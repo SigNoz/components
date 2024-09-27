@@ -11,6 +11,7 @@
     "lint": "eslint ./stories/*.stories.tsx --max-warnings 0"
   },
   "dependencies": {
+    "@signozhq/badge": "workspace:*",
     "@signozhq/button": "workspace:*",
     "@signozhq/input": "workspace:*",
     "@signozhq/tailwind-config": "workspace:*",
