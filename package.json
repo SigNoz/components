@@ -13,6 +13,15 @@
 		"prepare": "husky install",
 		"pre-commit": "lint-staged"
 	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,md,yml}": [
+			"prettier --write"
+		]
+	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",
 		"@commitlint/cli": "^19.5.0",
