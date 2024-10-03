@@ -1,12 +1,15 @@
 {
-  "name": "@signozhq/tailwind-config",
-  "version": "0.0.0",
-  "license": "MIT",
-  "dependencies": {
-    "tailwindcss": "^3.4.12",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@signozhq/tailwind-config",
+	"version": "0.0.0",
+	"license": "MIT",
+	"scripts": {
+		"lint": "eslint . --ext .ts,.tsx,.js,.jsx --fix && prettier --write ."
+	},
+	"dependencies": {
+		"tailwindcss": "^3.4.12",
+		"tailwindcss-animate": "^1.0.7"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }

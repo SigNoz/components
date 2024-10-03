@@ -1,18 +1,18 @@
 {
-	"name": "@signozhq/button",
+	"name": "@signozhq/badge",
 	"version": "0.0.0",
 	"sideEffects": false,
 	"license": "MIT",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/button.d.ts",
-			"import": "./dist/button.js"
+			"types": "./dist/badge.d.ts",
+			"import": "./dist/badge.js"
 		}
 	},
-	"main": "./dist/button.js",
-	"module": "./dist/button.js",
-	"types": "./dist/button.d.ts",
+	"main": "./dist/badge.js",
+	"module": "./dist/badge.js",
+	"types": "./dist/badge.d.ts",
 	"files": [
 		"dist"
 	],
@@ -52,5 +52,6 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"description": "a badge component from scratch"
 }
