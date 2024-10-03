@@ -213,19 +213,36 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           `apps/docs/stories/${(answers as { name: string }).name}.stories.tsx`
         );
         const storyContent = `
-import React from 'react';
-import { Story, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-export default {
+const ExampleComponent = ({ text = "Example Component" }) => <h1>{text}</h1>;
+
+const meta: Meta<typeof ExampleComponent> = {
   title: 'Components/${(answers as { name: string }).name.charAt(0).toUpperCase() + (answers as { name: string }).name.slice(1)}',
-  component: () => <h1>Component goes here</h1>,
-} as Meta;
+  component: ExampleComponent,
+  argTypes: {
+    text: {
+      control: { type: "text" },
+    },
+  },
+};
 
-const Template: Story = () => <h1>Component goes here</h1>;
+export default meta;
 
-export const Default = Template.bind({});
-Default.args = {
-  // Add default props here
+type Story = StoryObj<typeof ExampleComponent>;
+
+export const Default: Story = {
+  render: (args) => <ExampleComponent {...args} />,
+  args: {
+    text: "Default Example",
+  },
+};
+
+export const CustomText: Story = {
+  render: (args) => <ExampleComponent {...args} />,
+  args: {
+    text: "Custom Example Text",
+  },
 };
 `;
 
