@@ -11,6 +11,7 @@
 		"lint": "eslint . --ext ./stories/*.stories.tsx --fix && prettier --write ."
 	},
 	"dependencies": {
+		"@signozhq/alert": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/input": "workspace:*",
 		"@signozhq/tailwind-config": "workspace:*",
