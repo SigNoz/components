@@ -1,0 +1,13 @@
+{
+	"extends": "@repo/typescript-config/react-library.json",
+	"exclude": ["node_modules"],
+	"include": [
+		"apps/**/*.ts",
+		"apps/**/*.tsx",
+		"packages/**/*.ts",
+		"packages/**/*.tsx",
+		"turbo/**/*.ts",
+		"./*.ts",
+		"./*.js"
+	]
+}

@@ -1,37 +1,38 @@
 {
-  "name": "docs",
-  "version": "0.1.18",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "storybook dev -p 6006",
-    "build": "storybook build --docs",
-    "preview-storybook": "serve storybook-static",
-    "clean": "rm -rf .turbo && rm -rf node_modules",
-    "lint": "eslint ./stories/*.stories.tsx --max-warnings 0"
-  },
-  "dependencies": {
-    "@signozhq/button": "workspace:*",
-    "@signozhq/input": "workspace:*",
-    "@signozhq/tailwind-config": "workspace:*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@chromatic-com/storybook": "^1",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@storybook/addon-actions": "^8.3.3",
-    "@storybook/addon-designs": "^8.0.3",
-    "@storybook/addon-essentials": "^8.3.3",
-    "@storybook/addon-links": "^8.3.3",
-    "@storybook/react": "^8.3.3",
-    "@storybook/react-vite": "^8.3.3",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^9.11.0",
-    "serve": "^14.2.1",
-    "storybook": "^8.3.3",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.4"
-  }
+	"name": "docs",
+	"version": "0.1.18",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"dev": "storybook dev -p 6006",
+		"build": "storybook build --docs",
+		"preview-storybook": "serve storybook-static",
+		"clean": "rm -rf .turbo && rm -rf node_modules",
+		"lint": "eslint ./stories/*.stories.tsx --max-warnings 0"
+	},
+	"dependencies": {
+		"@signozhq/button": "workspace:*",
+		"@signozhq/input": "workspace:*",
+		"@signozhq/tailwind-config": "workspace:*",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@chromatic-com/storybook": "^1",
+		"@repo/eslint-config": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
+		"@storybook/addon-actions": "^8.3.3",
+		"@storybook/addon-designs": "^8.0.3",
+		"@storybook/addon-essentials": "^8.3.3",
+		"@storybook/addon-links": "^8.3.3",
+		"@storybook/react": "^8.3.3",
+		"@storybook/react-vite": "^8.3.3",
+		"@types/react": "^18.3.11",
+		"@vitejs/plugin-react": "^4.2.1",
+		"eslint": "^9.11.0",
+		"serve": "^14.2.1",
+		"storybook": "^8.3.3",
+		"typescript": "^5.3.3",
+		"vite": "^5.1.4"
+	}
 }
