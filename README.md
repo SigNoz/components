@@ -34,6 +34,7 @@ This guide explains how to use Signoz components library powered by Turborepo, R
 - `pnpm lint` - Lint all packages
 - `pnpm changeset` - Generate a changeset
 - `pnpm clean` - Clean up all `node_modules` and `dist` folders
+- `pnpm turbo gen new-package` - Custom generator script to add new component/package to the component library
 
 ## Available Packages
 
