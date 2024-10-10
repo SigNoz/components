@@ -1,12 +1,13 @@
 {
-  "name": "@signozhq/tailwind-config",
-  "version": "0.0.0",
-  "license": "MIT",
-  "dependencies": {
-    "tailwindcss": "^3.4.12",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@signozhq/tailwind-config",
+	"version": "0.0.0",
+	"license": "MIT",
+	"dependencies": {
+		"@signozhq/design-tokens": "latest",
+		"tailwindcss": "^3.4.12",
+		"tailwindcss-animate": "^1.0.7"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }
