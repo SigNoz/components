@@ -1,3 +1,4 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@signozhq/button";
 
@@ -6,14 +7,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link",
-      ],
+      options: ["primary", "danger", "warning", "default", "ghost", "link"],
     },
     size: {
       control: { type: "select" },
@@ -51,23 +45,22 @@ export const Primary: Story = {
   render: (args) => <Button {...args} />,
   args: {
     children: "Button",
-    variant: "default",
+    variant: "primary",
     size: "default",
     theme: "light",
     asChild: false,
     onClick: () => {
-      // eslint-disable-next-line no-alert -- alert for demo
       alert("It works!");
     },
   },
 };
 
-export const Secondary: Story = {
+export const Default: Story = {
   render: (args) => <Button {...args} />,
   args: {
     ...Primary.args,
-    children: "Secondary",
-    variant: "secondary",
+    children: "Default",
+    variant: "default",
   },
 };
 
