@@ -48,6 +48,13 @@ const meta: Meta<typeof PaginationComponent> = {
     backgrounds: {
       default: "dark",
     },
+    design: [
+      {
+        name: "Figma",
+        type: "figma",
+        url: "https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=40-1657&node-type=frame&t=RGQXgBfSXKWsYAz9-0",
+      },
+    ],
   },
 };
 
