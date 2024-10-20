@@ -91,7 +91,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/button
       '@signozhq/design-tokens':
-        specifier: latest
+        specifier: 1.0.0
         version: 1.0.0
       '@signozhq/theme':
         specifier: workspace:*
@@ -322,7 +322,7 @@ importers:
   packages/theme:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: latest
+        specifier: 1.0.0
         version: 1.0.0
       '@types/react':
         specifier: ^18.3.8

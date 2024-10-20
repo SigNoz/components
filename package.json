@@ -6,6 +6,8 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "build-storybook": "turbo run build-storybook -- --output-dir=storybook-static",
+    "chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "update-version": "changeset && changeset version",
