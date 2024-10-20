@@ -6,8 +6,15 @@
       "outputs": ["dist/**", "storybook-static/**"],
       "dependsOn": ["^build"]
     },
+    "build-storybook": {
+      "dependsOn": ["^build-storybook"],
+      "outputs": ["storybook-static/**"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "chromatic": {
+      "dependsOn": ["^chromatic"]
     },
     "dev": {
       "cache": false,
