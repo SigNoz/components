@@ -2,6 +2,9 @@
 	"name": "@signozhq/tailwind-config",
 	"version": "0.0.0",
 	"license": "MIT",
+	"scripts": {
+		"lint": "eslint . --ext .ts,.tsx,.js,.jsx --fix && prettier --write ."
+	},
 	"dependencies": {
 		"@signozhq/design-tokens": "latest",
 		"tailwindcss": "^3.4.12",
