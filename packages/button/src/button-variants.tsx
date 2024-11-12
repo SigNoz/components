@@ -1,20 +1,20 @@
 import { cva } from "class-variance-authority";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:warning-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
+        primary:
+          "bg-robin-500 text-primary-foreground shadow hover:bg-robin-500/90",
+        danger:
+          "bg-cherry-500 text-destructive-foreground shadow-sm hover:bg-cherry-500/90",
+        warning:
+          "bg-amber-500 text-primary-foreground shadow hover:bg-amber-500/90",
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-slate-400 text-vanilla-100 shadow-sm hover:bg-slate-400/80",
+        ghost: "text-primary-foreground ",
+        link: "text-slate-100 underline-offset-4 hover:underline",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -37,35 +37,35 @@ const buttonVariants = cva(
         theme: "dark",
         variant: "default",
         className:
-          "bg-primary-dark text-primary-foreground-dark shadow hover:bg-primary-dark/90",
+          "bg-robin-500 text-primary-foreground-dark shadow hover:bg-robin-500/90",
       },
       {
         theme: "dark",
-        variant: "destructive",
+        variant: "danger",
         className:
-          "bg-destructive-dark text-destructive-foreground-dark shadow-sm hover:bg-destructive-dark/90",
+          "bg-cherry-500 text-destructive-foreground shadow-sm hover:bg-cherry-500/90",
       },
       {
         theme: "dark",
-        variant: "outline",
+        variant: "warning",
         className:
           "border border-input-dark bg-background-dark shadow-sm text-primary-foreground hover:bg-background-dark/80",
       },
       {
         theme: "dark",
-        variant: "secondary",
+        variant: "primary",
         className:
-          "bg-secondary-dark text-primary-foreground shadow-sm hover:bg-secondary-dark/80",
+          "bg-robin-500 text-primary-foreground shadow-sm hover:bg-robin-500/80",
       },
       {
         theme: "dark",
         variant: "ghost",
-        className: "hover:bg-accent-dark hover:text-accent-foreground-dark",
+        className: "text-robin-100",
       },
       {
         theme: "dark",
         variant: "link",
-        className: "text-primary-dark underline-offset-4 hover:underline",
+        className: "text-vanilla-100 underline-offset-4 hover:underline",
       },
     ],
   }

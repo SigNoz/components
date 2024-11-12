@@ -1,25 +1,25 @@
 {
-  "name": "@signozhq/theme",
-  "version": "0.0.0",
-  "type": "module",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
-  "files": [
-    "src"
-  ],
-  "scripts": {
-    "build": "vite build",
-    "dev": "vite build --watch"
-  },
-  "dependencies": {
-    "@signozhq/design-tokens": "latest",
-    "@types/react": "^18.3.8",
-    "react": "^18.2.0"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "react-dom": "^18.2.0",
-    "vite": "^5.4.7",
-    "vite-plugin-dts": "^4.2.1"
-  }
+	"name": "@signozhq/theme",
+	"version": "0.0.0",
+	"type": "module",
+	"main": "./src/index.tsx",
+	"types": "./src/index.tsx",
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch"
+	},
+	"dependencies": {
+		"@signozhq/design-tokens": "latest",
+		"@types/react": "^18.3.8",
+		"react": "^18.2.0"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-react": "^4.3.1",
+		"react-dom": "^18.2.0",
+		"vite": "^5.4.7",
+		"vite-plugin-dts": "^4.2.1"
+	}
 }
