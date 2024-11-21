@@ -10,17 +10,19 @@ const buttonVariants = cva(
         danger:
           "bg-cherry-500 text-destructive-foreground shadow-sm hover:bg-cherry-500/90",
         warning:
-          "bg-amber-500 text-primary-foreground shadow hover:bg-amber-500/90",
-        default:
+          "bg-amber-500 text-black shadow hover:bg-amber-500/90",
+          secondary:
           "bg-slate-400 text-vanilla-100 shadow-sm hover:bg-slate-400/80",
         ghost: "text-primary-foreground ",
-        link: "text-slate-100 underline-offset-4 hover:underline",
+        link: "text-robin-500 underline-offset-4",
+        solid: "outline text-primary-foreground outline-[#1D2023] rounded-sm hover:bg-[#24272B]",
+        dashed: "outline-dashed text-primary-foreground outline-[#1D2023] hover:bg-[#24272B]"
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        xs: "h-6 rounded-sm py-1 text-[10px]",
+        sm: "h-8 rounded-sm py-2 text-xs",
+        md: "h-9 rounded-sm py-2 text-xs",
+        lg: "h-12 rounded-sm py-3.5 text-base",
       },
       theme: {
         light: "",
@@ -28,14 +30,14 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: "primary",
+      size: "sm",
       theme: "light",
     },
     compoundVariants: [
       {
         theme: "dark",
-        variant: "default",
+        variant: "primary",
         className:
           "bg-robin-500 text-primary-foreground-dark shadow hover:bg-robin-500/90",
       },

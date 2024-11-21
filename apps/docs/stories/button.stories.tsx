@@ -8,11 +8,11 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["primary", "danger", "warning", "default", "ghost", "link"],
+      options: ["primary", "danger", "warning", "secondary", "ghost", "link", "solid", "dashed"],
     },
     size: {
       control: { type: "select" },
-      options: ["default", "sm", "lg", "icon"],
+      options: ["xs", "sm", "md", "lg"],
     },
     theme: {
       control: { type: "select" },
@@ -45,9 +45,9 @@ type Story = StoryObj<typeof Button>;
 export const Primary: Story = {
   render: (args) => <Button {...args} />,
   args: {
-    children: "Button",
+    children: "Big Button 1",
     variant: "primary",
-    size: "default",
+    size: "xs",
     theme: "light",
     asChild: false,
     onClick: () => {
@@ -56,38 +56,65 @@ export const Primary: Story = {
   },
 };
 
-export const Default: Story = {
+export const Secondary: Story = {
   render: (args) => <Button {...args} />,
   args: {
     ...Primary.args,
-    children: "Default",
-    variant: "default",
+    children: "Big Button 1",
+    variant: "secondary",
   },
 };
 
-export const Large: Story = {
+export const Warning: Story = {
   render: (args) => <Button {...args} />,
   args: {
     ...Primary.args,
-    children: "Large",
-    size: "lg",
+    children: "Big Button 1",
+    variant: "warning",
   },
 };
 
-export const Small: Story = {
+export const Danger: Story = {
   render: (args) => <Button {...args} />,
   args: {
     ...Primary.args,
-    children: "Small",
-    size: "sm",
+    children: "Big Button 1",
+    variant: "danger",
   },
 };
 
-export const Dark: Story = {
+export const Link: Story = {
   render: (args) => <Button {...args} />,
   args: {
     ...Primary.args,
-    children: "Dark Theme",
-    theme: "dark",
+    children: "Big Button 1",
+    variant: "link",
+  },
+};
+
+export const Ghost: Story = {
+  render: (args) => <Button {...args} />,
+  args: {
+    ...Primary.args,
+    children: "Big Button 1",
+    variant: "ghost",
+  },
+};
+
+export const Solid: Story = {
+  render: (args) => <Button {...args} />,
+  args: {
+    ...Primary.args,
+    children: "Big Button 1",
+    variant: "solid",
+  },
+};
+
+export const Dashed: Story = {
+  render: (args) => <Button {...args} />,
+  args: {
+    ...Primary.args,
+    children: "Big Button 1",
+    variant: "dashed",
   },
 };
