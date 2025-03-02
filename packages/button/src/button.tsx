@@ -88,7 +88,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{prefixIcon && (
 					<span>
 						{React.cloneElement(prefixIcon, {
-							size: iconSizes[size],
+							...(!prefixIcon.props.size && { size: iconSizes[size] }),
 						})}
 					</span>
 				)}
@@ -96,7 +96,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{suffixIcon && (
 					<span>
 						{React.cloneElement(suffixIcon, {
-							size: iconSizes[size],
+							...(!suffixIcon.props.size && { size: iconSizes[size] }),
 						})}
 					</span>
 				)}
