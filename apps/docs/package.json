@@ -14,9 +14,11 @@
 	},
 	"dependencies": {
 		"@signozhq/button": "workspace:*",
-		"@signozhq/input": "workspace:*",
 		"@signozhq/design-tokens": "latest",
+		"@signozhq/input": "workspace:*",
+		"@signozhq/tabs": "workspace:*",
 		"@signozhq/tailwind-config": "workspace:*",
+		"lucide-react": "^0.477.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},
