@@ -10,13 +10,6 @@ done
 str="{
   \"extends\": \"./tsconfig.json\",
   \"include\": [
-    \"apps/**/*.ts\",
-    \"apps/**/*.tsx\",
-    \"packages/**/*.ts\",
-    \"packages/**/*.tsx\",
-    \"turbo/**/*.ts\",
-    \"./*.ts\",
-    \"./*.js\",
     $files
   ]
 }"
