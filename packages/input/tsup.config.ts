@@ -10,9 +10,4 @@ export default defineConfig({
 	treeshake: true,
 	external: ['react'],
 	injectStyle: true,
-	esbuildOptions(options) {
-		options.banner = {
-			js: '"use client";',
-		};
-	},
 });
