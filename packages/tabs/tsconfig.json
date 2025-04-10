@@ -1,6 +1,6 @@
 {
 	"extends": "@repo/typescript-config/react-library.json",
-	"include": ["src"],
+	"include": ["src", "tsup.config.ts"],
 	"exclude": ["dist", "build", "node_modules"],
 	"compilerOptions": {
 		"outDir": "dist",
