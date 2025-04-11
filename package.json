@@ -47,7 +47,8 @@
 		"typescript-eslint": "^8.0.1"
 	},
 	"resolutions": {
-		"cross-spawn": "7.0.5"
+		"cross-spawn": "7.0.5",
+		"esbuild": "^0.25.0"
 	},
 	"packageManager": "pnpm@8.15.6",
 	"name": "design-system"
