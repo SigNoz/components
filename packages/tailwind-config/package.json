@@ -2,6 +2,7 @@
 	"name": "@signozhq/tailwind-config",
 	"version": "0.0.0",
 	"license": "MIT",
+	"type": "module",
 	"dependencies": {
 		"@signozhq/design-tokens": "latest",
 		"tailwindcss": "^3.4.12",
