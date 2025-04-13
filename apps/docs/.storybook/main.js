@@ -1,43 +1,46 @@
-import { dirname, join } from "path";
+import { dirname, join } from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 function getAbsolutePath(value) {
-  return dirname(require.resolve(join(value, "package.json")));
+	return dirname(require.resolve(join(value, 'package.json')));
 }
 
 const config = {
-  stories: ["../stories/*.stories.tsx", "../stories/**/*.stories.tsx"],
-  addons: [
-    getAbsolutePath("@storybook/addon-links"),
-    getAbsolutePath("@storybook/addon-essentials"),
-    getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-designs"),
-  ],
-  framework: {
-    name: getAbsolutePath("@storybook/react-vite"),
-    options: {},
-  },
+	stories: ['../stories/*.stories.tsx', '../stories/**/*.stories.tsx'],
+	addons: [
+		getAbsolutePath('@storybook/addon-links'),
+		getAbsolutePath('@storybook/addon-essentials'),
+		getAbsolutePath('@chromatic-com/storybook'),
+		getAbsolutePath('@storybook/addon-designs'),
+	],
+	framework: {
+		name: getAbsolutePath('@storybook/react-vite'),
+		options: {},
+	},
 
-  core: {},
+	core: {},
 
-  async viteFinal(config) {
-    config.css = {
-      postcss: {
-        plugins: [require("tailwindcss"), require("autoprefixer")],
-      },
-    };
+	async viteFinal(config) {
+		config.css = {
+			postcss: {
+				plugins: [(await import('@tailwindcss/postcss')).default],
+			},
+		};
 
-    return {
-      ...config,
-      define: { "process.env": {} },
-      resolve: {
-        alias: [],
-      },
-    };
-  },
+		return {
+			...config,
+			define: { 'process.env': {} },
+			resolve: {
+				alias: [],
+			},
+		};
+	},
 
-  typescript: {
-    reactDocgen: "react-docgen-typescript",
-  },
+	typescript: {
+		reactDocgen: 'react-docgen-typescript',
+	},
 };
 
 export default config;
