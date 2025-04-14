@@ -6,12 +6,12 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				primary:
-					'bg-robin-500 text-primary-foreground shadow hover:bg-robin-500/90',
+					'bg-robin-500 text-primary-foreground shadow-sm hover:bg-robin-500/90',
 				danger:
-					'bg-cherry-500 text-destructive-foreground shadow-sm hover:bg-cherry-500/90',
+					'bg-cherry-500 text-destructive-foreground shadow-xs hover:bg-cherry-500/90',
 				warning:
-					'bg-amber-500 text-primary-foreground shadow hover:bg-amber-500/90',
-				default: 'bg-slate-400 text-vanilla-100 shadow-sm hover:bg-slate-400/80',
+					'bg-amber-500 text-primary-foreground shadow-sm hover:bg-amber-500/90',
+				default: 'bg-slate-400 text-vanilla-100 shadow-xs hover:bg-slate-400/80',
 				ghost: 'text-primary-foreground ',
 				link: 'text-slate-100 underline-offset-4 hover:underline',
 			},
@@ -36,25 +36,25 @@ const buttonVariants = cva(
 				theme: 'dark',
 				variant: 'default',
 				className:
-					'bg-robin-500 text-primary-foreground-dark shadow hover:bg-robin-500/90',
+					'bg-robin-500 text-primary-foreground-dark shadow-sm hover:bg-robin-500/90',
 			},
 			{
 				theme: 'dark',
 				variant: 'danger',
 				className:
-					'bg-cherry-500 text-destructive-foreground shadow-sm hover:bg-cherry-500/90',
+					'bg-cherry-500 text-destructive-foreground shadow-xs hover:bg-cherry-500/90',
 			},
 			{
 				theme: 'dark',
 				variant: 'warning',
 				className:
-					'border border-input-dark bg-background-dark shadow-sm text-primary-foreground hover:bg-background-dark/80',
+					'border border-input-dark bg-background-dark shadow-xs text-primary-foreground hover:bg-background-dark/80',
 			},
 			{
 				theme: 'dark',
 				variant: 'primary',
 				className:
-					'bg-robin-500 text-primary-foreground shadow-sm hover:bg-robin-500/80',
+					'bg-robin-500 text-primary-foreground shadow-xs hover:bg-robin-500/80',
 			},
 			{
 				theme: 'dark',

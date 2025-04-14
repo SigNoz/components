@@ -1,6 +1,5 @@
-@import '@signozhq/design-tokens/dist/style.css';
 @import 'tailwindcss';
-@import 'tw-animate-css';
+@import '@signozhq/design-tokens/dist/style.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -78,7 +77,7 @@
 	--sidebar-ring: var(--bg-robin-500);
 }
 
-@theme inline {
+@theme {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
@@ -118,6 +117,69 @@
 	--font-sans: var(--font-sans);
 	--font-serif: var(--font-serif);
 	--font-mono: var(--font-mono);
+
+	--color-robin-100: var(--bg-robin-100);
+	--color-robin-200: var(--bg-robin-200);
+	--color-robin-300: var(--bg-robin-300);
+	--color-robin-400: var(--bg-robin-400);
+	--color-robin-500: var(--bg-robin-500);
+	--color-robin-600: var(--bg-robin-600);
+	--color-sienna-100: var(--bg-sienna-100);
+	--color-sienna-200: var(--bg-sienna-200);
+	--color-sienna-300: var(--bg-sienna-300);
+	--color-sienna-400: var(--bg-sienna-400);
+	--color-sienna-500: var(--bg-sienna-500);
+	--color-sienna-600: var(--bg-sienna-600);
+	--color-cherry-100: var(--bg-cherry-100);
+	--color-cherry-200: var(--bg-cherry-200);
+	--color-cherry-300: var(--bg-cherry-300);
+	--color-cherry-400: var(--bg-cherry-400);
+	--color-cherry-500: var(--bg-cherry-500);
+	--color-cherry-600: var(--bg-cherry-600);
+	--color-aqua-100: var(--bg-aqua-100);
+	--color-aqua-200: var(--bg-aqua-200);
+	--color-aqua-300: var(--bg-aqua-300);
+	--color-aqua-400: var(--bg-aqua-400);
+	--color-aqua-500: var(--bg-aqua-500);
+	--color-aqua-600: var(--bg-aqua-600);
+	--color-sakura-100: var(--bg-sakura-100);
+	--color-sakura-200: var(--bg-sakura-200);
+	--color-sakura-300: var(--bg-sakura-300);
+	--color-sakura-400: var(--bg-sakura-400);
+	--color-sakura-500: var(--bg-sakura-500);
+	--color-sakura-600: var(--bg-sakura-600);
+	--color-amber-100: var(--bg-amber-100);
+	--color-amber-200: var(--bg-amber-200);
+	--color-amber-300: var(--bg-amber-300);
+	--color-amber-400: var(--bg-amber-400);
+	--color-amber-500: var(--bg-amber-500);
+	--color-amber-600: var(--bg-amber-600);
+	--color-ink-100: var(--bg-ink-100);
+	--color-ink-200: var(--bg-ink-200);
+	--color-ink-300: var(--bg-ink-300);
+	--color-ink-400: var(--bg-ink-400);
+	--color-ink-500: var(--bg-ink-500);
+	--color-vanilla-100: var(--bg-vanilla-100);
+	--color-vanilla-200: var(--bg-vanilla-200);
+	--color-vanilla-300: var(--bg-vanilla-300);
+	--color-vanilla-400: var(--bg-vanilla-400);
+	--color-slate-50: var(--bg-slate-50);
+	--color-slate-100: var(--bg-slate-100);
+	--color-slate-200: var(--bg-slate-200);
+	--color-slate-300: var(--bg-slate-300);
+	--color-slate-400: var(--bg-slate-400);
+	--color-slate-500: var(--bg-slate-500);
+	--color-forest-200: var(--bg-forest-200);
+	--color-forest-300: var(--bg-forest-300);
+	--color-forest-400: var(--bg-forest-400);
+	--color-forest-500: var(--bg-forest-500);
+	--color-forest-600: var(--bg-forest-600);
+	--color-gradient-coral: var(--bg-gradient-coral);
+	--color-gradient-dark-shadow: var(--bg-gradient-dark-shadow);
+	--color-gradient-dawn: var(--bg-gradient-dawn);
+	--color-gradient-ocean: var(--bg-gradient-ocean);
+	--color-gradient-splash: var(--bg-gradient-splash);
+	--color-gradient-flamingo: var(--bg-gradient-flamingo);
 }
 
 @layer base {
