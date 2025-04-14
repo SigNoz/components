@@ -5,7 +5,8 @@
 	"dependencies": {
 		"@signozhq/design-tokens": "latest",
 		"tailwindcss": "^3.4.12",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"tw-animate-css": "^1.2.5"
 	},
 	"publishConfig": {
 		"access": "public"
