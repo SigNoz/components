@@ -106,11 +106,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				return 'package.json updated';
 			},
 
-			// Update vite.config.ts
+			// Update tsup.config.ts
 			(answers) => {
 				const configPath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/vite.config.ts`,
+					`packages/${(answers as { name: string }).name}/tsup.config.ts`,
 				);
 				let content = fs.readFileSync(configPath, 'utf8');
 
@@ -119,9 +119,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				fs.writeFileSync(configPath, content);
 
 				console.log(
-					`Updated vite.config.ts for ${(answers as { name: string }).name}`,
+					`Updated tsup.config.ts for ${(answers as { name: string }).name}`,
 				);
-				return 'vite.config.ts updated';
+				return 'tsup.config.ts updated';
 			},
 			// Update docs app package.json
 			{
