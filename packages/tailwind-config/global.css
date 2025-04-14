@@ -1,3 +1,4 @@
+@import 'tailwindcss';
 @import '@signozhq/design-tokens/dist/style.css';
 
 @custom-variant dark (&:is(.dark *));
