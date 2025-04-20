@@ -13,6 +13,7 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
+		"@signozhq/switch": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/input": "workspace:*",
 		"@signozhq/design-tokens": "latest",
