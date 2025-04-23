@@ -13,9 +13,9 @@
 	"dependencies": {
 		"@signozhq/button": "workspace:*",
 		"@signozhq/tabs": "workspace:*",
-		"@signozhq/theme": "workspace:*",
 		"@signozhq/design-tokens": "latest",
-		"lucide-react": "^0.503.0",
+		"@signozhq/theme": "workspace:*",
+		"lucide-react": "^0.445.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
 	},
