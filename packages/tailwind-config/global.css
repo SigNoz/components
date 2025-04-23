@@ -189,3 +189,82 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+[data-theme-color='blue'] {
+	--primary: var(--bg-robin-500);
+	--primary-foreground: var(--text-vanilla-100);
+	--ring: var(--bg-robin-500);
+	--sidebar-primary: var(--bg-robin-500);
+	--sidebar-ring: var(--bg-robin-500);
+}
+
+.dark[data-theme-color='blue'] {
+	--primary: var(--bg-robin-400);
+	--primary-foreground: var(--text-ink-500);
+	--ring: var(--bg-robin-400);
+	--sidebar-primary: var(--bg-robin-400);
+	--sidebar-ring: var(--bg-robin-400);
+}
+[data-theme-color='green'] {
+	--primary: var(--bg-forest-500);
+	--primary-foreground: var(--text-vanilla-100);
+	--ring: var(--bg-forest-500);
+	--sidebar-primary: var(--bg-forest-500);
+	--sidebar-ring: var(--bg-forest-500);
+}
+
+.dark[data-theme-color='green'] {
+	--primary: var(--bg-forest-400);
+	--primary-foreground: var(--text-ink-500);
+	--ring: var(--bg-forest-400);
+	--sidebar-primary: var(--bg-forest-400);
+	--sidebar-ring: var(--bg-forest-400);
+}
+
+[data-theme-color='amber'] {
+	--primary: var(--bg-amber-500);
+	--primary-foreground: var(--text-vanilla-100);
+	--ring: var(--bg-amber-500);
+	--sidebar-primary: var(--bg-amber-500);
+	--sidebar-ring: var(--bg-amber-500);
+}
+
+.dark[data-theme-color='amber'] {
+	--primary: var(--bg-amber-400);
+	--primary-foreground: var(--text-ink-500);
+	--ring: var(--bg-amber-400);
+	--sidebar-primary: var(--bg-amber-400);
+	--sidebar-ring: var(--bg-amber-400);
+}
+
+[data-theme-color='cherry'] {
+	--primary: var(--bg-cherry-500);
+	--primary-foreground: var(--text-vanilla-100);
+	--ring: var(--bg-cherry-500);
+	--sidebar-primary: var(--bg-cherry-500);
+	--sidebar-ring: var(--bg-cherry-500);
+}
+
+.dark[data-theme-color='cherry'] {
+	--primary: var(--bg-cherry-400);
+	--primary-foreground: var(--text-ink-500);
+	--ring: var(--bg-cherry-400);
+	--sidebar-primary: var(--bg-cherry-400);
+	--sidebar-ring: var(--bg-cherry-400);
+}
+
+[data-theme-color='aqua'] {
+	--primary: var(--bg-aqua-500);
+	--primary-foreground: var(--text-vanilla-100);
+	--ring: var(--bg-aqua-500);
+	--sidebar-primary: var(--bg-aqua-500);
+	--sidebar-ring: var(--bg-aqua-500);
+}
+
+.dark[data-theme-color='aqua'] {
+	--primary: var(--bg-aqua-400);
+	--primary-foreground: var(--text-ink-500);
+	--ring: var(--bg-aqua-400);
+	--sidebar-primary: var(--bg-aqua-400);
+	--sidebar-ring: var(--bg-aqua-400);
+}
