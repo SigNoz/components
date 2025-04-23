@@ -12,8 +12,10 @@
 	},
 	"dependencies": {
 		"@signozhq/button": "workspace:*",
-		"@signozhq/theme": "workspace:*",
 		"@signozhq/design-tokens": "latest",
+		"@signozhq/tabs": "workspace:*",
+		"@signozhq/theme": "workspace:*",
+		"lucide-react": "^0.503.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
 	},
