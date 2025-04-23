@@ -1,31 +1,58 @@
-// import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Checkbox } from '@signozhq/checkbox';
 
-// const ExampleComponent = ({ text = "Example Component" }) => <h1>{text}</h1>;
+const meta: Meta<typeof Checkbox> = {
+	title: 'Components/Checkbox',
+	component: Checkbox,
+	argTypes: {
+		labelName: {
+			control: 'text',
+		},
+		disabled: {
+			control: 'boolean',
+		},
+		id: {
+			control: 'text',
+		},
+	},
+	parameters: {
+		design: [
+			{
+				name: 'Figma',
+				type: 'figma',
+				url: 'https://www.figma.com/file/your-design-url',
+			},
+		],
+	},
+};
 
-// const meta: Meta<typeof ExampleComponent> = {
-//   title: 'Components/Checkbox',
-//   component: ExampleComponent,
-//   argTypes: {
-//     text: {
-//       control: { type: "text" },
-//     },
-//   },
-// };
+export default meta;
 
-// export default meta;
+type Story = StoryObj<typeof Checkbox>;
 
-// type Story = StoryObj<typeof ExampleComponent>;
+export const Checked: Story = {
+	args: {
+		id: 'filled',
+		labelName: 'Filled checkbox',
+		defaultChecked: true,
+		disabled: false,
+	},
+};
 
-// export const Default: Story = {
-//   render: (args) => <ExampleComponent {...args} />,
-//   args: {
-//     text: "Default Example",
-//   },
-// };
+export const Disabled: Story = {
+	args: {
+		id: 'disabled',
+		labelName: 'Disabled checkbox',
+		defaultChecked: false,
+		disabled: true,
+	},
+};
 
-// export const CustomText: Story = {
-//   render: (args) => <ExampleComponent {...args} />,
-//   args: {
-//     text: "Custom Example Text",
-//   },
-// };
+export const DisabledChecked: Story = {
+	args: {
+		id: 'disabled-filled',
+		labelName: 'Disabled Filled',
+		defaultChecked: true,
+		disabled: true,
+	},
+};

@@ -13,14 +13,17 @@ function App() {
 			<h1>Theme Switcher and Button</h1>
 			<ThemeSwitcher />
 			<Button variant="primary">hey</Button>
-			<div className="flex items-center space-x-2">
-				<Checkbox id="terms" />
-				<label
-					htmlFor="terms"
-					className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-				>
-					Accept terms and conditions
-				</label>
+			<div className="space-y-2 border border-dashed border-indigo-400 p-4 rounded-md">
+				<Checkbox id="default" labelName="Default checkbox" />
+				<Checkbox id="hover" labelName="Hover checkbox" />
+				<Checkbox id="filled" labelName="Filled checkbox" defaultChecked />
+				<Checkbox id="disabled" labelName="Disabled checkbox" disabled />
+				<Checkbox
+					id="disabled-filled"
+					labelName="Disabled Filled"
+					disabled
+					checked
+				/>
 			</div>
 			<Switch id="test" labelName={'Airplane mode'} disabled={false} />
 			<Switch id="test" labelName={'Airplane mode'} disabled={false} />
