@@ -1,24 +1,18 @@
-import './App.css';
-import { ThemeSwitcher, useTheme } from '@signozhq/theme';
+import React from 'react';
+
 import { Button } from '@signozhq/button';
+import './App.css';
+import { ThemeSwitcher } from '@signozhq/theme';
+import { Checkbox } from '@signozhq/checkbox';
 import { Switch } from '@signozhq/switch';
 import { RadioGroup, RadioGroupItem } from '@signozhq/radio-group';
 
-import { Typography } from '@signozhq/design-tokens';
-import { Spacing } from '@signozhq/design-tokens';
-import { Checkbox } from '@signozhq/checkbox';
-
 function App() {
-	const { theme, currentThemeColors } = useTheme();
-
 	return (
-		<>
+		<div>
 			<h1>Theme Switcher and Button</h1>
 			<ThemeSwitcher />
-
-			<Button theme={theme} variant="primary">
-				hey
-			</Button>
+			<Button variant="primary">hey</Button>
 			<div className="flex items-center space-x-2">
 				<Checkbox id="terms" />
 				<label
@@ -41,17 +35,7 @@ function App() {
 					<label htmlFor="option-two">Option Two</label>
 				</div>
 			</RadioGroup>
-			<h1>Design tokens</h1>
-			<p
-				style={{
-					background: currentThemeColors.TEXT_COLOR,
-					letterSpacing: Spacing.MARGIN_10,
-					fontSize: Typography.FONTSIZE_3XL,
-				}}
-			>
-				hey
-			</p>
-		</>
+		</div>
 	);
 }
 

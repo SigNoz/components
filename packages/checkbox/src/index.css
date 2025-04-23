@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @layer base {
@@ -63,4 +63,6 @@
 	body {
 		@apply bg-background text-foreground;
 	}
-}
+} */
+@import 'tailwindcss';
+@import '@signozhq/tailwind-config/global.css';
