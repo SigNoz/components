@@ -1,1 +1,3 @@
-@import '../../tailwind-config/global.css';
+@import 'tailwindcss';
+
+@import '@signozhq/tailwind-config/global.css';
