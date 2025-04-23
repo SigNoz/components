@@ -14,6 +14,7 @@
 		"@signozhq/button": "workspace:*",
 		"@signozhq/switch": "workspace:*",
 		"@signozhq/radio-group": "workspace:*",
+		"@signozhq/checkbox": "workspace:*",
 		"@signozhq/theme": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"react": "^18.3.1",

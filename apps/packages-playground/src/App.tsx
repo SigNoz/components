@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@signozhq/radio-group';
 
 import { Typography } from '@signozhq/design-tokens';
 import { Spacing } from '@signozhq/design-tokens';
+import { Checkbox } from '@signozhq/checkbox';
 
 function App() {
 	const { theme, currentThemeColors } = useTheme();
@@ -18,6 +19,15 @@ function App() {
 			<Button theme={theme} variant="primary">
 				hey
 			</Button>
+			<div className="flex items-center space-x-2">
+				<Checkbox id="terms" />
+				<label
+					htmlFor="terms"
+					className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+				>
+					Accept terms and conditions
+				</label>
+			</div>
 			<Switch id="test" labelName={'Airplane mode'} disabled={false} />
 			<Switch id="test" labelName={'Airplane mode'} disabled={false} />
 
