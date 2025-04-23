@@ -26,9 +26,9 @@ function App() {
 				/>
 			</div>
 			<Switch id="test" labelName={'Airplane mode'} disabled={false} />
-			<Switch id="test" labelName={'Airplane mode'} disabled={false} />
+			<Switch id="test2" labelName={'bluetooth'} disabled={false} />
 
-			<RadioGroup defaultValue="option-one">
+			<RadioGroup defaultValue="">
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="option-one" id="option-one" />
 					<label htmlFor="option-one">Option One</label>
