@@ -25,4 +25,24 @@ const Checkbox = React.forwardRef<
 ));
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-export { Checkbox };
+const CheckboxWrapper: React.FC<
+	{ labelName?: string | React.ReactNode } & React.ComponentPropsWithoutRef<
+		typeof Checkbox
+	>
+> = ({ labelName, ...props }) => {
+	return (
+		<div className="flex items-center space-x-2">
+			<Checkbox {...props} />
+			{labelName && (
+				<label
+					htmlFor={props.id}
+					className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
+				>
+					{labelName}
+				</label>
+			)}
+		</div>
+	);
+};
+
+export { CheckboxWrapper as Checkbox };
