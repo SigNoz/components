@@ -1,5 +1,210 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+@import '@signozhq/design-tokens/dist/style.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	--background: var(--bg-vanilla-200);
+	--foreground: var(--text-ink-400);
+	--card: var(--bg-vanilla-100);
+	--card-foreground: var(--text-ink-400);
+	--popover: var(--bg-vanilla-100);
+	--popover-foreground: var(--text-ink-400);
+	--primary: var(--bg-robin-500);
+	--primary-foreground: var(--text-vanilla-100);
+	--secondary: var(--bg-vanilla-300);
+	--secondary-foreground: var(--text-slate-400);
+	--muted: var(--bg-vanilla-300);
+	--muted-foreground: var(--text-slate-50);
+	--accent: var(--bg-aqua-100);
+	--accent-foreground: var(--text-slate-400);
+	--destructive: var(--bg-cherry-500);
+	--destructive-foreground: var(--text-vanilla-100);
+	--border: var(--bg-slate-400);
+	--input: var(--bg-slate-400);
+	--ring: var(--bg-robin-500);
+	--chart-1: var(--bg-robin-500);
+	--chart-2: var(--bg-robin-600);
+	--chart-3: var(--bg-slate-300);
+	--chart-4: var(--bg-slate-400);
+	--chart-5: var(--bg-slate-500);
+	--radius: 0.25rem;
+	--sidebar: var(--bg-vanilla-300);
+	--sidebar-foreground: var(--text-ink-400);
+	--sidebar-primary: var(--bg-robin-500);
+	--sidebar-primary-foreground: var(--text-vanilla-100);
+	--sidebar-accent: var(--bg-aqua-100);
+	--sidebar-accent-foreground: var(--text-slate-400);
+	--sidebar-border: var(--bg-slate-400);
+	--sidebar-ring: var(--bg-robin-500);
+	--font-sans: 'Inter, sans-serif';
+	--font-serif: 'Open Sans, sans-serif';
+	--font-mono: 'Geist Mono, monospace';
+}
+
+.dark {
+	--background: var(--bg-ink-500);
+	--foreground: var(--text-vanilla-400);
+	--card: var(--bg-ink-400);
+	--card-foreground: var(--text-vanilla-100);
+	--popover: var(--bg-ink-400);
+	--popover-foreground: var(--text-vanilla-100);
+	--primary: var(--bg-robin-500);
+	--primary-foreground: var(--text-ink-500);
+	--secondary: var(--bg-slate-500);
+	--secondary-foreground: var(--text-vanilla-400);
+	--muted: var(--bg-slate-500);
+	--muted-foreground: var(--text-vanilla-400);
+	--accent: var(--bg-slate-300);
+	--accent-foreground: var(--text-vanilla-100);
+	--destructive: var(--bg-cherry-500);
+	--destructive-foreground: var(--text-ink-500);
+	--border: var(--bg-slate-400);
+	--input: var(--bg-slate-300);
+	--ring: var(--bg-robin-500);
+	--chart-1: var(--bg-robin-400);
+	--chart-2: var(--bg-robin-500);
+	--chart-3: var(--bg-robin-600);
+	--chart-4: var(--bg-slate-200);
+	--chart-5: var(--bg-slate-300);
+	--sidebar: var(--bg-slate-500);
+	--sidebar-foreground: var(--text-vanilla-400);
+	--sidebar-primary: var(--bg-robin-500);
+	--sidebar-primary-foreground: var(--text-ink-500);
+	--sidebar-accent: var(--bg-slate-400);
+	--sidebar-accent-foreground: var(--text-vanilla-400);
+	--sidebar-border: var(--bg-slate-500);
+	--sidebar-ring: var(--bg-robin-500);
+}
+
+@theme {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+	--font-sans: var(--font-sans);
+	--font-serif: var(--font-serif);
+	--font-mono: var(--font-mono);
+
+	--color-robin-100: var(--bg-robin-100);
+	--color-robin-200: var(--bg-robin-200);
+	--color-robin-300: var(--bg-robin-300);
+	--color-robin-400: var(--bg-robin-400);
+	--color-robin-500: var(--bg-robin-500);
+	--color-robin-600: var(--bg-robin-600);
+	--color-sienna-100: var(--bg-sienna-100);
+	--color-sienna-200: var(--bg-sienna-200);
+	--color-sienna-300: var(--bg-sienna-300);
+	--color-sienna-400: var(--bg-sienna-400);
+	--color-sienna-500: var(--bg-sienna-500);
+	--color-sienna-600: var(--bg-sienna-600);
+	--color-cherry-100: var(--bg-cherry-100);
+	--color-cherry-200: var(--bg-cherry-200);
+	--color-cherry-300: var(--bg-cherry-300);
+	--color-cherry-400: var(--bg-cherry-400);
+	--color-cherry-500: var(--bg-cherry-500);
+	--color-cherry-600: var(--bg-cherry-600);
+	--color-aqua-100: var(--bg-aqua-100);
+	--color-aqua-200: var(--bg-aqua-200);
+	--color-aqua-300: var(--bg-aqua-300);
+	--color-aqua-400: var(--bg-aqua-400);
+	--color-aqua-500: var(--bg-aqua-500);
+	--color-aqua-600: var(--bg-aqua-600);
+	--color-sakura-100: var(--bg-sakura-100);
+	--color-sakura-200: var(--bg-sakura-200);
+	--color-sakura-300: var(--bg-sakura-300);
+	--color-sakura-400: var(--bg-sakura-400);
+	--color-sakura-500: var(--bg-sakura-500);
+	--color-sakura-600: var(--bg-sakura-600);
+	--color-amber-100: var(--bg-amber-100);
+	--color-amber-200: var(--bg-amber-200);
+	--color-amber-300: var(--bg-amber-300);
+	--color-amber-400: var(--bg-amber-400);
+	--color-amber-500: var(--bg-amber-500);
+	--color-amber-600: var(--bg-amber-600);
+	--color-ink-100: var(--bg-ink-100);
+	--color-ink-200: var(--bg-ink-200);
+	--color-ink-300: var(--bg-ink-300);
+	--color-ink-400: var(--bg-ink-400);
+	--color-ink-500: var(--bg-ink-500);
+	--color-vanilla-100: var(--bg-vanilla-100);
+	--color-vanilla-200: var(--bg-vanilla-200);
+	--color-vanilla-300: var(--bg-vanilla-300);
+	--color-vanilla-400: var(--bg-vanilla-400);
+	--color-slate-50: var(--bg-slate-50);
+	--color-slate-100: var(--bg-slate-100);
+	--color-slate-200: var(--bg-slate-200);
+	--color-slate-300: var(--bg-slate-300);
+	--color-slate-400: var(--bg-slate-400);
+	--color-slate-500: var(--bg-slate-500);
+	--color-forest-200: var(--bg-forest-200);
+	--color-forest-300: var(--bg-forest-300);
+	--color-forest-400: var(--bg-forest-400);
+	--color-forest-500: var(--bg-forest-500);
+	--color-forest-600: var(--bg-forest-600);
+	--color-gradient-coral: var(--bg-gradient-coral);
+	--color-gradient-dark-shadow: var(--bg-gradient-dark-shadow);
+	--color-gradient-dawn: var(--bg-gradient-dawn);
+	--color-gradient-ocean: var(--bg-gradient-ocean);
+	--color-gradient-splash: var(--bg-gradient-splash);
+	--color-gradient-flamingo: var(--bg-gradient-flamingo);
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
+}
