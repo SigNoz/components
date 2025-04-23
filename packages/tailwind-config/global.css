@@ -1,4 +1,3 @@
-@import 'tailwindcss';
 @import '@signozhq/design-tokens/dist/style.css';
 
 @custom-variant dark (&:is(.dark *));
@@ -37,9 +36,9 @@
 	--sidebar-accent-foreground: var(--text-slate-400);
 	--sidebar-border: var(--bg-slate-400);
 	--sidebar-ring: var(--bg-robin-500);
-	--font-sans: 'Inter, sans-serif';
-	--font-serif: 'Open Sans, sans-serif';
-	--font-mono: 'Geist Mono, monospace';
+	--font-sans: 'Inter';
+	--font-serif: 'Open Sans';
+	--font-mono: 'Geist Mono';
 }
 
 .dark {
@@ -188,23 +187,5 @@
 	}
 	body {
 		@apply bg-background text-foreground;
-	}
-}
-
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-	*,
-	::after,
-	::before,
-	::backdrop,
-	::file-selector-button {
-		border-color: var(--color-gray-200, currentcolor);
 	}
 }

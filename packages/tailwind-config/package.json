@@ -3,11 +3,29 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"type": "module",
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch"
+	},
+	"files": [
+		"global.css",
+		"tailwind.config.js"
+	],
+	"main": "./dist/tailwind.config.cjs",
+	"module": "./dist/tailwind.config.js",
+	"exports": {
+		".": "./tailwind.config.js",
+		"./global.css": "./global.css"
+	},
 	"dependencies": {
 		"@signozhq/design-tokens": "latest",
 		"tailwindcss": "^3.4.12",
 		"tailwindcss-animate": "^1.0.7",
 		"tw-animate-css": "^1.2.5"
+	},
+	"devDependencies": {
+		"@types/node": "^20.14.13",
+		"tsup": "^8.2.3"
 	},
 	"publishConfig": {
 		"access": "public"
