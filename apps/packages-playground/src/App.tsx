@@ -5,13 +5,13 @@ import './App.css';
 import { ThemeSwitcher } from '@signozhq/theme';
 import { Home, Code, Settings } from 'lucide-react';
 import Tabs from '@signozhq/tabs';
-
 function App() {
 	return (
 		<div>
 			<h1>Theme Switcher and Button</h1>
 			<ThemeSwitcher />
 			<Button variant="primary">hey</Button>
+
 			<Tabs
 				{...{
 					defaultValue: 'overview',
@@ -51,7 +51,18 @@ function App() {
 						},
 					],
 				}}
+				style={{ marginTop: '2rem' }}
 			/>
+			{/* <Tabs defaultValue="account" className="w-[400px]">
+				<TabsList>
+					<TabsTrigger value="account">Account</TabsTrigger>
+					<TabsTrigger value="password">Password</TabsTrigger>
+				</TabsList>
+				<TabsContent value="account">
+					Make changes to your account here.
+				</TabsContent>
+				<TabsContent value="password">Change your password here.</TabsContent>
+			</Tabs> */}
 		</div>
 	);
 }
