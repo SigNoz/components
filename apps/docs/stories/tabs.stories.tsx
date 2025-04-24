@@ -1,167 +1,183 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import Tabs from '@signozhq/tabs';
-import { Home, Code, Settings, Zap, BarChart3, History } from 'lucide-react';
+import Tabs from '@signozhq/tabs'; // Corrected import path
+import {
+	AlertCircle,
+	Component,
+	History,
+	LayoutGrid,
+	List,
+	Settings,
+	Settings2,
+} from 'lucide-react';
 
 const meta: Meta<typeof Tabs> = {
 	title: 'Components/Tabs',
 	component: Tabs,
-	parameters: {
-		layout: 'centered',
-		backgrounds: {
-			default: 'dark',
-		},
-		controls: {
-			disable: true,
-		},
-	},
-	decorators: [
-		(Story) => (
-			<div className="dark p-4">
-				<Story />
-			</div>
-		),
-	],
+	tags: ['autodocs'],
 };
 
 export default meta;
+
 type Story = StoryObj<typeof Tabs>;
 
+const playgroundItems = [
+	// Primary variant items
+	{
+		key: 'overview',
+		label: 'Overview',
+		children: 'Overview content panel',
+		prefixIcon: <Settings2 className="size-4" />,
+	},
+	{
+		key: 'issues',
+		label: 'Issues (Disabled)',
+		children: 'Issues content panel',
+		disabled: true,
+		prefixIcon: <AlertCircle className="size-4" />,
+	},
+	{
+		key: 'history',
+		label: 'History',
+		children: 'History content panel',
+		suffixIcon: <History className="size-4" />,
+	},
+	{
+		key: 'another',
+		label: 'Another Tab',
+		children: 'Another content panel',
+	},
+	{
+		key: 'all-endpoints',
+		label: 'All Endpoints',
+		children: 'Endpoints list panel',
+		variant: 'secondary',
+	},
+	{
+		key: 'details',
+		label: 'Endpoint Details',
+		children: 'Details content panel',
+		variant: 'secondary',
+	},
+	{
+		key: 'settings',
+		label: 'Settings',
+		children: 'Settings content panel',
+		variant: 'secondary',
+		prefixIcon: <Settings className="size-4" />,
+		disabled: true,
+	},
+];
+
 export const Default: Story = {
+	render: () => (
+		<div className="space-y-8">
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary Variant</h2>
+				<Tabs
+					items={playgroundItems.filter((i) => i.variant !== 'secondary')}
+					variant="primary"
+					defaultValue="overview"
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary Variant</h2>
+				<Tabs
+					items={playgroundItems
+						.filter((i) => i.variant === 'secondary')
+						.map((i) => ({ ...i, variant: undefined }))}
+					variant="secondary"
+					defaultValue="all-endpoints"
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">With Icons</h2>
+				<Tabs
+					items={[
+						{
+							key: 'apps',
+							label: 'Applications',
+							children: 'Applications list',
+							prefixIcon: <LayoutGrid className="size-4" />,
+							suffixIcon: <List className="size-4" />,
+						},
+						{
+							key: 'modules',
+							label: 'Modules',
+							children: 'Modules content',
+							prefixIcon: <Component className="size-4" />,
+						},
+					]}
+					variant="primary"
+					defaultValue="apps"
+				/>
+			</div>
+		</div>
+	),
+};
+
+const primaryItems = [
+	{
+		key: 'overview',
+		label: 'Overview',
+		children: 'Overview content',
+		prefixIcon: <Settings className="size-4" />,
+	},
+	{
+		key: 'issues',
+		label: 'Issues',
+		children: 'Issues content',
+		disabled: true,
+		prefixIcon: <AlertCircle className="size-4" />,
+	},
+	{
+		key: 'history',
+		label: 'History',
+		children: 'History content',
+		suffixIcon: <History className="size-4" />,
+	},
+];
+
+const secondaryItems = [
+	{ key: 'all', label: 'All Endpoints', children: 'All endpoints content' },
+	{
+		key: 'details',
+		label: 'Endpoint Details',
+		children: 'Endpoint details content',
+	},
+];
+
+export const Primary: Story = {
 	args: {
-		defaultValue: 'overview',
-		items: [
-			{
-				key: 'overview',
-				label: <span>Overview</span>,
-				prefixIcon: <Home size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Overview</div>
-						<p>Overview content goes here.</p>
-					</div>
-				),
-			},
-			{
-				key: 'issues',
-				label: <span>Issues</span>,
-				prefixIcon: <Code size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Issues</div>
-						<p>Issues content goes here.</p>
-					</div>
-				),
-			},
-			{
-				key: 'settings',
-				label: <span>Settings</span>,
-				prefixIcon: <Settings size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Settings</div>
-						<p>Settings content goes here.</p>
-					</div>
-				),
-			},
-		],
+		items: primaryItems,
+		variant: 'primary',
+		defaultValue: 'overview', // Added defaultValue for clarity
 	},
 };
 
-export const WithCustomColors: Story = {
+export const Secondary: Story = {
 	args: {
-		defaultValue: 'overview',
-		slideColor: 'sienna-500',
-		tabColor: 'sienna-500',
-		hoverColor: 'sienna-500',
-		items: [
-			{
-				key: 'overview',
-				label: <span>Overview</span>,
-				prefixIcon: <Home size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Overview</div>
-						<p>Overview content goes here.</p>
-					</div>
-				),
-			},
-			{
-				key: 'issues',
-				label: <span>Issues</span>,
-				prefixIcon: <Code size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Issues</div>
-						<p>Issues content goes here.</p>
-					</div>
-				),
-			},
-			{
-				key: 'autofix',
-				label: <span>Autofix</span>,
-				prefixIcon: <Zap size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Autofix</div>
-						<p>Autofix content goes here.</p>
-					</div>
-				),
-			},
-			{
-				key: 'metrics',
-				label: <span>Metrics</span>,
-				prefixIcon: <BarChart3 size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Metrics</div>
-						<p>Metrics content goes here.</p>
-					</div>
-				),
-			},
-		],
+		items: secondaryItems,
+		variant: 'secondary',
+		defaultValue: 'all', // Added defaultValue for clarity
 	},
 };
 
-export const WithIconsAndDisabled: Story = {
+export const DisabledState: Story = {
 	args: {
-		defaultValue: 'overview',
 		items: [
+			...primaryItems.slice(0, 2), // Keep first two items
 			{
-				key: 'overview',
-				label: <span>Overview</span>,
-				prefixIcon: <Home size={16} />,
-				suffixIcon: <Code size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Overview</div>
-						<p>Overview content goes here.</p>
-					</div>
-				),
-			},
-			{
-				key: 'issues',
-				label: <span>Issues</span>,
-				prefixIcon: <Code size={16} />,
+				key: 'disabled',
+				label: 'Disabled Tab',
+				children: 'Disabled content',
 				disabled: true,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">Issues</div>
-						<p>Issues content goes here.</p>
-					</div>
-				),
 			},
-			{
-				key: 'history',
-				label: <span>History</span>,
-				prefixIcon: <History size={16} />,
-				children: (
-					<div className="text-vanilla-400">
-						<div className="text-xl font-semibold">History</div>
-						<p>History content goes here.</p>
-					</div>
-				),
-			},
+			primaryItems[2], // Add history back
 		],
+		variant: 'primary',
+		defaultValue: 'overview', // Added defaultValue for clarity
 	},
 };

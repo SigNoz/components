@@ -58,7 +58,7 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'whitespace-nowrap inline-flex items-center gap-2 rounded px-1.5 py-1 text-sm font-normal',
 				'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
 				'disabled:pointer-events-none disabled:opacity-50',
-				'data-[state=active]:bg-background data-[state=active]:text-foreground text-muted-foreground',
+				'data-[state=active]:text-foreground text-muted-foreground',
 				'relative z-10',
 			],
 			secondary: [
