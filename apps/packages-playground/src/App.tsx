@@ -14,6 +14,49 @@ function App() {
 
 			<Tabs
 				{...{
+					variant: 'primary',
+					defaultValue: 'overview',
+					items: [
+						{
+							key: 'overview',
+							label: <span>Overview</span>,
+							prefixIcon: <Home size={16} />,
+							children: (
+								<div className="text-vanilla-400">
+									<div className="text-xl font-semibold">Overview</div>
+									<p>Overview content goes here.</p>
+								</div>
+							),
+						},
+						{
+							key: 'issues',
+							label: <span>Issues</span>,
+							prefixIcon: <Code size={16} />,
+							children: (
+								<div className="text-vanilla-400">
+									<div className="text-xl font-semibold">Issues</div>
+									<p>Issues content goes here.</p>
+								</div>
+							),
+						},
+						{
+							key: 'settings',
+							label: <span>Settings</span>,
+							prefixIcon: <Settings size={16} />,
+							children: (
+								<div className="text-vanilla-400">
+									<div className="text-xl font-semibold">Settings</div>
+									<p>Settings content goes here.</p>
+								</div>
+							),
+						},
+					],
+				}}
+				style={{ marginTop: '2rem' }}
+			/>
+			<Tabs
+				{...{
+					variant: 'secondary',
 					defaultValue: 'overview',
 					items: [
 						{

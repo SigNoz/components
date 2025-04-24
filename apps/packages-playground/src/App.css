@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-.app {
-}
 .app.light {
 	background: #fff;
+}
+.app {
 	padding: 2rem;
 }
 #root {
