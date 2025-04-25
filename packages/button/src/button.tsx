@@ -55,7 +55,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				data-color={color}
 				className={cn(
 					buttonVariants({ variant, size, className }),
-					'font-inter m-2',
+					'font-inter',
 					width && `w-${width}`,
 					loading && 'cursor-wait',
 				)}
