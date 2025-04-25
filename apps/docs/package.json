@@ -13,6 +13,9 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
+		"@signozhq/checkbox": "workspace:*",
+		"@signozhq/radio-group": "workspace:*",
+		"@signozhq/switch": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"@signozhq/input": "workspace:*",
