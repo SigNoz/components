@@ -25,21 +25,20 @@ type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
 	render: () => (
-		<RadioGroup defaultValue="">
-			<div className="flex items-center space-x-2">
-				<RadioGroupItem value="default" id="default-radio" />
-				<label htmlFor="default-radio">Default radio</label>
-			</div>
-		</RadioGroup>
-	),
-};
-
-export const Checked: Story = {
-	render: () => (
-		<RadioGroup defaultValue="filled">
-			<div className="flex items-center space-x-2">
-				<RadioGroupItem value="filled" id="filled-radio" />
-				<label htmlFor="filled-radio">Filled radio</label>
+		<RadioGroup defaultValue="option1">
+			<div className="flex flex-col space-y-2">
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="option1" id="option1-radio" />
+					<label htmlFor="option1-radio">Option 1</label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="option2" id="option2-radio" />
+					<label htmlFor="option2-radio">Option 2</label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="option3" id="option3-radio" />
+					<label htmlFor="option3-radio">Option 3</label>
+				</div>
 			</div>
 		</RadioGroup>
 	),
@@ -47,35 +46,30 @@ export const Checked: Story = {
 
 export const Disabled: Story = {
 	render: () => (
-		<RadioGroup defaultValue="">
-			<div className="flex items-center space-x-2">
-				<RadioGroupItem value="disabled" id="disabled-radio" disabled />
-				<label
-					htmlFor="disabled-radio"
-					className="text-zinc-400 cursor-not-allowed"
-				>
-					Disabled radio
-				</label>
-			</div>
-		</RadioGroup>
-	),
-};
-
-export const DisabledChecked: Story = {
-	render: () => (
-		<RadioGroup defaultValue="disabled-checked">
-			<div className="flex items-center space-x-2">
-				<RadioGroupItem
-					value="disabled-checked"
-					id="disabled-checked-radio"
-					disabled
-				/>
-				<label
-					htmlFor="disabled-checked-radio"
-					className="text-zinc-400 cursor-not-allowed"
-				>
-					Disabled radio – selected
-				</label>
+		<RadioGroup defaultValue="active">
+			<div className="flex flex-col space-y-2">
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="active" id="active-radio" />
+					<label htmlFor="active-radio">Active Option</label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="disabled1" id="disabled1-radio" disabled />
+					<label
+						htmlFor="disabled1-radio"
+						className="text-zinc-400 cursor-not-allowed"
+					>
+						Disabled Option 1
+					</label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="disabled2" id="disabled2-radio" disabled />
+					<label
+						htmlFor="disabled2-radio"
+						className="text-zinc-400 cursor-not-allowed"
+					>
+						Disabled Option 2
+					</label>
+				</div>
 			</div>
 		</RadioGroup>
 	),
