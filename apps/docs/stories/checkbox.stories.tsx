@@ -20,15 +20,24 @@ const meta: Meta<typeof Checkbox> = {
 			{
 				name: 'Figma',
 				type: 'figma',
-				url: 'https://www.figma.com/file/your-design-url',
+				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-742&p=f',
 			},
 		],
 	},
 };
 
 export default meta;
-
 type Story = StoryObj<typeof Checkbox>;
+
+// Default checkbox
+export const Default: Story = {
+	args: {
+		id: 'default',
+		labelName: 'Default checkbox',
+		defaultChecked: false,
+		disabled: false,
+	},
+};
 
 export const Checked: Story = {
 	args: {

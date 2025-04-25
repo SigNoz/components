@@ -14,7 +14,7 @@ const meta: Meta<typeof RadioGroup> = {
 			{
 				name: 'Figma',
 				type: 'figma',
-				url: 'https://www.figma.com/file/your-design-url',
+				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-742&p=f',
 			},
 		],
 	},
@@ -29,21 +29,6 @@ export const Default: Story = {
 			<div className="flex items-center space-x-2">
 				<RadioGroupItem value="default" id="default-radio" />
 				<label htmlFor="default-radio">Default radio</label>
-			</div>
-		</RadioGroup>
-	),
-};
-
-export const Hover: Story = {
-	render: () => (
-		<RadioGroup defaultValue="">
-			<div className="flex items-center space-x-2">
-				<RadioGroupItem
-					value="hover"
-					id="hover-radio"
-					className="hover:ring-1 hover:ring-primary"
-				/>
-				<label htmlFor="hover-radio">Hover radio</label>
 			</div>
 		</RadioGroup>
 	),

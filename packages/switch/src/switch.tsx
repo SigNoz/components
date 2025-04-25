@@ -30,7 +30,6 @@ const SwitchWrapper: React.FC<
 		typeof Switch
 	>
 > = ({ labelName, ...props }) => {
-	// const { labelName, ...restLabelProps } = labelProps || {}
 	return (
 		<div className="flex items-center space-x-2">
 			<Switch {...props} />
@@ -47,6 +46,3 @@ const SwitchWrapper: React.FC<
 };
 
 export { SwitchWrapper as Switch };
-
-// hover state
-// support accent color

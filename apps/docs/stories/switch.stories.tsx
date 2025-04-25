@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Switch } from '@signozhq/switch'; // adjust to your actual import path
+import { Switch } from '@signozhq/switch';
 
 const meta: Meta<typeof Switch> = {
 	title: 'Components/Switch',
@@ -20,7 +20,7 @@ const meta: Meta<typeof Switch> = {
 			{
 				name: 'Figma',
 				type: 'figma',
-				url: 'https://www.figma.com/file/your-design-url',
+				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-742&p=f',
 			},
 		],
 	},
@@ -36,21 +36,6 @@ export const Default: Story = {
 		labelName: 'Default switch',
 		defaultChecked: false,
 		disabled: false,
-	},
-};
-
-// ✅ Hover simulation (optional addon required)
-export const Hover: Story = {
-	args: {
-		id: 'hover-switch',
-		labelName: 'Hover switch',
-		defaultChecked: false,
-		disabled: false,
-	},
-	parameters: {
-		pseudo: {
-			hover: true,
-		},
 	},
 };
 
