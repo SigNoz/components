@@ -172,6 +172,9 @@ importers:
 
   apps/packages-playground:
     dependencies:
+      '@signozhq/alert-dialog':
+        specifier: workspace:*
+        version: link:../../packages/alert-dialog
       '@signozhq/badge':
         specifier: workspace:*
         version: link:../../packages/badge
