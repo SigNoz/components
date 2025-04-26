@@ -166,6 +166,9 @@ importers:
 
   apps/packages-playground:
     dependencies:
+      '@signozhq/badge':
+        specifier: workspace:*
+        version: link:../../packages/badge
       '@signozhq/button':
         specifier: workspace:*
         version: link:../../packages/button
