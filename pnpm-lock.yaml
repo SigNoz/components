@@ -181,6 +181,9 @@ importers:
       '@signozhq/design-tokens':
         specifier: latest
         version: 1.1.4
+      '@signozhq/dialog':
+        specifier: workspace:*
+        version: link:../../packages/dialog
       '@signozhq/radio-group':
         specifier: workspace:*
         version: link:../../packages/radio-group

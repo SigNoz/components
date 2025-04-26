@@ -1,31 +1,54 @@
-// import type { Meta, StoryObj } from "@storybook/react";
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@signozhq/dialog';
+import { Button } from '@signozhq/button';
 
-// const ExampleComponent = ({ text = "Example Component" }) => <h1>{text}</h1>;
+type DialogStoryProps = {
+	openTrigger: string;
+};
 
-// const meta: Meta<typeof ExampleComponent> = {
-//   title: 'Components/Dialog',
-//   component: ExampleComponent,
-//   argTypes: {
-//     text: {
-//       control: { type: "text" },
-//     },
-//   },
-// };
+const meta: Meta<DialogStoryProps> = {
+	title: 'Components/Dialog',
+	component: Dialog,
+	tags: ['autodocs'],
+	argTypes: {},
+};
 
-// export default meta;
+export default meta;
+type Story = StoryObj<DialogStoryProps>;
 
-// type Story = StoryObj<typeof ExampleComponent>;
-
-// export const Default: Story = {
-//   render: (args) => <ExampleComponent {...args} />,
-//   args: {
-//     text: "Default Example",
-//   },
-// };
-
-// export const CustomText: Story = {
-//   render: (args) => <ExampleComponent {...args} />,
-//   args: {
-//     text: "Custom Example Text",
-//   },
-// };
+export const Default: Story = {
+	args: {},
+	render: () => (
+		<Dialog>
+			<DialogTrigger>
+				<Button variant="primary">Open Dialog</Button>
+			</DialogTrigger>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Edit report details</DialogTitle>
+					<DialogDescription>
+						This action cannot be undone. This will permanently delete your account
+						and remove your data from our servers.
+					</DialogDescription>
+				</DialogHeader>
+				<DialogFooter className="sm:justify-start">
+					<DialogClose asChild>
+						<Button type="button" variant="secondary">
+							Close
+						</Button>
+					</DialogClose>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	),
+};
