@@ -16,6 +16,7 @@
 		"@signozhq/radio-group": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
 		"@signozhq/tabs": "workspace:*",
+		"@signozhq/badge": "workspace:*",
 		"@signozhq/theme": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"lucide-react": "^0.503.0",
