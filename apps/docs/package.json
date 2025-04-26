@@ -16,6 +16,7 @@
 		"@signozhq/checkbox": "workspace:*",
 		"@signozhq/radio-group": "workspace:*",
 		"@signozhq/switch": "workspace:*",
+		"@signozhq/pagination": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"@signozhq/input": "workspace:*",
