@@ -18,6 +18,7 @@
 		"@signozhq/tabs": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/dialog": "workspace:*",
+		"@signozhq/alert-dialog": "workspace:*",
 		"@signozhq/theme": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"lucide-react": "^0.503.0",
