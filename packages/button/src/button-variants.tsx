@@ -1,28 +1,31 @@
 import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+	'inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer disabled:pointer-events-none disabled:opacity-60 bg-[var(--button-background)] text-[var(--button-solid-foreground)] hover:bg-[var(--button-hover-background)] ',
 	{
 		variants: {
 			variant: {
-				primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
-				destructive:
-					'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-				warning: 'bg-amber-500 text-primary-background hover:bg-amber-500/90',
-				outline:
-					'border text-primary-foreground border-input border-border  hover:text-vanilla-100 hover:bg-slate-300',
+				solid: '',
+				outlined:
+					'border border-solid bg-transparent border-[var(--button-background)] text-[var(--button-outlined-foreground)] hover:bg-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
+				dashed:
+					'border border-dashed bg-transparent border-[var(--button-background)] text-[var(--button-outlined-foreground)] hover:bg-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
+				ghost:
+					'bg-transparent text-[var(--button-outlined-foreground)] hover:border-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
+				link:
+					'bg-transparent text-[var(--button-outlined-foreground)]/90  hover:bg-transparent hover:text-[var(--button-outlined-foreground)] disabled:opacity-60 font-weight-normal',
 			},
 			size: {
-				default: 'h-9 px-4 py-2',
-				sm: 'h-8 rounded-md px-3 text-xs',
-				lg: 'h-10 rounded-md px-8',
+				xs: 'h-[26px] px-2 py-1 text-[10px] leading-[14px] gap-1.5',
+				sm: 'h-[32px] px-4 py-2 text-xs leading-6 gap-2',
+				md: 'h-[36px] px-4 py-2 text-xs leading-6 gap-2',
+				lg: 'h-[48px] px-6 py-3.5 text-base leading-6 gap-2',
 				icon: 'h-9 w-9',
 			},
 		},
 		defaultVariants: {
-			variant: 'primary',
-			size: 'default',
+			size: 'md',
+			variant: 'outlined',
 		},
 	},
 );
