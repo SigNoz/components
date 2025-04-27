@@ -12,6 +12,7 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@signozhq/alert-dialog';
+import { Code } from 'lucide-react';
 
 const meta: Meta<typeof AlertDialog> = {
 	title: 'Components/Alert Dialog',
@@ -26,7 +27,9 @@ export const Default: Story = {
 	render: () => (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button variant="primary">Open</Button>
+				<Button variant="solid" color="primary" prefixIcon={<Code />}>
+					Open Alert Dialog
+				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>

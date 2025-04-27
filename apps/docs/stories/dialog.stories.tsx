@@ -11,6 +11,7 @@ import {
 	DialogTrigger,
 } from '@signozhq/dialog';
 import { Button } from '@signozhq/button';
+import { Code } from 'lucide-react';
 
 type DialogStoryProps = {
 	openTrigger: string;
@@ -31,7 +32,9 @@ export const Default: Story = {
 	render: () => (
 		<Dialog>
 			<DialogTrigger>
-				<Button variant="primary">Open Dialog</Button>
+				<Button variant="solid" color="primary" prefixIcon={<Code />}>
+					Open Dialog
+				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
@@ -43,7 +46,7 @@ export const Default: Story = {
 				</DialogHeader>
 				<DialogFooter className="sm:justify-start">
 					<DialogClose asChild>
-						<Button type="button" variant="secondary">
+						<Button type="button" variant="solid" color="secondary">
 							Close
 						</Button>
 					</DialogClose>
