@@ -141,6 +141,43 @@ function AlertDialogCancel({
 	);
 }
 
+interface AlertDialogWrapperProps {
+	title?: string;
+	description?: string;
+	children: React.ReactNode;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	trigger?: React.ReactNode;
+	className?: string;
+}
+
+function AlertDialogWrapper({
+	title,
+	description,
+	children,
+	open,
+	onOpenChange,
+	trigger,
+	className,
+}: AlertDialogWrapperProps) {
+	return (
+		<AlertDialog open={open} onOpenChange={onOpenChange}>
+			{trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
+			<AlertDialogContent className={className}>
+				{(title || description) && (
+					<AlertDialogHeader>
+						{title && <AlertDialogTitle>{title}</AlertDialogTitle>}
+						{description && (
+							<AlertDialogDescription>{description}</AlertDialogDescription>
+						)}
+					</AlertDialogHeader>
+				)}
+				{children}
+			</AlertDialogContent>
+		</AlertDialog>
+	);
+}
+
 export {
 	AlertDialog,
 	AlertDialogPortal,
@@ -153,4 +190,5 @@ export {
 	AlertDialogDescription,
 	AlertDialogAction,
 	AlertDialogCancel,
+	AlertDialogWrapper,
 };
