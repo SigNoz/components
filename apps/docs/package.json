@@ -13,7 +13,6 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
-		"@signozhq/alert-dialog": "workspace:*",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",

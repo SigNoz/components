@@ -146,7 +146,7 @@ function DialogWrapper({
 	trigger,
 	className,
 	showCloseButton = true,
-	disableOutsideClick = true,
+	disableOutsideClick = false,
 }: DialogWrapperProps) {
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
