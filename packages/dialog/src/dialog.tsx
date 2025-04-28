@@ -120,6 +120,41 @@ function DialogDescription({
 	);
 }
 
+interface DialogWrapperProps {
+	title?: string;
+	description?: string;
+	children: React.ReactNode;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	trigger?: React.ReactNode;
+	className?: string;
+}
+
+function DialogWrapper({
+	title,
+	description,
+	children,
+	open,
+	onOpenChange,
+	trigger,
+	className,
+}: DialogWrapperProps) {
+	return (
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			{trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+			<DialogContent className={className}>
+				{(title || description) && (
+					<DialogHeader>
+						{title && <DialogTitle>{title}</DialogTitle>}
+						{description && <DialogDescription>{description}</DialogDescription>}
+					</DialogHeader>
+				)}
+				{children}
+			</DialogContent>
+		</Dialog>
+	);
+}
+
 export {
 	Dialog,
 	DialogClose,
@@ -131,4 +166,5 @@ export {
 	DialogPortal,
 	DialogTitle,
 	DialogTrigger,
+	DialogWrapper,
 };
