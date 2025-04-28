@@ -11,29 +11,74 @@ export default meta;
 
 type Story = StoryObj<typeof Badge>;
 
-export const AllVariants: Story = {
+export const Default: Story = {
+	args: {
+		children: 'Badge',
+		color: 'primary',
+	},
+};
+
+export const Colors: Story = {
 	render: () => (
-		<div style={{ display: 'flex', gap: 16 }}>
-			<Badge variant="default">Default</Badge>
-			<Badge variant="secondary">Secondary</Badge>
-			<Badge variant="destructive">Destructive</Badge>
-			<Badge variant="outline">Outline</Badge>
+		<div className="flex gap-2">
+			<Badge color="primary">Primary</Badge>
+			<Badge color="secondary">Secondary</Badge>
+			<Badge color="destructive">Destructive</Badge>
+			<Badge color="warning">Warning</Badge>
 		</div>
 	),
 };
 
-export const CustomColors: Story = {
+export const Outline: Story = {
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-			<Badge className="bg-gray-100 text-gray-600 hover:bg-gray-200">BETA</Badge>
-			<Badge className="bg-blue-600 text-white hover:bg-blue-700">BETA</Badge>
-			<Badge className="bg-green-500 text-white hover:bg-green-600">BETA</Badge>
-			<Badge className="bg-yellow-300 text-black hover:bg-yellow-400">BETA</Badge>
-			<Badge className="bg-amber-400 text-white hover:bg-amber-500">BETA</Badge>
-			<Badge className="bg-amber-700 text-white hover:bg-amber-800">BETA</Badge>
-			<Badge className="bg-red-500 text-white hover:bg-red-600">BETA</Badge>
-			<Badge className="bg-pink-400 text-white hover:bg-pink-500">BETA</Badge>
-			<Badge className="bg-sky-400 text-white hover:bg-sky-500">BETA</Badge>
+		<div className="flex gap-2">
+			<Badge variant="outline" color="primary">
+				Primary
+			</Badge>
+			<Badge variant="outline" color="secondary">
+				Secondary
+			</Badge>
+			<Badge variant="outline" color="destructive">
+				Destructive
+			</Badge>
+			<Badge variant="outline" color="warning">
+				Warning
+			</Badge>
+		</div>
+	),
+};
+
+export const WithIcons: Story = {
+	render: () => (
+		<div className="flex gap-2">
+			<Badge color="primary">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+				</svg>
+				With Icon
+			</Badge>
+			<Badge variant="outline" color="secondary">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				>
+					<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+				</svg>
+				With Icon
+			</Badge>
 		</div>
 	),
 };

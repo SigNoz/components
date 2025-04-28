@@ -1,2 +1,32 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+[data-color='primary'] {
+	--badge-background: var(--bg-robin-500);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-robin-400);
+}
+
+[data-color='destructive'] {
+	--badge-background: var(--bg-cherry-500);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-cherry-400);
+}
+
+[data-color='warning'] {
+	--badge-background: var(--bg-amber-500);
+	--badge-foreground: var(--bg-ink-400);
+	--badge-hover-background: var(--bg-amber-400);
+}
+
+[data-color='secondary'] {
+	--badge-background: var(--bg-vanilla-300);
+	--badge-foreground: var(--bg-slate-500);
+	--badge-hover-background: var(--bg-vanilla-300);
+}
+
+.dark [data-color='secondary'] {
+	--badge-background: var(--bg-slate-400);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-slate-300);
+}
