@@ -48,8 +48,11 @@ function DialogOverlay({
 function DialogContent({
 	className,
 	children,
+	showCloseButton = true,
 	...props
-}: React.ComponentProps<typeof DialogPrimitive.Content>) {
+}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+	showCloseButton?: boolean;
+}) {
 	return (
 		<DialogPortal data-slot="dialog-portal">
 			<DialogOverlay />
@@ -62,10 +65,12 @@ function DialogContent({
 				{...props}
 			>
 				{children}
-				<DialogPrimitive.Close className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-					<XIcon />
-					<span className="sr-only">Close</span>
-				</DialogPrimitive.Close>
+				{showCloseButton && (
+					<DialogPrimitive.Close className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none cursor-pointer [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
+						<XIcon />
+						<span className="sr-only">Close</span>
+					</DialogPrimitive.Close>
+				)}
 			</DialogPrimitive.Content>
 		</DialogPortal>
 	);
@@ -128,6 +133,8 @@ interface DialogWrapperProps {
 	onOpenChange?: (open: boolean) => void;
 	trigger?: React.ReactNode;
 	className?: string;
+	showCloseButton?: boolean;
+	disableOutsideClick?: boolean;
 }
 
 function DialogWrapper({
@@ -138,11 +145,19 @@ function DialogWrapper({
 	onOpenChange,
 	trigger,
 	className,
+	showCloseButton = true,
+	disableOutsideClick = true,
 }: DialogWrapperProps) {
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			{trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-			<DialogContent className={className}>
+			<DialogContent
+				className={className}
+				showCloseButton={showCloseButton}
+				onPointerDownOutside={
+					disableOutsideClick ? (e) => e.preventDefault() : undefined
+				}
+			>
 				{(title || description) && (
 					<DialogHeader>
 						{title && <DialogTitle>{title}</DialogTitle>}

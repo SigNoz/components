@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@signozhq/button';
 import { DialogWrapper } from '@signozhq/dialog';
+import { Code } from 'lucide-react';
 
 const meta: Meta<typeof DialogWrapper> = {
 	title: 'Components/Dialog',
@@ -47,6 +48,46 @@ export const Controlled: Story = {
 							Close Dialog
 						</Button>
 					</div>
+				</div>
+			</DialogWrapper>
+		);
+	},
+};
+
+export const AlertDialog: Story = {
+	render: () => {
+		const [open, setOpen] = React.useState(false);
+
+		const handleClose = () => {
+			setOpen(false);
+		};
+
+		const handleAction = () => {
+			console.log('Action performed');
+			setOpen(false);
+		};
+
+		return (
+			<DialogWrapper
+				open={open}
+				onOpenChange={setOpen}
+				title="Are you absolutely sure?"
+				description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+				trigger={
+					<Button variant="solid" color="primary" prefixIcon={<Code />}>
+						Open Alert Dialog
+					</Button>
+				}
+				disableOutsideClick={true}
+				showCloseButton={false}
+			>
+				<div className="flex justify-end gap-2">
+					<Button variant="outlined" color="secondary" onClick={handleClose}>
+						Cancel
+					</Button>
+					<Button variant="solid" color="destructive" onClick={handleAction}>
+						Delete Account
+					</Button>
 				</div>
 			</DialogWrapper>
 		);
