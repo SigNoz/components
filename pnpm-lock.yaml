@@ -196,6 +196,9 @@ importers:
       '@signozhq/dialog':
         specifier: workspace:*
         version: link:../../packages/dialog
+      '@signozhq/drawer':
+        specifier: workspace:*
+        version: link:../../packages/drawer
       '@signozhq/radio-group':
         specifier: workspace:*
         version: link:../../packages/radio-group
