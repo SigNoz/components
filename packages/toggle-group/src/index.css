@@ -1,37 +1,21 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
-[data-color='primary'] {
-	--button-background: var(--bg-robin-500);
-	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-robin-500);
-	--button-hover-background: var(--bg-robin-400);
+:root {
+	--vanilla-100: #FFFFFF;
+	--vanilla-300: #E9E9E9;
+	--ink-400: #121317;
+	--slate-400: #1D212D;
 }
 
-[data-color='destructive'] {
-	--button-background: var(--bg-cherry-500);
-	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-cherry-500);
-	--button-hover-background: var(--bg-cherry-400);
+.dark {
+	--bg-base: var(--ink-400);
+	--text-base: var(--vanilla-100);
+	--border-base: var(--slate-400);
 }
 
-[data-color='warning'] {
-	--button-background: var(--bg-amber-500);
-	--button-solid-foreground: var(--bg-ink-400);
-	--button-outlined-foreground: var(--bg-amber-500);
-	--button-hover-background: var(--bg-amber-400);
-}
-
-[data-color='secondary'] {
-	--button-background: var(--bg-vanilla-300);
-	--button-solid-foreground: var(--bg-slate-500);
-	--button-outlined-foreground: var(--bg-slate-50);
-	--button-hover-background: var(--bg-vanilla-300);
-}
-
-.dark [data-color='secondary'] {
-	--button-background: var(--bg-slate-400);
-	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-vanilla-400);
-	--button-hover-background: var(--bg-slate-300);
+.light {
+	--bg-base: var(--vanilla-100);
+	--text-base: var(--ink-400);
+	--border-base: var(--vanilla-300);
 }
