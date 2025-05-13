@@ -40,6 +40,11 @@ const meta: Meta<typeof DrawerWrapper> = {
 			control: 'boolean',
 			defaultValue: true,
 		},
+		showOverlay: {
+			description: 'Whether to show the overlay behind the drawer',
+			control: 'boolean',
+			defaultValue: true,
+		},
 		className: {
 			description: 'Additional CSS classes',
 			control: 'text',
@@ -74,5 +79,6 @@ export const Default: Story = {
 		direction: 'right',
 		showCloseButton: true,
 		allowOutsideClick: true,
+		showOverlay: true,
 	},
 };

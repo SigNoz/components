@@ -48,11 +48,14 @@ function DrawerOverlay({
 function DrawerContent({
 	className,
 	children,
+	showOverlay = true,
 	...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+	showOverlay?: boolean;
+}) {
 	return (
 		<DrawerPortal data-slot="drawer-portal">
-			<DrawerOverlay />
+			{showOverlay && <DrawerOverlay />}
 			<DrawerPrimitive.Content
 				data-slot="drawer-content"
 				className={cn(
@@ -130,6 +133,7 @@ interface DrawerWrapperProps {
 	direction?: 'top' | 'right' | 'bottom' | 'left';
 	showCloseButton?: boolean;
 	allowOutsideClick?: boolean;
+	showOverlay?: boolean;
 	className?: string;
 }
 
@@ -141,12 +145,13 @@ function DrawerWrapper({
 	direction = 'right',
 	showCloseButton = true,
 	allowOutsideClick = true,
+	showOverlay = true,
 	className,
 }: DrawerWrapperProps) {
 	return (
 		<Drawer direction={direction} modal={allowOutsideClick}>
 			<DrawerTrigger asChild>{trigger}</DrawerTrigger>
-			<DrawerContent className={className}>
+			<DrawerContent className={className} showOverlay={showOverlay}>
 				<div className="mx-auto w-full max-w-sm">
 					{header && (
 						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-6">
