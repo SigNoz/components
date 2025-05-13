@@ -48,20 +48,23 @@ function DrawerOverlay({
 function DrawerContent({
 	className,
 	children,
+	showOverlay = true,
 	...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+	showOverlay?: boolean;
+}) {
 	return (
 		<DrawerPortal data-slot="drawer-portal">
-			<DrawerOverlay />
+			{showOverlay && <DrawerOverlay />}
 			<DrawerPrimitive.Content
 				data-slot="drawer-content"
 				className={cn(
 					'group/drawer-content bg-background fixed z-50 flex h-auto flex-col shadow-lg',
 					'data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b',
 					'data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t',
-					'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:sm:max-w-sm data-[vaul-drawer-direction=right]:rounded-l-lg',
-					'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:sm:max-w-sm data-[vaul-drawer-direction=left]:rounded-r-lg',
-					'border border-gray-200',
+					'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:sm:max-w-sm',
+					'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:sm:max-w-sm',
+					'border border-vanilla-300 dark:border-slate-500 rounded-lg',
 					className,
 				)}
 				{...props}
@@ -130,6 +133,7 @@ interface DrawerWrapperProps {
 	direction?: 'top' | 'right' | 'bottom' | 'left';
 	showCloseButton?: boolean;
 	allowOutsideClick?: boolean;
+	showOverlay?: boolean;
 	className?: string;
 }
 
@@ -141,17 +145,18 @@ function DrawerWrapper({
 	direction = 'right',
 	showCloseButton = true,
 	allowOutsideClick = true,
+	showOverlay = true,
 	className,
 }: DrawerWrapperProps) {
 	return (
 		<Drawer direction={direction} modal={allowOutsideClick}>
 			<DrawerTrigger asChild>{trigger}</DrawerTrigger>
-			<DrawerContent className={className}>
+			<DrawerContent className={className} showOverlay={showOverlay}>
 				<div className="mx-auto w-full max-w-sm">
 					{header && (
-						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 px-6">
+						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-6">
 							<div className="flex items-center gap-2">
-								<DrawerTitle className="font-inter text-sm font-normal text-ink-500">
+								<DrawerTitle className="font-inter text-sm font-normal">
 									{header.title}
 								</DrawerTitle>
 							</div>
