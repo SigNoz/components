@@ -36,7 +36,7 @@ const meta: Meta<typeof ToggleGroup> = {
 			{
 				name: 'Figma',
 				type: 'figma',
-				url: 'https://www.figma.com/file/your-figma-url-here',
+				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-757&p=f&t=DqcgJjfI3A74mvM2-0',
 			},
 		],
 	},
@@ -53,7 +53,6 @@ export const SingleChoice: Story = {
 			variant={variant}
 			size={size}
 			disabled={disabled}
-			//   onValueChange={(val) => console.log(val)}
 		>
 			<ToggleGroupItem value="left" aria-label="Align left">
 				<AlignLeft className="h-3 w-3" />
@@ -79,7 +78,6 @@ export const MultipleChoices: Story = {
 			variant={variant}
 			size={size}
 			disabled={disabled}
-			//   onValueChange={(val) => console.log(val)}
 		>
 			<ToggleGroupItem value="bold" aria-label="Bold">
 				<Bold className="h-3 w-3" />
@@ -105,7 +103,6 @@ export const WithLabels: Story = {
 			size={size}
 			variant={variant}
 			disabled={disabled}
-			//   onValueChange={(val) => console.log(val)}
 		>
 			<ToggleGroupItem value="first">
 				<LayoutGrid className="h-6 w-6" /> Label
