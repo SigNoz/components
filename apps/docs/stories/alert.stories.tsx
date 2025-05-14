@@ -14,6 +14,10 @@ const meta: Meta<typeof Alert> = {
 					'A versatile alert component to display important messages to the user, with various types, sizes, and custom styling options.',
 			},
 		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-749&m=dev',
+		},
 	},
 	argTypes: {
 		message: {
@@ -70,6 +74,7 @@ const meta: Meta<typeof Alert> = {
 		description:
 			'This is the default alert description that can be quite long and should wrap nicely.',
 	},
+
 	tags: ['autodocs'],
 };
 
