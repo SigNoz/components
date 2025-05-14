@@ -59,6 +59,7 @@ function ToggleGroupItem({
 					variant: context.variant || variant,
 					size: context.size || size,
 				}),
+				'border-l border-vanilla-300 dark:border-slate-400 first:border-l-0',
 				'min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-l-md last:rounded-r-md focus:z-10 focus-visible:z-10 text-slate-50 dark:text-vanilla-400 hover:bg-slate-50/10 dark:hover:bg-vanilla-100/10 data-[state=on]:bg-vanilla-300 dark:data-[state=on]:bg-slate-400 data-[state=on]:text-slate-500 dark:data-[state=on]:text-vanilla-100',
 				'cursor-pointer',
 				className,
