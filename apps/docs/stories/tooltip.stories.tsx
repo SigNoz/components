@@ -14,6 +14,10 @@ const meta: Meta<typeof Tooltip> = {
 					'A customizable tooltip component with smooth animations and flexible positioning.',
 			},
 		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-746&m=dev',
+		},
 	},
 	tags: ['autodocs'],
 };
