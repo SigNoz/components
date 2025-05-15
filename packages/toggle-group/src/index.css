@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+@import '@signozhq/tailwind-config/global.css';
+
+:root {
+	--vanilla-100: #FFFFFF;
+	--vanilla-300: #E9E9E9;
+	--ink-400: #121317;
+	--slate-400: #1D212D;
+}
+
+.dark {
+	--bg-base: var(--ink-400);
+	--text-base: var(--vanilla-100);
+	--border-base: var(--slate-400);
+}
+
+.light {
+	--bg-base: var(--vanilla-100);
+	--text-base: var(--ink-400);
+	--border-base: var(--vanilla-300);
+}
