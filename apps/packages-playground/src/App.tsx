@@ -18,58 +18,84 @@ function App() {
 
 			<hr />
 
-			<hr />
-
-			<DataTable
-				columns={[
-					{
-						accessorKey: 'id',
-						header: 'ID',
-					},
-					{
-						accessorKey: 'name',
-						header: 'Name',
-					},
-					{
-						accessorKey: 'status',
-						header: 'Status',
-					},
-					{
-						accessorKey: 'amount',
-						header: 'Amount',
-						cell: ({ row }) => {
-							const amount = parseFloat(row.getValue('amount'));
-							return `$${amount.toFixed(2)}`;
+			<div className="my-8">
+				<h2 className="text-2xl font-bold mb-4">Table Component</h2>
+				<DataTable
+					tableId="invoices-table"
+					columns={[
+						{
+							accessorKey: 'id',
+							header: 'ID',
+							enableSorting: true,
 						},
-					},
-				]}
-				data={[
-					{
-						id: 'INV001',
-						name: 'John Doe',
-						status: 'Pending',
-						amount: '125.50',
-					},
-					{
-						id: 'INV002',
-						name: 'Jane Smith',
-						status: 'Paid',
-						amount: '350.00',
-					},
-					{
-						id: 'INV003',
-						name: 'Robert Johnson',
-						status: 'Overdue',
-						amount: '780.25',
-					},
-					{
-						id: 'INV004',
-						name: 'Emily Davis',
-						status: 'Paid',
-						amount: '210.75',
-					},
-				]}
-			/>
+						{
+							accessorKey: 'name',
+							header: 'Name',
+							enableSorting: true,
+						},
+						{
+							accessorKey: 'status',
+							header: 'Status',
+							enableSorting: true,
+							cell: ({ row }) => {
+								const status = row.getValue('status') as string;
+								return (
+									<div
+										className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+											status === 'Paid'
+												? 'bg-green-100 text-green-800'
+												: status === 'Pending'
+													? 'bg-yellow-100 text-yellow-800'
+													: status === 'Overdue'
+														? 'bg-red-100 text-red-800'
+														: ''
+										}`}
+									>
+										{status}
+									</div>
+								);
+							},
+						},
+						{
+							accessorKey: 'amount',
+							header: 'Amount',
+							enableSorting: true,
+							cell: ({ row }) => {
+								const amount = parseFloat(row.getValue('amount'));
+								return (
+									<div className="text-right font-medium">${amount.toFixed(2)}</div>
+								);
+							},
+						},
+					]}
+					data={[
+						{
+							id: 'INV001',
+							name: 'John Doe',
+							status: 'Pending',
+							amount: '125.50',
+						},
+						{
+							id: 'INV002',
+							name: 'Jane Smith',
+							status: 'Paid',
+							amount: '350.00',
+						},
+						{
+							id: 'INV003',
+							name: 'Robert Johnson',
+							status: 'Overdue',
+							amount: '780.25',
+						},
+						{
+							id: 'INV004',
+							name: 'Emily Davis',
+							status: 'Paid',
+							amount: '210.75',
+						},
+					]}
+				/>
+			</div>
 
 			<div className="space-y-12">
 				{COLORS.map((color) => (
