@@ -13,12 +13,11 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
+		"@signozhq/table": "workspace:*",
 		"@signozhq/callout": "workspace:*",
 		"@signozhq/badge": "workspace:*",
-		"@signozhq/callout": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
-		"@signozhq/callout": "workspace:*",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
 		"@signozhq/design-tokens": "latest",
