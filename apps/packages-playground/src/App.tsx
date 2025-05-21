@@ -22,19 +22,22 @@ function App() {
 				<h2 className="text-2xl font-bold mb-4">Table Component</h2>
 				<DataTable
 					tableId="invoices-table"
-					enableColumnReordering={false}
+					enableColumnReordering={true}
+					enableGlobalFilter={true}
 					columns={[
 						{
 							id: 'id',
 							accessorKey: 'id',
 							header: 'ID',
 							enableSorting: true,
+							filterFn: 'includesString',
 						},
 						{
 							id: 'name',
 							accessorKey: 'name',
 							header: 'Name',
 							enableSorting: true,
+							enableColumnFilter: false,
 						},
 						{
 							id: 'status',
