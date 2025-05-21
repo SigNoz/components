@@ -43,5 +43,5 @@ const columns: ColumnDef<Person>[] = [
 ];
 
 export function ExampleTable() {
-	return <DataTable columns={columns} data={data} />;
+	return <DataTable columns={columns} data={data} tableId="example-table" />;
 }
