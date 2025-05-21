@@ -1,39 +1,43 @@
 import React from 'react';
-import { Button } from '@signozhq/button';
+// import { Button } from '@signozhq/button';
 import './App.css';
-import { ThemeSwitcher } from '@signozhq/theme';
-import { Code } from 'lucide-react';
+// import { ThemeSwitcher } from '@signozhq/theme';
+// import { Code } from 'lucide-react';
 import { DataTable } from '@signozhq/table/data-table';
 
-const VARIANTS = ['solid', 'outlined', 'dashed', 'ghost', 'link'] as const;
-const COLORS = ['primary', 'destructive', 'warning', 'secondary'] as const;
+// const VARIANTS = ['solid', 'outlined', 'dashed', 'ghost', 'link'] as const;
+// const COLORS = ['primary', 'destructive', 'warning', 'secondary'] as const;
 
 function App() {
 	return (
 		<div className="p-8">
-			<div className="flex items-center justify-between mb-8">
+			{/* <div className="flex items-center justify-between mb-8">
 				<h1 className="text-2xl font-bold">Button Component</h1>
 				<ThemeSwitcher />
 			</div>
 
-			<hr />
+			<hr /> */}
 
 			<div className="my-8">
 				<h2 className="text-2xl font-bold mb-4">Table Component</h2>
 				<DataTable
 					tableId="invoices-table"
+					enableColumnReordering={false}
 					columns={[
 						{
+							id: 'id',
 							accessorKey: 'id',
 							header: 'ID',
 							enableSorting: true,
 						},
 						{
+							id: 'name',
 							accessorKey: 'name',
 							header: 'Name',
 							enableSorting: true,
 						},
 						{
+							id: 'status',
 							accessorKey: 'status',
 							header: 'Status',
 							enableSorting: true,
@@ -57,6 +61,7 @@ function App() {
 							},
 						},
 						{
+							id: 'amount',
 							accessorKey: 'amount',
 							header: 'Amount',
 							enableSorting: true,
@@ -97,7 +102,7 @@ function App() {
 				/>
 			</div>
 
-			<div className="space-y-12">
+			{/* <div className="space-y-12">
 				{COLORS.map((color) => (
 					<div key={color} className="space-y-4">
 						<h2
@@ -150,7 +155,7 @@ function App() {
 						<hr />
 					</div>
 				))}
-			</div>
+			</div> */}
 		</div>
 	);
 }
