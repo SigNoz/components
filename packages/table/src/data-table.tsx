@@ -88,13 +88,16 @@ export function DataTable<TData, TValue>({
 			columnOrder,
 			columnSizing,
 		},
-		columnResizeMode: 'onChange',
+		...(enableColumnResizing
+			? {
+					columnResizeMode: 'onChange',
+					onColumnSizingChange: setColumnSizing,
+				}
+			: {}),
 		onSortingChange: setSorting,
-		onColumnSizingChange: setColumnSizing,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		enableSorting,
-		enableColumnResizing,
 		defaultColumn: {
 			minSize: minColumnWidth,
 			maxSize: maxColumnWidth,
