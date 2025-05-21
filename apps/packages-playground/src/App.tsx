@@ -3,6 +3,7 @@ import { Button } from '@signozhq/button';
 import './App.css';
 import { ThemeSwitcher } from '@signozhq/theme';
 import { Code } from 'lucide-react';
+import { DataTable } from '@signozhq/table/data-table';
 
 const VARIANTS = ['solid', 'outlined', 'dashed', 'ghost', 'link'] as const;
 const COLORS = ['primary', 'destructive', 'warning', 'secondary'] as const;
@@ -18,6 +19,57 @@ function App() {
 			<hr />
 
 			<hr />
+
+			<DataTable
+				columns={[
+					{
+						accessorKey: 'id',
+						header: 'ID',
+					},
+					{
+						accessorKey: 'name',
+						header: 'Name',
+					},
+					{
+						accessorKey: 'status',
+						header: 'Status',
+					},
+					{
+						accessorKey: 'amount',
+						header: 'Amount',
+						cell: ({ row }) => {
+							const amount = parseFloat(row.getValue('amount'));
+							return `$${amount.toFixed(2)}`;
+						},
+					},
+				]}
+				data={[
+					{
+						id: 'INV001',
+						name: 'John Doe',
+						status: 'Pending',
+						amount: '125.50',
+					},
+					{
+						id: 'INV002',
+						name: 'Jane Smith',
+						status: 'Paid',
+						amount: '350.00',
+					},
+					{
+						id: 'INV003',
+						name: 'Robert Johnson',
+						status: 'Overdue',
+						amount: '780.25',
+					},
+					{
+						id: 'INV004',
+						name: 'Emily Davis',
+						status: 'Paid',
+						amount: '210.75',
+					},
+				]}
+			/>
 
 			<div className="space-y-12">
 				{COLORS.map((color) => (

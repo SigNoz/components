@@ -20,6 +20,7 @@
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"@signozhq/theme": "workspace:*",
+		"@signozhq/table": "workspace:*",
 		"lucide-react": "^0.445.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
