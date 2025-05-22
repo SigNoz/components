@@ -59,7 +59,7 @@ function TooltipContent({
 		<TooltipPrimitive.Portal>
 			<TooltipPrimitive.Content
 				data-slot="tooltip-content"
-				sideOffset={sideOffset}
+				sideOffset={arrow ? 0 : sideOffset}
 				className={cn(
 					// Colors
 					'bg-card text-card-foreground',
