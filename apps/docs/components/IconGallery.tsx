@@ -4,7 +4,6 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { iconsManifest } from '../data/icons-manifest';
 import { Input } from '@signozhq/input';
 import { Button } from '@signozhq/button';
-import Tabs from '@signozhq/tabs';
 import { Copy, Check } from 'lucide-react';
 
 interface IconGalleryProps {
@@ -52,7 +51,7 @@ const IconCell = React.memo(
 						variant="ghost"
 						size="sm"
 						onClick={() => onCopy(name)}
-						className="w-full"
+						className="gap-0"
 					>
 						{copiedIcon === name ? (
 							<Check className="size-4 mr-2" />
@@ -76,23 +75,15 @@ function IconGallery({
 }: IconGalleryProps) {
 	const [search, setSearch] = useState('');
 	const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
-	const [selectedCategory, setSelectedCategory] = useState('all');
-
-	const categories = useMemo(() => {
-		const cats = new Set(iconsManifest.map((icon) => icon.category));
-		return ['all', ...Array.from(cats)];
-	}, []);
 
 	const filteredIcons = useMemo(() => {
 		return iconsManifest.filter((icon) => {
 			const matchesSearch =
 				icon.name.toLowerCase().includes(search.toLowerCase()) ||
 				icon.tags.some((tag) => tag.includes(search.toLowerCase()));
-			const matchesCategory =
-				selectedCategory === 'all' || icon.category === selectedCategory;
-			return matchesSearch && matchesCategory;
+			return matchesSearch;
 		});
-	}, [search, selectedCategory]);
+	}, [search]);
 
 	const copyToClipboard = async (iconName: string) => {
 		await navigator.clipboard.writeText(`<${iconName} />`);
@@ -110,15 +101,6 @@ function IconGallery({
 					placeholder="Search icons..."
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
-				/>
-				<Tabs
-					items={categories.map((cat) => ({
-						key: cat,
-						label: cat.charAt(0).toUpperCase() + cat.slice(1),
-						children: null,
-					}))}
-					defaultValue="all"
-					onChange={(key) => setSelectedCategory(key as string)}
 				/>
 			</div>
 
