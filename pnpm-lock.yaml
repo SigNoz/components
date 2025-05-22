@@ -75,9 +75,6 @@ importers:
       '@signozhq/button':
         specifier: workspace:*
         version: link:../../packages/button
-      '@signozhq/callout':
-        specifier: workspace:*
-        version: link:../../packages/callout
       '@signozhq/checkbox':
         specifier: workspace:*
         version: link:../../packages/checkbox
@@ -200,7 +197,7 @@ importers:
         specifier: ^5.3.3
         version: 5.8.3
       vite:
-        specifier: ^5.4.12
+        specifier: ^5.4.19
         version: 5.4.19(@types/node@20.5.1)(lightningcss@1.30.1)
 
   apps/packages-playground:
@@ -273,7 +270,7 @@ importers:
         specifier: ^8.0.1
         version: 8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       vite:
-        specifier: ^5.4.12
+        specifier: ^5.4.19
         version: 5.4.19(@types/node@22.15.29)(lightningcss@1.30.1)
 
   packages/badge:
@@ -1135,7 +1132,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       vite:
-        specifier: ^5.4.12
+        specifier: ^5.4.19
         version: 5.4.19(@types/node@22.15.29)(lightningcss@1.30.1)
       vite-plugin-dts:
         specifier: ^4.2.1
@@ -2535,9 +2532,6 @@ packages:
 
   '@rushstack/ts-command-line@5.0.1':
     resolution: {integrity: sha512-bsbUucn41UXrQK7wgM8CNM/jagBytEyJqXw/umtI8d68vFm1Jwxh1OtLrlW7uGZgjCWiiPH6ooUNa1aVsuVr3Q==}
-
-  '@signozhq/design-tokens@1.2.1':
-    resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
 
   '@signozhq/design-tokens@1.2.1':
     resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
@@ -8789,8 +8783,6 @@ snapshots:
       string-argv: 0.3.2
     transitivePeerDependencies:
       - '@types/node'
-
-  '@signozhq/design-tokens@1.2.1': {}
 
   '@signozhq/design-tokens@1.2.1': {}
 
