@@ -14,6 +14,9 @@ import {
 	ColumnFiltersState,
 	ColumnPinningState,
 	RowSelectionState,
+	ExpandedState,
+	getExpandedRowModel,
+	Row,
 } from '@tanstack/react-table';
 import { cn } from './lib/utils';
 import {
@@ -31,6 +34,7 @@ import {
 	Filter,
 	Pin,
 	PinOff,
+	ChevronRight,
 } from 'lucide-react';
 import {
 	Table,
@@ -58,7 +62,35 @@ interface DataTableProps<TData, TValue> {
 	enableRowSelection?: boolean;
 	selectionMode?: 'single' | 'multiple';
 	onRowSelectionChange?: (selectedRows: TData[]) => void;
+	enableRowExpansion?: boolean;
+	renderSubComponent?: (props: { row: Row<TData> }) => React.ReactNode;
+	initialExpanded?: ExpandedState;
+	onExpandedChange?: (expanded: ExpandedState) => void;
+	getRowCanExpand?: (row: Row<TData>) => boolean;
+	expandOnRowClick?: boolean;
 }
+
+const AnimatedRow = React.forwardRef<
+	HTMLTableRowElement,
+	React.HTMLAttributes<HTMLTableRowElement> & {
+		isExpanded: boolean;
+	}
+>(({ isExpanded, children, ...props }, ref) => {
+	return (
+		<TableRow
+			ref={ref}
+			{...props}
+			className={cn(
+				props.className,
+				'transition-all duration-200 ease-in-out',
+				isExpanded ? 'opacity-100' : 'opacity-0',
+			)}
+		>
+			{children}
+		</TableRow>
+	);
+});
+AnimatedRow.displayName = 'AnimatedRow';
 
 export function DataTable<TData, TValue>({
 	columns,
@@ -77,6 +109,12 @@ export function DataTable<TData, TValue>({
 	enableRowSelection = false,
 	selectionMode = 'multiple',
 	onRowSelectionChange,
+	enableRowExpansion = false,
+	renderSubComponent,
+	initialExpanded = {},
+	onExpandedChange,
+	getRowCanExpand,
+	expandOnRowClick = false,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
@@ -98,6 +136,7 @@ export function DataTable<TData, TValue>({
 		{},
 	);
 	const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+	const [expanded, setExpanded] = React.useState<ExpandedState>(initialExpanded);
 
 	// Initialise Column Order Array
 	React.useEffect(() => {
@@ -126,6 +165,9 @@ export function DataTable<TData, TValue>({
 		if (preferences.columnSizing) setColumnSizing(preferences.columnSizing);
 		if (preferences.sortState) setSorting(preferences.sortState);
 		if (preferences.rowSelection) setRowSelection(preferences.rowSelection);
+		if (preferences.expanded) {
+			setExpanded(preferences.expanded);
+		}
 	}, [tableId, columns]);
 
 	// Save preferences when they change
@@ -136,6 +178,7 @@ export function DataTable<TData, TValue>({
 			columnSizing,
 			sortState: sorting,
 			rowSelection,
+			expanded,
 		};
 		saveTablePreferences(tableId, preferences);
 	}, [
@@ -145,7 +188,13 @@ export function DataTable<TData, TValue>({
 		columnSizing,
 		sorting,
 		rowSelection,
+		expanded,
 	]);
+
+	// Notify parent of expanded state changes
+	React.useEffect(() => {
+		onExpandedChange?.(expanded);
+	}, [expanded, onExpandedChange]);
 
 	const table = useReactTable({
 		data,
@@ -159,6 +208,7 @@ export function DataTable<TData, TValue>({
 			...(enableGlobalFilter ? { globalFilter } : {}),
 			...(enableColumnPinning ? { columnPinning } : {}),
 			...(enableRowSelection ? { rowSelection } : {}),
+			...(enableRowExpansion ? { expanded } : {}),
 		},
 		...(enableColumnResizing
 			? {
@@ -199,6 +249,13 @@ export function DataTable<TData, TValue>({
 							setRowSelection(updater);
 						}
 					},
+				}
+			: {}),
+		...(enableRowExpansion
+			? {
+					getExpandedRowModel: getExpandedRowModel(),
+					onExpandedChange: setExpanded,
+					getRowCanExpand,
 				}
 			: {}),
 		getCoreRowModel: getCoreRowModel(),
@@ -473,59 +530,111 @@ export function DataTable<TData, TValue>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									className={cn(row.getIsSelected() && 'bg-muted/50', 'cursor-pointer')}
-									onClick={() => {
-										if (enableRowSelection) {
-											row.toggleSelected();
-										}
-									}}
-									aria-selected={row.getIsSelected()}
-									tabIndex={0}
-									onKeyDown={(e) => {
-										if (enableRowSelection && (e.key === ' ' || e.key === 'Enter')) {
-											e.preventDefault();
-											row.toggleSelected();
-										}
-									}}
-								>
-									{enableRowSelection && (
-										<TableCell className="w-[48px]">
-											<input
-												type="checkbox"
-												aria-label={`Select row ${row.id}`}
-												checked={row.getIsSelected()}
-												onChange={row.getToggleSelectedHandler()}
-												onClick={(e) => e.stopPropagation()}
-												className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-												tabIndex={0}
-											/>
-										</TableCell>
-									)}
-									{row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
-										const isPinned = cell.column.getIsPinned();
-										return (
-											<TableCell
-												key={cell.id}
-												style={{
-													width: cell.column.getSize(),
-												}}
-												className={cn(
-													isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-													isPinned === 'right' && 'sticky right-0 z-10 bg-background',
-												)}
-											>
-												{flexRender(cell.column.columnDef.cell, cell.getContext())}
+								<React.Fragment key={row.id}>
+									<TableRow
+										className={cn(
+											row.getIsSelected() && 'bg-muted/50',
+											'cursor-pointer',
+											enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30',
+										)}
+										onClick={() => {
+											if (enableRowSelection) {
+												row.toggleSelected();
+											}
+											if (enableRowExpansion && expandOnRowClick && row.getCanExpand()) {
+												row.toggleExpanded();
+											}
+										}}
+										aria-selected={row.getIsSelected()}
+										tabIndex={0}
+										onKeyDown={(e) => {
+											if (enableRowSelection && (e.key === ' ' || e.key === 'Enter')) {
+												e.preventDefault();
+												row.toggleSelected();
+											}
+											if (
+												enableRowExpansion &&
+												(e.key === ' ' || e.key === 'Enter') &&
+												row.getCanExpand()
+											) {
+												e.preventDefault();
+												row.toggleExpanded();
+											}
+										}}
+									>
+										{enableRowSelection && (
+											<TableCell className="w-[48px]">
+												<input
+													type="checkbox"
+													aria-label={`Select row ${row.id}`}
+													checked={row.getIsSelected()}
+													onChange={row.getToggleSelectedHandler()}
+													onClick={(e) => e.stopPropagation()}
+													className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+													tabIndex={0}
+												/>
 											</TableCell>
-										);
-									})}
-								</TableRow>
+										)}
+										{enableRowExpansion && (
+											<TableCell className="w-[48px]">
+												{row.getCanExpand() && (
+													<button
+														onClick={(e) => {
+															e.stopPropagation();
+															row.toggleExpanded();
+														}}
+														className={cn(
+															'transform transition-transform duration-200',
+															row.getIsExpanded() ? 'rotate-90' : '',
+														)}
+													>
+														<ChevronRight className="h-4 w-4" />
+													</button>
+												)}
+											</TableCell>
+										)}
+										{row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
+											const isPinned = cell.column.getIsPinned();
+											return (
+												<TableCell
+													key={cell.id}
+													style={{
+														width: cell.column.getSize(),
+													}}
+													className={cn(
+														isPinned === 'left' && 'sticky left-0 z-10 bg-background',
+														isPinned === 'right' && 'sticky right-0 z-10 bg-background',
+													)}
+												>
+													{flexRender(cell.column.columnDef.cell, cell.getContext())}
+												</TableCell>
+											);
+										})}
+									</TableRow>
+									{enableRowExpansion && row.getIsExpanded() && renderSubComponent && (
+										<AnimatedRow isExpanded={row.getIsExpanded()}>
+											<TableCell
+												colSpan={
+													row.getVisibleCells().length +
+													(enableRowSelection ? 1 : 0) +
+													(enableRowExpansion ? 1 : 0)
+												}
+												className="bg-muted/30"
+											>
+												{renderSubComponent({ row })}
+											</TableCell>
+										</AnimatedRow>
+									)}
+								</React.Fragment>
 							))
 						) : (
 							<TableRow>
 								<TableCell
-									colSpan={columns.length + (enableRowSelection ? 1 : 0)}
+									colSpan={
+										columns.length +
+										(enableRowSelection ? 1 : 0) +
+										(enableRowExpansion ? 1 : 0)
+									}
 									className="h-24 text-center"
 								>
 									No results.
