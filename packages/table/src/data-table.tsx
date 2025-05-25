@@ -17,6 +17,7 @@ import {
 	ExpandedState,
 	getExpandedRowModel,
 	Row,
+	getPaginationRowModel,
 } from '@tanstack/react-table';
 import { cn } from './lib/utils';
 import {
@@ -35,6 +36,9 @@ import {
 	Pin,
 	PinOff,
 	ChevronRight,
+	ChevronLeft,
+	ChevronsLeft,
+	ChevronsRight,
 } from 'lucide-react';
 import {
 	Table,
@@ -85,6 +89,11 @@ interface DataTableProps<TData, TValue> {
 	enableDynamicRowHeights?: boolean;
 	rowHeight?: number;
 	onScroll?: (scrollPosition: { top: number; left: number }) => void;
+	enablePagination?: boolean;
+	pageSize?: number;
+	pageSizeOptions?: number[];
+	onPageChange?: (page: number) => void;
+	onPageSizeChange?: (pageSize: number) => void;
 }
 
 const AnimatedRow = React.forwardRef<
@@ -143,6 +152,11 @@ export function DataTable<TData, TValue>({
 	enableDynamicRowHeights = false,
 	rowHeight = 40,
 	onScroll,
+	enablePagination = false,
+	pageSize = 10,
+	pageSizeOptions = [10, 20, 30, 40, 50],
+	onPageChange,
+	onPageSizeChange,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
@@ -171,6 +185,10 @@ export function DataTable<TData, TValue>({
 	});
 	const tableRef = React.useRef<HTMLDivElement>(null);
 	const isInitialMount = React.useRef(true);
+	const [pagination, setPagination] = React.useState({
+		pageIndex: 0,
+		pageSize: pageSize,
+	});
 
 	// Initialise Column Order Array
 	React.useEffect(() => {
@@ -264,6 +282,7 @@ export function DataTable<TData, TValue>({
 			...(enableColumnPinning ? { columnPinning } : {}),
 			...(enableRowSelection ? { rowSelection } : {}),
 			...(enableRowExpansion ? { expanded } : {}),
+			...(enablePagination ? { pagination } : {}),
 		},
 		...(enableColumnResizing
 			? {
@@ -311,6 +330,12 @@ export function DataTable<TData, TValue>({
 					getExpandedRowModel: getExpandedRowModel(),
 					onExpandedChange: setExpanded,
 					getRowCanExpand,
+				}
+			: {}),
+		...(enablePagination
+			? {
+					onPaginationChange: setPagination,
+					getPaginationRowModel: getPaginationRowModel(),
 				}
 			: {}),
 		getCoreRowModel: getCoreRowModel(),
@@ -877,6 +902,75 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
+			{enablePagination && (
+				<div className="flex items-center justify-between px-2">
+					<div className="flex items-center gap-2">
+						<p className="text-sm text-muted-foreground">Rows per page</p>
+						<select
+							value={table.getState().pagination.pageSize}
+							onChange={(e) => {
+								table.setPageSize(Number(e.target.value));
+								onPageSizeChange?.(Number(e.target.value));
+							}}
+							className="h-8 w-[70px] rounded-md border border-input bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+						>
+							{pageSizeOptions.map((size) => (
+								<option key={size} value={size}>
+									{size}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="flex items-center gap-6 lg:gap-8">
+						<div className="flex w-[100px] items-center justify-center text-sm font-medium">
+							Page {table.getState().pagination.pageIndex + 1} of{' '}
+							{table.getPageCount()}
+						</div>
+						<div className="flex items-center gap-2">
+							<button
+								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								onClick={() => {
+									table.setPageIndex(0);
+									onPageChange?.(0);
+								}}
+								disabled={!table.getCanPreviousPage()}
+							>
+								<ChevronsLeft className="h-4 w-4" />
+							</button>
+							<button
+								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								onClick={() => {
+									table.previousPage();
+									onPageChange?.(table.getState().pagination.pageIndex - 1);
+								}}
+								disabled={!table.getCanPreviousPage()}
+							>
+								<ChevronLeft className="h-4 w-4" />
+							</button>
+							<button
+								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								onClick={() => {
+									table.nextPage();
+									onPageChange?.(table.getState().pagination.pageIndex + 1);
+								}}
+								disabled={!table.getCanNextPage()}
+							>
+								<ChevronRight className="h-4 w-4" />
+							</button>
+							<button
+								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								onClick={() => {
+									table.setPageIndex(table.getPageCount() - 1);
+									onPageChange?.(table.getPageCount() - 1);
+								}}
+								disabled={!table.getCanNextPage()}
+							>
+								<ChevronsRight className="h-4 w-4" />
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
