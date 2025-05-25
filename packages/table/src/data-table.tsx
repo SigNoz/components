@@ -233,6 +233,10 @@ export function DataTable<TData, TValue>({
 			if (preferences.scrollPosition) {
 				setScrollPosition(preferences.scrollPosition);
 			}
+			// Load pagination preferences
+			if (preferences.pagination) {
+				setPagination(preferences.pagination);
+			}
 		}
 
 		isInitialMount.current = false;
@@ -251,6 +255,8 @@ export function DataTable<TData, TValue>({
 			rowSelection,
 			expanded,
 			scrollPosition,
+			// Save pagination preferences
+			pagination: enablePagination ? pagination : undefined,
 		};
 		saveTablePreferences(tableId, preferences);
 	}, [
@@ -262,6 +268,9 @@ export function DataTable<TData, TValue>({
 		rowSelection,
 		expanded,
 		scrollPosition,
+		// Add pagination to dependencies
+		enablePagination,
+		pagination,
 	]);
 
 	// Notify parent of expanded state changes

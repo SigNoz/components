@@ -8,6 +8,7 @@ export interface TablePreferences {
 	rowSelection?: Record<string, boolean>;
 	expanded?: ExpandedState;
 	scrollPosition?: { top: number; left: number };
+	pagination?: { pageIndex: number; pageSize: number };
 }
 
 const PREFERENCES_KEY_PREFIX = 'table-preferences-';
