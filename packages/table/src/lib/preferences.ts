@@ -7,6 +7,7 @@ export interface TablePreferences {
 	sortState?: { id: string; desc: boolean }[];
 	rowSelection?: Record<string, boolean>;
 	expanded?: ExpandedState;
+	scrollPosition?: { top: number; left: number };
 }
 
 const PREFERENCES_KEY_PREFIX = 'table-preferences-';

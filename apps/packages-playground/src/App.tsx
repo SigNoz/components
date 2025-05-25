@@ -4,37 +4,41 @@ import './App.css';
 // import { ThemeSwitcher } from '@signozhq/theme';
 // import { Code } from 'lucide-react';
 import { DataTable } from '@signozhq/table/data-table';
+// import { Row, Cell } from '@tanstack/react-table';
+// import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
 
 // const VARIANTS = ['solid', 'outlined', 'dashed', 'ghost', 'link'] as const;
 // const COLORS = ['primary', 'destructive', 'warning', 'secondary'] as const;
 
 // Define types for our data
-interface InvoiceItem {
-	id: string;
-	description: string;
-	quantity: number;
-	unitPrice: number;
-	total: number;
-}
+// interface InvoiceItem {
+// 	id: string;
+// 	description: string;
+// 	quantity: number;
+// 	unitPrice: number;
+// 	total: number;
+// }
 
-interface Invoice {
-	id: string;
-	name: string;
-	status: 'Paid' | 'Pending' | 'Overdue';
-	amount: string;
-	items?: InvoiceItem[];
-	hasChildren?: boolean;
-}
+// interface Invoice {
+// 	id: string;
+// 	name: string;
+// 	status: 'Paid' | 'Pending' | 'Overdue';
+// 	amount: string;
+// 	items?: InvoiceItem[];
+// 	hasChildren?: boolean;
+// 	notes?: string; // Added for testing dynamic heights
+// }
 
 function App() {
-	// Sample data with nested items
-	const data: Invoice[] = [
+	// Sample data with nested items and varying content lengths
+	const data = [
 		{
 			id: 'INV001',
 			name: 'John Doe',
-			status: 'Pending',
+			status: 'Pending' as 'Paid' | 'Pending' | 'Overdue',
 			amount: '125.50',
 			hasChildren: true,
+			notes: 'This is a short note.',
 			items: [
 				{
 					id: 'INV001-1',
@@ -58,6 +62,8 @@ function App() {
 			status: 'Paid',
 			amount: '350.00',
 			hasChildren: true,
+			notes:
+				'This is a longer note that will test dynamic row heights. It contains multiple lines of text to demonstrate how the table handles varying content lengths. The row should expand to accommodate this text while maintaining readability.',
 			items: [
 				{
 					id: 'INV002-1',
@@ -75,88 +81,75 @@ function App() {
 				},
 			],
 		},
-		{
-			id: 'INV003',
-			name: 'Robert Johnson',
-			status: 'Overdue',
-			amount: '780.25',
+		// Add more data to test scrolling
+		...Array.from({ length: 20 }, (_, i) => ({
+			id: `INV${(i + 3).toString().padStart(3, '0')}`,
+			name: `Customer ${i + 3}`,
+			status: ['Paid', 'Pending', 'Overdue'][Math.floor(Math.random() * 3)] as
+				| 'Paid'
+				| 'Pending'
+				| 'Overdue',
+			amount: (Math.random() * 1000).toFixed(2),
 			hasChildren: true,
+			notes:
+				i % 3 === 0
+					? 'This is a short note.'
+					: i % 3 === 1
+						? 'This is a medium length note that will test dynamic row heights.'
+						: 'This is a very long note that will test dynamic row heights. It contains multiple lines of text to demonstrate how the table handles varying content lengths. The row should expand to accommodate this text while maintaining readability.',
 			items: [
 				{
-					id: 'INV003-1',
-					description: 'Software License',
-					quantity: 1,
-					unitPrice: 500.0,
-					total: 500.0,
+					id: `INV${(i + 3).toString().padStart(3, '0')}-1`,
+					description: 'Service A',
+					quantity: Math.floor(Math.random() * 5) + 1,
+					unitPrice: Math.random() * 100,
+					total: 0, // Will be calculated
 				},
 				{
-					id: 'INV003-2',
-					description: 'Technical Support',
-					quantity: 5,
-					unitPrice: 56.05,
-					total: 280.25,
+					id: `INV${(i + 3).toString().padStart(3, '0')}-2`,
+					description: 'Service B',
+					quantity: Math.floor(Math.random() * 5) + 1,
+					unitPrice: Math.random() * 100,
+					total: 0, // Will be calculated
 				},
 			],
-		},
-		{
-			id: 'INV004',
-			name: 'Emily Davis',
-			status: 'Paid',
-			amount: '210.75',
-			hasChildren: true,
-			items: [
-				{
-					id: 'INV004-1',
-					description: 'Content Writing',
-					quantity: 1,
-					unitPrice: 150.0,
-					total: 150.0,
-				},
-				{
-					id: 'INV004-2',
-					description: 'SEO Services',
-					quantity: 1,
-					unitPrice: 60.75,
-					total: 60.75,
-				},
-			],
-		},
-	];
+		})),
+	].map((invoice) => ({
+		...invoice,
+		items: invoice.items?.map((item) => ({
+			...item,
+			total: item.quantity * item.unitPrice,
+		})),
+	}));
 
-	// Nested table columns for invoice items
-	// const itemColumns = [
-	// 	{
-	// 		id: 'description',
-	// 		accessorKey: 'description',
-	// 		header: 'Description',
-	// 	},
-	// 	{
-	// 		id: 'quantity',
-	// 		accessorKey: 'quantity',
-	// 		header: 'Quantity',
-	// 		cell: ({ row }: { row: any }) => {
-	// 			return <div className="text-right">{row.getValue('quantity')}</div>;
-	// 		},
-	// 	},
-	// 	{
-	// 		id: 'unitPrice',
-	// 		accessorKey: 'unitPrice',
-	// 		header: 'Unit Price',
-	// 		cell: ({ row }: { row: any }) => {
-	// 			const price = parseFloat(row.getValue('unitPrice'));
-	// 			return <div className="text-right">${price.toFixed(2)}</div>;
-	// 		},
-	// 	},
-	// 	{
-	// 		id: 'total',
-	// 		accessorKey: 'total',
-	// 		header: 'Total',
-	// 		cell: ({ row }: { row: any }) => {
-	// 			const total = parseFloat(row.getValue('total'));
-	// 			return <div className="text-right font-medium">${total.toFixed(2)}</div>;
-	// 		},
-	// 	},
-	// ];
+	// Custom row component with hover effect and actions
+	// const CustomRow = ({
+	// 	row,
+	// 	children,
+	// }: {
+	// 	row: any;
+	// 	children: React.ReactNode;
+	// }) => {
+	// 	const [showActions, setShowActions] = React.useState(false);
+	// 	console.log('uncaught row', row);
+
+	// 	return (
+	// 		<div
+	// 			className="relative group flex items-center"
+	// 			onMouseEnter={() => setShowActions(true)}
+	// 			onMouseLeave={() => setShowActions(false)}
+	// 		>
+	// 			{children} Jabba
+	// 			{showActions && (
+	// 				<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+	// 					<button className="p-1 hover:bg-slate-100 rounded-full">
+	// 						<Edit className="h-4 w-4" />
+	// 					</button>
+	// 				</div>
+	// 			)}
+	// 		</div>
+	// 	);
+	// };
 
 	return (
 		<div className="p-8">
@@ -169,7 +162,7 @@ function App() {
 
 			<div className="my-8">
 				<h2 className="text-2xl font-bold mb-4">
-					Table Component with Row Expansion
+					Table Component with Dynamic Heights and Scroll Features
 				</h2>
 				<DataTable
 					tableId="invoices-table"
@@ -177,29 +170,30 @@ function App() {
 					enableColumnResizing={false}
 					enableGlobalFilter={true}
 					enableRowSelection={true}
-					enableRowExpansion={true}
-					getRowCanExpand={(row) => row.original.hasChildren || false}
-					expandOnRowClick={true}
 					selectionMode="multiple"
+					enableDynamicRowHeights={true}
+					rowHeight={10}
+					enableScrollRestoration={true}
+					onScroll={(position) => {
+						console.log('Scroll position:', position);
+					}}
 					onRowSelectionChange={(selectedRows) => {
 						console.log('Selected rows:', selectedRows);
 					}}
-					renderSubComponent={() => {
-						// const invoice = row.original as Invoice;
-						return (
-							<div className="p-4">
-								<h3 className="text-lg font-semibold mb-4">Invoice Items</h3>
-								{/* <DataTable
-									tableId={`invoice-items-${invoice.id}`}
-									columns={itemColumns}
-									data={invoice.items || []}
-									enableColumnResizing={false}
-									enableSorting={true}
-									enableRowSelection={true}
-								/> */}
-							</div>
-						);
+					onRowClick={(row, event) => {
+						console.log('Row clicked:', row.original);
 					}}
+					onRowDoubleClick={(row, event) => {
+						console.log('Row double clicked:', row.original);
+					}}
+					onCellClick={(cell, event) => {
+						console.log('Cell clicked:', cell.getValue());
+					}}
+					onCellDoubleClick={(cell, event) => {
+						console.log('Cell double clicked:', cell.getValue());
+					}}
+					stopPropagationOnRowClick={false}
+					stopPropagationOnCellClick={false}
 					columns={[
 						{
 							id: 'id',
@@ -221,7 +215,7 @@ function App() {
 							header: 'Status',
 							enableSorting: true,
 							cell: ({ row }) => {
-								const status = row.getValue('status') as string;
+								const status = row.getValue('status') as 'Paid' | 'Pending' | 'Overdue';
 								return (
 									<div
 										className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
@@ -248,6 +242,20 @@ function App() {
 								const amount = parseFloat(row.getValue('amount'));
 								return (
 									<div className="text-right font-medium">${amount.toFixed(2)}</div>
+								);
+							},
+						},
+						{
+							id: 'notes',
+							accessorKey: 'notes',
+							header: 'Notes',
+							enableSorting: true,
+							cell: ({ row }) => {
+								const notes = row.getValue('notes') as string;
+								return (
+									<div className="text-sm text-gray-600 whitespace-pre-wrap">
+										{notes}
+									</div>
 								);
 							},
 						},
