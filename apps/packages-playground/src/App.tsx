@@ -174,6 +174,15 @@ function App() {
 					enableDynamicRowHeights={true}
 					rowHeight={10}
 					enableScrollRestoration={true}
+					enablePagination={true}
+					pageSize={10}
+					pageSizeOptions={[5, 10, 20, 50]}
+					onPageChange={(page) => {
+						console.log('Page changed:', page);
+					}}
+					onPageSizeChange={(pageSize) => {
+						console.log('Page size changed:', pageSize);
+					}}
 					onScroll={(position) => {
 						console.log('Scroll position:', position);
 					}}
