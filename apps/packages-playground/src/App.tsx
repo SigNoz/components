@@ -23,7 +23,13 @@ function App() {
 				<DataTable
 					tableId="invoices-table"
 					enableColumnReordering={true}
+					enableColumnResizing={false}
 					enableGlobalFilter={true}
+					enableRowSelection={true}
+					selectionMode="multiple"
+					onRowSelectionChange={(selectedRows) => {
+						console.log('uncaught selection', selectedRows);
+					}}
 					columns={[
 						{
 							id: 'id',
