@@ -30,126 +30,93 @@ import { DataTable } from '@signozhq/table/data-table';
 // }
 
 function App() {
-	// Sample data with nested items and varying content lengths
-	const data = [
-		{
-			id: 'INV001',
-			name: 'John Doe',
-			status: 'Pending' as 'Paid' | 'Pending' | 'Overdue',
-			amount: '125.50',
-			hasChildren: true,
-			notes: 'This is a short note.',
-			items: [
-				{
-					id: 'INV001-1',
-					description: 'Web Development Services',
-					quantity: 1,
-					unitPrice: 100.0,
-					total: 100.0,
-				},
-				{
-					id: 'INV001-2',
-					description: 'Hosting (Monthly)',
-					quantity: 1,
-					unitPrice: 25.5,
-					total: 25.5,
-				},
-			],
-		},
-		{
-			id: 'INV002',
-			name: 'Jane Smith',
-			status: 'Paid',
-			amount: '350.00',
-			hasChildren: true,
-			notes:
-				'This is a longer note that will test dynamic row heights. It contains multiple lines of text to demonstrate how the table handles varying content lengths. The row should expand to accommodate this text while maintaining readability.',
-			items: [
-				{
-					id: 'INV002-1',
-					description: 'UI/UX Design',
-					quantity: 1,
-					unitPrice: 250.0,
-					total: 250.0,
-				},
-				{
-					id: 'INV002-2',
-					description: 'Consultation',
-					quantity: 2,
-					unitPrice: 50.0,
-					total: 100.0,
-				},
-			],
-		},
-		// Add more data to test scrolling
-		...Array.from({ length: 20 }, (_, i) => ({
-			id: `INV${(i + 3).toString().padStart(3, '0')}`,
-			name: `Customer ${i + 3}`,
-			status: ['Paid', 'Pending', 'Overdue'][Math.floor(Math.random() * 3)] as
-				| 'Paid'
-				| 'Pending'
-				| 'Overdue',
-			amount: (Math.random() * 1000).toFixed(2),
-			hasChildren: true,
-			notes:
-				i % 3 === 0
-					? 'This is a short note.'
-					: i % 3 === 1
-						? 'This is a medium length note that will test dynamic row heights.'
-						: 'This is a very long note that will test dynamic row heights. It contains multiple lines of text to demonstrate how the table handles varying content lengths. The row should expand to accommodate this text while maintaining readability.',
-			items: [
-				{
-					id: `INV${(i + 3).toString().padStart(3, '0')}-1`,
-					description: 'Service A',
-					quantity: Math.floor(Math.random() * 5) + 1,
-					unitPrice: Math.random() * 100,
-					total: 0, // Will be calculated
-				},
-				{
-					id: `INV${(i + 3).toString().padStart(3, '0')}-2`,
-					description: 'Service B',
-					quantity: Math.floor(Math.random() * 5) + 1,
-					unitPrice: Math.random() * 100,
-					total: 0, // Will be calculated
-				},
-			],
-		})),
-	].map((invoice) => ({
-		...invoice,
-		items: invoice.items?.map((item) => ({
-			...item,
-			total: item.quantity * item.unitPrice,
-		})),
-	}));
+	const [data, setData] = React.useState<any[]>([]);
+	const [isLoading, setIsLoading] = React.useState(false);
+	const [loadingMore, setLoadingMore] = React.useState(false);
+	const [hasMore, setHasMore] = React.useState(true);
+	const [page, setPage] = React.useState(1);
+	const pageSize = 20;
 
-	// Custom row component with hover effect and actions
-	// const CustomRow = ({
-	// 	row,
-	// 	children,
-	// }: {
-	// 	row: any;
-	// 	children: React.ReactNode;
-	// }) => {
-	// 	const [showActions, setShowActions] = React.useState(false);
-	// 	console.log('uncaught row', row);
+	// Simulate server-side data fetching
+	const fetchData = React.useCallback(
+		async (pageNumber: number, isLoadMore: boolean = false) => {
+			if (isLoadMore) {
+				setLoadingMore(true);
+			} else {
+				setIsLoading(true);
+			}
 
-	// 	return (
-	// 		<div
-	// 			className="relative group flex items-center"
-	// 			onMouseEnter={() => setShowActions(true)}
-	// 			onMouseLeave={() => setShowActions(false)}
-	// 		>
-	// 			{children} Jabba
-	// 			{showActions && (
-	// 				<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-	// 					<button className="p-1 hover:bg-slate-100 rounded-full">
-	// 						<Edit className="h-4 w-4" />
-	// 					</button>
-	// 				</div>
-	// 			)}
-	// 		</div>
-	// 	);
-	// };
+			try {
+				// Simulate API delay
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+
+				// Generate data for the current page
+				const startIndex = (pageNumber - 1) * pageSize;
+				const pageData = Array.from({ length: pageSize }, (_, i) => ({
+					id: `INV${(startIndex + i + 1).toString().padStart(3, '0')}`,
+					name: `Customer ${startIndex + i + 1}`,
+					status: ['Paid', 'Pending', 'Overdue'][Math.floor(Math.random() * 3)] as
+						| 'Paid'
+						| 'Pending'
+						| 'Overdue',
+					amount: (Math.random() * 1000).toFixed(2),
+					hasChildren: true,
+					notes:
+						i % 3 === 0
+							? 'This is a short note.'
+							: i % 3 === 1
+								? 'This is a medium length note that will test dynamic row heights.'
+								: 'This is a very long note that will test dynamic row heights. It contains multiple lines of text to demonstrate how the table handles varying content lengths. The row should expand to accommodate this text while maintaining readability.',
+					items: [
+						{
+							id: `INV${(startIndex + i + 1).toString().padStart(3, '0')}-1`,
+							description: 'Service A',
+							quantity: Math.floor(Math.random() * 5) + 1,
+							unitPrice: Math.random() * 100,
+							total: 0,
+						},
+						{
+							id: `INV${(startIndex + i + 1).toString().padStart(3, '0')}-2`,
+							description: 'Service B',
+							quantity: Math.floor(Math.random() * 5) + 1,
+							unitPrice: Math.random() * 100,
+							total: 0,
+						},
+					],
+				})).map((invoice) => ({
+					...invoice,
+					items: invoice.items?.map((item) => ({
+						...item,
+						total: item.quantity * item.unitPrice,
+					})),
+				}));
+
+				// Simulate reaching the end of data after 5 pages
+				if (pageNumber >= 5) {
+					setHasMore(false);
+				}
+
+				setData((prev) => (isLoadMore ? [...prev, ...pageData] : pageData));
+				setPage(pageNumber);
+			} finally {
+				setIsLoading(false);
+				setLoadingMore(false);
+			}
+		},
+		[],
+	);
+
+	// Initial data fetch
+	React.useEffect(() => {
+		fetchData(1);
+	}, [fetchData]);
+
+	// Handle load more
+	const handleLoadMore = React.useCallback(() => {
+		if (!loadingMore && hasMore) {
+			fetchData(page + 1, true);
+		}
+	}, [fetchData, loadingMore, hasMore, page]);
 
 	return (
 		<div className="p-8">
@@ -162,7 +129,7 @@ function App() {
 
 			<div className="my-8">
 				<h2 className="text-2xl font-bold mb-4">
-					Table Component with Dynamic Heights and Scroll Features
+					Table Component with Infinite Scroll
 				</h2>
 				<DataTable
 					tableId="invoices-table"
@@ -174,15 +141,11 @@ function App() {
 					enableDynamicRowHeights={true}
 					rowHeight={10}
 					enableScrollRestoration={true}
-					enablePagination={true}
-					pageSize={10}
-					pageSizeOptions={[5, 10, 20, 50]}
-					onPageChange={(page) => {
-						console.log('Page changed:', page);
-					}}
-					onPageSizeChange={(pageSize) => {
-						console.log('Page size changed:', pageSize);
-					}}
+					enableInfiniteScroll={true}
+					hasMore={hasMore}
+					loadingMore={loadingMore}
+					onLoadMore={handleLoadMore}
+					isLoading={isLoading}
 					onScroll={(position) => {
 						console.log('Scroll position:', position);
 					}}
@@ -254,20 +217,20 @@ function App() {
 								);
 							},
 						},
-						{
-							id: 'notes',
-							accessorKey: 'notes',
-							header: 'Notes',
-							enableSorting: true,
-							cell: ({ row }) => {
-								const notes = row.getValue('notes') as string;
-								return (
-									<div className="text-sm text-gray-600 whitespace-pre-wrap">
-										{notes}
-									</div>
-								);
-							},
-						},
+						// {
+						// 	id: 'notes',
+						// 	accessorKey: 'notes',
+						// 	header: 'Notes',
+						// 	enableSorting: true,
+						// 	cell: ({ row }) => {
+						// 		const notes = row.getValue('notes') as string;
+						// 		return (
+						// 			<div className="text-sm text-gray-600 whitespace-pre-wrap">
+						// 				{notes}
+						// 			</div>
+						// 		);
+						// 	},
+						// },
 					]}
 					data={data}
 				/>
