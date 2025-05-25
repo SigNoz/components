@@ -13,6 +13,7 @@ import {
 	getFilteredRowModel,
 	ColumnFiltersState,
 	ColumnPinningState,
+	RowSelectionState,
 } from '@tanstack/react-table';
 import { cn } from './lib/utils';
 import {
@@ -54,6 +55,9 @@ interface DataTableProps<TData, TValue> {
 	defaultColumnWidth?: number;
 	minColumnWidth?: number;
 	maxColumnWidth?: number;
+	enableRowSelection?: boolean;
+	selectionMode?: 'single' | 'multiple';
+	onRowSelectionChange?: (selectedRows: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -70,6 +74,9 @@ export function DataTable<TData, TValue>({
 	defaultColumnWidth = 150,
 	minColumnWidth = 50,
 	maxColumnWidth = 500,
+	enableRowSelection = false,
+	selectionMode = 'multiple',
+	onRowSelectionChange,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
@@ -90,6 +97,7 @@ export function DataTable<TData, TValue>({
 	const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>(
 		{},
 	);
+	const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
 	// Initialise Column Order Array
 	React.useEffect(() => {
@@ -117,6 +125,7 @@ export function DataTable<TData, TValue>({
 			setColumnVisibility(preferences.columnVisibility);
 		if (preferences.columnSizing) setColumnSizing(preferences.columnSizing);
 		if (preferences.sortState) setSorting(preferences.sortState);
+		if (preferences.rowSelection) setRowSelection(preferences.rowSelection);
 	}, [tableId, columns]);
 
 	// Save preferences when they change
@@ -126,9 +135,17 @@ export function DataTable<TData, TValue>({
 			columnVisibility,
 			columnSizing,
 			sortState: sorting,
+			rowSelection,
 		};
 		saveTablePreferences(tableId, preferences);
-	}, [tableId, columnOrder, columnVisibility, columnSizing, sorting]);
+	}, [
+		tableId,
+		columnOrder,
+		columnVisibility,
+		columnSizing,
+		sorting,
+		rowSelection,
+	]);
 
 	const table = useReactTable({
 		data,
@@ -141,6 +158,7 @@ export function DataTable<TData, TValue>({
 			...(enableFiltering ? { columnFilters } : {}),
 			...(enableGlobalFilter ? { globalFilter } : {}),
 			...(enableColumnPinning ? { columnPinning } : {}),
+			...(enableRowSelection ? { rowSelection } : {}),
 		},
 		...(enableColumnResizing
 			? {
@@ -157,6 +175,32 @@ export function DataTable<TData, TValue>({
 		onColumnFiltersChange: setColumnFilters,
 		...(enableGlobalFilter ? { onGlobalFilterChange: setGlobalFilter } : {}),
 		...(enableColumnPinning ? { onColumnPinningChange: setColumnPinning } : {}),
+		...(enableRowSelection
+			? {
+					onRowSelectionChange: (updater) => {
+						if (selectionMode === 'single') {
+							setRowSelection((prev) => {
+								const next = typeof updater === 'function' ? updater(prev) : updater;
+								const selectedIds = Object.keys(next);
+								if (selectedIds.length > 1) {
+									// Find the id that was just toggled on
+									const newSelectedId = selectedIds.find((id) => !prev[id]);
+									return newSelectedId
+										? { [newSelectedId]: true }
+										: { [selectedIds[0]]: true };
+								}
+								// If the same row is clicked again, deselect it
+								if (selectedIds.length === 1 && prev[selectedIds[0]]) {
+									return {};
+								}
+								return next;
+							});
+						} else {
+							setRowSelection(updater);
+						}
+					},
+				}
+			: {}),
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
@@ -257,6 +301,16 @@ export function DataTable<TData, TValue>({
 		});
 	};
 
+	// Notify parent component of selection changes
+	React.useEffect(() => {
+		if (onRowSelectionChange) {
+			const selectedRows = table
+				.getSelectedRowModel()
+				.rows.map((row) => row.original);
+			onRowSelectionChange(selectedRows);
+		}
+	}, [rowSelection, onRowSelectionChange, table]);
+
 	return (
 		<div className="space-y-4">
 			{enableGlobalFilter && (
@@ -285,6 +339,20 @@ export function DataTable<TData, TValue>({
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
 							<TableRow key={headerGroup.id}>
+								{enableRowSelection && (
+									<TableHead className="w-[48px]">
+										{selectionMode === 'multiple' && (
+											<input
+												type="checkbox"
+												aria-label="Select all rows"
+												checked={table.getIsAllRowsSelected()}
+												onChange={table.getToggleAllRowsSelectedHandler()}
+												className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+												tabIndex={0}
+											/>
+										)}
+									</TableHead>
+								)}
 								{headerGroup.headers.map((header) => {
 									const column = header.column;
 									const isSorted = column.getIsSorted();
@@ -405,7 +473,36 @@ export function DataTable<TData, TValue>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id}>
+								<TableRow
+									key={row.id}
+									className={cn(row.getIsSelected() && 'bg-muted/50', 'cursor-pointer')}
+									onClick={() => {
+										if (enableRowSelection) {
+											row.toggleSelected();
+										}
+									}}
+									aria-selected={row.getIsSelected()}
+									tabIndex={0}
+									onKeyDown={(e) => {
+										if (enableRowSelection && (e.key === ' ' || e.key === 'Enter')) {
+											e.preventDefault();
+											row.toggleSelected();
+										}
+									}}
+								>
+									{enableRowSelection && (
+										<TableCell className="w-[48px]">
+											<input
+												type="checkbox"
+												aria-label={`Select row ${row.id}`}
+												checked={row.getIsSelected()}
+												onChange={row.getToggleSelectedHandler()}
+												onClick={(e) => e.stopPropagation()}
+												className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+												tabIndex={0}
+											/>
+										</TableCell>
+									)}
 									{row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
 										const isPinned = cell.column.getIsPinned();
 										return (
@@ -427,7 +524,10 @@ export function DataTable<TData, TValue>({
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={columns.length} className="h-24 text-center">
+								<TableCell
+									colSpan={columns.length + (enableRowSelection ? 1 : 0)}
+									className="h-24 text-center"
+								>
 									No results.
 								</TableCell>
 							</TableRow>
