@@ -1,15 +1,12 @@
-import {
-	ColumnOrderState,
-	RowSelectionState,
-	VisibilityState,
-} from '@tanstack/react-table';
+import { ExpandedState } from '@tanstack/react-table';
 
 export interface TablePreferences {
-	columnOrder?: ColumnOrderState;
-	columnVisibility?: VisibilityState;
+	columnOrder?: string[];
+	columnVisibility?: Record<string, boolean>;
 	columnSizing?: Record<string, number>;
 	sortState?: { id: string; desc: boolean }[];
-	rowSelection?: RowSelectionState;
+	rowSelection?: Record<string, boolean>;
+	expanded?: ExpandedState;
 }
 
 const PREFERENCES_KEY_PREFIX = 'table-preferences-';
