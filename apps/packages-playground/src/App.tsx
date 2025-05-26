@@ -650,6 +650,7 @@ function App() {
 					enableVirtualization={true}
 					estimateRowSize={55}
 					overscan={10}
+					showHeaders={false}
 					enableColumnReordering={false}
 					enableColumnResizing={true}
 					enableGlobalFilter={false}
