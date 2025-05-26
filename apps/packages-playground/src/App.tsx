@@ -303,8 +303,8 @@ function App() {
 				</h2>
 				<DataTable
 					tableId="invoices-table"
-					enableColumnReordering={true}
-					enableColumnResizing={false}
+					enableColumnReordering={false}
+					enableColumnResizing={true}
 					enableGlobalFilter={true}
 					enableRowSelection={true}
 					selectionMode="multiple"
@@ -419,7 +419,7 @@ function App() {
 					enableVirtualization={true}
 					estimateRowSize={50}
 					overscan={10}
-					enableColumnReordering={true}
+					enableColumnReordering={false}
 					enableColumnResizing={true}
 					enableGlobalFilter={true}
 					enableRowSelection={true}
@@ -523,7 +523,7 @@ function App() {
 					enableVirtualization={true}
 					estimateRowSize={60}
 					overscan={15}
-					enableColumnReordering={true}
+					enableColumnReordering={false}
 					enableColumnResizing={true}
 					enableGlobalFilter={true}
 					enableRowSelection={true}
@@ -650,7 +650,7 @@ function App() {
 					enableVirtualization={true}
 					estimateRowSize={55}
 					overscan={10}
-					enableColumnReordering={true}
+					enableColumnReordering={false}
 					enableColumnResizing={true}
 					enableGlobalFilter={false}
 					enableRowSelection={true}

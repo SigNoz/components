@@ -265,7 +265,7 @@ function VirtualizedTableBody<TData>({
 									<TableCell
 										key={cell.id}
 										style={{
-											width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+											width: cell.column.getSize(),
 											height: enableDynamicRowHeights ? 'auto' : `${virtualRow.size}px`,
 											minHeight: `${virtualRow.size}px`,
 											padding: '0.75rem',
@@ -338,12 +338,6 @@ function VirtualizedTableBody<TData>({
 		</TableBody>
 	);
 }
-
-// Memoized version for performance during column resizing
-const MemoizedVirtualizedTableBody = React.memo(
-	VirtualizedTableBody,
-	(prev, next) => prev.table.options.data === next.table.options.data,
-) as typeof VirtualizedTableBody;
 
 const AnimatedRow = React.forwardRef<
 	HTMLTableRowElement,
@@ -814,7 +808,7 @@ export function DataTable<TData, TValue>({
 			>
 				<Table
 					style={{
-						width: enableVirtualization ? table.getTotalSize() : undefined,
+						tableLayout: enableVirtualization ? 'fixed' : 'auto',
 					}}
 				>
 					<TableHeader>
@@ -953,39 +947,21 @@ export function DataTable<TData, TValue>({
 					</TableHeader>
 					{enableVirtualization ? (
 						// Virtualized table body
-						table.getState().columnSizingInfo.isResizingColumn ? (
-							<MemoizedVirtualizedTableBody
-								table={table}
-								virtualizer={virtualizer}
-								enableRowSelection={enableRowSelection}
-								enableRowExpansion={enableRowExpansion}
-								enableDynamicRowHeights={enableDynamicRowHeights}
-								onRowClick={onRowClick}
-								onRowDoubleClick={onRowDoubleClick}
-								onCellClick={onCellClick}
-								onCellDoubleClick={onCellDoubleClick}
-								stopPropagationOnRowClick={stopPropagationOnRowClick}
-								stopPropagationOnCellClick={stopPropagationOnCellClick}
-								expandOnRowClick={expandOnRowClick}
-								renderSubComponent={renderSubComponent}
-							/>
-						) : (
-							<VirtualizedTableBody
-								table={table}
-								virtualizer={virtualizer}
-								enableRowSelection={enableRowSelection}
-								enableRowExpansion={enableRowExpansion}
-								enableDynamicRowHeights={enableDynamicRowHeights}
-								onRowClick={onRowClick}
-								onRowDoubleClick={onRowDoubleClick}
-								onCellClick={onCellClick}
-								onCellDoubleClick={onCellDoubleClick}
-								stopPropagationOnRowClick={stopPropagationOnRowClick}
-								stopPropagationOnCellClick={stopPropagationOnCellClick}
-								expandOnRowClick={expandOnRowClick}
-								renderSubComponent={renderSubComponent}
-							/>
-						)
+						<VirtualizedTableBody
+							table={table}
+							virtualizer={virtualizer}
+							enableRowSelection={enableRowSelection}
+							enableRowExpansion={enableRowExpansion}
+							enableDynamicRowHeights={enableDynamicRowHeights}
+							onRowClick={onRowClick}
+							onRowDoubleClick={onRowDoubleClick}
+							onCellClick={onCellClick}
+							onCellDoubleClick={onCellDoubleClick}
+							stopPropagationOnRowClick={stopPropagationOnRowClick}
+							stopPropagationOnCellClick={stopPropagationOnCellClick}
+							expandOnRowClick={expandOnRowClick}
+							renderSubComponent={renderSubComponent}
+						/>
 					) : (
 						// Regular table body
 						<TableBody>
