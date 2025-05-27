@@ -124,7 +124,13 @@ export const ButtonShowcase: Story = {
 							{color}
 						</h2>
 						<div className="flex gap-4">
-							{VARIANTS.map((variant) => (
+							{/* Filter variants based on color */}
+							{VARIANTS.filter(
+								(variant) =>
+									// Only show outlined and dashed for secondary
+									color === 'secondary' ||
+									!(variant === 'outlined' || variant === 'dashed'),
+							).map((variant) => (
 								<div key={variant} className="grid grid-cols-1 gap-4">
 									<Button
 										variant={variant}
