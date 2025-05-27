@@ -65,7 +65,7 @@ function Callout({
 			className={cn(calloutVariants({ size }), className)}
 			{...props}
 		>
-			{IconComponent &&
+			{IconComponent ? (
 				React.cloneElement(IconComponent as React.ReactElement, {
 					'aria-hidden': true,
 					className: cn(
@@ -74,7 +74,10 @@ function Callout({
 					),
 					color: 'var(--callout-icon-color)',
 					size: size === 'medium' ? 16 : 12,
-				})}
+				})
+			) : (
+				<div className={cn(size === 'medium' ? 'w-4' : 'w-3')} />
+			)}
 			<div className="grid gap-0.5 flex-1">
 				{message && (
 					<div
