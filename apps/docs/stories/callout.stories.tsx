@@ -65,6 +65,16 @@ const meta: Meta<typeof Callout> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Customization' },
 		},
+		dismissable: {
+			control: 'boolean',
+			description: 'Whether the callout can be dismissed with a close button.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		onClose: {
+			action: 'closed',
+			description: 'Function called when the close button is clicked.',
+			table: { category: 'Events' },
+		},
 	},
 	args: {
 		type: 'info',
@@ -73,6 +83,7 @@ const meta: Meta<typeof Callout> = {
 		message: 'Default Callout Message',
 		description:
 			'This is the default callout description that can be quite long and should wrap nicely.',
+		dismissable: false,
 	},
 
 	tags: ['autodocs'],
@@ -213,6 +224,45 @@ export const AllVariantsOverview: Story = {
 				message="Info with Custom Icon & Tailwind Color"
 				description="Icon styling can also be done via className if preferred."
 			/>
+
+			{/* Dismissable Variations */}
+			<h2 className="mt-8 mb-2.5 border-b pb-2 text-2xl">Dismissable Callouts</h2>
+			<Callout
+				type="info"
+				size="small"
+				showIcon
+				message="Small Dismissable Info"
+				description="This is a small informational callout that can be dismissed."
+				dismissable
+				onClose={() => console.log('Small info callout closed')}
+			/>
+			<Callout
+				type="success"
+				size="medium"
+				showIcon
+				message="Medium Dismissable Success"
+				description="This is a medium success callout that can be dismissed."
+				dismissable
+				onClose={() => console.log('Medium success callout closed')}
+			/>
+			<Callout
+				type="warning"
+				size="small"
+				showIcon={false}
+				message="Small Warning (No Icon) with Close Button"
+				description="This callout can be dismissed even without an icon."
+				dismissable
+				onClose={() => console.log('Warning callout closed')}
+			/>
+			<Callout
+				type="error"
+				size="medium"
+				icon={<XCircle size={16} color="var(--bg-cherry-500)" aria-hidden />}
+				message="Error with Custom Icon and Close Button"
+				description="This callout has both a custom icon and a close button."
+				dismissable
+				onClose={() => console.log('Error callout closed')}
+			/>
 		</div>
 	),
 };
@@ -326,5 +376,15 @@ export const OnlyDescription: Story = {
 			'Please be aware that maintenance is scheduled for tonight from 10 PM to 11 PM JST.',
 		showIcon: true,
 		size: 'medium',
+	},
+};
+
+export const Dismissable: Story = {
+	name: 'Behavior: Dismissable',
+	args: {
+		...DefaultInfo.args,
+		message: 'Dismissable Callout',
+		description: 'Click the X button on the right to dismiss this callout.',
+		dismissable: true,
 	},
 };

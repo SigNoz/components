@@ -2,7 +2,7 @@ import './index.css';
 import React from 'react';
 import { cva } from 'class-variance-authority';
 
-import { Info, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { Info, CheckCircle2, AlertTriangle, XCircle, X } from 'lucide-react';
 import { cn } from './lib/utils';
 
 interface CalloutProps extends React.ComponentProps<'div'> {
@@ -13,6 +13,8 @@ interface CalloutProps extends React.ComponentProps<'div'> {
 	icon?: React.ReactNode;
 	color?: string;
 	size?: 'small' | 'medium';
+	dismissable?: boolean;
+	onClose?: () => void;
 }
 
 const typeToColorMap = {
@@ -53,6 +55,8 @@ function Callout({
 	icon,
 	color,
 	size = 'small',
+	dismissable = false,
+	onClose,
 	...props
 }: CalloutProps) {
 	const IconComponent = icon || (showIcon && defaultIcons[type]);
@@ -102,6 +106,19 @@ function Callout({
 					</div>
 				)}
 			</div>
+			{dismissable && (
+				<button
+					type="button"
+					aria-label="Close"
+					onClick={onClose}
+					className="self-start p-1 rounded-sm  transition-colors cursor-pointer"
+				>
+					<X
+						size={size === 'medium' ? 16 : 14}
+						className="text-[var(--callout-description-color)] hover:text-[var(--callout-title-color)] transition-colors duration-100 ease-out"
+					/>
+				</button>
+			)}
 		</div>
 	);
 }
