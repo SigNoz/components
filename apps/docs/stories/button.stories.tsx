@@ -46,6 +46,11 @@ const meta: Meta<typeof Button> = {
 			control: 'boolean',
 			description: 'Whether to render as a child component',
 		},
+		background: {
+			control: 'select',
+			options: ['ink-500', 'ink-400', 'vanilla-100', 'vanilla-200'],
+			description: 'The background context for the action button',
+		},
 	},
 	parameters: {
 		design: {
@@ -378,4 +383,115 @@ export const Playground: Story = {
 			options: ['xs', 'sm', 'md', 'lg'],
 		},
 	},
+};
+
+// Add Action Button Story
+export const ActionButtons: Story = {
+	parameters: {
+		controls: { disable: true },
+	},
+	argTypes: {
+		background: {
+			control: 'select',
+			options: ['ink-500', 'ink-400', 'vanilla-100', 'vanilla-200'],
+			description: 'The background context for the action button',
+		},
+	},
+	args: {
+		variant: 'action',
+		background: 'ink-500',
+	},
+	render: () => (
+		<div className="space-y-8">
+			<div>
+				<h2 className="text-base font-semibold mb-4">Action Buttons</h2>
+				<p className="text-sm mb-4">
+					Action buttons adapt their style based on the background they`re placed on.
+				</p>
+
+				<div className="grid grid-cols-2 gap-8">
+					{/* ink-500 background */}
+					<div className="p-6 bg-ink-500 rounded-lg">
+						<p className="text-vanilla-100 mb-4">On ink-500 background</p>
+						<Button
+							variant="action"
+							background="ink-500"
+							prefixIcon={<ChevronLeft />}
+							suffixIcon={<ChevronRight />}
+						>
+							Action Button
+						</Button>
+					</div>
+
+					{/* ink-400 background */}
+					<div className="p-6 bg-ink-400 rounded-lg">
+						<p className="text-vanilla-100 mb-4">On ink-400 background</p>
+						<Button
+							variant="action"
+							background="ink-400"
+							prefixIcon={<ChevronLeft />}
+							suffixIcon={<ChevronRight />}
+						>
+							Action Button
+						</Button>
+					</div>
+
+					{/* vanilla-100 background */}
+					<div className="p-6 bg-vanilla-100 rounded-lg">
+						<p className="text-slate-500 mb-4">On vanilla-100 background</p>
+						<Button
+							variant="action"
+							background="vanilla-100"
+							prefixIcon={<ChevronLeft />}
+							suffixIcon={<ChevronRight />}
+						>
+							Action Button
+						</Button>
+					</div>
+
+					{/* vanilla-200 background */}
+					<div className="p-6 bg-vanilla-200 rounded-lg">
+						<p className="text-slate-500 mb-4">On vanilla-200 background</p>
+						<Button
+							variant="action"
+							background="vanilla-200"
+							prefixIcon={<ChevronLeft />}
+							suffixIcon={<ChevronRight />}
+						>
+							Action Button
+						</Button>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<h3 className="text-sm font-medium mb-3">Disabled Action Buttons</h3>
+				<div className="grid grid-cols-2 gap-8">
+					{/* Disabled examples */}
+					<div className="p-6 bg-ink-500 rounded-lg">
+						<Button
+							variant="action"
+							background="ink-500"
+							disabled
+							prefixIcon={<ChevronLeft />}
+							suffixIcon={<ChevronRight />}
+						>
+							Disabled Action Button
+						</Button>
+					</div>
+					<div className="p-6 bg-vanilla-100 rounded-lg">
+						<Button
+							variant="action"
+							background="vanilla-100"
+							disabled
+							prefixIcon={<ChevronLeft />}
+							suffixIcon={<ChevronRight />}
+						>
+							Disabled Action Button
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+	),
 };

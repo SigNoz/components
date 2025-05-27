@@ -11,9 +11,11 @@ const buttonVariants = cva(
 				dashed:
 					'border border-dashed bg-transparent border-[var(--button-background)] text-[var(--button-outlined-foreground)] hover:bg-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
 				ghost:
-					'bg-transparent text-[var(--button-outlined-foreground)]  hover:bg-[var(--button-outlined-foreground)]/10 disabled:opacity-60',
+					'bg-transparent text-[var(--button-outlined-foreground)] hover:bg-[var(--button-ghost-hover-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
 				link:
 					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90 hover:bg-transparent hover:text-[var(--button-link-hover-foreground)] disabled:opacity-60 font-weight-normal',
+				action:
+					'border border-solid bg-[var(--action-button-background)] border-[var(--action-button-border)] text-[var(--action-button-text)] hover:bg-[var(--action-button-hover-background)] hover:border-[var(--action-button-hover-border)] hover:text-[var(--action-button-hover-text)] disabled:opacity-60',
 			},
 			size: {
 				xs: 'h-[26px] px-2 py-1 text-[10px] leading-[14px] gap-1.5',
