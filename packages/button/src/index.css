@@ -6,6 +6,7 @@
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-robin-500);
 	--button-hover-background: var(--bg-robin-400);
+	--button-link-hover-foreground: var(--bg-robin-300);
 }
 
 [data-color='destructive'] {
@@ -13,6 +14,7 @@
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-cherry-500);
 	--button-hover-background: var(--bg-cherry-400);
+	--button-link-hover-foreground: var(--bg-cherry-300);
 }
 
 [data-color='warning'] {
@@ -20,13 +22,16 @@
 	--button-solid-foreground: var(--bg-ink-400);
 	--button-outlined-foreground: var(--bg-amber-500);
 	--button-hover-background: var(--bg-amber-400);
+	--button-link-hover-foreground: var(--bg-amber-300);
 }
 
 [data-color='secondary'] {
 	--button-background: var(--bg-vanilla-300);
+
 	--button-solid-foreground: var(--bg-slate-500);
 	--button-outlined-foreground: var(--bg-slate-50);
 	--button-hover-background: var(--bg-vanilla-300);
+	--button-link-hover-foreground: var(--bg-slate-300);
 }
 
 .dark [data-color='secondary'] {
@@ -34,4 +39,5 @@
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-vanilla-400);
 	--button-hover-background: var(--bg-slate-300);
+	--button-link-hover-foreground: var(--bg-vanilla-200);
 }

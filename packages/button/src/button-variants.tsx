@@ -13,7 +13,7 @@ const buttonVariants = cva(
 				ghost:
 					'bg-transparent text-[var(--button-outlined-foreground)] hover:border-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
 				link:
-					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90  hover:bg-transparent hover:text-[var(--button-outlined-foreground)] disabled:opacity-60 font-weight-normal',
+					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90 hover:bg-transparent hover:text-[var(--button-link-hover-foreground)] disabled:opacity-60 font-weight-normal',
 			},
 			size: {
 				xs: 'h-[26px] px-2 py-1 text-[10px] leading-[14px] gap-1.5',
