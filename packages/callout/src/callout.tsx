@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { Info, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import { cn } from './lib/utils';
 
-interface AlertProps extends React.ComponentProps<'div'> {
+interface CalloutProps extends React.ComponentProps<'div'> {
 	message?: React.ReactNode;
 	description?: React.ReactNode;
 	type?: 'info' | 'success' | 'warning' | 'error';
@@ -29,19 +29,22 @@ const defaultIcons = {
 	error: <XCircle />,
 };
 
-const alertVariants = cva('relative w-full rounded-lg border flex gap-[10px]', {
-	variants: {
-		size: {
-			small: 'p-3 pb-[14px] text-sm',
-			medium: 'p-4 text-base',
+const calloutVariants = cva(
+	'relative w-full rounded-lg border flex gap-[10px]',
+	{
+		variants: {
+			size: {
+				small: 'p-3 pb-[14px] text-sm',
+				medium: 'p-4 text-base',
+			},
+		},
+		defaultVariants: {
+			size: 'small',
 		},
 	},
-	defaultVariants: {
-		size: 'small',
-	},
-});
+);
 
-function Alert({
+function Callout({
 	className,
 	message,
 	description,
@@ -51,15 +54,15 @@ function Alert({
 	color,
 	size = 'small',
 	...props
-}: AlertProps) {
+}: CalloutProps) {
 	const IconComponent = icon || (showIcon && defaultIcons[type]);
 
 	return (
 		<div
-			data-slot="alert"
+			data-slot="callout"
 			data-color={color ?? typeToColorMap[type]}
 			role="alert"
-			className={cn(alertVariants({ size }), className)}
+			className={cn(calloutVariants({ size }), className)}
 			{...props}
 		>
 			{IconComponent &&
@@ -69,15 +72,15 @@ function Alert({
 						'mt-1',
 						(IconComponent as React.ReactElement)?.props?.className,
 					),
-					color: 'var(--alert-icon-color)',
+					color: 'var(--callout-icon-color)',
 					size: size === 'medium' ? 16 : 12,
 				})}
 			<div className="grid gap-0.5 flex-1">
 				{message && (
 					<div
-						data-slot="alert-title"
+						data-slot="callout-title"
 						className={cn(
-							'line-clamp-1 min-h-4 font-medium tracking-tight text-[var(--alert-title-color)]',
+							'line-clamp-1 min-h-4 font-medium tracking-tight text-[var(--callout-title-color)]',
 							size === 'medium' && 'text-base',
 						)}
 					>
@@ -86,9 +89,9 @@ function Alert({
 				)}
 				{description && (
 					<div
-						data-slot="alert-description"
+						data-slot="callout-description"
 						className={cn(
-							'grid justify-items-start gap-1 [&_p]:leading-relaxed text-[var(--alert-description-color)] font-normal leading-5',
+							'grid justify-items-start gap-1 [&_p]:leading-relaxed text-[var(--callout-description-color)] font-normal leading-5',
 							size === 'medium' ? 'text-base' : 'text-sm',
 						)}
 					>
@@ -100,4 +103,4 @@ function Alert({
 	);
 }
 
-export { Alert };
+export { Callout };
