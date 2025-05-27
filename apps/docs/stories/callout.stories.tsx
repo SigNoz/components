@@ -1,17 +1,41 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Callout } from '@signozhq/callout';
-
+import { Alert } from '@signozhq/alert';
+import { generateDocs } from '../utils/generateDocs';
 import { Info, XCircle, Star, Sun, Zap } from 'lucide-react'; // Added more icons for variety
 
-const meta: Meta<typeof Callout> = {
-	title: 'Components/Callout',
-	component: Callout,
+const alertExamples = [
+	`
+	import { Alert } from '@signozhq/alert';
+import { Info } from 'lucide-react';
+
+export default function MyComponent() {
+	return (
+		<Alert
+			type="info"
+			size="medium"
+			showIcon
+			message="Important Information"
+			description="This is additional information that provides more context about the alert."
+		/>
+	);
+}`,
+];
+
+const alertDocs = generateDocs({
+	packageName: '@signozhq/alert',
+	description:
+		'A versatile alert component to display important messages to the user, with various types, sizes, and custom styling options.',
+	examples: alertExamples,
+});
+
+const meta: Meta<typeof Alert> = {
+	title: 'Components/Alert',
+	component: Alert,
 	parameters: {
 		docs: {
 			description: {
-				component:
-					'A versatile callout component to display important messages to the user, with various types, sizes, and custom styling options.',
+				component: alertDocs,
 			},
 		},
 		design: {
