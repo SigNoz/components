@@ -201,49 +201,74 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 			},
 
 			// Create a generic story file
-			(answers) => {
-				const storyPath = path.resolve(
+			async (answers) => {
+				const componentName = (answers as { name: string }).name;
+				const description = (answers as { description: string }).description;
+				const storiesPath = path.resolve(
 					PROJECT_ROOT,
-					`apps/docs/stories/${(answers as { name: string }).name}.stories.tsx`,
+					`apps/docs/stories/${componentName}.stories.tsx`,
 				);
-				const storyContent = `
-import type { Meta, StoryObj } from "@storybook/react";
 
-const ExampleComponent = ({ text = "Example Component" }) => <h1>{text}</h1>;
+				// Convert kebab-case to PascalCase
+				const toPascalCase = (str: string) => {
+					return str
+						.split('-')
+						.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+						.join('');
+				};
 
-const meta: Meta<typeof ExampleComponent> = {
-  title: 'Components/${(answers as { name: string }).name.charAt(0).toUpperCase() + (answers as { name: string }).name.slice(1)}',
-  component: ExampleComponent,
-  argTypes: {
-    text: {
-      control: { type: "text" },
+				const pascalCaseName = toPascalCase(componentName);
+
+				// Create documentation boilerplate
+				const exampleCode = `import { ${pascalCaseName} } from '@signozhq/${componentName}';
+
+export default function MyComponent() {
+  return (
+    <${pascalCaseName} />
+  );
+}`;
+
+				// Create documentation boilerplate
+				const storiesContent = `import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { ${pascalCaseName} } from '@signozhq/${componentName}';
+import { generateDocs } from '../utils/generateDocs';
+
+const ${pascalCaseName}Examples = [
+\`${exampleCode}\`
+];
+
+const ${pascalCaseName}Docs = generateDocs({
+  packageName: '@signozhq/${componentName}',
+  description: '${description}',
+  examples: ${pascalCaseName}Examples,
+});
+
+const meta: Meta<typeof ${pascalCaseName}> = {
+  title: 'Components/${pascalCaseName}',
+  component: ${pascalCaseName},
+  parameters: {
+    docs: {
+      description: {
+        component: ${pascalCaseName}Docs,
+      },
     },
   },
+  tags: ['autodocs'],
 };
 
 export default meta;
-
-type Story = StoryObj<typeof ExampleComponent>;
+type Story = StoryObj<typeof ${pascalCaseName}>;
 
 export const Default: Story = {
-  render: (args) => <ExampleComponent {...args} />,
   args: {
-    text: "Default Example",
+    // Add default props here
   },
-};
+};`;
 
-export const CustomText: Story = {
-  render: (args) => <ExampleComponent {...args} />,
-  args: {
-    text: "Custom Example Text",
-  },
-};
-`;
-
-				fs.writeFileSync(storyPath, storyContent);
-
-				console.log(`Created generic story file: ${storyPath}`);
-				return `Generic story file created for ${(answers as { name: string }).name}`;
+				fs.writeFileSync(storiesPath, storiesContent);
+				console.log(`Created Storybook story with documentation at ${storiesPath}`);
+				return 'Storybook story created';
 			},
 
 			// Run pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT level
