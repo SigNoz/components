@@ -17,7 +17,6 @@ export default function MyComponent() {
         id="my-input" 
         type="email" 
         placeholder="name@example.com" 
-        theme="light" 
       />
     </div>
   );
