@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer disabled:pointer-events-none disabled:opacity-60 bg-[var(--button-background)] text-[var(--button-solid-foreground)] hover:bg-[var(--button-hover-background)] ',
+	'inline-flex items-center justify-center whitespace-nowrap rounded-md transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer disabled:pointer-events-none disabled:opacity-60 bg-[var(--button-background)] text-[var(--button-solid-foreground)] hover:bg-[var(--button-hover-background)] ',
 	{
 		variants: {
 			variant: {
@@ -13,7 +13,7 @@ const buttonVariants = cva(
 				ghost:
 					'bg-transparent text-[var(--button-outlined-foreground)] hover:border-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
 				link:
-					'bg-transparent text-[var(--button-outlined-foreground)]/90  hover:bg-transparent hover:text-[var(--button-outlined-foreground)] disabled:opacity-60 font-weight-normal',
+					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90  hover:bg-transparent hover:text-[var(--button-outlined-foreground)] disabled:opacity-60 font-weight-normal',
 			},
 			size: {
 				xs: 'h-[26px] px-2 py-1 text-[10px] leading-[14px] gap-1.5',
