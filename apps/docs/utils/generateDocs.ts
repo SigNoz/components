@@ -31,7 +31,7 @@ ${installCommands.map((cmd) => `\`\`\`bash\n${cmd}\n\`\`\``).join('\n\n')}
 
 	// Generate usage examples
 	const usage = `
-## Usage
+## Example usage
 
 ${examples.map((example) => `\`\`\`jsx\n${example}\n\`\`\``).join('\n\n')}
 `;
