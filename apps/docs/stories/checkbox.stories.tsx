@@ -1,5 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from '@signozhq/checkbox';
+import { generateDocs } from '../utils/generateDocs';
+
+const checkboxExamples = [
+	`import { Checkbox } from '@signozhq/checkbox';
+
+export default function MyComponent() {
+	return (
+		<div className="space-y-2">
+			<Checkbox id="terms" labelName="Accept terms and conditions" />
+			<Checkbox id="newsletter" labelName="Subscribe to newsletter" defaultChecked />
+			<Checkbox id="disabled" labelName="Disabled option" disabled />
+		</div>
+	);
+}`,
+];
+
+const checkboxDocs = generateDocs({
+	packageName: '@signozhq/checkbox',
+	description:
+		'A customizable checkbox component for user selections with support for disabled states.',
+	examples: checkboxExamples,
+});
 
 const meta: Meta<typeof Checkbox> = {
 	title: 'Components/Checkbox',
@@ -21,6 +43,11 @@ const meta: Meta<typeof Checkbox> = {
 		},
 	},
 	parameters: {
+		docs: {
+			description: {
+				component: checkboxDocs,
+			},
+		},
 		design: [
 			{
 				name: 'Figma',
@@ -29,6 +56,7 @@ const meta: Meta<typeof Checkbox> = {
 			},
 		],
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;

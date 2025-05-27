@@ -1,10 +1,40 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '@signozhq/badge';
+import { generateDocs } from '../utils/generateDocs';
+
+const badgeExamples = [
+	`import { Badge } from '@signozhq/badge';
+
+	export default function MyComponent() {
+		return (
+			<div className="flex gap-2">
+				<Badge color="primary">Primary</Badge>
+				<Badge color="secondary">Secondary</Badge>
+				<Badge variant="outline" color="destructive">Destructive</Badge>
+			</div>
+		);
+	}`,
+];
+
+const badgeDocs = generateDocs({
+	packageName: '@signozhq/badge',
+	description:
+		'A versatile badge component for displaying status, counts, or labels with various colors and styles.',
+	examples: badgeExamples,
+});
 
 const meta: Meta<typeof Badge> = {
 	title: 'Components/Badge',
 	component: Badge,
+	parameters: {
+		docs: {
+			description: {
+				component: badgeDocs,
+			},
+		},
+	},
+	tags: ['autodocs'],
 	argTypes: {
 		color: {
 			control: 'select',
