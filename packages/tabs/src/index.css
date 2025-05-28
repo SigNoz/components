@@ -1,2 +1,20 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+:root {
+	--tab-border-color: var(--color-vanilla-300);
+	--tab-background: var(--color-vanilla-200);
+	--tab-text-color: var(--color-slate-50);
+	--tab-hover-text-color: var(--color-slate-400);
+	--tab-active-text-color: var(--color-slate-500);
+	--tab-active-background: var(--color-transparent);
+}
+
+.dark {
+	--tab-border-color: var(--color-slate-400);
+	--tab-background: var(--color-ink-300);
+	--tab-text-color: var(--color-vanilla-400);
+	--tab-hover-text-color: var(--color-vanilla-100);
+	--tab-active-text-color: var(--color-vanilla-100);
+	--tab-active-background: var(--color-transparent);
+}
