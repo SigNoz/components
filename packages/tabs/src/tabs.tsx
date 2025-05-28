@@ -53,6 +53,7 @@ const Tabs = React.forwardRef<
 				{...props}
 			>
 				<TabsList variant={variant}>
+					<div className="min-w-4  border-b border-secondary flex-0"></div>
 					{items.map((item) => (
 						<TabsTrigger
 							key={item.key}
@@ -65,6 +66,7 @@ const Tabs = React.forwardRef<
 							{item.suffixIcon && item.suffixIcon}
 						</TabsTrigger>
 					))}
+					<div className="min-w-4  border-b border-secondary flex-0"></div>
 				</TabsList>
 				{items.map((item) => (
 					<TabsContent key={item.key} value={item.key}>
