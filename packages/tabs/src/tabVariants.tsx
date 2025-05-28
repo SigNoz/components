@@ -62,12 +62,32 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'relative z-10',
 			],
 			secondary: [
-				'inline-flex h-full flex-0 items-center justify-center gap-1.5 bg-background  whitespace-nowrap px-5 py-1 text-sm transition-[color] border-t border-l border-b border-r first:rounded-tl-[1px] last:rounded-tr-[1px] data-[state=active]:border-b-transparent focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:text-opacity-50 disabled:bg-opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4  cursor-pointer',
-				'border-secondary',
-				'text-slate-50 dark:text-vanilla-400',
-				'data-[state=active]:bg-card dark:data-[state=active]:bg-input/30',
-				'hover:text-slate-400 dark:hover:text-vanilla-100',
-				'data-[state=active]:text-slate-400  dark:data-[state=active]:text-vanilla-100',
+				// 'inline-flex h-full flex-0 items-center justify-center gap-1.5 bg-background disabled:bg-vanilla-200 dark:disabled:bg-ink-300 disabled:text-vanilla-400   whitespace-nowrap px-5 py-1 text-sm transition-[color] border-t border-l border-b border-r first:rounded-tl-[1px] last:rounded-tr-[1px] data-[state=active]:border-b-transparent focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none  [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4  cursor-pointer',
+
+				// Layout & Sizing
+				'inline-flex h-full flex-0 items-center justify-center gap-1.5 whitespace-nowrap px-5 py-1 text-sm',
+				'cursor-pointer transition-[color]',
+
+				// Borders & Shape
+				'border  border-[var(--tab-border-color)] [&:not(:last-of-type)]:border-r-transparent',
+				'first:rounded-tl-[1px] last:rounded-tr-[1px]',
+				'data-[state=active]:border-b-transparent',
+
+				// Focus & Disabled States
+				'focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1',
+				'disabled:pointer-events-none disabled:text-opacity-50 disabled:bg-opacity-50',
+
+				// Icon Styles
+				'[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+
+				// Colors & Background
+				'text-[var(--tab-text-color)]',
+				'bg-[var(--tab-background)]',
+
+				// Hover & Active States
+				'hover:text-[var(--tab-hover-text-color)]',
+				'data-[state=active]:text-[var(--tab-active-text-color)]',
+				'data-[state=active]:bg-[var(--tab-active-background)]',
 			],
 		},
 	},
