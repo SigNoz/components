@@ -16,7 +16,7 @@ const tabsListWrapperVariants = cva('', {
 	variants: {
 		variant: {
 			primary: '',
-			secondary: 'w-full  rounded-none pl-4',
+			secondary: 'w-full pl-4',
 		},
 	},
 	defaultVariants: {
@@ -62,23 +62,37 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'relative z-10',
 			],
 			secondary: [
-				// 'inline-flex h-full flex-0 items-center justify-center gap-1.5 bg-background disabled:bg-vanilla-200 dark:disabled:bg-ink-300 disabled:text-vanilla-400   whitespace-nowrap px-5 py-1 text-sm transition-[color] border-t border-l border-b border-r first:rounded-tl-[1px] last:rounded-tr-[1px] data-[state=active]:border-b-transparent focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none  [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4  cursor-pointer',
-
 				// Layout & Sizing
-				'inline-flex h-full flex-0 items-center justify-center gap-1.5 whitespace-nowrap px-5 py-1 text-sm',
+				'inline-flex h-full flex-0 items-center justify-center gap-1 whitespace-nowrap px-5 py-1 text-sm',
 				'cursor-pointer transition-[color]',
 
 				// Borders & Shape
-				'border  border-[var(--tab-border-color)] [&:not(:last-of-type)]:border-r-transparent',
-				'first:rounded-tl-[1px] last:rounded-tr-[1px]',
+				'border  border-[var(--tab-border-color)] border-r-[0.5px] last-of-type:border-r-[1px]',
 				'data-[state=active]:border-b-transparent',
+				'first-of-type:rounded-tl-md last-of-type:rounded-tr-md',
 
-				// Focus & Disabled States
-				'focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1',
-				'disabled:pointer-events-none disabled:text-opacity-50 disabled:bg-opacity-50',
+				// Disabled States
+				'disabled:relative disabled:z-0 disabled:cursor-not-allowed',
+
+				// Left side stripes
+				'disabled:before:content-[""] disabled:before:absolute disabled:before:inset-y-0 disabled:before:left-0',
+				'disabled:before:w-[25px] disabled:before:h-full',
+				'disabled:before:bg-[repeating-linear-gradient(-45deg,transparent,transparent_2px,var(--tab-border-color)_2px,var(--tab-border-color)_4px)]',
+				'disabled:before:opacity-70  disabled:before:z-[1]',
+				'disabled:before:[mask-image:linear-gradient(to_left,transparent_0%,black_100%)]',
+
+				// Right side stripes
+				'disabled:after:content-[""] disabled:after:absolute disabled:after:inset-y-0 disabled:after:right-0',
+				'disabled:after:w-[25px] disabled:after:h-full',
+				'disabled:after:bg-[repeating-linear-gradient(-45deg,transparent,transparent_2px,var(--tab-border-color)_2px,var(--tab-border-color)_4px)]',
+				'disabled:after:opacity-70  disabled:after:z-[1]',
+				'disabled:after:[mask-image:linear-gradient(to_right,transparent_0%,black_100%)]',
+
+				// Ensure text and icons are above the stripes
+				'disabled:[&>*]:relative disabled:[&>*]:z-[2]',
 
 				// Icon Styles
-				'[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+				'[&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
 
 				// Colors & Background
 				'text-[var(--tab-text-color)]',
@@ -88,6 +102,7 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'hover:text-[var(--tab-hover-text-color)]',
 				'data-[state=active]:text-[var(--tab-active-text-color)]',
 				'data-[state=active]:bg-[var(--tab-active-background)]',
+				'disabled:text-slate-50/40 dark:disabled:text-vanilla-100/40',
 			],
 		},
 	},
