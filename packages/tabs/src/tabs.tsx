@@ -58,7 +58,9 @@ const Tabs = React.forwardRef<
 				{' '}
 				<TooltipProvider>
 					<TabsList variant={variant}>
-						<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+						{variant === 'secondary' && (
+							<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+						)}
 						{items.map((item) => (
 							<TabsTrigger
 								key={item.key}
@@ -79,7 +81,9 @@ const Tabs = React.forwardRef<
 								)}
 							</TabsTrigger>
 						))}
-						<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+						{variant === 'secondary' && (
+							<div className="min-w-4 border-b border-[var(--tab-border-color)] shrink-0 grow"></div>
+						)}
 					</TabsList>
 					{items.map((item) => (
 						<TabsContent key={item.key} value={item.key}>

@@ -67,7 +67,7 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'cursor-pointer transition-[color]',
 
 				// Borders & Shape
-				'border  border-[var(--tab-border-color)] border-r-[0.5px] last-of-type:border-r-[1px]',
+				'border  border-[var(--tab-border-color)] border-r-0 last-of-type:border-r-[1px]',
 				'data-[state=active]:border-b-transparent',
 				'first-of-type:rounded-tl-md last-of-type:rounded-tr-md',
 
