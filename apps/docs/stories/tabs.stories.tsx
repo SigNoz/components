@@ -17,7 +17,7 @@ import {
 
 const tabsExamples = [
 	`import Tabs from '@signozhq/tabs';
-import { Settings, AlertCircle } from 'lucide-react';
+import { Settings, AlertCircle } from '@signozhq/icons';
 
 export default function MyComponent() {
 	const items = [

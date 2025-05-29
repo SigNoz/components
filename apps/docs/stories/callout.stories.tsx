@@ -7,7 +7,7 @@ import { Info, XCircle, Star, Sun, Zap } from 'lucide-react'; // Added more icon
 const alertExamples = [
 	`
 	import { Callout } from '@signozhq/callout';
-import { Info } from 'lucide-react';
+import { Info } from '@signozhq/icons';
 
 export default function MyComponent() {
 	return (
