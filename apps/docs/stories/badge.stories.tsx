@@ -6,15 +6,15 @@ import { generateDocs } from '../utils/generateDocs';
 const badgeExamples = [
 	`import { Badge } from '@signozhq/badge';
 
-	export default function MyComponent() {
-		return (
-			<div className="flex gap-2">
-				<Badge color="primary">Primary</Badge>
-				<Badge color="secondary">Secondary</Badge>
-				<Badge variant="outline" color="destructive">Destructive</Badge>
-			</div>
-		);
-	}`,
+export default function MyComponent() {
+	return (
+		<div className="flex gap-2">
+			<Badge color="primary">Primary</Badge>
+			<Badge color="secondary">Secondary</Badge>
+			<Badge variant="outline" color="destructive">Destructive</Badge>
+		</div>
+	);
+}`,
 ];
 
 const badgeDocs = generateDocs({
