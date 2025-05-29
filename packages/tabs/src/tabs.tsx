@@ -3,6 +3,8 @@ import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { type VariantProps } from 'class-variance-authority';
 import { cn } from './lib/utils';
+import { LockIcon } from 'lucide-react';
+import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
 import {
 	tabsListVariants,
 	tabsListWrapperVariants,
@@ -15,6 +17,7 @@ type TabItemType = {
 	label: React.ReactNode;
 	children: React.ReactNode;
 	disabled?: boolean;
+	disabledReason?: string;
 	prefixIcon?: React.ReactNode;
 	suffixIcon?: React.ReactNode;
 };
@@ -52,27 +55,38 @@ const Tabs = React.forwardRef<
 				className={cn(tabsVariants({ variant, className }))}
 				{...props}
 			>
-				<TabsList variant={variant}>
-					<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+				{' '}
+				<TooltipProvider>
+					<TabsList variant={variant}>
+						<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+						{items.map((item) => (
+							<TabsTrigger
+								key={item.key}
+								value={item.key}
+								disabled={item.disabled}
+								variant={variant}
+							>
+								{item.disabled ? (
+									<Tooltip title={item.disabledReason || 'This tab is disabled'}>
+										<LockIcon className="shrink-0 " size={16} />
+									</Tooltip>
+								) : (
+									item.prefixIcon && <span className="">{item.prefixIcon}</span>
+								)}
+								{item.label}
+								{!item.disabled && item.suffixIcon && (
+									<span className="">{item.suffixIcon}</span>
+								)}
+							</TabsTrigger>
+						))}
+						<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+					</TabsList>
 					{items.map((item) => (
-						<TabsTrigger
-							key={item.key}
-							value={item.key}
-							disabled={item.disabled}
-							variant={variant}
-						>
-							{item.prefixIcon && item.prefixIcon}
-							{item.label}
-							{item.suffixIcon && item.suffixIcon}
-						</TabsTrigger>
-					))}
-					<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
-				</TabsList>
-				{items.map((item) => (
-					<TabsContent key={item.key} value={item.key}>
-						{item.children}
-					</TabsContent>
-				))}
+						<TabsContent key={item.key} value={item.key}>
+							{item.children}
+						</TabsContent>
+					))}{' '}
+				</TooltipProvider>
 			</TabsPrimitive.Root>
 		);
 	},
@@ -138,7 +152,7 @@ const TabsTrigger = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.Trigger>,
 	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
 		VariantProps<typeof tabsTriggerVariants>
->(({ className, children, variant = 'primary', ...props }, ref) => {
+>(({ className, children, variant = 'primary', disabled, ...props }, ref) => {
 	const triggerRef = React.useRef<HTMLButtonElement>(null);
 
 	React.useImperativeHandle(ref, () => triggerRef.current!);
@@ -180,6 +194,7 @@ const TabsTrigger = React.forwardRef<
 			className={cn(tabsTriggerVariants({ variant, className }))}
 			onMouseEnter={variant === 'primary' ? updateTabHoverStyles : undefined}
 			onMouseLeave={variant === 'primary' ? resetTabHoverStyles : undefined}
+			disabled={disabled}
 			{...props}
 		>
 			{children}
