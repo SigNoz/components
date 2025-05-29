@@ -27,22 +27,7 @@ const tabsListWrapperVariants = cva('', {
 const tabsListVariants = cva('', {
 	variants: {
 		variant: {
-			primary: [
-				'group inline-flex items-center gap-6 p-1 rounded-md relative',
-				'before:absolute before:content-[""] before:h-[calc(100%-8px)] before:top-1',
-				'before:bg-[#3E44631A] dark:before:bg-[#ABBDFF1A]',
-				'before:rounded ',
-				'before:transition-[width,transform,opacity] before:duration-200 before:ease-in-out',
-				'before:opacity-0 hover:before:opacity-100',
-				'[--tab-width:0px] [--tab-left:0px]',
-				'before:w-[var(--tab-width)] before:transform before:translate-x-[var(--tab-left)]',
-				'after:absolute after:content-[""] after:bottom-[-8px] after:left-0 after:h-0.5',
-				'after:bg-primary',
-				'after:rounded-full after:transition-[width,transform]',
-				'after:duration-200 after:ease-in-out',
-				'[--active-width:0px] [--active-left:0px]',
-				'after:w-[var(--active-width)] after:transform after:translate-x-[var(--active-left)]',
-			],
+			primary: ['inline-flex items-center gap-6 rounded-md relative'],
 			secondary: 'flex ',
 		},
 	},
@@ -59,7 +44,8 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
 				'disabled:text-opacity-50 disabled:cursor-not-allowed',
 				'disabled:text-slate-50/40 dark:disabled:text-vanilla-100/40',
-				'data-[state=active]:text-foreground text-muted-foreground',
+				'data-[state=active]:text-foreground text-slate-50',
+				'hover:text-ink-500 dark:hover:text-vanilla-100',
 				'relative z-10',
 			],
 			secondary: [
