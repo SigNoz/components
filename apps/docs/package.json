@@ -15,7 +15,6 @@
 	"dependencies": {
 		"@signozhq/alert": "workspace:*",
 		"@signozhq/tooltip": "workspace:*",
-		"@signozhq/alert": "workspace:*",
 		"@signozhq/toggle-group": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
 		"@signozhq/dialog": "workspace:*",

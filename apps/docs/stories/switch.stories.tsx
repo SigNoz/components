@@ -1,5 +1,27 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Switch } from '@signozhq/switch';
+import { generateDocs } from '../utils/generateDocs';
+
+const switchExamples = [
+	`import { Switch } from '@signozhq/switch';
+
+export default function MyComponent() {
+	return (
+		<div className="space-y-4">
+			<Switch id="notifications" labelName="Enable notifications" />
+			<Switch id="dark-mode" labelName="Dark mode" defaultChecked />
+			<Switch id="maintenance" labelName="Maintenance mode" disabled />
+		</div>
+	);
+}`,
+];
+
+const switchDocs = generateDocs({
+	packageName: '@signozhq/switch',
+	description:
+		'A toggle switch component for binary on/off or true/false selections.',
+	examples: switchExamples,
+});
 
 const meta: Meta<typeof Switch> = {
 	title: 'Components/Switch',
@@ -16,6 +38,11 @@ const meta: Meta<typeof Switch> = {
 		},
 	},
 	parameters: {
+		docs: {
+			description: {
+				component: switchDocs,
+			},
+		},
 		design: [
 			{
 				name: 'Figma',
@@ -24,6 +51,7 @@ const meta: Meta<typeof Switch> = {
 			},
 		],
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;

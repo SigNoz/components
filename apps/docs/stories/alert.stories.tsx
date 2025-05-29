@@ -1,8 +1,33 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Alert } from '@signozhq/alert';
-
+import { generateDocs } from '../utils/generateDocs';
 import { Info, XCircle, Star, Sun, Zap } from 'lucide-react'; // Added more icons for variety
+
+const alertExamples = [
+	`
+	import { Alert } from '@signozhq/alert';
+import { Info } from '@signozhq/icons';
+
+export default function MyComponent() {
+	return (
+		<Alert
+			type="info"
+			size="medium"
+			showIcon
+			message="Important Information"
+			description="This is additional information that provides more context about the alert."
+		/>
+	);
+}`,
+];
+
+const alertDocs = generateDocs({
+	packageName: '@signozhq/alert',
+	description:
+		'A versatile alert component to display important messages to the user, with various types, sizes, and custom styling options.',
+	examples: alertExamples,
+});
 
 const meta: Meta<typeof Alert> = {
 	title: 'Components/Alert',
@@ -10,8 +35,7 @@ const meta: Meta<typeof Alert> = {
 	parameters: {
 		docs: {
 			description: {
-				component:
-					'A versatile alert component to display important messages to the user, with various types, sizes, and custom styling options.',
+				component: alertDocs,
 			},
 		},
 		design: {
