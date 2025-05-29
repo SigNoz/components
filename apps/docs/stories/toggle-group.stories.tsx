@@ -15,23 +15,23 @@ import {
 
 const toggleGroupExamples = [
 	`import { ToggleGroup, ToggleGroupItem } from '@signozhq/toggle-group';
-	import { Bold, Italic, Underline } from 'lucide-react';
+import { Bold, Italic, Underline } from 'lucide-react';
 
-	export default function MyComponent() {
-		return (
-			<ToggleGroup type="multiple" defaultValue={['bold']} variant="outline">
-				<ToggleGroupItem value="bold" aria-label="Bold">
-					<Bold className="h-3 w-3" />
-				</ToggleGroupItem>
-				<ToggleGroupItem value="italic" aria-label="Italic">
-					<Italic className="h-3 w-3" />
-				</ToggleGroupItem>
-				<ToggleGroupItem value="underline" aria-label="Underline">
-					<Underline className="h-3 w-3" />
-				</ToggleGroupItem>
-			</ToggleGroup>
-		);
-	}`,
+export default function MyComponent() {
+	return (
+		<ToggleGroup type="multiple" defaultValue={['bold']} variant="outline">
+			<ToggleGroupItem value="bold" aria-label="Bold">
+				<Bold className="h-3 w-3" />
+			</ToggleGroupItem>
+			<ToggleGroupItem value="italic" aria-label="Italic">
+				<Italic className="h-3 w-3" />
+			</ToggleGroupItem>
+			<ToggleGroupItem value="underline" aria-label="Underline">
+				<Underline className="h-3 w-3" />
+			</ToggleGroupItem>
+		</ToggleGroup>
+	);
+}`,
 ];
 
 const toggleGroupDocs = generateDocs({
