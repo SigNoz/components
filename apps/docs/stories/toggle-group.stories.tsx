@@ -15,7 +15,7 @@ import {
 
 const toggleGroupExamples = [
 	`import { ToggleGroup, ToggleGroupItem } from '@signozhq/toggle-group';
-import { Bold, Italic, Underline } from 'lucide-react';
+import { Bold, Italic, Underline } from '@signozhq/icons';
 
 export default function MyComponent() {
 	return (

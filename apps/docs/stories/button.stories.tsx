@@ -17,7 +17,7 @@ type ButtonConfig = {
 
 const buttonExamples = [
 	`import { Button } from '@signozhq/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from '@signozhq/icons';
 
 export default function MyComponent() {
 return (
