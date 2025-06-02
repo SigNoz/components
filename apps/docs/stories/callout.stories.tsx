@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Callout } from '../../../packages/callout/dist/callout';
+import { Callout } from '@signozhq/callout';
 
 import { Info, XCircle, Star, Sun, Zap } from 'lucide-react'; // Added more icons for variety
 
@@ -90,7 +90,7 @@ const meta: Meta<typeof Callout> = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof Callout>;
 
 export const AllVariantsOverview: Story = {
 	name: 'All Variants Overview',
