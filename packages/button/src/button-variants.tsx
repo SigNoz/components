@@ -13,7 +13,7 @@ const buttonVariants = cva(
 				ghost:
 					'bg-transparent text-[var(--button-outlined-foreground)] hover:bg-[var(--button-ghost-hover-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
 				link:
-					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90 hover:bg-transparent hover:text-[var(--button-link-hover-foreground)] disabled:opacity-60 font-weight-normal',
+					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90 hover:bg-transparent hover:text-[var(--button-link-hover-foreground)] disabled:opacity-60',
 				action:
 					'border border-solid bg-[var(--action-button-background)] border-[var(--action-button-border)] text-[var(--action-button-text)] hover:bg-[var(--action-button-hover-background)] hover:border-[var(--action-button-hover-border)] hover:text-[var(--action-button-hover-text)] disabled:opacity-60',
 			},

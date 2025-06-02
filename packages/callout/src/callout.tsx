@@ -70,15 +70,21 @@ function Callout({
 			{...props}
 		>
 			{IconComponent ? (
-				React.cloneElement(IconComponent as React.ReactElement, {
-					'aria-hidden': true,
-					className: cn(
-						'mt-1',
-						(IconComponent as React.ReactElement)?.props?.className,
-					),
-					color: 'var(--callout-icon-color)',
-					size: size === 'medium' ? 16 : 12,
-				})
+				React.isValidElement(IconComponent) ? (
+					React.cloneElement(IconComponent as React.ReactElement, {
+						'aria-hidden': true,
+						className: cn(
+							'mt-1',
+							(IconComponent as React.ReactElement).props?.className,
+						),
+						color: 'var(--callout-icon-color)',
+						size: size === 'medium' ? 16 : 12,
+					})
+				) : (
+					<span className="mt-1" style={{ color: 'var(--callout-icon-color)' }}>
+						{IconComponent}
+					</span>
+				)
 			) : (
 				<div className={cn(size === 'medium' ? 'w-4' : 'w-3')} />
 			)}
