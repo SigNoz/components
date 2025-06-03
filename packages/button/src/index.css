@@ -4,9 +4,10 @@
 [data-color='primary'] {
 	--button-background: var(--bg-robin-500);
 	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-robin-500);
+	--button-outlined-foreground: var(--bg-robin-700);
 	--button-hover-background: var(--bg-robin-400);
-	--button-link-hover-foreground: var(--bg-robin-300);
+	--button-link-hover-foreground: var(--bg-robin-500);
+	--button-ghost-hover-foreground: var(--bg-robin-500);
 }
 
 [data-color='destructive'] {
@@ -14,15 +15,17 @@
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-cherry-500);
 	--button-hover-background: var(--bg-cherry-400);
-	--button-link-hover-foreground: var(--bg-cherry-300);
+	--button-link-hover-foreground: var(--bg-cherry-400);
+	--button-ghost-hover-foreground: var(--bg-cherry-400);
 }
 
 [data-color='warning'] {
 	--button-background: var(--bg-amber-500);
 	--button-solid-foreground: var(--bg-ink-400);
-	--button-outlined-foreground: var(--bg-amber-500);
+	--button-outlined-foreground: var(--bg-amber-700);
 	--button-hover-background: var(--bg-amber-400);
-	--button-link-hover-foreground: var(--bg-amber-300);
+	--button-link-hover-foreground: var(--bg-amber-600);
+	--button-ghost-hover-foreground: var(--bg-amber-600);
 }
 
 [data-color='secondary'] {
