@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer disabled:pointer-events-none disabled:opacity-60 bg-[var(--button-background)] text-[var(--button-solid-foreground)] hover:bg-[var(--button-hover-background)] ',
+	'inline-flex items-center justify-center whitespace-nowrap rounded-md transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring cursor-pointer disabled:pointer-events-none disabled:opacity-60 bg-[var(--button-background)] text-[var(--button-solid-foreground)] hover:bg-[var(--button-hover-background)] ',
 	{
 		variants: {
 			variant: {
@@ -11,9 +11,11 @@ const buttonVariants = cva(
 				dashed:
 					'border border-dashed bg-transparent border-[var(--button-background)] text-[var(--button-outlined-foreground)] hover:bg-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
 				ghost:
-					'bg-transparent text-[var(--button-outlined-foreground)] hover:border-[var(--button-background)] hover:text-[var(--button-solid-foreground)] disabled:opacity-60',
+					'bg-transparent text-[var(--button-outlined-foreground)] hover:bg-[var(--button-ghost-hover-background)] hover:text-[var(--button-ghost-hover-foreground)] disabled:opacity-60',
 				link:
-					'bg-transparent text-[var(--button-outlined-foreground)]/90  hover:bg-transparent hover:text-[var(--button-outlined-foreground)] disabled:opacity-60 font-weight-normal',
+					'bg-transparent font-medium text-[var(--button-outlined-foreground)]/90 hover:bg-transparent hover:text-[var(--button-link-hover-foreground)] disabled:opacity-60',
+				action:
+					'border border-solid bg-[var(--action-button-background)] border-[var(--action-button-border)] text-[var(--action-button-text)] hover:bg-[var(--action-button-hover-background)] hover:border-[var(--action-button-hover-border)] hover:text-[var(--action-button-hover-text)] disabled:opacity-60',
 			},
 			size: {
 				xs: 'h-[26px] px-2 py-1 text-[10px] leading-[14px] gap-1.5',

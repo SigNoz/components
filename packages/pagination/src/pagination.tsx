@@ -49,7 +49,7 @@ function PaginationContent({
 }
 
 function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
-	return <li data-slot="pagination-item" {...props} />;
+	return <li data-slot="pagination-item" {...props} className="flex" />;
 }
 
 type PaginationLinkProps = {
@@ -85,9 +85,11 @@ function PaginationLink({
 					variant: isActive ? 'solid' : 'ghost',
 					size,
 				}),
-				'm-0 hover:bg-secondary hover:text-secondary-foreground cursor-pointer',
-				isActive &&
-					'bg-primary  text-primary-foreground hover:bg-primary hover:text-primary-foreground',
+				'm-0 font-sans tabular-nums slashed-zero',
+				isActive
+					? 'bg-[var(--pagination-active-bg)] text-[var(--pagination-active-text)] hover:bg-[var(--pagination-active-hover-bg)] hover:text-[var(--pagination-active-text)] text-[var(--pagination-active-text)] font-medium'
+					: 'text-[var(--pagination-item-text)] hover:text-[var(--pagination-item-hover-text)] hover:bg-[var(--pagination-item-hover-bg)]',
+
 				className,
 			)}
 			onClick={handleClick}
@@ -119,7 +121,7 @@ function PaginationPrevious({
 			disabled={disabled}
 			{...props}
 		>
-			<ChevronLeft size={16} />
+			<ChevronLeft className="w-full" size={16} />
 		</PaginationLink>
 	);
 }
@@ -133,7 +135,7 @@ function PaginationNext({ className, disabled, ...props }: PaginationNavProps) {
 			disabled={disabled}
 			{...props}
 		>
-			<ChevronRight size={16} />
+			<ChevronRight className="w-full" size={16} />
 		</PaginationLink>
 	);
 }

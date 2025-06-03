@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+@import '@signozhq/tailwind-config/global.css';
+
+[data-slot='callout'] {
+	--callout-icon-color: currentColor;
+	--callout-title-color: var(--text-card-foreground);
+	--callout-description-color: var(--text-muted-foreground);
+	border-color: var(--callout-border-color, transparent);
+}
+
+[data-slot='callout'] {
+	background: color-mix(in srgb, var(--callout-background) 20%, transparent);
+}
+
+.dark [data-slot='callout'] {
+	background: color-mix(in srgb, var(--callout-background) 10%, transparent);
+}
+
+[data-color='robin'] {
+	--callout-background: var(--bg-robin-500);
+	--callout-icon-color: var(--bg-robin-500);
+	--callout-title-color: var(--bg-robin-500);
+	--callout-description-color: var(--bg-robin-600);
+}
+
+.dark [data-color='robin'] {
+	--callout-background: var(--bg-robin-300);
+	--callout-icon-color: var(--bg-robin-300);
+	--callout-title-color: var(--bg-robin-100);
+	--callout-description-color: var(--bg-robin-300);
+}
+
+[data-color='cherry'] {
+	--callout-background: var(--bg-cherry-500);
+	--callout-icon-color: var(--bg-cherry-500);
+	--callout-title-color: var(--bg-cherry-500);
+	--callout-description-color: var(--bg-cherry-500);
+}
+
+.dark [data-color='cherry'] {
+	--callout-background: var(--bg-cherry-300);
+	--callout-icon-color: var(--bg-cherry-300);
+	--callout-title-color: var(--bg-cherry-100);
+	--callout-description-color: var(--bg-cherry-300);
+}
+
+[data-color='amber'] {
+	--callout-background: var(--bg-amber-500);
+	--callout-title-color: var(--bg-amber-500);
+	--callout-icon-color: var(--bg-amber-600);
+	--callout-description-color: var(--bg-amber-600);
+}
+
+.dark [data-color='amber'] {
+	--callout-background: var(--bg-amber-300);
+	--callout-icon-color: var(--bg-amber-300);
+	--callout-title-color: var(--bg-amber-100);
+	--callout-description-color: var(--bg-amber-300);
+}
+
+[data-color='sienna'] {
+	--callout-background: var(--bg-sienna-500);
+	--callout-icon-color: var(--bg-sienna-600);
+	--callout-title-color: var(--bg-sienna-600);
+	--callout-description-color: var(--bg-sienna-600);
+}
+
+.dark [data-color='sienna'] {
+	--callout-background: var(--bg-sienna-500);
+	--callout-icon-color: var(--bg-sienna-300);
+	--callout-title-color: var(--bg-sienna-100);
+	--callout-description-color: var(--bg-sienna-300);
+}
+
+[data-color='forest'] {
+	--callout-background: var(--bg-forest-600);
+	--callout-icon-color: var(--bg-forest-600);
+	--callout-title-color: var(--bg-forest-600);
+	--callout-description-color: var(--bg-forest-600);
+}
+
+.dark [data-color='forest'] {
+	--callout-background: var(--bg-forest-500);
+	--callout-icon-color: var(--bg-forest-300);
+	--callout-title-color: var(--bg-forest-100);
+	--callout-description-color: var(--bg-forest-300);
+}
+
+[data-color='aqua'] {
+	--callout-background: var(--bg-aqua-500);
+	--callout-icon-color: var(--bg-aqua-300);
+	--callout-title-color: var(--bg-aqua-300);
+	--callout-description-color: var(--bg-aqua-300);
+}
+
+.dark [data-color='aqua'] {
+	--callout-background: var(--bg-aqua-500);
+	--callout-icon-color: var(--bg-aqua-300);
+	--callout-title-color: var(--bg-aqua-100);
+	--callout-description-color: var(--bg-aqua-300);
+}
