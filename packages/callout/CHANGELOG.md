@@ -1,4 +1,4 @@
-# @signozhq/callout
+# @signozhq/alert
 
 ## 0.0.1
 

@@ -75,7 +75,7 @@ importers:
       '@signozhq/button':
         specifier: workspace:*
         version: link:../../packages/button
-      '@signozhq/callout':
+      '@signozhq/alert':
         specifier: workspace:*
         version: link:../../packages/callout
       '@signozhq/checkbox':
