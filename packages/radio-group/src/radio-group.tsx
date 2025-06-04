@@ -4,6 +4,20 @@ import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import { cn } from './lib/utils';
 import { Circle } from 'lucide-react';
 
+export type RadioColorProps =
+	| 'robin'
+	| 'forest'
+	| 'amber'
+	| 'sienna'
+	| 'cherry'
+	| 'sakura'
+	| 'aqua';
+
+interface RadioGroupItemProps
+	extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {
+	color?: RadioColorProps;
+}
+
 const RadioGroup = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
@@ -20,13 +34,16 @@ RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
 const RadioGroupItem = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Item>,
-	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
+	RadioGroupItemProps
+>(({ className, color = 'robin', ...props }, ref) => {
 	return (
 		<RadioGroupPrimitive.Item
 			ref={ref}
+			data-color={color}
 			className={cn(
-				'aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-[2px]',
+				'aspect-square h-4 w-4 rounded-full border border-[var(--radio-checked-background)] text-[var(--radio-checked-background)] ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--radio-checked-background)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-[2px]',
+				'hover:ring-1 hover:ring-[var(--radio-checked-background)] hover:border-[var(--radio-checked-background)]',
+				'peer-disabled:hover:ring-0 peer-disabled:hover:border-transparent',
 				className,
 			)}
 			{...props}
