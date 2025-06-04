@@ -69,7 +69,7 @@ export const Default: Story = {
 			description: 'This is a description of the drawer content',
 		},
 		content: (
-			<div className="p-4">
+			<div className="p-4 w-full">
 				<h2 className="text-lg font-semibold">Content Title</h2>
 				<p className="text-sm text-gray-500">
 					This is the main content area of the drawer.
