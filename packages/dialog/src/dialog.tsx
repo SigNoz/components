@@ -97,7 +97,6 @@ function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
 			data-slot="dialog-header"
 			className={cn(
 				'flex flex-col gap-2 text-center sm:text-left border-b border-vanilla-300 dark:border-slate-500 p-4 cursor-default',
-				'[&.alert-dialog]:border-b-0 [&.alert-dialog]:pb-0',
 				className,
 			)}
 			{...props}
@@ -131,7 +130,6 @@ function DialogTitle({
 			data-slot="dialog-title"
 			className={cn(
 				'text-sm font-normal leading-5 font-inter font-regular flex items-center gap-2',
-				'[&.alert-dialog]:font-medium',
 				className,
 			)}
 			{...props}
