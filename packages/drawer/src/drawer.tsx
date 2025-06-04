@@ -66,7 +66,7 @@ function DrawerContent({
 					'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:border-l',
 					'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:border-r',
 					'border border-vanilla-300 dark:border-slate-500',
-					type === 'drawer' ? 'rounded-md' : 'rounded-none',
+					type === 'drawer' ? 'rounded-md m-4' : 'rounded-none',
 					className,
 				)}
 				{...props}
