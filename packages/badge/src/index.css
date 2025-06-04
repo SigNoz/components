@@ -1,32 +1,74 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
-[data-color='primary'] {
+[data-color='vanilla'] {
+	--badge-background: var(--bg-vanilla-300);
+	--badge-foreground: var(--bg-slate-500);
+	--badge-hover-background: var(--bg-vanilla-400);
+}
+
+.dark [data-color='vanilla'] {
+	--badge-background: var(--bg-slate-400);
+	--badge-foreground: var(--bg-vanilla-400);
+	--badge-hover-background: var(--bg-slate-300);
+}
+
+[data-color='robin'] {
 	--badge-background: var(--bg-robin-500);
 	--badge-foreground: var(--bg-vanilla-100);
 	--badge-hover-background: var(--bg-robin-400);
 }
 
-[data-color='destructive'] {
+.dark [data-color='robin'] {
+	--badge-background: var(--bg-robin-500);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-robin-400);
+}
+
+[data-color='forest'] {
+	--badge-background: var(--bg-forest-600);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-forest-500);
+}
+
+.dark [data-color='forest'] {
+	--badge-background: var(--bg-forest-500);
+	--badge-foreground: var(--bg-slate-500);
+	--badge-hover-background: var(--bg-forest-400);
+}
+
+[data-color='amber'] {
+	--badge-background: var(--bg-amber-500);
+	--badge-foreground: var(--bg-slate-500);
+	--badge-hover-background: var(--bg-amber-400);
+}
+
+[data-color='sienna'] {
+	--badge-background: var(--bg-sienna-500);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-sienna-400);
+}
+
+[data-color='cherry'] {
 	--badge-background: var(--bg-cherry-500);
 	--badge-foreground: var(--bg-vanilla-100);
 	--badge-hover-background: var(--bg-cherry-400);
 }
 
-[data-color='warning'] {
-	--badge-background: var(--bg-amber-500);
-	--badge-foreground: var(--bg-ink-400);
-	--badge-hover-background: var(--bg-amber-400);
-}
-
-[data-color='secondary'] {
-	--badge-background: var(--bg-vanilla-300);
-	--badge-foreground: var(--bg-slate-500);
-	--badge-hover-background: var(--bg-vanilla-300);
-}
-
-.dark [data-color='secondary'] {
-	--badge-background: var(--bg-slate-400);
+[data-color='sakura'] {
+	--badge-background: var(--bg-sakura-500);
 	--badge-foreground: var(--bg-vanilla-100);
-	--badge-hover-background: var(--bg-slate-300);
+	--badge-hover-background: var(--bg-sakura-400);
+}
+
+[data-color='aqua'] {
+	--badge-background: var(--bg-aqua-600);
+	--badge-foreground: var(--bg-vanilla-100);
+	--badge-hover-background: var(--bg-aqua-500);
+}
+
+.dark [data-color='aqua'] {
+	--badge-background: var(--bg-aqua-500);
+	--badge-foreground: var(--bg-slate-500);
+	--badge-hover-background: var(--bg-aqua-400);
 }
