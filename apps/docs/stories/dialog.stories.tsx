@@ -41,14 +41,14 @@ export const Controlled: Story = {
 				open={open}
 				onOpenChange={setOpen}
 				title="Controlled Dialog"
-				description="This dialog's open state is controlled via React state"
+				titleIcon={<Code size={16} />}
 				trigger={
 					<Button variant="solid" color="primary">
 						Open Controlled Dialog
 					</Button>
 				}
 			>
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
 					<p>Dialog content goes here</p>
 					<div className="flex justify-end">
 						<Button variant="solid" color="primary" onClick={() => setOpen(false)}>
@@ -79,7 +79,6 @@ export const AlertDialog: Story = {
 				open={open}
 				onOpenChange={setOpen}
 				title="Are you absolutely sure?"
-				description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
 				trigger={
 					<Button variant="solid" color="primary" prefixIcon={<Code />}>
 						Open Alert Dialog
@@ -88,7 +87,11 @@ export const AlertDialog: Story = {
 				disableOutsideClick={true}
 				showCloseButton={false}
 			>
-				<div className="flex justify-end gap-2">
+				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+					This action cannot be undone. This will permanently delete your account and
+					remove your data from our servers.
+				</div>
+				<div className="flex justify-end gap-2 mt-4">
 					<Button variant="outlined" color="secondary" onClick={handleClose}>
 						Cancel
 					</Button>
