@@ -1,2 +1,30 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+[data-color='robin'] {
+	--switch-checked-background: var(--bg-robin-500);
+}
+
+[data-color='forest'] {
+	--switch-checked-background: var(--bg-forest-500);
+}
+
+[data-color='amber'] {
+	--switch-checked-background: var(--bg-amber-500);
+}
+
+[data-color='sienna'] {
+	--switch-checked-background: var(--bg-sienna-500);
+}
+
+[data-color='cherry'] {
+	--switch-checked-background: var(--bg-cherry-500);
+}
+
+[data-color='sakura'] {
+	--switch-checked-background: var(--bg-sakura-500);
+}
+
+[data-color='aqua'] {
+	--switch-checked-background: var(--bg-aqua-500);
+}
