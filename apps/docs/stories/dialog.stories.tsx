@@ -103,3 +103,39 @@ export const AlertDialog: Story = {
 		);
 	},
 };
+
+export const DialogWidth: Story = {
+	render: () => {
+		const [open, setOpen] = React.useState<string | null>(null);
+
+		const widths = ['narrow', 'base', 'wide', 'extra-wide'] as const;
+
+		return (
+			<div className="flex flex-wrap gap-4">
+				{widths.map((width) => (
+					<DialogWrapper
+						key={width}
+						open={open === width}
+						onOpenChange={(isOpen) => setOpen(isOpen ? width : null)}
+						title={`${width.charAt(0).toUpperCase() + width.slice(1)} Width Dialog`}
+						width={width}
+						trigger={
+							<Button variant="solid" color="primary">
+								Open {width} Dialog
+							</Button>
+						}
+					>
+						<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+							<p>This is a dialog with {width} width.</p>
+							<div className="flex justify-end">
+								<Button variant="solid" color="primary" onClick={() => setOpen(null)}>
+									Close Dialog
+								</Button>
+							</div>
+						</div>
+					</DialogWrapper>
+				))}
+			</div>
+		);
+	},
+};
