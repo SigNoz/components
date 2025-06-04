@@ -43,42 +43,58 @@ export const Default: Story = {
 };
 
 export const Colors: Story = {
-	render: () => (
+	render: (args: Story['args']) => (
 		<div className="flex gap-2">
-			<Badge color="vanilla">Vanilla</Badge>
-			<Badge color="robin">Robin</Badge>
-			<Badge color="forest">Forest</Badge>
-			<Badge color="amber">Amber</Badge>
-			<Badge color="sienna">Sienna</Badge>
-			<Badge color="cherry">Cherry</Badge>
-			<Badge color="sakura">Sakura</Badge>
-			<Badge color="aqua">Aqua</Badge>
+			<Badge {...args} color="vanilla">
+				Vanilla
+			</Badge>
+			<Badge {...args} color="robin">
+				Robin
+			</Badge>
+			<Badge {...args} color="forest">
+				Forest
+			</Badge>
+			<Badge {...args} color="amber">
+				Amber
+			</Badge>
+			<Badge {...args} color="sienna">
+				Sienna
+			</Badge>
+			<Badge {...args} color="cherry">
+				Cherry
+			</Badge>
+			<Badge {...args} color="sakura">
+				Sakura
+			</Badge>
+			<Badge {...args} color="aqua">
+				Aqua
+			</Badge>
 		</div>
 	),
 };
 
 export const Outline: Story = {
-	render: () => (
+	render: (args: Story['args']) => (
 		<div className="flex gap-2">
-			<Badge variant="outline" color="robin">
+			<Badge {...args} variant="outline" color="robin">
 				Robin
 			</Badge>
-			<Badge variant="outline" color="forest">
+			<Badge {...args} variant="outline" color="forest">
 				Forest
 			</Badge>
-			<Badge variant="outline" color="amber">
+			<Badge {...args} variant="outline" color="amber">
 				Amber
 			</Badge>
-			<Badge variant="outline" color="sienna">
+			<Badge {...args} variant="outline" color="sienna">
 				Sienna
 			</Badge>
-			<Badge variant="outline" color="cherry">
+			<Badge {...args} variant="outline" color="cherry">
 				Cherry
 			</Badge>
-			<Badge variant="outline" color="sakura">
+			<Badge {...args} variant="outline" color="sakura">
 				Sakura
 			</Badge>
-			<Badge variant="outline" color="aqua">
+			<Badge {...args} variant="outline" color="aqua">
 				Aqua
 			</Badge>
 		</div>
@@ -86,9 +102,9 @@ export const Outline: Story = {
 };
 
 export const WithIcons: Story = {
-	render: () => (
+	render: (args: Story['args']) => (
 		<div className="flex gap-2">
-			<Badge color="robin">
+			<Badge {...args} color="robin">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"
@@ -102,7 +118,7 @@ export const WithIcons: Story = {
 				</svg>
 				With Icon
 			</Badge>
-			<Badge variant="outline" color="robin">
+			<Badge {...args} variant="outline" color="robin">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 24 24"
@@ -121,12 +137,12 @@ export const WithIcons: Story = {
 };
 
 export const Capitalized: Story = {
-	render: () => (
+	render: (args: Story['args']) => (
 		<div className="flex gap-2">
-			<Badge color="robin" capitalize>
+			<Badge {...args} color="robin" capitalize>
 				Capitalized Badge
 			</Badge>
-			<Badge variant="outline" color="robin" capitalize>
+			<Badge {...args} variant="outline" color="robin" capitalize>
 				Capitalized Outline
 			</Badge>
 		</div>

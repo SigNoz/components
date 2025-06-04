@@ -8,6 +8,12 @@ const meta: Meta<typeof DialogWrapper> = {
 	title: 'Components/Dialog',
 	component: DialogWrapper,
 	tags: ['autodocs'],
+	argTypes: {
+		width: {
+			control: 'select',
+			options: ['narrow', 'base', 'wide', 'extra-wide'],
+		},
+	},
 };
 
 export default meta;
@@ -16,6 +22,7 @@ type Story = StoryObj<typeof DialogWrapper>;
 export const Default: Story = {
 	args: {
 		title: 'Edit report details',
+		width: 'base',
 		trigger: (
 			<Button variant="solid" color="primary">
 				Open Dialog
