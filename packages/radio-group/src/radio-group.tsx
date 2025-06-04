@@ -35,7 +35,7 @@ const RadioGroupItem = React.forwardRef<
 				{/* <Circle className="h-2.5 w-2.5 fill-current text-current" /> */}
 				<Circle
 					className="h-3 w-3"
-					strokeWidth={7}
+					strokeWidth={5}
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				/>
