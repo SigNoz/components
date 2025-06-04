@@ -61,7 +61,7 @@ const meta: Meta<typeof DrawerWrapper> = {
 export default meta;
 type Story = StoryObj<typeof DrawerWrapper>;
 
-export const Default: Story = {
+export const SideDrawer: Story = {
 	args: {
 		trigger: <Button variant="outlined">Open Drawer</Button>,
 		header: {
@@ -82,6 +82,35 @@ export const Default: Story = {
 				<Button variant="outlined">Cancel</Button>
 			</div>
 		),
+		direction: 'right',
+		showCloseButton: true,
+		allowOutsideClick: true,
+		showOverlay: true,
+	},
+};
+
+export const SidePanel: Story = {
+	args: {
+		trigger: <Button variant="outlined">Open Panel</Button>,
+		header: {
+			title: 'Panel Header',
+			description: 'This is a description of the panel content',
+		},
+		content: (
+			<div className="p-4 w-full">
+				<h2 className="text-lg font-semibold">Content Title</h2>
+				<p className="text-sm text-gray-500">
+					This is the main content area of the panel.
+				</p>
+			</div>
+		),
+		footer: (
+			<div className="flex gap-2">
+				<Button>Submit</Button>
+				<Button variant="outlined">Cancel</Button>
+			</div>
+		),
+		type: 'panel',
 		direction: 'right',
 		showCloseButton: true,
 		allowOutsideClick: true,
