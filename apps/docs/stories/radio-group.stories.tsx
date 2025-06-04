@@ -1,6 +1,10 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { RadioGroup, RadioGroupItem } from '@signozhq/radio-group';
+import {
+	RadioGroup,
+	RadioGroupItem,
+	RadioGroupLabel,
+} from '@signozhq/radio-group';
 
 const meta: Meta<typeof RadioGroup> = {
 	title: 'Components/RadioGroup',
@@ -29,15 +33,15 @@ export const Default: Story = {
 			<div className="flex flex-col space-y-2">
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="option1" id="option1-radio" />
-					<label htmlFor="option1-radio">Option 1</label>
+					<RadioGroupLabel htmlFor="option1-radio">Option 1</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="option2" id="option2-radio" />
-					<label htmlFor="option2-radio">Option 2</label>
+					<RadioGroupLabel htmlFor="option2-radio">Option 2</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="option3" id="option3-radio" />
-					<label htmlFor="option3-radio">Option 3</label>
+					<RadioGroupLabel htmlFor="option3-radio">Option 3</RadioGroupLabel>
 				</div>
 			</div>
 		</RadioGroup>
@@ -50,25 +54,19 @@ export const Disabled: Story = {
 			<div className="flex flex-col space-y-2">
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="active" id="active-radio" />
-					<label htmlFor="active-radio">Active Option</label>
+					<RadioGroupLabel htmlFor="active-radio">Active Option</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="disabled1" id="disabled1-radio" disabled />
-					<label
-						htmlFor="disabled1-radio"
-						className="text-zinc-400 cursor-not-allowed"
-					>
+					<RadioGroupLabel htmlFor="disabled1-radio">
 						Disabled Option 1
-					</label>
+					</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem value="disabled2" id="disabled2-radio" disabled />
-					<label
-						htmlFor="disabled2-radio"
-						className="text-zinc-400 cursor-not-allowed"
-					>
+					<RadioGroupLabel htmlFor="disabled2-radio">
 						Disabled Option 2
-					</label>
+					</RadioGroupLabel>
 				</div>
 			</div>
 		</RadioGroup>
