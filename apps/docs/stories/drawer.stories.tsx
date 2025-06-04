@@ -12,6 +12,12 @@ const meta: Meta<typeof DrawerWrapper> = {
 			description: 'The element that triggers the drawer to open',
 			control: false,
 		},
+		type: {
+			description: 'Panel or Drawer',
+			control: 'select',
+			options: ['drawer', 'panel'],
+			defaultValue: 'drawer',
+		},
 		header: {
 			description: 'Header configuration with title and optional description',
 			control: 'object',

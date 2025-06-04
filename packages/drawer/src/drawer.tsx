@@ -44,14 +44,15 @@ function DrawerOverlay({
 		/>
 	);
 }
-
 function DrawerContent({
 	className,
 	children,
 	showOverlay = true,
+	type,
 	...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
 	showOverlay?: boolean;
+	type?: 'panel' | 'drawer';
 }) {
 	return (
 		<DrawerPortal data-slot="drawer-portal">
@@ -64,7 +65,8 @@ function DrawerContent({
 					'data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t',
 					'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:sm:max-w-sm',
 					'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:sm:max-w-sm',
-					'border border-vanilla-300 dark:border-slate-500 rounded-md',
+					'border border-vanilla-300 dark:border-slate-500',
+					type === 'drawer' ? 'rounded-md' : 'rounded-none',
 					className,
 				)}
 				{...props}
@@ -135,6 +137,18 @@ interface DrawerWrapperProps {
 	allowOutsideClick?: boolean;
 	showOverlay?: boolean;
 	className?: string;
+	type?: 'panel' | 'drawer';
+}
+
+function CloseButton() {
+	return (
+		<DrawerClose asChild>
+			<button className="mr-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+				<X className="h-4 w-4" />
+				<span className="sr-only">Close</span>
+			</button>
+		</DrawerClose>
+	);
 }
 
 function DrawerWrapper({
@@ -147,27 +161,22 @@ function DrawerWrapper({
 	allowOutsideClick = true,
 	showOverlay = true,
 	className,
+	type = 'drawer',
 }: DrawerWrapperProps) {
 	return (
 		<Drawer direction={direction} modal={allowOutsideClick}>
 			<DrawerTrigger asChild>{trigger}</DrawerTrigger>
-			<DrawerContent className={className} showOverlay={showOverlay}>
+			<DrawerContent className={className} showOverlay={showOverlay} type={type}>
 				<div className="mx-auto w-full max-w-sm">
 					{header && (
 						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-6">
-							<div className="flex items-center gap-2">
+							{type === 'panel' && showCloseButton && <CloseButton />}
+							<div className="flex items-center gap-2 flex-1">
 								<DrawerTitle className="font-inter text-sm font-normal">
 									{header.title}
 								</DrawerTitle>
 							</div>
-							{showCloseButton && (
-								<DrawerClose asChild>
-									<button className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
-										<X className="h-4 w-4" />
-										<span className="sr-only">Close</span>
-									</button>
-								</DrawerClose>
-							)}
+							{type === 'drawer' && showCloseButton && <CloseButton />}
 						</div>
 					)}
 					<DrawerHeader>
