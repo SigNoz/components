@@ -178,13 +178,13 @@ function DrawerWrapper({
 				>
 					{header && (
 						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-4">
-							{type === 'panel' && showCloseButton && <CloseButton />}
+							{type === 'panel' && showCloseButton && <CloseButton type={type} />}
 							<div className="flex items-center gap-2 flex-1">
 								<DrawerTitle className="font-inter text-sm font-normal">
 									{header.title}
 								</DrawerTitle>
 							</div>
-							{type === 'drawer' && showCloseButton && <CloseButton />}
+							{type === 'drawer' && showCloseButton && <CloseButton type={type} />}
 						</div>
 					)}
 					<DrawerHeader>
