@@ -12,7 +12,7 @@ const badgeVariants = cva(
 			variant: {
 				default: 'border-transparent',
 				outline:
-					'border-[var(--badge-background)] bg-transparent text-[var(--badge-background)] hover:bg-[var(--badge-background)] hover:text-[var(--badge-foreground)]',
+					'border-[var(--badge-background)]/20 bg-[var(--badge-background)]/10 text-[var(--badge-background)] hover:bg-[var(--badge-background)]/20',
 			},
 		},
 		defaultVariants: {
