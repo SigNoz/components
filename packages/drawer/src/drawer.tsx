@@ -140,10 +140,12 @@ interface DrawerWrapperProps {
 	type?: 'panel' | 'drawer';
 }
 
-function CloseButton() {
+function CloseButton({ type }: { type?: 'panel' | 'drawer' }) {
 	return (
 		<DrawerClose asChild>
-			<button className="mr-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+			<button
+				className={`rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none ${type === 'panel' ? 'mr-2' : ''}`}
+			>
 				<X className="h-4 w-4" />
 				<span className="sr-only">Close</span>
 			</button>
@@ -175,7 +177,7 @@ function DrawerWrapper({
 					}}
 				>
 					{header && (
-						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-6">
+						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-4">
 							{type === 'panel' && showCloseButton && <CloseButton />}
 							<div className="flex items-center gap-2 flex-1">
 								<DrawerTitle className="font-inter text-sm font-normal">
