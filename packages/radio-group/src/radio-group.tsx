@@ -2,7 +2,21 @@ import './index.css';
 import * as React from 'react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import { cn } from './lib/utils';
-import { DotFilledIcon } from '@radix-ui/react-icons';
+import { Circle } from 'lucide-react';
+
+export type RadioColorProps =
+	| 'robin'
+	| 'forest'
+	| 'amber'
+	| 'sienna'
+	| 'cherry'
+	| 'sakura'
+	| 'aqua';
+
+interface RadioGroupItemProps
+	extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {
+	color?: RadioColorProps;
+}
 
 const RadioGroup = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -20,29 +34,48 @@ RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
 const RadioGroupItem = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Item>,
-	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
+	RadioGroupItemProps
+>(({ className, color = 'robin', ...props }, ref) => {
 	return (
 		<RadioGroupPrimitive.Item
 			ref={ref}
+			data-color={color}
 			className={cn(
-				'aspect-square h-4.5 w-4.5 rounded-full',
-				'border border-primary text-primary',
-				'shadow',
-				'hover:ring-1 hover:ring-primary hover:border-primary',
-				'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-				'disabled:cursor-not-allowed disabled:opacity-50',
-				'cursor-pointer',
+				'aspect-square h-4 w-4 rounded-full border border-[var(--radio-checked-background)] text-[var(--radio-checked-background)] ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--radio-checked-background)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-[2px]',
+				'hover:ring-1 hover:ring-[var(--radio-checked-background)] hover:border-[var(--radio-checked-background)]',
+				'peer-disabled:hover:ring-0 peer-disabled:hover:border-transparent',
 				className,
 			)}
 			{...props}
 		>
 			<RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-				<DotFilledIcon className="h-3.5 w-3.5 fill-primary" />
+				{/* <Circle className="h-2.5 w-2.5 fill-current text-current" /> */}
+				<Circle
+					className="h-3 w-3 fill-[var(--bg-vanilla-100)]"
+					strokeWidth={5}
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				/>
 			</RadioGroupPrimitive.Indicator>
 		</RadioGroupPrimitive.Item>
 	);
 });
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
 
-export { RadioGroup, RadioGroupItem };
+const RadioGroupLabel = React.forwardRef<
+	HTMLLabelElement,
+	React.LabelHTMLAttributes<HTMLLabelElement>
+>(({ ...props }, ref) => {
+	return (
+		<label
+			ref={ref}
+			className={cn(
+				'font-inter text-sm font-normal leading-5 tracking-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+			)}
+			{...props}
+		/>
+	);
+});
+RadioGroupLabel.displayName = 'RadioGroupLabel';
+
+export { RadioGroup, RadioGroupItem, RadioGroupLabel };

@@ -14,6 +14,11 @@ const meta: Meta<typeof Checkbox> = {
 		id: {
 			control: 'text',
 		},
+		color: {
+			control: 'select',
+			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
+			description: 'The color variant of the checkbox',
+		},
 	},
 	parameters: {
 		design: [
@@ -36,6 +41,7 @@ export const Default: Story = {
 		labelName: 'Default checkbox',
 		defaultChecked: false,
 		disabled: false,
+		color: 'robin',
 	},
 };
 
@@ -45,6 +51,7 @@ export const Checked: Story = {
 		labelName: 'Filled checkbox',
 		defaultChecked: true,
 		disabled: false,
+		color: 'robin',
 	},
 };
 
@@ -54,6 +61,7 @@ export const Disabled: Story = {
 		labelName: 'Disabled checkbox',
 		defaultChecked: false,
 		disabled: true,
+		color: 'robin',
 	},
 };
 
@@ -63,5 +71,6 @@ export const DisabledChecked: Story = {
 		labelName: 'Disabled Filled',
 		defaultChecked: true,
 		disabled: true,
+		color: 'robin',
 	},
 };

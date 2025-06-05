@@ -1,2 +1,30 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+[data-color='robin'] {
+	--checkbox-checked-background: var(--bg-robin-500);
+}
+
+[data-color='forest'] {
+	--checkbox-checked-background: var(--bg-forest-500);
+}
+
+[data-color='amber'] {
+	--checkbox-checked-background: var(--bg-amber-500);
+}
+
+[data-color='sienna'] {
+	--checkbox-checked-background: var(--bg-sienna-500);
+}
+
+[data-color='cherry'] {
+	--checkbox-checked-background: var(--bg-cherry-500);
+}
+
+[data-color='sakura'] {
+	--checkbox-checked-background: var(--bg-sakura-500);
+}
+
+[data-color='aqua'] {
+	--checkbox-checked-background: var(--bg-aqua-500);
+}

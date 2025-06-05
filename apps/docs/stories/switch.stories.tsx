@@ -14,6 +14,11 @@ const meta: Meta<typeof Switch> = {
 		id: {
 			control: 'text',
 		},
+		color: {
+			control: 'select',
+			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
+			description: 'The color variant of the switch',
+		},
 	},
 	parameters: {
 		design: [
@@ -36,6 +41,7 @@ export const Default: Story = {
 		labelName: 'Default switch',
 		defaultChecked: false,
 		disabled: false,
+		color: 'robin',
 	},
 };
 
@@ -46,6 +52,7 @@ export const Filled: Story = {
 		labelName: 'Filled switch',
 		defaultChecked: true,
 		disabled: false,
+		color: 'robin',
 	},
 };
 
@@ -56,6 +63,7 @@ export const Disabled: Story = {
 		labelName: 'Disabled switch',
 		defaultChecked: false,
 		disabled: true,
+		color: 'robin',
 	},
 };
 
@@ -66,5 +74,6 @@ export const DisabledChecked: Story = {
 		labelName: 'Disabled switch – pre selected',
 		defaultChecked: true,
 		disabled: true,
+		color: 'robin',
 	},
 };
