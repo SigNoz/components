@@ -9,6 +9,9 @@ import {
 	List,
 	Settings,
 	Settings2,
+	Lock,
+	Clock,
+	ShieldAlert,
 } from 'lucide-react';
 
 const meta: Meta<typeof Tabs> = {
@@ -34,6 +37,7 @@ const playgroundItems = [
 		label: 'Issues (Disabled)',
 		children: 'Issues content panel',
 		disabled: true,
+		disabledReason: 'Issues are temporarily unavailable',
 		prefixIcon: <AlertCircle className="size-4" />,
 	},
 	{
@@ -66,6 +70,7 @@ const playgroundItems = [
 		variant: 'secondary',
 		prefixIcon: <Settings className="size-4" />,
 		disabled: true,
+		disabledReason: 'You need admin privileges to access settings',
 	},
 ];
 
@@ -130,6 +135,7 @@ const primaryItems = [
 		label: 'Issues',
 		children: 'Issues content',
 		disabled: true,
+		disabledReason: 'Issues feature is currently under maintenance',
 		prefixIcon: <AlertCircle className="size-4" />,
 	},
 	{
@@ -147,13 +153,20 @@ const secondaryItems = [
 		label: 'Endpoint Details',
 		children: 'Endpoint details content',
 	},
+	{
+		key: 'advanced',
+		label: 'Advanced Settings',
+		children: 'Advanced settings content',
+		disabled: true,
+		disabledReason: 'Requires premium subscription',
+	},
 ];
 
 export const Primary: Story = {
 	args: {
 		items: primaryItems,
 		variant: 'primary',
-		defaultValue: 'overview', // Added defaultValue for clarity
+		defaultValue: 'overview',
 	},
 };
 
@@ -161,23 +174,91 @@ export const Secondary: Story = {
 	args: {
 		items: secondaryItems,
 		variant: 'secondary',
-		defaultValue: 'all', // Added defaultValue for clarity
+		defaultValue: 'all',
 	},
 };
 
-export const DisabledState: Story = {
-	args: {
-		items: [
-			...primaryItems.slice(0, 2), // Keep first two items
-			{
-				key: 'disabled',
-				label: 'Disabled Tab',
-				children: 'Disabled content',
-				disabled: true,
-			},
-			primaryItems[2], // Add history back
-		],
-		variant: 'primary',
-		defaultValue: 'overview', // Added defaultValue for clarity
-	},
+export const DisabledStates: Story = {
+	render: () => (
+		<div className="space-y-8">
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">
+					Disabled Tabs with Custom Reasons
+				</h2>
+				<Tabs
+					items={[
+						{
+							key: 'active',
+							label: 'Active Tab',
+							children: 'This tab is active and can be clicked',
+						},
+						{
+							key: 'locked',
+							label: 'Locked',
+							children: 'Locked content',
+							disabled: true,
+							disabledReason: 'This feature is locked',
+							prefixIcon: <Lock className="size-4" />,
+						},
+						{
+							key: 'maintenance',
+							label: 'Under Maintenance',
+							children: 'Maintenance content',
+							disabled: true,
+							disabledReason: 'This section is under maintenance',
+							prefixIcon: <Clock className="size-4" />,
+						},
+						{
+							key: 'permissions',
+							label: 'Insufficient Permissions',
+							children: 'Permissions content',
+							disabled: true,
+							disabledReason: 'You do not have permission to access this area',
+							prefixIcon: <ShieldAlert className="size-4" />,
+						},
+						{
+							key: 'default',
+							label: 'Default Disabled',
+							children: 'Default disabled content',
+							disabled: true,
+							// No disabledReason provided, will show default message
+						},
+					]}
+					variant="primary"
+					defaultValue="active"
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">
+					Secondary Variant Disabled States
+				</h2>
+				<Tabs
+					items={[
+						{
+							key: 'active',
+							label: 'Active Tab',
+							children: 'This tab is active and can be clicked',
+						},
+						{
+							key: 'premium',
+							label: 'Premium Features',
+							children: 'Premium content',
+							disabled: true,
+							disabledReason: 'Available only in premium tier',
+						},
+						{
+							key: 'beta',
+							label: 'Beta Features',
+							children: 'Beta content',
+							disabled: true,
+							disabledReason: 'Coming soon - currently in beta testing',
+						},
+					]}
+					variant="secondary"
+					defaultValue="active"
+				/>
+			</div>
+		</div>
+	),
 };

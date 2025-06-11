@@ -1,2 +1,16 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+:root {
+	--pagination-item-text: var(--color-ink-400);
+	--pagination-item-hover-text: var(--color-ink-100);
+	--pagination-active-bg: var(--color-robin-500);
+	--pagination-active-hover-bg: var(--color-robin-400);
+	--pagination-active-text: var(--color-primary-foreground);
+	--pagination-item-hover-bg: var(--color-secondary);
+}
+
+.dark {
+	--pagination-item-text: var(--color-vanilla-400);
+	--pagination-item-hover-text: var(--color-vanilla-100);
+}
