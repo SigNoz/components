@@ -1,2 +1,9 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+[data-vaul-drawer][data-vaul-drawer-direction='right']::after,
+[data-vaul-drawer][data-vaul-drawer-direction='left']::after,
+[data-vaul-drawer][data-vaul-drawer-direction='top']::after,
+[data-vaul-drawer][data-vaul-drawer-direction='bottom']::after {
+	background: transparent;
+}

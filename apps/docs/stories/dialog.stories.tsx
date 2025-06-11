@@ -1,13 +1,19 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@signozhq/button';
-import { DialogWrapper } from '@signozhq/dialog';
+import { DialogWrapper, AlertDialogWrapper } from '@signozhq/dialog';
 import { Code } from 'lucide-react';
 
 const meta: Meta<typeof DialogWrapper> = {
 	title: 'Components/Dialog',
 	component: DialogWrapper,
 	tags: ['autodocs'],
+	argTypes: {
+		width: {
+			control: 'select',
+			options: ['narrow', 'base', 'wide', 'extra-wide'],
+		},
+	},
 };
 
 export default meta;
@@ -16,6 +22,7 @@ type Story = StoryObj<typeof DialogWrapper>;
 export const Default: Story = {
 	args: {
 		title: 'Edit report details',
+		width: 'base',
 		trigger: (
 			<Button variant="solid" color="primary">
 				Open Dialog
@@ -34,14 +41,14 @@ export const Controlled: Story = {
 				open={open}
 				onOpenChange={setOpen}
 				title="Controlled Dialog"
-				description="This dialog's open state is controlled via React state"
+				titleIcon={<Code size={16} />}
 				trigger={
 					<Button variant="solid" color="primary">
 						Open Controlled Dialog
 					</Button>
 				}
 			>
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
 					<p>Dialog content goes here</p>
 					<div className="flex justify-end">
 						<Button variant="solid" color="primary" onClick={() => setOpen(false)}>
@@ -54,42 +61,81 @@ export const Controlled: Story = {
 	},
 };
 
+export const DialogWidth: Story = {
+	render: () => {
+		const [open, setOpen] = React.useState<string | null>(null);
+
+		const widths = ['narrow', 'base', 'wide', 'extra-wide'] as const;
+
+		return (
+			<div className="flex flex-wrap gap-4">
+				{widths.map((width) => (
+					<DialogWrapper
+						key={width}
+						open={open === width}
+						onOpenChange={(isOpen) => setOpen(isOpen ? width : null)}
+						title={`${width.charAt(0).toUpperCase() + width.slice(1)} Width Dialog`}
+						width={width}
+						trigger={
+							<Button variant="solid" color="primary">
+								Open {width} Dialog
+							</Button>
+						}
+					>
+						<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+							<p>This is a dialog with {width} width.</p>
+							<div className="flex justify-end">
+								<Button variant="solid" color="primary" onClick={() => setOpen(null)}>
+									Close Dialog
+								</Button>
+							</div>
+						</div>
+					</DialogWrapper>
+				))}
+			</div>
+		);
+	},
+};
+
 export const AlertDialog: Story = {
 	render: () => {
 		const [open, setOpen] = React.useState(false);
 
-		const handleClose = () => {
-			setOpen(false);
-		};
-
-		const handleAction = () => {
-			console.log('Action performed');
-			setOpen(false);
-		};
-
 		return (
-			<DialogWrapper
+			<AlertDialogWrapper
 				open={open}
 				onOpenChange={setOpen}
 				title="Are you absolutely sure?"
-				description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
 				trigger={
 					<Button variant="solid" color="primary" prefixIcon={<Code />}>
 						Open Alert Dialog
 					</Button>
 				}
-				disableOutsideClick={true}
-				showCloseButton={false}
 			>
-				<div className="flex justify-end gap-2">
-					<Button variant="outlined" color="secondary" onClick={handleClose}>
+				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+					This action cannot be undone. This will permanently delete your account and
+					remove your data from our servers.
+				</div>
+				<div className="flex justify-end gap-2 mt-4">
+					<Button
+						variant="outlined"
+						color="secondary"
+						onClick={() => setOpen(false)}
+					>
 						Cancel
 					</Button>
-					<Button variant="solid" color="destructive" onClick={handleAction}>
+					<Button
+						variant="solid"
+						color="destructive"
+						onClick={() => {
+							console.log('Action performed');
+							setOpen(false);
+						}}
+					>
 						Delete Account
 					</Button>
 				</div>
-			</DialogWrapper>
+			</AlertDialogWrapper>
 		);
 	},
 };
