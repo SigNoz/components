@@ -8,8 +8,20 @@ import buttonVariants from './button-variants';
 import { cn } from './lib/utils';
 import { Loader2 } from 'lucide-react';
 
-export type ButtonVariant = 'solid' | 'outlined' | 'dashed' | 'ghost' | 'link';
+export type ButtonVariant =
+	| 'solid'
+	| 'outlined'
+	| 'dashed'
+	| 'ghost'
+	| 'link'
+	| 'action';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'icon';
+export type ButtonBackground =
+	| 'ink-500'
+	| 'ink-400'
+	| 'vanilla-100'
+	| 'vanilla-200';
+
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
 		VariantProps<typeof buttonVariants> {
@@ -20,6 +32,7 @@ export interface ButtonProps
 	suffixIcon?: React.ReactElement;
 	size?: ButtonSize;
 	loading?: boolean;
+	background?: ButtonBackground;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -35,6 +48,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			asChild = false,
 			disabled,
 			loading = false,
+			background,
 			children,
 			...props
 		},
@@ -53,6 +67,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		return (
 			<Comp
 				data-color={color}
+				data-background={variant === 'action' ? background : undefined}
 				className={cn(
 					buttonVariants({ variant, size, className }),
 					'font-inter',

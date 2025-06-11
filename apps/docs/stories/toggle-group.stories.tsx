@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 const meta: Meta<typeof ToggleGroup> = {
-	title: 'Components/ToggleGroup',
+	title: 'Components/Segmented Controls',
 	component: ToggleGroup,
 	argTypes: {
 		variant: {

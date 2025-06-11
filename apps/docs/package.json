@@ -13,13 +13,13 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
-		"@signozhq/alert": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
-		"@signozhq/design-tokens": "latest",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
+		"@signozhq/design-tokens": "latest",
+		"@signozhq/icons": "^0.0.1",
 		"@signozhq/input": "workspace:*",
 		"@signozhq/pagination": "workspace:*",
 		"@signozhq/radio-group": "workspace:*",
@@ -31,7 +31,10 @@
 		"@signozhq/tooltip": "workspace:*",
 		"lucide-react": "^0.445.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"react-use": "^17.6.0",
+		"react-virtualized-auto-sizer": "^1.0.26",
+		"react-window": "^1.8.11"
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "^1",
@@ -45,6 +48,7 @@
 		"@storybook/react-vite": "^8.3.3",
 		"@tailwindcss/postcss": "^4.1.4",
 		"@types/react": "^18.3.11",
+		"@types/react-window": "^1.8.8",
 		"@vitejs/plugin-react": "^4.2.1",
 		"eslint": "^9.11.0",
 		"postcss": "^8.4.35",

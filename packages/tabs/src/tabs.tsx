@@ -1,8 +1,21 @@
 import './index.css';
-import * as React from 'react';
+import React, {
+	ComponentPropsWithoutRef,
+	CSSProperties,
+	ElementRef,
+	forwardRef,
+	ReactNode,
+	useCallback,
+	useEffect,
+	useImperativeHandle,
+	useRef,
+	useState,
+} from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { type VariantProps } from 'class-variance-authority';
 import { cn } from './lib/utils';
+import { LockIcon } from 'lucide-react';
+import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
 import {
 	tabsListVariants,
 	tabsListWrapperVariants,
@@ -12,16 +25,17 @@ import {
 
 type TabItemType = {
 	key: string;
-	label: React.ReactNode;
-	children: React.ReactNode;
+	label: ReactNode;
+	children: ReactNode;
 	disabled?: boolean;
-	prefixIcon?: React.ReactNode;
-	suffixIcon?: React.ReactNode;
+	disabledReason?: string;
+	prefixIcon?: ReactNode;
+	suffixIcon?: ReactNode;
 };
 
-const Tabs = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Root>,
-	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
+const Tabs = forwardRef<
+	ElementRef<typeof TabsPrimitive.Root>,
+	ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
 		items: TabItemType[];
 		variant?: 'primary' | 'secondary';
 		onChange?: (key: string) => void;
@@ -39,38 +53,140 @@ const Tabs = React.forwardRef<
 		},
 		ref,
 	) => {
+		const [activeTabKey, setActiveTabKey] = useState(
+			value || defaultValue || items[0]?.key,
+		);
+		const tabsListRef = useRef<HTMLDivElement>(null);
+		const triggerRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+
+		// State for the active tab slider
+		const [activeSliderStyle, setActiveSliderStyle] = useState<CSSProperties>({});
+		// State for the hover tab slider
+		const [hoverSliderStyle, setHoverSliderStyle] = useState<CSSProperties>({
+			opacity: 0, // Initially hidden
+		});
+
 		const handleValueChange = (newValue: string) => {
+			setActiveTabKey(newValue);
 			onChange?.(newValue);
 		};
+
+		// --- Active Slider Logic ---
+		const updateActiveSliderPosition = useCallback(() => {
+			if (activeTabKey && tabsListRef.current) {
+				const activeTrigger = triggerRefs.current[activeTabKey];
+				if (activeTrigger) {
+					const listRect = tabsListRef.current.getBoundingClientRect();
+					const triggerRect = activeTrigger.getBoundingClientRect();
+
+					setActiveSliderStyle({
+						left: triggerRect.left - listRect.left,
+						width: triggerRect.width,
+						opacity: 1,
+					});
+				} else {
+					setActiveSliderStyle({ opacity: 0 }); // Hide if no active trigger
+				}
+			}
+		}, [activeTabKey]);
+
+		useEffect(() => {
+			updateActiveSliderPosition();
+		}, [activeTabKey, items, updateActiveSliderPosition]);
+
+		// --- Hover Slider Logic ---
+		const handleMouseEnter = (itemKey: string) => {
+			if (tabsListRef.current && triggerRefs.current[itemKey]) {
+				const hoveredTrigger = triggerRefs.current[itemKey];
+				const listRect = tabsListRef.current.getBoundingClientRect();
+				const triggerRect = hoveredTrigger!.getBoundingClientRect();
+
+				setHoverSliderStyle({
+					left: triggerRect.left - listRect.left,
+					width: triggerRect.width,
+					opacity: 1, // Make visible on hover
+				});
+			}
+		};
+
+		const handleMouseLeave = () => {
+			// Hide the hover slider when not hovering
+			setHoverSliderStyle((prev) => ({ ...prev, opacity: 0 }));
+		};
+
+		// Effect to update slider styles on window resize
+		useEffect(() => {
+			const handleResize = () => {
+				updateActiveSliderPosition();
+				// We don't need to update hover position on resize unless a tab is actively hovered.
+				// It will be re-calculated on the next mouse enter.
+			};
+
+			window.addEventListener('resize', handleResize);
+			return () => window.removeEventListener('resize', handleResize);
+		}, [updateActiveSliderPosition]);
 
 		return (
 			<TabsPrimitive.Root
 				ref={ref}
 				onValueChange={handleValueChange}
 				defaultValue={defaultValue}
-				value={value}
+				value={activeTabKey}
 				className={cn(tabsVariants({ variant, className }))}
 				{...props}
 			>
-				<TabsList variant={variant}>
+				<TooltipProvider>
+					<TabsList variant={variant} ref={tabsListRef}>
+						{variant === 'secondary' && (
+							<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
+						)}
+						{items.map((item) => (
+							<TabsTrigger
+								key={item.key}
+								value={item.key}
+								disabled={item.disabled}
+								variant={variant}
+								ref={(el) => (triggerRefs.current[item.key] = el)}
+								// Add hover event handlers
+								onMouseEnter={() => handleMouseEnter(item.key)}
+								onMouseLeave={handleMouseLeave}
+							>
+								{item.disabled ? (
+									<Tooltip title={item.disabledReason || 'This tab is disabled'}>
+										<LockIcon className="shrink-0 " size={16} />
+									</Tooltip>
+								) : (
+									item.prefixIcon && <span className="">{item.prefixIcon}</span>
+								)}
+								{item.label}
+								{!item.disabled && item.suffixIcon && (
+									<span className="">{item.suffixIcon}</span>
+								)}
+							</TabsTrigger>
+						))}
+						{variant === 'secondary' ? (
+							<div className="min-w-4 border-b border-[var(--tab-border-color)] shrink-0 grow"></div>
+						) : (
+							<>
+								{/* Hover Slider */}
+								<div
+									className="absolute bg-ink-500/10 dark:bg-vanilla-100/10 rounded-md transition-all duration-300 ease-in-out opacity-0 z-0 h-[28px] "
+									style={hoverSliderStyle}
+								/>
+								{/* Active Slider */}
+								<div
+									className="absolute bottom-[-8px] h-[2px] bg-[var(--bg-robin-500)] rounded-[20px] transition-all duration-300 ease-in-out"
+									style={activeSliderStyle}
+								/>
+							</>
+						)}
+					</TabsList>
 					{items.map((item) => (
-						<TabsTrigger
-							key={item.key}
-							value={item.key}
-							disabled={item.disabled}
-							variant={variant}
-						>
-							{item.prefixIcon && item.prefixIcon}
-							{item.label}
-							{item.suffixIcon && item.suffixIcon}
-						</TabsTrigger>
-					))}
-				</TabsList>
-				{items.map((item) => (
-					<TabsContent key={item.key} value={item.key}>
-						{item.children}
-					</TabsContent>
-				))}
+						<TabsContent key={item.key} value={item.key}>
+							{item.children}
+						</TabsContent>
+					))}{' '}
+				</TooltipProvider>
 			</TabsPrimitive.Root>
 		);
 	},
@@ -78,9 +194,9 @@ const Tabs = React.forwardRef<
 Tabs.displayName = 'Tabs';
 
 // Update TabsList to use variants
-const TabsList = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.List>,
-	React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> &
+const TabsList = forwardRef<
+	ElementRef<typeof TabsPrimitive.List>,
+	ComponentPropsWithoutRef<typeof TabsPrimitive.List> &
 		VariantProps<typeof tabsListVariants>
 >(({ className, variant = 'primary', ...props }, ref) => {
 	return (
@@ -95,89 +211,21 @@ const TabsList = React.forwardRef<
 });
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-const updateTabHoverStyles = (e: React.MouseEvent<HTMLButtonElement>) => {
-	const button = e.currentTarget;
-	const list = button.closest('[role="tablist"]');
-	if (!list) return;
-
-	const rect = button.getBoundingClientRect();
-	const listRect = list.getBoundingClientRect();
-	const left = rect.left - listRect.left - 4; // Subtract 4px to account for padding
-
-	(list as HTMLElement).style.setProperty('--tab-width', `${rect.width}px`);
-	(list as HTMLElement).style.setProperty('--tab-left', `${left}px`);
-};
-
-const resetTabHoverStyles = (e: React.MouseEvent<HTMLButtonElement>) => {
-	const button = e.currentTarget;
-	const list = button.closest('[role="tablist"]');
-	if (!list) return;
-
-	(list as HTMLElement).style.setProperty('--tab-width', '0px');
-};
-
-const updateActiveStyles = (triggerRef: React.RefObject<HTMLButtonElement>) => {
-	const button = triggerRef.current;
-	if (!button) return;
-
-	const list = button.closest('[role="tablist"]');
-	if (!list) return;
-
-	const rect = button.getBoundingClientRect();
-	const listRect = list.getBoundingClientRect();
-	const left = rect.left - listRect.left;
-
-	(list as HTMLElement).style.setProperty('--active-width', `${rect.width}px`);
-	(list as HTMLElement).style.setProperty('--active-left', `${left}px`);
-};
-
 // Update TabsTrigger to use variants
-const TabsTrigger = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Trigger>,
-	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
+const TabsTrigger = forwardRef<
+	ElementRef<typeof TabsPrimitive.Trigger>,
+	ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
 		VariantProps<typeof tabsTriggerVariants>
->(({ className, children, variant = 'primary', ...props }, ref) => {
-	const triggerRef = React.useRef<HTMLButtonElement>(null);
+>(({ className, children, variant = 'primary', disabled, ...props }, ref) => {
+	const triggerRef = useRef<HTMLButtonElement>(null);
 
-	React.useImperativeHandle(ref, () => triggerRef.current!);
-
-	const memoizedUpdateActiveStyles = React.useCallback(() => {
-		updateActiveStyles(triggerRef);
-	}, []);
-
-	React.useEffect(() => {
-		if (variant !== 'primary') return;
-
-		const button = triggerRef.current;
-		if (!button) return;
-
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (
-					mutation.type === 'attributes' &&
-					mutation.attributeName === 'data-state' &&
-					button.getAttribute('data-state') === 'active'
-				) {
-					requestAnimationFrame(memoizedUpdateActiveStyles);
-				}
-			});
-		});
-
-		observer.observe(button, { attributes: true });
-
-		if (button.getAttribute('data-state') === 'active') {
-			requestAnimationFrame(memoizedUpdateActiveStyles);
-		}
-
-		return () => observer.disconnect();
-	}, [variant, memoizedUpdateActiveStyles]);
+	useImperativeHandle(ref, () => triggerRef.current!);
 
 	return (
 		<TabsPrimitive.Trigger
 			ref={triggerRef}
 			className={cn(tabsTriggerVariants({ variant, className }))}
-			onMouseEnter={variant === 'primary' ? updateTabHoverStyles : undefined}
-			onMouseLeave={variant === 'primary' ? resetTabHoverStyles : undefined}
+			disabled={disabled}
 			{...props}
 		>
 			{children}
@@ -186,9 +234,9 @@ const TabsTrigger = React.forwardRef<
 });
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
-const TabsContent = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Content>,
-	React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+const TabsContent = forwardRef<
+	ElementRef<typeof TabsPrimitive.Content>,
+	ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, ...props }, ref) => {
 	return (
 		<TabsPrimitive.Content
