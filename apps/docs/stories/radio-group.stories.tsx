@@ -6,6 +6,39 @@ import {
 	RadioGroupLabel,
 	RadioColorProps,
 } from '@signozhq/radio-group';
+import { generateDocs } from '../utils/generateDocs';
+
+const radioGroupExamples = [
+	`import { RadioGroup, RadioGroupItem } from '@signozhq/radio-group';
+
+export default function MyComponent() {
+	return (
+		<RadioGroup defaultValue="option1">
+			<div className="flex flex-col space-y-2">
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="option1" id="option1-radio" />
+					<label htmlFor="option1-radio">Option 1</label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="option2" id="option2-radio" />
+					<label htmlFor="option2-radio">Option 2</label>
+				</div>
+				<div className="flex items-center space-x-2">
+					<RadioGroupItem value="option3" id="option3-radio" disabled />
+					<label htmlFor="option3-radio" className="text-zinc-400">Option 3 (Disabled)</label>
+				</div>
+			</div>
+		</RadioGroup>
+	);
+}`,
+];
+
+const radioGroupDocs = generateDocs({
+	packageName: '@signozhq/radio-group',
+	description:
+		'A radio group component for selecting a single option from a list of choices.',
+	examples: radioGroupExamples,
+});
 
 const meta: Meta<typeof RadioGroup> = {
 	title: 'Components/RadioGroup',
@@ -28,6 +61,11 @@ const meta: Meta<typeof RadioGroup> = {
 		},
 	},
 	parameters: {
+		docs: {
+			description: {
+				component: radioGroupDocs,
+			},
+		},
 		design: [
 			{
 				name: 'Figma',
@@ -36,6 +74,7 @@ const meta: Meta<typeof RadioGroup> = {
 			},
 		],
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;

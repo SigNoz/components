@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button, ButtonSize } from '@signozhq/button';
 import { Code, ChevronLeft, ChevronRight } from 'lucide-react';
+import { generateDocs } from '../utils/generateDocs';
 
 const VARIANTS = ['solid', 'outlined', 'dashed', 'ghost', 'link'] as const;
 const COLORS = ['primary', 'destructive', 'warning', 'secondary'] as const;
@@ -13,6 +14,32 @@ type ButtonConfig = {
 	label: string;
 	buttonText?: string;
 };
+
+const buttonExamples = [
+	`import { Button } from '@signozhq/button';
+import { ChevronLeft, ChevronRight } from '@signozhq/icons';
+
+export default function MyComponent() {
+return (
+	<Button 
+		variant="solid" 
+		color="primary" 
+		size="md"
+		prefixIcon={<ChevronLeft />}
+		suffixIcon={<ChevronRight />}
+	>
+		Click Me
+	</Button>
+);
+}`,
+];
+
+const buttonDocs = generateDocs({
+	packageName: '@signozhq/button',
+	description:
+		'A versatile button component with multiple variants, colors, and sizes.',
+	examples: buttonExamples,
+});
 
 const meta: Meta<typeof Button> = {
 	title: 'Components/Button',
@@ -61,7 +88,16 @@ const meta: Meta<typeof Button> = {
 			disable: true,
 		},
 		controls: { disable: true },
+		docs: {
+			description: {
+				component: buttonDocs,
+			},
+			source: {
+				type: 'code',
+			},
+		},
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;

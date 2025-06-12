@@ -2,6 +2,32 @@ import React from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from '@signozhq/input';
+import { generateDocs } from '../utils/generateDocs';
+
+const inputExamples = [
+	`import { Input } from "@signozhq/input";
+
+export default function MyComponent() {
+  return (
+    <div>
+      <label htmlFor="my-input" className="block mb-2 text-sm font-medium">
+        Email address
+      </label>
+      <Input 
+        id="my-input" 
+        type="email" 
+        placeholder="name@example.com" 
+      />
+    </div>
+  );
+}`,
+];
+
+const inputDocs = generateDocs({
+	packageName: '@signozhq/input',
+	description: 'A flexible input component with light and dark themes.',
+	examples: inputExamples,
+});
 
 const meta: Meta<typeof Input> = {
 	title: 'Components/Input',
@@ -11,6 +37,13 @@ const meta: Meta<typeof Input> = {
 		theme: {
 			control: 'radio',
 			options: ['light', 'dark'],
+		},
+	},
+	parameters: {
+		docs: {
+			description: {
+				component: inputDocs,
+			},
 		},
 	},
 };
@@ -37,7 +70,7 @@ export const WithLabel: Story = {
 		<div className={args.theme === 'dark' ? 'bg-gray-800 p-4' : ''}>
 			<label
 				htmlFor="input-with-label"
-				className={`block mb-2 text-sm ${args.theme === 'dark' ? 'text-white' : ''}`}
+				className={`block mb-2 text-sm font-medium ${args.theme === 'dark' ? 'text-white' : ''}`}
 			>
 				Label
 			</label>

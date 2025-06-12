@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import Tabs from '@signozhq/tabs'; // Corrected import path
+import Tabs from '@signozhq/tabs';
+import { generateDocs } from '../utils/generateDocs';
 import {
 	AlertCircle,
 	Component,
@@ -14,10 +15,54 @@ import {
 	ShieldAlert,
 } from 'lucide-react';
 
+const tabsExamples = [
+	`import Tabs from '@signozhq/tabs';
+import { Settings, AlertCircle } from '@signozhq/icons';
+
+export default function MyComponent() {
+	const items = [
+		{
+			key: 'overview',
+			label: 'Overview',
+			children: 'Overview content',
+			prefixIcon: <Settings className="size-4" />,
+		},
+		{
+			key: 'issues',
+			label: 'Issues',
+			children: 'Issues content',
+			prefixIcon: <AlertCircle className="size-4" />,
+		}
+	];
+
+	return (
+		<Tabs
+			items={items}
+			variant="primary"
+			defaultValue="overview"
+		/>
+	);
+}`,
+];
+
+const tabsDocs = generateDocs({
+	packageName: '@signozhq/tabs',
+	description:
+		'A flexible tabbed interface component with primary and secondary variants, supporting icons and disabled states.',
+	examples: tabsExamples,
+});
+
 const meta: Meta<typeof Tabs> = {
 	title: 'Components/Tabs',
 	component: Tabs,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component: tabsDocs,
+			},
+		},
+	},
 };
 
 export default meta;

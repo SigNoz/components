@@ -3,6 +3,31 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
 import { Button } from '@signozhq/button';
+import { generateDocs } from '../utils/generateDocs';
+
+const tooltipExamples = [
+	`import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
+import { Button } from '@signozhq/button';
+
+export default function MyComponent() {
+	return (
+		<TooltipProvider>
+			<Tooltip title="Helpful information" arrow>
+				<Button variant="solid" color="secondary">
+					Hover me
+				</Button>
+			</Tooltip>
+		</TooltipProvider>
+	);
+}`,
+];
+
+const tooltipDocs = generateDocs({
+	packageName: '@signozhq/tooltip',
+	description:
+		'A customizable tooltip component with smooth animations and flexible positioning.',
+	examples: tooltipExamples,
+});
 
 const meta: Meta<typeof Tooltip> = {
 	title: 'Components/Tooltip',
@@ -10,8 +35,7 @@ const meta: Meta<typeof Tooltip> = {
 	parameters: {
 		docs: {
 			description: {
-				component:
-					'A customizable tooltip component with smooth animations and flexible positioning.',
+				component: tooltipDocs,
 			},
 		},
 		design: {

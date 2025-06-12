@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ToggleGroup, ToggleGroupItem } from '@signozhq/toggle-group';
+import { generateDocs } from '../utils/generateDocs';
 import {
 	Bold,
 	Italic,
@@ -11,6 +12,34 @@ import {
 	AlignJustify,
 	LayoutGrid,
 } from 'lucide-react';
+
+const toggleGroupExamples = [
+	`import { ToggleGroup, ToggleGroupItem } from '@signozhq/toggle-group';
+import { Bold, Italic, Underline } from '@signozhq/icons';
+
+export default function MyComponent() {
+	return (
+		<ToggleGroup type="multiple" defaultValue={['bold']} variant="outline">
+			<ToggleGroupItem value="bold" aria-label="Bold">
+				<Bold className="h-3 w-3" />
+			</ToggleGroupItem>
+			<ToggleGroupItem value="italic" aria-label="Italic">
+				<Italic className="h-3 w-3" />
+			</ToggleGroupItem>
+			<ToggleGroupItem value="underline" aria-label="Underline">
+				<Underline className="h-3 w-3" />
+			</ToggleGroupItem>
+		</ToggleGroup>
+	);
+}`,
+];
+
+const toggleGroupDocs = generateDocs({
+	packageName: '@signozhq/toggle-group',
+	description:
+		'A set of two-state buttons that can be toggled on or off, in single or multiple selection mode.',
+	examples: toggleGroupExamples,
+});
 
 const meta: Meta<typeof ToggleGroup> = {
 	title: 'Components/Segmented Controls',
@@ -32,6 +61,11 @@ const meta: Meta<typeof ToggleGroup> = {
 		},
 	},
 	parameters: {
+		docs: {
+			description: {
+				component: toggleGroupDocs,
+			},
+		},
 		design: [
 			{
 				name: 'Figma',
@@ -40,6 +74,7 @@ const meta: Meta<typeof ToggleGroup> = {
 			},
 		],
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;
