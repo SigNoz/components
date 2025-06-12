@@ -16,6 +16,7 @@
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
+		"@signozhq/callout": "workspace:*",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
 		"@signozhq/design-tokens": "latest",
