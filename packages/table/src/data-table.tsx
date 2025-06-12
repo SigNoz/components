@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { throttle } from 'lodash-es';
 import {
 	ColumnDef,
 	flexRender,
@@ -67,7 +68,7 @@ interface DataTableProps<TData, TValue> {
 	minColumnWidth?: number;
 	maxColumnWidth?: number;
 	enableRowSelection?: boolean;
-	selectionMode?: 'single' | 'multiple';
+	selectionMode?: SelectionModeType;
 	onRowSelectionChange?: (selectedRows: TData[]) => void;
 	enableRowExpansion?: boolean;
 	renderSubComponent?: (props: { row: Row<TData> }) => React.ReactNode;
@@ -121,6 +122,13 @@ interface DataTableProps<TData, TValue> {
 	// Header visibility prop
 	showHeaders?: boolean;
 }
+
+export enum SelectionMode {
+	Single = 'single',
+	Multiple = 'multiple',
+}
+
+export type SelectionModeType = SelectionMode.Single | SelectionMode.Multiple;
 
 // Virtualized Table Body Component
 function VirtualizedTableBody<TData>({
@@ -378,7 +386,7 @@ export function DataTable<TData, TValue>({
 	minColumnWidth = 50,
 	maxColumnWidth = 500,
 	enableRowSelection = false,
-	selectionMode = 'multiple',
+	selectionMode = SelectionMode.Multiple,
 	onRowSelectionChange,
 	enableRowExpansion = false,
 	renderSubComponent,
@@ -573,7 +581,7 @@ export function DataTable<TData, TValue>({
 		...(enableRowSelection
 			? {
 					onRowSelectionChange: (updater) => {
-						if (selectionMode === 'single') {
+						if (selectionMode === SelectionMode.Single) {
 							setRowSelection((prev) => {
 								const next = typeof updater === 'function' ? updater(prev) : updater;
 								const selectedIds = Object.keys(next);
@@ -758,22 +766,28 @@ export function DataTable<TData, TValue>({
 
 	// Add scroll handler for infinite scroll
 	const handleScroll = React.useCallback(
-		(e: React.UIEvent<HTMLDivElement>) => {
-			const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-			const newPosition = { top: scrollTop, left: e.currentTarget.scrollLeft };
-			setScrollPosition(newPosition);
-			onScroll?.(newPosition);
+		throttle(
+			(e: React.UIEvent<HTMLDivElement>) => {
+				if (!e.currentTarget) return;
+				console.log('uncaught handlescroll', e.currentTarget);
+				const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+				const newPosition = { top: scrollTop, left: e.currentTarget.scrollLeft };
+				setScrollPosition(newPosition);
+				onScroll?.(newPosition);
 
-			// Check if we've scrolled to the bottom
-			if (
-				enableInfiniteScroll &&
-				hasMore &&
-				!loadingMore &&
-				scrollHeight - scrollTop - clientHeight < 100 // Load more when within 100px of bottom
-			) {
-				onLoadMore?.();
-			}
-		},
+				// Check if we've scrolled to the bottom
+				if (
+					enableInfiniteScroll &&
+					hasMore &&
+					!loadingMore &&
+					scrollHeight - scrollTop - clientHeight < 100 // Load more when within 100px of bottom
+				) {
+					onLoadMore?.();
+				}
+			},
+			500,
+			{ leading: true, trailing: true },
+		), // Throttle to 100ms
 		[enableInfiniteScroll, hasMore, loadingMore, onLoadMore, onScroll],
 	);
 
@@ -827,7 +841,7 @@ export function DataTable<TData, TValue>({
 								<TableRow key={headerGroup.id}>
 									{enableRowSelection && (
 										<TableHead className="w-[48px]">
-											{selectionMode === 'multiple' && (
+											{selectionMode === SelectionMode.Multiple && (
 												<input
 													type="checkbox"
 													aria-label="Select all rows"
@@ -881,7 +895,7 @@ export function DataTable<TData, TValue>({
 											>
 												<div className="flex flex-col gap-2">
 													<div className="flex items-center gap-2">
-														{enableColumnReordering && (
+														{enableColumnReordering && !isPinned && (
 															<GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
 														)}
 														{header.isPlaceholder
@@ -932,7 +946,11 @@ export function DataTable<TData, TValue>({
 													{canFilter && isFilterVisible && (
 														<div className="relative">
 															<input
-																placeholder={`Filter ${header.column.columnDef.header as string}...`}
+																placeholder={
+																	typeof header.column.columnDef.header === 'string'
+																		? `Filter ${header.column.columnDef.header}...`
+																		: 'Filter values...'
+																}
 																value={(filterValue ?? '') as string}
 																onChange={(e) => column.setFilterValue(e.target.value)}
 																className="w-full rounded-md border px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"

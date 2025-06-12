@@ -302,12 +302,14 @@ function App() {
 					Table Component with Infinite Scroll
 				</h2>
 				<DataTable
+					minColumnWidth={400}
+					maxColumnWidth={600}
 					tableId="invoices-table"
 					enableColumnReordering={true}
 					enableColumnResizing={true}
 					enableGlobalFilter={true}
 					enableRowSelection={true}
-					selectionMode="multiple"
+					selectionMode={'multiple'}
 					enableDynamicRowHeights={true}
 					rowHeight={10}
 					enableScrollRestoration={true}
@@ -519,6 +521,8 @@ function App() {
 					scroll. Currently showing {virtualizedInfiniteData.length} rows.
 				</p>
 				<DataTable
+					minColumnWidth={200}
+					maxColumnWidth={300}
 					tableId="virtualized-infinite-table"
 					enableVirtualization={true}
 					estimateRowSize={60}
