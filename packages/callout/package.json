@@ -1,5 +1,5 @@
 {
-	"name": "@signozhq/alert",
+	"name": "@signozhq/callout",
 	"version": "0.0.1",
 	"license": "MIT",
 	"type": "module",
