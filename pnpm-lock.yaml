@@ -293,9 +293,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -333,6 +330,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -363,9 +363,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -403,6 +400,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -436,9 +436,6 @@ importers:
       lucide-solid:
         specifier: ^0.510.0
         version: 0.510.0(solid-js@1.9.7)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -476,6 +473,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -509,9 +509,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -549,6 +546,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -582,9 +582,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -622,6 +619,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -655,9 +655,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -698,6 +695,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -746,9 +746,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -786,6 +783,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -819,9 +819,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -859,6 +856,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -892,9 +892,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -932,6 +929,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -965,9 +965,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -1005,6 +1002,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -1041,9 +1041,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -1081,6 +1078,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -1164,9 +1164,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -1204,6 +1201,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -1237,9 +1237,6 @@ importers:
       lucide-react:
         specifier: ^0.445.0
         version: 0.445.0(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.6.0
@@ -1277,6 +1274,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.5.4
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -2535,9 +2535,6 @@ packages:
 
   '@rushstack/ts-command-line@5.0.1':
     resolution: {integrity: sha512-bsbUucn41UXrQK7wgM8CNM/jagBytEyJqXw/umtI8d68vFm1Jwxh1OtLrlW7uGZgjCWiiPH6ooUNa1aVsuVr3Q==}
-
-  '@signozhq/design-tokens@1.2.1':
-    resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
 
   '@signozhq/design-tokens@1.2.1':
     resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
@@ -8789,8 +8786,6 @@ snapshots:
       string-argv: 0.3.2
     transitivePeerDependencies:
       - '@types/node'
-
-  '@signozhq/design-tokens@1.2.1': {}
 
   '@signozhq/design-tokens@1.2.1': {}
 
