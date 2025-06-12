@@ -303,7 +303,7 @@ function App() {
 				</h2>
 				<DataTable
 					tableId="invoices-table"
-					enableColumnReordering={false}
+					enableColumnReordering={true}
 					enableColumnResizing={true}
 					enableGlobalFilter={true}
 					enableRowSelection={true}

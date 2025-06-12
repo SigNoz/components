@@ -428,6 +428,7 @@ export function DataTable<TData, TValue>({
 	);
 	const [draggedColumn, setDraggedColumn] = React.useState<string | null>(null);
 	const [dropTarget, setDropTarget] = React.useState<string | null>(null);
+	const [isResizing, setIsResizing] = React.useState(false);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[],
 	);
@@ -662,6 +663,11 @@ export function DataTable<TData, TValue>({
 	};
 
 	const handleDragStart = (columnId: string) => (e: React.DragEvent) => {
+		// Don't start drag if we're currently resizing
+		if (isResizing) {
+			e.preventDefault();
+			return;
+		}
 		e.dataTransfer.setData('text/plain', columnId);
 		setDraggedColumn(columnId);
 		e.dataTransfer.effectAllowed = 'move';
@@ -857,11 +863,21 @@ export function DataTable<TData, TValue>({
 													isPinned === 'left' && 'sticky left-0 z-20 bg-background',
 													isPinned === 'right' && 'sticky right-0 z-20 bg-background',
 												)}
-												draggable={enableColumnReordering}
-												onDragStart={handleDragStart(header.id)}
-												onDragOver={handleDragOver(header.id)}
-												onDragEnd={handleDragEnd}
-												onDrop={handleDrop(header.id)}
+												draggable={enableColumnReordering && !isResizing}
+												onDragStart={
+													enableColumnReordering ? handleDragStart(header.id) : undefined
+												}
+												onDragOver={
+													enableColumnReordering && !isResizing
+														? handleDragOver(header.id)
+														: undefined
+												}
+												onDrop={
+													enableColumnReordering && !isResizing
+														? handleDrop(header.id)
+														: undefined
+												}
+												onDragEnd={enableColumnReordering ? handleDragEnd : undefined}
 											>
 												<div className="flex flex-col gap-2">
 													<div className="flex items-center gap-2">
@@ -936,8 +952,28 @@ export function DataTable<TData, TValue>({
 													<div
 														{...{
 															onDoubleClick: () => header.column.resetSize(),
-															onMouseDown: header.getResizeHandler(),
-															onTouchStart: header.getResizeHandler(),
+															onMouseDown: (e: React.MouseEvent) => {
+																setIsResizing(true);
+																header.getResizeHandler()(e);
+																// Add global mouse up listener to detect when resizing ends
+																const onMouseUp = () => {
+																	setIsResizing(false);
+																	document.removeEventListener('mouseup', onMouseUp);
+																};
+																document.addEventListener('mouseup', onMouseUp, { once: true });
+															},
+															onTouchStart: (e: React.TouchEvent) => {
+																setIsResizing(true);
+																header.getResizeHandler()(e);
+																// Add global touch end listener to detect when resizing ends
+																const onTouchEnd = () => {
+																	setIsResizing(false);
+																	document.removeEventListener('touchend', onTouchEnd);
+																};
+																document.addEventListener('touchend', onTouchEnd, {
+																	once: true,
+																});
+															},
 															style: {
 																display: !header.column.getCanResize() ? 'none' : '',
 															},
