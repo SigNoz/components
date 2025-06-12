@@ -16,8 +16,12 @@ const PREFERENCES_KEY_PREFIX = 'table-preferences-';
 export const getTablePreferences = (tableId: string): TablePreferences => {
 	if (typeof window === 'undefined') return {};
 
-	const stored = localStorage.getItem(`${PREFERENCES_KEY_PREFIX}${tableId}`);
-	return stored ? JSON.parse(stored) : {};
+	try {
+		const stored = localStorage.getItem(`${PREFERENCES_KEY_PREFIX}${tableId}`);
+		return stored ? JSON.parse(stored) : {};
+	} catch {
+		return {};
+	}
 };
 
 export const saveTablePreferences = (
@@ -26,14 +30,22 @@ export const saveTablePreferences = (
 ) => {
 	if (typeof window === 'undefined') return;
 
-	localStorage.setItem(
-		`${PREFERENCES_KEY_PREFIX}${tableId}`,
-		JSON.stringify(preferences),
-	);
+	try {
+		localStorage.setItem(
+			`${PREFERENCES_KEY_PREFIX}${tableId}`,
+			JSON.stringify(preferences),
+		);
+	} catch {
+		console.error('Failed to save table preferences');
+	}
 };
 
 export const resetTablePreferences = (tableId: string) => {
 	if (typeof window === 'undefined') return;
 
-	localStorage.removeItem(`${PREFERENCES_KEY_PREFIX}${tableId}`);
+	try {
+		localStorage.removeItem(`${PREFERENCES_KEY_PREFIX}${tableId}`);
+	} catch {
+		console.error('Failed to reset table preferences');
+	}
 };
