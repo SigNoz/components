@@ -18,6 +18,7 @@
 		"@signozhq/callout": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
+		"@signozhq/callout": "workspace:*",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
 		"@signozhq/design-tokens": "latest",
@@ -59,6 +60,6 @@
 		"storybook-dark-mode": "^4.0.2",
 		"tailwindcss": "^4.1.4",
 		"typescript": "^5.3.3",
-		"vite": "^5.4.12"
+		"vite": "^5.4.19"
 	}
 }
