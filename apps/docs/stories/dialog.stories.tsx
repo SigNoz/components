@@ -3,11 +3,48 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@signozhq/button';
 import { DialogWrapper, AlertDialogWrapper } from '@signozhq/dialog';
 import { Code } from 'lucide-react';
+import { generateDocs } from '../utils/generateDocs';
+
+const dialogExamples = [
+	`import { DialogWrapper } from '@signozhq/dialog';
+import { Button } from '@signozhq/button';
+
+export default function MyComponent() {
+	return (
+		<DialogWrapper
+			title="Edit Details"
+			description="Make changes to your profile information."
+			trigger={<Button variant="solid">Open Dialog</Button>}
+		>
+			<div className="flex flex-col gap-4">
+				<p>Dialog content goes here</p>
+				<div className="flex justify-end">
+					<Button variant="solid" color="primary">Save Changes</Button>
+				</div>
+			</div>
+		</DialogWrapper>
+	);
+}`,
+];
+
+const dialogDocs = generateDocs({
+	packageName: '@signozhq/dialog',
+	description:
+		'A modal dialog component for displaying content that requires user attention or interaction.',
+	examples: dialogExamples,
+});
 
 const meta: Meta<typeof DialogWrapper> = {
 	title: 'Components/Dialog',
 	component: DialogWrapper,
 	tags: ['autodocs'],
+	parameters: {
+		docs: {
+			description: {
+				component: dialogDocs,
+			},
+		},
+	},
 	argTypes: {
 		width: {
 			control: 'select',

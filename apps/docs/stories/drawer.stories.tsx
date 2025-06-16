@@ -2,10 +2,54 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '@signozhq/button';
 import { DrawerWrapper } from '@signozhq/drawer';
+import { generateDocs } from '../utils/generateDocs';
+
+const drawerExamples = [
+	`import { DrawerWrapper } from '@signozhq/drawer';
+import { Button } from '@signozhq/button';
+
+export default function MyComponent() {
+	return (
+		<DrawerWrapper
+			trigger={<Button variant="outlined">Open Drawer</Button>}
+			header={{
+				title: "Drawer Title",
+				description: "This is a description of the drawer content"
+			}}
+			content={
+				<div className="p-4">
+					<p>Main content of the drawer goes here</p>
+				</div>
+			}
+			footer={
+				<div className="flex gap-2">
+					<Button>Save</Button>
+					<Button variant="outlined">Cancel</Button>
+				</div>
+			}
+			direction="right"
+		/>
+	);
+}`,
+];
+
+const drawerDocs = generateDocs({
+	packageName: '@signozhq/drawer',
+	description:
+		'A customizable drawer component that slides in from any edge of the screen with support for header, content, and footer sections.',
+	examples: drawerExamples,
+});
 
 const meta: Meta<typeof DrawerWrapper> = {
 	title: 'Components/Drawer',
 	component: DrawerWrapper,
+	parameters: {
+		docs: {
+			description: {
+				component: drawerDocs,
+			},
+		},
+	},
 	tags: ['autodocs'],
 	argTypes: {
 		trigger: {

@@ -2539,9 +2539,6 @@ packages:
   '@signozhq/design-tokens@1.2.1':
     resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
 
-  '@signozhq/design-tokens@1.2.1':
-    resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
-
   '@signozhq/icons@0.0.1':
     resolution: {integrity: sha512-8IJBec9fHHlZKwxKsLFDHaFx/jXFvn84Zjp6zBIRHFLiIcXFtMlZYn73jraT63c+sTXoRig7BXz5s1jKE7FLKw==}
 
@@ -8789,8 +8786,6 @@ snapshots:
       string-argv: 0.3.2
     transitivePeerDependencies:
       - '@types/node'
-
-  '@signozhq/design-tokens@1.2.1': {}
 
   '@signozhq/design-tokens@1.2.1': {}
 

@@ -2,6 +2,33 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Pagination from '@signozhq/pagination';
 import React, { useState } from 'react';
 import type { ComponentProps } from 'react'; // Import ComponentProps
+import { generateDocs } from '../utils/generateDocs';
+
+const paginationExamples = [
+	`import Pagination from '@signozhq/pagination';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [currentPage, setCurrentPage] = useState(1);
+	
+	return (
+		<Pagination
+			total={100}
+			pageSize={10}
+			current={currentPage}
+			onPageChange={(page) => setCurrentPage(page)}
+			align="center"
+		/>
+	);
+}`,
+];
+
+const paginationDocs = generateDocs({
+	packageName: '@signozhq/pagination',
+	description:
+		'A flexible pagination component for navigating through multi-page content.',
+	examples: paginationExamples,
+});
 
 const meta: Meta<typeof Pagination> = {
 	title: 'Components/Pagination',
@@ -51,6 +78,11 @@ const meta: Meta<typeof Pagination> = {
 				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=40-1657&node-type=frame&t=RGQXgBfSXKWsYAz9-0',
 			},
 		],
+		docs: {
+			description: {
+				component: paginationDocs,
+			},
+		},
 	},
 };
 
