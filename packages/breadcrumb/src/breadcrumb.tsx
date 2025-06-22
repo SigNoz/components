@@ -2,10 +2,16 @@ import './index.css';
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from './lib/utils';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 
 function Breadcrumb({ ...props }: React.ComponentProps<'nav'>) {
-	return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
+	return (
+		<nav
+			aria-label="breadcrumb"
+			data-slot="breadcrumb"
+			{...props}
+			className="border"
+		/>
+	);
 }
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
@@ -13,7 +19,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
 		<ol
 			data-slot="breadcrumb-list"
 			className={cn(
-				'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5',
+				'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5 mx-4',
 				className,
 			)}
 			{...props}
@@ -73,7 +79,7 @@ function BreadcrumbSeparator({
 			role="presentation"
 			aria-hidden="true"
 			className={cn(
-				'text-slate-50 dark:text-vanilla-400 font-inter text-xl font-normal leading-5',
+				'text-slate-50 dark:text-vanilla-400 font-inter text-xl font-normal leading-7',
 				className,
 			)}
 			{...props}
@@ -92,10 +98,13 @@ function BreadcrumbEllipsis({
 			data-slot="breadcrumb-ellipsis"
 			role="presentation"
 			aria-hidden="true"
-			className={cn('flex size-9 items-center justify-center', className)}
+			className={cn(
+				'text-slate-50 dark:text-vanilla-400 font-inter text-xl font-normal leading-7 tracking-tight',
+				className,
+			)}
 			{...props}
 		>
-			<DotsHorizontalIcon className="size-4" />
+			...
 			<span className="sr-only">More</span>
 		</span>
 	);

@@ -72,9 +72,6 @@ importers:
       '@signozhq/badge':
         specifier: workspace:*
         version: link:../../packages/badge
-      '@signozhq/breadcrumb':
-        specifier: workspace:*
-        version: link:../../packages/breadcrumb
       '@signozhq/button':
         specifier: workspace:*
         version: link:../../packages/button
