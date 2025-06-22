@@ -23,7 +23,6 @@ function Breadcrumb({
 	className,
 	...props
 }: BreadcrumbProps) {
-	// If items are provided, render the simplified API using existing components
 	if (items) {
 		return (
 			<nav
