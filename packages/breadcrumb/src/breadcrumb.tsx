@@ -1,10 +1,64 @@
 import './index.css';
 import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
 import { cn } from './lib/utils';
-import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
+import { TooltipProvider } from '@signozhq/tooltip';
 
-function Breadcrumb({ ...props }: React.ComponentProps<'nav'>) {
+// Types for the new items-based API
+export interface BreadcrumbItemType {
+	title: React.ReactNode;
+	href?: string;
+	onClick?: (e: React.MouseEvent) => void;
+	className?: string;
+}
+
+export interface BreadcrumbProps extends React.ComponentProps<'nav'> {
+	items?: BreadcrumbItemType[];
+	separator?: React.ReactNode;
+	className?: string;
+}
+
+function Breadcrumb({
+	items,
+	separator = '/',
+	className,
+	...props
+}: BreadcrumbProps) {
+	// If items are provided, render the simplified API using existing components
+	if (items) {
+		return (
+			<nav
+				aria-label="breadcrumb"
+				data-slot="breadcrumb"
+				className={className}
+				{...props}
+			>
+				<BreadcrumbList>
+					{items.map((item, index) => {
+						const isLast = index === items.length - 1;
+
+						return (
+							<React.Fragment key={index}>
+								<BreadcrumbItem>
+									{isLast ? (
+										<BreadcrumbPage>{item.title}</BreadcrumbPage>
+									) : (
+										<BreadcrumbLink href={item.href} onClick={item.onClick}>
+											{item.title}
+										</BreadcrumbLink>
+									)}
+								</BreadcrumbItem>
+								{!isLast && (
+									<BreadcrumbSeparator isLast={false}>{separator}</BreadcrumbSeparator>
+								)}
+							</React.Fragment>
+						);
+					})}
+				</BreadcrumbList>
+			</nav>
+		);
+	}
+
+	// Fallback to the original verbose API
 	return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
@@ -37,39 +91,26 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 function BreadcrumbLink({
-	asChild,
 	className,
 	children,
 	...props
-}: React.ComponentProps<'a'> & {
-	asChild?: boolean;
-}) {
-	const Comp = asChild ? Slot : 'a';
-
+}: React.ComponentProps<'a'>) {
 	// Truncate text if it's longer than 24 characters
 	const truncatedChildren =
 		typeof children === 'string' && children.length > 24
 			? `${children.slice(0, 12)}...${children.slice(-9)}`
 			: children;
 
-	console.log(truncatedChildren);
-
 	return (
-		<Comp
+		<a
 			data-slot="breadcrumb-link"
 			className={cn(' transition-colors ', className)}
 			{...props}
 		>
-			<div className="text-slate-50 dark:text-vanilla-400 hover:text-ink-500 dark:hover:text-vanilla-100 text-sm leading-5">
-				{truncatedChildren !== children ? (
-					<Tooltip title={children}>
-						<span>{truncatedChildren}</span>
-					</Tooltip>
-				) : (
-					children
-				)}
+			<div className="text-slate-50 dark:text-vanilla-400 hover:text-ink-500 dark:hover:text-vanilla-100 text-sm leading-5 cursor-pointer">
+				{truncatedChildren}
 			</div>
-		</Comp>
+		</a>
 	);
 }
 
@@ -126,30 +167,4 @@ function BreadcrumbSeparator({
 	);
 }
 
-function BreadcrumbEllipsis({
-	className,
-	...props
-}: React.ComponentProps<'span'>) {
-	return (
-		<span
-			data-slot="breadcrumb-ellipsis"
-			role="presentation"
-			aria-hidden="true"
-			className={cn(' text-sm leading-5', className)}
-			{...props}
-		>
-			...
-			<span className="sr-only">More</span>
-		</span>
-	);
-}
-
-export {
-	Breadcrumb,
-	BreadcrumbList,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-	BreadcrumbEllipsis,
-};
+export default Breadcrumb;
