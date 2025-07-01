@@ -3,7 +3,7 @@ import React from 'react';
 import './App.css';
 // import { ThemeSwitcher } from '@signozhq/theme';
 // import { Code } from 'lucide-react';
-import { DataTable } from '@signozhq/table/data-table';
+import { DataTable } from '@signozhq/table';
 // import { Row, Cell } from '@tanstack/react-table';
 // import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
 

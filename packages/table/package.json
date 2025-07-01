@@ -5,10 +5,6 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/table.d.ts",
-			"import": "./dist/table.js"
-		},
-		"./data-table": {
 			"types": "./dist/data-table.d.ts",
 			"import": "./dist/data-table.js"
 		}
