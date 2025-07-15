@@ -1,5 +1,11 @@
 # @signozhq/tabs
 
+## 0.0.11
+
+### Patch Changes
+
+- latest changes
+
 ## 0.0.10
 
 ### Patch Changes
