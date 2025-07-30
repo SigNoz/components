@@ -80,7 +80,7 @@ const meta: Meta<typeof Table> = {
 	title: 'Components/Basic Table',
 	component: Table,
 	parameters: {
-		layout: 'padded',
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: `
@@ -131,8 +131,10 @@ type Story = StoryObj<typeof Table>;
 export const Simple: Story = {
 	render: () => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Simple User Table</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Simple User Table
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A basic table with clean, minimal styling for simple data display.
 				</p>
@@ -176,14 +178,16 @@ export const Simple: Story = {
 export const Enhanced: Story = {
 	render: () => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Enhanced User Table</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Enhanced User Table
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A more detailed table with avatars, status indicators, and action buttons.
 				</p>
 				<Table>
 					<TableHeader>
-						<TableRow className="bg-gray-50">
+						<TableRow className="bg-muted/50">
 							<TableHead className="font-semibold">User</TableHead>
 							<TableHead className="font-semibold">Department</TableHead>
 							<TableHead className="font-semibold">Role</TableHead>
@@ -196,7 +200,7 @@ export const Enhanced: Story = {
 						{users.map((user, index) => (
 							<TableRow
 								key={user.id}
-								className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+								className={index % 2 === 0 ? 'bg-background' : 'bg-muted/30'}
 							>
 								<TableCell>
 									<div className="flex items-center gap-3">
@@ -287,8 +291,10 @@ export const Enhanced: Story = {
 export const WithCaption: Story = {
 	render: () => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Table with Caption</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Table with Caption
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A table with a caption and summary information for better accessibility.
 				</p>
@@ -336,8 +342,8 @@ export const WithCaption: Story = {
 export const Empty: Story = {
 	render: () => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Empty State</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Empty State</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					How the table looks when there&apos;s no data to display.
 				</p>
@@ -354,9 +360,9 @@ export const Empty: Story = {
 						<TableRow>
 							<TableCell colSpan={4} className="text-center py-12">
 								<div className="flex flex-col items-center gap-2">
-									<AlertCircle className="h-8 w-8 text-gray-400" />
-									<p className="text-sm font-medium text-gray-900">No users found</p>
-									<p className="text-sm text-gray-500">
+									<AlertCircle className="h-8 w-8 text-muted-foreground" />
+									<p className="text-sm font-medium text-foreground">No users found</p>
+									<p className="text-sm text-muted-foreground">
 										Get started by creating a new user.
 									</p>
 									<Button size="sm" className="mt-2">
@@ -377,8 +383,10 @@ export const Empty: Story = {
 export const Compact: Story = {
 	render: () => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Compact Table</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Compact Table
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A compact version perfect for mobile devices or space-constrained layouts.
 				</p>

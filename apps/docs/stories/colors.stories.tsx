@@ -8,6 +8,7 @@ const meta: Meta<typeof ColorPalette> = {
 	component: ColorPalette,
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		backgrounds: {
 			default: 'dark',
 			values: [{ name: 'dark', value: '#000' }],

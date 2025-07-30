@@ -43,6 +43,7 @@ const meta: Meta<typeof Switch> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: switchDocs,

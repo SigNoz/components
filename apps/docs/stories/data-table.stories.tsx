@@ -357,8 +357,10 @@ const simpleColumns: ColumnDef<User>[] = [
 export const Basic: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Employee Directory</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Employee Directory
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A basic data table with sorting, filtering, and pagination capabilities.
 				</p>
@@ -387,8 +389,10 @@ export const Basic: StoryObj<typeof DataTable<User>> = {
 export const Advanced: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Advanced Employee Management</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Advanced Employee Management
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					Full-featured data table with column reordering, resizing, pinning, row
 					selection, and more.
@@ -418,8 +422,10 @@ export const Advanced: StoryObj<typeof DataTable<User>> = {
 export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Column Reordering Demo</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Column Reordering Demo
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					Drag and drop column headers to reorder them. Try dragging the
 					&quot;Name&quot; column to different positions.
@@ -448,8 +454,10 @@ export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
 export const RowSelection: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Row Selection Demo</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Row Selection Demo
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					Select individual rows or use the header checkbox to select all rows.
 					Selected rows are highlighted.
@@ -479,8 +487,10 @@ export const RowSelection: StoryObj<typeof DataTable<User>> = {
 export const Compact: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-white">
-				<h3 className="text-lg font-semibold mb-2">Compact Employee List</h3>
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Compact Employee List
+				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A compact view with essential information only, perfect for mobile or
 					space-constrained layouts.
@@ -561,7 +571,7 @@ const meta: Meta<typeof DataTable<User>> = {
 	title: 'Components/DataTable',
 	component: DataTable,
 	parameters: {
-		layout: 'padded',
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: `

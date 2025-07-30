@@ -43,6 +43,7 @@ const meta: Meta<typeof Checkbox> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: checkboxDocs,
