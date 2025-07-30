@@ -80,6 +80,7 @@ const meta: Meta<typeof Button> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		design: {
 			type: 'figma',
 			url: 'https://www.figma.com/file/...',

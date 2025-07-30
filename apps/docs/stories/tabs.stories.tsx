@@ -57,6 +57,7 @@ const meta: Meta<typeof Tabs> = {
 	component: Tabs,
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: tabsDocs,

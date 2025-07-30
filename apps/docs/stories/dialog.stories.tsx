@@ -39,6 +39,7 @@ const meta: Meta<typeof DialogWrapper> = {
 	component: DialogWrapper,
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: dialogDocs,
