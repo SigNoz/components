@@ -2,18 +2,18 @@
 # Owners are automatically requested for review for PRs that changes code
 # that they own.
 
-/packages/eslint-config @ahmadshaheer
-/packages/tailwind-config @ahmadshaheer
-/packages/typescript-config @ahmadshaheer
-/packages/theme @ahmadshaheer
-/turbo @ahmadshaheer
-package.json @ahmadshaheer
-README.md @ahmadshaheer
-turbo.json @ahmadshaheer
-.npmrc @ahmadshaheer
-/.turbo @ahmadshaheer
-/.changeset @ahmadshaheer
-/apps/docs/vite.config.ts @ahmadshaheer
-/apps/docs/package.json @ahmadshaheer
-/apps/docs/tsconfig.json @ahmadshaheer
-/apps/docs/.storybook @ahmadshaheer
+/packages/eslint-config @SigNoz/frontend
+/packages/tailwind-config @SigNoz/frontend
+/packages/typescript-config @SigNoz/frontend
+/packages/theme @SigNoz/frontend
+/turbo @SigNoz/frontend
+package.json @SigNoz/frontend
+README.md @SigNoz/frontend
+turbo.json @SigNoz/frontend
+.npmrc @SigNoz/frontend
+/.turbo @SigNoz/frontend
+/.changeset @SigNoz/frontend
+/apps/docs/vite.config.ts @SigNoz/frontend
+/apps/docs/package.json @SigNoz/frontend
+/apps/docs/tsconfig.json @SigNoz/frontend
+/apps/docs/.storybook @SigNoz/frontend
