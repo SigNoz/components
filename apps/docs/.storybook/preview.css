@@ -1,4 +1,188 @@
 @import '../index.css';
+
 :root {
 	--color-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Improve Storybook UI styling */
+.sb-show-main {
+	background: #0b0c0e; /* Use ink-500 to match story backgrounds */
+	color: #ffffff; /* White text for dark mode */
+}
+
+/* Force full width for docs pages */
+.sb-show-main .docs-story {
+	margin: 0 !important;
+	padding: 0 !important;
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Override any Storybook container constraints */
+.sb-show-main .docs-story > div {
+	max-width: none !important;
+	width: 100% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* Ensure docs content takes full width */
+.sb-show-main .docs-story .docblock-source {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Override any Storybook grid or container classes */
+.sb-show-main .docs-story .css-1v0mbdj,
+.sb-show-main .docs-story .css-1d3z3di,
+.sb-show-main .docs-story .css-1v0mbdj > div {
+	max-width: none !important;
+	width: 100% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* Override the specific 1000px constraint */
+.css-q22hxw,
+.sb-show-main .docs-story .css-q22hxw,
+.sb-show-main .docs-story [class*="css-"] {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Override any Storybook container with max-width */
+.sb-show-main .docs-story [style*="max-width"],
+.sb-show-main .docs-story [style*="maxWidth"] {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Target any element with 1000px constraint */
+.sb-show-main .docs-story *[style*="1000px"] {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Comprehensive override for any Storybook-generated CSS classes */
+.sb-show-main .docs-story [class*="css-"] {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Override any element with max-width in docs */
+.sb-show-main .docs-story * {
+	max-width: none !important;
+}
+
+/* But allow specific elements to have their natural width */
+.sb-show-main .docs-story table,
+.sb-show-main .docs-story pre,
+.sb-show-main .docs-story code {
+	max-width: 100% !important;
+	width: 100% !important;
+}
+
+/* Global font settings */
+* {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Improved typography for better readability */
+body {
+	font-size: 14px;
+	line-height: 1.6;
+	color: #ffffff;
+}
+
+/* Improve heading hierarchy */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 600;
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+	color: #ffffff;
+}
+
+h1 { font-size: 1.875rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.125rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+/* Improve paragraph spacing */
+p {
+	margin-bottom: 1rem;
+	color: #e5e7eb;
+}
+
+/* Improve list styling */
+ul, ol {
+	margin-bottom: 1rem;
+	padding-left: 1.5rem;
+}
+
+li {
+	margin-bottom: 0.25rem;
+	color: #e5e7eb;
+}
+
+/* Improve code blocks */
+pre {
+	background: rgba(0, 0, 0, 0.3);
+	border-radius: 6px;
+	padding: 1rem;
+	margin: 1rem 0;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	overflow-x: auto;
+}
+
+code {
+	background: rgba(0, 0, 0, 0.2);
+	padding: 0.125rem 0.25rem;
+	border-radius: 3px;
+	font-size: 0.875em;
+	color: #fbbf24;
+}
+
+/* Improve table styling */
+table {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 1rem 0;
+}
+
+th, td {
+	padding: 0.75rem;
+	text-align: left;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+	font-weight: 600;
+	background: rgba(0, 0, 0, 0.2);
+	color: #ffffff;
+}
+
+/* Ensure dark mode is applied by default */
+.dark {
+	background: #0b0c0e;
+	color: var(--text-vanilla-100);
+}
+
+/* Improve component spacing */
+.sb-show-main > div {
+	padding: 0;
+}
+
+/* Better focus states for accessibility */
+*:focus {
+	outline: 2px solid #3b82f6;
+	outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+	transition: color 0.2s ease, background-color 0.2s ease;
 }

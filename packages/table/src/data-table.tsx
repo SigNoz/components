@@ -462,8 +462,22 @@ export function DataTable<TData, TValue>({
 
 	// Initialise Column Order Array
 	React.useEffect(() => {
-		setColumnOrder(
-			initialColumnOrder || columns.map((column) => column.id as string),
+		// Generate column IDs based on accessorKey or create a fallback
+		const defaultOrder = columns.map((column, index) => {
+			// Use accessorKey as ID if available, otherwise use index
+			const accessorKey = 'accessorKey' in column ? column.accessorKey : undefined;
+			return (accessorKey as string) || `column-${index}`;
+		});
+		setColumnOrder(initialColumnOrder || defaultOrder);
+		console.log('Column order initialized:', initialColumnOrder || defaultOrder);
+		console.log(
+			'Columns:',
+			columns.map((col, i) => ({
+				index: i,
+				accessorKey: 'accessorKey' in col ? col.accessorKey : undefined,
+				id: col.id,
+				header: typeof col.header === 'string' ? col.header : 'custom',
+			})),
 		);
 	}, [columns, initialColumnOrder]);
 
@@ -569,11 +583,8 @@ export function DataTable<TData, TValue>({
 					onColumnSizingChange: setColumnSizing,
 				}
 			: {}),
-		...(enableColumnReordering
-			? {
-					onColumnOrderChange: setColumnOrder,
-				}
-			: {}),
+		// Note: We handle column reordering manually via drag and drop
+		// Don't use TanStack's built-in column ordering to avoid conflicts
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		...(enableGlobalFilter ? { onGlobalFilterChange: setGlobalFilter } : {}),
@@ -676,6 +687,7 @@ export function DataTable<TData, TValue>({
 			e.preventDefault();
 			return;
 		}
+		console.log('Drag start:', columnId, 'Current column order:', columnOrder);
 		e.dataTransfer.setData('text/plain', columnId);
 		setDraggedColumn(columnId);
 		e.dataTransfer.effectAllowed = 'move';
@@ -696,17 +708,29 @@ export function DataTable<TData, TValue>({
 	const handleDrop = (columnId: string) => (e: React.DragEvent) => {
 		e.preventDefault();
 		const sourceColumnId = e.dataTransfer.getData('text/plain');
+		console.log('Drop:', {
+			sourceColumnId,
+			targetColumnId: columnId,
+			currentOrder: columnOrder,
+		});
 
 		if (sourceColumnId && columnId !== sourceColumnId) {
 			const newColumnOrder = [...columnOrder];
 			const sourceIndex = newColumnOrder.indexOf(sourceColumnId);
 			const targetIndex = newColumnOrder.indexOf(columnId);
 
+			console.log('Indices:', { sourceIndex, targetIndex });
+
 			if (sourceIndex !== -1 && targetIndex !== -1) {
 				newColumnOrder.splice(sourceIndex, 1);
 				newColumnOrder.splice(targetIndex, 0, sourceColumnId);
+				console.log('New column order:', newColumnOrder);
 				setColumnOrder(newColumnOrder);
+			} else {
+				console.log('Invalid indices, not updating order');
 			}
+		} else {
+			console.log('Invalid drop operation');
 		}
 
 		setDraggedColumn(null);

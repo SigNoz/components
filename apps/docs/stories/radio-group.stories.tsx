@@ -61,6 +61,7 @@ const meta: Meta<typeof RadioGroup> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: radioGroupDocs,

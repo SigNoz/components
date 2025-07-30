@@ -61,6 +61,7 @@ const meta: Meta<typeof ToggleGroup> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: toggleGroupDocs,

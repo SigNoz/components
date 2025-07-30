@@ -5,13 +5,13 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/data-table.d.ts",
-			"import": "./dist/data-table.js"
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
 		}
 	},
-	"main": "./dist/table.js",
-	"module": "./dist/table.js",
-	"types": "./dist/table.d.ts",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"files": [
 		"dist"
 	],
