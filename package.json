@@ -51,5 +51,8 @@
 		"esbuild": "^0.25.0"
 	},
 	"packageManager": "pnpm@8.15.6",
-	"name": "design-system"
+	"name": "design-system",
+	"dependencies": {
+		"@tanstack/react-table": "^8.21.3"
+	}
 }
