@@ -28,6 +28,7 @@ const meta: Meta<typeof Badge> = {
 	title: 'Components/Badge',
 	component: Badge,
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: badgeDocs,

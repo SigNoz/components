@@ -40,6 +40,7 @@ const meta: Meta<typeof Input> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: inputDocs,

@@ -33,6 +33,7 @@ const meta: Meta<typeof Tooltip> = {
 	title: 'Components/Tooltip',
 	component: Tooltip,
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: tooltipDocs,

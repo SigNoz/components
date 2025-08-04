@@ -44,6 +44,7 @@ const meta: Meta<typeof DrawerWrapper> = {
 	title: 'Components/Drawer',
 	component: DrawerWrapper,
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: drawerDocs,
