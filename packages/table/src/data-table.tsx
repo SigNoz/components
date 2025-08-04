@@ -469,16 +469,6 @@ export function DataTable<TData, TValue>({
 			return (accessorKey as string) || `column-${index}`;
 		});
 		setColumnOrder(initialColumnOrder || defaultOrder);
-		console.log('Column order initialized:', initialColumnOrder || defaultOrder);
-		console.log(
-			'Columns:',
-			columns.map((col, i) => ({
-				index: i,
-				accessorKey: 'accessorKey' in col ? col.accessorKey : undefined,
-				id: col.id,
-				header: typeof col.header === 'string' ? col.header : 'custom',
-			})),
-		);
 	}, [columns, initialColumnOrder]);
 
 	// Load preferences on mount
@@ -687,7 +677,7 @@ export function DataTable<TData, TValue>({
 			e.preventDefault();
 			return;
 		}
-		console.log('Drag start:', columnId, 'Current column order:', columnOrder);
+
 		e.dataTransfer.setData('text/plain', columnId);
 		setDraggedColumn(columnId);
 		e.dataTransfer.effectAllowed = 'move';
@@ -708,29 +698,17 @@ export function DataTable<TData, TValue>({
 	const handleDrop = (columnId: string) => (e: React.DragEvent) => {
 		e.preventDefault();
 		const sourceColumnId = e.dataTransfer.getData('text/plain');
-		console.log('Drop:', {
-			sourceColumnId,
-			targetColumnId: columnId,
-			currentOrder: columnOrder,
-		});
 
 		if (sourceColumnId && columnId !== sourceColumnId) {
 			const newColumnOrder = [...columnOrder];
 			const sourceIndex = newColumnOrder.indexOf(sourceColumnId);
 			const targetIndex = newColumnOrder.indexOf(columnId);
 
-			console.log('Indices:', { sourceIndex, targetIndex });
-
 			if (sourceIndex !== -1 && targetIndex !== -1) {
 				newColumnOrder.splice(sourceIndex, 1);
 				newColumnOrder.splice(targetIndex, 0, sourceColumnId);
-				console.log('New column order:', newColumnOrder);
 				setColumnOrder(newColumnOrder);
-			} else {
-				console.log('Invalid indices, not updating order');
 			}
-		} else {
-			console.log('Invalid drop operation');
 		}
 
 		setDraggedColumn(null);
@@ -793,7 +771,6 @@ export function DataTable<TData, TValue>({
 		throttle(
 			(e: React.UIEvent<HTMLDivElement>) => {
 				if (!e.currentTarget) return;
-				console.log('uncaught handlescroll', e.currentTarget);
 				const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
 				const newPosition = { top: scrollTop, left: e.currentTarget.scrollLeft };
 				setScrollPosition(newPosition);

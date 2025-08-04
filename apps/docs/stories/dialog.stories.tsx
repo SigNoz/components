@@ -165,7 +165,6 @@ export const AlertDialog: Story = {
 						variant="solid"
 						color="destructive"
 						onClick={() => {
-							console.log('Action performed');
 							setOpen(false);
 						}}
 					>
