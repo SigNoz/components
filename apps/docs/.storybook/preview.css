@@ -45,26 +45,26 @@
 /* Override the specific 1000px constraint */
 .css-q22hxw,
 .sb-show-main .docs-story .css-q22hxw,
-.sb-show-main .docs-story [class*="css-"] {
+.sb-show-main .docs-story [class*='css-'] {
 	max-width: none !important;
 	width: 100% !important;
 }
 
 /* Override any Storybook container with max-width */
-.sb-show-main .docs-story [style*="max-width"],
-.sb-show-main .docs-story [style*="maxWidth"] {
+.sb-show-main .docs-story [style*='max-width'],
+.sb-show-main .docs-story [style*='maxWidth'] {
 	max-width: none !important;
 	width: 100% !important;
 }
 
 /* Target any element with 1000px constraint */
-.sb-show-main .docs-story *[style*="1000px"] {
+.sb-show-main .docs-story *[style*='1000px'] {
 	max-width: none !important;
 	width: 100% !important;
 }
 
 /* Comprehensive override for any Storybook-generated CSS classes */
-.sb-show-main .docs-story [class*="css-"] {
+.sb-show-main .docs-story [class*='css-'] {
 	max-width: none !important;
 	width: 100% !important;
 }
@@ -82,50 +82,76 @@
 	width: 100% !important;
 }
 
-/* Global font settings */
-* {
-	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+/* Global font settings - only apply to Storybook UI elements */
+.sb-show-main * {
+	font-family:
+		'Inter',
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		'Roboto',
+		'Oxygen',
+		'Ubuntu',
+		'Cantarell',
+		'Fira Sans',
+		'Droid Sans',
+		'Helvetica Neue',
+		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-/* Improved typography for better readability */
-body {
+/* Improved typography for better readability - only for Storybook UI */
+.sb-show-main body {
 	font-size: 14px;
 	line-height: 1.6;
-	color: #ffffff;
 }
 
-/* Improve heading hierarchy */
-h1, h2, h3, h4, h5, h6 {
+/* Improve heading hierarchy - only for Storybook UI */
+.sb-show-main h1,
+.sb-show-main h2,
+.sb-show-main h3,
+.sb-show-main h4,
+.sb-show-main h5,
+.sb-show-main h6 {
 	font-weight: 600;
 	margin-top: 1.5rem;
 	margin-bottom: 0.75rem;
-	color: #ffffff;
 }
 
-h1 { font-size: 1.875rem; }
-h2 { font-size: 1.5rem; }
-h3 { font-size: 1.25rem; }
-h4 { font-size: 1.125rem; }
-h5 { font-size: 1rem; }
-h6 { font-size: 0.875rem; }
+.sb-show-main h1 {
+	font-size: 1.875rem;
+}
+.sb-show-main h2 {
+	font-size: 1.5rem;
+}
+.sb-show-main h3 {
+	font-size: 1.25rem;
+}
+.sb-show-main h4 {
+	font-size: 1.125rem;
+}
+.sb-show-main h5 {
+	font-size: 1rem;
+}
+.sb-show-main h6 {
+	font-size: 0.875rem;
+}
 
-/* Improve paragraph spacing */
-p {
+/* Improve paragraph spacing - only for Storybook UI */
+.sb-show-main p {
 	margin-bottom: 1rem;
-	color: #e5e7eb;
 }
 
-/* Improve list styling */
-ul, ol {
+/* Improve list styling - only for Storybook UI */
+.sb-show-main ul,
+.sb-show-main ol {
 	margin-bottom: 1rem;
 	padding-left: 1.5rem;
 }
 
-li {
+.sb-show-main li {
 	margin-bottom: 0.25rem;
-	color: #e5e7eb;
 }
 
 /* Improve code blocks */
@@ -153,7 +179,8 @@ table {
 	margin: 1rem 0;
 }
 
-th, td {
+th,
+td {
 	padding: 0.75rem;
 	text-align: left;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -184,5 +211,7 @@ th {
 
 /* Smooth transitions */
 * {
-	transition: color 0.2s ease, background-color 0.2s ease;
+	transition:
+		color 0.2s ease,
+		background-color 0.2s ease;
 }
