@@ -88,7 +88,7 @@ const meta: Meta<typeof Button> = {
 		backgrounds: {
 			disable: true,
 		},
-		controls: { disable: true },
+		controls: { disable: false },
 		docs: {
 			description: {
 				component: buttonDocs,
@@ -425,7 +425,7 @@ export const Playground: Story = {
 // Add Action Button Story
 export const ActionButtons: Story = {
 	parameters: {
-		controls: { disable: true },
+		controls: { disable: false },
 	},
 	argTypes: {
 		background: {
