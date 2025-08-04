@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-	entry: ['src/table.tsx', 'src/data-table.tsx'],
+	entry: ['src/index.ts'],
 	format: ['esm'],
 	dts: true,
 	splitting: true,
