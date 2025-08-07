@@ -10,18 +10,19 @@ function getAbsolutePath(value) {
 const config = {
 	stories: ['../stories/*.stories.tsx', '../stories/**/*.stories.tsx'],
 	addons: [
-		getAbsolutePath('@storybook/addon-links'),
 		getAbsolutePath('@storybook/addon-essentials'),
+		getAbsolutePath('@storybook/addon-links'),
 		getAbsolutePath('@chromatic-com/storybook'),
 		getAbsolutePath('@storybook/addon-designs'),
+		getAbsolutePath('@storybook/addon-docs'),
 	],
 	framework: {
 		name: getAbsolutePath('@storybook/react-vite'),
 		options: {},
 	},
-
-	core: {},
-
+	core: {
+		disableTelemetry: true,
+	},
 	async viteFinal(config) {
 		return {
 			...config,

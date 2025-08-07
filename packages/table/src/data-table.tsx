@@ -462,9 +462,13 @@ export function DataTable<TData, TValue>({
 
 	// Initialise Column Order Array
 	React.useEffect(() => {
-		setColumnOrder(
-			initialColumnOrder || columns.map((column) => column.id as string),
-		);
+		// Generate column IDs based on accessorKey or create a fallback
+		const defaultOrder = columns.map((column, index) => {
+			// Use accessorKey as ID if available, otherwise use index
+			const accessorKey = 'accessorKey' in column ? column.accessorKey : undefined;
+			return (accessorKey as string) || `column-${index}`;
+		});
+		setColumnOrder(initialColumnOrder || defaultOrder);
 	}, [columns, initialColumnOrder]);
 
 	// Load preferences on mount
@@ -569,11 +573,8 @@ export function DataTable<TData, TValue>({
 					onColumnSizingChange: setColumnSizing,
 				}
 			: {}),
-		...(enableColumnReordering
-			? {
-					onColumnOrderChange: setColumnOrder,
-				}
-			: {}),
+		// Note: We handle column reordering manually via drag and drop
+		// Don't use TanStack's built-in column ordering to avoid conflicts
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		...(enableGlobalFilter ? { onGlobalFilterChange: setGlobalFilter } : {}),
@@ -676,6 +677,7 @@ export function DataTable<TData, TValue>({
 			e.preventDefault();
 			return;
 		}
+
 		e.dataTransfer.setData('text/plain', columnId);
 		setDraggedColumn(columnId);
 		e.dataTransfer.effectAllowed = 'move';
@@ -769,7 +771,6 @@ export function DataTable<TData, TValue>({
 		throttle(
 			(e: React.UIEvent<HTMLDivElement>) => {
 				if (!e.currentTarget) return;
-				console.log('uncaught handlescroll', e.currentTarget);
 				const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
 				const newPosition = { top: scrollTop, left: e.currentTarget.scrollLeft };
 				setScrollPosition(newPosition);

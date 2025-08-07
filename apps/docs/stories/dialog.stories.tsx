@@ -39,6 +39,7 @@ const meta: Meta<typeof DialogWrapper> = {
 	component: DialogWrapper,
 	tags: ['autodocs'],
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: dialogDocs,
@@ -165,7 +166,6 @@ export const AlertDialog: Story = {
 						variant="solid"
 						color="destructive"
 						onClick={() => {
-							console.log('Action performed');
 							setOpen(false);
 						}}
 					>

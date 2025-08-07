@@ -68,6 +68,7 @@ const meta: Meta<typeof Pagination> = {
 		},
 	},
 	parameters: {
+		layout: 'fullscreen',
 		backgrounds: {
 			default: 'dark',
 		},

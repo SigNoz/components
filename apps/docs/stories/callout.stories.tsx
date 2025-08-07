@@ -33,6 +33,7 @@ const meta: Meta<typeof Callout> = {
 	title: 'Components/Callout',
 	component: Callout,
 	parameters: {
+		layout: 'fullscreen',
 		docs: {
 			description: {
 				component: alertDocs,
