@@ -167,26 +167,6 @@ function VirtualizedTableBody<TData>({
 
 	return (
 		<TableBody>
-			{/* Spacer for rows before virtual window */}
-			{virtualizer.getVirtualItems().length > 0 &&
-				virtualizer.getVirtualItems()[0].start > 0 && (
-					<tr>
-						<td
-							style={{
-								height: `${virtualizer.getVirtualItems()[0].start}px`,
-								padding: 0,
-								border: 'none',
-							}}
-							colSpan={
-								table.getAllColumns().length +
-								(enableRowSelection ? 1 : 0) +
-								(enableRowExpansion ? 1 : 0)
-							}
-						/>
-					</tr>
-				)}
-
-			{/* Virtual rows */}
 			{virtualizer.getVirtualItems().map((virtualRow) => {
 				const row = rows[virtualRow.index];
 				if (!row) return null;
@@ -194,15 +174,13 @@ function VirtualizedTableBody<TData>({
 				return (
 					<React.Fragment key={virtualRow.key}>
 						<TableRow
+							data-index={virtualRow.index}
+							ref={enableDynamicRowHeights ? virtualizer.measureElement : undefined}
 							className={cn(
 								row.getIsSelected() && 'bg-muted/50',
 								'cursor-pointer',
 								enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30',
 							)}
-							style={{
-								height: enableDynamicRowHeights ? 'auto' : `${virtualRow.size}px`,
-								minHeight: `${virtualRow.size}px`,
-							}}
 							onClick={(e) => {
 								if (stopPropagationOnRowClick) {
 									e.stopPropagation();
@@ -276,10 +254,6 @@ function VirtualizedTableBody<TData>({
 										key={cell.id}
 										style={{
 											width: cell.column.getSize(),
-											height: enableDynamicRowHeights ? 'auto' : `${virtualRow.size}px`,
-											minHeight: `${virtualRow.size}px`,
-											padding: '0.75rem',
-											verticalAlign: 'top',
 										}}
 										className={cn(
 											isPinned === 'left' && 'sticky left-0 z-10 bg-background',
@@ -320,31 +294,6 @@ function VirtualizedTableBody<TData>({
 					</React.Fragment>
 				);
 			})}
-
-			{/* Spacer for rows after virtual window */}
-			{virtualizer.getVirtualItems().length > 0 &&
-				(() => {
-					const lastItem =
-						virtualizer.getVirtualItems()[virtualizer.getVirtualItems().length - 1];
-					const remainingHeight =
-						virtualizer.getTotalSize() - (lastItem.start + lastItem.size);
-					return remainingHeight > 0 ? (
-						<tr>
-							<td
-								style={{
-									height: `${remainingHeight}px`,
-									padding: 0,
-									border: 'none',
-								}}
-								colSpan={
-									table.getAllColumns().length +
-									(enableRowSelection ? 1 : 0) +
-									(enableRowExpansion ? 1 : 0)
-								}
-							/>
-						</tr>
-					) : null;
-				})()}
 		</TableBody>
 	);
 }
@@ -652,6 +601,13 @@ export function DataTable<TData, TValue>({
 		estimateSize: () => estimateRowSize || rowHeight,
 		overscan: overscan,
 		enabled: enableVirtualization,
+		// Add dynamic row height measurement like TanStack example
+		measureElement:
+			enableDynamicRowHeights &&
+			typeof window !== 'undefined' &&
+			navigator.userAgent.indexOf('Firefox') === -1
+				? (element) => element?.getBoundingClientRect().height
+				: undefined,
 	});
 
 	// Set up virtualizer ref and callback
@@ -781,7 +737,7 @@ export function DataTable<TData, TValue>({
 					enableInfiniteScroll &&
 					hasMore &&
 					!loadingMore &&
-					scrollHeight - scrollTop - clientHeight < 100 // Load more when within 100px of bottom
+					scrollHeight - scrollTop - clientHeight < 300 // Load more when within 100px of bottom
 				) {
 					onLoadMore?.();
 				}
@@ -824,16 +780,77 @@ export function DataTable<TData, TValue>({
 			)}
 			<div
 				ref={tableRef}
-				className="rounded-md border overflow-auto relative"
+				className="rounded-md border overflow-auto relative table-scroll-container"
 				onScroll={handleScroll}
 				style={{
 					maxHeight: 'calc(100vh - 200px)',
+					height: 'calc(100vh - 200px)',
 					scrollBehavior: 'smooth',
+					overflowX: 'auto',
+					overflowY: 'auto',
+				}}
+				role="region"
+				aria-label="Table data"
+				tabIndex={0}
+				onKeyDown={(e) => {
+					// Keyboard navigation for scrolling
+					const scrollAmount = 50;
+					switch (e.key) {
+						case 'ArrowUp':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollTop -= scrollAmount;
+							}
+							break;
+						case 'ArrowDown':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollTop += scrollAmount;
+							}
+							break;
+						case 'ArrowLeft':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollLeft -= scrollAmount;
+							}
+							break;
+						case 'ArrowRight':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollLeft += scrollAmount;
+							}
+							break;
+						case 'PageUp':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollTop -= tableRef.current.clientHeight;
+							}
+							break;
+						case 'PageDown':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollTop += tableRef.current.clientHeight;
+							}
+							break;
+						case 'Home':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollTop = 0;
+							}
+							break;
+						case 'End':
+							e.preventDefault();
+							if (tableRef.current) {
+								tableRef.current.scrollTop = tableRef.current.scrollHeight;
+							}
+							break;
+					}
 				}}
 			>
 				<Table
 					style={{
-						tableLayout: enableVirtualization ? 'fixed' : 'auto',
+						tableLayout: 'fixed',
+						width: '100%',
 					}}
 				>
 					{showHeaders && (
@@ -872,7 +889,7 @@ export function DataTable<TData, TValue>({
 													width: header.getSize(),
 												}}
 												className={cn(
-													'relative',
+													'relative group',
 													isDragging && 'opacity-50',
 													isDropTarget && 'border-l-2 border-primary',
 													isPinned === 'left' && 'sticky left-0 z-20 bg-background',
@@ -943,6 +960,11 @@ export function DataTable<TData, TValue>({
 																)}
 															</button>
 														)}
+														{enableColumnResizing && (
+															<div className="ml-2 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity">
+																<div className="w-1 h-3 bg-current rounded-full" />
+															</div>
+														)}
 													</div>
 													{canFilter && isFilterVisible && (
 														<div className="relative">
@@ -997,8 +1019,9 @@ export function DataTable<TData, TValue>({
 																display: !header.column.getCanResize() ? 'none' : '',
 															},
 															className: cn(
-																'absolute top-0 right-0 h-full w-1 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted',
-																header.column.getIsResizing() && 'bg-primary',
+																'absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted hover:w-3 transition-all duration-200 group border-l border-border/50 hover:bg-muted/80',
+																header.column.getIsResizing() &&
+																	'bg-primary w-3 border-primary',
 															),
 														}}
 													/>
