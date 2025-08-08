@@ -121,6 +121,10 @@ interface DataTableProps<TData, TValue> {
 	>;
 	// Header visibility prop
 	showHeaders?: boolean;
+	// Sticky headers prop
+	enableStickyHeaders?: boolean;
+	// Fixed height for table container
+	fixedHeight?: string | number;
 }
 
 export enum SelectionMode {
@@ -375,6 +379,10 @@ export function DataTable<TData, TValue>({
 	virtualizerRef,
 	// Header visibility prop
 	showHeaders = true,
+	// Sticky headers prop
+	enableStickyHeaders = false,
+	// Fixed height for table container
+	fixedHeight,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
@@ -852,9 +860,10 @@ export function DataTable<TData, TValue>({
 						tableLayout: 'fixed',
 						width: '100%',
 					}}
+					fixedHeight={fixedHeight}
 				>
 					{showHeaders && (
-						<TableHeader>
+						<TableHeader sticky={enableStickyHeaders}>
 							{table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
 								<TableRow key={headerGroup.id}>
 									{enableRowSelection && (

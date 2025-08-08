@@ -131,11 +131,14 @@ const users: User[] = [
 	},
 ];
 
-// Enhanced columns with better visual presentation
+// Enhanced columns with better visual presentation and individual width constraints
 const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Employee',
+		size: 250, // Default width
+		minSize: 200, // Minimum width
+		maxSize: 350, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const user = row.original;
 			return (
@@ -157,6 +160,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'role',
 		header: 'Role',
+		size: 120, // Default width
+		minSize: 100, // Minimum width
+		maxSize: 150, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.getValue('role') as User['role'];
 			const roleMap: Record<User['role'], { label: string; className: string }> = {
@@ -188,6 +194,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'status',
 		header: 'Status',
+		size: 140, // Default width
+		minSize: 120, // Minimum width
+		maxSize: 180, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const status = row.getValue('status') as User['status'];
 			const statusMap: Record<
@@ -230,6 +239,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'department',
 		header: 'Department',
+		size: 150, // Default width
+		minSize: 120, // Minimum width
+		maxSize: 200, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const department = row.getValue('department') as string;
 			return <span className="font-medium text-sm">{department}</span>;
@@ -238,6 +250,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'salary',
 		header: 'Salary',
+		size: 120, // Default width
+		minSize: 100, // Minimum width
+		maxSize: 150, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const salary = parseFloat(row.getValue('salary') as string);
 			const formatted = new Intl.NumberFormat('en-US', {
@@ -252,6 +267,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'performance',
 		header: 'Performance',
+		size: 180, // Default width
+		minSize: 150, // Minimum width
+		maxSize: 250, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const performance = parseFloat(row.getValue('performance') as string);
 			const getPerformanceColor = (score: number) => {
@@ -280,6 +298,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'lastLogin',
 		header: 'Last Login',
+		size: 140, // Default width
+		minSize: 120, // Minimum width
+		maxSize: 180, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const date = new Date(row.getValue('lastLogin') as string);
 			const formatted = date.toLocaleDateString('en-US', {
@@ -1529,7 +1550,263 @@ The DataTable accepts all standard table features as props, allowing you to enab
 			control: 'boolean',
 			description: 'Show or hide table headers',
 		},
+		enableStickyHeaders: {
+			control: 'boolean',
+			description: 'Enable sticky headers that remain visible when scrolling',
+		},
+		fixedHeight: {
+			control: 'text',
+			description: 'Fixed height for the table container (e.g., "400px" or 400)',
+		},
 	},
 };
 
 export default meta;
+
+export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
+	args: {
+		columns: [
+			{
+				accessorKey: 'id',
+				header: 'ID',
+				size: 80,
+			},
+			{
+				accessorKey: 'name',
+				header: 'Employee Name',
+				size: 200,
+				cell: ({ row }: { row: Row<User> }) => (
+					<div className="flex items-center gap-3">
+						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+							{row.original.name
+								.split(' ')
+								.map((n) => n[0])
+								.join('')
+								.toUpperCase()}
+						</div>
+						<div className="flex flex-col">
+							<span className="font-medium text-sm">{row.original.name}</span>
+							<span className="text-xs text-muted-foreground">
+								{row.original.email}
+							</span>
+						</div>
+					</div>
+				),
+			},
+			{
+				accessorKey: 'role',
+				header: 'Role',
+				size: 120,
+				cell: ({ row }: { row: Row<User> }) => {
+					const roleMap: Record<User['role'], { label: string; className: string }> =
+						{
+							admin: { label: 'Admin', className: 'bg-red-100 text-red-800' },
+							user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+							moderator: {
+								label: 'Moderator',
+								className: 'bg-yellow-100 text-yellow-800',
+							},
+							guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						};
+					const role = roleMap[row.original.role];
+					return <Badge className={role.className}>{role.label}</Badge>;
+				},
+			},
+			{
+				accessorKey: 'status',
+				header: 'Status',
+				size: 120,
+				cell: ({ row }: { row: Row<User> }) => {
+					const statusMap: Record<
+						User['status'],
+						{ icon: LucideIcon; className: string }
+					> = {
+						active: { icon: CheckCircle, className: 'text-green-600' },
+						inactive: { icon: XCircle, className: 'text-red-600' },
+						pending: { icon: Clock, className: 'text-yellow-600' },
+						suspended: { icon: AlertCircle, className: 'text-orange-600' },
+					};
+					const status = statusMap[row.original.status];
+					const Icon = status.icon;
+					return (
+						<div className="flex items-center gap-2">
+							<Icon className="h-4 w-4" />
+							<span className="capitalize text-sm">{row.original.status}</span>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'department',
+				header: 'Department',
+				size: 150,
+			},
+			{
+				accessorKey: 'salary',
+				header: 'Annual Salary',
+				size: 140,
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="font-mono text-sm">
+						${row.original.salary.toLocaleString()}
+					</span>
+				),
+			},
+			{
+				accessorKey: 'performance',
+				header: 'Performance',
+				size: 120,
+				cell: ({ row }: { row: Row<User> }) => {
+					const score = row.original.performance;
+					const getPerformanceColor = (score: number) => {
+						if (score >= 90) return 'text-green-600';
+						if (score >= 80) return 'text-blue-600';
+						if (score >= 70) return 'text-yellow-600';
+						return 'text-red-600';
+					};
+					return (
+						<div className="flex items-center gap-3">
+							<span className={`font-medium text-sm ${getPerformanceColor(score)}`}>
+								{score}%
+							</span>
+							<div className="w-20 bg-gray-200 rounded-full h-2 overflow-hidden">
+								<div
+									className={`h-2 rounded-full transition-all duration-300 ${getPerformanceColor(score).replace('text-', 'bg-')}`}
+									style={{ width: `${score}%` }}
+								/>
+							</div>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'lastLogin',
+				header: 'Last Active',
+				size: 140,
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="text-sm text-muted-foreground">
+						{new Date(row.original.lastLogin).toLocaleDateString()}
+					</span>
+				),
+			},
+		],
+		data: generateLargeDataset(100), // More rows to better demonstrate scrolling
+		tableId: 'sticky-headers-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableColumnResizing: true,
+		enableColumnReordering: true,
+		enableColumnPinning: true,
+		enableRowSelection: true,
+		enableStickyHeaders: true,
+		fixedHeight: 600, // Taller for better demo
+		showHeaders: true,
+		defaultColumnWidth: 150,
+		minColumnWidth: 80,
+		maxColumnWidth: 800, // Increased to allow full width usage
+	},
+	parameters: {
+		docs: {
+			description: {
+				story: `
+## Sticky Headers
+
+This example demonstrates the sticky headers feature with an employee directory. The table has a fixed height of 500px, and when you scroll through the data, the headers remain visible at the top.
+
+### Key Features:
+- **Sticky Headers**: Headers stay visible while scrolling through 100+ employee records
+- **Fixed Height**: Table container has a defined height with smooth scrolling
+- **Rich Data Display**: Shows employee avatars, performance bars, and status indicators
+- **All Interactive Features**: Includes sorting, filtering, column resizing, and row selection
+- **No Layout Shift**: Headers maintain perfect alignment during scroll
+
+### Visual Improvements:
+- **Employee Cards**: Name and email displayed together with avatar
+- **Performance Bars**: Visual progress bars for performance scores
+- **Status Indicators**: Icons with color-coded status
+- **Better Typography**: Improved text hierarchy and spacing
+
+### Usage:
+\`\`\`tsx
+<DataTable
+  columns={columns}
+  data={data}
+  tableId="sticky-table"
+  enableStickyHeaders={true}
+  fixedHeight={500}
+  enableSorting={true}
+  enableFiltering={true}
+  enableColumnResizing={true}
+  enableRowSelection={true}
+/>
+\`\`\`
+				`,
+			},
+		},
+	},
+};
+
+export const IndividualColumnWidths: StoryObj<typeof DataTable<User>> = {
+	args: {
+		columns: enhancedColumns, // Uses columns with individual size/minSize/maxSize
+		data: users,
+		tableId: 'individual-widths-table',
+		enableColumnResizing: true,
+		defaultColumnWidth: 150,
+		minColumnWidth: 80,
+		maxColumnWidth: 400,
+	},
+	parameters: {
+		docs: {
+			description: {
+				story: `
+## Individual Column Width Constraints
+
+This example demonstrates how to set individual width constraints for each column using TanStack Table's built-in properties.
+
+### Column Width Properties:
+- **\`size\`**: Default width of the column
+- **\`minSize\`**: Minimum width the column can be resized to
+- **\`maxSize\`**: Maximum width the column can be resized to
+
+### Example Configuration:
+\`\`\`tsx
+const columns: ColumnDef<User>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Employee',
+    size: 250,        // Default width
+    minSize: 200,     // Minimum width
+    maxSize: 350,     // Maximum width
+    cell: ({ row }) => { /* ... */ }
+  },
+  {
+    accessorKey: 'role',
+    header: 'Role',
+    size: 120,        // Default width
+    minSize: 100,     // Minimum width
+    maxSize: 150,     // Maximum width
+    cell: ({ row }) => { /* ... */ }
+  },
+  // ... more columns
+];
+\`\`\`
+
+### Benefits:
+- **Precise Control**: Each column can have its own width constraints
+- **Better UX**: Prevents columns from becoming too narrow or too wide
+- **Responsive Design**: Columns maintain appropriate proportions
+- **Override Globals**: Individual constraints override global minColumnWidth/maxColumnWidth
+
+### Current Column Constraints:
+- **Employee**: 200-350px (default: 250px)
+- **Role**: 100-150px (default: 120px)
+- **Status**: 120-180px (default: 140px)
+- **Department**: 120-200px (default: 150px)
+- **Salary**: 100-150px (default: 120px)
+- **Performance**: 150-250px (default: 180px)
+- **Last Login**: 120-180px (default: 140px)
+				`,
+			},
+		},
+	},
+};

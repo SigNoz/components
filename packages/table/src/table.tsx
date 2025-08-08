@@ -3,23 +3,50 @@ import * as React from 'react';
 
 import { cn } from './lib/utils';
 
-function Table({ className, ...props }: React.ComponentProps<'table'>) {
+function Table({
+	className,
+	fixedHeight,
+	...props
+}: React.ComponentProps<'table'> & { fixedHeight?: string | number }) {
 	return (
-		<div data-slot="table-container" className="relative w-full overflow-x-auto">
+		<div
+			data-slot="table-container"
+			className={cn(
+				'relative w-full overflow-x-auto',
+				fixedHeight &&
+					'overflow-y-auto table-scroll-container sticky-header-table-container',
+			)}
+			style={
+				fixedHeight
+					? {
+							height:
+								typeof fixedHeight === 'number' ? `${fixedHeight}px` : fixedHeight,
+						}
+					: undefined
+			}
+		>
 			<table
 				data-slot="table"
-				className={cn('w-full caption-bottom text-sm', className)}
+				className={cn(
+					'w-full caption-bottom text-sm',
+					fixedHeight && 'sticky-header-table',
+					className,
+				)}
 				{...props}
 			/>
 		</div>
 	);
 }
 
-function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
+function TableHeader({
+	className,
+	sticky,
+	...props
+}: React.ComponentProps<'thead'> & { sticky?: boolean }) {
 	return (
 		<thead
 			data-slot="table-header"
-			className={cn('[&_tr]:border-b', className)}
+			className={cn('[&_tr]:border-b', sticky && 'sticky-header', className)}
 			{...props}
 		/>
 	);

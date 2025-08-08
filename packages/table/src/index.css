@@ -93,3 +93,51 @@
 		scroll-behavior: auto;
 	}
 }
+
+/* Sticky header styles to prevent layout shift */
+.sticky-header-table {
+	/* Ensure the table maintains consistent width */
+	table-layout: fixed;
+	width: 100%;
+}
+
+.sticky-header-table thead {
+	/* Ensure sticky headers don't shift */
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background: hsl(var(--background));
+	box-shadow:
+		0 1px 3px 0 rgb(0 0 0 / 0.1),
+		0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Ensure consistent scrollbar behavior */
+.sticky-header-table-container {
+	scrollbar-gutter: stable;
+	overflow-y: scroll;
+}
+
+/* Sticky header class */
+.sticky-header {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background: hsl(var(--background));
+	box-shadow:
+		0 1px 3px 0 rgb(0 0 0 / 0.1),
+		0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Ensure sticky headers have proper background */
+.sticky-header-table thead {
+	background: hsl(var(--background));
+	border-bottom: 1px solid hsl(var(--border));
+}
+
+/* Remove top margin from table container */
+.sticky-header-table-container {
+	scrollbar-gutter: stable;
+	overflow-y: scroll;
+	margin-top: 0;
+}
