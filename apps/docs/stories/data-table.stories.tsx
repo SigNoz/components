@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { DataTable as BaseDataTable } from '@signozhq/table';
-import type { ColumnDef } from '@tanstack/react-table';
+import {
+	DataTable as BaseDataTable,
+	type ColumnDef,
+	type Row,
+} from '@signozhq/table';
 import { Badge } from '@signozhq/badge';
 import { Button } from '@signozhq/button';
 import {
@@ -13,6 +16,7 @@ import {
 	Edit,
 	Trash2,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 // Create a properly typed wrapper component
 const DataTable = <TData,>({
@@ -132,14 +136,14 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Employee',
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<User> }) => {
 			const user = row.original;
 			return (
 				<div className="flex items-center gap-3">
 					<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
 						{user.name
 							.split(' ')
-							.map((n) => n[0])
+							.map((n: string) => n[0])
 							.join('')}
 					</div>
 					<div className="flex flex-col">
@@ -153,9 +157,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'role',
 		header: 'Role',
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.getValue('role') as User['role'];
-			const roleMap = {
+			const roleMap: Record<User['role'], { label: string; className: string }> = {
 				admin: {
 					label: 'Admin',
 					className: 'bg-purple-100 text-purple-800 border-purple-200',
@@ -184,9 +188,12 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'status',
 		header: 'Status',
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<User> }) => {
 			const status = row.getValue('status') as User['status'];
-			const statusMap = {
+			const statusMap: Record<
+				User['status'],
+				{ label: string; icon: LucideIcon; className: string }
+			> = {
 				active: {
 					label: 'Active',
 					icon: CheckCircle,
@@ -223,7 +230,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'department',
 		header: 'Department',
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<User> }) => {
 			const department = row.getValue('department') as string;
 			return <span className="font-medium text-sm">{department}</span>;
 		},
@@ -231,8 +238,8 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'salary',
 		header: 'Salary',
-		cell: ({ row }) => {
-			const salary = parseFloat(row.getValue('salary'));
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
 			const formatted = new Intl.NumberFormat('en-US', {
 				style: 'currency',
 				currency: 'USD',
@@ -245,8 +252,8 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'performance',
 		header: 'Performance',
-		cell: ({ row }) => {
-			const performance = parseFloat(row.getValue('performance'));
+		cell: ({ row }: { row: Row<User> }) => {
+			const performance = parseFloat(row.getValue('performance') as string);
 			const getPerformanceColor = (score: number) => {
 				if (score >= 90) return 'text-green-600';
 				if (score >= 80) return 'text-blue-600';
@@ -273,8 +280,8 @@ const enhancedColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'lastLogin',
 		header: 'Last Login',
-		cell: ({ row }) => {
-			const date = new Date(row.getValue('lastLogin'));
+		cell: ({ row }: { row: Row<User> }) => {
+			const date = new Date(row.getValue('lastLogin') as string);
 			const formatted = date.toLocaleDateString('en-US', {
 				month: 'short',
 				day: 'numeric',
@@ -314,12 +321,12 @@ const simpleColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Name',
-		cell: ({ row }) => (
+		cell: ({ row }: { row: Row<User> }) => (
 			<div className="flex items-center gap-2">
 				<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
 					{row.original.name
 						.split(' ')
-						.map((n) => n[0])
+						.map((n: string) => n[0])
 						.join('')}
 				</div>
 				<span className="font-medium">{row.original.name}</span>
@@ -329,16 +336,16 @@ const simpleColumns: ColumnDef<User>[] = [
 	{
 		accessorKey: 'email',
 		header: 'Email',
-		cell: ({ row }) => (
+		cell: ({ row }: { row: Row<User> }) => (
 			<span className="text-sm text-muted-foreground">{row.original.email}</span>
 		),
 	},
 	{
 		accessorKey: 'role',
 		header: 'Role',
-		cell: ({ row }) => {
+		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.original.role;
-			const roleMap = {
+			const roleMap: Record<User['role'], { label: string; className: string }> = {
 				admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
 				user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
 				moderator: {
@@ -504,12 +511,12 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 			{
 				accessorKey: 'name',
 				header: 'Employee',
-				cell: ({ row }) => (
+				cell: ({ row }: { row: Row<User> }) => (
 					<div className="flex items-center gap-2">
 						<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
 							{row.original.name
 								.split(' ')
-								.map((n) => n[0])
+								.map((n: string) => n[0])
 								.join('')}
 						</div>
 						<span className="font-medium text-sm">{row.original.name}</span>
@@ -519,14 +526,15 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 			{
 				accessorKey: 'role',
 				header: 'Role',
-				cell: ({ row }) => {
+				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap = {
-						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
-						moderator: { label: 'Mod', className: 'bg-orange-100 text-orange-800' },
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
-					};
+					const roleMap: Record<User['role'], { label: string; className: string }> =
+						{
+							admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+							user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+							moderator: { label: 'Mod', className: 'bg-orange-100 text-orange-800' },
+							guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						};
 					const roleInfo = roleMap[role];
 					return (
 						<Badge className={`text-xs ${roleInfo.className}`}>
@@ -538,9 +546,12 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 			{
 				accessorKey: 'status',
 				header: 'Status',
-				cell: ({ row }) => {
+				cell: ({ row }: { row: Row<User> }) => {
 					const status = row.original.status;
-					const statusMap = {
+					const statusMap: Record<
+						User['status'],
+						{ icon: LucideIcon; className: string }
+					> = {
 						active: { icon: CheckCircle, className: 'text-green-600' },
 						inactive: { icon: XCircle, className: 'text-red-600' },
 						pending: { icon: Clock, className: 'text-yellow-600' },
@@ -564,6 +575,877 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 		enablePagination: true,
 		pageSize: 10,
 		showHeaders: true,
+	},
+};
+
+// Story: Column Resizing Demo
+export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
+	render: (args) => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Column Resizing Demo
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					Hover over column headers to see the resize handle. Drag the right edge of
+					column headers to resize them. Double-click the resize handle to reset
+					column width.
+				</p>
+				<DataTable {...args} />
+			</div>
+		</div>
+	),
+	args: {
+		columns: [
+			{
+				accessorKey: 'name',
+				header: 'Employee Name',
+				cell: ({ row }: { row: Row<User> }) => (
+					<div className="flex items-center gap-2">
+						<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+							{row.original.name
+								.split(' ')
+								.map((n: string) => n[0])
+								.join('')}
+						</div>
+						<span className="font-medium">{row.original.name}</span>
+					</div>
+				),
+			},
+			{
+				accessorKey: 'email',
+				header: 'Email Address',
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="text-sm text-muted-foreground">{row.original.email}</span>
+				),
+			},
+			{
+				accessorKey: 'role',
+				header: 'Role',
+				cell: ({ row }: { row: Row<User> }) => {
+					const role = row.original.role;
+					const roleMap: Record<User['role'], { label: string; className: string }> =
+						{
+							admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+							user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+							moderator: {
+								label: 'Moderator',
+								className: 'bg-orange-100 text-orange-800',
+							},
+							guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						};
+					const roleInfo = roleMap[role];
+					return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+				},
+			},
+			{
+				accessorKey: 'department',
+				header: 'Department',
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="font-medium text-sm">{row.original.department}</span>
+				),
+			},
+			{
+				accessorKey: 'salary',
+				header: 'Salary',
+				cell: ({ row }: { row: Row<User> }) => {
+					const salary = parseFloat(row.getValue('salary') as string);
+					const formatted = new Intl.NumberFormat('en-US', {
+						style: 'currency',
+						currency: 'USD',
+						minimumFractionDigits: 0,
+						maximumFractionDigits: 0,
+					}).format(salary);
+					return (
+						<div className="font-medium text-sm text-green-700">{formatted}</div>
+					);
+				},
+			},
+		],
+		data: users,
+		tableId: 'resize-demo-table',
+		enableColumnResizing: true,
+		enableSorting: false,
+		enableFiltering: false,
+		enableGlobalFilter: false,
+		enableColumnReordering: false,
+		enableColumnPinning: false,
+		enableRowSelection: false,
+		enablePagination: false,
+		showHeaders: true,
+		defaultColumnWidth: 200,
+		minColumnWidth: 100,
+		maxColumnWidth: 400,
+	},
+};
+
+// Story: All Features Demo
+export const AllFeatures: StoryObj<typeof DataTable<User>> = {
+	render: (args) => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					All Features Demo
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					This table demonstrates all available features: column reordering,
+					resizing, sorting, filtering, pinning, row selection, and pagination. Try
+					hovering over headers to see resize handles, drag columns to reorder, click
+					headers to sort, use the filter buttons, and select rows with checkboxes.
+				</p>
+				<DataTable {...args} />
+			</div>
+		</div>
+	),
+	args: {
+		columns: [
+			{
+				id: 'serial',
+				header: '#',
+				cell: ({ row }: { row: Row<User> }) => (
+					<div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-muted-foreground text-sm font-medium">
+						{row.index + 1}
+					</div>
+				),
+				size: 60,
+			},
+			{
+				accessorKey: 'name',
+				header: 'Employee Name',
+				cell: ({ row }: { row: Row<User> }) => (
+					<div className="flex items-center gap-3">
+						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+							{row.original.name
+								.split(' ')
+								.map((n: string) => n[0])
+								.join('')}
+						</div>
+						<div className="flex flex-col">
+							<span className="font-medium text-sm">{row.original.name}</span>
+							<span className="text-xs text-muted-foreground">
+								{row.original.email}
+							</span>
+						</div>
+					</div>
+				),
+			},
+			{
+				accessorKey: 'role',
+				header: 'Role',
+				cell: ({ row }: { row: Row<User> }) => {
+					const role = row.original.role;
+					const roleMap: Record<User['role'], { label: string; className: string }> =
+						{
+							admin: {
+								label: 'Admin',
+								className: 'bg-purple-100 text-purple-800 border-purple-200',
+							},
+							user: {
+								label: 'User',
+								className: 'bg-blue-100 text-blue-800 border-blue-200',
+							},
+							moderator: {
+								label: 'Moderator',
+								className: 'bg-orange-100 text-orange-800 border-orange-200',
+							},
+							guest: {
+								label: 'Guest',
+								className: 'bg-gray-100 text-gray-800 border-gray-200',
+							},
+						};
+					const roleInfo = roleMap[role];
+					return (
+						<Badge variant="outline" className={roleInfo.className}>
+							{roleInfo.label}
+						</Badge>
+					);
+				},
+			},
+			{
+				accessorKey: 'status',
+				header: 'Status',
+				cell: ({ row }: { row: Row<User> }) => {
+					const status = row.original.status;
+					const statusMap: Record<
+						User['status'],
+						{ label: string; icon: React.ComponentType; className: string }
+					> = {
+						active: {
+							label: 'Active',
+							icon: CheckCircle,
+							className: 'bg-green-100 text-green-800 border-green-200',
+						},
+						inactive: {
+							label: 'Inactive',
+							icon: XCircle,
+							className: 'bg-red-100 text-red-800 border-red-200',
+						},
+						pending: {
+							label: 'Pending',
+							icon: Clock,
+							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+						},
+						suspended: {
+							label: 'Suspended',
+							icon: AlertCircle,
+							className: 'bg-gray-100 text-gray-800 border-gray-200',
+						},
+					};
+					const statusInfo = statusMap[status];
+					const Icon = statusInfo.icon;
+					return (
+						<div className="flex items-center gap-2">
+							<Icon />
+							<Badge variant="outline" className={statusInfo.className}>
+								{statusInfo.label}
+							</Badge>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'department',
+				header: 'Department',
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="font-medium text-sm">{row.original.department}</span>
+				),
+			},
+			{
+				accessorKey: 'salary',
+				header: 'Salary',
+				cell: ({ row }: { row: Row<User> }) => {
+					const salary = parseFloat(row.getValue('salary') as string);
+					const formatted = new Intl.NumberFormat('en-US', {
+						style: 'currency',
+						currency: 'USD',
+						minimumFractionDigits: 0,
+						maximumFractionDigits: 0,
+					}).format(salary);
+					return (
+						<div className="font-medium text-sm text-green-700">{formatted}</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'performance',
+				header: 'Performance',
+				cell: ({ row }: { row: Row<User> }) => {
+					const performance = parseFloat(row.getValue('performance') as string);
+					const getPerformanceColor = (score: number) => {
+						if (score >= 90) return 'text-green-600';
+						if (score >= 80) return 'text-blue-600';
+						if (score >= 70) return 'text-yellow-600';
+						return 'text-red-600';
+					};
+					return (
+						<div className="flex items-center gap-2">
+							<div className="flex-1 bg-gray-200 rounded-full h-2">
+								<div
+									className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
+									style={{ width: `${performance}%` }}
+								/>
+							</div>
+							<span
+								className={`text-sm font-medium ${getPerformanceColor(performance)}`}
+							>
+								{performance}%
+							</span>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'lastLogin',
+				header: 'Last Login',
+				cell: ({ row }: { row: Row<User> }) => {
+					const date = new Date(row.getValue('lastLogin') as string);
+					const formatted = date.toLocaleDateString('en-US', {
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit',
+					});
+					return <span className="text-sm text-muted-foreground">{formatted}</span>;
+				},
+			},
+			{
+				id: 'actions',
+				header: 'Actions',
+				cell: () => {
+					return (
+						<div className="flex items-center gap-1">
+							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+								<Eye className="h-4 w-4" />
+							</Button>
+							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+								<Edit className="h-4 w-4" />
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+							>
+								<Trash2 className="h-4 w-4" />
+							</Button>
+						</div>
+					);
+				},
+			},
+		],
+		data: users,
+		tableId: 'all-features-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableGlobalFilter: true,
+		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: true,
+		enableRowSelection: true,
+		enablePagination: true,
+		pageSize: 5,
+		showHeaders: true,
+		defaultColumnWidth: 180,
+		minColumnWidth: 100,
+		maxColumnWidth: 400,
+	},
+};
+
+// Generate large dataset for virtualization demo
+const generateLargeDataset = (count: number): User[] => {
+	const departments = [
+		'Engineering',
+		'Marketing',
+		'Sales',
+		'Support',
+		'Product',
+		'Design',
+		'Finance',
+		'HR',
+	];
+	const roles = ['admin', 'user', 'moderator', 'guest'] as const;
+	const statuses = ['active', 'inactive', 'pending', 'suspended'] as const;
+
+	return Array.from({ length: count }, (_, index) => ({
+		id: `${index + 1}`,
+		name: `User ${index + 1}`,
+		email: `user${index + 1}@company.com`,
+		role: roles[index % roles.length],
+		status: statuses[index % statuses.length],
+		lastLogin: new Date(
+			Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+		).toISOString(),
+		createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000)
+			.toISOString()
+			.split('T')[0],
+		avatar: `https://images.unsplash.com/photo-${1500000000000 + index}?w=32&h=32&fit=crop&crop=face`,
+		department: departments[index % departments.length],
+		salary: 50000 + Math.floor(Math.random() * 100000),
+		performance: 60 + Math.floor(Math.random() * 40),
+	}));
+};
+
+const largeDataset = generateLargeDataset(1000);
+
+// Story: Virtualization with All Features
+export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
+	render: (args) => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Virtualization with All Features
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					This table demonstrates virtualization with 1000 rows, plus all interactive
+					features: column reordering, resizing, sorting, filtering, and row
+					selection. The table uses virtual scrolling for optimal performance with
+					large datasets. Try scrolling, resizing columns, reordering, and selecting
+					rows to see how virtualization maintains smooth performance.
+				</p>
+				<DataTable {...args} />
+			</div>
+		</div>
+	),
+	args: {
+		columns: [
+			{
+				accessorKey: 'name',
+				header: 'Employee Name',
+				cell: ({ row }: { row: Row<User> }) => (
+					<div className="flex items-center gap-3">
+						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+							{row.original.name
+								.split(' ')
+								.map((n: string) => n[0])
+								.join('')}
+						</div>
+						<div className="flex flex-col">
+							<span className="font-medium text-sm">{row.original.name}</span>
+							<span className="text-xs text-muted-foreground">
+								{row.original.email}
+							</span>
+						</div>
+					</div>
+				),
+			},
+			{
+				accessorKey: 'role',
+				header: 'Role',
+				cell: ({ row }: { row: Row<User> }) => {
+					const role = row.original.role;
+					const roleMap: Record<User['role'], { label: string; className: string }> =
+						{
+							admin: {
+								label: 'Admin',
+								className: 'bg-purple-100 text-purple-800 border-purple-200',
+							},
+							user: {
+								label: 'User',
+								className: 'bg-blue-100 text-blue-800 border-blue-200',
+							},
+							moderator: {
+								label: 'Moderator',
+								className: 'bg-orange-100 text-orange-800 border-orange-200',
+							},
+							guest: {
+								label: 'Guest',
+								className: 'bg-gray-100 text-gray-800 border-gray-200',
+							},
+						};
+					const roleInfo = roleMap[role];
+					return (
+						<Badge variant="outline" className={roleInfo.className}>
+							{roleInfo.label}
+						</Badge>
+					);
+				},
+			},
+			{
+				accessorKey: 'status',
+				header: 'Status',
+				cell: ({ row }: { row: Row<User> }) => {
+					const status = row.original.status;
+					const statusMap: Record<
+						User['status'],
+						{ label: string; icon: React.ComponentType; className: string }
+					> = {
+						active: {
+							label: 'Active',
+							icon: CheckCircle,
+							className: 'bg-green-100 text-green-800 border-green-200',
+						},
+						inactive: {
+							label: 'Inactive',
+							icon: XCircle,
+							className: 'bg-red-100 text-red-800 border-red-200',
+						},
+						pending: {
+							label: 'Pending',
+							icon: Clock,
+							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+						},
+						suspended: {
+							label: 'Suspended',
+							icon: AlertCircle,
+							className: 'bg-gray-100 text-gray-800 border-gray-200',
+						},
+					};
+					const statusInfo = statusMap[status];
+					const Icon = statusInfo.icon;
+					return (
+						<div className="flex items-center gap-2">
+							<Icon />
+							<Badge variant="outline" className={statusInfo.className}>
+								{statusInfo.label}
+							</Badge>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'department',
+				header: 'Department',
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="font-medium text-sm">{row.original.department}</span>
+				),
+			},
+			{
+				accessorKey: 'salary',
+				header: 'Salary',
+				cell: ({ row }: { row: Row<User> }) => {
+					const salary = parseFloat(row.getValue('salary') as string);
+					const formatted = new Intl.NumberFormat('en-US', {
+						style: 'currency',
+						currency: 'USD',
+						minimumFractionDigits: 0,
+						maximumFractionDigits: 0,
+					}).format(salary);
+					return (
+						<div className="font-medium text-sm text-green-700">{formatted}</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'performance',
+				header: 'Performance',
+				cell: ({ row }: { row: Row<User> }) => {
+					const performance = parseFloat(row.getValue('performance') as string);
+					const getPerformanceColor = (score: number) => {
+						if (score >= 90) return 'text-green-600';
+						if (score >= 80) return 'text-blue-600';
+						if (score >= 70) return 'text-yellow-600';
+						return 'text-red-600';
+					};
+					return (
+						<div className="flex items-center gap-2">
+							<div className="flex-1 bg-gray-200 rounded-full h-2">
+								<div
+									className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
+									style={{ width: `${performance}%` }}
+								/>
+							</div>
+							<span
+								className={`text-sm font-medium ${getPerformanceColor(performance)}`}
+							>
+								{performance}%
+							</span>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'lastLogin',
+				header: 'Last Login',
+				cell: ({ row }: { row: Row<User> }) => {
+					const date = new Date(row.getValue('lastLogin') as string);
+					const formatted = date.toLocaleDateString('en-US', {
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit',
+					});
+					return <span className="text-sm text-muted-foreground">{formatted}</span>;
+				},
+			},
+			{
+				id: 'actions',
+				header: 'Actions',
+				cell: () => {
+					return (
+						<div className="flex items-center gap-1">
+							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+								<Eye className="h-4 w-4" />
+							</Button>
+							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+								<Edit className="h-4 w-4" />
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+							>
+								<Trash2 className="h-4 w-4" />
+							</Button>
+						</div>
+					);
+				},
+			},
+		],
+		data: largeDataset,
+		tableId: 'virtualization-features-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableGlobalFilter: true,
+		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: true,
+		enableRowSelection: true,
+		enablePagination: false, // Disable pagination for virtualization demo
+		showHeaders: true,
+		defaultColumnWidth: 180,
+		minColumnWidth: 100,
+		maxColumnWidth: 400,
+		// Virtualization settings
+		enableVirtualization: true,
+		estimateRowSize: 60,
+		overscan: 10,
+		rowHeight: 60,
+		enableDynamicRowHeights: false,
+	},
+};
+
+// Story: Infinite Scroll with Load More
+export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
+	render: (args) => {
+		const [data, setData] = React.useState<User[]>([]);
+		const [loading, setLoading] = React.useState(false);
+		const [hasMore, setHasMore] = React.useState(true);
+		const [page, setPage] = React.useState(1);
+		const itemsPerPage = 50;
+
+		// Load initial data
+		React.useEffect(() => {
+			const initialData = generateLargeDataset(itemsPerPage);
+			setData(initialData);
+		}, []);
+
+		// Simulate loading more data
+		const loadMore = React.useCallback(() => {
+			if (loading || !hasMore) return;
+
+			setLoading(true);
+
+			// Simulate API call delay
+			setTimeout(() => {
+				const newData = generateLargeDataset(itemsPerPage);
+				setData((prev) => [...prev, ...newData]);
+				setPage((prev) => prev + 1);
+				setLoading(false);
+
+				// Stop loading more after 10 pages (500 items)
+				if (page >= 10) {
+					setHasMore(false);
+				}
+			}, 1000);
+		}, [loading, hasMore, page]);
+
+		return (
+			<div className="space-y-4">
+				<div className="border rounded-lg p-6 bg-background">
+					<h3 className="text-lg font-semibold mb-2 text-foreground">
+						Infinite Scroll with Load More
+					</h3>
+					<p className="text-sm text-muted-foreground mb-4">
+						This table demonstrates infinite scrolling with 50 items loaded initially.
+						Scroll to the bottom to automatically load more items. The table maintains
+						all interactive features while efficiently loading data on demand.
+					</p>
+					<div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
+						<span>Loaded: {data.length} items</span>
+						<span>Page: {page}</span>
+						{loading && (
+							<span className="flex items-center gap-2">
+								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+								Loading more...
+							</span>
+						)}
+						{!hasMore && <span className="text-green-600">All items loaded</span>}
+					</div>
+					<DataTable
+						{...args}
+						data={data}
+						enableInfiniteScroll={true}
+						hasMore={hasMore}
+						onLoadMore={loadMore}
+						loadingMore={loading}
+					/>
+				</div>
+			</div>
+		);
+	},
+	args: {
+		columns: [
+			{
+				accessorKey: 'name',
+				header: 'Employee Name',
+				cell: ({ row }: { row: Row<User> }) => (
+					<div className="flex items-center gap-3">
+						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+							{row.original.name
+								.split(' ')
+								.map((n: string) => n[0])
+								.join('')}
+						</div>
+						<div className="flex flex-col">
+							<span className="font-medium text-sm">{row.original.name}</span>
+							<span className="text-xs text-muted-foreground">
+								{row.original.email}
+							</span>
+						</div>
+					</div>
+				),
+			},
+			{
+				accessorKey: 'role',
+				header: 'Role',
+				cell: ({ row }: { row: Row<User> }) => {
+					const role = row.original.role;
+					const roleMap: Record<User['role'], { label: string; className: string }> =
+						{
+							admin: {
+								label: 'Admin',
+								className: 'bg-purple-100 text-purple-800 border-purple-200',
+							},
+							user: {
+								label: 'User',
+								className: 'bg-blue-100 text-blue-800 border-blue-200',
+							},
+							moderator: {
+								label: 'Moderator',
+								className: 'bg-orange-100 text-orange-800 border-orange-200',
+							},
+							guest: {
+								label: 'Guest',
+								className: 'bg-gray-100 text-gray-800 border-gray-200',
+							},
+						};
+					const roleInfo = roleMap[role];
+					return (
+						<Badge variant="outline" className={roleInfo.className}>
+							{roleInfo.label}
+						</Badge>
+					);
+				},
+			},
+			{
+				accessorKey: 'status',
+				header: 'Status',
+				cell: ({ row }: { row: Row<User> }) => {
+					const status = row.original.status;
+					const statusMap: Record<
+						User['status'],
+						{ label: string; icon: React.ComponentType; className: string }
+					> = {
+						active: {
+							label: 'Active',
+							icon: CheckCircle,
+							className: 'bg-green-100 text-green-800 border-green-200',
+						},
+						inactive: {
+							label: 'Inactive',
+							icon: XCircle,
+							className: 'bg-red-100 text-red-800 border-red-200',
+						},
+						pending: {
+							label: 'Pending',
+							icon: Clock,
+							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+						},
+						suspended: {
+							label: 'Suspended',
+							icon: AlertCircle,
+							className: 'bg-gray-100 text-gray-800 border-gray-200',
+						},
+					};
+					const statusInfo = statusMap[status];
+					const Icon = statusInfo.icon;
+					return (
+						<div className="flex items-center gap-2">
+							<Icon />
+							<Badge variant="outline" className={statusInfo.className}>
+								{statusInfo.label}
+							</Badge>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'department',
+				header: 'Department',
+				cell: ({ row }: { row: Row<User> }) => (
+					<span className="font-medium text-sm">{row.original.department}</span>
+				),
+			},
+			{
+				accessorKey: 'salary',
+				header: 'Salary',
+				cell: ({ row }: { row: Row<User> }) => {
+					const salary = parseFloat(row.getValue('salary') as string);
+					const formatted = new Intl.NumberFormat('en-US', {
+						style: 'currency',
+						currency: 'USD',
+						minimumFractionDigits: 0,
+						maximumFractionDigits: 0,
+					}).format(salary);
+					return (
+						<div className="font-medium text-sm text-green-700">{formatted}</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'performance',
+				header: 'Performance',
+				cell: ({ row }: { row: Row<User> }) => {
+					const performance = parseFloat(row.getValue('performance') as string);
+					const getPerformanceColor = (score: number) => {
+						if (score >= 90) return 'text-green-600';
+						if (score >= 80) return 'text-blue-600';
+						if (score >= 70) return 'text-yellow-600';
+						return 'text-red-600';
+					};
+					return (
+						<div className="flex items-center gap-2">
+							<div className="flex-1 bg-gray-200 rounded-full h-2">
+								<div
+									className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
+									style={{ width: `${performance}%` }}
+								/>
+							</div>
+							<span
+								className={`text-sm font-medium ${getPerformanceColor(performance)}`}
+							>
+								{performance}%
+							</span>
+						</div>
+					);
+				},
+			},
+			{
+				accessorKey: 'lastLogin',
+				header: 'Last Login',
+				cell: ({ row }: { row: Row<User> }) => {
+					const date = new Date(row.getValue('lastLogin') as string);
+					const formatted = date.toLocaleDateString('en-US', {
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit',
+					});
+					return <span className="text-sm text-muted-foreground">{formatted}</span>;
+				},
+			},
+			{
+				id: 'actions',
+				header: 'Actions',
+				cell: () => {
+					return (
+						<div className="flex items-center gap-1">
+							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+								<Eye className="h-4 w-4" />
+							</Button>
+							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+								<Edit className="h-4 w-4" />
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+							>
+								<Trash2 className="h-4 w-4" />
+							</Button>
+						</div>
+					);
+				},
+			},
+		],
+		tableId: 'infinite-scroll-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableGlobalFilter: true,
+		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: true,
+		enableRowSelection: true,
+		enablePagination: false, // Disable pagination for infinite scroll
+		showHeaders: true,
+		defaultColumnWidth: 180,
+		minColumnWidth: 100,
+		maxColumnWidth: 400,
+		// Virtualization settings for smooth scrolling
+		enableVirtualization: true,
+		estimateRowSize: 60,
+		overscan: 10,
+		rowHeight: 60,
+		enableDynamicRowHeights: false,
 	},
 };
 
