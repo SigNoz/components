@@ -1286,7 +1286,7 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 		const [hasMore, setHasMore] = React.useState(true);
 		const [page, setPage] = React.useState(0);
 		const itemsPerPage = 50;
-		const maxItems = 500;
+		const maxItems = 200;
 
 		// Load initial data
 		React.useEffect(() => {

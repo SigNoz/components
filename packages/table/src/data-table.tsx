@@ -880,8 +880,16 @@ export function DataTable<TData, TValue>({
 
 	// Restore scroll position
 	React.useEffect(() => {
-		if (tableRef.current && enableScrollRestoration && !isInitialMount.current) {
-			tableRef.current.scrollTo(scrollPosition.left, scrollPosition.top);
+		const el = tableRef.current as unknown as {
+			scrollTo?: (x: number, y: number) => void;
+		} | null;
+		if (
+			el &&
+			typeof el.scrollTo === 'function' &&
+			enableScrollRestoration &&
+			!isInitialMount.current
+		) {
+			el.scrollTo(scrollPosition.left, scrollPosition.top);
 		}
 	}, [scrollPosition, enableScrollRestoration]);
 
