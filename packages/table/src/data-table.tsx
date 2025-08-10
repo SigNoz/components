@@ -790,13 +790,6 @@ export function DataTable<TData, TValue>({
 				ref={tableRef}
 				className="rounded-md border overflow-auto relative table-scroll-container"
 				onScroll={handleScroll}
-				style={{
-					maxHeight: 'calc(100vh - 200px)',
-					height: 'calc(100vh - 200px)',
-					scrollBehavior: 'smooth',
-					overflowX: 'auto',
-					overflowY: 'auto',
-				}}
 				role="region"
 				aria-label="Table data"
 				tabIndex={0}
