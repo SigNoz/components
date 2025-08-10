@@ -891,33 +891,39 @@ export function DataTable<TData, TValue>({
 			!enableInfiniteScroll ||
 			!hasMore ||
 			!sentinelRef.current ||
-			!tableRef.current
-		)
+			!tableRef.current ||
+			typeof IntersectionObserver === 'undefined'
+		) {
 			return;
+		}
 		const root = tableRef.current;
 		const sentinel = sentinelRef.current;
 		let pending = false;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				const entry = entries[0];
-				if (entry.isIntersecting && !pending && !loadingMore) {
-					pending = true;
-					onLoadMore?.();
-					// Release the pending flag on next tick; the scroll handler guard still prevents duplication
-					setTimeout(() => {
-						pending = false;
-					}, 0);
-				}
-			},
-			{
-				root,
-				rootMargin: '300px 0px 300px 0px',
-				threshold: 0,
-			},
-		);
-		observer.observe(sentinel);
-		return () => observer.disconnect();
+		let observer: IntersectionObserver | null = null;
+		try {
+			observer = new IntersectionObserver(
+				(entries) => {
+					const entry = entries[0];
+					if (entry.isIntersecting && !pending && !loadingMore) {
+						pending = true;
+						onLoadMore?.();
+						// Release the pending flag on next tick
+						setTimeout(() => {
+							pending = false;
+						}, 0);
+					}
+				},
+				{
+					root,
+					rootMargin: '300px 0px 600px 0px',
+					threshold: 0,
+				},
+			);
+			observer.observe(sentinel);
+		} catch {
+			// no-op: fail safe in environments without IO
+		}
+		return () => observer?.disconnect();
 	}, [enableInfiniteScroll, hasMore, loadingMore, onLoadMore]);
 
 	// Compute pinned offsets for sticky columns
