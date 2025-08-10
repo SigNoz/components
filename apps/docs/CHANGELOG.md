@@ -1,5 +1,12 @@
 # docs
 
+## 0.1.20
+
+### Patch Changes
+
+- Updated dependencies [be0d2d6]
+  - @signozhq/table@0.3.0
+
 ## 0.1.19
 
 ### Patch Changes

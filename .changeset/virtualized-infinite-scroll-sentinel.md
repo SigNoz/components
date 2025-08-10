@@ -1,5 +1,5 @@
 ---
-"@signozhq/table": minor
+'@signozhq/table': minor
 ---
 
 Virtualized infinite scroll improvements:
@@ -10,5 +10,3 @@ Virtualized infinite scroll improvements:
 - Improve near-end detection and throttling
 - Dark header styling and remove external table margins
 - Docs: story for virtualization + infinite scroll + DnD + resize
-
-
