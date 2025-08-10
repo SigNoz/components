@@ -53,8 +53,9 @@
 	/* Ensure sticky headers don't shift */
 	position: sticky;
 	top: 0;
-	z-index: 20;
-	background: hsl(var(--background));
+	z-index: 30;
+	background: #1f2937; /* dark gray */
+	color: #ffffff;
 	box-shadow:
 		0 1px 3px 0 rgb(0 0 0 / 0.1),
 		0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -70,8 +71,9 @@
 .sticky-header {
 	position: sticky;
 	top: 0;
-	z-index: 20;
-	background: hsl(var(--background));
+	z-index: 30;
+	background: #1f2937; /* dark gray */
+	color: #ffffff;
 	box-shadow:
 		0 1px 3px 0 rgb(0 0 0 / 0.1),
 		0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -79,7 +81,8 @@
 
 /* Ensure sticky headers have proper background */
 .sticky-header-table thead {
-	background: hsl(var(--background));
+	background: #1f2937; /* dark gray */
+	color: #ffffff;
 	border-bottom: 1px solid hsl(var(--border));
 }
 
@@ -88,4 +91,9 @@
 	scrollbar-gutter: stable;
 	overflow-y: scroll;
 	margin-top: 0;
+}
+
+/* Ensure our component table has no external margins affecting layout/virtualization */
+[data-slot='table'] {
+	margin: 0 !important;
 }

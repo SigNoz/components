@@ -1015,8 +1015,8 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 	},
 };
 
-// Generate large dataset for virtualization demo
-const generateLargeDataset = (count: number): User[] => {
+// Generate large dataset for virtualization demo (supports offset for unique ids)
+const generateLargeDataset = (count: number, startIndex = 0): User[] => {
 	const departments = [
 		'Engineering',
 		'Marketing',
@@ -1031,9 +1031,9 @@ const generateLargeDataset = (count: number): User[] => {
 	const statuses = ['active', 'inactive', 'pending', 'suspended'] as const;
 
 	return Array.from({ length: count }, (_, index) => ({
-		id: `${index + 1}`,
-		name: `User ${index + 1}`,
-		email: `user${index + 1}@company.com`,
+		id: `${startIndex + index + 1}`,
+		name: `User ${startIndex + index + 1}`,
+		email: `user${startIndex + index + 1}@company.com`,
 		role: roles[index % roles.length],
 		status: statuses[index % statuses.length],
 		lastLogin: new Date(
@@ -1049,7 +1049,7 @@ const generateLargeDataset = (count: number): User[] => {
 	}));
 };
 
-const largeDataset = generateLargeDataset(1000);
+const largeDataset = generateLargeDataset(1000, 0);
 
 // Story: Virtualization with All Features
 export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
@@ -1284,13 +1284,15 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 		const [data, setData] = React.useState<User[]>([]);
 		const [loading, setLoading] = React.useState(false);
 		const [hasMore, setHasMore] = React.useState(true);
-		const [page, setPage] = React.useState(1);
+		const [page, setPage] = React.useState(0);
 		const itemsPerPage = 50;
+		const maxItems = 500;
 
 		// Load initial data
 		React.useEffect(() => {
-			const initialData = generateLargeDataset(itemsPerPage);
+			const initialData = generateLargeDataset(itemsPerPage, 0);
 			setData(initialData);
+			setPage(1);
 		}, []);
 
 		// Simulate loading more data
@@ -1298,16 +1300,16 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 			if (loading || !hasMore) return;
 
 			setLoading(true);
-
-			// Simulate API call delay
 			setTimeout(() => {
-				const newData = generateLargeDataset(itemsPerPage);
+				const offset = page * itemsPerPage;
+				const remaining = Math.max(0, maxItems - offset);
+				const take = Math.min(itemsPerPage, remaining);
+				const newData = take > 0 ? generateLargeDataset(take, offset) : [];
 				setData((prev) => [...prev, ...newData]);
-				setPage((prev) => prev + 1);
+				const nextPage = page + 1;
+				setPage(nextPage);
 				setLoading(false);
-
-				// Stop loading more after 10 pages (500 items)
-				if (page >= 10) {
+				if (nextPage * itemsPerPage >= maxItems) {
 					setHasMore(false);
 				}
 			}, 1000);
@@ -1551,6 +1553,156 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 		overscan: 10,
 		rowHeight: 60,
 		enableDynamicRowHeights: false,
+	},
+};
+
+// Story: Virtualized Infinite Scroll with Resize + Reorder
+export const VirtualizedInfiniteScrollDndResize: StoryObj<
+	typeof DataTable<User>
+> = {
+	render: (args) => {
+		const [data, setData] = React.useState<User[]>([]);
+		const [loading, setLoading] = React.useState(false);
+		const [hasMore, setHasMore] = React.useState(true);
+		const [page, setPage] = React.useState(0);
+		const itemsPerPage = 100;
+		const maxItems = 1000;
+
+		React.useEffect(() => {
+			setData(generateLargeDataset(itemsPerPage, 0));
+			setPage(1);
+		}, []);
+
+		const loadMore = React.useCallback(() => {
+			if (loading || !hasMore) return;
+			setLoading(true);
+			// Simulate API latency
+			setTimeout(() => {
+				const offset = page * itemsPerPage;
+				const remaining = Math.max(0, maxItems - offset);
+				const take = Math.min(itemsPerPage, remaining);
+				const newData = take > 0 ? generateLargeDataset(take, offset) : [];
+				setData((prev) => [...prev, ...newData]);
+				const nextPage = page + 1;
+				setPage(nextPage);
+				setLoading(false);
+				if (nextPage * itemsPerPage >= maxItems) setHasMore(false);
+			}, 600);
+		}, [loading, hasMore, page]);
+
+		return (
+			<div className="space-y-4">
+				<div className="border rounded-lg p-6 bg-background">
+					<h3 className="text-lg font-semibold mb-2 text-foreground">
+						Virtualized Infinite Scroll + Reorder + Resize
+					</h3>
+					<p className="text-sm text-muted-foreground mb-4">
+						Large dataset with virtualized rows, drag-and-drop column reordering, and
+						on-change column resizing. Scroll to load more.
+					</p>
+					<div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
+						<span>Rows: {data.length}</span>
+						<span>Page: {page}</span>
+						{loading && <span>Loading…</span>}
+						{!hasMore && <span className="text-green-600">All items loaded</span>}
+					</div>
+					<DataTable
+						{...args}
+						data={data}
+						hasMore={hasMore}
+						onLoadMore={loadMore}
+						loadingMore={loading}
+					/>
+				</div>
+			</div>
+		);
+	},
+	args: {
+		columns: [
+			{
+				id: 'serial',
+				header: '#',
+				size: 72,
+				cell: ({ row }: { row: Row<User> }) => row.index + 1,
+			},
+			{
+				accessorKey: 'name',
+				header: 'Name',
+				size: 220,
+				minSize: 120,
+				maxSize: 360,
+			},
+			{
+				accessorKey: 'email',
+				header: 'Email',
+				size: 260,
+				minSize: 160,
+				maxSize: 460,
+			},
+			{
+				accessorKey: 'role',
+				header: 'Role',
+				size: 140,
+				minSize: 100,
+				maxSize: 220,
+			},
+			{
+				accessorKey: 'status',
+				header: 'Status',
+				size: 160,
+				minSize: 120,
+				maxSize: 240,
+			},
+			{
+				accessorKey: 'department',
+				header: 'Department',
+				size: 180,
+				minSize: 120,
+				maxSize: 280,
+			},
+			{
+				accessorKey: 'salary',
+				header: 'Salary',
+				size: 140,
+				minSize: 100,
+				maxSize: 220,
+			},
+			{
+				accessorKey: 'performance',
+				header: 'Performance',
+				size: 200,
+				minSize: 120,
+				maxSize: 300,
+			},
+			{
+				accessorKey: 'lastLogin',
+				header: 'Last Login',
+				size: 180,
+				minSize: 120,
+				maxSize: 260,
+			},
+		],
+		tableId: 'virtualized-infinite-reorder-resize',
+		enableSorting: false,
+		enableFiltering: true,
+		enableGlobalFilter: false,
+		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: true,
+		enableRowSelection: true,
+		enablePagination: false,
+		showHeaders: true,
+		defaultColumnWidth: 180,
+		minColumnWidth: 80,
+		maxColumnWidth: 480,
+		// Virtualization + Infinite Scroll
+		enableVirtualization: true,
+		estimateRowSize: 56,
+		overscan: 10,
+		rowHeight: 56,
+		enableInfiniteScroll: true,
+		enableScrollRestoration: false,
+		fixedHeight: 600,
 	},
 };
 

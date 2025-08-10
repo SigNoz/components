@@ -3,18 +3,28 @@ import * as React from 'react';
 
 import { cn } from './lib/utils';
 
+type TableProps = React.ComponentProps<'table'> & {
+	fixedHeight?: string | number;
+	containerRef?: React.Ref<HTMLDivElement>;
+	containerProps?: React.HTMLAttributes<HTMLDivElement>;
+};
+
 function Table({
 	className,
 	fixedHeight,
+	containerRef,
+	containerProps,
 	...props
-}: React.ComponentProps<'table'> & { fixedHeight?: string | number }) {
+}: TableProps) {
 	return (
 		<div
+			ref={containerRef}
 			data-slot="table-container"
 			className={cn(
 				'relative w-full overflow-x-auto',
 				fixedHeight &&
 					'overflow-y-auto table-scroll-container sticky-header-table-container',
+				containerProps?.className,
 			)}
 			style={
 				fixedHeight
@@ -24,6 +34,11 @@ function Table({
 						}
 					: undefined
 			}
+			onScroll={containerProps?.onScroll}
+			role={containerProps?.role}
+			aria-label={containerProps?.['aria-label']}
+			tabIndex={containerProps?.tabIndex}
+			onKeyDown={containerProps?.onKeyDown}
 		>
 			<table
 				data-slot="table"
@@ -46,7 +61,11 @@ function TableHeader({
 	return (
 		<thead
 			data-slot="table-header"
-			className={cn('[&_tr]:border-b', sticky && 'sticky-header', className)}
+			className={cn(
+				'[&_tr]:border-b z-10 bg-[#1f2937] text-white',
+				sticky && 'sticky-header',
+				className,
+			)}
 			{...props}
 		/>
 	);
