@@ -1066,7 +1066,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					large datasets. Try scrolling, resizing columns, reordering, and selecting
 					rows to see how virtualization maintains smooth performance.
 				</p>
-				<DataTable {...args} />
+				<DataTable {...args} fixedHeight={600} />
 			</div>
 		</div>
 	),

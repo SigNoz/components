@@ -36,7 +36,7 @@ export const saveTablePreferences = (
 			JSON.stringify(preferences),
 		);
 	} catch {
-		console.error('Failed to save table preferences');
+		// Silently ignore in environments where storage is unavailable (e.g., Chromatic/CI)
 	}
 };
 
@@ -46,6 +46,6 @@ export const resetTablePreferences = (tableId: string) => {
 	try {
 		localStorage.removeItem(`${PREFERENCES_KEY_PREFIX}${tableId}`);
 	} catch {
-		console.error('Failed to reset table preferences');
+		// Silently ignore in environments where storage is unavailable (e.g., Chromatic/CI)
 	}
 };
