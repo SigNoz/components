@@ -1567,6 +1567,9 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<
 		const [page, setPage] = React.useState(0);
 		const itemsPerPage = 100;
 		const maxItems = 1000;
+		const [orderedColumns, setOrderedColumns] = React.useState<ColumnDef<User>[]>(
+			[],
+		);
 
 		React.useEffect(() => {
 			setData(generateLargeDataset(itemsPerPage, 0));
@@ -1605,6 +1608,20 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<
 						<span>Page: {page}</span>
 						{loading && <span>Loading…</span>}
 						{!hasMore && <span className="text-green-600">All items loaded</span>}
+						{orderedColumns.length > 0 && (
+							<span className="truncate">
+								Order:{' '}
+								{orderedColumns
+									.map((c) =>
+										String(
+											(c as { id?: string; accessorKey?: string }).id ??
+												(c as { accessorKey?: string }).accessorKey ??
+												'?',
+										),
+									)
+									.join(' | ')}
+							</span>
+						)}
 					</div>
 					<DataTable
 						{...args}
@@ -1612,6 +1629,7 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<
 						hasMore={hasMore}
 						onLoadMore={loadMore}
 						loadingMore={loading}
+						onColumnOrderChange={setOrderedColumns}
 					/>
 				</div>
 			</div>
