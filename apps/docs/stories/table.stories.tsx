@@ -434,3 +434,117 @@ export const Compact: Story = {
 		</div>
 	),
 };
+
+// Table with fixed height and overflow
+export const WithFixedHeight: Story = {
+	render: () => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Table with Fixed Height
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					A table with a fixed height of 300px. When the content exceeds this height,
+					it becomes scrollable while keeping the headers sticky.
+				</p>
+				<Table fixedHeight={300}>
+					<TableHeader sticky>
+						<TableRow>
+							<TableHead>Name</TableHead>
+							<TableHead>Email</TableHead>
+							<TableHead>Role</TableHead>
+							<TableHead>Department</TableHead>
+							<TableHead>Status</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{users.map((user) => (
+							<TableRow key={user.id}>
+								<TableCell className="font-medium">{user.name}</TableCell>
+								<TableCell className="text-muted-foreground">{user.email}</TableCell>
+								<TableCell className="capitalize">{user.role}</TableCell>
+								<TableCell>{user.department}</TableCell>
+								<TableCell>
+									<Badge
+										variant="outline"
+										className={
+											user.status === 'active'
+												? 'bg-green-100 text-green-800'
+												: 'bg-gray-100 text-gray-800'
+										}
+									>
+										{user.status}
+									</Badge>
+								</TableCell>
+							</TableRow>
+						))}
+						{/* Add more rows to demonstrate overflow */}
+						{Array.from({ length: 15 }, (_, i) => ({
+							id: `extra-${i + 1}`,
+							name: `Extra User ${i + 1}`,
+							email: `extra${i + 1}@example.com`,
+							role: 'user',
+							department: 'Engineering',
+							status: 'active',
+						})).map((user) => (
+							<TableRow key={user.id}>
+								<TableCell className="font-medium">{user.name}</TableCell>
+								<TableCell className="text-muted-foreground">{user.email}</TableCell>
+								<TableCell className="capitalize">{user.role}</TableCell>
+								<TableCell>{user.department}</TableCell>
+								<TableCell>
+									<Badge variant="outline" className="bg-green-100 text-green-800">
+										{user.status}
+									</Badge>
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+		</div>
+	),
+	parameters: {
+		docs: {
+			description: {
+				story: `
+## Table with Fixed Height
+
+This example demonstrates how to create a table with a fixed height that handles overflow gracefully.
+
+### Key Features:
+- **Fixed Height**: The table container has a defined height of 300px
+- **Vertical Scrolling**: When content exceeds the height, it becomes scrollable
+- **Sticky Headers**: Headers remain visible while scrolling through the data
+- **Custom Scrollbars**: Styled scrollbars for better user experience
+- **No Layout Shift**: Headers maintain perfect alignment during scroll
+
+### Usage:
+\`\`\`tsx
+<Table fixedHeight={300}>
+  <TableHeader sticky>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Email</TableHead>
+      <TableHead>Role</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {/* Your table rows */}
+  </TableBody>
+</Table>
+\`\`\`
+
+### Props:
+- **\`fixedHeight\`**: Accepts a string (e.g., "400px") or number (e.g., 400) for the container height
+- **\`sticky\`**: When true on TableHeader, keeps headers visible during scroll
+
+### CSS Classes Applied:
+- **\`.table-scroll-container\`**: Container with overflow handling
+- **\`.sticky-header-table\`**: Table with sticky header support
+- **\`.sticky-header\`**: Sticky header styling
+				`,
+			},
+		},
+	},
+};

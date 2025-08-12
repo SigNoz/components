@@ -7,6 +7,7 @@ import {
 	useReactTable,
 	HeaderGroup,
 	Table as ReactTable,
+	type Column,
 	Cell,
 	SortingState,
 	getSortedRowModel,
@@ -121,6 +122,10 @@ interface DataTableProps<TData, TValue> {
 	>;
 	// Header visibility prop
 	showHeaders?: boolean;
+	// Sticky headers prop
+	enableStickyHeaders?: boolean;
+	// Fixed height for table container
+	fixedHeight?: string | number;
 }
 
 export enum SelectionMode {
@@ -145,6 +150,7 @@ function VirtualizedTableBody<TData>({
 	stopPropagationOnCellClick,
 	expandOnRowClick,
 	renderSubComponent,
+	sentinelRef,
 }: {
 	table: ReactTable<TData>;
 	virtualizer: Virtualizer<HTMLDivElement, Element>;
@@ -162,47 +168,44 @@ function VirtualizedTableBody<TData>({
 	stopPropagationOnCellClick?: boolean;
 	expandOnRowClick?: boolean;
 	renderSubComponent?: (props: { row: Row<TData> }) => React.ReactNode;
+	sentinelRef?: React.RefObject<HTMLDivElement>;
 }): JSX.Element {
 	const { rows } = table.getRowModel();
+	const leafColumns = table.getAllLeafColumns();
+
+	const virtualItems = virtualizer.getVirtualItems();
+	const paddingTop = virtualItems.length > 0 ? virtualItems[0].start : 0;
+	const paddingBottom =
+		virtualItems.length > 0
+			? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end
+			: 0;
+
+	const spacerColSpan =
+		table.getAllLeafColumns().length +
+		(enableRowSelection ? 1 : 0) +
+		(enableRowExpansion ? 1 : 0);
 
 	return (
 		<TableBody>
-			{/* Spacer for rows before virtual window */}
-			{virtualizer.getVirtualItems().length > 0 &&
-				virtualizer.getVirtualItems()[0].start > 0 && (
-					<tr>
-						<td
-							style={{
-								height: `${virtualizer.getVirtualItems()[0].start}px`,
-								padding: 0,
-								border: 'none',
-							}}
-							colSpan={
-								table.getAllColumns().length +
-								(enableRowSelection ? 1 : 0) +
-								(enableRowExpansion ? 1 : 0)
-							}
-						/>
-					</tr>
-				)}
-
-			{/* Virtual rows */}
-			{virtualizer.getVirtualItems().map((virtualRow) => {
+			{paddingTop > 0 && (
+				<TableRow>
+					<TableCell colSpan={spacerColSpan} style={{ height: `${paddingTop}px` }} />
+				</TableRow>
+			)}
+			{virtualItems.map((virtualRow) => {
 				const row = rows[virtualRow.index];
 				if (!row) return null;
 
 				return (
 					<React.Fragment key={virtualRow.key}>
 						<TableRow
+							data-index={virtualRow.index}
+							ref={enableDynamicRowHeights ? virtualizer.measureElement : undefined}
 							className={cn(
 								row.getIsSelected() && 'bg-muted/50',
 								'cursor-pointer',
 								enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30',
 							)}
-							style={{
-								height: enableDynamicRowHeights ? 'auto' : `${virtualRow.size}px`,
-								minHeight: `${virtualRow.size}px`,
-							}}
 							onClick={(e) => {
 								if (stopPropagationOnRowClick) {
 									e.stopPropagation();
@@ -271,15 +274,32 @@ function VirtualizedTableBody<TData>({
 							)}
 							{row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
 								const isPinned = cell.column.getIsPinned();
+								// compute offsets for pinned cells
+								let leftOffset = 0;
+								let rightOffset = 0;
+								if (isPinned === 'left') {
+									for (const c of leafColumns) {
+										if (c.getIsPinned() === 'left') {
+											if (c.id === cell.column.id) break;
+											leftOffset += c.getSize();
+										}
+									}
+								} else if (isPinned === 'right') {
+									for (let i = leafColumns.length - 1; i >= 0; i -= 1) {
+										const c = leafColumns[i];
+										if (c.getIsPinned() === 'right') {
+											if (c.id === cell.column.id) break;
+											rightOffset += c.getSize();
+										}
+									}
+								}
 								return (
 									<TableCell
 										key={cell.id}
 										style={{
 											width: cell.column.getSize(),
-											height: enableDynamicRowHeights ? 'auto' : `${virtualRow.size}px`,
-											minHeight: `${virtualRow.size}px`,
-											padding: '0.75rem',
-											verticalAlign: 'top',
+											...(isPinned === 'left' ? { left: leftOffset } : {}),
+											...(isPinned === 'right' ? { right: rightOffset } : {}),
 										}}
 										className={cn(
 											isPinned === 'left' && 'sticky left-0 z-10 bg-background',
@@ -320,31 +340,21 @@ function VirtualizedTableBody<TData>({
 					</React.Fragment>
 				);
 			})}
-
-			{/* Spacer for rows after virtual window */}
-			{virtualizer.getVirtualItems().length > 0 &&
-				(() => {
-					const lastItem =
-						virtualizer.getVirtualItems()[virtualizer.getVirtualItems().length - 1];
-					const remainingHeight =
-						virtualizer.getTotalSize() - (lastItem.start + lastItem.size);
-					return remainingHeight > 0 ? (
-						<tr>
-							<td
-								style={{
-									height: `${remainingHeight}px`,
-									padding: 0,
-									border: 'none',
-								}}
-								colSpan={
-									table.getAllColumns().length +
-									(enableRowSelection ? 1 : 0) +
-									(enableRowExpansion ? 1 : 0)
-								}
-							/>
-						</tr>
-					) : null;
-				})()}
+			{paddingBottom > 0 && (
+				<TableRow>
+					<TableCell
+						colSpan={spacerColSpan}
+						style={{ height: `${paddingBottom}px` }}
+					/>
+				</TableRow>
+			)}
+			{sentinelRef && (
+				<TableRow role="presentation">
+					<TableCell colSpan={spacerColSpan}>
+						<div ref={sentinelRef} style={{ height: 1 }} />
+					</TableCell>
+				</TableRow>
+			)}
 		</TableBody>
 	);
 }
@@ -426,6 +436,10 @@ export function DataTable<TData, TValue>({
 	virtualizerRef,
 	// Header visibility prop
 	showHeaders = true,
+	// Sticky headers prop
+	enableStickyHeaders = false,
+	// Fixed height for table container
+	fixedHeight,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] =
@@ -454,22 +468,35 @@ export function DataTable<TData, TValue>({
 		left: 0,
 	});
 	const tableRef = React.useRef<HTMLDivElement>(null);
+	const sentinelRef = React.useRef<HTMLDivElement>(null);
 	const isInitialMount = React.useRef(true);
 	const [pagination, setPagination] = React.useState({
 		pageIndex: 0,
 		pageSize: pageSize,
 	});
 
+	// Helper to resolve column id consistently
+	const resolveColumnId = React.useCallback(
+		(column: ColumnDef<TData, TValue>, index: number): string => {
+			const explicitId = (column as { id?: string }).id;
+			const accessorKey =
+				'accessorKey' in column
+					? (column as { accessorKey?: string }).accessorKey
+					: undefined;
+			return (
+				explicitId ?? (accessorKey as string | undefined) ?? `column-${index}`
+			);
+		},
+		[],
+	);
+
 	// Initialise Column Order Array
 	React.useEffect(() => {
-		// Generate column IDs based on accessorKey or create a fallback
-		const defaultOrder = columns.map((column, index) => {
-			// Use accessorKey as ID if available, otherwise use index
-			const accessorKey = 'accessorKey' in column ? column.accessorKey : undefined;
-			return (accessorKey as string) || `column-${index}`;
-		});
+		const defaultOrder = columns.map((column, index) =>
+			resolveColumnId(column, index),
+		);
 		setColumnOrder(initialColumnOrder || defaultOrder);
-	}, [columns, initialColumnOrder]);
+	}, [columns, initialColumnOrder, resolveColumnId]);
 
 	// Load preferences on mount
 	React.useEffect(() => {
@@ -479,7 +506,9 @@ export function DataTable<TData, TValue>({
 		if (isInitialMount.current) {
 			if (preferences.columnOrder?.length) {
 				// Only use saved column order if it contains all current columns
-				const currentColumnIds = new Set(columns.map((col) => col.id as string));
+				const currentColumnIds = new Set(
+					columns.map((col, idx) => resolveColumnId(col, idx)),
+				);
 				const savedColumnIds = new Set(preferences.columnOrder);
 
 				if (
@@ -652,6 +681,13 @@ export function DataTable<TData, TValue>({
 		estimateSize: () => estimateRowSize || rowHeight,
 		overscan: overscan,
 		enabled: enableVirtualization,
+		// Add dynamic row height measurement like TanStack example
+		measureElement:
+			enableDynamicRowHeights &&
+			typeof window !== 'undefined' &&
+			navigator.userAgent.indexOf('Firefox') === -1
+				? (element) => element?.getBoundingClientRect().height
+				: undefined,
 	});
 
 	// Set up virtualizer ref and callback
@@ -766,7 +802,11 @@ export function DataTable<TData, TValue>({
 		}
 	}, [rowSelection, onRowSelectionChange, table]);
 
-	// Add scroll handler for infinite scroll
+	// Add scroll handler for infinite scroll with hysteresis to avoid repeated triggers near bottom
+	const loadRequestedRef = React.useRef(false);
+	const LOAD_MORE_THRESHOLD = 300; // px from bottom to trigger
+	const RESET_THRESHOLD_MULTIPLIER = 2; // must scroll away this much to allow next trigger
+
 	const handleScroll = React.useCallback(
 		throttle(
 			(e: React.UIEvent<HTMLDivElement>) => {
@@ -776,28 +816,151 @@ export function DataTable<TData, TValue>({
 				setScrollPosition(newPosition);
 				onScroll?.(newPosition);
 
-				// Check if we've scrolled to the bottom
-				if (
-					enableInfiniteScroll &&
-					hasMore &&
-					!loadingMore &&
-					scrollHeight - scrollTop - clientHeight < 100 // Load more when within 100px of bottom
-				) {
-					onLoadMore?.();
+				// Infinite scroll trigger with hysteresis
+				if (enableInfiniteScroll && hasMore && !loadingMore) {
+					const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+					if (
+						distanceFromBottom < LOAD_MORE_THRESHOLD &&
+						!loadRequestedRef.current
+					) {
+						loadRequestedRef.current = true;
+						onLoadMore?.();
+					} else if (
+						distanceFromBottom >
+						LOAD_MORE_THRESHOLD * RESET_THRESHOLD_MULTIPLIER
+					) {
+						// reset once user scrolls away sufficiently from bottom
+						loadRequestedRef.current = false;
+					}
 				}
 			},
-			500,
-			{ leading: true, trailing: true },
-		), // Throttle to 100ms
+			100,
+			{ leading: false, trailing: true },
+		),
 		[enableInfiniteScroll, hasMore, loadingMore, onLoadMore, onScroll],
 	);
 
+	// Reset loadRequested flag when data grows
+	const prevRowCountRef = React.useRef(rows.length);
+	React.useEffect(() => {
+		if (rows.length > prevRowCountRef.current) {
+			loadRequestedRef.current = false;
+		}
+		prevRowCountRef.current = rows.length;
+	}, [rows.length]);
+
+	// Also observe virtualizer range to catch fast scrolls that skip bottom scroll event
+	React.useEffect(() => {
+		if (!enableInfiniteScroll || !hasMore || loadingMore) return;
+		const virtualItems = virtualizer.getVirtualItems();
+		const last = virtualItems[virtualItems.length - 1];
+		const nearEndByIndex = last
+			? last.index >= rows.length - Math.max(5, Math.floor(overscan / 2))
+			: false;
+		let nearEndByScroll = false;
+		const el = tableRef.current;
+		if (el) {
+			const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+			nearEndByScroll = distanceFromBottom < LOAD_MORE_THRESHOLD;
+		}
+		if ((nearEndByIndex || nearEndByScroll) && !loadRequestedRef.current) {
+			loadRequestedRef.current = true;
+			onLoadMore?.();
+		}
+	}, [
+		enableInfiniteScroll,
+		hasMore,
+		loadingMore,
+		virtualizer,
+		rows.length,
+		overscan,
+		scrollPosition,
+		onLoadMore,
+	]);
+
 	// Restore scroll position
 	React.useEffect(() => {
-		if (tableRef.current && enableScrollRestoration && !isInitialMount.current) {
-			tableRef.current.scrollTo(scrollPosition.left, scrollPosition.top);
+		const el = tableRef.current as unknown as {
+			scrollTo?: (x: number, y: number) => void;
+		} | null;
+		if (
+			el &&
+			typeof el.scrollTo === 'function' &&
+			enableScrollRestoration &&
+			!isInitialMount.current
+		) {
+			el.scrollTo(scrollPosition.left, scrollPosition.top);
 		}
 	}, [scrollPosition, enableScrollRestoration]);
+
+	// IntersectionObserver-based load more for jiggle-free infinite scroll
+	React.useEffect(() => {
+		if (
+			!enableInfiniteScroll ||
+			!hasMore ||
+			!sentinelRef.current ||
+			!tableRef.current ||
+			typeof IntersectionObserver === 'undefined'
+		) {
+			return;
+		}
+		const root = tableRef.current;
+		const sentinel = sentinelRef.current;
+		let pending = false;
+		let observer: IntersectionObserver | null = null;
+		try {
+			observer = new IntersectionObserver(
+				(entries) => {
+					const entry = entries[0];
+					if (entry.isIntersecting && !pending && !loadingMore) {
+						pending = true;
+						onLoadMore?.();
+						// Release the pending flag on next tick
+						setTimeout(() => {
+							pending = false;
+						}, 0);
+					}
+				},
+				{
+					root,
+					rootMargin: '300px 0px 600px 0px',
+					threshold: 0,
+				},
+			);
+			observer.observe(sentinel);
+		} catch {
+			// no-op: fail safe in environments without IO
+		}
+		return () => observer?.disconnect();
+	}, [enableInfiniteScroll, hasMore, loadingMore, onLoadMore]);
+
+	// Compute pinned offsets for sticky columns
+	const getPinnedOffset = React.useCallback(
+		(col: Column<TData, unknown>, side: 'left' | 'right'): number => {
+			const leafColumns = table.getAllLeafColumns();
+			if (side === 'left') {
+				let offset = 0;
+				for (const c of leafColumns) {
+					if (c.getIsPinned() === 'left') {
+						if (c.id === col.id) break;
+						offset += c.getSize();
+					}
+				}
+				return offset;
+			}
+			// right side: accumulate sizes of right-pinned columns after this column
+			let offset = 0;
+			for (let i = leafColumns.length - 1; i >= 0; i -= 1) {
+				const c = leafColumns[i];
+				if (c.getIsPinned() === 'right') {
+					if (c.id === col.id) break;
+					offset += c.getSize();
+				}
+			}
+			return offset;
+		},
+		[table],
+	);
 
 	return (
 		<div className="space-y-4">
@@ -822,22 +985,74 @@ export function DataTable<TData, TValue>({
 					</div>
 				</div>
 			)}
-			<div
-				ref={tableRef}
-				className="rounded-md border overflow-auto relative"
-				onScroll={handleScroll}
-				style={{
-					maxHeight: 'calc(100vh - 200px)',
-					scrollBehavior: 'smooth',
-				}}
-			>
+			<div className="rounded-md border relative">
 				<Table
-					style={{
-						tableLayout: enableVirtualization ? 'fixed' : 'auto',
+					style={{ tableLayout: 'fixed', width: '100%' }}
+					fixedHeight={fixedHeight}
+					containerRef={tableRef}
+					containerProps={{
+						onScroll: handleScroll as unknown as React.UIEventHandler<HTMLDivElement>,
+						role: 'region',
+						'aria-label': 'Table data',
+						tabIndex: 0,
+						onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+							// Keyboard navigation for scrolling
+							const scrollAmount = 50;
+							switch (e.key) {
+								case 'ArrowUp':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollTop -= scrollAmount;
+									}
+									break;
+								case 'ArrowDown':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollTop += scrollAmount;
+									}
+									break;
+								case 'ArrowLeft':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollLeft -= scrollAmount;
+									}
+									break;
+								case 'ArrowRight':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollLeft += scrollAmount;
+									}
+									break;
+								case 'PageUp':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollTop -= tableRef.current.clientHeight;
+									}
+									break;
+								case 'PageDown':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollTop += tableRef.current.clientHeight;
+									}
+									break;
+								case 'Home':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollTop = 0;
+									}
+									break;
+								case 'End':
+									e.preventDefault();
+									if (tableRef.current) {
+										tableRef.current.scrollTop = tableRef.current.scrollHeight;
+									}
+									break;
+							}
+						},
 					}}
 				>
 					{showHeaders && (
-						<TableHeader>
+						<TableHeader sticky={enableStickyHeaders}>
 							{table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
 								<TableRow key={headerGroup.id}>
 									{enableRowSelection && (
@@ -870,9 +1085,25 @@ export function DataTable<TData, TValue>({
 												key={header.id}
 												style={{
 													width: header.getSize(),
+													...(isPinned === 'left'
+														? {
+																left: getPinnedOffset(
+																	column as unknown as Column<TData, unknown>,
+																	'left',
+																),
+															}
+														: {}),
+													...(isPinned === 'right'
+														? {
+																right: getPinnedOffset(
+																	column as unknown as Column<TData, unknown>,
+																	'right',
+																),
+															}
+														: {}),
 												}}
 												className={cn(
-													'relative',
+													'relative group',
 													isDragging && 'opacity-50',
 													isDropTarget && 'border-l-2 border-primary',
 													isPinned === 'left' && 'sticky left-0 z-20 bg-background',
@@ -943,6 +1174,11 @@ export function DataTable<TData, TValue>({
 																)}
 															</button>
 														)}
+														{enableColumnResizing && (
+															<div className="ml-2 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity">
+																<div className="w-1 h-3 bg-current rounded-full" />
+															</div>
+														)}
 													</div>
 													{canFilter && isFilterVisible && (
 														<div className="relative">
@@ -997,8 +1233,9 @@ export function DataTable<TData, TValue>({
 																display: !header.column.getCanResize() ? 'none' : '',
 															},
 															className: cn(
-																'absolute top-0 right-0 h-full w-1 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted',
-																header.column.getIsResizing() && 'bg-primary',
+																'absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted hover:w-3 transition-all duration-200 group border-l border-border/50 hover:bg-muted/80',
+																header.column.getIsResizing() &&
+																	'bg-primary w-3 border-primary',
 															),
 														}}
 													/>
@@ -1026,6 +1263,7 @@ export function DataTable<TData, TValue>({
 							stopPropagationOnCellClick={stopPropagationOnCellClick}
 							expandOnRowClick={expandOnRowClick}
 							renderSubComponent={renderSubComponent}
+							sentinelRef={enableInfiniteScroll ? sentinelRef : undefined}
 						/>
 					) : (
 						// Regular table body
@@ -1150,6 +1388,22 @@ export function DataTable<TData, TValue>({
 																			minHeight: `${rowHeight}px`,
 																			padding: '0.75rem',
 																			verticalAlign: 'top',
+																			...(isPinned === 'left'
+																				? {
+																						left: getPinnedOffset(
+																							cell.column as Column<TData, unknown>,
+																							'left',
+																						),
+																					}
+																				: {}),
+																			...(isPinned === 'right'
+																				? {
+																						right: getPinnedOffset(
+																							cell.column as Column<TData, unknown>,
+																							'right',
+																						),
+																					}
+																				: {}),
 																		}}
 																		className={cn(
 																			isPinned === 'left' && 'sticky left-0 z-10 bg-background',
@@ -1267,6 +1521,22 @@ export function DataTable<TData, TValue>({
 																	minHeight: `${rowHeight}px`,
 																	padding: '0.75rem',
 																	verticalAlign: 'top',
+																	...(isPinned === 'left'
+																		? {
+																				left: getPinnedOffset(
+																					cell.column as Column<TData, unknown>,
+																					'left',
+																				),
+																			}
+																		: {}),
+																	...(isPinned === 'right'
+																		? {
+																				right: getPinnedOffset(
+																					cell.column as Column<TData, unknown>,
+																					'right',
+																				),
+																			}
+																		: {}),
 																}}
 																className={cn(
 																	isPinned === 'left' && 'sticky left-0 z-10 bg-background',

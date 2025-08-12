@@ -3,23 +3,69 @@ import * as React from 'react';
 
 import { cn } from './lib/utils';
 
-function Table({ className, ...props }: React.ComponentProps<'table'>) {
+type TableProps = React.ComponentProps<'table'> & {
+	fixedHeight?: string | number;
+	containerRef?: React.Ref<HTMLDivElement>;
+	containerProps?: React.HTMLAttributes<HTMLDivElement>;
+};
+
+function Table({
+	className,
+	fixedHeight,
+	containerRef,
+	containerProps,
+	...props
+}: TableProps) {
 	return (
-		<div data-slot="table-container" className="relative w-full overflow-x-auto">
+		<div
+			ref={containerRef}
+			data-slot="table-container"
+			className={cn(
+				'relative w-full overflow-x-auto',
+				fixedHeight &&
+					'overflow-y-auto table-scroll-container sticky-header-table-container',
+				containerProps?.className,
+			)}
+			style={
+				fixedHeight
+					? {
+							height:
+								typeof fixedHeight === 'number' ? `${fixedHeight}px` : fixedHeight,
+						}
+					: undefined
+			}
+			onScroll={containerProps?.onScroll}
+			role={containerProps?.role}
+			aria-label={containerProps?.['aria-label']}
+			tabIndex={containerProps?.tabIndex}
+			onKeyDown={containerProps?.onKeyDown}
+		>
 			<table
 				data-slot="table"
-				className={cn('w-full caption-bottom text-sm', className)}
+				className={cn(
+					'w-full caption-bottom text-sm',
+					fixedHeight && 'sticky-header-table',
+					className,
+				)}
 				{...props}
 			/>
 		</div>
 	);
 }
 
-function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
+function TableHeader({
+	className,
+	sticky,
+	...props
+}: React.ComponentProps<'thead'> & { sticky?: boolean }) {
 	return (
 		<thead
 			data-slot="table-header"
-			className={cn('[&_tr]:border-b', className)}
+			className={cn(
+				'[&_tr]:border-b z-10 bg-[#1f2937] text-white',
+				sticky && 'sticky-header',
+				className,
+			)}
 			{...props}
 		/>
 	);

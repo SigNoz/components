@@ -1,6 +1,6 @@
 {
 	"name": "@signozhq/table",
-	"version": "0.0.0",
+	"version": "0.3.0",
 	"license": "MIT",
 	"type": "module",
 	"exports": {
@@ -47,12 +47,43 @@
 		"clsx": "^2.1.1",
 		"lodash-es": "^4.17.21",
 		"lucide-react": "^0.445.0",
-		"react": "^18.2.0",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7"
 	},
 	"publishConfig": {
 		"access": "public"
 	},
-	"description": "Table component with granular control using tanstack"
+	"description": "Table component with granular control using tanstack",
+	"keywords": [
+		"react",
+		"table",
+		"data-table",
+		"tanstack",
+		"virtualization",
+		"typescript",
+		"ui",
+		"component"
+	],
+	"author": "SigNoz",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SigNoz/components.git",
+		"directory": "packages/table"
+	},
+	"bugs": {
+		"url": "https://github.com/SigNoz/components/issues"
+	},
+	"homepage": "https://github.com/SigNoz/components#readme",
+	"peerDependencies": {
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0"
+	},
+	"peerDependenciesMeta": {
+		"react": {
+			"optional": false
+		},
+		"react-dom": {
+			"optional": false
+		}
+	}
 }
