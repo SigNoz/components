@@ -59,6 +59,8 @@ interface DataTableProps<TData, TValue> {
 	data: TData[];
 	tableId: string;
 	initialColumnOrder?: string[];
+	// Callback when the column order changes. Returns the reordered columns array
+	onColumnOrderChange?: (orderedColumns: ColumnDef<TData, TValue>[]) => void;
 	enableColumnReordering?: boolean;
 	enableColumnResizing?: boolean;
 	enableSorting?: boolean;
@@ -386,6 +388,7 @@ export function DataTable<TData, TValue>({
 	data,
 	tableId,
 	initialColumnOrder,
+	onColumnOrderChange,
 	enableColumnResizing = true,
 	enableSorting = true,
 	enableFiltering = true,
@@ -488,6 +491,26 @@ export function DataTable<TData, TValue>({
 			);
 		},
 		[],
+	);
+
+	// Map of columnId -> ColumnDef for quick reordering lookups
+	const columnsById = React.useMemo(() => {
+		const map = new Map<string, ColumnDef<TData, TValue>>();
+		columns.forEach((col, idx) => {
+			const id = resolveColumnId(col, idx);
+			map.set(id, col);
+		});
+		return map;
+	}, [columns, resolveColumnId]);
+
+	const getOrderedColumns = React.useCallback(
+		(order: string[]): ColumnDef<TData, TValue>[] => {
+			return order.map((id) => columnsById.get(id)).filter(Boolean) as ColumnDef<
+				TData,
+				TValue
+			>[];
+		},
+		[columnsById],
 	);
 
 	// Initialise Column Order Array
@@ -698,6 +721,13 @@ export function DataTable<TData, TValue>({
 		onVirtualizerChange?.(virtualizer);
 	}, [virtualizer, virtualizerRef, onVirtualizerChange]);
 
+	// Emit column order changes (covers initialization, preference load, and DnD)
+	React.useEffect(() => {
+		if (onColumnOrderChange) {
+			onColumnOrderChange(getOrderedColumns(columnOrder));
+		}
+	}, [columnOrder, onColumnOrderChange, getOrderedColumns]);
+
 	const getSortIcon = (isSorted: false | 'asc' | 'desc') => {
 		if (!isSorted) return <ArrowUpDown className="h-4 w-4" />;
 		return isSorted === 'asc' ? (
@@ -744,6 +774,8 @@ export function DataTable<TData, TValue>({
 				newColumnOrder.splice(sourceIndex, 1);
 				newColumnOrder.splice(targetIndex, 0, sourceColumnId);
 				setColumnOrder(newColumnOrder);
+				// Notify listener with the reordered columns
+				onColumnOrderChange?.(getOrderedColumns(newColumnOrder));
 			}
 		}
 
