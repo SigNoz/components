@@ -19,8 +19,8 @@
 	--accent-foreground: var(--text-slate-400);
 	--destructive: var(--bg-cherry-500);
 	--destructive-foreground: var(--text-vanilla-100);
-	--border: var(--bg-slate-400);
-	--input: var(--bg-slate-400);
+	--border: var(--bg-vanilla-400);
+	--input: var(--bg-vanilla-400);
 	--ring: var(--bg-robin-500);
 	--chart-1: var(--bg-robin-500);
 	--chart-2: var(--bg-robin-600);
