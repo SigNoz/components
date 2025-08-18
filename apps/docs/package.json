@@ -13,6 +13,7 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
+		"@signozhq/calendar": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/calendar": "workspace:*",
