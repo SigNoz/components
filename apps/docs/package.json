@@ -13,9 +13,9 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
-		"@signozhq/calendar": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
+		"@signozhq/calendar": "workspace:*",
 		"@signozhq/callout": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
 		"@signozhq/design-tokens": "latest",
@@ -34,6 +34,7 @@
 		"@signozhq/tooltip": "workspace:*",
 		"lucide-react": "^0.445.0",
 		"react": "^18.2.0",
+		"react-day-picker": "^9.9.0",
 		"react-dom": "^18.2.0",
 		"react-use": "^17.6.0",
 		"react-virtualized-auto-sizer": "^1.0.26",
