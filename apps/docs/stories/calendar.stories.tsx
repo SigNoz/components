@@ -316,3 +316,157 @@ export const DisabledDates: Story = {
 		);
 	},
 };
+
+export const WithTimezone: Story = {
+	args: {
+		showOutsideDays: true,
+		captionLayout: 'label',
+		buttonVariant: 'ghost',
+	},
+	render: (args) => {
+		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [timezone, setTimezone] = React.useState('UTC');
+		const [time, setTime] = React.useState('12:00:00');
+
+		// Common timezones
+		const timezones = [
+			{ value: 'UTC', label: 'UTC' },
+			{ value: 'America/New_York', label: 'Eastern Time' },
+			{ value: 'America/Chicago', label: 'Central Time' },
+			{ value: 'America/Denver', label: 'Mountain Time' },
+			{ value: 'America/Los_Angeles', label: 'Pacific Time' },
+			{ value: 'Europe/London', label: 'London' },
+			{ value: 'Europe/Paris', label: 'Paris' },
+			{ value: 'Asia/Tokyo', label: 'Tokyo' },
+			{ value: 'Asia/Shanghai', label: 'Shanghai' },
+			{ value: 'Australia/Sydney', label: 'Sydney' },
+		];
+
+		// Format date and time in selected timezone
+		const formatDateTimeInTimezone = (
+			date: Date | undefined,
+			tz: string,
+			timeStr: string,
+		) => {
+			if (!date) return 'No date selected';
+
+			try {
+				// Create a date with the selected time
+				const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+				const dateWithTime = new Date(date);
+				dateWithTime.setHours(hours, minutes, seconds || 0);
+
+				// Format in the selected timezone
+				return new Intl.DateTimeFormat('en-US', {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric',
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit',
+					timeZone: tz,
+				}).format(dateWithTime);
+			} catch {
+				return `${date.toLocaleDateString()} at ${timeStr}`;
+			}
+		};
+
+		// Get current time in selected timezone
+		const getCurrentTimeInTimezone = (tz: string) => {
+			try {
+				return new Intl.DateTimeFormat('en-US', {
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit',
+					timeZone: tz,
+				}).format(new Date());
+			} catch {
+				return new Date().toLocaleTimeString();
+			}
+		};
+
+		return (
+			<div className="space-y-6">
+				<div className="space-y-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<h3 className="text-sm font-medium mb-2">Timezone Selection:</h3>
+							<select
+								value={timezone}
+								onChange={(e) => setTimezone(e.target.value)}
+								className="w-full px-3 py-2 border border-input rounded-md text-sm"
+							>
+								{timezones.map((tz) => (
+									<option key={tz.value} value={tz.value}>
+										{tz.label}
+									</option>
+								))}
+							</select>
+						</div>
+
+						<div>
+							<h3 className="text-sm font-medium mb-2">Time Selection:</h3>
+							<input
+								type="time"
+								value={time}
+								onChange={(e) => setTime(e.target.value)}
+								step="1"
+								className="w-full px-3 py-2 border border-input rounded-md text-sm"
+							/>
+						</div>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
+							<div className="space-y-2">
+								<p className="text-sm text-muted-foreground">
+									<strong>Local:</strong>{' '}
+									{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
+								</p>
+								<p className="text-sm text-muted-foreground">
+									<strong>{timezone}:</strong>{' '}
+									{formatDateTimeInTimezone(date, timezone, time)}
+								</p>
+							</div>
+						</div>
+
+						<div>
+							<h3 className="text-sm font-medium mb-2">Current Time:</h3>
+							<div className="space-y-2">
+								<p className="text-sm text-muted-foreground">
+									<strong>Local:</strong> {new Date().toLocaleTimeString()}
+								</p>
+								<p className="text-sm text-muted-foreground">
+									<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h3 className="text-sm font-medium mb-2">Calendar:</h3>
+					<Calendar
+						{...args}
+						mode="single"
+						selected={date}
+						onSelect={setDate}
+						className="rounded-md border shadow-sm"
+					/>
+				</div>
+
+				<div className="p-4 bg-muted rounded-md">
+					<h4 className="text-sm font-medium mb-2">Date & Time with Timezone:</h4>
+					<p className="text-xs text-muted-foreground">
+						This example demonstrates how to handle dates and times with different
+						timezones. The selected date and time are displayed in both local time and
+						the chosen timezone. This shows how you can combine calendar selection
+						with time input and timezone conversion for comprehensive datetime
+						handling in your applications.
+					</p>
+				</div>
+			</div>
+		);
+	},
+};

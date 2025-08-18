@@ -13,7 +13,9 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
+		"@signozhq/popover": "workspace:*",
 		"@signozhq/calendar": "workspace:*",
+		"@signozhq/date-picker": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
 		"@signozhq/calendar": "workspace:*",
