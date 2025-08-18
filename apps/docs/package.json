@@ -18,7 +18,6 @@
 		"@signozhq/date-picker": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
-		"@signozhq/calendar": "workspace:*",
 		"@signozhq/callout": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
 		"@signozhq/design-tokens": "latest",

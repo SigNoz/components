@@ -266,7 +266,7 @@ export const CustomButtonVariant: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'outline',
+		buttonVariant: 'outlined',
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
