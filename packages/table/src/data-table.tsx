@@ -1206,11 +1206,6 @@ export function DataTable<TData, TValue>({
 																)}
 															</button>
 														)}
-														{enableColumnResizing && (
-															<div className="ml-2 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity">
-																<div className="w-1 h-3 bg-current rounded-full" />
-															</div>
-														)}
 													</div>
 													{canFilter && isFilterVisible && (
 														<div className="relative">
