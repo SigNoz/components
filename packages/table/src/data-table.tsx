@@ -1017,7 +1017,7 @@ export function DataTable<TData, TValue>({
 					</div>
 				</div>
 			)}
-			<div className="rounded-md border relative">
+			<div className="rounded-md border relative data-table-container">
 				<Table
 					style={{ tableLayout: 'fixed', width: '100%' }}
 					fixedHeight={fixedHeight}
