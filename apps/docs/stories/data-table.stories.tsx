@@ -1340,6 +1340,7 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 					<DataTable
 						{...args}
 						data={data}
+						tableId="infinite-scroll-table"
 						enableInfiniteScroll={true}
 						hasMore={hasMore}
 						onLoadMore={loadMore}
