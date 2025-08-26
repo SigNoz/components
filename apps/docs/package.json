@@ -27,6 +27,7 @@
 		"@signozhq/input": "workspace:*",
 		"@signozhq/pagination": "workspace:*",
 		"@signozhq/radio-group": "workspace:*",
+		"@signozhq/sonner": "workspace:*",
 		"@signozhq/switch": "workspace:*",
 		"@signozhq/table": "workspace:*",
 		"@signozhq/tabs": "workspace:*",
