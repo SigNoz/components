@@ -184,10 +184,21 @@ function VirtualizedTableBody<TData>({
 	const leafColumns = table.getAllLeafColumns();
 
 	const virtualItems = virtualizer.getVirtualItems();
-	const paddingTop = virtualItems.length > 0 ? virtualItems[0].start : 0;
-	const paddingBottom =
+
+	// Add safety checks to prevent extreme padding values during fast scrolling
+	const safePaddingTop =
 		virtualItems.length > 0
-			? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end
+			? Math.max(0, Math.min(virtualItems[0].start, 100))
+			: 0;
+	const safePaddingBottom =
+		virtualItems.length > 0
+			? Math.max(
+					0,
+					Math.min(
+						virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end,
+						100,
+					),
+				)
 			: 0;
 
 	const spacerColSpan =
@@ -197,9 +208,12 @@ function VirtualizedTableBody<TData>({
 
 	return (
 		<TableBody>
-			{paddingTop > 0 && (
+			{safePaddingTop > 0 && (
 				<TableRow>
-					<TableCell colSpan={spacerColSpan} style={{ height: `${paddingTop}px` }} />
+					<TableCell
+						colSpan={spacerColSpan}
+						style={{ height: `${safePaddingTop}px` }}
+					/>
 				</TableRow>
 			)}
 			{virtualItems.map((virtualRow) => {
@@ -350,11 +364,11 @@ function VirtualizedTableBody<TData>({
 					</React.Fragment>
 				);
 			})}
-			{paddingBottom > 0 && (
+			{safePaddingBottom > 0 && (
 				<TableRow>
 					<TableCell
 						colSpan={spacerColSpan}
-						style={{ height: `${paddingBottom}px` }}
+						style={{ height: `${safePaddingBottom}px` }}
 					/>
 				</TableRow>
 			)}
@@ -719,7 +733,13 @@ export function DataTable<TData, TValue>({
 			enableDynamicRowHeights &&
 			typeof window !== 'undefined' &&
 			navigator.userAgent.indexOf('Firefox') === -1
-				? (element) => element?.getBoundingClientRect().height
+				? (element) => {
+						// Add safety check for measurement to prevent extreme values
+						const height = element?.getBoundingClientRect().height;
+						return height && height > 0 && height < 100
+							? height
+							: estimateRowSize || rowHeight;
+					}
 				: undefined,
 	});
 
@@ -730,6 +750,25 @@ export function DataTable<TData, TValue>({
 		}
 		onVirtualizerChange?.(virtualizer);
 	}, [virtualizer, virtualizerRef, onVirtualizerChange]);
+
+	// Add virtualizer reset mechanism for extreme values
+	React.useEffect(() => {
+		if (!enableVirtualization || !virtualizer) return;
+
+		const virtualItems = virtualizer.getVirtualItems();
+		const totalSize = virtualizer.getTotalSize();
+
+		// Check for extreme values that indicate virtualizer corruption
+		const hasExtremeValues =
+			virtualItems.some(
+				(item) => item.start > 100 || item.end > 100 || item.size > 100,
+			) || totalSize > 50000;
+
+		if (hasExtremeValues) {
+			console.warn('Virtualizer detected extreme values, resetting...');
+			virtualizer.measure();
+		}
+	}, [virtualizer, enableVirtualization]);
 
 	// Set up scroll to index functionality
 	const scrollToIndex = React.useCallback(
