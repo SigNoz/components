@@ -14,6 +14,9 @@ export {
 export { DataTable, SelectionMode } from './data-table';
 export type { SelectionModeType } from './data-table';
 
+// Export DataTable props type for external use
+export type { DataTableProps } from './data-table';
+
 // Re-export commonly used TanStack Table types
 export type {
 	ColumnDef,
