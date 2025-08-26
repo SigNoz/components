@@ -1,5 +1,16 @@
 # @signozhq/table
 
+## 0.4.0
+
+### Minor Changes
+
+- feat: Add scroll to index functionality for DataTable component
+  - Add `scrollToIndexRef` prop to expose scroll to row functionality
+  - Support both virtualized and non-virtualized tables
+  - Allow custom alignment options (start, center, end)
+  - Update documentation with usage examples
+  - Add interactive examples in example.tsx
+
 ## 0.3.0
 
 ### Minor Changes

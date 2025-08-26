@@ -2000,6 +2000,164 @@ This example demonstrates the sticky headers feature with an employee directory.
 	},
 };
 
+// Story: Scroll to Index Functionality
+export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
+	args: {
+		columns: enhancedColumns,
+		data: generateLargeDataset(200), // Generate more data for better scrolling demo
+		tableId: 'scroll-to-index-table',
+		enableVirtualization: true,
+		enableStickyHeaders: true,
+		fixedHeight: 500,
+		enableSorting: true,
+		enableFiltering: true,
+		enableColumnResizing: true,
+		enableRowSelection: true,
+		estimateRowSize: 60,
+		overscan: 5,
+	},
+	render: (args) => {
+		const ScrollToIndexDemo = () => {
+			const scrollToIndexRef = React.useRef<
+				| ((
+						rowIndex: number,
+						options?: { align?: 'start' | 'center' | 'end' },
+				  ) => void)
+				| undefined
+			>();
+
+			const handleScrollToUser = (userId: string) => {
+				const userIndex = args.data.findIndex((user) => user.id === userId);
+				console.log(
+					`[Virtualized] Looking for user ID: ${userId}, found at index: ${userIndex}`,
+				);
+				console.log(
+					'[Virtualized] Available users:',
+					args.data.slice(0, 5).map((u) => ({ id: u.id, name: u.name })),
+				);
+				if (userIndex !== -1 && scrollToIndexRef.current) {
+					console.log(`[Virtualized] Scrolling to index: ${userIndex}`);
+					scrollToIndexRef.current(userIndex, { align: 'center' });
+				} else {
+					console.log(
+						`[Virtualized] User with ID ${userId} not found or scrollToIndexRef not available`,
+					);
+				}
+			};
+
+			const handleScrollToRandom = () => {
+				if (scrollToIndexRef.current) {
+					const randomIndex = Math.floor(Math.random() * args.data.length);
+					scrollToIndexRef.current(randomIndex, { align: 'center' });
+				}
+			};
+
+			return (
+				<div className="space-y-4">
+					<div className="flex flex-wrap gap-2">
+						<Button
+							onClick={() => handleScrollToUser('1')}
+							variant="outlined"
+							size="sm"
+						>
+							Scroll to User 1
+						</Button>
+						<Button
+							onClick={() => handleScrollToUser('50')}
+							variant="outlined"
+							size="sm"
+						>
+							Scroll to User 50
+						</Button>
+						<Button
+							onClick={() => handleScrollToUser('100')}
+							variant="outlined"
+							size="sm"
+						>
+							Scroll to User 100
+						</Button>
+						<Button
+							onClick={() => handleScrollToUser('150')}
+							variant="outlined"
+							size="sm"
+						>
+							Scroll to User 150
+						</Button>
+						<Button
+							onClick={() => handleScrollToUser('200')}
+							variant="outlined"
+							size="sm"
+						>
+							Scroll to Last User
+						</Button>
+						<Button onClick={handleScrollToRandom} variant="outlined" size="sm">
+							Scroll to Random User
+						</Button>
+					</div>
+					<DataTable {...args} scrollToIndexRef={scrollToIndexRef} />
+				</div>
+			);
+		};
+
+		return <ScrollToIndexDemo />;
+	},
+	parameters: {
+		docs: {
+			description: {
+				story: `
+## Scroll to Index Functionality
+
+This example demonstrates the new scroll to index functionality that allows you to programmatically scroll to specific rows in the table.
+
+### Key Features:
+- **Programmatic Scrolling**: Scroll to any row by its index
+- **Alignment Options**: Choose how the row is positioned in the viewport
+- **Virtualization Support**: Works seamlessly with virtualized tables
+- **Interactive Controls**: Buttons to test different scroll scenarios
+
+### Scroll Options:
+- **\`align: 'start'\`**: Align row to the top of the viewport
+- **\`align: 'center'\`**: Align row to the center of the viewport (default)
+- **\`align: 'end'\`**: Align row to the bottom of the viewport
+
+### Usage:
+\`\`\`tsx
+import { useRef } from 'react';
+
+function MyTable({ users }) {
+  const scrollToIndexRef = useRef<((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined>();
+
+  const scrollToUser = (userId: string) => {
+    const userIndex = users.findIndex(user => user.id === userId);
+    if (userIndex !== -1 && scrollToIndexRef.current) {
+      scrollToIndexRef.current(userIndex, { align: 'center' });
+    }
+  };
+
+  return (
+    <DataTable
+      columns={columns}
+      data={users}
+      tableId="my-table"
+      fixedHeight={500}
+      enableVirtualization={true}
+      scrollToIndexRef={scrollToIndexRef}
+    />
+  );
+}
+\`\`\`
+
+### Benefits:
+- **User Experience**: Allow users to quickly navigate to specific data
+- **Search Integration**: Perfect for highlighting search results
+- **Navigation**: Build custom navigation controls
+- **Performance**: Efficient scrolling even with large datasets
+				`,
+			},
+		},
+	},
+};
+
 export const IndividualColumnWidths: StoryObj<typeof DataTable<User>> = {
 	args: {
 		columns: enhancedColumns, // Uses columns with individual size/minSize/maxSize

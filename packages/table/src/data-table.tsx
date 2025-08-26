@@ -54,7 +54,7 @@ import {
 	TableRow,
 } from './table';
 
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	tableId: string;
@@ -121,6 +121,14 @@ interface DataTableProps<TData, TValue> {
 	) => void;
 	virtualizerRef?: React.MutableRefObject<
 		Virtualizer<HTMLDivElement, Element> | undefined
+	>;
+	// Scroll to index functionality
+	scrollToIndexRef?: React.MutableRefObject<
+		| ((
+				rowIndex: number,
+				options?: { align?: 'start' | 'center' | 'end' },
+		  ) => void)
+		| undefined
 	>;
 	// Header visibility prop
 	showHeaders?: boolean;
@@ -437,6 +445,8 @@ export function DataTable<TData, TValue>({
 	overscan = 5,
 	onVirtualizerChange,
 	virtualizerRef,
+	// Scroll to index functionality
+	scrollToIndexRef,
 	// Header visibility prop
 	showHeaders = true,
 	// Sticky headers prop
@@ -720,6 +730,29 @@ export function DataTable<TData, TValue>({
 		}
 		onVirtualizerChange?.(virtualizer);
 	}, [virtualizer, virtualizerRef, onVirtualizerChange]);
+
+	// Set up scroll to index functionality
+	const scrollToIndex = React.useCallback(
+		(rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => {
+			if (enableVirtualization && virtualizer) {
+				// Use virtualizer's scrollToIndex method
+				virtualizer.scrollToIndex(rowIndex, options);
+			} else if (tableRef.current) {
+				// For non-virtualized tables, calculate position and scroll manually
+				const rowHeight = estimateRowSize || 40;
+				const scrollTop = rowIndex * rowHeight;
+				tableRef.current.scrollTop = scrollTop;
+			}
+		},
+		[enableVirtualization, virtualizer, estimateRowSize],
+	);
+
+	// Expose scroll to index function through ref
+	React.useEffect(() => {
+		if (scrollToIndexRef) {
+			scrollToIndexRef.current = scrollToIndex;
+		}
+	}, [scrollToIndex, scrollToIndexRef]);
 
 	// Emit column order changes (covers initialization, preference load, and DnD)
 	React.useEffect(() => {
