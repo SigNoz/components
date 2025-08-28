@@ -488,6 +488,25 @@ export function DataTable<TData, TValue>({
 		pageSize: pageSize,
 	});
 
+	// Helper to check if column reordering is disabled
+	const isReorderDisabled = (columnDef: ColumnDef<TData, TValue>) => {
+		return (columnDef as { disableReorder?: boolean }).disableReorder === true;
+	};
+
+	// Helper to check if dropping before a column is disabled
+	const isDropBeforeDisabled = (columnDef: ColumnDef<TData, TValue>) => {
+		return (
+			(columnDef as { disableDropBefore?: boolean }).disableDropBefore === true
+		);
+	};
+
+	// Helper to check if dropping after a column is disabled
+	const isDropAfterDisabled = (columnDef: ColumnDef<TData, TValue>) => {
+		return (
+			(columnDef as { disableDropAfter?: boolean }).disableDropAfter === true
+		);
+	};
+
 	// Helper to resolve column id consistently
 	const resolveColumnId = React.useCallback(
 		(column: ColumnDef<TData, TValue>, index: number): string => {
@@ -778,7 +797,34 @@ export function DataTable<TData, TValue>({
 	const handleDragOver = (columnId: string) => (e: React.DragEvent) => {
 		e.preventDefault();
 		if (columnId !== draggedColumn) {
-			setDropTarget(columnId);
+			// Check if dropping is allowed on this column
+			const targetColumn = table.getColumn(columnId);
+			if (targetColumn) {
+				const targetColumnDef = targetColumn.columnDef;
+				const sourceColumnId = e.dataTransfer.getData('text/plain');
+
+				// If we have a source column, check if dropping is allowed
+				if (sourceColumnId) {
+					const sourceColumn = table.getColumn(sourceColumnId);
+					if (sourceColumn) {
+						const sourceIndex = columnOrder.indexOf(sourceColumnId);
+						const targetIndex = columnOrder.indexOf(columnId);
+
+						// Check if dropping before is disabled
+						if (isDropBeforeDisabled(targetColumnDef) && sourceIndex > targetIndex) {
+							return; // Don't allow dropping before
+						}
+
+						// Check if dropping after is disabled
+						// This prevents dropping at the position immediately after the target column
+						if (isDropAfterDisabled(targetColumnDef) && sourceIndex < targetIndex) {
+							return; // Don't allow dropping after
+						}
+					}
+				}
+
+				setDropTarget(columnId);
+			}
 		}
 	};
 
@@ -792,11 +838,30 @@ export function DataTable<TData, TValue>({
 		const sourceColumnId = e.dataTransfer.getData('text/plain');
 
 		if (sourceColumnId && columnId !== sourceColumnId) {
-			const newColumnOrder = [...columnOrder];
-			const sourceIndex = newColumnOrder.indexOf(sourceColumnId);
-			const targetIndex = newColumnOrder.indexOf(columnId);
+			// Check if dropping is allowed on this column
+			const targetColumn = table.getColumn(columnId);
+			if (targetColumn) {
+				const targetColumnDef = targetColumn.columnDef;
+				const sourceIndex = columnOrder.indexOf(sourceColumnId);
+				const targetIndex = columnOrder.indexOf(columnId);
 
-			if (sourceIndex !== -1 && targetIndex !== -1) {
+				// Check if dropping before is disabled
+				if (isDropBeforeDisabled(targetColumnDef) && sourceIndex > targetIndex) {
+					setDraggedColumn(null);
+					setDropTarget(null);
+					return; // Don't allow dropping before
+				}
+
+				// Check if dropping after is disabled
+				// This prevents dropping at the position immediately after the target column
+				if (isDropAfterDisabled(targetColumnDef) && sourceIndex < targetIndex) {
+					setDraggedColumn(null);
+					setDropTarget(null);
+					return; // Don't allow dropping after
+				}
+
+				// Proceed with the drop
+				const newColumnOrder = [...columnOrder];
 				newColumnOrder.splice(sourceIndex, 1);
 				newColumnOrder.splice(targetIndex, 0, sourceColumnId);
 				setColumnOrder(newColumnOrder);
@@ -1169,9 +1234,16 @@ export function DataTable<TData, TValue>({
 														isPinned === 'left' && 'sticky left-0 z-20 bg-background',
 														isPinned === 'right' && 'sticky right-0 z-20 bg-background',
 													)}
-													draggable={enableColumnReordering && !isResizing}
+													draggable={
+														enableColumnReordering &&
+														!isResizing &&
+														!isReorderDisabled(header.column.columnDef)
+													}
 													onDragStart={
-														enableColumnReordering ? handleDragStart(header.id) : undefined
+														enableColumnReordering &&
+														!isReorderDisabled(header.column.columnDef)
+															? handleDragStart(header.id)
+															: undefined
 													}
 													onDragOver={
 														enableColumnReordering && !isResizing
@@ -1187,9 +1259,11 @@ export function DataTable<TData, TValue>({
 												>
 													<div className="flex flex-col gap-2">
 														<div className="flex items-center gap-2 min-w-0">
-															{enableColumnReordering && !isPinned && (
-																<GripVertical className="h-4 w-4 cursor-grab text-muted-foreground flex-shrink-0" />
-															)}
+															{enableColumnReordering &&
+																!isPinned &&
+																!isReorderDisabled(header.column.columnDef) && (
+																	<GripVertical className="h-4 w-4 cursor-grab text-muted-foreground flex-shrink-0" />
+																)}
 															<div className="flex-1 min-w-0">
 																{header.isPlaceholder ? null : (
 																	<Tooltip

@@ -80,11 +80,83 @@ function MyTable() {
 3. **Preference persistence**: Saves user's column order preferences automatically
 4. **Simple usage**: No need to manage column order state unless you want to track changes
 5. **Smart header layout**: Action buttons are always visible, text shows ellipsis with tooltip when overflowing
+6. **Selective reordering**: Disable reordering for specific columns using `disableReorder: true`
+7. **Drop control**: Control where columns can be dropped using `disableDropBefore` and `disableDropAfter`
 
 ### Props
 
 - `onColumnOrderChange?: (orderedColumns: ColumnDef<TData, TValue>[]) => void` - Callback called only on manual reorder
 - `enableColumnReordering?: boolean` - Enable/disable column reordering (default: true)
+
+### Selective Column Reordering
+
+You can disable reordering for specific columns by adding `disableReorder: true` to the column definition:
+
+```tsx
+const columns = [
+	{
+		accessorKey: 'name',
+		header: 'Name',
+		disableReorder: true, // This column cannot be reordered
+	},
+	{
+		accessorKey: 'email',
+		header: 'Email', // This column can be reordered
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		disableReorder: true, // This column cannot be reordered
+	},
+];
+```
+
+When `disableReorder: true` is set on a column:
+
+- The drag handle (grip icon) will not be shown
+- The column cannot be dragged to reorder
+- The column will remain in its original position
+
+### Drop Control
+
+You can control where columns can be dropped by using `disableDropBefore` and `disableDropAfter` properties:
+
+```tsx
+const columns = [
+	{
+		accessorKey: 'name',
+		header: 'Name',
+		disableReorder: true, // This column cannot be reordered
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		disableDropBefore: true, // No columns can be dropped before this
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		disableDropAfter: true, // No columns can be dropped after this
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status', // This column can be reordered and dropped anywhere
+	},
+];
+```
+
+**Drop Control Properties:**
+
+- `disableDropBefore: true` - Prevents other columns from being dropped before this column
+- `disableDropAfter: true` - Prevents other columns from being dropped after this column
+- Both properties can be used together for maximum control
+
+**Use Cases:**
+
+- **Fixed position columns**: Use `disableReorder: true` for columns that should never move
+- **Boundary columns**: Use `disableDropBefore` for the first column in a logical group
+- **End markers**: Use `disableDropAfter` for the last column in a logical group
+- **Protected zones**: Combine properties to create protected column ranges
 
 ### Behavior Summary
 

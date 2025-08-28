@@ -5,6 +5,7 @@ import {
 	type ColumnDef,
 	type Row,
 } from '@signozhq/table';
+
 import { Badge } from '@signozhq/badge';
 import { Button } from '@signozhq/button';
 import {
@@ -465,6 +466,177 @@ const simpleColumns: ColumnDef<User>[] = [
 	},
 ];
 
+// Columns with some disabled reordering for demonstration
+const columnsWithDisabledReorder = [
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		size: 200,
+		disableReorder: true, // This column cannot be reordered
+		cell: ({ row }: { row: Row<User> }) => (
+			<div className="flex items-center gap-2">
+				<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<span className="font-medium">{row.original.name}</span>
+			</div>
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; className: string }> = {
+				admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+				user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+				moderator: {
+					label: 'Moderator',
+					className: 'bg-orange-100 text-orange-800',
+				},
+				guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+			};
+			const roleInfo = roleMap[role];
+			return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+		},
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		size: 150,
+		disableReorder: true, // This column cannot be reordered
+		cell: ({ row }: { row: Row<User> }) => (
+			<span className="font-medium text-sm">{row.original.department}</span>
+		),
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		size: 140,
+		cell: ({ row }: { row: Row<User> }) => {
+			const status = row.original.status;
+			const statusMap: Record<
+				User['status'],
+				{ icon: LucideIcon; className: string }
+			> = {
+				active: { icon: CheckCircle, className: 'text-green-600' },
+				inactive: { icon: XCircle, className: 'text-red-600' },
+				pending: { icon: Clock, className: 'text-yellow-600' },
+				suspended: { icon: AlertCircle, className: 'text-gray-600' },
+			};
+			const statusInfo = statusMap[status];
+			const Icon = statusInfo.icon;
+			return <Icon className={`h-4 w-4 ${statusInfo.className}`} />;
+		},
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(salary);
+			return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+		},
+	},
+];
+
+// Columns with drop control features for demonstration
+const columnsWithDropControl = [
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		size: 200,
+		disableReorder: true, // This column cannot be reordered
+		disableDropBefore: true, // No columns can be dropped before this
+		cell: ({ row }: { row: Row<User> }) => (
+			<div className="flex items-center gap-2">
+				<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<span className="font-medium">{row.original.name}</span>
+			</div>
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		size: 120,
+		disableDropBefore: true, // No columns can be dropped before this
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; className: string }> = {
+				admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+				user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+				moderator: {
+					label: 'Moderator',
+					className: 'bg-orange-100 text-orange-800',
+				},
+				guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+			};
+			const roleInfo = roleMap[role];
+			return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+		},
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		size: 150,
+		disableDropAfter: true, // No columns can be dropped after this
+		cell: ({ row }: { row: Row<User> }) => (
+			<span className="font-medium text-sm">{row.original.department}</span>
+		),
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		size: 140,
+		disableDropAfter: true, // No columns can be dropped after this
+		cell: ({ row }: { row: Row<User> }) => {
+			const status = row.original.status;
+			const statusMap: Record<
+				User['status'],
+				{ icon: LucideIcon; className: string }
+			> = {
+				active: { icon: CheckCircle, className: 'text-green-600' },
+				inactive: { icon: XCircle, className: 'text-red-600' },
+				pending: { icon: Clock, className: 'text-yellow-600' },
+				suspended: { icon: AlertCircle, className: 'text-gray-600' },
+			};
+			const statusInfo = statusMap[status];
+			const Icon = statusInfo.icon;
+			return <Icon className={`h-4 w-4 ${statusInfo.className}`} />;
+		},
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(salary);
+			return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+		},
+	},
+];
+
 // Story: Basic DataTable with essential features
 export const Basic: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
@@ -679,6 +851,77 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 		enableRowSelection: false,
 		enablePagination: true,
 		pageSize: 10,
+		showHeaders: true,
+	},
+};
+
+// Story: Selective Column Reordering
+export const SelectiveColumnReordering: StoryObj<typeof DataTable<User>> = {
+	render: (args) => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Selective Column Reordering
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					This table demonstrates the disableReorder feature. The &quot;Employee
+					Name&quot; and &quot;Department&quot; columns cannot be reordered (no drag
+					handle), while &quot;Role&quot;, &quot;Status&quot;, and &quot;Salary&quot;
+					columns can be reordered.
+				</p>
+				<DataTable {...args} />
+			</div>
+		</div>
+	),
+	args: {
+		columns: columnsWithDisabledReorder,
+		data: users,
+		tableId: 'selective-reorder-demo-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableGlobalFilter: false,
+		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: false,
+		enableRowSelection: false,
+		enablePagination: true,
+		pageSize: 5,
+		showHeaders: true,
+	},
+};
+
+// Story: Drop Control Demo
+export const DropControl: StoryObj<typeof DataTable<User>> = {
+	render: (args) => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Drop Control Demo
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					This table demonstrates the drop control features. The &quot;Employee
+					Name&quot; column cannot be reordered at all. The &quot;Role&quot; column
+					prevents other columns from being dropped before it. The
+					&quot;Department&quot; column prevents other columns from being dropped
+					after it.
+				</p>
+				<DataTable {...args} />
+			</div>
+		</div>
+	),
+	args: {
+		columns: columnsWithDropControl,
+		data: users,
+		tableId: 'drop-control-demo-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableGlobalFilter: false,
+		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: false,
+		enableRowSelection: false,
+		enablePagination: true,
+		pageSize: 5,
 		showHeaders: true,
 	},
 };
