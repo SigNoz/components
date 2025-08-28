@@ -1,351 +1,94 @@
-# Table Component
+# DataTable Component
 
-A comprehensive table component library with advanced features including height management, overflow handling, and sticky headers.
+A feature-rich React table component built on top of TanStack Table with support for column reordering, resizing, sorting, filtering, and more.
 
-## Features
+## Column Ordering
 
-- **Fixed Height Support**: Set a specific height for table containers
-- **Overflow Handling**: Automatic scrolling when content exceeds the container height
-- **Sticky Headers**: Headers remain visible while scrolling through data
-- **Virtualization Support**: Efficient rendering of large datasets with fixed height
-- **Responsive Design**: Works well on different screen sizes
-- **TypeScript Support**: Full type safety for all components
-- **Accessibility**: Semantic HTML structure and keyboard navigation
+The DataTable component uses the order of columns as defined in the `columns` array by default. The `onColumnOrderChange` callback is only called when the user manually reorders columns through drag and drop.
 
-## Basic Usage
+### Default Behavior
 
-### Simple Table
+The component automatically uses the column order from the `columns` array:
 
 ```tsx
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@signozhq/table';
+import { DataTable } from '@your-org/table';
 
 function MyTable() {
-	return (
-		<Table>
-			<TableHeader>
-				<TableRow>
-					<TableHead>Name</TableHead>
-					<TableHead>Email</TableHead>
-					<TableHead>Role</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				<TableRow>
-					<TableCell>John Doe</TableCell>
-					<TableCell>john@example.com</TableCell>
-					<TableCell>Developer</TableCell>
-				</TableRow>
-			</TableBody>
-		</Table>
-	);
-}
-```
-
-### Table with Fixed Height and Overflow
-
-```tsx
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@signozhq/table';
-
-function MyTableWithHeight() {
-	return (
-		<Table fixedHeight={400}>
-			<TableHeader sticky>
-				<TableRow>
-					<TableHead>Name</TableHead>
-					<TableHead>Email</TableHead>
-					<TableHead>Role</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{/* Your table rows - will scroll if they exceed 400px height */}
-			</TableBody>
-		</Table>
-	);
-}
-```
-
-## Props
-
-### Table Component
-
-| Prop          | Type                            | Default     | Description                                                                                                |
-| ------------- | ------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------- |
-| `fixedHeight` | `string \| number`              | `undefined` | Sets a fixed height for the table container. When provided, enables overflow scrolling and sticky headers. |
-| `className`   | `string`                        | `undefined` | Additional CSS classes for the table element                                                               |
-| `...props`    | `React.ComponentProps<'table'>` | -           | All standard HTML table props                                                                              |
-
-### TableHeader Component
-
-| Prop        | Type                            | Default     | Description                                                                           |
-| ----------- | ------------------------------- | ----------- | ------------------------------------------------------------------------------------- |
-| `sticky`    | `boolean`                       | `false`     | When true, keeps the header visible while scrolling (requires `fixedHeight` on Table) |
-| `className` | `string`                        | `undefined` | Additional CSS classes for the header element                                         |
-| `...props`  | `React.ComponentProps<'thead'>` | -           | All standard HTML thead props                                                         |
-
-## Height and Overflow Features
-
-### Fixed Height
-
-The `fixedHeight` prop allows you to set a specific height for your table container:
-
-```tsx
-// Using a number (pixels)
-<Table fixedHeight={400}>
-
-// Using a string (any valid CSS height)
-<Table fixedHeight="50vh">
-<Table fixedHeight="300px">
-<Table fixedHeight="calc(100vh - 200px)">
-```
-
-### Overflow Handling
-
-When `fixedHeight` is provided, the table automatically:
-
-1. **Wraps the table in a scrollable container**
-2. **Enables vertical scrolling** when content exceeds the height
-3. **Maintains horizontal scrolling** for wide tables
-4. **Preserves table layout** during scroll
-
-### Sticky Headers
-
-Enable sticky headers by setting `sticky={true}` on the `TableHeader` component:
-
-```tsx
-<Table fixedHeight={400}>
-	<TableHeader sticky>
-		<TableRow>
-			<TableHead>Name</TableHead>
-			<TableHead>Email</TableHead>
-		</TableRow>
-	</TableHeader>
-	<TableBody>{/* Headers will remain visible while scrolling */}</TableBody>
-</Table>
-```
-
-## Virtualization with Fixed Height
-
-The `fixedHeight` functionality works seamlessly with virtualization in the DataTable component. When both `fixedHeight` and `enableVirtualization` are enabled:
-
-### How It Works
-
-1. **Container Setup**: The `fixedHeight` creates a scrollable container with the specified height
-2. **Virtualization Integration**: The virtualizer uses this container as its scroll element
-3. **Performance**: Only visible rows are rendered, maintaining smooth scrolling even with thousands of rows
-4. **Sticky Headers**: Headers remain visible while scrolling through virtualized content
-
-### Example with Virtualization
-
-```tsx
-import { DataTable } from '@signozhq/table';
-
-function VirtualizedTableWithHeight({ users }) {
 	const columns = [
 		{ accessorKey: 'name', header: 'Name' },
 		{ accessorKey: 'email', header: 'Email' },
 		{ accessorKey: 'role', header: 'Role' },
 	];
 
+	const data = [
+		{ name: 'John Doe', email: 'john@example.com', role: 'Admin' },
+		{ name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
+	];
+
 	return (
 		<DataTable
 			columns={columns}
-			data={users}
-			tableId="virtualized-table"
-			fixedHeight={400}
-			enableStickyHeaders={true}
-			enableVirtualization={true}
-			estimateRowSize={50}
-			overscan={5}
-			rowHeight={50}
-			enableSorting={true}
-			enableFiltering={true}
+			data={data}
+			tableId="my-table"
+			enableColumnReordering={true}
 		/>
 	);
 }
 ```
 
-### Virtualization Props
+### With Column Order Change Callback
 
-| Prop                      | Type      | Default | Description                                                             |
-| ------------------------- | --------- | ------- | ----------------------------------------------------------------------- |
-| `enableVirtualization`    | `boolean` | `false` | Enables virtual scrolling for large datasets                            |
-| `estimateRowSize`         | `number`  | `40`    | Estimated height of each row for virtualization calculations            |
-| `overscan`                | `number`  | `5`     | Number of items to render outside the visible area for smooth scrolling |
-| `rowHeight`               | `number`  | `40`    | Fixed height of each row (used when `enableDynamicRowHeights` is false) |
-| `enableDynamicRowHeights` | `boolean` | `false` | Allows rows to have different heights (experimental)                    |
-
-### Benefits of Virtualization + Fixed Height
-
-- **Memory Efficiency**: Only renders visible rows, even with 100,000+ items
-- **Smooth Scrolling**: Consistent performance regardless of dataset size
-- **Fixed Layout**: Predictable table height for consistent UI layout
-- **Sticky Headers**: Headers remain accessible during virtual scrolling
-- **All Features**: Sorting, filtering, and other features work seamlessly
-
-## CSS Classes
-
-The component applies several CSS classes for styling:
-
-### Container Classes
-
-- `.table-scroll-container`: Applied to the scrollable container when `fixedHeight` is set
-- `.sticky-header-table-container`: Container with sticky header support
-
-### Table Classes
-
-- `.sticky-header-table`: Applied to the table element when `fixedHeight` is set
-- `.sticky-header`: Applied to sticky headers
-
-## Examples
-
-### Basic Table with Height
+If you want to be notified when the user manually reorders columns:
 
 ```tsx
-function UserTable({ users }) {
-	return (
-		<Table fixedHeight={300}>
-			<TableHeader sticky>
-				<TableRow>
-					<TableHead>Name</TableHead>
-					<TableHead>Email</TableHead>
-					<TableHead>Role</TableHead>
-					<TableHead>Status</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{users.map((user) => (
-					<TableRow key={user.id}>
-						<TableCell>{user.name}</TableCell>
-						<TableCell>{user.email}</TableCell>
-						<TableCell>{user.role}</TableCell>
-						<TableCell>{user.status}</TableCell>
-					</TableRow>
-				))}
-			</TableBody>
-		</Table>
-	);
-}
-```
+import { DataTable } from '@your-org/table';
 
-### Responsive Height
-
-```tsx
-function ResponsiveTable({ users }) {
-	return (
-		<Table fixedHeight="calc(100vh - 200px)">
-			<TableHeader sticky>
-				<TableRow>
-					<TableHead>Name</TableHead>
-					<TableHead>Email</TableHead>
-					<TableHead>Role</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{users.map((user) => (
-					<TableRow key={user.id}>
-						<TableCell>{user.name}</TableCell>
-						<TableCell>{user.email}</TableCell>
-						<TableCell>{user.role}</TableCell>
-					</TableRow>
-				))}
-			</TableBody>
-		</Table>
-	);
-}
-```
-
-### With DataTable Component
-
-For more advanced features, use the `DataTable` component:
-
-```tsx
-import { DataTable } from '@signozhq/table';
-
-function AdvancedTable({ users }) {
+function MyTable() {
 	const columns = [
 		{ accessorKey: 'name', header: 'Name' },
 		{ accessorKey: 'email', header: 'Email' },
 		{ accessorKey: 'role', header: 'Role' },
 	];
 
-	return (
-		<DataTable
-			columns={columns}
-			data={users}
-			tableId="user-table"
-			fixedHeight={400}
-			enableStickyHeaders={true}
-			enableSorting={true}
-			enableFiltering={true}
-		/>
-	);
-}
-```
-
-### Large Dataset with Virtualization
-
-```tsx
-function LargeDatasetTable({ users }) {
-	const columns = [
-		{ accessorKey: 'name', header: 'Name' },
-		{ accessorKey: 'email', header: 'Email' },
-		{ accessorKey: 'role', header: 'Role' },
+	const data = [
+		{ name: 'John Doe', email: 'john@example.com', role: 'Admin' },
+		{ name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
 	];
 
+	const handleColumnOrderChange = (orderedColumns) => {
+		// This will only be called when user manually reorders columns
+		console.log('Columns reordered:', orderedColumns);
+		// You can save the new order to your state management system
+	};
+
 	return (
 		<DataTable
 			columns={columns}
-			data={users} // 10,000+ items
-			tableId="large-table"
-			fixedHeight={500}
-			enableStickyHeaders={true}
-			enableVirtualization={true}
-			estimateRowSize={50}
-			overscan={10}
-			enableSorting={true}
-			enableFiltering={true}
+			data={data}
+			tableId="my-table"
+			onColumnOrderChange={handleColumnOrderChange}
+			enableColumnReordering={true}
 		/>
 	);
 }
 ```
 
-## Accessibility
+### Key Features
 
-The table component includes several accessibility features:
+1. **Automatic column order**: Uses the order of columns as defined in the `columns` array
+2. **No unwanted callbacks**: `onColumnOrderChange` is only called when user manually reorders columns
+3. **Preference persistence**: Saves user's column order preferences automatically
+4. **Simple usage**: No need to manage column order state unless you want to track changes
 
-- **Semantic HTML**: Proper table structure with `table`, `thead`, `tbody`, `th`, and `td` elements
-- **Keyboard Navigation**: Full keyboard support for scrolling and interaction
-- **Screen Reader Support**: Proper ARIA labels and semantic structure
-- **Focus Management**: Clear focus indicators for keyboard navigation
+### Props
 
-## Browser Support
+- `onColumnOrderChange?: (orderedColumns: ColumnDef<TData, TValue>[]) => void` - Callback called only on manual reorder
+- `enableColumnReordering?: boolean` - Enable/disable column reordering (default: true)
 
-The component works in all modern browsers and includes:
+### Behavior Summary
 
-- **Cross-browser compatibility**: Works consistently across all modern browsers
-- **Mobile browsers**: Touch-friendly scrolling
-- **Progressive enhancement**: Graceful degradation for older browsers
-
-## Performance
-
-The table component is optimized for performance:
-
-- **Efficient scrolling**: Smooth scroll performance with CSS transforms
-- **Minimal reflows**: Careful CSS to avoid layout thrashing
-- **Lightweight**: Minimal JavaScript overhead for basic tables
-- **Virtual scrolling**: Available in DataTable component for large datasets
-- **Memory efficient**: Virtualization prevents memory issues with large datasets
+| Scenario             | Column Order Source   | `onColumnOrderChange` Called |
+| -------------------- | --------------------- | ---------------------------- |
+| Component mounts     | `columns` array order | ❌ No                        |
+| User drags and drops | Updated order         | ✅ Yes, with new order       |
+| Preferences load     | Saved preferences     | ❌ No                        |

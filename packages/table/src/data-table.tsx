@@ -58,8 +58,8 @@ export interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	tableId: string;
-	initialColumnOrder?: string[];
 	// Callback when the column order changes. Returns the reordered columns array
+	// Only called when user manually reorders columns, not on mount or preference loading
 	onColumnOrderChange?: (orderedColumns: ColumnDef<TData, TValue>[]) => void;
 	enableColumnReordering?: boolean;
 	enableColumnResizing?: boolean;
@@ -395,7 +395,6 @@ export function DataTable<TData, TValue>({
 	columns,
 	data,
 	tableId,
-	initialColumnOrder,
 	onColumnOrderChange,
 	enableColumnResizing = true,
 	enableSorting = true,
@@ -523,13 +522,13 @@ export function DataTable<TData, TValue>({
 		[columnsById],
 	);
 
-	// Initialise Column Order Array
+	// Initialise Column Order Array from columns
 	React.useEffect(() => {
 		const defaultOrder = columns.map((column, index) =>
 			resolveColumnId(column, index),
 		);
-		setColumnOrder(initialColumnOrder || defaultOrder);
-	}, [columns, initialColumnOrder, resolveColumnId]);
+		setColumnOrder(defaultOrder);
+	}, [columns, resolveColumnId]);
 
 	// Load preferences on mount
 	React.useEffect(() => {
@@ -537,8 +536,8 @@ export function DataTable<TData, TValue>({
 
 		// Only set preferences if they exist and we're on initial mount
 		if (isInitialMount.current) {
+			// Load saved column order if it contains all current columns
 			if (preferences.columnOrder?.length) {
-				// Only use saved column order if it contains all current columns
 				const currentColumnIds = new Set(
 					columns.map((col, idx) => resolveColumnId(col, idx)),
 				);
@@ -753,13 +752,6 @@ export function DataTable<TData, TValue>({
 			scrollToIndexRef.current = scrollToIndex;
 		}
 	}, [scrollToIndex, scrollToIndexRef]);
-
-	// Emit column order changes (covers initialization, preference load, and DnD)
-	React.useEffect(() => {
-		if (onColumnOrderChange) {
-			onColumnOrderChange(getOrderedColumns(columnOrder));
-		}
-	}, [columnOrder, onColumnOrderChange, getOrderedColumns]);
 
 	const getSortIcon = (isSorted: false | 'asc' | 'desc') => {
 		if (!isSorted) return <ArrowUpDown className="h-4 w-4" />;
