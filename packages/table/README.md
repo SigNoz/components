@@ -79,6 +79,7 @@ function MyTable() {
 2. **No unwanted callbacks**: `onColumnOrderChange` is only called when user manually reorders columns
 3. **Preference persistence**: Saves user's column order preferences automatically
 4. **Simple usage**: No need to manage column order state unless you want to track changes
+5. **Smart header layout**: Action buttons are always visible, text shows ellipsis with tooltip when overflowing
 
 ### Props
 
