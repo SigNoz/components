@@ -82,6 +82,7 @@ function MyTable() {
 5. **Smart header layout**: Action buttons are always visible, text shows ellipsis with tooltip when overflowing
 6. **Selective reordering**: Disable reordering for specific columns using `disableReorder: true`
 7. **Drop control**: Control where columns can be dropped using `disableDropBefore` and `disableDropAfter`
+8. **Selective resizing**: Disable resizing for specific columns using `disableResizing: true`
 
 ### Props
 
@@ -151,12 +152,42 @@ const columns = [
 - `disableDropAfter: true` - Prevents other columns from being dropped after this column
 - Both properties can be used together for maximum control
 
+### Selective Column Resizing
+
+You can disable resizing for specific columns by adding `disableResizing: true` to the column definition:
+
+```tsx
+const columns = [
+	{
+		accessorKey: 'name',
+		header: 'Name',
+		disableResizing: true, // This column cannot be resized
+	},
+	{
+		accessorKey: 'email',
+		header: 'Email', // This column can be resized
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		disableResizing: true, // This column cannot be resized
+	},
+];
+```
+
+When `disableResizing: true` is set on a column:
+
+- The resize handle will not be shown
+- The column cannot be resized by dragging
+- The column will maintain its specified width
+
 **Use Cases:**
 
 - **Fixed position columns**: Use `disableReorder: true` for columns that should never move
 - **Boundary columns**: Use `disableDropBefore` for the first column in a logical group
 - **End markers**: Use `disableDropAfter` for the last column in a logical group
 - **Protected zones**: Combine properties to create protected column ranges
+- **Fixed width columns**: Use `disableResizing: true` for columns that should maintain their width
 
 ### Behavior Summary
 

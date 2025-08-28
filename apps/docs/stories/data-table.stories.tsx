@@ -637,6 +637,90 @@ const columnsWithDropControl = [
 	},
 ];
 
+// Columns with disabled resizing for demonstration
+const columnsWithDisabledResizing = [
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		size: 200,
+		disableResizing: true, // This column cannot be resized
+		cell: ({ row }: { row: Row<User> }) => (
+			<div className="flex items-center gap-2">
+				<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<span className="font-medium">{row.original.name}</span>
+			</div>
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; className: string }> = {
+				admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+				user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+				moderator: {
+					label: 'Moderator',
+					className: 'bg-orange-100 text-orange-800',
+				},
+				guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+			};
+			const roleInfo = roleMap[role];
+			return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+		},
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		size: 150,
+		disableResizing: true, // This column cannot be resized
+		cell: ({ row }: { row: Row<User> }) => (
+			<span className="font-medium text-sm">{row.original.department}</span>
+		),
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		size: 140,
+		cell: ({ row }: { row: Row<User> }) => {
+			const status = row.original.status;
+			const statusMap: Record<
+				User['status'],
+				{ icon: LucideIcon; className: string }
+			> = {
+				active: { icon: CheckCircle, className: 'text-green-600' },
+				inactive: { icon: XCircle, className: 'text-red-600' },
+				pending: { icon: Clock, className: 'text-yellow-600' },
+				suspended: { icon: AlertCircle, className: 'text-gray-600' },
+			};
+			const statusInfo = statusMap[status];
+			const Icon = statusInfo.icon;
+			return <Icon className={`h-4 w-4 ${statusInfo.className}`} />;
+		},
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(salary);
+			return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+		},
+	},
+];
+
 // Story: Basic DataTable with essential features
 export const Basic: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
@@ -917,6 +1001,41 @@ export const DropControl: StoryObj<typeof DataTable<User>> = {
 		enableFiltering: true,
 		enableGlobalFilter: false,
 		enableColumnReordering: true,
+		enableColumnResizing: true,
+		enableColumnPinning: false,
+		enableRowSelection: false,
+		enablePagination: true,
+		pageSize: 5,
+		showHeaders: true,
+	},
+};
+
+// Story: Selective Column Resizing
+export const SelectiveColumnResizing: StoryObj<typeof DataTable<User>> = {
+	render: (args) => (
+		<div className="space-y-4">
+			<div className="border rounded-lg p-6 bg-background">
+				<h3 className="text-lg font-semibold mb-2 text-foreground">
+					Selective Column Resizing
+				</h3>
+				<p className="text-sm text-muted-foreground mb-4">
+					This table demonstrates the disableResizing feature. The &quot;Employee
+					Name&quot; and &quot;Department&quot; columns cannot be resized (no resize
+					handle), while &quot;Role&quot;, &quot;Status&quot;, and &quot;Salary&quot;
+					columns can be resized.
+				</p>
+				<DataTable {...args} />
+			</div>
+		</div>
+	),
+	args: {
+		columns: columnsWithDisabledResizing,
+		data: users,
+		tableId: 'selective-resizing-demo-table',
+		enableSorting: true,
+		enableFiltering: true,
+		enableGlobalFilter: false,
+		enableColumnReordering: false,
 		enableColumnResizing: true,
 		enableColumnPinning: false,
 		enableRowSelection: false,

@@ -507,6 +507,11 @@ export function DataTable<TData, TValue>({
 		);
 	};
 
+	// Helper to check if column resizing is disabled
+	const isResizingDisabled = (columnDef: ColumnDef<TData, TValue>) => {
+		return (columnDef as { disableResizing?: boolean }).disableResizing === true;
+	};
+
 	// Helper to resolve column id consistently
 	const resolveColumnId = React.useCallback(
 		(column: ColumnDef<TData, TValue>, index: number): string => {
@@ -1346,45 +1351,46 @@ export function DataTable<TData, TValue>({
 															</div>
 														)}
 													</div>
-													{enableColumnResizing && (
-														<div
-															{...{
-																onDoubleClick: () => header.column.resetSize(),
-																onMouseDown: (e: React.MouseEvent) => {
-																	setIsResizing(true);
-																	header.getResizeHandler()(e);
-																	// Add global mouse up listener to detect when resizing ends
-																	const onMouseUp = () => {
-																		setIsResizing(false);
-																		document.removeEventListener('mouseup', onMouseUp);
-																	};
-																	document.addEventListener('mouseup', onMouseUp, {
-																		once: true,
-																	});
-																},
-																onTouchStart: (e: React.TouchEvent) => {
-																	setIsResizing(true);
-																	header.getResizeHandler()(e);
-																	// Add global touch end listener to detect when resizing ends
-																	const onTouchEnd = () => {
-																		setIsResizing(false);
-																		document.removeEventListener('touchend', onTouchEnd);
-																	};
-																	document.addEventListener('touchend', onTouchEnd, {
-																		once: true,
-																	});
-																},
-																style: {
-																	display: !header.column.getCanResize() ? 'none' : '',
-																},
-																className: cn(
-																	'absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted hover:w-3 transition-all duration-200 group border-l border-border/50 hover:bg-muted/80',
-																	header.column.getIsResizing() &&
-																		'bg-primary w-3 border-primary',
-																),
-															}}
-														/>
-													)}
+													{enableColumnResizing &&
+														!isResizingDisabled(header.column.columnDef) && (
+															<div
+																{...{
+																	onDoubleClick: () => header.column.resetSize(),
+																	onMouseDown: (e: React.MouseEvent) => {
+																		setIsResizing(true);
+																		header.getResizeHandler()(e);
+																		// Add global mouse up listener to detect when resizing ends
+																		const onMouseUp = () => {
+																			setIsResizing(false);
+																			document.removeEventListener('mouseup', onMouseUp);
+																		};
+																		document.addEventListener('mouseup', onMouseUp, {
+																			once: true,
+																		});
+																	},
+																	onTouchStart: (e: React.TouchEvent) => {
+																		setIsResizing(true);
+																		header.getResizeHandler()(e);
+																		// Add global touch end listener to detect when resizing ends
+																		const onTouchEnd = () => {
+																			setIsResizing(false);
+																			document.removeEventListener('touchend', onTouchEnd);
+																		};
+																		document.addEventListener('touchend', onTouchEnd, {
+																			once: true,
+																		});
+																	},
+																	style: {
+																		display: !header.column.getCanResize() ? 'none' : '',
+																	},
+																	className: cn(
+																		'absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted hover:w-3 transition-all duration-200 group border-l border-border/50 hover:bg-muted/80',
+																		header.column.getIsResizing() &&
+																			'bg-primary w-3 border-primary',
+																	),
+																}}
+															/>
+														)}
 												</TableHead>
 											);
 										})}

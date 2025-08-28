@@ -1,6 +1,6 @@
 {
 	"name": "@signozhq/table",
-	"version": "0.3.6",
+	"version": "0.3.7",
 	"license": "MIT",
 	"type": "module",
 	"exports": {
