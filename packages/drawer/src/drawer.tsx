@@ -187,11 +187,11 @@ function DrawerWrapper({
 							{type === 'drawer' && showCloseButton && <CloseButton type={type} />}
 						</div>
 					)}
-					<DrawerHeader>
-						{header?.description && (
+					{header?.description && (
+						<DrawerHeader>
 							<DrawerDescription>{header.description}</DrawerDescription>
-						)}
-					</DrawerHeader>
+						</DrawerHeader>
+					)}
 					{content}
 					{footer && <DrawerFooter>{footer}</DrawerFooter>}
 				</div>
