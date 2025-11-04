@@ -8,6 +8,16 @@
 	--tab-hover-text-color: var(--color-slate-400);
 	--tab-active-text-color: var(--color-slate-500);
 	--tab-active-background: var(--color-transparent);
+	--tab-hover-bg: var(--bg-ink-500);
+}
+
+/* Scoped tabs-specific variables */
+[data-slot='tabs-trigger'] {
+	--tab-hover-bg: var(--bg-ink-500);
+}
+
+.dark [data-slot='tabs-trigger'] {
+	--tab-hover-bg: var(--bg-vanilla-100);
 }
 
 .dark {
@@ -17,4 +27,5 @@
 	--tab-hover-text-color: var(--color-vanilla-100);
 	--tab-active-text-color: var(--color-vanilla-100);
 	--tab-active-background: var(--color-transparent);
+	--tab-hover-bg: var(--bg-vanilla-100);
 }

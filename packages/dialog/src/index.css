@@ -1,6 +1,23 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
+/* Dialog-specific CSS variables */
+[data-slot='dialog-content'] {
+	--dialog-border: var(--bg-vanilla-300);
+}
+
+.dark [data-slot='dialog-content'] {
+	--dialog-border: var(--bg-slate-500);
+}
+
+[data-slot='dialog-header'] {
+	--dialog-border: var(--bg-vanilla-300);
+}
+
+.dark [data-slot='dialog-header'] {
+	--dialog-border: var(--bg-slate-500);
+}
+
 .alert-dialog [data-slot='dialog-header'] {
 	border-bottom: none;
 	padding-bottom: 0;

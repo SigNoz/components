@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
+/* Drawer-specific CSS variables */
+[data-slot='drawer-content'] {
+	--drawer-border: var(--bg-vanilla-300);
+}
+
+.dark [data-slot='drawer-content'] {
+	--drawer-border: var(--bg-slate-500);
+}
+
 [data-vaul-drawer][data-vaul-drawer-direction='right']::after,
 [data-vaul-drawer][data-vaul-drawer-direction='left']::after,
 [data-vaul-drawer][data-vaul-drawer-direction='top']::after,

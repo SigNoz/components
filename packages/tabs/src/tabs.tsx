@@ -170,7 +170,7 @@ const Tabs = forwardRef<
 							<>
 								{/* Hover Slider */}
 								<div
-									className="absolute bg-ink-500/10 dark:bg-vanilla-100/10 rounded-md transition-all duration-300 ease-in-out opacity-0 z-0 h-[28px] "
+									className="absolute bg-[var(--tab-hover-bg)]/10 rounded-md transition-all duration-300 ease-in-out opacity-0 z-0 h-[28px] "
 									style={hoverSliderStyle}
 								/>
 								{/* Active Slider */}
@@ -224,6 +224,7 @@ const TabsTrigger = forwardRef<
 	return (
 		<TabsPrimitive.Trigger
 			ref={triggerRef}
+			data-slot="tabs-trigger"
 			className={cn(tabsTriggerVariants({ variant, className }))}
 			disabled={disabled}
 			{...props}

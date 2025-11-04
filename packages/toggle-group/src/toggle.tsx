@@ -12,8 +12,7 @@ const toggleVariants = cva(
 		variants: {
 			variant: {
 				default: '',
-				outline:
-					'border-l border-vanilla-300 dark:border-slate-400 first:border-l-0',
+				outline: '',
 			},
 			size: {
 				default: 'h-9 px-3',

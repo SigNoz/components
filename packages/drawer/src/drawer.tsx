@@ -65,7 +65,7 @@ function DrawerContent({
 					'data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t',
 					'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:border-l',
 					'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:border-r',
-					'border border-vanilla-300 dark:border-slate-500',
+					'border border-[var(--drawer-border)]',
 					type === 'drawer' ? 'rounded-md m-4' : 'rounded-none',
 					className,
 				)}
@@ -177,7 +177,7 @@ function DrawerWrapper({
 					}}
 				>
 					{header && (
-						<div className="flex h-12 items-center justify-between border-b border-vanilla-300 dark:border-slate-500 px-4">
+						<div className="flex h-12 items-center justify-between border-b border-[var(--drawer-border)] px-4">
 							{type === 'panel' && showCloseButton && <CloseButton type={type} />}
 							<div className="flex items-center gap-2 flex-1">
 								<DrawerTitle className="font-inter text-sm font-normal">
