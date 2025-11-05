@@ -3,7 +3,7 @@ import { FixedSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { iconsManifest } from '../data/icons-manifest';
 import { Input } from '@signozhq/input';
-import { Button } from '@signozhq/button';
+import { Button, ButtonSize, ButtonVariant } from '@signozhq/button';
 import { Copy, Check } from 'lucide-react';
 
 interface IconGalleryProps {
@@ -48,8 +48,8 @@ const IconCell = React.memo(
 					</div>
 					<span className="text-sm text-center mb-2">{name}</span>
 					<Button
-						variant="ghost"
-						size="sm"
+						variant={ButtonVariant.Ghost}
+						size={ButtonSize.SM}
 						onClick={() => onCopy(name)}
 						className="gap-0"
 					>

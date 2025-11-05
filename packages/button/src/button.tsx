@@ -6,21 +6,38 @@ import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps } from 'class-variance-authority';
 import buttonVariants from './button-variants';
 import { cn } from './lib/utils';
-import { Loader2 } from 'lucide-react';
+import { Spinner } from '@signozhq/icons';
 
-export type ButtonVariant =
-	| 'solid'
-	| 'outlined'
-	| 'dashed'
-	| 'ghost'
-	| 'link'
-	| 'action';
-export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'icon';
-export type ButtonBackground =
-	| 'ink-500'
-	| 'ink-400'
-	| 'vanilla-100'
-	| 'vanilla-200';
+export enum ButtonVariant {
+	Solid = 'solid',
+	Outlined = 'outlined',
+	Dashed = 'dashed',
+	Ghost = 'ghost',
+	Link = 'link',
+	Action = 'action',
+}
+
+export enum ButtonSize {
+	XS = 'xs',
+	SM = 'sm',
+	MD = 'md',
+	LG = 'lg',
+	Icon = 'icon',
+}
+
+export enum ButtonBackground {
+	Ink500 = 'ink-500',
+	Ink400 = 'ink-400',
+	Vanilla100 = 'vanilla-100',
+	Vanilla200 = 'vanilla-200',
+}
+
+export enum ButtonColor {
+	Primary = 'primary',
+	Destructive = 'destructive',
+	Warning = 'warning',
+	Secondary = 'secondary',
+}
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -39,9 +56,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	(
 		{
 			className,
-			variant = 'solid',
+			variant = ButtonVariant.Solid,
 			color,
-			size = 'md',
+			size = ButtonSize.MD,
 			width,
 			prefixIcon,
 			suffixIcon,
@@ -57,17 +74,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		const Comp = asChild ? Slot : 'button';
 
 		const iconSizes: Record<ButtonSize, number> = {
-			xs: 10,
-			sm: 16,
-			md: 16,
-			lg: 20,
-			icon: 16,
+			[ButtonSize.XS]: 10,
+			[ButtonSize.SM]: 16,
+			[ButtonSize.MD]: 16,
+			[ButtonSize.LG]: 20,
+			[ButtonSize.Icon]: 16,
 		};
 
 		return (
 			<Comp
 				data-color={color}
-				data-background={variant === 'action' ? background : undefined}
+				data-background={variant === ButtonVariant.Action ? background : undefined}
 				className={cn(
 					buttonVariants({ variant, size, className }),
 					'font-inter',
@@ -79,7 +96,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{...props}
 			>
 				{loading ? (
-					<Loader2 size={iconSizes[size]} className="animate-fast-spin" />
+					<Spinner size={iconSizes[size]} />
 				) : (
 					prefixIcon &&
 					React.cloneElement(prefixIcon, {

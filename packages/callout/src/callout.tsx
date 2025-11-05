@@ -2,8 +2,14 @@ import './index.css';
 import React from 'react';
 import { cva } from 'class-variance-authority';
 
-import { Info, CheckCircle2, AlertTriangle, XCircle, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { cn } from './lib/utils';
+import {
+	SolidInfoCircle,
+	SolidCheckCircle2,
+	SolidAlertTriangle,
+	SolidXCircle,
+} from '@signozhq/icons';
 
 interface CalloutProps extends React.ComponentProps<'div'> {
 	message?: React.ReactNode;
@@ -25,10 +31,10 @@ const typeToColorMap = {
 } as const;
 
 const defaultIcons = {
-	info: <Info />,
-	success: <CheckCircle2 />,
-	warning: <AlertTriangle />,
-	error: <XCircle />,
+	info: <SolidInfoCircle />,
+	success: <SolidCheckCircle2 />,
+	warning: <SolidAlertTriangle />,
+	error: <SolidXCircle />,
 };
 
 const calloutVariants = cva(

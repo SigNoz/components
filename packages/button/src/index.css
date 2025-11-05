@@ -34,6 +34,7 @@
 	--button-outlined-foreground: var(--bg-slate-50);
 	--button-hover-background: var(--bg-vanilla-300);
 	--button-link-hover-foreground: var(--bg-slate-300);
+	--button-ghost-hover-foreground: var(--bg-slate-300);
 }
 
 .dark [data-color='secondary'] {
@@ -42,6 +43,7 @@
 	--button-outlined-foreground: var(--bg-vanilla-400);
 	--button-hover-background: var(--bg-slate-300);
 	--button-link-hover-foreground: var(--bg-vanilla-200);
+	--button-ghost-hover-foreground: var(--bg-vanilla-200);
 }
 
 [data-background='ink-500'] {

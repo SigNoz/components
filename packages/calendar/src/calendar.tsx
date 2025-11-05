@@ -8,14 +8,19 @@ import {
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
 import { cn } from './lib/utils';
-import { Button, buttonVariants } from '@signozhq/button';
+import {
+	Button,
+	ButtonSize,
+	ButtonVariant,
+	buttonVariants,
+} from '@signozhq/button';
 
 function Calendar({
 	className,
 	classNames,
 	showOutsideDays = true,
 	captionLayout = 'label',
-	buttonVariant = 'ghost',
+	buttonVariant = ButtonVariant.Ghost,
 	formatters,
 	components,
 	...props
@@ -207,8 +212,8 @@ function CalendarDayButton({
 	return (
 		<Button
 			ref={ref}
-			variant="ghost"
-			size="icon"
+			variant={ButtonVariant.Ghost}
+			size={ButtonSize.Icon}
 			data-day={day.date.toLocaleDateString()}
 			data-selected-single={
 				modifiers.selected &&
