@@ -165,6 +165,115 @@ export const Default: Story = {
 					defaultValue="apps"
 				/>
 			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Dashboard Navigation</h2>
+				<Tabs
+					items={[
+						{
+							key: 'overview',
+							label: 'Overview',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Overview</h1>
+								</div>
+							),
+						},
+						{
+							key: 'integrations',
+							label: 'Integrations',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Integrations</h1>
+								</div>
+							),
+						},
+						{
+							key: 'activity',
+							label: 'Activity',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Activity</h1>
+								</div>
+							),
+						},
+						{
+							key: 'domains',
+							label: 'Domains',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Domains</h1>
+								</div>
+							),
+						},
+						{
+							key: 'usage',
+							label: 'Usage',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Usage</h1>
+								</div>
+							),
+						},
+						{
+							key: 'monitoring',
+							label: 'Monitoring',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Monitoring</h1>
+								</div>
+							),
+						},
+						{
+							key: 'observability',
+							label: 'Observability',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Observability</h1>
+								</div>
+							),
+						},
+						{
+							key: 'storage',
+							label: 'Storage',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Storage</h1>
+								</div>
+							),
+						},
+						{
+							key: 'ai',
+							label: 'AI',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">AI</h1>
+								</div>
+							),
+						},
+						{
+							key: 'support',
+							label: 'Support',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Support</h1>
+								</div>
+							),
+						},
+						{
+							key: 'settings',
+							label: 'Settings',
+							children: (
+								<div className="pt-4">
+									<h1 className="text-2xl font-semibold">Settings</h1>
+								</div>
+							),
+						},
+					]}
+					variant="primary"
+					defaultValue="observability"
+				/>
+			</div>
 		</div>
 	),
 };

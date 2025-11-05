@@ -237,7 +237,7 @@
 	--color-gradient-splash: var(--bg-gradient-splash);
 	--color-gradient-flamingo: var(--bg-gradient-flamingo);
 
-	--animate-fast-spin: spin 0.7s linear infinite;
+	--animate-fast-spin: spin 0.5s linear infinite;
 }
 
 @layer theme {

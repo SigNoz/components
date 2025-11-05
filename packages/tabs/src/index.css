@@ -4,11 +4,13 @@
 :root {
 	--tab-border-color: var(--color-vanilla-300);
 	--tab-background: var(--color-vanilla-200);
-	--tab-text-color: var(--color-slate-50);
-	--tab-hover-text-color: var(--color-slate-400);
-	--tab-active-text-color: var(--color-slate-500);
+	--tab-text-color: var(--text-slate-50);
+	--tab-hover-text-color: var(--text-ink-400);
+	--tab-active-text-color: var(--text-ink-400);
 	--tab-active-background: var(--color-transparent);
 	--tab-hover-bg: var(--bg-ink-500);
+	--tab-active-accent-color: var(--bg-robin-500);
+	--tab-secondary-accent-color: var(--bg-vanilla-100);
 }
 
 /* Scoped tabs-specific variables */
@@ -23,9 +25,26 @@
 .dark {
 	--tab-border-color: var(--color-slate-400);
 	--tab-background: var(--color-ink-300);
-	--tab-text-color: var(--color-vanilla-400);
-	--tab-hover-text-color: var(--color-vanilla-100);
-	--tab-active-text-color: var(--color-vanilla-100);
+	--tab-text-color: var(--text-vanilla-400);
+	--tab-hover-text-color: var(--text-vanilla-100);
+	--tab-active-text-color: var(--text-vanilla-100);
 	--tab-active-background: var(--color-transparent);
 	--tab-hover-bg: var(--bg-vanilla-100);
+	--tab-active-accent-color: var(--bg-robin-500);
+	--tab-secondary-accent-color: var(--bg-vanilla-100);
+}
+
+/* Tab slider animations */
+.tab-hover-slider {
+	transition:
+		left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+		width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 0.15s ease-out;
+}
+
+.tab-active-slider {
+	transition:
+		left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 0.2s ease-out;
 }
