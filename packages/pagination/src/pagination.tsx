@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 
 import { cn } from './lib/utils';
 import { buttonVariants } from '../../button/src/button';
-import type { ButtonSize } from '../../button/src/button';
+import { ButtonSize } from '../../button/src/button';
 import { renderPageNumbers } from './utils';
 
 // Define alignment options
@@ -62,7 +62,7 @@ type PaginationLinkProps = {
 function PaginationLink({
 	className,
 	isActive,
-	size = 'icon',
+	size = ButtonSize.Icon,
 	disabled,
 	children,
 	...props
@@ -116,7 +116,7 @@ function PaginationPrevious({
 	return (
 		<PaginationLink
 			aria-label="Go to previous page"
-			size="icon"
+			size={ButtonSize.Icon}
 			className={cn(className)}
 			disabled={disabled}
 			{...props}
@@ -130,7 +130,7 @@ function PaginationNext({ className, disabled, ...props }: PaginationNavProps) {
 	return (
 		<PaginationLink
 			aria-label="Go to next page"
-			size="icon"
+			size={ButtonSize.Icon}
 			className={cn(className)}
 			disabled={disabled}
 			{...props}
