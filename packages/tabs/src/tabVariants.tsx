@@ -91,7 +91,7 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 				'hover:text-[var(--tab-hover-text-color)]',
 				'data-[state=active]:text-[var(--tab-active-text-color)]',
 				'data-[state=active]:bg-[var(--tab-active-background)]',
-				'disabled:text-slate-50/40 dark:disabled:text-vanilla-100/40 disabled:pointer-events-none',
+				'disabled:text-slate-50/40 dark:disabled:text-vanilla-100/40',
 			],
 		},
 	},

@@ -1,2 +1,151 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
+
+/* Toast Container Styling */
+.toaster [data-sonner-toast] {
+	align-items: flex-start !important;
+	padding: 14px 16px !important;
+	border-radius: 6px !important;
+	gap: 10px !important;
+}
+
+/* Icon container - prefer data attributes, fallback to structural */
+.toaster [data-sonner-toast] [data-icon-wrapper],
+.toaster [data-sonner-toast] > div:has([data-icon]),
+.toaster [data-sonner-toast] > div:has(svg) {
+	align-self: flex-start !important;
+	margin-top: 0;
+	padding-top: 2px;
+	gap: 12px;
+}
+
+/* Icon element - prioritize data-icon, then svg elements */
+.toaster [data-sonner-toast] [data-icon],
+.toaster [data-sonner-toast] svg {
+	align-self: flex-start !important;
+	margin-top: 0;
+	width: 16px !important;
+	height: 16px !important;
+	flex-shrink: 0;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+/* Content Area Styling */
+/* Content wrapper - prefer data attributes */
+.toaster [data-sonner-toast] [data-content],
+.toaster [data-sonner-toast] > div:has([data-title]),
+.toaster [data-sonner-toast] > div:has([data-description]) {
+	align-self: flex-start !important;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+/* Title/Message Styling */
+/* Priority: data-title > first text element in content */
+.toaster [data-sonner-toast] [data-title] {
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-500);
+	margin: 0;
+	padding: 0;
+	height: 20px;
+}
+
+.dark .toaster [data-sonner-toast] [data-title] {
+	color: var(--text-vanilla-100);
+}
+
+/* Fallback for cases where data-title isn't present */
+.toaster [data-sonner-toast] [data-content] > p:first-of-type,
+.toaster [data-sonner-toast] > div:has([data-title]) > p:first-of-type,
+.toaster [data-sonner-toast] > div:has([data-title]) > div:first-of-type {
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-500);
+	margin: 0;
+	padding: 0;
+	height: 20px;
+}
+
+.dark .toaster [data-sonner-toast] [data-content] > p:first-of-type,
+.dark .toaster [data-sonner-toast] > div:has([data-title]) > p:first-of-type,
+.dark .toaster [data-sonner-toast] > div:has([data-title]) > div:first-of-type {
+	color: var(--text-vanilla-100);
+}
+
+/* Description Styling */
+/* Priority: data-description > description container */
+.toaster [data-sonner-toast] [data-description] {
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-50);
+	margin: 0;
+	padding: 0;
+}
+
+.dark .toaster [data-sonner-toast] [data-description] {
+	color: var(--text-vanilla-400);
+}
+
+/* Description container - for multi-line descriptions */
+.toaster [data-sonner-toast] [data-description-wrapper],
+.toaster [data-sonner-toast] [data-content] > div:has([data-description]),
+.toaster [data-sonner-toast] > div:has([data-description]) > div:last-of-type {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-50);
+	margin: 0;
+	padding: 0;
+}
+
+.dark .toaster [data-sonner-toast] [data-description-wrapper],
+.dark .toaster [data-sonner-toast] [data-content] > div:has([data-description]),
+.dark
+	.toaster
+	[data-sonner-toast]
+	> div:has([data-description])
+	> div:last-of-type {
+	color: var(--text-vanilla-400);
+}
+
+/* Fallback for description paragraphs */
+.toaster [data-sonner-toast] [data-content] > p:not(:first-of-type),
+.toaster
+	[data-sonner-toast]
+	> div:has([data-description])
+	> p:not(:first-of-type) {
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-50);
+	margin: 0;
+	padding: 0;
+}
+
+.dark .toaster [data-sonner-toast] [data-content] > p:not(:first-of-type),
+.dark
+	.toaster
+	[data-sonner-toast]
+	> div:has([data-description])
+	> p:not(:first-of-type) {
+	color: var(--text-vanilla-400);
+}
