@@ -49,7 +49,8 @@
 	"resolutions": {
 		"cross-spawn": "7.0.5",
 		"esbuild": "^0.25.0",
-		"semver": ">=7.5.2"
+		"semver": ">=7.5.2",
+		"tmp": "0.2.4"
 	},
 	"packageManager": "pnpm@8.15.6",
 	"name": "design-system"
