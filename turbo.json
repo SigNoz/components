@@ -1,27 +1,28 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "tasks": {
-    "build": {
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", "storybook-static/**"],
-      "dependsOn": ["^build"]
-    },
-    "build-storybook": {
-      "dependsOn": ["^build-storybook"],
-      "outputs": ["storybook-static/**"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "chromatic": {
-      "dependsOn": ["^chromatic"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "clean": {
-      "cache": false
-    }
-  }
+	"$schema": "https://turbo.build/schema.json",
+	"concurrency": "25",
+	"tasks": {
+		"build": {
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": ["dist/**", "storybook-static/**"],
+			"dependsOn": ["^build"]
+		},
+		"build-storybook": {
+			"dependsOn": ["^build-storybook"],
+			"outputs": ["storybook-static/**"]
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"chromatic": {
+			"dependsOn": ["^chromatic"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"clean": {
+			"cache": false
+		}
+	}
 }

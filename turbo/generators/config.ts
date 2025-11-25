@@ -86,15 +86,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				packageJson.version = '0.0.0';
 
 				// Update main, module, and types fields
-				packageJson.main = `./dist/${(answers as { name: string }).name}.js`;
-				packageJson.module = `./dist/${(answers as { name: string }).name}.js`;
-				packageJson.types = `./dist/${(answers as { name: string }).name}.d.ts`;
+				packageJson.main = `./dist/index.js`;
+				packageJson.module = `./dist/index.js`;
+				packageJson.types = `./dist/index.d.ts`;
 
 				// Update exports
 				packageJson.exports = {
 					'.': {
-						types: `./dist/${(answers as { name: string }).name}.d.ts`,
-						import: `./dist/${(answers as { name: string }).name}.js`,
+						types: `./dist/index.d.ts`,
+						import: `./dist/index.js`,
 					},
 				};
 
@@ -114,7 +114,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				);
 				let content = fs.readFileSync(configPath, 'utf8');
 
-				content = content.replace(/button/g, (answers as { name: string }).name);
+				const componentName = (answers as { name: string }).name;
+				// Replace entry array format with object format: entry: { index: 'src/component-name.tsx' }
+				content = content.replace(
+					/entry:\s*\[['"]src\/[\w-]+\.tsx['"]\],?/,
+					`entry: { index: 'src/${componentName}.tsx' },`,
+				);
 
 				fs.writeFileSync(configPath, content);
 
