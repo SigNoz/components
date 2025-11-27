@@ -564,7 +564,7 @@ export const UsingAsChild: Story = {
 						<Badge asChild color="robin">
 							<button
 								type="button"
-								onClick={() => alert('Button badge clicked!')}
+								onClick={() => console.log('Button badge clicked!')}
 								className="cursor-pointer"
 							>
 								Interactive Badge
