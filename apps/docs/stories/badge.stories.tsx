@@ -564,8 +564,8 @@ export const UsingAsChild: Story = {
 						<Badge asChild color="robin">
 							<button
 								type="button"
-								onClick={() => console.log('Button badge clicked!')}
-								className="cursor-pointer"
+								onClick={() => alert('Button badge clicked!')}
+								className="!cursor-pointer"
 							>
 								Interactive Badge
 							</button>
@@ -583,7 +583,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('All filter')}
-							className="cursor-pointer"
+							className="!cursor-pointer"
 						>
 							All
 						</button>
@@ -592,7 +592,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Active filter')}
-							className="cursor-pointer"
+							className="!cursor-pointer"
 						>
 							<CheckIcon />
 							Active
@@ -602,7 +602,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Pending filter')}
-							className="cursor-pointer"
+							className="!cursor-pointer"
 						>
 							Pending
 						</button>
@@ -611,7 +611,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Remove filter')}
-							className="cursor-pointer"
+							className="!cursor-pointer"
 						>
 							<XIcon />
 							Clear
