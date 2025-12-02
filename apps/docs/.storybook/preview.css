@@ -195,3 +195,15 @@ code {
 		color 0.2s ease,
 		background-color 0.2s ease;
 }
+
+/* Disable outline only on cmdk elements */
+[data-story-block='true'] [cmdk-input],
+[data-story-block='true'] [cmdk-input]:focus,
+[data-story-block='true'] [cmdk-root] *:focus {
+	outline: none !important;
+}
+
+[cmdk-input]:focus {
+	outline: none !important;
+	outline-offset: 0 !important;
+}
