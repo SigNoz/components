@@ -1,7 +1,6 @@
 import './index.css';
 
 import * as React from 'react';
-import { type DialogProps } from '@radix-ui/react-dialog';
 import { Command as CommandPrimitive } from 'cmdk';
 import { cn } from './lib/utils';
 import { Dialog, DialogContent } from './dialog';
@@ -22,10 +21,27 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-const CommandDialog = ({ children, ...props }: DialogProps) => {
+type DialogPosition = 'center' | 'top' | 'custom';
+type CommandDialogProps = React.ComponentProps<typeof Dialog> & {
+	position?: DialogPosition;
+	offset?: number;
+	contentClassName?: string;
+};
+
+const CommandDialog = ({
+	children,
+	position = 'center',
+	offset = 100,
+	contentClassName,
+	...props
+}: CommandDialogProps) => {
 	return (
 		<Dialog {...props}>
-			<DialogContent className="overflow-hidden p-0">
+			<DialogContent
+				className={cn('overflow-hidden p-0', contentClassName)}
+				position={position}
+				offset={offset}
+			>
 				<Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
 					{children}
 				</Command>

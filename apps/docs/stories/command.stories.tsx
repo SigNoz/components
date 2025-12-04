@@ -193,7 +193,12 @@ export const Dialog: Story = {
 					<button onClick={() => handleOpenChange(true)}>Open Command Dialog</button>
 				</div>
 
-				<CommandDialog open={open} onOpenChange={handleOpenChange}>
+				<CommandDialog
+					open={open}
+					onOpenChange={handleOpenChange}
+					position="top"
+					offset={110}
+				>
 					<div style={{ width: 520 }}>
 						<CommandInput placeholder={args.placeholder} autoFocus={false} />
 						<CommandList>
