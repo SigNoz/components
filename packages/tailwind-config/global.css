@@ -1,6 +1,7 @@
 @import '@signozhq/design-tokens/dist/style.css';
+@plugin "tailwindcss-animate";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@variant dark (&:where(.dark, .dark *));
 
 :root {
 	--background: var(--bg-vanilla-200);
