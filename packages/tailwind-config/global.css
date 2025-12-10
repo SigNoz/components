@@ -41,6 +41,10 @@
 	--font-serif: 'Open Sans';
 	--font-mono: 'Geist Mono';
 
+	/* Base Colors - Direct from Design Tokens */
+	--base-white: var(--text-base-white);
+	--base-black: var(--text-base-black);
+
 	/* Semantic Theming - Light Mode */
 	--l1-background: var(--bg-neutral-light-1000);
 	--l2-background: var(--bg-neutral-light-950);
@@ -238,6 +242,133 @@
 	--sidebar-accent-foreground: var(--text-vanilla-400);
 	--sidebar-border: var(--bg-slate-500);
 	--sidebar-ring: var(--bg-robin-500);
+
+	/* Semantic Theming - Dark Mode */
+	--l1-background: var(--bg-neutral-dark-1000);
+	--l2-background: var(--bg-neutral-dark-900);
+	--l3-background: var(--bg-neutral-dark-800);
+	--l1-background-hover: var(--bg-neutral-dark-900);
+	--l2-background-hover: var(--bg-neutral-dark-700);
+	--l3-background-hover: var(--bg-neutral-dark-700);
+	--l1-foreground: var(--text-neutral-dark-50);
+	--l1-foreground-hover: var(--text-base-white);
+	--l2-foreground: var(--text-neutral-dark-100);
+	--l2-foreground-hover: var(--text-neutral-dark-50);
+	--l3-foreground: var(--text-neutral-dark-200);
+	--l3-foreground-hover: var(--text-neutral-dark-300);
+	--l1-border: var(--bg-neutral-dark-900);
+	--l2-border: var(--bg-neutral-dark-800);
+	--l3-border: var(--bg-neutral-dark-700);
+
+	/* Semantic States - Dark Mode */
+	--primary-background: var(--bg-robin-500);
+	--primary-background-hover: var(--bg-robin-400);
+	--primary-foreground: var(--text-neutral-dark-50);
+	--primary-foreground-hover: var(--text-base-white);
+	--secondary-background: var(--bg-neutral-dark-900);
+	--secondary-background-hover: var(--bg-neutral-dark-700);
+	--secondary-foreground: var(--text-neutral-dark-100);
+	--secondary-foreground-hover: var(--text-neutral-dark-50);
+	--secondary-border: var(--bg-neutral-dark-800);
+
+	--success-background: var(--bg-forest-600);
+	--success-background-hover: var(--bg-forest-400);
+	--success-foreground: var(--text-neutral-dark-50);
+	--success-foreground-hover: var(--text-base-white);
+	--warning-background: var(--bg-amber-600);
+	--warning-background-hover: var(--bg-amber-400);
+	--warning-foreground: var(--text-neutral-dark-50);
+	--warning-foreground-hover: var(--text-base-white);
+	--danger-background: var(--bg-cherry-500);
+	--danger-background-hover: var(--bg-cherry-400);
+	--danger-foreground: var(--text-neutral-dark-50);
+	--danger-foreground-hover: var(--text-base-white);
+
+	/* Transparent/Opacity Variants - Dark Mode */
+	--l1-background-transparent: color-mix(
+		in srgb,
+		var(--bg-neutral-dark-1000),
+		transparent 100%
+	);
+	--l1-background-60: color-mix(
+		in srgb,
+		var(--bg-neutral-dark-1000),
+		transparent 40%
+	);
+	--l2-background-transparent: color-mix(
+		in srgb,
+		var(--bg-neutral-dark-900),
+		transparent 100%
+	);
+	--l2-background-60: color-mix(
+		in srgb,
+		var(--bg-neutral-dark-900),
+		transparent 40%
+	);
+	--l3-background-transparent: color-mix(
+		in srgb,
+		var(--bg-neutral-dark-800),
+		transparent 100%
+	);
+	--l3-background-60: color-mix(
+		in srgb,
+		var(--bg-neutral-dark-800),
+		transparent 40%
+	);
+
+	/* Callouts - Dark Mode */
+	--callout-primary-background: color-mix(
+		in srgb,
+		var(--bg-robin-500),
+		transparent 90%
+	);
+	--callout-primary-border: color-mix(
+		in srgb,
+		var(--bg-robin-500),
+		transparent 80%
+	);
+	--callout-primary-title: var(--bg-robin-400);
+	--callout-primary-description: var(--bg-robin-400);
+	--callout-primary-icon: var(--bg-robin-300);
+	--callout-success-background: color-mix(
+		in srgb,
+		var(--bg-forest-600),
+		transparent 90%
+	);
+	--callout-success-border: color-mix(
+		in srgb,
+		var(--bg-forest-600),
+		transparent 80%
+	);
+	--callout-success-title: var(--bg-forest-400);
+	--callout-success-description: var(--bg-forest-400);
+	--callout-success-icon: var(--bg-forest-300);
+	--callout-warning-background: color-mix(
+		in srgb,
+		var(--bg-amber-600),
+		transparent 90%
+	);
+	--callout-warning-border: color-mix(
+		in srgb,
+		var(--bg-amber-600),
+		transparent 80%
+	);
+	--callout-warning-title: var(--bg-amber-400);
+	--callout-warning-description: var(--bg-amber-400);
+	--callout-warning-icon: var(--bg-amber-300);
+	--callout-error-background: color-mix(
+		in srgb,
+		var(--bg-cherry-500),
+		transparent 90%
+	);
+	--callout-error-border: color-mix(
+		in srgb,
+		var(--bg-cherry-500),
+		transparent 80%
+	);
+	--callout-error-title: var(--bg-cherry-400);
+	--callout-error-description: var(--bg-cherry-400);
+	--callout-error-icon: var(--bg-cherry-300);
 
 	/* Accent Colors - Dark Mode */
 	/* Primary Accent */
@@ -463,8 +594,8 @@
 	--color-neutral-light-1000: var(--bg-neutral-light-1000);
 
 	/* Base */
-	--color-base-black: var(--bg-base-black);
-	--color-base-white: var(--bg-base-white);
+	--color-base-black: var(--base-black);
+	--color-base-white: var(--base-white);
 
 	/* Typography - Font Size */
 	--text-xs: var(--font-size-xs);
