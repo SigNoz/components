@@ -93,8 +93,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/date-picker
       '@signozhq/design-tokens':
-        specifier: latest
-        version: 1.2.1
+        specifier: ^2.0.0
+        version: 2.0.0
       '@signozhq/dialog':
         specifier: workspace:*
         version: link:../../packages/dialog
@@ -1609,8 +1609,8 @@ importers:
   packages/tailwind-config:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: latest
-        version: 1.2.1
+        specifier: ^2.0.0
+        version: 2.0.0
       tailwindcss:
         specifier: ^4.1.4
         version: 4.1.14
@@ -1631,8 +1631,8 @@ importers:
   packages/theme:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: latest
-        version: 1.2.1
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/react':
         specifier: ^18.3.8
         version: 18.3.25
@@ -3104,8 +3104,8 @@ packages:
     peerDependencies:
       react: ^18.2.0
 
-  '@signozhq/design-tokens@1.2.1':
-    resolution: {integrity: sha512-Tyj8KmxLJ7DSJGN045pc48OFiu0h9B/729xCmQd0D6qjce7vVHb22Cf33nppknmZbfRRBfa9GE7MdcVgJqb5yw==}
+  '@signozhq/design-tokens@2.0.0':
+    resolution: {integrity: sha512-1OAuRgCpEO2oD1H2V63y7ohekDXAx3eyoSfAD4e984e6zVfUf5n6ezk8hCrhphSdCnuzlQ45pE7HCQIX6yv/zA==}
 
   '@signozhq/icons@0.0.1':
     resolution: {integrity: sha512-8IJBec9fHHlZKwxKsLFDHaFx/jXFvn84Zjp6zBIRHFLiIcXFtMlZYn73jraT63c+sTXoRig7BXz5s1jKE7FLKw==}
@@ -9574,7 +9574,7 @@ snapshots:
       - '@types/react'
       - tailwindcss
 
-  '@signozhq/design-tokens@1.2.1': {}
+  '@signozhq/design-tokens@2.0.0': {}
 
   '@signozhq/icons@0.0.1':
     dependencies:
