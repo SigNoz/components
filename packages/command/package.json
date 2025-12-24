@@ -1,17 +1,17 @@
 {
-	"name": "@signozhq/drawer",
-	"version": "0.0.3",
+	"name": "@signozhq/command",
+	"version": "0.0.0",
 	"license": "MIT",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/drawer.d.ts",
-			"import": "./dist/drawer.js"
+			"types": "./dist/command.d.ts",
+			"import": "./dist/command.js"
 		}
 	},
-	"main": "./dist/drawer.js",
-	"module": "./dist/drawer.js",
-	"types": "./dist/drawer.d.ts",
+	"main": "./dist/command.js",
+	"module": "./dist/command.js",
+	"types": "./dist/command.d.ts",
 	"files": [
 		"dist"
 	],
@@ -44,10 +44,10 @@
 		"@radix-ui/react-slot": "^1.1.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
+		"cmdk": "^1.1.1",
 		"lucide-react": "^0.445.0",
 		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7",
-		"vaul": "^1.1.2"
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"peerDependencies": {
 		"react": "^18.2.0"
@@ -55,5 +55,5 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"description": "side drawer component"
+	"description": "Fast, composable, unstyled command menu for React."
 }

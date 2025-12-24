@@ -18,6 +18,27 @@ function getContrastTextColor(hexColor: string): string {
 }
 
 function ColorPalette() {
+	// Accent colors configuration
+	const primaryAccents = ['robin'];
+	const secondaryAccents = [
+		'forest',
+		'amber',
+		'cherry',
+		'aqua',
+		'sakura',
+		'sienna',
+	];
+
+	// Get accent color data
+	const getAccentColor = (colorName: string) => {
+		const color = colors.find(
+			(c) => c.name.toLowerCase() === colorName.toLowerCase(),
+		);
+		if (!color) return null;
+		const shade500 = color.shades.find((s) => s.name === '500');
+		return shade500 ? { name: color.name, value: shade500.value } : null;
+	};
+
 	return (
 		<div className="p-5">
 			<h1 className="mb-5 text-lg font-bold text-card-foreground">Pallette</h1>
@@ -45,6 +66,59 @@ function ColorPalette() {
 							</div>
 						</div>
 					))}
+			</div>
+
+			{/* Accents */}
+			<div className="mb-12">
+				<h1 className="mb-5 text-lg font-bold text-card-foreground">Accents</h1>
+
+				{/* Primary Accents */}
+				<div className="mb-8">
+					<h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+						PRIMARY
+					</h2>
+					<div className="flex gap-4">
+						{primaryAccents.map((accentName) => {
+							const accent = getAccentColor(accentName);
+							if (!accent) return null;
+							return (
+								<div key={accent.name} className="flex flex-col gap-3">
+									<div
+										className="h-[70px] w-[150px] rounded shadow-lg"
+										style={{ backgroundColor: accent.value }}
+									/>
+									<p className="text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+										{accent.name}
+									</p>
+								</div>
+							);
+						})}
+					</div>
+				</div>
+
+				{/* Secondary Accents */}
+				<div>
+					<h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+						SECONDARY
+					</h2>
+					<div className="flex flex-wrap gap-4">
+						{secondaryAccents.map((accentName) => {
+							const accent = getAccentColor(accentName);
+							if (!accent) return null;
+							return (
+								<div key={accent.name} className="flex flex-col gap-3">
+									<div
+										className="h-[70px] w-[150px] rounded shadow-lg"
+										style={{ backgroundColor: accent.value }}
+									/>
+									<p className="text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+										{accent.name}
+									</p>
+								</div>
+							);
+						})}
+					</div>
+				</div>
 			</div>
 
 			{/* Gradients */}
