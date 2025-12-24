@@ -91,7 +91,11 @@ const Tabs = forwardRef<
 		}, [activeTabKey]);
 
 		useEffect(() => {
-			updateActiveSliderPosition();
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					updateActiveSliderPosition();
+				});
+			});
 		}, [activeTabKey, items, updateActiveSliderPosition]);
 
 		// --- Hover Slider Logic ---
@@ -140,42 +144,64 @@ const Tabs = forwardRef<
 						{variant === 'secondary' && (
 							<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
 						)}
-						{items.map((item) => (
-							<TabsTrigger
-								key={item.key}
-								value={item.key}
-								disabled={item.disabled}
-								variant={variant}
-								ref={(el) => (triggerRefs.current[item.key] = el)}
-								// Add hover event handlers
-								onMouseEnter={() => handleMouseEnter(item.key)}
-								onMouseLeave={handleMouseLeave}
-							>
-								{item.disabled ? (
-									<Tooltip title={item.disabledReason || 'This tab is disabled'}>
-										<LockIcon className="shrink-0 " size={16} />
-									</Tooltip>
-								) : (
-									item.prefixIcon && <span className="">{item.prefixIcon}</span>
-								)}
-								{item.label}
-								{!item.disabled && item.suffixIcon && (
-									<span className="">{item.suffixIcon}</span>
-								)}
-							</TabsTrigger>
-						))}
+						{items.map((item) => {
+							const triggerContent = (
+								<TabsTrigger
+									key={item.key}
+									value={item.key}
+									disabled={item.disabled}
+									variant={variant}
+									ref={(el) => {
+										triggerRefs.current[item.key] = el;
+										// Update position when active tab's ref is set (handles initial render)
+										if (el && item.key === activeTabKey) {
+											requestAnimationFrame(() => {
+												updateActiveSliderPosition();
+											});
+										}
+									}}
+									// Add hover event handlers
+									onMouseEnter={() => handleMouseEnter(item.key)}
+									onMouseLeave={handleMouseLeave}
+								>
+									{item.disabled ? (
+										<LockIcon className="shrink-0" size={16} />
+									) : (
+										item.prefixIcon && <span className="shrink-0">{item.prefixIcon}</span>
+									)}
+									{item.label}
+									{!item.disabled && item.suffixIcon && (
+										<span className="shrink-0">{item.suffixIcon}</span>
+									)}
+								</TabsTrigger>
+							);
+
+							return item.disabled ? (
+								<Tooltip
+									key={item.key}
+									title={item.disabledReason || 'This tab is disabled'}
+								>
+									{triggerContent}
+								</Tooltip>
+							) : (
+								triggerContent
+							);
+						})}
 						{variant === 'secondary' ? (
 							<div className="min-w-4 border-b border-[var(--tab-border-color)] shrink-0 grow"></div>
 						) : (
 							<>
 								{/* Hover Slider */}
 								<div
-									className="absolute bg-ink-500/10 dark:bg-vanilla-100/10 rounded-md transition-all duration-300 ease-in-out opacity-0 z-0 h-[28px] "
-									style={hoverSliderStyle}
+									className="tab-hover-slider absolute bg-[var(--tab-hover-bg)]/10 rounded z-0"
+									style={{
+										...hoverSliderStyle,
+										height: '28px',
+									}}
 								/>
 								{/* Active Slider */}
 								<div
-									className="absolute bottom-[-8px] h-[2px] bg-[var(--bg-robin-500)] rounded-[20px] transition-all duration-300 ease-in-out"
+									className="tab-active-slider absolute bottom-[-8px] h-[2px] bg-[var(--tab-active-accent-color)] rounded"
 									style={activeSliderStyle}
 								/>
 							</>
@@ -224,6 +250,7 @@ const TabsTrigger = forwardRef<
 	return (
 		<TabsPrimitive.Trigger
 			ref={triggerRef}
+			data-slot="tabs-trigger"
 			className={cn(tabsTriggerVariants({ variant, className }))}
 			disabled={disabled}
 			{...props}

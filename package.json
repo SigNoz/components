@@ -53,5 +53,8 @@
 		"tmp": "0.2.4"
 	},
 	"packageManager": "pnpm@8.15.6",
-	"name": "design-system"
+	"name": "design-system",
+	"dependencies": {
+		"@signozhq/icons": "^0.1.0"
+	}
 }

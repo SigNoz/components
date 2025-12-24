@@ -13,6 +13,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@signozhq/icons':
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.1
@@ -102,8 +106,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/drawer
       '@signozhq/icons':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.1.0
+        version: 0.1.0
       '@signozhq/input':
         specifier: workspace:*
         version: link:../../packages/input
@@ -316,6 +320,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.2.3(@types/react@18.3.25)(react@18.3.1)
+      '@signozhq/icons':
+        specifier: ^0.1.0
+        version: 0.1.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -465,6 +472,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.2.3(@types/react@18.3.25)(react@18.3.1)
+      '@signozhq/icons':
+        specifier: ^0.1.0
+        version: 0.1.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -1010,8 +1020,8 @@ importers:
         specifier: ^1.1.1
         version: 1.2.3(@types/react@18.3.25)(react@18.3.1)
       '@signozhq/icons':
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.1.0
+        version: 0.1.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -1456,6 +1466,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.2.3(@types/react@18.3.25)(react@18.3.1)
+      '@signozhq/icons':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3107,8 +3120,8 @@ packages:
   '@signozhq/design-tokens@2.0.0':
     resolution: {integrity: sha512-1OAuRgCpEO2oD1H2V63y7ohekDXAx3eyoSfAD4e984e6zVfUf5n6ezk8hCrhphSdCnuzlQ45pE7HCQIX6yv/zA==}
 
-  '@signozhq/icons@0.0.1':
-    resolution: {integrity: sha512-8IJBec9fHHlZKwxKsLFDHaFx/jXFvn84Zjp6zBIRHFLiIcXFtMlZYn73jraT63c+sTXoRig7BXz5s1jKE7FLKw==}
+  '@signozhq/icons@0.1.0':
+    resolution: {integrity: sha512-kGWDhCpQkFWaNwyWfy88AIbg902wBbgTFTBAtmo6DkHyLGoqWAf0Jcq8BX+7brFqJF9PnLoSJDj1lvCpUsI/Ig==}
 
   '@signozhq/input@0.0.2':
     resolution: {integrity: sha512-Iti9GkvexSsULX1pQsN6FT6Gw96YWilts72wITZd5fzgZq1yKqaDtQl98/QNuyoS3I3WEh+hVF4EIeCCe7oRsQ==}
@@ -9576,7 +9589,7 @@ snapshots:
 
   '@signozhq/design-tokens@2.0.0': {}
 
-  '@signozhq/icons@0.0.1':
+  '@signozhq/icons@0.1.0':
     dependencies:
       '@babel/runtime': 7.28.4
       '@commitlint/cli': 17.8.1

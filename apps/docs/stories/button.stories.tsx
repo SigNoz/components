@@ -1,16 +1,33 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, ButtonSize } from '@signozhq/button';
+import {
+	Button,
+	ButtonSize,
+	ButtonVariant,
+	ButtonColor,
+	ButtonBackground,
+} from '@signozhq/button';
 import { Code, ChevronLeft, ChevronRight } from 'lucide-react';
 import { generateDocs } from '../utils/generateDocs';
 
-const VARIANTS = ['solid', 'outlined', 'dashed', 'ghost', 'link'] as const;
-const COLORS = ['primary', 'destructive', 'warning', 'secondary'] as const;
+const VARIANTS = [
+	ButtonVariant.Solid,
+	ButtonVariant.Outlined,
+	ButtonVariant.Dashed,
+	ButtonVariant.Ghost,
+	ButtonVariant.Link,
+] as const;
+const COLORS = [
+	ButtonColor.Primary,
+	ButtonColor.Destructive,
+	ButtonColor.Warning,
+	ButtonColor.Secondary,
+] as const;
 
 type ButtonConfig = {
 	size?: ButtonSize;
-	variant?: 'solid' | 'outlined' | 'dashed' | 'ghost' | 'link';
-	color?: 'primary' | 'destructive' | 'warning' | 'secondary';
+	variant?: ButtonVariant;
+	color?: ButtonColor;
 	label: string;
 	buttonText?: string;
 };
@@ -108,27 +125,35 @@ export const Default: Story = {
 	render: () => {
 		const buttonConfigs: ButtonConfig[] = [
 			// Size Variations
-			{ size: 'xs', label: 'Extra-small Button', color: 'primary' },
-			{ size: 'sm', label: 'Small Button', color: 'primary' },
-			{ size: 'md', label: 'Medium Button', color: 'primary' },
-			{ size: 'lg', label: 'Large Button', color: 'primary' },
+			{
+				size: ButtonSize.XS,
+				label: 'Extra-small Button',
+				color: ButtonColor.Primary,
+			},
+			{ size: ButtonSize.SM, label: 'Small Button', color: ButtonColor.Primary },
+			{ size: ButtonSize.MD, label: 'Medium Button', color: ButtonColor.Primary },
+			{ size: ButtonSize.LG, label: 'Large Button', color: ButtonColor.Primary },
 
 			// Variant Types
-			{ variant: 'outlined', label: 'Border-solid Button' },
-			{ variant: 'dashed', label: 'Border-dashed Button' },
-			{ variant: 'ghost', label: 'Ghost Button' },
+			{ variant: ButtonVariant.Outlined, label: 'Border-solid Button' },
+			{ variant: ButtonVariant.Dashed, label: 'Border-dashed Button' },
 			{
-				variant: 'link',
+				variant: ButtonVariant.Ghost,
+				label: 'Ghost Button',
+				color: ButtonColor.Secondary,
+			},
+			{
+				variant: ButtonVariant.Link,
 				label: 'Link Button',
 				buttonText: 'Default button',
-				color: 'primary',
+				color: ButtonColor.Primary,
 			},
 
 			// Color Variations
-			{ color: 'primary', label: 'Primary Button' },
-			{ color: 'destructive', label: 'Danger Button' },
-			{ color: 'warning', label: 'Warning Button' },
-			{ color: 'secondary', label: 'Secondary Button' },
+			{ color: ButtonColor.Primary, label: 'Primary Button' },
+			{ color: ButtonColor.Destructive, label: 'Danger Button' },
+			{ color: ButtonColor.Warning, label: 'Warning Button' },
+			{ color: ButtonColor.Secondary, label: 'Secondary Button' },
 		];
 
 		return (
@@ -216,8 +241,8 @@ export const Sizes: Story = {
 		controls: { disable: false },
 	},
 	args: {
-		variant: 'solid',
-		color: 'primary',
+		variant: ButtonVariant.Solid,
+		color: ButtonColor.Primary,
 	},
 	argTypes: {
 		variant: {
@@ -234,19 +259,21 @@ export const Sizes: Story = {
 			<div className="space-y-4">
 				<h2 className="text-base font-semibold">Size Variations</h2>
 				<div className="space-y-8">
-					{['xs', 'sm', 'md', 'lg'].map((size) => (
-						<div key={size} className="space-y-4">
-							<h3 className="text-sm font-medium capitalize">{size}</h3>
-							<Button
-								size={size as ButtonSize}
-								{...args}
-								prefixIcon={<ChevronLeft />}
-								suffixIcon={<ChevronRight />}
-							>
-								{size} Button
-							</Button>
-						</div>
-					))}
+					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map(
+						(size) => (
+							<div key={size} className="space-y-4">
+								<h3 className="text-sm font-medium capitalize">{size}</h3>
+								<Button
+									size={size}
+									{...args}
+									prefixIcon={<ChevronLeft />}
+									suffixIcon={<ChevronRight />}
+								>
+									{size} Button
+								</Button>
+							</div>
+						),
+					)}
 				</div>
 			</div>
 		</div>
@@ -259,8 +286,8 @@ export const LoadingStates: Story = {
 		controls: { disable: false },
 	},
 	args: {
-		variant: 'solid',
-		color: 'primary',
+		variant: ButtonVariant.Solid,
+		color: ButtonColor.Primary,
 	},
 	argTypes: {
 		variant: {
@@ -278,22 +305,24 @@ export const LoadingStates: Story = {
 				<Button loading {...args}>
 					Loading
 				</Button>
-				<Button loading variant="outlined" {...args}>
+				<Button loading variant={ButtonVariant.Outlined} {...args}>
 					Loading
 				</Button>
-				<Button loading variant="dashed" {...args}>
+				<Button loading variant={ButtonVariant.Dashed} {...args}>
 					Loading
 				</Button>
-				<Button loading variant="ghost" {...args}>
+				<Button loading variant={ButtonVariant.Ghost} {...args}>
 					Loading
 				</Button>
 			</div>
 			<div className="flex gap-4">
-				{['xs', 'sm', 'md', 'lg'].map((size) => (
-					<Button key={size} size={size as ButtonSize} loading {...args}>
-						Loading
-					</Button>
-				))}
+				{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map(
+					(size) => (
+						<Button key={size} size={size} loading {...args}>
+							Loading
+						</Button>
+					),
+				)}
 			</div>
 		</div>
 	),
@@ -305,8 +334,8 @@ export const IconButtons: Story = {
 		controls: { disable: false },
 	},
 	args: {
-		variant: 'solid',
-		color: 'primary',
+		variant: ButtonVariant.Solid,
+		color: ButtonColor.Primary,
 	},
 	argTypes: {
 		variant: {
@@ -330,7 +359,7 @@ export const IconButtons: Story = {
 							key={variant}
 							variant={variant}
 							prefixIcon={<Code />}
-							size="icon"
+							size={ButtonSize.Icon}
 							{...args}
 						/>
 					))}
@@ -341,14 +370,11 @@ export const IconButtons: Story = {
 					Icon Button Sizes
 				</h2>
 				<div className="flex gap-4">
-					{['xs', 'sm', 'md', 'lg'].map((size) => (
-						<Button
-							key={size}
-							size={size as ButtonSize}
-							prefixIcon={<Code />}
-							{...args}
-						/>
-					))}
+					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map(
+						(size) => (
+							<Button key={size} size={size} prefixIcon={<Code />} {...args} />
+						),
+					)}
 				</div>
 			</div>
 		</div>
@@ -361,8 +387,8 @@ export const FullWidth: Story = {
 		controls: { disable: false },
 	},
 	args: {
-		variant: 'solid',
-		color: 'primary',
+		variant: ButtonVariant.Solid,
+		color: ButtonColor.Primary,
 	},
 	argTypes: {
 		variant: {
@@ -397,9 +423,9 @@ export const Playground: Story = {
 	},
 	args: {
 		children: 'Button',
-		variant: 'solid',
-		color: 'primary',
-		size: 'md',
+		variant: ButtonVariant.Solid,
+		color: ButtonColor.Primary,
+		size: ButtonSize.MD,
 		disabled: false,
 		loading: false,
 		width: undefined,
@@ -409,15 +435,26 @@ export const Playground: Story = {
 	argTypes: {
 		variant: {
 			control: 'select',
-			options: ['solid', 'outlined', 'dashed', 'ghost', 'text', 'link'],
+			options: [
+				ButtonVariant.Solid,
+				ButtonVariant.Outlined,
+				ButtonVariant.Dashed,
+				ButtonVariant.Ghost,
+				ButtonVariant.Link,
+			],
 		},
 		color: {
 			control: 'select',
-			options: ['primary', 'destructive', 'warning', 'secondary'],
+			options: [
+				ButtonColor.Primary,
+				ButtonColor.Destructive,
+				ButtonColor.Warning,
+				ButtonColor.Secondary,
+			],
 		},
 		size: {
 			control: 'select',
-			options: ['xs', 'sm', 'md', 'lg'],
+			options: [ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG],
 		},
 	},
 };
@@ -430,13 +467,18 @@ export const ActionButtons: Story = {
 	argTypes: {
 		background: {
 			control: 'select',
-			options: ['ink-500', 'ink-400', 'vanilla-100', 'vanilla-200'],
+			options: [
+				ButtonBackground.Ink500,
+				ButtonBackground.Ink400,
+				ButtonBackground.Vanilla100,
+				ButtonBackground.Vanilla200,
+			],
 			description: 'The background context for the action button',
 		},
 	},
 	args: {
-		variant: 'action',
-		background: 'ink-500',
+		variant: ButtonVariant.Action,
+		background: ButtonBackground.Ink500,
 	},
 	render: () => (
 		<div className="space-y-8">
@@ -451,8 +493,8 @@ export const ActionButtons: Story = {
 					<div className="p-6 bg-ink-500 rounded-lg">
 						<p className="text-vanilla-100 mb-4">On ink-500 background</p>
 						<Button
-							variant="action"
-							background="ink-500"
+							variant={ButtonVariant.Action}
+							background={ButtonBackground.Ink500}
 							prefixIcon={<ChevronLeft />}
 							suffixIcon={<ChevronRight />}
 						>
@@ -464,8 +506,8 @@ export const ActionButtons: Story = {
 					<div className="p-6 bg-ink-400 rounded-lg">
 						<p className="text-vanilla-100 mb-4">On ink-400 background</p>
 						<Button
-							variant="action"
-							background="ink-400"
+							variant={ButtonVariant.Action}
+							background={ButtonBackground.Ink400}
 							prefixIcon={<ChevronLeft />}
 							suffixIcon={<ChevronRight />}
 						>
@@ -477,8 +519,8 @@ export const ActionButtons: Story = {
 					<div className="p-6 bg-vanilla-100 rounded-lg">
 						<p className="text-slate-500 mb-4">On vanilla-100 background</p>
 						<Button
-							variant="action"
-							background="vanilla-100"
+							variant={ButtonVariant.Action}
+							background={ButtonBackground.Vanilla100}
 							prefixIcon={<ChevronLeft />}
 							suffixIcon={<ChevronRight />}
 						>
@@ -490,8 +532,8 @@ export const ActionButtons: Story = {
 					<div className="p-6 bg-vanilla-200 rounded-lg">
 						<p className="text-slate-500 mb-4">On vanilla-200 background</p>
 						<Button
-							variant="action"
-							background="vanilla-200"
+							variant={ButtonVariant.Action}
+							background={ButtonBackground.Vanilla200}
 							prefixIcon={<ChevronLeft />}
 							suffixIcon={<ChevronRight />}
 						>
@@ -507,8 +549,8 @@ export const ActionButtons: Story = {
 					{/* Disabled examples */}
 					<div className="p-6 bg-ink-500 rounded-lg">
 						<Button
-							variant="action"
-							background="ink-500"
+							variant={ButtonVariant.Action}
+							background={ButtonBackground.Ink500}
 							disabled
 							prefixIcon={<ChevronLeft />}
 							suffixIcon={<ChevronRight />}
@@ -518,8 +560,8 @@ export const ActionButtons: Story = {
 					</div>
 					<div className="p-6 bg-vanilla-100 rounded-lg">
 						<Button
-							variant="action"
-							background="vanilla-100"
+							variant={ButtonVariant.Action}
+							background={ButtonBackground.Vanilla100}
 							disabled
 							prefixIcon={<ChevronLeft />}
 							suffixIcon={<ChevronRight />}

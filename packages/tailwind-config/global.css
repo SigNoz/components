@@ -756,7 +756,11 @@
 
 @layer base {
 	* {
-		@apply border-border outline-ring/50;
+		@apply border-border;
+	}
+	/* Only apply focus styles to interactive elements when keyboard focused */
+	*:focus-visible {
+		@apply outline-2 outline-offset-2 outline-ring;
 	}
 	body {
 		@apply bg-background text-foreground;

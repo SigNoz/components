@@ -27,7 +27,7 @@ const tabsListWrapperVariants = cva('', {
 const tabsListVariants = cva('', {
 	variants: {
 		variant: {
-			primary: ['inline-flex items-center gap-6 rounded-md relative'],
+			primary: ['inline-flex items-center gap-6 relative'],
 			secondary: 'flex ',
 		},
 	},
@@ -40,12 +40,14 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 	variants: {
 		variant: {
 			primary: [
-				'whitespace-nowrap inline-flex items-center gap-2 rounded px-1.5 py-1 text-sm font-normal',
+				'whitespace-nowrap inline-flex items-center gap-2 rounded px-1.5 py-1',
+				'text-sm font-normal leading-5',
 				'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
 				'disabled:text-opacity-50 disabled:cursor-not-allowed',
 				'disabled:text-slate-50/40 dark:disabled:text-vanilla-100/40',
-				'data-[state=active]:text-foreground text-slate-50',
-				'hover:text-ink-500 dark:hover:text-vanilla-100',
+				'text-[var(--tab-text-color)]',
+				'hover:text-[var(--tab-hover-text-color)]',
+				'data-[state=active]:text-[var(--tab-active-text-color)]',
 				'relative z-10',
 			],
 			secondary: [

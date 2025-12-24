@@ -1,11 +1,11 @@
 import './index.css';
 import * as React from 'react';
 import { useState, useEffect, MouseEvent } from 'react';
-import { ChevronLeft, ChevronRight, PaginationDivider } from '@signozhq/icons';
+import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 
 import { cn } from './lib/utils';
 import { buttonVariants } from '../../button/src/button';
-import type { ButtonSize } from '../../button/src/button';
+import { ButtonSize } from '../../button/src/button';
 import { renderPageNumbers } from './utils';
 
 // Define alignment options
@@ -62,7 +62,7 @@ type PaginationLinkProps = {
 function PaginationLink({
 	className,
 	isActive,
-	size = 'icon',
+	size = ButtonSize.Icon,
 	disabled,
 	children,
 	...props
@@ -116,7 +116,7 @@ function PaginationPrevious({
 	return (
 		<PaginationLink
 			aria-label="Go to previous page"
-			size="icon"
+			size={ButtonSize.Icon}
 			className={cn(className)}
 			disabled={disabled}
 			{...props}
@@ -130,7 +130,7 @@ function PaginationNext({ className, disabled, ...props }: PaginationNavProps) {
 	return (
 		<PaginationLink
 			aria-label="Go to next page"
-			size="icon"
+			size={ButtonSize.Icon}
 			className={cn(className)}
 			disabled={disabled}
 			{...props}
@@ -151,12 +151,7 @@ function PaginationEllipsis({
 			className={cn('flex h-9 w-9 items-center justify-center', className)}
 			{...props}
 		>
-			<PaginationDivider
-				height={1}
-				width={32}
-				viewBox="0 0 32 1"
-				className="text-inherit"
-			/>
+			<Minus height="100%" width={32} /> {/* for the time being */}
 			<span className="sr-only">More pages</span>
 		</span>
 	);

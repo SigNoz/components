@@ -12,9 +12,16 @@ function Dialog({
 }
 
 function DialogTrigger({
+	className,
 	...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-	return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+	return (
+		<DialogPrimitive.Trigger
+			data-slot="dialog-trigger"
+			className={cn('cursor-pointer', className)}
+			{...props}
+		/>
+	);
 }
 
 function DialogPortal({
@@ -24,9 +31,16 @@ function DialogPortal({
 }
 
 function DialogClose({
+	className,
 	...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-	return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+	return (
+		<DialogPrimitive.Close
+			data-slot="dialog-close"
+			className={cn('cursor-pointer', className)}
+			{...props}
+		/>
+	);
 }
 
 function DialogOverlay({
@@ -37,7 +51,7 @@ function DialogOverlay({
 		<DialogPrimitive.Overlay
 			data-slot="dialog-overlay"
 			className={cn(
-				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
+				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 dark:bg-black/60',
 				className,
 			)}
 			{...props}
@@ -73,7 +87,7 @@ function DialogContent({
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
 				className={cn(
-					'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[80px] left-[50%] z-50 grid w-full translate-x-[-50%] rounded-lg border shadow-lg duration-200 border-vanilla-300 dark:border-slate-500',
+					'fixed left-[50%] z-50 grid w-full translate-x-[-50%] shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)] cursor-default',
 					widthClass,
 					className,
 				)}
@@ -81,8 +95,11 @@ function DialogContent({
 			>
 				{children}
 				{showCloseButton && (
-					<DialogPrimitive.Close className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none cursor-pointer [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:not([class*='size-']):size-4">
-						<XIcon size={18} />
+					<DialogPrimitive.Close
+						data-slot="dialog-close"
+						className="absolute top-[13px] right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none cursor-pointer flex items-center justify-center w-6 h-6 hover:bg-[var(--dialog-close-icon)]/10"
+					>
+						<XIcon size={14} className="shrink-0" />
 						<span className="sr-only">Close</span>
 					</DialogPrimitive.Close>
 				)}
@@ -96,7 +113,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
 		<div
 			data-slot="dialog-header"
 			className={cn(
-				'flex flex-col gap-2 text-center sm:text-left border-b border-vanilla-300 dark:border-slate-500 p-4 cursor-default',
+				'flex flex-row items-center justify-between border-b border-[var(--dialog-border)] px-4 py-3 cursor-default',
 				className,
 			)}
 			{...props}
@@ -109,7 +126,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
 		<div
 			data-slot="dialog-footer"
 			className={cn(
-				'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end',
+				'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end cursor-default',
 				className,
 			)}
 			{...props}
@@ -129,7 +146,7 @@ function DialogTitle({
 		<DialogPrimitive.Title
 			data-slot="dialog-title"
 			className={cn(
-				'text-sm font-normal leading-5 font-inter font-regular flex items-center gap-2',
+				'text-sm font-normal leading-5 font-inter flex items-center gap-2 m-0 cursor-default',
 				className,
 			)}
 			{...props}
@@ -147,7 +164,7 @@ function DialogDescription({
 	return (
 		<DialogPrimitive.Description
 			data-slot="dialog-description"
-			className={cn('text-sm p-4', className)}
+			className={cn('text-sm p-4 cursor-default', className)}
 			{...props}
 		/>
 	);

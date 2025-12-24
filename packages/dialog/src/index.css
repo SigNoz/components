@@ -1,6 +1,52 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
+/* Dialog-specific CSS variables */
+[data-slot='dialog-content'] {
+	--dialog-background: var(--bg-vanilla-100);
+	--dialog-border: var(--bg-vanilla-300);
+	--dialog-text: var(--text-ink-400);
+	--dialog-text-muted: var(--text-ink-300);
+	--dialog-close-icon: var(--text-ink-400);
+	background-color: var(--dialog-background);
+	border: 1px solid var(--dialog-border);
+	border-radius: 4px;
+	color: var(--dialog-text);
+}
+
+.dark [data-slot='dialog-content'] {
+	--dialog-background: var(--bg-ink-400);
+	--dialog-border: var(--bg-slate-500);
+	--dialog-text: var(--text-vanilla-100);
+	--dialog-text-muted: var(--text-vanilla-400);
+	--dialog-close-icon: var(--text-vanilla-400);
+}
+
+[data-slot='dialog-header'] {
+	--dialog-border: var(--bg-vanilla-300);
+	border-color: var(--dialog-border);
+}
+
+.dark [data-slot='dialog-header'] {
+	--dialog-border: var(--bg-slate-500);
+}
+
+[data-slot='dialog-title'] {
+	color: var(--dialog-text);
+}
+
+[data-slot='dialog-description'] {
+	color: var(--dialog-text-muted);
+}
+
+[data-slot='dialog-close'] {
+	color: var(--dialog-close-icon);
+}
+
+[data-slot='dialog-close'] svg {
+	color: var(--dialog-close-icon);
+}
+
 .alert-dialog [data-slot='dialog-header'] {
 	border-bottom: none;
 	padding-bottom: 0;
@@ -8,4 +54,60 @@
 
 .alert-dialog [data-slot='dialog-title'] {
 	font-weight: 500;
+}
+
+/* Override Storybook h2 styles for dialog titles */
+.sb-show-main [data-slot='dialog-title'],
+.sb-show-main [data-slot='dialog-title'] h2 {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* Ensure dialog header has proper spacing */
+[data-slot='dialog-header'] {
+	margin-top: 0;
+}
+
+[data-slot='dialog-header'] [data-slot='dialog-title'] {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+/* Dialog motion animation matching Figma spec */
+@keyframes dialog-in {
+	from {
+		top: 100px;
+		opacity: 0;
+	}
+	to {
+		top: 80px;
+		opacity: 1;
+	}
+}
+
+@keyframes dialog-out {
+	from {
+		top: 80px;
+		opacity: 1;
+	}
+	to {
+		top: 100px;
+		opacity: 0;
+	}
+}
+
+[data-slot='dialog-content'] {
+	top: 80px;
+	opacity: 0;
+}
+
+[data-slot='dialog-content'][data-state='open'] {
+	animation: dialog-in 0.2s cubic-bezier(0.76, 0, 0.23, 1) forwards;
+}
+
+[data-slot='dialog-content'][data-state='closed'] {
+	animation: dialog-out 0.2s cubic-bezier(0.76, 0, 0.23, 1) forwards;
 }

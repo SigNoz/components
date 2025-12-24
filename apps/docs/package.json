@@ -23,7 +23,7 @@
 		"@signozhq/design-tokens": "latest",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
-		"@signozhq/icons": "^0.0.1",
+		"@signozhq/icons": "^0.1.0",
 		"@signozhq/input": "workspace:*",
 		"@signozhq/pagination": "workspace:*",
 		"@signozhq/popover": "workspace:*",

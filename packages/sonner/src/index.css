@@ -1,81 +1,151 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
-[data-color='primary'] {
-	--button-background: var(--bg-robin-500);
-	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-robin-700);
-	--button-hover-background: var(--bg-robin-400);
-	--button-link-hover-foreground: var(--bg-robin-500);
-	--button-ghost-hover-foreground: var(--bg-robin-500);
+/* Toast Container Styling */
+.toaster [data-sonner-toast] {
+	align-items: flex-start !important;
+	padding: 14px 16px !important;
+	border-radius: 6px !important;
+	gap: 10px !important;
 }
 
-[data-color='destructive'] {
-	--button-background: var(--bg-cherry-500);
-	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-cherry-500);
-	--button-hover-background: var(--bg-cherry-400);
-	--button-link-hover-foreground: var(--bg-cherry-400);
-	--button-ghost-hover-foreground: var(--bg-cherry-400);
+/* Icon container - prefer data attributes, fallback to structural */
+.toaster [data-sonner-toast] [data-icon-wrapper],
+.toaster [data-sonner-toast] > div:has([data-icon]),
+.toaster [data-sonner-toast] > div:has(svg) {
+	align-self: flex-start !important;
+	margin-top: 0;
+	padding-top: 2px;
+	gap: 12px;
 }
 
-[data-color='warning'] {
-	--button-background: var(--bg-amber-500);
-	--button-solid-foreground: var(--bg-ink-400);
-	--button-outlined-foreground: var(--bg-amber-700);
-	--button-hover-background: var(--bg-amber-400);
-	--button-link-hover-foreground: var(--bg-amber-600);
-	--button-ghost-hover-foreground: var(--bg-amber-600);
+/* Icon element - prioritize data-icon, then svg elements */
+.toaster [data-sonner-toast] [data-icon],
+.toaster [data-sonner-toast] svg {
+	align-self: flex-start !important;
+	margin-top: 0;
+	width: 16px !important;
+	height: 16px !important;
+	flex-shrink: 0;
+	margin-left: 0;
+	margin-right: 0;
 }
 
-[data-color='secondary'] {
-	--button-background: var(--bg-vanilla-300);
-	--button-solid-foreground: var(--bg-slate-500);
-	--button-outlined-foreground: var(--bg-slate-50);
-	--button-hover-background: var(--bg-vanilla-300);
-	--button-link-hover-foreground: var(--bg-slate-300);
+/* Content Area Styling */
+/* Content wrapper - prefer data attributes */
+.toaster [data-sonner-toast] [data-content],
+.toaster [data-sonner-toast] > div:has([data-title]),
+.toaster [data-sonner-toast] > div:has([data-description]) {
+	align-self: flex-start !important;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
 }
 
-.dark [data-color='secondary'] {
-	--button-background: var(--bg-slate-400);
-	--button-solid-foreground: var(--bg-vanilla-100);
-	--button-outlined-foreground: var(--bg-vanilla-400);
-	--button-hover-background: var(--bg-slate-300);
-	--button-link-hover-foreground: var(--bg-vanilla-200);
+/* Title/Message Styling */
+/* Priority: data-title > first text element in content */
+.toaster [data-sonner-toast] [data-title] {
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-500);
+	margin: 0;
+	padding: 0;
+	height: 20px;
 }
 
-[data-background='ink-500'] {
-	--action-button-background: var(--bg-ink-400);
-	--action-button-border: var(--bg-slate-500);
-	--action-button-text: var(--bg-vanilla-400);
-	--action-button-hover-background: var(--bg-ink-300);
-	--action-button-hover-border: var(--bg-slate-400);
-	--action-button-hover-text: var(--bg-vanilla-100);
+.dark .toaster [data-sonner-toast] [data-title] {
+	color: var(--text-vanilla-100);
 }
 
-[data-background='ink-400'] {
-	--action-button-background: var(--bg-ink-300);
-	--action-button-border: var(--bg-slate-400);
-	--action-button-text: var(--bg-vanilla-400);
-	--action-button-hover-background: var(--bg-ink-200);
-	--action-button-hover-border: var(--bg-slate-300);
-	--action-button-hover-text: var(--bg-vanilla-100);
+/* Fallback for cases where data-title isn't present */
+.toaster [data-sonner-toast] [data-content] > p:first-of-type,
+.toaster [data-sonner-toast] > div:has([data-title]) > p:first-of-type,
+.toaster [data-sonner-toast] > div:has([data-title]) > div:first-of-type {
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-500);
+	margin: 0;
+	padding: 0;
+	height: 20px;
 }
 
-[data-background='vanilla-100'] {
-	--action-button-background: var(--bg-vanilla-200);
-	--action-button-border: var(--bg-vanilla-300);
-	--action-button-text: var(--bg-slate-50);
-	--action-button-hover-background: var(--bg-vanilla-300);
-	--action-button-hover-border: rgba(var(--rgb-vanilla-400), 0.4);
-	--action-button-hover-text: var(--bg-slate-500);
+.dark .toaster [data-sonner-toast] [data-content] > p:first-of-type,
+.dark .toaster [data-sonner-toast] > div:has([data-title]) > p:first-of-type,
+.dark .toaster [data-sonner-toast] > div:has([data-title]) > div:first-of-type {
+	color: var(--text-vanilla-100);
 }
 
-[data-background='vanilla-200'] {
-	--action-button-background: var(--bg-vanilla-100);
-	--action-button-border: var(--bg-vanilla-300);
-	--action-button-text: var(--bg-slate-50);
-	--action-button-hover-background: var(--bg-vanilla-100);
-	--action-button-hover-border: rgba(var(--rgb-vanilla-400), 0.4);
-	--action-button-hover-text: var(--bg-slate-500);
+/* Description Styling */
+/* Priority: data-description > description container */
+.toaster [data-sonner-toast] [data-description] {
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-50);
+	margin: 0;
+	padding: 0;
+}
+
+.dark .toaster [data-sonner-toast] [data-description] {
+	color: var(--text-vanilla-400);
+}
+
+/* Description container - for multi-line descriptions */
+.toaster [data-sonner-toast] [data-description-wrapper],
+.toaster [data-sonner-toast] [data-content] > div:has([data-description]),
+.toaster [data-sonner-toast] > div:has([data-description]) > div:last-of-type {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-50);
+	margin: 0;
+	padding: 0;
+}
+
+.dark .toaster [data-sonner-toast] [data-description-wrapper],
+.dark .toaster [data-sonner-toast] [data-content] > div:has([data-description]),
+.dark
+	.toaster
+	[data-sonner-toast]
+	> div:has([data-description])
+	> div:last-of-type {
+	color: var(--text-vanilla-400);
+}
+
+/* Fallback for description paragraphs */
+.toaster [data-sonner-toast] [data-content] > p:not(:first-of-type),
+.toaster
+	[data-sonner-toast]
+	> div:has([data-description])
+	> p:not(:first-of-type) {
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 20px;
+	letter-spacing: -0.07px;
+	color: var(--text-slate-50);
+	margin: 0;
+	padding: 0;
+}
+
+.dark .toaster [data-sonner-toast] [data-content] > p:not(:first-of-type),
+.dark
+	.toaster
+	[data-sonner-toast]
+	> div:has([data-description])
+	> p:not(:first-of-type) {
+	color: var(--text-vanilla-400);
 }

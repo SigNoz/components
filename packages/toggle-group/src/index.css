@@ -1,21 +1,19 @@
 @import 'tailwindcss';
 @import '@signozhq/tailwind-config/global.css';
 
-:root {
-	--vanilla-100: #FFFFFF;
-	--vanilla-300: #E9E9E9;
-	--ink-400: #121317;
-	--slate-400: #1D212D;
+/* Scoped variables for toggle-group only - no global overrides */
+[data-slot='toggle-group'] {
+	--toggle-bg: var(--bg-vanilla-100);
+	--toggle-text: var(--text-slate-50);
+	--toggle-border: var(--bg-vanilla-300);
+	--toggle-active-bg: var(--bg-vanilla-300);
+	--toggle-active-text: var(--text-slate-500);
 }
 
-.dark {
-	--bg-base: var(--ink-400);
-	--text-base: var(--vanilla-100);
-	--border-base: var(--slate-400);
-}
-
-.light {
-	--bg-base: var(--vanilla-100);
-	--text-base: var(--ink-400);
-	--border-base: var(--vanilla-300);
+.dark [data-slot='toggle-group'] {
+	--toggle-bg: var(--bg-ink-400);
+	--toggle-text: var(--text-vanilla-400);
+	--toggle-border: var(--bg-slate-400);
+	--toggle-active-bg: var(--bg-slate-400);
+	--toggle-active-text: var(--text-vanilla-100);
 }

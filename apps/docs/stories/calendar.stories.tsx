@@ -3,6 +3,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Calendar } from '@signozhq/calendar';
 import { generateDocs } from '../utils/generateDocs';
+import { ButtonVariant } from '@signozhq/button';
 
 const CalendarExamples = [
 	`import { Calendar } from '@signozhq/calendar';
@@ -111,7 +112,7 @@ export const Default: Story = {
 		mode: 'single',
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 };
 
@@ -120,7 +121,7 @@ export const SingleDateSelection: Story = {
 		mode: 'single',
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -149,7 +150,7 @@ export const DateRangeSelection: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [range, setRange] = React.useState<any>({
@@ -185,7 +186,7 @@ export const MultipleDateSelection: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [selected, setSelected] = React.useState<any>([]);
@@ -216,7 +217,7 @@ export const WithDropdownNavigation: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'dropdown',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -245,7 +246,7 @@ export const HideOutsideDays: Story = {
 	args: {
 		showOutsideDays: false,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -266,7 +267,7 @@ export const CustomButtonVariant: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'outlined',
+		buttonVariant: ButtonVariant.Outlined,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -287,7 +288,7 @@ export const DisabledDates: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -321,7 +322,7 @@ export const WithTimezone: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: 'ghost',
+		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date());
