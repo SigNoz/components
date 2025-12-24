@@ -1280,12 +1280,6 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 
 // Story: Infinite Scroll with Load More
 export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
-	parameters: {
-		chromatic: {
-			delay: 500, // Wait 500ms for initial data to load
-			pauseAnimationAtEnd: true,
-		},
-	},
 	render: (args) => {
 		const [data, setData] = React.useState<User[]>([]);
 		const [loading, setLoading] = React.useState(false);
