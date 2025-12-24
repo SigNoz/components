@@ -101,10 +101,6 @@ html.dark .docs-story > div:first-of-type {
 
 /* Improve paragraph spacing - only for Storybook UI */
 
-.sb-show-main p {
-	margin-bottom: 0.75rem;
-}
-
 /* Improve list styling - only for Storybook UI */
 
 .sb-show-main ul,
