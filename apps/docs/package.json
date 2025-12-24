@@ -20,7 +20,7 @@
 		"@signozhq/callout": "workspace:*",
 		"@signozhq/checkbox": "workspace:*",
 		"@signozhq/date-picker": "workspace:*",
-		"@signozhq/design-tokens": "^2.0.0",
+		"@signozhq/design-tokens": "latest",
 		"@signozhq/dialog": "workspace:*",
 		"@signozhq/drawer": "workspace:*",
 		"@signozhq/icons": "^0.0.1",

@@ -53,6 +53,5 @@
 		"tmp": "0.2.4"
 	},
 	"packageManager": "pnpm@8.15.6",
-	"name": "design-system",
-	"dependencies": {}
+	"name": "design-system"
 }

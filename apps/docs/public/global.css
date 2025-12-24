@@ -118,6 +118,8 @@
 	--font-sans: var(--font-sans);
 	--font-serif: var(--font-serif);
 	--font-mono: var(--font-mono);
+
+	--animate-fast-spin: spin 0.7s linear infinite;
 }
 
 @layer base {

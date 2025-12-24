@@ -93,7 +93,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/date-picker
       '@signozhq/design-tokens':
-        specifier: ^2.0.0
+        specifier: latest
         version: 2.0.0
       '@signozhq/dialog':
         specifier: workspace:*
@@ -1609,7 +1609,7 @@ importers:
   packages/tailwind-config:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: ^2.0.0
+        specifier: latest
         version: 2.0.0
       tailwindcss:
         specifier: ^4.1.4
@@ -1631,7 +1631,7 @@ importers:
   packages/theme:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: ^2.0.0
+        specifier: latest
         version: 2.0.0
       '@types/react':
         specifier: ^18.3.8
