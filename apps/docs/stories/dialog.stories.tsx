@@ -1,8 +1,13 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@signozhq/button';
+import {
+	Button,
+	ButtonSize,
+	ButtonColor,
+	ButtonVariant,
+} from '@signozhq/button';
 import { DialogWrapper, AlertDialogWrapper } from '@signozhq/dialog';
-import { Code } from 'lucide-react';
+import { Code, X, Trash2 } from '@signozhq/icons';
 import { generateDocs } from '../utils/generateDocs';
 
 const dialogExamples = [
@@ -62,7 +67,7 @@ export const Default: Story = {
 		title: 'Edit report details',
 		width: 'base',
 		trigger: (
-			<Button variant="solid" color="primary">
+			<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 				Open Dialog
 			</Button>
 		),
@@ -81,7 +86,7 @@ export const Controlled: Story = {
 				title="Controlled Dialog"
 				titleIcon={<Code size={16} />}
 				trigger={
-					<Button variant="solid" color="primary">
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 						Open Controlled Dialog
 					</Button>
 				}
@@ -89,7 +94,11 @@ export const Controlled: Story = {
 				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
 					<p>Dialog content goes here</p>
 					<div className="flex justify-end">
-						<Button variant="solid" color="primary" onClick={() => setOpen(false)}>
+						<Button
+							variant={ButtonVariant.Solid}
+							color={ButtonColor.Primary}
+							onClick={() => setOpen(false)}
+						>
 							Close Dialog
 						</Button>
 					</div>
@@ -111,11 +120,11 @@ export const DialogWidth: Story = {
 					<DialogWrapper
 						key={width}
 						open={open === width}
-						onOpenChange={(isOpen) => setOpen(isOpen ? width : null)}
+						onOpenChange={(isOpen: boolean) => setOpen(isOpen ? width : null)}
 						title={`${width.charAt(0).toUpperCase() + width.slice(1)} Width Dialog`}
 						width={width}
 						trigger={
-							<Button variant="solid" color="primary">
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 								Open {width} Dialog
 							</Button>
 						}
@@ -123,7 +132,11 @@ export const DialogWidth: Story = {
 						<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
 							<p>This is a dialog with {width} width.</p>
 							<div className="flex justify-end">
-								<Button variant="solid" color="primary" onClick={() => setOpen(null)}>
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Primary}
+									onClick={() => setOpen(null)}
+								>
 									Close Dialog
 								</Button>
 							</div>
@@ -138,40 +151,53 @@ export const DialogWidth: Story = {
 export const AlertDialog: Story = {
 	render: () => {
 		const [open, setOpen] = React.useState(false);
+		const [checkboxChecked, setCheckboxChecked] = React.useState(true);
 
 		return (
 			<AlertDialogWrapper
 				open={open}
+				width="narrow"
 				onOpenChange={setOpen}
-				title="Are you absolutely sure?"
+				title="Delete this step"
+				checkboxLabel="Do not ask me this again"
+				checkboxChecked={checkboxChecked}
+				onCheckboxChange={setCheckboxChecked}
 				trigger={
-					<Button variant="solid" color="primary" prefixIcon={<Code />}>
-						Open Alert Dialog
+					<Button
+						variant={ButtonVariant.Solid}
+						color={ButtonColor.Primary}
+						prefixIcon={<Code />}
+					>
+						Open Dialog
 					</Button>
 				}
+				footer={
+					<>
+						<Button
+							variant={ButtonVariant.Ghost}
+							color="secondary"
+							prefixIcon={<X size={12} />}
+							onClick={() => setOpen(false)}
+							size={ButtonSize.SM}
+						>
+							Cancel
+						</Button>
+						<Button
+							variant={ButtonVariant.Solid}
+							color="destructive"
+							prefixIcon={<Trash2 size={12} />}
+							size={ButtonSize.SM}
+							onClick={() => {
+								setOpen(false);
+							}}
+						>
+							Delete Step
+						</Button>
+					</>
+				}
 			>
-				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-					This action cannot be undone. This will permanently delete your account and
-					remove your data from our servers.
-				</div>
-				<div className="flex justify-end gap-2 mt-4">
-					<Button
-						variant="outlined"
-						color="secondary"
-						onClick={() => setOpen(false)}
-					>
-						Cancel
-					</Button>
-					<Button
-						variant="solid"
-						color="destructive"
-						onClick={() => {
-							setOpen(false);
-						}}
-					>
-						Delete Account
-					</Button>
-				</div>
+				Deleting this step would stop further analytics using this step of the
+				funnel.
 			</AlertDialogWrapper>
 		);
 	},
