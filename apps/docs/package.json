@@ -15,6 +15,7 @@
 	"dependencies": {
 		"@signozhq/combobox": "workspace:*",
 		"@signozhq/dropdown-menu": "workspace:*",
+		"@signozhq/pin-list": "workspace:*",
 		"@signozhq/command": "workspace:*",
 		"@signozhq/badge": "workspace:*",
 		"@signozhq/button": "workspace:*",
