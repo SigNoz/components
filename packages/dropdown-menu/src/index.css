@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import '@signozhq/tailwind-config/global.css';
+*:focus-visible {
+	outline: none;
+
+	outline-offset: 0;
+}
