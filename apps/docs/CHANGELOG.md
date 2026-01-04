@@ -1,5 +1,11 @@
 # docs
 
+## 0.1.21
+
+### Patch Changes
+
+- Added hide/show password functionality in Input component
+
 ## 0.1.20
 
 ### Patch Changes
