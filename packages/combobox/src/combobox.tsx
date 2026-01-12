@@ -103,6 +103,18 @@ const ComboboxEmpty = React.forwardRef<
 ));
 ComboboxEmpty.displayName = CommandPrimitive.Empty.displayName;
 
+const ComboboxLoading = React.forwardRef<
+	React.ElementRef<typeof CommandPrimitive.Loading>,
+	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Loading>
+>(({ className, ...props }, ref) => (
+	<CommandPrimitive.Loading
+		ref={ref}
+		className={cn('py-6 text-center text-sm', className)}
+		{...props}
+	/>
+));
+ComboboxLoading.displayName = CommandPrimitive.Loading.displayName;
+
 const ComboboxGroup = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.Group>,
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
@@ -175,6 +187,7 @@ export {
 	ComboboxInput,
 	ComboboxList,
 	ComboboxEmpty,
+	ComboboxLoading,
 	ComboboxGroup,
 	ComboboxLabel,
 	ComboboxItem,

@@ -8,12 +8,14 @@ import {
 	ComboboxInput,
 	ComboboxList,
 	ComboboxEmpty,
+	ComboboxLoading,
 	ComboboxItem,
 	ComboboxGroup,
 	ComboboxLabel,
 	ComboboxSeparator,
 } from '@signozhq/combobox';
 import { generateDocs } from '../utils/generateDocs';
+import { Code2, Database, Terminal, GitBranch } from 'lucide-react';
 
 const ComboboxExamples = [
 	`import {
@@ -636,6 +638,90 @@ export const WithoutSearchNoCheck: Story = {
 											{framework.label}
 										</ComboboxItem>
 									))}
+								</ComboboxList>
+							</ComboboxCommand>
+						</ComboboxContent>
+					)}
+				</Combobox>
+			</div>
+		);
+	},
+};
+
+export const WithIcons: Story = {
+	render: () => {
+		const [value, setValue] = useState('');
+		const [open, setOpen] = useState(false);
+		const [isLoading, setIsLoading] = useState(false);
+
+		const itemsWithIcons = [
+			{
+				value: 'react',
+				label: 'React',
+				icon: Code2,
+			},
+			{
+				value: 'nodejs',
+				label: 'Node.js',
+				icon: Terminal,
+			},
+			{
+				value: 'postgres',
+				label: 'PostgreSQL',
+				icon: Database,
+			},
+			{
+				value: 'git',
+				label: 'Git',
+				icon: GitBranch,
+			},
+		];
+
+		const handleInputChange = (searchValue: string) => {
+			if (searchValue.length > 0) {
+				setIsLoading(true);
+				// Simulate API call
+				setTimeout(() => setIsLoading(false), 1000);
+			}
+		};
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<Combobox open={open} onOpenChange={setOpen}>
+					<ComboboxTrigger
+						placeholder="Select a tool..."
+						value={itemsWithIcons.find((f) => f.value === value)?.label || ''}
+					/>
+					{open && (
+						<ComboboxContent>
+							<ComboboxCommand>
+								<ComboboxInput
+									placeholder="Search tools..."
+									onValueChange={handleInputChange}
+								/>
+								<ComboboxList>
+									{isLoading ? (
+										<ComboboxLoading>Loading tools...</ComboboxLoading>
+									) : (
+										itemsWithIcons.map((item) => {
+											const Icon = item.icon;
+											return (
+												<ComboboxItem
+													key={item.value}
+													value={item.value}
+													onSelect={() => {
+														setValue(item.value);
+														setOpen(false);
+														setIsLoading(false);
+													}}
+													isSelected={value === item.value}
+												>
+													<Icon className="mr-2 h-4 w-4" />
+													{item.label}
+												</ComboboxItem>
+											);
+										})
+									)}
 								</ComboboxList>
 							</ComboboxCommand>
 						</ComboboxContent>
