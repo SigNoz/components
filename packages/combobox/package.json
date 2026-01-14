@@ -1,17 +1,17 @@
 {
-	"name": "@signozhq/table",
-	"version": "0.4.0",
+	"name": "@signozhq/combobox",
+	"version": "1.0.0",
 	"license": "MIT",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
+			"types": "./dist/combobox.d.ts",
+			"import": "./dist/combobox.js"
 		}
 	},
-	"main": "./dist/index.js",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"main": "./dist/combobox.js",
+	"module": "./dist/combobox.js",
+	"types": "./dist/combobox.d.ts",
 	"files": [
 		"dist"
 	],
@@ -32,6 +32,7 @@
 		"@vitejs/plugin-react": "^4.2.1",
 		"eslint": "^9.11.0",
 		"postcss": "^8.4.47",
+		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"tailwindcss": "^4.1.4",
 		"tsup": "^8.0.0",
@@ -39,52 +40,21 @@
 	},
 	"dependencies": {
 		"@radix-ui/react-icons": "^1.3.0",
+		"@radix-ui/react-popover": "^1.1.2",
 		"@radix-ui/react-slot": "^1.1.0",
 		"@signozhq/icons": "^0.1.0",
-		"@tanstack/react-table": "^8.21.3",
-		"@tanstack/react-virtual": "^3.13.9",
-		"@types/lodash-es": "^4.17.12",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
-		"lodash-es": "^4.17.21",
+		"cmdk": "^0.2.1",
 		"lucide-react": "^0.445.0",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7"
 	},
+	"peerDependencies": {
+		"react": "^18.2.0"
+	},
 	"publishConfig": {
 		"access": "public"
 	},
-	"description": "Table component with granular control using tanstack",
-	"keywords": [
-		"react",
-		"table",
-		"data-table",
-		"tanstack",
-		"virtualization",
-		"typescript",
-		"ui",
-		"component"
-	],
-	"author": "SigNoz",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/SigNoz/components.git",
-		"directory": "packages/table"
-	},
-	"bugs": {
-		"url": "https://github.com/SigNoz/components/issues"
-	},
-	"homepage": "https://github.com/SigNoz/components#readme",
-	"peerDependencies": {
-		"react": ">=18.0.0",
-		"react-dom": ">=18.0.0"
-	},
-	"peerDependenciesMeta": {
-		"react": {
-			"optional": false
-		},
-		"react-dom": {
-			"optional": false
-		}
-	}
+	"description": "Autocomplete input and command palette with a list of suggestions"
 }

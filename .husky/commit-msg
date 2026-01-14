@@ -1,10 +1,22 @@
 pnpm commitlint --edit $1
 
+# Skip branch check in CI environments
+if [ -n "$CI" ] || [ -n "$GITHUB_ACTIONS" ]; then
+  exit 0
+fi
+
 branch="$(git rev-parse --abbrev-ref HEAD)"
 
-color_red="$(tput setaf 1)"
-bold="$(tput bold)"
-reset="$(tput sgr0)"
+# Only use colors if terminal supports it
+if [ -t 1 ] && [ -n "$TERM" ]; then
+  color_red="$(tput setaf 1)"
+  bold="$(tput bold)"
+  reset="$(tput sgr0)"
+else
+  color_red=""
+  bold=""
+  reset=""
+fi
 
 if [ "$branch" = "main" ]; then
   echo "${color_red}${bold}You can't commit directly to the main branch${reset}"
