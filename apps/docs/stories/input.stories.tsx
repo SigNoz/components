@@ -12,7 +12,7 @@ const meta: Meta<typeof Input> = {
 		docs: {
 			description: {
 				component:
-					'A flexible input component with light and dark theme support. Includes password visibility toggle, proper accessibility, and seamless integration with forms. Perfect for text entry, search fields, password inputs, and form validation.',
+					'A flexible input component with light and dark theme support. Supports various input types including password, proper accessibility, and seamless integration with forms. Perfect for text entry, search fields, password inputs, and form validation.',
 			},
 		},
 	},
@@ -37,7 +37,7 @@ const meta: Meta<typeof Input> = {
 				'datetime-local',
 			],
 			description:
-				'The input type. Determines the keyboard layout and validation behavior.',
+				'The input type. Determines the keyboard layout and validation behavior. Use type="password" for password inputs.',
 			table: { category: 'Behavior', defaultValue: { summary: 'text' } },
 		},
 		theme: {
@@ -46,12 +46,6 @@ const meta: Meta<typeof Input> = {
 			description:
 				'The visual theme of the input. Light theme for light backgrounds, dark theme for dark backgrounds.',
 			table: { category: 'Appearance', defaultValue: { summary: 'light' } },
-		},
-		showPasswordToggle: {
-			control: 'boolean',
-			description:
-				'Enable password visibility toggle for password inputs. Shows an eye icon to reveal/hide the password.',
-			table: { category: 'Behavior', defaultValue: { summary: 'true' } },
 		},
 		disabled: {
 			control: 'boolean',
@@ -99,7 +93,6 @@ export const Playground: Story = {
 		placeholder: 'Enter text...',
 		type: 'text',
 		theme: 'light',
-		showPasswordToggle: true,
 		disabled: false,
 		required: false,
 		readOnly: false,
@@ -121,7 +114,6 @@ export const InputTypes: Story = {
 		placeholder: { control: false },
 		type: { control: false },
 		theme: { control: false },
-		showPasswordToggle: { control: false },
 		disabled: { control: false },
 		required: { control: false },
 		readOnly: { control: false },
@@ -240,50 +232,6 @@ export const InputTypes: Story = {
 	),
 };
 
-export const PasswordWithToggle: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Password inputs can include a visibility toggle button. Enable `showPasswordToggle` to allow users to reveal or hide their password for better UX.',
-			},
-		},
-	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		theme: { control: false },
-		showPasswordToggle: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
-	},
-	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
-					<label
-						htmlFor="password-toggle"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Password with Toggle
-					</label>
-					<Input
-						id="password-toggle"
-						type="password"
-						placeholder="Enter password"
-						showPasswordToggle
-						theme="light"
-					/>
-				</div>
-			</div>
-		</div>
-	),
-};
-
 export const WithLabels: Story = {
 	parameters: {
 		docs: {
@@ -297,7 +245,6 @@ export const WithLabels: Story = {
 		placeholder: { control: false },
 		type: { control: false },
 		theme: { control: false },
-		showPasswordToggle: { control: false },
 		disabled: { control: false },
 		required: { control: false },
 		readOnly: { control: false },
@@ -363,7 +310,6 @@ export const DisabledStates: Story = {
 		placeholder: { control: false },
 		type: { control: false },
 		theme: { control: false },
-		showPasswordToggle: { control: false },
 		disabled: { control: false },
 		required: { control: false },
 		readOnly: { control: false },
@@ -406,7 +352,6 @@ export const ReadOnlyStates: Story = {
 		placeholder: { control: false },
 		type: { control: false },
 		theme: { control: false },
-		showPasswordToggle: { control: false },
 		disabled: { control: false },
 		required: { control: false },
 		readOnly: { control: false },
@@ -449,7 +394,6 @@ export const RequiredFields: Story = {
 		placeholder: { control: false },
 		type: { control: false },
 		theme: { control: false },
-		showPasswordToggle: { control: false },
 		disabled: { control: false },
 		required: { control: false },
 		readOnly: { control: false },
@@ -496,7 +440,6 @@ export const FormExamples: Story = {
 		placeholder: { control: false },
 		type: { control: false },
 		theme: { control: false },
-		showPasswordToggle: { control: false },
 		disabled: { control: false },
 		required: { control: false },
 		readOnly: { control: false },
@@ -558,10 +501,9 @@ export const FormExamples: Story = {
 						</label>
 						<Input
 							id="form-password"
-							type="password"
 							placeholder="Enter password"
-							showPasswordToggle
 							required
+							type="password"
 							theme="light"
 						/>
 					</div>

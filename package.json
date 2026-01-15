@@ -34,6 +34,7 @@
 		"@repo/typescript-config": "workspace:*",
 		"@turbo/gen": "^2.1.2",
 		"@types/fs-extra": "^11.0.4",
+		"baseline-browser-mapping": "^2.9.14",
 		"eslint": "^9.11.0",
 		"eslint-plugin-react": "^7.37.1",
 		"fs-extra": "^11.2.0",
