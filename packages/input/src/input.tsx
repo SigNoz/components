@@ -27,6 +27,8 @@ InputComponent.displayName = 'Input';
 // Create compound component with proper typing
 const Input = Object.assign(InputComponent, {
 	Password: InputPassword,
-});
+}) as typeof InputComponent & {
+	Password: typeof InputPassword;
+};
 
-export { Input, inputVariants, InputPassword };
+export { Input, InputComponent, inputVariants, InputPassword };

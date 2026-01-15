@@ -3,6 +3,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { type VariantProps } from 'class-variance-authority';
 
 import { cn } from './lib/utils';
+import { InputComponent } from './input';
 import { inputVariants } from './input-variants';
 
 export interface InputPasswordProps
@@ -19,9 +20,10 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 
 		return (
 			<div className="relative w-full">
-				<input
+				<InputComponent
 					type={showPassword ? 'text' : 'password'}
-					className={cn(inputVariants({ theme, className }), 'pr-10')}
+					className={cn('pr-10', className)}
+					theme={theme}
 					ref={ref}
 					{...props}
 				/>
