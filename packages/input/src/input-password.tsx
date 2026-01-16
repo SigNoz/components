@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { type VariantProps } from 'class-variance-authority';
+import { Button, ButtonVariant, ButtonSize } from '@signozhq/button';
 
 import { cn } from './lib/utils';
 import { InputComponent } from './input';
@@ -27,14 +28,15 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 					ref={ref}
 					{...props}
 				/>
-				<button
+				<Button
 					type="button"
+					variant={ButtonVariant.Ghost}
+					size={ButtonSize.Icon}
 					onClick={togglePasswordVisibility}
 					className={cn(
-						'absolute right-0 top-0 h-full px-3 flex items-center justify-center z-10',
-						'cursor-pointer hover:opacity-70 transition-opacity',
-						'focus:outline-hidden focus:ring-0',
-						'disabled:opacity-50 disabled:cursor-not-allowed',
+						'absolute right-0 top-0 h-full w-auto px-3 z-10',
+						'rounded-none shadow-none',
+						'hover:opacity-70 transition-opacity',
 						theme === 'dark' ? 'text-muted-foreground-dark' : 'text-muted-foreground',
 					)}
 					aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -46,7 +48,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 					) : (
 						<EyeIcon className="h-4 w-4" aria-hidden="true" strokeWidth={2} />
 					)}
-				</button>
+				</Button>
 			</div>
 		);
 	},
