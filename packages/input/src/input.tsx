@@ -1,31 +1,16 @@
 import './index.css';
 import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { type VariantProps } from 'class-variance-authority';
 
 import { cn } from './lib/utils';
-
-const inputVariants = cva(
-	'flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50',
-	{
-		variants: {
-			theme: {
-				light:
-					'border-input text-foreground file:text-foreground focus-visible:ring-ring',
-				dark:
-					'border-input-dark bg-background-dark text-primary-foreground-dark file:text-foreground-dark placeholder:text-muted-foreground-dark focus-visible:ring-ring-dark',
-			},
-		},
-		defaultVariants: {
-			theme: 'light',
-		},
-	},
-);
+import { InputPassword } from './input-password';
+import { inputVariants } from './input-variants';
 
 export interface InputProps
 	extends React.InputHTMLAttributes<HTMLInputElement>,
 		VariantProps<typeof inputVariants> {}
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 	({ className, type, theme, ...props }, ref) => {
 		return (
 			<input
@@ -37,6 +22,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 		);
 	},
 );
-Input.displayName = 'Input';
+InputComponent.displayName = 'Input';
 
-export { Input, inputVariants };
+// Create compound component with proper typing
+const Input = Object.assign(InputComponent, {
+	Password: InputPassword,
+}) as typeof InputComponent & {
+	Password: typeof InputPassword;
+};
+
+export { Input, InputComponent, inputVariants, InputPassword };
