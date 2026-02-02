@@ -2,6 +2,7 @@ import './index.css';
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
+import { Checkbox } from '@signozhq/checkbox';
 
 import { cn } from './lib/utils';
 
@@ -73,10 +74,10 @@ function DialogContent({
 		'narrow' | 'base' | 'wide' | 'extra-wide',
 		string
 	> = {
-		narrow: 'max-w-sm',
-		base: 'max-w-lg',
-		wide: 'max-w-2xl',
-		'extra-wide': 'max-w-4xl',
+		narrow: 'max-w-[384px]',
+		base: 'max-w-[512px]',
+		wide: 'max-w-[672px]',
+		'extra-wide': 'max-w-[820px]',
 	};
 	const widthClass =
 		widthClassMap[width as 'narrow' | 'base' | 'wide' | 'extra-wide'] ||
@@ -87,7 +88,7 @@ function DialogContent({
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
 				className={cn(
-					'fixed left-[50%] z-50 grid w-full translate-x-[-50%] shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)] cursor-default',
+					'bg-l1-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[80px] left-[50%] z-50 grid w-full translate-x-[-50%] rounded-lg border duration-200 border-l2-border shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)] cursor-default',
 					widthClass,
 					className,
 				)}
@@ -146,7 +147,8 @@ function DialogTitle({
 		<DialogPrimitive.Title
 			data-slot="dialog-title"
 			className={cn(
-				'text-sm font-normal leading-5 font-inter flex items-center gap-2 m-0 cursor-default',
+				'leading-[100%] font-inter font-regular flex items-center gap-2 tracking-[-0.065px] slashed-zero text-l1-foreground cursor-default !text-[13px] !font-medium font-inter !m-0',
+
 				className,
 			)}
 			{...props}
@@ -217,10 +219,93 @@ function DialogWrapper({
 	);
 }
 
+type CheckboxColor =
+	| 'robin'
+	| 'forest'
+	| 'amber'
+	| 'sienna'
+	| 'cherry'
+	| 'sakura'
+	| 'aqua';
+
+interface AlertDialogContentProps {
+	title?: string;
+	titleIcon?: React.ReactNode;
+	children: React.ReactNode;
+	checkboxLabel?: string;
+	checkboxChecked?: boolean;
+	onCheckboxChange?: (checked: boolean) => void;
+	checkboxColor?: CheckboxColor;
+	footer?: React.ReactNode;
+}
+
+function AlertDialogContent({
+	title,
+	titleIcon,
+	children,
+	checkboxLabel,
+	checkboxChecked,
+	onCheckboxChange,
+	checkboxColor = 'cherry',
+	footer,
+}: AlertDialogContentProps) {
+	const checkboxId = React.useId();
+
+	return (
+		<div className="flex flex-col gap-6">
+			<div className="flex flex-col gap-1.5">
+				{title && (
+					<DialogHeader className="border-b-0 p-0 pb-0">
+						<DialogTitle icon={titleIcon}>{title}</DialogTitle>
+					</DialogHeader>
+				)}
+				{children && (
+					<DialogDescription className="text-[13px] font-normal leading-[20px] p-0 text-l2-foreground slashed-zero tracking-[-0.065px] mb-1.5">
+						{children}
+					</DialogDescription>
+				)}
+				{checkboxLabel && (
+					<Checkbox
+						id={checkboxId}
+						color={checkboxColor}
+						checked={checkboxChecked}
+						onCheckedChange={(checked: boolean | 'indeterminate') => {
+							const isChecked = checked === true;
+							onCheckboxChange?.(isChecked);
+						}}
+						labelName={
+							<span className="text-[13px] font-normal leading-none text-l2-foreground tracking-[-0.065px] slashed-zero">
+								{checkboxLabel}
+							</span>
+						}
+					/>
+				)}
+			</div>
+			{footer && <DialogFooter className="gap-3">{footer}</DialogFooter>}
+		</div>
+	);
+}
+
+interface AlertDialogWrapperProps
+	extends Omit<DialogWrapperProps, 'showCloseButton' | 'disableOutsideClick'> {
+	checkboxLabel?: string;
+	checkboxChecked?: boolean;
+	onCheckboxChange?: (checked: boolean) => void;
+	checkboxColor?: CheckboxColor;
+	footer?: React.ReactNode;
+}
+
 export function AlertDialogWrapper({
 	children,
+	checkboxLabel,
+	checkboxChecked,
+	onCheckboxChange,
+	checkboxColor = 'cherry',
+	footer,
+	title,
+	titleIcon,
 	...props
-}: Omit<DialogWrapperProps, 'showCloseButton' | 'disableOutsideClick'>) {
+}: AlertDialogWrapperProps) {
 	return (
 		<DialogWrapper
 			className="alert-dialog"
@@ -228,7 +313,17 @@ export function AlertDialogWrapper({
 			disableOutsideClick={true}
 			{...props}
 		>
-			{children}
+			<AlertDialogContent
+				title={title}
+				titleIcon={titleIcon}
+				checkboxLabel={checkboxLabel}
+				checkboxChecked={checkboxChecked}
+				onCheckboxChange={onCheckboxChange}
+				checkboxColor={checkboxColor}
+				footer={footer}
+			>
+				{children}
+			</AlertDialogContent>
 		</DialogWrapper>
 	);
 }
