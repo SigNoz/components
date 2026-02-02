@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Dropdown, type MenuItem } from '@signozhq/dropdown-menu';
 
-import { Button, ButtonSize, ButtonVariant } from '@signozhq/button';
+import {
+	Button,
+	ButtonColor,
+	ButtonSize,
+	ButtonVariant,
+} from '@signozhq/button';
 import {
 	Grid3x3,
 	Link,
@@ -10,12 +15,10 @@ import {
 	Check,
 	ChevronRight,
 	MoreHorizontal,
-	Search,
 	Settings,
 	User,
 	LogOut,
 	Copy,
-	Edit,
 	FileText,
 	Folder,
 } from 'lucide-react';
@@ -70,13 +73,124 @@ const meta: Meta<typeof Dropdown> = {
 		},
 	},
 	tags: ['autodocs'],
+	argTypes: {
+		menu: {
+			control: 'object',
+			description:
+				'Menu configuration object containing items, search, and loading options.',
+			table: { category: 'Content' },
+		},
+		children: {
+			control: false,
+			description: 'The trigger element that opens the dropdown menu.',
+			table: { category: 'Content' },
+		},
+		align: {
+			control: 'inline-radio',
+			options: ['start', 'center', 'end'],
+			description: 'Horizontal alignment of the dropdown relative to the trigger.',
+			table: { category: 'Positioning', defaultValue: { summary: 'start' } },
+		},
+		side: {
+			control: 'inline-radio',
+			options: ['top', 'right', 'bottom', 'left'],
+			description: 'Side of the trigger where the dropdown appears.',
+			table: { category: 'Positioning', defaultValue: { summary: 'bottom' } },
+		},
+		sideOffset: {
+			control: 'number',
+			description: 'Distance in pixels from the trigger.',
+			table: { category: 'Positioning', defaultValue: { summary: '4' } },
+		},
+		alignOffset: {
+			control: 'number',
+			description:
+				'Offset in pixels along the alignment axis. Useful for fine-tuning position.',
+			table: { category: 'Positioning', defaultValue: { summary: '0' } },
+		},
+		avoidCollisions: {
+			control: 'boolean',
+			description:
+				'When true, the dropdown will reposition to avoid collisions with viewport edges.',
+			table: { category: 'Positioning', defaultValue: { summary: 'true' } },
+		},
+		collisionPadding: {
+			control: 'number',
+			description:
+				'Padding in pixels from viewport edges when avoiding collisions.',
+			table: { category: 'Positioning', defaultValue: { summary: '8' } },
+		},
+		loop: {
+			control: 'boolean',
+			description:
+				'When true, keyboard navigation will loop from last to first item and vice versa.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Appearance' },
+		},
+	},
 };
 
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
+// Playground Story - Primary interactive example
+export const Playground: Story = {
+	args: {
+		menu: {
+			items: [
+				{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
+				{
+					key: 'settings',
+					label: 'Settings',
+					icon: <Settings className="h-4 w-4" />,
+				},
+				{ key: 'billing', label: 'Billing' },
+				{ type: 'divider' },
+				{
+					key: 'logout',
+					label: 'Logout',
+					icon: <LogOut className="h-4 w-4" />,
+					danger: true,
+				},
+			],
+		},
+		align: 'start',
+		side: 'bottom',
+		sideOffset: 4,
+	},
+	render: (args) => (
+		<div className="p-8">
+			<Dropdown {...args}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					Open Menu
+				</Button>
+			</Dropdown>
+		</div>
+	),
+};
+
 // Basic Dropdown
 export const Basic: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'A simple dropdown menu with basic items and a divider. Perfect for user account menus or simple action lists.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const items: MenuItem[] = [
 			{ key: 'profile', label: 'Profile' },
@@ -89,7 +203,9 @@ export const Basic: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Outlined}>Open Menu</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						Open Menu
+					</Button>
 				</Dropdown>
 			</div>
 		);
@@ -98,6 +214,22 @@ export const Basic: Story = {
 
 // With Icons
 export const WithIcons: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Dropdown menus support icons for enhanced visual communication. Icons can be placed on the left, right, or both sides of menu items. Use icons to make menus more scannable and intuitive.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const items1: MenuItem[] = [
 			{ key: 'view', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
@@ -150,15 +282,21 @@ export const WithIcons: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items: items1 }}>
-					<Button variant={ButtonVariant.Outlined}>View Options</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						View Options
+					</Button>
 				</Dropdown>
 
 				<Dropdown menu={{ items: items2 }}>
-					<Button variant={ButtonVariant.Outlined}>With Checkmark</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						With Checkmark
+					</Button>
 				</Dropdown>
 
 				<Dropdown menu={{ items: items3 }}>
-					<Button variant={ButtonVariant.Outlined}>With Arrow</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						With Arrow
+					</Button>
 				</Dropdown>
 			</div>
 		);
@@ -167,6 +305,22 @@ export const WithIcons: Story = {
 
 // Destructive Items
 export const Destructive: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Use the danger prop to highlight destructive actions like delete or remove. Destructive items are styled in red to warn users about irreversible actions.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const items: MenuItem[] = [
 			{ key: 'view', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
@@ -183,7 +337,7 @@ export const Destructive: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Outlined} color="destructive">
+					<Button variant={ButtonVariant.Outlined} color={ButtonColor.Destructive}>
 						Delete dashboard
 					</Button>
 				</Dropdown>
@@ -194,6 +348,22 @@ export const Destructive: Story = {
 
 // Section Labels
 export const WithSectionLabels: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Organize menu items into logical groups with section labels. Groups help users navigate complex menus by categorizing related actions together.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const items: MenuItem[] = [
 			{
@@ -224,7 +394,9 @@ export const WithSectionLabels: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Outlined}>Menu with Sections</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						Menu with Sections
+					</Button>
 				</Dropdown>
 			</div>
 		);
@@ -233,6 +405,22 @@ export const WithSectionLabels: Story = {
 
 // Checkable Items
 export const Checkable: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Dropdown menus support checkbox items for toggling options and radio groups for selecting one option from a set. Perfect for settings menus and filter controls.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const [showStatusBar, setShowStatusBar] = useState(true);
 		const [showActivityBar, setShowActivityBar] = useState(false);
@@ -292,11 +480,15 @@ export const Checkable: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items: checkboxItems }}>
-					<Button variant={ButtonVariant.Outlined}>Checkbox Items</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						Checkbox Items
+					</Button>
 				</Dropdown>
 
 				<Dropdown menu={{ items: radioItems }}>
-					<Button variant={ButtonVariant.Outlined}>Radio Group</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						Radio Group
+					</Button>
 				</Dropdown>
 			</div>
 		);
@@ -305,6 +497,22 @@ export const Checkable: Story = {
 
 // Nested Menus (2-Step) - Standard Radix SubMenu
 export const NestedMenus: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Create hierarchical navigation with nested submenus. Submenus automatically open on hover and display a chevron indicator. Perfect for complex action hierarchies.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const items: MenuItem[] = [
 			{
@@ -369,146 +577,9 @@ export const NestedMenus: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Outlined}>Nested Menu</Button>
-				</Dropdown>
-			</div>
-		);
-	},
-};
-
-// Multi-Step Dropdown (Primary/Secondary switching)
-// Note: Multi-step dropdowns are not supported in the simplified API.
-// Use nested submenus instead for hierarchical navigation.
-export const MultiStepDropdown: Story = {
-	render: () => {
-		// Using nested submenus as an alternative to multi-step
-		const items: MenuItem[] = [
-			{
-				key: 'step2',
-				label: 'Step 2',
-				icon: <Grid3x3 className="h-4 w-4" />,
-				children: [
-					{
-						key: 'another-link',
-						label: 'Another link',
-						icon: <Link className="h-4 w-4" />,
-					},
-					{
-						key: 'one-link',
-						label: 'One link',
-						icon: <Grid3x3 className="h-4 w-4" />,
-					},
-					{
-						key: 'another-activity',
-						label: 'Another activity',
-						icon: <Grid3x3 className="h-4 w-4" />,
-					},
-					{ type: 'divider' },
-					{
-						key: 'delete',
-						label: 'Delete dashboard',
-						icon: <Trash2 className="h-4 w-4" />,
-						danger: true,
-					},
-				],
-			},
-		];
-
-		const fontSizeItems: MenuItem[] = [
-			{
-				key: 'font-size',
-				label: 'Font size',
-				children: [
-					{
-						type: 'radio-group',
-						value: 'medium',
-						children: [
-							{ type: 'radio', key: 'small', label: 'Small', value: 'small' },
-							{ type: 'radio', key: 'medium', label: 'Medium', value: 'medium' },
-							{ type: 'radio', key: 'large', label: 'Large', value: 'large' },
-						],
-					},
-				],
-			},
-		];
-
-		return (
-			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Outlined}>Multi-Step Menu (Nested)</Button>
-				</Dropdown>
-
-				<Dropdown menu={{ items: fontSizeItems }}>
-					<Button variant={ButtonVariant.Outlined}>Font Size Selector</Button>
-				</Dropdown>
-			</div>
-		);
-	},
-};
-
-// Search Dropdown
-export const WithSearch: Story = {
-	render: () => {
-		const [searchQuery, setSearchQuery] = useState('');
-		const [isLoading, setIsLoading] = useState(false);
-
-		const allItems: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link className="h-4 w-4" /> },
-			{ key: 'edit', label: 'Edit', icon: <Edit className="h-4 w-4" /> },
-			{
-				key: 'settings',
-				label: 'Settings',
-				icon: <Settings className="h-4 w-4" />,
-			},
-			{ key: 'delete', label: 'Delete', icon: <Trash2 className="h-4 w-4" /> },
-		];
-
-		const filteredItems = allItems.filter((item) => {
-			if (
-				item.type === 'divider' ||
-				item.type === 'group' ||
-				item.type === 'radio-group'
-			) {
-				return true;
-			}
-			// Type guard: exclude radio-group (already handled above) and check if label exists
-			if (item.type === 'checkbox') {
-				const label = typeof item.label === 'string' ? item.label : '';
-				return label.toLowerCase().includes(searchQuery.toLowerCase());
-			}
-			// For other items (SubMenuItem, BaseMenuItem), check if label exists
-			if ('label' in item) {
-				const label = typeof item.label === 'string' ? item.label : '';
-				if (label) {
-					return label.toLowerCase().includes(searchQuery.toLowerCase());
-				}
-			}
-			return false;
-		});
-
-		const handleSearchChange = (value: string) => {
-			setSearchQuery(value);
-			if (value) {
-				setIsLoading(true);
-				setTimeout(() => setIsLoading(false), 500);
-			}
-		};
-
-		return (
-			<div className="p-8 flex gap-4">
-				<Dropdown
-					menu={{
-						items: isLoading ? [] : filteredItems,
-						search: {
-							placeholder: 'Search...',
-							searchIcon: <Search className="h-4 w-4" />,
-							onSearchChange: handleSearchChange,
-						},
-						loading: isLoading,
-					}}
-				>
-					<Button variant={ButtonVariant.Outlined}>Search Menu</Button>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+						Nested Menu
+					</Button>
 				</Dropdown>
 			</div>
 		);
@@ -517,10 +588,28 @@ export const WithSearch: Story = {
 
 // Loading State
 export const Loading: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Display a loading state while menu items are being fetched. Useful for dynamic menus that load data from an API.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => (
 		<div className="p-8 flex gap-4">
 			<Dropdown menu={{ items: [], loading: true }}>
-				<Button variant={ButtonVariant.Outlined}>Loading Menu</Button>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					Loading Menu
+				</Button>
 			</Dropdown>
 		</div>
 	),
@@ -528,6 +617,22 @@ export const Loading: Story = {
 
 // All States Showcase
 export const AllStates: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'A comprehensive showcase of all dropdown menu features including default states, shortcuts, icons, groups, nested menus, and various item types. This example demonstrates the full capabilities of the component.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
 	render: () => {
 		const defaultItems: MenuItem[] = [
 			{ key: 'default', label: 'Default item' },
@@ -605,7 +710,9 @@ export const AllStates: Story = {
 					<h3 className="text-lg font-semibold">Default States</h3>
 					<div className="flex gap-4">
 						<Dropdown menu={{ items: defaultItems }}>
-							<Button variant={ButtonVariant.Outlined}>Default</Button>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+								Default
+							</Button>
 						</Dropdown>
 					</div>
 				</div>
@@ -614,7 +721,9 @@ export const AllStates: Story = {
 					<h3 className="text-lg font-semibold">With Shortcuts</h3>
 					<div className="flex gap-4">
 						<Dropdown menu={{ items: shortcutItems }}>
-							<Button variant={ButtonVariant.Outlined}>Shortcuts</Button>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+								Shortcuts
+							</Button>
 						</Dropdown>
 					</div>
 				</div>
@@ -623,7 +732,11 @@ export const AllStates: Story = {
 					<h3 className="text-lg font-semibold">Complex Example</h3>
 					<div className="flex gap-4">
 						<Dropdown menu={{ items: complexItems }} align="end" className="w-56">
-							<Button variant={ButtonVariant.Outlined} size={ButtonSize.XS}>
+							<Button
+								variant={ButtonVariant.Solid}
+								color={ButtonColor.Secondary}
+								size={ButtonSize.XS}
+							>
 								<MoreHorizontal />
 							</Button>
 						</Dropdown>

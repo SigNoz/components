@@ -102,8 +102,8 @@ const DropdownMenuSubTrigger = React.forwardRef<
 		className={cn(
 			'flex cursor-default select-none items-center gap-2 rounded-sm px-3 py-[10px] text-sm leading-none outline-none transition-colors',
 			'text-l1-foreground',
-			'data-[state=open]:bg-[var(--bg-slate-100)]',
-			' hover:bg-l1-background-hover dark:data-[state=open]:bg-[var(--bg-slate-300)]',
+			'data-[state=open]:bg-[var(--bg-vanilla-200)] dark:data-[state=open]:bg-[var(--bg-slate-300)]',
+			' hover:bg-l1-background-hover',
 			inset && 'pl-8',
 			className,
 		)}
@@ -130,7 +130,7 @@ const DropdownMenuSubContent = React.forwardRef<
 		data-slot="dropdown-menu-sub-content"
 		className={cn(
 			'z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-			'bg-l1-background border-[var(--bg-vanilla-400)] text-l1-foreground',
+			'bg-l1-background border-l2-border text-l1-foreground',
 			className,
 		)}
 		{...props}
@@ -150,7 +150,7 @@ const DropdownMenuContent = React.forwardRef<
 			sideOffset={sideOffset}
 			className={cn(
 				'min-w-[8rem] overflow-hidden rounded border border-solid [border-image:none] py-1 [box-shadow:4px_10px_16px_2px_rgba(0,0,0,0.2)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-				'bg-l1-background border-[var(--l2-border)] text-l1-foreground',
+				'bg-l1-background border-l2-border text-l1-foreground',
 				className,
 			)}
 			{...props}
@@ -182,7 +182,7 @@ const DropdownMenuItem = React.forwardRef<
 			className={cn(
 				'relative flex cursor-default select-none items-center gap-2 rounded-sm px-3 py-[10px] text-sm leading-none outline-none transition-colors w-full min-w-[177px]',
 				'text-l1-foreground',
-				'focus:bg-[var(--bg-slate-200)]',
+				'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
 				'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 				'hover:bg-l1-background-hover',
 				destructive &&
@@ -222,7 +222,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 		className={cn(
 			'relative flex cursor-default select-none items-center rounded-sm py-[10px] pl-8 pr-3 text-sm leading-none outline-none transition-colors',
 			'text-l1-foreground',
-			'focus:bg-[var(--bg-slate-200)]',
+			'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
 			'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 			' hover:bg-l1-background-hover',
 			className,
@@ -254,7 +254,7 @@ const DropdownMenuRadioItem = React.forwardRef<
 		className={cn(
 			'relative flex cursor-default select-none items-center rounded-sm py-[10px] pl-8 pr-3 text-sm leading-none outline-none transition-colors',
 			'text-l1-foreground',
-			'focus:bg-[var(--bg-slate-200)]',
+			'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
 			'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 			' hover:bg-l1-background-hover',
 			className,
