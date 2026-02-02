@@ -26,6 +26,7 @@ export type PinListItem = {
 	isEnabled: boolean;
 	itemKey: string;
 	active?: boolean;
+	className?: string;
 };
 
 export type PinListProps = {
@@ -35,6 +36,8 @@ export type PinListProps = {
 	shortcutsLabel?: string;
 	moreLabel?: string;
 	className?: string;
+	itemClassName?: string;
+	labelClassName?: string;
 	transition?: Transition;
 	isDocked?: boolean;
 } & Omit<HTMLMotionProps<'div'>, 'children'>;
@@ -53,6 +56,8 @@ function PinList({
 	shortcutsLabel = 'SHORTCUTS',
 	moreLabel = 'MORE',
 	className,
+	itemClassName,
+	labelClassName,
 	transition = defaultTransition,
 	isDocked: isDockedProp,
 	...props
@@ -113,6 +118,7 @@ function PinList({
 								className={cn(
 									'pin-list-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center px-3 gap-[8px]',
 									isDockedProp && 'pin-list-label-docked',
+									labelClassName,
 								)}
 							>
 								<div className="relative shrink-0 size-[16px]">
@@ -132,6 +138,7 @@ function PinList({
 										onPinClick={() => toggleStatus(item.key)}
 										isPinned
 										isDocked={isDockedProp}
+										className={cn(itemClassName, item.className)}
 									/>
 								))}
 							</div>
@@ -158,6 +165,7 @@ function PinList({
 									className={cn(
 										'pin-list-more-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center w-full cursor-pointer hover:opacity-80 transition-opacity px-3 justify-between',
 										isDockedProp && 'pin-list-more-label-docked',
+										labelClassName,
 									)}
 								>
 									<div className="pin-list-more-label-content flex items-center gap-[8px]">
@@ -197,6 +205,7 @@ function PinList({
 											onPinClick={() => toggleStatus(item.key)}
 											isPinned={false}
 											isDocked={isDockedProp}
+											className={cn(itemClassName, item.className)}
 										/>
 									))}
 								</motion.div>
@@ -216,6 +225,7 @@ type PinListItemProps = {
 	onPinClick: () => void;
 	isPinned: boolean;
 	isDocked?: boolean;
+	className?: string;
 };
 
 function PinListItem({
@@ -225,6 +235,7 @@ function PinListItem({
 	onPinClick,
 	isPinned,
 	isDocked = false,
+	className,
 }: PinListItemProps) {
 	const [isHovered, setIsHovered] = React.useState(false);
 
@@ -244,6 +255,7 @@ function PinListItem({
 						? 'bg-secondary'
 						: 'bg-transparent',
 				item.active && isHovered && 'bg-secondary/80',
+				className,
 			)}
 		>
 			<div className="pin-list-item-content flex items-center gap-[8px]">

@@ -25,6 +25,7 @@ const createPinListItem = (
 		isPinned?: boolean;
 		isEnabled?: boolean;
 		active?: boolean;
+		className?: string;
 	} = {},
 ): PinListItem => ({
 	key,
@@ -34,6 +35,7 @@ const createPinListItem = (
 	isPinned: options.isPinned ?? false,
 	isEnabled: options.isEnabled ?? true,
 	active: options.active ?? false,
+	className: options.className,
 });
 
 const PinListExamples = [
@@ -122,6 +124,14 @@ const meta: Meta<typeof PinList> = {
 		className: {
 			control: 'text',
 			description: 'Additional CSS classes to apply to the container.',
+		},
+		itemClassName: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to all items.',
+		},
+		labelClassName: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to section labels.',
 		},
 		isDocked: {
 			control: 'boolean',
@@ -281,4 +291,33 @@ export const SingleItem: Story = {
 		moreLabel: 'MORE',
 	},
 	name: 'Single Item',
+};
+
+// ============================================================================
+// Story: With Custom ClassNames
+// ============================================================================
+/**
+ * **Custom ClassNames**
+ *
+ * Demonstrates the ability to pass custom class names to specific parts of the
+ * component. This allows for fine-grained styling of the container, items,
+ * and labels.
+ */
+export const WithCustomClassNames: Story = {
+	args: {
+		items: [
+			createPinListItem('1', 'Logs', <FileText />, {
+				isPinned: true,
+				active: true,
+				className: 'bg-primary/10',
+			}),
+			createPinListItem('2', 'Metrics', <BarChart />, { isPinned: false }),
+		],
+		shortcutsLabel: 'SHORTCUTS',
+		moreLabel: 'MORE',
+		className: 'bg-muted/30 p-4 rounded-lg border border-border/50',
+		itemClassName: 'hover:shadow-sm transition-all duration-200',
+		labelClassName: 'text-primary font-headers tracking-widest',
+	},
+	name: 'With Custom ClassNames',
 };
