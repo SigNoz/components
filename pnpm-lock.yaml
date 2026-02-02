@@ -93,6 +93,9 @@ importers:
       '@signozhq/checkbox':
         specifier: workspace:*
         version: link:../../packages/checkbox
+      '@signozhq/combobox':
+        specifier: workspace:*
+        version: link:../../packages/combobox
       '@signozhq/command':
         specifier: workspace:*
         version: link:../../packages/command
