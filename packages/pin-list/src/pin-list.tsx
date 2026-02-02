@@ -111,12 +111,12 @@ function PinList({
 								exit={{ opacity: 0 }}
 								transition={{ duration: 0.22, ease: 'easeInOut' }}
 								className={cn(
-									'pin-list-label mb-2 text-slate-50 font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center px-3 gap-[8px]',
+									'pin-list-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center px-3 gap-[8px]',
 									isDockedProp && 'pin-list-label-docked',
 								)}
 							>
 								<div className="relative shrink-0 size-[16px]">
-									<MousePointerClick className="size-[16px] text-slate-50" />
+									<MousePointerClick className="size-[16px] text-card-foreground" />
 								</div>
 								<span className="pin-list-label-text">{shortcutsLabel}</span>
 							</motion.p>
@@ -137,7 +137,7 @@ function PinList({
 							</div>
 						) : (
 							<div className="pin-list-empty-state">
-								<p className="font-inter font-normal leading-4.5 opacity-60 text-vanilla-400 text-[12px] tracking-[-0.06px]  w-[150px] text-left pl-3">
+								<p className="font-inter font-normal leading-4.5 opacity-60 text-foreground text-[12px] tracking-[-0.06px]  w-[150px] text-left pl-3">
 									You have not added any shortcuts yet.
 								</p>
 							</div>
@@ -156,13 +156,13 @@ function PinList({
 									transition={{ duration: 0.22, ease: 'easeInOut' }}
 									onClick={() => setIsMoreExpanded(!isMoreExpanded)}
 									className={cn(
-										'pin-list-more-label mb-2 text-slate-50 font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center w-full cursor-pointer hover:opacity-80 transition-opacity px-3 justify-between',
+										'pin-list-more-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center w-full cursor-pointer hover:opacity-80 transition-opacity px-3 justify-between',
 										isDockedProp && 'pin-list-more-label-docked',
 									)}
 								>
 									<div className="pin-list-more-label-content flex items-center gap-[8px]">
 										<div className="relative shrink-0 size-[16px]">
-											<MoreHorizontal className="size-[16px] text-slate-50" />
+											<MoreHorizontal className="size-[16px] text-card-foreground" />
 										</div>
 										<span className="pin-list-more-label-text">{moreLabel}</span>
 									</div>
@@ -171,7 +171,7 @@ function PinList({
 											animate={{ rotate: isMoreExpanded ? 0 : -90 }}
 											transition={{ duration: 0.2, ease: 'easeInOut' }}
 										>
-											<ChevronDown className="size-[16px] text-slate-50" />
+											<ChevronDown className="size-[16px] text-card-foreground" />
 										</motion.div>
 									</div>
 								</motion.button>
@@ -236,26 +236,28 @@ function PinListItem({
 			onMouseLeave={() => setIsHovered(false)}
 			transition={transition}
 			className={cn(
-				'pin-list-item flex items-center rounded-[3px] py-[4px] relative w-full text-left transition-colors text-[#C0C1C3] font-inter text-[14px] font-normal leading-[18px] m-0 h-[32px] px-[12px] justify-between gap-5',
+				'pin-list-item flex items-center rounded-[3px] py-[4px] relative w-full text-left transition-colors text-foreground font-inter text-[14px] font-normal leading-[18px] m-0 h-[32px] px-[12px] justify-between gap-5',
 				isDocked && 'pin-list-item-docked',
 				item.active
-					? 'bg-[rgba(171,189,255,0.08)]'
+					? 'bg-secondary'
 					: isHovered
-						? 'bg-[rgba(171,189,255,0.08)]'
+						? 'bg-secondary'
 						: 'bg-transparent',
-				item.active && isHovered && 'bg-[rgba(171,189,255,0.12)]',
+				item.active && isHovered && 'bg-secondary/80',
 			)}
 		>
 			<div className="pin-list-item-content flex items-center gap-[8px]">
 				<div className="relative shrink-0 size-[16px]">
 					{React.cloneElement(item.icon, {
-						className: cn('size-[16px] text-[#C0C1C3]', item.icon.props.className),
+						className: cn('size-[16px] text-foreground', item.icon.props.className),
 					})}
 				</div>
 				<div
 					className={cn(
 						'pin-list-item-label font-inter text-[14px] font-normal leading-[18px]',
-						item.active || isHovered ? 'text-white' : 'text-[#C0C1C3]',
+						item.active || isHovered
+							? 'text-secondary-foreground'
+							: 'text-foreground',
 					)}
 				>
 					{item.label}
@@ -276,9 +278,9 @@ function PinListItem({
 					}}
 				>
 					{isPinned ? (
-						<PinOff className={cn('size-[16px]', 'text-[#C0C1C3]')} />
+						<PinOff className={cn('size-[16px]', 'text-foreground')} />
 					) : (
-						<Pin className={cn('size-[16px]', 'text-white')} />
+						<Pin className={cn('size-[16px]', 'text-foreground')} />
 					)}
 				</div>
 			</Tooltip>
