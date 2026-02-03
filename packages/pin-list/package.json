@@ -1,17 +1,17 @@
 {
-	"name": "@signozhq/dropdown-menu",
+	"name": "@signozhq/pin-list",
 	"version": "0.0.1",
 	"license": "MIT",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/dropdown-menu.d.ts",
-			"import": "./dist/dropdown-menu.js"
+			"types": "./dist/pin-list.d.ts",
+			"import": "./dist/pin-list.js"
 		}
 	},
-	"main": "./dist/dropdown-menu.js",
-	"module": "./dist/dropdown-menu.js",
-	"types": "./dist/dropdown-menu.d.ts",
+	"main": "./dist/pin-list.js",
+	"module": "./dist/pin-list.js",
+	"types": "./dist/pin-list.d.ts",
 	"files": [
 		"dist"
 	],
@@ -39,13 +39,14 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
-		"@radix-ui/react-dropdown-menu": "^2.1.16",
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-slot": "^1.1.0",
 		"@signozhq/icons": "^0.1.0",
+		"@signozhq/tooltip": "workspace:*",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"lucide-react": "^0.445.0",
+		"motion": "^11.11.17",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7"
 	},
@@ -55,5 +56,5 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"description": "dropdown menu component"
+	"description": "A new package"
 }
