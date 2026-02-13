@@ -1,5 +1,12 @@
 # @signozhq/tabs
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies
+  - @signozhq/tooltip@0.1.0
+
 ## 0.0.10
 
 ### Patch Changes

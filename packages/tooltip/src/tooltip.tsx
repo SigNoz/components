@@ -3,15 +3,64 @@ import * as React from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from './lib/utils';
 
+type TooltipPlacement =
+	| 'top'
+	| 'top-start'
+	| 'top-end'
+	| 'bottom'
+	| 'bottom-start'
+	| 'bottom-end'
+	| 'left'
+	| 'left-start'
+	| 'left-end'
+	| 'right'
+	| 'right-start'
+	| 'right-end';
+
 interface TooltipProps
 	extends React.ComponentProps<typeof TooltipPrimitive.Root> {
 	title?: React.ReactNode;
 	arrow?: boolean;
+	/**
+	 * The placement of the tooltip relative to the trigger.
+	 * @default "top"
+	 */
+	placement?: TooltipPlacement;
+	/**
+	 * The distance in pixels from the trigger.
+	 * @default 4
+	 */
+	offset?: number;
+	/**
+	 * Custom className for the tooltip content.
+	 */
+	contentClassName?: string;
+	/**
+	 * Custom className for the tooltip arrow.
+	 */
+	arrowClassName?: string;
 }
 
 interface TooltipContentProps
 	extends React.ComponentProps<typeof TooltipPrimitive.Content> {
 	arrow?: boolean;
+	/**
+	 * Custom className for the tooltip arrow.
+	 */
+	arrowClassName?: string;
+}
+
+/**
+ * Helper to convert placement prop to Radix side and align values
+ */
+function parsePlacement(placement: TooltipPlacement): {
+	side: 'top' | 'right' | 'bottom' | 'left';
+	align: 'start' | 'center' | 'end';
+} {
+	const parts = placement.split('-') as [string, string?];
+	const side = parts[0] as 'top' | 'right' | 'bottom' | 'left';
+	const align = (parts[1] as 'start' | 'end') || 'center';
+	return { side, align };
 }
 
 function TooltipProvider({
@@ -27,13 +76,34 @@ function TooltipProvider({
 	);
 }
 
-function Tooltip({ title, arrow, open, children, ...props }: TooltipProps) {
+function Tooltip({
+	title,
+	arrow,
+	open,
+	children,
+	placement = 'top',
+	offset,
+	contentClassName,
+	arrowClassName,
+	...props
+}: TooltipProps) {
+	const { side, align } = parsePlacement(placement);
+
 	return (
 		<TooltipPrimitive.Root open={open} {...props}>
 			{title ? (
 				<>
 					<TooltipTrigger asChild>{children}</TooltipTrigger>
-					<TooltipContent arrow={arrow}>{title}</TooltipContent>
+					<TooltipContent
+						arrow={arrow}
+						side={side}
+						align={align}
+						sideOffset={offset}
+						className={contentClassName}
+						arrowClassName={arrowClassName}
+					>
+						{title}
+					</TooltipContent>
 				</>
 			) : (
 				children
@@ -53,6 +123,7 @@ function TooltipContent({
 	sideOffset = 4,
 	children,
 	arrow = false,
+	arrowClassName,
 	...props
 }: TooltipContentProps) {
 	return (
@@ -67,8 +138,8 @@ function TooltipContent({
 					'animate-in fade-in-0 zoom-in-95',
 					'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
 					'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-					// Layout & Positioning
-					'z-50 w-fit origin-(--radix-tooltip-content-transform-origin)',
+					// Layout & Positioning - z-[9999] ensures tooltip appears above modals (z-50)
+					'z-[9999] w-fit origin-(--radix-tooltip-content-transform-origin)',
 					// Spacing & Shape
 					'rounded-xs px-2 py-0.75',
 					// Typography
@@ -80,11 +151,24 @@ function TooltipContent({
 			>
 				{children}
 				{arrow && (
-					<TooltipPrimitive.Arrow className="bg-card fill-card z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
+					<TooltipPrimitive.Arrow
+						className={cn(
+							'bg-card fill-card z-[9999] size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]',
+							arrowClassName,
+						)}
+					/>
 				)}
 			</TooltipPrimitive.Content>
 		</TooltipPrimitive.Portal>
 	);
 }
 
-export { Tooltip, TooltipProvider };
+export {
+	Tooltip,
+	TooltipProvider,
+	TooltipTrigger,
+	TooltipContent,
+	type TooltipProps,
+	type TooltipContentProps,
+	type TooltipPlacement,
+};
