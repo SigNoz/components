@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { Button, ButtonColor, ButtonVariant } from '@signozhq/button';
 import { DrawerWrapper } from '@signozhq/drawer';
 import { generateDocs } from '../utils/generateDocs';
@@ -208,17 +209,21 @@ export const SidePanel: Story = {
 
 export const Controlled: Story = {
 	render: (args) => {
-		const [open, setOpen] = React.useState(false);
+		const [{ open }, updateArgs] = useArgs();
 		return (
 			<div className="flex gap-2">
 				<Button
 					variant={ButtonVariant.Solid}
 					color={ButtonColor.Primary}
-					onClick={() => setOpen(true)}
+					onClick={() => updateArgs({ open: true })}
 				>
 					Open Programmatically
 				</Button>
-				<DrawerWrapper {...args} open={open} onOpenChange={setOpen} />
+				<DrawerWrapper
+					{...args}
+					open={open}
+					onOpenChange={(nextOpen) => updateArgs({ open: nextOpen })}
+				/>
 			</div>
 		);
 	},
