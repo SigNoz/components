@@ -1,5 +1,11 @@
 # @signozhq/tooltip
 
+## 0.1.0
+
+### Minor Changes
+
+- Enhancement in tooltip component to expose better props and classnames
+
 ## 0.0.2
 
 ### Patch Changes

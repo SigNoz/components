@@ -1,5 +1,15 @@
 # docs
 
+## 0.1.22
+
+### Patch Changes
+
+- Enhancement in tooltip component to expose better props and classnames
+- Updated dependencies
+  - @signozhq/tooltip@0.1.0
+  - @signozhq/pin-list@0.0.2
+  - @signozhq/tabs@0.0.11
+
 ## 0.1.21
 
 ### Patch Changes
