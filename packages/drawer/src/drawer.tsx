@@ -125,7 +125,8 @@ function DrawerDescription({
 }
 
 interface DrawerWrapperProps {
-	trigger: React.ReactNode;
+	/** Element that opens the drawer. Optional when using controlled mode (open/onOpenChange). */
+	trigger?: React.ReactNode;
 	header?: {
 		title: string;
 		description?: string;
@@ -138,6 +139,10 @@ interface DrawerWrapperProps {
 	showOverlay?: boolean;
 	className?: string;
 	type?: 'panel' | 'drawer';
+	/** Controlled open state. When provided with onOpenChange, enables programmatic control. */
+	open?: boolean;
+	/** Called when drawer open state changes (close button, outside click, ESC). Required for controlled mode. */
+	onOpenChange?: (open: boolean) => void;
 }
 
 function CloseButton({ type }: { type?: 'panel' | 'drawer' }) {
@@ -164,10 +169,17 @@ function DrawerWrapper({
 	showOverlay = true,
 	className,
 	type = 'drawer',
+	open,
+	onOpenChange,
 }: DrawerWrapperProps) {
 	return (
-		<Drawer direction={direction} modal={allowOutsideClick}>
-			<DrawerTrigger asChild>{trigger}</DrawerTrigger>
+		<Drawer
+			direction={direction}
+			modal={allowOutsideClick}
+			open={open}
+			onOpenChange={onOpenChange}
+		>
+			{trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
 			<DrawerContent className={className} showOverlay={showOverlay} type={type}>
 				<div
 					className="w-full max-w-3xl"
