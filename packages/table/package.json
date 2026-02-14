@@ -46,7 +46,7 @@
 		"@types/lodash-es": "^4.17.12",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
-		"lodash-es": "^4.17.21",
+		"lodash-es": "^4.17.23",
 		"lucide-react": "^0.445.0",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7"
