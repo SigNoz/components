@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/dropdown-menu.d.mts",
-				"import": "./dist/dropdown-menu.mjs"
+				"types": "./dist/dropdown-menu.d.ts",
+				"import": "./dist/dropdown-menu.js"
 			},
 			"require": {
 				"types": "./dist/dropdown-menu.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/dropdown-menu.cjs",
-	"module": "./dist/dropdown-menu.mjs",
-	"types": "./dist/dropdown-menu.d.mts",
+	"module": "./dist/dropdown-menu.js",
+	"types": "./dist/dropdown-menu.d.cts",
 	"files": [
 		"dist"
 	],

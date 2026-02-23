@@ -1,5 +1,7 @@
 @import 'tailwindcss';
-@import '@signozhq/tailwind-config/global.css';
+@source "./";
+
+@variant dark (&:where(.dark, .dark *));
 *:focus-visible {
 	outline: none;
 

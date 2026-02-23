@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/resizable.d.mts",
-				"import": "./dist/resizable.mjs"
+				"types": "./dist/resizable.d.ts",
+				"import": "./dist/resizable.js"
 			},
 			"require": {
 				"types": "./dist/resizable.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/resizable.cjs",
-	"module": "./dist/resizable.mjs",
-	"types": "./dist/resizable.d.mts",
+	"module": "./dist/resizable.js",
+	"types": "./dist/resizable.d.cts",
 	"files": [
 		"dist"
 	],

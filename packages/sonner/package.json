@@ -17,7 +17,7 @@
 	},
 	"main": "./dist/sonner.cjs",
 	"module": "./dist/sonner.js",
-	"types": "./dist/sonner.d.ts",
+	"types": "./dist/sonner.d.cts",
 	"files": [
 		"dist"
 	],

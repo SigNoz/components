@@ -1,0 +1,33 @@
+---
+description: Component CSS must not import full global.css; use minimal Tailwind + app-provided design tokens
+globs: packages/*/src/index.css
+alwaysApply: false
+---
+
+# Component CSS optimization
+
+Component packages must not bundle `@signozhq/tailwind-config/global.css` or `@signozhq/design-tokens`. The app loads design tokens once; components only ship minimal CSS.
+
+## Required pattern for `packages/*/src/index.css`
+
+1. **Do not import** `@signozhq/tailwind-config/global.css` (it pulls in full design-tokens and bloats every component bundle).
+
+2. **Use this header** (then your component-specific rules):
+
+```css
+@import 'tailwindcss';
+@source "./";
+
+@variant dark (&:where(.dark, .dark *));
+```
+
+3. **Add only** `:root` vars that this component’s Tailwind classes actually use (e.g. `--ring`, `--destructive` for focus/aria). Omit vars used only in global.css.
+
+4. **Keep** all component-specific rules (e.g. `[data-slot='...']`, `[data-color='...']`, etc.). They may reference design token vars like `var(--bg-vanilla-300)`; those resolve at runtime when the app has loaded global.css or design-tokens.
+
+5. **Result**: Smaller dist CSS (no design-tokens inlined). The consuming app must import `@signozhq/tailwind-config/global.css` or `@signozhq/design-tokens/dist/style.css` once so token variables are defined.
+
+## Reference
+
+- Good example: `packages/badge/src/index.css` (no global.css import, uses `@source "./"`, minimal `:root`, then `[data-color]` rules).
+- Bad: any `index.css` that contains `@import '@signozhq/tailwind-config/global.css';` (remove that line and apply the pattern above).

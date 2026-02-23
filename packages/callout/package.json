@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/callout.d.mts",
-				"import": "./dist/callout.mjs"
+				"types": "./dist/callout.d.ts",
+				"import": "./dist/callout.js"
 			},
 			"require": {
 				"types": "./dist/callout.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/callout.cjs",
-	"module": "./dist/callout.mjs",
-	"types": "./dist/callout.d.mts",
+	"module": "./dist/callout.js",
+	"types": "./dist/callout.d.cts",
 	"files": [
 		"dist"
 	],

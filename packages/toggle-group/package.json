@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/toggle-group.d.mts",
-				"import": "./dist/toggle-group.mjs"
+				"types": "./dist/toggle-group.d.ts",
+				"import": "./dist/toggle-group.js"
 			},
 			"require": {
 				"types": "./dist/toggle-group.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/toggle-group.cjs",
-	"module": "./dist/toggle-group.mjs",
-	"types": "./dist/toggle-group.d.mts",
+	"module": "./dist/toggle-group.js",
+	"types": "./dist/toggle-group.d.cts",
 	"files": [
 		"dist"
 	],

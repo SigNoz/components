@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/calendar.d.mts",
-				"import": "./dist/calendar.mjs"
+				"types": "./dist/calendar.d.ts",
+				"import": "./dist/calendar.js"
 			},
 			"require": {
 				"types": "./dist/calendar.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/calendar.cjs",
-	"module": "./dist/calendar.mjs",
-	"types": "./dist/calendar.d.mts",
+	"module": "./dist/calendar.js",
+	"types": "./dist/calendar.d.cts",
 	"files": [
 		"dist"
 	],

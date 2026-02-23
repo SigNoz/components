@@ -613,7 +613,7 @@
 	--text-9xl: var(--font-size-9xl);
 
 	/* Typography - Font Weight */
-	/* --font-weight-thin: var(--font-weight-thin);
+	--font-weight-thin: var(--font-weight-thin);
 	--font-weight-extralight: var(--font-weight-extralight);
 	--font-weight-light: var(--font-weight-light);
 	--font-weight-normal: var(--font-weight-normal);
@@ -621,7 +621,7 @@
 	--font-weight-semibold: var(--font-weight-semibold);
 	--font-weight-bold: var(--font-weight-bold);
 	--font-weight-extrabold: var(--font-weight-extrabold);
-	--font-weight-black: var(--font-weight-black); */
+	--font-weight-black: var(--font-weight-black);
 
 	/* Typography - Line Height */
 	--leading-none: var(--line-height-none);

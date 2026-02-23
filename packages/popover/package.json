@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/popover.d.mts",
-				"import": "./dist/popover.mjs"
+				"types": "./dist/popover.d.ts",
+				"import": "./dist/popover.js"
 			},
 			"require": {
 				"types": "./dist/popover.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/popover.cjs",
-	"module": "./dist/popover.mjs",
-	"types": "./dist/popover.d.mts",
+	"module": "./dist/popover.js",
+	"types": "./dist/popover.d.cts",
 	"files": [
 		"dist"
 	],

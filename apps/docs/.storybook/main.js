@@ -1,5 +1,7 @@
 import { dirname, join } from 'path';
 import { createRequire } from 'module';
+import { mergeConfig } from 'vite';
+import tailwindConfig from '@signozhq/tailwind-config';
 
 const require = createRequire(import.meta.url);
 
@@ -24,13 +26,16 @@ const config = {
 		disableTelemetry: true,
 	},
 	async viteFinal(config) {
-		return {
-			...config,
+		const { default: tailwindcss } = await import('@tailwindcss/vite');
+
+		return mergeConfig(config, {
 			define: { 'process.env': {} },
 			resolve: {
-				alias: [],
+				...config.resolve,
+				alias: config.resolve?.alias ?? [],
 			},
-		};
+			plugins: [tailwindcss(tailwindConfig)],
+		});
 	},
 
 	typescript: {

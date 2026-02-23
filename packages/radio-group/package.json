@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/radio-group.d.mts",
-				"import": "./dist/radio-group.mjs"
+				"types": "./dist/radio-group.d.ts",
+				"import": "./dist/radio-group.js"
 			},
 			"require": {
 				"types": "./dist/radio-group.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/radio-group.cjs",
-	"module": "./dist/radio-group.mjs",
-	"types": "./dist/radio-group.d.mts",
+	"module": "./dist/radio-group.js",
+	"types": "./dist/radio-group.d.cts",
 	"files": [
 		"dist"
 	],

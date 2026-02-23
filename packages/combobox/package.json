@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/combobox.d.mts",
-				"import": "./dist/combobox.mjs"
+				"types": "./dist/combobox.d.ts",
+				"import": "./dist/combobox.js"
 			},
 			"require": {
 				"types": "./dist/combobox.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/combobox.cjs",
-	"module": "./dist/combobox.mjs",
-	"types": "./dist/combobox.d.mts",
+	"module": "./dist/combobox.js",
+	"types": "./dist/combobox.d.cts",
 	"files": [
 		"dist"
 	],

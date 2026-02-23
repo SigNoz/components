@@ -1,5 +1,7 @@
 @import 'tailwindcss';
-@import '@signozhq/tailwind-config/global.css';
+@source "./";
+
+@variant dark (&:where(.dark, .dark *));
 
 .periscope-calendar-day {
 	margin: 4px;

@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/badge.d.mts",
-				"import": "./dist/badge.mjs"
+				"types": "./dist/badge.d.ts",
+				"import": "./dist/badge.js"
 			},
 			"require": {
 				"types": "./dist/badge.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/badge.cjs",
-	"module": "./dist/badge.mjs",
-	"types": "./dist/badge.d.mts",
+	"module": "./dist/badge.js",
+	"types": "./dist/badge.d.cts",
 	"files": [
 		"dist"
 	],

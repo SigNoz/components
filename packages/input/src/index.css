@@ -1,3 +1,4 @@
 @import 'tailwindcss';
+@source "./";
 
-@import '@signozhq/tailwind-config/global.css';
+@variant dark (&:where(.dark, .dark *));

@@ -6,8 +6,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/pagination.d.mts",
-				"import": "./dist/pagination.mjs"
+				"types": "./dist/pagination.d.ts",
+				"import": "./dist/pagination.js"
 			},
 			"require": {
 				"types": "./dist/pagination.d.cts",
@@ -16,8 +16,8 @@
 		}
 	},
 	"main": "./dist/pagination.cjs",
-	"module": "./dist/pagination.mjs",
-	"types": "./dist/pagination.d.mts",
+	"module": "./dist/pagination.js",
+	"types": "./dist/pagination.d.cts",
 	"files": [
 		"dist"
 	],

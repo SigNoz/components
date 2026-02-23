@@ -1,7 +1,11 @@
 @import 'tailwindcss';
-@import '@signozhq/tailwind-config/global.css';
+@source "./";
+
+@variant dark (&:where(.dark, .dark *));
 
 :root {
+	--ring: var(--bg-robin-500);
+	--destructive: var(--bg-cherry-500);
 	--pagination-item-text: var(--color-ink-400);
 	--pagination-item-hover-text: var(--color-ink-100);
 	--pagination-active-bg: var(--color-robin-500);

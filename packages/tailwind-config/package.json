@@ -8,18 +8,21 @@
 		"dev": "tsdown --watch"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"global.css"
 	],
 	"main": "./dist/tailwind.config.cjs",
-	"module": "./dist/tailwind.config.mjs",
+	"module": "./dist/tailwind.config.js",
 	"exports": {
 		".": {
-			"import": "./dist/tailwind.config.mjs",
+			"import": "./dist/tailwind.config.js",
 			"require": "./dist/tailwind.config.cjs"
 		},
 		"./global.css": "./dist/global.css"
 	},
 	"dependencies": {
+		"@tailwindcss/postcss": "^4.1.4",
+		"rollup-plugin-postcss": "^4.0.2",
 		"tw-animate-css": "^1.2.5"
 	},
 	"devDependencies": {
