@@ -1,4 +1,3 @@
-import './index.css';
 import * as React from 'react';
 import { type VariantProps } from 'class-variance-authority';
 
@@ -7,7 +6,8 @@ import { InputPassword } from './input-password';
 import { inputVariants } from './input-variants';
 
 export interface InputProps
-	extends React.InputHTMLAttributes<HTMLInputElement>,
+	extends
+		React.InputHTMLAttributes<HTMLInputElement>,
 		VariantProps<typeof inputVariants> {}
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(

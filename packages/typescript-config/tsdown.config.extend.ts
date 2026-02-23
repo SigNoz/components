@@ -1,26 +1,23 @@
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import type { UserConfig } from 'tsdown';
-import postcss from 'rollup-plugin-postcss';
 
-const distCss = path.resolve(
-	process.cwd(),
-	'dist',
-	path.basename(process.cwd()) + '.css',
-);
-
-const cssFileName = path.basename(process.cwd()) + '.css';
+const cwd = process.cwd();
 
 const externalPatterns = [
 	'react',
 	'tailwindcss',
 	'clsx',
 	'tailwind-merge',
-	'tailwindcss-animate',
 	/^@signozhq\/.*$/,
 ];
 
 function isExternal(id: string): boolean {
-	if (externalPatterns.some((p) => (typeof p === 'string' ? id === p || id.startsWith(p + '/') : p.test(id)))) {
+	if (
+		externalPatterns.some((p) =>
+			typeof p === 'string' ? id === p || id.startsWith(p + '/') : p.test(id),
+		)
+	) {
 		return true;
 	}
 	return false;
@@ -31,11 +28,17 @@ function cssSideEffectImport() {
 		name: 'css-side-effect-import',
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		renderChunk(code: string, chunk: any) {
-			if (chunk.isEntry && (chunk.fileName.endsWith('.js') || chunk.fileName.endsWith('.cjs'))) {
+			const cssChunkName = chunk.fileName.replace('.js', '.css').replace('.cjs', '.css');
+			const cssFileExists = existsSync(path.resolve(cwd, 'dist', cssChunkName))
+
+			if (
+				chunk.isEntry &&
+				(chunk.fileName.endsWith('.js') || chunk.fileName.endsWith('.cjs')) && cssFileExists
+			) {
 				const isCjs = chunk.fileName.endsWith('.cjs');
 				const importLine = isCjs
-					? `require('./${cssFileName}');\n`
-					: `import './${cssFileName}';\n`;
+					? `require('./${cssChunkName}');\n`
+					: `import './${cssChunkName}';\n`;
 				return { code: importLine + code, map: null };
 			}
 			return null;
@@ -59,12 +62,6 @@ export default {
 	platform: 'browser',
 	target: 'es6',
 	plugins: [
-		postcss({
-			extensions: ['.css'],
-			config: true,
-			extract: distCss,
-			inject: false,
-		}),
 		cssSideEffectImport(),
 	],
 } satisfies UserConfig;

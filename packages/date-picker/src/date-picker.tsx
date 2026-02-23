@@ -1,4 +1,3 @@
-import './index.css';
 import * as React from 'react';
 import { Input } from '@signozhq/input';
 import { CalendarIcon, ChevronDown } from 'lucide-react';

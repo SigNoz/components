@@ -1,8 +1,3 @@
-@import 'tailwindcss';
-@source "./";
-
-@variant dark (&:where(.dark, .dark *));
-
 [data-color='vanilla'] {
 	--badge-background: var(--bg-vanilla-300);
 	--badge-foreground: var(--bg-slate-500);

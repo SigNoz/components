@@ -1015,6 +1015,8 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 	},
 };
 
+const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
+
 // Generate large dataset for virtualization demo (supports offset for unique ids)
 const generateLargeDataset = (count: number, startIndex = 0): User[] => {
 	const departments = [
@@ -1036,16 +1038,14 @@ const generateLargeDataset = (count: number, startIndex = 0): User[] => {
 		email: `user${startIndex + index + 1}@company.com`,
 		role: roles[index % roles.length],
 		status: statuses[index % statuses.length],
-		lastLogin: new Date(
-			Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
-		).toISOString(),
-		createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000)
+		lastLogin: new Date(fixedDate + 60 * 1000 * index).toISOString(),
+		createdAt: new Date(fixedDate - 60 * 1000 * index)
 			.toISOString()
 			.split('T')[0],
 		avatar: `https://images.unsplash.com/photo-${1500000000000 + index}?w=32&h=32&fit=crop&crop=face`,
 		department: departments[index % departments.length],
-		salary: 50000 + Math.floor(Math.random() * 100000),
-		performance: 60 + Math.floor(Math.random() * 40),
+		salary: 50000 + 1000 * index,
+		performance: 60 + (index % 40),
 	}));
 };
 

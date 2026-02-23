@@ -28,7 +28,6 @@
 	},
 	"devDependencies": {
 		"@bosh-code/tsdown-plugin-inject-css": "^2.0.0",
-		"@bosh-code/tsdown-plugin-tailwindcss": "^1.0.1",
 		"@changesets/cli": "^2.27.1",
 		"@commitlint/cli": "^19.5.0",
 		"@commitlint/config-conventional": "^19.5.0",

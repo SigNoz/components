@@ -1,144 +1,90 @@
 # Signoz Components Library
 
-This guide explains how to use Signoz components library powered by Turborepo, React, and Storybook.
+React component library powered by Turborepo, React, and Storybook.
 
-## Getting Started
+## Install & Use
 
-1. Clone the repository:
+Install the packages you need. You must install and configure `@signozhq/tailwind-config` first, since all components depend on its theme and utilities.
 
-   ```sh
-   git clone git@github.com:SigNoz/components.git
-   ```
+```sh
+pnpm add @signozhq/tailwind-config @signozhq/theme
+pnpm add @signozhq/button @signozhq/input
+```
 
-2. Install dependencies:
+In your app’s main CSS file (e.g. `index.css` or `global.css`), import Tailwind and the shared config, then the tailwind-config **global.css**. The order matters:
 
-   ```sh
-   pnpm install
-   ```
+1. `tailwindcss` and `@config` pointing to the tailwind-config.
+2. `@signozhq/tailwind-config/global.css` (design tokens, CSS variables, and base styles).
 
-3. Build the packages:
+Example (as in the [Storybook app](apps/docs/index.css)):
 
-   ```sh
-   pnpm build
-   ```
+```css
+@import 'tailwindcss';
+@config "@signozhq/tailwind-config";
+@import '@signozhq/tailwind-config/global.css';
+@source "./node_modules/@signozhq/*";
+```
 
-4. Start Storybook:
-   ```sh
-   pnpm run dev
-   ```
+> It's important to use `@source` with the path to the `node_modules/@signozhq/*` directory to ensure that the components using Tailwind classes are able to resolve the correct Tailwind config.
 
-## Useful Commands
+If you use Vite with the Tailwind plugin, pass the same config (see [Storybook `main.js`](apps/docs/.storybook/main.js)):
 
-- `pnpm build` - Build all packages, including the Storybook site
-- `pnpm dev` - Run all packages locally and preview with Storybook
-- `pnpm lint` - Lint all packages
-- `pnpm changeset` - Generate a changeset
-- `pnpm clean` - Clean up all `node_modules` and `dist` folders
-- `pnpm turbo gen new-package` - Custom generator script to add new component/package to the component library
+```js
+import tailwindConfig from '@signozhq/tailwind-config';
+import tailwindcss from '@tailwindcss/vite';
+
+export default {
+  plugins: [tailwindcss(tailwindConfig)],
+};
+```
+
+Then use the theme provider and components:
+
+```tsx
+import { ThemeProvider } from '@signozhq/theme';
+import { Button } from '@signozhq/button';
+import { Input } from '@signozhq/input';
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <Button>Click me</Button>
+      <Input placeholder="Type here" />
+    </ThemeProvider>
+  );
+}
+```
 
 ## Available Packages
 
-- `@signozhq/theme`: Contains theme provider, theme switcher, ...
-- `@signozhq/tailwind-config`: UI configuration, including Tailwind CSS setup
-- `@signozhq/button`: Button component
-- `@signozhq/input`: Input component
+| Package                     | Description                                                       |
+| --------------------------- | ----------------------------------------------------------------- |
+| `@signozhq/tailwind-config` | Tailwind config, design tokens, and `global.css` (required first) |
+| `@signozhq/theme`           | Theme provider and theme switcher                                 |
+| `@signozhq/badge`           | Badge component                                                   |
+| `@signozhq/button`          | Button component                                                  |
+| `@signozhq/calendar`        | Calendar component                                                |
+| `@signozhq/callout`         | Callout component                                                 |
+| `@signozhq/checkbox`        | Checkbox component                                                |
+| `@signozhq/combobox`        | Combobox component                                                |
+| `@signozhq/command`         | Command palette component                                         |
+| `@signozhq/date-picker`     | Date picker component                                             |
+| `@signozhq/dialog`          | Dialog component                                                  |
+| `@signozhq/drawer`          | Drawer component                                                  |
+| `@signozhq/dropdown-menu`   | Dropdown menu component                                           |
+| `@signozhq/input`           | Input component                                                   |
+| `@signozhq/pagination`      | Pagination component                                              |
+| `@signozhq/pin-list`        | Pin list component                                                |
+| `@signozhq/popover`         | Popover component                                                 |
+| `@signozhq/radio-group`     | Radio group component                                             |
+| `@signozhq/resizable`       | Resizable panels component                                        |
+| `@signozhq/sonner`          | Sonner toast component                                            |
+| `@signozhq/switch`          | Switch component                                                  |
+| `@signozhq/table`           | Table component                                                   |
+| `@signozhq/tabs`            | Tabs component                                                    |
+| `@signozhq/tooltip`         | Tooltip component                                                 |
+| `@signozhq/toggle-group`    | Toggle group component                                            |
 
-## Creating a New Package
+## Contributing
 
-To create a new package:
-
-1. Create a new branch:
-
-   ```sh
-   git checkout -b feature/new-package-name
-   ```
-
-2. From the root of the project, run:
-
-   ```sh
-   pnpm turbo gen new-package
-   ```
-
-   During the package creation process, you'll be asked to input a name, description, and choose between creating a component from scratch or importing one from shadcn. Provide the requested information as prompted. Here's an example:
-
-   - Package name: component/package name (if you want to get the component from shadcn, Enter a name that corresponds to a shadcn component e.g. dropdown-menu)
-   - Description: Provide a brief explanation of the package's purpose
-   - You can choose to either import a pre-built component from shadcn or create a new component from scratch
-
-   e.g.
-
-   ```sh
-   ❯ pnpm turbo gen new-package
-   turbo 2.1.2
-
-
-   >>> Modify "design-system" using custom generators
-
-   ? What is the name of the new package? dropdown-menu
-   ? Provide a brief description of the package: dropdown menu package
-   ? Do you want to import a shadcn component or create a component from scratch? (Use arrow keys)
-   ❯ shadcn
-   from_scratch
-   ```
-
-   Executing this generator will automatically set up and configure the new package with the necessary files and structure.
-
-   ```
-   ├── apps
-   │   └── docs
-   │       ├── package.json (modified)
-   │       └── stories
-   │           └── dropdown-menu.stories.tsx (new)
-   ├── packages
-   │   └── dropdown-menu
-   │       ├── .eslintrc.js (new)
-   │       ├── components.json (new)
-   │       ├── package.json (new)
-   │       ├── postcss.config.js (new)
-   │       ├── src
-   │       │   ├── dropdown-menu.tsx (new)
-   │       │   ├── index.css (new)
-   │       │   └── lib
-   │       │       └── utils.ts (new)
-   │       ├── tailwind.config.js (new)
-   │       ├── tsconfig.app.json (new)
-   │       ├── tsconfig.json (new)
-   │       └── vite.config.ts (new)
-   ```
-
-3. Make the necessary changes:
-
-   - Modify the component (e.g. `packages/dropdown-menu/src/dropdown-menu.tsx`)
-   - Add a storybook story in `apps/docs/stories/dropdown-menu.stories.tsx`
-
-4. From the root of the project, commit the changes to the new branch:
-
-   ```sh
-   git add .
-   git commit -m "Add new package: dropdown-menu"
-   ```
-
-5. From the root of the project, run:
-
-   ```sh
-   pnpm changeset
-   ```
-
-   This will guide you through the process of creating a changeset, which is used to document changes and manage version bumps.
-
-   #### It will prompt you with the following:
-
-   - Which packages would you like to include? – This shows which packages and changed and which have remained the same. By default, no packages are included. Press space to select the packages you want to include in the changeset.
-   - Which packages should have a major bump? – Press space to select the packages you want to bump versions for.
-   - If doing the first major version, confirm you want to release.
-   - Write a summary for the changes.
-   - Confirm the changeset looks as expected.
-   - A new Markdown file will be created in the changeset folder with the summary and a list of the packages included.
-
-6. Push the changes to the remote repository:
-
-   ```sh
-   git push origin feature/new-package-name
-   ```
-
-7. Create a new PR
+See [CONTRIBUTING.md](CONTRIBUTING.md) for getting started, useful commands, and how to create a new package.

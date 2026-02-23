@@ -1,5 +1,3 @@
-import './index.css';
-
 import React from 'react';
 import * as ResizablePrimitive from 'react-resizable-panels';
 

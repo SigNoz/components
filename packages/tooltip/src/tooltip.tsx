@@ -1,16 +1,17 @@
-import './index.css';
 import * as React from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cn } from './lib/utils';
 
-interface TooltipProps
-	extends React.ComponentProps<typeof TooltipPrimitive.Root> {
+interface TooltipProps extends React.ComponentProps<
+	typeof TooltipPrimitive.Root
+> {
 	title?: React.ReactNode;
 	arrow?: boolean;
 }
 
-interface TooltipContentProps
-	extends React.ComponentProps<typeof TooltipPrimitive.Content> {
+interface TooltipContentProps extends React.ComponentProps<
+	typeof TooltipPrimitive.Content
+> {
 	arrow?: boolean;
 }
 

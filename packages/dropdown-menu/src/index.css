@@ -1,7 +1,3 @@
-@import 'tailwindcss';
-@source "./";
-
-@variant dark (&:where(.dark, .dark *));
 *:focus-visible {
 	outline: none;
 

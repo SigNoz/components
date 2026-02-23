@@ -1,8 +1,3 @@
-@import 'tailwindcss';
-@source "./";
-
-@variant dark (&:where(.dark, .dark *));
-
 /* Scoped variables for toggle-group only - no global overrides */
 [data-slot='toggle-group'] {
 	--toggle-bg: var(--bg-vanilla-100);

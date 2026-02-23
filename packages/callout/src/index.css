@@ -1,8 +1,3 @@
-@import 'tailwindcss';
-@source "./";
-
-@variant dark (&:where(.dark, .dark *));
-
 [data-slot='callout'] {
 	--callout-icon-color: currentColor;
 	--callout-title-color: var(--text-card-foreground);

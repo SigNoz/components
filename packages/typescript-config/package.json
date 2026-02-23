@@ -3,10 +3,12 @@
 	"version": "0.0.0",
 	"private": true,
 	"license": "MIT",
+	"type": "module",
 	"publishConfig": {
 		"access": "public"
 	},
 	"devDependencies": {
-		"rollup-plugin-postcss": "^4.0.2"
+		"rollup-plugin-postcss": "^4.0.2",
+		"@signozhq/tailwind-config": "workspace:*"
 	}
 }

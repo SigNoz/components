@@ -113,9 +113,11 @@ const meta: Meta<typeof DatePicker> = {
 export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
+const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
+
 export const Default: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-4">
@@ -133,7 +135,7 @@ export const Default: Story = {
 
 export const DateOnly: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-4">
@@ -157,7 +159,7 @@ export const DateOnly: Story = {
 
 export const DateAndTime: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 		const [time, setTime] = React.useState('09:30:00');
 
 		return (
@@ -184,7 +186,7 @@ export const DateAndTime: Story = {
 
 export const WithTimezone: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 		const [time, setTime] = React.useState('15:45:00');
 		const [timezone, setTimezone] = React.useState('America/New_York');
 
@@ -216,7 +218,7 @@ export const WithTimezone: Story = {
 
 export const WithActions: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 		const [time, setTime] = React.useState('12:00:00');
 		const [timezone, setTimezone] = React.useState('UTC');
 
@@ -250,9 +252,15 @@ export const WithActions: Story = {
 
 export const DifferentButtonVariants: Story = {
 	render: () => {
-		const [date1, setDate1] = React.useState<Date | undefined>(new Date());
-		const [date2, setDate2] = React.useState<Date | undefined>(new Date());
-		const [date3, setDate3] = React.useState<Date | undefined>(new Date());
+		const [date1, setDate1] = React.useState<Date | undefined>(
+			new Date(fixedDate),
+		);
+		const [date2, setDate2] = React.useState<Date | undefined>(
+			new Date(fixedDate),
+		);
+		const [date3, setDate3] = React.useState<Date | undefined>(
+			new Date(fixedDate),
+		);
 
 		return (
 			<div className="space-y-6">
@@ -299,9 +307,15 @@ export const DifferentButtonVariants: Story = {
 
 export const DifferentButtonSizes: Story = {
 	render: () => {
-		const [date1, setDate1] = React.useState<Date | undefined>(new Date());
-		const [date2, setDate2] = React.useState<Date | undefined>(new Date());
-		const [date3, setDate3] = React.useState<Date | undefined>(new Date());
+		const [date1, setDate1] = React.useState<Date | undefined>(
+			new Date(fixedDate),
+		);
+		const [date2, setDate2] = React.useState<Date | undefined>(
+			new Date(fixedDate),
+		);
+		const [date3, setDate3] = React.useState<Date | undefined>(
+			new Date(fixedDate),
+		);
 
 		return (
 			<div className="space-y-6">
@@ -348,7 +362,7 @@ export const DifferentButtonSizes: Story = {
 
 export const Disabled: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-4">
