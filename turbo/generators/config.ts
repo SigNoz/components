@@ -106,11 +106,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				return 'package.json updated';
 			},
 
-			// Update tsup.config.ts
+			// Update tsdown.config.ts
 			(answers) => {
 				const configPath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/tsup.config.ts`,
+					`packages/${(answers as { name: string }).name}/tsdown.config.ts`,
 				);
 				let content = fs.readFileSync(configPath, 'utf8');
 
@@ -119,9 +119,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				fs.writeFileSync(configPath, content);
 
 				console.log(
-					`Updated tsup.config.ts for ${(answers as { name: string }).name}`,
+					`Updated tsdown.config.ts for ${(answers as { name: string }).name}`,
 				);
-				return 'tsup.config.ts updated';
+				return 'tsdown.config.ts updated';
 			},
 			// Update docs app package.json
 			{

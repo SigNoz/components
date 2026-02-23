@@ -5,19 +5,25 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/toggle-group.d.ts",
-			"import": "./dist/toggle-group.js"
+			"import": {
+				"types": "./dist/toggle-group.d.mts",
+				"import": "./dist/toggle-group.mjs"
+			},
+			"require": {
+				"types": "./dist/toggle-group.d.cts",
+				"require": "./dist/toggle-group.cjs"
+			}
 		}
 	},
-	"main": "./dist/toggle-group.js",
-	"module": "./dist/toggle-group.js",
-	"types": "./dist/toggle-group.d.ts",
+	"main": "./dist/toggle-group.cjs",
+	"module": "./dist/toggle-group.mjs",
+	"types": "./dist/toggle-group.d.mts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"lint": "eslint . --max-warnings 0",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
 	},
@@ -35,7 +41,7 @@
 		"react-dom": "^18.2.0",
 		"tailwindcss": "^4.1.4",
 		"react": "^18.2.0",
-		"tsup": "^8.0.0",
+		"tsdown": "^0.20.3",
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
@@ -44,13 +50,14 @@
 		"@radix-ui/react-toggle": "^1.1.6",
 		"@radix-ui/react-toggle-group": "^1.1.7",
 		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
-		"lucide-react": "^0.445.0",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7"
+		"lucide-react": "^0.445.0"
 	},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"clsx": "^2.1.1",
+		"react": "^18.2.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwindcss": "^4.1.4",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"publishConfig": {
 		"access": "public"

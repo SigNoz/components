@@ -2,6 +2,6 @@ import { defineConfig } from 'tsdown';
 import tsdownExtend from '@repo/typescript-config/tsdown.config.extend.ts';
 
 export default defineConfig({
-	entry: ['src/callout.tsx'],
+	entry: ['src/dropdown-menu.tsx'],
 	...tsdownExtend,
 });

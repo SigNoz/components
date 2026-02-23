@@ -1,4 +1,4 @@
-import { ExpandedState } from '@tanstack/react-table';
+import type { ExpandedState } from '@tanstack/react-table';
 
 export interface TablePreferences {
 	columnOrder?: string[];

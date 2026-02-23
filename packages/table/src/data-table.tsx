@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { throttle } from 'lodash-es';
 import {
-	ColumnDef,
+	type ColumnDef,
 	flexRender,
 	getCoreRowModel,
 	useReactTable,
-	HeaderGroup,
-	Table as ReactTable,
+	type HeaderGroup,
+	type Table as ReactTable,
 	type Column,
-	Cell,
-	SortingState,
+	type Cell,
+	type SortingState,
 	getSortedRowModel,
-	VisibilityState,
-	ColumnOrderState,
+	type VisibilityState,
+	type ColumnOrderState,
 	getFilteredRowModel,
-	ColumnFiltersState,
-	ColumnPinningState,
-	RowSelectionState,
-	ExpandedState,
+	type ColumnFiltersState,
+	type ColumnPinningState,
+	type RowSelectionState,
+	type ExpandedState,
 	getExpandedRowModel,
-	Row,
+	type Row,
 	getPaginationRowModel,
 } from '@tanstack/react-table';
 import { useVirtualizer, Virtualizer } from '@tanstack/react-virtual';
@@ -27,7 +27,7 @@ import { cn } from './lib/utils';
 import {
 	getTablePreferences,
 	saveTablePreferences,
-	TablePreferences,
+	type TablePreferences,
 } from './lib/preferences';
 import {
 	ArrowUpDown,

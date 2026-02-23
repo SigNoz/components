@@ -5,19 +5,25 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/button.d.ts",
-			"import": "./dist/button.js"
+			"import": {
+				"types": "./dist/button.d.mts",
+				"import": "./dist/button.mjs"
+			},
+			"require": {
+				"types": "./dist/button.d.cts",
+				"require": "./dist/button.cjs"
+			}
 		}
 	},
-	"main": "./dist/button.js",
-	"module": "./dist/button.js",
-	"types": "./dist/button.d.ts",
+	"main": "./dist/button.cjs",
+	"module": "./dist/button.mjs",
+	"types": "./dist/button.d.mts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"lint": "eslint . --max-warnings 0",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
 	},
@@ -35,21 +41,22 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"tailwindcss": "^4.1.4",
-		"tsup": "^8.0.0",
+		"tsdown": "^0.20.3",
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-slot": "^1.1.0",
-		"@signozhq/icons": "^0.1.0",
 		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
-		"lucide-react": "^0.445.0",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7"
+		"lucide-react": "^0.445.0"
 	},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"@signozhq/icons": "^0.1.0",
+		"clsx": "^2.1.1",
+		"react": "^18.2.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwindcss": "^4.1.4",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"publishConfig": {
 		"access": "public"

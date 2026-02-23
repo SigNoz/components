@@ -1,5 +1,9 @@
 {
 	"extends": "@repo/typescript-config/react-library.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"allowImportingTsExtensions": true
+	},
 	"exclude": ["node_modules"],
 	"include": [
 		"apps/**/*.ts",

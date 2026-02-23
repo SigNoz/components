@@ -5,19 +5,25 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/callout.d.ts",
-			"import": "./dist/callout.js"
+			"import": {
+				"types": "./dist/callout.d.mts",
+				"import": "./dist/callout.mjs"
+			},
+			"require": {
+				"types": "./dist/callout.d.cts",
+				"require": "./dist/callout.cjs"
+			}
 		}
 	},
-	"main": "./dist/callout.js",
-	"module": "./dist/callout.js",
-	"types": "./dist/callout.d.ts",
+	"main": "./dist/callout.cjs",
+	"module": "./dist/callout.mjs",
+	"types": "./dist/callout.d.mts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"lint": "eslint . --max-warnings 0",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
 	},
@@ -35,22 +41,23 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"tailwindcss": "^4.1.4",
-		"tsup": "^8.0.0",
+		"tsdown": "^0.20.3",
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-slot": "^1.1.0",
-		"@signozhq/icons": "^0.1.0",
 		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
 		"lucide-react": "^0.445.0",
-		"lucide-solid": "^0.510.0",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7"
+		"lucide-solid": "^0.510.0"
 	},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"@signozhq/icons": "^0.1.0",
+		"clsx": "^2.1.1",
+		"react": "^18.2.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwindcss": "^4.1.4",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"publishConfig": {
 		"access": "public"

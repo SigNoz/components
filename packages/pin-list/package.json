@@ -5,19 +5,25 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/pin-list.d.ts",
-			"import": "./dist/pin-list.js"
+			"import": {
+				"types": "./dist/pin-list.d.mts",
+				"import": "./dist/pin-list.mjs"
+			},
+			"require": {
+				"types": "./dist/pin-list.d.cts",
+				"require": "./dist/pin-list.cjs"
+			}
 		}
 	},
-	"main": "./dist/pin-list.js",
-	"module": "./dist/pin-list.js",
-	"types": "./dist/pin-list.d.ts",
+	"main": "./dist/pin-list.cjs",
+	"module": "./dist/pin-list.mjs",
+	"types": "./dist/pin-list.d.mts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"lint": "eslint . --max-warnings 0",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
 	},
@@ -35,23 +41,24 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"tailwindcss": "^4.1.4",
-		"tsup": "^8.0.0",
+		"tsdown": "^0.20.3",
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-slot": "^1.1.0",
-		"@signozhq/icons": "^0.1.0",
-		"@signozhq/tooltip": "workspace:*",
 		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
 		"lucide-react": "^0.445.0",
-		"motion": "^11.11.17",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7"
+		"motion": "^11.11.17"
 	},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"@signozhq/icons": "^0.1.0",
+		"@signozhq/tooltip": "workspace:*",
+		"clsx": "^2.1.1",
+		"react": "^18.2.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwindcss": "^4.1.4",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"publishConfig": {
 		"access": "public"

@@ -5,19 +5,25 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/tooltip.d.ts",
-			"import": "./dist/tooltip.js"
+			"import": {
+				"types": "./dist/tooltip.d.mts",
+				"import": "./dist/tooltip.mjs"
+			},
+			"require": {
+				"types": "./dist/tooltip.d.cts",
+				"require": "./dist/tooltip.cjs"
+			}
 		}
 	},
-	"main": "./dist/tooltip.js",
-	"module": "./dist/tooltip.js",
-	"types": "./dist/tooltip.d.ts",
+	"main": "./dist/tooltip.cjs",
+	"module": "./dist/tooltip.mjs",
+	"types": "./dist/tooltip.d.mts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"lint": "eslint . --max-warnings 0",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
 	},
@@ -34,7 +40,7 @@
 		"postcss": "^8.4.47",
 		"react-dom": "^18.2.0",
 		"tailwindcss": "^4.1.4",
-		"tsup": "^8.0.0",
+		"tsdown": "^0.20.3",
 		"react": "^18.2.0",
 		"typescript": "^5.3.3"
 	},
@@ -43,13 +49,14 @@
 		"@radix-ui/react-slot": "^1.1.0",
 		"@radix-ui/react-tooltip": "^1.2.6",
 		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.1",
-		"lucide-react": "^0.445.0",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss-animate": "^1.0.7"
+		"lucide-react": "^0.445.0"
 	},
 	"peerDependencies": {
-		"react": "^18.2.0"
+		"clsx": "^2.1.1",
+		"react": "^18.2.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwindcss": "^4.1.4",
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"publishConfig": {
 		"access": "public"
