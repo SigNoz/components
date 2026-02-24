@@ -1,9 +1,8 @@
+import type { VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { type VariantProps } from 'class-variance-authority';
-
-import { cn } from './lib/utils';
-import { InputPassword } from './input-password';
-import { inputVariants } from './input-variants';
+import { InputPassword } from './input-password.jsx';
+import { inputVariants } from './input-variants.js';
+import { cn } from './lib/utils.js';
 
 export interface InputProps
 	extends

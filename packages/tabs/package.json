@@ -1,67 +1,63 @@
 {
-  "name": "@signozhq/tabs",
-  "version": "0.0.10",
-  "license": "MIT",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/types/esm/tabs.d.ts",
-        "import": "./dist/tabs.js"
-      },
-      "require": {
-        "types": "./dist/types/cjs/tabs.d.cts",
-        "require": "./dist/tabs.cjs"
-      }
-    }
-  },
-  "main": "./dist/tabs.cjs",
-  "module": "./dist/tabs.js",
-  "types": "./dist/types/cjs/tabs.d.cts",
-  "files": [
-    "dist"
-  ],
-  "sideEffects": [
-    "*.css"
-  ],
-  "scripts": {
-    "build": "vite build && publint",
-    "dev": "vite build --watch",
-    "lint": "eslint . --max-warnings 0",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "publint": "publint"
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@signozhq/tailwind-config": "workspace:*",
-    "publint": "^0.3.17",
-    "@tailwindcss/postcss": "^4.1.4",
-    "@types/node": "^22.5.5",
-    "@types/react": "^18.2.61",
-    "@types/react-dom": "^18.2.19",
-    "eslint": "^9.11.0",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^4.1.4"
-  },
-  "dependencies": {
-    "@radix-ui/react-icons": "^1.3.0",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@radix-ui/react-tabs": "^1.1.3",
-    "class-variance-authority": "^0.7.0",
-    "lucide-react": "^0.445.0"
-  },
-  "peerDependencies": {
-    "@signozhq/tooltip": "workspace:*",
-    "clsx": "^2.1.1",
-    "react": "^18.2.0",
-    "tailwind-merge": "^2.5.2",
-    "tailwindcss": "^4.1.4",
-    "tailwindcss-animate": "^1.0.7",
-    "react-dom": "^18.2.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "description": "A new package"
+	"name": "@signozhq/tabs",
+	"version": "0.0.10",
+	"license": "MIT",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/types/esm/tabs.d.ts",
+				"import": "./dist/tabs.js"
+			},
+			"require": {
+				"types": "./dist/types/cjs/tabs.d.cts",
+				"require": "./dist/tabs.cjs"
+			}
+		}
+	},
+	"main": "./dist/tabs.cjs",
+	"module": "./dist/tabs.js",
+	"types": "./dist/types/cjs/tabs.d.cts",
+	"files": [
+		"dist"
+	],
+	"sideEffects": [
+		"*.css"
+	],
+	"scripts": {
+		"build": "vite build && publint",
+		"dev": "vite build --watch",
+		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+		"publint": "publint"
+	},
+	"devDependencies": {
+		"@repo/typescript-config": "workspace:*",
+		"@signozhq/tailwind-config": "workspace:*",
+		"publint": "^0.3.17",
+		"@tailwindcss/postcss": "^4.1.4",
+		"@types/node": "^22.5.5",
+		"@types/react": "^18.2.61",
+		"postcss": "^8.4.47",
+		"tailwindcss": "^4.1.4"
+	},
+	"dependencies": {
+		"@radix-ui/react-icons": "^1.3.0",
+		"@radix-ui/react-slot": "^1.1.0",
+		"@radix-ui/react-tabs": "^1.1.3",
+		"class-variance-authority": "^0.7.0",
+		"lucide-react": "^0.445.0"
+	},
+	"peerDependencies": {
+		"@signozhq/tooltip": "workspace:*",
+		"clsx": "^2.1.1",
+		"react": "^18.2.0",
+		"tailwind-merge": "^2.5.2",
+		"tailwindcss": "^4.1.4",
+		"tailwindcss-animate": "^1.0.7",
+		"react-dom": "^18.2.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"description": "A new package"
 }

@@ -5,5 +5,5 @@ import { defineConfig } from 'vite';
 export default defineConfig(
 	getViteLibConfig('src/index.ts', {
 		plugins: [react()],
-	}),
+	})
 );

@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 @config "@signozhq/tailwind-config";
-@import '@signozhq/tailwind-config/global.css';
+@import "@signozhq/tailwind-config/global.css";
 @source "./";
 @source './node_modules/@signozhq/*';

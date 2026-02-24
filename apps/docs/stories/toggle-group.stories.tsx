@@ -1,17 +1,16 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { ToggleGroup, ToggleGroupItem } from '@signozhq/toggle-group';
-import { generateDocs } from '../utils/generateDocs';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
+	AlignCenter,
+	AlignJustify,
+	AlignLeft,
+	AlignRight,
 	Bold,
 	Italic,
-	Underline,
-	AlignLeft,
-	AlignCenter,
-	AlignRight,
-	AlignJustify,
 	LayoutGrid,
+	Underline,
 } from 'lucide-react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const toggleGroupExamples = [
 	`import { ToggleGroup, ToggleGroupItem } from '@signozhq/toggle-group';

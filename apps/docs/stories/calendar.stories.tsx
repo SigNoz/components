@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { Calendar } from '@signozhq/calendar';
-import { generateDocs } from '../utils/generateDocs';
+
 import { ButtonVariant } from '@signozhq/button';
+import { Calendar } from '@signozhq/calendar';
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const CalendarExamples = [
 	`import { Calendar } from '@signozhq/calendar';
@@ -344,11 +345,7 @@ export const WithTimezone: Story = {
 		];
 
 		// Format date and time in selected timezone
-		const formatDateTimeInTimezone = (
-			date: Date | undefined,
-			tz: string,
-			timeStr: string,
-		) => {
+		const formatDateTimeInTimezone = (date: Date | undefined, tz: string, timeStr: string) => {
 			if (!date) return 'No date selected';
 
 			try {
@@ -426,8 +423,7 @@ export const WithTimezone: Story = {
 									{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
 								</p>
 								<p className="text-sm text-muted-foreground">
-									<strong>{timezone}:</strong>{' '}
-									{formatDateTimeInTimezone(date, timezone, time)}
+									<strong>{timezone}:</strong> {formatDateTimeInTimezone(date, timezone, time)}
 								</p>
 							</div>
 						</div>
@@ -460,11 +456,10 @@ export const WithTimezone: Story = {
 				<div className="p-4 bg-muted rounded-md">
 					<h4 className="text-sm font-medium mb-2">Date & Time with Timezone:</h4>
 					<p className="text-xs text-muted-foreground">
-						This example demonstrates how to handle dates and times with different
-						timezones. The selected date and time are displayed in both local time and
-						the chosen timezone. This shows how you can combine calendar selection
-						with time input and timezone conversion for comprehensive datetime
-						handling in your applications.
+						This example demonstrates how to handle dates and times with different timezones. The
+						selected date and time are displayed in both local time and the chosen timezone. This
+						shows how you can combine calendar selection with time input and timezone conversion for
+						comprehensive datetime handling in your applications.
 					</p>
 				</div>
 			</div>

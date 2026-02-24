@@ -1,7 +1,7 @@
 import './index.css';
-import * as React from 'react';
+import type * as React from 'react';
 
-import { cn } from './lib/utils';
+import { cn } from './lib/utils.js';
 
 type TableProps = React.ComponentProps<'table'> & {
 	fixedHeight?: string | number;
@@ -9,28 +9,20 @@ type TableProps = React.ComponentProps<'table'> & {
 	containerProps?: React.HTMLAttributes<HTMLDivElement>;
 };
 
-function Table({
-	className,
-	fixedHeight,
-	containerRef,
-	containerProps,
-	...props
-}: TableProps) {
+function Table({ className, fixedHeight, containerRef, containerProps, ...props }: TableProps) {
 	return (
 		<div
 			ref={containerRef}
 			data-slot="table-container"
 			className={cn(
 				'relative w-full overflow-x-auto',
-				fixedHeight &&
-					'overflow-y-auto table-scroll-container sticky-header-table-container',
-				containerProps?.className,
+				fixedHeight && 'overflow-y-auto table-scroll-container sticky-header-table-container',
+				containerProps?.className
 			)}
 			style={
 				fixedHeight
 					? {
-							height:
-								typeof fixedHeight === 'number' ? `${fixedHeight}px` : fixedHeight,
+							height: typeof fixedHeight === 'number' ? `${fixedHeight}px` : fixedHeight,
 						}
 					: undefined
 			}
@@ -45,7 +37,7 @@ function Table({
 				className={cn(
 					'w-full caption-bottom text-sm',
 					fixedHeight && 'sticky-header-table',
-					className,
+					className
 				)}
 				{...props}
 			/>
@@ -64,7 +56,7 @@ function TableHeader({
 			className={cn(
 				'[&_tr]:border-b z-10 bg-[#1f2937] text-white',
 				sticky && 'sticky-header',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -85,10 +77,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
 	return (
 		<tfoot
 			data-slot="table-footer"
-			className={cn(
-				'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',
-				className,
-			)}
+			className={cn('bg-muted/50 border-t font-medium [&>tr]:last:border-b-0', className)}
 			{...props}
 		/>
 	);
@@ -100,7 +89,7 @@ function TableRow({ className, ...props }: React.ComponentProps<'tr'>) {
 			data-slot="table-row"
 			className={cn(
 				'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -113,7 +102,7 @@ function TableHead({ className, ...props }: React.ComponentProps<'th'>) {
 			data-slot="table-head"
 			className={cn(
 				'text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -126,17 +115,14 @@ function TableCell({ className, ...props }: React.ComponentProps<'td'>) {
 			data-slot="table-cell"
 			className={cn(
 				'p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
-				className,
+				className
 			)}
 			{...props}
 		/>
 	);
 }
 
-function TableCaption({
-	className,
-	...props
-}: React.ComponentProps<'caption'>) {
+function TableCaption({ className, ...props }: React.ComponentProps<'caption'>) {
 	return (
 		<caption
 			data-slot="table-caption"
@@ -146,13 +132,4 @@ function TableCaption({
 	);
 }
 
-export {
-	Table,
-	TableHeader,
-	TableBody,
-	TableFooter,
-	TableHead,
-	TableRow,
-	TableCell,
-	TableCaption,
-};
+export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };

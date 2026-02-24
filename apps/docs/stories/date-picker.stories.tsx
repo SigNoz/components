@@ -1,7 +1,7 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { DatePicker } from '@signozhq/date-picker';
-import { generateDocs } from '../utils/generateDocs';
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const DatePickerExamples = [
 	`import { DatePicker } from '@signozhq/date-picker';
@@ -195,9 +195,7 @@ export const WithTimezone: Story = {
 				<div>
 					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
 					<p className="text-sm text-muted-foreground">
-						{date
-							? `${date.toLocaleDateString()} at ${time} (${timezone})`
-							: 'No date selected'}
+						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
 					</p>
 				</div>
 				<DatePicker
@@ -227,9 +225,7 @@ export const WithActions: Story = {
 				<div>
 					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
 					<p className="text-sm text-muted-foreground">
-						{date
-							? `${date.toLocaleDateString()} at ${time} (${timezone})`
-							: 'No date selected'}
+						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
 					</p>
 				</div>
 				<DatePicker
@@ -252,15 +248,9 @@ export const WithActions: Story = {
 
 export const DifferentButtonVariants: Story = {
 	render: () => {
-		const [date1, setDate1] = React.useState<Date | undefined>(
-			new Date(fixedDate),
-		);
-		const [date2, setDate2] = React.useState<Date | undefined>(
-			new Date(fixedDate),
-		);
-		const [date3, setDate3] = React.useState<Date | undefined>(
-			new Date(fixedDate),
-		);
+		const [date1, setDate1] = React.useState<Date | undefined>(new Date(fixedDate));
+		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
+		const [date3, setDate3] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-6">
@@ -307,15 +297,9 @@ export const DifferentButtonVariants: Story = {
 
 export const DifferentButtonSizes: Story = {
 	render: () => {
-		const [date1, setDate1] = React.useState<Date | undefined>(
-			new Date(fixedDate),
-		);
-		const [date2, setDate2] = React.useState<Date | undefined>(
-			new Date(fixedDate),
-		);
-		const [date3, setDate3] = React.useState<Date | undefined>(
-			new Date(fixedDate),
-		);
+		const [date1, setDate1] = React.useState<Date | undefined>(new Date(fixedDate));
+		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
+		const [date3, setDate3] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-6">

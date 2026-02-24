@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from '@signozhq/checkbox';
-import { generateDocs } from '../utils/generateDocs';
+import type { Meta, StoryObj } from '@storybook/react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const checkboxExamples = [
 	`import { Checkbox } from '@signozhq/checkbox';

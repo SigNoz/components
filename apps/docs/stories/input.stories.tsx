@@ -1,6 +1,5 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from '@signozhq/input';
+import type { Meta, StoryObj } from '@storybook/react';
 
 // Meta Configuration
 const meta: Meta<typeof Input> = {
@@ -55,8 +54,7 @@ const meta: Meta<typeof Input> = {
 		},
 		required: {
 			control: 'boolean',
-			description:
-				'Whether the input is required. Browsers will prevent form submission if empty.',
+			description: 'Whether the input is required. Browsers will prevent form submission if empty.',
 			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
 		},
 		readOnly: {
@@ -135,12 +133,7 @@ export const InputTypes: Story = {
 						>
 							Text
 						</label>
-						<Input
-							id="type-text"
-							type="text"
-							placeholder="Enter text"
-							theme="light"
-						/>
+						<Input id="type-text" type="text" placeholder="Enter text" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label
@@ -149,12 +142,7 @@ export const InputTypes: Story = {
 						>
 							Email
 						</label>
-						<Input
-							id="type-email"
-							type="email"
-							placeholder="email@example.com"
-							theme="light"
-						/>
+						<Input id="type-email" type="email" placeholder="email@example.com" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label
@@ -163,12 +151,7 @@ export const InputTypes: Story = {
 						>
 							Password
 						</label>
-						<Input
-							id="type-password"
-							type="password"
-							placeholder="Enter password"
-							theme="light"
-						/>
+						<Input id="type-password" type="password" placeholder="Enter password" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label
@@ -177,12 +160,7 @@ export const InputTypes: Story = {
 						>
 							Number
 						</label>
-						<Input
-							id="type-number"
-							type="number"
-							placeholder="Enter number"
-							theme="light"
-						/>
+						<Input id="type-number" type="number" placeholder="Enter number" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label
@@ -191,12 +169,7 @@ export const InputTypes: Story = {
 						>
 							Telephone
 						</label>
-						<Input
-							id="type-tel"
-							type="tel"
-							placeholder="+1 (555) 000-0000"
-							theme="light"
-						/>
+						<Input id="type-tel" type="tel" placeholder="+1 (555) 000-0000" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label
@@ -205,12 +178,7 @@ export const InputTypes: Story = {
 						>
 							URL
 						</label>
-						<Input
-							id="type-url"
-							type="url"
-							placeholder="https://example.com"
-							theme="light"
-						/>
+						<Input id="type-url" type="url" placeholder="https://example.com" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label
@@ -219,12 +187,7 @@ export const InputTypes: Story = {
 						>
 							Search
 						</label>
-						<Input
-							id="type-search"
-							type="search"
-							placeholder="Search..."
-							theme="light"
-						/>
+						<Input id="type-search" type="search" placeholder="Search..." theme="light" />
 					</div>
 				</div>
 			</div>
@@ -271,12 +234,7 @@ export const WithLabels: Story = {
 					>
 						Email Address
 					</label>
-					<Input
-						id="labeled-input-2"
-						type="email"
-						placeholder="john@example.com"
-						theme="light"
-					/>
+					<Input id="labeled-input-2" type="email" placeholder="john@example.com" theme="light" />
 				</div>
 				<div className="space-y-2">
 					<label
@@ -285,12 +243,7 @@ export const WithLabels: Story = {
 					>
 						Phone Number
 					</label>
-					<Input
-						id="labeled-input-3"
-						type="tel"
-						placeholder="+1 (555) 000-0000"
-						theme="light"
-					/>
+					<Input id="labeled-input-3" type="tel" placeholder="+1 (555) 000-0000" theme="light" />
 				</div>
 			</div>
 		</div>
@@ -327,12 +280,7 @@ export const DisabledStates: Story = {
 					>
 						Disabled Input
 					</label>
-					<Input
-						id="disabled-input"
-						placeholder="Cannot edit this"
-						disabled
-						theme="light"
-					/>
+					<Input id="disabled-input" placeholder="Cannot edit this" disabled theme="light" />
 				</div>
 			</div>
 		</div>
@@ -418,9 +366,7 @@ export const RequiredFields: Story = {
 						required
 						theme="light"
 					/>
-					<p className="text-xs text-vanilla-600 dark:text-vanilla-400">
-						This field is required
-					</p>
+					<p className="text-xs text-vanilla-600 dark:text-vanilla-400">This field is required</p>
 				</div>
 			</div>
 		</div>
@@ -450,9 +396,7 @@ export const FormExamples: Story = {
 	render: () => (
 		<div className="p-8 space-y-8 bg-background">
 			<div className="max-w-md space-y-6">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-300">
-					Contact Form
-				</h3>
+				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-300">Contact Form</h3>
 				<form className="space-y-4">
 					<div className="space-y-2">
 						<label
@@ -485,12 +429,7 @@ export const FormExamples: Story = {
 						>
 							Phone Number
 						</label>
-						<Input
-							id="form-phone"
-							type="tel"
-							placeholder="+1 (555) 000-0000"
-							theme="light"
-						/>
+						<Input id="form-phone" type="tel" placeholder="+1 (555) 000-0000" theme="light" />
 					</div>
 					<div className="space-y-2">
 						<label

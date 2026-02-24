@@ -1,5 +1,9 @@
 import './index.css';
-import React, {
+import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
+import type { VariantProps } from 'class-variance-authority';
+import { LockIcon } from 'lucide-react';
+import {
 	type ComponentPropsWithoutRef,
 	type CSSProperties,
 	type ElementRef,
@@ -11,17 +15,13 @@ import React, {
 	useRef,
 	useState,
 } from 'react';
-import * as TabsPrimitive from '@radix-ui/react-tabs';
-import { type VariantProps } from 'class-variance-authority';
-import { cn } from './lib/utils';
-import { LockIcon } from 'lucide-react';
-import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
+import { cn } from './lib/utils.js';
 import {
 	tabsListVariants,
 	tabsListWrapperVariants,
 	tabsTriggerVariants,
 	tabsVariants,
-} from './tabVariants';
+} from './tabVariants.jsx';
 
 type TabItemType = {
 	key: string;
@@ -96,14 +96,14 @@ const Tabs = forwardRef<
 					updateActiveSliderPosition();
 				});
 			});
-		}, [activeTabKey, items, updateActiveSliderPosition]);
+		}, [updateActiveSliderPosition]);
 
 		// --- Hover Slider Logic ---
 		const handleMouseEnter = (itemKey: string) => {
 			if (tabsListRef.current && triggerRefs.current[itemKey]) {
 				const hoveredTrigger = triggerRefs.current[itemKey];
 				const listRect = tabsListRef.current.getBoundingClientRect();
-				const triggerRect = hoveredTrigger!.getBoundingClientRect();
+				const triggerRect = hoveredTrigger?.getBoundingClientRect();
 
 				setHoverSliderStyle({
 					left: triggerRect.left - listRect.left,

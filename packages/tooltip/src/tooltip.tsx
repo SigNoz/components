@@ -1,17 +1,13 @@
-import * as React from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import { cn } from './lib/utils';
+import type * as React from 'react';
+import { cn } from './lib/utils.js';
 
-interface TooltipProps extends React.ComponentProps<
-	typeof TooltipPrimitive.Root
-> {
+interface TooltipProps extends React.ComponentProps<typeof TooltipPrimitive.Root> {
 	title?: React.ReactNode;
 	arrow?: boolean;
 }
 
-interface TooltipContentProps extends React.ComponentProps<
-	typeof TooltipPrimitive.Content
-> {
+interface TooltipContentProps extends React.ComponentProps<typeof TooltipPrimitive.Content> {
 	arrow?: boolean;
 }
 
@@ -43,9 +39,7 @@ function Tooltip({ title, arrow, open, children, ...props }: TooltipProps) {
 	);
 }
 
-function TooltipTrigger({
-	...props
-}: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
+function TooltipTrigger({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
 	return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
 
@@ -75,7 +69,7 @@ function TooltipContent({
 					// Typography
 					'text-xs text-balance leading-[18px] tracking-[-0.06px]',
 					'border border-secondary shadow-[0px_6px_12px_0px_rgba(0,0,0,0.20)] backdrop-blur-[15px] rounded-xs border-solid',
-					className,
+					className
 				)}
 				{...props}
 			>

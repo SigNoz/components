@@ -1,8 +1,9 @@
-import { PlopTypes } from '@turbo/gen';
+import { execSync } from 'node:child_process';
+import path from 'node:path';
+import type { PlopTypes } from '@turbo/gen';
 import fs from 'fs-extra';
-import path from 'path';
 import inquirer from 'inquirer';
-import { execSync } from 'child_process';
+
 const PROJECT_ROOT = path.resolve(__dirname, '../..');
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
@@ -36,7 +37,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				const sourcePath = path.resolve(PROJECT_ROOT, 'packages/button');
 				const targetPath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}`,
+					`packages/${(answers as { name: string }).name}`
 				);
 
 				if (!fs.existsSync(sourcePath)) {
@@ -57,7 +58,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 						fs.removeSync(targetPath);
 					} else {
 						throw new Error(
-							`Package ${(answers as { name: string }).name} already exists. Operation cancelled.`,
+							`Package ${(answers as { name: string }).name} already exists. Operation cancelled.`
 						);
 					}
 				}
@@ -77,7 +78,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 			(answers) => {
 				const packageJsonPath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/package.json`,
+					`packages/${(answers as { name: string }).name}/package.json`
 				);
 				const packageJson = fs.readJsonSync(packageJsonPath);
 
@@ -106,9 +107,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
 				fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
 
-				console.log(
-					`Updated package.json for ${(answers as { name: string }).name}`,
-				);
+				console.log(`Updated package.json for ${(answers as { name: string }).name}`);
 				return 'package.json updated';
 			},
 
@@ -116,7 +115,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 			(answers) => {
 				const configPath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/vite.config.ts`,
+					`packages/${(answers as { name: string }).name}/vite.config.ts`
 				);
 				let content = fs.readFileSync(configPath, 'utf8');
 
@@ -124,9 +123,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
 				fs.writeFileSync(configPath, content);
 
-				console.log(
-					`Updated vite.config.ts for ${(answers as { name: string }).name}`,
-				);
+				console.log(`Updated vite.config.ts for ${(answers as { name: string }).name}`);
 				return 'vite.config.ts updated';
 			},
 			// Update docs app package.json
@@ -141,36 +138,30 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 			async (answers) => {
 				const packagePath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}`,
+					`packages/${(answers as { name: string }).name}`
 				);
 
 				const { componentType } = await inquirer.prompt([
 					{
 						type: 'list',
 						name: 'componentType',
-						message:
-							'Do you want to import a shadcn component or create a component from scratch?',
+						message: 'Do you want to import a shadcn component or create a component from scratch?',
 						choices: ['shadcn', 'from_scratch'],
 					},
 				]);
 
 				if (componentType === 'shadcn') {
-					console.log(
-						`Running shadcn command for ${(answers as { name: string }).name}`,
-					);
+					console.log(`Running shadcn command for ${(answers as { name: string }).name}`);
 					try {
-						execSync(
-							`pnpm dlx shadcn@latest add ${(answers as { name: string }).name}`,
-							{
-								cwd: packagePath,
-								stdio: 'inherit',
-							},
-						);
+						execSync(`pnpm dlx shadcn@latest add ${(answers as { name: string }).name}`, {
+							cwd: packagePath,
+							stdio: 'inherit',
+						});
 
 						// Append import statement to the newly generated component
 						const componentPath = path.join(
 							packagePath,
-							`src/${(answers as { name: string }).name}.tsx`,
+							`src/${(answers as { name: string }).name}.tsx`
 						);
 						const componentContent = fs.readFileSync(componentPath, 'utf8');
 						const updatedContent = `import "./index.css"\n${componentContent}`;
@@ -185,7 +176,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 					// Create a component from scratch
 					const componentPath = path.join(
 						packagePath,
-						`src/${(answers as { name: string }).name}.tsx`,
+						`src/${(answers as { name: string }).name}.tsx`
 					);
 					const componentName =
 						(answers as { name: string }).name.charAt(0).toUpperCase() +
@@ -212,7 +203,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				const description = (answers as { description: string }).description;
 				const storiesPath = path.resolve(
 					PROJECT_ROOT,
-					`apps/docs/stories/${componentName}.stories.tsx`,
+					`apps/docs/stories/${componentName}.stories.tsx`
 				);
 
 				// Convert kebab-case to PascalCase
@@ -279,9 +270,7 @@ export const Default: Story = {
 
 			// Run pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT level
 			() => {
-				console.log(
-					'Running pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT',
-				);
+				console.log('Running pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT');
 				try {
 					execSync('pnpm clean && pnpm install && pnpm run dev', {
 						cwd: PROJECT_ROOT,

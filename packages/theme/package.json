@@ -1,40 +1,40 @@
 {
-  "name": "@signozhq/theme",
-  "version": "0.0.0",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/types/cjs/index.d.cts",
-        "import": "./dist/theme.js"
-      },
-      "require": {
-        "types": "./dist/types/cjs/index.d.cts",
-        "require": "./dist/theme.cjs"
-      }
-    }
-  },
-  "main": "./dist/theme.cjs",
-  "module": "./dist/theme.js",
-  "types": "./dist/types/cjs/index.d.cts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "vite build && publint",
-    "dev": "vite build --watch",
-    "publint": "publint"
-  },
-  "peerDependencies": {
-    "@signozhq/design-tokens": "*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
-    "publint": "^0.3.17",
-    "@types/react": "^18.3.8",
-    "@vitejs/plugin-react": "^5.1.4",
-    "vite": "^5.4.19"
-  }
+	"name": "@signozhq/theme",
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/types/cjs/index.d.cts",
+				"import": "./dist/theme.js"
+			},
+			"require": {
+				"types": "./dist/types/cjs/index.d.cts",
+				"require": "./dist/theme.cjs"
+			}
+		}
+	},
+	"main": "./dist/theme.cjs",
+	"module": "./dist/theme.js",
+	"types": "./dist/types/cjs/index.d.cts",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "vite build && publint",
+		"dev": "vite build --watch",
+		"publint": "publint"
+	},
+	"peerDependencies": {
+		"@signozhq/design-tokens": "*",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@repo/typescript-config": "workspace:*",
+		"publint": "^0.3.17",
+		"@types/react": "^18.3.8",
+		"@vitejs/plugin-react": "^5.1.4",
+		"vite": "^5.4.19"
+	}
 }

@@ -1,20 +1,14 @@
-import * as React from 'react';
+import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
+import { ChevronDown, MoreHorizontal, MousePointerClick, Pin, PinOff } from 'lucide-react';
 import {
-	ChevronDown,
-	MoreHorizontal,
-	MousePointerClick,
-	Pin,
-	PinOff,
-} from 'lucide-react';
-import {
-	motion,
-	LayoutGroup,
 	AnimatePresence,
 	type HTMLMotionProps,
+	LayoutGroup,
+	motion,
 	type Transition,
 } from 'motion/react';
-import { Tooltip, TooltipProvider } from '@signozhq/tooltip';
-import { cn } from './lib/utils';
+import * as React from 'react';
+import { cn } from './lib/utils.js';
 
 export type PinListItem = {
 	key: string;
@@ -99,10 +93,7 @@ function PinList({
 
 	return (
 		<TooltipProvider>
-			<motion.div
-				className={cn('pin-list-container space-y-10', className)}
-				{...props}
-			>
+			<motion.div className={cn('pin-list-container space-y-10', className)} {...props}>
 				<LayoutGroup>
 					<div>
 						<AnimatePresence>
@@ -116,7 +107,7 @@ function PinList({
 								className={cn(
 									'pin-list-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center px-3 gap-[8px]',
 									isDockedProp && 'pin-list-label-docked',
-									labelClassName,
+									labelClassName
 								)}
 							>
 								<div className="relative shrink-0 size-[16px]">
@@ -163,7 +154,7 @@ function PinList({
 									className={cn(
 										'pin-list-more-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center w-full cursor-pointer hover:opacity-80 transition-opacity px-3 justify-between',
 										isDockedProp && 'pin-list-more-label-docked',
-										labelClassName,
+										labelClassName
 									)}
 								>
 									<div className="pin-list-more-label-content flex items-center gap-[8px]">
@@ -190,9 +181,7 @@ function PinList({
 									animate={{ opacity: 1, height: 'auto' }}
 									exit={{ opacity: 0, height: 0 }}
 									transition={{ duration: 0.2, ease: 'easeInOut' }}
-									className={cn(
-										'space-y-3 relative gap-[6px] flex flex-col overflow-hidden',
-									)}
+									className={cn('space-y-3 relative gap-[6px] flex flex-col overflow-hidden')}
 								>
 									{unpinned.map((item) => (
 										<PinListItem
@@ -247,13 +236,9 @@ function PinListItem({
 			className={cn(
 				'pin-list-item flex items-center rounded-[3px] py-[4px] relative w-full text-left transition-colors text-foreground font-inter text-[14px] font-normal leading-[18px] m-0 h-[32px] px-[12px] justify-between gap-5',
 				isDocked && 'pin-list-item-docked',
-				item.active
-					? 'bg-secondary'
-					: isHovered
-						? 'bg-secondary'
-						: 'bg-transparent',
+				item.active ? 'bg-secondary' : isHovered ? 'bg-secondary' : 'bg-transparent',
 				item.active && isHovered && 'bg-secondary/80',
-				className,
+				className
 			)}
 		>
 			<div className="pin-list-item-content flex items-center gap-[8px]">
@@ -265,9 +250,7 @@ function PinListItem({
 				<div
 					className={cn(
 						'pin-list-item-label font-inter text-[14px] font-normal leading-[18px]',
-						item.active || isHovered
-							? 'text-secondary-foreground'
-							: 'text-foreground',
+						item.active || isHovered ? 'text-secondary-foreground' : 'text-foreground'
 					)}
 				>
 					{item.label}
@@ -277,7 +260,7 @@ function PinListItem({
 				<div
 					className={cn(
 						'pin-list-item-pin-button flex items-center justify-center size-[16px] shrink-0 transition-opacity cursor-pointer',
-						isPinned ? 'opacity-100' : isHovered ? 'opacity-100' : 'opacity-0',
+						isPinned ? 'opacity-100' : isHovered ? 'opacity-100' : 'opacity-0'
 					)}
 					onClick={(e) => {
 						e.stopPropagation();

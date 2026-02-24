@@ -1,5 +1,4 @@
-import React from 'react';
-import Spacing from '../components/Spacing';
+import Spacing from '../components/Spacing.jsx';
 
 export default {
 	title: 'Design System/Spacing',

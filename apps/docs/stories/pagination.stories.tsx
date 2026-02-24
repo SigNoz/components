@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import Pagination from '@signozhq/pagination';
-import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react'; // Import ComponentProps
-import { generateDocs } from '../utils/generateDocs';
+import { useState } from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const paginationExamples = [
 	`import Pagination from '@signozhq/pagination';
@@ -25,8 +25,7 @@ export default function MyComponent() {
 
 const paginationDocs = generateDocs({
 	packageName: '@signozhq/pagination',
-	description:
-		'A flexible pagination component for navigating through multi-page content.',
+	description: 'A flexible pagination component for navigating through multi-page content.',
 	examples: paginationExamples,
 });
 
@@ -93,10 +92,7 @@ type PaginationProps = ComponentProps<typeof Pagination>;
 type Story = StoryObj<typeof Pagination>;
 
 // Helper render function for controlled stories
-const ControlledPagination = (
-	args: PaginationProps,
-	initialPage: number,
-): JSX.Element => {
+const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.Element => {
 	const [currentPage, setCurrentPage] = useState(initialPage);
 
 	return (
@@ -123,10 +119,7 @@ export const Default: Story = {
 			p7: 10,
 		});
 
-		const handlePageChange = (
-			key: keyof typeof currentPages,
-			page: number,
-		): void => {
+		const handlePageChange = (key: keyof typeof currentPages, page: number): void => {
 			setCurrentPages((prev) => ({ ...prev, [key]: page }));
 			args.onPageChange?.(page);
 		};
@@ -166,9 +159,7 @@ export const Default: Story = {
 				</div>
 
 				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">
-						10 Pages - Middle Selected (Page 7)
-					</p>
+					<p className="mb-2 text-sm text-gray-400">10 Pages - Middle Selected (Page 7)</p>
 					<Pagination
 						total={100}
 						pageSize={10}

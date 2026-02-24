@@ -1,42 +1,38 @@
-import {
-  colorTokens,
-  spacingTokens,
-  typographyTokens,
-} from "@signozhq/design-tokens";
+import { colorTokens, spacingTokens, typographyTokens } from '@signozhq/design-tokens';
 
 // Extracted types
 type ColorToken = {
-  value: string;
-  type: string;
+	value: string;
+	type: string;
 };
 
 type ColorTokens = Record<string, Record<string, ColorToken>>;
 
 type TransformedColor = {
-  name: string;
-  shades: { name: string; value: string }[];
+	name: string;
+	shades: { name: string; value: string }[];
 };
 
 type SpacingToken = {
-  value: string;
+	value: string;
 };
 
 type SpacingTokens = {
-  padding: Record<string, SpacingToken>;
+	padding: Record<string, SpacingToken>;
 };
 
 type TypographyToken = {
-  value: string;
+	value: string;
 };
 
 type TypographyTokens = {
-  fontSize: Record<string, TypographyToken>;
-  fontWeight: Record<string, TypographyToken>;
+	fontSize: Record<string, TypographyToken>;
+	fontWeight: Record<string, TypographyToken>;
 };
 
 type TransformedTypography = {
-  FONTSIZE: Record<string, string>;
-  FONTWEIGHT: Record<string, string>;
+	FONTSIZE: Record<string, string>;
+	FONTWEIGHT: Record<string, string>;
 };
 
 /**
@@ -66,21 +62,20 @@ type TransformedTypography = {
  * ]
  */
 function transformColorTokens(colorTokens: ColorTokens): TransformedColor[] {
-  return Object.entries(colorTokens).map(([colorName, shades]) => ({
-    name: colorName,
-    shades: Object.entries(shades).map(([shadeName, shadeInfo]) => ({
-      name: shadeName,
-      value: shadeInfo.value,
-    })),
-  }));
+	return Object.entries(colorTokens).map(([colorName, shades]) => ({
+		name: colorName,
+		shades: Object.entries(shades).map(([shadeName, shadeInfo]) => ({
+			name: shadeName,
+			value: shadeInfo.value,
+		})),
+	}));
 }
 
 /**
  * Retrieves and transforms color tokens.
  * @returns Transformed color tokens.
  */
-export const getTransformedColorTokens = () =>
-  transformColorTokens(colorTokens.bg);
+export const getTransformedColorTokens = () => transformColorTokens(colorTokens.bg);
 
 /**
  * Transforms spacing tokens into a simplified format.
@@ -103,19 +98,13 @@ export const getTransformedColorTokens = () =>
  *   medium: "8px"
  * }
  */
-function transformSpacingTokens(
-  spacingTokens: SpacingTokens
-): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(spacingTokens.padding).map(([key, { value }]) => [
-      key,
-      value,
-    ])
-  );
+function transformSpacingTokens(spacingTokens: SpacingTokens): Record<string, string> {
+	return Object.fromEntries(
+		Object.entries(spacingTokens.padding).map(([key, { value }]) => [key, value])
+	);
 }
 
-export const getTransformedSpacingTokens = () =>
-  transformSpacingTokens(spacingTokens);
+export const getTransformedSpacingTokens = () => transformSpacingTokens(spacingTokens);
 
 /**
  * Transforms typography tokens into a structured format.
@@ -152,27 +141,24 @@ export const getTransformedSpacingTokens = () =>
  *   }
  * }
  */
-function transformTypographyTokens(
-  typographyTokens: TypographyTokens
-): TransformedTypography {
-  // Helper function to transform a specific property
-  const transformProperty = (property: "fontSize" | "fontWeight") =>
-    Object.fromEntries(
-      Object.entries(typographyTokens[property]).map(([key, { value }]) => [
-        key.toUpperCase(),
-        value,
-      ])
-    );
+function transformTypographyTokens(typographyTokens: TypographyTokens): TransformedTypography {
+	// Helper function to transform a specific property
+	const transformProperty = (property: 'fontSize' | 'fontWeight') =>
+		Object.fromEntries(
+			Object.entries(typographyTokens[property]).map(([key, { value }]) => [
+				key.toUpperCase(),
+				value,
+			])
+		);
 
-  return {
-    FONTSIZE: transformProperty("fontSize"),
-    FONTWEIGHT: transformProperty("fontWeight"),
-  };
+	return {
+		FONTSIZE: transformProperty('fontSize'),
+		FONTWEIGHT: transformProperty('fontWeight'),
+	};
 }
 
 /**
  * Retrieves and transforms typography tokens.
  * @returns Transformed typography tokens.
  */
-export const getTransformedTypographyTokens = () =>
-  transformTypographyTokens(typographyTokens);
+export const getTransformedTypographyTokens = () => transformTypographyTokens(typographyTokens);

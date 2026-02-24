@@ -1,7 +1,7 @@
-import { dirname, join } from 'path';
-import { createRequire } from 'module';
-import { mergeConfig } from 'vite';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
 import tailwindConfig from '@signozhq/tailwind-config';
+import { mergeConfig } from 'vite';
 
 const require = createRequire(import.meta.url);
 

@@ -3,35 +3,16 @@
 	"concurrency": "30",
 	"tasks": {
 		"build": {
-			"inputs": [
-				"$TURBO_DEFAULT$",
-				".env*"
-			],
-			"outputs": [
-				"dist/**",
-				"storybook-static/**"
-			],
-			"dependsOn": [
-				"^build"
-			]
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": ["dist/**", "storybook-static/**"],
+			"dependsOn": ["^build"]
 		},
 		"build-storybook": {
-			"dependsOn": [
-				"^build-storybook"
-			],
-			"outputs": [
-				"storybook-static/**"
-			]
-		},
-		"lint": {
-			"dependsOn": [
-				"^lint"
-			]
+			"dependsOn": ["^build-storybook"],
+			"outputs": ["storybook-static/**"]
 		},
 		"chromatic": {
-			"dependsOn": [
-				"^chromatic"
-			]
+			"dependsOn": ["^chromatic"]
 		},
 		"dev": {
 			"cache": false,

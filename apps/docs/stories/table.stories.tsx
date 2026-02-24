@@ -1,26 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import * as React from 'react';
+import { Badge } from '@signozhq/badge';
+import { Button } from '@signozhq/button';
 import {
 	Table,
 	TableBody,
+	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
-	TableCaption,
 } from '@signozhq/table';
-import { Badge } from '@signozhq/badge';
-import { Button } from '@signozhq/button';
-import {
-	CheckCircle,
-	XCircle,
-	Clock,
-	AlertCircle,
-	Eye,
-	Edit,
-	Trash2,
-	Upload,
-} from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, Upload, XCircle } from 'lucide-react';
 
 // Enhanced sample data
 const users = [
@@ -132,9 +122,7 @@ export const Simple: Story = {
 	render: () => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Simple User Table
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Simple User Table</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A basic table with clean, minimal styling for simple data display.
 				</p>
@@ -179,9 +167,7 @@ export const Enhanced: Story = {
 	render: () => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Enhanced User Table
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Enhanced User Table</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A more detailed table with avatars, status indicators, and action buttons.
 				</p>
@@ -198,10 +184,7 @@ export const Enhanced: Story = {
 					</TableHeader>
 					<TableBody>
 						{users.map((user, index) => (
-							<TableRow
-								key={user.id}
-								className={index % 2 === 0 ? 'bg-background' : 'bg-muted/30'}
-							>
+							<TableRow key={user.id} className={index % 2 === 0 ? 'bg-background' : 'bg-muted/30'}>
 								<TableCell>
 									<div className="flex items-center gap-3">
 										<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
@@ -230,15 +213,9 @@ export const Enhanced: Story = {
 								</TableCell>
 								<TableCell>
 									<div className="flex items-center gap-2">
-										{user.status === 'active' && (
-											<CheckCircle className="h-4 w-4 text-green-600" />
-										)}
-										{user.status === 'inactive' && (
-											<XCircle className="h-4 w-4 text-red-600" />
-										)}
-										{user.status === 'pending' && (
-											<Clock className="h-4 w-4 text-yellow-600" />
-										)}
+										{user.status === 'active' && <CheckCircle className="h-4 w-4 text-green-600" />}
+										{user.status === 'inactive' && <XCircle className="h-4 w-4 text-red-600" />}
+										{user.status === 'pending' && <Clock className="h-4 w-4 text-yellow-600" />}
 										<Badge
 											variant="outline"
 											className={
@@ -292,16 +269,13 @@ export const WithCaption: Story = {
 	render: () => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Table with Caption
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Table with Caption</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A table with a caption and summary information for better accessibility.
 				</p>
 				<Table>
 					<TableCaption>
-						A list of all users in the system with their current status and role
-						information.
+						A list of all users in the system with their current status and role information.
 					</TableCaption>
 					<TableHeader>
 						<TableRow>
@@ -384,9 +358,7 @@ export const Compact: Story = {
 	render: () => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Compact Table
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Compact Table</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A compact version perfect for mobile devices or space-constrained layouts.
 				</p>
@@ -416,15 +388,9 @@ export const Compact: Story = {
 									<Badge className="text-xs capitalize">{user.role}</Badge>
 								</TableCell>
 								<TableCell>
-									{user.status === 'active' && (
-										<CheckCircle className="h-4 w-4 text-green-600" />
-									)}
-									{user.status === 'inactive' && (
-										<XCircle className="h-4 w-4 text-red-600" />
-									)}
-									{user.status === 'pending' && (
-										<Clock className="h-4 w-4 text-yellow-600" />
-									)}
+									{user.status === 'active' && <CheckCircle className="h-4 w-4 text-green-600" />}
+									{user.status === 'inactive' && <XCircle className="h-4 w-4 text-red-600" />}
+									{user.status === 'pending' && <Clock className="h-4 w-4 text-yellow-600" />}
 								</TableCell>
 							</TableRow>
 						))}
@@ -440,12 +406,10 @@ export const WithFixedHeight: Story = {
 	render: () => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Table with Fixed Height
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Table with Fixed Height</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					A table with a fixed height of 300px. When the content exceeds this height,
-					it becomes scrollable while keeping the headers sticky.
+					A table with a fixed height of 300px. When the content exceeds this height, it becomes
+					scrollable while keeping the headers sticky.
 				</p>
 				<Table fixedHeight={300}>
 					<TableHeader sticky>

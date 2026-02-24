@@ -1,14 +1,7 @@
-import React from 'react';
+import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/button';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-	Button,
-	ButtonSize,
-	ButtonVariant,
-	ButtonColor,
-	ButtonBackground,
-} from '@signozhq/button';
-import { Code, ChevronLeft, ChevronRight } from 'lucide-react';
-import { generateDocs } from '../utils/generateDocs';
+import { ChevronLeft, ChevronRight, Code } from 'lucide-react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const VARIANTS = [
 	ButtonVariant.Solid,
@@ -53,8 +46,7 @@ return (
 
 const buttonDocs = generateDocs({
 	packageName: '@signozhq/button',
-	description:
-		'A versatile button component with multiple variants, colors, and sizes.',
+	description: 'A versatile button component with multiple variants, colors, and sizes.',
 	examples: buttonExamples,
 });
 
@@ -187,16 +179,13 @@ export const ButtonShowcase: Story = {
 			<div className="space-y-12">
 				{COLORS.map((color) => (
 					<div key={color} className="space-y-4">
-						<h2 className="text-base font-semibold capitalize text-foreground">
-							{color}
-						</h2>
+						<h2 className="text-base font-semibold capitalize text-foreground">{color}</h2>
 						<div className="flex gap-4">
 							{/* Filter variants based on color */}
 							{VARIANTS.filter(
 								(variant) =>
 									// Only show outlined and dashed for secondary
-									color === 'secondary' ||
-									!(variant === 'outlined' || variant === 'dashed'),
+									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed')
 							).map((variant) => (
 								<div key={variant} className="grid grid-cols-1 gap-4">
 									<Button
@@ -259,21 +248,19 @@ export const Sizes: Story = {
 			<div className="space-y-4">
 				<h2 className="text-base font-semibold">Size Variations</h2>
 				<div className="space-y-8">
-					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map(
-						(size) => (
-							<div key={size} className="space-y-4">
-								<h3 className="text-sm font-medium capitalize">{size}</h3>
-								<Button
-									size={size}
-									{...args}
-									prefixIcon={<ChevronLeft />}
-									suffixIcon={<ChevronRight />}
-								>
-									{size} Button
-								</Button>
-							</div>
-						),
-					)}
+					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
+						<div key={size} className="space-y-4">
+							<h3 className="text-sm font-medium capitalize">{size}</h3>
+							<Button
+								size={size}
+								{...args}
+								prefixIcon={<ChevronLeft />}
+								suffixIcon={<ChevronRight />}
+							>
+								{size} Button
+							</Button>
+						</div>
+					))}
 				</div>
 			</div>
 		</div>
@@ -316,13 +303,11 @@ export const LoadingStates: Story = {
 				</Button>
 			</div>
 			<div className="flex gap-4">
-				{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map(
-					(size) => (
-						<Button key={size} size={size} loading {...args}>
-							Loading
-						</Button>
-					),
-				)}
+				{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
+					<Button key={size} size={size} loading {...args}>
+						Loading
+					</Button>
+				))}
 			</div>
 		</div>
 	),
@@ -350,9 +335,7 @@ export const IconButtons: Story = {
 	render: (args) => (
 		<div className="p-8 space-y-8 rounded-lg bg-background">
 			<div className="space-y-4">
-				<h2 className="text-base font-semibold text-foreground">
-					Icon Only Buttons
-				</h2>
+				<h2 className="text-base font-semibold text-foreground">Icon Only Buttons</h2>
 				<div className="flex gap-4">
 					{VARIANTS.map((variant) => (
 						<Button
@@ -366,15 +349,11 @@ export const IconButtons: Story = {
 				</div>
 			</div>
 			<div className="space-y-4">
-				<h2 className="text-base font-semibold text-foreground">
-					Icon Button Sizes
-				</h2>
+				<h2 className="text-base font-semibold text-foreground">Icon Button Sizes</h2>
 				<div className="flex gap-4">
-					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map(
-						(size) => (
-							<Button key={size} size={size} prefixIcon={<Code />} {...args} />
-						),
-					)}
+					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
+						<Button key={size} size={size} prefixIcon={<Code />} {...args} />
+					))}
 				</div>
 			</div>
 		</div>
@@ -402,9 +381,7 @@ export const FullWidth: Story = {
 	},
 	render: (args) => (
 		<div className="p-8 space-y-4 rounded-lg bg-background">
-			<h2 className="text-base font-semibold text-foreground">
-				Full Width Buttons
-			</h2>
+			<h2 className="text-base font-semibold text-foreground">Full Width Buttons</h2>
 			<div className="space-y-4 w-full">
 				{VARIANTS.map((variant) => (
 					<Button key={variant} variant={variant} width="full" {...args}>

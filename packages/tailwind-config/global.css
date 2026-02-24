@@ -1,8 +1,10 @@
-@import '@signozhq/design-tokens/dist/style.css';
+@import "@signozhq/design-tokens/dist/style.css";
 @config "./tailwind.config.js";
-@import 'tw-animate-css';
+@import "tw-animate-css";
 
-@variant dark (&:where(.dark, .dark *));
+@variant dark
+(
+&:where(.dark, .dark *));
 
 :root {
 	--background: var(--bg-vanilla-200);

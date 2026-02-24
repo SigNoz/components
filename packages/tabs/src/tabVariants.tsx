@@ -100,9 +100,4 @@ const tabsTriggerVariants = cva('cursor-pointer', {
 	},
 });
 
-export {
-	tabsVariants,
-	tabsListWrapperVariants,
-	tabsListVariants,
-	tabsTriggerVariants,
-};
+export { tabsVariants, tabsListWrapperVariants, tabsListVariants, tabsTriggerVariants };

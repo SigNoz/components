@@ -1,6 +1,6 @@
-import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from './data-table';
+import * as React from 'react';
+import { DataTable } from './data-table.jsx';
 
 // Define the type for our data
 type Person = {

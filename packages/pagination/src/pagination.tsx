@@ -1,11 +1,10 @@
 import './index.css';
-import * as React from 'react';
-import { type MouseEvent, useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
-
-import { cn } from './lib/utils';
 import { ButtonSize, buttonVariants } from '@signozhq/button';
-import { renderPageNumbers } from './utils';
+import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
+import type * as React from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
+import { cn } from './lib/utils.js';
+import { renderPageNumbers } from './utils.js';
 
 // Define alignment options
 type PaginationAlign = 'start' | 'center' | 'end';
@@ -17,7 +16,6 @@ function PaginationContainer({
 }: React.ComponentProps<'nav'> & { align?: PaginationAlign }) {
 	return (
 		<nav
-			role="navigation"
 			aria-label="pagination"
 			data-slot="pagination"
 			className={cn(
@@ -27,17 +25,14 @@ function PaginationContainer({
 					'justify-center': align === 'center',
 					'justify-end': align === 'end',
 				},
-				className,
+				className
 			)}
 			{...props}
 		/>
 	);
 }
 
-function PaginationContent({
-	className,
-	...props
-}: React.ComponentProps<'ul'>) {
+function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) {
 	return (
 		<ul
 			data-slot="pagination-content"
@@ -89,7 +84,7 @@ function PaginationLink({
 					? 'bg-[var(--pagination-active-bg)] text-[var(--pagination-active-text)] hover:bg-[var(--pagination-active-hover-bg)] hover:text-[var(--pagination-active-text)] text-[var(--pagination-active-text)] font-medium'
 					: 'text-[var(--pagination-item-text)] hover:text-[var(--pagination-item-hover-text)] hover:bg-[var(--pagination-item-hover-bg)]',
 
-				className,
+				className
 			)}
 			onClick={handleClick}
 			disabled={disabled}
@@ -100,18 +95,11 @@ function PaginationLink({
 	);
 }
 
-type PaginationNavProps = Omit<
-	PaginationLinkProps,
-	'children' | 'isActive' | 'href' | 'size'
-> & {
+type PaginationNavProps = Omit<PaginationLinkProps, 'children' | 'isActive' | 'href' | 'size'> & {
 	className?: string;
 };
 
-function PaginationPrevious({
-	className,
-	disabled,
-	...props
-}: PaginationNavProps) {
+function PaginationPrevious({ className, disabled, ...props }: PaginationNavProps) {
 	return (
 		<PaginationLink
 			aria-label="Go to previous page"
@@ -139,10 +127,7 @@ function PaginationNext({ className, disabled, ...props }: PaginationNavProps) {
 	);
 }
 
-function PaginationEllipsis({
-	className,
-	...props
-}: React.ComponentProps<'span'>) {
+function PaginationEllipsis({ className, ...props }: React.ComponentProps<'span'>) {
 	return (
 		<span
 			aria-hidden
@@ -156,9 +141,7 @@ function PaginationEllipsis({
 	);
 }
 
-interface PaginationProps extends React.ComponentProps<
-	typeof PaginationContainer
-> {
+interface PaginationProps extends React.ComponentProps<typeof PaginationContainer> {
 	total: number;
 	pageSize?: number;
 	current?: number;
@@ -179,9 +162,7 @@ function Pagination({
 }: PaginationProps) {
 	const totalPages = Math.ceil(total / pageSize);
 
-	const [internalCurrent, setInternalCurrent] = useState(
-		controlledCurrent ?? defaultCurrent,
-	);
+	const [internalCurrent, setInternalCurrent] = useState(controlledCurrent ?? defaultCurrent);
 
 	useEffect(() => {
 		if (controlledCurrent !== undefined) {

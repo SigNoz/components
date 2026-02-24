@@ -1,19 +1,7 @@
-import React from 'react';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/resizable';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-	ResizablePanelGroup,
-	ResizablePanel,
-	ResizableHandle,
-} from '@signozhq/resizable';
-import { generateDocs } from '../utils/generateDocs';
-import {
-	Code,
-	FileText,
-	Settings,
-	BarChart3,
-	Database,
-	Terminal,
-} from 'lucide-react';
+import { BarChart3, Code, Database, FileText, Settings, Terminal } from 'lucide-react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const ResizableExamples = [
 	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/resizable';
@@ -138,9 +126,7 @@ export const Default: Story = {
 	render: () => (
 		<div className="space-y-8 p-6 bg-background">
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Horizontal Layout
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Horizontal Layout</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="horizontal">
 						<ResizablePanel defaultSize={25} minSize={20}>
@@ -174,9 +160,7 @@ export const Default: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Vertical Layout
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Vertical Layout</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="vertical">
 						<ResizablePanel defaultSize={70}>
@@ -207,9 +191,7 @@ export const HorizontalLayout: Story = {
 	render: () => (
 		<div className="space-y-6 p-6 bg-background">
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Two Panel Layout
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Two Panel Layout</h2>
 				<div className="h-[300px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="horizontal">
 						<ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
@@ -230,9 +212,7 @@ export const HorizontalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Three Panel Layout
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Three Panel Layout</h2>
 				<div className="h-[300px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="horizontal">
 						<ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
@@ -275,9 +255,7 @@ export const HorizontalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Dashboard Layout
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Dashboard Layout</h2>
 				<div className="h-[300px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="horizontal">
 						<ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
@@ -325,9 +303,7 @@ export const VerticalLayout: Story = {
 	render: () => (
 		<div className="space-y-6 p-6 bg-background">
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Application Layout
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Application Layout</h2>
 				<div className="h-[500px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="vertical">
 						<ResizablePanel defaultSize={15} minSize={10} maxSize={25}>
@@ -345,9 +321,7 @@ export const VerticalLayout: Story = {
 							<div className="flex h-full flex-col p-6">
 								<h3 className="font-medium mb-4">Main Content Area</h3>
 								<div className="flex-1 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-lg flex items-center justify-center">
-									<span className="text-lg text-muted-foreground">
-										Primary workspace content
-									</span>
+									<span className="text-lg text-muted-foreground">Primary workspace content</span>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -367,9 +341,7 @@ export const VerticalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Chat Interface
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Chat Interface</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="vertical">
 						<ResizablePanel defaultSize={75}>
@@ -388,9 +360,7 @@ export const VerticalLayout: Story = {
 									</div>
 									<div className="flex justify-start">
 										<div className="bg-muted px-3 py-2 rounded-lg max-w-xs">
-											<p className="text-sm">
-												Sure! You can drag the handles to resize panels.
-											</p>
+											<p className="text-sm">Sure! You can drag the handles to resize panels.</p>
 										</div>
 									</div>
 								</div>
@@ -417,9 +387,7 @@ export const VerticalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Development Environment
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Development Environment</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="vertical">
 						<ResizablePanel defaultSize={60}>
@@ -447,9 +415,7 @@ export const VerticalLayout: Story = {
 								</div>
 								<div className="flex-1 bg-slate-950 rounded text-green-400 p-3 font-mono text-xs">
 									<div>$ npm run dev</div>
-									<div className="text-blue-400">
-										Server running on http://localhost:3000
-									</div>
+									<div className="text-blue-400">Server running on http://localhost:3000</div>
 									<div className="animate-pulse">█</div>
 								</div>
 							</div>
@@ -474,17 +440,10 @@ export const CollapsiblePanels: Story = {
 	render: () => (
 		<div className="space-y-6 p-6 bg-background">
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Collapsible Sidebar
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Collapsible Sidebar</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="horizontal">
-						<ResizablePanel
-							defaultSize={25}
-							minSize={15}
-							maxSize={40}
-							collapsible={true}
-						>
+						<ResizablePanel defaultSize={25} minSize={15} maxSize={40} collapsible={true}>
 							<div className="flex h-full flex-col p-4 bg-muted">
 								<div className="flex items-center gap-2 mb-4">
 									<FileText className="h-5 w-5 text-muted-foreground" />
@@ -532,9 +491,7 @@ export const CollapsiblePanels: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Collapsible Bottom Panel
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Collapsible Bottom Panel</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="vertical">
 						<ResizablePanel defaultSize={70}>
@@ -549,12 +506,7 @@ export const CollapsiblePanels: Story = {
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
-						<ResizablePanel
-							defaultSize={30}
-							minSize={20}
-							maxSize={50}
-							collapsible={true}
-						>
+						<ResizablePanel defaultSize={30} minSize={20} maxSize={50} collapsible={true}>
 							<div className="flex h-full flex-col p-4 bg-muted">
 								<div className="flex items-center gap-2 mb-3">
 									<Terminal className="h-5 w-5 text-muted-foreground" />
@@ -577,17 +529,10 @@ export const CollapsiblePanels: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">
-					Multiple Collapsible Panels
-				</h2>
+				<h2 className="text-lg font-semibold mb-4 text-foreground">Multiple Collapsible Panels</h2>
 				<div className="h-[400px] border rounded-lg overflow-hidden">
 					<ResizablePanelGroup direction="horizontal">
-						<ResizablePanel
-							defaultSize={20}
-							minSize={15}
-							maxSize={35}
-							collapsible={true}
-						>
+						<ResizablePanel defaultSize={20} minSize={15} maxSize={35} collapsible={true}>
 							<div className="flex h-full flex-col p-4 bg-muted">
 								<div className="flex items-center gap-2 mb-3">
 									<Settings className="h-5 w-5 text-muted-foreground" />
@@ -614,12 +559,7 @@ export const CollapsiblePanels: Story = {
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
-						<ResizablePanel
-							defaultSize={20}
-							minSize={15}
-							maxSize={35}
-							collapsible={true}
-						>
+						<ResizablePanel defaultSize={20} minSize={15} maxSize={35} collapsible={true}>
 							<div className="flex h-full flex-col p-4 bg-muted">
 								<div className="flex items-center gap-2 mb-3">
 									<Database className="h-5 w-5 text-muted-foreground" />
@@ -661,9 +601,7 @@ export const PanelGroupPlayground: Story = {
 	},
 	render: (args) => (
 		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">
-				Interactive Panel Group
-			</h2>
+			<h2 className="text-lg font-semibold mb-4 text-foreground">Interactive Panel Group</h2>
 			<div className="h-[400px] border rounded-lg overflow-hidden">
 				<ResizablePanelGroup {...args}>
 					<ResizablePanel defaultSize={25} minSize={20}>
@@ -717,17 +655,10 @@ export const PanelPlayground: Story = {
 	argTypes: {},
 	render: () => (
 		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">
-				Interactive Panel Properties
-			</h2>
+			<h2 className="text-lg font-semibold mb-4 text-foreground">Interactive Panel Properties</h2>
 			<div className="h-[400px] border rounded-lg overflow-hidden">
 				<ResizablePanelGroup direction="horizontal">
-					<ResizablePanel
-						defaultSize={30}
-						minSize={20}
-						maxSize={60}
-						collapsible={false}
-					>
+					<ResizablePanel defaultSize={30} minSize={20} maxSize={60} collapsible={false}>
 						<div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20">
 							<div className="text-center">
 								<BarChart3 className="mx-auto mb-2 h-8 w-8 text-blue-600" />
@@ -747,9 +678,7 @@ export const PanelPlayground: Story = {
 							<div className="text-center">
 								<Code className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
 								<span className="text-sm font-medium">Fixed Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">
-									Responds to left panel changes
-								</p>
+								<p className="text-xs text-muted-foreground mt-1">Responds to left panel changes</p>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -775,9 +704,7 @@ export const ResizeHandlePlayground: Story = {
 	argTypes: {},
 	render: () => (
 		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">
-				Interactive Resize Handle
-			</h2>
+			<h2 className="text-lg font-semibold mb-4 text-foreground">Interactive Resize Handle</h2>
 			<div className="h-[400px] border rounded-lg overflow-hidden">
 				<ResizablePanelGroup direction="horizontal">
 					<ResizablePanel defaultSize={40}>
@@ -785,9 +712,7 @@ export const ResizeHandlePlayground: Story = {
 							<div className="text-center">
 								<FileText className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
 								<span className="text-sm font-medium">Left Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">
-									Drag the handle to resize
-								</p>
+								<p className="text-xs text-muted-foreground mt-1">Drag the handle to resize</p>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -837,9 +762,7 @@ export const PersistentLayout: Story = {
 	},
 	render: (args) => (
 		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">
-				Persistent Layout Demo
-			</h2>
+			<h2 className="text-lg font-semibold mb-4 text-foreground">Persistent Layout Demo</h2>
 			<div className="h-[400px] border rounded-lg overflow-hidden">
 				<ResizablePanelGroup direction="horizontal" autoSaveId={args.autoSaveId}>
 					<ResizablePanel defaultSize={25} collapsible>
@@ -891,9 +814,7 @@ export const PersistentLayout: Story = {
 					<li>• Layout automatically saved to localStorage</li>
 					<li>• Restore layout on page refresh or revisit</li>
 					<li>• Different autoSaveId values create separate saved layouts</li>
-					<li>
-						• Try resizing panels, then refresh the page to see persistence in action
-					</li>
+					<li>• Try resizing panels, then refresh the page to see persistence in action</li>
 				</ul>
 			</div>
 		</div>

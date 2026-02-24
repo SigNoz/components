@@ -1,10 +1,10 @@
 import './index.css';
 
-import * as React from 'react';
-import { Command as CommandPrimitive } from 'cmdk';
-import { cn } from './lib/utils';
-import { Dialog, DialogContent } from './dialog';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { Command as CommandPrimitive } from 'cmdk';
+import * as React from 'react';
+import { Dialog, DialogContent } from './dialog.jsx';
+import { cn } from './lib/utils.js';
 
 const Command = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive>,

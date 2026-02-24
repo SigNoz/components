@@ -1,113 +1,109 @@
 {
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "turbo run build",
-    "publint": "turbo run publint",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "build-storybook": "turbo run build-storybook -- --output-dir=storybook-static",
-    "chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "update-version": "changeset && changeset version",
-    "release": "turbo run build --filter=docs^... && changeset publish",
-    "prepare": "husky",
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js, jsx,ts,tsx}": [
-      "sh scripts/typecheck-staged.sh",
-      "eslint --quiet --fix",
-      "prettier --write"
-    ],
-    "*.{json,js,ts,jsx,tsx,html}": [
-      "prettier --write --ignore-unknown"
-    ]
-  },
-  "devDependencies": {
-    "@bosh-code/tsdown-plugin-inject-css": "^2.0.0",
-    "@changesets/cli": "^2.27.1",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@eslint/js": "^9.9.0",
-    "@repo/typescript-config": "workspace:*",
-    "@turbo/gen": "^2.1.2",
-    "@types/fs-extra": "^11.0.4",
-    "@vitejs/plugin-react": "^5.1.4",
-    "baseline-browser-mapping": "^2.9.14",
-    "eslint": "^9.11.0",
-    "eslint-plugin-react": "^7.37.1",
-    "fs-extra": "^11.2.0",
-    "glob": "^13.0.6",
-    "globals": "^15.9.0",
-    "husky": "^9.1.6",
-    "inquirer": "^11.0.2",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.2.5",
-    "publint": "^0.3.17",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tsdown": "^0.20.3",
-    "turbo": "^2.1.2",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.0.1",
-    "vite": "npm:rolldown-vite@7.3.1",
-    "vite-plugin-lib-inject-css": "^2.2.2"
-  },
-  "resolutions": {
-    "cross-spawn": "7.0.5",
-    "esbuild": "^0.25.0",
-    "semver": ">=7.5.2",
-    "tmp": "0.2.4"
-  },
-  "packageManager": "pnpm@8.15.6",
-  "name": "design-system",
-  "dependencies": {
-    "@signozhq/icons": "^0.1.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "vite": "npm:rolldown-vite@7.3.1"
-    },
-    "packageExtensions": {
-      "vite-plugin-lib-inject-css": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      },
-      "@vitejs/plugin-react": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      },
-      "@storybook/react-vite": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      },
-      "@joshwooding/vite-plugin-react-docgen-typescript": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      },
-      "@storybook/builder-vite": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      },
-      "@tailwindcss/vite": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      },
-      "vite-plugin-dts": {
-        "peerDependencies": {
-          "vite": "npm:rolldown-vite@7.3.1"
-        }
-      }
-    }
-  }
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "turbo run build",
+		"publint": "turbo run publint",
+		"dev": "turbo run dev",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"clean": "turbo run clean && rm -rf node_modules",
+		"format": "biome format --write .",
+		"build-storybook": "turbo run build-storybook -- --output-dir=storybook-static",
+		"chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
+		"changeset": "changeset",
+		"version-packages": "changeset version",
+		"update-version": "changeset && changeset version",
+		"release": "turbo run build --filter=docs^... && changeset publish",
+		"prepare": "husky",
+		"pre-commit": "lint-staged"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"sh scripts/typecheck-staged.sh",
+			"biome check --write --no-errors-on-unmatched"
+		],
+		"*.{json,html,css}": [
+			"biome format --write --no-errors-on-unmatched"
+		]
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.4",
+		"@bosh-code/tsdown-plugin-inject-css": "^2.0.0",
+		"@changesets/cli": "^2.27.1",
+		"@commitlint/cli": "^19.5.0",
+		"@commitlint/config-conventional": "^19.5.0",
+		"@repo/typescript-config": "workspace:*",
+		"@turbo/gen": "^2.1.2",
+		"@types/fs-extra": "^11.0.4",
+		"@types/react-dom": "^18.2.19",
+		"@vitejs/plugin-react": "^5.1.4",
+		"baseline-browser-mapping": "^2.9.14",
+		"fs-extra": "^11.2.0",
+		"glob": "^13.0.6",
+		"husky": "^9.1.6",
+		"inquirer": "^11.0.2",
+		"lint-staged": "^15.2.10",
+		"publint": "^0.3.17",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"tsdown": "^0.20.3",
+		"turbo": "^2.1.2",
+		"typescript": "^5.6.2",
+		"vite": "npm:rolldown-vite@7.3.1",
+		"vite-plugin-lib-inject-css": "^2.2.2"
+	},
+	"resolutions": {
+		"cross-spawn": "7.0.5",
+		"esbuild": "^0.25.0",
+		"semver": ">=7.5.2",
+		"tmp": "0.2.4"
+	},
+	"packageManager": "pnpm@8.15.6",
+	"name": "design-system",
+	"dependencies": {
+		"@signozhq/icons": "^0.1.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"vite": "npm:rolldown-vite@7.3.1"
+		},
+		"packageExtensions": {
+			"vite-plugin-lib-inject-css": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			},
+			"@vitejs/plugin-react": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			},
+			"@storybook/react-vite": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			},
+			"@joshwooding/vite-plugin-react-docgen-typescript": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			},
+			"@storybook/builder-vite": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			},
+			"@tailwindcss/vite": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			},
+			"vite-plugin-dts": {
+				"peerDependencies": {
+					"vite": "npm:rolldown-vite@7.3.1"
+				}
+			}
+		}
+	}
 }

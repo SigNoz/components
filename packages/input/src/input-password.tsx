@@ -1,14 +1,14 @@
-import * as React from 'react';
+import { Button, ButtonSize, ButtonVariant } from '@signozhq/button';
+import type { VariantProps } from 'class-variance-authority';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { type VariantProps } from 'class-variance-authority';
-import { Button, ButtonVariant, ButtonSize } from '@signozhq/button';
-
-import { cn } from './lib/utils';
-import { InputComponent } from './input';
-import { inputVariants } from './input-variants';
+import * as React from 'react';
+import { InputComponent } from './input.jsx';
+import type { inputVariants } from './input-variants.js';
+import { cn } from './lib/utils.js';
 
 export interface InputPasswordProps
-	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>,
+	extends
+		Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>,
 		VariantProps<typeof inputVariants> {}
 
 const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(

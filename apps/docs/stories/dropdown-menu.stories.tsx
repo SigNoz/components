@@ -1,28 +1,22 @@
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/button';
 import { Dropdown, type MenuItem } from '@signozhq/dropdown-menu';
-
+import type { Meta, StoryObj } from '@storybook/react';
 import {
-	Button,
-	ButtonColor,
-	ButtonSize,
-	ButtonVariant,
-} from '@signozhq/button';
-import {
-	Grid3x3,
-	Link,
-	Trash2,
 	Check,
 	ChevronRight,
-	MoreHorizontal,
-	Settings,
-	User,
-	LogOut,
 	Copy,
 	FileText,
 	Folder,
+	Grid3x3,
+	Link,
+	LogOut,
+	MoreHorizontal,
+	Settings,
+	Trash2,
+	User,
 } from 'lucide-react';
-import { generateDocs } from '../utils/generateDocs';
+import { useState } from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const dropdownExamples = [
 	`import { Dropdown, type MenuItem } from '@signozhq/dropdown-menu';
@@ -76,8 +70,7 @@ const meta: Meta<typeof Dropdown> = {
 	argTypes: {
 		menu: {
 			control: 'object',
-			description:
-				'Menu configuration object containing items, search, and loading options.',
+			description: 'Menu configuration object containing items, search, and loading options.',
 			table: { category: 'Content' },
 		},
 		children: {
@@ -104,8 +97,7 @@ const meta: Meta<typeof Dropdown> = {
 		},
 		alignOffset: {
 			control: 'number',
-			description:
-				'Offset in pixels along the alignment axis. Useful for fine-tuning position.',
+			description: 'Offset in pixels along the alignment axis. Useful for fine-tuning position.',
 			table: { category: 'Positioning', defaultValue: { summary: '0' } },
 		},
 		avoidCollisions: {
@@ -116,8 +108,7 @@ const meta: Meta<typeof Dropdown> = {
 		},
 		collisionPadding: {
 			control: 'number',
-			description:
-				'Padding in pixels from viewport edges when avoiding collisions.',
+			description: 'Padding in pixels from viewport edges when avoiding collisions.',
 			table: { category: 'Positioning', defaultValue: { summary: '8' } },
 		},
 		loop: {

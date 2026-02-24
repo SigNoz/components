@@ -1,13 +1,12 @@
-import * as React from 'react';
-import { Input } from '@signozhq/input';
-import { CalendarIcon, ChevronDown } from 'lucide-react';
 import { Calendar } from '@signozhq/calendar';
+import { Input } from '@signozhq/input';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-
-import { cn } from './lib/utils';
-import { ALL_TIMEZONES } from './constants';
+import { CalendarIcon, ChevronDown } from 'lucide-react';
+import * as React from 'react';
+import { ALL_TIMEZONES } from './constants.js';
+import { cn } from './lib/utils.js';
 
 // Extend dayjs with timezone plugins
 dayjs.extend(utc);
@@ -43,10 +42,7 @@ export interface DatePickerProps {
 	/** Button size */
 	buttonSize?: 'sm' | 'md' | 'lg';
 	/** Calendar props */
-	calendarProps?: Omit<
-		React.ComponentProps<typeof Calendar>,
-		'mode' | 'selected' | 'onSelect'
-	>;
+	calendarProps?: Omit<React.ComponentProps<typeof Calendar>, 'mode' | 'selected' | 'onSelect'>;
 	/** Whether to close popover on date selection */
 	closeOnSelect?: boolean;
 	/** Custom trigger element */
@@ -102,11 +98,7 @@ export function DatePicker({
 	}, [timezone]);
 
 	// Format date for display
-	const formatDisplayDate = (
-		date: Date | undefined,
-		tz: string,
-		timeStr: string,
-	) => {
+	const formatDisplayDate = (date: Date | undefined, tz: string, timeStr: string) => {
 		if (!date) return placeholder;
 
 		// If only date is needed
@@ -188,8 +180,7 @@ export function DatePicker({
 
 		const variantClasses = {
 			default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-			outline:
-				'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+			outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
 			ghost: 'hover:bg-accent hover:text-accent-foreground',
 		};
 
@@ -204,7 +195,7 @@ export function DatePicker({
 			variantClasses[buttonVariant],
 			sizeClasses[buttonSize],
 			baseClasses,
-			className,
+			className
 		);
 	};
 

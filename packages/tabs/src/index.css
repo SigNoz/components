@@ -11,11 +11,11 @@
 }
 
 /* Scoped tabs-specific variables */
-[data-slot='tabs-trigger'] {
+[data-slot="tabs-trigger"] {
 	--tab-hover-bg: var(--bg-ink-500);
 }
 
-.dark [data-slot='tabs-trigger'] {
+.dark [data-slot="tabs-trigger"] {
 	--tab-hover-bg: var(--bg-vanilla-100);
 }
 

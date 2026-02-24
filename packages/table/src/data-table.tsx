@@ -14,10 +14,10 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 	type HeaderGroup,
+	type Table as ReactTable,
 	type Row,
 	type RowSelectionState,
 	type SortingState,
-	type Table as ReactTable,
 	useReactTable,
 	type VisibilityState,
 } from '@tanstack/react-table';
@@ -43,8 +43,8 @@ import {
 	getTablePreferences,
 	saveTablePreferences,
 	type TablePreferences,
-} from './lib/preferences';
-import { cn } from './lib/utils';
+} from './lib/preferences.js';
+import { cn } from './lib/utils.js';
 import {
 	Table,
 	TableBody,
@@ -52,7 +52,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from './table';
+} from './table.jsx';
 
 export interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -576,7 +576,7 @@ export function DataTable<TData, TValue>({
 		}
 
 		isInitialMount.current = false;
-	}, [tableId, columns]);
+	}, [tableId, columns, resolveColumnId]);
 
 	// Save preferences when they change
 	React.useEffect(() => {
@@ -865,7 +865,7 @@ export function DataTable<TData, TValue>({
 				.rows.map((row) => row.original);
 			onRowSelectionChange(selectedRows);
 		}
-	}, [rowSelection, onRowSelectionChange, table]);
+	}, [onRowSelectionChange, table]);
 
 	// Add scroll handler for infinite scroll with hysteresis to avoid repeated triggers near bottom
 	const loadRequestedRef = React.useRef(false);
@@ -902,7 +902,7 @@ export function DataTable<TData, TValue>({
 			100,
 			{ leading: false, trailing: true },
 		),
-		[enableInfiniteScroll, hasMore, loadingMore, onLoadMore, onScroll],
+		[],
 	);
 
 	// Reset loadRequested flag when data grows
@@ -939,7 +939,6 @@ export function DataTable<TData, TValue>({
 		virtualizer,
 		rows.length,
 		overscan,
-		scrollPosition,
 		onLoadMore,
 	]);
 

@@ -14,7 +14,7 @@ const range = (start: number, end: number): number[] => {
 export const renderPageNumbers = (
 	totalPages: number,
 	current: number,
-	siblingCount = 1,
+	siblingCount = 1
 ): (number | 'ellipsis')[] => {
 	// Total visible page numbers/ellipses between prev/next arrows
 	// Includes: first page, last page, current page, siblings on each side, potentially 2 ellipses
@@ -55,13 +55,7 @@ export const renderPageNumbers = (
 	// e.g., 1 ... 4 5 6 ... 10 (when current is 4, 5, 6, 7 and siblingCount=1)
 	if (shouldShowLeftDots && shouldShowRightDots) {
 		const middleRange = range(leftSiblingIndex, rightSiblingIndex);
-		return [
-			firstPageIndex,
-			'ellipsis',
-			...middleRange,
-			'ellipsis',
-			lastPageIndex,
-		];
+		return [firstPageIndex, 'ellipsis', ...middleRange, 'ellipsis', lastPageIndex];
 	}
 
 	// Fallback (should not be reached with the above logic if totalPages > totalPageNumbers)

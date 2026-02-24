@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Sun, Moon } from 'lucide-react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ModeDecorator = (Story: any) => {

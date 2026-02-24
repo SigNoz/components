@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { getTransformedColorTokens } from '../utils';
+import { getTransformedColorTokens } from '../utils.js';
 
 const colors = getTransformedColorTokens();
 
@@ -20,20 +18,11 @@ function getContrastTextColor(hexColor: string): string {
 function ColorPalette() {
 	// Accent colors configuration
 	const primaryAccents = ['robin'];
-	const secondaryAccents = [
-		'forest',
-		'amber',
-		'cherry',
-		'aqua',
-		'sakura',
-		'sienna',
-	];
+	const secondaryAccents = ['forest', 'amber', 'cherry', 'aqua', 'sakura', 'sienna'];
 
 	// Get accent color data
 	const getAccentColor = (colorName: string) => {
-		const color = colors.find(
-			(c) => c.name.toLowerCase() === colorName.toLowerCase(),
-		);
+		const color = colors.find((c) => c.name.toLowerCase() === colorName.toLowerCase());
 		if (!color) return null;
 		const shade500 = color.shades.find((s) => s.name === '500');
 		return shade500 ? { name: color.name, value: shade500.value } : null;

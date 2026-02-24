@@ -1,17 +1,8 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import {
-	FileText,
-	BarChart,
-	GitBranch,
-	Server,
-	Hexagon,
-	List,
-	Globe,
-	Bug,
-} from 'lucide-react';
 import { PinList, type PinListItem } from '@signozhq/pin-list';
-import { generateDocs } from '../utils/generateDocs';
+import type { Meta, StoryObj } from '@storybook/react';
+import { BarChart, Bug, FileText, GitBranch, Globe, Hexagon, List, Server } from 'lucide-react';
+import type React from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 /**
  * Helper function to create properly formatted PinList items
@@ -26,7 +17,7 @@ const createPinListItem = (
 		isEnabled?: boolean;
 		active?: boolean;
 		className?: string;
-	} = {},
+	} = {}
 ): PinListItem => ({
 	key,
 	itemKey: key,
@@ -103,8 +94,7 @@ const meta: Meta<typeof PinList> = {
 		},
 		onItemClick: {
 			action: 'item-clicked',
-			description:
-				'Callback fired when an item is clicked. Receives the clicked PinListItem.',
+			description: 'Callback fired when an item is clicked. Receives the clicked PinListItem.',
 		},
 		onPinToggle: {
 			action: 'pin-toggled',
@@ -135,8 +125,7 @@ const meta: Meta<typeof PinList> = {
 		},
 		isDocked: {
 			control: 'boolean',
-			description:
-				'Whether the component is in a docked state, which may apply different styling.',
+			description: 'Whether the component is in a docked state, which may apply different styling.',
 			defaultValue: false,
 		},
 		transition: {

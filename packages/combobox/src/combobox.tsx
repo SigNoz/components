@@ -1,10 +1,10 @@
 import './index.css';
 
-import * as React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Check, ChevronDown } from 'lucide-react';
-import { cn } from './lib/utils';
+import * as React from 'react';
+import { cn } from './lib/utils.js';
 
 const Combobox = PopoverPrimitive.Root;
 
@@ -19,13 +19,11 @@ const ComboboxTrigger = React.forwardRef<
 		ref={ref}
 		className={cn(
 			'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-			className,
+			className
 		)}
 		{...props}
 	>
-		<span className="line-clamp-1">
-			{value || placeholder || 'Select an option...'}
-		</span>
+		<span className="line-clamp-1">{value || placeholder || 'Select an option...'}</span>
 		<ChevronDown className="h-4 w-4 opacity-50" />
 	</PopoverPrimitive.Trigger>
 ));
@@ -41,7 +39,7 @@ const ComboboxContent = React.forwardRef<
 			ref={ref}
 			className={cn(
 				'w-[--radix-popover-trigger-width] rounded-md border border-border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-				className,
+				className
 			)}
 			style={{ minWidth: 'var(--radix-popover-trigger-width)' }}
 			{...props}
@@ -70,7 +68,7 @@ const ComboboxInput = React.forwardRef<
 		ref={ref}
 		className={cn(
 			'flex h-10 w-full rounded-md border-b border-b-border px-3 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-			className,
+			className
 		)}
 		{...props}
 	/>
@@ -83,10 +81,7 @@ const ComboboxList = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.List
 		ref={ref}
-		className={cn(
-			'max-h-[200px] overflow-y-auto overflow-x-hidden p-1',
-			className,
-		)}
+		className={cn('max-h-[200px] overflow-y-auto overflow-x-hidden p-1', className)}
 		{...props}
 	/>
 ));
@@ -136,7 +131,7 @@ const ComboboxLabel = React.forwardRef<
 		ref={ref}
 		className={cn(
 			'overflow-hidden px-2 py-1.5 text-xs font-medium text-muted-foreground',
-			className,
+			className
 		)}
 		{...props}
 	/>
@@ -154,14 +149,12 @@ const ComboboxItem = React.forwardRef<
 		ref={ref}
 		className={cn(
 			'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
-			className,
+			className
 		)}
 		{...props}
 	>
 		{showCheck && (
-			<Check
-				className={cn('mr-2 h-4 w-4', isSelected ? 'opacity-100' : 'opacity-0')}
-			/>
+			<Check className={cn('mr-2 h-4 w-4', isSelected ? 'opacity-100' : 'opacity-0')} />
 		)}
 		{props.children}
 	</CommandPrimitive.Item>

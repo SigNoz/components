@@ -1,4 +1,4 @@
-[data-color='primary'] {
+[data-color="primary"] {
 	--button-background: var(--bg-robin-500);
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-robin-700);
@@ -7,7 +7,7 @@
 	--button-ghost-hover-foreground: var(--bg-robin-500);
 }
 
-[data-color='destructive'] {
+[data-color="destructive"] {
 	--button-background: var(--bg-cherry-500);
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-cherry-500);
@@ -16,7 +16,7 @@
 	--button-ghost-hover-foreground: var(--bg-cherry-400);
 }
 
-[data-color='warning'] {
+[data-color="warning"] {
 	--button-background: var(--bg-amber-500);
 	--button-solid-foreground: var(--bg-ink-400);
 	--button-outlined-foreground: var(--bg-amber-700);
@@ -25,7 +25,7 @@
 	--button-ghost-hover-foreground: var(--bg-amber-600);
 }
 
-[data-color='secondary'] {
+[data-color="secondary"] {
 	--button-background: var(--bg-vanilla-300);
 	--button-solid-foreground: var(--bg-slate-500);
 	--button-outlined-foreground: var(--bg-slate-50);
@@ -33,7 +33,7 @@
 	--button-link-hover-foreground: var(--bg-slate-300);
 }
 
-.dark [data-color='secondary'] {
+.dark [data-color="secondary"] {
 	--button-background: var(--bg-slate-400);
 	--button-solid-foreground: var(--bg-vanilla-100);
 	--button-outlined-foreground: var(--bg-vanilla-400);
@@ -41,7 +41,7 @@
 	--button-link-hover-foreground: var(--bg-vanilla-200);
 }
 
-[data-background='ink-500'] {
+[data-background="ink-500"] {
 	--action-button-background: var(--bg-ink-400);
 	--action-button-border: var(--bg-slate-500);
 	--action-button-text: var(--bg-vanilla-400);
@@ -50,7 +50,7 @@
 	--action-button-hover-text: var(--bg-vanilla-100);
 }
 
-[data-background='ink-400'] {
+[data-background="ink-400"] {
 	--action-button-background: var(--bg-ink-300);
 	--action-button-border: var(--bg-slate-400);
 	--action-button-text: var(--bg-vanilla-400);
@@ -59,7 +59,7 @@
 	--action-button-hover-text: var(--bg-vanilla-100);
 }
 
-[data-background='vanilla-100'] {
+[data-background="vanilla-100"] {
 	--action-button-background: var(--bg-vanilla-200);
 	--action-button-border: var(--bg-vanilla-300);
 	--action-button-text: var(--bg-slate-50);
@@ -68,7 +68,7 @@
 	--action-button-hover-text: var(--bg-slate-500);
 }
 
-[data-background='vanilla-200'] {
+[data-background="vanilla-200"] {
 	--action-button-background: var(--bg-vanilla-100);
 	--action-button-border: var(--bg-vanilla-300);
 	--action-button-text: var(--bg-slate-50);

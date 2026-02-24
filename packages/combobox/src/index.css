@@ -1,7 +1,7 @@
-[data-slot='combobox-content'] {
+[data-slot="combobox-content"] {
 	border-color: var(--border, var(--bg-vanilla-400));
 }
 
-.dark [data-slot='combobox-content'] {
+.dark [data-slot="combobox-content"] {
 	border-color: var(--border, var(--bg-slate-400));
 }

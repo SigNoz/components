@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import IconGallery from '../components/IconGallery';
+import IconGallery from '../components/IconGallery.jsx';
 
 const meta: Meta<typeof IconGallery> = {
 	title: 'Design System/Icons',

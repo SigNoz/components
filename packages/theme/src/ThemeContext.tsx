@@ -1,12 +1,13 @@
-import React, {
+import type React from 'react';
+import {
 	createContext,
-	useState,
+	type ReactNode,
 	useContext,
-	ReactNode,
 	useEffect,
 	useMemo,
+	useState,
 } from 'react';
-import { ThemeColors } from './ThemeColor';
+import { ThemeColors } from './ThemeColor.jsx';
 
 export type ThemeColor = 'blue' | 'green' | 'amber' | 'cherry' | 'aqua';
 export type Theme = 'light' | 'dark';
