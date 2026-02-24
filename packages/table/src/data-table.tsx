@@ -45,14 +45,7 @@ import {
 	type TablePreferences,
 } from './lib/preferences.js';
 import { cn } from './lib/utils.js';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from './table.jsx';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table.jsx';
 
 export interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -79,17 +72,11 @@ export interface DataTableProps<TData, TValue> {
 	onExpandedChange?: (expanded: ExpandedState) => void;
 	getRowCanExpand?: (row: Row<TData>) => boolean;
 	expandOnRowClick?: boolean;
-	renderRow?: (props: {
-		row: Row<TData>;
-		children: React.ReactNode;
-	}) => React.ReactNode;
+	renderRow?: (props: { row: Row<TData>; children: React.ReactNode }) => React.ReactNode;
 	onRowClick?: (row: Row<TData>, event: React.MouseEvent) => void;
 	onRowDoubleClick?: (row: Row<TData>, event: React.MouseEvent) => void;
 	onCellClick?: (cell: Cell<TData, unknown>, event: React.MouseEvent) => void;
-	onCellDoubleClick?: (
-		cell: Cell<TData, unknown>,
-		event: React.MouseEvent,
-	) => void;
+	onCellDoubleClick?: (cell: Cell<TData, unknown>, event: React.MouseEvent) => void;
 	stopPropagationOnRowClick?: boolean;
 	stopPropagationOnCellClick?: boolean;
 	enableScrollRestoration?: boolean;
@@ -104,10 +91,7 @@ export interface DataTableProps<TData, TValue> {
 	serverSidePagination?: boolean;
 	totalCount?: number;
 	isLoading?: boolean;
-	onPaginationChange?: (pagination: {
-		pageIndex: number;
-		pageSize: number;
-	}) => void;
+	onPaginationChange?: (pagination: { pageIndex: number; pageSize: number }) => void;
 	enableInfiniteScroll?: boolean;
 	hasMore?: boolean;
 	onLoadMore?: () => void;
@@ -116,19 +100,11 @@ export interface DataTableProps<TData, TValue> {
 	enableVirtualization?: boolean;
 	estimateRowSize?: number;
 	overscan?: number;
-	onVirtualizerChange?: (
-		virtualizer: Virtualizer<HTMLDivElement, Element>,
-	) => void;
-	virtualizerRef?: React.MutableRefObject<
-		Virtualizer<HTMLDivElement, Element> | undefined
-	>;
+	onVirtualizerChange?: (virtualizer: Virtualizer<HTMLDivElement, Element>) => void;
+	virtualizerRef?: React.MutableRefObject<Virtualizer<HTMLDivElement, Element> | undefined>;
 	// Scroll to index functionality
 	scrollToIndexRef?: React.MutableRefObject<
-		| ((
-				rowIndex: number,
-				options?: { align?: 'start' | 'center' | 'end' },
-		  ) => void)
-		| undefined
+		((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined
 	>;
 	// Header visibility prop
 	showHeaders?: boolean;
@@ -170,10 +146,7 @@ function VirtualizedTableBody<TData>({
 	onRowClick?: (row: Row<TData>, event: React.MouseEvent) => void;
 	onRowDoubleClick?: (row: Row<TData>, event: React.MouseEvent) => void;
 	onCellClick?: (cell: Cell<TData, unknown>, event: React.MouseEvent) => void;
-	onCellDoubleClick?: (
-		cell: Cell<TData, unknown>,
-		event: React.MouseEvent,
-	) => void;
+	onCellDoubleClick?: (cell: Cell<TData, unknown>, event: React.MouseEvent) => void;
 	stopPropagationOnRowClick?: boolean;
 	stopPropagationOnCellClick?: boolean;
 	expandOnRowClick?: boolean;
@@ -191,9 +164,7 @@ function VirtualizedTableBody<TData>({
 			: 0;
 
 	const spacerColSpan =
-		table.getAllLeafColumns().length +
-		(enableRowSelection ? 1 : 0) +
-		(enableRowExpansion ? 1 : 0);
+		table.getAllLeafColumns().length + (enableRowSelection ? 1 : 0) + (enableRowExpansion ? 1 : 0);
 
 	return (
 		<TableBody>
@@ -214,7 +185,7 @@ function VirtualizedTableBody<TData>({
 							className={cn(
 								row.getIsSelected() && 'bg-muted/50',
 								'cursor-pointer',
-								enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30',
+								enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30'
 							)}
 							onClick={(e) => {
 								if (stopPropagationOnRowClick) {
@@ -274,7 +245,7 @@ function VirtualizedTableBody<TData>({
 											}}
 											className={cn(
 												'transform transition-transform duration-200',
-												row.getIsExpanded() ? 'rotate-90' : '',
+												row.getIsExpanded() ? 'rotate-90' : ''
 											)}
 										>
 											<ChevronRight className="h-4 w-4" />
@@ -313,7 +284,7 @@ function VirtualizedTableBody<TData>({
 										}}
 										className={cn(
 											isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-											isPinned === 'right' && 'sticky right-0 z-10 bg-background',
+											isPinned === 'right' && 'sticky right-0 z-10 bg-background'
 										)}
 										onClick={(e) => {
 											if (stopPropagationOnCellClick) {
@@ -352,10 +323,7 @@ function VirtualizedTableBody<TData>({
 			})}
 			{paddingBottom > 0 && (
 				<TableRow>
-					<TableCell
-						colSpan={spacerColSpan}
-						style={{ height: `${paddingBottom}px` }}
-					/>
+					<TableCell colSpan={spacerColSpan} style={{ height: `${paddingBottom}px` }} />
 				</TableRow>
 			)}
 			{sentinelRef && (
@@ -382,7 +350,7 @@ const AnimatedRow = React.forwardRef<
 			className={cn(
 				props.className,
 				'transition-all duration-200 ease-in-out',
-				isExpanded ? 'opacity-100' : 'opacity-0',
+				isExpanded ? 'opacity-100' : 'opacity-0'
 			)}
 		>
 			{children}
@@ -455,25 +423,16 @@ export function DataTable<TData, TValue>({
 	fixedHeight,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
-	const [columnVisibility, setColumnVisibility] =
-		React.useState<VisibilityState>({});
+	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
 	const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([]);
-	const [columnSizing, setColumnSizing] = React.useState<Record<string, number>>(
-		{},
-	);
+	const [columnSizing, setColumnSizing] = React.useState<Record<string, number>>({});
 	const [draggedColumn, setDraggedColumn] = React.useState<string | null>(null);
 	const [dropTarget, setDropTarget] = React.useState<string | null>(null);
 	const [isResizing, setIsResizing] = React.useState(false);
-	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-		[],
-	);
+	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 	const [globalFilter, setGlobalFilter] = React.useState('');
-	const [visibleFilters, setVisibleFilters] = React.useState<Set<string>>(
-		new Set(),
-	);
-	const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>(
-		{},
-	);
+	const [visibleFilters, setVisibleFilters] = React.useState<Set<string>>(new Set());
+	const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>({});
 	const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 	const [expanded, setExpanded] = React.useState<ExpandedState>(initialExpanded);
 	const [scrollPosition, setScrollPosition] = React.useState({
@@ -493,14 +452,10 @@ export function DataTable<TData, TValue>({
 		(column: ColumnDef<TData, TValue>, index: number): string => {
 			const explicitId = (column as { id?: string }).id;
 			const accessorKey =
-				'accessorKey' in column
-					? (column as { accessorKey?: string }).accessorKey
-					: undefined;
-			return (
-				explicitId ?? (accessorKey as string | undefined) ?? `column-${index}`
-			);
+				'accessorKey' in column ? (column as { accessorKey?: string }).accessorKey : undefined;
+			return explicitId ?? (accessorKey as string | undefined) ?? `column-${index}`;
 		},
-		[],
+		[]
 	);
 
 	// Map of columnId -> ColumnDef for quick reordering lookups
@@ -515,19 +470,14 @@ export function DataTable<TData, TValue>({
 
 	const getOrderedColumns = React.useCallback(
 		(order: string[]): ColumnDef<TData, TValue>[] => {
-			return order.map((id) => columnsById.get(id)).filter(Boolean) as ColumnDef<
-				TData,
-				TValue
-			>[];
+			return order.map((id) => columnsById.get(id)).filter(Boolean) as ColumnDef<TData, TValue>[];
 		},
-		[columnsById],
+		[columnsById]
 	);
 
 	// Initialise Column Order Array
 	React.useEffect(() => {
-		const defaultOrder = columns.map((column, index) =>
-			resolveColumnId(column, index),
-		);
+		const defaultOrder = columns.map((column, index) => resolveColumnId(column, index));
 		setColumnOrder(initialColumnOrder || defaultOrder);
 	}, [columns, initialColumnOrder, resolveColumnId]);
 
@@ -539,9 +489,7 @@ export function DataTable<TData, TValue>({
 		if (isInitialMount.current) {
 			if (preferences.columnOrder?.length) {
 				// Only use saved column order if it contains all current columns
-				const currentColumnIds = new Set(
-					columns.map((col, idx) => resolveColumnId(col, idx)),
-				);
+				const currentColumnIds = new Set(columns.map((col, idx) => resolveColumnId(col, idx)));
 				const savedColumnIds = new Set(preferences.columnOrder);
 
 				if (
@@ -651,9 +599,7 @@ export function DataTable<TData, TValue>({
 								if (selectedIds.length > 1) {
 									// Find the id that was just toggled on
 									const newSelectedId = selectedIds.find((id) => !prev[id]);
-									return newSelectedId
-										? { [newSelectedId]: true }
-										: { [selectedIds[0]]: true };
+									return newSelectedId ? { [newSelectedId]: true } : { [selectedIds[0]]: true };
 								}
 								// If the same row is clicked again, deselect it
 								if (selectedIds.length === 1 && prev[selectedIds[0]]) {
@@ -677,8 +623,7 @@ export function DataTable<TData, TValue>({
 		...(enablePagination
 			? {
 					onPaginationChange: (updater) => {
-						const newPagination =
-							typeof updater === 'function' ? updater(pagination) : updater;
+						const newPagination = typeof updater === 'function' ? updater(pagination) : updater;
 						setPagination(newPagination);
 						if (serverSidePagination) {
 							onPaginationChange?.(newPagination);
@@ -744,7 +689,7 @@ export function DataTable<TData, TValue>({
 				tableRef.current.scrollTop = scrollTop;
 			}
 		},
-		[enableVirtualization, virtualizer, estimateRowSize],
+		[enableVirtualization, virtualizer, estimateRowSize]
 	);
 
 	// Expose scroll to index function through ref
@@ -860,9 +805,7 @@ export function DataTable<TData, TValue>({
 	// Notify parent component of selection changes
 	React.useEffect(() => {
 		if (onRowSelectionChange) {
-			const selectedRows = table
-				.getSelectedRowModel()
-				.rows.map((row) => row.original);
+			const selectedRows = table.getSelectedRowModel().rows.map((row) => row.original);
 			onRowSelectionChange(selectedRows);
 		}
 	}, [onRowSelectionChange, table]);
@@ -884,25 +827,19 @@ export function DataTable<TData, TValue>({
 				// Infinite scroll trigger with hysteresis
 				if (enableInfiniteScroll && hasMore && !loadingMore) {
 					const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-					if (
-						distanceFromBottom < LOAD_MORE_THRESHOLD &&
-						!loadRequestedRef.current
-					) {
+					if (distanceFromBottom < LOAD_MORE_THRESHOLD && !loadRequestedRef.current) {
 						loadRequestedRef.current = true;
 						onLoadMore?.();
-					} else if (
-						distanceFromBottom >
-						LOAD_MORE_THRESHOLD * RESET_THRESHOLD_MULTIPLIER
-					) {
+					} else if (distanceFromBottom > LOAD_MORE_THRESHOLD * RESET_THRESHOLD_MULTIPLIER) {
 						// reset once user scrolls away sufficiently from bottom
 						loadRequestedRef.current = false;
 					}
 				}
 			},
 			100,
-			{ leading: false, trailing: true },
+			{ leading: false, trailing: true }
 		),
-		[],
+		[]
 	);
 
 	// Reset loadRequested flag when data grows
@@ -932,15 +869,7 @@ export function DataTable<TData, TValue>({
 			loadRequestedRef.current = true;
 			onLoadMore?.();
 		}
-	}, [
-		enableInfiniteScroll,
-		hasMore,
-		loadingMore,
-		virtualizer,
-		rows.length,
-		overscan,
-		onLoadMore,
-	]);
+	}, [enableInfiniteScroll, hasMore, loadingMore, virtualizer, rows.length, overscan, onLoadMore]);
 
 	// Restore scroll position
 	React.useEffect(() => {
@@ -989,7 +918,7 @@ export function DataTable<TData, TValue>({
 					root,
 					rootMargin: '300px 0px 600px 0px',
 					threshold: 0,
-				},
+				}
 			);
 			observer.observe(sentinel);
 		} catch {
@@ -1023,7 +952,7 @@ export function DataTable<TData, TValue>({
 			}
 			return offset;
 		},
-		[table],
+		[table]
 	);
 
 	return (
@@ -1153,7 +1082,7 @@ export function DataTable<TData, TValue>({
 														? {
 																left: getPinnedOffset(
 																	column as unknown as Column<TData, unknown>,
-																	'left',
+																	'left'
 																),
 															}
 														: {}),
@@ -1161,7 +1090,7 @@ export function DataTable<TData, TValue>({
 														? {
 																right: getPinnedOffset(
 																	column as unknown as Column<TData, unknown>,
-																	'right',
+																	'right'
 																),
 															}
 														: {}),
@@ -1171,7 +1100,7 @@ export function DataTable<TData, TValue>({
 													isDragging && 'opacity-50',
 													isDropTarget && 'border-l-2 border-primary',
 													isPinned === 'left' && 'sticky left-0 z-20 bg-background',
-													isPinned === 'right' && 'sticky right-0 z-20 bg-background',
+													isPinned === 'right' && 'sticky right-0 z-20 bg-background'
 												)}
 												draggable={enableColumnReordering && !isResizing}
 												onDragStart={
@@ -1183,9 +1112,7 @@ export function DataTable<TData, TValue>({
 														: undefined
 												}
 												onDrop={
-													enableColumnReordering && !isResizing
-														? handleDrop(header.id)
-														: undefined
+													enableColumnReordering && !isResizing ? handleDrop(header.id) : undefined
 												}
 												onDragEnd={enableColumnReordering ? handleDragEnd : undefined}
 											>
@@ -1196,16 +1123,13 @@ export function DataTable<TData, TValue>({
 														)}
 														{header.isPlaceholder
 															? null
-															: flexRender(
-																	header.column.columnDef.header,
-																	header.getContext(),
-																)}
+															: flexRender(header.column.columnDef.header, header.getContext())}
 														{enableSorting && column.getCanSort() && (
 															<button
 																onClick={column.getToggleSortingHandler()}
 																className={cn(
 																	'ml-2 hover:bg-muted/50 rounded p-1',
-																	isSorted && 'bg-muted/50',
+																	isSorted && 'bg-muted/50'
 																)}
 															>
 																{getSortIcon(isSorted)}
@@ -1217,7 +1141,7 @@ export function DataTable<TData, TValue>({
 																className={cn(
 																	'ml-2 hover:bg-muted/50 rounded p-1',
 																	filterValue ? 'bg-muted/50' : '',
-																	isFilterVisible && 'bg-muted/50',
+																	isFilterVisible && 'bg-muted/50'
 																)}
 															>
 																<Filter className="h-4 w-4" />
@@ -1228,7 +1152,7 @@ export function DataTable<TData, TValue>({
 																onClick={() => togglePin(header.id)}
 																className={cn(
 																	'ml-2 hover:bg-muted/50 rounded p-1',
-																	isPinned && 'bg-muted/50',
+																	isPinned && 'bg-muted/50'
 																)}
 															>
 																{isPinned ? (
@@ -1293,8 +1217,7 @@ export function DataTable<TData, TValue>({
 															},
 															className: cn(
 																'absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted hover:w-3 transition-all duration-200 group border-l border-border/50 hover:bg-muted/80',
-																header.column.getIsResizing() &&
-																	'bg-primary w-3 border-primary',
+																header.column.getIsResizing() && 'bg-primary w-3 border-primary'
 															),
 														}}
 													/>
@@ -1331,9 +1254,7 @@ export function DataTable<TData, TValue>({
 								<TableRow>
 									<TableCell
 										colSpan={
-											columns.length +
-											(enableRowSelection ? 1 : 0) +
-											(enableRowExpansion ? 1 : 0)
+											columns.length + (enableRowSelection ? 1 : 0) + (enableRowExpansion ? 1 : 0)
 										}
 										className="h-[400px] relative"
 									>
@@ -1357,7 +1278,7 @@ export function DataTable<TData, TValue>({
 															className={cn(
 																row.getIsSelected() && 'bg-muted/50',
 																'cursor-pointer',
-																enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30',
+																enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30'
 															)}
 															style={{
 																height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
@@ -1370,11 +1291,7 @@ export function DataTable<TData, TValue>({
 																if (enableRowSelection) {
 																	row.toggleSelected();
 																}
-																if (
-																	enableRowExpansion &&
-																	expandOnRowClick &&
-																	row.getCanExpand()
-																) {
+																if (enableRowExpansion && expandOnRowClick && row.getCanExpand()) {
 																	row.toggleExpanded();
 																}
 																onRowClick?.(row, e);
@@ -1388,10 +1305,7 @@ export function DataTable<TData, TValue>({
 															aria-selected={row.getIsSelected()}
 															tabIndex={0}
 															onKeyDown={(e) => {
-																if (
-																	enableRowSelection &&
-																	(e.key === ' ' || e.key === 'Enter')
-																) {
+																if (enableRowSelection && (e.key === ' ' || e.key === 'Enter')) {
 																	e.preventDefault();
 																	row.toggleSelected();
 																}
@@ -1428,7 +1342,7 @@ export function DataTable<TData, TValue>({
 																			}}
 																			className={cn(
 																				'transform transition-transform duration-200',
-																				row.getIsExpanded() ? 'rotate-90' : '',
+																				row.getIsExpanded() ? 'rotate-90' : ''
 																			)}
 																		>
 																			<ChevronRight className="h-4 w-4" />
@@ -1451,7 +1365,7 @@ export function DataTable<TData, TValue>({
 																				? {
 																						left: getPinnedOffset(
 																							cell.column as Column<TData, unknown>,
-																							'left',
+																							'left'
 																						),
 																					}
 																				: {}),
@@ -1459,14 +1373,14 @@ export function DataTable<TData, TValue>({
 																				? {
 																						right: getPinnedOffset(
 																							cell.column as Column<TData, unknown>,
-																							'right',
+																							'right'
 																						),
 																					}
 																				: {}),
 																		}}
 																		className={cn(
 																			isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-																			isPinned === 'right' && 'sticky right-0 z-10 bg-background',
+																			isPinned === 'right' && 'sticky right-0 z-10 bg-background'
 																		)}
 																		onClick={(e) => {
 																			if (stopPropagationOnCellClick) {
@@ -1493,7 +1407,7 @@ export function DataTable<TData, TValue>({
 													className={cn(
 														row.getIsSelected() && 'bg-muted/50',
 														'cursor-pointer',
-														enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30',
+														enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30'
 													)}
 													style={{
 														height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
@@ -1506,11 +1420,7 @@ export function DataTable<TData, TValue>({
 														if (enableRowSelection) {
 															row.toggleSelected();
 														}
-														if (
-															enableRowExpansion &&
-															expandOnRowClick &&
-															row.getCanExpand()
-														) {
+														if (enableRowExpansion && expandOnRowClick && row.getCanExpand()) {
 															row.toggleExpanded();
 														}
 														onRowClick?.(row, e);
@@ -1561,7 +1471,7 @@ export function DataTable<TData, TValue>({
 																	}}
 																	className={cn(
 																		'transform transition-transform duration-200',
-																		row.getIsExpanded() ? 'rotate-90' : '',
+																		row.getIsExpanded() ? 'rotate-90' : ''
 																	)}
 																>
 																	<ChevronRight className="h-4 w-4" />
@@ -1584,7 +1494,7 @@ export function DataTable<TData, TValue>({
 																		? {
 																				left: getPinnedOffset(
 																					cell.column as Column<TData, unknown>,
-																					'left',
+																					'left'
 																				),
 																			}
 																		: {}),
@@ -1592,14 +1502,14 @@ export function DataTable<TData, TValue>({
 																		? {
 																				right: getPinnedOffset(
 																					cell.column as Column<TData, unknown>,
-																					'right',
+																					'right'
 																				),
 																			}
 																		: {}),
 																}}
 																className={cn(
 																	isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-																	isPinned === 'right' && 'sticky right-0 z-10 bg-background',
+																	isPinned === 'right' && 'sticky right-0 z-10 bg-background'
 																)}
 																onClick={(e) => {
 																	if (stopPropagationOnCellClick) {
@@ -1662,9 +1572,7 @@ export function DataTable<TData, TValue>({
 								<TableRow>
 									<TableCell
 										colSpan={
-											columns.length +
-											(enableRowSelection ? 1 : 0) +
-											(enableRowExpansion ? 1 : 0)
+											columns.length + (enableRowSelection ? 1 : 0) + (enableRowExpansion ? 1 : 0)
 										}
 										className="h-24 text-center"
 									>

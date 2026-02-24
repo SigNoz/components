@@ -5,21 +5,15 @@ import { inputVariants } from './input-variants.js';
 import { cn } from './lib/utils.js';
 
 export interface InputProps
-	extends
-		React.InputHTMLAttributes<HTMLInputElement>,
+	extends React.InputHTMLAttributes<HTMLInputElement>,
 		VariantProps<typeof inputVariants> {}
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 	({ className, type, theme, ...props }, ref) => {
 		return (
-			<input
-				type={type}
-				className={cn(inputVariants({ theme, className }))}
-				ref={ref}
-				{...props}
-			/>
+			<input type={type} className={cn(inputVariants({ theme, className }))} ref={ref} {...props} />
 		);
-	},
+	}
 );
 InputComponent.displayName = 'Input';
 

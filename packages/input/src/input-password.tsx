@@ -7,8 +7,7 @@ import type { inputVariants } from './input-variants.js';
 import { cn } from './lib/utils.js';
 
 export interface InputPasswordProps
-	extends
-		Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>,
+	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>,
 		VariantProps<typeof inputVariants> {}
 
 const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
@@ -37,7 +36,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 						'absolute right-0 top-0 h-full w-auto px-3 z-10',
 						'rounded-none shadow-none',
 						'hover:opacity-70 transition-opacity',
-						theme === 'dark' ? 'text-muted-foreground-dark' : 'text-muted-foreground',
+						theme === 'dark' ? 'text-muted-foreground-dark' : 'text-muted-foreground'
 					)}
 					aria-label={showPassword ? 'Hide password' : 'Show password'}
 					tabIndex={-1}
@@ -51,7 +50,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 				</Button>
 			</div>
 		);
-	},
+	}
 );
 InputPassword.displayName = 'InputPassword';
 

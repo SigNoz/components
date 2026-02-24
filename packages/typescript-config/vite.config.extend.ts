@@ -75,6 +75,7 @@ export default function getViteLibConfig(
 		plugins: [
 			// Reference: https://github.com/qmhc/unplugin-dts/issues/267#issuecomment-2142950802
 			dts({
+				tsconfigPath: resolve(cwd, 'tsconfig.json'),
 				entryRoot: 'src',
 				// create two type folders, one for esm and cjs
 				outDir: ['dist/types/esm', 'dist/types/cjs'],
@@ -103,6 +104,7 @@ export default function getViteLibConfig(
 									(match) => match.replace('.d.ts.map', '.d.cts.map')
 								);
 								// Update .js references to .cjs
+								updatedContent = updatedContent.replace(/(from\s+['"].*?)\.jsx(['"])/g, '$1.cjs$2');
 								updatedContent = updatedContent.replace(/(from\s+['"].*?)\.js(['"])/g, '$1.cjs$2');
 								await fs.writeFile(newFilePath, updatedContent, 'utf-8');
 							}

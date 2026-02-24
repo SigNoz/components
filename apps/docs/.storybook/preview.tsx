@@ -1,12 +1,5 @@
 import './preview.css';
-import {
-	Controls,
-	Description,
-	Primary,
-	Stories,
-	Subtitle,
-	Title,
-} from '@storybook/blocks';
+import { Controls, Description, Primary, Stories, Subtitle, Title } from '@storybook/blocks';
 import { themes } from '@storybook/theming';
 import { ModeDecorator } from './modeDecorator.jsx';
 

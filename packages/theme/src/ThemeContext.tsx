@@ -1,12 +1,5 @@
 import type React from 'react';
-import {
-	createContext,
-	type ReactNode,
-	useContext,
-	useEffect,
-	useMemo,
-	useState,
-} from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { ThemeColors } from './ThemeColor.jsx';
 
 export type ThemeColor = 'blue' | 'green' | 'amber' | 'cherry' | 'aqua';
@@ -24,9 +17,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
-	children,
-}) => {
+export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 	const [theme, setThemeState] = useState<Theme>(() => {
 		if (typeof window !== 'undefined') {
 			const storedTheme = localStorage.getItem('theme') as Theme;
@@ -51,13 +42,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
 	}, [theme]);
 
 	const availableThemes: Theme[] = ['light', 'dark'];
-	const availableColors: ThemeColor[] = [
-		'blue',
-		'green',
-		'amber',
-		'cherry',
-		'aqua',
-	];
+	const availableColors: ThemeColor[] = ['blue', 'green', 'amber', 'cherry', 'aqua'];
 
 	useEffect(() => {
 		const root = window.document.documentElement;

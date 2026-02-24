@@ -6,9 +6,7 @@ import * as React from 'react';
 import { cn } from './lib/utils.js';
 import { toggleVariants } from './toggle.jsx';
 
-const ToggleGroupContext = React.createContext<
-	VariantProps<typeof toggleVariants>
->({
+const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({
 	size: 'default',
 	variant: 'default',
 });
@@ -19,8 +17,7 @@ function ToggleGroup({
 	size,
 	children,
 	...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
-	VariantProps<typeof toggleVariants>) {
+}: React.ComponentProps<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>) {
 	return (
 		<ToggleGroupPrimitive.Root
 			data-slot="toggle-group"
@@ -28,7 +25,7 @@ function ToggleGroup({
 			data-size={size}
 			className={cn(
 				'group/toggle-group flex w-fit items-center rounded-md border bg-[var(--toggle-bg)] border-[var(--toggle-border)]',
-				className,
+				className
 			)}
 			{...props}
 		>
@@ -45,8 +42,7 @@ function ToggleGroupItem({
 	variant,
 	size,
 	...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
-	VariantProps<typeof toggleVariants>) {
+}: React.ComponentProps<typeof ToggleGroupPrimitive.Item> & VariantProps<typeof toggleVariants>) {
 	const context = React.useContext(ToggleGroupContext);
 
 	return (
@@ -64,7 +60,7 @@ function ToggleGroupItem({
 				'text-[var(--toggle-text)] opacity-70 hover:opacity-100',
 				'data-[state=on]:bg-[var(--toggle-active-bg)] data-[state=on]:text-[var(--toggle-active-text)] data-[state=on]:opacity-100',
 				'cursor-pointer',
-				className,
+				className
 			)}
 			{...props}
 		>
