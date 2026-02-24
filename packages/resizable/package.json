@@ -1,72 +1,70 @@
 {
-	"name": "@signozhq/resizable",
-	"version": "0.0.0",
-	"license": "MIT",
-	"type": "module",
-	"exports": {
-		".": {
-			"import": {
-				"types": "./dist/resizable.d.ts",
-				"import": "./dist/resizable.js"
-			},
-			"require": {
-				"types": "./dist/resizable.d.cts",
-				"require": "./dist/resizable.cjs"
-			}
-		}
-	},
-	"main": "./dist/resizable.cjs",
-	"module": "./dist/resizable.js",
-	"types": "./dist/resizable.d.cts",
-	"files": [
-		"dist"
-	],
-	"scripts": {
-		"build": "tsdown",
-		"dev": "tsdown --watch",
-		"lint": "eslint . --max-warnings 0",
-		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-		"yalc-watch": "yalc-watch"
-	},
-	"yalcWatch": {
-		"watchFolder": "dist",
-		"buildWatchCommand": "tsdown --watch",
-		"extensions": "js,png,svg,gif,jpeg,css"
-	},
-	"devDependencies": {
-		"@repo/eslint-config": "workspace:*",
-		"@repo/typescript-config": "workspace:*",
-		"@signozhq/tailwind-config": "workspace:*",
-		"@tailwindcss/postcss": "^4.1.4",
-		"@types/node": "^22.5.5",
-		"@types/react": "^18.2.61",
-		"@types/react-dom": "^18.2.19",
-		"@vitejs/plugin-react": "^4.2.1",
-		"eslint": "^9.11.0",
-		"postcss": "^8.4.47",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"tailwindcss": "^4.1.4",
-		"tsdown": "^0.20.3",
-		"yalc-watch": "^0.0.6",
-		"typescript": "^5.3.3"
-	},
-	"dependencies": {
-		"@radix-ui/react-icons": "^1.3.0",
-		"@radix-ui/react-slot": "^1.1.0",
-		"class-variance-authority": "^0.7.0",
-		"lucide-react": "^0.445.0",
-		"react-resizable-panels": "^3.0.5"
-	},
-	"peerDependencies": {
-		"clsx": "^2.1.1",
-		"react": "^18.2.0",
-		"tailwind-merge": "^2.5.2",
-		"tailwindcss": "^4.1.4",
-		"tailwindcss-animate": "^1.0.7"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"description": "A new package"
+  "name": "@signozhq/resizable",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/esm/resizable.d.ts",
+        "import": "./dist/resizable.js"
+      },
+      "require": {
+        "types": "./dist/types/cjs/resizable.d.cts",
+        "require": "./dist/resizable.cjs"
+      }
+    }
+  },
+  "main": "./dist/resizable.cjs",
+  "module": "./dist/resizable.js",
+  "types": "./dist/types/cjs/resizable.d.cts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && publint",
+    "dev": "vite build --watch",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "yalc-watch": "yalc-watch",
+    "publint": "publint"
+  },
+  "yalcWatch": {
+    "watchFolder": "dist",
+    "buildWatchCommand": "vite build --watch",
+    "extensions": "js,png,svg,gif,jpeg,css"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@signozhq/tailwind-config": "workspace:*",
+    "publint": "^0.3.17",
+    "@tailwindcss/postcss": "^4.1.4",
+    "@types/node": "^22.5.5",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "eslint": "^9.11.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^4.1.4",
+    "yalc-watch": "^0.0.6"
+  },
+  "dependencies": {
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "lucide-react": "^0.445.0",
+    "react-resizable-panels": "^3.0.5"
+  },
+  "peerDependencies": {
+    "clsx": "^2.1.1",
+    "react": "^18.2.0",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss": "^4.1.4",
+    "tailwindcss-animate": "^1.0.7",
+    "react-dom": "^18.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "A new package"
 }

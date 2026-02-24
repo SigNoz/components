@@ -86,15 +86,21 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				packageJson.version = '0.0.0';
 
 				// Update main, module, and types fields
-				packageJson.main = `./dist/${(answers as { name: string }).name}.js`;
+				packageJson.main = `./dist/${(answers as { name: string }).name}.cjs`;
 				packageJson.module = `./dist/${(answers as { name: string }).name}.js`;
-				packageJson.types = `./dist/${(answers as { name: string }).name}.d.ts`;
+				packageJson.types = `./dist/${(answers as { name: string }).name}.d.cts`;
 
 				// Update exports
 				packageJson.exports = {
 					'.': {
-						types: `./dist/${(answers as { name: string }).name}.d.ts`,
-						import: `./dist/${(answers as { name: string }).name}.js`,
+						import: {
+							types: `./dist/${(answers as { name: string }).name}.d.ts`,
+							import: `./dist/${(answers as { name: string }).name}.js`,
+						},
+						require: {
+							types: `./dist/${(answers as { name: string }).name}.d.cts`,
+							require: `./dist/${(answers as { name: string }).name}.cjs`,
+						},
 					},
 				};
 
@@ -106,11 +112,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				return 'package.json updated';
 			},
 
-			// Update tsdown.config.ts
+			// Update vite.config.ts
 			(answers) => {
 				const configPath = path.resolve(
 					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/tsdown.config.ts`,
+					`packages/${(answers as { name: string }).name}/vite.config.ts`,
 				);
 				let content = fs.readFileSync(configPath, 'utf8');
 
@@ -119,9 +125,9 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 				fs.writeFileSync(configPath, content);
 
 				console.log(
-					`Updated tsdown.config.ts for ${(answers as { name: string }).name}`,
+					`Updated vite.config.ts for ${(answers as { name: string }).name}`,
 				);
-				return 'tsdown.config.ts updated';
+				return 'vite.config.ts updated';
 			},
 			// Update docs app package.json
 			{

@@ -84,7 +84,7 @@
    │       ├── .eslintrc.js (new)
    │       ├── components.json (new)
    │       ├── package.json (new)
-   │       ├── postcss.config.js (new)
+   │       ├── "@vitejs/plugin-react": "^5.1.4",.config.js (new)
    │       ├── src
    │       │   ├── dropdown-menu.tsx (new)
    │       │   ├── index.css (new)

@@ -4,7 +4,7 @@ import {
 	RadioGroup,
 	RadioGroupItem,
 	RadioGroupLabel,
-	RadioColorProps,
+	type RadioColorProps,
 } from '@signozhq/radio-group';
 import { generateDocs } from '../utils/generateDocs';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from './data-table';
 
 // Define the type for our data

@@ -1,11 +1,10 @@
 import './index.css';
 import * as React from 'react';
-import { useState, useEffect, MouseEvent } from 'react';
+import { type MouseEvent, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 
 import { cn } from './lib/utils';
-import { buttonVariants } from '../../button/src/button';
-import { ButtonSize } from '../../button/src/button';
+import { ButtonSize, buttonVariants } from '@signozhq/button';
 import { renderPageNumbers } from './utils';
 
 // Define alignment options
@@ -157,8 +156,9 @@ function PaginationEllipsis({
 	);
 }
 
-interface PaginationProps
-	extends React.ComponentProps<typeof PaginationContainer> {
+interface PaginationProps extends React.ComponentProps<
+	typeof PaginationContainer
+> {
 	total: number;
 	pageSize?: number;
 	current?: number;

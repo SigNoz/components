@@ -1,10 +1,10 @@
 import './index.css';
 import React, {
-	ComponentPropsWithoutRef,
-	CSSProperties,
-	ElementRef,
+	type ComponentPropsWithoutRef,
+	type CSSProperties,
+	type ElementRef,
 	forwardRef,
-	ReactNode,
+	type ReactNode,
 	useCallback,
 	useEffect,
 	useImperativeHandle,

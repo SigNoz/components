@@ -1,12 +1,11 @@
 import './index.css';
 
-import React from 'react';
-import { forwardRef } from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps } from 'class-variance-authority';
+import { Loader2 } from 'lucide-react';
+import React, { forwardRef } from 'react';
 import buttonVariants from './button-variants';
 import { cn } from './lib/utils';
-import { Loader2 } from 'lucide-react';
 
 export enum ButtonVariant {
 	Solid = 'solid',

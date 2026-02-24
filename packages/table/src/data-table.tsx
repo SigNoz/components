@@ -1,49 +1,50 @@
-import * as React from 'react';
-import { throttle } from 'lodash-es';
+import { Spinner } from '@signozhq/icons';
 import {
+	type Cell,
+	type Column,
 	type ColumnDef,
+	type ColumnFiltersState,
+	type ColumnOrderState,
+	type ColumnPinningState,
+	type ExpandedState,
 	flexRender,
 	getCoreRowModel,
-	useReactTable,
-	type HeaderGroup,
-	type Table as ReactTable,
-	type Column,
-	type Cell,
-	type SortingState,
-	getSortedRowModel,
-	type VisibilityState,
-	type ColumnOrderState,
-	getFilteredRowModel,
-	type ColumnFiltersState,
-	type ColumnPinningState,
-	type RowSelectionState,
-	type ExpandedState,
 	getExpandedRowModel,
-	type Row,
+	getFilteredRowModel,
 	getPaginationRowModel,
+	getSortedRowModel,
+	type HeaderGroup,
+	type Row,
+	type RowSelectionState,
+	type SortingState,
+	type Table as ReactTable,
+	useReactTable,
+	type VisibilityState,
 } from '@tanstack/react-table';
-import { useVirtualizer, Virtualizer } from '@tanstack/react-virtual';
-import { cn } from './lib/utils';
+import { useVirtualizer, type Virtualizer } from '@tanstack/react-virtual';
+import throttle from 'lodash-es/throttle';
+import {
+	ArrowUpDown,
+	ChevronDown,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+	ChevronUp,
+	Filter,
+	GripVertical,
+	Pin,
+	PinOff,
+	Search,
+	X,
+} from 'lucide-react';
+import * as React from 'react';
 import {
 	getTablePreferences,
 	saveTablePreferences,
 	type TablePreferences,
 } from './lib/preferences';
-import {
-	ArrowUpDown,
-	ChevronDown,
-	ChevronUp,
-	GripVertical,
-	Search,
-	X,
-	Filter,
-	Pin,
-	PinOff,
-	ChevronRight,
-	ChevronLeft,
-	ChevronsLeft,
-	ChevronsRight,
-} from 'lucide-react';
+import { cn } from './lib/utils';
 import {
 	Table,
 	TableBody,
@@ -52,7 +53,6 @@ import {
 	TableHeader,
 	TableRow,
 } from './table';
-import { Spinner } from '@signozhq/icons';
 
 export interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];

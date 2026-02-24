@@ -1,24 +1,22 @@
-import { defineConfig } from "vite";
+import getViteLibConfig from "@repo/typescript-config/vite.config.extend";
 import react from "@vitejs/plugin-react";
-import dts from "vite-plugin-dts";
-import { resolve } from "path";
+import { defineConfig } from "vite";
 
-export default defineConfig({
-  build: {
-    lib: {
-      entry: resolve(__dirname, "src/index.tsx"),
-      name: "theme",
-      fileName: (format) => `theme.${format}.js`,
-    },
-    rollupOptions: {
-      external: ["react", "react-dom"],
-      output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
+export default defineConfig(
+  getViteLibConfig("src/index.tsx", {
+    plugins: [react()],
+    build: {
+      lib: {
+        fileName: (format) => `theme.${format === "es" ? "js" : "cjs"}`,
+      },
+      rollupOptions: {
+        output: {
+          globals: {
+            react: "React",
+            "react-dom": "ReactDOM",
+          },
         },
       },
     },
-  },
-  plugins: [react(), dts()],
-});
+  }),
+);
