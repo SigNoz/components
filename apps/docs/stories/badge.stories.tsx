@@ -1,6 +1,5 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '@signozhq/badge';
+import type { Meta, StoryObj } from '@storybook/react';
 
 type BadgeColor =
 	| 'vanilla'
@@ -127,16 +126,7 @@ const meta: Meta<typeof Badge> = {
 		},
 		color: {
 			control: 'select',
-			options: [
-				'vanilla',
-				'robin',
-				'forest',
-				'amber',
-				'sienna',
-				'cherry',
-				'sakura',
-				'aqua',
-			],
+			options: ['vanilla', 'robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
 			description:
 				'The color theme of the badge. Each color has semantic meaning for different use cases.',
 			table: { category: 'Appearance', defaultValue: { summary: 'robin' } },
@@ -150,8 +140,7 @@ const meta: Meta<typeof Badge> = {
 		},
 		capitalize: {
 			control: 'boolean',
-			description:
-				'Transforms text to uppercase with wider letter spacing for emphasis.',
+			description: 'Transforms text to uppercase with wider letter spacing for emphasis.',
 			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
 		},
 		asChild: {
@@ -509,15 +498,11 @@ export const CapitalizedText: Story = {
 				</h3>
 				<div className="flex gap-4 flex-wrap">
 					<div className="flex flex-col gap-2">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">
-							Normal
-						</span>
+						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Normal</span>
 						<Badge color="robin">Active User</Badge>
 					</div>
 					<div className="flex flex-col gap-2">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">
-							Capitalized
-						</span>
+						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Capitalized</span>
 						<Badge color="robin" capitalize>
 							Active User
 						</Badge>
@@ -580,11 +565,7 @@ export const UsingAsChild: Story = {
 				</h3>
 				<div className="flex gap-2 flex-wrap">
 					<Badge asChild color="robin" variant="outline">
-						<button
-							type="button"
-							onClick={() => alert('All filter')}
-							className="!cursor-pointer"
-						>
+						<button type="button" onClick={() => alert('All filter')} className="!cursor-pointer">
 							All
 						</button>
 					</Badge>

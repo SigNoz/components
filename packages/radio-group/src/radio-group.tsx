@@ -1,8 +1,8 @@
 import './index.css';
-import * as React from 'react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
-import { cn } from './lib/utils';
 import { Circle } from 'lucide-react';
+import * as React from 'react';
+import { cn } from './lib/utils.js';
 
 export type RadioColorProps =
 	| 'robin'
@@ -22,13 +22,7 @@ const RadioGroup = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => {
-	return (
-		<RadioGroupPrimitive.Root
-			className={cn('grid gap-2', className)}
-			{...props}
-			ref={ref}
-		/>
-	);
+	return <RadioGroupPrimitive.Root className={cn('grid gap-2', className)} {...props} ref={ref} />;
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
@@ -44,7 +38,7 @@ const RadioGroupItem = React.forwardRef<
 				'aspect-square h-4 w-4 rounded-full border border-[var(--radio-checked-background)] text-[var(--radio-checked-background)] ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--radio-checked-background)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-[2px]',
 				'hover:ring-1 hover:ring-[var(--radio-checked-background)] hover:border-[var(--radio-checked-background)]',
 				'peer-disabled:hover:ring-0 peer-disabled:hover:border-transparent',
-				className,
+				className
 			)}
 			{...props}
 		>
@@ -70,7 +64,7 @@ const RadioGroupLabel = React.forwardRef<
 		<label
 			ref={ref}
 			className={cn(
-				'font-inter text-sm font-normal leading-5 tracking-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+				'font-inter text-sm font-normal leading-5 tracking-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 			)}
 			{...props}
 		/>

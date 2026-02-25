@@ -1,8 +1,7 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import { Callout } from '@signozhq/callout';
-import { generateDocs } from '../utils/generateDocs';
-import { Info, XCircle, Star, Sun, Zap } from 'lucide-react'; // Added more icons for variety
+import type { Meta, StoryObj } from '@storybook/react';
+import { Info, Star, Sun, XCircle, Zap } from 'lucide-react'; // Added more icons for variety
+import { generateDocs } from '../utils/generateDocs.js';
 
 const alertExamples = [
 	`
@@ -75,8 +74,7 @@ const meta: Meta<typeof Callout> = {
 		color: {
 			control: 'select',
 			options: [null, 'robin', 'forest', 'amber', 'cherry', 'sienna', 'aqua'], // Added null to represent 'undefined' / default
-			description:
-				'Overrides the default color derived from `type`. Uses predefined color names.',
+			description: 'Overrides the default color derived from `type`. Uses predefined color names.',
 			table: { category: 'Appearance' },
 		},
 		size: {
@@ -122,9 +120,7 @@ export const AllVariantsOverview: Story = {
 	render: () => (
 		<div className="flex flex-col max-w-800px gap-4">
 			{/* Small Size Variations */}
-			<h2 className="mt-5 mb-2.5 border-b border-gray-300 pb-2 text-2xl">
-				Small Callouts
-			</h2>
+			<h2 className="mt-5 mb-2.5 border-b border-gray-300 pb-2 text-2xl">Small Callouts</h2>
 			<Callout
 				type="info"
 				size="small"
@@ -132,12 +128,7 @@ export const AllVariantsOverview: Story = {
 				message="Small Info"
 				description="This is a small informational callout with its default icon."
 			/>
-			<Callout
-				type="success"
-				size="small"
-				showIcon
-				message="Small Success (No Description)"
-			/>
+			<Callout type="success" size="small" showIcon message="Small Success (No Description)" />
 			<Callout
 				type="warning"
 				size="small"
@@ -177,12 +168,7 @@ export const AllVariantsOverview: Story = {
 				message="Medium Info Message"
 				description="This is a medium informational callout with its default icon. It offers more space for detailed text and features a slightly larger icon for better visibility."
 			/>
-			<Callout
-				type="success"
-				size="medium"
-				showIcon
-				message="Medium Success (No Description)"
-			/>
+			<Callout type="success" size="medium" showIcon message="Medium Success (No Description)" />
 			<Callout
 				type="warning"
 				size="medium"
@@ -214,15 +200,8 @@ export const AllVariantsOverview: Story = {
 			/>
 
 			{/* Content & Icon Variations */}
-			<h2 className="mt-8 mb-2.5 border-b pb-2 text-2xl">
-				Content & Icon Variations
-			</h2>
-			<Callout
-				type="info"
-				size="small"
-				showIcon
-				message="Small Info - Only Message"
-			/>
+			<h2 className="mt-8 mb-2.5 border-b pb-2 text-2xl">Content & Icon Variations</h2>
+			<Callout type="info" size="small" showIcon message="Small Info - Only Message" />
 			<Callout
 				type="success"
 				size="medium"
@@ -341,8 +320,7 @@ export const MediumSize: Story = {
 	args: {
 		...DefaultInfo.args,
 		message: 'Medium Sized Callout',
-		description:
-			'This callout is larger to accommodate more content or draw more attention.',
+		description: 'This callout is larger to accommodate more content or draw more attention.',
 		size: 'medium',
 	},
 };

@@ -1,15 +1,7 @@
 import './preview.css';
+import { Controls, Description, Primary, Stories, Subtitle, Title } from '@storybook/blocks';
 import { themes } from '@storybook/theming';
-import { ModeDecorator } from './modeDecorator';
-import {
-	Title,
-	Subtitle,
-	Description,
-	Primary,
-	Controls,
-	Stories,
-} from '@storybook/blocks';
-import React from 'react';
+import { ModeDecorator } from './modeDecorator.jsx';
 
 // Configure Storybook parameters
 export const parameters = {

@@ -1,11 +1,10 @@
-import * as React from 'react';
+import { Button, ButtonSize, ButtonVariant } from '@signozhq/button';
+import type { VariantProps } from 'class-variance-authority';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { type VariantProps } from 'class-variance-authority';
-import { Button, ButtonVariant, ButtonSize } from '@signozhq/button';
-
-import { cn } from './lib/utils';
-import { InputComponent } from './input';
-import { inputVariants } from './input-variants';
+import * as React from 'react';
+import { InputComponent } from './input.jsx';
+import type { inputVariants } from './input-variants.js';
+import { cn } from './lib/utils.js';
 
 export interface InputPasswordProps
 	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>,
@@ -37,7 +36,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 						'absolute right-0 top-0 h-full w-auto px-3 z-10',
 						'rounded-none shadow-none',
 						'hover:opacity-70 transition-opacity',
-						theme === 'dark' ? 'text-muted-foreground-dark' : 'text-muted-foreground',
+						theme === 'dark' ? 'text-muted-foreground-dark' : 'text-muted-foreground'
 					)}
 					aria-label={showPassword ? 'Hide password' : 'Show password'}
 					tabIndex={-1}
@@ -51,7 +50,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 				</Button>
 			</div>
 		);
-	},
+	}
 );
 InputPassword.displayName = 'InputPassword';
 

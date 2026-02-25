@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
 import {
 	Command,
 	CommandDialog,
-	CommandInput,
-	CommandList,
 	CommandEmpty,
 	CommandGroup,
+	CommandInput,
 	CommandItem,
-	CommandShortcut,
+	CommandList,
 	CommandSeparator,
+	CommandShortcut,
 } from '@signozhq/command';
+import { action } from '@storybook/addon-actions';
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 
-import { generateDocs } from '../utils/generateDocs';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const examples = [
 	`import { Command, CommandInput, CommandList, CommandItem } from '@signozhq/command';
@@ -193,12 +193,7 @@ export const Dialog: Story = {
 					<button onClick={() => handleOpenChange(true)}>Open Command Dialog</button>
 				</div>
 
-				<CommandDialog
-					open={open}
-					onOpenChange={handleOpenChange}
-					position="top"
-					offset={110}
-				>
+				<CommandDialog open={open} onOpenChange={handleOpenChange} position="top" offset={110}>
 					<div style={{ width: 520 }}>
 						<CommandInput placeholder={args.placeholder} autoFocus={false} />
 						<CommandList>
@@ -238,9 +233,7 @@ export const CreateOrSearch: Story = {
 		const [query, setQuery] = useState('');
 		const [items, setItems] = useState(ITEMS);
 
-		const results = items.filter((it) =>
-			it.label.toLowerCase().includes(query.toLowerCase()),
-		);
+		const results = items.filter((it) => it.label.toLowerCase().includes(query.toLowerCase()));
 
 		const handleCreate = (name: string) => {
 			const label = name.trim() || `untitled-${Date.now()}`;
@@ -459,8 +452,7 @@ export const EmptyState: Story = {
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>
 					<CommandEmpty>
-						Nothing matched your search. Try different keywords or create a new
-						command.
+						Nothing matched your search. Try different keywords or create a new command.
 					</CommandEmpty>
 				</CommandList>
 			</Command>

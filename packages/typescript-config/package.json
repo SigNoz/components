@@ -1,9 +1,15 @@
 {
-  "name": "@repo/typescript-config",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@repo/typescript-config",
+	"version": "0.0.0",
+	"private": true,
+	"license": "MIT",
+	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"rollup-plugin-postcss": "^4.0.2",
+		"@signozhq/tailwind-config": "workspace:*",
+		"vite-plugin-dts": "^4.5.4"
+	}
 }

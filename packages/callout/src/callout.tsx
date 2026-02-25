@@ -1,15 +1,15 @@
 import './index.css';
-import React from 'react';
+import {
+	SolidAlertTriangle,
+	SolidCheckCircle2,
+	SolidInfoCircle,
+	SolidXCircle,
+} from '@signozhq/icons';
 import { cva } from 'class-variance-authority';
 
 import { X } from 'lucide-react';
-import { cn } from './lib/utils';
-import {
-	SolidInfoCircle,
-	SolidCheckCircle2,
-	SolidAlertTriangle,
-	SolidXCircle,
-} from '@signozhq/icons';
+import React from 'react';
+import { cn } from './lib/utils.js';
 
 interface CalloutProps extends React.ComponentProps<'div'> {
 	message?: React.ReactNode;
@@ -37,20 +37,17 @@ const defaultIcons = {
 	error: <SolidXCircle />,
 };
 
-const calloutVariants = cva(
-	'relative w-full rounded-lg border flex gap-[10px]',
-	{
-		variants: {
-			size: {
-				small: 'p-3 pb-[14px] text-sm',
-				medium: 'p-4 text-base',
-			},
-		},
-		defaultVariants: {
-			size: 'small',
+const calloutVariants = cva('relative w-full rounded-lg border flex gap-[10px]', {
+	variants: {
+		size: {
+			small: 'p-3 pb-[14px] text-sm',
+			medium: 'p-4 text-base',
 		},
 	},
-);
+	defaultVariants: {
+		size: 'small',
+	},
+});
 
 function Callout({
 	className,
@@ -79,10 +76,7 @@ function Callout({
 				React.isValidElement(IconComponent) ? (
 					React.cloneElement(IconComponent as React.ReactElement, {
 						'aria-hidden': true,
-						className: cn(
-							'mt-1',
-							(IconComponent as React.ReactElement).props?.className,
-						),
+						className: cn('mt-1', (IconComponent as React.ReactElement).props?.className),
 						color: 'var(--callout-icon-color)',
 						size: size === 'medium' ? 16 : 12,
 					})
@@ -100,7 +94,7 @@ function Callout({
 						data-slot="callout-title"
 						className={cn(
 							'line-clamp-1 min-h-4 font-medium tracking-tight text-[var(--callout-title-color)]',
-							size === 'medium' && 'text-base',
+							size === 'medium' && 'text-base'
 						)}
 					>
 						{message}
@@ -111,7 +105,7 @@ function Callout({
 						data-slot="callout-description"
 						className={cn(
 							'grid justify-items-start gap-1 [&_p]:leading-relaxed text-[var(--callout-description-color)] font-normal leading-5',
-							size === 'medium' ? 'text-base' : 'text-sm',
+							size === 'medium' ? 'text-base' : 'text-sm'
 						)}
 					>
 						{description}

@@ -1,6 +1,3 @@
-@import 'tailwindcss';
-@import '@signozhq/tailwind-config/global.css';
-
 .periscope-calendar-day {
 	margin: 4px;
 

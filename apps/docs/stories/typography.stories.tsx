@@ -1,6 +1,6 @@
-import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
-import { getTransformedTypographyTokens } from '../utils';
+import type { Meta, StoryFn } from '@storybook/react';
+import type React from 'react';
+import { getTransformedTypographyTokens } from '../utils.js';
 
 export default {
 	title: 'Design System/Typography',
@@ -21,9 +21,7 @@ const getFontSize = (variant: string): string => {
 };
 
 const getFontWeight = (variant: string): string => {
-	return (
-		typography.FONTWEIGHT[variant as keyof typeof typography.FONTWEIGHT] || ''
-	);
+	return typography.FONTWEIGHT[variant as keyof typeof typography.FONTWEIGHT] || '';
 };
 
 const FontSizeShowcase: React.FC = () => (

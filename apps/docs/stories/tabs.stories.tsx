@@ -1,19 +1,18 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import Tabs from '@signozhq/tabs';
-import { generateDocs } from '../utils/generateDocs';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
 	AlertCircle,
+	Clock,
 	Component,
 	History,
 	LayoutGrid,
 	List,
+	Lock,
 	Settings,
 	Settings2,
-	Lock,
-	Clock,
 	ShieldAlert,
 } from 'lucide-react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const tabsExamples = [
 	`import Tabs from '@signozhq/tabs';
@@ -337,9 +336,7 @@ export const DisabledStates: Story = {
 	render: () => (
 		<div className="space-y-8">
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">
-					Disabled Tabs with Custom Reasons
-				</h2>
+				<h2 className="mb-4 text-lg font-semibold">Disabled Tabs with Custom Reasons</h2>
 				<Tabs
 					items={[
 						{
@@ -385,9 +382,7 @@ export const DisabledStates: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">
-					Secondary Variant Disabled States
-				</h2>
+				<h2 className="mb-4 text-lg font-semibold">Secondary Variant Disabled States</h2>
 				<Tabs
 					items={[
 						{

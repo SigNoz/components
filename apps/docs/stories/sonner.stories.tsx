@@ -1,8 +1,7 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { Toaster, toast } from '@signozhq/sonner';
 import { Button } from '@signozhq/button';
-import { generateDocs } from '../utils/generateDocs';
+import { Toaster, toast } from '@signozhq/sonner';
+import type { Meta, StoryObj } from '@storybook/react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const SonnerExamples = [
 	`import { Toaster, toast } from '@signozhq/sonner';
@@ -68,11 +67,7 @@ export const BasicToasts: Story = {
 		<div className="p-8 space-y-4">
 			<h2 className="text-lg font-semibold">Basic Toast Examples</h2>
 			<div className="flex gap-4 flex-wrap">
-				<Button
-					onClick={() => toast('Hello World!')}
-					variant="solid"
-					color="primary"
-				>
+				<Button onClick={() => toast('Hello World!')} variant="solid" color="primary">
 					Default Toast
 				</Button>
 				<Button
@@ -487,11 +482,7 @@ export const Default: Story = {
 				Click the buttons below to see different types of toasts in action.
 			</p>
 			<div className="flex gap-4 flex-wrap">
-				<Button
-					onClick={() => toast('Hello World!')}
-					variant="solid"
-					color="primary"
-				>
+				<Button onClick={() => toast('Hello World!')} variant="solid" color="primary">
 					Show Toast
 				</Button>
 			</div>

@@ -1,6 +1,3 @@
-@import 'tailwindcss';
-@import '@signozhq/tailwind-config/global.css';
-
 /* Focus styles for keyboard navigation */
 .table-scroll-container:focus {
 	outline: 2px solid hsl(var(--primary));

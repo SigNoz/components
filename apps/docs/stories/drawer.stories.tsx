@@ -1,9 +1,8 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { useArgs } from '@storybook/preview-api';
 import { Button, ButtonColor, ButtonVariant } from '@signozhq/button';
 import { DrawerWrapper } from '@signozhq/drawer';
-import { generateDocs } from '../utils/generateDocs';
+import { useArgs } from '@storybook/preview-api';
+import type { Meta, StoryObj } from '@storybook/react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const drawerExamples = [
 	`import { DrawerWrapper } from '@signozhq/drawer';
@@ -152,9 +151,7 @@ export const SideDrawer: Story = {
 		content: (
 			<div className="p-4 w-full">
 				<h2 className="text-lg font-semibold">Content Title</h2>
-				<p className="text-sm text-gray-500">
-					This is the main content area of the drawer.
-				</p>
+				<p className="text-sm text-gray-500">This is the main content area of the drawer.</p>
 			</div>
 		),
 		footer: (
@@ -186,9 +183,7 @@ export const SidePanel: Story = {
 		content: (
 			<div className="p-4 w-full">
 				<h2 className="text-lg font-semibold">Content Title</h2>
-				<p className="text-sm text-gray-500">
-					This is the main content area of the panel.
-				</p>
+				<p className="text-sm text-gray-500">This is the main content area of the panel.</p>
 			</div>
 		),
 		footer: (
@@ -241,9 +236,7 @@ export const Controlled: Story = {
 
 		content: (
 			<div className="p-4 w-full">
-				<p className="text-sm">
-					Visibility is controlled by the parent via open/onOpenChange.
-				</p>
+				<p className="text-sm">Visibility is controlled by the parent via open/onOpenChange.</p>
 			</div>
 		),
 

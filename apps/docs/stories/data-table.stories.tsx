@@ -1,22 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import * as React from 'react';
-import {
-	DataTable as BaseDataTable,
-	type ColumnDef,
-	type Row,
-} from '@signozhq/table';
 import { Badge } from '@signozhq/badge';
 import { Button } from '@signozhq/button';
-import {
-	CheckCircle,
-	Clock,
-	XCircle,
-	AlertCircle,
-	Eye,
-	Edit,
-	Trash2,
-} from 'lucide-react';
+import { DataTable as BaseDataTable, type ColumnDef, type Row } from '@signozhq/table';
+import type { Meta, StoryObj } from '@storybook/react';
 import type { LucideIcon } from 'lucide-react';
+import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, XCircle } from 'lucide-react';
+import * as React from 'react';
 
 // Create a properly typed wrapper component
 const DataTable = <TData,>({
@@ -370,9 +358,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 							style={{ width: `${performance}%` }}
 						/>
 					</div>
-					<span
-						className={`text-sm font-medium ${getPerformanceColor(performance)}`}
-					>
+					<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
 						{performance}%
 					</span>
 				</div>
@@ -408,11 +394,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 					<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
 						<Edit className="h-4 w-4" />
 					</Button>
-					<Button
-						variant="ghost"
-						size="sm"
-						className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-					>
+					<Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-600 hover:text-red-700">
 						<Trash2 className="h-4 w-4" />
 					</Button>
 				</div>
@@ -470,9 +452,7 @@ export const Basic: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Employee Directory
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Employee Directory</h3>
 				<p className="text-sm text-muted-foreground mb-4">
 					A basic data table with sorting, filtering, and pagination capabilities.
 				</p>
@@ -502,12 +482,10 @@ export const Advanced: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Advanced Employee Management
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Advanced Employee Management</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					Full-featured data table with column reordering, resizing, pinning, row
-					selection, and more.
+					Full-featured data table with column reordering, resizing, pinning, row selection, and
+					more.
 				</p>
 				<DataTable {...args} />
 			</div>
@@ -535,12 +513,10 @@ export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Column Reordering Demo
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Column Reordering Demo</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					Drag and drop column headers to reorder them. Try dragging the
-					&quot;Name&quot; column to different positions.
+					Drag and drop column headers to reorder them. Try dragging the &quot;Name&quot; column to
+					different positions.
 				</p>
 				<DataTable {...args} />
 			</div>
@@ -567,12 +543,10 @@ export const RowSelection: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Row Selection Demo
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Row Selection Demo</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					Select individual rows or use the header checkbox to select all rows.
-					Selected rows are highlighted.
+					Select individual rows or use the header checkbox to select all rows. Selected rows are
+					highlighted.
 				</p>
 				<DataTable {...args} />
 			</div>
@@ -600,12 +574,10 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Compact Employee List
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Compact Employee List</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					A compact view with essential information only, perfect for mobile or
-					space-constrained layouts.
+					A compact view with essential information only, perfect for mobile or space-constrained
+					layouts.
 				</p>
 				<DataTable {...args} />
 			</div>
@@ -633,19 +605,14 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> =
-						{
-							admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-							user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
-							moderator: { label: 'Mod', className: 'bg-orange-100 text-orange-800' },
-							guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
-						};
+					const roleMap: Record<User['role'], { label: string; className: string }> = {
+						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+						moderator: { label: 'Mod', className: 'bg-orange-100 text-orange-800' },
+						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+					};
 					const roleInfo = roleMap[role];
-					return (
-						<Badge className={`text-xs ${roleInfo.className}`}>
-							{roleInfo.label}
-						</Badge>
-					);
+					return <Badge className={`text-xs ${roleInfo.className}`}>{roleInfo.label}</Badge>;
 				},
 			},
 			{
@@ -653,10 +620,7 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				cell: ({ row }: { row: Row<User> }) => {
 					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ icon: LucideIcon; className: string }
-					> = {
+					const statusMap: Record<User['status'], { icon: LucideIcon; className: string }> = {
 						active: { icon: CheckCircle, className: 'text-green-600' },
 						inactive: { icon: XCircle, className: 'text-red-600' },
 						pending: { icon: Clock, className: 'text-yellow-600' },
@@ -688,13 +652,10 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Column Resizing Demo
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">Column Resizing Demo</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					Hover over column headers to see the resize handle. Drag the right edge of
-					column headers to resize them. Double-click the resize handle to reset
-					column width.
+					Hover over column headers to see the resize handle. Drag the right edge of column headers
+					to resize them. Double-click the resize handle to reset column width.
 				</p>
 				<DataTable {...args} />
 			</div>
@@ -729,16 +690,15 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> =
-						{
-							admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-							user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
-							moderator: {
-								label: 'Moderator',
-								className: 'bg-orange-100 text-orange-800',
-							},
-							guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
-						};
+					const roleMap: Record<User['role'], { label: string; className: string }> = {
+						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
+						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+						moderator: {
+							label: 'Moderator',
+							className: 'bg-orange-100 text-orange-800',
+						},
+						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+					};
 					const roleInfo = roleMap[role];
 					return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
 				},
@@ -761,9 +721,7 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return (
-						<div className="font-medium text-sm text-green-700">{formatted}</div>
-					);
+					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
 				},
 			},
 		],
@@ -789,14 +747,12 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="space-y-4">
 			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					All Features Demo
-				</h3>
+				<h3 className="text-lg font-semibold mb-2 text-foreground">All Features Demo</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					This table demonstrates all available features: column reordering,
-					resizing, sorting, filtering, pinning, row selection, and pagination. Try
-					hovering over headers to see resize handles, drag columns to reorder, click
-					headers to sort, use the filter buttons, and select rows with checkboxes.
+					This table demonstrates all available features: column reordering, resizing, sorting,
+					filtering, pinning, row selection, and pagination. Try hovering over headers to see resize
+					handles, drag columns to reorder, click headers to sort, use the filter buttons, and
+					select rows with checkboxes.
 				</p>
 				<DataTable {...args} />
 			</div>
@@ -827,9 +783,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						</div>
 						<div className="flex flex-col">
 							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">
-								{row.original.email}
-							</span>
+							<span className="text-xs text-muted-foreground">{row.original.email}</span>
 						</div>
 					</div>
 				),
@@ -839,25 +793,24 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> =
-						{
-							admin: {
-								label: 'Admin',
-								className: 'bg-purple-100 text-purple-800 border-purple-200',
-							},
-							user: {
-								label: 'User',
-								className: 'bg-blue-100 text-blue-800 border-blue-200',
-							},
-							moderator: {
-								label: 'Moderator',
-								className: 'bg-orange-100 text-orange-800 border-orange-200',
-							},
-							guest: {
-								label: 'Guest',
-								className: 'bg-gray-100 text-gray-800 border-gray-200',
-							},
-						};
+					const roleMap: Record<User['role'], { label: string; className: string }> = {
+						admin: {
+							label: 'Admin',
+							className: 'bg-purple-100 text-purple-800 border-purple-200',
+						},
+						user: {
+							label: 'User',
+							className: 'bg-blue-100 text-blue-800 border-blue-200',
+						},
+						moderator: {
+							label: 'Moderator',
+							className: 'bg-orange-100 text-orange-800 border-orange-200',
+						},
+						guest: {
+							label: 'Guest',
+							className: 'bg-gray-100 text-gray-800 border-gray-200',
+						},
+					};
 					const roleInfo = roleMap[role];
 					return (
 						<Badge variant="outline" className={roleInfo.className}>
@@ -926,9 +879,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return (
-						<div className="font-medium text-sm text-green-700">{formatted}</div>
-					);
+					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
 				},
 			},
 			{
@@ -950,9 +901,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 									style={{ width: `${performance}%` }}
 								/>
 							</div>
-							<span
-								className={`text-sm font-medium ${getPerformanceColor(performance)}`}
-							>
+							<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
 								{performance}%
 							</span>
 						</div>
@@ -1015,6 +964,8 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 	},
 };
 
+const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
+
 // Generate large dataset for virtualization demo (supports offset for unique ids)
 const generateLargeDataset = (count: number, startIndex = 0): User[] => {
 	const departments = [
@@ -1036,16 +987,12 @@ const generateLargeDataset = (count: number, startIndex = 0): User[] => {
 		email: `user${startIndex + index + 1}@company.com`,
 		role: roles[index % roles.length],
 		status: statuses[index % statuses.length],
-		lastLogin: new Date(
-			Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
-		).toISOString(),
-		createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000)
-			.toISOString()
-			.split('T')[0],
+		lastLogin: new Date(fixedDate + 60 * 1000 * index).toISOString(),
+		createdAt: new Date(fixedDate - 60 * 1000 * index).toISOString().split('T')[0],
 		avatar: `https://images.unsplash.com/photo-${1500000000000 + index}?w=32&h=32&fit=crop&crop=face`,
 		department: departments[index % departments.length],
-		salary: 50000 + Math.floor(Math.random() * 100000),
-		performance: 60 + Math.floor(Math.random() * 40),
+		salary: 50000 + 1000 * index,
+		performance: 60 + (index % 40),
 	}));
 };
 
@@ -1060,11 +1007,10 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					Virtualization with All Features
 				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					This table demonstrates virtualization with 1000 rows, plus all interactive
-					features: column reordering, resizing, sorting, filtering, and row
-					selection. The table uses virtual scrolling for optimal performance with
-					large datasets. Try scrolling, resizing columns, reordering, and selecting
-					rows to see how virtualization maintains smooth performance.
+					This table demonstrates virtualization with 1000 rows, plus all interactive features:
+					column reordering, resizing, sorting, filtering, and row selection. The table uses virtual
+					scrolling for optimal performance with large datasets. Try scrolling, resizing columns,
+					reordering, and selecting rows to see how virtualization maintains smooth performance.
 				</p>
 				<DataTable {...args} fixedHeight={600} />
 			</div>
@@ -1085,9 +1031,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						</div>
 						<div className="flex flex-col">
 							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">
-								{row.original.email}
-							</span>
+							<span className="text-xs text-muted-foreground">{row.original.email}</span>
 						</div>
 					</div>
 				),
@@ -1097,25 +1041,24 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> =
-						{
-							admin: {
-								label: 'Admin',
-								className: 'bg-purple-100 text-purple-800 border-purple-200',
-							},
-							user: {
-								label: 'User',
-								className: 'bg-blue-100 text-blue-800 border-blue-200',
-							},
-							moderator: {
-								label: 'Moderator',
-								className: 'bg-orange-100 text-orange-800 border-orange-200',
-							},
-							guest: {
-								label: 'Guest',
-								className: 'bg-gray-100 text-gray-800 border-gray-200',
-							},
-						};
+					const roleMap: Record<User['role'], { label: string; className: string }> = {
+						admin: {
+							label: 'Admin',
+							className: 'bg-purple-100 text-purple-800 border-purple-200',
+						},
+						user: {
+							label: 'User',
+							className: 'bg-blue-100 text-blue-800 border-blue-200',
+						},
+						moderator: {
+							label: 'Moderator',
+							className: 'bg-orange-100 text-orange-800 border-orange-200',
+						},
+						guest: {
+							label: 'Guest',
+							className: 'bg-gray-100 text-gray-800 border-gray-200',
+						},
+					};
 					const roleInfo = roleMap[role];
 					return (
 						<Badge variant="outline" className={roleInfo.className}>
@@ -1184,9 +1127,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return (
-						<div className="font-medium text-sm text-green-700">{formatted}</div>
-					);
+					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
 				},
 			},
 			{
@@ -1208,9 +1149,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 									style={{ width: `${performance}%` }}
 								/>
 							</div>
-							<span
-								className={`text-sm font-medium ${getPerformanceColor(performance)}`}
-							>
+							<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
 								{performance}%
 							</span>
 						</div>
@@ -1322,9 +1261,9 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 						Infinite Scroll with Load More
 					</h3>
 					<p className="text-sm text-muted-foreground mb-4">
-						This table demonstrates infinite scrolling with 50 items loaded initially.
-						Scroll to the bottom to automatically load more items. The table maintains
-						all interactive features while efficiently loading data on demand.
+						This table demonstrates infinite scrolling with 50 items loaded initially. Scroll to the
+						bottom to automatically load more items. The table maintains all interactive features
+						while efficiently loading data on demand.
 					</p>
 					<div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
 						<span>Loaded: {data.length} items</span>
@@ -1365,9 +1304,7 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 						</div>
 						<div className="flex flex-col">
 							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">
-								{row.original.email}
-							</span>
+							<span className="text-xs text-muted-foreground">{row.original.email}</span>
 						</div>
 					</div>
 				),
@@ -1377,25 +1314,24 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> =
-						{
-							admin: {
-								label: 'Admin',
-								className: 'bg-purple-100 text-purple-800 border-purple-200',
-							},
-							user: {
-								label: 'User',
-								className: 'bg-blue-100 text-blue-800 border-blue-200',
-							},
-							moderator: {
-								label: 'Moderator',
-								className: 'bg-orange-100 text-orange-800 border-orange-200',
-							},
-							guest: {
-								label: 'Guest',
-								className: 'bg-gray-100 text-gray-800 border-gray-200',
-							},
-						};
+					const roleMap: Record<User['role'], { label: string; className: string }> = {
+						admin: {
+							label: 'Admin',
+							className: 'bg-purple-100 text-purple-800 border-purple-200',
+						},
+						user: {
+							label: 'User',
+							className: 'bg-blue-100 text-blue-800 border-blue-200',
+						},
+						moderator: {
+							label: 'Moderator',
+							className: 'bg-orange-100 text-orange-800 border-orange-200',
+						},
+						guest: {
+							label: 'Guest',
+							className: 'bg-gray-100 text-gray-800 border-gray-200',
+						},
+					};
 					const roleInfo = roleMap[role];
 					return (
 						<Badge variant="outline" className={roleInfo.className}>
@@ -1464,9 +1400,7 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return (
-						<div className="font-medium text-sm text-green-700">{formatted}</div>
-					);
+					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
 				},
 			},
 			{
@@ -1488,9 +1422,7 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 									style={{ width: `${performance}%` }}
 								/>
 							</div>
-							<span
-								className={`text-sm font-medium ${getPerformanceColor(performance)}`}
-							>
+							<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
 								{performance}%
 							</span>
 						</div>
@@ -1558,9 +1490,7 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 };
 
 // Story: Virtualized Infinite Scroll with Resize + Reorder
-export const VirtualizedInfiniteScrollDndResize: StoryObj<
-	typeof DataTable<User>
-> = {
+export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>> = {
 	render: (args) => {
 		const [data, setData] = React.useState<User[]>([]);
 		const [loading, setLoading] = React.useState(false);
@@ -1568,9 +1498,7 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<
 		const [page, setPage] = React.useState(0);
 		const itemsPerPage = 100;
 		const maxItems = 1000;
-		const [orderedColumns, setOrderedColumns] = React.useState<ColumnDef<User>[]>(
-			[],
-		);
+		const [orderedColumns, setOrderedColumns] = React.useState<ColumnDef<User>[]>([]);
 
 		React.useEffect(() => {
 			setData(generateLargeDataset(itemsPerPage, 0));
@@ -1601,8 +1529,8 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<
 						Virtualized Infinite Scroll + Reorder + Resize
 					</h3>
 					<p className="text-sm text-muted-foreground mb-4">
-						Large dataset with virtualized rows, drag-and-drop column reordering, and
-						on-change column resizing. Scroll to load more.
+						Large dataset with virtualized rows, drag-and-drop column reordering, and on-change
+						column resizing. Scroll to load more.
 					</p>
 					<div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
 						<span>Rows: {data.length}</span>
@@ -1617,8 +1545,8 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<
 										String(
 											(c as { id?: string; accessorKey?: string }).id ??
 												(c as { accessorKey?: string }).accessorKey ??
-												'?',
-										),
+												'?'
+										)
 									)
 									.join(' | ')}
 							</span>
@@ -1841,9 +1769,7 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 						</div>
 						<div className="flex flex-col">
 							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">
-								{row.original.email}
-							</span>
+							<span className="text-xs text-muted-foreground">{row.original.email}</span>
 						</div>
 					</div>
 				),
@@ -1853,16 +1779,15 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				size: 120,
 				cell: ({ row }: { row: Row<User> }) => {
-					const roleMap: Record<User['role'], { label: string; className: string }> =
-						{
-							admin: { label: 'Admin', className: 'bg-red-100 text-red-800' },
-							user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
-							moderator: {
-								label: 'Moderator',
-								className: 'bg-yellow-100 text-yellow-800',
-							},
-							guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
-						};
+					const roleMap: Record<User['role'], { label: string; className: string }> = {
+						admin: { label: 'Admin', className: 'bg-red-100 text-red-800' },
+						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+						moderator: {
+							label: 'Moderator',
+							className: 'bg-yellow-100 text-yellow-800',
+						},
+						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+					};
 					const role = roleMap[row.original.role];
 					return <Badge className={role.className}>{role.label}</Badge>;
 				},
@@ -1872,10 +1797,7 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				size: 120,
 				cell: ({ row }: { row: Row<User> }) => {
-					const statusMap: Record<
-						User['status'],
-						{ icon: LucideIcon; className: string }
-					> = {
+					const statusMap: Record<User['status'], { icon: LucideIcon; className: string }> = {
 						active: { icon: CheckCircle, className: 'text-green-600' },
 						inactive: { icon: XCircle, className: 'text-red-600' },
 						pending: { icon: Clock, className: 'text-yellow-600' },
@@ -1901,9 +1823,7 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Annual Salary',
 				size: 140,
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="font-mono text-sm">
-						${row.original.salary.toLocaleString()}
-					</span>
+					<span className="font-mono text-sm">${row.original.salary.toLocaleString()}</span>
 				),
 			},
 			{
@@ -1920,9 +1840,7 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 					};
 					return (
 						<div className="flex items-center gap-3">
-							<span className={`font-medium text-sm ${getPerformanceColor(score)}`}>
-								{score}%
-							</span>
+							<span className={`font-medium text-sm ${getPerformanceColor(score)}`}>{score}%</span>
 							<div className="w-20 bg-gray-200 rounded-full h-2 overflow-hidden">
 								<div
 									className={`h-2 rounded-full transition-all duration-300 ${getPerformanceColor(score).replace('text-', 'bg-')}`}
@@ -2019,28 +1937,22 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 	render: (args) => {
 		const ScrollToIndexDemo = () => {
 			const scrollToIndexRef = React.useRef<
-				| ((
-						rowIndex: number,
-						options?: { align?: 'start' | 'center' | 'end' },
-				  ) => void)
-				| undefined
+				((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined
 			>();
 
 			const handleScrollToUser = (userId: string) => {
 				const userIndex = args.data.findIndex((user) => user.id === userId);
-				console.log(
-					`[Virtualized] Looking for user ID: ${userId}, found at index: ${userIndex}`,
-				);
+				console.log(`[Virtualized] Looking for user ID: ${userId}, found at index: ${userIndex}`);
 				console.log(
 					'[Virtualized] Available users:',
-					args.data.slice(0, 5).map((u) => ({ id: u.id, name: u.name })),
+					args.data.slice(0, 5).map((u) => ({ id: u.id, name: u.name }))
 				);
 				if (userIndex !== -1 && scrollToIndexRef.current) {
 					console.log(`[Virtualized] Scrolling to index: ${userIndex}`);
 					scrollToIndexRef.current(userIndex, { align: 'center' });
 				} else {
 					console.log(
-						`[Virtualized] User with ID ${userId} not found or scrollToIndexRef not available`,
+						`[Virtualized] User with ID ${userId} not found or scrollToIndexRef not available`
 					);
 				}
 			};
@@ -2055,39 +1967,19 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 			return (
 				<div className="space-y-4">
 					<div className="flex flex-wrap gap-2">
-						<Button
-							onClick={() => handleScrollToUser('1')}
-							variant="outlined"
-							size="sm"
-						>
+						<Button onClick={() => handleScrollToUser('1')} variant="outlined" size="sm">
 							Scroll to User 1
 						</Button>
-						<Button
-							onClick={() => handleScrollToUser('50')}
-							variant="outlined"
-							size="sm"
-						>
+						<Button onClick={() => handleScrollToUser('50')} variant="outlined" size="sm">
 							Scroll to User 50
 						</Button>
-						<Button
-							onClick={() => handleScrollToUser('100')}
-							variant="outlined"
-							size="sm"
-						>
+						<Button onClick={() => handleScrollToUser('100')} variant="outlined" size="sm">
 							Scroll to User 100
 						</Button>
-						<Button
-							onClick={() => handleScrollToUser('150')}
-							variant="outlined"
-							size="sm"
-						>
+						<Button onClick={() => handleScrollToUser('150')} variant="outlined" size="sm">
 							Scroll to User 150
 						</Button>
-						<Button
-							onClick={() => handleScrollToUser('200')}
-							variant="outlined"
-							size="sm"
-						>
+						<Button onClick={() => handleScrollToUser('200')} variant="outlined" size="sm">
 							Scroll to Last User
 						</Button>
 						<Button onClick={handleScrollToRandom} variant="outlined" size="sm">

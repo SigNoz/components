@@ -1,14 +1,9 @@
-import React from 'react';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/button';
+import { AlertDialogWrapper, DialogWrapper } from '@signozhq/dialog';
+import { Code, Trash2, X } from '@signozhq/icons';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-	Button,
-	ButtonSize,
-	ButtonColor,
-	ButtonVariant,
-} from '@signozhq/button';
-import { DialogWrapper, AlertDialogWrapper } from '@signozhq/dialog';
-import { Code, X, Trash2 } from '@signozhq/icons';
-import { generateDocs } from '../utils/generateDocs';
+import React from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const dialogExamples = [
 	`import { DialogWrapper } from '@signozhq/dialog';
@@ -163,11 +158,7 @@ export const AlertDialog: Story = {
 				checkboxChecked={checkboxChecked}
 				onCheckboxChange={setCheckboxChecked}
 				trigger={
-					<Button
-						variant={ButtonVariant.Solid}
-						color={ButtonColor.Primary}
-						prefixIcon={<Code />}
-					>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} prefixIcon={<Code />}>
 						Open Dialog
 					</Button>
 				}
@@ -196,8 +187,7 @@ export const AlertDialog: Story = {
 					</>
 				}
 			>
-				Deleting this step would stop further analytics using this step of the
-				funnel.
+				Deleting this step would stop further analytics using this step of the funnel.
 			</AlertDialogWrapper>
 		);
 	},

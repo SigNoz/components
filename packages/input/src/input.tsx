@@ -1,10 +1,8 @@
-import './index.css';
+import type { VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { type VariantProps } from 'class-variance-authority';
-
-import { cn } from './lib/utils';
-import { InputPassword } from './input-password';
-import { inputVariants } from './input-variants';
+import { InputPassword } from './input-password.jsx';
+import { inputVariants } from './input-variants.js';
+import { cn } from './lib/utils.js';
 
 export interface InputProps
 	extends React.InputHTMLAttributes<HTMLInputElement>,
@@ -13,14 +11,9 @@ export interface InputProps
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 	({ className, type, theme, ...props }, ref) => {
 		return (
-			<input
-				type={type}
-				className={cn(inputVariants({ theme, className }))}
-				ref={ref}
-				{...props}
-			/>
+			<input type={type} className={cn(inputVariants({ theme, className }))} ref={ref} {...props} />
 		);
-	},
+	}
 );
 InputComponent.displayName = 'Input';
 

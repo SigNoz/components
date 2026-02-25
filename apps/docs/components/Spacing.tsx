@@ -1,5 +1,4 @@
-import React from 'react';
-import { getTransformedSpacingTokens } from '../utils';
+import { getTransformedSpacingTokens } from '../utils.js';
 
 const spacing = getTransformedSpacingTokens();
 const spacingKeys = Object.keys(spacing);

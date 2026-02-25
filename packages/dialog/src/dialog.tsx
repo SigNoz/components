@@ -1,14 +1,12 @@
 import './index.css';
-import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { XIcon } from 'lucide-react';
 import { Checkbox } from '@signozhq/checkbox';
+import { XIcon } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from './lib/utils';
+import { cn } from './lib/utils.js';
 
-function Dialog({
-	...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) {
+function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
 	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
@@ -25,16 +23,11 @@ function DialogTrigger({
 	);
 }
 
-function DialogPortal({
-	...props
-}: React.ComponentProps<typeof DialogPrimitive.Portal>) {
+function DialogPortal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
 	return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
-function DialogClose({
-	className,
-	...props
-}: React.ComponentProps<typeof DialogPrimitive.Close>) {
+function DialogClose({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Close>) {
 	return (
 		<DialogPrimitive.Close
 			data-slot="dialog-close"
@@ -53,7 +46,7 @@ function DialogOverlay({
 			data-slot="dialog-overlay"
 			className={cn(
 				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 dark:bg-black/60',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -70,18 +63,14 @@ function DialogContent({
 	showCloseButton?: boolean;
 	width?: 'narrow' | 'base' | 'wide' | 'extra-wide';
 }) {
-	const widthClassMap: Record<
-		'narrow' | 'base' | 'wide' | 'extra-wide',
-		string
-	> = {
+	const widthClassMap: Record<'narrow' | 'base' | 'wide' | 'extra-wide', string> = {
 		narrow: 'max-w-[384px]',
 		base: 'max-w-[512px]',
 		wide: 'max-w-[672px]',
 		'extra-wide': 'max-w-[820px]',
 	};
 	const widthClass =
-		widthClassMap[width as 'narrow' | 'base' | 'wide' | 'extra-wide'] ||
-		'sm:max-w-lg';
+		widthClassMap[width as 'narrow' | 'base' | 'wide' | 'extra-wide'] || 'sm:max-w-lg';
 	return (
 		<DialogPortal data-slot="dialog-portal">
 			<DialogOverlay />
@@ -90,7 +79,7 @@ function DialogContent({
 				className={cn(
 					'bg-l1-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[80px] left-[50%] z-50 grid w-full translate-x-[-50%] rounded-lg border duration-200 border-l2-border shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)] cursor-default',
 					widthClass,
-					className,
+					className
 				)}
 				{...props}
 			>
@@ -115,7 +104,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
 			data-slot="dialog-header"
 			className={cn(
 				'flex flex-row items-center justify-between border-b border-[var(--dialog-border)] px-4 py-3 cursor-default',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -128,7 +117,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
 			data-slot="dialog-footer"
 			className={cn(
 				'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end cursor-default',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -149,7 +138,7 @@ function DialogTitle({
 			className={cn(
 				'leading-[100%] font-inter font-regular flex items-center gap-2 tracking-[-0.065px] slashed-zero text-l1-foreground cursor-default !text-[13px] !font-medium font-inter !m-0',
 
-				className,
+				className
 			)}
 			{...props}
 		>
@@ -203,9 +192,7 @@ function DialogWrapper({
 			<DialogContent
 				className={className}
 				showCloseButton={showCloseButton}
-				onPointerDownOutside={
-					disableOutsideClick ? (e) => e.preventDefault() : undefined
-				}
+				onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
 				width={width}
 			>
 				{title && (
@@ -219,14 +206,7 @@ function DialogWrapper({
 	);
 }
 
-type CheckboxColor =
-	| 'robin'
-	| 'forest'
-	| 'amber'
-	| 'sienna'
-	| 'cherry'
-	| 'sakura'
-	| 'aqua';
+type CheckboxColor = 'robin' | 'forest' | 'amber' | 'sienna' | 'cherry' | 'sakura' | 'aqua';
 
 interface AlertDialogContentProps {
 	title?: string;

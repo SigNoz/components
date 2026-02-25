@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react';
-import { FixedSizeGrid as Grid } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { iconsManifest } from '../data/icons-manifest';
-import { Input } from '@signozhq/input';
 import { Button, ButtonSize, ButtonVariant } from '@signozhq/button';
-import { Copy, Check } from 'lucide-react';
+import { Input } from '@signozhq/input';
+import { Check, Copy } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeGrid as Grid } from 'react-window';
+import { iconsManifest } from '../data/icons-manifest.js';
 
 interface IconGalleryProps {
 	size?: number;
@@ -63,16 +63,12 @@ const IconCell = React.memo(
 				</div>
 			</div>
 		);
-	},
+	}
 );
 
 IconCell.displayName = 'IconCell';
 
-function IconGallery({
-	size = 24,
-	strokeWidth = 2,
-	color = 'currentColor',
-}: IconGalleryProps) {
+function IconGallery({ size = 24, strokeWidth = 2, color = 'currentColor' }: IconGalleryProps) {
 	const [search, setSearch] = useState('');
 	const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
 

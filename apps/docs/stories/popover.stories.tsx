@@ -1,11 +1,11 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/popover';
-import { ChevronDown } from 'lucide-react';
 import { Button } from '@signozhq/button';
-import { Input } from '@signozhq/input';
 import { Calendar } from '@signozhq/calendar';
-import { generateDocs } from '../utils/generateDocs';
+import { Input } from '@signozhq/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/popover';
+import type { Meta, StoryObj } from '@storybook/react';
+import { ChevronDown } from 'lucide-react';
+import React from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const PopoverExamples = [
 	`import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/popover';
@@ -125,9 +125,7 @@ export const Default: Story = {
 					<div className="grid gap-4">
 						<div className="space-y-2">
 							<h4 className="leading-none font-medium !mt-0">Dimensions</h4>
-							<p className="text-muted-foreground text-sm">
-								Set the dimensions for the layer.
-							</p>
+							<p className="text-muted-foreground text-sm">Set the dimensions for the layer.</p>
 						</div>
 						<div className="grid gap-2">
 							<div className="grid grid-cols-3 items-center gap-4">
@@ -173,7 +171,7 @@ export const DateAndTimePicker: Story = {
 								id="date-picker"
 								className="w-[280px] justify-between font-normal"
 							>
-								{date ? date.toLocaleDateString() + ' : ' + time : 'Select date'}
+								{date ? `${date.toLocaleDateString()} : ${time}` : 'Select date'}
 								<ChevronDown size={16} />
 							</Button>
 						</PopoverTrigger>

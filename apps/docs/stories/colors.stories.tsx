@@ -1,7 +1,5 @@
-import React from 'react';
-
 import type { Meta, StoryObj } from '@storybook/react';
-import ColorPalette from '../components/ColorPalette';
+import ColorPalette from '../components/ColorPalette.jsx';
 
 const meta: Meta<typeof ColorPalette> = {
 	title: 'Design System/Colors',

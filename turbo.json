@@ -11,9 +11,6 @@
 			"dependsOn": ["^build-storybook"],
 			"outputs": ["storybook-static/**"]
 		},
-		"lint": {
-			"dependsOn": ["^lint"]
-		},
 		"chromatic": {
 			"dependsOn": ["^chromatic"]
 		},

@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import {
 	Combobox,
-	ComboboxTrigger,
-	ComboboxContent,
 	ComboboxCommand,
-	ComboboxInput,
-	ComboboxList,
+	ComboboxContent,
 	ComboboxEmpty,
-	ComboboxLoading,
-	ComboboxItem,
 	ComboboxGroup,
+	ComboboxInput,
+	ComboboxItem,
 	ComboboxLabel,
+	ComboboxList,
+	ComboboxLoading,
 	ComboboxSeparator,
+	ComboboxTrigger,
 } from '@signozhq/combobox';
-import { generateDocs } from '../utils/generateDocs';
-import { Code2, Database, Terminal, GitBranch } from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/react';
+import { Code2, Database, GitBranch, Terminal } from 'lucide-react';
+import { useState } from 'react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const ComboboxExamples = [
 	`import {
@@ -51,8 +51,7 @@ export default function MyComponent() {
 
 const ComboboxDocs = generateDocs({
 	packageName: '@signozhq/combobox',
-	description:
-		'Autocomplete input and command palette with a list of suggestions',
+	description: 'Autocomplete input and command palette with a list of suggestions',
 	examples: ComboboxExamples,
 });
 
@@ -207,9 +206,7 @@ export const WithGroups: Story = {
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						placeholder="Select an option..."
-						value={
-							[...frameworks, ...languages].find((f) => f.value === value)?.label || ''
-						}
+						value={[...frameworks, ...languages].find((f) => f.value === value)?.label || ''}
 					/>
 					{open && (
 						<ComboboxContent>
@@ -270,9 +267,8 @@ export const WithMultipleGroups: Story = {
 					<ComboboxTrigger
 						placeholder="Select a technology..."
 						value={
-							[...frameworks, ...languages, ...databases].find(
-								(f) => f.value === value,
-							)?.label || ''
+							[...frameworks, ...languages, ...databases].find((f) => f.value === value)?.label ||
+							''
 						}
 					/>
 					{open && (
@@ -317,9 +313,7 @@ export const Searchable: Story = {
 		const [open, setOpen] = useState(false);
 		const [search, setSearch] = useState('');
 
-		const filtered = frameworks.filter((f) =>
-			f.label.toLowerCase().includes(search.toLowerCase()),
-		);
+		const filtered = frameworks.filter((f) => f.label.toLowerCase().includes(search.toLowerCase()));
 
 		return (
 			<div className="p-8 w-full max-w-sm">
@@ -422,9 +416,7 @@ export const WithDescription: Story = {
 										>
 											<div className="flex flex-col">
 												<span>{item.label}</span>
-												<span className="text-xs text-muted-foreground">
-													{item.description}
-												</span>
+												<span className="text-xs text-muted-foreground">{item.description}</span>
 											</div>
 										</ComboboxItem>
 									))}
@@ -695,10 +687,7 @@ export const WithIcons: Story = {
 					{open && (
 						<ComboboxContent>
 							<ComboboxCommand>
-								<ComboboxInput
-									placeholder="Search tools..."
-									onValueChange={handleInputChange}
-								/>
+								<ComboboxInput placeholder="Search tools..." onValueChange={handleInputChange} />
 								<ComboboxList>
 									{isLoading ? (
 										<ComboboxLoading>Loading tools...</ComboboxLoading>

@@ -1,12 +1,11 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
 import {
+	type RadioColorProps,
 	RadioGroup,
 	RadioGroupItem,
 	RadioGroupLabel,
-	RadioColorProps,
 } from '@signozhq/radio-group';
-import { generateDocs } from '../utils/generateDocs';
+import type { Meta, StoryObj } from '@storybook/react';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const radioGroupExamples = [
 	`import { RadioGroup, RadioGroupItem } from '@signozhq/radio-group';
@@ -35,8 +34,7 @@ export default function MyComponent() {
 
 const radioGroupDocs = generateDocs({
 	packageName: '@signozhq/radio-group',
-	description:
-		'A radio group component for selecting a single option from a list of choices.',
+	description: 'A radio group component for selecting a single option from a list of choices.',
 	examples: radioGroupExamples,
 });
 
@@ -48,15 +46,7 @@ const meta: Meta<typeof RadioGroup> = {
 		id: { control: 'text' },
 		color: {
 			control: 'select',
-			options: [
-				'robin',
-				'forest',
-				'amber',
-				'sienna',
-				'cherry',
-				'sakura',
-				'aqua',
-			] as const,
+			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'] as const,
 			description: 'The color variant of the radio button',
 		},
 	},
@@ -89,27 +79,15 @@ export const Default: Story = {
 		<RadioGroup defaultValue="option1">
 			<div className="flex flex-col space-y-2">
 				<div className="flex items-center space-x-2">
-					<RadioGroupItem
-						value="option1"
-						id="option1-radio"
-						color={color as RadioColorProps}
-					/>
+					<RadioGroupItem value="option1" id="option1-radio" color={color as RadioColorProps} />
 					<RadioGroupLabel htmlFor="option1-radio">Option 1</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
-					<RadioGroupItem
-						value="option2"
-						id="option2-radio"
-						color={color as RadioColorProps}
-					/>
+					<RadioGroupItem value="option2" id="option2-radio" color={color as RadioColorProps} />
 					<RadioGroupLabel htmlFor="option2-radio">Option 2</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
-					<RadioGroupItem
-						value="option3"
-						id="option3-radio"
-						color={color as RadioColorProps}
-					/>
+					<RadioGroupItem value="option3" id="option3-radio" color={color as RadioColorProps} />
 					<RadioGroupLabel htmlFor="option3-radio">Option 3</RadioGroupLabel>
 				</div>
 			</div>
@@ -125,11 +103,7 @@ export const Disabled: Story = {
 		<RadioGroup defaultValue="active">
 			<div className="flex flex-col space-y-2">
 				<div className="flex items-center space-x-2">
-					<RadioGroupItem
-						value="active"
-						id="active-radio"
-						color={color as RadioColorProps}
-					/>
+					<RadioGroupItem value="active" id="active-radio" color={color as RadioColorProps} />
 					<RadioGroupLabel htmlFor="active-radio">Active Option</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
@@ -139,9 +113,7 @@ export const Disabled: Story = {
 						disabled
 						color={color as RadioColorProps}
 					/>
-					<RadioGroupLabel htmlFor="disabled1-radio">
-						Disabled Option 1
-					</RadioGroupLabel>
+					<RadioGroupLabel htmlFor="disabled1-radio">Disabled Option 1</RadioGroupLabel>
 				</div>
 				<div className="flex items-center space-x-2">
 					<RadioGroupItem
@@ -150,9 +122,7 @@ export const Disabled: Story = {
 						disabled
 						color={color as RadioColorProps}
 					/>
-					<RadioGroupLabel htmlFor="disabled2-radio">
-						Disabled Option 2
-					</RadioGroupLabel>
+					<RadioGroupLabel htmlFor="disabled2-radio">Disabled Option 2</RadioGroupLabel>
 				</div>
 			</div>
 		</RadioGroup>

@@ -1,6 +1,6 @@
+import type { ColumnDef } from '@tanstack/react-table';
 import * as React from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from './data-table';
+import { DataTable } from './data-table.jsx';
 
 // Define the type for our data
 type Person = {
@@ -134,11 +134,7 @@ const columns: ColumnDef<Person>[] = [
 
 export function ExampleTable() {
 	const scrollToIndexRef = React.useRef<
-		| ((
-				rowIndex: number,
-				options?: { align?: 'start' | 'center' | 'end' },
-		  ) => void)
-		| undefined
+		((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined
 	>();
 
 	const handleScrollToUser = (userId: string) => {
@@ -155,9 +151,9 @@ export function ExampleTable() {
 					Table with Fixed Height and Overflow
 				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					This table has a fixed height of 300px. When the data exceeds this height,
-					the content becomes scrollable while keeping the headers sticky. You can
-					also scroll to specific users using the buttons below.
+					This table has a fixed height of 300px. When the data exceeds this height, the content
+					becomes scrollable while keeping the headers sticky. You can also scroll to specific users
+					using the buttons below.
 				</p>
 				<div className="flex gap-2 mb-4">
 					<button
@@ -196,11 +192,10 @@ export function ExampleTable() {
 					Table with Fixed Height and Virtualization
 				</h3>
 				<p className="text-sm text-muted-foreground mb-4">
-					This table demonstrates how fixedHeight works with virtualization. It has a
-					fixed height of 400px and uses virtualization to efficiently render 1000
-					rows. The virtualization works seamlessly with the fixed height container,
-					providing smooth scrolling performance. You can also scroll to specific
-					rows using the buttons below.
+					This table demonstrates how fixedHeight works with virtualization. It has a fixed height
+					of 400px and uses virtualization to efficiently render 1000 rows. The virtualization works
+					seamlessly with the fixed height container, providing smooth scrolling performance. You
+					can also scroll to specific rows using the buttons below.
 				</p>
 				<div className="flex gap-2 mb-4">
 					<button

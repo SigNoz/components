@@ -1,4 +1,4 @@
-import { ExpandedState } from '@tanstack/react-table';
+import type { ExpandedState } from '@tanstack/react-table';
 
 export interface TablePreferences {
 	columnOrder?: string[];
@@ -24,17 +24,11 @@ export const getTablePreferences = (tableId: string): TablePreferences => {
 	}
 };
 
-export const saveTablePreferences = (
-	tableId: string,
-	preferences: TablePreferences,
-) => {
+export const saveTablePreferences = (tableId: string, preferences: TablePreferences) => {
 	if (typeof window === 'undefined') return;
 
 	try {
-		localStorage.setItem(
-			`${PREFERENCES_KEY_PREFIX}${tableId}`,
-			JSON.stringify(preferences),
-		);
+		localStorage.setItem(`${PREFERENCES_KEY_PREFIX}${tableId}`, JSON.stringify(preferences));
 	} catch {
 		// Silently ignore in environments where storage is unavailable (e.g., Chromatic/CI)
 	}

@@ -1,10 +1,10 @@
 import './index.css';
 
-import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { Check, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from './lib/utils';
+import { cn } from './lib/utils.js';
 
 // Simplified API Type Definitions
 export interface BaseMenuItem {
@@ -105,7 +105,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
 			'data-[state=open]:bg-[var(--bg-vanilla-200)] dark:data-[state=open]:bg-[var(--bg-slate-300)]',
 			' hover:bg-l1-background-hover',
 			inset && 'pl-8',
-			className,
+			className
 		)}
 		{...props}
 	>
@@ -118,8 +118,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
 		<ChevronRight className="ml-auto h-[14px] w-[14px] flex-shrink-0" />
 	</DropdownMenuPrimitive.SubTrigger>
 ));
-DropdownMenuSubTrigger.displayName =
-	DropdownMenuPrimitive.SubTrigger.displayName;
+DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName;
 
 const DropdownMenuSubContent = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
@@ -131,13 +130,12 @@ const DropdownMenuSubContent = React.forwardRef<
 		className={cn(
 			'z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
 			'bg-l1-background border-l2-border text-l1-foreground',
-			className,
+			className
 		)}
 		{...props}
 	/>
 ));
-DropdownMenuSubContent.displayName =
-	DropdownMenuPrimitive.SubContent.displayName;
+DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName;
 
 const DropdownMenuContent = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
@@ -151,7 +149,7 @@ const DropdownMenuContent = React.forwardRef<
 			className={cn(
 				'min-w-[8rem] overflow-hidden rounded border border-solid [border-image:none] py-1 [box-shadow:4px_10px_16px_2px_rgba(0,0,0,0.2)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
 				'bg-l1-background border-l2-border text-l1-foreground',
-				className,
+				className
 			)}
 			{...props}
 		/>
@@ -170,46 +168,36 @@ export interface DropdownMenuItemProps
 const DropdownMenuItem = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Item>,
 	DropdownMenuItemProps
->(
-	(
-		{ className, inset, leftIcon, rightIcon, destructive, children, ...props },
-		ref,
-	) => (
-		<DropdownMenuPrimitive.Item
-			ref={ref}
-			data-slot="dropdown-menu-item"
-			data-destructive={destructive ? '' : undefined}
-			className={cn(
-				'relative flex cursor-default select-none items-center gap-2 rounded-sm px-3 py-[10px] text-sm leading-none outline-none transition-colors w-full min-w-[177px]',
-				'text-l1-foreground',
-				'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
-				'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-				'hover:bg-l1-background-hover',
-				destructive &&
-					'text-[var(--bg-cherry-500)] dark:text-[var(--bg-cherry-500)] ',
-				inset && 'pl-8',
-				className,
-			)}
-			{...props}
-		>
-			{leftIcon && (
-				<span
-					className={cn(
-						'flex-shrink-0 h-[14px] w-[14px] flex items-center justify-center',
-					)}
-				>
-					{leftIcon}
-				</span>
-			)}
-			{children}
-			{rightIcon && (
-				<span className="ml-auto flex-shrink-0 h-[14px] w-[14px] flex items-center justify-center">
-					{rightIcon}
-				</span>
-			)}
-		</DropdownMenuPrimitive.Item>
-	),
-);
+>(({ className, inset, leftIcon, rightIcon, destructive, children, ...props }, ref) => (
+	<DropdownMenuPrimitive.Item
+		ref={ref}
+		data-slot="dropdown-menu-item"
+		data-destructive={destructive ? '' : undefined}
+		className={cn(
+			'relative flex cursor-default select-none items-center gap-2 rounded-sm px-3 py-[10px] text-sm leading-none outline-none transition-colors w-full min-w-[177px]',
+			'text-l1-foreground',
+			'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
+			'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+			'hover:bg-l1-background-hover',
+			destructive && 'text-[var(--bg-cherry-500)] dark:text-[var(--bg-cherry-500)] ',
+			inset && 'pl-8',
+			className
+		)}
+		{...props}
+	>
+		{leftIcon && (
+			<span className={cn('flex-shrink-0 h-[14px] w-[14px] flex items-center justify-center')}>
+				{leftIcon}
+			</span>
+		)}
+		{children}
+		{rightIcon && (
+			<span className="ml-auto flex-shrink-0 h-[14px] w-[14px] flex items-center justify-center">
+				{rightIcon}
+			</span>
+		)}
+	</DropdownMenuPrimitive.Item>
+));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 
 const DropdownMenuCheckboxItem = React.forwardRef<
@@ -225,7 +213,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 			'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
 			'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 			' hover:bg-l1-background-hover',
-			className,
+			className
 		)}
 		checked={checked}
 		{...props}
@@ -241,8 +229,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
 		{children}
 	</DropdownMenuPrimitive.CheckboxItem>
 ));
-DropdownMenuCheckboxItem.displayName =
-	DropdownMenuPrimitive.CheckboxItem.displayName;
+DropdownMenuCheckboxItem.displayName = DropdownMenuPrimitive.CheckboxItem.displayName;
 
 const DropdownMenuRadioItem = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
@@ -257,7 +244,7 @@ const DropdownMenuRadioItem = React.forwardRef<
 			'focus:bg-[var(--bg-vanilla-200)] dark:focus:bg-[var(--bg-slate-200)]',
 			'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 			' hover:bg-l1-background-hover',
-			className,
+			className
 		)}
 		{...props}
 	>
@@ -287,7 +274,7 @@ const DropdownMenuLabel = React.forwardRef<
 			'px-3 py-2 text-[11px] font-medium uppercase tracking-[0.44px] leading-[100%]',
 			'text-[var(--l3-foreground)]',
 			inset && 'pl-8',
-			className,
+			className
 		)}
 		{...props}
 	/>
@@ -307,17 +294,11 @@ const DropdownMenuSeparator = React.forwardRef<
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
-const DropdownMenuShortcut = ({
-	className,
-	...props
-}: React.HTMLAttributes<HTMLSpanElement>) => {
+const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
 	return (
 		<span
 			data-slot="dropdown-menu-shortcut"
-			className={cn(
-				'ml-auto text-xs tracking-widest opacity-60 font-mono',
-				className,
-			)}
+			className={cn('ml-auto text-xs tracking-widest opacity-60 font-mono', className)}
 			{...props}
 		/>
 	);
@@ -325,10 +306,7 @@ const DropdownMenuShortcut = ({
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
 // Helper function to render menu items recursively
-const renderMenuItems = (
-	items: MenuItem[],
-	keyPath: string[] = [],
-): React.ReactNode[] => {
+const renderMenuItems = (items: MenuItem[], keyPath: string[] = []): React.ReactNode[] => {
 	return items.map((item, index) => {
 		const itemKey = item.key || `item-${index}`;
 		const currentKeyPath = [...keyPath, itemKey];
@@ -365,11 +343,7 @@ const renderMenuItems = (
 		// Handle radio group
 		if ('type' in item && item.type === 'radio-group') {
 			return (
-				<DropdownMenuRadioGroup
-					key={itemKey}
-					value={item.value}
-					onValueChange={item.onChange}
-				>
+				<DropdownMenuRadioGroup key={itemKey} value={item.value} onValueChange={item.onChange}>
 					{item.children.map((radioItem) => (
 						<DropdownMenuRadioItem
 							key={radioItem.key}
@@ -421,9 +395,7 @@ const renderMenuItems = (
 				className={baseItem.className}
 			>
 				{baseItem.label}
-				{baseItem.shortcut && (
-					<DropdownMenuShortcut>{baseItem.shortcut}</DropdownMenuShortcut>
-				)}
+				{baseItem.shortcut && <DropdownMenuShortcut>{baseItem.shortcut}</DropdownMenuShortcut>}
 			</DropdownMenuItem>
 		);
 	});
@@ -445,7 +417,7 @@ const DropdownMenuLoading: React.FC<DropdownMenuLoadingProps> = ({
 			className={cn(
 				'flex items-center justify-center gap-2 p-4 text-sm',
 				'text-l1-foreground',
-				className,
+				className
 			)}
 		>
 			<Loader2 className="h-4 w-4 animate-spin" />
@@ -456,26 +428,13 @@ const DropdownMenuLoading: React.FC<DropdownMenuLoadingProps> = ({
 DropdownMenuLoading.displayName = 'DropdownMenuLoading';
 
 // Search component for dropdown
-export interface DropdownMenuSearchProps
-	extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface DropdownMenuSearchProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	onSearchChange?: (value: string) => void;
 	searchIcon?: React.ReactNode;
 }
 
-const DropdownMenuSearch = React.forwardRef<
-	HTMLInputElement,
-	DropdownMenuSearchProps
->(
-	(
-		{
-			className,
-			onSearchChange,
-			searchIcon,
-			placeholder = 'Search...',
-			...props
-		},
-		ref,
-	) => {
+const DropdownMenuSearch = React.forwardRef<HTMLInputElement, DropdownMenuSearchProps>(
+	({ className, onSearchChange, searchIcon, placeholder = 'Search...', ...props }, ref) => {
 		const [value, setValue] = React.useState('');
 
 		const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -507,22 +466,19 @@ const DropdownMenuSearch = React.forwardRef<
 						'w-full px-3 py-2 pl-8 rounded border text-sm',
 						'bg-[var(--bg-vanilla-100)] border-[var(--bg-vanilla-400)] text-l1-foreground',
 						'dark:bg-[var(--bg-ink-500)] dark:border-[var(--bg-slate-400)] ',
-						className,
+						className
 					)}
 					{...props}
 				/>
 			</div>
 		);
-	},
+	}
 );
 DropdownMenuSearch.displayName = 'DropdownMenuSearch';
 
 // Simplified Dropdown Component (Ant Design-style API)
 export interface DropdownProps
-	extends Omit<
-		React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>,
-		'children'
-	> {
+	extends Omit<React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>, 'children'> {
 	menu: MenuProps;
 	children: React.ReactNode;
 }
@@ -542,12 +498,7 @@ const Dropdown = React.forwardRef<
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-			<DropdownMenuContent
-				ref={ref}
-				sideOffset={sideOffset}
-				className={className}
-				{...props}
-			>
+			<DropdownMenuContent ref={ref} sideOffset={sideOffset} className={className} {...props}>
 				{search && (
 					<DropdownMenuSearch
 						placeholder={search.placeholder}
@@ -556,9 +507,7 @@ const Dropdown = React.forwardRef<
 					/>
 				)}
 				{loading ? (
-					<DropdownMenuLoading
-						text={typeof loading === 'object' ? loading.text : undefined}
-					/>
+					<DropdownMenuLoading text={typeof loading === 'object' ? loading.text : undefined} />
 				) : (
 					renderMenuItems(items)
 				)}
@@ -588,7 +537,7 @@ const DropdownMenuBack = React.forwardRef<
 			'focus:bg-[var(--bg-slate-200)]',
 			'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 			' hover:bg-l1-background-hover',
-			className,
+			className
 		)}
 		onSelect={(e) => {
 			e.preventDefault();
@@ -620,9 +569,7 @@ const DropdownMenuMultiStep = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Root>,
 	DropdownMenuMultiStepProps
 >(({ children, ...props }) => {
-	const [currentStep, setCurrentStep] = React.useState<'primary' | 'secondary'>(
-		'primary',
-	);
+	const [currentStep, setCurrentStep] = React.useState<'primary' | 'secondary'>('primary');
 	const [open, setOpen] = React.useState(false);
 
 	// Reset to primary when menu closes
@@ -655,21 +602,12 @@ const DropdownMenuMultiStepContent = React.forwardRef<
 	DropdownMenuMultiStepContentProps
 >(
 	(
-		{
-			primaryContent,
-			secondaryContent,
-			secondaryLabel,
-			className,
-			sideOffset = 4,
-			...props
-		},
-		ref,
+		{ primaryContent, secondaryContent, secondaryLabel, className, sideOffset = 4, ...props },
+		ref
 	) => {
 		const context = React.useContext(MultiStepContext);
 		if (!context) {
-			throw new Error(
-				'DropdownMenuMultiStepContent must be used within DropdownMenuMultiStep',
-			);
+			throw new Error('DropdownMenuMultiStepContent must be used within DropdownMenuMultiStep');
 		}
 
 		const { currentStep, setCurrentStep } = context;
@@ -688,7 +626,7 @@ const DropdownMenuMultiStepContent = React.forwardRef<
 						'min-w-[8rem] overflow-hidden rounded-md border border-solid [border-image:none] p-1 [box-shadow:4px_10px_16px_2px_rgba(0,0,0,0.2)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
 						'bg-[var(--bg-vanilla-100)] border-[var(--l2-border)] text-l1-foreground',
 						'dark:bg-[var(--bg-ink-400)] ',
-						className,
+						className
 					)}
 					{...props}
 				>
@@ -704,7 +642,7 @@ const DropdownMenuMultiStepContent = React.forwardRef<
 				</DropdownMenuPrimitive.Content>
 			</DropdownMenuPrimitive.Portal>
 		);
-	},
+	}
 );
 DropdownMenuMultiStepContent.displayName = 'DropdownMenuMultiStepContent';
 
@@ -720,9 +658,7 @@ const DropdownMenuMultiStepTrigger = React.forwardRef<
 >(({ className, leftIcon, children, ...props }, ref) => {
 	const context = React.useContext(MultiStepContext);
 	if (!context) {
-		throw new Error(
-			'DropdownMenuMultiStepTrigger must be used within DropdownMenuMultiStep',
-		);
+		throw new Error('DropdownMenuMultiStepTrigger must be used within DropdownMenuMultiStep');
 	}
 
 	const { setCurrentStep } = context;
@@ -737,7 +673,7 @@ const DropdownMenuMultiStepTrigger = React.forwardRef<
 				'focus:bg-[var(--bg-slate-200)]',
 				'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
 				' hover:bg-l1-background-hover',
-				className,
+				className
 			)}
 			onSelect={(e) => {
 				e.preventDefault();

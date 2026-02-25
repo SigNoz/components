@@ -1,15 +1,9 @@
-import React from 'react';
-import { useTheme } from './ThemeContext';
+import type React from 'react';
+import { useTheme } from './ThemeContext.jsx';
 
 export const ThemeSwitcher: React.FC = () => {
-	const {
-		theme,
-		themeColor,
-		setTheme,
-		setThemeColor,
-		availableThemes,
-		availableColors,
-	} = useTheme();
+	const { theme, themeColor, setTheme, setThemeColor, availableThemes, availableColors } =
+		useTheme();
 
 	return (
 		<div className="flex flex-col gap-4">
