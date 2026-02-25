@@ -7,8 +7,7 @@ React component library powered by Turborepo, React, and Storybook.
 Install the packages you need. You must install and configure `@signozhq/tailwind-config` first, since all components depend on its theme and utilities.
 
 ```sh
-pnpm add @signozhq/tailwind-config @signozhq/design-tokens
-pnpm add @signozhq/button @signozhq/input
+pnpm add @signozhq/tailwind-config @signozhq/design-tokens @signozhq/components
 ```
 
 In your app’s main CSS file (e.g. `index.css` or `global.css`), import Tailwind and the shared config, then the tailwind-config **global.css**. The order matters:
@@ -62,31 +61,36 @@ To learn more about the available components, take a look at: https://periscope.
 | Package                     | Description                                                       |
 | --------------------------- | ----------------------------------------------------------------- |
 | `@signozhq/tailwind-config` | Tailwind config, design tokens, and `global.css` (required first) |
-| `@signozhq/theme`           | Theme provider and theme switcher                                 |
-| `@signozhq/badge`           | Badge component                                                   |
-| `@signozhq/button`          | Button component                                                  |
-| `@signozhq/calendar`        | Calendar component                                                |
-| `@signozhq/callout`         | Callout component                                                 |
-| `@signozhq/checkbox`        | Checkbox component                                                |
-| `@signozhq/combobox`        | Combobox component                                                |
-| `@signozhq/command`         | Command palette component                                         |
-| `@signozhq/date-picker`     | Date picker component                                             |
-| `@signozhq/dialog`          | Dialog component                                                  |
-| `@signozhq/drawer`          | Drawer component                                                  |
-| `@signozhq/dropdown-menu`   | Dropdown menu component                                           |
-| `@signozhq/input`           | Input component                                                   |
-| `@signozhq/pagination`      | Pagination component                                              |
-| `@signozhq/pin-list`        | Pin list component                                                |
-| `@signozhq/popover`         | Popover component                                                 |
-| `@signozhq/radio-group`     | Radio group component                                             |
-| `@signozhq/resizable`       | Resizable panels component                                        |
-| `@signozhq/sonner`          | Sonner toast component                                            |
-| `@signozhq/switch`          | Switch component                                                  |
-| `@signozhq/table`           | Table component                                                   |
-| `@signozhq/tabs`            | Tabs component                                                    |
-| `@signozhq/tooltip`         | Tooltip component                                                 |
-| `@signozhq/toggle-group`    | Toggle group component                                            |
+| `@signozhq/components`      | All UI components (single package with subpath exports)           |
+
+All components live in `@signozhq/components`. Import by subpath:
+
+```ts
+import { Badge } from '@signozhq/components/badge';
+import { Button } from '@signozhq/components/button';
+import { Calendar } from '@signozhq/components/calendar';
+import { Callout } from '@signozhq/components/callout';
+import { Checkbox } from '@signozhq/components/checkbox';
+import { Combobox } from '@signozhq/components/combobox';
+import { Command } from '@signozhq/components/command';
+import { DatePicker } from '@signozhq/components/date-picker';
+import { Dialog } from '@signozhq/components/dialog';
+import { Drawer } from '@signozhq/components/drawer';
+import { Dropdown } from '@signozhq/components/dropdown-menu';
+import { Input } from '@signozhq/components/input';
+import { Pagination } from '@signozhq/components/pagination';
+import { PinList } from '@signozhq/components/pin-list';
+import { Popover } from '@signozhq/components/popover';
+import { RadioGroup } from '@signozhq/components/radio-group';
+import { ResizablePanelGroup } from '@signozhq/components/resizable';
+import { Toaster } from '@signozhq/components/sonner';
+import { Switch } from '@signozhq/components/switch';
+import { Table } from '@signozhq/components/table';
+import { Tabs } from '@signozhq/components/tabs';
+import { ToggleGroup } from '@signozhq/components/toggle-group';
+import { Tooltip } from '@signozhq/components/tooltip';
+```
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for getting started, useful commands, and how to create a new package.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for getting started, useful commands, and how to add a new component.

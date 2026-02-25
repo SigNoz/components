@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ButtonVariant } from '@signozhq/button';
-import { Calendar } from '@signozhq/calendar';
+import { ButtonVariant } from '@signozhq/components/button';
+import { Calendar } from '@signozhq/components/calendar';
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const CalendarExamples = [
-	`import { Calendar } from '@signozhq/calendar';
+	`import { Calendar } from '@signozhq/components/calendar';
 
 export default function MyComponent() {
   return (
     <Calendar />
   );
 }`,
-	`import { Calendar } from '@signozhq/calendar';
+	`import { Calendar } from '@signozhq/components/calendar';
 
 export default function SingleDatePicker() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -28,7 +28,7 @@ export default function SingleDatePicker() {
     />
   );
 }`,
-	`import { Calendar } from '@signozhq/calendar';
+	`import { Calendar } from '@signozhq/components/calendar';
 
 export default function RangePicker() {
   const [range, setRange] = React.useState<{
@@ -48,7 +48,7 @@ export default function RangePicker() {
     />
   );
 }`,
-	`import { Calendar } from '@signozhq/calendar';
+	`import { Calendar } from '@signozhq/components/calendar';
 
 export default function MultiplePicker() {
   const [selected, setSelected] = React.useState<Date[]>([]);
@@ -65,7 +65,7 @@ export default function MultiplePicker() {
 ];
 
 const CalendarDocs = generateDocs({
-	packageName: '@signozhq/calendar',
+	packageName: '@signozhq/components/calendar',
 	description:
 		'A date field component that allows users to enter and edit dates. Built on top of React DayPicker.',
 	examples: CalendarExamples,

@@ -1,16 +1,16 @@
-import { Button } from '@signozhq/button';
-import { Calendar } from '@signozhq/calendar';
-import { Input } from '@signozhq/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/popover';
+import { Button } from '@signozhq/components/button';
+import { Calendar } from '@signozhq/components/calendar';
+import { Input } from '@signozhq/components/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/components/popover';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const PopoverExamples = [
-	`import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/popover';
-import { Button } from '@signozhq/button';
-import { Input } from '@signozhq/input';
+	`import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/components/popover';
+import { Button } from '@signozhq/components/button';
+import { Input } from '@signozhq/components/input';
 
 export default function PopoverDemo() {
   return (
@@ -49,10 +49,10 @@ export default function PopoverDemo() {
     </Popover>
   );
 }`,
-	`import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/popover';
-import { Button } from '@signozhq/button';
-import { Calendar } from '@signozhq/calendar';
-import { Input } from '@signozhq/input';
+	`import { Popover, PopoverContent, PopoverTrigger } from '@signozhq/components/popover';
+import { Button } from '@signozhq/components/button';
+import { Calendar } from '@signozhq/components/calendar';
+import { Input } from '@signozhq/components/input';
 
 export default function DatePickerDemo() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -93,7 +93,7 @@ export default function DatePickerDemo() {
 ];
 
 const PopoverDocs = generateDocs({
-	packageName: '@signozhq/popover',
+	packageName: '@signozhq/components/popover',
 	description: 'Displays rich content in a portal, triggered by a button.',
 	examples: PopoverExamples,
 });

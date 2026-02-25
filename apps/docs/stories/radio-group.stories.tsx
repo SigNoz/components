@@ -3,12 +3,12 @@ import {
 	RadioGroup,
 	RadioGroupItem,
 	RadioGroupLabel,
-} from '@signozhq/radio-group';
+} from '@signozhq/components/radio-group';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const radioGroupExamples = [
-	`import { RadioGroup, RadioGroupItem } from '@signozhq/radio-group';
+	`import { RadioGroup, RadioGroupItem } from '@signozhq/components/radio-group';
 
 export default function MyComponent() {
 	return (
@@ -33,7 +33,7 @@ export default function MyComponent() {
 ];
 
 const radioGroupDocs = generateDocs({
-	packageName: '@signozhq/radio-group',
+	packageName: '@signozhq/components/radio-group',
 	description: 'A radio group component for selecting a single option from a list of choices.',
 	examples: radioGroupExamples,
 });

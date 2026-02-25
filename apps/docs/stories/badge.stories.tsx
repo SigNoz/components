@@ -1,4 +1,4 @@
-import { Badge } from '@signozhq/badge';
+import { Badge } from '@signozhq/components/badge';
 import type { Meta, StoryObj } from '@storybook/react';
 
 type BadgeColor =

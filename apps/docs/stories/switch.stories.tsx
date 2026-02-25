@@ -1,9 +1,9 @@
-import { Switch } from '@signozhq/switch';
+import { Switch } from '@signozhq/components/switch';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const switchExamples = [
-	`import { Switch } from '@signozhq/switch';
+	`import { Switch } from '@signozhq/components/switch';
 
 export default function MyComponent() {
 	return (
@@ -17,7 +17,7 @@ export default function MyComponent() {
 ];
 
 const switchDocs = generateDocs({
-	packageName: '@signozhq/switch',
+	packageName: '@signozhq/components/switch',
 	description: 'A toggle switch component for binary on/off or true/false selections.',
 	examples: switchExamples,
 });

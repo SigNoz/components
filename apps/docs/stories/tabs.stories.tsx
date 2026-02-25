@@ -1,4 +1,4 @@
-import Tabs from '@signozhq/tabs';
+import { Tabs } from '@signozhq/components/tabs';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
 	AlertCircle,
@@ -15,7 +15,7 @@ import {
 import { generateDocs } from '../utils/generateDocs.js';
 
 const tabsExamples = [
-	`import Tabs from '@signozhq/tabs';
+	`import { Tabs } from '@signozhq/components/tabs';
 import { Settings, AlertCircle } from '@signozhq/icons';
 
 export default function MyComponent() {
@@ -45,7 +45,7 @@ export default function MyComponent() {
 ];
 
 const tabsDocs = generateDocs({
-	packageName: '@signozhq/tabs',
+	packageName: '@signozhq/components/tabs',
 	description:
 		'A flexible tabbed interface component with primary and secondary variants, supporting icons and disabled states.',
 	examples: tabsExamples,

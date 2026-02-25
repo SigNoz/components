@@ -1,10 +1,14 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/resizable';
+import {
+	ResizableHandle,
+	ResizablePanel,
+	ResizablePanelGroup,
+} from '@signozhq/components/resizable';
 import type { Meta, StoryObj } from '@storybook/react';
 import { BarChart3, Code, Database, FileText, Settings, Terminal } from 'lucide-react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const ResizableExamples = [
-	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/resizable';
+	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/components/resizable';
 
 export default function MyComponent() {
   return (
@@ -25,7 +29,7 @@ export default function MyComponent() {
     </div>
   );
 }`,
-	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/resizable';
+	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/components/resizable';
 
 // Vertical layout with collapsible panels
 export default function VerticalLayout() {
@@ -47,7 +51,7 @@ export default function VerticalLayout() {
     </div>
   );
 }`,
-	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/resizable';
+	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/components/resizable';
 
 // Complex nested layout
 export default function NestedLayout() {
@@ -88,7 +92,7 @@ export default function NestedLayout() {
 ];
 
 const ResizableDocs = generateDocs({
-	packageName: '@signozhq/resizable',
+	packageName: '@signozhq/components/resizable',
 	description:
 		'A flexible resizable panel system for creating split layouts with draggable dividers. Perfect for building code editors, dashboards, and multi-panel interfaces with persistent layouts.',
 	examples: ResizableExamples,

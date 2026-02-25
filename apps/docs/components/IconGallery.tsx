@@ -1,5 +1,5 @@
-import { Button, ButtonSize, ButtonVariant } from '@signozhq/button';
-import { Input } from '@signozhq/input';
+import { Button, ButtonSize, ButtonVariant } from '@signozhq/components/button';
+import { Input } from '@signozhq/components/input';
 import { Check, Copy } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';

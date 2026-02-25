@@ -1,13 +1,13 @@
-import { Button, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/button';
-import { AlertDialogWrapper, DialogWrapper } from '@signozhq/dialog';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/components/button';
+import { AlertDialogWrapper, DialogWrapper } from '@signozhq/components/dialog';
 import { Code, Trash2, X } from '@signozhq/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const dialogExamples = [
-	`import { DialogWrapper } from '@signozhq/dialog';
-import { Button } from '@signozhq/button';
+	`import { DialogWrapper } from '@signozhq/components/dialog';
+import { Button } from '@signozhq/components/button';
 
 export default function MyComponent() {
 	return (
@@ -28,7 +28,7 @@ export default function MyComponent() {
 ];
 
 const dialogDocs = generateDocs({
-	packageName: '@signozhq/dialog',
+	packageName: '@signozhq/components/dialog',
 	description:
 		'A modal dialog component for displaying content that requires user attention or interaction.',
 	examples: dialogExamples,
