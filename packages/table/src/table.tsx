@@ -54,7 +54,7 @@ function TableHeader({
 		<thead
 			data-slot="table-header"
 			className={cn(
-				'[&_tr]:border-b z-10 bg-[#1f2937] text-white',
+				'[&_tr]:border-b z-10 bg-base-black text-white',
 				sticky && 'sticky-header',
 				className
 			)}
