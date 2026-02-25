@@ -11,10 +11,7 @@
 		"format": "biome format --write .",
 		"build-storybook": "turbo run build-storybook -- --output-dir=storybook-static",
 		"chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
-		"changeset": "changeset",
-		"version-packages": "changeset version",
-		"update-version": "changeset && changeset version",
-		"release": "turbo run build --filter=docs^... && changeset publish",
+		"release": "turbo run build --filter=docs^...",
 		"prepare": "husky",
 		"pre-commit": "lint-staged"
 	},
@@ -29,7 +26,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.4",
-		"@changesets/cli": "^2.27.1",
 		"@commitlint/cli": "^19.5.0",
 		"@commitlint/config-conventional": "^19.5.0",
 		"@repo/typescript-config": "workspace:*",

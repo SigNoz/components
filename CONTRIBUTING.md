@@ -31,7 +31,6 @@
 - `pnpm build` - Build all packages, including the Storybook site
 - `pnpm dev` - Run all packages locally and preview with Storybook
 - `pnpm lint` - Lint all packages
-- `pnpm changeset` - Generate a changeset
 - `pnpm clean` - Clean up all `node_modules` and `dist` folders
 
 ## Adding a New Component
@@ -67,15 +66,7 @@ All components live in the single package `@signozhq/components` under `packages
    pnpm dev
    ```
 
-6. From the root of the project, run:
-
-   ```sh
-   pnpm changeset
-   ```
-
-   This will guide you through creating a changeset. Select `@signozhq/components` when prompted for which packages to include, then write a summary.
-
-7. Commit and push:
+6. Commit and push:
 
    ```sh
    git add .
@@ -83,4 +74,8 @@ All components live in the single package `@signozhq/components` under `packages
    git push origin feature/new-component-name
    ```
 
-8. Open a pull request.
+7. Open a pull request.
+
+## Releasing
+
+Releases are driven by Release Please. Create a pull request with your changes and the Release Please bot will create a release draft with generated notes.

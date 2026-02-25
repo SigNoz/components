@@ -298,5 +298,9 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SigNoz/components.git"
 	}
 }
