@@ -7,14 +7,17 @@ React component library powered by Turborepo, React, and Storybook.
 Install the packages you need. You must install and configure `@signozhq/tailwind-config` first, since all components depend on its theme and utilities.
 
 ```sh
-pnpm add @signozhq/tailwind-config @signozhq/theme
+pnpm add @signozhq/tailwind-config @signozhq/design-tokens
 pnpm add @signozhq/button @signozhq/input
 ```
 
 In your app’s main CSS file (e.g. `index.css` or `global.css`), import Tailwind and the shared config, then the tailwind-config **global.css**. The order matters:
 
 1. `tailwindcss` and `@config` pointing to the tailwind-config.
-2. `@signozhq/tailwind-config/global.css` (design tokens, CSS variables, and base styles).
+2. `@signozhq/tailwind-config/global.css` (CSS variables, and base styles).
+3. `@signozhq/design-tokens/dist/style.css` (design tokens and base styles).
+4. `@signozhq/design-tokens/dist/themes/signoz-tokens.css` (default theme).
+5. `@source "./node_modules/@signozhq/*"` to compile the Tailwind at the components.
 
 Example (as in the [Storybook app](apps/docs/index.css)):
 
@@ -22,6 +25,8 @@ Example (as in the [Storybook app](apps/docs/index.css)):
 @import 'tailwindcss';
 @config "@signozhq/tailwind-config";
 @import '@signozhq/tailwind-config/global.css';
+@import "@signozhq/design-tokens/dist/style.css";
+@import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
 @source "./node_modules/@signozhq/*";
 ```
 
@@ -38,22 +43,19 @@ export default {
 };
 ```
 
-Then use the theme provider and components:
+Then you need to add the data attribute in your element `body` or `html` to select the theme:
 
-```tsx
-import { ThemeProvider } from '@signozhq/theme';
-import { Button } from '@signozhq/button';
-import { Input } from '@signozhq/input';
-
-export default function App() {
-  return (
-    <ThemeProvider>
-      <Button>Click me</Button>
-      <Input placeholder="Type here" />
-    </ThemeProvider>
-  );
-}
+```html
+<html lang="en" data-theme="default">
 ```
+
+If you want to toggle/change between themes, you just need to update the value of the attribute `data-theme`.
+
+> **tip**: Take a look at [./apps/docs/blue-demo.css](./apps/docs/blue-demo.css) to learn how to create a new theme.
+
+## Storybook
+
+To learn more about the available components, take a look at: https://periscope.signoz.io/
 
 ## Available Packages
 
