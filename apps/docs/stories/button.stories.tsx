@@ -8,7 +8,7 @@ import {
 	ButtonVariant,
 	type ButtonVariantValue,
 } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronLeft, ChevronRight, Code } from 'lucide-react';
 import { generateDocs } from '../utils/generateDocs.js';
 

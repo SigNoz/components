@@ -1,5 +1,5 @@
 import { Button, Calendar, Input, Popover, PopoverContent, PopoverTrigger } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';

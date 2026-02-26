@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, Upload, XCircle } from 'lucide-react';
 
 // Enhanced sample data

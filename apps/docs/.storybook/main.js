@@ -1,25 +1,17 @@
-import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
 import tailwindConfig from '@signozhq/tailwind-config';
 import { mergeConfig } from 'vite';
-
-const require = createRequire(import.meta.url);
-
-function getAbsolutePath(value) {
-	return dirname(require.resolve(join(value, 'package.json')));
-}
 
 const config = {
 	stories: ['../stories/*.stories.tsx', '../stories/**/*.stories.tsx'],
 	addons: [
-		getAbsolutePath('@storybook/addon-essentials'),
-		getAbsolutePath('@storybook/addon-links'),
-		getAbsolutePath('@chromatic-com/storybook'),
-		getAbsolutePath('@storybook/addon-designs'),
-		getAbsolutePath('@storybook/addon-docs'),
+		'@storybook/addon-docs',
+		'@storybook/addon-themes',
+		'@storybook/addon-designs',
+		'@chromatic-com/storybook',
+		'@storybook/addon-vitest',
 	],
 	framework: {
-		name: getAbsolutePath('@storybook/react-vite'),
+		name: '@storybook/react-vite',
 		options: {},
 	},
 	core: {
@@ -37,7 +29,6 @@ const config = {
 			plugins: [tailwindcss(tailwindConfig)],
 		});
 	},
-
 	typescript: {
 		reactDocgen: 'react-docgen-typescript',
 	},

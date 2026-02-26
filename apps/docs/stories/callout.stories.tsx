@@ -1,5 +1,5 @@
 import { Callout } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Info, Star, Sun, XCircle, Zap } from 'lucide-react'; // Added more icons for variety
 import { generateDocs } from '../utils/generateDocs.js';
 

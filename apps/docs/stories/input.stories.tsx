@@ -1,5 +1,5 @@
 import { Input } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // Meta Configuration
 const meta: Meta<typeof Input> = {

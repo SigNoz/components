@@ -1,5 +1,5 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BarChart3, Code, Database, FileText, Settings, Terminal } from 'lucide-react';
 import { generateDocs } from '../utils/generateDocs.js';
 

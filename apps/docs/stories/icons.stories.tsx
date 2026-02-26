@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import IconGallery from '../components/IconGallery.jsx';
 
 const meta: Meta<typeof IconGallery> = {

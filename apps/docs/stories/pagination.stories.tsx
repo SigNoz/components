@@ -1,5 +1,5 @@
 import { Pagination } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react'; // Import ComponentProps
 import { useState } from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
