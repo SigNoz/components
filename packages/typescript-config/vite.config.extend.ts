@@ -61,18 +61,24 @@ export default function getViteLibConfig(
 			emptyOutDir: true,
 			minify: false,
 			sourcemap: true,
-			target: 'es6',
+			target: 'es2018',
 			...overrides?.build,
 			lib: {
 				entry: libEntry,
 				formats: ['es', 'cjs'],
-				fileName: (format) => (format === 'es' ? '[name].js' : '[name].cjs'),
+				fileName: (format) => (format === 'es' ? '[name].mjs' : '[name].cjs'),
 				...overrides?.build?.lib,
 			},
-			rollupOptions: {
+			rolldownOptions: {
+				platform: 'browser',
 				external: externalPatterns,
-				output: { globals: {} },
-				...overrides?.build?.rollupOptions,
+				output: {
+					globals: {},
+					dir: 'dist',
+					preserveModules: true,
+					preserveModulesRoot: 'src',
+				},
+				...overrides?.build?.rolldownOptions,
 			},
 		},
 		plugins: [
@@ -81,11 +87,11 @@ export default function getViteLibConfig(
 				tsconfigPath: resolve(cwd, 'tsconfig.json'),
 				entryRoot: 'src',
 				// create two type folders, one for esm and cjs
-				outDir: ['dist/types/esm', 'dist/types/cjs'],
+				outDir: 'dist',
 				// modify type files after they have been written
 				afterBuild: async () => {
 					// Fetch all .d.ts files recursively from the dist/types/cjs directory
-					const files = glob.sync('dist/types/cjs/**/*.d.{ts,ts.map}', { nodir: true });
+					const files = glob.sync('dist/**/*.d.{ts,ts.map}', { nodir: true });
 					// Since TypeScript 5.0, it has emphasized that type files (*.d.ts) are also affected by its ESM and CJS context.
 					// This means that you can't share a single type file for both ESM and CJS exports of your library.
 					// You need to have two type files when dual-publishing your library.
@@ -97,11 +103,10 @@ export default function getViteLibConfig(
 						files.map(async (file: string): Promise<void> => {
 							// Generate the new files with the new .c.ts/.c.ts.map naming
 							const newFilePath = file.replace(/\.d\.ts(\.map)?$/, '.d.cts$1');
-							await fs.move(file, newFilePath, { overwrite: true });
 
 							// Update sourceMappingURL references
 							if (newFilePath.endsWith('.d.cts')) {
-								const content = await fs.readFile(newFilePath, 'utf-8');
+								const content = await fs.readFile(file, 'utf-8');
 								let updatedContent = content.replace(
 									/\/\/# sourceMappingURL=.*\.d\.ts\.map/g,
 									(match) => match.replace('.d.ts.map', '.d.cts.map')

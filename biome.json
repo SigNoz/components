@@ -31,6 +31,7 @@
 				"useExhaustiveDependencies": "warn",
 				"useHookAtTopLevel": "error",
 				"useImportExtensions": {
+					"level": "error",
 					"options": {
 						"extensionMappings": {
 							"ts": "js",
