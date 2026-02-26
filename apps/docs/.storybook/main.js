@@ -21,7 +21,6 @@ const config = {
 		const { default: tailwindcss } = await import('@tailwindcss/vite');
 
 		return mergeConfig(config, {
-			define: { 'process.env': {} },
 			resolve: {
 				...config.resolve,
 				alias: config.resolve?.alias ?? [],
