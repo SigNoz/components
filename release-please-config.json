@@ -20,12 +20,14 @@
 			"changelog-type": "default",
 			"extra-files": [
 				{
-					"release-type": "node",
-					"path": "./packages/ui"
+					"type": "json",
+					"path": "./packages/ui/package.json",
+					"jsonpath": "$.version"
 				},
 				{
-					"release-type": "node",
-					"path": "./packages/tailwind-config"
+					"type": "json",
+					"path": "./packages/tailwind-config/package.json",
+					"jsonpath": "$.version"
 				}
 			],
 			"changelog-sections": [
