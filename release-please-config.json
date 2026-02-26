@@ -20,11 +20,11 @@
 			"changelog-type": "default",
 			"extra-files": [
 				{
-					"type": "node",
+					"release-type": "node",
 					"path": "./packages/ui"
 				},
 				{
-					"type": "node",
+					"release-type": "node",
 					"path": "./packages/tailwind-config"
 				}
 			],
