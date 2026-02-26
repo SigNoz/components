@@ -1,14 +1,9 @@
-import {
-	type RadioColorProps,
-	RadioGroup,
-	RadioGroupItem,
-	RadioGroupLabel,
-} from '@signozhq/components/radio-group';
+import { type RadioColorProps, RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const radioGroupExamples = [
-	`import { RadioGroup, RadioGroupItem } from '@signozhq/components/radio-group';
+	`import { RadioGroup, RadioGroupItem } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
@@ -33,7 +28,7 @@ export default function MyComponent() {
 ];
 
 const radioGroupDocs = generateDocs({
-	packageName: '@signozhq/components/radio-group',
+	packageName: '@signozhq/ui',
 	description: 'A radio group component for selecting a single option from a list of choices.',
 	examples: radioGroupExamples,
 });

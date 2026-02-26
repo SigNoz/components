@@ -1,12 +1,11 @@
-import { Button, ButtonColor, ButtonVariant } from '@signozhq/components/button';
-import { DrawerWrapper } from '@signozhq/components/drawer';
+import { Button, ButtonColor, ButtonVariant, DrawerWrapper } from '@signozhq/ui';
 import { useArgs } from '@storybook/preview-api';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const drawerExamples = [
-	`import { DrawerWrapper } from '@signozhq/components/drawer';
-import { Button } from '@signozhq/components/button';
+	`import { DrawerWrapper } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
@@ -33,8 +32,8 @@ export default function MyComponent() {
 }`,
 	`// Controlled mode - programmatic open/close
 import { useState } from 'react';
-import { DrawerWrapper } from '@signozhq/components/drawer';
-import { Button } from '@signozhq/components/button';
+import { DrawerWrapper } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
 
 export default function ControlledDrawer() {
 	const [open, setOpen] = useState(false);
@@ -54,7 +53,7 @@ export default function ControlledDrawer() {
 ];
 
 const drawerDocs = generateDocs({
-	packageName: '@signozhq/components/drawer',
+	packageName: '@signozhq/ui',
 	description:
 		'A customizable drawer component that slides in from any edge of the screen with support for header, content, and footer sections.',
 	examples: drawerExamples,

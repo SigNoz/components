@@ -1,11 +1,10 @@
-import { Button } from '@signozhq/components/button';
-import { Tooltip, TooltipProvider } from '@signozhq/components/tooltip';
+import { Button, Tooltip, TooltipProvider } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const tooltipExamples = [
-	`import { Tooltip, TooltipProvider } from '@signozhq/components/tooltip';
-import { Button } from '@signozhq/components/button';
+	`import { Tooltip, TooltipProvider } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
@@ -21,7 +20,7 @@ export default function MyComponent() {
 ];
 
 const tooltipDocs = generateDocs({
-	packageName: '@signozhq/components/tooltip',
+	packageName: '@signozhq/ui',
 	description: 'A customizable tooltip component with smooth animations and flexible positioning.',
 	examples: tooltipExamples,
 });

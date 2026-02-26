@@ -1,4 +1,4 @@
-import { PinList, type PinListItem } from '@signozhq/components/pin-list';
+import { PinList, type PinListItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { BarChart, Bug, FileText, GitBranch, Globe, Hexagon, List, Server } from 'lucide-react';
 import type React from 'react';
@@ -30,7 +30,7 @@ const createPinListItem = (
 });
 
 const PinListExamples = [
-	`import { PinList } from '@signozhq/components/pin-list';
+	`import { PinList } from '@signozhq/ui';
 import { FileText, BarChart } from 'lucide-react';
 
 export default function MyComponent() {
@@ -65,7 +65,7 @@ export default function MyComponent() {
 ];
 
 const PinListDocs = generateDocs({
-	packageName: '@signozhq/components/pin-list',
+	packageName: '@signozhq/ui',
 	description:
 		'A pin list component with smooth animations for managing pinned and unpinned items. Supports hover states, tooltips, and active item indicators. The component uses Framer Motion for smooth layout animations and provides a collapsible "MORE" section for unpinned items.',
 	examples: PinListExamples,

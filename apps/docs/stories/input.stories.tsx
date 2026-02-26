@@ -1,4 +1,4 @@
-import { Input } from '@signozhq/components/input';
+import { Input } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 
 // Meta Configuration

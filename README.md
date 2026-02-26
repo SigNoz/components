@@ -7,7 +7,7 @@ React component library powered by Turborepo, React, and Storybook.
 Install the packages you need. You must install and configure `@signozhq/tailwind-config` first, since all components depend on its theme and utilities.
 
 ```sh
-pnpm add @signozhq/tailwind-config @signozhq/design-tokens @signozhq/components
+pnpm add @signozhq/tailwind-config @signozhq/design-tokens @signozhq/ui
 ```
 
 In your app’s main CSS file (e.g. `index.css` or `global.css`), import Tailwind and the shared config, then the tailwind-config **global.css**. The order matters:
@@ -61,34 +61,34 @@ To learn more about the available components, take a look at: https://periscope.
 | Package                     | Description                                                       |
 | --------------------------- | ----------------------------------------------------------------- |
 | `@signozhq/tailwind-config` | Tailwind config, design tokens, and `global.css` (required first) |
-| `@signozhq/components`      | All UI components (single package with subpath exports)           |
+| `@signozhq/ui`              | All UI components (single package with subpath exports)           |
 
-All components live in `@signozhq/components`. Import by subpath:
+All components live in `@signozhq/ui`. Import by subpath:
 
 ```ts
-import { Badge } from '@signozhq/components/badge';
-import { Button } from '@signozhq/components/button';
-import { Calendar } from '@signozhq/components/calendar';
-import { Callout } from '@signozhq/components/callout';
-import { Checkbox } from '@signozhq/components/checkbox';
-import { Combobox } from '@signozhq/components/combobox';
-import { Command } from '@signozhq/components/command';
-import { DatePicker } from '@signozhq/components/date-picker';
-import { Dialog } from '@signozhq/components/dialog';
-import { Drawer } from '@signozhq/components/drawer';
-import { Dropdown } from '@signozhq/components/dropdown-menu';
-import { Input } from '@signozhq/components/input';
-import { Pagination } from '@signozhq/components/pagination';
-import { PinList } from '@signozhq/components/pin-list';
-import { Popover } from '@signozhq/components/popover';
-import { RadioGroup } from '@signozhq/components/radio-group';
-import { ResizablePanelGroup } from '@signozhq/components/resizable';
-import { Toaster } from '@signozhq/components/sonner';
-import { Switch } from '@signozhq/components/switch';
-import { Table } from '@signozhq/components/table';
-import { Tabs } from '@signozhq/components/tabs';
-import { ToggleGroup } from '@signozhq/components/toggle-group';
-import { Tooltip } from '@signozhq/components/tooltip';
+import { Badge } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
+import { Calendar } from '@signozhq/ui';
+import { Callout } from '@signozhq/ui';
+import { Checkbox } from '@signozhq/ui';
+import { Combobox } from '@signozhq/ui';
+import { Command } from '@signozhq/ui';
+import { DatePicker } from '@signozhq/ui';
+import { Dialog } from '@signozhq/ui';
+import { Drawer } from '@signozhq/ui';
+import { Dropdown } from '@signozhq/ui';
+import { Input } from '@signozhq/ui';
+import { Pagination } from '@signozhq/ui';
+import { PinList } from '@signozhq/ui';
+import { Popover } from '@signozhq/ui';
+import { RadioGroup } from '@signozhq/ui';
+import { ResizablePanelGroup } from '@signozhq/ui';
+import { Toaster } from '@signozhq/ui';
+import { Switch } from '@signozhq/ui';
+import { Table } from '@signozhq/ui';
+import { Tabs } from '@signozhq/ui';
+import { ToggleGroup } from '@signozhq/ui';
+import { Tooltip } from '@signozhq/ui';
 ```
 
 ## Contributing

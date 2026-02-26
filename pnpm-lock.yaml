@@ -90,9 +90,6 @@ importers:
 
   apps/docs:
     dependencies:
-      '@signozhq/components':
-        specifier: workspace:*
-        version: link:../../packages/components
       '@signozhq/design-tokens':
         specifier: latest
         version: 2.1.1
@@ -102,6 +99,9 @@ importers:
       '@signozhq/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
+      '@signozhq/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@tailwindcss/vite':
         specifier: ^4.2.1
         version: 4.2.1(rolldown-vite@7.3.1)
@@ -185,7 +185,65 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.2.1)
 
-  packages/components:
+  packages/eslint-config:
+    devDependencies:
+      '@vercel/style-guide':
+        specifier: ^5.2.0
+        version: 5.2.0(eslint@8.57.1)(typescript@5.9.3)
+      eslint-config-turbo:
+        specifier: ^2.0.0
+        version: 2.8.10(eslint@8.57.1)(turbo@2.8.10)
+      eslint-plugin-mdx:
+        specifier: ^3.1.5
+        version: 3.6.2(eslint@8.57.1)
+      eslint-plugin-only-warn:
+        specifier: ^1.1.0
+        version: 1.1.0
+      eslint-plugin-storybook:
+        specifier: ^0.8.0
+        version: 0.8.0(eslint@8.57.1)(typescript@5.9.3)
+
+  packages/tailwind-config:
+    dependencies:
+      '@signozhq/design-tokens':
+        specifier: ^2.1.1
+        version: 2.1.1
+      '@tailwindcss/postcss':
+        specifier: ^4.1.4
+        version: 4.2.1
+      postcss-import:
+        specifier: ^16.1.1
+        version: 16.1.1(postcss@8.5.6)
+      rollup-plugin-postcss:
+        specifier: ^4.0.2
+        version: 4.0.2(postcss@8.5.6)(ts-node@10.9.2)
+      tailwindcss:
+        specifier: ^4.1.4
+        version: 4.2.1
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20.14.13
+        version: 20.19.33
+      tsdown:
+        specifier: ^0.20.3
+        version: 0.20.3(publint@0.3.17)(typescript@5.9.3)
+
+  packages/typescript-config:
+    devDependencies:
+      '@signozhq/tailwind-config':
+        specifier: workspace:*
+        version: link:../tailwind-config
+      rollup-plugin-postcss:
+        specifier: ^4.0.2
+        version: 4.0.2(postcss@8.5.6)(ts-node@10.9.2)
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@22.19.11)(rolldown-vite@7.3.1)(typescript@5.9.3)
+
+  packages/ui:
     dependencies:
       '@radix-ui/react-checkbox':
         specifier: ^1.2.3
@@ -314,64 +372,6 @@ importers:
       tailwindcss:
         specifier: ^4.1.4
         version: 4.2.1
-
-  packages/eslint-config:
-    devDependencies:
-      '@vercel/style-guide':
-        specifier: ^5.2.0
-        version: 5.2.0(eslint@8.57.1)(typescript@5.9.3)
-      eslint-config-turbo:
-        specifier: ^2.0.0
-        version: 2.8.10(eslint@8.57.1)(turbo@2.8.10)
-      eslint-plugin-mdx:
-        specifier: ^3.1.5
-        version: 3.6.2(eslint@8.57.1)
-      eslint-plugin-only-warn:
-        specifier: ^1.1.0
-        version: 1.1.0
-      eslint-plugin-storybook:
-        specifier: ^0.8.0
-        version: 0.8.0(eslint@8.57.1)(typescript@5.9.3)
-
-  packages/tailwind-config:
-    dependencies:
-      '@signozhq/design-tokens':
-        specifier: ^2.1.1
-        version: 2.1.1
-      '@tailwindcss/postcss':
-        specifier: ^4.1.4
-        version: 4.2.1
-      postcss-import:
-        specifier: ^16.1.1
-        version: 16.1.1(postcss@8.5.6)
-      rollup-plugin-postcss:
-        specifier: ^4.0.2
-        version: 4.0.2(postcss@8.5.6)(ts-node@10.9.2)
-      tailwindcss:
-        specifier: ^4.1.4
-        version: 4.2.1
-      tw-animate-css:
-        specifier: ^1.4.0
-        version: 1.4.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.14.13
-        version: 20.19.33
-      tsdown:
-        specifier: ^0.20.3
-        version: 0.20.3(publint@0.3.17)(typescript@5.9.3)
-
-  packages/typescript-config:
-    devDependencies:
-      '@signozhq/tailwind-config':
-        specifier: workspace:*
-        version: link:../tailwind-config
-      rollup-plugin-postcss:
-        specifier: ^4.0.2
-        version: 4.0.2(postcss@8.5.6)(ts-node@10.9.2)
-      vite-plugin-dts:
-        specifier: ^4.5.4
-        version: 4.5.4(@types/node@22.19.11)(rolldown-vite@7.3.1)(typescript@5.9.3)
 
 packages:
 

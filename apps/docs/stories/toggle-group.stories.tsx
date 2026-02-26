@@ -1,4 +1,4 @@
-import { ToggleGroup, ToggleGroupItem } from '@signozhq/components/toggle-group';
+import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
 	AlignCenter,
@@ -13,7 +13,7 @@ import {
 import { generateDocs } from '../utils/generateDocs.js';
 
 const toggleGroupExamples = [
-	`import { ToggleGroup, ToggleGroupItem } from '@signozhq/components/toggle-group';
+	`import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
 import { Bold, Italic, Underline } from '@signozhq/icons';
 
 export default function MyComponent() {
@@ -34,7 +34,7 @@ export default function MyComponent() {
 ];
 
 const toggleGroupDocs = generateDocs({
-	packageName: '@signozhq/components/toggle-group',
+	packageName: '@signozhq/ui',
 	description:
 		'A set of two-state buttons that can be toggled on or off, in single or multiple selection mode.',
 	examples: toggleGroupExamples,

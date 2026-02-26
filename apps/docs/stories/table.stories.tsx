@@ -1,6 +1,6 @@
-import { Badge } from '@signozhq/components/badge';
-import { Button } from '@signozhq/components/button';
 import {
+	Badge,
+	Button,
 	Table,
 	TableBody,
 	TableCaption,
@@ -8,7 +8,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from '@signozhq/components/table';
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, Upload, XCircle } from 'lucide-react';
 

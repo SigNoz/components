@@ -7,7 +7,7 @@ import {
 	type ButtonSizeValue,
 	ButtonVariant,
 	type ButtonVariantValue,
-} from '@signozhq/components/button';
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ChevronLeft, ChevronRight, Code } from 'lucide-react';
 import { generateDocs } from '../utils/generateDocs.js';
@@ -35,7 +35,7 @@ type ButtonConfig = {
 };
 
 const buttonExamples = [
-	`import { Button } from '@signozhq/components/button';
+	`import { Button } from '@signozhq/ui';
 import { ChevronLeft, ChevronRight } from '@signozhq/icons';
 
 export default function MyComponent() {
@@ -54,7 +54,7 @@ return (
 ];
 
 const buttonDocs = generateDocs({
-	packageName: '@signozhq/components/button',
+	packageName: '@signozhq/ui',
 	description: 'A versatile button component with multiple variants, colors, and sizes.',
 	examples: buttonExamples,
 });

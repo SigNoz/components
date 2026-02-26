@@ -1,10 +1,10 @@
-import { DatePicker } from '@signozhq/components/date-picker';
+import { DatePicker } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const DatePickerExamples = [
-	`import { DatePicker } from '@signozhq/components/date-picker';
+	`import { DatePicker } from '@signozhq/ui';
 
 export default function DateOnlyPicker() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -17,7 +17,7 @@ export default function DateOnlyPicker() {
     />
   );
 }`,
-	`import { DatePicker } from '@signozhq/components/date-picker';
+	`import { DatePicker } from '@signozhq/ui';
 
 export default function DateAndTimePicker() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -34,7 +34,7 @@ export default function DateAndTimePicker() {
     />
   );
 }`,
-	`import { DatePicker } from '@signozhq/components/date-picker';
+	`import { DatePicker } from '@signozhq/ui';
 
 export default function DateTimeTimezonePicker() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -59,7 +59,7 @@ export default function DateTimeTimezonePicker() {
 ];
 
 const DatePickerDocs = generateDocs({
-	packageName: '@signozhq/components/date-picker',
+	packageName: '@signozhq/ui',
 	description:
 		'A comprehensive and configurable date picker component that supports date, time, and timezone selection. All functionality is controlled through props for maximum flexibility.',
 	examples: DatePickerExamples,

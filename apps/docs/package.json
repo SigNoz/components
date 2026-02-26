@@ -12,7 +12,7 @@
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
 	},
 	"dependencies": {
-		"@signozhq/components": "workspace:*",
+		"@signozhq/ui": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"@signozhq/icons": "^0.1.0",
 		"@signozhq/tailwind-config": "workspace:*",
