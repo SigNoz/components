@@ -2,8 +2,8 @@ import path, { resolve } from 'node:path';
 import fs from 'fs-extra';
 import { glob } from 'glob';
 import type { UserConfig } from 'vite';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import dts from 'vite-plugin-dts';
-import { libInjectCss } from 'vite-plugin-lib-inject-css';
 
 const cwd = process.cwd();
 
@@ -61,6 +61,7 @@ export default function getViteLibConfig(
 			emptyOutDir: true,
 			minify: false,
 			sourcemap: true,
+			cssCodeSplit: true,
 			target: 'es2018',
 			...overrides?.build,
 			lib: {
@@ -127,7 +128,9 @@ export default function getViteLibConfig(
 					);
 				},
 			}),
-			libInjectCss(),
+			cssInjectedByJsPlugin({
+				relativeCSSInjection: true,
+			}),
 			...(overrides?.plugins ?? []),
 		],
 	};

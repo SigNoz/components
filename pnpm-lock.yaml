@@ -84,9 +84,9 @@ importers:
       vite:
         specifier: npm:rolldown-vite@7.3.1
         version: /rolldown-vite@7.3.1(@types/node@22.19.11)
-      vite-plugin-lib-inject-css:
-        specifier: ^2.2.2
-        version: 2.2.2(rolldown-vite@7.3.1)
+      vite-plugin-css-injected-by-js:
+        specifier: ^4.0.1
+        version: 4.0.1(rolldown-vite@7.3.1)
 
   apps/docs:
     dependencies:
@@ -385,102 +385,6 @@ packages:
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
-
-  /@ast-grep/napi-darwin-arm64@0.36.3:
-    resolution: {integrity: sha512-uM0Hrm5gcHqaBL64ktmPBFMTorTlPKWsUfi0E2Cg09GJfeYWvZmicCqgd7qVtjURmQvFQdb4JSqHIkJvws6Uqw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-darwin-x64@0.36.3:
-    resolution: {integrity: sha512-wEMeQw8lRL66puG2m8m0kDRQDtubygj59HA/cmut2V5SPx/13BN3wuEk6JPv97gqGUCUGhG2+5Z6UZ/Ll2q01Q==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-linux-arm64-gnu@0.36.3:
-    resolution: {integrity: sha512-sMsTMaUjW7SM8KPbLviCSBuM4zgJcwvie1yZI92HKSlFzC7ABe7X7UvyUREB+JwqccDVEL5yOJAjqB8eFSCizw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-linux-arm64-musl@0.36.3:
-    resolution: {integrity: sha512-2XRmNYuovZu0Pa4J3or4PKMkQZnXXfpVcCrPwWB/2ytX7XUo+TWLgYE8rPVnJOyw5zujkveFb0XUrro9mQgLzw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-linux-x64-gnu@0.36.3:
-    resolution: {integrity: sha512-mTwPRbBi1feGqR2b5TWC5gkEDeRi8wfk4euF5sKNihfMGHj6pdfINHQ3QvLVO4C7z0r/wgWLAvditFA0b997dg==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-linux-x64-musl@0.36.3:
-    resolution: {integrity: sha512-tMGPrT+zuZzJK6n1cD1kOii7HYZE9gUXjwtVNE/uZqXEaWP6lmkfoTMbLjnxEe74VQbmaoDGh1/cjrDBnqC6Uw==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-win32-arm64-msvc@0.36.3:
-    resolution: {integrity: sha512-7pFyr9+dyV+4cBJJ1I57gg6PDXP3GBQeVAsEEitzEruxx4Hb4cyNro54gGtlsS+6ty+N0t004tPQxYO2VrsPIg==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-win32-ia32-msvc@0.36.3:
-    resolution: {integrity: sha512-MPAgccH9VscRaFuEBMzDGPS+3c4cKNVGIVJ7WSNa1nZtLQ0eFEaPJ7pyDnCezgVSxfNFVYBvKyyF/vcm7Qc9+A==}
-    engines: {node: '>= 10'}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi-win32-x64-msvc@0.36.3:
-    resolution: {integrity: sha512-TIVtuSbXhty9kaSEfr4ULWx5PAuUeGgUkFaR60lmOs7sGTWgpig+suwKfTmevoAblFknCW/aMHOwziwJoUZA6A==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@ast-grep/napi@0.36.3:
-    resolution: {integrity: sha512-ExypohE8L7FvKBHxu7UpwcV9XVfyS+AqNZKyKIfxYwJyD9l7Gw6pmMYd7J2uopJsPEIUf44/emEFds6nFUx/dw==}
-    engines: {node: '>= 10'}
-    optionalDependencies:
-      '@ast-grep/napi-darwin-arm64': 0.36.3
-      '@ast-grep/napi-darwin-x64': 0.36.3
-      '@ast-grep/napi-linux-arm64-gnu': 0.36.3
-      '@ast-grep/napi-linux-arm64-musl': 0.36.3
-      '@ast-grep/napi-linux-x64-gnu': 0.36.3
-      '@ast-grep/napi-linux-x64-musl': 0.36.3
-      '@ast-grep/napi-win32-arm64-msvc': 0.36.3
-      '@ast-grep/napi-win32-ia32-msvc': 0.36.3
-      '@ast-grep/napi-win32-x64-msvc': 0.36.3
-    dev: true
 
   /@babel/code-frame@7.29.0:
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
@@ -12130,6 +12034,14 @@ packages:
       vfile-message: 4.0.3
     dev: true
 
+  /vite-plugin-css-injected-by-js@4.0.1(rolldown-vite@7.3.1):
+    resolution: {integrity: sha512-WfyRojojQyAO/KzWf+efcXpTPv6zJPXaRmr9EYq5a4v5I3PWCR7kR01hiri2lW6+rHm3a57kpwsf+iahIJi1Qw==}
+    peerDependencies:
+      vite: npm:rolldown-vite@7.3.1
+    dependencies:
+      vite: /rolldown-vite@7.3.1(@types/node@22.19.11)
+    dev: true
+
   /vite-plugin-dts@4.5.4(@types/node@22.19.11)(rolldown-vite@7.3.1)(typescript@5.9.3):
     resolution: {integrity: sha512-d4sOM8M/8z7vRXHHq/ebbblfaxENjogAAekcfcDCCwAyvGqnPrc7f4NZbvItS+g4WTgerW0xDwSz5qz11JT3vg==}
     peerDependencies:
@@ -12154,17 +12066,6 @@ packages:
       - '@types/node'
       - rollup
       - supports-color
-    dev: true
-
-  /vite-plugin-lib-inject-css@2.2.2(rolldown-vite@7.3.1):
-    resolution: {integrity: sha512-NF30p0GwtfSAmVlxo2NgPXM2rEdtgV7LFi4lkzajKD7P3Ru/ZAFmI533M0Z5qyMZpvNMxVGkewzpjD0HOWtbDQ==}
-    peerDependencies:
-      vite: npm:rolldown-vite@7.3.1
-    dependencies:
-      '@ast-grep/napi': 0.36.3
-      magic-string: 0.30.21
-      picocolors: 1.1.1
-      vite: /rolldown-vite@7.3.1(@types/node@22.19.11)
     dev: true
 
   /vitest@4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(rolldown-vite@7.3.1):
