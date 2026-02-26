@@ -5,14 +5,12 @@
 /packages/eslint-config @SigNoz/frontend
 /packages/tailwind-config @SigNoz/frontend
 /packages/typescript-config @SigNoz/frontend
-/packages/theme @SigNoz/frontend
 /turbo @SigNoz/frontend
 package.json @SigNoz/frontend
 README.md @SigNoz/frontend
 turbo.json @SigNoz/frontend
 .npmrc @SigNoz/frontend
 /.turbo @SigNoz/frontend
-/.changeset @SigNoz/frontend
 /apps/docs/vite.config.ts @SigNoz/frontend
 /apps/docs/package.json @SigNoz/frontend
 /apps/docs/tsconfig.json @SigNoz/frontend

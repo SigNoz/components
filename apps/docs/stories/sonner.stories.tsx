@@ -1,10 +1,9 @@
-import { Button } from '@signozhq/button';
-import { Toaster, toast } from '@signozhq/sonner';
+import { Button, Toaster, toast } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const SonnerExamples = [
-	`import { Toaster, toast } from '@signozhq/sonner';
+	`import { Toaster, toast } from '@signozhq/ui';
 
 export default function MyComponent() {
   const showToast = () => {
@@ -18,7 +17,7 @@ export default function MyComponent() {
     </div>
   );
 }`,
-	`import { Toaster, toast } from '@signozhq/sonner';
+	`import { Toaster, toast } from '@signozhq/ui';
 
 export default function MyComponent() {
   const showSuccessToast = () => {
@@ -40,7 +39,7 @@ export default function MyComponent() {
 ];
 
 const SonnerDocs = generateDocs({
-	packageName: '@signozhq/sonner',
+	packageName: '@signozhq/ui',
 	description: 'A toast component for displaying notifications and alerts.',
 	examples: SonnerExamples,
 });

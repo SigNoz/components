@@ -10,7 +10,7 @@ import {
 	CommandList,
 	CommandSeparator,
 	CommandShortcut,
-} from '@signozhq/command';
+} from '@signozhq/ui';
 import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const examples = [
-	`import { Command, CommandInput, CommandList, CommandItem } from '@signozhq/command';
+	`import { Command, CommandInput, CommandList, CommandItem } from '@signozhq/ui';
 
 export default function MyComponent() {
   return (
@@ -33,7 +33,7 @@ export default function MyComponent() {
 ];
 
 const docs = generateDocs({
-	packageName: '@signozhq/command',
+	packageName: '@signozhq/ui',
 	description:
 		'Fast, composable, unstyled command menu for React. Use CommandDialog to mount in a modal/portal.',
 	examples,

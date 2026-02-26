@@ -1,9 +1,9 @@
-import { Checkbox } from '@signozhq/checkbox';
+import { Checkbox } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const checkboxExamples = [
-	`import { Checkbox } from '@signozhq/checkbox';
+	`import { Checkbox } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
@@ -17,7 +17,7 @@ export default function MyComponent() {
 ];
 
 const checkboxDocs = generateDocs({
-	packageName: '@signozhq/checkbox',
+	packageName: '@signozhq/ui',
 	description:
 		'A customizable checkbox component for user selections with support for disabled states.',
 	examples: checkboxExamples,

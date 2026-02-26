@@ -1,5 +1,11 @@
-import { Button, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/button';
-import { Dropdown, type MenuItem } from '@signozhq/dropdown-menu';
+import {
+	Button,
+	ButtonColor,
+	ButtonSize,
+	ButtonVariant,
+	Dropdown,
+	type MenuItem,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
 	Check,
@@ -19,8 +25,8 @@ import { useState } from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const dropdownExamples = [
-	`import { Dropdown, type MenuItem } from '@signozhq/dropdown-menu';
-import { Button } from '@signozhq/button';
+	`import { Dropdown, type MenuItem } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
 import { Grid3x3, Link, Trash2 } from 'lucide-react';
 
 const items: MenuItem[] = [
@@ -46,7 +52,7 @@ export default function MyComponent() {
 ];
 
 const dropdownDocs = generateDocs({
-	packageName: '@signozhq/dropdown-menu',
+	packageName: '@signozhq/ui',
 	description:
 		'A versatile dropdown menu component with support for icons, search, nested menus, selection states, and custom styling.',
 	examples: dropdownExamples,

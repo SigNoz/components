@@ -1,6 +1,4 @@
-import { Badge } from '@signozhq/badge';
-import { Button } from '@signozhq/button';
-import { DataTable as BaseDataTable, type ColumnDef, type Row } from '@signozhq/table';
+import { Badge, DataTable as BaseDataTable, Button, type ColumnDef, type Row } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { LucideIcon } from 'lucide-react';
 import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, XCircle } from 'lucide-react';

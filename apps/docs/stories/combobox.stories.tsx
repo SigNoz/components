@@ -11,7 +11,7 @@ import {
 	ComboboxLoading,
 	ComboboxSeparator,
 	ComboboxTrigger,
-} from '@signozhq/combobox';
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Code2, Database, GitBranch, Terminal } from 'lucide-react';
 import { useState } from 'react';
@@ -26,7 +26,7 @@ const ComboboxExamples = [
   ComboboxInput,
   ComboboxList,
   ComboboxItem,
-} from '@signozhq/combobox';
+} from '@signozhq/ui';
 
 export default function MyComponent() {
   const [value, setValue] = useState('');
@@ -50,7 +50,7 @@ export default function MyComponent() {
 ];
 
 const ComboboxDocs = generateDocs({
-	packageName: '@signozhq/combobox',
+	packageName: '@signozhq/ui',
 	description: 'Autocomplete input and command palette with a list of suggestions',
 	examples: ComboboxExamples,
 });

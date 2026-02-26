@@ -7,20 +7,30 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
 jobs:
-  release:
-    name: Release
+  release-please:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Release Please
+        uses: googleapis/release-please-action@v4
+        id: release
+
       - name: Setup pnpm
+        if: ${{ steps.release.outputs.release_created }}
         uses: pnpm/action-setup@v3
         with:
           version: 8
 
       - name: Setup Node.js 24.x
+        if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -30,14 +40,15 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install Dependencies
+        if: ${{ steps.release.outputs.release_created }}
         run: pnpm install
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: pnpm release
-          commit: "chore: version packages"
+      - name: Build
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm run build --filter=docs^...
+
+      - name: Publish to npm
+        if: ${{ steps.release.outputs.release_created }}
+        run: pnpm -r publish --no-git-checks --filter=docs^...
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

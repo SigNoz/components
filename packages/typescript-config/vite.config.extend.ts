@@ -34,15 +34,18 @@ export const externalPatterns = [
 ];
 
 export default function getViteLibConfig(
-	entry: string | string[],
+	entry: string | string[] | Record<string, string>,
 	overrides?: Partial<UserConfig>
 ): UserConfig {
-	const entryResolved = Array.isArray(entry)
-		? entry.reduce<Record<string, string>>((acc, e, i) => {
-				acc[path.basename(e, path.extname(e)) || `entry${i}`] = resolve(cwd, e);
-				return acc;
-			}, {})
-		: resolve(cwd, entry);
+	const entryResolved =
+		typeof entry === 'object' && !Array.isArray(entry)
+			? Object.fromEntries(Object.entries(entry).map(([k, v]) => [k, resolve(cwd, v)]))
+			: Array.isArray(entry)
+				? entry.reduce<Record<string, string>>((acc, e, i) => {
+						acc[path.basename(e, path.extname(e)) || `entry${i}`] = resolve(cwd, e);
+						return acc;
+					}, {})
+				: resolve(cwd, entry);
 
 	let libEntry: string | Record<string, string>;
 	if (typeof entryResolved === 'string') {

@@ -1,11 +1,11 @@
-import Pagination from '@signozhq/pagination';
+import { Pagination } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ComponentProps } from 'react'; // Import ComponentProps
 import { useState } from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const paginationExamples = [
-	`import Pagination from '@signozhq/pagination';
+	`import { Pagination } from '@signozhq/ui';
 import { useState } from 'react';
 
 export default function MyComponent() {
@@ -24,7 +24,7 @@ export default function MyComponent() {
 ];
 
 const paginationDocs = generateDocs({
-	packageName: '@signozhq/pagination',
+	packageName: '@signozhq/ui',
 	description: 'A flexible pagination component for navigating through multi-page content.',
 	examples: paginationExamples,
 });
