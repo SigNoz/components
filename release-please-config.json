@@ -18,6 +18,16 @@
 			"changelog-path": "CHANGELOG.md",
 			"changelog-host": "https://github.com",
 			"changelog-type": "default",
+			"extra-files": [
+				{
+					"type": "node",
+					"path": "./packages/ui"
+				},
+				{
+					"type": "node",
+					"path": "./packages/tailwind-config"
+				}
+			],
 			"changelog-sections": [
 				{
 					"type": "feat",
