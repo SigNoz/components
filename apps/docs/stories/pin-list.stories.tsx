@@ -72,7 +72,7 @@ const PinListDocs = generateDocs({
 });
 
 const meta: Meta<typeof PinList> = {
-	title: 'Components/PinList',
+	title: 'Experimental/PinList',
 	component: PinList,
 	parameters: {
 		layout: 'fullscreen',

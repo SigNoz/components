@@ -40,7 +40,7 @@ const docs = generateDocs({
 });
 
 const meta: Meta<any> = {
-	title: 'Components/Command',
+	title: 'Experimental/Command',
 	component: Command,
 	tags: ['autodocs'],
 	parameters: {

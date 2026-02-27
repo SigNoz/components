@@ -18,13 +18,21 @@
 
 .docs-story > div:first-of-type {
 	position: relative !important;
-	padding: 4rem 2rem;
+	padding: 1rem;
 	display: flex !important;
 	align-items: center !important;
 	justify-content: center !important;
 
 	background-color: #ffffff !important;
 	transition: background-color 0.2s ease;
+
+	> div {
+		width: 100%;
+	}
+}
+
+#storybook-root {
+	width: 100vw;
 }
 
 html.dark .docs-story > div:first-of-type {
@@ -99,6 +107,11 @@ html.dark .docs-story > div:first-of-type {
 	font-size: 0.875rem;
 }
 
+.sb-show-main p {
+	margin: 4px 0;
+	line-height: 16px;
+}
+
 /* Improve paragraph spacing - only for Storybook UI */
 
 /* Improve list styling - only for Storybook UI */
@@ -121,9 +134,8 @@ pre {
 
 	border-radius: 6px;
 
-	padding: 1rem;
-
-	margin: 1rem 0;
+	padding: 0.5rem;
+	margin: 0;
 
 	border: 1px solid rgba(255, 255, 255, 0.1);
 
@@ -140,6 +152,10 @@ code {
 	font-size: 0.875em;
 
 	color: #fbbf24;
+}
+
+.docblock-source {
+	margin: 1rem 0 !important;
 }
 
 /* Ensure dark mode is applied by default */

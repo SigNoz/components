@@ -34,7 +34,7 @@ const radioGroupDocs = generateDocs({
 });
 
 const meta: Meta<typeof RadioGroup> = {
-	title: 'Components/RadioGroup',
+	title: 'Experimental/RadioGroup',
 	component: RadioGroup,
 	argTypes: {
 		disabled: { control: 'boolean' },

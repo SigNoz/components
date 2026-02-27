@@ -1,0 +1,288 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Design System / Overview"  />
+
+# Overview
+
+This section covers the design system foundations: token hierarchy, installation, usage patterns, surface levels, extending tokens for new components, and migration from legacy tokens. For the interactive token reference, see [Design System / Tokens](?path=/docs/design-system-tokens--docs).
+
+## Token Hierarchy
+
+Our token system follows a three-tier hierarchy:
+
+```
+Diagram of the token hierarchy:
+┌─────────────────────────────────────────────────────────────┐
+│                      Components                             │
+│   Dialog, Button, Card, etc. use semantic tokens            │
+└─────────────────────────────────────────────────────────────┘
+                              ▲
+                              │ uses
+┌─────────────────────────────────────────────────────────────┐
+│                    Semantic Tokens                          │
+│   l1-background, primary-background, accent-cherry, etc.    │
+│   Purpose-driven: "what it's for"                           │
+└─────────────────────────────────────────────────────────────┘
+                              ▲
+                              │ references
+┌─────────────────────────────────────────────────────────────┐
+│                    Primitive Tokens                         │
+│   robin-500, cherry-400, neutral-dark-900, etc.             │
+│   Raw values: "what color it is"                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Why this matters:**
+- **Primitives** are raw color values (e.g., `robin-500: #4E74F8`)
+- **Semantic tokens** give meaning to those values (e.g., `primary-background: var(--bg-robin-500)`)
+- **Components** use semantic tokens, making theme changes automatic
+
+---
+
+
+## Token Usage
+
+### CSS Variables
+
+All tokens are available as CSS custom properties:
+
+```css
+.my-element {
+  background-color: var(--l1-background);
+  color: var(--l1-foreground);
+  border: 1px solid var(--l2-border);
+}
+```
+
+### Tailwind Classes
+
+Tokens are mapped to Tailwind utility classes:
+
+```tsx
+<div className="bg-l1-background text-l1-foreground border border-l2-border">
+  Content here
+</div>
+```
+
+### When to Use Which
+
+| Approach | Best For |
+|----------|----------|
+| **Tailwind classes** | Component styling, responsive design, rapid prototyping |
+| **CSS variables** | Complex animations, dynamic theming, CSS-in-JS libraries |
+
+---
+
+## Surface Level System
+
+The surface level system provides a consistent approach to layered UI. Each level (L1, L2, L3) represents a different depth in the visual hierarchy.
+
+### L1 - Page Background
+
+The outermost container, typically the page or app shell background.
+
+```tsx
+<div className="bg-l1-background text-l1-foreground">
+  {/* Page content */}
+</div>
+```
+
+**Use for:** Main app shell, page backgrounds, root containers
+
+**Don't use for:** Cards, modals, or nested elements
+
+### L2 - Cards and Panels
+
+Secondary surfaces that sit on top of L1.
+
+```tsx
+<div className="bg-l1-background">
+  <div className="bg-l2-background border border-l2-border rounded-lg p-4">
+    {/* Card content */}
+  </div>
+</div>
+```
+
+**Use for:** Cards, panels, sidebars, dialogs, first-level nested containers
+
+**Don't use for:** Deeply nested elements inside cards
+
+### L3 - Nested Elements
+
+Tertiary surfaces within L2 containers.
+
+```tsx
+<div className="bg-l2-background p-4">
+  <input className="bg-l3-background border border-l3-border rounded px-3 py-2" />
+</div>
+```
+
+**Use for:** Inputs, dropdowns, code blocks, elements nested inside L2 containers
+
+### Visual Example
+
+```
+Of each level:
+┌──────────────────────────────────────── L1 (Page) ──┐
+│                                                     │
+│  ┌─────────────────────────────── L2 (Card) ──────┐ │
+│  │                                                │ │
+│  │  ┌───────────────── L3 (Input) ──────────────┐ │ │
+│  │  │ Type here...                              │ │ │
+│  │  └───────────────────────────────────────────┘ │ │
+│  │                                                │ │
+│  └────────────────────────────────────────────────┘ │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+### Hover States
+
+Each level has corresponding hover tokens:
+
+```tsx
+<button className="bg-l2-background hover:bg-l2-background-hover">
+  Hover me
+</button>
+```
+
+---
+
+## Extending Tokens for New Components
+
+When creating new components, follow this pattern to leverage the token system effectively.
+
+### Step 1: Use Semantic Tokens as Base
+
+Start with existing semantic tokens wherever possible:
+
+```tsx
+// dialog.tsx
+function DialogContent({ children }) {
+  return (
+    <div className="bg-l1-background border border-l2-border rounded-lg shadow-lg">
+      {children}
+    </div>
+  );
+}
+```
+
+### Step 2: Define Component-Specific Variables (When Needed)
+
+For component-specific styling that doesn't fit existing tokens, define CSS custom properties:
+
+```css
+/* dialog/index.css */
+.dialog {
+  --dialog-border: var(--l2-border);
+  --dialog-close-icon: var(--l2-foreground);
+}
+
+.alert-dialog {
+  --dialog-border: var(--danger-background);
+}
+```
+
+### Step 3: Use Component Variables in Styles
+
+```tsx
+function DialogHeader({ className, ...props }) {
+  return (
+    <div
+      className={cn(
+        'border-b border-[var(--dialog-border)] px-4 py-3',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+```
+
+### Real Example: Dialog Component
+
+Here's how the Dialog component from `@signozhq/ui` uses tokens:
+
+```tsx
+// DialogContent uses surface tokens for background and border
+<DialogPrimitive.Content
+  className={cn(
+    'bg-l1-background',
+    'border border-l2-border',
+    'rounded-lg shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)]',
+    className
+  )}
+>
+  {children}
+</DialogPrimitive.Content>
+
+// DialogHeader uses component-specific variable for flexible border
+<div
+  className={cn(
+    'border-b border-[var(--dialog-border)]',
+    'px-4 py-3',
+    className
+  )}
+>
+  {title}
+</div>
+
+// DialogTitle uses foreground tokens
+<DialogPrimitive.Title
+  className={cn(
+    'text-l1-foreground',
+    'text-[13px] font-medium',
+    className
+  )}
+>
+  {children}
+</DialogPrimitive.Title>
+```
+
+### Pattern Summary
+
+1. **Background**: Use `l1-background`, `l2-background`, or `l3-background` based on nesting depth
+2. **Text**: Use matching foreground tokens (`l1-foreground`, etc.)
+3. **Borders**: Use level-appropriate border tokens
+4. **Interactive states**: Use action tokens (`primary-background`, etc.)
+5. **Component-specific**: Define CSS variables referencing semantic tokens
+
+---
+
+## Migration from Legacy Tokens
+
+If you're migrating from the legacy token system, use this mapping:
+
+| Legacy Token | New Semantic Token | Notes |
+|--------------|-------------------|-------|
+| `background` | `l1-background` | Page-level background |
+| `foreground` | `l1-foreground` | Primary text color |
+| `card` | `l2-background` | Card backgrounds |
+| `card-foreground` | `l2-foreground` | Card text |
+| `muted` | `l3-background` | Muted backgrounds |
+| `muted-foreground` | `l3-foreground` | Muted text |
+| `primary` | `primary-background` | Primary actions |
+| `secondary` | `secondary-background` | Secondary actions |
+| `destructive` | `danger-background` | Destructive actions |
+| `accent` | `accent-primary` | Accent highlights |
+| `border` | `l1-border` or `l2-border` | Context-dependent |
+
+### Migration Example
+
+**Before:**
+```tsx
+<div className="bg-card text-card-foreground border-border">
+  <button className="bg-primary text-primary-foreground">
+    Click
+  </button>
+</div>
+```
+
+**After:**
+```tsx
+<div className="bg-l2-background text-l2-foreground border-l2-border">
+  <button className="bg-primary-background text-primary-foreground">
+    Click
+  </button>
+</div>
+```

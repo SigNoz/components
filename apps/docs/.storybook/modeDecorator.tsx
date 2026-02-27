@@ -6,7 +6,8 @@ const THEMES = ['default', 'blue-demo'] as const;
 type Theme = (typeof THEMES)[number];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const ModeDecorator = (Story: any) => {
+export const ModeDecorator = (Story: any, context: { title?: string }) => {
+	const isDesignSystemPages = context?.title?.startsWith('Design System');
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [theme, setTheme] = useState<Theme>('default');
 	const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
@@ -105,7 +106,7 @@ export const ModeDecorator = (Story: any) => {
 
 	return (
 		<>
-			{mounted && createPortal(controls, document.body)}
+			{mounted && !isDesignSystemPages && createPortal(controls, document.body)}
 			<Story />
 		</>
 	);

@@ -1,10 +1,27 @@
 import tailwindConfig from '@signozhq/tailwind-config';
+import remarkGfm from 'remark-gfm';
 import { mergeConfig } from 'vite';
 
 const config = {
-	stories: ['../stories/*.stories.tsx', '../stories/**/*.stories.tsx'],
+	stories: [
+		'../stories/intro.mdx',
+		'../stories/design-system.mdx',
+		'../stories/*.stories.tsx',
+		'../stories/**/*.stories.tsx',
+		'../stories/*.mdx',
+		'../stories/**/*.mdx',
+	],
 	addons: [
-		'@storybook/addon-docs',
+		{
+			name: '@storybook/addon-docs',
+			options: {
+				mdxPluginOptions: {
+					mdxCompileOptions: {
+						remarkPlugins: [remarkGfm],
+					},
+				},
+			},
+		},
 		'@storybook/addon-themes',
 		'@storybook/addon-designs',
 		'@chromatic-com/storybook',
