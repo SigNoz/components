@@ -35,7 +35,57 @@
 
 ## Adding a New Component
 
-All components live in the single package `@signozhq/ui` under `packages/ui`. To add a new component:
+All components live in the single package `@signozhq/ui` under `packages/ui`.
+
+### Using the Generator (Recommended)
+
+The easiest way to add a new component is using the turbo generator:
+
+1. Create a new branch:
+
+   ```sh
+   git checkout -b feature/new-component-name
+   ```
+
+2. Run the generator:
+
+   ```sh
+   pnpm turbo gen
+   ```
+
+3. Select `new-component` and follow the prompts:
+   - Enter the component name in kebab-case (e.g., `my-component`)
+   - Provide a brief description
+   - Choose whether to import from shadcn or create from scratch
+
+   The generator will automatically:
+
+   - Create the component folder at `packages/ui/src/{name}/`
+   - Add the export to `packages/ui/src/index.ts`
+   - Add the build entry to `packages/ui/vite.config.ts`
+   - Create a Storybook story at `apps/docs/stories/{name}.stories.tsx`
+   - Run `pnpm install`
+
+4. Build and verify:
+
+   ```sh
+   pnpm build
+   pnpm dev
+   ```
+
+5. Commit and push:
+
+   ```sh
+   git add .
+   git commit -m "Add new component: my-component"
+   git push origin feature/new-component-name
+   ```
+
+6. Open a pull request.
+
+### Manual Setup
+
+If you prefer to add a component manually:
 
 1. Create a new branch:
 
@@ -45,34 +95,39 @@ All components live in the single package `@signozhq/ui` under `packages/ui`. To
 
 2. Add the component under `packages/ui/src/`:
 
-   - Create a folder named after the component (e.g. `packages/ui/src/my-component/`).
-   - Add the component file (e.g. `my-component.tsx`) and an `index.ts` that re-exports the public API.
-   - Follow the structure of existing components (e.g. `packages/ui/src/badge/`).
+   - Create a folder named after the component (e.g., `packages/ui/src/my-component/`)
+   - Add the component file (e.g., `my-component.tsx`) and an `index.ts` that re-exports the public API
+   - Add an `index.css` for component styles
+   - Follow the structure of existing components (e.g., `packages/ui/src/badge/`)
 
-3. Register the new export in `packages/ui/package.json`:
+3. Register the new export in `packages/ui/src/index.ts`:
 
-   - Add an entry under `exports` for the new subpath (e.g. `"./my-component": { ... }`).
-   - Copy the pattern from an existing component export (e.g. `"./badge"`).
+   ```ts
+   export * from './my-component/index.js';
+   ```
 
-4. Register the new export in `packages/ui/index.ts`:
-   - Add an entry under `export * from './my-component';` for the new subpath (e.g. `export * from './my-component';`).
+4. Register the new entry in `packages/ui/vite.config.ts`:
 
-5. Register the new export in `packages/ui/vite.config.ts`:
-   - Add an entry under `index: 'src/index.ts',` for the new subpath (e.g. `'my-component/index': 'src/my-component/index.ts',`).
+   ```ts
+   const entries: Record<string, string> = {
+     // ... existing entries
+     'my-component/index': 'src/my-component/index.ts',
+   };
+   ```
 
-6. Add a Storybook story in `apps/docs/stories/`:
+5. Add a Storybook story in `apps/docs/stories/`:
 
-   - Create `apps/docs/stories/my-component.stories.tsx`.
-   - Import from `@signozhq/ui` and use the same story/doc pattern as other stories (see e.g. `badge.stories.tsx`).
+   - Create `apps/docs/stories/my-component.stories.tsx`
+   - Import from `@signozhq/ui` and use the same story/doc pattern as other stories (see e.g., `badge.stories.tsx`)
 
-7. Build and verify:
+6. Build and verify:
 
    ```sh
    pnpm build
    pnpm dev
    ```
 
-8. Commit and push:
+7. Commit and push:
 
    ```sh
    git add .
@@ -80,7 +135,7 @@ All components live in the single package `@signozhq/ui` under `packages/ui`. To
    git push origin feature/new-component-name
    ```
 
-9. Open a pull request.
+8. Open a pull request.
 
 ## Releasing
 
