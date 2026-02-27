@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/SigNoz/components/compare/v0.0.2...v0.0.3) (2026-02-27)
+
+
+### Features
+
+* **storybook:** bump version of storybook to v10 ([#127](https://github.com/SigNoz/components/issues/127)) ([1128d80](https://github.com/SigNoz/components/commit/1128d809682ae6c7d9c222897c9766929ccee992))
+
 ## [0.0.2](https://github.com/SigNoz/components/compare/v0.0.1...v0.0.2) (2026-02-26)
 
 
