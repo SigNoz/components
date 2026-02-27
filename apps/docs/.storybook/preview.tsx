@@ -7,8 +7,15 @@ import {
 	Subtitle,
 	Title,
 } from '@storybook/addon-docs/blocks';
+import 'react-syntax-highlighter';
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
+import scss from 'react-syntax-highlighter/dist/esm/languages/prism/scss';
+import { SyntaxHighlighter } from 'storybook/internal/components';
 import { themes } from 'storybook/theming';
 import { ModeDecorator } from './modeDecorator.jsx';
+
+SyntaxHighlighter.registerLanguage('scss', scss);
+SyntaxHighlighter.registerLanguage('bash', bash);
 
 export const parameters = {
 	controls: {
@@ -26,6 +33,9 @@ export const parameters = {
 		},
 		page: () => (
 			<>
+				<h2 className="sbdocs sbdocs-h2" style={{ marginTop: 0 }}>
+					Overview
+				</h2>
 				<Title />
 				<Subtitle />
 				<Description />

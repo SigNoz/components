@@ -1652,7 +1652,7 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>
 };
 
 const meta: Meta<typeof DataTable<User>> = {
-	title: 'Components/DataTable',
+	title: 'Experimental/DataTable',
 	component: DataTable,
 	parameters: {
 		layout: 'fullscreen',

@@ -67,7 +67,7 @@ const users = [
 ];
 
 const meta: Meta<typeof Table> = {
-	title: 'Components/Basic Table',
+	title: 'Experimental/Basic Table',
 	component: Table,
 	parameters: {
 		layout: 'fullscreen',

@@ -5,8 +5,11 @@ import { createPortal } from 'react-dom';
 const THEMES = ['default', 'blue-demo'] as const;
 type Theme = (typeof THEMES)[number];
 
+const TOKEN_REFERENCE_TITLE = 'Design System/Token Reference';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const ModeDecorator = (Story: any) => {
+export const ModeDecorator = (Story: any, context: { title?: string }) => {
+	const isTokenReference = context?.title === TOKEN_REFERENCE_TITLE;
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [theme, setTheme] = useState<Theme>('default');
 	const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
@@ -105,7 +108,7 @@ export const ModeDecorator = (Story: any) => {
 
 	return (
 		<>
-			{mounted && createPortal(controls, document.body)}
+			{mounted && !isTokenReference && createPortal(controls, document.body)}
 			<Story />
 		</>
 	);

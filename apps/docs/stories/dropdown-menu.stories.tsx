@@ -59,7 +59,7 @@ const dropdownDocs = generateDocs({
 });
 
 const meta: Meta<typeof Dropdown> = {
-	title: 'Components/DropdownMenu',
+	title: 'Experimental/DropdownMenu',
 	component: Dropdown,
 	parameters: {
 		layout: 'fullscreen',

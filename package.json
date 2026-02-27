@@ -57,6 +57,7 @@
 	"packageManager": "pnpm@8.15.6",
 	"name": "design-system",
 	"dependencies": {
+		"@signozhq/design-tokens": "file:.yalc/@signozhq/design-tokens",
 		"@signozhq/icons": "^0.1.0"
 	},
 	"pnpm": {

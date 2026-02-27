@@ -62,7 +62,7 @@ const buttonDocs = generateDocs({
 });
 
 const meta: Meta<typeof Button> = {
-	title: 'Components/Button',
+	title: 'Experimental/Button',
 	component: Button,
 	decorators: [],
 	args: {
