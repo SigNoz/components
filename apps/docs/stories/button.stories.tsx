@@ -8,8 +8,9 @@ import {
 	ButtonVariant,
 	type ButtonVariantValue,
 } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronLeft, ChevronRight, Code } from 'lucide-react';
+import { expect, fn } from 'storybook/test';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const VARIANTS = [
@@ -27,6 +28,7 @@ const COLORS = [
 ] as const;
 
 type ButtonConfig = {
+	testId?: string;
 	size?: ButtonSizeValue;
 	variant?: ButtonVariantValue;
 	color?: ButtonColorValue;
@@ -63,6 +65,9 @@ const meta: Meta<typeof Button> = {
 	title: 'Components/Button',
 	component: Button,
 	decorators: [],
+	args: {
+		onClick: fn(),
+	},
 	argTypes: {
 		variant: {
 			control: 'select',
@@ -123,10 +128,10 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
-	render: () => {
+	render: (args) => {
 		const buttonConfigs: ButtonConfig[] = [
-			// Size Variations
 			{
+				testId: 'extra-small-button',
 				size: ButtonSize.XS,
 				label: 'Extra-small Button',
 				color: ButtonColor.Primary,
@@ -164,11 +169,13 @@ export const Default: Story = {
 						<div key={index} className="flex items-center">
 							<div className="w-[200px]">
 								<Button
+									testId={config.testId}
 									size={config.size}
 									variant={config.variant}
 									color={config.color}
 									prefixIcon={<ChevronLeft />}
 									suffixIcon={<ChevronRight />}
+									onClick={args.onClick}
 								>
 									{config.label}
 								</Button>
@@ -178,6 +185,16 @@ export const Default: Story = {
 				</div>
 			</div>
 		);
+	},
+	play: async ({ mount, canvas, userEvent, args }) => {
+		await mount();
+
+		const button = canvas.getByTestId('extra-small-button');
+		await expect(button).toBeInTheDocument();
+
+		await userEvent.click(button);
+
+		await expect(args.onClick).toHaveBeenCalled();
 	},
 };
 

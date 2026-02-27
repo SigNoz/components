@@ -7,7 +7,7 @@ import {
 	ButtonVariant,
 	DialogWrapper,
 } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';
 

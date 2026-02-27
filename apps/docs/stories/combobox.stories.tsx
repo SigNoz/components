@@ -12,7 +12,7 @@ import {
 	ComboboxSeparator,
 	ComboboxTrigger,
 } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Code2, Database, GitBranch, Terminal } from 'lucide-react';
 import { useState } from 'react';
 import { generateDocs } from '../utils/generateDocs.js';

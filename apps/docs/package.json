@@ -9,13 +9,15 @@
 		"preview-storybook": "serve storybook-static",
 		"build-storybook": "storybook build -o storybook-static",
 		"clean": "rm -rf .turbo && rm -rf node_modules",
-		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes "
+		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes ",
+		"test": "vitest",
+		"test-storybook": "vitest --project=storybook"
 	},
 	"dependencies": {
-		"@signozhq/ui": "workspace:*",
 		"@signozhq/design-tokens": "latest",
 		"@signozhq/icons": "^0.1.0",
 		"@signozhq/tailwind-config": "workspace:*",
+		"@signozhq/ui": "workspace:*",
 		"@tailwindcss/vite": "^4.2.1",
 		"lucide-react": "^0.445.0",
 		"react": "^18.2.0",
@@ -26,24 +28,25 @@
 		"react-window": "^1.8.11"
 	},
 	"devDependencies": {
-		"@chromatic-com/storybook": "^1",
+		"@chromatic-com/storybook": "^5.0.1",
 		"@repo/typescript-config": "workspace:*",
-		"@storybook/addon-actions": "^8.3.3",
-		"@storybook/addon-designs": "^8.0.3",
-		"@storybook/addon-essentials": "^8.3.3",
-		"@storybook/addon-links": "^8.3.3",
-		"@storybook/addon-themes": "^8.6.0",
-		"@storybook/react": "^8.3.3",
-		"@storybook/react-vite": "^8.3.3",
+		"@storybook/addon-designs": "^11.0.0",
+		"@storybook/addon-docs": "^10.0.0",
+		"@storybook/addon-themes": "^10.0.0",
+		"@storybook/addon-vitest": "^10.2.13",
+		"@storybook/react-vite": "^10.0.0",
 		"@tailwindcss/postcss": "^4.1.4",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.2.19",
 		"@types/react-window": "^1.8.8",
 		"postcss": "^8.4.35",
 		"serve": "^14.2.1",
-		"storybook": "^8.3.3",
-		"storybook-dark-mode": "^4.0.2",
+		"storybook": "^10.0.0",
 		"tailwindcss": "^4.1.4",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"vitest": "^4.0.18",
+		"playwright": "^1.58.2",
+		"@vitest/browser-playwright": "^4.0.18",
+		"@vitest/coverage-v8": "^4.0.18"
 	}
 }

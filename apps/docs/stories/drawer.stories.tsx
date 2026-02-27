@@ -1,6 +1,6 @@
 import { Button, ButtonColor, ButtonVariant, DrawerWrapper } from '@signozhq/ui';
-import { useArgs } from '@storybook/preview-api';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useArgs } from 'storybook/preview-api';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const drawerExamples = [

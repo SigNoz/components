@@ -1,5 +1,5 @@
 import { PinList, type PinListItem } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BarChart, Bug, FileText, GitBranch, Globe, Hexagon, List, Server } from 'lucide-react';
 import type React from 'react';
 import { generateDocs } from '../utils/generateDocs.js';

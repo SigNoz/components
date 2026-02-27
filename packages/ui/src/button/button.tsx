@@ -55,6 +55,7 @@ export interface ButtonProps
 	size?: ButtonSizeValue;
 	loading?: boolean;
 	background?: ButtonBackgroundValue;
+	testId?: string;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -72,6 +73,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			loading = false,
 			background,
 			children,
+			testId,
 			...props
 		},
 		ref
@@ -88,6 +90,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 		return (
 			<Comp
+				data-testid={testId}
 				data-color={color}
 				data-background={variant === ButtonVariant.Action ? background : undefined}
 				className={cn(

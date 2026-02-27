@@ -11,9 +11,9 @@ import {
 	CommandSeparator,
 	CommandShortcut,
 } from '@signozhq/ui';
-import { action } from '@storybook/addon-actions';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import { action } from 'storybook/actions';
 
 import { generateDocs } from '../utils/generateDocs.js';
 

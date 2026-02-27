@@ -12,3 +12,4 @@ server/dist
 public/dist
 storybook-static/
 apps/packages-playground/
+.idea
