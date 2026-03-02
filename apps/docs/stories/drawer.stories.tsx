@@ -60,7 +60,7 @@ const drawerDocs = generateDocs({
 });
 
 const meta: Meta<typeof DrawerWrapper> = {
-	title: 'Components/Drawer',
+	title: 'Old Components/Drawer',
 	component: DrawerWrapper,
 	parameters: {
 		layout: 'fullscreen',

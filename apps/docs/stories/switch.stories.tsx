@@ -23,7 +23,7 @@ const switchDocs = generateDocs({
 });
 
 const meta: Meta<typeof Switch> = {
-	title: 'Components/Switch',
+	title: 'Old Components/Switch',
 	component: Switch,
 	argTypes: {
 		labelName: {

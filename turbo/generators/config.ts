@@ -1,25 +1,48 @@
 import { execSync } from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import type { PlopTypes } from '@turbo/gen';
-import fs from 'fs-extra';
-import inquirer from 'inquirer';
 
 const PROJECT_ROOT = path.resolve(__dirname, '../..');
+const UI_PACKAGE_PATH = path.resolve(PROJECT_ROOT, 'packages/ui');
+const UI_SRC_PATH = path.resolve(UI_PACKAGE_PATH, 'src');
+
+function toPascalCase(str: string): string {
+	return str
+		.split('-')
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.join('');
+}
+
+function ensureDirSync(dirPath: string): void {
+	if (!fs.existsSync(dirPath)) {
+		fs.mkdirSync(dirPath, { recursive: true });
+	}
+}
+
+function removeDirSync(dirPath: string): void {
+	if (fs.existsSync(dirPath)) {
+		fs.rmSync(dirPath, { recursive: true, force: true });
+	}
+}
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
-	plop.setGenerator('new-package', {
-		description: 'Creates a new package based on the button package',
+	plop.setGenerator('new-component', {
+		description: 'Creates a new component inside packages/ui',
 		prompts: [
 			{
 				type: 'input',
 				name: 'name',
-				message: 'What is the name of the new package?',
+				message: 'What is the name of the new component? (use kebab-case, e.g., my-component)',
 				validate: (input: string) => {
 					if (input.includes(' ')) {
-						return 'Package name cannot include spaces';
+						return 'Component name cannot include spaces';
 					}
 					if (!input) {
-						return 'Package name is required';
+						return 'Component name is required';
+					}
+					if (!/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(input)) {
+						return 'Component name must be kebab-case (e.g., my-component)';
 					}
 					return true;
 				},
@@ -27,261 +50,244 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 			{
 				type: 'input',
 				name: 'description',
-				message: 'Provide a brief description of the package:',
-				default: 'A new package',
+				message: 'Provide a brief description of the component:',
+				default: 'A new component',
+			},
+			{
+				type: 'confirm',
+				name: 'replaceExisting',
+				message: 'A component with this name already exists. Do you want to replace it?',
+				default: false,
+				when: (answers) => {
+					const componentPath = path.resolve(UI_SRC_PATH, answers.name as string);
+					return fs.existsSync(componentPath);
+				},
+			},
+			{
+				type: 'list',
+				name: 'componentType',
+				message: 'Do you want to import a shadcn component or create a component from scratch?',
+				choices: ['shadcn', 'from_scratch'],
 			},
 		],
-		actions: [
-			// Copy the entire button package directory
-			async (answers) => {
-				const sourcePath = path.resolve(PROJECT_ROOT, 'packages/button');
-				const targetPath = path.resolve(
-					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}`
-				);
+		actions: (answers) => {
+			if (!answers) return [];
 
-				if (!fs.existsSync(sourcePath)) {
-					throw new Error(`Button package directory not found: ${sourcePath}`);
-				}
+			const { name, replaceExisting } = answers as {
+				name: string;
+				replaceExisting?: boolean;
+			};
+			const componentPath = path.resolve(UI_SRC_PATH, name);
 
-				if (fs.existsSync(targetPath)) {
-					const { replace } = await inquirer.prompt([
-						{
-							type: 'confirm',
-							name: 'replace',
-							message: `The package ${(answers as { name: string }).name} already exists. Do you want to replace it?`,
-							default: false,
-						},
-					]);
+			if (fs.existsSync(componentPath) && replaceExisting === false) {
+				throw new Error(`Component ${name} already exists. Operation cancelled.`);
+			}
 
-					if (replace) {
-						fs.removeSync(targetPath);
+			return [
+				(data) => {
+					const componentName = (data as { name: string }).name;
+					const compPath = path.resolve(UI_SRC_PATH, componentName);
+					const compType = (data as { componentType: string }).componentType;
+
+					if (fs.existsSync(compPath)) {
+						removeDirSync(compPath);
+					}
+
+					ensureDirSync(compPath);
+
+					if (compType === 'shadcn') {
+						console.log(`Running shadcn command for ${componentName}`);
+						try {
+							execSync(`pnpm dlx shadcn@latest add ${componentName}`, {
+								cwd: UI_PACKAGE_PATH,
+								stdio: 'inherit',
+							});
+
+							const componentFilePath = path.join(compPath, `${componentName}.tsx`);
+							if (fs.existsSync(componentFilePath)) {
+								const componentContent = fs.readFileSync(componentFilePath, 'utf8');
+								const updatedContent = `import "./index.css"\n${componentContent}`;
+								fs.writeFileSync(componentFilePath, updatedContent);
+							}
+
+							return `Shadcn ${componentName} added successfully`;
+						} catch (error) {
+							console.error('Error running shadcn command:', error);
+							removeDirSync(compPath);
+							throw new Error(`Failed to add shadcn ${componentName}`);
+						}
 					} else {
-						throw new Error(
-							`Package ${(answers as { name: string }).name} already exists. Operation cancelled.`
-						);
-					}
-				}
+						const pascalCaseName = toPascalCase(componentName);
 
-				fs.copySync(sourcePath, targetPath);
+						const componentContent = `import './index.css';
 
-				// Remove CHANGELOG.md and src/button.tsx
-				fs.removeSync(path.join(targetPath, 'CHANGELOG.md'));
-				fs.removeSync(path.join(targetPath, 'src', 'button.tsx'));
-				fs.removeSync(path.join(targetPath, 'src', 'button-variants.tsx'));
+export interface ${pascalCaseName}Props {
+	children?: React.ReactNode;
+}
 
-				console.log(`Copied button package to ${targetPath}`);
-				return 'Package directory created';
-			},
-
-			// Update package.json
-			(answers) => {
-				const packageJsonPath = path.resolve(
-					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/package.json`
-				);
-				const packageJson = fs.readJsonSync(packageJsonPath);
-
-				packageJson.name = `@signozhq/${(answers as { name: string }).name}`;
-				packageJson.description = (answers as { description: string }).description;
-				packageJson.version = '0.0.0';
-
-				// Update main, module, and types fields
-				packageJson.main = `./dist/${(answers as { name: string }).name}.cjs`;
-				packageJson.module = `./dist/${(answers as { name: string }).name}.js`;
-				packageJson.types = `./dist/${(answers as { name: string }).name}.d.cts`;
-
-				// Update exports
-				packageJson.exports = {
-					'.': {
-						import: {
-							types: `./dist/${(answers as { name: string }).name}.d.ts`,
-							import: `./dist/${(answers as { name: string }).name}.js`,
-						},
-						require: {
-							types: `./dist/${(answers as { name: string }).name}.d.cts`,
-							require: `./dist/${(answers as { name: string }).name}.cjs`,
-						},
-					},
-				};
-
-				fs.writeJsonSync(packageJsonPath, packageJson, { spaces: 2 });
-
-				console.log(`Updated package.json for ${(answers as { name: string }).name}`);
-				return 'package.json updated';
-			},
-
-			// Update vite.config.ts
-			(answers) => {
-				const configPath = path.resolve(
-					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}/vite.config.ts`
-				);
-				let content = fs.readFileSync(configPath, 'utf8');
-
-				content = content.replace(/button/g, (answers as { name: string }).name);
-
-				fs.writeFileSync(configPath, content);
-
-				console.log(`Updated vite.config.ts for ${(answers as { name: string }).name}`);
-				return 'vite.config.ts updated';
-			},
-			// Update docs app package.json
-			{
-				type: 'append',
-				path: path.resolve(PROJECT_ROOT, 'apps/docs/package.json'),
-				pattern: /"dependencies": {/,
-				template: `    "@signozhq/{{ name }}": "workspace:*",`,
-			},
-
-			// Prompt for component type and create accordingly
-			async (answers) => {
-				const packagePath = path.resolve(
-					PROJECT_ROOT,
-					`packages/${(answers as { name: string }).name}`
-				);
-
-				const { componentType } = await inquirer.prompt([
-					{
-						type: 'list',
-						name: 'componentType',
-						message: 'Do you want to import a shadcn component or create a component from scratch?',
-						choices: ['shadcn', 'from_scratch'],
-					},
-				]);
-
-				if (componentType === 'shadcn') {
-					console.log(`Running shadcn command for ${(answers as { name: string }).name}`);
-					try {
-						execSync(`pnpm dlx shadcn@latest add ${(answers as { name: string }).name}`, {
-							cwd: packagePath,
-							stdio: 'inherit',
-						});
-
-						// Append import statement to the newly generated component
-						const componentPath = path.join(
-							packagePath,
-							`src/${(answers as { name: string }).name}.tsx`
-						);
-						const componentContent = fs.readFileSync(componentPath, 'utf8');
-						const updatedContent = `import "./index.css"\n${componentContent}`;
-						fs.writeFileSync(componentPath, updatedContent);
-
-						return `Shadcn ${(answers as { name: string }).name} added successfully and import statement appended`;
-					} catch (error) {
-						console.error('Error running shadcn command:', error);
-						return `Failed to add shadcn ${(answers as { name: string }).name}`;
-					}
-				} else {
-					// Create a component from scratch
-					const componentPath = path.join(
-						packagePath,
-						`src/${(answers as { name: string }).name}.tsx`
-					);
-					const componentName =
-						(answers as { name: string }).name.charAt(0).toUpperCase() +
-						(answers as { name: string }).name.slice(1);
-					const componentContent = `
-
-  const ${componentName} = () => {
-    return (
-      <div>${(answers as { name: string }).name}</div>
-    );
-  };
-
-  export default ${componentName};
-
+export function ${pascalCaseName}({ children }: ${pascalCaseName}Props) {
+	return <div className="${componentName}">{children}</div>;
+}
 `;
-					fs.writeFileSync(componentPath, componentContent);
-					return `component  ${(answers as { name: string }).name} created from scratch successfully`;
-				}
-			},
 
-			// Create a generic story file
-			async (answers) => {
-				const componentName = (answers as { name: string }).name;
-				const description = (answers as { description: string }).description;
-				const storiesPath = path.resolve(
-					PROJECT_ROOT,
-					`apps/docs/stories/${componentName}.stories.tsx`
-				);
+						const indexContent = `export type * from './${componentName}.js';
+export { ${pascalCaseName} } from './${componentName}.js';
+`;
 
-				// Convert kebab-case to PascalCase
-				const toPascalCase = (str: string) => {
-					return str
-						.split('-')
-						.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-						.join('');
-				};
+						const cssContent = `/* Styles for ${pascalCaseName} component */
+.${componentName} {
+	/* Add your styles here */
+}
+`;
 
-				const pascalCaseName = toPascalCase(componentName);
+						fs.writeFileSync(path.join(compPath, `${componentName}.tsx`), componentContent);
+						fs.writeFileSync(path.join(compPath, 'index.ts'), indexContent);
+						fs.writeFileSync(path.join(compPath, 'index.css'), cssContent);
 
-				// Create documentation boilerplate
-				const exampleCode = `import { ${pascalCaseName} } from '@signozhq/${componentName}';
+						return `Component ${componentName} created from scratch`;
+					}
+				},
+
+				(data) => {
+					const componentName = (data as { name: string }).name;
+					const indexPath = path.resolve(UI_SRC_PATH, 'index.ts');
+					const indexContent = fs.readFileSync(indexPath, 'utf8');
+
+					const exportLine = `export * from './${componentName}/index.js';`;
+
+					if (indexContent.includes(exportLine)) {
+						return 'Export already exists in index.ts';
+					}
+
+					const lines = indexContent.trim().split('\n');
+					lines.push(exportLine);
+					lines.sort((a, b) => a.localeCompare(b));
+
+					fs.writeFileSync(indexPath, lines.join('\n') + '\n');
+
+					console.log(`Added export for ${componentName} to packages/ui/src/index.ts`);
+					return 'index.ts updated';
+				},
+
+				(data) => {
+					const componentName = (data as { name: string }).name;
+					const viteConfigPath = path.resolve(UI_PACKAGE_PATH, 'vite.config.ts');
+					const viteContent = fs.readFileSync(viteConfigPath, 'utf8');
+
+					const entryLine = `\t'${componentName}/index': 'src/${componentName}/index.ts',`;
+
+					if (viteContent.includes(`'${componentName}/index'`)) {
+						return 'Entry already exists in vite.config.ts';
+					}
+
+					const entriesRegex = /const entries: Record<string, string> = \{([^}]+)\}/;
+					const entriesMatch = entriesRegex.exec(viteContent);
+					if (!entriesMatch) {
+						throw new Error('Could not find entries object in vite.config.ts');
+					}
+
+					const entriesContent = entriesMatch[1];
+					const entriesLines = entriesContent.split('\n').filter((line) => line.trim());
+
+					const newEntriesLines = [...entriesLines];
+					const entryKeyRegex = /'([^']+)\/index'/;
+					const insertIndex = newEntriesLines.findIndex((line) => {
+						const match = entryKeyRegex.exec(line);
+						if (match) {
+							return match[1] > componentName;
+						}
+						return false;
+					});
+
+					if (insertIndex === -1) {
+						newEntriesLines.push(entryLine);
+					} else {
+						newEntriesLines.splice(insertIndex, 0, entryLine);
+					}
+
+					const newEntriesContent = '\n' + newEntriesLines.join('\n') + '\n';
+					const updatedViteContent = viteContent.replace(entriesContent, newEntriesContent);
+
+					fs.writeFileSync(viteConfigPath, updatedViteContent);
+
+					console.log(`Added entry for ${componentName} to packages/ui/vite.config.ts`);
+					return 'vite.config.ts updated';
+				},
+
+				(data) => {
+					const componentName = (data as { name: string }).name;
+					const description = (data as { description: string }).description;
+					const pascalCaseName = toPascalCase(componentName);
+
+					const storiesPath = path.resolve(
+						PROJECT_ROOT,
+						`apps/docs/stories/${componentName}.stories.tsx`
+					);
+
+					const exampleCode = `import { ${pascalCaseName} } from '@signozhq/ui';
 
 export default function MyComponent() {
   return (
-    <${pascalCaseName} />
+    <${pascalCaseName}>Hello World</${pascalCaseName}>
   );
 }`;
 
-				// Create documentation boilerplate
-				const storiesContent = `import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { ${pascalCaseName} } from '@signozhq/${componentName}';
-import { generateDocs } from '../utils/generateDocs';
+					const storiesContent = `import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ${pascalCaseName} } from '@signozhq/ui';
+import { generateDocs } from '../utils/generateDocs.js';
 
 const ${pascalCaseName}Examples = [
 \`${exampleCode}\`
 ];
 
 const ${pascalCaseName}Docs = generateDocs({
-  packageName: '@signozhq/${componentName}',
-  description: '${description}',
-  examples: ${pascalCaseName}Examples,
+	packageName: '@signozhq/ui',
+	description: '${description}',
+	examples: ${pascalCaseName}Examples,
 });
 
 const meta: Meta<typeof ${pascalCaseName}> = {
-  title: 'Components/${pascalCaseName}',
-  component: ${pascalCaseName},
-  parameters: {
-    docs: {
-      description: {
-        component: ${pascalCaseName}Docs,
-      },
-    },
-  },
-  tags: ['autodocs'],
+	title: 'Working in Progress/${pascalCaseName}',
+	component: ${pascalCaseName},
+	parameters: {
+		docs: {
+			description: {
+				component: ${pascalCaseName}Docs,
+			},
+		},
+	},
+	tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj<typeof ${pascalCaseName}>;
 
 export const Default: Story = {
-  args: {
-    // Add default props here
-  },
-};`;
+	args: {
+		children: 'Hello World',
+	},
+};
+`;
 
-				fs.writeFileSync(storiesPath, storiesContent);
-				console.log(`Created Storybook story with documentation at ${storiesPath}`);
-				return 'Storybook story created';
-			},
+					fs.writeFileSync(storiesPath, storiesContent);
+					console.log(`Created Storybook story at ${storiesPath}`);
+					return 'Storybook story created';
+				},
 
-			// Run pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT level
-			() => {
-				console.log('Running pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT');
-				try {
-					execSync('pnpm clean && pnpm install && pnpm run dev', {
-						cwd: PROJECT_ROOT,
-						stdio: 'inherit',
-					});
-					return 'pnpm clean && pnpm install && pnpm run dev completed successfully at PROJECT_ROOT';
-				} catch (error) {
-					console.error('Error running commands at PROJECT_ROOT:', error);
-					return 'Failed to run pnpm clean && pnpm install && pnpm run dev at PROJECT_ROOT';
-				}
-			},
-		],
+				() => {
+					console.log('Running pnpm install at PROJECT_ROOT');
+					try {
+						execSync('pnpm install', {
+							cwd: PROJECT_ROOT,
+							stdio: 'inherit',
+						});
+						return 'pnpm install completed successfully';
+					} catch (error) {
+						console.error('Error running pnpm install:', error);
+						return 'Failed to run pnpm install';
+					}
+				},
+			];
+		},
 	});
 }

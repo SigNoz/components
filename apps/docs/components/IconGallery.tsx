@@ -86,7 +86,7 @@ function IconGallery({ size = 24, strokeWidth = 2, color = 'currentColor' }: Ico
 		setTimeout(() => setCopiedIcon(null), 2000);
 	};
 
-	const COLUMN_WIDTH = 200; // Base width for each column
+	const COLUMN_WIDTH = 230; // Base width for each column
 	const ROW_HEIGHT = 180; // Height for each row
 
 	return (

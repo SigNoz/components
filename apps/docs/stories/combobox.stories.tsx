@@ -56,7 +56,7 @@ const ComboboxDocs = generateDocs({
 });
 
 const meta: Meta<typeof Combobox> = {
-	title: 'Components/Combobox',
+	title: 'Old Components/Combobox',
 	component: Combobox,
 	parameters: {
 		docs: {

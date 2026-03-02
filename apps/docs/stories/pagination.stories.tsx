@@ -30,7 +30,7 @@ const paginationDocs = generateDocs({
 });
 
 const meta: Meta<typeof Pagination> = {
-	title: 'Components/Pagination',
+	title: 'Old Components/Pagination',
 	component: Pagination,
 	argTypes: {
 		current: {

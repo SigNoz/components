@@ -41,7 +41,7 @@ const toggleGroupDocs = generateDocs({
 });
 
 const meta: Meta<typeof ToggleGroup> = {
-	title: 'Components/Segmented Controls',
+	title: 'Old Components/Segmented Controls',
 	component: ToggleGroup,
 	argTypes: {
 		variant: {

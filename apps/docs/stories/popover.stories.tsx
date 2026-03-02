@@ -96,7 +96,7 @@ const PopoverDocs = generateDocs({
 });
 
 const meta: Meta<typeof Popover> = {
-	title: 'Components/Popover',
+	title: 'Old Components/Popover',
 	component: Popover,
 	parameters: {
 		docs: {

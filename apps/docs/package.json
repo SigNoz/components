@@ -14,7 +14,7 @@
 		"test-storybook": "vitest --project=storybook"
 	},
 	"dependencies": {
-		"@signozhq/design-tokens": "latest",
+		"@signozhq/design-tokens": "2.1.2",
 		"@signozhq/icons": "^0.1.0",
 		"@signozhq/tailwind-config": "workspace:*",
 		"@signozhq/ui": "workspace:*",
@@ -38,15 +38,18 @@
 		"@tailwindcss/postcss": "^4.1.4",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.2.19",
+		"@types/react-syntax-highlighter": "^15.5.13",
 		"@types/react-window": "^1.8.8",
+		"@vitest/browser-playwright": "^4.0.18",
+		"@vitest/coverage-v8": "^4.0.18",
+		"playwright": "^1.58.2",
 		"postcss": "^8.4.35",
+		"react-syntax-highlighter": "^16.1.1",
+		"remark-gfm": "^4.0.1",
 		"serve": "^14.2.1",
 		"storybook": "^10.0.0",
 		"tailwindcss": "^4.1.4",
 		"tailwindcss-animate": "^1.0.7",
-		"vitest": "^4.0.18",
-		"playwright": "^1.58.2",
-		"@vitest/browser-playwright": "^4.0.18",
-		"@vitest/coverage-v8": "^4.0.18"
+		"vitest": "^4.0.18"
 	}
 }

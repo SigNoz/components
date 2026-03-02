@@ -26,7 +26,7 @@ const tooltipDocs = generateDocs({
 });
 
 const meta: Meta<typeof Tooltip> = {
-	title: 'Components/Tooltip',
+	title: 'Old Components/Tooltip',
 	component: Tooltip,
 	parameters: {
 		layout: 'fullscreen',

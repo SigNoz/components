@@ -52,7 +52,7 @@ const tabsDocs = generateDocs({
 });
 
 const meta: Meta<typeof Tabs> = {
-	title: 'Components/Tabs',
+	title: 'Old Components/Tabs',
 	component: Tabs,
 	tags: ['autodocs'],
 	parameters: {

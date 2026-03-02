@@ -41,7 +41,7 @@ const dialogDocs = generateDocs({
 });
 
 const meta: Meta<typeof DialogWrapper> = {
-	title: 'Components/Dialog',
+	title: 'Old Components/Dialog',
 	component: DialogWrapper,
 	tags: ['autodocs'],
 	parameters: {

@@ -105,7 +105,7 @@ const StarIcon = () => (
 
 // Meta Configuration
 const meta: Meta<typeof Badge> = {
-	title: 'Components/Badge',
+	title: 'Old Components/Badge',
 	component: Badge,
 	tags: ['autodocs'],
 	parameters: {

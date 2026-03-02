@@ -24,7 +24,7 @@ const checkboxDocs = generateDocs({
 });
 
 const meta: Meta<typeof Checkbox> = {
-	title: 'Components/Checkbox',
+	title: 'Old Components/Checkbox',
 	component: Checkbox,
 	argTypes: {
 		labelName: {
