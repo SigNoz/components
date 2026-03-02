@@ -95,7 +95,7 @@ const ResizableDocs = generateDocs({
 });
 
 const meta: Meta<typeof ResizablePanelGroup> = {
-	title: 'Experimental/Resizable',
+	title: 'Old Components/Resizable',
 	component: ResizablePanelGroup,
 	parameters: {
 		layout: 'fullscreen',

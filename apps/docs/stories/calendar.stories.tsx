@@ -71,7 +71,7 @@ const CalendarDocs = generateDocs({
 });
 
 const meta: Meta<typeof Calendar> = {
-	title: 'Experimental/Calendar',
+	title: 'Old Components/Calendar',
 	component: Calendar,
 	parameters: {
 		docs: {

@@ -247,7 +247,7 @@ const ${pascalCaseName}Docs = generateDocs({
 });
 
 const meta: Meta<typeof ${pascalCaseName}> = {
-	title: 'Experimental/${pascalCaseName}',
+	title: 'Working in Progress/${pascalCaseName}',
 	component: ${pascalCaseName},
 	parameters: {
 		docs: {

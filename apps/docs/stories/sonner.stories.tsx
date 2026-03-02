@@ -45,7 +45,7 @@ const SonnerDocs = generateDocs({
 });
 
 const meta: Meta<typeof Toaster> = {
-	title: 'Experimental/Sonner',
+	title: 'Old Components/Sonner',
 	component: Toaster,
 	parameters: {
 		docs: {

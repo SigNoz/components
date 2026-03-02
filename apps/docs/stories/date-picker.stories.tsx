@@ -66,7 +66,7 @@ const DatePickerDocs = generateDocs({
 });
 
 const meta: Meta<typeof DatePicker> = {
-	title: 'Experimental/DatePicker',
+	title: 'Old Components/DatePicker',
 	component: DatePicker,
 	parameters: {
 		docs: {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // Meta Configuration
 const meta: Meta<typeof Input> = {
-	title: 'Experimental/Input',
+	title: 'Old Components/Input',
 	component: Input,
 	tags: ['autodocs'],
 	parameters: {
