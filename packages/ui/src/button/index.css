@@ -78,3 +78,18 @@
 	--action-button-hover-border: color-mix(in srgb, var(--bg-vanilla-400) 40%, transparent);
 	--action-button-hover-text: var(--bg-slate-500);
 }
+
+@layer utilities {
+	.font-size-inherit {
+		font-size: inherit;
+	}
+	.font-weight-inherit {
+		font-weight: inherit;
+	}
+	.line-height-inherit {
+		line-height: inherit;
+	}
+	.font-family-inherit {
+		font-family: inherit;
+	}
+}

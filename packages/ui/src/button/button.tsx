@@ -3,7 +3,8 @@ import './index.css';
 import { Slot } from '@radix-ui/react-slot';
 import type { VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
-import React, { forwardRef } from 'react';
+import type React from 'react';
+import { cloneElement, forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import buttonVariants from './button-variants.js';
 
@@ -36,6 +37,7 @@ export const ButtonColor = {
 	Destructive: 'destructive',
 	Warning: 'warning',
 	Secondary: 'secondary',
+	None: 'none',
 } as const;
 
 export type ButtonVariantValue = (typeof ButtonVariant)[keyof typeof ButtonVariant];
@@ -43,31 +45,37 @@ export type ButtonSizeValue = (typeof ButtonSize)[keyof typeof ButtonSize];
 export type ButtonBackgroundValue = (typeof ButtonBackground)[keyof typeof ButtonBackground];
 export type ButtonColorValue = (typeof ButtonColor)[keyof typeof ButtonColor] | (string & {});
 
-export interface ButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-		VariantProps<typeof buttonVariants> {
+export type ButtonProps = VariantProps<typeof buttonVariants> & {
 	asChild?: boolean;
-	variant?: ButtonVariantValue;
 	color?: ButtonColorValue;
-	width?: string;
-	prefixIcon?: React.ReactElement;
-	suffixIcon?: React.ReactElement;
-	size?: ButtonSizeValue;
+	prefix?: React.ReactElement;
+	suffix?: React.ReactElement;
 	loading?: boolean;
 	background?: ButtonBackgroundValue;
 	testId?: string;
-}
+} & Pick<
+		React.ButtonHTMLAttributes<HTMLButtonElement>,
+		| 'disabled'
+		| 'onClick'
+		| 'className'
+		| 'children'
+		| 'onDoubleClick'
+		| 'type'
+		| 'id'
+		| 'tabIndex'
+		| 'title'
+	> &
+	React.AriaAttributes;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	(
 		{
 			className,
-			variant = ButtonVariant.Solid,
+			variant,
 			color,
-			size = ButtonSize.MD,
-			width,
-			prefixIcon,
-			suffixIcon,
+			size,
+			prefix,
+			suffix,
 			asChild = false,
 			disabled,
 			loading = false,
@@ -80,6 +88,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	) => {
 		const Comp = asChild ? Slot : 'button';
 
+		variant ??= ButtonVariant.Solid;
+		size ??= ButtonSize.MD;
+		color ??= ButtonColor.Primary;
+
 		const iconSizes: Record<ButtonSizeValue, number> = {
 			[ButtonSize.XS]: 10,
 			[ButtonSize.SM]: 16,
@@ -87,6 +99,30 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			[ButtonSize.LG]: 20,
 			[ButtonSize.Icon]: 16,
 		};
+
+		if (asChild) {
+			if (loading || prefix || suffix) {
+				console.warn('Loading, prefix, and suffix are not supported when using asChild');
+			}
+
+			return (
+				<Comp
+					data-testid={testId}
+					data-color={color}
+					data-background={variant === ButtonVariant.Action ? background : undefined}
+					className={cn(
+						buttonVariants({ variant, size, className }),
+						'font-inter',
+						loading && 'cursor-wait'
+					)}
+					disabled={disabled || loading}
+					ref={ref}
+					{...props}
+				>
+					{children}
+				</Comp>
+			);
+		}
 
 		return (
 			<Comp
@@ -96,7 +132,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				className={cn(
 					buttonVariants({ variant, size, className }),
 					'font-inter',
-					width && `w-${width}`,
 					loading && 'cursor-wait'
 				)}
 				disabled={disabled || loading}
@@ -106,23 +141,25 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{loading ? (
 					<Loader2 size={iconSizes[size]} className="animate-fast-spin" />
 				) : (
-					prefixIcon &&
-					React.cloneElement(prefixIcon, {
-						...(!prefixIcon.props.size && {
-							size: iconSizes[size],
-							className: 'flex-shrink-0',
-						}),
-					})
+					(prefix &&
+						cloneElement(prefix, {
+							...(!prefix.props.size && {
+								size: iconSizes[size],
+								className: 'flex-shrink-0',
+							}),
+						})) ||
+					null
 				)}
 				{children}
-				{!loading &&
-					suffixIcon &&
-					React.cloneElement(suffixIcon, {
-						...(!suffixIcon.props.size && {
+				{(!loading &&
+					suffix &&
+					cloneElement(suffix, {
+						...(!suffix.props.size && {
 							size: iconSizes[size],
 							className: 'flex-shrink-0',
 						}),
-					})}
+					})) ||
+					null}
 			</Comp>
 		);
 	}

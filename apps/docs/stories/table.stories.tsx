@@ -1,6 +1,7 @@
 import {
 	Badge,
 	Button,
+	ButtonColor,
 	Table,
 	TableBody,
 	TableCaption,
@@ -240,14 +241,25 @@ export const Enhanced: Story = {
 								</TableCell>
 								<TableCell>
 									<div className="flex items-center gap-1">
-										<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+										<Button
+											variant="ghost"
+											color={ButtonColor.None}
+											size="sm"
+											className="h-8 w-8 p-0"
+										>
 											<Eye className="h-4 w-4" />
 										</Button>
-										<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+										<Button
+											variant="ghost"
+											color={ButtonColor.None}
+											size="sm"
+											className="h-8 w-8 p-0"
+										>
 											<Edit className="h-4 w-4" />
 										</Button>
 										<Button
 											variant="ghost"
+											color={ButtonColor.None}
 											size="sm"
 											className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
 										>
@@ -339,8 +351,13 @@ export const Empty: Story = {
 									<p className="text-sm text-muted-foreground">
 										Get started by creating a new user.
 									</p>
-									<Button size="sm" className="mt-2">
-										<Upload className="h-4 w-4 mr-2" />
+									<Button
+										size="sm"
+										className="mt-2"
+										variant="ghost"
+										color={ButtonColor.None}
+										prefix={<Upload />}
+									>
 										Add User
 									</Button>
 								</div>

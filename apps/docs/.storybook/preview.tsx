@@ -8,6 +8,7 @@ import {
 	Title,
 } from '@storybook/addon-docs/blocks';
 import 'react-syntax-highlighter';
+import type { Preview } from '@storybook/react-vite';
 import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import scss from 'react-syntax-highlighter/dist/esm/languages/prism/scss';
 import { SyntaxHighlighter } from 'storybook/internal/components';
@@ -17,12 +18,17 @@ import { ModeDecorator } from './modeDecorator.jsx';
 SyntaxHighlighter.registerLanguage('scss', scss);
 SyntaxHighlighter.registerLanguage('bash', bash);
 
-export const parameters = {
+export const parameters: Preview['parameters'] = {
 	controls: {
 		expanded: true,
 		matchers: {
 			color: /(background|color)$/i,
 			date: /Date$/,
+		},
+	},
+	options: {
+		storySort: {
+			order: ['Intro', 'Design System', 'Components', 'Old Components'],
 		},
 	},
 	backgrounds: { disable: true },

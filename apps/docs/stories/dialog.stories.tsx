@@ -164,7 +164,7 @@ export const AlertDialog: Story = {
 				checkboxChecked={checkboxChecked}
 				onCheckboxChange={setCheckboxChecked}
 				trigger={
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} prefixIcon={<Code />}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} prefix={<Code />}>
 						Open Dialog
 					</Button>
 				}
@@ -173,7 +173,7 @@ export const AlertDialog: Story = {
 						<Button
 							variant={ButtonVariant.Ghost}
 							color="secondary"
-							prefixIcon={<X size={12} />}
+							prefix={<X size={12} />}
 							onClick={() => setOpen(false)}
 							size={ButtonSize.SM}
 						>
@@ -182,7 +182,7 @@ export const AlertDialog: Story = {
 						<Button
 							variant={ButtonVariant.Solid}
 							color="destructive"
-							prefixIcon={<Trash2 size={12} />}
+							prefix={<Trash2 size={12} />}
 							size={ButtonSize.SM}
 							onClick={() => {
 								setOpen(false);

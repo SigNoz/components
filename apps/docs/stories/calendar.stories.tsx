@@ -16,7 +16,7 @@ export default function MyComponent() {
 	`import { Calendar } from '@signozhq/ui';
 
 export default function SingleDatePicker() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
   return (
     <Calendar
@@ -116,6 +116,8 @@ export const Default: Story = {
 	},
 };
 
+const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
+
 export const SingleDateSelection: Story = {
 	args: {
 		mode: 'single',
@@ -124,7 +126,7 @@ export const SingleDateSelection: Story = {
 		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-4">
@@ -220,7 +222,7 @@ export const WithDropdownNavigation: Story = {
 		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-4">
@@ -249,7 +251,7 @@ export const HideOutsideDays: Story = {
 		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<Calendar
@@ -270,7 +272,7 @@ export const CustomButtonVariant: Story = {
 		buttonVariant: ButtonVariant.Outlined,
 	},
 	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<Calendar
@@ -291,7 +293,7 @@ export const DisabledDates: Story = {
 		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		// Disable weekends
 		const disabledDays = [
@@ -325,7 +327,7 @@ export const WithTimezone: Story = {
 		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 		const [timezone, setTimezone] = React.useState('UTC');
 		const [time, setTime] = React.useState('12:00:00');
 
@@ -376,9 +378,9 @@ export const WithTimezone: Story = {
 					minute: '2-digit',
 					second: '2-digit',
 					timeZone: tz,
-				}).format(new Date());
+				}).format(new Date(fixedDate));
 			} catch {
-				return new Date().toLocaleTimeString();
+				return new Date(fixedDate).toLocaleTimeString();
 			}
 		};
 
@@ -431,7 +433,7 @@ export const WithTimezone: Story = {
 							<h3 className="text-sm font-medium mb-2">Current Time:</h3>
 							<div className="space-y-2">
 								<p className="text-sm text-muted-foreground">
-									<strong>Local:</strong> {new Date().toLocaleTimeString()}
+									<strong>Local:</strong> {new Date(fixedDate).toLocaleTimeString()}
 								</p>
 								<p className="text-sm text-muted-foreground">
 									<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
