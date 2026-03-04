@@ -1,4 +1,5 @@
 import getViteLibConfig from '@repo/typescript-config/vite.config.extend';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
@@ -29,4 +30,8 @@ const entries: Record<string, string> = {
 	'tooltip/index': 'src/tooltip/index.ts',
 };
 
-export default defineConfig(getViteLibConfig(entries, { plugins: [react()] }));
+export default defineConfig(
+	getViteLibConfig(entries, {
+		plugins: [react(), tailwindcss({ optimize: true })],
+	})
+);

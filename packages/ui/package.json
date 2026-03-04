@@ -16,7 +16,9 @@
 				"types": "./dist/index.d.cts",
 				"require": "./dist/index.cjs"
 			}
-		}
+		},
+		"./ui.css": "./dist/ui.css",
+		"./dist/ui.css": "./dist/ui.css"
 	},
 	"files": [
 		"dist"
@@ -34,8 +36,7 @@
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",
-		"@signozhq/tailwind-config": "workspace:*",
-		"@tailwindcss/postcss": "^4.1.4",
+		"@tailwindcss/postcss": "4.2.1",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/react": "^16.0.1",
 		"@types/node": "^22.5.5",
@@ -43,7 +44,7 @@
 		"jsdom": "^28.1.0",
 		"postcss": "^8.4.47",
 		"publint": "^0.3.17",
-		"tailwindcss": "^4.1.4",
+		"tailwindcss": "4.2.1",
 		"vitest": "^4.0.18"
 	},
 	"dependencies": {
@@ -59,6 +60,9 @@
 		"@radix-ui/react-toggle": "^1.1.6",
 		"@radix-ui/react-toggle-group": "^1.1.7",
 		"@radix-ui/react-tooltip": "^1.2.6",
+		"@signozhq/design-tokens": "2.1.2",
+		"@signozhq/tailwind-config": "workspace:*",
+		"@tailwindcss/vite": "4.2.1",
 		"@tanstack/react-table": "^8.21.3",
 		"@tanstack/react-virtual": "^3.13.9",
 		"@types/lodash-es": "^4.17.12",
@@ -76,14 +80,14 @@
 		"react-resizable-panels": "^4.7.1",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.5.0",
+		"tailwindcss": "4.2.1",
+		"tailwindcss-animate": "^1.0.7",
 		"vaul": "^1.1.2"
 	},
 	"peerDependencies": {
 		"@signozhq/icons": "^0.1.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"tailwindcss": "^4.1.4",
-		"tailwindcss-animate": "^1.0.7"
+		"react-dom": "^18.2.0"
 	},
 	"publishConfig": {
 		"access": "public"

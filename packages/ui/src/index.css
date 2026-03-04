@@ -1,0 +1,12 @@
+@import 'tailwindcss/preflight' layer(base);
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
+@config "@signozhq/tailwind-config";
+@import '@signozhq/tailwind-config/global.css';
+@source "./";
+
+@layer utilities {
+  .border-image-none {
+    border-image: unset;
+  }
+}

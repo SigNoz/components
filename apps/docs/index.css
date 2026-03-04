@@ -1,11 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 @import 'tailwindcss';
-@config "@signozhq/tailwind-config";
-@import '@signozhq/tailwind-config/global.css';
-@import "@signozhq/design-tokens/dist/style.css";
-@import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
-@source "./node_modules/@signozhq/*";
 
-@source "./";
+@import "@signozhq/design-tokens/dist/style.css" layer(base);
+@import '@signozhq/ui/ui.css';
 @import './blue-demo.css';
+
+@layer utilities {
+    @tailwind utilities;
+}

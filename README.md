@@ -10,37 +10,24 @@ Install the packages you need. You must install and configure `@signozhq/tailwin
 pnpm add @signozhq/tailwind-config @signozhq/design-tokens @signozhq/ui
 ```
 
-In your app’s main CSS file (e.g. `index.css` or `global.css`), import Tailwind and the shared config, then the tailwind-config **global.css**. The order matters:
-
-1. `tailwindcss` and `@config` pointing to the tailwind-config.
-2. `@signozhq/tailwind-config/global.css` (CSS variables, and base styles).
-3. `@signozhq/design-tokens/dist/style.css` (design tokens and base styles).
-4. `@signozhq/design-tokens/dist/themes/signoz-tokens.css` (default theme).
-5. `@source "./node_modules/@signozhq/*"` to compile the Tailwind at the components.
+In your app’s main CSS file (e.g. `index.css` or `global.css`), import the design tokens and the UI components. The order matters:
 
 Example (as in the [Storybook app](apps/docs/index.css)):
 
 ```css
-@import 'tailwindcss';
-@config "@signozhq/tailwind-config";
-@import '@signozhq/tailwind-config/global.css';
-@import "@signozhq/design-tokens/dist/style.css";
+/* First you need to add the design tokens and the CSS of our component library */
+@import "@signozhq/design-tokens/dist/style.css" layer(base);
+@import '@signozhq/ui/ui.css';
 @import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
-@source "./node_modules/@signozhq/*";
+
+/* If you want to add custom themes, add like this */
+/* @import './blue-demo.css' */
+
+/* If you is using Tailwind, then you add the import of Tailwind CSS LAST */
+@import 'tailwindcss';
 ```
 
-> It's important to use `@source` with the path to the `node_modules/@signozhq/*` directory to ensure that the components using Tailwind classes are able to resolve the correct Tailwind config.
-
-If you use Vite with the Tailwind plugin, pass the same config (see [Storybook `main.js`](apps/docs/.storybook/main.js)):
-
-```js
-import tailwindConfig from '@signozhq/tailwind-config';
-import tailwindcss from '@tailwindcss/vite';
-
-export default {
-  plugins: [tailwindcss(tailwindConfig)],
-};
-```
+> It's important to add tailwind CSS after the import of the UI components.
 
 Then you need to add the data attribute in your element `body` or `html` to select the theme:
 

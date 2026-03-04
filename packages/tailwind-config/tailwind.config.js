@@ -1,9 +1,11 @@
 import { ColorTailwind } from '@signozhq/design-tokens';
+import animate from 'tailwindcss-animate';
 
 export default {
 	darkMode: ['class'],
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
+		plugins: [animate],
 		extend: {
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],

@@ -179,14 +179,6 @@ code {
 	outline-offset: 2px;
 }
 
-/* Smooth transitions */
-
-* {
-	transition:
-		color 0.2s ease,
-		background-color 0.2s ease;
-}
-
 /* Disable outline only on cmdk elements */
 [data-story-block='true'] [cmdk-input],
 [data-story-block='true'] [cmdk-input]:focus,
