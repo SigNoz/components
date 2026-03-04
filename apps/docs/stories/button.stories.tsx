@@ -1,16 +1,7 @@
-import {
-	Button,
-	ButtonBackground,
-	ButtonColor,
-	type ButtonColorValue,
-	ButtonSize,
-	type ButtonSizeValue,
-	ButtonVariant,
-	type ButtonVariantValue,
-} from '@signozhq/ui';
+import { Check, ChevronLeft, ChevronRight, Code, Star, Trash } from '@signozhq/icons';
+import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ChevronLeft, ChevronRight, Code } from 'lucide-react';
-import { expect, fn } from 'storybook/test';
+import { fn } from 'storybook/test';
 import { generateDocs } from '../utils/generateDocs.js';
 
 const VARIANTS = [
@@ -19,22 +10,15 @@ const VARIANTS = [
 	ButtonVariant.Dashed,
 	ButtonVariant.Ghost,
 	ButtonVariant.Link,
+	ButtonVariant.Action,
 ] as const;
 const COLORS = [
 	ButtonColor.Primary,
 	ButtonColor.Destructive,
 	ButtonColor.Warning,
 	ButtonColor.Secondary,
+	ButtonColor.None,
 ] as const;
-
-type ButtonConfig = {
-	testId?: string;
-	size?: ButtonSizeValue;
-	variant?: ButtonVariantValue;
-	color?: ButtonColorValue;
-	label: string;
-	buttonText?: string;
-};
 
 const buttonExamples = [
 	`import { Button } from '@signozhq/ui';
@@ -46,8 +30,8 @@ return (
 		variant="solid" 
 		color="primary" 
 		size="md"
-		prefixIcon={<ChevronLeft />}
-		suffixIcon={<ChevronRight />}
+		prefix={<ChevronLeft />}
+		suffix={<ChevronRight />}
 	>
 		Click Me
 	</Button>
@@ -62,44 +46,93 @@ const buttonDocs = generateDocs({
 });
 
 const meta: Meta<typeof Button> = {
-	title: 'Old Components/Button',
+	title: 'Components/Button',
 	component: Button,
 	decorators: [],
 	args: {
 		onClick: fn(),
+		onDoubleClick: fn(),
+		variant: ButtonVariant.Solid,
+		size: ButtonSize.MD,
+		loading: false,
+		disabled: false,
+		type: 'button',
 	},
 	argTypes: {
 		variant: {
 			control: 'select',
-			options: ['solid', 'outlined', 'dashed', 'ghost', 'link', 'text'],
+			options: VARIANTS,
 			description: 'The visual style of the button',
+			table: {
+				defaultValue: { summary: 'solid' },
+			},
 		},
 		size: {
 			control: 'select',
 			options: ['xs', 'sm', 'md', 'lg', 'icon'],
 			description: 'The size of the button',
+			table: {
+				defaultValue: { summary: 'md' },
+			},
 		},
 		color: {
 			control: 'select',
-			options: ['primary', 'destructive', 'warning', 'secondary'],
+			options: COLORS,
 			description: 'The color scheme of the button',
 		},
 		disabled: {
 			control: 'boolean',
 			description: 'Whether the button is disabled',
-		},
-		width: {
-			control: 'text',
-			description: 'Custom width for the button',
+			table: {
+				defaultValue: { summary: 'false' },
+				type: { summary: 'boolean' },
+			},
 		},
 		asChild: {
 			control: 'boolean',
 			description: 'Whether to render as a child component',
+			table: {
+				type: { summary: 'boolean' },
+			},
 		},
 		background: {
 			control: 'select',
 			options: ['ink-500', 'ink-400', 'vanilla-100', 'vanilla-200'],
-			description: 'The background context for the action button',
+			description:
+				'The background context for the action button. Only applicable to *Action* buttons.',
+			table: {
+				type: { summary: 'string' },
+			},
+		},
+		loading: {
+			control: 'boolean',
+			description: 'Whether the button is loading',
+			table: {
+				defaultValue: { summary: 'false' },
+				type: { summary: 'boolean' },
+			},
+		},
+		type: {
+			control: 'select',
+			options: ['button', 'submit'],
+			description: 'The type of the button',
+			table: {
+				defaultValue: { summary: 'submit' },
+			},
+		},
+		onClick: {
+			action: 'onClick',
+			description: 'The function to call when the button is clicked',
+			table: {
+				type: { summary: 'function' },
+			},
+		},
+		onDoubleClick: {
+			action: 'onDoubleClick',
+			description: 'The function to call when the button is double clicked',
+			table: {
+				type: { summary: 'function' },
+			},
 		},
 	},
 	parameters: {
@@ -120,6 +153,7 @@ const meta: Meta<typeof Button> = {
 				type: 'code',
 			},
 		},
+		test: { dangerouslyIgnoreUnhandledErrors: true },
 	},
 	tags: ['autodocs'],
 };
@@ -128,78 +162,91 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
-	render: (args) => {
-		const buttonConfigs: ButtonConfig[] = [
-			{
-				testId: 'extra-small-button',
-				size: ButtonSize.XS,
-				label: 'Extra-small Button',
-				color: ButtonColor.Primary,
+	parameters: {
+		docs: { story: { autoplay: true } },
+	},
+	argTypes: {
+		prefix: {
+			control: 'select',
+			options: ['chevron-left', 'chevron-right', 'star', 'code'],
+			description:
+				'The prefix for the button, will be displayed before the button text, can be anything such as an icon or a text. For this playground, the only options are icons.',
+			table: {
+				type: { summary: 'React.ReactElement' },
 			},
-			{ size: ButtonSize.SM, label: 'Small Button', color: ButtonColor.Primary },
-			{ size: ButtonSize.MD, label: 'Medium Button', color: ButtonColor.Primary },
-			{ size: ButtonSize.LG, label: 'Large Button', color: ButtonColor.Primary },
+		},
+		suffix: {
+			control: 'select',
+			options: ['trash', 'check', 'star', 'code'],
+			description:
+				'The suffix for the button, will be displayed after the button text, can be anything such as an icon or a text. For this playground, the only options are icons.',
+			table: {
+				type: { summary: 'React.ReactElement' },
+			},
+		},
+	},
+	render: ({ prefix, suffix, ...args }) => {
+		if (args.asChild) {
+			return (
+				<div>
+					<Button asChild {...args}>
+						<a href="https://www.google.com" target="_blank" rel="noopener noreferrer">
+							Go to Google
+						</a>
+					</Button>
+				</div>
+			);
+		}
 
-			// Variant Types
-			{ variant: ButtonVariant.Outlined, label: 'Border-solid Button' },
-			{ variant: ButtonVariant.Dashed, label: 'Border-dashed Button' },
-			{
-				variant: ButtonVariant.Ghost,
-				label: 'Ghost Button',
-				color: ButtonColor.Secondary,
-			},
-			{
-				variant: ButtonVariant.Link,
-				label: 'Link Button',
-				buttonText: 'Default button',
-				color: ButtonColor.Primary,
-			},
+		switch (prefix?.toString()) {
+			case 'chevron-left':
+				prefix = <ChevronLeft />;
+				break;
+			case 'chevron-right':
+				prefix = <ChevronRight />;
+				break;
+			case 'star':
+				prefix = <Star />;
+				break;
+			case 'code':
+				prefix = <Code />;
+				break;
+			default:
+				prefix = undefined;
+				break;
+		}
 
-			// Color Variations
-			{ color: ButtonColor.Primary, label: 'Primary Button' },
-			{ color: ButtonColor.Destructive, label: 'Danger Button' },
-			{ color: ButtonColor.Warning, label: 'Warning Button' },
-			{ color: ButtonColor.Secondary, label: 'Secondary Button' },
-		];
+		switch (suffix?.toString()) {
+			case 'trash':
+				suffix = <Trash />;
+				break;
+			case 'check':
+				suffix = <Check />;
+				break;
+			case 'star':
+				suffix = <Star />;
+				break;
+			case 'code':
+				suffix = <Code />;
+				break;
+			default:
+				suffix = undefined;
+				break;
+		}
 
 		return (
-			<div className="p-8 rounded-lg bg-background">
-				<div className="space-y-6">
-					{buttonConfigs.map((config, index) => (
-						<div key={index} className="flex items-center">
-							<div className="w-[200px]">
-								<Button
-									testId={config.testId}
-									size={config.size}
-									variant={config.variant}
-									color={config.color}
-									prefixIcon={<ChevronLeft />}
-									suffixIcon={<ChevronRight />}
-									onClick={args.onClick}
-								>
-									{config.label}
-								</Button>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
+			<Button testId="default-button" prefix={prefix} suffix={suffix} {...args}>
+				Click Me
+			</Button>
 		);
-	},
-	play: async ({ mount, canvas, userEvent, args }) => {
-		await mount();
-
-		const button = canvas.getByTestId('extra-small-button');
-		await expect(button).toBeInTheDocument();
-
-		await userEvent.click(button);
-
-		await expect(args.onClick).toHaveBeenCalled();
 	},
 };
 
 // Main showcase of all button styles
 export const ButtonShowcase: Story = {
+	parameters: {
+		docs: { story: { autoplay: true } },
+	},
 	render: () => (
 		<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background ">
 			<div className="space-y-12">
@@ -217,28 +264,34 @@ export const ButtonShowcase: Story = {
 									<Button
 										variant={variant}
 										color={color}
-										prefixIcon={<ChevronLeft />}
-										suffixIcon={<ChevronRight />}
+										prefix={<Star />}
+										suffix={<Star />}
+										title={`${variant} ${color}`}
 									>
 										{variant}
 									</Button>
 									<Button
 										variant={variant}
 										color={color}
-										prefixIcon={<ChevronLeft />}
-										suffixIcon={<ChevronRight />}
+										prefix={<Star />}
+										suffix={<Star />}
 										disabled
+										title={`${variant} disabled`}
 									>
 										{variant} disabled
 									</Button>
 									<Button
 										variant={variant}
 										color={color}
-										prefixIcon={<ChevronLeft />}
-										suffixIcon={<ChevronRight />}
+										prefix={<Star />}
+										suffix={<Star />}
 										loading
+										title={`${variant} loading`}
 									>
 										{variant} loading
+									</Button>
+									<Button variant={variant} color={color} title={`${variant} icon only`}>
+										{<Star />}
 									</Button>
 								</div>
 							))}
@@ -277,63 +330,12 @@ export const Sizes: Story = {
 					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
 						<div key={size} className="space-y-4">
 							<h3 className="text-sm font-medium capitalize">{size}</h3>
-							<Button
-								size={size}
-								{...args}
-								prefixIcon={<ChevronLeft />}
-								suffixIcon={<ChevronRight />}
-							>
+							<Button {...args} size={size} prefix={<ChevronLeft />} suffix={<ChevronRight />}>
 								{size} Button
 							</Button>
 						</div>
 					))}
 				</div>
-			</div>
-		</div>
-	),
-};
-
-// Loading States
-export const LoadingStates: Story = {
-	parameters: {
-		controls: { disable: false },
-	},
-	args: {
-		variant: ButtonVariant.Solid,
-		color: ButtonColor.Primary,
-	},
-	argTypes: {
-		variant: {
-			control: 'select',
-			options: VARIANTS,
-		},
-		color: {
-			control: 'select',
-			options: COLORS,
-		},
-	},
-	render: (args) => (
-		<div className="flex flex-col gap-4">
-			<div className="flex gap-4">
-				<Button loading {...args}>
-					Loading
-				</Button>
-				<Button loading variant={ButtonVariant.Outlined} {...args}>
-					Loading
-				</Button>
-				<Button loading variant={ButtonVariant.Dashed} {...args}>
-					Loading
-				</Button>
-				<Button loading variant={ButtonVariant.Ghost} {...args}>
-					Loading
-				</Button>
-			</div>
-			<div className="flex gap-4">
-				{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
-					<Button key={size} size={size} loading {...args}>
-						Loading
-					</Button>
-				))}
 			</div>
 		</div>
 	),
@@ -362,104 +364,38 @@ export const IconButtons: Story = {
 		<div className="p-8 space-y-8 rounded-lg bg-background">
 			<div className="space-y-4">
 				<h2 className="text-base font-semibold text-foreground">Icon Only Buttons</h2>
-				<div className="flex gap-4">
+				<p>
+					Icon only buttons are buttons that only have an icon as their content. These buttons are
+					useful when you need to display an icon in a button without any text. You can just specify
+					the button as:
+					<pre>&lt;Button suffix=&#123;&lt;Code /&gt;&#125; size=&quot;icon&quot;/&gt;</pre>
+				</p>
+				<div className="flex gap-4 mt-4">
 					{VARIANTS.map((variant) => (
 						<Button
+							{...args}
 							key={variant}
 							variant={variant}
-							prefixIcon={<Code />}
+							suffix={<Code size={32} />}
 							size={ButtonSize.Icon}
-							{...args}
 						/>
 					))}
 				</div>
 			</div>
 			<div className="space-y-4">
 				<h2 className="text-base font-semibold text-foreground">Icon Button Sizes</h2>
-				<div className="flex gap-4">
+				<p>
+					By default, the icon will be displayed at the size of the button. You can also specify the
+					size of the icon by passing the "size" prop to the icon.
+				</p>
+				<div className="flex gap-4 mt-4">
 					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
-						<Button key={size} size={size} prefixIcon={<Code />} {...args} />
+						<Button {...args} key={size} size={size} prefix={<Code />} />
 					))}
 				</div>
 			</div>
 		</div>
 	),
-};
-
-// Full Width Buttons
-export const FullWidth: Story = {
-	parameters: {
-		controls: { disable: false },
-	},
-	args: {
-		variant: ButtonVariant.Solid,
-		color: ButtonColor.Primary,
-	},
-	argTypes: {
-		variant: {
-			control: 'select',
-			options: VARIANTS,
-		},
-		color: {
-			control: 'select',
-			options: COLORS,
-		},
-	},
-	render: (args) => (
-		<div className="p-8 space-y-4 rounded-lg bg-background">
-			<h2 className="text-base font-semibold text-foreground">Full Width Buttons</h2>
-			<div className="space-y-4 w-full">
-				{VARIANTS.map((variant) => (
-					<Button key={variant} variant={variant} width="full" {...args}>
-						{variant} Full Width
-					</Button>
-				))}
-			</div>
-		</div>
-	),
-};
-
-// Playground
-export const Playground: Story = {
-	parameters: {
-		controls: { disable: false },
-	},
-	args: {
-		children: 'Button',
-		variant: ButtonVariant.Solid,
-		color: ButtonColor.Primary,
-		size: ButtonSize.MD,
-		disabled: false,
-		loading: false,
-		width: undefined,
-		prefixIcon: undefined,
-		suffixIcon: undefined,
-	},
-	argTypes: {
-		variant: {
-			control: 'select',
-			options: [
-				ButtonVariant.Solid,
-				ButtonVariant.Outlined,
-				ButtonVariant.Dashed,
-				ButtonVariant.Ghost,
-				ButtonVariant.Link,
-			],
-		},
-		color: {
-			control: 'select',
-			options: [
-				ButtonColor.Primary,
-				ButtonColor.Destructive,
-				ButtonColor.Warning,
-				ButtonColor.Secondary,
-			],
-		},
-		size: {
-			control: 'select',
-			options: [ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG],
-		},
-	},
 };
 
 // Add Action Button Story
@@ -498,8 +434,8 @@ export const ActionButtons: Story = {
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink500}
-							prefixIcon={<ChevronLeft />}
-							suffixIcon={<ChevronRight />}
+							prefix={<ChevronLeft />}
+							suffix={<ChevronRight />}
 						>
 							Action Button
 						</Button>
@@ -511,8 +447,8 @@ export const ActionButtons: Story = {
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink400}
-							prefixIcon={<ChevronLeft />}
-							suffixIcon={<ChevronRight />}
+							prefix={<ChevronLeft />}
+							suffix={<ChevronRight />}
 						>
 							Action Button
 						</Button>
@@ -524,8 +460,8 @@ export const ActionButtons: Story = {
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla100}
-							prefixIcon={<ChevronLeft />}
-							suffixIcon={<ChevronRight />}
+							prefix={<ChevronLeft />}
+							suffix={<ChevronRight />}
 						>
 							Action Button
 						</Button>
@@ -537,8 +473,8 @@ export const ActionButtons: Story = {
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla200}
-							prefixIcon={<ChevronLeft />}
-							suffixIcon={<ChevronRight />}
+							prefix={<ChevronLeft />}
+							suffix={<ChevronRight />}
 						>
 							Action Button
 						</Button>
@@ -555,8 +491,8 @@ export const ActionButtons: Story = {
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink500}
 							disabled
-							prefixIcon={<ChevronLeft />}
-							suffixIcon={<ChevronRight />}
+							prefix={<ChevronLeft />}
+							suffix={<ChevronRight />}
 						>
 							Disabled Action Button
 						</Button>
@@ -566,8 +502,8 @@ export const ActionButtons: Story = {
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla100}
 							disabled
-							prefixIcon={<ChevronLeft />}
-							suffixIcon={<ChevronRight />}
+							prefix={<ChevronLeft />}
+							suffix={<ChevronRight />}
 						>
 							Disabled Action Button
 						</Button>

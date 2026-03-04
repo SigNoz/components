@@ -1,4 +1,4 @@
-import { Button, ButtonSize, ButtonVariant, Input } from '@signozhq/ui';
+import { Button, ButtonColor, ButtonSize, ButtonVariant, Input } from '@signozhq/ui';
 import { Check, Copy } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -48,15 +48,13 @@ const IconCell = React.memo(
 					<span className="text-sm text-center mb-2">{name}</span>
 					<Button
 						variant={ButtonVariant.Ghost}
+						color={ButtonColor.None}
 						size={ButtonSize.SM}
 						onClick={() => onCopy(name)}
-						className="gap-0"
+						prefix={
+							copiedIcon === name ? <Check className="size-4" /> : <Copy className="size-4" />
+						}
 					>
-						{copiedIcon === name ? (
-							<Check className="size-4 mr-2" />
-						) : (
-							<Copy className="size-4 mr-2" />
-						)}
 						{copiedIcon === name ? 'Copied!' : 'Copy'}
 					</Button>
 				</div>

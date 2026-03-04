@@ -1,4 +1,4 @@
-import { Button, Toaster, toast } from '@signozhq/ui';
+import { Button, ButtonColor, Toaster, toast } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { generateDocs } from '../utils/generateDocs.js';
 
@@ -217,6 +217,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Top left', { position: 'top-left' })}
 							variant="outlined"
 							size="sm"
+							color={ButtonColor.None}
 						>
 							Top Left
 						</Button>
@@ -224,6 +225,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Top center', { position: 'top-center' })}
 							variant="outlined"
 							size="sm"
+							color={ButtonColor.None}
 						>
 							Top Center
 						</Button>
@@ -231,6 +233,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Top right', { position: 'top-right' })}
 							variant="outlined"
 							size="sm"
+							color={ButtonColor.None}
 						>
 							Top Right
 						</Button>
@@ -243,6 +246,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Bottom left', { position: 'bottom-left' })}
 							variant="outlined"
 							size="sm"
+							color={ButtonColor.None}
 						>
 							Bottom Left
 						</Button>
@@ -250,6 +254,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Bottom center', { position: 'bottom-center' })}
 							variant="outlined"
 							size="sm"
+							color={ButtonColor.None}
 						>
 							Bottom Center
 						</Button>
@@ -257,6 +262,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Bottom right', { position: 'bottom-right' })}
 							variant="outlined"
 							size="sm"
+							color={ButtonColor.None}
 						>
 							Bottom Right
 						</Button>

@@ -28,17 +28,23 @@
 		"build": "vite build && publint",
 		"dev": "vite build --watch",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-		"publint": "publint"
+		"publint": "publint",
+		"test": "vitest",
+		"test:run": "vitest run"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",
 		"@signozhq/tailwind-config": "workspace:*",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.0.1",
+		"jsdom": "^28.1.0",
 		"publint": "^0.3.17",
 		"@tailwindcss/postcss": "^4.1.4",
 		"@types/node": "^22.5.5",
 		"@types/react": "^18.2.61",
 		"postcss": "^8.4.47",
-		"tailwindcss": "^4.1.4"
+		"tailwindcss": "^4.1.4",
+		"vitest": "^4.0.18"
 	},
 	"dependencies": {
 		"@radix-ui/react-checkbox": "^1.2.3",

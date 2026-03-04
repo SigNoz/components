@@ -1,4 +1,11 @@
-import { Badge, DataTable as BaseDataTable, Button, type ColumnDef, type Row } from '@signozhq/ui';
+import {
+	Badge,
+	DataTable as BaseDataTable,
+	Button,
+	ButtonColor,
+	type ColumnDef,
+	type Row,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { LucideIcon } from 'lucide-react';
 import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, XCircle } from 'lucide-react';
@@ -386,13 +393,18 @@ const enhancedColumns: ColumnDef<User>[] = [
 		cell: () => {
 			return (
 				<div className="flex items-center gap-1">
-					<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+					<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 						<Eye className="h-4 w-4" />
 					</Button>
-					<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+					<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 						<Edit className="h-4 w-4" />
 					</Button>
-					<Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-600 hover:text-red-700">
+					<Button
+						variant="ghost"
+						color={ButtonColor.None}
+						size="sm"
+						className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+					>
 						<Trash2 className="h-4 w-4" />
 					</Button>
 				</div>
@@ -926,14 +938,15 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className="flex items-center gap-1">
-							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 								<Eye className="h-4 w-4" />
 							</Button>
-							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 								<Edit className="h-4 w-4" />
 							</Button>
 							<Button
 								variant="ghost"
+								color={ButtonColor.None}
 								size="sm"
 								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
 							>
@@ -1174,14 +1187,15 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className="flex items-center gap-1">
-							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 								<Eye className="h-4 w-4" />
 							</Button>
-							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 								<Edit className="h-4 w-4" />
 							</Button>
 							<Button
 								variant="ghost"
+								color={ButtonColor.None}
 								size="sm"
 								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
 							>
@@ -1447,14 +1461,15 @@ export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className="flex items-center gap-1">
-							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 								<Eye className="h-4 w-4" />
 							</Button>
-							<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
 								<Edit className="h-4 w-4" />
 							</Button>
 							<Button
 								variant="ghost"
+								color={ButtonColor.None}
 								size="sm"
 								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
 							>
@@ -1965,22 +1980,52 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 			return (
 				<div className="space-y-4">
 					<div className="flex flex-wrap gap-2">
-						<Button onClick={() => handleScrollToUser('1')} variant="outlined" size="sm">
+						<Button
+							onClick={() => handleScrollToUser('1')}
+							variant="outlined"
+							color={ButtonColor.None}
+							size="sm"
+						>
 							Scroll to User 1
 						</Button>
-						<Button onClick={() => handleScrollToUser('50')} variant="outlined" size="sm">
+						<Button
+							onClick={() => handleScrollToUser('50')}
+							variant="outlined"
+							color={ButtonColor.None}
+							size="sm"
+						>
 							Scroll to User 50
 						</Button>
-						<Button onClick={() => handleScrollToUser('100')} variant="outlined" size="sm">
+						<Button
+							onClick={() => handleScrollToUser('100')}
+							variant="outlined"
+							color={ButtonColor.None}
+							size="sm"
+						>
 							Scroll to User 100
 						</Button>
-						<Button onClick={() => handleScrollToUser('150')} variant="outlined" size="sm">
+						<Button
+							onClick={() => handleScrollToUser('150')}
+							variant="outlined"
+							color={ButtonColor.None}
+							size="sm"
+						>
 							Scroll to User 150
 						</Button>
-						<Button onClick={() => handleScrollToUser('200')} variant="outlined" size="sm">
+						<Button
+							onClick={() => handleScrollToUser('200')}
+							variant="outlined"
+							color={ButtonColor.None}
+							size="sm"
+						>
 							Scroll to Last User
 						</Button>
-						<Button onClick={handleScrollToRandom} variant="outlined" size="sm">
+						<Button
+							onClick={handleScrollToRandom}
+							variant="outlined"
+							color={ButtonColor.None}
+							size="sm"
+						>
 							Scroll to Random User
 						</Button>
 					</div>

@@ -1,4 +1,12 @@
-import { Button, Calendar, Input, Popover, PopoverContent, PopoverTrigger } from '@signozhq/ui';
+import {
+	Button,
+	ButtonColor,
+	Calendar,
+	Input,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
@@ -116,7 +124,9 @@ export const Default: Story = {
 		<div className="flex flex-col gap-4">
 			<Popover>
 				<PopoverTrigger asChild>
-					<Button variant="outlined">Open popover</Button>
+					<Button variant="outlined" color={ButtonColor.None}>
+						Open popover
+					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-80">
 					<div className="grid gap-4">
@@ -149,9 +159,11 @@ export const Default: Story = {
 	),
 };
 
+const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
+
 export const DateAndTimePicker: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date());
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 		const [open, setOpen] = React.useState(false);
 		const [time, setTime] = React.useState('10:30:00');
 
@@ -165,6 +177,7 @@ export const DateAndTimePicker: Story = {
 						<PopoverTrigger asChild>
 							<Button
 								variant="outlined"
+								color={ButtonColor.None}
 								id="date-picker"
 								className="w-[280px] justify-between font-normal"
 							>

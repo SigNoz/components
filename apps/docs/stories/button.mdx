@@ -1,0 +1,26 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from './button.stories';
+import { Button } from '@signozhq/ui';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+The button component is a versatile component that can be used to trigger actions in your application. It supports multiple variants, colors, and sizes.
+
+## How to use
+
+```tsx
+import { Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	// the default button is a solid button with the primary color
+	return <Button>Click Me</Button>;
+}
+```
+
+This code above will render the following button:
+
+<Primary />
+
+<Controls of={ButtonStories.Default} />
