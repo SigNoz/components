@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/SigNoz/components/compare/v0.0.3...v0.0.4) (2026-03-04)
+
+
+### Features
+
+* **button:** cleaned button component ([#130](https://github.com/SigNoz/components/issues/130)) ([c844745](https://github.com/SigNoz/components/commit/c844745f303d8deca3522f9f83c01750cbb2f92a))
+
 ## [0.0.3](https://github.com/SigNoz/components/compare/v0.0.2...v0.0.3) (2026-02-27)
 
 
