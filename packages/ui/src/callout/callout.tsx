@@ -23,6 +23,16 @@ const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
 		return (
 			<div
 				ref={ref}
+				data-slot="callout"
+				data-color={
+					type === 'info'
+						? 'robin'
+						: type === 'success'
+							? 'forest'
+							: type === 'warning'
+								? 'amber'
+								: 'cherry'
+				}
 				data-type={type}
 				data-size={size}
 				className={cn(styles['callout'], className)}
