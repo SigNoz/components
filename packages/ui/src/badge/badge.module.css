@@ -1,0 +1,77 @@
+/* packages/ui/src/badge/badge.module.css */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  width: fit-content;
+  white-space: nowrap;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  overflow: hidden;
+  background-color: var(--badge-background);
+  color: var(--badge-foreground);
+  cursor: default;
+  transition-property: color, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.badge:hover {
+  background-color: var(--badge-hover-background);
+}
+
+.badge:focus-visible {
+  border-color: var(--ring);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--ring-rgb), 0.5);
+}
+
+.badge[aria-invalid="true"] {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.2);
+}
+
+.dark .badge[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.4);
+}
+
+/* Variant: default */
+.badge[data-variant="default"] {
+  border-color: transparent;
+}
+
+/* Variant: outline */
+.badge[data-variant="outline"] {
+  border-color: rgba(var(--badge-background-rgb), 0.2);
+  background-color: rgba(var(--badge-background-rgb), 0.1);
+  color: var(--badge-background);
+}
+
+.badge[data-variant="outline"]:hover {
+  background-color: rgba(var(--badge-background-rgb), 0.2);
+}
+
+/* SVG icons inside badge */
+.badge > svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  pointer-events: none;
+}
+
+/* Capitalize modifier */
+.badge[data-capitalize="true"] {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge[data-capitalize="false"] {
+  font-weight: 400;
+}
