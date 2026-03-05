@@ -3,7 +3,8 @@
 .calendar {
   background-color: var(--background);
   padding: 0.75rem;
-  --cell-size: var(--spacing-8);
+  --cell-size: calc(var(--spacing) * 8);
+  --spacing: 2px;
 }
 
 .calendar[data-slot="card-content"],
