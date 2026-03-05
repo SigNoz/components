@@ -1,0 +1,68 @@
+/* packages/ui/src/checkbox/checkbox.module.css */
+
+.checkbox {
+  height: 1rem;
+  width: 1rem;
+  flex-shrink: 0;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.checkbox:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--checkbox-checked-background);
+}
+
+.checkbox:hover {
+  box-shadow: 0 0 0 1px var(--checkbox-checked-background);
+  border-color: var(--checkbox-checked-background);
+}
+
+.checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox:disabled:hover {
+  box-shadow: none;
+  border-color: var(--border);
+}
+
+.checkbox[data-state="checked"] {
+  background-color: var(--checkbox-checked-background);
+  color: white;
+  border-color: transparent;
+}
+
+.checkbox__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.checkbox__icon {
+  height: 0.875rem;
+  width: 0.875rem;
+  color: white;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox-wrapper__label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox:disabled ~ .checkbox-wrapper__label {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
