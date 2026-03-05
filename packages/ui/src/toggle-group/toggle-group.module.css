@@ -1,0 +1,139 @@
+/* packages/ui/src/toggle-group/toggle-group.module.css */
+
+/* Toggle base styles */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  letter-spacing: -0.025em;
+  outline: none;
+  transition: color 150ms ease;
+}
+
+.toggle:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.toggle svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.toggle svg:not([class*='size-']) {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* Size variants */
+.toggle[data-size="default"] {
+  height: 2.25rem;
+  padding: 0 0.75rem;
+}
+
+.toggle[data-size="sm"] {
+  height: 2rem;
+  padding: 0 0.5rem;
+}
+
+.toggle[data-size="lg"] {
+  height: 2.5rem;
+  padding: 0 1rem;
+}
+
+/* Toggle Group */
+.toggle-group {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--toggle-border);
+  background-color: var(--toggle-bg);
+}
+
+/* Toggle Group Item */
+.toggle-group-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0;
+  border-left: 1px solid var(--toggle-border);
+  min-width: 0;
+  flex: 1;
+  flex-shrink: 0;
+  box-shadow: none;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  letter-spacing: -0.025em;
+  outline: none;
+  transition: color 150ms ease;
+  color: var(--toggle-text);
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.toggle-group-item:first-child {
+  border-left: 0;
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+}
+
+.toggle-group-item:last-child {
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+.toggle-group-item:hover {
+  opacity: 1;
+}
+
+.toggle-group-item:focus,
+.toggle-group-item:focus-visible {
+  z-index: 10;
+}
+
+.toggle-group-item[data-state="on"] {
+  background-color: var(--toggle-active-bg);
+  color: var(--toggle-active-text);
+  opacity: 1;
+}
+
+.toggle-group-item:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.toggle-group-item svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.toggle-group-item svg:not([class*='size-']) {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+/* Size variants for toggle group items */
+.toggle-group-item[data-size="default"] {
+  height: 2.25rem;
+  padding: 0 0.75rem;
+}
+
+.toggle-group-item[data-size="sm"] {
+  height: 2rem;
+  padding: 0 0.5rem;
+}
+
+.toggle-group-item[data-size="lg"] {
+  height: 2.5rem;
+  padding: 0 1rem;
+}
