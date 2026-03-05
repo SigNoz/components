@@ -30,16 +30,16 @@
 .badge:focus-visible {
   border-color: var(--ring);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--ring-rgb), 0.5);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent);
 }
 
 .badge[aria-invalid="true"] {
   border-color: var(--destructive);
-  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
 }
 
 .dark .badge[aria-invalid="true"] {
-  box-shadow: 0 0 0 3px rgba(var(--destructive-rgb), 0.4);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 40%, transparent);
 }
 
 /* Variant: default */
@@ -49,13 +49,13 @@
 
 /* Variant: outline */
 .badge[data-variant="outline"] {
-  border-color: rgba(var(--badge-background-rgb), 0.2);
-  background-color: rgba(var(--badge-background-rgb), 0.1);
+  border-color: color-mix(in oklab, var(--badge-background) 20%, transparent);
+  background-color: color-mix(in oklab, var(--badge-background) 10%, transparent);
   color: var(--badge-background);
 }
 
 .badge[data-variant="outline"]:hover {
-  background-color: rgba(var(--badge-background-rgb), 0.2);
+  background-color: color-mix(in oklab, var(--badge-background) 20%, transparent);
 }
 
 /* SVG icons inside badge */
