@@ -1,0 +1,201 @@
+/* packages/ui/src/date-picker/date-picker.module.css */
+
+.date-picker {
+  position: relative;
+}
+
+/* Button base styles */
+.date-picker__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: calc(var(--radius) - 2px);
+  transition: background-color 150ms ease, color 150ms ease;
+  justify-content: space-between;
+  font-weight: 400;
+}
+
+.date-picker__trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ring);
+  box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background);
+}
+
+.date-picker__trigger:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Button variants */
+.date-picker__trigger[data-variant="default"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.date-picker__trigger[data-variant="default"]:hover {
+  background-color: var(--primary);
+  opacity: 0.9;
+}
+
+.date-picker__trigger[data-variant="outline"] {
+  border: 1px solid var(--input);
+  background-color: var(--background);
+}
+
+.date-picker__trigger[data-variant="outline"]:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.date-picker__trigger[data-variant="ghost"]:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Button sizes */
+.date-picker__trigger[data-size="sm"] {
+  height: 2rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.date-picker__trigger[data-size="md"] {
+  height: 2.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.date-picker__trigger[data-size="lg"] {
+  height: 3rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.date-picker__trigger-icon {
+  height: 1rem;
+  width: 1rem;
+}
+
+.date-picker__trigger-text {
+  flex: 1;
+  text-align: left;
+}
+
+/* Popover */
+.date-picker__popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  z-index: 50;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  min-width: 20rem;
+}
+
+.date-picker__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.date-picker__calendar {
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--border);
+}
+
+/* Time and Timezone Section */
+.date-picker__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+.date-picker__control-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.date-picker__control-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 400;
+  display: block;
+}
+
+.date-picker__time-input {
+  width: 50%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--input);
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  background-color: var(--background);
+}
+
+.date-picker__time-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ring);
+  box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background);
+}
+
+.date-picker__timezone-select {
+  width: 50%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--input);
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  background-color: var(--background);
+}
+
+.date-picker__timezone-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ring);
+  box-shadow: 0 0 0 2px var(--ring), 0 0 0 4px var(--background);
+}
+
+/* Actions */
+.date-picker__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.date-picker__action-button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border-radius: calc(var(--radius) - 2px);
+  transition: background-color 150ms ease;
+}
+
+.date-picker__action-button--cancel {
+  border: 1px solid var(--input);
+}
+
+.date-picker__action-button--cancel:hover {
+  background-color: var(--accent);
+}
+
+.date-picker__action-button--ok {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.date-picker__action-button--ok:hover {
+  background-color: var(--primary);
+  opacity: 0.9;
+}
