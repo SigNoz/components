@@ -7,6 +7,13 @@ import styles from './callout.module.css';
 type CalloutType = 'info' | 'success' | 'warning' | 'error';
 type CalloutSize = 'small' | 'medium';
 
+const CALLOUT_TYPE_TO_COLOR: Record<CalloutType, string> = {
+	info: 'robin',
+	success: 'forest',
+	warning: 'amber',
+	error: 'cherry',
+};
+
 interface CalloutProps extends React.HTMLAttributes<HTMLDivElement> {
 	type?: CalloutType;
 	size?: CalloutSize;
@@ -24,15 +31,7 @@ const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
 			<div
 				ref={ref}
 				data-slot="callout"
-				data-color={
-					type === 'info'
-						? 'robin'
-						: type === 'success'
-							? 'forest'
-							: type === 'warning'
-								? 'amber'
-								: 'cherry'
-				}
+				data-color={CALLOUT_TYPE_TO_COLOR[type]}
 				data-type={type}
 				data-size={size}
 				className={cn(styles['callout'], className)}
