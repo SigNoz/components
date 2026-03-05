@@ -77,12 +77,16 @@
   position: relative;
   border: 1px solid var(--input);
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
 }
 
 .calendar__dropdown-root:has(:focus) {
   border-color: var(--ring);
-  box-shadow: 0 0 0 3px rgb(var(--ring) / 0.5);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent);
+}
+
+:global(.dark) .calendar__dropdown-root:has(:focus) {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
 }
 
 .calendar__dropdown {
@@ -102,7 +106,7 @@
 }
 
 .calendar__caption-label--dropdown {
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
   padding-left: 0.5rem;
   padding-right: 0.25rem;
   display: flex;
@@ -130,7 +134,7 @@
 
 .calendar__weekday {
   color: var(--muted-foreground);
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
   flex: 1;
   font-weight: 400;
   font-size: 0.8rem;
@@ -165,16 +169,6 @@
   cursor: pointer;
 }
 
-.calendar__day[data-selected="true"]:first-child button {
-  border-top-left-radius: 0.375rem;
-  border-bottom-left-radius: 0.375rem;
-}
-
-.calendar__day[data-selected="true"]:last-child button {
-  border-top-right-radius: 0.375rem;
-  border-bottom-right-radius: 0.375rem;
-}
-
 .calendar__range-start {
   border-top-left-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
@@ -194,7 +188,7 @@
 .calendar__today {
   background-color: var(--accent);
   color: var(--accent-foreground);
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
 }
 
 .calendar__today[data-selected="true"] {
@@ -277,7 +271,7 @@
 }
 
 .calendar__day-button[data-range-end="true"] {
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
   border-top-right-radius: 0.375rem;
   border-bottom-right-radius: 0.375rem;
 }
@@ -287,7 +281,7 @@
 }
 
 .calendar__day-button[data-range-start="true"] {
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
   border-top-left-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
 }
@@ -296,7 +290,11 @@
   position: relative;
   z-index: 10;
   border-color: var(--ring);
-  box-shadow: 0 0 0 3px rgb(var(--ring) / 0.5);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent);
+}
+
+:global(.dark .group\/day[data-focused="true"]) .calendar__day-button {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 50%, transparent);
 }
 
 .calendar__day-button:hover {
