@@ -9,6 +9,7 @@ import {
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
 import { Tooltip, TooltipProvider } from '../tooltip/index.js';
+import styles from './pin-list.module.css';
 
 export type PinListItem = {
 	key: string;
@@ -93,7 +94,7 @@ function PinList({
 
 	return (
 		<TooltipProvider>
-			<motion.div className={cn('pin-list-container space-y-10', className)} {...props}>
+			<motion.div className={cn(styles['pin-list-container'], className)} {...props}>
 				<LayoutGroup>
 					<div>
 						<AnimatePresence>
@@ -105,19 +106,19 @@ function PinList({
 								exit={{ opacity: 0 }}
 								transition={{ duration: 0.22, ease: 'easeInOut' }}
 								className={cn(
-									'pin-list-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center px-3 gap-[8px]',
+									styles['pin-list-label'],
 									isDockedProp && 'pin-list-label-docked',
 									labelClassName
 								)}
 							>
-								<div className="relative shrink-0 size-[16px]">
+								<div className={styles['pin-list-label__icon']}>
 									<MousePointerClick className="size-[16px] text-card-foreground" />
 								</div>
-								<span className="pin-list-label-text">{shortcutsLabel}</span>
+								<span className={styles['pin-list-label-text']}>{shortcutsLabel}</span>
 							</motion.p>
 						</AnimatePresence>
 						{pinned.length > 0 ? (
-							<div className={cn('space-y-3 relative gap-[6px] flex flex-col')}>
+							<div className={styles['pin-list-items-container']}>
 								{pinned.map((item) => (
 									<PinListItem
 										key={item.key}
@@ -132,8 +133,8 @@ function PinList({
 								))}
 							</div>
 						) : (
-							<div className="pin-list-empty-state">
-								<p className="font-inter font-normal leading-4.5 opacity-60 text-foreground text-[12px] tracking-[-0.06px]  w-[150px] text-left pl-3">
+							<div className={styles['pin-list-empty-state']}>
+								<p className={styles['pin-list-empty-state__text']}>
 									You have not added any shortcuts yet.
 								</p>
 							</div>
@@ -152,18 +153,18 @@ function PinList({
 									transition={{ duration: 0.22, ease: 'easeInOut' }}
 									onClick={() => setIsMoreExpanded(!isMoreExpanded)}
 									className={cn(
-										'pin-list-more-label mb-2 text-card-foreground font-inter text-[11px] font-semibold leading-[18px] tracking-[0.88px] uppercase text-left flex items-center w-full cursor-pointer hover:opacity-80 transition-opacity px-3 justify-between',
+										styles['pin-list-more-label'],
 										isDockedProp && 'pin-list-more-label-docked',
 										labelClassName
 									)}
 								>
-									<div className="pin-list-more-label-content flex items-center gap-[8px]">
-										<div className="relative shrink-0 size-[16px]">
+									<div className={styles['pin-list-more-label-content']}>
+										<div className={styles['pin-list-more-label__icon']}>
 											<MoreHorizontal className="size-[16px] text-card-foreground" />
 										</div>
-										<span className="pin-list-more-label-text">{moreLabel}</span>
+										<span className={styles['pin-list-more-label-text']}>{moreLabel}</span>
 									</div>
-									<div className="pin-list-more-label-chevron relative shrink-0 size-[16px]">
+									<div className={styles['pin-list-more-label-chevron']}>
 										<motion.div
 											animate={{ rotate: isMoreExpanded ? 0 : -90 }}
 											transition={{ duration: 0.2, ease: 'easeInOut' }}
@@ -181,7 +182,7 @@ function PinList({
 									animate={{ opacity: 1, height: 'auto' }}
 									exit={{ opacity: 0, height: 0 }}
 									transition={{ duration: 0.2, ease: 'easeInOut' }}
-									className={cn('space-y-3 relative gap-[6px] flex flex-col overflow-hidden')}
+									className={styles['pin-list-more-items-container']}
 								>
 									{unpinned.map((item) => (
 										<PinListItem
@@ -233,35 +234,27 @@ function PinListItem({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			transition={transition}
-			className={cn(
-				'pin-list-item flex items-center rounded-[3px] py-[4px] relative w-full text-left transition-colors text-foreground font-inter text-[14px] font-normal leading-[18px] m-0 h-[32px] px-[12px] justify-between gap-5',
-				isDocked && 'pin-list-item-docked',
-				item.active ? 'bg-secondary' : isHovered ? 'bg-secondary' : 'bg-transparent',
-				item.active && isHovered && 'bg-secondary/80',
-				className
-			)}
+			data-active={item.active}
+			className={cn(styles['pin-list-item'], isDocked && 'pin-list-item-docked', className)}
 		>
-			<div className="pin-list-item-content flex items-center gap-[8px]">
-				<div className="relative shrink-0 size-[16px]">
+			<div className={styles['pin-list-item-content']}>
+				<div className={styles['pin-list-item__icon']}>
 					{React.cloneElement(item.icon, {
 						className: cn('size-[16px] text-foreground', item.icon.props.className),
 					})}
 				</div>
 				<div
-					className={cn(
-						'pin-list-item-label font-inter text-[14px] font-normal leading-[18px]',
-						item.active || isHovered ? 'text-secondary-foreground' : 'text-foreground'
-					)}
+					className={styles['pin-list-item-label']}
+					data-active={item.active || isHovered}
+					data-hovered={isHovered}
 				>
 					{item.label}
 				</div>
 			</div>
 			<Tooltip title={isPinned ? 'Remove from shortcuts' : 'Add to shortcuts'}>
 				<div
-					className={cn(
-						'pin-list-item-pin-button flex items-center justify-center size-[16px] shrink-0 transition-opacity cursor-pointer',
-						isPinned ? 'opacity-100' : isHovered ? 'opacity-100' : 'opacity-0'
-					)}
+					className={styles['pin-list-item-pin-button']}
+					data-visible={isPinned || isHovered}
 					onClick={(e) => {
 						e.stopPropagation();
 						onPinClick();
