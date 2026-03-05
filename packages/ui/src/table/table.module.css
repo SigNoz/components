@@ -1,0 +1,79 @@
+/* packages/ui/src/table/table.module.css */
+
+.table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  caption-side: bottom;
+  font-size: 0.875rem;
+}
+
+.table__header {
+  border-bottom: 1px solid var(--border);
+}
+
+.table__header--sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: var(--background);
+}
+
+.table__body {
+  /* tbody styles */
+}
+
+.table__body tr:last-child {
+  border-bottom: 0;
+}
+
+.table__footer {
+  border-top: 1px solid var(--border);
+  background-color: var(--muted);
+  font-weight: 500;
+}
+
+.table__row {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 150ms ease;
+}
+
+.table__row:hover {
+  background-color: var(--muted);
+}
+
+.table__row[data-state="selected"] {
+  background-color: var(--muted);
+}
+
+.table__head {
+  height: 2.5rem;
+  padding: 0 0.5rem;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.table__head[data-align="right"] {
+  text-align: right;
+}
+
+.table__cell {
+  padding: 0.5rem;
+  vertical-align: middle;
+}
+
+.table__cell[data-align="right"] {
+  text-align: right;
+}
+
+.table__caption {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
