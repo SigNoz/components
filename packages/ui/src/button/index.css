@@ -31,7 +31,6 @@
 	--button-outlined-foreground: var(--bg-slate-50);
 	--button-hover-background: var(--bg-vanilla-300);
 	--button-link-hover-foreground: var(--bg-slate-300);
-	--button-ghost-hover-foreground: var(--bg-slate-300);
 }
 
 .dark [data-color="secondary"] {
@@ -40,7 +39,6 @@
 	--button-outlined-foreground: var(--bg-vanilla-400);
 	--button-hover-background: var(--bg-slate-300);
 	--button-link-hover-foreground: var(--bg-vanilla-200);
-	--button-ghost-hover-foreground: var(--bg-vanilla-200);
 }
 
 [data-background="ink-500"] {
@@ -66,7 +64,7 @@
 	--action-button-border: var(--bg-vanilla-300);
 	--action-button-text: var(--bg-slate-50);
 	--action-button-hover-background: var(--bg-vanilla-300);
-	--action-button-hover-border: color-mix(in srgb, var(--bg-vanilla-400) 40%, transparent);
+	--action-button-hover-border: rgba(var(--rgb-vanilla-400), 0.4);
 	--action-button-hover-text: var(--bg-slate-500);
 }
 
@@ -75,7 +73,7 @@
 	--action-button-border: var(--bg-vanilla-300);
 	--action-button-text: var(--bg-slate-50);
 	--action-button-hover-background: var(--bg-vanilla-100);
-	--action-button-hover-border: color-mix(in srgb, var(--bg-vanilla-400) 40%, transparent);
+	--action-button-hover-border: rgba(var(--rgb-vanilla-400), 0.4);
 	--action-button-hover-text: var(--bg-slate-500);
 }
 

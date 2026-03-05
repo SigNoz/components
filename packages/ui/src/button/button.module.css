@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  border-radius: 0.375rem;
+  border-radius: calc(var(--radius) - 2px);
   transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
   cursor: pointer;
   background-color: var(--button-background);
@@ -13,8 +13,8 @@
 }
 
 .button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 1px var(--ring);
+  outline-offset: 2px;
+  outline: var(--ring) solid 2px;
 }
 
 .button:hover {
