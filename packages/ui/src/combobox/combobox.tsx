@@ -5,6 +5,7 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Check, ChevronDown } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
+import styles from './combobox.module.css';
 
 const Combobox = PopoverPrimitive.Root;
 
@@ -17,14 +18,13 @@ const ComboboxTrigger = React.forwardRef<
 >(({ className, placeholder, value, ...props }, ref) => (
 	<PopoverPrimitive.Trigger
 		ref={ref}
-		className={cn(
-			'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-			className
-		)}
+		className={cn(styles['combobox__trigger'], className)}
 		{...props}
 	>
-		<span className="line-clamp-1">{value || placeholder || 'Select an option...'}</span>
-		<ChevronDown className="h-4 w-4 opacity-50" />
+		<span className={styles['combobox__trigger-text']}>
+			{value || placeholder || 'Select an option...'}
+		</span>
+		<ChevronDown className={styles['combobox__trigger-icon']} />
 	</PopoverPrimitive.Trigger>
 ));
 ComboboxTrigger.displayName = 'ComboboxTrigger';
@@ -37,10 +37,7 @@ const ComboboxContent = React.forwardRef<
 		<PopoverPrimitive.Content
 			data-slot="combobox-content"
 			ref={ref}
-			className={cn(
-				'w-[--radix-popover-trigger-width] rounded-md border border-border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-				className
-			)}
+			className={cn(styles['combobox__content'], className)}
 			style={{ minWidth: 'var(--radix-popover-trigger-width)' }}
 			{...props}
 		/>
@@ -52,11 +49,7 @@ const ComboboxCommand = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive>,
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive>
 >(({ className, ...props }, ref) => (
-	<CommandPrimitive
-		ref={ref}
-		className={cn('flex h-full w-full flex-col overflow-hidden', className)}
-		{...props}
-	/>
+	<CommandPrimitive ref={ref} className={cn(styles['combobox__command'], className)} {...props} />
 ));
 ComboboxCommand.displayName = CommandPrimitive.displayName;
 
@@ -66,10 +59,7 @@ const ComboboxInput = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.Input
 		ref={ref}
-		className={cn(
-			'flex h-10 w-full rounded-md border-b border-b-border px-3 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-			className
-		)}
+		className={cn(styles['combobox__input'], className)}
 		{...props}
 	/>
 ));
@@ -79,11 +69,7 @@ const ComboboxList = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.List>,
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
 >(({ className, ...props }, ref) => (
-	<CommandPrimitive.List
-		ref={ref}
-		className={cn('max-h-[200px] overflow-y-auto overflow-x-hidden p-1', className)}
-		{...props}
-	/>
+	<CommandPrimitive.List ref={ref} className={cn(styles['combobox__list'], className)} {...props} />
 ));
 ComboboxList.displayName = CommandPrimitive.List.displayName;
 
@@ -93,7 +79,7 @@ const ComboboxEmpty = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.Empty
 		ref={ref}
-		className={cn('py-6 text-center text-sm', className)}
+		className={cn(styles['combobox__empty'], className)}
 		{...props}
 	/>
 ));
@@ -105,7 +91,7 @@ const ComboboxLoading = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.Loading
 		ref={ref}
-		className={cn('py-6 text-center text-sm', className)}
+		className={cn(styles['combobox__loading'], className)}
 		{...props}
 	/>
 ));
@@ -117,7 +103,7 @@ const ComboboxGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.Group
 		ref={ref}
-		className={cn('overflow-hidden text-foreground', className)}
+		className={cn(styles['combobox__group'], className)}
 		{...props}
 	/>
 ));
@@ -129,10 +115,7 @@ const ComboboxLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.Group
 		ref={ref}
-		className={cn(
-			'overflow-hidden px-2 py-1.5 text-xs font-medium text-muted-foreground',
-			className
-		)}
+		className={cn(styles['combobox__label'], className)}
 		{...props}
 	/>
 ));
@@ -145,16 +128,16 @@ const ComboboxItem = React.forwardRef<
 		showCheck?: boolean;
 	}
 >(({ className, isSelected, showCheck = true, ...props }, ref) => (
-	<CommandPrimitive.Item
-		ref={ref}
-		className={cn(
-			'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
-			className
-		)}
-		{...props}
-	>
+	<CommandPrimitive.Item ref={ref} className={cn(styles['combobox__item'], className)} {...props}>
 		{showCheck && (
-			<Check className={cn('mr-2 h-4 w-4', isSelected ? 'opacity-100' : 'opacity-0')} />
+			<Check
+				className={cn(
+					styles['combobox__item-check'],
+					isSelected
+						? styles['combobox__item-check--visible']
+						: styles['combobox__item-check--hidden']
+				)}
+			/>
 		)}
 		{props.children}
 	</CommandPrimitive.Item>
@@ -167,7 +150,7 @@ const ComboboxSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<CommandPrimitive.Separator
 		ref={ref}
-		className={cn('-mx-1 h-px bg-border', className)}
+		className={cn(styles['combobox__separator'], className)}
 		{...props}
 	/>
 ));
