@@ -69,6 +69,8 @@ function PaginationLink({
 			tabIndex={disabled ? -1 : undefined}
 			data-slot="pagination-link"
 			data-active={isActive}
+			data-variant={isActive ? 'solid' : 'ghost'}
+			data-size={size}
 			className={cn(
 				buttonVariants({
 					variant: isActive ? 'solid' : 'ghost',
