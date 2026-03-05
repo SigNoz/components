@@ -225,7 +225,7 @@
 /* Sliders (keep existing from index.css) */
 .tab-hover-slider {
   position: absolute;
-  background-color: rgba(var(--tab-hover-bg-rgb, 0, 0, 0), 0.1);
+  background-color: color-mix(in srgb, var(--tab-hover-bg, black) 10%, transparent);
   border-radius: 0.25rem;
   z-index: 0;
   transition:
