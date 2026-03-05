@@ -2,8 +2,8 @@ import './index.css';
 import { X } from 'lucide-react';
 import type * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
-
 import { cn } from '../lib/utils.js';
+import styles from './drawer.module.css';
 
 function Drawer({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
 	return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
@@ -29,7 +29,8 @@ function DrawerOverlay({
 		<DrawerPrimitive.Overlay
 			data-slot="drawer-overlay"
 			className={cn(
-				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
+				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+				styles['drawer__overlay'],
 				className
 			)}
 			{...props}
@@ -72,21 +73,13 @@ function DrawerContent({
 
 function DrawerHeader({ className, ...props }: React.ComponentProps<'div'>) {
 	return (
-		<div
-			data-slot="drawer-header"
-			className={cn('flex flex-col gap-1.5 p-4', className)}
-			{...props}
-		/>
+		<div data-slot="drawer-header" className={cn(styles['drawer__header'], className)} {...props} />
 	);
 }
 
 function DrawerFooter({ className, ...props }: React.ComponentProps<'div'>) {
 	return (
-		<div
-			data-slot="drawer-footer"
-			className={cn('mt-auto flex flex-col gap-2 p-4', className)}
-			{...props}
-		/>
+		<div data-slot="drawer-footer" className={cn(styles['drawer__footer'], className)} {...props} />
 	);
 }
 
@@ -94,7 +87,7 @@ function DrawerTitle({ className, ...props }: React.ComponentProps<typeof Drawer
 	return (
 		<DrawerPrimitive.Title
 			data-slot="drawer-title"
-			className={cn('text-foreground font-semibold', className)}
+			className={cn(styles['drawer__title'], className)}
 			{...props}
 		/>
 	);
@@ -107,7 +100,7 @@ function DrawerDescription({
 	return (
 		<DrawerPrimitive.Description
 			data-slot="drawer-description"
-			className={cn('text-muted-foreground text-sm', className)}
+			className={cn(styles['drawer__description'], className)}
 			{...props}
 		/>
 	);
