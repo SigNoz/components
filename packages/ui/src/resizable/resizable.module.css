@@ -1,0 +1,67 @@
+/* packages/ui/src/resizable/resizable.module.css */
+
+.resizable-group {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.resizable-group[data-panel-group-direction="vertical"] {
+  flex-direction: column;
+}
+
+.resizable-panel {
+  /* Panel styles managed by react-resizable-panels */
+}
+
+.resizable-handle {
+  position: relative;
+  display: flex;
+  width: 0.25rem;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--border);
+  transition: background-color 150ms ease;
+}
+
+.resizable-handle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-50%);
+  width: 0.25rem;
+}
+
+.resizable-handle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--ring);
+}
+
+.resizable-handle[data-panel-group-direction="vertical"] {
+  height: 0.25rem;
+  width: 100%;
+}
+
+.resizable-handle[data-panel-group-direction="vertical"]::after {
+  transform: translateY(-50%);
+  height: 0.25rem;
+  width: 100%;
+  left: 0;
+}
+
+.resizable-handle__icon-wrapper {
+  z-index: 10;
+  display: flex;
+  height: 1rem;
+  width: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.125rem;
+  border: 1px solid var(--border);
+  background-color: var(--border);
+}
+
+.resizable-handle__icon {
+  height: 0.625rem;
+  width: 0.625rem;
+}
