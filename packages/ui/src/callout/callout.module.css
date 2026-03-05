@@ -1,0 +1,53 @@
+/* packages/ui/src/callout/callout.module.css */
+
+.callout {
+  position: relative;
+  display: flex;
+  width: 100%;
+  gap: 0.75rem;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--callout-border-color);
+  background-color: var(--callout-background);
+}
+
+/* Size variants via data attribute */
+.callout[data-size="small"] {
+  padding: 0.5rem 0.75rem;
+}
+
+.callout[data-size="medium"] {
+  padding: 0.75rem 1rem;
+}
+
+.callout__icon {
+  flex-shrink: 0;
+  color: var(--callout-icon-color);
+}
+
+.callout__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.callout__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.callout__title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  letter-spacing: -0.01em;
+  color: var(--callout-title-color);
+}
+
+.callout__description {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  color: var(--callout-description-color);
+}
