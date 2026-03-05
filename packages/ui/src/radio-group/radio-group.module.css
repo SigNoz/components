@@ -1,0 +1,50 @@
+/* packages/ui/src/radio-group/radio-group.module.css */
+
+.radio-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.radio-group__item {
+  display: flex;
+  height: 1rem;
+  width: 1rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  background-color: transparent;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.radio-group__item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--radio-checked-background);
+}
+
+.radio-group__item:hover {
+  border-color: var(--radio-checked-background);
+}
+
+.radio-group__item:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.radio-group__item[data-state="checked"] {
+  border-color: var(--radio-checked-background);
+}
+
+.radio-group__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-group__indicator-dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--radio-checked-background);
+}
