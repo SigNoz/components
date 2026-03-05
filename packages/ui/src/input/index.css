@@ -1,0 +1,5 @@
+/* CSS custom properties for Input component */
+
+:root {
+  --input-placeholder-color: var(--muted-foreground);
+}

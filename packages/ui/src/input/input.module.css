@@ -1,0 +1,105 @@
+/* packages/ui/src/input/input.module.css */
+
+.input {
+  display: flex;
+  height: 2.25rem; /* h-9 */
+  width: 100%;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid;
+  background-color: transparent;
+  padding-left: 0.75rem; /* px-3 */
+  padding-right: 0.75rem;
+  padding-top: 0.25rem; /* py-1 */
+  padding-bottom: 0.25rem;
+  font-size: 0.875rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.input::file-selector-button {
+  border: 0;
+  background-color: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.input::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+.input:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  ring: 1px;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Theme variants via data attribute */
+.input[data-theme="light"] {
+  border-color: var(--border-input);
+  color: var(--foreground);
+}
+
+.input[data-theme="light"]::file-selector-button {
+  color: var(--foreground);
+}
+
+.input[data-theme="light"]:focus-visible {
+  box-shadow: 0 0 0 1px var(--ring);
+}
+
+.input[data-theme="dark"] {
+  border-color: var(--border-input-dark);
+  background-color: var(--background-dark);
+  color: var(--primary-foreground-dark);
+}
+
+.input[data-theme="dark"]::file-selector-button {
+  color: var(--foreground-dark);
+}
+
+.input[data-theme="dark"]::placeholder {
+  color: var(--muted-foreground-dark);
+}
+
+.input[data-theme="dark"]:focus-visible {
+  box-shadow: 0 0 0 1px var(--ring-dark);
+}
+
+/* Input password wrapper */
+.input-password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-password-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: auto;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  z-index: 10;
+  border-radius: 0;
+  box-shadow: none;
+  transition: opacity 150ms ease;
+}
+
+.input-password-button:hover {
+  opacity: 0.7;
+}
+
+.input-password-button[data-theme="dark"] {
+  color: var(--muted-foreground-dark);
+}
+
+.input-password-button[data-theme="light"] {
+  color: var(--muted-foreground);
+}

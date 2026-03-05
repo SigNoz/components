@@ -1,17 +1,17 @@
-import type { VariantProps } from 'class-variance-authority';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import * as React from 'react';
 import { Button, ButtonSize, ButtonVariant } from '../button/index.js';
 import { cn } from '../lib/utils.js';
-import { InputComponent } from './input.js';
-import type { inputVariants } from './input-variants.js';
+import { InputComponent, type InputProps } from './input.js';
+import styles from './input.module.css';
 
 export interface InputPasswordProps
-	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'>,
-		VariantProps<typeof inputVariants> {}
+	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+	theme?: InputProps['theme'];
+}
 
 const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
-	({ className, theme, ...props }, ref) => {
+	({ className, theme = 'light', ...props }, ref) => {
 		const [showPassword, setShowPassword] = React.useState(false);
 
 		const togglePasswordVisibility = () => {
@@ -19,7 +19,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 		};
 
 		return (
-			<div className="relative w-full">
+			<div className={styles['input-password-wrapper']}>
 				<InputComponent
 					type={showPassword ? 'text' : 'password'}
 					className={cn('pr-10', className)}
@@ -32,12 +32,8 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 					variant={ButtonVariant.Ghost}
 					size={ButtonSize.Icon}
 					onClick={togglePasswordVisibility}
-					className={cn(
-						'absolute right-0 top-0 h-full w-auto px-3 z-10',
-						'rounded-none shadow-none',
-						'hover:opacity-70 transition-opacity',
-						theme === 'dark' ? 'text-muted-foreground-dark' : 'text-muted-foreground'
-					)}
+					data-theme={theme}
+					className={cn(styles['input-password-button'])}
 					aria-label={showPassword ? 'Hide password' : 'Show password'}
 					tabIndex={-1}
 					disabled={props.disabled}
