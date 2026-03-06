@@ -69,7 +69,7 @@ const meta: Meta<typeof Button> = {
 		},
 		size: {
 			control: 'select',
-			options: ['xs', 'sm', 'md', 'lg', 'icon'],
+			options: ['sm', 'md', 'icon'],
 			description: 'The size of the button',
 			table: {
 				defaultValue: { summary: 'md' },
@@ -290,7 +290,12 @@ export const ButtonShowcase: Story = {
 									>
 										{variant} loading
 									</Button>
-									<Button variant={variant} color={color} title={`${variant} icon only`}>
+									<Button
+										variant={variant}
+										color={color}
+										size="icon"
+										title={`${variant} icon only`}
+									>
 										{<Star />}
 									</Button>
 								</div>
@@ -327,7 +332,7 @@ export const Sizes: Story = {
 			<div className="space-y-4">
 				<h2 className="text-base font-semibold">Size Variations</h2>
 				<div className="space-y-8">
-					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
+					{[ButtonSize.SM, ButtonSize.MD].map((size) => (
 						<div key={size} className="space-y-4">
 							<h3 className="text-sm font-medium capitalize">{size}</h3>
 							<Button {...args} size={size} prefix={<ChevronLeft />} suffix={<ChevronRight />}>
@@ -377,7 +382,7 @@ export const IconButtons: Story = {
 							key={variant}
 							variant={variant}
 							suffix={<Code size={32} />}
-							size={ButtonSize.Icon}
+							size="icon"
 						/>
 					))}
 				</div>
@@ -389,7 +394,7 @@ export const IconButtons: Story = {
 					size of the icon by passing the "size" prop to the icon.
 				</p>
 				<div className="flex gap-4 mt-4">
-					{[ButtonSize.XS, ButtonSize.SM, ButtonSize.MD, ButtonSize.LG].map((size) => (
+					{[ButtonSize.SM, ButtonSize.MD, ButtonSize.Icon].map((size) => (
 						<Button {...args} key={size} size={size} prefix={<Code />} />
 					))}
 				</div>
