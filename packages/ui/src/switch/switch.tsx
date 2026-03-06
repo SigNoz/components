@@ -12,7 +12,7 @@ interface SwitchProps extends React.ComponentPropsWithoutRef<typeof SwitchPrimit
 	color?: SwitchColor;
 }
 
-const Switch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
+const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
 	({ className, color = 'robin', ...props }, ref) => (
 		<SwitchPrimitive.Root
 			ref={ref}
@@ -24,6 +24,22 @@ const Switch = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, S
 		</SwitchPrimitive.Root>
 	)
 );
-Switch.displayName = SwitchPrimitive.Root.displayName;
+SwitchBase.displayName = SwitchPrimitive.Root.displayName;
 
-export { Switch };
+const SwitchWrapper: React.FC<{ labelName?: string | React.ReactNode } & SwitchProps> = ({
+	labelName,
+	...props
+}) => {
+	return (
+		<div className={styles['switch-wrapper']}>
+			<SwitchBase {...props} />
+			{labelName && (
+				<label htmlFor={props.id} className={styles['switch-label']}>
+					{labelName}
+				</label>
+			)}
+		</div>
+	);
+};
+
+export { SwitchWrapper as Switch };

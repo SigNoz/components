@@ -1,5 +1,21 @@
 /* packages/ui/src/switch/switch.module.css */
 
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.switch-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch:disabled ~ .switch-label {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .switch {
   display: inline-flex;
   height: 1.25rem;
