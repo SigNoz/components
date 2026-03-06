@@ -1,15 +1,5 @@
-import { Badge } from '@signozhq/ui';
+import { Badge, type BadgeColor } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-type BadgeColor =
-	| 'vanilla'
-	| 'robin'
-	| 'forest'
-	| 'amber'
-	| 'sienna'
-	| 'cherry'
-	| 'sakura'
-	| 'aqua';
 
 // Icon Components for examples
 const CheckIcon = () => (
@@ -105,7 +95,7 @@ const StarIcon = () => (
 
 // Meta Configuration
 const meta: Meta<typeof Badge> = {
-	title: 'Old Components/Badge',
+	title: 'Components/Badge',
 	component: Badge,
 	tags: ['autodocs'],
 	parameters: {
@@ -126,7 +116,21 @@ const meta: Meta<typeof Badge> = {
 		},
 		color: {
 			control: 'select',
-			options: ['vanilla', 'robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
+			options: [
+				'primary',
+				'secondary',
+				'success',
+				'warning',
+				'error',
+				'vanilla',
+				'robin',
+				'forest',
+				'amber',
+				'sienna',
+				'cherry',
+				'sakura',
+				'aqua',
+			],
 			description:
 				'The color theme of the badge. Each color has semantic meaning for different use cases.',
 			table: { category: 'Appearance', defaultValue: { summary: 'robin' } },
@@ -156,13 +160,26 @@ export default meta;
 
 type Story = StoryObj<typeof Badge>;
 
-// The "Playground" Story - This is the Primary story
 export const Playground: Story = {
 	args: {
-		children: 'Badge',
+		children: 'Hello',
 		color: 'robin',
 		variant: 'default',
 		capitalize: false,
+		asChild: false,
+	},
+	render: (props) => {
+		if (props.asChild) {
+			return (
+				<Badge {...props}>
+					<a href="#hi" onClick={(e) => e.preventDefault()}>
+						Random link
+					</a>
+				</Badge>
+			);
+		}
+
+		return <Badge {...props} />;
 	},
 };
 
@@ -187,7 +204,7 @@ export const AllColors: Story = {
 	render: () => {
 		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
 		return (
-			<div className="flex gap-2 flex-wrap">
+			<div className="flex gap-2 max-w-1/2 flex-wrap">
 				{colors.map((color) => (
 					<Badge key={color} color={color}>
 						{color.charAt(0).toUpperCase() + color.slice(1)}

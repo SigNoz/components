@@ -1,0 +1,25 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as BadgeStories from './badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+
+The badge component is a versatile component that can be used to display various types of information.
+
+## How to use
+
+```tsx
+import { Badge } from '@signozhq/ui';
+
+export default function MyComponent() {
+	// the default badge is variant default with color primary
+	return <Badge>Hello</Badge>;
+}
+```
+
+This code above will render the following badge:
+
+<Primary />
+
+<Controls of={BadgeStories.Default} />

@@ -1,0 +1,165 @@
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--badge-border-radius, var(--radius-round, 9999px));
+    border: var(--badge-border-width, 1px) solid var(--badge-border-color, transparent);
+    padding: var(--badge-padding, var(--spacing-1, 0.25rem) var(--spacing-2, 0.5rem));
+    font-size: var(--badge-font-size, var(--font-size-xs));
+    line-height: var(--badge-line-height, 100%);
+    font-weight: var(--badge-font-weight, var(--font-weight-medium));
+    width: fit-content;
+    white-space: nowrap;
+    flex-shrink: 0;
+    gap: var(--badge-gap, var(--spacing-1, 0.25rem));
+    overflow: hidden;
+    background-color: var(--badge-background);
+    color: var(--badge-foreground);
+    cursor: default;
+    transition-property: color, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    font-variant-numeric: slashed-zero;
+
+    &[data-color="vanilla"] {
+        --badge-background: var(--bg-neutral-light-950);
+        --badge-foreground: var(--bg-neutral-light-100);
+        --badge-hover-background: var(--bg-neutral-light-900);
+        --badge-border-color: var(--bg-neutral-light-800);
+        --badge-outline-color: var(--bg-neutral-light-100);
+        --badge-outline-border-color: var(--bg-neutral-light-800);
+        --badge-outline-hover-background-color: var(--bg-neutral-light-900);
+    }
+
+
+    &[data-color="robin"] {
+        --badge-background: var(--bg-robin-500);
+        --badge-foreground: var(--bg-neutral-light-1000);
+        --badge-hover-background: var(--bg-robin-400);
+    }
+
+    &[data-color="forest"] {
+        --badge-background: var(--bg-forest-600);
+        --badge-foreground: var(--bg-neutral-light-1000);
+        --badge-hover-background: var(--bg-forest-500);
+    }
+
+    &[data-color="amber"] {
+        --badge-background: var(--bg-amber-600);
+        --badge-foreground: var(--bg-neutral-light-50);
+        --badge-hover-background: var(--bg-amber-500);
+    }
+
+    &[data-color="sienna"] {
+        --badge-background: var(--bg-sienna-600);
+        --badge-foreground: var(--bg-neutral-light-1000);
+        --badge-hover-background: var(--bg-sienna-500);
+    }
+
+    &[data-color="cherry"] {
+        --badge-background: var(--bg-cherry-600);
+        --badge-foreground: var(--bg-neutral-light-1000);
+        --badge-hover-background: var(--bg-cherry-500);
+    }
+
+    &[data-color="sakura"] {
+        --badge-background: var(--bg-sakura-600);
+        --badge-foreground: var(--bg-neutral-light-1000);
+        --badge-hover-background: var(--bg-sakura-500);
+    }
+
+    &[data-color="aqua"] {
+        --badge-background: var(--bg-aqua-600);
+        --badge-foreground: var(--bg-neutral-light-1000);
+        --badge-hover-background: var(--bg-aqua-500);
+    }
+}
+
+:global(.dark) [data-color="vanilla"] {
+    --badge-background: var(--bg-neutral-dark-950);
+    --badge-foreground: var(--bg-neutral-dark-100);
+    --badge-hover-background: var(--bg-neutral-dark-900);
+    --badge-border-color: var(--bg-neutral-dark-800);
+    --badge-outline-color: var(--bg-neutral-dark-100);
+    --badge-outline-border-color: var(--bg-neutral-dark-800);
+    --badge-outline-hover-background-color: var(--bg-neutral-dark-900);
+}
+
+:global(.dark) [data-color="robin"] {
+    --badge-background: var(--bg-robin-500);
+    --badge-foreground: var(--bg-neutral-dark-50);
+    --badge-hover-background: var(--bg-robin-600);
+}
+
+:global(.dark) [data-color="forest"] {
+    --badge-background: var(--bg-forest-500);
+    --badge-foreground: var(--bg-neutral-dark-1000);
+    --badge-hover-background: var(--bg-forest-600);
+}
+
+:global(.dark) [data-color="amber"] {
+    --badge-background: var(--bg-amber-500);
+    --badge-foreground: var(--bg-neutral-dark-1000);
+    --badge-hover-background: var(--bg-amber-600);
+}
+
+:global(.dark) [data-color="sienna"] {
+    --badge-background: var(--bg-sienna-500);
+    --badge-foreground: var(--bg-neutral-dark-1000);
+    --badge-hover-background: var(--bg-sienna-600);
+}
+
+:global(.dark) [data-color="cherry"] {
+    --badge-background: var(--bg-cherry-500);
+    --badge-foreground: var(--bg-neutral-dark-1000);
+    --badge-hover-background: var(--bg-cherry-600);
+}
+
+:global(.dark) [data-color="sakura"] {
+    --badge-background: var(--bg-sakura-500);
+    --badge-foreground: var(--bg-neutral-dark-1000);
+    --badge-hover-background: var(--bg-sakura-600);
+}
+
+:global(.dark) [data-color="aqua"] {
+    --badge-background: var(--bg-aqua-500);
+    --badge-foreground: var(--bg-neutral-dark-1000);
+    --badge-hover-background: var(--bg-aqua-600);
+}
+
+.badge:hover {
+    background-color: var(--badge-hover-background);
+}
+
+.badge:focus-visible {
+    border-color: var(--badge-focus-border-color, var(--ring));
+    outline: var(--badge-focus-outline, none);
+    box-shadow: var(--badge-box-shadow, 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent));
+}
+
+.badge[aria-invalid="true"] {
+    border-color: var(--badge-invalid-border-color, var(--destructive));
+    box-shadow: var(--badge-invalid-box-shadow, 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent));
+}
+
+.dark .badge[aria-invalid="true"] {
+    box-shadow: var(--badge-invalid-box-shadow, 0 0 0 3px color-mix(in srgb, var(--destructive) 40%, transparent));
+}
+
+.badge[data-variant="outline"] {
+    border-color: var(--badge-outline-border-color, color-mix(in oklab, var(--badge-background) 20%, transparent));
+    background-color: var(--badge-outline-background-color, color-mix(in oklab, var(--badge-background) 10%, transparent));
+    color: var(--badge-outline-color, var(--badge-background));
+}
+
+.badge[data-variant="outline"]:hover {
+    background-color: var(--badge-outline-hover-background-color, color-mix(in oklab, var(--badge-background) 20%, transparent));
+}
+
+.badge[data-capitalize="true"] {
+    text-transform: uppercase;
+}
+
+.badge[data-capitalize="false"] {
+    font-weight: var(--badge-capitalize-font-weight, var(--font-weight-normal));
+}
