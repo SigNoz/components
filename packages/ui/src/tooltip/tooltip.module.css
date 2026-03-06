@@ -1,0 +1,64 @@
+/* packages/ui/src/tooltip/tooltip.module.css */
+
+.tooltip__trigger {
+  cursor: pointer;
+}
+
+.tooltip__content {
+  z-index: 50;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 2px);
+  background-color: var(--bg-ink-400);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--bg-vanilla-100);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  animation: fade-in 150ms ease-out;
+}
+
+.tooltip__content--side-top {
+  animation: slide-down-fade 150ms ease-out;
+}
+
+.tooltip__content--side-bottom {
+  animation: slide-up-fade 150ms ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-down-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tooltip__arrow {
+  fill: var(--bg-ink-400);
+  z-index: 50;
+  width: 0.625rem;
+  height: 0.625rem;
+  transform: translateY(calc(-50% - 2px)) rotate(45deg);
+  border-radius: 2px;
+}
+
+/* Dark mode handled via CSS variables - no change needed */

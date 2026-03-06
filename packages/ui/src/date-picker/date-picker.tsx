@@ -7,6 +7,7 @@ import { Calendar } from '../calendar/index.js';
 import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
 import { ALL_TIMEZONES } from './constants.js';
+import styles from './date-picker.module.css';
 
 // Extend dayjs with timezone plugins
 dayjs.extend(utc);
@@ -174,59 +175,42 @@ export function DatePicker({
 		setOpen(false);
 	};
 
-	// Get button classes based on variant and size
-	const getButtonClasses = () => {
-		const baseClasses = 'justify-between font-normal';
-
-		const variantClasses = {
-			default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-			outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-			ghost: 'hover:bg-accent hover:text-accent-foreground',
-		};
-
-		const sizeClasses = {
-			sm: 'h-8 px-3 text-sm',
-			md: 'h-10 px-4 py-2',
-			lg: 'h-12 px-6 text-lg',
-		};
-
-		return cn(
-			'inline-flex items-center gap-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-			variantClasses[buttonVariant],
-			sizeClasses[buttonSize],
-			baseClasses,
-			className
-		);
-	};
-
 	const defaultTrigger = (
 		<button
 			type="button"
-			className={getButtonClasses()}
+			className={cn(styles['date-picker__trigger'], className)}
+			data-variant={buttonVariant}
+			data-size={buttonSize}
 			onClick={() => setOpen(!open)}
 			disabled={disabled}
 		>
-			<CalendarIcon className="h-4 w-4" />
-			<span className="flex-1 text-left">
+			<CalendarIcon className={styles['date-picker__trigger-icon']} />
+			<span className={styles['date-picker__trigger-text']}>
 				{formatDisplayDate(localDate, localTimezone, localTime)}
 			</span>
-			<ChevronDown className="h-4 w-4" />
+			<ChevronDown className={styles['date-picker__trigger-icon']} />
 		</button>
 	);
 
 	const defaultActions = (
-		<div className="flex justify-end gap-2 pt-3 border-t">
+		<div className={styles['date-picker__actions']}>
 			<button
 				type="button"
 				onClick={handleCancel}
-				className="px-3 py-2 text-sm border border-input rounded-md hover:bg-accent"
+				className={cn(
+					styles['date-picker__action-button'],
+					styles['date-picker__action-button--cancel']
+				)}
 			>
 				Cancel
 			</button>
 			<button
 				type="button"
 				onClick={handleOk}
-				className="px-3 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+				className={cn(
+					styles['date-picker__action-button'],
+					styles['date-picker__action-button--ok']
+				)}
 			>
 				OK
 			</button>
@@ -234,48 +218,48 @@ export function DatePicker({
 	);
 
 	return (
-		<div className="relative periscope-date-picker">
+		<div className={cn(styles['date-picker'], 'periscope-date-picker')}>
 			{trigger || defaultTrigger}
 
 			{open && (
-				<div className="absolute top-full left-0 mt-2 z-50 bg-background border border-border rounded-md shadow-lg p-4 min-w-[320px]">
-					<div className="space-y-4">
-						<div className="calendar-container">
+				<div className={styles['date-picker__popover']}>
+					<div className={styles['date-picker__content']}>
+						<div>
 							<Calendar
 								mode="single"
 								selected={localDate}
 								onSelect={handleDateSelect}
-								className="rounded-md border"
+								className={styles['date-picker__calendar']}
 								{...calendarProps}
 							/>
 						</div>
 
 						{/* Time and Timezone Selection */}
 						{(showTime || showTimezone) && (
-							<div className="space-y-3 pt-3 flex flex-col gap-2">
+							<div className={styles['date-picker__controls']}>
 								{/* Time Selection */}
 								{showTime && (
-									<div className="flex flex-row  items-center justify-between gap-2 time-selector">
-										<label className="text-xs font-normal block">Time</label>
+									<div className={cn(styles['date-picker__control-row'], 'time-selector')}>
+										<label className={styles['date-picker__control-label']}>Time</label>
 										<Input
 											type="time"
 											id="time-picker"
 											value={localTime}
 											onChange={(e) => handleTimeChange(e.target.value)}
 											step="1"
-											className="w-1/2 px-3 px-2 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+											className={styles['date-picker__time-input']}
 										/>
 									</div>
 								)}
 
 								{/* Timezone Selection */}
 								{showTimezone && (
-									<div className="flex flex-row items-center justify-between gap-2 timezone-selector">
-										<label className="text-xs font-normal block">Timezone</label>
+									<div className={cn(styles['date-picker__control-row'], 'timezone-selector')}>
+										<label className={styles['date-picker__control-label']}>Timezone</label>
 										<select
 											value={localTimezone}
 											onChange={(e) => handleTimezoneChange(e.target.value)}
-											className="w-1/2 px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+											className={styles['date-picker__timezone-select']}
 										>
 											{timezones.map((tz) => (
 												<option key={tz.value} value={tz.value}>

@@ -1,0 +1,64 @@
+/* packages/ui/src/drawer/drawer.module.css */
+
+.drawer__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.drawer__content {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 50;
+  margin-top: 1.5rem;
+  display: flex;
+  height: auto;
+  flex-direction: column;
+  border-radius: 0.625rem 0.625rem 0 0;
+  border: 1px solid var(--drawer-border);
+  background-color: var(--background);
+}
+
+.drawer__handle {
+  margin: 0 auto;
+  margin-top: 1rem;
+  height: 0.375rem;
+  width: 6.25rem;
+  border-radius: 9999px;
+  background-color: var(--muted);
+}
+
+.drawer__header {
+  display: grid;
+  gap: 0.375rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .drawer__header {
+    text-align: left;
+  }
+}
+
+.drawer__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 1rem;
+}
+
+.drawer__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.drawer__description {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}

@@ -1,0 +1,48 @@
+/* packages/ui/src/popover/popover.module.css */
+
+.popover__trigger {
+  cursor: pointer;
+}
+
+.popover__content {
+  z-index: 50;
+  width: 18rem;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--popover-border);
+  background-color: var(--popover-background);
+  padding: 1rem;
+  color: var(--popover-text);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  outline: none;
+}
+
+/* Animations */
+.popover__content[data-state="open"] {
+  animation: popover-in 150ms ease-out;
+}
+
+.popover__content[data-state="closed"] {
+  animation: popover-out 150ms ease-in;
+}
+
+@keyframes popover-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popover-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}

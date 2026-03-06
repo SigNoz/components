@@ -4,31 +4,14 @@ import {
 	SolidCheckCircle2,
 	SolidInfoCircle,
 	SolidXCircle,
+	X,
 } from '@signozhq/icons';
-import { cva } from 'class-variance-authority';
-
-import { X } from 'lucide-react';
-import React from 'react';
+import * as React from 'react';
 import { cn } from '../lib/utils.js';
+import styles from './callout.module.css';
 
-interface CalloutProps extends React.ComponentProps<'div'> {
-	message?: React.ReactNode;
-	description?: React.ReactNode;
-	type?: 'info' | 'success' | 'warning' | 'error';
-	showIcon?: boolean;
-	icon?: React.ReactNode;
-	color?: string;
-	size?: 'small' | 'medium';
-	dismissable?: boolean;
-	onClose?: () => void;
-}
-
-const typeToColorMap = {
-	info: 'robin',
-	success: 'forest',
-	warning: 'amber',
-	error: 'cherry',
-} as const;
+export type CalloutType = 'info' | 'success' | 'warning' | 'error';
+export type CalloutSize = 'small' | 'medium';
 
 const defaultIcons = {
 	info: <SolidInfoCircle />,
@@ -37,96 +20,82 @@ const defaultIcons = {
 	error: <SolidXCircle />,
 };
 
-const calloutVariants = cva('relative w-full rounded-lg border flex gap-[10px]', {
-	variants: {
-		size: {
-			small: 'p-3 pb-[14px] text-sm',
-			medium: 'p-4 text-base',
-		},
-	},
-	defaultVariants: {
-		size: 'small',
-	},
-});
-
-function Callout({
-	className,
-	message,
-	description,
-	type = 'info',
-	showIcon = false,
-	icon,
-	color,
-	size = 'small',
-	dismissable = false,
-	onClose,
-	...props
-}: CalloutProps) {
-	const IconComponent = icon || (showIcon && defaultIcons[type]);
-
-	return (
-		<div
-			data-slot="callout"
-			data-color={color ?? typeToColorMap[type]}
-			role="alert"
-			className={cn(calloutVariants({ size }), className)}
-			{...props}
-		>
-			{IconComponent ? (
-				React.isValidElement(IconComponent) ? (
-					React.cloneElement(IconComponent as React.ReactElement, {
-						'aria-hidden': true,
-						className: cn('mt-1', (IconComponent as React.ReactElement).props?.className),
-						color: 'var(--callout-icon-color)',
-						size: size === 'medium' ? 16 : 12,
-					})
-				) : (
-					<span className="mt-1" style={{ color: 'var(--callout-icon-color)' }}>
-						{IconComponent}
-					</span>
-				)
-			) : (
-				<div className={cn(size === 'medium' ? 'w-4' : 'w-3')} />
-			)}
-			<div className="grid gap-0.5 flex-1">
-				{message && (
-					<div
-						data-slot="callout-title"
-						className={cn(
-							'line-clamp-1 min-h-4 font-medium tracking-tight text-[var(--callout-title-color)]',
-							size === 'medium' && 'text-base'
-						)}
-					>
-						{message}
-					</div>
-				)}
-				{description && (
-					<div
-						data-slot="callout-description"
-						className={cn(
-							'grid justify-items-start gap-1 [&_p]:leading-relaxed text-[var(--callout-description-color)] font-normal leading-5',
-							size === 'medium' ? 'text-base' : 'text-sm'
-						)}
-					>
-						{description}
-					</div>
-				)}
-			</div>
-			{dismissable && (
-				<button
-					type="button"
-					aria-label="Close"
-					onClick={onClose}
-					className="self-start p-1 rounded-sm  transition-colors cursor-pointer"
-				>
-					<X
-						size={size === 'medium' ? 16 : 14}
-						className="text-[var(--callout-description-color)] hover:text-[var(--callout-title-color)] transition-colors duration-100 ease-out"
-					/>
-				</button>
-			)}
-		</div>
-	);
+export interface CalloutProps extends React.HTMLAttributes<HTMLDivElement> {
+	type?: CalloutType;
+	size?: CalloutSize;
+	icon?: React.ReactNode;
+	message?: string;
+	description?: string;
+	showIcon?: boolean;
+	dismissable?: boolean;
+	onClose?: () => void;
 }
 
-export { Callout, type CalloutProps };
+const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
+	(
+		{
+			className,
+			type = 'info',
+			size = 'medium',
+			icon,
+			message,
+			description,
+			children,
+			showIcon = true,
+			dismissable = false,
+			onClose,
+			color,
+			...props
+		},
+		ref
+	) => {
+		const IconComponent = icon || (showIcon && defaultIcons[type]) || null;
+
+		return (
+			<div
+				ref={ref}
+				data-slot="callout"
+				data-color={color || type}
+				data-type={type}
+				data-size={size}
+				className={cn(styles['callout'], className)}
+				{...props}
+			>
+				{IconComponent ? (
+					React.isValidElement(IconComponent) ? (
+						React.cloneElement(IconComponent as React.ReactElement, {
+							'aria-hidden': true,
+							className: cn(
+								styles['callout__icon'],
+								(IconComponent as React.ReactElement).props?.className
+							),
+							size: size === 'medium' ? 16 : 12,
+						})
+					) : (
+						<span>{IconComponent}(IconComponent as React</span>
+					)
+				) : (
+					<div className={cn(size === 'medium' ? 'w-4' : 'w-3')} />
+				)}
+				<div className={styles['callout__content']}>
+					{message && <div className={styles['callout__message']}>{message}</div>}
+					{description && <div className={styles['callout__description']}>{description}</div>}
+					{children}
+				</div>
+				{dismissable && (
+					<button
+						type="button"
+						aria-label="Close"
+						onClick={onClose}
+						className={styles.callout__dismissable}
+					>
+						<X size={size === 'medium' ? 16 : 14} className="" />
+					</button>
+				)}
+			</div>
+		);
+	}
+);
+Callout.displayName = 'Callout';
+
+export { Callout };

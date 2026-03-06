@@ -6,11 +6,12 @@ do
     files="$files \"$var\","
 done
 
-# create temporary tsconfig which includes only passed files
+# create temporary tsconfig which includes only passed files plus type declarations
 str="{
   \"extends\": \"./tsconfig.json\",
   \"include\": [
     $files
+    \"**/types/**/*.d.ts\"
   ]
 }"
 echo $str > tsconfig.tmp

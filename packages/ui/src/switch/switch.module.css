@@ -1,0 +1,64 @@
+/* packages/ui/src/switch/switch.module.css */
+
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.switch-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch:disabled ~ .switch-label {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.switch {
+  display: inline-flex;
+  height: 1.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  align-items: center;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  transition: background-color 150ms ease-in-out;
+  background-color: var(--bg-slate-400);
+}
+
+.switch:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+}
+
+.switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.switch[data-state="checked"] {
+  background-color: var(--switch-checked-background);
+}
+
+.switch__thumb {
+  display: block;
+  height: 1rem;
+  width: 1rem;
+  pointer-events: none;
+  border-radius: 9999px;
+  background-color: var(--bg-vanilla-100);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  transition: transform 150ms ease-in-out;
+}
+
+.switch[data-state="checked"] .switch__thumb {
+  transform: translateX(1rem);
+}
+
+.switch[data-state="unchecked"] .switch__thumb {
+  transform: translateX(0);
+}

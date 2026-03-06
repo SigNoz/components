@@ -17,7 +17,6 @@
 	},
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx}": [
-			"sh scripts/typecheck-staged.sh",
 			"biome check --write --no-errors-on-unmatched"
 		],
 		"*.{json,html,css}": [

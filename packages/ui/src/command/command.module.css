@@ -1,0 +1,177 @@
+/* packages/ui/src/command/command.module.css */
+
+.command {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 2px);
+  background-color: var(--popover-background);
+  color: var(--popover-text);
+}
+
+.command__dialog-content {
+  overflow: hidden;
+  padding: 0;
+}
+
+.command__dialog-styles {
+  /* Applied to Command when inside CommandDialog */
+}
+
+/* Nested selector styles for CommandDialog Command element */
+.command__dialog-styles [cmdk-group-heading] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.command__dialog-styles [cmdk-group]:not([hidden]) ~ [cmdk-group] {
+  padding-top: 0;
+}
+
+.command__dialog-styles [cmdk-group] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.command__dialog-styles [cmdk-input-wrapper] svg {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.command__dialog-styles [cmdk-input] {
+  height: 3rem;
+}
+
+.command__dialog-styles [cmdk-item] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.command__dialog-styles [cmdk-item] svg {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.command__input-wrapper {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.command__input-icon {
+  margin-right: 0.5rem;
+  height: 1rem;
+  width: 1rem;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.command__input {
+  display: flex;
+  height: 2.5rem;
+  width: 100%;
+  border-radius: calc(var(--radius) - 2px);
+  background-color: transparent;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+}
+
+.command__input::placeholder {
+  color: var(--text-muted);
+}
+
+.command__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.command__list {
+  max-height: 18.75rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.command__empty {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.command__group {
+  overflow: hidden;
+  padding: 0.25rem;
+  color: var(--text);
+}
+
+.command__group [cmdk-group-heading] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.command__separator {
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  height: 1px;
+  background-color: var(--border);
+}
+
+.command__item {
+  position: relative;
+  display: flex;
+  cursor: default;
+  gap: 0.5rem;
+  user-select: none;
+  align-items: center;
+  border-radius: 0.125rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+}
+
+.command__item[data-disabled="true"] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.command__item[data-selected="true"] {
+  background-color: var(--accent-background);
+  color: var(--accent-text);
+}
+
+.command__item svg {
+  pointer-events: none;
+  height: 1rem;
+  width: 1rem;
+  flex-shrink: 0;
+}
+
+.command__shortcut {
+  margin-left: auto;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}

@@ -34,6 +34,28 @@
 	--button-ghost-hover-foreground: var(--bg-slate-300);
 }
 
+[data-color="primary"],
+[data-color="destructive"],
+[data-color="warning"],
+[data-color="none"],
+[data-color="secondary"] {
+    --action-button-border: var(--bg-ink-100);
+    --action-button-hover-border: var(--bg-ink-100);
+    --action-button-text: var(--bg-ink-100);
+    --action-button-hover-text: var(--bg-ink-100);
+}
+
+.dark [data-color="primary"],
+.dark [data-color="destructive"],
+.dark [data-color="warning"],
+.dark [data-color="none"],
+.dark [data-color="secondary"] {
+    --action-button-border: var(--bg-vanilla-100);
+    --action-button-hover-border: var(--bg-vanilla-100);
+    --action-button-text: var(--bg-vanilla-100);
+    --action-button-hover-text: var(--bg-vanilla-100);
+}
+
 .dark [data-color="secondary"] {
 	--button-background: var(--bg-slate-400);
 	--button-solid-foreground: var(--bg-vanilla-100);

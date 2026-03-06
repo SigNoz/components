@@ -4,6 +4,7 @@ import type * as React from 'react';
 import { type MouseEvent, useEffect, useState } from 'react';
 import { ButtonSize, type ButtonSizeValue, buttonVariants } from '../button/index.js';
 import { cn } from '../lib/utils.js';
+import styles from './pagination.module.css';
 import { renderPageNumbers } from './utils.js';
 
 // Define alignment options
@@ -18,15 +19,8 @@ function PaginationContainer({
 		<nav
 			aria-label="pagination"
 			data-slot="pagination"
-			className={cn(
-				'flex',
-				{
-					'justify-start': align === 'start',
-					'justify-center': align === 'center',
-					'justify-end': align === 'end',
-				},
-				className
-			)}
+			data-align={align}
+			className={cn(styles['pagination'], className)}
 			{...props}
 		/>
 	);
@@ -36,14 +30,14 @@ function PaginationContent({ className, ...props }: React.ComponentProps<'ul'>) 
 	return (
 		<ul
 			data-slot="pagination-content"
-			className={cn('flex flex-row items-center gap-2.5', className)}
+			className={cn(styles['pagination__content'], className)}
 			{...props}
 		/>
 	);
 }
 
 function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
-	return <li data-slot="pagination-item" {...props} className="flex" />;
+	return <li data-slot="pagination-item" className={styles['pagination__item']} {...props} />;
 }
 
 type PaginationLinkProps = {
@@ -74,16 +68,15 @@ function PaginationLink({
 			aria-current={isActive ? 'page' : undefined}
 			tabIndex={disabled ? -1 : undefined}
 			data-slot="pagination-link"
+			data-active={isActive}
+			data-variant={isActive ? 'solid' : 'ghost'}
+			data-size={size}
 			className={cn(
 				buttonVariants({
 					variant: isActive ? 'solid' : 'ghost',
 					size,
 				}),
-				'm-0 font-sans tabular-nums slashed-zero',
-				isActive
-					? 'bg-[var(--pagination-active-bg)] text-[var(--pagination-active-text)] hover:bg-[var(--pagination-active-hover-bg)] hover:text-[var(--pagination-active-text)] text-[var(--pagination-active-text)] font-medium'
-					: 'text-[var(--pagination-item-text)] hover:text-[var(--pagination-item-hover-text)] hover:bg-[var(--pagination-item-hover-bg)]',
-
+				styles['pagination__link'],
 				className
 			)}
 			onClick={handleClick}
@@ -132,11 +125,11 @@ function PaginationEllipsis({ className, ...props }: React.ComponentProps<'span'
 		<span
 			aria-hidden
 			data-slot="pagination-ellipsis"
-			className={cn('flex h-9 w-9 items-center justify-center', className)}
+			className={cn(styles['pagination__ellipsis'], className)}
 			{...props}
 		>
 			<Minus height="100%" width={32} /> {/* for the time being */}
-			<span className="sr-only">More pages</span>
+			<span className={styles['pagination__ellipsis-sr']}>More pages</span>
 		</span>
 	);
 }

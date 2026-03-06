@@ -1,0 +1,9 @@
+/* packages/ui/src/sonner/sonner.module.css */
+
+.toaster {
+  /* toaster class - base container */
+}
+
+.group {
+  /* group class - allows for group-based selectors if needed */
+}

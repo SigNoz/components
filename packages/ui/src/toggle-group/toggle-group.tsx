@@ -1,32 +1,33 @@
 import './index.css';
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
-import type { VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '../lib/utils.js';
-import { toggleVariants } from './toggle.js';
+import type { ToggleSize, ToggleVariant } from './toggle.js';
+import styles from './toggle-group.module.css';
 
-const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants>>({
+interface ToggleGroupContextValue {
+	size?: ToggleSize;
+	variant?: ToggleVariant;
+}
+
+const ToggleGroupContext = React.createContext<ToggleGroupContextValue>({
 	size: 'default',
 	variant: 'default',
 });
 
-function ToggleGroup({
-	className,
-	variant,
-	size,
-	children,
-	...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>) {
+type ToggleGroupProps = React.ComponentProps<typeof ToggleGroupPrimitive.Root> & {
+	variant?: ToggleVariant;
+	size?: ToggleSize;
+};
+
+function ToggleGroup({ className, variant, size, children, ...props }: ToggleGroupProps) {
 	return (
 		<ToggleGroupPrimitive.Root
 			data-slot="toggle-group"
 			data-variant={variant}
 			data-size={size}
-			className={cn(
-				'group/toggle-group flex w-fit items-center rounded-md border bg-[var(--toggle-bg)] border-[var(--toggle-border)]',
-				className
-			)}
+			className={cn(styles['toggle-group'], className)}
 			{...props}
 		>
 			<ToggleGroupContext.Provider value={{ variant, size }}>
@@ -36,13 +37,12 @@ function ToggleGroup({
 	);
 }
 
-function ToggleGroupItem({
-	className,
-	children,
-	variant,
-	size,
-	...props
-}: React.ComponentProps<typeof ToggleGroupPrimitive.Item> & VariantProps<typeof toggleVariants>) {
+type ToggleGroupItemProps = React.ComponentProps<typeof ToggleGroupPrimitive.Item> & {
+	variant?: ToggleVariant;
+	size?: ToggleSize;
+};
+
+function ToggleGroupItem({ className, children, variant, size, ...props }: ToggleGroupItemProps) {
 	const context = React.useContext(ToggleGroupContext);
 
 	return (
@@ -50,18 +50,7 @@ function ToggleGroupItem({
 			data-slot="toggle-group-item"
 			data-variant={context.variant || variant}
 			data-size={context.size || size}
-			className={cn(
-				toggleVariants({
-					variant: context.variant || variant,
-					size: context.size || size,
-				}),
-				'border-l border-[var(--toggle-border)] first:border-l-0',
-				'min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-l-md last:rounded-r-md focus:z-10 focus-visible:z-10',
-				'text-[var(--toggle-text)] opacity-70 hover:opacity-100',
-				'data-[state=on]:bg-[var(--toggle-active-bg)] data-[state=on]:text-[var(--toggle-active-text)] data-[state=on]:opacity-100',
-				'cursor-pointer',
-				className
-			)}
+			className={cn(styles['toggle-group-item'], className)}
 			{...props}
 		>
 			{children}

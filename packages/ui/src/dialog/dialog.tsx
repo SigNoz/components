@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Checkbox } from '../checkbox/index.js';
 
 import { cn } from '../lib/utils.js';
+import styles from './dialog.module.css';
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
 	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -17,7 +18,7 @@ function DialogTrigger({
 	return (
 		<DialogPrimitive.Trigger
 			data-slot="dialog-trigger"
-			className={cn('cursor-pointer', className)}
+			className={cn(styles['dialog__trigger'], className)}
 			{...props}
 		/>
 	);
@@ -31,7 +32,7 @@ function DialogClose({ className, ...props }: React.ComponentProps<typeof Dialog
 	return (
 		<DialogPrimitive.Close
 			data-slot="dialog-close"
-			className={cn('cursor-pointer', className)}
+			className={cn(styles['dialog__close'], className)}
 			{...props}
 		/>
 	);
@@ -44,10 +45,7 @@ function DialogOverlay({
 	return (
 		<DialogPrimitive.Overlay
 			data-slot="dialog-overlay"
-			className={cn(
-				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 dark:bg-black/60',
-				className
-			)}
+			className={cn(styles['dialog__overlay'], className)}
 			{...props}
 		/>
 	);
@@ -63,31 +61,20 @@ function DialogContent({
 	showCloseButton?: boolean;
 	width?: 'narrow' | 'base' | 'wide' | 'extra-wide';
 }) {
-	const widthClassMap: Record<'narrow' | 'base' | 'wide' | 'extra-wide', string> = {
-		narrow: 'max-w-[384px]',
-		base: 'max-w-[512px]',
-		wide: 'max-w-[672px]',
-		'extra-wide': 'max-w-[820px]',
-	};
-	const widthClass =
-		widthClassMap[width as 'narrow' | 'base' | 'wide' | 'extra-wide'] || 'sm:max-w-lg';
 	return (
 		<DialogPortal data-slot="dialog-portal">
 			<DialogOverlay />
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
-				className={cn(
-					'bg-l1-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[80px] left-[50%] z-50 grid w-full translate-x-[-50%] rounded-lg border duration-200 border-l2-border shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)] cursor-default',
-					widthClass,
-					className
-				)}
+				data-width={width}
+				className={cn(styles['dialog__content'], className)}
 				{...props}
 			>
 				{children}
 				{showCloseButton && (
 					<DialogPrimitive.Close
 						data-slot="dialog-close"
-						className="absolute top-[13px] right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none cursor-pointer flex items-center justify-center w-6 h-6 hover:bg-[var(--dialog-close-icon)]/10"
+						className={styles['dialog__close-button']}
 					>
 						<XIcon size={14} className="shrink-0" />
 						<span className="sr-only">Close</span>
@@ -100,27 +87,13 @@ function DialogContent({
 
 function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
 	return (
-		<div
-			data-slot="dialog-header"
-			className={cn(
-				'flex flex-row items-center justify-between border-b border-[var(--dialog-border)] px-4 py-3 cursor-default',
-				className
-			)}
-			{...props}
-		/>
+		<div data-slot="dialog-header" className={cn(styles['dialog__header'], className)} {...props} />
 	);
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
 	return (
-		<div
-			data-slot="dialog-footer"
-			className={cn(
-				'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end cursor-default',
-				className
-			)}
-			{...props}
-		/>
+		<div data-slot="dialog-footer" className={cn(styles['dialog__footer'], className)} {...props} />
 	);
 }
 
@@ -135,11 +108,7 @@ function DialogTitle({
 	return (
 		<DialogPrimitive.Title
 			data-slot="dialog-title"
-			className={cn(
-				'leading-[100%] font-inter font-regular flex items-center gap-2 tracking-[-0.065px] slashed-zero text-l1-foreground cursor-default !text-[13px] !font-medium font-inter !m-0',
-
-				className
-			)}
+			className={cn(styles['dialog__title'], className)}
 			{...props}
 		>
 			{icon}
@@ -155,7 +124,7 @@ function DialogDescription({
 	return (
 		<DialogPrimitive.Description
 			data-slot="dialog-description"
-			className={cn('text-sm p-4 cursor-default', className)}
+			className={cn(styles['dialog__description'], className)}
 			{...props}
 		/>
 	);
@@ -232,15 +201,15 @@ function AlertDialogContent({
 	const checkboxId = React.useId();
 
 	return (
-		<div className="flex flex-col gap-6">
-			<div className="flex flex-col gap-1.5">
+		<div className={styles['alert-dialog__content-wrapper']}>
+			<div className={styles['alert-dialog__content-inner']}>
 				{title && (
-					<DialogHeader className="border-b-0 p-0 pb-0">
+					<DialogHeader className={styles['alert-dialog__header']}>
 						<DialogTitle icon={titleIcon}>{title}</DialogTitle>
 					</DialogHeader>
 				)}
 				{children && (
-					<DialogDescription className="text-[13px] font-normal leading-[20px] p-0 text-l2-foreground slashed-zero tracking-[-0.065px] mb-1.5">
+					<DialogDescription className={styles['alert-dialog__description']}>
 						{children}
 					</DialogDescription>
 				)}
@@ -261,7 +230,7 @@ function AlertDialogContent({
 					/>
 				)}
 			</div>
-			{footer && <DialogFooter className="gap-3">{footer}</DialogFooter>}
+			{footer && <DialogFooter className={styles['alert-dialog__footer']}>{footer}</DialogFooter>}
 		</div>
 	);
 }

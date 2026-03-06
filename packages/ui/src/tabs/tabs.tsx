@@ -1,6 +1,5 @@
 import './index.css';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-import type { VariantProps } from 'class-variance-authority';
 import { LockIcon } from 'lucide-react';
 import {
 	type ComponentPropsWithoutRef,
@@ -16,12 +15,7 @@ import {
 } from 'react';
 import { cn } from '../lib/utils.js';
 import { Tooltip, TooltipProvider } from '../tooltip/index.js';
-import {
-	tabsListVariants,
-	tabsListWrapperVariants,
-	tabsTriggerVariants,
-	tabsVariants,
-} from './tabVariants.js';
+import styles from './tabs.module.css';
 
 type TabItemType = {
 	key: string;
@@ -122,14 +116,13 @@ const Tabs = forwardRef<
 			onValueChange={handleValueChange}
 			defaultValue={defaultValue}
 			value={activeTabKey}
-			className={cn(tabsVariants({ variant, className }))}
+			data-variant={variant}
+			className={cn(styles['tabs'], className)}
 			{...props}
 		>
 			<TooltipProvider>
 				<TabsList variant={variant} ref={tabsListRef}>
-					{variant === 'secondary' && (
-						<div className="min-w-4 border-b border-[var(--tab-border-color)] flex-0"></div>
-					)}
+					{variant === 'secondary' && <div className={styles['tabs-secondary-border']}></div>}
 					{items.map((item) => {
 						const triggerContent = (
 							<TabsTrigger
@@ -137,7 +130,7 @@ const Tabs = forwardRef<
 								value={item.key}
 								disabled={item.disabled}
 								variant={variant}
-								ref={(el) => {
+								ref={(el: HTMLButtonElement | null) => {
 									triggerRefs.current[item.key] = el;
 									// Update position when active tab's ref is set (handles initial render)
 									if (el && item.key === activeTabKey) {
@@ -151,13 +144,15 @@ const Tabs = forwardRef<
 								onMouseLeave={handleMouseLeave}
 							>
 								{item.disabled ? (
-									<LockIcon className="shrink-0" size={16} />
+									<LockIcon className={styles['tabs-trigger__icon']} size={16} />
 								) : (
-									item.prefixIcon && <span className="shrink-0">{item.prefixIcon}</span>
+									item.prefixIcon && (
+										<span className={styles['tabs-trigger__icon']}>{item.prefixIcon}</span>
+									)
 								)}
 								{item.label}
 								{!item.disabled && item.suffixIcon && (
-									<span className="shrink-0">{item.suffixIcon}</span>
+									<span className={styles['tabs-trigger__icon']}>{item.suffixIcon}</span>
 								)}
 							</TabsTrigger>
 						);
@@ -171,22 +166,21 @@ const Tabs = forwardRef<
 						);
 					})}
 					{variant === 'secondary' ? (
-						<div className="min-w-4 border-b border-[var(--tab-border-color)] shrink-0 grow"></div>
+						<div
+							className={cn(styles['tabs-secondary-border'], styles['tabs-secondary-border--grow'])}
+						></div>
 					) : (
 						<>
 							{/* Hover Slider */}
 							<div
-								className="tab-hover-slider absolute bg-[var(--tab-hover-bg)]/10 rounded z-0"
+								className={styles['tab-hover-slider']}
 								style={{
 									...hoverSliderStyle,
 									height: '28px',
 								}}
 							/>
 							{/* Active Slider */}
-							<div
-								className="tab-active-slider absolute bottom-[-8px] h-[2px] bg-[var(--tab-active-accent-color)] rounded"
-								style={activeSliderStyle}
-							/>
+							<div className={styles['tab-active-slider']} style={activeSliderStyle} />
 						</>
 					)}
 				</TabsList>
@@ -201,16 +195,19 @@ const Tabs = forwardRef<
 });
 Tabs.displayName = 'Tabs';
 
-// Update TabsList to use variants
+// Update TabsList to use data attributes
 const TabsList = forwardRef<
 	ElementRef<typeof TabsPrimitive.List>,
-	ComponentPropsWithoutRef<typeof TabsPrimitive.List> & VariantProps<typeof tabsListVariants>
+	ComponentPropsWithoutRef<typeof TabsPrimitive.List> & {
+		variant?: 'primary' | 'secondary';
+	}
 >(({ className, variant = 'primary', ...props }, ref) => {
 	return (
-		<div className={cn(tabsListWrapperVariants({ variant }))}>
+		<div data-variant={variant} className={styles['tabs-list-wrapper']}>
 			<TabsPrimitive.List
 				ref={ref}
-				className={cn(tabsListVariants({ variant }), className)}
+				data-variant={variant}
+				className={cn(styles['tabs-list'], className)}
 				{...props}
 			/>
 		</div>
@@ -218,10 +215,12 @@ const TabsList = forwardRef<
 });
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-// Update TabsTrigger to use variants
+// Update TabsTrigger to use data attributes
 const TabsTrigger = forwardRef<
 	ElementRef<typeof TabsPrimitive.Trigger>,
-	ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & VariantProps<typeof tabsTriggerVariants>
+	ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
+		variant?: 'primary' | 'secondary';
+	}
 >(({ className, children, variant = 'primary', disabled, ...props }, ref) => {
 	const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -231,7 +230,8 @@ const TabsTrigger = forwardRef<
 		<TabsPrimitive.Trigger
 			ref={triggerRef}
 			data-slot="tabs-trigger"
-			className={cn(tabsTriggerVariants({ variant, className }))}
+			data-variant={variant}
+			className={cn(styles['tabs-trigger'], className)}
 			disabled={disabled}
 			{...props}
 		>
@@ -246,14 +246,7 @@ const TabsContent = forwardRef<
 	ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, ...props }, ref) => {
 	return (
-		<TabsPrimitive.Content
-			ref={ref}
-			className={cn(
-				'mt-2 p-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-				className
-			)}
-			{...props}
-		/>
+		<TabsPrimitive.Content ref={ref} className={cn(styles['tabs-content'], className)} {...props} />
 	);
 });
 TabsContent.displayName = TabsPrimitive.Content.displayName;

@@ -1,17 +1,25 @@
-import type { VariantProps } from 'class-variance-authority';
+import './index.css';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
+import styles from './input.module.css';
 import { InputPassword } from './input-password.js';
-import { inputVariants } from './input-variants.js';
 
-export interface InputProps
-	extends React.InputHTMLAttributes<HTMLInputElement>,
-		VariantProps<typeof inputVariants> {}
+type InputTheme = 'light' | 'dark';
+
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+	theme?: InputTheme;
+}
 
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
-	({ className, type, theme, ...props }, ref) => {
+	({ className, type, theme = 'light', ...props }, ref) => {
 		return (
-			<input type={type} className={cn(inputVariants({ theme, className }))} ref={ref} {...props} />
+			<input
+				type={type}
+				data-theme={theme}
+				className={cn(styles['input'], className)}
+				ref={ref}
+				{...props}
+			/>
 		);
 	}
 );
@@ -24,4 +32,5 @@ const Input = Object.assign(InputComponent, {
 	Password: typeof InputPassword;
 };
 
-export { Input, InputComponent, inputVariants, InputPassword };
+export { Input, InputComponent, InputPassword };
+export type { InputTheme };
