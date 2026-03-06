@@ -6,14 +6,9 @@
 
 /* Improve Storybook UI styling */
 .sb-show-main {
-	background: #0b0c0e; /* Use ink-500 to match story backgrounds */
-	color: #ffffff; /* White text for dark mode */
 	padding: 2rem !important;
 	min-height: 100vh;
-}
-
-.sb-show-main:has(.sbdocs) {
-	padding: 0 !important;
+	background: rgb(34, 35, 37);
 }
 
 .docs-story > div:first-of-type {
@@ -22,8 +17,6 @@
 	display: flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-
-	background-color: #ffffff !important;
 	transition: background-color 0.2s ease;
 
 	> div {
@@ -33,10 +26,6 @@
 
 #storybook-root {
 	width: 100vw;
-}
-
-html.dark .docs-story > div:first-of-type {
-	background-color: #0b0c0e !important;
 }
 
 /* Global font settings - only apply to Storybook UI elements */
@@ -161,8 +150,6 @@ code {
 /* Ensure dark mode is applied by default */
 
 .dark {
-	background: #0b0c0e;
-
 	color: var(--text-vanilla-100);
 }
 
@@ -217,22 +204,11 @@ code {
 		color 0.3s ease;
 }
 
-/* Default (Light Mode) */
-
-.sb-show-main {
-	background-color: #ffffff !important;
-
-	color: #000000 !important;
-}
-
-/* Dark Mode (when html has .dark class) */
-
-html.dark .sb-show-main {
-	background-color: #0b0c0e !important;
-
-	color: #ffffff !important;
-}
-
 .sbdocs-preview .sb-bar {
 	display: none !important;
+}
+
+html.dark .docs-story>div:first-of-type,
+html.dark .sb-show-main {
+	background-color: #0b0c0e !important;
 }

@@ -2,10 +2,14 @@
 
 @import 'tailwindcss';
 @config "@signozhq/tailwind-config";
-@import '@signozhq/tailwind-config/global.css';
 @import "@signozhq/design-tokens/dist/style.css";
 @import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
 @source "./node_modules/@signozhq/*";
 
 @source "./";
 @import './blue-demo.css';
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+}

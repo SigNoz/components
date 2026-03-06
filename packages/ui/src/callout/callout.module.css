@@ -1,53 +1,70 @@
-/* packages/ui/src/callout/callout.module.css */
-
 .callout {
-  position: relative;
-  display: flex;
-  width: 100%;
-  gap: 0.75rem;
-  border-radius: calc(var(--radius) - 2px);
-  border: 1px solid var(--callout-border-color);
-  background-color: var(--callout-background);
+    position: relative;
+    display: flex;
+    width: 100%;
+    gap: 0.75rem;
+    border-radius: calc(var(--radius) - 2px);
+    border: 1px solid var(--callout-border-color);
+    background-color: var(--callout-background);
+    letter-spacing: var(--tracking-tight);
+    color: var(--callout-icon-color);
 }
 
-/* Size variants via data attribute */
 .callout[data-size="small"] {
-  padding: 0.5rem 0.75rem;
+    padding: calc(var(--callout-spacing, 0.25rem) * 3);
+    font-size: var(--callout-text-size-small, .875rem);
+    line-height: var(--callout-line-height-small, 1.25rem);
 }
 
 .callout[data-size="medium"] {
-  padding: 0.75rem 1rem;
+    padding: calc(var(--callout-spacing, 0.25rem) * 4);
+    font-size: var(--callout-text-size-medium, 1rem);
+    line-height: var(--callout-line-height-medium, 1.5rem);
 }
 
 .callout__icon {
-  flex-shrink: 0;
-  color: var(--callout-icon-color);
-}
+    flex-shrink: 0;
+    margin-top: calc(var(--callout-spacing, 0.25rem) * 1);
 
-.callout__icon svg {
-  width: 1rem;
-  height: 1rem;
+    &, span {
+        color: currentColor;
+    }
 }
 
 .callout__content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  flex: 1;
-  min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--callout-spacing, 0.25rem) * .5);
+    flex: 1;
+    min-width: 0;
 }
 
-.callout__title {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  line-height: 1.25rem;
-  letter-spacing: -0.01em;
-  color: var(--callout-title-color);
+.callout__message {
+    color: var(--callout-message-color);
+    min-height: calc(var(--callout-spacing, 0.25rem) * 4);
+    font-weight: var(--callout-font-weight-small, 500);
 }
 
 .callout__description {
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.25rem;
-  color: var(--callout-description-color);
+    color: var(--callout-description-color);
+    font-weight: var(--callout-font-weight-small, 400);
+}
+
+.callout__dismissable {
+    align-self: flex-start;
+    padding: var(--callout-spacing, .25rem);
+    border-radius: calc(var(--radius) - 4px);
+    transition-property: color, background-color, border-color, outline-color;
+    transition-timing-function: ease;
+    transition-duration: 150ms;
+    color: var(--callout-description-color);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--callout-message-color);
+    }
+
+    /*className="self-start p-1 rounded-sm  transition-colors cursor-pointer"*/
+
+    /*text-[var(--callout-description-color)] hover:text-[var(--callout-title-color)] transition-colors duration-100 ease-out*/
 }
