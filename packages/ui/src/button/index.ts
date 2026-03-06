@@ -5,5 +5,4 @@ export {
 	ButtonColor,
 	ButtonSize,
 	ButtonVariant,
-	buttonVariants,
 } from './button.js';
