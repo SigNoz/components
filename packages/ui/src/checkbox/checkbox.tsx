@@ -1,54 +1,97 @@
-import './index.css';
+import type { CheckedState } from '@radix-ui/react-checkbox';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { CheckIcon } from '@radix-ui/react-icons';
+import { Check, Slash } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
+import styles from './checkbox.module.scss';
 
-type CheckboxColor = 'robin' | 'forest' | 'amber' | 'sienna' | 'cherry' | 'sakura' | 'aqua';
+type CheckboxColor =
+	| 'primary'
+	| 'success'
+	| 'warning'
+	| 'error'
+	| 'robin'
+	| 'forest'
+	| 'amber'
+	| 'sienna'
+	| 'cherry'
+	| 'sakura'
+	| 'aqua';
 
-interface CheckboxProps extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
+const colorMap: Record<string, string> = {
+	success: 'forest',
+	warning: 'amber',
+	error: 'cherry',
+	primary: 'robin',
+};
+
+interface CheckboxProps
+	extends Pick<
+		React.ComponentPropsWithoutRef<'button'>,
+		'id' | 'disabled' | 'className' | 'children' | 'onClick'
+	> {
+	/**
+	 * The name of the checkbox. Submitted with its owning form as part of a name/value pair.
+	 */
+	name?: string;
+	/**
+	 * The color of the checkbox.
+	 * @default primary
+	 */
 	color?: CheckboxColor;
+	/**
+	 * The value given as data when submitted with a name.
+	 */
+	value?: CheckedState;
+	/**
+	 * The checked state of the checkbox when it is initially rendered. Use when you do not need to control its checked state.
+	 * @default undefined
+	 */
+	defaultValue?: CheckedState;
+	/**
+	 * When true, indicates that the user must check the checkbox before the owning form can be submitted.
+	 * @default false
+	 */
+	required?: boolean;
+	/**
+	 * The testId associated with the checkbox.
+	 */
+	testId?: string;
+
+	/**
+	 * The callback invoked when the value state of the checkbox changes.
+	 * @param checked
+	 */
+	onChange?(checked: CheckedState): void;
 }
 
 const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
-	({ className, color = 'robin', ...props }, ref) => (
+	({ className, color = 'primary', onChange, value, defaultValue, ...props }, ref) => (
 		<CheckboxPrimitive.Root
 			ref={ref}
-			data-color={color}
-			className={cn(
-				'peer h-4 w-4 shrink-0 rounded-md',
-				'border shadow',
-				'cursor-pointer',
-				'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--checkbox-checked-background)]',
-				'hover:ring-1 hover:ring-[var(--checkbox-checked-background)] hover:border-[var(--checkbox-checked-background)]',
-				'peer-disabled:hover:ring-0 peer-disabled:hover:border-transparent',
-				'data-[state=checked]:bg-[var(--checkbox-checked-background)] data-[state=checked]:text-white data-[state=checked]:border-transparent',
-				'disabled:cursor-not-allowed disabled:opacity-50',
-				className
-			)}
+			data-color={colorMap[color] || color}
+			className={cn(styles.checkbox, className)}
+			checked={value}
+			defaultChecked={defaultValue}
+			onCheckedChange={onChange}
 			{...props}
 		>
-			<CheckboxPrimitive.Indicator className={cn('flex items-center justify-center text-current')}>
-				<CheckIcon className="h-3.5 w-3.5 text-white" />
+			<CheckboxPrimitive.Indicator className={styles['checkbox__indicator']}>
+				<Slash className={cn(styles['checkbox__icon'], styles['checkbox__icon--slash'])} />
+				<Check className={cn(styles['checkbox__icon'], styles['checkbox__icon--check'])} />
 			</CheckboxPrimitive.Indicator>
 		</CheckboxPrimitive.Root>
 	)
 );
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-const CheckboxWrapper: React.FC<{ labelName?: string | React.ReactNode } & CheckboxProps> = ({
-	labelName,
-	...props
-}) => {
+const CheckboxWrapper: React.FC<CheckboxProps> = ({ children, testId, ...props }) => {
 	return (
-		<div className="flex items-center space-x-2 cursor-pointer">
+		<div className={styles['checkbox-wrapper']} data-testId={testId}>
 			<Checkbox {...props} />
-			{labelName && (
-				<label
-					htmlFor={props.id}
-					className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer select-none"
-				>
-					{labelName}
+			{children && (
+				<label htmlFor={props.id} className={styles['checkbox-wrapper__label']}>
+					{children}
 				</label>
 			)}
 		</div>
