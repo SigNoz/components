@@ -1,0 +1,94 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as CalloutStories from './callout.stories';
+
+<Meta of={CalloutStories} />
+
+# Callout
+
+A versatile callout component to display important messages to the user, with various types, sizes, and custom styling options.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import {Callout} from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Callout
+			type="info"
+			size="medium"
+			title="Important Information">
+        This is additional information that provides more context about the callout.
+        </Callout>
+	);
+}
+```
+
+### With custom icon
+
+```tsx
+import {Callout} from '@signozhq/ui';
+import {Star} from '@signozhq/icons';
+
+export default function MyComponent() {
+	return (
+		<Callout
+			type="info"
+			icon={<Star />}
+			title="Featured Item">
+        This item has been marked as featured.
+        </Callout>
+	);
+}
+```
+
+### Dismissible callout
+
+```tsx
+import {Callout} from '@signozhq/ui';
+import {useState} from 'react';
+
+export default function MyComponent() {
+	const [isVisible, setIsVisible] = useState(true);
+
+	if (!isVisible) return null;
+
+	return (
+		<Callout
+			type="info"
+			title="Dismissible Message"
+			action="dismissible"
+			onActionClick={() => setIsVisible(false)}>
+        Click the X to dismiss this callout.
+        </Callout>
+	);
+}
+```
+
+### Expandable callout
+
+```tsx
+import { Callout } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Callout
+			type="info"
+			showIcon
+			title="Expandable Content"
+			action="expandable">
+        Click the chevron to toggle this content.
+        </Callout>
+	);
+}
+```
+
+This following example shows a default callout:
+
+<Primary />
+
+## Props
+
+<Controls of={CalloutStories.Default} />
