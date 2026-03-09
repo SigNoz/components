@@ -1,0 +1,24 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as SwitchStories from './switch.stories';
+
+<Meta of={SwitchStories} />
+
+# Switch
+
+A toggle switch component for binary on/off or true/false selections.
+
+## How to use
+
+```tsx
+import { Switch } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Switch>Enable notifications</Switch>
+}
+```
+
+This code above will render the following switch:
+
+<Primary />
+
+<Controls of={SwitchStories.Default} />
