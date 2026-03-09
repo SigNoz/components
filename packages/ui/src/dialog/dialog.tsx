@@ -248,17 +248,16 @@ function AlertDialogContent({
 					<Checkbox
 						id={checkboxId}
 						color={checkboxColor}
-						checked={checkboxChecked}
-						onCheckedChange={(checked: boolean | 'indeterminate') => {
+						value={checkboxChecked}
+						onChange={(checked: boolean | 'indeterminate') => {
 							const isChecked = checked === true;
 							onCheckboxChange?.(isChecked);
 						}}
-						labelName={
-							<span className="text-[13px] font-normal leading-none text-l2-foreground tracking-[-0.065px] slashed-zero">
-								{checkboxLabel}
-							</span>
-						}
-					/>
+					>
+						<span className="text-[13px] font-normal leading-none text-l2-foreground tracking-[-0.065px] slashed-zero">
+							{checkboxLabel}
+						</span>
+					</Checkbox>
 				)}
 			</div>
 			{footer && <DialogFooter className="gap-3">{footer}</DialogFooter>}
