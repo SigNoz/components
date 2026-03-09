@@ -1,26 +1,29 @@
-import './index.css';
 import {
-	SolidAlertTriangle,
-	SolidCheckCircle2,
-	SolidInfoCircle,
-	SolidXCircle,
+    ChevronDown,
+    ChevronUp,
+    SolidAlertTriangle,
+    SolidCheckCircle2,
+    SolidInfoCircle,
+    SolidXCircle,
+    X,
 } from '@signozhq/icons';
-import { cva } from 'class-variance-authority';
-
-import { X } from 'lucide-react';
 import React from 'react';
-import { cn } from '../lib/utils.js';
+import {cn} from '../lib/utils.js';
+import styles from './callout.module.scss';
 
-interface CalloutProps extends React.ComponentProps<'div'> {
-	message?: React.ReactNode;
-	description?: React.ReactNode;
+export type CalloutColor = 'robin' | 'forest' | 'amber' | 'cherry' | 'sakura' | 'aqua';
+
+export type CalloutProps = Pick<React.ComponentProps<'div'>, 'id' | 'className' | 'children'> & {
+	title?: React.ReactNode;
 	type?: 'info' | 'success' | 'warning' | 'error';
 	showIcon?: boolean;
 	icon?: React.ReactNode;
-	color?: string;
+	color?: CalloutColor | (string & {});
 	size?: 'small' | 'medium';
-	dismissable?: boolean;
-	onClose?: () => void;
+	action?: 'none' | 'dismissible' | 'expandable';
+	defaultExpanded?: boolean;
+	onClick?: () => void;
+	testId?: string;
 }
 
 const typeToColorMap = {
@@ -37,96 +40,168 @@ const defaultIcons = {
 	error: <SolidXCircle />,
 };
 
-const calloutVariants = cva('relative w-full rounded-lg border flex gap-[10px]', {
-	variants: {
-		size: {
-			small: 'p-3 pb-[14px] text-sm',
-			medium: 'p-4 text-base',
-		},
-	},
-	defaultVariants: {
-		size: 'small',
-	},
-});
-
+/**
+ * A callout component for displaying informational messages with optional icons and descriptions.
+ * Supports multiple color variants, sizes, and interactive actions (dismissible/expandable).
+ *
+ * @example
+ * ```tsx
+ * // Basic info callout
+ * <Callout title="What is instrumentation?" />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With description and icon
+ * <Callout
+ *   title="Success!"
+ *   description="Your changes have been saved."
+ *   type="success"
+ *   showIcon
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Dismissible error callout
+ * <Callout
+ *   title="Error occurred"
+ *   description="Please try again later."
+ *   type="error"
+ *   showIcon
+ *   action="dismissible"
+ *   onActionClick={() => console.log('dismissed')}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Expandable callout (toggles description visibility)
+ * <Callout
+ *   title="Collapsible information"
+ *   description="This description can be toggled."
+ *   type="info"
+ *   showIcon
+ *   action="expandable"
+ *   onClick={() => console.log('toggled')}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Medium size with custom color
+ * <Callout
+ *   title="Custom callout"
+ *   color="aqua"
+ *   size="medium"
+ * />
+ * ```
+ */
 function Callout({
 	className,
-	message,
-	description,
+	title,
+	children,
 	type = 'info',
-	showIcon = false,
+	showIcon = true,
 	icon,
 	color,
 	size = 'small',
-	dismissable = false,
-	onClose,
+	action = 'none',
+	onClick,
+    defaultExpanded = true,
 	...props
 }: CalloutProps) {
+	const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
 	const IconComponent = icon || (showIcon && defaultIcons[type]);
+
+	const handleActionClick = React.useCallback(() => {
+		if (action === 'expandable') {
+			setIsExpanded((expand) => !expand);
+		}
+		onClick?.();
+	}, [onClick, action]);
+
+	const iconComponent = React.useMemo(() => {
+		return IconComponent ? (
+			<div className={styles['callout__icon']}>
+				{React.isValidElement(IconComponent) ? (
+					React.cloneElement(IconComponent as React.ReactElement, {
+						'aria-hidden': true,
+						className: cn((IconComponent as React.ReactElement).props?.className),
+						color: 'var(--callout-icon-color)',
+						size: size === 'medium' ? 16 : 12,
+					})
+				) : (
+					<span style={{ color: 'var(--callout-icon-color)' }}>{IconComponent}</span>
+				)}
+			</div>
+		) : null;
+	}, [IconComponent, size]);
 
 	return (
 		<div
 			data-slot="callout"
 			data-color={color ?? typeToColorMap[type]}
-			role="alert"
-			className={cn(calloutVariants({ size }), className)}
+			className={cn(
+				styles['callout'],
+				size === 'small' ? styles['callout--small'] : styles['callout--medium'],
+				className
+			)}
+			role={action === 'expandable' ? 'button' : 'alert'}
+			onClick={action === 'expandable' ? handleActionClick : undefined}
 			{...props}
 		>
-			{IconComponent ? (
-				React.isValidElement(IconComponent) ? (
-					React.cloneElement(IconComponent as React.ReactElement, {
-						'aria-hidden': true,
-						className: cn('mt-1', (IconComponent as React.ReactElement).props?.className),
-						color: 'var(--callout-icon-color)',
-						size: size === 'medium' ? 16 : 12,
-					})
-				) : (
-					<span className="mt-1" style={{ color: 'var(--callout-icon-color)' }}>
-						{IconComponent}
-					</span>
-				)
-			) : (
-				<div className={cn(size === 'medium' ? 'w-4' : 'w-3')} />
-			)}
-			<div className="grid gap-0.5 flex-1">
-				{message && (
+			{iconComponent}
+			<div className={styles['callout__content']}>
+				{title && (
 					<div
 						data-slot="callout-title"
-						className={cn(
-							'line-clamp-1 min-h-4 font-medium tracking-tight text-[var(--callout-title-color)]',
-							size === 'medium' && 'text-base'
-						)}
+						className={cn(styles['callout__title'], size === 'medium' && 'text-base')}
 					>
-						{message}
+						{title}
 					</div>
 				)}
-				{description && (
+				{children && action !== 'expandable' && (
 					<div
 						data-slot="callout-description"
 						className={cn(
-							'grid justify-items-start gap-1 [&_p]:leading-relaxed text-[var(--callout-description-color)] font-normal leading-5',
+							styles['callout__description'],
 							size === 'medium' ? 'text-base' : 'text-sm'
 						)}
 					>
-						{description}
+						{children}
+					</div>
+				)}
+				{children && action === 'expandable' && isExpanded && (
+					<div
+						data-slot="callout-description"
+						className={cn(
+							styles['callout__description'],
+							size === 'medium' ? 'text-base' : 'text-sm'
+						)}
+					>
+						{children}
 					</div>
 				)}
 			</div>
-			{dismissable && (
+			{action !== 'none' && (
 				<button
 					type="button"
-					aria-label="Close"
-					onClick={onClose}
-					className="self-start p-1 rounded-sm  transition-colors cursor-pointer"
+					aria-label={action === 'dismissible' ? 'Close' : isExpanded ? 'Collapse' : 'Expand'}
+					className={styles['callout__action']}
+					onClick={action === 'dismissible' ? handleActionClick : undefined}
 				>
-					<X
-						size={size === 'medium' ? 16 : 14}
-						className="text-[var(--callout-description-color)] hover:text-[var(--callout-title-color)] transition-colors duration-100 ease-out"
-					/>
+					{action === 'dismissible' ? (
+						<X size={size === 'medium' ? 16 : 14} />
+					) : isExpanded ? (
+						<ChevronUp size={size === 'medium' ? 16 : 14} />
+					) : (
+						<ChevronDown size={size === 'medium' ? 16 : 14} />
+					)}
 				</button>
 			)}
 		</div>
 	);
 }
 
-export { Callout, type CalloutProps };
+export { Callout };
