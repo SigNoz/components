@@ -1,0 +1,225 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as SonnerStories from './sonner.stories';
+
+<Meta of={SonnerStories} />
+
+# Sonner
+
+An opinionated toast component for React. This is a re-export of [Sonner](https://sonner.emilkowal.ski/) with SigNoz design tokens applied for consistent styling across the design system.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import { Toaster, toast } from '@signozhq/ui';
+
+export default function MyComponent() {
+  const showToast = () => {
+    toast('Hello World!');
+  };
+
+  return (
+    <div>
+      <button onClick={showToast}>Show Toast</button>
+      <Toaster />
+    </div>
+  );
+}
+```
+
+**Important**: You need to render the `<Toaster />` component somewhere in your app, typically at the root level. Then you can call `toast()` from anywhere in your application.
+
+### Toast Types
+
+Sonner supports different toast types with appropriate icons and styling:
+
+```tsx
+import { toast } from '@signozhq/ui';
+
+// Default toast
+toast('This is a default toast');
+
+// Success toast (with checkmark icon)
+toast.success('Success! Your action was completed.');
+
+// Error toast (with error icon)
+toast.error('Error! Something went wrong.');
+
+// Warning toast
+toast.warning('Warning! Please check your input.');
+
+// Info toast
+toast.info('Info: Here is some information.');
+```
+
+### Toast with Description
+
+You can add a description to provide more context:
+
+```tsx
+toast('File uploaded', {
+  description: 'Your file has been successfully uploaded to the server.',
+});
+
+toast.error('Upload failed', {
+  description: 'The file could not be uploaded. Please try again.',
+});
+```
+
+### Toast with Actions
+
+Add action buttons to your toasts:
+
+```tsx
+// With action button
+toast('Undo action', {
+  action: {
+    label: 'Undo',
+    onClick: () => console.log('Undo clicked'),
+  },
+});
+
+// With cancel button
+toast('Delete item', {
+  cancel: {
+    label: 'Cancel',
+    onClick: () => console.log('Cancelled'),
+  },
+});
+
+// With both action and description
+toast.error('Delete item', {
+  description: 'This action cannot be undone.',
+  action: {
+    label: 'Undo',
+    onClick: () => console.log('Undo delete'),
+  },
+});
+```
+
+You can also pass JSX as your action or cancel:
+
+```tsx
+toast('My action toast', {
+  action: <Button onClick={() => console.log('Action!')}>Action</Button>,
+});
+```
+
+### Promise Toasts
+
+Automatically show loading, success, or error states based on promise resolution:
+
+```tsx
+const promise = new Promise((resolve) => setTimeout(resolve, 2000));
+
+toast.promise(promise, {
+  loading: 'Loading...',
+  success: 'Success!',
+  error: 'Error!',
+});
+```
+
+For more detailed feedback, you can use a function to incorporate the result:
+
+```tsx
+const promise = fetch('/api/data');
+
+toast.promise(promise, {
+  loading: 'Fetching data...',
+  success: (data) => `Successfully loaded ${data.length} items`,
+  error: (err) => `Failed to load data: ${err.message}`,
+});
+```
+
+### Loading Toast
+
+For manual control over loading states:
+
+```tsx
+const toastId = toast.loading('Loading...');
+
+// Later, update it to success
+toast.success('Done!', { id: toastId });
+```
+
+### Custom Toast
+
+Render custom JSX while maintaining default styling:
+
+```tsx
+toast.custom(() => (
+  <div className="bg-blue-500 text-white p-4 rounded-lg shadow-lg">
+    <div className="font-semibold">Custom Toast</div>
+    <div className="text-sm opacity-90">This is a custom styled toast</div>
+  </div>
+));
+```
+
+### Toast Position
+
+Control where toasts appear on the screen:
+
+```tsx
+// Available positions:
+// 'top-left' | 'top-center' | 'top-right'
+// 'bottom-left' | 'bottom-center' | 'bottom-right'
+
+toast('Top left', { position: 'top-left' });
+toast('Bottom right', { position: 'bottom-right' }); // default
+```
+
+### Toast Duration
+
+Customize how long toasts are visible:
+
+```tsx
+// Short duration (1 second)
+toast('Quick message', { duration: 1000 });
+
+// Standard duration (4 seconds - default)
+toast('Standard message', { duration: 4000 });
+
+// Long duration (8 seconds)
+toast('Long message', { duration: 8000 });
+
+// Persistent (must be manually dismissed)
+toast('Persistent message', { duration: Infinity });
+```
+
+## Toast API Reference
+
+The `toast()` function accepts the following options as a second argument:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `description` | `ReactNode` | - | Additional content below the title |
+| `duration` | `number` | `4000` | Duration in milliseconds (use `Infinity` for persistent) |
+| `position` | `string` | `'bottom-right'` | Position on screen |
+| `dismissible` | `boolean` | `true` | Whether the toast can be dismissed by clicking |
+| `action` | `ReactNode` or `{ label: string, onClick: () => void }` | - | Action button to display |
+| `cancel` | `ReactNode` or `{ label: string, onClick: () => void }` | - | Cancel button to display |
+| `id` | `string` | - | Custom ID for the toast (useful for updating toasts) |
+| `icon` | `ReactNode` | - | Custom icon to display |
+| `onDismiss` | `function` | - | Callback when toast is dismissed |
+| `onAutoClose` | `function` | - | Callback when toast auto-closes |
+| `closeButton` | `boolean` | `false` | Show a close button |
+| `invert` | `boolean` | `false` | Invert colors for dark theme |
+
+## Toaster Props
+
+The `<Toaster />` component accepts these props to configure default behavior:
+
+<Controls of={SonnerStories.Default} />
+
+## Examples
+
+This example shows the default toast implementation:
+
+<Primary />
+
+## Additional Resources
+
+For more detailed information about the underlying Sonner library, visit the [official documentation](https://sonner.emilkowal.ski/toast).
+
+**Note**: While the official Sonner documentation provides comprehensive API details, remember that our implementation uses SigNoz design tokens for consistent theming across the design system.
