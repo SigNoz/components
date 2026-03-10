@@ -1,11 +1,4 @@
-import {
-	Button,
-	ButtonColor,
-	ButtonSize,
-	ButtonVariant,
-	Dropdown,
-	type MenuItem,
-} from '@signozhq/ui';
+import { Button, ButtonColor, ButtonVariant, Dropdown, type MenuItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
 	Check,
@@ -732,7 +725,7 @@ export const AllStates: Story = {
 							<Button
 								variant={ButtonVariant.Solid}
 								color={ButtonColor.Secondary}
-								size={ButtonSize.XS}
+								// size={ButtonSize.XS}
 							>
 								<MoreHorizontal />
 							</Button>
