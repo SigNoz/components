@@ -5,6 +5,7 @@
 		"build": "turbo run build",
 		"publint": "turbo run publint",
 		"dev": "turbo run dev",
+		"type-check": "tsgo --noEmit -p tsconfig.json",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"clean": "turbo run clean && rm -rf node_modules",
@@ -15,15 +16,6 @@
 		"prepare": "husky",
 		"pre-commit": "lint-staged"
 	},
-	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": [
-			"sh scripts/typecheck-staged.sh",
-			"biome check --write --no-errors-on-unmatched"
-		],
-		"*.{json,html,css}": [
-			"biome format --write --no-errors-on-unmatched"
-		]
-	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.4",
 		"@commitlint/cli": "^19.5.0",
@@ -32,6 +24,7 @@
 		"@turbo/gen": "^2.1.2",
 		"@types/fs-extra": "^11.0.4",
 		"@types/react-dom": "^18.2.19",
+		"@typescript/native-preview": "7.0.0-dev.20260309.1",
 		"@vitejs/plugin-react": "^5.1.4",
 		"baseline-browser-mapping": "^2.9.14",
 		"fs-extra": "^11.3.3",

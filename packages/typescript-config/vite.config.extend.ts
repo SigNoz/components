@@ -107,7 +107,7 @@ export default function getViteLibConfig(
 
 							// Update sourceMappingURL references
 							if (newFilePath.endsWith('.d.cts')) {
-								const content = await fs.readFile(file, 'utf-8');
+								const content = (await fs.readFile(file, 'utf-8'))?.toString();
 								let updatedContent = content.replace(
 									/\/\/# sourceMappingURL=.*\.d\.ts\.map/g,
 									(match) => match.replace('.d.ts.map', '.d.cts.map')
