@@ -1,0 +1,102 @@
+.input {
+  display: flex;
+  height: var(--input-height, 2.25rem);
+  width: 100%;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--border);
+  background-color: transparent;
+  padding: var(--spacing-2, 0.25rem) var(--spacing-6, 0.75rem);
+  font-size: var(--input-font-size, var(--font-size-sm, 0.875rem));
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+
+  &::file-selector-button {
+    border: 0;
+    background-color: transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  &::placeholder {
+    color: var(--input-placeholder-color, var(--muted-foreground));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+/* Input wrapper with prefix/suffix */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--input-height, 2.25rem);
+  border-radius: var(--input-border-radius, calc(var(--radius) - 2px));
+  border: 1px solid var(--border);
+  background-color: transparent;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  gap: var(--spacing-2, 0.75rem);
+  padding-left: var(--spacing-6, 0.75rem);
+  padding-right: var(--spacing-6, 0.75rem);
+
+  &:focus-within {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  &[data-has-prefix="true"] {
+    padding-left: 0;
+  }
+
+  &[data-has-suffix="true"] {
+    padding-right: 0;
+  }
+}
+
+.input-prefix,
+.input-suffix {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: var(--input-font-size, var(--font-size-sm, 0.875rem));
+  color: inherit;
+  max-height: 100%;
+}
+
+.input-with-adornments {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: var(--input-font-size, var(--font-size-sm, 0.875rem));
+  color: inherit;
+  padding: 0;
+  height: 100%;
+
+  &::placeholder {
+    color: var(--input-placeholder-color, var(--muted-foreground));
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+}
+
+.input-password-wrapper {
+  position: relative;
+  width: 100%;
+}
