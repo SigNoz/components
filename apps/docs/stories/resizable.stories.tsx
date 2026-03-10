@@ -6,115 +6,100 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BarChart3, Code, Database, FileText, Settings, Terminal } from 'lucide-react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const ResizableExamples = [
-	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/ui';
-
-export default function MyComponent() {
-  return (
-    <div className="h-screen">
-      <ResizablePanelGroup orientation="horizontal">
-        <ResizablePanel defaultSize="25%">
-          <div className="flex h-full items-center justify-center">
-            <span>Sidebar</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="75%">
-          <div className="flex h-full items-center justify-center">
-            <span>Main Content</span>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
-}`,
-	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/ui';
-
-// Vertical layout with collapsible panels
-export default function VerticalLayout() {
-  return (
-    <div className="h-screen">
-      <ResizablePanelGroup orientation="vertical">
-        <ResizablePanel defaultSize="70%">
-          <div className="flex h-full items-center justify-center">
-            <span>Main Content Area</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="30%" collapsible>
-          <div className="flex h-full items-center justify-center">
-            <span>Bottom Panel (Collapsible)</span>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
-}`,
-	`import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@signozhq/ui';
-
-// Complex nested layout
-export default function NestedLayout() {
-  return (
-    <div className="h-screen">
-      <ResizablePanelGroup orientation="horizontal">
-        <ResizablePanel defaultSize="20%" minSize="15%" maxSize="40%">
-          <div className="h-full p-4">
-            <h3>File Explorer</h3>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="60%">
-          <ResizablePanelGroup orientation="vertical">
-            <ResizablePanel defaultSize="70%">
-              <div className="h-full p-4">
-                <h3>Code Editor</h3>
-              </div>
-            </ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel defaultSize="30%">
-              <div className="h-full p-4">
-                <h3>Terminal</h3>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="20%" collapsible>
-          <div className="h-full p-4">
-            <h3>Properties</h3>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
-}`,
-];
-
-const ResizableDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A flexible resizable panel system for creating split layouts with draggable dividers. Perfect for building code editors, dashboards, and multi-panel interfaces with persistent layouts.',
-	examples: ResizableExamples,
-});
 
 const meta: Meta<typeof ResizablePanelGroup> = {
-	title: 'Old Components/Resizable',
+	title: 'Components/Resizable',
 	component: ResizablePanelGroup,
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: ResizableDocs,
-			},
-		},
 	},
 	argTypes: {
 		orientation: {
 			control: 'select',
 			options: ['horizontal', 'vertical'],
-			description: 'The orientation of the panel group layout',
+			description:
+				'Specifies the resizable orientation ("horizontal" or "vertical"); defaults to "horizontal"',
+			table: {
+				category: 'Layout',
+				type: { summary: "'horizontal' | 'vertical'" },
+				defaultValue: { summary: 'horizontal' },
+			},
+		},
+		defaultLayout: {
+			control: false,
+			description:
+				'Default layout for the Group. This value allows layouts to be remembered between page reloads.',
+			table: { category: 'Layout', type: { summary: 'Layout' } },
+		},
+		onLayoutChange: {
+			control: false,
+			description:
+				"Called when the Group's layout is changing. ⚠️ For layout changes caused by pointer events, this method is called each time the pointer is moved. For most cases, it is recommended to use the `onLayoutChanged` callback instead.",
+			table: { category: 'Events', type: { summary: '(layout: Layout) => void' } },
+		},
+		onLayoutChanged: {
+			control: false,
+			description:
+				"Called after the Group's layout has been changed. For layout changes caused by pointer events, this method is not called until the pointer has been released. This method is recommended when saving layouts to some storage api.",
+			table: { category: 'Events', type: { summary: '(layout: Layout) => void' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Disable resize functionality.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		disableCursor: {
+			control: 'boolean',
+			description:
+				'This library sets custom mouse cursor styles to indicate drag state. Use this prop to disable that behavior for Panels and Separators in this group.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		resizeTargetMinimumSize: {
+			control: false,
+			description:
+				'Minimum size of the resizable hit target area (either Separator or Panel edge). This threshold ensures are large enough to avoid mis-clicks.',
+			table: { category: 'Behavior', type: { summary: '{ coarse: number; fine: number }' } },
+		},
+		groupRef: {
+			control: false,
+			description:
+				'Exposes the following imperative API: getLayout(): Layout and setLayout(layout: Layout): void. The useGroupRef and useGroupCallbackRef hooks are exported for convenience use in TypeScript projects.',
+			table: { category: 'Advanced', type: { summary: 'Ref<GroupImperativeHandle | null>' } },
+		},
+		style: {
+			control: false,
+			description:
+				'CSS properties. ⚠️ The following styles cannot be overridden: display, flex-direction, flex-wrap, and overflow.',
+			table: { category: 'Styling', type: { summary: 'CSSProperties' } },
+		},
+		id: {
+			control: 'text',
+			description:
+				'Uniquely identifies this group within an application. Falls back to useId when not provided. This value will also be assigned to the data-group attribute.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to the panel group',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		children: {
+			control: false,
+			description: 'Panel and Separator components that comprise this group.',
+			table: { category: 'Content', type: { summary: 'ReactNode' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'The testId associated with the panel group for testing purposes.',
+			table: { category: 'Testing', type: { summary: 'string' } },
 		},
 	},
 	tags: ['autodocs'],
