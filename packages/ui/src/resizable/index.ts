@@ -4,4 +4,8 @@ export {
 	ResizablePanel,
 	ResizablePanelGroup,
 	useDefaultLayout,
+	useGroupCallbackRef,
+	useGroupRef,
+	usePanelCallbackRef,
+	usePanelRef,
 } from './resizable.js';
