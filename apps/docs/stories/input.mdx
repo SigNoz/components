@@ -1,0 +1,55 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as InputStories from './input.stories';
+
+<Meta of={InputStories} />
+
+# Input
+
+A flexible text input component with support for prefixes, suffixes, and a dedicated password variant.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import { Input } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Input placeholder="Enter text" />;
+}
+```
+
+### With prefix and suffix
+
+```tsx
+import { Input } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Input
+			prefix={<span className="text-xs text-vanilla-500">@</span>}
+			suffix={<button type="button">Clear</button>}
+			placeholder="username"
+		/>
+	);
+}
+```
+
+### Password input
+
+```tsx
+import { Input } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Input.Password placeholder="Enter password" />;
+}
+```
+
+This following example shows a basic input (using the default story):
+
+<Primary />
+
+## Input & Input.Password Props
+
+<Controls of={InputStories.Default} />
+
