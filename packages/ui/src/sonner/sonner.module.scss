@@ -1,9 +1,9 @@
 /* Toast Container Styling */
 .toaster [data-sonner-toast] {
   align-items: flex-start !important;
-  padding: var(--spacing-3, .75rem) var(--spacing-4, 1rem) !important;
+  padding: var(--spacing-3, .75rem) var(--spacing-8, 1rem) !important;
   border-radius: 6px !important;
-  gap: var(--spacing-2, .5rem) !important;
+  gap: var(--spacing-4, 0.5rem) !important;
 
   --normal-bg: var(--popover);
   --normal-text: var(--popover-foreground);
@@ -40,7 +40,7 @@
   align-self: flex-start !important;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2, .5rem);
+  gap: var(--spacing-4, 0.5rem);
 }
 
 /* Title/Message Styling */

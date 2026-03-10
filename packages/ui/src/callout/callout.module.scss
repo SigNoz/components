@@ -4,7 +4,7 @@
   border-radius: var(--radius-2, 0.5rem);
   border: 1px solid transparent;
   display: flex;
-  gap: var(--spacing-2, .5rem);
+  gap: var(--spacing-4, 0.5rem);
   align-items: flex-start;
   
   --callout-icon-color: currentColor;
@@ -12,7 +12,7 @@
   --callout-description-color: var(--text-muted-foreground);
   border-color: color-mix(in srgb, var(--callout-background) 20%, transparent);
   background: color-mix(in srgb, var(--callout-background) 10%, transparent);
-  padding: var(--callout-padding, var(--spacing-4, 1rem));
+  padding: var(--callout-padding, var(--spacing-8, 1rem));
 
   :global(.dark) & {
     background: color-mix(in srgb, var(--callout-background) 10%, transparent);
@@ -117,14 +117,14 @@
   }
 
   &__icon {
-    margin-top: var(--spacing-1, 0.25rem);
+    margin-top: var(--spacing-2, 0.25rem);
     color: var(--callout-icon-color);
     flex-shrink: 0;
   }
 
   &__content {
     display: grid;
-    gap: var(--spacing-2, 0.5rem);
+    gap: var(--spacing-4, 0.5rem);
     flex: 1 1 0%;
     min-width: 0;
   }
@@ -142,7 +142,7 @@
   &__description {
     display: grid;
     justify-items: start;
-    gap: var(--spacing-1, 0.25rem);
+    gap: var(--spacing-2, 0.25rem);
     color: var(--callout-description-color);
     font-weight: var(--callout-description-font-weight, var(--font-weight-normal));
     line-height: 1.25rem;
@@ -150,7 +150,7 @@
 
   &__close {
     align-self: flex-start;
-    padding: var(--spacing-1, 0.25rem);
+    padding: var(--spacing-2, 0.25rem);
     border-radius: calc(var(--radius) - 4px);
     transition: colors 100ms ease-out;
     cursor: pointer;
@@ -165,7 +165,7 @@
 
   &__action {
     align-self: flex-start;
-    padding: var(--spacing-1, 0.25rem);
+    padding: var(--spacing-2, 0.25rem);
     border-radius: calc(var(--radius) - 4px);
     transition: colors 100ms ease-out;
     cursor: pointer;

@@ -9,19 +9,3 @@
 
 @source "./";
 @import './blue-demo.css';
-
-/**
- * Fix design tokens mismatch with Figma
- */
-:root {
-    --spacing-1: .25rem !important;
-    --spacing-2: .5rem !important;
-    --spacing-3: .75rem !important;
-    --spacing-4: 1rem !important;
-    --spacing-5: 1.25rem !important;
-    --spacing-6: 1.5rem !important;
-    --spacing-7: 1.75rem !important;
-    --spacing-8: 2rem !important;
-    --spacing-9: 2.25rem !important;
-    --spacing-10: 2.5rem !important;
-}
