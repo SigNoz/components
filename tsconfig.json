@@ -1,6 +1,10 @@
 {
 	"extends": "@repo/typescript-config/react-library.json",
-	"exclude": ["node_modules"],
+	"compilerOptions": {
+		"skipDefaultLibCheck": true,
+		"skipLibCheck": true
+	},
+	"exclude": ["node_modules/**"],
 	"include": [
 		"apps/**/*.ts",
 		"apps/**/*.tsx",
