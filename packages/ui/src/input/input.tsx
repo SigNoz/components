@@ -180,13 +180,14 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>((pr
 					aria-label={showPassword ? 'Hide password' : 'Show password'}
 					tabIndex={-1}
 					disabled={props.disabled}
-				>
-					{showPassword ? (
-						<EyeOffIcon aria-hidden="true" strokeWidth={2} />
-					) : (
-						<EyeIcon aria-hidden="true" strokeWidth={2} />
-					)}
-				</Button>
+					suffix={
+						showPassword ? (
+							<EyeOffIcon aria-hidden="true" strokeWidth={2} />
+						) : (
+							<EyeIcon aria-hidden="true" strokeWidth={2} />
+						)
+					}
+				/>
 			}
 		/>
 	);
