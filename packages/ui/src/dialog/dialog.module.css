@@ -1,0 +1,142 @@
+.dialog__trigger {
+  cursor: pointer;
+}
+
+.dialog__close {
+  cursor: pointer;
+}
+
+.dialog__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  .dialog__overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.dialog__content {
+  position: fixed;
+  z-index: 50;
+  display: grid;
+  width: 100%;
+  border-radius: var(--spacing-2, 0.25rem);
+  border: 1px solid var(--l2-border);
+  background-color: var(--l2-background);
+  box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.04);
+
+  &[data-position="top"] {
+    left: 50%;
+  }
+
+  &[data-position="center"] {
+    top: 50%;
+    left: 50%;
+  }
+
+  /* Width variants */
+  &[data-width="narrow"] {
+    max-width: 24rem;
+  }
+
+  &[data-width="base"] {
+    max-width: 32rem;
+  }
+
+  &[data-width="wide"] {
+    max-width: 42rem;
+  }
+
+  &[data-width="extra-wide"] {
+    max-width: 51.25rem;
+  }
+}
+
+.dialog__close__button {
+  position: absolute;
+  top: calc(var(--spacing-8, 1rem) - (var(--spacing-8, 1rem) - 16px) / 2);
+  right: var(--spacing-8, 1rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--dialog-close-button-size, var(--spacing-8, 1rem));
+  height: var(--dialog-close-button-size, var(--spacing-8, 1rem));
+  border-radius: 0.125rem;
+  opacity: 0.7;
+  transition: opacity 150ms ease;
+  cursor: pointer;
+  border-width: var(--dialog-close-button-border-width, 0px);
+  background-color: var(--dialog-close-button-background, transparent);
+
+  &:hover {
+    opacity: 1;
+    background-color: color-mix(in srgb, var(--dialog-close-icon) 10%, transparent);
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+
+  & svg {
+    flex-shrink: 0;
+  }
+}
+
+.dialog__close__button_screenreader {
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
+}
+
+.dialog__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-width: var(--dialog-header-border-width, 0px 0px 1px 0px);
+  border-style: var(--dialog-header-border-style, solid);
+  border-color: var(--dialog-header-border-color, var(--l2-border));
+  padding: var(--dialog-header-padding, var(--spacing-8, 1rem));
+}
+
+.dialog__footer {
+  display: flex;
+  flex-direction: var(--dialog-footer-flex-direction, column-reverse);
+  gap: var(--dialog-footer-gap, var(--spacing-4, 0.5rem));
+  padding: var(--dialog-footer-padding, var(--spacing-6, .75rem) var(--spacing-8, 1rem) var(--spacing-8, 1rem) var(--spacing-8, 1rem));
+
+  @media(min-width: 640px) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+.dialog__title {
+  display: flex;
+  align-items: center;
+  gap: var(--dialog-title-gap, var(--spacing-4, 0.5rem));
+  margin: var(--dialog-title-margin, 0);
+  font-size: var(--dialog-title-font-size, var(--font-size-sm, 0.875rem));
+  font-weight: var(--dialog-title-font-weight, var(--font-weight-normal, 400));
+  line-height: var(--dialog-title-line-height, 100%);
+  color: var(--dialog-title-color, var(--l1-foreground));
+  font-variant-numeric: slashed-zero;
+}
+
+.dialog__description {
+  padding: var(--dialog-description-padding, var(--spacing-8, 1rem));
+  font-size: var(--dialog-description-font-size, var(--font-size-sm, 0.875rem));
+  color: var(--dialog-description-color, var(--l2-foreground));
+  font-variant-numeric: slashed-zero;
+  margin: var(--dialog-description-margin, 0px);
+}

@@ -1,3 +1,4 @@
+export * from './alert-dialog/index.js';
 export * from './badge/index.js';
 export * from './button/index.js';
 export * from './calendar/index.js';

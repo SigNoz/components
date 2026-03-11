@@ -1,12 +1,20 @@
-export type * from './command.js';
 export {
 	Command,
 	CommandDialog,
+	type CommandDialogProps,
 	CommandEmpty,
+	type CommandEmptyProps,
 	CommandGroup,
+	type CommandGroupProps,
 	CommandInput,
+	type CommandInputProps,
 	CommandItem,
+	type CommandItemProps,
 	CommandList,
+	type CommandListProps,
+	type CommandProps,
 	CommandSeparator,
+	type CommandSeparatorProps,
 	CommandShortcut,
+	type CommandShortcutProps,
 } from './command.js';
