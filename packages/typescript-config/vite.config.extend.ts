@@ -25,6 +25,7 @@ export const externalPatterns = [
 	/^lodash-es(\/.*)?$/,
 	'react-resizable-panels',
 	'vaul',
+	'nuqs',
 	'dayjs',
 	/dayjs\/.*$/,
 	'@tanstack/react-virtual',
