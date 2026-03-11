@@ -106,8 +106,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		color ??= ButtonColor.Primary;
 
 		const iconSizes: Record<ButtonSizeValue, number> = {
-			[ButtonSize.SM]: 16,
-			[ButtonSize.MD]: 16,
+			[ButtonSize.SM]: 12,
+			[ButtonSize.MD]: 14,
 			[ButtonSize.Icon]: 16,
 		};
 
