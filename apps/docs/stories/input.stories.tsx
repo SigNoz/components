@@ -490,7 +490,9 @@ export const PasswordInput: Story = {
 	},
 	render: (args) => {
 		return (
-			<div className="pt-5">
+			<div className="p-5 mt-5">
+				<h2 className="mb-3">Input.Password Example</h2>
+
 				<Input.Password {...args} />
 			</div>
 		);
