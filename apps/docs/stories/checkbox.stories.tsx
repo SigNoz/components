@@ -97,7 +97,6 @@ const meta: Meta<typeof Checkbox> = {
 			},
 		],
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;

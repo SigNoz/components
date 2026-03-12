@@ -17,7 +17,6 @@ import { action } from 'storybook/actions';
 const meta: Meta<any> = {
 	title: 'Components/Command',
 	component: Command,
-	tags: ['autodocs'],
 	parameters: {
 		controls: { expanded: true },
 	},

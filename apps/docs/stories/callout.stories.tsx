@@ -79,7 +79,6 @@ const meta: Meta<typeof Callout> = {
 		children: 'This is additional information that provides more context about the callout.',
 		action: 'none',
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;

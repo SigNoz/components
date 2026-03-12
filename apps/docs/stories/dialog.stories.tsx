@@ -97,7 +97,6 @@ const meta: Meta<typeof DialogWrapper> = {
 	parameters: {
 		layout: 'fullscreen',
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;

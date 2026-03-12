@@ -4,7 +4,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta: Meta<typeof Input> = {
 	title: 'Components/Input',
 	component: Input,
-	tags: ['autodocs'],
 	parameters: {
 		layout: 'fullscreen',
 		design: [
