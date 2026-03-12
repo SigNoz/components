@@ -1,5 +1,4 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { X } from '@signozhq/icons';
 import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -8,18 +7,133 @@ import styles from '../dialog.module.css';
 import { DialogOverlay } from './dialog-overlay.js';
 import { DialogPortal } from './dialog-portal.js';
 
-const getContentVariants = (position: DialogPosition): Variants => {
+export type DialogPosition = 'top' | 'center' | 'left' | 'right' | 'bottom';
+export type DialogSize = 'narrow' | 'base' | 'wide' | 'extra-wide';
+export type DialogHeightMode = 'content' | 'full';
+export type DialogAnimation = 'fade' | 'zoom' | 'slide';
+
+export const DialogPositionValue: Record<Capitalize<DialogPosition>, DialogPosition> = {
+	Top: 'top',
+	Center: 'center',
+	Left: 'left',
+	Right: 'right',
+	Bottom: 'bottom',
+};
+
+type MotionContentProps = React.ComponentProps<typeof motion.div> & {
+	'data-state'?: 'open' | 'closed';
+};
+
+const dialogContentTransition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] };
+
+const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
+	({ 'data-state': state, initial, animate, transition, exit, ...rest }, ref) => {
+		const resolvedInitial = state === 'open' ? (initial ?? 'initial') : (initial ?? 'exit');
+		const resolvedAnimate = state === 'open' ? (animate ?? 'animate') : (animate ?? 'exit');
+		const resolvedExit = exit ?? 'exit';
+
+		return (
+			<motion.div
+				ref={ref}
+				initial={resolvedInitial}
+				animate={resolvedAnimate}
+				transition={transition ?? dialogContentTransition}
+				exit={resolvedExit}
+				{...rest}
+			/>
+		);
+	}
+);
+
+const getContentVariants = (
+	position: DialogPosition,
+	heightMode: DialogHeightMode,
+	animation: DialogAnimation
+): Variants => {
 	const baseTransform =
 		position === 'center'
 			? 'translateX(-50%) translateY(-50%)'
-			: position === 'top'
+			: position === 'top' || position === 'bottom'
 				? 'translateX(-50%)'
-				: 'none';
+				: position === 'left' || position === 'right'
+					? heightMode === 'content'
+						? 'translateY(-50%)'
+						: 'none'
+					: 'none';
+
+	if (animation === 'slide') {
+		const transition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] };
+		const yCenter = heightMode === 'content' ? ' translateY(-50%)' : '';
+
+		if (position === 'left') {
+			return {
+				initial: { opacity: 0, transform: `translateX(-100%)${yCenter}` },
+				animate: { opacity: 1, transform: `translateX(0%)${yCenter}`, transition },
+				exit: { opacity: 0, transform: `translateX(-100%)${yCenter}` },
+			};
+		}
+
+		if (position === 'right') {
+			return {
+				initial: { opacity: 0, transform: `translateX(100%)${yCenter}` },
+				animate: { opacity: 1, transform: `translateX(0%)${yCenter}`, transition },
+				exit: { opacity: 0, transform: `translateX(100%)${yCenter}` },
+			};
+		}
+
+		if (position === 'top') {
+			const initialTransform =
+				heightMode === 'full' ? 'translateY(-100%)' : 'translate(-50%, -100%)';
+			const animateTransform = heightMode === 'full' ? 'translateY(0%)' : 'translate(-50%, 0%)';
+
+			return {
+				initial: { opacity: 0, transform: initialTransform },
+				animate: { opacity: 1, transform: animateTransform, transition },
+				exit: { opacity: 0, transform: initialTransform },
+			};
+		}
+
+		if (position === 'bottom') {
+			const initialTransform = heightMode === 'full' ? 'translateY(100%)' : 'translate(-50%, 100%)';
+			const animateTransform = heightMode === 'full' ? 'translateY(0%)' : 'translate(-50%, 0%)';
+
+			return {
+				initial: { opacity: 0, transform: initialTransform },
+				animate: { opacity: 1, transform: animateTransform, transition },
+				exit: { opacity: 0, transform: initialTransform },
+			};
+		}
+
+		if (position === 'center') {
+			return {
+				initial: {
+					opacity: 0,
+					transform: 'translateX(-50%) translateY(-55%)',
+				},
+				animate: {
+					opacity: 1,
+					transform: 'translateX(-50%) translateY(-50%)',
+				},
+				exit: {
+					opacity: 0,
+					transform: 'translateX(-50%) translateY(-55%)',
+				},
+			};
+		}
+
+		return {
+			initial: { opacity: 0, transform: 'translateY(-8px)' },
+			animate: { opacity: 1, transform: 'translateY(0px)' },
+			exit: { opacity: 0, transform: 'translateY(-8px)' },
+		};
+	}
+
+	const scaleInitial = animation === 'zoom' ? 0.9 : 0.95;
 
 	return {
 		initial: {
 			opacity: 0,
-			transform: `${baseTransform} scale(0.95)`,
+			transform: `${baseTransform} scale(${scaleInitial})`,
 		},
 		animate: {
 			opacity: 1,
@@ -27,14 +141,10 @@ const getContentVariants = (position: DialogPosition): Variants => {
 		},
 		exit: {
 			opacity: 0,
-			transform: `${baseTransform} scale(0.95)`,
+			transform: `${baseTransform} scale(${scaleInitial})`,
 		},
 	};
 };
-
-export type DialogPosition = 'top' | 'center' | 'custom';
-export type DialogSize = 'narrow' | 'base' | 'wide' | 'extra-wide';
-const dialogContentTransition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] };
 
 export type DialogContentProps = Pick<
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
@@ -81,11 +191,6 @@ export type DialogContentProps = Pick<
 	 */
 	forceMount?: true;
 	/**
-	 * Show the close button.
-	 * @default true
-	 */
-	showCloseButton?: boolean;
-	/**
 	 * The width of the dialog.
 	 * @default 'base'
 	 */
@@ -101,19 +206,34 @@ export type DialogContentProps = Pick<
 	 */
 	offset?: number;
 	/**
-	 * The on close callback.
-	 */
-	onClose?: () => void;
-	/**
 	 * Test ID for the dialog content.
 	 */
 	testId?: string;
+	/**
+	 * Controls how the dialog content stretches in the viewport.
+	 * - `content` keeps the panel sized to its content (current behavior).
+	 * - `full` makes the panel take the full viewport height or width depending on position.
+	 * @default 'content'
+	 */
+	heightMode?: DialogHeightMode;
+	/**
+	 * Whether to render the overlay behind the dialog content.
+	 * @default true
+	 */
+	showOverlay?: boolean;
+	/**
+	 * Controls the enter/exit animation of the dialog panel.
+	 * - `fade` keeps the current subtle fade + zoom behavior.
+	 * - `zoom` uses a slightly stronger zoom effect.
+	 * - `slide` animates directionally based on the `position` and `heightMode`.
+	 * @default 'fade'
+	 */
+	animation?: DialogAnimation;
 };
 
 /**
  * Animated dialog panel that renders the actual dialog surface inside a
- * portal with overlay. Controls width, position and optional built-in
- * close button.
+ * portal with overlay. Controls width and position.
  *
  * @example
  * ```tsx
@@ -174,56 +294,60 @@ export const DialogContent = React.forwardRef<
 		{
 			className,
 			children,
-			showCloseButton = true,
 			width = 'base',
 			position = 'center',
-			offset = 100,
+			offset = 16,
 			style: propStyle,
 			testId,
+			heightMode = 'content',
+			showOverlay = true,
+			animation = 'fade',
 			...props
 		},
 		ref
 	) => {
 		const style = useMemo(() => {
-			const positionStyle = position === 'top' ? { top: `${offset}px` } : undefined;
-			return { ...positionStyle, ...propStyle };
-		}, [propStyle, position, offset]);
+			const offsetMap = {
+				top: offset,
+				bottom: offset,
+				left: offset,
+				right: offset,
+			} as Record<DialogPosition, number>;
 
-		const variants = useMemo(() => getContentVariants(position), [position]);
+			const positionStyle =
+				offsetMap[position] && heightMode === 'content'
+					? { [position]: `${offsetMap[position]}px` }
+					: undefined;
+			return { ...positionStyle, ...propStyle };
+		}, [propStyle, position, offset, heightMode]);
+
+		const variants = useMemo(
+			() => getContentVariants(position, heightMode, animation),
+			[position, heightMode, animation]
+		);
 
 		return (
-			<DialogPortal data-slot="dialog-portal">
-				<DialogOverlay />
+			<DialogPortal data-slot="dialog-portal" forceMount={props.forceMount}>
+				{showOverlay && <DialogOverlay forceMount={props.forceMount} />}
 				<DialogPrimitive.Content
 					ref={ref}
 					data-slot="dialog-content"
 					data-width={width}
 					data-position={position}
+					data-height-mode={heightMode}
+					data-animation={animation}
 					data-testid={testId}
 					asChild
+					forceMount={props.forceMount}
 					{...props}
 				>
-					<motion.div
+					<MotionContent
 						className={cn(styles.dialog__content, className)}
 						style={style}
 						variants={variants}
-						initial="initial"
-						animate="animate"
-						exit="exit"
-						transition={dialogContentTransition}
 					>
 						{children}
-						{showCloseButton && (
-							<DialogPrimitive.Close
-								data-slot="dialog-close"
-								className={styles.dialog__close__button}
-								onClick={props.onClose}
-							>
-								<X />
-								<span className={styles.dialog__close__button_screenreader}>Close</span>
-							</DialogPrimitive.Close>
-						)}
-					</motion.div>
+					</MotionContent>
 				</DialogPrimitive.Content>
 			</DialogPortal>
 		);

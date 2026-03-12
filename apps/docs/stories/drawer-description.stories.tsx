@@ -10,22 +10,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { descriptionArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerDescription> = {
 	title: 'Components/Drawer/DrawerDescription',
 	component: DrawerDescription,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the description container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: 'text',
-			description: 'The descriptive text or content of the drawer.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: descriptionArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -46,7 +36,7 @@ export const Default: Story = {
 					Open drawer
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent type="drawer">
+			<DrawerContent>
 				<DrawerHeader>
 					<DrawerTitle>Confirm action</DrawerTitle>
 				</DrawerHeader>
@@ -55,4 +45,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

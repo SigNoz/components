@@ -1,4 +1,4 @@
-import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary, Story } from '@storybook/addon-docs/blocks';
 import * as DialogStories from './dialog.stories';
 import * as DialogWrapperStories from './dialog-wrapper.stories';
 import * as ConfirmDialogStories from './confirm-dialog.stories';
@@ -25,21 +25,27 @@ A modal dialog component for displaying content that requires user attention or 
 
 ### DialogWrapper (preset)
 
-Use `DialogWrapper` for a simple dialog with title, optional trigger, and content:
+Use `DialogWrapper` for a simple dialog with title, optional trigger, and content. Pass `open` and `onOpenChange` for controlled mode with exit animations:
 
 ```tsx
 import { DialogWrapper, Button } from '@signozhq/ui';
 
 export default function MyComponent() {
+	const [open, setOpen] = React.useState(false);
+
 	return (
 		<DialogWrapper
+			open={open}
+			onOpenChange={setOpen}
 			title="Edit Details"
 			trigger={<Button variant="solid">Open Dialog</Button>}
 		>
 			<div className="flex flex-col gap-4">
 				<p>Dialog content goes here</p>
 				<div className="flex justify-end">
-					<Button variant="solid" color="primary">Save Changes</Button>
+					<Button variant="solid" color="primary" onClick={() => setOpen(false)}>
+						Save Changes
+					</Button>
 				</div>
 			</div>
 		</DialogWrapper>
@@ -175,6 +181,10 @@ export default function MyComponent() {
 
 For full control, use the low-level building blocks: `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, and `DialogClose`.
 
+### Exit animations
+
+To animate the dialog on close, wrap `DialogContent` in `AnimatePresence` and pass `forceMount` plus a stable `key`:
+
 ```tsx
 import {
 	Dialog,
@@ -187,6 +197,7 @@ import {
 	DialogClose,
 	Button,
 } from '@signozhq/ui';
+import { AnimatePresence } from 'motion/react';
 
 export default function MyComponent() {
 	const [open, setOpen] = useState(false);
@@ -196,24 +207,30 @@ export default function MyComponent() {
 			<DialogTrigger asChild>
 				<Button>Open</Button>
 			</DialogTrigger>
-			<DialogContent width="base">
-				<DialogHeader>
-					<DialogTitle>Title</DialogTitle>
-				</DialogHeader>
-				<DialogDescription>
-					Description and body content.
-				</DialogDescription>
-				<DialogFooter>
-					<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-					<DialogClose asChild>
-						<Button>Confirm</Button>
-					</DialogClose>
-				</DialogFooter>
-			</DialogContent>
+			<AnimatePresence>
+				{open && (
+					<DialogContent key="dialog" width="base" forceMount>
+						<DialogHeader>
+							<DialogTitle>Title</DialogTitle>
+						</DialogHeader>
+						<DialogDescription>
+							Description and body content.
+						</DialogDescription>
+						<DialogFooter>
+							<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+							<DialogClose asChild>
+								<Button>Confirm</Button>
+							</DialogClose>
+						</DialogFooter>
+					</DialogContent>
+				)}
+			</AnimatePresence>
 		</Dialog>
 	);
 }
 ```
+
+Without `AnimatePresence`, `forceMount`, and `key`, the dialog closes instantly. `DialogWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
 
 ## Dialog Props
 

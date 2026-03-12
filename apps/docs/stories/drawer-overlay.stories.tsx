@@ -12,17 +12,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { overlayComponentArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerOverlay> = {
 	title: 'Components/Drawer/DrawerOverlay',
 	component: DrawerOverlay,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the overlay.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-	},
+	argTypes: overlayComponentArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -42,14 +37,14 @@ export const Default: Story = {
 			</DrawerTrigger>
 			<DrawerPortal>
 				<DrawerOverlay {...args} />
-				<DrawerContent type="drawer">
+				<DrawerContent>
 					<DrawerHeader>
 						<DrawerTitle>Drawer overlay</DrawerTitle>
 					</DrawerHeader>
 					<DrawerDescription>
 						<p className="text-sm">
-							The overlay dims the background and blocks interaction with the page while the
-							drawer is open.
+							The overlay dims the background and blocks interaction with the page while the drawer
+							is open.
 						</p>
 					</DrawerDescription>
 				</DrawerContent>
@@ -57,4 +52,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

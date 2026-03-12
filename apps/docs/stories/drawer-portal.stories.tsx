@@ -12,21 +12,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { portalArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerPortal> = {
 	title: 'Components/Drawer/DrawerPortal',
 	component: DrawerPortal,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the portal container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: portalArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -46,7 +37,7 @@ export const Default: Story = {
 			</DrawerTrigger>
 			<DrawerPortal {...args}>
 				<DrawerOverlay />
-				<DrawerContent type="drawer">
+				<DrawerContent>
 					<DrawerHeader>
 						<DrawerTitle>Drawer portal</DrawerTitle>
 					</DrawerHeader>
@@ -60,4 +51,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

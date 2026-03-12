@@ -11,33 +11,12 @@ import {
 	DialogTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { portalArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogPortal> = {
 	title: 'Components/Dialog/DialogPortal',
 	component: DialogPortal,
-	argTypes: {
-		testId: {
-			control: 'text',
-			description: 'Test ID for the dialog portal.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		container: {
-			control: false,
-			description:
-				'Optional DOM element to portal the dialog into. Defaults to document.body when not provided.',
-			table: { category: 'Behavior', type: { summary: 'HTMLElement | null | undefined' } },
-		},
-		forceMount: {
-			control: 'boolean',
-			description:
-				'When true, keeps the portal mounted even when the dialog is closed. Useful for controlling animations.',
-			table: { category: 'Behavior', type: { summary: 'boolean | undefined' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: portalArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

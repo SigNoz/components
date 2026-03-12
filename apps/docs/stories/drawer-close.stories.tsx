@@ -12,32 +12,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { closeArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerClose> = {
 	title: 'Components/Drawer/DrawerClose',
 	component: DrawerClose,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the close element.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		asChild: {
-			control: 'boolean',
-			description:
-				'When true, the child element will be treated as the close control (no extra DOM wrapper).',
-			table: { category: 'Behavior', type: { summary: 'boolean' } },
-		},
-		onClick: {
-			control: false,
-			description: 'Click handler invoked when the close element is activated.',
-			table: { category: 'Events', type: { summary: '(event: MouseEvent) => void' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: closeArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -58,14 +38,12 @@ export const Default: Story = {
 					Open drawer
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent type="drawer">
+			<DrawerContent>
 				<DrawerHeader>
 					<DrawerTitle>Drawer with custom close</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<p className="text-sm">
-						This drawer uses DrawerClose in the footer instead of an integrated close button.
-					</p>
+					This drawer uses DrawerClose in the footer for the close action.
 				</DrawerDescription>
 				<DrawerFooter>
 					<Button variant={ButtonVariant.Ghost} color="secondary">
@@ -81,4 +59,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

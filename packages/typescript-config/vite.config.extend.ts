@@ -24,7 +24,6 @@ export const externalPatterns = [
 	'react-day-picker',
 	/^lodash-es(\/.*)?$/,
 	'react-resizable-panels',
-	'vaul',
 	'nuqs',
 	'dayjs',
 	/dayjs\/.*$/,

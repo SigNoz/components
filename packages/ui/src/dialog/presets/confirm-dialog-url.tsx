@@ -60,6 +60,7 @@ export function ConfirmDialogUrl({ urlKey, onConfirm, onCancel, ...props }: Conf
 	return (
 		<ConfirmDialog
 			open={open || false}
+			onOpenChange={(next) => setOpen(next)}
 			onConfirm={onConfirmProxy}
 			onCancel={onCancelProxy}
 			{...props}
