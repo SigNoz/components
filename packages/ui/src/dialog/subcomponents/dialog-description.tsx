@@ -36,7 +36,7 @@ export const DialogDescription = React.forwardRef<
 	<div
 		ref={ref}
 		data-slot="dialog-description"
-		data-testId={testId}
+		data-testid={testId}
 		className={cn(styles.dialog__description, className)}
 		{...props}
 	/>

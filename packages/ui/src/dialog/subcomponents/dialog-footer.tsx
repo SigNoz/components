@@ -41,7 +41,7 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
 		<div
 			ref={ref}
 			data-slot="dialog-footer"
-			data-testId={testId}
+			data-testid={testId}
 			className={cn(styles.dialog__footer, className)}
 			{...props}
 		/>

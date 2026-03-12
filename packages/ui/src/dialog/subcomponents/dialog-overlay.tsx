@@ -57,7 +57,7 @@ export const DialogOverlay = React.forwardRef<
 	<DialogPrimitive.Overlay
 		ref={ref}
 		data-slot="dialog-overlay"
-		data-testId={testId}
+		data-testid={testId}
 		asChild
 		{...props}
 	>

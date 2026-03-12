@@ -43,7 +43,7 @@ export const DialogTrigger = React.forwardRef<
 	<DialogPrimitive.Trigger
 		ref={ref}
 		data-slot="dialog-trigger"
-		data-testId={testId}
+		data-testid={testId}
 		className={cn(styles.dialog__trigger, className)}
 		{...props}
 	/>
