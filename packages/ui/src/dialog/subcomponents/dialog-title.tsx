@@ -55,7 +55,7 @@ export const DialogTitle = React.forwardRef<
 	<DialogPrimitive.Title
 		ref={ref}
 		data-slot="dialog-title"
-		data-testId={testId}
+		data-testid={testId}
 		className={cn(styles.dialog__title, className)}
 		{...props}
 	>

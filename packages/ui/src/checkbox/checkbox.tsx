@@ -109,7 +109,7 @@ const CheckboxWrapper: React.FC<CheckboxProps> = ({
 	const fallbackId = React.useId();
 
 	return (
-		<div className={cn(styles['checkbox-wrapper'], className)} data-testId={testId}>
+		<div className={cn(styles['checkbox-wrapper'], className)} data-testid={testId}>
 			<Checkbox id={id || fallbackId} {...props} />
 			{children && (
 				<label htmlFor={id || fallbackId} className={styles['checkbox-wrapper__label']}>

@@ -44,7 +44,7 @@ export const DialogClose = React.forwardRef<
 	<DialogPrimitive.Close
 		ref={ref}
 		data-slot="dialog-close"
-		data-testId={testId}
+		data-testid={testId}
 		className={cn(styles.dialog__close, className)}
 		{...props}
 	/>

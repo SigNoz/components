@@ -168,7 +168,7 @@ const ResizablePanelGroup = React.forwardRef<HTMLDivElement, ResizablePanelGroup
 	({ className, testId, ...props }, ref) => (
 		<Group
 			className={cn(styles['resizable-group'], className)}
-			data-testId={testId}
+			data-testid={testId}
 			elementRef={ref}
 			{...props}
 		/>
@@ -303,7 +303,7 @@ export type ResizablePanelProps = Pick<React.ComponentPropsWithoutRef<'div'>, 'c
  */
 const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelProps>(
 	({ className, testId, ...props }, ref) => (
-		<Panel className={className} data-testId={testId} elementRef={ref} {...props} />
+		<Panel className={className} data-testid={testId} elementRef={ref} {...props} />
 	)
 );
 ResizablePanel.displayName = 'ResizablePanel';
@@ -374,7 +374,7 @@ const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
 	({ withHandle, className, testId, ...props }, ref) => (
 		<Separator
 			className={cn(styles['resizable-handle'], className)}
-			data-testId={testId}
+			data-testid={testId}
 			elementRef={ref}
 			{...props}
 		>
