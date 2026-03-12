@@ -101,7 +101,6 @@ const meta: Meta<typeof RadioGroup> = {
 			},
 		],
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;

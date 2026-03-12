@@ -2,7 +2,6 @@ import { Check, ChevronLeft, ChevronRight, Code, Star, Trash } from '@signozhq/i
 import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-import { generateDocs } from '../utils/generateDocs.js';
 
 const VARIANTS = [
 	ButtonVariant.Solid,
@@ -19,31 +18,6 @@ const COLORS = [
 	ButtonColor.Secondary,
 	ButtonColor.None,
 ] as const;
-
-const buttonExamples = [
-	`import { Button } from '@signozhq/ui';
-import { ChevronLeft, ChevronRight } from '@signozhq/icons';
-
-export default function MyComponent() {
-return (
-	<Button 
-		variant="solid" 
-		color="primary" 
-		size="md"
-		prefix={<ChevronLeft />}
-		suffix={<ChevronRight />}
-	>
-		Click Me
-	</Button>
-);
-}`,
-];
-
-const buttonDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description: 'A versatile button component with multiple variants, colors, and sizes.',
-	examples: buttonExamples,
-});
 
 const meta: Meta<typeof Button> = {
 	title: 'Components/Button',
@@ -146,16 +120,12 @@ const meta: Meta<typeof Button> = {
 		},
 		controls: { disable: false },
 		docs: {
-			description: {
-				component: buttonDocs,
-			},
 			source: {
 				type: 'code',
 			},
 		},
 		test: { dangerouslyIgnoreUnhandledErrors: true },
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;

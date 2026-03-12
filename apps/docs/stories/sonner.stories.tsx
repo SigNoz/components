@@ -1,60 +1,9 @@
 import { Button, ButtonColor, Toaster, toast } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const SonnerExamples = [
-	`import { Toaster, toast } from '@signozhq/ui';
-
-export default function MyComponent() {
-  const showToast = () => {
-    toast('Hello World!');
-  };
-
-  return (
-    <div>
-      <button onClick={showToast}>Show Toast</button>
-      <Toaster />
-    </div>
-  );
-}`,
-	`import { Toaster, toast } from '@signozhq/ui';
-
-export default function MyComponent() {
-  const showSuccessToast = () => {
-    toast.success('Success! Your action was completed.');
-  };
-
-  const showErrorToast = () => {
-    toast.error('Error! Something went wrong.');
-  };
-
-  return (
-    <div>
-      <button onClick={showSuccessToast}>Success Toast</button>
-      <button onClick={showErrorToast}>Error Toast</button>
-      <Toaster />
-    </div>
-  );
-}`,
-];
-
-const SonnerDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description: 'A toast component for displaying notifications and alerts.',
-	examples: SonnerExamples,
-});
 
 const meta: Meta<typeof Toaster> = {
-	title: 'Old Components/Sonner',
+	title: 'Components/Sonner',
 	component: Toaster,
-	parameters: {
-		docs: {
-			description: {
-				component: SonnerDocs,
-			},
-		},
-	},
-	tags: ['autodocs'],
 };
 
 export default meta;

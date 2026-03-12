@@ -6,10 +6,10 @@ const config = {
 	stories: [
 		'../stories/intro.mdx',
 		'../stories/design-system.mdx',
-		'../stories/*.stories.tsx',
-		'../stories/**/*.stories.tsx',
 		'../stories/*.mdx',
 		'../stories/**/*.mdx',
+		'../stories/*.stories.tsx',
+		'../stories/**/*.stories.tsx',
 	],
 	addons: [
 		{

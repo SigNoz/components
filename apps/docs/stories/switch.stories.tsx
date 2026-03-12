@@ -78,7 +78,6 @@ const meta: Meta<typeof Switch> = {
 			},
 		],
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
