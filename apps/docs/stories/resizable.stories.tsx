@@ -102,7 +102,6 @@ const meta: Meta<typeof ResizablePanelGroup> = {
 			table: { category: 'Testing', type: { summary: 'string' } },
 		},
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
