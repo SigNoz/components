@@ -1,105 +1,171 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ButtonVariant, Calendar } from '@signozhq/ui';
+import { Calendar } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const CalendarExamples = [
-	`import { Calendar } from '@signozhq/ui';
-
-export default function MyComponent() {
-  return (
-    <Calendar />
-  );
-}`,
-	`import { Calendar } from '@signozhq/ui';
-
-export default function SingleDatePicker() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-  return (
-    <Calendar
-      mode="single"
-      selected={date}
-      onSelect={setDate}
-      className="rounded-md border shadow-sm"
-    />
-  );
-}`,
-	`import { Calendar } from '@signozhq/ui';
-
-export default function RangePicker() {
-  const [range, setRange] = React.useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
-    from: undefined,
-    to: undefined,
-  });
-
-  return (
-    <Calendar
-      mode="range"
-      selected={range}
-      onSelect={setRange}
-      className="rounded-md border shadow-sm"
-    />
-  );
-}`,
-	`import { Calendar } from '@signozhq/ui';
-
-export default function MultiplePicker() {
-  const [selected, setSelected] = React.useState<Date[]>([]);
-
-  return (
-    <Calendar
-      mode="multiple"
-      selected={selected}
-      onSelect={setSelected}
-      className="rounded-md border shadow-sm"
-    />
-  );
-}`,
-];
-
-const CalendarDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A date field component that allows users to enter and edit dates. Built on top of React DayPicker.',
-	examples: CalendarExamples,
-});
 
 const meta: Meta<typeof Calendar> = {
-	title: 'Old Components/Calendar',
+	title: 'Components/Calendar',
 	component: Calendar,
-	parameters: {
-		docs: {
-			description: {
-				component: CalendarDocs,
-			},
-		},
-	},
-	tags: ['autodocs'],
 	argTypes: {
 		mode: {
 			control: { type: 'select' },
 			options: ['single', 'range', 'multiple'],
-			description: 'The selection mode of the calendar',
+			description:
+				'Enable selection of a single day, multiple days, or a range of days. See https://daypicker.dev/docs/selection-modes',
+			table: { category: 'Selection', type: { summary: "'single' | 'range' | 'multiple'" } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Whether the selection is required.',
+			table: { category: 'Selection', type: { summary: 'boolean' } },
 		},
 		showOutsideDays: {
-			control: { type: 'boolean' },
-			description: 'Show days outside the current month',
+			control: 'boolean',
+			description: 'Show the outside days (days falling in the next or the previous month).',
+			table: {
+				category: 'Display',
+				defaultValue: { summary: 'true' },
+				type: { summary: 'boolean' },
+			},
 		},
 		captionLayout: {
 			control: { type: 'select' },
-			options: ['label', 'dropdown'],
-			description: 'Layout of the month/year caption',
+			options: ['label', 'dropdown', 'dropdown-months', 'dropdown-years'],
+			description:
+				'Show dropdowns to navigate between months or years. "label" displays month/year as text.',
+			table: {
+				category: 'Display',
+				defaultValue: { summary: 'label' },
+				type: { summary: "'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years'" },
+			},
 		},
-		buttonVariant: {
+		numberOfMonths: {
+			control: { type: 'number', min: 1 },
+			description: 'The number of displayed months.',
+			table: { category: 'Display', defaultValue: { summary: '1' }, type: { summary: 'number' } },
+		},
+		fixedWeeks: {
+			control: 'boolean',
+			description: 'Display always 6 weeks per month.',
+			table: { category: 'Display', type: { summary: 'boolean' } },
+		},
+		hideWeekdays: {
+			control: 'boolean',
+			description: 'Hide the row displaying the weekday names.',
+			table: { category: 'Display', type: { summary: 'boolean' } },
+		},
+		showWeekNumber: {
+			control: 'boolean',
+			description: 'Show the week numbers column.',
+			table: { category: 'Display', type: { summary: 'boolean' } },
+		},
+		hideNavigation: {
+			control: 'boolean',
+			description: 'Hide the navigation buttons (prev/next month).',
+			table: { category: 'Navigation', type: { summary: 'boolean' } },
+		},
+		disableNavigation: {
+			control: 'boolean',
+			description: 'Disable navigation between months.',
+			table: { category: 'Navigation', type: { summary: 'boolean' } },
+		},
+		pagedNavigation: {
+			control: 'boolean',
+			description: 'Paginate month navigation by numberOfMonths.',
+			table: { category: 'Navigation', type: { summary: 'boolean' } },
+		},
+		reverseMonths: {
+			control: 'boolean',
+			description: 'Render months in reversed order when numberOfMonths > 1.',
+			table: { category: 'Navigation', type: { summary: 'boolean' } },
+		},
+		navLayout: {
 			control: { type: 'select' },
-			options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
-			description: 'Variant of the navigation buttons',
+			options: ['around', 'after'],
+			description: 'Position of the navigation buttons relative to the caption.',
+			table: { category: 'Navigation', type: { summary: "'around' | 'after'" } },
+		},
+		animate: {
+			control: 'boolean',
+			description: 'Animate navigating between months.',
+			table: { category: 'Display', type: { summary: 'boolean' } },
+		},
+		defaultMonth: {
+			control: false,
+			description: 'The initial month to show. Use with uncontrolled calendar.',
+			table: { category: 'Navigation', type: { summary: 'Date' } },
+		},
+		month: {
+			control: false,
+			description: 'The displayed month (controlled). Use with onMonthChange.',
+			table: { category: 'Navigation', type: { summary: 'Date' } },
+		},
+		startMonth: {
+			control: false,
+			description: 'The earliest month for navigation.',
+			table: { category: 'Navigation', type: { summary: 'Date' } },
+		},
+		endMonth: {
+			control: false,
+			description: 'The latest month for navigation.',
+			table: { category: 'Navigation', type: { summary: 'Date' } },
+		},
+		disabled: {
+			control: false,
+			description: 'Matcher(s) for disabled days. Disabled days cannot be selected.',
+			table: { category: 'Selection', type: { summary: 'Matcher | Matcher[]' } },
+		},
+		hidden: {
+			control: false,
+			description: 'Matcher(s) for hidden days. Hidden days are not displayed.',
+			table: { category: 'Display', type: { summary: 'Matcher | Matcher[]' } },
+		},
+		today: {
+			control: false,
+			description: "The date to use as 'today' for styling.",
+			table: { category: 'Display', type: { summary: 'Date' } },
+		},
+		locale: {
+			control: false,
+			description: 'Locale object for localization. Pass a locale from react-day-picker/locale.',
+			table: { category: 'Localization', type: { summary: 'DayPickerLocale' } },
+		},
+		weekStartsOn: {
+			control: { type: 'select' },
+			options: [0, 1, 2, 3, 4, 5, 6],
+			description: 'The index of the first day of the week (0 = Sunday).',
+			table: { category: 'Localization', type: { summary: '0 | 1 | 2 | 3 | 4 | 5 | 6' } },
+		},
+		timeZone: {
+			control: 'text',
+			description: 'IANA time zone or UTC offset for the calendar (experimental).',
+			table: { category: 'Localization', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Class name for the root element.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		selected: {
+			control: false,
+			description: 'Selected date(s) or range. Type depends on mode.',
+			table: { category: 'Selection' },
+		},
+		onSelect: {
+			control: false,
+			description: 'Called when selection changes.',
+			table: { category: 'Events' },
+		},
+		onMonthChange: {
+			control: false,
+			description: 'Called when the user navigates between months.',
+			table: { category: 'Events' },
+		},
+		footer: {
+			control: 'text',
+			description: 'Footer content (e.g. for screen readers).',
+			table: { category: 'Accessibility', type: { summary: 'ReactNode | string' } },
 		},
 	},
 };
@@ -107,23 +173,38 @@ const meta: Meta<typeof Calendar> = {
 export default meta;
 type Story = StoryObj<typeof Calendar>;
 
+const fixedDate = 1771949360343;
+
 export const Default: Story = {
 	args: {
 		mode: 'single',
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
+	},
+	render: (args) => {
+		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+		const [range, setRange] = React.useState<{ from?: Date; to?: Date }>({});
+		const [multiple, setMultiple] = React.useState<Date[]>([]);
+		const mode = args.mode ?? 'single';
+		const selected = mode === 'range' ? range : mode === 'multiple' ? multiple : date;
+		const onSelect = mode === 'range' ? setRange : mode === 'multiple' ? setMultiple : setDate;
+		return (
+			<Calendar
+				{...args}
+				mode={mode}
+				selected={selected as any}
+				onSelect={onSelect as any}
+				className="rounded-md border shadow-sm"
+			/>
+		);
 	},
 };
-
-const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
 
 export const SingleDateSelection: Story = {
 	args: {
 		mode: 'single',
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
@@ -152,7 +233,6 @@ export const DateRangeSelection: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [range, setRange] = React.useState<any>({
@@ -188,7 +268,6 @@ export const MultipleDateSelection: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [selected, setSelected] = React.useState<any>([]);
@@ -219,7 +298,6 @@ export const WithDropdownNavigation: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'dropdown',
-		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
@@ -248,28 +326,6 @@ export const HideOutsideDays: Story = {
 	args: {
 		showOutsideDays: false,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
-			<Calendar
-				{...args}
-				mode="single"
-				selected={date}
-				onSelect={setDate}
-				className="rounded-md border shadow-sm"
-			/>
-		);
-	},
-};
-
-export const CustomButtonVariant: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Outlined,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
@@ -290,7 +346,6 @@ export const DisabledDates: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
@@ -324,7 +379,6 @@ export const WithTimezone: Story = {
 	args: {
 		showOutsideDays: true,
 		captionLayout: 'label',
-		buttonVariant: ButtonVariant.Ghost,
 	},
 	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));

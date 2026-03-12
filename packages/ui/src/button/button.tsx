@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import type React from 'react';
 import { cloneElement, forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
-import styles from './button.module.css';
+import styles from './button.module.scss';
 
 export const ButtonVariant = {
 	Solid: 'solid',
