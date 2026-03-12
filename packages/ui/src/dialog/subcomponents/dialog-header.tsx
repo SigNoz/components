@@ -29,13 +29,15 @@ export type DialogHeaderProps = Pick<
  * ```
  */
 export const DialogHeader = React.forwardRef<HTMLDivElement, DialogHeaderProps>(
-	({ className, testId, ...props }, ref) => (
+	({ className, testId, children, ...props }, ref) => (
 		<div
 			ref={ref}
 			data-slot="dialog-header"
 			data-testid={testId}
 			className={cn(styles.dialog__header, className)}
 			{...props}
-		/>
+		>
+			{children}
+		</div>
 	)
 );

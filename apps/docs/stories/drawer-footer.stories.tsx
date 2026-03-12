@@ -11,21 +11,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { footerArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerFooter> = {
 	title: 'Components/Drawer/DrawerFooter',
 	component: DrawerFooter,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the footer container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: footerArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -43,7 +34,7 @@ export const Default: Story = {
 					Open drawer
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent type="drawer">
+			<DrawerContent>
 				<DrawerHeader>
 					<DrawerTitle>Delete this item</DrawerTitle>
 				</DrawerHeader>
@@ -64,4 +55,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

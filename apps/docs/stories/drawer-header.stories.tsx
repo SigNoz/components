@@ -10,21 +10,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { headerArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerHeader> = {
 	title: 'Components/Drawer/DrawerHeader',
 	component: DrawerHeader,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the header container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: headerArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -42,17 +33,14 @@ export const Default: Story = {
 					Open drawer
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent type="drawer">
+			<DrawerContent>
 				<DrawerHeader {...args}>
 					<DrawerTitle>Drawer header</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<p className="text-sm">
-						The header typically contains the title and optional actions.
-					</p>
+					<p className="text-sm">The header typically contains the title and optional actions.</p>
 				</DrawerDescription>
 			</DrawerContent>
 		</Drawer>
 	),
 };
-

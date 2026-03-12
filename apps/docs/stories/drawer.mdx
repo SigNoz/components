@@ -1,6 +1,8 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as DrawerStories from './drawer.stories';
 import * as DrawerWrapperStories from './drawer-wrapper.stories';
+import * as ConfirmDrawerStories from './confirm-drawer.stories';
+import * as ConfirmDrawerUrlStories from './confirm-drawer-url.stories';
 import * as DrawerTriggerStories from './drawer-trigger.stories';
 import * as DrawerContentStories from './drawer-content.stories';
 import * as DrawerHeaderStories from './drawer-header.stories';
@@ -66,9 +68,95 @@ export default function MyComponent() {
 
 <Controls of={DrawerWrapperStories.Default} />
 
+## ConfirmDrawer
+
+For confirm/cancel flows with a title, description, and footer actions:
+
+```tsx
+import { ConfirmDrawer, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Delete</Button>
+			<ConfirmDrawer
+				open={open}
+				onOpenChange={setOpen}
+				title="Confirm action"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={() => setOpen(false)}
+				onCancel={() => setOpen(false)}
+				direction="right"
+				width="narrow"
+			>
+				Are you sure? This action cannot be undone.
+			</ConfirmDrawer>
+		</>
+	);
+}
+```
+
+## ConfirmDrawer Props
+
+<Controls of={ConfirmDrawerStories.Default} />
+
+## ConfirmDrawerUrl
+
+For confirm drawers controlled via a URL query parameter:
+
+> This component requires the setup with [nuqs](https://nuqs.dev/).
+
+```tsx
+import { ConfirmDrawerUrl, Button } from '@signozhq/ui';
+import { useQueryState, parseAsBoolean } from 'nuqs';
+
+export default function MyComponent() {
+	const [, setOpen] = useQueryState('drawer-delete-step', parseAsBoolean.withDefault(false));
+
+	return (
+		<>
+			<Button
+				variant="solid"
+				color="primary"
+				onClick={() => setOpen(true)}
+			>
+				Open confirm drawer (URL)
+			</Button>
+			<ConfirmDrawerUrl
+				urlKey="drawer-delete-step"
+				title="Delete from URL param"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={async () => {
+					await new Promise((resolve) => setTimeout(resolve, 300));
+					return true;
+				}}
+				direction="right"
+				width="narrow"
+			>
+				This confirm drawer is controlled via a URL query parameter using nuqs.
+			</ConfirmDrawerUrl>
+		</>
+	);
+}
+```
+
+## ConfirmDrawerUrl Props
+
+<Controls of={ConfirmDrawerUrlStories.Default} />
+
 ## Primitive composition
 
 For full control, use the low-level building blocks: `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerFooter`, `DrawerClose`, `DrawerOverlay`, and `DrawerPortal`.
+
+### Exit animations
+
+To animate the drawer on close, wrap `DrawerContent` in `AnimatePresence` and pass `forceMount` plus a stable `key`:
 
 ```tsx
 import {
@@ -80,49 +168,51 @@ import {
 	DrawerDescription,
 	DrawerFooter,
 	DrawerClose,
-	DrawerOverlay,
-	DrawerPortal,
 	Button,
 } from '@signozhq/ui';
+import { AnimatePresence } from 'motion/react';
 
 export default function MyComponent() {
 	const [open, setOpen] = React.useState(false);
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen} direction="right">
+		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<Button variant="solid" color="primary">
 					Open drawer
 				</Button>
 			</DrawerTrigger>
-			<DrawerPortal>
-				<DrawerOverlay />
-				<DrawerContent type="drawer">
-					<DrawerHeader>
-						<DrawerTitle>Drawer title</DrawerTitle>
-					</DrawerHeader>
-					<DrawerDescription>
-						<div className="text-sm text-gray-600">
-							Description and body content. Use the primitive components when you need
-							lower-level control.
-						</div>
-					</DrawerDescription>
-					<DrawerFooter>
-						<Button variant="ghost" onClick={() => setOpen(false)}>
-							Cancel
-						</Button>
-						<DrawerClose asChild>
-							<Button variant="solid" color="primary">
-								Confirm
+			<AnimatePresence>
+				{open && (
+					<DrawerContent key="drawer" forceMount>
+						<DrawerHeader>
+							<DrawerTitle>Drawer title</DrawerTitle>
+						</DrawerHeader>
+						<DrawerDescription>
+							<div className="text-sm text-gray-600">
+								Description and body content. Use the primitive components when you need
+								lower-level control.
+							</div>
+						</DrawerDescription>
+						<DrawerFooter>
+							<Button variant="ghost" onClick={() => setOpen(false)}>
+								Cancel
 							</Button>
-						</DrawerClose>
-					</DrawerFooter>
-				</DrawerContent>
-			</DrawerPortal>
+							<DrawerClose asChild>
+								<Button variant="solid" color="primary">
+									Confirm
+								</Button>
+							</DrawerClose>
+						</DrawerFooter>
+					</DrawerContent>
+				)}
+			</AnimatePresence>
 		</Drawer>
 	);
 }
 ```
+
+Without `AnimatePresence`, `forceMount`, and `key`, the drawer closes instantly. `DrawerWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
 
 ## Drawer Props
 

@@ -10,31 +10,12 @@ import {
 	DialogTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { headerArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogHeader> = {
 	title: 'Components/Dialog/DialogHeader',
 	component: DialogHeader,
-	argTypes: {
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the dialog header element.',
-			table: { category: 'Accessibility' },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the header container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		testId: {
-			control: 'text',
-			description: 'Test ID for the dialog header.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: headerArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

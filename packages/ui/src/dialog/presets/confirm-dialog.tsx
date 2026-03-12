@@ -1,7 +1,9 @@
+import { AnimatePresence } from 'motion/react';
 import React, { useCallback } from 'react';
 import { Button, type ButtonProps } from '../../button/index.js';
 import {
 	Dialog,
+	DialogCloseButton,
 	DialogContent,
 	type DialogContentProps,
 	DialogDescription,
@@ -85,6 +87,11 @@ export type ConfirmDialogProps = {
 	 * @default center
 	 */
 	position?: DialogContentProps['position'];
+	/**
+	 * The height mode of the dialog.
+	 * @default content
+	 */
+	heightMode?: DialogContentProps['heightMode'];
 };
 
 /**
@@ -150,7 +157,11 @@ export function ConfirmDialog({
 
 	disableOutsideClick = false,
 	width = 'base',
+	position = 'center',
+
+	heightMode = 'content',
 }: ConfirmDialogProps) {
+	const animation = position === 'center' ? 'fade' : 'slide';
 	const [onConfirming, setOnConfirming] = React.useState(false);
 	const onConfirmProxy = useCallback(async () => {
 		setOnConfirming(true);
@@ -162,43 +173,52 @@ export function ConfirmDialog({
 		}
 	}, [onConfirm, onOpenChange]);
 
+	const isControlled = open !== undefined && onOpenChange !== undefined;
+
+	const content = (
+		<DialogContent
+			key="confirm-dialog"
+			className={className}
+			forceMount={isControlled ? (true as const) : undefined}
+			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
+			width={width}
+			position={position}
+			animation={animation}
+			heightMode={heightMode}
+		>
+			{title && (
+				<DialogHeader>{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}</DialogHeader>
+			)}
+			{children && <DialogDescription>{children}</DialogDescription>}
+			<DialogFooter>
+				<Button
+					type="button"
+					variant="ghost"
+					color="secondary"
+					onClick={onCancel}
+					prefix={cancelIcon}
+				>
+					{cancelText}
+				</Button>
+
+				<Button
+					type="button"
+					variant="solid"
+					color={confirmColor}
+					loading={onConfirming}
+					onClick={onConfirmProxy}
+					prefix={confirmIcon}
+				>
+					{confirmText}
+				</Button>
+			</DialogFooter>
+			<DialogCloseButton onClick={onCancel} />
+		</DialogContent>
+	);
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent
-				className={className}
-				onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
-				width={width}
-				onClose={onCancel}
-			>
-				{title && (
-					<DialogHeader>
-						{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
-					</DialogHeader>
-				)}
-				{children && <DialogDescription>{children}</DialogDescription>}
-				<DialogFooter>
-					<Button
-						type="button"
-						variant="ghost"
-						color="secondary"
-						onClick={onCancel}
-						prefix={cancelIcon}
-					>
-						{cancelText}
-					</Button>
-
-					<Button
-						type="button"
-						variant="solid"
-						color={confirmColor}
-						loading={onConfirming}
-						onClick={onConfirmProxy}
-						prefix={confirmIcon}
-					>
-						{confirmText}
-					</Button>
-				</DialogFooter>
-			</DialogContent>
+			{isControlled ? <AnimatePresence>{open ? content : null}</AnimatePresence> : content}
 		</Dialog>
 	);
 }

@@ -11,19 +11,23 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { contentArgTypes } from './shared/dialog-drawer-arg-types.js';
+
+const { position: _, ...sharedContentArgTypes } = contentArgTypes ?? {};
 
 const meta: Meta<typeof DrawerContent> = {
 	title: 'Components/Drawer/DrawerContent',
 	component: DrawerContent,
 	argTypes: {
-		type: {
+		...sharedContentArgTypes,
+		direction: {
 			control: 'select',
-			options: ['drawer', 'panel'],
-			description: 'Visual style of the content surface.',
+			options: ['left', 'right', 'top', 'bottom'],
+			description: 'The side of the viewport from which the drawer appears.',
 			table: {
 				category: 'Appearance',
-				type: { summary: '"drawer" | "panel"' },
-				defaultValue: { summary: 'drawer' },
+				type: { summary: '"left" | "right" | "top" | "bottom"' },
+				defaultValue: { summary: 'right' },
 			},
 		},
 		showOverlay: {
@@ -34,15 +38,6 @@ const meta: Meta<typeof DrawerContent> = {
 				type: { summary: 'boolean' },
 				defaultValue: { summary: 'true' },
 			},
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the drawer content.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
 		},
 	},
 	parameters: {
@@ -56,7 +51,6 @@ type Story = StoryObj<typeof DrawerContent>;
 
 export const Default: Story = {
 	args: {
-		type: 'drawer',
 		showOverlay: true,
 	},
 	render: (args) => (
@@ -87,4 +81,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

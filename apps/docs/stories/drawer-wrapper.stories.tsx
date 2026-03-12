@@ -1,51 +1,15 @@
 import { Button, ButtonColor, ButtonVariant, DrawerWrapper } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import React from 'react';
+import { wrapperArgTypes } from './shared/dialog-drawer-arg-types.js';
+
+const { width, titleIcon, ...sharedWrapperArgTypes } = wrapperArgTypes ?? {};
 
 const meta: Meta<typeof DrawerWrapper> = {
 	title: 'Components/Drawer/DrawerWrapper',
 	component: DrawerWrapper,
 	argTypes: {
-		title: {
-			control: 'text',
-			description: 'The title of the drawer.',
-			table: {
-				category: 'Content',
-				type: { summary: 'string' },
-			},
-		},
-		subTitle: {
-			control: 'text',
-			description: 'The subtitle of the drawer.',
-			table: {
-				category: 'Content',
-				type: { summary: 'string' },
-			},
-		},
-		children: {
-			control: false,
-			description: 'The main content of the drawer.',
-			table: {
-				category: 'Content',
-				type: { summary: 'React.ReactNode' },
-			},
-		},
-		footer: {
-			control: false,
-			description: 'Optional footer content, typically used for actions.',
-			table: {
-				category: 'Content',
-				type: { summary: 'React.ReactNode' },
-			},
-		},
-		trigger: {
-			control: false,
-			description:
-				'The element that opens the drawer. Optional when using controlled mode (open/onOpenChange).',
-			table: {
-				category: 'Content',
-				type: { summary: 'React.ReactNode' },
-			},
-		},
+		...sharedWrapperArgTypes,
 		direction: {
 			control: 'select',
 			options: ['left', 'right', 'top', 'bottom'],
@@ -54,70 +18,6 @@ const meta: Meta<typeof DrawerWrapper> = {
 				category: 'Appearance',
 				type: { summary: '"left" | "right" | "top" | "bottom"' },
 				defaultValue: { summary: 'right' },
-			},
-		},
-		type: {
-			control: 'select',
-			options: ['drawer', 'panel'],
-			description: 'Visual style of the surface: drawer (auto) or panel (fixed width/height).',
-			table: {
-				category: 'Appearance',
-				type: { summary: '"panel" | "drawer"' },
-				defaultValue: { summary: 'drawer' },
-			},
-		},
-		showCloseButton: {
-			control: 'boolean',
-			description: 'Whether to show the close button in the header bar.',
-			table: {
-				category: 'Appearance',
-				type: { summary: 'boolean' },
-				defaultValue: { summary: 'true' },
-			},
-		},
-		allowOutsideClick: {
-			control: 'boolean',
-			description:
-				'When true, allows closing the drawer by clicking outside. When false, outside clicks are prevented.',
-			table: {
-				category: 'Behavior',
-				type: { summary: 'boolean' },
-				defaultValue: { summary: 'true' },
-			},
-		},
-		showOverlay: {
-			control: 'boolean',
-			description: 'Whether to render the overlay behind the drawer.',
-			table: {
-				category: 'Appearance',
-				type: { summary: 'boolean' },
-				defaultValue: { summary: 'true' },
-			},
-		},
-		className: {
-			control: 'text',
-			description: 'Optional class name passed to the drawer content container.',
-			table: {
-				category: 'Styling',
-				type: { summary: 'string' },
-			},
-		},
-		open: {
-			control: 'boolean',
-			description:
-				'Controlled open state. Provide together with onOpenChange for programmatic control.',
-			table: {
-				category: 'State',
-				type: { summary: 'boolean' },
-			},
-		},
-		onOpenChange: {
-			control: false,
-			description:
-				'Called when the open state changes (close button, outside click, ESC). Required in controlled mode.',
-			table: {
-				category: 'Events',
-				type: { summary: '(open: boolean) => void' },
 			},
 		},
 	},
@@ -150,17 +50,36 @@ export const Default: Story = {
 		),
 		direction: 'right',
 		showCloseButton: true,
-		allowOutsideClick: true,
+		disableOutsideClick: false,
 		showOverlay: true,
 	},
-	render: (args) => (
-		<DrawerWrapper
-			{...args}
-			trigger={
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
-					Open drawer
-				</Button>
-			}
-		/>
-	),
+	render: (args) => {
+		const [open, setOpen] = React.useState(false);
+		return (
+			<DrawerWrapper
+				{...args}
+				open={open}
+				onOpenChange={setOpen}
+				trigger={
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						Open drawer
+					</Button>
+				}
+				footer={
+					<div className="flex gap-2 justify-end">
+						<Button variant="ghost" color="none" onClick={() => setOpen(false)}>
+							Cancel
+						</Button>
+						<Button
+							variant={ButtonVariant.Solid}
+							color={ButtonColor.Primary}
+							onClick={() => setOpen(false)}
+						>
+							Save
+						</Button>
+					</div>
+				}
+			/>
+		);
+	},
 };

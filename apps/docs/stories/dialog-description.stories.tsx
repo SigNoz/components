@@ -10,32 +10,12 @@ import {
 	DialogTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { descriptionArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogDescription> = {
 	title: 'Components/Dialog/DialogDescription',
 	component: DialogDescription,
-	argTypes: {
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the dialog description element.',
-			table: { category: 'Accessibility', type: { summary: 'string' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the description container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		testId: {
-			control: 'text',
-			description: 'Test ID for the dialog description.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		children: {
-			control: 'text',
-			description: 'The descriptive text or content of the dialog.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: descriptionArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
