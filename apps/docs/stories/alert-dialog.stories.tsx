@@ -1,5 +1,5 @@
 import { Code, Trash2, X } from '@signozhq/icons';
-import { AlertDialog, Button, ButtonColor, ButtonVariant } from '@signozhq/ui';
+import { AlertDialog, Button, ButtonColor, ButtonVariant, CheckboxColors } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
@@ -65,11 +65,11 @@ const meta: Meta<typeof AlertDialog> = {
 		},
 		checkboxColor: {
 			control: 'select',
-			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
+			options: Object.values(CheckboxColors),
 			description: 'The color of the checkbox when rendered.',
 			table: {
 				category: 'Appearance',
-				type: { summary: '"robin" | "forest" | "amber" | "sienna" | "cherry" | "sakura" | "aqua"' },
+				type: { summary: `"${Object.values(CheckboxColors).join('" | "')}"` },
 				defaultValue: { summary: 'cherry' },
 			},
 		},

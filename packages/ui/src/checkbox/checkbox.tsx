@@ -25,7 +25,21 @@ const colorMap: Record<string, string> = {
 	primary: 'robin',
 };
 
-interface CheckboxProps
+export const CheckboxColors: Record<Capitalize<CheckboxColor>, CheckboxColor> = {
+	Primary: 'primary',
+	Success: 'success',
+	Warning: 'warning',
+	Error: 'error',
+	Robin: 'robin',
+	Forest: 'forest',
+	Amber: 'amber',
+	Sienna: 'sienna',
+	Cherry: 'cherry',
+	Sakura: 'sakura',
+	Aqua: 'aqua',
+};
+
+export interface CheckboxProps
 	extends Pick<
 		React.ComponentPropsWithoutRef<'button'>,
 		'id' | 'disabled' | 'className' | 'children' | 'onClick'
