@@ -1,9 +1,9 @@
-import './index.css';
-import { X } from 'lucide-react';
+import { X } from '@signozhq/icons';
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
-
+import { Button } from '../button/button.js';
 import { cn } from '../lib/utils.js';
+import styles from './drawer.module.scss';
 
 function Drawer({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
 	return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
@@ -29,10 +29,7 @@ const DrawerOverlay = React.forwardRef<
 		<DrawerPrimitive.Overlay
 			ref={ref}
 			data-slot="drawer-overlay"
-			className={cn(
-				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
-				className
-			)}
+			className={cn(styles.overlay, className)}
 			{...props}
 		/>
 	);
@@ -41,7 +38,7 @@ function DrawerContent({
 	className,
 	children,
 	showOverlay = true,
-	type,
+	type = 'drawer',
 	...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
 	showOverlay?: boolean;
@@ -52,19 +49,10 @@ function DrawerContent({
 			{showOverlay && <DrawerOverlay />}
 			<DrawerPrimitive.Content
 				data-slot="drawer-content"
-				className={cn(
-					'group/drawer-content bg-card fixed z-50 flex h-fit flex-col shadow-lg',
-					'data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b',
-					'data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t',
-					'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:border-l',
-					'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:border-r',
-					'border border-[var(--drawer-border)]',
-					type === 'drawer' ? 'rounded-md m-4' : 'rounded-none',
-					className
-				)}
+				data-type={type}
+				className={cn(styles.content, className)}
 				{...props}
 			>
-				{/* <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" /> */}
 				{children}
 			</DrawerPrimitive.Content>
 		</DrawerPortal>
@@ -72,56 +60,80 @@ function DrawerContent({
 }
 
 function DrawerHeader({ className, ...props }: React.ComponentProps<'div'>) {
-	return (
-		<div
-			data-slot="drawer-header"
-			className={cn('flex flex-col gap-1.5 p-4', className)}
-			{...props}
-		/>
-	);
+	return <div data-slot="drawer-header" className={cn(styles.header, className)} {...props} />;
 }
 
 function DrawerFooter({ className, ...props }: React.ComponentProps<'div'>) {
-	return (
-		<div
-			data-slot="drawer-footer"
-			className={cn('mt-auto flex flex-col gap-2 p-4', className)}
-			{...props}
-		/>
-	);
+	return <div data-slot="drawer-footer" className={cn(styles.footer, className)} {...props} />;
 }
 
 function DrawerTitle({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Title>) {
 	return (
 		<DrawerPrimitive.Title
 			data-slot="drawer-title"
-			className={cn('text-foreground font-semibold', className)}
+			className={cn(styles.title, className)}
 			{...props}
 		/>
 	);
 }
 
-function DrawerDescription({
+function DrawerSubtitle({
 	className,
 	...props
 }: React.ComponentProps<typeof DrawerPrimitive.Description>) {
 	return (
 		<DrawerPrimitive.Description
-			data-slot="drawer-description"
-			className={cn('text-muted-foreground text-sm', className)}
+			data-slot="drawer-subtitle"
+			className={cn(styles.subtitle, className)}
 			{...props}
 		/>
 	);
 }
 
-interface DrawerWrapperProps {
+export type DrawerDescriptionProps = Pick<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className' | 'style' | 'children'
+> & {
+	testId?: string;
+};
+
+function DrawerDescription({ className, children, testId, ...props }: DrawerDescriptionProps) {
+	return (
+		<div
+			data-slot="drawer-description"
+			data-testid={testId}
+			className={cn(styles.description, className)}
+			{...props}
+		>
+			{children}
+		</div>
+	);
+}
+
+function DrawerCloseButton() {
+	return (
+		<DrawerClose asChild>
+			<Button
+				type="button"
+				variant="ghost"
+				size="icon"
+				color="none"
+				aria-label="Close"
+				suffix={<X className={styles.closeButtonIcon} />}
+				className={cn(styles.closeButton)}
+			>
+				<span className={styles.srOnly}>Close</span>
+			</Button>
+		</DrawerClose>
+	);
+}
+
+export interface DrawerWrapperProps {
 	/** Element that opens the drawer. Optional when using controlled mode (open/onOpenChange). */
 	trigger?: React.ReactNode;
-	header?: {
-		title: string;
-		description?: string;
-	};
-	content: React.ReactNode;
+	title?: string;
+	subTitle?: string;
+	children?: React.ReactNode;
 	footer?: React.ReactNode;
 	direction?: 'top' | 'right' | 'bottom' | 'left';
 	showCloseButton?: boolean;
@@ -135,23 +147,10 @@ interface DrawerWrapperProps {
 	onOpenChange?: (open: boolean) => void;
 }
 
-function CloseButton({ type }: { type?: 'panel' | 'drawer' }) {
-	return (
-		<DrawerClose asChild>
-			<button
-				className={`rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none ${type === 'panel' ? 'mr-2' : ''}`}
-			>
-				<X className="h-4 w-4" />
-				<span className="sr-only">Close</span>
-			</button>
-		</DrawerClose>
-	);
-}
-
 function DrawerWrapper({
 	trigger,
-	header,
-	content,
+	title,
+	subTitle,
 	footer,
 	direction = 'right',
 	showCloseButton = true,
@@ -161,35 +160,21 @@ function DrawerWrapper({
 	type = 'drawer',
 	open,
 	onOpenChange,
+	children,
 }: DrawerWrapperProps) {
 	return (
 		<Drawer direction={direction} modal={allowOutsideClick} open={open} onOpenChange={onOpenChange}>
 			{trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
 			<DrawerContent className={className} showOverlay={showOverlay} type={type}>
-				<div
-					className="w-full max-w-3xl"
-					style={{
-						width: type === 'panel' ? '720px' : 'auto',
-						height: type === 'panel' ? '100vh' : 'auto',
-					}}
-				>
-					{header && (
-						<div className="flex h-12 items-center justify-between border-b border-[var(--drawer-border)] px-4">
-							{type === 'panel' && showCloseButton && <CloseButton type={type} />}
-							<div className="flex items-center gap-2 flex-1">
-								<DrawerTitle className="font-inter text-sm font-normal">{header.title}</DrawerTitle>
-							</div>
-							{type === 'drawer' && showCloseButton && <CloseButton type={type} />}
-						</div>
-					)}
-					{header?.description && (
-						<DrawerHeader>
-							<DrawerDescription>{header.description}</DrawerDescription>
-						</DrawerHeader>
-					)}
-					{content}
-					{footer && <DrawerFooter>{footer}</DrawerFooter>}
-				</div>
+				{(title || subTitle) && (
+					<DrawerHeader>
+						{title && <DrawerTitle>{title}</DrawerTitle>}
+						{subTitle && <DrawerSubtitle>{subTitle}</DrawerSubtitle>}
+						{showCloseButton && <DrawerCloseButton />}
+					</DrawerHeader>
+				)}
+				{children && <DrawerDescription>{children}</DrawerDescription>}
+				{footer && <DrawerFooter>{footer}</DrawerFooter>}
 			</DrawerContent>
 		</Drawer>
 	);
@@ -204,7 +189,9 @@ export {
 	DrawerContent,
 	DrawerHeader,
 	DrawerFooter,
+	DrawerSubtitle,
 	DrawerTitle,
 	DrawerDescription,
 	DrawerWrapper,
+	DrawerCloseButton,
 };
