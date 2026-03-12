@@ -10,22 +10,12 @@ import {
 	DrawerTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { subtitleArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerSubtitle> = {
 	title: 'Components/Drawer/DrawerSubtitle',
 	component: DrawerSubtitle,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the subtitle.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: 'text',
-			description: 'The text content of the subtitle.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: subtitleArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
@@ -46,7 +36,7 @@ export const Default: Story = {
 					Open drawer
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent type="drawer">
+			<DrawerContent>
 				<DrawerHeader>
 					<DrawerTitle>Drawer title</DrawerTitle>
 					<DrawerSubtitle {...args} />
@@ -55,4 +45,3 @@ export const Default: Story = {
 		</Drawer>
 	),
 };
-

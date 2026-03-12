@@ -1,10 +1,14 @@
+import { AnimatePresence } from 'motion/react';
 import type React from 'react';
+import { useCallback, useState } from 'react';
 import {
 	Dialog,
+	DialogCloseButton,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
+	DialogSubtitle,
 	DialogTitle,
 	DialogTrigger,
 } from '../index.js';
@@ -14,6 +18,10 @@ export interface DialogWrapperProps {
 	 * The title of the dialog.
 	 */
 	title?: string;
+	/**
+	 * The subtitle of the dialog.
+	 */
+	subTitle?: string;
 	/**
 	 * The content of the dialog.
 	 */
@@ -57,6 +65,11 @@ export interface DialogWrapperProps {
 	 * The icon of the dialog title.
 	 */
 	titleIcon?: React.ReactNode;
+	/**
+	 * Whether to render the overlay behind the dialog.
+	 * @default true
+	 */
+	showOverlay?: boolean;
 }
 
 /**
@@ -116,6 +129,7 @@ export interface DialogWrapperProps {
  */
 export function DialogWrapper({
 	title,
+	subTitle,
 	children,
 	open,
 	onOpenChange,
@@ -126,24 +140,48 @@ export function DialogWrapper({
 	width = 'base',
 	titleIcon,
 	footer,
+	showOverlay = true,
 }: DialogWrapperProps) {
+	const isControlled = open !== undefined && onOpenChange !== undefined;
+	const [internalOpen, setInternalOpen] = useState(false);
+	const resolvedOpen = isControlled ? open : internalOpen;
+	const resolvedOnOpenChange = useCallback(
+		(next: boolean) => {
+			if (!isControlled) setInternalOpen(next);
+			onOpenChange?.(next);
+		},
+		[isControlled, onOpenChange]
+	);
+	const onClickClose = useCallback(() => {
+		if (!isControlled) setInternalOpen(false);
+		onOpenChange?.(false);
+	}, [isControlled, onOpenChange]);
+
+	const content = (
+		<DialogContent
+			key="dialog-wrapper"
+			className={className}
+			forceMount
+			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
+			width={width}
+			showOverlay={showOverlay}
+		>
+			{(title || subTitle) && (
+				<DialogHeader>
+					{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
+					{subTitle && <DialogSubtitle>{subTitle}</DialogSubtitle>}
+				</DialogHeader>
+			)}
+			{children && <DialogDescription>{children}</DialogDescription>}
+			{footer && <DialogFooter>{footer}</DialogFooter>}
+			{showCloseButton && <DialogCloseButton onClick={onClickClose} />}
+		</DialogContent>
+	);
+
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
+		<Dialog open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
 			{trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-			<DialogContent
-				className={className}
-				showCloseButton={showCloseButton}
-				onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
-				width={width}
-			>
-				{title && (
-					<DialogHeader>
-						{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
-					</DialogHeader>
-				)}
-				{children && <DialogDescription>{children}</DialogDescription>}
-				{footer && <DialogFooter>{footer}</DialogFooter>}
-			</DialogContent>
+			<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
 		</Dialog>
 	);
 }
