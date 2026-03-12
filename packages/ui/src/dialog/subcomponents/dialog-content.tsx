@@ -199,7 +199,7 @@ export const DialogContent = React.forwardRef<
 					data-slot="dialog-content"
 					data-width={width}
 					data-position={position}
-					data-testId={testId}
+					data-testid={testId}
 					asChild
 					{...props}
 				>

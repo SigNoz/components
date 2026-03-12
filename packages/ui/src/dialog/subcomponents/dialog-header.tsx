@@ -33,7 +33,7 @@ export const DialogHeader = React.forwardRef<HTMLDivElement, DialogHeaderProps>(
 		<div
 			ref={ref}
 			data-slot="dialog-header"
-			data-testId={testId}
+			data-testid={testId}
 			className={cn(styles.dialog__header, className)}
 			{...props}
 		/>

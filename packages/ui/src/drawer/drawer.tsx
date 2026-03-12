@@ -1,6 +1,6 @@
 import './index.css';
 import { X } from 'lucide-react';
-import type * as React from 'react';
+import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
 import { cn } from '../lib/utils.js';
@@ -21,12 +21,13 @@ function DrawerClose({ ...props }: React.ComponentProps<typeof DrawerPrimitive.C
 	return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />;
 }
 
-function DrawerOverlay({
-	className,
-	...props
-}: React.ComponentProps<typeof DrawerPrimitive.Overlay>) {
+const DrawerOverlay = React.forwardRef<
+	React.ElementRef<typeof DrawerPrimitive.Overlay>,
+	React.ComponentProps<typeof DrawerPrimitive.Overlay>
+>(({ className, ...props }, ref) => {
 	return (
 		<DrawerPrimitive.Overlay
+			ref={ref}
 			data-slot="drawer-overlay"
 			className={cn(
 				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
@@ -35,7 +36,7 @@ function DrawerOverlay({
 			{...props}
 		/>
 	);
-}
+});
 function DrawerContent({
 	className,
 	children,

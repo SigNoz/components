@@ -568,7 +568,7 @@ export interface DropdownMenuMultiStepProps
 const DropdownMenuMultiStep = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Root>,
 	DropdownMenuMultiStepProps
->(({ children, ...props }) => {
+>(({ children, ...props }, ref) => {
 	const [currentStep, setCurrentStep] = React.useState<'primary' | 'secondary'>('primary');
 	const [open, setOpen] = React.useState(false);
 
@@ -581,7 +581,13 @@ const DropdownMenuMultiStep = React.forwardRef<
 
 	return (
 		<MultiStepContext.Provider value={{ currentStep, setCurrentStep }}>
-			<DropdownMenuPrimitive.Root {...props} open={open} onOpenChange={setOpen}>
+			<DropdownMenuPrimitive.Root
+				{...props}
+				open={open}
+				onOpenChange={setOpen}
+				// @ts-expect-error - ref is not used in the root component
+				ref={ref}
+			>
 				{children}
 			</DropdownMenuPrimitive.Root>
 		</MultiStepContext.Provider>

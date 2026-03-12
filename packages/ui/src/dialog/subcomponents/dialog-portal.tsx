@@ -41,5 +41,5 @@ export type DialogPortalProps = {
  * ```
  */
 export function DialogPortal({ testId, ...props }: DialogPortalProps) {
-	return <DialogPrimitive.Portal data-slot="dialog-portal" data-testId={testId} {...props} />;
+	return <DialogPrimitive.Portal data-slot="dialog-portal" data-testid={testId} {...props} />;
 }
