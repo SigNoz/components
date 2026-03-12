@@ -10,5 +10,8 @@
 	},
 	"[mdx]": {
 		"editor.defaultFormatter": "unifiedjs.vscode-mdx"
+	},
+	"[scss]": {
+		"editor.defaultFormatter": "vscode.css-language-features"
 	}
 }
