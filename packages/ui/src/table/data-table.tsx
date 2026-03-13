@@ -112,6 +112,7 @@ export interface DataTableProps<TData, TValue> {
 	enableStickyHeaders?: boolean;
 	// Fixed height for table container
 	fixedHeight?: string | number;
+	testId?: string;
 }
 
 export enum SelectionMode {
@@ -421,6 +422,7 @@ export function DataTable<TData, TValue>({
 	enableStickyHeaders = false,
 	// Fixed height for table container
 	fixedHeight,
+	testId,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -644,6 +646,7 @@ export function DataTable<TData, TValue>({
 		getFilteredRowModel: getFilteredRowModel(),
 		enableSorting,
 		enableFilters: enableFiltering,
+		enableRowSelection,
 		defaultColumn: {
 			minSize: minColumnWidth,
 			maxSize: maxColumnWidth,
@@ -956,7 +959,7 @@ export function DataTable<TData, TValue>({
 	);
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-4" data-testid={testId}>
 			{enableGlobalFilter && (
 				<div className="flex items-center gap-2">
 					<div className="relative flex-1">
