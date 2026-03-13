@@ -1,0 +1,127 @@
+.table__container {
+	position: relative;
+	width: 100%;
+	overflow-x: auto;
+}
+
+.table__container_scrollable {
+	overflow-y: auto;
+	scrollbar-gutter: stable;
+	margin-top: 0;
+
+	&:focus {
+		outline: 2px solid hsl(var(--primary));
+		outline-offset: 2px;
+	}
+}
+
+.table__table {
+	table-layout: fixed;
+	width: 100%;
+	caption-side: bottom;
+	font-size: var(--font-size-sm, 0.875rem);
+	margin: 0;
+}
+
+.table__table_sticky {
+	table-layout: fixed;
+	width: 100%;
+
+	thead {
+		position: sticky;
+		top: 0;
+		z-index: 30;
+		background: var(--table-header-bg, var(--l1-background));
+		color: var(--table-header-fg, var(--foreground));
+		box-shadow: var(--table-header-shadow, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1));
+		border-bottom: 1px solid var(--table-border-color, var(--border));
+	}
+}
+
+.table__header {
+	z-index: 10;
+	background: var(--table-header-bg, transparent);
+	color: var(--table-header-fg, var(--foreground));
+
+	tr {
+		border-bottom: 1px solid var(--table-border-color, var(--border));
+	}
+}
+
+.table__header_sticky {
+	position: sticky;
+	top: 0;
+	z-index: 30;
+	background: var(--table-header-bg, var(--l1-background));
+	color: var(--table-header-fg, var(--foreground));
+	box-shadow: var(--table-header-shadow, 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1));
+}
+
+.table__body {
+	tr:last-child {
+		border-bottom: 0;
+	}
+}
+
+.table__footer {
+	background: var(--muted);
+	border-top: 1px solid var(--table-border-color, var(--border));
+	font-weight: 500;
+
+	tr:last-child {
+		border-bottom: 0;
+	}
+}
+
+.table__row {
+	border-bottom: 1px solid var(--table-border-color, var(--border));
+	transition: background-color 0.15s;
+
+	&:hover:not(.table__header > &) {
+		background: var(--muted);
+	}
+
+	&[data-state='selected'] {
+		background: var(--muted);
+	}
+}
+
+
+.table__head {
+	position: relative;
+	height: var(--table-head-height, 2.5rem);
+	padding: var(--table-cell-padding, var(--spacing-4, 0.5rem));
+	text-align: left;
+	vertical-align: middle;
+	font-weight: 500;
+	white-space: nowrap;
+	color: var(--foreground);
+
+	&:has([role='checkbox']) {
+		padding-right: 0;
+	}
+
+	[role='checkbox'] {
+		transform: translateY(2px);
+	}
+}
+
+.table__cell {
+	padding: var(--table-cell-padding, var(--spacing-4, 0.5rem));
+	vertical-align: middle;
+	white-space: nowrap;
+
+	&:has([role='checkbox']) {
+		padding-right: 0;
+	}
+
+	[role='checkbox'] {
+		transform: translateY(2px);
+	}
+}
+
+.table__caption {
+	color: var(--muted-foreground);
+	margin-top: var(--table-caption-margin-top, var(--spacing-4, 1rem));
+	font-size: var(--font-size-sm, 0.875rem);
+}
