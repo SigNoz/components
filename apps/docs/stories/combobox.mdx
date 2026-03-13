@@ -1,0 +1,259 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ComboboxStories from './combobox.stories';
+import * as ComboboxSimpleStories from './combobox-simple.stories';
+import * as ComboboxPrimitiveStories from './combobox-primitive.stories';
+import * as ComboboxTriggerStories from './combobox-trigger.stories';
+import * as ComboboxContentStories from './combobox-content.stories';
+import * as ComboboxCommandStories from './combobox-command.stories';
+import * as ComboboxInputStories from './combobox-input.stories';
+import * as ComboboxListStories from './combobox-list.stories';
+import * as ComboboxEmptyStories from './combobox-empty.stories';
+import * as ComboboxGroupStories from './combobox-group.stories';
+import * as ComboboxItemStories from './combobox-item.stories';
+import * as ComboboxLoadingStories from './combobox-loading.stories';
+import * as ComboboxSeparatorStories from './combobox-separator.stories';
+
+<Meta of={ComboboxStories} />
+
+# Combobox
+
+Searchable select built on `Command` and `Popover`. Use for single-value selection with optional filtering and grouped options.
+
+## How to use
+
+### ComboboxSimple (preset)
+
+Minimal preset that accepts a list of items and handles selection, filtering, and value display. Supports flat items, grouped items, and custom label content (ReactNode).
+
+**Flat items (value + label):**
+
+```tsx
+import { ComboboxSimple } from '@signozhq/ui';
+import { useState } from 'react';
+
+const items = [
+	{ value: 'react', label: 'React' },
+	{ value: 'vue', label: 'Vue' },
+	{ value: 'angular', label: 'Angular' },
+];
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+
+	return (
+		<ComboboxSimple
+			items={items}
+			placeholder="Select a framework..."
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
+```
+
+**Items with icons (ReactNode labels):**
+
+```tsx
+import { ComboboxSimple } from '@signozhq/ui';
+import { useState } from 'react';
+import { Code2, Database } from 'lucide-react';
+
+const items = [
+	{ value: 'react', label: <><Code2 className="mr-2 h-4 w-4" />React</> },
+	{ value: 'vue', label: <><Code2 className="mr-2 h-4 w-4" />Vue</> },
+	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</> },
+];
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+
+	return (
+		<ComboboxSimple
+			items={items}
+			placeholder="Select a tool..."
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
+```
+
+**Items with displayValue (ReactNode in list, plain text in trigger):**
+
+```tsx
+import { ComboboxSimple } from '@signozhq/ui';
+import { useState } from 'react';
+import { Code2 } from 'lucide-react';
+
+const items = [
+	{ value: 'react', label: <><Code2 className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
+	{ value: 'vue', label: <><Code2 className="mr-2 h-4 w-4" />Vue</>, displayValue: 'Vue' },
+];
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+	return <ComboboxSimple items={items} value={value} onChange={setValue} />;
+}
+```
+
+**Grouped items with headings:**
+
+```tsx
+<ComboboxSimple
+	groups={[
+		{ heading: 'Frameworks', items: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }] },
+		{ heading: 'Languages', items: [{ value: 'ts', label: 'TypeScript' }, { value: 'js', label: 'JavaScript' }] },
+	]}
+	placeholder="Select..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+**Uncontrolled with defaultValue:**
+
+```tsx
+<ComboboxSimple
+	items={items}
+	defaultValue="react"
+	placeholder="Select a framework..."
+	onChange={(v) => console.log('Selected:', v)}
+/>
+```
+
+**Custom displayValue callback:**
+
+```tsx
+<ComboboxSimple
+	items={items}
+	value={value}
+	onChange={setValue}
+	displayValue={(item) => item ? `${item.displayValue ?? item.value} ✓` : 'Choose...'}
+/>
+```
+
+**Custom empty placeholder:**
+
+```tsx
+<ComboboxSimple
+	items={items}
+	value={value}
+	onChange={setValue}
+	emptyPlaceholder="No frameworks match your search."
+/>
+```
+
+<Primary />
+
+## ComboboxSimple Props
+
+<Controls of={ComboboxSimpleStories.Default} />
+
+## Basic combobox (composition)
+
+For full control, compose the subcomponents manually:
+
+```tsx
+import {
+	Combobox,
+	ComboboxTrigger,
+	ComboboxContent,
+	ComboboxCommand,
+	ComboboxInput,
+	ComboboxList,
+	ComboboxItem,
+	ComboboxEmpty,
+} from '@signozhq/ui';
+import { useState } from 'react';
+
+const frameworks = [
+	{ value: 'react', label: 'React' },
+	{ value: 'vue', label: 'Vue' },
+];
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+	const [open, setOpen] = useState(false);
+	const selectedLabel = frameworks.find((f) => f.value === value)?.label ?? '';
+
+	return (
+		<Combobox open={open} onOpenChange={setOpen}>
+			<ComboboxTrigger placeholder="Select a framework..." value={selectedLabel} />
+			<ComboboxContent>
+				<ComboboxCommand>
+					<ComboboxInput placeholder="Search frameworks..." />
+					<ComboboxList>
+						<ComboboxItem
+							value="react"
+							onSelect={() => {
+								setValue('react');
+								setOpen(false);
+							}}
+							isSelected={value === 'react'}
+						>
+							React
+						</ComboboxItem>
+						<ComboboxItem
+							value="vue"
+							onSelect={() => {
+								setValue('vue');
+								setOpen(false);
+							}}
+							isSelected={value === 'vue'}
+						>
+							Vue
+						</ComboboxItem>
+						<ComboboxEmpty>No results.</ComboboxEmpty>
+					</ComboboxList>
+				</ComboboxCommand>
+			</ComboboxContent>
+		</Combobox>
+	);
+}
+```
+
+## Combobox Props
+
+<Controls of={ComboboxPrimitiveStories.Default} />
+
+## Subcomponents
+
+### ComboboxTrigger
+
+<Controls of={ComboboxTriggerStories.Default} />
+
+### ComboboxContent
+
+<Controls of={ComboboxContentStories.Default} />
+
+### ComboboxCommand
+
+<Controls of={ComboboxCommandStories.Default} />
+
+### ComboboxInput
+
+<Controls of={ComboboxInputStories.Default} />
+
+### ComboboxList
+
+<Controls of={ComboboxListStories.Default} />
+
+### ComboboxEmpty
+
+<Controls of={ComboboxEmptyStories.Default} />
+
+### ComboboxGroup
+
+<Controls of={ComboboxGroupStories.Default} />
+
+### ComboboxItem
+
+<Controls of={ComboboxItemStories.Default} />
+
+### ComboboxLoading
+
+<Controls of={ComboboxLoadingStories.Default} />
+
+### ComboboxSeparator
+
+<Controls of={ComboboxSeparatorStories.Default} />
