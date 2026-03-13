@@ -1,35 +1,109 @@
-import './index.css';
-
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { Command as CommandPrimitive } from 'cmdk';
 import { Check, ChevronDown } from 'lucide-react';
 import * as React from 'react';
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	type CommandItemProps,
+	CommandList,
+	CommandLoading,
+	CommandSeparator,
+} from '../command/index.js';
 import { cn } from '../lib/utils.js';
+import styles from './combobox.module.scss';
 
-const Combobox = PopoverPrimitive.Root;
+/**
+ * Root component for the combobox. Controls open/close state of the popover.
+ *
+ * Compose with `ComboboxTrigger`, `ComboboxContent`, `ComboboxCommand`, `ComboboxInput`,
+ * `ComboboxList`, `ComboboxGroup`, `ComboboxItem`, `ComboboxEmpty`,
+ * `ComboboxSeparator`, and `ComboboxLoading`.
+ *
+ * @example
+ * ```tsx
+ * const [value, setValue] = useState('');
+ * const [open, setOpen] = useState(false);
+ *
+ * return (
+ *   <Combobox open={open} onOpenChange={setOpen}>
+ *     <ComboboxTrigger placeholder="Select..." value={value} />
+ *     <ComboboxContent>
+ *       <ComboboxCommand>
+ *         <ComboboxInput placeholder="Search..." />
+ *         <ComboboxList>
+ *           <ComboboxItem value="react" onSelect={() => setValue('react')}>
+ *             React
+ *           </ComboboxItem>
+ *           <ComboboxEmpty>No results.</ComboboxEmpty>
+ *         </ComboboxList>
+ *       </ComboboxCommand>
+ *     </ComboboxContent>
+ *   </Combobox>
+ * );
+ * ```
+ */
+export const Combobox = PopoverPrimitive.Root;
 
-const ComboboxTrigger = React.forwardRef<
+export type ComboboxTriggerProps = Omit<
+	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>,
+	'value'
+> & {
+	placeholder?: React.ReactNode;
+	value?: React.ReactNode;
+};
+
+/**
+ * Trigger button that opens the combobox popover and displays the selected value.
+ *
+ * Use `placeholder` when no value is selected and `value` to show the current selection.
+ *
+ * @example
+ * ```tsx
+ * <Combobox>
+ *   <ComboboxTrigger placeholder="Select a framework..." value={selectedLabel} />
+ *   <ComboboxContent>
+ *     ...
+ *   </ComboboxContent>
+ * </Combobox>
+ * ```
+ */
+export const ComboboxTrigger = React.forwardRef<
 	React.ElementRef<typeof PopoverPrimitive.Trigger>,
-	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger> & {
-		placeholder?: string;
-		value?: string;
-	}
+	ComboboxTriggerProps
 >(({ className, placeholder, value, ...props }, ref) => (
 	<PopoverPrimitive.Trigger
 		ref={ref}
-		className={cn(
-			'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-			className
-		)}
+		className={cn(styles['combobox__trigger'], className)}
 		{...props}
 	>
-		<span className="line-clamp-1">{value || placeholder || 'Select an option...'}</span>
-		<ChevronDown className="h-4 w-4 opacity-50" />
+		<span className={styles['combobox__trigger-value']}>
+			{value || placeholder || 'Select an option...'}
+		</span>
+		<ChevronDown className={styles['combobox__trigger-icon']} />
 	</PopoverPrimitive.Trigger>
 ));
-ComboboxTrigger.displayName = 'ComboboxTrigger';
 
-const ComboboxContent = React.forwardRef<
+/**
+ * Popover content container that wraps the combobox command and list.
+ *
+ * Renders in a portal and positions relative to the trigger.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxContent>
+ *   <ComboboxCommand>
+ *     <ComboboxInput placeholder="Search..." />
+ *     <ComboboxList>
+ *       <ComboboxItem value="react">React</ComboboxItem>
+ *     </ComboboxList>
+ *   </ComboboxCommand>
+ * </ComboboxContent>
+ * ```
+ */
+export const ComboboxContent = React.forwardRef<
 	React.ElementRef<typeof PopoverPrimitive.Content>,
 	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, ...props }, ref) => (
@@ -37,153 +111,197 @@ const ComboboxContent = React.forwardRef<
 		<PopoverPrimitive.Content
 			data-slot="combobox-content"
 			ref={ref}
-			className={cn(
-				'w-[--radix-popover-trigger-width] rounded-md border border-border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-				className
-			)}
-			style={{ minWidth: 'var(--radix-popover-trigger-width)' }}
+			className={cn(styles['combobox__content'], className)}
 			{...props}
 		/>
 	</PopoverPrimitive.Portal>
 ));
-ComboboxContent.displayName = 'ComboboxContent';
 
-const ComboboxCommand = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive
-		ref={ref}
-		className={cn('flex h-full w-full flex-col overflow-hidden', className)}
-		{...props}
-	/>
-));
-ComboboxCommand.displayName = CommandPrimitive.displayName;
+export type ComboboxCommandProps = React.ComponentPropsWithoutRef<typeof Command>;
 
-const ComboboxInput = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Input>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Input
-		ref={ref}
-		className={cn(
-			'flex h-10 w-full rounded-md border-b border-b-border px-3 py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-			className
-		)}
-		{...props}
-	/>
-));
-ComboboxInput.displayName = CommandPrimitive.Input.displayName;
+/**
+ * Command root used inside the combobox for filtering and keyboard navigation.
+ *
+ * Wraps `Command` with combobox-specific data attributes. Use `shouldFilter={false}`
+ * when implementing custom filtering (e.g. async search).
+ *
+ * @example
+ * ```tsx
+ * <ComboboxContent>
+ *   <ComboboxCommand shouldFilter={false}>
+ *     <ComboboxInput placeholder="Search..." onValueChange={setQuery} />
+ *     <ComboboxList>
+ *       {filteredItems.map((item) => (
+ *         <ComboboxItem key={item.value} value={item.value} onSelect={() => setValue(item.value)}>
+ *           {item.label}
+ *         </ComboboxItem>
+ *       ))}
+ *     </ComboboxList>
+ *   </ComboboxCommand>
+ * </ComboboxContent>
+ * ```
+ */
+export function ComboboxCommand(props: ComboboxCommandProps) {
+	return <Command data-slot="combobox-command" {...props} />;
+}
 
-const ComboboxList = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.List>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.List
-		ref={ref}
-		className={cn('max-h-[200px] overflow-y-auto overflow-x-hidden p-1', className)}
-		{...props}
-	/>
-));
-ComboboxList.displayName = CommandPrimitive.List.displayName;
+export type ComboboxInputProps = React.ComponentPropsWithoutRef<typeof CommandInput>;
 
-const ComboboxEmpty = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Empty>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Empty
-		ref={ref}
-		className={cn('py-6 text-center text-sm', className)}
-		{...props}
-	/>
-));
-ComboboxEmpty.displayName = CommandPrimitive.Empty.displayName;
+/**
+ * Search input inside the combobox.
+ *
+ * Renders a search icon and forwards props to the underlying command input.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxCommand>
+ *   <ComboboxInput
+ *     placeholder="Search frameworks..."
+ *     onValueChange={(value) => setQuery(value)}
+ *   />
+ *   <ComboboxList>...</ComboboxList>
+ * </ComboboxCommand>
+ * ```
+ */
+export function ComboboxInput(props: ComboboxInputProps) {
+	return <CommandInput data-slot="combobox-input" {...props} />;
+}
 
-const ComboboxLoading = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Loading>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Loading>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Loading
-		ref={ref}
-		className={cn('py-6 text-center text-sm', className)}
-		{...props}
-	/>
-));
-ComboboxLoading.displayName = CommandPrimitive.Loading.displayName;
+export type ComboboxListProps = React.ComponentPropsWithoutRef<typeof CommandList>;
 
-const ComboboxGroup = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Group>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Group
-		ref={ref}
-		className={cn('overflow-hidden text-foreground', className)}
-		{...props}
-	/>
-));
-ComboboxGroup.displayName = CommandPrimitive.Group.displayName;
+/**
+ * Scrollable list container for combobox items.
+ *
+ * Use inside `ComboboxCommand` to render the selectable options.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxList>
+ *   <ComboboxGroup heading="Frameworks">
+ *     <ComboboxItem value="react">React</ComboboxItem>
+ *     <ComboboxItem value="vue">Vue</ComboboxItem>
+ *   </ComboboxGroup>
+ *   <ComboboxEmpty>No results.</ComboboxEmpty>
+ * </ComboboxList>
+ * ```
+ */
+export function ComboboxList(props: ComboboxListProps) {
+	return <CommandList data-slot="combobox-list" {...props} />;
+}
 
-const ComboboxLabel = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Group>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Group
-		ref={ref}
-		className={cn(
-			'overflow-hidden px-2 py-1.5 text-xs font-medium text-muted-foreground',
-			className
-		)}
-		{...props}
-	/>
-));
-ComboboxLabel.displayName = 'ComboboxLabel';
+export type ComboboxEmptyProps = React.ComponentPropsWithoutRef<typeof CommandEmpty>;
 
-const ComboboxItem = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Item>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> & {
-		isSelected?: boolean;
-		showCheck?: boolean;
-	}
->(({ className, isSelected, showCheck = true, ...props }, ref) => (
-	<CommandPrimitive.Item
-		ref={ref}
-		className={cn(
-			'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
-			className
-		)}
-		{...props}
-	>
-		{showCheck && (
-			<Check className={cn('mr-2 h-4 w-4', isSelected ? 'opacity-100' : 'opacity-0')} />
-		)}
-		{props.children}
-	</CommandPrimitive.Item>
-));
-ComboboxItem.displayName = CommandPrimitive.Item.displayName;
+/**
+ * Fallback content shown when there are no matching results.
+ *
+ * Place inside `ComboboxList` to customize the empty state.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxList>
+ *   {items.map(...)}
+ *   <ComboboxEmpty>No framework found. Try a different search.</ComboboxEmpty>
+ * </ComboboxList>
+ * ```
+ */
+export function ComboboxEmpty(props: ComboboxEmptyProps) {
+	return <CommandEmpty data-slot="combobox-empty" {...props} />;
+}
 
-const ComboboxSeparator = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Separator>,
-	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Separator
-		ref={ref}
-		className={cn('-mx-1 h-px bg-border', className)}
-		{...props}
-	/>
-));
-ComboboxSeparator.displayName = CommandPrimitive.Separator.displayName;
+export type ComboboxLoadingProps = React.ComponentPropsWithoutRef<typeof CommandLoading>;
 
-export {
-	Combobox,
-	ComboboxTrigger,
-	ComboboxContent,
-	ComboboxCommand,
-	ComboboxInput,
-	ComboboxList,
-	ComboboxEmpty,
-	ComboboxLoading,
-	ComboboxGroup,
-	ComboboxLabel,
-	ComboboxItem,
-	ComboboxSeparator,
+/**
+ * Loading indicator shown while fetching or filtering items.
+ *
+ * Place inside `ComboboxList` when performing async operations.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxList>
+ *   {isLoading ? (
+ *     <ComboboxLoading>Loading options...</ComboboxLoading>
+ *   ) : (
+ *     items.map(...)
+ *   )}
+ * </ComboboxList>
+ * ```
+ */
+export function ComboboxLoading(props: ComboboxLoadingProps) {
+	return <CommandLoading data-slot="combobox-loading" {...props} />;
+}
+
+export type ComboboxGroupProps = React.ComponentPropsWithoutRef<typeof CommandGroup>;
+
+/**
+ * Groups related combobox items.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxGroup heading="Frameworks">
+ *   <ComboboxItem value="react">React</ComboboxItem>
+ *   <ComboboxItem value="vue">Vue</ComboboxItem>
+ * </ComboboxGroup>
+ * ```
+ */
+export function ComboboxGroup({ children, ...props }: ComboboxGroupProps) {
+	return (
+		<CommandGroup data-slot="combobox-group" {...props}>
+			{children}
+		</CommandGroup>
+	);
+}
+
+export type ComboboxItemProps = CommandItemProps & {
+	isSelected?: boolean;
 };
+
+/**
+ * Selectable item in the combobox list.
+ *
+ * Use `isSelected` to show a checkmark for the current value. Pass `prefix={null}`
+ * to hide the default check icon.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxItem
+ *   value="react"
+ *   onSelect={() => setValue('react')}
+ *   isSelected={value === 'react'}
+ * >
+ *   React
+ * </ComboboxItem>
+ * ```
+ */
+export function ComboboxItem({ prefix, isSelected = false, ...props }: ComboboxItemProps) {
+	const resolvedPrefix: React.ReactNode =
+		prefix === undefined ? (
+			<span className={styles['combobox__item-check']} data-selected={isSelected}>
+				<Check />
+			</span>
+		) : (
+			prefix
+		);
+	return <CommandItem data-slot="combobox-item" {...props} prefix={resolvedPrefix} />;
+}
+
+export type ComboboxSeparatorProps = React.ComponentPropsWithoutRef<typeof CommandSeparator>;
+
+/**
+ * Visual divider between groups inside the combobox list.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxList>
+ *   <ComboboxGroup heading="Frameworks">
+ *     <ComboboxItem value="react">React</ComboboxItem>
+ *   </ComboboxGroup>
+ *   <ComboboxSeparator />
+ *   <ComboboxGroup heading="Languages">
+ *     <ComboboxItem value="ts">TypeScript</ComboboxItem>
+ *   </ComboboxGroup>
+ * </ComboboxList>
+ * ```
+ */
+export function ComboboxSeparator(props: ComboboxSeparatorProps) {
+	return <CommandSeparator data-slot="combobox-separator" {...props} />;
+}

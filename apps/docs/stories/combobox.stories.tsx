@@ -6,7 +6,6 @@ import {
 	ComboboxGroup,
 	ComboboxInput,
 	ComboboxItem,
-	ComboboxLabel,
 	ComboboxList,
 	ComboboxLoading,
 	ComboboxSeparator,
@@ -15,65 +14,13 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Code2, Database, GitBranch, Terminal } from 'lucide-react';
 import { useState } from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const ComboboxExamples = [
-	`import {
-  Combobox,
-  ComboboxTrigger,
-  ComboboxContent,
-  ComboboxCommand,
-  ComboboxInput,
-  ComboboxList,
-  ComboboxItem,
-} from '@signozhq/ui';
-
-export default function MyComponent() {
-  const [value, setValue] = useState('');
-
-  return (
-    <Combobox>
-      <ComboboxTrigger placeholder="Select a framework..." value={value} />
-      <ComboboxContent>
-        <ComboboxCommand>
-          <ComboboxInput placeholder="Search frameworks..." />
-          <ComboboxList>
-            <ComboboxItem value="react">React</ComboboxItem>
-            <ComboboxItem value="vue">Vue</ComboboxItem>
-            <ComboboxItem value="angular">Angular</ComboboxItem>
-          </ComboboxList>
-        </ComboboxCommand>
-      </ComboboxContent>
-    </Combobox>
-  );
-}`,
-];
-
-const ComboboxDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description: 'Autocomplete input and command palette with a list of suggestions',
-	examples: ComboboxExamples,
-});
 
 const meta: Meta<typeof Combobox> = {
-	title: 'Old Components/Combobox',
+	title: 'Components/Combobox',
 	component: Combobox,
 	parameters: {
-		docs: {
-			description: {
-				component: ComboboxDocs,
-			},
-		},
 		layout: 'fullscreen',
-		design: [
-			{
-				name: 'Figma',
-				type: 'figma',
-				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-742&p=f',
-			},
-		],
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
@@ -214,8 +161,7 @@ export const WithGroups: Story = {
 								<ComboboxInput placeholder="Search..." />
 								<ComboboxList>
 									{allItems.map((group) => (
-										<ComboboxGroup key={group.group}>
-											<ComboboxLabel>{group.group}</ComboboxLabel>
+										<ComboboxGroup key={group.group} heading={group.group}>
 											{group.items.map((item) => (
 												<ComboboxItem
 													key={item.value}
@@ -279,8 +225,7 @@ export const WithMultipleGroups: Story = {
 									{allItems.map((group, idx) => (
 										<div key={group.group}>
 											{idx > 0 && <ComboboxSeparator />}
-											<ComboboxGroup>
-												<ComboboxLabel>{group.group}</ComboboxLabel>
+											<ComboboxGroup heading={group.group}>
 												{group.items.map((item) => (
 													<ComboboxItem
 														key={item.value}
@@ -440,12 +385,12 @@ export const CustomWidth: Story = {
 		return (
 			<div className="p-8 space-y-6">
 				<div>
-					<p className="text-sm text-gray-600 mb-2">Small (w-[200px])</p>
+					<p className="text-sm mb-2">Small (w-[200px])</p>
 					<Combobox open={open1} onOpenChange={setOpen1}>
 						<ComboboxTrigger
 							placeholder="Select..."
 							value={frameworks.find((f) => f.value === value1)?.label || ''}
-							className="w-[200px]"
+							className="w-[200px]!"
 						/>
 						{open1 && (
 							<ComboboxContent>
@@ -473,12 +418,12 @@ export const CustomWidth: Story = {
 				</div>
 
 				<div>
-					<p className="text-sm text-gray-600 mb-2">Large (w-[400px])</p>
+					<p className="text-sm mb-2">Large (w-[400px])</p>
 					<Combobox open={open2} onOpenChange={setOpen2}>
 						<ComboboxTrigger
 							placeholder="Select a framework..."
 							value={frameworks.find((f) => f.value === value2)?.label || ''}
-							className="w-[400px]"
+							className="w-[400px]!"
 						/>
 						{open2 && (
 							<ComboboxContent>
@@ -625,7 +570,7 @@ export const WithoutSearchNoCheck: Story = {
 												setOpen(false);
 											}}
 											isSelected={value === framework.value}
-											showCheck={false}
+											prefix={null}
 										>
 											{framework.label}
 										</ComboboxItem>

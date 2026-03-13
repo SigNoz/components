@@ -22,7 +22,7 @@
     color: var(--text-muted);
   }
 
-  & [cmdk-group]:not([hidden]) ~ [cmdk-group] {
+  & [cmdk-group]:not([hidden])~[cmdk-group] {
     padding-top: 0;
   }
 
@@ -103,6 +103,13 @@
   line-height: var(--command-empty-line-height, 1.25rem);
 }
 
+.command__loading {
+  padding: var(--command-loading-padding, var(--spacing-8, 1rem));
+  text-align: center;
+  font-size: var(--command-loading-font-size, 0.875rem);
+  line-height: var(--command-loading-line-height, 1.25rem);
+}
+
 .command__group {
   overflow: hidden;
   padding: var(--command-group-padding, var(--spacing-2, 0.25rem));
@@ -156,9 +163,23 @@
   &:hover {
     background-color: var(--l2-background-hover);
   }
+
   &:focus-within {
     outline: 2px solid var(--ring);
   }
+}
+
+.command__item-prefix {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.command__item-suffix {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
 .command__shortcut {

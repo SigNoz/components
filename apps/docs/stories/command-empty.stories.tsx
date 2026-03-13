@@ -1,21 +1,12 @@
 import { Command, CommandEmpty, CommandInput, CommandList } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { emptyArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof CommandEmpty> = {
 	title: 'Components/Command/CommandEmpty',
 	component: CommandEmpty,
-	argTypes: {
-		children: {
-			control: 'text',
-			description: 'Content shown when there are no matching results.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the empty state.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-	},
+	argTypes: emptyArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

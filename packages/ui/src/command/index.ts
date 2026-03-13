@@ -12,6 +12,8 @@ export {
 	type CommandItemProps,
 	CommandList,
 	type CommandListProps,
+	CommandLoading,
+	type CommandLoadingProps,
 	type CommandProps,
 	CommandSeparator,
 	type CommandSeparatorProps,

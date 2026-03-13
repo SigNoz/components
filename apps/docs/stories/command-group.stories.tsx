@@ -8,25 +8,12 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { groupArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof CommandGroup> = {
 	title: 'Components/Command/CommandGroup',
 	component: CommandGroup,
-	argTypes: {
-		heading: {
-			control: 'text',
-			description: 'Optional visual heading displayed above the group items.',
-			table: { category: 'Content', type: { summary: 'string' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the group wrapper.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: groupArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
