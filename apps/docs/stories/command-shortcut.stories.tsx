@@ -9,21 +9,12 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { shortcutArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof CommandShortcut> = {
 	title: 'Components/Command/CommandShortcut',
 	component: CommandShortcut,
-	argTypes: {
-		children: {
-			control: 'text',
-			description: 'Shortcut text shown to the right of the item label.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the shortcut span.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-	},
+	argTypes: shortcutArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

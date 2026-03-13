@@ -7,9 +7,14 @@ export {
 	ComboboxGroup,
 	ComboboxInput,
 	ComboboxItem,
-	ComboboxLabel,
 	ComboboxList,
 	ComboboxLoading,
 	ComboboxSeparator,
 	ComboboxTrigger,
 } from './combobox.js';
+export {
+	ComboboxSimple,
+	type ComboboxSimpleGroup,
+	type ComboboxSimpleItem,
+	type ComboboxSimpleProps,
+} from './presets/combobox-simple.js';
