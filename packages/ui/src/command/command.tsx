@@ -196,6 +196,19 @@ export const CommandEmpty = React.forwardRef<
 	<CommandPrimitive.Empty ref={ref} className={styles['command__empty']} {...props} />
 ));
 
+export type CommandLoadingProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Loading>;
+
+export const CommandLoading = React.forwardRef<
+	React.ElementRef<typeof CommandPrimitive.Loading>,
+	CommandLoadingProps
+>(({ className, ...props }, ref) => (
+	<CommandPrimitive.Loading
+		ref={ref}
+		className={cn(styles['command__loading'], className)}
+		{...props}
+	/>
+));
+
 export type CommandGroupProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>;
 
 /**
@@ -268,7 +281,21 @@ export const CommandSeparator = React.forwardRef<
 	/>
 ));
 
-export type CommandItemProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>;
+export type CommandItemProps = Omit<
+	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>,
+	'prefix' | 'suffix'
+> & {
+	/**
+	 * The prefix to display before the item label.
+	 * null will not render the default prefix (Check icon).
+	 */
+	prefix?: React.ReactNode | null;
+	/**
+	 * The suffix to display after the item label.
+	 * null will not render the suffix.
+	 */
+	suffix?: React.ReactNode | null;
+};
 
 /**
  * Clickable or keyboard-selectable item representing a single command.
@@ -295,8 +322,12 @@ export type CommandItemProps = React.ComponentPropsWithoutRef<typeof CommandPrim
 export const CommandItem = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.Item>,
 	CommandItemProps
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.Item ref={ref} className={cn(styles['command__item'], className)} {...props} />
+>(({ className, prefix, suffix, children, ...props }, ref) => (
+	<CommandPrimitive.Item ref={ref} className={cn(styles['command__item'], className)} {...props}>
+		{prefix != null && <span className={styles['command__item-prefix']}>{prefix}</span>}
+		{children}
+		{suffix != null && <span className={styles['command__item-suffix']}>{suffix}</span>}
+	</CommandPrimitive.Item>
 ));
 
 export type CommandShortcutProps = React.HTMLAttributes<HTMLSpanElement>;

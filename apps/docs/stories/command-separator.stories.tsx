@@ -9,16 +9,12 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { separatorArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof CommandSeparator> = {
 	title: 'Components/Command/CommandSeparator',
 	component: CommandSeparator,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the separator element.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-	},
+	argTypes: separatorArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

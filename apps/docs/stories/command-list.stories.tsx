@@ -8,20 +8,12 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { listArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof CommandList> = {
 	title: 'Components/Command/CommandList',
 	component: CommandList,
-	argTypes: {
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the list container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: listArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

@@ -2,39 +2,12 @@ import { Command, CommandEmpty, CommandInput, CommandList } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
+import { inputArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof CommandInput> = {
 	title: 'Components/Command/CommandInput',
 	component: CommandInput,
-	argTypes: {
-		placeholder: {
-			control: 'text',
-			description: 'Placeholder text displayed inside the input.',
-			table: { category: 'Content', type: { summary: 'string' } },
-		},
-		autoFocus: {
-			control: 'boolean',
-			description: 'When true, focuses the input when it is mounted.',
-			table: { category: 'Behavior', type: { summary: 'boolean' } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'When true, disables user interaction with the input.',
-			table: { category: 'State', type: { summary: 'boolean' } },
-		},
-		onValueChange: {
-			control: false,
-			description: 'Callback fired when the input value changes.',
-			table: {
-				category: 'Events',
-				type: { summary: '(value: string) => void' },
-			},
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the input.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-	},
+	argTypes: inputArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},

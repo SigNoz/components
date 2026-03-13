@@ -9,33 +9,12 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
+import { commandArgTypes } from './shared/command-combobox-arg-types.js';
+
 const meta: Meta<typeof Command> = {
 	title: 'Components/Command/Command',
 	component: Command,
-	argTypes: {
-		value: {
-			control: 'text',
-			description: 'The current search query value for the command palette.',
-			table: { category: 'State', type: { summary: 'string' } },
-		},
-		onValueChange: {
-			control: false,
-			description: 'Callback fired when the search query changes.',
-			table: {
-				category: 'Events',
-				type: { summary: '(value: string) => void' },
-			},
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the command container.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		children: {
-			control: false,
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-	},
+	argTypes: commandArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
