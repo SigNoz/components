@@ -1,78 +1,83 @@
-import { Code, Trash2, X } from '@signozhq/icons';
+import { Code } from '@signozhq/icons';
 import {
-	AlertDialogWrapper,
 	Button,
 	ButtonColor,
-	ButtonSize,
 	ButtonVariant,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 	DialogWrapper,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { AnimatePresence } from 'motion/react';
 import React from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
+import { overlayArgTypes } from './shared/dialog-drawer-arg-types.js';
 
-const dialogExamples = [
-	`import { DialogWrapper } from '@signozhq/ui';
-import { Button } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<DialogWrapper
-			title="Edit Details"
-			description="Make changes to your profile information."
-			trigger={<Button variant="solid">Open Dialog</Button>}
-		>
-			<div className="flex flex-col gap-4">
-				<p>Dialog content goes here</p>
-				<div className="flex justify-end">
-					<Button variant="solid" color="primary">Save Changes</Button>
-				</div>
-			</div>
-		</DialogWrapper>
-	);
-}`,
-];
-
-const dialogDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A modal dialog component for displaying content that requires user attention or interaction.',
-	examples: dialogExamples,
-});
-
-const meta: Meta<typeof DialogWrapper> = {
-	title: 'Old Components/Dialog',
-	component: DialogWrapper,
-	tags: ['autodocs'],
+const meta: Meta<typeof Dialog> = {
+	title: 'Components/Dialog',
+	component: Dialog,
+	argTypes: overlayArgTypes,
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: dialogDocs,
-			},
-		},
-	},
-	argTypes: {
-		width: {
-			control: 'select',
-			options: ['narrow', 'base', 'wide', 'extra-wide'],
-		},
 	},
 };
 
 export default meta;
-type Story = StoryObj<typeof DialogWrapper>;
+type Story = StoryObj<typeof Dialog>;
 
 export const Default: Story = {
 	args: {
-		title: 'Edit report details',
-		width: 'base',
-		trigger: (
-			<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
-				Open Dialog
-			</Button>
-		),
-		children: <div style={{ height: '70vh' }} />,
+		defaultOpen: false,
+	},
+	render: (args) => {
+		const [open, setOpen] = React.useState<boolean | undefined>(args.open ?? args.defaultOpen);
+
+		return (
+			<Dialog
+				{...args}
+				open={args.open ?? open}
+				onOpenChange={(next) => {
+					setOpen(next);
+					args.onOpenChange?.(next);
+				}}
+			>
+				<DialogTrigger asChild>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						Open dialog
+					</Button>
+				</DialogTrigger>
+				<AnimatePresence>
+					{open && (
+						<DialogContent key="dialog" width="base" forceMount>
+							<DialogHeader>
+								<DialogTitle>Edit report details</DialogTitle>
+							</DialogHeader>
+							<DialogDescription>
+								<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+									<p>
+										Dialog content goes here. Use the primitive dialog components for full control.
+									</p>
+									<div className="flex justify-end">
+										<Button
+											variant={ButtonVariant.Solid}
+											color={ButtonColor.Primary}
+											onClick={() => setOpen(false)}
+										>
+											Save Changes
+										</Button>
+									</div>
+								</div>
+							</DialogDescription>
+						</DialogContent>
+					)}
+				</AnimatePresence>
+			</Dialog>
+		);
 	},
 };
 
@@ -91,28 +96,27 @@ export const Controlled: Story = {
 						Open Controlled Dialog
 					</Button>
 				}
+				footer={
+					<Button
+						variant={ButtonVariant.Solid}
+						color={ButtonColor.Primary}
+						onClick={() => setOpen(false)}
+					>
+						Close Dialog
+					</Button>
+				}
 			>
 				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-					<p>Dialog content goes here</p>
-					<div className="flex justify-end">
-						<Button
-							variant={ButtonVariant.Solid}
-							color={ButtonColor.Primary}
-							onClick={() => setOpen(false)}
-						>
-							Close Dialog
-						</Button>
-					</div>
+					<p>Dialog content goes here. Uses AnimatePresence for exit animation.</p>
 				</div>
 			</DialogWrapper>
 		);
 	},
 };
 
-export const DialogWidth: Story = {
+export const WidthVariants: Story = {
 	render: () => {
 		const [open, setOpen] = React.useState<string | null>(null);
-
 		const widths = ['narrow', 'base', 'wide', 'extra-wide'] as const;
 
 		return (
@@ -122,23 +126,23 @@ export const DialogWidth: Story = {
 						key={width}
 						open={open === width}
 						onOpenChange={(isOpen: boolean) => setOpen(isOpen ? width : null)}
-						title={`${width.charAt(0).toUpperCase() + width.slice(1)} Width Dialog`}
+						title={`${width.charAt(0).toUpperCase() + width.slice(1)} width`}
 						width={width}
 						trigger={
 							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
-								Open {width} Dialog
+								Open {width}
 							</Button>
 						}
 					>
 						<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-							<p>This is a dialog with {width} width.</p>
+							<p>This dialog uses the {width} width variant.</p>
 							<div className="flex justify-end">
 								<Button
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Primary}
 									onClick={() => setOpen(null)}
 								>
-									Close Dialog
+									Close
 								</Button>
 							</div>
 						</div>
@@ -149,52 +153,139 @@ export const DialogWidth: Story = {
 	},
 };
 
-export const AlertDialog: Story = {
+export const PositionVariants: Story = {
 	render: () => {
-		const [open, setOpen] = React.useState(false);
-		const [checkboxChecked, setCheckboxChecked] = React.useState(true);
+		const [open, setOpen] = React.useState<'center' | 'top' | 'left' | 'right' | 'bottom' | null>(
+			null
+		);
 
 		return (
-			<AlertDialogWrapper
-				open={open}
-				width="narrow"
-				onOpenChange={setOpen}
-				title="Delete this step"
-				checkboxLabel="Do not ask me this again"
-				checkboxChecked={checkboxChecked}
-				onCheckboxChange={setCheckboxChecked}
-				trigger={
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} prefix={<Code />}>
-						Open Dialog
+			<div className="flex flex-wrap gap-4">
+				{(['center', 'top', 'left', 'right', 'bottom'] as const).map((position) => (
+					<Dialog
+						key={position}
+						open={open === position}
+						onOpenChange={(v) => setOpen(v ? position : null)}
+					>
+						<DialogTrigger asChild>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+								Open {position}
+							</Button>
+						</DialogTrigger>
+						<AnimatePresence>
+							{open === position && (
+								<DialogContent
+									key={`dialog-${position}`}
+									position={position}
+									width="base"
+									forceMount
+									onPointerDownOutside={() => setOpen(null)}
+								>
+									<DialogHeader>
+										<DialogTitle>
+											{position.charAt(0).toUpperCase() + position.slice(1)} dialog
+										</DialogTitle>
+									</DialogHeader>
+									<DialogDescription>
+										<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+											<p>This dialog is positioned at {position}.</p>
+										</div>
+									</DialogDescription>
+									<DialogFooter>
+										<Button
+											variant={ButtonVariant.Solid}
+											color={ButtonColor.Primary}
+											onClick={() => setOpen(null)}
+										>
+											Close
+										</Button>
+									</DialogFooter>
+								</DialogContent>
+							)}
+						</AnimatePresence>
+					</Dialog>
+				))}
+			</div>
+		);
+	},
+};
+
+PositionVariants.decorators = [
+	(Story) => (
+		<div style={{ minHeight: 400 }}>
+			<Story />
+		</div>
+	),
+];
+
+export const WithoutCloseButton: Story = {
+	render: () => (
+		<DialogWrapper
+			title="Dialog without close button"
+			showCloseButton={false}
+			trigger={
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					Open Dialog
+				</Button>
+			}
+		>
+			<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
+				<p>This dialog has no close (X) button. Use the button below or click outside to close.</p>
+				<div className="flex justify-end">
+					<DialogClose asChild>
+						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+							Close
+						</Button>
+					</DialogClose>
+				</div>
+			</div>
+		</DialogWrapper>
+	),
+};
+
+export const Primitive: Story = {
+	render: () => {
+		const [open, setOpen] = React.useState(false);
+
+		return (
+			<Dialog open={open} onOpenChange={setOpen}>
+				<DialogTrigger asChild>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						Open primitive dialog
 					</Button>
-				}
-				footer={
-					<>
-						<Button
-							variant={ButtonVariant.Ghost}
-							color="secondary"
-							prefix={<X size={12} />}
-							onClick={() => setOpen(false)}
-							size={ButtonSize.SM}
-						>
-							Cancel
-						</Button>
-						<Button
-							variant={ButtonVariant.Solid}
-							color="destructive"
-							prefix={<Trash2 size={12} />}
-							size={ButtonSize.SM}
-							onClick={() => {
-								setOpen(false);
-							}}
-						>
-							Delete Step
-						</Button>
-					</>
-				}
-			>
-				Deleting this step would stop further analytics using this step of the funnel.
-			</AlertDialogWrapper>
+				</DialogTrigger>
+				<AnimatePresence>
+					{open && (
+						<DialogContent key="dialog-primitive" width="base" forceMount>
+							<DialogHeader>
+								<DialogTitle icon={<Code size={16} />}>Primitive composition</DialogTitle>
+							</DialogHeader>
+							<DialogDescription>
+								<p className="text-sm font-normal leading-5 font-inter font-regular">
+									Use Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle,
+									DialogDescription and DialogFooter for full control.
+								</p>
+							</DialogDescription>
+							<DialogFooter>
+								<Button
+									variant={ButtonVariant.Ghost}
+									color="secondary"
+									onClick={() => setOpen(false)}
+								>
+									Cancel
+								</Button>
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Primary}
+									onClick={() => setOpen(false)}
+								>
+									Confirm
+								</Button>
+							</DialogFooter>
+						</DialogContent>
+					)}
+				</AnimatePresence>
+			</Dialog>
 		);
 	},
 };

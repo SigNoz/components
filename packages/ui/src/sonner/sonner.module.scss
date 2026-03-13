@@ -1,0 +1,119 @@
+/* Toast Container Styling */
+.toaster [data-sonner-toast] {
+  align-items: flex-start !important;
+  padding: var(--spacing-3, .75rem) var(--spacing-8, 1rem) !important;
+  border-radius: 6px !important;
+  gap: var(--spacing-4, 0.5rem) !important;
+
+  --normal-bg: var(--popover);
+  --normal-text: var(--popover-foreground);
+  --normal-border: var(--border);
+}
+
+/* Icon container - prefer data attributes, fallback to structural */
+.toaster [data-sonner-toast] [data-icon-wrapper],
+.toaster [data-sonner-toast] > div:has([data-icon]),
+.toaster [data-sonner-toast] > div:has(svg) {
+  align-self: flex-start !important;
+  margin-top: 0;
+  padding-top: 2px;
+  gap: var(--spacing-3, .75rem);
+}
+
+/* Icon element - prioritize data-icon, then svg elements */
+.toaster [data-sonner-toast] [data-icon],
+.toaster [data-sonner-toast] svg {
+  align-self: flex-start !important;
+  margin-top: 0;
+  width: var(--sonner-icon-size, 1rem) !important;
+  height: var(--sonner-icon-size, 1rem) !important;
+  flex-shrink: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Content Area Styling */
+/* Content wrapper - prefer data attributes */
+.toaster [data-sonner-toast] [data-content],
+.toaster [data-sonner-toast] > div:has([data-title]),
+.toaster [data-sonner-toast] > div:has([data-description]) {
+  align-self: flex-start !important;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4, 0.5rem);
+}
+
+/* Title/Message Styling */
+/* Priority: data-title > first text element in content */
+.toaster [data-sonner-toast] [data-title] {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: var(--font-size-sm, .75rem);
+  line-height: 20px;
+  letter-spacing: -0.07px;
+  color: var(--l1-foreground);
+  margin: 0;
+  padding: 0;
+  height: 20px;
+}
+
+/* Fallback for cases where data-title isn't present */
+.toaster [data-sonner-toast] [data-content] > p:first-of-type,
+.toaster [data-sonner-toast] > div:has([data-title]) > p:first-of-type,
+.toaster [data-sonner-toast] > div:has([data-title]) > div:first-of-type {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: var(--font-size-sm, .75rem);
+  line-height: 20px;
+  letter-spacing: -0.07px;
+  color: var(--l1-foreground);
+  margin: 0;
+  padding: 0;
+  height: 20px;
+}
+
+/* Description Styling */
+/* Priority: data-description > description container */
+.toaster [data-sonner-toast] [data-description] {
+  font-family: 'Inter', sans-serif;
+  font-weight: var(--font-weight-normal, 400);
+  font-size: var(--font-size-sm, .75rem);
+  line-height: 20px;
+  letter-spacing: -0.07px;
+  color: var(--l2-foreground);
+  margin: 0;
+  padding: 0;
+}
+
+/* Description container - for multi-line descriptions */
+.toaster [data-sonner-toast] [data-description-wrapper],
+.toaster [data-sonner-toast] [data-content] > div:has([data-description]),
+.toaster [data-sonner-toast] > div:has([data-description]) > div:last-of-type {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: 'Inter', sans-serif;
+  font-weight: var(--font-weight-normal, 400);
+  font-size: var(--font-size-sm, .75rem);
+  line-height: 20px;
+  letter-spacing: -0.07px;
+  color: var(--l2-foreground);
+  margin: 0;
+  padding: 0;
+}
+
+/* Fallback for description paragraphs */
+.toaster [data-sonner-toast] [data-content] > p:not(:first-of-type),
+.toaster
+[data-sonner-toast]
+> div:has([data-description])
+> p:not(:first-of-type) {
+  font-family: 'Inter', sans-serif;
+  font-weight: var(--font-weight-normal, 400);
+  font-size: var(--font-size-sm, .75rem);
+  line-height: 20px;
+  letter-spacing: -0.07px;
+  color: var(--l2-foreground);
+  margin: 0;
+  padding: 0;
+}

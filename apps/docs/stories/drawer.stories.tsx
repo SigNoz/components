@@ -1,248 +1,156 @@
-import { Button, ButtonColor, ButtonVariant, DrawerWrapper } from '@signozhq/ui';
+import {
+	Button,
+	ButtonColor,
+	ButtonVariant,
+	Drawer,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useArgs } from 'storybook/preview-api';
-import { generateDocs } from '../utils/generateDocs.js';
+import { AnimatePresence } from 'motion/react';
+import React from 'react';
+import { overlayArgTypes } from './shared/dialog-drawer-arg-types.js';
 
-const drawerExamples = [
-	`import { DrawerWrapper } from '@signozhq/ui';
-import { Button } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<DrawerWrapper
-			trigger={<Button variant="outlined">Open Drawer</Button>}
-			header={{
-				title: "Drawer Title",
-				description: "This is a description of the drawer content"
-			}}
-			content={
-				<div className="p-4">
-					<p>Main content of the drawer goes here</p>
-				</div>
-			}
-			footer={
-				<div className="flex gap-2">
-					<Button>Save</Button>
-					<Button variant="outlined">Cancel</Button>
-				</div>
-			}
-			direction="right"
-		/>
-	);
-}`,
-	`// Controlled mode - programmatic open/close
-import { useState } from 'react';
-import { DrawerWrapper } from '@signozhq/ui';
-import { Button } from '@signozhq/ui';
-
-export default function ControlledDrawer() {
-	const [open, setOpen] = useState(false);
-	return (
-		<>
-			<Button onClick={() => setOpen(true)}>Open</Button>
-			<DrawerWrapper
-				open={open}
-				onOpenChange={setOpen}
-				trigger={<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>Or click here</Button>}
-				header={{ title: "Controlled Drawer" }}
-				content={<div className="p-4">Content</div>}
-			/>
-		</>
-	);
-}`,
-];
-
-const drawerDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A customizable drawer component that slides in from any edge of the screen with support for header, content, and footer sections.',
-	examples: drawerExamples,
-});
-
-const meta: Meta<typeof DrawerWrapper> = {
-	title: 'Old Components/Drawer',
-	component: DrawerWrapper,
+const meta: Meta<typeof Drawer> = {
+	title: 'Components/Drawer',
+	component: Drawer,
+	argTypes: overlayArgTypes,
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: drawerDocs,
-			},
-		},
-	},
-	tags: ['autodocs'],
-	argTypes: {
-		trigger: {
-			description:
-				'The element that triggers the drawer to open. Optional when using controlled mode (open/onOpenChange).',
-			control: false,
-		},
-		type: {
-			description: 'Panel or Drawer',
-			control: 'select',
-			options: ['drawer', 'panel'],
-			defaultValue: 'drawer',
-		},
-		header: {
-			description: 'Header configuration with title and optional description',
-			control: 'object',
-		},
-		content: {
-			description: 'The main content of the drawer',
-			control: false,
-		},
-		footer: {
-			description: 'Optional footer content',
-			control: false,
-		},
-		direction: {
-			description: 'The direction the drawer opens from',
-			control: 'select',
-			options: ['left', 'right', 'top', 'bottom'],
-			defaultValue: 'right',
-		},
-		showCloseButton: {
-			description: 'Whether to show the close button in header',
-			control: 'boolean',
-			defaultValue: true,
-		},
-		allowOutsideClick: {
-			description: 'Whether clicking outside closes the drawer',
-			control: 'boolean',
-			defaultValue: true,
-		},
-		showOverlay: {
-			description: 'Whether to show the overlay behind the drawer',
-			control: 'boolean',
-			defaultValue: true,
-		},
-		className: {
-			description: 'Additional CSS classes',
-			control: 'text',
-		},
-		open: {
-			description:
-				'Controlled open state. When provided with onOpenChange, enables programmatic control of drawer visibility.',
-			control: 'boolean',
-		},
-		onOpenChange: {
-			description:
-				'Called when drawer open state changes (close button, outside click, ESC). Required when using controlled mode (open prop).',
-			action: 'onOpenChange',
-		},
 	},
 };
 
 export default meta;
-type Story = StoryObj<typeof DrawerWrapper>;
+type Story = StoryObj<typeof Drawer>;
 
-export const SideDrawer: Story = {
-	args: {
-		trigger: (
-			<Button variant={ButtonVariant.Outlined} color={ButtonColor.Primary}>
-				Open Drawer
-			</Button>
-		),
-		header: {
-			title: 'Drawer Header',
-			description: 'This is a description of the drawer content',
-		},
-		content: (
-			<div className="p-4 w-full">
-				<h2 className="text-lg font-semibold">Content Title</h2>
-				<p className="text-sm text-gray-500">This is the main content area of the drawer.</p>
-			</div>
-		),
-		footer: (
-			<div className="flex gap-2">
-				<Button>Submit</Button>
-				<Button variant={ButtonVariant.Outlined} color={ButtonColor.Primary}>
-					Cancel
+const DrawerPositionVariant = ({
+	args,
+	direction,
+}: {
+	args: Story['args'];
+	direction: 'left' | 'right' | 'top' | 'bottom';
+}) => {
+	const [open, setOpen] = React.useState<boolean | undefined>(false);
+
+	return (
+		<Drawer
+			{...args}
+			open={args?.open ?? open}
+			onOpenChange={(next) => {
+				setOpen(next);
+				args?.onOpenChange?.(next);
+			}}
+		>
+			<DrawerTrigger asChild>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					From {direction}
 				</Button>
-			</div>
-		),
-		direction: 'right',
-		showCloseButton: true,
-		allowOutsideClick: true,
-		showOverlay: true,
-	},
+			</DrawerTrigger>
+			<AnimatePresence>
+				{open && (
+					<DrawerContent key={`drawer-${direction}`} direction={direction} forceMount>
+						<DrawerHeader>
+							<DrawerTitle>Drawer from {direction}</DrawerTitle>
+							<DrawerCloseButton />
+						</DrawerHeader>
+						<DrawerDescription>
+							Drawer content goes here. Use the primitive drawer components for full control.
+						</DrawerDescription>
+						<DrawerFooter>
+							<Button
+								variant={ButtonVariant.Ghost}
+								color="secondary"
+								onClick={() => setOpen(false)}
+							>
+								Cancel
+							</Button>
+							<Button
+								variant={ButtonVariant.Solid}
+								color={ButtonColor.Primary}
+								onClick={() => setOpen(false)}
+							>
+								Confirm
+							</Button>
+						</DrawerFooter>
+					</DrawerContent>
+				)}
+			</AnimatePresence>
+		</Drawer>
+	);
 };
 
-export const SidePanel: Story = {
+export const Default: Story = {
 	args: {
-		trigger: (
-			<Button variant={ButtonVariant.Outlined} color={ButtonColor.Primary}>
-				Open Panel
-			</Button>
-		),
-		header: {
-			title: 'Panel Header',
-			description: 'This is a description of the panel content',
-		},
-		content: (
-			<div className="p-4 w-full">
-				<h2 className="text-lg font-semibold">Content Title</h2>
-				<p className="text-sm text-gray-500">This is the main content area of the panel.</p>
-			</div>
-		),
-		footer: (
-			<div className="flex gap-2">
-				<Button>Submit</Button>
-				<Button variant={ButtonVariant.Outlined} color={ButtonColor.Primary}>
-					Cancel
-				</Button>
-			</div>
-		),
-		type: 'panel',
-		direction: 'right',
-		showCloseButton: true,
-		allowOutsideClick: true,
-		showOverlay: true,
+		defaultOpen: false,
 	},
+	render: (args) => (
+		<div className="flex flex-wrap gap-4 p-8">
+			{(['left', 'right', 'top', 'bottom'] as const).map((dir) => (
+				<DrawerPositionVariant key={dir} args={args} direction={dir} />
+			))}
+		</div>
+	),
 };
 
-export const Controlled: Story = {
+export const WithoutOverlay: Story = {
+	args: {
+		...Default.args,
+	},
 	render: (args) => {
-		const [{ open }, updateArgs] = useArgs();
+		const [open, setOpen] = React.useState<boolean | undefined>(args.open ?? args.defaultOpen);
+
 		return (
-			<div className="flex gap-2">
-				<Button
-					variant={ButtonVariant.Solid}
-					color={ButtonColor.Primary}
-					onClick={() => updateArgs({ open: true })}
-				>
-					Open Programmatically
-				</Button>
-				<DrawerWrapper
-					{...args}
-					open={open}
-					onOpenChange={(nextOpen) => updateArgs({ open: nextOpen })}
-				/>
-			</div>
+			<Drawer
+				{...args}
+				open={args.open ?? open}
+				onOpenChange={(next) => {
+					setOpen(next);
+					args.onOpenChange?.(next);
+				}}
+			>
+				<DrawerTrigger asChild>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						Open drawer without overlay
+					</Button>
+				</DrawerTrigger>
+				<AnimatePresence>
+					{open && (
+						<DrawerContent key="drawer-no-overlay" showOverlay={false} forceMount>
+							<DrawerHeader>
+								<DrawerTitle>Drawer without overlay</DrawerTitle>
+								<DrawerCloseButton />
+							</DrawerHeader>
+							<DrawerDescription>
+								<p className="text-sm font-normal leading-5">
+									This variant keeps the background interactive by disabling the overlay while the
+									drawer is open.
+								</p>
+							</DrawerDescription>
+							<DrawerFooter>
+								<Button
+									variant={ButtonVariant.Ghost}
+									color="secondary"
+									onClick={() => setOpen(false)}
+								>
+									Cancel
+								</Button>
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Primary}
+									onClick={() => setOpen(false)}
+								>
+									Confirm
+								</Button>
+							</DrawerFooter>
+						</DrawerContent>
+					)}
+				</AnimatePresence>
+			</Drawer>
 		);
-	},
-	args: {
-		trigger: (
-			<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
-				Or Open via Trigger
-			</Button>
-		),
-
-		header: {
-			title: 'Controlled Drawer',
-			description: 'Can be opened from a button outside or via the trigger',
-		},
-
-		content: (
-			<div className="p-4 w-full">
-				<p className="text-sm">Visibility is controlled by the parent via open/onOpenChange.</p>
-			</div>
-		),
-
-		direction: 'right',
-		showCloseButton: true,
-		allowOutsideClick: true,
-		showOverlay: true,
-		open: true,
 	},
 };

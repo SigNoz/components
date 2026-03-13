@@ -1,12 +1,9 @@
-import './index.css';
-
 import { Slot } from '@radix-ui/react-slot';
-import type { VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 import type React from 'react';
 import { cloneElement, forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
-import buttonVariants from './button-variants.js';
+import styles from './button.module.scss';
 
 export const ButtonVariant = {
 	Solid: 'solid',
@@ -18,10 +15,8 @@ export const ButtonVariant = {
 } as const;
 
 export const ButtonSize = {
-	XS: 'xs',
 	SM: 'sm',
 	MD: 'md',
-	LG: 'lg',
 	Icon: 'icon',
 } as const;
 
@@ -45,7 +40,25 @@ export type ButtonSizeValue = (typeof ButtonSize)[keyof typeof ButtonSize];
 export type ButtonBackgroundValue = (typeof ButtonBackground)[keyof typeof ButtonBackground];
 export type ButtonColorValue = (typeof ButtonColor)[keyof typeof ButtonColor] | (string & {});
 
-export type ButtonProps = VariantProps<typeof buttonVariants> & {
+/**
+ * Helper function to generate button class names for use in other components
+ * This replaces the old CVA-based buttonVariants function
+ */
+export function buttonVariants({
+	variant = 'outlined',
+	size = 'md',
+	className,
+}: {
+	variant?: ButtonVariantValue;
+	size?: ButtonSizeValue;
+	className?: string;
+} = {}) {
+	return cn(styles['button'], className);
+}
+
+export type ButtonProps = {
+	variant?: ButtonVariantValue;
+	size?: ButtonSizeValue;
 	asChild?: boolean;
 	color?: ButtonColorValue;
 	prefix?: React.ReactElement;
@@ -54,17 +67,17 @@ export type ButtonProps = VariantProps<typeof buttonVariants> & {
 	background?: ButtonBackgroundValue;
 	testId?: string;
 } & Pick<
-		React.ButtonHTMLAttributes<HTMLButtonElement>,
-		| 'disabled'
-		| 'onClick'
-		| 'className'
-		| 'children'
-		| 'onDoubleClick'
-		| 'type'
-		| 'id'
-		| 'tabIndex'
-		| 'title'
-	> &
+	React.ButtonHTMLAttributes<HTMLButtonElement>,
+	| 'disabled'
+	| 'onClick'
+	| 'className'
+	| 'children'
+	| 'onDoubleClick'
+	| 'type'
+	| 'id'
+	| 'tabIndex'
+	| 'title'
+> &
 	React.AriaAttributes;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -93,10 +106,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		color ??= ButtonColor.Primary;
 
 		const iconSizes: Record<ButtonSizeValue, number> = {
-			[ButtonSize.XS]: 10,
-			[ButtonSize.SM]: 16,
-			[ButtonSize.MD]: 16,
-			[ButtonSize.LG]: 20,
+			[ButtonSize.SM]: 12,
+			[ButtonSize.MD]: 14,
 			[ButtonSize.Icon]: 16,
 		};
 
@@ -109,11 +120,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				<Comp
 					data-testid={testId}
 					data-color={color}
+					data-variant={variant}
+					data-size={size}
 					data-background={variant === ButtonVariant.Action ? background : undefined}
 					className={cn(
-						buttonVariants({ variant, size, className }),
+						styles['button'],
 						'font-inter',
-						loading && 'cursor-wait'
+						loading && styles['button--loading'],
+						className
 					)}
 					disabled={disabled || loading}
 					ref={ref}
@@ -128,12 +142,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			<Comp
 				data-testid={testId}
 				data-color={color}
+				data-variant={variant}
+				data-size={size}
 				data-background={variant === ButtonVariant.Action ? background : undefined}
-				className={cn(
-					buttonVariants({ variant, size, className }),
-					'font-inter',
-					loading && 'cursor-wait'
-				)}
+				className={cn(styles['button'], loading && styles['button--loading'], className)}
 				disabled={disabled || loading}
 				ref={ref}
 				{...props}
@@ -145,7 +157,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 						cloneElement(prefix, {
 							...(!prefix.props.size && {
 								size: iconSizes[size],
-								className: 'flex-shrink-0',
+								className: styles['button__prefix'],
 							}),
 						})) ||
 					null
@@ -156,7 +168,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 					cloneElement(suffix, {
 						...(!suffix.props.size && {
 							size: iconSizes[size],
-							className: 'flex-shrink-0',
+							className: styles['button__suffix'],
 						}),
 					})) ||
 					null}
@@ -166,4 +178,4 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-export { Button, buttonVariants };
+export { Button };

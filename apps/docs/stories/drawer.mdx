@@ -1,0 +1,260 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DrawerStories from './drawer.stories';
+import * as DrawerWrapperStories from './drawer-wrapper.stories';
+import * as ConfirmDrawerStories from './confirm-drawer.stories';
+import * as ConfirmDrawerUrlStories from './confirm-drawer-url.stories';
+import * as DrawerTriggerStories from './drawer-trigger.stories';
+import * as DrawerContentStories from './drawer-content.stories';
+import * as DrawerHeaderStories from './drawer-header.stories';
+import * as DrawerTitleStories from './drawer-title.stories';
+import * as DrawerSubtitleStories from './drawer-subtitle.stories';
+import * as DrawerDescriptionStories from './drawer-description.stories';
+import * as DrawerFooterStories from './drawer-footer.stories';
+import * as DrawerCloseStories from './drawer-close.stories';
+import * as DrawerOverlayStories from './drawer-overlay.stories';
+import * as DrawerPortalStories from './drawer-portal.stories';
+
+<Meta of={DrawerStories} />
+
+# Drawer
+
+A slide-in drawer component that can appear from any edge of the screen, with support for header, content, and footer sections.
+
+## How to use
+
+### DrawerWrapper (preset)
+
+`DrawerWrapper` is a higher-level preset built on top of the primitive drawer components. It wires
+`DrawerHeader`, `DrawerTitle`, `DrawerSubtitle`, `DrawerDescription`, and `DrawerFooter` into a single
+convenient API for common layouts with header, content, and optional footer:
+
+```tsx
+import { DrawerWrapper, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<DrawerWrapper
+			trigger={
+				<Button variant="solid" color="primary">
+					Open Drawer
+				</Button>
+			}
+			header={{
+				title: 'Drawer title',
+				description: 'Optional description for the drawer content.',
+			}}
+			content={
+				<div className="p-4">
+					<p>Main content of the drawer goes here.</p>
+				</div>
+			}
+			footer={
+				<div className="flex gap-2 justify-end">
+					<Button variant="ghost">Cancel</Button>
+					<Button variant="solid" color="primary">
+						Save
+					</Button>
+				</div>
+			}
+			direction="right"
+		/>
+	);
+}
+```
+
+<Primary />
+
+## DrawerWrapper Props
+
+<Controls of={DrawerWrapperStories.Default} />
+
+## ConfirmDrawer
+
+For confirm/cancel flows with a title, description, and footer actions:
+
+```tsx
+import { ConfirmDrawer, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Delete</Button>
+			<ConfirmDrawer
+				open={open}
+				onOpenChange={setOpen}
+				title="Confirm action"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={() => setOpen(false)}
+				onCancel={() => setOpen(false)}
+				direction="right"
+				width="narrow"
+			>
+				Are you sure? This action cannot be undone.
+			</ConfirmDrawer>
+		</>
+	);
+}
+```
+
+## ConfirmDrawer Props
+
+<Controls of={ConfirmDrawerStories.Default} />
+
+## ConfirmDrawerUrl
+
+For confirm drawers controlled via a URL query parameter:
+
+> This component requires the setup with [nuqs](https://nuqs.dev/).
+
+```tsx
+import { ConfirmDrawerUrl, Button } from '@signozhq/ui';
+import { useQueryState, parseAsBoolean } from 'nuqs';
+
+export default function MyComponent() {
+	const [, setOpen] = useQueryState('drawer-delete-step', parseAsBoolean.withDefault(false));
+
+	return (
+		<>
+			<Button
+				variant="solid"
+				color="primary"
+				onClick={() => setOpen(true)}
+			>
+				Open confirm drawer (URL)
+			</Button>
+			<ConfirmDrawerUrl
+				urlKey="drawer-delete-step"
+				title="Delete from URL param"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={async () => {
+					await new Promise((resolve) => setTimeout(resolve, 300));
+					return true;
+				}}
+				direction="right"
+				width="narrow"
+			>
+				This confirm drawer is controlled via a URL query parameter using nuqs.
+			</ConfirmDrawerUrl>
+		</>
+	);
+}
+```
+
+## ConfirmDrawerUrl Props
+
+<Controls of={ConfirmDrawerUrlStories.Default} />
+
+## Primitive composition
+
+For full control, use the low-level building blocks: `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerFooter`, `DrawerClose`, `DrawerOverlay`, and `DrawerPortal`.
+
+### Exit animations
+
+To animate the drawer on close, wrap `DrawerContent` in `AnimatePresence` and pass `forceMount` plus a stable `key`:
+
+```tsx
+import {
+	Drawer,
+	DrawerTrigger,
+	DrawerContent,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerClose,
+	Button,
+} from '@signozhq/ui';
+import { AnimatePresence } from 'motion/react';
+
+export default function MyComponent() {
+	const [open, setOpen] = React.useState(false);
+
+	return (
+		<Drawer open={open} onOpenChange={setOpen}>
+			<DrawerTrigger asChild>
+				<Button variant="solid" color="primary">
+					Open drawer
+				</Button>
+			</DrawerTrigger>
+			<AnimatePresence>
+				{open && (
+					<DrawerContent key="drawer" forceMount>
+						<DrawerHeader>
+							<DrawerTitle>Drawer title</DrawerTitle>
+						</DrawerHeader>
+						<DrawerDescription>
+							<div className="text-sm text-gray-600">
+								Description and body content. Use the primitive components when you need
+								lower-level control.
+							</div>
+						</DrawerDescription>
+						<DrawerFooter>
+							<Button variant="ghost" onClick={() => setOpen(false)}>
+								Cancel
+							</Button>
+							<DrawerClose asChild>
+								<Button variant="solid" color="primary">
+									Confirm
+								</Button>
+							</DrawerClose>
+						</DrawerFooter>
+					</DrawerContent>
+				)}
+			</AnimatePresence>
+		</Drawer>
+	);
+}
+```
+
+Without `AnimatePresence`, `forceMount`, and `key`, the drawer closes instantly. `DrawerWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
+
+## Drawer Props
+
+<Controls of={DrawerStories.Default} />
+
+## DrawerTrigger Props
+
+<Controls of={DrawerTriggerStories.Default} />
+
+## DrawerContent Props
+
+<Controls of={DrawerContentStories.Default} />
+
+## DrawerHeader Props
+
+<Controls of={DrawerHeaderStories.Default} />
+
+## DrawerTitle Props
+
+<Controls of={DrawerTitleStories.Default} />
+
+## DrawerSubtitle Props
+
+<Controls of={DrawerSubtitleStories.Default} />
+
+## DrawerDescription Props
+
+<Controls of={DrawerDescriptionStories.Default} />
+
+## DrawerFooter Props
+
+<Controls of={DrawerFooterStories.Default} />
+
+## DrawerClose Props
+
+<Controls of={DrawerCloseStories.Default} />
+
+## DrawerOverlay Props
+
+<Controls of={DrawerOverlayStories.Default} />
+
+## DrawerPortal Props
+
+<Controls of={DrawerPortalStories.Default} />
+

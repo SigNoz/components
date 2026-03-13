@@ -5,7 +5,9 @@ on:
     branches:
       - main
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -17,27 +19,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Release Please
         uses: googleapis/release-please-action@v4
         id: release
 
       - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         if: ${{ steps.release.outputs.release_created }}
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
 
       - name: Setup Node.js 24.x
         if: ${{ steps.release.outputs.release_created }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: "pnpm"
-          registry-url: "https://registry.npmjs.org"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Install Dependencies
         if: ${{ steps.release.outputs.release_created }}

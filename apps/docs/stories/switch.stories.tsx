@@ -1,53 +1,75 @@
 import { Switch } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const switchExamples = [
-	`import { Switch } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<div className="space-y-4">
-			<Switch id="notifications" labelName="Enable notifications" />
-			<Switch id="dark-mode" labelName="Dark mode" defaultChecked />
-			<Switch id="maintenance" labelName="Maintenance mode" disabled />
-		</div>
-	);
-}`,
-];
-
-const switchDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description: 'A toggle switch component for binary on/off or true/false selections.',
-	examples: switchExamples,
-});
 
 const meta: Meta<typeof Switch> = {
-	title: 'Old Components/Switch',
+	title: 'Components/Switch',
 	component: Switch,
 	argTypes: {
-		labelName: {
+		children: {
 			control: 'text',
-		},
-		disabled: {
-			control: 'boolean',
-		},
-		id: {
-			control: 'text',
+			description:
+				'The content inside the switch label. Typically used for adding text or other elements alongside the switch.',
+			table: { category: 'Content' },
 		},
 		color: {
 			control: 'select',
 			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
-			description: 'The color variant of the switch',
+			description:
+				'The color theme of the switch. Each color has semantic meaning for different use cases.',
+			table: { category: 'Appearance', defaultValue: { summary: 'robin' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Prevents user interaction and displays the switch in a disabled state.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		required: {
+			control: 'boolean',
+			description:
+				'When true, indicates that the user must toggle the switch before the owning form can be submitted.',
+			table: {
+				category: 'Behavior',
+				defaultValue: { summary: 'false' },
+				type: { summary: 'boolean' },
+			},
+		},
+		id: {
+			control: 'text',
+			description:
+				'A unique identifier for the switch. Links the switch with its label for accessibility.',
+			table: { category: 'Accessibility' },
+		},
+		name: {
+			control: 'text',
+			description:
+				'The name of the switch. Submitted with its owning form as part of a name/value pair.',
+			table: { category: 'Form', type: { summary: 'string' } },
+		},
+		value: {
+			control: 'boolean',
+			description:
+				'The controlled checked state of the switch. Use when you need to control its checked state.',
+			table: { category: 'Form', type: { summary: 'boolean' } },
+		},
+		defaultValue: {
+			control: 'boolean',
+			description:
+				'The initial checked state of the switch. Use when you do not need to control its checked state.',
+			table: { category: 'Form', defaultValue: { summary: 'false' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to the switch.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		onChange: {
+			control: false,
+			description: 'The callback invoked when the checked state of the switch changes.',
+			table: { category: 'Events', type: { summary: '(checked: boolean) => void' } },
 		},
 	},
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: switchDocs,
-			},
-		},
 		design: [
 			{
 				name: 'Figma',
@@ -56,52 +78,53 @@ const meta: Meta<typeof Switch> = {
 			},
 		],
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj<typeof Switch>;
 
-// ✅ Interactive uncontrolled story
+// Default switch
 export const Default: Story = {
 	args: {
-		id: 'default-switch',
-		labelName: 'Default switch',
-		defaultChecked: false,
+		id: 'default',
+		children: 'Default switch',
+		defaultValue: false,
 		disabled: false,
 		color: 'robin',
 	},
 };
 
-// ✅ Checked switch
-export const Filled: Story = {
-	args: {
-		id: 'filled-switch',
-		labelName: 'Filled switch',
-		defaultChecked: true,
-		disabled: false,
-		color: 'robin',
-	},
-};
+export const AllVariants: Story = {
+	render: () => (
+		<div className="space-y-4">
+			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
+				<div key={c} className="flex items-center gap-6">
+					<div style={{ width: 120 }} className="capitalize">
+						{c}
+					</div>
 
-// ✅ Disabled switch
-export const Disabled: Story = {
-	args: {
-		id: 'disabled-switch',
-		labelName: 'Disabled switch',
-		defaultChecked: false,
-		disabled: true,
-		color: 'robin',
-	},
-};
+					<Switch id={`switch-${c}-default`} color={c as any}>
+						Default
+					</Switch>
 
-// ✅ Disabled + Checked
-export const DisabledChecked: Story = {
-	args: {
-		id: 'disabled-checked-switch',
-		labelName: 'Disabled switch – pre selected',
-		defaultChecked: true,
-		disabled: true,
-		color: 'robin',
-	},
+					<Switch id={`switch-${c}-checked`} defaultValue={true} color={c as any}>
+						Checked
+					</Switch>
+
+					<Switch id={`switch-${c}-disabled`} disabled={true} color={c as any}>
+						Disabled
+					</Switch>
+
+					<Switch
+						id={`switch-${c}-disabled-checked`}
+						defaultValue={true}
+						disabled={true}
+						color={c as any}
+					>
+						Disabled Checked
+					</Switch>
+				</div>
+			))}
+		</div>
+	),
 };

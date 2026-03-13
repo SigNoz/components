@@ -1,0 +1,75 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as RadioGroupStories from './radio-group.stories';
+import * as RadioGroupItemStories from './radio-group-item.stories';
+import * as RadioGroupLabelStories from './radio-group-label.stories';
+
+<Meta of={RadioGroupStories} />
+
+# RadioGroup
+
+A radio group component for selecting a single option from a list of choices.
+
+## How to use
+
+### Basic usage (with inline labels)
+
+```tsx
+import { RadioGroup, RadioGroupItem } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<RadioGroup defaultValue="option1">
+			<RadioGroupItem value="option1">Option 1</RadioGroupItem>
+			<RadioGroupItem value="option2">Option 2</RadioGroupItem>
+			<RadioGroupItem value="option3">Option 3</RadioGroupItem>
+		</RadioGroup>
+	);
+}
+```
+
+When you pass children to `RadioGroupItem`, it automatically renders an inline label associated with the radio button.
+
+### With RadioGroupLabel (for custom layouts)
+
+If you prefer to use separate label elements for more control over styling or layout, use the `RadioGroupLabel` component:
+
+```tsx
+import { RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<RadioGroup defaultValue="option1">
+			<div className="flex items-center space-x-2">
+				<RadioGroupItem value="option1" id="option1-radio" />
+				<RadioGroupLabel htmlFor="option1-radio">Option 1</RadioGroupLabel>
+			</div>
+			<div className="flex items-center space-x-2">
+				<RadioGroupItem value="option2" id="option2-radio" />
+				<RadioGroupLabel htmlFor="option2-radio">Option 2</RadioGroupLabel>
+			</div>
+			<div className="flex items-center space-x-2">
+				<RadioGroupItem value="option3" id="option3-radio" disabled />
+				<RadioGroupLabel htmlFor="option3-radio" aria-disabled="true">
+					Option 3 (Disabled)
+				</RadioGroupLabel>
+			</div>
+		</RadioGroup>
+	);
+}
+```
+
+This following example shows a radio group with three options (using code from first example above):
+
+<Primary />
+
+## RadioGroup Props
+
+<Controls of={RadioGroupStories.Default} />
+
+## RadioGroupItem Props
+
+<Controls of={RadioGroupItemStories.Default} />
+
+## RadioGroupLabel Props
+
+<Controls of={RadioGroupLabelStories.Default} />

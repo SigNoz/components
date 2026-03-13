@@ -1,57 +1,98 @@
 import { type RadioColorProps, RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { generateDocs } from '../utils/generateDocs.js';
 
-const radioGroupExamples = [
-	`import { RadioGroup, RadioGroupItem } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<RadioGroup defaultValue="option1">
-			<div className="flex flex-col space-y-2">
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="option1" id="option1-radio" />
-					<label htmlFor="option1-radio">Option 1</label>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="option2" id="option2-radio" />
-					<label htmlFor="option2-radio">Option 2</label>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="option3" id="option3-radio" disabled />
-					<label htmlFor="option3-radio" className="text-zinc-400">Option 3 (Disabled)</label>
-				</div>
-			</div>
-		</RadioGroup>
-	);
-}`,
-];
-
-const radioGroupDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description: 'A radio group component for selecting a single option from a list of choices.',
-	examples: radioGroupExamples,
-});
+// Import RadioGroupItem stories to reuse their args
+import * as RadioGroupItemStories from './radio-group-item.stories.js';
 
 const meta: Meta<typeof RadioGroup> = {
-	title: 'Old Components/RadioGroup',
+	title: 'Components/RadioGroup',
 	component: RadioGroup,
+	subcomponents: {
+		RadioGroupItem: RadioGroupItem as any,
+		RadioGroupLabel: RadioGroupLabel as any,
+	},
 	argTypes: {
-		disabled: { control: 'boolean' },
-		id: { control: 'text' },
+		defaultValue: {
+			control: 'text',
+			description:
+				'The value of the radio item that should be checked when initially rendered. Use when you do not need to control the state of the radio items.',
+			table: { category: 'Form', type: { summary: 'string' } },
+		},
+		value: {
+			control: 'text',
+			description:
+				'The controlled value of the radio item to check. Should be used in conjunction with onChange.',
+			table: { category: 'Form', type: { summary: 'string | null' } },
+		},
+		name: {
+			control: 'text',
+			description:
+				'The name of the group. Submitted with its owning form as part of a name/value pair.',
+			table: { category: 'Form', type: { summary: 'string' } },
+		},
+		required: {
+			control: 'boolean',
+			description:
+				'When true, indicates that the user must check a radio item before the owning form can be submitted.',
+			table: {
+				category: 'Behavior',
+				defaultValue: { summary: 'false' },
+				type: { summary: 'boolean' },
+			},
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'When true, prevents the user from interacting with radio items.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		dir: {
+			control: 'select',
+			options: ['ltr', 'rtl'],
+			description:
+				'The reading direction of the radio group. If omitted, inherits globally from DirectionProvider or assumes LTR (left-to-right) reading mode.',
+			table: { category: 'Behavior', type: { summary: "'ltr' | 'rtl'" } },
+		},
+		orientation: {
+			control: 'select',
+			options: ['horizontal', 'vertical'],
+			description: 'The orientation of the component.',
+			table: { category: 'Layout', type: { summary: "'horizontal' | 'vertical'" } },
+		},
+		loop: {
+			control: 'boolean',
+			description:
+				'When true, keyboard navigation will loop from last item to first, and vice versa.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
 		color: {
 			control: 'select',
-			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'] as const,
-			description: 'The color variant of the radio button',
+			options: ['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'],
+			description: 'The color of the radio group.',
+			table: { category: 'Appearance', defaultValue: { summary: 'robin' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the radio group.',
+			table: { category: 'Accessibility' },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to the radio group.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'The testId associated with the radio group for testing purposes.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		onChange: {
+			control: false,
+			description: 'Event handler called when the value changes.',
+			table: { category: 'Events', type: { summary: '(value: string) => void' } },
 		},
 	},
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: radioGroupDocs,
-			},
-		},
 		design: [
 			{
 				name: 'Figma',
@@ -60,66 +101,72 @@ const meta: Meta<typeof RadioGroup> = {
 			},
 		],
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj<typeof RadioGroup>;
 
+// Default radio group
 export const Default: Story = {
 	args: {
-		color: 'robin' as RadioColorProps,
+		defaultValue: 'option1',
+		disabled: false,
+		required: false,
+		color: 'robin',
 	},
-	render: ({ color }) => (
-		<RadioGroup defaultValue="option1">
-			<div className="flex flex-col space-y-2">
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="option1" id="option1-radio" color={color as RadioColorProps} />
-					<RadioGroupLabel htmlFor="option1-radio">Option 1</RadioGroupLabel>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="option2" id="option2-radio" color={color as RadioColorProps} />
-					<RadioGroupLabel htmlFor="option2-radio">Option 2</RadioGroupLabel>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="option3" id="option3-radio" color={color as RadioColorProps} />
-					<RadioGroupLabel htmlFor="option3-radio">Option 3</RadioGroupLabel>
-				</div>
-			</div>
+	render: (args) => (
+		<RadioGroup {...args}>
+			<RadioGroupItem {...RadioGroupItemStories.Default.args} value="option1" id="option1">
+				Option 1
+			</RadioGroupItem>
+			<RadioGroupItem {...RadioGroupItemStories.Default.args} value="option2" id="option2">
+				Option 2
+			</RadioGroupItem>
+			<RadioGroupItem {...RadioGroupItemStories.Default.args} value="option3" id="option3">
+				Option 3
+			</RadioGroupItem>
 		</RadioGroup>
 	),
 };
 
-export const Disabled: Story = {
-	args: {
-		color: 'robin' as RadioColorProps,
-	},
-	render: ({ color }) => (
-		<RadioGroup defaultValue="active">
-			<div className="flex flex-col space-y-2">
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem value="active" id="active-radio" color={color as RadioColorProps} />
-					<RadioGroupLabel htmlFor="active-radio">Active Option</RadioGroupLabel>
+export const AllVariants: Story = {
+	render: () => (
+		<div className="space-y-4">
+			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
+				<div key={c} className="flex items-start gap-6">
+					<div style={{ width: 120 }} className="capitalize">
+						{c}
+					</div>
+
+					<RadioGroup color={c as RadioColorProps}>
+						<RadioGroupItem value="default" id={`radio-${c}-default`}>
+							Default
+						</RadioGroupItem>
+					</RadioGroup>
+
+					<RadioGroup defaultValue="selected" color={c as RadioColorProps}>
+						<RadioGroupItem value="selected" id={`radio-${c}-selected`}>
+							Selected
+						</RadioGroupItem>
+					</RadioGroup>
+
+					<RadioGroup color={c as RadioColorProps}>
+						<RadioGroupItem value="disabled" id={`radio-${c}-disabled`} disabled={true}>
+							Disabled
+						</RadioGroupItem>
+					</RadioGroup>
+
+					<RadioGroup defaultValue="disabled-selected" color={c as RadioColorProps}>
+						<RadioGroupItem
+							value="disabled-selected"
+							id={`radio-${c}-disabled-selected`}
+							disabled={true}
+						>
+							Disabled Selected
+						</RadioGroupItem>
+					</RadioGroup>
 				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem
-						value="disabled1"
-						id="disabled1-radio"
-						disabled
-						color={color as RadioColorProps}
-					/>
-					<RadioGroupLabel htmlFor="disabled1-radio">Disabled Option 1</RadioGroupLabel>
-				</div>
-				<div className="flex items-center space-x-2">
-					<RadioGroupItem
-						value="disabled2"
-						id="disabled2-radio"
-						disabled
-						color={color as RadioColorProps}
-					/>
-					<RadioGroupLabel htmlFor="disabled2-radio">Disabled Option 2</RadioGroupLabel>
-				</div>
-			</div>
-		</RadioGroup>
+			))}
+		</div>
 	),
 };

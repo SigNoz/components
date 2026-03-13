@@ -1,0 +1,109 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as CalendarStories from './calendar.stories';
+
+<Meta of={CalendarStories} />
+
+# Calendar
+
+Calendar is a styled re-export of [React DayPicker](https://daypicker.dev/). It uses the same API as DayPicker; for the full list of props and behavior, see the [DayPicker documentation](https://daypicker.dev/).
+
+## How to use
+
+### Basic usage (no selection)
+
+```tsx
+import { Calendar } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Calendar />;
+}
+```
+
+### Single date selection
+
+```tsx
+import { Calendar } from '@signozhq/ui';
+
+export default function SingleDatePicker() {
+	const [date, setDate] = React.useState<Date | undefined>();
+
+	return (
+		<Calendar
+			mode="single"
+			selected={date}
+			onSelect={setDate}
+			className="rounded-md border shadow-sm"
+		/>
+	);
+}
+```
+
+### Date range selection
+
+```tsx
+import { Calendar } from '@signozhq/ui';
+
+export default function RangePicker() {
+	const [range, setRange] = React.useState<{
+		from: Date | undefined;
+		to: Date | undefined;
+	}>({ from: undefined, to: undefined });
+
+	return (
+		<Calendar
+			mode="range"
+			selected={range}
+			onSelect={setRange}
+			className="rounded-md border shadow-sm"
+		/>
+	);
+}
+```
+
+### Multiple dates selection
+
+```tsx
+import { Calendar } from '@signozhq/ui';
+
+export default function MultiplePicker() {
+	const [selected, setSelected] = React.useState<Date[]>([]);
+
+	return (
+		<Calendar
+			mode="multiple"
+			selected={selected}
+			onSelect={setSelected}
+			className="rounded-md border shadow-sm"
+		/>
+	);
+}
+```
+
+### Disabling specific days (e.g. weekends)
+
+```tsx
+import { Calendar } from '@signozhq/ui';
+
+export default function CalendarWithDisabledDays() {
+	const [date, setDate] = React.useState<Date | undefined>();
+
+	return (
+		<Calendar
+			mode="single"
+			selected={date}
+			onSelect={setDate}
+			disabled={[{ dayOfWeek: [0, 6] }]}
+		/>
+	);
+}
+```
+
+Default calendar with single selection:
+
+<Primary />
+
+## Calendar Props
+
+The component accepts all [DayPicker props](https://daypicker.dev/api/interfaces/PropsBase). Common options are listed below.
+
+<Controls of={CalendarStories.Default} />

@@ -2,6 +2,10 @@ name: UI Tests
 
 on: [push]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,21 +15,18 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.58.2-noble
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
+        uses: pnpm/action-setup@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: "pnpm"
-          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: pnpm install

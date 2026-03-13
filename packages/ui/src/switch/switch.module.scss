@@ -1,0 +1,91 @@
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4, 0.5rem);
+}
+
+.switch-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch {
+  display: inline-flex;
+  height: var(--switch-height, 1rem);
+  width: var(--switch-width, 1.75rem);
+  flex-shrink: 0;
+  cursor: pointer;
+  align-items: center;
+  border-radius: var(--switch-border-radius, 9999px);
+  border: 2px solid transparent;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.30);
+  transition: background-color 150ms ease-in-out;
+  background-color: var(--l3-background);
+  padding: 0;
+
+  &[data-color="robin"] {
+    --switch-checked-background: var(--bg-robin-500);
+  }
+
+  &[data-color="forest"] {
+    --switch-checked-background: var(--bg-forest-500);
+  }
+
+  &[data-color="amber"] {
+    --switch-checked-background: var(--bg-amber-500);
+  }
+
+  &[data-color="sienna"] {
+    --switch-checked-background: var(--bg-sienna-500);
+  }
+
+  &[data-color="cherry"] {
+    --switch-checked-background: var(--bg-cherry-500);
+  }
+
+  &[data-color="sakura"] {
+    --switch-checked-background: var(--bg-sakura-500);
+  }
+
+  &[data-color="aqua"] {
+    --switch-checked-background: var(--bg-aqua-500);
+  }
+
+  &:focus-visible {
+    outline-offset: -1px;
+    outline: 2px solid var(--switch-checked-background);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:disabled ~ .switch-label {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  &__thumb {
+    display: block;
+    height: var(--switch-thumb-size, .75rem);
+    width: var(--switch-thumb-size, .75rem);
+    pointer-events: none;
+    border-radius: 9999px;
+    background-color: var(--bg-vanilla-100);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    transition: transform 150ms ease-in-out;
+  }
+
+  &[data-state="checked"] {
+    background-color: var(--switch-checked-background);
+  }
+
+  &[data-state="checked"] .switch__thumb {
+    transform: translateX(var(--switch-thumb-size, .75rem));
+  }
+
+  &[data-state="unchecked"] .switch__thumb {
+    transform: translateX(0);
+  }
+}

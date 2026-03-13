@@ -1,55 +1,25 @@
+import { Star, Sun, Zap } from '@signozhq/icons';
 import { Callout } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Info, Star, Sun, XCircle, Zap } from 'lucide-react'; // Added more icons for variety
-import { generateDocs } from '../utils/generateDocs.js';
-
-const alertExamples = [
-	`
-	import { Callout } from '@signozhq/ui';
-import { Info } from '@signozhq/icons';
-
-export default function MyComponent() {
-	return (
-		<Callout
-			type="info"
-			size="medium"
-			showIcon
-			message="Important Information"
-			description="This is additional information that provides more context about the callout."
-		/>
-	);
-}`,
-];
-
-const alertDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A versatile callout component to display important messages to the user, with various types, sizes, and custom styling options.',
-	examples: alertExamples,
-});
+import { useState } from 'react';
 
 const meta: Meta<typeof Callout> = {
-	title: 'Old Components/Callout',
+	title: 'Components/Callout',
 	component: Callout,
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: alertDocs,
-			},
-		},
 		design: {
 			type: 'figma',
 			url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-749&m=dev',
 		},
 	},
 	argTypes: {
-		message: {
+		title: {
 			control: 'text',
-			description: 'The main message or title of the callout.',
+			description: 'The main title of the callout.',
 			table: { category: 'Content' },
 		},
-		description: {
+		children: {
 			control: 'text',
 			description: 'Additional descriptive text for the callout.',
 			table: { category: 'Content' },
@@ -63,7 +33,7 @@ const meta: Meta<typeof Callout> = {
 		showIcon: {
 			control: 'boolean',
 			description: 'Whether to show the default icon based on the type.',
-			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+			table: { category: 'Appearance', defaultValue: { summary: 'true' } },
 		},
 		icon: {
 			control: false,
@@ -73,7 +43,7 @@ const meta: Meta<typeof Callout> = {
 		},
 		color: {
 			control: 'select',
-			options: [null, 'robin', 'forest', 'amber', 'cherry', 'sienna', 'aqua'], // Added null to represent 'undefined' / default
+			options: ['robin', 'forest', 'amber', 'cherry', 'sienna', 'aqua'],
 			description: 'Overrides the default color derived from `type`. Uses predefined color names.',
 			table: { category: 'Appearance' },
 		},
@@ -88,306 +58,189 @@ const meta: Meta<typeof Callout> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Customization' },
 		},
-		dismissable: {
-			control: 'boolean',
-			description: 'Whether the callout can be dismissed with a close button.',
-			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		action: {
+			control: 'radio',
+			options: ['none', 'dismissible', 'expandable'],
+			description:
+				'Action button type: none (no button), dismissible (X button), or expandable (chevron toggle).',
+			table: { category: 'Behavior', defaultValue: { summary: 'none' } },
 		},
-		onClose: {
-			action: 'closed',
-			description: 'Function called when the close button is clicked.',
-			table: { category: 'Events' },
+		onClick: {
+			action: 'action-clicked',
+			description: 'Function called when the action button (dismiss or expand) is clicked.',
+			table: { category: 'Events', type: { summary: '() => void' } },
 		},
 	},
 	args: {
 		type: 'info',
-		showIcon: false,
-		size: 'small',
-		message: 'Default Callout Message',
-		description:
-			'This is the default callout description that can be quite long and should wrap nicely.',
-		dismissable: false,
+		showIcon: true,
+		size: 'medium',
+		title: 'Important Information',
+		children: 'This is additional information that provides more context about the callout.',
+		action: 'none',
 	},
-
-	tags: ['autodocs'],
 };
 
 export default meta;
 type Story = StoryObj<typeof Callout>;
 
-export const AllVariantsOverview: Story = {
-	name: 'All Variants Overview',
+// Default story
+export const Default: Story = {
+	args: {
+		type: 'info',
+		showIcon: true,
+		size: 'medium',
+		title: 'Important Information',
+		children: 'This is additional information that provides more context about the callout.',
+		action: 'none',
+	},
+};
+
+// All variants overview
+export const AllVariants: Story = {
 	render: () => (
-		<div className="flex flex-col max-w-800px gap-4">
-			{/* Small Size Variations */}
-			<h2 className="mt-5 mb-2.5 border-b border-gray-300 pb-2 text-2xl">Small Callouts</h2>
-			<Callout
-				type="info"
-				size="small"
-				showIcon
-				message="Small Info"
-				description="This is a small informational callout with its default icon."
-			/>
-			<Callout type="success" size="small" showIcon message="Small Success (No Description)" />
-			<Callout
-				type="warning"
-				size="small"
-				showIcon={false}
-				message="Small Warning (No Icon)"
-				description="This callout is small, a warning, and has its icon explicitly hidden."
-			/>
-			<Callout
-				type="error"
-				size="small"
-				showIcon
-				message="Small Error"
-				description="A small error message indicating something went wrong."
-			/>
-			<Callout
-				type="info" // Base type for default icon
-				color="aqua" // Custom color
-				size="small"
-				showIcon
-				message="Small Custom Color (Aqua)"
-				description="Small callout with a custom 'aqua' color, showing the default info icon."
-			/>
-			<Callout
-				color="sienna" // Custom color
-				size="small"
-				icon={<Sun size={12} aria-hidden />} // Custom icon
-				message="Small Custom Color (Sienna) & Custom Icon"
-				description="Small callout with 'sienna' color and a custom Sun icon."
-			/>
+		<div className="flex flex-col max-w-800px gap-6 p-6">
+			{/* Type Variations */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Types</h3>
+				<Callout type="info" size="medium" title="Info Callout">
+					This is an informational message.
+				</Callout>
+				<Callout type="success" size="medium" title="Success Callout">
+					Operation completed successfully.
+				</Callout>
+				<Callout type="warning" size="medium" title="Warning Callout">
+					Please review your settings carefully.
+				</Callout>
+				<Callout type="error" size="medium" title="Error Callout">
+					An unexpected error occurred.
+				</Callout>
+			</div>
 
-			{/* Medium Size Variations */}
-			<h2 className="mt-8 mb-2.5 border-b pb-2 text-2xl">Medium Callouts</h2>
-			<Callout
-				type="info"
-				size="medium"
-				showIcon
-				message="Medium Info Message"
-				description="This is a medium informational callout with its default icon. It offers more space for detailed text and features a slightly larger icon for better visibility."
-			/>
-			<Callout type="success" size="medium" showIcon message="Medium Success (No Description)" />
-			<Callout
-				type="warning"
-				size="medium"
-				showIcon={false}
-				message="Medium Warning (No Icon)"
-				description="This medium callout is a warning and explicitly has its icon hidden. Suitable for when the message is self-explanatory."
-			/>
-			<Callout
-				type="error"
-				size="medium"
-				showIcon
-				message="Medium Error Occurred"
-				description="A medium-sized error message, providing more visual impact for critical issues."
-			/>
-			<Callout
-				type="info" // Base type for default icon
-				color="forest" // Custom color
-				size="medium"
-				showIcon
-				message="Medium Custom Color (Forest)"
-				description="Medium callout demonstrating a custom 'forest' color, using the default icon for the 'info' type."
-			/>
-			<Callout
-				color="amber" // Custom color
-				size="medium"
-				icon={<Zap size={16} aria-hidden />} // Custom icon
-				message="Medium Custom Color (Amber) & Custom Zap Icon"
-				description="Medium callout showcasing the 'amber' color with a completely custom Zap icon."
-			/>
+			{/* Size Variations */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Sizes</h3>
+				<Callout type="info" size="small" title="Small Callout">
+					This is a small callout.
+				</Callout>
+				<Callout type="info" size="medium" title="Medium Callout">
+					This is a medium callout with more space for content.
+				</Callout>
+			</div>
 
-			{/* Content & Icon Variations */}
-			<h2 className="mt-8 mb-2.5 border-b pb-2 text-2xl">Content & Icon Variations</h2>
-			<Callout type="info" size="small" showIcon message="Small Info - Only Message" />
-			<Callout
-				type="success"
-				size="medium"
-				showIcon
-				description="Medium success callout with only a description. The icon helps provide immediate context even without a title."
-			/>
-			<Callout
-				type="warning"
-				size="small"
-				showIcon={false}
-				message="Small Warning - Only Message, No Icon"
-			/>
-			<Callout
-				type="error"
-				size="medium"
-				icon={<XCircle size={16} color="var(--bg-cherry-500)" aria-hidden />} // Custom icon with explicit color
-				message="Error with Custom XCircle Icon (Medium)"
-				description="Using a custom icon node directly with specific styling."
-			/>
-			<Callout
-				type="info"
-				size="small"
-				icon={<Info size={12} className="text-blue-500" aria-hidden />} // Custom icon with Tailwind class for color
-				message="Info with Custom Icon & Tailwind Color"
-				description="Icon styling can also be done via className if preferred."
-			/>
+			{/* Content Variations */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Content Variations</h3>
+				<Callout type="info" size="medium" title="Only Title" />
+				<Callout type="info" size="medium" showIcon>
+					Only description without a title.
+				</Callout>
+				<Callout type="info" size="medium" showIcon={false} title="No Icon">
+					This callout has no icon.
+				</Callout>
+			</div>
 
-			{/* Dismissable Variations */}
-			<h2 className="mt-8 mb-2.5 border-b pb-2 text-2xl">Dismissable Callouts</h2>
-			<Callout
-				type="info"
-				size="small"
-				showIcon
-				message="Small Dismissable Info"
-				description="This is a small informational callout that can be dismissed."
-				dismissable
-				onClose={() => console.log('Small info callout closed')}
-			/>
-			<Callout
-				type="success"
-				size="medium"
-				showIcon
-				message="Medium Dismissable Success"
-				description="This is a medium success callout that can be dismissed."
-				dismissable
-				onClose={() => console.log('Medium success callout closed')}
-			/>
-			<Callout
-				type="warning"
-				size="small"
-				showIcon={false}
-				message="Small Warning (No Icon) with Close Button"
-				description="This callout can be dismissed even without an icon."
-				dismissable
-				onClose={() => console.log('Warning callout closed')}
-			/>
-			<Callout
-				type="error"
-				size="medium"
-				icon={<XCircle size={16} color="var(--bg-cherry-500)" aria-hidden />}
-				message="Error with Custom Icon and Close Button"
-				description="This callout has both a custom icon and a close button."
-				dismissable
-				onClose={() => console.log('Error callout closed')}
-			/>
+			{/* Custom Icon */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Custom Icons</h3>
+				<Callout type="info" size="medium" icon={<Star aria-hidden />} title="Star Icon">
+					Custom star icon instead of default.
+				</Callout>
+				<Callout type="warning" size="medium" icon={<Zap aria-hidden />} title="Zap Icon">
+					Custom zap icon with warning colors.
+				</Callout>
+				<Callout color="sienna" size="medium" icon={<Sun aria-hidden />} title="Sun Icon">
+					Custom sun icon with sienna colors.
+				</Callout>
+			</div>
+
+			{/* Custom Colors */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Custom Colors</h3>
+				<Callout color="robin" size="medium" title="Robin Color">
+					Using custom robin color.
+				</Callout>
+				<Callout color="forest" size="medium" title="Forest Color">
+					Using custom forest color.
+				</Callout>
+				<Callout color="amber" size="medium" title="Amber Color">
+					Using custom amber color.
+				</Callout>
+				<Callout color="cherry" size="medium" title="Cherry Color">
+					Using custom cherry color.
+				</Callout>
+				<Callout color="sienna" size="medium" title="Sienna Color">
+					Using custom sienna color.
+				</Callout>
+				<Callout color="aqua" size="medium" title="Aqua Color">
+					Using custom aqua color.
+				</Callout>
+			</div>
+
+			{/* Dismissible */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Dismissible</h3>
+				<DismissibleExample type="info" title="Dismissible Info">
+					Click the X to dismiss this callout.
+				</DismissibleExample>
+				<DismissibleExample type="success" title="Dismissible Success">
+					This success message can be dismissed.
+				</DismissibleExample>
+			</div>
+
+			{/* Expandable */}
+			<div className="space-y-4">
+				<h3 className="text-lg font-semibold">Expandable</h3>
+				<Callout type="info" size="medium" title="Expandable Callout" action="expandable">
+					Click the chevron to toggle this content.
+				</Callout>
+				<Callout
+					type="warning"
+					size="medium"
+					showIcon
+					title="Expandable Warning"
+					action="expandable"
+				>
+					This warning can be expanded or collapsed.
+				</Callout>
+			</div>
 		</div>
 	),
 };
 
-// --- Individual Stories for focused testing/documentation ---
+// Helper component for dismissible examples
+function DismissibleExample({
+	type,
+	title,
+	children,
+}: {
+	type: 'info' | 'success' | 'warning' | 'error';
+	title: string;
+	children?: string;
+}) {
+	const [isVisible, setIsVisible] = useState(true);
 
-export const DefaultInfo: Story = {
-	name: 'Type: Info (Default)',
-	args: {
-		message: 'Informational Message',
-		description: 'This is some additional information for the user.',
-		type: 'info',
-		showIcon: true,
-		size: 'small',
-	},
-};
+	if (!isVisible) {
+		return (
+			<button
+				onClick={() => setIsVisible(true)}
+				className="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+			>
+				Restore "{title}"
+			</button>
+		);
+	}
 
-export const Success: Story = {
-	name: 'Type: Success',
-	args: {
-		...DefaultInfo.args,
-		message: 'Operation Successful!',
-		description: 'Your changes have been saved.',
-		type: 'success',
-	},
-};
-
-export const Warning: Story = {
-	name: 'Type: Warning',
-	args: {
-		...DefaultInfo.args,
-		message: 'Potential Issue Detected',
-		description: 'Please review your settings carefully.',
-		type: 'warning',
-		color: 'amber', // Example of using type and then overriding color
-	},
-};
-
-export const Error: Story = {
-	name: 'Type: Error',
-	args: {
-		...DefaultInfo.args,
-		message: 'Action Failed',
-		description: 'An unexpected error occurred. Please try again.',
-		type: 'error',
-	},
-};
-
-export const MediumSize: Story = {
-	name: 'Size: Medium',
-	args: {
-		...DefaultInfo.args,
-		message: 'Medium Sized Callout',
-		description: 'This callout is larger to accommodate more content or draw more attention.',
-		size: 'medium',
-	},
-};
-
-export const WithoutIcon: Story = {
-	name: 'Appearance: Without Icon',
-	args: {
-		...DefaultInfo.args,
-		message: 'Callout Without Any Icon',
-		description: 'Sometimes, an icon might not be necessary.',
-		showIcon: false,
-	},
-};
-
-export const WithCustomIcon: Story = {
-	name: 'Appearance: With Custom Star Icon',
-	args: {
-		...DefaultInfo.args,
-		message: 'Callout With A Custom Icon',
-		description: 'You can provide any React node as an icon.',
-		type: 'info', // type still sets a base, but icon overrides
-		icon: <Star aria-hidden />,
-		showIcon: false, // Often set to false when `icon` prop is used, or ensure component logic handles `icon` taking precedence
-	},
-};
-
-export const CustomColorSienna: Story = {
-	name: 'Color: Custom Sienna',
-	args: {
-		...DefaultInfo.args,
-		message: 'Sienna Colored Callout',
-		description: 'This callout uses a specific "sienna" color theme.',
-		type: 'info', // Base type for default icon if showIcon is true and no custom icon
-		color: 'sienna',
-		showIcon: true,
-	},
-};
-
-export const OnlyMessage: Story = {
-	name: 'Content: Only Message',
-	args: {
-		type: 'success',
-		message: 'Quick update: All systems operational!',
-		description: undefined, // Explicitly undefined
-		showIcon: true,
-		size: 'small',
-	},
-};
-
-export const OnlyDescription: Story = {
-	name: 'Content: Only Description',
-	args: {
-		type: 'warning',
-		message: undefined, // Explicitly undefined
-		description:
-			'Please be aware that maintenance is scheduled for tonight from 10 PM to 11 PM JST.',
-		showIcon: true,
-		size: 'medium',
-	},
-};
-
-export const Dismissable: Story = {
-	name: 'Behavior: Dismissable',
-	args: {
-		...DefaultInfo.args,
-		message: 'Dismissable Callout',
-		description: 'Click the X button on the right to dismiss this callout.',
-		dismissable: true,
-	},
-};
+	return (
+		<Callout
+			type={type}
+			size="medium"
+			showIcon
+			title={title}
+			action="dismissible"
+			onClick={() => setIsVisible(false)}
+		>
+			{children}
+		</Callout>
+	);
+}

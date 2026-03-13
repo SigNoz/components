@@ -32,7 +32,7 @@
 }
 
 #storybook-root {
-	width: 100vw;
+	width: 90vw;
 }
 
 html.dark .docs-story > div:first-of-type {
@@ -66,65 +66,6 @@ html.dark .docs-story > div:first-of-type {
 	font-size: 14px;
 
 	line-height: 1.6;
-}
-
-/* Improve heading hierarchy - only for Storybook UI */
-
-.sb-show-main h1,
-.sb-show-main h2,
-.sb-show-main h3,
-.sb-show-main h4,
-.sb-show-main h5,
-.sb-show-main h6 {
-	font-weight: 600;
-
-	margin-top: 0.75rem;
-
-	margin-bottom: 0.5rem;
-}
-
-.sb-show-main h1 {
-	font-size: 1.875rem;
-}
-
-.sb-show-main h2 {
-	font-size: 1.5rem;
-}
-
-.sb-show-main h3 {
-	font-size: 1.25rem;
-}
-
-.sb-show-main h4 {
-	font-size: 1.125rem;
-}
-
-.sb-show-main h5 {
-	font-size: 1rem;
-}
-
-.sb-show-main h6 {
-	font-size: 0.875rem;
-}
-
-.sb-show-main p {
-	margin: 4px 0;
-	line-height: 16px;
-}
-
-/* Improve paragraph spacing - only for Storybook UI */
-
-/* Improve list styling - only for Storybook UI */
-
-.sb-show-main ul,
-.sb-show-main ol {
-	margin-bottom: 1rem;
-
-	padding-left: 1.5rem;
-}
-
-.sb-show-main li {
-	margin-bottom: 0.25rem;
 }
 
 /* Improve code blocks */

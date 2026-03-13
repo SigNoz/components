@@ -1,27 +1,43 @@
 name: "Chromatic"
-on: push
+
+on:
+  push:
+    branches:
+      - main
+      - next
+  pull_request:
+    branches:
+      - main
+      - next
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   chromatic:
     name: Run Chromatic
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js 24.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: "pnpm"
+
       - name: Install Dependencies and Build
         run: |
           pnpm install
           pnpm build
+
       - name: Run Chromatic
         uses: chromaui/action@latest
         with:

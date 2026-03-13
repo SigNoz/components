@@ -2,7 +2,8 @@ import './index.css';
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 import type * as React from 'react';
 import { type MouseEvent, useEffect, useState } from 'react';
-import { ButtonSize, type ButtonSizeValue, buttonVariants } from '../button/index.js';
+import { buttonVariants } from '../button/button.js';
+import { ButtonSize, type ButtonSizeValue } from '../button/index.js';
 import { cn } from '../lib/utils.js';
 import { renderPageNumbers } from './utils.js';
 

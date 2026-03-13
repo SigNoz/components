@@ -1,0 +1,165 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as CommandStories from './command.stories';
+import * as CommandPrimitiveStories from './command-primitive.stories';
+import * as CommandDialogStories from './command-dialog.stories';
+import * as CommandInputStories from './command-input.stories';
+import * as CommandListStories from './command-list.stories';
+import * as CommandGroupStories from './command-group.stories';
+import * as CommandItemStories from './command-item.stories';
+import * as CommandEmptyStories from './command-empty.stories';
+import * as CommandSeparatorStories from './command-separator.stories';
+import * as CommandShortcutStories from './command-shortcut.stories';
+
+<Meta of={CommandStories} />
+
+# Command
+
+Use `CommandDialog` to mount the command palette in a modal/portal, or compose the low-level primitives for inline palettes.
+
+## How to use
+
+### Inline Command
+
+Use `Command`, `CommandInput`, `CommandList`, and `CommandItem` for an inline searchable list:
+
+```tsx
+import {
+	Command,
+	CommandInput,
+	CommandList,
+	CommandGroup,
+	CommandItem,
+	CommandEmpty,
+} from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Command>
+			<CommandInput placeholder="Search…" />
+			<CommandList>
+				<CommandGroup heading="General">
+					<CommandItem onSelect={() => {}}>Open settings</CommandItem>
+					<CommandItem onSelect={() => {}}>Toggle sidebar</CommandItem>
+				</CommandGroup>
+				<CommandEmpty>No results.</CommandEmpty>
+			</CommandList>
+		</Command>
+	);
+}
+```
+
+<Primary />
+
+## Command Props
+
+<Controls of={CommandPrimitiveStories.Default} />
+
+## Default Story Props
+
+<Controls of={CommandStories.Default} />
+
+## CommandDialog
+
+Mount the command palette in a dialog for a global command menu (e.g. ⌘K):
+
+```tsx
+import {
+	CommandDialog,
+	CommandInput,
+	CommandList,
+	CommandGroup,
+	CommandItem,
+	CommandEmpty,
+	CommandShortcut,
+} from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<button onClick={() => setOpen(true)}>Open Command Dialog</button>
+			<CommandDialog open={open} onOpenChange={setOpen} position="top" offset={110}>
+				<CommandInput placeholder="Search or run a command…" />
+				<CommandList>
+					<CommandGroup heading="Quick actions">
+						<CommandItem onSelect={() => setOpen(false)}>
+							Open settings
+							<CommandShortcut>⌘S</CommandShortcut>
+						</CommandItem>
+						<CommandItem onSelect={() => setOpen(false)}>Toggle sidebar</CommandItem>
+					</CommandGroup>
+					<CommandEmpty>No results.</CommandEmpty>
+				</CommandList>
+			</CommandDialog>
+		</>
+	);
+}
+```
+
+## CommandDialog Props
+
+<Controls of={CommandDialogStories.Default} />
+
+## Primitive Props
+
+### CommandInput
+
+<Controls of={CommandInputStories.Default} />
+
+### CommandList
+
+<Controls of={CommandListStories.Default} />
+
+### CommandGroup
+
+<Controls of={CommandGroupStories.Default} />
+
+### CommandItem
+
+<Controls of={CommandItemStories.Default} />
+
+### CommandEmpty
+
+<Controls of={CommandEmptyStories.Default} />
+
+### CommandSeparator
+
+<Controls of={CommandSeparatorStories.Default} />
+
+### CommandShortcut
+
+<Controls of={CommandShortcutStories.Default} />
+
+## Create or search
+
+Use `CommandEmpty` and custom keyboard handling to let users create a new item when there are no matches (e.g. press Enter to create):
+
+## CreateOrSearch Props
+
+<Controls of={CommandStories.CreateOrSearch} />
+
+## Suggestions
+
+Static suggestion group with heading.
+
+<Controls of={CommandStories.Suggestions} />
+
+## Separators
+
+Multiple groups separated by `CommandSeparator`.
+
+<Controls of={CommandStories.Separators} />
+
+## Shortcuts
+
+Show keyboard shortcuts next to items with `CommandShortcut`.
+
+<Controls of={CommandStories.ShortcutsDemo} />
+
+## Empty state
+
+Custom empty message when no results match the search.
+
+<Controls of={CommandStories.EmptyState} />
