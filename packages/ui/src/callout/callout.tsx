@@ -1,14 +1,14 @@
 import {
-    ChevronDown,
-    ChevronUp,
-    SolidAlertTriangle,
-    SolidCheckCircle2,
-    SolidInfoCircle,
-    SolidXCircle,
-    X,
+	ChevronDown,
+	ChevronUp,
+	SolidAlertTriangle,
+	SolidCheckCircle2,
+	SolidInfoCircle,
+	SolidXCircle,
+	X,
 } from '@signozhq/icons';
 import React from 'react';
-import {cn} from '../lib/utils.js';
+import { cn } from '../lib/utils.js';
 import styles from './callout.module.scss';
 
 export type CalloutColor = 'robin' | 'forest' | 'amber' | 'cherry' | 'sakura' | 'aqua';
@@ -24,7 +24,7 @@ export type CalloutProps = Pick<React.ComponentProps<'div'>, 'id' | 'className' 
 	defaultExpanded?: boolean;
 	onClick?: () => void;
 	testId?: string;
-}
+};
 
 const typeToColorMap = {
 	info: 'robin',
@@ -108,7 +108,7 @@ function Callout({
 	size = 'small',
 	action = 'none',
 	onClick,
-    defaultExpanded = true,
+	defaultExpanded = true,
 	...props
 }: CalloutProps) {
 	const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
