@@ -107,25 +107,20 @@ export type InputProps = Simplify<
  */
 const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 	({ className, type, prefix, suffix, ...props }, ref) => {
-		const hasAdornments = prefix || suffix;
+		const useWrapper = prefix !== undefined || suffix !== undefined;
 
-		if (!hasAdornments) {
+		if (!useWrapper) {
 			return <input type={type} className={cn(styles['input'], className)} ref={ref} {...props} />;
 		}
 
 		return (
 			<div
-				className={styles['input-wrapper']}
+				className={cn(styles['input-wrapper'], className)}
 				data-has-suffix={!!suffix}
 				data-has-prefix={!!prefix}
 			>
 				{prefix && <div className={styles['input-prefix']}>{prefix}</div>}
-				<input
-					type={type}
-					className={cn(styles['input-with-adornments'], className)}
-					ref={ref}
-					{...props}
-				/>
+				<input type={type} className={styles['input-with-adornments']} ref={ref} {...props} />
 				{suffix && <div className={styles['input-suffix']}>{suffix}</div>}
 			</div>
 		);
