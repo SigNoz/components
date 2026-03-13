@@ -39,7 +39,10 @@ import {
 	X,
 } from 'lucide-react';
 import * as React from 'react';
+import { Button } from '../button/index.js';
+import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
+import styles from './data-table.module.scss';
 import {
 	getTablePreferences,
 	saveTablePreferences,
@@ -184,9 +187,9 @@ function VirtualizedTableBody<TData>({
 							data-index={virtualRow.index}
 							ref={enableDynamicRowHeights ? virtualizer.measureElement : undefined}
 							className={cn(
-								row.getIsSelected() && 'bg-muted/50',
-								'cursor-pointer',
-								enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30'
+								row.getIsSelected() && styles['data-table__row_selected'],
+								styles['data-table__row_clickable'],
+								enableRowExpansion && row.getCanExpand() && styles['data-table__row_expandable']
 							)}
 							onClick={(e) => {
 								if (stopPropagationOnRowClick) {
@@ -224,20 +227,20 @@ function VirtualizedTableBody<TData>({
 							}}
 						>
 							{enableRowSelection && (
-								<TableCell className="w-[48px]">
+								<TableCell className={styles['data-table__action-cell']}>
 									<input
 										type="checkbox"
 										aria-label={`Select row ${row.id}`}
 										checked={row.getIsSelected()}
 										onChange={row.getToggleSelectedHandler()}
 										onClick={(e) => e.stopPropagation()}
-										className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+										className={styles['data-table__checkbox']}
 										tabIndex={0}
 									/>
 								</TableCell>
 							)}
 							{enableRowExpansion && (
-								<TableCell className="w-[48px]">
+								<TableCell className={styles['data-table__action-cell']}>
 									{row.getCanExpand() && (
 										<button
 											onClick={(e) => {
@@ -245,11 +248,11 @@ function VirtualizedTableBody<TData>({
 												row.toggleExpanded();
 											}}
 											className={cn(
-												'transform transition-transform duration-200',
-												row.getIsExpanded() ? 'rotate-90' : ''
+												styles['data-table__expand-button'],
+												row.getIsExpanded() && styles['data-table__expand-button_expanded']
 											)}
 										>
-											<ChevronRight className="h-4 w-4" />
+											<ChevronRight className={styles['data-table__expand-icon']} />
 										</button>
 									)}
 								</TableCell>
@@ -284,8 +287,8 @@ function VirtualizedTableBody<TData>({
 											...(isPinned === 'right' ? { right: rightOffset } : {}),
 										}}
 										className={cn(
-											isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-											isPinned === 'right' && 'sticky right-0 z-10 bg-background'
+											isPinned === 'left' && styles['data-table__cell_pinned-left'],
+											isPinned === 'right' && styles['data-table__cell_pinned-right']
 										)}
 										onClick={(e) => {
 											if (stopPropagationOnCellClick) {
@@ -313,7 +316,7 @@ function VirtualizedTableBody<TData>({
 										(enableRowSelection ? 1 : 0) +
 										(enableRowExpansion ? 1 : 0)
 									}
-									className="bg-muted/30"
+									className={styles['data-table__sub-row']}
 								>
 									{renderSubComponent({ row })}
 								</TableCell>
@@ -350,8 +353,8 @@ const AnimatedRow = React.forwardRef<
 			{...props}
 			className={cn(
 				props.className,
-				'transition-all duration-200 ease-in-out',
-				isExpanded ? 'opacity-100' : 'opacity-0'
+				styles['data-table__animated-row'],
+				!isExpanded && styles['data-table__animated-row_collapsed']
 			)}
 		>
 			{children}
@@ -710,11 +713,11 @@ export function DataTable<TData, TValue>({
 	}, [columnOrder, onColumnOrderChange, getOrderedColumns]);
 
 	const getSortIcon = (isSorted: false | 'asc' | 'desc') => {
-		if (!isSorted) return <ArrowUpDown className="h-4 w-4" />;
+		if (!isSorted) return <ArrowUpDown className={styles['data-table__header-button-icon']} />;
 		return isSorted === 'asc' ? (
-			<ChevronUp className="h-4 w-4" />
+			<ChevronUp className={styles['data-table__header-button-icon']} />
 		) : (
-			<ChevronDown className="h-4 w-4" />
+			<ChevronDown className={styles['data-table__header-button-icon']} />
 		);
 	};
 
@@ -959,29 +962,28 @@ export function DataTable<TData, TValue>({
 	);
 
 	return (
-		<div className="space-y-4" data-testid={testId}>
+		<div className={styles['data-table__root']} data-testid={testId}>
 			{enableGlobalFilter && (
-				<div className="flex items-center gap-2">
-					<div className="relative flex-1">
-						<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-						<input
-							placeholder="Search all columns..."
-							value={globalFilter ?? ''}
-							onChange={(e) => setGlobalFilter(e.target.value)}
-							className="w-full rounded-md border pl-8 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-						/>
-						{globalFilter && (
-							<button
+				<Input
+					placeholder="Search all columns"
+					value={globalFilter ?? ''}
+					onChange={(e) => setGlobalFilter(e.target.value)}
+					prefix={<Search className={styles['data-table__search-icon']} />}
+					suffix={
+						globalFilter && (
+							<Button
+								type="button"
+								variant="ghost"
+								color="none"
+								size="icon"
 								onClick={() => setGlobalFilter('')}
-								className="absolute right-2 top-2.5 text-muted-foreground hover:text-foreground"
-							>
-								<X className="h-4 w-4" />
-							</button>
-						)}
-					</div>
-				</div>
+								suffix={<X />}
+							/>
+						)
+					}
+				/>
 			)}
-			<div className="rounded-md border relative data-table-container">
+			<div className={styles['data-table__container']}>
 				<Table
 					style={{ tableLayout: 'fixed', width: '100%' }}
 					fixedHeight={fixedHeight}
@@ -1052,20 +1054,22 @@ export function DataTable<TData, TValue>({
 							{table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
 								<TableRow key={headerGroup.id}>
 									{enableRowSelection && (
-										<TableHead className="w-[48px]">
+										<TableHead className={styles['data-table__action-cell']}>
 											{selectionMode === SelectionMode.Multiple && (
 												<input
 													type="checkbox"
 													aria-label="Select all rows"
 													checked={table.getIsAllRowsSelected()}
 													onChange={table.getToggleAllRowsSelectedHandler()}
-													className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+													className={styles['data-table__checkbox']}
 													tabIndex={0}
 												/>
 											)}
 										</TableHead>
 									)}
-									{enableRowExpansion && <TableHead className="w-[48px]" />}
+									{enableRowExpansion && (
+										<TableHead className={styles['data-table__action-cell']} />
+									)}
 									{headerGroup.headers.map((header) => {
 										const column = header.column;
 										const isSorted = column.getIsSorted();
@@ -1099,11 +1103,10 @@ export function DataTable<TData, TValue>({
 														: {}),
 												}}
 												className={cn(
-													'relative group',
-													isDragging && 'opacity-50',
-													isDropTarget && 'border-l-2 border-primary',
-													isPinned === 'left' && 'sticky left-0 z-20 bg-background',
-													isPinned === 'right' && 'sticky right-0 z-20 bg-background'
+													isDragging && styles['data-table__header_dragging'],
+													isDropTarget && styles['data-table__header_drop-target'],
+													isPinned === 'left' && styles['data-table__header_pinned-left'],
+													isPinned === 'right' && styles['data-table__header_pinned-right']
 												)}
 												draggable={enableColumnReordering && !isResizing}
 												onDragStart={
@@ -1119,10 +1122,10 @@ export function DataTable<TData, TValue>({
 												}
 												onDragEnd={enableColumnReordering ? handleDragEnd : undefined}
 											>
-												<div className="flex flex-col gap-2">
-													<div className="flex items-center gap-2">
+												<div className={styles['data-table__header-content']}>
+													<div className={styles['data-table__header-row']}>
 														{enableColumnReordering && !isPinned && (
-															<GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
+															<GripVertical className={styles['data-table__grip-icon']} />
 														)}
 														{header.isPlaceholder
 															? null
@@ -1131,8 +1134,8 @@ export function DataTable<TData, TValue>({
 															<button
 																onClick={column.getToggleSortingHandler()}
 																className={cn(
-																	'ml-2 hover:bg-muted/50 rounded p-1',
-																	isSorted && 'bg-muted/50'
+																	styles['data-table__header-button'],
+																	isSorted && styles['data-table__header-button_active']
 																)}
 															>
 																{getSortIcon(isSorted)}
@@ -1142,51 +1145,52 @@ export function DataTable<TData, TValue>({
 															<button
 																onClick={() => toggleFilter(header.id)}
 																className={cn(
-																	'ml-2 hover:bg-muted/50 rounded p-1',
-																	filterValue ? 'bg-muted/50' : '',
-																	isFilterVisible && 'bg-muted/50'
+																	styles['data-table__header-button'],
+																	(filterValue || isFilterVisible) &&
+																		styles['data-table__header-button_active']
 																)}
 															>
-																<Filter className="h-4 w-4" />
+																<Filter className={styles['data-table__header-button-icon']} />
 															</button>
 														)}
 														{enableColumnPinning && (
 															<button
 																onClick={() => togglePin(header.id)}
 																className={cn(
-																	'ml-2 hover:bg-muted/50 rounded p-1',
-																	isPinned && 'bg-muted/50'
+																	styles['data-table__header-button'],
+																	isPinned && styles['data-table__header-button_active']
 																)}
 															>
 																{isPinned ? (
-																	<Pin className="h-4 w-4" />
+																	<Pin className={styles['data-table__header-button-icon']} />
 																) : (
-																	<PinOff className="h-4 w-4" />
+																	<PinOff className={styles['data-table__header-button-icon']} />
 																)}
 															</button>
 														)}
 													</div>
 													{canFilter && isFilterVisible && (
-														<div className="relative">
-															<input
-																placeholder={
-																	typeof header.column.columnDef.header === 'string'
-																		? `Filter ${header.column.columnDef.header}...`
-																		: 'Filter values...'
-																}
-																value={(filterValue ?? '') as string}
-																onChange={(e) => column.setFilterValue(e.target.value)}
-																className="w-full rounded-md border px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-															/>
-															{filterValue != null && (
-																<button
-																	onClick={() => column.setFilterValue('')}
-																	className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-																>
-																	<X className="h-3 w-3" />
-																</button>
-															)}
-														</div>
+														<Input
+															className={styles['data-table__filter-input']}
+															placeholder={
+																typeof header.column.columnDef.header === 'string'
+																	? `Filter ${header.column.columnDef.header}...`
+																	: 'Filter values...'
+															}
+															value={(filterValue ?? '') as string}
+															onChange={(e) => column.setFilterValue(e.target.value)}
+															suffix={
+																filterValue ? (
+																	<Button
+																		type="button"
+																		variant="ghost"
+																		color="none"
+																		onClick={() => column.setFilterValue('')}
+																		suffix={<X />}
+																	/>
+																) : null
+															}
+														/>
 													)}
 												</div>
 												{enableColumnResizing && (
@@ -1196,7 +1200,6 @@ export function DataTable<TData, TValue>({
 															onMouseDown: (e: React.MouseEvent) => {
 																setIsResizing(true);
 																header.getResizeHandler()(e);
-																// Add global mouse up listener to detect when resizing ends
 																const onMouseUp = () => {
 																	setIsResizing(false);
 																	document.removeEventListener('mouseup', onMouseUp);
@@ -1206,7 +1209,6 @@ export function DataTable<TData, TValue>({
 															onTouchStart: (e: React.TouchEvent) => {
 																setIsResizing(true);
 																header.getResizeHandler()(e);
-																// Add global touch end listener to detect when resizing ends
 																const onTouchEnd = () => {
 																	setIsResizing(false);
 																	document.removeEventListener('touchend', onTouchEnd);
@@ -1219,8 +1221,9 @@ export function DataTable<TData, TValue>({
 																display: !header.column.getCanResize() ? 'none' : '',
 															},
 															className: cn(
-																'absolute top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none bg-muted/50 hover:bg-muted hover:w-3 transition-all duration-200 group border-l border-border/50 hover:bg-muted/80',
-																header.column.getIsResizing() && 'bg-primary w-3 border-primary'
+																styles['data-table__resizer'],
+																header.column.getIsResizing() &&
+																	styles['data-table__resizer_resizing']
 															),
 														}}
 													/>
@@ -1259,10 +1262,10 @@ export function DataTable<TData, TValue>({
 										colSpan={
 											columns.length + (enableRowSelection ? 1 : 0) + (enableRowExpansion ? 1 : 0)
 										}
-										className="h-[400px] relative"
+										className={styles['data-table__loading-cell']}
 									>
-										<div className="absolute inset-0 flex items-center justify-center">
-											<div className="flex items-center gap-2 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-md shadow-sm">
+										<div className={styles['data-table__loading-overlay']}>
+											<div className={styles['data-table__loading-content']}>
 												<Spinner />
 												<span>Loading...</span>
 											</div>
@@ -1279,9 +1282,11 @@ export function DataTable<TData, TValue>({
 													children: (
 														<TableRow
 															className={cn(
-																row.getIsSelected() && 'bg-muted/50',
-																'cursor-pointer',
-																enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30'
+																row.getIsSelected() && styles['data-table__row_selected'],
+																styles['data-table__row_clickable'],
+																enableRowExpansion &&
+																	row.getCanExpand() &&
+																	styles['data-table__row_expandable']
 															)}
 															style={{
 																height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
@@ -1323,20 +1328,20 @@ export function DataTable<TData, TValue>({
 															}}
 														>
 															{enableRowSelection && (
-																<TableCell className="w-[48px]">
+																<TableCell className={styles['data-table__action-cell']}>
 																	<input
 																		type="checkbox"
 																		aria-label={`Select row ${row.id}`}
 																		checked={row.getIsSelected()}
 																		onChange={row.getToggleSelectedHandler()}
 																		onClick={(e) => e.stopPropagation()}
-																		className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+																		className={styles['data-table__checkbox']}
 																		tabIndex={0}
 																	/>
 																</TableCell>
 															)}
 															{enableRowExpansion && (
-																<TableCell className="w-[48px]">
+																<TableCell className={styles['data-table__action-cell']}>
 																	{row.getCanExpand() && (
 																		<button
 																			onClick={(e) => {
@@ -1344,11 +1349,12 @@ export function DataTable<TData, TValue>({
 																				row.toggleExpanded();
 																			}}
 																			className={cn(
-																				'transform transition-transform duration-200',
-																				row.getIsExpanded() ? 'rotate-90' : ''
+																				styles['data-table__expand-button'],
+																				row.getIsExpanded() &&
+																					styles['data-table__expand-button_expanded']
 																			)}
 																		>
-																			<ChevronRight className="h-4 w-4" />
+																			<ChevronRight className={styles['data-table__expand-icon']} />
 																		</button>
 																	)}
 																</TableCell>
@@ -1362,8 +1368,6 @@ export function DataTable<TData, TValue>({
 																			width: cell.column.getSize(),
 																			height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
 																			minHeight: `${rowHeight}px`,
-																			padding: '0.75rem',
-																			verticalAlign: 'top',
 																			...(isPinned === 'left'
 																				? {
 																						left: getPinnedOffset(
@@ -1382,8 +1386,10 @@ export function DataTable<TData, TValue>({
 																				: {}),
 																		}}
 																		className={cn(
-																			isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-																			isPinned === 'right' && 'sticky right-0 z-10 bg-background'
+																			styles['data-table__cell-padding'],
+																			isPinned === 'left' && styles['data-table__cell_pinned-left'],
+																			isPinned === 'right' &&
+																				styles['data-table__cell_pinned-right']
 																		)}
 																		onClick={(e) => {
 																			if (stopPropagationOnCellClick) {
@@ -1408,9 +1414,11 @@ export function DataTable<TData, TValue>({
 											) : (
 												<TableRow
 													className={cn(
-														row.getIsSelected() && 'bg-muted/50',
-														'cursor-pointer',
-														enableRowExpansion && row.getCanExpand() && 'hover:bg-muted/30'
+														row.getIsSelected() && styles['data-table__row_selected'],
+														styles['data-table__row_clickable'],
+														enableRowExpansion &&
+															row.getCanExpand() &&
+															styles['data-table__row_expandable']
 													)}
 													style={{
 														height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
@@ -1452,20 +1460,20 @@ export function DataTable<TData, TValue>({
 													}}
 												>
 													{enableRowSelection && (
-														<TableCell className="w-[48px]">
+														<TableCell className={styles['data-table__action-cell']}>
 															<input
 																type="checkbox"
 																aria-label={`Select row ${row.id}`}
 																checked={row.getIsSelected()}
 																onChange={row.getToggleSelectedHandler()}
 																onClick={(e) => e.stopPropagation()}
-																className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+																className={styles['data-table__checkbox']}
 																tabIndex={0}
 															/>
 														</TableCell>
 													)}
 													{enableRowExpansion && (
-														<TableCell className="w-[48px]">
+														<TableCell className={styles['data-table__action-cell']}>
 															{row.getCanExpand() && (
 																<button
 																	onClick={(e) => {
@@ -1473,11 +1481,12 @@ export function DataTable<TData, TValue>({
 																		row.toggleExpanded();
 																	}}
 																	className={cn(
-																		'transform transition-transform duration-200',
-																		row.getIsExpanded() ? 'rotate-90' : ''
+																		styles['data-table__expand-button'],
+																		row.getIsExpanded() &&
+																			styles['data-table__expand-button_expanded']
 																	)}
 																>
-																	<ChevronRight className="h-4 w-4" />
+																	<ChevronRight className={styles['data-table__expand-icon']} />
 																</button>
 															)}
 														</TableCell>
@@ -1491,8 +1500,6 @@ export function DataTable<TData, TValue>({
 																	width: cell.column.getSize(),
 																	height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
 																	minHeight: `${rowHeight}px`,
-																	padding: '0.75rem',
-																	verticalAlign: 'top',
 																	...(isPinned === 'left'
 																		? {
 																				left: getPinnedOffset(
@@ -1511,8 +1518,9 @@ export function DataTable<TData, TValue>({
 																		: {}),
 																}}
 																className={cn(
-																	isPinned === 'left' && 'sticky left-0 z-10 bg-background',
-																	isPinned === 'right' && 'sticky right-0 z-10 bg-background'
+																	styles['data-table__cell-padding'],
+																	isPinned === 'left' && styles['data-table__cell_pinned-left'],
+																	isPinned === 'right' && styles['data-table__cell_pinned-right']
 																)}
 																onClick={(e) => {
 																	if (stopPropagationOnCellClick) {
@@ -1541,7 +1549,7 @@ export function DataTable<TData, TValue>({
 															(enableRowSelection ? 1 : 0) +
 															(enableRowExpansion ? 1 : 0)
 														}
-														className="bg-muted/30"
+														className={styles['data-table__sub-row']}
 													>
 														{renderSubComponent({ row })}
 													</TableCell>
@@ -1557,11 +1565,11 @@ export function DataTable<TData, TValue>({
 													(enableRowSelection ? 1 : 0) +
 													(enableRowExpansion ? 1 : 0)
 												}
-												className="h-16"
+												className={styles['data-table__infinite-scroll-cell']}
 											>
-												<div className="flex items-center justify-center">
+												<div className={styles['data-table__infinite-scroll-content']}>
 													{loadingMore ? (
-														<div className="flex items-center gap-2">
+														<div className={styles['data-table__pagination-left']}>
 															<Spinner />
 															<span>Loading more...</span>
 														</div>
@@ -1577,7 +1585,7 @@ export function DataTable<TData, TValue>({
 										colSpan={
 											columns.length + (enableRowSelection ? 1 : 0) + (enableRowExpansion ? 1 : 0)
 										}
-										className="h-24 text-center"
+										className={styles['data-table__empty-cell']}
 									>
 										No results.
 									</TableCell>
@@ -1588,9 +1596,9 @@ export function DataTable<TData, TValue>({
 				</Table>
 			</div>
 			{enablePagination && (
-				<div className="flex items-center justify-between px-2">
-					<div className="flex items-center gap-2">
-						<p className="text-sm text-muted-foreground">Rows per page</p>
+				<div className={styles['data-table__pagination']}>
+					<div className={styles['data-table__pagination-left']}>
+						<p className={styles['data-table__pagination-label']}>Rows per page</p>
 						<select
 							value={table.getState().pagination.pageSize}
 							onChange={(e) => {
@@ -1605,7 +1613,7 @@ export function DataTable<TData, TValue>({
 								}
 							}}
 							disabled={isLoading}
-							className="h-8 w-[70px] rounded-md border border-input bg-background px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+							className={styles['data-table__pagination-select']}
 						>
 							{pageSizeOptions.map((size) => (
 								<option key={size} value={size}>
@@ -1614,10 +1622,10 @@ export function DataTable<TData, TValue>({
 							))}
 						</select>
 					</div>
-					<div className="flex items-center gap-6 lg:gap-8">
-						<div className="flex w-[100px] items-center justify-center text-sm font-medium">
+					<div className={styles['data-table__pagination-right']}>
+						<div className={styles['data-table__pagination-info']}>
 							{isLoading ? (
-								<div className="flex items-center gap-2">
+								<div className={styles['data-table__pagination-left']}>
 									<Spinner />
 									<span>Loading...</span>
 								</div>
@@ -1625,9 +1633,9 @@ export function DataTable<TData, TValue>({
 								`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`
 							)}
 						</div>
-						<div className="flex items-center gap-2">
+						<div className={styles['data-table__pagination-buttons']}>
 							<button
-								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.setPageIndex(0);
 									onPageChange?.(0);
@@ -1640,10 +1648,10 @@ export function DataTable<TData, TValue>({
 								}}
 								disabled={!table.getCanPreviousPage() || isLoading}
 							>
-								<ChevronsLeft className="h-4 w-4" />
+								<ChevronsLeft className={styles['data-table__pagination-button-icon']} />
 							</button>
 							<button
-								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.previousPage();
 									onPageChange?.(table.getState().pagination.pageIndex - 1);
@@ -1656,10 +1664,10 @@ export function DataTable<TData, TValue>({
 								}}
 								disabled={!table.getCanPreviousPage() || isLoading}
 							>
-								<ChevronLeft className="h-4 w-4" />
+								<ChevronLeft className={styles['data-table__pagination-button-icon']} />
 							</button>
 							<button
-								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.nextPage();
 									onPageChange?.(table.getState().pagination.pageIndex + 1);
@@ -1672,10 +1680,10 @@ export function DataTable<TData, TValue>({
 								}}
 								disabled={!table.getCanNextPage() || isLoading}
 							>
-								<ChevronRight className="h-4 w-4" />
+								<ChevronRight className={styles['data-table__pagination-button-icon']} />
 							</button>
 							<button
-								className="inline-flex items-center justify-center rounded-md p-1 text-sm font-medium hover:bg-muted disabled:pointer-events-none disabled:opacity-50"
+								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.setPageIndex(table.getPageCount() - 1);
 									onPageChange?.(table.getPageCount() - 1);
@@ -1688,7 +1696,7 @@ export function DataTable<TData, TValue>({
 								}}
 								disabled={!table.getCanNextPage() || isLoading}
 							>
-								<ChevronsRight className="h-4 w-4" />
+								<ChevronsRight className={styles['data-table__pagination-button-icon']} />
 							</button>
 						</div>
 					</div>
