@@ -1,0 +1,101 @@
+.toggle {
+  display: var(--toggle-display, inline-flex);
+  align-items: var(--toggle-align-items, center);
+  justify-content: var(--toggle-justify-content, center);
+  gap: var(--toggle-gap, var(--spacing-4, 0.5rem));
+  border-radius: var(--toggle-radius, var(--radius-md));
+  border: var(--toggle-border-width, 1px) var(--toggle-border-style, solid) var(--toggle-border, var(--l2-border));
+  background-color: var(--toggle-bg);
+  color: var(--toggle-text);
+  font-size: var(--toggle-font-size, var(--text-xs));
+  font-weight: var(--toggle-font-weight, var(--font-weight-normal));
+  line-height: var(--toggle-line-height, 1.25rem);
+  letter-spacing: var(--tracking-tighter);
+  outline: none;
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--toggle-transition-duration, 150ms);
+  cursor: pointer;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: var(--toggle-disabled-opacity, 0.5);
+  }
+
+
+  &:focus,
+  &:focus-visible {
+    z-index: 10;
+    background-color: var(--toggle-active-bg);
+  }
+
+  &[data-state='on'] {
+    background-color: var(--toggle-active-bg);
+    color: var(--toggle-text-active);
+  }
+
+  &[data-color='primary'] {
+    --toggle-bg: var(--toggle-primary-bg, var(--l1-background));
+    --toggle-text: var(--toggle-primary-text, var(--l1-foreground));
+    --toggle-text-active: var(--toggle-primary-text-active, var(--l1-foreground-hover));
+    --toggle-border: var(--toggle-primary-border, var(--l2-border));
+    --toggle-active-bg: var(--toggle-primary-active-bg, var(--bg-robin-500));
+  }
+
+  &[data-color='destructive'] {
+    --toggle-bg: var(--toggle-destructive-bg, var(--l1-background));
+    --toggle-text: var(--toggle-destructive-text, var(--l1-foreground));
+    --toggle-text-active: var(--toggle-destructive-text-active, var(--l1-foreground-hover));
+    --toggle-border: var(--toggle-destructive-border, var(--l2-border));
+    --toggle-active-bg: var(--toggle-destructive-active-bg, var(--bg-cherry-500));
+  }
+
+  &[data-color='warning'] {
+    --toggle-bg: var(--toggle-warning-bg, var(--l1-background));
+    --toggle-text: var(--toggle-warning-text, var(--l1-foreground));
+    --toggle-text-active: var(--toggle-warning-text-active, var(--bg-neutral-dark-800));
+    --toggle-border: var(--toggle-warning-border, var(--l2-border));
+    --toggle-active-bg: var(--toggle-warning-active-bg, var(--bg-amber-500));
+  }
+
+  &[data-color='secondary'] {
+    --toggle-bg: var(--toggle-secondary-bg, var(--l1-background));
+    --toggle-text: var(--toggle-secondary-text, var(--l1-foreground));
+    --toggle-text-active: var(--toggle-secondary-text-active, var(--l1-foreground-hover));
+    --toggle-border: var(--toggle-secondary-border, var(--l2-border));
+    --toggle-active-bg: var(--toggle-secondary-active-bg, var(--l1-background-hover));
+  }
+
+  &[data-color='none'] {
+    --toggle-bg: var(--toggle-none-bg, transparent);
+    --toggle-text: var(--toggle-none-text, var(--l1-foreground));
+    --toggle-text-active: var(--toggle-none-text-active, var(--l1-foreground-hover));
+    --toggle-border: var(--toggle-none-border, var(--l2-border));
+    --toggle-active-bg: var(--toggle-none-active-bg, var(--l1-background-hover));
+  }
+
+  svg {
+    pointer-events: none;
+    flex-shrink: 0;
+    width: var(--toggle-icon-size, 0.75rem);
+    height: var(--toggle-icon-size, 0.75rem);
+  }
+
+  &[data-size='default'] {
+    height: var(--toggle-size, 2.25rem);
+    padding-left: var(--toggle-padding-left, var(--spacing-6, 0.75rem));
+    padding-right: var(--toggle-padding-right, var(--spacing-6, 0.75rem));
+  }
+
+  &[data-size='sm'] {
+    height: var(--toggle-size, 2rem);
+    padding-left: var(--toggle-padding-left, var(--spacing-4, 0.5rem));
+    padding-right: var(--toggle-padding-right, var(--spacing-4, 0.5rem));
+  }
+
+  &[data-size='lg'] {
+    height: var(--toggle-size, 2.5rem);
+    padding-left: var(--toggle-padding-left, var(--spacing-8, 1rem));
+    padding-right: var(--toggle-padding-right, var(--spacing-8, 1rem));
+  }
+}

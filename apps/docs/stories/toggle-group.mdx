@@ -1,0 +1,102 @@
+import { Meta, Controls, Story } from '@storybook/addon-docs/blocks';
+import * as ToggleGroupStories from './toggle-group.stories';
+import * as ToggleGroupSimpleStories from './toggle-group-simple.stories';
+import * as ToggleGroupItemStories from './toggle-group-item.stories';
+
+<Meta of={ToggleGroupStories} />
+
+# ToggleGroup
+
+A set of two-state buttons that can be toggled on or off, in single or multiple selection mode.
+
+## How to use
+
+### ToggleGroupSimple (preset)
+
+Use `ToggleGroupSimple` for an items-based API. Pass a list of items with `value` and `label` (string, icon, or ReactNode). Supports icon-only, label-only, or icon + label:
+
+```tsx
+import { ToggleGroupSimple } from '@signozhq/ui';
+import { Bold, Italic, LayoutGrid } from '@signozhq/icons';
+
+const items = [
+  { value: 'left', label: 'Left' },
+  { value: 'center', label: 'Center' },
+  { value: 'right', label: 'Right' },
+];
+
+export default function MyComponent() {
+  return (
+    <ToggleGroupSimple
+      type="single"
+      items={items}
+      defaultValue="center"
+    />
+  );
+}
+```
+
+For icon-only items, add `aria-label` for accessibility:
+
+```tsx
+const iconItems = [
+  { value: 'bold', label: <Bold className="h-3 w-3" />, 'aria-label': 'Bold' },
+  { value: 'italic', label: <Italic className="h-3 w-3" />, 'aria-label': 'Italic' },
+];
+
+<ToggleGroupSimple type="multiple" items={iconItems} defaultValue={['bold']} />
+```
+
+<Story of={ToggleGroupSimpleStories.Default} />
+
+## ToggleGroupSimple Props
+
+<Controls of={ToggleGroupSimpleStories.Default} />
+
+### Manual composition with ToggleGroup
+
+For full control over each option, use `ToggleGroup` with `ToggleGroupItem` as children:
+
+```tsx
+import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
+import { AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
+
+export default function MyComponent() {
+  return (
+    <ToggleGroup type="single" defaultValue="center">
+      <ToggleGroupItem value="left" aria-label="Align left">
+        <AlignLeft className="h-3 w-3" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="center" aria-label="Align center">
+        <AlignCenter className="h-3 w-3" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="right" aria-label="Align right">
+        <AlignRight className="h-3 w-3" />
+      </ToggleGroupItem>
+    </ToggleGroup>
+  );
+}
+```
+
+For multiple selection:
+
+```tsx
+<ToggleGroup type="multiple" defaultValue={['bold']}>
+  <ToggleGroupItem value="bold" aria-label="Bold">
+    <Bold className="h-3 w-3" />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="italic" aria-label="Italic">
+    <Italic className="h-3 w-3" />
+  </ToggleGroupItem>
+</ToggleGroup>
+```
+
+<Story of={ToggleGroupStories.Default} />
+
+## ToggleGroup Props
+
+<Controls of={ToggleGroupStories.Default} />
+
+## ToggleGroupItem Props
+
+<Controls of={ToggleGroupItemStories.Default} />

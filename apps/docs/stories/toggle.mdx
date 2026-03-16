@@ -1,0 +1,48 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ToggleStories from './toggle.stories';
+
+<Meta of={ToggleStories} />
+
+# Toggle
+
+A two-state button that can be toggled on or off. For grouped toggles, use ToggleGroup with ToggleGroupItem or ToggleGroupSimple.
+
+## How to use
+
+### Standalone toggle
+
+```tsx
+import { Toggle } from '@signozhq/ui';
+import { Bold } from 'lucide-react';
+
+export default function MyComponent() {
+  return (
+    <Toggle aria-label="Toggle bold" defaultValue={false}>
+      <Bold className="h-3 w-3" />
+    </Toggle>
+  );
+}
+```
+
+### Controlled
+
+```tsx
+import { Toggle } from '@signozhq/ui';
+import { Bold } from 'lucide-react';
+
+export default function MyComponent() {
+  const [bold, setBold] = React.useState(false);
+
+  return (
+    <Toggle aria-label="Toggle bold" value={bold} onChange={setBold}>
+      <Bold className="h-3 w-3" />
+    </Toggle>
+  );
+}
+```
+
+<Primary />
+
+## Toggle Props
+
+<Controls of={ToggleStories.Default} />
