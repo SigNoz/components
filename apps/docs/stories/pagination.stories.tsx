@@ -1,100 +1,12 @@
 import { Pagination } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ComponentProps } from 'react'; // Import ComponentProps
+import type { ComponentProps } from 'react';
 import { useState } from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const paginationExamples = [
-	`import { Pagination } from '@signozhq/ui';
-import { useState } from 'react';
-
-export default function MyComponent() {
-	const [currentPage, setCurrentPage] = useState(1);
-	
-	return (
-		<Pagination
-			total={100}
-			pageSize={10}
-			current={currentPage}
-			onPageChange={(page) => setCurrentPage(page)}
-			align="center"
-		/>
-	);
-}`,
-];
-
-const paginationDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description: 'A flexible pagination component for navigating through multi-page content.',
-	examples: paginationExamples,
-});
-
-const meta: Meta<typeof Pagination> = {
-	title: 'Old Components/Pagination',
-	component: Pagination,
-	argTypes: {
-		current: {
-			control: 'number',
-			description: 'Current selected page',
-			table: {
-				disable: true,
-			},
-		},
-		total: {
-			control: 'number',
-			description: 'Total number of items',
-			required: true,
-		},
-		pageSize: {
-			control: 'number',
-			description: 'Number of items per page',
-			defaultValue: 10,
-		},
-		defaultCurrent: {
-			control: 'number',
-			description: 'Initial page number when uncontrolled',
-			defaultValue: 1,
-		},
-		align: {
-			control: 'select',
-			options: ['start', 'center', 'end'],
-			description: 'Alignment of pagination component',
-			defaultValue: 'start',
-		},
-		onPageChange: {
-			action: 'page changed',
-			description: 'Callback when page changes',
-		},
-	},
-	parameters: {
-		layout: 'fullscreen',
-		backgrounds: {
-			default: 'dark',
-		},
-		design: [
-			{
-				name: 'Figma',
-				type: 'figma',
-				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=40-1657&node-type=frame&t=RGQXgBfSXKWsYAz9-0',
-			},
-		],
-		docs: {
-			description: {
-				component: paginationDocs,
-			},
-		},
-	},
-};
-
-export default meta;
 
 type PaginationProps = ComponentProps<typeof Pagination>;
-type Story = StoryObj<typeof Pagination>;
 
-// Helper render function for controlled stories
 const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.Element => {
 	const [currentPage, setCurrentPage] = useState(initialPage);
-
 	return (
 		<Pagination
 			{...args}
@@ -106,6 +18,72 @@ const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.E
 		/>
 	);
 };
+
+const meta: Meta<typeof Pagination> = {
+	title: 'Components/Pagination/Pagination',
+	component: Pagination,
+	argTypes: {
+		total: {
+			control: 'number',
+			description: 'Total number of items',
+			table: { category: 'Content', type: { summary: 'number' } },
+		},
+		pageSize: {
+			control: 'number',
+			description: 'Number of items per page',
+			table: { category: 'Content', type: { summary: 'number' }, defaultValue: { summary: '10' } },
+		},
+		current: {
+			control: 'number',
+			description: 'Current page (controlled mode)',
+			table: { category: 'State', type: { summary: 'number' } },
+		},
+		defaultCurrent: {
+			control: 'number',
+			description: 'Initial page when uncontrolled',
+			table: { category: 'State', type: { summary: 'number' }, defaultValue: { summary: '1' } },
+		},
+		align: {
+			control: 'select',
+			options: ['start', 'center', 'end'],
+			description: 'Alignment of the pagination container',
+			table: {
+				category: 'Appearance',
+				type: { summary: "'start' | 'center' | 'end'" },
+				defaultValue: { summary: "'start'" },
+			},
+		},
+		onPageChange: {
+			control: false,
+			description: 'Callback when the page changes',
+			table: { category: 'Events', type: { summary: '(page: number) => void' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'Test ID for the pagination container',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+	},
+	parameters: {
+		layout: 'fullscreen',
+		design: [
+			{
+				name: 'Figma',
+				type: 'figma',
+				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=40-1657&node-type=frame&t=RGQXgBfSXKWsYAz9-0',
+			},
+		],
+	},
+	tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof Pagination>;
 
 export const Default: Story = {
 	render: (args) => {
@@ -137,7 +115,6 @@ export const Default: Story = {
 				</div>
 
 				<div className="mt-6">
-					{' '}
 					<p className="mb-2 text-sm text-gray-400">3 Pages - Second Selected</p>
 					<Pagination
 						total={30}
@@ -148,7 +125,6 @@ export const Default: Story = {
 				</div>
 
 				<div className="mt-6">
-					{' '}
 					<p className="mb-2 text-sm text-gray-400">10 Pages - First Selected</p>
 					<Pagination
 						total={100}
@@ -204,63 +180,38 @@ export const Default: Story = {
 	},
 };
 
-export const CustomPageSize: Story = {
-	args: {
-		total: 100,
-		pageSize: 5,
-	},
-	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(1);
-		return (
-			<Pagination
-				{...args}
-				current={currentPage}
-				onPageChange={(page): void => {
-					setCurrentPage(page);
-					args.onPageChange?.(page);
-				}}
-			/>
-		);
-	},
-};
-
 export const CenterAligned: Story = {
 	args: {
 		total: 50,
+		pageSize: 10,
 		align: 'center',
 	},
 	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(1);
-		return (
-			<Pagination
-				{...args}
-				current={currentPage}
-				onPageChange={(page): void => {
-					setCurrentPage(page);
-					args.onPageChange?.(page);
-				}}
-			/>
-		);
+		const [current, setCurrent] = useState(1);
+		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
 	},
 };
 
 export const EndAligned: Story = {
 	args: {
 		total: 50,
+		pageSize: 10,
 		align: 'end',
 	},
 	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(1);
-		return (
-			<Pagination
-				{...args}
-				current={currentPage}
-				onPageChange={(page): void => {
-					setCurrentPage(page);
-					args.onPageChange?.(page);
-				}}
-			/>
-		);
+		const [current, setCurrent] = useState(1);
+		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
+	},
+};
+
+export const CustomPageSize: Story = {
+	args: {
+		total: 100,
+		pageSize: 5,
+	},
+	render: (args) => {
+		const [current, setCurrent] = useState(1);
+		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
 	},
 };
 
@@ -269,7 +220,7 @@ export const WithPageChangeHandler: Story = {
 		total: 50,
 	},
 	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(1); // Initial page set to 1
+		const [currentPage, setCurrentPage] = useState(1);
 		return (
 			<Pagination
 				{...args}

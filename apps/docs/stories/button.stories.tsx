@@ -2,22 +2,7 @@ import { Check, ChevronLeft, ChevronRight, Code, Star, Trash } from '@signozhq/i
 import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
-
-const VARIANTS = [
-	ButtonVariant.Solid,
-	ButtonVariant.Outlined,
-	ButtonVariant.Dashed,
-	ButtonVariant.Ghost,
-	ButtonVariant.Link,
-	ButtonVariant.Action,
-] as const;
-const COLORS = [
-	ButtonColor.Primary,
-	ButtonColor.Destructive,
-	ButtonColor.Warning,
-	ButtonColor.Secondary,
-	ButtonColor.None,
-] as const;
+import { buttonArgTypes, COLORS, VARIANTS } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof Button> = {
 	title: 'Components/Button',
@@ -32,83 +17,7 @@ const meta: Meta<typeof Button> = {
 		disabled: false,
 		type: 'button',
 	},
-	argTypes: {
-		variant: {
-			control: 'select',
-			options: VARIANTS,
-			description: 'The visual style of the button',
-			table: {
-				defaultValue: { summary: 'solid' },
-			},
-		},
-		size: {
-			control: 'select',
-			options: ['sm', 'md', 'icon'],
-			description: 'The size of the button',
-			table: {
-				defaultValue: { summary: 'md' },
-			},
-		},
-		color: {
-			control: 'select',
-			options: COLORS,
-			description: 'The color scheme of the button',
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Whether the button is disabled',
-			table: {
-				defaultValue: { summary: 'false' },
-				type: { summary: 'boolean' },
-			},
-		},
-		asChild: {
-			control: 'boolean',
-			description: 'Whether to render as a child component',
-			table: {
-				type: { summary: 'boolean' },
-			},
-		},
-		background: {
-			control: 'select',
-			options: ['ink-500', 'ink-400', 'vanilla-100', 'vanilla-200'],
-			description:
-				'The background context for the action button. Only applicable to *Action* buttons.',
-			table: {
-				type: { summary: 'string' },
-			},
-		},
-		loading: {
-			control: 'boolean',
-			description: 'Whether the button is loading',
-			table: {
-				defaultValue: { summary: 'false' },
-				type: { summary: 'boolean' },
-			},
-		},
-		type: {
-			control: 'select',
-			options: ['button', 'submit'],
-			description: 'The type of the button',
-			table: {
-				defaultValue: { summary: 'submit' },
-			},
-		},
-		onClick: {
-			action: 'onClick',
-			description: 'The function to call when the button is clicked',
-			table: {
-				type: { summary: 'function' },
-			},
-		},
-		onDoubleClick: {
-			action: 'onDoubleClick',
-			description: 'The function to call when the button is double clicked',
-			table: {
-				type: { summary: 'function' },
-			},
-		},
-	},
+	argTypes: buttonArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 		design: {
