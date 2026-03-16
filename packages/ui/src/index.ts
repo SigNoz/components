@@ -20,5 +20,6 @@ export * from './sonner/index.js';
 export * from './switch/index.js';
 export * from './table/index.js';
 export * from './tabs/index.js';
+export * from './toggle/index.js';
 export * from './toggle-group/index.js';
 export * from './tooltip/index.js';
