@@ -23,12 +23,12 @@
   }
 
   &--small {
-    font-size: var(--callout-font-size-small, var(--font-size-sm, 0.875rem));
+    font-size: var(--callout-font-size-small, var(--periscope-font-size-base, 13px));
     line-height: var(--callout-line-height-small, 1.25rem);
   }
 
   &--medium {
-    font-size: var(--callout-font-size-medium, var(--font-size-md, 1rem));
+    font-size: var(--callout-font-size-medium, var(--periscope-font-size-medium, 16px));
     line-height: var(--callout-line-height-medium, 1.5rem);
   }
 

@@ -11,7 +11,7 @@
 	border-color: var(--combobox-trigger-border-color, var(--input, var(--border)));
 	background-color: var(--combobox-trigger-background-color, transparent);
 	padding: var(--combobox-trigger-padding, var(--spacing-4, 0.5rem) var(--spacing-6, 0.75rem));
-	font-size: var(--combobox-trigger-font-size, var(--font-size-sm, 0.875rem));
+	font-size: var(--combobox-trigger-font-size, var(--periscope-font-size-base, 13px));
 	line-height: var(--combobox-trigger-line-height, 1.25rem);
 	box-shadow: var(--combobox-trigger-box-shadow, 0 1px 2px 0 rgb(0 0 0 / 0.05));
 	cursor: pointer;
@@ -57,7 +57,7 @@
 	display: flex;
 	align-items: center;
 	gap: var(--combobox-trigger-value-gap, var(--command-item-gap, var(--spacing-4, 0.5rem)));
-	font-size: var(--combobox-trigger-value-font-size, var(--command-item-font-size, var(--font-size-sm, 0.875rem)));
+	font-size: var(--combobox-trigger-value-font-size, var(--periscope-font-size-base, 13px));
 	line-height: var(--combobox-trigger-value-line-height, var(--command-item-line-height, 1.25rem));
 	overflow: hidden;
 

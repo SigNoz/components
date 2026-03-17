@@ -48,7 +48,7 @@
 .toaster [data-sonner-toast] [data-title] {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: var(--font-size-sm, .75rem);
+  font-size: var(--periscope-font-size-small, 11px);
   line-height: 20px;
   letter-spacing: -0.07px;
   color: var(--l1-foreground);
@@ -63,7 +63,7 @@
 .toaster [data-sonner-toast] > div:has([data-title]) > div:first-of-type {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: var(--font-size-sm, .75rem);
+  font-size: var(--periscope-font-size-small, 11px);
   line-height: 20px;
   letter-spacing: -0.07px;
   color: var(--l1-foreground);
@@ -77,7 +77,7 @@
 .toaster [data-sonner-toast] [data-description] {
   font-family: 'Inter', sans-serif;
   font-weight: var(--font-weight-normal, 400);
-  font-size: var(--font-size-sm, .75rem);
+  font-size: var(--periscope-font-size-small, 11px);
   line-height: 20px;
   letter-spacing: -0.07px;
   color: var(--l2-foreground);
@@ -94,7 +94,7 @@
   gap: 4px;
   font-family: 'Inter', sans-serif;
   font-weight: var(--font-weight-normal, 400);
-  font-size: var(--font-size-sm, .75rem);
+  font-size: var(--periscope-font-size-small, 11px);
   line-height: 20px;
   letter-spacing: -0.07px;
   color: var(--l2-foreground);
@@ -110,7 +110,7 @@
 > p:not(:first-of-type) {
   font-family: 'Inter', sans-serif;
   font-weight: var(--font-weight-normal, 400);
-  font-size: var(--font-size-sm, .75rem);
+  font-size: var(--periscope-font-size-small, 11px);
   line-height: 20px;
   letter-spacing: -0.07px;
   color: var(--l2-foreground);

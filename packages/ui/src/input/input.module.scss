@@ -6,7 +6,7 @@
   border: 1px solid var(--border);
   background-color: transparent;
   padding: var(--spacing-2, 0.25rem) var(--spacing-6, 0.75rem);
-  font-size: var(--input-font-size, var(--font-size-sm, 0.875rem));
+  font-size: var(--input-font-size, var(--periscope-font-size-base, 13px));
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition-property: color, background-color, border-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -15,7 +15,7 @@
   &::file-selector-button {
     border: 0;
     background-color: transparent;
-    font-size: 0.875rem;
+    font-size: var(--periscope-font-size-base, 13px);
     font-weight: 500;
   }
 
@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  font-size: var(--input-font-size, var(--font-size-sm, 0.875rem));
+  font-size: var(--input-font-size, var(--periscope-font-size-base, 13px));
   color: inherit;
   max-height: 100%;
 }
@@ -81,7 +81,7 @@
   background-color: transparent;
   border: none;
   outline: none;
-  font-size: var(--input-font-size, var(--font-size-sm, 0.875rem));
+  font-size: var(--input-font-size, var(--periscope-font-size-base, 13px));
   color: inherit;
   padding: 0;
   height: 100%;
