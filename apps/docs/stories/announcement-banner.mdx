@@ -1,0 +1,94 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as AnnouncementBannerStories from './announcement-banner.stories';
+import * as PersistedAnnouncementBannerStories from './persisted-announcement-banner.stories';
+
+<Meta of={AnnouncementBannerStories} />
+
+# AnnouncementBanner
+
+A banner component for displaying announcements, alerts, or notices to users. Supports multiple types (warning, info, error, success), optional actions, and dismissible behavior.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import { AnnouncementBanner } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<AnnouncementBanner type="warning">
+			This is an important announcement. Please review before proceeding.
+		</AnnouncementBanner>
+	);
+}
+```
+
+### With action button
+
+```tsx
+import { AnnouncementBanner } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<AnnouncementBanner
+			type="info"
+			action={{
+				label: 'Learn more',
+				onClick: () => window.open('/docs'),
+			}}
+		>
+			New feature available. Check it out now.
+		</AnnouncementBanner>
+	);
+}
+```
+
+### Dismissible banner
+
+```tsx
+import { AnnouncementBanner } from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [visible, setVisible] = useState(true);
+
+	if (!visible) return null;
+
+	return (
+		<AnnouncementBanner type="warning" onClose={() => setVisible(false)}>
+			This banner can be dismissed. Click the X to close.
+		</AnnouncementBanner>
+	);
+}
+```
+
+### PersistedAnnouncementBanner (preset)
+
+Use `PersistedAnnouncementBanner` when you want the dismiss state to persist across page reloads via localStorage:
+
+```tsx
+import { PersistedAnnouncementBanner } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<PersistedAnnouncementBanner
+			storageKey="my-app-announcement-v1"
+			type="info"
+			onDismiss={() => console.log('Banner dismissed')}
+		>
+			This banner persists its dismiss state. Once dismissed, it stays hidden until the storage key changes.
+		</PersistedAnnouncementBanner>
+	);
+}
+```
+
+<Primary />
+
+## AnnouncementBanner Props
+
+<Controls of={AnnouncementBannerStories.Default} />
+
+## PersistedAnnouncementBanner Props
+
+<Controls of={PersistedAnnouncementBannerStories.Default} />

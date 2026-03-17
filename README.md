@@ -57,6 +57,7 @@ To learn more about the available components, take a look at: https://periscope.
 All components live in `@signozhq/ui`. Import by subpath:
 
 ```ts
+import { AnnouncementBanner } from '@signozhq/ui';
 import { Badge } from '@signozhq/ui';
 import { Button } from '@signozhq/ui';
 import { Calendar } from '@signozhq/ui';
