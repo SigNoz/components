@@ -19,7 +19,7 @@
 	table-layout: fixed;
 	width: 100%;
 	caption-side: bottom;
-	font-size: var(--font-size-sm, 0.875rem);
+	font-size: var(--periscope-font-size-base, 13px);
 	margin: 0;
 }
 
@@ -123,5 +123,5 @@
 .table__caption {
 	color: var(--muted-foreground);
 	margin-top: var(--table-caption-margin-top, var(--spacing-4, 1rem));
-	font-size: var(--font-size-sm, 0.875rem);
+	font-size: var(--periscope-font-size-base, 13px);
 }
