@@ -2,53 +2,61 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Intro" />
 
-# Getting Started
+# Signoz Components Library
 
-React component library powered by Turborepo, React, and Storybook. This guide explains how to install and use the Signoz components in your app.
+React component library powered by Turborepo, React, and Storybook.
 
 ## Install & Use
 
-Install the packages you need, use the following command:
+To use the Signoz components library, you need to install the following packages:
 
-```bash
-pnpm add @signozhq/tailwind-config @signozhq/design-tokens @signozhq/ui
+```sh
+pnpm add @signozhq/design-tokens @signozhq/ui
 ```
 
-In your app's main CSS file (e.g. `index.css` or `global.css`), import Tailwind and the shared config, then the tailwind-config **global.css**. The order matters:
+In your app's main CSS file (e.g. `index.css` or `global.css`), import the following css:
 
-```scss
-@import 'tailwindcss';
-@config "@signozhq/tailwind-config";
-@import '@signozhq/tailwind-config/global.css';
+```css
 @import "@signozhq/design-tokens/dist/style.css";
 @import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
-@source "./node_modules/@signozhq/*";
 ```
 
-> It's important to use `@source` with the path to the `node_modules/@signozhq/*` directory to ensure that the components using Tailwind classes are able to resolve the correct Tailwind config.
-
-If you use Vite with the Tailwind plugin, you can also configure via vite.config:
-
-```js
-import tailwindConfig from '@signozhq/tailwind-config';
-import tailwindcss from '@tailwindcss/vite';
-
-export default {
-  plugins: [tailwindcss(tailwindConfig)],
-};
-```
-
-Then add the data attribute on your `body` or `html` to select the theme:
+Then you need to add the data attribute in your element `body` or `html` to select the theme:
 
 ```html
 <html lang="en" data-theme="default">
 ```
 
-To toggle or change themes, update the value of the `data-theme` attribute.
+If you want to toggle/change between themes, you just need to update the value of the attribute `data-theme`.
 
-> **Tip:** See the Storybook app's `blue-demo.css` for an example of creating a new theme.
+> **tip**: Take a look at [./apps/docs/blue-demo.css](./apps/docs/blue-demo.css) to learn how to create a new theme.
+
+### How to use with Tailwind
+
+In case you want to have our design tokens exposed directly to Tailwind, you can install the following package:
+
+```sh
+pnpm add @signozhq/tailwind-config
+```
+
+And then import the following css:
+
+```css
+@import 'tailwindcss';
+@config "@signozhq/tailwind-config";
+@import '@signozhq/tailwind-config/global.css';
+```
+
+## Storybook
+
+To learn more about the available components, take a look at: https://periscope.signoz.io/
 
 ## Available Packages
+
+| Package                     | Description                                                       |
+| --------------------------- | ----------------------------------------------------------------- |
+| `@signozhq/tailwind-config` | Tailwind config, design tokens, and `global.css` (required first) |
+| `@signozhq/ui`              | All UI components (single package with subpath exports)           |
 
 All components live in `@signozhq/ui`. Import by subpath:
 
@@ -60,22 +68,15 @@ import { Callout } from '@signozhq/ui';
 import { Checkbox } from '@signozhq/ui';
 import { Combobox } from '@signozhq/ui';
 import { Command } from '@signozhq/ui';
-import { DatePicker } from '@signozhq/ui';
 import { Dialog } from '@signozhq/ui';
 import { Drawer } from '@signozhq/ui';
 import { Input } from '@signozhq/ui';
 import { Pagination } from '@signozhq/ui';
-import { PinList } from '@signozhq/ui';
-import { Popover } from '@signozhq/ui';
 import { RadioGroup } from '@signozhq/ui';
 import { ResizablePanelGroup } from '@signozhq/ui';
 import { Toaster } from '@signozhq/ui';
 import { Switch } from '@signozhq/ui';
 import { Table } from '@signozhq/ui';
-import { Tabs } from '@signozhq/ui';
 import { Toggle } from '@signozhq/ui';
 import { ToggleGroup } from '@signozhq/ui';
-import { Tooltip } from '@signozhq/ui';
 ```
-
-Use the sidebar to explore each component and the **Design System** section for tokens, colors, typography, and spacing.
