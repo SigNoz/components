@@ -13,3 +13,5 @@ public/dist
 storybook-static/
 apps/packages-playground/
 .idea
+**/.yalc
+**/yalc.lock
