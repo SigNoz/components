@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.0.5](https://github.com/SigNoz/components/compare/v0.0.4...v0.0.5) (2026-03-18)
+
+
+### Features
+
+* **announcement-banner:** add component ([633b74e](https://github.com/SigNoz/components/commit/633b74e308c5eb1fce8db95f62b752c19a0de611))
+
+
+### Bug Fixes
+
+* **components:** use new periscope tokens to align with figma ([355395c](https://github.com/SigNoz/components/commit/355395c7c4d7cc46f72a7b5c2c3900cc2714d4b8))
+
+
+### Miscellaneous Chores
+
+* **gitignore:** ignore yalc ([2eb6e0d](https://github.com/SigNoz/components/commit/2eb6e0d067b935387876051385900c95ccaff0d5))
+
 ## [0.0.4](https://github.com/SigNoz/components/compare/v0.0.3...v0.0.4) (2026-03-17)
 
 
