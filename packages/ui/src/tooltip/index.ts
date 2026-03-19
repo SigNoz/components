@@ -1,5 +1,2 @@
-/**
- * @experimental Not migrated to CSS modules and JSDoc. Prefer other components until migration is complete.
- */
 export type * from './tooltip.js';
-export { Tooltip, TooltipProvider } from './tooltip.js';
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip.js';

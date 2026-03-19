@@ -1,0 +1,62 @@
+@keyframes tooltip-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes tooltip-out {
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+}
+
+.tooltip__content {
+	background-color: var(--tooltip-background, var(--l2-background));
+	color: var(--tooltip-foreground, var(--l1-foreground));
+	z-index: var(--tooltip-z-index, 50);
+	width: var(--tooltip-width, fit-content);
+	transform-origin: var(--tooltip-transform-origin, var(--radix-tooltip-content-transform-origin));
+	border-radius: var(--tooltip-border-radius, calc(var(--radius-sm) - 4px));
+	padding: var(--tooltip-padding, var(--spacing-2) var(--spacing-4));
+	font-size: var(--tooltip-font-size, var(--periscope-font-size-small));
+	text-wrap: var(--tooltip-text-wrap, balance);
+	line-height: var(--tooltip-line-height, 18px);
+	letter-spacing: var(--tooltip-letter-spacing, -0.06px);
+	border-width: var(--tooltip-border-width, 1px);
+	border-style: var(--tooltip-border-style, solid);
+	border-color: var(--tooltip-border-color, var(--l2-border));
+	box-shadow: var(--tooltip-box-shadow, 0 6px 12px 0 rgba(0, 0, 0, 0.2));
+}
+
+.tooltip__content[data-state="open"] {
+	animation: tooltip-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tooltip__content[data-state="closed"] {
+	animation: tooltip-out 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
+.tooltip__arrow {
+	z-index: calc(var(--tooltip-z-index, 50) + 1);
+	width: var(--tooltip-arrow-width, 10px);
+	height: var(--tooltip-arrow-height, 10px);
+	border-radius: var(--tooltip-arrow-border-radius, 2px);
+	transform: translateY(-1.5px);
+}
+
+.tooltip__arrowPath {
+	fill: var(--tooltip-background, var(--l2-background));
+	stroke: var(--tooltip-border-color, var(--l2-border));
+	stroke-width: var(--tooltip-border-width, 2px);
+}

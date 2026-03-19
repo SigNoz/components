@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@signozhq/icons": {
+      "signature": "a5f2d41f28711313c76d8dc5df828340",
+      "file": true,
+      "replaced": "0.2.0"
+    }
+  }
+}
