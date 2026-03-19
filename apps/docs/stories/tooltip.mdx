@@ -1,0 +1,78 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as TooltipStories from './tooltip.stories';
+import * as TooltipProviderStories from './tooltip-provider.stories';
+import * as TooltipTriggerStories from './tooltip-trigger.stories';
+import * as TooltipContentStories from './tooltip-content.stories';
+
+<Meta of={TooltipStories} />
+
+# Tooltip
+
+A customizable tooltip component with smooth animations and flexible positioning.
+
+## How to use
+
+### Basic usage (with title)
+
+Use `Tooltip` with the `title` prop for simple tooltips. Wrap your app (or section) with `TooltipProvider`:
+
+```tsx
+import { Tooltip, TooltipProvider } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<TooltipProvider delayDuration={700}>
+			<Tooltip title="Helpful information" arrow>
+				<Button variant="solid" color="secondary">
+					Hover me
+				</Button>
+			</Tooltip>
+		</TooltipProvider>
+	);
+}
+```
+
+Set `delayDuration={0}` in Storybook for instant feedback.
+
+<Primary />
+
+## Tooltip Props
+
+<Controls of={TooltipStories.Default} />
+
+## TooltipProvider Props
+
+<Controls of={TooltipProviderStories.Default} />
+
+## Primitive composition
+
+For custom content and positioning, use `TooltipTrigger` and `TooltipContent`:
+
+```tsx
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<TooltipProvider>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<Button>Custom content</Button>
+				</TooltipTrigger>
+				<TooltipContent side="bottom" arrow>
+					<span>Rich tooltip content</span>
+				</TooltipContent>
+			</Tooltip>
+		</TooltipProvider>
+	);
+}
+```
+
+## TooltipTrigger Props
+
+<Controls of={TooltipTriggerStories.Default} />
+
+## TooltipContent Props
+
+<Controls of={TooltipContentStories.Default} />
