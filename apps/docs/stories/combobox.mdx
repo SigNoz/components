@@ -143,6 +143,63 @@ export default function MyComponent() {
 />
 ```
 
+### Combobox inside a popover
+
+When placing a combobox inside a popover (e.g. a filter panel or form), set `withPortal={false}` so the dropdown content stays within the popover DOM instead of portaling to `document.body`. This avoids z-index and stacking issues.
+
+**ComboboxSimple preset:**
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent, ComboboxSimple, Button } from '@signozhq/ui';
+
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open filters</Button>
+	</PopoverTrigger>
+	<PopoverContent className="w-80">
+		<ComboboxSimple
+			items={items}
+			value={value}
+			onChange={setValue}
+			withPortal={false}
+		/>
+	</PopoverContent>
+</Popover>
+```
+
+**Primitive composition:**
+
+```tsx
+import {
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	Combobox,
+	ComboboxTrigger,
+	ComboboxContent,
+	ComboboxCommand,
+	ComboboxInput,
+	ComboboxList,
+} from '@signozhq/ui';
+
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open</Button>
+	</PopoverTrigger>
+	<PopoverContent>
+		<Combobox open={open} onOpenChange={setOpen}>
+			<ComboboxTrigger placeholder="Select..." value={selectedLabel} />
+			<ComboboxContent withPortal={false}>
+				<ComboboxCommand>
+					<ComboboxInput placeholder="Search..." />
+					<ComboboxList>{/* items */}</ComboboxList>
+				</ComboboxCommand>
+			</ComboboxContent>
+		</Combobox>
+	</PopoverContent>
+</Popover>
+```
+
 <Primary />
 
 ## ComboboxSimple Props

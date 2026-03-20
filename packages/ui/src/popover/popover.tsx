@@ -302,6 +302,12 @@ export type PopoverContentProps = {
 	 * Whether to show the arrow.
 	 */
 	arrow?: boolean;
+	/**
+	 * Only change to false when you want to include a popover inside another popover.
+	 *
+	 * @default true
+	 */
+	withPortal?: boolean;
 } & Pick<React.ComponentProps<'div'>, 'id' | 'className' | 'style' | 'children'>;
 
 /**
@@ -327,25 +333,38 @@ export type PopoverContentProps = {
  */
 export const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
 	(
-		{ className, align = 'center', sideOffset = 4, testId, children, arrow = false, ...props },
+		{
+			className,
+			align = 'center',
+			sideOffset = 4,
+			testId,
+			children,
+			arrow = false,
+			withPortal = true,
+			...props
+		},
 		ref
 	) => {
-		return (
-			<PopoverPortal>
-				<PopoverPrimitive.Content
-					ref={ref}
-					data-slot="popover-content"
-					data-testid={testId}
-					align={align}
-					sideOffset={sideOffset}
-					className={cn(styles.popover__content, className)}
-					{...props}
-				>
-					{children}
-					{arrow && <PopoverArrow />}
-				</PopoverPrimitive.Content>
-			</PopoverPortal>
+		const popoverContent = (
+			<PopoverPrimitive.Content
+				ref={ref}
+				data-slot="popover-content"
+				data-testid={testId}
+				align={align}
+				sideOffset={sideOffset}
+				className={cn(styles.popover__content, className)}
+				{...props}
+			>
+				{arrow && <PopoverArrow />}
+				{children}
+			</PopoverPrimitive.Content>
 		);
+
+		if (!withPortal) {
+			return popoverContent;
+		}
+
+		return <PopoverPortal>{popoverContent}</PopoverPortal>;
 	}
 );
 
