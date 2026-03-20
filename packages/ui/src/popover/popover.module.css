@@ -1,0 +1,58 @@
+@keyframes popover-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes popover-out {
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+}
+
+.popover__content {
+	background-color: var(--popover-background, var(--l2-background));
+	color: var(--popover-foreground, var(--l1-foreground));
+	z-index: var(--popover-z-index, 50);
+	width: var(--popover-width, fit-content);
+	transform-origin: var(--popover-transform-origin, var(--radix-popover-content-transform-origin));
+	border-radius: var(--popover-border-radius, var(--radius-2, 4px));
+	padding: var(--popover-padding, var(--spacing-8));
+	border-width: var(--popover-border-width, 1px);
+	border-style: var(--popover-border-style, solid);
+	border-color: var(--popover-border-color, var(--l2-border));
+	box-shadow: var(--popover-box-shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1));
+	outline: none;
+}
+
+.popover__content[data-state="open"] {
+	animation: popover-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.popover__content[data-state="closed"] {
+	animation: popover-out 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.popover__arrow {
+	z-index: calc(var(--popover-z-index, 50) + 1);
+	width: var(--popover-arrow-width, 10px);
+	height: var(--popover-arrow-height, 10px);
+	border-radius: var(--popover-arrow-border-radius, 2px);
+	transform: translateY(-1.5px);
+}
+
+.popover__arrowPath {
+	fill: var(--popover-background, var(--l2-background));
+	stroke: var(--popover-border-color, var(--l2-border));
+	stroke-width: var(--popover-border-width, 2px);
+}
