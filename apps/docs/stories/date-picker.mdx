@@ -1,0 +1,83 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DatePickerStories from './date-picker.stories';
+
+<Meta of={DatePickerStories} />
+
+# DatePicker
+
+A comprehensive and configurable date picker component that supports date, time, and timezone selection. All functionality is controlled through props for maximum flexibility.
+
+## How to use
+
+### Date only
+
+```tsx
+import { DatePicker } from '@signozhq/ui';
+
+export default function DateOnlyPicker() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+	return (
+		<DatePicker
+			date={date}
+			onDateChange={setDate}
+			placeholder="Pick a date"
+		/>
+	);
+}
+```
+
+### Date and time
+
+```tsx
+import { DatePicker } from '@signozhq/ui';
+
+export default function DateAndTimePicker() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date());
+	const [time, setTime] = React.useState('12:00:00');
+
+	return (
+		<DatePicker
+			date={date}
+			onDateChange={setDate}
+			time={time}
+			onTimeChange={setTime}
+			showTime={true}
+			placeholder="Pick a date and time"
+		/>
+	);
+}
+```
+
+### Date, time, and timezone
+
+```tsx
+import { DatePicker } from '@signozhq/ui';
+
+export default function DateTimeTimezonePicker() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date());
+	const [time, setTime] = React.useState('12:00:00');
+	const [timezone, setTimezone] = React.useState('UTC');
+
+	return (
+		<DatePicker
+			date={date}
+			onDateChange={setDate}
+			time={time}
+			onTimeChange={setTime}
+			timezone={timezone}
+			onTimezoneChange={setTimezone}
+			showTime={true}
+			showTimezone={true}
+			showActions={true}
+			placeholder="Pick a date, time, and timezone"
+		/>
+	);
+}
+```
+
+<Primary />
+
+## DatePicker Props
+
+<Controls of={DatePickerStories.Default} />

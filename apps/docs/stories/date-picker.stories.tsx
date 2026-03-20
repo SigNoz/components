@@ -1,111 +1,171 @@
 import { DatePicker } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const DatePickerExamples = [
-	`import { DatePicker } from '@signozhq/ui';
-
-export default function DateOnlyPicker() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-
-  return (
-    <DatePicker
-      date={date}
-      onDateChange={setDate}
-      placeholder="Pick a date"
-    />
-  );
-}`,
-	`import { DatePicker } from '@signozhq/ui';
-
-export default function DateAndTimePicker() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [time, setTime] = React.useState('12:00:00');
-
-  return (
-    <DatePicker
-      date={date}
-      onDateChange={setDate}
-      time={time}
-      onTimeChange={setTime}
-      showTime={true}
-      placeholder="Pick a date and time"
-    />
-  );
-}`,
-	`import { DatePicker } from '@signozhq/ui';
-
-export default function DateTimeTimezonePicker() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-  const [time, setTime] = React.useState('12:00:00');
-  const [timezone, setTimezone] = React.useState('UTC');
-
-  return (
-    <DatePicker
-      date={date}
-      onDateChange={setDate}
-      time={time}
-      onTimeChange={setTime}
-      timezone={timezone}
-      onTimezoneChange={setTimezone}
-      showTime={true}
-      showTimezone={true}
-      showActions={true}
-      placeholder="Pick a date, time, and timezone"
-    />
-  );
-}`,
-];
-
-const DatePickerDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A comprehensive and configurable date picker component that supports date, time, and timezone selection. All functionality is controlled through props for maximum flexibility.',
-	examples: DatePickerExamples,
-});
 
 const meta: Meta<typeof DatePicker> = {
-	title: 'Old Components/DatePicker',
+	title: 'Components/DatePicker',
 	component: DatePicker,
-	parameters: {
-		docs: {
-			description: {
-				component: DatePickerDocs,
-			},
-		},
-	},
 	tags: ['autodocs'],
 	argTypes: {
-		buttonVariant: {
-			control: { type: 'select' },
-			options: ['default', 'outline', 'ghost'],
-			description: 'The variant of the trigger button',
+		date: {
+			control: false,
+			description: 'The selected date.',
+			table: { category: 'State', type: { summary: 'Date | undefined' } },
 		},
-		buttonSize: {
-			control: { type: 'select' },
-			options: ['sm', 'md', 'lg'],
-			description: 'The size of the trigger button',
+		onDateChange: {
+			control: false,
+			description: 'Callback when date changes.',
+			table: { category: 'Events', type: { summary: '(date: Date | undefined) => void' } },
+		},
+		time: {
+			control: 'text',
+			description: 'The selected time in HH:mm:ss format.',
+			table: {
+				category: 'State',
+				type: { summary: 'string' },
+				defaultValue: { summary: "'12:00:00'" },
+			},
+		},
+		onTimeChange: {
+			control: false,
+			description: 'Callback when time changes.',
+			table: { category: 'Events', type: { summary: '(time: string) => void' } },
+		},
+		timezone: {
+			control: 'text',
+			description: 'The selected timezone.',
+			table: {
+				category: 'State',
+				type: { summary: 'string' },
+				defaultValue: { summary: "'UTC'" },
+			},
+		},
+		onTimezoneChange: {
+			control: false,
+			description: 'Callback when timezone changes.',
+			table: { category: 'Events', type: { summary: '(timezone: string) => void' } },
+		},
+		placeholder: {
+			control: 'text',
+			description: 'Placeholder text.',
+			table: {
+				category: 'Content',
+				type: { summary: 'string' },
+				defaultValue: { summary: "'Pick a date'" },
+			},
 		},
 		showTime: {
-			control: { type: 'boolean' },
-			description: 'Whether to show time selection',
+			control: 'boolean',
+			description: 'Whether to show time selection.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
 		},
 		showTimezone: {
-			control: { type: 'boolean' },
-			description: 'Whether to show timezone selection',
+			control: 'boolean',
+			description: 'Whether to show timezone selection.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
 		},
 		showActions: {
-			control: { type: 'boolean' },
-			description: 'Whether to show action buttons (Cancel/OK)',
+			control: 'boolean',
+			description: 'Whether to show action buttons (Cancel/OK).',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
 		},
 		closeOnSelect: {
-			control: { type: 'boolean' },
-			description: 'Whether to close popover on date selection',
+			control: 'boolean',
+			description: 'Whether to close popover on date selection.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'true' },
+			},
 		},
 		disabled: {
-			control: { type: 'boolean' },
-			description: 'Whether the picker is disabled',
+			control: 'boolean',
+			description: 'Whether the picker is disabled.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		buttonVariant: {
+			control: 'select',
+			options: ['solid', 'outlined', 'dashed', 'ghost', 'link', 'action'],
+			description: 'Button variant for the trigger.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'ButtonVariantValue' },
+				defaultValue: { summary: "'outlined'" },
+			},
+		},
+		buttonColor: {
+			control: 'select',
+			options: ['primary', 'destructive', 'warning', 'secondary', 'none'],
+			description: 'Button color for the trigger.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'ButtonColorValue' },
+				defaultValue: { summary: "'secondary'" },
+			},
+		},
+		buttonSize: {
+			control: 'select',
+			options: ['sm', 'md', 'lg'],
+			description: 'Button size for the trigger.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'ButtonSizeValue' },
+				defaultValue: { summary: "'md'" },
+			},
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		popoverContentClassName: {
+			control: 'text',
+			description: 'Additional CSS classes for the popover content.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		trigger: {
+			control: false,
+			description: 'Custom trigger element.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		actions: {
+			control: false,
+			description: 'Custom action buttons.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		timezones: {
+			control: false,
+			description: 'Available timezones.',
+			table: {
+				category: 'Content',
+				type: { summary: 'readonly { value: string; label: string }[]' },
+			},
+		},
+		calendarProps: {
+			control: false,
+			description: 'Calendar props.',
+			table: { category: 'Content', type: { summary: 'CalendarProps' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'Test ID for the date picker.',
+			table: { category: 'Testing', type: { summary: 'string' } },
 		},
 	},
 };
@@ -116,18 +176,43 @@ type Story = StoryObj<typeof DatePicker>;
 const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
 
 export const Default: Story = {
-	render: () => {
+	args: {
+		placeholder: 'Pick a date',
+		showTime: false,
+		showTimezone: false,
+		showActions: false,
+		closeOnSelect: true,
+		disabled: false,
+		buttonVariant: 'outlined',
+		buttonColor: 'secondary',
+		buttonSize: 'md',
+	},
+	render: (args) => {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+		const [time, setTime] = React.useState(args.time ?? '12:00:00');
+		const [timezone, setTimezone] = React.useState(args.timezone ?? 'UTC');
 
 		return (
 			<div className="space-y-4">
 				<div>
 					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
 					<p className="text-sm text-muted-foreground">
-						{date ? date.toLocaleDateString() : 'No date selected'}
+						{date
+							? args.showTime
+								? `${date.toLocaleDateString()} at ${time}${args.showTimezone ? ` (${timezone})` : ''}`
+								: date.toLocaleDateString()
+							: 'No date selected'}
 					</p>
 				</div>
-				<DatePicker date={date} onDateChange={setDate} placeholder="Pick a date" />
+				<DatePicker
+					{...args}
+					date={date}
+					onDateChange={setDate}
+					time={time}
+					onTimeChange={setTime}
+					timezone={timezone}
+					onTimezoneChange={setTimezone}
+				/>
 			</div>
 		);
 	},
@@ -258,22 +343,22 @@ export const DifferentButtonVariants: Story = {
 					<h3 className="text-sm font-medium">Button Variants:</h3>
 
 					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Default variant:</p>
+						<p className="text-xs text-muted-foreground">Solid variant:</p>
 						<DatePicker
 							date={date1}
 							onDateChange={setDate1}
-							buttonVariant="default"
+							buttonVariant="solid"
 							showTime={false}
 							showTimezone={false}
 						/>
 					</div>
 
 					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Outline variant:</p>
+						<p className="text-xs text-muted-foreground">Outlined variant:</p>
 						<DatePicker
 							date={date2}
 							onDateChange={setDate2}
-							buttonVariant="outline"
+							buttonVariant="outlined"
 							showTime={false}
 							showTimezone={false}
 						/>
@@ -299,7 +384,6 @@ export const DifferentButtonSizes: Story = {
 	render: () => {
 		const [date1, setDate1] = React.useState<Date | undefined>(new Date(fixedDate));
 		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [date3, setDate3] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
 			<div className="space-y-6">
@@ -323,17 +407,6 @@ export const DifferentButtonSizes: Story = {
 							date={date2}
 							onDateChange={setDate2}
 							buttonSize="md"
-							showTime={false}
-							showTimezone={false}
-						/>
-					</div>
-
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Large size:</p>
-						<DatePicker
-							date={date3}
-							onDateChange={setDate3}
-							buttonSize="lg"
 							showTime={false}
 							showTimezone={false}
 						/>
