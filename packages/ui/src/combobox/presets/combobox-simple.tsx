@@ -80,6 +80,12 @@ export type ComboboxSimpleProps = {
 	 * @returns The string or ReactNode to show in the trigger.
 	 */
 	displayValue?: (item: ComboboxSimpleItem | undefined) => string | React.ReactNode;
+	/**
+	 * Only change to false when you want to include this component inside a popover
+	 *
+	 * @default true
+	 */
+	withPortal?: boolean;
 };
 
 function flattenItems(groups: ComboboxSimpleGroup[]): ComboboxSimpleItem[] {
@@ -108,6 +114,7 @@ function ComboboxSimpleInner({
 	defaultValue = '',
 	onChange,
 	displayValue: displayValueFn,
+	withPortal = true,
 }: ComboboxSimpleProps) {
 	const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
 	const [open, setOpen] = React.useState(false);
@@ -165,7 +172,7 @@ function ComboboxSimpleInner({
 		<Combobox open={open} onOpenChange={setOpen}>
 			<ComboboxTrigger placeholder={placeholder} value={triggerValue} />
 			{open && (
-				<ComboboxContent>
+				<ComboboxContent withPortal={withPortal}>
 					<ComboboxCommand>
 						<ComboboxInput placeholder={placeholder} />
 						<ComboboxList>{listContent}</ComboboxList>

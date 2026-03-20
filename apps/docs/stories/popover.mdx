@@ -94,6 +94,29 @@ Use `PopoverAnchor` when you want the popover positioned against a different ele
 </Popover>
 ```
 
+### Popover inside another popover
+
+When nesting a popover inside another (e.g. a submenu or cascading picker), set `withPortal={false}` on the inner `PopoverContent`. This keeps the nested content in the parent popover's DOM hierarchy instead of portaling to `document.body`, avoiding z-index and stacking issues.
+
+```tsx
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open menu</Button>
+	</PopoverTrigger>
+	<PopoverContent className="w-64">
+		<p>Parent content</p>
+		<Popover>
+			<PopoverTrigger asChild>
+				<Button variant="ghost" size="sm">Open submenu</Button>
+			</PopoverTrigger>
+			<PopoverContent withPortal={false}>
+				<p>Nested popover content</p>
+			</PopoverContent>
+		</Popover>
+	</PopoverContent>
+</Popover>
+```
+
 ## Popover Props
 
 <Controls of={PopoverPrimitiveStories.Default} />

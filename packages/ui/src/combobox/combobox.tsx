@@ -13,6 +13,7 @@ import {
 	CommandSeparator,
 } from '../command/index.js';
 import { cn } from '../lib/utils.js';
+import { PopoverContent, type PopoverContentProps } from '../popover/index.js';
 import styles from './combobox.module.scss';
 
 /**
@@ -86,6 +87,8 @@ export const ComboboxTrigger = React.forwardRef<
 	</PopoverPrimitive.Trigger>
 ));
 
+export type ComboboxContentProps = PopoverContentProps;
+
 /**
  * Popover content container that wraps the combobox command and list.
  *
@@ -105,16 +108,14 @@ export const ComboboxTrigger = React.forwardRef<
  */
 export const ComboboxContent = React.forwardRef<
 	React.ElementRef<typeof PopoverPrimitive.Content>,
-	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+	ComboboxContentProps
 >(({ className, ...props }, ref) => (
-	<PopoverPrimitive.Portal>
-		<PopoverPrimitive.Content
-			data-slot="combobox-content"
-			ref={ref}
-			className={cn(styles['combobox__content'], className)}
-			{...props}
-		/>
-	</PopoverPrimitive.Portal>
+	<PopoverContent
+		ref={ref}
+		data-slot="combobox-content"
+		className={cn(className, styles.combobox__content)}
+		{...props}
+	/>
 ));
 
 export type ComboboxCommandProps = React.ComponentPropsWithoutRef<typeof Command>;
