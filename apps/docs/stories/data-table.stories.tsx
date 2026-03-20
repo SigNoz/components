@@ -1229,294 +1229,18 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 	},
 };
 
-// Story: Infinite Scroll with Load More
-export const InfiniteScroll: StoryObj<typeof DataTable<User>> = {
-	render: (args) => {
-		const [data, setData] = React.useState<User[]>([]);
-		const [loading, setLoading] = React.useState(false);
-		const [hasMore, setHasMore] = React.useState(true);
-		const [page, setPage] = React.useState(0);
-		const itemsPerPage = 50;
-		const maxItems = 200;
-
-		// Load initial data
-		React.useEffect(() => {
-			const initialData = generateLargeDataset(itemsPerPage, 0);
-			setData(initialData);
-			setPage(1);
-		}, []);
-
-		// Simulate loading more data
-		const loadMore = React.useCallback(() => {
-			if (loading || !hasMore) return;
-
-			setLoading(true);
-			setTimeout(() => {
-				const offset = page * itemsPerPage;
-				const remaining = Math.max(0, maxItems - offset);
-				const take = Math.min(itemsPerPage, remaining);
-				const newData = take > 0 ? generateLargeDataset(take, offset) : [];
-				setData((prev) => [...prev, ...newData]);
-				const nextPage = page + 1;
-				setPage(nextPage);
-				setLoading(false);
-				if (nextPage * itemsPerPage >= maxItems) {
-					setHasMore(false);
-				}
-			}, 1000);
-		}, [loading, hasMore, page]);
-
-		return (
-			<div className="space-y-4">
-				<div className="border rounded-lg p-6 bg-background">
-					<h3 className="text-lg font-semibold mb-2 text-foreground">
-						Infinite Scroll with Load More
-					</h3>
-					<p className="text-sm text-muted-foreground mb-4">
-						This table demonstrates infinite scrolling with 50 items loaded initially. Scroll to the
-						bottom to automatically load more items. The table maintains all interactive features
-						while efficiently loading data on demand.
-					</p>
-					<div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
-						<span>Loaded: {data.length} items</span>
-						<span>Page: {page}</span>
-						{loading && (
-							<span className="flex items-center gap-2">
-								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-								Loading more...
-							</span>
-						)}
-						{!hasMore && <span className="text-green-600">All items loaded</span>}
-					</div>
-					<DataTable
-						{...args}
-						data={data}
-						tableId="infinite-scroll-table"
-						enableInfiniteScroll={true}
-						hasMore={hasMore}
-						onLoadMore={loadMore}
-						loadingMore={loading}
-					/>
-				</div>
-			</div>
-		);
-	},
-	args: {
-		columns: [
-			{
-				accessorKey: 'name',
-				header: 'Employee Name',
-				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center gap-3">
-						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
-							{row.original.name
-								.split(' ')
-								.map((n: string) => n[0])
-								.join('')}
-						</div>
-						<div className="flex flex-col">
-							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">{row.original.email}</span>
-						</div>
-					</div>
-				),
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				cell: ({ row }: { row: Row<User> }) => {
-					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: {
-							label: 'Admin',
-							className: 'bg-purple-100 text-purple-800 border-purple-200',
-						},
-						user: {
-							label: 'User',
-							className: 'bg-blue-100 text-blue-800 border-blue-200',
-						},
-						moderator: {
-							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800 border-orange-200',
-						},
-						guest: {
-							label: 'Guest',
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
-						},
-					};
-					const roleInfo = roleMap[role];
-					return (
-						<Badge variant="outline" className={roleInfo.className}>
-							{roleInfo.label}
-						</Badge>
-					);
-				},
-			},
-			{
-				accessorKey: 'status',
-				header: 'Status',
-				cell: ({ row }: { row: Row<User> }) => {
-					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ label: string; icon: React.ComponentType; className: string }
-					> = {
-						active: {
-							label: 'Active',
-							icon: CheckCircle,
-							className: 'bg-green-100 text-green-800 border-green-200',
-						},
-						inactive: {
-							label: 'Inactive',
-							icon: XCircle,
-							className: 'bg-red-100 text-red-800 border-red-200',
-						},
-						pending: {
-							label: 'Pending',
-							icon: Clock,
-							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-						},
-						suspended: {
-							label: 'Suspended',
-							icon: AlertCircle,
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
-						},
-					};
-					const statusInfo = statusMap[status];
-					const Icon = statusInfo.icon;
-					return (
-						<div className="flex items-center gap-2">
-							<Icon />
-							<Badge variant="outline" className={statusInfo.className}>
-								{statusInfo.label}
-							</Badge>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'department',
-				header: 'Department',
-				cell: ({ row }: { row: Row<User> }) => (
-					<span className="font-medium text-sm">{row.original.department}</span>
-				),
-			},
-			{
-				accessorKey: 'salary',
-				header: 'Salary',
-				cell: ({ row }: { row: Row<User> }) => {
-					const salary = parseFloat(row.getValue('salary') as string);
-					const formatted = new Intl.NumberFormat('en-US', {
-						style: 'currency',
-						currency: 'USD',
-						minimumFractionDigits: 0,
-						maximumFractionDigits: 0,
-					}).format(salary);
-					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
-				},
-			},
-			{
-				accessorKey: 'performance',
-				header: 'Performance',
-				cell: ({ row }: { row: Row<User> }) => {
-					const performance = parseFloat(row.getValue('performance') as string);
-					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return 'text-green-600';
-						if (score >= 80) return 'text-blue-600';
-						if (score >= 70) return 'text-yellow-600';
-						return 'text-red-600';
-					};
-					return (
-						<div className="flex items-center gap-2">
-							<div className="flex-1 bg-gray-200 rounded-full h-2">
-								<div
-									className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
-									style={{ width: `${performance}%` }}
-								/>
-							</div>
-							<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
-								{performance}%
-							</span>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'lastLogin',
-				header: 'Last Login',
-				cell: ({ row }: { row: Row<User> }) => {
-					const date = new Date(row.getValue('lastLogin') as string);
-					const formatted = date.toLocaleDateString('en-US', {
-						month: 'short',
-						day: 'numeric',
-						hour: '2-digit',
-						minute: '2-digit',
-					});
-					return <span className="text-sm text-muted-foreground">{formatted}</span>;
-				},
-			},
-			{
-				id: 'actions',
-				header: 'Actions',
-				cell: () => {
-					return (
-						<div className="flex items-center gap-1">
-							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Eye className="h-4 w-4" />
-							</Button>
-							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Edit className="h-4 w-4" />
-							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-							>
-								<Trash2 className="h-4 w-4" />
-							</Button>
-						</div>
-					);
-				},
-			},
-		],
-		tableId: 'infinite-scroll-table',
-		enableSorting: true,
-		enableFiltering: true,
-		enableGlobalFilter: true,
-		enableColumnReordering: true,
-		enableColumnResizing: true,
-		enableColumnPinning: true,
-		enableRowSelection: true,
-		enablePagination: false, // Disable pagination for infinite scroll
-		showHeaders: true,
-		defaultColumnWidth: 180,
-		minColumnWidth: 100,
-		maxColumnWidth: 400,
-		// Virtualization settings for smooth scrolling
-		enableVirtualization: true,
-		estimateRowSize: 60,
-		overscan: 10,
-		rowHeight: 60,
-		enableDynamicRowHeights: false,
-	},
-};
-
 // Story: Virtualized Infinite Scroll with Resize + Reorder
 export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>> = {
 	render: (args) => {
-		const [data, setData] = React.useState<User[]>([]);
-		const [loading, setLoading] = React.useState(false);
-		const [hasMore, setHasMore] = React.useState(true);
-		const [page, setPage] = React.useState(0);
 		const itemsPerPage = 100;
 		const maxItems = 1000;
-		const [orderedColumns, setOrderedColumns] = React.useState<ColumnDef<User>[]>([]);
 
-		React.useEffect(() => {
-			setData(generateLargeDataset(itemsPerPage, 0));
-			setPage(1);
-		}, []);
+		// Initialize data synchronously to avoid Chromatic snapshot race conditions
+		const [data, setData] = React.useState<User[]>(() => generateLargeDataset(itemsPerPage, 0));
+		const [loading, setLoading] = React.useState(false);
+		const [hasMore, setHasMore] = React.useState(true);
+		const [page, setPage] = React.useState(1);
+		const [orderedColumns, setOrderedColumns] = React.useState<ColumnDef<User>[]>([]);
 
 		const loadMore = React.useCallback(() => {
 			if (loading || !hasMore) return;
@@ -1663,6 +1387,12 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>
 		enableInfiniteScroll: true,
 		enableScrollRestoration: false,
 		fixedHeight: 600,
+	},
+	parameters: {
+		chromatic: {
+			// Disable animations to prevent visual diffs from spinning loaders
+			pauseAnimationAtEnd: true,
+		},
 	},
 };
 
