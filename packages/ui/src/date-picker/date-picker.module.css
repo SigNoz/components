@@ -1,0 +1,86 @@
+.datePicker {
+	position: relative;
+}
+
+.datePicker__trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--date-picker-trigger-gap, var(--spacing-4, 8px));
+	justify-content: space-between;
+	font-weight: var(--date-picker-trigger-font-weight, 400);
+	min-width: var(--date-picker-trigger-min-width, 200px);
+}
+
+.datePicker__triggerIcon {
+	flex-shrink: 0;
+	width: var(--date-picker-icon-size, 16px);
+	height: var(--date-picker-icon-size, 16px);
+	color: var(--date-picker-icon-color, var(--l2-foreground));
+}
+
+.datePicker__triggerText {
+	flex: 1;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.datePicker__triggerText--placeholder {
+	color: var(--date-picker-placeholder-color, var(--l3-foreground));
+}
+
+.datePicker__content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--date-picker-content-gap, var(--spacing-6, 12px));
+}
+
+.datePicker__calendar {
+	--calendar-background: var(--l2-background);
+	--calendar-padding: 0px;
+}
+
+.datePicker__controls {
+	display: flex;
+	flex-direction: column;
+	gap: var(--date-picker-controls-gap, var(--spacing-4, 8px));
+	padding-top: var(--date-picker-controls-padding-top, var(--spacing-4, 8px));
+	border-top: var(--date-picker-controls-border-width, 1px) solid var(--date-picker-controls-border-color, var(--l2-border));
+}
+
+.datePicker__fieldRow {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--date-picker-field-gap, var(--spacing-4, 8px));
+	padding-top: var(--date-picker-actions-padding-top, var(--spacing-4, 8px));
+}
+
+.datePicker__fieldLabel {
+	font-size: var(--date-picker-label-font-size, 12px);
+	font-weight: var(--date-picker-label-font-weight, 400);
+	color: var(--date-picker-label-color, var(--l2-foreground));
+	flex-shrink: 0;
+}
+
+.datePicker__fieldInput {
+	width: var(--date-picker-field-input-width, 50%);
+}
+
+.datePicker__timeInput {
+	width: var(--date-picker-time-input-width, 50%);
+}
+
+.datePicker__timezoneCombobox {
+	width: var(--date-picker-timezone-width, 50%);
+}
+
+.datePicker__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--date-picker-actions-gap, var(--spacing-4, 8px));
+	padding-top: var(--date-picker-actions-padding-top, var(--spacing-8, 16px));
+	border-top: var(--date-picker-actions-border-width, 1px) solid var(--date-picker-actions-border-color, var(--l2-border));
+}

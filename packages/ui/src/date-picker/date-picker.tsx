@@ -3,61 +3,173 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { CalendarIcon, ChevronDown } from 'lucide-react';
 import * as React from 'react';
+import {
+	Button,
+	type ButtonColorValue,
+	type ButtonSizeValue,
+	type ButtonVariantValue,
+} from '../button/index.js';
 import { Calendar } from '../calendar/index.js';
+import { ComboboxSimple, type ComboboxSimpleItem } from '../combobox/index.js';
 import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
+import { Popover, PopoverContent, PopoverTrigger } from '../popover/index.js';
 import { ALL_TIMEZONES } from './constants.js';
+import styles from './date-picker.module.css';
 
 // Extend dayjs with timezone plugins
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export interface DatePickerProps {
-	/** The selected date */
+export type DatePickerProps = {
+	/**
+	 * The selected date.
+	 */
 	date?: Date;
-	/** Callback when date changes */
+	/**
+	 * Callback when date changes.
+	 */
 	onDateChange?: (date: Date | undefined) => void;
-	/** The selected time in HH:mm:ss format */
+	/**
+	 * The selected time in HH:mm:ss format.
+	 * @default '12:00:00'
+	 */
 	time?: string;
-	/** Callback when time changes */
+	/**
+	 * Callback when time changes.
+	 */
 	onTimeChange?: (time: string) => void;
-	/** The selected timezone */
+	/**
+	 * The selected timezone.
+	 * @default 'UTC'
+	 */
 	timezone?: string;
-	/** Callback when timezone changes */
+	/**
+	 * Callback when timezone changes.
+	 */
 	onTimezoneChange?: (timezone: string) => void;
-	/** Available timezones */
+	/**
+	 * Available timezones.
+	 */
 	timezones?: readonly { value: string; label: string }[];
-	/** Whether to show timezone selection */
+	/**
+	 * Whether to show timezone selection.
+	 * @default false
+	 */
 	showTimezone?: boolean;
-	/** Whether to show time selection */
+	/**
+	 * Whether to show time selection.
+	 * @default false
+	 */
 	showTime?: boolean;
-	/** Placeholder text */
+	/**
+	 * Placeholder text.
+	 * @default 'Pick a date'
+	 */
 	placeholder?: string;
-	/** Whether the picker is disabled */
+	/**
+	 * Whether the picker is disabled.
+	 * @default false
+	 */
 	disabled?: boolean;
-	/** Additional CSS classes */
+	/**
+	 * Additional CSS classes.
+	 */
 	className?: string;
-	/** Button variant */
-	buttonVariant?: 'default' | 'outline' | 'ghost';
-	/** Button size */
-	buttonSize?: 'sm' | 'md' | 'lg';
-	/** Calendar props */
+	/**
+	 * Additional CSS classes for the popover content.
+	 */
+	popoverContentClassName?: string;
+	/**
+	 * Button variant.
+	 * @default 'outlined'
+	 */
+	buttonVariant?: ButtonVariantValue;
+	/**
+	 * Button color.
+	 * @default 'secondary'
+	 */
+	buttonColor?: ButtonColorValue;
+	/**
+	 * Button size.
+	 * @default 'md'
+	 */
+	buttonSize?: ButtonSizeValue;
+	/**
+	 * Calendar props.
+	 */
 	calendarProps?: Omit<React.ComponentProps<typeof Calendar>, 'mode' | 'selected' | 'onSelect'>;
-	/** Whether to close popover on date selection */
+	/**
+	 * Whether to close popover on date selection.
+	 * @default true
+	 */
 	closeOnSelect?: boolean;
-	/** Custom trigger element */
+	/**
+	 * Custom trigger element.
+	 */
 	trigger?: React.ReactNode;
-	/** Whether to show action buttons (Cancel/OK) */
+	/**
+	 * Whether to show action buttons (Cancel/OK).
+	 * @default false
+	 */
 	showActions?: boolean;
-	/** Custom action buttons */
+	/**
+	 * Custom action buttons.
+	 */
 	actions?: React.ReactNode;
-}
+	/**
+	 * Test ID for the date picker.
+	 */
+	testId?: string;
+};
 
 export const TIMEZONES = ALL_TIMEZONES.map((tz) => ({
 	value: tz,
 	label: tz,
 }));
 
+/**
+ * DatePicker component for selecting dates with optional time and timezone support.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * const [date, setDate] = React.useState<Date | undefined>();
+ * <DatePicker date={date} onDateChange={setDate} />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With time selection
+ * const [date, setDate] = React.useState<Date | undefined>();
+ * const [time, setTime] = React.useState('12:00:00');
+ * <DatePicker
+ *   date={date}
+ *   onDateChange={setDate}
+ *   time={time}
+ *   onTimeChange={setTime}
+ *   showTime
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With timezone selection
+ * const [date, setDate] = React.useState<Date | undefined>();
+ * const [time, setTime] = React.useState('12:00:00');
+ * const [tz, setTz] = React.useState('UTC');
+ * <DatePicker
+ *   date={date}
+ *   onDateChange={setDate}
+ *   time={time}
+ *   onTimeChange={setTime}
+ *   timezone={tz}
+ *   onTimezoneChange={setTz}
+ *   showTime
+ *   showTimezone
+ * />
+ * ```
+ */
 export function DatePicker({
 	date,
 	onDateChange,
@@ -71,13 +183,16 @@ export function DatePicker({
 	placeholder = 'Pick a date',
 	disabled = false,
 	className,
-	buttonVariant = 'outline',
-	buttonSize = 'sm',
+	popoverContentClassName,
+	buttonVariant = 'outlined',
+	buttonColor = 'secondary',
+	buttonSize = 'md',
 	calendarProps,
 	closeOnSelect = true,
 	trigger,
 	showActions = false,
 	actions,
+	testId,
 }: DatePickerProps) {
 	const [open, setOpen] = React.useState(false);
 	const [localDate, setLocalDate] = React.useState<Date | undefined>(date);
@@ -111,23 +226,16 @@ export function DatePicker({
 			return `${dayjs(date).format('MMM DD, YYYY')} at ${timeStr}`;
 		}
 
-		// If timezone is included
-		if (showTimezone) {
-			try {
-				// Create a date with the selected time
-				const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-				const dateWithTime = new Date(date);
-				dateWithTime.setHours(hours, minutes, seconds || 0);
+		// If timezone is included (with time)
+		if (showTimezone && showTime) {
+			// Display the date, time as entered, and timezone without conversion
+			// The time represents the time in the selected timezone
+			return `${dayjs(date).format('MMM DD, YYYY')} at ${timeStr} (${tz})`;
+		}
 
-				// Format in the selected timezone using dayjs
-				const formattedDate = dayjs(dateWithTime).tz(tz).format('MMM DD, YYYY');
-				const formattedTime = dayjs(dateWithTime).tz(tz).format('HH:mm:ss');
-
-				return `${formattedDate} at ${formattedTime} (${tz})`;
-			} catch {
-				// Fallback to local formatting
-				return `${dayjs(date).format('MMM DD, YYYY')} at ${timeStr}`;
-			}
+		// If only timezone is included (without time)
+		if (showTimezone && !showTime) {
+			return `${dayjs(date).format('MMM DD, YYYY')} (${tz})`;
 		}
 
 		return dayjs(date).format('MMM DD, YYYY');
@@ -136,10 +244,11 @@ export function DatePicker({
 	// Handle date selection
 	const handleDateSelect = (selectedDate: Date | undefined) => {
 		setLocalDate(selectedDate);
-		if (onDateChange) {
+		// Only notify parent immediately if showActions is false
+		if (!showActions && onDateChange) {
 			onDateChange(selectedDate);
 		}
-		if (closeOnSelect && !showTime && !showTimezone) {
+		if (closeOnSelect && !showTime && !showTimezone && !showActions) {
 			setOpen(false);
 		}
 	};
@@ -147,7 +256,8 @@ export function DatePicker({
 	// Handle time change
 	const handleTimeChange = (newTime: string) => {
 		setLocalTime(newTime);
-		if (onTimeChange) {
+		// Only notify parent immediately if showActions is false
+		if (!showActions && onTimeChange) {
 			onTimeChange(newTime);
 		}
 	};
@@ -155,13 +265,24 @@ export function DatePicker({
 	// Handle timezone change
 	const handleTimezoneChange = (newTimezone: string) => {
 		setLocalTimezone(newTimezone);
-		if (onTimezoneChange) {
+		// Only notify parent immediately if showActions is false
+		if (!showActions && onTimezoneChange) {
 			onTimezoneChange(newTimezone);
 		}
 	};
 
 	// Handle OK button click
 	const handleOk = () => {
+		// When showActions is true, commit changes only on OK
+		if (onDateChange && localDate !== date) {
+			onDateChange(localDate);
+		}
+		if (onTimeChange && localTime !== time) {
+			onTimeChange(localTime);
+		}
+		if (onTimezoneChange && localTimezone !== timezone) {
+			onTimezoneChange(localTimezone);
+		}
 		setOpen(false);
 	};
 
@@ -174,126 +295,123 @@ export function DatePicker({
 		setOpen(false);
 	};
 
-	// Get button classes based on variant and size
-	const getButtonClasses = () => {
-		const baseClasses = 'justify-between font-normal';
+	// Convert timezones to ComboboxSimpleItem format
+	const timezoneItems: ComboboxSimpleItem[] = React.useMemo(
+		() =>
+			timezones.map((tz) => ({
+				value: tz.value,
+				label: tz.label,
+			})),
+		[timezones]
+	);
 
-		const variantClasses = {
-			default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-			outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-			ghost: 'hover:bg-accent hover:text-accent-foreground',
-		};
-
-		const sizeClasses = {
-			sm: 'h-8 px-3 text-sm',
-			md: 'h-10 px-4 py-2',
-			lg: 'h-12 px-6 text-lg',
-		};
-
-		return cn(
-			'inline-flex items-center gap-2 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-			variantClasses[buttonVariant],
-			sizeClasses[buttonSize],
-			baseClasses,
-			className
-		);
-	};
+	const displayText = formatDisplayDate(localDate, localTimezone, localTime);
+	const isPlaceholder = displayText === placeholder;
 
 	const defaultTrigger = (
-		<button
-			type="button"
-			className={getButtonClasses()}
-			onClick={() => setOpen(!open)}
+		<Button
+			variant={buttonVariant}
+			color={buttonColor}
 			disabled={disabled}
+			size={buttonSize}
+			className={cn(styles['datePicker__trigger'], className)}
+			testId={testId ? `${testId}-trigger` : undefined}
+			prefix={<CalendarIcon className={styles['datePicker__triggerIcon']} />}
+			suffix={<ChevronDown className={styles['datePicker__triggerIcon']} />}
 		>
-			<CalendarIcon className="h-4 w-4" />
-			<span className="flex-1 text-left">
-				{formatDisplayDate(localDate, localTimezone, localTime)}
+			<span
+				className={cn(
+					styles['datePicker__triggerText'],
+					isPlaceholder && styles['datePicker__triggerText--placeholder']
+				)}
+			>
+				{displayText}
 			</span>
-			<ChevronDown className="h-4 w-4" />
-		</button>
+		</Button>
 	);
 
 	const defaultActions = (
-		<div className="flex justify-end gap-2 pt-3 border-t">
-			<button
-				type="button"
+		<div className={styles['datePicker__actions']}>
+			<Button
+				variant="outlined"
+				color="secondary"
+				size="sm"
 				onClick={handleCancel}
-				className="px-3 py-2 text-sm border border-input rounded-md hover:bg-accent"
+				testId={testId ? `${testId}-cancel` : undefined}
 			>
 				Cancel
-			</button>
-			<button
-				type="button"
+			</Button>
+			<Button
+				variant="solid"
+				color="primary"
+				size="sm"
 				onClick={handleOk}
-				className="px-3 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+				testId={testId ? `${testId}-ok` : undefined}
 			>
 				OK
-			</button>
+			</Button>
 		</div>
 	);
 
 	return (
-		<div className="relative periscope-date-picker">
-			{trigger || defaultTrigger}
+		<Popover open={open} onOpenChange={setOpen} testId={testId}>
+			<PopoverTrigger asChild testId={testId ? `${testId}-popover-trigger` : undefined}>
+				{trigger || defaultTrigger}
+			</PopoverTrigger>
+			<PopoverContent
+				align="start"
+				arrow
+				className={cn(styles['datePicker__content'], popoverContentClassName)}
+				testId={testId ? `${testId}-content` : undefined}
+			>
+				<div className={styles['datePicker__calendar']}>
+					<Calendar
+						mode="single"
+						selected={localDate}
+						onSelect={handleDateSelect}
+						{...calendarProps}
+					/>
+				</div>
 
-			{open && (
-				<div className="absolute top-full left-0 mt-2 z-50 bg-background border border-border rounded-md shadow-lg p-4 min-w-[320px]">
-					<div className="space-y-4">
-						<div className="calendar-container">
-							<Calendar
-								mode="single"
-								selected={localDate}
-								onSelect={handleDateSelect}
-								className="rounded-md border"
-								{...calendarProps}
-							/>
-						</div>
-
-						{/* Time and Timezone Selection */}
-						{(showTime || showTimezone) && (
-							<div className="space-y-3 pt-3 flex flex-col gap-2">
-								{/* Time Selection */}
-								{showTime && (
-									<div className="flex flex-row  items-center justify-between gap-2 time-selector">
-										<label className="text-xs font-normal block">Time</label>
-										<Input
-											type="time"
-											id="time-picker"
-											value={localTime}
-											onChange={(e) => handleTimeChange(e.target.value)}
-											step="1"
-											className="w-1/2 px-3 px-2 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-										/>
-									</div>
-								)}
-
-								{/* Timezone Selection */}
-								{showTimezone && (
-									<div className="flex flex-row items-center justify-between gap-2 timezone-selector">
-										<label className="text-xs font-normal block">Timezone</label>
-										<select
-											value={localTimezone}
-											onChange={(e) => handleTimezoneChange(e.target.value)}
-											className="w-1/2 px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-										>
-											{timezones.map((tz) => (
-												<option key={tz.value} value={tz.value}>
-													{tz.label}
-												</option>
-											))}
-										</select>
-									</div>
-								)}
+				{/* Time and Timezone Selection */}
+				{(showTime || showTimezone) && (
+					<div className={styles['datePicker__controls']}>
+						{/* Time Selection */}
+						{showTime && (
+							<div className={styles['datePicker__fieldRow']}>
+								<label className={styles['datePicker__fieldLabel']}>Time</label>
+								<Input
+									type="time"
+									value={localTime}
+									onChange={(e) => handleTimeChange(e.target.value)}
+									step="1"
+									className={styles['datePicker__timeInput']}
+								/>
 							</div>
 						)}
 
-						{/* Action Buttons */}
-						{showActions && (actions || defaultActions)}
+						{/* Timezone Selection */}
+						{showTimezone && (
+							<div className={styles['datePicker__fieldRow']}>
+								<label className={styles['datePicker__fieldLabel']}>Timezone</label>
+								<div className={styles['datePicker__timezoneCombobox']}>
+									<ComboboxSimple
+										withPortal={false}
+										items={timezoneItems}
+										value={localTimezone}
+										onChange={handleTimezoneChange}
+										placeholder="Select timezone..."
+									/>
+								</div>
+							</div>
+						)}
 					</div>
-				</div>
-			)}
-		</div>
+				)}
+
+				{/* Action Buttons */}
+				{showActions && (actions || defaultActions)}
+			</PopoverContent>
+		</Popover>
 	);
 }
 
