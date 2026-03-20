@@ -1,2 +1,9 @@
-export type * from './tooltip.js';
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip.js';
+export {
+	Tooltip,
+	TooltipContent,
+	type TooltipContentProps,
+	type TooltipProps,
+	TooltipProvider,
+	type TooltipProviderProps,
+	TooltipTrigger,
+} from './tooltip.js';
