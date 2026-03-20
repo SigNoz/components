@@ -1,0 +1,111 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PopoverStories from './popover.stories';
+import * as PopoverPrimitiveStories from './popover-primitive.stories';
+import * as PopoverTriggerStories from './popover-trigger.stories';
+import * as PopoverContentStories from './popover-content.stories';
+import * as PopoverAnchorStories from './popover-anchor.stories';
+import * as PopoverSimpleStories from './popover-simple.stories';
+
+<Meta of={PopoverStories} />
+
+# Popover
+
+Displays rich content in a portal, triggered by a button. Use for tooltips, menus, date pickers, and similar patterns.
+
+## How to use
+
+### PopoverSimple (preset)
+
+For simple use cases, use `PopoverSimple` with `trigger` and `children`:
+
+```tsx
+import { PopoverSimple, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<PopoverSimple
+			trigger={<Button variant="outline">Open</Button>}
+			className="w-64"
+		>
+			<p>Simple popover content</p>
+		</PopoverSimple>
+	);
+}
+```
+
+<Primary />
+
+## PopoverSimple Props
+
+<Controls of={PopoverSimpleStories.Default} />
+
+## Primitive composition
+
+For full control, use the low-level building blocks: `Popover`, `PopoverTrigger`, `PopoverContent`, and optionally `PopoverAnchor`.
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Popover>
+			<PopoverTrigger asChild>
+				<Button variant="outline">Open popover</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-80">
+				<div className="space-y-2">
+					<h4 className="font-medium">Title</h4>
+					<p className="text-sm text-muted-foreground">Content goes here.</p>
+				</div>
+			</PopoverContent>
+		</Popover>
+	);
+}
+```
+
+### Controlled mode
+
+```tsx
+const [open, setOpen] = React.useState(false);
+
+<Popover open={open} onOpenChange={setOpen}>
+	<PopoverTrigger asChild>
+		<Button>{date ? date.toLocaleDateString() : 'Pick a date'}</Button>
+	</PopoverTrigger>
+	<PopoverContent align="start">
+		<Calendar mode="single" selected={date} onSelect={(d) => { setDate(d); setOpen(false); }} />
+	</PopoverContent>
+</Popover>
+```
+
+### PopoverAnchor
+
+Use `PopoverAnchor` when you want the popover positioned against a different element than the trigger:
+
+```tsx
+<Popover>
+	<PopoverAnchor asChild>
+		<div className="flex gap-2">
+			<span>Row as anchor</span>
+			<PopoverTrigger>Trigger</PopoverTrigger>
+		</div>
+	</PopoverAnchor>
+	<PopoverContent>Content positioned against the anchor row</PopoverContent>
+</Popover>
+```
+
+## Popover Props
+
+<Controls of={PopoverPrimitiveStories.Default} />
+
+## PopoverTrigger Props
+
+<Controls of={PopoverTriggerStories.Default} />
+
+## PopoverContent Props
+
+<Controls of={PopoverContentStories.Default} />
+
+## PopoverAnchor Props
+
+<Controls of={PopoverAnchorStories.Default} />
