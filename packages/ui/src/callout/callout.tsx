@@ -154,32 +154,17 @@ function Callout({
 			{iconComponent}
 			<div className={styles['callout__content']}>
 				{title && (
-					<div
-						data-slot="callout-title"
-						className={cn(styles['callout__title'], size === 'medium' && 'text-base')}
-					>
+					<div data-slot="callout-title" className={styles['callout__title']}>
 						{title}
 					</div>
 				)}
 				{children && action !== 'expandable' && (
-					<div
-						data-slot="callout-description"
-						className={cn(
-							styles['callout__description'],
-							size === 'medium' ? 'text-base' : 'text-sm'
-						)}
-					>
+					<div data-slot="callout-description" className={styles['callout__description']}>
 						{children}
 					</div>
 				)}
 				{children && action === 'expandable' && isExpanded && (
-					<div
-						data-slot="callout-description"
-						className={cn(
-							styles['callout__description'],
-							size === 'medium' ? 'text-base' : 'text-sm'
-						)}
-					>
+					<div data-slot="callout-description" className={styles['callout__description']}>
 						{children}
 					</div>
 				)}

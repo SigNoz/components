@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import * as React from 'react';
 import { DataTable } from './data-table.js';
+import styles from './example.module.scss';
 
 // Define the type for our data
 type Person = {
@@ -145,33 +146,22 @@ export function ExampleTable() {
 	};
 
 	return (
-		<div className="space-y-8">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Table with Fixed Height and Overflow
-				</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div className={styles.example}>
+			<div className={styles['example__section']}>
+				<h3 className={styles['example__title']}>Table with Fixed Height and Overflow</h3>
+				<p className={styles['example__description']}>
 					This table has a fixed height of 300px. When the data exceeds this height, the content
 					becomes scrollable while keeping the headers sticky. You can also scroll to specific users
 					using the buttons below.
 				</p>
-				<div className="flex gap-2 mb-4">
-					<button
-						onClick={() => handleScrollToUser('1')}
-						className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
-					>
+				<div className={styles['example__buttons']}>
+					<button onClick={() => handleScrollToUser('1')} className={styles['example__button']}>
 						Scroll to John Doe
 					</button>
-					<button
-						onClick={() => handleScrollToUser('5')}
-						className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
-					>
+					<button onClick={() => handleScrollToUser('5')} className={styles['example__button']}>
 						Scroll to Charlie Wilson
 					</button>
-					<button
-						onClick={() => handleScrollToUser('10')}
-						className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
-					>
+					<button onClick={() => handleScrollToUser('10')} className={styles['example__button']}>
 						Scroll to Helen Taylor
 					</button>
 				</div>
@@ -187,32 +177,30 @@ export function ExampleTable() {
 				/>
 			</div>
 
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
-					Table with Fixed Height and Virtualization
-				</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+			<div className={styles['example__section']}>
+				<h3 className={styles['example__title']}>Table with Fixed Height and Virtualization</h3>
+				<p className={styles['example__description']}>
 					This table demonstrates how fixedHeight works with virtualization. It has a fixed height
 					of 400px and uses virtualization to efficiently render 1000 rows. The virtualization works
 					seamlessly with the fixed height container, providing smooth scrolling performance. You
 					can also scroll to specific rows using the buttons below.
 				</p>
-				<div className="flex gap-2 mb-4">
+				<div className={styles['example__buttons']}>
 					<button
 						onClick={() => scrollToIndexRef.current?.(0, { align: 'start' })}
-						className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
+						className={styles['example__button']}
 					>
 						Scroll to First Row
 					</button>
 					<button
 						onClick={() => scrollToIndexRef.current?.(500, { align: 'center' })}
-						className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
+						className={styles['example__button']}
 					>
 						Scroll to Row 500
 					</button>
 					<button
 						onClick={() => scrollToIndexRef.current?.(999, { align: 'end' })}
-						className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90"
+						className={styles['example__button']}
 					>
 						Scroll to Last Row
 					</button>
