@@ -1,0 +1,48 @@
+.example {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__section {
+    border: 1px solid var(--border-color, hsl(var(--border)));
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    background: var(--bg-ink-500);
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-vanilla-100);
+  }
+
+  &__description {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--text-vanilla-400);
+    margin-bottom: 1rem;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__button {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background: var(--bg-robin-500);
+    color: var(--text-ink-500);
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, var(--bg-robin-500) 90%, transparent);
+    }
+  }
+}
