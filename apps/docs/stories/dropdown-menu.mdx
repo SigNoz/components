@@ -1,0 +1,176 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DropdownStories from './dropdown-menu.stories';
+import * as DropdownMenuRootStories from './dropdown-menu-root.stories';
+import * as DropdownMenuPortalStories from './dropdown-menu-portal.stories';
+import * as DropdownMenuTriggerStories from './dropdown-menu-trigger.stories';
+import * as DropdownMenuContentStories from './dropdown-menu-content.stories';
+import * as DropdownMenuItemStories from './dropdown-menu-item.stories';
+import * as DropdownMenuLabelStories from './dropdown-menu-label.stories';
+import * as DropdownMenuSeparatorStories from './dropdown-menu-separator.stories';
+import * as DropdownMenuCheckboxItemStories from './dropdown-menu-checkbox-item.stories';
+import * as DropdownMenuRadioGroupStories from './dropdown-menu-radio-group.stories';
+import * as DropdownMenuRadioItemStories from './dropdown-menu-radio-item.stories';
+import * as DropdownMenuSubStories from './dropdown-menu-sub.stories';
+import * as DropdownMenuSubTriggerStories from './dropdown-menu-sub-trigger.stories';
+import * as DropdownMenuSubContentStories from './dropdown-menu-sub-content.stories';
+import * as DropdownMenuShortcutStories from './dropdown-menu-shortcut.stories';
+import * as DropdownMenuBackStories from './dropdown-menu-back.stories';
+import * as DropdownMenuMultiStepStories from './dropdown-menu-multi-step.stories';
+import * as DropdownMenuGroupStories from './dropdown-menu-group.stories';
+import * as DropdownMenuLoadingStories from './dropdown-menu-loading.stories';
+import * as DropdownMenuSearchStories from './dropdown-menu-search.stories';
+
+<Meta of={DropdownStories} />
+
+# DropdownMenu
+
+A versatile dropdown menu component with support for icons, search, nested menus, selection states, and custom styling.
+
+## How to use
+
+### Dropdown (preset)
+
+Use `Dropdown` for a declarative menu configuration. Pass a `menu` object with `items` and an optional trigger:
+
+```tsx
+import { Dropdown, type MenuItem } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
+import { Grid3X3, Link2, Trash2 } from '@signozhq/icons';
+
+const items: MenuItem[] = [
+  {
+    type: 'group',
+    label: 'My Account',
+    children: [
+      { key: 'view', label: 'View', icon: <Grid3X3 /> },
+      { key: 'copy', label: 'Copy link', icon: <Link2 /> },
+      { type: 'divider' },
+      { key: 'delete', label: 'Delete', icon: <Trash2 />, danger: true },
+    ],
+  },
+];
+
+export default function MyComponent() {
+  return (
+    <Dropdown menu={{ items }}>
+      <Button variant="outlined">Open</Button>
+    </Dropdown>
+  );
+}
+```
+
+<Primary />
+
+## Dropdown Props
+
+<Controls of={DropdownStories.Default} />
+
+## Primitive composition
+
+For full control, use the low-level building blocks: `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuPortal`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuCheckboxItem`, `DropdownMenuRadioGroup`, `DropdownMenuRadioItem`, `DropdownMenuSub`, `DropdownMenuSubTrigger`, `DropdownMenuSubContent`, `DropdownMenuShortcut`, `DropdownMenuBack`, `DropdownMenuMultiStep`, `DropdownMenuGroup`, `DropdownMenuLoading`, and `DropdownMenuSearch`.
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+} from '@signozhq/ui';
+
+export default function MyComponent() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button>Open menu</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>
+          Profile
+          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Logout</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+```
+
+## DropdownMenu Props
+
+<Controls of={DropdownMenuRootStories.Default} />
+
+## DropdownMenuPortal Props
+
+<Controls of={DropdownMenuPortalStories.Default} />
+
+## DropdownMenuTrigger Props
+
+<Controls of={DropdownMenuTriggerStories.Default} />
+
+## DropdownMenuContent Props
+
+<Controls of={DropdownMenuContentStories.Default} />
+
+## DropdownMenuItem Props
+
+<Controls of={DropdownMenuItemStories.Default} />
+
+## DropdownMenuLabel Props
+
+<Controls of={DropdownMenuLabelStories.Default} />
+
+## DropdownMenuSeparator Props
+
+<Controls of={DropdownMenuSeparatorStories.Default} />
+
+## DropdownMenuCheckboxItem Props
+
+<Controls of={DropdownMenuCheckboxItemStories.Default} />
+
+## DropdownMenuRadioGroup Props
+
+<Controls of={DropdownMenuRadioGroupStories.Default} />
+
+## DropdownMenuRadioItem Props
+
+<Controls of={DropdownMenuRadioItemStories.Default} />
+
+## DropdownMenuSubTrigger Props
+
+<Controls of={DropdownMenuSubTriggerStories.Default} />
+
+## DropdownMenuSubContent Props
+
+<Controls of={DropdownMenuSubContentStories.Default} />
+
+## DropdownMenuSub Props
+
+<Controls of={DropdownMenuSubStories.Default} />
+
+## DropdownMenuShortcut Props
+
+<Controls of={DropdownMenuShortcutStories.Default} />
+
+## DropdownMenuBack Props
+
+<Controls of={DropdownMenuBackStories.Default} />
+
+## DropdownMenuMultiStep Props
+
+<Controls of={DropdownMenuMultiStepStories.Default} />
+
+## DropdownMenuGroup Props
+
+<Controls of={DropdownMenuGroupStories.Default} />
+
+## DropdownMenuLoading Props
+
+<Controls of={DropdownMenuLoadingStories.Default} />
+
+## DropdownMenuSearch Props
+
+<Controls of={DropdownMenuSearchStories.Default} />

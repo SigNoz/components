@@ -1,71 +1,31 @@
-import { Button, ButtonColor, ButtonVariant, Dropdown, type MenuItem } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
 	Check,
 	ChevronRight,
 	Copy,
+	Ellipsis,
 	FileText,
 	Folder,
-	Grid3x3,
-	Link,
+	Grid3X3,
+	Link2,
 	LogOut,
-	MoreHorizontal,
+	Search,
 	Settings,
 	Trash2,
 	User,
-} from 'lucide-react';
-import { useState } from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const dropdownExamples = [
-	`import { Dropdown, type MenuItem } from '@signozhq/ui';
-import { Button } from '@signozhq/ui';
-import { Grid3x3, Link, Trash2 } from 'lucide-react';
-
-const items: MenuItem[] = [
-  {
-    type: 'group',
-    label: 'My Account',
-    children: [
-      { key: 'view', label: 'View', icon: <Grid3x3 /> },
-      { key: 'copy', label: 'Copy link', icon: <Link /> },
-      { type: 'divider' },
-      { key: 'delete', label: 'Delete', icon: <Trash2 />, danger: true },
-    ],
-  },
-];
-
-export default function MyComponent() {
-  return (
-    <Dropdown menu={{ items }}>
-      <Button variant={ButtonVariant.Outlined}>Open</Button>
-    </Dropdown>
-  );
-}`,
-];
-
-const dropdownDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A versatile dropdown menu component with support for icons, search, nested menus, selection states, and custom styling.',
-	examples: dropdownExamples,
-});
+} from '@signozhq/icons';
+import { Button, Dropdown, type MenuItem } from '@signozhq/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useMemo, useState } from 'react';
 
 const meta: Meta<typeof Dropdown> = {
-	title: 'Old Components/DropdownMenu',
+	title: 'Components/DropdownMenu',
 	component: Dropdown,
 	parameters: {
 		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: dropdownDocs,
-			},
-		},
 		backgrounds: {
 			disable: true,
 		},
 	},
-	tags: ['autodocs'],
 	argTypes: {
 		menu: {
 			control: 'object',
@@ -127,24 +87,24 @@ const meta: Meta<typeof Dropdown> = {
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-// Playground Story - Primary interactive example
-export const Playground: Story = {
+export const Default: Story = {
 	args: {
 		menu: {
 			items: [
-				{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
 				{
-					key: 'settings',
-					label: 'Settings',
-					icon: <Settings className="h-4 w-4" />,
-				},
-				{ key: 'billing', label: 'Billing' },
-				{ type: 'divider' },
-				{
-					key: 'logout',
-					label: 'Logout',
-					icon: <LogOut className="h-4 w-4" />,
-					danger: true,
+					type: 'group',
+					label: 'My Account',
+					children: [
+						{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+						{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+						{ type: 'divider' },
+						{
+							key: 'delete',
+							label: 'Delete',
+							icon: <Trash2 className="h-4 w-4" />,
+							danger: true,
+						},
+					],
 				},
 			],
 		},
@@ -155,8 +115,44 @@ export const Playground: Story = {
 	render: (args) => (
 		<div className="p-8">
 			<Dropdown {...args}>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
-					Open Menu
+				<Button variant="solid" color="secondary">
+					Open
+				</Button>
+			</Dropdown>
+		</div>
+	),
+};
+
+export const Playground: Story = {
+	args: {
+		menu: {
+			items: [
+				{
+					type: 'group',
+					label: 'My Account',
+					children: [
+						{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+						{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+						{ type: 'divider' },
+						{
+							key: 'delete',
+							label: 'Delete',
+							icon: <Trash2 className="h-4 w-4" />,
+							danger: true,
+						},
+					],
+				},
+			],
+		},
+		align: 'start',
+		side: 'bottom',
+		sideOffset: 4,
+	},
+	render: (args) => (
+		<div className="p-8">
+			<Dropdown {...args}>
+				<Button variant="solid" color="secondary">
+					Open
 				</Button>
 			</Dropdown>
 		</div>
@@ -193,7 +189,7 @@ export const Basic: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						Open Menu
 					</Button>
 				</Dropdown>
@@ -222,11 +218,11 @@ export const WithIcons: Story = {
 	},
 	render: () => {
 		const items1: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link className="h-4 w-4" /> },
-			{ key: 'view2', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'view3', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'view4', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
+			{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+			{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
@@ -240,26 +236,26 @@ export const WithIcons: Story = {
 			{
 				key: 'view',
 				label: 'View',
-				icon: <Grid3x3 className="h-4 w-4" />,
+				icon: <Grid3X3 className="h-4 w-4" />,
 				rightIcon: <Check className="h-4 w-4" />,
 			},
-			{ key: 'copy', label: 'Copy link', icon: <Link className="h-4 w-4" /> },
-			{ key: 'view2', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'view3', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'view4', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+			{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
 		];
 
 		const items3: MenuItem[] = [
 			{
 				key: 'view',
 				label: 'View',
-				icon: <Grid3x3 className="h-4 w-4" />,
+				icon: <Grid3X3 className="h-4 w-4" />,
 				rightIcon: <ChevronRight className="h-4 w-4" />,
 			},
-			{ key: 'copy', label: 'Copy link', icon: <Link className="h-4 w-4" /> },
-			{ key: 'view2', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'view3', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'view4', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+			{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
@@ -272,19 +268,19 @@ export const WithIcons: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items: items1 }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						View Options
 					</Button>
 				</Dropdown>
 
 				<Dropdown menu={{ items: items2 }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						With Checkmark
 					</Button>
 				</Dropdown>
 
 				<Dropdown menu={{ items: items3 }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						With Arrow
 					</Button>
 				</Dropdown>
@@ -313,8 +309,8 @@ export const Destructive: Story = {
 	},
 	render: () => {
 		const items: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link className="h-4 w-4" /> },
+			{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
@@ -327,7 +323,7 @@ export const Destructive: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Outlined} color={ButtonColor.Destructive}>
+					<Button variant="solid" color="secondary">
 						Delete dashboard
 					</Button>
 				</Dropdown>
@@ -363,13 +359,13 @@ export const WithSectionLabels: Story = {
 					{
 						key: 'view',
 						label: 'View',
-						icon: <Grid3x3 className="h-4 w-4" />,
+						icon: <Grid3X3 className="h-4 w-4" />,
 						rightIcon: <Check className="h-4 w-4" />,
 					},
-					{ key: 'copy', label: 'Copy link', icon: <Link className="h-4 w-4" /> },
-					{ key: 'view2', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-					{ key: 'view3', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
-					{ key: 'view4', label: 'View', icon: <Grid3x3 className="h-4 w-4" /> },
+					{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+					{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+					{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+					{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
 					{ type: 'divider' },
 					{
 						key: 'delete',
@@ -384,7 +380,7 @@ export const WithSectionLabels: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						Menu with Sections
 					</Button>
 				</Dropdown>
@@ -470,13 +466,13 @@ export const Checkable: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items: checkboxItems }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						Checkbox Items
 					</Button>
 				</Dropdown>
 
 				<Dropdown menu={{ items: radioItems }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						Radio Group
 					</Button>
 				</Dropdown>
@@ -512,22 +508,22 @@ export const NestedMenus: Story = {
 					{
 						key: 'step2',
 						label: 'Step 2',
-						icon: <Grid3x3 className="h-4 w-4" />,
+						icon: <Grid3X3 className="h-4 w-4" />,
 						children: [
 							{
 								key: 'another-link',
 								label: 'Another link',
-								icon: <Link className="h-4 w-4" />,
+								icon: <Link2 className="h-4 w-4" />,
 							},
 							{
 								key: 'one-link',
 								label: 'One link',
-								icon: <Grid3x3 className="h-4 w-4" />,
+								icon: <Grid3X3 className="h-4 w-4" />,
 							},
 							{
 								key: 'another-activity',
 								label: 'Another activity',
-								icon: <Grid3x3 className="h-4 w-4" />,
+								icon: <Grid3X3 className="h-4 w-4" />,
 							},
 							{ type: 'divider' },
 							{
@@ -541,17 +537,17 @@ export const NestedMenus: Story = {
 					{
 						key: 'another-link',
 						label: 'Another link',
-						icon: <Link className="h-4 w-4" />,
+						icon: <Link2 className="h-4 w-4" />,
 					},
 					{
 						key: 'one-link',
 						label: 'One link',
-						icon: <Grid3x3 className="h-4 w-4" />,
+						icon: <Grid3X3 className="h-4 w-4" />,
 					},
 					{
 						key: 'another-activity',
 						label: 'Another activity',
-						icon: <Grid3x3 className="h-4 w-4" />,
+						icon: <Grid3X3 className="h-4 w-4" />,
 					},
 					{ type: 'divider' },
 					{
@@ -567,7 +563,7 @@ export const NestedMenus: Story = {
 		return (
 			<div className="p-8 flex gap-4">
 				<Dropdown menu={{ items }}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+					<Button variant="solid" color="secondary">
 						Nested Menu
 					</Button>
 				</Dropdown>
@@ -597,12 +593,80 @@ export const Loading: Story = {
 	render: () => (
 		<div className="p-8 flex gap-4">
 			<Dropdown menu={{ items: [], loading: true }}>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+				<Button variant="solid" color="secondary">
 					Loading Menu
 				</Button>
 			</Dropdown>
 		</div>
 	),
+};
+
+const searchMenuItems: MenuItem[] = [
+	{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
+	{ key: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+	{ key: 'billing', label: 'Billing', icon: <FileText className="h-4 w-4" /> },
+	{ type: 'divider' },
+	{ key: 'view', label: 'View dashboard', icon: <Grid3X3 className="h-4 w-4" /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{ key: 'folder', label: 'Open folder', icon: <Folder className="h-4 w-4" /> },
+	{ type: 'divider' },
+	{
+		key: 'logout',
+		label: 'Log out',
+		icon: <LogOut className="h-4 w-4" />,
+		danger: true,
+	},
+];
+
+// With Search
+export const WithSearch: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Add a search input at the top of the dropdown to filter menu items. Use onSearchChange to filter items based on the query. Great for long menus or when users need to find a specific option quickly.',
+			},
+		},
+	},
+	argTypes: {
+		menu: { control: false },
+		children: { control: false },
+		align: { control: false },
+		side: { control: false },
+		sideOffset: { control: false },
+		className: { control: false },
+	},
+	render: () => {
+		const [query, setQuery] = useState('');
+		const filteredItems = useMemo(() => {
+			if (!query.trim()) return searchMenuItems;
+			const q = query.toLowerCase();
+			return searchMenuItems.filter((item) => {
+				// Dividers are kept but will be cleaned up by Dropdown's cleanupMenuItems
+				if ('type' in item && item.type === 'divider') return true;
+				return 'label' in item && String(item.label).toLowerCase().includes(q);
+			});
+		}, [query]);
+
+		return (
+			<div className="p-8 flex gap-4">
+				<Dropdown
+					menu={{
+						items: filteredItems,
+						search: {
+							placeholder: 'Search menu...',
+							searchIcon: <Search className="h-4 w-4" />,
+							onSearchChange: setQuery,
+						},
+					}}
+				>
+					<Button variant="solid" color="secondary">
+						Search Menu
+					</Button>
+				</Dropdown>
+			</div>
+		);
+	},
 };
 
 // All States Showcase
@@ -669,7 +733,7 @@ export const AllStates: Story = {
 				icon: <User className="h-4 w-4" />,
 				children: [
 					{ key: 'email', label: 'Email', icon: <Copy className="h-4 w-4" /> },
-					{ key: 'message', label: 'Message', icon: <Link className="h-4 w-4" /> },
+					{ key: 'message', label: 'Message', icon: <Link2 className="h-4 w-4" /> },
 					{ type: 'divider' },
 					{ key: 'more', label: 'More...' },
 				],
@@ -681,7 +745,7 @@ export const AllStates: Story = {
 				shortcut: '⌘+T',
 			},
 			{ type: 'divider' },
-			{ key: 'github', label: 'GitHub', icon: <Link className="h-4 w-4" /> },
+			{ key: 'github', label: 'GitHub', icon: <Link2 className="h-4 w-4" /> },
 			{ key: 'support', label: 'Support' },
 			{ key: 'api', label: 'API', disabled: true },
 			{ type: 'divider' },
@@ -700,7 +764,7 @@ export const AllStates: Story = {
 					<h3 className="text-lg font-semibold">Default States</h3>
 					<div className="flex gap-4">
 						<Dropdown menu={{ items: defaultItems }}>
-							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+							<Button variant="solid" color="secondary">
 								Default
 							</Button>
 						</Dropdown>
@@ -711,7 +775,7 @@ export const AllStates: Story = {
 					<h3 className="text-lg font-semibold">With Shortcuts</h3>
 					<div className="flex gap-4">
 						<Dropdown menu={{ items: shortcutItems }}>
-							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+							<Button variant="solid" color="secondary">
 								Shortcuts
 							</Button>
 						</Dropdown>
@@ -722,12 +786,8 @@ export const AllStates: Story = {
 					<h3 className="text-lg font-semibold">Complex Example</h3>
 					<div className="flex gap-4">
 						<Dropdown menu={{ items: complexItems }} align="end" className="w-56">
-							<Button
-								variant={ButtonVariant.Solid}
-								color={ButtonColor.Secondary}
-								// size={ButtonSize.XS}
-							>
-								<MoreHorizontal />
+							<Button variant="solid" color="secondary">
+								<Ellipsis />
 							</Button>
 						</Dropdown>
 					</div>
