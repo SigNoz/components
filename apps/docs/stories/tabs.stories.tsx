@@ -1,67 +1,89 @@
-import { Tabs } from '@signozhq/ui';
+import { Component, LayoutGrid } from '@signozhq/icons';
+import { type TabItemProps, Tabs, type TabVariants } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
 	AlertCircle,
 	Clock,
-	Component,
 	History,
-	LayoutGrid,
 	List,
 	Lock,
 	Settings,
 	Settings2,
 	ShieldAlert,
 } from 'lucide-react';
-import { generateDocs } from '../utils/generateDocs.js';
-
-const tabsExamples = [
-	`import { Tabs } from '@signozhq/ui';
-import { Settings, AlertCircle } from '@signozhq/icons';
-
-export default function MyComponent() {
-	const items = [
-		{
-			key: 'overview',
-			label: 'Overview',
-			children: 'Overview content',
-			prefixIcon: <Settings className="size-4" />,
-		},
-		{
-			key: 'issues',
-			label: 'Issues',
-			children: 'Issues content',
-			prefixIcon: <AlertCircle className="size-4" />,
-		}
-	];
-
-	return (
-		<Tabs
-			items={items}
-			variant="primary"
-			defaultValue="overview"
-		/>
-	);
-}`,
-];
-
-const tabsDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A flexible tabbed interface component with primary and secondary variants, supporting icons and disabled states.',
-	examples: tabsExamples,
-});
 
 const meta: Meta<typeof Tabs> = {
-	title: 'Old Components/Tabs',
+	title: 'Components/Tabs',
 	component: Tabs,
-	tags: ['autodocs'],
-	parameters: {
-		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: tabsDocs,
+	argTypes: {
+		items: {
+			control: false,
+			description: 'Array of tab items to render.',
+			table: { category: 'Content', type: { summary: 'TabItemProps[]' } },
+		},
+		variant: {
+			control: 'select',
+			options: ['primary', 'secondary'],
+			description: 'The visual style variant of the tabs.',
+			table: {
+				category: 'Appearance',
+				type: { summary: "'primary' | 'secondary'" },
+				defaultValue: { summary: "'primary'" },
 			},
 		},
+		defaultValue: {
+			control: 'text',
+			description:
+				'The value of the tab that should be active when initially rendered. Use when you do not need to control the state of the tabs.',
+			table: { category: 'State', type: { summary: 'string' } },
+		},
+		value: {
+			control: 'text',
+			description:
+				'The controlled value of the tab to activate. Should be used in conjunction with onChange.',
+			table: { category: 'State', type: { summary: 'string' } },
+		},
+		onChange: {
+			control: false,
+			description: 'Event handler called when the active tab changes.',
+			table: { category: 'Events', type: { summary: '(key: string) => void' } },
+		},
+		orientation: {
+			control: 'select',
+			options: ['horizontal', 'vertical'],
+			description: 'The orientation of the tabs.',
+			table: { category: 'Layout', type: { summary: "'horizontal' | 'vertical'" } },
+		},
+		dir: {
+			control: 'select',
+			options: ['ltr', 'rtl'],
+			description: 'The direction of navigation when using keyboard.',
+			table: { category: 'Behavior', type: { summary: "'ltr' | 'rtl'" } },
+		},
+		activationMode: {
+			control: 'select',
+			options: ['automatic', 'manual'],
+			description:
+				'When automatic, tabs are activated when receiving focus. When manual, tabs are activated when clicked.',
+			table: {
+				category: 'Behavior',
+				type: { summary: "'automatic' | 'manual'" },
+				defaultValue: { summary: "'automatic'" },
+			},
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the tabs.',
+			table: { category: 'Accessibility' },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to the tabs root.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+	},
+	parameters: {
+		layout: 'fullscreen',
 	},
 };
 
@@ -69,8 +91,7 @@ export default meta;
 
 type Story = StoryObj<typeof Tabs>;
 
-const playgroundItems = [
-	// Primary variant items
+const playgroundItems: (TabItemProps & { variant?: TabVariants })[] = [
 	{
 		key: 'overview',
 		label: 'Overview',
@@ -119,7 +140,44 @@ const playgroundItems = [
 	},
 ];
 
+const defaultItems: TabItemProps[] = [
+	{
+		key: 'overview',
+		label: 'Overview',
+		children: 'Overview content panel',
+		prefixIcon: <Settings2 className="size-4" />,
+	},
+	{
+		key: 'issues',
+		label: 'Issues (Disabled)',
+		children: 'Issues content panel',
+		disabled: true,
+		disabledReason: 'Issues are temporarily unavailable',
+		prefixIcon: <AlertCircle className="size-4" />,
+	},
+	{
+		key: 'history',
+		label: 'History',
+		children: 'History content panel',
+		suffixIcon: <History className="size-4" />,
+	},
+	{
+		key: 'another',
+		label: 'Another Tab',
+		children: 'Another content panel',
+	},
+];
+
 export const Default: Story = {
+	args: {
+		items: defaultItems,
+		variant: 'primary',
+		defaultValue: 'overview',
+	},
+	render: (args) => <Tabs {...args} items={args.items} />,
+};
+
+export const AllVariants: Story = {
 	render: () => (
 		<div className="space-y-8">
 			<div>

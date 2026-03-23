@@ -1,0 +1,142 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as TabsStories from './tabs.stories';
+import * as TabsRootStories from './tabs-root.stories';
+import * as TabsListStories from './tabs-list.stories';
+import * as TabsTriggerStories from './tabs-trigger.stories';
+import * as TabsContentStories from './tabs-content.stories';
+
+<Meta of={TabsStories} />
+
+# Tabs
+
+A flexible tabbed interface component with primary and secondary variants, supporting icons and disabled states.
+
+## How to use
+
+### Tabs (items-based API)
+
+Use the main `Tabs` component with an `items` array for the most common use case:
+
+```tsx
+import { Tabs } from '@signozhq/ui';
+import { Settings, AlertCircle } from 'lucide-react';
+
+export default function MyComponent() {
+	const items = [
+		{
+			key: 'overview',
+			label: 'Overview',
+			children: 'Overview content',
+			prefixIcon: <Settings className="size-4" />,
+		},
+		{
+			key: 'issues',
+			label: 'Issues',
+			children: 'Issues content',
+			prefixIcon: <AlertCircle className="size-4" />,
+		},
+	];
+
+	return (
+		<Tabs
+			items={items}
+			variant="primary"
+			defaultValue="overview"
+		/>
+	);
+}
+```
+
+### Controlled state
+
+For controlled tabs, use `value` and `onChange`:
+
+```tsx
+import { Tabs } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [activeTab, setActiveTab] = React.useState('tab1');
+
+	return (
+		<Tabs
+			variant="secondary"
+			value={activeTab}
+			onChange={setActiveTab}
+			items={[
+				{ key: 'tab1', label: 'Overview', children: <div>Overview content</div> },
+				{ key: 'tab2', label: 'Details', children: <div>Details content</div> },
+			]}
+		/>
+	);
+}
+```
+
+### With icons and disabled tabs
+
+```tsx
+import { Tabs } from '@signozhq/ui';
+import { HomeIcon, LockIcon } from 'lucide-react';
+
+<Tabs
+	items={[
+		{
+			key: 'home',
+			label: 'Home',
+			prefixIcon: <HomeIcon />,
+			children: <div>Home</div>,
+		},
+		{
+			key: 'settings',
+			label: 'Settings',
+			disabled: true,
+			disabledReason: 'Coming soon',
+			children: <div>Settings</div>,
+		},
+	]}
+/>
+```
+
+<Primary />
+
+## Tabs Props
+
+<Controls of={TabsStories.Default} />
+
+## Primitive composition
+
+For full control, use the low-level building blocks: `TabsRoot`, `TabsList`, `TabsTrigger`, and `TabsContent`.
+
+```tsx
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<TabsRoot defaultValue="tab1">
+			<TabsList variant="primary">
+				<TabsTrigger value="tab1">Tab 1</TabsTrigger>
+				<TabsTrigger value="tab2">Tab 2</TabsTrigger>
+			</TabsList>
+			<TabsContent value="tab1">Tab 1 content</TabsContent>
+			<TabsContent value="tab2">Tab 2 content</TabsContent>
+		</TabsRoot>
+	);
+}
+```
+
+> Note: We do not recommend using primitive composition since the variant `primary` is not supported.
+
+## TabsRoot Props
+
+<Controls of={TabsRootStories.Default} />
+
+## TabsList Props
+
+<Controls of={TabsListStories.Default} />
+
+## TabsTrigger Props
+
+<Controls of={TabsTriggerStories.Default} />
+
+## TabsContent Props
+
+<Controls of={TabsContentStories.Default} />

@@ -96,6 +96,9 @@ importers:
 
   apps/docs:
     dependencies:
+      '@radix-ui/react-tabs':
+        specifier: ^1.1.3
+        version: 1.1.13(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@signozhq/design-tokens':
         specifier: 2.1.3
         version: 2.1.3
@@ -207,7 +210,7 @@ importers:
         version: 1.0.7(tailwindcss@4.2.1)
       vitest:
         specifier: ^4.0.18
-        version: 4.0.18(@types/node@22.19.15)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
+        version: 4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
 
   packages/eslint-config:
     devDependencies:
@@ -9457,7 +9460,7 @@ snapshots:
       '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))(vitest@4.0.18)
       '@vitest/browser-playwright': 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))(vitest@4.0.18)
       '@vitest/runner': 4.0.18
-      vitest: 4.0.18(@types/node@22.19.15)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
+      vitest: 4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
     transitivePeerDependencies:
       - react
       - react-dom
@@ -10128,7 +10131,7 @@ snapshots:
       playwright: 1.58.2
       tinyrainbow: 3.0.3
       vite: rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2)
-      vitest: 4.0.18(@types/node@22.19.15)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
+      vitest: 4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
     transitivePeerDependencies:
       - bufferutil
       - msw
@@ -10143,7 +10146,7 @@ snapshots:
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@types/node@22.19.15)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
+      vitest: 4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
       ws: 8.19.0
     transitivePeerDependencies:
       - bufferutil
@@ -10164,7 +10167,7 @@ snapshots:
       std-env: 3.10.0
       tinyrainbow: 3.0.3
       vite: rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2)
-      vitest: 4.0.18(@types/node@22.19.15)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
+      vitest: 4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
     optionalDependencies:
       '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))(vitest@4.0.18)
 
@@ -15331,6 +15334,35 @@ snapshots:
       - '@types/node'
       - rollup
       - supports-color
+
+  vitest@4.0.18(@types/node@20.5.1)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2)):
+    dependencies:
+      '@vitest/expect': 4.0.18
+      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))
+      '@vitest/pretty-format': 4.0.18
+      '@vitest/runner': 4.0.18
+      '@vitest/snapshot': 4.0.18
+      '@vitest/spy': 4.0.18
+      '@vitest/utils': 4.0.18
+      es-module-lexer: 1.7.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.3
+      std-env: 3.10.0
+      tinybench: 2.9.0
+      tinyexec: 1.0.2
+      tinyglobby: 0.2.15
+      tinyrainbow: 3.0.3
+      vite: rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 20.5.1
+      '@vitest/browser-playwright': 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2))(vitest@4.0.18)
+      jsdom: 28.1.0
+    transitivePeerDependencies:
+      - msw
 
   vitest@4.0.18(@types/node@22.19.15)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(@types/node@22.19.15)(esbuild@0.25.12)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.97.3)(yaml@2.8.2)):
     dependencies:
