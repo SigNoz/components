@@ -1,6 +1,6 @@
+import { Bold } from '@signozhq/icons';
 import { Toggle, type ToggleColor } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Bold } from 'lucide-react';
 
 const meta: Meta<typeof Toggle> = {
 	title: 'Components/Toggle',

@@ -1,6 +1,6 @@
+import { Bold, Italic, LayoutGrid, List, Underline } from '@signozhq/icons';
 import { ToggleGroupSimple, type ToggleGroupSimpleItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Bold, Italic, LayoutGrid, List, Underline } from 'lucide-react';
 
 const meta: Meta<typeof ToggleGroupSimple> = {
 	title: 'Components/ToggleGroup/ToggleGroupSimple',

@@ -56,11 +56,11 @@ export default function MyComponent() {
 ```tsx
 import { ComboboxSimple } from '@signozhq/ui';
 import { useState } from 'react';
-import { Code2, Database } from 'lucide-react';
+import { Code, Database } from '@signozhq/icons';
 
 const items = [
-	{ value: 'react', label: <><Code2 className="mr-2 h-4 w-4" />React</> },
-	{ value: 'vue', label: <><Code2 className="mr-2 h-4 w-4" />Vue</> },
+	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</> },
+	{ value: 'vue', label: <><Code className="mr-2 h-4 w-4" />Vue</> },
 	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</> },
 ];
 
@@ -83,11 +83,11 @@ export default function MyComponent() {
 ```tsx
 import { ComboboxSimple } from '@signozhq/ui';
 import { useState } from 'react';
-import { Code2 } from 'lucide-react';
+import { Code } from '@signozhq/icons';
 
 const items = [
-	{ value: 'react', label: <><Code2 className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
-	{ value: 'vue', label: <><Code2 className="mr-2 h-4 w-4" />Vue</>, displayValue: 'Vue' },
+	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
+	{ value: 'vue', label: <><Code className="mr-2 h-4 w-4" />Vue</>, displayValue: 'Vue' },
 ];
 
 export default function MyComponent() {

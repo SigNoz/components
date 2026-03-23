@@ -1,6 +1,6 @@
+import { AlignCenter, AlignLeft, AlignRight, Bold } from '@signozhq/icons';
 import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { AlignCenter, AlignLeft, AlignRight, Bold } from 'lucide-react';
 
 const meta: Meta<typeof ToggleGroupItem> = {
 	title: 'Components/ToggleGroup/ToggleGroupItem',

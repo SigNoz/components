@@ -1,4 +1,4 @@
-import { ChevronDown, Moon, Palette, Sun } from 'lucide-react';
+import { ChevronDown, Moon, Palette, Sun } from '@signozhq/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 

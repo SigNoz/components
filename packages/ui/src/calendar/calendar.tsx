@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight } from '@signozhq/icons';
 import * as React from 'react';
 import {
 	type ClassNames,
@@ -166,20 +166,14 @@ export function Calendar({
 			// eslint-disable-next-line react/prop-types
 			Chevron: ({ className, orientation, ...props }) => {
 				if (orientation === 'left') {
-					return (
-						<ChevronLeftIcon className={cn(styles['calendar__chevron'], className)} {...props} />
-					);
+					return <ChevronLeft className={cn(styles['calendar__chevron'], className)} {...props} />;
 				}
 
 				if (orientation === 'right') {
-					return (
-						<ChevronRightIcon className={cn(styles['calendar__chevron'], className)} {...props} />
-					);
+					return <ChevronRight className={cn(styles['calendar__chevron'], className)} {...props} />;
 				}
 
-				return (
-					<ChevronDownIcon className={cn(styles['calendar__chevron'], className)} {...props} />
-				);
+				return <ChevronDown className={cn(styles['calendar__chevron'], className)} {...props} />;
 			},
 			DayButton: CalendarDayButton,
 			WeekNumber: ({ children, ...props }) => {

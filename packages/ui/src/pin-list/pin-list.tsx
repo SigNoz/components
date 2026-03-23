@@ -1,4 +1,4 @@
-import { ChevronDown, MoreHorizontal, MousePointerClick, Pin, PinOff } from 'lucide-react';
+import { ChevronDown, Ellipsis, MousePointerClick, Pin, PinOff } from '@signozhq/icons';
 import {
 	AnimatePresence,
 	type HTMLMotionProps,
@@ -25,7 +25,7 @@ export type PinListItem = {
 	label: string | React.ReactNode;
 	/**
 	 * Icon element to display alongside the item label.
-	 * Must be a React element (e.g., `<FileText />` from lucide-react).
+	 * Must be a React element (e.g., `<FileText />` from @signozhq/icons).
 	 */
 	icon: React.ReactElement;
 	/**
@@ -320,7 +320,7 @@ function PinList({
 								>
 									<div className={styles['more-label-content']}>
 										<div className={styles['label-icon']}>
-											<MoreHorizontal className={styles['label-icon']} />
+											<Ellipsis className={styles['label-icon']} />
 										</div>
 										<span>{moreLabel}</span>
 									</div>

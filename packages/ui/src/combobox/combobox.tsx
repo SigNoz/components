@@ -1,5 +1,5 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown } from '@signozhq/icons';
 import * as React from 'react';
 import {
 	Command,

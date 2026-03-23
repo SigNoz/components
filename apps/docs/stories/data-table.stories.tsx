@@ -1,3 +1,4 @@
+import { CircleAlert, CircleCheck, CircleX, Clock, Eye, Pencil, Trash2 } from '@signozhq/icons';
 import {
 	Badge,
 	DataTable as BaseDataTable,
@@ -7,8 +8,9 @@ import {
 	type Row,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { LucideIcon } from 'lucide-react';
-import { AlertCircle, CheckCircle, Clock, Edit, Eye, Trash2, XCircle } from 'lucide-react';
+
+type IconComponent = React.ComponentType<{ className?: string; size?: number }>;
+
 import * as React from 'react';
 
 // Create a properly typed wrapper component
@@ -278,16 +280,16 @@ const enhancedColumns: ColumnDef<User>[] = [
 			const status = row.getValue('status') as User['status'];
 			const statusMap: Record<
 				User['status'],
-				{ label: string; icon: LucideIcon; className: string }
+				{ label: string; icon: IconComponent; className: string }
 			> = {
 				active: {
 					label: 'Active',
-					icon: CheckCircle,
+					icon: CircleCheck,
 					className: 'bg-green-100 text-green-800 border-green-200',
 				},
 				inactive: {
 					label: 'Inactive',
-					icon: XCircle,
+					icon: CircleX,
 					className: 'bg-red-100 text-red-800 border-red-200',
 				},
 				pending: {
@@ -297,7 +299,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 				},
 				suspended: {
 					label: 'Suspended',
-					icon: AlertCircle,
+					icon: CircleAlert,
 					className: 'bg-gray-100 text-gray-800 border-gray-200',
 				},
 			};
@@ -397,7 +399,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 						<Eye className="h-4 w-4" />
 					</Button>
 					<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-						<Edit className="h-4 w-4" />
+						<Pencil className="h-4 w-4" />
 					</Button>
 					<Button
 						variant="ghost"
@@ -630,11 +632,11 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				cell: ({ row }: { row: Row<User> }) => {
 					const status = row.original.status;
-					const statusMap: Record<User['status'], { icon: LucideIcon; className: string }> = {
-						active: { icon: CheckCircle, className: 'text-green-600' },
-						inactive: { icon: XCircle, className: 'text-red-600' },
+					const statusMap: Record<User['status'], { icon: IconComponent; className: string }> = {
+						active: { icon: CircleCheck, className: 'text-green-600' },
+						inactive: { icon: CircleX, className: 'text-red-600' },
 						pending: { icon: Clock, className: 'text-yellow-600' },
-						suspended: { icon: AlertCircle, className: 'text-gray-600' },
+						suspended: { icon: CircleAlert, className: 'text-gray-600' },
 					};
 					const statusInfo = statusMap[status];
 					const Icon = statusInfo.icon;
@@ -840,12 +842,12 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 					> = {
 						active: {
 							label: 'Active',
-							icon: CheckCircle,
+							icon: CircleCheck,
 							className: 'bg-green-100 text-green-800 border-green-200',
 						},
 						inactive: {
 							label: 'Inactive',
-							icon: XCircle,
+							icon: CircleX,
 							className: 'bg-red-100 text-red-800 border-red-200',
 						},
 						pending: {
@@ -855,7 +857,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						},
 						suspended: {
 							label: 'Suspended',
-							icon: AlertCircle,
+							icon: CircleAlert,
 							className: 'bg-gray-100 text-gray-800 border-gray-200',
 						},
 					};
@@ -942,7 +944,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 								<Eye className="h-4 w-4" />
 							</Button>
 							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Edit className="h-4 w-4" />
+								<Pencil className="h-4 w-4" />
 							</Button>
 							<Button
 								variant="ghost"
@@ -1089,12 +1091,12 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					> = {
 						active: {
 							label: 'Active',
-							icon: CheckCircle,
+							icon: CircleCheck,
 							className: 'bg-green-100 text-green-800 border-green-200',
 						},
 						inactive: {
 							label: 'Inactive',
-							icon: XCircle,
+							icon: CircleX,
 							className: 'bg-red-100 text-red-800 border-red-200',
 						},
 						pending: {
@@ -1104,7 +1106,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						},
 						suspended: {
 							label: 'Suspended',
-							icon: AlertCircle,
+							icon: CircleAlert,
 							className: 'bg-gray-100 text-gray-800 border-gray-200',
 						},
 					};
@@ -1191,7 +1193,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 								<Eye className="h-4 w-4" />
 							</Button>
 							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Edit className="h-4 w-4" />
+								<Pencil className="h-4 w-4" />
 							</Button>
 							<Button
 								variant="ghost"
@@ -1540,11 +1542,11 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				size: 120,
 				cell: ({ row }: { row: Row<User> }) => {
-					const statusMap: Record<User['status'], { icon: LucideIcon; className: string }> = {
-						active: { icon: CheckCircle, className: 'text-green-600' },
-						inactive: { icon: XCircle, className: 'text-red-600' },
+					const statusMap: Record<User['status'], { icon: IconComponent; className: string }> = {
+						active: { icon: CircleCheck, className: 'text-green-600' },
+						inactive: { icon: CircleX, className: 'text-red-600' },
 						pending: { icon: Clock, className: 'text-yellow-600' },
-						suspended: { icon: AlertCircle, className: 'text-orange-600' },
+						suspended: { icon: CircleAlert, className: 'text-orange-600' },
 					};
 					const status = statusMap[row.original.status];
 					const Icon = status.icon;

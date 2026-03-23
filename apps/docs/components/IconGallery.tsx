@@ -1,5 +1,5 @@
+import { Check, Copy } from '@signozhq/icons';
 import { Button, ButtonColor, ButtonSize, ButtonVariant, Input } from '@signozhq/ui';
-import { Check, Copy } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';

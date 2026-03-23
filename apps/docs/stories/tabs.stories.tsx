@@ -1,16 +1,17 @@
-import { Component, LayoutGrid } from '@signozhq/icons';
-import { type TabItemProps, Tabs, type TabVariants } from '@signozhq/ui';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
-	AlertCircle,
+	CircleAlert,
 	Clock,
+	Component,
 	History,
+	LayoutGrid,
 	List,
 	Lock,
 	Settings,
 	Settings2,
 	ShieldAlert,
-} from 'lucide-react';
+} from '@signozhq/icons';
+import { type TabItemProps, Tabs, type TabVariants } from '@signozhq/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Tabs> = {
 	title: 'Components/Tabs',
@@ -104,7 +105,7 @@ const playgroundItems: (TabItemProps & { variant?: TabVariants })[] = [
 		children: 'Issues content panel',
 		disabled: true,
 		disabledReason: 'Issues are temporarily unavailable',
-		prefixIcon: <AlertCircle className="size-4" />,
+		prefixIcon: <CircleAlert className="size-4" />,
 	},
 	{
 		key: 'history',
@@ -153,7 +154,7 @@ const defaultItems: TabItemProps[] = [
 		children: 'Issues content panel',
 		disabled: true,
 		disabledReason: 'Issues are temporarily unavailable',
-		prefixIcon: <AlertCircle className="size-4" />,
+		prefixIcon: <CircleAlert className="size-4" />,
 	},
 	{
 		key: 'history',
@@ -348,7 +349,7 @@ const primaryItems = [
 		children: 'Issues content',
 		disabled: true,
 		disabledReason: 'Issues feature is currently under maintenance',
-		prefixIcon: <AlertCircle className="size-4" />,
+		prefixIcon: <CircleAlert className="size-4" />,
 	},
 	{
 		key: 'history',

@@ -19,7 +19,7 @@ Use the main `Tabs` component with an `items` array for the most common use case
 
 ```tsx
 import { Tabs } from '@signozhq/ui';
-import { Settings, AlertCircle } from 'lucide-react';
+import { Settings, CircleAlert } from '@signozhq/icons';
 
 export default function MyComponent() {
 	const items = [
@@ -33,7 +33,7 @@ export default function MyComponent() {
 			key: 'issues',
 			label: 'Issues',
 			children: 'Issues content',
-			prefixIcon: <AlertCircle className="size-4" />,
+			prefixIcon: <CircleAlert className="size-4" />,
 		},
 	];
 
@@ -75,14 +75,14 @@ export default function MyComponent() {
 
 ```tsx
 import { Tabs } from '@signozhq/ui';
-import { HomeIcon, LockIcon } from 'lucide-react';
+import { House, Lock } from '@signozhq/icons';
 
 <Tabs
 	items={[
 		{
 			key: 'home',
 			label: 'Home',
-			prefixIcon: <HomeIcon />,
+			prefixIcon: <House />,
 			children: <div>Home</div>,
 		},
 		{

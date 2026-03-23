@@ -1,6 +1,6 @@
+import { Code, Settings } from '@signozhq/icons';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Code, Settings } from 'lucide-react';
 
 const meta: Meta<typeof ResizablePanel> = {
 	title: 'Components/Resizable/ResizablePanel',

@@ -1,6 +1,6 @@
+import { Bug, ChartBar, FileText, GitBranch, Globe, Hexagon, List, Server } from '@signozhq/icons';
 import { PinList, type PinListItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { BarChart, Bug, FileText, GitBranch, Globe, Hexagon, List, Server } from 'lucide-react';
 import type React from 'react';
 
 /**
@@ -129,7 +129,7 @@ type Story = StoryObj<typeof PinList>;
 
 const defaultItems: PinListItem[] = [
 	createPinListItem('1', 'Logs', <FileText />, { isPinned: true, active: true }),
-	createPinListItem('2', 'Metrics', <BarChart />, { isPinned: false }),
+	createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
 	createPinListItem('3', 'Traces', <GitBranch />, { isPinned: false }),
 	createPinListItem('4', 'Services', <Server />, { isPinned: false }),
 	createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: false }),
@@ -174,7 +174,7 @@ export const EmptyShortcuts: Story = {
 	args: {
 		items: [
 			createPinListItem('1', 'Logs', <FileText />, { isPinned: false }),
-			createPinListItem('2', 'Metrics', <BarChart />, { isPinned: false }),
+			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
 			createPinListItem('3', 'Traces', <GitBranch />, { isPinned: false }),
 			createPinListItem('4', 'Services', <Server />, { isPinned: false }),
 			createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: false }),
@@ -203,7 +203,7 @@ export const AllPinned: Story = {
 				isPinned: true,
 				active: true,
 			}),
-			createPinListItem('2', 'Metrics', <BarChart />, { isPinned: true }),
+			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: true }),
 			createPinListItem('3', 'Traces', <GitBranch />, { isPinned: true }),
 			createPinListItem('4', 'Services', <Server />, { isPinned: true }),
 			createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: true }),
@@ -274,7 +274,7 @@ export const WithCustomClassNames: Story = {
 				active: true,
 				className: 'bg-primary/10',
 			}),
-			createPinListItem('2', 'Metrics', <BarChart />, { isPinned: false }),
+			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
 		],
 		shortcutsLabel: 'SHORTCUTS',
 		moreLabel: 'MORE',

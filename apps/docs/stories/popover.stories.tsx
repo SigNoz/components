@@ -1,3 +1,4 @@
+import { ChevronDown } from '@signozhq/icons';
 import {
 	Button,
 	ButtonColor,
@@ -9,7 +10,6 @@ import {
 	PopoverTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ChevronDown } from 'lucide-react';
 import React from 'react';
 import { popoverArgTypes } from './shared/popover-arg-types.js';
 

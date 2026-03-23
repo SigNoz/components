@@ -1,6 +1,6 @@
+import { CircleAlert, History, Settings } from '@signozhq/icons';
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { AlertCircle, History, Settings } from 'lucide-react';
 
 const meta: Meta<typeof TabsRoot> = {
 	title: 'Components/Tabs/TabsRoot',
@@ -83,7 +83,7 @@ export const PrimaryVariant: Story = {
 					Overview
 				</TabsTrigger>
 				<TabsTrigger value="issues" variant="primary">
-					<AlertCircle className="size-4" />
+					<CircleAlert className="size-4" />
 					Issues
 				</TabsTrigger>
 				<TabsTrigger value="history" variant="primary">
