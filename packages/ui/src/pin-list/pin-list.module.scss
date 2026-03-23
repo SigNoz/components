@@ -1,0 +1,179 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pin-list-container-gap, var(--spacing-10, 20px));
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-items {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pin-list-section-items-gap, var(--spacing-3, 6px));
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--pin-list-label-gap, 8px);
+  margin-bottom: var(--pin-list-label-margin-bottom, var(--spacing-2, 8px));
+  padding-left: var(--pin-list-label-padding-x, var(--spacing-6, 12px));
+  padding-right: var(--pin-list-label-padding-x, var(--spacing-6, 12px));
+  font-size: var(--pin-list-label-font-size, var(--periscope-font-size-small, 11px));
+  font-weight: var(--pin-list-label-font-weight, var(--font-weight-semibold, 600));
+  line-height: var(--pin-list-label-line-height, 18px);
+  letter-spacing: var(--pin-list-label-letter-spacing, 0.88px);
+  text-transform: var(--pin-list-label-text-transform, uppercase);
+  text-align: var(--pin-list-label-text-align, left);
+  color: var(--pin-list-label-color, var(--card-foreground));
+}
+
+.label-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--pin-list-label-icon-size, 16px);
+  height: var(--pin-list-label-icon-size, 16px);
+  color: var(--pin-list-label-icon-color, var(--card-foreground));
+}
+
+.more-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--pin-list-more-label-gap, 8px);
+  margin-bottom: var(--pin-list-more-label-margin-bottom, var(--spacing-2, 8px));
+  padding-left: var(--pin-list-more-label-padding-x, var(--spacing-6, 12px));
+  padding-right: var(--pin-list-more-label-padding-x, var(--spacing-6, 12px));
+  font-size: var(--pin-list-more-label-font-size, var(--periscope-font-size-small, 11px));
+  font-weight: var(--pin-list-more-label-font-weight, var(--font-weight-semibold, 600));
+  line-height: var(--pin-list-more-label-line-height, 18px);
+  letter-spacing: var(--pin-list-more-label-letter-spacing, 0.88px);
+  text-transform: var(--pin-list-more-label-text-transform, uppercase);
+  text-align: var(--pin-list-more-label-text-align, left);
+  color: var(--pin-list-more-label-color, var(--card-foreground));
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition-property: var(--pin-list-more-label-transition-property, opacity);
+  transition-duration: var(--pin-list-more-label-transition-duration, 150ms);
+  transition-timing-function: var(--pin-list-more-label-transition-timing, ease);
+
+  &:hover {
+    opacity: var(--pin-list-more-label-hover-opacity, 0.8);
+  }
+}
+
+.more-label-content {
+  display: flex;
+  align-items: center;
+  gap: var(--pin-list-more-label-content-gap, 8px);
+}
+
+.more-label-chevron {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--pin-list-more-label-chevron-size, 16px);
+  height: var(--pin-list-more-label-chevron-size, 16px);
+  color: var(--pin-list-more-label-chevron-color, var(--card-foreground));
+}
+
+.empty-state {
+  padding-left: var(--pin-list-empty-state-padding-left, var(--spacing-6, 12px));
+}
+
+.empty-state-text {
+  width: var(--pin-list-empty-state-text-width, 150px);
+  font-size: var(--pin-list-empty-state-font-size, var(--periscope-font-size-small, 11px));
+  font-weight: var(--pin-list-empty-state-font-weight, var(--font-weight-normal, 400));
+  line-height: var(--pin-list-empty-state-line-height, 18px);
+  letter-spacing: var(--pin-list-empty-state-letter-spacing, -0.06px);
+  text-align: var(--pin-list-empty-state-text-align, left);
+  color: var(--pin-list-empty-state-color, var(--foreground));
+  opacity: var(--pin-list-empty-state-opacity, 0.6);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: var(--pin-list-item-height, 32px);
+  margin: 0;
+  padding: var(--pin-list-item-padding, var(--spacing-2, 4px) var(--spacing-6, 12px));
+  gap: var(--pin-list-item-gap, var(--spacing-10, 20px));
+  border-radius: var(--pin-list-item-border-radius, 3px);
+  font-size: var(--pin-list-item-font-size, var(--periscope-font-size-base, 13px));
+  font-weight: var(--pin-list-item-font-weight, var(--font-weight-normal, 400));
+  line-height: var(--pin-list-item-line-height, 18px);
+  text-align: var(--pin-list-item-text-align, left);
+  color: var(--pin-list-item-color, var(--foreground));
+  background-color: var(--pin-list-item-background, transparent);
+  border: none;
+  cursor: pointer;
+  transition-property: var(--pin-list-item-transition-property, background-color, color);
+  transition-duration: var(--pin-list-item-transition-duration, 150ms);
+  transition-timing-function: var(--pin-list-item-transition-timing, ease);
+
+  &:hover {
+    background-color: var(--pin-list-item-hover-background, var(--secondary));
+  }
+
+  &[data-active='true'] {
+    background-color: var(--pin-list-item-active-background, var(--secondary));
+
+    &:hover {
+      background-color: var(--pin-list-item-active-hover-background, color-mix(in srgb, var(--secondary) 80%, transparent));
+    }
+  }
+}
+
+.item-content {
+  display: flex;
+  align-items: center;
+  gap: var(--pin-list-item-content-gap, 8px);
+}
+
+.item-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--pin-list-item-icon-size, 16px);
+  height: var(--pin-list-item-icon-size, 16px);
+  color: var(--pin-list-item-icon-color, var(--foreground));
+}
+
+.item-label {
+  font-size: var(--pin-list-item-label-font-size, var(--periscope-font-size-base, 13px));
+  font-weight: var(--pin-list-item-label-font-weight, var(--font-weight-normal, 400));
+  line-height: var(--pin-list-item-label-line-height, 18px);
+  color: var(--pin-list-item-label-color, var(--foreground));
+
+  &[data-active='true'],
+  &[data-hovered='true'] {
+    color: var(--pin-list-item-label-active-color, var(--secondary-foreground));
+  }
+}
+
+.item-pin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--pin-list-item-pin-button-size, 16px);
+  height: var(--pin-list-item-pin-button-size, 16px);
+  cursor: pointer;
+  color: var(--pin-list-item-pin-button-color, var(--foreground));
+  opacity: var(--pin-list-item-pin-button-opacity, 0);
+  transition-property: var(--pin-list-item-pin-button-transition-property, opacity);
+  transition-duration: var(--pin-list-item-pin-button-transition-duration, 150ms);
+  transition-timing-function: var(--pin-list-item-pin-button-transition-timing, ease);
+
+  &[data-visible='true'] {
+    opacity: var(--pin-list-item-pin-button-visible-opacity, 1);
+  }
+}
