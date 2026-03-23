@@ -1,7 +1,7 @@
+import { Calendar as CalendarIcon, ChevronDown } from '@signozhq/icons';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-import { CalendarIcon, ChevronDown } from 'lucide-react';
 import * as React from 'react';
 import {
 	Button,

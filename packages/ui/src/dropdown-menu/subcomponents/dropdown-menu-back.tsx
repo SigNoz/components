@@ -1,5 +1,5 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from '@signozhq/icons';
 import * as React from 'react';
 
 import { cn } from '../../lib/utils.js';

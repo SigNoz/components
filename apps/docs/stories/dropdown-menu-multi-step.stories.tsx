@@ -1,3 +1,4 @@
+import { Settings, User } from '@signozhq/icons';
 import {
 	Button,
 	DropdownMenuItem,
@@ -7,7 +8,6 @@ import {
 	DropdownMenuTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Settings, User } from 'lucide-react';
 
 const meta: Meta<typeof DropdownMenuMultiStep> = {
 	title: 'Components/DropdownMenu/DropdownMenuMultiStep',

@@ -1,3 +1,4 @@
+import { Check, LogOut, Settings, User } from '@signozhq/icons';
 import {
 	Button,
 	DropdownMenu,
@@ -7,7 +8,6 @@ import {
 	DropdownMenuTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Check, LogOut, Settings, User } from 'lucide-react';
 
 const meta: Meta<typeof DropdownMenuItem> = {
 	title: 'Components/DropdownMenu/DropdownMenuItem',

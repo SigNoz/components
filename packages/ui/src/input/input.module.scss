@@ -157,6 +157,5 @@
 }
 
 .input-password-wrapper {
-  position: relative;
-  width: var(--input-password-wrapper-width, 100%);
+  --input-suffix-padding: 0px;
 }

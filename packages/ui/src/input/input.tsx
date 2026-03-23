@@ -1,4 +1,4 @@
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { Eye, EyeOff } from '@signozhq/icons';
 import * as React from 'react';
 import { Button } from '../button/index.js';
 import { cn, type Simplify } from '../lib/utils.js';
@@ -153,40 +153,43 @@ export type InputPasswordProps = Omit<InputProps, 'type' | 'ref'>;
  * </div>
  * ```
  */
-const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>((props, ref) => {
-	const [showPassword, setShowPassword] = React.useState(false);
+const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
+	({ className, ...props }, ref) => {
+		const [showPassword, setShowPassword] = React.useState(false);
 
-	const togglePasswordVisibility = React.useCallback(() => {
-		setShowPassword((prev) => !prev);
-	}, []);
+		const togglePasswordVisibility = React.useCallback(() => {
+			setShowPassword((prev) => !prev);
+		}, []);
 
-	return (
-		<InputComponent
-			{...props}
-			type={showPassword ? 'text' : 'password'}
-			ref={ref}
-			suffix={
-				<Button
-					type="button"
-					color="none"
-					variant="link"
-					size="icon"
-					onClick={togglePasswordVisibility}
-					aria-label={showPassword ? 'Hide password' : 'Show password'}
-					tabIndex={-1}
-					disabled={props.disabled}
-					suffix={
-						showPassword ? (
-							<EyeOffIcon aria-hidden="true" strokeWidth={2} />
-						) : (
-							<EyeIcon aria-hidden="true" strokeWidth={2} />
-						)
-					}
-				/>
-			}
-		/>
-	);
-});
+		return (
+			<InputComponent
+				className={cn(styles['input-password-wrapper'], className)}
+				{...props}
+				type={showPassword ? 'text' : 'password'}
+				ref={ref}
+				suffix={
+					<Button
+						type="button"
+						color="none"
+						variant="link"
+						size="icon"
+						onClick={togglePasswordVisibility}
+						aria-label={showPassword ? 'Hide password' : 'Show password'}
+						tabIndex={-1}
+						disabled={props.disabled}
+						suffix={
+							showPassword ? (
+								<EyeOff aria-hidden="true" strokeWidth={2} />
+							) : (
+								<Eye aria-hidden="true" strokeWidth={2} />
+							)
+						}
+					/>
+				}
+			/>
+		);
+	}
+);
 InputPassword.displayName = 'InputPassword';
 
 // Create compound component with proper typing

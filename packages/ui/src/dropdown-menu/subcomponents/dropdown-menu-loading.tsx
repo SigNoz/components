@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react';
+import { LoaderCircle } from '@signozhq/icons';
 
 import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
@@ -44,7 +44,7 @@ export function DropdownMenuLoading({ className, text = 'Loading...' }: Dropdown
 			data-slot="dropdown-menu-loading"
 			className={cn(styles['dropdown-menu__loading'], className)}
 		>
-			<Loader2 className={styles['dropdown-menu__loading-spinner']} />
+			<LoaderCircle className={styles['dropdown-menu__loading-spinner']} />
 			<span>{text}</span>
 		</div>
 	);

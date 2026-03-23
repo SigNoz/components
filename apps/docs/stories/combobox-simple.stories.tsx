@@ -1,6 +1,6 @@
+import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
 import { ComboboxSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Code2, Database, GitBranch, Terminal } from 'lucide-react';
 import { useState } from 'react';
 
 const meta: Meta<typeof ComboboxSimple> = {
@@ -140,7 +140,7 @@ const itemsWithIcons = [
 		value: 'react',
 		label: (
 			<>
-				<Code2 className="mr-2 h-4 w-4" />
+				<Code className="mr-2 h-4 w-4" />
 				React
 			</>
 		),
@@ -196,7 +196,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'react',
 						label: (
 							<>
-								<Code2 className="mr-2 h-4 w-4" />
+								<Code className="mr-2 h-4 w-4" />
 								React
 							</>
 						),
@@ -205,7 +205,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'vue',
 						label: (
 							<>
-								<Code2 className="mr-2 h-4 w-4" />
+								<Code className="mr-2 h-4 w-4" />
 								Vue
 							</>
 						),

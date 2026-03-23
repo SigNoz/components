@@ -1,5 +1,5 @@
 import { Slot } from '@radix-ui/react-slot';
-import { Loader2 } from 'lucide-react';
+import { LoaderCircle } from '@signozhq/icons';
 import type React from 'react';
 import { cloneElement, forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
@@ -151,7 +151,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{...props}
 			>
 				{loading ? (
-					<Loader2 size={iconSizes[size]} className="animate-fast-spin" />
+					<LoaderCircle size={iconSizes[size]} className="animate-fast-spin" />
 				) : (
 					(prefix &&
 						cloneElement(prefix, {

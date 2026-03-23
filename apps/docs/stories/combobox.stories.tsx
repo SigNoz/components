@@ -1,3 +1,4 @@
+import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
 import {
 	Combobox,
 	ComboboxCommand,
@@ -12,7 +13,6 @@ import {
 	ComboboxTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Code2, Database, GitBranch, Terminal } from 'lucide-react';
 import { useState } from 'react';
 
 const meta: Meta<typeof Combobox> = {
@@ -595,7 +595,7 @@ export const WithIcons: Story = {
 			{
 				value: 'react',
 				label: 'React',
-				icon: Code2,
+				icon: Code,
 			},
 			{
 				value: 'nodejs',

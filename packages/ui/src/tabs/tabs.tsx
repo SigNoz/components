@@ -1,5 +1,5 @@
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-import { LockIcon } from 'lucide-react';
+import { Lock } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
 import { Tooltip, TooltipProvider } from '../tooltip/index.js';
@@ -143,7 +143,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 									variant={variant}
 								>
 									{item.disabled ? (
-										<LockIcon className={styles['tabs__icon']} size={16} />
+										<Lock className={styles['tabs__icon']} size={16} />
 									) : (
 										item.prefixIcon && (
 											<span className={styles['tabs__icon']}>{item.prefixIcon}</span>

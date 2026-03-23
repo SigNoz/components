@@ -53,7 +53,7 @@
 .command__input-wrapper {
   display: flex;
   align-items: center;
-  padding: var(--command-input-wrapper-padding, 0 var(--spacing-6, 0.75rem));
+  padding: var(--command-input-wrapper-padding, 0 var(--spacing-4, 0.5rem));
   border-width: var(--command-input-wrapper-border-width, 0px 0px 1px 0px);
   border-style: var(--command-input-wrapper-border-style, solid);
   border-color: var(--command-input-wrapper-border-color, var(--border));

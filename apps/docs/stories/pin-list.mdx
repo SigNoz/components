@@ -13,7 +13,7 @@ A pin list component for displaying items that can be pinned/unpinned as shortcu
 
 ```tsx
 import { PinList } from '@signozhq/ui';
-import { FileText, BarChart } from 'lucide-react';
+import { FileText, ChartBar } from '@signozhq/icons';
 
 export default function MyComponent() {
 	const items = [
@@ -30,7 +30,7 @@ export default function MyComponent() {
 			key: '2',
 			itemKey: '2',
 			label: 'Metrics',
-			icon: <BarChart />,
+			icon: <ChartBar />,
 			isPinned: false,
 			isEnabled: true,
 		},

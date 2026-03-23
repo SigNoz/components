@@ -1,3 +1,4 @@
+import { ChartBar, Code, Database, FileText, Settings, Terminal } from '@signozhq/icons';
 import {
 	ResizableHandle,
 	ResizablePanel,
@@ -5,7 +6,6 @@ import {
 	useDefaultLayout,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { BarChart3, Code, Database, FileText, Settings, Terminal } from 'lucide-react';
 
 const meta: Meta<typeof ResizablePanelGroup> = {
 	title: 'Components/Resizable',
@@ -151,7 +151,7 @@ export const Default: Story = {
 						<ResizablePanel defaultSize="70%">
 							<div className="flex h-full items-center justify-center">
 								<div className="text-center">
-									<BarChart3 className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+									<ChartBar className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
 									<span className="text-sm font-medium">Main Dashboard</span>
 								</div>
 							</div>
@@ -245,7 +245,7 @@ export const HorizontalLayout: Story = {
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="20%" minSize="15%" maxSize="30%">
 							<div className="flex h-full flex-col p-4 bg-muted">
-								<BarChart3 className="h-5 w-5 mb-2 text-muted-foreground" />
+								<ChartBar className="h-5 w-5 mb-2 text-muted-foreground" />
 								<h3 className="font-medium mb-2">Metrics</h3>
 								<div className="text-xs text-muted-foreground space-y-1">
 									<div>CPU: 45%</div>
@@ -487,7 +487,7 @@ export const CollapsiblePanels: Story = {
 								<h3 className="font-medium mb-4">Main Workspace</h3>
 								<div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg flex items-center justify-center">
 									<div className="text-center">
-										<BarChart3 className="mx-auto mb-2 h-12 w-12 text-blue-500" />
+										<ChartBar className="mx-auto mb-2 h-12 w-12 text-blue-500" />
 										<span className="text-lg font-medium">Dashboard Content</span>
 									</div>
 								</div>
@@ -646,7 +646,7 @@ export const PanelPlayground: Story = {
 					<ResizablePanel defaultSize="30%" minSize="20%" maxSize="60%" collapsible={false}>
 						<div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20">
 							<div className="text-center">
-								<BarChart3 className="mx-auto mb-2 h-8 w-8 text-blue-600" />
+								<ChartBar className="mx-auto mb-2 h-8 w-8 text-blue-600" />
 								<span className="text-sm font-medium">Configurable Panel</span>
 								<div className="text-xs text-muted-foreground mt-2 space-y-1">
 									<div>Default: 30%</div>

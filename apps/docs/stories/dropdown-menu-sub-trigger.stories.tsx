@@ -1,3 +1,4 @@
+import { Link, Settings } from '@signozhq/icons';
 import {
 	Button,
 	DropdownMenu,
@@ -9,7 +10,6 @@ import {
 	DropdownMenuTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Link, Settings } from 'lucide-react';
 
 const meta: Meta<typeof DropdownMenuSubTrigger> = {
 	title: 'Components/DropdownMenu/DropdownMenuSubTrigger',

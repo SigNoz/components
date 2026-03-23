@@ -1,4 +1,19 @@
-import { Spinner } from '@signozhq/icons';
+import {
+	ArrowUpDown,
+	ChevronDown,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+	ChevronUp,
+	Filter,
+	GripVertical,
+	LoaderCircle,
+	Pin,
+	PinOff,
+	Search,
+	X,
+} from '@signozhq/icons';
 import {
 	type Cell,
 	type Column,
@@ -23,21 +38,6 @@ import {
 } from '@tanstack/react-table';
 import { useVirtualizer, type Virtualizer } from '@tanstack/react-virtual';
 import throttle from 'lodash-es/throttle';
-import {
-	ArrowUpDown,
-	ChevronDown,
-	ChevronLeft,
-	ChevronRight,
-	ChevronsLeft,
-	ChevronsRight,
-	ChevronUp,
-	Filter,
-	GripVertical,
-	Pin,
-	PinOff,
-	Search,
-	X,
-} from 'lucide-react';
 import * as React from 'react';
 import { Button } from '../button/index.js';
 import { Input } from '../input/index.js';
@@ -1266,7 +1266,7 @@ export function DataTable<TData, TValue>({
 									>
 										<div className={styles['data-table__loading-overlay']}>
 											<div className={styles['data-table__loading-content']}>
-												<Spinner />
+												<LoaderCircle />
 												<span>Loading...</span>
 											</div>
 										</div>
@@ -1570,7 +1570,7 @@ export function DataTable<TData, TValue>({
 												<div className={styles['data-table__infinite-scroll-content']}>
 													{loadingMore ? (
 														<div className={styles['data-table__pagination-left']}>
-															<Spinner />
+															<LoaderCircle />
 															<span>Loading more...</span>
 														</div>
 													) : null}
@@ -1626,7 +1626,7 @@ export function DataTable<TData, TValue>({
 						<div className={styles['data-table__pagination-info']}>
 							{isLoading ? (
 								<div className={styles['data-table__pagination-left']}>
-									<Spinner />
+									<LoaderCircle />
 									<span>Loading...</span>
 								</div>
 							) : (
