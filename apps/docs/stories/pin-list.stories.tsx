@@ -2,7 +2,6 @@ import { PinList, type PinListItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BarChart, Bug, FileText, GitBranch, Globe, Hexagon, List, Server } from 'lucide-react';
 import type React from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
 
 /**
  * Helper function to create properly formatted PinList items
@@ -29,121 +28,96 @@ const createPinListItem = (
 	className: options.className,
 });
 
-const PinListExamples = [
-	`import { PinList } from '@signozhq/ui';
-import { FileText, BarChart } from 'lucide-react';
-
-export default function MyComponent() {
-  const items = [
-    { 
-      key: '1', 
-      itemKey: '1',
-      label: 'Logs', 
-      icon: <FileText />, 
-      isPinned: true, 
-      active: true,
-      isEnabled: true,
-    },
-    { 
-      key: '2', 
-      itemKey: '2',
-      label: 'Metrics', 
-      icon: <BarChart />, 
-      isPinned: false,
-      isEnabled: true,
-    },
-  ];
-
-  return (
-    <PinList
-      items={items}
-      onItemClick={(item) => console.log('Clicked:', item.label)}
-      onPinToggle={(item) => console.log('Pin toggled:', item.label)}
-    />
-  );
-}`,
-];
-
-const PinListDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A pin list component with smooth animations for managing pinned and unpinned items. Supports hover states, tooltips, and active item indicators. The component uses Framer Motion for smooth layout animations and provides a collapsible "MORE" section for unpinned items.',
-	examples: PinListExamples,
-});
-
 const meta: Meta<typeof PinList> = {
-	title: 'Old Components/PinList',
+	title: 'Components/PinList',
 	component: PinList,
-	parameters: {
-		layout: 'fullscreen',
-		docs: {
-			description: {
-				component: PinListDocs,
+	argTypes: {
+		items: {
+			control: false,
+			description:
+				'Array of items to display in the pin list. Items are automatically separated into pinned (shortcuts) and unpinned (more) sections. Each item must have key, itemKey, label, icon (ReactElement), isPinned, isEnabled, and optionally active.',
+			table: { category: 'Content', type: { summary: 'PinListItem[]' } },
+		},
+		onItemClick: {
+			control: false,
+			action: 'item-clicked',
+			description: 'Callback fired when an item is clicked. Receives the clicked PinListItem.',
+			table: { category: 'Events', type: { summary: '(item: PinListItem) => void' } },
+		},
+		onPinToggle: {
+			control: false,
+			action: 'pin-toggled',
+			description:
+				"Callback fired when an item's pin state is toggled. Receives the item with its new isPinned state (already toggled).",
+			table: { category: 'Events', type: { summary: '(item: PinListItem) => void' } },
+		},
+		shortcutsLabel: {
+			control: 'text',
+			description: 'Label text for the pinned items section header.',
+			table: {
+				category: 'Content',
+				type: { summary: 'string' },
+				defaultValue: { summary: '"SHORTCUTS"' },
 			},
 		},
+		moreLabel: {
+			control: 'text',
+			description: 'Label text for the unpinned items section header.',
+			table: {
+				category: 'Content',
+				type: { summary: 'string' },
+				defaultValue: { summary: '"MORE"' },
+			},
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS class names to apply to the container element.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		itemClassName: {
+			control: 'text',
+			description: 'Additional CSS class names to apply to all item elements.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		labelClassName: {
+			control: 'text',
+			description:
+				'Additional CSS class names to apply to section label elements (shortcuts and more headers).',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		transition: {
+			control: false,
+			description:
+				'Framer Motion transition configuration for item animations. Uses spring animation by default.',
+			table: { category: 'Styling', type: { summary: 'Transition' } },
+		},
+		isDocked: {
+			control: 'boolean',
+			description:
+				'Whether the component is in a docked/collapsed state. Can be used to apply different styling when the sidebar is collapsed.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+	},
+	parameters: {
+		layout: 'fullscreen',
 		design: {
 			type: 'figma',
 			url: 'https://www.figma.com/design/NthLbcN3oStPosxLkCI8Mt/Periscope---Composites?node-id=276-2244',
 		},
 	},
-	argTypes: {
-		items: {
-			control: { disable: true },
-			description:
-				'Array of items to display in the pin list. Each item must have key, itemKey, label, icon (ReactElement), isPinned, isEnabled, and optionally active.',
-		},
-		onItemClick: {
-			action: 'item-clicked',
-			description: 'Callback fired when an item is clicked. Receives the clicked PinListItem.',
-		},
-		onPinToggle: {
-			action: 'pin-toggled',
-			description:
-				'Callback fired when an item is pinned or unpinned. Receives the toggled PinListItem with updated isPinned state.',
-		},
-		shortcutsLabel: {
-			control: 'text',
-			description: 'Label for the pinned items section. Defaults to "SHORTCUTS".',
-			defaultValue: 'SHORTCUTS',
-		},
-		moreLabel: {
-			control: 'text',
-			description: 'Label for the unpinned items section. Defaults to "MORE".',
-			defaultValue: 'MORE',
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to the container.',
-		},
-		itemClassName: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to all items.',
-		},
-		labelClassName: {
-			control: 'text',
-			description: 'Additional CSS classes to apply to section labels.',
-		},
-		isDocked: {
-			control: 'boolean',
-			description: 'Whether the component is in a docked state, which may apply different styling.',
-			defaultValue: false,
-		},
-		transition: {
-			control: { disable: true },
-			description:
-				'Framer Motion transition configuration for animations. Uses spring animation by default.',
-		},
-	},
 	decorators: [
 		(Story) => (
-			<div className="p-8 bg-background min-h-screen">
+			<div className="p-8 bg-background min-h-[360px]">
 				<div className="max-w-[360px]">
 					<Story />
 				</div>
 			</div>
 		),
 	],
-	tags: ['autodocs'],
 };
 
 export default meta;

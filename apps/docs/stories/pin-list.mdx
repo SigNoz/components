@@ -1,0 +1,74 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PinListStories from './pin-list.stories';
+
+<Meta of={PinListStories} />
+
+# PinList
+
+A pin list component for displaying items that can be pinned/unpinned as shortcuts.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import { PinList } from '@signozhq/ui';
+import { FileText, BarChart } from 'lucide-react';
+
+export default function MyComponent() {
+	const items = [
+		{
+			key: '1',
+			itemKey: '1',
+			label: 'Logs',
+			icon: <FileText />,
+			isPinned: true,
+			active: true,
+			isEnabled: true,
+		},
+		{
+			key: '2',
+			itemKey: '2',
+			label: 'Metrics',
+			icon: <BarChart />,
+			isPinned: false,
+			isEnabled: true,
+		},
+	];
+
+	return (
+		<PinList
+			items={items}
+			onItemClick={(item) => console.log('Clicked:', item.label)}
+			onPinToggle={(item) => console.log('Pin toggled:', item.label)}
+		/>
+	);
+}
+```
+
+### With custom labels
+
+```tsx
+<PinList
+	items={items}
+	shortcutsLabel="FAVORITES"
+	moreLabel="ALL ITEMS"
+	onItemClick={handleClick}
+/>
+```
+
+### Docked mode (collapsed sidebar)
+
+```tsx
+<PinList
+	items={items}
+	isDocked={true}
+	onItemClick={handleClick}
+/>
+```
+
+<Primary />
+
+## PinList Props
+
+<Controls of={PinListStories.Default} />
