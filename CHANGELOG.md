@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.0.6](https://github.com/SigNoz/components/compare/v0.0.5...v0.0.6) (2026-03-24)
+
+
+### Features
+
+* **css-modules:** migrate date picker ([3e8ba9a](https://github.com/SigNoz/components/commit/3e8ba9a8c5a22600de6a1d880e582dde54b3a561))
+* **css-modules:** migrate dropdown menu ([662b7f8](https://github.com/SigNoz/components/commit/662b7f81972ecb4ef7b6d39862750c0cd145b298))
+* **css-modules:** migrate pin list ([f5aee77](https://github.com/SigNoz/components/commit/f5aee77fd3f8dfbd7651949c8e0ef78a8060e11c))
+* **css-modules:** migrate popover ([5cd4458](https://github.com/SigNoz/components/commit/5cd44586bc846190bdbb7d0513a07981381b3323))
+* **css-modules:** migrate tabs ([bd20778](https://github.com/SigNoz/components/commit/bd20778d293d990a12f1a2c047e9d824ecd3e1dd))
+* **css-modules:** migrate tooltip ([4f79174](https://github.com/SigNoz/components/commit/4f791745e13e42c18f34c85d4db2ff3dbbe11c3f))
+* **deps:** remove unused deps & remove tailwind ([7295323](https://github.com/SigNoz/components/commit/7295323af7831cc36fb38c0217d178d3dbd3ddbf))
+
+
+### Bug Fixes
+
+* **combobox:** use popover component & support popover inside popover ([ba38938](https://github.com/SigNoz/components/commit/ba389384b9333ccf7fafcb17fc1c8eefaec840db))
+* **data-table-stories:** remove story that causes build to fail from time to time ([37a0d01](https://github.com/SigNoz/components/commit/37a0d012439d7810c893fd4ff2e4af56e310eda0))
+* **data-table:** remove margin on search icon ([d08a864](https://github.com/SigNoz/components/commit/d08a86451206b44fa4302bdfcfa3f19361cb31b4))
+* **input:** allow more customization via css variables ([8d9126d](https://github.com/SigNoz/components/commit/8d9126d4e58e4409c882f3c6fb1974860d214dc4))
+* **signozhq-icons:** use updated lib & remove lucide ([b00cd70](https://github.com/SigNoz/components/commit/b00cd700184f77fe67c877dd2467018edefff3c8))
+* **tooltip:** explicit exports ([9ad148a](https://github.com/SigNoz/components/commit/9ad148abe90c6931d83cac0d5b831d3f0007c882))
+
+
+### Documentation
+
+* **readme:** add missing components ([d6b9c1b](https://github.com/SigNoz/components/commit/d6b9c1b3a3cb75294b4c407f12bf70c433eed52b))
+
 ## [0.0.5](https://github.com/SigNoz/components/compare/v0.0.4...v0.0.5) (2026-03-18)
 
 
