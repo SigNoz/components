@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/SigNoz/components/compare/v0.0.6...v0.0.7) (2026-04-08)
+
+
+### Bug Fixes
+
+* fixed the light mode colors for the action and dismiss btn in announcement banner ([31b86c0](https://github.com/SigNoz/components/commit/31b86c0f4916362125bd7d9e46552635425609c7))
+
 ## [0.0.6](https://github.com/SigNoz/components/compare/v0.0.5...v0.0.6) (2026-03-24)
 
 
