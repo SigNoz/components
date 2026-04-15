@@ -16,6 +16,7 @@ export const TriangleAlert = createIcon('triangle-alert');
 export const X = createIcon('x');
 export const Check = createIcon('check');
 export const Slash = createIcon('slash');
+export const ChevronDown = createIcon('chevron-down');
 export const ChevronLeft = createIcon('chevron-left');
 export const ChevronRight = createIcon('chevron-right');
 export const Minus = createIcon('minus');
