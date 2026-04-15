@@ -5,6 +5,11 @@ const meta: Meta<typeof TabsList> = {
 	title: 'Components/Tabs/TabsList',
 	component: TabsList,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the tabs list.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 		variant: {
 			control: 'select',
 			options: ['primary', 'secondary'],

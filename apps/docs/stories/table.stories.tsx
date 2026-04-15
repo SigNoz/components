@@ -79,6 +79,23 @@ const users = [
 const meta: Meta<typeof Table> = {
 	title: 'Old Components/Basic Table',
 	component: Table,
+	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the table.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the table.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+	},
 	parameters: {
 		layout: 'fullscreen',
 		docs: {

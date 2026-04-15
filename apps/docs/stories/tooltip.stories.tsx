@@ -16,6 +16,21 @@ const meta: Meta<typeof Tooltip> = {
 	title: 'Components/Tooltip',
 	component: Tooltip,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the tooltip.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the tooltip.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
 		open: {
 			control: 'boolean',
 			description:

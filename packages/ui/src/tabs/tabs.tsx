@@ -40,8 +40,12 @@ export type TabItemProps = {
 
 export type TabsProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
+	/**
+	 * The testId associated with the tabs.
+	 */
+	testId?: string;
 	/**
 	 * Array of tab items to render.
 	 */
@@ -122,7 +126,10 @@ export type TabsProps = Pick<
  * ```
  */
 export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
-	({ items, onChange, defaultValue, value, variant = 'primary', className, ...props }, ref) => {
+	(
+		{ items, onChange, defaultValue, value, variant = 'primary', className, testId, ...props },
+		ref
+	) => {
 		return (
 			<TabsRoot
 				ref={ref}
@@ -130,6 +137,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 				defaultValue={defaultValue ?? items[0]?.key}
 				value={value}
 				className={className}
+				testId={testId}
 				{...props}
 			>
 				<TooltipProvider>
@@ -178,8 +186,12 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 
 export type TabsListProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
+	/**
+	 * The testId associated with the tabs list.
+	 */
+	testId?: string;
 	/**
 	 * The visual style variant of the tabs list.
 	 */
@@ -215,7 +227,7 @@ export type TabsListProps = Pick<
 export const TabsList = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.List>,
 	TabsListProps
->(({ className, variant = 'primary', children, ...props }, ref) => {
+>(({ className, variant = 'primary', children, testId, ...props }, ref) => {
 	const listRef = React.useRef<HTMLDivElement>(null);
 	const activeSliderRef = React.useRef<HTMLDivElement>(null);
 	const hoverSliderRef = React.useRef<HTMLDivElement>(null);
@@ -312,6 +324,7 @@ export const TabsList = React.forwardRef<
 				ref={listRef}
 				className={cn(styles['tabs__list'], className)}
 				data-variant={variant}
+				data-testid={testId}
 				onMouseOver={variant === 'primary' ? handleMouseOver : undefined}
 				onMouseLeave={variant === 'primary' ? handleMouseLeave : undefined}
 				{...props}
@@ -340,8 +353,12 @@ export const TabsList = React.forwardRef<
 
 export type TabsTriggerProps = Pick<
 	React.ComponentPropsWithoutRef<'button'>,
-	'id' | 'className' | 'children' | 'onMouseEnter' | 'onMouseDown' | 'onMouseLeave'
+	'id' | 'className' | 'style' | 'children' | 'onMouseEnter' | 'onMouseDown' | 'onMouseLeave'
 > & {
+	/**
+	 * The testId associated with the tabs trigger.
+	 */
+	testId?: string;
 	/**
 	 * The unique value that associates the trigger with a content panel.
 	 */
@@ -388,11 +405,12 @@ export type TabsTriggerProps = Pick<
 export const TabsTrigger = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.Trigger>,
 	TabsTriggerProps
->(({ className, children, variant = 'primary', disabled, ...props }, ref) => (
+>(({ className, children, variant = 'primary', disabled, testId, ...props }, ref) => (
 	<TabsPrimitive.Trigger
 		ref={ref}
 		data-slot="tabs-trigger"
 		data-variant={variant}
+		data-testid={testId}
 		className={cn(styles['tabs__trigger'], className)}
 		disabled={disabled}
 		{...props}
@@ -403,8 +421,12 @@ export const TabsTrigger = React.forwardRef<
 
 export type TabsContentProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
+	/**
+	 * The testId associated with the tabs content.
+	 */
+	testId?: string;
 	/**
 	 * The unique value that associates the content with a trigger.
 	 */
@@ -450,11 +472,12 @@ export type TabsContentProps = Pick<
 export const TabsContent = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.Content>,
 	TabsContentProps
->(({ className, ...props }, ref) => {
+>(({ className, testId, ...props }, ref) => {
 	return (
 		<TabsPrimitive.Content
 			ref={ref}
 			className={cn(styles['tabs__content'], className)}
+			data-testid={testId}
 			{...props}
 		/>
 	);
@@ -462,8 +485,12 @@ export const TabsContent = React.forwardRef<
 
 export type TabsRootProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
+	/**
+	 * The testId associated with the tabs root.
+	 */
+	testId?: string;
 	/**
 	 * The direction of navigation when using keyboard.
 	 */
@@ -513,6 +540,13 @@ export type TabsRootProps = Pick<
 export const TabsRoot = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.Root>,
 	TabsRootProps
->(({ className, ...props }, ref) => {
-	return <TabsPrimitive.Root ref={ref} className={cn(styles.tabs, className)} {...props} />;
+>(({ className, testId, ...props }, ref) => {
+	return (
+		<TabsPrimitive.Root
+			ref={ref}
+			className={cn(styles.tabs, className)}
+			data-testid={testId}
+			{...props}
+		/>
+	);
 });

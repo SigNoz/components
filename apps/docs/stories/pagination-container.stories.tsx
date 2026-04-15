@@ -14,6 +14,11 @@ const meta: Meta<typeof PaginationContainer> = {
 	title: 'Components/Pagination/PaginationContainer',
 	component: PaginationContainer,
 	argTypes: {
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the pagination container.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		align: {
 			control: 'select',
 			options: ['start', 'center', 'end'],

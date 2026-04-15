@@ -13,7 +13,10 @@ import styles from './callout.module.scss';
 
 export type CalloutColor = 'robin' | 'forest' | 'amber' | 'cherry' | 'sakura' | 'aqua';
 
-export type CalloutProps = Pick<React.ComponentProps<'div'>, 'id' | 'className' | 'children'> & {
+export type CalloutProps = Pick<
+	React.ComponentProps<'div'>,
+	'id' | 'className' | 'style' | 'children'
+> & {
 	title?: React.ReactNode;
 	type?: 'info' | 'success' | 'warning' | 'error';
 	showIcon?: boolean;
@@ -109,6 +112,8 @@ function Callout({
 	action = 'none',
 	onClick,
 	defaultExpanded = true,
+	testId,
+	id,
 	...props
 }: CalloutProps) {
 	const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
@@ -142,6 +147,8 @@ function Callout({
 		<div
 			data-slot="callout"
 			data-color={color ?? typeToColorMap[type]}
+			data-testid={testId}
+			id={id}
 			className={cn(
 				styles['callout'],
 				size === 'small' ? styles['callout--small'] : styles['callout--medium'],

@@ -17,6 +17,18 @@ export type DropdownMenuContentProps = {
 	 */
 	className?: string;
 	/**
+	 * Inline styles to apply to the content.
+	 */
+	style?: OriginalContentProps['style'];
+	/**
+	 * The id of the content.
+	 */
+	id?: string;
+	/**
+	 * The testId associated with the content.
+	 */
+	testId?: string;
+	/**
 	 * Used to force mounting when more control is needed.
 	 * Useful when controlling animation with React animation libraries.
 	 */
@@ -150,11 +162,13 @@ export type DropdownMenuContentProps = {
 export const DropdownMenuContent = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
 	DropdownMenuContentProps
->(({ className, sideOffset = 4, ...props }, ref) => (
+>(({ className, sideOffset = 4, testId, id, ...props }, ref) => (
 	<DropdownMenuPortal>
 		<DropdownMenuPrimitive.Content
 			ref={ref}
 			data-slot="dropdown-menu-content"
+			data-testid={testId}
+			id={id}
 			sideOffset={sideOffset}
 			className={cn(styles['dropdown-menu__content'], className)}
 			{...props}

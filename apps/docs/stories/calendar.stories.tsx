@@ -8,6 +8,16 @@ const meta: Meta<typeof Calendar> = {
 	title: 'Components/Calendar',
 	component: Calendar,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the calendar.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the calendar.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		mode: {
 			control: { type: 'select' },
 			options: ['single', 'range', 'multiple'],

@@ -11,6 +11,11 @@ const meta: Meta<typeof DropdownMenuTrigger> = {
 	title: 'Components/DropdownMenu/DropdownMenuTrigger',
 	component: DropdownMenuTrigger,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the dropdown menu trigger.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 		asChild: {
 			control: 'boolean',
 			description:

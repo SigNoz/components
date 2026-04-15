@@ -16,6 +16,14 @@ import {
 
 export interface DrawerWrapperProps {
 	/**
+	 * The testId associated with the drawer.
+	 */
+	testId?: string;
+	/**
+	 * The id of the drawer.
+	 */
+	id?: string;
+	/**
 	 * The title of the drawer.
 	 */
 	title?: string;
@@ -47,6 +55,10 @@ export interface DrawerWrapperProps {
 	 * The class name of the drawer.
 	 */
 	className?: string;
+	/**
+	 * Inline styles applied to the drawer content surface.
+	 */
+	style?: React.CSSProperties;
 	/**
 	 * Whether to disable outside clicks.
 	 * @default false
@@ -130,11 +142,14 @@ export function DrawerWrapper({
 	onOpenChange,
 	trigger,
 	className,
+	style,
 	disableOutsideClick = false,
 	showCloseButton = true,
 	direction = 'right',
 	showOverlay = true,
 	footer,
+	testId,
+	id,
 }: DrawerWrapperProps) {
 	const isControlled = open !== undefined && onOpenChange !== undefined;
 	const [internalOpen, setInternalOpen] = useState(false);
@@ -155,10 +170,13 @@ export function DrawerWrapper({
 		<DrawerContent
 			key="drawer-wrapper"
 			className={className}
+			style={style}
 			direction={direction}
 			showOverlay={showOverlay}
 			forceMount
 			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
+			testId={testId}
+			id={id}
 		>
 			{(title || subTitle) && (
 				<DrawerHeader>

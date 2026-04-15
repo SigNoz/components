@@ -13,6 +13,11 @@ const meta: Meta<typeof PaginationContent> = {
 	title: 'Components/Pagination/PaginationContent',
 	component: PaginationContent,
 	argTypes: {
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the pagination content.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		className: {
 			control: 'text',
 			description: 'Additional CSS classes',

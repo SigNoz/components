@@ -55,6 +55,14 @@ export type PinListItem = {
 
 export type PinListProps = {
 	/**
+	 * The testId associated with the pin list.
+	 */
+	testId?: string;
+	/**
+	 * The id of the pin list.
+	 */
+	id?: string;
+	/**
 	 * Array of items to display in the pin list.
 	 * Items are automatically separated into pinned (shortcuts) and unpinned (more) sections.
 	 *
@@ -205,6 +213,8 @@ function PinList({
 	labelClassName,
 	transition = defaultTransition,
 	isDocked: isDockedProp,
+	testId,
+	id,
 	...props
 }: PinListProps) {
 	const [listItems, setListItems] = React.useState(initialItems);
@@ -264,7 +274,12 @@ function PinList({
 
 	return (
 		<TooltipProvider>
-			<motion.div className={cn(styles['container'], className)} {...props}>
+			<motion.div
+				className={cn(styles['container'], className)}
+				data-testid={testId}
+				id={id}
+				{...props}
+			>
 				<LayoutGroup>
 					<div className={styles['section']}>
 						<AnimatePresence>

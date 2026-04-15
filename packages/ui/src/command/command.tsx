@@ -5,7 +5,12 @@ import { Dialog, DialogContent, type DialogPosition } from '../dialog/index.js';
 import { cn } from '../lib/utils.js';
 import styles from './command.module.scss';
 
-export type CommandProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive>;
+export type CommandProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive> & {
+	/**
+	 * The testId associated with the command.
+	 */
+	testId?: string;
+};
 
 /**
  * High-level wrapper around `cmdk`'s `Command` root.
@@ -40,8 +45,13 @@ export type CommandProps = React.ComponentPropsWithoutRef<typeof CommandPrimitiv
  * ```
  */
 export const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive>, CommandProps>(
-	({ className, ...props }, ref) => (
-		<CommandPrimitive ref={ref} className={cn(styles['command'], className)} {...props} />
+	({ className, testId, ...props }, ref) => (
+		<CommandPrimitive
+			ref={ref}
+			className={cn(styles['command'], className)}
+			data-testid={testId}
+			{...props}
+		/>
 	)
 );
 
@@ -109,7 +119,28 @@ export const CommandDialog = ({
 	);
 };
 
-export type CommandInputProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>;
+export type CommandInputProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+	/**
+	 * The testId associated with the command input.
+	 */
+	testId?: string;
+	/**
+	 * Additional CSS classes to apply to the command input wrapper.
+	 */
+	containerClassName?: string;
+	/**
+	 * Inline styles to apply to the command input wrapper.
+	 */
+	containerStyle?: React.CSSProperties;
+	/**
+	 * The id of the command input wrapper.
+	 */
+	containerId?: string;
+	/**
+	 * The testId associated with the command input wrapper.
+	 */
+	containerTestId?: string;
+};
 
 /**
  * Input field used inside `Command` to capture the search query.
@@ -130,21 +161,81 @@ export type CommandInputProps = React.ComponentPropsWithoutRef<typeof CommandPri
  * </Command>
  * ```
  */
-export const CommandInput = React.forwardRef<
-	React.ElementRef<typeof CommandPrimitive.Input>,
-	CommandInputProps
->(({ className, ...props }, ref) => (
-	<div className={styles['command__input-wrapper']}>
-		<MagnifyingGlassIcon className={styles['command__input-icon']} />
-		<CommandPrimitive.Input
-			ref={ref}
-			className={cn(styles['command__input'], className)}
-			{...props}
-		/>
-	</div>
-));
+export const CommandInput = React.forwardRef<HTMLInputElement, CommandInputProps>(
+	(
+		{
+			className,
+			style,
+			testId,
+			id,
+			containerClassName,
+			containerStyle,
+			containerId,
+			containerTestId,
+			...props
+		},
+		ref
+	) => {
+		const inputRef = React.useRef<HTMLInputElement | null>(null);
 
-export type CommandListProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>;
+		const setRef = React.useCallback(
+			(node: HTMLInputElement | null) => {
+				inputRef.current = node;
+
+				if (typeof ref === 'function') {
+					ref(node);
+					return;
+				}
+
+				if (ref) {
+					ref.current = node;
+				}
+			},
+			[ref]
+		);
+
+		React.useLayoutEffect(() => {
+			if (!id || !inputRef.current) {
+				return;
+			}
+
+			inputRef.current.id = id;
+
+			const commandRoot = inputRef.current.closest('[cmdk-root]');
+			const label = commandRoot?.querySelector('[cmdk-label]');
+
+			if (label instanceof HTMLLabelElement) {
+				label.htmlFor = id;
+			}
+		}, [id]);
+
+		return (
+			<div
+				className={cn(styles['command__input-wrapper'], containerClassName)}
+				data-testid={containerTestId}
+				id={containerId}
+				style={containerStyle}
+			>
+				<MagnifyingGlassIcon className={styles['command__input-icon']} />
+				<CommandPrimitive.Input
+					ref={setRef}
+					className={cn(styles['command__input'], className)}
+					data-testid={testId}
+					style={style}
+					{...props}
+					id={id}
+				/>
+			</div>
+		);
+	}
+);
+
+export type CommandListProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> & {
+	/**
+	 * The testId associated with the command list.
+	 */
+	testId?: string;
+};
 
 /**
  * Scrollable list container for `CommandItem`, `CommandGroup`, `CommandEmpty`,
@@ -170,8 +261,13 @@ export type CommandListProps = React.ComponentPropsWithoutRef<typeof CommandPrim
 export const CommandList = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.List>,
 	CommandListProps
->(({ className, ...props }, ref) => (
-	<CommandPrimitive.List ref={ref} className={cn(styles['command__list'], className)} {...props} />
+>(({ className, testId, ...props }, ref) => (
+	<CommandPrimitive.List
+		ref={ref}
+		className={cn(styles['command__list'], className)}
+		data-testid={testId}
+		{...props}
+	/>
 ));
 
 export type CommandEmptyProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>;
@@ -209,7 +305,12 @@ export const CommandLoading = React.forwardRef<
 	/>
 ));
 
-export type CommandGroupProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>;
+export type CommandGroupProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group> & {
+	/**
+	 * The testId associated with the command group.
+	 */
+	testId?: string;
+};
 
 /**
  * Groups related `CommandItem` entries under an optional heading.
@@ -238,10 +339,11 @@ export type CommandGroupProps = React.ComponentPropsWithoutRef<typeof CommandPri
 export const CommandGroup = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.Group>,
 	CommandGroupProps
->(({ className, ...props }, ref) => (
+>(({ className, testId, ...props }, ref) => (
 	<CommandPrimitive.Group
 		ref={ref}
 		className={cn(styles['command__group'], className)}
+		data-testid={testId}
 		{...props}
 	/>
 ));
@@ -286,6 +388,10 @@ export type CommandItemProps = Omit<
 	'prefix' | 'suffix'
 > & {
 	/**
+	 * The testId associated with the command item.
+	 */
+	testId?: string;
+	/**
 	 * The prefix to display before the item label.
 	 * null will not render the default prefix (Check icon).
 	 */
@@ -322,8 +428,13 @@ export type CommandItemProps = Omit<
 export const CommandItem = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.Item>,
 	CommandItemProps
->(({ className, prefix, suffix, children, ...props }, ref) => (
-	<CommandPrimitive.Item ref={ref} className={cn(styles['command__item'], className)} {...props}>
+>(({ className, prefix, suffix, children, testId, ...props }, ref) => (
+	<CommandPrimitive.Item
+		ref={ref}
+		className={cn(styles['command__item'], className)}
+		data-testid={testId}
+		{...props}
+	>
 		{prefix != null && <span className={styles['command__item-prefix']}>{prefix}</span>}
 		{children}
 		{suffix != null && <span className={styles['command__item-suffix']}>{suffix}</span>}

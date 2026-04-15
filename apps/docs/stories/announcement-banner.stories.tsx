@@ -9,6 +9,11 @@ const meta: Meta<typeof AnnouncementBanner> = {
 		layout: 'fullscreen',
 	},
 	argTypes: {
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the announcement banner.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		type: {
 			control: 'select',
 			options: ['warning', 'info', 'error', 'success'] satisfies AnnouncementBannerType[],

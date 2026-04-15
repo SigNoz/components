@@ -15,6 +15,14 @@ import {
 
 export interface DialogWrapperProps {
 	/**
+	 * The testId associated with the dialog.
+	 */
+	testId?: string;
+	/**
+	 * The id of the dialog.
+	 */
+	id?: string;
+	/**
 	 * The title of the dialog.
 	 */
 	title?: string;
@@ -46,6 +54,10 @@ export interface DialogWrapperProps {
 	 * The class name of the dialog.
 	 */
 	className?: string;
+	/**
+	 * Inline styles applied to the dialog content surface.
+	 */
+	style?: React.CSSProperties;
 	/**
 	 * Whether to disable outside clicks.
 	 * @default false
@@ -135,12 +147,15 @@ export function DialogWrapper({
 	onOpenChange,
 	trigger,
 	className,
+	style,
 	disableOutsideClick = false,
 	showCloseButton = true,
 	width = 'base',
 	titleIcon,
 	footer,
 	showOverlay = true,
+	testId,
+	id,
 }: DialogWrapperProps) {
 	const isControlled = open !== undefined && onOpenChange !== undefined;
 	const [internalOpen, setInternalOpen] = useState(false);
@@ -161,10 +176,13 @@ export function DialogWrapper({
 		<DialogContent
 			key="dialog-wrapper"
 			className={className}
+			style={style}
 			forceMount
 			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
 			width={width}
 			showOverlay={showOverlay}
+			testId={testId}
+			id={id}
 		>
 			{(title || subTitle) && (
 				<DialogHeader>

@@ -5,6 +5,11 @@ const meta: Meta<typeof TabsTrigger> = {
 	title: 'Components/Tabs/TabsTrigger',
 	component: TabsTrigger,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the tab trigger.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 		value: {
 			control: 'text',
 			description: 'The unique value that associates the trigger with a content panel.',

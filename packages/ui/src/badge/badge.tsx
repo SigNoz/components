@@ -20,7 +20,12 @@ type BadgeColor =
 	| 'aqua'
 	| 'vanilla';
 
-interface BadgeProps extends Pick<React.ComponentProps<'span'>, 'className' | 'children'> {
+interface BadgeProps
+	extends Pick<React.ComponentProps<'span'>, 'className' | 'children' | 'id' | 'style'> {
+	/**
+	 * The testId associated with the badge.
+	 */
+	testId?: string;
 	/**
 	 * @default false
 	 */
@@ -53,6 +58,7 @@ function Badge({
 	color = 'primary',
 	asChild = false,
 	capitalize = false,
+	testId,
 	...props
 }: BadgeProps) {
 	const Comp = asChild ? Slot : 'span';
@@ -63,6 +69,7 @@ function Badge({
 			data-variant={variant}
 			data-capitalize={capitalize}
 			data-slot="badge"
+			data-testid={testId}
 			className={cn(styles.badge, className)}
 			{...props}
 		/>

@@ -1,7 +1,14 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
 
-export type DropdownMenuTriggerProps = React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>;
+export type DropdownMenuTriggerProps = React.ComponentProps<
+	typeof DropdownMenuPrimitive.Trigger
+> & {
+	/**
+	 * The testId associated with the trigger.
+	 */
+	testId?: string;
+};
 
 /**
  * The button that toggles the dropdown menu.
@@ -27,8 +34,15 @@ export type DropdownMenuTriggerProps = React.ComponentProps<typeof DropdownMenuP
 export const DropdownMenuTrigger = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
 	DropdownMenuTriggerProps
->((props, ref) => {
-	return <DropdownMenuPrimitive.Trigger ref={ref} data-slot="dropdown-menu-trigger" {...props} />;
+>(({ testId, ...props }, ref) => {
+	return (
+		<DropdownMenuPrimitive.Trigger
+			ref={ref}
+			data-slot="dropdown-menu-trigger"
+			data-testid={testId}
+			{...props}
+		/>
+	);
 });
 
 DropdownMenuTrigger.displayName = 'DropdownMenuTrigger';

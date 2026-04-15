@@ -80,7 +80,18 @@ export function Popover({ testId, ...props }: PopoverProps) {
 	return <PopoverPrimitive.Root data-slot="popover" data-testid={testId} {...props} />;
 }
 
-export type PopoverTriggerProps = React.ComponentProps<typeof PopoverPrimitive.Trigger> & {
+export type PopoverTriggerProps = Omit<
+	React.ComponentProps<typeof PopoverPrimitive.Trigger>,
+	'id' | 'className'
+> & {
+	/**
+	 * The id of the popover trigger.
+	 */
+	id?: string;
+	/**
+	 * The class name of the popover trigger.
+	 */
+	className?: string;
 	/**
 	 * The test id of the popover trigger.
 	 */
@@ -102,19 +113,32 @@ export type PopoverTriggerProps = React.ComponentProps<typeof PopoverPrimitive.T
  * ```
  */
 export const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTriggerProps>(
-	({ testId, ...props }, ref) => {
+	({ testId, id, className, ...props }, ref) => {
 		return (
 			<PopoverPrimitive.Trigger
 				ref={ref}
 				data-slot="popover-trigger"
 				data-testid={testId}
+				id={id}
+				className={className}
 				{...props}
 			/>
 		);
 	}
 );
 
-export type PopoverAnchorProps = React.ComponentProps<typeof PopoverPrimitive.Anchor> & {
+export type PopoverAnchorProps = Omit<
+	React.ComponentProps<typeof PopoverPrimitive.Anchor>,
+	'id' | 'className'
+> & {
+	/**
+	 * The id of the popover anchor.
+	 */
+	id?: string;
+	/**
+	 * The class name of the popover anchor.
+	 */
+	className?: string;
 	/**
 	 * The test id of the popover anchor.
 	 */
@@ -139,12 +163,14 @@ export type PopoverAnchorProps = React.ComponentProps<typeof PopoverPrimitive.An
  * ```
  */
 export const PopoverAnchor = React.forwardRef<HTMLDivElement, PopoverAnchorProps>(
-	({ testId, ...props }, ref) => {
+	({ testId, id, className, ...props }, ref) => {
 		return (
 			<PopoverPrimitive.Anchor
 				ref={ref}
 				data-slot="popover-anchor"
 				data-testid={testId}
+				id={id}
+				className={className}
 				{...props}
 			/>
 		);
@@ -171,7 +197,7 @@ export type PopoverArrowProps = {
 	 * The test id of the popover arrow.
 	 */
 	testId?: string;
-} & Pick<React.ComponentProps<'svg'>, 'className'>;
+} & Pick<React.ComponentProps<'svg'>, 'className' | 'style'>;
 
 /**
  * Optional arrow element to visually link the trigger with the content.
@@ -185,7 +211,7 @@ export type PopoverArrowProps = {
  * ```
  */
 export const PopoverArrow = React.forwardRef<SVGSVGElement, PopoverArrowProps>(
-	({ testId, className }, ref) => {
+	({ testId, className, style }, ref) => {
 		return (
 			<PopoverPrimitive.Arrow
 				ref={ref}
@@ -193,6 +219,7 @@ export const PopoverArrow = React.forwardRef<SVGSVGElement, PopoverArrowProps>(
 				data-testid={testId}
 				asChild
 				className={cn(styles.popover__arrow, className)}
+				style={style}
 			>
 				<svg width={10} height={5} viewBox="0 0 30 10" preserveAspectRatio="none">
 					<path d="M 0,0 L 15,10 L 30,0" className={styles.popover__arrowPath} />

@@ -14,6 +14,16 @@ const meta: Meta<typeof Callout> = {
 		},
 	},
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the callout.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the callout.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		title: {
 			control: 'text',
 			description: 'The main title of the callout.',

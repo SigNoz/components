@@ -107,6 +107,21 @@ const meta: Meta<typeof Badge> = {
 		},
 	},
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the badge.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the badge.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
 		children: {
 			control: 'text',
 			description:

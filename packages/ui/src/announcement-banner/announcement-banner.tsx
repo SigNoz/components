@@ -66,7 +66,7 @@ export type AnnouncementBannerProps = {
 	 * The test id to apply to the banner.
 	 */
 	testId?: string;
-} & Pick<React.ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'children'>;
+} & Pick<React.ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'style' | 'children'>;
 
 const DEFAULT_ICONS: Record<AnnouncementBannerType, ReactNode> = {
 	warning: <TriangleAlert size={14} />,
@@ -76,7 +76,7 @@ const DEFAULT_ICONS: Record<AnnouncementBannerType, ReactNode> = {
 };
 
 export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementBannerProps>(
-	({ children, type = 'warning', icon, action, onClose, className, testId, id }, ref) => {
+	({ children, type = 'warning', icon, action, onClose, className, style, testId, id }, ref) => {
 		const resolvedIcon = icon === null ? null : (icon ?? DEFAULT_ICONS[type]);
 
 		return (
@@ -87,6 +87,7 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 				data-testid={testId}
 				data-type={type}
 				className={cn(styles.banner, styles[`banner--${type}`], className)}
+				style={style}
 			>
 				<div className={styles['banner__body']}>
 					{resolvedIcon && (

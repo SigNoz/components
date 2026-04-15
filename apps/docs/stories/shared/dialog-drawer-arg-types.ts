@@ -155,6 +155,11 @@ export const contentArgTypes: Meta<typeof DialogContent>['argTypes'] = {
 		description: 'Additional CSS classes to apply to the dialog content.',
 		table: { category: 'Styling', type: { summary: 'string' } },
 	},
+	style: {
+		control: false,
+		description: 'Inline styles applied to the dialog content surface.',
+		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+	},
 	children: {
 		control: false,
 		table: { category: 'Content', type: { summary: 'React.ReactNode' } },
@@ -374,6 +379,16 @@ export const triggerArgTypes: Meta<typeof DialogTrigger>['argTypes'] = {
 };
 
 export const wrapperArgTypes: Meta<typeof DialogWrapper>['argTypes'] = {
+	testId: {
+		control: 'text',
+		description: 'Test ID for the dialog wrapper.',
+		table: { category: 'Testing', type: { summary: 'string' } },
+	},
+	id: {
+		control: 'text',
+		description: 'A unique identifier for the dialog wrapper.',
+		table: { category: 'Accessibility', type: { summary: 'string' } },
+	},
 	title: {
 		control: 'text',
 		description: 'The title of the dialog.',
@@ -452,6 +467,11 @@ export const wrapperArgTypes: Meta<typeof DialogWrapper>['argTypes'] = {
 		description: 'Optional class name passed to the underlying dialog content for custom styling.',
 		table: { category: 'Appearance', type: { summary: 'string' } },
 	},
+	style: {
+		control: false,
+		description: 'Inline styles applied to the dialog content surface.',
+		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+	},
 	onOpenChange: {
 		control: false,
 		description: 'Callback when the open state changes.',
@@ -467,6 +487,16 @@ export const confirmArgTypes: Meta<typeof ConfirmDialog>['argTypes'] = {
 		control: 'boolean',
 		description: 'Controlled open state of the confirm dialog.',
 		table: { category: 'State', type: { summary: 'boolean' } },
+	},
+	testId: {
+		control: 'text',
+		description: 'Test ID for the confirm dialog.',
+		table: { category: 'Testing', type: { summary: 'string' } },
+	},
+	id: {
+		control: 'text',
+		description: 'A unique identifier for the confirm dialog.',
+		table: { category: 'Accessibility', type: { summary: 'string' } },
 	},
 	title: {
 		control: 'text',
@@ -487,6 +517,11 @@ export const confirmArgTypes: Meta<typeof ConfirmDialog>['argTypes'] = {
 		control: 'text',
 		description: 'Optional class name passed to the underlying dialog content for custom styling.',
 		table: { category: 'Appearance', type: { summary: 'string' } },
+	},
+	style: {
+		control: false,
+		description: 'Inline styles applied to the dialog content surface.',
+		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
 	},
 	cancelText: {
 		control: 'text',
