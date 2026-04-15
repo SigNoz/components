@@ -10,11 +10,13 @@ import {
 
 export type PopoverSimpleProps = Pick<
 	PopoverProps,
-	'open' | 'defaultOpen' | 'onOpenChange' | 'modal'
+	'open' | 'defaultOpen' | 'onOpenChange' | 'modal' | 'testId'
 > &
 	Pick<
 		PopoverContentProps,
 		| 'className'
+		| 'style'
+		| 'id'
 		| 'side'
 		| 'sideOffset'
 		| 'align'
@@ -65,6 +67,9 @@ export function PopoverSimple({
 	trigger,
 	children,
 	className,
+	style,
+	id,
+	testId,
 	open,
 	defaultOpen,
 	onOpenChange,
@@ -79,10 +84,18 @@ export function PopoverSimple({
 	collisionPadding,
 }: PopoverSimpleProps) {
 	return (
-		<Popover open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange} modal={modal}>
+		<Popover
+			open={open}
+			defaultOpen={defaultOpen}
+			onOpenChange={onOpenChange}
+			modal={modal}
+			testId={testId}
+		>
 			{trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
 			<PopoverContent
 				className={className}
+				style={style}
+				id={id}
 				side={side}
 				sideOffset={sideOffset}
 				align={align}

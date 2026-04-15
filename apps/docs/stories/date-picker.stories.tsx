@@ -7,6 +7,11 @@ const meta: Meta<typeof DatePicker> = {
 	component: DatePicker,
 	tags: ['autodocs'],
 	argTypes: {
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the date picker.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		date: {
 			control: false,
 			description: 'The selected date.',

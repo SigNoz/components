@@ -21,6 +21,21 @@ const meta: Meta<any> = {
 		controls: { expanded: true },
 	},
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the command component.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the command component.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
 		placeholder: {
 			control: 'text',
 			description: 'Placeholder text shown in the command input box',

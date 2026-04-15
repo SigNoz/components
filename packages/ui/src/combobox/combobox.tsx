@@ -50,8 +50,20 @@ export const Combobox = PopoverPrimitive.Root;
 
 export type ComboboxTriggerProps = Omit<
 	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>,
-	'value'
+	'value' | 'id' | 'className'
 > & {
+	/**
+	 * The id of the combobox trigger.
+	 */
+	id?: string;
+	/**
+	 * The class name of the combobox trigger.
+	 */
+	className?: string;
+	/**
+	 * The testId associated with the combobox trigger.
+	 */
+	testId?: string;
 	placeholder?: React.ReactNode;
 	value?: React.ReactNode;
 };
@@ -74,10 +86,12 @@ export type ComboboxTriggerProps = Omit<
 export const ComboboxTrigger = React.forwardRef<
 	React.ElementRef<typeof PopoverPrimitive.Trigger>,
 	ComboboxTriggerProps
->(({ className, placeholder, value, ...props }, ref) => (
+>(({ className, placeholder, value, testId, id, ...props }, ref) => (
 	<PopoverPrimitive.Trigger
 		ref={ref}
 		className={cn(styles['combobox__trigger'], className)}
+		data-testid={testId}
+		id={id}
 		{...props}
 	>
 		<span className={styles['combobox__trigger-value']}>

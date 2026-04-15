@@ -14,6 +14,14 @@ import {
 
 export type ConfirmDialogProps = {
 	/**
+	 * The testId associated with the dialog.
+	 */
+	testId?: string;
+	/**
+	 * The id of the dialog.
+	 */
+	id?: string;
+	/**
 	 * The controlled open state of the dialog. Must be used in conjunction with onOpenChange.
 	 */
 	open?: boolean;
@@ -39,6 +47,10 @@ export type ConfirmDialogProps = {
 	 * The class name of the dialog.
 	 */
 	className?: string;
+	/**
+	 * Inline styles applied to the dialog content surface.
+	 */
+	style?: React.CSSProperties;
 
 	/**
 	 * The text of the cancel button.
@@ -145,6 +157,9 @@ export function ConfirmDialog({
 	titleIcon,
 	children,
 	className,
+	style,
+	testId,
+	id,
 
 	cancelText = 'Cancel',
 	onCancel,
@@ -179,6 +194,9 @@ export function ConfirmDialog({
 		<DialogContent
 			key="confirm-dialog"
 			className={className}
+			style={style}
+			testId={testId}
+			id={id}
 			forceMount={isControlled ? (true as const) : undefined}
 			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
 			width={width}

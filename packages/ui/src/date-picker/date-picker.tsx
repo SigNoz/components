@@ -23,6 +23,10 @@ dayjs.extend(timezone);
 
 export type DatePickerProps = {
 	/**
+	 * The id of the date picker.
+	 */
+	id?: string;
+	/**
 	 * The selected date.
 	 */
 	date?: Date;
@@ -76,6 +80,10 @@ export type DatePickerProps = {
 	 * Additional CSS classes.
 	 */
 	className?: string;
+	/**
+	 * Inline styles applied to the default trigger button. Ignored when using a custom `trigger`.
+	 */
+	style?: React.CSSProperties;
 	/**
 	 * Additional CSS classes for the popover content.
 	 */
@@ -171,6 +179,7 @@ export const TIMEZONES = ALL_TIMEZONES.map((tz) => ({
  * ```
  */
 export function DatePicker({
+	id,
 	date,
 	onDateChange,
 	time = '12:00:00',
@@ -183,6 +192,7 @@ export function DatePicker({
 	placeholder = 'Pick a date',
 	disabled = false,
 	className,
+	style,
 	popoverContentClassName,
 	buttonVariant = 'outlined',
 	buttonColor = 'secondary',
@@ -315,6 +325,7 @@ export function DatePicker({
 			disabled={disabled}
 			size={buttonSize}
 			className={cn(styles['datePicker__trigger'], className)}
+			style={style}
 			testId={testId ? `${testId}-trigger` : undefined}
 			prefix={<CalendarIcon className={styles['datePicker__triggerIcon']} />}
 			suffix={<ChevronDown className={styles['datePicker__triggerIcon']} />}
@@ -355,7 +366,7 @@ export function DatePicker({
 
 	return (
 		<Popover open={open} onOpenChange={setOpen} testId={testId}>
-			<PopoverTrigger asChild testId={testId ? `${testId}-popover-trigger` : undefined}>
+			<PopoverTrigger asChild testId={testId ? `${testId}-popover-trigger` : undefined} id={id}>
 				{trigger || defaultTrigger}
 			</PopoverTrigger>
 			<PopoverContent

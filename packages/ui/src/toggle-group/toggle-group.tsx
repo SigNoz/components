@@ -77,7 +77,7 @@ export type ToggleGroupProps = (
 	 * @default 'secondary'
 	 */
 	color?: ToggleColor;
-} & Pick<React.ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'children'>;
+} & Pick<React.ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'style' | 'children'>;
 
 /**
  * A set of two-state buttons that can be toggled on or off, in single or multiple selection mode.
@@ -110,12 +110,16 @@ export type ToggleGroupProps = (
  * ```
  */
 export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
-	({ className, children, size = 'default', color = 'secondary', onChange, ...props }, ref) => (
+	(
+		{ className, children, size = 'default', color = 'secondary', onChange, testId, ...props },
+		ref
+	) => (
 		<ToggleGroupPrimitive.Root
 			ref={ref}
 			data-slot="toggle-group"
 			data-size={size}
 			data-color={color}
+			data-testid={testId}
 			className={cn(styles['toggle-group'], className)}
 			onValueChange={onChange as (value: string | string[]) => void}
 			{...props}
@@ -136,7 +140,7 @@ export type ToggleGroupItemProps = {
 	testId?: string;
 } & Pick<
 	React.ComponentPropsWithoutRef<'button'>,
-	'className' | 'id' | 'disabled' | 'aria-disabled' | 'onClick' | 'children'
+	'className' | 'style' | 'id' | 'disabled' | 'aria-disabled' | 'onClick' | 'children'
 >;
 
 /**

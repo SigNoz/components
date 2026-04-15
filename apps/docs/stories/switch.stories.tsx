@@ -5,6 +5,11 @@ const meta: Meta<typeof Switch> = {
 	title: 'Components/Switch',
 	component: Switch,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the switch.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 		children: {
 			control: 'text',
 			description:

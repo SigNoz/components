@@ -10,7 +10,7 @@ export type PaginationAlign = 'start' | 'center' | 'end';
 
 export type PaginationContainerProps = Pick<
 	React.ComponentPropsWithoutRef<'nav'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * The alignment of the pagination container.
@@ -80,7 +80,7 @@ export const PaginationContainer = React.forwardRef<HTMLElement, PaginationConta
 
 export type PaginationContentProps = Pick<
 	React.ComponentPropsWithoutRef<'ul'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * The test ID to apply to the pagination content.
@@ -107,7 +107,7 @@ export const PaginationContent = React.forwardRef<HTMLUListElement, PaginationCo
 
 export type PaginationItemProps = Pick<
 	React.ComponentPropsWithoutRef<'li'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * The test ID to apply to the pagination item.
@@ -213,7 +213,7 @@ export const PaginationNext = React.forwardRef<HTMLButtonElement, PaginationNavP
 
 export type PaginationEllipsisProps = Pick<
 	React.ComponentPropsWithoutRef<'span'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * The test ID to apply to the pagination ellipsis.
@@ -350,13 +350,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		}
 
 		return (
-			<PaginationContainer
-				ref={ref}
-				className={className}
-				align={align}
-				data-testid={testId}
-				{...props}
-			>
+			<PaginationContainer ref={ref} className={className} align={align} testId={testId} {...props}>
 				<PaginationContent>
 					<PaginationItem>
 						<PaginationPrevious

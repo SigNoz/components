@@ -151,6 +151,11 @@ export const contentArgTypes: Meta<typeof PopoverContent>['argTypes'] = {
 		description: 'Additional CSS classes to apply to the content.',
 		table: { category: 'Styling', type: { summary: 'string' } },
 	},
+	style: {
+		control: false,
+		description: 'Inline styles applied to the popover content.',
+		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+	},
 	testId: {
 		control: 'text',
 		description: 'Test ID for the popover content.',
@@ -196,6 +201,16 @@ export const contentArgTypes: Meta<typeof PopoverContent>['argTypes'] = {
 };
 
 export const simpleArgTypes: Meta<typeof PopoverSimple>['argTypes'] = {
+	testId: {
+		control: 'text',
+		description: 'Test ID for the popover.',
+		table: { category: 'Testing', type: { summary: 'string' } },
+	},
+	id: {
+		control: 'text',
+		description: 'A unique identifier for the popover content.',
+		table: { category: 'Accessibility', type: { summary: 'string' } },
+	},
 	open: {
 		control: 'boolean',
 		description: 'The controlled open state. Use together with onOpenChange.',
@@ -225,6 +240,11 @@ export const simpleArgTypes: Meta<typeof PopoverSimple>['argTypes'] = {
 		control: 'text',
 		description: 'Additional CSS classes for the content.',
 		table: { category: 'Styling', type: { summary: 'string' } },
+	},
+	style: {
+		control: false,
+		description: 'Inline styles applied to the popover content.',
+		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
 	},
 	side: {
 		control: 'select',

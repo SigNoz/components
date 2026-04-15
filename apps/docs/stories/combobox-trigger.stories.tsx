@@ -15,6 +15,16 @@ const meta: Meta<typeof ComboboxTrigger> = {
 	title: 'Components/Combobox/ComboboxTrigger',
 	component: ComboboxTrigger,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the combobox trigger.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the combobox trigger.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		placeholder: {
 			control: 'text',
 			description: 'Text shown when no value is selected.',

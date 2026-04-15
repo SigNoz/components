@@ -4,16 +4,28 @@ import { cn } from '../lib/utils.js';
 import styles from './table.module.scss';
 
 type TableProps = React.ComponentProps<'table'> & {
+	/**
+	 * The testId associated with the table.
+	 */
+	testId?: string;
 	fixedHeight?: string | number;
 	containerRef?: React.Ref<HTMLDivElement>;
 	containerProps?: React.HTMLAttributes<HTMLDivElement>;
 };
 
-function Table({ className, fixedHeight, containerRef, containerProps, ...props }: TableProps) {
+function Table({
+	className,
+	fixedHeight,
+	containerRef,
+	containerProps,
+	testId,
+	...props
+}: TableProps) {
 	return (
 		<div
 			ref={containerRef}
 			data-slot="table-container"
+			data-testid={testId}
 			className={cn(
 				styles['table__container'],
 				fixedHeight && styles['table__container_scrollable'],

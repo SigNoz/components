@@ -11,6 +11,16 @@ const meta: Meta<typeof DropdownMenuContent> = {
 	title: 'Components/DropdownMenu/DropdownMenuContent',
 	component: DropdownMenuContent,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the dropdown menu content.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the dropdown menu content.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 		side: {
 			control: 'select',
 			options: ['top', 'right', 'bottom', 'left'],

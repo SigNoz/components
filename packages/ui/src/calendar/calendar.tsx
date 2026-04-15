@@ -12,7 +12,16 @@ import { Button, ButtonColor, type ButtonColorValue, buttonVariants } from '../b
 import { cn } from '../lib/utils.js';
 import styles from './calendar.module.scss';
 
-export type CalendarProps = React.ComponentProps<Exclude<typeof DayPicker, 'color'>>;
+export type CalendarProps = React.ComponentProps<Exclude<typeof DayPicker, 'color'>> & {
+	/**
+	 * The testId associated with the calendar.
+	 */
+	testId?: string;
+	/**
+	 * The id of the calendar.
+	 */
+	id?: string;
+};
 
 const defaultClassNames = getDefaultClassNames();
 
@@ -65,6 +74,8 @@ export function Calendar({
 	captionLayout = 'label',
 	formatters,
 	components,
+	testId,
+	id,
 	...props
 }: CalendarProps) {
 	const calendarFormatters = React.useMemo<Partial<Formatters>>(() => {
@@ -160,8 +171,17 @@ export function Calendar({
 	const calendarComponents = React.useMemo<DayPickerProps['components']>(() => {
 		return {
 			// eslint-disable-next-line react/prop-types
-			Root: ({ className, rootRef, ...props }) => {
-				return <div data-slot="calendar" ref={rootRef} className={cn(className)} {...props} />;
+			Root: ({ className: rootClassName, rootRef, ...rootProps }) => {
+				return (
+					<div
+						data-slot="calendar"
+						data-testid={testId}
+						id={id}
+						ref={rootRef}
+						className={cn(rootClassName)}
+						{...rootProps}
+					/>
+				);
 			},
 			// eslint-disable-next-line react/prop-types
 			Chevron: ({ className, orientation, ...props }) => {

@@ -7,6 +7,21 @@ const meta: Meta<typeof ComboboxSimple> = {
 	title: 'Components/Combobox/ComboboxSimple',
 	component: ComboboxSimple,
 	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the combobox.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the combobox.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
 		items: {
 			control: 'object',
 			description: 'List of items to display (flat). Ignored when groups is provided.',

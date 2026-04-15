@@ -40,6 +40,22 @@ export type ComboboxSimpleGroup = {
 
 export type ComboboxSimpleProps = {
 	/**
+	 * The testId associated with the combobox.
+	 */
+	testId?: string;
+	/**
+	 * The id of the combobox.
+	 */
+	id?: string;
+	/**
+	 * Additional CSS classes to apply to the combobox trigger.
+	 */
+	className?: string;
+	/**
+	 * Inline styles to apply to the combobox trigger.
+	 */
+	style?: React.CSSProperties;
+	/**
 	 * List of items to display (flat). Ignored when groups is provided.
 	 * @default []
 	 */
@@ -115,6 +131,10 @@ function ComboboxSimpleInner({
 	onChange,
 	displayValue: displayValueFn,
 	withPortal = true,
+	testId,
+	id,
+	className,
+	style,
 }: ComboboxSimpleProps) {
 	const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
 	const [open, setOpen] = React.useState(false);
@@ -170,7 +190,14 @@ function ComboboxSimpleInner({
 
 	return (
 		<Combobox open={open} onOpenChange={setOpen}>
-			<ComboboxTrigger placeholder={placeholder} value={triggerValue} />
+			<ComboboxTrigger
+				placeholder={placeholder}
+				value={triggerValue}
+				testId={testId}
+				id={id}
+				className={className}
+				style={style}
+			/>
 			{open && (
 				<ComboboxContent withPortal={withPortal}>
 					<ComboboxCommand>

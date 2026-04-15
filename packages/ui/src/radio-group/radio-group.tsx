@@ -15,7 +15,7 @@ export type RadioColorProps =
 
 export type RadioGroupProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * The name of the group. Submitted with its owning form as part of a name/value pair.
@@ -65,7 +65,7 @@ export type RadioGroupProps = Pick<
 
 export type RadioGroupItemProps = Pick<
 	React.ComponentPropsWithoutRef<'button'>,
-	'id' | 'className' | 'children'
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * The value given as data when submitted with a name.
@@ -83,6 +83,22 @@ export type RadioGroupItemProps = Pick<
 	 * The testId associated with the radio item.
 	 */
 	testId?: string;
+	/**
+	 * Additional CSS classes to apply to the radio item wrapper.
+	 */
+	containerClassName?: string;
+	/**
+	 * Inline styles to apply to the radio item wrapper.
+	 */
+	containerStyle?: React.CSSProperties;
+	/**
+	 * The id of the radio item wrapper.
+	 */
+	containerId?: string;
+	/**
+	 * The testId associated with the radio item wrapper.
+	 */
+	containerTestId?: string;
 	/**
 	 * The callback invoked when the value state of the radio item changes.
 	 */
@@ -138,12 +154,13 @@ export type RadioGroupLabelProps = Pick<
 const RadioGroup = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Root>,
 	RadioGroupProps
->(({ className, onChange, color = 'robin', ...props }, ref) => {
+>(({ className, onChange, color = 'robin', testId, ...props }, ref) => {
 	return (
 		<RadioGroupPrimitive.Root
 			className={cn(styles['radio-group'], className)}
 			onValueChange={onChange}
 			data-color={color}
+			data-testid={testId}
 			{...props}
 			ref={ref}
 		/>
@@ -154,39 +171,64 @@ RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 const RadioGroupItem = React.forwardRef<
 	React.ElementRef<typeof RadioGroupPrimitive.Item>,
 	RadioGroupItemProps
->(({ className, children, ...props }, ref) => {
-	const fallbackId = useId();
+>(
+	(
+		{
+			className,
+			style,
+			children,
+			testId,
+			containerClassName,
+			containerStyle,
+			containerId,
+			containerTestId,
+			...props
+		},
+		ref
+	) => {
+		const fallbackId = useId();
+		const radioId = props.id || fallbackId;
 
-	if (children) {
-		return (
-			<div className={styles['radio-group__item-wrapper']}>
-				<RadioGroupPrimitive.Item
-					ref={ref}
-					className={cn(styles['radio-group__item'], className)}
-					id={props.id || fallbackId}
-					{...props}
+		if (children) {
+			return (
+				<div
+					className={cn(styles['radio-group__item-wrapper'], containerClassName)}
+					data-testid={containerTestId}
+					id={containerId}
+					style={containerStyle}
 				>
-					<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
-				</RadioGroupPrimitive.Item>
-				{children && (
-					<RadioGroupLabel htmlFor={props.id || fallbackId} aria-disabled={props.disabled}>
-						{children}
-					</RadioGroupLabel>
-				)}
-			</div>
+					<RadioGroupPrimitive.Item
+						ref={ref}
+						className={cn(styles['radio-group__item'], className)}
+						id={radioId}
+						data-testid={testId}
+						style={style}
+						{...props}
+					>
+						<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
+					</RadioGroupPrimitive.Item>
+					{children && (
+						<RadioGroupLabel htmlFor={radioId} aria-disabled={props.disabled}>
+							{children}
+						</RadioGroupLabel>
+					)}
+				</div>
+			);
+		}
+
+		return (
+			<RadioGroupPrimitive.Item
+				ref={ref}
+				className={cn(styles['radio-group__item'], className)}
+				data-testid={testId}
+				style={style}
+				{...props}
+			>
+				<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
+			</RadioGroupPrimitive.Item>
 		);
 	}
-
-	return (
-		<RadioGroupPrimitive.Item
-			ref={ref}
-			className={cn(styles['radio-group__item'], className)}
-			{...props}
-		>
-			<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
-		</RadioGroupPrimitive.Item>
-	);
-});
+);
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
 
 const RadioGroupLabel = React.forwardRef<HTMLLabelElement, RadioGroupLabelProps>(

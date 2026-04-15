@@ -13,6 +13,10 @@ export type DropdownMenuItemProps = Omit<
 	 */
 	className?: string;
 	/**
+	 * The testId associated with the item.
+	 */
+	testId?: string;
+	/**
 	 * When `true`, adds additional left padding.
 	 */
 	inset?: boolean;
@@ -81,11 +85,12 @@ export type DropdownMenuItemProps = Omit<
 export const DropdownMenuItem = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Item>,
 	DropdownMenuItemProps
->(({ className, inset, leftIcon, rightIcon, destructive, children, ...props }, ref) => (
+>(({ className, inset, leftIcon, rightIcon, destructive, children, testId, ...props }, ref) => (
 	<DropdownMenuPrimitive.Item
 		ref={ref}
 		data-slot="dropdown-menu-item"
 		data-destructive={destructive ? '' : undefined}
+		data-testid={testId}
 		className={cn(
 			styles['dropdown-menu__item'],
 			inset && styles['dropdown-menu__item--inset'],

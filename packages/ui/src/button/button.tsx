@@ -66,6 +66,10 @@ export type ButtonProps = {
 	loading?: boolean;
 	background?: ButtonBackgroundValue;
 	testId?: string;
+	/**
+	 * Inline styles applied to the default trigger button. Ignored when using a custom `trigger`.
+	 */
+	style?: React.CSSProperties;
 } & Pick<
 	React.ButtonHTMLAttributes<HTMLButtonElement>,
 	| 'disabled'

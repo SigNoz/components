@@ -8,8 +8,28 @@ type SwitchColor = 'robin' | 'forest' | 'amber' | 'sienna' | 'cherry' | 'sakura'
 
 export type SwitchProps = Pick<
 	React.ComponentPropsWithoutRef<'button'>,
-	'id' | 'className' | 'children' | 'name'
+	'id' | 'className' | 'style' | 'children' | 'name'
 > & {
+	/**
+	 * The testId associated with the switch.
+	 */
+	testId?: string;
+	/**
+	 * Additional CSS classes to apply to the switch wrapper.
+	 */
+	containerClassName?: string;
+	/**
+	 * Inline styles to apply to the switch wrapper.
+	 */
+	containerStyle?: React.CSSProperties;
+	/**
+	 * The id of the switch wrapper.
+	 */
+	containerId?: string;
+	/**
+	 * The testId associated with the switch wrapper.
+	 */
+	containerTestId?: string;
 	/**
 	 * The controlled checked state of the switch. Must be used in conjunction with onChange.
 	 */
@@ -39,11 +59,13 @@ export type SwitchProps = Pick<
 };
 
 const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
-	({ className, value, onChange, defaultValue, color = 'robin', ...props }, ref) => (
+	({ className, style, testId, value, onChange, defaultValue, color = 'robin', ...props }, ref) => (
 		<SwitchPrimitive.Root
 			ref={ref}
 			data-color={color}
 			className={cn(styles['switch'], className)}
+			data-testid={testId}
+			style={style}
 			checked={value}
 			onCheckedChange={onChange}
 			defaultChecked={defaultValue}
@@ -89,14 +111,31 @@ SwitchBase.displayName = SwitchPrimitive.Root.displayName;
  * <Switch disabled>Maintenance mode</Switch>
  * ```
  */
-const SwitchWrapper: React.FC<SwitchProps> = ({ children, id, ...props }) => {
+const SwitchWrapper: React.FC<SwitchProps> = ({
+	children,
+	id,
+	testId,
+	className,
+	style,
+	containerClassName,
+	containerStyle,
+	containerId,
+	containerTestId,
+	...props
+}) => {
 	const fallbackId = useId();
+	const switchId = id || fallbackId;
 
 	return (
-		<div className={styles['switch-wrapper']}>
-			<SwitchBase id={id || fallbackId} {...props} />
+		<div
+			className={cn(styles['switch-wrapper'], containerClassName)}
+			data-testid={containerTestId}
+			id={containerId}
+			style={containerStyle}
+		>
+			<SwitchBase id={switchId} testId={testId} className={className} style={style} {...props} />
 			{children && (
-				<label htmlFor={id || fallbackId} className={styles['switch-label']}>
+				<label htmlFor={switchId} className={styles['switch-label']}>
 					{children}
 				</label>
 			)}

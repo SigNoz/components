@@ -116,6 +116,10 @@ export interface DataTableProps<TData, TValue> {
 	// Fixed height for table container
 	fixedHeight?: string | number;
 	testId?: string;
+	/**
+	 * Inline styles applied to the data table root element.
+	 */
+	style?: React.CSSProperties;
 }
 
 export enum SelectionMode {
@@ -426,6 +430,7 @@ export function DataTable<TData, TValue>({
 	// Fixed height for table container
 	fixedHeight,
 	testId,
+	style,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -962,7 +967,7 @@ export function DataTable<TData, TValue>({
 	);
 
 	return (
-		<div className={styles['data-table__root']} data-testid={testId}>
+		<div className={styles['data-table__root']} data-testid={testId} style={style}>
 			{enableGlobalFilter && (
 				<Input
 					placeholder="Search all columns"
@@ -1266,7 +1271,7 @@ export function DataTable<TData, TValue>({
 									>
 										<div className={styles['data-table__loading-overlay']}>
 											<div className={styles['data-table__loading-content']}>
-												<LoaderCircle />
+												<LoaderCircle className="animate-fast-spin" />
 												<span>Loading...</span>
 											</div>
 										</div>
@@ -1570,7 +1575,7 @@ export function DataTable<TData, TValue>({
 												<div className={styles['data-table__infinite-scroll-content']}>
 													{loadingMore ? (
 														<div className={styles['data-table__pagination-left']}>
-															<LoaderCircle />
+															<LoaderCircle className="animate-fast-spin" />
 															<span>Loading more...</span>
 														</div>
 													) : null}
@@ -1626,7 +1631,7 @@ export function DataTable<TData, TValue>({
 						<div className={styles['data-table__pagination-info']}>
 							{isLoading ? (
 								<div className={styles['data-table__pagination-left']}>
-									<LoaderCircle />
+									<LoaderCircle className="animate-fast-spin" />
 									<span>Loading...</span>
 								</div>
 							) : (
