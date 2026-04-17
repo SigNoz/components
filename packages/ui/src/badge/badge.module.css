@@ -1,25 +1,28 @@
 .badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: var(--badge-display, inline-flex);
+    align-items: var(--badge-align-items, center);
+    justify-content: var(--badge-justify-content, center);
     border-radius: var(--badge-border-radius, var(--radius-round, 9999px));
     border: var(--badge-border-width, 1px) solid var(--badge-border-color, transparent);
     padding: var(--badge-padding, var(--spacing-2, 0.25rem) var(--spacing-4, 0.5rem));
     font-size: var(--badge-font-size, var(--periscope-font-size-small, 11px));
     line-height: var(--badge-line-height, 100%);
     font-weight: var(--badge-font-weight, var(--font-weight-medium));
-    width: fit-content;
-    white-space: nowrap;
-    flex-shrink: 0;
+    width: var(--badge-width, fit-content);
+    white-space: var(--badge-white-space, nowrap);
     gap: var(--badge-gap, var(--spacing-2, 0.25rem));
-    overflow: hidden;
+    overflow: var(--badge-overflow, hidden);
     background-color: var(--badge-background);
     color: var(--badge-foreground);
-    cursor: default;
-    transition-property: color, box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    font-variant-numeric: slashed-zero;
+    cursor: var(--badge-cursor, default);
+    transition-property: var(--badge-transition-property, color, box-shadow);
+    transition-timing-function: var(--badge-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+    transition-duration: var(--badge-transition-duration, 150ms);
+    font-variant-numeric: var(--badge-font-variant-numeric, slashed-zero);
+
+    & > * {
+        display: var(--badge-child-display, block);
+    }
 
     &[data-color="vanilla"] {
         --badge-background: var(--bg-neutral-light-950);
@@ -162,4 +165,14 @@
 
 .badge[data-capitalize="false"] {
     font-weight: var(--badge-capitalize-font-weight, var(--font-weight-normal));
+}
+
+.badge[data-text-ellipsis="true"] {
+    display: flex;
+    min-width: 0;
+}
+
+.badgeEllipsis {
+    flex: 1;
+    min-width: 0;
 }

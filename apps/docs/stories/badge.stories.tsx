@@ -544,6 +544,111 @@ export const CapitalizedText: Story = {
 	),
 };
 
+export const TextEllipsisPositions: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'The `textEllipsis` prop enables canvas-based text truncation with ellipsis at different positions. Use `true` or `"center"` for center truncation (default), `"start"` for start truncation, or `"end"` for end truncation. Only works with string children.',
+			},
+		},
+	},
+	argTypes: {
+		children: { control: false },
+		color: { control: false },
+		variant: { control: false },
+		capitalize: { control: false },
+		asChild: { control: false },
+		textEllipsis: { control: false },
+	},
+	render: () => (
+		<div className="space-y-6">
+			<div>
+				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+					Ellipsis Positions
+				</h3>
+				<div className="flex flex-col gap-3">
+					<div className="flex items-center gap-3">
+						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">Center:</span>
+						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
+							<Badge color="robin" textEllipsis="center">
+								This is a very long badge text that will be truncated in the center
+							</Badge>
+						</div>
+					</div>
+					<div className="flex items-center gap-3">
+						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">Start:</span>
+						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
+							<Badge color="forest" textEllipsis="start">
+								path/to/very/long/filename/that/needs/truncation.tsx
+							</Badge>
+						</div>
+					</div>
+					<div className="flex items-center gap-3">
+						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">End:</span>
+						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
+							<Badge color="amber" textEllipsis="end">
+								A long description that should be truncated at the end
+							</Badge>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+					Boolean Shorthand (defaults to center)
+				</h3>
+				<div className="flex flex-col gap-2">
+					<div style={{ '--badge-width': '200px' } as React.CSSProperties}>
+						<Badge color="aqua" textEllipsis>
+							Using textEllipsis=true defaults to center truncation
+						</Badge>
+					</div>
+				</div>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+					With Outline Variant
+				</h3>
+				<div className="flex flex-col gap-2">
+					<div style={{ '--badge-width': '160px' } as React.CSSProperties}>
+						<Badge color="cherry" variant="outline" textEllipsis="center">
+							Error: Connection timeout after 30 seconds of inactivity
+						</Badge>
+					</div>
+					<div style={{ '--badge-width': '160px' } as React.CSSProperties}>
+						<Badge color="sakura" variant="outline" textEllipsis="end">
+							User: very.long.email.address@example.domain.com
+						</Badge>
+					</div>
+				</div>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+					Container Constrained
+				</h3>
+				<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+					Badges inside a narrow container will truncate automatically with textEllipsis
+				</p>
+				<div
+					className="flex flex-col gap-2 p-2 border border-vanilla-300 dark:border-vanilla-700 rounded"
+					style={{ width: '220px', '--badge-width': '100%' } as React.CSSProperties}
+				>
+					<Badge color="robin" textEllipsis="center">
+						kubernetes-deployment-production-east-us-2
+					</Badge>
+					<Badge color="forest" variant="outline" textEllipsis="start">
+						/var/log/application/server/debug/2024-01-15.log
+					</Badge>
+					<Badge color="sienna" textEllipsis="end">
+						Successfully processed 1,234 items in batch
+					</Badge>
+				</div>
+			</div>
+		</div>
+	),
+};
+
 export const UsingAsChild: Story = {
 	parameters: {
 		docs: {

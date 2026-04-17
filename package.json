@@ -123,6 +123,9 @@
 					"vite": "npm:rolldown-vite@7.3.1"
 				}
 			}
+		},
+		"patchedDependencies": {
+			"rolldown-vite@7.3.1": "patches/rolldown-vite@7.3.1.patch"
 		}
 	},
 	"version": "0.0.7"

@@ -1,0 +1,15 @@
+diff --git a/dist/node/chunks/node.js b/dist/node/chunks/node.js
+index 21f8d7cf6b0c9e9f473b891b9b1de0d7f857179b..f741e932683223b834b0c90659271c15e7d63147 100644
+--- a/dist/node/chunks/node.js
++++ b/dist/node/chunks/node.js
+@@ -14754,8 +14754,8 @@ function resolveChokidarOptions(options$1, resolvedOutDirs, emptyOutDir, cacheDi
+ 	};
+ }
+ function convertToNotifyOptions(options$1) {
+-	if (!options$1) return;
+-	return { pollInterval: options$1.usePolling ? options$1.interval ?? 100 : void 0 };
++	if (!options$1 || !options$1.usePolling) return;
++	return { pollInterval: options$1.interval ?? 100 };
+ }
+ var NoopWatcher = class extends EventEmitter {
+ 	constructor(options$1) {
