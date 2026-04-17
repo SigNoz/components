@@ -27,6 +27,7 @@ export const externalPatterns = [
 	'@tanstack/react-table',
 	/@radix-ui\/.*$/,
 	/^@signozhq\/.*$/,
+	'@chenglou/pretext',
 ];
 
 export default function getViteLibConfig(
