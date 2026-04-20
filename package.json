@@ -128,5 +128,5 @@
 			"rolldown-vite@7.3.1": "patches/rolldown-vite@7.3.1.patch"
 		}
 	},
-	"version": "0.0.7"
+	"version": "0.0.8"
 }
