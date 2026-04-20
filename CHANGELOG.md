@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.0.8](https://github.com/SigNoz/components/compare/v0.0.7...v0.0.8) (2026-04-20)
+
+
+### Features
+
+* **select:** add select component ([f14bf74](https://github.com/SigNoz/components/commit/f14bf74ad4a66c2a301e33c5236de7562f81d32a))
+* **text-ellipsis:** add new component & add support to badge ([2e96a9b](https://github.com/SigNoz/components/commit/2e96a9b869d173135376f1e19417efa94ed685cd))
+
+
+### Bug Fixes
+
+* **button:** icon size should be square & add variables for each property ([3b49984](https://github.com/SigNoz/components/commit/3b4998446b7eb77f4b63bac3657693c27ee83de9))
+* **components:** ensure all of them accepts className/id/testId ([f82dce4](https://github.com/SigNoz/components/commit/f82dce40f543666fadc75290612b00c0abd46736))
+* **drawer:** expose width and more props ([c4d5e57](https://github.com/SigNoz/components/commit/c4d5e57b7b758a3020faf8751aadf623cef83687))
+
+
+### Miscellaneous Chores
+
+* **deps:** bump @chenglou/pretext from 0.0.4 to 0.0.5 ([cfbc4d4](https://github.com/SigNoz/components/commit/cfbc4d4f8ecd184da9538efec01837e78f85a5d8))
+
 ## [0.0.7](https://github.com/SigNoz/components/compare/v0.0.6...v0.0.7) (2026-04-08)
 
 
