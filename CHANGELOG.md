@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.9](https://github.com/SigNoz/components/compare/v0.0.8...v0.0.9) (2026-04-20)
+
+
+### Bug Fixes
+
+* **input:** missing box-sizing ([#177](https://github.com/SigNoz/components/issues/177)) ([872c7a4](https://github.com/SigNoz/components/commit/872c7a4da4860348e0aca8d8ed39ccf6d2ed63f2))
+
 ## [0.0.8](https://github.com/SigNoz/components/compare/v0.0.7...v0.0.8) (2026-04-20)
 
 
