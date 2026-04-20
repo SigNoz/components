@@ -20,6 +20,16 @@ const meta: Meta<typeof DrawerWrapper> = {
 				defaultValue: { summary: 'right' },
 			},
 		},
+		width: {
+			control: 'select',
+			options: ['narrow', 'base', 'wide', 'extra-wide'],
+			description: 'The width of the dialog surface.',
+			table: {
+				category: 'Appearance',
+				type: { summary: '"narrow" | "base" | "wide" | "extra-wide"' },
+				defaultValue: { summary: 'base' },
+			},
+		},
 		drawerContentProps: {
 			control: 'object',
 			description: 'Props passed to the DrawerContent component.',
