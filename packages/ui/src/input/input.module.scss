@@ -16,6 +16,7 @@
   transition-property: var(--input-transition-property, color, background-color, border-color, box-shadow);
   transition-timing-function: var(--input-transition-timing, cubic-bezier(0.4, 0, 0.2, 1));
   transition-duration: var(--input-transition-duration, 150ms);
+  box-sizing: border-box;
 
   &::file-selector-button {
     border: 0;
