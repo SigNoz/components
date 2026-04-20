@@ -66,6 +66,41 @@ export const buttonArgTypes: Meta<typeof Button>['argTypes'] = {
 			defaultValue: { summary: 'submit' },
 		},
 	},
+	form: {
+		control: 'text',
+		description: 'The id of the form the button is associated with',
+		table: {
+			type: { summary: 'string' },
+		},
+	},
+	role: {
+		control: 'text',
+		description: 'The ARIA role of the button',
+		table: {
+			type: { summary: 'string' },
+		},
+	},
+	tabIndex: {
+		control: 'number',
+		description: 'The tab index of the button',
+		table: {
+			type: { summary: 'number' },
+		},
+	},
+	onKeyDown: {
+		action: 'onKeyDown',
+		description: 'The function to call when a key is pressed',
+		table: {
+			type: { summary: 'function' },
+		},
+	},
+	onKeyUp: {
+		action: 'onKeyUp',
+		description: 'The function to call when a key is released',
+		table: {
+			type: { summary: 'function' },
+		},
+	},
 	onClick: {
 		action: 'onClick',
 		description: 'The function to call when the button is clicked',

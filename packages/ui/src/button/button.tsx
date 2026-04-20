@@ -77,10 +77,14 @@ export type ButtonProps = {
 	| 'className'
 	| 'children'
 	| 'onDoubleClick'
+	| 'onKeyDown'
+	| 'onKeyUp'
 	| 'type'
 	| 'id'
 	| 'tabIndex'
 	| 'title'
+	| 'form'
+	| 'role'
 > &
 	React.AriaAttributes;
 
