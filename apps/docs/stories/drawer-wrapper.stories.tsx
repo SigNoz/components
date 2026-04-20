@@ -20,6 +20,62 @@ const meta: Meta<typeof DrawerWrapper> = {
 				defaultValue: { summary: 'right' },
 			},
 		},
+		drawerContentProps: {
+			control: 'object',
+			description: 'Props passed to the DrawerContent component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: 'Omit<DrawerContentProps, ...>' },
+			},
+		},
+		drawerHeaderProps: {
+			control: 'object',
+			description: 'Props passed to the DrawerHeader component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: "Omit<DrawerHeaderProps, 'children'>" },
+			},
+		},
+		drawerTitleProps: {
+			control: 'object',
+			description: 'Props passed to the DrawerTitle component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: "Omit<DrawerTitleProps, 'children'>" },
+			},
+		},
+		drawerSubtitleProps: {
+			control: 'object',
+			description: 'Props passed to the DrawerSubtitle component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: "Omit<DrawerSubtitleProps, 'children'>" },
+			},
+		},
+		drawerDescriptionProps: {
+			control: 'object',
+			description: 'Props passed to the DrawerDescription component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: "Omit<DrawerDescriptionProps, 'children'>" },
+			},
+		},
+		drawerFooterProps: {
+			control: 'object',
+			description: 'Props passed to the DrawerFooter component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: "Omit<DrawerFooterProps, 'children'>" },
+			},
+		},
+		closeButtonProps: {
+			control: 'object',
+			description: 'Props passed to the DialogCloseButton component.',
+			table: {
+				category: 'Sub-component Props',
+				type: { summary: "Omit<DialogCloseButtonProps, 'onClick'>" },
+			},
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

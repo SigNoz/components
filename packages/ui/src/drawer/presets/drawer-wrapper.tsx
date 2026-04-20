@@ -1,16 +1,26 @@
 import { AnimatePresence } from 'motion/react';
 import type React from 'react';
 import { useCallback, useState } from 'react';
-import { DialogCloseButton } from '../../dialog/index.js';
+import {
+	DialogCloseButton,
+	type DialogCloseButtonProps,
+	type DialogSize,
+} from '../../dialog/index.js';
 import {
 	Drawer,
 	DrawerContent,
+	type DrawerContentProps,
 	DrawerDescription,
+	type DrawerDescriptionProps,
 	type DrawerDirection,
 	DrawerFooter,
+	type DrawerFooterProps,
 	DrawerHeader,
+	type DrawerHeaderProps,
 	DrawerSubtitle,
+	type DrawerSubtitleProps,
 	DrawerTitle,
+	type DrawerTitleProps,
 	DrawerTrigger,
 } from '../index.js';
 
@@ -79,6 +89,51 @@ export interface DrawerWrapperProps {
 	 * @default true
 	 */
 	showOverlay?: boolean;
+	/**
+	 * The width of the dialog.
+	 * @default 'base'
+	 */
+	width?: DialogSize;
+	/**
+	 * The props you can pass to drawer content
+	 */
+	drawerContentProps?: Omit<
+		DrawerContentProps,
+		| 'className'
+		| 'style'
+		| 'direction'
+		| 'showOverlay'
+		| 'forceMount'
+		| 'onPointerDownOutside'
+		| 'testId'
+		| 'id'
+		| 'key'
+		| 'width'
+	>;
+	/**
+	 * The props you can pass to drawer header
+	 */
+	drawerHeaderProps?: Omit<DrawerHeaderProps, 'children'>;
+	/**
+	 * The props you can pass to drawer title
+	 */
+	drawerTitleProps?: Omit<DrawerTitleProps, 'children'>;
+	/**
+	 * The props you can pass to drawer subtitle
+	 */
+	drawerSubtitleProps?: Omit<DrawerSubtitleProps, 'children'>;
+	/**
+	 * The props you can pass to drawer description
+	 */
+	drawerDescriptionProps?: Omit<DrawerDescriptionProps, 'children'>;
+	/**
+	 * The props you can pass to drawer footer
+	 */
+	drawerFooterProps?: Omit<DrawerFooterProps, 'children'>;
+	/**
+	 * The props you can pass to close button
+	 */
+	closeButtonProps?: Omit<DialogCloseButtonProps, 'onClick'>;
 }
 
 /**
@@ -150,6 +205,14 @@ export function DrawerWrapper({
 	footer,
 	testId,
 	id,
+	drawerContentProps,
+	drawerHeaderProps,
+	drawerTitleProps,
+	drawerSubtitleProps,
+	drawerDescriptionProps,
+	drawerFooterProps,
+	closeButtonProps,
+	width = 'base',
 }: DrawerWrapperProps) {
 	const isControlled = open !== undefined && onOpenChange !== undefined;
 	const [internalOpen, setInternalOpen] = useState(false);
@@ -177,16 +240,18 @@ export function DrawerWrapper({
 			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
 			testId={testId}
 			id={id}
+			width={width}
+			{...drawerContentProps}
 		>
 			{(title || subTitle) && (
-				<DrawerHeader>
-					{title && <DrawerTitle>{title}</DrawerTitle>}
-					{subTitle && <DrawerSubtitle>{subTitle}</DrawerSubtitle>}
+				<DrawerHeader {...drawerHeaderProps}>
+					{title && <DrawerTitle {...drawerTitleProps}>{title}</DrawerTitle>}
+					{subTitle && <DrawerSubtitle {...drawerSubtitleProps}>{subTitle}</DrawerSubtitle>}
 				</DrawerHeader>
 			)}
-			{children && <DrawerDescription>{children}</DrawerDescription>}
-			{footer && <DrawerFooter>{footer}</DrawerFooter>}
-			{showCloseButton && <DialogCloseButton onClick={onClickClose} />}
+			{children && <DrawerDescription {...drawerDescriptionProps}>{children}</DrawerDescription>}
+			{footer && <DrawerFooter {...drawerFooterProps}>{footer}</DrawerFooter>}
+			{showCloseButton && <DialogCloseButton onClick={onClickClose} {...closeButtonProps} />}
 		</DrawerContent>
 	);
 
