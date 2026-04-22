@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.0.10](https://github.com/SigNoz/components/compare/v0.0.9...v0.0.10) (2026-04-22)
+
+
+### Features
+
+* **kbd:** add Kbd component ([793d88d](https://github.com/SigNoz/components/commit/793d88d34491686d6f5d819286a15a8e2bf6a22b))
+* **kbd:** add Kbd component ([074b29a](https://github.com/SigNoz/components/commit/074b29a860ec9c9e85a616de7543f02aa4fa2aac))
+
+
+### Bug Fixes
+
+* **kbd:** use semantic tokens for colors ([7cf19c9](https://github.com/SigNoz/components/commit/7cf19c97f147c1c2f7813744aee4bb8706954513))
+
+
+### Documentation
+
+* **kbd:** add kbd.mdx ([a4a66f5](https://github.com/SigNoz/components/commit/a4a66f5c24571e5ffd2110e2220f60f1cdda1584))
+
+
+### Miscellaneous Chores
+
+* added primary color ([6b6f8eb](https://github.com/SigNoz/components/commit/6b6f8eb21f29eefabdfdabfb992a9ec7b527762e))
+* updated kbd mdx ([76e8b77](https://github.com/SigNoz/components/commit/76e8b77cd26b0ff6bb6948237d2d03bb2bc96856))
+
 ## [0.0.9](https://github.com/SigNoz/components/compare/v0.0.8...v0.0.9) (2026-04-20)
 
 
