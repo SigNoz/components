@@ -19,12 +19,18 @@ interface KbdProps
 	 * @default default
 	 */
 	size?: KbdSize;
+	/**
+	 * Highlights the key with a subtle primary color tint.
+	 * @default false
+	 */
+	active?: boolean;
 }
 
 function Kbd({
 	className,
 	size = 'default',
 	asChild = false,
+	active = false,
 	testId,
 	children,
 	...props
@@ -35,6 +41,7 @@ function Kbd({
 		<Comp
 			data-slot="kbd"
 			data-size={size}
+			data-active={active || undefined}
 			data-testid={testId}
 			className={cn(styles.kbd, className)}
 			{...props}

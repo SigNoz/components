@@ -31,4 +31,10 @@
         --kbd-font-size: var(--font-size-base);
         --kbd-border-radius: var(--radius-md);
     }
+
+    &[data-active] {
+        --kbd-background: var(--callout-primary-background);
+        --kbd-foreground: var(--primary-background);
+        --kbd-border-color: var(--primary-background);
+    }
 }

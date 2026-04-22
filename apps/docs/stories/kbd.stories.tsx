@@ -45,6 +45,11 @@ const meta: Meta<typeof Kbd> = {
 			description: 'Use Radix Slot to compose as a different element.',
 			table: { category: 'Composition', defaultValue: { summary: 'false' } },
 		},
+		active: {
+			control: 'boolean',
+			description: 'Highlights the key with a subtle primary color tint.',
+			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+		},
 	},
 };
 
@@ -57,6 +62,7 @@ export const Playground: Story = {
 		children: '⌘K',
 		size: 'default',
 		asChild: false,
+		active: false,
 	},
 	render: (props) => (
 		<div className="p-4">
@@ -199,6 +205,61 @@ export const InlineText: Story = {
 			<p>
 				Hold <Kbd size="sm">⇧</Kbd> while clicking to select a range.
 			</p>
+		</div>
+	),
+};
+
+export const ActiveState: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Use `active` to highlight a key with a subtle primary color tint and solid primary border.',
+			},
+		},
+	},
+	argTypes: {
+		children: { control: false },
+		size: { control: false },
+		asChild: { control: false },
+		active: { control: false },
+	},
+	render: () => (
+		<div className="space-y-4 p-4">
+			<div>
+				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+					Default vs Active
+				</h3>
+				<div className="flex items-center gap-2">
+					<Kbd>⌘</Kbd>
+					<Kbd active>⌘</Kbd>
+				</div>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+					All Sizes
+				</h3>
+				<div className="flex items-center gap-2">
+					<Kbd size="sm" active>
+						⌘
+					</Kbd>
+					<Kbd size="default" active>
+						⌘
+					</Kbd>
+					<Kbd size="lg" active>
+						⌘
+					</Kbd>
+				</div>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+					Active Key in a Shortcut
+				</h3>
+				<div className="flex items-center gap-1">
+					<Kbd active>⌘</Kbd>
+					<Kbd>K</Kbd>
+				</div>
+			</div>
 		</div>
 	),
 };
