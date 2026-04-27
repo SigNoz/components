@@ -113,7 +113,6 @@ function Typography({
 	...props
 }: TypographyProps) {
 	const Tag = as ?? defaultTagMap[variant];
-	const Comp = Tag;
 
 	const truncateStyle: React.CSSProperties | undefined =
 		truncate !== undefined
@@ -123,7 +122,7 @@ function Typography({
 			: undefined;
 
 	return (
-		<Comp
+		<Tag
 			data-slot="typography"
 			data-variant={variant}
 			data-size={size}
@@ -136,7 +135,7 @@ function Typography({
 			{...props}
 		>
 			{children}
-		</Comp>
+		</Tag>
 	);
 }
 
