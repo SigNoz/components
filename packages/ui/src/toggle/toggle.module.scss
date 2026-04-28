@@ -39,7 +39,7 @@
     --toggle-text: var(--toggle-primary-text, var(--l1-foreground));
     --toggle-text-active: var(--toggle-primary-text-active, var(--l1-foreground-hover));
     --toggle-border: var(--toggle-primary-border, var(--l2-border));
-    --toggle-active-bg: var(--toggle-primary-active-bg, var(--bg-robin-500));
+    --toggle-active-bg: var(--toggle-primary-active-bg, var(--primary-background));
   }
 
   &[data-color='destructive'] {
@@ -47,15 +47,15 @@
     --toggle-text: var(--toggle-destructive-text, var(--l1-foreground));
     --toggle-text-active: var(--toggle-destructive-text-active, var(--l1-foreground-hover));
     --toggle-border: var(--toggle-destructive-border, var(--l2-border));
-    --toggle-active-bg: var(--toggle-destructive-active-bg, var(--bg-cherry-500));
+    --toggle-active-bg: var(--toggle-destructive-active-bg, var(--danger-background));
   }
 
   &[data-color='warning'] {
     --toggle-bg: var(--toggle-warning-bg, var(--l1-background));
     --toggle-text: var(--toggle-warning-text, var(--l1-foreground));
-    --toggle-text-active: var(--toggle-warning-text-active, var(--bg-neutral-dark-800));
+    --toggle-text-active: var(--toggle-warning-text-active, var(--warning-foreground-contrast));
     --toggle-border: var(--toggle-warning-border, var(--l2-border));
-    --toggle-active-bg: var(--toggle-warning-active-bg, var(--bg-amber-500));
+    --toggle-active-bg: var(--toggle-warning-active-bg, var(--warning-background));
   }
 
   &[data-color='secondary'] {

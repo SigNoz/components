@@ -16,53 +16,53 @@
 	border-color: var(--button-base-border-color, transparent);
 
 	&[data-color='primary'] {
-		--button-background: var(--button-primary-background, var(--bg-robin-500));
-		--button-border-color: var(--button-primary-border-color, var(--bg-robin-500));
-		--button-solid-foreground: var(--button-primary-solid-foreground, var(--bg-vanilla-100));
-		--button-outlined-foreground: var(--button-primary-outlined-foreground, var(--bg-robin-700));
-		--button-hover-background: var(--button-primary-hover-background, var(--bg-robin-400));
-		--button-link-hover-foreground: var(--button-primary-link-hover-foreground, var(--bg-robin-500));
-		--button-ghost-hover-foreground: var(--button-primary-ghost-hover-foreground, var(--bg-robin-500));
+		--button-background: var(--button-primary-background, var(--primary-background));
+		--button-border-color: var(--button-primary-border-color, var(--primary-background));
+		--button-solid-foreground: var(--button-primary-solid-foreground, var(--primary-foreground));
+		--button-outlined-foreground: var(--button-primary-outlined-foreground, var(--primary));
+		--button-hover-background: var(--button-primary-hover-background, var(--primary-background-hover));
+		--button-link-hover-foreground: var(--button-primary-link-hover-foreground, var(--primary-foreground-hover));
+		--button-ghost-hover-foreground: var(--button-primary-ghost-hover-foreground, var(--primary-foreground-hover));
 	}
 
 	&[data-color='destructive'] {
-		--button-background: var(--button-destructive-background, var(--bg-cherry-500));
-		--button-border-color: var(--button-destructive-border-color, var(--bg-cherry-500));
-		--button-solid-foreground: var(--button-destructive-solid-foreground, var(--bg-vanilla-100));
-		--button-outlined-foreground: var(--button-destructive-outlined-foreground, var(--bg-cherry-500));
-		--button-hover-background: var(--button-destructive-hover-background, var(--bg-cherry-400));
-		--button-link-hover-foreground: var(--button-destructive-link-hover-foreground, var(--bg-cherry-400));
-		--button-ghost-hover-foreground: var(--button-destructive-ghost-hover-foreground, var(--bg-cherry-400));
+		--button-background: var(--button-destructive-background, var(--danger-background));
+		--button-border-color: var(--button-destructive-border-color, var(--danger-background));
+		--button-solid-foreground: var(--button-destructive-solid-foreground, var(--danger-foreground));
+		--button-outlined-foreground: var(--button-destructive-outlined-foreground, var(--danger-background));
+		--button-hover-background: var(--button-destructive-hover-background, var(--danger-background-hover));
+		--button-link-hover-foreground: var(--button-destructive-link-hover-foreground, var(--danger-foreground-hover));
+		--button-ghost-hover-foreground: var(--button-destructive-ghost-hover-foreground, var(--danger-foreground-hover));
 	}
 
 	&[data-color='warning'] {
-		--button-background: var(--button-warning-background, var(--bg-amber-500));
-		--button-border-color: var(--button-warning-border-color, var(--bg-amber-500));
-		--button-solid-foreground: var(--button-warning-solid-foreground, var(--bg-ink-400));
-		--button-outlined-foreground: var(--button-warning-outlined-foreground, var(--bg-amber-700));
-		--button-hover-background: var(--button-warning-hover-background, var(--bg-amber-400));
-		--button-link-hover-foreground: var(--button-warning-link-hover-foreground, var(--bg-amber-600));
-		--button-ghost-hover-foreground: var(--button-warning-ghost-hover-foreground, var(--bg-amber-600));
+		--button-background: var(--button-warning-background, var(--warning-background));
+		--button-border-color: var(--button-warning-border-color, var(--warning-background));
+		--button-solid-foreground: var(--button-warning-solid-foreground, var(--warning-foreground));
+		--button-outlined-foreground: var(--button-warning-outlined-foreground, var(--warning-background));
+		--button-hover-background: var(--button-warning-hover-background, var(--warning-background-hover));
+		--button-link-hover-foreground: var(--button-warning-link-hover-foreground, var(--warning-background-hover));
+		--button-ghost-hover-foreground: var(--button-warning-ghost-hover-foreground, var(--warning-foreground-hover));
 	}
 
 	&[data-color='secondary'] {
-		--button-background: var(--button-secondary-background, var(--bg-vanilla-300));
-		--button-border-color: var(--button-secondary-border-color, var(--bg-vanilla-300));
-		--button-solid-foreground: var(--button-secondary-solid-foreground, var(--bg-slate-500));
-		--button-outlined-foreground: var(--button-secondary-outlined-foreground, var(--bg-slate-50));
-		--button-hover-background: var(--button-secondary-hover-background, var(--bg-vanilla-300));
-		--button-link-hover-foreground: var(--button-secondary-link-hover-foreground, var(--bg-slate-300));
-		--button-ghost-hover-foreground: var(--button-secondary-ghost-hover-foreground, var(--bg-slate-300));
+		--button-background: var(--button-secondary-background, var(--secondary-background));
+		--button-border-color: var(--button-secondary-border-color, var(--secondary-border));
+		--button-solid-foreground: var(--button-secondary-solid-foreground, var(--secondary-foreground));
+		--button-outlined-foreground: var(--button-secondary-outlined-foreground, var(--secondary-foreground));
+		--button-hover-background: var(--button-secondary-hover-background, var(--secondary-background-hover));
+		--button-link-hover-foreground: var(--button-secondary-link-hover-foreground, var(--secondary-foreground-hover));
+		--button-ghost-hover-foreground: var(--button-secondary-ghost-hover-foreground, var(--secondary-foreground-hover));
 	}
 
 	&[data-color='none'] {
-		--button-background: var(--button-none-background, transparent);
-		--button-border-color: var(--button-none-border-color, var(--bg-vanilla-300));
-		--button-solid-foreground: var(--button-none-solid-foreground, var(--bg-slate-500));
-		--button-outlined-foreground: var(--button-none-outlined-foreground, var(--bg-slate-50));
-		--button-hover-background: var(--button-none-hover-background, var(--bg-vanilla-300));
-		--button-link-hover-foreground: var(--button-none-link-hover-foreground, var(--bg-slate-300));
-		--button-ghost-hover-foreground: var(--button-none-ghost-hover-foreground, var(--bg-slate-300));
+		--button-background: var(--button-none-background, var(--ghost-background));
+		--button-border-color: var(--button-none-border-color, var(--ghost-border));
+		--button-solid-foreground: var(--button-none-solid-foreground, var(--ghost-foreground));
+		--button-outlined-foreground: var(--button-none-outlined-foreground, var(--ghost-foreground));
+		--button-hover-background: var(--button-none-hover-background, var(--ghost-background-hover));
+		--button-link-hover-foreground: var(--button-none-link-hover-foreground, var(--ghost-foreground-hover));
+		--button-ghost-hover-foreground: var(--button-none-ghost-hover-foreground, var(--ghost-foreground-hover));
 	}
 
 	&[data-color='primary'],
@@ -70,87 +70,47 @@
 	&[data-color='warning'],
 	&[data-color='none'],
 	&[data-color='secondary'] {
-		--action-button-border: var(--button-action-border, var(--bg-ink-100));
-		--action-button-hover-border: var(--button-action-hover-border, var(--bg-ink-100));
-		--action-button-text: var(--button-action-text, var(--bg-ink-100));
-		--action-button-hover-text: var(--button-action-hover-text, var(--bg-ink-100));
+		--action-button-border: var(--button-action-border, var(--action-border));
+		--action-button-hover-border: var(--button-action-hover-border, var(--action-border-hover));
+		--action-button-text: var(--button-action-text, var(--action-foreground));
+		--action-button-hover-text: var(--button-action-hover-text, var(--action-foreground-hover));
 	}
 
 	&[data-background='ink-500'] {
-		--action-button-background: var(--button-action-ink-500-background, var(--bg-ink-400));
-		--action-button-border: var(--button-action-ink-500-border, var(--bg-slate-500));
-		--action-button-text: var(--button-action-ink-500-text, var(--bg-vanilla-400));
-		--action-button-hover-background: var(--button-action-ink-500-hover-background, var(--bg-ink-300));
-		--action-button-hover-border: var(--button-action-ink-500-hover-border, var(--bg-slate-400));
-		--action-button-hover-text: var(--button-action-ink-500-hover-text, var(--bg-vanilla-100));
+		--action-button-background: var(--button-action-ink-500-background, var(--action-background));
+		--action-button-border: var(--button-action-ink-500-border, var(--action-border));
+		--action-button-text: var(--button-action-ink-500-text, var(--action-foreground));
+		--action-button-hover-background: var(--button-action-ink-500-hover-background, var(--action-background-hover));
+		--action-button-hover-border: var(--button-action-ink-500-hover-border, var(--action-border-hover));
+		--action-button-hover-text: var(--button-action-ink-500-hover-text, var(--action-foreground-hover));
 	}
 
 	&[data-background='ink-400'] {
-		--action-button-background: var(--button-action-ink-400-background, var(--bg-ink-300));
-		--action-button-border: var(--button-action-ink-400-border, var(--bg-slate-400));
-		--action-button-text: var(--button-action-ink-400-text, var(--bg-vanilla-400));
-		--action-button-hover-background: var(--button-action-ink-400-hover-background, var(--bg-ink-200));
-		--action-button-hover-border: var(--button-action-ink-400-hover-border, var(--bg-slate-300));
-		--action-button-hover-text: var(--button-action-ink-400-hover-text, var(--bg-vanilla-100));
+		--action-button-background: var(--button-action-ink-400-background, var(--action-background));
+		--action-button-border: var(--button-action-ink-400-border, var(--action-border));
+		--action-button-text: var(--button-action-ink-400-text, var(--action-foreground));
+		--action-button-hover-background: var(--button-action-ink-400-hover-background, var(--action-background-hover));
+		--action-button-hover-border: var(--button-action-ink-400-hover-border, var(--action-border-hover));
+		--action-button-hover-text: var(--button-action-ink-400-hover-text, var(--action-foreground-hover));
 	}
 
 	&[data-background='vanilla-100'] {
-		--action-button-background: var(--button-action-vanilla-100-background, var(--bg-vanilla-200));
-		--action-button-border: var(--button-action-vanilla-100-border, var(--bg-vanilla-300));
-		--action-button-text: var(--button-action-vanilla-100-text, var(--bg-slate-50));
-		--action-button-hover-background: var(--button-action-vanilla-100-hover-background,
-				var(--bg-vanilla-300));
-		--action-button-hover-border: var(--button-action-vanilla-100-hover-border,
-				color-mix(in srgb, var(--bg-vanilla-400) 40%, transparent));
-		--action-button-hover-text: var(--button-action-vanilla-100-hover-text, var(--bg-slate-500));
+		--action-button-background: var(--button-action-vanilla-100-background, var(--action-background));
+		--action-button-border: var(--button-action-vanilla-100-border, var(--action-border));
+		--action-button-text: var(--button-action-vanilla-100-text, var(--action-foreground));
+		--action-button-hover-background: var(--button-action-vanilla-100-hover-background, var(--action-background-hover));
+		--action-button-hover-border: var(--button-action-vanilla-100-hover-border, var(--action-border-hover));
+		--action-button-hover-text: var(--button-action-vanilla-100-hover-text, var(--action-foreground-hover));
 	}
 
 	&[data-background='vanilla-200'] {
-		--action-button-background: var(--button-action-vanilla-200-background, var(--bg-vanilla-100));
-		--action-button-border: var(--button-action-vanilla-200-border, var(--bg-vanilla-300));
-		--action-button-text: var(--button-action-vanilla-200-text, var(--bg-slate-50));
-		--action-button-hover-background: var(--button-action-vanilla-200-hover-background,
-				var(--bg-vanilla-100));
-		--action-button-hover-border: var(--button-action-vanilla-200-hover-border,
-				color-mix(in srgb, var(--bg-vanilla-400) 40%, transparent));
-		--action-button-hover-text: var(--button-action-vanilla-200-hover-text, var(--bg-slate-500));
+		--action-button-background: var(--button-action-vanilla-200-background, var(--action-background));
+		--action-button-border: var(--button-action-vanilla-200-border, var(--action-border));
+		--action-button-text: var(--button-action-vanilla-200-text, var(--action-foreground));
+		--action-button-hover-background: var(--button-action-vanilla-200-hover-background, var(--action-background-hover));
+		--action-button-hover-border: var(--button-action-vanilla-200-hover-border, var(--action-border-hover));
+		--action-button-hover-text: var(--button-action-vanilla-200-hover-text, var(--action-foreground-hover));
 	}
-}
-
-:global(.dark) .button[data-color='primary'],
-:global(.dark) .button[data-color='destructive'],
-:global(.dark) .button[data-color='warning'],
-:global(.dark) .button[data-color='none'],
-:global(.dark) .button[data-color='secondary'] {
-	--action-button-border: var(--button-dark-action-border, var(--bg-vanilla-100));
-	--action-button-hover-border: var(--button-dark-action-hover-border, var(--bg-vanilla-100));
-	--action-button-text: var(--button-dark-action-text, var(--bg-vanilla-100));
-	--action-button-hover-text: var(--button-dark-action-hover-text, var(--bg-vanilla-100));
-}
-
-:global(.dark) .button[data-color='secondary'] {
-	--button-background: var(--button-secondary-background-dark, var(--bg-slate-400));
-	--button-border-color: var(--button-secondary-border-color-dark, var(--bg-slate-400));
-	--button-solid-foreground: var(--button-secondary-solid-foreground-dark, var(--bg-vanilla-100));
-	--button-outlined-foreground: var(--button-secondary-outlined-foreground-dark,
-			var(--bg-vanilla-400));
-	--button-hover-background: var(--button-secondary-hover-background-dark, var(--bg-slate-300));
-	--button-link-hover-foreground: var(--button-secondary-link-hover-foreground-dark,
-			var(--bg-vanilla-200));
-	--button-ghost-hover-foreground: var(--button-secondary-ghost-hover-foreground-dark,
-			var(--bg-vanilla-200));
-}
-
-:global(.dark) .button[data-color='none'] {
-	--button-background: var(--button-none-background-dark, transparent);
-	--button-solid-foreground: var(--button-none-solid-foreground-dark, var(--bg-vanilla-100));
-	--button-outlined-foreground: var(--button-none-outlined-foreground-dark,
-			var(--bg-vanilla-400));
-	--button-hover-background: var(--button-none-hover-background-dark, var(--bg-slate-300));
-	--button-link-hover-foreground: var(--button-none-link-hover-foreground-dark,
-			var(--bg-vanilla-200));
-	--button-ghost-hover-foreground: var(--button-none-ghost-hover-foreground-dark,
-			var(--bg-vanilla-200));
 }
 
 .button:focus-visible {

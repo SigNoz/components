@@ -14,8 +14,8 @@
     --toggle-group-text: var(--toggle-group-primary-text, var(--l1-foreground));
     --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--l1-foreground-hover));
     --toggle-group-border: var(--toggle-group-primary-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-primary-active-bg, var(--bg-robin-500));
-    --toggle-group-bg-hover: var(--toggle-group-primary-bg-hover, var(--bg-robin-400));
+    --toggle-group-active-bg: var(--toggle-group-primary-active-bg, var(--primary-background));
+    --toggle-group-bg-hover: var(--toggle-group-primary-bg-hover, var(--primary-background-hover));
   }
 
   &[data-color='destructive'] {
@@ -23,17 +23,17 @@
     --toggle-group-text: var(--toggle-group-destructive-text, var(--l1-foreground));
     --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--l1-foreground-hover));
     --toggle-group-border: var(--toggle-group-destructive-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-destructive-active-bg, var(--bg-cherry-500));
-    --toggle-group-bg-hover: var(--toggle-group-destructive-bg-hover, var(--bg-cherry-400));
+    --toggle-group-active-bg: var(--toggle-group-destructive-active-bg, var(--danger-background));
+    --toggle-group-bg-hover: var(--toggle-group-destructive-bg-hover, var(--danger-background-hover));
   }
 
   &[data-color='warning'] {
     --toggle-group-bg: var(--toggle-group-warning-bg, var(--l1-background));
     --toggle-group-text: var(--toggle-group-warning-text, var(--l1-foreground));
-    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--bg-neutral-dark-800));
+    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--warning-foreground-contrast));
     --toggle-group-border: var(--toggle-group-warning-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-warning-active-bg, var(--bg-amber-500));
-    --toggle-group-bg-hover: var(--toggle-group-warning-bg-hover, var(--bg-amber-400));
+    --toggle-group-active-bg: var(--toggle-group-warning-active-bg, var(--warning-background));
+    --toggle-group-bg-hover: var(--toggle-group-warning-bg-hover, var(--warning-background-hover));
   }
 
   &[data-color='secondary'] {
