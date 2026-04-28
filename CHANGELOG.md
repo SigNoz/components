@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.11](https://github.com/SigNoz/components/compare/v0.0.10...v0.0.11) (2026-04-28)
+
+
+### Bug Fixes
+
+* **ui:** ensure all the component uses semantic-tokens ([518c8e5](https://github.com/SigNoz/components/commit/518c8e5a7819232e7dd03ea98d9e9b8f76979573))
+
+
+### Miscellaneous Chores
+
+* **deps:** bump lodash-es from 4.17.23 to 4.18.1 ([#167](https://github.com/SigNoz/components/issues/167)) ([2096973](https://github.com/SigNoz/components/commit/20969737da2513343cec70804b90d6e698b95587))
+
 ## [0.0.10](https://github.com/SigNoz/components/compare/v0.0.9...v0.0.10) (2026-04-22)
 
 
