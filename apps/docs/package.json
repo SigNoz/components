@@ -45,7 +45,7 @@
 		"@vitest/browser-playwright": "^4.0.18",
 		"@vitest/coverage-v8": "^4.0.18",
 		"playwright": "^1.58.2",
-		"postcss": "^8.4.35",
+		"postcss": "^8.5.10",
 		"react-syntax-highlighter": "^16.1.1",
 		"remark-gfm": "^4.0.1",
 		"serve": "^14.2.1",
