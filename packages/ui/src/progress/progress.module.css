@@ -1,0 +1,103 @@
+.wrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+}
+
+.root {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--l3-background, #f0f0f0);
+	width: 100%;
+	/* Fix for overflow hidden in Safari */
+	transform: translateZ(0);
+}
+
+.sizeDefault {
+	height: 8px;
+}
+
+.sizeSmall {
+	height: 4px;
+}
+
+.rootRound {
+	border-radius: 9999px;
+}
+
+.rootButt {
+	border-radius: 0;
+}
+
+.indicator {
+	width: 100%;
+	height: 100%;
+	background-color: var(--primary-background, #1890ff);
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.indicatorRound {
+	border-radius: 9999px;
+}
+
+.indicatorButt {
+	border-radius: 0;
+}
+
+.statusActive {
+	position: relative;
+}
+
+.statusActive::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: linear-gradient(
+		-45deg,
+		rgba(255, 255, 255, 0.25) 25%,
+		transparent 25%,
+		transparent 50%,
+		rgba(255, 255, 255, 0.25) 50%,
+		rgba(255, 255, 255, 0.25) 75%,
+		transparent 75%,
+		transparent
+	);
+	background-size: 1.5rem 1.5rem;
+	animation: progress-active 1.5s linear infinite;
+	border-radius: inherit;
+}
+
+@keyframes progress-active {
+	0% {
+		background-position: 1.5rem 0;
+	}
+	100% {
+		background-position: 0 0;
+	}
+}
+
+.stepDividers {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.stepDivider {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 2px;
+	background-color: var(--l1-background, #ffffff);
+	transform: translateX(-50%);
+}
+
+.info {
+	font-variant-numeric: tabular-nums;
+	font-size: 14px;
+	color: var(--l1-foreground, #4b5563);
+	white-space: nowrap;
+}
