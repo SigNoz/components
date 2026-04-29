@@ -16,6 +16,7 @@ export * from './kbd/index.js';
 export * from './pagination/index.js';
 export * from './pin-list/index.js';
 export * from './popover/index.js';
+export * from './progress/index.js';
 export * from './radio-group/index.js';
 export * from './resizable/index.js';
 export * from './select/index.js';
