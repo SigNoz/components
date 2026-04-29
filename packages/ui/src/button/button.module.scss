@@ -21,7 +21,7 @@
 		--button-solid-foreground: var(--button-primary-solid-foreground, var(--primary-foreground));
 		--button-outlined-foreground: var(--button-primary-outlined-foreground, var(--primary));
 		--button-hover-background: var(--button-primary-hover-background, var(--primary-background-hover));
-		--button-link-hover-foreground: var(--button-primary-link-hover-foreground, var(--primary-foreground-hover));
+		--button-link-hover-foreground: var(--button-primary-link-hover-foreground, var(--primary-background-hover));
 		--button-ghost-hover-foreground: var(--button-primary-ghost-hover-foreground, var(--primary-foreground-hover));
 	}
 
@@ -31,7 +31,7 @@
 		--button-solid-foreground: var(--button-destructive-solid-foreground, var(--danger-foreground));
 		--button-outlined-foreground: var(--button-destructive-outlined-foreground, var(--danger-background));
 		--button-hover-background: var(--button-destructive-hover-background, var(--danger-background-hover));
-		--button-link-hover-foreground: var(--button-destructive-link-hover-foreground, var(--danger-foreground-hover));
+		--button-link-hover-foreground: var(--button-destructive-link-hover-foreground, var(--danger-background-hover));
 		--button-ghost-hover-foreground: var(--button-destructive-ghost-hover-foreground, var(--danger-foreground-hover));
 	}
 
@@ -169,7 +169,6 @@
 	background-color: var(--button-variant-link-background-color, transparent);
 	font-weight: var(--button-variant-link-font-weight, 500);
 	color: var(--button-variant-link-color, var(--button-outlined-foreground));
-	opacity: var(--button-variant-link-opacity, 0.9);
 }
 
 .button[data-variant='link']:hover {
