@@ -49,6 +49,10 @@
     opacity: var(--input-disabled-opacity, 0.5);
     background-color: var(--input-disabled-background, transparent);
   }
+
+  &::-webkit-search-cancel-button {
+    cursor: pointer;
+  }
 }
 
 /* Input wrapper with prefix/suffix */
