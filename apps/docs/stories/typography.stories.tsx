@@ -1,65 +1,7 @@
 import { Typography } from '@signozhq/ui';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
 import type React from 'react';
-import { generateDocs } from '../utils/generateDocs.js';
 import { getTransformedTypographyTokens } from '../utils.js';
-
-// ─── Usage documentation ─────────────────────────────────────────────────────
-
-const typographyExamples = [
-	`import { Typography } from '@signozhq/ui';
-
-// Basic text (renders as <p>)
-<Typography>Hello World</Typography>`,
-
-	`// Heading variant (renders as <h2> by default)
-<Typography variant="title" size="4xl">
-  Page Title
-</Typography>`,
-
-	`// Control the heading level with "as"
-<Typography variant="title" as="h1" size="5xl">
-  Main Heading
-</Typography>
-<Typography variant="title" as="h3" size="2xl">
-  Sub Heading
-</Typography>`,
-
-	`// Sizes: xs | sm | base | lg | xl | 2xl | 3xl | 4xl | 5xl | 6xl | 7xl | 8xl | 9xl
-<Typography size="xs">Extra small</Typography>
-<Typography size="base">Base (default)</Typography>
-<Typography size="4xl">Extra large</Typography>`,
-
-	`// Weights: thin | extralight | light | normal | medium | semibold | bold | extrabold | black
-<Typography weight="thin">Thin — 100</Typography>
-<Typography weight="normal">Normal — 400</Typography>
-<Typography weight="bold">Bold — 700</Typography>
-<Typography weight="black">Black — 900</Typography>`,
-
-	`// Truncate after N lines
-<Typography truncate={2}>
-  This long text will be clamped to 2 lines with an ellipsis...
-</Typography>`,
-
-	`// Muted (secondary color)
-<Typography muted>
-  Helper text or captions
-</Typography>`,
-
-	`// Alignment
-<Typography align="center" size="xl">
-  Centered text
-</Typography>`,
-];
-
-const typographyDocs = generateDocs({
-	packageName: '@signozhq/ui',
-	description:
-		'A flexible Typography component for rendering text with consistent sizing, weight, alignment, and truncation. Supports two variants: `title` (heading) and `text` (body). Uses design tokens from the project for font sizes and weights.',
-	examples: typographyExamples,
-});
-
-// ─── Token showcase (existing) ───────────────────────────────────────────────
 
 const typography = getTransformedTypographyTokens();
 
@@ -107,39 +49,11 @@ const FontWeightShowcase: React.FC = () => (
 	</div>
 );
 
-// ─── Meta ────────────────────────────────────────────────────────────────────
-
 export default {
-	title: 'Design System/Typography',
+	title: 'Components/Typography',
 	component: Typography,
 	parameters: {
 		layout: 'fullscreen',
-		backgrounds: {
-			default: 'dark',
-			values: [{ name: 'dark', value: '#1a1a1a' }],
-		},
-		docs: {
-			description: {
-				component: typographyDocs,
-			},
-		},
-	},
-} as Meta<typeof Typography>;
-
-type Story = StoryObj<typeof Typography>;
-
-export const FontSize: StoryFn = () => <FontSizeShowcase />;
-export const FontWeight: StoryFn = () => <FontWeightShowcase />;
-
-// ─── Typography component stories ────────────────────────────────────────────
-
-export const Playground: Story = {
-	args: {
-		children: 'The quick brown fox jumps over the lazy dog',
-		variant: 'text',
-		size: 'base',
-		weight: 'normal',
-		muted: false,
 	},
 	argTypes: {
 		variant: {
@@ -157,9 +71,14 @@ export const Playground: Story = {
 		size: {
 			control: 'select',
 			options: [
+				// Semantic sizes (Ant Design compatible)
+				'small',
+				'base',
+				'medium',
+				'large',
+				// Legacy sizes
 				'xs',
 				'sm',
-				'base',
 				'lg',
 				'xl',
 				'2xl',
@@ -171,7 +90,8 @@ export const Playground: Story = {
 				'8xl',
 				'9xl',
 			],
-			description: 'Font size token.',
+			description:
+				'Font size token. Use semantic sizes (small/base/medium/large) for Ant Design compatibility.',
 			table: { category: 'Appearance', defaultValue: { summary: 'base' } },
 		},
 		weight: {
@@ -203,8 +123,45 @@ export const Playground: Story = {
 		},
 		muted: {
 			control: 'boolean',
-			description: 'Apply a muted/secondary color treatment.',
+			description: 'Apply a muted/secondary color treatment (deprecated, use color="muted").',
 			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+		},
+		color: {
+			control: 'select',
+			options: [undefined, 'muted', 'danger', 'warning', 'success'],
+			description: 'Semantic color variant.',
+			table: { category: 'Appearance' },
+		},
+		strong: {
+			control: 'boolean',
+			description: 'Apply bold font weight.',
+			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+		},
+		italic: {
+			control: 'boolean',
+			description: 'Apply italic font style.',
+			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+		},
+		code: {
+			control: 'boolean',
+			description: 'Apply inline code styling.',
+			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Apply disabled styling.',
+			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
+		},
+		copyable: {
+			control: 'boolean',
+			description: 'Enable copy to clipboard.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		level: {
+			control: 'select',
+			options: [undefined, 1, 2, 3, 4, 5],
+			description: 'Heading level (1-5). Only for variant="title".',
+			table: { category: 'Appearance' },
 		},
 		children: {
 			control: 'text',
@@ -217,6 +174,18 @@ export const Playground: Story = {
 			table: { category: 'Styling' },
 		},
 	},
+} as Meta<typeof Typography>;
+
+type Story = StoryObj<typeof Typography>;
+
+export const Playground: Story = {
+	args: {
+		children: 'The quick brown fox jumps over the lazy dog',
+		variant: 'text',
+		size: 'base',
+		weight: 'normal',
+		muted: false,
+	},
 	render: (props) => (
 		<div className="p-6">
 			<Typography {...props} />
@@ -224,12 +193,50 @@ export const Playground: Story = {
 	),
 };
 
+export const FontSize: StoryFn = () => <FontSizeShowcase />;
+export const FontWeight: StoryFn = () => <FontWeightShowcase />;
+
+export const SemanticSizes: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Semantic size tokens matching Ant Design: `small` (12px), `base` (14px), `medium` (16px), `large` (20px). Recommended for new code.',
+			},
+		},
+	},
+	render: () => {
+		const sizes = [
+			{ name: 'small', px: '12px' },
+			{ name: 'base', px: '14px' },
+			{ name: 'medium', px: '16px' },
+			{ name: 'large', px: '20px' },
+		] as const;
+
+		return (
+			<div className="space-y-4 p-6">
+				{sizes.map(({ name, px }) => (
+					<div key={name} className="flex items-baseline gap-4">
+						<span
+							className="text-vanilla-400 shrink-0"
+							style={{ width: 100, fontSize: 12, textAlign: 'right' }}
+						>
+							{name} ({px})
+						</span>
+						<Typography size={name}>The quick brown fox jumps over the lazy dog</Typography>
+					</div>
+				))}
+			</div>
+		);
+	},
+};
+
 export const AllSizes: Story = {
 	parameters: {
 		docs: {
 			description: {
 				story:
-					'All available size tokens from `xs` to `9xl`. Each row shows the token name alongside sample text at that size.',
+					'Legacy size tokens from `xs` to `9xl`. Kept for backward compatibility. Prefer semantic sizes for new code.',
 			},
 		},
 	},
@@ -237,7 +244,6 @@ export const AllSizes: Story = {
 		const sizes = [
 			'xs',
 			'sm',
-			'base',
 			'lg',
 			'xl',
 			'2xl',
@@ -448,6 +454,117 @@ export const MutedState: Story = {
 			<Typography size="sm" muted>
 				Muted helper text — secondary information or captions.
 			</Typography>
+		</div>
+	),
+};
+
+export const ColorVariants: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Use `color` prop for semantic color variants.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-2 p-6">
+			<Typography>Default text</Typography>
+			<Typography color="muted">Muted text (secondary)</Typography>
+			<Typography color="success">Success text</Typography>
+			<Typography color="warning">Warning text</Typography>
+			<Typography color="danger">Danger/error text</Typography>
+		</div>
+	),
+};
+
+export const TextDecorations: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Use `strong`, `italic`, and `code` props for text styling.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-2 p-6">
+			<Typography strong>Strong/bold text</Typography>
+			<Typography italic>Italic text</Typography>
+			<Typography code>Inline code: const x = 1</Typography>
+			<Typography strong italic>
+				Strong and italic combined
+			</Typography>
+		</div>
+	),
+};
+
+export const TitleLevels: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Use `level` prop with `variant="title"` for heading hierarchy.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-4 p-6">
+			<Typography.Title level={1}>Heading Level 1 (h1)</Typography.Title>
+			<Typography.Title level={2}>Heading Level 2 (h2)</Typography.Title>
+			<Typography.Title level={3}>Heading Level 3 (h3)</Typography.Title>
+			<Typography.Title level={4}>Heading Level 4 (h4)</Typography.Title>
+			<Typography.Title level={5}>Heading Level 5 (h5)</Typography.Title>
+		</div>
+	),
+};
+
+export const CompoundComponents: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Use compound components for Ant Design-like API.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-4 p-6">
+			<Typography.Title level={2}>Typography.Title</Typography.Title>
+			<Typography.Text>Typography.Text - regular paragraph text</Typography.Text>
+			<Typography.Text strong>Typography.Text with strong</Typography.Text>
+			<Typography.Text color="danger">Typography.Text with color="danger"</Typography.Text>
+			<Typography.Link href="https://signoz.io">Typography.Link to SigNoz</Typography.Link>
+		</div>
+	),
+};
+
+export const Copyable: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Use `copyable` prop to enable copy to clipboard functionality.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-2 p-6">
+			<Typography copyable>Click the icon to copy this text</Typography>
+			<Typography.Text code copyable>
+				npm install @signozhq/ui
+			</Typography.Text>
+		</div>
+	),
+};
+
+export const DisabledState: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story: 'Use `disabled` prop for non-interactive disabled appearance.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-2 p-6">
+			<Typography>Normal text</Typography>
+			<Typography disabled>Disabled text - cannot be selected</Typography>
 		</div>
 	),
 };
