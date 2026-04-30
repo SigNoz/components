@@ -7,6 +7,7 @@ export interface ProgressProps
 	extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
 	/**
 	 * The completion value from 0 to 100.
+	 * @defaultValue 0
 	 */
 	percent?: number;
 	/**
@@ -15,7 +16,7 @@ export interface ProgressProps
 	steps?: number;
 	/**
 	 * Controls the edge styling of the progress indicator.
-	 * @default 'butt'
+	 * @defaultValue 'butt'
 	 */
 	strokeLinecap?: 'butt' | 'round';
 	/**
@@ -23,21 +24,46 @@ export interface ProgressProps
 	 */
 	strokeColor?: string;
 	/**
-	 * @default 'default'
+	 * The size of the progress bar.
+	 * @defaultValue 'default'
 	 */
 	size?: 'small' | 'default';
 	/**
 	 * If true, renders the percent value as text next to the progress bar.
-	 * @default false
+	 * @defaultValue false
 	 */
 	showInfo?: boolean;
 	/**
-	 * If 'active', it applies a subtle striped animation to the progress bar.
-	 * @default 'normal'
+	 * If 'active', applies a subtle striped animation to the progress bar.
+	 * @defaultValue 'normal'
 	 */
 	status?: 'normal' | 'active';
 }
 
+/**
+ * Displays a progress bar indicating the completion percentage of a task or process.
+ * Supports different sizes, line cap styles, step dividers, and an animated active state.
+ *
+ * @example
+ * ```tsx
+ * <Progress percent={50} />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <Progress percent={75} strokeLinecap="round" showInfo />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <Progress percent={30} status="active" strokeColor="#52c41a" />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <Progress percent={60} steps={5} size="small" />
+ * ```
+ */
 const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, ProgressProps>(
 	(
 		{
