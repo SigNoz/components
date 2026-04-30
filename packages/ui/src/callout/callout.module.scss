@@ -78,6 +78,7 @@
     margin-top: var(--spacing-2, 0.25rem);
     color: var(--callout-icon-color);
     flex-shrink: 0;
+    line-height: 0;
   }
 
   &__content {
