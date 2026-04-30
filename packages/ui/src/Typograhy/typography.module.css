@@ -1,4 +1,4 @@
-/* Styles for Typography component */
+
 .typography {
 	margin: 0;
 	padding: 0;
@@ -9,7 +9,7 @@
 	color: var(--typography-color, inherit);
 	text-align: var(--typography-text-align, unset);
 
-	/* ——— Variant ——— */
+
 	&[data-variant='heading'] {
 		--typography-font-weight: var(--font-weight-bold, 700);
 		--typography-line-height: 1.25;
@@ -19,7 +19,7 @@
 		--typography-line-height: 1.5;
 	}
 
-	/* ——— Size ——— */
+
 	&[data-size='xs'] {
 		--typography-font-size: var(--periscope-font-size-xs, 10px);
 		--typography-line-height: 1.4;
@@ -85,7 +85,6 @@
 		--typography-line-height: 1.05;
 	}
 
-	/* ——— Weight ——— */
 	&[data-weight='thin'] {
 		--typography-font-weight: var(--font-weight-thin, 100);
 	}
@@ -122,7 +121,7 @@
 		--typography-font-weight: var(--font-weight-black, 900);
 	}
 
-	/* ——— Align ——— */
+
 	&[data-align='left'] {
 		--typography-text-align: left;
 	}
@@ -135,12 +134,12 @@
 		--typography-text-align: right;
 	}
 
-	/* ——— Muted ——— */
+
 	&[data-muted] {
 		--typography-color: var(--l2-foreground);
 	}
 
-	/* ——— Truncation ——— */
+
 	&[data-truncate] {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
