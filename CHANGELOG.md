@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.13](https://github.com/SigNoz/components/compare/v0.0.12...v0.0.13) (2026-04-30)
+
+
+### Bug Fixes
+
+* **tabs-toggle-group:** reset css not being applied ([af3d70f](https://github.com/SigNoz/components/commit/af3d70f9f72f04878a79ba60c61927467d4c78f2))
+* **token-reference:** using wrong variant of button ([7e82c11](https://github.com/SigNoz/components/commit/7e82c11ab83fb230ea931ac28013c1fa8354c541))
+
 ## [0.0.12](https://github.com/SigNoz/components/compare/v0.0.11...v0.0.12) (2026-04-30)
 
 
