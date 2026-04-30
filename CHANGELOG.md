@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.12](https://github.com/SigNoz/components/compare/v0.0.11...v0.0.12) (2026-04-30)
+
+
+### Bug Fixes
+
+* update component issues for button, callout and input ([#194](https://github.com/SigNoz/components/issues/194)) ([7830671](https://github.com/SigNoz/components/commit/78306719e63877eea2d6304ea64771ad8818125c))
+
 ## [0.0.11](https://github.com/SigNoz/components/compare/v0.0.10...v0.0.11) (2026-04-28)
 
 
