@@ -45,6 +45,8 @@
 .tabs__trigger {
   cursor: pointer;
   color: var(--tab-text-color, var(--l1-foreground));
+  background-color: var(--tab-trigger-background-color, transparent);
+  border: var(--tab-trigger-border, none);
 
   &:hover {
     color: var(--tab-hover-text-color, --l1-foreground-hover);
