@@ -1,5 +1,6 @@
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 import * as React from 'react';
+import { useId, useMemo } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './progress.module.css';
 
@@ -38,6 +39,18 @@ export interface ProgressProps
 	 * @defaultValue 'normal'
 	 */
 	status?: 'normal' | 'active';
+	/**
+	 * Test ID for the progress bar.
+	 */
+	testId?: string;
+	/**
+	 * A unique identifier for the progress bar.
+	 */
+	id?: string;
+	/**
+	 * Inline styles applied to the progress wrapper.
+	 */
+	style?: React.CSSProperties;
 }
 
 /**
@@ -75,15 +88,20 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
 			size = 'default',
 			showInfo = false,
 			status = 'normal',
+			testId,
+			id,
+			style,
 			...props
 		},
 		ref
 	) => {
+		const internalId = useId();
 		// Clamp percent between 0 and 100
 		const clampedPercent = Math.min(Math.max(percent, 0), 100);
+		const stepList = useMemo(() => (steps ? Array.from({ length: steps - 1 }) : []), [steps]);
 
 		return (
-			<div className={cn(styles.wrapper, className)}>
+			<div className={cn(styles.wrapper, className)} data-testid={testId} id={id} style={style}>
 				<ProgressPrimitive.Root
 					ref={ref}
 					className={styles.root}
@@ -104,9 +122,9 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
 					{/* Overlay dividers for steps */}
 					{steps && steps > 1 ? (
 						<div className={styles.stepDividers} aria-hidden="true">
-							{Array.from({ length: steps - 1 }).map((_, i) => (
+							{stepList.map((_, i) => (
 								<div
-									key={i}
+									key={`progress-step-divider-${internalId}-${i}`}
 									className={styles.stepDivider}
 									style={{ left: `${((i + 1) * 100) / steps}%` }}
 								/>

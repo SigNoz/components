@@ -65,6 +65,21 @@ const meta: Meta<typeof Progress> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: 'object',
+			description: 'Inline styles applied to the progress wrapper.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the progress bar.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'Test ID for the progress bar.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 	},
 	parameters: {
 		layout: 'padded',
