@@ -90,7 +90,7 @@ interface TypographyProps
 	/**
 	 * The testId associated with the element.
 	 */
-	'data-testid'?: string;
+	testid?: string;
 }
 
 const defaultTagMap: Record<TypographyVariant, TypographyElement> = {
