@@ -261,7 +261,7 @@ export function TokenReference({
 									setActiveSection('primitive');
 									setSelectedCategory(null);
 								}}
-								variant={activeSection === 'primitive' ? 'solid' : 'link'}
+								variant={activeSection === 'primitive' ? 'solid' : 'ghost'}
 								color={activeSection === 'primitive' ? 'primary' : 'secondary'}
 							>
 								Primitive Colors
@@ -292,7 +292,7 @@ export function TokenReference({
 								<Button
 									type="button"
 									onClick={() => setThemeMode('light')}
-									variant={themeMode === 'light' ? 'solid' : 'link'}
+									variant={themeMode === 'light' ? 'solid' : 'ghost'}
 									color={themeMode === 'light' ? 'primary' : 'secondary'}
 								>
 									Light
@@ -300,7 +300,7 @@ export function TokenReference({
 								<Button
 									type="button"
 									onClick={() => setThemeMode('dark')}
-									variant={themeMode === 'dark' ? 'solid' : 'link'}
+									variant={themeMode === 'dark' ? 'solid' : 'ghost'}
 									color={themeMode === 'dark' ? 'primary' : 'secondary'}
 								>
 									Dark
