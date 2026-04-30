@@ -60,21 +60,15 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
 			<div className={cn(styles.wrapper, className)}>
 				<ProgressPrimitive.Root
 					ref={ref}
-					className={cn(styles.root, {
-						[styles.sizeSmall as string]: size === 'small',
-						[styles.sizeDefault as string]: size === 'default',
-						[styles.rootRound as string]: strokeLinecap === 'round',
-						[styles.rootButt as string]: strokeLinecap === 'butt',
-					})}
+					className={styles.root}
+					data-size={size}
+					data-linecap={strokeLinecap}
 					value={clampedPercent}
 					{...props}
 				>
 					<ProgressPrimitive.Indicator
-						className={cn(styles.indicator, {
-							[styles.indicatorRound as string]: strokeLinecap === 'round',
-							[styles.indicatorButt as string]: strokeLinecap === 'butt',
-							[styles.statusActive as string]: status === 'active',
-						})}
+						className={styles.indicator}
+						data-status={status}
 						style={{
 							transform: `translateX(-${100 - clampedPercent}%)`,
 							backgroundColor: strokeColor,

@@ -1,5 +1,5 @@
 import { Progress, type ProgressProps } from '@signozhq/ui';
-import { type Meta, StoryFn } from '@storybook/react-vite';
+import type { Meta, StoryFn } from '@storybook/react-vite';
 
 const meta: Meta<typeof Progress> = {
 	title: 'Components/Progress',
