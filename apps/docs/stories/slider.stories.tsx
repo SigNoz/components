@@ -2,7 +2,7 @@ import { Slider, TooltipProvider } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-	title: 'Design System/Slider',
+	title: 'Components/Slider',
 	component: Slider,
 	parameters: {
 		layout: 'centered',
