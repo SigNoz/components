@@ -1,0 +1,31 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as SliderStories from './slider.stories';
+
+<Meta of={SliderStories} />
+
+# Slider
+
+An input where the user selects a value from within a given range.
+
+## How to use
+
+```tsx
+import { Slider } from '@signozhq/ui';
+
+export default function MyComponent() {
+  return <Slider defaultValue={[50]} max={100} step={1} />;
+}
+```
+
+This code above will render the following slider:
+
+<Primary />
+
+<Controls of={SliderStories.Default} />
+
+## Features
+
+- **Controlled/Uncontrolled:** Use `value` or `defaultValue`.
+- **Custom Steps:** Configure the stepping interval with the `step` prop.
+- **Multiple Thumbs:** Pass multiple values in the array to create a range slider.
+- **Disabled State:** Disable the slider with the `disabled` prop.
