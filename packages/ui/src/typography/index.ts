@@ -1,5 +1,3 @@
-export type * from './typography';
-
 /**
  * A flexible typography component for rendering text with consistent styling.
  * Supports variants (title/text), semantic colors, truncation, and copy-to-clipboard.
@@ -55,4 +53,6 @@ export type * from './typography';
  * <Typography as="span">Inline text</Typography>
  * ```
  */
-export { Typography } from './typography';
+
+export type * from './typography.js';
+export { Typography } from './typography.js';

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Typography } from './typography';
+import { Typography } from './typography.js';
 
 vi.mock('copy-text-to-clipboard', () => ({
 	default: vi.fn(() => true),
