@@ -1,0 +1,99 @@
+.wrapper {
+	display: var(--progress-wrapper-display, flex);
+	align-items: var(--progress-wrapper-align-items, center);
+	gap: var(--progress-wrapper-gap, var(--spacing-4, 8px));
+	width: var(--progress-wrapper-width, 100%);
+}
+
+.root {
+	position: var(--progress-position, relative);
+	overflow: var(--progress-overflow, hidden);
+	background-color: var(--progress-background, var(--l3-background));
+	width: var(--progress-width, 100%);
+	/* Fix for overflow hidden in Safari */
+	transform: translateZ(0);
+	height: var(--progress-height, 8px);
+	border-radius: var(--progress-border-radius, 9999px);
+
+	&[data-size="default"] {
+		--progress-height: 8px;
+	}
+
+	&[data-size="small"] {
+		--progress-height: 4px;
+	}
+
+	&[data-linecap="round"] {
+		--progress-border-radius: var(--radius-round, 9999px);
+	}
+
+	&[data-linecap="butt"] {
+		--progress-border-radius: 0;
+	}
+}
+
+.indicator {
+	width: var(--progress-indicator-width, 100%);
+	height: var(--progress-indicator-height, 100%);
+	background-color: var(--progress-indicator-background, var(--primary-background));
+	transition: var(--progress-indicator-transition, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+	border-radius: var(--progress-border-radius, var(--radius-round, 9999px));
+
+	&[data-status="active"] {
+		position: relative;
+	}
+
+	&[data-status="active"]::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image: linear-gradient(
+				-45deg,
+				rgba(255, 255, 255, 0.25) 25%,
+				transparent 25%,
+				transparent 50%,
+				rgba(255, 255, 255, 0.25) 50%,
+				rgba(255, 255, 255, 0.25) 75%,
+				transparent 75%,
+				transparent
+		);
+		background-size: var(--progress-active-stripe-size, 1.5rem 1.5rem);
+		animation: progress-active var(--progress-active-animation-duration, 1.5s) linear infinite;
+		border-radius: inherit;
+	}
+
+}
+
+@keyframes progress-active {
+	0% {
+		background-position: 1.5rem 0;
+	}
+	100% {
+		background-position: 0 0;
+	}
+}
+
+.stepDividers {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.stepDivider {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: var(--progress-divider-width, 2px);
+	background-color: var(--progress-divider-background, var(--l1-background));
+	transform: translateX(-50%);
+}
+
+.info {
+	font-variant-numeric: var(--progress-info-font-variant-numeric, tabular-nums);
+	font-size: var(--progress-info-font-size, var(--font-size-sm, 14px));
+	color: var(--progress-info-foreground, var(--l1-foreground));
+	white-space: var(--progress-info-white-space, nowrap);
+}
