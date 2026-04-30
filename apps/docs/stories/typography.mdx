@@ -1,0 +1,29 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as TypographyStories from './typography.stories';
+
+<Meta of={TypographyStories} />
+
+# Typography
+
+A flexible Typography component for rendering text with consistent sizing, weight, alignment, and truncation. Supports two variants: `title` (heading) and `text` (body). Uses design tokens from the project for font sizes and weights.
+
+## How to use
+
+```tsx
+import { Typography } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<div>
+			<Typography variant="title" size="4xl">Heading</Typography>
+			<Typography variant="text" size="base">This is body text.</Typography>
+		</div>
+	);
+}
+```
+
+This code above will render the following typography:
+
+<Primary />
+
+<Controls of={TypographyStories.Playground} />

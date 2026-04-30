@@ -124,7 +124,6 @@ export default {
 			},
 		},
 	},
-	tags: ['autodocs'],
 } as Meta<typeof Typography>;
 
 type Story = StoryObj<typeof Typography>;
