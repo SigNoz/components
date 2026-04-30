@@ -1,11 +1,11 @@
-import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary, Story } from '@storybook/addon-docs/blocks';
 import * as SliderStories from './slider.stories';
 
 <Meta of={SliderStories} />
 
 # Slider
 
-An input where the user selects a value from within a given range.
+An input where the user selects a value from within a given range. This component serves as a drop-in replacement for the Ant Design Slider, supporting legacy props while utilizing `@radix-ui/react-slider` primitives under the hood.
 
 ## How to use
 
@@ -13,7 +13,7 @@ An input where the user selects a value from within a given range.
 import { Slider } from '@signozhq/ui';
 
 export default function MyComponent() {
-  return <Slider defaultValue={[50]} max={100} step={1} />;
+  return <Slider defaultValue={50} max={100} step={1} />;
 }
 ```
 
@@ -23,9 +23,67 @@ This code above will render the following slider:
 
 <Controls of={SliderStories.Default} />
 
-## Features
+## Ant Design Compatibility
 
-- **Controlled/Uncontrolled:** Use `value` or `defaultValue`.
-- **Custom Steps:** Configure the stepping interval with the `step` prop.
-- **Multiple Thumbs:** Pass multiple values in the array to create a range slider.
-- **Disabled State:** Disable the slider with the `disabled` prop.
+This component maps common Ant Design `Slider` props to their Radix UI equivalents seamlessly.
+
+### Events
+
+- **`onChange`**: Fired when the value changes during dragging. Maps to Radix's `onValueChange`.
+- **`onAfterChange`**: Fired when `mouseup` or `keyup` happens. Maps to Radix's `onValueCommit`.
+
+### Range Slider
+
+To use a dual-thumb range slider, set the `range` prop to `true` and provide an array of values.
+
+```tsx
+<Slider range defaultValue={[25, 75]} />
+```
+
+<Story of={SliderStories.Range} />
+
+### Marks
+
+You can provide a `marks` object to display tick marks along the track. The key should be a number, and the value can be a string or a React node.
+
+```tsx
+const marks = {
+  0: '0°C',
+  26: '26°C',
+  37: '37°C',
+  100: {
+    style: { color: '#f50' },
+    label: <strong>100°C</strong>,
+  },
+};
+
+<Slider marks={marks} defaultValue={37} />
+```
+
+<Story of={SliderStories.WithMarks} />
+
+### Tooltips
+
+By providing a `tooltip` prop with a `formatter`, the slider thumbs will be wrapped in tooltips displaying the current value.
+
+```tsx
+<Slider tooltip={{ formatter: (val) => `${val}%` }} defaultValue={25} />
+```
+
+<Story of={SliderStories.WithTooltip} />
+
+### Custom Styles
+
+You can inject inline styles directly into the internal Radix parts using the `styles` prop:
+
+```tsx
+<Slider 
+  styles={{
+    track: { backgroundColor: '#ffe4e6' },
+    range: { backgroundColor: '#e11d48' },
+    thumb: { borderColor: '#e11d48' },
+  }} 
+/>
+```
+
+<Story of={SliderStories.CustomStyles} />
