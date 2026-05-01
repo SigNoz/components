@@ -40,6 +40,18 @@ export interface SliderProps
 		range?: React.CSSProperties;
 		thumb?: React.CSSProperties;
 	};
+	/**
+	 * Test ID for testing purposes (mapped to data-testid).
+	 */
+	'test-id'?: string;
+	/**
+	 * Unique identifier for the slider root element.
+	 */
+	id?: string;
+	/**
+	 * Inline style for the slider root element.
+	 */
+	style?: React.CSSProperties;
 }
 
 const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, SliderProps>(
@@ -56,6 +68,9 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 			defaultValue,
 			min = 0,
 			max = 100,
+			id,
+			style,
+			'test-id': testId,
 			...props
 		},
 		ref
@@ -91,9 +106,27 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 			}
 		};
 
+		const markList = React.useMemo(() => {
+			if (!marks) return [];
+			return Object.entries(marks).map(([key, markObj]) => {
+				const markVal = Number(key);
+				const percent = ((markVal - min) / (max - min)) * 100;
+
+				const isObject =
+					typeof markObj === 'object' && markObj !== null && !React.isValidElement(markObj);
+				const label = isObject && 'label' in markObj ? (markObj as any).label : markObj;
+				const markStyle = isObject && 'style' in markObj ? (markObj as any).style : {};
+
+				return { key, percent, label, markStyle };
+			});
+		}, [marks, min, max]);
+
 		return (
 			<SliderPrimitive.Root
 				ref={ref}
+				id={id}
+				style={style}
+				data-testid={testId}
 				min={min}
 				max={max}
 				value={internalValue}
@@ -129,27 +162,17 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					return thumb;
 				})}
 
-				{marks && (
+				{markList.length > 0 && (
 					<div className={styles['slider-marks']}>
-						{Object.entries(marks).map(([key, markObj]) => {
-							const markVal = Number(key);
-							const percent = ((markVal - min) / (max - min)) * 100;
-
-							const isObject =
-								typeof markObj === 'object' && markObj !== null && !React.isValidElement(markObj);
-							const label = isObject && 'label' in markObj ? (markObj as any).label : markObj;
-							const markStyle = isObject && 'style' in markObj ? (markObj as any).style : {};
-
-							return (
-								<span
-									key={key}
-									className={styles['slider-mark']}
-									style={{ left: `${percent}%`, ...markStyle }}
-								>
-									{label}
-								</span>
-							);
-						})}
+						{markList.map(({ key, percent, label, markStyle }) => (
+							<span
+								key={key}
+								className={styles['slider-mark']}
+								style={{ left: `${percent}%`, ...markStyle }}
+							>
+								{label}
+							</span>
+						))}
 					</div>
 				)}
 			</SliderPrimitive.Root>
