@@ -1,0 +1,48 @@
+import { Meta, Canvas, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ProgressStories from './progress.stories';
+import { Progress } from '@signozhq/ui';
+
+<Meta of={ProgressStories} />
+
+# Progress
+
+The `Progress` component is used to display the current progress of an operation flow. It supports multiple sizes, custom colors, segmented steps, and status animations.
+
+## How to use
+
+```tsx
+import { Progress } from '@signozhq/ui';
+
+export default function MyComponent() {
+	// A default continuous progress bar at 50%
+	return <Progress percent={50} />;
+}
+```
+
+This code above will render the following progress bar:
+
+<Primary />
+
+<Controls of={ProgressStories.Default} />
+
+## Examples
+
+### Segmented Progress
+You can divide the progress bar into equal visual segments by providing the `steps` prop.
+
+<Canvas of={ProgressStories.Segmented} />
+
+### Dynamic Colors
+You can override the progress indicator's background color dynamically using the `strokeColor` prop, which is useful for indicating severity levels.
+
+<Canvas of={ProgressStories.DynamicColors} />
+
+### Sizes
+The component supports `default` and `small` sizes.
+
+<Canvas of={ProgressStories.Sizes} />
+
+### Status and Info
+You can display the current percentage using `showInfo`, and apply a striped animation by setting `status="active"`.
+
+<Canvas of={ProgressStories.WithInfo} />
