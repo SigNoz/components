@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.14](https://github.com/SigNoz/components/compare/v0.0.13...v0.0.14) (2026-05-01)
+
+
+### Features
+
+* **components:** add progress component ([#193](https://github.com/SigNoz/components/issues/193)) ([5540b31](https://github.com/SigNoz/components/commit/5540b316fd1839a1ad367d6498dc1495785974b8))
+* **components:** add typography component ([#188](https://github.com/SigNoz/components/issues/188)) ([19c2389](https://github.com/SigNoz/components/commit/19c2389ff1376e80662da445b50986b7427fa8c9))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump postcss from 8.5.8 to 8.5.10 ([#191](https://github.com/SigNoz/components/issues/191)) ([c00c48d](https://github.com/SigNoz/components/commit/c00c48db3b3f379817bac8f0b42b5a3062aeeee8))
+
 ## [0.0.13](https://github.com/SigNoz/components/compare/v0.0.12...v0.0.13) (2026-04-30)
 
 
