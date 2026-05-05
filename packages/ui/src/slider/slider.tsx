@@ -1,9 +1,9 @@
 import * as SliderPrimitive from '@radix-ui/react-slider';
-import React from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { cn } from '../lib/utils.js';
 import { Tooltip, TooltipProvider } from '../tooltip/tooltip.js';
-import styles from './slider.module.css';
+import styles from './slider.module.scss';
 
 export interface SliderProps
 	extends Omit<
@@ -34,6 +34,12 @@ export interface SliderProps
 	range?: boolean;
 	/**
 	 * Custom inline styles for the internal track, range, and thumb elements.
+	 *
+	 * @example
+	 * ```tsx
+	 * // Custom track fill color
+	 * <Slider styles={{ range: { backgroundColor: '#4E74F8' } }} />
+	 * ```
 	 */
 	styles?: {
 		track?: React.CSSProperties;
@@ -41,9 +47,23 @@ export interface SliderProps
 		thumb?: React.CSSProperties;
 	};
 	/**
+	 * Custom CSS class names for the internal track, range, and thumb elements.
+	 *
+	 * @example
+	 * ```tsx
+	 * // Apply custom classes
+	 * <Slider classNames={{ track: 'bg-gray-200', range: 'bg-blue-500', thumb: 'border-blue-500' }} />
+	 * ```
+	 */
+	classNames?: {
+		track?: string;
+		range?: string;
+		thumb?: string;
+	};
+	/**
 	 * Test ID for testing purposes (mapped to data-testid).
 	 */
-	'test-id'?: string;
+	testId?: string;
 	/**
 	 * Unique identifier for the slider root element.
 	 */
@@ -54,6 +74,68 @@ export interface SliderProps
 	style?: React.CSSProperties;
 }
 
+const toArray = (val: number | number[] | undefined) =>
+	Array.isArray(val) ? val : val !== undefined ? [val] : undefined;
+
+/**
+ * Slider component for selecting a value or range from a continuous set of values.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <Slider defaultValue={50} max={100} step={1} />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Range slider with two thumbs
+ * <Slider defaultValue={[25, 75]} max={100} range />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With marks
+ * <Slider
+ *   defaultValue={50}
+ *   marks={{
+ *     0: '0°C',
+ *     26: '26°C',
+ *     37: '37°C',
+ *     100: { style: { color: '#f50' }, label: <strong>100°C</strong> },
+ *   }}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With tooltip
+ * <Slider defaultValue={25} tooltip={{ formatter: (val) => `${val}%` }} />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Custom styles (inline)
+ * <Slider
+ *   styles={{
+ *     track: { backgroundColor: '#ffe4e6' },
+ *     range: { backgroundColor: '#e11d48' },
+ *     thumb: { borderColor: '#e11d48' },
+ *   }}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Custom classNames (Tailwind/CSS modules)
+ * <Slider
+ *   classNames={{
+ *     track: 'bg-gray-200',
+ *     range: 'bg-blue-500',
+ *     thumb: 'border-blue-500',
+ *   }}
+ * />
+ * ```
+ */
 const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, SliderProps>(
 	(
 		{
@@ -64,49 +146,53 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 			onAfterChange,
 			range,
 			styles: inlineStyles,
+			classNames,
 			value: controlledValue,
 			defaultValue,
 			min = 0,
 			max = 100,
 			id,
 			style,
-			'test-id': testId,
+			testId,
 			...props
 		},
 		ref
 	) => {
-		const toArray = (val: number | number[] | undefined) =>
-			Array.isArray(val) ? val : val !== undefined ? [val] : undefined;
+		const internalValue = useMemo(() => toArray(controlledValue), [controlledValue]);
+		const internalDefaultValue = useMemo(() => toArray(defaultValue), [defaultValue]);
 
-		const internalValue = toArray(controlledValue);
-		const internalDefaultValue = toArray(defaultValue);
-
-		const [localValues, setLocalValues] = React.useState<number[]>(
+		const [localValues, setLocalValues] = useState<number[]>(
 			internalValue || internalDefaultValue || [min]
 		);
 
-		React.useEffect(() => {
+		useEffect(() => {
 			if (internalValue !== undefined) {
 				setLocalValues(internalValue);
 			}
 		}, [internalValue]);
 
-		const handleValueChange = (newValues: number[]) => {
-			if (internalValue === undefined) {
-				setLocalValues(newValues);
-			}
-			if (onChange) {
-				onChange(range ? newValues : newValues[0]);
-			}
-		};
+		const handleValueChange = useCallback(
+			(newValues: number[]) => {
+				if (internalValue === undefined) {
+					setLocalValues(newValues);
+				}
+				if (onChange) {
+					onChange(range ? newValues : newValues[0]);
+				}
+			},
+			[internalValue, onChange, range]
+		);
 
-		const handleValueCommit = (newValues: number[]) => {
-			if (onAfterChange) {
-				onAfterChange(range ? newValues : newValues[0]);
-			}
-		};
+		const handleValueCommit = useCallback(
+			(newValues: number[]) => {
+				if (onAfterChange) {
+					onAfterChange(range ? newValues : newValues[0]);
+				}
+			},
+			[onAfterChange, range]
+		);
 
-		const markList = React.useMemo(() => {
+		const markList = useMemo(() => {
 			if (!marks) return [];
 			return Object.entries(marks).map(([key, markObj]) => {
 				const markVal = Number(key);
@@ -120,6 +206,8 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				return { key, percent, label, markStyle };
 			});
 		}, [marks, min, max]);
+
+		const internalId = useId();
 
 		return (
 			<SliderPrimitive.Root
@@ -136,16 +224,21 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				className={cn(styles['slider-root'], className)}
 				{...props}
 			>
-				<SliderPrimitive.Track className={styles['slider-track']} style={inlineStyles?.track}>
-					<SliderPrimitive.Range className={styles['slider-range']} style={inlineStyles?.range} />
+				<SliderPrimitive.Track
+					className={cn(styles['slider-track'], classNames?.track)}
+					style={inlineStyles?.track}
+				>
+					<SliderPrimitive.Range
+						className={cn(styles['slider-range'], classNames?.range)}
+						style={inlineStyles?.range}
+					/>
 				</SliderPrimitive.Track>
 
 				{localValues.map((val, index) => {
 					const thumb = (
-						// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
 						<SliderPrimitive.Thumb
-							key={index}
-							className={styles['slider-thumb']}
+							key={`slider-${internalId}-thumb-${index}`}
+							className={cn(styles['slider-thumb'], classNames?.thumb)}
 							style={inlineStyles?.thumb}
 						/>
 					);
@@ -153,7 +246,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					if (tooltip) {
 						return (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
-							<TooltipProvider key={index}>
+							<TooltipProvider key={`slider-${internalId}-${index}-tooltip`}>
 								<Tooltip title={tooltip.formatter ? tooltip.formatter(val) : val}>{thumb}</Tooltip>
 							</TooltipProvider>
 						);
@@ -166,7 +259,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					<div className={styles['slider-marks']}>
 						{markList.map(({ key, percent, label, markStyle }) => (
 							<span
-								key={key}
+								key={`slider-${internalId}-mark-${key}`}
 								className={styles['slider-mark']}
 								style={{ left: `${percent}%`, ...markStyle }}
 							>
