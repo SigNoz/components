@@ -157,6 +157,27 @@ export default {
 			description: 'Enable copy to clipboard.',
 			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
 		},
+		interactive: {
+			control: 'boolean',
+			description:
+				'Enable interactive hover styling (cursor pointer, hover color). Auto-enabled when onClick provided.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		onClick: {
+			action: 'clicked',
+			description: 'Click handler for the typography element.',
+			table: { category: 'Events' },
+		},
+		onMouseEnter: {
+			action: 'mouseEnter',
+			description: 'Mouse enter handler.',
+			table: { category: 'Events' },
+		},
+		onMouseLeave: {
+			action: 'mouseLeave',
+			description: 'Mouse leave handler.',
+			table: { category: 'Events' },
+		},
 		level: {
 			control: 'select',
 			options: [undefined, 1, 2, 3, 4, 5],
@@ -616,6 +637,41 @@ export const DisabledState: Story = {
 			</div>
 			<div>
 				<Typography disabled>Disabled text - cannot be selected</Typography>
+			</div>
+		</div>
+	),
+};
+
+export const Interactive: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Use `onClick` for click handlers or `interactive` for hover styling without click. Interactive text shows cursor pointer and color change on hover.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-4 p-6">
+			<div>
+				<Typography>Normal text (no hover effect)</Typography>
+			</div>
+			<div>
+				<Typography onClick={() => alert('Clicked!')}>
+					Clickable text - click me (has onClick)
+				</Typography>
+			</div>
+			<div>
+				<Typography interactive>Interactive text - hover me (no onClick, just styling)</Typography>
+			</div>
+			<div>
+				<Typography
+					onClick={() => alert('Clicked!')}
+					onMouseEnter={() => console.log('Mouse entered')}
+					onMouseLeave={() => console.log('Mouse left')}
+				>
+					With all mouse handlers - click, enter, leave
+				</Typography>
 			</div>
 		</div>
 	),

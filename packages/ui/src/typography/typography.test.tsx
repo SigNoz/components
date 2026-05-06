@@ -159,6 +159,55 @@ describe('Typography', () => {
 		});
 	});
 
+	describe('onClick prop', () => {
+		it('calls onClick handler when clicked', () => {
+			const handleClick = vi.fn();
+			render(<Typography onClick={handleClick}>Clickable text</Typography>);
+			const element = screen.getByText('Clickable text');
+			fireEvent.click(element);
+			expect(handleClick).toHaveBeenCalledTimes(1);
+		});
+
+		it('applies data-interactive when onClick is provided', () => {
+			const handleClick = vi.fn();
+			render(<Typography onClick={handleClick}>Clickable text</Typography>);
+			const element = screen.getByText('Clickable text');
+			expect(element).toHaveAttribute('data-interactive', 'true');
+		});
+	});
+
+	describe('interactive prop', () => {
+		it('applies data-interactive when interactive is true', () => {
+			render(<Typography interactive>Interactive text</Typography>);
+			const element = screen.getByText('Interactive text');
+			expect(element).toHaveAttribute('data-interactive', 'true');
+		});
+
+		it('does not apply data-interactive when interactive is false', () => {
+			render(<Typography>Normal text</Typography>);
+			const element = screen.getByText('Normal text');
+			expect(element).not.toHaveAttribute('data-interactive');
+		});
+	});
+
+	describe('mouse event handlers', () => {
+		it('calls onMouseEnter handler', () => {
+			const handleMouseEnter = vi.fn();
+			render(<Typography onMouseEnter={handleMouseEnter}>Hover text</Typography>);
+			const element = screen.getByText('Hover text');
+			fireEvent.mouseEnter(element);
+			expect(handleMouseEnter).toHaveBeenCalledTimes(1);
+		});
+
+		it('calls onMouseLeave handler', () => {
+			const handleMouseLeave = vi.fn();
+			render(<Typography onMouseLeave={handleMouseLeave}>Hover text</Typography>);
+			const element = screen.getByText('Hover text');
+			fireEvent.mouseLeave(element);
+			expect(handleMouseLeave).toHaveBeenCalledTimes(1);
+		});
+	});
+
 	describe('copyable prop', () => {
 		it('renders copy button when copyable is true', () => {
 			render(<Typography copyable>Copy me</Typography>);

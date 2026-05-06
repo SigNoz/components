@@ -237,6 +237,15 @@
 		}
 	}
 
+	&[data-interactive] {
+		cursor: pointer;
+		transition: color var(--transition-duration-fast, 0.15s) ease;
+
+		&:hover {
+			--typography-color: var(--typography-interactive-hover-color, var(--primary-background));
+		}
+	}
+
 	&[data-truncate] {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;

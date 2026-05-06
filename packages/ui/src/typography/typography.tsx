@@ -60,6 +60,21 @@ type TypographyLevel = 1 | 2 | 3 | 4 | 5;
 interface TypographyProps
 	extends Pick<React.ComponentProps<'div'>, 'children' | 'className' | 'id' | 'style' | 'title'> {
 	/**
+	 * Click handler for the typography element.
+	 */
+	onClick?: React.MouseEventHandler<HTMLElement>;
+
+	/**
+	 * Mouse enter handler for the typography element.
+	 */
+	onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+
+	/**
+	 * Mouse leave handler for the typography element.
+	 */
+	onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+
+	/**
 	 * The variant determines the semantic role of the typography.
 	 * - `title` renders as heading element
 	 * - `text` renders as `p` by default
@@ -169,6 +184,13 @@ interface TypographyProps
 	 * The testId associated with the element.
 	 */
 	testId?: string;
+
+	/**
+	 * Enable interactive hover styling (cursor pointer, hover color change).
+	 * Automatically enabled when onClick is provided.
+	 * @default false
+	 */
+	interactive?: boolean;
 }
 
 const levelTagMap: Record<TypographyLevel, TypographyElement> = {
@@ -245,6 +267,10 @@ function Typography({
 	style,
 	title,
 	testId,
+	onClick,
+	onMouseEnter,
+	onMouseLeave,
+	interactive,
 	...props
 }: TypographyProps) {
 	const [copied, setCopied] = useState(false);
@@ -262,6 +288,7 @@ function Typography({
 	}
 
 	const isLink = Tag === 'a' || href;
+	const isInteractive = interactive || !!onClick;
 
 	const truncateStyle: React.CSSProperties | undefined =
 		truncate !== undefined
@@ -296,10 +323,14 @@ function Typography({
 			data-disabled={disabled || undefined}
 			data-level={level || undefined}
 			data-link={isLink || undefined}
+			data-interactive={isInteractive || undefined}
 			data-testid={testId}
 			title={title}
 			className={cn(styles.typography, className)}
 			style={{ ...truncateStyle, ...style }}
+			onClick={onClick as React.MouseEventHandler}
+			onMouseEnter={onMouseEnter as React.MouseEventHandler}
+			onMouseLeave={onMouseLeave as React.MouseEventHandler}
 			{...linkProps}
 			{...props}
 		>
