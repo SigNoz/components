@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.15](https://github.com/SigNoz/components/compare/v0.0.14...v0.0.15) (2026-05-06)
+
+
+### Features
+
+* **components:** add slider ([#198](https://github.com/SigNoz/components/issues/198)) ([24b77c0](https://github.com/SigNoz/components/commit/24b77c0082d697a1cfd1a366a8631deb62638be1))
+
+
+### Bug Fixes
+
+* **readme:** missing readme on npm page ([#200](https://github.com/SigNoz/components/issues/200)) ([d36ab31](https://github.com/SigNoz/components/commit/d36ab31502a40c96c76da6b2e05ca26de77a648b))
+* **typography:** add on click and mouse event handlers ([#203](https://github.com/SigNoz/components/issues/203)) ([6f35fcb](https://github.com/SigNoz/components/commit/6f35fcb8f4749c11980b38f9392d4703d25e4663))
+* **typography:** missing compatibility css ([#201](https://github.com/SigNoz/components/issues/201)) ([ca63362](https://github.com/SigNoz/components/commit/ca63362c0b70aeec1098bc68e0b3b9c7d5f20d52))
+
 ## [0.0.14](https://github.com/SigNoz/components/compare/v0.0.13...v0.0.14) (2026-05-01)
 
 
