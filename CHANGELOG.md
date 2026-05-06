@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.16](https://github.com/SigNoz/components/compare/v0.0.15...v0.0.16) (2026-05-06)
+
+
+### Bug Fixes
+
+* **typography:** add role/tabIndex and better types for handlers ([9f72bbb](https://github.com/SigNoz/components/commit/9f72bbbf9067e6e0f97f87d56e2af8ab22e0a1a5))
+
 ## [0.0.15](https://github.com/SigNoz/components/compare/v0.0.14...v0.0.15) (2026-05-06)
 
 
