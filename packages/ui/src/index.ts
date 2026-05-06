@@ -20,6 +20,7 @@ export * from './progress/index.js';
 export * from './radio-group/index.js';
 export * from './resizable/index.js';
 export * from './select/index.js';
+export * from './slider/index.js';
 export * from './sonner/index.js';
 export * from './switch/index.js';
 export * from './table/index.js';
