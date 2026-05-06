@@ -58,7 +58,7 @@ type TypographyColor = 'muted' | 'danger' | 'warning' | 'success';
 type TypographyLevel = 1 | 2 | 3 | 4 | 5;
 
 interface TypographyProps
-	extends Pick<React.ComponentProps<'div'>, 'children' | 'className' | 'id' | 'style'> {
+	extends Pick<React.ComponentProps<'div'>, 'children' | 'className' | 'id' | 'style' | 'title'> {
 	/**
 	 * The variant determines the semantic role of the typography.
 	 * - `title` renders as heading element
@@ -243,6 +243,7 @@ function Typography({
 	className,
 	children,
 	style,
+	title,
 	testId,
 	...props
 }: TypographyProps) {
@@ -296,6 +297,7 @@ function Typography({
 			data-level={level || undefined}
 			data-link={isLink || undefined}
 			data-testid={testId}
+			title={title}
 			className={cn(styles.typography, className)}
 			style={{ ...truncateStyle, ...style }}
 			{...linkProps}

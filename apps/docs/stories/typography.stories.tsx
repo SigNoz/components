@@ -357,13 +357,17 @@ export const TextVariant: Story = {
 	},
 	render: () => (
 		<div className="space-y-4 p-6">
-			<Typography size="lg">
-				This is a paragraph of body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-				Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-			</Typography>
-			<Typography as="span" size="sm" muted>
-				This is a muted span element.
-			</Typography>
+			<div>
+				<Typography size="lg">
+					This is a paragraph of body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+				</Typography>
+			</div>
+			<div>
+				<Typography as="span" size="sm" muted>
+					This is a muted span element.
+				</Typography>
+			</div>
 		</div>
 	),
 };
@@ -378,15 +382,21 @@ export const Alignment: Story = {
 	},
 	render: () => (
 		<div className="space-y-4 p-6">
-			<Typography align="left" size="lg">
-				Left-aligned text
-			</Typography>
-			<Typography align="center" size="lg">
-				Center-aligned text
-			</Typography>
-			<Typography align="right" size="lg">
-				Right-aligned text
-			</Typography>
+			<div className="w-100">
+				<Typography align="left" size="lg" className="w-100">
+					Left-aligned text
+				</Typography>
+			</div>
+			<div className="w-100">
+				<Typography align="center" size="lg" className="w-100">
+					Center-aligned text
+				</Typography>
+			</div>
+			<div className="w-100">
+				<Typography align="right" size="lg" className="w-100">
+					Right-aligned text
+				</Typography>
+			</div>
 		</div>
 	),
 };
@@ -447,13 +457,19 @@ export const MutedState: Story = {
 	},
 	render: () => (
 		<div className="space-y-2 p-6">
-			<Typography size="lg" weight="bold">
-				Primary heading text
-			</Typography>
-			<Typography size="base">Normal body text with default color.</Typography>
-			<Typography size="sm" muted>
-				Muted helper text — secondary information or captions.
-			</Typography>
+			<div>
+				<Typography size="lg" weight="bold">
+					Primary heading text
+				</Typography>
+			</div>
+			<div>
+				<Typography size="base">Normal body text with default color.</Typography>
+			</div>
+			<div>
+				<Typography size="sm" muted>
+					Muted helper text — secondary information or captions.
+				</Typography>
+			</div>
 		</div>
 	),
 };
@@ -468,11 +484,21 @@ export const ColorVariants: Story = {
 	},
 	render: () => (
 		<div className="space-y-2 p-6">
-			<Typography>Default text</Typography>
-			<Typography color="muted">Muted text (secondary)</Typography>
-			<Typography color="success">Success text</Typography>
-			<Typography color="warning">Warning text</Typography>
-			<Typography color="danger">Danger/error text</Typography>
+			<div>
+				<Typography>Default text</Typography>
+			</div>
+			<div>
+				<Typography color="muted">Muted text (secondary)</Typography>
+			</div>
+			<div>
+				<Typography color="success">Success text</Typography>
+			</div>
+			<div>
+				<Typography color="warning">Warning text</Typography>
+			</div>
+			<div>
+				<Typography color="danger">Danger/error text</Typography>
+			</div>
 		</div>
 	),
 };
@@ -487,12 +513,20 @@ export const TextDecorations: Story = {
 	},
 	render: () => (
 		<div className="space-y-2 p-6">
-			<Typography strong>Strong/bold text</Typography>
-			<Typography italic>Italic text</Typography>
-			<Typography code>Inline code: const x = 1</Typography>
-			<Typography strong italic>
-				Strong and italic combined
-			</Typography>
+			<div>
+				<Typography strong>Strong/bold text</Typography>
+			</div>
+			<div>
+				<Typography italic>Italic text</Typography>
+			</div>
+			<div>
+				<Typography code>Inline code: const x = 1</Typography>
+			</div>
+			<div>
+				<Typography strong italic>
+					Strong and italic combined
+				</Typography>
+			</div>
 		</div>
 	),
 };
@@ -526,11 +560,21 @@ export const CompoundComponents: Story = {
 	},
 	render: () => (
 		<div className="space-y-4 p-6">
-			<Typography.Title level={2}>Typography.Title</Typography.Title>
-			<Typography.Text>Typography.Text - regular paragraph text</Typography.Text>
-			<Typography.Text strong>Typography.Text with strong</Typography.Text>
-			<Typography.Text color="danger">Typography.Text with color="danger"</Typography.Text>
-			<Typography.Link href="https://signoz.io">Typography.Link to SigNoz</Typography.Link>
+			<div>
+				<Typography.Title level={2}>Typography.Title</Typography.Title>
+			</div>
+			<div>
+				<Typography.Text>Typography.Text - regular paragraph text</Typography.Text>
+			</div>
+			<div>
+				<Typography.Text strong>Typography.Text with strong</Typography.Text>
+			</div>
+			<div>
+				<Typography.Text color="danger">Typography.Text with color="danger"</Typography.Text>
+			</div>
+			<div>
+				<Typography.Link href="https://signoz.io">Typography.Link to SigNoz</Typography.Link>
+			</div>
 		</div>
 	),
 };
@@ -545,10 +589,14 @@ export const Copyable: Story = {
 	},
 	render: () => (
 		<div className="space-y-2 p-6">
-			<Typography copyable>Click the icon to copy this text</Typography>
-			<Typography.Text code copyable>
-				npm install @signozhq/ui
-			</Typography.Text>
+			<div>
+				<Typography copyable>Click the icon to copy this text</Typography>
+			</div>
+			<div>
+				<Typography.Text code copyable>
+					npm install @signozhq/ui
+				</Typography.Text>
+			</div>
 		</div>
 	),
 };
@@ -563,8 +611,12 @@ export const DisabledState: Story = {
 	},
 	render: () => (
 		<div className="space-y-2 p-6">
-			<Typography>Normal text</Typography>
-			<Typography disabled>Disabled text - cannot be selected</Typography>
+			<div>
+				<Typography>Normal text</Typography>
+			</div>
+			<div>
+				<Typography disabled>Disabled text - cannot be selected</Typography>
+			</div>
 		</div>
 	),
 };
