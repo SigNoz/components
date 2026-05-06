@@ -14,7 +14,13 @@
 	}
 
 	&[data-variant='text'] {
+		display: var(--typography-text-display, inline);
 		--typography-line-height: var(--line-height-normal, 1.5);
+	}
+
+	&[data-variant='title'] {
+		margin-top: var(--typography-title-margin-top, 9px);
+		margin-bottom: var(--typography-title-margin-bottom, 9px);
 	}
 
 	&[data-size='small'] {
@@ -134,14 +140,17 @@
 	}
 
 	&[data-align='left'] {
+		display: var(--typography-text-display, inline-block);
 		--typography-text-align: left;
 	}
 
 	&[data-align='center'] {
+		display: var(--typography-text-display, inline-block);
 		--typography-text-align: center;
 	}
 
 	&[data-align='right'] {
+		display: var(--typography-text-display, inline-block);
 		--typography-text-align: right;
 	}
 
