@@ -58,22 +58,24 @@ type TypographyColor = 'muted' | 'danger' | 'warning' | 'success';
 type TypographyLevel = 1 | 2 | 3 | 4 | 5;
 
 interface TypographyProps
-	extends Pick<React.ComponentProps<'div'>, 'children' | 'className' | 'id' | 'style' | 'title'> {
+	extends Pick<
+		React.ComponentProps<'div'>,
+		'children' | 'className' | 'id' | 'style' | 'title' | 'role' | 'tabIndex'
+	> {
 	/**
 	 * Click handler for the typography element.
 	 */
-	onClick?: React.MouseEventHandler<HTMLElement>;
+	onClick?: React.MouseEventHandler<unknown>;
 
 	/**
 	 * Mouse enter handler for the typography element.
 	 */
-	onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+	onMouseEnter?: React.MouseEventHandler<unknown>;
 
 	/**
 	 * Mouse leave handler for the typography element.
 	 */
-	onMouseLeave?: React.MouseEventHandler<HTMLElement>;
-
+	onMouseLeave?: React.MouseEventHandler<unknown>;
 	/**
 	 * The variant determines the semantic role of the typography.
 	 * - `title` renders as heading element
@@ -267,10 +269,8 @@ function Typography({
 	style,
 	title,
 	testId,
-	onClick,
-	onMouseEnter,
-	onMouseLeave,
 	interactive,
+	onClick,
 	...props
 }: TypographyProps) {
 	const [copied, setCopied] = useState(false);
@@ -328,9 +328,7 @@ function Typography({
 			title={title}
 			className={cn(styles.typography, className)}
 			style={{ ...truncateStyle, ...style }}
-			onClick={onClick as React.MouseEventHandler}
-			onMouseEnter={onMouseEnter as React.MouseEventHandler}
-			onMouseLeave={onMouseLeave as React.MouseEventHandler}
+			onClick={onClick}
 			{...linkProps}
 			{...props}
 		>
