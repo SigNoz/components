@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.17](https://github.com/SigNoz/components/compare/v0.0.16...v0.0.17) (2026-05-07)
+
+
+### Bug Fixes
+
+* **drawer:** docs suggesting wrong props ([266020f](https://github.com/SigNoz/components/commit/266020f8f2485989895e45dfc07bcc55ad21df39))
+* **typography:** missing support for forward ref required for styled ([550e728](https://github.com/SigNoz/components/commit/550e728d509633703b7e75b638d06e866fcc903b))
+
 ## [0.0.16](https://github.com/SigNoz/components/compare/v0.0.15...v0.0.16) (2026-05-06)
 
 
