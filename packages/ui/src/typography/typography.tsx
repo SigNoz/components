@@ -1,7 +1,7 @@
 import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
 import copy from 'copy-text-to-clipboard';
 import type React from 'react';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './typography.module.css';
 
@@ -245,34 +245,37 @@ const defaultTagMap: Record<TypographyVariant, TypographyElement> = {
  * <Typography href="https://signoz.io" target="_blank">Visit SigNoz</Typography>
  * ```
  */
-function Typography({
-	variant = 'text',
-	as,
-	asChild = false,
-	size,
-	weight,
-	align,
-	truncate,
-	muted = false,
-	color,
-	strong = false,
-	italic = false,
-	code = false,
-	disabled = false,
-	copyable = false,
-	level,
-	href,
-	target,
-	rel,
-	className,
-	children,
-	style,
-	title,
-	testId,
-	interactive,
-	onClick,
-	...props
-}: TypographyProps) {
+const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
+	{
+		variant = 'text',
+		as,
+		asChild = false,
+		size,
+		weight,
+		align,
+		truncate,
+		muted = false,
+		color,
+		strong = false,
+		italic = false,
+		code = false,
+		disabled = false,
+		copyable = false,
+		level,
+		href,
+		target,
+		rel,
+		className,
+		children,
+		style,
+		title,
+		testId,
+		interactive,
+		onClick,
+		...props
+	},
+	ref
+) {
 	const [copied, setCopied] = useState(false);
 
 	// Determine the element to render
@@ -309,6 +312,7 @@ function Typography({
 
 	return (
 		<Tag
+			ref={ref as never}
 			data-slot="typography"
 			data-variant={variant}
 			data-size={size || undefined}
@@ -345,73 +349,81 @@ function Typography({
 			)}
 		</Tag>
 	);
-}
-
-Typography.displayName = 'Typography';
+});
 
 // Compound components
 interface TypographyTextProps extends Omit<TypographyProps, 'variant' | 'level'> {}
 
-function TypographyText(props: TypographyTextProps) {
-	return <Typography variant="text" {...props} />;
-}
-TypographyText.displayName = 'Typography.Text';
+const TypographyText = forwardRef<HTMLElement, TypographyTextProps>(
+	function TypographyText(props, ref) {
+		return <Typography ref={ref} variant="text" {...props} />;
+	}
+);
 
 interface TypographyTitleProps extends Omit<TypographyProps, 'variant'> {}
 
-function TypographyTitle({ level = 1, ...props }: TypographyTitleProps) {
-	return <Typography variant="title" level={level} {...props} />;
-}
-TypographyTitle.displayName = 'Typography.Title';
+const TypographyTitle = forwardRef<HTMLElement, TypographyTitleProps>(function TypographyTitle(
+	{ level = 1, ...props },
+	ref
+) {
+	return <Typography ref={ref} variant="title" level={level} {...props} />;
+});
 
 interface TypographyLinkProps extends Omit<TypographyProps, 'variant' | 'level'> {
 	href?: string;
 }
 
-function TypographyLink(props: TypographyLinkProps) {
-	return <Typography as="a" {...props} />;
+const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(
+	function TypographyLink(props, ref) {
+		return <Typography ref={ref} as="a" {...props} />;
+	}
+);
+
+interface TypographyComponent
+	extends React.ForwardRefExoticComponent<TypographyProps & React.RefAttributes<HTMLElement>> {
+	/**
+	 * Shorthand for rendering body text. Equivalent to `<Typography variant="text">`.
+	 *
+	 * @example
+	 * ```tsx
+	 * <Typography.Text>Body text content</Typography.Text>
+	 * <Typography.Text color="muted">Secondary information</Typography.Text>
+	 * <Typography.Text strong>Important text</Typography.Text>
+	 * ```
+	 */
+	Text: typeof TypographyText;
+	/**
+	 * Shorthand for rendering headings. Equivalent to `<Typography variant="title">`.
+	 * The `level` prop controls both the HTML element (h1-h5) and default styling.
+	 *
+	 * @example
+	 * ```tsx
+	 * <Typography.Title level={1}>Page Title</Typography.Title>
+	 * <Typography.Title level={2}>Section Heading</Typography.Title>
+	 * <Typography.Title level={3} color="muted">Subsection</Typography.Title>
+	 * ```
+	 */
+	Title: typeof TypographyTitle;
+	/**
+	 * Shorthand for rendering links. Renders as an anchor element with link styling.
+	 *
+	 * @example
+	 * ```tsx
+	 * <Typography.Link href="/docs">Documentation</Typography.Link>
+	 * <Typography.Link href="https://signoz.io" target="_blank" rel="noopener noreferrer">
+	 *   Visit SigNoz
+	 * </Typography.Link>
+	 * ```
+	 */
+	Link: typeof TypographyLink;
 }
-TypographyLink.displayName = 'Typography.Link';
 
-/**
- * Shorthand for rendering body text. Equivalent to `<Typography variant="text">`.
- *
- * @example
- * ```tsx
- * <Typography.Text>Body text content</Typography.Text>
- * <Typography.Text color="muted">Secondary information</Typography.Text>
- * <Typography.Text strong>Important text</Typography.Text>
- * ```
- */
-Typography.Text = TypographyText;
+const TypographyWithCompound = Typography as TypographyComponent;
+TypographyWithCompound.Text = TypographyText;
+TypographyWithCompound.Title = TypographyTitle;
+TypographyWithCompound.Link = TypographyLink;
 
-/**
- * Shorthand for rendering headings. Equivalent to `<Typography variant="title">`.
- * The `level` prop controls both the HTML element (h1-h5) and default styling.
- *
- * @example
- * ```tsx
- * <Typography.Title level={1}>Page Title</Typography.Title>
- * <Typography.Title level={2}>Section Heading</Typography.Title>
- * <Typography.Title level={3} color="muted">Subsection</Typography.Title>
- * ```
- */
-Typography.Title = TypographyTitle;
-
-/**
- * Shorthand for rendering links. Renders as an anchor element with link styling.
- *
- * @example
- * ```tsx
- * <Typography.Link href="/docs">Documentation</Typography.Link>
- * <Typography.Link href="https://signoz.io" target="_blank" rel="noopener noreferrer">
- *   Visit SigNoz
- * </Typography.Link>
- * ```
- */
-Typography.Link = TypographyLink;
-
-export { Typography };
+export { TypographyWithCompound as Typography };
 
 export type {
 	TypographyProps,
