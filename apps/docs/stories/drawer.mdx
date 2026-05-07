@@ -39,15 +39,8 @@ export default function MyComponent() {
 					Open Drawer
 				</Button>
 			}
-			header={{
-				title: 'Drawer title',
-				description: 'Optional description for the drawer content.',
-			}}
-			content={
-				<div className="p-4">
-					<p>Main content of the drawer goes here.</p>
-				</div>
-			}
+			title="Drawer title"
+			subTitle="Optional subtitle for the drawer."
 			footer={
 				<div className="flex gap-2 justify-end">
 					<Button variant="ghost">Cancel</Button>
@@ -57,7 +50,9 @@ export default function MyComponent() {
 				</div>
 			}
 			direction="right"
-		/>
+		>
+			<p>Main content of the drawer goes here.</p>
+		</DrawerWrapper>
 	);
 }
 ```
