@@ -1,16 +1,22 @@
+import { ChevronDown } from '@signozhq/icons';
 import * as React from 'react';
+import { cn } from '../../lib/utils.js';
+import { Tooltip, TooltipProvider } from '../../tooltip/index.js';
 import {
 	Combobox,
 	ComboboxCommand,
 	ComboboxContent,
+	ComboboxCreateItem,
 	ComboboxEmpty,
 	ComboboxGroup,
 	ComboboxInput,
 	ComboboxItem,
 	ComboboxList,
+	ComboboxPill,
 	ComboboxSeparator,
 	ComboboxTrigger,
 } from '../combobox.js';
+import styles from '../combobox.module.scss';
 
 export type ComboboxSimpleItem = {
 	/**
@@ -76,20 +82,20 @@ export type ComboboxSimpleProps = {
 	 */
 	emptyPlaceholder?: string;
 	/**
-	 * Controlled selected value.
+	 * Controlled selected value. When `multiple` is true, this should be an array.
 	 * @default undefined
 	 */
-	value?: string;
+	value?: string | string[];
 	/**
-	 * Initial value when uncontrolled.
-	 * @default ''
+	 * Initial value when uncontrolled. When `multiple` is true, this should be an array.
+	 * @default '' (or [] when multiple)
 	 */
-	defaultValue?: string;
+	defaultValue?: string | string[];
 	/**
 	 * Callback when selection changes.
-	 * @param value - The new selected value.
+	 * @param value - The new selected value (string when single, string[] when multiple).
 	 */
-	onChange?: (value: string) => void;
+	onChange?: (value: string | string[]) => void;
 	/**
 	 * Customize what is shown in the trigger. Receives the selected item (or undefined). Use when you want a string instead of the label ReactNode.
 	 * @param item - The selected item (or undefined).
@@ -102,24 +108,57 @@ export type ComboboxSimpleProps = {
 	 * @default true
 	 */
 	withPortal?: boolean;
+	/**
+	 * Enable multi-select mode. Values are shown as removable pills.
+	 * @default false
+	 */
+	multiple?: boolean;
+	/**
+	 * Allow creating new items by typing and pressing Enter.
+	 * When `true`, shows a default "Create [input]" option.
+	 * When a function, renders custom content for the create option.
+	 * @default false
+	 */
+	allowCreate?: boolean | ((inputValue: string) => React.ReactNode);
+	/**
+	 * Maximum number of pills to display in multi-select mode.
+	 * Overflow items are shown as "+N" badge.
+	 * @default undefined (show all)
+	 */
+	maxDisplayedPills?: number;
+	/**
+	 * Disable the internal TooltipProvider wrapper.
+	 * Set to true when ComboboxSimple is already inside a TooltipProvider.
+	 * @default false
+	 */
+	disableTooltipProvider?: boolean;
 };
 
 function flattenItems(groups: ComboboxSimpleGroup[]): ComboboxSimpleItem[] {
 	return groups.flatMap((g) => g.items);
 }
 
-function renderItem(item: ComboboxSimpleItem, value: string, handleSelect: (v: string) => void) {
+function renderItem(
+	item: ComboboxSimpleItem,
+	selectedValues: string[],
+	handleSelect: (v: string) => void
+) {
 	return (
 		<ComboboxItem
 			key={item.value}
 			value={item.value}
 			onSelect={handleSelect}
-			isSelected={value === item.value}
+			isSelected={selectedValues.includes(item.value)}
 		>
 			{item.label}
 		</ComboboxItem>
 	);
 }
+
+const normalizeValue = (v: string | string[] | undefined): string[] => {
+	if (v === undefined) return [];
+	return Array.isArray(v) ? v : [v];
+};
 
 function ComboboxSimpleInner({
 	items = [],
@@ -127,7 +166,7 @@ function ComboboxSimpleInner({
 	placeholder = 'Select an option...',
 	emptyPlaceholder = 'No results found.',
 	value: controlledValue,
-	defaultValue = '',
+	defaultValue,
 	onChange,
 	displayValue: displayValueFn,
 	withPortal = true,
@@ -135,78 +174,313 @@ function ComboboxSimpleInner({
 	id,
 	className,
 	style,
+	multiple = false,
+	allowCreate = false,
+	maxDisplayedPills,
+	disableTooltipProvider = false,
 }: ComboboxSimpleProps) {
-	const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
+	const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() =>
+		normalizeValue(defaultValue)
+	);
 	const [open, setOpen] = React.useState(false);
+	const [inputValue, setInputValue] = React.useState('');
 
 	const isControlled = controlledValue !== undefined;
-	const value = isControlled ? controlledValue : uncontrolledValue;
+	const selectedValues = React.useMemo(
+		() => (isControlled ? normalizeValue(controlledValue) : uncontrolledValue),
+		[isControlled, controlledValue, uncontrolledValue]
+	);
 
 	const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
 
+	const itemsMap = React.useMemo(() => {
+		const map = new Map<string, ComboboxSimpleItem>();
+		for (const item of allItems) {
+			map.set(item.value, item);
+		}
+		return map;
+	}, [allItems]);
+
 	const handleSelect = React.useCallback(
 		(selectedValue: string) => {
-			if (!isControlled) {
-				setUncontrolledValue(selectedValue);
+			if (multiple) {
+				const newValues = selectedValues.includes(selectedValue)
+					? selectedValues.filter((v) => v !== selectedValue)
+					: [...selectedValues, selectedValue];
+				if (!isControlled) {
+					setUncontrolledValue(newValues);
+				}
+				onChange?.(newValues);
+				setInputValue('');
+				// Stay open for multi-select
+			} else {
+				if (!isControlled) {
+					setUncontrolledValue([selectedValue]);
+				}
+				onChange?.(selectedValue);
+				setOpen(false);
 			}
-			onChange?.(selectedValue);
-			setOpen(false);
 		},
-		[isControlled, onChange]
+		[multiple, onChange, selectedValues, isControlled]
+	);
+
+	const handleRemove = React.useCallback(
+		(valueToRemove: string) => {
+			const newValues = selectedValues.filter((v) => v !== valueToRemove);
+			if (!isControlled) {
+				setUncontrolledValue(newValues);
+			}
+			onChange?.(newValues);
+		},
+		[onChange, selectedValues, isControlled]
+	);
+
+	const handleCreate = React.useCallback(
+		(valueToCreate: string) => {
+			const trimmed = valueToCreate.trim();
+			if (!trimmed) return;
+
+			// Ignore duplicates
+			if (selectedValues.includes(trimmed)) {
+				setInputValue('');
+				return;
+			}
+
+			if (multiple) {
+				const newValues = [...selectedValues, trimmed];
+				if (!isControlled) {
+					setUncontrolledValue(newValues);
+				}
+				onChange?.(newValues);
+			} else {
+				if (!isControlled) {
+					setUncontrolledValue([trimmed]);
+				}
+				onChange?.(trimmed);
+				setOpen(false);
+			}
+			setInputValue('');
+		},
+		[multiple, onChange, selectedValues, isControlled]
 	);
 
 	const selectedItem = React.useMemo(
-		() => allItems.find((item) => item.value === value),
-		[allItems, value]
+		() => (multiple ? undefined : allItems.find((item) => item.value === selectedValues[0])),
+		[multiple, allItems, selectedValues]
 	);
+
 	const triggerValue = displayValueFn
 		? displayValueFn(selectedItem)
 		: selectedItem
 			? (selectedItem.displayValue ?? selectedItem.label)
 			: undefined;
 
+	const resolveLabel = React.useCallback(
+		(value: string): React.ReactNode => {
+			const item = itemsMap.get(value);
+			if (!item) return value;
+			return item.displayValue ?? item.label;
+		},
+		[itemsMap]
+	);
+
+	const showCreateOption =
+		allowCreate &&
+		inputValue.trim() &&
+		!selectedValues.includes(inputValue.trim()) &&
+		!allItems.some((item) => item.value === inputValue.trim());
+
+	// Custom values = selected values not in predefined items
+	const customValues = React.useMemo(
+		() => selectedValues.filter((v) => !itemsMap.has(v)),
+		[selectedValues, itemsMap]
+	);
+
 	const listContent = React.useMemo(
 		() =>
 			groups ? (
 				<>
+					{customValues.length > 0 && (
+						<>
+							<ComboboxGroup heading="Custom">
+								{customValues.map((v) => (
+									<ComboboxItem key={v} value={v} onSelect={handleSelect} isSelected={true}>
+										{v}
+									</ComboboxItem>
+								))}
+							</ComboboxGroup>
+							<ComboboxSeparator />
+						</>
+					)}
 					{groups.map((group, idx) => (
 						<React.Fragment key={group.heading ?? idx}>
 							{idx > 0 && <ComboboxSeparator />}
 							<ComboboxGroup heading={group.heading}>
-								{group.items.map((item) => renderItem(item, value, handleSelect))}
+								{group.items.map((item) => renderItem(item, selectedValues, handleSelect))}
 							</ComboboxGroup>
 						</React.Fragment>
 					))}
+					{showCreateOption && (
+						<ComboboxCreateItem
+							inputValue={inputValue.trim()}
+							onSelect={() => handleCreate(inputValue)}
+							value={`__create__${inputValue.trim()}`}
+						>
+							{typeof allowCreate === 'function'
+								? allowCreate(inputValue.trim())
+								: `Create "${inputValue.trim()}"`}
+						</ComboboxCreateItem>
+					)}
 					<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
 				</>
 			) : (
 				<>
-					{items.map((item) => renderItem(item, value, handleSelect))}
+					{customValues.length > 0 && (
+						<>
+							<ComboboxGroup heading="Custom">
+								{customValues.map((v) => (
+									<ComboboxItem key={v} value={v} onSelect={handleSelect} isSelected={true}>
+										{v}
+									</ComboboxItem>
+								))}
+							</ComboboxGroup>
+							{items.length > 0 && <ComboboxSeparator />}
+						</>
+					)}
+					{items.map((item) => renderItem(item, selectedValues, handleSelect))}
+					{showCreateOption && (
+						<ComboboxCreateItem
+							inputValue={inputValue.trim()}
+							onSelect={() => handleCreate(inputValue)}
+							value={`__create__${inputValue.trim()}`}
+						>
+							{typeof allowCreate === 'function'
+								? allowCreate(inputValue.trim())
+								: `Create "${inputValue.trim()}"`}
+						</ComboboxCreateItem>
+					)}
 					<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
 				</>
 			),
-		[groups, items, value, handleSelect, emptyPlaceholder]
+		[
+			groups,
+			items,
+			selectedValues,
+			handleSelect,
+			emptyPlaceholder,
+			showCreateOption,
+			inputValue,
+			allowCreate,
+			handleCreate,
+			customValues,
+		]
 	);
 
+	const Wrapper = disableTooltipProvider ? React.Fragment : TooltipProvider;
+
+	// Multi-select mode with pills in trigger, input in popover
+	if (multiple) {
+		const displayedValues =
+			maxDisplayedPills !== undefined ? selectedValues.slice(0, maxDisplayedPills) : selectedValues;
+		const overflowCount =
+			maxDisplayedPills !== undefined ? Math.max(0, selectedValues.length - maxDisplayedPills) : 0;
+		const hiddenValues = selectedValues.slice(maxDisplayedPills);
+
+		const pillsContent =
+			selectedValues.length > 0 ? (
+				<span
+					data-slot="combobox-pills"
+					style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', alignItems: 'center' }}
+				>
+					{displayedValues.map((v) => (
+						<ComboboxPill key={v} value={v} onRemove={handleRemove}>
+							{resolveLabel(v)}
+						</ComboboxPill>
+					))}
+					{overflowCount > 0 && (
+						<Tooltip title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
+							<span
+								data-slot="combobox-pill-overflow"
+								style={{
+									display: 'inline-flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+									height: '1.25rem',
+									padding: '0 0.5rem',
+									borderRadius: '2px',
+									backgroundColor: 'var(--muted)',
+									color: 'var(--muted-foreground)',
+									fontSize: '0.75rem',
+									fontWeight: 500,
+									cursor: 'default',
+								}}
+							>
+								+{overflowCount}
+							</span>
+						</Tooltip>
+					)}
+				</span>
+			) : undefined;
+
+		return (
+			<Wrapper>
+				<Combobox open={open} onOpenChange={setOpen}>
+					<ComboboxTrigger asChild>
+						<div
+							className={cn(styles['combobox__trigger'], className)}
+							style={style}
+							data-testid={testId}
+							id={id}
+							role="combobox"
+							aria-expanded={open}
+							aria-haspopup="listbox"
+							tabIndex={0}
+						>
+							<span className={styles['combobox__trigger-value']}>
+								{pillsContent || placeholder || 'Select an option...'}
+							</span>
+							<ChevronDown className={styles['combobox__trigger-icon']} />
+						</div>
+					</ComboboxTrigger>
+					{open && (
+						<ComboboxContent withPortal={withPortal}>
+							<ComboboxCommand>
+								<ComboboxInput
+									placeholder={placeholder}
+									value={inputValue}
+									onValueChange={setInputValue}
+								/>
+								<ComboboxList>{listContent}</ComboboxList>
+							</ComboboxCommand>
+						</ComboboxContent>
+					)}
+				</Combobox>
+			</Wrapper>
+		);
+	}
+
+	// Single-select mode (original behavior)
 	return (
-		<Combobox open={open} onOpenChange={setOpen}>
-			<ComboboxTrigger
-				placeholder={placeholder}
-				value={triggerValue}
-				testId={testId}
-				id={id}
-				className={className}
-				style={style}
-			/>
-			{open && (
-				<ComboboxContent withPortal={withPortal}>
-					<ComboboxCommand>
-						<ComboboxInput placeholder={placeholder} />
-						<ComboboxList>{listContent}</ComboboxList>
-					</ComboboxCommand>
-				</ComboboxContent>
-			)}
-		</Combobox>
+		<Wrapper>
+			<Combobox open={open} onOpenChange={setOpen}>
+				<ComboboxTrigger
+					placeholder={placeholder}
+					value={triggerValue}
+					testId={testId}
+					id={id}
+					className={className}
+					style={style}
+				/>
+				{open && (
+					<ComboboxContent withPortal={withPortal}>
+						<ComboboxCommand>
+							<ComboboxInput placeholder={placeholder} />
+							<ComboboxList>{listContent}</ComboboxList>
+						</ComboboxCommand>
+					</ComboboxContent>
+				)}
+			</Combobox>
+		</Wrapper>
 	);
 }
 
@@ -267,6 +541,44 @@ function ComboboxSimpleInner({
  *   value={value}
  *   onChange={setValue}
  *   displayValue={(item) => item ? `${item.displayValue ?? item.value} ✓` : 'Choose...'}
+ * />
+ * ```
+ *
+ * @example Multi-select mode
+ * ```tsx
+ * const [values, setValues] = useState<string[]>([]);
+ *
+ * <ComboboxSimple
+ *   multiple
+ *   items={items}
+ *   value={values}
+ *   onChange={(v) => setValues(v as string[])}
+ *   placeholder="Select frameworks..."
+ * />
+ * ```
+ *
+ * @example Allow creating new items (tags mode)
+ * ```tsx
+ * const [tags, setTags] = useState<string[]>([]);
+ *
+ * <ComboboxSimple
+ *   multiple
+ *   allowCreate
+ *   items={[]}
+ *   value={tags}
+ *   onChange={(v) => setTags(v as string[])}
+ *   placeholder="Type to add tags..."
+ * />
+ * ```
+ *
+ * @example Custom create option text
+ * ```tsx
+ * <ComboboxSimple
+ *   multiple
+ *   allowCreate={(input) => <span>Add <strong>"{input}"</strong> as new tag</span>}
+ *   items={items}
+ *   value={values}
+ *   onChange={(v) => setValues(v as string[])}
  * />
  * ```
  */
