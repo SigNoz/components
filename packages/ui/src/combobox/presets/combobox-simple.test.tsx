@@ -48,6 +48,33 @@ describe('ComboboxSimple', () => {
 			expect(screen.getByTestId('combo')).toHaveTextContent('Choose...');
 		});
 
+		it('uses inputPlaceholder for search input when provided', () => {
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					placeholder="Choose..."
+					inputPlaceholder="Search items..."
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+			fireEvent.click(screen.getByTestId('combo'));
+			expect(screen.getByPlaceholderText('Search items...')).toBeInTheDocument();
+		});
+
+		it('falls back to placeholder for search input when inputPlaceholder not provided', () => {
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					placeholder="Choose..."
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+			fireEvent.click(screen.getByTestId('combo'));
+			expect(screen.getByPlaceholderText('Choose...')).toBeInTheDocument();
+		});
+
 		it('applies testId to trigger', () => {
 			renderWithProviders(
 				<ComboboxSimple items={defaultItems} testId="my-combobox" withPortal={false} />
@@ -185,6 +212,21 @@ describe('ComboboxSimple', () => {
 			fireEvent.click(screen.getByText('Change'));
 			expect(screen.getByTestId('combo')).toHaveTextContent('Vue');
 		});
+
+		it('closes dropdown and focuses trigger when pressing Shift+Tab on input', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} testId="combo" withPortal={false} />
+			);
+
+			const trigger = screen.getByTestId('combo');
+			fireEvent.click(trigger);
+
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+
+			expect(screen.queryByRole('option')).not.toBeInTheDocument();
+			expect(document.activeElement).toBe(trigger);
+		});
 	});
 
 	describe('multi-select mode', () => {
@@ -307,6 +349,55 @@ describe('ComboboxSimple', () => {
 			expect(screen.getByText('Vue')).toBeInTheDocument();
 			expect(screen.getByText('Angular')).toBeInTheDocument();
 			expect(screen.queryByText('+1')).not.toBeInTheDocument();
+		});
+
+		it('opens dropdown when pressing Enter on trigger', () => {
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					multiple
+					defaultValue={['react']}
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+
+			const trigger = screen.getByTestId('combo');
+			fireEvent.keyDown(trigger, { key: 'Enter' });
+
+			expect(screen.getByRole('option', { name: 'Vue' })).toBeInTheDocument();
+		});
+
+		it('opens dropdown when pressing Space on trigger', () => {
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					multiple
+					defaultValue={['react']}
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+
+			const trigger = screen.getByTestId('combo');
+			fireEvent.keyDown(trigger, { key: ' ' });
+
+			expect(screen.getByRole('option', { name: 'Vue' })).toBeInTheDocument();
+		});
+
+		it('closes dropdown and focuses trigger when pressing Shift+Tab on input', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			);
+
+			const trigger = screen.getByTestId('combo');
+			fireEvent.click(trigger);
+
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+
+			expect(screen.queryByRole('option')).not.toBeInTheDocument();
+			expect(document.activeElement).toBe(trigger);
 		});
 	});
 
