@@ -44,18 +44,61 @@ const meta: Meta<typeof ComboboxSimple> = {
 		},
 		value: {
 			control: 'text',
-			description: 'Controlled selected value.',
-			table: { category: 'State', type: { summary: 'string' } },
+			description: 'Controlled selected value. Array when `multiple` is true.',
+			table: { category: 'State', type: { summary: 'string | string[]' } },
 		},
 		defaultValue: {
 			control: 'text',
-			description: 'Initial value when uncontrolled.',
-			table: { category: 'State', type: { summary: 'string' } },
+			description: 'Initial value when uncontrolled. Array when `multiple` is true.',
+			table: { category: 'State', type: { summary: 'string | string[]' } },
 		},
 		onChange: {
 			control: false,
 			description: 'Callback when selection changes.',
-			table: { category: 'Events', type: { summary: '(value: string) => void' } },
+			table: { category: 'Events', type: { summary: '(value: string | string[]) => void' } },
+		},
+		multiple: {
+			control: 'boolean',
+			description: 'Enable multi-select mode. Values shown as removable pills.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		allowCreate: {
+			control: 'boolean',
+			description:
+				'Allow creating new items by typing. Pass a function to customize the create option text.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean | ((inputValue: string) => ReactNode)' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		maxDisplayedPills: {
+			control: 'number',
+			description:
+				'Maximum number of pills to display in multi-select mode. Overflow shown as "+N".',
+			table: { category: 'Display', type: { summary: 'number' } },
+		},
+		withPortal: {
+			control: 'boolean',
+			description: 'Set to false when inside a popover to avoid z-index issues.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'true' },
+			},
+		},
+		disableTooltipProvider: {
+			control: 'boolean',
+			description: 'Disable internal TooltipProvider when already inside one.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
 		},
 	},
 	parameters: {
@@ -96,7 +139,7 @@ export const Controlled: Story = {
 
 		return (
 			<div className="p-8 w-full max-w-sm">
-				<ComboboxSimple {...args} value={value} onChange={setValue} />
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString())} />
 				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
 			</div>
 		);

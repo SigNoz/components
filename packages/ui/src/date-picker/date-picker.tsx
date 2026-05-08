@@ -410,7 +410,7 @@ export function DatePicker({
 										withPortal={false}
 										items={timezoneItems}
 										value={localTimezone}
-										onChange={handleTimezoneChange}
+										onChange={(value) => handleTimezoneChange(value as string)}
 										placeholder="Select timezone..."
 									/>
 								</div>

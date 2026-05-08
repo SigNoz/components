@@ -1,666 +1,407 @@
 import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
-import {
-	Combobox,
-	ComboboxCommand,
-	ComboboxContent,
-	ComboboxEmpty,
-	ComboboxGroup,
-	ComboboxInput,
-	ComboboxItem,
-	ComboboxList,
-	ComboboxLoading,
-	ComboboxSeparator,
-	ComboboxTrigger,
-} from '@signozhq/ui';
+import { ComboboxSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
-const meta: Meta<typeof Combobox> = {
+const meta: Meta<typeof ComboboxSimple> = {
 	title: 'Components/Combobox',
-	component: Combobox,
+	component: ComboboxSimple,
+	argTypes: {
+		testId: {
+			control: 'text',
+			description: 'Test ID for the combobox.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		id: {
+			control: 'text',
+			description: 'A unique identifier for the combobox.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for custom styling.',
+			table: { category: 'Styling', type: { summary: 'string' } },
+		},
+		items: {
+			control: 'object',
+			description: 'List of items to display (flat). Ignored when groups is provided.',
+			table: { category: 'Content', type: { summary: 'ComboboxSimpleItem[]' } },
+		},
+		groups: {
+			control: false,
+			description: 'Grouped items with optional headings. When provided, items is ignored.',
+			table: { category: 'Content', type: { summary: 'ComboboxSimpleGroup[]' } },
+		},
+		placeholder: {
+			control: 'text',
+			description: 'Placeholder text when no value is selected and in the search input.',
+			table: { category: 'Content', type: { summary: 'string' } },
+		},
+		emptyPlaceholder: {
+			control: 'text',
+			description: 'Text shown when there are no results (e.g. after filtering).',
+			table: { category: 'Content', type: { summary: 'string' } },
+		},
+		value: {
+			control: 'text',
+			description: 'Controlled selected value. Array when `multiple` is true.',
+			table: { category: 'State', type: { summary: 'string | string[]' } },
+		},
+		defaultValue: {
+			control: 'text',
+			description: 'Initial value when uncontrolled. Array when `multiple` is true.',
+			table: { category: 'State', type: { summary: 'string | string[]' } },
+		},
+		onChange: {
+			control: false,
+			description: 'Callback when selection changes.',
+			table: { category: 'Events', type: { summary: '(value: string | string[]) => void' } },
+		},
+		multiple: {
+			control: 'boolean',
+			description: 'Enable multi-select mode. Values shown as removable pills.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		allowCreate: {
+			control: 'boolean',
+			description:
+				'Allow creating new items by typing and pressing Enter. Pass a function to customize the create option text.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean | ((inputValue: string) => ReactNode)' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		maxDisplayedPills: {
+			control: 'number',
+			description:
+				'Maximum number of pills to display in multi-select mode. Overflow shown as "+N".',
+			table: { category: 'Display', type: { summary: 'number' } },
+		},
+	},
 	parameters: {
 		layout: 'fullscreen',
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<typeof Combobox>;
+type Story = StoryObj<typeof ComboboxSimple>;
 
-const frameworks = [
+const defaultItems = [
 	{ value: 'react', label: 'React' },
 	{ value: 'vue', label: 'Vue' },
 	{ value: 'angular', label: 'Angular' },
 	{ value: 'svelte', label: 'Svelte' },
 ];
 
-const languages = [
-	{ value: 'javascript', label: 'JavaScript' },
-	{ value: 'typescript', label: 'TypeScript' },
-	{ value: 'python', label: 'Python' },
-	{ value: 'go', label: 'Go' },
-	{ value: 'rust', label: 'Rust' },
-];
-
-const databases = [
-	{ value: 'postgres', label: 'PostgreSQL' },
-	{ value: 'mongodb', label: 'MongoDB' },
-	{ value: 'redis', label: 'Redis' },
-	{ value: 'mysql', label: 'MySQL' },
-];
-
 export const Default: Story = {
-	render: () => {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select a framework...',
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const Controlled: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select a framework...',
+	},
+	render: (args) => {
 		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
 
 		return (
 			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a framework..."
-						value={frameworks.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search frameworks..." />
-								<ComboboxList>
-									{frameworks.length === 0 ? (
-										<ComboboxEmpty>No framework found.</ComboboxEmpty>
-									) : (
-										frameworks.map((framework) => (
-											<ComboboxItem
-												key={framework.value}
-												value={framework.value}
-												onSelect={() => {
-													setValue(framework.value);
-													setOpen(false);
-												}}
-												isSelected={value === framework.value}
-											>
-												{framework.label}
-											</ComboboxItem>
-										))
-									)}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
 			</div>
 		);
 	},
 };
 
 export const WithDefaultValue: Story = {
-	render: () => {
-		const [value, setValue] = useState('react');
-		const [open, setOpen] = useState(false);
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a framework..."
-						value={frameworks.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search frameworks..." />
-								<ComboboxList>
-									{frameworks.map((framework) => (
-										<ComboboxItem
-											key={framework.value}
-											value={framework.value}
-											onSelect={() => {
-												setValue(framework.value);
-												setOpen(false);
-											}}
-											isSelected={value === framework.value}
-										>
-											{framework.label}
-										</ComboboxItem>
-									))}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
+	args: {
+		items: defaultItems,
+		placeholder: 'Select a framework...',
+		defaultValue: 'react',
 	},
-};
-
-export const WithGroups: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-
-		const allItems = [
-			{
-				group: 'Frameworks',
-				items: frameworks,
-			},
-			{
-				group: 'Languages',
-				items: languages,
-			},
-		];
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select an option..."
-						value={[...frameworks, ...languages].find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search..." />
-								<ComboboxList>
-									{allItems.map((group) => (
-										<ComboboxGroup key={group.group} heading={group.group}>
-											{group.items.map((item) => (
-												<ComboboxItem
-													key={item.value}
-													value={item.value}
-													onSelect={() => {
-														setValue(item.value);
-														setOpen(false);
-													}}
-													isSelected={value === item.value}
-												>
-													{item.label}
-												</ComboboxItem>
-											))}
-										</ComboboxGroup>
-									))}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
-	},
-};
-
-export const WithMultipleGroups: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-
-		const allItems = [
-			{
-				group: 'Frameworks',
-				items: frameworks,
-			},
-			{
-				group: 'Languages',
-				items: languages,
-			},
-			{
-				group: 'Databases',
-				items: databases,
-			},
-		];
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a technology..."
-						value={
-							[...frameworks, ...languages, ...databases].find((f) => f.value === value)?.label ||
-							''
-						}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search technologies..." />
-								<ComboboxList>
-									{allItems.map((group, idx) => (
-										<div key={group.group}>
-											{idx > 0 && <ComboboxSeparator />}
-											<ComboboxGroup heading={group.group}>
-												{group.items.map((item) => (
-													<ComboboxItem
-														key={item.value}
-														value={item.value}
-														onSelect={() => {
-															setValue(item.value);
-															setOpen(false);
-														}}
-														isSelected={value === item.value}
-													>
-														{item.label}
-													</ComboboxItem>
-												))}
-											</ComboboxGroup>
-										</div>
-									))}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
-	},
-};
-
-export const Searchable: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-		const [search, setSearch] = useState('');
-
-		const filtered = frameworks.filter((f) => f.label.toLowerCase().includes(search.toLowerCase()));
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Search frameworks..."
-						value={frameworks.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand shouldFilter={false}>
-								<ComboboxInput
-									placeholder="Search frameworks..."
-									value={search}
-									onValueChange={setSearch}
-								/>
-								<ComboboxList>
-									{filtered.length === 0 ? (
-										<ComboboxEmpty>No framework found.</ComboboxEmpty>
-									) : (
-										filtered.map((framework) => (
-											<ComboboxItem
-												key={framework.value}
-												value={framework.value}
-												onSelect={() => {
-													setValue(framework.value);
-													setSearch('');
-													setOpen(false);
-												}}
-												isSelected={value === framework.value}
-											>
-												{framework.label}
-											</ComboboxItem>
-										))
-									)}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
-	},
-};
-
-export const Disabled: Story = {
-	render: () => (
+	render: (args) => (
 		<div className="p-8 w-full max-w-sm">
-			<Combobox>
-				<ComboboxTrigger placeholder="Select a framework..." disabled value="" />
-			</Combobox>
+			<ComboboxSimple {...args} />
 		</div>
 	),
 };
 
-export const WithDescription: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-
-		const itemsWithDesc = [
-			{
-				value: 'react',
-				label: 'React',
-				description: 'A JavaScript library for building user interfaces',
-			},
-			{
-				value: 'vue',
-				label: 'Vue',
-				description: 'The Progressive JavaScript Framework',
-			},
-			{
-				value: 'angular',
-				label: 'Angular',
-				description: 'Platform for building mobile and desktop web applications',
-			},
-		];
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a framework..."
-						value={itemsWithDesc.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search frameworks..." />
-								<ComboboxList>
-									{itemsWithDesc.map((item) => (
-										<ComboboxItem
-											key={item.value}
-											value={item.value}
-											onSelect={() => {
-												setValue(item.value);
-												setOpen(false);
-											}}
-											isSelected={value === item.value}
-										>
-											<div className="flex flex-col">
-												<span>{item.label}</span>
-												<span className="text-xs text-muted-foreground">{item.description}</span>
-											</div>
-										</ComboboxItem>
-									))}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
+const groups = [
+	{
+		heading: 'Frameworks',
+		items: [
+			{ value: 'react', label: 'React' },
+			{ value: 'vue', label: 'Vue' },
+			{ value: 'angular', label: 'Angular' },
+			{ value: 'svelte', label: 'Svelte' },
+		],
 	},
+	{
+		heading: 'Languages',
+		items: [
+			{ value: 'javascript', label: 'JavaScript' },
+			{ value: 'typescript', label: 'TypeScript' },
+			{ value: 'python', label: 'Python' },
+			{ value: 'go', label: 'Go' },
+			{ value: 'rust', label: 'Rust' },
+		],
+	},
+];
+
+export const WithGroups: Story = {
+	args: {
+		groups,
+		placeholder: 'Select a technology...',
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
 };
 
-export const CustomWidth: Story = {
-	render: () => {
-		const [value1, setValue1] = useState('');
-		const [open1, setOpen1] = useState(false);
-		const [value2, setValue2] = useState('');
-		const [open2, setOpen2] = useState(false);
-
-		return (
-			<div className="p-8 space-y-6">
-				<div>
-					<p className="text-sm mb-2">Small (w-[200px])</p>
-					<Combobox open={open1} onOpenChange={setOpen1}>
-						<ComboboxTrigger
-							placeholder="Select..."
-							value={frameworks.find((f) => f.value === value1)?.label || ''}
-							className="w-[200px]!"
-						/>
-						{open1 && (
-							<ComboboxContent>
-								<ComboboxCommand>
-									<ComboboxInput placeholder="Search..." />
-									<ComboboxList>
-										{frameworks.map((framework) => (
-											<ComboboxItem
-												key={framework.value}
-												value={framework.value}
-												onSelect={() => {
-													setValue1(framework.value);
-													setOpen1(false);
-												}}
-												isSelected={value1 === framework.value}
-											>
-												{framework.label}
-											</ComboboxItem>
-										))}
-									</ComboboxList>
-								</ComboboxCommand>
-							</ComboboxContent>
-						)}
-					</Combobox>
-				</div>
-
-				<div>
-					<p className="text-sm mb-2">Large (w-[400px])</p>
-					<Combobox open={open2} onOpenChange={setOpen2}>
-						<ComboboxTrigger
-							placeholder="Select a framework..."
-							value={frameworks.find((f) => f.value === value2)?.label || ''}
-							className="w-[400px]!"
-						/>
-						{open2 && (
-							<ComboboxContent>
-								<ComboboxCommand>
-									<ComboboxInput placeholder="Search frameworks..." />
-									<ComboboxList>
-										{frameworks.map((framework) => (
-											<ComboboxItem
-												key={framework.value}
-												value={framework.value}
-												onSelect={() => {
-													setValue2(framework.value);
-													setOpen2(false);
-												}}
-												isSelected={value2 === framework.value}
-											>
-												{framework.label}
-											</ComboboxItem>
-										))}
-									</ComboboxList>
-								</ComboboxCommand>
-							</ComboboxContent>
-						)}
-					</Combobox>
-				</div>
-			</div>
-		);
+const itemsWithIcons = [
+	{
+		value: 'react',
+		label: (
+			<>
+				<Code className="mr-2 h-4 w-4" />
+				React
+			</>
+		),
 	},
-};
-
-export const Controlled: Story = {
-	render: () => {
-		const [value, setValue] = useState('react');
-		const [open, setOpen] = useState(false);
-
-		const handleChange = (newValue: string) => {
-			console.log('Value changed to:', newValue);
-			setValue(newValue);
-			setOpen(false);
-			// You can add any custom logic here
-			// e.g., API calls, validation, etc.
-		};
-
-		return (
-			<div className="p-8 w-full max-w-sm space-y-4">
-				<div>
-					<p className="text-sm font-medium mb-2">
-						Selected: <span className="text-primary">{value}</span>
-					</p>
-					<Combobox open={open} onOpenChange={setOpen}>
-						<ComboboxTrigger
-							placeholder="Select a framework..."
-							value={frameworks.find((f) => f.value === value)?.label || ''}
-						/>
-						{open && (
-							<ComboboxContent>
-								<ComboboxCommand>
-									<ComboboxInput placeholder="Search frameworks..." />
-									<ComboboxList>
-										{frameworks.map((framework) => (
-											<ComboboxItem
-												key={framework.value}
-												value={framework.value}
-												onSelect={() => handleChange(framework.value)}
-												isSelected={value === framework.value}
-											>
-												{framework.label}
-											</ComboboxItem>
-										))}
-									</ComboboxList>
-								</ComboboxCommand>
-							</ComboboxContent>
-						)}
-					</Combobox>
-				</div>
-			</div>
-		);
+	{
+		value: 'nodejs',
+		label: (
+			<>
+				<Terminal className="mr-2 h-4 w-4" />
+				Node.js
+			</>
+		),
 	},
-};
-
-export const WithoutSearch: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a framework..."
-						value={frameworks.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								{/* No ComboboxInput - search bar is hidden */}
-								<ComboboxList>
-									{frameworks.map((framework) => (
-										<ComboboxItem
-											key={framework.value}
-											value={framework.value}
-											onSelect={() => {
-												setValue(framework.value);
-												setOpen(false);
-											}}
-											isSelected={value === framework.value}
-										>
-											{framework.label}
-										</ComboboxItem>
-									))}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
+	{
+		value: 'postgres',
+		label: (
+			<>
+				<Database className="mr-2 h-4 w-4" />
+				PostgreSQL
+			</>
+		),
 	},
-};
-
-export const WithoutSearchNoCheck: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-
-		return (
-			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a framework..."
-						value={frameworks.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								{/* No ComboboxInput - search bar is hidden */}
-								<ComboboxList>
-									{frameworks.map((framework) => (
-										<ComboboxItem
-											key={framework.value}
-											value={framework.value}
-											onSelect={() => {
-												setValue(framework.value);
-												setOpen(false);
-											}}
-											isSelected={value === framework.value}
-											prefix={null}
-										>
-											{framework.label}
-										</ComboboxItem>
-									))}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
+	{
+		value: 'git',
+		label: (
+			<>
+				<GitBranch className="mr-2 h-4 w-4" />
+				Git
+			</>
+		),
 	},
-};
+];
 
 export const WithIcons: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(false);
-		const [isLoading, setIsLoading] = useState(false);
+	args: {
+		items: itemsWithIcons,
+		placeholder: 'Select a tool...',
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
 
-		const itemsWithIcons = [
+export const WithGroupsAndIcons: Story = {
+	args: {
+		groups: [
 			{
-				value: 'react',
-				label: 'React',
-				icon: Code,
+				heading: 'Frameworks',
+				items: [
+					{
+						value: 'react',
+						label: (
+							<>
+								<Code className="mr-2 h-4 w-4" />
+								React
+							</>
+						),
+					},
+					{
+						value: 'vue',
+						label: (
+							<>
+								<Code className="mr-2 h-4 w-4" />
+								Vue
+							</>
+						),
+					},
+				],
 			},
 			{
-				value: 'nodejs',
-				label: 'Node.js',
-				icon: Terminal,
+				heading: 'Databases',
+				items: [
+					{
+						value: 'postgres',
+						label: (
+							<>
+								<Database className="mr-2 h-4 w-4" />
+								PostgreSQL
+							</>
+						),
+					},
+					{
+						value: 'redis',
+						label: (
+							<>
+								<Database className="mr-2 h-4 w-4" />
+								Redis
+							</>
+						),
+					},
+				],
 			},
-			{
-				value: 'postgres',
-				label: 'PostgreSQL',
-				icon: Database,
-			},
-			{
-				value: 'git',
-				label: 'Git',
-				icon: GitBranch,
-			},
-		];
+		],
+		placeholder: 'Select a technology...',
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
 
-		const handleInputChange = (searchValue: string) => {
-			if (searchValue.length > 0) {
-				setIsLoading(true);
-				// Simulate API call
-				setTimeout(() => setIsLoading(false), 1000);
-			}
-		};
+export const MultiSelect: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select frameworks...',
+		multiple: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
 
 		return (
 			<div className="p-8 w-full max-w-sm">
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a tool..."
-						value={itemsWithIcons.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search tools..." onValueChange={handleInputChange} />
-								<ComboboxList>
-									{isLoading ? (
-										<ComboboxLoading>Loading tools...</ComboboxLoading>
-									) : (
-										itemsWithIcons.map((item) => {
-											const Icon = item.icon;
-											return (
-												<ComboboxItem
-													key={item.value}
-													value={item.value}
-													onSelect={() => {
-														setValue(item.value);
-														setOpen(false);
-														setIsLoading(false);
-													}}
-													isSelected={value === item.value}
-												>
-													<Icon className="mr-2 h-4 w-4" />
-													{item.label}
-												</ComboboxItem>
-											);
-										})
-									)}
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Selected: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const MultiSelectWithDefaultValues: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select frameworks...',
+		multiple: true,
+		defaultValue: ['react', 'vue'],
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const MultiSelectWithMaxPills: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select frameworks...',
+		multiple: true,
+		defaultValue: ['react', 'vue', 'angular', 'svelte'],
+		maxDisplayedPills: 2,
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const AllowCreate: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create tags...',
+		multiple: true,
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Type to filter, then click "Create" option to add new tags
+				</p>
+			</div>
+		);
+	},
+};
+
+export const AllowCreateWithCustomRender: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create tags...',
+		multiple: true,
+		allowCreate: (inputValue: string) => (
+			<span>
+				Add <strong>"{inputValue}"</strong> as new tag
+			</span>
+		),
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const TagsMode: Story = {
+	args: {
+		items: [],
+		placeholder: 'Type to add tags...',
+		multiple: true,
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>(['initial-tag']);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Free-form tag input - no predefined options
+				</p>
 			</div>
 		);
 	},
