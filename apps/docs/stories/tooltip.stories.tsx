@@ -2,9 +2,10 @@ import {
 	Button,
 	ButtonColor,
 	ButtonVariant,
-	Tooltip,
 	TooltipContent,
 	TooltipProvider,
+	TooltipRoot,
+	TooltipSimple,
 	TooltipTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -12,41 +13,29 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const SIDES = ['top', 'right', 'bottom', 'left'] as const;
 const ALIGNS = ['start', 'center', 'end'] as const;
 
-const meta: Meta<typeof Tooltip> = {
+const meta: Meta<typeof TooltipRoot> = {
 	title: 'Components/Tooltip',
-	component: Tooltip,
+	component: TooltipRoot,
 	argTypes: {
-		testId: {
-			control: 'text',
-			description: 'Test ID for the tooltip.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the tooltip.',
-			table: { category: 'Accessibility', type: { summary: 'string' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
 		open: {
 			control: 'boolean',
-			description:
-				'The controlled open state of the tooltip. Must be used in conjunction with onOpenChange.',
+			description: 'The controlled open state of the tooltip.',
 			table: { category: 'State', type: { summary: 'boolean' } },
 		},
 		defaultOpen: {
 			control: 'boolean',
-			description:
-				'The open state of the tooltip when it is initially rendered. Use when you do not need to control its open state.',
+			description: 'The open state of the tooltip when it is initially rendered.',
 			table: { category: 'State', type: { summary: 'boolean' } },
+		},
+		onOpenChange: {
+			control: false,
+			description: 'Event handler called when the open state of the tooltip changes.',
+			table: { category: 'Events', type: { summary: '(open: boolean) => void' } },
 		},
 		delayDuration: {
 			control: 'number',
 			description:
-				'The duration from when the pointer enters the trigger until the tooltip gets opened. Overrides the prop passed to Provider.',
+				'The duration from when the pointer enters the trigger until the tooltip gets opened. This will override the prop with the same name passed to Provider.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'number' },
@@ -63,21 +52,10 @@ const meta: Meta<typeof Tooltip> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
-		title: {
+		testId: {
 			control: 'text',
-			description:
-				'The content of the tooltip. Otherwise, the children will be used as the tooltip content.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-		arrow: {
-			control: 'boolean',
-			description: 'Whether to show the arrow.',
-			table: { category: 'Appearance', type: { summary: 'boolean' } },
-		},
-		onOpenChange: {
-			control: false,
-			description: 'Event handler called when the open state of the tooltip changes.',
-			table: { category: 'Events', type: { summary: '(open: boolean) => void' } },
+			description: 'The test id of the tooltip root.',
+			table: { category: 'Testing', type: { summary: 'string' } },
 		},
 	},
 	parameters: {
@@ -87,25 +65,21 @@ const meta: Meta<typeof Tooltip> = {
 			url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-746&m=dev',
 		},
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<typeof Tooltip>;
+type Story = StoryObj<typeof TooltipRoot>;
 
 export const Default: Story = {
-	args: {
-		title: "I'm a basic tooltip",
-		arrow: false,
-		delayDuration: 0,
-	},
-	render: (args) => (
-		<TooltipProvider delayDuration={args.delayDuration ?? 0}>
+	render: () => (
+		<TooltipProvider delayDuration={0}>
 			<div className="p-20 flex items-center justify-center">
-				<Tooltip {...args}>
+				<TooltipSimple title="I'm a basic tooltip" arrow>
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me
 					</Button>
-				</Tooltip>
+				</TooltipSimple>
 			</div>
 		</TooltipProvider>
 	),
@@ -123,7 +97,7 @@ export const TooltipShowcase: Story = {
 						<h2 className="text-base font-semibold text-foreground">Positions</h2>
 						<div className="flex flex-wrap gap-8 items-center">
 							{SIDES.map((side) => (
-								<Tooltip key={side}>
+								<TooltipRoot key={side}>
 									<TooltipTrigger asChild>
 										<Button
 											variant={ButtonVariant.Solid}
@@ -136,7 +110,7 @@ export const TooltipShowcase: Story = {
 									<TooltipContent side={side} arrow>
 										Tooltip on {side}
 									</TooltipContent>
-								</Tooltip>
+								</TooltipRoot>
 							))}
 						</div>
 					</div>
@@ -145,7 +119,7 @@ export const TooltipShowcase: Story = {
 						<h2 className="text-base font-semibold text-foreground">Align variations</h2>
 						<div className="flex flex-wrap gap-8">
 							{ALIGNS.map((align) => (
-								<Tooltip key={align}>
+								<TooltipRoot key={align}>
 									<TooltipTrigger asChild>
 										<Button
 											variant={ButtonVariant.Solid}
@@ -158,7 +132,7 @@ export const TooltipShowcase: Story = {
 									<TooltipContent side="top" align={align} arrow>
 										Align {align}
 									</TooltipContent>
-								</Tooltip>
+								</TooltipRoot>
 							))}
 						</div>
 					</div>
@@ -166,57 +140,59 @@ export const TooltipShowcase: Story = {
 					<div className="space-y-4">
 						<h2 className="text-base font-semibold text-foreground">With / without arrow</h2>
 						<div className="flex gap-4">
-							<Tooltip title="No arrow" arrow={false}>
+							<TooltipSimple title="No arrow" arrow={false}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									Without arrow
 								</Button>
-							</Tooltip>
-							<Tooltip title="With arrow" arrow>
+							</TooltipSimple>
+							<TooltipSimple title="With arrow" arrow>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									With arrow
 								</Button>
-							</Tooltip>
+							</TooltipSimple>
 						</div>
 					</div>
 
 					<div className="space-y-4">
 						<h2 className="text-base font-semibold text-foreground">Delay variations</h2>
 						<div className="flex gap-4 flex-wrap">
-							<Tooltip title="No delay (0ms)" delayDuration={0}>
+							<TooltipSimple title="No delay (0ms)" delayDuration={0}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									0ms
 								</Button>
-							</Tooltip>
-							<Tooltip title="300ms delay" delayDuration={300}>
+							</TooltipSimple>
+							<TooltipSimple title="300ms delay" delayDuration={300}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									300ms
 								</Button>
-							</Tooltip>
-							<Tooltip title="500ms delay" delayDuration={500}>
+							</TooltipSimple>
+							<TooltipSimple title="500ms delay" delayDuration={500}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									500ms
 								</Button>
-							</Tooltip>
-							<Tooltip title="700ms delay (default)" delayDuration={700}>
+							</TooltipSimple>
+							<TooltipSimple title="700ms delay (default)" delayDuration={700}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									700ms
 								</Button>
-							</Tooltip>
+							</TooltipSimple>
 						</div>
 					</div>
 
 					<div className="space-y-4">
 						<h2 className="text-base font-semibold text-foreground">Default open</h2>
-						<Tooltip defaultOpen title="I am open by default">
+						<TooltipSimple defaultOpen title="I am open by default">
 							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 								Hover or focus to see tooltip
 							</Button>
-						</Tooltip>
+						</TooltipSimple>
 					</div>
 
 					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">Custom content</h2>
-						<Tooltip>
+						<h2 className="text-base font-semibold text-foreground">
+							Custom content (composition)
+						</h2>
+						<TooltipRoot>
 							<TooltipTrigger asChild>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 									Rich content
@@ -227,7 +203,7 @@ export const TooltipShowcase: Story = {
 								<br />
 								<span className="text-sm opacity-90">With multiple lines</span>
 							</TooltipContent>
-						</Tooltip>
+						</TooltipRoot>
 					</div>
 				</div>
 			</div>

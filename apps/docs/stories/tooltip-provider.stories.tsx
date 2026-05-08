@@ -1,4 +1,4 @@
-import { Button, ButtonColor, ButtonVariant, Tooltip, TooltipProvider } from '@signozhq/ui';
+import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TooltipProvider> = {
@@ -35,6 +35,11 @@ const meta: Meta<typeof TooltipProvider> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
+		testId: {
+			control: 'text',
+			description: 'The test id of the tooltip provider.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -52,16 +57,16 @@ export const Default: Story = {
 	render: (args) => (
 		<TooltipProvider {...args}>
 			<div className="p-20 flex items-center justify-center gap-4">
-				<Tooltip title="First tooltip">
+				<TooltipSimple title="First tooltip">
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me
 					</Button>
-				</Tooltip>
-				<Tooltip title="Second tooltip">
+				</TooltipSimple>
+				<TooltipSimple title="Second tooltip">
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Or me
 					</Button>
-				</Tooltip>
+				</TooltipSimple>
 			</div>
 		</TooltipProvider>
 	),

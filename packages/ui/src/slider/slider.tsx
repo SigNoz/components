@@ -2,7 +2,7 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { cn } from '../lib/utils.js';
-import { Tooltip, TooltipProvider } from '../tooltip/tooltip.js';
+import { TooltipProvider, TooltipSimple } from '../tooltip/index.js';
 import styles from './slider.module.scss';
 
 export interface SliderProps
@@ -247,7 +247,9 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 						return (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
 							<TooltipProvider key={`slider-${internalId}-${index}-tooltip`}>
-								<Tooltip title={tooltip.formatter ? tooltip.formatter(val) : val}>{thumb}</Tooltip>
+								<TooltipSimple title={tooltip.formatter ? tooltip.formatter(val) : val}>
+									{thumb}
+								</TooltipSimple>
 							</TooltipProvider>
 						);
 					}

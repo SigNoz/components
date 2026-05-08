@@ -2,9 +2,9 @@ import {
 	Button,
 	ButtonColor,
 	ButtonVariant,
-	Tooltip,
 	TooltipContent,
 	TooltipProvider,
+	TooltipRoot,
 	TooltipTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -18,6 +18,11 @@ const meta: Meta<typeof TooltipTrigger> = {
 			description:
 				'When true, merges props onto the child element instead of rendering a wrapper. Use to delegate to a child (e.g. a Button).',
 			table: { category: 'Behavior', type: { summary: 'boolean' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'The test id of the tooltip trigger.',
+			table: { category: 'Testing', type: { summary: 'string' } },
 		},
 	},
 	parameters: {
@@ -36,7 +41,7 @@ export const Default: Story = {
 	render: (args: { asChild?: boolean }) => (
 		<TooltipProvider delayDuration={0}>
 			<div className="p-20 flex items-center justify-center">
-				<Tooltip>
+				<TooltipRoot>
 					<TooltipTrigger {...args}>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 							Custom content tooltip
@@ -45,7 +50,7 @@ export const Default: Story = {
 					<TooltipContent side="bottom" arrow>
 						<span>Rich tooltip content</span>
 					</TooltipContent>
-				</Tooltip>
+				</TooltipRoot>
 			</div>
 		</TooltipProvider>
 	),

@@ -1,7 +1,7 @@
 import { ChevronDown } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
-import { Tooltip, TooltipProvider } from '../../tooltip/index.js';
+import { TooltipProvider, TooltipSimple } from '../../tooltip/index.js';
 import {
 	Combobox,
 	ComboboxCommand,
@@ -421,7 +421,7 @@ function ComboboxSimpleInner({
 						</ComboboxPill>
 					))}
 					{overflowCount > 0 && (
-						<Tooltip title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
+						<TooltipSimple title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
 							<span
 								data-slot="combobox-pill-overflow"
 								style={{
@@ -440,7 +440,7 @@ function ComboboxSimpleInner({
 							>
 								+{overflowCount}
 							</span>
-						</Tooltip>
+						</TooltipSimple>
 					)}
 				</span>
 			) : undefined;
