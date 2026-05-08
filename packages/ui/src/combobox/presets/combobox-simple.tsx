@@ -72,10 +72,16 @@ export type ComboboxSimpleProps = {
 	 */
 	groups?: ComboboxSimpleGroup[];
 	/**
-	 * Placeholder text when no value is selected and in the search input.
+	 * Placeholder text when no value is selected.
 	 * @default 'Select an option...'
 	 */
 	placeholder?: string;
+	/**
+	 * Placeholder text for the search input inside the popover.
+	 * Falls back to `placeholder` if not provided.
+	 * @default undefined
+	 */
+	inputPlaceholder?: string;
 	/**
 	 * Text shown when there are no results (e.g. after filtering).
 	 * @default 'No results found.'
@@ -164,6 +170,7 @@ function ComboboxSimpleInner({
 	items = [],
 	groups,
 	placeholder = 'Select an option...',
+	inputPlaceholder,
 	emptyPlaceholder = 'No results found.',
 	value: controlledValue,
 	defaultValue,
@@ -184,6 +191,7 @@ function ComboboxSimpleInner({
 	);
 	const [open, setOpen] = React.useState(false);
 	const [inputValue, setInputValue] = React.useState('');
+	const triggerRef = React.useRef<HTMLButtonElement | HTMLDivElement>(null);
 
 	const isControlled = controlledValue !== undefined;
 	const selectedValues = React.useMemo(
@@ -283,6 +291,21 @@ function ComboboxSimpleInner({
 		},
 		[itemsMap]
 	);
+
+	const handleTriggerKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			setOpen(true);
+		}
+	}, []);
+
+	const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Tab' && e.shiftKey) {
+			e.preventDefault();
+			setOpen(false);
+			triggerRef.current?.focus();
+		}
+	}, []);
 
 	const showCreateOption =
 		allowCreate &&
@@ -427,6 +450,7 @@ function ComboboxSimpleInner({
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger asChild>
 						<div
+							ref={triggerRef as React.RefObject<HTMLDivElement>}
 							className={cn(styles['combobox__trigger'], className)}
 							style={style}
 							data-testid={testId}
@@ -435,6 +459,7 @@ function ComboboxSimpleInner({
 							aria-expanded={open}
 							aria-haspopup="listbox"
 							tabIndex={0}
+							onKeyDown={handleTriggerKeyDown}
 						>
 							<span className={styles['combobox__trigger-value']}>
 								{pillsContent || placeholder || 'Select an option...'}
@@ -446,9 +471,10 @@ function ComboboxSimpleInner({
 						<ComboboxContent withPortal={withPortal}>
 							<ComboboxCommand>
 								<ComboboxInput
-									placeholder={placeholder}
+									placeholder={inputPlaceholder ?? placeholder}
 									value={inputValue}
 									onValueChange={setInputValue}
+									onKeyDown={handleInputKeyDown}
 								/>
 								<ComboboxList>{listContent}</ComboboxList>
 							</ComboboxCommand>
@@ -464,6 +490,7 @@ function ComboboxSimpleInner({
 		<Wrapper>
 			<Combobox open={open} onOpenChange={setOpen}>
 				<ComboboxTrigger
+					ref={triggerRef as React.RefObject<HTMLButtonElement>}
 					placeholder={placeholder}
 					value={triggerValue}
 					testId={testId}
@@ -474,7 +501,10 @@ function ComboboxSimpleInner({
 				{open && (
 					<ComboboxContent withPortal={withPortal}>
 						<ComboboxCommand>
-							<ComboboxInput placeholder={placeholder} />
+							<ComboboxInput
+								placeholder={inputPlaceholder ?? placeholder}
+								onKeyDown={handleInputKeyDown}
+							/>
 							<ComboboxList>{listContent}</ComboboxList>
 						</ComboboxCommand>
 					</ComboboxContent>
