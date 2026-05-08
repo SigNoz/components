@@ -1,5 +1,6 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as TooltipStories from './tooltip.stories';
+import * as TooltipSimpleStories from './tooltip-simple.stories';
 import * as TooltipProviderStories from './tooltip-provider.stories';
 import * as TooltipTriggerStories from './tooltip-trigger.stories';
 import * as TooltipContentStories from './tooltip-content.stories';
@@ -12,34 +13,71 @@ A customizable tooltip component with smooth animations and flexible positioning
 
 ## How to use
 
-### Basic usage (with title)
+### TooltipSimple (preset)
 
-Use `Tooltip` with the `title` prop for simple tooltips. Wrap your app (or section) with `TooltipProvider`:
+Minimal preset that wraps a trigger element and shows a tooltip on hover. Handles all the composition internally.
+
+**Basic usage:**
 
 ```tsx
-import { Tooltip, TooltipProvider } from '@signozhq/ui';
+import { TooltipSimple, TooltipProvider } from '@signozhq/ui';
 import { Button } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
 		<TooltipProvider delayDuration={700}>
-			<Tooltip title="Helpful information" arrow>
+			<TooltipSimple title="Helpful information" arrow>
 				<Button variant="solid" color="secondary">
 					Hover me
 				</Button>
-			</Tooltip>
+			</TooltipSimple>
 		</TooltipProvider>
 	);
 }
+```
+
+**With positioning:**
+
+```tsx
+<TooltipSimple title="I appear on the right" side="right" align="start">
+	<Button>Hover me</Button>
+</TooltipSimple>
+```
+
+**Inside a modal/dialog (no portal):**
+
+When placing a tooltip inside a modal or dialog, set `withPortal={false}` so the tooltip content stays within the modal DOM instead of portaling to `document.body`. This avoids z-index and stacking issues.
+
+```tsx
+import { Dialog, DialogContent, TooltipSimple, Button } from '@signozhq/ui';
+
+<Dialog>
+	<DialogContent>
+		<TooltipSimple title="Inside modal" withPortal={false}>
+			<Button>Hover me</Button>
+		</TooltipSimple>
+	</DialogContent>
+</Dialog>
+```
+
+**With extra content props:**
+
+```tsx
+<TooltipSimple
+	title="Custom"
+	tooltipContentProps={{ className: 'custom-class', arrowPadding: 8 }}
+>
+	<Button>Hover me</Button>
+</TooltipSimple>
 ```
 
 Set `delayDuration={0}` in Storybook for instant feedback.
 
 <Primary />
 
-## Tooltip Props
+## TooltipSimple Props
 
-<Controls of={TooltipStories.Default} />
+<Controls of={TooltipSimpleStories.Default} />
 
 ## TooltipProvider Props
 
@@ -47,26 +85,56 @@ Set `delayDuration={0}` in Storybook for instant feedback.
 
 ## Primitive composition
 
-For custom content and positioning, use `TooltipTrigger` and `TooltipContent`:
+For custom content and positioning, use `TooltipRoot`, `TooltipTrigger`, and `TooltipContent`:
 
 ```tsx
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@signozhq/ui';
+import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipProvider } from '@signozhq/ui';
 import { Button } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
 		<TooltipProvider>
-			<Tooltip>
+			<TooltipRoot>
 				<TooltipTrigger asChild>
 					<Button>Custom content</Button>
 				</TooltipTrigger>
 				<TooltipContent side="bottom" arrow>
-					<span>Rich tooltip content</span>
+					<span className="font-medium">Custom tooltip</span>
+					<br />
+					<span className="text-sm opacity-90">With multiple lines</span>
 				</TooltipContent>
-			</Tooltip>
+			</TooltipRoot>
 		</TooltipProvider>
 	);
 }
+```
+
+**Inside a modal (no portal):**
+
+```tsx
+import {
+	Dialog,
+	DialogContent,
+	TooltipRoot,
+	TooltipTrigger,
+	TooltipContent,
+	TooltipProvider,
+} from '@signozhq/ui';
+
+<Dialog>
+	<DialogContent>
+		<TooltipProvider>
+			<TooltipRoot>
+				<TooltipTrigger asChild>
+					<Button>Hover me</Button>
+				</TooltipTrigger>
+				<TooltipContent side="top" withPortal={false}>
+					Tooltip inside modal
+				</TooltipContent>
+			</TooltipRoot>
+		</TooltipProvider>
+	</DialogContent>
+</Dialog>
 ```
 
 ## TooltipTrigger Props

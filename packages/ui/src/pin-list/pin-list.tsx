@@ -8,7 +8,7 @@ import {
 } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
-import { Tooltip, TooltipProvider } from '../tooltip/index.js';
+import { TooltipProvider, TooltipSimple } from '../tooltip/index.js';
 import styles from './pin-list.module.scss';
 
 /**
@@ -447,7 +447,7 @@ const PinListItemComponent = React.memo(function PinListItemComponent({
 					{item.label}
 				</div>
 			</div>
-			<Tooltip title={tooltipTitle}>
+			<TooltipSimple title={tooltipTitle}>
 				<div
 					className={styles['item-pin-button']}
 					data-visible={isPinned || isHovered}
@@ -460,7 +460,7 @@ const PinListItemComponent = React.memo(function PinListItemComponent({
 						<Pin className={styles['item-icon']} />
 					)}
 				</div>
-			</Tooltip>
+			</TooltipSimple>
 		</motion.button>
 	);
 });

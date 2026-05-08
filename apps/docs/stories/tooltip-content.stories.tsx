@@ -3,9 +3,9 @@ import {
 	Button,
 	ButtonColor,
 	ButtonVariant,
-	Tooltip,
 	TooltipContent,
 	TooltipProvider,
+	TooltipRoot,
 	TooltipTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -64,6 +64,15 @@ const meta: Meta<typeof TooltipContent> = {
 				'Used to force mounting when more control is needed. Useful when controlling animation with React animation libraries.',
 			table: { category: 'Behavior', type: { summary: 'true' } },
 		},
+		withPortal: {
+			control: 'boolean',
+			description: 'Whether to render in a portal. Set to false when inside modals/dialogs.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'true' },
+			},
+		},
 		testId: {
 			control: 'text',
 			description: 'The test id of the tooltip content.',
@@ -100,7 +109,7 @@ export const Default: Story = {
 	render: (args: Partial<TooltipContentProps>) => (
 		<TooltipProvider delayDuration={0}>
 			<div className="p-20 flex items-center justify-center">
-				<Tooltip>
+				<TooltipRoot>
 					<TooltipTrigger asChild>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 							Custom content
@@ -109,7 +118,7 @@ export const Default: Story = {
 					<TooltipContent {...args}>
 						<span>Rich tooltip content with positioning controls</span>
 					</TooltipContent>
-				</Tooltip>
+				</TooltipRoot>
 			</div>
 		</TooltipProvider>
 	),
