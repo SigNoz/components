@@ -1,28 +1,31 @@
 import type * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
 
-import { DropdownMenuCheckboxItem } from './dropdown-menu-checkbox-item.js';
-import { DropdownMenuContent, type DropdownMenuContentProps } from './dropdown-menu-content.js';
-import { DropdownMenuItem } from './dropdown-menu-item.js';
-import { DropdownMenuLabel } from './dropdown-menu-label.js';
-import { DropdownMenuLoading } from './dropdown-menu-loading.js';
-import { DropdownMenuRadioGroup } from './dropdown-menu-radio-group.js';
-import { DropdownMenuRadioItem } from './dropdown-menu-radio-item.js';
-import { DropdownMenu } from './dropdown-menu-root.js';
-import { DropdownMenuSearch } from './dropdown-menu-search.js';
-import { DropdownMenuSeparator } from './dropdown-menu-separator.js';
-import { DropdownMenuShortcut } from './dropdown-menu-shortcut.js';
-import { DropdownMenuSub } from './dropdown-menu-sub.js';
-import { DropdownMenuSubContent } from './dropdown-menu-sub-content.js';
-import { DropdownMenuSubTrigger } from './dropdown-menu-sub-trigger.js';
-import { DropdownMenuTrigger } from './dropdown-menu-trigger.js';
+import { DropdownMenuCheckboxItem } from '../subcomponents/dropdown-menu-checkbox-item.js';
+import {
+	DropdownMenuContent,
+	type DropdownMenuContentProps,
+} from '../subcomponents/dropdown-menu-content.js';
+import { DropdownMenuItem } from '../subcomponents/dropdown-menu-item.js';
+import { DropdownMenuLabel } from '../subcomponents/dropdown-menu-label.js';
+import { DropdownMenuLoading } from '../subcomponents/dropdown-menu-loading.js';
+import { DropdownMenuRadioGroup } from '../subcomponents/dropdown-menu-radio-group.js';
+import { DropdownMenuRadioItem } from '../subcomponents/dropdown-menu-radio-item.js';
+import { DropdownMenu } from '../subcomponents/dropdown-menu-root.js';
+import { DropdownMenuSearch } from '../subcomponents/dropdown-menu-search.js';
+import { DropdownMenuSeparator } from '../subcomponents/dropdown-menu-separator.js';
+import { DropdownMenuShortcut } from '../subcomponents/dropdown-menu-shortcut.js';
+import { DropdownMenuSub } from '../subcomponents/dropdown-menu-sub.js';
+import { DropdownMenuSubContent } from '../subcomponents/dropdown-menu-sub-content.js';
+import { DropdownMenuSubTrigger } from '../subcomponents/dropdown-menu-sub-trigger.js';
+import { DropdownMenuTrigger } from '../subcomponents/dropdown-menu-trigger.js';
 import type {
 	BaseMenuItem,
 	MenuDivider,
 	MenuGroup,
 	MenuItem,
 	MenuProps,
-} from './dropdown-menu-types.js';
+} from '../subcomponents/dropdown-menu-types.js';
 
 /**
  * Checks if a menu item is a divider.
@@ -200,15 +203,15 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
  *   { key: 'logout', label: 'Logout', danger: true },
  * ];
  *
- * <Dropdown menu={{ items }}>
+ * <DropdownMenuSimple menu={{ items }}>
  *   <Button>Open Menu</Button>
- * </Dropdown>
+ * </DropdownMenuSimple>
  * ```
  *
  * @example
  * ```tsx
  * // With search and loading
- * <Dropdown
+ * <DropdownMenuSimple
  *   menu={{
  *     items,
  *     search: {
@@ -219,7 +222,7 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
  *   }}
  * >
  *   <Button>Actions</Button>
- * </Dropdown>
+ * </DropdownMenuSimple>
  * ```
  *
  * @example
@@ -237,7 +240,7 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
  * ];
  * ```
  */
-export const Dropdown = React.forwardRef<
+export const DropdownMenuSimple = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
 	DropdownProps
 >(({ menu, children, sideOffset = 4, className, onOpenAutoFocus, ...props }, ref) => {
@@ -392,4 +395,4 @@ export const Dropdown = React.forwardRef<
 	);
 });
 
-Dropdown.displayName = 'Dropdown';
+DropdownMenuSimple.displayName = 'DropdownMenuSimple';

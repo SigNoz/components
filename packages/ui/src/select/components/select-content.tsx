@@ -58,7 +58,7 @@ export type SelectContentProps = {
 };
 
 /**
- * Dropdown content container that holds the selectable items.
+ * DropdownMenuSimple content container that holds the selectable items.
  *
  * By default, children are wrapped in a SelectViewport. When using scroll buttons
  * or SelectArrow, set `withViewport={false}` and manually include SelectViewport.
