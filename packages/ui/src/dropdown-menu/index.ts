@@ -1,7 +1,6 @@
 export {
 	type BaseMenuItem,
 	type CheckboxMenuItem,
-	Dropdown,
 	DropdownMenu,
 	DropdownMenuBack,
 	type DropdownMenuBackProps,
@@ -36,6 +35,7 @@ export {
 	type DropdownMenuSeparatorProps,
 	DropdownMenuShortcut,
 	type DropdownMenuShortcutProps,
+	DropdownMenuSimple,
 	DropdownMenuSub,
 	DropdownMenuSubContent,
 	type DropdownMenuSubContentProps,

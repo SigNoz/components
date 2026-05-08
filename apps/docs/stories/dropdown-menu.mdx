@@ -28,12 +28,12 @@ A versatile dropdown menu component with support for icons, search, nested menus
 
 ## How to use
 
-### Dropdown (preset)
+### DropdownMenuSimple (preset)
 
-Use `Dropdown` for a declarative menu configuration. Pass a `menu` object with `items` and an optional trigger:
+Use `DropdownMenuSimple` for a declarative menu configuration. Pass a `menu` object with `items` and an optional trigger:
 
 ```tsx
-import { Dropdown, type MenuItem } from '@signozhq/ui';
+import { DropdownMenuSimple, type MenuItem } from '@signozhq/ui';
 import { Button } from '@signozhq/ui';
 import { Grid3X3, Link2, Trash2 } from '@signozhq/icons';
 
@@ -52,16 +52,16 @@ const items: MenuItem[] = [
 
 export default function MyComponent() {
   return (
-    <Dropdown menu={{ items }}>
+    <DropdownMenuSimple menu={{ items }}>
       <Button variant="outlined">Open</Button>
-    </Dropdown>
+    </DropdownMenuSimple>
   );
 }
 ```
 
 <Primary />
 
-## Dropdown Props
+## DropdownMenuSimple Props
 
 <Controls of={DropdownStories.Default} />
 

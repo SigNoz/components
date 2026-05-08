@@ -13,13 +13,13 @@ import {
 	Trash2,
 	User,
 } from '@signozhq/icons';
-import { Button, Dropdown, type MenuItem } from '@signozhq/ui';
+import { Button, DropdownMenuSimple, type MenuItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useMemo, useState } from 'react';
 
-const meta: Meta<typeof Dropdown> = {
+const meta: Meta<typeof DropdownMenuSimple> = {
 	title: 'Components/DropdownMenu',
-	component: Dropdown,
+	component: DropdownMenuSimple,
 	parameters: {
 		layout: 'fullscreen',
 		backgrounds: {
@@ -85,7 +85,7 @@ const meta: Meta<typeof Dropdown> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Dropdown>;
+type Story = StoryObj<typeof DropdownMenuSimple>;
 
 export const Default: Story = {
 	args: {
@@ -114,11 +114,11 @@ export const Default: Story = {
 	},
 	render: (args) => (
 		<div className="p-8">
-			<Dropdown {...args}>
+			<DropdownMenuSimple {...args}>
 				<Button variant="solid" color="secondary">
 					Open
 				</Button>
-			</Dropdown>
+			</DropdownMenuSimple>
 		</div>
 	),
 };
@@ -150,16 +150,16 @@ export const Playground: Story = {
 	},
 	render: (args) => (
 		<div className="p-8">
-			<Dropdown {...args}>
+			<DropdownMenuSimple {...args}>
 				<Button variant="solid" color="secondary">
 					Open
 				</Button>
-			</Dropdown>
+			</DropdownMenuSimple>
 		</div>
 	),
 };
 
-// Basic Dropdown
+// Basic DropdownMenuSimple
 export const Basic: Story = {
 	parameters: {
 		docs: {
@@ -188,11 +188,11 @@ export const Basic: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items }}>
+				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Open Menu
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -204,7 +204,7 @@ export const WithIcons: Story = {
 		docs: {
 			description: {
 				story:
-					'Dropdown menus support icons for enhanced visual communication. Icons can be placed on the left, right, or both sides of menu items. Use icons to make menus more scannable and intuitive.',
+					'DropdownMenuSimple menus support icons for enhanced visual communication. Icons can be placed on the left, right, or both sides of menu items. Use icons to make menus more scannable and intuitive.',
 			},
 		},
 	},
@@ -267,23 +267,23 @@ export const WithIcons: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items: items1 }}>
+				<DropdownMenuSimple menu={{ items: items1 }}>
 					<Button variant="solid" color="secondary">
 						View Options
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 
-				<Dropdown menu={{ items: items2 }}>
+				<DropdownMenuSimple menu={{ items: items2 }}>
 					<Button variant="solid" color="secondary">
 						With Checkmark
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 
-				<Dropdown menu={{ items: items3 }}>
+				<DropdownMenuSimple menu={{ items: items3 }}>
 					<Button variant="solid" color="secondary">
 						With Arrow
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -322,11 +322,11 @@ export const Destructive: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items }}>
+				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Delete dashboard
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -379,11 +379,11 @@ export const WithSectionLabels: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items }}>
+				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Menu with Sections
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -395,7 +395,7 @@ export const Checkable: Story = {
 		docs: {
 			description: {
 				story:
-					'Dropdown menus support checkbox items for toggling options and radio groups for selecting one option from a set. Perfect for settings menus and filter controls.',
+					'DropdownMenuSimple menus support checkbox items for toggling options and radio groups for selecting one option from a set. Perfect for settings menus and filter controls.',
 			},
 		},
 	},
@@ -465,17 +465,17 @@ export const Checkable: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items: checkboxItems }}>
+				<DropdownMenuSimple menu={{ items: checkboxItems }}>
 					<Button variant="solid" color="secondary">
 						Checkbox Items
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 
-				<Dropdown menu={{ items: radioItems }}>
+				<DropdownMenuSimple menu={{ items: radioItems }}>
 					<Button variant="solid" color="secondary">
 						Radio Group
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -562,11 +562,11 @@ export const NestedMenus: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown menu={{ items }}>
+				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Nested Menu
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -592,11 +592,11 @@ export const Loading: Story = {
 	},
 	render: () => (
 		<div className="p-8 flex gap-4">
-			<Dropdown menu={{ items: [], loading: true }}>
+			<DropdownMenuSimple menu={{ items: [], loading: true }}>
 				<Button variant="solid" color="secondary">
 					Loading Menu
 				</Button>
-			</Dropdown>
+			</DropdownMenuSimple>
 		</div>
 	),
 };
@@ -642,7 +642,7 @@ export const WithSearch: Story = {
 			if (!query.trim()) return searchMenuItems;
 			const q = query.toLowerCase();
 			return searchMenuItems.filter((item) => {
-				// Dividers are kept but will be cleaned up by Dropdown's cleanupMenuItems
+				// Dividers are kept but will be cleaned up by DropdownMenuSimple's cleanupMenuItems
 				if ('type' in item && item.type === 'divider') return true;
 				return 'label' in item && String(item.label).toLowerCase().includes(q);
 			});
@@ -650,7 +650,7 @@ export const WithSearch: Story = {
 
 		return (
 			<div className="p-8 flex gap-4">
-				<Dropdown
+				<DropdownMenuSimple
 					menu={{
 						items: filteredItems,
 						search: {
@@ -663,7 +663,7 @@ export const WithSearch: Story = {
 					<Button variant="solid" color="secondary">
 						Search Menu
 					</Button>
-				</Dropdown>
+				</DropdownMenuSimple>
 			</div>
 		);
 	},
@@ -763,33 +763,33 @@ export const AllStates: Story = {
 				<div className="space-y-4">
 					<h3 className="text-lg font-semibold">Default States</h3>
 					<div className="flex gap-4">
-						<Dropdown menu={{ items: defaultItems }}>
+						<DropdownMenuSimple menu={{ items: defaultItems }}>
 							<Button variant="solid" color="secondary">
 								Default
 							</Button>
-						</Dropdown>
+						</DropdownMenuSimple>
 					</div>
 				</div>
 
 				<div className="space-y-4">
 					<h3 className="text-lg font-semibold">With Shortcuts</h3>
 					<div className="flex gap-4">
-						<Dropdown menu={{ items: shortcutItems }}>
+						<DropdownMenuSimple menu={{ items: shortcutItems }}>
 							<Button variant="solid" color="secondary">
 								Shortcuts
 							</Button>
-						</Dropdown>
+						</DropdownMenuSimple>
 					</div>
 				</div>
 
 				<div className="space-y-4">
 					<h3 className="text-lg font-semibold">Complex Example</h3>
 					<div className="flex gap-4">
-						<Dropdown menu={{ items: complexItems }} align="end" className="w-56">
+						<DropdownMenuSimple menu={{ items: complexItems }} align="end" className="w-56">
 							<Button variant="solid" color="secondary">
 								<Ellipsis />
 							</Button>
-						</Dropdown>
+						</DropdownMenuSimple>
 					</div>
 				</div>
 			</div>
