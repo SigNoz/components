@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.18](https://github.com/SigNoz/components/compare/v0.0.17...v0.0.18) (2026-05-08)
+
+
+### Features
+
+* **combobox:** add allowCreate and multiple props ([#210](https://github.com/SigNoz/components/issues/210)) ([0d3120b](https://github.com/SigNoz/components/commit/0d3120b7083c25e3dd2f42d3302221474e94eaa7))
+* **path-export:** more export variations ([1b523fe](https://github.com/SigNoz/components/commit/1b523fec30c7846aeb2ad9d67744726681df160f))
+
 ## [0.0.17](https://github.com/SigNoz/components/compare/v0.0.16...v0.0.17) (2026-05-07)
 
 
