@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.0.19](https://github.com/SigNoz/components/compare/v0.0.18...v0.0.19) (2026-05-11)
+
+
+### Features
+
+* **combobox:** add hints ([9bb5f09](https://github.com/SigNoz/components/commit/9bb5f099dec8a5aa9b96125780d0a1506019bbba))
+
+
+### Bug Fixes
+
+* **combobox:** adapt to have same size as input/button ([b783343](https://github.com/SigNoz/components/commit/b7833439b6dc61f56451e12a6317b15126b524fb))
+
+
+### Code Refactoring
+
+* **combobox:** better keyboard navigation & add placeholder for input ([04b75e1](https://github.com/SigNoz/components/commit/04b75e15a7200b7190e96ed6a6671e5230494b65))
+* **tooltip:** renaming and new props ([465c488](https://github.com/SigNoz/components/commit/465c48872de031af1b2fd280dfa53786a166180c))
+
 ## [0.0.18](https://github.com/SigNoz/components/compare/v0.0.17...v0.0.18) (2026-05-08)
 
 
