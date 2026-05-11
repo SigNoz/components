@@ -282,6 +282,17 @@ export function ComboboxGroup({ children, ...props }: ComboboxGroupProps) {
 
 export type ComboboxItemProps = CommandItemProps & {
 	isSelected?: boolean;
+	/**
+	 * When true, inserts value into input instead of selecting it.
+	 * Useful for hints/suggestions that provide a prefix for user to continue typing.
+	 * @default false
+	 */
+	insertOnInput?: boolean;
+	/**
+	 * Callback when item is used to insert into input. Called with the value to insert.
+	 * Only used when insertOnInput is true.
+	 */
+	onInsert?: (value: string) => void;
 };
 
 /**
@@ -289,6 +300,9 @@ export type ComboboxItemProps = CommandItemProps & {
  *
  * Use `isSelected` to show a checkmark for the current value. Pass `prefix={null}`
  * to hide the default check icon.
+ *
+ * Set `insertOnInput` to insert value into the input field instead of selecting it.
+ * This is useful for hint items that provide a prefix for the user to continue typing.
  *
  * @example
  * ```tsx
@@ -300,8 +314,28 @@ export type ComboboxItemProps = CommandItemProps & {
  *   React
  * </ComboboxItem>
  * ```
+ *
+ * @example Hint item that inserts into input
+ * ```tsx
+ * <ComboboxItem
+ *   value="status:"
+ *   insertOnInput
+ *   onInsert={(value) => setInputValue(value)}
+ *   prefix={<HintIcon />}
+ * >
+ *   Filter by status...
+ * </ComboboxItem>
+ * ```
  */
-export function ComboboxItem({ prefix, isSelected = false, ...props }: ComboboxItemProps) {
+export function ComboboxItem({
+	prefix,
+	isSelected = false,
+	insertOnInput = false,
+	onInsert,
+	onSelect,
+	value,
+	...props
+}: ComboboxItemProps) {
 	const resolvedPrefix: React.ReactNode =
 		prefix === undefined ? (
 			<span className={styles['combobox__item-check']} data-selected={isSelected}>
@@ -310,7 +344,25 @@ export function ComboboxItem({ prefix, isSelected = false, ...props }: ComboboxI
 		) : (
 			prefix
 		);
-	return <CommandItem data-slot="combobox-item" {...props} prefix={resolvedPrefix} />;
+
+	const handleSelect = (currentValue: string) => {
+		if (insertOnInput && onInsert) {
+			onInsert(value ?? currentValue);
+		} else if (onSelect) {
+			onSelect(currentValue);
+		}
+	};
+
+	return (
+		<CommandItem
+			data-slot="combobox-item"
+			data-insert-on-input={insertOnInput}
+			value={value}
+			onSelect={handleSelect}
+			{...props}
+			prefix={resolvedPrefix}
+		/>
+	);
 }
 
 export type ComboboxSeparatorProps = React.ComponentPropsWithoutRef<typeof CommandSeparator>;
@@ -505,6 +557,50 @@ export function ComboboxCreateItem({
 			{...props}
 		>
 			{children ?? `Create "${inputValue}"`}
+		</CommandItem>
+	);
+}
+
+export type ComboboxHintProps = Omit<CommandItemProps, 'onSelect'> & {
+	/** The value to insert into the input when this hint is selected. */
+	insertValue: string;
+	/** Callback when hint is selected. Called with the insertValue. */
+	onInsert: (value: string) => void;
+	/** Custom content for the hint. */
+	children: React.ReactNode;
+};
+
+/**
+ * Hint item that inserts a value into the input instead of selecting it.
+ * Useful for providing suggestions that serve as prefixes for continued typing.
+ *
+ * @example
+ * ```tsx
+ * <ComboboxHint
+ *   insertValue="status:"
+ *   onInsert={(value) => setInputValue(value)}
+ * >
+ *   Filter by status...
+ * </ComboboxHint>
+ * ```
+ */
+export function ComboboxHint({
+	insertValue,
+	onInsert,
+	children,
+	className,
+	prefix = null,
+	...props
+}: ComboboxHintProps) {
+	return (
+		<CommandItem
+			data-slot="combobox-hint"
+			className={cn(styles['combobox__hint-item'], className)}
+			onSelect={() => onInsert(insertValue)}
+			prefix={prefix}
+			{...props}
+		>
+			{children}
 		</CommandItem>
 	);
 }
