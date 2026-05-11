@@ -155,6 +155,24 @@ describe('ComboboxSimple', () => {
 			expect(screen.queryByRole('option')).not.toBeInTheDocument();
 		});
 
+		it('clears input after selection in single mode', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.change(input, { target: { value: 'rea' } });
+			expect(input).toHaveValue('rea');
+
+			fireEvent.click(screen.getByRole('option', { name: 'React' }));
+
+			// Reopen to check input is cleared
+			fireEvent.click(screen.getByTestId('combo'));
+			const inputAfter = screen.getByPlaceholderText('Select an option...');
+			expect(inputAfter).toHaveValue('');
+		});
+
 		it('displays selected value in trigger via defaultValue', () => {
 			renderWithProviders(
 				<ComboboxSimple
@@ -290,6 +308,23 @@ describe('ComboboxSimple', () => {
 			fireEvent.click(screen.getByTestId('combo'));
 			fireEvent.click(screen.getByRole('option', { name: 'React' }));
 
+			expect(screen.getByRole('option', { name: 'Vue' })).toBeInTheDocument();
+		});
+
+		it('clears input after selection in multi mode', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.change(input, { target: { value: 'rea' } });
+			expect(input).toHaveValue('rea');
+
+			fireEvent.click(screen.getByRole('option', { name: 'React' }));
+
+			// Input should be cleared but dropdown stays open
+			expect(input).toHaveValue('');
 			expect(screen.getByRole('option', { name: 'Vue' })).toBeInTheDocument();
 		});
 
@@ -566,9 +601,68 @@ describe('ComboboxSimple', () => {
 			expect(screen.getByRole('option', { name: 'custom-tag' })).toBeInTheDocument();
 		});
 
-		// Note: allowCreate in single-select mode doesn't work currently
-		// because inputValue state is not tracked in single-select mode.
-		// This would need to be fixed in the component itself.
+		it('shows create option in single-select mode', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} allowCreate testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.change(input, { target: { value: 'new-value' } });
+
+			expect(screen.getByText('Create "new-value"')).toBeInTheDocument();
+		});
+
+		it('creates and selects value in single-select mode', () => {
+			const onChange = vi.fn();
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					allowCreate
+					onChange={onChange}
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.change(input, { target: { value: 'custom-item' } });
+			fireEvent.click(screen.getByText('Create "custom-item"'));
+
+			expect(onChange).toHaveBeenCalledWith('custom-item');
+			// Popover closes after single-select
+			expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+		});
+
+		it('displays custom value in trigger after creation in single-select', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} allowCreate testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByPlaceholderText('Select an option...');
+			fireEvent.change(input, { target: { value: 'my-custom' } });
+			fireEvent.click(screen.getByText('Create "my-custom"'));
+
+			expect(screen.getByTestId('combo')).toHaveTextContent('my-custom');
+		});
+
+		it('shows custom value in Custom group when reopened in single-select', () => {
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					allowCreate
+					defaultValue="pre-existing-custom"
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			expect(screen.getByText('Custom')).toBeInTheDocument();
+			expect(screen.getByRole('option', { name: 'pre-existing-custom' })).toBeInTheDocument();
+		});
 	});
 
 	describe('empty state', () => {
@@ -761,6 +855,143 @@ describe('ComboboxSimple', () => {
 			// Pills should be visible - look for pill elements specifically
 			const pills = screen.getAllByRole('button', { name: /Remove/ });
 			expect(pills).toHaveLength(2);
+		});
+	});
+
+	describe('hint items (insertValue)', () => {
+		const groupsWithHints = [
+			{
+				heading: 'Suggestions',
+				items: [
+					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+				],
+			},
+			{
+				heading: 'Status',
+				items: [
+					{ value: 'status:active', label: 'Status: Active' },
+					{ value: 'status:pending', label: 'Status: Pending' },
+				],
+			},
+		];
+
+		it('shows hint items when input is empty', () => {
+			renderWithProviders(
+				<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+
+			expect(screen.getByText('Suggestions')).toBeInTheDocument();
+			expect(screen.getByText('status:')).toBeInTheDocument();
+			expect(screen.getByText('priority:')).toBeInTheDocument();
+		});
+
+		it('hides hint items when input starts with hint insertValue', () => {
+			renderWithProviders(
+				<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByRole('combobox');
+			fireEvent.change(input, { target: { value: 'status:' } });
+
+			// Hints should be hidden
+			expect(screen.queryByText('Suggestions')).not.toBeInTheDocument();
+			// But regular items should still show
+			expect(screen.getByRole('option', { name: 'Status: Active' })).toBeInTheDocument();
+		});
+
+		it('inserts value into input when hint is clicked', () => {
+			renderWithProviders(
+				<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			fireEvent.click(screen.getByText('status:'));
+
+			const input = screen.getByRole('combobox');
+			expect(input).toHaveValue('status:');
+		});
+
+		it('shows hints again after clearing input', () => {
+			renderWithProviders(
+				<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByRole('combobox');
+
+			// Type to hide hints
+			fireEvent.change(input, { target: { value: 'status:' } });
+			expect(screen.queryByText('Suggestions')).not.toBeInTheDocument();
+
+			// Clear to show hints again
+			fireEvent.change(input, { target: { value: '' } });
+			expect(screen.getByText('Suggestions')).toBeInTheDocument();
+		});
+
+		it('shows hints after deleting colon from prefix', () => {
+			renderWithProviders(
+				<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			const input = screen.getByRole('combobox');
+
+			// Type full prefix - hints should hide
+			fireEvent.change(input, { target: { value: 'status:' } });
+			expect(screen.queryByText('Suggestions')).not.toBeInTheDocument();
+			expect(screen.queryByText('status:')).not.toBeInTheDocument();
+
+			// Delete colon - hints should reappear
+			fireEvent.change(input, { target: { value: 'status' } });
+			expect(screen.getByText('Suggestions')).toBeInTheDocument();
+			expect(screen.getByText('status:')).toBeInTheDocument();
+		});
+
+		it('works with flat items containing hints', () => {
+			const itemsWithHint = [
+				{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' },
+				{ value: 'tag:bug', label: 'tag:bug' },
+				{ value: 'tag:feature', label: 'tag:feature' },
+			];
+
+			renderWithProviders(
+				<ComboboxSimple items={itemsWithHint} testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+
+			// Hint should be visible
+			expect(screen.getByText('tag:')).toBeInTheDocument();
+
+			// Click hint
+			fireEvent.click(screen.getByText('tag:'));
+
+			const input = screen.getByRole('combobox');
+			expect(input).toHaveValue('tag:');
+
+			// Hint should now be hidden
+			expect(screen.queryByText('tag:')).not.toBeInTheDocument();
+		});
+
+		it('works with multi-select mode', () => {
+			renderWithProviders(
+				<ComboboxSimple groups={groupsWithHints} multiple testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+
+			// Click hint
+			fireEvent.click(screen.getByText('priority:'));
+
+			const input = screen.getByPlaceholderText('Select an option...');
+			expect(input).toHaveValue('priority:');
+
+			// Hints should be hidden after inserting
+			expect(screen.queryByText('Suggestions')).not.toBeInTheDocument();
 		});
 	});
 });

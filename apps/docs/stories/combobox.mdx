@@ -143,6 +143,86 @@ export default function MyComponent() {
 />
 ```
 
+**Multi-select mode:**
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<ComboboxSimple
+	items={items}
+	multiple
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+	placeholder="Select frameworks..."
+/>
+```
+
+**Allow creating new items (tags mode):**
+
+```tsx
+const [tags, setTags] = useState<string[]>([]);
+
+<ComboboxSimple
+	items={[]}
+	multiple
+	allowCreate
+	value={tags}
+	onChange={(v) => setTags(v as string[])}
+	placeholder="Type to add tags..."
+/>
+```
+
+**Custom create option text:**
+
+```tsx
+<ComboboxSimple
+	items={items}
+	multiple
+	allowCreate={(inputValue) => (
+		<span>Add <strong>"{inputValue}"</strong> as new tag</span>
+	)}
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+/>
+```
+
+**Hint items with insertValue (filter suggestions):**
+
+Items with `insertValue` behave as hints - clicking them inserts the value into the input instead of selecting. Useful for filter prefixes like `status:` or `tag:`.
+
+```tsx
+<ComboboxSimple
+	groups={[
+		{
+			heading: 'Suggestions',
+			items: [
+				{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+				{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+			],
+		},
+		{
+			heading: 'Status',
+			items: [
+				{ value: 'status:active', label: 'Status: Active' },
+				{ value: 'status:pending', label: 'Status: Pending' },
+			],
+		},
+		{
+			heading: 'Priority',
+			items: [
+				{ value: 'priority:high', label: 'Priority: High' },
+				{ value: 'priority:low', label: 'Priority: Low' },
+			],
+		},
+	]}
+	placeholder="Filter by..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+Hints show when input is empty or doesn't start with any hint's `insertValue`. Once user types a prefix (e.g. `status:`), hints hide and matching items filter normally.
+
 ### Combobox inside a popover
 
 When placing a combobox inside a popover (e.g. a filter panel or form), set `withPortal={false}` so the dropdown content stays within the popover DOM instead of portaling to `document.body`. This avoids z-index and stacking issues.

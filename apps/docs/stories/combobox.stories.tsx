@@ -24,12 +24,14 @@ const meta: Meta<typeof ComboboxSimple> = {
 		},
 		items: {
 			control: 'object',
-			description: 'List of items to display (flat). Ignored when groups is provided.',
+			description:
+				'List of items to display (flat). Ignored when groups is provided. Items with `insertValue` behave as hints.',
 			table: { category: 'Content', type: { summary: 'ComboboxSimpleItem[]' } },
 		},
 		groups: {
 			control: false,
-			description: 'Grouped items with optional headings. When provided, items is ignored.',
+			description:
+				'Grouped items with optional headings. When provided, items is ignored. Items with `insertValue` behave as hints.',
 			table: { category: 'Content', type: { summary: 'ComboboxSimpleGroup[]' } },
 		},
 		placeholder: {
@@ -401,6 +403,202 @@ export const TagsMode: Story = {
 				</p>
 				<p className="mt-2 text-xs text-muted-foreground">
 					Free-form tag input - no predefined options
+				</p>
+			</div>
+		);
+	},
+};
+
+export const AllowCreateSingle: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create...',
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const AllowCreateSingleCustomText: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create...',
+		allowCreate: (inputValue: string) => (
+			<span>
+				Add <strong>"{inputValue}"</strong> as new option
+			</span>
+		),
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const WithHints: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [
+					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+				],
+			},
+			{
+				heading: 'Status',
+				items: [
+					{ value: 'status:active', label: 'Status: Active' },
+					{ value: 'status:pending', label: 'Status: Pending' },
+					{ value: 'status:closed', label: 'Status: Closed' },
+				],
+			},
+			{
+				heading: 'Priority',
+				items: [
+					{ value: 'priority:high', label: 'Priority: High' },
+					{ value: 'priority:medium', label: 'Priority: Medium' },
+					{ value: 'priority:low', label: 'Priority: Low' },
+				],
+			},
+		],
+		placeholder: 'Filter by...',
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const WithHintsAndCreate: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
+			},
+			{
+				heading: 'Tags',
+				items: [
+					{ value: 'tag:bug', label: 'tag:bug' },
+					{ value: 'tag:feature', label: 'tag:feature' },
+					{ value: 'tag:docs', label: 'tag:docs' },
+				],
+			},
+		],
+		placeholder: 'Add tag...',
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Try typing "tag:" to see filtered options, or create a new tag like "tag:mynewtag"
+				</p>
+			</div>
+		);
+	},
+};
+
+export const MultiSelectWithHints: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [
+					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+				],
+			},
+			{
+				heading: 'Status',
+				items: [
+					{ value: 'status:active', label: 'Status: Active' },
+					{ value: 'status:pending', label: 'Status: Pending' },
+					{ value: 'status:closed', label: 'Status: Closed' },
+				],
+			},
+			{
+				heading: 'Priority',
+				items: [
+					{ value: 'priority:high', label: 'Priority: High' },
+					{ value: 'priority:medium', label: 'Priority: Medium' },
+					{ value: 'priority:low', label: 'Priority: Low' },
+				],
+			},
+		],
+		placeholder: 'Add filters...',
+		multiple: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Filters: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const MultiSelectWithHintsAndCreate: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
+			},
+			{
+				heading: 'Tags',
+				items: [
+					{ value: 'tag:bug', label: 'tag:bug' },
+					{ value: 'tag:feature', label: 'tag:feature' },
+					{ value: 'tag:docs', label: 'tag:docs' },
+				],
+			},
+		],
+		placeholder: 'Add tags...',
+		multiple: true,
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Type "tag:" to filter, or create custom tags like "tag:mynewtag"
 				</p>
 			</div>
 		);

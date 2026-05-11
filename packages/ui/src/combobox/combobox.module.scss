@@ -189,6 +189,11 @@
 	color: var(--combobox-create-item-color, var(--muted-foreground));
 }
 
+.combobox__hint-item {
+	font-style: var(--combobox-hint-item-font-style, italic);
+	color: var(--combobox-hint-item-color, var(--muted-foreground));
+}
+
 .combobox__content {
 	--popover-padding: 0px;
 	--popover-border-radius: var(--radius-1, 2px);

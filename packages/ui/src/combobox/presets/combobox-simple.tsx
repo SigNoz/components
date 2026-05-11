@@ -9,6 +9,7 @@ import {
 	ComboboxCreateItem,
 	ComboboxEmpty,
 	ComboboxGroup,
+	ComboboxHint,
 	ComboboxInput,
 	ComboboxItem,
 	ComboboxList,
@@ -31,6 +32,11 @@ export type ComboboxSimpleItem = {
 	 * Optional string to show in the trigger instead of label. Use when label is ReactNode but you want plain text in the trigger.
 	 */
 	displayValue?: string;
+	/**
+	 * When set, item becomes a "hint" that inserts this value into input instead of selecting.
+	 * Useful for suggestions like "status:" that let users continue typing.
+	 */
+	insertValue?: string;
 };
 
 export type ComboboxSimpleGroup = {
@@ -147,8 +153,23 @@ function flattenItems(groups: ComboboxSimpleGroup[]): ComboboxSimpleItem[] {
 function renderItem(
 	item: ComboboxSimpleItem,
 	selectedValues: string[],
-	handleSelect: (v: string) => void
+	handleSelect: (v: string) => void,
+	handleInsert: (v: string) => void
 ) {
+	// Items with insertValue render as hints
+	if (item.insertValue !== undefined) {
+		return (
+			<ComboboxHint
+				key={item.value}
+				value={item.value}
+				insertValue={item.insertValue}
+				onInsert={handleInsert}
+			>
+				{item.label}
+			</ComboboxHint>
+		);
+	}
+
 	return (
 		<ComboboxItem
 			key={item.value}
@@ -163,7 +184,8 @@ function renderItem(
 
 const normalizeValue = (v: string | string[] | undefined): string[] => {
 	if (v === undefined) return [];
-	return Array.isArray(v) ? v : [v];
+	const arr = Array.isArray(v) ? v : [v];
+	return arr.filter((val) => val !== '');
 };
 
 function ComboboxSimpleInner({
@@ -226,6 +248,7 @@ function ComboboxSimpleInner({
 					setUncontrolledValue([selectedValue]);
 				}
 				onChange?.(selectedValue);
+				setInputValue('');
 				setOpen(false);
 			}
 		},
@@ -277,11 +300,15 @@ function ComboboxSimpleInner({
 		[multiple, allItems, selectedValues]
 	);
 
+	// For single-select with custom value (not in items), show the raw value
+	const singleCustomValue =
+		!multiple && selectedValues.length > 0 && !selectedItem ? selectedValues[0] : undefined;
+
 	const triggerValue = displayValueFn
 		? displayValueFn(selectedItem)
 		: selectedItem
 			? (selectedItem.displayValue ?? selectedItem.label)
-			: undefined;
+			: singleCustomValue;
 
 	const resolveLabel = React.useCallback(
 		(value: string): React.ReactNode => {
@@ -307,6 +334,33 @@ function ComboboxSimpleInner({
 		}
 	}, []);
 
+	const handleInsert = React.useCallback((value: string) => {
+		setInputValue(value);
+	}, []);
+
+	// Extract hint items (items with insertValue) from allItems
+	const hintItems = React.useMemo(
+		() => allItems.filter((item) => item.insertValue !== undefined),
+		[allItems]
+	);
+
+	// Show hints when input is empty or doesn't start with any hint's insertValue
+	const showHints =
+		hintItems.length > 0 && !hintItems.some((item) => inputValue.startsWith(item.insertValue!));
+
+	// Custom filter for cmdk: always show hint items when showHints is true
+	const hintValues = React.useMemo(() => new Set(hintItems.map((h) => h.value)), [hintItems]);
+	const customFilter = React.useCallback(
+		(value: string, search: string) => {
+			const isHintItem = hintValues.has(value);
+			if (isHintItem) return showHints ? 1 : 0;
+			// Default cmdk behavior for regular items
+			if (value.toLowerCase().includes(search.toLowerCase())) return 1;
+			return 0;
+		},
+		[hintValues, showHints]
+	);
+
 	const showCreateOption =
 		allowCreate &&
 		inputValue.trim() &&
@@ -319,15 +373,28 @@ function ComboboxSimpleInner({
 		[selectedValues, itemsMap]
 	);
 
+	// Filter items: show hints only when showHints is true, always show non-hint items
+	const filterItems = React.useCallback(
+		(itemList: ComboboxSimpleItem[]) =>
+			itemList.filter((item) => (item.insertValue !== undefined ? showHints : true)),
+		[showHints]
+	);
+
 	const listContent = React.useMemo(
 		() =>
 			groups ? (
 				<>
 					{customValues.length > 0 && (
 						<>
-							<ComboboxGroup heading="Custom">
+							<ComboboxGroup heading="Custom" forceMount>
 								{customValues.map((v) => (
-									<ComboboxItem key={v} value={v} onSelect={handleSelect} isSelected={true}>
+									<ComboboxItem
+										key={v}
+										value={v}
+										onSelect={handleSelect}
+										isSelected={true}
+										forceMount
+									>
 										{v}
 									</ComboboxItem>
 								))}
@@ -335,14 +402,20 @@ function ComboboxSimpleInner({
 							<ComboboxSeparator />
 						</>
 					)}
-					{groups.map((group, idx) => (
-						<React.Fragment key={group.heading ?? idx}>
-							{idx > 0 && <ComboboxSeparator />}
-							<ComboboxGroup heading={group.heading}>
-								{group.items.map((item) => renderItem(item, selectedValues, handleSelect))}
-							</ComboboxGroup>
-						</React.Fragment>
-					))}
+					{groups.map((group, idx) => {
+						const filteredItems = filterItems(group.items);
+						if (filteredItems.length === 0) return null;
+						return (
+							<React.Fragment key={group.heading ?? idx}>
+								{idx > 0 && <ComboboxSeparator />}
+								<ComboboxGroup heading={group.heading}>
+									{filteredItems.map((item) =>
+										renderItem(item, selectedValues, handleSelect, handleInsert)
+									)}
+								</ComboboxGroup>
+							</React.Fragment>
+						);
+					})}
 					{showCreateOption && (
 						<ComboboxCreateItem
 							inputValue={inputValue.trim()}
@@ -354,15 +427,23 @@ function ComboboxSimpleInner({
 								: `Create "${inputValue.trim()}"`}
 						</ComboboxCreateItem>
 					)}
-					<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
+					{!showCreateOption && customValues.length === 0 && (
+						<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
+					)}
 				</>
 			) : (
 				<>
 					{customValues.length > 0 && (
 						<>
-							<ComboboxGroup heading="Custom">
+							<ComboboxGroup heading="Custom" forceMount>
 								{customValues.map((v) => (
-									<ComboboxItem key={v} value={v} onSelect={handleSelect} isSelected={true}>
+									<ComboboxItem
+										key={v}
+										value={v}
+										onSelect={handleSelect}
+										isSelected={true}
+										forceMount
+									>
 										{v}
 									</ComboboxItem>
 								))}
@@ -370,7 +451,9 @@ function ComboboxSimpleInner({
 							{items.length > 0 && <ComboboxSeparator />}
 						</>
 					)}
-					{items.map((item) => renderItem(item, selectedValues, handleSelect))}
+					{filterItems(items).map((item) =>
+						renderItem(item, selectedValues, handleSelect, handleInsert)
+					)}
 					{showCreateOption && (
 						<ComboboxCreateItem
 							inputValue={inputValue.trim()}
@@ -382,7 +465,9 @@ function ComboboxSimpleInner({
 								: `Create "${inputValue.trim()}"`}
 						</ComboboxCreateItem>
 					)}
-					<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
+					{!showCreateOption && customValues.length === 0 && (
+						<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
+					)}
 				</>
 			),
 		[
@@ -396,6 +481,8 @@ function ComboboxSimpleInner({
 			allowCreate,
 			handleCreate,
 			customValues,
+			filterItems,
+			handleInsert,
 		]
 	);
 
@@ -469,7 +556,7 @@ function ComboboxSimpleInner({
 					</ComboboxTrigger>
 					{open && (
 						<ComboboxContent withPortal={withPortal}>
-							<ComboboxCommand>
+							<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
 								<ComboboxInput
 									placeholder={inputPlaceholder ?? placeholder}
 									value={inputValue}
@@ -500,9 +587,11 @@ function ComboboxSimpleInner({
 				/>
 				{open && (
 					<ComboboxContent withPortal={withPortal}>
-						<ComboboxCommand>
+						<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
 							<ComboboxInput
 								placeholder={inputPlaceholder ?? placeholder}
+								value={inputValue}
+								onValueChange={setInputValue}
 								onKeyDown={handleInputKeyDown}
 							/>
 							<ComboboxList>{listContent}</ComboboxList>
