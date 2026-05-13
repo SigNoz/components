@@ -23,6 +23,7 @@
 		"@repo/typescript-config": "workspace:*",
 		"@turbo/gen": "2.9.12",
 		"@types/fs-extra": "11.0.4",
+		"@types/node": "25.6.2",
 		"@types/react-dom": "18.3.7",
 		"@typescript/native-preview": "7.0.0-dev.20260309.1",
 		"@vitejs/plugin-react": "5.2.0",
@@ -38,6 +39,7 @@
 		"tsdown": "0.20.3",
 		"turbo": "2.9.12",
 		"typescript": "5.9.3",
+		"sass": "1.78.0",
 		"vite": "npm:rolldown-vite@7.3.1",
 		"vite-plugin-css-injected-by-js": "4.0.1"
 	},
@@ -57,9 +59,7 @@
 		"overrides": {
 			"vite": "npm:rolldown-vite@7.3.1",
 			"@types/node": "25.6.2",
-			"publint": "0.3.18",
-			"sass": "1.78.0",
-			"@typescript/native-preview": "7.0.0-dev.20260309.1"
+			"sass": "1.78.0"
 		},
 		"packageExtensions": {
 			"vite-plugin-lib-inject-css": {

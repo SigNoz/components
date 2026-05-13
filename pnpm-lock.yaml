@@ -11,9 +11,7 @@ overrides:
   tmp: 0.2.4
   vite: npm:rolldown-vite@7.3.1
   '@types/node': 25.6.2
-  publint: 0.3.18
   sass: 1.78.0
-  '@typescript/native-preview': 7.0.0-dev.20260309.1
 
 packageExtensionsChecksum: sha256-pbAhz4S9ckQT1t7W1ZdC6RssHIxKgH+QX6pai/FBocY=
 
@@ -51,6 +49,9 @@ importers:
       '@types/fs-extra':
         specifier: 11.0.4
         version: 11.0.4
+      '@types/node':
+        specifier: 25.6.2
+        version: 25.6.2
       '@types/react-dom':
         specifier: 18.3.7
         version: 18.3.7(@types/react@18.3.28)
@@ -59,7 +60,7 @@ importers:
         version: 7.0.0-dev.20260309.1
       '@vitejs/plugin-react':
         specifier: 5.2.0
-        version: 5.2.0(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+        version: 5.2.0(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       baseline-browser-mapping:
         specifier: 2.10.29
         version: 2.10.29
@@ -87,6 +88,9 @@ importers:
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
+      sass:
+        specifier: 1.78.0
+        version: 1.78.0
       tsdown:
         specifier: 0.20.3
         version: 0.20.3(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@typescript/native-preview@7.0.0-dev.20260309.1)(publint@0.3.18)(synckit@0.11.12)(typescript@5.9.3)
@@ -98,10 +102,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: npm:rolldown-vite@7.3.1
-        version: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+        version: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
       vite-plugin-css-injected-by-js:
         specifier: 4.0.1
-        version: 4.0.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+        version: 4.0.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
 
   apps/docs:
     dependencies:
@@ -122,7 +126,7 @@ importers:
         version: link:../../packages/ui
       '@tailwindcss/vite':
         specifier: ^4.2.1
-        version: 4.2.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+        version: 4.2.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       motion:
         specifier: ^11.18.2
         version: 11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -156,19 +160,19 @@ importers:
         version: link:../../packages/typescript-config
       '@storybook/addon-designs':
         specifier: ^11.0.0
-        version: 11.1.2(@storybook/addon-docs@10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 11.1.2(@storybook/addon-docs@10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@storybook/addon-docs':
         specifier: ^10.0.0
-        version: 10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@storybook/addon-themes':
         specifier: ^10.0.0
         version: 10.2.16(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@storybook/addon-vitest':
         specifier: ^10.2.13
-        version: 10.2.16(@vitest/browser-playwright@4.0.18)(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18))(@vitest/runner@4.0.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vitest@4.0.18)
+        version: 10.2.16(@vitest/browser-playwright@4.0.18)(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18))(@vitest/runner@4.0.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vitest@4.0.18)
       '@storybook/react-vite':
         specifier: ^10.0.0
-        version: 10.2.16(esbuild@0.25.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)
+        version: 10.2.16(esbuild@0.25.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: ^4.1.4
         version: 4.2.1
@@ -186,10 +190,10 @@ importers:
         version: 1.8.8
       '@vitest/browser-playwright':
         specifier: ^4.0.18
-        version: 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
+        version: 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
       '@vitest/coverage-v8':
         specifier: ^4.0.18
-        version: 4.0.18(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18))(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
+        version: 4.0.18(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18))(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
       playwright:
         specifier: ^1.58.2
         version: 1.58.2
@@ -216,7 +220,7 @@ importers:
         version: 1.0.7(tailwindcss@4.2.1)
       vitest:
         specifier: ^4.0.18
-        version: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+        version: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
 
   packages/eslint-config:
     devDependencies:
@@ -260,6 +264,9 @@ importers:
       '@types/node':
         specifier: 25.6.2
         version: 25.6.2
+      publint:
+        specifier: 0.3.18
+        version: 0.3.18
       tsdown:
         specifier: ^0.20.3
         version: 0.20.3(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@typescript/native-preview@7.0.0-dev.20260309.1)(publint@0.3.18)(synckit@0.11.12)(typescript@5.9.3)
@@ -274,7 +281,7 @@ importers:
         version: 4.0.2(postcss@8.5.14)(ts-node@10.9.2(@types/node@25.6.2)(typescript@5.9.3))
       vite-plugin-dts:
         specifier: ^4.5.4
-        version: 4.5.4(@types/node@25.6.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(typescript@5.9.3)
+        version: 4.5.4(@types/node@25.6.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(typescript@5.9.3)
 
   packages/ui:
     dependencies:
@@ -395,7 +402,7 @@ importers:
         version: 18.3.28
       '@vitejs/plugin-react':
         specifier: ^5.1.4
-        version: 5.1.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+        version: 5.1.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       jsdom:
         specifier: ^28.1.0
         version: 28.1.0
@@ -404,10 +411,10 @@ importers:
         version: 0.3.18
       vite:
         specifier: npm:rolldown-vite@7.3.1
-        version: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+        version: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
       vitest:
         specifier: ^4.0.18
-        version: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+        version: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
 
 packages:
 
@@ -6216,7 +6223,7 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@ts-macro/tsc': ^0.3.6
-      '@typescript/native-preview': 7.0.0-dev.20260309.1
+      '@typescript/native-preview': '>=7.0.0-dev.20250601.1'
       rolldown: ^1.0.0-rc.3
       typescript: ^5.0.0 || ^6.0.0-beta
       vue-tsc: ~3.2.0
@@ -6918,7 +6925,7 @@ packages:
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
       '@vitejs/devtools': '*'
-      publint: 0.3.18
+      publint: ^0.3.0
       typescript: ^5.0.0
       unplugin-lightningcss: ^0.4.0
       unplugin-unused: ^0.5.0
@@ -8122,11 +8129,11 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(typescript@5.9.3)':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.6.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(typescript@5.9.3)':
     dependencies:
       glob: 13.0.6
       react-docgen-typescript: 2.4.0(typescript@5.9.3)
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     optionalDependencies:
       typescript: 5.9.3
 
@@ -9024,21 +9031,21 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@storybook/addon-designs@11.1.2(@storybook/addon-docs@10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@storybook/addon-designs@11.1.2(@storybook/addon-docs@10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@figspec/react': 2.0.1(@types/react@18.3.28)(react@18.3.1)
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     optionalDependencies:
-      '@storybook/addon-docs': 10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@storybook/addon-docs': 10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
 
-  '@storybook/addon-docs@10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@storybook/addon-docs@10.2.16(@types/react@18.3.28)(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@mdx-js/react': 3.1.1(@types/react@18.3.28)(react@18.3.1)
-      '@storybook/csf-plugin': 10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@storybook/csf-plugin': 10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@storybook/icons': 2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@storybook/react-dom-shim': 10.2.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       react: 18.3.1
@@ -9057,39 +9064,39 @@ snapshots:
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-vitest@10.2.16(@vitest/browser-playwright@4.0.18)(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18))(@vitest/runner@4.0.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vitest@4.0.18)':
+  '@storybook/addon-vitest@10.2.16(@vitest/browser-playwright@4.0.18)(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18))(@vitest/runner@4.0.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vitest@4.0.18)':
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/icons': 2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     optionalDependencies:
-      '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
-      '@vitest/browser-playwright': 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
+      '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
+      '@vitest/browser-playwright': 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
       '@vitest/runner': 4.0.18
-      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
     transitivePeerDependencies:
       - react
       - react-dom
 
-  '@storybook/builder-vite@10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@storybook/builder-vite@10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
-      '@storybook/csf-plugin': 10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@storybook/csf-plugin': 10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ts-dedent: 2.2.0
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - esbuild
       - rollup
       - webpack
 
-  '@storybook/csf-plugin@10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@storybook/csf-plugin@10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       unplugin: 2.3.11
     optionalDependencies:
       esbuild: 0.25.0
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
 
   '@storybook/csf@0.0.1':
     dependencies:
@@ -9108,11 +9115,11 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  '@storybook/react-vite@10.2.16(esbuild@0.25.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)':
+  '@storybook/react-vite@10.2.16(esbuild@0.25.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(typescript@5.9.3)
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.6.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(typescript@5.9.3)
       '@rollup/pluginutils': 5.3.0
-      '@storybook/builder-vite': 10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      '@storybook/builder-vite': 10.2.16(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@storybook/react': 10.2.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)
       empathic: 2.0.0
       magic-string: 0.30.21
@@ -9122,7 +9129,7 @@ snapshots:
       resolve: 1.22.11
       storybook: 10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tsconfig-paths: 4.2.0
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - esbuild
       - rollup
@@ -9214,12 +9221,12 @@ snapshots:
       postcss: 8.5.12
       tailwindcss: 4.2.1
 
-  '@tailwindcss/vite@4.2.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))':
+  '@tailwindcss/vite@4.2.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))':
     dependencies:
       '@tailwindcss/node': 4.2.1
       '@tailwindcss/oxide': 4.2.1
       tailwindcss: 4.2.1
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
 
   '@tanstack/react-table@8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -9694,7 +9701,7 @@ snapshots:
       - jest
       - supports-color
 
-  '@vitejs/plugin-react@5.1.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))':
+  '@vitejs/plugin-react@5.1.4(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -9702,11 +9709,11 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-react@5.2.0(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))':
+  '@vitejs/plugin-react@5.2.0(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
@@ -9714,33 +9721,33 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-rc.3
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/browser-playwright@4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)':
+  '@vitest/browser-playwright@4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)':
     dependencies:
-      '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
-      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
+      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       playwright: 1.58.2
       tinyrainbow: 3.0.3
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
-      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
+      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
     transitivePeerDependencies:
       - bufferutil
       - msw
       - utf-8-validate
 
-  '@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)':
+  '@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)':
     dependencies:
-      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       '@vitest/utils': 4.0.18
       magic-string: 0.30.21
       pixelmatch: 7.1.0
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       ws: 8.19.0
     transitivePeerDependencies:
       - bufferutil
@@ -9748,7 +9755,7 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/coverage-v8@4.0.18(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18))(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)':
+  '@vitest/coverage-v8@4.0.18(@vitest/browser@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18))(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.0.18
@@ -9760,10 +9767,10 @@ snapshots:
       obug: 2.1.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
-      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
+      vitest: 4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
     optionalDependencies:
-      '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
+      '@vitest/browser': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -9782,13 +9789,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))':
+  '@vitest/mocker@4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.0.18
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
 
   '@vitest/pretty-format@3.2.4':
     dependencies:
@@ -9963,7 +9970,6 @@ snapshots:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
-    optional: true
 
   arch@2.2.0: {}
 
@@ -10101,8 +10107,7 @@ snapshots:
     dependencies:
       require-from-string: 2.0.2
 
-  binary-extensions@2.3.0:
-    optional: true
+  binary-extensions@2.3.0: {}
 
   birpc@4.0.0: {}
 
@@ -10242,7 +10247,6 @@ snapshots:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
-    optional: true
 
   chromatic@13.3.5: {}
 
@@ -11519,8 +11523,7 @@ snapshots:
 
   ignore@6.0.2: {}
 
-  immutable@4.3.8:
-    optional: true
+  immutable@4.3.8: {}
 
   immutable@5.1.5:
     optional: true
@@ -11612,7 +11615,6 @@ snapshots:
   is-binary-path@2.1.0:
     dependencies:
       binary-extensions: 2.3.0
-    optional: true
 
   is-boolean-object@1.2.2:
     dependencies:
@@ -12691,8 +12693,7 @@ snapshots:
       semver: 7.8.0
       validate-npm-package-license: 3.0.4
 
-  normalize-path@3.0.0:
-    optional: true
+  normalize-path@3.0.0: {}
 
   normalize-url@6.1.0: {}
 
@@ -13398,7 +13399,6 @@ snapshots:
   readdirp@3.6.0:
     dependencies:
       picomatch: 2.3.1
-    optional: true
 
   recast@0.23.11:
     dependencies:
@@ -13555,7 +13555,7 @@ snapshots:
     transitivePeerDependencies:
       - oxc-resolver
 
-  rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0):
+  rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0):
     dependencies:
       '@oxc-project/runtime': 0.101.0
       fdir: 6.5.0(picomatch@4.0.4)
@@ -13569,6 +13569,7 @@ snapshots:
       esbuild: 0.25.0
       fsevents: 2.3.3
       jiti: 2.6.1
+      sass: 1.78.0
       sass-embedded: 1.97.3
       yaml: 2.9.0
     transitivePeerDependencies:
@@ -13801,7 +13802,6 @@ snapshots:
       chokidar: 3.6.0
       immutable: 4.3.8
       source-map-js: 1.2.1
-    optional: true
 
   sax@1.5.0: {}
 
@@ -14596,11 +14596,11 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite-plugin-css-injected-by-js@4.0.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)):
+  vite-plugin-css-injected-by-js@4.0.1(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)):
     dependencies:
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
 
-  vite-plugin-dts@4.5.4(@types/node@25.6.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(typescript@5.9.3):
+  vite-plugin-dts@4.5.4(@types/node@25.6.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(typescript@5.9.3):
     dependencies:
       '@microsoft/api-extractor': 7.57.6(@types/node@25.6.2)
       '@rollup/pluginutils': 5.3.0
@@ -14613,16 +14613,16 @@ snapshots:
       magic-string: 0.30.21
       typescript: 5.9.3
     optionalDependencies:
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@types/node'
       - rollup
       - supports-color
 
-  vitest@4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)):
+  vitest@4.0.18(@types/node@25.6.2)(@vitest/browser-playwright@4.0.18)(jsdom@28.1.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.0.18
-      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))
+      '@vitest/mocker': 4.0.18(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
       '@vitest/pretty-format': 4.0.18
       '@vitest/runner': 4.0.18
       '@vitest/snapshot': 4.0.18
@@ -14639,11 +14639,11 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0)
+      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.6.2
-      '@vitest/browser-playwright': 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(yaml@2.9.0))(vitest@4.0.18)
+      '@vitest/browser-playwright': 4.0.18(playwright@1.58.2)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.0.18)
       jsdom: 28.1.0
     transitivePeerDependencies:
       - msw
