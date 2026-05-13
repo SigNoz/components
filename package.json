@@ -51,7 +51,7 @@
 	"name": "design-system",
 	"dependencies": {
 		"@signozhq/design-tokens": "2.1.6",
-		"@signozhq/icons": "0.4.2"
+		"@signozhq/icons": "0.4.0"
 	},
 	"pnpm": {
 		"overrides": {
