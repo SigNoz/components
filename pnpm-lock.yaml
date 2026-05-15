@@ -242,7 +242,7 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
       eslint-plugin-storybook:
-        specifier: 10.3.6
+        specifier: ^10.3.6
         version: 10.3.6(eslint@8.57.1)(storybook@10.2.16(@testing-library/dom@10.4.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.9.3)
 
   packages/tailwind-config:
