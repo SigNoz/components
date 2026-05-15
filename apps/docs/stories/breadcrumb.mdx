@@ -1,0 +1,225 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbStories from './breadcrumb.stories';
+import * as BreadcrumbSimpleStories from './breadcrumb-simple.stories';
+import * as BreadcrumbPrimitiveStories from './breadcrumb-primitive.stories';
+import * as BreadcrumbListStories from './breadcrumb-list.stories';
+import * as BreadcrumbItemStories from './breadcrumb-item.stories';
+import * as BreadcrumbLinkStories from './breadcrumb-link.stories';
+import * as BreadcrumbPageStories from './breadcrumb-page.stories';
+import * as BreadcrumbSeparatorStories from './breadcrumb-separator.stories';
+import * as BreadcrumbEllipsisStories from './breadcrumb-ellipsis.stories';
+import * as BreadcrumbDropdownStories from './breadcrumb-dropdown.stories';
+
+<Meta of={BreadcrumbStories} />
+
+# Breadcrumb
+
+A navigation component that displays the current location within a hierarchy and allows users to navigate back to previous levels.
+
+## How to use
+
+### BreadcrumbSimple (preset)
+
+Minimal preset that accepts a list of items and handles rendering, separators, and navigation. Supports icons, dropdowns, and custom separators.
+
+**Basic usage:**
+
+```tsx
+import { BreadcrumbSimple } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<BreadcrumbSimple
+			items={[
+				{ title: 'Home', href: '/' },
+				{ title: 'Products', href: '/products' },
+				{ title: 'Electronics', href: '/products/electronics' },
+				{ title: 'Phones' },
+			]}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## BreadcrumbSimple Props
+
+<Controls of={BreadcrumbSimpleStories.Default} />
+
+## With Icons
+
+Add icons to breadcrumb items using the `icon` prop:
+
+```tsx
+import { BreadcrumbSimple } from '@signozhq/ui';
+import { Home, Folder } from '@signozhq/icons';
+
+<BreadcrumbSimple
+	items={[
+		{ title: 'Home', href: '/', icon: <Home size={16} /> },
+		{ title: 'Documents', href: '/docs', icon: <Folder size={16} /> },
+		{ title: 'Report.pdf' },
+	]}
+/>
+```
+
+## Custom Separator
+
+Change the separator style using the `separator` prop:
+
+```tsx
+// Chevron separator
+<BreadcrumbSimple
+	separator="chevron"
+	items={[
+		{ title: 'Home', href: '/' },
+		{ title: 'Settings', href: '/settings' },
+		{ title: 'Profile' },
+	]}
+/>
+
+// Custom text separator
+<BreadcrumbSimple
+	separator=">"
+	items={[
+		{ title: 'Home', href: '/' },
+		{ title: 'About' },
+	]}
+/>
+```
+
+## With Dropdown Menu
+
+Add dropdown menus to breadcrumb items using the `menu` prop:
+
+```tsx
+<BreadcrumbSimple
+	items={[
+		{ title: 'Home', href: '/' },
+		{
+			title: 'Category',
+			menu: [
+				{ title: 'Electronics', href: '/electronics' },
+				{ title: 'Clothing', href: '/clothing' },
+				{ title: 'Books', href: '/books' },
+			],
+		},
+		{ title: 'Product' },
+	]}
+/>
+```
+
+## With React Router
+
+Use `itemRender` for integration with react-router or other routing libraries:
+
+```tsx
+import { BreadcrumbSimple } from '@signozhq/ui';
+import { Link } from 'react-router-dom';
+
+const items = [
+	{ title: 'Home', path: '/' },
+	{ title: 'Products', path: '/products' },
+	{ title: 'Details', path: '/details' },
+];
+
+<BreadcrumbSimple
+	items={items}
+	itemRender={(route, params, routes, paths) => {
+		const isLast = route === routes[routes.length - 1];
+		return isLast ? (
+			<span>{route.title}</span>
+		) : (
+			<Link to={`/${paths.join('/')}`}>{route.title}</Link>
+		);
+	}}
+/>
+```
+
+## Test IDs
+
+When `testId` is provided, it propagates to all child components:
+
+```tsx
+<BreadcrumbSimple testId="nav" items={items} />
+// Generates:
+// - nav (root)
+// - nav-list
+// - nav-item-0, nav-item-1, ...
+// - nav-link-0, nav-link-1, ...
+// - nav-separator-1, nav-separator-2, ...
+// - nav-page-N (last item)
+// - nav-dropdown-N (if item has menu)
+```
+
+## Primitive Composition
+
+For full control, compose the subcomponents manually:
+
+```tsx
+import {
+	Breadcrumb,
+	BreadcrumbList,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+	BreadcrumbEllipsis,
+	BreadcrumbDropdown,
+} from '@signozhq/ui';
+
+<Breadcrumb>
+	<BreadcrumbList>
+		<BreadcrumbItem>
+			<BreadcrumbLink href="/">Home</BreadcrumbLink>
+		</BreadcrumbItem>
+		<BreadcrumbSeparator />
+		<BreadcrumbItem>
+			<BreadcrumbEllipsis />
+		</BreadcrumbItem>
+		<BreadcrumbSeparator />
+		<BreadcrumbItem>
+			<BreadcrumbLink href="/components">Components</BreadcrumbLink>
+		</BreadcrumbItem>
+		<BreadcrumbSeparator />
+		<BreadcrumbItem>
+			<BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+		</BreadcrumbItem>
+	</BreadcrumbList>
+</Breadcrumb>
+```
+
+## Breadcrumb Props
+
+<Controls of={BreadcrumbPrimitiveStories.Default} />
+
+## Subcomponents
+
+### BreadcrumbList
+
+<Controls of={BreadcrumbListStories.Default} />
+
+### BreadcrumbItem
+
+<Controls of={BreadcrumbItemStories.Default} />
+
+### BreadcrumbLink
+
+<Controls of={BreadcrumbLinkStories.Default} />
+
+### BreadcrumbPage
+
+<Controls of={BreadcrumbPageStories.Default} />
+
+### BreadcrumbSeparator
+
+<Controls of={BreadcrumbSeparatorStories.Default} />
+
+### BreadcrumbEllipsis
+
+<Controls of={BreadcrumbEllipsisStories.Default} />
+
+### BreadcrumbDropdown
+
+<Controls of={BreadcrumbDropdownStories.Default} />

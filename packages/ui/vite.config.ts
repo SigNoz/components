@@ -7,6 +7,7 @@ const entries: Record<string, string> = {
 	'alert-dialog/index': 'src/alert-dialog/index.ts',
 	'announcement-banner/index': 'src/announcement-banner/index.ts',
 	'badge/index': 'src/badge/index.ts',
+	'breadcrumb/index': 'src/breadcrumb/index.ts',
 	'button/index': 'src/button/index.ts',
 	'calendar/index': 'src/calendar/index.ts',
 	'callout/index': 'src/callout/index.ts',
