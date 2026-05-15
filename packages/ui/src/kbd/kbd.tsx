@@ -51,5 +51,5 @@ function Kbd({
 	);
 }
 
-export { Kbd };
 export type { KbdProps, KbdSize };
+export { Kbd };

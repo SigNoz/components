@@ -423,18 +423,17 @@ TypographyWithCompound.Text = TypographyText;
 TypographyWithCompound.Title = TypographyTitle;
 TypographyWithCompound.Link = TypographyLink;
 
-export { TypographyWithCompound as Typography };
-
 export type {
-	TypographyProps,
-	TypographySize,
-	TypographyWeight,
-	TypographyElement,
-	TypographyVariant,
 	TypographyAlign,
 	TypographyColor,
+	TypographyElement,
 	TypographyLevel,
+	TypographyLinkProps,
+	TypographyProps,
+	TypographySize,
 	TypographyTextProps,
 	TypographyTitleProps,
-	TypographyLinkProps,
+	TypographyVariant,
+	TypographyWeight,
 };
+export { TypographyWithCompound as Typography };
