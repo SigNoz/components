@@ -85,7 +85,7 @@ export default function getViteLibConfig(
 				tsconfigPath: resolve(cwd, 'tsconfig.json'),
 				entryRoot: 'src',
 				// create two type folders, one for esm and cjs
-				outDir: 'dist',
+				outDirs: 'dist',
 				// modify type files after they have been written
 				afterBuild: async () => {
 					// Fetch all .d.ts files recursively from the dist/types/cjs directory
