@@ -8,9 +8,8 @@
 		"access": "public"
 	},
 	"devDependencies": {
-		"rollup-plugin-postcss": "4.0.2",
 		"@signozhq/tailwind-config": "workspace:*",
-		"@microsoft/api-extractor": "^7.58.7",
+		"rollup-plugin-postcss": "4.0.2",
 		"vite-plugin-dts": "^5.0.0"
 	}
 }

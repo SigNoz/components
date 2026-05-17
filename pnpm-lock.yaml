@@ -278,9 +278,6 @@ importers:
 
   packages/typescript-config:
     devDependencies:
-      '@microsoft/api-extractor':
-        specifier: ^7.58.7
-        version: 7.58.7(@types/node@25.6.2)
       '@signozhq/tailwind-config':
         specifier: workspace:*
         version: link:../tailwind-config
@@ -289,7 +286,7 @@ importers:
         version: 4.0.2(postcss@8.5.14)(ts-node@10.9.2(@types/node@25.6.2)(typescript@5.9.3))
       vite-plugin-dts:
         specifier: ^5.0.0
-        version: 5.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(rolldown@1.0.0)(typescript@5.9.3)
+        version: 5.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown@1.0.0)(typescript@5.9.3)
 
   packages/ui:
     dependencies:
@@ -8212,6 +8209,7 @@ snapshots:
       '@rushstack/node-core-library': 5.23.1(@types/node@25.6.2)
     transitivePeerDependencies:
       - '@types/node'
+    optional: true
 
   '@microsoft/api-extractor@7.58.7(@types/node@25.6.2)':
     dependencies:
@@ -8230,6 +8228,7 @@ snapshots:
       typescript: 5.9.3
     transitivePeerDependencies:
       - '@types/node'
+    optional: true
 
   '@microsoft/tsdoc-config@0.16.2':
     dependencies:
@@ -8244,10 +8243,12 @@ snapshots:
       ajv: 8.18.0
       jju: 1.4.0
       resolve: 1.22.12
+    optional: true
 
   '@microsoft/tsdoc@0.14.2': {}
 
-  '@microsoft/tsdoc@0.16.0': {}
+  '@microsoft/tsdoc@0.16.0':
+    optional: true
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
@@ -9018,15 +9019,18 @@ snapshots:
       semver: 7.8.0
     optionalDependencies:
       '@types/node': 25.6.2
+    optional: true
 
   '@rushstack/problem-matcher@0.2.1(@types/node@25.6.2)':
     optionalDependencies:
       '@types/node': 25.6.2
+    optional: true
 
   '@rushstack/rig-package@0.7.3':
     dependencies:
       jju: 1.4.0
       resolve: 1.22.12
+    optional: true
 
   '@rushstack/terminal@0.24.0(@types/node@25.6.2)':
     dependencies:
@@ -9035,6 +9039,7 @@ snapshots:
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 25.6.2
+    optional: true
 
   '@rushstack/ts-command-line@5.3.9(@types/node@25.6.2)':
     dependencies:
@@ -9044,6 +9049,7 @@ snapshots:
       string-argv: 0.3.2
     transitivePeerDependencies:
       - '@types/node'
+    optional: true
 
   '@signozhq/design-tokens@2.1.2': {}
 
@@ -9342,7 +9348,8 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@types/argparse@1.0.38': {}
+  '@types/argparse@1.0.38':
+    optional: true
 
   '@types/aria-query@5.0.4': {}
 
@@ -9944,10 +9951,12 @@ snapshots:
   ajv-draft-04@1.0.0(ajv@8.18.0):
     optionalDependencies:
       ajv: 8.18.0
+    optional: true
 
   ajv-formats@3.0.1(ajv@8.18.0):
     optionalDependencies:
       ajv: 8.18.0
+    optional: true
 
   ajv@6.15.0:
     dependencies:
@@ -10011,6 +10020,7 @@ snapshots:
   argparse@1.0.10:
     dependencies:
       sprintf-js: 1.0.3
+    optional: true
 
   argparse@2.0.1: {}
 
@@ -10617,7 +10627,8 @@ snapshots:
   diff@4.0.4:
     optional: true
 
-  diff@8.0.4: {}
+  diff@8.0.4:
+    optional: true
 
   dir-glob@3.0.1:
     dependencies:
@@ -11548,7 +11559,8 @@ snapshots:
     dependencies:
       resolve-from: 5.0.0
 
-  import-lazy@4.0.0: {}
+  import-lazy@4.0.0:
+    optional: true
 
   import-meta-resolve@4.2.0: {}
 
@@ -12604,6 +12616,7 @@ snapshots:
   minimatch@10.2.3:
     dependencies:
       brace-expansion: 5.0.6
+    optional: true
 
   minimatch@10.2.5:
     dependencies:
@@ -13983,7 +13996,8 @@ snapshots:
 
   split2@4.2.0: {}
 
-  sprintf-js@1.0.3: {}
+  sprintf-js@1.0.3:
+    optional: true
 
   stable-hash@0.0.5: {}
 
@@ -14167,6 +14181,7 @@ snapshots:
   supports-color@8.1.1:
     dependencies:
       has-flag: 4.0.0
+    optional: true
 
   supports-color@9.4.0: {}
 
@@ -14501,7 +14516,7 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-dts@1.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(rolldown@1.0.0)(typescript@5.9.3):
+  unplugin-dts@1.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown@1.0.0)(typescript@5.9.3):
     dependencies:
       '@rollup/pluginutils': 5.3.0
       '@volar/typescript': 2.4.28
@@ -14516,7 +14531,6 @@ snapshots:
       '@microsoft/api-extractor': 7.58.7(@types/node@25.6.2)
       esbuild: 0.25.0
       rolldown: 1.0.0
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -14643,12 +14657,11 @@ snapshots:
     dependencies:
       vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
 
-  vite-plugin-dts@5.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(rolldown@1.0.0)(typescript@5.9.3):
+  vite-plugin-dts@5.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown@1.0.0)(typescript@5.9.3):
     dependencies:
-      unplugin-dts: 1.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(rolldown@1.0.0)(typescript@5.9.3)
+      unplugin-dts: 1.0.0(@microsoft/api-extractor@7.58.7(@types/node@25.6.2))(esbuild@0.25.0)(rolldown@1.0.0)(typescript@5.9.3)
     optionalDependencies:
       '@microsoft/api-extractor': 7.58.7(@types/node@25.6.2)
-      vite: rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.6.1)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@rspack/core'
       - '@vue/language-core'
