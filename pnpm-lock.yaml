@@ -14,6 +14,7 @@ overrides:
   sass: 1.78.0
   eslint-config-prettier: 9.1.0
   eslint-import-resolver-typescript: 3.10.0
+  ajv@<6.14.0: ^6.14.2
 
 packageExtensionsChecksum: sha256-pbAhz4S9ckQT1t7W1ZdC6RssHIxKgH+QX6pai/FBocY=
 
@@ -2959,9 +2960,6 @@ packages:
     peerDependenciesMeta:
       ajv:
         optional: true
-
-  ajv@6.12.6:
-    resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
@@ -7772,7 +7770,7 @@ snapshots:
   '@microsoft/tsdoc-config@0.16.2':
     dependencies:
       '@microsoft/tsdoc': 0.14.2
-      ajv: 6.12.6
+      ajv: 6.15.0
       jju: 1.4.0
       resolve: 1.19.0
 
@@ -9479,13 +9477,6 @@ snapshots:
     optionalDependencies:
       ajv: 8.18.0
     optional: true
-
-  ajv@6.12.6:
-    dependencies:
-      fast-deep-equal: 3.1.3
-      fast-json-stable-stringify: 2.1.0
-      json-schema-traverse: 0.4.1
-      uri-js: 4.4.1
 
   ajv@6.15.0:
     dependencies:
