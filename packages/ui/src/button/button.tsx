@@ -70,17 +70,114 @@ export function buttonVariants({
 }
 
 export type ButtonProps = {
+	/**
+	 * Visual style of the button.
+	 * @default 'solid'
+	 */
 	variant?: ButtonVariantValue;
+	/**
+	 * Height + padding token. `'icon'` produces a square button suitable for a single icon child.
+	 * @default 'md'
+	 */
 	size?: ButtonSizeValue;
+	/**
+	 * When `true`, render as the immediate child element (via Radix `Slot`) instead of a native
+	 * `<button>`. Useful for turning a `Button` into a link. `loading`, `prefix`, and `suffix`
+	 * are not supported in this mode.
+	 * @default false
+	 */
 	asChild?: boolean;
+	/**
+	 * Color scheme applied to the variant. Maps to the button's `data-color` attribute and the
+	 * matching CSS custom properties.
+	 * @default 'primary'
+	 */
 	color?: ButtonColorValue;
+	/**
+	 * Element rendered before the button label. Sized + class-injected automatically when no
+	 * `size` prop is set on the element.
+	 */
 	prefix?: React.ReactElement;
+	/**
+	 * Element rendered after the button label. Sized + class-injected automatically when no
+	 * `size` prop is set on the element.
+	 */
 	suffix?: React.ReactElement;
+	/**
+	 * When `true`, replaces `prefix` (and hides `suffix`) with a spinner and disables the button.
+	 * @default false
+	 */
 	loading?: boolean;
+	/**
+	 * Background context for `variant="action"`. Only meaningful when `variant` is `"action"`.
+	 */
 	background?: ButtonBackgroundValue;
+	/**
+	 * Forwarded to the rendered element as `data-testid`.
+	 */
 	testId?: string;
 } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'prefix' | 'color'>;
 
+/**
+ * Versatile button that maps to a native `<button>` (or any child via `asChild`).
+ * Supports color/variant/size tokens, prefix/suffix slots, loading state, and forwards
+ * every native `HTMLButtonElement` attribute + event handler.
+ *
+ * When nested inside `ButtonGroup`, `size`, `variant`, and `color` defaults are
+ * inherited from the group; per-button props still win.
+ *
+ * @example
+ * ```tsx
+ * // Default — solid primary
+ * <Button onClick={save}>Save</Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Outlined secondary with a leading icon
+ * <Button variant="outlined" color="secondary" prefix={<Plus />}>
+ *   Create alert
+ * </Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Destructive ghost with a trailing icon
+ * <Button variant="ghost" color="destructive" suffix={<Trash />}>
+ *   Delete
+ * </Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Icon-only square button
+ * <Button size="icon" variant="outlined" color="secondary" aria-label="More">
+ *   <Ellipsis />
+ * </Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Loading state — disables the button and replaces the prefix with a spinner
+ * <Button loading prefix={<Plus />}>Saving…</Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // `asChild` — render as a link with button styling
+ * <Button asChild variant="link" color="primary">
+ *   <a href="/docs">Read the docs</a>
+ * </Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Native HTML submit button inside a form
+ * <form onSubmit={onSubmit}>
+ *   <Button type="submit">Submit</Button>
+ * </form>
+ * ```
+ */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	(
 		{

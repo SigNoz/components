@@ -1,12 +1,5 @@
 import { Check, ChevronLeft, ChevronRight, Code, Star, Trash } from '@signozhq/icons';
-import {
-	Button,
-	ButtonBackground,
-	ButtonColor,
-	ButtonGroup,
-	ButtonSize,
-	ButtonVariant,
-} from '@signozhq/ui';
+import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 import { buttonArgTypes, COLORS, VARIANTS } from './shared/button-arg-types.js';
@@ -400,86 +393,6 @@ export const ActionButtons: Story = {
 						</Button>
 					</div>
 				</div>
-			</div>
-		</div>
-	),
-};
-
-// ButtonGroup — merged segmented cluster of buttons (antd Button.Group equivalent)
-export const Group: Story = {
-	parameters: {
-		controls: { disable: true },
-		docs: { story: { autoplay: true } },
-	},
-	render: () => (
-		<div className="p-8 space-y-10">
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold">ButtonGroup</h2>
-				<p className="text-sm text-muted-foreground">
-					Cluster related actions inline. Internal borders dedupe automatically and only the outer
-					ends are rounded. <code>size</code> / <code>variant</code> / <code>color</code> on the
-					group propagate to children that don't override them.
-				</p>
-			</div>
-
-			<div className="space-y-3">
-				<h3 className="text-sm font-medium">Variants</h3>
-				<div className="flex flex-col gap-3">
-					<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
-						<Button>Day</Button>
-						<Button>Week</Button>
-						<Button>Month</Button>
-					</ButtonGroup>
-					<ButtonGroup variant={ButtonVariant.Solid}>
-						<Button>Day</Button>
-						<Button>Week</Button>
-						<Button>Month</Button>
-					</ButtonGroup>
-					<ButtonGroup variant={ButtonVariant.Ghost}>
-						<Button>Day</Button>
-						<Button>Week</Button>
-						<Button>Month</Button>
-					</ButtonGroup>
-				</div>
-			</div>
-
-			<div className="space-y-3">
-				<h3 className="text-sm font-medium">Sizes</h3>
-				<div className="flex items-end gap-4">
-					{[ButtonSize.SM, ButtonSize.MD].map((size) => (
-						<ButtonGroup
-							key={size}
-							size={size}
-							variant={ButtonVariant.Outlined}
-							color={ButtonColor.Secondary}
-						>
-							<Button>Prev</Button>
-							<Button>Next</Button>
-						</ButtonGroup>
-					))}
-				</div>
-			</div>
-
-			<div className="space-y-3">
-				<h3 className="text-sm font-medium">Icon-only cluster</h3>
-				<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary} size="icon">
-					<Button prefix={<ChevronLeft />} aria-label="Previous" />
-					<Button prefix={<Code />} aria-label="Code" />
-					<Button prefix={<ChevronRight />} aria-label="Next" />
-				</ButtonGroup>
-			</div>
-
-			<div className="space-y-3">
-				<h3 className="text-sm font-medium">Per-button override</h3>
-				<p className="text-xs text-muted-foreground">
-					Group sets the default; individual buttons can still opt into a different color or
-					variant.
-				</p>
-				<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
-					<Button>Approve</Button>
-					<Button>Hold</Button>
-					<Button color={ButtonColor.Destructive}>Reject</Button>
-				</ButtonGroup>
 			</div>
 		</div>
 	),
