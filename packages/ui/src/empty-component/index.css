@@ -1,0 +1,40 @@
+.empty-component {
+	width: 100%;
+}
+
+.empty-component[data-active='true'] {
+	animation: pulse 1.5s ease-in-out infinite;
+}
+
+.empty-component-title {
+	background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+	background-size: 200% 100%;
+	border-radius: 4px;
+	margin-bottom: 8px;
+}
+
+.empty-component-title[data-shape='circle'] {
+	border-radius: 50%;
+}
+
+.empty-component-title[data-shape='round'] {
+	border-radius: 999px;
+}
+
+.empty-component-line {
+	background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+	background-size: 200% 100%;
+	border-radius: 4px;
+	margin-bottom: 6px;
+	width: 100%;
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 0.6;
+	}
+	50% {
+		opacity: 1;
+	}
+}
