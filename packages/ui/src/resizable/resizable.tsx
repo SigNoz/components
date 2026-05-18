@@ -22,15 +22,15 @@ import {
 import { cn } from '../lib/utils.js';
 import styles from './resizable.module.scss';
 
-export { useDefaultLayout, useGroupRef, usePanelRef, useGroupCallbackRef, usePanelCallbackRef };
 export type {
-	Layout,
-	PanelSize,
 	GroupImperativeHandle,
-	PanelImperativeHandle,
-	OnGroupLayoutChange,
+	Layout,
 	LayoutStorage,
+	OnGroupLayoutChange,
+	PanelImperativeHandle,
+	PanelSize,
 };
+export { useDefaultLayout, useGroupCallbackRef, useGroupRef, usePanelCallbackRef, usePanelRef };
 
 export type ResizablePanelGroupProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
@@ -388,4 +388,4 @@ const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
 );
 ResizableHandle.displayName = 'ResizableHandle';
 
-export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
+export { ResizableHandle, ResizablePanel, ResizablePanelGroup };

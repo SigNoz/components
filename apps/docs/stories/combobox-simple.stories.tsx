@@ -39,7 +39,8 @@ const meta: Meta<typeof ComboboxSimple> = {
 		},
 		inputPlaceholder: {
 			control: 'text',
-			description: 'Placeholder text for the search input inside the popover. Falls back to placeholder.',
+			description:
+				'Placeholder text for the search input inside the popover. Falls back to placeholder.',
 			table: { category: 'Content', type: { summary: 'string' } },
 		},
 		emptyPlaceholder: {

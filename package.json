@@ -32,7 +32,7 @@
 		"glob": "13.0.6",
 		"husky": "9.1.7",
 		"inquirer": "11.1.0",
-		"lint-staged": "15.5.2",
+		"lint-staged": "^17.0.4",
 		"publint": "0.3.18",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
@@ -62,7 +62,7 @@
 			"sass": "1.78.0",
 			"eslint-config-prettier": "9.1.0",
 			"eslint-import-resolver-typescript": "3.10.0",
-			"css-declaration-sorter": "6.4.0"
+			"ajv@<6.14.0": "^6.14.2"
 		},
 		"packageExtensions": {
 			"vite-plugin-lib-inject-css": {

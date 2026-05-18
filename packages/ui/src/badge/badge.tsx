@@ -113,5 +113,5 @@ function Badge({
 	);
 }
 
+export type { BadgeColor, BadgeProps, BadgeVariant };
 export { Badge };
-export type { BadgeProps, BadgeVariant, BadgeColor };
