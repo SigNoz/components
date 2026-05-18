@@ -62,9 +62,7 @@
 			"sass": "1.78.0",
 			"eslint-config-prettier": "9.1.0",
 			"eslint-import-resolver-typescript": "3.10.0",
-			"css-declaration-sorter": "6.4.0",
-			"ajv@<6.14.0": "^6.14.2",
-			"yaml@>=1.0.0 <1.10.3": "^1.10.3"
+			"ajv@<6.14.0": "^6.14.2"
 		},
 		"packageExtensions": {
 			"vite-plugin-lib-inject-css": {

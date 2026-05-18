@@ -9,7 +9,6 @@
 	},
 	"devDependencies": {
 		"@signozhq/tailwind-config": "workspace:*",
-		"rollup-plugin-postcss": "4.0.2",
 		"vite-plugin-dts": "^5.0.0"
 	}
 }
