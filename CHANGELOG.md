@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.20](https://github.com/SigNoz/components/compare/v0.0.19...v0.0.20) (2026-05-18)
+
+
+### Features
+
+* **button:** add ButtonGroup and forward native HTMLButtonElement attributes ([#229](https://github.com/SigNoz/components/issues/229)) ([f071df0](https://github.com/SigNoz/components/commit/f071df02893a7931db9689327bb56906a1bf3362))
+
+
+### Miscellaneous Chores
+
+* **deps:** update deps and pin deps ([#215](https://github.com/SigNoz/components/issues/215)) ([3eca205](https://github.com/SigNoz/components/commit/3eca2058481a7fdaccf5d2e1d6eea512c0101a48))
+* update deps and other packages ([#222](https://github.com/SigNoz/components/issues/222)) ([49ac60e](https://github.com/SigNoz/components/commit/49ac60e6d31a23e0c689460939262b50d13f3659))
+
 ## [0.0.19](https://github.com/SigNoz/components/compare/v0.0.18...v0.0.19) (2026-05-11)
 
 
