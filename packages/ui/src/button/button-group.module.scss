@@ -1,0 +1,32 @@
+.button-group {
+	display: var(--button-group-display, inline-flex);
+	align-items: var(--button-group-align-items, stretch);
+}
+
+/* Inner buttons share borders (overlap by 1px) and lose corner rounding. */
+.button-group > * {
+	border-radius: 0;
+	position: relative;
+}
+
+.button-group > * + * {
+	margin-left: var(--button-group-overlap, -1px);
+}
+
+.button-group > *:first-child {
+	border-top-left-radius: var(--button-group-radius, calc(var(--radius) - 2px));
+	border-bottom-left-radius: var(--button-group-radius, calc(var(--radius) - 2px));
+}
+
+.button-group > *:last-child {
+	border-top-right-radius: var(--button-group-radius, calc(var(--radius) - 2px));
+	border-bottom-right-radius: var(--button-group-radius, calc(var(--radius) - 2px));
+}
+
+/* Bring hovered / focused buttons forward so their borders aren't clipped. */
+.button-group > *:hover,
+.button-group > *:focus,
+.button-group > *:focus-visible,
+.button-group > *:active {
+	z-index: 1;
+}
