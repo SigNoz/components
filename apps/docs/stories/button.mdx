@@ -24,3 +24,17 @@ This code above will render the following button:
 <Primary />
 
 <Controls of={ButtonStories.Default} />
+
+## ButtonGroup
+
+`ButtonGroup` clusters related buttons together with merged borders. `size`, `variant`, and `color` set on the group propagate to any child `Button` that doesn't set them locally.
+
+```tsx
+import { Button, ButtonGroup } from '@signozhq/ui';
+
+<ButtonGroup variant="outlined" color="secondary">
+	<Button>Day</Button>
+	<Button>Week</Button>
+	<Button>Month</Button>
+</ButtonGroup>;
+```

@@ -1,7 +1,7 @@
 import { Slot } from '@radix-ui/react-slot';
 import { LoaderCircle } from '@signozhq/icons';
 import type React from 'react';
-import { cloneElement, forwardRef } from 'react';
+import { cloneElement, createContext, forwardRef, useContext } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './button.module.scss';
 
@@ -41,6 +41,19 @@ export type ButtonBackgroundValue = (typeof ButtonBackground)[keyof typeof Butto
 export type ButtonColorValue = (typeof ButtonColor)[keyof typeof ButtonColor] | (string & {});
 
 /**
+ * Context used by `ButtonGroup` to propagate `size`, `variant`, and `color` to
+ * descendant `Button`s. Children may still override any of these locally.
+ */
+export interface ButtonGroupContextValue {
+	size?: ButtonSizeValue;
+	variant?: ButtonVariantValue;
+	color?: ButtonColorValue;
+	inGroup: boolean;
+}
+
+export const ButtonGroupContext = createContext<ButtonGroupContextValue | null>(null);
+
+/**
  * Helper function to generate button class names for use in other components
  * This replaces the old CVA-based buttonVariants function
  */
@@ -66,23 +79,7 @@ export type ButtonProps = {
 	loading?: boolean;
 	background?: ButtonBackgroundValue;
 	testId?: string;
-	/**
-	 * Inline styles applied to the default trigger button. Ignored when using a custom `trigger`.
-	 */
-	style?: React.CSSProperties;
-} & Pick<
-	React.ButtonHTMLAttributes<HTMLButtonElement>,
-	| 'disabled'
-	| 'onClick'
-	| 'className'
-	| 'children'
-	| 'onDoubleClick'
-	| 'type'
-	| 'id'
-	| 'tabIndex'
-	| 'title'
-> &
-	React.AriaAttributes;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'prefix' | 'color'>;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	(
@@ -104,10 +101,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		ref
 	) => {
 		const Comp = asChild ? Slot : 'button';
+		const group = useContext(ButtonGroupContext);
 
-		variant ??= ButtonVariant.Solid;
-		size ??= ButtonSize.MD;
-		color ??= ButtonColor.Primary;
+		variant ??= group?.variant ?? ButtonVariant.Solid;
+		size ??= group?.size ?? ButtonSize.MD;
+		color ??= group?.color ?? ButtonColor.Primary;
 
 		const iconSizes: Record<ButtonSizeValue, number> = {
 			[ButtonSize.SM]: 12,

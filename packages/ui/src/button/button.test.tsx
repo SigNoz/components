@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { Button, ButtonBackground, ButtonColor, ButtonVariant } from './button.js';
+import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from './button.js';
+import { ButtonGroup } from './button-group.js';
 
 describe('Button', () => {
 	it('renders as button with default props and children', () => {
@@ -125,5 +126,87 @@ describe('Button', () => {
 	it('applies type="submit" when specified', () => {
 		render(<Button type="submit">Submit</Button>);
 		expect(screen.getByRole('button')).toHaveAttribute('type', 'submit');
+	});
+
+	it('forwards native event handlers (onMouseEnter, onFocus, onKeyDown)', () => {
+		const onMouseEnter = vi.fn();
+		const onFocus = vi.fn();
+		const onKeyDown = vi.fn();
+		render(
+			<Button onMouseEnter={onMouseEnter} onFocus={onFocus} onKeyDown={onKeyDown}>
+				Hover
+			</Button>
+		);
+		const btn = screen.getByRole('button');
+		fireEvent.mouseEnter(btn);
+		fireEvent.focus(btn);
+		fireEvent.keyDown(btn, { key: 'Enter' });
+		expect(onMouseEnter).toHaveBeenCalledTimes(1);
+		expect(onFocus).toHaveBeenCalledTimes(1);
+		expect(onKeyDown).toHaveBeenCalledTimes(1);
+	});
+
+	it('forwards arbitrary aria-* and data-* attributes to the button element', () => {
+		render(
+			<Button aria-label="Toolbar action" data-foo="bar" tabIndex={-1}>
+				X
+			</Button>
+		);
+		const btn = screen.getByRole('button');
+		expect(btn).toHaveAttribute('aria-label', 'Toolbar action');
+		expect(btn).toHaveAttribute('data-foo', 'bar');
+		expect(btn).toHaveAttribute('tabindex', '-1');
+	});
+});
+
+describe('ButtonGroup', () => {
+	it('renders a group with role=group', () => {
+		render(
+			<ButtonGroup testId="g">
+				<Button>A</Button>
+				<Button>B</Button>
+			</ButtonGroup>
+		);
+		const group = screen.getByTestId('g');
+		expect(group).toHaveAttribute('role', 'group');
+	});
+
+	it('propagates size to child buttons that do not override it', () => {
+		render(
+			<ButtonGroup size={ButtonSize.SM} testId="g">
+				<Button testId="a">A</Button>
+				<Button testId="b" size={ButtonSize.MD}>
+					B
+				</Button>
+			</ButtonGroup>
+		);
+		expect(screen.getByTestId('a')).toHaveAttribute('data-size', 'sm');
+		expect(screen.getByTestId('b')).toHaveAttribute('data-size', 'md');
+	});
+
+	it('propagates variant and color to child buttons', () => {
+		render(
+			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
+				<Button testId="a">A</Button>
+				<Button testId="b" color={ButtonColor.Destructive}>
+					B
+				</Button>
+			</ButtonGroup>
+		);
+		const a = screen.getByTestId('a');
+		const b = screen.getByTestId('b');
+		expect(a).toHaveAttribute('data-variant', 'outlined');
+		expect(a).toHaveAttribute('data-color', 'secondary');
+		expect(b).toHaveAttribute('data-color', 'destructive');
+	});
+
+	it('forwards ref to the group element', () => {
+		const ref = createRef<HTMLDivElement>();
+		render(
+			<ButtonGroup ref={ref}>
+				<Button>A</Button>
+			</ButtonGroup>
+		);
+		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
 });
