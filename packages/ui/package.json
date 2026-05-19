@@ -47,6 +47,16 @@
 				"require": "./dist/badge/index.cjs"
 			}
 		},
+		"./breadcrumb": {
+			"import": {
+				"types": "./dist/breadcrumb/index.d.ts",
+				"import": "./dist/breadcrumb/index.mjs"
+			},
+			"require": {
+				"types": "./dist/breadcrumb/index.d.cts",
+				"require": "./dist/breadcrumb/index.cjs"
+			}
+		},
 		"./button": {
 			"import": {
 				"types": "./dist/button/index.d.ts",
@@ -345,6 +355,7 @@
 		"*.css"
 	],
 	"scripts": {
+		"prepack": "cp ../../README.md ./README.md",
 		"build": "vite build && publint",
 		"dev": "vite build --watch",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
