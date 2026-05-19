@@ -54,6 +54,7 @@ export const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive
 		/>
 	)
 );
+Command.displayName = 'Command';
 
 export type CommandDialogProps = React.ComponentProps<typeof Dialog> & {
 	position?: DialogPosition;
@@ -118,6 +119,7 @@ export const CommandDialog = ({
 		</Dialog>
 	);
 };
+CommandDialog.displayName = 'CommandDialog';
 
 export type CommandInputProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
 	/**
@@ -229,6 +231,7 @@ export const CommandInput = React.forwardRef<HTMLInputElement, CommandInputProps
 		);
 	}
 );
+CommandInput.displayName = 'CommandInput';
 
 export type CommandListProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> & {
 	/**
@@ -269,6 +272,7 @@ export const CommandList = React.forwardRef<
 		{...props}
 	/>
 ));
+CommandList.displayName = 'CommandList';
 
 export type CommandEmptyProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>;
 
@@ -291,6 +295,7 @@ export const CommandEmpty = React.forwardRef<
 >((props, ref) => (
 	<CommandPrimitive.Empty ref={ref} className={styles['command__empty']} {...props} />
 ));
+CommandEmpty.displayName = 'CommandEmpty';
 
 export type CommandLoadingProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Loading>;
 
@@ -304,6 +309,7 @@ export const CommandLoading = React.forwardRef<
 		{...props}
 	/>
 ));
+CommandLoading.displayName = 'CommandLoading';
 
 export type CommandGroupProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group> & {
 	/**
@@ -347,6 +353,7 @@ export const CommandGroup = React.forwardRef<
 		{...props}
 	/>
 ));
+CommandGroup.displayName = 'CommandGroup';
 
 export type CommandSeparatorProps = React.ComponentPropsWithoutRef<
 	typeof CommandPrimitive.Separator
@@ -382,6 +389,7 @@ export const CommandSeparator = React.forwardRef<
 		{...props}
 	/>
 ));
+CommandSeparator.displayName = 'CommandSeparator';
 
 export type CommandItemProps = Omit<
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>,
@@ -440,6 +448,7 @@ export const CommandItem = React.forwardRef<
 		{suffix != null && <span className={styles['command__item-suffix']}>{suffix}</span>}
 	</CommandPrimitive.Item>
 ));
+CommandItem.displayName = 'CommandItem';
 
 export type CommandShortcutProps = React.HTMLAttributes<HTMLSpanElement>;
 
@@ -455,6 +464,9 @@ export type CommandShortcutProps = React.HTMLAttributes<HTMLSpanElement>;
  * </CommandItem>
  * ```
  */
-export const CommandShortcut = ({ className, ...props }: CommandShortcutProps) => {
-	return <span className={cn(styles['command__shortcut'], className)} {...props} />;
-};
+export const CommandShortcut = React.forwardRef<HTMLSpanElement, CommandShortcutProps>(
+	({ className, ...props }, ref) => {
+		return <span ref={ref} className={cn(styles['command__shortcut'], className)} {...props} />;
+	}
+);
+CommandShortcut.displayName = 'CommandShortcut';

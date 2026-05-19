@@ -1,4 +1,5 @@
 import { LoaderCircle } from '@signozhq/icons';
+import * as React from 'react';
 
 import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
@@ -38,16 +39,18 @@ export type DropdownMenuLoadingProps = {
  * <DropdownMenuLoading text="Fetching options..." />
  * ```
  */
-export function DropdownMenuLoading({ className, text = 'Loading...' }: DropdownMenuLoadingProps) {
-	return (
-		<div
-			data-slot="dropdown-menu-loading"
-			className={cn(styles['dropdown-menu__loading'], className)}
-		>
-			<LoaderCircle className={styles['dropdown-menu__loading-spinner']} />
-			<span>{text}</span>
-		</div>
-	);
-}
-
+export const DropdownMenuLoading = React.forwardRef<HTMLDivElement, DropdownMenuLoadingProps>(
+	({ className, text = 'Loading...' }, ref) => {
+		return (
+			<div
+				ref={ref}
+				data-slot="dropdown-menu-loading"
+				className={cn(styles['dropdown-menu__loading'], className)}
+			>
+				<LoaderCircle className={styles['dropdown-menu__loading-spinner']} />
+				<span>{text}</span>
+			</div>
+		);
+	}
+);
 DropdownMenuLoading.displayName = 'DropdownMenuLoading';

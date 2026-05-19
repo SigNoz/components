@@ -41,6 +41,7 @@ const ToggleGroupSimpleInner = React.forwardRef<HTMLDivElement, ToggleGroupSimpl
 		);
 	}
 );
+ToggleGroupSimpleInner.displayName = 'ToggleGroupSimpleInner';
 
 /**
  * Minimal toggle group preset. Accepts a list of items and renders toggle buttons

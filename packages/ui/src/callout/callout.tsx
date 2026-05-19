@@ -7,7 +7,7 @@ import {
 	SolidXCircle,
 	X,
 } from '@signozhq/icons';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './callout.module.scss';
 
@@ -100,100 +100,107 @@ const defaultIcons = {
  * />
  * ```
  */
-function Callout({
-	className,
-	title,
-	children,
-	type = 'info',
-	showIcon = true,
-	icon,
-	color,
-	size = 'small',
-	action = 'none',
-	onClick,
-	defaultExpanded = true,
-	testId,
-	id,
-	...props
-}: CalloutProps) {
-	const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
-	const IconComponent = icon || (showIcon && defaultIcons[type]);
+const Callout = forwardRef<HTMLDivElement, CalloutProps>(
+	(
+		{
+			className,
+			title,
+			children,
+			type = 'info',
+			showIcon = true,
+			icon,
+			color,
+			size = 'small',
+			action = 'none',
+			onClick,
+			defaultExpanded = true,
+			testId,
+			id,
+			...props
+		},
+		ref
+	) => {
+		const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
+		const IconComponent = icon || (showIcon && defaultIcons[type]);
 
-	const handleActionClick = React.useCallback(() => {
-		if (action === 'expandable') {
-			setIsExpanded((expand) => !expand);
-		}
-		onClick?.();
-	}, [onClick, action]);
+		const handleActionClick = React.useCallback(() => {
+			if (action === 'expandable') {
+				setIsExpanded((expand) => !expand);
+			}
+			onClick?.();
+		}, [onClick, action]);
 
-	const iconComponent = React.useMemo(() => {
-		return IconComponent ? (
-			<div className={styles['callout__icon']}>
-				{React.isValidElement(IconComponent) ? (
-					React.cloneElement(IconComponent as React.ReactElement, {
-						'aria-hidden': true,
-						className: cn((IconComponent as React.ReactElement).props?.className),
-						color: 'var(--callout-icon-color)',
-						size: size === 'medium' ? 16 : 12,
-					})
-				) : (
-					<span style={{ color: 'var(--callout-icon-color)' }}>{IconComponent}</span>
-				)}
-			</div>
-		) : null;
-	}, [IconComponent, size]);
-
-	return (
-		<div
-			data-slot="callout"
-			data-color={color ?? typeToColorMap[type]}
-			data-testid={testId}
-			id={id}
-			className={cn(
-				styles['callout'],
-				size === 'small' ? styles['callout--small'] : styles['callout--medium'],
-				className
-			)}
-			role={action === 'expandable' ? 'button' : 'alert'}
-			onClick={action === 'expandable' ? handleActionClick : undefined}
-			{...props}
-		>
-			{iconComponent}
-			<div className={styles['callout__content']}>
-				{title && (
-					<div data-slot="callout-title" className={styles['callout__title']}>
-						{title}
-					</div>
-				)}
-				{children && action !== 'expandable' && (
-					<div data-slot="callout-description" className={styles['callout__description']}>
-						{children}
-					</div>
-				)}
-				{children && action === 'expandable' && isExpanded && (
-					<div data-slot="callout-description" className={styles['callout__description']}>
-						{children}
-					</div>
-				)}
-			</div>
-			{action !== 'none' && (
-				<button
-					type="button"
-					aria-label={action === 'dismissible' ? 'Close' : isExpanded ? 'Collapse' : 'Expand'}
-					className={styles['callout__action']}
-					onClick={action === 'dismissible' ? handleActionClick : undefined}
-				>
-					{action === 'dismissible' ? (
-						<X size={size === 'medium' ? 16 : 14} />
-					) : isExpanded ? (
-						<ChevronUp size={size === 'medium' ? 16 : 14} />
+		const iconComponent = React.useMemo(() => {
+			return IconComponent ? (
+				<div className={styles['callout__icon']}>
+					{React.isValidElement(IconComponent) ? (
+						React.cloneElement(IconComponent as React.ReactElement, {
+							'aria-hidden': true,
+							className: cn((IconComponent as React.ReactElement).props?.className),
+							color: 'var(--callout-icon-color)',
+							size: size === 'medium' ? 16 : 12,
+						})
 					) : (
-						<ChevronDown size={size === 'medium' ? 16 : 14} />
+						<span style={{ color: 'var(--callout-icon-color)' }}>{IconComponent}</span>
 					)}
-				</button>
-			)}
-		</div>
-	);
-}
+				</div>
+			) : null;
+		}, [IconComponent, size]);
+
+		return (
+			<div
+				ref={ref}
+				data-slot="callout"
+				data-color={color ?? typeToColorMap[type]}
+				data-testid={testId}
+				id={id}
+				className={cn(
+					styles['callout'],
+					size === 'small' ? styles['callout--small'] : styles['callout--medium'],
+					className
+				)}
+				role={action === 'expandable' ? 'button' : 'alert'}
+				onClick={action === 'expandable' ? handleActionClick : undefined}
+				{...props}
+			>
+				{iconComponent}
+				<div className={styles['callout__content']}>
+					{title && (
+						<div data-slot="callout-title" className={styles['callout__title']}>
+							{title}
+						</div>
+					)}
+					{children && action !== 'expandable' && (
+						<div data-slot="callout-description" className={styles['callout__description']}>
+							{children}
+						</div>
+					)}
+					{children && action === 'expandable' && isExpanded && (
+						<div data-slot="callout-description" className={styles['callout__description']}>
+							{children}
+						</div>
+					)}
+				</div>
+				{action !== 'none' && (
+					<button
+						type="button"
+						aria-label={action === 'dismissible' ? 'Close' : isExpanded ? 'Collapse' : 'Expand'}
+						className={styles['callout__action']}
+						onClick={action === 'dismissible' ? handleActionClick : undefined}
+					>
+						{action === 'dismissible' ? (
+							<X size={size === 'medium' ? 16 : 14} />
+						) : isExpanded ? (
+							<ChevronUp size={size === 'medium' ? 16 : 14} />
+						) : (
+							<ChevronDown size={size === 'medium' ? 16 : 14} />
+						)}
+					</button>
+				)}
+			</div>
+		);
+	}
+);
+Callout.displayName = 'Callout';
 
 export { Callout };

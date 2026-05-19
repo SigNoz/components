@@ -1,5 +1,5 @@
 import { Slot } from '@radix-ui/react-slot';
-import type React from 'react';
+import { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './kbd.module.css';
 
@@ -26,30 +26,29 @@ interface KbdProps
 	active?: boolean;
 }
 
-function Kbd({
-	className,
-	size = 'default',
-	asChild = false,
-	active = false,
-	testId,
-	children,
-	...props
-}: KbdProps) {
-	const Comp = asChild ? Slot : 'kbd';
+const Kbd = forwardRef<HTMLElement, KbdProps>(
+	(
+		{ className, size = 'default', asChild = false, active = false, testId, children, ...props },
+		ref
+	) => {
+		const Comp = asChild ? Slot : 'kbd';
 
-	return (
-		<Comp
-			data-slot="kbd"
-			data-size={size}
-			data-active={active || undefined}
-			data-testid={testId}
-			className={cn(styles.kbd, className)}
-			{...props}
-		>
-			{children}
-		</Comp>
-	);
-}
+		return (
+			<Comp
+				ref={ref}
+				data-slot="kbd"
+				data-size={size}
+				data-active={active || undefined}
+				data-testid={testId}
+				className={cn(styles.kbd, className)}
+				{...props}
+			>
+				{children}
+			</Comp>
+		);
+	}
+);
+Kbd.displayName = 'Kbd';
 
 export type { KbdProps, KbdSize };
 export { Kbd };

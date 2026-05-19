@@ -77,6 +77,7 @@ export const PaginationContainer = React.forwardRef<HTMLElement, PaginationConta
 		);
 	}
 );
+PaginationContainer.displayName = 'PaginationContainer';
 
 export type PaginationContentProps = Pick<
 	React.ComponentPropsWithoutRef<'ul'>,
@@ -104,6 +105,7 @@ export const PaginationContent = React.forwardRef<HTMLUListElement, PaginationCo
 		);
 	}
 );
+PaginationContent.displayName = 'PaginationContent';
 
 export type PaginationItemProps = Pick<
 	React.ComponentPropsWithoutRef<'li'>,
@@ -132,6 +134,7 @@ export const PaginationItem = React.forwardRef<HTMLLIElement, PaginationItemProp
 		);
 	}
 );
+PaginationItem.displayName = 'PaginationItem';
 
 export type PaginationLinkProps = {
 	/**
@@ -166,6 +169,7 @@ export const PaginationLink = React.forwardRef<HTMLButtonElement, PaginationLink
 		);
 	}
 );
+PaginationLink.displayName = 'PaginationLink';
 
 export type PaginationNavProps = Omit<PaginationLinkProps, 'children' | 'isActive'>;
 
@@ -189,6 +193,7 @@ export const PaginationPrevious = React.forwardRef<HTMLButtonElement, Pagination
 		);
 	}
 );
+PaginationPrevious.displayName = 'PaginationPrevious';
 
 /**
  * Button to navigate to the next page. Disable when on the last page.
@@ -210,6 +215,7 @@ export const PaginationNext = React.forwardRef<HTMLButtonElement, PaginationNavP
 		);
 	}
 );
+PaginationNext.displayName = 'PaginationNext';
 
 export type PaginationEllipsisProps = Pick<
 	React.ComponentPropsWithoutRef<'span'>,
@@ -242,6 +248,7 @@ export const PaginationEllipsis = React.forwardRef<HTMLSpanElement, PaginationEl
 		);
 	}
 );
+PaginationEllipsis.displayName = 'PaginationEllipsis';
 
 export type PaginationProps = PaginationContainerProps & {
 	/**
@@ -386,3 +393,4 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		);
 	}
 );
+Pagination.displayName = 'Pagination';

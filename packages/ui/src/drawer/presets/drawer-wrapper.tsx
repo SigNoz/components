@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'motion/react';
-import type React from 'react';
+import * as React from 'react';
 import { useCallback, useState } from 'react';
 import {
 	DialogCloseButton,
@@ -189,76 +189,83 @@ export interface DrawerWrapperProps {
  * </DrawerWrapper>
  * ```
  */
-export function DrawerWrapper({
-	title,
-	subTitle,
-	children,
-	open,
-	onOpenChange,
-	trigger,
-	className,
-	style,
-	disableOutsideClick = false,
-	showCloseButton = true,
-	direction = 'right',
-	showOverlay = true,
-	footer,
-	testId,
-	id,
-	drawerContentProps,
-	drawerHeaderProps,
-	drawerTitleProps,
-	drawerSubtitleProps,
-	drawerDescriptionProps,
-	drawerFooterProps,
-	closeButtonProps,
-	width = 'base',
-}: DrawerWrapperProps) {
-	const isControlled = open !== undefined && onOpenChange !== undefined;
-	const [internalOpen, setInternalOpen] = useState(false);
-	const resolvedOpen = isControlled ? open : internalOpen;
-	const resolvedOnOpenChange = useCallback(
-		(next: boolean) => {
-			if (!isControlled) setInternalOpen(next);
-			onOpenChange?.(next);
+export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps>(
+	(
+		{
+			title,
+			subTitle,
+			children,
+			open,
+			onOpenChange,
+			trigger,
+			className,
+			style,
+			disableOutsideClick = false,
+			showCloseButton = true,
+			direction = 'right',
+			showOverlay = true,
+			footer,
+			testId,
+			id,
+			drawerContentProps,
+			drawerHeaderProps,
+			drawerTitleProps,
+			drawerSubtitleProps,
+			drawerDescriptionProps,
+			drawerFooterProps,
+			closeButtonProps,
+			width = 'base',
 		},
-		[isControlled, onOpenChange]
-	);
-	const onClickClose = useCallback(() => {
-		if (!isControlled) setInternalOpen(false);
-		onOpenChange?.(false);
-	}, [isControlled, onOpenChange]);
+		ref
+	) => {
+		const isControlled = open !== undefined && onOpenChange !== undefined;
+		const [internalOpen, setInternalOpen] = useState(false);
+		const resolvedOpen = isControlled ? open : internalOpen;
+		const resolvedOnOpenChange = useCallback(
+			(next: boolean) => {
+				if (!isControlled) setInternalOpen(next);
+				onOpenChange?.(next);
+			},
+			[isControlled, onOpenChange]
+		);
+		const onClickClose = useCallback(() => {
+			if (!isControlled) setInternalOpen(false);
+			onOpenChange?.(false);
+		}, [isControlled, onOpenChange]);
 
-	const content = (
-		<DrawerContent
-			key="drawer-wrapper"
-			className={className}
-			style={style}
-			direction={direction}
-			showOverlay={showOverlay}
-			forceMount
-			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
-			testId={testId}
-			id={id}
-			width={width}
-			{...drawerContentProps}
-		>
-			{(title || subTitle) && (
-				<DrawerHeader {...drawerHeaderProps}>
-					{title && <DrawerTitle {...drawerTitleProps}>{title}</DrawerTitle>}
-					{subTitle && <DrawerSubtitle {...drawerSubtitleProps}>{subTitle}</DrawerSubtitle>}
-				</DrawerHeader>
-			)}
-			{children && <DrawerDescription {...drawerDescriptionProps}>{children}</DrawerDescription>}
-			{footer && <DrawerFooter {...drawerFooterProps}>{footer}</DrawerFooter>}
-			{showCloseButton && <DialogCloseButton onClick={onClickClose} {...closeButtonProps} />}
-		</DrawerContent>
-	);
+		const content = (
+			<DrawerContent
+				ref={ref}
+				key="drawer-wrapper"
+				className={className}
+				style={style}
+				direction={direction}
+				showOverlay={showOverlay}
+				forceMount
+				onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
+				testId={testId}
+				id={id}
+				width={width}
+				{...drawerContentProps}
+			>
+				{(title || subTitle) && (
+					<DrawerHeader {...drawerHeaderProps}>
+						{title && <DrawerTitle {...drawerTitleProps}>{title}</DrawerTitle>}
+						{subTitle && <DrawerSubtitle {...drawerSubtitleProps}>{subTitle}</DrawerSubtitle>}
+					</DrawerHeader>
+				)}
+				{children && <DrawerDescription {...drawerDescriptionProps}>{children}</DrawerDescription>}
+				{footer && <DrawerFooter {...drawerFooterProps}>{footer}</DrawerFooter>}
+				{showCloseButton && <DialogCloseButton onClick={onClickClose} {...closeButtonProps} />}
+			</DrawerContent>
+		);
 
-	return (
-		<Drawer open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
-			{trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-			<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
-		</Drawer>
-	);
-}
+		return (
+			<Drawer open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
+				{trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
+				<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
+			</Drawer>
+		);
+	}
+);
+DrawerWrapper.displayName = 'DrawerWrapper';

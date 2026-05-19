@@ -23,3 +23,4 @@ export const DialogSubtitle = React.forwardRef<HTMLDivElement, DialogSubtitlePro
 		/>
 	)
 );
+DialogSubtitle.displayName = 'DialogSubtitle';

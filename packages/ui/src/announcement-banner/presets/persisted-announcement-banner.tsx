@@ -50,3 +50,4 @@ export const PersistedAnnouncementBanner = React.forwardRef<
 
 	return <AnnouncementBanner ref={ref} {...props} onClose={handleClose} />;
 });
+PersistedAnnouncementBanner.displayName = 'PersistedAnnouncementBanner';

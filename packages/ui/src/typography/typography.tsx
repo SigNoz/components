@@ -350,6 +350,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 		</Tag>
 	);
 });
+Typography.displayName = 'Typography';
 
 // Compound components
 interface TypographyTextProps extends Omit<TypographyProps, 'variant' | 'level'> {}
@@ -359,6 +360,7 @@ const TypographyText = forwardRef<HTMLElement, TypographyTextProps>(
 		return <Typography ref={ref} variant="text" {...props} />;
 	}
 );
+TypographyText.displayName = 'TypographyText';
 
 interface TypographyTitleProps extends Omit<TypographyProps, 'variant'> {}
 
@@ -368,6 +370,7 @@ const TypographyTitle = forwardRef<HTMLElement, TypographyTitleProps>(function T
 ) {
 	return <Typography ref={ref} variant="title" level={level} {...props} />;
 });
+TypographyTitle.displayName = 'TypographyTitle';
 
 interface TypographyLinkProps extends Omit<TypographyProps, 'variant' | 'level'> {
 	href?: string;
@@ -378,6 +381,7 @@ const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(
 		return <Typography ref={ref} as="a" {...props} />;
 	}
 );
+TypographyLink.displayName = 'TypographyLink';
 
 interface TypographyComponent
 	extends React.ForwardRefExoticComponent<TypographyProps & React.RefAttributes<HTMLElement>> {

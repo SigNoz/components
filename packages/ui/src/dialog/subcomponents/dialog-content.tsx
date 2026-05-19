@@ -44,6 +44,7 @@ const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
 		);
 	}
 );
+MotionContent.displayName = 'MotionContent';
 
 const getContentVariants = (
 	position: DialogPosition,
@@ -353,3 +354,4 @@ export const DialogContent = React.forwardRef<
 		);
 	}
 );
+DialogContent.displayName = 'DialogContent';

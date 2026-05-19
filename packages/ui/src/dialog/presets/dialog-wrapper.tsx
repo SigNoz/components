@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'motion/react';
-import type React from 'react';
+import * as React from 'react';
 import { useCallback, useState } from 'react';
 import {
 	Dialog,
@@ -139,67 +139,74 @@ export interface DialogWrapperProps {
  * </DialogWrapper>
  * ```
  */
-export function DialogWrapper({
-	title,
-	subTitle,
-	children,
-	open,
-	onOpenChange,
-	trigger,
-	className,
-	style,
-	disableOutsideClick = false,
-	showCloseButton = true,
-	width = 'base',
-	titleIcon,
-	footer,
-	showOverlay = true,
-	testId,
-	id,
-}: DialogWrapperProps) {
-	const isControlled = open !== undefined && onOpenChange !== undefined;
-	const [internalOpen, setInternalOpen] = useState(false);
-	const resolvedOpen = isControlled ? open : internalOpen;
-	const resolvedOnOpenChange = useCallback(
-		(next: boolean) => {
-			if (!isControlled) setInternalOpen(next);
-			onOpenChange?.(next);
+export const DialogWrapper = React.forwardRef<HTMLDivElement, DialogWrapperProps>(
+	(
+		{
+			title,
+			subTitle,
+			children,
+			open,
+			onOpenChange,
+			trigger,
+			className,
+			style,
+			disableOutsideClick = false,
+			showCloseButton = true,
+			width = 'base',
+			titleIcon,
+			footer,
+			showOverlay = true,
+			testId,
+			id,
 		},
-		[isControlled, onOpenChange]
-	);
-	const onClickClose = useCallback(() => {
-		if (!isControlled) setInternalOpen(false);
-		onOpenChange?.(false);
-	}, [isControlled, onOpenChange]);
+		ref
+	) => {
+		const isControlled = open !== undefined && onOpenChange !== undefined;
+		const [internalOpen, setInternalOpen] = useState(false);
+		const resolvedOpen = isControlled ? open : internalOpen;
+		const resolvedOnOpenChange = useCallback(
+			(next: boolean) => {
+				if (!isControlled) setInternalOpen(next);
+				onOpenChange?.(next);
+			},
+			[isControlled, onOpenChange]
+		);
+		const onClickClose = useCallback(() => {
+			if (!isControlled) setInternalOpen(false);
+			onOpenChange?.(false);
+		}, [isControlled, onOpenChange]);
 
-	const content = (
-		<DialogContent
-			key="dialog-wrapper"
-			className={className}
-			style={style}
-			forceMount
-			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
-			width={width}
-			showOverlay={showOverlay}
-			testId={testId}
-			id={id}
-		>
-			{(title || subTitle) && (
-				<DialogHeader>
-					{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
-					{subTitle && <DialogSubtitle>{subTitle}</DialogSubtitle>}
-				</DialogHeader>
-			)}
-			{children && <DialogDescription>{children}</DialogDescription>}
-			{footer && <DialogFooter>{footer}</DialogFooter>}
-			{showCloseButton && <DialogCloseButton onClick={onClickClose} />}
-		</DialogContent>
-	);
+		const content = (
+			<DialogContent
+				ref={ref}
+				key="dialog-wrapper"
+				className={className}
+				style={style}
+				forceMount
+				onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
+				width={width}
+				showOverlay={showOverlay}
+				testId={testId}
+				id={id}
+			>
+				{(title || subTitle) && (
+					<DialogHeader>
+						{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
+						{subTitle && <DialogSubtitle>{subTitle}</DialogSubtitle>}
+					</DialogHeader>
+				)}
+				{children && <DialogDescription>{children}</DialogDescription>}
+				{footer && <DialogFooter>{footer}</DialogFooter>}
+				{showCloseButton && <DialogCloseButton onClick={onClickClose} />}
+			</DialogContent>
+		);
 
-	return (
-		<Dialog open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
-			{trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-			<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
-		</Dialog>
-	);
-}
+		return (
+			<Dialog open={resolvedOpen} onOpenChange={resolvedOnOpenChange}>
+				{trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+				<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
+			</Dialog>
+		);
+	}
+);
+DialogWrapper.displayName = 'DialogWrapper';

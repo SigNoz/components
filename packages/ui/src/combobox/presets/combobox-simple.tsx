@@ -188,372 +188,426 @@ const normalizeValue = (v: string | string[] | undefined): string[] => {
 	return arr.filter((val) => val !== '');
 };
 
-function ComboboxSimpleInner({
-	items = [],
-	groups,
-	placeholder = 'Select an option...',
-	inputPlaceholder,
-	emptyPlaceholder = 'No results found.',
-	value: controlledValue,
-	defaultValue,
-	onChange,
-	displayValue: displayValueFn,
-	withPortal = true,
-	testId,
-	id,
-	className,
-	style,
-	multiple = false,
-	allowCreate = false,
-	maxDisplayedPills,
-	disableTooltipProvider = false,
-}: ComboboxSimpleProps) {
-	const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() =>
-		normalizeValue(defaultValue)
-	);
-	const [open, setOpen] = React.useState(false);
-	const [inputValue, setInputValue] = React.useState('');
-	const triggerRef = React.useRef<HTMLButtonElement | HTMLDivElement>(null);
-
-	const isControlled = controlledValue !== undefined;
-	const selectedValues = React.useMemo(
-		() => (isControlled ? normalizeValue(controlledValue) : uncontrolledValue),
-		[isControlled, controlledValue, uncontrolledValue]
-	);
-
-	const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
-
-	const itemsMap = React.useMemo(() => {
-		const map = new Map<string, ComboboxSimpleItem>();
-		for (const item of allItems) {
-			map.set(item.value, item);
-		}
-		return map;
-	}, [allItems]);
-
-	const handleSelect = React.useCallback(
-		(selectedValue: string) => {
-			if (multiple) {
-				const newValues = selectedValues.includes(selectedValue)
-					? selectedValues.filter((v) => v !== selectedValue)
-					: [...selectedValues, selectedValue];
-				if (!isControlled) {
-					setUncontrolledValue(newValues);
-				}
-				onChange?.(newValues);
-				setInputValue('');
-				// Stay open for multi-select
-			} else {
-				if (!isControlled) {
-					setUncontrolledValue([selectedValue]);
-				}
-				onChange?.(selectedValue);
-				setInputValue('');
-				setOpen(false);
-			}
-		},
-		[multiple, onChange, selectedValues, isControlled]
-	);
-
-	const handleRemove = React.useCallback(
-		(valueToRemove: string) => {
-			const newValues = selectedValues.filter((v) => v !== valueToRemove);
-			if (!isControlled) {
-				setUncontrolledValue(newValues);
-			}
-			onChange?.(newValues);
-		},
-		[onChange, selectedValues, isControlled]
-	);
-
-	const handleCreate = React.useCallback(
-		(valueToCreate: string) => {
-			const trimmed = valueToCreate.trim();
-			if (!trimmed) return;
-
-			// Ignore duplicates
-			if (selectedValues.includes(trimmed)) {
-				setInputValue('');
-				return;
-			}
-
-			if (multiple) {
-				const newValues = [...selectedValues, trimmed];
-				if (!isControlled) {
-					setUncontrolledValue(newValues);
-				}
-				onChange?.(newValues);
-			} else {
-				if (!isControlled) {
-					setUncontrolledValue([trimmed]);
-				}
-				onChange?.(trimmed);
-				setOpen(false);
-			}
-			setInputValue('');
-		},
-		[multiple, onChange, selectedValues, isControlled]
-	);
-
-	const selectedItem = React.useMemo(
-		() => (multiple ? undefined : allItems.find((item) => item.value === selectedValues[0])),
-		[multiple, allItems, selectedValues]
-	);
-
-	// For single-select with custom value (not in items), show the raw value
-	const singleCustomValue =
-		!multiple && selectedValues.length > 0 && !selectedItem ? selectedValues[0] : undefined;
-
-	const triggerValue = displayValueFn
-		? displayValueFn(selectedItem)
-		: selectedItem
-			? (selectedItem.displayValue ?? selectedItem.label)
-			: singleCustomValue;
-
-	const resolveLabel = React.useCallback(
-		(value: string): React.ReactNode => {
-			const item = itemsMap.get(value);
-			if (!item) return value;
-			return item.displayValue ?? item.label;
-		},
-		[itemsMap]
-	);
-
-	const handleTriggerKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-		if (e.key === 'Enter' || e.key === ' ') {
-			e.preventDefault();
-			setOpen(true);
-		}
-	}, []);
-
-	const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Tab' && e.shiftKey) {
-			e.preventDefault();
-			setOpen(false);
-			triggerRef.current?.focus();
-		}
-	}, []);
-
-	const handleInsert = React.useCallback((value: string) => {
-		setInputValue(value);
-	}, []);
-
-	// Extract hint items (items with insertValue) from allItems
-	const hintItems = React.useMemo(
-		() => allItems.filter((item) => item.insertValue !== undefined),
-		[allItems]
-	);
-
-	// Show hints when input is empty or doesn't start with any hint's insertValue
-	const showHints =
-		hintItems.length > 0 && !hintItems.some((item) => inputValue.startsWith(item.insertValue!));
-
-	// Custom filter for cmdk: always show hint items when showHints is true
-	const hintValues = React.useMemo(() => new Set(hintItems.map((h) => h.value)), [hintItems]);
-	const customFilter = React.useCallback(
-		(value: string, search: string) => {
-			const isHintItem = hintValues.has(value);
-			if (isHintItem) return showHints ? 1 : 0;
-			// Default cmdk behavior for regular items
-			if (value.toLowerCase().includes(search.toLowerCase())) return 1;
-			return 0;
-		},
-		[hintValues, showHints]
-	);
-
-	const showCreateOption =
-		allowCreate &&
-		inputValue.trim() &&
-		!selectedValues.includes(inputValue.trim()) &&
-		!allItems.some((item) => item.value === inputValue.trim());
-
-	// Custom values = selected values not in predefined items
-	const customValues = React.useMemo(
-		() => selectedValues.filter((v) => !itemsMap.has(v)),
-		[selectedValues, itemsMap]
-	);
-
-	// Filter items: show hints only when showHints is true, always show non-hint items
-	const filterItems = React.useCallback(
-		(itemList: ComboboxSimpleItem[]) =>
-			itemList.filter((item) => (item.insertValue !== undefined ? showHints : true)),
-		[showHints]
-	);
-
-	const listContent = React.useMemo(
-		() =>
-			groups ? (
-				<>
-					{customValues.length > 0 && (
-						<>
-							<ComboboxGroup heading="Custom" forceMount>
-								{customValues.map((v) => (
-									<ComboboxItem
-										key={v}
-										value={v}
-										onSelect={handleSelect}
-										isSelected={true}
-										forceMount
-									>
-										{v}
-									</ComboboxItem>
-								))}
-							</ComboboxGroup>
-							<ComboboxSeparator />
-						</>
-					)}
-					{groups.map((group, idx) => {
-						const filteredItems = filterItems(group.items);
-						if (filteredItems.length === 0) return null;
-						return (
-							<React.Fragment key={group.heading ?? idx}>
-								{idx > 0 && <ComboboxSeparator />}
-								<ComboboxGroup heading={group.heading}>
-									{filteredItems.map((item) =>
-										renderItem(item, selectedValues, handleSelect, handleInsert)
-									)}
-								</ComboboxGroup>
-							</React.Fragment>
-						);
-					})}
-					{showCreateOption && (
-						<ComboboxCreateItem
-							inputValue={inputValue.trim()}
-							onSelect={() => handleCreate(inputValue)}
-							value={`__create__${inputValue.trim()}`}
-						>
-							{typeof allowCreate === 'function'
-								? allowCreate(inputValue.trim())
-								: `Create "${inputValue.trim()}"`}
-						</ComboboxCreateItem>
-					)}
-					{!showCreateOption && customValues.length === 0 && (
-						<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
-					)}
-				</>
-			) : (
-				<>
-					{customValues.length > 0 && (
-						<>
-							<ComboboxGroup heading="Custom" forceMount>
-								{customValues.map((v) => (
-									<ComboboxItem
-										key={v}
-										value={v}
-										onSelect={handleSelect}
-										isSelected={true}
-										forceMount
-									>
-										{v}
-									</ComboboxItem>
-								))}
-							</ComboboxGroup>
-							{items.length > 0 && <ComboboxSeparator />}
-						</>
-					)}
-					{filterItems(items).map((item) =>
-						renderItem(item, selectedValues, handleSelect, handleInsert)
-					)}
-					{showCreateOption && (
-						<ComboboxCreateItem
-							inputValue={inputValue.trim()}
-							onSelect={() => handleCreate(inputValue)}
-							value={`__create__${inputValue.trim()}`}
-						>
-							{typeof allowCreate === 'function'
-								? allowCreate(inputValue.trim())
-								: `Create "${inputValue.trim()}"`}
-						</ComboboxCreateItem>
-					)}
-					{!showCreateOption && customValues.length === 0 && (
-						<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
-					)}
-				</>
-			),
-		[
+const ComboboxSimpleInner = React.forwardRef<
+	HTMLButtonElement | HTMLDivElement,
+	ComboboxSimpleProps
+>(
+	(
+		{
+			items = [],
 			groups,
-			items,
-			selectedValues,
-			handleSelect,
-			emptyPlaceholder,
-			showCreateOption,
-			inputValue,
-			allowCreate,
-			handleCreate,
-			customValues,
-			filterItems,
-			handleInsert,
-		]
-	);
+			placeholder = 'Select an option...',
+			inputPlaceholder,
+			emptyPlaceholder = 'No results found.',
+			value: controlledValue,
+			defaultValue,
+			onChange,
+			displayValue: displayValueFn,
+			withPortal = true,
+			testId,
+			id,
+			className,
+			style,
+			multiple = false,
+			allowCreate = false,
+			maxDisplayedPills,
+			disableTooltipProvider = false,
+		},
+		forwardedRef
+	) => {
+		const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() =>
+			normalizeValue(defaultValue)
+		);
+		const [open, setOpen] = React.useState(false);
+		const [inputValue, setInputValue] = React.useState('');
+		const internalRef = React.useRef<HTMLButtonElement | HTMLDivElement>(null);
 
-	const Wrapper = disableTooltipProvider ? React.Fragment : TooltipProvider;
+		const triggerRef = React.useMemo(() => {
+			return (node: HTMLButtonElement | HTMLDivElement | null) => {
+				(internalRef as React.MutableRefObject<HTMLButtonElement | HTMLDivElement | null>).current =
+					node;
+				if (typeof forwardedRef === 'function') {
+					forwardedRef(node);
+				} else if (forwardedRef) {
+					forwardedRef.current = node;
+				}
+			};
+		}, [forwardedRef]);
 
-	// Multi-select mode with pills in trigger, input in popover
-	if (multiple) {
-		const displayedValues =
-			maxDisplayedPills !== undefined ? selectedValues.slice(0, maxDisplayedPills) : selectedValues;
-		const overflowCount =
-			maxDisplayedPills !== undefined ? Math.max(0, selectedValues.length - maxDisplayedPills) : 0;
-		const hiddenValues = selectedValues.slice(maxDisplayedPills);
+		const isControlled = controlledValue !== undefined;
+		const selectedValues = React.useMemo(
+			() => (isControlled ? normalizeValue(controlledValue) : uncontrolledValue),
+			[isControlled, controlledValue, uncontrolledValue]
+		);
 
-		const pillsContent =
-			selectedValues.length > 0 ? (
-				<span
-					data-slot="combobox-pills"
-					style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', alignItems: 'center' }}
-				>
-					{displayedValues.map((v) => (
-						<ComboboxPill key={v} value={v} onRemove={handleRemove}>
-							{resolveLabel(v)}
-						</ComboboxPill>
-					))}
-					{overflowCount > 0 && (
-						<TooltipSimple title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
-							<span
-								data-slot="combobox-pill-overflow"
-								style={{
-									display: 'inline-flex',
-									alignItems: 'center',
-									justifyContent: 'center',
-									height: '1.25rem',
-									padding: '0 0.5rem',
-									borderRadius: '2px',
-									backgroundColor: 'var(--muted)',
-									color: 'var(--muted-foreground)',
-									fontSize: '0.75rem',
-									fontWeight: 500,
-									cursor: 'default',
-								}}
+		const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
+
+		const itemsMap = React.useMemo(() => {
+			const map = new Map<string, ComboboxSimpleItem>();
+			for (const item of allItems) {
+				map.set(item.value, item);
+			}
+			return map;
+		}, [allItems]);
+
+		const handleSelect = React.useCallback(
+			(selectedValue: string) => {
+				if (multiple) {
+					const newValues = selectedValues.includes(selectedValue)
+						? selectedValues.filter((v) => v !== selectedValue)
+						: [...selectedValues, selectedValue];
+					if (!isControlled) {
+						setUncontrolledValue(newValues);
+					}
+					onChange?.(newValues);
+					setInputValue('');
+					// Stay open for multi-select
+				} else {
+					if (!isControlled) {
+						setUncontrolledValue([selectedValue]);
+					}
+					onChange?.(selectedValue);
+					setInputValue('');
+					setOpen(false);
+				}
+			},
+			[multiple, onChange, selectedValues, isControlled]
+		);
+
+		const handleRemove = React.useCallback(
+			(valueToRemove: string) => {
+				const newValues = selectedValues.filter((v) => v !== valueToRemove);
+				if (!isControlled) {
+					setUncontrolledValue(newValues);
+				}
+				onChange?.(newValues);
+			},
+			[onChange, selectedValues, isControlled]
+		);
+
+		const handleCreate = React.useCallback(
+			(valueToCreate: string) => {
+				const trimmed = valueToCreate.trim();
+				if (!trimmed) return;
+
+				// Ignore duplicates
+				if (selectedValues.includes(trimmed)) {
+					setInputValue('');
+					return;
+				}
+
+				if (multiple) {
+					const newValues = [...selectedValues, trimmed];
+					if (!isControlled) {
+						setUncontrolledValue(newValues);
+					}
+					onChange?.(newValues);
+				} else {
+					if (!isControlled) {
+						setUncontrolledValue([trimmed]);
+					}
+					onChange?.(trimmed);
+					setOpen(false);
+				}
+				setInputValue('');
+			},
+			[multiple, onChange, selectedValues, isControlled]
+		);
+
+		const selectedItem = React.useMemo(
+			() => (multiple ? undefined : allItems.find((item) => item.value === selectedValues[0])),
+			[multiple, allItems, selectedValues]
+		);
+
+		// For single-select with custom value (not in items), show the raw value
+		const singleCustomValue =
+			!multiple && selectedValues.length > 0 && !selectedItem ? selectedValues[0] : undefined;
+
+		const triggerValue = displayValueFn
+			? displayValueFn(selectedItem)
+			: selectedItem
+				? (selectedItem.displayValue ?? selectedItem.label)
+				: singleCustomValue;
+
+		const resolveLabel = React.useCallback(
+			(value: string): React.ReactNode => {
+				const item = itemsMap.get(value);
+				if (!item) return value;
+				return item.displayValue ?? item.label;
+			},
+			[itemsMap]
+		);
+
+		const handleTriggerKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				setOpen(true);
+			}
+		}, []);
+
+		const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+			if (e.key === 'Tab' && e.shiftKey) {
+				e.preventDefault();
+				setOpen(false);
+				internalRef.current?.focus();
+			}
+		}, []);
+
+		const handleInsert = React.useCallback((value: string) => {
+			setInputValue(value);
+		}, []);
+
+		// Extract hint items (items with insertValue) from allItems
+		const hintItems = React.useMemo(
+			() => allItems.filter((item) => item.insertValue !== undefined),
+			[allItems]
+		);
+
+		// Show hints when input is empty or doesn't start with any hint's insertValue
+		const showHints =
+			hintItems.length > 0 && !hintItems.some((item) => inputValue.startsWith(item.insertValue!));
+
+		// Custom filter for cmdk: always show hint items when showHints is true
+		const hintValues = React.useMemo(() => new Set(hintItems.map((h) => h.value)), [hintItems]);
+		const customFilter = React.useCallback(
+			(value: string, search: string) => {
+				const isHintItem = hintValues.has(value);
+				if (isHintItem) return showHints ? 1 : 0;
+				// Default cmdk behavior for regular items
+				if (value.toLowerCase().includes(search.toLowerCase())) return 1;
+				return 0;
+			},
+			[hintValues, showHints]
+		);
+
+		const showCreateOption =
+			allowCreate &&
+			inputValue.trim() &&
+			!selectedValues.includes(inputValue.trim()) &&
+			!allItems.some((item) => item.value === inputValue.trim());
+
+		// Custom values = selected values not in predefined items
+		const customValues = React.useMemo(
+			() => selectedValues.filter((v) => !itemsMap.has(v)),
+			[selectedValues, itemsMap]
+		);
+
+		// Filter items: show hints only when showHints is true, always show non-hint items
+		const filterItems = React.useCallback(
+			(itemList: ComboboxSimpleItem[]) =>
+				itemList.filter((item) => (item.insertValue !== undefined ? showHints : true)),
+			[showHints]
+		);
+
+		const listContent = React.useMemo(
+			() =>
+				groups ? (
+					<>
+						{customValues.length > 0 && (
+							<>
+								<ComboboxGroup heading="Custom" forceMount>
+									{customValues.map((v) => (
+										<ComboboxItem
+											key={v}
+											value={v}
+											onSelect={handleSelect}
+											isSelected={true}
+											forceMount
+										>
+											{v}
+										</ComboboxItem>
+									))}
+								</ComboboxGroup>
+								<ComboboxSeparator />
+							</>
+						)}
+						{groups.map((group, idx) => {
+							const filteredItems = filterItems(group.items);
+							if (filteredItems.length === 0) return null;
+							return (
+								<React.Fragment key={group.heading ?? idx}>
+									{idx > 0 && <ComboboxSeparator />}
+									<ComboboxGroup heading={group.heading}>
+										{filteredItems.map((item) =>
+											renderItem(item, selectedValues, handleSelect, handleInsert)
+										)}
+									</ComboboxGroup>
+								</React.Fragment>
+							);
+						})}
+						{showCreateOption && (
+							<ComboboxCreateItem
+								inputValue={inputValue.trim()}
+								onSelect={() => handleCreate(inputValue)}
+								value={`__create__${inputValue.trim()}`}
 							>
-								+{overflowCount}
-							</span>
-						</TooltipSimple>
-					)}
-				</span>
-			) : undefined;
+								{typeof allowCreate === 'function'
+									? allowCreate(inputValue.trim())
+									: `Create "${inputValue.trim()}"`}
+							</ComboboxCreateItem>
+						)}
+						{!showCreateOption && customValues.length === 0 && (
+							<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
+						)}
+					</>
+				) : (
+					<>
+						{customValues.length > 0 && (
+							<>
+								<ComboboxGroup heading="Custom" forceMount>
+									{customValues.map((v) => (
+										<ComboboxItem
+											key={v}
+											value={v}
+											onSelect={handleSelect}
+											isSelected={true}
+											forceMount
+										>
+											{v}
+										</ComboboxItem>
+									))}
+								</ComboboxGroup>
+								{items.length > 0 && <ComboboxSeparator />}
+							</>
+						)}
+						{filterItems(items).map((item) =>
+							renderItem(item, selectedValues, handleSelect, handleInsert)
+						)}
+						{showCreateOption && (
+							<ComboboxCreateItem
+								inputValue={inputValue.trim()}
+								onSelect={() => handleCreate(inputValue)}
+								value={`__create__${inputValue.trim()}`}
+							>
+								{typeof allowCreate === 'function'
+									? allowCreate(inputValue.trim())
+									: `Create "${inputValue.trim()}"`}
+							</ComboboxCreateItem>
+						)}
+						{!showCreateOption && customValues.length === 0 && (
+							<ComboboxEmpty>{emptyPlaceholder}</ComboboxEmpty>
+						)}
+					</>
+				),
+			[
+				groups,
+				items,
+				selectedValues,
+				handleSelect,
+				emptyPlaceholder,
+				showCreateOption,
+				inputValue,
+				allowCreate,
+				handleCreate,
+				customValues,
+				filterItems,
+				handleInsert,
+			]
+		);
 
+		const Wrapper = disableTooltipProvider ? React.Fragment : TooltipProvider;
+
+		// Multi-select mode with pills in trigger, input in popover
+		if (multiple) {
+			const displayedValues =
+				maxDisplayedPills !== undefined
+					? selectedValues.slice(0, maxDisplayedPills)
+					: selectedValues;
+			const overflowCount =
+				maxDisplayedPills !== undefined
+					? Math.max(0, selectedValues.length - maxDisplayedPills)
+					: 0;
+			const hiddenValues = selectedValues.slice(maxDisplayedPills);
+
+			const pillsContent =
+				selectedValues.length > 0 ? (
+					<span
+						data-slot="combobox-pills"
+						style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', alignItems: 'center' }}
+					>
+						{displayedValues.map((v) => (
+							<ComboboxPill key={v} value={v} onRemove={handleRemove}>
+								{resolveLabel(v)}
+							</ComboboxPill>
+						))}
+						{overflowCount > 0 && (
+							<TooltipSimple title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
+								<span
+									data-slot="combobox-pill-overflow"
+									style={{
+										display: 'inline-flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										height: '1.25rem',
+										padding: '0 0.5rem',
+										borderRadius: '2px',
+										backgroundColor: 'var(--muted)',
+										color: 'var(--muted-foreground)',
+										fontSize: '0.75rem',
+										fontWeight: 500,
+										cursor: 'default',
+									}}
+								>
+									+{overflowCount}
+								</span>
+							</TooltipSimple>
+						)}
+					</span>
+				) : undefined;
+
+			return (
+				<Wrapper>
+					<Combobox open={open} onOpenChange={setOpen}>
+						<ComboboxTrigger asChild>
+							<div
+								ref={triggerRef as React.RefCallback<HTMLDivElement>}
+								className={cn(styles['combobox__trigger'], className)}
+								style={style}
+								data-testid={testId}
+								id={id}
+								role="combobox"
+								aria-expanded={open}
+								aria-haspopup="listbox"
+								tabIndex={0}
+								onKeyDown={handleTriggerKeyDown}
+							>
+								<span className={styles['combobox__trigger-value']}>
+									{pillsContent || placeholder || 'Select an option...'}
+								</span>
+								<ChevronDown className={styles['combobox__trigger-icon']} />
+							</div>
+						</ComboboxTrigger>
+						{open && (
+							<ComboboxContent withPortal={withPortal}>
+								<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
+									<ComboboxInput
+										placeholder={inputPlaceholder ?? placeholder}
+										value={inputValue}
+										onValueChange={setInputValue}
+										onKeyDown={handleInputKeyDown}
+									/>
+									<ComboboxList>{listContent}</ComboboxList>
+								</ComboboxCommand>
+							</ComboboxContent>
+						)}
+					</Combobox>
+				</Wrapper>
+			);
+		}
+
+		// Single-select mode (original behavior)
 		return (
 			<Wrapper>
 				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger asChild>
-						<div
-							ref={triggerRef as React.RefObject<HTMLDivElement>}
-							className={cn(styles['combobox__trigger'], className)}
-							style={style}
-							data-testid={testId}
-							id={id}
-							role="combobox"
-							aria-expanded={open}
-							aria-haspopup="listbox"
-							tabIndex={0}
-							onKeyDown={handleTriggerKeyDown}
-						>
-							<span className={styles['combobox__trigger-value']}>
-								{pillsContent || placeholder || 'Select an option...'}
-							</span>
-							<ChevronDown className={styles['combobox__trigger-icon']} />
-						</div>
-					</ComboboxTrigger>
+					<ComboboxTrigger
+						ref={triggerRef as React.RefCallback<HTMLButtonElement>}
+						placeholder={placeholder}
+						value={triggerValue}
+						testId={testId}
+						id={id}
+						className={className}
+						style={style}
+					/>
 					{open && (
 						<ComboboxContent withPortal={withPortal}>
 							<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
@@ -571,37 +625,8 @@ function ComboboxSimpleInner({
 			</Wrapper>
 		);
 	}
-
-	// Single-select mode (original behavior)
-	return (
-		<Wrapper>
-			<Combobox open={open} onOpenChange={setOpen}>
-				<ComboboxTrigger
-					ref={triggerRef as React.RefObject<HTMLButtonElement>}
-					placeholder={placeholder}
-					value={triggerValue}
-					testId={testId}
-					id={id}
-					className={className}
-					style={style}
-				/>
-				{open && (
-					<ComboboxContent withPortal={withPortal}>
-						<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
-							<ComboboxInput
-								placeholder={inputPlaceholder ?? placeholder}
-								value={inputValue}
-								onValueChange={setInputValue}
-								onKeyDown={handleInputKeyDown}
-							/>
-							<ComboboxList>{listContent}</ComboboxList>
-						</ComboboxCommand>
-					</ComboboxContent>
-				)}
-			</Combobox>
-		</Wrapper>
-	);
-}
+);
+ComboboxSimpleInner.displayName = 'ComboboxSimpleInner';
 
 /**
  * Minimal combobox preset. Accepts a list of items and handles selection,

@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import {
 	DialogCloseButton as BaseDialogCloseButton,
 	type DialogCloseButtonProps as BaseDialogCloseButtonProps,
@@ -28,6 +29,10 @@ export type DrawerCloseButtonProps = BaseDialogCloseButtonProps;
  * </Drawer>
  * ```
  */
-export function DrawerCloseButton(props: DrawerCloseButtonProps) {
-	return <BaseDialogCloseButton {...props} />;
-}
+export const DrawerCloseButton = forwardRef<HTMLButtonElement, DrawerCloseButtonProps>(
+	(props, ref) => {
+		return <BaseDialogCloseButton ref={ref} {...props} />;
+	}
+);
+
+DrawerCloseButton.displayName = 'DrawerCloseButton';

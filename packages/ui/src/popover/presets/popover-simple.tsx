@@ -1,4 +1,4 @@
-import type React from 'react';
+import * as React from 'react';
 
 import {
 	Popover,
@@ -63,50 +63,57 @@ export type PopoverSimpleProps = Pick<
  * </PopoverSimple>
  * ```
  */
-export function PopoverSimple({
-	trigger,
-	children,
-	className,
-	style,
-	id,
-	testId,
-	open,
-	defaultOpen,
-	onOpenChange,
-	modal,
-	side,
-	sideOffset,
-	align,
-	alignOffset,
-	arrow,
-	forceMount,
-	avoidCollisions,
-	collisionPadding,
-}: PopoverSimpleProps) {
-	return (
-		<Popover
-			open={open}
-			defaultOpen={defaultOpen}
-			onOpenChange={onOpenChange}
-			modal={modal}
-			testId={testId}
-		>
-			{trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
-			<PopoverContent
-				className={className}
-				style={style}
-				id={id}
-				side={side}
-				sideOffset={sideOffset}
-				align={align}
-				alignOffset={alignOffset}
-				arrow={arrow}
-				forceMount={forceMount}
-				avoidCollisions={avoidCollisions}
-				collisionPadding={collisionPadding}
+export const PopoverSimple = React.forwardRef<HTMLDivElement, PopoverSimpleProps>(
+	(
+		{
+			trigger,
+			children,
+			className,
+			style,
+			id,
+			testId,
+			open,
+			defaultOpen,
+			onOpenChange,
+			modal,
+			side,
+			sideOffset,
+			align,
+			alignOffset,
+			arrow,
+			forceMount,
+			avoidCollisions,
+			collisionPadding,
+		},
+		ref
+	) => {
+		return (
+			<Popover
+				open={open}
+				defaultOpen={defaultOpen}
+				onOpenChange={onOpenChange}
+				modal={modal}
+				testId={testId}
 			>
-				{children}
-			</PopoverContent>
-		</Popover>
-	);
-}
+				{trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
+				<PopoverContent
+					ref={ref}
+					className={className}
+					style={style}
+					id={id}
+					side={side}
+					sideOffset={sideOffset}
+					align={align}
+					alignOffset={alignOffset}
+					arrow={arrow}
+					forceMount={forceMount}
+					avoidCollisions={avoidCollisions}
+					collisionPadding={collisionPadding}
+				>
+					{children}
+				</PopoverContent>
+			</Popover>
+		);
+	}
+);
+PopoverSimple.displayName = 'PopoverSimple';
