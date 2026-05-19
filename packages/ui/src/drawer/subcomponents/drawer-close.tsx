@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { DialogClose, type DialogCloseProps } from '../../dialog/index.js';
 
 export type DrawerCloseProps = DialogCloseProps;
@@ -29,6 +31,7 @@ export type DrawerCloseProps = DialogCloseProps;
  * </Drawer>
  * ```
  */
-export function DrawerClose(props: DrawerCloseProps) {
-	return <DialogClose data-slot="drawer-close" {...props} />;
-}
+export const DrawerClose = React.forwardRef<React.ElementRef<typeof DialogClose>, DrawerCloseProps>(
+	(props, ref) => <DialogClose ref={ref} data-slot="drawer-close" {...props} />
+);
+DrawerClose.displayName = 'DrawerClose';

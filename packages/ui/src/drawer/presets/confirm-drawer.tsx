@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { ConfirmDialog, type ConfirmDialogProps } from '../../dialog/index.js';
 import type { DrawerDirection } from '../index.js';
 
@@ -34,6 +35,9 @@ export type ConfirmDrawerProps = Omit<ConfirmDialogProps, 'position'> & {
  * </ConfirmDrawer>
  * ```
  */
-export function ConfirmDrawer({ direction = 'right', ...props }: ConfirmDrawerProps) {
-	return <ConfirmDialog {...props} position={direction} heightMode="full" />;
-}
+export const ConfirmDrawer = React.forwardRef<HTMLDivElement, ConfirmDrawerProps>(
+	({ direction = 'right', ...props }, ref) => {
+		return <ConfirmDialog ref={ref} {...props} position={direction} heightMode="full" />;
+	}
+);
+ConfirmDrawer.displayName = 'ConfirmDrawer';

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
 	DialogOverlay as BaseDialogOverlay,
 	type DialogOverlayProps as BaseDialogOverlayProps,
@@ -28,6 +29,8 @@ export type DrawerOverlayProps = BaseDialogOverlayProps;
  * </Drawer>
  * ```
  */
-export function DrawerOverlay(props: DrawerOverlayProps) {
-	return <BaseDialogOverlay data-slot="drawer-overlay" {...props} />;
-}
+export const DrawerOverlay = React.forwardRef<
+	React.ElementRef<typeof BaseDialogOverlay>,
+	DrawerOverlayProps
+>((props, ref) => <BaseDialogOverlay ref={ref} data-slot="drawer-overlay" {...props} />);
+DrawerOverlay.displayName = 'DrawerOverlay';

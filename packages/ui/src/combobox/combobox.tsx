@@ -114,6 +114,7 @@ export const ComboboxTrigger = React.forwardRef<
 		</PopoverPrimitive.Trigger>
 	);
 });
+ComboboxTrigger.displayName = 'ComboboxTrigger';
 
 export type ComboboxContentProps = PopoverContentProps;
 
@@ -145,6 +146,7 @@ export const ComboboxContent = React.forwardRef<
 		{...props}
 	/>
 ));
+ComboboxContent.displayName = 'ComboboxContent';
 
 export type ComboboxCommandProps = React.ComponentPropsWithoutRef<typeof Command>;
 
@@ -170,9 +172,11 @@ export type ComboboxCommandProps = React.ComponentPropsWithoutRef<typeof Command
  * </ComboboxContent>
  * ```
  */
-export function ComboboxCommand(props: ComboboxCommandProps) {
-	return <Command data-slot="combobox-command" {...props} />;
-}
+export const ComboboxCommand = React.forwardRef<
+	React.ElementRef<typeof Command>,
+	ComboboxCommandProps
+>((props, ref) => <Command ref={ref} data-slot="combobox-command" {...props} />);
+ComboboxCommand.displayName = 'ComboboxCommand';
 
 export type ComboboxInputProps = React.ComponentPropsWithoutRef<typeof CommandInput>;
 
@@ -192,9 +196,10 @@ export type ComboboxInputProps = React.ComponentPropsWithoutRef<typeof CommandIn
  * </ComboboxCommand>
  * ```
  */
-export function ComboboxInput(props: ComboboxInputProps) {
-	return <CommandInput data-slot="combobox-input" {...props} />;
-}
+export const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
+	(props, ref) => <CommandInput ref={ref} data-slot="combobox-input" {...props} />
+);
+ComboboxInput.displayName = 'ComboboxInput';
 
 export type ComboboxListProps = React.ComponentPropsWithoutRef<typeof CommandList>;
 
@@ -214,9 +219,11 @@ export type ComboboxListProps = React.ComponentPropsWithoutRef<typeof CommandLis
  * </ComboboxList>
  * ```
  */
-export function ComboboxList(props: ComboboxListProps) {
-	return <CommandList data-slot="combobox-list" {...props} />;
-}
+export const ComboboxList = React.forwardRef<
+	React.ElementRef<typeof CommandList>,
+	ComboboxListProps
+>((props, ref) => <CommandList ref={ref} data-slot="combobox-list" {...props} />);
+ComboboxList.displayName = 'ComboboxList';
 
 export type ComboboxEmptyProps = React.ComponentPropsWithoutRef<typeof CommandEmpty>;
 
@@ -233,9 +240,11 @@ export type ComboboxEmptyProps = React.ComponentPropsWithoutRef<typeof CommandEm
  * </ComboboxList>
  * ```
  */
-export function ComboboxEmpty(props: ComboboxEmptyProps) {
-	return <CommandEmpty data-slot="combobox-empty" {...props} />;
-}
+export const ComboboxEmpty = React.forwardRef<
+	React.ElementRef<typeof CommandEmpty>,
+	ComboboxEmptyProps
+>((props, ref) => <CommandEmpty ref={ref} data-slot="combobox-empty" {...props} />);
+ComboboxEmpty.displayName = 'ComboboxEmpty';
 
 export type ComboboxLoadingProps = React.ComponentPropsWithoutRef<typeof CommandLoading>;
 
@@ -255,9 +264,11 @@ export type ComboboxLoadingProps = React.ComponentPropsWithoutRef<typeof Command
  * </ComboboxList>
  * ```
  */
-export function ComboboxLoading(props: ComboboxLoadingProps) {
-	return <CommandLoading data-slot="combobox-loading" {...props} />;
-}
+export const ComboboxLoading = React.forwardRef<
+	React.ElementRef<typeof CommandLoading>,
+	ComboboxLoadingProps
+>((props, ref) => <CommandLoading ref={ref} data-slot="combobox-loading" {...props} />);
+ComboboxLoading.displayName = 'ComboboxLoading';
 
 export type ComboboxGroupProps = React.ComponentPropsWithoutRef<typeof CommandGroup>;
 
@@ -272,13 +283,15 @@ export type ComboboxGroupProps = React.ComponentPropsWithoutRef<typeof CommandGr
  * </ComboboxGroup>
  * ```
  */
-export function ComboboxGroup({ children, ...props }: ComboboxGroupProps) {
-	return (
-		<CommandGroup data-slot="combobox-group" {...props}>
-			{children}
-		</CommandGroup>
-	);
-}
+export const ComboboxGroup = React.forwardRef<
+	React.ElementRef<typeof CommandGroup>,
+	ComboboxGroupProps
+>(({ children, ...props }, ref) => (
+	<CommandGroup ref={ref} data-slot="combobox-group" {...props}>
+		{children}
+	</CommandGroup>
+));
+ComboboxGroup.displayName = 'ComboboxGroup';
 
 export type ComboboxItemProps = CommandItemProps & {
 	isSelected?: boolean;
@@ -327,43 +340,45 @@ export type ComboboxItemProps = CommandItemProps & {
  * </ComboboxItem>
  * ```
  */
-export function ComboboxItem({
-	prefix,
-	isSelected = false,
-	insertOnInput = false,
-	onInsert,
-	onSelect,
-	value,
-	...props
-}: ComboboxItemProps) {
-	const resolvedPrefix: React.ReactNode =
-		prefix === undefined ? (
-			<span className={styles['combobox__item-check']} data-selected={isSelected}>
-				<Check />
-			</span>
-		) : (
-			prefix
+export const ComboboxItem = React.forwardRef<
+	React.ElementRef<typeof CommandItem>,
+	ComboboxItemProps
+>(
+	(
+		{ prefix, isSelected = false, insertOnInput = false, onInsert, onSelect, value, ...props },
+		ref
+	) => {
+		const resolvedPrefix: React.ReactNode =
+			prefix === undefined ? (
+				<span className={styles['combobox__item-check']} data-selected={isSelected}>
+					<Check />
+				</span>
+			) : (
+				prefix
+			);
+
+		const handleSelect = (currentValue: string) => {
+			if (insertOnInput && onInsert) {
+				onInsert(value ?? currentValue);
+			} else if (onSelect) {
+				onSelect(currentValue);
+			}
+		};
+
+		return (
+			<CommandItem
+				ref={ref}
+				data-slot="combobox-item"
+				data-insert-on-input={insertOnInput}
+				value={value}
+				onSelect={handleSelect}
+				{...props}
+				prefix={resolvedPrefix}
+			/>
 		);
-
-	const handleSelect = (currentValue: string) => {
-		if (insertOnInput && onInsert) {
-			onInsert(value ?? currentValue);
-		} else if (onSelect) {
-			onSelect(currentValue);
-		}
-	};
-
-	return (
-		<CommandItem
-			data-slot="combobox-item"
-			data-insert-on-input={insertOnInput}
-			value={value}
-			onSelect={handleSelect}
-			{...props}
-			prefix={resolvedPrefix}
-		/>
-	);
-}
+	}
+);
+ComboboxItem.displayName = 'ComboboxItem';
 
 export type ComboboxSeparatorProps = React.ComponentPropsWithoutRef<typeof CommandSeparator>;
 
@@ -383,9 +398,11 @@ export type ComboboxSeparatorProps = React.ComponentPropsWithoutRef<typeof Comma
  * </ComboboxList>
  * ```
  */
-export function ComboboxSeparator(props: ComboboxSeparatorProps) {
-	return <CommandSeparator data-slot="combobox-separator" {...props} />;
-}
+export const ComboboxSeparator = React.forwardRef<
+	React.ElementRef<typeof CommandSeparator>,
+	ComboboxSeparatorProps
+>((props, ref) => <CommandSeparator ref={ref} data-slot="combobox-separator" {...props} />);
+ComboboxSeparator.displayName = 'ComboboxSeparator';
 
 export type ComboboxPillProps = {
 	/** The value represented by this pill. */
@@ -408,25 +425,28 @@ export type ComboboxPillProps = {
  * </ComboboxPill>
  * ```
  */
-export function ComboboxPill({ value, onRemove, children, className }: ComboboxPillProps) {
-	return (
-		<span className={cn(styles.combobox__pill, className)} data-slot="combobox-pill">
-			<span className={styles['combobox__pill-text']}>{children}</span>
-			<button
-				type="button"
-				className={styles['combobox__pill-remove']}
-				onClick={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					onRemove(value);
-				}}
-				aria-label={`Remove ${value}`}
-			>
-				<X />
-			</button>
-		</span>
-	);
-}
+export const ComboboxPill = React.forwardRef<HTMLSpanElement, ComboboxPillProps>(
+	({ value, onRemove, children, className }, ref) => {
+		return (
+			<span ref={ref} className={cn(styles.combobox__pill, className)} data-slot="combobox-pill">
+				<span className={styles['combobox__pill-text']}>{children}</span>
+				<button
+					type="button"
+					className={styles['combobox__pill-remove']}
+					onClick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						onRemove(value);
+					}}
+					aria-label={`Remove ${value}`}
+				>
+					<X />
+				</button>
+			</span>
+		);
+	}
+);
+ComboboxPill.displayName = 'ComboboxPill';
 
 export type ComboboxMultiTriggerProps = {
 	/** Additional CSS class names. */
@@ -544,22 +564,20 @@ export type ComboboxCreateItemProps = Omit<CommandItemProps, 'children'> & {
  * </ComboboxCreateItem>
  * ```
  */
-export function ComboboxCreateItem({
-	inputValue,
-	children,
-	className,
-	...props
-}: ComboboxCreateItemProps) {
-	return (
-		<CommandItem
-			data-slot="combobox-create-item"
-			className={cn(styles['combobox__create-item'], className)}
-			{...props}
-		>
-			{children ?? `Create "${inputValue}"`}
-		</CommandItem>
-	);
-}
+export const ComboboxCreateItem = React.forwardRef<
+	React.ElementRef<typeof CommandItem>,
+	ComboboxCreateItemProps
+>(({ inputValue, children, className, ...props }, ref) => (
+	<CommandItem
+		ref={ref}
+		data-slot="combobox-create-item"
+		className={cn(styles['combobox__create-item'], className)}
+		{...props}
+	>
+		{children ?? `Create "${inputValue}"`}
+	</CommandItem>
+));
+ComboboxCreateItem.displayName = 'ComboboxCreateItem';
 
 export type ComboboxHintProps = Omit<CommandItemProps, 'onSelect'> & {
 	/** The value to insert into the input when this hint is selected. */
@@ -584,23 +602,19 @@ export type ComboboxHintProps = Omit<CommandItemProps, 'onSelect'> & {
  * </ComboboxHint>
  * ```
  */
-export function ComboboxHint({
-	insertValue,
-	onInsert,
-	children,
-	className,
-	prefix = null,
-	...props
-}: ComboboxHintProps) {
-	return (
-		<CommandItem
-			data-slot="combobox-hint"
-			className={cn(styles['combobox__hint-item'], className)}
-			onSelect={() => onInsert(insertValue)}
-			prefix={prefix}
-			{...props}
-		>
-			{children}
-		</CommandItem>
-	);
-}
+export const ComboboxHint = React.forwardRef<
+	React.ElementRef<typeof CommandItem>,
+	ComboboxHintProps
+>(({ insertValue, onInsert, children, className, prefix = null, ...props }, ref) => (
+	<CommandItem
+		ref={ref}
+		data-slot="combobox-hint"
+		className={cn(styles['combobox__hint-item'], className)}
+		onSelect={() => onInsert(insertValue)}
+		prefix={prefix}
+		{...props}
+	>
+		{children}
+	</CommandItem>
+));
+ComboboxHint.displayName = 'ComboboxHint';

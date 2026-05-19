@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DialogHeader, type DialogHeaderProps } from '../../dialog/index.js';
 
 export type DrawerHeaderProps = DialogHeaderProps;
@@ -23,6 +24,8 @@ export type DrawerHeaderProps = DialogHeaderProps;
  * </Drawer>
  * ```
  */
-export function DrawerHeader(props: DrawerHeaderProps) {
-	return <DialogHeader data-slot="drawer-header" {...props} />;
-}
+export const DrawerHeader = React.forwardRef<
+	React.ElementRef<typeof DialogHeader>,
+	DrawerHeaderProps
+>((props, ref) => <DialogHeader ref={ref} data-slot="drawer-header" {...props} />);
+DrawerHeader.displayName = 'DrawerHeader';

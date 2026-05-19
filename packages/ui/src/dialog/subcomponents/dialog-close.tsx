@@ -49,3 +49,4 @@ export const DialogClose = React.forwardRef<
 		{...props}
 	/>
 ));
+DialogClose.displayName = 'DialogClose';

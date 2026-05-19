@@ -111,36 +111,49 @@ SwitchBase.displayName = SwitchPrimitive.Root.displayName;
  * <Switch disabled>Maintenance mode</Switch>
  * ```
  */
-const SwitchWrapper: React.FC<SwitchProps> = ({
-	children,
-	id,
-	testId,
-	className,
-	style,
-	containerClassName,
-	containerStyle,
-	containerId,
-	containerTestId,
-	...props
-}) => {
-	const fallbackId = useId();
-	const switchId = id || fallbackId;
+const SwitchWrapper = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
+	(
+		{
+			children,
+			id,
+			testId,
+			className,
+			style,
+			containerClassName,
+			containerStyle,
+			containerId,
+			containerTestId,
+			...props
+		},
+		ref
+	) => {
+		const fallbackId = useId();
+		const switchId = id || fallbackId;
 
-	return (
-		<div
-			className={cn(styles['switch-wrapper'], containerClassName)}
-			data-testid={containerTestId}
-			id={containerId}
-			style={containerStyle}
-		>
-			<SwitchBase id={switchId} testId={testId} className={className} style={style} {...props} />
-			{children && (
-				<label htmlFor={switchId} className={styles['switch-label']}>
-					{children}
-				</label>
-			)}
-		</div>
-	);
-};
+		return (
+			<div
+				className={cn(styles['switch-wrapper'], containerClassName)}
+				data-testid={containerTestId}
+				id={containerId}
+				style={containerStyle}
+			>
+				<SwitchBase
+					ref={ref}
+					id={switchId}
+					testId={testId}
+					className={className}
+					style={style}
+					{...props}
+				/>
+				{children && (
+					<label htmlFor={switchId} className={styles['switch-label']}>
+						{children}
+					</label>
+				)}
+			</div>
+		);
+	}
+);
+SwitchWrapper.displayName = 'Switch';
 
 export { SwitchWrapper as Switch };

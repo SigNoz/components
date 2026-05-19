@@ -1,4 +1,5 @@
 import { X } from '@signozhq/icons';
+import { forwardRef } from 'react';
 import { Button, type ButtonProps } from '../../button/index.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../dialog.module.css';
@@ -59,27 +60,27 @@ export interface DialogCloseButtonProps extends Omit<ButtonProps, 'type' | 'aria
  * <DialogCloseButton testId="dialog-close-btn" />
  * ```
  */
-export function DialogCloseButton({
-	className,
-	ariaLabel = 'Close',
-	icon = <X />,
-	...buttonProps
-}: DialogCloseButtonProps) {
-	return (
-		<DialogClose asChild>
-			<Button
-				type="button"
-				aria-label={ariaLabel}
-				variant="ghost"
-				size="icon"
-				color="none"
-				data-slot="dialog-close-button"
-				className={cn(styles.dialog__close__icon_button, className)}
-				{...buttonProps}
-			>
-				{icon}
-				<span className={styles.dialog__close__button_screenreader}>{ariaLabel}</span>
-			</Button>
-		</DialogClose>
-	);
-}
+export const DialogCloseButton = forwardRef<HTMLButtonElement, DialogCloseButtonProps>(
+	({ className, ariaLabel = 'Close', icon = <X />, ...buttonProps }, ref) => {
+		return (
+			<DialogClose asChild>
+				<Button
+					ref={ref}
+					type="button"
+					aria-label={ariaLabel}
+					variant="ghost"
+					size="icon"
+					color="none"
+					data-slot="dialog-close-button"
+					className={cn(styles.dialog__close__icon_button, className)}
+					{...buttonProps}
+				>
+					{icon}
+					<span className={styles.dialog__close__button_screenreader}>{ariaLabel}</span>
+				</Button>
+			</DialogClose>
+		);
+	}
+);
+
+DialogCloseButton.displayName = 'DialogCloseButton';

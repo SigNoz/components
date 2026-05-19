@@ -202,184 +202,193 @@ const expandAnimate = { opacity: 1, height: 'auto' } as const;
  * />
  * ```
  */
-function PinList({
-	items: initialItems,
-	onItemClick,
-	onPinToggle,
-	shortcutsLabel = 'SHORTCUTS',
-	moreLabel = 'MORE',
-	className,
-	itemClassName,
-	labelClassName,
-	transition = defaultTransition,
-	isDocked: isDockedProp,
-	testId,
-	id,
-	...props
-}: PinListProps) {
-	const [listItems, setListItems] = React.useState(initialItems);
-	const [isMoreExpanded, setIsMoreExpanded] = React.useState(true);
-
-	React.useEffect(() => {
-		setListItems(initialItems);
-	}, [initialItems]);
-
-	const pinned = React.useMemo(
-		() => listItems.filter((item) => item.isPinned && item.isEnabled),
-		[listItems]
-	);
-
-	const unpinned = React.useMemo(
-		() => listItems.filter((item) => !item.isPinned && item.isEnabled),
-		[listItems]
-	);
-
-	const toggleStatus = React.useCallback(
-		(key: string) => {
-			const item = listItems.find((i) => i.key === key);
-			if (!item) return;
-
-			setListItems((prev) => {
-				const idx = prev.findIndex((i) => i.key === key);
-				if (idx === -1) return prev;
-				const updated = [...prev];
-				const [itemToToggle] = updated.splice(idx, 1);
-				if (!itemToToggle) return prev;
-				const toggled = { ...itemToToggle, isPinned: !itemToToggle.isPinned };
-				if (toggled.isPinned) updated.push(toggled);
-				else updated.unshift(toggled);
-				return updated;
-			});
-
-			onPinToggle?.({ ...item, isPinned: !item.isPinned });
+const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
+	(
+		{
+			items: initialItems,
+			onItemClick,
+			onPinToggle,
+			shortcutsLabel = 'SHORTCUTS',
+			moreLabel = 'MORE',
+			className,
+			itemClassName,
+			labelClassName,
+			transition = defaultTransition,
+			isDocked: isDockedProp,
+			testId,
+			id,
+			...props
 		},
-		[listItems, onPinToggle]
-	);
+		ref
+	) => {
+		const [listItems, setListItems] = React.useState(initialItems);
+		const [isMoreExpanded, setIsMoreExpanded] = React.useState(true);
 
-	const handleItemClick = React.useCallback(
-		(item: PinListItem) => {
-			onItemClick?.(item);
-		},
-		[onItemClick]
-	);
+		React.useEffect(() => {
+			setListItems(initialItems);
+		}, [initialItems]);
 
-	const toggleMoreExpanded = React.useCallback(() => {
-		setIsMoreExpanded((prev) => !prev);
-	}, []);
+		const pinned = React.useMemo(
+			() => listItems.filter((item) => item.isPinned && item.isEnabled),
+			[listItems]
+		);
 
-	const chevronRotation = React.useMemo(
-		() => ({ rotate: isMoreExpanded ? 0 : -90 }),
-		[isMoreExpanded]
-	);
+		const unpinned = React.useMemo(
+			() => listItems.filter((item) => !item.isPinned && item.isEnabled),
+			[listItems]
+		);
 
-	return (
-		<TooltipProvider>
-			<motion.div
-				className={cn(styles['container'], className)}
-				data-testid={testId}
-				id={id}
-				{...props}
-			>
-				<LayoutGroup>
-					<div className={styles['section']}>
-						<AnimatePresence>
-							<motion.p
-								layout
-								key="pinned-label"
-								initial={fadeInInitial}
-								animate={fadeInAnimate}
-								exit={fadeInInitial}
-								transition={labelAnimationTransition}
-								className={cn(styles['label'], labelClassName)}
-							>
-								<div className={styles['label-icon']}>
-									<MousePointerClick className={styles['label-icon']} />
-								</div>
-								<span>{shortcutsLabel}</span>
-							</motion.p>
-						</AnimatePresence>
-						{pinned.length > 0 ? (
-							<div className={styles['section-items']}>
-								{pinned.map((item) => (
-									<PinListItemComponent
-										key={item.key}
-										item={item}
-										transition={transition}
-										onItemClick={handleItemClick}
-										onPinClick={toggleStatus}
-										isPinned
-										isDocked={isDockedProp}
-										className={cn(itemClassName, item.className)}
-									/>
-								))}
-							</div>
-						) : (
-							<div className={styles['empty-state']}>
-								<p className={styles['empty-state-text']}>You have not added any shortcuts yet.</p>
-							</div>
-						)}
-					</div>
+		const toggleStatus = React.useCallback(
+			(key: string) => {
+				const item = listItems.find((i) => i.key === key);
+				if (!item) return;
 
-					<div className={styles['section']}>
-						<AnimatePresence>
-							{unpinned.length > 0 && (
-								<motion.button
+				setListItems((prev) => {
+					const idx = prev.findIndex((i) => i.key === key);
+					if (idx === -1) return prev;
+					const updated = [...prev];
+					const [itemToToggle] = updated.splice(idx, 1);
+					if (!itemToToggle) return prev;
+					const toggled = { ...itemToToggle, isPinned: !itemToToggle.isPinned };
+					if (toggled.isPinned) updated.push(toggled);
+					else updated.unshift(toggled);
+					return updated;
+				});
+
+				onPinToggle?.({ ...item, isPinned: !item.isPinned });
+			},
+			[listItems, onPinToggle]
+		);
+
+		const handleItemClick = React.useCallback(
+			(item: PinListItem) => {
+				onItemClick?.(item);
+			},
+			[onItemClick]
+		);
+
+		const toggleMoreExpanded = React.useCallback(() => {
+			setIsMoreExpanded((prev) => !prev);
+		}, []);
+
+		const chevronRotation = React.useMemo(
+			() => ({ rotate: isMoreExpanded ? 0 : -90 }),
+			[isMoreExpanded]
+		);
+
+		return (
+			<TooltipProvider>
+				<motion.div
+					ref={ref}
+					className={cn(styles['container'], className)}
+					data-testid={testId}
+					id={id}
+					{...props}
+				>
+					<LayoutGroup>
+						<div className={styles['section']}>
+							<AnimatePresence>
+								<motion.p
 									layout
-									key="more-label"
+									key="pinned-label"
 									initial={fadeInInitial}
 									animate={fadeInAnimate}
 									exit={fadeInInitial}
 									transition={labelAnimationTransition}
-									onClick={toggleMoreExpanded}
-									className={cn(styles['more-label'], labelClassName)}
+									className={cn(styles['label'], labelClassName)}
 								>
-									<div className={styles['more-label-content']}>
-										<div className={styles['label-icon']}>
-											<Ellipsis className={styles['label-icon']} />
-										</div>
-										<span>{moreLabel}</span>
+									<div className={styles['label-icon']}>
+										<MousePointerClick className={styles['label-icon']} />
 									</div>
-									<div className={styles['more-label-chevron']}>
-										<motion.div
-											animate={chevronRotation}
-											transition={moreSectionAnimationTransition}
-										>
-											<ChevronDown className={styles['more-label-chevron']} />
-										</motion.div>
-									</div>
-								</motion.button>
-							)}
-						</AnimatePresence>
-						<AnimatePresence>
-							{unpinned.length > 0 && isMoreExpanded && (
-								<motion.div
-									initial={expandInitial}
-									animate={expandAnimate}
-									exit={expandInitial}
-									transition={moreSectionAnimationTransition}
-									className={cn(styles['section-items'], 'overflow-hidden')}
-								>
-									{unpinned.map((item) => (
+									<span>{shortcutsLabel}</span>
+								</motion.p>
+							</AnimatePresence>
+							{pinned.length > 0 ? (
+								<div className={styles['section-items']}>
+									{pinned.map((item) => (
 										<PinListItemComponent
 											key={item.key}
 											item={item}
 											transition={transition}
 											onItemClick={handleItemClick}
 											onPinClick={toggleStatus}
-											isPinned={false}
+											isPinned
 											isDocked={isDockedProp}
 											className={cn(itemClassName, item.className)}
 										/>
 									))}
-								</motion.div>
+								</div>
+							) : (
+								<div className={styles['empty-state']}>
+									<p className={styles['empty-state-text']}>
+										You have not added any shortcuts yet.
+									</p>
+								</div>
 							)}
-						</AnimatePresence>
-					</div>
-				</LayoutGroup>
-			</motion.div>
-		</TooltipProvider>
-	);
-}
+						</div>
+
+						<div className={styles['section']}>
+							<AnimatePresence>
+								{unpinned.length > 0 && (
+									<motion.button
+										layout
+										key="more-label"
+										initial={fadeInInitial}
+										animate={fadeInAnimate}
+										exit={fadeInInitial}
+										transition={labelAnimationTransition}
+										onClick={toggleMoreExpanded}
+										className={cn(styles['more-label'], labelClassName)}
+									>
+										<div className={styles['more-label-content']}>
+											<div className={styles['label-icon']}>
+												<Ellipsis className={styles['label-icon']} />
+											</div>
+											<span>{moreLabel}</span>
+										</div>
+										<div className={styles['more-label-chevron']}>
+											<motion.div
+												animate={chevronRotation}
+												transition={moreSectionAnimationTransition}
+											>
+												<ChevronDown className={styles['more-label-chevron']} />
+											</motion.div>
+										</div>
+									</motion.button>
+								)}
+							</AnimatePresence>
+							<AnimatePresence>
+								{unpinned.length > 0 && isMoreExpanded && (
+									<motion.div
+										initial={expandInitial}
+										animate={expandAnimate}
+										exit={expandInitial}
+										transition={moreSectionAnimationTransition}
+										className={cn(styles['section-items'], 'overflow-hidden')}
+									>
+										{unpinned.map((item) => (
+											<PinListItemComponent
+												key={item.key}
+												item={item}
+												transition={transition}
+												onItemClick={handleItemClick}
+												onPinClick={toggleStatus}
+												isPinned={false}
+												isDocked={isDockedProp}
+												className={cn(itemClassName, item.className)}
+											/>
+										))}
+									</motion.div>
+								)}
+							</AnimatePresence>
+						</div>
+					</LayoutGroup>
+				</motion.div>
+			</TooltipProvider>
+		);
+	}
+);
+PinList.displayName = 'PinList';
 
 type PinListItemComponentProps = {
 	item: PinListItem;

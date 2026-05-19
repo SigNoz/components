@@ -1,5 +1,5 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import type * as React from 'react';
+import * as React from 'react';
 
 export type TooltipTriggerProps = {
 	/**
@@ -20,6 +20,10 @@ export type TooltipTriggerProps = {
  * The element that triggers the tooltip to open on hover. Use with `asChild` to delegate
  * to a child element (e.g. a Button).
  */
-export function TooltipTrigger({ testId, ...props }: TooltipTriggerProps) {
-	return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" data-testid={testId} {...props} />;
-}
+export const TooltipTrigger = React.forwardRef<
+	React.ElementRef<typeof TooltipPrimitive.Trigger>,
+	TooltipTriggerProps
+>(({ testId, ...props }, ref) => (
+	<TooltipPrimitive.Trigger ref={ref} data-slot="tooltip-trigger" data-testid={testId} {...props} />
+));
+TooltipTrigger.displayName = 'TooltipTrigger';

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
 	DialogDescription as BaseDialogDescription,
 	type DialogDescriptionProps as BaseDialogDescriptionProps,
@@ -26,6 +27,8 @@ export type DrawerDescriptionProps = BaseDialogDescriptionProps;
  * </Drawer>
  * ```
  */
-export function DrawerDescription(props: DrawerDescriptionProps) {
-	return <BaseDialogDescription data-slot="drawer-description" {...props} />;
-}
+export const DrawerDescription = React.forwardRef<
+	React.ElementRef<typeof BaseDialogDescription>,
+	DrawerDescriptionProps
+>((props, ref) => <BaseDialogDescription ref={ref} data-slot="drawer-description" {...props} />);
+DrawerDescription.displayName = 'DrawerDescription';

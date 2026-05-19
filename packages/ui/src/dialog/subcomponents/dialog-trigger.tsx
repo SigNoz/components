@@ -48,3 +48,4 @@ export const DialogTrigger = React.forwardRef<
 		{...props}
 	/>
 ));
+DialogTrigger.displayName = 'DialogTrigger';

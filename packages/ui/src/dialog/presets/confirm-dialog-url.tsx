@@ -1,4 +1,5 @@
 import { parseAsBoolean, useQueryState } from 'nuqs';
+import * as React from 'react';
 import { useCallback } from 'react';
 import { ConfirmDialog, type ConfirmDialogProps } from './confirm-dialog.js';
 
@@ -41,29 +42,33 @@ export type ConfirmDialogUrlProps = {
  * </>
  * ```
  */
-export function ConfirmDialogUrl({ urlKey, onConfirm, onCancel, ...props }: ConfirmDialogUrlProps) {
-	const [open, setOpen] = useQueryState(urlKey, parseAsBoolean);
-	const onCancelProxy = useCallback(async () => {
-		await setOpen(false);
-		onCancel?.();
-	}, [setOpen, onCancel]);
-	const onConfirmProxy = useCallback(async () => {
-		const canClose = await onConfirm();
-
-		if (canClose === true || canClose === undefined) {
+export const ConfirmDialogUrl = React.forwardRef<HTMLDivElement, ConfirmDialogUrlProps>(
+	({ urlKey, onConfirm, onCancel, ...props }, ref) => {
+		const [open, setOpen] = useQueryState(urlKey, parseAsBoolean);
+		const onCancelProxy = useCallback(async () => {
 			await setOpen(false);
-		}
+			onCancel?.();
+		}, [setOpen, onCancel]);
+		const onConfirmProxy = useCallback(async () => {
+			const canClose = await onConfirm();
 
-		return canClose;
-	}, [setOpen, onConfirm]);
+			if (canClose === true || canClose === undefined) {
+				await setOpen(false);
+			}
 
-	return (
-		<ConfirmDialog
-			open={open || false}
-			onOpenChange={(next) => setOpen(next)}
-			onConfirm={onConfirmProxy}
-			onCancel={onCancelProxy}
-			{...props}
-		/>
-	);
-}
+			return canClose;
+		}, [setOpen, onConfirm]);
+
+		return (
+			<ConfirmDialog
+				ref={ref}
+				open={open || false}
+				onOpenChange={(next) => setOpen(next)}
+				onConfirm={onConfirmProxy}
+				onCancel={onCancelProxy}
+				{...props}
+			/>
+		);
+	}
+);
+ConfirmDialogUrl.displayName = 'ConfirmDialogUrl';

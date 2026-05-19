@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { DialogContent as BaseDialogContent, type DialogContentProps } from '../../dialog/index.js';
 import { DrawerOverlay } from './drawer-overlay.js';
 import { DrawerPortal } from './drawer-portal.js';
@@ -43,27 +45,24 @@ export interface DrawerContentProps extends Omit<DialogContentProps, 'position' 
  * </Drawer>
  * ```
  */
-export function DrawerContent({
-	children,
-	direction,
-	showOverlay = true,
-	forceMount,
-	...props
-}: DrawerContentProps) {
-	return (
-		<DrawerPortal forceMount={forceMount}>
-			{showOverlay && <DrawerOverlay forceMount={forceMount} />}
-			<BaseDialogContent
-				animation="slide"
-				data-slot="drawer-content"
-				position={direction ?? 'right'}
-				heightMode="full"
-				showOverlay={false}
-				forceMount={forceMount}
-				{...props}
-			>
-				{children}
-			</BaseDialogContent>
-		</DrawerPortal>
-	);
-}
+export const DrawerContent = React.forwardRef<
+	React.ElementRef<typeof BaseDialogContent>,
+	DrawerContentProps
+>(({ children, direction, showOverlay = true, forceMount, ...props }, ref) => (
+	<DrawerPortal forceMount={forceMount}>
+		{showOverlay && <DrawerOverlay forceMount={forceMount} />}
+		<BaseDialogContent
+			ref={ref}
+			animation="slide"
+			data-slot="drawer-content"
+			position={direction ?? 'right'}
+			heightMode="full"
+			showOverlay={false}
+			forceMount={forceMount}
+			{...props}
+		>
+			{children}
+		</BaseDialogContent>
+	</DrawerPortal>
+));
+DrawerContent.displayName = 'DrawerContent';

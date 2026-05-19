@@ -1,4 +1,4 @@
-import type React from 'react';
+import * as React from 'react';
 import { Checkbox } from '../checkbox/index.js';
 import { DialogWrapper, type DialogWrapperProps } from '../dialog/index.js';
 import { cn } from '../lib/utils.js';
@@ -15,43 +15,50 @@ export interface AlertDialogProps
 	footer?: React.ReactNode;
 }
 
-function AlertDialog({
-	children,
-	checkboxLabel,
-	checkboxChecked,
-	onCheckboxChange,
-	checkboxColor = 'cherry',
-	title,
-	titleIcon,
-	className,
-	...props
-}: AlertDialogProps) {
-	return (
-		<DialogWrapper
-			showCloseButton={false}
-			disableOutsideClick={true}
-			title={title}
-			titleIcon={titleIcon}
-			className={cn(styles.alert__dialog, className)}
-			{...props}
-		>
-			{children}
+const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
+	(
+		{
+			children,
+			checkboxLabel,
+			checkboxChecked,
+			onCheckboxChange,
+			checkboxColor = 'cherry',
+			title,
+			titleIcon,
+			className,
+			...props
+		},
+		ref
+	) => {
+		return (
+			<DialogWrapper
+				ref={ref}
+				showCloseButton={false}
+				disableOutsideClick={true}
+				title={title}
+				titleIcon={titleIcon}
+				className={cn(styles.alert__dialog, className)}
+				{...props}
+			>
+				{children}
 
-			{checkboxLabel && (
-				<Checkbox
-					color={checkboxColor}
-					value={checkboxChecked}
-					className={styles.alert__dialog__checkbox}
-					onChange={(checked: boolean | 'indeterminate') => {
-						const isChecked = checked === true;
-						onCheckboxChange?.(isChecked);
-					}}
-				>
-					{checkboxLabel}
-				</Checkbox>
-			)}
-		</DialogWrapper>
-	);
-}
+				{checkboxLabel && (
+					<Checkbox
+						color={checkboxColor}
+						value={checkboxChecked}
+						className={styles.alert__dialog__checkbox}
+						onChange={(checked: boolean | 'indeterminate') => {
+							const isChecked = checked === true;
+							onCheckboxChange?.(isChecked);
+						}}
+					>
+						{checkboxLabel}
+					</Checkbox>
+				)}
+			</DialogWrapper>
+		);
+	}
+);
+AlertDialog.displayName = 'AlertDialog';
 
 export { AlertDialog };

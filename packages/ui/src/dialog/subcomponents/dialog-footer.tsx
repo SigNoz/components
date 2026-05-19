@@ -47,3 +47,4 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
 		/>
 	)
 );
+DialogFooter.displayName = 'DialogFooter';

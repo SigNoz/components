@@ -1,5 +1,6 @@
 import { AnimatePresence } from 'motion/react';
-import React, { useCallback } from 'react';
+import * as React from 'react';
+import { useCallback } from 'react';
 import { Button, type ButtonProps } from '../../button/index.js';
 import {
 	Dialog,
@@ -150,93 +151,102 @@ export type ConfirmDialogProps = {
  * </ConfirmDialog>
  * ```
  */
-export function ConfirmDialog({
-	open,
-	onOpenChange,
-	title,
-	titleIcon,
-	children,
-	className,
-	style,
-	testId,
-	id,
+export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps>(
+	(
+		{
+			open,
+			onOpenChange,
+			title,
+			titleIcon,
+			children,
+			className,
+			style,
+			testId,
+			id,
 
-	cancelText = 'Cancel',
-	onCancel,
-	cancelIcon,
+			cancelText = 'Cancel',
+			onCancel,
+			cancelIcon,
 
-	confirmText,
-	onConfirm,
-	confirmColor = 'destructive',
-	confirmIcon,
+			confirmText,
+			onConfirm,
+			confirmColor = 'destructive',
+			confirmIcon,
 
-	disableOutsideClick = false,
-	width = 'base',
-	position = 'center',
+			disableOutsideClick = false,
+			width = 'base',
+			position = 'center',
 
-	heightMode = 'content',
-}: ConfirmDialogProps) {
-	const animation = position === 'center' ? 'fade' : 'slide';
-	const [onConfirming, setOnConfirming] = React.useState(false);
-	const onConfirmProxy = useCallback(async () => {
-		setOnConfirming(true);
-		const canClose = await onConfirm();
-		setOnConfirming(false);
+			heightMode = 'content',
+		},
+		ref
+	) => {
+		const animation = position === 'center' ? 'fade' : 'slide';
+		const [onConfirming, setOnConfirming] = React.useState(false);
+		const onConfirmProxy = useCallback(async () => {
+			setOnConfirming(true);
+			const canClose = await onConfirm();
+			setOnConfirming(false);
 
-		if (canClose === true || canClose === undefined) {
-			onOpenChange?.(false);
-		}
-	}, [onConfirm, onOpenChange]);
+			if (canClose === true || canClose === undefined) {
+				onOpenChange?.(false);
+			}
+		}, [onConfirm, onOpenChange]);
 
-	const isControlled = open !== undefined && onOpenChange !== undefined;
+		const isControlled = open !== undefined && onOpenChange !== undefined;
 
-	const content = (
-		<DialogContent
-			key="confirm-dialog"
-			className={className}
-			style={style}
-			testId={testId}
-			id={id}
-			forceMount={isControlled ? (true as const) : undefined}
-			onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
-			width={width}
-			position={position}
-			animation={animation}
-			heightMode={heightMode}
-		>
-			{title && (
-				<DialogHeader>{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}</DialogHeader>
-			)}
-			{children && <DialogDescription>{children}</DialogDescription>}
-			<DialogFooter>
-				<Button
-					type="button"
-					variant="ghost"
-					color="secondary"
-					onClick={onCancel}
-					prefix={cancelIcon}
-				>
-					{cancelText}
-				</Button>
+		const content = (
+			<DialogContent
+				ref={ref}
+				key="confirm-dialog"
+				className={className}
+				style={style}
+				testId={testId}
+				id={id}
+				forceMount={isControlled ? (true as const) : undefined}
+				onPointerDownOutside={disableOutsideClick ? (e) => e.preventDefault() : undefined}
+				width={width}
+				position={position}
+				animation={animation}
+				heightMode={heightMode}
+			>
+				{title && (
+					<DialogHeader>
+						{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
+					</DialogHeader>
+				)}
+				{children && <DialogDescription>{children}</DialogDescription>}
+				<DialogFooter>
+					<Button
+						type="button"
+						variant="ghost"
+						color="secondary"
+						onClick={onCancel}
+						prefix={cancelIcon}
+					>
+						{cancelText}
+					</Button>
 
-				<Button
-					type="button"
-					variant="solid"
-					color={confirmColor}
-					loading={onConfirming}
-					onClick={onConfirmProxy}
-					prefix={confirmIcon}
-				>
-					{confirmText}
-				</Button>
-			</DialogFooter>
-			<DialogCloseButton onClick={onCancel} />
-		</DialogContent>
-	);
+					<Button
+						type="button"
+						variant="solid"
+						color={confirmColor}
+						loading={onConfirming}
+						onClick={onConfirmProxy}
+						prefix={confirmIcon}
+					>
+						{confirmText}
+					</Button>
+				</DialogFooter>
+				<DialogCloseButton onClick={onCancel} />
+			</DialogContent>
+		);
 
-	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			{isControlled ? <AnimatePresence>{open ? content : null}</AnimatePresence> : content}
-		</Dialog>
-	);
-}
+		return (
+			<Dialog open={open} onOpenChange={onOpenChange}>
+				{isControlled ? <AnimatePresence>{open ? content : null}</AnimatePresence> : content}
+			</Dialog>
+		);
+	}
+);
+ConfirmDialog.displayName = 'ConfirmDialog';

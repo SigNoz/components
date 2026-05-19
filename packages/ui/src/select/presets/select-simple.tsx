@@ -118,101 +118,111 @@ function flattenItems(groups: SelectSimpleGroup[]): SelectSimpleItem[] {
 	return groups.flatMap((g) => g.items);
 }
 
-function SelectSimpleInner({
-	className,
-	style,
-	id,
-	testId,
-	items = [],
-	groups,
-	placeholder = 'Select...',
-	value: controlledValue,
-	defaultValue,
-	onChange,
-	multiple = false,
-	displayValue: displayValueFn,
-	withPortal = true,
-	disabled = false,
-	defaultOpen = false,
-	maxDisplayedPills,
-}: SelectSimpleProps) {
-	const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
-
-	const itemsMap = React.useMemo(() => {
-		const map = new Map<string, SelectSimpleItem>();
-		for (const item of allItems) {
-			map.set(item.value, item);
-		}
-		return map;
-	}, [allItems]);
-
-	const resolveLabel = React.useCallback(
-		(value: string): React.ReactNode => {
-			const item = itemsMap.get(value);
-			if (!item) return value;
-			return item.displayValue ?? item.label;
+const SelectSimpleInner = React.forwardRef<
+	React.ElementRef<typeof SelectTrigger>,
+	SelectSimpleProps
+>(
+	(
+		{
+			className,
+			style,
+			id,
+			testId,
+			items = [],
+			groups,
+			placeholder = 'Select...',
+			value: controlledValue,
+			defaultValue,
+			onChange,
+			multiple = false,
+			displayValue: displayValueFn,
+			withPortal = true,
+			disabled = false,
+			defaultOpen = false,
+			maxDisplayedPills,
 		},
-		[itemsMap]
-	);
+		ref
+	) => {
+		const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
 
-	const renderTriggerValue = React.useMemo(() => {
-		if (!displayValueFn) return undefined;
+		const itemsMap = React.useMemo(() => {
+			const map = new Map<string, SelectSimpleItem>();
+			for (const item of allItems) {
+				map.set(item.value, item);
+			}
+			return map;
+		}, [allItems]);
 
-		return (values: string[]) => {
-			const selectedItems = values
-				.map((v) => itemsMap.get(v))
-				.filter(Boolean) as SelectSimpleItem[];
-			return displayValueFn(selectedItems);
-		};
-	}, [displayValueFn, itemsMap]);
+		const resolveLabel = React.useCallback(
+			(value: string): React.ReactNode => {
+				const item = itemsMap.get(value);
+				if (!item) return value;
+				return item.displayValue ?? item.label;
+			},
+			[itemsMap]
+		);
 
-	const renderItems = (itemList: SelectSimpleItem[]) =>
-		itemList.map((item) => (
-			<SelectItem
-				key={item.value}
-				value={item.value}
-				disabled={item.disabled}
-				textValue={item.displayValue ?? (typeof item.label === 'string' ? item.label : undefined)}
+		const renderTriggerValue = React.useMemo(() => {
+			if (!displayValueFn) return undefined;
+
+			return (values: string[]) => {
+				const selectedItems = values
+					.map((v) => itemsMap.get(v))
+					.filter(Boolean) as SelectSimpleItem[];
+				return displayValueFn(selectedItems);
+			};
+		}, [displayValueFn, itemsMap]);
+
+		const renderItems = (itemList: SelectSimpleItem[]) =>
+			itemList.map((item) => (
+				<SelectItem
+					key={item.value}
+					value={item.value}
+					disabled={item.disabled}
+					textValue={item.displayValue ?? (typeof item.label === 'string' ? item.label : undefined)}
+				>
+					{item.label}
+				</SelectItem>
+			));
+
+		const content = groups
+			? groups.map((group, idx) => (
+					<React.Fragment key={group.heading ?? idx}>
+						{idx > 0 && <SelectSeparator />}
+						<SelectGroup>
+							{group.heading && <SelectLabel>{group.heading}</SelectLabel>}
+							{renderItems(group.items)}
+						</SelectGroup>
+					</React.Fragment>
+				))
+			: renderItems(items);
+
+		return (
+			<Select
+				value={controlledValue}
+				defaultValue={defaultValue}
+				onChange={onChange}
+				multiple={multiple}
+				disabled={disabled}
+				defaultOpen={defaultOpen}
 			>
-				{item.label}
-			</SelectItem>
-		));
-
-	const content = groups
-		? groups.map((group, idx) => (
-				<React.Fragment key={group.heading ?? idx}>
-					{idx > 0 && <SelectSeparator />}
-					<SelectGroup>
-						{group.heading && <SelectLabel>{group.heading}</SelectLabel>}
-						{renderItems(group.items)}
-					</SelectGroup>
-				</React.Fragment>
-			))
-		: renderItems(items);
-
-	return (
-		<Select
-			value={controlledValue}
-			defaultValue={defaultValue}
-			onChange={onChange}
-			multiple={multiple}
-			disabled={disabled}
-			defaultOpen={defaultOpen}
-		>
-			<SelectTrigger
-				className={className}
-				style={style}
-				id={id}
-				testId={testId}
-				placeholder={placeholder}
-				renderValue={renderTriggerValue}
-				resolveLabel={resolveLabel}
-				maxDisplayedPills={maxDisplayedPills}
-			/>
-			<SelectContent withPortal={withPortal}>{content}</SelectContent>
-		</Select>
-	);
-}
+				<SelectTrigger
+					ref={ref}
+					className={className}
+					style={style}
+					id={id}
+					testId={testId}
+					placeholder={placeholder}
+					renderValue={renderTriggerValue}
+					resolveLabel={resolveLabel}
+					maxDisplayedPills={maxDisplayedPills}
+				/>
+				<SelectContent withPortal={withPortal}>{content}</SelectContent>
+			</Select>
+		);
+	}
+);
+SelectSimpleInner.displayName = 'SelectSimpleInner';
 
 /**
  * Minimal select preset. Accepts a list of items and handles selection

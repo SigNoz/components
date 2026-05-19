@@ -1,4 +1,4 @@
-import type * as React from 'react';
+import * as React from 'react';
 import { TooltipContent, type TooltipContentProps } from '../subcomponents/tooltip-content.js';
 import { TooltipRoot, type TooltipRootProps } from '../subcomponents/tooltip-root.js';
 import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
@@ -108,35 +108,43 @@ export type TooltipSimpleProps = {
  * </TooltipSimple>
  * ```
  */
-export function TooltipSimple({
-	title,
-	arrow = false,
-	side,
-	align,
-	sideOffset,
-	alignOffset,
-	avoidCollisions,
-	withPortal = true,
-	tooltipContentProps,
-	testId,
-	children,
-	...rootProps
-}: TooltipSimpleProps) {
-	return (
-		<TooltipRoot data-testid={testId} {...rootProps}>
-			<TooltipTrigger asChild>{children}</TooltipTrigger>
-			<TooltipContent
-				arrow={arrow}
-				side={side}
-				align={align}
-				sideOffset={sideOffset}
-				alignOffset={alignOffset}
-				avoidCollisions={avoidCollisions}
-				withPortal={withPortal}
-				{...tooltipContentProps}
-			>
-				{title}
-			</TooltipContent>
-		</TooltipRoot>
-	);
-}
+export const TooltipSimple = React.forwardRef<HTMLButtonElement, TooltipSimpleProps>(
+	(
+		{
+			title,
+			arrow = false,
+			side,
+			align,
+			sideOffset,
+			alignOffset,
+			avoidCollisions,
+			withPortal = true,
+			tooltipContentProps,
+			testId,
+			children,
+			...rootProps
+		},
+		ref
+	) => {
+		return (
+			<TooltipRoot data-testid={testId} {...rootProps}>
+				<TooltipTrigger ref={ref} asChild>
+					{children}
+				</TooltipTrigger>
+				<TooltipContent
+					arrow={arrow}
+					side={side}
+					align={align}
+					sideOffset={sideOffset}
+					alignOffset={alignOffset}
+					avoidCollisions={avoidCollisions}
+					withPortal={withPortal}
+					{...tooltipContentProps}
+				>
+					{title}
+				</TooltipContent>
+			</TooltipRoot>
+		);
+	}
+);
+TooltipSimple.displayName = 'TooltipSimple';

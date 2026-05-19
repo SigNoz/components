@@ -63,3 +63,4 @@ export const DialogTitle = React.forwardRef<
 		{children}
 	</DialogPrimitive.Title>
 ));
+DialogTitle.displayName = 'DialogTitle';

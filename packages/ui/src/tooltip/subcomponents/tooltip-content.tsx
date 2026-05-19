@@ -1,5 +1,5 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import type * as React from 'react';
+import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../tooltip.module.css';
 
@@ -87,33 +87,29 @@ export type TooltipContentProps = {
 	testId?: string;
 } & Pick<React.ComponentProps<'div'>, 'id' | 'className' | 'style' | 'children'>;
 
-function TooltipContentInner({
-	className,
-	sideOffset = 4,
-	testId,
-	children,
-	arrow = false,
-	...props
-}: Omit<TooltipContentProps, 'withPortal'>) {
-	return (
-		<TooltipPrimitive.Content
-			data-slot="tooltip-content"
-			data-testid={testId}
-			sideOffset={arrow ? 0 : sideOffset}
-			className={cn(styles.tooltip__content, className)}
-			{...props}
-		>
-			{children}
-			{arrow && (
-				<TooltipPrimitive.Arrow asChild className={styles.tooltip__arrow}>
-					<svg width={10} height={5} viewBox="0 0 30 10" preserveAspectRatio="none">
-						<path d="M 0,0 L 15,10 L 30,0" className={styles.tooltip__arrowPath} />
-					</svg>
-				</TooltipPrimitive.Arrow>
-			)}
-		</TooltipPrimitive.Content>
-	);
-}
+const TooltipContentInner = React.forwardRef<
+	React.ElementRef<typeof TooltipPrimitive.Content>,
+	Omit<TooltipContentProps, 'withPortal'>
+>(({ className, sideOffset = 4, testId, children, arrow = false, ...props }, ref) => (
+	<TooltipPrimitive.Content
+		ref={ref}
+		data-slot="tooltip-content"
+		data-testid={testId}
+		sideOffset={arrow ? 0 : sideOffset}
+		className={cn(styles.tooltip__content, className)}
+		{...props}
+	>
+		{children}
+		{arrow && (
+			<TooltipPrimitive.Arrow asChild className={styles.tooltip__arrow}>
+				<svg width={10} height={5} viewBox="0 0 30 10" preserveAspectRatio="none">
+					<path d="M 0,0 L 15,10 L 30,0" className={styles.tooltip__arrowPath} />
+				</svg>
+			</TooltipPrimitive.Arrow>
+		)}
+	</TooltipPrimitive.Content>
+));
+TooltipContentInner.displayName = 'TooltipContentInner';
 
 /**
  * The content of the tooltip. Supports positioning via `side`, `align`,
@@ -121,14 +117,18 @@ function TooltipContentInner({
  *
  * Set `withPortal={false}` when inside modals/dialogs to avoid z-index issues.
  */
-export function TooltipContent({ withPortal = true, ...props }: TooltipContentProps) {
+export const TooltipContent = React.forwardRef<
+	React.ElementRef<typeof TooltipPrimitive.Content>,
+	TooltipContentProps
+>(({ withPortal = true, ...props }, ref) => {
 	if (withPortal) {
 		return (
 			<TooltipPrimitive.Portal>
-				<TooltipContentInner {...props} />
+				<TooltipContentInner ref={ref} {...props} />
 			</TooltipPrimitive.Portal>
 		);
 	}
 
-	return <TooltipContentInner {...props} />;
-}
+	return <TooltipContentInner ref={ref} {...props} />;
+});
+TooltipContent.displayName = 'TooltipContent';

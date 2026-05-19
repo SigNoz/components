@@ -99,18 +99,15 @@ const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root
 );
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
-const CheckboxWrapper: React.FC<CheckboxProps> = ({
-	id,
-	children,
-	testId,
-	className,
-	...props
-}) => {
+const CheckboxWrapper = React.forwardRef<
+	React.ElementRef<typeof CheckboxPrimitive.Root>,
+	CheckboxProps
+>(({ id, children, testId, className, ...props }, ref) => {
 	const fallbackId = React.useId();
 
 	return (
 		<div className={cn(styles['checkbox-wrapper'], className)} data-testid={testId}>
-			<Checkbox id={id || fallbackId} {...props} />
+			<Checkbox ref={ref} id={id || fallbackId} {...props} />
 			{children && (
 				<label htmlFor={id || fallbackId} className={styles['checkbox-wrapper__label']}>
 					{children}
@@ -118,6 +115,7 @@ const CheckboxWrapper: React.FC<CheckboxProps> = ({
 			)}
 		</div>
 	);
-};
+});
+CheckboxWrapper.displayName = 'Checkbox';
 
 export { CheckboxWrapper as Checkbox };

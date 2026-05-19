@@ -183,6 +183,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 		);
 	}
 );
+Tabs.displayName = 'Tabs';
 
 export type TabsListProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
@@ -350,6 +351,7 @@ export const TabsList = React.forwardRef<
 		</div>
 	);
 });
+TabsList.displayName = 'TabsList';
 
 export type TabsTriggerProps = Pick<
 	React.ComponentPropsWithoutRef<'button'>,
@@ -418,6 +420,7 @@ export const TabsTrigger = React.forwardRef<
 		{children}
 	</TabsPrimitive.Trigger>
 ));
+TabsTrigger.displayName = 'TabsTrigger';
 
 export type TabsContentProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
@@ -482,6 +485,7 @@ export const TabsContent = React.forwardRef<
 		/>
 	);
 });
+TabsContent.displayName = 'TabsContent';
 
 export type TabsRootProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,
@@ -550,3 +554,4 @@ export const TabsRoot = React.forwardRef<
 		/>
 	);
 });
+TabsRoot.displayName = 'TabsRoot';

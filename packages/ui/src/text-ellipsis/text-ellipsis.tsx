@@ -6,7 +6,15 @@ import {
 	prepareWithSegments,
 	walkLineRanges,
 } from '@chenglou/pretext';
-import { type RefObject, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+	forwardRef,
+	type RefObject,
+	useImperativeHandle,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './text-ellipsis.module.css';
 
@@ -338,64 +346,65 @@ export function useTextEllipsisWidth<T extends HTMLElement = HTMLElement>(): {
  * <TextEllipsis position="end">A long description here</TextEllipsis>
  * ```
  */
-export function TextEllipsis({
-	children,
-	position = 'center',
-	ellipsis = '...',
-	width: externalWidth,
-	className,
-	title,
-}: TextEllipsisProps) {
-	const containerRef = useRef<HTMLSpanElement>(null);
-	const [internalWidth, setInternalWidth] = useState(0);
-	const [font, setFont] = useState('');
+export const TextEllipsis = forwardRef<HTMLSpanElement, TextEllipsisProps>(
+	(
+		{ children, position = 'center', ellipsis = '...', width: externalWidth, className, title },
+		ref
+	) => {
+		const containerRef = useRef<HTMLSpanElement>(null);
+		const [internalWidth, setInternalWidth] = useState(0);
+		const [font, setFont] = useState('');
 
-	const width = externalWidth ?? internalWidth;
+		useImperativeHandle(ref, () => containerRef.current as HTMLSpanElement);
 
-	useLayoutEffect(() => {
-		const element = containerRef.current;
-		if (!element) return;
+		const width = externalWidth ?? internalWidth;
 
-		setFont(getComputedFont(element));
+		useLayoutEffect(() => {
+			const element = containerRef.current;
+			if (!element) return;
 
-		if (externalWidth !== undefined) return;
+			setFont(getComputedFont(element));
 
-		setInternalWidth(element.clientWidth);
+			if (externalWidth !== undefined) return;
 
-		const observer = new ResizeObserver((entries) => {
-			for (const entry of entries) {
-				if (entry.contentBoxSize) {
-					const contentBoxSize = Array.isArray(entry.contentBoxSize)
-						? entry.contentBoxSize[0]
-						: entry.contentBoxSize;
-					setInternalWidth(contentBoxSize.inlineSize);
-				} else {
-					setInternalWidth(entry.contentRect.width);
+			setInternalWidth(element.clientWidth);
+
+			const observer = new ResizeObserver((entries) => {
+				for (const entry of entries) {
+					if (entry.contentBoxSize) {
+						const contentBoxSize = Array.isArray(entry.contentBoxSize)
+							? entry.contentBoxSize[0]
+							: entry.contentBoxSize;
+						setInternalWidth(contentBoxSize.inlineSize);
+					} else {
+						setInternalWidth(entry.contentRect.width);
+					}
 				}
+			});
+
+			observer.observe(element);
+
+			return () => observer.disconnect();
+		}, [externalWidth]);
+
+		const { truncated, isTruncated } = useMemo(() => {
+			if (!font || width <= 0) {
+				return { truncated: children, isTruncated: false };
 			}
-		});
 
-		observer.observe(element);
+			return truncateText(children, Math.floor(width), font, position, ellipsis);
+		}, [children, width, font, position, ellipsis]);
 
-		return () => observer.disconnect();
-	}, [externalWidth]);
-
-	const { truncated, isTruncated } = useMemo(() => {
-		if (!font || width <= 0) {
-			return { truncated: children, isTruncated: false };
-		}
-
-		return truncateText(children, Math.floor(width), font, position, ellipsis);
-	}, [children, width, font, position, ellipsis]);
-
-	return (
-		<span
-			ref={containerRef}
-			className={cn(styles.textEllipsis, className)}
-			title={isTruncated ? (title ?? children) : title}
-			data-truncated={isTruncated}
-		>
-			{truncated}
-		</span>
-	);
-}
+		return (
+			<span
+				ref={containerRef}
+				className={cn(styles.textEllipsis, className)}
+				title={isTruncated ? (title ?? children) : title}
+				data-truncated={isTruncated}
+			>
+				{truncated}
+			</span>
+		);
+	}
+);
+TextEllipsis.displayName = 'TextEllipsis';

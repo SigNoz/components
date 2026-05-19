@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DialogFooter, type DialogFooterProps } from '../../dialog/index.js';
 
 export type DrawerFooterProps = DialogFooterProps;
@@ -27,6 +28,8 @@ export type DrawerFooterProps = DialogFooterProps;
  * </Drawer>
  * ```
  */
-export function DrawerFooter(props: DrawerFooterProps) {
-	return <DialogFooter data-slot="drawer-footer" {...props} />;
-}
+export const DrawerFooter = React.forwardRef<
+	React.ElementRef<typeof DialogFooter>,
+	DrawerFooterProps
+>((props, ref) => <DialogFooter ref={ref} data-slot="drawer-footer" {...props} />);
+DrawerFooter.displayName = 'DrawerFooter';

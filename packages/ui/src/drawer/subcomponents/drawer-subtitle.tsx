@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
 	DialogSubtitle as BaseDialogSubtitle,
 	type DialogSubtitleProps as BaseDialogSubtitleProps,
@@ -27,6 +28,8 @@ export type DrawerSubtitleProps = BaseDialogSubtitleProps;
  * </Drawer>
  * ```
  */
-export function DrawerSubtitle(props: DrawerSubtitleProps) {
-	return <BaseDialogSubtitle data-slot="drawer-subtitle" {...props} />;
-}
+export const DrawerSubtitle = React.forwardRef<
+	React.ElementRef<typeof BaseDialogSubtitle>,
+	DrawerSubtitleProps
+>((props, ref) => <BaseDialogSubtitle ref={ref} data-slot="drawer-subtitle" {...props} />);
+DrawerSubtitle.displayName = 'DrawerSubtitle';

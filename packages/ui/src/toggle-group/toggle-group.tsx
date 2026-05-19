@@ -128,6 +128,7 @@ export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
 		</ToggleGroupPrimitive.Root>
 	)
 );
+ToggleGroup.displayName = 'ToggleGroup';
 
 export type ToggleGroupItemProps = {
 	/**
@@ -181,3 +182,4 @@ export const ToggleGroupItem = React.forwardRef<HTMLButtonElement, ToggleGroupIt
 		/>
 	)
 );
+ToggleGroupItem.displayName = 'ToggleGroupItem';

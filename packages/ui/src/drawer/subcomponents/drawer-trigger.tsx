@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {
 	DialogTrigger as BaseDialogTrigger,
 	type DialogTriggerProps as BaseDialogTriggerProps,
@@ -26,6 +28,8 @@ export type DrawerTriggerProps = BaseDialogTriggerProps;
  * </Drawer>
  * ```
  */
-export function DrawerTrigger(props: DrawerTriggerProps) {
-	return <BaseDialogTrigger data-slot="drawer-trigger" {...props} />;
-}
+export const DrawerTrigger = React.forwardRef<
+	React.ElementRef<typeof BaseDialogTrigger>,
+	DrawerTriggerProps
+>((props, ref) => <BaseDialogTrigger ref={ref} data-slot="drawer-trigger" {...props} />);
+DrawerTrigger.displayName = 'DrawerTrigger';
