@@ -28,6 +28,7 @@ export const externalPatterns = [
 	/@radix-ui\/.*$/,
 	/^@signozhq\/.*$/,
 	'@chenglou/pretext',
+	'copy-text-to-clipboard',
 ];
 
 export default function getViteLibConfig(
