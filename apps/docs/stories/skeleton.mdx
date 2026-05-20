@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Components/Skeleton" />
+
+## Skeleton
+
+Use `Skeleton` to show placeholder loading states while content is being fetched.
+It supports animated pulse effects, configurable title and paragraph rows,
+and sub-components for inputs, buttons, and avatars.
+
+## Import
+
+```tsx
+import { Skeleton } from '@signozhq/ui';
+```
+
+## Basic Usage
+
+```tsx
+<Skeleton active />
+```
+
+## With Title and Paragraph
+
+```tsx
+<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 4 }} />
+```
+
+## Per-Row Widths
+
+```tsx
+<Skeleton
+	active
+	paragraph={{ rows: 4, width: ['100%', '95%', '80%', '60%'] }}
+/>
+```
+
+## Sub-Components
+
+```tsx
+<Skeleton.Input active size="small" />
+<Skeleton.Input active block />
+
+<Skeleton.Button active size="small" />
+<Skeleton.Button active block />
+
+<Skeleton.Avatar active shape="circle" size={36} />
+<Skeleton.Avatar active shape="square" />
+```
+
+## Composed Example
+
+```tsx
+<div style={{ display: 'flex', gap: '1rem' }}>
+	<Skeleton.Avatar active shape="circle" size={48} />
+	<div style={{ flex: 1 }}>
+		<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
+	</div>
+</div>
+```
