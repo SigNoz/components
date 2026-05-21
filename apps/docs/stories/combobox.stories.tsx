@@ -646,3 +646,53 @@ function ComboboxLoadingWithDelay() {
 		/>
 	);
 }
+
+export const WithKeywords: Story = {
+	args: {
+		items: [
+			{ value: '15', label: '15 minutes', keywords: ['quarter hour', '15m', '900 seconds'] },
+			{ value: '30', label: '30 minutes', keywords: ['half hour', '30m', '1800 seconds'] },
+			{ value: '60', label: '1 hour', keywords: ['60 minutes', '1h', '3600 seconds'] },
+			{ value: '1440', label: '1 day', keywords: ['24 hours', '1d', 'daily'] },
+		],
+		placeholder: 'Select duration...',
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Try searching: "minute", "hour", "quarter", "half", "daily"
+				</p>
+			</div>
+		);
+	},
+};
+
+export const WithStringLabelsFilter: Story = {
+	args: {
+		items: [
+			{ value: 'us-east-1', label: 'US East (N. Virginia)' },
+			{ value: 'us-west-2', label: 'US West (Oregon)' },
+			{ value: 'eu-west-1', label: 'EU (Ireland)' },
+			{ value: 'ap-southeast-1', label: 'Asia Pacific (Singapore)' },
+		],
+		placeholder: 'Select region...',
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
+				</p>
+			</div>
+		);
+	},
+};
