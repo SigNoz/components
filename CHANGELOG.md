@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.21](https://github.com/SigNoz/components/compare/v0.0.20...v0.0.21) (2026-05-21)
+
+
+### Features
+
+* **components:** add breadcrumb ([#234](https://github.com/SigNoz/components/issues/234)) ([7ca4fd4](https://github.com/SigNoz/components/commit/7ca4fd488333e28f5c9db3a3ce97d0638e4dcca9))
+
+
+### Bug Fixes
+
+* added ui fixes in slider ([38b43ab](https://github.com/SigNoz/components/commit/38b43ab39a08e73a652798c934fb59d8962774e4))
+* added ui fixes in slider ([77b28d2](https://github.com/SigNoz/components/commit/77b28d2256622ea1fc7b0c1532866612ea7fa68c))
+* cursor pointer + event propagation issue ([ba2bdde](https://github.com/SigNoz/components/commit/ba2bdde4b5e3410c69cb705f125a531dd3e7df72))
+* cursor pointer + event propagation issue ([9f2b6ab](https://github.com/SigNoz/components/commit/9f2b6abcdd56bfde1db2de5344a66db166df1da9))
+
 ## [0.0.20](https://github.com/SigNoz/components/compare/v0.0.19...v0.0.20) (2026-05-18)
 
 
