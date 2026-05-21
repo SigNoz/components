@@ -124,6 +124,15 @@ const meta: Meta<typeof ComboboxSimple> = {
 				defaultValue: { summary: "'Loading...'" },
 			},
 		},
+		disabled: {
+			control: 'boolean',
+			description: 'Whether the combobox is disabled.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -319,6 +328,19 @@ export const WithGroupsAndIcons: Story = {
 			},
 		],
 		placeholder: 'Select a technology...',
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const Disabled: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select a framework...',
+		disabled: true,
 	},
 	render: (args) => (
 		<div className="p-8 w-full max-w-sm">
