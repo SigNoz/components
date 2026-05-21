@@ -203,9 +203,46 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				const label = isObject && 'label' in markObj ? (markObj as any).label : markObj;
 				const markStyle = isObject && 'style' in markObj ? (markObj as any).style : {};
 
-				return { key, percent, label, markStyle };
+				return { key, markVal, percent, label, markStyle };
 			});
 		}, [marks, min, max]);
+
+		const isMarkActive = useCallback(
+			(markVal: number) => {
+				if (localValues.length === 1) return markVal <= localValues[0];
+				return markVal >= localValues[0] && markVal <= localValues[localValues.length - 1];
+			},
+			[localValues]
+		);
+
+		const handleMarkClick = useCallback(
+			(markVal: number) => {
+				let newValues: number[];
+				if (localValues.length === 1) {
+					newValues = [markVal];
+				} else {
+					const lastIndex = localValues.length - 1;
+					const distToFirst = Math.abs(localValues[0] - markVal);
+					const distToLast = Math.abs(localValues[lastIndex] - markVal);
+					newValues =
+						distToFirst <= distToLast
+							? [markVal, ...localValues.slice(1)]
+							: [...localValues.slice(0, lastIndex), markVal];
+					newValues = [...newValues].sort((a, b) => a - b);
+				}
+
+				if (internalValue === undefined) {
+					setLocalValues(newValues);
+				}
+				if (onChange) {
+					onChange(range ? newValues : newValues[0]);
+				}
+				if (onAfterChange) {
+					onAfterChange(range ? newValues : newValues[0]);
+				}
+			},
+			[localValues, internalValue, onChange, onAfterChange, range]
+		);
 
 		const internalId = useId();
 
@@ -221,7 +258,11 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				defaultValue={internalDefaultValue}
 				onValueChange={handleValueChange}
 				onValueCommit={handleValueCommit}
-				className={cn(styles['slider-root'], className)}
+				className={cn(
+					styles['slider-root'],
+					markList.length > 0 && styles['slider-root-with-marks'],
+					className
+				)}
 				{...props}
 			>
 				<SliderPrimitive.Track
@@ -234,36 +275,49 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					/>
 				</SliderPrimitive.Track>
 
-				{localValues.map((val, index) => {
-					const thumb = (
-						<SliderPrimitive.Thumb
-							key={`slider-${internalId}-thumb-${index}`}
-							className={cn(styles['slider-thumb'], classNames?.thumb)}
-							style={inlineStyles?.thumb}
-						/>
-					);
+				{markList.length > 0 && (
+					<div className={styles['slider-dots']}>
+						{markList.map(({ key, markVal, percent }) => (
+							<span
+								key={`slider-${internalId}-dot-${key}`}
+								className={cn(
+									styles['slider-dot'],
+									isMarkActive(markVal) && styles['slider-dot-active']
+								)}
+								style={{ left: `${percent}%` }}
+							/>
+						))}
+					</div>
+				)}
 
-					if (tooltip) {
-						return (
-							// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
-							<TooltipProvider key={`slider-${internalId}-${index}-tooltip`}>
-								<TooltipSimple title={tooltip.formatter ? tooltip.formatter(val) : val}>
-									{thumb}
-								</TooltipSimple>
-							</TooltipProvider>
-						);
-					}
-
-					return thumb;
-				})}
+				{localValues.map((val, index) => (
+					<SliderThumb
+						// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
+						key={`slider-${internalId}-thumb-${index}`}
+						value={val}
+						className={cn(styles['slider-thumb'], classNames?.thumb)}
+						style={inlineStyles?.thumb}
+						tooltip={tooltip}
+					/>
+				))}
 
 				{markList.length > 0 && (
 					<div className={styles['slider-marks']}>
-						{markList.map(({ key, percent, label, markStyle }) => (
+						{markList.map(({ key, markVal, percent, label, markStyle }) => (
+							// biome-ignore lint/a11y/useSemanticElements: span is intentional to avoid native button styling on slider marks
 							<span
 								key={`slider-${internalId}-mark-${key}`}
 								className={styles['slider-mark']}
 								style={{ left: `${percent}%`, ...markStyle }}
+								role="button"
+								tabIndex={0}
+								onClick={() => handleMarkClick(markVal)}
+								onKeyDown={(event) => {
+									if (event.key === 'Enter' || event.key === ' ') {
+										event.preventDefault();
+										handleMarkClick(markVal);
+									}
+								}}
 							>
 								{label}
 							</span>
@@ -275,5 +329,52 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 	}
 );
 Slider.displayName = 'Slider';
+
+interface SliderThumbProps {
+	value: number;
+	className: string;
+	style?: React.CSSProperties;
+	tooltip?: SliderProps['tooltip'];
+}
+
+/**
+ * Internal thumb wrapper that keeps the tooltip open for the entire drag/focus
+ * lifecycle. Radix's default behavior only shows the tooltip on hover, which
+ * causes flicker as the thumb moves under the cursor during dragging.
+ */
+function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
+	const [isDragging, setIsDragging] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+
+	useEffect(() => {
+		if (!isDragging) return;
+		const handlePointerUp = () => setIsDragging(false);
+		window.addEventListener('pointerup', handlePointerUp);
+		return () => window.removeEventListener('pointerup', handlePointerUp);
+	}, [isDragging]);
+
+	const thumb = (
+		<SliderPrimitive.Thumb
+			className={className}
+			style={style}
+			onPointerDown={() => setIsDragging(true)}
+			onPointerEnter={() => setIsHovering(true)}
+			onPointerLeave={() => setIsHovering(false)}
+		/>
+	);
+
+	if (!tooltip) return thumb;
+
+	return (
+		<TooltipProvider delayDuration={0}>
+			<TooltipSimple
+				open={isDragging || isHovering}
+				title={tooltip.formatter ? tooltip.formatter(value) : value}
+			>
+				{thumb}
+			</TooltipSimple>
+		</TooltipProvider>
+	);
+}
 
 export { Slider };
