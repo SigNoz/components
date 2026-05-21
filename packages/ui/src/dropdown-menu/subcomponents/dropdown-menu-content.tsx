@@ -131,6 +131,14 @@ export type DropdownMenuContentProps = {
 	 * Event handler called when a key is pressed within the content.
 	 */
 	onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
+	/**
+	 * Event handler called when the content is clicked. The default behavior
+	 * stops the synthetic click from bubbling further up the React tree so
+	 * menu interactions never trigger `onClick` handlers on ancestor elements
+	 * (e.g. a clickable row that wraps the trigger). The handler still runs
+	 * before propagation is stopped.
+	 */
+	onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
 
 /**
@@ -162,7 +170,7 @@ export type DropdownMenuContentProps = {
 export const DropdownMenuContent = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
 	DropdownMenuContentProps
->(({ className, sideOffset = 4, testId, id, ...props }, ref) => (
+>(({ className, sideOffset = 4, testId, id, onClick, ...props }, ref) => (
 	<DropdownMenuPortal>
 		<DropdownMenuPrimitive.Content
 			ref={ref}
@@ -171,6 +179,13 @@ export const DropdownMenuContent = React.forwardRef<
 			id={id}
 			sideOffset={sideOffset}
 			className={cn(styles['dropdown-menu__content'], className)}
+			onClick={(event): void => {
+				onClick?.(event);
+				// React synthetic clicks bubble through portals — without
+				// stopping here, every menu-item click would also fire the
+				// `onClick` of any clickable ancestor that wraps the trigger.
+				event.stopPropagation();
+			}}
 			{...props}
 		/>
 	</DropdownMenuPortal>

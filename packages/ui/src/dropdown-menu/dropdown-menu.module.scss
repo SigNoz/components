@@ -242,6 +242,10 @@
 			color: var(--dropdown-menu-item-destructive-hover-foreground, var(--danger-background-hover));
 		}
 	}
+
+	&--clickable {
+		cursor: pointer;
+	}
 }
 
 .dropdown-menu__item-icon {

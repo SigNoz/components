@@ -180,6 +180,7 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
 				rightIcon={baseItem.rightIcon}
 				destructive={baseItem.danger}
 				disabled={baseItem.disabled}
+				clickable={Boolean(baseItem.onClick)}
 				onSelect={handleSelect}
 				className={baseItem.className}
 			>
