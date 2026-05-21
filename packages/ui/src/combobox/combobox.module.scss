@@ -21,7 +21,8 @@
 		outline-offset: var(--combobox-trigger-outline-offset, 2px);
 	}
 
-	&:disabled {
+	&:disabled,
+	&[data-disabled='true'] {
 		cursor: not-allowed;
 		opacity: var(--combobox-trigger-disabled-opacity, 0.5);
 	}

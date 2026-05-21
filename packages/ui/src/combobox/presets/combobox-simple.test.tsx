@@ -995,6 +995,65 @@ describe('ComboboxSimple', () => {
 		});
 	});
 
+	describe('disabled state', () => {
+		it('does not open dropdown when disabled', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			expect(screen.queryByRole('option')).not.toBeInTheDocument();
+		});
+
+		it('applies disabled attribute to single-select trigger', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />
+			);
+
+			const trigger = screen.getByTestId('combo');
+			expect(trigger).toBeDisabled();
+			expect(trigger).toHaveAttribute('data-disabled', 'true');
+		});
+
+		it('applies disabled attributes to multi-select trigger', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} multiple disabled testId="combo" withPortal={false} />
+			);
+
+			const trigger = screen.getByTestId('combo');
+			expect(trigger).toHaveAttribute('aria-disabled', 'true');
+			expect(trigger).toHaveAttribute('data-disabled', 'true');
+			expect(trigger).toHaveAttribute('tabIndex', '-1');
+		});
+
+		it('does not open on Enter key when disabled', () => {
+			renderWithProviders(
+				<ComboboxSimple items={defaultItems} multiple disabled testId="combo" withPortal={false} />
+			);
+
+			const trigger = screen.getByTestId('combo');
+			fireEvent.keyDown(trigger, { key: 'Enter' });
+
+			expect(screen.queryByRole('option')).not.toBeInTheDocument();
+		});
+
+		it('does not call onChange when disabled', () => {
+			const onChange = vi.fn();
+			renderWithProviders(
+				<ComboboxSimple
+					items={defaultItems}
+					disabled
+					onChange={onChange}
+					testId="combo"
+					withPortal={false}
+				/>
+			);
+
+			fireEvent.click(screen.getByTestId('combo'));
+			expect(onChange).not.toHaveBeenCalled();
+		});
+	});
+
 	describe('filtering', () => {
 		it('filters items with fuzzy matching', () => {
 			renderWithProviders(

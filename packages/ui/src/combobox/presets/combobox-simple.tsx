@@ -161,6 +161,11 @@ export type ComboboxSimpleProps = {
 	 * @default 'Loading...'
 	 */
 	loadingPlaceholder?: React.ReactNode;
+	/**
+	 * Whether the combobox is disabled.
+	 * @default false
+	 */
+	disabled?: boolean;
 };
 
 function flattenItems(groups: ComboboxSimpleGroup[]): ComboboxSimpleItem[] {
@@ -231,13 +236,21 @@ const ComboboxSimpleInner = React.forwardRef<
 			disableTooltipProvider = false,
 			loading = false,
 			loadingPlaceholder = 'Loading...',
+			disabled = false,
 		},
 		forwardedRef
 	) => {
 		const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() =>
 			normalizeValue(defaultValue)
 		);
-		const [open, setOpen] = React.useState(false);
+		const [open, setOpenInternal] = React.useState(false);
+		const setOpen = React.useCallback(
+			(value: boolean | ((prev: boolean) => boolean)) => {
+				if (disabled) return;
+				setOpenInternal(value);
+			},
+			[disabled]
+		);
 		const [inputValue, setInputValue] = React.useState('');
 		const internalRef = React.useRef<HTMLButtonElement | HTMLDivElement>(null);
 
@@ -618,8 +631,10 @@ const ComboboxSimpleInner = React.forwardRef<
 								role="combobox"
 								aria-expanded={open}
 								aria-haspopup="listbox"
-								tabIndex={0}
-								onKeyDown={handleTriggerKeyDown}
+								aria-disabled={disabled}
+								data-disabled={disabled || undefined}
+								tabIndex={disabled ? -1 : 0}
+								onKeyDown={disabled ? undefined : handleTriggerKeyDown}
 							>
 								<span className={styles['combobox__trigger-value']}>
 									{pillsContent || placeholder || 'Select an option...'}
@@ -661,6 +676,8 @@ const ComboboxSimpleInner = React.forwardRef<
 							style={style}
 							data-testid={testId}
 							id={id}
+							disabled={disabled}
+							data-disabled={disabled || undefined}
 						>
 							<span className={styles['combobox__trigger-value']}>
 								{triggerValue || placeholder || 'Select an option...'}
