@@ -81,6 +81,24 @@ const meta: Meta<typeof SelectSimple> = {
 				type: { summary: '(selectedItems: SelectSimpleItem[]) => React.ReactNode' },
 			},
 		},
+		loading: {
+			control: 'boolean',
+			description: 'Show loading spinner on trigger.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		loadingPlaceholder: {
+			control: 'text',
+			description: 'Content shown in dropdown while loading. Can be string or ReactNode.',
+			table: {
+				category: 'Content',
+				type: { summary: 'ReactNode' },
+				defaultValue: { summary: "'Loading...'" },
+			},
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

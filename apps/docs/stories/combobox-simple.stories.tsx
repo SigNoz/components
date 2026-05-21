@@ -106,6 +106,24 @@ const meta: Meta<typeof ComboboxSimple> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
+		loading: {
+			control: 'boolean',
+			description: 'Show loading state instead of items.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		loadingPlaceholder: {
+			control: 'text',
+			description: 'Content shown while loading. Can be string or ReactNode.',
+			table: {
+				category: 'Content',
+				type: { summary: 'ReactNode' },
+				defaultValue: { summary: "'Loading...'" },
+			},
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

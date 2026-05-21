@@ -1,5 +1,5 @@
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { ChevronDown, X } from '@signozhq/icons';
+import { ChevronDown, LoaderCircle, X } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../select.module.scss';
@@ -42,6 +42,8 @@ export type SelectTriggerProps = {
 	'aria-labelledby'?: string;
 	/** ID of the element that describes this trigger. */
 	'aria-describedby'?: string;
+	/** Show loading spinner instead of chevron icon. */
+	loading?: boolean;
 };
 
 /**
@@ -79,6 +81,7 @@ export const SelectTrigger = React.forwardRef<
 			renderValue,
 			resolveLabel,
 			maxDisplayedPills,
+			loading = false,
 			...props
 		},
 		ref
@@ -149,9 +152,13 @@ export const SelectTrigger = React.forwardRef<
 				{...props}
 			>
 				<span className={styles['select__trigger-value']}>{renderContent()}</span>
-				<SelectPrimitive.Icon asChild>
-					<ChevronDown className={styles['select__trigger-icon']} />
-				</SelectPrimitive.Icon>
+				{loading ? (
+					<LoaderCircle className={styles['select__trigger-spinner']} />
+				) : (
+					<SelectPrimitive.Icon asChild>
+						<ChevronDown className={styles['select__trigger-icon']} />
+					</SelectPrimitive.Icon>
+				)}
 			</SelectPrimitive.Trigger>
 		);
 	}

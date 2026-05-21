@@ -3,6 +3,7 @@ import { Select } from '../components/select.js';
 import { SelectContent } from '../components/select-content.js';
 import { SelectGroup, SelectLabel } from '../components/select-group.js';
 import { SelectItem } from '../components/select-item.js';
+import { SelectLoading } from '../components/select-loading.js';
 import { SelectSeparator } from '../components/select-separator.js';
 import { SelectTrigger } from '../components/select-trigger.js';
 
@@ -112,6 +113,16 @@ export type SelectSimpleProps = {
 	 * @default undefined (show all)
 	 */
 	maxDisplayedPills?: number;
+	/**
+	 * Show loading spinner on trigger.
+	 * @default false
+	 */
+	loading?: boolean;
+	/**
+	 * Content shown in dropdown while loading. Can be string or ReactNode.
+	 * @default 'Loading...'
+	 */
+	loadingPlaceholder?: React.ReactNode;
 };
 
 function flattenItems(groups: SelectSimpleGroup[]): SelectSimpleItem[] {
@@ -140,6 +151,8 @@ const SelectSimpleInner = React.forwardRef<
 			disabled = false,
 			defaultOpen = false,
 			maxDisplayedPills,
+			loading = false,
+			loadingPlaceholder = 'Loading...',
 		},
 		ref
 	) => {
@@ -216,8 +229,11 @@ const SelectSimpleInner = React.forwardRef<
 					renderValue={renderTriggerValue}
 					resolveLabel={resolveLabel}
 					maxDisplayedPills={maxDisplayedPills}
+					loading={loading}
 				/>
-				<SelectContent withPortal={withPortal}>{content}</SelectContent>
+				<SelectContent withPortal={withPortal}>
+					{loading ? <SelectLoading>{loadingPlaceholder}</SelectLoading> : content}
+				</SelectContent>
 			</Select>
 		);
 	}
@@ -262,6 +278,16 @@ SelectSimpleInner.displayName = 'SelectSimpleInner';
  * ];
  *
  * <SelectSimple groups={groups} value={value} onChange={setValue} />
+ * ```
+ *
+ * @example Loading state (shows loading in dropdown)
+ * ```tsx
+ * <SelectSimple
+ *   items={[]}
+ *   loading={isLoading}
+ *   loadingPlaceholder="Fetching options..."
+ *   placeholder="Select..."
+ * />
  * ```
  */
 export const SelectSimple = React.memo(SelectSimpleInner);

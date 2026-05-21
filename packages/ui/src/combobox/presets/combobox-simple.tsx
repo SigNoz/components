@@ -1,4 +1,4 @@
-import { ChevronDown } from '@signozhq/icons';
+import { ChevronDown, LoaderCircle } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import { TooltipProvider, TooltipSimple } from '../../tooltip/index.js';
@@ -13,6 +13,7 @@ import {
 	ComboboxInput,
 	ComboboxItem,
 	ComboboxList,
+	ComboboxLoading,
 	ComboboxPill,
 	ComboboxSeparator,
 	ComboboxTrigger,
@@ -144,6 +145,16 @@ export type ComboboxSimpleProps = {
 	 * @default false
 	 */
 	disableTooltipProvider?: boolean;
+	/**
+	 * Show loading state instead of items.
+	 * @default false
+	 */
+	loading?: boolean;
+	/**
+	 * Content shown while loading. Can be string or ReactNode.
+	 * @default 'Loading...'
+	 */
+	loadingPlaceholder?: React.ReactNode;
 };
 
 function flattenItems(groups: ComboboxSimpleGroup[]): ComboboxSimpleItem[] {
@@ -212,6 +223,8 @@ const ComboboxSimpleInner = React.forwardRef<
 			allowCreate = false,
 			maxDisplayedPills,
 			disableTooltipProvider = false,
+			loading = false,
+			loadingPlaceholder = 'Loading...',
 		},
 		forwardedRef
 	) => {
@@ -401,7 +414,9 @@ const ComboboxSimpleInner = React.forwardRef<
 
 		const listContent = React.useMemo(
 			() =>
-				groups ? (
+				loading ? (
+					<ComboboxLoading>{loadingPlaceholder}</ComboboxLoading>
+				) : groups ? (
 					<>
 						{customValues.length > 0 && (
 							<>
@@ -490,6 +505,8 @@ const ComboboxSimpleInner = React.forwardRef<
 					</>
 				),
 			[
+				loading,
+				loadingPlaceholder,
 				groups,
 				items,
 				selectedValues,
@@ -574,7 +591,11 @@ const ComboboxSimpleInner = React.forwardRef<
 								<span className={styles['combobox__trigger-value']}>
 									{pillsContent || placeholder || 'Select an option...'}
 								</span>
-								<ChevronDown className={styles['combobox__trigger-icon']} />
+								{loading ? (
+									<LoaderCircle className={styles['combobox__trigger-spinner']} />
+								) : (
+									<ChevronDown className={styles['combobox__trigger-icon']} />
+								)}
 							</div>
 						</ComboboxTrigger>
 						{open && (
@@ -599,15 +620,25 @@ const ComboboxSimpleInner = React.forwardRef<
 		return (
 			<Wrapper>
 				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						ref={triggerRef as React.RefCallback<HTMLButtonElement>}
-						placeholder={placeholder}
-						value={triggerValue}
-						testId={testId}
-						id={id}
-						className={className}
-						style={style}
-					/>
+					<ComboboxTrigger asChild>
+						<button
+							ref={triggerRef as React.RefCallback<HTMLButtonElement>}
+							type="button"
+							className={cn(styles['combobox__trigger'], className)}
+							style={style}
+							data-testid={testId}
+							id={id}
+						>
+							<span className={styles['combobox__trigger-value']}>
+								{triggerValue || placeholder || 'Select an option...'}
+							</span>
+							{loading ? (
+								<LoaderCircle className={styles['combobox__trigger-spinner']} />
+							) : (
+								<ChevronDown className={styles['combobox__trigger-icon']} />
+							)}
+						</button>
+					</ComboboxTrigger>
 					{open && (
 						<ComboboxContent withPortal={withPortal}>
 							<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
@@ -723,6 +754,27 @@ ComboboxSimpleInner.displayName = 'ComboboxSimpleInner';
  *   items={items}
  *   value={values}
  *   onChange={(v) => setValues(v as string[])}
+ * />
+ * ```
+ *
+ * @example Loading state (async fetch)
+ * ```tsx
+ * const [items, setItems] = useState<ComboboxSimpleItem[]>([]);
+ * const [isLoading, setIsLoading] = useState(true);
+ *
+ * useEffect(() => {
+ *   fetchItems().then((data) => {
+ *     setItems(data);
+ *     setIsLoading(false);
+ *   });
+ * }, []);
+ *
+ * <ComboboxSimple
+ *   items={items}
+ *   loading={isLoading}
+ *   loadingPlaceholder="Fetching options..."
+ *   value={value}
+ *   onChange={setValue}
  * />
  * ```
  */

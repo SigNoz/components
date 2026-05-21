@@ -65,6 +65,40 @@
 	flex-shrink: var(--select-trigger-icon-flex-shrink, 0);
 }
 
+@keyframes select-spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.select__trigger-spinner {
+	height: var(--select-trigger-icon-size, 1rem);
+	width: var(--select-trigger-icon-size, 1rem);
+	opacity: var(--select-trigger-icon-opacity, 0.5);
+	flex-shrink: var(--select-trigger-icon-flex-shrink, 0);
+	animation: select-spin 1s linear infinite;
+}
+
+.select__loading {
+	display: var(--select-loading-display, flex);
+	align-items: var(--select-loading-align-items, center);
+	justify-content: var(--select-loading-justify-content, center);
+	gap: var(--select-loading-gap, 0.5rem);
+	padding: var(--select-loading-padding, 0.75rem 0.5rem);
+	color: var(--select-loading-color, var(--muted-foreground));
+	font-size: var(--select-loading-font-size, var(--periscope-font-size-base, 13px));
+}
+
+.select__loading-spinner {
+	width: var(--select-loading-spinner-size, 1rem);
+	height: var(--select-loading-spinner-size, 1rem);
+	animation: select-spin 1s linear infinite;
+}
+
 .select__pills {
 	display: var(--select-pills-display, flex);
 	flex-wrap: var(--select-pills-flex-wrap, wrap);

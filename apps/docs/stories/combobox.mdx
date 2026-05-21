@@ -223,6 +223,47 @@ Items with `insertValue` behave as hints - clicking them inserts the value into 
 
 Hints show when input is empty or doesn't start with any hint's `insertValue`. Once user types a prefix (e.g. `status:`), hints hide and matching items filter normally.
 
+**Loading state (async data):**
+
+Use `loading` and `loadingPlaceholder` props to show a loading spinner in the dropdown while fetching data:
+
+```tsx
+const [items, setItems] = useState([]);
+const [isLoading, setIsLoading] = useState(true);
+
+useEffect(() => {
+	fetchItems().then((data) => {
+		setItems(data);
+		setIsLoading(false);
+	});
+}, []);
+
+<ComboboxSimple
+	items={items}
+	loading={isLoading}
+	loadingPlaceholder="Fetching options..."
+	placeholder="Select a framework..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+For primitive composition, use `ComboboxLoading` inside `ComboboxList`:
+
+```tsx
+<ComboboxList>
+	{isLoading ? (
+		<ComboboxLoading>Loading options...</ComboboxLoading>
+	) : (
+		items.map((item) => (
+			<ComboboxItem key={item.value} value={item.value}>
+				{item.label}
+			</ComboboxItem>
+		))
+	)}
+</ComboboxList>
+```
+
 ### Combobox inside a popover
 
 When placing a combobox inside a popover (e.g. a filter panel or form), set `withPortal={false}` so the dropdown content stays within the popover DOM instead of portaling to `document.body`. This avoids z-index and stacking issues.
