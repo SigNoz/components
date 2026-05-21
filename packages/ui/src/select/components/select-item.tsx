@@ -6,7 +6,7 @@ import styles from '../select.module.scss';
 import { useSelectContext } from './select-context.js';
 
 export type SelectItemProps = {
-	/** Additional CSS class names for the item text container. */
+	/** Additional CSS class names for the item container. */
 	className?: string;
 	/** Inline styles for the element. */
 	style?: React.CSSProperties;
@@ -22,8 +22,6 @@ export type SelectItemProps = {
 	disabled?: boolean;
 	/** Text value for typeahead. By default uses trimmed text content. */
 	textValue?: string;
-	/** Additional CSS class names for the item container. */
-	containerClassname?: string;
 	/** Additional CSS class names for the check indicator. */
 	indicatorClassname?: string;
 };
@@ -49,54 +47,49 @@ export type SelectItemProps = {
 export const SelectItem = React.forwardRef<
 	React.ElementRef<typeof SelectPrimitive.Item>,
 	SelectItemProps
->(
-	(
-		{ className, style, id, testId, containerClassname, indicatorClassname, children, ...props },
-		ref
-	) => {
-		const context = useSelectContext();
-		const isSelected = context?.value.includes(props.value) ?? false;
+>(({ className, style, id, testId, indicatorClassname, children, ...props }, ref) => {
+	const context = useSelectContext();
+	const isSelected = context?.value.includes(props.value) ?? false;
 
-		// For multi-select, prevent Radix from closing and handle selection ourselves
-		const handlePointerUp = (e: React.PointerEvent) => {
-			if (context?.multiple && !props.disabled) {
-				e.preventDefault();
-				context.onValueChange(props.value);
-			}
-		};
+	// For multi-select, prevent Radix from closing and handle selection ourselves
+	const handlePointerUp = (e: React.PointerEvent) => {
+		if (context?.multiple && !props.disabled) {
+			e.preventDefault();
+			context.onValueChange(props.value);
+		}
+	};
 
-		return (
-			<SelectPrimitive.Item
-				ref={ref}
-				id={id}
-				className={cn(styles.select__item, containerClassname)}
-				style={style}
-				data-slot="select-item"
-				data-testid={testId}
-				data-selected={isSelected}
-				data-multiple={context?.multiple || undefined}
-				onPointerUp={handlePointerUp}
-				{...props}
-			>
-				{context?.multiple && (
-					<span
-						className={cn(styles['select__item-indicator'], indicatorClassname, {
-							'opacity-0': !isSelected,
-						})}
-					>
-						<SelectPrimitive.ItemIndicator>
-							<Check />
-						</SelectPrimitive.ItemIndicator>
-						{isSelected && !props.disabled && <Check />}
-					</span>
-				)}
-				<SelectPrimitive.ItemText>
-					<span className={cn(styles.select__item__container, className)}>{children}</span>
-				</SelectPrimitive.ItemText>
-			</SelectPrimitive.Item>
-		);
-	}
-);
+	return (
+		<SelectPrimitive.Item
+			ref={ref}
+			id={id}
+			className={cn(styles.select__item, className)}
+			style={style}
+			data-slot="select-item"
+			data-testid={testId}
+			data-selected={isSelected}
+			data-multiple={context?.multiple || undefined}
+			onPointerUp={handlePointerUp}
+			{...props}
+		>
+			{context?.multiple && (
+				<span
+					className={cn(styles['select__item-indicator'], indicatorClassname, {
+						'opacity-0': !isSelected,
+					})}
+				>
+					<SelectPrimitive.ItemIndicator>
+						<Check />
+					</SelectPrimitive.ItemIndicator>
+					{isSelected && !props.disabled && <Check />}
+				</span>
+			)}
+			<SelectPrimitive.ItemText>
+				<span className={styles.select__item__container}>{children}</span>
+			</SelectPrimitive.ItemText>
+		</SelectPrimitive.Item>
+	);
+});
 SelectItem.displayName = 'SelectItem';
 
 export type SelectItemTextProps = {

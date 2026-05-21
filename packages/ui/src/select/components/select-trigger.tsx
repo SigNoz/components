@@ -6,10 +6,8 @@ import styles from '../select.module.scss';
 import { useSelectContext } from './select-context.js';
 
 export type SelectTriggerProps = {
-	/** Additional CSS class names. */
+	/** Additional CSS class names for the trigger container. */
 	className?: string;
-	/** Additional CSS class names for the Select Trigger Container. */
-	containerClassname?: string;
 	/** Inline styles for the element. */
 	style?: React.CSSProperties;
 	/** Unique identifier for the element. */
@@ -72,7 +70,6 @@ export const SelectTrigger = React.forwardRef<
 	(
 		{
 			className,
-			containerClassname,
 			style,
 			id,
 			testId,
@@ -109,7 +106,7 @@ export const SelectTrigger = React.forwardRef<
 					<span className={styles.select__pills}>
 						{displayedValues.map((v) => (
 							<span key={v} className={styles.select__pill}>
-								<span className={cn(styles['select__pill-text'], className)}>
+								<span className={styles['select__pill-text']}>
 									{resolveLabel ? resolveLabel(v) : v}
 								</span>
 								<button
@@ -135,17 +132,17 @@ export const SelectTrigger = React.forwardRef<
 
 			// Single-select: use resolveLabel if provided and has value, otherwise use Radix default
 			if (resolveLabel && hasValue && context) {
-				return <span className={className}>{resolveLabel(context.value[0])}</span>;
+				return <span>{resolveLabel(context.value[0])}</span>;
 			}
 
-			return <SelectPrimitive.Value className={className} placeholder={placeholder} />;
+			return <SelectPrimitive.Value placeholder={placeholder} />;
 		};
 
 		return (
 			<SelectPrimitive.Trigger
 				ref={ref}
 				id={id}
-				className={cn(styles.select__trigger, containerClassname)}
+				className={cn(styles.select__trigger, className)}
 				style={style}
 				data-slot="select-trigger"
 				data-testid={testId}
