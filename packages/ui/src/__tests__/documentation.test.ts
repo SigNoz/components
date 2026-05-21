@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { getComponentDirs } from './utils.js';
 
-const README_PATH = join(__dirname, '..', '..', 'README.md');
+const README_PATH = join(__dirname, '..', '..', '..', '..', 'README.md');
 const INTRO_MDX_PATH = join(
 	__dirname,
 	'..',
