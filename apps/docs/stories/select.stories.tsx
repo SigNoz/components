@@ -5,11 +5,12 @@ import {
 	SelectGroup,
 	SelectItem,
 	SelectLabel,
+	SelectLoading,
 	SelectSeparator,
 	SelectTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof Select> = {
 	title: 'Components/Select',
@@ -218,3 +219,54 @@ export const DisabledItems: Story = {
 		);
 	},
 };
+
+export const Loading: Story = {
+	render: () => (
+		<div className="p-8 w-full max-w-2xl space-y-8">
+			<div>
+				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<Select>
+					<SelectTrigger placeholder="Select a framework..." loading />
+					<SelectContent>
+						<SelectLoading>Fetching options...</SelectLoading>
+					</SelectContent>
+				</Select>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<SelectLoadingWithDelay />
+			</div>
+		</div>
+	),
+};
+
+function SelectLoadingWithDelay() {
+	const [value, setValue] = useState('');
+	const [isLoading, setIsLoading] = useState(true);
+	const [items, setItems] = useState<typeof frameworks>([]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setItems(frameworks);
+			setIsLoading(false);
+		}, 5000);
+		return () => clearTimeout(timer);
+	}, []);
+
+	return (
+		<Select value={value} onChange={(v) => setValue(v as string)}>
+			<SelectTrigger placeholder="Select a framework..." loading={isLoading} />
+			<SelectContent>
+				{isLoading ? (
+					<SelectLoading>Loading options...</SelectLoading>
+				) : (
+					items.map((f) => (
+						<SelectItem key={f.value} value={f.value}>
+							{f.label}
+						</SelectItem>
+					))
+				)}
+			</SelectContent>
+		</Select>
+	);
+}

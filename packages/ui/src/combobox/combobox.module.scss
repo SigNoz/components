@@ -74,6 +74,39 @@
 	opacity: var(--combobox-trigger-icon-opacity, 0.5);
 }
 
+@keyframes combobox-spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.combobox__trigger-spinner {
+	height: var(--combobox-trigger-icon-size, 1rem);
+	width: var(--combobox-trigger-icon-size, 1rem);
+	opacity: var(--combobox-trigger-icon-opacity, 0.5);
+	animation: combobox-spin 1s linear infinite;
+}
+
+.combobox__loading {
+	display: var(--combobox-loading-display, flex);
+	align-items: var(--combobox-loading-align-items, center);
+	justify-content: var(--combobox-loading-justify-content, center);
+	gap: var(--combobox-loading-gap, 0.5rem);
+	padding: var(--combobox-loading-padding, 0.75rem 0.5rem);
+	color: var(--combobox-loading-color, var(--muted-foreground));
+	font-size: var(--combobox-loading-font-size, var(--periscope-font-size-base, 13px));
+}
+
+.combobox__loading-spinner {
+	width: var(--combobox-loading-spinner-size, 1rem);
+	height: var(--combobox-loading-spinner-size, 1rem);
+	animation: combobox-spin 1s linear infinite;
+}
+
 .combobox__multi-trigger {
 	display: var(--combobox-multi-trigger-display, flex);
 	flex-wrap: var(--combobox-multi-trigger-flex-wrap, wrap);

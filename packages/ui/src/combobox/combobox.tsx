@@ -246,7 +246,32 @@ export const ComboboxEmpty = React.forwardRef<
 >((props, ref) => <CommandEmpty ref={ref} data-slot="combobox-empty" {...props} />);
 ComboboxEmpty.displayName = 'ComboboxEmpty';
 
-export type ComboboxLoadingProps = React.ComponentPropsWithoutRef<typeof CommandLoading>;
+export type ComboboxLoadingProps = Omit<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className'
+> & {
+	/**
+	 * Additional CSS classes to apply to the loading container.
+	 */
+	className?: string;
+	/**
+	 * Inline styles for the loading container.
+	 */
+	style?: React.CSSProperties;
+	/**
+	 * Unique identifier for the element.
+	 */
+	id?: string;
+	/**
+	 * Test identifier for testing libraries.
+	 */
+	testId?: string;
+	/**
+	 * The loading content to display.
+	 * @default "Loading..."
+	 */
+	children?: React.ReactNode;
+};
 
 /**
  * Loading indicator shown while fetching or filtering items.

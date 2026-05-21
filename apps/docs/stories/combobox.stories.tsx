@@ -1,7 +1,7 @@
 import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
 import { ComboboxSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof ComboboxSimple> = {
 	title: 'Components/Combobox',
@@ -604,3 +604,45 @@ export const MultiSelectWithHintsAndCreate: Story = {
 		);
 	},
 };
+
+export const Loading: Story = {
+	render: () => (
+		<div className="p-8 w-full max-w-2xl space-y-8">
+			<div>
+				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<ComboboxSimple
+					items={[]}
+					placeholder="Select a framework..."
+					loading={true}
+					loadingPlaceholder="Fetching options..."
+				/>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<ComboboxLoadingWithDelay />
+			</div>
+		</div>
+	),
+};
+
+function ComboboxLoadingWithDelay() {
+	const [isLoading, setIsLoading] = useState(true);
+	const [items, setItems] = useState<typeof defaultItems>([]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setItems(defaultItems);
+			setIsLoading(false);
+		}, 5000);
+		return () => clearTimeout(timer);
+	}, []);
+
+	return (
+		<ComboboxSimple
+			items={items}
+			placeholder="Select a framework..."
+			loading={isLoading}
+			loadingPlaceholder="Loading options..."
+		/>
+	);
+}

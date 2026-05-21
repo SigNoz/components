@@ -33,6 +33,10 @@ export {
 	type SelectItemTextProps,
 } from './components/select-item.js';
 export {
+	SelectLoading,
+	type SelectLoadingProps,
+} from './components/select-loading.js';
+export {
 	SelectSeparator,
 	type SelectSeparatorProps,
 } from './components/select-separator.js';
