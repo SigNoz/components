@@ -234,28 +234,16 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					/>
 				</SliderPrimitive.Track>
 
-				{localValues.map((val, index) => {
-					const thumb = (
-						<SliderPrimitive.Thumb
-							key={`slider-${internalId}-thumb-${index}`}
-							className={cn(styles['slider-thumb'], classNames?.thumb)}
-							style={inlineStyles?.thumb}
-						/>
-					);
-
-					if (tooltip) {
-						return (
-							// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
-							<TooltipProvider key={`slider-${internalId}-${index}-tooltip`}>
-								<TooltipSimple title={tooltip.formatter ? tooltip.formatter(val) : val}>
-									{thumb}
-								</TooltipSimple>
-							</TooltipProvider>
-						);
-					}
-
-					return thumb;
-				})}
+				{localValues.map((val, index) => (
+					<SliderThumb
+						// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
+						key={`slider-${internalId}-thumb-${index}`}
+						value={val}
+						className={cn(styles['slider-thumb'], classNames?.thumb)}
+						style={inlineStyles?.thumb}
+						tooltip={tooltip}
+					/>
+				))}
 
 				{markList.length > 0 && (
 					<div className={styles['slider-marks']}>
@@ -275,5 +263,52 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 	}
 );
 Slider.displayName = 'Slider';
+
+interface SliderThumbProps {
+	value: number;
+	className: string;
+	style?: React.CSSProperties;
+	tooltip?: SliderProps['tooltip'];
+}
+
+/**
+ * Internal thumb wrapper that keeps the tooltip open for the entire drag/focus
+ * lifecycle. Radix's default behavior only shows the tooltip on hover, which
+ * causes flicker as the thumb moves under the cursor during dragging.
+ */
+function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
+	const [isDragging, setIsDragging] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+
+	useEffect(() => {
+		if (!isDragging) return;
+		const handlePointerUp = () => setIsDragging(false);
+		window.addEventListener('pointerup', handlePointerUp);
+		return () => window.removeEventListener('pointerup', handlePointerUp);
+	}, [isDragging]);
+
+	const thumb = (
+		<SliderPrimitive.Thumb
+			className={className}
+			style={style}
+			onPointerDown={() => setIsDragging(true)}
+			onPointerEnter={() => setIsHovering(true)}
+			onPointerLeave={() => setIsHovering(false)}
+		/>
+	);
+
+	if (!tooltip) return thumb;
+
+	return (
+		<TooltipProvider delayDuration={0}>
+			<TooltipSimple
+				open={isDragging || isHovering}
+				title={tooltip.formatter ? tooltip.formatter(value) : value}
+			>
+				{thumb}
+			</TooltipSimple>
+		</TooltipProvider>
+	);
+}
 
 export { Slider };
