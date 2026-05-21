@@ -626,6 +626,7 @@ const ComboboxSimpleInner = React.forwardRef<
 								ref={triggerRef as React.RefCallback<HTMLDivElement>}
 								className={cn(styles['combobox__trigger'], className)}
 								style={style}
+								data-slot="combobox-trigger"
 								data-testid={testId}
 								id={id}
 								role="combobox"
@@ -636,13 +637,19 @@ const ComboboxSimpleInner = React.forwardRef<
 								tabIndex={disabled ? -1 : 0}
 								onKeyDown={disabled ? undefined : handleTriggerKeyDown}
 							>
-								<span className={styles['combobox__trigger-value']}>
+								<span data-slot="combobox-value" className={styles['combobox__trigger-value']}>
 									{pillsContent || placeholder || 'Select an option...'}
 								</span>
 								{loading ? (
-									<LoaderCircle className={styles['combobox__trigger-spinner']} />
+									<LoaderCircle
+										data-slot="combobox-spinner"
+										className={styles['combobox__trigger-spinner']}
+									/>
 								) : (
-									<ChevronDown className={styles['combobox__trigger-icon']} />
+									<ChevronDown
+										data-slot="combobox-icon"
+										className={styles['combobox__trigger-icon']}
+									/>
 								)}
 							</div>
 						</ComboboxTrigger>
@@ -674,18 +681,25 @@ const ComboboxSimpleInner = React.forwardRef<
 							type="button"
 							className={cn(styles['combobox__trigger'], className)}
 							style={style}
+							data-slot="combobox-trigger"
 							data-testid={testId}
 							id={id}
 							disabled={disabled}
 							data-disabled={disabled || undefined}
 						>
-							<span className={styles['combobox__trigger-value']}>
+							<span data-slot="combobox-value" className={styles['combobox__trigger-value']}>
 								{triggerValue || placeholder || 'Select an option...'}
 							</span>
 							{loading ? (
-								<LoaderCircle className={styles['combobox__trigger-spinner']} />
+								<LoaderCircle
+									data-slot="combobox-spinner"
+									className={styles['combobox__trigger-spinner']}
+								/>
 							) : (
-								<ChevronDown className={styles['combobox__trigger-icon']} />
+								<ChevronDown
+									data-slot="combobox-icon"
+									className={styles['combobox__trigger-icon']}
+								/>
 							)}
 						</button>
 					</ComboboxTrigger>

@@ -103,14 +103,15 @@ export const ComboboxTrigger = React.forwardRef<
 		<PopoverPrimitive.Trigger
 			ref={ref}
 			className={cn(styles['combobox__trigger'], className)}
+			data-slot="combobox-trigger"
 			data-testid={testId}
 			id={id}
 			{...props}
 		>
-			<span className={styles['combobox__trigger-value']}>
+			<span data-slot="combobox-value" className={styles['combobox__trigger-value']}>
 				{value || placeholder || 'Select an option...'}
 			</span>
-			<ChevronDown className={styles['combobox__trigger-icon']} />
+			<ChevronDown data-slot="combobox-icon" className={styles['combobox__trigger-icon']} />
 		</PopoverPrimitive.Trigger>
 	);
 });
@@ -375,7 +376,11 @@ export const ComboboxItem = React.forwardRef<
 	) => {
 		const resolvedPrefix: React.ReactNode =
 			prefix === undefined ? (
-				<span className={styles['combobox__item-check']} data-selected={isSelected}>
+				<span
+					data-slot="combobox-item-indicator"
+					className={styles['combobox__item-check']}
+					data-selected={isSelected}
+				>
 					<Check />
 				</span>
 			) : (
@@ -454,9 +459,12 @@ export const ComboboxPill = React.forwardRef<HTMLSpanElement, ComboboxPillProps>
 	({ value, onRemove, children, className }, ref) => {
 		return (
 			<span ref={ref} className={cn(styles.combobox__pill, className)} data-slot="combobox-pill">
-				<span className={styles['combobox__pill-text']}>{children}</span>
+				<span data-slot="combobox-pill-text" className={styles['combobox__pill-text']}>
+					{children}
+				</span>
 				<button
 					type="button"
+					data-slot="combobox-pill-remove"
 					className={styles['combobox__pill-remove']}
 					onClick={(e) => {
 						e.preventDefault();
@@ -558,6 +566,7 @@ export const ComboboxMultiTrigger = React.forwardRef<HTMLDivElement, ComboboxMul
 				<input
 					ref={inputRef}
 					type="text"
+					data-slot="combobox-multi-input"
 					className={styles['combobox__multi-input']}
 					placeholder={React.Children.count(children) === 0 ? placeholder : undefined}
 					value={inputValue}
