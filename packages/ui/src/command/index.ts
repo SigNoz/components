@@ -1,3 +1,4 @@
+export { defaultFilter as commandDefaultFilter } from 'cmdk';
 export {
 	Command,
 	CommandDialog,

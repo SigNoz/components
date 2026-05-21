@@ -1,5 +1,6 @@
 import { ChevronDown, LoaderCircle } from '@signozhq/icons';
 import * as React from 'react';
+import { commandDefaultFilter } from '../../command/index.js';
 import { cn } from '../../lib/utils.js';
 import { TooltipProvider, TooltipSimple } from '../../tooltip/index.js';
 import {
@@ -38,6 +39,11 @@ export type ComboboxSimpleItem = {
 	 * Useful for suggestions like "status:" that let users continue typing.
 	 */
 	insertValue?: string;
+	/**
+	 * Additional keywords for filtering. Useful when value differs from searchable text.
+	 * E.g. value="15" with keywords=["15 minutes", "quarter hour"]
+	 */
+	keywords?: string[];
 };
 
 export type ComboboxSimpleGroup = {
@@ -263,6 +269,23 @@ const ComboboxSimpleInner = React.forwardRef<
 			return map;
 		}, [allItems]);
 
+		// Build searchable strings for each item: value, displayValue, insertValue, label (if string), keywords
+		const searchStringsMap = React.useMemo(() => {
+			const map = new Map<string, string[]>();
+			for (const item of allItems) {
+				const searchable: string[] = [item.value];
+				if (item.displayValue) searchable.push(item.displayValue);
+				if (item.insertValue) searchable.push(item.insertValue);
+				if (typeof item.label === 'string') searchable.push(item.label);
+				if (item.keywords) searchable.push(...item.keywords);
+				map.set(
+					item.value,
+					searchable.map((s) => s.toLowerCase())
+				);
+			}
+			return map;
+		}, [allItems]);
+
 		const handleSelect = React.useCallback(
 			(selectedValue: string) => {
 				if (multiple) {
@@ -381,16 +404,26 @@ const ComboboxSimpleInner = React.forwardRef<
 			hintItems.length > 0 && !hintItems.some((item) => inputValue.startsWith(item.insertValue!));
 
 		// Custom filter for cmdk: always show hint items when showHints is true
+		// Uses cmdk's commandDefaultFilter (fuzzy matching) with extended searchable fields
 		const hintValues = React.useMemo(() => new Set(hintItems.map((h) => h.value)), [hintItems]);
 		const customFilter = React.useCallback(
-			(value: string, search: string) => {
+			(value: string, search: string, keywords?: string[]) => {
 				const isHintItem = hintValues.has(value);
 				if (isHintItem) return showHints ? 1 : 0;
-				// Default cmdk behavior for regular items
-				if (value.toLowerCase().includes(search.toLowerCase())) return 1;
-				return 0;
+
+				const searchStrings = searchStringsMap.get(value);
+
+				// Item in allItems - use fuzzy filter with all searchable fields as keywords
+				if (searchStrings) {
+					// Combine our searchStrings with cmdk-provided keywords
+					const allKeywords = [...searchStrings, ...(keywords ?? [])];
+					return commandDefaultFilter(value, search, allKeywords);
+				}
+
+				// Item not in allItems (create items, custom values) - use default fuzzy filter
+				return commandDefaultFilter(value, search, keywords);
 			},
-			[hintValues, showHints]
+			[hintValues, showHints, searchStringsMap]
 		);
 
 		const showCreateOption =
@@ -600,7 +633,7 @@ const ComboboxSimpleInner = React.forwardRef<
 						</ComboboxTrigger>
 						{open && (
 							<ComboboxContent withPortal={withPortal}>
-								<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
+								<ComboboxCommand filter={customFilter}>
 									<ComboboxInput
 										placeholder={inputPlaceholder ?? placeholder}
 										value={inputValue}
@@ -641,7 +674,7 @@ const ComboboxSimpleInner = React.forwardRef<
 					</ComboboxTrigger>
 					{open && (
 						<ComboboxContent withPortal={withPortal}>
-							<ComboboxCommand filter={hintItems.length > 0 ? customFilter : undefined}>
+							<ComboboxCommand filter={customFilter}>
 								<ComboboxInput
 									placeholder={inputPlaceholder ?? placeholder}
 									value={inputValue}

@@ -186,6 +186,41 @@ const [tags, setTags] = useState<string[]>([]);
 />
 ```
 
+**Keywords for enhanced filtering:**
+
+Use `keywords` when the `value` differs from what users might search for. The filter searches across `value`, `label` (if string), `displayValue`, `insertValue`, and `keywords`.
+
+```tsx
+const items = [
+	{ value: '15', label: '15 minutes', keywords: ['quarter hour', '15m', '900 seconds'] },
+	{ value: '30', label: '30 minutes', keywords: ['half hour', '30m'] },
+	{ value: '60', label: '1 hour', keywords: ['60 minutes', '1h'] },
+];
+
+<ComboboxSimple
+	items={items}
+	placeholder="Select duration..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+Now users can find "15 minutes" by typing "15", "minute", "quarter", or "900".
+
+**String labels are automatically searchable:**
+
+When `label` is a string, it's included in the filter. No extra config needed.
+
+```tsx
+const items = [
+	{ value: 'us-east-1', label: 'US East (N. Virginia)' },
+	{ value: 'eu-west-1', label: 'EU (Ireland)' },
+];
+
+// Users can search "us-east" (value) or "Virginia" (label)
+<ComboboxSimple items={items} value={value} onChange={setValue} />
+```
+
 **Hint items with insertValue (filter suggestions):**
 
 Items with `insertValue` behave as hints - clicking them inserts the value into the input instead of selecting. Useful for filter prefixes like `status:` or `tag:`.
