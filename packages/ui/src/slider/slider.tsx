@@ -203,9 +203,46 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				const label = isObject && 'label' in markObj ? (markObj as any).label : markObj;
 				const markStyle = isObject && 'style' in markObj ? (markObj as any).style : {};
 
-				return { key, percent, label, markStyle };
+				return { key, markVal, percent, label, markStyle };
 			});
 		}, [marks, min, max]);
+
+		const isMarkActive = useCallback(
+			(markVal: number) => {
+				if (localValues.length === 1) return markVal <= localValues[0];
+				return markVal >= localValues[0] && markVal <= localValues[localValues.length - 1];
+			},
+			[localValues]
+		);
+
+		const handleMarkClick = useCallback(
+			(markVal: number) => {
+				let newValues: number[];
+				if (localValues.length === 1) {
+					newValues = [markVal];
+				} else {
+					const lastIndex = localValues.length - 1;
+					const distToFirst = Math.abs(localValues[0] - markVal);
+					const distToLast = Math.abs(localValues[lastIndex] - markVal);
+					newValues =
+						distToFirst <= distToLast
+							? [markVal, ...localValues.slice(1)]
+							: [...localValues.slice(0, lastIndex), markVal];
+					newValues = [...newValues].sort((a, b) => a - b);
+				}
+
+				if (internalValue === undefined) {
+					setLocalValues(newValues);
+				}
+				if (onChange) {
+					onChange(range ? newValues : newValues[0]);
+				}
+				if (onAfterChange) {
+					onAfterChange(range ? newValues : newValues[0]);
+				}
+			},
+			[localValues, internalValue, onChange, onAfterChange, range]
+		);
 
 		const internalId = useId();
 
@@ -221,7 +258,11 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				defaultValue={internalDefaultValue}
 				onValueChange={handleValueChange}
 				onValueCommit={handleValueCommit}
-				className={cn(styles['slider-root'], className)}
+				className={cn(
+					styles['slider-root'],
+					markList.length > 0 && styles['slider-root-with-marks'],
+					className
+				)}
 				{...props}
 			>
 				<SliderPrimitive.Track
@@ -233,6 +274,21 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 						style={inlineStyles?.range}
 					/>
 				</SliderPrimitive.Track>
+
+				{markList.length > 0 && (
+					<div className={styles['slider-dots']}>
+						{markList.map(({ key, markVal, percent }) => (
+							<span
+								key={`slider-${internalId}-dot-${key}`}
+								className={cn(
+									styles['slider-dot'],
+									isMarkActive(markVal) && styles['slider-dot-active']
+								)}
+								style={{ left: `${percent}%` }}
+							/>
+						))}
+					</div>
+				)}
 
 				{localValues.map((val, index) => (
 					<SliderThumb
@@ -247,11 +303,21 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 
 				{markList.length > 0 && (
 					<div className={styles['slider-marks']}>
-						{markList.map(({ key, percent, label, markStyle }) => (
+						{markList.map(({ key, markVal, percent, label, markStyle }) => (
+							// biome-ignore lint/a11y/useSemanticElements: span is intentional to avoid native button styling on slider marks
 							<span
 								key={`slider-${internalId}-mark-${key}`}
 								className={styles['slider-mark']}
 								style={{ left: `${percent}%`, ...markStyle }}
+								role="button"
+								tabIndex={0}
+								onClick={() => handleMarkClick(markVal)}
+								onKeyDown={(event) => {
+									if (event.key === 'Enter' || event.key === ' ') {
+										event.preventDefault();
+										handleMarkClick(markVal);
+									}
+								}}
 							>
 								{label}
 							</span>

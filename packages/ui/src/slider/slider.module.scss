@@ -19,6 +19,10 @@
 	}
 }
 
+.slider-root-with-marks {
+	margin-bottom: var(--slider-root-with-marks-margin-bottom, 28px);
+}
+
 .slider-track {
 	position: var(--slider-track-position, relative);
 	height: var(--slider-track-height, 6px);
@@ -53,9 +57,14 @@
 	background-color: var(--slider-thumb-background, var(--base-white));
 	box-shadow: var(--slider-thumb-box-shadow, 0 1px 3px 0 rgba(0, 0, 0, 0.1));
 	transition: var(--slider-thumb-transition, background-color 150ms ease-in-out);
+	cursor: var(--slider-thumb-cursor, grab);
 
 	&:hover {
 		background-color: var(--slider-thumb-hover-background, var(--base-white));
+	}
+
+	&:active {
+		cursor: var(--slider-thumb-active-cursor, grabbing);
 	}
 
 	&:focus-visible {
@@ -67,6 +76,34 @@
 		cursor: var(--slider-thumb-disabled-cursor, not-allowed);
 		opacity: var(--slider-thumb-disabled-opacity, 0.5);
 	}
+}
+
+.slider-dots {
+	position: var(--slider-dots-position, absolute);
+	top: var(--slider-dots-top, 50%);
+	left: var(--slider-dots-left, 0);
+	width: var(--slider-dots-width, 100%);
+	height: 0;
+	pointer-events: var(--slider-dots-pointer-events, none);
+}
+
+.slider-dot {
+	position: var(--slider-dot-position, absolute);
+	top: 0;
+	width: var(--slider-dot-width, 8px);
+	height: var(--slider-dot-height, 8px);
+	border-radius: var(--slider-dot-border-radius, 50%);
+	background-color: var(--slider-dot-background, var(--base-white));
+	border: var(
+		--slider-dot-border,
+		2px solid color-mix(in srgb, var(--primary) 30%, transparent)
+	);
+	transform: var(--slider-dot-transform, translate(-50%, -50%));
+	box-sizing: border-box;
+}
+
+.slider-dot-active {
+	border-color: var(--slider-dot-active-border-color, var(--primary));
 }
 
 .slider-marks {
@@ -83,4 +120,12 @@
 	transform: var(--slider-mark-transform, translateX(-50%));
 	white-space: var(--slider-mark-white-space, nowrap);
 	color: var(--slider-mark-color, var(--base-white));
+	cursor: var(--slider-mark-cursor, pointer);
+	pointer-events: var(--slider-mark-pointer-events, auto);
+
+	&:focus-visible {
+		outline: var(--slider-mark-focus-outline, 2px solid var(--primary));
+		outline-offset: var(--slider-mark-focus-outline-offset, 2px);
+		border-radius: var(--slider-mark-focus-border-radius, 2px);
+	}
 }
