@@ -125,8 +125,48 @@ describe('ComboboxSimple rendering', () => {
 		renderWithProviders(<ComboboxSimple items={defaultItems} testId="combo" withPortal={false} />);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger).toHaveAttribute('data-slot', 'combobox-trigger');
-		expect(trigger.querySelector('[data-slot="combobox-value"]')).toBeInTheDocument();
+		expect(trigger.querySelector('[data-slot="combobox-placeholder"]')).toBeInTheDocument();
 		expect(trigger.querySelector('[data-slot="combobox-icon"]')).toBeInTheDocument();
+	});
+
+	it('uses combobox-placeholder data-slot when no value selected (single)', () => {
+		renderWithProviders(<ComboboxSimple items={defaultItems} testId="combo" withPortal={false} />);
+		const trigger = screen.getByTestId('combo');
+		expect(trigger.querySelector('[data-slot="combobox-placeholder"]')).toBeInTheDocument();
+		expect(trigger.querySelector('[data-slot="combobox-value"]')).not.toBeInTheDocument();
+	});
+
+	it('uses combobox-value data-slot when value selected (single)', () => {
+		renderWithProviders(
+			<ComboboxSimple items={defaultItems} value="react" testId="combo" withPortal={false} />
+		);
+		const trigger = screen.getByTestId('combo');
+		expect(trigger.querySelector('[data-slot="combobox-value"]')).toBeInTheDocument();
+		expect(trigger.querySelector('[data-slot="combobox-placeholder"]')).not.toBeInTheDocument();
+	});
+
+	it('uses combobox-placeholder data-slot when no value selected (multi)', () => {
+		renderWithProviders(
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+		);
+		const trigger = screen.getByTestId('combo');
+		expect(trigger.querySelector('[data-slot="combobox-placeholder"]')).toBeInTheDocument();
+		expect(trigger.querySelector('[data-slot="combobox-value"]')).not.toBeInTheDocument();
+	});
+
+	it('uses combobox-value data-slot when value selected (multi)', () => {
+		renderWithProviders(
+			<ComboboxSimple
+				items={defaultItems}
+				multiple
+				value={['react']}
+				testId="combo"
+				withPortal={false}
+			/>
+		);
+		const trigger = screen.getByTestId('combo');
+		expect(trigger.querySelector('[data-slot="combobox-value"]')).toBeInTheDocument();
+		expect(trigger.querySelector('[data-slot="combobox-placeholder"]')).not.toBeInTheDocument();
 	});
 
 	it('shows spinner data-slot when loading', () => {

@@ -64,7 +64,10 @@ export const ComboboxTrigger = React.forwardRef<
 			id={id}
 			{...props}
 		>
-			<span data-slot="combobox-value" className={styles['combobox__trigger-value']}>
+			<span
+				data-slot={value ? 'combobox-value' : 'combobox-placeholder'}
+				className={styles['combobox__trigger-value']}
+			>
 				{value || placeholder || 'Select an option...'}
 			</span>
 			<ChevronDown data-slot="combobox-icon" className={styles['combobox__trigger-icon']} />
