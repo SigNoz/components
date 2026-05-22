@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.0.22](https://github.com/SigNoz/components/compare/v0.0.21...v0.0.22) (2026-05-22)
+
+
+### Features
+
+* **combobox-simple:** add keywords & fix search by label/displayName ([d15391a](https://github.com/SigNoz/components/commit/d15391a18e029ffbc6a0df7b9bc0dec5fd559b84))
+* **select-combobox:** add loading prop ([779f944](https://github.com/SigNoz/components/commit/779f9441af68fa874978552a006807ffe7b8566d))
+
+
+### Bug Fixes
+
+* **combobox:** add data-slot attributes ([d44f8b7](https://github.com/SigNoz/components/commit/d44f8b7747cf09c77845bfc31c615dfb36d447f1))
+* **combobox:** add disabled prop ([6119ad2](https://github.com/SigNoz/components/commit/6119ad205e20a55cf34f93a0efbd635e19c62c1b))
+* **components:** ensure all components have uses forward ref ([f3dd554](https://github.com/SigNoz/components/commit/f3dd55448c0f020c0c1728bd324f316069c09dd1))
+* **select:** remove container classname ([d3e85c1](https://github.com/SigNoz/components/commit/d3e85c19e82ceeb53a83c56fe88d214598960593))
+* **slider:** added minor fixes related to marks in slider ([#249](https://github.com/SigNoz/components/issues/249)) ([456c575](https://github.com/SigNoz/components/commit/456c575761b7d5dda2dd3ed4469adf2cc563810f))
+* update flex property to allow automatic sizing ([#250](https://github.com/SigNoz/components/issues/250)) ([e3abbcf](https://github.com/SigNoz/components/commit/e3abbcf124f10b8058e1bb1818aa3be755bc94bf))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump turbo from 2.9.12 to 2.9.14 ([#243](https://github.com/SigNoz/components/issues/243)) ([d5e0b74](https://github.com/SigNoz/components/commit/d5e0b74b7a88cf048e7c3f577459debf38e1ea1f))
+* **deps:** bump ws from 8.19.0 to 8.20.1 ([aab281a](https://github.com/SigNoz/components/commit/aab281a53ece6df23ade1ee2e9fa5bc958c9c880))
+* **package:** readme and export fixes ([a9f0aba](https://github.com/SigNoz/components/commit/a9f0aba420eb485b9473eb3887f217c2b463ebf2))
+
+
+### Tests
+
+* **documentation:** use root readme instead of package ui ([155a2a9](https://github.com/SigNoz/components/commit/155a2a9768b19df44b564e3901a8f7b7c6e77554))
+
 ## [0.0.21](https://github.com/SigNoz/components/compare/v0.0.20...v0.0.21) (2026-05-21)
 
 
