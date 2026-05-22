@@ -61,7 +61,7 @@
   justify-content: var(--toggle-group-item-justify-content, center);
   gap: var(--toggle-group-item-gap, var(--spacing-4, 0.5rem));
   min-width: 0;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   border-radius: var(--toggle-group-item-border-radius, 0px);
   border-color: var(--toggle-group-item-border-color, transparent);
   border-width: var(--toggle-group-item-border-width, 0);
