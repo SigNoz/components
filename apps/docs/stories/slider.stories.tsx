@@ -181,14 +181,15 @@ export const WithMarks: Story = {
 	args: {
 		defaultValue: 50,
 		max: 100,
-		step: 10,
+		step: 1,
 		marks: {
-			0: '0°C',
-			26: '26°C',
-			37: '37°C',
+			0: `1 GB`,
+			25: `10 GB`,
+			50: `100 GB`,
+			75: `1,000 GB`,
 			100: {
 				style: { color: '#f50' },
-				label: <strong>100°C</strong>,
+				label: <strong>10,000 GB</strong>,
 			},
 		},
 	},

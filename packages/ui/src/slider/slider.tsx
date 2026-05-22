@@ -254,7 +254,10 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				data-testid={testId}
 				min={min}
 				max={max}
-				value={internalValue}
+				// Always drive Radix from localValues so handleMarkClick (which
+				// updates localValues) can actually move the thumb — Radix
+				// ignores onValueChange-only updates when it's uncontrolled.
+				value={localValues}
 				defaultValue={internalDefaultValue}
 				onValueChange={handleValueChange}
 				onValueCommit={handleValueCommit}
@@ -311,6 +314,12 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 								style={{ left: `${percent}%`, ...markStyle }}
 								role="button"
 								tabIndex={0}
+								// Stop pointerdown from bubbling to Radix's slider root —
+								// otherwise Radix would snap the thumb to the cursor's
+								// x-position inside the label (so clicking the left edge
+								// of "10 GB" lands below 10, the right edge above 10),
+								// overriding our exact handleMarkClick(markVal) jump.
+								onPointerDown={(event) => event.stopPropagation()}
 								onClick={() => handleMarkClick(markVal)}
 								onKeyDown={(event) => {
 									if (event.key === 'Enter' || event.key === ' ') {
