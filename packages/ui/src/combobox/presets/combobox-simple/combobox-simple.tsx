@@ -388,7 +388,10 @@ const ComboboxSimpleInner = React.forwardRef<
 								tabIndex={disabled ? -1 : 0}
 								onKeyDown={disabled ? undefined : handleTriggerKeyDown}
 							>
-								<span data-slot="combobox-value" className={styles['combobox__trigger-value']}>
+								<span
+									data-slot={pillsContent ? 'combobox-value' : 'combobox-placeholder'}
+									className={styles['combobox__trigger-value']}
+								>
 									{pillsContent || placeholder || 'Select an option...'}
 								</span>
 								{loading ? (
@@ -425,7 +428,10 @@ const ComboboxSimpleInner = React.forwardRef<
 							disabled={disabled}
 							data-disabled={disabled || undefined}
 						>
-							<span data-slot="combobox-value" className={styles['combobox__trigger-value']}>
+							<span
+								data-slot={triggerValue ? 'combobox-value' : 'combobox-placeholder'}
+								className={styles['combobox__trigger-value']}
+							>
 								{triggerValue || placeholder || 'Select an option...'}
 							</span>
 							{loading ? (
