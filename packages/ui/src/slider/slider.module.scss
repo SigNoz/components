@@ -31,10 +31,20 @@
 	overflow: var(--slider-track-overflow, hidden);
 	border-radius: var(--slider-track-border-radius, 9999px);
 	background-color: var(--slider-track-background, color-mix(in srgb, var(--primary) 10%, transparent));
+	// Inset the track by half the thumb width on each side so its visible
+	// edges line up with the first and last marks. Radix shifts the thumb
+	// inward by `thumbWidth/2` at the extremes to keep it within bounds —
+	// matching the track keeps thumb, range fill, dots, and marks in sync.
+	margin-left: var(--slider-track-margin-x, calc(var(--slider-thumb-width, 18px) / 2));
+	margin-right: var(--slider-track-margin-x, calc(var(--slider-thumb-width, 18px) / 2));
 
 	.slider-root[data-orientation='vertical'] & {
 		width: var(--slider-track-vertical-width, 6px);
 		height: var(--slider-track-vertical-height, 100%);
+		margin-left: 0;
+		margin-right: 0;
+		margin-top: var(--slider-track-vertical-margin-y, calc(var(--slider-thumb-height, 18px) / 2));
+		margin-bottom: var(--slider-track-vertical-margin-y, calc(var(--slider-thumb-height, 18px) / 2));
 	}
 }
 
@@ -81,8 +91,11 @@
 .slider-dots {
 	position: var(--slider-dots-position, absolute);
 	top: var(--slider-dots-top, 50%);
-	left: var(--slider-dots-left, 0);
-	width: var(--slider-dots-width, 100%);
+	// Inset by half the thumb width so a dot at `${percent}%` lines up with the
+	// thumb's center — Radix shifts the thumb inward by `thumbWidth/2` at the
+	// extremes to keep it within the track bounds.
+	left: var(--slider-dots-left, calc(var(--slider-thumb-width, 18px) / 2));
+	width: var(--slider-dots-width, calc(100% - var(--slider-thumb-width, 18px)));
 	height: 0;
 	pointer-events: var(--slider-dots-pointer-events, none);
 }
@@ -94,10 +107,8 @@
 	height: var(--slider-dot-height, 8px);
 	border-radius: var(--slider-dot-border-radius, 50%);
 	background-color: var(--slider-dot-background, var(--base-white));
-	border: var(
-		--slider-dot-border,
-		2px solid color-mix(in srgb, var(--primary) 30%, transparent)
-	);
+	border: var(--slider-dot-border,
+			2px solid color-mix(in srgb, var(--primary) 30%, transparent));
 	transform: var(--slider-dot-transform, translate(-50%, -50%));
 	box-sizing: border-box;
 }
@@ -109,9 +120,10 @@
 .slider-marks {
 	position: var(--slider-marks-position, absolute);
 	top: var(--slider-marks-top, calc(50% + 12px));
-	left: var(--slider-marks-left, 0);
-	width: var(--slider-marks-width, 100%);
-	font-size: var(--slider-marks-font-size, 12px);
+	// Match the thumb's in-bounds offset so mark labels align with the thumb.
+	left: var(--slider-marks-left, calc(var(--slider-thumb-width, 18px) / 2));
+	width: var(--slider-marks-width, calc(100% - var(--slider-thumb-width, 18px)));
+	font-size: var(--slider-marks-font-size, 11px);
 	pointer-events: var(--slider-marks-pointer-events, none);
 }
 
@@ -119,7 +131,7 @@
 	position: var(--slider-mark-position, absolute);
 	transform: var(--slider-mark-transform, translateX(-50%));
 	white-space: var(--slider-mark-white-space, nowrap);
-	color: var(--slider-mark-color, var(--base-white));
+	color: var(--slider-mark-color, var(--l3-foreground));
 	cursor: var(--slider-mark-cursor, pointer);
 	pointer-events: var(--slider-mark-pointer-events, auto);
 
