@@ -1,60 +1,42 @@
-import { Meta } from '@storybook/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as SkeletonStories from './skeleton.stories';
 
-<Meta title="Components/Skeleton" />
+<Meta of={SkeletonStories} />
 
-## Skeleton
+# Skeleton
 
 Use `Skeleton` to show placeholder loading states while content is being fetched.
 It supports animated pulse effects, configurable title and paragraph rows,
 and sub-components for inputs, buttons, and avatars.
 
-## Import
-
-```tsx
-import { Skeleton } from '@signozhq/ui';
-```
-
 ## Basic Usage
 
 ```tsx
-<Skeleton active />
+import { Skeleton } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />;
+}
 ```
 
-## With Title and Paragraph
+<Primary />
 
-```tsx
-<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 4 }} />
-```
+## Props
 
-## Per-Row Widths
-
-```tsx
-<Skeleton
-	active
-	paragraph={{ rows: 4, width: ['100%', '95%', '80%', '60%'] }}
-/>
-```
+<Controls of={SkeletonStories.Default} />
 
 ## Sub-Components
 
 ```tsx
+// Input
 <Skeleton.Input active size="small" />
 <Skeleton.Input active block />
 
+// Button
 <Skeleton.Button active size="small" />
 <Skeleton.Button active block />
 
+// Avatar
 <Skeleton.Avatar active shape="circle" size={36} />
 <Skeleton.Avatar active shape="square" />
-```
-
-## Composed Example
-
-```tsx
-<div style={{ display: 'flex', gap: '1rem' }}>
-	<Skeleton.Avatar active shape="circle" size={48} />
-	<div style={{ flex: 1 }}>
-		<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
-	</div>
-</div>
 ```

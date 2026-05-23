@@ -17,7 +17,7 @@ const entries: Record<string, string> = {
 	'dialog/index': 'src/dialog/index.ts',
 	'drawer/index': 'src/drawer/index.ts',
 	'dropdown-menu/index': 'src/dropdown-menu/index.ts',
-	'empty-component/index': 'src/empty-component/index.ts',
+	'skeleton/index': 'src/skeleton/index.ts',
 	'input/index': 'src/input/index.ts',
 	'kbd/index': 'src/kbd/index.ts',
 	'pagination/index': 'src/pagination/index.ts',
