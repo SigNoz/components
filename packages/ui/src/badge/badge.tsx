@@ -1,8 +1,9 @@
 import { Slot } from '@radix-ui/react-slot';
-import { forwardRef } from 'react';
+import { X } from '@signozhq/icons';
+import { forwardRef, type MouseEvent, type ReactNode, useState } from 'react';
 import { cn } from '../lib/utils.js';
 import { TextEllipsis, type TextEllipsisProps } from '../text-ellipsis/index.js';
-import styles from './badge.module.css';
+import styles from './badge.module.scss';
 
 export type BadgeVariant = 'default' | 'outline';
 
@@ -52,6 +53,26 @@ export interface BadgeProps
 	 * @default false
 	 */
 	textEllipsis?: boolean | TextEllipsisPosition;
+	/**
+	 * Render a close button and hide the badge after close unless onClose prevents default.
+	 * Intended for the default span-rendered Badge. When asChild is true, closeable is ignored
+	 * to preserve Slot composition behavior.
+	 * @default false
+	 */
+	closable?: boolean;
+	/**
+	 * Called when the close button is clicked. Call event.preventDefault() to keep the badge visible.
+	 */
+	onClose?: (event: MouseEvent<HTMLButtonElement>) => void;
+	/**
+	 * Custom close icon.
+	 */
+	closeIcon?: ReactNode;
+	/**
+	 * Accessible label for the close button.
+	 * @default Close badge
+	 */
+	closeAriaLabel?: string;
 }
 
 const colorMap: Record<string, string> = {
@@ -72,12 +93,21 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 			capitalize = false,
 			testId,
 			textEllipsis = false,
+			closable = false,
+			onClose,
+			closeIcon,
+			closeAriaLabel = 'Close badge',
 			children,
 			...props
 		},
 		ref
 	) => {
-		const Comp = asChild ? Slot : 'span';
+		const [closed, setClosed] = useState(false);
+		const isClosable = closable && !asChild;
+
+		if (closed) {
+			return null;
+		}
 
 		// Determine ellipsis position
 		const ellipsisPosition: TextEllipsisPosition | false =
@@ -101,20 +131,51 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 			children
 		);
 
+		const handleCloseClick = (event: MouseEvent<HTMLButtonElement>): void => {
+			event.stopPropagation();
+			onClose?.(event);
+
+			if (!event.defaultPrevented) {
+				setClosed(true);
+			}
+		};
+
+		const badgeProps = {
+			'data-color': colorMap[color] || color,
+			'data-variant': variant,
+			'data-capitalize': capitalize,
+			'data-slot': 'badge',
+			'data-testid': testId,
+			'data-text-ellipsis': shouldApplyEllipsis || undefined,
+			'data-closable': isClosable || undefined,
+			className: cn(styles.badge, className),
+			...props,
+		};
+
+		if (asChild) {
+			return (
+				<Slot ref={ref} {...badgeProps}>
+					{content}
+				</Slot>
+			);
+		}
+
 		return (
-			<Comp
-				ref={ref}
-				data-color={colorMap[color] || color}
-				data-variant={variant}
-				data-capitalize={capitalize}
-				data-slot="badge"
-				data-testid={testId}
-				data-text-ellipsis={shouldApplyEllipsis || undefined}
-				className={cn(styles.badge, className)}
-				{...props}
-			>
+			<span ref={ref} {...badgeProps}>
 				{content}
-			</Comp>
+				{isClosable && (
+					<button
+						type="button"
+						aria-label={closeAriaLabel}
+						className={styles.closeButton}
+						onClick={handleCloseClick}
+					>
+						<span aria-hidden="true" className={styles.closeIcon}>
+							{closeIcon ?? <X />}
+						</span>
+					</button>
+				)}
+			</span>
 		);
 	}
 );

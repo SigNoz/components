@@ -1,5 +1,6 @@
 import { Badge, type BadgeColor } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
 
 // Icon Components for examples
 const CheckIcon = () => (
@@ -97,6 +98,9 @@ const StarIcon = () => (
 const meta: Meta<typeof Badge> = {
 	title: 'Components/Badge',
 	component: Badge,
+	args: {
+		onClose: fn(),
+	},
 	parameters: {
 		layout: 'fullscreen',
 		docs: {
@@ -164,8 +168,43 @@ const meta: Meta<typeof Badge> = {
 		asChild: {
 			control: 'boolean',
 			description:
-				'Use Radix Slot to compose the badge as a different element (e.g., button, link).',
+				'Use Radix Slot to compose the badge as a different element (e.g., button, link). The closable prop is intended for the default span-rendered Badge.',
 			table: { category: 'Composition', defaultValue: { summary: 'false' } },
+		},
+		textEllipsis: {
+			control: 'boolean',
+			description:
+				'Enable text truncation. Use true for center truncation, or pass start, center, or end in code.',
+			table: {
+				category: 'Behavior',
+				defaultValue: { summary: 'false' },
+				type: { summary: 'boolean | "start" | "center" | "end"' },
+			},
+		},
+		closable: {
+			control: 'boolean',
+			description:
+				'Renders a trailing close button. The badge hides after close unless onClose prevents default.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
+		onClose: {
+			control: false,
+			description:
+				'Callback fired from the close button. Call event.preventDefault() to keep the badge visible.',
+			table: {
+				category: 'Events',
+				type: { summary: '(event: React.MouseEvent<HTMLButtonElement>) => void' },
+			},
+		},
+		closeIcon: {
+			control: false,
+			description: 'Custom close icon. Defaults to X from @signozhq/icons.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		closeAriaLabel: {
+			control: 'text',
+			description: 'Accessible label for the close button.',
+			table: { category: 'Accessibility', defaultValue: { summary: 'Close badge' } },
 		},
 	},
 };
@@ -181,6 +220,8 @@ export const Playground: Story = {
 		variant: 'default',
 		capitalize: false,
 		asChild: false,
+		closable: false,
+		closeAriaLabel: 'Close badge',
 	},
 	render: (props) => {
 		if (props.asChild) {
@@ -649,12 +690,57 @@ export const TextEllipsisPositions: Story = {
 	),
 };
 
+export const Closeable: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Set `closable` to render a trailing close button. The badge hides automatically after close unless `onClose` calls `event.preventDefault()`.',
+			},
+		},
+	},
+	argTypes: {
+		children: { control: false },
+		color: { control: false },
+		variant: { control: false },
+		capitalize: { control: false },
+		asChild: { control: false },
+		textEllipsis: { control: false },
+		closable: { control: false },
+		onClose: { control: false },
+		closeIcon: { control: false },
+		closeAriaLabel: { control: false },
+	},
+	render: () => (
+		<div className="flex gap-2 flex-wrap">
+			<Badge closable color="robin" onClose={fn()} closeAriaLabel="Remove React tag">
+				React
+			</Badge>
+			<Badge closable color="aqua" onClose={fn()} closeAriaLabel="Remove TypeScript tag">
+				TypeScript
+			</Badge>
+			<Badge closable color="forest" onClose={fn()} closeAriaLabel="Remove Next.js tag">
+				Next.js
+			</Badge>
+			<Badge
+				closable
+				color="amber"
+				closeIcon={<XIcon />}
+				onClose={(event) => event.preventDefault()}
+				closeAriaLabel="Keep warning tag"
+			>
+				Persistent
+			</Badge>
+		</div>
+	),
+};
+
 export const UsingAsChild: Story = {
 	parameters: {
 		docs: {
 			description: {
 				story:
-					'The `asChild` prop uses Radix UI Slot to compose the badge as a different element. This allows you to create interactive badges that maintain all badge styling while functioning as buttons, links, or other interactive elements. The badge styling is applied to the child element instead of rendering a wrapper span.',
+					'The `asChild` prop uses Radix UI Slot to compose the badge as a different element. This allows you to create interactive badges that maintain all badge styling while functioning as buttons, links, or other interactive elements. The badge styling is applied to the child element instead of rendering a wrapper span. For removable tags, use `closable` with the default span-rendered Badge.',
 			},
 		},
 	},
@@ -769,68 +855,6 @@ export const UsingAsChild: Story = {
 						>
 							Examples
 						</a>
-					</Badge>
-				</div>
-			</div>
-
-			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
-					Tag Removal Pattern
-				</h3>
-				<div className="flex gap-2 flex-wrap">
-					<Badge color="robin">
-						React
-						<Badge
-							asChild
-							color="robin"
-							variant="outline"
-							className="ml-1.5 !px-1 !py-0 hover:bg-robin-500/20"
-						>
-							<button
-								type="button"
-								onClick={() => alert('Remove React tag')}
-								className="cursor-pointer border-0 bg-transparent p-0"
-								aria-label="Remove React tag"
-							>
-								<XIcon />
-							</button>
-						</Badge>
-					</Badge>
-					<Badge color="aqua">
-						TypeScript
-						<Badge
-							asChild
-							color="aqua"
-							variant="outline"
-							className="ml-1.5 !px-1 !py-0 hover:bg-aqua-500/20"
-						>
-							<button
-								type="button"
-								onClick={() => alert('Remove TypeScript tag')}
-								className="cursor-pointer border-0 bg-transparent p-0"
-								aria-label="Remove TypeScript tag"
-							>
-								<XIcon />
-							</button>
-						</Badge>
-					</Badge>
-					<Badge color="forest">
-						Next.js
-						<Badge
-							asChild
-							color="forest"
-							variant="outline"
-							className="ml-1.5 !px-1 !py-0 hover:bg-forest-500/20"
-						>
-							<button
-								type="button"
-								onClick={() => alert('Remove Next.js tag')}
-								className="cursor-pointer border-0 bg-transparent p-0"
-								aria-label="Remove Next.js tag"
-							>
-								<XIcon />
-							</button>
-						</Badge>
 					</Badge>
 				</div>
 			</div>
