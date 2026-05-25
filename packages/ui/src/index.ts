@@ -1,5 +1,6 @@
 export * from './alert-dialog/index.js';
 export * from './announcement-banner/index.js';
+export * from './avatar/index.js';
 export * from './badge/index.js';
 export * from './breadcrumb/index.js';
 export * from './button/index.js';

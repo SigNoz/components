@@ -1,0 +1,24 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as AvatarStories from './avatar.stories';
+
+<Meta of={AvatarStories} />
+
+# Avatar
+
+The avatar component displays user profile images, initials, or icons with support for multiple sizes, shapes, and a loading skeleton state.
+
+## How to use
+
+```tsx
+import { Avatar } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Avatar size="lg" src="/user.png" alt="Jane Doe" />;
+}
+```
+
+This code above will render the following avatar:
+
+<Primary />
+
+<Controls of={AvatarStories.Playground} />
