@@ -1,0 +1,174 @@
+/* ===========================================================================
+ * Textarea
+ *
+ * Two-element structure:
+ *   .textarea-wrap            // owns border, background, padding, focus ring
+ *     .textarea               // transparent overlay that captures input
+ *     ::after                 // hidden mirror of the value — drives auto-grow
+ *
+ * When `data-autosize="true"`, the wrapper uses `display: grid` with both the
+ * textarea and the `::after` pseudo placed in the same grid cell. The cell
+ * sizes to the larger of the two, so the textarea grows with content. With
+ * `data-has-max="true"`, `max-height` clamps the wrapper using the CSS `1lh`
+ * unit (with an `em` fallback for older engines).
+ * =========================================================================== */
+
+$sizes: (
+	small: (
+		padding-y: var(--textarea-size-small-padding-y, var(--spacing-2, 0.25rem)),
+		font-size: var(--textarea-size-small-font-size, 12px),
+	),
+	middle: (
+		padding-y: var(--textarea-size-middle-padding-y, var(--spacing-4, 0.5rem)),
+		font-size: var(
+			--textarea-size-middle-font-size,
+			var(--input-font-size, var(--periscope-font-size-base, 13px))
+		),
+	),
+	large: (
+		padding-y: var(--textarea-size-large-padding-y, var(--spacing-6, 0.75rem)),
+		font-size: var(--textarea-size-large-font-size, 14px),
+	),
+);
+
+.textarea-wrap {
+	display: grid;
+	width: 100%;
+	box-sizing: border-box;
+	color: var(--input-foreground, inherit);
+	background-color: var(--input-background, transparent);
+	border-width: var(--input-border-width, 1px);
+	border-style: var(--input-border-style, solid);
+	border-color: var(--input-border-color, var(--border));
+	border-radius: var(--input-border-radius, calc(var(--radius) - 2px));
+	box-shadow: var(--input-box-shadow, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+	font-family: inherit;
+	line-height: var(--textarea-line-height, 1.5);
+	padding-left: var(--textarea-padding-x, var(--spacing-6, 0.75rem));
+	padding-right: var(--textarea-padding-x, var(--spacing-6, 0.75rem));
+	transition-property: color, background-color, border-color, box-shadow;
+	transition-timing-function: var(--input-transition-timing, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--input-transition-duration, 150ms);
+
+	@each $name, $cfg in $sizes {
+		&[data-size='#{$name}'] {
+			padding-top: map-get($cfg, padding-y);
+			padding-bottom: map-get($cfg, padding-y);
+			font-size: map-get($cfg, font-size);
+		}
+	}
+
+	/* Mirror element — placed in the same grid cell as the textarea so the cell
+	   sizes to whichever is taller. Hidden by default; activated by data-autosize. */
+	&::after {
+		content: attr(data-replicated-value) ' ';
+		grid-area: 1 / 1 / 2 / 2;
+		font: inherit;
+		line-height: inherit;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+		visibility: hidden;
+		pointer-events: none;
+		display: none;
+	}
+
+	> .textarea {
+		grid-area: 1 / 1 / 2 / 2;
+	}
+
+	&[data-autosize='true']::after {
+		display: block;
+	}
+
+	&[data-autosize='true'] > .textarea {
+		resize: none;
+		overflow: hidden;
+	}
+
+	/* maxRows clamp — wrapper max-height limits both children. The first
+	   `max-height` (em-based) is a fallback for engines without `lh` support. */
+	&[data-has-max='true'] {
+		max-height: calc(
+			var(--textarea-line-height, 1.5) * 1em * var(--textarea-max-rows, 9999) +
+				2 * var(--textarea-padding-y-resolved, var(--spacing-4, 0.5rem)) + 2 *
+				var(--input-border-width, 1px)
+		);
+		max-height: calc(
+			1lh * var(--textarea-max-rows, 9999) + 2 *
+				var(--textarea-padding-y-resolved, var(--spacing-4, 0.5rem)) + 2 *
+				var(--input-border-width, 1px)
+		);
+		overflow: hidden;
+	}
+
+	@each $name, $cfg in $sizes {
+		&[data-size='#{$name}'][data-has-max='true'] {
+			--textarea-padding-y-resolved: #{map-get($cfg, padding-y)};
+		}
+	}
+
+	&[data-has-max='true'] > .textarea {
+		/* When content exceeds the clamped wrapper, the textarea scrolls internally. */
+		overflow-y: auto;
+	}
+
+	&:hover:not([data-disabled='true']):not([data-readonly='true']) {
+		border-color: var(--input-hover-border-color, var(--border));
+		background-color: var(--input-hover-background, var(--input-background, transparent));
+	}
+
+	&:focus-within {
+		outline-width: var(--input-focus-outline-width, 2px);
+		outline-style: var(--input-focus-outline-style, solid);
+		outline-color: var(--input-focus-outline-color, var(--ring));
+		outline-offset: var(--input-focus-outline-offset, 2px);
+		border-color: var(--input-focus-border-color, var(--border));
+		background-color: var(--input-focus-background, var(--input-background, transparent));
+	}
+
+	&[data-disabled='true'] {
+		cursor: var(--input-disabled-cursor, not-allowed);
+		opacity: var(--input-disabled-opacity, 0.5);
+		background-color: var(--input-disabled-background, var(--input-background, transparent));
+	}
+
+	&[data-status='error'] {
+		border-color: var(--input-error-border-color, hsl(0 84% 60%));
+		&:focus-within {
+			outline-color: var(--input-error-border-color, hsl(0 84% 60%));
+		}
+	}
+
+	&[data-status='warning'] {
+		border-color: var(--input-warning-border-color, hsl(38 92% 50%));
+		&:focus-within {
+			outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
+		}
+	}
+}
+
+/* The textarea itself is now a transparent overlay sitting inside the wrapper.
+   Border/background/focus styles live on the wrapper. */
+.textarea {
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: none;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	line-height: inherit;
+	resize: vertical;
+	box-sizing: border-box;
+
+	&::placeholder {
+		color: var(--input-placeholder-color, var(--muted-foreground));
+	}
+
+	&:disabled {
+		cursor: var(--input-disabled-cursor, not-allowed);
+	}
+}

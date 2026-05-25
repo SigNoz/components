@@ -317,6 +317,16 @@
 				"require": "./dist/text-ellipsis/index.cjs"
 			}
 		},
+		"./textarea": {
+			"import": {
+				"types": "./dist/textarea/index.d.ts",
+				"import": "./dist/textarea/index.mjs"
+			},
+			"require": {
+				"types": "./dist/textarea/index.d.cts",
+				"require": "./dist/textarea/index.cjs"
+			}
+		},
 		"./toggle": {
 			"import": {
 				"types": "./dist/toggle/index.d.ts",

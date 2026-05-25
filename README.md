@@ -86,6 +86,7 @@ import { Switch } from '@signozhq/ui';
 import { Table } from '@signozhq/ui';
 import { Tabs } from '@signozhq/ui';
 import { TextEllipsis } from '@signozhq/ui';
+import { Textarea } from '@signozhq/ui';
 import { Toaster } from '@signozhq/ui';
 import { Toggle } from '@signozhq/ui';
 import { ToggleGroup } from '@signozhq/ui';

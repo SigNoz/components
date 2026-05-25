@@ -34,6 +34,7 @@ const entries: Record<string, string> = {
 	'table/index': 'src/table/index.ts',
 	'tabs/index': 'src/tabs/index.ts',
 	'text-ellipsis/index': 'src/text-ellipsis/index.ts',
+	'textarea/index': 'src/textarea/index.ts',
 	'toggle/index': 'src/toggle/index.ts',
 	'toggle-group/index': 'src/toggle-group/index.ts',
 	'tooltip/index': 'src/tooltip/index.ts',

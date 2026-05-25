@@ -2,6 +2,7 @@ import { Eye, EyeOff } from '@signozhq/icons';
 import * as React from 'react';
 import { Button } from '../button/index.js';
 import { cn, type Simplify } from '../lib/utils.js';
+import { Textarea } from '../textarea/index.js';
 import styles from './input.module.scss';
 
 type BaseInputProps = {
@@ -253,7 +254,11 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 InputPassword.displayName = 'InputPassword';
 
 // Create compound component with proper typing
-type InputWithPassword = typeof InputComponent & { Password: typeof InputPassword };
-(InputComponent as InputWithPassword).Password = InputPassword;
+type InputCompound = typeof InputComponent & {
+	Password: typeof InputPassword;
+	TextArea: typeof Textarea;
+};
+(InputComponent as InputCompound).Password = InputPassword;
+(InputComponent as InputCompound).TextArea = Textarea;
 
-export const Input = InputComponent as InputWithPassword;
+export const Input = InputComponent as InputCompound;
