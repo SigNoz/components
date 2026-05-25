@@ -16,6 +16,7 @@ const entries: Record<string, string> = {
 	'command/index': 'src/command/index.ts',
 	'date-picker/index': 'src/date-picker/index.ts',
 	'dialog/index': 'src/dialog/index.ts',
+	'divider/index': 'src/divider/index.ts',
 	'drawer/index': 'src/drawer/index.ts',
 	'dropdown-menu/index': 'src/dropdown-menu/index.ts',
 	'input/index': 'src/input/index.ts',

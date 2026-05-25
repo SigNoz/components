@@ -137,6 +137,16 @@
 				"require": "./dist/dialog/index.cjs"
 			}
 		},
+		"./divider": {
+			"import": {
+				"types": "./dist/divider/index.d.ts",
+				"default": "./dist/divider/index.mjs"
+			},
+			"require": {
+				"types": "./dist/divider/index.d.cts",
+				"default": "./dist/divider/index.cjs"
+			}
+		},
 		"./drawer": {
 			"import": {
 				"types": "./dist/drawer/index.d.ts",
