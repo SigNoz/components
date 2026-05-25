@@ -37,6 +37,16 @@
 				"require": "./dist/announcement-banner/index.cjs"
 			}
 		},
+		"./avatar": {
+			"import": {
+				"types": "./dist/avatar/index.d.ts",
+				"import": "./dist/avatar/index.mjs"
+			},
+			"require": {
+				"types": "./dist/avatar/index.d.cts",
+				"require": "./dist/avatar/index.cjs"
+			}
+		},
 		"./badge": {
 			"import": {
 				"types": "./dist/badge/index.d.ts",
