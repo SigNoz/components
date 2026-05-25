@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from '@signozhq/icons';
 import * as React from 'react';
 import { Button } from '../button/index.js';
+import { InputNumber } from '../input-number/index.js';
 import { cn, type Simplify } from '../lib/utils.js';
 import { Textarea } from '../textarea/index.js';
 import styles from './input.module.scss';
@@ -257,8 +258,10 @@ InputPassword.displayName = 'InputPassword';
 type InputCompound = typeof InputComponent & {
 	Password: typeof InputPassword;
 	TextArea: typeof Textarea;
+	Number: typeof InputNumber;
 };
 (InputComponent as InputCompound).Password = InputPassword;
 (InputComponent as InputCompound).TextArea = Textarea;
+(InputComponent as InputCompound).Number = InputNumber;
 
 export const Input = InputComponent as InputCompound;
