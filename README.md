@@ -72,6 +72,7 @@ import { Dialog } from '@signozhq/ui';
 import { Drawer } from '@signozhq/ui';
 import { DropdownMenu } from '@signozhq/ui';
 import { Input } from '@signozhq/ui';
+import { InputNumber } from '@signozhq/ui';
 import { Kbd } from '@signozhq/ui';
 import { Pagination } from '@signozhq/ui';
 import { Progress } from '@signozhq/ui';

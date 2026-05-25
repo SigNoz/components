@@ -167,6 +167,16 @@
 				"require": "./dist/input/index.cjs"
 			}
 		},
+		"./input-number": {
+			"import": {
+				"types": "./dist/input-number/index.d.ts",
+				"import": "./dist/input-number/index.mjs"
+			},
+			"require": {
+				"types": "./dist/input-number/index.d.cts",
+				"require": "./dist/input-number/index.cjs"
+			}
+		},
 		"./kbd": {
 			"import": {
 				"types": "./dist/kbd/index.d.ts",

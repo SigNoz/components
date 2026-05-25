@@ -19,6 +19,7 @@ const entries: Record<string, string> = {
 	'drawer/index': 'src/drawer/index.ts',
 	'dropdown-menu/index': 'src/dropdown-menu/index.ts',
 	'input/index': 'src/input/index.ts',
+	'input-number/index': 'src/input-number/index.ts',
 	'kbd/index': 'src/kbd/index.ts',
 	'pagination/index': 'src/pagination/index.ts',
 	'pin-list/index': 'src/pin-list/index.ts',
