@@ -1,0 +1,30 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DividerStories from './divider.stories';
+
+<Meta of={DividerStories} />
+
+# Divider
+
+The divider component is a separator for visually dividing content. It supports horizontal and vertical orientations, dashed lines, and optional text labels.
+
+## How to use
+
+```tsx
+import { Divider } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<div>
+			<p>Content above</p>
+			<Divider />
+			<p>Content below</p>
+		</div>
+	);
+}
+```
+
+This code above will render the following divider:
+
+<Primary />
+
+<Controls of={DividerStories.Playground} />
