@@ -3,7 +3,7 @@ import { X } from '@signozhq/icons';
 import { forwardRef, type MouseEvent, type ReactNode, useState } from 'react';
 import { cn } from '../lib/utils.js';
 import { TextEllipsis, type TextEllipsisProps } from '../text-ellipsis/index.js';
-import styles from './badge.module.css';
+import styles from './badge.module.scss';
 
 export type BadgeVariant = 'default' | 'outline';
 
