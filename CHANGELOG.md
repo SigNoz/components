@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.0.23](https://github.com/SigNoz/components/compare/v0.0.22...v0.0.23) (2026-05-25)
+
+
+### Features
+
+* add avatar component ([727563a](https://github.com/SigNoz/components/commit/727563a3ccdbc0c4aff260eab88db1a8e9ae4801))
+* **badge:** update badge to support closeable ([572f60b](https://github.com/SigNoz/components/commit/572f60b2ec1d8c0f21f2f3458ef1758c710fdbb7))
+* **badge:** update badge to support closeable ([3ffb639](https://github.com/SigNoz/components/commit/3ffb6397946a4449718a1659445a585f5596ebab))
+* **divider:** add divider component ([d4c0038](https://github.com/SigNoz/components/commit/d4c003870d7c084fcfb86409cd511a4d07c52c92))
+* **divider:** add divider component ([232fa1b](https://github.com/SigNoz/components/commit/232fa1b3852270bfe58072550239ae767618ec43))
+
+
+### Bug Fixes
+
+* delete .css file ([23a100f](https://github.com/SigNoz/components/commit/23a100f630ea529762a5a3a77f49b7211ef5904c))
+* isolate avatar only changes ([5cba09b](https://github.com/SigNoz/components/commit/5cba09b0716e54506bfe48cac883f5470551e87c))
+
+
+### Miscellaneous Chores
+
+* move .css to .scss ([9d32163](https://github.com/SigNoz/components/commit/9d321635480d9f6689273e06791cdee47f8172e5))
+* remove .css and move to .scss ([d0587c3](https://github.com/SigNoz/components/commit/d0587c31ffbeba292c3bbcd0626b639092c4b101))
+
+
+### Code Refactoring
+
+* **avatar:** use module.scss instead of module.css ([848b530](https://github.com/SigNoz/components/commit/848b530e39c1cb8b5cd60d08a79aa3204c9a7912))
+
+
+### Tests
+
+* **badge:** move badge tests out of forward-ref test file ([#257](https://github.com/SigNoz/components/issues/257)) ([fcd523b](https://github.com/SigNoz/components/commit/fcd523bdf61b10ca8c2e0360c8f7ba91f0667cd4))
+
 ## [0.0.22](https://github.com/SigNoz/components/compare/v0.0.21...v0.0.22) (2026-05-22)
 
 
