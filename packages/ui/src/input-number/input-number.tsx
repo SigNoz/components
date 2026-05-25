@@ -15,7 +15,13 @@ export type InputNumberVariant = 'outlined' | 'filled' | 'borderless' | 'underli
 /** Validation surface — paints a colored border and matching focus ring. */
 export type InputNumberStatus = 'error' | 'warning';
 
-/** Layout for the spinner controls when `controls` is enabled. `input` stacks up/down vertically; `spinner` places them side-by-side. */
+/**
+ * Layout for the spinner controls when `controls` is enabled. `input` stacks
+ * up/down vertically; `spinner` places them side-by-side.
+ *
+ * NOTE: `mode` is purely a layout hint. It does not enable the spinner buttons
+ * on its own — set `controls` to render them.
+ */
 export type InputNumberMode = 'input' | 'spinner';
 
 /**
@@ -81,6 +87,9 @@ type BaseProps = {
 	 * Custom display formatter. Called on every render and on every keystroke.
 	 * The `info` argument lets you branch on whether the user is currently typing.
 	 *
+	 * Stabilize this reference with `useCallback` if it has dependencies — an
+	 * inline arrow is fine but re-runs the formatter on every parent render.
+	 *
 	 * @example
 	 * ```tsx
 	 * formatter={(v) => `$ ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -111,7 +120,11 @@ type BaseProps = {
 
 	/** Show the spinner up/down controls. Pass an object to override the chevron icons. */
 	controls?: InputNumberControls;
-	/** Layout for the spinner controls. Default: `'input'` (stacked). */
+	/**
+	 * Layout for the spinner controls. Default: `'input'` (stacked).
+	 * Only takes effect when `controls` is enabled — `mode` does not turn the
+	 * buttons on by itself.
+	 */
 	mode?: InputNumberMode;
 
 	/** Visual treatment for the wrapper. Default: `'outlined'`. */
@@ -147,15 +160,27 @@ type BaseProps = {
 	id?: string;
 	/** `name` for the underlying `<input>` — used by native form submission. */
 	name?: string;
-	/** Convenience alias for `data-testid` on the underlying `<input>`. */
+	/** Convenience alias for `data-testid` on the underlying `<input>`. Takes precedence over `data-testid` when both are set. */
 	testId?: string;
 	/** Standard `data-testid` passthrough. `testId` takes precedence if both are set. */
 	'data-testid'?: string;
 
 	/**
+	 * Accessible label for the increment spinner button. Default: `'Increase value'`.
+	 * Override for localization.
+	 */
+	incrementAriaLabel?: string;
+	/**
+	 * Accessible label for the decrement spinner button. Default: `'Decrease value'`.
+	 * Override for localization.
+	 */
+	decrementAriaLabel?: string;
+
+	/**
 	 * Accepted for AntD `InputNumber` drop-in compatibility. The value is
 	 * ignored — the underlying input always uses `type="text"` with
 	 * `inputMode="decimal"` so the formatter/parser pipeline can run.
+	 * In dev, passing anything other than `'text'` logs a one-time warning.
 	 */
 	type?: React.HTMLInputTypeAttribute;
 
@@ -169,9 +194,20 @@ type BaseProps = {
 	onFocus?: React.FocusEventHandler<HTMLInputElement>;
 	/** Standard key-down handler. Runs before the built-in Enter/↑/↓ logic; call `event.preventDefault()` to suppress it. */
 	onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-	/** Standard wheel handler. Runs before the built-in `changeOnWheel` logic; call `event.preventDefault()` to suppress it. */
+	/**
+	 * Standard wheel handler. Always fires when the wheel is scrolled over the input.
+	 * NOTE: React's synthetic wheel listener is passive — calling `preventDefault()`
+	 * here is a no-op. To stop the page from scrolling while stepping, set
+	 * `changeOnWheel` (which uses a non-passive native listener internally).
+	 */
 	onWheel?: React.WheelEventHandler<HTMLInputElement>;
-	/** Accessible label for the input — required when no visible `<label>` is associated. */
+	/**
+	 * Accessible label for the input — required when no visible `<label>` is associated.
+	 * The input has `role="spinbutton"`, which implies a steppable control. If you set
+	 * both `keyboard={false}` and `controls={false}`, the value is not actually
+	 * steppable through the input itself — consider whether `spinbutton` is still
+	 * the right semantic, or set the label to make the read-only intent obvious.
+	 */
 	'aria-label'?: string;
 };
 
@@ -232,7 +268,7 @@ const parseFromInput = (
 ): InputNumberValue => {
 	let work = raw;
 	if (parser) work = parser(work);
-	if (decimalSeparator) work = work.replaceAll(decimalSeparator, '.');
+	if (decimalSeparator) work = work.split(decimalSeparator).join('.');
 	if (work === '' || work === '-' || work === '.') return null;
 	const parsed = Number(work);
 	return Number.isNaN(parsed) ? null : parsed;
@@ -373,6 +409,11 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 			testId,
 			'data-testid': dataTestId,
 
+			incrementAriaLabel = 'Increase value',
+			decrementAriaLabel = 'Decrease value',
+
+			type,
+
 			onPressEnter,
 			onStep,
 			onBlur,
@@ -389,16 +430,12 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 		);
 		const value = isControlled ? (valueProp ?? null) : internalValue;
 
-		const [displayValue, setDisplayValue] = React.useState<string>(() =>
-			formatForDisplay(value, precision, decimalSeparator, formatter)
-		);
+		// `rawInput` only holds the user's in-progress typing buffer while focused.
+		// When the input is not focused, the displayed value is computed inline from
+		// `value` — there is no state to drift out of sync with.
+		const [rawInput, setRawInput] = React.useState<string>('');
 		const [isFocused, setIsFocused] = React.useState(false);
-
-		React.useEffect(() => {
-			if (!isFocused) {
-				setDisplayValue(formatForDisplay(value, precision, decimalSeparator, formatter));
-			}
-		}, [value, precision, decimalSeparator, formatter, isFocused]);
+		const isFocusedRef = React.useRef(false);
 
 		React.useImperativeHandle(
 			ref,
@@ -434,7 +471,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 
 		const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 			const raw = event.target.value;
-			setDisplayValue(raw);
+			setRawInput(raw);
 			const parsed = parseFromInput(raw, decimalSeparator, parser);
 			if (parsed === null) {
 				emitChange(null);
@@ -453,9 +490,20 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 				precision
 			);
 			emitChange(next);
-			setDisplayValue(formatForDisplay(next, precision, decimalSeparator, formatter));
+			// In controlled mode, parents that ignore `onChange` will not update `value`.
+			// While focused, `rawInput` reflects what we just computed so the user sees
+			// the step take effect; if `value` never updates, the next blur reformat will
+			// snap back to the parent's value. This is the expected controlled contract.
+			if (isFocusedRef.current) {
+				setRawInput(formatForDisplay(next, precision, decimalSeparator, formatter));
+			}
 			onStep?.(next, { offset: offset * stepValue, type: offset > 0 ? 'up' : 'down', emitter });
 		};
+
+		// Keep a ref to the latest step handler so the native wheel listener (below)
+		// can call into current closure state without re-attaching on every render.
+		const handleStepRef = React.useRef(handleStep);
+		handleStepRef.current = handleStep;
 
 		const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 			onKeyDown?.(event);
@@ -474,40 +522,72 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 			}
 		};
 
+		// React attaches `wheel` listeners at the root as passive in modern versions,
+		// so a synthetic `onWheel` handler cannot `preventDefault()` page scroll.
+		// Attach a non-passive native listener directly on the input for the stepper.
+		React.useEffect(() => {
+			if (!changeOnWheel) return;
+			const el = inputRef.current;
+			if (!el) return;
+			const handler = (event: WheelEvent) => {
+				if (!isFocusedRef.current) return;
+				event.preventDefault();
+				handleStepRef.current(event.deltaY < 0 ? 1 : -1, 'wheel');
+			};
+			el.addEventListener('wheel', handler, { passive: false });
+			return () => el.removeEventListener('wheel', handler);
+		}, [changeOnWheel]);
+
+		// Synthetic wheel handler just forwards to the user's callback. Stepping
+		// happens in the native listener above so it can actually prevent default.
 		const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
 			onWheelProp?.(event);
-			if (event.defaultPrevented) return;
-			if (!changeOnWheel || !isFocused) return;
-			event.preventDefault();
-			handleStep(event.deltaY < 0 ? 1 : -1, 'wheel');
 		};
 
 		const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+			isFocusedRef.current = true;
 			setIsFocused(true);
+			// Seed the typing buffer from the currently displayed value so the first
+			// keystroke does not wipe formatting in unexpected ways.
+			setRawInput(formatForDisplay(value, precision, decimalSeparator, formatter));
 			onFocus?.(event);
 		};
 
 		const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+			isFocusedRef.current = false;
 			setIsFocused(false);
 			if (changeOnBlur && isNumberLike(value)) {
 				const clamped = clamp(value, min, max);
 				if (clamped !== value) {
-					const next = roundToPrecision(clamped, precision);
-					emitChange(next);
-					setDisplayValue(formatForDisplay(next, precision, decimalSeparator, formatter));
-				} else {
-					setDisplayValue(formatForDisplay(value, precision, decimalSeparator, formatter));
+					emitChange(roundToPrecision(clamped, precision));
 				}
-			} else {
-				setDisplayValue(formatForDisplay(value, precision, decimalSeparator, formatter));
 			}
+			// `rawInput` is irrelevant while unfocused; the input renders from `value`.
 			onBlur?.(event);
 		};
 
+		// Dev-only warning: the `type` prop is accepted for AntD parity but ignored.
+		React.useEffect(() => {
+			const env = (
+				globalThis as { process?: { env?: { NODE_ENV?: string } } }
+			).process?.env?.NODE_ENV;
+			if (env !== 'production' && type !== undefined && type !== 'text') {
+				// eslint-disable-next-line no-console
+				console.warn(
+					`[InputNumber] The "type" prop is accepted for AntD compatibility but ignored. Received: "${type}". The underlying input always uses type="text" with inputMode="decimal".`
+				);
+			}
+		}, [type]);
+
 		const controlsConfig = resolveControls(controls);
-		const showControls = controlsConfig.enabled || mode === 'spinner';
+		// `mode` is a layout-only hint; it never enables the spinner on its own.
+		const showControls = controlsConfig.enabled;
 		const outOfRange = isOutOfRange(value, min, max);
 		const hasAddon = addonBefore !== undefined || addonAfter !== undefined;
+
+		const inputDisplayValue = isFocused
+			? rawInput
+			: formatForDisplay(value, precision, decimalSeparator, formatter);
 
 		const inputElement = (
 			<input
@@ -521,11 +601,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 				aria-valuenow={isNumberLike(value) ? value : undefined}
 				aria-label={ariaLabel}
 				className={styles['input-number-input']}
-				value={
-					isFocused
-						? displayValue
-						: formatForDisplay(value, precision, decimalSeparator, formatter)
-				}
+				value={inputDisplayValue}
 				placeholder={placeholder}
 				disabled={disabled}
 				readOnly={readOnly}
@@ -572,7 +648,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 							onMouseDown={(e) => e.preventDefault()}
 							onClick={() => handleStep(1, 'handler')}
 							disabled={disabled || readOnly || (max !== undefined && isNumberLike(value) && value >= max)}
-							aria-label="Increase value"
+							aria-label={incrementAriaLabel}
 						>
 							{controlsConfig.upIcon}
 						</button>
@@ -583,7 +659,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 							onMouseDown={(e) => e.preventDefault()}
 							onClick={() => handleStep(-1, 'handler')}
 							disabled={disabled || readOnly || (min !== undefined && isNumberLike(value) && value <= min)}
-							aria-label="Decrease value"
+							aria-label={decrementAriaLabel}
 						>
 							{controlsConfig.downIcon}
 						</button>

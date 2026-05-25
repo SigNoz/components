@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -119,5 +119,94 @@ describe('InputNumber', () => {
 		);
 		expect(screen.getByTestId('addon-before')).toBeInTheDocument();
 		expect(screen.getByTestId('addon-after')).toBeInTheDocument();
+	});
+
+	it('hides spinner controls when controls={false}, even with mode="spinner"', () => {
+		render(<InputNumber controls={false} mode="spinner" defaultValue={1} />);
+		expect(screen.queryByLabelText('Increase value')).not.toBeInTheDocument();
+		expect(screen.queryByLabelText('Decrease value')).not.toBeInTheDocument();
+	});
+
+	it('mode="spinner" lays the actions out side-by-side when controls are enabled', () => {
+		render(<InputNumber controls mode="spinner" defaultValue={1} />);
+		const actions = screen.getByLabelText('Increase value').parentElement;
+		expect(actions).toHaveAttribute('data-mode', 'spinner');
+	});
+
+	it('does not clamp on blur when changeOnBlur={false}', () => {
+		const onChange = vi.fn();
+		render(
+			<InputNumber
+				onChange={onChange}
+				min={0}
+				max={10}
+				changeOnBlur={false}
+				testId="num"
+			/>
+		);
+		const input = screen.getByTestId('num') as HTMLInputElement;
+		fireEvent.focus(input);
+		fireEvent.change(input, { target: { value: '50' } });
+		expect(onChange).toHaveBeenLastCalledWith(50);
+		fireEvent.blur(input);
+		expect(onChange).toHaveBeenLastCalledWith(50);
+	});
+
+	it('round-trips decimalSeparator for display and parsing', () => {
+		const onChange = vi.fn();
+		render(
+			<InputNumber
+				defaultValue={1.5}
+				decimalSeparator=","
+				onChange={onChange}
+				testId="num"
+			/>
+		);
+		const input = screen.getByTestId('num') as HTMLInputElement;
+		expect(input.value).toBe('1,5');
+		fireEvent.focus(input);
+		fireEvent.change(input, { target: { value: '2,75' } });
+		expect(onChange).toHaveBeenLastCalledWith(2.75);
+	});
+
+	it('marks the wrapper as out-of-range when value drifts outside [min, max]', () => {
+		render(<InputNumber min={1} max={10} value={99} testId="num" />);
+		const wrapper = screen.getByTestId('num').parentElement;
+		expect(wrapper).toHaveAttribute('data-out-of-range', 'true');
+	});
+
+	it('steps via mouse wheel when changeOnWheel is set and the input is focused', () => {
+		const onChange = vi.fn();
+		render(
+			<InputNumber
+				defaultValue={5}
+				onChange={onChange}
+				changeOnWheel
+				testId="num"
+			/>
+		);
+		const input = screen.getByTestId('num') as HTMLInputElement;
+		fireEvent.focus(input);
+		act(() => {
+			fireEvent.wheel(input, { deltaY: -1 });
+		});
+		expect(onChange).toHaveBeenLastCalledWith(6);
+		act(() => {
+			fireEvent.wheel(input, { deltaY: 1 });
+		});
+		expect(onChange).toHaveBeenLastCalledWith(5);
+	});
+
+	it('honors custom aria labels for the increment/decrement buttons', () => {
+		render(
+			<InputNumber
+				controls
+				defaultValue={0}
+				incrementAriaLabel="Augmenter"
+				decrementAriaLabel="Diminuer"
+			/>
+		);
+		expect(screen.getByLabelText('Augmenter')).toBeInTheDocument();
+		expect(screen.getByLabelText('Diminuer')).toBeInTheDocument();
 	});
 });
