@@ -1,6 +1,6 @@
 import { forwardRef, useState } from 'react';
 import { cn } from '../lib/utils.js';
-import styles from './avatar.module.css';
+import styles from './avatar.module.scss';
 
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 

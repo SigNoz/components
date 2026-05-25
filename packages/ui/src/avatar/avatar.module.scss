@@ -1,0 +1,113 @@
+.avatar {
+    display: var(--avatar-display, inline-flex);
+    align-items: var(--avatar-align-items, center);
+    justify-content: var(--avatar-justify-content, center);
+    overflow: var(--avatar-overflow, hidden);
+    position: relative;
+    vertical-align: middle;
+    user-select: none;
+    flex-shrink: 0;
+
+    &[data-size="sm"] {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+    }
+
+    &[data-size="md"] {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    &[data-size="lg"] {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    &[data-size="xl"] {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+
+    &[data-shape="circle"] {
+        border-radius: 9999px;
+    }
+
+    &[data-shape="square"] {
+        border-radius: var(--radius-md, 6px);
+    }
+
+    &[data-color="vanilla"] {
+        background-color: var(--l2-background);
+        color: var(--l2-foreground);
+    }
+
+    &[data-color="robin"] {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    &[data-color="forest"] {
+        background-color: var(--accent-forest);
+        color: var(--accent-forest-foreground);
+    }
+
+    &[data-color="amber"] {
+        background-color: var(--accent-amber);
+        color: var(--accent-amber-foreground);
+    }
+
+    &[data-color="sienna"] {
+        background-color: var(--accent-sienna);
+        color: var(--accent-sienna-foreground);
+    }
+
+    &[data-color="cherry"] {
+        background-color: var(--accent-cherry);
+        color: var(--accent-cherry-foreground);
+    }
+
+    &[data-color="sakura"] {
+        background-color: var(--accent-sakura);
+        color: var(--accent-sakura-foreground);
+    }
+
+    &[data-color="aqua"] {
+        background-color: var(--accent-aqua);
+        color: var(--accent-aqua-foreground);
+    }
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.skeleton {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--l2-background, #e5e7eb);
+    animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 1;
+    }
+}
