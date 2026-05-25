@@ -10,24 +10,33 @@
  *       .input-number-actions
  *         .input-number-action
  *     .input-number-addon[after]
+ *
+ * Tokens follow the same pattern as `input.module.scss`:
+ *   • Shared surface tokens (`--input-*`) drive borders, radii, colors, shadows,
+ *     and focus rings so InputNumber visually matches Input out of the box.
+ *   • InputNumber-specific tokens (`--input-number-*`) cover what is unique to
+ *     this component: the size scale, spinner actions, and addon paddings.
  * =========================================================================== */
 
 /* ---------------- Sizes (height + horizontal padding) -------------------- */
 $sizes: (
 	small: (
-		height: 1.5rem,
-		padding-x: var(--spacing-4, 0.5rem),
-		font-size: 12px,
+		height: var(--input-number-size-small-height, 1.5rem),
+		padding-x: var(--input-number-size-small-padding-x, var(--spacing-4, 0.5rem)),
+		font-size: var(--input-number-size-small-font-size, 12px),
 	),
 	middle: (
-		height: 2rem,
-		padding-x: var(--spacing-6, 0.75rem),
-		font-size: var(--periscope-font-size-base, 13px),
+		height: var(--input-number-size-middle-height, var(--input-height, 2rem)),
+		padding-x: var(--input-number-size-middle-padding-x, var(--spacing-6, 0.75rem)),
+		font-size: var(
+			--input-number-size-middle-font-size,
+			var(--input-font-size, var(--periscope-font-size-base, 13px))
+		),
 	),
 	large: (
-		height: 2.5rem,
-		padding-x: var(--spacing-6, 0.75rem),
-		font-size: 14px,
+		height: var(--input-number-size-large-height, 2.5rem),
+		padding-x: var(--input-number-size-large-padding-x, var(--spacing-6, 0.75rem)),
+		font-size: var(--input-number-size-large-font-size, 14px),
 	),
 );
 
@@ -45,7 +54,7 @@ $sizes: (
 	}
 
 	&[data-disabled='true'] {
-		cursor: not-allowed;
+		cursor: var(--input-disabled-cursor, not-allowed);
 		opacity: var(--input-disabled-opacity, 0.5);
 	}
 }
@@ -57,12 +66,21 @@ $sizes: (
 	align-items: center;
 	box-sizing: border-box;
 	border-radius: var(--input-border-radius, calc(var(--radius) - 2px));
-	border: var(--input-border-width, 1px) var(--input-border-style, solid)
-		var(--input-border-color, var(--border));
+	border-width: var(--input-border-width, 1px);
+	border-style: var(--input-border-style, solid);
+	border-color: var(--input-border-color, var(--border));
 	background-color: var(--input-background, transparent);
 	color: var(--input-foreground, inherit);
 	box-shadow: var(--input-box-shadow, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
-	transition: color, background-color, border-color, box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition-property: var(
+		--input-transition-property,
+		color,
+		background-color,
+		border-color,
+		box-shadow
+	);
+	transition-timing-function: var(--input-transition-timing, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--input-transition-duration, 150ms);
 	gap: 0;
 
 	@each $name, $cfg in $sizes {
@@ -83,18 +101,22 @@ $sizes: (
 
 	&:hover:not([data-disabled='true']):not([data-readonly='true']) {
 		border-color: var(--input-hover-border-color, var(--border));
+		background-color: var(--input-hover-background, var(--input-background, transparent));
 	}
 
 	&[data-focused='true'] {
-		outline: var(--input-focus-outline-width, 2px) solid
-			var(--input-focus-outline-color, var(--ring));
+		outline-width: var(--input-focus-outline-width, 2px);
+		outline-style: var(--input-focus-outline-style, solid);
+		outline-color: var(--input-focus-outline-color, var(--ring));
 		outline-offset: var(--input-focus-outline-offset, 2px);
 		border-color: var(--input-focus-border-color, var(--border));
+		background-color: var(--input-focus-background, var(--input-background, transparent));
 	}
 
 	&[data-disabled='true'] {
-		cursor: not-allowed;
+		cursor: var(--input-disabled-cursor, not-allowed);
 		opacity: var(--input-disabled-opacity, 0.5);
+		background-color: var(--input-disabled-background, var(--input-background, transparent));
 	}
 
 	/* Variants */
@@ -136,13 +158,13 @@ $sizes: (
 	/* Tighten padding when there's a prefix/suffix slot, so the slot contents
 	   own their padding instead. Matches the existing Input wrapper behavior. */
 	&[data-has-prefix='true'] {
-		padding-left: 0;
+		padding-left: var(--input-wrapper-with-prefix-padding-left, 0);
 	}
 	&[data-has-suffix='true'] {
-		padding-right: 0;
+		padding-right: var(--input-wrapper-with-suffix-padding-right, 0);
 	}
 	&[data-has-controls='true'] {
-		padding-right: 0;
+		padding-right: var(--input-number-wrapper-with-controls-padding-right, 0);
 	}
 }
 
@@ -151,19 +173,22 @@ $sizes: (
 	flex: 1 1 auto;
 	min-width: 0;
 	height: 100%;
-	background-color: transparent;
+	background-color: var(--input-inner-background, transparent);
 	border: 0;
 	outline: none;
-	padding: 0;
-	color: inherit;
+	padding: var(--input-inner-padding, 0);
+	color: var(--input-inner-foreground, var(--input-foreground, inherit));
 	font: inherit;
 
 	&::placeholder {
-		color: var(--input-placeholder-color, var(--muted-foreground));
+		color: var(
+			--input-inner-placeholder-color,
+			var(--input-placeholder-color, var(--muted-foreground))
+		);
 	}
 
 	&:disabled {
-		cursor: not-allowed;
+		cursor: var(--input-inner-disabled-cursor, var(--input-disabled-cursor, not-allowed));
 	}
 
 	&::-webkit-outer-spin-button,
@@ -182,18 +207,24 @@ $sizes: (
 	flex-shrink: 0;
 	height: 100%;
 	font-size: inherit;
-	color: inherit;
-	gap: var(--spacing-2, 0.5rem);
+	color: var(--input-prefix-color, inherit);
+	gap: var(--input-number-affix-gap, var(--spacing-2, 0.5rem));
 }
 
 .input-number-prefix {
-	padding-left: var(--spacing-6, 0.75rem);
-	padding-right: var(--spacing-2, 0.5rem);
+	padding-left: var(
+		--input-number-prefix-padding-left,
+		var(--input-prefix-padding-left, var(--spacing-6, 0.75rem))
+	);
+	padding-right: var(--input-number-prefix-padding-right, var(--spacing-2, 0.5rem));
 }
 
 .input-number-suffix {
-	padding-left: var(--spacing-2, 0.5rem);
-	padding-right: var(--spacing-6, 0.75rem);
+	padding-left: var(--input-number-suffix-padding-left, var(--spacing-2, 0.5rem));
+	padding-right: var(
+		--input-number-suffix-padding-right,
+		var(--input-suffix-padding-right, var(--spacing-6, 0.75rem))
+	);
 }
 
 /* ---------------- Actions (spinner controls) ---------------------------- */
@@ -201,7 +232,9 @@ $sizes: (
 	display: inline-flex;
 	flex-direction: column;
 	align-self: stretch;
-	border-left: 1px solid var(--input-border-color, var(--border));
+	border-left-width: var(--input-number-action-divider-width, var(--input-border-width, 1px));
+	border-left-style: var(--input-number-action-divider-style, var(--input-border-style, solid));
+	border-left-color: var(--input-number-action-divider-color, var(--input-border-color, var(--border)));
 	flex-shrink: 0;
 
 	&[data-mode='spinner'] {
@@ -214,36 +247,48 @@ $sizes: (
 	align-items: center;
 	justify-content: center;
 	flex: 1;
-	min-width: 1.5rem;
-	padding: 0 0.25rem;
-	background: transparent;
+	min-width: var(--input-number-action-min-width, 1.5rem);
+	padding: var(--input-number-action-padding, 0 0.25rem);
+	background: var(--input-number-action-background, transparent);
 	border: 0;
-	color: var(--muted-foreground, inherit);
+	color: var(--input-number-action-color, var(--muted-foreground, inherit));
 	cursor: pointer;
-	transition: background-color 100ms ease, color 100ms ease;
+	transition-property: background-color, color;
+	transition-duration: var(--input-number-action-transition-duration, 100ms);
+	transition-timing-function: var(--input-number-action-transition-timing, ease);
 
 	&:hover:not(:disabled) {
-		background-color: var(--input-action-hover-background, rgba(0, 0, 0, 0.04));
-		color: inherit;
+		background-color: var(
+			--input-number-action-hover-background,
+			var(--input-action-hover-background, rgba(0, 0, 0, 0.04))
+		);
+		color: var(--input-number-action-hover-color, inherit);
 	}
 
 	&:disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
+		cursor: var(--input-number-action-disabled-cursor, not-allowed);
+		opacity: var(--input-number-action-disabled-opacity, 0.5);
 	}
 
 	svg {
-		width: 0.875rem;
-		height: 0.875rem;
+		width: var(--input-number-action-icon-size, 0.875rem);
+		height: var(--input-number-action-icon-size, 0.875rem);
 	}
 }
 
 .input-number-action-up {
-	border-bottom: 1px solid var(--input-border-color, var(--border));
+	border-bottom-width: var(--input-number-action-divider-width, var(--input-border-width, 1px));
+	border-bottom-style: var(--input-number-action-divider-style, var(--input-border-style, solid));
+	border-bottom-color: var(--input-number-action-divider-color, var(--input-border-color, var(--border)));
 
 	.input-number-actions[data-mode='spinner'] & {
 		border-bottom: 0;
-		border-left: 1px solid var(--input-border-color, var(--border));
+		border-left-width: var(--input-number-action-divider-width, var(--input-border-width, 1px));
+		border-left-style: var(--input-number-action-divider-style, var(--input-border-style, solid));
+		border-left-color: var(
+			--input-number-action-divider-color,
+			var(--input-border-color, var(--border))
+		);
 		order: 2;
 	}
 }
@@ -259,11 +304,12 @@ $sizes: (
 	display: inline-flex;
 	align-items: center;
 	flex-shrink: 0;
-	padding: 0 var(--spacing-6, 0.75rem);
+	padding: var(--input-number-addon-padding, 0 var(--spacing-6, 0.75rem));
 	background-color: var(--input-addon-background, var(--muted, hsl(0 0% 96%)));
 	color: var(--input-addon-color, inherit);
-	border: var(--input-border-width, 1px) var(--input-border-style, solid)
-		var(--input-border-color, var(--border));
+	border-width: var(--input-border-width, 1px);
+	border-style: var(--input-border-style, solid);
+	border-color: var(--input-border-color, var(--border));
 	white-space: nowrap;
 
 	&[data-position='before'] {
@@ -303,6 +349,29 @@ $sizes: (
 }
 .input-number-root:has(.input-number-addon[data-position='after']) .input-number-wrapper {
 	border-right: 0;
+}
+
+/* When addons are present, the focus ring lives on the root so it wraps the
+   entire control (input + addons) instead of cutting off at the input seam. */
+.input-number-root[data-focused='true'] {
+	outline-width: var(--input-focus-outline-width, 2px);
+	outline-style: var(--input-focus-outline-style, solid);
+	outline-color: var(--input-focus-outline-color, var(--ring));
+	outline-offset: var(--input-focus-outline-offset, 2px);
+
+	&[data-status='error'] {
+		outline-color: var(--input-error-border-color, hsl(0 84% 60%));
+	}
+	&[data-status='warning'] {
+		outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
+	}
+	&[data-out-of-range='true']:not([data-status='error']):not([data-status='warning']) {
+		outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
+	}
+}
+
+.input-number-root .input-number-wrapper[data-focused='true'] {
+	outline: none;
 }
 
 /* Style for embedded form controls inside prefix/suffix (e.g. Select) so they

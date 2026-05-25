@@ -462,7 +462,7 @@ export const Variants: Story = {
 					<InputNumber defaultValue={3} variant="borderless" />
 				</Field>
 				<Field label="Underlined" hint="Material-style underline only.">
-					<InputNumber defaultValue={3} variant="underlined" />
+g					<InputNumber defaultValue={3} variant="underlined" />
 				</Field>
 			</Section>
 		</div>
@@ -744,36 +744,6 @@ export const QueryLimit: Story = {
 						<Output value={limit} />
 					</Field>
 				</Section>
-			</div>
-		);
-	},
-};
-
-/** Max lines per row — compact spinner. */
-export const MaxLinesField: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Adapted from `OptionsMenu/MaxLinesField`. A compact, small-sized input with spinner controls for dense option menus.',
-			},
-		},
-	},
-	render: () => {
-		const [value, setValue] = useState<number | null>(5);
-		return (
-			<div className="p-8 max-w-xs bg-background">
-				<Field label="Max lines per row" hint="1–50">
-					<InputNumber
-						value={value}
-						onChange={setValue}
-						controls
-						size="small"
-						min={1}
-						max={50}
-					/>
-					<Output value={value} />
-				</Field>
 			</div>
 		);
 	},
