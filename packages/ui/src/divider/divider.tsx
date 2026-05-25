@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
-import styles from './divider.module.css';
+import styles from './divider.module.scss';
 
 export interface DividerProps
 	extends Pick<React.ComponentProps<'div'>, 'className' | 'children' | 'id' | 'style'> {
