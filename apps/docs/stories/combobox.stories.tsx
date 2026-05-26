@@ -57,7 +57,10 @@ const meta: Meta<typeof ComboboxSimple> = {
 		onChange: {
 			control: false,
 			description: 'Callback when selection changes.',
-			table: { category: 'Events', type: { summary: '(value: string | string[]) => void' } },
+			table: {
+				category: 'Events',
+				type: { summary: '(value: string | string[] | undefined) => void' },
+			},
 		},
 		multiple: {
 			control: 'boolean',
@@ -83,6 +86,52 @@ const meta: Meta<typeof ComboboxSimple> = {
 			description:
 				'Maximum number of pills to display in multi-select mode. Overflow shown as "+N".',
 			table: { category: 'Display', type: { summary: 'number' } },
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Whether the combobox is disabled.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		loading: {
+			control: 'boolean',
+			description: 'Show loading state instead of items.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		loadingPlaceholder: {
+			control: 'text',
+			description: 'Content shown while loading. Can be string or ReactNode.',
+			table: {
+				category: 'Content',
+				type: { summary: 'ReactNode' },
+				defaultValue: { summary: "'Loading...'" },
+			},
+		},
+		virtualized: {
+			control: 'object',
+			description:
+				'Enable virtualization for large lists. Pass `true` for defaults or an object with { estimatedItemHeight, virtualizedHeight }.',
+			table: {
+				category: 'Performance',
+				type: { summary: 'boolean | { estimatedItemHeight?: number; virtualizedHeight?: number }' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		allowClear: {
+			control: 'boolean',
+			description: 'Show a clear button on hover when a value is selected.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
 		},
 	},
 	parameters: {
@@ -692,6 +741,278 @@ export const WithStringLabelsFilter: Story = {
 				<p className="mt-2 text-xs text-muted-foreground">
 					Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
 				</p>
+			</div>
+		);
+	},
+};
+
+const largeItems = Array.from({ length: 200 }, (_, i) => ({
+	value: `item-${i}`,
+	label: `Item ${i + 1}`,
+}));
+
+const largeGroups = [
+	{
+		heading: 'Group A (100 items)',
+		items: Array.from({ length: 100 }, (_, i) => ({
+			value: `a-${i}`,
+			label: `Group A - Item ${i + 1}`,
+		})),
+	},
+	{
+		heading: 'Group B (100 items)',
+		items: Array.from({ length: 100 }, (_, i) => ({
+			value: `b-${i}`,
+			label: `Group B - Item ${i + 1}`,
+		})),
+	},
+];
+
+const largeHintGroups = [
+	{
+		heading: 'Suggestions',
+		items: [
+			{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+			{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+		],
+	},
+	{
+		heading: 'Status (100 items)',
+		items: Array.from({ length: 100 }, (_, i) => ({
+			value: `status:${i}`,
+			label: `Status ${i + 1}`,
+		})),
+	},
+	{
+		heading: 'Priority (100 items)',
+		items: Array.from({ length: 100 }, (_, i) => ({
+			value: `priority:${i}`,
+			label: `Priority ${i + 1}`,
+		})),
+	},
+];
+
+export const Virtualized: Story = {
+	args: {
+		items: largeItems,
+		placeholder: 'Select from 200 items...',
+		virtualized: true,
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const VirtualizedWithConfig: Story = {
+	args: {
+		items: largeItems,
+		placeholder: 'Select from 200 items...',
+		virtualized: { estimatedItemHeight: 40, virtualizedHeight: 400 },
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const VirtualizedWithGroups: Story = {
+	args: {
+		groups: largeGroups,
+		placeholder: 'Select from grouped items...',
+		virtualized: { virtualizedHeight: 350 },
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const VirtualizedMultiSelect: Story = {
+	args: {
+		items: largeItems,
+		placeholder: 'Select multiple from 200 items...',
+		multiple: true,
+		virtualized: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Selected: {values.length > 0 ? `${values.length} items` : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const VirtualizedMultiSelectWithMaxPills: Story = {
+	args: {
+		items: largeItems,
+		placeholder: 'Select multiple from 200 items...',
+		multiple: true,
+		virtualized: true,
+		defaultValue: ['item-0', 'item-1', 'item-2', 'item-3', 'item-4'],
+		maxDisplayedPills: 2,
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const VirtualizedAllowCreate: Story = {
+	args: {
+		items: largeItems,
+		placeholder: 'Select or create from 200 items...',
+		allowCreate: true,
+		virtualized: true,
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const VirtualizedMultiAllowCreate: Story = {
+	args: {
+		items: largeItems,
+		placeholder: 'Select or create tags...',
+		multiple: true,
+		allowCreate: true,
+		virtualized: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? `${values.length} tags` : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Type to filter, then click "Create" option to add new tags
+				</p>
+			</div>
+		);
+	},
+};
+
+export const VirtualizedWithHints: Story = {
+	args: {
+		groups: largeHintGroups,
+		placeholder: 'Filter by...',
+		virtualized: true,
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Try typing "status:" or "priority:" hints
+				</p>
+			</div>
+		);
+	},
+};
+
+export const VirtualizedMultiWithHints: Story = {
+	args: {
+		groups: largeHintGroups,
+		placeholder: 'Add filters...',
+		multiple: true,
+		virtualized: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Filters: {values.length > 0 ? `${values.length} active` : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const VirtualizedMultiWithHintsAndCreate: Story = {
+	args: {
+		groups: largeHintGroups,
+		placeholder: 'Add or create filters...',
+		multiple: true,
+		allowCreate: true,
+		virtualized: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Filters: {values.length > 0 ? `${values.length} active` : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Try typing "status:" or "priority:" hints, or create new filters
+				</p>
+			</div>
+		);
+	},
+};
+
+export const WithAllowClear: Story = {
+	render: () => {
+		const [singleValue, setSingleValue] = useState<string | undefined>('react');
+		const [multiValue, setMultiValue] = useState<string[]>(['react', 'vue']);
+
+		return (
+			<div className="p-8 w-full max-w-2xl space-y-8">
+				<div>
+					<h3 className="text-sm font-medium mb-2">Single Select</h3>
+					<p className="mb-2 text-xs text-muted-foreground">Hover to see clear button</p>
+					<ComboboxSimple
+						items={defaultItems}
+						placeholder="Select a framework..."
+						value={singleValue}
+						onChange={(v) => setSingleValue(typeof v === 'string' ? v : undefined)}
+						allowClear
+					/>
+					<p className="mt-2 text-sm text-muted-foreground">Selected: {singleValue || 'none'}</p>
+				</div>
+				<div>
+					<h3 className="text-sm font-medium mb-2">Multiple Select</h3>
+					<p className="mb-2 text-xs text-muted-foreground">Hover to see clear button</p>
+					<ComboboxSimple
+						items={defaultItems}
+						placeholder="Select frameworks..."
+						value={multiValue}
+						onChange={(v) => setMultiValue(Array.isArray(v) ? v : [])}
+						multiple
+						allowClear
+					/>
+					<p className="mt-2 text-sm text-muted-foreground">
+						Selected: {multiValue.length > 0 ? multiValue.join(', ') : 'none'}
+					</p>
+				</div>
 			</div>
 		);
 	},

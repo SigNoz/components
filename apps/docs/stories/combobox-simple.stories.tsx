@@ -133,6 +133,16 @@ const meta: Meta<typeof ComboboxSimple> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
+		virtualized: {
+			control: 'object',
+			description:
+				'Enable virtualization for large lists. Pass `true` for defaults or an object with { estimatedItemHeight, virtualizedHeight }.',
+			table: {
+				category: 'Performance',
+				type: { summary: 'boolean | { estimatedItemHeight?: number; virtualizedHeight?: number }' },
+				defaultValue: { summary: 'false' },
+			},
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -172,7 +182,7 @@ export const Controlled: Story = {
 
 		return (
 			<div className="p-8 w-full max-w-sm">
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString())} />
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString() ?? '')} />
 				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
 			</div>
 		);
