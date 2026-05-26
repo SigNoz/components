@@ -1,4 +1,4 @@
-import { ChevronDown, LoaderCircle } from '@signozhq/icons';
+import { ChevronDown, LoaderCircle, X } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../../lib/utils.js';
 import { TooltipProvider } from '../../../tooltip/index.js';
@@ -70,6 +70,12 @@ export type ComboboxSimpleProps = {
 	emptyPlaceholder?: string;
 	/**
 	 * Controlled selected value. When `multiple` is true, this should be an array.
+	 *
+	 * When this prop is defined, this component turns into controlled, and you need to use
+	 * onChange to detect changes and pass the new value that was selected via this prop.
+	 *
+	 * If you don't want to control the value, do not set this prop, not even with undefined.
+	 *
 	 * @default undefined
 	 */
 	value?: string | string[];
@@ -80,9 +86,9 @@ export type ComboboxSimpleProps = {
 	defaultValue?: string | string[];
 	/**
 	 * Callback when selection changes.
-	 * @param value - The new selected value (string when single, string[] when multiple).
+	 * @param value - The new selected value (string or undefined when single, string[] when multiple).
 	 */
-	onChange?: (value: string | string[]) => void;
+	onChange?: (value: string | string[] | undefined) => void;
 	/**
 	 * Customize what is shown in the trigger. Receives the selected item (or undefined). Use when you want a string instead of the label ReactNode.
 	 * @param item - The selected item (or undefined).
@@ -153,6 +159,12 @@ export type ComboboxSimpleProps = {
 				 */
 				virtualizedHeight?: number;
 		  };
+	/**
+	 * Show a clear button on hover when a value is selected.
+	 * Clicking it clears the selection.
+	 * @default false
+	 */
+	allowClear?: boolean;
 };
 
 const ComboboxSimpleInner = React.forwardRef<
@@ -166,7 +178,6 @@ const ComboboxSimpleInner = React.forwardRef<
 			placeholder = 'Select an option...',
 			inputPlaceholder,
 			emptyPlaceholder = 'No results found.',
-			value: controlledValue,
 			defaultValue,
 			onChange,
 			displayValue: displayValueFn,
@@ -183,6 +194,8 @@ const ComboboxSimpleInner = React.forwardRef<
 			loadingPlaceholder = 'Loading...',
 			disabled = false,
 			virtualized = false,
+			allowClear = false,
+			...props
 		},
 		forwardedRef
 	) => {
@@ -193,6 +206,7 @@ const ComboboxSimpleInner = React.forwardRef<
 			typeof virtualized === 'object' ? (virtualized.virtualizedHeight ?? 300) : 300;
 
 		const [inputValue, setInputValue] = React.useState('');
+		const [isHovered, setIsHovered] = React.useState(false);
 		const internalRef = React.useRef<HTMLButtonElement | HTMLDivElement>(null);
 
 		const triggerRef = React.useMemo(() => {
@@ -212,16 +226,24 @@ const ComboboxSimpleInner = React.forwardRef<
 		const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
 		const itemsMap = React.useMemo(() => buildItemsMap(allItems), [allItems]);
 
-		const { selectedValues, customValues, selectedItem, handleSelect, handleRemove, addValue } =
-			useComboboxSelection({
-				controlledValue,
-				defaultValue,
-				multiple,
-				itemsMap,
-				onChange,
-				setOpen,
-				setInputValue,
-			});
+		const {
+			selectedValues,
+			customValues,
+			selectedItem,
+			handleSelect,
+			handleRemove,
+			addValue,
+			clearSelection,
+		} = useComboboxSelection({
+			controlledValue: props.value,
+			isControlled: 'value' in props,
+			defaultValue,
+			multiple,
+			itemsMap,
+			onChange,
+			setOpen,
+			setInputValue,
+		});
 
 		const { showHints } = useComboboxFilter({ items: allItems, inputValue });
 
@@ -264,13 +286,17 @@ const ComboboxSimpleInner = React.forwardRef<
 		);
 
 		const handleTriggerKeyDown = React.useCallback(
-			(e: React.KeyboardEvent<HTMLDivElement>) => {
+			(e: React.KeyboardEvent<HTMLDivElement | HTMLButtonElement>) => {
 				if (e.key === 'Enter' || e.key === ' ') {
 					e.preventDefault();
 					setOpen(true);
+				} else if (allowClear && (e.key === 'Delete' || e.key === 'Backspace')) {
+					e.preventDefault();
+					clearSelection();
+					setInputValue('');
 				}
 			},
-			[setOpen]
+			[setOpen, allowClear, clearSelection]
 		);
 
 		const handleInputKeyDown = React.useCallback(
@@ -287,6 +313,16 @@ const ComboboxSimpleInner = React.forwardRef<
 		const handleInsert = React.useCallback((value: string) => {
 			setInputValue(value);
 		}, []);
+
+		const handleClear = React.useCallback(
+			(e: React.MouseEvent) => {
+				e.stopPropagation();
+				e.preventDefault();
+				clearSelection();
+				setInputValue('');
+			},
+			[clearSelection]
+		);
 
 		const renderTree = React.useMemo(
 			() =>
@@ -368,6 +404,9 @@ const ComboboxSimpleInner = React.forwardRef<
 					/>
 				) : undefined;
 
+			const showClearMultiple =
+				allowClear && isHovered && selectedValues.length > 0 && !loading && !disabled;
+
 			return (
 				<Wrapper>
 					<Combobox open={open} onOpenChange={setOpen}>
@@ -387,6 +426,8 @@ const ComboboxSimpleInner = React.forwardRef<
 								data-disabled={disabled || undefined}
 								tabIndex={disabled ? -1 : 0}
 								onKeyDown={disabled ? undefined : handleTriggerKeyDown}
+								onMouseEnter={() => setIsHovered(true)}
+								onMouseLeave={() => setIsHovered(false)}
 							>
 								<span
 									data-slot={pillsContent ? 'combobox-value' : 'combobox-placeholder'}
@@ -398,6 +439,13 @@ const ComboboxSimpleInner = React.forwardRef<
 									<LoaderCircle
 										data-slot="combobox-spinner"
 										className={styles['combobox__trigger-spinner']}
+									/>
+								) : showClearMultiple ? (
+									<X
+										data-slot="combobox-clear"
+										className={styles['combobox__trigger-icon']}
+										onClick={handleClear}
+										aria-label="Clear selection"
 									/>
 								) : (
 									<ChevronDown
@@ -413,6 +461,9 @@ const ComboboxSimpleInner = React.forwardRef<
 			);
 		}
 
+		const showClearSingle =
+			allowClear && isHovered && Boolean(triggerValue) && !loading && !disabled;
+
 		return (
 			<Wrapper>
 				<Combobox open={open} onOpenChange={setOpen}>
@@ -427,6 +478,9 @@ const ComboboxSimpleInner = React.forwardRef<
 							id={id}
 							disabled={disabled}
 							data-disabled={disabled || undefined}
+							onKeyDown={disabled ? undefined : handleTriggerKeyDown}
+							onMouseEnter={() => setIsHovered(true)}
+							onMouseLeave={() => setIsHovered(false)}
 						>
 							<span
 								data-slot={triggerValue ? 'combobox-value' : 'combobox-placeholder'}
@@ -438,6 +492,13 @@ const ComboboxSimpleInner = React.forwardRef<
 								<LoaderCircle
 									data-slot="combobox-spinner"
 									className={styles['combobox__trigger-spinner']}
+								/>
+							) : showClearSingle ? (
+								<X
+									data-slot="combobox-clear"
+									className={styles['combobox__trigger-icon']}
+									onClick={handleClear}
+									aria-label="Clear selection"
 								/>
 							) : (
 								<ChevronDown

@@ -57,7 +57,10 @@ const meta: Meta<typeof ComboboxSimple> = {
 		onChange: {
 			control: false,
 			description: 'Callback when selection changes.',
-			table: { category: 'Events', type: { summary: '(value: string | string[]) => void' } },
+			table: {
+				category: 'Events',
+				type: { summary: '(value: string | string[] | undefined) => void' },
+			},
 		},
 		multiple: {
 			control: 'boolean',
@@ -118,6 +121,15 @@ const meta: Meta<typeof ComboboxSimple> = {
 			table: {
 				category: 'Performance',
 				type: { summary: 'boolean | { estimatedItemHeight?: number; virtualizedHeight?: number }' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		allowClear: {
+			control: 'boolean',
+			description: 'Show a clear button on hover when a value is selected.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
 				defaultValue: { summary: 'false' },
 			},
 		},
@@ -962,6 +974,45 @@ export const VirtualizedMultiWithHintsAndCreate: Story = {
 				<p className="mt-2 text-xs text-muted-foreground">
 					Try typing "status:" or "priority:" hints, or create new filters
 				</p>
+			</div>
+		);
+	},
+};
+
+export const WithAllowClear: Story = {
+	render: () => {
+		const [singleValue, setSingleValue] = useState<string | undefined>('react');
+		const [multiValue, setMultiValue] = useState<string[]>(['react', 'vue']);
+
+		return (
+			<div className="p-8 w-full max-w-2xl space-y-8">
+				<div>
+					<h3 className="text-sm font-medium mb-2">Single Select</h3>
+					<p className="mb-2 text-xs text-muted-foreground">Hover to see clear button</p>
+					<ComboboxSimple
+						items={defaultItems}
+						placeholder="Select a framework..."
+						value={singleValue}
+						onChange={(v) => setSingleValue(typeof v === 'string' ? v : undefined)}
+						allowClear
+					/>
+					<p className="mt-2 text-sm text-muted-foreground">Selected: {singleValue || 'none'}</p>
+				</div>
+				<div>
+					<h3 className="text-sm font-medium mb-2">Multiple Select</h3>
+					<p className="mb-2 text-xs text-muted-foreground">Hover to see clear button</p>
+					<ComboboxSimple
+						items={defaultItems}
+						placeholder="Select frameworks..."
+						value={multiValue}
+						onChange={(v) => setMultiValue(Array.isArray(v) ? v : [])}
+						multiple
+						allowClear
+					/>
+					<p className="mt-2 text-sm text-muted-foreground">
+						Selected: {multiValue.length > 0 ? multiValue.join(', ') : 'none'}
+					</p>
+				</div>
 			</div>
 		);
 	},

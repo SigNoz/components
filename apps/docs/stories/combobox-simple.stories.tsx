@@ -182,7 +182,7 @@ export const Controlled: Story = {
 
 		return (
 			<div className="p-8 w-full max-w-sm">
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString())} />
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString() ?? '')} />
 				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
 			</div>
 		);
