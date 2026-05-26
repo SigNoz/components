@@ -73,6 +73,21 @@
 	height: var(--combobox-trigger-icon-size, 1rem);
 	width: var(--combobox-trigger-icon-size, 1rem);
 	opacity: var(--combobox-trigger-icon-opacity, 0.5);
+	flex-shrink: 0;
+	transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+	animation: combobox-icon-in 150ms ease-out;
+}
+
+@keyframes combobox-icon-in {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	to {
+		opacity: var(--combobox-trigger-icon-opacity, 0.5);
+		transform: scale(1);
+	}
 }
 
 @keyframes combobox-spin {
