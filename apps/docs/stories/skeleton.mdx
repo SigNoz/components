@@ -1,0 +1,42 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as SkeletonStories from './skeleton.stories';
+
+<Meta of={SkeletonStories} />
+
+# Skeleton
+
+Use `Skeleton` to show placeholder loading states while content is being fetched.
+It supports animated pulse effects, configurable title and paragraph rows,
+and sub-components for inputs, buttons, and avatars.
+
+## Basic Usage
+
+```tsx
+import { Skeleton } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />;
+}
+```
+
+<Primary />
+
+## Props
+
+<Controls of={SkeletonStories.Default} />
+
+## Sub-Components
+
+```tsx
+// Input
+<Skeleton.Input active size="small" />
+<Skeleton.Input active block />
+
+// Button
+<Skeleton.Button active size="small" />
+<Skeleton.Button active block />
+
+// Avatar
+<Skeleton.Avatar active shape="circle" size={36} />
+<Skeleton.Avatar active shape="square" />
+```

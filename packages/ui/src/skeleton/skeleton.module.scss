@@ -1,0 +1,120 @@
+/* Shared shimmer mixin */
+@mixin skeleton-base {
+	background: var(--skeleton-background, var(--muted, #e0e0e0));
+	border-radius: var(--skeleton-border-radius, calc(var(--radius) - 2px));
+	position: relative;
+	overflow: hidden;
+
+	&[data-active='true']::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(90deg,
+				transparent 25%,
+				var(--skeleton-shimmer-color, rgba(255, 255, 255, 0.25)) 50%,
+				transparent 75%);
+		background-size: 200% 100%;
+		animation: skeleton-shimmer var(--skeleton-animation-duration, 1.5s) ease-in-out infinite;
+	}
+}
+
+@keyframes skeleton-shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Base Skeleton */
+.skeleton {
+	width: var(--skeleton-width, 100%);
+	display: flex;
+	flex-direction: column;
+	gap: var(--skeleton-gap, 0.5rem);
+}
+
+.skeleton-title {
+	@include skeleton-base;
+	height: var(--skeleton-title-height, 1rem);
+	margin-bottom: var(--skeleton-title-margin-bottom, 0.75rem);
+}
+
+.skeleton-paragraph {
+	display: flex;
+	flex-direction: column;
+	gap: var(--skeleton-paragraph-gap, 0.5rem);
+}
+
+.skeleton-paragraph-row {
+	@include skeleton-base;
+	height: var(--skeleton-paragraph-row-height, 0.75rem);
+}
+
+/* Skeleton.Input */
+.skeleton-input {
+	@include skeleton-base;
+	display: inline-block;
+	height: var(--skeleton-input-height, 2rem);
+	width: var(--skeleton-input-width, 10rem);
+	min-width: var(--skeleton-input-min-width, 10rem);
+	border-radius: var(--skeleton-input-border-radius, calc(var(--radius) - 2px));
+
+	&[data-size='small'] {
+		height: var(--skeleton-input-height-small, 1.5rem);
+		min-width: var(--skeleton-input-min-width-small, 7rem);
+	}
+
+	&[data-size='large'] {
+		height: var(--skeleton-input-height-large, 2.5rem);
+		min-width: var(--skeleton-input-min-width-large, 14rem);
+	}
+
+	&[data-block='true'] {
+		width: 100%;
+		min-width: 100%;
+		display: block;
+	}
+}
+
+/* Skeleton.Button  */
+.skeleton-button {
+	@include skeleton-base;
+	display: inline-block;
+	height: var(--skeleton-button-height, 2rem);
+	width: var(--skeleton-button-width, 4rem);
+	min-width: var(--skeleton-button-min-width, 4rem);
+	border-radius: var(--skeleton-button-border-radius, calc(var(--radius) - 2px));
+
+	&[data-size='small'] {
+		height: var(--skeleton-button-height-small, 1.5rem);
+		width: var(--skeleton-button-width-small, 3rem);
+		min-width: var(--skeleton-button-min-width-small, 3rem);
+	}
+
+	&[data-size='large'] {
+		height: var(--skeleton-button-height-large, 2.5rem);
+		width: var(--skeleton-button-width-large, 5rem);
+		min-width: var(--skeleton-button-min-width-large, 5rem);
+	}
+
+	&[data-block='true'] {
+		width: 100%;
+		min-width: 100%;
+		display: block;
+	}
+}
+
+/* Skeleton.Avatar  */
+.skeleton-avatar {
+	@include skeleton-base;
+	display: inline-block;
+	flex-shrink: 0;
+	border-radius: var(--skeleton-avatar-border-radius, 50%);
+
+	&[data-shape='square'] {
+		border-radius: var(--skeleton-avatar-square-border-radius, calc(var(--radius) - 2px));
+	}
+}

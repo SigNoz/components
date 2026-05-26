@@ -20,6 +20,7 @@ const entries: Record<string, string> = {
 	'divider/index': 'src/divider/index.ts',
 	'drawer/index': 'src/drawer/index.ts',
 	'dropdown-menu/index': 'src/dropdown-menu/index.ts',
+	'skeleton/index': 'src/skeleton/index.ts',
 	'input/index': 'src/input/index.ts',
 	'kbd/index': 'src/kbd/index.ts',
 	'pagination/index': 'src/pagination/index.ts',
