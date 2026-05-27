@@ -452,15 +452,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		const handlePageChange = (e: MouseEvent<HTMLButtonElement>, page: number) => {
 			e.preventDefault();
 
-			console.log('Pagination Clicked:', {
-				targetPage: page,
-				currentPage: current,
-				totalPages,
-				isCurrentControlled,
-			});
-
 			if (page < 1 || page > totalPages || page === current) {
-				console.log('Page change ignored (invalid page or already active)');
 				return;
 			}
 
