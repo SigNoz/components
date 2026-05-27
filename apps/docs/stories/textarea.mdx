@@ -1,0 +1,72 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as TextareaStories from './textarea.stories';
+
+<Meta of={TextareaStories} />
+
+# Textarea
+
+Multi-line text input. Mirrors `Input` styling via shared tokens and exposes an `autoSize` mode that grows the field with content between optional `minRows`/`maxRows` bounds. Also available as `Input.TextArea` for Ant Design drop-in compatibility.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import { Textarea } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Textarea rows={4} placeholder="Write your feedback here..." />;
+}
+```
+
+### Controlled
+
+```tsx
+import { Textarea } from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+	return <Textarea value={value} onChange={(e) => setValue(e.target.value)} rows={4} />;
+}
+```
+
+### Auto-size
+
+Pass `autoSize` to grow the field with content. Use `{ minRows, maxRows }` to clamp; at `maxRows` the textarea scrolls internally.
+
+```tsx
+import { Textarea } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Textarea autoSize={{ minRows: 1, maxRows: 6 }} placeholder="Grows with content..." />;
+}
+```
+
+### Validation status
+
+```tsx
+import { Textarea } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Textarea status="error" rows={3} defaultValue="This value is invalid." />;
+}
+```
+
+### Drop-in AntD usage
+
+```tsx
+import { Input } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <Input.TextArea rows={4} placeholder="Enter notification message..." />;
+}
+```
+
+This following example shows the playground story:
+
+<Primary />
+
+## Textarea Props
+
+<Controls of={TextareaStories.Playground} />
