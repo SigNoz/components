@@ -1,12 +1,19 @@
 import { Pagination } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type PaginationProps = ComponentProps<typeof Pagination>;
 
 const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.Element => {
-	const [currentPage, setCurrentPage] = useState(initialPage);
+	const [currentPage, setCurrentPage] = useState(args.current ?? initialPage);
+
+	useEffect(() => {
+		if (args.current !== undefined) {
+			setCurrentPage(args.current);
+		}
+	}, [args.current]);
+
 	return (
 		<Pagination
 			{...args}
@@ -57,6 +64,29 @@ const meta: Meta<typeof Pagination> = {
 			control: false,
 			description: 'Callback when the page changes',
 			table: { category: 'Events', type: { summary: '(page: number) => void' } },
+		},
+		enablePageSize: {
+			control: 'boolean',
+			description: 'Whether to enable the page size selector',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		pageSizeOptions: {
+			control: 'object',
+			description: 'Options for the page size selector',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'number[]' },
+				defaultValue: { summary: '[10, 20, 30, 40, 50]' },
+			},
+		},
+		onPageSizeChange: {
+			control: false,
+			description: 'Callback when the page size changes',
+			table: { category: 'Events', type: { summary: '(pageSize: number) => void' } },
 		},
 		className: {
 			control: 'text',
@@ -187,7 +217,14 @@ export const CenterAligned: Story = {
 		align: 'center',
 	},
 	render: (args) => {
-		const [current, setCurrent] = useState(1);
+		const [current, setCurrent] = useState(args.current ?? 1);
+
+		useEffect(() => {
+			if (args.current !== undefined) {
+				setCurrent(args.current);
+			}
+		}, [args.current]);
+
 		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
 	},
 };
@@ -199,7 +236,14 @@ export const EndAligned: Story = {
 		align: 'end',
 	},
 	render: (args) => {
-		const [current, setCurrent] = useState(1);
+		const [current, setCurrent] = useState(args.current ?? 1);
+
+		useEffect(() => {
+			if (args.current !== undefined) {
+				setCurrent(args.current);
+			}
+		}, [args.current]);
+
 		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
 	},
 };
@@ -210,7 +254,14 @@ export const CustomPageSize: Story = {
 		pageSize: 5,
 	},
 	render: (args) => {
-		const [current, setCurrent] = useState(1);
+		const [current, setCurrent] = useState(args.current ?? 1);
+
+		useEffect(() => {
+			if (args.current !== undefined) {
+				setCurrent(args.current);
+			}
+		}, [args.current]);
+
 		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
 	},
 };
@@ -220,7 +271,14 @@ export const WithPageChangeHandler: Story = {
 		total: 50,
 	},
 	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(1);
+		const [currentPage, setCurrentPage] = useState(args.current ?? 1);
+
+		useEffect(() => {
+			if (args.current !== undefined) {
+				setCurrentPage(args.current);
+			}
+		}, [args.current]);
+
 		return (
 			<Pagination
 				{...args}
@@ -261,4 +319,42 @@ export const TenPages_LastSelected: Story = {
 		total: 100,
 	},
 	render: (args) => ControlledPagination(args, 10),
+};
+
+export const WithPageSizeSelector: Story = {
+	args: {
+		total: 100,
+		pageSize: 10,
+		enablePageSize: true,
+	},
+	render: (args) => {
+		const [current, setCurrent] = useState(args.current ?? 1);
+		const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
+
+		useEffect(() => {
+			if (args.current !== undefined) {
+				setCurrent(args.current);
+			}
+		}, [args.current]);
+
+		useEffect(() => {
+			if (args.pageSize !== undefined) {
+				setPageSize(args.pageSize);
+			}
+		}, [args.pageSize]);
+
+		return (
+			<Pagination
+				{...args}
+				current={current}
+				onPageChange={setCurrent}
+				pageSize={pageSize}
+				onPageSizeChange={(newSize) => {
+					setPageSize(newSize);
+					setCurrent(1);
+					args.onPageSizeChange?.(newSize);
+				}}
+			/>
+		);
+	},
 };
