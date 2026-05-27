@@ -55,3 +55,20 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+.pagination-page-size {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3, 0.75rem);
+  margin-right: var(--spacing-4, 1rem);
+}
+
+.pagination-page-size-label {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--text-secondary, #64748b);
+  white-space: nowrap;
+}
+
+.pagination-page-size-select {
+  width: 72px;
+}

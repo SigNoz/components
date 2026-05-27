@@ -3,6 +3,7 @@ import * as React from 'react';
 import { type MouseEvent, useEffect, useState } from 'react';
 import { Button, type ButtonProps, ButtonSize } from '../button/index.js';
 import { cn } from '../lib/utils.js';
+import { SelectSimple } from '../select/index.js';
 import styles from './pagination.module.scss';
 import { renderPageNumbers } from './utils.js';
 
@@ -254,6 +255,20 @@ export type PaginationProps = PaginationContainerProps & {
 	 */
 	pageSize?: number;
 	/**
+	 * Whether to enable the page size selector.
+	 * @default false
+	 */
+	enablePageSize?: boolean;
+	/**
+	 * Options for the page size selector.
+	 * @default [10, 20, 30, 40, 50]
+	 */
+	pageSizeOptions?: number[];
+	/**
+	 * The function to call when the page size changes.
+	 */
+	onPageSizeChange?: (pageSize: number) => void;
+	/**
 	 * The current page.
 	 */
 	current?: number;
@@ -307,7 +322,10 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 	(
 		{
 			total,
-			pageSize = 10,
+			pageSize: controlledPageSize,
+			enablePageSize = false,
+			pageSizeOptions = [10, 20, 30, 40, 50],
+			onPageSizeChange,
 			current: controlledCurrent,
 			defaultCurrent = 1,
 			onPageChange,
@@ -318,8 +336,16 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		},
 		ref
 	) => {
-		const totalPages = Math.ceil(total / pageSize);
+		const [internalPageSize, setInternalPageSize] = useState(controlledPageSize ?? 10);
 
+		useEffect(() => {
+			if (controlledPageSize !== undefined) {
+				setInternalPageSize(controlledPageSize);
+			}
+		}, [controlledPageSize]);
+
+		const pageSize = controlledPageSize ?? internalPageSize;
+		const totalPages = Math.ceil(total / pageSize);
 		const [internalCurrent, setInternalCurrent] = useState(controlledCurrent ?? defaultCurrent);
 
 		useEffect(() => {
@@ -328,29 +354,74 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			}
 		}, [controlledCurrent]);
 
+		useEffect(() => {
+			if (internalCurrent > totalPages && totalPages > 0) {
+				setInternalCurrent(totalPages);
+			}
+		}, [totalPages, internalCurrent]);
+
 		const current = controlledCurrent ?? internalCurrent;
+
+		const isCurrentControlled = controlledCurrent !== undefined;
+		const isPageSizeControlled = controlledPageSize !== undefined;
 
 		const handlePageChange = (e: MouseEvent<HTMLButtonElement>, page: number) => {
 			e.preventDefault();
+
+			console.log('Pagination Clicked:', {
+				targetPage: page,
+				currentPage: current,
+				totalPages,
+				isCurrentControlled,
+			});
+
 			if (page < 1 || page > totalPages || page === current) {
+				console.log('Page change ignored (invalid page or already active)');
 				return;
 			}
 
-			if (onPageChange) {
-				onPageChange(page);
-			} else {
+			if (!isCurrentControlled) {
 				setInternalCurrent(page);
 			}
+			onPageChange?.(page);
 		};
 
 		const pageNumbers = renderPageNumbers(totalPages, current);
 
-		if (totalPages <= 1) {
+		if (totalPages <= 1 && !enablePageSize) {
 			return null;
 		}
 
 		return (
 			<PaginationContainer ref={ref} className={className} align={align} testId={testId} {...props}>
+				{enablePageSize ? (
+					<div className={styles['pagination-page-size']}>
+						<span className={styles['pagination-page-size-label']}>Rows per page</span>
+						<SelectSimple
+							className={styles['pagination-page-size-select']}
+							items={pageSizeOptions.map((size) => ({
+								value: size.toString(),
+								label: size.toString(),
+							}))}
+							value={pageSize.toString()}
+							onChange={(value) => {
+								if (typeof value === 'string') {
+									const newSize = Number(value);
+									if (!isPageSizeControlled) {
+										setInternalPageSize(newSize);
+									}
+									onPageSizeChange?.(newSize);
+
+									if (!isCurrentControlled) {
+										setInternalCurrent(1);
+									}
+									onPageChange?.(1);
+								}
+							}}
+							withPortal={false}
+						/>
+					</div>
+				) : null}
 				<PaginationContent>
 					<PaginationItem>
 						<PaginationPrevious
