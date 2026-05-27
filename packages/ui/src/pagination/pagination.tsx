@@ -244,6 +244,90 @@ export const PaginationEllipsis = React.forwardRef<HTMLSpanElement, PaginationEl
 	}
 );
 
+export type PaginationSelectorProps = Pick<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className' | 'style'
+> & {
+	/**
+	 * The label to display next to the selector.
+	 * @default 'Rows per page'
+	 */
+	label?: string;
+	/**
+	 * The current page size value.
+	 */
+	value: number;
+	/**
+	 * Options for the page size selector.
+	 * @default [10, 20, 30, 40, 50]
+	 */
+	options?: number[];
+	/**
+	 * The function to call when the page size changes.
+	 */
+	onChange?: (pageSize: number) => void;
+	/**
+	 * The test ID to apply to the pagination selector.
+	 */
+	testId?: string;
+};
+
+/**
+ * A page size selector for pagination. Renders a label and a dropdown
+ * to choose how many items to display per page. Can be used standalone
+ * in custom pagination layouts via `PaginationContainer`, or automatically
+ * rendered by the `Pagination` component when `enablePageSize` is true.
+ *
+ * @example
+ * ```tsx
+ * <PaginationSelector
+ *   value={pageSize}
+ *   options={[10, 20, 50]}
+ *   onChange={(size) => setPageSize(size)}
+ * />
+ * ```
+ */
+export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSelectorProps>(
+	(
+		{
+			label = 'Rows per page',
+			value,
+			options = [10, 20, 30, 40, 50],
+			onChange,
+			className,
+			testId,
+			...props
+		},
+		ref
+	) => {
+		return (
+			<div
+				ref={ref}
+				data-testid={testId}
+				data-slot="pagination-selector"
+				className={cn(styles['pagination-page-size'], className)}
+				{...props}
+			>
+				<span className={styles['pagination-page-size-label']}>{label}</span>
+				<SelectSimple
+					className={styles['pagination-page-size-select']}
+					items={options.map((size) => ({
+						value: size.toString(),
+						label: size.toString(),
+					}))}
+					value={value.toString()}
+					onChange={(val) => {
+						if (typeof val === 'string') {
+							onChange?.(Number(val));
+						}
+					}}
+					withPortal={false}
+				/>
+			</div>
+		);
+	}
+);
+
 export type PaginationProps = PaginationContainerProps & {
 	/**
 	 * The total number of items.
@@ -395,32 +479,21 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		return (
 			<PaginationContainer ref={ref} className={className} align={align} testId={testId} {...props}>
 				{enablePageSize ? (
-					<div className={styles['pagination-page-size']}>
-						<span className={styles['pagination-page-size-label']}>Rows per page</span>
-						<SelectSimple
-							className={styles['pagination-page-size-select']}
-							items={pageSizeOptions.map((size) => ({
-								value: size.toString(),
-								label: size.toString(),
-							}))}
-							value={pageSize.toString()}
-							onChange={(value) => {
-								if (typeof value === 'string') {
-									const newSize = Number(value);
-									if (!isPageSizeControlled) {
-										setInternalPageSize(newSize);
-									}
-									onPageSizeChange?.(newSize);
+					<PaginationSelector
+						value={pageSize}
+						options={pageSizeOptions}
+						onChange={(newSize) => {
+							if (!isPageSizeControlled) {
+								setInternalPageSize(newSize);
+							}
+							onPageSizeChange?.(newSize);
 
-									if (!isCurrentControlled) {
-										setInternalCurrent(1);
-									}
-									onPageChange?.(1);
-								}
-							}}
-							withPortal={false}
-						/>
-					</div>
+							if (!isCurrentControlled) {
+								setInternalCurrent(1);
+							}
+							onPageChange?.(1);
+						}}
+					/>
 				) : null}
 				<PaginationContent>
 					<PaginationItem>
