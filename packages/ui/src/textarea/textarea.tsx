@@ -30,10 +30,8 @@ type BaseProps = {
 	autoSize?: TextareaAutoSize;
 	/** Class applied to the outer wrapper (carries border, background, focus ring). */
 	rootClassName?: string;
-	/** Convenience alias for `data-testid` on the underlying `<textarea>`. Takes precedence over `data-testid`. */
+	/** `data-testid` set on the underlying `<textarea>`. */
 	testId?: string;
-	/** Standard `data-testid` passthrough on the underlying `<textarea>`. */
-	'data-testid'?: string;
 } & Pick<
 	React.ComponentPropsWithoutRef<'textarea'>,
 	| 'id'
@@ -107,7 +105,6 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((pr
 		rootClassName,
 		className,
 		testId,
-		'data-testid': dataTestId,
 		value,
 		defaultValue,
 		onChange,
@@ -117,13 +114,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((pr
 		...rest
 	} = props;
 
-	// Track the current value so the `::after` mirror always reflects what the
-	// user sees, in both controlled and uncontrolled modes.
+	const isControlled = 'value' in props;
 	const [trackedValue, setTrackedValue] = React.useState<string>(() =>
 		defaultValue !== undefined && defaultValue !== null ? String(defaultValue) : ''
 	);
 
-	const isControlled = value !== undefined;
 	const replicated = isControlled
 		? value === null || value === undefined
 			? ''
@@ -163,7 +158,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((pr
 			<textarea
 				ref={ref}
 				className={cn(styles['textarea'], className)}
-				data-testid={testId ?? dataTestId}
+				data-testid={testId}
 				value={value}
 				defaultValue={defaultValue}
 				onChange={handleChange}

@@ -1,4 +1,4 @@
-import { Input, Textarea } from '@signozhq/ui';
+import { Textarea } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
@@ -235,69 +235,3 @@ export const AutoSize: Story = {
 	},
 };
 
-/** Available as the compound `Input.TextArea` for AntD parity. */
-export const AsInputTextArea: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'`Input.TextArea` is the same component as `Textarea` — exposed on the `Input` namespace so AntD code (`<Input.TextArea ... />`) drops in unchanged.',
-			},
-		},
-	},
-	render: () => {
-		const [value, setValue] = useState('');
-		return (
-			<div className="p-8 max-w-md bg-background">
-				<Section title="Input.TextArea">
-					<Field label="Drop-in AntD usage">
-						<Input.TextArea
-							rows={4}
-							placeholder="Enter notification message..."
-							value={value}
-							onChange={(e) => setValue(e.target.value)}
-						/>
-					</Field>
-				</Section>
-			</div>
-		);
-	},
-};
-
-/** Required + maxLength — native form integration. */
-export const FormIntegration: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Standard form props (`name`, `required`, `maxLength`) pass through to the underlying `<textarea>`, so native form submission and validation work as expected.',
-			},
-		},
-	},
-	render: () => (
-		<form
-			className="p-8 max-w-md bg-background space-y-3"
-			onSubmit={(e) => {
-				e.preventDefault();
-				const data = new FormData(e.currentTarget);
-				alert(`description=${data.get('description')}`);
-			}}
-		>
-			<Field label="Description" hint="required, maxLength=200">
-				<Textarea
-					name="description"
-					rows={4}
-					required
-					maxLength={200}
-					placeholder="Tell us more (200 chars max)..."
-				/>
-			</Field>
-			<button
-				type="submit"
-				className="rounded border border-vanilla-300 bg-vanilla-100 px-3 py-1.5 text-xs font-medium dark:border-vanilla-700 dark:bg-vanilla-900"
-			>
-				Submit
-			</button>
-		</form>
-	),
-};

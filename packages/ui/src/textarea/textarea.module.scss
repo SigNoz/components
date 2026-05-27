@@ -1,18 +1,3 @@
-/* ===========================================================================
- * Textarea
- *
- * Two-element structure:
- *   .textarea-wrap            // owns border, background, padding, focus ring
- *     .textarea               // transparent overlay that captures input
- *     ::after                 // hidden mirror of the value — drives auto-grow
- *
- * When `data-autosize="true"`, the wrapper uses `display: grid` with both the
- * textarea and the `::after` pseudo placed in the same grid cell. The cell
- * sizes to the larger of the two, so the textarea grows with content. With
- * `data-has-max="true"`, `max-height` clamps the wrapper using the CSS `1lh`
- * unit (with an `em` fallback for older engines).
- * =========================================================================== */
-
 $sizes: (
 	small: (
 		padding-y: var(--textarea-size-small-padding-y, var(--spacing-2, 0.25rem)),
@@ -58,8 +43,6 @@ $sizes: (
 		}
 	}
 
-	/* Mirror element — placed in the same grid cell as the textarea so the cell
-	   sizes to whichever is taller. Hidden by default; activated by data-autosize. */
 	&::after {
 		content: attr(data-replicated-value) ' ';
 		grid-area: 1 / 1 / 2 / 2;
@@ -86,9 +69,8 @@ $sizes: (
 		overflow: hidden;
 	}
 
-	/* maxRows clamp — wrapper max-height limits both children. The first
-	   `max-height` (em-based) is a fallback for engines without `lh` support. */
 	&[data-has-max='true'] {
+		// First `max-height` (em-based) is a fallback for engines without `lh` support.
 		max-height: calc(
 			var(--textarea-line-height, 1.5) * 1em * var(--textarea-max-rows, 9999) +
 				2 * var(--textarea-padding-y-resolved, var(--spacing-4, 0.5rem)) + 2 *
@@ -109,7 +91,6 @@ $sizes: (
 	}
 
 	&[data-has-max='true'] > .textarea {
-		/* When content exceeds the clamped wrapper, the textarea scrolls internally. */
 		overflow-y: auto;
 	}
 
@@ -148,8 +129,6 @@ $sizes: (
 	}
 }
 
-/* The textarea itself is now a transparent overlay sitting inside the wrapper.
-   Border/background/focus styles live on the wrapper. */
 .textarea {
 	width: 100%;
 	min-width: 0;
