@@ -329,7 +329,10 @@ export const Addons: Story = {
 					<Field label="Text addons" hint="A URL field, for example.">
 						<InputNumber addonBefore="https://" addonAfter=".com" defaultValue={42} />
 					</Field>
-					<Field label="Select as addonAfter" hint="The Select's own border is removed so the whole thing reads as one control.">
+					<Field
+						label="Select as addonAfter"
+						hint="The Select's own border is removed so the whole thing reads as one control."
+					>
 						<InputNumber
 							defaultValue={500}
 							addonAfter={
@@ -412,10 +415,7 @@ export const ClampOnBlur: Story = {
 		const [value, setValue] = useState<number | null>(5);
 		return (
 			<div className="p-8 max-w-sm bg-background">
-				<Field
-					label="Clamp to 0–10"
-					hint="Type 99 and tab/click away — value clamps to 10."
-				>
+				<Field label="Clamp to 0–10" hint="Type 99 and tab/click away — value clamps to 10.">
 					<InputNumber value={value} onChange={setValue} min={0} max={10} />
 					<Output value={value} />
 				</Field>
@@ -462,7 +462,7 @@ export const Variants: Story = {
 					<InputNumber defaultValue={3} variant="borderless" />
 				</Field>
 				<Field label="Underlined" hint="Material-style underline only.">
-g					<InputNumber defaultValue={3} variant="underlined" />
+					<InputNumber defaultValue={3} variant="underlined" />
 				</Field>
 			</Section>
 		</div>
@@ -506,10 +506,7 @@ export const KeyboardAndWheel: Story = {
 						<code>changeOnWheel</code>
 					</label>
 				</div>
-				<Field
-					label="Try it"
-					hint="Focus the input, then press ↑ / ↓ or scroll the mouse wheel."
-				>
+				<Field label="Try it" hint="Focus the input, then press ↑ / ↓ or scroll the mouse wheel.">
 					<InputNumber
 						defaultValue={5}
 						min={0}
@@ -550,200 +547,6 @@ export const PressEnter: Story = {
 						placeholder="e.g. 42"
 					/>
 				</Field>
-			</div>
-		);
-	},
-};
-
-/* -------------------------------------------------------------------------- */
-/*  Real-world examples — mirrored from SigNoz PR #11378                      */
-/* -------------------------------------------------------------------------- */
-
-/** Threshold field — alert rule threshold with text prefix. */
-export const ThresholdField: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Adapted from `FormAlertRules/RuleOptions.tsx`. A labelled threshold field — the label sits in the prefix slot so it stays right next to the value.',
-			},
-		},
-	},
-	render: () => {
-		const [value, setValue] = useState<number | null>(null);
-		return (
-			<div className="p-8 max-w-md bg-background">
-				<Field label="Alert threshold" hint="Triggered when the metric crosses this value.">
-					<InputNumber prefix="Threshold" value={value} onChange={setValue} />
-					<Output value={value} />
-				</Field>
-			</div>
-		);
-	},
-};
-
-/** Ingestion limits — value + unit dropdown. */
-export const IngestionLimits: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Adapted from `IngestionSettings/MultiIngestionSettings.tsx`. A daily-limit field paired with a unit `Select` in the `addonAfter` slot.',
-			},
-		},
-	},
-	render: () => {
-		const [dailyLimit, setDailyLimit] = useState<number | null>(null);
-		const [unit, setUnit] = useState('GiB');
-		const [samples, setSamples] = useState<number | null>(null);
-		const [samplesUnit, setSamplesUnit] = useState('million');
-		return (
-			<div className="p-8 max-w-md bg-background">
-				<Section title="Daily ingestion limits">
-					<Field label="Volume per day">
-						<InputNumber
-							value={dailyLimit}
-							onChange={setDailyLimit}
-							placeholder="e.g. 500"
-							addonAfter={
-								<Select value={unit} onChange={(v) => setUnit(v as string)}>
-									<SelectTrigger aria-label="unit">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="MiB">MiB</SelectItem>
-										<SelectItem value="GiB">GiB</SelectItem>
-										<SelectItem value="TiB">TiB</SelectItem>
-									</SelectContent>
-								</Select>
-							}
-						/>
-					</Field>
-					<Field label="Samples per day">
-						<InputNumber
-							value={samples}
-							onChange={setSamples}
-							placeholder="Enter max # of samples/day"
-							addonAfter={
-								<Select
-									value={samplesUnit}
-									onChange={(v) => setSamplesUnit(v as string)}
-								>
-									<SelectTrigger aria-label="scale">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="thousand">thousand</SelectItem>
-										<SelectItem value="million">million</SelectItem>
-										<SelectItem value="billion">billion</SelectItem>
-									</SelectContent>
-								</Select>
-							}
-						/>
-					</Field>
-				</Section>
-			</div>
-		);
-	},
-};
-
-/** Histogram buckets — integer count + decimal width. */
-export const HistogramBuckets: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Adapted from `NewWidget/HistogramBucketsSection.tsx`. A pair of bucket-config inputs with different precisions and steps.',
-			},
-		},
-	},
-	render: () => {
-		const [count, setCount] = useState<number | null>(null);
-		const [width, setWidth] = useState<number | null>(null);
-		return (
-			<div className="p-8 max-w-md bg-background">
-				<Section title="Histogram bucket configuration">
-					<Field label="Bucket count" hint="Number of histogram buckets.">
-						<InputNumber value={count} onChange={setCount} min={0} placeholder="Default: 30" />
-					</Field>
-					<Field label="Bucket width" hint="Use 0 / empty for auto.">
-						<InputNumber
-							value={width}
-							onChange={setWidth}
-							precision={2}
-							step={0.1}
-							placeholder="Default: Auto"
-						/>
-					</Field>
-				</Section>
-			</div>
-		);
-	},
-};
-
-/** Soft axes — paired min/max range. */
-export const SoftAxesRange: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Adapted from `NewWidget/AxesSection.tsx`. Paired soft-min / soft-max inputs in a horizontal field layout.',
-			},
-		},
-	},
-	render: () => {
-		const [softMin, setSoftMin] = useState<number | null>(null);
-		const [softMax, setSoftMax] = useState<number | null>(null);
-		return (
-			<div className="p-8 max-w-md bg-background">
-				<Section title="Y-axis bounds" description="Leave blank for auto-fit.">
-					<div className="grid grid-cols-[80px_1fr] items-center gap-3">
-						<span className="text-xs text-vanilla-700 dark:text-vanilla-300">Soft Min</span>
-						<InputNumber value={softMin} onChange={setSoftMin} placeholder="Auto" />
-						<span className="text-xs text-vanilla-700 dark:text-vanilla-300">Soft Max</span>
-						<InputNumber value={softMax} onChange={setSoftMax} placeholder="Auto" />
-					</div>
-				</Section>
-			</div>
-		);
-	},
-};
-
-/** Query limit — min=1, optionally disabled. */
-export const QueryLimit: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Adapted from `QueryBuilder/filters/LimitFilter`. A row-limit field that is min-clamped to 1 and can be disabled when the query isn\'t configured to use a limit.',
-			},
-		},
-	},
-	render: () => {
-		const [limit, setLimit] = useState<number | null>(10);
-		const [disabled, setDisabled] = useState(false);
-		return (
-			<div className="p-8 max-w-sm bg-background">
-				<Section title="Query row limit">
-					<label className="flex items-center gap-2 text-xs">
-						<input
-							type="checkbox"
-							checked={disabled}
-							onChange={(e) => setDisabled(e.target.checked)}
-						/>
-						Disable input
-					</label>
-					<Field label="Limit" hint="Minimum is 1.">
-						<InputNumber
-							min={1}
-							value={limit}
-							onChange={setLimit}
-							disabled={disabled}
-							controls
-						/>
-						<Output value={limit} />
-					</Field>
-				</Section>
 			</div>
 		);
 	},

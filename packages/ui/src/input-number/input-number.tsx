@@ -1,7 +1,16 @@
-import { ChevronDown, ChevronUp } from '@signozhq/icons';
 import * as React from 'react';
 import { cn, type Simplify } from '../lib/utils.js';
 import styles from './input-number.module.scss';
+import {
+	clamp,
+	DEFAULT_STEP,
+	formatForDisplay,
+	isNumberLike,
+	isOutOfRange,
+	parseFromInput,
+	resolveControls,
+	roundToPrecision,
+} from './utils.js';
 
 /** The numeric value emitted by `onChange`. `null` represents an empty input. */
 export type InputNumberValue = number | null;
@@ -44,10 +53,7 @@ export type InputNumberControls =
  */
 export type InputNumberRef = {
 	/** Focus the underlying input. `cursor` positions the caret afterwards. */
-	focus: (options?: {
-		preventScroll?: boolean;
-		cursor?: 'start' | 'end' | 'all';
-	}) => void;
+	focus: (options?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => void;
 	/** Blur the underlying input. */
 	blur: () => void;
 	/** Reference to the underlying `<input>` element, or `null` before mount. */
@@ -95,10 +101,7 @@ type BaseProps = {
 	 * formatter={(v) => `$ ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 	 * ```
 	 */
-	formatter?: (
-		value: number | string,
-		info: { userTyping: boolean; input: string }
-	) => string;
+	formatter?: (value: number | string, info: { userTyping: boolean; input: string }) => string;
 	/**
 	 * Inverse of `formatter` — strips formatting characters before parsing as a number.
 	 *
@@ -176,14 +179,6 @@ type BaseProps = {
 	 */
 	decrementAriaLabel?: string;
 
-	/**
-	 * Accepted for AntD `InputNumber` drop-in compatibility. The value is
-	 * ignored — the underlying input always uses `type="text"` with
-	 * `inputMode="decimal"` so the formatter/parser pipeline can run.
-	 * In dev, passing anything other than `'text'` logs a one-time warning.
-	 */
-	type?: React.HTMLInputTypeAttribute;
-
 	/** Fires when the user presses Enter while the input is focused. */
 	onPressEnter?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 	/** Fires after every step (spinner click, arrow key, or wheel) with the new value and step metadata. */
@@ -213,86 +208,6 @@ type BaseProps = {
 
 /** Props accepted by {@link InputNumber}. */
 export type InputNumberProps = Simplify<BaseProps>;
-
-const DEFAULT_STEP = 1;
-
-const isNumberLike = (value: unknown): value is number =>
-	typeof value === 'number' && !Number.isNaN(value);
-
-const clamp = (value: number, min: number | undefined, max: number | undefined): number => {
-	let next = value;
-	if (max !== undefined && next > max) next = max;
-	if (min !== undefined && next < min) next = min;
-	return next;
-};
-
-const isOutOfRange = (
-	value: InputNumberValue,
-	min: number | undefined,
-	max: number | undefined
-): boolean => {
-	if (!isNumberLike(value)) return false;
-	if (max !== undefined && value > max) return true;
-	if (min !== undefined && value < min) return true;
-	return false;
-};
-
-const roundToPrecision = (value: number, precision: number | undefined): number => {
-	if (precision === undefined) return value;
-	const factor = 10 ** precision;
-	return Math.round(value * factor) / factor;
-};
-
-const formatForDisplay = (
-	value: InputNumberValue,
-	precision: number | undefined,
-	decimalSeparator: string | undefined,
-	formatter: InputNumberProps['formatter']
-): string => {
-	if (value === null || value === undefined) return '';
-	let display: string =
-		precision !== undefined ? value.toFixed(precision) : String(value);
-	if (decimalSeparator) {
-		display = display.replace('.', decimalSeparator);
-	}
-	if (formatter) {
-		display = formatter(value, { userTyping: false, input: display });
-	}
-	return display;
-};
-
-const parseFromInput = (
-	raw: string,
-	decimalSeparator: string | undefined,
-	parser: InputNumberProps['parser']
-): InputNumberValue => {
-	let work = raw;
-	if (parser) work = parser(work);
-	if (decimalSeparator) work = work.split(decimalSeparator).join('.');
-	if (work === '' || work === '-' || work === '.') return null;
-	const parsed = Number(work);
-	return Number.isNaN(parsed) ? null : parsed;
-};
-
-const resolveControls = (
-	controls: InputNumberControls | undefined
-): { enabled: boolean; upIcon: React.ReactNode; downIcon: React.ReactNode } => {
-	if (controls === false) {
-		return { enabled: false, upIcon: null, downIcon: null };
-	}
-	if (controls && typeof controls === 'object') {
-		return {
-			enabled: true,
-			upIcon: controls.upIcon ?? <ChevronUp aria-hidden="true" />,
-			downIcon: controls.downIcon ?? <ChevronDown aria-hidden="true" />,
-		};
-	}
-	return {
-		enabled: controls === true,
-		upIcon: <ChevronUp aria-hidden="true" />,
-		downIcon: <ChevronDown aria-hidden="true" />,
-	};
-};
 
 /**
  * Numeric input with a rich slot API and an Ant Design–compatible prop surface,
@@ -364,112 +279,108 @@ const resolveControls = (
  *
  * @see {@link InputNumberProps} for the full prop list.
  */
-export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
-	(props, ref) => {
-		const {
-			value: valueProp,
-			defaultValue,
-			onChange,
+export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((props, ref) => {
+	const {
+		value: valueProp,
+		defaultValue,
+		onChange,
 
-			min,
-			max,
-			step = DEFAULT_STEP,
-			precision,
-			decimalSeparator,
+		min,
+		max,
+		step = DEFAULT_STEP,
+		precision,
+		decimalSeparator,
 
-			formatter,
-			parser,
+		formatter,
+		parser,
 
-			prefix,
-			suffix,
-			addonBefore,
-			addonAfter,
+		prefix,
+		suffix,
+		addonBefore,
+		addonAfter,
 
-			controls,
-			mode = 'input',
+		controls,
+		mode = 'input',
 
-			variant = 'outlined',
-			size = 'middle',
-			status,
+		variant = 'outlined',
+		size = 'middle',
+		status,
 
-			changeOnBlur = true,
-			changeOnWheel,
-			keyboard = true,
+		changeOnBlur = true,
+		changeOnWheel,
+		keyboard = true,
 
-			readOnly,
-			disabled,
-			autoFocus,
+		readOnly,
+		disabled,
+		autoFocus,
 
-			placeholder,
-			className,
-			rootClassName,
-			style,
-			id,
-			name,
-			testId,
-			'data-testid': dataTestId,
+		placeholder,
+		className,
+		rootClassName,
+		style,
+		id,
+		name,
+		testId,
+		'data-testid': dataTestId,
 
-			incrementAriaLabel = 'Increase value',
-			decrementAriaLabel = 'Decrease value',
+		incrementAriaLabel = 'Increase value',
+		decrementAriaLabel = 'Decrease value',
 
-			type,
+		onPressEnter,
+		onStep,
+		onBlur,
+		onFocus,
+		onKeyDown,
+		onWheel: onWheelProp,
+		'aria-label': ariaLabel,
+	} = props;
 
-			onPressEnter,
-			onStep,
-			onBlur,
-			onFocus,
-			onKeyDown,
-			onWheel: onWheelProp,
-			'aria-label': ariaLabel,
-		} = props;
+	const isControlled = valueProp !== undefined;
+	const inputRef = React.useRef<HTMLInputElement | null>(null);
+	const [internalValue, setInternalValue] = React.useState<InputNumberValue>(defaultValue ?? null);
+	const value = isControlled ? (valueProp ?? null) : internalValue;
 
-		const isControlled = valueProp !== undefined;
-		const inputRef = React.useRef<HTMLInputElement | null>(null);
-		const [internalValue, setInternalValue] = React.useState<InputNumberValue>(
-			defaultValue ?? null
-		);
-		const value = isControlled ? (valueProp ?? null) : internalValue;
+	// `rawInput` only holds the user's in-progress typing buffer while focused.
+	// When the input is not focused, the displayed value is computed inline from
+	// `value` — there is no state to drift out of sync with.
+	const [rawInput, setRawInput] = React.useState<string>('');
+	const [isFocused, setIsFocused] = React.useState(false);
+	const isFocusedRef = React.useRef(false);
 
-		// `rawInput` only holds the user's in-progress typing buffer while focused.
-		// When the input is not focused, the displayed value is computed inline from
-		// `value` — there is no state to drift out of sync with.
-		const [rawInput, setRawInput] = React.useState<string>('');
-		const [isFocused, setIsFocused] = React.useState(false);
-		const isFocusedRef = React.useRef(false);
-
-		React.useImperativeHandle(
-			ref,
-			() => ({
-				focus: (options) => {
-					if (!inputRef.current) return;
-					inputRef.current.focus({ preventScroll: options?.preventScroll });
-					const cursor = options?.cursor;
-					if (cursor === 'start') {
-						inputRef.current.setSelectionRange(0, 0);
-					} else if (cursor === 'end') {
-						const length = inputRef.current.value.length;
-						inputRef.current.setSelectionRange(length, length);
-					} else if (cursor === 'all') {
-						inputRef.current.select();
-					}
-				},
-				blur: () => inputRef.current?.blur(),
-				get nativeElement() {
-					return inputRef.current;
-				},
-			}),
-			[]
-		);
-
-		const emitChange = React.useCallback(
-			(next: InputNumberValue) => {
-				if (!isControlled) setInternalValue(next);
-				onChange?.(next);
+	React.useImperativeHandle(
+		ref,
+		() => ({
+			focus: (options) => {
+				if (!inputRef.current) return;
+				inputRef.current.focus({ preventScroll: options?.preventScroll });
+				const cursor = options?.cursor;
+				if (cursor === 'start') {
+					inputRef.current.setSelectionRange(0, 0);
+				} else if (cursor === 'end') {
+					const length = inputRef.current.value.length;
+					inputRef.current.setSelectionRange(length, length);
+				} else if (cursor === 'all') {
+					inputRef.current.select();
+				}
 			},
-			[isControlled, onChange]
-		);
+			blur: () => inputRef.current?.blur(),
+			get nativeElement() {
+				return inputRef.current;
+			},
+		}),
+		[]
+	);
 
-		const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const emitChange = React.useCallback(
+		(next: InputNumberValue) => {
+			if (!isControlled) setInternalValue(next);
+			onChange?.(next);
+		},
+		[isControlled, onChange]
+	);
+
+	const handleChange = React.useCallback(
+		(event: React.ChangeEvent<HTMLInputElement>) => {
 			const raw = event.target.value;
 			setRawInput(raw);
 			const parsed = parseFromInput(raw, decimalSeparator, parser);
@@ -478,17 +389,17 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 				return;
 			}
 			emitChange(roundToPrecision(parsed, precision));
-		};
+		},
+		[decimalSeparator, parser, precision, emitChange]
+	);
 
-		const handleStep = (offset: number, emitter: InputNumberStepInfo['emitter']) => {
+	const handleStep = React.useCallback(
+		(offset: number, emitter: InputNumberStepInfo['emitter']) => {
 			if (disabled || readOnly) return;
 			const stepValue = typeof step === 'string' ? Number(step) : step;
 			if (!isNumberLike(stepValue)) return;
 			const base = isNumberLike(value) ? value : 0;
-			const next = roundToPrecision(
-				clamp(base + offset * stepValue, min, max),
-				precision
-			);
+			const next = roundToPrecision(clamp(base + offset * stepValue, min, max), precision);
 			emitChange(next);
 			// In controlled mode, parents that ignore `onChange` will not update `value`.
 			// While focused, `rawInput` reflects what we just computed so the user sees
@@ -498,14 +409,29 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 				setRawInput(formatForDisplay(next, precision, decimalSeparator, formatter));
 			}
 			onStep?.(next, { offset: offset * stepValue, type: offset > 0 ? 'up' : 'down', emitter });
-		};
+		},
+		[
+			disabled,
+			readOnly,
+			step,
+			value,
+			min,
+			max,
+			precision,
+			decimalSeparator,
+			formatter,
+			emitChange,
+			onStep,
+		]
+	);
 
-		// Keep a ref to the latest step handler so the native wheel listener (below)
-		// can call into current closure state without re-attaching on every render.
-		const handleStepRef = React.useRef(handleStep);
-		handleStepRef.current = handleStep;
+	// Keep a ref to the latest step handler so the native wheel listener (below)
+	// can call into current closure state without re-attaching on every render.
+	const handleStepRef = React.useRef(handleStep);
+	handleStepRef.current = handleStep;
 
-		const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = React.useCallback(
+		(event: React.KeyboardEvent<HTMLInputElement>) => {
 			onKeyDown?.(event);
 			if (event.defaultPrevented) return;
 			if (event.key === 'Enter') {
@@ -520,40 +446,49 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 				event.preventDefault();
 				handleStep(-1, 'keydown');
 			}
+		},
+		[onKeyDown, onPressEnter, keyboard, handleStep]
+	);
+
+	// React attaches `wheel` listeners at the root as passive in modern versions,
+	// so a synthetic `onWheel` handler cannot `preventDefault()` page scroll.
+	// Attach a non-passive native listener directly on the input for the stepper.
+	React.useEffect(() => {
+		if (!changeOnWheel) return;
+		const el = inputRef.current;
+		if (!el) return;
+		const handler = (event: WheelEvent) => {
+			if (!isFocusedRef.current) return;
+			event.preventDefault();
+			handleStepRef.current(event.deltaY < 0 ? 1 : -1, 'wheel');
 		};
+		el.addEventListener('wheel', handler, { passive: false });
+		return () => el.removeEventListener('wheel', handler);
+	}, [changeOnWheel]);
 
-		// React attaches `wheel` listeners at the root as passive in modern versions,
-		// so a synthetic `onWheel` handler cannot `preventDefault()` page scroll.
-		// Attach a non-passive native listener directly on the input for the stepper.
-		React.useEffect(() => {
-			if (!changeOnWheel) return;
-			const el = inputRef.current;
-			if (!el) return;
-			const handler = (event: WheelEvent) => {
-				if (!isFocusedRef.current) return;
-				event.preventDefault();
-				handleStepRef.current(event.deltaY < 0 ? 1 : -1, 'wheel');
-			};
-			el.addEventListener('wheel', handler, { passive: false });
-			return () => el.removeEventListener('wheel', handler);
-		}, [changeOnWheel]);
-
-		// Synthetic wheel handler just forwards to the user's callback. Stepping
-		// happens in the native listener above so it can actually prevent default.
-		const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+	// Synthetic wheel handler just forwards to the user's callback. Stepping
+	// happens in the native listener above so it can actually prevent default.
+	const handleWheel = React.useCallback(
+		(event: React.WheelEvent<HTMLInputElement>) => {
 			onWheelProp?.(event);
-		};
+		},
+		[onWheelProp]
+	);
 
-		const handleFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+	const handleFocus = React.useCallback(
+		(event: React.FocusEvent<HTMLInputElement>) => {
 			isFocusedRef.current = true;
 			setIsFocused(true);
 			// Seed the typing buffer from the currently displayed value so the first
 			// keystroke does not wipe formatting in unexpected ways.
 			setRawInput(formatForDisplay(value, precision, decimalSeparator, formatter));
 			onFocus?.(event);
-		};
+		},
+		[value, precision, decimalSeparator, formatter, onFocus]
+	);
 
-		const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+	const handleBlur = React.useCallback(
+		(event: React.FocusEvent<HTMLInputElement>) => {
 			isFocusedRef.current = false;
 			setIsFocused(false);
 			if (changeOnBlur && isNumberLike(value)) {
@@ -562,140 +497,130 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>(
 					emitChange(roundToPrecision(clamped, precision));
 				}
 			}
-			// `rawInput` is irrelevant while unfocused; the input renders from `value`.
 			onBlur?.(event);
-		};
+		},
+		[changeOnBlur, value, min, max, precision, emitChange, onBlur]
+	);
 
-		// Dev-only warning: the `type` prop is accepted for AntD parity but ignored.
-		React.useEffect(() => {
-			const env = (
-				globalThis as { process?: { env?: { NODE_ENV?: string } } }
-			).process?.env?.NODE_ENV;
-			if (env !== 'production' && type !== undefined && type !== 'text') {
-				// eslint-disable-next-line no-console
-				console.warn(
-					`[InputNumber] The "type" prop is accepted for AntD compatibility but ignored. Received: "${type}". The underlying input always uses type="text" with inputMode="decimal".`
-				);
-			}
-		}, [type]);
+	const controlsConfig = resolveControls(controls);
+	const showControls = controlsConfig.enabled;
+	const outOfRange = isOutOfRange(value, min, max);
+	const hasAddon = addonBefore !== undefined || addonAfter !== undefined;
 
-		const controlsConfig = resolveControls(controls);
-		// `mode` is a layout-only hint; it never enables the spinner on its own.
-		const showControls = controlsConfig.enabled;
-		const outOfRange = isOutOfRange(value, min, max);
-		const hasAddon = addonBefore !== undefined || addonAfter !== undefined;
+	const inputDisplayValue = isFocused
+		? rawInput
+		: formatForDisplay(value, precision, decimalSeparator, formatter);
 
-		const inputDisplayValue = isFocused
-			? rawInput
-			: formatForDisplay(value, precision, decimalSeparator, formatter);
+	const inputElement = (
+		<input
+			ref={inputRef}
+			type="text"
+			inputMode="decimal"
+			role="spinbutton"
+			autoComplete="off"
+			aria-valuemin={min}
+			aria-valuemax={max}
+			aria-valuenow={isNumberLike(value) ? value : undefined}
+			aria-label={ariaLabel}
+			className={styles['input-number-input']}
+			value={inputDisplayValue}
+			placeholder={placeholder}
+			disabled={disabled}
+			readOnly={readOnly}
+			autoFocus={autoFocus}
+			id={id}
+			name={name}
+			data-testid={testId ?? dataTestId}
+			onChange={handleChange}
+			onKeyDown={handleKeyDown}
+			onWheel={handleWheel}
+			onFocus={handleFocus}
+			onBlur={handleBlur}
+		/>
+	);
 
-		const inputElement = (
-			<input
-				ref={inputRef}
-				type="text"
-				inputMode="decimal"
-				role="spinbutton"
-				autoComplete="off"
-				aria-valuemin={min}
-				aria-valuemax={max}
-				aria-valuenow={isNumberLike(value) ? value : undefined}
-				aria-label={ariaLabel}
-				className={styles['input-number-input']}
-				value={inputDisplayValue}
-				placeholder={placeholder}
-				disabled={disabled}
-				readOnly={readOnly}
-				autoFocus={autoFocus}
-				id={id}
-				name={name}
-				data-testid={testId ?? dataTestId}
-				onChange={handleChange}
-				onKeyDown={handleKeyDown}
-				onWheel={handleWheel}
-				onFocus={handleFocus}
-				onBlur={handleBlur}
-			/>
-		);
+	const inputWrapper = (
+		<div
+			className={cn(
+				styles['input-number-wrapper'],
+				className,
+				!hasAddon ? rootClassName : undefined
+			)}
+			data-variant={variant}
+			data-size={size}
+			data-status={status}
+			data-disabled={disabled || undefined}
+			data-readonly={readOnly || undefined}
+			data-focused={isFocused || undefined}
+			data-has-prefix={prefix !== undefined || undefined}
+			data-has-suffix={suffix !== undefined || undefined}
+			data-has-controls={showControls || undefined}
+			data-out-of-range={outOfRange || undefined}
+			style={!hasAddon ? style : undefined}
+		>
+			{prefix !== undefined && <span className={styles['input-number-prefix']}>{prefix}</span>}
+			{inputElement}
+			{suffix !== undefined && <span className={styles['input-number-suffix']}>{suffix}</span>}
+			{showControls && (
+				<span className={styles['input-number-actions']} data-mode={mode}>
+					<button
+						type="button"
+						tabIndex={-1}
+						className={cn(styles['input-number-action'], styles['input-number-action-up'])}
+						onMouseDown={(e) => e.preventDefault()}
+						onClick={() => handleStep(1, 'handler')}
+						disabled={
+							disabled || readOnly || (max !== undefined && isNumberLike(value) && value >= max)
+						}
+						aria-label={incrementAriaLabel}
+					>
+						{controlsConfig.upIcon}
+					</button>
+					<button
+						type="button"
+						tabIndex={-1}
+						className={cn(styles['input-number-action'], styles['input-number-action-down'])}
+						onMouseDown={(e) => e.preventDefault()}
+						onClick={() => handleStep(-1, 'handler')}
+						disabled={
+							disabled || readOnly || (min !== undefined && isNumberLike(value) && value <= min)
+						}
+						aria-label={decrementAriaLabel}
+					>
+						{controlsConfig.downIcon}
+					</button>
+				</span>
+			)}
+		</div>
+	);
 
-		const inputWrapper = (
-			<div
-				className={cn(
-					styles['input-number-wrapper'],
-					className,
-					!hasAddon ? rootClassName : undefined
-				)}
-				data-variant={variant}
-				data-size={size}
-				data-status={status}
-				data-disabled={disabled || undefined}
-				data-readonly={readOnly || undefined}
-				data-focused={isFocused || undefined}
-				data-has-prefix={prefix !== undefined || undefined}
-				data-has-suffix={suffix !== undefined || undefined}
-				data-has-controls={showControls || undefined}
-				data-out-of-range={outOfRange || undefined}
-				style={!hasAddon ? style : undefined}
-			>
-				{prefix !== undefined && <span className={styles['input-number-prefix']}>{prefix}</span>}
-				{inputElement}
-				{suffix !== undefined && <span className={styles['input-number-suffix']}>{suffix}</span>}
-				{showControls && (
-					<span className={styles['input-number-actions']} data-mode={mode}>
-						<button
-							type="button"
-							tabIndex={-1}
-							className={cn(styles['input-number-action'], styles['input-number-action-up'])}
-							onMouseDown={(e) => e.preventDefault()}
-							onClick={() => handleStep(1, 'handler')}
-							disabled={disabled || readOnly || (max !== undefined && isNumberLike(value) && value >= max)}
-							aria-label={incrementAriaLabel}
-						>
-							{controlsConfig.upIcon}
-						</button>
-						<button
-							type="button"
-							tabIndex={-1}
-							className={cn(styles['input-number-action'], styles['input-number-action-down'])}
-							onMouseDown={(e) => e.preventDefault()}
-							onClick={() => handleStep(-1, 'handler')}
-							disabled={disabled || readOnly || (min !== undefined && isNumberLike(value) && value <= min)}
-							aria-label={decrementAriaLabel}
-						>
-							{controlsConfig.downIcon}
-						</button>
-					</span>
-				)}
-			</div>
-		);
-
-		if (!hasAddon) {
-			return inputWrapper;
-		}
-
-		return (
-			<div
-				className={cn(styles['input-number-root'], rootClassName)}
-				data-variant={variant}
-				data-size={size}
-				data-status={status}
-				data-disabled={disabled || undefined}
-				data-focused={isFocused || undefined}
-				data-out-of-range={outOfRange || undefined}
-				style={style}
-			>
-				{addonBefore !== undefined && (
-					<span className={styles['input-number-addon']} data-position="before">
-						{addonBefore}
-					</span>
-				)}
-				{inputWrapper}
-				{addonAfter !== undefined && (
-					<span className={styles['input-number-addon']} data-position="after">
-						{addonAfter}
-					</span>
-				)}
-			</div>
-		);
+	if (!hasAddon) {
+		return inputWrapper;
 	}
-);
+
+	return (
+		<div
+			className={cn(styles['input-number-root'], rootClassName)}
+			data-variant={variant}
+			data-size={size}
+			data-status={status}
+			data-disabled={disabled || undefined}
+			data-focused={isFocused || undefined}
+			data-out-of-range={outOfRange || undefined}
+			style={style}
+		>
+			{addonBefore !== undefined && (
+				<span className={styles['input-number-addon']} data-position="before">
+					{addonBefore}
+				</span>
+			)}
+			{inputWrapper}
+			{addonAfter !== undefined && (
+				<span className={styles['input-number-addon']} data-position="after">
+					{addonAfter}
+				</span>
+			)}
+		</div>
+	);
+});
 InputNumber.displayName = 'InputNumber';

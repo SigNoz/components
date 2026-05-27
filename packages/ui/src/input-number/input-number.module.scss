@@ -1,65 +1,60 @@
-/* ===========================================================================
- * InputNumber
- * Structure:
- *   .input-number-root            // only present when addonBefore/addonAfter set
- *     .input-number-addon[before]
- *     .input-number-wrapper       // bordered wrapper around prefix + input + suffix + actions
- *       .input-number-prefix
- *       .input-number-input
- *       .input-number-suffix
- *       .input-number-actions
- *         .input-number-action
- *     .input-number-addon[after]
- *
- * Tokens follow the same pattern as `input.module.scss`:
- *   • Shared surface tokens (`--input-*`) drive borders, radii, colors, shadows,
- *     and focus rings so InputNumber visually matches Input out of the box.
- *   • InputNumber-specific tokens (`--input-number-*`) cover what is unique to
- *     this component: the size scale, spinner actions, and addon paddings.
- * =========================================================================== */
-
-/* ---------------- Sizes (height + horizontal padding) -------------------- */
-$sizes: (
-	small: (
-		height: var(--input-number-size-small-height, 1.5rem),
-		padding-x: var(--input-number-size-small-padding-x, var(--spacing-4, 0.5rem)),
-		font-size: var(--input-number-size-small-font-size, 12px),
-	),
-	middle: (
-		height: var(--input-number-size-middle-height, var(--input-height, 2rem)),
-		padding-x: var(--input-number-size-middle-padding-x, var(--spacing-6, 0.75rem)),
-		font-size: var(
-			--input-number-size-middle-font-size,
-			var(--input-font-size, var(--periscope-font-size-base, 13px))
-		),
-	),
-	large: (
-		height: var(--input-number-size-large-height, 2.5rem),
-		padding-x: var(--input-number-size-large-padding-x, var(--spacing-6, 0.75rem)),
-		font-size: var(--input-number-size-large-font-size, 14px),
-	),
-);
-
-/* ---------------- Root (addon container) --------------------------------- */
 .input-number-root {
 	display: inline-flex;
 	width: 100%;
 	align-items: stretch;
 	border-radius: var(--input-border-radius, calc(var(--radius) - 2px));
 
-	@each $name, $cfg in $sizes {
-		&[data-size='#{$name}'] {
-			height: map-get($cfg, height);
-		}
+	&[data-size='small'] {
+		height: var(--input-number-size-small-height, 1.5rem);
+	}
+	&[data-size='middle'] {
+		height: var(--input-number-size-middle-height, var(--input-height, 2rem));
+	}
+	&[data-size='large'] {
+		height: var(--input-number-size-large-height, 2.5rem);
 	}
 
 	&[data-disabled='true'] {
 		cursor: var(--input-disabled-cursor, not-allowed);
 		opacity: var(--input-disabled-opacity, 0.5);
 	}
+
+	.input-number-wrapper {
+		flex: 1 1 auto;
+		min-width: 0;
+		border-radius: 0;
+		height: 100%;
+	}
+
+	&:has(.input-number-addon[data-position='before']) .input-number-wrapper {
+		border-left: 0;
+	}
+	&:has(.input-number-addon[data-position='after']) .input-number-wrapper {
+		border-right: 0;
+	}
+
+	&[data-focused='true'] {
+		outline-width: var(--input-focus-outline-width, 2px);
+		outline-style: var(--input-focus-outline-style, solid);
+		outline-color: var(--input-focus-outline-color, var(--ring));
+		outline-offset: var(--input-focus-outline-offset, 2px);
+
+		&[data-status='error'] {
+			outline-color: var(--input-error-border-color, hsl(0 84% 60%));
+		}
+		&[data-status='warning'] {
+			outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
+		}
+		&[data-out-of-range='true']:not([data-status='error']):not([data-status='warning']) {
+			outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
+		}
+
+		.input-number-wrapper[data-focused='true'] {
+			outline: none;
+		}
+	}
 }
 
-/* ---------------- Wrapper (the bordered input box) ----------------------- */
 .input-number-wrapper {
 	display: inline-flex;
 	width: 100%;
@@ -83,20 +78,23 @@ $sizes: (
 	transition-duration: var(--input-transition-duration, 150ms);
 	gap: 0;
 
-	@each $name, $cfg in $sizes {
-		&[data-size='#{$name}'] {
-			height: map-get($cfg, height);
-			font-size: map-get($cfg, font-size);
-			padding: 0 map-get($cfg, padding-x);
-		}
+	&[data-size='small'] {
+		height: var(--input-number-size-small-height, 1.5rem);
+		font-size: var(--input-number-size-small-font-size, 12px);
+		padding: 0 var(--input-number-size-small-padding-x, var(--spacing-4, 0.5rem));
 	}
-
-	/* Embedded inside an addon container — let the root own the height */
-	.input-number-root & {
-		flex: 1 1 auto;
-		min-width: 0;
-		border-radius: 0;
-		height: 100%;
+	&[data-size='middle'] {
+		height: var(--input-number-size-middle-height, var(--input-height, 2rem));
+		font-size: var(
+			--input-number-size-middle-font-size,
+			var(--input-font-size, var(--periscope-font-size-base, 13px))
+		);
+		padding: 0 var(--input-number-size-middle-padding-x, var(--spacing-6, 0.75rem));
+	}
+	&[data-size='large'] {
+		height: var(--input-number-size-large-height, 2.5rem);
+		font-size: var(--input-number-size-large-font-size, 14px);
+		padding: 0 var(--input-number-size-large-padding-x, var(--spacing-6, 0.75rem));
 	}
 
 	&:hover:not([data-disabled='true']):not([data-readonly='true']) {
@@ -119,7 +117,6 @@ $sizes: (
 		background-color: var(--input-disabled-background, var(--input-background, transparent));
 	}
 
-	/* Variants */
 	&[data-variant='filled'] {
 		background-color: var(--input-filled-background, var(--muted, hsl(0 0% 96%)));
 		border-color: transparent;
@@ -136,7 +133,6 @@ $sizes: (
 		box-shadow: none;
 	}
 
-	/* Status */
 	&[data-status='error'] {
 		border-color: var(--input-error-border-color, hsl(0 84% 60%));
 		&[data-focused='true'] {
@@ -150,13 +146,10 @@ $sizes: (
 		}
 	}
 
-	/* Out of range — surface warning border automatically */
 	&[data-out-of-range='true']:not([data-status='error']):not([data-status='warning']) {
 		border-color: var(--input-warning-border-color, hsl(38 92% 50%));
 	}
 
-	/* Tighten padding when there's a prefix/suffix slot, so the slot contents
-	   own their padding instead. Matches the existing Input wrapper behavior. */
 	&[data-has-prefix='true'] {
 		padding-left: var(--input-wrapper-with-prefix-padding-left, 0);
 	}
@@ -168,7 +161,6 @@ $sizes: (
 	}
 }
 
-/* ---------------- Input element ----------------------------------------- */
 .input-number-input {
 	flex: 1 1 auto;
 	min-width: 0;
@@ -199,7 +191,6 @@ $sizes: (
 	}
 }
 
-/* ---------------- Prefix / Suffix --------------------------------------- */
 .input-number-prefix,
 .input-number-suffix {
 	display: inline-flex;
@@ -227,7 +218,6 @@ $sizes: (
 	);
 }
 
-/* ---------------- Actions (spinner controls) ---------------------------- */
 .input-number-actions {
 	display: inline-flex;
 	flex-direction: column;
@@ -299,7 +289,6 @@ $sizes: (
 	}
 }
 
-/* ---------------- Addons ------------------------------------------------ */
 .input-number-addon {
 	display: inline-flex;
 	align-items: center;
@@ -322,72 +311,5 @@ $sizes: (
 		border-left: 0;
 		border-top-right-radius: var(--input-border-radius, calc(var(--radius) - 2px));
 		border-bottom-right-radius: var(--input-border-radius, calc(var(--radius) - 2px));
-	}
-
-	/* When an addon hosts a Select / Combobox / Button-like control, strip its
-	   own border/background so it visually merges into the addon slot. */
-	:global(.ant-select),
-	:global(.ant-select-selector),
-	[role='combobox'],
-	[data-radix-select-trigger],
-	[data-slot='select-trigger'],
-	[data-slot='combobox-trigger'] {
-		border: 0 !important;
-		background: transparent !important;
-		box-shadow: none !important;
-		height: 100% !important;
-	}
-}
-
-/* When the wrapper is inside the addon root, drop its border on the addon side
-   so the seam between the addon and the input is a single line. */
-.input-number-root .input-number-wrapper {
-	border-radius: 0;
-}
-.input-number-root:has(.input-number-addon[data-position='before']) .input-number-wrapper {
-	border-left: 0;
-}
-.input-number-root:has(.input-number-addon[data-position='after']) .input-number-wrapper {
-	border-right: 0;
-}
-
-/* When addons are present, the focus ring lives on the root so it wraps the
-   entire control (input + addons) instead of cutting off at the input seam. */
-.input-number-root[data-focused='true'] {
-	outline-width: var(--input-focus-outline-width, 2px);
-	outline-style: var(--input-focus-outline-style, solid);
-	outline-color: var(--input-focus-outline-color, var(--ring));
-	outline-offset: var(--input-focus-outline-offset, 2px);
-
-	&[data-status='error'] {
-		outline-color: var(--input-error-border-color, hsl(0 84% 60%));
-	}
-	&[data-status='warning'] {
-		outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
-	}
-	&[data-out-of-range='true']:not([data-status='error']):not([data-status='warning']) {
-		outline-color: var(--input-warning-border-color, hsl(38 92% 50%));
-	}
-}
-
-.input-number-root .input-number-wrapper[data-focused='true'] {
-	outline: none;
-}
-
-/* Style for embedded form controls inside prefix/suffix (e.g. Select) so they
-   blend visually with the input. */
-.input-number-prefix,
-.input-number-suffix {
-	:global(.ant-select),
-	:global(.ant-select-selector),
-	[role='combobox'],
-	[data-radix-select-trigger],
-	[data-slot='select-trigger'],
-	[data-slot='combobox-trigger'] {
-		border: 0 !important;
-		background: transparent !important;
-		box-shadow: none !important;
-		height: 100% !important;
-		min-width: 0;
 	}
 }
