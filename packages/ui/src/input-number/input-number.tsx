@@ -507,6 +507,18 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 	const outOfRange = isOutOfRange(value, min, max);
 	const hasAddon = addonBefore !== undefined || addonAfter !== undefined;
 
+	const handleActionMouseDown = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+	}, []);
+
+	const handleIncrement = React.useCallback(() => {
+		handleStep(1, 'handler');
+	}, [handleStep]);
+
+	const handleDecrement = React.useCallback(() => {
+		handleStep(-1, 'handler');
+	}, [handleStep]);
+
 	const inputDisplayValue = isFocused
 		? rawInput
 		: formatForDisplay(value, precision, decimalSeparator, formatter);
@@ -567,8 +579,8 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 						type="button"
 						tabIndex={-1}
 						className={cn(styles['input-number-action'], styles['input-number-action-up'])}
-						onMouseDown={(e) => e.preventDefault()}
-						onClick={() => handleStep(1, 'handler')}
+						onMouseDown={handleActionMouseDown}
+						onClick={handleIncrement}
 						disabled={
 							disabled || readOnly || (max !== undefined && isNumberLike(value) && value >= max)
 						}
@@ -580,8 +592,8 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 						type="button"
 						tabIndex={-1}
 						className={cn(styles['input-number-action'], styles['input-number-action-down'])}
-						onMouseDown={(e) => e.preventDefault()}
-						onClick={() => handleStep(-1, 'handler')}
+						onMouseDown={handleActionMouseDown}
+						onClick={handleDecrement}
 						disabled={
 							disabled || readOnly || (min !== undefined && isNumberLike(value) && value <= min)
 						}

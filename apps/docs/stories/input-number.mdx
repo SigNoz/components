@@ -1,0 +1,86 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as InputNumberStories from './input-number.stories';
+
+<Meta of={InputNumberStories} />
+
+# InputNumber
+
+A numeric input with optional spinner controls, `prefix`/`suffix` and `addonBefore`/`addonAfter` slots, `formatter`/`parser` for currency or unit formatting, `min`/`max` clamping, `precision` rounding, and keyboard/wheel stepping. The prop surface mirrors Ant Design's `InputNumber` for a drop-in migration path.
+
+## How to use
+
+### Basic usage
+
+```tsx
+import { InputNumber } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <InputNumber defaultValue={42} />;
+}
+```
+
+### Controlled with bounds and a step
+
+```tsx
+import { InputNumber } from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [value, setValue] = useState<number | null>(0);
+	return <InputNumber min={0} max={100} step={1} value={value} onChange={setValue} />;
+}
+```
+
+### Spinner controls
+
+```tsx
+import { InputNumber } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <InputNumber controls defaultValue={1} />;
+}
+```
+
+### Prefix and suffix
+
+```tsx
+import { InputNumber } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <InputNumber prefix="$" suffix="USD" defaultValue={1000} />;
+}
+```
+
+
+### Precision
+
+```tsx
+import { InputNumber } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return <InputNumber precision={2} step={0.01} defaultValue={1.5} controls />;
+}
+```
+
+### Status
+
+```tsx
+import { InputNumber } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<>
+			<InputNumber status="error" defaultValue={3} />
+			<InputNumber status="warning" defaultValue={3} />
+		</>
+	);
+}
+```
+
+The following example shows the InputNumber playground (using the default story):
+
+<Primary />
+
+## InputNumber Props
+
+<Controls of={InputNumberStories.Playground} />

@@ -1,7 +1,7 @@
 .input-number-root {
-	display: inline-flex;
-	width: 100%;
-	align-items: stretch;
+	display: var(--input-number-root-display, inline-flex);
+	width: var(--input-number-root-width, 100%);
+	align-items: var(--input-number-root-align-items, stretch);
 	border-radius: var(--input-border-radius, calc(var(--radius) - 2px));
 
 	&[data-size='small'] {
@@ -56,10 +56,10 @@
 }
 
 .input-number-wrapper {
-	display: inline-flex;
-	width: 100%;
-	align-items: center;
-	box-sizing: border-box;
+	display: var(--input-number-wrapper-display, inline-flex);
+	width: var(--input-number-wrapper-width, 100%);
+	align-items: var(--input-number-wrapper-align-items, center);
+	box-sizing: var(--input-number-wrapper-box-sizing, border-box);
 	border-radius: var(--input-border-radius, calc(var(--radius) - 2px));
 	border-width: var(--input-border-width, 1px);
 	border-style: var(--input-border-style, solid);
@@ -76,7 +76,7 @@
 	);
 	transition-timing-function: var(--input-transition-timing, cubic-bezier(0.4, 0, 0.2, 1));
 	transition-duration: var(--input-transition-duration, 150ms);
-	gap: 0;
+	gap: var(--input-number-wrapper-gap, 0);
 
 	&[data-size='small'] {
 		height: var(--input-number-size-small-height, 1.5rem);
@@ -162,12 +162,12 @@
 }
 
 .input-number-input {
-	flex: 1 1 auto;
-	min-width: 0;
-	height: 100%;
+	flex: var(--input-number-input-flex, 1 1 auto);
+	min-width: var(--input-number-input-min-width, 0);
+	height: var(--input-number-input-height, 100%);
 	background-color: var(--input-inner-background, transparent);
-	border: 0;
-	outline: none;
+	border: var(--input-number-input-border, 0);
+	outline: var(--input-number-input-outline, none);
 	padding: var(--input-inner-padding, 0);
 	color: var(--input-inner-foreground, var(--input-foreground, inherit));
 	font: inherit;
@@ -193,10 +193,10 @@
 
 .input-number-prefix,
 .input-number-suffix {
-	display: inline-flex;
-	align-items: center;
-	flex-shrink: 0;
-	height: 100%;
+	display: var(--input-number-affix-display, inline-flex);
+	align-items: var(--input-number-affix-align-items, center);
+	flex-shrink: var(--input-number-affix-flex-shrink, 0);
+	height: var(--input-number-affix-height, 100%);
 	font-size: inherit;
 	color: var(--input-prefix-color, inherit);
 	gap: var(--input-number-affix-gap, var(--spacing-2, 0.5rem));
@@ -219,13 +219,13 @@
 }
 
 .input-number-actions {
-	display: inline-flex;
-	flex-direction: column;
-	align-self: stretch;
+	display: var(--input-number-actions-display, inline-flex);
+	flex-direction: var(--input-number-actions-flex-direction, column);
+	align-self: var(--input-number-actions-align-self, stretch);
 	border-left-width: var(--input-number-action-divider-width, var(--input-border-width, 1px));
 	border-left-style: var(--input-number-action-divider-style, var(--input-border-style, solid));
 	border-left-color: var(--input-number-action-divider-color, var(--input-border-color, var(--border)));
-	flex-shrink: 0;
+	flex-shrink: var(--input-number-actions-flex-shrink, 0);
 
 	&[data-mode='spinner'] {
 		flex-direction: row;
@@ -233,16 +233,16 @@
 }
 
 .input-number-action {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex: 1;
+	display: var(--input-number-action-display, inline-flex);
+	align-items: var(--input-number-action-align-items, center);
+	justify-content: var(--input-number-action-justify-content, center);
+	flex: var(--input-number-action-flex, 1);
 	min-width: var(--input-number-action-min-width, 1.5rem);
 	padding: var(--input-number-action-padding, 0 0.25rem);
 	background: var(--input-number-action-background, transparent);
-	border: 0;
+	border: var(--input-number-action-border, 0);
 	color: var(--input-number-action-color, var(--muted-foreground, inherit));
-	cursor: pointer;
+	cursor: var(--input-number-action-cursor, pointer);
 	transition-property: background-color, color;
 	transition-duration: var(--input-number-action-transition-duration, 100ms);
 	transition-timing-function: var(--input-number-action-transition-timing, ease);
@@ -290,16 +290,16 @@
 }
 
 .input-number-addon {
-	display: inline-flex;
-	align-items: center;
-	flex-shrink: 0;
+	display: var(--input-number-addon-display, inline-flex);
+	align-items: var(--input-number-addon-align-items, center);
+	flex-shrink: var(--input-number-addon-flex-shrink, 0);
 	padding: var(--input-number-addon-padding, 0 var(--spacing-6, 0.75rem));
 	background-color: var(--input-addon-background, var(--muted, hsl(0 0% 96%)));
 	color: var(--input-addon-color, inherit);
 	border-width: var(--input-border-width, 1px);
 	border-style: var(--input-border-style, solid);
 	border-color: var(--input-border-color, var(--border));
-	white-space: nowrap;
+	white-space: var(--input-number-addon-white-space, nowrap);
 
 	&[data-position='before'] {
 		border-right: 0;
