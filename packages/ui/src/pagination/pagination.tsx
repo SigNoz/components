@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 import * as React from 'react';
-import { type MouseEvent, useEffect, useState } from 'react';
+import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, type ButtonProps, ButtonSize } from '../button/index.js';
 import { cn } from '../lib/utils.js';
 import { SelectSimple } from '../select/index.js';
@@ -300,6 +300,21 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 		},
 		ref
 	) => {
+		const pageSizeOptions = useMemo(
+			() => options.map((size) => ({ value: size.toString(), label: size.toString() })),
+			[options]
+		);
+
+		const handlePageSizeChange = useCallback(
+			(val: string | string[]) => {
+				const selectedVal = Array.isArray(val) ? val[0] : val;
+				if (selectedVal) {
+					onChange?.(Number(selectedVal));
+				}
+			},
+			[onChange]
+		);
+
 		return (
 			<div
 				ref={ref}
@@ -311,16 +326,9 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 				<span className={styles['pagination-page-size-label']}>{label}</span>
 				<SelectSimple
 					className={styles['pagination-page-size-select']}
-					items={options.map((size) => ({
-						value: size.toString(),
-						label: size.toString(),
-					}))}
+					items={pageSizeOptions}
 					value={value.toString()}
-					onChange={(val) => {
-						if (typeof val === 'string') {
-							onChange?.(Number(val));
-						}
-					}}
+					onChange={handlePageSizeChange}
 					withPortal={false}
 				/>
 			</div>
@@ -365,6 +373,11 @@ export type PaginationProps = PaginationContainerProps & {
 	 * The function to call when the page changes.
 	 */
 	onPageChange?: (page: number) => void;
+	/**
+	 * Position of the page size selector relative to pagination controls.
+	 * @default 'right'
+	 */
+	pageSizePosition?: 'left' | 'right';
 };
 
 /**
@@ -409,6 +422,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			pageSize: controlledPageSize,
 			enablePageSize = false,
 			pageSizeOptions = [10, 20, 30, 40, 50],
+			pageSizePosition = 'right',
 			onPageSizeChange,
 			current: controlledCurrent,
 			defaultCurrent = 1,
@@ -449,44 +463,54 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		const isCurrentControlled = controlledCurrent !== undefined;
 		const isPageSizeControlled = controlledPageSize !== undefined;
 
-		const handlePageChange = (e: MouseEvent<HTMLButtonElement>, page: number) => {
-			e.preventDefault();
+		const handlePageSizeChange = useCallback(
+			(newSize: number): void => {
+				if (!isPageSizeControlled) {
+					setInternalPageSize(newSize);
+				}
+				onPageSizeChange?.(newSize);
 
-			if (page < 1 || page > totalPages || page === current) {
-				return;
-			}
+				if (!isCurrentControlled) {
+					setInternalCurrent(1);
+				}
+				onPageChange?.(1);
+			},
+			[isPageSizeControlled, onPageSizeChange, isCurrentControlled, onPageChange]
+		);
 
-			if (!isCurrentControlled) {
-				setInternalCurrent(page);
-			}
-			onPageChange?.(page);
-		};
+		const handlePageChange = useCallback(
+			(e: MouseEvent<HTMLButtonElement>, page: number) => {
+				e.preventDefault();
+
+				if (page < 1 || page > totalPages || page === current) {
+					return;
+				}
+
+				if (!isCurrentControlled) {
+					setInternalCurrent(page);
+				}
+				onPageChange?.(page);
+			},
+			[isCurrentControlled, onPageChange, current, totalPages]
+		);
 
 		const pageNumbers = renderPageNumbers(totalPages, current);
 
-		if (totalPages <= 1 && !enablePageSize) {
+		if (totalPages <= 1) {
 			return null;
 		}
 
+		const selector = enablePageSize ? (
+			<PaginationSelector
+				value={pageSize}
+				options={pageSizeOptions}
+				onChange={handlePageSizeChange}
+			/>
+		) : null;
+
 		return (
 			<PaginationContainer ref={ref} className={className} align={align} testId={testId} {...props}>
-				{enablePageSize ? (
-					<PaginationSelector
-						value={pageSize}
-						options={pageSizeOptions}
-						onChange={(newSize) => {
-							if (!isPageSizeControlled) {
-								setInternalPageSize(newSize);
-							}
-							onPageSizeChange?.(newSize);
-
-							if (!isCurrentControlled) {
-								setInternalCurrent(1);
-							}
-							onPageChange?.(1);
-						}}
-					/>
-				) : null}
+				{pageSizePosition === 'left' && selector}
 				<PaginationContent>
 					<PaginationItem>
 						<PaginationPrevious
@@ -518,6 +542,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 						/>
 					</PaginationItem>
 				</PaginationContent>
+				{pageSizePosition === 'right' && selector}
 			</PaginationContainer>
 		);
 	}
