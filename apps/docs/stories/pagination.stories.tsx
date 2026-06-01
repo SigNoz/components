@@ -1,4 +1,4 @@
-import { Pagination } from '@signozhq/ui';
+import { Pagination, PaginationSelector } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
 import { useEffect, useState } from 'react';
@@ -88,6 +88,16 @@ const meta: Meta<typeof Pagination> = {
 			description: 'Callback when the page size changes',
 			table: { category: 'Events', type: { summary: '(pageSize: number) => void' } },
 		},
+		pageSizePosition: {
+			control: 'select',
+			options: ['left', 'right'],
+			description: 'Position of the page size selector relative to pagination controls',
+			table: {
+				category: 'Behavior',
+				type: { summary: "'left' | 'right'" },
+				defaultValue: { summary: "'right'" },
+			},
+		},
 		className: {
 			control: 'text',
 			description: 'Additional CSS classes',
@@ -116,6 +126,10 @@ export default meta;
 type Story = StoryObj<typeof Pagination>;
 
 export const Default: Story = {
+	args: {
+		enablePageSize: true,
+	},
+
 	render: (args) => {
 		const [currentPages, setCurrentPages] = useState({
 			p1: 1,
@@ -137,6 +151,7 @@ export const Default: Story = {
 				<div>
 					<p className="mb-2 text-sm text-gray-400">3 Pages - First Selected</p>
 					<Pagination
+						{...args}
 						total={30}
 						pageSize={10}
 						current={currentPages.p1}
@@ -147,6 +162,7 @@ export const Default: Story = {
 				<div className="mt-6">
 					<p className="mb-2 text-sm text-gray-400">3 Pages - Second Selected</p>
 					<Pagination
+						{...args}
 						total={30}
 						pageSize={10}
 						current={currentPages.p2}
@@ -157,6 +173,7 @@ export const Default: Story = {
 				<div className="mt-6">
 					<p className="mb-2 text-sm text-gray-400">10 Pages - First Selected</p>
 					<Pagination
+						{...args}
 						total={100}
 						pageSize={10}
 						current={currentPages.p3}
@@ -167,6 +184,7 @@ export const Default: Story = {
 				<div className="mt-6">
 					<p className="mb-2 text-sm text-gray-400">10 Pages - Middle Selected (Page 7)</p>
 					<Pagination
+						{...args}
 						total={100}
 						pageSize={10}
 						current={currentPages.p4}
@@ -177,6 +195,7 @@ export const Default: Story = {
 				<div className="mt-6">
 					<p className="mb-2 text-sm text-gray-400">5 Pages - Center Aligned</p>
 					<Pagination
+						{...args}
 						total={50}
 						pageSize={10}
 						current={currentPages.p5}
@@ -188,6 +207,7 @@ export const Default: Story = {
 				<div className="mt-6">
 					<p className="mb-2 text-sm text-gray-400">5 Pages - End Aligned</p>
 					<Pagination
+						{...args}
 						total={50}
 						pageSize={10}
 						current={currentPages.p6}
@@ -199,6 +219,7 @@ export const Default: Story = {
 				<div className="mt-6">
 					<p className="mb-2 text-sm text-gray-400">10 Pages - Last Selected</p>
 					<Pagination
+						{...args}
 						total={100}
 						pageSize={10}
 						current={currentPages.p7}
@@ -351,8 +372,73 @@ export const WithPageSizeSelector: Story = {
 				pageSize={pageSize}
 				onPageSizeChange={(newSize) => {
 					setPageSize(newSize);
-					setCurrent(1);
 					args.onPageSizeChange?.(newSize);
+				}}
+			/>
+		);
+	},
+};
+
+export const WithPageSizeSelectorLeft: Story = {
+	args: {
+		total: 100,
+		pageSize: 10,
+		enablePageSize: true,
+		pageSizePosition: 'left',
+	},
+	render: (args) => {
+		const [current, setCurrent] = useState(args.current ?? 1);
+		const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
+
+		useEffect(() => {
+			if (args.current !== undefined) {
+				setCurrent(args.current);
+			}
+		}, [args.current]);
+
+		useEffect(() => {
+			if (args.pageSize !== undefined) {
+				setPageSize(args.pageSize);
+			}
+		}, [args.pageSize]);
+
+		return (
+			<Pagination
+				{...args}
+				current={current}
+				onPageChange={setCurrent}
+				pageSize={pageSize}
+				onPageSizeChange={(newSize) => {
+					setPageSize(newSize);
+					args.onPageSizeChange?.(newSize);
+				}}
+			/>
+		);
+	},
+};
+
+export const SelectorOnly: StoryObj<typeof PaginationSelector> = {
+	args: {
+		value: 10,
+		options: [10, 20, 30, 40, 50],
+		label: 'Rows per page',
+	},
+	render: (args) => {
+		const [value, setValue] = useState(args.value ?? 10);
+
+		useEffect(() => {
+			if (args.value !== undefined) {
+				setValue(args.value);
+			}
+		}, [args.value]);
+
+		return (
+			<PaginationSelector
+				{...args}
+				value={value}
+				onChange={(newSize) => {
+					setValue(newSize);
+					args.onChange?.(newSize);
 				}}
 			/>
 		);
