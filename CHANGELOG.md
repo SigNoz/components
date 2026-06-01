@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.24](https://github.com/SigNoz/components/compare/v0.0.23...v0.0.24) (2026-06-01)
+
+
+### Features
+
+* **input-number:** add input number component ([9bbdbed](https://github.com/SigNoz/components/commit/9bbdbed6ec42659db687ef901f6360f1ac5090d1))
+
 ## [0.0.23](https://github.com/SigNoz/components/compare/v0.0.22...v0.0.23) (2026-05-26)
 
 
