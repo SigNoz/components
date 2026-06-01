@@ -15,5 +15,7 @@ export {
 	PaginationNext,
 	PaginationPrevious,
 	type PaginationProps,
+	PaginationSelector,
+	type PaginationSelectorProps,
 } from './pagination.js';
 export { PaginationUrl, type PaginationUrlProps } from './presets/pagination-url.js';

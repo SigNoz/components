@@ -45,6 +45,29 @@ const meta: Meta<typeof PaginationUrl> = {
 			description: 'Test ID for the pagination container',
 			table: { category: 'Testing', type: { summary: 'string' } },
 		},
+		enablePageSize: {
+			control: 'boolean',
+			description: 'Whether to enable the page size selector',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		pageSizeOptions: {
+			control: 'object',
+			description: 'Options for the page size selector',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'number[]' },
+				defaultValue: { summary: '[10, 20, 30, 40, 50]' },
+			},
+		},
+		onPageSizeChange: {
+			control: false,
+			description: 'Callback when the page size changes',
+			table: { category: 'Events', type: { summary: '(pageSize: number) => void' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -77,6 +100,23 @@ export const CustomUrlKey: Story = {
 		total: 500,
 		pageSize: 25,
 		align: 'center',
+	},
+	decorators: [
+		(Story) => (
+			<NuqsAdapter>
+				<Story />
+			</NuqsAdapter>
+		),
+	],
+};
+
+export const WithPageSizeSelector: Story = {
+	args: {
+		urlKey: 'page',
+		total: 100,
+		pageSize: 10,
+		enablePageSize: true,
+		align: 'start',
 	},
 	decorators: [
 		(Story) => (

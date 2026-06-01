@@ -8,6 +8,7 @@ import * as PaginationLinkStories from './pagination-link.stories';
 import * as PaginationPreviousStories from './pagination-previous.stories';
 import * as PaginationNextStories from './pagination-next.stories';
 import * as PaginationEllipsisStories from './pagination-ellipsis.stories';
+import * as PaginationSelectorStories from './pagination-selector.stories';
 
 <Meta of={PaginationStories} />
 
@@ -44,6 +45,18 @@ Uncontrolled usage:
 
 ```tsx
 <Pagination total={100} pageSize={10} defaultCurrent={1} />
+```
+
+With page size selector (defaults to the right side):
+
+```tsx
+<Pagination total={100} enablePageSize />
+```
+
+With page size selector on the left:
+
+```tsx
+<Pagination total={100} enablePageSize pageSizePosition="left" />
 ```
 
 <Primary />
@@ -93,7 +106,7 @@ With custom `urlKey` to avoid conflicts:
 
 ## Primitive composition
 
-For full control, use the low-level building blocks: `PaginationContainer`, `PaginationContent`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, and `PaginationEllipsis`.
+For full control, use the low-level building blocks: `PaginationContainer`, `PaginationContent`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis`, and `PaginationSelector`.
 
 ```tsx
 import {
@@ -175,3 +188,7 @@ export default function MyComponent() {
 ## PaginationEllipsis Props
 
 <Controls of={PaginationEllipsisStories.Default} />
+
+## PaginationSelector Props
+
+<Controls of={PaginationSelectorStories.Default} />
