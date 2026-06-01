@@ -60,7 +60,14 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3, 0.75rem);
-  margin-right: var(--spacing-4, 1rem);
+
+  &:first-child {
+    margin-right: var(--spacing-4, 1rem);
+  }
+
+  &:last-child {
+    margin-left: var(--spacing-4, 1rem);
+  }
 }
 
 .pagination-page-size-label {
