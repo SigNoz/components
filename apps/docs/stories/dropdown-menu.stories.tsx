@@ -18,7 +18,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useMemo, useState } from 'react';
 
 const meta: Meta<typeof DropdownMenuSimple> = {
-	title: 'Components/DropdownMenu',
+	title: 'Composed Components/DropdownMenu/DropdownMenuSimple',
 	component: DropdownMenuSimple,
 	parameters: {
 		layout: 'fullscreen',

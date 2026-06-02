@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { closeArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogClose> = {
-	title: 'Components/Dialog/DialogClose',
+	title: 'Primitive Components/Dialog/DialogClose',
 	component: DialogClose,
 	argTypes: closeArgTypes,
 	parameters: {

@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as RadioGroupItemStories from './radio-group-item.stories.js';
 
 const meta: Meta<typeof RadioGroup> = {
-	title: 'Components/RadioGroup',
+	title: 'Primitive Components/RadioGroup',
 	component: RadioGroup,
 	subcomponents: {
 		RadioGroupItem: RadioGroupItem as any,

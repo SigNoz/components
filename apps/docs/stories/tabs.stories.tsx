@@ -14,7 +14,7 @@ import { type TabItemProps, Tabs, type TabVariants } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Tabs> = {
-	title: 'Components/Tabs',
+	title: 'Composed Components/Tabs/TabsSimple',
 	component: Tabs,
 	argTypes: {
 		items: {

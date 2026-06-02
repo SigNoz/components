@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { COLORS, VARIANTS } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof ButtonGroup> = {
-	title: 'Components/Button/ButtonGroup',
+	title: 'Primitive Components/Button/ButtonGroup',
 	component: ButtonGroup,
 	parameters: {
 		layout: 'fullscreen',

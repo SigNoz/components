@@ -5,7 +5,7 @@ import { NuqsAdapter } from 'nuqs/adapters/react';
 import { confirmUrlArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof ConfirmDialogUrl> = {
-	title: 'Components/Dialog/ConfirmDialogUrl',
+	title: 'Composed Components/Dialog/ConfirmDialogUrl',
 	component: ConfirmDialogUrl,
 	argTypes: confirmUrlArgTypes,
 	parameters: {

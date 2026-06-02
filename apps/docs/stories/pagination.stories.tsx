@@ -20,7 +20,7 @@ const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.E
 };
 
 const meta: Meta<typeof Pagination> = {
-	title: 'Components/Pagination/Pagination',
+	title: 'Composed Components/Pagination/Pagination',
 	component: Pagination,
 	argTypes: {
 		total: {

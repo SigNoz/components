@@ -16,7 +16,7 @@ import { contentArgTypes } from './shared/dialog-drawer-arg-types.js';
 const { position: _, ...sharedContentArgTypes } = contentArgTypes ?? {};
 
 const meta: Meta<typeof DrawerContent> = {
-	title: 'Components/Drawer/DrawerContent',
+	title: 'Primitive Components/Drawer/DrawerContent',
 	component: DrawerContent,
 	argTypes: {
 		...sharedContentArgTypes,

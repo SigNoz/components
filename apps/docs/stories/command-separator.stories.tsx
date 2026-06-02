@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { separatorArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandSeparator> = {
-	title: 'Components/Command/CommandSeparator',
+	title: 'Primitive Components/Command/CommandSeparator',
 	component: CommandSeparator,
 	argTypes: separatorArgTypes,
 	parameters: {

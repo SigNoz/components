@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectPortal> = {
-	title: 'Components/Select/SelectPortal',
+	title: 'Primitive Components/Select/SelectPortal',
 	component: SelectPortal,
 	argTypes: {
 		container: {

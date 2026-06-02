@@ -2,7 +2,7 @@ import { Button, ButtonColor, Toaster, toast } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Toaster> = {
-	title: 'Components/Sonner',
+	title: 'Primitive Components/Sonner',
 	component: Toaster,
 };
 

@@ -10,7 +10,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TooltipTrigger> = {
-	title: 'Components/Tooltip/TooltipTrigger',
+	title: 'Primitive Components/Tooltip/TooltipTrigger',
 	component: TooltipTrigger,
 	argTypes: {
 		asChild: {

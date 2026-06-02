@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof SelectLoading> = {
-	title: 'Components/Select/SelectLoading',
+	title: 'Primitive Components/Select/SelectLoading',
 	component: SelectLoading,
 	argTypes: {
 		children: {

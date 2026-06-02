@@ -14,7 +14,7 @@ const SIDES = ['top', 'right', 'bottom', 'left'] as const;
 const ALIGNS = ['start', 'center', 'end'] as const;
 
 const meta: Meta<typeof TooltipRoot> = {
-	title: 'Components/Tooltip',
+	title: 'Primitive Components/Tooltip',
 	component: TooltipRoot,
 	argTypes: {
 		open: {

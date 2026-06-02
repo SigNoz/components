@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { itemArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandItem> = {
-	title: 'Components/Command/CommandItem',
+	title: 'Primitive Components/Command/CommandItem',
 	component: CommandItem,
 	argTypes: itemArgTypes,
 	parameters: {

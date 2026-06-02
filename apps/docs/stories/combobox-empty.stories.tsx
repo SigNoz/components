@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { emptyArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof ComboboxEmpty> = {
-	title: 'Components/Combobox/ComboboxEmpty',
+	title: 'Primitive Components/Combobox/ComboboxEmpty',
 	component: ComboboxEmpty,
 	argTypes: emptyArgTypes,
 	parameters: {

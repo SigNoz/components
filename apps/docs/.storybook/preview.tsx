@@ -29,12 +29,7 @@ export const parameters: Preview['parameters'] = {
 	},
 	options: {
 		storySort: {
-			order: [
-				'Intro',
-				['Design System', 'Docs', '*'],
-				['Components', 'Docs', '*'],
-				['Old Components', 'Docs', '*'],
-			],
+			order: ['Intro', 'Design System', 'Primitive Components', 'Composed Components'],
 		},
 	},
 	backgrounds: { disable: true },

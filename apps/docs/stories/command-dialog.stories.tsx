@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
 const meta: Meta<typeof CommandDialog> = {
-	title: 'Components/Command/CommandDialog',
+	title: 'Primitive Components/Command/CommandDialog',
 	component: CommandDialog,
 	argTypes: {
 		open: {

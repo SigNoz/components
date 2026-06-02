@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectContent> = {
-	title: 'Components/Select/SelectContent',
+	title: 'Primitive Components/Select/SelectContent',
 	component: SelectContent,
 	argTypes: {
 		position: {

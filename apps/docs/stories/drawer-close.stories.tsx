@@ -15,7 +15,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { closeArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerClose> = {
-	title: 'Components/Drawer/DrawerClose',
+	title: 'Primitive Components/Drawer/DrawerClose',
 	component: DrawerClose,
 	argTypes: closeArgTypes,
 	parameters: {

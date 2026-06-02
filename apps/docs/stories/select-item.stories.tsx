@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectItem> = {
-	title: 'Components/Select/SelectItem',
+	title: 'Primitive Components/Select/SelectItem',
 	component: SelectItem,
 	argTypes: {
 		value: {

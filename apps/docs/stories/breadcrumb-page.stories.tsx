@@ -10,7 +10,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof BreadcrumbPage> = {
-	title: 'Components/Breadcrumb/BreadcrumbPage',
+	title: 'Primitive Components/Breadcrumb/BreadcrumbPage',
 	component: BreadcrumbPage,
 	argTypes: {
 		id: {

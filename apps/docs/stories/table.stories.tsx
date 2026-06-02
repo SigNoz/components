@@ -77,7 +77,7 @@ const users = [
 ];
 
 const meta: Meta<typeof Table> = {
-	title: 'Old Components/Basic Table',
+	title: 'Primitive Components/Table',
 	component: Table,
 	argTypes: {
 		testId: {

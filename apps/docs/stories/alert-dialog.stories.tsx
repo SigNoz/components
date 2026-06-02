@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
 const meta: Meta<typeof AlertDialog> = {
-	title: 'Components/Dialog/AlertDialog',
+	title: 'Composed Components/Dialog/AlertDialog',
 	component: AlertDialog,
 	argTypes: {
 		open: {

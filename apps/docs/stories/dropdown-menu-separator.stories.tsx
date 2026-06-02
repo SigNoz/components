@@ -9,7 +9,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DropdownMenuSeparator> = {
-	title: 'Components/DropdownMenu/DropdownMenuSeparator',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuSeparator',
 	component: DropdownMenuSeparator,
 	argTypes: {
 		className: {

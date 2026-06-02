@@ -5,7 +5,7 @@ import { fn } from 'storybook/test';
 import { buttonArgTypes, COLORS, VARIANTS } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof Button> = {
-	title: 'Components/Button',
+	title: 'Primitive Components/Button',
 	component: Button,
 	decorators: [],
 	args: {

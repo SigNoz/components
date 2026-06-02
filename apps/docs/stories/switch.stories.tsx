@@ -2,7 +2,7 @@ import { Switch } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Switch> = {
-	title: 'Components/Switch',
+	title: 'Primitive Components/Switch',
 	component: Switch,
 	argTypes: {
 		testId: {

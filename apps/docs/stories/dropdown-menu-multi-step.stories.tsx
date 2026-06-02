@@ -10,7 +10,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DropdownMenuMultiStep> = {
-	title: 'Components/DropdownMenu/DropdownMenuMultiStep',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuMultiStep',
 	component: DropdownMenuMultiStep,
 	argTypes: {
 		defaultOpen: {

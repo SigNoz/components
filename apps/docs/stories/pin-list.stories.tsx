@@ -29,7 +29,7 @@ const createPinListItem = (
 });
 
 const meta: Meta<typeof PinList> = {
-	title: 'Components/PinList',
+	title: 'Composed Components/PinList',
 	component: PinList,
 	argTypes: {
 		items: {

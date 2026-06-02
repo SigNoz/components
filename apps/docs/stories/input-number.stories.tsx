@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof InputNumber> = {
-	title: 'Components/InputNumber',
+	title: 'Primitive Components/InputNumber',
 	component: InputNumber,
 	parameters: {
 		layout: 'fullscreen',

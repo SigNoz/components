@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta = {
-	title: 'Components/Select/SelectScrollButtons',
+	title: 'Primitive Components/Select/SelectScrollButtons',
 	parameters: {
 		layout: 'fullscreen',
 	},

@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof Callout> = {
-	title: 'Components/Callout',
+	title: 'Primitive Components/Callout',
 	component: Callout,
 	parameters: {
 		layout: 'fullscreen',

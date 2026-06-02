@@ -9,7 +9,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof BreadcrumbItem> = {
-	title: 'Components/Breadcrumb/BreadcrumbItem',
+	title: 'Primitive Components/Breadcrumb/BreadcrumbItem',
 	component: BreadcrumbItem,
 	argTypes: {
 		id: {

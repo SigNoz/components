@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
 const meta: Meta<typeof Slider> = {
-	title: 'Components/Slider',
+	title: 'Primitive Components/Slider',
 	component: Slider,
 	parameters: {
 		layout: 'centered',

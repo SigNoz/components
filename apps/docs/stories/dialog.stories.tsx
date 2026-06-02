@@ -19,7 +19,7 @@ import React from 'react';
 import { overlayArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof Dialog> = {
-	title: 'Components/Dialog',
+	title: 'Primitive Components/Dialog',
 	component: Dialog,
 	argTypes: overlayArgTypes,
 	parameters: {
