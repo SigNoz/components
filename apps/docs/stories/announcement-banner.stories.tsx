@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
 const meta: Meta<typeof AnnouncementBanner> = {
-	title: 'Components/AnnouncementBanner',
+	title: 'Composed Components/AnnouncementBanner',
 	component: AnnouncementBanner,
 	parameters: {
 		layout: 'fullscreen',

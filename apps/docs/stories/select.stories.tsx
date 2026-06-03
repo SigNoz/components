@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof Select> = {
-	title: 'Components/Select',
+	title: 'Primitive Components/Select',
 	component: Select,
 	parameters: {
 		layout: 'fullscreen',

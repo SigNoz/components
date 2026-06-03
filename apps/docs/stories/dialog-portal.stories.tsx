@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { portalArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogPortal> = {
-	title: 'Components/Dialog/DialogPortal',
+	title: 'Primitive Components/Dialog/DialogPortal',
 	component: DialogPortal,
 	argTypes: portalArgTypes,
 	parameters: {

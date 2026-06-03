@@ -2,7 +2,7 @@ import { PersistedAnnouncementBanner } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof PersistedAnnouncementBanner> = {
-	title: 'Components/AnnouncementBanner/PersistedAnnouncementBanner',
+	title: 'Composed Components/AnnouncementBanner/PersistedAnnouncementBanner',
 	component: PersistedAnnouncementBanner,
 	parameters: {
 		layout: 'fullscreen',

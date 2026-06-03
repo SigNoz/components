@@ -6,7 +6,7 @@ import { wrapperArgTypes } from './shared/dialog-drawer-arg-types.js';
 const { width, titleIcon, ...sharedWrapperArgTypes } = wrapperArgTypes ?? {};
 
 const meta: Meta<typeof DrawerWrapper> = {
-	title: 'Components/Drawer/DrawerWrapper',
+	title: 'Composed Components/Drawer/DrawerWrapper',
 	component: DrawerWrapper,
 	argTypes: {
 		...sharedWrapperArgTypes,

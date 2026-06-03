@@ -2,7 +2,7 @@ import { Divider } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Divider> = {
-	title: 'Components/Divider',
+	title: 'Primitive Components/Divider',
 	component: Divider,
 	parameters: {
 		layout: 'fullscreen',

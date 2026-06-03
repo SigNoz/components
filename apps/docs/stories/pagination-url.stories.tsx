@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 
 const meta: Meta<typeof PaginationUrl> = {
-	title: 'Components/Pagination/PaginationUrl',
+	title: 'Composed Components/Pagination/PaginationUrl',
 	component: PaginationUrl,
 	argTypes: {
 		urlKey: {

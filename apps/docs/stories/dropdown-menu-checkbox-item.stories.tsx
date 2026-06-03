@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof DropdownMenuCheckboxItem> = {
-	title: 'Components/DropdownMenu/DropdownMenuCheckboxItem',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuCheckboxItem',
 	component: DropdownMenuCheckboxItem,
 	argTypes: {
 		checked: {

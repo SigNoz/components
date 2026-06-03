@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { descriptionArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerDescription> = {
-	title: 'Components/Drawer/DrawerDescription',
+	title: 'Primitive Components/Drawer/DrawerDescription',
 	component: DrawerDescription,
 	argTypes: descriptionArgTypes,
 	parameters: {

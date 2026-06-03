@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { shortcutArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandShortcut> = {
-	title: 'Components/Command/CommandShortcut',
+	title: 'Primitive Components/Command/CommandShortcut',
 	component: CommandShortcut,
 	argTypes: shortcutArgTypes,
 	parameters: {

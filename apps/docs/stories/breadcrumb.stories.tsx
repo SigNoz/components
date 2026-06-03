@@ -16,7 +16,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { breadcrumbSimpleArgTypes } from './shared/breadcrumb-arg-types.js';
 
 const meta: Meta<typeof BreadcrumbSimple> = {
-	title: 'Components/Breadcrumb',
+	title: 'Composed Components/Breadcrumb',
 	component: BreadcrumbSimple,
 	argTypes: breadcrumbSimpleArgTypes,
 	parameters: {

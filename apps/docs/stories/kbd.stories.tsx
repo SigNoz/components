@@ -2,7 +2,7 @@ import { Kbd } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Kbd> = {
-	title: 'Components/Kbd',
+	title: 'Primitive Components/Kbd',
 	component: Kbd,
 	parameters: {
 		layout: 'fullscreen',

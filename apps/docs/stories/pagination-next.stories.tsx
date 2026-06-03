@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { buttonArgTypes } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof PaginationNext> = {
-	title: 'Components/Pagination/PaginationNext',
+	title: 'Primitive Components/Pagination/PaginationNext',
 	component: PaginationNext,
 	argTypes: buttonArgTypes,
 	parameters: {

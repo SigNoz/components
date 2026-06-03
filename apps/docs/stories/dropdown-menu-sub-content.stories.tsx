@@ -11,7 +11,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DropdownMenuSubContent> = {
-	title: 'Components/DropdownMenu/DropdownMenuSubContent',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuSubContent',
 	component: DropdownMenuSubContent,
 	argTypes: {
 		sideOffset: {

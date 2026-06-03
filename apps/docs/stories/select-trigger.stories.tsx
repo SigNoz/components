@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectTrigger> = {
-	title: 'Components/Select/SelectTrigger',
+	title: 'Primitive Components/Select/SelectTrigger',
 	component: SelectTrigger,
 	argTypes: {
 		placeholder: {

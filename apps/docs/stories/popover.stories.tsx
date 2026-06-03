@@ -17,7 +17,7 @@ const SIDES = ['top', 'right', 'bottom', 'left'] as const;
 const ALIGNS = ['start', 'center', 'end'] as const;
 
 const meta: Meta<typeof Popover> = {
-	title: 'Components/Popover',
+	title: 'Primitive Components/Popover',
 	component: Popover,
 	argTypes: popoverArgTypes,
 	parameters: {

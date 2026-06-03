@@ -50,7 +50,7 @@ const FontWeightShowcase: React.FC = () => (
 );
 
 export default {
-	title: 'Components/Typography',
+	title: 'Primitive Components/Typography',
 	component: Typography,
 	parameters: {
 		layout: 'fullscreen',

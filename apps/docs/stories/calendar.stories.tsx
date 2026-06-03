@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
 const meta: Meta<typeof Calendar> = {
-	title: 'Components/Calendar',
+	title: 'Composed Components/Calendar',
 	component: Calendar,
 	argTypes: {
 		testId: {

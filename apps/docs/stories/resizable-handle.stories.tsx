@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ResizableHandle> = {
-	title: 'Components/Resizable/ResizableHandle',
+	title: 'Primitive Components/Resizable/ResizableHandle',
 	component: ResizableHandle,
 	argTypes: {
 		withHandle: {

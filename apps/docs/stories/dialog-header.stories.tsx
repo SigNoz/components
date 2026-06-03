@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { headerArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogHeader> = {
-	title: 'Components/Dialog/DialogHeader',
+	title: 'Primitive Components/Dialog/DialogHeader',
 	component: DialogHeader,
 	argTypes: headerArgTypes,
 	parameters: {

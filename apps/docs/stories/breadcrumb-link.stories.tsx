@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 const meta: Meta<typeof BreadcrumbLink> = {
-	title: 'Components/Breadcrumb/BreadcrumbLink',
+	title: 'Primitive Components/Breadcrumb/BreadcrumbLink',
 	component: BreadcrumbLink,
 	argTypes: {
 		href: {

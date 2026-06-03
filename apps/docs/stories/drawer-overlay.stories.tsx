@@ -15,7 +15,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { overlayComponentArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerOverlay> = {
-	title: 'Components/Drawer/DrawerOverlay',
+	title: 'Primitive Components/Drawer/DrawerOverlay',
 	component: DrawerOverlay,
 	argTypes: overlayComponentArgTypes,
 	parameters: {

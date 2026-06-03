@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { contentArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogContent> = {
-	title: 'Components/Dialog/DialogContent',
+	title: 'Primitive Components/Dialog/DialogContent',
 	component: DialogContent,
 	argTypes: contentArgTypes,
 	parameters: {

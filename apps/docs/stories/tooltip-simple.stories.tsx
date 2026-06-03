@@ -3,7 +3,7 @@ import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } fr
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TooltipSimple> = {
-	title: 'Components/Tooltip/TooltipSimple',
+	title: 'Composed Components/Tooltip/TooltipSimple',
 	component: TooltipSimple,
 	argTypes: {
 		title: {

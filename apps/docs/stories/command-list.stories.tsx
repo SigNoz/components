@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { listArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandList> = {
-	title: 'Components/Command/CommandList',
+	title: 'Primitive Components/Command/CommandList',
 	component: CommandList,
 	argTypes: listArgTypes,
 	parameters: {

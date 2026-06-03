@@ -6,7 +6,7 @@ import { fn } from 'storybook/test';
 import { breadcrumbSimpleArgTypes } from './shared/breadcrumb-arg-types.js';
 
 const meta: Meta<typeof BreadcrumbSimple> = {
-	title: 'Components/Breadcrumb/BreadcrumbSimple',
+	title: 'Composed Components/Breadcrumb/BreadcrumbSimple',
 	component: BreadcrumbSimple,
 	argTypes: breadcrumbSimpleArgTypes,
 	parameters: {

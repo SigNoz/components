@@ -3,7 +3,7 @@ import { Toggle, type ToggleColor } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Toggle> = {
-	title: 'Components/Toggle',
+	title: 'Primitive Components/Toggle',
 	component: Toggle,
 	argTypes: {
 		value: {

@@ -12,7 +12,7 @@ import React from 'react';
 import { commandArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof Command> = {
-	title: 'Components/Command/Command',
+	title: 'Primitive Components/Command/Command',
 	component: Command,
 	argTypes: commandArgTypes,
 	parameters: {

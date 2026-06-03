@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof DropdownMenuBack> = {
-	title: 'Components/DropdownMenu/DropdownMenuBack',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuBack',
 	component: DropdownMenuBack,
 	argTypes: {
 		label: {

@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { separatorArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof ComboboxSeparator> = {
-	title: 'Components/Combobox/ComboboxSeparator',
+	title: 'Primitive Components/Combobox/ComboboxSeparator',
 	component: ComboboxSeparator,
 	argTypes: separatorArgTypes,
 	parameters: {

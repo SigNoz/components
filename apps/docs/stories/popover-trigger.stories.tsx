@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { triggerArgTypes } from './shared/popover-arg-types.js';
 
 const meta: Meta<typeof PopoverTrigger> = {
-	title: 'Components/Popover/PopoverTrigger',
+	title: 'Primitive Components/Popover/PopoverTrigger',
 	component: PopoverTrigger,
 	argTypes: triggerArgTypes,
 	parameters: {
