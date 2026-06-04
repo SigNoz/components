@@ -91,7 +91,7 @@
     width: var(--switch-loading-icon-size, .5rem);
     height: var(--switch-loading-icon-size, .5rem);
     flex-shrink: 0;
-    animation: var(--switch-animate-spin, switch-spin 0.7s linear infinite);
+    animation: switch-spin 0.7s linear infinite;
     color: var(--switch-loading-icon-color, var(--text-ink-500));
 
     @media (prefers-reduced-motion: reduce) {
