@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { simpleArgTypes } from './shared/popover-arg-types.js';
 
 const meta: Meta<typeof PopoverSimple> = {
-	title: 'Composed Components/Popover/PopoverSimple',
+	title: 'Composed Components/PopoverSimple',
 	component: PopoverSimple,
 	argTypes: simpleArgTypes,
 	parameters: {

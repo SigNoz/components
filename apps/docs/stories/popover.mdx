@@ -4,7 +4,6 @@ import * as PopoverPrimitiveStories from './popover-primitive.stories';
 import * as PopoverTriggerStories from './popover-trigger.stories';
 import * as PopoverContentStories from './popover-content.stories';
 import * as PopoverAnchorStories from './popover-anchor.stories';
-import * as PopoverSimpleStories from './popover-simple.stories';
 
 <Meta of={PopoverStories} />
 
@@ -12,32 +11,7 @@ import * as PopoverSimpleStories from './popover-simple.stories';
 
 Displays rich content in a portal, triggered by a button. Use for tooltips, menus, date pickers, and similar patterns.
 
-## How to use
-
-### PopoverSimple (preset)
-
-For simple use cases, use `PopoverSimple` with `trigger` and `children`:
-
-```tsx
-import { PopoverSimple, Button } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<PopoverSimple
-			trigger={<Button variant="outline">Open</Button>}
-			className="w-64"
-		>
-			<p>Simple popover content</p>
-		</PopoverSimple>
-	);
-}
-```
-
-<Primary />
-
-## PopoverSimple Props
-
-<Controls of={PopoverSimpleStories.Default} />
+For the quick-start preset, see [PopoverSimple](?path=/docs/composed-components-popoversimple--docs).
 
 ## Primitive composition
 
@@ -62,6 +36,8 @@ export default function MyComponent() {
 	);
 }
 ```
+
+<Primary />
 
 ### Controlled mode
 
