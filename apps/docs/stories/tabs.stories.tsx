@@ -6,11 +6,23 @@ import {
 	LayoutGrid,
 	List,
 	Lock,
+	Plus,
 	Settings,
 	Settings2,
 	ShieldAlert,
 } from '@signozhq/icons';
-import { type TabItemProps, Tabs, type TabVariants } from '@signozhq/ui';
+import {
+	Button,
+	ButtonColor,
+	ButtonSize,
+	ButtonVariant,
+	type TabItemProps,
+	Tabs,
+	TabsList,
+	TabsRoot,
+	TabsTrigger,
+	type TabVariants,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Tabs> = {
@@ -389,6 +401,115 @@ export const Secondary: Story = {
 		variant: 'secondary',
 		defaultValue: 'all',
 	},
+};
+
+export const TabBarExtraContent: Story = {
+	render: () => (
+		<div className="space-y-8 p-6">
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — right-only (Add view button)</h2>
+				<Tabs
+					items={primaryItems}
+					variant="primary"
+					defaultValue="overview"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							Add view
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — both left and right content</h2>
+				<Tabs
+					items={primaryItems}
+					variant="primary"
+					defaultValue="overview"
+					tabBarLeftContent={<span className="text-xs opacity-50">Service: frontend</span>}
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Settings className="size-4" />}
+						>
+							Configure
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary — right-only</h2>
+				<Tabs
+					items={secondaryItems}
+					variant="secondary"
+					defaultValue="all"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							New endpoint
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary — left and right content</h2>
+				<Tabs
+					items={secondaryItems}
+					variant="secondary"
+					defaultValue="all"
+					tabBarLeftContent={<span className="text-xs opacity-50">v2 API</span>}
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							New endpoint
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">
+					Primitive TabsList — rightContent prop directly
+				</h2>
+				<TabsRoot defaultValue="tab1">
+					<TabsList
+						variant="primary"
+						rightContent={
+							<Button
+								variant={ButtonVariant.Outlined}
+								size={ButtonSize.SM}
+								color={ButtonColor.Secondary}
+								prefix={<Plus className="size-4" />}
+							>
+								Add
+							</Button>
+						}
+					>
+						<TabsTrigger value="tab1">Tab One</TabsTrigger>
+						<TabsTrigger value="tab2">Tab Two</TabsTrigger>
+						<TabsTrigger value="tab3">Tab Three</TabsTrigger>
+					</TabsList>
+				</TabsRoot>
+			</div>
+		</div>
+	),
 };
 
 export const DisabledStates: Story = {

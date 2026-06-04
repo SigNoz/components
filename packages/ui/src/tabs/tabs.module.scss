@@ -7,15 +7,47 @@
 .tabs__list-wrapper {
   &[data-variant="primary"] {
     display: inline-flex;
-    align-items: flex-start;
+    align-items: center;
     text-align: left;
-    position: relative;
+    gap: var(--tab-bar-content-gap, var(--spacing-8, 16px));
+  }
+
+  &[data-variant="primary"][data-has-extra-content] {
+    display: flex;
   }
 
   &[data-variant="secondary"] {
     display: flex;
     width: 100%;
     padding-left: var(--tab-list-wrapper-secondary-padding-left, var(--spacing-8, 16px));
+  }
+}
+
+.tabs__list-inner {
+  display: inline-flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.tabs__extra-content {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  [data-variant="secondary"] & {
+    border-bottom: var(--tab-border-spacer-border-width, 1px) solid var(--tab-border-color, var(--l1-border));
+  }
+
+  // Left slot: pad right so the border-bottom extends as a spacer before Tab1,
+  // giving the same 16 px blank zone the left border-spacer normally provides.
+  [data-variant="secondary"] &:first-child {
+    padding-right: var(--tab-bar-content-gap, var(--spacing-8, 16px));
+  }
+
+  // Right slot: pad left so there's visual breathing room between the grow-spacer
+  // and the right-side content (mirrors the left indent on the opposite side).
+  [data-variant="secondary"] &:last-child {
+    padding-left: var(--tab-bar-content-gap, var(--spacing-8, 16px));
   }
 }
 
