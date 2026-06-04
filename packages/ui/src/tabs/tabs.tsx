@@ -357,7 +357,11 @@ export const TabsList = React.forwardRef<
 				data-variant={variant}
 				data-has-extra-content={leftContent || rightContent ? '' : undefined}
 			>
-				{leftContent && <div className={styles['tabs__extra-content']}>{leftContent}</div>}
+				{leftContent && (
+					<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>
+						{leftContent}
+					</div>
+				)}
 
 				{variant === 'secondary' && !leftContent && (
 					<div className={styles['tabs__border-spacer']} />
@@ -399,11 +403,18 @@ export const TabsList = React.forwardRef<
 					</TabsPrimitive.List>
 				)}
 
-				{variant === 'secondary' && (
-					<div className={cn(styles['tabs__border-spacer'], styles['tabs__border-spacer--grow'])} />
+				{rightContent && (
+					<div data-slot="tab-extra-content-right" className={styles['tabs__extra-content']}>
+						{rightContent}
+					</div>
 				)}
 
-				{rightContent && <div className={styles['tabs__extra-content']}>{rightContent}</div>}
+				{variant === 'secondary' && (
+					<div
+						data-slot="tab-spacer-grow"
+						className={cn(styles['tabs__border-spacer'], styles['tabs__border-spacer--grow'])}
+					/>
+				)}
 			</div>
 		);
 	}
