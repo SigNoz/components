@@ -7,6 +7,8 @@ import styles from './tabs.module.scss';
 
 export type TabVariants = 'primary' | 'secondary';
 
+export type TabsAlignment = 'left' | 'center' | 'right';
+
 export type TabItemProps = {
 	/**
 	 * Unique identifier for the tab item.
@@ -91,6 +93,11 @@ export type TabsProps = Pick<
 	 * Content rendered to the right of the tab list, in the same horizontal row.
 	 */
 	tabBarRightContent?: React.ReactNode;
+	/**
+	 * Controls the alignment of the tab list within its container.
+	 * @default 'left'
+	 */
+	alignment?: TabsAlignment;
 };
 
 /**
@@ -141,6 +148,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 			defaultValue,
 			value,
 			variant = 'primary',
+			alignment,
 			className,
 			testId,
 			tabBarLeftContent,
@@ -162,6 +170,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 				<TooltipProvider>
 					<TabsList
 						variant={variant}
+						alignment={alignment}
 						leftContent={tabBarLeftContent}
 						rightContent={tabBarRightContent}
 					>
@@ -174,15 +183,13 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 									variant={variant}
 								>
 									{item.disabled ? (
-										<Lock className={styles['tabs__icon']} size={16} />
+										<Lock className={styles.tabs__icon} size={16} />
 									) : (
-										item.prefixIcon && (
-											<span className={styles['tabs__icon']}>{item.prefixIcon}</span>
-										)
+										item.prefixIcon && <span className={styles.tabs__icon}>{item.prefixIcon}</span>
 									)}
 									{item.label}
 									{!item.disabled && item.suffixIcon && (
-										<span className={styles['tabs__icon']}>{item.suffixIcon}</span>
+										<span className={styles.tabs__icon}>{item.suffixIcon}</span>
 									)}
 								</TabsTrigger>
 							);
@@ -232,6 +239,11 @@ export type TabsListProps = Pick<
 	 * Content rendered to the right of the tab list, in the same horizontal row.
 	 */
 	rightContent?: React.ReactNode;
+	/**
+	 * Controls the alignment of the tab list within its container.
+	 * @default 'left'
+	 */
+	alignment?: TabsAlignment;
 };
 
 /**
@@ -261,7 +273,16 @@ export const TabsList = React.forwardRef<
 	TabsListProps
 >(
 	(
-		{ className, variant = 'primary', children, testId, leftContent, rightContent, ...props },
+		{
+			className,
+			variant = 'primary',
+			alignment = 'left',
+			children,
+			testId,
+			leftContent,
+			rightContent,
+			...props
+		},
 		ref
 	) => {
 		const listRef = React.useRef<HTMLDivElement>(null);
@@ -355,6 +376,7 @@ export const TabsList = React.forwardRef<
 			<div
 				className={styles['tabs__list-wrapper']}
 				data-variant={variant}
+				data-alignment={alignment}
 				data-has-extra-content={leftContent || rightContent ? '' : undefined}
 			>
 				{leftContent && (
@@ -364,14 +386,14 @@ export const TabsList = React.forwardRef<
 				)}
 
 				{variant === 'secondary' && !leftContent && (
-					<div className={styles['tabs__border-spacer']} />
+					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
 				)}
 
 				{variant === 'primary' ? (
 					<div className={styles['tabs__list-inner']}>
 						<TabsPrimitive.List
 							ref={listRef}
-							className={cn(styles['tabs__list'], className)}
+							className={cn(styles.tabs__list, className)}
 							data-variant={variant}
 							data-testid={testId}
 							onMouseOver={handleMouseOver}
@@ -394,7 +416,7 @@ export const TabsList = React.forwardRef<
 				) : (
 					<TabsPrimitive.List
 						ref={listRef}
-						className={cn(styles['tabs__list'], className)}
+						className={cn(styles.tabs__list, className)}
 						data-variant={variant}
 						data-testid={testId}
 						{...props}
@@ -481,7 +503,7 @@ export const TabsTrigger = React.forwardRef<
 		data-slot="tabs-trigger"
 		data-variant={variant}
 		data-testid={testId}
-		className={cn(styles['tabs__trigger'], className)}
+		className={cn(styles.tabs__trigger, className)}
 		disabled={disabled}
 		{...props}
 	>
@@ -547,7 +569,7 @@ export const TabsContent = React.forwardRef<
 	return (
 		<TabsPrimitive.Content
 			ref={ref}
-			className={cn(styles['tabs__content'], className)}
+			className={cn(styles.tabs__content, className)}
 			data-testid={testId}
 			{...props}
 		/>

@@ -18,6 +18,7 @@ import {
 	ButtonVariant,
 	type TabItemProps,
 	Tabs,
+	type TabsAlignment,
 	TabsList,
 	TabsRoot,
 	TabsTrigger,
@@ -82,6 +83,16 @@ const meta: Meta<typeof Tabs> = {
 				category: 'Behavior',
 				type: { summary: "'automatic' | 'manual'" },
 				defaultValue: { summary: "'automatic'" },
+			},
+		},
+		alignment: {
+			control: 'select',
+			options: ['left', 'center', 'right'],
+			description: 'Controls the alignment of the tab list within its container.',
+			table: {
+				category: 'Layout',
+				type: { summary: "'left' | 'center' | 'right'" },
+				defaultValue: { summary: "'left'" },
 			},
 		},
 		id: {
@@ -507,6 +518,143 @@ export const TabBarExtraContent: Story = {
 						<TabsTrigger value="tab3">Tab Three</TabsTrigger>
 					</TabsList>
 				</TabsRoot>
+			</div>
+		</div>
+	),
+};
+
+const alignmentItems: TabItemProps[] = [
+	{ key: 'overview', label: 'Overview', children: 'Overview content' },
+	{ key: 'analytics', label: 'Analytics', children: 'Analytics content' },
+	{ key: 'settings', label: 'Settings', children: 'Settings content' },
+];
+
+export const Alignment: Story = {
+	render: () => (
+		<div className="space-y-8">
+			{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
+				<div key={alignment}>
+					<h2 className="mb-4 text-lg font-semibold capitalize">Primary — {alignment}</h2>
+					<Tabs
+						items={alignmentItems}
+						variant="primary"
+						alignment={alignment}
+						defaultValue="overview"
+					/>
+				</div>
+			))}
+			{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
+				<div key={`secondary-${alignment}`}>
+					<h2 className="mb-4 text-lg font-semibold capitalize">Secondary — {alignment}</h2>
+					<Tabs
+						items={alignmentItems}
+						variant="secondary"
+						alignment={alignment}
+						defaultValue="overview"
+					/>
+				</div>
+			))}
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — center + right content</h2>
+				<Tabs
+					items={alignmentItems}
+					variant="primary"
+					alignment="center"
+					defaultValue="overview"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							Add view
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — center + left and right content</h2>
+				<Tabs
+					items={alignmentItems}
+					variant="primary"
+					alignment="center"
+					defaultValue="overview"
+					tabBarLeftContent={<span className="text-xs opacity-50">Service: frontend</span>}
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Settings className="size-4" />}
+						>
+							Configure
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — right + right content</h2>
+				<Tabs
+					items={alignmentItems}
+					variant="primary"
+					alignment="right"
+					defaultValue="overview"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							Add view
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary — center + right content</h2>
+				<Tabs
+					items={alignmentItems}
+					variant="secondary"
+					alignment="center"
+					defaultValue="overview"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							Add view
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary — center + left and right content</h2>
+				<Tabs
+					items={alignmentItems}
+					variant="secondary"
+					alignment="center"
+					defaultValue="overview"
+					tabBarLeftContent={<span className="text-xs opacity-50">v2 API</span>}
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Settings className="size-4" />}
+						>
+							Configure
+						</Button>
+					}
+				/>
 			</div>
 		</div>
 	),

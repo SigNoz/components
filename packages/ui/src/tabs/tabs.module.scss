@@ -16,10 +16,36 @@
     display: var(--tabs-list-wrapper-primary-extra-content-display, flex);
   }
 
+  &[data-variant="primary"][data-alignment="center"] {
+    display: flex;
+    justify-content: center;
+  }
+
+  &[data-variant="primary"][data-alignment="right"] {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   &[data-variant="secondary"] {
     display: var(--tabs-list-wrapper-secondary-display, flex);
     width: var(--tabs-list-wrapper-secondary-width, 100%);
     padding-left: var(--tabs-list-wrapper-secondary-padding-left, var(--spacing-8, 16px));
+
+    &[data-alignment="center"] {
+      [data-slot="tab-spacer-left"] {
+        flex-grow: 1;
+      }
+    }
+
+    &[data-alignment="right"] {
+      [data-slot="tab-spacer-left"] {
+        flex-grow: 1;
+      }
+
+      [data-slot="tab-spacer-grow"] {
+        flex-grow: 0;
+      }
+    }
   }
 }
 
