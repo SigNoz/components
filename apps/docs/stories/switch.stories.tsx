@@ -67,6 +67,11 @@ const meta: Meta<typeof Switch> = {
 			description: 'Additional CSS classes to apply to the switch.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		isLoading: {
+			control: 'boolean',
+			description: 'When true, shows a loading spinner in the thumb and prevents user interaction.',
+			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
+		},
 		onChange: {
 			control: false,
 			description: 'The callback invoked when the checked state of the switch changes.',
@@ -99,6 +104,15 @@ export const Default: Story = {
 	},
 };
 
+export const IsLoading: Story = {
+	args: {
+		id: 'loading',
+		children: 'Loading switch',
+		isLoading: true,
+		color: 'robin',
+	},
+};
+
 export const AllVariants: Story = {
 	render: () => (
 		<div className="space-y-4">
@@ -127,6 +141,19 @@ export const AllVariants: Story = {
 						color={c as any}
 					>
 						Disabled Checked
+					</Switch>
+
+					<Switch id={`switch-${c}-loading`} isLoading={true} color={c as any}>
+						Loading
+					</Switch>
+
+					<Switch
+						id={`switch-${c}-loading-checked`}
+						defaultValue={true}
+						isLoading={true}
+						color={c as any}
+					>
+						Loading Checked
 					</Switch>
 				</div>
 			))}

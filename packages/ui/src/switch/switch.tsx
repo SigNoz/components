@@ -1,4 +1,5 @@
 import * as SwitchPrimitive from '@radix-ui/react-switch';
+import { LoaderCircle } from '@signozhq/icons';
 import * as React from 'react';
 import { useId } from 'react';
 import { cn } from '../lib/utils.js';
@@ -56,22 +57,51 @@ export type SwitchProps = Pick<
 	 * @default 'robin'
 	 */
 	color?: SwitchColor;
+	/**
+	 * When true, shows a loading spinner in the thumb and prevents user interaction.
+	 * @default false
+	 */
+	isLoading?: boolean;
 };
 
 const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
-	({ className, style, testId, value, onChange, defaultValue, color = 'robin', ...props }, ref) => (
+	(
+		{
+			className,
+			style,
+			testId,
+			value,
+			onChange,
+			defaultValue,
+			color = 'robin',
+			disabled,
+			isLoading = false,
+			...props
+		},
+		ref
+	) => (
 		<SwitchPrimitive.Root
 			ref={ref}
 			data-color={color}
+			data-loading={isLoading ? '' : undefined}
 			className={cn(styles['switch'], className)}
 			data-testid={testId}
 			style={style}
 			checked={value}
 			onCheckedChange={onChange}
 			defaultChecked={defaultValue}
+			disabled={disabled || isLoading}
+			aria-busy={isLoading || undefined}
 			{...props}
 		>
-			<SwitchPrimitive.Thumb className={styles['switch__thumb']} />
+			<SwitchPrimitive.Thumb className={styles['switch__thumb']}>
+				{isLoading && (
+					<LoaderCircle
+						data-testid="switch-loading-icon"
+						className={styles['switch__loading-icon']}
+					/>
+				)}
+			</SwitchPrimitive.Thumb>
 		</SwitchPrimitive.Root>
 	)
 );
@@ -109,6 +139,12 @@ SwitchBase.displayName = SwitchPrimitive.Root.displayName;
  * ```tsx
  * // Disabled state
  * <Switch disabled>Maintenance mode</Switch>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Loading state — shows spinner and prevents interaction
+ * <Switch isLoading>Saving…</Switch>
  * ```
  */
 const SwitchWrapper = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
