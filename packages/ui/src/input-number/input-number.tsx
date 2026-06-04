@@ -539,6 +539,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			placeholder={placeholder}
 			disabled={disabled}
 			readOnly={readOnly}
+			// biome-ignore lint/a11y/noAutofocus: Fix later, not part of the current PR
 			autoFocus={autoFocus}
 			id={id}
 			name={name}
