@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './skeleton.module.scss';
 
-// Base Skeleton 
+// Base Skeleton
 
 export interface SkeletonProps {
 	/**
@@ -89,26 +89,13 @@ export interface SkeletonProps {
  * ```
  */
 const SkeletonComponent = React.forwardRef<HTMLDivElement, SkeletonProps>(
-	(
-		{
-			active = false,
-			title = true,
-			paragraph = true,
-			id,
-			testId,
-			style,
-			className,
-		},
-		ref
-	) => {
-		const titleWidth =
-			typeof title === 'object' && title.width ? title.width : '38%';
+	({ active = false, title = true, paragraph = true, id, testId, style, className }, ref) => {
+		const titleWidth = typeof title === 'object' && title.width ? title.width : '38%';
 
 		const paragraphRows = React.useMemo(() => {
 			if (!paragraph) return null;
 
-			const rows =
-				typeof paragraph === 'object' ? paragraph.rows ?? 3 : 3;
+			const rows = typeof paragraph === 'object' ? (paragraph.rows ?? 3) : 3;
 
 			const widths =
 				typeof paragraph === 'object' && paragraph.width
@@ -136,23 +123,16 @@ const SkeletonComponent = React.forwardRef<HTMLDivElement, SkeletonProps>(
 				className={cn(styles['skeleton'], className)}
 			>
 				{title !== false && (
-					<div
-						className={styles['skeleton-title']}
-						style={{ width: titleWidth }}
-					/>
+					<div className={styles['skeleton-title']} style={{ width: titleWidth }} />
 				)}
-				{paragraph !== false && (
-					<div className={styles['skeleton-paragraph']}>
-						{paragraphRows}
-					</div>
-				)}
+				{paragraph !== false && <div className={styles['skeleton-paragraph']}>{paragraphRows}</div>}
 			</div>
 		);
 	}
 );
 SkeletonComponent.displayName = 'Skeleton';
 
-//  Skeleton.Input 
+//  Skeleton.Input
 
 export interface SkeletonInputProps {
 	/**
@@ -221,10 +201,7 @@ export interface SkeletonInputProps {
  * ```
  */
 const SkeletonInput = React.forwardRef<HTMLDivElement, SkeletonInputProps>(
-	(
-		{ active = false, size = 'default', block = false, id, testId, style, className },
-		ref
-	) => (
+	({ active = false, size = 'default', block = false, id, testId, style, className }, ref) => (
 		<div
 			ref={ref}
 			id={id}
@@ -239,7 +216,7 @@ const SkeletonInput = React.forwardRef<HTMLDivElement, SkeletonInputProps>(
 );
 SkeletonInput.displayName = 'SkeletonInput';
 
-// Skeleton.Button 
+// Skeleton.Button
 
 export interface SkeletonButtonProps {
 	/**
@@ -307,10 +284,7 @@ export interface SkeletonButtonProps {
  * ```
  */
 const SkeletonButton = React.forwardRef<HTMLDivElement, SkeletonButtonProps>(
-	(
-		{ active = false, size = 'default', block = false, id, testId, style, className },
-		ref
-	) => (
+	({ active = false, size = 'default', block = false, id, testId, style, className }, ref) => (
 		<div
 			ref={ref}
 			id={id}
@@ -325,7 +299,7 @@ const SkeletonButton = React.forwardRef<HTMLDivElement, SkeletonButtonProps>(
 );
 SkeletonButton.displayName = 'SkeletonButton';
 
-// Skeleton.Avatar 
+// Skeleton.Avatar
 
 export interface SkeletonAvatarProps {
 	/**
@@ -397,12 +371,8 @@ const avatarSizeMap = { small: 24, default: 36, large: 48 };
  * ```
  */
 const SkeletonAvatar = React.forwardRef<HTMLDivElement, SkeletonAvatarProps>(
-	(
-		{ active = false, size = 'default', shape = 'circle', id, testId, style, className },
-		ref
-	) => {
-		const resolvedSize =
-			typeof size === 'number' ? size : avatarSizeMap[size];
+	({ active = false, size = 'default', shape = 'circle', id, testId, style, className }, ref) => {
+		const resolvedSize = typeof size === 'number' ? size : avatarSizeMap[size];
 
 		return (
 			<div
@@ -419,7 +389,7 @@ const SkeletonAvatar = React.forwardRef<HTMLDivElement, SkeletonAvatarProps>(
 );
 SkeletonAvatar.displayName = 'SkeletonAvatar';
 
-// Compound component 
+// Compound component
 
 type SkeletonWithSubComponents = typeof SkeletonComponent & {
 	Input: typeof SkeletonInput;
