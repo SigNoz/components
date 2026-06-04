@@ -391,7 +391,9 @@
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
 		"publint": "publint",
 		"test": "vitest",
-		"test:run": "vitest run"
+		"test:run": "vitest run",
+		"tokens": "node scripts/extract-css-tokens.mjs",
+		"tokens:check": "node scripts/extract-css-tokens.mjs --check"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",
