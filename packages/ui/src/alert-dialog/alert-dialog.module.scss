@@ -1,8 +1,8 @@
 .alert__dialog {
-  --dialog-header-border-width: 0;
-  --dialog-description-padding: 0 var(--spacing-8, 1rem) var(--spacing-3, 0.375rem) var(--spacing-8, 1rem);
-  --dialog-header-padding: var(--spacing-8, 1rem) var(--spacing-8, 1rem) var(--spacing-3, 0.375rem) var(--spacing-8, 1rem);
-  --dialog-footer-border-width: 0;
+  --dialog-header-border-width: var(--alert-dialog-header-border-width, 0);
+  --dialog-description-padding: var(--alert-dialog-description-padding, 0 var(--spacing-8, 1rem) var(--spacing-3, 0.375rem) var(--spacing-8, 1rem));
+  --dialog-header-padding: var(--alert-dialog-header-padding, var(--spacing-8, 1rem) var(--spacing-8, 1rem) var(--spacing-3, 0.375rem) var(--spacing-8, 1rem));
+  --dialog-footer-border-width: var(--alert-dialog-footer-border-width, 0);
 
   &__checkbox {
     margin-top: var(--spacing-3, 0.375rem);
