@@ -1,3 +1,42 @@
+// #region css-tokens
+/**
+ * CSS Tokens for typography
+ * Prefix: `--typography-`
+ *
+ * | Token | Default |
+ * |-------|---------|
+ * | `--typography-code-background` | `var(--l3-background)` |
+ * | `--typography-code-border` | `1px solid var(--l3-border)` |
+ * | `--typography-code-font-family` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Co...` |
+ * | `--typography-code-font-size` | `0.9em` |
+ * | `--typography-code-padding` | `0.125em 0.25em` |
+ * | `--typography-code-radius` | `var(--radius-sm)` |
+ * | `--typography-color` | `var(--typography-interactive-hover-color, var(-...` |
+ * | `--typography-copy-align-items` | `center` |
+ * | `--typography-copy-bg` | `transparent` |
+ * | `--typography-copy-border` | `none` |
+ * | `--typography-copy-cursor` | `pointer` |
+ * | `--typography-copy-display` | `inline-flex` |
+ * | `--typography-copy-hover-color` | `var(--l2-foreground)` |
+ * | `--typography-copy-icon-size` | `14px` |
+ * | `--typography-copy-margin` | `0px 0px 0px var(--spacing-2, 8px)` |
+ * | `--typography-copy-padding` | `var(--spacing-1, 4px)` |
+ * | `--typography-copy-vertical-align` | `middle` |
+ * | `--typography-font-family` | `inherit` |
+ * | `--typography-font-size` | `var(--periscope-font-size-h5, 16px)` |
+ * | `--typography-font-weight` | `var(--font-weight-semibold, 600)` |
+ * | `--typography-interactive-hover-color` | `var(--primary-background)` |
+ * | `--typography-line-clamp` | `1` |
+ * | `--typography-line-height` | `var(--line-height-normal, 1.5)` |
+ * | `--typography-margin` | `0` |
+ * | `--typography-padding` | `0` |
+ * | `--typography-text-align` | `right` |
+ * | `--typography-text-display` | `inline` |
+ * | `--typography-title-margin-bottom` | `9px` |
+ * | `--typography-title-margin-top` | `9px` |
+ */
+// #endregion css-tokens
+
 /**
  * A flexible typography component for rendering text with consistent styling.
  * Supports variants (title/text), semantic colors, truncation, and copy-to-clipboard.
