@@ -3,31 +3,31 @@
   gap: 0.5rem;
 
   &[data-color="robin"] {
-    --radio-checked-background: var(--accent-primary);
+    --radio-group-checked-background: var(--accent-primary);
   }
 
   &[data-color="forest"] {
-    --radio-checked-background: var(--accent-forest);
+    --radio-group-checked-background: var(--accent-forest);
   }
 
   &[data-color="amber"] {
-    --radio-checked-background: var(--accent-amber);
+    --radio-group-checked-background: var(--accent-amber);
   }
 
   &[data-color="sienna"] {
-    --radio-checked-background: var(--accent-sienna);
+    --radio-group-checked-background: var(--accent-sienna);
   }
 
   &[data-color="cherry"] {
-    --radio-checked-background: var(--accent-cherry);
+    --radio-group-checked-background: var(--accent-cherry);
   }
 
   &[data-color="sakura"] {
-    --radio-checked-background: var(--accent-sakura);
+    --radio-group-checked-background: var(--accent-sakura);
   }
 
   &[data-color="aqua"] {
-    --radio-checked-background: var(--accent-aqua);
+    --radio-group-checked-background: var(--accent-aqua);
   }
 }
 
@@ -53,16 +53,16 @@
 
   &[data-state="checked"] {
     border-width: calc(var(--radio-group-item-size, 1rem) / 3);
-    border-color: var(--radio-checked-background);
+    border-color: var(--radio-group-checked-background);
   }
 
   &:focus-visible {
     outline-offset: -1px;
-    outline: 2px solid var(--radio-checked-background);
+    outline: 2px solid var(--radio-group-checked-background);
   }
 
   &:hover {
-    border-color: var(--radio-checked-background);
+    border-color: var(--radio-group-checked-background);
   }
 
   &:disabled {
@@ -74,7 +74,7 @@
 .radio-group__indicator {
   height: 100%;
   width: 100%;
-  background-color: var(--radio-checked-indicator-background, var(--base-white));
+  background-color: var(--radio-group-checked-indicator-background, var(--base-white));
   border-radius: 9999px;
 }
 
