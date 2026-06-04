@@ -1,4 +1,4 @@
-import { Pagination, PaginationSelector } from '@signozhq/ui';
+import { Pagination } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
 import { useEffect, useState } from 'react';
@@ -126,10 +126,6 @@ export default meta;
 type Story = StoryObj<typeof Pagination>;
 
 export const Default: Story = {
-	args: {
-		enablePageSize: true,
-	},
-
 	render: (args) => {
 		const [currentPages, setCurrentPages] = useState({
 			p1: 1,
@@ -411,34 +407,6 @@ export const WithPageSizeSelectorLeft: Story = {
 				onPageSizeChange={(newSize) => {
 					setPageSize(newSize);
 					args.onPageSizeChange?.(newSize);
-				}}
-			/>
-		);
-	},
-};
-
-export const SelectorOnly: StoryObj<typeof PaginationSelector> = {
-	args: {
-		value: 10,
-		options: [10, 20, 30, 40, 50],
-		label: 'Rows per page',
-	},
-	render: (args) => {
-		const [value, setValue] = useState(args.value ?? 10);
-
-		useEffect(() => {
-			if (args.value !== undefined) {
-				setValue(args.value);
-			}
-		}, [args.value]);
-
-		return (
-			<PaginationSelector
-				{...args}
-				value={value}
-				onChange={(newSize) => {
-					setValue(newSize);
-					args.onChange?.(newSize);
 				}}
 			/>
 		);
