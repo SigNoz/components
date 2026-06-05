@@ -378,6 +378,8 @@ export const TabsList = React.forwardRef<
 				data-variant={variant}
 				data-alignment={alignment}
 				data-has-extra-content={leftContent || rightContent ? '' : undefined}
+				data-has-left-content={leftContent ? '' : undefined}
+				data-has-right-content={rightContent ? '' : undefined}
 			>
 				{leftContent && (
 					<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>

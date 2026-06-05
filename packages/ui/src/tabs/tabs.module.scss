@@ -32,8 +32,43 @@
     padding-left: var(--tabs-list-wrapper-secondary-padding-left, var(--spacing-8, 16px));
 
     &[data-alignment="center"] {
+      padding-left: 0;
+
+      // Use flex:1 (flex-basis:0%) on all zone elements so every side starts
+      // from the same base. Spacers and extra-content zones then grow equally,
+      // keeping the tab list truly centered regardless of which side carries
+      // extra content.
       [data-slot="tab-spacer-left"] {
-        flex-grow: 1;
+        flex: 1;
+        min-width: 0;
+        padding-right: var(--tab-bar-content-gap, var(--spacing-8, 16px));
+      }
+
+      [data-slot="tab-spacer-grow"] {
+        flex: 1;
+        min-width: 0;
+        padding-left: var(--tab-bar-content-gap, var(--spacing-8, 16px));
+      }
+
+      &[data-has-left-content] {
+        [data-slot="tab-extra-content-left"] {
+          flex: 1;
+          min-width: 0;
+        }
+      }
+
+      &[data-has-right-content] {
+        [data-slot="tab-extra-content-right"] {
+          flex: 1;
+          justify-content: flex-end;
+          min-width: 0;
+        }
+
+        [data-slot="tab-spacer-grow"] {
+          flex: none;
+          min-width: 0;
+          padding-left: 0;
+        }
       }
     }
 

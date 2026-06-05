@@ -25,6 +25,7 @@ import {
 	type TabVariants,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type * as React from 'react';
 
 const meta: Meta<typeof Tabs> = {
 	title: 'Composed Components/Tabs/TabsSimple',
@@ -529,133 +530,66 @@ const alignmentItems: TabItemProps[] = [
 	{ key: 'settings', label: 'Settings', children: 'Settings content' },
 ];
 
+const leftExtra = <span className="text-xs opacity-60">v2 API</span>;
+const rightExtra = (
+	<Button
+		variant={ButtonVariant.Outlined}
+		size={ButtonSize.SM}
+		color={ButtonColor.Secondary}
+		prefix={<Plus className="size-4" />}
+	>
+		Add view
+	</Button>
+);
+
+type ExtraVariant = 'empty' | 'left' | 'right' | 'both';
+
+const extraConfigs: Record<
+	ExtraVariant,
+	{ label: string; tabBarLeftContent?: React.ReactNode; tabBarRightContent?: React.ReactNode }
+> = {
+	empty: { label: 'No extra content' },
+	left: { label: 'Left content only', tabBarLeftContent: leftExtra },
+	right: { label: 'Right content only', tabBarRightContent: rightExtra },
+	both: {
+		label: 'Left + right content',
+		tabBarLeftContent: leftExtra,
+		tabBarRightContent: rightExtra,
+	},
+};
+
 export const Alignment: Story = {
 	render: () => (
-		<div className="space-y-8">
-			{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
-				<div key={alignment}>
-					<h2 className="mb-4 text-lg font-semibold capitalize">Primary — {alignment}</h2>
-					<Tabs
-						items={alignmentItems}
-						variant="primary"
-						alignment={alignment}
-						defaultValue="overview"
-					/>
-				</div>
+		<div className="space-y-12 p-6">
+			{(['primary', 'secondary'] as TabVariants[]).map((variant) => (
+				<section key={variant}>
+					<h1 className="mb-6 border-b pb-2 text-xl font-bold capitalize">{variant} variant</h1>
+					{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
+						<div key={alignment} className="mb-10">
+							<h2 className="mb-4 text-base font-semibold capitalize">{alignment} alignment</h2>
+							<div className="space-y-6">
+								{(Object.keys(extraConfigs) as ExtraVariant[]).map((extraVariant) => {
+									const { label, tabBarLeftContent, tabBarRightContent } =
+										extraConfigs[extraVariant];
+									return (
+										<div key={extraVariant}>
+											<p className="mb-2 font-mono text-xs opacity-50">{label}</p>
+											<Tabs
+												items={alignmentItems}
+												variant={variant}
+												alignment={alignment}
+												defaultValue="overview"
+												tabBarLeftContent={tabBarLeftContent}
+												tabBarRightContent={tabBarRightContent}
+											/>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					))}
+				</section>
 			))}
-			{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
-				<div key={`secondary-${alignment}`}>
-					<h2 className="mb-4 text-lg font-semibold capitalize">Secondary — {alignment}</h2>
-					<Tabs
-						items={alignmentItems}
-						variant="secondary"
-						alignment={alignment}
-						defaultValue="overview"
-					/>
-				</div>
-			))}
-
-			<div>
-				<h2 className="mb-4 text-lg font-semibold">Primary — center + right content</h2>
-				<Tabs
-					items={alignmentItems}
-					variant="primary"
-					alignment="center"
-					defaultValue="overview"
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Plus className="size-4" />}
-						>
-							Add view
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 className="mb-4 text-lg font-semibold">Primary — center + left and right content</h2>
-				<Tabs
-					items={alignmentItems}
-					variant="primary"
-					alignment="center"
-					defaultValue="overview"
-					tabBarLeftContent={<span className="text-xs opacity-50">Service: frontend</span>}
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Settings className="size-4" />}
-						>
-							Configure
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 className="mb-4 text-lg font-semibold">Primary — right + right content</h2>
-				<Tabs
-					items={alignmentItems}
-					variant="primary"
-					alignment="right"
-					defaultValue="overview"
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Plus className="size-4" />}
-						>
-							Add view
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 className="mb-4 text-lg font-semibold">Secondary — center + right content</h2>
-				<Tabs
-					items={alignmentItems}
-					variant="secondary"
-					alignment="center"
-					defaultValue="overview"
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Plus className="size-4" />}
-						>
-							Add view
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 className="mb-4 text-lg font-semibold">Secondary — center + left and right content</h2>
-				<Tabs
-					items={alignmentItems}
-					variant="secondary"
-					alignment="center"
-					defaultValue="overview"
-					tabBarLeftContent={<span className="text-xs opacity-50">v2 API</span>}
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Settings className="size-4" />}
-						>
-							Configure
-						</Button>
-					}
-				/>
-			</div>
 		</div>
 	),
 };
