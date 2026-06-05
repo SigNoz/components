@@ -18,12 +18,14 @@ import {
 	ButtonVariant,
 	type TabItemProps,
 	Tabs,
+	type TabsAlignment,
 	TabsList,
 	TabsRoot,
 	TabsTrigger,
 	type TabVariants,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type * as React from 'react';
 
 const meta: Meta<typeof Tabs> = {
 	title: 'Composed Components/Tabs/TabsSimple',
@@ -82,6 +84,16 @@ const meta: Meta<typeof Tabs> = {
 				category: 'Behavior',
 				type: { summary: "'automatic' | 'manual'" },
 				defaultValue: { summary: "'automatic'" },
+			},
+		},
+		alignment: {
+			control: 'select',
+			options: ['left', 'center', 'right'],
+			description: 'Controls the alignment of the tab list within its container.',
+			table: {
+				category: 'Layout',
+				type: { summary: "'left' | 'center' | 'right'" },
+				defaultValue: { summary: "'left'" },
 			},
 		},
 		id: {
@@ -508,6 +520,76 @@ export const TabBarExtraContent: Story = {
 					</TabsList>
 				</TabsRoot>
 			</div>
+		</div>
+	),
+};
+
+const alignmentItems: TabItemProps[] = [
+	{ key: 'overview', label: 'Overview', children: 'Overview content' },
+	{ key: 'analytics', label: 'Analytics', children: 'Analytics content' },
+	{ key: 'settings', label: 'Settings', children: 'Settings content' },
+];
+
+const leftExtra = <span className="text-xs opacity-60">v2 API</span>;
+const rightExtra = (
+	<Button
+		variant={ButtonVariant.Outlined}
+		size={ButtonSize.SM}
+		color={ButtonColor.Secondary}
+		prefix={<Plus className="size-4" />}
+	>
+		Add view
+	</Button>
+);
+
+type ExtraVariant = 'empty' | 'left' | 'right' | 'both';
+
+const extraConfigs: Record<
+	ExtraVariant,
+	{ label: string; tabBarLeftContent?: React.ReactNode; tabBarRightContent?: React.ReactNode }
+> = {
+	empty: { label: 'No extra content' },
+	left: { label: 'Left content only', tabBarLeftContent: leftExtra },
+	right: { label: 'Right content only', tabBarRightContent: rightExtra },
+	both: {
+		label: 'Left + right content',
+		tabBarLeftContent: leftExtra,
+		tabBarRightContent: rightExtra,
+	},
+};
+
+export const Alignment: Story = {
+	render: () => (
+		<div className="space-y-12 p-6">
+			{(['primary', 'secondary'] as TabVariants[]).map((variant) => (
+				<section key={variant}>
+					<h1 className="mb-6 border-b pb-2 text-xl font-bold capitalize">{variant} variant</h1>
+					{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
+						<div key={alignment} className="mb-10">
+							<h2 className="mb-4 text-base font-semibold capitalize">{alignment} alignment</h2>
+							<div className="space-y-6">
+								{(Object.keys(extraConfigs) as ExtraVariant[]).map((extraVariant) => {
+									const { label, tabBarLeftContent, tabBarRightContent } =
+										extraConfigs[extraVariant];
+									return (
+										<div key={extraVariant}>
+											<p className="mb-2 font-mono text-xs opacity-50">{label}</p>
+											<Tabs
+												items={alignmentItems}
+												variant={variant}
+												alignment={alignment}
+												defaultValue="overview"
+												tabBarLeftContent={tabBarLeftContent}
+												tabBarRightContent={tabBarRightContent}
+											/>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					))}
+				</section>
+			))}
 		</div>
 	),
 };

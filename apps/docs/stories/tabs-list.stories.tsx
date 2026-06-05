@@ -26,6 +26,16 @@ const meta: Meta<typeof TabsList> = {
 				'When true, keyboard navigation will loop from last tab to first, and vice versa.',
 			table: { category: 'Behavior', type: { summary: 'boolean' } },
 		},
+		alignment: {
+			control: 'select',
+			options: ['left', 'center', 'right'],
+			description: 'Controls the alignment of the tab list within its container.',
+			table: {
+				category: 'Layout',
+				type: { summary: "'left' | 'center' | 'right'" },
+				defaultValue: { summary: "'left'" },
+			},
+		},
 		id: {
 			control: 'text',
 			description: 'A unique identifier for the tabs list.',

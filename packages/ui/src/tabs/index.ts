@@ -120,6 +120,7 @@
 export {
 	type TabItemProps,
 	Tabs,
+	type TabsAlignment,
 	TabsContent,
 	type TabsContentProps,
 	TabsList,
