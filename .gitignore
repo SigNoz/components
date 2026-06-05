@@ -16,4 +16,3 @@ apps/packages-playground/
 **/.yalc
 **/yalc.lock
 packages/ui/README.md
-.playwright-mcp/
