@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 import * as React from 'react';
-import { type MouseEvent, useEffect, useState } from 'react';
+import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, type ButtonProps, ButtonSize } from '../button/index.js';
 import { cn } from '../lib/utils.js';
+import { SelectSimple } from '../select/index.js';
 import styles from './pagination.module.scss';
 import { renderPageNumbers } from './utils.js';
 
@@ -250,6 +251,98 @@ export const PaginationEllipsis = React.forwardRef<HTMLSpanElement, PaginationEl
 );
 PaginationEllipsis.displayName = 'PaginationEllipsis';
 
+export type PaginationSelectorProps = Pick<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className' | 'style'
+> & {
+	/**
+	 * The label to display next to the selector.
+	 * @default 'Rows per page'
+	 */
+	label?: string;
+	/**
+	 * The current page size value.
+	 */
+	value: number;
+	/**
+	 * Options for the page size selector.
+	 * @default [10, 20, 30, 40, 50]
+	 */
+	options?: number[];
+	/**
+	 * The function to call when the page size changes.
+	 */
+	onChange?: (pageSize: number) => void;
+	/**
+	 * The test ID to apply to the pagination selector.
+	 */
+	testId?: string;
+};
+
+/**
+ * A page size selector for pagination. Renders a label and a dropdown
+ * to choose how many items to display per page. Can be used standalone
+ * in custom pagination layouts via `PaginationContainer`, or automatically
+ * rendered by the `Pagination` component when `enablePageSize` is true.
+ *
+ * @example
+ * ```tsx
+ * <PaginationSelector
+ *   value={pageSize}
+ *   options={[10, 20, 50]}
+ *   onChange={(size) => setPageSize(size)}
+ * />
+ * ```
+ */
+export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSelectorProps>(
+	(
+		{
+			label = 'Rows per page',
+			value,
+			options = [10, 20, 30, 40, 50],
+			onChange,
+			className,
+			testId,
+			...props
+		},
+		ref
+	) => {
+		const pageSizeOptions = useMemo(
+			() => options.map((size) => ({ value: size.toString(), label: size.toString() })),
+			[options]
+		);
+
+		const handlePageSizeChange = useCallback(
+			(val: string | string[]) => {
+				const selectedVal = Array.isArray(val) ? val[0] : val;
+				if (selectedVal) {
+					onChange?.(Number(selectedVal));
+				}
+			},
+			[onChange]
+		);
+
+		return (
+			<div
+				ref={ref}
+				data-testid={testId}
+				data-slot="pagination-selector"
+				className={cn(styles['pagination-page-size'], className)}
+				{...props}
+			>
+				<span className={styles['pagination-page-size-label']}>{label}</span>
+				<SelectSimple
+					className={styles['pagination-page-size-select']}
+					items={pageSizeOptions}
+					value={value.toString()}
+					onChange={handlePageSizeChange}
+					withPortal={false}
+				/>
+			</div>
+		);
+	}
+);
+
 export type PaginationProps = PaginationContainerProps & {
 	/**
 	 * The total number of items.
@@ -260,6 +353,20 @@ export type PaginationProps = PaginationContainerProps & {
 	 * @default 10
 	 */
 	pageSize?: number;
+	/**
+	 * Whether to enable the page size selector.
+	 * @default false
+	 */
+	enablePageSize?: boolean;
+	/**
+	 * Options for the page size selector.
+	 * @default [10, 20, 30, 40, 50]
+	 */
+	pageSizeOptions?: number[];
+	/**
+	 * The function to call when the page size changes.
+	 */
+	onPageSizeChange?: (pageSize: number) => void;
 	/**
 	 * The current page.
 	 */
@@ -273,6 +380,11 @@ export type PaginationProps = PaginationContainerProps & {
 	 * The function to call when the page changes.
 	 */
 	onPageChange?: (page: number) => void;
+	/**
+	 * Position of the page size selector relative to pagination controls.
+	 * @default 'right'
+	 */
+	pageSizePosition?: 'left' | 'right';
 };
 
 /**
@@ -314,7 +426,11 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 	(
 		{
 			total,
-			pageSize = 10,
+			pageSize: controlledPageSize,
+			enablePageSize = false,
+			pageSizeOptions = [10, 20, 30, 40, 50],
+			pageSizePosition = 'right',
+			onPageSizeChange,
 			current: controlledCurrent,
 			defaultCurrent = 1,
 			onPageChange,
@@ -325,8 +441,16 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 		},
 		ref
 	) => {
-		const totalPages = Math.ceil(total / pageSize);
+		const [internalPageSize, setInternalPageSize] = useState(controlledPageSize ?? 10);
 
+		useEffect(() => {
+			if (controlledPageSize !== undefined) {
+				setInternalPageSize(controlledPageSize);
+			}
+		}, [controlledPageSize]);
+
+		const pageSize = controlledPageSize ?? internalPageSize;
+		const totalPages = Math.ceil(total / pageSize);
 		const [internalCurrent, setInternalCurrent] = useState(controlledCurrent ?? defaultCurrent);
 
 		useEffect(() => {
@@ -335,20 +459,47 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			}
 		}, [controlledCurrent]);
 
+		useEffect(() => {
+			if (internalCurrent > totalPages && totalPages > 0) {
+				setInternalCurrent(totalPages);
+			}
+		}, [totalPages, internalCurrent]);
+
 		const current = controlledCurrent ?? internalCurrent;
 
-		const handlePageChange = (e: MouseEvent<HTMLButtonElement>, page: number) => {
-			e.preventDefault();
-			if (page < 1 || page > totalPages || page === current) {
-				return;
-			}
+		const isCurrentControlled = controlledCurrent !== undefined;
+		const isPageSizeControlled = controlledPageSize !== undefined;
 
-			if (onPageChange) {
-				onPageChange(page);
-			} else {
-				setInternalCurrent(page);
-			}
-		};
+		const handlePageSizeChange = useCallback(
+			(newSize: number): void => {
+				if (!isPageSizeControlled) {
+					setInternalPageSize(newSize);
+				}
+				onPageSizeChange?.(newSize);
+
+				if (!isCurrentControlled) {
+					setInternalCurrent(1);
+				}
+				onPageChange?.(1);
+			},
+			[isPageSizeControlled, onPageSizeChange, isCurrentControlled, onPageChange]
+		);
+
+		const handlePageChange = useCallback(
+			(e: MouseEvent<HTMLButtonElement>, page: number) => {
+				e.preventDefault();
+
+				if (page < 1 || page > totalPages || page === current) {
+					return;
+				}
+
+				if (!isCurrentControlled) {
+					setInternalCurrent(page);
+				}
+				onPageChange?.(page);
+			},
+			[isCurrentControlled, onPageChange, current, totalPages]
+		);
 
 		const pageNumbers = renderPageNumbers(totalPages, current);
 
@@ -356,8 +507,17 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			return null;
 		}
 
+		const selector = enablePageSize ? (
+			<PaginationSelector
+				value={pageSize}
+				options={pageSizeOptions}
+				onChange={handlePageSizeChange}
+			/>
+		) : null;
+
 		return (
 			<PaginationContainer ref={ref} className={className} align={align} testId={testId} {...props}>
+				{pageSizePosition === 'left' && selector}
 				<PaginationContent>
 					<PaginationItem>
 						<PaginationPrevious
@@ -389,6 +549,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 						/>
 					</PaginationItem>
 				</PaginationContent>
+				{pageSizePosition === 'right' && selector}
 			</PaginationContainer>
 		);
 	}
