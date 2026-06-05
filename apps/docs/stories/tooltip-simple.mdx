@@ -1,0 +1,144 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as TooltipSimpleStories from './tooltip-simple.stories';
+
+<Meta of={TooltipSimpleStories} />
+
+# TooltipSimple
+
+Preset that wraps `TooltipRoot`, `TooltipTrigger`, and `TooltipContent` in a single component. Pass a `title` and a trigger element instead of composing subcomponents manually.
+
+For full primitive control, see [Tooltip](?path=/docs/primitive-components-tooltip--docs).
+
+## How to use
+
+`TooltipSimple` must be rendered inside a `TooltipProvider`. Place the provider once near the root of your app or around a group of tooltips:
+
+```tsx
+import { TooltipSimple, TooltipProvider, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<TooltipProvider>
+			<TooltipSimple title="Helpful information">
+				<Button variant="solid" color="secondary">
+					Hover me
+				</Button>
+			</TooltipSimple>
+		</TooltipProvider>
+	);
+}
+```
+
+<Primary />
+
+## Arrow
+
+Set `arrow` to render a directional indicator pointing toward the trigger:
+
+```tsx
+<TooltipProvider>
+	<TooltipSimple title="With arrow" arrow>
+		<Button>Hover me</Button>
+	</TooltipSimple>
+</TooltipProvider>
+```
+
+## Positioning
+
+`side` sets which side of the trigger the tooltip opens against (`top`, `right`, `bottom`, `left`). `align` controls alignment along that side (`start`, `center`, `end`). Collision detection repositions the tooltip automatically when it would overflow the viewport:
+
+```tsx
+<TooltipProvider>
+	<TooltipSimple title="On the right" side="right" align="start" arrow>
+		<Button>Hover me</Button>
+	</TooltipSimple>
+</TooltipProvider>
+```
+
+Use `sideOffset` and `alignOffset` for pixel-level adjustments:
+
+```tsx
+<TooltipProvider>
+	<TooltipSimple title="Offset" side="bottom" sideOffset={8} alignOffset={4}>
+		<Button>Hover me</Button>
+	</TooltipSimple>
+</TooltipProvider>
+```
+
+## Delay duration
+
+Control how long the pointer must hover before the tooltip opens. Pass `delayDuration` on the `TooltipProvider` to apply it globally, or on the individual tooltip to override it:
+
+```tsx
+<TooltipProvider delayDuration={200}>
+	<TooltipSimple title="Fast tooltip">
+		<Button>Hover me</Button>
+	</TooltipSimple>
+</TooltipProvider>
+```
+
+Per-instance override:
+
+```tsx
+<TooltipSimple title="Instant" delayDuration={0}>
+	<Button>Hover me</Button>
+</TooltipSimple>
+```
+
+## Controlled mode
+
+Pass `open` and `onOpenChange` to drive the open state externally:
+
+```tsx
+import { useState } from 'react';
+import { TooltipSimple, TooltipProvider, Button } from '@signozhq/ui';
+
+function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<TooltipProvider>
+			<TooltipSimple
+				title="Controlled tooltip"
+				open={open}
+				onOpenChange={setOpen}
+			>
+				<Button>Hover me</Button>
+			</TooltipSimple>
+		</TooltipProvider>
+	);
+}
+```
+
+## Inside a modal
+
+When placing a tooltip inside a modal or dialog, set `withPortal={false}` so the tooltip content stays within the modal DOM instead of portaling to `document.body`. This avoids z-index and stacking context issues:
+
+```tsx
+import { Dialog, DialogContent, TooltipSimple, Button } from '@signozhq/ui';
+
+<Dialog>
+	<DialogContent>
+		<TooltipSimple title="Inside modal" withPortal={false}>
+			<Button>Hover me</Button>
+		</TooltipSimple>
+	</DialogContent>
+</Dialog>
+```
+
+## Extra content props
+
+Use `tooltipContentProps` to pass additional props to the underlying `TooltipContent` without losing the preset's composition:
+
+```tsx
+<TooltipSimple
+	title="Custom"
+	tooltipContentProps={{ className: 'max-w-xs', arrowPadding: 8 }}
+>
+	<Button>Hover me</Button>
+</TooltipSimple>
+```
+
+## Props
+
+<Controls of={TooltipSimpleStories.Default} />
