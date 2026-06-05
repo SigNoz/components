@@ -41,13 +41,13 @@
       [data-slot="tab-spacer-left"] {
         flex: 1;
         min-width: 0;
-        padding-right: var(--tab-bar-content-gap, var(--spacing-8, 16px));
+        padding-right: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
       }
 
       [data-slot="tab-spacer-grow"] {
         flex: 1;
         min-width: 0;
-        padding-left: var(--tab-bar-content-gap, var(--spacing-8, 16px));
+        padding-left: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
       }
 
       &[data-has-left-content] {
