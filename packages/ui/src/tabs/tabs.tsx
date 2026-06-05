@@ -387,7 +387,7 @@ export const TabsList = React.forwardRef<
 					</div>
 				)}
 
-				{variant === 'secondary' && !leftContent && (
+				{variant === 'secondary' && (
 					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
 				)}
 
