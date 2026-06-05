@@ -277,6 +277,16 @@
 				"require": "./dist/select/index.cjs"
 			}
 		},
+		"./skeleton": {
+			"import": {
+				"types": "./dist/skeleton/index.d.ts",
+				"import": "./dist/skeleton/index.mjs"
+			},
+			"require": {
+				"types": "./dist/skeleton/index.d.cts",
+				"require": "./dist/skeleton/index.cjs"
+			}
+		},
 		"./slider": {
 			"import": {
 				"types": "./dist/slider/index.d.ts",
