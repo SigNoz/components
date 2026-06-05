@@ -381,14 +381,14 @@ export const TabsList = React.forwardRef<
 				data-has-left-content={leftContent ? '' : undefined}
 				data-has-right-content={rightContent ? '' : undefined}
 			>
+				{variant === 'secondary' && (
+					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
+				)}
+
 				{leftContent && (
 					<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>
 						{leftContent}
 					</div>
-				)}
-
-				{variant === 'secondary' && (
-					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
 				)}
 
 				{variant === 'primary' ? (
