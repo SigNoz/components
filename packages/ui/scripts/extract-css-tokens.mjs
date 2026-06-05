@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'node:fs';
-import { join, dirname, relative } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import {existsSync, readdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
+import {dirname, join, relative} from 'node:path';
+import {fileURLToPath} from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UI_SRC_DIR = join(__dirname, '../src');
@@ -141,6 +141,7 @@ function generateTokenComment(componentName, vars, prefix) {
 
 function updateIndexFile(indexPath, tokenComment) {
   let content = readFileSync(indexPath, 'utf-8');
+  const currentContent = content;
 
   const regionStartIdx = content.indexOf(REGION_START);
   const regionEndIdx = content.indexOf(REGION_END);
@@ -155,7 +156,7 @@ function updateIndexFile(indexPath, tokenComment) {
     content = newRegion + '\n\n' + content;
   }
 
-  return content;
+  return {currentContent, updatedContent: content};
 }
 
 function removeTokenRegion(indexPath) {
@@ -234,9 +235,7 @@ function main() {
     }
 
     const tokenComment = generateTokenComment(name, filteredVars, prefix);
-    const updatedContent = updateIndexFile(indexPath, tokenComment);
-    const currentContent = readFileSync(indexPath, 'utf-8');
-
+    const {updatedContent, currentContent} = updateIndexFile(indexPath, tokenComment);
     if (checkMode) {
       if (updatedContent !== currentContent) {
         console.error(`Outdated: ${relative(process.cwd(), indexPath)}`);

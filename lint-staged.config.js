@@ -4,4 +4,5 @@ export default {
 		'biome check --write --no-errors-on-unmatched',
 	],
 	'*.{json,html,css}': ['biome format --write --no-errors-on-unmatched'],
+	'packages/ui/**/*.{css,scss}': [() => 'pnpm -F @signozhq/ui tokens:check'],
 };
