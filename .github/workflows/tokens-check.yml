@@ -1,6 +1,13 @@
 name: Token Docs Check
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - "packages/ui/**/*.scss"
+      - "packages/ui/**/*.css"
+      - "packages/ui/scripts/extract-css-tokens.mjs"
+      - "packages/ui/package.json"
+      - ".github/workflows/tokens-check.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
