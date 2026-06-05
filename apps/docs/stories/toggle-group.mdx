@@ -1,6 +1,5 @@
 import { Meta, Controls, Story } from '@storybook/addon-docs/blocks';
 import * as ToggleGroupStories from './toggle-group.stories';
-import * as ToggleGroupSimpleStories from './toggle-group-simple.stories';
 import * as ToggleGroupItemStories from './toggle-group-item.stories';
 
 <Meta of={ToggleGroupStories} />
@@ -9,51 +8,9 @@ import * as ToggleGroupItemStories from './toggle-group-item.stories';
 
 A set of two-state buttons that can be toggled on or off, in single or multiple selection mode.
 
-## How to use
+For the quick-start preset, see [ToggleGroupSimple](?path=/docs/composed-components-togglegroupsimple--docs).
 
-### ToggleGroupSimple (preset)
-
-Use `ToggleGroupSimple` for an items-based API. Pass a list of items with `value` and `label` (string, icon, or ReactNode). Supports icon-only, label-only, or icon + label:
-
-```tsx
-import { ToggleGroupSimple } from '@signozhq/ui';
-import { Bold, Italic, LayoutGrid } from '@signozhq/icons';
-
-const items = [
-  { value: 'left', label: 'Left' },
-  { value: 'center', label: 'Center' },
-  { value: 'right', label: 'Right' },
-];
-
-export default function MyComponent() {
-  return (
-    <ToggleGroupSimple
-      type="single"
-      items={items}
-      defaultValue="center"
-    />
-  );
-}
-```
-
-For icon-only items, add `aria-label` for accessibility:
-
-```tsx
-const iconItems = [
-  { value: 'bold', label: <Bold className="h-3 w-3" />, 'aria-label': 'Bold' },
-  { value: 'italic', label: <Italic className="h-3 w-3" />, 'aria-label': 'Italic' },
-];
-
-<ToggleGroupSimple type="multiple" items={iconItems} defaultValue={['bold']} />
-```
-
-<Story of={ToggleGroupSimpleStories.Default} />
-
-## ToggleGroupSimple Props
-
-<Controls of={ToggleGroupSimpleStories.Default} />
-
-### Manual composition with ToggleGroup
+## Basic usage (composition)
 
 For full control over each option, use `ToggleGroup` with `ToggleGroupItem` as children:
 

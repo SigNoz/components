@@ -1,0 +1,151 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ToggleGroupSimpleStories from './toggle-group-simple.stories';
+
+<Meta of={ToggleGroupSimpleStories} />
+
+# ToggleGroupSimple
+
+Preset that wraps `ToggleGroup` and `ToggleGroupItem` in a single component. Pass an `items` array instead of composing subcomponents manually.
+
+For full primitive control, see [ToggleGroup](?path=/docs/primitive-components-togglegroup--docs).
+
+## How to use
+
+```tsx
+import { ToggleGroupSimple } from '@signozhq/ui';
+
+const items = [
+	{ value: 'left', label: 'Left' },
+	{ value: 'center', label: 'Center' },
+	{ value: 'right', label: 'Right' },
+];
+
+export default function MyComponent() {
+	return (
+		<ToggleGroupSimple
+			type="single"
+			items={items}
+			defaultValue="center"
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Icon-only items
+
+Add `aria-label` on each item when the label is an icon — required for screen reader accessibility:
+
+```tsx
+import { Bold, Italic, Underline } from '@signozhq/icons';
+
+const items = [
+	{ value: 'bold', label: <Bold className="h-3 w-3" />, 'aria-label': 'Bold' },
+	{ value: 'italic', label: <Italic className="h-3 w-3" />, 'aria-label': 'Italic' },
+	{ value: 'underline', label: <Underline className="h-3 w-3" />, 'aria-label': 'Underline' },
+];
+
+<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold']} />
+```
+
+## Icon + label items
+
+Pass a ReactNode as `label` to render an icon alongside text:
+
+```tsx
+import { LayoutGrid, List } from '@signozhq/icons';
+
+const items = [
+	{ value: 'grid', label: <><LayoutGrid className="h-6 w-6" /> Grid</> },
+	{ value: 'list', label: <><List className="h-6 w-6" /> List</> },
+];
+
+<ToggleGroupSimple type="single" items={items} defaultValue="grid" />
+```
+
+## Multiple selection
+
+Set `type="multiple"` and pass `defaultValue` as an array to allow multiple items to be active at once:
+
+```tsx
+<ToggleGroupSimple
+	type="multiple"
+	items={items}
+	defaultValue={['bold', 'italic']}
+/>
+```
+
+## Controlled usage
+
+Use `value` and `onChange` to control selection externally:
+
+```tsx
+import { useState } from 'react';
+
+function MyComponent() {
+	const [value, setValue] = useState('center');
+
+	return (
+		<ToggleGroupSimple
+			type="single"
+			items={items}
+			value={value}
+			onChange={(v) => setValue(v as string)}
+		/>
+	);
+}
+```
+
+For multiple selection, `onChange` receives `string[]`:
+
+```tsx
+const [values, setValues] = useState<string[]>(['bold']);
+
+<ToggleGroupSimple
+	type="multiple"
+	items={items}
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+/>
+```
+
+## Size variants
+
+Three sizes are available: `sm`, `default`, and `lg`:
+
+```tsx
+<ToggleGroupSimple type="single" size="sm" items={items} defaultValue="center" />
+<ToggleGroupSimple type="single" size="default" items={items} defaultValue="center" />
+<ToggleGroupSimple type="single" size="lg" items={items} defaultValue="center" />
+```
+
+## Color variants
+
+```tsx
+<ToggleGroupSimple type="single" color="primary" items={items} defaultValue="center" />
+<ToggleGroupSimple type="single" color="secondary" items={items} defaultValue="center" />
+<ToggleGroupSimple type="single" color="destructive" items={items} defaultValue="center" />
+<ToggleGroupSimple type="single" color="warning" items={items} defaultValue="center" />
+```
+
+## Disabled state
+
+```tsx
+<ToggleGroupSimple type="single" items={items} defaultValue="center" disabled />
+```
+
+## Vertical orientation
+
+```tsx
+<ToggleGroupSimple
+	type="single"
+	items={items}
+	defaultValue="center"
+	orientation="vertical"
+/>
+```
+
+## Props
+
+<Controls of={ToggleGroupSimpleStories.Default} />
