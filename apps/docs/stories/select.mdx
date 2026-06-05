@@ -55,6 +55,38 @@ export default function MyComponent() {
 
 <Primary />
 
+## Select inside a popover
+
+When rendering a select inside a popover or modal, pass `withPortal={false}` to `SelectContent` so the dropdown stays in the same DOM tree and avoids z-index issues:
+
+```tsx
+import {
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	Select,
+	SelectTrigger,
+	SelectContent,
+	SelectItem,
+	Button,
+} from '@signozhq/ui';
+
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open</Button>
+	</PopoverTrigger>
+	<PopoverContent>
+		<Select value={value} onChange={(v) => setValue(v as string)}>
+			<SelectTrigger placeholder="Select..." />
+			<SelectContent withPortal={false}>
+				<SelectItem value="react">React</SelectItem>
+				<SelectItem value="vue">Vue</SelectItem>
+			</SelectContent>
+		</Select>
+	</PopoverContent>
+</Popover>
+```
+
 ## Select vs Combobox
 
 | Feature | Select | Combobox |

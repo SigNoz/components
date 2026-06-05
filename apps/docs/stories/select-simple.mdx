@@ -7,7 +7,7 @@ import * as SelectSimpleStories from './select-simple.stories';
 
 Preset that wraps `Select`, `SelectTrigger`, and `SelectContent` in a single component. Pass `items` (or `groups`) instead of composing subcomponents.
 
-For full primitive control, see [Select](?path=/docs/components-select--docs).
+For full primitive control, see [Select](?path=/docs/primitive-components-select--docs).
 
 ## How to use
 
@@ -56,7 +56,13 @@ const [values, setValues] = useState<string[]>([]);
 Use `maxDisplayedPills` to cap visible pills. Overflow items appear as "+N":
 
 ```tsx
-<SelectSimple multiple items={items} value={values} onChange={setValues} maxDisplayedPills={2} />
+<SelectSimple
+	multiple
+	items={items}
+	value={values}
+	onChange={setValues}
+	maxDisplayedPills={2}
+/>
 ```
 
 ## Grouped items
@@ -99,19 +105,55 @@ Or use `displayValue` as a callback to fully control the trigger label:
 />
 ```
 
+## Uncontrolled usage
+
+Use `defaultValue` when you don't need to control the selection externally:
+
+```tsx
+<SelectSimple
+	items={items}
+	defaultValue="react"
+	placeholder="Select a framework..."
+	onChange={(v) => console.log('Selected:', v)}
+/>
+```
+
+## Disabled state
+
+```tsx
+<SelectSimple items={items} value={value} onChange={setValue} disabled />
+```
+
 ## Loading state
 
 Use `loading` and `loadingPlaceholder` while fetching options asynchronously:
 
 ```tsx
-<SelectSimple
-	items={items}
-	loading={isLoading}
-	loadingPlaceholder="Fetching options..."
-	placeholder="Select a framework..."
-	value={value}
-	onChange={setValue}
-/>
+import { useEffect, useState } from 'react';
+
+function AsyncSelect() {
+	const [items, setItems] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [value, setValue] = useState('');
+
+	useEffect(() => {
+		fetchItems().then((data) => {
+			setItems(data);
+			setIsLoading(false);
+		});
+	}, []);
+
+	return (
+		<SelectSimple
+			items={items}
+			loading={isLoading}
+			loadingPlaceholder="Fetching options..."
+			placeholder="Select a framework..."
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
 ```
 
 ## Select inside a popover
