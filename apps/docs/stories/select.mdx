@@ -1,6 +1,5 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as SelectStories from './select.stories';
-import * as SelectSimpleStories from './select-simple.stories';
 import * as SelectTriggerStories from './select-trigger.stories';
 import * as SelectContentStories from './select-content.stories';
 import * as SelectItemStories from './select-item.stories';
@@ -13,240 +12,7 @@ import * as SelectLoadingStories from './select-loading.stories';
 
 Lightweight dropdown select built on Radix UI Select. Use for single or multi-value selection without search. For searchable dropdowns, use Combobox.
 
-## How to use
-
-### SelectSimple (preset)
-
-Minimal preset that accepts a list of items and handles selection and value display. Supports flat items, grouped items, and multi-select.
-
-**Flat items (value + label):**
-
-```tsx
-import { SelectSimple } from '@signozhq/ui';
-import { useState } from 'react';
-
-const items = [
-	{ value: 'react', label: 'React' },
-	{ value: 'vue', label: 'Vue' },
-	{ value: 'angular', label: 'Angular' },
-];
-
-export default function MyComponent() {
-	const [value, setValue] = useState('');
-
-	return (
-		<SelectSimple
-			items={items}
-			placeholder="Select a framework..."
-			value={value}
-			onChange={setValue}
-		/>
-	);
-}
-```
-
-**Multi-select with removable pills:**
-
-```tsx
-import { SelectSimple } from '@signozhq/ui';
-import { useState } from 'react';
-
-const items = [
-	{ value: 'react', label: 'React' },
-	{ value: 'vue', label: 'Vue' },
-	{ value: 'angular', label: 'Angular' },
-];
-
-export default function MyComponent() {
-	const [values, setValues] = useState<string[]>([]);
-
-	return (
-		<SelectSimple
-			multiple
-			items={items}
-			placeholder="Select frameworks..."
-			value={values}
-			onChange={setValues}
-		/>
-	);
-}
-```
-
-**Multi-select with overflow handling:**
-
-Use `maxDisplayedPills` to limit visible pills when space is limited. Overflow items are shown as "+N":
-
-```tsx
-<SelectSimple
-	multiple
-	items={items}
-	value={values}
-	onChange={setValues}
-	maxDisplayedPills={2}
-/>
-```
-
-**Items with icons (ReactNode labels):**
-
-```tsx
-import { SelectSimple } from '@signozhq/ui';
-import { useState } from 'react';
-import { Code, Database } from '@signozhq/icons';
-
-const items = [
-	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
-	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</>, displayValue: 'PostgreSQL' },
-];
-
-export default function MyComponent() {
-	const [value, setValue] = useState('');
-
-	return (
-		<SelectSimple
-			items={items}
-			placeholder="Select a tool..."
-			value={value}
-			onChange={setValue}
-		/>
-	);
-}
-```
-
-**Grouped items with headings:**
-
-```tsx
-<SelectSimple
-	groups={[
-		{ heading: 'Frameworks', items: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }] },
-		{ heading: 'Languages', items: [{ value: 'ts', label: 'TypeScript' }, { value: 'js', label: 'JavaScript' }] },
-	]}
-	placeholder="Select..."
-	value={value}
-	onChange={setValue}
-/>
-```
-
-**Uncontrolled with defaultValue:**
-
-```tsx
-<SelectSimple
-	items={items}
-	defaultValue="react"
-	placeholder="Select a framework..."
-	onChange={(v) => console.log('Selected:', v)}
-/>
-```
-
-**Custom displayValue callback:**
-
-```tsx
-<SelectSimple
-	items={items}
-	value={value}
-	onChange={setValue}
-	displayValue={(selectedItems) => selectedItems.length > 0 ? `${selectedItems.length} selected` : null}
-/>
-```
-
-**Loading state (async data):**
-
-Use `loading` and `loadingPlaceholder` props to show a loading spinner in the dropdown while fetching data:
-
-```tsx
-const [items, setItems] = useState([]);
-const [isLoading, setIsLoading] = useState(true);
-
-useEffect(() => {
-	fetchItems().then((data) => {
-		setItems(data);
-		setIsLoading(false);
-	});
-}, []);
-
-<SelectSimple
-	items={items}
-	loading={isLoading}
-	loadingPlaceholder="Fetching options..."
-	placeholder="Select a framework..."
-	value={value}
-	onChange={setValue}
-/>
-```
-
-For primitive composition, use `SelectLoading` inside `SelectContent`:
-
-```tsx
-<SelectContent>
-	{isLoading ? (
-		<SelectLoading>Loading options...</SelectLoading>
-	) : (
-		items.map((item) => (
-			<SelectItem key={item.value} value={item.value}>
-				{item.label}
-			</SelectItem>
-		))
-	)}
-</SelectContent>
-```
-
-### Select inside a popover
-
-When placing a select inside a popover, set `withPortal={false}` so the dropdown content stays within the popover DOM instead of portaling to `document.body`. This avoids z-index and stacking issues.
-
-**SelectSimple preset:**
-
-```tsx
-import { Popover, PopoverTrigger, PopoverContent, SelectSimple, Button } from '@signozhq/ui';
-
-<Popover>
-	<PopoverTrigger asChild>
-		<Button variant="outline">Open filters</Button>
-	</PopoverTrigger>
-	<PopoverContent className="w-80">
-		<SelectSimple
-			items={items}
-			value={value}
-			onChange={setValue}
-			withPortal={false}
-		/>
-	</PopoverContent>
-</Popover>
-```
-
-**Primitive composition:**
-
-```tsx
-import {
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	Select,
-	SelectTrigger,
-	SelectContent,
-	SelectItem,
-} from '@signozhq/ui';
-
-<Popover>
-	<PopoverTrigger asChild>
-		<Button variant="outline">Open</Button>
-	</PopoverTrigger>
-	<PopoverContent>
-		<Select value={value} onChange={setValue}>
-			<SelectTrigger placeholder="Select..." />
-			<SelectContent withPortal={false}>
-				<SelectItem value="react">React</SelectItem>
-				<SelectItem value="vue">Vue</SelectItem>
-			</SelectContent>
-		</Select>
-	</PopoverContent>
-</Popover>
-```
-
-<Primary />
-
-## SelectSimple Props
-
-<Controls of={SelectSimpleStories.Default} />
+For the quick-start preset, see [SelectSimple](?path=/docs/composed-components-selectsimple--docs).
 
 ## Basic select (composition)
 
@@ -285,6 +51,40 @@ export default function MyComponent() {
 		</Select>
 	);
 }
+```
+
+<Primary />
+
+## Select inside a popover
+
+When rendering a select inside a popover or modal, pass `withPortal={false}` to `SelectContent` so the dropdown stays in the same DOM tree and avoids z-index issues:
+
+```tsx
+import {
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+	Select,
+	SelectTrigger,
+	SelectContent,
+	SelectItem,
+	Button,
+} from '@signozhq/ui';
+
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open</Button>
+	</PopoverTrigger>
+	<PopoverContent>
+		<Select value={value} onChange={(v) => setValue(v as string)}>
+			<SelectTrigger placeholder="Select..." />
+			<SelectContent withPortal={false}>
+				<SelectItem value="react">React</SelectItem>
+				<SelectItem value="vue">Vue</SelectItem>
+			</SelectContent>
+		</Select>
+	</PopoverContent>
+</Popover>
 ```
 
 ## Select vs Combobox
