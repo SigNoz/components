@@ -1,0 +1,90 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbPrimitiveStories from './breadcrumb-primitive.stories';
+import * as BreadcrumbListStories from './breadcrumb-list.stories';
+import * as BreadcrumbItemStories from './breadcrumb-item.stories';
+import * as BreadcrumbLinkStories from './breadcrumb-link.stories';
+import * as BreadcrumbPageStories from './breadcrumb-page.stories';
+import * as BreadcrumbSeparatorStories from './breadcrumb-separator.stories';
+import * as BreadcrumbEllipsisStories from './breadcrumb-ellipsis.stories';
+import * as BreadcrumbDropdownStories from './breadcrumb-dropdown.stories';
+
+<Meta of={BreadcrumbPrimitiveStories} />
+
+# Breadcrumb
+
+A navigation component that displays the current location within a hierarchy and allows users to navigate back to previous levels.
+
+For the quick-start preset, see [BreadcrumbSimple](?path=/docs/composed-components-breadcrumbsimple--docs).
+
+<Primary />
+
+## Primitive Composition
+
+For full control, compose the subcomponents manually:
+
+```tsx
+import {
+	Breadcrumb,
+	BreadcrumbList,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+	BreadcrumbEllipsis,
+	BreadcrumbDropdown,
+} from '@signozhq/ui';
+
+<Breadcrumb>
+	<BreadcrumbList>
+		<BreadcrumbItem>
+			<BreadcrumbLink href="/">Home</BreadcrumbLink>
+		</BreadcrumbItem>
+		<BreadcrumbSeparator />
+		<BreadcrumbItem>
+			<BreadcrumbEllipsis />
+		</BreadcrumbItem>
+		<BreadcrumbSeparator />
+		<BreadcrumbItem>
+			<BreadcrumbLink href="/components">Components</BreadcrumbLink>
+		</BreadcrumbItem>
+		<BreadcrumbSeparator />
+		<BreadcrumbItem>
+			<BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+		</BreadcrumbItem>
+	</BreadcrumbList>
+</Breadcrumb>
+```
+
+## Breadcrumb Props
+
+<Controls of={BreadcrumbPrimitiveStories.Default} />
+
+## Subcomponents
+
+### BreadcrumbList
+
+<Controls of={BreadcrumbListStories.Default} />
+
+### BreadcrumbItem
+
+<Controls of={BreadcrumbItemStories.Default} />
+
+### BreadcrumbLink
+
+<Controls of={BreadcrumbLinkStories.Default} />
+
+### BreadcrumbPage
+
+<Controls of={BreadcrumbPageStories.Default} />
+
+### BreadcrumbSeparator
+
+<Controls of={BreadcrumbSeparatorStories.Default} />
+
+### BreadcrumbEllipsis
+
+<Controls of={BreadcrumbEllipsisStories.Default} />
+
+### BreadcrumbDropdown
+
+<Controls of={BreadcrumbDropdownStories.Default} />
