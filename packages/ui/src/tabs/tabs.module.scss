@@ -298,5 +298,7 @@
 }
 
 .tabs__icon {
+  display: var(--tabs-icon-display, inline-flex);
+  align-items: var(--tabs-icon-align-items, center);
   flex-shrink: var(--tabs-icon-flex-shrink, 0);
 }
