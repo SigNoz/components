@@ -18,13 +18,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useMemo, useState } from 'react';
 
 const meta: Meta<typeof DropdownMenuSimple> = {
-	title: 'Composed Components/DropdownMenu/DropdownMenuSimple',
+	title: 'Composed Components/DropdownMenuSimple',
 	component: DropdownMenuSimple,
 	parameters: {
 		layout: 'fullscreen',
-		backgrounds: {
-			disable: true,
-		},
+		backgrounds: { default: 'dark' },
 	},
 	argTypes: {
 		menu: {
@@ -123,42 +121,6 @@ export const Default: Story = {
 	),
 };
 
-export const Playground: Story = {
-	args: {
-		menu: {
-			items: [
-				{
-					type: 'group',
-					label: 'My Account',
-					children: [
-						{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-						{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-						{ type: 'divider' },
-						{
-							key: 'delete',
-							label: 'Delete',
-							icon: <Trash2 className="h-4 w-4" />,
-							danger: true,
-						},
-					],
-				},
-			],
-		},
-		align: 'start',
-		side: 'bottom',
-		sideOffset: 4,
-	},
-	render: (args) => (
-		<div className="p-8">
-			<DropdownMenuSimple {...args}>
-				<Button variant="solid" color="secondary">
-					Open
-				</Button>
-			</DropdownMenuSimple>
-		</div>
-	),
-};
-
 // Basic DropdownMenuSimple
 export const Basic: Story = {
 	parameters: {
@@ -220,9 +182,9 @@ export const WithIcons: Story = {
 		const items1: MenuItem[] = [
 			{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
 			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-			{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
+			{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
+			{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
@@ -240,9 +202,9 @@ export const WithIcons: Story = {
 				rightIcon: <Check className="h-4 w-4" />,
 			},
 			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-			{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
+			{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
+			{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
 		];
 
 		const items3: MenuItem[] = [
@@ -253,9 +215,9 @@ export const WithIcons: Story = {
 				rightIcon: <ChevronRight className="h-4 w-4" />,
 			},
 			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-			{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+			{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
+			{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
+			{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
@@ -363,9 +325,9 @@ export const WithSectionLabels: Story = {
 						rightIcon: <Check className="h-4 w-4" />,
 					},
 					{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-					{ key: 'view2', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-					{ key: 'view3', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-					{ key: 'view4', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+					{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
+					{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
+					{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
 					{ type: 'divider' },
 					{
 						key: 'delete',
@@ -642,7 +604,6 @@ export const WithSearch: Story = {
 			if (!query.trim()) return searchMenuItems;
 			const q = query.toLowerCase();
 			return searchMenuItems.filter((item) => {
-				// Dividers are kept but will be cleaned up by DropdownMenuSimple's cleanupMenuItems
 				if ('type' in item && item.type === 'divider') return true;
 				return 'label' in item && String(item.label).toLowerCase().includes(q);
 			});
@@ -742,7 +703,7 @@ export const AllStates: Story = {
 				key: 'new-team',
 				label: 'New Team',
 				icon: <Folder className="h-4 w-4" />,
-				shortcut: '⌘+T',
+				shortcut: '⌘T',
 			},
 			{ type: 'divider' },
 			{ key: 'github', label: 'GitHub', icon: <Link2 className="h-4 w-4" /> },
