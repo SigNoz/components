@@ -36,6 +36,16 @@ const meta: Meta<typeof TabsList> = {
 				defaultValue: { summary: "'left'" },
 			},
 		},
+		leftContent: {
+			control: false,
+			description: 'Content rendered to the left of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		rightContent: {
+			control: false,
+			description: 'Content rendered to the right of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
 		id: {
 			control: 'text',
 			description: 'A unique identifier for the tabs list.',
