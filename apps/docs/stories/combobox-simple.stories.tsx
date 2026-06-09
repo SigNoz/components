@@ -1,10 +1,10 @@
 import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
 import { ComboboxSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof ComboboxSimple> = {
-	title: 'Composed Components/Combobox/ComboboxSimple',
+	title: 'Composed Components/ComboboxSimple',
 	component: ComboboxSimple,
 	argTypes: {
 		testId: {
@@ -137,7 +137,6 @@ const meta: Meta<typeof ComboboxSimple> = {
 	parameters: {
 		layout: 'fullscreen',
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
@@ -347,4 +346,414 @@ export const Disabled: Story = {
 			<ComboboxSimple {...args} />
 		</div>
 	),
+};
+
+export const MultiSelect: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select frameworks...',
+		multiple: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Selected: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const MultiSelectWithDefaultValues: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select frameworks...',
+		multiple: true,
+		defaultValue: ['react', 'vue'],
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const MultiSelectWithMaxPills: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select frameworks...',
+		multiple: true,
+		defaultValue: ['react', 'vue', 'angular', 'svelte'],
+		maxDisplayedPills: 2,
+	},
+	render: (args) => (
+		<div className="p-8 w-full max-w-sm">
+			<ComboboxSimple {...args} />
+		</div>
+	),
+};
+
+export const AllowCreate: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create tags...',
+		multiple: true,
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Type to filter, then click "Create" option to add new tags
+				</p>
+			</div>
+		);
+	},
+};
+
+export const AllowCreateWithCustomRender: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create tags...',
+		multiple: true,
+		allowCreate: (inputValue: string) => (
+			<span>
+				Add <strong>"{inputValue}"</strong> as new tag
+			</span>
+		),
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const TagsMode: Story = {
+	args: {
+		items: [],
+		placeholder: 'Type to add tags...',
+		multiple: true,
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>(['initial-tag']);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Free-form tag input - no predefined options
+				</p>
+			</div>
+		);
+	},
+};
+
+export const AllowCreateSingle: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create...',
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const AllowCreateSingleCustomText: Story = {
+	args: {
+		items: defaultItems,
+		placeholder: 'Select or create...',
+		allowCreate: (inputValue: string) => (
+			<span>
+				Add <strong>"{inputValue}"</strong> as new option
+			</span>
+		),
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const WithHints: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [
+					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+				],
+			},
+			{
+				heading: 'Status',
+				items: [
+					{ value: 'status:active', label: 'Status: Active' },
+					{ value: 'status:pending', label: 'Status: Pending' },
+					{ value: 'status:closed', label: 'Status: Closed' },
+				],
+			},
+			{
+				heading: 'Priority',
+				items: [
+					{ value: 'priority:high', label: 'Priority: High' },
+					{ value: 'priority:medium', label: 'Priority: Medium' },
+					{ value: 'priority:low', label: 'Priority: Low' },
+				],
+			},
+		],
+		placeholder: 'Filter by...',
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+			</div>
+		);
+	},
+};
+
+export const WithHintsAndCreate: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
+			},
+			{
+				heading: 'Tags',
+				items: [
+					{ value: 'tag:bug', label: 'tag:bug' },
+					{ value: 'tag:feature', label: 'tag:feature' },
+					{ value: 'tag:docs', label: 'tag:docs' },
+				],
+			},
+		],
+		placeholder: 'Add tag...',
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Try typing "tag:" to see filtered options, or create a new tag like "tag:mynewtag"
+				</p>
+			</div>
+		);
+	},
+};
+
+export const MultiSelectWithHints: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [
+					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+				],
+			},
+			{
+				heading: 'Status',
+				items: [
+					{ value: 'status:active', label: 'Status: Active' },
+					{ value: 'status:pending', label: 'Status: Pending' },
+					{ value: 'status:closed', label: 'Status: Closed' },
+				],
+			},
+			{
+				heading: 'Priority',
+				items: [
+					{ value: 'priority:high', label: 'Priority: High' },
+					{ value: 'priority:medium', label: 'Priority: Medium' },
+					{ value: 'priority:low', label: 'Priority: Low' },
+				],
+			},
+		],
+		placeholder: 'Add filters...',
+		multiple: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Filters: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+			</div>
+		);
+	},
+};
+
+export const MultiSelectWithHintsAndCreate: Story = {
+	args: {
+		groups: [
+			{
+				heading: 'Suggestions',
+				items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
+			},
+			{
+				heading: 'Tags',
+				items: [
+					{ value: 'tag:bug', label: 'tag:bug' },
+					{ value: 'tag:feature', label: 'tag:feature' },
+					{ value: 'tag:docs', label: 'tag:docs' },
+				],
+			},
+		],
+		placeholder: 'Add tags...',
+		multiple: true,
+		allowCreate: true,
+	},
+	render: (args) => {
+		const [values, setValues] = useState<string[]>([]);
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
+				<p className="mt-4 text-sm text-muted-foreground">
+					Tags: {values.length > 0 ? values.join(', ') : 'none'}
+				</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Type "tag:" to filter, or create custom tags like "tag:mynewtag"
+				</p>
+			</div>
+		);
+	},
+};
+
+export const Loading: Story = {
+	render: () => (
+		<div className="p-8 w-full max-w-2xl space-y-8">
+			<div>
+				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<ComboboxSimple
+					items={[]}
+					placeholder="Select a framework..."
+					loading={true}
+					loadingPlaceholder="Fetching options..."
+				/>
+			</div>
+			<div>
+				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<ComboboxLoadingWithDelay />
+			</div>
+		</div>
+	),
+};
+
+function ComboboxLoadingWithDelay() {
+	const [isLoading, setIsLoading] = useState(true);
+	const [items, setItems] = useState<typeof defaultItems>([]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setItems(defaultItems);
+			setIsLoading(false);
+		}, 5000);
+		return () => clearTimeout(timer);
+	}, []);
+
+	return (
+		<ComboboxSimple
+			items={items}
+			placeholder="Select a framework..."
+			loading={isLoading}
+			loadingPlaceholder="Loading options..."
+		/>
+	);
+}
+
+export const WithKeywords: Story = {
+	args: {
+		items: [
+			{ value: '15', label: '15 minutes', keywords: ['quarter hour', '15m', '900 seconds'] },
+			{ value: '30', label: '30 minutes', keywords: ['half hour', '30m', '1800 seconds'] },
+			{ value: '60', label: '1 hour', keywords: ['60 minutes', '1h', '3600 seconds'] },
+			{ value: '1440', label: '1 day', keywords: ['24 hours', '1d', 'daily'] },
+		],
+		placeholder: 'Select duration...',
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Try searching: "minute", "hour", "quarter", "half", "daily"
+				</p>
+			</div>
+		);
+	},
+};
+
+export const WithStringLabelsFilter: Story = {
+	args: {
+		items: [
+			{ value: 'us-east-1', label: 'US East (N. Virginia)' },
+			{ value: 'us-west-2', label: 'US West (Oregon)' },
+			{ value: 'eu-west-1', label: 'EU (Ireland)' },
+			{ value: 'ap-southeast-1', label: 'Asia Pacific (Singapore)' },
+		],
+		placeholder: 'Select region...',
+	},
+	render: (args) => {
+		const [value, setValue] = useState('');
+
+		return (
+			<div className="p-8 w-full max-w-sm">
+				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
+				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p className="mt-2 text-xs text-muted-foreground">
+					Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
+				</p>
+			</div>
+		);
+	},
 };

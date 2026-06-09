@@ -1,0 +1,237 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ComboboxSimpleStories from './combobox-simple.stories';
+
+<Meta of={ComboboxSimpleStories} />
+
+# ComboboxSimple
+
+Searchable select preset built on `Combobox` and `Popover`. Pass `items` (or `groups`) instead of composing subcomponents. Supports filtering, multi-select, grouped items, and custom labels.
+
+For full primitive control, see [Combobox](?path=/docs/primitive-components-combobox--docs).
+
+## How to use
+
+```tsx
+import { ComboboxSimple } from '@signozhq/ui';
+import { useState } from 'react';
+
+const items = [
+	{ value: 'react', label: 'React' },
+	{ value: 'vue', label: 'Vue' },
+	{ value: 'angular', label: 'Angular' },
+];
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+
+	return (
+		<ComboboxSimple
+			items={items}
+			placeholder="Select a framework..."
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Multi-select
+
+Set `multiple` to enable multi-select with removable pills in the trigger:
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<ComboboxSimple
+	multiple
+	items={items}
+	placeholder="Select frameworks..."
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+/>
+```
+
+Use `maxDisplayedPills` to cap visible pills. Overflow items appear as "+N":
+
+```tsx
+<ComboboxSimple
+	multiple
+	items={items}
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+	maxDisplayedPills={2}
+/>
+```
+
+## Grouped items
+
+Pass `groups` instead of `items` to render headings between option clusters:
+
+```tsx
+<ComboboxSimple
+	groups={[
+		{ heading: 'Frameworks', items: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }] },
+		{ heading: 'Languages', items: [{ value: 'ts', label: 'TypeScript' }, { value: 'js', label: 'JavaScript' }] },
+	]}
+	placeholder="Select..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+## Items with icons
+
+Use ReactNode labels. Add `displayValue` to control what shows in the trigger:
+
+```tsx
+import { Code, Database } from '@signozhq/icons';
+
+const items = [
+	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
+	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</>, displayValue: 'PostgreSQL' },
+];
+```
+
+## displayValue callback
+
+Pass a `displayValue` function to fully control what appears in the trigger after selection:
+
+```tsx
+<ComboboxSimple
+	items={items}
+	value={value}
+	onChange={setValue}
+	displayValue={(item) => item ? `${item.displayValue ?? item.value} ✓` : 'Choose...'}
+/>
+```
+
+## Custom empty placeholder
+
+Override the default "No results found" message with `emptyPlaceholder`:
+
+```tsx
+<ComboboxSimple
+	items={items}
+	value={value}
+	onChange={setValue}
+	emptyPlaceholder="No frameworks match your search."
+/>
+```
+
+## Uncontrolled usage
+
+Use `defaultValue` when you don't need to control the selection externally:
+
+```tsx
+<ComboboxSimple
+	items={items}
+	defaultValue="react"
+	placeholder="Select a framework..."
+	onChange={(v) => console.log('Selected:', v)}
+/>
+```
+
+## Allow creating new items
+
+Set `allowCreate` to let users type and press Enter to create new options. Pass a function to customise the create option label:
+
+```tsx
+<ComboboxSimple
+	items={items}
+	multiple
+	allowCreate
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+	placeholder="Type to add tags..."
+/>
+```
+
+```tsx
+<ComboboxSimple
+	items={items}
+	multiple
+	allowCreate={(inputValue) => (
+		<span>Add <strong>"{inputValue}"</strong> as new tag</span>
+	)}
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+/>
+```
+
+## Keywords for enhanced filtering
+
+Use `keywords` when the `value` differs from what users might search for. The filter searches across `value`, `label` (if string), `displayValue`, `insertValue`, and `keywords`:
+
+```tsx
+const items = [
+	{ value: '15', label: '15 minutes', keywords: ['quarter hour', '15m', '900 seconds'] },
+	{ value: '30', label: '30 minutes', keywords: ['half hour', '30m'] },
+	{ value: '60', label: '1 hour', keywords: ['60 minutes', '1h'] },
+];
+```
+
+## Hint items with insertValue
+
+Items with `insertValue` behave as hints — clicking them inserts the value into the input instead of selecting. Useful for filter prefixes like `status:` or `tag:`:
+
+```tsx
+<ComboboxSimple
+	groups={[
+		{
+			heading: 'Suggestions',
+			items: [
+				{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+				{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+			],
+		},
+		{
+			heading: 'Status',
+			items: [
+				{ value: 'status:active', label: 'Status: Active' },
+				{ value: 'status:pending', label: 'Status: Pending' },
+			],
+		},
+	]}
+	placeholder="Filter by..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+## Loading state
+
+Use `loading` and `loadingPlaceholder` while fetching options asynchronously:
+
+```tsx
+<ComboboxSimple
+	items={items}
+	loading={isLoading}
+	loadingPlaceholder="Fetching options..."
+	placeholder="Select a framework..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+## ComboboxSimple inside a popover
+
+Set `withPortal={false}` when placing inside a popover or modal to avoid z-index and stacking issues:
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent, ComboboxSimple, Button } from '@signozhq/ui';
+
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open filters</Button>
+	</PopoverTrigger>
+	<PopoverContent className="w-80">
+		<ComboboxSimple items={items} value={value} onChange={setValue} withPortal={false} />
+	</PopoverContent>
+</Popover>
+```
+
+## Props
+
+<Controls of={ComboboxSimpleStories.Default} />
