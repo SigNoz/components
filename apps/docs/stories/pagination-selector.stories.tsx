@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
 
 const meta: Meta<typeof PaginationSelector> = {
-	title: 'Components/Pagination/PaginationSelector',
+	title: 'Primitive Components/Pagination/PaginationSelector',
 	component: PaginationSelector,
 	argTypes: {
 		label: {

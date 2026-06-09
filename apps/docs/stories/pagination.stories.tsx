@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 
 type PaginationProps = ComponentProps<typeof Pagination>;
 
-const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.Element => {
+function ControlledPagination({
+	initialPage,
+	...args
+}: PaginationProps & { initialPage: number }): JSX.Element {
 	const [currentPage, setCurrentPage] = useState(args.current ?? initialPage);
 
 	useEffect(() => {
@@ -24,10 +27,10 @@ const ControlledPagination = (args: PaginationProps, initialPage: number): JSX.E
 			}}
 		/>
 	);
-};
+}
 
 const meta: Meta<typeof Pagination> = {
-	title: 'Composed Components/Pagination/Pagination',
+	title: 'Composed Components/Pagination',
 	component: Pagination,
 	argTypes: {
 		total: {
@@ -233,17 +236,7 @@ export const CenterAligned: Story = {
 		pageSize: 10,
 		align: 'center',
 	},
-	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-
-		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
-			}
-		}, [args.current]);
-
-		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
-	},
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };
 
 export const EndAligned: Story = {
@@ -252,17 +245,7 @@ export const EndAligned: Story = {
 		pageSize: 10,
 		align: 'end',
 	},
-	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-
-		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
-			}
-		}, [args.current]);
-
-		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
-	},
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };
 
 export const CustomPageSize: Story = {
@@ -270,17 +253,7 @@ export const CustomPageSize: Story = {
 		total: 100,
 		pageSize: 5,
 	},
-	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-
-		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
-			}
-		}, [args.current]);
-
-		return <Pagination {...args} current={current} onPageChange={setCurrent} />;
-	},
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };
 
 export const WithPageChangeHandler: Story = {
@@ -310,32 +283,32 @@ export const WithPageChangeHandler: Story = {
 	},
 };
 
-export const ThreePages_FirstSelected: Story = {
+export const ThreePagesFirstSelected: Story = {
 	args: {
 		total: 30,
 	},
-	render: (args) => ControlledPagination(args, 1),
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };
 
-export const ThreePages_SecondSelected: Story = {
+export const ThreePagesSecondSelected: Story = {
 	args: {
 		total: 30,
 	},
-	render: (args) => ControlledPagination(args, 2),
+	render: (args) => <ControlledPagination {...args} initialPage={2} />,
 };
 
-export const TenPages_FirstSelected: Story = {
+export const TenPagesFirstSelected: Story = {
 	args: {
 		total: 100,
 	},
-	render: (args) => ControlledPagination(args, 1),
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };
 
-export const TenPages_LastSelected: Story = {
+export const TenPagesLastSelected: Story = {
 	args: {
 		total: 100,
 	},
-	render: (args) => ControlledPagination(args, 10),
+	render: (args) => <ControlledPagination {...args} initialPage={10} />,
 };
 
 export const WithPageSizeSelector: Story = {
