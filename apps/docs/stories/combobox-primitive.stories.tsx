@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof Combobox> = {
-	title: 'Primitive Components/Combobox/Combobox',
+	title: 'Primitive Components/Combobox',
 	component: Combobox,
 	argTypes: {
 		open: {
@@ -32,7 +32,6 @@ const meta: Meta<typeof Combobox> = {
 	parameters: {
 		layout: 'fullscreen',
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;
