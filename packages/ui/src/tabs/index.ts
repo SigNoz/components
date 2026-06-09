@@ -39,6 +39,8 @@
  * | `--tabs-hover-slider-will-change` | `transform, width, opacity` |
  * | `--tabs-hover-slider-z-index` | `0` |
  * | `--tabs-hover-text-color` | `var(--l1-foreground-hover)` |
+ * | `--tabs-icon-align-items` | `center` |
+ * | `--tabs-icon-display` | `inline-flex` |
  * | `--tabs-icon-flex-shrink` | `0` |
  * | `--tabs-list-inner-align-items` | `flex-start` |
  * | `--tabs-list-inner-display` | `inline-flex` |

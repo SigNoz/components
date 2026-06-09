@@ -674,3 +674,39 @@ export const DisabledStates: Story = {
 		</div>
 	),
 };
+
+/**
+ * Visual-regression anchor for prefix/suffix icon alignment.
+ *
+ * Icons passed via `prefixIcon` / `suffixIcon` are wrapped in a `.tabs__icon`
+ * element. This story isolates that wrapper so Chromatic captures the icon
+ * staying vertically centered against the label (rather than sitting on the
+ * text baseline). Includes prefix-only, suffix-only, and both-icon triggers.
+ */
+export const IconAlignment: Story = {
+	args: {
+		variant: 'primary',
+		defaultValue: 'prefix',
+		items: [
+			{
+				key: 'prefix',
+				label: 'Prefix Icon',
+				children: 'Tab with a leading icon',
+				prefixIcon: <Settings2 className="size-4" />,
+			},
+			{
+				key: 'suffix',
+				label: 'Suffix Icon',
+				children: 'Tab with a trailing icon',
+				suffixIcon: <History className="size-4" />,
+			},
+			{
+				key: 'both',
+				label: 'Both Icons',
+				children: 'Tab with leading and trailing icons',
+				prefixIcon: <LayoutGrid className="size-4" />,
+				suffixIcon: <Component className="size-4" />,
+			},
+		],
+	},
+};
