@@ -28,7 +28,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type * as React from 'react';
 
 const meta: Meta<typeof Tabs> = {
-	title: 'Composed Components/Tabs/TabsSimple',
+	title: 'Composed Components/TabsSimple',
 	component: Tabs,
 	argTypes: {
 		items: {
@@ -106,10 +106,26 @@ const meta: Meta<typeof Tabs> = {
 			description: 'Additional CSS classes to apply to the tabs root.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		tabBarLeftContent: {
+			control: false,
+			description: 'Content rendered to the left of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		tabBarRightContent: {
+			control: false,
+			description: 'Content rendered to the right of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'Test ID applied to the tabs root element.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;

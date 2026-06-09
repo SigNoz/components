@@ -1,142 +1,165 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as TabsStories from './tabs.stories';
-import * as TabsRootStories from './tabs-root.stories';
-import * as TabsListStories from './tabs-list.stories';
-import * as TabsTriggerStories from './tabs-trigger.stories';
-import * as TabsContentStories from './tabs-content.stories';
 
 <Meta of={TabsStories} />
 
-# Tabs
+# TabsSimple
 
-A flexible tabbed interface component with primary and secondary variants, supporting icons and disabled states.
+Preset that accepts an `items` array and renders a tabbed interface with primary and secondary variants, prefix/suffix icons, disabled states with tooltips, and optional tab bar extra content.
+
+For full primitive control, see [Tabs](?path=/docs/primitive-components-tabs-tabs--docs).
 
 ## How to use
 
-### Tabs (items-based API)
-
-Use the main `Tabs` component with an `items` array for the most common use case:
-
 ```tsx
 import { Tabs } from '@signozhq/ui';
-import { Settings, CircleAlert } from '@signozhq/icons';
+
+const items = [
+	{ key: 'overview', label: 'Overview', children: 'Overview content' },
+	{ key: 'analytics', label: 'Analytics', children: 'Analytics content' },
+	{ key: 'settings', label: 'Settings', children: 'Settings content' },
+];
 
 export default function MyComponent() {
-	const items = [
-		{
-			key: 'overview',
-			label: 'Overview',
-			children: 'Overview content',
-			prefixIcon: <Settings className="size-4" />,
-		},
-		{
-			key: 'issues',
-			label: 'Issues',
-			children: 'Issues content',
-			prefixIcon: <CircleAlert className="size-4" />,
-		},
-	];
-
 	return (
-		<Tabs
-			items={items}
-			variant="primary"
-			defaultValue="overview"
-		/>
+		<Tabs items={items} defaultValue="overview" />
 	);
 }
-```
-
-### Controlled state
-
-For controlled tabs, use `value` and `onChange`:
-
-```tsx
-import { Tabs } from '@signozhq/ui';
-
-export default function MyComponent() {
-	const [activeTab, setActiveTab] = React.useState('tab1');
-
-	return (
-		<Tabs
-			variant="secondary"
-			value={activeTab}
-			onChange={setActiveTab}
-			items={[
-				{ key: 'tab1', label: 'Overview', children: <div>Overview content</div> },
-				{ key: 'tab2', label: 'Details', children: <div>Details content</div> },
-			]}
-		/>
-	);
-}
-```
-
-### With icons and disabled tabs
-
-```tsx
-import { Tabs } from '@signozhq/ui';
-import { House, Lock } from '@signozhq/icons';
-
-<Tabs
-	items={[
-		{
-			key: 'home',
-			label: 'Home',
-			prefixIcon: <House />,
-			children: <div>Home</div>,
-		},
-		{
-			key: 'settings',
-			label: 'Settings',
-			disabled: true,
-			disabledReason: 'Coming soon',
-			children: <div>Settings</div>,
-		},
-	]}
-/>
 ```
 
 <Primary />
 
-## Tabs Props
+## Variants
 
-<Controls of={TabsStories.Default} />
-
-## Primitive composition
-
-For full control, use the low-level building blocks: `TabsRoot`, `TabsList`, `TabsTrigger`, and `TabsContent`.
+Switch between `primary` (default) and `secondary` styles with the `variant` prop:
 
 ```tsx
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@signozhq/ui';
+// Primary variant (default) — underline indicator with hover slider
+<Tabs items={items} variant="primary" defaultValue="overview" />
 
-export default function MyComponent() {
+// Secondary variant — pill-style tabs with a bottom border
+<Tabs items={items} variant="secondary" defaultValue="overview" />
+```
+
+## With icons
+
+Add `prefixIcon` or `suffixIcon` to tab items to display icons alongside the label:
+
+```tsx
+import { Settings, History } from '@signozhq/icons';
+
+<Tabs
+	items={[
+		{
+			key: 'settings',
+			label: 'Settings',
+			prefixIcon: <Settings className="size-4" />,
+			children: 'Settings content',
+		},
+		{
+			key: 'history',
+			label: 'History',
+			suffixIcon: <History className="size-4" />,
+			children: 'History content',
+		},
+	]}
+	defaultValue="settings"
+/>
+```
+
+## Disabled tabs
+
+Disabled tabs automatically display a lock icon (replacing any `prefixIcon`) and show a tooltip on hover. Use `disabledReason` to customise the tooltip message:
+
+```tsx
+<Tabs
+	items={[
+		{ key: 'active', label: 'Active', children: 'Active content' },
+		{
+			key: 'locked',
+			label: 'Issues',
+			disabled: true,
+			disabledReason: 'Feature is under maintenance',
+			children: 'Issues content',
+		},
+		{
+			key: 'beta',
+			label: 'Beta',
+			disabled: true,
+			children: 'Beta content',
+		},
+	]}
+	defaultValue="active"
+/>
+```
+
+## Tab bar extra content
+
+Render additional content to the left or right of the tab list with `tabBarLeftContent` and `tabBarRightContent`:
+
+```tsx
+import { Button, ButtonVariant, ButtonSize, ButtonColor } from '@signozhq/ui';
+import { Plus } from '@signozhq/icons';
+
+<Tabs
+	items={items}
+	defaultValue="overview"
+	tabBarRightContent={
+		<Button
+			variant={ButtonVariant.Outlined}
+			size={ButtonSize.SM}
+			color={ButtonColor.Secondary}
+			prefix={<Plus className="size-4" />}
+		>
+			Add view
+		</Button>
+	}
+/>
+```
+
+Combine both sides:
+
+```tsx
+<Tabs
+	items={items}
+	defaultValue="overview"
+	tabBarLeftContent={<span className="text-xs opacity-60">Service: frontend</span>}
+	tabBarRightContent={<Button>Configure</Button>}
+/>
+```
+
+## Alignment
+
+Control how the tab list positions itself within its container using the `alignment` prop (`left`, `center`, `right`):
+
+```tsx
+<Tabs items={items} alignment="center" defaultValue="overview" />
+<Tabs items={items} alignment="right" defaultValue="overview" />
+```
+
+Alignment works alongside `tabBarLeftContent` and `tabBarRightContent` — the tab list shifts between the extra content slots.
+
+## Controlled state
+
+Pass `value` and `onChange` to drive the active tab from external state:
+
+```tsx
+import { useState } from 'react';
+import { Tabs } from '@signozhq/ui';
+
+function MyComponent() {
+	const [activeTab, setActiveTab] = useState('overview');
+
 	return (
-		<TabsRoot defaultValue="tab1">
-			<TabsList variant="primary">
-				<TabsTrigger value="tab1">Tab 1</TabsTrigger>
-				<TabsTrigger value="tab2">Tab 2</TabsTrigger>
-			</TabsList>
-			<TabsContent value="tab1">Tab 1 content</TabsContent>
-			<TabsContent value="tab2">Tab 2 content</TabsContent>
-		</TabsRoot>
+		<Tabs
+			items={items}
+			value={activeTab}
+			onChange={setActiveTab}
+		/>
 	);
 }
 ```
 
-> Note: We do not recommend using primitive composition since the variant `primary` is not supported.
+## Props
 
-## TabsRoot Props
-
-<Controls of={TabsRootStories.Default} />
-
-## TabsList Props
-
-<Controls of={TabsListStories.Default} />
-
-## TabsTrigger Props
-
-<Controls of={TabsTriggerStories.Default} />
-
-## TabsContent Props
-
-<Controls of={TabsContentStories.Default} />
+<Controls of={TabsStories.Default} />
