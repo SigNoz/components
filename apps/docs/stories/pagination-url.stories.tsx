@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 
 const meta: Meta<typeof PaginationUrl> = {
-	title: 'Composed Components/Pagination/PaginationUrl',
+	title: 'Composed Components/PaginationUrl',
 	component: PaginationUrl,
 	argTypes: {
 		urlKey: {
@@ -63,6 +63,25 @@ const meta: Meta<typeof PaginationUrl> = {
 				defaultValue: { summary: '[10, 20, 30, 40, 50]' },
 			},
 		},
+		pageSizePosition: {
+			control: 'select',
+			options: ['left', 'right'],
+			description: 'Position of the page size selector relative to pagination controls',
+			table: {
+				category: 'Behavior',
+				type: { summary: "'left' | 'right'" },
+				defaultValue: { summary: "'right'" },
+			},
+		},
+		pageSizeUrlKey: {
+			control: 'text',
+			description: 'Query parameter key for the page size in the URL',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'string' },
+				defaultValue: { summary: "'pageSize'" },
+			},
+		},
 		onPageSizeChange: {
 			control: false,
 			description: 'Callback when the page size changes',
@@ -116,6 +135,24 @@ export const WithPageSizeSelector: Story = {
 		total: 100,
 		pageSize: 10,
 		enablePageSize: true,
+		align: 'start',
+	},
+	decorators: [
+		(Story) => (
+			<NuqsAdapter>
+				<Story />
+			</NuqsAdapter>
+		),
+	],
+};
+
+export const WithPageSizeSelectorLeft: Story = {
+	args: {
+		urlKey: 'page',
+		total: 100,
+		pageSize: 10,
+		enablePageSize: true,
+		pageSizePosition: 'left',
 		align: 'start',
 	},
 	decorators: [

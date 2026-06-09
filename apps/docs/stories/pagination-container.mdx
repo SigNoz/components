@@ -1,0 +1,171 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PaginationContainerStories from './pagination-container.stories';
+import * as PaginationContentStories from './pagination-content.stories';
+import * as PaginationItemStories from './pagination-item.stories';
+import * as PaginationLinkStories from './pagination-link.stories';
+import * as PaginationPreviousStories from './pagination-previous.stories';
+import * as PaginationNextStories from './pagination-next.stories';
+import * as PaginationEllipsisStories from './pagination-ellipsis.stories';
+import * as PaginationSelectorStories from './pagination-selector.stories';
+
+<Meta of={PaginationContainerStories} />
+
+# PaginationContainer
+
+Low-level building blocks for constructing fully custom pagination layouts.
+
+For the all-in-one preset, see [Pagination](?path=/docs/composed-components-pagination--docs). For URL-synchronized pagination, see [PaginationUrl](?path=/docs/composed-components-paginationurl--docs).
+
+<Primary />
+
+## Primitive composition
+
+Compose the primitives for full control:
+
+```tsx
+import {
+	PaginationContainer,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationPrevious,
+	PaginationNext,
+	PaginationEllipsis,
+} from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [current, setCurrent] = useState(1);
+	const totalPages = 10;
+
+	return (
+		<PaginationContainer align="center">
+			<PaginationContent>
+				<PaginationItem>
+					<PaginationPrevious
+						onClick={() => setCurrent((p) => Math.max(1, p - 1))}
+						disabled={current === 1}
+					/>
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationLink isActive={current === 1} onClick={() => setCurrent(1)}>
+						1
+					</PaginationLink>
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationEllipsis />
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationLink
+						isActive={current === totalPages}
+						onClick={() => setCurrent(totalPages)}
+					>
+						{totalPages}
+					</PaginationLink>
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationNext
+						onClick={() => setCurrent((p) => Math.min(totalPages, p + 1))}
+						disabled={current === totalPages}
+					/>
+				</PaginationItem>
+			</PaginationContent>
+		</PaginationContainer>
+	);
+}
+```
+
+## With page size selector
+
+Add `PaginationSelector` alongside `PaginationContent` to let users control page size:
+
+```tsx
+import {
+	PaginationContainer,
+	PaginationContent,
+	PaginationItem,
+	PaginationLink,
+	PaginationPrevious,
+	PaginationNext,
+	PaginationSelector,
+} from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function MyComponent() {
+	const [current, setCurrent] = useState(1);
+	const [pageSize, setPageSize] = useState(10);
+	const totalPages = Math.ceil(100 / pageSize);
+
+	return (
+		<PaginationContainer align="center">
+			<PaginationSelector
+				value={pageSize}
+				options={[10, 20, 50]}
+				onChange={(size) => {
+					setPageSize(size);
+					setCurrent(1);
+				}}
+			/>
+			<PaginationContent>
+				<PaginationItem>
+					<PaginationPrevious
+						onClick={() => setCurrent((p) => Math.max(1, p - 1))}
+						disabled={current === 1}
+					/>
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationLink isActive={current === 1} onClick={() => setCurrent(1)}>
+						1
+					</PaginationLink>
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationLink
+						isActive={current === totalPages}
+						onClick={() => setCurrent(totalPages)}
+					>
+						{totalPages}
+					</PaginationLink>
+				</PaginationItem>
+				<PaginationItem>
+					<PaginationNext
+						onClick={() => setCurrent((p) => Math.min(totalPages, p + 1))}
+						disabled={current === totalPages}
+					/>
+				</PaginationItem>
+			</PaginationContent>
+		</PaginationContainer>
+	);
+}
+```
+
+## PaginationContainer Props
+
+<Controls of={PaginationContainerStories.Default} />
+
+## PaginationContent Props
+
+<Controls of={PaginationContentStories.Default} />
+
+## PaginationItem Props
+
+<Controls of={PaginationItemStories.Default} />
+
+## PaginationLink Props
+
+<Controls of={PaginationLinkStories.Default} />
+
+## PaginationPrevious Props
+
+<Controls of={PaginationPreviousStories.Default} />
+
+## PaginationNext Props
+
+<Controls of={PaginationNextStories.Default} />
+
+## PaginationEllipsis Props
+
+<Controls of={PaginationEllipsisStories.Default} />
+
+## PaginationSelector Props
+
+<Controls of={PaginationSelectorStories.Default} />
