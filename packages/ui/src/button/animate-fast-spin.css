@@ -1,0 +1,18 @@
+/**
+ * Button loading spinner, applied via the literal class `button-animate-fast-spin`.
+ *
+ * Plain (non-module) CSS on purpose: CSS Modules hash `@keyframes` names but
+ * not the name inside an `animation` shorthand's `var()` fallback, which
+ * silently breaks the animation. Plain CSS keeps the keyframe literal. It lives
+ * in the button dir so the `--button-*` override tokens below are picked up by
+ * the token-doc extractor (scripts/extract-css-tokens.mjs).
+ */
+@keyframes button-fast-spin {
+	to {
+		transform: var(--button-spin-transform, rotate(360deg));
+	}
+}
+
+.button-animate-fast-spin {
+	animation: var(--button-animate-fast-spin, button-fast-spin 0.7s linear infinite);
+}

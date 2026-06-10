@@ -46,7 +46,7 @@ describe('Button', () => {
 		fireEvent.click(button);
 		expect(onClick).toHaveBeenCalledTimes(0);
 
-		expect(button.querySelector('.animate-fast-spin')).toBeInTheDocument();
+		expect(button.querySelector('.button-animate-fast-spin')).toBeInTheDocument();
 	});
 
 	it('hides prefix and suffix when loading', () => {
