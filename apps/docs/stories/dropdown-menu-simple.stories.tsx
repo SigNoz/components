@@ -93,13 +93,13 @@ export const Default: Story = {
 					type: 'group',
 					label: 'My Account',
 					children: [
-						{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-						{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+						{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
+						{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
 						{ type: 'divider' },
 						{
 							key: 'delete',
 							label: 'Delete',
-							icon: <Trash2 className="h-4 w-4" />,
+							icon: <Trash2 size={16} />,
 							danger: true,
 						},
 					],
@@ -111,7 +111,7 @@ export const Default: Story = {
 		sideOffset: 4,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenuSimple {...args}>
 				<Button variant="solid" color="secondary">
 					Open
@@ -149,7 +149,7 @@ export const Basic: Story = {
 		];
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Open Menu
@@ -180,16 +180,16 @@ export const WithIcons: Story = {
 	},
 	render: () => {
 		const items1: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-			{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
-			{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
-			{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
+			{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+			{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+			{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+			{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
 				label: 'Delete dashboard',
-				icon: <Trash2 className="h-4 w-4" />,
+				icon: <Trash2 size={16} />,
 				danger: true,
 			},
 		];
@@ -198,37 +198,37 @@ export const WithIcons: Story = {
 			{
 				key: 'view',
 				label: 'View',
-				icon: <Grid3X3 className="h-4 w-4" />,
-				rightIcon: <Check className="h-4 w-4" />,
+				icon: <Grid3X3 size={16} />,
+				rightIcon: <Check size={16} />,
 			},
-			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-			{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
-			{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
-			{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+			{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+			{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+			{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
 		];
 
 		const items3: MenuItem[] = [
 			{
 				key: 'view',
 				label: 'View',
-				icon: <Grid3X3 className="h-4 w-4" />,
-				rightIcon: <ChevronRight className="h-4 w-4" />,
+				icon: <Grid3X3 size={16} />,
+				rightIcon: <ChevronRight size={16} />,
 			},
-			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-			{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
-			{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
-			{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+			{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+			{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+			{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
 				label: 'Delete dashboard',
-				icon: <Trash2 className="h-4 w-4" />,
+				icon: <Trash2 size={16} />,
 				danger: true,
 			},
 		];
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple menu={{ items: items1 }}>
 					<Button variant="solid" color="secondary">
 						View Options
@@ -271,19 +271,19 @@ export const Destructive: Story = {
 	},
 	render: () => {
 		const items: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+			{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
+			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
 			{ type: 'divider' },
 			{
 				key: 'delete',
 				label: 'Delete dashboard',
-				icon: <Trash2 className="h-4 w-4" />,
+				icon: <Trash2 size={16} />,
 				danger: true,
 			},
 		];
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Delete dashboard
@@ -321,18 +321,18 @@ export const WithSectionLabels: Story = {
 					{
 						key: 'view',
 						label: 'View',
-						icon: <Grid3X3 className="h-4 w-4" />,
-						rightIcon: <Check className="h-4 w-4" />,
+						icon: <Grid3X3 size={16} />,
+						rightIcon: <Check size={16} />,
 					},
-					{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-					{ key: 'open', label: 'Open', icon: <FileText className="h-4 w-4" /> },
-					{ key: 'duplicate', label: 'Duplicate', icon: <Copy className="h-4 w-4" /> },
-					{ key: 'archive', label: 'Archive', icon: <Folder className="h-4 w-4" /> },
+					{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+					{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+					{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+					{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
 					{ type: 'divider' },
 					{
 						key: 'delete',
 						label: 'Delete dashboard',
-						icon: <Trash2 className="h-4 w-4" />,
+						icon: <Trash2 size={16} />,
 						danger: true,
 					},
 				],
@@ -340,7 +340,7 @@ export const WithSectionLabels: Story = {
 		];
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Menu with Sections
@@ -426,7 +426,7 @@ export const Checkable: Story = {
 		];
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple menu={{ items: checkboxItems }}>
 					<Button variant="solid" color="secondary">
 						Checkbox Items
@@ -470,28 +470,28 @@ export const NestedMenus: Story = {
 					{
 						key: 'step2',
 						label: 'Step 2',
-						icon: <Grid3X3 className="h-4 w-4" />,
+						icon: <Grid3X3 size={16} />,
 						children: [
 							{
 								key: 'another-link',
 								label: 'Another link',
-								icon: <Link2 className="h-4 w-4" />,
+								icon: <Link2 size={16} />,
 							},
 							{
 								key: 'one-link',
 								label: 'One link',
-								icon: <Grid3X3 className="h-4 w-4" />,
+								icon: <Grid3X3 size={16} />,
 							},
 							{
 								key: 'another-activity',
 								label: 'Another activity',
-								icon: <Grid3X3 className="h-4 w-4" />,
+								icon: <Grid3X3 size={16} />,
 							},
 							{ type: 'divider' },
 							{
 								key: 'delete',
 								label: 'Delete dashboard',
-								icon: <Trash2 className="h-4 w-4" />,
+								icon: <Trash2 size={16} />,
 								danger: true,
 							},
 						],
@@ -499,23 +499,23 @@ export const NestedMenus: Story = {
 					{
 						key: 'another-link',
 						label: 'Another link',
-						icon: <Link2 className="h-4 w-4" />,
+						icon: <Link2 size={16} />,
 					},
 					{
 						key: 'one-link',
 						label: 'One link',
-						icon: <Grid3X3 className="h-4 w-4" />,
+						icon: <Grid3X3 size={16} />,
 					},
 					{
 						key: 'another-activity',
 						label: 'Another activity',
-						icon: <Grid3X3 className="h-4 w-4" />,
+						icon: <Grid3X3 size={16} />,
 					},
 					{ type: 'divider' },
 					{
 						key: 'delete',
 						label: 'Delete dashboard',
-						icon: <Trash2 className="h-4 w-4" />,
+						icon: <Trash2 size={16} />,
 						danger: true,
 					},
 				],
@@ -523,7 +523,7 @@ export const NestedMenus: Story = {
 		];
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple menu={{ items }}>
 					<Button variant="solid" color="secondary">
 						Nested Menu
@@ -553,7 +553,7 @@ export const Loading: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 flex gap-4">
+		<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 			<DropdownMenuSimple menu={{ items: [], loading: true }}>
 				<Button variant="solid" color="secondary">
 					Loading Menu
@@ -564,18 +564,18 @@ export const Loading: Story = {
 };
 
 const searchMenuItems: MenuItem[] = [
-	{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
-	{ key: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
-	{ key: 'billing', label: 'Billing', icon: <FileText className="h-4 w-4" /> },
+	{ key: 'profile', label: 'Profile', icon: <User size={16} /> },
+	{ key: 'settings', label: 'Settings', icon: <Settings size={16} /> },
+	{ key: 'billing', label: 'Billing', icon: <FileText size={16} /> },
 	{ type: 'divider' },
-	{ key: 'view', label: 'View dashboard', icon: <Grid3X3 className="h-4 w-4" /> },
-	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
-	{ key: 'folder', label: 'Open folder', icon: <Folder className="h-4 w-4" /> },
+	{ key: 'view', label: 'View dashboard', icon: <Grid3X3 size={16} /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+	{ key: 'folder', label: 'Open folder', icon: <Folder size={16} /> },
 	{ type: 'divider' },
 	{
 		key: 'logout',
 		label: 'Log out',
-		icon: <LogOut className="h-4 w-4" />,
+		icon: <LogOut size={16} />,
 		danger: true,
 	},
 ];
@@ -610,13 +610,13 @@ export const WithSearch: Story = {
 		}, [query]);
 
 		return (
-			<div className="p-8 flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
 				<DropdownMenuSimple
 					menu={{
 						items: filteredItems,
 						search: {
 							placeholder: 'Search menu...',
-							searchIcon: <Search className="h-4 w-4" />,
+							searchIcon: <Search size={16} />,
 							onSearchChange: setQuery,
 						},
 					}}
@@ -669,32 +669,32 @@ export const AllStates: Story = {
 					{
 						key: 'profile',
 						label: 'Profile',
-						icon: <User className="h-4 w-4" />,
+						icon: <User size={16} />,
 						shortcut: '⇧⌘P',
 					},
 					{
 						key: 'settings',
 						label: 'Settings',
-						icon: <Settings className="h-4 w-4" />,
+						icon: <Settings size={16} />,
 						shortcut: '⌘S',
 					},
 					{
 						key: 'keyboard',
 						label: 'Keyboard shortcuts',
-						icon: <FileText className="h-4 w-4" />,
+						icon: <FileText size={16} />,
 						shortcut: '⌘K',
 					},
 				],
 			},
 			{ type: 'divider' },
-			{ key: 'team', label: 'Team', icon: <Folder className="h-4 w-4" /> },
+			{ key: 'team', label: 'Team', icon: <Folder size={16} /> },
 			{
 				key: 'invite',
 				label: 'Invite users',
-				icon: <User className="h-4 w-4" />,
+				icon: <User size={16} />,
 				children: [
-					{ key: 'email', label: 'Email', icon: <Copy className="h-4 w-4" /> },
-					{ key: 'message', label: 'Message', icon: <Link2 className="h-4 w-4" /> },
+					{ key: 'email', label: 'Email', icon: <Copy size={16} /> },
+					{ key: 'message', label: 'Message', icon: <Link2 size={16} /> },
 					{ type: 'divider' },
 					{ key: 'more', label: 'More...' },
 				],
@@ -702,28 +702,28 @@ export const AllStates: Story = {
 			{
 				key: 'new-team',
 				label: 'New Team',
-				icon: <Folder className="h-4 w-4" />,
+				icon: <Folder size={16} />,
 				shortcut: '⌘T',
 			},
 			{ type: 'divider' },
-			{ key: 'github', label: 'GitHub', icon: <Link2 className="h-4 w-4" /> },
+			{ key: 'github', label: 'GitHub', icon: <Link2 size={16} /> },
 			{ key: 'support', label: 'Support' },
 			{ key: 'api', label: 'API', disabled: true },
 			{ type: 'divider' },
 			{
 				key: 'logout',
 				label: 'Log out',
-				icon: <LogOut className="h-4 w-4" />,
+				icon: <LogOut size={16} />,
 				danger: true,
 				shortcut: '⇧⌘Q',
 			},
 		];
 
 		return (
-			<div className="p-8 space-y-8">
-				<div className="space-y-4">
-					<h3 className="text-lg font-semibold">Default States</h3>
-					<div className="flex gap-4">
+			<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Default States</h3>
+					<div style={{ display: 'flex', gap: '1rem' }}>
 						<DropdownMenuSimple menu={{ items: defaultItems }}>
 							<Button variant="solid" color="secondary">
 								Default
@@ -732,9 +732,9 @@ export const AllStates: Story = {
 					</div>
 				</div>
 
-				<div className="space-y-4">
-					<h3 className="text-lg font-semibold">With Shortcuts</h3>
-					<div className="flex gap-4">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>With Shortcuts</h3>
+					<div style={{ display: 'flex', gap: '1rem' }}>
 						<DropdownMenuSimple menu={{ items: shortcutItems }}>
 							<Button variant="solid" color="secondary">
 								Shortcuts
@@ -743,10 +743,14 @@ export const AllStates: Story = {
 					</div>
 				</div>
 
-				<div className="space-y-4">
-					<h3 className="text-lg font-semibold">Complex Example</h3>
-					<div className="flex gap-4">
-						<DropdownMenuSimple menu={{ items: complexItems }} align="end" className="w-56">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Complex Example</h3>
+					<div style={{ display: 'flex', gap: '1rem' }}>
+						<DropdownMenuSimple
+							menu={{ items: complexItems }}
+							align="end"
+							style={{ width: '14rem' }}
+						>
 							<Button variant="solid" color="secondary">
 								<Ellipsis />
 							</Button>

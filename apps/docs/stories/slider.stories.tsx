@@ -157,7 +157,7 @@ export const Default: Story = {
 		step: 1,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
 		</div>
 	),
@@ -171,7 +171,7 @@ export const Range: Story = {
 		range: true,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
 		</div>
 	),
@@ -194,7 +194,14 @@ export const WithMarks: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6 pb-6">
+		<div
+			style={{
+				width: '300px',
+				marginTop: '1.5rem',
+				marginBottom: '1.5rem',
+				paddingBottom: '1.5rem',
+			}}
+		>
 			<Slider {...args} />
 		</div>
 	),
@@ -215,7 +222,7 @@ export const WithTooltip: Story = {
 		),
 	],
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
 		</div>
 	),
@@ -233,7 +240,7 @@ export const CustomStyles: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
 		</div>
 	),
@@ -251,7 +258,7 @@ export const CustomClassNames: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
 		</div>
 	),
@@ -261,9 +268,18 @@ export const Controlled: Story = {
 	render: () => {
 		const [value, setValue] = React.useState(30);
 		return (
-			<div className="w-[300px] my-6 space-y-4">
+			<div
+				style={{
+					width: '300px',
+					marginTop: '1.5rem',
+					marginBottom: '1.5rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '1rem',
+				}}
+			>
 				<Slider value={value} onChange={(v) => setValue(v as number)} max={100} />
-				<p className="text-sm text-gray-500">Value: {value}</p>
+				<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Value: {value}</p>
 			</div>
 		);
 	},
@@ -273,9 +289,18 @@ export const ControlledRange: Story = {
 	render: () => {
 		const [value, setValue] = React.useState([20, 80]);
 		return (
-			<div className="w-[300px] my-6 space-y-4">
+			<div
+				style={{
+					width: '300px',
+					marginTop: '1.5rem',
+					marginBottom: '1.5rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '1rem',
+				}}
+			>
 				<Slider value={value} onChange={(v) => setValue(v as number[])} max={100} range />
-				<p className="text-sm text-gray-500">
+				<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
 					Range: {value[0]} - {value[1]}
 				</p>
 			</div>
@@ -287,9 +312,18 @@ export const WithOnAfterChange: Story = {
 	render: () => {
 		const [committed, setCommitted] = React.useState(50);
 		return (
-			<div className="w-[300px] my-6 space-y-4">
+			<div
+				style={{
+					width: '300px',
+					marginTop: '1.5rem',
+					marginBottom: '1.5rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '1rem',
+				}}
+			>
 				<Slider defaultValue={50} max={100} onAfterChange={(v) => setCommitted(v as number)} />
-				<p className="text-sm text-gray-500">Committed on release: {committed}</p>
+				<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Committed on release: {committed}</p>
 			</div>
 		);
 	},
@@ -303,8 +337,10 @@ export const MinMax: Story = {
 		step: 1,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
-			<p className="text-sm text-gray-500 mb-2">min=20, max=80</p>
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+			<p style={{ fontSize: '0.875rem', marginBottom: '0.5rem', color: '#6b7280' }}>
+				min=20, max=80
+			</p>
 			<Slider {...args} />
 		</div>
 	),
@@ -317,7 +353,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
 		</div>
 	),
@@ -331,9 +367,11 @@ export const WithTestId: Story = {
 		id: 'slider-id',
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 			<Slider {...args} />
-			<p className="text-sm text-gray-500 mt-2">testId="my-slider", id="slider-id"</p>
+			<p style={{ fontSize: '0.875rem', marginTop: '0.5rem', color: '#6b7280' }}>
+				testId="my-slider", id="slider-id"
+			</p>
 		</div>
 	),
 };

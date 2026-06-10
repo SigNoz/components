@@ -38,7 +38,9 @@ export const Default: Story = {
 					<DrawerTitle>Drawer header</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<p className="text-sm">The header typically contains the title and optional actions.</p>
+					<p style={{ fontSize: '0.875rem' }}>
+						The header typically contains the title and optional actions.
+					</p>
 				</DrawerDescription>
 			</DrawerContent>
 		</Drawer>

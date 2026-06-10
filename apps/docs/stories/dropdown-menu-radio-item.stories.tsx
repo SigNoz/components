@@ -51,7 +51,7 @@ export const Default: Story = {
 		const [theme, setTheme] = useState('light');
 
 		return (
-			<div className="p-8">
+			<div style={{ padding: '2rem' }}>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">
