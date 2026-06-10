@@ -1,11 +1,23 @@
+/* Font */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-@import 'tailwindcss';
-@config "@signozhq/tailwind-config";
-@import '@signozhq/tailwind-config/global.css';
+/* Design tokens — define every CSS variable the components consume
+   (--primary, --l1-foreground, --border, --radius, spacing, etc.).
+   These are plain CSS files and need no build-time framework. */
 @import "@signozhq/design-tokens/dist/style.css";
-@import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
-@source "./node_modules/@signozhq/*";
+@import "@signozhq/design-tokens/dist/themes/signoz-tokens.css";
 
-@source "./";
-@import './blue-demo.css';
+/* Demo-only theme used by some stories */
+@import "./blue-demo.css";
+
+/*
+ * Document defaults. Intentionally NOT a CSS reset — Tailwind's Preflight was
+ * removed on purpose so that styling issues surface in the component SCSS
+ * instead of being masked (see https://github.com/SigNoz/components/pull/290).
+ * This only wires the page background/foreground/font to the design tokens.
+ */
+body {
+	background-color: var(--background);
+	color: var(--foreground);
+	font-family: 'Inter', sans-serif;
+}
