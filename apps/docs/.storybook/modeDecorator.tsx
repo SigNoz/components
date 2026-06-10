@@ -1,6 +1,7 @@
 import { ChevronDown, Moon, Palette, Sun } from '@signozhq/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import './modeDecorator.css';
 
 const THEMES = ['default', 'blue-demo'] as const;
 type Theme = (typeof THEMES)[number];
@@ -43,47 +44,32 @@ export const ModeDecorator = (Story: any, context: { title?: string }) => {
 		}
 	}, [isThemeMenuOpen]);
 
-	const buttonStyle = {
-		backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-		borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
-		color: isDarkMode ? '#ffffff' : '#000000',
-		padding: '0.375rem',
-	};
-
 	const controls = (
-		<div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-			<div className="relative" data-theme-selector>
+		<div className={isDarkMode ? 'sb-mode-controls sb-mode-controls--dark' : 'sb-mode-controls'}>
+			<div className="sb-mode-selector" data-theme-selector>
 				<button
 					type="button"
 					onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-					className="flex items-center gap-1 rounded-2xl border shadow-lg hover:scale-105 transition-transform cursor-pointer"
 					aria-label="Select theme"
 					title="Select Theme"
-					style={buttonStyle}
+					className="sb-mode-button"
 				>
-					<Palette className="w-3 h-3" />
-					<span className="text-xs capitalize">{theme}</span>
-					<ChevronDown className="w-3 h-3" />
+					<Palette size={12} />
+					<span className="sb-mode-button__label">{theme}</span>
+					<ChevronDown size={12} />
 				</button>
 				{isThemeMenuOpen && (
-					<div
-						className="absolute top-full right-0 mt-1 rounded-lg border shadow-lg overflow-hidden min-w-[120px]"
-						style={{
-							backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-							borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
-						}}
-					>
+					<div className="sb-mode-menu">
 						{THEMES.map((t) => (
 							<button
 								type="button"
 								key={t}
 								onClick={() => selectTheme(t)}
-								className="w-full px-3 py-2 text-left text-xs capitalize hover:bg-opacity-80 transition-colors cursor-pointer"
-								style={{
-									backgroundColor:
-										theme === t ? (isDarkMode ? '#374151' : '#e5e7eb') : 'transparent',
-									color: isDarkMode ? '#ffffff' : '#000000',
-								}}
+								className={
+									theme === t
+										? 'sb-mode-menu__item sb-mode-menu__item--active'
+										: 'sb-mode-menu__item'
+								}
 							>
 								{t}
 							</button>
@@ -94,12 +80,11 @@ export const ModeDecorator = (Story: any, context: { title?: string }) => {
 			<button
 				type="button"
 				onClick={toggleMode}
-				className="rounded-2xl border shadow-lg hover:scale-105 transition-transform cursor-pointer"
 				aria-label="Toggle dark mode"
 				title="Toggle Dark Mode"
-				style={buttonStyle}
+				className="sb-mode-button"
 			>
-				{isDarkMode ? <Sun className="w-3 h-3" /> : <Moon className="w-3 h-3" />}
+				{isDarkMode ? <Sun size={12} /> : <Moon size={12} />}
 			</button>
 		</div>
 	);
