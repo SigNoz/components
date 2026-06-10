@@ -36,7 +36,7 @@ export const Default: Story = {
 		text: 'Loading...',
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -56,7 +56,7 @@ export const CustomText: Story = {
 		text: 'Fetching options...',
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

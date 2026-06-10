@@ -31,8 +31,8 @@ export const WithScrollButtons: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					ScrollUpButton and ScrollDownButton provide visual affordances for scrolling when the
 					content overflows. They appear at the top/bottom of the viewport when there is more
 					content to scroll.
@@ -51,7 +51,9 @@ export const WithScrollButtons: Story = {
 						<SelectScrollDownButton />
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -62,8 +64,8 @@ export const ScrollUpButtonOnly: Story = {
 		const [value, setValue] = useState('item-50');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					SelectScrollUpButton appears when scrolled down and there is content above.
 				</p>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
@@ -89,8 +91,8 @@ export const ScrollDownButtonOnly: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					SelectScrollDownButton appears when there is more content below.
 				</p>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
@@ -116,15 +118,15 @@ export const CustomScrollButtonContent: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					You can provide custom content to the scroll buttons.
 				</p>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an item..." />
 					<SelectContent withViewport={false}>
 						<SelectScrollUpButton>
-							<span className="text-xs">Scroll Up</span>
+							<span style={{ fontSize: '0.75rem' }}>Scroll Up</span>
 						</SelectScrollUpButton>
 						<SelectViewport style={{ maxHeight: '200px' }}>
 							{manyItems.map((item) => (
@@ -134,7 +136,7 @@ export const CustomScrollButtonContent: Story = {
 							))}
 						</SelectViewport>
 						<SelectScrollDownButton>
-							<span className="text-xs">Scroll Down</span>
+							<span style={{ fontSize: '0.75rem' }}>Scroll Down</span>
 						</SelectScrollDownButton>
 					</SelectContent>
 				</Select>

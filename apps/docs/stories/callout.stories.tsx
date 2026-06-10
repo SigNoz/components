@@ -109,10 +109,18 @@ export const Default: Story = {
 // All variants overview
 export const AllVariants: Story = {
 	render: () => (
-		<div className="flex flex-col max-w-800px gap-6 p-6">
+		<div
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1.5rem',
+				padding: '1.5rem',
+				maxWidth: '800px',
+			}}
+		>
 			{/* Type Variations */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Types</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Types</h3>
 				<Callout type="info" size="medium" title="Info Callout">
 					This is an informational message.
 				</Callout>
@@ -128,8 +136,8 @@ export const AllVariants: Story = {
 			</div>
 
 			{/* Size Variations */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Sizes</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Sizes</h3>
 				<Callout type="info" size="small" title="Small Callout">
 					This is a small callout.
 				</Callout>
@@ -139,8 +147,8 @@ export const AllVariants: Story = {
 			</div>
 
 			{/* Content Variations */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Content Variations</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Content Variations</h3>
 				<Callout type="info" size="medium" title="Only Title" />
 				<Callout type="info" size="medium" showIcon>
 					Only description without a title.
@@ -151,8 +159,8 @@ export const AllVariants: Story = {
 			</div>
 
 			{/* Custom Icon */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Custom Icons</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Custom Icons</h3>
 				<Callout type="info" size="medium" icon={<Star aria-hidden />} title="Star Icon">
 					Custom star icon instead of default.
 				</Callout>
@@ -165,8 +173,8 @@ export const AllVariants: Story = {
 			</div>
 
 			{/* Custom Colors */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Custom Colors</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Custom Colors</h3>
 				<Callout color="robin" size="medium" title="Robin Color">
 					Using custom robin color.
 				</Callout>
@@ -188,8 +196,8 @@ export const AllVariants: Story = {
 			</div>
 
 			{/* Dismissible */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Dismissible</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Dismissible</h3>
 				<DismissibleExample type="info" title="Dismissible Info">
 					Click the X to dismiss this callout.
 				</DismissibleExample>
@@ -199,8 +207,8 @@ export const AllVariants: Story = {
 			</div>
 
 			{/* Expandable */}
-			<div className="space-y-4">
-				<h3 className="text-lg font-semibold">Expandable</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Expandable</h3>
 				<Callout type="info" size="medium" title="Expandable Callout" action="expandable">
 					Click the chevron to toggle this content.
 				</Callout>
@@ -234,7 +242,15 @@ function DismissibleExample({
 		return (
 			<button
 				onClick={() => setIsVisible(true)}
-				className="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+				style={{
+					paddingLeft: '1rem',
+					paddingRight: '1rem',
+					paddingTop: '0.5rem',
+					paddingBottom: '0.5rem',
+					fontSize: '0.875rem',
+					borderRadius: '0.25rem',
+					backgroundColor: '#e5e7eb',
+				}}
 			>
 				Restore "{title}"
 			</button>
