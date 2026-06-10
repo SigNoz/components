@@ -42,6 +42,7 @@ import * as React from 'react';
 import { Button } from '../button/index.js';
 import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
+import './animate-fast-spin.css';
 import styles from './data-table.module.scss';
 import {
 	getTablePreferences,
@@ -1271,7 +1272,7 @@ export function DataTable<TData, TValue>({
 									>
 										<div className={styles['data-table__loading-overlay']}>
 											<div className={styles['data-table__loading-content']}>
-												<LoaderCircle className="animate-fast-spin" />
+												<LoaderCircle className="table-animate-fast-spin" />
 												<span>Loading...</span>
 											</div>
 										</div>
@@ -1575,7 +1576,7 @@ export function DataTable<TData, TValue>({
 												<div className={styles['data-table__infinite-scroll-content']}>
 													{loadingMore ? (
 														<div className={styles['data-table__pagination-left']}>
-															<LoaderCircle className="animate-fast-spin" />
+															<LoaderCircle className="table-animate-fast-spin" />
 															<span>Loading more...</span>
 														</div>
 													) : null}
@@ -1631,7 +1632,7 @@ export function DataTable<TData, TValue>({
 						<div className={styles['data-table__pagination-info']}>
 							{isLoading ? (
 								<div className={styles['data-table__pagination-left']}>
-									<LoaderCircle className="animate-fast-spin" />
+									<LoaderCircle className="table-animate-fast-spin" />
 									<span>Loading...</span>
 								</div>
 							) : (

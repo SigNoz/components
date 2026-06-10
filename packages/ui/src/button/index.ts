@@ -35,7 +35,7 @@
  * | `--button-action-vanilla-200-text` | `var(--action-foreground)` |
  * | `--button-affix-flex-shrink` | `0` |
  * | `--button-align-items` | `center` |
- * | `--button-animate-fast-spin` | `spin 0.7s linear infinite` |
+ * | `--button-animate-fast-spin` | `button-fast-spin 0.7s linear infinite` |
  * | `--button-base-border-color` | `transparent` |
  * | `--button-border-radius` | `calc(var(--radius) - 2px)` |
  * | `--button-cursor` | `pointer` |

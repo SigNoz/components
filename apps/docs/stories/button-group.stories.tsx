@@ -60,7 +60,7 @@ export const Default: Story = {
 export const Variants: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8 flex flex-col gap-3">
+		<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
 			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
 				<Button>Day</Button>
 				<Button>Week</Button>
@@ -83,7 +83,7 @@ export const Variants: Story = {
 export const Sizes: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8 flex items-end gap-4">
+		<div style={{ padding: '2rem', display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
 			{[ButtonSize.SM, ButtonSize.MD].map((size) => (
 				<ButtonGroup
 					key={size}
@@ -102,7 +102,7 @@ export const Sizes: Story = {
 export const IconCluster: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary} size="icon">
 				<Button prefix={<ChevronLeft />} aria-label="Previous" />
 				<Button prefix={<Code />} aria-label="Code" />
@@ -115,7 +115,7 @@ export const IconCluster: Story = {
 export const PerButtonOverride: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
 				<Button>Approve</Button>
 				<Button>Hold</Button>

@@ -229,13 +229,3 @@
 .button__suffix {
 	flex-shrink: var(--button-affix-flex-shrink, 0);
 }
-
-@keyframes spin {
-	to {
-		transform: var(--button-spin-transform, rotate(360deg));
-	}
-}
-
-.animate-fast-spin {
-	animation: var(--button-animate-fast-spin, spin 0.7s linear infinite);
-}

@@ -115,12 +115,10 @@ export const IsLoading: Story = {
 
 export const AllVariants: Story = {
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
-				<div key={c} className="flex items-center gap-6">
-					<div style={{ width: 120 }} className="capitalize">
-						{c}
-					</div>
+				<div key={c} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+					<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
 
 					<Switch id={`switch-${c}-default`} color={c as any}>
 						Default

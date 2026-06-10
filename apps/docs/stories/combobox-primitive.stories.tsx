@@ -52,7 +52,7 @@ export const Default: Story = {
 		const [open, setOpen] = useState(args.open ?? false);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Combobox
 					open={args.open !== undefined ? args.open : open}
 					onOpenChange={args.open !== undefined ? args.onOpenChange : setOpen}

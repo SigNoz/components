@@ -44,7 +44,7 @@ export const Default: Story = {
 		modal: true,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenuMultiStep {...args}>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -55,8 +55,8 @@ export const Default: Story = {
 					secondaryLabel="Settings"
 					primaryContent={
 						<>
-							<DropdownMenuItem leftIcon={<User className="h-4 w-4" />}>Profile</DropdownMenuItem>
-							<DropdownMenuMultiStepTrigger leftIcon={<Settings className="h-4 w-4" />}>
+							<DropdownMenuItem leftIcon={<User size={16} />}>Profile</DropdownMenuItem>
+							<DropdownMenuMultiStepTrigger leftIcon={<Settings size={16} />}>
 								Settings
 							</DropdownMenuMultiStepTrigger>
 						</>

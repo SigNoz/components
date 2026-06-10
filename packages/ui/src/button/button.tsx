@@ -3,6 +3,7 @@ import { LoaderCircle } from '@signozhq/icons';
 import type React from 'react';
 import { cloneElement, createContext, forwardRef, useContext } from 'react';
 import { cn } from '../lib/utils.js';
+import './animate-fast-spin.css';
 import styles from './button.module.scss';
 
 export const ButtonVariant = {
@@ -250,7 +251,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{...props}
 			>
 				{loading ? (
-					<LoaderCircle size={iconSizes[size]} className="animate-fast-spin" />
+					<LoaderCircle size={iconSizes[size]} className="button-animate-fast-spin" />
 				) : (
 					(prefix &&
 						cloneElement(prefix, {
