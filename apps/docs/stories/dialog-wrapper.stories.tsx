@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { wrapperArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogWrapper> = {
-	title: 'Composed Components/Dialog/DialogWrapper',
+	title: 'Composed Components/DialogWrapper',
 	component: DialogWrapper,
 	argTypes: wrapperArgTypes,
 	parameters: {

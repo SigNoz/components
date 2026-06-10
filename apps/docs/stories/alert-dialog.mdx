@@ -1,0 +1,71 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as AlertDialogStories from './alert-dialog.stories';
+
+<Meta of={AlertDialogStories} />
+
+# AlertDialog
+
+A dialog preset for destructive or high-impact actions. Always blocks outside-click dismissal and hides the close button to ensure the user makes an explicit choice.
+
+Optionally renders a checkbox (e.g. "Don't ask me again") and accepts a custom `footer` with action buttons.
+
+For full primitive control, see [Dialog](?path=/docs/primitive-components-dialog--docs).
+
+## How to use
+
+```tsx
+import { useState } from 'react';
+import { AlertDialog, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+	const [dontAskAgain, setDontAskAgain] = useState(false);
+
+	return (
+		<AlertDialog
+			open={open}
+			onOpenChange={setOpen}
+			title="Delete this step"
+			checkboxLabel="Do not ask me this again"
+			checkboxChecked={dontAskAgain}
+			onCheckboxChange={setDontAskAgain}
+			trigger={<Button>Delete</Button>}
+			footer={
+				<>
+					<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+					<Button color="destructive" onClick={() => setOpen(false)}>Delete</Button>
+				</>
+			}
+		>
+			Deleting this step would stop further analytics using this step.
+		</AlertDialog>
+	);
+}
+```
+
+<Primary />
+
+## Without checkbox
+
+Omit `checkboxLabel` to render the alert dialog without the checkbox:
+
+```tsx
+<AlertDialog
+	open={open}
+	onOpenChange={setOpen}
+	title="Permanently delete"
+	trigger={<Button>Delete</Button>}
+	footer={
+		<>
+			<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+			<Button color="destructive" onClick={() => setOpen(false)}>Delete</Button>
+		</>
+	}
+>
+	This action cannot be undone.
+</AlertDialog>
+```
+
+## Props
+
+<Controls of={AlertDialogStories.Default} />

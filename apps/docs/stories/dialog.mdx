@@ -1,9 +1,5 @@
-import { Meta, Controls, Primary, Story } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as DialogStories from './dialog.stories';
-import * as DialogWrapperStories from './dialog-wrapper.stories';
-import * as ConfirmDialogStories from './confirm-dialog.stories';
-import * as ConfirmDialogUrlStories from './confirm-dialog-url.stories';
-import * as AlertDialogStories from './alert-dialog.stories';
 import * as DialogPrimitiveStories from './dialog-primitive.stories';
 import * as DialogTriggerStories from './dialog-trigger.stories';
 import * as DialogContentStories from './dialog-content.stories';
@@ -19,171 +15,13 @@ import * as DialogPortalStories from './dialog-portal.stories';
 
 # Dialog
 
-A modal dialog component for displaying content that requires user attention or interaction.
+Low-level primitives for building modal dialogs with full control over structure and behaviour.
+
+For ready-made presets, see [DialogWrapper](?path=/docs/composed-components-dialogwrapper--docs), [ConfirmDialog](?path=/docs/composed-components-confirmdialog--docs), or [AlertDialog](?path=/docs/composed-components-alertdialog--docs).
 
 ## How to use
 
-### DialogWrapper (preset)
-
-Use `DialogWrapper` for a simple dialog with title, optional trigger, and content. Pass `open` and `onOpenChange` for controlled mode with exit animations:
-
-```tsx
-import { DialogWrapper, Button } from '@signozhq/ui';
-
-export default function MyComponent() {
-	const [open, setOpen] = React.useState(false);
-
-	return (
-		<DialogWrapper
-			open={open}
-			onOpenChange={setOpen}
-			title="Edit Details"
-			trigger={<Button variant="solid">Open Dialog</Button>}
-		>
-			<div className="flex flex-col gap-4">
-				<p>Dialog content goes here</p>
-				<div className="flex justify-end">
-					<Button variant="solid" color="primary" onClick={() => setOpen(false)}>
-						Save Changes
-					</Button>
-				</div>
-			</div>
-		</DialogWrapper>
-	);
-}
-```
-
-<Primary />
-
-## DialogWrapper Props
-
-<Controls of={DialogWrapperStories.Default} />
-
-## ConfirmDialog
-
-For confirm/cancel flows with a title, description, and footer actions:
-
-```tsx
-import { ConfirmDialog, Button } from '@signozhq/ui';
-
-export default function MyComponent() {
-	const [open, setOpen] = useState(false);
-
-	return (
-		<>
-			<Button onClick={() => setOpen(true)}>Delete</Button>
-			<ConfirmDialog
-				open={open}
-				onOpenChange={setOpen}
-				title="Confirm action"
-				confirmText="Delete"
-				cancelText="Cancel"
-				confirmColor="destructive"
-				onConfirm={() => setOpen(false)}
-				onCancel={() => setOpen(false)}
-				width="narrow"
-			>
-				Are you sure? This action cannot be undone.
-			</ConfirmDialog>
-		</>
-	);
-}
-```
-
-## ConfirmDialog Props
-
-<Controls of={ConfirmDialogStories.Default} />
-
-## AlertDialog
-
-For destructive or high-impact actions, with optional checkbox (e.g. “Don’t ask again”) and custom footer:
-
-```tsx
-import { AlertDialog, Button } from '@signozhq/ui';
-
-export default function MyComponent() {
-	const [open, setOpen] = useState(false);
-	const [dontAskAgain, setDontAskAgain] = useState(false);
-
-	return (
-		<AlertDialog
-			open={open}
-			onOpenChange={setOpen}
-			title="Delete this step"
-			checkboxLabel="Do not ask me this again"
-			checkboxChecked={dontAskAgain}
-			onCheckboxChange={setDontAskAgain}
-			trigger={<Button>Delete</Button>}
-			footer={
-				<>
-					<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-					<Button color="destructive" onClick={() => setOpen(false)}>Delete</Button>
-				</>
-			}
-		>
-			Deleting this step would stop further analytics using this step.
-		</AlertDialog>
-	);
-}
-```
-
-## AlertDialog Props
-
-<Controls of={AlertDialogStories.Default} />
-
-## ConfirmDialogUrl
-
-For confirm dialogs controlled via a URL query parameter:
-
-> This component requires the setup with [nuqs](https://nuqs.dev/).
-
-```tsx
-import { ConfirmDialogUrl, Button } from '@signozhq/ui';
-import { useQueryState, parseAsBoolean } from 'nuqs';
-
-export default function MyComponent() {
-    const [, setOpen] = useQueryState('dialog-delete-step', parseAsBoolean.withDefault(false));
-
-	return (
-		<>
-			<Button
-				variant="solid"
-				color="primary"
-				onClick={() => setOpen(true)}
-			>
-				Open confirm dialog (URL)
-			</Button>
-			<ConfirmDialogUrl
-				urlKey="dialog-delete-step"
-				title="Delete from URL param"
-				confirmText="Delete"
-				cancelText="Cancel"
-				confirmColor="destructive"
-				onConfirm={async () => {
-					// Simulate async work, this will change the button to loading state
-					await new Promise((resolve) => setTimeout(resolve, 300));
-					return true;
-				}}
-				width="narrow"
-			>
-				This confirm dialog is controlled via a URL query parameter using nuqs.
-			</ConfirmDialogUrl>
-		</>
-	);
-}
-```
-
-## ConfirmDialogUrl Props
-
-<Controls of={ConfirmDialogUrlStories.Default} />
-
-## Primitive composition
-
-For full control, use the low-level building blocks: `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, and `DialogClose`.
-
-### Exit animations
-
-To animate the dialog on close, wrap `DialogContent` in `AnimatePresence` and pass `forceMount` plus a stable `key`:
+Compose `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, and `DialogClose` directly:
 
 ```tsx
 import {
@@ -198,6 +36,7 @@ import {
 	Button,
 } from '@signozhq/ui';
 import { AnimatePresence } from 'motion/react';
+import { useState } from 'react';
 
 export default function MyComponent() {
 	const [open, setOpen] = useState(false);
@@ -213,9 +52,7 @@ export default function MyComponent() {
 						<DialogHeader>
 							<DialogTitle>Title</DialogTitle>
 						</DialogHeader>
-						<DialogDescription>
-							Description and body content.
-						</DialogDescription>
+						<DialogDescription>Description and body content.</DialogDescription>
 						<DialogFooter>
 							<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
 							<DialogClose asChild>
@@ -230,7 +67,35 @@ export default function MyComponent() {
 }
 ```
 
-Without `AnimatePresence`, `forceMount`, and `key`, the dialog closes instantly. `DialogWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
+<Primary />
+
+## Exit animations
+
+Wrap `DialogContent` in `AnimatePresence` and pass `forceMount` plus a stable `key` to animate the dialog on close. Without these three, the dialog unmounts instantly with no exit animation.
+
+`DialogWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
+
+## Position variants
+
+`DialogContent` accepts a `position` prop to anchor the dialog surface to any edge of the viewport: `center` (default), `top`, `right`, `bottom`, `left`.
+
+```tsx
+<Dialog open={open} onOpenChange={setOpen}>
+	<DialogTrigger asChild>
+		<Button>Open right</Button>
+	</DialogTrigger>
+	<AnimatePresence>
+		{open && (
+			<DialogContent key="dialog-right" position="right" width="base" forceMount>
+				<DialogHeader>
+					<DialogTitle>Right panel</DialogTitle>
+				</DialogHeader>
+				<DialogDescription>Content slides in from the right.</DialogDescription>
+			</DialogContent>
+		)}
+	</AnimatePresence>
+</Dialog>
+```
 
 ## Dialog Props
 
@@ -271,4 +136,3 @@ Without `AnimatePresence`, `forceMount`, and `key`, the dialog closes instantly.
 ## DialogPortal Props
 
 <Controls of={DialogPortalStories.Default} />
-
