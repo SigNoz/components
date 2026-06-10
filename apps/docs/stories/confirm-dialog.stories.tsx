@@ -4,7 +4,7 @@ import React from 'react';
 import { confirmArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof ConfirmDialog> = {
-	title: 'Composed Components/Dialog/ConfirmDialog',
+	title: 'Composed Components/ConfirmDialog',
 	component: ConfirmDialog,
 	argTypes: confirmArgTypes,
 	parameters: {

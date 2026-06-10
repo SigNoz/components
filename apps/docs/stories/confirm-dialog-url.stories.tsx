@@ -5,13 +5,12 @@ import { NuqsAdapter } from 'nuqs/adapters/react';
 import { confirmUrlArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof ConfirmDialogUrl> = {
-	title: 'Composed Components/Dialog/ConfirmDialogUrl',
+	title: 'Composed Components/ConfirmDialogUrl',
 	component: ConfirmDialogUrl,
 	argTypes: confirmUrlArgTypes,
 	parameters: {
 		layout: 'fullscreen',
 	},
-	tags: ['autodocs'],
 };
 
 export default meta;

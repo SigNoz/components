@@ -1,0 +1,87 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DialogWrapperStories from './dialog-wrapper.stories';
+
+<Meta of={DialogWrapperStories} />
+
+# DialogWrapper
+
+Preset that wraps `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, and an optional footer in a single component. Pass a `title`, optional `trigger`, and children.
+
+For full primitive control, see [Dialog](?path=/docs/primitive-components-dialog--docs).
+
+## How to use
+
+```tsx
+import { DialogWrapper, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<DialogWrapper
+			title="Edit Details"
+			trigger={<Button variant="solid">Open Dialog</Button>}
+		>
+			<p>Dialog content goes here.</p>
+		</DialogWrapper>
+	);
+}
+```
+
+<Primary />
+
+## Controlled state
+
+Pass `open` and `onOpenChange` to drive the open state externally. This also enables exit animations internally via `AnimatePresence`:
+
+```tsx
+import { useState } from 'react';
+import { DialogWrapper, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<DialogWrapper
+			open={open}
+			onOpenChange={setOpen}
+			title="Controlled Dialog"
+			trigger={<Button>Open</Button>}
+		>
+			<p>Dialog content goes here.</p>
+		</DialogWrapper>
+	);
+}
+```
+
+## Width variants
+
+Use `width` to control the width of the dialog surface. Options: `narrow`, `base` (default), `wide`, `extra-wide`:
+
+```tsx
+<DialogWrapper title="Wide dialog" width="wide" trigger={<Button>Open</Button>}>
+	<p>Wide dialog content.</p>
+</DialogWrapper>
+```
+
+## Without close button
+
+Set `showCloseButton={false}` to hide the default X button. Provide your own close action in the content or footer:
+
+```tsx
+import { DialogWrapper, DialogClose, Button } from '@signozhq/ui';
+
+<DialogWrapper
+	title="No close button"
+	showCloseButton={false}
+	trigger={<Button>Open</Button>}
+>
+	<div className="flex justify-end">
+		<DialogClose asChild>
+			<Button>Close</Button>
+		</DialogClose>
+	</div>
+</DialogWrapper>
+```
+
+## Props
+
+<Controls of={DialogWrapperStories.Default} />
