@@ -3,7 +3,6 @@
 # that they own.
 
 /packages/eslint-config @SigNoz/frontend
-/packages/tailwind-config @SigNoz/frontend
 /packages/typescript-config @SigNoz/frontend
 /turbo @SigNoz/frontend
 package.json @SigNoz/frontend
