@@ -5,6 +5,7 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--table-animate-fast-spin` | `table-fast-spin 0.7s linear infinite` |
  * | `--table-border-color` | `var(--border)` |
  * | `--table-caption-margin-top` | `var(--spacing-4, 1rem)` |
  * | `--table-cell-padding` | `var(--spacing-4, 0.5rem)` |

@@ -30,7 +30,7 @@ describe('DataTable rendering', () => {
 
 	it('shows loading spinner when isLoading', () => {
 		renderDataTable({ isLoading: true, testId: 'table-4' });
-		expect(document.querySelector('.animate-fast-spin')).toBeInTheDocument();
+		expect(document.querySelector('.table-animate-fast-spin')).toBeInTheDocument();
 	});
 
 	it('hides headers when showHeaders is false', () => {

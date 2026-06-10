@@ -1,0 +1,17 @@
+/**
+ * DataTable loading spinner, applied via the literal class `table-animate-fast-spin`.
+ *
+ * Plain (non-module) CSS on purpose: CSS Modules hash `@keyframes` names but
+ * not the name inside an `animation` shorthand's `var()` fallback, which
+ * silently breaks the animation. Plain CSS keeps the keyframe literal. The
+ * `--table-animate-fast-spin` override is picked up by the token-doc extractor.
+ */
+@keyframes table-fast-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.table-animate-fast-spin {
+	animation: var(--table-animate-fast-spin, table-fast-spin 0.7s linear infinite);
+}
