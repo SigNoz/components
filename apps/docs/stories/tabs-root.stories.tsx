@@ -61,7 +61,16 @@ export const Default: Story = {
 		defaultValue: 'tab1',
 	},
 	render: (args) => (
-		<TabsRoot {...args} className="flex flex-col gap-2 items-start text-left">
+		<TabsRoot
+			{...args}
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '0.5rem',
+				alignItems: 'flex-start',
+				textAlign: 'left',
+			}}
+		>
 			<TabsList variant="primary">
 				<TabsTrigger value="tab1">Tab 1</TabsTrigger>
 				<TabsTrigger value="tab2">Tab 2</TabsTrigger>
@@ -76,19 +85,28 @@ export const Default: Story = {
 
 export const PrimaryVariant: Story = {
 	render: () => (
-		<TabsRoot defaultValue="overview" className="flex flex-col gap-2 items-start text-left">
+		<TabsRoot
+			defaultValue="overview"
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '0.5rem',
+				alignItems: 'flex-start',
+				textAlign: 'left',
+			}}
+		>
 			<TabsList variant="primary">
 				<TabsTrigger value="overview" variant="primary">
-					<Settings className="size-4" />
+					<Settings size={16} />
 					Overview
 				</TabsTrigger>
 				<TabsTrigger value="issues" variant="primary">
-					<CircleAlert className="size-4" />
+					<CircleAlert size={16} />
 					Issues
 				</TabsTrigger>
 				<TabsTrigger value="history" variant="primary">
 					History
-					<History className="size-4" />
+					<History size={16} />
 				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="overview">Overview content panel</TabsContent>
@@ -100,7 +118,10 @@ export const PrimaryVariant: Story = {
 
 export const SecondaryVariant: Story = {
 	render: () => (
-		<TabsRoot defaultValue="all" className="flex flex-col gap-2">
+		<TabsRoot
+			defaultValue="all"
+			style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+		>
 			<TabsList variant="secondary">
 				<TabsTrigger value="all" variant="secondary">
 					All Endpoints
@@ -121,7 +142,16 @@ export const SecondaryVariant: Story = {
 
 export const WithDisabledTabs: Story = {
 	render: () => (
-		<TabsRoot defaultValue="active" className="flex flex-col gap-2 items-start text-left">
+		<TabsRoot
+			defaultValue="active"
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '0.5rem',
+				alignItems: 'flex-start',
+				textAlign: 'left',
+			}}
+		>
 			<TabsList variant="primary">
 				<TabsTrigger value="active" variant="primary">
 					Active Tab

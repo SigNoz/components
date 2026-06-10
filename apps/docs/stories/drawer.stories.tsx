@@ -89,7 +89,7 @@ export const Default: Story = {
 		defaultOpen: false,
 	},
 	render: (args) => (
-		<div className="flex flex-wrap gap-4 p-8">
+		<div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', padding: '2rem' }}>
 			{(['left', 'right', 'top', 'bottom'] as const).map((dir) => (
 				<DrawerPositionVariant key={dir} args={args} direction={dir} />
 			))}
@@ -126,7 +126,7 @@ export const WithoutOverlay: Story = {
 								<DrawerCloseButton />
 							</DrawerHeader>
 							<DrawerDescription>
-								<p className="text-sm font-normal leading-5">
+								<p style={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: '1.25rem' }}>
 									This variant keeps the background interactive by disabling the overlay while the
 									drawer is open.
 								</p>

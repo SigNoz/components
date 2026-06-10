@@ -43,7 +43,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -54,7 +54,9 @@ export const Default: Story = {
 						))}
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -82,7 +84,7 @@ export const WithGroups: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a technology..." />
 					<SelectContent>
@@ -105,7 +107,9 @@ export const WithGroups: Story = {
 						</SelectGroup>
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -116,29 +120,42 @@ export const WithIcons: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
-					<SelectTrigger placeholder="Select a tool..." className="flex gap-2" />
+					<SelectTrigger
+						placeholder="Select a tool..."
+						style={{ display: 'flex', gap: '0.5rem' }}
+					/>
 					<SelectContent>
-						<SelectItem value="react" textValue="React" className="flex gap-2">
-							<Code className="mr-2 h-4 w-4" />
+						<SelectItem value="react" textValue="React" style={{ display: 'flex', gap: '0.5rem' }}>
+							<Code size={16} style={{ marginRight: '0.5rem' }} />
 							React
 						</SelectItem>
-						<SelectItem value="nodejs" textValue="Node.js" className="flex gap-2">
-							<Terminal className="mr-2 h-4 w-4" />
+						<SelectItem
+							value="nodejs"
+							textValue="Node.js"
+							style={{ display: 'flex', gap: '0.5rem' }}
+						>
+							<Terminal size={16} style={{ marginRight: '0.5rem' }} />
 							Node.js
 						</SelectItem>
-						<SelectItem value="postgres" textValue="PostgreSQL" className="flex gap-2">
-							<Database className="mr-2 h-4 w-4" />
+						<SelectItem
+							value="postgres"
+							textValue="PostgreSQL"
+							style={{ display: 'flex', gap: '0.5rem' }}
+						>
+							<Database size={16} style={{ marginRight: '0.5rem' }} />
 							PostgreSQL
 						</SelectItem>
-						<SelectItem value="git" textValue="Git" className="flex gap-2">
-							<GitBranch className="mr-2 h-4 w-4" />
+						<SelectItem value="git" textValue="Git" style={{ display: 'flex', gap: '0.5rem' }}>
+							<GitBranch size={16} style={{ marginRight: '0.5rem' }} />
 							Git
 						</SelectItem>
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -149,7 +166,7 @@ export const MultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select multiple value={values} onChange={(v) => setValues(v as string[])}>
 					<SelectTrigger placeholder="Select frameworks..." />
 					<SelectContent>
@@ -160,7 +177,7 @@ export const MultiSelect: Story = {
 						))}
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
 			</div>
@@ -173,7 +190,7 @@ export const MultiSelectWithOverflow: Story = {
 		const [values, setValues] = useState<string[]>(['react', 'vue', 'angular']);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select multiple value={values} onChange={(v) => setValues(v as string[])}>
 					<SelectTrigger placeholder="Select frameworks..." maxDisplayedPills={2} />
 					<SelectContent>
@@ -184,10 +201,10 @@ export const MultiSelectWithOverflow: Story = {
 						))}
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
-				<p className="mt-1 text-xs text-muted-foreground">
+				<p style={{ marginTop: '0.25rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					(maxDisplayedPills=2, showing +N for overflow)
 				</p>
 			</div>
@@ -197,7 +214,7 @@ export const MultiSelectWithOverflow: Story = {
 
 export const Disabled: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<Select disabled>
 				<SelectTrigger placeholder="Select a framework..." />
 				<SelectContent>
@@ -217,7 +234,7 @@ export const DisabledItems: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -231,7 +248,9 @@ export const DisabledItems: Story = {
 						</SelectItem>
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -239,9 +258,20 @@ export const DisabledItems: Story = {
 
 export const Loading: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-2xl space-y-8">
+		<div
+			style={{
+				padding: '2rem',
+				width: '100%',
+				maxWidth: '42rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2rem',
+			}}
+		>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Infinite Loading
+				</h3>
 				<Select>
 					<SelectTrigger placeholder="Select a framework..." loading />
 					<SelectContent>
@@ -250,7 +280,9 @@ export const Loading: Story = {
 				</Select>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Loading with Delay (5s)
+				</h3>
 				<SelectLoadingWithDelay />
 			</div>
 		</div>

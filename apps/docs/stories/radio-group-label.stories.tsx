@@ -43,7 +43,7 @@ export const Default: Story = {
 	},
 	render: (args) => (
 		<RadioGroup defaultValue="option1">
-			<div className="flex items-center space-x-2">
+			<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
 				<RadioGroupItem value="option1" id="radio-label-example" />
 				<RadioGroupLabel {...args} />
 			</div>
@@ -58,7 +58,7 @@ export const WithDisabledRadio: Story = {
 	},
 	render: (args) => (
 		<RadioGroup>
-			<div className="flex items-center space-x-2">
+			<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
 				<RadioGroupItem value="disabled" id="disabled-radio-label" disabled />
 				<RadioGroupLabel {...args} aria-disabled="true" />
 			</div>
@@ -69,16 +69,16 @@ export const WithDisabledRadio: Story = {
 export const MultipleLabels: Story = {
 	render: () => (
 		<RadioGroup defaultValue="option1">
-			<div className="flex flex-col space-y-3">
-				<div className="flex items-center space-x-2">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+				<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
 					<RadioGroupItem value="option1" id="opt1" />
 					<RadioGroupLabel htmlFor="opt1">First Option</RadioGroupLabel>
 				</div>
-				<div className="flex items-center space-x-2">
+				<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
 					<RadioGroupItem value="option2" id="opt2" />
 					<RadioGroupLabel htmlFor="opt2">Second Option</RadioGroupLabel>
 				</div>
-				<div className="flex items-center space-x-2">
+				<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
 					<RadioGroupItem value="option3" id="opt3" disabled />
 					<RadioGroupLabel htmlFor="opt3" aria-disabled="true">
 						Disabled Option

@@ -30,8 +30,19 @@ export const Default: Story = {
 	render: (args) => (
 		<Popover>
 			<PopoverAnchor {...args}>
-				<div className="flex gap-2 items-center p-2 rounded border border-border w-fit">
-					<span className="text-sm">Row as anchor</span>
+				<div
+					style={{
+						display: 'flex',
+						gap: '0.5rem',
+						alignItems: 'center',
+						padding: '0.5rem',
+						borderRadius: '0.25rem',
+						border: '1px solid var(--border)',
+						borderColor: 'var(--border)',
+						width: 'fit-content',
+					}}
+				>
+					<span style={{ fontSize: '0.875rem' }}>Row as anchor</span>
 					<PopoverTrigger asChild>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="sm">
 							Trigger
@@ -39,8 +50,10 @@ export const Default: Story = {
 					</PopoverTrigger>
 				</div>
 			</PopoverAnchor>
-			<PopoverContent className="w-56">
-				<p className="text-sm">Content positioned against the anchor row, not the trigger.</p>
+			<PopoverContent style={{ width: '14rem' }}>
+				<p style={{ fontSize: '0.875rem' }}>
+					Content positioned against the anchor row, not the trigger.
+				</p>
 			</PopoverContent>
 		</Popover>
 	),

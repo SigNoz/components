@@ -44,7 +44,7 @@ export const Default: Story = {
 		asChild: true,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger {...args}>
 					<Button variant="solid" color="secondary">

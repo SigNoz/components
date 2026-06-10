@@ -42,7 +42,14 @@ export const Default: Story = {
 						<DialogTitle>Dialog overlay</DialogTitle>
 					</DialogHeader>
 					<DialogDescription>
-						<p className="text-sm font-normal leading-5 font-inter font-regular">
+						<p
+							style={{
+								fontSize: '0.875rem',
+								fontWeight: 400,
+								lineHeight: '1.25rem',
+								fontFamily: 'Inter, sans-serif',
+							}}
+						>
 							The overlay dims the background and blocks interaction with the page while the dialog
 							is open.
 						</p>

@@ -156,7 +156,7 @@ export const WithIconsAndDropdown: Story = {
 
 export const WithClassName: Story = {
 	args: {
-		className: 'bg-slate-800 p-4 rounded',
+		style: { backgroundColor: '#1e293b', padding: '1rem', borderRadius: '0.25rem' },
 		items: defaultItems,
 	},
 };

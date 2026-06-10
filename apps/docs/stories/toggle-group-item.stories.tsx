@@ -50,16 +50,16 @@ export const Default: Story = {
 	args: {
 		value: 'center',
 		disabled: false,
-		children: <AlignCenter className="h-3 w-3" />,
+		children: <AlignCenter size={12} />,
 	},
 	render: (args) => (
 		<ToggleGroup type="single" defaultValue="center">
 			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft className="h-3 w-3" />
+				<AlignLeft size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem {...args} aria-label="Align center" />
 			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight className="h-3 w-3" />
+				<AlignRight size={12} />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -73,7 +73,7 @@ export const IconOnly: Story = {
 	render: (args) => (
 		<ToggleGroup type="multiple" defaultValue={['bold']}>
 			<ToggleGroupItem {...args} aria-label="Bold">
-				<Bold className="h-3 w-3" />
+				<Bold size={12} />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -83,16 +83,16 @@ export const Disabled: Story = {
 	args: {
 		value: 'center',
 		disabled: true,
-		children: <AlignCenter className="h-3 w-3" />,
+		children: <AlignCenter size={12} />,
 	},
 	render: (args) => (
 		<ToggleGroup type="single" defaultValue="left">
 			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft className="h-3 w-3" />
+				<AlignLeft size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem {...args} aria-label="Align center" />
 			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight className="h-3 w-3" />
+				<AlignRight size={12} />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),

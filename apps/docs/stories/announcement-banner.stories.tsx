@@ -97,7 +97,7 @@ export const Dismissible: Story = {
 
 export const AllTypes: Story = {
 	render: () => (
-		<div className="flex flex-col gap-4 p-6">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
 			<AnnouncementBanner type="warning">
 				Warning: Please review your configuration before continuing.
 			</AnnouncementBanner>

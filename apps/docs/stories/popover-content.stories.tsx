@@ -36,8 +36,10 @@ export const Default: Story = {
 					Open popover
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent {...args} className="w-64">
-				<p className="text-sm">This story focuses on PopoverContent and its positioning props.</p>
+			<PopoverContent {...args} style={{ width: '16rem' }}>
+				<p style={{ fontSize: '0.875rem' }}>
+					This story focuses on PopoverContent and its positioning props.
+				</p>
 			</PopoverContent>
 		</Popover>
 	),

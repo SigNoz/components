@@ -107,7 +107,7 @@ export const Default: Story = {
 			</p>
 		),
 		footer: (
-			<div className="flex gap-2 justify-end">
+			<div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
 				<Button variant={ButtonVariant.Ghost}>Cancel</Button>
 				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 					Save
@@ -132,7 +132,7 @@ export const Default: Story = {
 					</Button>
 				}
 				footer={
-					<div className="flex gap-2 justify-end">
+					<div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
 						<Button variant="ghost" color="none" onClick={() => setOpen(false)}>
 							Cancel
 						</Button>

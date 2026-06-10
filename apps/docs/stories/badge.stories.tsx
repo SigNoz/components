@@ -259,7 +259,14 @@ export const AllColors: Story = {
 	render: () => {
 		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
 		return (
-			<div className="flex gap-2 max-w-1/2 flex-wrap">
+			<div
+				style={{
+					display: 'flex',
+					gap: '0.5rem',
+					maxWidth: '50%',
+					flexWrap: 'wrap',
+				}}
+			>
 				{colors.map((color) => (
 					<Badge key={color} color={color}>
 						{color.charAt(0).toUpperCase() + color.slice(1)}
@@ -289,7 +296,7 @@ export const OutlineVariant: Story = {
 	render: () => {
 		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
 		return (
-			<div className="flex gap-2 flex-wrap">
+			<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 				{colors.map((color) => (
 					<Badge key={color} variant="outline" color={color}>
 						{color.charAt(0).toUpperCase() + color.slice(1)}
@@ -317,12 +324,19 @@ export const StatusIndicators: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					System Status
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="forest">
 						<CheckIcon />
 						Online
@@ -342,10 +356,17 @@ export const StatusIndicators: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					User Status
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="forest" variant="outline">
 						<CheckIcon />
 						Active
@@ -384,48 +405,62 @@ export const NotificationCounts: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Message Notifications
 				</h3>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
+				<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 						<BellIcon />
-						<span className="text-vanilla-900 dark:text-vanilla-100">Messages</span>
+						<span style={{ color: 'var(--foreground)' }}>Messages</span>
 						<Badge color="cherry">12</Badge>
 					</div>
-					<div className="flex items-center gap-2">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 						<BellIcon />
-						<span className="text-vanilla-900 dark:text-vanilla-100">Alerts</span>
+						<span style={{ color: 'var(--foreground)' }}>Alerts</span>
 						<Badge color="amber">3</Badge>
 					</div>
-					<div className="flex items-center gap-2">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 						<BellIcon />
-						<span className="text-vanilla-900 dark:text-vanilla-100">Updates</span>
+						<span style={{ color: 'var(--foreground)' }}>Updates</span>
 						<Badge color="aqua">99+</Badge>
 					</div>
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					With Outline Variant
 				</h3>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
-						<span className="text-vanilla-900 dark:text-vanilla-100">Inbox</span>
+				<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+						<span style={{ color: 'var(--foreground)' }}>Inbox</span>
 						<Badge color="robin" variant="outline">
 							5
 						</Badge>
 					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-vanilla-900 dark:text-vanilla-100">Drafts</span>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+						<span style={{ color: 'var(--foreground)' }}>Drafts</span>
 						<Badge color="vanilla" variant="outline">
 							2
 						</Badge>
 					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-vanilla-900 dark:text-vanilla-100">Archive</span>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+						<span style={{ color: 'var(--foreground)' }}>Archive</span>
 						<Badge color="sakura" variant="outline">
 							128
 						</Badge>
@@ -453,12 +488,19 @@ export const WithIcons: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Success & Verification
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="forest">
 						<CheckIcon />
 						Verified
@@ -474,10 +516,17 @@ export const WithIcons: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Alerts & Warnings
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="amber">
 						<AlertIcon />
 						Warning
@@ -493,10 +542,17 @@ export const WithIcons: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Notifications
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="cherry">
 						<BellIcon />
 						New Alerts
@@ -528,12 +584,19 @@ export const CapitalizedText: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Priority Levels
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="cherry" capitalize>
 						Critical
 					</Badge>
@@ -549,10 +612,17 @@ export const CapitalizedText: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Status Codes
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge color="forest" variant="outline" capitalize>
 						200 OK
 					</Badge>
@@ -565,16 +635,25 @@ export const CapitalizedText: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Comparison: Normal vs Capitalized
 				</h3>
-				<div className="flex gap-4 flex-wrap">
-					<div className="flex flex-col gap-2">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Normal</span>
+				<div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Normal</span>
 						<Badge color="robin">Active User</Badge>
 					</div>
-					<div className="flex flex-col gap-2">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Capitalized</span>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+							Capitalized
+						</span>
 						<Badge color="robin" capitalize>
 							Active User
 						</Badge>
@@ -603,30 +682,61 @@ export const TextEllipsisPositions: Story = {
 		textEllipsis: { control: false },
 	},
 	render: () => (
-		<div className="space-y-6">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Ellipsis Positions
 				</h3>
-				<div className="flex flex-col gap-3">
-					<div className="flex items-center gap-3">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">Center:</span>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+						<span
+							style={{
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+								width: '4rem',
+							}}
+						>
+							Center:
+						</span>
 						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
 							<Badge color="robin" textEllipsis="center">
 								This is a very long badge text that will be truncated in the center
 							</Badge>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">Start:</span>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+						<span
+							style={{
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+								width: '4rem',
+							}}
+						>
+							Start:
+						</span>
 						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
 							<Badge color="forest" textEllipsis="start">
 								path/to/very/long/filename/that/needs/truncation.tsx
 							</Badge>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">End:</span>
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+						<span
+							style={{
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+								width: '4rem',
+							}}
+						>
+							End:
+						</span>
 						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
 							<Badge color="amber" textEllipsis="end">
 								A long description that should be truncated at the end
@@ -636,10 +746,17 @@ export const TextEllipsisPositions: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Boolean Shorthand (defaults to center)
 				</h3>
-				<div className="flex flex-col gap-2">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<div style={{ '--badge-width': '200px' } as React.CSSProperties}>
 						<Badge color="aqua" textEllipsis>
 							Using textEllipsis=true defaults to center truncation
@@ -648,10 +765,17 @@ export const TextEllipsisPositions: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					With Outline Variant
 				</h3>
-				<div className="flex flex-col gap-2">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<div style={{ '--badge-width': '160px' } as React.CSSProperties}>
 						<Badge color="cherry" variant="outline" textEllipsis="center">
 							Error: Connection timeout after 30 seconds of inactivity
@@ -665,15 +789,38 @@ export const TextEllipsisPositions: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.5rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Container Constrained
 				</h3>
-				<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+				<p
+					style={{
+						fontSize: '0.75rem',
+						color: 'var(--muted-foreground)',
+						marginBottom: '0.5rem',
+					}}
+				>
 					Badges inside a narrow container will truncate automatically with textEllipsis
 				</p>
 				<div
-					className="flex flex-col gap-2 p-2 border border-vanilla-300 dark:border-vanilla-700 rounded"
-					style={{ width: '220px', '--badge-width': '100%' } as React.CSSProperties}
+					style={
+						{
+							display: 'flex',
+							flexDirection: 'column',
+							gap: '0.5rem',
+							padding: '0.5rem',
+							border: '1px solid var(--border)',
+							borderRadius: '0.25rem',
+							width: '220px',
+							'--badge-width': '100%',
+						} as React.CSSProperties
+					}
 				>
 					<Badge color="robin" textEllipsis="center">
 						kubernetes-deployment-production-east-us-2
@@ -712,7 +859,7 @@ export const Closeable: Story = {
 		closeAriaLabel: { control: false },
 	},
 	render: () => (
-		<div className="flex gap-2 flex-wrap">
+		<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 			<Badge closable color="robin" onClose={fn()} closeAriaLabel="Remove React tag">
 				React
 			</Badge>
@@ -752,27 +899,46 @@ export const UsingAsChild: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-6">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Regular Badge vs asChild Badge
 				</h3>
-				<div className="space-y-3">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
 					<div>
-						<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+						<p
+							style={{
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+								marginBottom: '0.5rem',
+							}}
+						>
 							Regular Badge (non-interactive span)
 						</p>
 						<Badge color="robin">Static Badge</Badge>
 					</div>
 					<div>
-						<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+						<p
+							style={{
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+								marginBottom: '0.5rem',
+							}}
+						>
 							asChild Badge (interactive button)
 						</p>
 						<Badge asChild color="robin">
 							<button
 								type="button"
 								onClick={() => alert('Button badge clicked!')}
-								className="!cursor-pointer"
+								style={{ cursor: 'pointer' }}
 							>
 								Interactive Badge
 							</button>
@@ -782,12 +948,19 @@ export const UsingAsChild: Story = {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Filter & Action Badges
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge asChild color="robin" variant="outline">
-						<button type="button" onClick={() => alert('All filter')} className="!cursor-pointer">
+						<button type="button" onClick={() => alert('All filter')} style={{ cursor: 'pointer' }}>
 							All
 						</button>
 					</Badge>
@@ -795,7 +968,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Active filter')}
-							className="!cursor-pointer"
+							style={{ cursor: 'pointer' }}
 						>
 							<CheckIcon />
 							Active
@@ -805,7 +978,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Pending filter')}
-							className="!cursor-pointer"
+							style={{ cursor: 'pointer' }}
 						>
 							Pending
 						</button>
@@ -814,7 +987,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Remove filter')}
-							className="!cursor-pointer"
+							style={{ cursor: 'pointer' }}
 						>
 							<XIcon />
 							Clear
@@ -824,15 +997,22 @@ export const UsingAsChild: Story = {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
 					Navigation Links
 				</h3>
-				<div className="flex gap-2 flex-wrap">
+				<div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<Badge asChild color="aqua" variant="outline">
 						<a
 							href="#docs"
 							onClick={(e) => e.preventDefault()}
-							className="cursor-pointer no-underline"
+							style={{ cursor: 'pointer', textDecoration: 'none' }}
 						>
 							Documentation
 						</a>
@@ -841,7 +1021,7 @@ export const UsingAsChild: Story = {
 						<a
 							href="#guide"
 							onClick={(e) => e.preventDefault()}
-							className="cursor-pointer no-underline"
+							style={{ cursor: 'pointer', textDecoration: 'none' }}
 						>
 							<InfoIcon />
 							Getting Started
@@ -851,7 +1031,7 @@ export const UsingAsChild: Story = {
 						<a
 							href="#examples"
 							onClick={(e) => e.preventDefault()}
-							className="cursor-pointer no-underline"
+							style={{ cursor: 'pointer', textDecoration: 'none' }}
 						>
 							Examples
 						</a>

@@ -88,7 +88,7 @@ export const Default: Story = {
 
 export const WithCustomClassName: Story = {
 	args: {
-		className: 'gap-4',
+		style: { gap: '1rem' },
 	},
 	render: (args) => (
 		<Breadcrumb>

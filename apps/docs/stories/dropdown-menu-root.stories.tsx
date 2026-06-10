@@ -64,7 +64,7 @@ export const Default: Story = {
 		modal: true,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu {...args}>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

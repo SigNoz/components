@@ -4,7 +4,6 @@ import {
 	CircleX,
 	Clock,
 	Eye,
-	type IconSize,
 	Pencil,
 	Trash2,
 } from '@signozhq/icons';
@@ -18,7 +17,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-type IconComponent = React.ComponentType<{ className?: string; size?: IconSize | number }>;
+type IconComponent = React.ComponentType<{ style?: React.CSSProperties; size?: number }>;
 
 import * as React from 'react';
 
@@ -230,16 +229,31 @@ const enhancedColumns: ColumnDef<User>[] = [
 		cell: ({ row }: { row: Row<User> }) => {
 			const user = row.original;
 			return (
-				<div className="flex items-center gap-3">
-					<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+					<div
+						style={{
+							height: '2rem',
+							width: '2rem',
+							borderRadius: '9999px',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							color: '#ffffff',
+							fontSize: '0.75rem',
+							fontWeight: 500,
+							backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+						}}
+					>
 						{user.name
 							.split(' ')
 							.map((n: string) => n[0])
 							.join('')}
 					</div>
-					<div className="flex flex-col">
-						<span className="font-medium text-sm">{user.name}</span>
-						<span className="text-xs text-muted-foreground">{user.email}</span>
+					<div style={{ display: 'flex', flexDirection: 'column' }}>
+						<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{user.name}</span>
+						<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+							{user.email}
+						</span>
 					</div>
 				</div>
 			);
@@ -253,27 +267,27 @@ const enhancedColumns: ColumnDef<User>[] = [
 		maxSize: 150, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.getValue('role') as User['role'];
-			const roleMap: Record<User['role'], { label: string; className: string }> = {
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
 				admin: {
 					label: 'Admin',
-					className: 'bg-purple-100 text-purple-800 border-purple-200',
+					style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
 				},
 				user: {
 					label: 'User',
-					className: 'bg-blue-100 text-blue-800 border-blue-200',
+					style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
 				},
 				moderator: {
 					label: 'Moderator',
-					className: 'bg-orange-100 text-orange-800 border-orange-200',
+					style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
 				},
 				guest: {
 					label: 'Guest',
-					className: 'bg-gray-100 text-gray-800 border-gray-200',
+					style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
 				},
 			};
 			const roleInfo = roleMap[role];
 			return (
-				<Badge variant="outline" className={roleInfo.className}>
+				<Badge variant="outline" style={roleInfo.style}>
 					{roleInfo.label}
 				</Badge>
 			);
@@ -289,35 +303,35 @@ const enhancedColumns: ColumnDef<User>[] = [
 			const status = row.getValue('status') as User['status'];
 			const statusMap: Record<
 				User['status'],
-				{ label: string; icon: IconComponent; className: string }
+				{ label: string; icon: IconComponent; style: React.CSSProperties }
 			> = {
 				active: {
 					label: 'Active',
 					icon: CircleCheck,
-					className: 'bg-green-100 text-green-800 border-green-200',
+					style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
 				},
 				inactive: {
 					label: 'Inactive',
 					icon: CircleX,
-					className: 'bg-red-100 text-red-800 border-red-200',
+					style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
 				},
 				pending: {
 					label: 'Pending',
 					icon: Clock,
-					className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+					style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
 				},
 				suspended: {
 					label: 'Suspended',
 					icon: CircleAlert,
-					className: 'bg-gray-100 text-gray-800 border-gray-200',
+					style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
 				},
 			};
 			const statusInfo = statusMap[status];
 			const Icon = statusInfo.icon;
 			return (
-				<div className="flex items-center gap-2">
-					<Icon className="h-4 w-4" />
-					<Badge variant="outline" className={statusInfo.className}>
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<Icon size={16} />
+					<Badge variant="outline" style={statusInfo.style}>
 						{statusInfo.label}
 					</Badge>
 				</div>
@@ -332,7 +346,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 		maxSize: 200, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const department = row.getValue('department') as string;
-			return <span className="font-medium text-sm">{department}</span>;
+			return <span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{department}</span>;
 		},
 	},
 	{
@@ -349,7 +363,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 				minimumFractionDigits: 0,
 				maximumFractionDigits: 0,
 			}).format(salary);
-			return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+			return (
+				<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>{formatted}</div>
+			);
 		},
 	},
 	{
@@ -361,20 +377,37 @@ const enhancedColumns: ColumnDef<User>[] = [
 		cell: ({ row }: { row: Row<User> }) => {
 			const performance = parseFloat(row.getValue('performance') as string);
 			const getPerformanceColor = (score: number) => {
-				if (score >= 90) return 'text-green-600';
-				if (score >= 80) return 'text-blue-600';
-				if (score >= 70) return 'text-yellow-600';
-				return 'text-red-600';
+				if (score >= 90) return '#16a34a';
+				if (score >= 80) return '#2563eb';
+				if (score >= 70) return '#ca8a04';
+				return '#dc2626';
 			};
 			return (
-				<div className="flex items-center gap-2">
-					<div className="flex-1 bg-gray-200 rounded-full h-2">
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<div
+						style={{
+							flex: '1 1 0%',
+							borderRadius: '9999px',
+							height: '0.5rem',
+							backgroundColor: '#e5e7eb',
+						}}
+					>
 						<div
-							className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
-							style={{ width: `${performance}%` }}
+							style={{
+								width: `${performance}%`,
+								height: '0.5rem',
+								borderRadius: '9999px',
+								backgroundColor: getPerformanceColor(performance),
+							}}
 						/>
 					</div>
-					<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
+					<span
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: getPerformanceColor(performance),
+						}}
+					>
 						{performance}%
 					</span>
 				</div>
@@ -395,7 +428,9 @@ const enhancedColumns: ColumnDef<User>[] = [
 				hour: '2-digit',
 				minute: '2-digit',
 			});
-			return <span className="text-sm text-muted-foreground">{formatted}</span>;
+			return (
+				<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{formatted}</span>
+			);
 		},
 	},
 	{
@@ -403,20 +438,30 @@ const enhancedColumns: ColumnDef<User>[] = [
 		header: 'Actions',
 		cell: () => {
 			return (
-				<div className="flex items-center gap-1">
-					<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-						<Eye className="h-4 w-4" />
-					</Button>
-					<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-						<Pencil className="h-4 w-4" />
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+					<Button
+						variant="ghost"
+						color={ButtonColor.None}
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Eye size={16} />
 					</Button>
 					<Button
 						variant="ghost"
 						color={ButtonColor.None}
 						size="sm"
-						className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
 					>
-						<Trash2 className="h-4 w-4" />
+						<Pencil size={16} />
+					</Button>
+					<Button
+						variant="ghost"
+						color="destructive"
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Trash2 size={16} />
 					</Button>
 				</div>
 			);
@@ -430,14 +475,27 @@ const simpleColumns: ColumnDef<User>[] = [
 		accessorKey: 'name',
 		header: 'Name',
 		cell: ({ row }: { row: Row<User> }) => (
-			<div className="flex items-center gap-2">
-				<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+				<div
+					style={{
+						height: '1.5rem',
+						width: '1.5rem',
+						borderRadius: '9999px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						color: '#ffffff',
+						fontSize: '0.75rem',
+						fontWeight: 500,
+						backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+					}}
+				>
 					{row.original.name
 						.split(' ')
 						.map((n: string) => n[0])
 						.join('')}
 				</div>
-				<span className="font-medium">{row.original.name}</span>
+				<span style={{ fontWeight: 500 }}>{row.original.name}</span>
 			</div>
 		),
 	},
@@ -445,7 +503,9 @@ const simpleColumns: ColumnDef<User>[] = [
 		accessorKey: 'email',
 		header: 'Email',
 		cell: ({ row }: { row: Row<User> }) => (
-			<span className="text-sm text-muted-foreground">{row.original.email}</span>
+			<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				{row.original.email}
+			</span>
 		),
 	},
 	{
@@ -453,17 +513,17 @@ const simpleColumns: ColumnDef<User>[] = [
 		header: 'Role',
 		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.original.role;
-			const roleMap: Record<User['role'], { label: string; className: string }> = {
-				admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-				user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+				admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
+				user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
 				moderator: {
 					label: 'Moderator',
-					className: 'bg-orange-100 text-orange-800',
+					style: { backgroundColor: '#ffedd5', color: '#9a3412' },
 				},
-				guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+				guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
 			};
 			const roleInfo = roleMap[role];
-			return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+			return <Badge style={roleInfo.style}>{roleInfo.label}</Badge>;
 		},
 	},
 ];
@@ -471,10 +531,26 @@ const simpleColumns: ColumnDef<User>[] = [
 // Story: Basic DataTable with essential features
 export const Basic: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">Employee Directory</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					Employee Directory
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					A basic data table with sorting, filtering, and pagination capabilities.
 				</p>
 				<DataTable {...args} />
@@ -501,10 +577,26 @@ export const Basic: StoryObj<typeof DataTable<User>> = {
 // Story: Advanced DataTable with all features
 export const Advanced: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">Advanced Employee Management</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					Advanced Employee Management
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					Full-featured data table with column reordering, resizing, pinning, row selection, and
 					more.
 				</p>
@@ -532,10 +624,26 @@ export const Advanced: StoryObj<typeof DataTable<User>> = {
 // Story: Column Reordering Demo
 export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">Column Reordering Demo</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					Column Reordering Demo
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					Drag and drop column headers to reorder them. Try dragging the &quot;Name&quot; column to
 					different positions.
 				</p>
@@ -562,10 +670,26 @@ export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
 // Story: Row Selection Demo
 export const RowSelection: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">Row Selection Demo</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					Row Selection Demo
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					Select individual rows or use the header checkbox to select all rows. Selected rows are
 					highlighted.
 				</p>
@@ -593,10 +717,26 @@ export const RowSelection: StoryObj<typeof DataTable<User>> = {
 // Story: Compact View
 export const Compact: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">Compact Employee List</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					Compact Employee List
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					A compact view with essential information only, perfect for mobile or space-constrained
 					layouts.
 				</p>
@@ -610,14 +750,27 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'name',
 				header: 'Employee',
 				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center gap-2">
-						<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+						<div
+							style={{
+								height: '1.5rem',
+								width: '1.5rem',
+								borderRadius: '9999px',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								color: '#ffffff',
+								fontSize: '0.75rem',
+								fontWeight: 500,
+								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+							}}
+						>
 							{row.original.name
 								.split(' ')
 								.map((n: string) => n[0])
 								.join('')}
 						</div>
-						<span className="font-medium text-sm">{row.original.name}</span>
+						<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
 					</div>
 				),
 			},
@@ -626,14 +779,14 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
-						moderator: { label: 'Mod', className: 'bg-orange-100 text-orange-800' },
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+						admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
+						user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
+						moderator: { label: 'Mod', style: { backgroundColor: '#ffedd5', color: '#9a3412' } },
+						guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
 					};
 					const roleInfo = roleMap[role];
-					return <Badge className={`text-xs ${roleInfo.className}`}>{roleInfo.label}</Badge>;
+					return <Badge style={{ fontSize: '0.75rem', ...roleInfo.style }}>{roleInfo.label}</Badge>;
 				},
 			},
 			{
@@ -641,15 +794,18 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				cell: ({ row }: { row: Row<User> }) => {
 					const status = row.original.status;
-					const statusMap: Record<User['status'], { icon: IconComponent; className: string }> = {
-						active: { icon: CircleCheck, className: 'text-green-600' },
-						inactive: { icon: CircleX, className: 'text-red-600' },
-						pending: { icon: Clock, className: 'text-yellow-600' },
-						suspended: { icon: CircleAlert, className: 'text-gray-600' },
+					const statusMap: Record<
+						User['status'],
+						{ icon: IconComponent; style: React.CSSProperties }
+					> = {
+						active: { icon: CircleCheck, style: { color: '#16a34a' } },
+						inactive: { icon: CircleX, style: { color: '#dc2626' } },
+						pending: { icon: Clock, style: { color: '#ca8a04' } },
+						suspended: { icon: CircleAlert, style: { color: '#4b5563' } },
 					};
 					const statusInfo = statusMap[status];
 					const Icon = statusInfo.icon;
-					return <Icon className={`h-4 w-4 ${statusInfo.className}`} />;
+					return <Icon style={{ height: '1rem', width: '1rem', ...statusInfo.style }} />;
 				},
 			},
 		],
@@ -671,10 +827,26 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 // Story: Column Resizing Demo
 export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">Column Resizing Demo</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					Column Resizing Demo
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					Hover over column headers to see the resize handle. Drag the right edge of column headers
 					to resize them. Double-click the resize handle to reset column width.
 				</p>
@@ -688,14 +860,27 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'name',
 				header: 'Employee Name',
 				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center gap-2">
-						<div className="h-6 w-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+						<div
+							style={{
+								height: '1.5rem',
+								width: '1.5rem',
+								borderRadius: '9999px',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								color: '#ffffff',
+								fontSize: '0.75rem',
+								fontWeight: 500,
+								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+							}}
+						>
 							{row.original.name
 								.split(' ')
 								.map((n: string) => n[0])
 								.join('')}
 						</div>
-						<span className="font-medium">{row.original.name}</span>
+						<span style={{ fontWeight: 500 }}>{row.original.name}</span>
 					</div>
 				),
 			},
@@ -703,7 +888,9 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'email',
 				header: 'Email Address',
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="text-sm text-muted-foreground">{row.original.email}</span>
+					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+						{row.original.email}
+					</span>
 				),
 			},
 			{
@@ -711,24 +898,24 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+						admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
+						user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800',
+							style: { backgroundColor: '#ffedd5', color: '#9a3412' },
 						},
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
 					};
 					const roleInfo = roleMap[role];
-					return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+					return <Badge style={roleInfo.style}>{roleInfo.label}</Badge>;
 				},
 			},
 			{
 				accessorKey: 'department',
 				header: 'Department',
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="font-medium text-sm">{row.original.department}</span>
+					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
 				),
 			},
 			{
@@ -742,7 +929,11 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+					return (
+						<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>
+							{formatted}
+						</div>
+					);
 				},
 			},
 		],
@@ -766,10 +957,26 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 // Story: All Features Demo
 export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">All Features Demo</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
+					All Features Demo
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					This table demonstrates all available features: column reordering, resizing, sorting,
 					filtering, pinning, row selection, and pagination. Try hovering over headers to see resize
 					handles, drag columns to reorder, click headers to sort, use the filter buttons, and
@@ -785,7 +992,20 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				id: 'serial',
 				header: '#',
 				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted text-muted-foreground text-sm font-medium">
+					<div
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							width: '2rem',
+							height: '2rem',
+							borderRadius: '9999px',
+							backgroundColor: 'var(--muted)',
+							color: 'var(--muted-foreground)',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+						}}
+					>
 						{row.index + 1}
 					</div>
 				),
@@ -795,16 +1015,31 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'name',
 				header: 'Employee Name',
 				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center gap-3">
-						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+						<div
+							style={{
+								height: '2rem',
+								width: '2rem',
+								borderRadius: '9999px',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								color: '#ffffff',
+								fontSize: '0.75rem',
+								fontWeight: 500,
+								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+							}}
+						>
 							{row.original.name
 								.split(' ')
 								.map((n: string) => n[0])
 								.join('')}
 						</div>
-						<div className="flex flex-col">
-							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">{row.original.email}</span>
+						<div style={{ display: 'flex', flexDirection: 'column' }}>
+							<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
+							<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								{row.original.email}
+							</span>
 						</div>
 					</div>
 				),
@@ -814,27 +1049,27 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
+					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
 						admin: {
 							label: 'Admin',
-							className: 'bg-purple-100 text-purple-800 border-purple-200',
+							style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
 						},
 						user: {
 							label: 'User',
-							className: 'bg-blue-100 text-blue-800 border-blue-200',
+							style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
 						},
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800 border-orange-200',
+							style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
 						},
 						guest: {
 							label: 'Guest',
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
+							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
 						},
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outline" className={roleInfo.className}>
+						<Badge variant="outline" style={roleInfo.style}>
 							{roleInfo.label}
 						</Badge>
 					);
@@ -847,35 +1082,35 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 					const status = row.original.status;
 					const statusMap: Record<
 						User['status'],
-						{ label: string; icon: React.ComponentType; className: string }
+						{ label: string; icon: React.ComponentType; style: React.CSSProperties }
 					> = {
 						active: {
 							label: 'Active',
 							icon: CircleCheck,
-							className: 'bg-green-100 text-green-800 border-green-200',
+							style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
 						},
 						inactive: {
 							label: 'Inactive',
 							icon: CircleX,
-							className: 'bg-red-100 text-red-800 border-red-200',
+							style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
 						},
 						pending: {
 							label: 'Pending',
 							icon: Clock,
-							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+							style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
 						},
 						suspended: {
 							label: 'Suspended',
 							icon: CircleAlert,
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
+							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
 						},
 					};
 					const statusInfo = statusMap[status];
 					const Icon = statusInfo.icon;
 					return (
-						<div className="flex items-center gap-2">
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 							<Icon />
-							<Badge variant="outline" className={statusInfo.className}>
+							<Badge variant="outline" style={statusInfo.style}>
 								{statusInfo.label}
 							</Badge>
 						</div>
@@ -886,7 +1121,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'department',
 				header: 'Department',
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="font-medium text-sm">{row.original.department}</span>
+					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
 				),
 			},
 			{
@@ -900,7 +1135,11 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+					return (
+						<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>
+							{formatted}
+						</div>
+					);
 				},
 			},
 			{
@@ -909,20 +1148,37 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: ({ row }: { row: Row<User> }) => {
 					const performance = parseFloat(row.getValue('performance') as string);
 					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return 'text-green-600';
-						if (score >= 80) return 'text-blue-600';
-						if (score >= 70) return 'text-yellow-600';
-						return 'text-red-600';
+						if (score >= 90) return '#16a34a';
+						if (score >= 80) return '#2563eb';
+						if (score >= 70) return '#ca8a04';
+						return '#dc2626';
 					};
 					return (
-						<div className="flex items-center gap-2">
-							<div className="flex-1 bg-gray-200 rounded-full h-2">
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+							<div
+								style={{
+									flex: '1 1 0%',
+									borderRadius: '9999px',
+									height: '0.5rem',
+									backgroundColor: '#e5e7eb',
+								}}
+							>
 								<div
-									className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
-									style={{ width: `${performance}%` }}
+									style={{
+										width: `${performance}%`,
+										height: '0.5rem',
+										borderRadius: '9999px',
+										backgroundColor: getPerformanceColor(performance),
+									}}
 								/>
 							</div>
-							<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
+							<span
+								style={{
+									fontSize: '0.875rem',
+									fontWeight: 500,
+									color: getPerformanceColor(performance),
+								}}
+							>
 								{performance}%
 							</span>
 						</div>
@@ -940,7 +1196,11 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						hour: '2-digit',
 						minute: '2-digit',
 					});
-					return <span className="text-sm text-muted-foreground">{formatted}</span>;
+					return (
+						<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							{formatted}
+						</span>
+					);
 				},
 			},
 			{
@@ -948,20 +1208,30 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Actions',
 				cell: () => {
 					return (
-						<div className="flex items-center gap-1">
-							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Eye className="h-4 w-4" />
-							</Button>
-							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Pencil className="h-4 w-4" />
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+							<Button
+								variant="ghost"
+								color={ButtonColor.None}
+								size="sm"
+								style={{ height: '2rem', width: '2rem', padding: 0 }}
+							>
+								<Eye size={16} />
 							</Button>
 							<Button
 								variant="ghost"
 								color={ButtonColor.None}
 								size="sm"
-								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+								style={{ height: '2rem', width: '2rem', padding: 0 }}
 							>
-								<Trash2 className="h-4 w-4" />
+								<Pencil size={16} />
+							</Button>
+							<Button
+								variant="ghost"
+								color="destructive"
+								size="sm"
+								style={{ height: '2rem', width: '2rem', padding: 0 }}
+							>
+								<Trash2 size={16} />
 							</Button>
 						</div>
 					);
@@ -1023,12 +1293,26 @@ const largeDataset = generateLargeDataset(1000, 0);
 // Story: Virtualization with All Features
 export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
-		<div className="space-y-4">
-			<div className="border rounded-lg p-6 bg-background">
-				<h3 className="text-lg font-semibold mb-2 text-foreground">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div
+				style={{
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					padding: '1.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<h3
+					style={{
+						fontSize: '1.125rem',
+						fontWeight: 600,
+						marginBottom: '0.5rem',
+						color: 'var(--foreground)',
+					}}
+				>
 					Virtualization with All Features
 				</h3>
-				<p className="text-sm text-muted-foreground mb-4">
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
 					This table demonstrates virtualization with 1000 rows, plus all interactive features:
 					column reordering, resizing, sorting, filtering, and row selection. The table uses virtual
 					scrolling for optimal performance with large datasets. Try scrolling, resizing columns,
@@ -1044,16 +1328,31 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'name',
 				header: 'Employee Name',
 				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center gap-3">
-						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+						<div
+							style={{
+								height: '2rem',
+								width: '2rem',
+								borderRadius: '9999px',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								color: '#ffffff',
+								fontSize: '0.75rem',
+								fontWeight: 500,
+								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+							}}
+						>
 							{row.original.name
 								.split(' ')
 								.map((n: string) => n[0])
 								.join('')}
 						</div>
-						<div className="flex flex-col">
-							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">{row.original.email}</span>
+						<div style={{ display: 'flex', flexDirection: 'column' }}>
+							<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
+							<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								{row.original.email}
+							</span>
 						</div>
 					</div>
 				),
@@ -1063,27 +1362,27 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
+					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
 						admin: {
 							label: 'Admin',
-							className: 'bg-purple-100 text-purple-800 border-purple-200',
+							style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
 						},
 						user: {
 							label: 'User',
-							className: 'bg-blue-100 text-blue-800 border-blue-200',
+							style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
 						},
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800 border-orange-200',
+							style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
 						},
 						guest: {
 							label: 'Guest',
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
+							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
 						},
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outline" className={roleInfo.className}>
+						<Badge variant="outline" style={roleInfo.style}>
 							{roleInfo.label}
 						</Badge>
 					);
@@ -1096,35 +1395,35 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					const status = row.original.status;
 					const statusMap: Record<
 						User['status'],
-						{ label: string; icon: React.ComponentType; className: string }
+						{ label: string; icon: React.ComponentType; style: React.CSSProperties }
 					> = {
 						active: {
 							label: 'Active',
 							icon: CircleCheck,
-							className: 'bg-green-100 text-green-800 border-green-200',
+							style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
 						},
 						inactive: {
 							label: 'Inactive',
 							icon: CircleX,
-							className: 'bg-red-100 text-red-800 border-red-200',
+							style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
 						},
 						pending: {
 							label: 'Pending',
 							icon: Clock,
-							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+							style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
 						},
 						suspended: {
 							label: 'Suspended',
 							icon: CircleAlert,
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
+							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
 						},
 					};
 					const statusInfo = statusMap[status];
 					const Icon = statusInfo.icon;
 					return (
-						<div className="flex items-center gap-2">
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 							<Icon />
-							<Badge variant="outline" className={statusInfo.className}>
+							<Badge variant="outline" style={statusInfo.style}>
 								{statusInfo.label}
 							</Badge>
 						</div>
@@ -1135,7 +1434,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'department',
 				header: 'Department',
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="font-medium text-sm">{row.original.department}</span>
+					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
 				),
 			},
 			{
@@ -1149,7 +1448,11 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						minimumFractionDigits: 0,
 						maximumFractionDigits: 0,
 					}).format(salary);
-					return <div className="font-medium text-sm text-green-700">{formatted}</div>;
+					return (
+						<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>
+							{formatted}
+						</div>
+					);
 				},
 			},
 			{
@@ -1158,20 +1461,37 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: ({ row }: { row: Row<User> }) => {
 					const performance = parseFloat(row.getValue('performance') as string);
 					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return 'text-green-600';
-						if (score >= 80) return 'text-blue-600';
-						if (score >= 70) return 'text-yellow-600';
-						return 'text-red-600';
+						if (score >= 90) return '#16a34a';
+						if (score >= 80) return '#2563eb';
+						if (score >= 70) return '#ca8a04';
+						return '#dc2626';
 					};
 					return (
-						<div className="flex items-center gap-2">
-							<div className="flex-1 bg-gray-200 rounded-full h-2">
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+							<div
+								style={{
+									flex: '1 1 0%',
+									borderRadius: '9999px',
+									height: '0.5rem',
+									backgroundColor: '#e5e7eb',
+								}}
+							>
 								<div
-									className={`h-2 rounded-full ${getPerformanceColor(performance)}`}
-									style={{ width: `${performance}%` }}
+									style={{
+										width: `${performance}%`,
+										height: '0.5rem',
+										borderRadius: '9999px',
+										backgroundColor: getPerformanceColor(performance),
+									}}
 								/>
 							</div>
-							<span className={`text-sm font-medium ${getPerformanceColor(performance)}`}>
+							<span
+								style={{
+									fontSize: '0.875rem',
+									fontWeight: 500,
+									color: getPerformanceColor(performance),
+								}}
+							>
 								{performance}%
 							</span>
 						</div>
@@ -1189,7 +1509,11 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						hour: '2-digit',
 						minute: '2-digit',
 					});
-					return <span className="text-sm text-muted-foreground">{formatted}</span>;
+					return (
+						<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							{formatted}
+						</span>
+					);
 				},
 			},
 			{
@@ -1197,20 +1521,30 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Actions',
 				cell: () => {
 					return (
-						<div className="flex items-center gap-1">
-							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Eye className="h-4 w-4" />
-							</Button>
-							<Button variant="ghost" color={ButtonColor.None} size="sm" className="h-8 w-8 p-0">
-								<Pencil className="h-4 w-4" />
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+							<Button
+								variant="ghost"
+								color={ButtonColor.None}
+								size="sm"
+								style={{ height: '2rem', width: '2rem', padding: 0 }}
+							>
+								<Eye size={16} />
 							</Button>
 							<Button
 								variant="ghost"
 								color={ButtonColor.None}
 								size="sm"
-								className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+								style={{ height: '2rem', width: '2rem', padding: 0 }}
 							>
-								<Trash2 className="h-4 w-4" />
+								<Pencil size={16} />
+							</Button>
+							<Button
+								variant="ghost"
+								color="destructive"
+								size="sm"
+								style={{ height: '2rem', width: '2rem', padding: 0 }}
+							>
+								<Trash2 size={16} />
 							</Button>
 						</div>
 					);
@@ -1271,22 +1605,47 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>
 		}, [loading, hasMore, page]);
 
 		return (
-			<div className="space-y-4">
-				<div className="border rounded-lg p-6 bg-background">
-					<h3 className="text-lg font-semibold mb-2 text-foreground">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<div
+					style={{
+						border: '1px solid var(--border)',
+						borderRadius: '0.5rem',
+						padding: '1.5rem',
+						backgroundColor: 'var(--background)',
+					}}
+				>
+					<h3
+						style={{
+							fontSize: '1.125rem',
+							fontWeight: 600,
+							marginBottom: '0.5rem',
+							color: 'var(--foreground)',
+						}}
+					>
 						Virtualized Infinite Scroll + Reorder + Resize
 					</h3>
-					<p className="text-sm text-muted-foreground mb-4">
+					<p
+						style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}
+					>
 						Large dataset with virtualized rows, drag-and-drop column reordering, and on-change
 						column resizing. Scroll to load more.
 					</p>
-					<div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
+					<div
+						style={{
+							marginBottom: '1rem',
+							display: 'flex',
+							alignItems: 'center',
+							gap: '1rem',
+							fontSize: '0.875rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
 						<span>Rows: {data.length}</span>
 						<span>Page: {page}</span>
 						{loading && <span>Loading…</span>}
-						{!hasMore && <span className="text-green-600">All items loaded</span>}
+						{!hasMore && <span style={{ color: '#16a34a' }}>All items loaded</span>}
 						{orderedColumns.length > 0 && (
-							<span className="truncate">
+							<span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
 								Order:{' '}
 								{orderedColumns
 									.map((c) =>
@@ -1513,17 +1872,32 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Employee Name',
 				size: 200,
 				cell: ({ row }: { row: Row<User> }) => (
-					<div className="flex items-center gap-3">
-						<div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-medium">
+					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+						<div
+							style={{
+								height: '2rem',
+								width: '2rem',
+								borderRadius: '9999px',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								color: '#ffffff',
+								fontSize: '0.75rem',
+								fontWeight: 500,
+								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+							}}
+						>
 							{row.original.name
 								.split(' ')
 								.map((n) => n[0])
 								.join('')
 								.toUpperCase()}
 						</div>
-						<div className="flex flex-col">
-							<span className="font-medium text-sm">{row.original.name}</span>
-							<span className="text-xs text-muted-foreground">{row.original.email}</span>
+						<div style={{ display: 'flex', flexDirection: 'column' }}>
+							<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
+							<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								{row.original.email}
+							</span>
 						</div>
 					</div>
 				),
@@ -1533,17 +1907,17 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				size: 120,
 				cell: ({ row }: { row: Row<User> }) => {
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: { label: 'Admin', className: 'bg-red-100 text-red-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+						admin: { label: 'Admin', style: { backgroundColor: '#fee2e2', color: '#991b1b' } },
+						user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-yellow-100 text-yellow-800',
+							style: { backgroundColor: '#fef9c3', color: '#854d0e' },
 						},
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
 					};
 					const role = roleMap[row.original.role];
-					return <Badge className={role.className}>{role.label}</Badge>;
+					return <Badge style={role.style}>{role.label}</Badge>;
 				},
 			},
 			{
@@ -1551,18 +1925,23 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				size: 120,
 				cell: ({ row }: { row: Row<User> }) => {
-					const statusMap: Record<User['status'], { icon: IconComponent; className: string }> = {
-						active: { icon: CircleCheck, className: 'text-green-600' },
-						inactive: { icon: CircleX, className: 'text-red-600' },
-						pending: { icon: Clock, className: 'text-yellow-600' },
-						suspended: { icon: CircleAlert, className: 'text-orange-600' },
+					const statusMap: Record<
+						User['status'],
+						{ icon: IconComponent; style: React.CSSProperties }
+					> = {
+						active: { icon: CircleCheck, style: { color: '#16a34a' } },
+						inactive: { icon: CircleX, style: { color: '#dc2626' } },
+						pending: { icon: Clock, style: { color: '#ca8a04' } },
+						suspended: { icon: CircleAlert, style: { color: '#ea580c' } },
 					};
 					const status = statusMap[row.original.status];
 					const Icon = status.icon;
 					return (
-						<div className="flex items-center gap-2">
-							<Icon className="h-4 w-4" />
-							<span className="capitalize text-sm">{row.original.status}</span>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+							<Icon size={16} />
+							<span style={{ textTransform: 'capitalize', fontSize: '0.875rem' }}>
+								{row.original.status}
+							</span>
 						</div>
 					);
 				},
@@ -1577,7 +1956,9 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Annual Salary',
 				size: 140,
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="font-mono text-sm">${row.original.salary.toLocaleString()}</span>
+					<span style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
+						${row.original.salary.toLocaleString()}
+					</span>
 				),
 			},
 			{
@@ -1587,18 +1968,35 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				cell: ({ row }: { row: Row<User> }) => {
 					const score = row.original.performance;
 					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return 'text-green-600';
-						if (score >= 80) return 'text-blue-600';
-						if (score >= 70) return 'text-yellow-600';
-						return 'text-red-600';
+						if (score >= 90) return '#16a34a';
+						if (score >= 80) return '#2563eb';
+						if (score >= 70) return '#ca8a04';
+						return '#dc2626';
 					};
 					return (
-						<div className="flex items-center gap-3">
-							<span className={`font-medium text-sm ${getPerformanceColor(score)}`}>{score}%</span>
-							<div className="w-20 bg-gray-200 rounded-full h-2 overflow-hidden">
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+							<span
+								style={{ fontWeight: 500, fontSize: '0.875rem', color: getPerformanceColor(score) }}
+							>
+								{score}%
+							</span>
+							<div
+								style={{
+									width: '5rem',
+									borderRadius: '9999px',
+									height: '0.5rem',
+									overflow: 'hidden',
+									backgroundColor: '#e5e7eb',
+								}}
+							>
 								<div
-									className={`h-2 rounded-full transition-all duration-300 ${getPerformanceColor(score).replace('text-', 'bg-')}`}
-									style={{ width: `${score}%` }}
+									style={{
+										height: '0.5rem',
+										borderRadius: '9999px',
+										transition: 'all 300ms',
+										backgroundColor: getPerformanceColor(score),
+										width: `${score}%`,
+									}}
 								/>
 							</div>
 						</div>
@@ -1610,7 +2008,7 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Last Active',
 				size: 140,
 				cell: ({ row }: { row: Row<User> }) => (
-					<span className="text-sm text-muted-foreground">
+					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{new Date(row.original.lastLogin).toLocaleDateString()}
 					</span>
 				),
@@ -1719,8 +2117,8 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 			};
 
 			return (
-				<div className="space-y-4">
-					<div className="flex flex-wrap gap-2">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
 						<Button
 							onClick={() => handleScrollToUser('1')}
 							variant="outlined"

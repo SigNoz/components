@@ -131,12 +131,10 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
-				<div key={c} className="flex items-start gap-6">
-					<div style={{ width: 120 }} className="capitalize">
-						{c}
-					</div>
+				<div key={c} style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
+					<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
 
 					<RadioGroup color={c as RadioColorProps}>
 						<RadioGroupItem value="default" id={`radio-${c}-default`}>

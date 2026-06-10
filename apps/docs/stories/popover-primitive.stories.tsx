@@ -45,20 +45,44 @@ export const Default: Story = {
 						Open popover
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent className="w-80">
-					<div className="grid gap-4">
-						<div className="space-y-2">
-							<h4 className="leading-none font-medium !mt-0">Dimensions</h4>
-							<p className="text-muted-foreground text-sm">Set the dimensions for the layer.</p>
+				<PopoverContent style={{ width: '20rem' }}>
+					<div style={{ display: 'grid', gap: '1rem' }}>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<h4 style={{ lineHeight: 1, fontWeight: 500, marginTop: '0' }}>Dimensions</h4>
+							<p style={{ color: 'var(--muted-foreground)', fontSize: '0.875rem' }}>
+								Set the dimensions for the layer.
+							</p>
 						</div>
-						<div className="grid gap-2">
-							<div className="grid grid-cols-3 items-center gap-4">
+						<div style={{ display: 'grid', gap: '0.5rem' }}>
+							<div
+								style={{
+									display: 'grid',
+									gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+									alignItems: 'center',
+									gap: '1rem',
+								}}
+							>
 								<label htmlFor="width">Width</label>
-								<Input id="width" defaultValue="100%" className="col-span-2 h-8" />
+								<Input
+									id="width"
+									defaultValue="100%"
+									style={{ gridColumn: 'span 2', height: '2rem' }}
+								/>
 							</div>
-							<div className="grid grid-cols-3 items-center gap-4">
+							<div
+								style={{
+									display: 'grid',
+									gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+									alignItems: 'center',
+									gap: '1rem',
+								}}
+							>
 								<label htmlFor="maxWidth">Max. width</label>
-								<Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
+								<Input
+									id="maxWidth"
+									defaultValue="300px"
+									style={{ gridColumn: 'span 2', height: '2rem' }}
+								/>
 							</div>
 						</div>
 					</div>

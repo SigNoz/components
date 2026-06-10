@@ -65,7 +65,7 @@ export const Default: Story = {
 		const [open, setOpen] = useState(true);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						placeholder="Select a framework..."
@@ -89,13 +89,26 @@ export const Default: Story = {
 
 export const Variations: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-2xl space-y-8">
+		<div
+			style={{
+				padding: '2rem',
+				width: '100%',
+				maxWidth: '42rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2rem',
+			}}
+		>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Infinite Loading
+				</h3>
 				<InfiniteLoadingExample />
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Loading with Delay (5s)
+				</h3>
 				<DelayedLoadingExample />
 			</div>
 		</div>

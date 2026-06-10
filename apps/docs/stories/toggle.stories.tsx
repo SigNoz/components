@@ -80,7 +80,7 @@ export const Default: Story = {
 	},
 	render: (args) => (
 		<Toggle {...args} aria-label="Toggle bold">
-			<Bold className="h-3 w-3" />
+			<Bold size={12} />
 		</Toggle>
 	),
 };
@@ -94,7 +94,7 @@ export const Pressed: Story = {
 	},
 	render: (args) => (
 		<Toggle {...args} aria-label="Toggle bold">
-			<Bold className="h-3 w-3" />
+			<Bold size={12} />
 		</Toggle>
 	),
 };
@@ -106,7 +106,7 @@ export const Disabled: Story = {
 	},
 	render: (args) => (
 		<Toggle {...args} aria-label="Toggle bold">
-			<Bold className="h-3 w-3" />
+			<Bold size={12} />
 		</Toggle>
 	),
 };
@@ -115,16 +115,19 @@ const colors: ToggleColor[] = ['primary', 'destructive', 'warning', 'secondary',
 
 export const AllColors: Story = {
 	render: () => (
-		<div className="flex flex-wrap gap-4">
+		<div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
 			{colors.map((color) => (
-				<div key={color} className="flex flex-col items-center gap-2">
-					<span className="text-sm capitalize">{color}</span>
-					<div className="flex gap-2">
+				<div
+					key={color}
+					style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}
+				>
+					<span style={{ fontSize: '0.875rem', textTransform: 'capitalize' }}>{color}</span>
+					<div style={{ display: 'flex', gap: '0.5rem' }}>
 						<Toggle defaultValue={false} color={color} aria-label={`${color} off`}>
-							<Bold className="h-3 w-3" />
+							<Bold size={12} />
 						</Toggle>
 						<Toggle defaultValue={true} color={color} aria-label={`${color} on`}>
-							<Bold className="h-3 w-3" />
+							<Bold size={12} />
 						</Toggle>
 					</div>
 				</div>
@@ -135,15 +138,15 @@ export const AllColors: Story = {
 
 export const AllSizes: Story = {
 	render: () => (
-		<div className="flex items-center gap-4">
+		<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
 			<Toggle size="sm" aria-label="Small">
-				<Bold className="h-3 w-3" />
+				<Bold size={12} />
 			</Toggle>
 			<Toggle size="default" aria-label="Default">
-				<Bold className="h-3 w-3" />
+				<Bold size={12} />
 			</Toggle>
 			<Toggle size="lg" aria-label="Large">
-				<Bold className="h-3 w-3" />
+				<Bold size={12} />
 			</Toggle>
 		</div>
 	),

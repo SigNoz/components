@@ -119,16 +119,16 @@ export const Default: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft className="h-3 w-3" />
+				<AlignLeft size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="center" aria-label="Align center">
-				<AlignCenter className="h-3 w-3" />
+				<AlignCenter size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight className="h-3 w-3" />
+				<AlignRight size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="justify" aria-label="Justify">
-				<AlignJustify className="h-3 w-3" />
+				<AlignJustify size={12} />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -139,33 +139,46 @@ export const ToggleGroupShowcase: Story = {
 		docs: { story: { autoplay: true } },
 	},
 	render: () => (
-		<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background">
-			<div className="space-y-12">
+		<div style={{ padding: '2rem', borderRadius: '0.5rem', backgroundColor: 'var(--background)' }}>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
 				{COLORS.map((color) => (
-					<div key={color} className="space-y-4">
-						<h2 className="text-base font-semibold capitalize text-foreground">{color}</h2>
-						<div className="flex flex-wrap gap-8">
+					<div key={color} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h2
+							style={{
+								fontSize: '1rem',
+								fontWeight: 600,
+								textTransform: 'capitalize',
+								color: 'var(--foreground)',
+							}}
+						>
+							{color}
+						</h2>
+						<div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
 							{SIZES.map((size) => (
-								<div key={size} className="space-y-2">
-									<h3 className="text-sm font-medium capitalize">{size}</h3>
+								<div key={size} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+									<h3
+										style={{ fontSize: '0.875rem', fontWeight: 500, textTransform: 'capitalize' }}
+									>
+										{size}
+									</h3>
 									<ToggleGroup type="single" defaultValue="center" color={color} size={size}>
 										<ToggleGroupItem value="left" aria-label="Align left">
-											<AlignLeft className="h-3 w-3" />
+											<AlignLeft size={12} />
 										</ToggleGroupItem>
 										<ToggleGroupItem value="center" aria-label="Align center">
-											<AlignCenter className="h-3 w-3" />
+											<AlignCenter size={12} />
 										</ToggleGroupItem>
 										<ToggleGroupItem value="right" aria-label="Align right">
-											<AlignRight className="h-3 w-3" />
+											<AlignRight size={12} />
 										</ToggleGroupItem>
 										<ToggleGroupItem value="justify" aria-label="Justify">
-											<AlignJustify className="h-3 w-3" />
+											<AlignJustify size={12} />
 										</ToggleGroupItem>
 									</ToggleGroup>
 								</div>
 							))}
-							<div className="space-y-2">
-								<h3 className="text-sm font-medium">Disabled</h3>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+								<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Disabled</h3>
 								<ToggleGroup
 									type="single"
 									defaultValue="center"
@@ -174,16 +187,16 @@ export const ToggleGroupShowcase: Story = {
 									disabled
 								>
 									<ToggleGroupItem value="left" aria-label="Align left">
-										<AlignLeft className="h-3 w-3" />
+										<AlignLeft size={12} />
 									</ToggleGroupItem>
 									<ToggleGroupItem value="center" aria-label="Align center">
-										<AlignCenter className="h-3 w-3" />
+										<AlignCenter size={12} />
 									</ToggleGroupItem>
 									<ToggleGroupItem value="right" aria-label="Align right">
-										<AlignRight className="h-3 w-3" />
+										<AlignRight size={12} />
 									</ToggleGroupItem>
 									<ToggleGroupItem value="justify" aria-label="Justify">
-										<AlignJustify className="h-3 w-3" />
+										<AlignJustify size={12} />
 									</ToggleGroupItem>
 								</ToggleGroup>
 							</div>
@@ -205,16 +218,16 @@ export const SingleChoice: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft className="h-3 w-3" />
+				<AlignLeft size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="center" aria-label="Align center">
-				<AlignCenter className="h-3 w-3" />
+				<AlignCenter size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight className="h-3 w-3" />
+				<AlignRight size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="justify" aria-label="Justify">
-				<AlignJustify className="h-3 w-3" />
+				<AlignJustify size={12} />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -230,13 +243,13 @@ export const MultipleChoices: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="bold" aria-label="Bold">
-				<Bold className="h-3 w-3" />
+				<Bold size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="italic" aria-label="Italic">
-				<Italic className="h-3 w-3" />
+				<Italic size={12} />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="underline" aria-label="Underline">
-				<Underline className="h-3 w-3" />
+				<Underline size={12} />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -252,13 +265,13 @@ export const WithLabels: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="first">
-				<LayoutGrid className="h-6 w-6" /> Label
+				<LayoutGrid size={24} /> Label
 			</ToggleGroupItem>
 			<ToggleGroupItem value="second">
-				<LayoutGrid className="h-6 w-6" /> Label
+				<LayoutGrid size={24} /> Label
 			</ToggleGroupItem>
 			<ToggleGroupItem value="third">
-				<LayoutGrid className="h-6 w-6" /> Label
+				<LayoutGrid size={24} /> Label
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),

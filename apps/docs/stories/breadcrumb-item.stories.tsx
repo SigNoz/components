@@ -116,7 +116,7 @@ export const WithPage: Story = {
 
 export const WithCustomClassName: Story = {
 	args: {
-		className: 'font-bold',
+		style: { fontWeight: 700 },
 	},
 	render: (args) => (
 		<Breadcrumb>
