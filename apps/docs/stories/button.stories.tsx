@@ -127,19 +127,35 @@ export const ButtonShowcase: Story = {
 		docs: { story: { autoplay: true } },
 	},
 	render: () => (
-		<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background ">
-			<div className="space-y-12">
+		<div style={{ padding: '2rem', borderRadius: '0.5rem', backgroundColor: 'var(--background)' }}>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
 				{COLORS.map((color) => (
-					<div key={color} className="space-y-4">
-						<h2 className="text-base font-semibold capitalize text-foreground">{color}</h2>
-						<div className="flex gap-4">
+					<div key={color} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h2
+							style={{
+								fontSize: '1rem',
+								fontWeight: 600,
+								textTransform: 'capitalize',
+								color: 'var(--foreground)',
+							}}
+						>
+							{color}
+						</h2>
+						<div style={{ display: 'flex', gap: '1rem' }}>
 							{/* Filter variants based on color */}
 							{VARIANTS.filter(
 								(variant) =>
 									// Only show outlined and dashed for secondary
 									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed')
 							).map((variant) => (
-								<div key={variant} className="grid grid-cols-1 gap-4">
+								<div
+									key={variant}
+									style={{
+										display: 'grid',
+										gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+										gap: '1rem',
+									}}
+								>
 									<Button
 										variant={variant}
 										color={color}
@@ -207,13 +223,15 @@ export const Sizes: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="p-8 space-y-8">
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold">Size Variations</h2>
-				<div className="space-y-8">
+		<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h2 style={{ fontSize: '1rem', fontWeight: 600 }}>Size Variations</h2>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 					{[ButtonSize.SM, ButtonSize.MD].map((size) => (
-						<div key={size} className="space-y-4">
-							<h3 className="text-sm font-medium capitalize">{size}</h3>
+						<div key={size} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, textTransform: 'capitalize' }}>
+								{size}
+							</h3>
 							<Button {...args} size={size} prefix={<ChevronLeft />} suffix={<ChevronRight />}>
 								{size} Button
 							</Button>
@@ -245,16 +263,27 @@ export const IconButtons: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="p-8 space-y-8 rounded-lg bg-background">
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold text-foreground">Icon Only Buttons</h2>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2rem',
+				borderRadius: '0.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
+					Icon Only Buttons
+				</h2>
 				<p>
 					Icon only buttons are buttons that only have an icon as their content. These buttons are
 					useful when you need to display an icon in a button without any text. You can just specify
 					the button as:
 					<pre>&lt;Button suffix=&#123;&lt;Code /&gt;&#125; size=&quot;icon&quot;/&gt;</pre>
 				</p>
-				<div className="flex gap-4 mt-4">
+				<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
 					{VARIANTS.map((variant) => (
 						<Button
 							{...args}
@@ -266,13 +295,15 @@ export const IconButtons: Story = {
 					))}
 				</div>
 			</div>
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold text-foreground">Icon Button Sizes</h2>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
+					Icon Button Sizes
+				</h2>
 				<p>
 					By default, the icon will be displayed at the size of the button. You can also specify the
 					size of the icon by passing the "size" prop to the icon.
 				</p>
-				<div className="flex gap-4 mt-4">
+				<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
 					{[ButtonSize.SM, ButtonSize.MD, ButtonSize.Icon].map((size) => (
 						<Button {...args} key={size} size={size} prefix={<Code />} />
 					))}
@@ -304,17 +335,27 @@ export const ActionButtons: Story = {
 		background: ButtonBackground.Ink500,
 	},
 	render: () => (
-		<div className="space-y-8">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 			<div>
-				<h2 className="text-base font-semibold mb-4">Action Buttons</h2>
-				<p className="text-sm mb-4">
+				<h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Action Buttons</h2>
+				<p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
 					Action buttons adapt their style based on the background they`re placed on.
 				</p>
 
-				<div className="grid grid-cols-2 gap-8">
+				<div
+					style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '2rem' }}
+				>
 					{/* ink-500 background */}
-					<div className="p-6 bg-ink-500 rounded-lg">
-						<p className="text-vanilla-100 mb-4">On ink-500 background</p>
+					<div
+						style={{
+							padding: '1.5rem',
+							backgroundColor: 'var(--bg-ink-500)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<p style={{ color: 'var(--text-vanilla-100)', marginBottom: '1rem' }}>
+							On ink-500 background
+						</p>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink500}
@@ -326,8 +367,16 @@ export const ActionButtons: Story = {
 					</div>
 
 					{/* ink-400 background */}
-					<div className="p-6 bg-ink-400 rounded-lg">
-						<p className="text-vanilla-100 mb-4">On ink-400 background</p>
+					<div
+						style={{
+							padding: '1.5rem',
+							backgroundColor: 'var(--bg-ink-400)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<p style={{ color: 'var(--text-vanilla-100)', marginBottom: '1rem' }}>
+							On ink-400 background
+						</p>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink400}
@@ -339,8 +388,16 @@ export const ActionButtons: Story = {
 					</div>
 
 					{/* vanilla-100 background */}
-					<div className="p-6 bg-vanilla-100 rounded-lg">
-						<p className="text-slate-500 mb-4">On vanilla-100 background</p>
+					<div
+						style={{
+							padding: '1.5rem',
+							backgroundColor: 'var(--bg-vanilla-100)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<p style={{ color: 'var(--text-slate-500)', marginBottom: '1rem' }}>
+							On vanilla-100 background
+						</p>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla100}
@@ -352,8 +409,16 @@ export const ActionButtons: Story = {
 					</div>
 
 					{/* vanilla-200 background */}
-					<div className="p-6 bg-vanilla-200 rounded-lg">
-						<p className="text-slate-500 mb-4">On vanilla-200 background</p>
+					<div
+						style={{
+							padding: '1.5rem',
+							backgroundColor: 'var(--bg-vanilla-200)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<p style={{ color: 'var(--text-slate-500)', marginBottom: '1rem' }}>
+							On vanilla-200 background
+						</p>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla200}
@@ -367,10 +432,20 @@ export const ActionButtons: Story = {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-3">Disabled Action Buttons</h3>
-				<div className="grid grid-cols-2 gap-8">
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.75rem' }}>
+					Disabled Action Buttons
+				</h3>
+				<div
+					style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '2rem' }}
+				>
 					{/* Disabled examples */}
-					<div className="p-6 bg-ink-500 rounded-lg">
+					<div
+						style={{
+							padding: '1.5rem',
+							backgroundColor: 'var(--bg-ink-500)',
+							borderRadius: '0.5rem',
+						}}
+					>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink500}
@@ -381,7 +456,13 @@ export const ActionButtons: Story = {
 							Disabled Action Button
 						</Button>
 					</div>
-					<div className="p-6 bg-vanilla-100 rounded-lg">
+					<div
+						style={{
+							padding: '1.5rem',
+							backgroundColor: 'var(--bg-vanilla-100)',
+							borderRadius: '0.5rem',
+						}}
+					>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla100}

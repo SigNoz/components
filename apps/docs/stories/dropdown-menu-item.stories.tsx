@@ -55,7 +55,7 @@ export const Default: Story = {
 		destructive: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -63,13 +63,9 @@ export const Default: Story = {
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem {...args} leftIcon={<User className="h-4 w-4" />} />
-					<DropdownMenuItem leftIcon={<Settings className="h-4 w-4" />}>Settings</DropdownMenuItem>
-					<DropdownMenuItem
-						destructive
-						leftIcon={<LogOut className="h-4 w-4" />}
-						onSelect={() => {}}
-					>
+					<DropdownMenuItem {...args} leftIcon={<User size={16} />} />
+					<DropdownMenuItem leftIcon={<Settings size={16} />}>Settings</DropdownMenuItem>
+					<DropdownMenuItem destructive leftIcon={<LogOut size={16} />} onSelect={() => {}}>
 						Logout
 					</DropdownMenuItem>
 				</DropdownMenuContent>
@@ -85,7 +81,7 @@ export const WithShortcut: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -93,15 +89,15 @@ export const WithShortcut: Story = {
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem {...args} leftIcon={<User className="h-4 w-4" />}>
+					<DropdownMenuItem {...args} leftIcon={<User size={16} />}>
 						{args.children}
 						<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 					</DropdownMenuItem>
-					<DropdownMenuItem leftIcon={<Settings className="h-4 w-4" />}>
+					<DropdownMenuItem leftIcon={<Settings size={16} />}>
 						Settings
 						<DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
 					</DropdownMenuItem>
-					<DropdownMenuItem leftIcon={<Check className="h-4 w-4" />}>
+					<DropdownMenuItem leftIcon={<Check size={16} />}>
 						With checkmark
 						<DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
 					</DropdownMenuItem>
