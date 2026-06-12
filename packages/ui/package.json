@@ -415,7 +415,7 @@
 		"jsdom": "^29.1.1",
 		"publint": "0.3.18",
 		"vite": "npm:rolldown-vite@7.3.1",
-		"vitest": "^4.1.0"
+		"vitest": "^4.1.8"
 	},
 	"dependencies": {
 		"@chenglou/pretext": "^0.0.5",
