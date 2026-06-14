@@ -32,22 +32,25 @@
 		"glob": "13.0.6",
 		"husky": "9.1.7",
 		"inquirer": "11.1.0",
-		"lint-staged": "^17.0.4",
+		"lint-staged": "^17.0.7",
 		"publint": "0.3.18",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
+		"sass": "1.78.0",
 		"tsdown": "0.20.3",
 		"turbo": "2.9.14",
 		"typescript": "5.9.3",
-		"sass": "1.78.0",
 		"vite": "npm:rolldown-vite@7.3.1",
 		"vite-plugin-css-injected-by-js": "4.0.1"
 	},
 	"resolutions": {
 		"cross-spawn": "7.0.5",
-		"esbuild": "0.25.0",
+		"esbuild": "^0.28.1",
 		"semver": ">=7.5.2",
-		"tmp": "0.2.4"
+		"tmp": "^0.2.7",
+		"js-cookie": "^3.0.8",
+		"vitest": "^4.1.8",
+		"@vitest/browser": "^4.1.8"
 	},
 	"packageManager": "pnpm@10.30.3",
 	"name": "design-system",
@@ -62,7 +65,15 @@
 			"sass": "1.78.0",
 			"eslint-config-prettier": "9.1.0",
 			"eslint-import-resolver-typescript": "3.10.0",
-			"ajv@<6.14.0": "^6.14.2"
+			"ajv@<6.14.0": "^6.14.2",
+			"esbuild": "^0.28.1",
+			"tmp": "^0.2.7",
+			"js-cookie": "^3.0.8",
+			"vitest": "^4.1.8",
+			"@vitest/browser": "^4.1.8",
+			"@vitest/browser-playwright": "^4.1.8",
+			"@vitest/coverage-v8": "^4.1.8",
+			"@vitest/mocker": "^4.1.8"
 		},
 		"packageExtensions": {
 			"vite-plugin-lib-inject-css": {

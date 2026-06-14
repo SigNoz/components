@@ -12,7 +12,7 @@
 		"eslint-config-turbo": "2.0.0",
 		"eslint-plugin-mdx": "3.1.5",
 		"eslint-plugin-only-warn": "1.1.0",
-		"eslint-plugin-storybook": "^10.3.6",
+		"eslint-plugin-storybook": "^10.4.4",
 		"vite": "npm:rolldown-vite@7.3.1"
 	}
 }

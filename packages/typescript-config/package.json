@@ -9,6 +9,6 @@
 	},
 	"devDependencies": {
 		"@signozhq/tailwind-config": "workspace:*",
-		"vite-plugin-dts": "^5.0.0"
+		"vite-plugin-dts": "^5.0.2"
 	}
 }
