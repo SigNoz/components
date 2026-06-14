@@ -1,0 +1,178 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as SelectSimpleStories from './select-simple.stories';
+
+<Meta of={SelectSimpleStories} />
+
+# SelectSimple
+
+Preset that wraps `Select`, `SelectTrigger`, and `SelectContent` in a single component. Pass `items` (or `groups`) instead of composing subcomponents.
+
+For full primitive control, see [Select](?path=/docs/primitive-components-select--docs).
+
+## How to use
+
+```tsx
+import { SelectSimple } from '@signozhq/ui';
+import { useState } from 'react';
+
+const items = [
+	{ value: 'react', label: 'React' },
+	{ value: 'vue', label: 'Vue' },
+	{ value: 'angular', label: 'Angular' },
+];
+
+export default function MyComponent() {
+	const [value, setValue] = useState('');
+
+	return (
+		<SelectSimple
+			items={items}
+			placeholder="Select a framework..."
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Multi-select
+
+Set `multiple` to enable multi-select with removable pills in the trigger:
+
+```tsx
+const [values, setValues] = useState<string[]>([]);
+
+<SelectSimple
+	multiple
+	items={items}
+	placeholder="Select frameworks..."
+	value={values}
+	onChange={setValues}
+/>
+```
+
+Use `maxDisplayedPills` to cap visible pills. Overflow items appear as "+N":
+
+```tsx
+<SelectSimple
+	multiple
+	items={items}
+	value={values}
+	onChange={setValues}
+	maxDisplayedPills={2}
+/>
+```
+
+## Grouped items
+
+Pass `groups` instead of `items` to render headings between option clusters:
+
+```tsx
+<SelectSimple
+	groups={[
+		{ heading: 'Frameworks', items: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }] },
+		{ heading: 'Languages', items: [{ value: 'ts', label: 'TypeScript' }, { value: 'js', label: 'JavaScript' }] },
+	]}
+	placeholder="Select..."
+	value={value}
+	onChange={setValue}
+/>
+```
+
+## Items with icons
+
+Use ReactNode labels with a `displayValue` string for what shows in the trigger:
+
+```tsx
+import { Code, Database } from '@signozhq/icons';
+
+const items = [
+	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
+	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</>, displayValue: 'PostgreSQL' },
+];
+```
+
+Or use `displayValue` as a callback to fully control the trigger label:
+
+```tsx
+<SelectSimple
+	items={items}
+	value={value}
+	onChange={setValue}
+	displayValue={(selectedItems) => selectedItems.length > 0 ? `${selectedItems.length} selected` : null}
+/>
+```
+
+## Uncontrolled usage
+
+Use `defaultValue` when you don't need to control the selection externally:
+
+```tsx
+<SelectSimple
+	items={items}
+	defaultValue="react"
+	placeholder="Select a framework..."
+	onChange={(v) => console.log('Selected:', v)}
+/>
+```
+
+## Disabled state
+
+```tsx
+<SelectSimple items={items} value={value} onChange={setValue} disabled />
+```
+
+## Loading state
+
+Use `loading` and `loadingPlaceholder` while fetching options asynchronously:
+
+```tsx
+import { useEffect, useState } from 'react';
+
+function AsyncSelect() {
+	const [items, setItems] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+	const [value, setValue] = useState('');
+
+	useEffect(() => {
+		fetchItems().then((data) => {
+			setItems(data);
+			setIsLoading(false);
+		});
+	}, []);
+
+	return (
+		<SelectSimple
+			items={items}
+			loading={isLoading}
+			loadingPlaceholder="Fetching options..."
+			placeholder="Select a framework..."
+			value={value}
+			onChange={setValue}
+		/>
+	);
+}
+```
+
+## Select inside a popover
+
+Set `withPortal={false}` when placing a select inside a popover or modal to avoid z-index and stacking issues:
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent, SelectSimple, Button } from '@signozhq/ui';
+
+<Popover>
+	<PopoverTrigger asChild>
+		<Button variant="outline">Open filters</Button>
+	</PopoverTrigger>
+	<PopoverContent className="w-80">
+		<SelectSimple items={items} value={value} onChange={setValue} withPortal={false} />
+	</PopoverContent>
+</Popover>
+```
+
+## Props
+
+<Controls of={SelectSimpleStories.Default} />

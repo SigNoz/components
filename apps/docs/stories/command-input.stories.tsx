@@ -5,7 +5,7 @@ import React from 'react';
 import { inputArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandInput> = {
-	title: 'Components/Command/CommandInput',
+	title: 'Primitive Components/Command/CommandInput',
 	component: CommandInput,
 	argTypes: inputArgTypes,
 	parameters: {

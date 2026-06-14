@@ -9,6 +9,12 @@ export type PaginationUrlProps = {
 	 * @default 'page'
 	 */
 	urlKey?: string;
+	/**
+	 * The key of the query state to synchronize the page size with.
+	 * Change this to avoid conflicts with other query states.
+	 * @default 'pageSize'
+	 */
+	pageSizeUrlKey?: string;
 } & Omit<PaginationProps, 'current' | 'defaultCurrent' | 'onPageChange'>;
 
 /**
@@ -38,12 +44,20 @@ export type PaginationUrlProps = {
  */
 export function PaginationUrl({
 	urlKey = 'page',
+	pageSizeUrlKey = 'pageSize',
 	total,
 	pageSize = 10,
+	onPageSizeChange,
 	...props
 }: PaginationUrlProps) {
 	const [page, setPage] = useQueryState(urlKey, parseAsInteger.withDefault(1));
-	const totalPages = Math.ceil(total / pageSize);
+	const [urlPageSize, setUrlPageSize] = useQueryState(
+		pageSizeUrlKey,
+		parseAsInteger.withDefault(pageSize)
+	);
+
+	const activePageSize = props.enablePageSize ? (urlPageSize ?? pageSize) : pageSize;
+	const totalPages = Math.ceil(total / activePageSize);
 	const clampedPage = Math.max(1, Math.min(page ?? 1, totalPages));
 
 	useEffect(() => {
@@ -59,13 +73,24 @@ export function PaginationUrl({
 		[setPage]
 	);
 
+	const handlePageSizeChange = useCallback(
+		(newSize: number) => {
+			if (props.enablePageSize) {
+				setUrlPageSize(newSize);
+			}
+			onPageSizeChange?.(newSize);
+		},
+		[props.enablePageSize, setUrlPageSize, onPageSizeChange]
+	);
+
 	return (
 		<Pagination
+			{...props}
 			total={total}
-			pageSize={pageSize}
+			pageSize={activePageSize}
 			current={clampedPage}
 			onPageChange={onPageChange}
-			{...props}
+			onPageSizeChange={handlePageSizeChange}
 		/>
 	);
 }

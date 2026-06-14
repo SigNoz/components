@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { action } from 'storybook/actions';
 
 const meta: Meta<any> = {
-	title: 'Components/Command',
+	title: 'Primitive Components/Command',
 	component: Command,
 	parameters: {
 		controls: { expanded: true },

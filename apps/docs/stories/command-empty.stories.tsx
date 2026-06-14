@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { emptyArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandEmpty> = {
-	title: 'Components/Command/CommandEmpty',
+	title: 'Primitive Components/Command/CommandEmpty',
 	component: CommandEmpty,
 	argTypes: emptyArgTypes,
 	parameters: {

@@ -1,0 +1,282 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DropdownMenuSimpleStories from './dropdown-menu-simple.stories';
+
+<Meta of={DropdownMenuSimpleStories} />
+
+# DropdownMenuSimple
+
+Preset that accepts a declarative `menu` configuration and renders a complete dropdown menu. Pass a `menu` object with `items` (and optional `search`/`loading`) instead of composing subcomponents manually.
+
+For full primitive control, see [DropdownMenu](?path=/docs/primitive-components-dropdownmenu-dropdownmenu--docs).
+
+## How to use
+
+```tsx
+import { DropdownMenuSimple, type MenuItem } from '@signozhq/ui';
+import { Button } from '@signozhq/ui';
+import { Grid3X3, Link2, Trash2 } from '@signozhq/icons';
+
+const items: MenuItem[] = [
+	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{ type: 'divider' },
+	{ key: 'delete', label: 'Delete', icon: <Trash2 className="h-4 w-4" />, danger: true },
+];
+
+export default function MyComponent() {
+	return (
+		<DropdownMenuSimple menu={{ items }}>
+			<Button variant="solid" color="secondary">Open</Button>
+		</DropdownMenuSimple>
+	);
+}
+```
+
+<Primary />
+
+## With Icons
+
+Use `icon` for a left icon and `rightIcon` for a right icon on any item:
+
+```tsx
+import { Grid3X3, Link2, Check, Trash2 } from '@signozhq/icons';
+
+const items: MenuItem[] = [
+	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" />, rightIcon: <Check className="h-4 w-4" /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{ type: 'divider' },
+	{ key: 'delete', label: 'Delete dashboard', icon: <Trash2 className="h-4 w-4" />, danger: true },
+];
+
+<DropdownMenuSimple menu={{ items }}>
+	<Button variant="solid" color="secondary">View Options</Button>
+</DropdownMenuSimple>
+```
+
+## Destructive Items
+
+Set `danger: true` on any item to style it as a destructive action:
+
+```tsx
+const items: MenuItem[] = [
+	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{ type: 'divider' },
+	{ key: 'delete', label: 'Delete dashboard', icon: <Trash2 className="h-4 w-4" />, danger: true },
+];
+```
+
+## Section Labels
+
+Wrap items in a `type: 'group'` to add a label header and visually separate related actions:
+
+```tsx
+import { User, Settings, LogOut } from '@signozhq/icons';
+
+const items: MenuItem[] = [
+	{
+		type: 'group',
+		label: 'My Account',
+		children: [
+			{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
+			{ key: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+			{ type: 'divider' },
+			{ key: 'logout', label: 'Log out', icon: <LogOut className="h-4 w-4" />, danger: true },
+		],
+	},
+];
+```
+
+## Keyboard Shortcuts
+
+Add `shortcut` to display a keyboard hint on the right side of an item:
+
+```tsx
+const items: MenuItem[] = [
+	{ key: 'profile', label: 'Profile', shortcut: '⇧⌘P' },
+	{ key: 'billing', label: 'Billing', shortcut: '⌘B' },
+	{ key: 'settings', label: 'Settings', shortcut: '⌘S' },
+	{ type: 'divider' },
+	{ key: 'logout', label: 'Log out', danger: true, shortcut: '⇧⌘Q' },
+];
+```
+
+## Checkable Items
+
+Use `type: 'checkbox'` for togglable items and `type: 'radio-group'` for single-selection groups:
+
+```tsx
+import { useState } from 'react';
+
+function MyComponent() {
+	const [showPanel, setShowPanel] = useState(false);
+	const [position, setPosition] = useState('bottom');
+
+	const items: MenuItem[] = [
+		{
+			type: 'group',
+			label: 'Appearance',
+			children: [
+				{
+					type: 'checkbox',
+					key: 'panel',
+					label: 'Show Panel',
+					checked: showPanel,
+					onCheckedChange: setShowPanel,
+				},
+			],
+		},
+		{
+			type: 'group',
+			label: 'Panel Position',
+			children: [
+				{
+					type: 'radio-group',
+					value: position,
+					onChange: setPosition,
+					children: [
+						{ type: 'radio', key: 'top', label: 'Top', value: 'top' },
+						{ type: 'radio', key: 'bottom', label: 'Bottom', value: 'bottom' },
+						{ type: 'radio', key: 'right', label: 'Right', value: 'right' },
+					],
+				},
+			],
+		},
+	];
+
+	return (
+		<DropdownMenuSimple menu={{ items }}>
+			<Button>View Settings</Button>
+		</DropdownMenuSimple>
+	);
+}
+```
+
+## Nested Menus
+
+Add `children` to any item to create a submenu. Submenus open on hover and display a chevron indicator automatically:
+
+```tsx
+import { User, Copy, Link2 } from '@signozhq/icons';
+
+const items: MenuItem[] = [
+	{
+		key: 'invite',
+		label: 'Invite users',
+		icon: <User className="h-4 w-4" />,
+		children: [
+			{ key: 'email', label: 'Email', icon: <Copy className="h-4 w-4" /> },
+			{ key: 'message', label: 'Message', icon: <Link2 className="h-4 w-4" /> },
+			{ type: 'divider' },
+			{ key: 'more', label: 'More...' },
+		],
+	},
+	{ key: 'settings', label: 'Settings' },
+];
+```
+
+## Loading State
+
+Pass `loading: true` to show a spinner while items are being fetched. Use `loading: { text: '...' }` to customise the loading message:
+
+```tsx
+<DropdownMenuSimple menu={{ items: [], loading: true }}>
+	<Button>Loading Menu</Button>
+</DropdownMenuSimple>
+
+// With custom text
+<DropdownMenuSimple menu={{ items: [], loading: { text: 'Fetching options...' } }}>
+	<Button>Loading Menu</Button>
+</DropdownMenuSimple>
+```
+
+## With Search
+
+Pass `menu.search` to render a search input at the top of the menu. Use `onSearchChange` to filter the items array based on the current query:
+
+```tsx
+import { useMemo, useState } from 'react';
+import { Search, User, Settings } from '@signozhq/icons';
+
+const allItems: MenuItem[] = [
+	{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
+	{ key: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+	{ key: 'billing', label: 'Billing' },
+	{ type: 'divider' },
+	{ key: 'logout', label: 'Log out', danger: true },
+];
+
+function SearchableMenu() {
+	const [query, setQuery] = useState('');
+
+	const filteredItems = useMemo(() => {
+		if (!query.trim()) return allItems;
+		const q = query.toLowerCase();
+		return allItems.filter((item) => {
+			if ('type' in item && item.type === 'divider') return true;
+			return 'label' in item && String(item.label).toLowerCase().includes(q);
+		});
+	}, [query]);
+
+	return (
+		<DropdownMenuSimple
+			menu={{
+				items: filteredItems,
+				search: {
+					placeholder: 'Search menu...',
+					searchIcon: <Search className="h-4 w-4" />,
+					onSearchChange: setQuery,
+				},
+			}}
+		>
+			<Button>Search Menu</Button>
+		</DropdownMenuSimple>
+	);
+}
+```
+
+Keyboard navigation: `ArrowDown` from the search input moves focus to the first menu item. `ArrowUp` or `Shift+Tab` from the first item returns focus to the search input.
+
+## Handling Selection
+
+Add `onSelect` to any item to respond when it is clicked or activated via keyboard:
+
+```tsx
+const items: MenuItem[] = [
+	{ key: 'view', label: 'View', onSelect: () => console.log('view') },
+	{ key: 'copy', label: 'Copy link', onSelect: () => navigator.clipboard.writeText(url) },
+	{ type: 'divider' },
+	{ key: 'delete', label: 'Delete', danger: true, onSelect: () => handleDelete() },
+];
+```
+
+Use `disabled: true` to prevent selection without removing the item from the list:
+
+```tsx
+const items: MenuItem[] = [
+	{ key: 'edit', label: 'Edit' },
+	{ key: 'publish', label: 'Publish', disabled: true },
+];
+```
+
+## Positioning
+
+`side` sets which side of the trigger the menu opens against. `align` controls alignment along that side. Collision detection automatically repositions the menu when it would overflow the viewport:
+
+```tsx
+<DropdownMenuSimple menu={{ items }} side="right" align="start">
+	<Button>Open</Button>
+</DropdownMenuSimple>
+```
+
+Use `sideOffset` and `alignOffset` for pixel-level adjustments:
+
+```tsx
+<DropdownMenuSimple menu={{ items }} side="bottom" sideOffset={8} alignOffset={4}>
+	<Button>Open</Button>
+</DropdownMenuSimple>
+```
+
+## Props
+
+<Controls of={DropdownMenuSimpleStories.Default} />

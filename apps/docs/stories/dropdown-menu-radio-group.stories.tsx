@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof DropdownMenuRadioGroup> = {
-	title: 'Components/DropdownMenu/DropdownMenuRadioGroup',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuRadioGroup',
 	component: DropdownMenuRadioGroup,
 	argTypes: {
 		value: {

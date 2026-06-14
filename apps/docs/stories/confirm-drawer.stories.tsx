@@ -6,7 +6,7 @@ import { confirmArgTypes } from './shared/dialog-drawer-arg-types.js';
 const { position: _, ...sharedConfirmArgTypes } = confirmArgTypes ?? {};
 
 const meta: Meta<typeof ConfirmDrawer> = {
-	title: 'Components/Drawer/ConfirmDrawer',
+	title: 'Composed Components/Drawer/ConfirmDrawer',
 	component: ConfirmDrawer,
 	argTypes: {
 		...sharedConfirmArgTypes,

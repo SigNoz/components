@@ -2,7 +2,7 @@ import { RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof RadioGroupLabel> = {
-	title: 'Components/RadioGroup/RadioGroupLabel',
+	title: 'Primitive Components/RadioGroup/RadioGroupLabel',
 	component: RadioGroupLabel,
 	argTypes: {
 		htmlFor: {

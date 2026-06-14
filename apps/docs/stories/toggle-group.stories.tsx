@@ -12,7 +12,7 @@ import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ToggleGroup> = {
-	title: 'Components/ToggleGroup',
+	title: 'Primitive Components/ToggleGroup',
 	component: ToggleGroup,
 	subcomponents: {
 		ToggleGroupItem: ToggleGroupItem as React.ComponentType<unknown>,

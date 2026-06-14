@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { inputArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof ComboboxInput> = {
-	title: 'Components/Combobox/ComboboxInput',
+	title: 'Primitive Components/Combobox/ComboboxInput',
 	component: ComboboxInput,
 	argTypes: inputArgTypes,
 	parameters: {

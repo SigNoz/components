@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { buttonArgTypes } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof PaginationLink> = {
-	title: 'Components/Pagination/PaginationLink',
+	title: 'Primitive Components/Pagination/PaginationLink',
 	component: PaginationLink,
 	argTypes: {
 		isActive: {

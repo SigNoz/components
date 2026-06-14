@@ -2,7 +2,7 @@ import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TabsList> = {
-	title: 'Components/Tabs/TabsList',
+	title: 'Primitive Components/Tabs/TabsList',
 	component: TabsList,
 	argTypes: {
 		testId: {
@@ -25,6 +25,26 @@ const meta: Meta<typeof TabsList> = {
 			description:
 				'When true, keyboard navigation will loop from last tab to first, and vice versa.',
 			table: { category: 'Behavior', type: { summary: 'boolean' } },
+		},
+		alignment: {
+			control: 'select',
+			options: ['left', 'center', 'right'],
+			description: 'Controls the alignment of the tab list within its container.',
+			table: {
+				category: 'Layout',
+				type: { summary: "'left' | 'center' | 'right'" },
+				defaultValue: { summary: "'left'" },
+			},
+		},
+		leftContent: {
+			control: false,
+			description: 'Content rendered to the left of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		rightContent: {
+			control: false,
+			description: 'Content rendered to the right of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
 		},
 		id: {
 			control: 'text',

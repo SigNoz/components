@@ -10,7 +10,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DropdownMenuItem> = {
-	title: 'Components/DropdownMenu/DropdownMenuItem',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuItem',
 	component: DropdownMenuItem,
 	argTypes: {
 		inset: {

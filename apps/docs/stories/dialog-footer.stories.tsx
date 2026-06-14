@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { footerArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DialogFooter> = {
-	title: 'Components/Dialog/DialogFooter',
+	title: 'Primitive Components/Dialog/DialogFooter',
 	component: DialogFooter,
 	argTypes: footerArgTypes,
 	parameters: {

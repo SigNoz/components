@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectGroup> = {
-	title: 'Components/Select/SelectGroup',
+	title: 'Primitive Components/Select/SelectGroup',
 	component: SelectGroup,
 	argTypes: {
 		className: {

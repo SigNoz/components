@@ -2,7 +2,7 @@ import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } fr
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TooltipProvider> = {
-	title: 'Components/Tooltip/TooltipProvider',
+	title: 'Primitive Components/Tooltip/TooltipProvider',
 	component: TooltipProvider,
 	argTypes: {
 		delayDuration: {

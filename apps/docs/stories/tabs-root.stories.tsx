@@ -3,7 +3,7 @@ import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TabsRoot> = {
-	title: 'Components/Tabs/TabsRoot',
+	title: 'Primitive Components/Tabs/Tabs',
 	component: TabsRoot,
 	argTypes: {
 		defaultValue: {

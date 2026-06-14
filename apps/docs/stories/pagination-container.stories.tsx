@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof PaginationContainer> = {
-	title: 'Components/Pagination/PaginationContainer',
+	title: 'Primitive Components/Pagination/PaginationContainer',
 	component: PaginationContainer,
 	argTypes: {
 		id: {

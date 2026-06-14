@@ -8,7 +8,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DropdownMenuLoading> = {
-	title: 'Components/DropdownMenu/DropdownMenuLoading',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuLoading',
 	component: DropdownMenuLoading,
 	argTypes: {
 		text: {

@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useMemo, useState } from 'react';
 
 const meta: Meta<typeof DropdownMenuSearch> = {
-	title: 'Components/DropdownMenu/DropdownMenuSearch',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuSearch',
 	component: DropdownMenuSearch,
 	argTypes: {
 		placeholder: {

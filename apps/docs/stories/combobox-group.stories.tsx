@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { groupArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof ComboboxGroup> = {
-	title: 'Components/Combobox/ComboboxGroup',
+	title: 'Primitive Components/Combobox/ComboboxGroup',
 	component: ComboboxGroup,
 	argTypes: groupArgTypes,
 	parameters: {

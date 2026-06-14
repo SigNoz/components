@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { anchorArgTypes } from './shared/popover-arg-types.js';
 
 const meta: Meta<typeof PopoverAnchor> = {
-	title: 'Components/Popover/PopoverAnchor',
+	title: 'Primitive Components/Popover/PopoverAnchor',
 	component: PopoverAnchor,
 	argTypes: anchorArgTypes,
 	parameters: {

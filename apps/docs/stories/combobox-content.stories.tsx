@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof ComboboxContent> = {
-	title: 'Components/Combobox/ComboboxContent',
+	title: 'Primitive Components/Combobox/ComboboxContent',
 	component: ComboboxContent,
 	argTypes: {
 		className: {

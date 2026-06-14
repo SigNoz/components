@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectArrow> = {
-	title: 'Components/Select/SelectArrow',
+	title: 'Primitive Components/Select/SelectArrow',
 	component: SelectArrow,
 	argTypes: {
 		width: {

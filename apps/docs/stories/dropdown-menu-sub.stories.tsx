@@ -38,7 +38,7 @@ function SubMenuFrame({
 }
 
 const meta: Meta<typeof DropdownMenuSub> = {
-	title: 'Components/DropdownMenu/DropdownMenuSub',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuSub',
 	component: DropdownMenuSub,
 	argTypes: {
 		defaultOpen: {

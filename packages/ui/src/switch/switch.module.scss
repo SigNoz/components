@@ -1,3 +1,9 @@
+@keyframes switch-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .switch-wrapper {
   display: flex;
   align-items: center;
@@ -56,14 +62,45 @@
     outline: 2px solid var(--switch-checked-background);
   }
 
-  &:disabled {
+  &:disabled:not([data-loading]) {
     cursor: not-allowed;
     opacity: 0.5;
   }
 
-  &:disabled ~ .switch-label {
+  &:disabled:not([data-loading]) ~ .switch-label {
     cursor: not-allowed;
     opacity: 0.7;
+  }
+
+  &[data-loading] {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  &[data-loading] ~ .switch-label {
+    cursor: wait;
+  }
+
+  &[data-loading] &__thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__loading-icon {
+    width: var(--switch-loading-icon-size, .5rem);
+    height: var(--switch-loading-icon-size, .5rem);
+    flex-shrink: 0;
+    animation: switch-spin 0.7s linear infinite;
+    color: var(--switch-loading-icon-color, var(--text-ink-500));
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &[data-state="checked"] &__loading-icon {
+    color: var(--switch-loading-icon-color, var(--switch-checked-background));
   }
 
   &__thumb {

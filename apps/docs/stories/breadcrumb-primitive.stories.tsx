@@ -1,5 +1,6 @@
 import {
 	Breadcrumb,
+	BreadcrumbEllipsis,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
@@ -9,7 +10,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Breadcrumb> = {
-	title: 'Components/Breadcrumb/Breadcrumb',
+	title: 'Primitive Components/Breadcrumb/Breadcrumb',
 	component: Breadcrumb,
 	argTypes: {
 		id: {
@@ -111,6 +112,30 @@ export const SingleItem: Story = {
 			<BreadcrumbList>
 				<BreadcrumbItem>
 					<BreadcrumbPage>Dashboard</BreadcrumbPage>
+				</BreadcrumbItem>
+			</BreadcrumbList>
+		</Breadcrumb>
+	),
+};
+
+export const WithEllipsis: Story = {
+	render: () => (
+		<Breadcrumb>
+			<BreadcrumbList>
+				<BreadcrumbItem>
+					<BreadcrumbLink href="#">Home</BreadcrumbLink>
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					<BreadcrumbEllipsis />
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					<BreadcrumbLink href="#">Components</BreadcrumbLink>
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					<BreadcrumbPage>Breadcrumb</BreadcrumbPage>
 				</BreadcrumbItem>
 			</BreadcrumbList>
 		</Breadcrumb>

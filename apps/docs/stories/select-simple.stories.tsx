@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectSimple> = {
-	title: 'Components/Select/SelectSimple',
+	title: 'Composed Components/SelectSimple',
 	component: SelectSimple,
 	argTypes: {
 		items: {

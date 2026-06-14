@@ -13,7 +13,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { triggerArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof DrawerTrigger> = {
-	title: 'Components/Drawer/DrawerTrigger',
+	title: 'Primitive Components/Drawer/DrawerTrigger',
 	component: DrawerTrigger,
 	argTypes: triggerArgTypes,
 	parameters: {

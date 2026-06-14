@@ -6,12 +6,19 @@ import { fn } from 'storybook/test';
 import { breadcrumbSimpleArgTypes } from './shared/breadcrumb-arg-types.js';
 
 const meta: Meta<typeof BreadcrumbSimple> = {
-	title: 'Components/Breadcrumb/BreadcrumbSimple',
+	title: 'Composed Components/BreadcrumbSimple',
 	component: BreadcrumbSimple,
 	argTypes: breadcrumbSimpleArgTypes,
 	parameters: {
 		layout: 'padded',
 		backgrounds: { default: 'dark' },
+		design: [
+			{
+				name: 'Figma',
+				type: 'figma',
+				url: 'https://www.figma.com/design/eyORbfrXMWCz9w0xEFdgWe/Periscope-%E2%80%93-Primitives-v2?node-id=4643-265&m=dev',
+			},
+		],
 	},
 	tags: ['autodocs'],
 };

@@ -14,7 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof SelectViewport> = {
-	title: 'Components/Select/SelectViewport',
+	title: 'Primitive Components/Select/SelectViewport',
 	component: SelectViewport,
 	argTypes: {
 		className: {

@@ -11,7 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { groupArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandGroup> = {
-	title: 'Components/Command/CommandGroup',
+	title: 'Primitive Components/Command/CommandGroup',
 	component: CommandGroup,
 	argTypes: groupArgTypes,
 	parameters: {

@@ -2,7 +2,7 @@ import { Skeleton } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Skeleton> = {
-	title: 'Components/Skeleton',
+	title: 'Primitive Components/Skeleton',
 	component: Skeleton,
 	argTypes: {
 		active: {
@@ -38,7 +38,6 @@ export const Default: Story = {
 export const Overview: Story = {
 	render: () => (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem' }}>
-
 			{/* Base variants */}
 			<div>
 				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — with title & paragraph</p>
@@ -104,7 +103,6 @@ export const Overview: Story = {
 					</div>
 				</div>
 			</div>
-
 		</div>
 	),
 };

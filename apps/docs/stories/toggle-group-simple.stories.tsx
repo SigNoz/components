@@ -3,7 +3,7 @@ import { ToggleGroupSimple, type ToggleGroupSimpleItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ToggleGroupSimple> = {
-	title: 'Components/ToggleGroup/ToggleGroupSimple',
+	title: 'Composed Components/ToggleGroupSimple',
 	component: ToggleGroupSimple,
 	argTypes: {
 		type: {

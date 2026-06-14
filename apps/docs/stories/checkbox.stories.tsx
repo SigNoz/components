@@ -2,7 +2,7 @@ import { Checkbox } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Checkbox> = {
-	title: 'Components/Checkbox',
+	title: 'Primitive Components/Checkbox',
 	component: Checkbox,
 	argTypes: {
 		children: {

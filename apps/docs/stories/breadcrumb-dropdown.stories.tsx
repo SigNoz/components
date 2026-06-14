@@ -12,7 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
 
 const meta: Meta<typeof BreadcrumbDropdown> = {
-	title: 'Components/Breadcrumb/BreadcrumbDropdown',
+	title: 'Primitive Components/Breadcrumb/BreadcrumbDropdown',
 	component: BreadcrumbDropdown,
 	argTypes: {
 		items: {

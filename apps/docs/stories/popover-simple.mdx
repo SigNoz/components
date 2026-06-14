@@ -1,0 +1,73 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PopoverSimpleStories from './popover-simple.stories';
+
+<Meta of={PopoverSimpleStories} />
+
+# PopoverSimple
+
+Preset that combines `Popover`, `PopoverTrigger`, and `PopoverContent` in a single component. Pass `trigger` and `children` instead of composing subcomponents.
+
+For full primitive control, see [Popover](?path=/docs/components-popover--docs).
+
+## How to use
+
+```tsx
+import { PopoverSimple, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<PopoverSimple
+			trigger={<Button variant="solid" color="primary">Open</Button>}
+			className="w-64"
+		>
+			<p className="text-sm">Popover content here.</p>
+		</PopoverSimple>
+	);
+}
+```
+
+<Primary />
+
+## Positioning
+
+`side` sets which side of the trigger the popover opens against (`top`, `right`, `bottom`, `left`). `align` controls alignment along that side (`start`, `center`, `end`). Collision detection flips the popover automatically when it would overflow the viewport.
+
+```tsx
+<PopoverSimple side="right" align="start" trigger={<Button>Open</Button>}>
+	Content to the right, aligned to the start
+</PopoverSimple>
+```
+
+## Arrow
+
+Set `arrow` to render a directional indicator pointing toward the trigger.
+
+```tsx
+<PopoverSimple arrow side="bottom" trigger={<Button>Open</Button>}>
+	Content with arrow
+</PopoverSimple>
+```
+
+## Controlled mode
+
+Pass `open` and `onOpenChange` to drive the open state externally.
+
+```tsx
+const [open, setOpen] = React.useState(false);
+
+<PopoverSimple
+	open={open}
+	onOpenChange={setOpen}
+	trigger={<Button>Open</Button>}
+>
+	Controlled content
+</PopoverSimple>
+```
+
+## Nested popovers
+
+`PopoverSimple` always portals its content to `document.body`. If you need to nest one popover inside another and control portaling, use [primitive composition](?path=/docs/components-popover--docs) with `withPortal={false}` on the inner `PopoverContent` directly.
+
+## Props
+
+<Controls of={PopoverSimpleStories.Default} />

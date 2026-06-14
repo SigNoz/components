@@ -2,7 +2,7 @@ import { Avatar, type AvatarColor, type AvatarSize } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Avatar> = {
-	title: 'Components/Avatar',
+	title: 'Primitive Components/Avatar',
 	component: Avatar,
 	parameters: {
 		layout: 'fullscreen',

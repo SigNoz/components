@@ -2,7 +2,7 @@ import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TabsContent> = {
-	title: 'Components/Tabs/TabsContent',
+	title: 'Primitive Components/Tabs/TabsContent',
 	component: TabsContent,
 	argTypes: {
 		testId: {

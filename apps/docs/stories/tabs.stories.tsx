@@ -6,15 +6,29 @@ import {
 	LayoutGrid,
 	List,
 	Lock,
+	Plus,
 	Settings,
 	Settings2,
 	ShieldAlert,
 } from '@signozhq/icons';
-import { type TabItemProps, Tabs, type TabVariants } from '@signozhq/ui';
+import {
+	Button,
+	ButtonColor,
+	ButtonSize,
+	ButtonVariant,
+	type TabItemProps,
+	Tabs,
+	type TabsAlignment,
+	TabsList,
+	TabsRoot,
+	TabsTrigger,
+	type TabVariants,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type * as React from 'react';
 
 const meta: Meta<typeof Tabs> = {
-	title: 'Components/Tabs',
+	title: 'Composed Components/TabsSimple',
 	component: Tabs,
 	argTypes: {
 		items: {
@@ -72,6 +86,16 @@ const meta: Meta<typeof Tabs> = {
 				defaultValue: { summary: "'automatic'" },
 			},
 		},
+		alignment: {
+			control: 'select',
+			options: ['left', 'center', 'right'],
+			description: 'Controls the alignment of the tab list within its container.',
+			table: {
+				category: 'Layout',
+				type: { summary: "'left' | 'center' | 'right'" },
+				defaultValue: { summary: "'left'" },
+			},
+		},
 		id: {
 			control: 'text',
 			description: 'A unique identifier for the tabs.',
@@ -82,10 +106,26 @@ const meta: Meta<typeof Tabs> = {
 			description: 'Additional CSS classes to apply to the tabs root.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		tabBarLeftContent: {
+			control: false,
+			description: 'Content rendered to the left of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		tabBarRightContent: {
+			control: false,
+			description: 'Content rendered to the right of the tab list, in the same horizontal row.',
+			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'Test ID applied to the tabs root element.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
 	},
+	tags: ['autodocs'],
 };
 
 export default meta;
@@ -391,6 +431,185 @@ export const Secondary: Story = {
 	},
 };
 
+export const TabBarExtraContent: Story = {
+	render: () => (
+		<div className="space-y-8 p-6">
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — right-only (Add view button)</h2>
+				<Tabs
+					items={primaryItems}
+					variant="primary"
+					defaultValue="overview"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							Add view
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Primary — both left and right content</h2>
+				<Tabs
+					items={primaryItems}
+					variant="primary"
+					defaultValue="overview"
+					tabBarLeftContent={<span className="text-xs opacity-50">Service: frontend</span>}
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Settings className="size-4" />}
+						>
+							Configure
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary — right-only</h2>
+				<Tabs
+					items={secondaryItems}
+					variant="secondary"
+					defaultValue="all"
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							New endpoint
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">Secondary — left and right content</h2>
+				<Tabs
+					items={secondaryItems}
+					variant="secondary"
+					defaultValue="all"
+					tabBarLeftContent={<span className="text-xs opacity-50">v2 API</span>}
+					tabBarRightContent={
+						<Button
+							variant={ButtonVariant.Outlined}
+							size={ButtonSize.SM}
+							color={ButtonColor.Secondary}
+							prefix={<Plus className="size-4" />}
+						>
+							New endpoint
+						</Button>
+					}
+				/>
+			</div>
+
+			<div>
+				<h2 className="mb-4 text-lg font-semibold">
+					Primitive TabsList — rightContent prop directly
+				</h2>
+				<TabsRoot defaultValue="tab1">
+					<TabsList
+						variant="primary"
+						rightContent={
+							<Button
+								variant={ButtonVariant.Outlined}
+								size={ButtonSize.SM}
+								color={ButtonColor.Secondary}
+								prefix={<Plus className="size-4" />}
+							>
+								Add
+							</Button>
+						}
+					>
+						<TabsTrigger value="tab1">Tab One</TabsTrigger>
+						<TabsTrigger value="tab2">Tab Two</TabsTrigger>
+						<TabsTrigger value="tab3">Tab Three</TabsTrigger>
+					</TabsList>
+				</TabsRoot>
+			</div>
+		</div>
+	),
+};
+
+const alignmentItems: TabItemProps[] = [
+	{ key: 'overview', label: 'Overview', children: 'Overview content' },
+	{ key: 'analytics', label: 'Analytics', children: 'Analytics content' },
+	{ key: 'settings', label: 'Settings', children: 'Settings content' },
+];
+
+const leftExtra = <span className="text-xs opacity-60">v2 API</span>;
+const rightExtra = (
+	<Button
+		variant={ButtonVariant.Outlined}
+		size={ButtonSize.SM}
+		color={ButtonColor.Secondary}
+		prefix={<Plus className="size-4" />}
+	>
+		Add view
+	</Button>
+);
+
+type ExtraVariant = 'empty' | 'left' | 'right' | 'both';
+
+const extraConfigs: Record<
+	ExtraVariant,
+	{ label: string; tabBarLeftContent?: React.ReactNode; tabBarRightContent?: React.ReactNode }
+> = {
+	empty: { label: 'No extra content' },
+	left: { label: 'Left content only', tabBarLeftContent: leftExtra },
+	right: { label: 'Right content only', tabBarRightContent: rightExtra },
+	both: {
+		label: 'Left + right content',
+		tabBarLeftContent: leftExtra,
+		tabBarRightContent: rightExtra,
+	},
+};
+
+export const Alignment: Story = {
+	render: () => (
+		<div className="space-y-12 p-6">
+			{(['primary', 'secondary'] as TabVariants[]).map((variant) => (
+				<section key={variant}>
+					<h1 className="mb-6 border-b pb-2 text-xl font-bold capitalize">{variant} variant</h1>
+					{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
+						<div key={alignment} className="mb-10">
+							<h2 className="mb-4 text-base font-semibold capitalize">{alignment} alignment</h2>
+							<div className="space-y-6">
+								{(Object.keys(extraConfigs) as ExtraVariant[]).map((extraVariant) => {
+									const { label, tabBarLeftContent, tabBarRightContent } =
+										extraConfigs[extraVariant];
+									return (
+										<div key={extraVariant}>
+											<p className="mb-2 font-mono text-xs opacity-50">{label}</p>
+											<Tabs
+												items={alignmentItems}
+												variant={variant}
+												alignment={alignment}
+												defaultValue="overview"
+												tabBarLeftContent={tabBarLeftContent}
+												tabBarRightContent={tabBarRightContent}
+											/>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					))}
+				</section>
+			))}
+		</div>
+	),
+};
+
 export const DisabledStates: Story = {
 	render: () => (
 		<div className="space-y-8">
@@ -470,4 +689,40 @@ export const DisabledStates: Story = {
 			</div>
 		</div>
 	),
+};
+
+/**
+ * Visual-regression anchor for prefix/suffix icon alignment.
+ *
+ * Icons passed via `prefixIcon` / `suffixIcon` are wrapped in a `.tabs__icon`
+ * element. This story isolates that wrapper so Chromatic captures the icon
+ * staying vertically centered against the label (rather than sitting on the
+ * text baseline). Includes prefix-only, suffix-only, and both-icon triggers.
+ */
+export const IconAlignment: Story = {
+	args: {
+		variant: 'primary',
+		defaultValue: 'prefix',
+		items: [
+			{
+				key: 'prefix',
+				label: 'Prefix Icon',
+				children: 'Tab with a leading icon',
+				prefixIcon: <Settings2 className="size-4" />,
+			},
+			{
+				key: 'suffix',
+				label: 'Suffix Icon',
+				children: 'Tab with a trailing icon',
+				suffixIcon: <History className="size-4" />,
+			},
+			{
+				key: 'both',
+				label: 'Both Icons',
+				children: 'Tab with leading and trailing icons',
+				prefixIcon: <LayoutGrid className="size-4" />,
+				suffixIcon: <Component className="size-4" />,
+			},
+		],
+	},
 };

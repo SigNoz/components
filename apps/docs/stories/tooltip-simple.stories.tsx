@@ -3,7 +3,7 @@ import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } fr
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TooltipSimple> = {
-	title: 'Components/Tooltip/TooltipSimple',
+	title: 'Composed Components/TooltipSimple',
 	component: TooltipSimple,
 	argTypes: {
 		title: {
@@ -100,6 +100,15 @@ const meta: Meta<typeof TooltipSimple> = {
 			control: 'text',
 			description: 'Test ID for the tooltip.',
 			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+		tooltipContentProps: {
+			control: false,
+			description:
+				'Additional props passed to the underlying TooltipContent. Use to set className, arrowPadding, or other TooltipContent props without breaking the preset composition.',
+			table: {
+				category: 'Advanced',
+				type: { summary: 'TooltipContentProps (positioning/arrow props excluded)' },
+			},
 		},
 	},
 	parameters: {

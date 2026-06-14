@@ -1,0 +1,74 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PaginationUrlStories from './pagination-url.stories';
+
+<Meta of={PaginationUrlStories} />
+
+# PaginationUrl
+
+URL-driven pagination preset that synchronizes the current page with a browser query parameter using [nuqs](https://nuqs.dev/). Useful for deep-linking and coordinating with browser back/forward navigation.
+
+For state-managed pagination, see [Pagination](?path=/docs/composed-components-pagination--docs). For full primitive control, see [Pagination primitives](?path=/docs/primitive-components-pagination-paginationcontainer--docs).
+
+## How to use
+
+> Requires [nuqs](https://nuqs.dev/). Wrap your app (or the relevant subtree) in the appropriate `NuqsAdapter`.
+
+```tsx
+import { PaginationUrl } from '@signozhq/ui';
+import { NuqsAdapter } from 'nuqs/adapters/react';
+
+export default function MyComponent() {
+	return (
+		<NuqsAdapter>
+			<PaginationUrl
+				urlKey="page"
+				total={100}
+				pageSize={10}
+			/>
+		</NuqsAdapter>
+	);
+}
+```
+
+<Primary />
+
+## Custom URL key
+
+Use a unique `urlKey` per component instance to avoid query-parameter conflicts when multiple paginations appear on the same page:
+
+```tsx
+<PaginationUrl urlKey="logs-page" total={500} pageSize={25} />
+<PaginationUrl urlKey="events-page" total={200} pageSize={10} />
+```
+
+## With page size selector
+
+Add `enablePageSize` to surface a page size dropdown alongside the pagination controls:
+
+```tsx
+<PaginationUrl
+	urlKey="page"
+	total={100}
+	pageSize={10}
+	enablePageSize
+/>
+```
+
+Position the selector on the left with `pageSizePosition`:
+
+```tsx
+<PaginationUrl urlKey="page" total={100} enablePageSize pageSizePosition="left" />
+```
+
+## Custom page size URL key
+
+When `enablePageSize` is true, the selected page size is also stored in the URL. Use `pageSizeUrlKey` to customize that query parameter — required when multiple `PaginationUrl` instances share a page so their size keys don't collide:
+
+```tsx
+<PaginationUrl urlKey="logs-page" pageSizeUrlKey="logs-size" total={500} pageSize={25} enablePageSize />
+<PaginationUrl urlKey="events-page" pageSizeUrlKey="events-size" total={200} pageSize={10} enablePageSize />
+```
+
+## Props
+
+<Controls of={PaginationUrlStories.Default} />

@@ -1,0 +1,54 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as TabsRootStories from './tabs-root.stories';
+import * as TabsListStories from './tabs-list.stories';
+import * as TabsTriggerStories from './tabs-trigger.stories';
+import * as TabsContentStories from './tabs-content.stories';
+
+<Meta of={TabsRootStories} />
+
+# Tabs
+
+A navigation component that organises content into separate, switchable panels.
+
+For the quick-start preset, see [TabsSimple](?path=/docs/composed-components-tabssimple--docs).
+
+<Primary />
+
+## Primitive Composition
+
+For full structural control, compose `TabsRoot`, `TabsList`, `TabsTrigger`, and `TabsContent` manually:
+
+```tsx
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<TabsRoot defaultValue="tab1">
+			<TabsList variant="primary">
+				<TabsTrigger value="tab1">Tab 1</TabsTrigger>
+				<TabsTrigger value="tab2">Tab 2</TabsTrigger>
+			</TabsList>
+			<TabsContent value="tab1">Tab 1 content</TabsContent>
+			<TabsContent value="tab2">Tab 2 content</TabsContent>
+		</TabsRoot>
+	);
+}
+```
+
+> Note: Disabled tab tooltips and automatic lock-icon replacement for disabled states require the `Tabs` composed component. Primitive composition does not wrap `TabsTrigger` with `TooltipSimple`, so `disabledReason` has no effect.
+
+## TabsRoot Props
+
+<Controls of={TabsRootStories.Default} />
+
+## TabsList Props
+
+<Controls of={TabsListStories.Default} />
+
+## TabsTrigger Props
+
+<Controls of={TabsTriggerStories.Default} />
+
+## TabsContent Props
+
+<Controls of={TabsContentStories.Default} />

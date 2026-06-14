@@ -12,7 +12,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DropdownMenuSubTrigger> = {
-	title: 'Components/DropdownMenu/DropdownMenuSubTrigger',
+	title: 'Primitive Components/DropdownMenu/DropdownMenuSubTrigger',
 	component: DropdownMenuSubTrigger,
 	argTypes: {
 		inset: {

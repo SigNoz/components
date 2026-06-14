@@ -12,7 +12,7 @@ import React from 'react';
 import { popoverArgTypes } from './shared/popover-arg-types.js';
 
 const meta: Meta<typeof Popover> = {
-	title: 'Components/Popover/Popover',
+	title: 'Primitive Components/Popover/Popover',
 	component: Popover,
 	argTypes: popoverArgTypes,
 	parameters: {

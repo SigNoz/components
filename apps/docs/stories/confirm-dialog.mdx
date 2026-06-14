@@ -1,0 +1,120 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ConfirmDialogStories from './confirm-dialog.stories';
+import * as ConfirmDialogUrlStories from './confirm-dialog-url.stories';
+
+<Meta of={ConfirmDialogStories} />
+
+# ConfirmDialog
+
+A dialog preset for confirm/cancel flows. Renders a title, optional description, and footer with configurable confirm and cancel buttons.
+
+For full primitive control, see [Dialog](?path=/docs/primitive-components-dialog--docs).
+
+## How to use
+
+```tsx
+import { useState } from 'react';
+import { ConfirmDialog, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Delete</Button>
+			<ConfirmDialog
+				open={open}
+				onOpenChange={setOpen}
+				title="Confirm action"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={() => setOpen(false)}
+				onCancel={() => setOpen(false)}
+				width="narrow"
+			>
+				Are you sure? This action cannot be undone.
+			</ConfirmDialog>
+		</>
+	);
+}
+```
+
+<Primary />
+
+## Async confirm
+
+Pass an async `onConfirm` handler — the confirm button shows a loading state until the promise resolves. Return `true` to close the dialog, or `false` to keep it open:
+
+```tsx
+<ConfirmDialog
+	open={open}
+	onOpenChange={setOpen}
+	title="Delete record"
+	confirmText="Delete"
+	confirmColor="destructive"
+	onConfirm={async () => {
+		await deleteRecord();
+		return true;
+	}}
+	onCancel={() => setOpen(false)}
+>
+	This will permanently delete the record.
+</ConfirmDialog>
+```
+
+## Props
+
+<Controls of={ConfirmDialogStories.Default} />
+
+---
+
+## ConfirmDialogUrl
+
+Variant of `ConfirmDialog` that syncs the open state with a URL boolean query parameter via [nuqs](https://nuqs.dev/). Useful for shareable or bookmarkable confirmation states.
+
+### How to use
+
+Wrap your app (or page) in `NuqsAdapter` and use `useQueryState` to open the dialog by setting the URL param:
+
+```tsx
+import { ConfirmDialogUrl, Button } from '@signozhq/ui';
+import { useQueryState, parseAsBoolean } from 'nuqs';
+import { NuqsAdapter } from 'nuqs/adapters/react';
+
+function DeleteDialog() {
+	const [, setOpen] = useQueryState('dialog-delete-step', parseAsBoolean.withDefault(false));
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Open confirm dialog (URL)</Button>
+			<ConfirmDialogUrl
+				urlKey="dialog-delete-step"
+				title="Delete from URL param"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={async () => {
+					await new Promise((resolve) => setTimeout(resolve, 300));
+					return true;
+				}}
+				width="narrow"
+			>
+				This confirm dialog is controlled via a URL query parameter using nuqs.
+			</ConfirmDialogUrl>
+		</>
+	);
+}
+
+export default function MyComponent() {
+	return (
+		<NuqsAdapter>
+			<DeleteDialog />
+		</NuqsAdapter>
+	);
+}
+```
+
+### Props
+
+<Controls of={ConfirmDialogUrlStories.Default} />

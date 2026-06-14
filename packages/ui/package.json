@@ -187,6 +187,16 @@
 				"require": "./dist/input/index.cjs"
 			}
 		},
+		"./input-number": {
+			"import": {
+				"types": "./dist/input-number/index.d.ts",
+				"import": "./dist/input-number/index.mjs"
+			},
+			"require": {
+				"types": "./dist/input-number/index.d.cts",
+				"require": "./dist/input-number/index.cjs"
+			}
+		},
 		"./kbd": {
 			"import": {
 				"types": "./dist/kbd/index.d.ts",
@@ -265,6 +275,16 @@
 			"require": {
 				"types": "./dist/select/index.d.cts",
 				"require": "./dist/select/index.cjs"
+			}
+		},
+		"./skeleton": {
+			"import": {
+				"types": "./dist/skeleton/index.d.ts",
+				"import": "./dist/skeleton/index.mjs"
+			},
+			"require": {
+				"types": "./dist/skeleton/index.d.cts",
+				"require": "./dist/skeleton/index.cjs"
 			}
 		},
 		"./slider": {
@@ -381,7 +401,9 @@
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
 		"publint": "publint",
 		"test": "vitest",
-		"test:run": "vitest run"
+		"test:run": "vitest run",
+		"tokens": "node scripts/extract-css-tokens.mjs",
+		"tokens:check": "node scripts/extract-css-tokens.mjs --check"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",

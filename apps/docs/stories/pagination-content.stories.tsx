@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta: Meta<typeof PaginationContent> = {
-	title: 'Components/Pagination/PaginationContent',
+	title: 'Primitive Components/Pagination/PaginationContent',
 	component: PaginationContent,
 	argTypes: {
 		id: {

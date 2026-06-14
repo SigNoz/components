@@ -7,7 +7,7 @@ import { confirmUrlArgTypes } from './shared/dialog-drawer-arg-types.js';
 const { position: _, ...sharedConfirmUrlArgTypes } = confirmUrlArgTypes ?? {};
 
 const meta: Meta<typeof ConfirmDrawerUrl> = {
-	title: 'Components/Drawer/ConfirmDrawerUrl',
+	title: 'Composed Components/Drawer/ConfirmDrawerUrl',
 	component: ConfirmDrawerUrl,
 	argTypes: {
 		...sharedConfirmUrlArgTypes,

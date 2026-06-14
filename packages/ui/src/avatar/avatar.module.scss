@@ -9,75 +9,75 @@
     flex-shrink: 0;
 
     &[data-size="sm"] {
-        width: 24px;
-        height: 24px;
-        font-size: 12px;
+        width: var(--avatar-size-sm-width, 24px);
+        height: var(--avatar-size-sm-height, 24px);
+        font-size: var(--avatar-size-sm-font-size, 12px);
     }
 
     &[data-size="md"] {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
+        width: var(--avatar-size-md-width, 32px);
+        height: var(--avatar-size-md-height, 32px);
+        font-size: var(--avatar-size-md-font-size, 14px);
     }
 
     &[data-size="lg"] {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
+        width: var(--avatar-size-lg-width, 40px);
+        height: var(--avatar-size-lg-height, 40px);
+        font-size: var(--avatar-size-lg-font-size, 16px);
     }
 
     &[data-size="xl"] {
-        width: 48px;
-        height: 48px;
-        font-size: 18px;
+        width: var(--avatar-size-xl-width, 48px);
+        height: var(--avatar-size-xl-height, 48px);
+        font-size: var(--avatar-size-xl-font-size, 18px);
     }
 
     &[data-shape="circle"] {
-        border-radius: 9999px;
+        border-radius: var(--avatar-shape-circle-border-radius, 9999px);
     }
 
     &[data-shape="square"] {
-        border-radius: var(--radius-md, 6px);
+        border-radius: var(--avatar-shape-square-border-radius, var(--radius-md, 6px));
     }
 
     &[data-color="vanilla"] {
-        background-color: var(--l2-background);
-        color: var(--l2-foreground);
+        background-color: var(--avatar-vanilla-background, var(--l2-background));
+        color: var(--avatar-vanilla-foreground, var(--l2-foreground));
     }
 
     &[data-color="robin"] {
-        background-color: var(--primary);
-        color: var(--primary-foreground);
+        background-color: var(--avatar-robin-background, var(--primary));
+        color: var(--avatar-robin-foreground, var(--primary-foreground));
     }
 
     &[data-color="forest"] {
-        background-color: var(--accent-forest);
-        color: var(--accent-forest-foreground);
+        background-color: var(--avatar-forest-background, var(--accent-forest));
+        color: var(--avatar-forest-foreground, var(--accent-forest-foreground));
     }
 
     &[data-color="amber"] {
-        background-color: var(--accent-amber);
-        color: var(--accent-amber-foreground);
+        background-color: var(--avatar-amber-background, var(--accent-amber));
+        color: var(--avatar-amber-foreground, var(--accent-amber-foreground));
     }
 
     &[data-color="sienna"] {
-        background-color: var(--accent-sienna);
-        color: var(--accent-sienna-foreground);
+        background-color: var(--avatar-sienna-background, var(--accent-sienna));
+        color: var(--avatar-sienna-foreground, var(--accent-sienna-foreground));
     }
 
     &[data-color="cherry"] {
-        background-color: var(--accent-cherry);
-        color: var(--accent-cherry-foreground);
+        background-color: var(--avatar-cherry-background, var(--accent-cherry));
+        color: var(--avatar-cherry-foreground, var(--accent-cherry-foreground));
     }
 
     &[data-color="sakura"] {
-        background-color: var(--accent-sakura);
-        color: var(--accent-sakura-foreground);
+        background-color: var(--avatar-sakura-background, var(--accent-sakura));
+        color: var(--avatar-sakura-foreground, var(--accent-sakura-foreground));
     }
 
     &[data-color="aqua"] {
-        background-color: var(--accent-aqua);
-        color: var(--accent-aqua-foreground);
+        background-color: var(--avatar-aqua-background, var(--accent-aqua));
+        color: var(--avatar-aqua-foreground, var(--accent-aqua-foreground));
     }
 }
 
@@ -99,7 +99,7 @@
     display: block;
     width: 100%;
     height: 100%;
-    background-color: var(--l2-background, #e5e7eb);
+    background-color: var(--avatar-skeleton-background, var(--l2-background, #e5e7eb));
     animation: shimmer 1.5s ease-in-out infinite;
 }
 

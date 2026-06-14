@@ -7,6 +7,8 @@ import styles from './tabs.module.scss';
 
 export type TabVariants = 'primary' | 'secondary';
 
+export type TabsAlignment = 'left' | 'center' | 'right';
+
 export type TabItemProps = {
 	/**
 	 * Unique identifier for the tab item.
@@ -83,6 +85,19 @@ export type TabsProps = Pick<
 	 * @default 'automatic'
 	 */
 	activationMode?: 'automatic' | 'manual';
+	/**
+	 * Content rendered to the left of the tab list, in the same horizontal row.
+	 */
+	tabBarLeftContent?: React.ReactNode;
+	/**
+	 * Content rendered to the right of the tab list, in the same horizontal row.
+	 */
+	tabBarRightContent?: React.ReactNode;
+	/**
+	 * Controls the alignment of the tab list within its container.
+	 * @default 'left'
+	 */
+	alignment?: TabsAlignment;
 };
 
 /**
@@ -127,7 +142,19 @@ export type TabsProps = Pick<
  */
 export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
 	(
-		{ items, onChange, defaultValue, value, variant = 'primary', className, testId, ...props },
+		{
+			items,
+			onChange,
+			defaultValue,
+			value,
+			variant = 'primary',
+			alignment,
+			className,
+			testId,
+			tabBarLeftContent,
+			tabBarRightContent,
+			...props
+		},
 		ref
 	) => {
 		return (
@@ -141,7 +168,12 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 				{...props}
 			>
 				<TooltipProvider>
-					<TabsList variant={variant}>
+					<TabsList
+						variant={variant}
+						alignment={alignment}
+						leftContent={tabBarLeftContent}
+						rightContent={tabBarRightContent}
+					>
 						{items.map((item) => {
 							const triggerContent = (
 								<TabsTrigger
@@ -151,15 +183,13 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 									variant={variant}
 								>
 									{item.disabled ? (
-										<Lock className={styles['tabs__icon']} size={16} />
+										<Lock className={styles.tabs__icon} size={16} />
 									) : (
-										item.prefixIcon && (
-											<span className={styles['tabs__icon']}>{item.prefixIcon}</span>
-										)
+										item.prefixIcon && <span className={styles.tabs__icon}>{item.prefixIcon}</span>
 									)}
 									{item.label}
 									{!item.disabled && item.suffixIcon && (
-										<span className={styles['tabs__icon']}>{item.suffixIcon}</span>
+										<span className={styles.tabs__icon}>{item.suffixIcon}</span>
 									)}
 								</TabsTrigger>
 							);
@@ -201,6 +231,19 @@ export type TabsListProps = Pick<
 	 * When true, keyboard navigation will loop from last tab to first, and vice versa.
 	 */
 	loop?: boolean;
+	/**
+	 * Content rendered to the left of the tab list, in the same horizontal row.
+	 */
+	leftContent?: React.ReactNode;
+	/**
+	 * Content rendered to the right of the tab list, in the same horizontal row.
+	 */
+	rightContent?: React.ReactNode;
+	/**
+	 * Controls the alignment of the tab list within its container.
+	 * @default 'left'
+	 */
+	alignment?: TabsAlignment;
 };
 
 /**
@@ -228,129 +271,178 @@ export type TabsListProps = Pick<
 export const TabsList = React.forwardRef<
 	React.ElementRef<typeof TabsPrimitive.List>,
 	TabsListProps
->(({ className, variant = 'primary', children, testId, ...props }, ref) => {
-	const listRef = React.useRef<HTMLDivElement>(null);
-	const activeSliderRef = React.useRef<HTMLDivElement>(null);
-	const hoverSliderRef = React.useRef<HTMLDivElement>(null);
-
-	// Combine refs
-	React.useImperativeHandle(ref, () => listRef.current as HTMLDivElement);
-
-	const updateSliderPosition = React.useCallback(
-		(slider: HTMLDivElement | null, trigger: HTMLElement | null) => {
-			if (!slider || !trigger || !listRef.current) {
-				if (slider) slider.style.opacity = '0';
-				return;
-			}
-
-			const listRect = listRef.current.getBoundingClientRect();
-			const triggerRect = trigger.getBoundingClientRect();
-			const offset = triggerRect.left - listRect.left;
-
-			slider.style.transform = `translateX(${offset}px)`;
-			slider.style.width = `${triggerRect.width}px`;
-			slider.style.opacity = '1';
+>(
+	(
+		{
+			className,
+			variant = 'primary',
+			alignment = 'left',
+			children,
+			testId,
+			leftContent,
+			rightContent,
+			...props
 		},
-		[]
-	);
+		ref
+	) => {
+		const listRef = React.useRef<HTMLDivElement>(null);
+		const activeSliderRef = React.useRef<HTMLDivElement>(null);
+		const hoverSliderRef = React.useRef<HTMLDivElement>(null);
 
-	const updateActiveSlider = React.useCallback(() => {
-		if (variant !== 'primary' || !listRef.current) return;
+		// Combine refs
+		React.useImperativeHandle(ref, () => listRef.current as HTMLDivElement);
 
-		const activeTrigger = listRef.current.querySelector<HTMLElement>(
-			'[data-slot="tabs-trigger"][data-state="active"]'
-		);
-		updateSliderPosition(activeSliderRef.current, activeTrigger);
-	}, [variant, updateSliderPosition]);
-
-	// Update active slider on mount and when children change
-	React.useEffect(() => {
-		if (variant !== 'primary') return;
-
-		requestAnimationFrame(updateActiveSlider);
-
-		// Observe for data-state changes on triggers
-		const list = listRef.current;
-		if (!list) return;
-
-		const observer = new MutationObserver((mutations) => {
-			for (const mutation of mutations) {
-				if (mutation.type === 'attributes' && mutation.attributeName === 'data-state') {
-					updateActiveSlider();
-					break;
+		const updateSliderPosition = React.useCallback(
+			(slider: HTMLDivElement | null, trigger: HTMLElement | null) => {
+				if (!slider || !trigger || !listRef.current) {
+					if (slider) slider.style.opacity = '0';
+					return;
 				}
-			}
-		});
 
-		observer.observe(list, {
-			attributes: true,
-			attributeFilter: ['data-state'],
-			subtree: true,
-		});
+				const listRect = listRef.current.getBoundingClientRect();
+				const triggerRect = trigger.getBoundingClientRect();
+				const offset = triggerRect.left - listRect.left;
 
-		return () => observer.disconnect();
-	}, [variant, updateActiveSlider]);
+				slider.style.transform = `translateX(${offset}px)`;
+				slider.style.width = `${triggerRect.width}px`;
+				slider.style.opacity = '1';
+			},
+			[]
+		);
 
-	React.useEffect(() => {
-		if (variant !== 'primary') return;
+		const updateActiveSlider = React.useCallback(() => {
+			if (variant !== 'primary' || !listRef.current) return;
 
-		const handleResize = () => updateActiveSlider();
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, [variant, updateActiveSlider]);
+			const activeTrigger = listRef.current.querySelector<HTMLElement>(
+				'[data-slot="tabs-trigger"][data-state="active"]'
+			);
+			updateSliderPosition(activeSliderRef.current, activeTrigger);
+		}, [variant, updateSliderPosition]);
 
-	const handleMouseOver = React.useCallback(
-		(e: React.MouseEvent) => {
+		// Update active slider on mount and when children change
+		React.useEffect(() => {
 			if (variant !== 'primary') return;
 
-			const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-slot="tabs-trigger"]');
-			if (trigger) {
-				updateSliderPosition(hoverSliderRef.current, trigger);
-			}
-		},
-		[variant, updateSliderPosition]
-	);
+			requestAnimationFrame(updateActiveSlider);
 
-	const handleMouseLeave = React.useCallback(() => {
-		if (variant !== 'primary') return;
+			// Observe for data-state changes on triggers
+			const list = listRef.current;
+			if (!list) return;
 
-		const slider = hoverSliderRef.current;
-		if (slider) slider.style.opacity = '0';
-	}, [variant]);
+			const observer = new MutationObserver((mutations) => {
+				for (const mutation of mutations) {
+					if (mutation.type === 'attributes' && mutation.attributeName === 'data-state') {
+						updateActiveSlider();
+						break;
+					}
+				}
+			});
 
-	return (
-		<div className={styles['tabs__list-wrapper']} data-variant={variant}>
-			{variant === 'secondary' && <div className={styles['tabs__border-spacer']} />}
-			<TabsPrimitive.List
-				ref={listRef}
-				className={cn(styles['tabs__list'], className)}
+			observer.observe(list, {
+				attributes: true,
+				attributeFilter: ['data-state'],
+				subtree: true,
+			});
+
+			return () => observer.disconnect();
+		}, [variant, updateActiveSlider]);
+
+		React.useEffect(() => {
+			if (variant !== 'primary') return;
+
+			const handleResize = () => updateActiveSlider();
+			window.addEventListener('resize', handleResize);
+			return () => window.removeEventListener('resize', handleResize);
+		}, [variant, updateActiveSlider]);
+
+		const handleMouseOver = React.useCallback(
+			(e: React.MouseEvent) => {
+				const trigger = (e.target as HTMLElement).closest<HTMLElement>(
+					'[data-slot="tabs-trigger"]'
+				);
+				if (trigger) {
+					updateSliderPosition(hoverSliderRef.current, trigger);
+				}
+			},
+			[updateSliderPosition]
+		);
+
+		const handleMouseLeave = React.useCallback(() => {
+			const slider = hoverSliderRef.current;
+			if (slider) slider.style.opacity = '0';
+		}, []);
+
+		return (
+			<div
+				className={styles['tabs__list-wrapper']}
 				data-variant={variant}
-				data-testid={testId}
-				onMouseOver={variant === 'primary' ? handleMouseOver : undefined}
-				onMouseLeave={variant === 'primary' ? handleMouseLeave : undefined}
-				{...props}
+				data-alignment={alignment}
+				data-has-extra-content={leftContent || rightContent ? '' : undefined}
+				data-has-left-content={leftContent ? '' : undefined}
+				data-has-right-content={rightContent ? '' : undefined}
 			>
-				{children}
-			</TabsPrimitive.List>
-			{variant === 'secondary' ? (
-				<div className={cn(styles['tabs__border-spacer'], styles['tabs__border-spacer--grow'])} />
-			) : (
-				<>
+				{variant === 'secondary' && (
+					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
+				)}
+
+				{leftContent && (
+					<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>
+						{leftContent}
+					</div>
+				)}
+
+				{variant === 'primary' ? (
+					<div className={styles['tabs__list-inner']}>
+						<TabsPrimitive.List
+							ref={listRef}
+							className={cn(styles.tabs__list, className)}
+							data-variant={variant}
+							data-testid={testId}
+							onMouseOver={handleMouseOver}
+							onMouseLeave={handleMouseLeave}
+							{...props}
+						>
+							{children}
+						</TabsPrimitive.List>
+						<div
+							ref={hoverSliderRef}
+							className={styles['tabs__hover-slider']}
+							style={{ height: '28px', opacity: 0 }}
+						/>
+						<div
+							ref={activeSliderRef}
+							className={styles['tabs__active-slider']}
+							style={{ opacity: 0 }}
+						/>
+					</div>
+				) : (
+					<TabsPrimitive.List
+						ref={listRef}
+						className={cn(styles.tabs__list, className)}
+						data-variant={variant}
+						data-testid={testId}
+						{...props}
+					>
+						{children}
+					</TabsPrimitive.List>
+				)}
+
+				{rightContent && (
+					<div data-slot="tab-extra-content-right" className={styles['tabs__extra-content']}>
+						{rightContent}
+					</div>
+				)}
+
+				{variant === 'secondary' && (
 					<div
-						ref={hoverSliderRef}
-						className={styles['tabs__hover-slider']}
-						style={{ height: '28px', opacity: 0 }}
+						data-slot="tab-spacer-grow"
+						className={cn(styles['tabs__border-spacer'], styles['tabs__border-spacer--grow'])}
 					/>
-					<div
-						ref={activeSliderRef}
-						className={styles['tabs__active-slider']}
-						style={{ opacity: 0 }}
-					/>
-				</>
-			)}
-		</div>
-	);
-});
+				)}
+			</div>
+		);
+	}
+);
 TabsList.displayName = 'TabsList';
 
 export type TabsTriggerProps = Pick<
@@ -413,7 +505,7 @@ export const TabsTrigger = React.forwardRef<
 		data-slot="tabs-trigger"
 		data-variant={variant}
 		data-testid={testId}
-		className={cn(styles['tabs__trigger'], className)}
+		className={cn(styles.tabs__trigger, className)}
 		disabled={disabled}
 		{...props}
 	>
@@ -479,7 +571,7 @@ export const TabsContent = React.forwardRef<
 	return (
 		<TabsPrimitive.Content
 			ref={ref}
-			className={cn(styles['tabs__content'], className)}
+			className={cn(styles.tabs__content, className)}
 			data-testid={testId}
 			{...props}
 		/>
