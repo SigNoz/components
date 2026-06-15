@@ -51,40 +51,75 @@ export const Default: Story = {
 	),
 };
 
-export const WithDisabledRadio: Story = {
-	args: {
-		htmlFor: 'disabled-radio-label',
-		children: 'Disabled Option',
-	},
-	render: (args) => (
-		<RadioGroup>
-			<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
-				<RadioGroupItem value="disabled" id="disabled-radio-label" disabled />
-				<RadioGroupLabel {...args} aria-disabled="true" />
-			</div>
-		</RadioGroup>
-	),
-};
-
-export const MultipleLabels: Story = {
+export const Preview: Story = {
 	render: () => (
-		<RadioGroup defaultValue="option1">
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-				<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
-					<RadioGroupItem value="option1" id="opt1" />
-					<RadioGroupLabel htmlFor="opt1">First Option</RadioGroupLabel>
-				</div>
-				<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
-					<RadioGroupItem value="option2" id="opt2" />
-					<RadioGroupLabel htmlFor="opt2">Second Option</RadioGroupLabel>
-				</div>
-				<div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}>
-					<RadioGroupItem value="option3" id="opt3" disabled />
-					<RadioGroupLabel htmlFor="opt3" aria-disabled="true">
-						Disabled Option
-					</RadioGroupLabel>
-				</div>
-			</div>
-		</RadioGroup>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Disabled Radio
+				</h3>
+				<RadioGroup>
+					<div
+						style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}
+					>
+						<RadioGroupItem value="disabled" id="disabled-radio-label" disabled />
+						<RadioGroupLabel htmlFor="disabled-radio-label" aria-disabled="true">
+							Disabled Option
+						</RadioGroupLabel>
+					</div>
+				</RadioGroup>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multiple Labels
+				</h3>
+				<RadioGroup defaultValue="option1">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+						<div
+							style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}
+						>
+							<RadioGroupItem value="option1" id="opt1" />
+							<RadioGroupLabel htmlFor="opt1">First Option</RadioGroupLabel>
+						</div>
+						<div
+							style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}
+						>
+							<RadioGroupItem value="option2" id="opt2" />
+							<RadioGroupLabel htmlFor="opt2">Second Option</RadioGroupLabel>
+						</div>
+						<div
+							style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', gap: '0.5rem' }}
+						>
+							<RadioGroupItem value="option3" id="opt3" disabled />
+							<RadioGroupLabel htmlFor="opt3" aria-disabled="true">
+								Disabled Option
+							</RadioGroupLabel>
+						</div>
+					</div>
+				</RadioGroup>
+			</section>
+		</div>
 	),
 };

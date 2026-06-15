@@ -128,29 +128,57 @@ export const Default: Story = {
 	render: (args) => <ToggleGroupSimple {...args} />,
 };
 
-export const SingleWithLabels: Story = {
-	args: {
-		type: 'single',
-		defaultValue: 'center',
-		items: labelItems,
-	},
-	render: (args) => <ToggleGroupSimple {...args} />,
-};
-
-export const MultipleWithIcons: Story = {
-	args: {
-		type: 'multiple',
-		defaultValue: ['bold'],
-		items: iconItems,
-	},
-	render: (args) => <ToggleGroupSimple {...args} />,
-};
-
-export const SingleWithIconAndLabel: Story = {
-	args: {
-		type: 'single',
-		defaultValue: 'grid',
-		items: iconAndLabelItems,
-	},
-	render: (args) => <ToggleGroupSimple {...args} />,
+export const Preview: Story = {
+	parameters: { chromatic: { disableSnapshot: false } },
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Single With Labels
+				</h3>
+				<ToggleGroupSimple type="single" defaultValue="center" items={labelItems} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multiple With Icons
+				</h3>
+				<ToggleGroupSimple type="multiple" defaultValue={['bold']} items={iconItems} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Single With Icon And Label
+				</h3>
+				<ToggleGroupSimple type="single" defaultValue="grid" items={iconAndLabelItems} />
+			</section>
+		</div>
+	),
 };

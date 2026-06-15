@@ -1,5 +1,5 @@
 import { Typography } from '@signozhq/ui';
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type React from 'react';
 import { getTransformedTypographyTokens } from '../utils.js';
 
@@ -67,7 +67,7 @@ const FontWeightShowcase: React.FC = () => (
 	</div>
 );
 
-export default {
+const meta = {
 	title: 'Primitive Components/Typography',
 	component: Typography,
 	parameters: {
@@ -220,9 +220,11 @@ export default {
 	},
 } as Meta<typeof Typography>;
 
+export default meta;
+
 type Story = StoryObj<typeof Typography>;
 
-export const Playground: Story = {
+export const Default: Story = {
 	args: {
 		children: 'The quick brown fox jumps over the lazy dog',
 		variant: 'text',
@@ -237,97 +239,6 @@ export const Playground: Story = {
 	),
 };
 
-export const FontSize: StoryFn = () => <FontSizeShowcase />;
-export const FontWeight: StoryFn = () => <FontWeightShowcase />;
-
-export const SemanticSizes: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Semantic size tokens matching Ant Design: `small` (12px), `base` (14px), `medium` (16px), `large` (20px). Recommended for new code.',
-			},
-		},
-	},
-	render: () => {
-		const sizes = [
-			{ name: 'small', px: '12px' },
-			{ name: 'base', px: '14px' },
-			{ name: 'medium', px: '16px' },
-			{ name: 'large', px: '20px' },
-		] as const;
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-				{sizes.map(({ name, px }) => (
-					<div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
-						<span
-							style={{
-								width: 100,
-								fontSize: 12,
-								textAlign: 'right',
-								color: 'var(--text-vanilla-400)',
-								flexShrink: 0,
-							}}
-						>
-							{name} ({px})
-						</span>
-						<Typography size={name}>The quick brown fox jumps over the lazy dog</Typography>
-					</div>
-				))}
-			</div>
-		);
-	},
-};
-
-export const AllSizes: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Legacy size tokens from `xs` to `9xl`. Kept for backward compatibility. Prefer semantic sizes for new code.',
-			},
-		},
-	},
-	render: () => {
-		const sizes = [
-			'xs',
-			'sm',
-			'lg',
-			'xl',
-			'2xl',
-			'3xl',
-			'4xl',
-			'5xl',
-			'6xl',
-			'7xl',
-			'8xl',
-			'9xl',
-		] as const;
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-				{sizes.map((s) => (
-					<div key={s} style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
-						<span
-							style={{
-								width: 48,
-								fontSize: 12,
-								textAlign: 'right',
-								color: 'var(--text-vanilla-400)',
-								flexShrink: 0,
-							}}
-						>
-							{s}
-						</span>
-						<Typography size={s}>The quick brown fox jumps over the lazy dog</Typography>
-					</div>
-				))}
-			</div>
-		);
-	},
-};
-
 const ALL_WEIGHTS = [
 	{ name: 'thin' as const, value: 100 },
 	{ name: 'extralight' as const, value: 200 },
@@ -340,385 +251,508 @@ const ALL_WEIGHTS = [
 	{ name: 'black' as const, value: 900 },
 ];
 
-export const AllWeights: Story = {
+export const Preview: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story: 'All 9 font weight tokens from `thin` (100) to `black` (900).',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			{ALL_WEIGHTS.map(({ name, value }) => (
-				<div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
-					<span
-						style={{
-							width: 110,
-							fontSize: 12,
-							textAlign: 'right',
-							color: 'var(--text-vanilla-400)',
-							flexShrink: 0,
-						}}
-					>
-						{name.toUpperCase()} - {value}
-					</span>
-					<Typography size="xl" weight={name}>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					</Typography>
-				</div>
-			))}
-		</div>
-	),
-};
-
-export const HeadingVariant: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Using `variant="title"` renders as an `<h2>` by default with bold weight and tighter line-height. Combine with `as` to control the heading level.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<Typography variant="title" as="h1" size="5xl">
-				Heading 1
-			</Typography>
-			<Typography variant="title" as="h2" size="4xl">
-				Heading 2
-			</Typography>
-			<Typography variant="title" as="h3" size="3xl">
-				Heading 3
-			</Typography>
-			<Typography variant="title" as="h4" size="2xl">
-				Heading 4
-			</Typography>
-			<Typography variant="title" as="h5" size="xl">
-				Heading 5
-			</Typography>
-			<Typography variant="title" as="h6" size="lg">
-				Heading 6
-			</Typography>
-		</div>
-	),
-};
-
-export const TextVariant: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'The default `variant="text"` renders as `<p>`. Use `as` to render as `<span>`, `<div>`, or `<label>`.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<div>
-				<Typography size="lg">
-					This is a paragraph of body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-				</Typography>
-			</div>
-			<div>
-				<Typography as="span" size="sm" muted>
-					This is a muted span element.
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const Alignment: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Control text alignment with the `align` prop.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<div style={{ width: '25rem' }}>
-				<Typography align="left" size="lg" style={{ width: '100%' }}>
-					Left-aligned text
-				</Typography>
-			</div>
-			<div style={{ width: '25rem' }}>
-				<Typography align="center" size="lg" style={{ width: '100%' }}>
-					Center-aligned text
-				</Typography>
-			</div>
-			<div style={{ width: '25rem' }}>
-				<Typography align="right" size="lg" style={{ width: '100%' }}>
-					Right-aligned text
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const Truncation: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use the `truncate` prop to clamp text after N lines. Hover the text to see the full content via the browser title.',
-			},
-		},
+		chromatic: { disableSnapshot: false },
 	},
 	render: () => (
 		<div
 			style={{
-				maxWidth: 400,
+				padding: '2rem',
 				display: 'flex',
 				flexDirection: 'column',
-				gap: '1.5rem',
-				padding: '1.5rem',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
 			}}
 		>
-			<div>
-				<Typography size="sm" muted style={{ marginBottom: 4 }}>
-					truncate=1
-				</Typography>
-				<Typography truncate={1} size="base">
-					This is a long piece of text that should be truncated after a single line. It keeps going
-					and going to demonstrate the ellipsis behavior.
-				</Typography>
-			</div>
-			<div>
-				<Typography size="sm" muted style={{ marginBottom: 4 }}>
-					truncate=2
-				</Typography>
-				<Typography truncate={2} size="base">
-					This is a long piece of text that should be truncated after two lines. It keeps going and
-					going to demonstrate the multi-line clamp behavior. The third line and beyond should be
-					hidden with an ellipsis.
-				</Typography>
-			</div>
-			<div>
-				<Typography size="sm" muted style={{ marginBottom: 4 }}>
-					truncate=3
-				</Typography>
-				<Typography truncate={3} size="base">
-					This is a long piece of text that should be truncated after three lines. It keeps going
-					and going and going. We need enough text here to fill at least four lines so we can verify
-					the clamp works. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-					tempor incididunt ut labore.
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const MutedState: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use `muted` to apply a secondary/subdued color. Useful for captions, helper text, and secondary labels.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
-			<div>
-				<Typography size="lg" weight="bold">
-					Primary heading text
-				</Typography>
-			</div>
-			<div>
-				<Typography size="base">Normal body text with default color.</Typography>
-			</div>
-			<div>
-				<Typography size="sm" muted>
-					Muted helper text — secondary information or captions.
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const ColorVariants: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `color` prop for semantic color variants.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
-			<div>
-				<Typography>Default text</Typography>
-			</div>
-			<div>
-				<Typography color="muted">Muted text (secondary)</Typography>
-			</div>
-			<div>
-				<Typography color="success">Success text</Typography>
-			</div>
-			<div>
-				<Typography color="warning">Warning text</Typography>
-			</div>
-			<div>
-				<Typography color="danger">Danger/error text</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const TextDecorations: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `strong`, `italic`, and `code` props for text styling.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
-			<div>
-				<Typography strong>Strong/bold text</Typography>
-			</div>
-			<div>
-				<Typography italic>Italic text</Typography>
-			</div>
-			<div>
-				<Typography code>Inline code: const x = 1</Typography>
-			</div>
-			<div>
-				<Typography strong italic>
-					Strong and italic combined
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const TitleLevels: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `level` prop with `variant="title"` for heading hierarchy.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<Typography.Title level={1}>Heading Level 1 (h1)</Typography.Title>
-			<Typography.Title level={2}>Heading Level 2 (h2)</Typography.Title>
-			<Typography.Title level={3}>Heading Level 3 (h3)</Typography.Title>
-			<Typography.Title level={4}>Heading Level 4 (h4)</Typography.Title>
-			<Typography.Title level={5}>Heading Level 5 (h5)</Typography.Title>
-		</div>
-	),
-};
-
-export const CompoundComponents: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use compound components for Ant Design-like API.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<div>
-				<Typography.Title level={2}>Typography.Title</Typography.Title>
-			</div>
-			<div>
-				<Typography.Text>Typography.Text - regular paragraph text</Typography.Text>
-			</div>
-			<div>
-				<Typography.Text strong>Typography.Text with strong</Typography.Text>
-			</div>
-			<div>
-				<Typography.Text color="danger">Typography.Text with color="danger"</Typography.Text>
-			</div>
-			<div>
-				<Typography.Link href="https://signoz.io">Typography.Link to SigNoz</Typography.Link>
-			</div>
-		</div>
-	),
-};
-
-export const Copyable: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `copyable` prop to enable copy to clipboard functionality.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
-			<div>
-				<Typography copyable>Click the icon to copy this text</Typography>
-			</div>
-			<div>
-				<Typography.Text code copyable>
-					npm install @signozhq/ui
-				</Typography.Text>
-			</div>
-		</div>
-	),
-};
-
-export const DisabledState: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `disabled` prop for non-interactive disabled appearance.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
-			<div>
-				<Typography>Normal text</Typography>
-			</div>
-			<div>
-				<Typography disabled>Disabled text - cannot be selected</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const Interactive: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use `onClick` for click handlers or `interactive` for hover styling without click. Interactive text shows cursor pointer and color change on hover.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<div>
-				<Typography>Normal text (no hover effect)</Typography>
-			</div>
-			<div>
-				<Typography onClick={() => alert('Clicked!')}>
-					Clickable text - click me (has onClick)
-				</Typography>
-			</div>
-			<div>
-				<Typography interactive>Interactive text - hover me (no onClick, just styling)</Typography>
-			</div>
-			<div>
-				<Typography
-					onClick={() => alert('Clicked!')}
-					onMouseEnter={() => console.log('Mouse entered')}
-					onMouseLeave={() => console.log('Mouse left')}
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
 				>
-					With all mouse handlers - click, enter, leave
-				</Typography>
-			</div>
+					Font Size
+				</h3>
+				<FontSizeShowcase />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Font Weight
+				</h3>
+				<FontWeightShowcase />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Semantic Sizes
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					{(
+						[
+							{ name: 'small', px: '12px' },
+							{ name: 'base', px: '14px' },
+							{ name: 'medium', px: '16px' },
+							{ name: 'large', px: '20px' },
+						] as const
+					).map(({ name, px }) => (
+						<div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
+							<span
+								style={{
+									width: 100,
+									fontSize: 12,
+									textAlign: 'right',
+									color: 'var(--text-vanilla-400)',
+									flexShrink: 0,
+								}}
+							>
+								{name} ({px})
+							</span>
+							<Typography size={name}>The quick brown fox jumps over the lazy dog</Typography>
+						</div>
+					))}
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Sizes
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					{(
+						[
+							'xs',
+							'sm',
+							'lg',
+							'xl',
+							'2xl',
+							'3xl',
+							'4xl',
+							'5xl',
+							'6xl',
+							'7xl',
+							'8xl',
+							'9xl',
+						] as const
+					).map((s) => (
+						<div key={s} style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
+							<span
+								style={{
+									width: 48,
+									fontSize: 12,
+									textAlign: 'right',
+									color: 'var(--text-vanilla-400)',
+									flexShrink: 0,
+								}}
+							>
+								{s}
+							</span>
+							<Typography size={s}>The quick brown fox jumps over the lazy dog</Typography>
+						</div>
+					))}
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Weights
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					{ALL_WEIGHTS.map(({ name, value }) => (
+						<div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
+							<span
+								style={{
+									width: 110,
+									fontSize: 12,
+									textAlign: 'right',
+									color: 'var(--text-vanilla-400)',
+									flexShrink: 0,
+								}}
+							>
+								{name.toUpperCase()} - {value}
+							</span>
+							<Typography size="xl" weight={name}>
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+							</Typography>
+						</div>
+					))}
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Heading Variant
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					<Typography variant="title" as="h1" size="5xl">
+						Heading 1
+					</Typography>
+					<Typography variant="title" as="h2" size="4xl">
+						Heading 2
+					</Typography>
+					<Typography variant="title" as="h3" size="3xl">
+						Heading 3
+					</Typography>
+					<Typography variant="title" as="h4" size="2xl">
+						Heading 4
+					</Typography>
+					<Typography variant="title" as="h5" size="xl">
+						Heading 5
+					</Typography>
+					<Typography variant="title" as="h6" size="lg">
+						Heading 6
+					</Typography>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Text Variant
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					<div>
+						<Typography size="lg">
+							This is a paragraph of body text. Lorem ipsum dolor sit amet, consectetur adipiscing
+							elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+						</Typography>
+					</div>
+					<div>
+						<Typography as="span" size="sm" muted>
+							This is a muted span element.
+						</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Alignment
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					<div style={{ width: '25rem' }}>
+						<Typography align="left" size="lg" style={{ width: '100%' }}>
+							Left-aligned text
+						</Typography>
+					</div>
+					<div style={{ width: '25rem' }}>
+						<Typography align="center" size="lg" style={{ width: '100%' }}>
+							Center-aligned text
+						</Typography>
+					</div>
+					<div style={{ width: '25rem' }}>
+						<Typography align="right" size="lg" style={{ width: '100%' }}>
+							Right-aligned text
+						</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Truncation
+				</h3>
+				<div
+					style={{
+						maxWidth: 400,
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1.5rem',
+					}}
+				>
+					<div>
+						<Typography size="sm" muted style={{ marginBottom: 4 }}>
+							truncate=1
+						</Typography>
+						<Typography truncate={1} size="base">
+							This is a long piece of text that should be truncated after a single line. It keeps
+							going and going to demonstrate the ellipsis behavior.
+						</Typography>
+					</div>
+					<div>
+						<Typography size="sm" muted style={{ marginBottom: 4 }}>
+							truncate=2
+						</Typography>
+						<Typography truncate={2} size="base">
+							This is a long piece of text that should be truncated after two lines. It keeps going
+							and going to demonstrate the multi-line clamp behavior. The third line and beyond
+							should be hidden with an ellipsis.
+						</Typography>
+					</div>
+					<div>
+						<Typography size="sm" muted style={{ marginBottom: 4 }}>
+							truncate=3
+						</Typography>
+						<Typography truncate={3} size="base">
+							This is a long piece of text that should be truncated after three lines. It keeps
+							going and going and going. We need enough text here to fill at least four lines so we
+							can verify the clamp works. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+							sed do eiusmod tempor incididunt ut labore.
+						</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Muted State
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
+					<div>
+						<Typography size="lg" weight="bold">
+							Primary heading text
+						</Typography>
+					</div>
+					<div>
+						<Typography size="base">Normal body text with default color.</Typography>
+					</div>
+					<div>
+						<Typography size="sm" muted>
+							Muted helper text — secondary information or captions.
+						</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Color Variants
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
+					<div>
+						<Typography>Default text</Typography>
+					</div>
+					<div>
+						<Typography color="muted">Muted text (secondary)</Typography>
+					</div>
+					<div>
+						<Typography color="success">Success text</Typography>
+					</div>
+					<div>
+						<Typography color="warning">Warning text</Typography>
+					</div>
+					<div>
+						<Typography color="danger">Danger/error text</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Text Decorations
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
+					<div>
+						<Typography strong>Strong/bold text</Typography>
+					</div>
+					<div>
+						<Typography italic>Italic text</Typography>
+					</div>
+					<div>
+						<Typography code>Inline code: const x = 1</Typography>
+					</div>
+					<div>
+						<Typography strong italic>
+							Strong and italic combined
+						</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Title Levels
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					<Typography.Title level={1}>Heading Level 1 (h1)</Typography.Title>
+					<Typography.Title level={2}>Heading Level 2 (h2)</Typography.Title>
+					<Typography.Title level={3}>Heading Level 3 (h3)</Typography.Title>
+					<Typography.Title level={4}>Heading Level 4 (h4)</Typography.Title>
+					<Typography.Title level={5}>Heading Level 5 (h5)</Typography.Title>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Compound Components
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					<div>
+						<Typography.Title level={2}>Typography.Title</Typography.Title>
+					</div>
+					<div>
+						<Typography.Text>Typography.Text - regular paragraph text</Typography.Text>
+					</div>
+					<div>
+						<Typography.Text strong>Typography.Text with strong</Typography.Text>
+					</div>
+					<div>
+						<Typography.Text color="danger">Typography.Text with color="danger"</Typography.Text>
+					</div>
+					<div>
+						<Typography.Link href="https://signoz.io">Typography.Link to SigNoz</Typography.Link>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Copyable
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
+					<div>
+						<Typography copyable>Click the icon to copy this text</Typography>
+					</div>
+					<div>
+						<Typography.Text code copyable>
+							npm install @signozhq/ui
+						</Typography.Text>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled State
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.5rem' }}>
+					<div>
+						<Typography>Normal text</Typography>
+					</div>
+					<div>
+						<Typography disabled>Disabled text - cannot be selected</Typography>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Interactive
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+					<div>
+						<Typography>Normal text (no hover effect)</Typography>
+					</div>
+					<div>
+						<Typography onClick={() => alert('Clicked!')}>
+							Clickable text - click me (has onClick)
+						</Typography>
+					</div>
+					<div>
+						<Typography interactive>
+							Interactive text - hover me (no onClick, just styling)
+						</Typography>
+					</div>
+					<div>
+						<Typography
+							onClick={() => alert('Clicked!')}
+							onMouseEnter={() => console.log('Mouse entered')}
+							onMouseLeave={() => console.log('Mouse left')}
+						>
+							With all mouse handlers - click, enter, leave
+						</Typography>
+					</div>
+				</div>
+			</section>
 		</div>
 	),
 };

@@ -114,55 +114,80 @@ export const Default: Story = {
 	},
 };
 
-export const AllVariants: Story = {
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+	},
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			{[
-				'primary',
-				'success',
-				'warning',
-				'error',
-				'robin',
-				'forest',
-				'amber',
-				'sienna',
-				'cherry',
-				'sakura',
-				'aqua',
-			].map((c) => (
-				<div key={c} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-					<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Variants
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					{[
+						'primary',
+						'success',
+						'warning',
+						'error',
+						'robin',
+						'forest',
+						'amber',
+						'sienna',
+						'cherry',
+						'sakura',
+						'aqua',
+					].map((c) => (
+						<div key={c} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+							<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
 
-					<Checkbox id={`checkbox-${c}-default`} color={c as any}>
-						Default
-					</Checkbox>
+							<Checkbox id={`checkbox-${c}-default`} color={c as any}>
+								Default
+							</Checkbox>
 
-					<Checkbox id={`checkbox-${c}-checked`} defaultValue={true} color={c as any}>
-						Checked
-					</Checkbox>
+							<Checkbox id={`checkbox-${c}-checked`} defaultValue={true} color={c as any}>
+								Checked
+							</Checkbox>
 
-					<Checkbox
-						id={`checkbox-${c}-indeterminate`}
-						defaultValue={'indeterminate' as any}
-						color={c as any}
-					>
-						Indeterminate
-					</Checkbox>
+							<Checkbox
+								id={`checkbox-${c}-indeterminate`}
+								defaultValue={'indeterminate' as any}
+								color={c as any}
+							>
+								Indeterminate
+							</Checkbox>
 
-					<Checkbox id={`checkbox-${c}-disabled`} disabled={true} color={c as any}>
-						Disabled
-					</Checkbox>
+							<Checkbox id={`checkbox-${c}-disabled`} disabled={true} color={c as any}>
+								Disabled
+							</Checkbox>
 
-					<Checkbox
-						id={`checkbox-${c}-disabled-checked`}
-						defaultValue={true}
-						disabled={true}
-						color={c as any}
-					>
-						Disabled Checked
-					</Checkbox>
+							<Checkbox
+								id={`checkbox-${c}-disabled-checked`}
+								defaultValue={true}
+								disabled={true}
+								color={c as any}
+							>
+								Disabled Checked
+							</Checkbox>
+						</div>
+					))}
 				</div>
-			))}
+			</section>
 		</div>
 	),
 };

@@ -117,138 +117,182 @@ export const Default: Story = {
 	),
 };
 
-export const WithIcon: Story = {
-	args: {
-		href: '#',
-		icon: <Home size={16} />,
-		children: 'Home',
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const IconOnly: Story = {
-	args: {
-		href: '#',
-		icon: <Home size={16} />,
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const WithOnClick: Story = {
-	args: {
-		href: '#',
-		children: 'Click Me',
-		onClick: fn(),
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const MultipleWithIcons: Story = {
+export const Preview: Story = {
 	render: () => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#" icon={<Home size={16} />}>
-						Home
-					</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#" icon={<Folder size={16} />}>
-						Documents
-					</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#" icon={<Settings size={16} />}>
-						Settings
-					</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const WithExternalLink: Story = {
-	args: {
-		href: 'https://example.com',
-		target: '_blank',
-		rel: 'noopener noreferrer',
-		children: 'External Link',
-		title: 'Opens in new tab',
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const WithAriaLabel: Story = {
-	args: {
-		href: '#',
-		children: 'Home',
-		'aria-label': 'Go to home page',
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Icon
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" icon={<Home size={16} />}>
+								Home
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Icon Only
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" icon={<Home size={16} />} />
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With On Click
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" onClick={fn()}>
+								Click Me
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multiple With Icons
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" icon={<Home size={16} />}>
+								Home
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" icon={<Folder size={16} />}>
+								Documents
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" icon={<Settings size={16} />}>
+								Settings
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With External Link
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink
+								href="https://example.com"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Opens in new tab"
+							>
+								External Link
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Aria Label
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" aria-label="Go to home page">
+								Home
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+		</div>
 	),
 };

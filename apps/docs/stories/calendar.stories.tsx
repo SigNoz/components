@@ -219,163 +219,89 @@ export const Default: Story = {
 	},
 };
 
-export const SingleDateSelection: Story = {
-	args: {
-		mode: 'single',
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+function DateRangeSelectionPreview() {
+	const [range, setRange] = React.useState<any>({
+		from: undefined,
+		to: undefined,
+	});
 
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Date:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{date ? date.toLocaleDateString() : 'No date selected'}
-					</p>
-				</div>
-				<Calendar
-					{...args}
-					mode="single"
-					selected={date}
-					onSelect={setDate}
-					style={{
-						borderRadius: '0.375rem',
-						border: '1px solid var(--border)',
-						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-					}}
-				/>
+	return (
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Selected Range:
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					{range.from && range.to
+						? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
+						: range.from
+							? `${range.from.toLocaleDateString()} - Select end date`
+							: 'Select start date'}
+				</p>
 			</div>
-		);
-	},
-};
-
-export const DateRangeSelection: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [range, setRange] = React.useState<any>({
-			from: undefined,
-			to: undefined,
-		});
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Range:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{range.from && range.to
-							? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
-							: range.from
-								? `${range.from.toLocaleDateString()} - Select end date`
-								: 'Select start date'}
-					</p>
-				</div>
-				<Calendar
-					{...args}
-					mode="range"
-					selected={range}
-					onSelect={setRange}
-					style={{
-						borderRadius: '0.375rem',
-						border: '1px solid var(--border)',
-						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-					}}
-				/>
-			</div>
-		);
-	},
-};
-
-export const MultipleDateSelection: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [selected, setSelected] = React.useState<any>([]);
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Dates:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{selected.length > 0
-							? selected.map((date: Date) => date.toLocaleDateString()).join(', ')
-							: 'No dates selected'}
-					</p>
-				</div>
-				<Calendar
-					{...args}
-					mode="multiple"
-					selected={selected}
-					onSelect={setSelected}
-					style={{
-						borderRadius: '0.375rem',
-						border: '1px solid var(--border)',
-						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-					}}
-				/>
-			</div>
-		);
-	},
-};
-
-export const WithDropdownNavigation: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'dropdown',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Date:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{date ? date.toLocaleDateString() : 'No date selected'}
-					</p>
-				</div>
-				<Calendar
-					{...args}
-					mode="single"
-					selected={date}
-					onSelect={setDate}
-					style={{
-						borderRadius: '0.375rem',
-						border: '1px solid var(--border)',
-						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-					}}
-				/>
-			</div>
-		);
-	},
-};
-
-export const HideOutsideDays: Story = {
-	args: {
-		showOutsideDays: false,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
 			<Calendar
-				{...args}
+				showOutsideDays
+				captionLayout="label"
+				mode="range"
+				selected={range}
+				onSelect={setRange}
+				style={{
+					borderRadius: '0.375rem',
+					border: '1px solid var(--border)',
+					boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+				}}
+			/>
+		</div>
+	);
+}
+
+function MultipleDateSelectionPreview() {
+	const [selected, setSelected] = React.useState<any>([]);
+
+	return (
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Selected Dates:
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					{selected.length > 0
+						? selected.map((date: Date) => date.toLocaleDateString()).join(', ')
+						: 'No dates selected'}
+				</p>
+			</div>
+			<Calendar
+				showOutsideDays
+				captionLayout="label"
+				mode="multiple"
+				selected={selected}
+				onSelect={setSelected}
+				style={{
+					borderRadius: '0.375rem',
+					border: '1px solid var(--border)',
+					boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+				}}
+			/>
+		</div>
+	);
+}
+
+function WithDropdownNavigationPreview() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+
+	return (
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Selected Date:
+				</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					{date ? date.toLocaleDateString() : 'No date selected'}
+				</p>
+			</div>
+			<Calendar
+				showOutsideDays
+				captionLayout="dropdown"
 				mode="single"
 				selected={date}
 				onSelect={setDate}
@@ -385,42 +311,232 @@ export const HideOutsideDays: Story = {
 					boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
 				}}
 			/>
-		);
-	},
-};
+		</div>
+	);
+}
 
-export const DisabledDates: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+function HideOutsideDaysPreview() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
-		// Disable weekends
-		const disabledDays = [
-			{ dayOfWeek: [0, 6] }, // Sunday and Saturday
-		];
+	return (
+		<Calendar
+			showOutsideDays={false}
+			captionLayout="label"
+			mode="single"
+			selected={date}
+			onSelect={setDate}
+			style={{
+				borderRadius: '0.375rem',
+				border: '1px solid var(--border)',
+				boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+			}}
+		/>
+	);
+}
 
-		return (
+function DisabledDatesPreview() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+
+	// Disable weekends
+	const disabledDays = [
+		{ dayOfWeek: [0, 6] }, // Sunday and Saturday
+	];
+
+	return (
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+			<div>
+				<p
+					style={{
+						fontSize: '0.875rem',
+						color: 'var(--muted-foreground)',
+						marginBottom: '0.5rem',
+					}}
+				>
+					Weekends are disabled in this example
+				</p>
+			</div>
+			<Calendar
+				showOutsideDays
+				captionLayout="label"
+				mode="single"
+				selected={date}
+				onSelect={setDate}
+				disabled={disabledDays}
+				style={{
+					borderRadius: '0.375rem',
+					border: '1px solid var(--border)',
+					boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+				}}
+			/>
+		</div>
+	);
+}
+
+function WithTimezonePreview() {
+	const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+	const [timezone, setTimezone] = React.useState('UTC');
+	const [time, setTime] = React.useState('12:00:00');
+
+	// Common timezones
+	const timezones = [
+		{ value: 'UTC', label: 'UTC' },
+		{ value: 'America/New_York', label: 'Eastern Time' },
+		{ value: 'America/Chicago', label: 'Central Time' },
+		{ value: 'America/Denver', label: 'Mountain Time' },
+		{ value: 'America/Los_Angeles', label: 'Pacific Time' },
+		{ value: 'Europe/London', label: 'London' },
+		{ value: 'Europe/Paris', label: 'Paris' },
+		{ value: 'Asia/Tokyo', label: 'Tokyo' },
+		{ value: 'Asia/Shanghai', label: 'Shanghai' },
+		{ value: 'Australia/Sydney', label: 'Sydney' },
+	];
+
+	// Format date and time in selected timezone
+	const formatDateTimeInTimezone = (date: Date | undefined, tz: string, timeStr: string) => {
+		if (!date) return 'No date selected';
+
+		try {
+			// Create a date with the selected time
+			const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+			const dateWithTime = new Date(date);
+			dateWithTime.setHours(hours, minutes, seconds || 0);
+
+			// Format in the selected timezone
+			return new Intl.DateTimeFormat('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+				timeZone: tz,
+			}).format(dateWithTime);
+		} catch {
+			return `${date.toLocaleDateString()} at ${timeStr}`;
+		}
+	};
+
+	// Get current time in selected timezone
+	const getCurrentTimeInTimezone = (tz: string) => {
+		try {
+			return new Intl.DateTimeFormat('en-US', {
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+				timeZone: tz,
+			}).format(new Date(fixedDate));
+		} catch {
+			return new Date(fixedDate).toLocaleTimeString();
+		}
+	};
+
+	return (
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<p
-						style={{
-							fontSize: '0.875rem',
-							color: 'var(--muted-foreground)',
-							marginBottom: '0.5rem',
-						}}
-					>
-						Weekends are disabled in this example
-					</p>
+				<div
+					style={{
+						display: 'grid',
+						gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+						gap: '1rem',
+					}}
+				>
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Timezone Selection:
+						</h3>
+						<select
+							value={timezone}
+							onChange={(e) => setTimezone(e.target.value)}
+							style={{
+								width: '100%',
+								paddingLeft: '0.75rem',
+								paddingRight: '0.75rem',
+								paddingTop: '0.5rem',
+								paddingBottom: '0.5rem',
+								border: '1px solid var(--border)',
+								borderColor: 'var(--input)',
+								borderRadius: '0.375rem',
+								fontSize: '0.875rem',
+							}}
+						>
+							{timezones.map((tz) => (
+								<option key={tz.value} value={tz.value}>
+									{tz.label}
+								</option>
+							))}
+						</select>
+					</div>
+
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Time Selection:
+						</h3>
+						<input
+							type="time"
+							value={time}
+							onChange={(e) => setTime(e.target.value)}
+							step="1"
+							style={{
+								width: '100%',
+								paddingLeft: '0.75rem',
+								paddingRight: '0.75rem',
+								paddingTop: '0.5rem',
+								paddingBottom: '0.5rem',
+								border: '1px solid var(--border)',
+								borderColor: 'var(--input)',
+								borderRadius: '0.375rem',
+								fontSize: '0.875rem',
+							}}
+						/>
+					</div>
 				</div>
+
+				<div
+					style={{
+						display: 'grid',
+						gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+						gap: '1rem',
+					}}
+				>
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Selected Date & Time:
+						</h3>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+								<strong>Local:</strong>{' '}
+								{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
+							</p>
+							<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+								<strong>{timezone}:</strong> {formatDateTimeInTimezone(date, timezone, time)}
+							</p>
+						</div>
+					</div>
+
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Current Time:
+						</h3>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+								<strong>Local:</strong> {new Date(fixedDate).toLocaleTimeString()}
+							</p>
+							<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+								<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>Calendar:</h3>
 				<Calendar
-					{...args}
+					showOutsideDays
+					captionLayout="label"
 					mode="single"
 					selected={date}
 					onSelect={setDate}
-					disabled={disabledDays}
 					style={{
 						borderRadius: '0.375rem',
 						border: '1px solid var(--border)',
@@ -428,201 +544,114 @@ export const DisabledDates: Story = {
 					}}
 				/>
 			</div>
-		);
-	},
-};
 
-export const WithTimezone: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [timezone, setTimezone] = React.useState('UTC');
-		const [time, setTime] = React.useState('12:00:00');
-
-		// Common timezones
-		const timezones = [
-			{ value: 'UTC', label: 'UTC' },
-			{ value: 'America/New_York', label: 'Eastern Time' },
-			{ value: 'America/Chicago', label: 'Central Time' },
-			{ value: 'America/Denver', label: 'Mountain Time' },
-			{ value: 'America/Los_Angeles', label: 'Pacific Time' },
-			{ value: 'Europe/London', label: 'London' },
-			{ value: 'Europe/Paris', label: 'Paris' },
-			{ value: 'Asia/Tokyo', label: 'Tokyo' },
-			{ value: 'Asia/Shanghai', label: 'Shanghai' },
-			{ value: 'Australia/Sydney', label: 'Sydney' },
-		];
-
-		// Format date and time in selected timezone
-		const formatDateTimeInTimezone = (date: Date | undefined, tz: string, timeStr: string) => {
-			if (!date) return 'No date selected';
-
-			try {
-				// Create a date with the selected time
-				const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-				const dateWithTime = new Date(date);
-				dateWithTime.setHours(hours, minutes, seconds || 0);
-
-				// Format in the selected timezone
-				return new Intl.DateTimeFormat('en-US', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit',
-					timeZone: tz,
-				}).format(dateWithTime);
-			} catch {
-				return `${date.toLocaleDateString()} at ${timeStr}`;
-			}
-		};
-
-		// Get current time in selected timezone
-		const getCurrentTimeInTimezone = (tz: string) => {
-			try {
-				return new Intl.DateTimeFormat('en-US', {
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit',
-					timeZone: tz,
-				}).format(new Date(fixedDate));
-			} catch {
-				return new Date(fixedDate).toLocaleTimeString();
-			}
-		};
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div
-						style={{
-							display: 'grid',
-							gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-							gap: '1rem',
-						}}
-					>
-						<div>
-							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-								Timezone Selection:
-							</h3>
-							<select
-								value={timezone}
-								onChange={(e) => setTimezone(e.target.value)}
-								style={{
-									width: '100%',
-									paddingLeft: '0.75rem',
-									paddingRight: '0.75rem',
-									paddingTop: '0.5rem',
-									paddingBottom: '0.5rem',
-									border: '1px solid var(--border)',
-									borderColor: 'var(--input)',
-									borderRadius: '0.375rem',
-									fontSize: '0.875rem',
-								}}
-							>
-								{timezones.map((tz) => (
-									<option key={tz.value} value={tz.value}>
-										{tz.label}
-									</option>
-								))}
-							</select>
-						</div>
-
-						<div>
-							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-								Time Selection:
-							</h3>
-							<input
-								type="time"
-								value={time}
-								onChange={(e) => setTime(e.target.value)}
-								step="1"
-								style={{
-									width: '100%',
-									paddingLeft: '0.75rem',
-									paddingRight: '0.75rem',
-									paddingTop: '0.5rem',
-									paddingBottom: '0.5rem',
-									border: '1px solid var(--border)',
-									borderColor: 'var(--input)',
-									borderRadius: '0.375rem',
-									fontSize: '0.875rem',
-								}}
-							/>
-						</div>
-					</div>
-
-					<div
-						style={{
-							display: 'grid',
-							gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-							gap: '1rem',
-						}}
-					>
-						<div>
-							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-								Selected Date & Time:
-							</h3>
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-									<strong>Local:</strong>{' '}
-									{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
-								</p>
-								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-									<strong>{timezone}:</strong> {formatDateTimeInTimezone(date, timezone, time)}
-								</p>
-							</div>
-						</div>
-
-						<div>
-							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-								Current Time:
-							</h3>
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-									<strong>Local:</strong> {new Date(fixedDate).toLocaleTimeString()}
-								</p>
-								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-									<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Calendar:
-					</h3>
-					<Calendar
-						{...args}
-						mode="single"
-						selected={date}
-						onSelect={setDate}
-						style={{
-							borderRadius: '0.375rem',
-							border: '1px solid var(--border)',
-							boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-						}}
-					/>
-				</div>
-
-				<div style={{ padding: '1rem', backgroundColor: 'var(--muted)', borderRadius: '0.375rem' }}>
-					<h4 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Date & Time with Timezone:
-					</h4>
-					<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-						This example demonstrates how to handle dates and times with different timezones. The
-						selected date and time are displayed in both local time and the chosen timezone. This
-						shows how you can combine calendar selection with time input and timezone conversion for
-						comprehensive datetime handling in your applications.
-					</p>
-				</div>
+			<div style={{ padding: '1rem', backgroundColor: 'var(--muted)', borderRadius: '0.375rem' }}>
+				<h4 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Date & Time with Timezone:
+				</h4>
+				<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+					This example demonstrates how to handle dates and times with different timezones. The
+					selected date and time are displayed in both local time and the chosen timezone. This
+					shows how you can combine calendar selection with time input and timezone conversion for
+					comprehensive datetime handling in your applications.
+				</p>
 			</div>
-		);
+		</div>
+	);
+}
+
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Date Range Selection
+				</h3>
+				<DateRangeSelectionPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multiple Date Selection
+				</h3>
+				<MultipleDateSelectionPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Dropdown Navigation
+				</h3>
+				<WithDropdownNavigationPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Hide Outside Days
+				</h3>
+				<HideOutsideDaysPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled Dates
+				</h3>
+				<DisabledDatesPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Timezone
+				</h3>
+				<WithTimezonePreview />
+			</section>
+		</div>
+	),
 };

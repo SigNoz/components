@@ -1,6 +1,6 @@
 import { AnnouncementBanner, type AnnouncementBannerType } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import React from 'react';
+import { useState } from 'react';
 
 const meta: Meta<typeof AnnouncementBanner> = {
 	title: 'Composed Components/AnnouncementBanner',
@@ -72,66 +72,113 @@ export const Default: Story = {
 	},
 };
 
-export const WithAction: Story = {
-	args: {
-		type: 'info',
-		children: 'New feature available. Check it out now.',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => (
-		<AnnouncementBanner
-			{...args}
-			action={{
-				label: 'Learn more',
-				onClick: () => window.alert('Action clicked'),
-			}}
-		/>
-	),
-};
-
-export const Dismissible: Story = {
 	render: () => {
-		const [visible, setVisible] = React.useState(true);
-		if (!visible) return <></>;
-		return (
-			<AnnouncementBanner type="warning" onClose={() => setVisible(false)}>
-				This banner can be dismissed. Click the X to close.
-			</AnnouncementBanner>
-		);
-	},
-};
+		const [dismissibleVisible, setDismissibleVisible] = useState(true);
+		const [actionDismissVisible, setActionDismissVisible] = useState(true);
 
-export const AllTypes: Story = {
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
-			<AnnouncementBanner type="warning">
-				Warning: Please review your configuration before continuing.
-			</AnnouncementBanner>
-			<AnnouncementBanner type="info">
-				Info: We have updated our terms of service.
-			</AnnouncementBanner>
-			<AnnouncementBanner type="error">
-				Error: Something went wrong. Please try again.
-			</AnnouncementBanner>
-			<AnnouncementBanner type="success">Success: Your changes have been saved.</AnnouncementBanner>
-		</div>
-	),
-};
-
-export const WithActionAndDismiss: Story = {
-	render: () => {
-		const [visible, setVisible] = React.useState(true);
-		if (!visible) return <></>;
 		return (
-			<AnnouncementBanner
-				type="info"
-				onClose={() => setVisible(false)}
-				action={{
-					label: 'View details',
-					onClick: () => window.alert('Viewing details'),
+			<div
+				style={{
+					padding: '2rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '2.5rem',
+					backgroundColor: 'var(--background)',
 				}}
 			>
-				New update available. You can view details or dismiss this banner.
-			</AnnouncementBanner>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						With Action
+					</h3>
+					<AnnouncementBanner
+						type="info"
+						action={{
+							label: 'Learn more',
+							onClick: () => window.alert('Action clicked'),
+						}}
+					>
+						New feature available. Check it out now.
+					</AnnouncementBanner>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Dismissible
+					</h3>
+					{dismissibleVisible ? (
+						<AnnouncementBanner type="warning" onClose={() => setDismissibleVisible(false)}>
+							This banner can be dismissed. Click the X to close.
+						</AnnouncementBanner>
+					) : null}
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						All Types
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<AnnouncementBanner type="warning">
+							Warning: Please review your configuration before continuing.
+						</AnnouncementBanner>
+						<AnnouncementBanner type="info">
+							Info: We have updated our terms of service.
+						</AnnouncementBanner>
+						<AnnouncementBanner type="error">
+							Error: Something went wrong. Please try again.
+						</AnnouncementBanner>
+						<AnnouncementBanner type="success">
+							Success: Your changes have been saved.
+						</AnnouncementBanner>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						With Action And Dismiss
+					</h3>
+					{actionDismissVisible ? (
+						<AnnouncementBanner
+							type="info"
+							onClose={() => setActionDismissVisible(false)}
+							action={{
+								label: 'View details',
+								onClick: () => window.alert('Viewing details'),
+							}}
+						>
+							New update available. You can view details or dismiss this banner.
+						</AnnouncementBanner>
+					) : null}
+				</section>
+			</div>
 		);
 	},
 };

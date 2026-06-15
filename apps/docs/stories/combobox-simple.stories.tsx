@@ -154,50 +154,6 @@ const defaultItems = [
 	{ value: 'svelte', label: 'Svelte' },
 ];
 
-export const Default: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
-
-export const Controlled: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString())} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const WithDefaultValue: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-		defaultValue: 'react',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
-
 const groups = [
 	{
 		heading: 'Frameworks',
@@ -219,18 +175,6 @@ const groups = [
 		],
 	},
 ];
-
-export const WithGroups: Story = {
-	args: {
-		groups,
-		placeholder: 'Select a technology...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
 
 const itemsWithIcons = [
 	{
@@ -271,520 +215,602 @@ const itemsWithIcons = [
 	},
 ];
 
-export const WithIcons: Story = {
-	args: {
-		items: itemsWithIcons,
-		placeholder: 'Select a tool...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
-
-export const WithGroupsAndIcons: Story = {
-	args: {
-		groups: [
+const groupsWithIcons = [
+	{
+		heading: 'Frameworks',
+		items: [
 			{
-				heading: 'Frameworks',
-				items: [
-					{
-						value: 'react',
-						label: (
-							<>
-								<Code size={16} style={{ marginRight: '0.5rem' }} />
-								React
-							</>
-						),
-					},
-					{
-						value: 'vue',
-						label: (
-							<>
-								<Code size={16} style={{ marginRight: '0.5rem' }} />
-								Vue
-							</>
-						),
-					},
-				],
+				value: 'react',
+				label: (
+					<>
+						<Code size={16} style={{ marginRight: '0.5rem' }} />
+						React
+					</>
+				),
 			},
 			{
-				heading: 'Databases',
-				items: [
-					{
-						value: 'postgres',
-						label: (
-							<>
-								<Database size={16} style={{ marginRight: '0.5rem' }} />
-								PostgreSQL
-							</>
-						),
-					},
-					{
-						value: 'redis',
-						label: (
-							<>
-								<Database size={16} style={{ marginRight: '0.5rem' }} />
-								Redis
-							</>
-						),
-					},
-				],
+				value: 'vue',
+				label: (
+					<>
+						<Code size={16} style={{ marginRight: '0.5rem' }} />
+						Vue
+					</>
+				),
 			},
 		],
-		placeholder: 'Select a technology...',
 	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
+	{
+		heading: 'Databases',
+		items: [
+			{
+				value: 'postgres',
+				label: (
+					<>
+						<Database size={16} style={{ marginRight: '0.5rem' }} />
+						PostgreSQL
+					</>
+				),
+			},
+			{
+				value: 'redis',
+				label: (
+					<>
+						<Database size={16} style={{ marginRight: '0.5rem' }} />
+						Redis
+					</>
+				),
+			},
+		],
+	},
+];
 
-export const Disabled: Story = {
+const hintGroups = [
+	{
+		heading: 'Suggestions',
+		items: [
+			{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
+			{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
+		],
+	},
+	{
+		heading: 'Status',
+		items: [
+			{ value: 'status:active', label: 'Status: Active' },
+			{ value: 'status:pending', label: 'Status: Pending' },
+			{ value: 'status:closed', label: 'Status: Closed' },
+		],
+	},
+	{
+		heading: 'Priority',
+		items: [
+			{ value: 'priority:high', label: 'Priority: High' },
+			{ value: 'priority:medium', label: 'Priority: Medium' },
+			{ value: 'priority:low', label: 'Priority: Low' },
+		],
+	},
+];
+
+const hintGroupsWithCreate = [
+	{
+		heading: 'Suggestions',
+		items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
+	},
+	{
+		heading: 'Tags',
+		items: [
+			{ value: 'tag:bug', label: 'tag:bug' },
+			{ value: 'tag:feature', label: 'tag:feature' },
+			{ value: 'tag:docs', label: 'tag:docs' },
+		],
+	},
+];
+
+const keywordItems = [
+	{ value: '15', label: '15 minutes', keywords: ['quarter hour', '15m', '900 seconds'] },
+	{ value: '30', label: '30 minutes', keywords: ['half hour', '30m', '1800 seconds'] },
+	{ value: '60', label: '1 hour', keywords: ['60 minutes', '1h', '3600 seconds'] },
+	{ value: '1440', label: '1 day', keywords: ['24 hours', '1d', 'daily'] },
+];
+
+const regionItems = [
+	{ value: 'us-east-1', label: 'US East (N. Virginia)' },
+	{ value: 'us-west-2', label: 'US West (Oregon)' },
+	{ value: 'eu-west-1', label: 'EU (Ireland)' },
+	{ value: 'ap-southeast-1', label: 'Asia Pacific (Singapore)' },
+];
+
+const sectionTitleStyle = {
+	fontSize: '0.875rem',
+	fontWeight: 500,
+	marginBottom: '0.75rem',
+	color: 'var(--muted-foreground)',
+} as const;
+
+const comboboxWrapperStyle = { padding: '2rem', width: '100%', maxWidth: '24rem' } as const;
+
+export const Default: Story = {
 	args: {
 		items: defaultItems,
 		placeholder: 'Select a framework...',
-		disabled: true,
 	},
 	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+		<div style={comboboxWrapperStyle}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
 };
 
-export const MultiSelect: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select frameworks...',
-		multiple: true,
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
+	render: function ComboboxSimplePreview() {
+		const [controlledValue, setControlledValue] = useState('');
+		const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
+		const [allowCreateValue, setAllowCreateValue] = useState<string[]>([]);
+		const [allowCreateCustomValue, setAllowCreateCustomValue] = useState<string[]>([]);
+		const [tagsModeValue, setTagsModeValue] = useState<string[]>(['initial-tag']);
+		const [allowCreateSingleValue, setAllowCreateSingleValue] = useState('');
+		const [allowCreateSingleCustomValue, setAllowCreateSingleCustomValue] = useState('');
+		const [withHintsValue, setWithHintsValue] = useState('');
+		const [withHintsAndCreateValue, setWithHintsAndCreateValue] = useState('');
+		const [multiSelectHintsValue, setMultiSelectHintsValue] = useState<string[]>([]);
+		const [multiSelectHintsCreateValue, setMultiSelectHintsCreateValue] = useState<string[]>([]);
+		const [loadingDelayIsLoading, setLoadingDelayIsLoading] = useState(true);
+		const [loadingDelayItems, setLoadingDelayItems] = useState<typeof defaultItems>([]);
+		const [withKeywordsValue, setWithKeywordsValue] = useState('');
+		const [stringLabelsFilterValue, setStringLabelsFilterValue] = useState('');
+
+		useEffect(() => {
+			const timer = setTimeout(() => {
+				setLoadingDelayItems(defaultItems);
+				setLoadingDelayIsLoading(false);
+			}, 5000);
+			return () => clearTimeout(timer);
+		}, []);
 
 		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const MultiSelectWithDefaultValues: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select frameworks...',
-		multiple: true,
-		defaultValue: ['react', 'vue'],
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
-
-export const MultiSelectWithMaxPills: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select frameworks...',
-		multiple: true,
-		defaultValue: ['react', 'vue', 'angular', 'svelte'],
-		maxDisplayedPills: 2,
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<ComboboxSimple {...args} />
-		</div>
-	),
-};
-
-export const AllowCreate: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select or create tags...',
-		multiple: true,
-		allowCreate: true,
-	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-					Type to filter, then click "Create" option to add new tags
-				</p>
-			</div>
-		);
-	},
-};
-
-export const AllowCreateWithCustomRender: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select or create tags...',
-		multiple: true,
-		allowCreate: (inputValue: string) => (
-			<span>
-				Add <strong>"{inputValue}"</strong> as new tag
-			</span>
-		),
-	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const TagsMode: Story = {
-	args: {
-		items: [],
-		placeholder: 'Type to add tags...',
-		multiple: true,
-		allowCreate: true,
-	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>(['initial-tag']);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-					Free-form tag input - no predefined options
-				</p>
-			</div>
-		);
-	},
-};
-
-export const AllowCreateSingle: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select or create...',
-		allowCreate: true,
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const AllowCreateSingleCustomText: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select or create...',
-		allowCreate: (inputValue: string) => (
-			<span>
-				Add <strong>"{inputValue}"</strong> as new option
-			</span>
-		),
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const WithHints: Story = {
-	args: {
-		groups: [
-			{
-				heading: 'Suggestions',
-				items: [
-					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
-					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
-				],
-			},
-			{
-				heading: 'Status',
-				items: [
-					{ value: 'status:active', label: 'Status: Active' },
-					{ value: 'status:pending', label: 'Status: Pending' },
-					{ value: 'status:closed', label: 'Status: Closed' },
-				],
-			},
-			{
-				heading: 'Priority',
-				items: [
-					{ value: 'priority:high', label: 'Priority: High' },
-					{ value: 'priority:medium', label: 'Priority: Medium' },
-					{ value: 'priority:low', label: 'Priority: Low' },
-				],
-			},
-		],
-		placeholder: 'Filter by...',
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const WithHintsAndCreate: Story = {
-	args: {
-		groups: [
-			{
-				heading: 'Suggestions',
-				items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
-			},
-			{
-				heading: 'Tags',
-				items: [
-					{ value: 'tag:bug', label: 'tag:bug' },
-					{ value: 'tag:feature', label: 'tag:feature' },
-					{ value: 'tag:docs', label: 'tag:docs' },
-				],
-			},
-		],
-		placeholder: 'Add tag...',
-		allowCreate: true,
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-					Try typing "tag:" to see filtered options, or create a new tag like "tag:mynewtag"
-				</p>
-			</div>
-		);
-	},
-};
-
-export const MultiSelectWithHints: Story = {
-	args: {
-		groups: [
-			{
-				heading: 'Suggestions',
-				items: [
-					{ value: 'hint:status', label: 'status:', insertValue: 'status:' },
-					{ value: 'hint:priority', label: 'priority:', insertValue: 'priority:' },
-				],
-			},
-			{
-				heading: 'Status',
-				items: [
-					{ value: 'status:active', label: 'Status: Active' },
-					{ value: 'status:pending', label: 'Status: Pending' },
-					{ value: 'status:closed', label: 'Status: Closed' },
-				],
-			},
-			{
-				heading: 'Priority',
-				items: [
-					{ value: 'priority:high', label: 'Priority: High' },
-					{ value: 'priority:medium', label: 'Priority: Medium' },
-					{ value: 'priority:low', label: 'Priority: Low' },
-				],
-			},
-		],
-		placeholder: 'Add filters...',
-		multiple: true,
-	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Filters: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const MultiSelectWithHintsAndCreate: Story = {
-	args: {
-		groups: [
-			{
-				heading: 'Suggestions',
-				items: [{ value: 'hint:tag', label: 'tag:', insertValue: 'tag:' }],
-			},
-			{
-				heading: 'Tags',
-				items: [
-					{ value: 'tag:bug', label: 'tag:bug' },
-					{ value: 'tag:feature', label: 'tag:feature' },
-					{ value: 'tag:docs', label: 'tag:docs' },
-				],
-			},
-		],
-		placeholder: 'Add tags...',
-		multiple: true,
-		allowCreate: true,
-	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-					Type "tag:" to filter, or create custom tags like "tag:mynewtag"
-				</p>
-			</div>
-		);
-	},
-};
-
-export const Loading: Story = {
-	render: () => (
-		<div
-			style={{
-				padding: '2rem',
-				width: '100%',
-				maxWidth: '42rem',
-				display: 'flex',
-				flexDirection: 'column',
-				gap: '2rem',
-			}}
-		>
-			<div>
-				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-					Infinite Loading
-				</h3>
-				<ComboboxSimple
-					items={[]}
-					placeholder="Select a framework..."
-					loading={true}
-					loadingPlaceholder="Fetching options..."
-				/>
-			</div>
-			<div>
-				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-					Loading with Delay (5s)
-				</h3>
-				<ComboboxLoadingWithDelay />
-			</div>
-		</div>
-	),
-};
-
-function ComboboxLoadingWithDelay() {
-	const [isLoading, setIsLoading] = useState(true);
-	const [items, setItems] = useState<typeof defaultItems>([]);
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setItems(defaultItems);
-			setIsLoading(false);
-		}, 5000);
-		return () => clearTimeout(timer);
-	}, []);
-
-	return (
-		<ComboboxSimple
-			items={items}
-			placeholder="Select a framework..."
-			loading={isLoading}
-			loadingPlaceholder="Loading options..."
-		/>
-	);
-}
-
-export const WithKeywords: Story = {
-	args: {
-		items: [
-			{ value: '15', label: '15 minutes', keywords: ['quarter hour', '15m', '900 seconds'] },
-			{ value: '30', label: '30 minutes', keywords: ['half hour', '30m', '1800 seconds'] },
-			{ value: '60', label: '1 hour', keywords: ['60 minutes', '1h', '3600 seconds'] },
-			{ value: '1440', label: '1 day', keywords: ['24 hours', '1d', 'daily'] },
-		],
-		placeholder: 'Select duration...',
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-					Try searching: "minute", "hour", "quarter", "half", "daily"
-				</p>
-			</div>
-		);
-	},
-};
-
-export const WithStringLabelsFilter: Story = {
-	args: {
-		items: [
-			{ value: 'us-east-1', label: 'US East (N. Virginia)' },
-			{ value: 'us-west-2', label: 'US West (Oregon)' },
-			{ value: 'eu-west-1', label: 'EU (Ireland)' },
-			{ value: 'ap-southeast-1', label: 'Asia Pacific (Singapore)' },
-		],
-		placeholder: 'Select region...',
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-					Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
-				</p>
+			<div
+				style={{
+					padding: '2rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '2.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<section>
+					<h3 style={sectionTitleStyle}>Controlled</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select a framework..."
+							value={controlledValue}
+							onChange={(v) => setControlledValue(v?.toString())}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {controlledValue || 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Default Value</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select a framework..."
+							defaultValue="react"
+						/>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Groups</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple groups={groups} placeholder="Select a technology..." />
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Icons</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple items={itemsWithIcons} placeholder="Select a tool..." />
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Groups And Icons</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple groups={groupsWithIcons} placeholder="Select a technology..." />
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Disabled</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple items={defaultItems} placeholder="Select a framework..." disabled />
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Multi Select</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select frameworks..."
+							multiple
+							value={multiSelectValue}
+							onChange={(v) => setMultiSelectValue(v as string[])}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {multiSelectValue.length > 0 ? multiSelectValue.join(', ') : 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Multi Select With Default Values</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select frameworks..."
+							multiple
+							defaultValue={['react', 'vue']}
+						/>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Multi Select With Max Pills</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select frameworks..."
+							multiple
+							defaultValue={['react', 'vue', 'angular', 'svelte']}
+							maxDisplayedPills={2}
+						/>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Allow Create</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select or create tags..."
+							multiple
+							allowCreate
+							value={allowCreateValue}
+							onChange={(v) => setAllowCreateValue(v as string[])}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Tags: {allowCreateValue.length > 0 ? allowCreateValue.join(', ') : 'none'}
+						</p>
+						<p
+							style={{
+								marginTop: '0.5rem',
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Type to filter, then click "Create" option to add new tags
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Allow Create With Custom Render</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select or create tags..."
+							multiple
+							allowCreate={(inputValue: string) => (
+								<span>
+									Add <strong>"{inputValue}"</strong> as new tag
+								</span>
+							)}
+							value={allowCreateCustomValue}
+							onChange={(v) => setAllowCreateCustomValue(v as string[])}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Tags: {allowCreateCustomValue.length > 0 ? allowCreateCustomValue.join(', ') : 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Tags Mode</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={[]}
+							placeholder="Type to add tags..."
+							multiple
+							allowCreate
+							value={tagsModeValue}
+							onChange={(v) => setTagsModeValue(v as string[])}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Tags: {tagsModeValue.length > 0 ? tagsModeValue.join(', ') : 'none'}
+						</p>
+						<p
+							style={{
+								marginTop: '0.5rem',
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Free-form tag input - no predefined options
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Allow Create Single</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select or create..."
+							allowCreate
+							value={allowCreateSingleValue}
+							onChange={(v) => setAllowCreateSingleValue(v as string)}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {allowCreateSingleValue || 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Allow Create Single Custom Text</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={defaultItems}
+							placeholder="Select or create..."
+							allowCreate={(inputValue: string) => (
+								<span>
+									Add <strong>"{inputValue}"</strong> as new option
+								</span>
+							)}
+							value={allowCreateSingleCustomValue}
+							onChange={(v) => setAllowCreateSingleCustomValue(v as string)}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {allowCreateSingleCustomValue || 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Hints</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							groups={hintGroups}
+							placeholder="Filter by..."
+							value={withHintsValue}
+							onChange={(v) => setWithHintsValue(v as string)}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {withHintsValue || 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Hints And Create</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							groups={hintGroupsWithCreate}
+							placeholder="Add tag..."
+							allowCreate
+							value={withHintsAndCreateValue}
+							onChange={(v) => setWithHintsAndCreateValue(v as string)}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {withHintsAndCreateValue || 'none'}
+						</p>
+						<p
+							style={{
+								marginTop: '0.5rem',
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Try typing "tag:" to see filtered options, or create a new tag like "tag:mynewtag"
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Multi Select With Hints</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							groups={hintGroups}
+							placeholder="Add filters..."
+							multiple
+							value={multiSelectHintsValue}
+							onChange={(v) => setMultiSelectHintsValue(v as string[])}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Filters:{' '}
+							{multiSelectHintsValue.length > 0 ? multiSelectHintsValue.join(', ') : 'none'}
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Multi Select With Hints And Create</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							groups={hintGroupsWithCreate}
+							placeholder="Add tags..."
+							multiple
+							allowCreate
+							value={multiSelectHintsCreateValue}
+							onChange={(v) => setMultiSelectHintsCreateValue(v as string[])}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Tags:{' '}
+							{multiSelectHintsCreateValue.length > 0
+								? multiSelectHintsCreateValue.join(', ')
+								: 'none'}
+						</p>
+						<p
+							style={{
+								marginTop: '0.5rem',
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Type "tag:" to filter, or create custom tags like "tag:mynewtag"
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>Loading</h3>
+					<div
+						style={{
+							padding: '2rem',
+							width: '100%',
+							maxWidth: '42rem',
+							display: 'flex',
+							flexDirection: 'column',
+							gap: '2rem',
+						}}
+					>
+						<div>
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+								Infinite Loading
+							</h3>
+							<ComboboxSimple
+								items={[]}
+								placeholder="Select a framework..."
+								loading
+								loadingPlaceholder="Fetching options..."
+							/>
+						</div>
+						<div>
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+								Loading with Delay (5s)
+							</h3>
+							<ComboboxSimple
+								items={loadingDelayItems}
+								placeholder="Select a framework..."
+								loading={loadingDelayIsLoading}
+								loadingPlaceholder="Loading options..."
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With Keywords</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={keywordItems}
+							placeholder="Select duration..."
+							value={withKeywordsValue}
+							onChange={(v) => setWithKeywordsValue(v as string)}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {withKeywordsValue || 'none'}
+						</p>
+						<p
+							style={{
+								marginTop: '0.5rem',
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Try searching: "minute", "hour", "quarter", "half", "daily"
+						</p>
+					</div>
+				</section>
+				<section>
+					<h3 style={sectionTitleStyle}>With String Labels Filter</h3>
+					<div style={comboboxWrapperStyle}>
+						<ComboboxSimple
+							items={regionItems}
+							placeholder="Select region..."
+							value={stringLabelsFilterValue}
+							onChange={(v) => setStringLabelsFilterValue(v as string)}
+						/>
+						<p
+							style={{
+								marginTop: '1rem',
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Selected: {stringLabelsFilterValue || 'none'}
+						</p>
+						<p
+							style={{
+								marginTop: '0.5rem',
+								fontSize: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
+						</p>
+					</div>
+				</section>
 			</div>
 		);
 	},

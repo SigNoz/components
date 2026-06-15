@@ -111,126 +111,6 @@ export const Default: Story = {
 	},
 };
 
-// All variants overview
-export const AllVariants: Story = {
-	render: () => (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				gap: '1.5rem',
-				padding: '1.5rem',
-				maxWidth: '800px',
-			}}
-		>
-			{/* Type Variations */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Types</h3>
-				<Callout type="info" size="medium" title="Info Callout">
-					This is an informational message.
-				</Callout>
-				<Callout type="success" size="medium" title="Success Callout">
-					Operation completed successfully.
-				</Callout>
-				<Callout type="warning" size="medium" title="Warning Callout">
-					Please review your settings carefully.
-				</Callout>
-				<Callout type="error" size="medium" title="Error Callout">
-					An unexpected error occurred.
-				</Callout>
-			</div>
-
-			{/* Size Variations */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Sizes</h3>
-				<Callout type="info" size="small" title="Small Callout">
-					This is a small callout.
-				</Callout>
-				<Callout type="info" size="medium" title="Medium Callout">
-					This is a medium callout with more space for content.
-				</Callout>
-			</div>
-
-			{/* Content Variations */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Content Variations</h3>
-				<Callout type="info" size="medium" title="Only Title" />
-				<Callout type="info" size="medium" showIcon>
-					Only description without a title.
-				</Callout>
-				<Callout type="info" size="medium" showIcon={false} title="No Icon">
-					This callout has no icon.
-				</Callout>
-			</div>
-
-			{/* Custom Icon */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Custom Icons</h3>
-				<Callout type="info" size="medium" icon={<Star aria-hidden />} title="Star Icon">
-					Custom star icon instead of default.
-				</Callout>
-				<Callout type="warning" size="medium" icon={<Zap aria-hidden />} title="Zap Icon">
-					Custom zap icon with warning colors.
-				</Callout>
-				<Callout color="sienna" size="medium" icon={<Sun aria-hidden />} title="Sun Icon">
-					Custom sun icon with sienna colors.
-				</Callout>
-			</div>
-
-			{/* Custom Colors */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Custom Colors</h3>
-				<Callout color="robin" size="medium" title="Robin Color">
-					Using custom robin color.
-				</Callout>
-				<Callout color="forest" size="medium" title="Forest Color">
-					Using custom forest color.
-				</Callout>
-				<Callout color="amber" size="medium" title="Amber Color">
-					Using custom amber color.
-				</Callout>
-				<Callout color="cherry" size="medium" title="Cherry Color">
-					Using custom cherry color.
-				</Callout>
-				<Callout color="sienna" size="medium" title="Sienna Color">
-					Using custom sienna color.
-				</Callout>
-				<Callout color="aqua" size="medium" title="Aqua Color">
-					Using custom aqua color.
-				</Callout>
-			</div>
-
-			{/* Dismissible */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Dismissible</h3>
-				<DismissibleExample type="info" title="Dismissible Info">
-					Click the X to dismiss this callout.
-				</DismissibleExample>
-				<DismissibleExample type="success" title="Dismissible Success">
-					This success message can be dismissed.
-				</DismissibleExample>
-			</div>
-
-			{/* Expandable */}
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Expandable</h3>
-				<Callout type="info" size="medium" title="Expandable Callout" action="expandable">
-					Click the chevron to toggle this content.
-				</Callout>
-				<Callout
-					type="warning"
-					size="medium"
-					showIcon
-					title="Expandable Warning"
-					action="expandable"
-				>
-					This warning can be expanded or collapsed.
-				</Callout>
-			</div>
-		</div>
-	),
-};
-
 // Helper component for dismissible examples
 function DismissibleExample({
 	type,
@@ -275,3 +155,140 @@ function DismissibleExample({
 		</Callout>
 	);
 }
+
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+	},
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Variants
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1.5rem',
+						maxWidth: '800px',
+					}}
+				>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Types</h3>
+						<Callout type="info" size="medium" title="Info Callout">
+							This is an informational message.
+						</Callout>
+						<Callout type="success" size="medium" title="Success Callout">
+							Operation completed successfully.
+						</Callout>
+						<Callout type="warning" size="medium" title="Warning Callout">
+							Please review your settings carefully.
+						</Callout>
+						<Callout type="error" size="medium" title="Error Callout">
+							An unexpected error occurred.
+						</Callout>
+					</div>
+
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Sizes</h3>
+						<Callout type="info" size="small" title="Small Callout">
+							This is a small callout.
+						</Callout>
+						<Callout type="info" size="medium" title="Medium Callout">
+							This is a medium callout with more space for content.
+						</Callout>
+					</div>
+
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Content Variations</h3>
+						<Callout type="info" size="medium" title="Only Title" />
+						<Callout type="info" size="medium" showIcon>
+							Only description without a title.
+						</Callout>
+						<Callout type="info" size="medium" showIcon={false} title="No Icon">
+							This callout has no icon.
+						</Callout>
+					</div>
+
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Custom Icons</h3>
+						<Callout type="info" size="medium" icon={<Star aria-hidden />} title="Star Icon">
+							Custom star icon instead of default.
+						</Callout>
+						<Callout type="warning" size="medium" icon={<Zap aria-hidden />} title="Zap Icon">
+							Custom zap icon with warning colors.
+						</Callout>
+						<Callout color="sienna" size="medium" icon={<Sun aria-hidden />} title="Sun Icon">
+							Custom sun icon with sienna colors.
+						</Callout>
+					</div>
+
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Custom Colors</h3>
+						<Callout color="robin" size="medium" title="Robin Color">
+							Using custom robin color.
+						</Callout>
+						<Callout color="forest" size="medium" title="Forest Color">
+							Using custom forest color.
+						</Callout>
+						<Callout color="amber" size="medium" title="Amber Color">
+							Using custom amber color.
+						</Callout>
+						<Callout color="cherry" size="medium" title="Cherry Color">
+							Using custom cherry color.
+						</Callout>
+						<Callout color="sienna" size="medium" title="Sienna Color">
+							Using custom sienna color.
+						</Callout>
+						<Callout color="aqua" size="medium" title="Aqua Color">
+							Using custom aqua color.
+						</Callout>
+					</div>
+
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Dismissible</h3>
+						<DismissibleExample type="info" title="Dismissible Info">
+							Click the X to dismiss this callout.
+						</DismissibleExample>
+						<DismissibleExample type="success" title="Dismissible Success">
+							This success message can be dismissed.
+						</DismissibleExample>
+					</div>
+
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Expandable</h3>
+						<Callout type="info" size="medium" title="Expandable Callout" action="expandable">
+							Click the chevron to toggle this content.
+						</Callout>
+						<Callout
+							type="warning"
+							size="medium"
+							showIcon
+							title="Expandable Warning"
+							action="expandable"
+						>
+							This warning can be expanded or collapsed.
+						</Callout>
+					</div>
+				</div>
+			</section>
+		</div>
+	),
+};

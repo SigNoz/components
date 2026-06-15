@@ -223,170 +223,6 @@ export const Default: Story = {
 	render: (args) => <Tabs {...args} items={args.items} />,
 };
 
-export const AllVariants: Story = {
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Primary Variant
-				</h2>
-				<Tabs
-					items={playgroundItems.filter((i) => i.variant !== 'secondary')}
-					variant="primary"
-					defaultValue="overview"
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Secondary Variant
-				</h2>
-				<Tabs
-					items={playgroundItems
-						.filter((i) => i.variant === 'secondary')
-						.map((i) => ({ ...i, variant: undefined }))}
-					variant="secondary"
-					defaultValue="all-endpoints"
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>With Icons</h2>
-				<Tabs
-					items={[
-						{
-							key: 'apps',
-							label: 'Applications',
-							children: 'Applications list',
-							prefixIcon: <LayoutGrid size={16} />,
-							suffixIcon: <List size={16} />,
-						},
-						{
-							key: 'modules',
-							label: 'Modules',
-							children: 'Modules content',
-							prefixIcon: <Component size={16} />,
-						},
-					]}
-					variant="primary"
-					defaultValue="apps"
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Dashboard Navigation
-				</h2>
-				<Tabs
-					items={[
-						{
-							key: 'overview',
-							label: 'Overview',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Overview</h1>
-								</div>
-							),
-						},
-						{
-							key: 'integrations',
-							label: 'Integrations',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Integrations</h1>
-								</div>
-							),
-						},
-						{
-							key: 'activity',
-							label: 'Activity',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Activity</h1>
-								</div>
-							),
-						},
-						{
-							key: 'domains',
-							label: 'Domains',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Domains</h1>
-								</div>
-							),
-						},
-						{
-							key: 'usage',
-							label: 'Usage',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Usage</h1>
-								</div>
-							),
-						},
-						{
-							key: 'monitoring',
-							label: 'Monitoring',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Monitoring</h1>
-								</div>
-							),
-						},
-						{
-							key: 'observability',
-							label: 'Observability',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Observability</h1>
-								</div>
-							),
-						},
-						{
-							key: 'storage',
-							label: 'Storage',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Storage</h1>
-								</div>
-							),
-						},
-						{
-							key: 'ai',
-							label: 'AI',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>AI</h1>
-								</div>
-							),
-						},
-						{
-							key: 'support',
-							label: 'Support',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Support</h1>
-								</div>
-							),
-						},
-						{
-							key: 'settings',
-							label: 'Settings',
-							children: (
-								<div style={{ paddingTop: '1rem' }}>
-									<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Settings</h1>
-								</div>
-							),
-						},
-					]}
-					variant="primary"
-					defaultValue="observability"
-				/>
-			</div>
-		</div>
-	),
-};
-
 const primaryItems = [
 	{
 		key: 'overview',
@@ -426,141 +262,6 @@ const secondaryItems = [
 	},
 ];
 
-export const Primary: Story = {
-	args: {
-		items: primaryItems,
-		variant: 'primary',
-		defaultValue: 'overview',
-	},
-};
-
-export const Secondary: Story = {
-	args: {
-		items: secondaryItems,
-		variant: 'secondary',
-		defaultValue: 'all',
-	},
-};
-
-export const TabBarExtraContent: Story = {
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1.5rem' }}>
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Primary — right-only (Add view button)
-				</h2>
-				<Tabs
-					items={primaryItems}
-					variant="primary"
-					defaultValue="overview"
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Plus size={16} />}
-						>
-							Add view
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Primary — both left and right content
-				</h2>
-				<Tabs
-					items={primaryItems}
-					variant="primary"
-					defaultValue="overview"
-					tabBarLeftContent={
-						<span style={{ fontSize: '0.75rem', opacity: 0.5 }}>Service: frontend</span>
-					}
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Settings size={16} />}
-						>
-							Configure
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Secondary — right-only
-				</h2>
-				<Tabs
-					items={secondaryItems}
-					variant="secondary"
-					defaultValue="all"
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Plus size={16} />}
-						>
-							New endpoint
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Secondary — left and right content
-				</h2>
-				<Tabs
-					items={secondaryItems}
-					variant="secondary"
-					defaultValue="all"
-					tabBarLeftContent={<span style={{ fontSize: '0.75rem', opacity: 0.5 }}>v2 API</span>}
-					tabBarRightContent={
-						<Button
-							variant={ButtonVariant.Outlined}
-							size={ButtonSize.SM}
-							color={ButtonColor.Secondary}
-							prefix={<Plus size={16} />}
-						>
-							New endpoint
-						</Button>
-					}
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Primitive TabsList — rightContent prop directly
-				</h2>
-				<TabsRoot defaultValue="tab1">
-					<TabsList
-						variant="primary"
-						rightContent={
-							<Button
-								variant={ButtonVariant.Outlined}
-								size={ButtonSize.SM}
-								color={ButtonColor.Secondary}
-								prefix={<Plus size={16} />}
-							>
-								Add
-							</Button>
-						}
-					>
-						<TabsTrigger value="tab1">Tab One</TabsTrigger>
-						<TabsTrigger value="tab2">Tab Two</TabsTrigger>
-						<TabsTrigger value="tab3">Tab Three</TabsTrigger>
-					</TabsList>
-				</TabsRoot>
-			</div>
-		</div>
-	),
-};
-
 const alignmentItems: TabItemProps[] = [
 	{ key: 'overview', label: 'Overview', children: 'Overview content' },
 	{ key: 'analytics', label: 'Analytics', children: 'Analytics content' },
@@ -595,188 +296,546 @@ const extraConfigs: Record<
 	},
 };
 
-export const Alignment: Story = {
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+	},
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', padding: '1.5rem' }}>
-			{(['primary', 'secondary'] as TabVariants[]).map((variant) => (
-				<section key={variant}>
-					<h1
-						style={{
-							marginBottom: '1.5rem',
-							borderBottom: '1px solid var(--border)',
-							paddingBottom: '0.5rem',
-							fontSize: '1.25rem',
-							fontWeight: 700,
-							textTransform: 'capitalize',
-						}}
-					>
-						{variant} variant
-					</h1>
-					{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
-						<div key={alignment} style={{ marginBottom: '2.5rem' }}>
-							<h2
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Variants
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Primary Variant
+						</h2>
+						<Tabs
+							items={playgroundItems.filter((i) => i.variant !== 'secondary')}
+							variant="primary"
+							defaultValue="overview"
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Secondary Variant
+						</h2>
+						<Tabs
+							items={playgroundItems
+								.filter((i) => i.variant === 'secondary')
+								.map((i) => ({ ...i, variant: undefined }))}
+							variant="secondary"
+							defaultValue="all-endpoints"
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							With Icons
+						</h2>
+						<Tabs
+							items={[
+								{
+									key: 'apps',
+									label: 'Applications',
+									children: 'Applications list',
+									prefixIcon: <LayoutGrid size={16} />,
+									suffixIcon: <List size={16} />,
+								},
+								{
+									key: 'modules',
+									label: 'Modules',
+									children: 'Modules content',
+									prefixIcon: <Component size={16} />,
+								},
+							]}
+							variant="primary"
+							defaultValue="apps"
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Dashboard Navigation
+						</h2>
+						<Tabs
+							items={[
+								{
+									key: 'overview',
+									label: 'Overview',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Overview</h1>
+										</div>
+									),
+								},
+								{
+									key: 'integrations',
+									label: 'Integrations',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Integrations</h1>
+										</div>
+									),
+								},
+								{
+									key: 'activity',
+									label: 'Activity',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Activity</h1>
+										</div>
+									),
+								},
+								{
+									key: 'domains',
+									label: 'Domains',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Domains</h1>
+										</div>
+									),
+								},
+								{
+									key: 'usage',
+									label: 'Usage',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Usage</h1>
+										</div>
+									),
+								},
+								{
+									key: 'monitoring',
+									label: 'Monitoring',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Monitoring</h1>
+										</div>
+									),
+								},
+								{
+									key: 'observability',
+									label: 'Observability',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Observability</h1>
+										</div>
+									),
+								},
+								{
+									key: 'storage',
+									label: 'Storage',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Storage</h1>
+										</div>
+									),
+								},
+								{
+									key: 'ai',
+									label: 'AI',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>AI</h1>
+										</div>
+									),
+								},
+								{
+									key: 'support',
+									label: 'Support',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Support</h1>
+										</div>
+									),
+								},
+								{
+									key: 'settings',
+									label: 'Settings',
+									children: (
+										<div style={{ paddingTop: '1rem' }}>
+											<h1 style={{ fontSize: '1.5rem', fontWeight: 600 }}>Settings</h1>
+										</div>
+									),
+								},
+							]}
+							variant="primary"
+							defaultValue="observability"
+						/>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Primary
+				</h3>
+				<Tabs items={primaryItems} variant="primary" defaultValue="overview" />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Secondary
+				</h3>
+				<Tabs items={secondaryItems} variant="secondary" defaultValue="all" />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Tab Bar Extra Content
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1.5rem' }}>
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Primary — right-only (Add view button)
+						</h2>
+						<Tabs
+							items={primaryItems}
+							variant="primary"
+							defaultValue="overview"
+							tabBarRightContent={
+								<Button
+									variant={ButtonVariant.Outlined}
+									size={ButtonSize.SM}
+									color={ButtonColor.Secondary}
+									prefix={<Plus size={16} />}
+								>
+									Add view
+								</Button>
+							}
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Primary — both left and right content
+						</h2>
+						<Tabs
+							items={primaryItems}
+							variant="primary"
+							defaultValue="overview"
+							tabBarLeftContent={
+								<span style={{ fontSize: '0.75rem', opacity: 0.5 }}>Service: frontend</span>
+							}
+							tabBarRightContent={
+								<Button
+									variant={ButtonVariant.Outlined}
+									size={ButtonSize.SM}
+									color={ButtonColor.Secondary}
+									prefix={<Settings size={16} />}
+								>
+									Configure
+								</Button>
+							}
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Secondary — right-only
+						</h2>
+						<Tabs
+							items={secondaryItems}
+							variant="secondary"
+							defaultValue="all"
+							tabBarRightContent={
+								<Button
+									variant={ButtonVariant.Outlined}
+									size={ButtonSize.SM}
+									color={ButtonColor.Secondary}
+									prefix={<Plus size={16} />}
+								>
+									New endpoint
+								</Button>
+							}
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Secondary — left and right content
+						</h2>
+						<Tabs
+							items={secondaryItems}
+							variant="secondary"
+							defaultValue="all"
+							tabBarLeftContent={<span style={{ fontSize: '0.75rem', opacity: 0.5 }}>v2 API</span>}
+							tabBarRightContent={
+								<Button
+									variant={ButtonVariant.Outlined}
+									size={ButtonSize.SM}
+									color={ButtonColor.Secondary}
+									prefix={<Plus size={16} />}
+								>
+									New endpoint
+								</Button>
+							}
+						/>
+					</div>
+
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Primitive TabsList — rightContent prop directly
+						</h2>
+						<TabsRoot defaultValue="tab1">
+							<TabsList
+								variant="primary"
+								rightContent={
+									<Button
+										variant={ButtonVariant.Outlined}
+										size={ButtonSize.SM}
+										color={ButtonColor.Secondary}
+										prefix={<Plus size={16} />}
+									>
+										Add
+									</Button>
+								}
+							>
+								<TabsTrigger value="tab1">Tab One</TabsTrigger>
+								<TabsTrigger value="tab2">Tab Two</TabsTrigger>
+								<TabsTrigger value="tab3">Tab Three</TabsTrigger>
+							</TabsList>
+						</TabsRoot>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Alignment
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', padding: '1.5rem' }}>
+					{(['primary', 'secondary'] as TabVariants[]).map((variant) => (
+						<section key={variant}>
+							<h1
 								style={{
-									marginBottom: '1rem',
-									fontSize: '1rem',
-									fontWeight: 600,
+									marginBottom: '1.5rem',
+									borderBottom: '1px solid var(--border)',
+									paddingBottom: '0.5rem',
+									fontSize: '1.25rem',
+									fontWeight: 700,
 									textTransform: 'capitalize',
 								}}
 							>
-								{alignment} alignment
-							</h2>
-							<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-								{(Object.keys(extraConfigs) as ExtraVariant[]).map((extraVariant) => {
-									const { label, tabBarLeftContent, tabBarRightContent } =
-										extraConfigs[extraVariant];
-									return (
-										<div key={extraVariant}>
-											<p
-												style={{
-													marginBottom: '0.5rem',
-													fontFamily: 'monospace',
-													fontSize: '0.75rem',
-													opacity: 0.5,
-												}}
-											>
-												{label}
-											</p>
-											<Tabs
-												items={alignmentItems}
-												variant={variant}
-												alignment={alignment}
-												defaultValue="overview"
-												tabBarLeftContent={tabBarLeftContent}
-												tabBarRightContent={tabBarRightContent}
-											/>
-										</div>
-									);
-								})}
-							</div>
-						</div>
+								{variant} variant
+							</h1>
+							{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
+								<div key={alignment} style={{ marginBottom: '2.5rem' }}>
+									<h2
+										style={{
+											marginBottom: '1rem',
+											fontSize: '1rem',
+											fontWeight: 600,
+											textTransform: 'capitalize',
+										}}
+									>
+										{alignment} alignment
+									</h2>
+									<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+										{(Object.keys(extraConfigs) as ExtraVariant[]).map((extraVariant) => {
+											const { label, tabBarLeftContent, tabBarRightContent } =
+												extraConfigs[extraVariant];
+											return (
+												<div key={extraVariant}>
+													<p
+														style={{
+															marginBottom: '0.5rem',
+															fontFamily: 'monospace',
+															fontSize: '0.75rem',
+															opacity: 0.5,
+														}}
+													>
+														{label}
+													</p>
+													<Tabs
+														items={alignmentItems}
+														variant={variant}
+														alignment={alignment}
+														defaultValue="overview"
+														tabBarLeftContent={tabBarLeftContent}
+														tabBarRightContent={tabBarRightContent}
+													/>
+												</div>
+											);
+										})}
+									</div>
+								</div>
+							))}
+						</section>
 					))}
-				</section>
-			))}
-		</div>
-	),
-};
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled States
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Disabled Tabs with Custom Reasons
+						</h2>
+						<Tabs
+							items={[
+								{
+									key: 'active',
+									label: 'Active Tab',
+									children: 'This tab is active and can be clicked',
+								},
+								{
+									key: 'locked',
+									label: 'Locked',
+									children: 'Locked content',
+									disabled: true,
+									disabledReason: 'This feature is locked',
+									prefixIcon: <Lock size={16} />,
+								},
+								{
+									key: 'maintenance',
+									label: 'Under Maintenance',
+									children: 'Maintenance content',
+									disabled: true,
+									disabledReason: 'This section is under maintenance',
+									prefixIcon: <Clock size={16} />,
+								},
+								{
+									key: 'permissions',
+									label: 'Insufficient Permissions',
+									children: 'Permissions content',
+									disabled: true,
+									disabledReason: 'You do not have permission to access this area',
+									prefixIcon: <ShieldAlert size={16} />,
+								},
+								{
+									key: 'default',
+									label: 'Default Disabled',
+									children: 'Default disabled content',
+									disabled: true,
+									// No disabledReason provided, will show default message
+								},
+							]}
+							variant="primary"
+							defaultValue="active"
+						/>
+					</div>
 
-export const DisabledStates: Story = {
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Disabled Tabs with Custom Reasons
-				</h2>
+					<div>
+						<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
+							Secondary Variant Disabled States
+						</h2>
+						<Tabs
+							items={[
+								{
+									key: 'active',
+									label: 'Active Tab',
+									children: 'This tab is active and can be clicked',
+								},
+								{
+									key: 'premium',
+									label: 'Premium Features',
+									children: 'Premium content',
+									disabled: true,
+									disabledReason: 'Available only in premium tier',
+								},
+								{
+									key: 'beta',
+									label: 'Beta Features',
+									children: 'Beta content',
+									disabled: true,
+									disabledReason: 'Coming soon - currently in beta testing',
+								},
+							]}
+							variant="secondary"
+							defaultValue="active"
+						/>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Icon Alignment
+				</h3>
 				<Tabs
-					items={[
-						{
-							key: 'active',
-							label: 'Active Tab',
-							children: 'This tab is active and can be clicked',
-						},
-						{
-							key: 'locked',
-							label: 'Locked',
-							children: 'Locked content',
-							disabled: true,
-							disabledReason: 'This feature is locked',
-							prefixIcon: <Lock size={16} />,
-						},
-						{
-							key: 'maintenance',
-							label: 'Under Maintenance',
-							children: 'Maintenance content',
-							disabled: true,
-							disabledReason: 'This section is under maintenance',
-							prefixIcon: <Clock size={16} />,
-						},
-						{
-							key: 'permissions',
-							label: 'Insufficient Permissions',
-							children: 'Permissions content',
-							disabled: true,
-							disabledReason: 'You do not have permission to access this area',
-							prefixIcon: <ShieldAlert size={16} />,
-						},
-						{
-							key: 'default',
-							label: 'Default Disabled',
-							children: 'Default disabled content',
-							disabled: true,
-							// No disabledReason provided, will show default message
-						},
-					]}
 					variant="primary"
-					defaultValue="active"
-				/>
-			</div>
-
-			<div>
-				<h2 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: 600 }}>
-					Secondary Variant Disabled States
-				</h2>
-				<Tabs
+					defaultValue="prefix"
 					items={[
 						{
-							key: 'active',
-							label: 'Active Tab',
-							children: 'This tab is active and can be clicked',
+							key: 'prefix',
+							label: 'Prefix Icon',
+							children: 'Tab with a leading icon',
+							prefixIcon: <Settings2 size={16} />,
 						},
 						{
-							key: 'premium',
-							label: 'Premium Features',
-							children: 'Premium content',
-							disabled: true,
-							disabledReason: 'Available only in premium tier',
+							key: 'suffix',
+							label: 'Suffix Icon',
+							children: 'Tab with a trailing icon',
+							suffixIcon: <History size={16} />,
 						},
 						{
-							key: 'beta',
-							label: 'Beta Features',
-							children: 'Beta content',
-							disabled: true,
-							disabledReason: 'Coming soon - currently in beta testing',
+							key: 'both',
+							label: 'Both Icons',
+							children: 'Tab with leading and trailing icons',
+							prefixIcon: <LayoutGrid size={16} />,
+							suffixIcon: <Component size={16} />,
 						},
 					]}
-					variant="secondary"
-					defaultValue="active"
 				/>
-			</div>
+			</section>
 		</div>
 	),
-};
-
-/**
- * Visual-regression anchor for prefix/suffix icon alignment.
- *
- * Icons passed via `prefixIcon` / `suffixIcon` are wrapped in a `.tabs__icon`
- * element. This story isolates that wrapper so Chromatic captures the icon
- * staying vertically centered against the label (rather than sitting on the
- * text baseline). Includes prefix-only, suffix-only, and both-icon triggers.
- */
-export const IconAlignment: Story = {
-	args: {
-		variant: 'primary',
-		defaultValue: 'prefix',
-		items: [
-			{
-				key: 'prefix',
-				label: 'Prefix Icon',
-				children: 'Tab with a leading icon',
-				prefixIcon: <Settings2 size={16} />,
-			},
-			{
-				key: 'suffix',
-				label: 'Suffix Icon',
-				children: 'Tab with a trailing icon',
-				suffixIcon: <History size={16} />,
-			},
-			{
-				key: 'both',
-				label: 'Both Icons',
-				children: 'Tab with leading and trailing icons',
-				prefixIcon: <LayoutGrid size={16} />,
-				suffixIcon: <Component size={16} />,
-			},
-		],
-	},
 };

@@ -87,8 +87,22 @@ export const Default: Story = {
 	},
 };
 
-export const Variations: Story = {
-	render: () => (
+function VariationsPreview() {
+	const [infiniteOpen, setInfiniteOpen] = useState(false);
+	const [delayedValue, setDelayedValue] = useState('');
+	const [delayedOpen, setDelayedOpen] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [items, setItems] = useState<typeof frameworks>([]);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setItems(frameworks);
+			setIsLoading(false);
+		}, 5000);
+		return () => clearTimeout(timer);
+	}, []);
+
+	return (
 		<div
 			style={{
 				padding: '2rem',
@@ -103,84 +117,85 @@ export const Variations: Story = {
 				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
 					Infinite Loading
 				</h3>
-				<InfiniteLoadingExample />
+				<Combobox open={infiniteOpen} onOpenChange={setInfiniteOpen}>
+					<ComboboxTrigger placeholder="Select a framework..." value="" />
+					{infiniteOpen && (
+						<ComboboxContent>
+							<ComboboxCommand>
+								<ComboboxInput placeholder="Search frameworks..." />
+								<ComboboxList>
+									<ComboboxLoading>Fetching options...</ComboboxLoading>
+								</ComboboxList>
+							</ComboboxCommand>
+						</ComboboxContent>
+					)}
+				</Combobox>
 			</div>
 			<div>
 				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
 					Loading with Delay (5s)
 				</h3>
-				<DelayedLoadingExample />
+				<Combobox open={delayedOpen} onOpenChange={setDelayedOpen}>
+					<ComboboxTrigger
+						placeholder="Select a framework..."
+						value={frameworks.find((f) => f.value === delayedValue)?.label || ''}
+					/>
+					{delayedOpen && (
+						<ComboboxContent>
+							<ComboboxCommand>
+								<ComboboxInput placeholder="Search frameworks..." />
+								<ComboboxList>
+									{isLoading ? (
+										<ComboboxLoading>Loading options...</ComboboxLoading>
+									) : (
+										items.map((f) => (
+											<ComboboxItem
+												key={f.value}
+												value={f.value}
+												onSelect={() => {
+													setDelayedValue(f.value);
+													setDelayedOpen(false);
+												}}
+												isSelected={delayedValue === f.value}
+											>
+												{f.label}
+											</ComboboxItem>
+										))
+									)}
+								</ComboboxList>
+							</ComboboxCommand>
+						</ComboboxContent>
+					)}
+				</Combobox>
 			</div>
+		</div>
+	);
+}
+
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Variations
+				</h3>
+				<VariationsPreview />
+			</section>
 		</div>
 	),
 };
-
-function InfiniteLoadingExample() {
-	const [open, setOpen] = useState(false);
-
-	return (
-		<Combobox open={open} onOpenChange={setOpen}>
-			<ComboboxTrigger placeholder="Select a framework..." value="" />
-			{open && (
-				<ComboboxContent>
-					<ComboboxCommand>
-						<ComboboxInput placeholder="Search frameworks..." />
-						<ComboboxList>
-							<ComboboxLoading>Fetching options...</ComboboxLoading>
-						</ComboboxList>
-					</ComboboxCommand>
-				</ComboboxContent>
-			)}
-		</Combobox>
-	);
-}
-
-function DelayedLoadingExample() {
-	const [value, setValue] = useState('');
-	const [open, setOpen] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
-	const [items, setItems] = useState<typeof frameworks>([]);
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setItems(frameworks);
-			setIsLoading(false);
-		}, 5000);
-		return () => clearTimeout(timer);
-	}, []);
-
-	return (
-		<Combobox open={open} onOpenChange={setOpen}>
-			<ComboboxTrigger
-				placeholder="Select a framework..."
-				value={frameworks.find((f) => f.value === value)?.label || ''}
-			/>
-			{open && (
-				<ComboboxContent>
-					<ComboboxCommand>
-						<ComboboxInput placeholder="Search frameworks..." />
-						<ComboboxList>
-							{isLoading ? (
-								<ComboboxLoading>Loading options...</ComboboxLoading>
-							) : (
-								items.map((f) => (
-									<ComboboxItem
-										key={f.value}
-										value={f.value}
-										onSelect={() => {
-											setValue(f.value);
-											setOpen(false);
-										}}
-										isSelected={value === f.value}
-									>
-										{f.label}
-									</ComboboxItem>
-								))
-							)}
-						</ComboboxList>
-					</ComboboxCommand>
-				</ComboboxContent>
-			)}
-		</Combobox>
-	);
-}

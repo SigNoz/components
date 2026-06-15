@@ -1,6 +1,6 @@
 import { Slider, TooltipProvider } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import React from 'react';
+import { useState } from 'react';
 
 const meta: Meta<typeof Slider> = {
 	title: 'Primitive Components/Slider',
@@ -150,6 +150,68 @@ export default meta;
 
 type Story = StoryObj<typeof Slider>;
 
+const sliderWrapperStyle = {
+	width: '300px',
+	marginTop: '1.5rem',
+	marginBottom: '1.5rem',
+} as const;
+
+function ControlledSliderExample() {
+	const [value, setValue] = useState(30);
+
+	return (
+		<div
+			style={{
+				...sliderWrapperStyle,
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1rem',
+			}}
+		>
+			<Slider value={value} onChange={(v) => setValue(v as number)} max={100} />
+			<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Value: {value}</p>
+		</div>
+	);
+}
+
+function ControlledRangeSliderExample() {
+	const [value, setValue] = useState([20, 80]);
+
+	return (
+		<div
+			style={{
+				...sliderWrapperStyle,
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1rem',
+			}}
+		>
+			<Slider value={value} onChange={(v) => setValue(v as number[])} max={100} range />
+			<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+				Range: {value[0]} - {value[1]}
+			</p>
+		</div>
+	);
+}
+
+function OnAfterChangeSliderExample() {
+	const [committed, setCommitted] = useState(50);
+
+	return (
+		<div
+			style={{
+				...sliderWrapperStyle,
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1rem',
+			}}
+		>
+			<Slider defaultValue={50} max={100} onAfterChange={(v) => setCommitted(v as number)} />
+			<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Committed on release: {committed}</p>
+		</div>
+	);
+}
+
 export const Default: Story = {
 	args: {
 		defaultValue: 50,
@@ -157,221 +219,230 @@ export const Default: Story = {
 		step: 1,
 	},
 	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
+		<div style={sliderWrapperStyle}>
 			<Slider {...args} />
 		</div>
 	),
 };
 
-export const Range: Story = {
-	args: {
-		defaultValue: [25, 75],
-		max: 100,
-		step: 1,
-		range: true,
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const WithMarks: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-		marks: {
-			0: `1 GB`,
-			25: `10 GB`,
-			50: `100 GB`,
-			75: `1,000 GB`,
-			100: {
-				style: { color: '#f50' },
-				label: <strong>10,000 GB</strong>,
-			},
-		},
-	},
-	render: (args) => (
+	render: () => (
 		<div
 			style={{
-				width: '300px',
-				marginTop: '1.5rem',
-				marginBottom: '1.5rem',
-				paddingBottom: '1.5rem',
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
 			}}
 		>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const WithTooltip: Story = {
-	args: {
-		defaultValue: 25,
-		max: 100,
-		step: 1,
-		tooltip: { formatter: (val) => `${val}%` },
-	},
-	decorators: [
-		(Story) => (
-			<TooltipProvider>
-				<Story />
-			</TooltipProvider>
-		),
-	],
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const CustomStyles: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-		styles: {
-			track: { backgroundColor: '#ffe4e6' },
-			range: { backgroundColor: '#e11d48' },
-			thumb: { borderColor: '#e11d48' },
-		},
-	},
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const CustomClassNames: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-		classNames: {
-			track: 'bg-slate-200',
-			range: 'bg-emerald-500',
-			thumb: 'border-emerald-500',
-		},
-	},
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const Controlled: Story = {
-	render: () => {
-		const [value, setValue] = React.useState(30);
-		return (
-			<div
-				style={{
-					width: '300px',
-					marginTop: '1.5rem',
-					marginBottom: '1.5rem',
-					display: 'flex',
-					flexDirection: 'column',
-					gap: '1rem',
-				}}
-			>
-				<Slider value={value} onChange={(v) => setValue(v as number)} max={100} />
-				<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Value: {value}</p>
-			</div>
-		);
-	},
-};
-
-export const ControlledRange: Story = {
-	render: () => {
-		const [value, setValue] = React.useState([20, 80]);
-		return (
-			<div
-				style={{
-					width: '300px',
-					marginTop: '1.5rem',
-					marginBottom: '1.5rem',
-					display: 'flex',
-					flexDirection: 'column',
-					gap: '1rem',
-				}}
-			>
-				<Slider value={value} onChange={(v) => setValue(v as number[])} max={100} range />
-				<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-					Range: {value[0]} - {value[1]}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const WithOnAfterChange: Story = {
-	render: () => {
-		const [committed, setCommitted] = React.useState(50);
-		return (
-			<div
-				style={{
-					width: '300px',
-					marginTop: '1.5rem',
-					marginBottom: '1.5rem',
-					display: 'flex',
-					flexDirection: 'column',
-					gap: '1rem',
-				}}
-			>
-				<Slider defaultValue={50} max={100} onAfterChange={(v) => setCommitted(v as number)} />
-				<p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Committed on release: {committed}</p>
-			</div>
-		);
-	},
-};
-
-export const MinMax: Story = {
-	args: {
-		defaultValue: 50,
-		min: 20,
-		max: 80,
-		step: 1,
-	},
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<p style={{ fontSize: '0.875rem', marginBottom: '0.5rem', color: '#6b7280' }}>
-				min=20, max=80
-			</p>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const Disabled: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		disabled: true,
-	},
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const WithTestId: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		testId: 'my-slider',
-		id: 'slider-id',
-	},
-	render: (args) => (
-		<div style={{ width: '300px', marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-			<Slider {...args} />
-			<p style={{ fontSize: '0.875rem', marginTop: '0.5rem', color: '#6b7280' }}>
-				testId="my-slider", id="slider-id"
-			</p>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Range
+				</h3>
+				<div style={sliderWrapperStyle}>
+					<Slider defaultValue={[25, 75]} max={100} step={1} range />
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Marks
+				</h3>
+				<div style={{ ...sliderWrapperStyle, paddingBottom: '1.5rem' }}>
+					<Slider
+						defaultValue={50}
+						max={100}
+						step={1}
+						marks={{
+							0: `1 GB`,
+							25: `10 GB`,
+							50: `100 GB`,
+							75: `1,000 GB`,
+							100: {
+								style: { color: '#f50' },
+								label: <strong>10,000 GB</strong>,
+							},
+						}}
+					/>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Tooltip
+				</h3>
+				<TooltipProvider>
+					<div style={sliderWrapperStyle}>
+						<Slider
+							defaultValue={25}
+							max={100}
+							step={1}
+							tooltip={{ formatter: (val) => `${val}%` }}
+						/>
+					</div>
+				</TooltipProvider>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Custom Styles
+				</h3>
+				<div style={sliderWrapperStyle}>
+					<Slider
+						defaultValue={50}
+						max={100}
+						step={1}
+						styles={{
+							track: { backgroundColor: '#ffe4e6' },
+							range: { backgroundColor: '#e11d48' },
+							thumb: { borderColor: '#e11d48' },
+						}}
+					/>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Custom Class Names
+				</h3>
+				<div style={sliderWrapperStyle}>
+					<Slider
+						defaultValue={50}
+						max={100}
+						step={1}
+						classNames={{
+							track: 'bg-slate-200',
+							range: 'bg-emerald-500',
+							thumb: 'border-emerald-500',
+						}}
+					/>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Controlled
+				</h3>
+				<ControlledSliderExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Controlled Range
+				</h3>
+				<ControlledRangeSliderExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With On After Change
+				</h3>
+				<OnAfterChangeSliderExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Min Max
+				</h3>
+				<div style={sliderWrapperStyle}>
+					<p style={{ fontSize: '0.875rem', marginBottom: '0.5rem', color: '#6b7280' }}>
+						min=20, max=80
+					</p>
+					<Slider defaultValue={50} min={20} max={80} step={1} />
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<div style={sliderWrapperStyle}>
+					<Slider defaultValue={50} max={100} disabled />
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Test Id
+				</h3>
+				<div style={sliderWrapperStyle}>
+					<Slider defaultValue={50} max={100} testId="my-slider" id="slider-id" />
+					<p style={{ fontSize: '0.875rem', marginTop: '0.5rem', color: '#6b7280' }}>
+						testId="my-slider", id="slider-id"
+					</p>
+				</div>
+			</section>
 		</div>
 	),
 };

@@ -165,129 +165,122 @@ export const Default: Story = {
 	},
 };
 
-// ============================================================================
-// Story: Empty State - No Pinned Items
-// ============================================================================
-/**
- * **Empty State: No Pinned Items**
- *
- * When there are no pinned items, the component displays a helpful empty state
- * message: "You have not added any shortcuts yet." This is important for user
- * guidance when the component first loads or after clearing all pins.
- */
-export const EmptyShortcuts: Story = {
-	args: {
-		items: [
-			createPinListItem('1', 'Logs', <FileText />, { isPinned: false }),
-			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
-			createPinListItem('3', 'Traces', <GitBranch />, { isPinned: false }),
-			createPinListItem('4', 'Services', <Server />, { isPinned: false }),
-			createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: false }),
-		],
-		shortcutsLabel: 'SHORTCUTS',
-		moreLabel: 'MORE',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	name: 'Empty Shortcuts',
-};
-
-// ============================================================================
-// Story: All Pinned
-// ============================================================================
-/**
- * **All Items Pinned**
- *
- * When all items are pinned, the SHORTCUTS section is populated and the MORE
- * section is hidden (since there are no unpinned items). This demonstrates
- * the component's ability to handle the scenario where users have pinned
- * everything they need.
- */
-export const AllPinned: Story = {
-	args: {
-		items: [
-			createPinListItem('1', 'Logs', <FileText />, {
-				isPinned: true,
-				active: true,
-			}),
-			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: true }),
-			createPinListItem('3', 'Traces', <GitBranch />, { isPinned: true }),
-			createPinListItem('4', 'Services', <Server />, { isPinned: true }),
-			createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: true }),
-		],
-		shortcutsLabel: 'SHORTCUTS',
-		moreLabel: 'MORE',
-	},
-	name: 'All Pinned',
-};
-
-// ============================================================================
-// Story: Custom Labels
-// ============================================================================
-/**
- * **Custom Section Labels**
- *
- * Demonstrates the ability to customize the section labels. This is useful for
- * internationalization (i18n) or contextual naming (e.g., "FAVORITES" instead
- * of "SHORTCUTS").
- */
-export const CustomLabels: Story = {
-	args: {
-		items: defaultItems,
-		shortcutsLabel: 'FAVORITES',
-		moreLabel: 'OTHER ITEMS',
-	},
-	name: 'Custom Labels',
-};
-
-// ============================================================================
-// Story: Single Item
-// ============================================================================
-/**
- * **Single Item**
- *
- * Edge case: Component with just one item. Tests minimal state rendering
- * and ensures the component handles the single-item scenario correctly.
- */
-export const SingleItem: Story = {
-	args: {
-		items: [
-			createPinListItem('1', 'Logs', <FileText />, {
-				isPinned: true,
-				active: true,
-			}),
-		],
-		shortcutsLabel: 'SHORTCUTS',
-		moreLabel: 'MORE',
-	},
-	name: 'Single Item',
-};
-
-// ============================================================================
-// Story: With Custom ClassNames
-// ============================================================================
-/**
- * **Custom ClassNames**
- *
- * Demonstrates the ability to pass custom class names to specific parts of the
- * component. This allows for fine-grained styling of the container, items,
- * and labels.
- */
-export const WithCustomClassNames: Story = {
-	args: {
-		items: [
-			createPinListItem('1', 'Logs', <FileText />, {
-				isPinned: true,
-				active: true,
-			}),
-			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
-		],
-		shortcutsLabel: 'SHORTCUTS',
-		moreLabel: 'MORE',
-		style: {
-			backgroundColor: 'var(--muted)',
-			padding: '1rem',
-			borderRadius: '0.5rem',
-			border: '1px solid var(--border)',
-		},
-	},
-	name: 'With Custom ClassNames',
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Empty Shortcuts
+				</h3>
+				<PinList
+					items={[
+						createPinListItem('1', 'Logs', <FileText />, { isPinned: false }),
+						createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
+						createPinListItem('3', 'Traces', <GitBranch />, { isPinned: false }),
+						createPinListItem('4', 'Services', <Server />, { isPinned: false }),
+						createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: false }),
+					]}
+					shortcutsLabel="SHORTCUTS"
+					moreLabel="MORE"
+				/>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Pinned
+				</h3>
+				<PinList
+					items={[
+						createPinListItem('1', 'Logs', <FileText />, { isPinned: true, active: true }),
+						createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: true }),
+						createPinListItem('3', 'Traces', <GitBranch />, { isPinned: true }),
+						createPinListItem('4', 'Services', <Server />, { isPinned: true }),
+						createPinListItem('5', 'Infrastructure', <Hexagon />, { isPinned: true }),
+					]}
+					shortcutsLabel="SHORTCUTS"
+					moreLabel="MORE"
+				/>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Custom Labels
+				</h3>
+				<PinList items={defaultItems} shortcutsLabel="FAVORITES" moreLabel="OTHER ITEMS" />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Single Item
+				</h3>
+				<PinList
+					items={[createPinListItem('1', 'Logs', <FileText />, { isPinned: true, active: true })]}
+					shortcutsLabel="SHORTCUTS"
+					moreLabel="MORE"
+				/>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Custom Class Names
+				</h3>
+				<PinList
+					items={[
+						createPinListItem('1', 'Logs', <FileText />, { isPinned: true, active: true }),
+						createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
+					]}
+					shortcutsLabel="SHORTCUTS"
+					moreLabel="MORE"
+					style={{
+						backgroundColor: 'var(--muted)',
+						padding: '1rem',
+						borderRadius: '0.5rem',
+						border: '1px solid var(--border)',
+					}}
+				/>
+			</section>
+		</div>
+	),
 };

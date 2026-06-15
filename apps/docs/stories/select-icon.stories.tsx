@@ -67,47 +67,66 @@ export const Default: Story = {
 	},
 };
 
-export const StandaloneUsage: Story = {
-	render: () => {
-		return (
-			<div
-				style={{
-					padding: '2rem',
-					width: '100%',
-					maxWidth: '24rem',
-					display: 'flex',
-					flexDirection: 'column',
-					gap: '1.5rem',
-				}}
-			>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					SelectIcon is primarily an internal component used by SelectTrigger. These examples show
-					the icon styling when rendered standalone.
-				</p>
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Standalone Usage
+				</h3>
+				<div
+					style={{
+						width: '100%',
+						maxWidth: '24rem',
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '1.5rem',
+					}}
+				>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+						SelectIcon is primarily an internal component used by SelectTrigger. These examples show
+						the icon styling when rendered standalone.
+					</p>
 
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-						<span style={{ fontSize: '0.875rem', width: '8rem' }}>ChevronDown:</span>
-						<SelectIcon asChild>
-							<ChevronDown size={16} />
-						</SelectIcon>
-					</div>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+							<span style={{ fontSize: '0.875rem', width: '8rem' }}>ChevronDown:</span>
+							<SelectIcon asChild>
+								<ChevronDown size={16} />
+							</SelectIcon>
+						</div>
 
-					<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-						<span style={{ fontSize: '0.875rem', width: '8rem' }}>ChevronUp:</span>
-						<SelectIcon asChild>
-							<ChevronUp size={16} />
-						</SelectIcon>
-					</div>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+							<span style={{ fontSize: '0.875rem', width: '8rem' }}>ChevronUp:</span>
+							<SelectIcon asChild>
+								<ChevronUp size={16} />
+							</SelectIcon>
+						</div>
 
-					<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-						<span style={{ fontSize: '0.875rem', width: '8rem' }}>ChevronsUpDown:</span>
-						<SelectIcon asChild>
-							<ChevronsUpDown size={16} />
-						</SelectIcon>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+							<span style={{ fontSize: '0.875rem', width: '8rem' }}>ChevronsUpDown:</span>
+							<SelectIcon asChild>
+								<ChevronsUpDown size={16} />
+							</SelectIcon>
+						</div>
 					</div>
 				</div>
-			</div>
-		);
-	},
+			</section>
+		</div>
+	),
 };

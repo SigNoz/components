@@ -121,360 +121,372 @@ export const Default: Story = {
 	},
 };
 
-// Main showcase of all button styles
-export const ButtonShowcase: Story = {
+export const Preview: Story = {
 	parameters: {
-		docs: { story: { autoplay: true } },
+		chromatic: { disableSnapshot: false },
 	},
 	render: () => (
-		<div style={{ padding: '2rem', borderRadius: '0.5rem', backgroundColor: 'var(--background)' }}>
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-				{COLORS.map((color) => (
-					<div key={color} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-						<h2
-							style={{
-								fontSize: '1rem',
-								fontWeight: 600,
-								textTransform: 'capitalize',
-								color: 'var(--foreground)',
-							}}
-						>
-							{color}
-						</h2>
-						<div style={{ display: 'flex', gap: '1rem' }}>
-							{/* Filter variants based on color */}
-							{VARIANTS.filter(
-								(variant) =>
-									// Only show outlined and dashed for secondary
-									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed')
-							).map((variant) => (
-								<div
-									key={variant}
-									style={{
-										display: 'grid',
-										gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
-										gap: '1rem',
-									}}
-								>
-									<Button
-										variant={variant}
-										color={color}
-										prefix={<Star />}
-										suffix={<Star />}
-										title={`${variant} ${color}`}
-									>
-										{variant}
-									</Button>
-									<Button
-										variant={variant}
-										color={color}
-										prefix={<Star />}
-										suffix={<Star />}
-										disabled
-										title={`${variant} disabled`}
-									>
-										{variant} disabled
-									</Button>
-									<Button
-										variant={variant}
-										color={color}
-										prefix={<Star />}
-										suffix={<Star />}
-										loading
-										title={`${variant} loading`}
-									>
-										{variant} loading
-									</Button>
-									<Button
-										variant={variant}
-										color={color}
-										size="icon"
-										title={`${variant} icon only`}
-									>
-										{<Star />}
-									</Button>
-								</div>
-							))}
-						</div>
-					</div>
-				))}
-			</div>
-		</div>
-	),
-};
-
-// Size Variations
-export const Sizes: Story = {
-	parameters: {
-		controls: { disable: false },
-	},
-	args: {
-		variant: ButtonVariant.Solid,
-		color: ButtonColor.Primary,
-	},
-	argTypes: {
-		variant: {
-			control: 'select',
-			options: VARIANTS,
-		},
-		color: {
-			control: 'select',
-			options: COLORS,
-		},
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h2 style={{ fontSize: '1rem', fontWeight: 600 }}>Size Variations</h2>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-					{[ButtonSize.SM, ButtonSize.MD].map((size) => (
-						<div key={size} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, textTransform: 'capitalize' }}>
-								{size}
-							</h3>
-							<Button {...args} size={size} prefix={<ChevronLeft />} suffix={<ChevronRight />}>
-								{size} Button
-							</Button>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	),
-};
-
-// Icon Only Buttons
-export const IconButtons: Story = {
-	parameters: {
-		controls: { disable: false },
-	},
-	args: {
-		variant: ButtonVariant.Solid,
-		color: ButtonColor.Primary,
-	},
-	argTypes: {
-		variant: {
-			control: 'select',
-			options: VARIANTS,
-		},
-		color: {
-			control: 'select',
-			options: COLORS,
-		},
-	},
-	render: (args) => (
 		<div
 			style={{
 				padding: '2rem',
 				display: 'flex',
 				flexDirection: 'column',
-				gap: '2rem',
-				borderRadius: '0.5rem',
+				gap: '2.5rem',
 				backgroundColor: 'var(--background)',
 			}}
 		>
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
-					Icon Only Buttons
-				</h2>
-				<p>
-					Icon only buttons are buttons that only have an icon as their content. These buttons are
-					useful when you need to display an icon in a button without any text. You can just specify
-					the button as:
-					<pre>&lt;Button suffix=&#123;&lt;Code /&gt;&#125; size=&quot;icon&quot;/&gt;</pre>
-				</p>
-				<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-					{VARIANTS.map((variant) => (
-						<Button
-							{...args}
-							key={variant}
-							variant={variant}
-							suffix={<Code size={32} />}
-							size="icon"
-						/>
-					))}
-				</div>
-			</div>
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
-					Icon Button Sizes
-				</h2>
-				<p>
-					By default, the icon will be displayed at the size of the button. You can also specify the
-					size of the icon by passing the "size" prop to the icon.
-				</p>
-				<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-					{[ButtonSize.SM, ButtonSize.MD, ButtonSize.Icon].map((size) => (
-						<Button {...args} key={size} size={size} prefix={<Code />} />
-					))}
-				</div>
-			</div>
-		</div>
-	),
-};
-
-// Add Action Button Story
-export const ActionButtons: Story = {
-	parameters: {
-		controls: { disable: false },
-	},
-	argTypes: {
-		background: {
-			control: 'select',
-			options: [
-				ButtonBackground.Ink500,
-				ButtonBackground.Ink400,
-				ButtonBackground.Vanilla100,
-				ButtonBackground.Vanilla200,
-			],
-			description: 'The background context for the action button',
-		},
-	},
-	args: {
-		variant: ButtonVariant.Action,
-		background: ButtonBackground.Ink500,
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-			<div>
-				<h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Action Buttons</h2>
-				<p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
-					Action buttons adapt their style based on the background they`re placed on.
-				</p>
-
-				<div
-					style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '2rem' }}
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
 				>
-					{/* ink-500 background */}
-					<div
-						style={{
-							padding: '1.5rem',
-							backgroundColor: 'var(--bg-ink-500)',
-							borderRadius: '0.5rem',
-						}}
-					>
-						<p style={{ color: 'var(--text-vanilla-100)', marginBottom: '1rem' }}>
-							On ink-500 background
-						</p>
-						<Button
-							variant={ButtonVariant.Action}
-							background={ButtonBackground.Ink500}
-							prefix={<ChevronLeft />}
-							suffix={<ChevronRight />}
-						>
-							Action Button
-						</Button>
-					</div>
-
-					{/* ink-400 background */}
-					<div
-						style={{
-							padding: '1.5rem',
-							backgroundColor: 'var(--bg-ink-400)',
-							borderRadius: '0.5rem',
-						}}
-					>
-						<p style={{ color: 'var(--text-vanilla-100)', marginBottom: '1rem' }}>
-							On ink-400 background
-						</p>
-						<Button
-							variant={ButtonVariant.Action}
-							background={ButtonBackground.Ink400}
-							prefix={<ChevronLeft />}
-							suffix={<ChevronRight />}
-						>
-							Action Button
-						</Button>
-					</div>
-
-					{/* vanilla-100 background */}
-					<div
-						style={{
-							padding: '1.5rem',
-							backgroundColor: 'var(--bg-vanilla-100)',
-							borderRadius: '0.5rem',
-						}}
-					>
-						<p style={{ color: 'var(--text-slate-500)', marginBottom: '1rem' }}>
-							On vanilla-100 background
-						</p>
-						<Button
-							variant={ButtonVariant.Action}
-							background={ButtonBackground.Vanilla100}
-							prefix={<ChevronLeft />}
-							suffix={<ChevronRight />}
-						>
-							Action Button
-						</Button>
-					</div>
-
-					{/* vanilla-200 background */}
-					<div
-						style={{
-							padding: '1.5rem',
-							backgroundColor: 'var(--bg-vanilla-200)',
-							borderRadius: '0.5rem',
-						}}
-					>
-						<p style={{ color: 'var(--text-slate-500)', marginBottom: '1rem' }}>
-							On vanilla-200 background
-						</p>
-						<Button
-							variant={ButtonVariant.Action}
-							background={ButtonBackground.Vanilla200}
-							prefix={<ChevronLeft />}
-							suffix={<ChevronRight />}
-						>
-							Action Button
-						</Button>
-					</div>
-				</div>
-			</div>
-
-			<div>
-				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.75rem' }}>
-					Disabled Action Buttons
+					Button Showcase
 				</h3>
 				<div
-					style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '2rem' }}
+					style={{ padding: '2rem', borderRadius: '0.5rem', backgroundColor: 'var(--background)' }}
 				>
-					{/* Disabled examples */}
-					<div
-						style={{
-							padding: '1.5rem',
-							backgroundColor: 'var(--bg-ink-500)',
-							borderRadius: '0.5rem',
-						}}
-					>
-						<Button
-							variant={ButtonVariant.Action}
-							background={ButtonBackground.Ink500}
-							disabled
-							prefix={<ChevronLeft />}
-							suffix={<ChevronRight />}
-						>
-							Disabled Action Button
-						</Button>
-					</div>
-					<div
-						style={{
-							padding: '1.5rem',
-							backgroundColor: 'var(--bg-vanilla-100)',
-							borderRadius: '0.5rem',
-						}}
-					>
-						<Button
-							variant={ButtonVariant.Action}
-							background={ButtonBackground.Vanilla100}
-							disabled
-							prefix={<ChevronLeft />}
-							suffix={<ChevronRight />}
-						>
-							Disabled Action Button
-						</Button>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+						{COLORS.map((color) => (
+							<div key={color} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+								<h2
+									style={{
+										fontSize: '1rem',
+										fontWeight: 600,
+										textTransform: 'capitalize',
+										color: 'var(--foreground)',
+									}}
+								>
+									{color}
+								</h2>
+								<div style={{ display: 'flex', gap: '1rem' }}>
+									{/* Filter variants based on color */}
+									{VARIANTS.filter(
+										(variant) =>
+											// Only show outlined and dashed for secondary
+											color === 'secondary' || !(variant === 'outlined' || variant === 'dashed')
+									).map((variant) => (
+										<div
+											key={variant}
+											style={{
+												display: 'grid',
+												gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+												gap: '1rem',
+											}}
+										>
+											<Button
+												variant={variant}
+												color={color}
+												prefix={<Star />}
+												suffix={<Star />}
+												title={`${variant} ${color}`}
+											>
+												{variant}
+											</Button>
+											<Button
+												variant={variant}
+												color={color}
+												prefix={<Star />}
+												suffix={<Star />}
+												disabled
+												title={`${variant} disabled`}
+											>
+												{variant} disabled
+											</Button>
+											<Button
+												variant={variant}
+												color={color}
+												prefix={<Star />}
+												suffix={<Star />}
+												loading
+												title={`${variant} loading`}
+											>
+												{variant} loading
+											</Button>
+											<Button
+												variant={variant}
+												color={color}
+												size="icon"
+												title={`${variant} icon only`}
+											>
+												{<Star />}
+											</Button>
+										</div>
+									))}
+								</div>
+							</div>
+						))}
 					</div>
 				</div>
-			</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Sizes
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h2 style={{ fontSize: '1rem', fontWeight: 600 }}>Size Variations</h2>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+							{[ButtonSize.SM, ButtonSize.MD].map((size) => (
+								<div key={size} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+									<h3
+										style={{ fontSize: '0.875rem', fontWeight: 500, textTransform: 'capitalize' }}
+									>
+										{size}
+									</h3>
+									<Button
+										variant={ButtonVariant.Solid}
+										color={ButtonColor.Primary}
+										size={size}
+										prefix={<ChevronLeft />}
+										suffix={<ChevronRight />}
+									>
+										{size} Button
+									</Button>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Icon Buttons
+				</h3>
+				<div
+					style={{
+						padding: '2rem',
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '2rem',
+						borderRadius: '0.5rem',
+						backgroundColor: 'var(--background)',
+					}}
+				>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
+							Icon Only Buttons
+						</h2>
+						<p>
+							Icon only buttons are buttons that only have an icon as their content. These buttons
+							are useful when you need to display an icon in a button without any text. You can just
+							specify the button as:
+							<pre>&lt;Button suffix=&#123;&lt;Code /&gt;&#125; size=&quot;icon&quot;/&gt;</pre>
+						</p>
+						<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+							{VARIANTS.map((variant) => (
+								<Button
+									key={variant}
+									variant={variant}
+									color={ButtonColor.Primary}
+									suffix={<Code size={32} />}
+									size="icon"
+								/>
+							))}
+						</div>
+					</div>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--foreground)' }}>
+							Icon Button Sizes
+						</h2>
+						<p>
+							By default, the icon will be displayed at the size of the button. You can also specify
+							the size of the icon by passing the "size" prop to the icon.
+						</p>
+						<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+							{[ButtonSize.SM, ButtonSize.MD, ButtonSize.Icon].map((size) => (
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Primary}
+									key={size}
+									size={size}
+									prefix={<Code />}
+								/>
+							))}
+						</div>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Action Buttons
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+					<div>
+						<h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>
+							Action Buttons
+						</h2>
+						<p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
+							Action buttons adapt their style based on the background they`re placed on.
+						</p>
+
+						<div
+							style={{
+								display: 'grid',
+								gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+								gap: '2rem',
+							}}
+						>
+							{/* ink-500 background */}
+							<div
+								style={{
+									padding: '1.5rem',
+									backgroundColor: 'var(--bg-ink-500)',
+									borderRadius: '0.5rem',
+								}}
+							>
+								<p style={{ color: 'var(--text-vanilla-100)', marginBottom: '1rem' }}>
+									On ink-500 background
+								</p>
+								<Button
+									variant={ButtonVariant.Action}
+									background={ButtonBackground.Ink500}
+									prefix={<ChevronLeft />}
+									suffix={<ChevronRight />}
+								>
+									Action Button
+								</Button>
+							</div>
+
+							{/* ink-400 background */}
+							<div
+								style={{
+									padding: '1.5rem',
+									backgroundColor: 'var(--bg-ink-400)',
+									borderRadius: '0.5rem',
+								}}
+							>
+								<p style={{ color: 'var(--text-vanilla-100)', marginBottom: '1rem' }}>
+									On ink-400 background
+								</p>
+								<Button
+									variant={ButtonVariant.Action}
+									background={ButtonBackground.Ink400}
+									prefix={<ChevronLeft />}
+									suffix={<ChevronRight />}
+								>
+									Action Button
+								</Button>
+							</div>
+
+							{/* vanilla-100 background */}
+							<div
+								style={{
+									padding: '1.5rem',
+									backgroundColor: 'var(--bg-vanilla-100)',
+									borderRadius: '0.5rem',
+								}}
+							>
+								<p style={{ color: 'var(--text-slate-500)', marginBottom: '1rem' }}>
+									On vanilla-100 background
+								</p>
+								<Button
+									variant={ButtonVariant.Action}
+									background={ButtonBackground.Vanilla100}
+									prefix={<ChevronLeft />}
+									suffix={<ChevronRight />}
+								>
+									Action Button
+								</Button>
+							</div>
+
+							{/* vanilla-200 background */}
+							<div
+								style={{
+									padding: '1.5rem',
+									backgroundColor: 'var(--bg-vanilla-200)',
+									borderRadius: '0.5rem',
+								}}
+							>
+								<p style={{ color: 'var(--text-slate-500)', marginBottom: '1rem' }}>
+									On vanilla-200 background
+								</p>
+								<Button
+									variant={ButtonVariant.Action}
+									background={ButtonBackground.Vanilla200}
+									prefix={<ChevronLeft />}
+									suffix={<ChevronRight />}
+								>
+									Action Button
+								</Button>
+							</div>
+						</div>
+					</div>
+
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.75rem' }}>
+							Disabled Action Buttons
+						</h3>
+						<div
+							style={{
+								display: 'grid',
+								gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+								gap: '2rem',
+							}}
+						>
+							{/* Disabled examples */}
+							<div
+								style={{
+									padding: '1.5rem',
+									backgroundColor: 'var(--bg-ink-500)',
+									borderRadius: '0.5rem',
+								}}
+							>
+								<Button
+									variant={ButtonVariant.Action}
+									background={ButtonBackground.Ink500}
+									disabled
+									prefix={<ChevronLeft />}
+									suffix={<ChevronRight />}
+								>
+									Disabled Action Button
+								</Button>
+							</div>
+							<div
+								style={{
+									padding: '1.5rem',
+									backgroundColor: 'var(--bg-vanilla-100)',
+									borderRadius: '0.5rem',
+								}}
+							>
+								<Button
+									variant={ButtonVariant.Action}
+									background={ButtonBackground.Vanilla100}
+									disabled
+									prefix={<ChevronLeft />}
+									suffix={<ChevronRight />}
+								>
+									Disabled Action Button
+								</Button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
 		</div>
 	),
 };

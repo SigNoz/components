@@ -97,6 +97,13 @@ const meta: Meta<typeof PaginationUrl> = {
 		layout: 'fullscreen',
 	},
 	tags: ['autodocs'],
+	decorators: [
+		(Story) => (
+			<NuqsAdapter>
+				<Story />
+			</NuqsAdapter>
+		),
+	],
 };
 
 export default meta;
@@ -109,21 +116,11 @@ export const Default: Story = {
 		pageSize: 10,
 		align: 'start',
 	},
-	decorators: [
-		(Story) => (
-			<NuqsAdapter>
-				<Story />
-			</NuqsAdapter>
-		),
-	],
 };
 
-export const CustomUrlKey: Story = {
-	args: {
-		urlKey: 'logs-page',
-		total: 500,
-		pageSize: 25,
-		align: 'center',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
 	decorators: [
 		(Story) => (
@@ -132,39 +129,62 @@ export const CustomUrlKey: Story = {
 			</NuqsAdapter>
 		),
 	],
-};
-
-export const WithPageSizeSelector: Story = {
-	args: {
-		urlKey: 'page',
-		total: 100,
-		pageSize: 10,
-		enablePageSize: true,
-		align: 'start',
-	},
-	decorators: [
-		(Story) => (
-			<NuqsAdapter>
-				<Story />
-			</NuqsAdapter>
-		),
-	],
-};
-
-export const WithPageSizeSelectorLeft: Story = {
-	args: {
-		urlKey: 'page',
-		total: 100,
-		pageSize: 10,
-		enablePageSize: true,
-		pageSizePosition: 'left',
-		align: 'start',
-	},
-	decorators: [
-		(Story) => (
-			<NuqsAdapter>
-				<Story />
-			</NuqsAdapter>
-		),
-	],
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Custom Url Key
+				</h3>
+				<PaginationUrl urlKey="logs-page" total={500} pageSize={25} align="center" />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Page Size Selector
+				</h3>
+				<PaginationUrl urlKey="page" total={100} pageSize={10} enablePageSize align="start" />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Page Size Selector Left
+				</h3>
+				<PaginationUrl
+					urlKey="page"
+					total={100}
+					pageSize={10}
+					enablePageSize
+					pageSizePosition="left"
+					align="start"
+				/>
+			</section>
+		</div>
+	),
 };

@@ -58,7 +58,7 @@ export default meta;
 
 type Story = StoryObj<typeof Divider>;
 
-export const Playground: Story = {
+export const Default: Story = {
 	args: {
 		type: 'horizontal',
 		dashed: false,
@@ -73,95 +73,111 @@ export const Playground: Story = {
 	),
 };
 
-export const Horizontal: Story = {
+export const Preview: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story: 'A simple horizontal divider separating content sections.',
-			},
-		},
+		chromatic: { disableSnapshot: false },
 	},
 	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Section A</p>
-			<Divider />
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Section B</p>
-			<Divider />
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Section C</p>
-		</div>
-	),
-};
-
-export const Vertical: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'A vertical divider for inline separation, commonly used in toolbars and action groups.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '1rem' }}>
-			<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Edit</span>
-			<Divider type="vertical" />
-			<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Copy</span>
-			<Divider type="vertical" />
-			<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Delete</span>
-		</div>
-	),
-};
-
-export const Dashed: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use the `dashed` prop for a dashed line style.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Solid (default)</p>
-			<Divider />
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Dashed</p>
-			<Divider dashed />
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>End</p>
-		</div>
-	),
-};
-
-export const WithText: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Pass children to render text between the divider lines. Useful for "OR" separators and section labels.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Login with email</p>
-			<Divider>OR</Divider>
-			<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Login with SSO</p>
-		</div>
-	),
-};
-
-export const PlainText: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'The `plain` prop renders divider text with normal font weight instead of medium.',
-			},
-		},
-	},
-	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<Divider>Default weight</Divider>
-			<div style={{ height: '1rem' }} />
-			<Divider plain>Plain weight</Divider>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Horizontal
+				</h3>
+				<div style={{ width: '100%', padding: '1rem' }}>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Section A</p>
+					<Divider />
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Section B</p>
+					<Divider />
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Section C</p>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Vertical
+				</h3>
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '1rem' }}>
+					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Edit</span>
+					<Divider type="vertical" />
+					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Copy</span>
+					<Divider type="vertical" />
+					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Delete</span>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Dashed
+				</h3>
+				<div style={{ width: '100%', padding: '1rem' }}>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Solid (default)</p>
+					<Divider />
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Dashed</p>
+					<Divider dashed />
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>End</p>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Text
+				</h3>
+				<div style={{ width: '100%', padding: '1rem' }}>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Login with email</p>
+					<Divider>OR</Divider>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Login with SSO</p>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Plain Text
+				</h3>
+				<div style={{ width: '100%', padding: '1rem' }}>
+					<Divider>Default weight</Divider>
+					<div style={{ height: '1rem' }} />
+					<Divider plain>Plain weight</Divider>
+				</div>
+			</section>
 		</div>
 	),
 };

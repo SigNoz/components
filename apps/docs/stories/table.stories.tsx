@@ -150,7 +150,7 @@ export default meta;
 type Story = StoryObj<typeof Table>;
 
 // Simple table with basic data
-export const Simple: Story = {
+export const Default: Story = {
 	render: () => (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div
@@ -210,9 +210,8 @@ export const Simple: Story = {
 	),
 };
 
-// Enhanced table with more features
-export const Enhanced: Story = {
-	render: () => (
+function EnhancedTableExample() {
+	return (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div
 				style={{
@@ -373,12 +372,11 @@ export const Enhanced: Story = {
 				</Table>
 			</div>
 		</div>
-	),
-};
+	);
+}
 
-// Table with caption and summary
-export const WithCaption: Story = {
-	render: () => (
+function WithCaptionTableExample() {
+	return (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div
 				style={{
@@ -437,12 +435,11 @@ export const WithCaption: Story = {
 				</Table>
 			</div>
 		</div>
-	),
-};
+	);
+}
 
-// Empty state table
-export const Empty: Story = {
-	render: () => (
+function EmptyTableExample() {
+	return (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div
 				style={{
@@ -511,12 +508,11 @@ export const Empty: Story = {
 				</Table>
 			</div>
 		</div>
-	),
-};
+	);
+}
 
-// Compact table for mobile
-export const Compact: Story = {
-	render: () => (
+function CompactTableExample() {
+	return (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div
 				style={{
@@ -594,12 +590,11 @@ export const Compact: Story = {
 				</Table>
 			</div>
 		</div>
-	),
-};
+	);
+}
 
-// Table with fixed height and overflow
-export const WithFixedHeight: Story = {
-	render: () => (
+function WithFixedHeightTableExample() {
+	return (
 		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			<div
 				style={{
@@ -679,48 +674,88 @@ export const WithFixedHeight: Story = {
 				</Table>
 			</div>
 		</div>
-	),
+	);
+}
+
+export const Preview: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story: `
-## Table with Fixed Height
-
-This example demonstrates how to create a table with a fixed height that handles overflow gracefully.
-
-### Key Features:
-- **Fixed Height**: The table container has a defined height of 300px
-- **Vertical Scrolling**: When content exceeds the height, it becomes scrollable
-- **Sticky Headers**: Headers remain visible while scrolling through the data
-- **Custom Scrollbars**: Styled scrollbars for better user experience
-- **No Layout Shift**: Headers maintain perfect alignment during scroll
-
-### Usage:
-\`\`\`tsx
-<Table fixedHeight={300}>
-  <TableHeader sticky>
-    <TableRow>
-      <TableHead>Name</TableHead>
-      <TableHead>Email</TableHead>
-      <TableHead>Role</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {/* Your table rows */}
-  </TableBody>
-</Table>
-\`\`\`
-
-### Props:
-- **\`fixedHeight\`**: Accepts a string (e.g., "400px") or number (e.g., 400) for the container height
-- **\`sticky\`**: When true on TableHeader, keeps headers visible during scroll
-
-### CSS Classes Applied:
-- **\`.table-scroll-container\`**: Container with overflow handling
-- **\`.sticky-header-table\`**: Table with sticky header support
-- **\`.sticky-header\`**: Sticky header styling
-				`,
-			},
-		},
+		chromatic: { disableSnapshot: false },
 	},
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Enhanced
+				</h3>
+				<EnhancedTableExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Caption
+				</h3>
+				<WithCaptionTableExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Empty
+				</h3>
+				<EmptyTableExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Compact
+				</h3>
+				<CompactTableExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Fixed Height
+				</h3>
+				<WithFixedHeightTableExample />
+			</section>
+		</div>
+	),
 };

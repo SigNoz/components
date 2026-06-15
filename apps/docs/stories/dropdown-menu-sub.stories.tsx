@@ -37,6 +37,22 @@ function SubMenuFrame({
 	);
 }
 
+function ControlledSubMenu() {
+	const [open, setOpen] = React.useState(false);
+	return (
+		<SubMenuFrame subProps={{ open, onOpenChange: setOpen }}>
+			<DropdownMenuSubTrigger leftIcon={<Settings size={16} />}>
+				More Options
+			</DropdownMenuSubTrigger>
+			<DropdownMenuSubContent sideOffset={4}>
+				<DropdownMenuItem leftIcon={<Link size={16} />}>Sub Item 1</DropdownMenuItem>
+				<DropdownMenuItem>Sub Item 2</DropdownMenuItem>
+				<DropdownMenuItem>Sub Item 3</DropdownMenuItem>
+			</DropdownMenuSubContent>
+		</SubMenuFrame>
+	);
+}
+
 const meta: Meta<typeof DropdownMenuSub> = {
 	title: 'Primitive Components/DropdownMenu/DropdownMenuSub',
 	component: DropdownMenuSub,
@@ -89,38 +105,52 @@ export const Default: Story = {
 	),
 };
 
-export const DefaultOpen: Story = {
-	args: {
-		defaultOpen: true,
-	},
-	render: (args) => (
-		<SubMenuFrame subProps={{ defaultOpen: args.defaultOpen }}>
-			<DropdownMenuSubTrigger leftIcon={<Settings size={16} />}>
-				More Options
-			</DropdownMenuSubTrigger>
-			<DropdownMenuSubContent sideOffset={4}>
-				<DropdownMenuItem leftIcon={<Link size={16} />}>Sub Item 1</DropdownMenuItem>
-				<DropdownMenuItem>Sub Item 2</DropdownMenuItem>
-				<DropdownMenuItem>Sub Item 3</DropdownMenuItem>
-			</DropdownMenuSubContent>
-		</SubMenuFrame>
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Default Open
+				</h3>
+				<SubMenuFrame subProps={{ defaultOpen: true }}>
+					<DropdownMenuSubTrigger leftIcon={<Settings size={16} />}>
+						More Options
+					</DropdownMenuSubTrigger>
+					<DropdownMenuSubContent sideOffset={4}>
+						<DropdownMenuItem leftIcon={<Link size={16} />}>Sub Item 1</DropdownMenuItem>
+						<DropdownMenuItem>Sub Item 2</DropdownMenuItem>
+						<DropdownMenuItem>Sub Item 3</DropdownMenuItem>
+					</DropdownMenuSubContent>
+				</SubMenuFrame>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Controlled
+				</h3>
+				<ControlledSubMenu />
+			</section>
+		</div>
 	),
-};
-
-export const Controlled: Story = {
-	render: () => {
-		const [open, setOpen] = React.useState(false);
-		return (
-			<SubMenuFrame subProps={{ open, onOpenChange: setOpen }}>
-				<DropdownMenuSubTrigger leftIcon={<Settings size={16} />}>
-					More Options
-				</DropdownMenuSubTrigger>
-				<DropdownMenuSubContent sideOffset={4}>
-					<DropdownMenuItem leftIcon={<Link size={16} />}>Sub Item 1</DropdownMenuItem>
-					<DropdownMenuItem>Sub Item 2</DropdownMenuItem>
-					<DropdownMenuItem>Sub Item 3</DropdownMenuItem>
-				</DropdownMenuSubContent>
-			</SubMenuFrame>
-		);
-	},
 };
