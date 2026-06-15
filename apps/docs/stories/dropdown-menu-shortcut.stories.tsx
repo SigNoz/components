@@ -17,6 +17,11 @@ const meta: Meta<typeof DropdownMenuShortcut> = {
 			description: 'Additional CSS classes for the shortcut.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the shortcut.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description: 'The shortcut text (e.g. ⌘T, ⇧⌘P).',

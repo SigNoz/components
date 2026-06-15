@@ -37,6 +37,11 @@ const meta: Meta<typeof RadioGroupItem> = {
 			description: 'Additional CSS classes to apply to the radio item.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the radio item.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description:

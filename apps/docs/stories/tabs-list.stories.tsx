@@ -56,6 +56,11 @@ const meta: Meta<typeof TabsList> = {
 			description: 'Additional CSS classes to apply to the tabs list.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the tabs list.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

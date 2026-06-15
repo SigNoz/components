@@ -113,6 +113,11 @@ const meta: Meta<typeof Input> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onChange: {
 			control: false,
 			description: 'Event handler called when the input value changes.',

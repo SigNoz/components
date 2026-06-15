@@ -17,6 +17,11 @@ const meta: Meta<typeof DropdownMenuSeparator> = {
 			description: 'Additional CSS classes for the separator.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the separator.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

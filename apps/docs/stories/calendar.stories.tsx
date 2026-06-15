@@ -157,6 +157,11 @@ const meta: Meta<typeof Calendar> = {
 			description: 'Class name for the root element.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles: class name for the root element.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		selected: {
 			control: false,
 			description: 'Selected date(s) or range. Type depends on mode.',

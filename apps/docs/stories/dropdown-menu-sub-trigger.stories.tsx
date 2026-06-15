@@ -30,6 +30,11 @@ const meta: Meta<typeof DropdownMenuSubTrigger> = {
 			description: 'Additional CSS classes for the sub trigger.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the sub trigger.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		leftIcon: { control: false, table: { category: 'Content' } },
 		children: { control: 'text', table: { category: 'Content' } },
 	},

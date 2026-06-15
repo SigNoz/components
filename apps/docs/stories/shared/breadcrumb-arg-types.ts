@@ -45,6 +45,11 @@ export const breadcrumbSimpleArgTypes: Meta<typeof BreadcrumbSimple>['argTypes']
 		description: 'Additional CSS classes to apply to the breadcrumb container.',
 		table: { category: 'Styling', type: { summary: 'string' } },
 	},
+	style: {
+		control: false,
+		description: 'Inline styles applied to the breadcrumb container.',
+		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+	},
 	testId: {
 		control: 'text',
 		description:

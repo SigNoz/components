@@ -21,6 +21,11 @@ const meta: Meta<typeof ToggleGroupItem> = {
 			description: 'Additional CSS classes to apply.',
 			table: { category: 'Styling' },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to apply.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		id: {
 			control: 'text',
 			description: 'A unique identifier for the item.',

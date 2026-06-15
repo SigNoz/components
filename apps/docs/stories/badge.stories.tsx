@@ -126,6 +126,11 @@ const meta: Meta<typeof Badge> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description:

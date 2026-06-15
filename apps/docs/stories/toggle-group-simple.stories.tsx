@@ -63,6 +63,11 @@ const meta: Meta<typeof ToggleGroupSimple> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling' },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

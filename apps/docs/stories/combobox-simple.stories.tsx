@@ -22,6 +22,11 @@ const meta: Meta<typeof ComboboxSimple> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		items: {
 			control: 'object',
 			description: 'List of items to display (flat). Ignored when groups is provided.',

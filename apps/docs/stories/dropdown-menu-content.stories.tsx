@@ -66,6 +66,11 @@ const meta: Meta<typeof DropdownMenuContent> = {
 			description: 'Additional CSS classes for the content.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the content.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		forceMount: {
 			control: 'boolean',
 			description: 'When true, keeps the content mounted when closed (e.g. for animations).',

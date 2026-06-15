@@ -40,6 +40,11 @@ const meta: Meta<typeof BreadcrumbLink> = {
 			description: 'Additional CSS classes to apply to the link.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the link.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		testId: {
 			control: 'text',
 			description: 'Test ID for automated testing.',

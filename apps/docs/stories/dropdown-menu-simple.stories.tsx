@@ -79,6 +79,11 @@ const meta: Meta<typeof DropdownMenuSimple> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Appearance' },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 };
 

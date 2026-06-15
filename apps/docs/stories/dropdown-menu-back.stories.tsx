@@ -24,6 +24,11 @@ const meta: Meta<typeof DropdownMenuBack> = {
 			description: 'Additional CSS classes for the back button.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the back button.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onBack: { control: false, table: { category: 'Events' } },
 	},
 	parameters: {

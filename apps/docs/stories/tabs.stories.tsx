@@ -106,6 +106,11 @@ const meta: Meta<typeof Tabs> = {
 			description: 'Additional CSS classes to apply to the tabs root.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the tabs root.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		tabBarLeftContent: {
 			control: false,
 			description: 'Content rendered to the left of the tab list, in the same horizontal row.',

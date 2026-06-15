@@ -19,6 +19,11 @@ const meta: Meta<typeof PaginationEllipsis> = {
 			description: 'Additional CSS classes',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		testId: {
 			control: 'text',
 			description: 'Test ID for the ellipsis',

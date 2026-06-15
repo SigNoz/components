@@ -30,6 +30,11 @@ const meta: Meta<typeof TabsContent> = {
 			description: 'Additional CSS classes to apply to the content panel.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the content panel.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description: 'The content displayed in the panel when the tab is active.',
