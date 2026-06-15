@@ -73,17 +73,40 @@ export const Default: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="h-[400px] border rounded-lg overflow-hidden m-6">
+		<div
+			style={{
+				height: '400px',
+				border: '1px solid var(--border)',
+				borderRadius: '0.5rem',
+				overflow: 'hidden',
+				margin: '1.5rem',
+			}}
+		>
 			<ResizablePanelGroup orientation="horizontal">
 				<ResizablePanel defaultSize="50%">
-					<div className="flex h-full items-center justify-center bg-muted">
-						<span className="text-sm font-medium">Panel 1</span>
+					<div
+						style={{
+							display: 'flex',
+							height: '100%',
+							alignItems: 'center',
+							justifyContent: 'center',
+							backgroundColor: 'var(--muted)',
+						}}
+					>
+						<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Panel 1</span>
 					</div>
 				</ResizablePanel>
 				<ResizableHandle {...args} />
 				<ResizablePanel defaultSize="50%">
-					<div className="flex h-full items-center justify-center">
-						<span className="text-sm font-medium">Panel 2</span>
+					<div
+						style={{
+							display: 'flex',
+							height: '100%',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Panel 2</span>
 					</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>
@@ -97,27 +120,64 @@ export const WithVisibleHandle: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Visible Handle:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div style={{ margin: '1.5rem' }}>
+			<div
+				style={{
+					marginBottom: '1rem',
+					padding: '1rem',
+					backgroundColor: 'var(--muted)',
+					borderRadius: '0.5rem',
+				}}
+			>
+				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Visible Handle:</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					The dots icon makes the draggable area more discoverable for users
 				</p>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div
+				style={{
+					height: '400px',
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					overflow: 'hidden',
+				}}
+			>
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Left Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">Drag the dots to resize</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: 'var(--muted)',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Left Panel</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									Drag the dots to resize
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle {...args} />
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center">
-							<span className="text-sm font-medium">Right Panel</span>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}
+						>
+							<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Right Panel</span>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -132,29 +192,74 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Disabled Handle:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div style={{ margin: '1.5rem' }}>
+			<div
+				style={{
+					marginBottom: '1rem',
+					padding: '1rem',
+					backgroundColor: 'var(--muted)',
+					borderRadius: '0.5rem',
+				}}
+			>
+				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Disabled Handle:</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					This handle cannot be dragged. Try dragging it - nothing will happen!
 				</p>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div
+				style={{
+					height: '400px',
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					overflow: 'hidden',
+				}}
+			>
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="30%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Fixed Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">30% width</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: 'var(--muted)',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Fixed Panel</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									30% width
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle {...args} />
 					<ResizablePanel defaultSize="70%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Fixed Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">70% width</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Fixed Panel</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									70% width
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -170,24 +275,53 @@ export const VerticalHandle: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Vertical Handle:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div style={{ margin: '1.5rem' }}>
+			<div
+				style={{
+					marginBottom: '1rem',
+					padding: '1rem',
+					backgroundColor: 'var(--muted)',
+					borderRadius: '0.5rem',
+				}}
+			>
+				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Vertical Handle:</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Handles work the same way in vertical layouts
 				</p>
 			</div>
-			<div className="h-[500px] border rounded-lg overflow-hidden">
+			<div
+				style={{
+					height: '500px',
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					overflow: 'hidden',
+				}}
+			>
 				<ResizablePanelGroup orientation="vertical">
 					<ResizablePanel defaultSize="60%">
-						<div className="flex h-full items-center justify-center">
-							<span className="text-sm font-medium">Top Panel</span>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}
+						>
+							<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Top Panel</span>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle {...args} />
 					<ResizablePanel defaultSize="40%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<span className="text-sm font-medium">Bottom Panel</span>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: 'var(--muted)',
+							}}
+						>
+							<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Bottom Panel</span>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -198,37 +332,84 @@ export const VerticalHandle: Story = {
 
 export const MultipleHandles: Story = {
 	render: () => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Multiple Handles:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div style={{ margin: '1.5rem' }}>
+			<div
+				style={{
+					marginBottom: '1rem',
+					padding: '1rem',
+					backgroundColor: 'var(--muted)',
+					borderRadius: '0.5rem',
+				}}
+			>
+				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Multiple Handles:</h3>
+				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Each handle can have different configurations
 				</p>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div
+				style={{
+					height: '400px',
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					overflow: 'hidden',
+				}}
+			>
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="25%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Panel 1</span>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: 'var(--muted)',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Panel 1</span>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={false} />
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Panel 2</span>
-								<p className="text-xs text-muted-foreground mt-1">Left: no visible handle</p>
-								<p className="text-xs text-muted-foreground">Right: with visible handle</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Panel 2</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									Left: no visible handle
+								</p>
+								<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+									Right: with visible handle
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} />
 					<ResizablePanel defaultSize="25%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Panel 3</span>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: 'var(--muted)',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Panel 3</span>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -240,40 +421,111 @@ export const MultipleHandles: Story = {
 
 export const MixedHandles: Story = {
 	render: () => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Mixed Handle Configuration:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
+		<div style={{ margin: '1.5rem' }}>
+			<div
+				style={{
+					marginBottom: '1rem',
+					padding: '1rem',
+					backgroundColor: 'var(--muted)',
+					borderRadius: '0.5rem',
+				}}
+			>
+				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Mixed Handle Configuration:</h3>
+				<ul
+					style={{
+						fontSize: '0.875rem',
+						color: 'var(--muted-foreground)',
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '0.25rem',
+					}}
+				>
 					<li>• First handle: Active with visible indicator</li>
 					<li>• Second handle: Disabled (cannot drag)</li>
 				</ul>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div
+				style={{
+					height: '400px',
+					border: '1px solid var(--border)',
+					borderRadius: '0.5rem',
+					overflow: 'hidden',
+				}}
+			>
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="33%">
-						<div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20">
-							<div className="text-center">
-								<span className="text-sm font-medium">Resizable</span>
-								<p className="text-xs text-muted-foreground mt-1">Can resize right</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundImage: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Resizable</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									Can resize right
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} disabled={false} />
 					<ResizablePanel defaultSize="34%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Flexible</span>
-								<p className="text-xs text-muted-foreground mt-1">Can resize left</p>
-								<p className="text-xs text-muted-foreground">Cannot resize right</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Flexible</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									Can resize left
+								</p>
+								<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+									Cannot resize right
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} disabled={true} />
 					<ResizablePanel defaultSize="33%">
-						<div className="flex h-full items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-900/20">
-							<div className="text-center">
-								<span className="text-sm font-medium">Fixed</span>
-								<p className="text-xs text-muted-foreground mt-1">Cannot resize</p>
+						<div
+							style={{
+								display: 'flex',
+								height: '100%',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundImage: 'linear-gradient(to bottom right, #fffbeb, #ffedd5)',
+							}}
+						>
+							<div style={{ textAlign: 'center' }}>
+								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Fixed</span>
+								<p
+									style={{
+										fontSize: '0.75rem',
+										color: 'var(--muted-foreground)',
+										marginTop: '0.25rem',
+									}}
+								>
+									Cannot resize
+								</p>
 							</div>
 						</div>
 					</ResizablePanel>

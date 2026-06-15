@@ -83,14 +83,16 @@ function Section({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className="space-y-3">
-			<header className="space-y-1">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-200">{title}</h3>
+		<section style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+			<header style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>
+					{title}
+				</h3>
 				{description && (
-					<p className="text-xs text-vanilla-600 dark:text-vanilla-400">{description}</p>
+					<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>{description}</p>
 				)}
 			</header>
-			<div className="space-y-3">{children}</div>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>{children}</div>
 		</section>
 	);
 }
@@ -105,22 +107,27 @@ function Field({
 	children: React.ReactNode;
 }) {
 	return (
-		<label className="block space-y-1.5">
-			<span className="block text-xs font-medium text-vanilla-700 dark:text-vanilla-300">
+		<label style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+			<span
+				style={{
+					display: 'block',
+					fontSize: '0.75rem',
+					fontWeight: 500,
+					color: 'var(--muted-foreground)',
+				}}
+			>
 				{label}
 			</span>
 			{children}
-			{hint && (
-				<span className="block text-[11px] text-vanilla-500 dark:text-vanilla-500">{hint}</span>
-			)}
+			{hint && <span style={{ display: 'block', color: 'var(--muted-foreground)' }}>{hint}</span>}
 		</label>
 	);
 }
 
 function Output({ value }: { value: number | null }) {
 	return (
-		<p className="text-[11px] text-vanilla-500 dark:text-vanilla-500">
-			onChange: <code className="font-mono">{value === null ? 'null' : value}</code>
+		<p style={{ color: 'var(--muted-foreground)' }}>
+			onChange: <code style={{ fontFamily: 'monospace' }}>{value === null ? 'null' : value}</code>
 		</p>
 	);
 }
@@ -139,7 +146,7 @@ export const Playground: Story = {
 		placeholder: 'Enter a number',
 	},
 	render: (args) => (
-		<div className="p-8 max-w-sm bg-background">
+		<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 			<InputNumber {...args} />
 		</div>
 	),
@@ -159,7 +166,7 @@ export const States: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 			<Section title="States" description="Same input, three interactive modes.">
 				<Field label="Default">
 					<InputNumber defaultValue={3} placeholder="0" />
@@ -186,7 +193,7 @@ export const Spinner: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-md bg-background">
+		<div style={{ padding: '2rem', maxWidth: '28rem', backgroundColor: 'var(--background)' }}>
 			<Section
 				title="Spinner controls"
 				description="Click the arrows, focus and press ↑ / ↓, or scroll with the wheel when changeOnWheel is on."
@@ -220,7 +227,7 @@ export const Formatter: Story = {
 		const [percent, setPercent] = useState<number | null>(80);
 		const [bytes, setBytes] = useState<number | null>(1024);
 		return (
-			<div className="p-8 max-w-md bg-background">
+			<div style={{ padding: '2rem', maxWidth: '28rem', backgroundColor: 'var(--background)' }}>
 				<Section title="Formatter & parser">
 					<Field label="Currency" hint="Thousands separators + leading symbol.">
 						<InputNumber
@@ -270,7 +277,7 @@ export const Precision: Story = {
 	render: () => {
 		const [value, setValue] = useState<number | null>(1.234);
 		return (
-			<div className="p-8 max-w-sm bg-background">
+			<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 				<Field label="precision={2}" hint="Try typing 1.2345 — onChange will receive 1.23.">
 					<InputNumber value={value} onChange={setValue} precision={2} step={0.01} controls />
 					<Output value={value} />
@@ -295,7 +302,7 @@ export const PrefixAndSuffix: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-md bg-background">
+		<div style={{ padding: '2rem', maxWidth: '28rem', backgroundColor: 'var(--background)' }}>
 			<Section title="Inline adornments">
 				<Field label="Currency prefix">
 					<InputNumber prefix="$" defaultValue={999} precision={2} />
@@ -324,7 +331,7 @@ export const Addons: Story = {
 	render: () => {
 		const [unit, setUnit] = useState('GiB');
 		return (
-			<div className="p-8 max-w-md bg-background">
+			<div style={{ padding: '2rem', maxWidth: '28rem', backgroundColor: 'var(--background)' }}>
 				<Section title="Outer addons">
 					<Field label="Text addons" hint="A URL field, for example.">
 						<InputNumber addonBefore="https://" addonAfter=".com" defaultValue={42} />
@@ -385,7 +392,7 @@ export const Status: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 			<Section title="Validation surfaces">
 				<Field label="Error" hint="Form validation failure.">
 					<InputNumber defaultValue={3} status="error" />
@@ -414,7 +421,7 @@ export const ClampOnBlur: Story = {
 	render: () => {
 		const [value, setValue] = useState<number | null>(5);
 		return (
-			<div className="p-8 max-w-sm bg-background">
+			<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 				<Field label="Clamp to 0–10" hint="Type 99 and tab/click away — value clamps to 10.">
 					<InputNumber value={value} onChange={setValue} min={0} max={10} />
 					<Output value={value} />
@@ -431,7 +438,7 @@ export const ClampOnBlur: Story = {
 /** Sizes — small (24px), middle (32px), large (40px). */
 export const Sizes: Story = {
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 			<Section title="Sizes">
 				<Field label="Small" hint="24px height — dense toolbars, table cells.">
 					<InputNumber defaultValue={3} size="small" />
@@ -450,7 +457,7 @@ export const Sizes: Story = {
 /** Variants — outlined, filled, borderless, underlined. */
 export const Variants: Story = {
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 			<Section title="Variants">
 				<Field label="Outlined (default)">
 					<InputNumber defaultValue={3} variant="outlined" />
@@ -487,9 +494,20 @@ export const KeyboardAndWheel: Story = {
 		const [keyboardEnabled, setKeyboardEnabled] = useState(true);
 		const [wheelEnabled, setWheelEnabled] = useState(true);
 		return (
-			<div className="p-8 max-w-sm bg-background space-y-4">
-				<div className="flex flex-col gap-2">
-					<label className="flex items-center gap-2 text-xs">
+			<div
+				style={{
+					padding: '2rem',
+					maxWidth: '24rem',
+					backgroundColor: 'var(--background)',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '1rem',
+				}}
+			>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+					<label
+						style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem' }}
+					>
 						<input
 							type="checkbox"
 							checked={keyboardEnabled}
@@ -497,7 +515,9 @@ export const KeyboardAndWheel: Story = {
 						/>
 						<code>keyboard</code>
 					</label>
-					<label className="flex items-center gap-2 text-xs">
+					<label
+						style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem' }}
+					>
 						<input
 							type="checkbox"
 							checked={wheelEnabled}
@@ -535,7 +555,7 @@ export const PressEnter: Story = {
 		const [submitted, setSubmitted] = useState<number | null>(null);
 		const [value, setValue] = useState<number | null>(null);
 		return (
-			<div className="p-8 max-w-sm bg-background">
+			<div style={{ padding: '2rem', maxWidth: '24rem', backgroundColor: 'var(--background)' }}>
 				<Field
 					label="Type a number, press Enter"
 					hint={submitted === null ? 'Nothing submitted yet.' : `Last submitted: ${submitted}`}

@@ -43,6 +43,11 @@ const meta: Meta<typeof AlertDialog> = {
 				defaultValue: { summary: 'base' },
 			},
 		},
+		style: {
+			control: false,
+			description: 'The width of the dialog surface.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		trigger: {
 			control: false,
 			description: 'The element that opens the dialog when clicked.',

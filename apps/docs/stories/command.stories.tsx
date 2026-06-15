@@ -36,6 +36,11 @@ const meta: Meta<any> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		placeholder: {
 			control: 'text',
 			description: 'Placeholder text shown in the command input box',

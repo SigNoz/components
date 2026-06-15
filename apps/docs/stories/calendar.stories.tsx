@@ -157,6 +157,11 @@ const meta: Meta<typeof Calendar> = {
 			description: 'Class name for the root element.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles: class name for the root element.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		selected: {
 			control: false,
 			description: 'Selected date(s) or range. Type depends on mode.',
@@ -204,7 +209,11 @@ export const Default: Story = {
 				mode={mode}
 				selected={selected as any}
 				onSelect={onSelect as any}
-				className="rounded-md border shadow-sm"
+				style={{
+					borderRadius: '0.375rem',
+					border: '1px solid var(--border)',
+					boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+				}}
 			/>
 		);
 	},
@@ -220,10 +229,12 @@ export const SingleDateSelection: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date ? date.toLocaleDateString() : 'No date selected'}
 					</p>
 				</div>
@@ -232,7 +243,11 @@ export const SingleDateSelection: Story = {
 					mode="single"
 					selected={date}
 					onSelect={setDate}
-					className="rounded-md border shadow-sm"
+					style={{
+						borderRadius: '0.375rem',
+						border: '1px solid var(--border)',
+						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+					}}
 				/>
 			</div>
 		);
@@ -251,10 +266,12 @@ export const DateRangeSelection: Story = {
 		});
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Range:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Range:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{range.from && range.to
 							? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
 							: range.from
@@ -267,7 +284,11 @@ export const DateRangeSelection: Story = {
 					mode="range"
 					selected={range}
 					onSelect={setRange}
-					className="rounded-md border shadow-sm"
+					style={{
+						borderRadius: '0.375rem',
+						border: '1px solid var(--border)',
+						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+					}}
 				/>
 			</div>
 		);
@@ -283,10 +304,12 @@ export const MultipleDateSelection: Story = {
 		const [selected, setSelected] = React.useState<any>([]);
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Dates:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Dates:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{selected.length > 0
 							? selected.map((date: Date) => date.toLocaleDateString()).join(', ')
 							: 'No dates selected'}
@@ -297,7 +320,11 @@ export const MultipleDateSelection: Story = {
 					mode="multiple"
 					selected={selected}
 					onSelect={setSelected}
-					className="rounded-md border shadow-sm"
+					style={{
+						borderRadius: '0.375rem',
+						border: '1px solid var(--border)',
+						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+					}}
 				/>
 			</div>
 		);
@@ -313,10 +340,12 @@ export const WithDropdownNavigation: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date ? date.toLocaleDateString() : 'No date selected'}
 					</p>
 				</div>
@@ -325,7 +354,11 @@ export const WithDropdownNavigation: Story = {
 					mode="single"
 					selected={date}
 					onSelect={setDate}
-					className="rounded-md border shadow-sm"
+					style={{
+						borderRadius: '0.375rem',
+						border: '1px solid var(--border)',
+						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+					}}
 				/>
 			</div>
 		);
@@ -346,7 +379,11 @@ export const HideOutsideDays: Story = {
 				mode="single"
 				selected={date}
 				onSelect={setDate}
-				className="rounded-md border shadow-sm"
+				style={{
+					borderRadius: '0.375rem',
+					border: '1px solid var(--border)',
+					boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+				}}
 			/>
 		);
 	},
@@ -366,9 +403,15 @@ export const DisabledDates: Story = {
 		];
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<p className="text-sm text-muted-foreground mb-2">
+					<p
+						style={{
+							fontSize: '0.875rem',
+							color: 'var(--muted-foreground)',
+							marginBottom: '0.5rem',
+						}}
+					>
 						Weekends are disabled in this example
 					</p>
 				</div>
@@ -378,7 +421,11 @@ export const DisabledDates: Story = {
 					selected={date}
 					onSelect={setDate}
 					disabled={disabledDays}
-					className="rounded-md border shadow-sm"
+					style={{
+						borderRadius: '0.375rem',
+						border: '1px solid var(--border)',
+						boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+					}}
 				/>
 			</div>
 		);
@@ -449,15 +496,33 @@ export const WithTimezone: Story = {
 		};
 
 		return (
-			<div className="space-y-6">
-				<div className="space-y-4">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<div
+						style={{
+							display: 'grid',
+							gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+							gap: '1rem',
+						}}
+					>
 						<div>
-							<h3 className="text-sm font-medium mb-2">Timezone Selection:</h3>
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+								Timezone Selection:
+							</h3>
 							<select
 								value={timezone}
 								onChange={(e) => setTimezone(e.target.value)}
-								className="w-full px-3 py-2 border border-input rounded-md text-sm"
+								style={{
+									width: '100%',
+									paddingLeft: '0.75rem',
+									paddingRight: '0.75rem',
+									paddingTop: '0.5rem',
+									paddingBottom: '0.5rem',
+									border: '1px solid var(--border)',
+									borderColor: 'var(--input)',
+									borderRadius: '0.375rem',
+									fontSize: '0.875rem',
+								}}
 							>
 								{timezones.map((tz) => (
 									<option key={tz.value} value={tz.value}>
@@ -468,38 +533,60 @@ export const WithTimezone: Story = {
 						</div>
 
 						<div>
-							<h3 className="text-sm font-medium mb-2">Time Selection:</h3>
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+								Time Selection:
+							</h3>
 							<input
 								type="time"
 								value={time}
 								onChange={(e) => setTime(e.target.value)}
 								step="1"
-								className="w-full px-3 py-2 border border-input rounded-md text-sm"
+								style={{
+									width: '100%',
+									paddingLeft: '0.75rem',
+									paddingRight: '0.75rem',
+									paddingTop: '0.5rem',
+									paddingBottom: '0.5rem',
+									border: '1px solid var(--border)',
+									borderColor: 'var(--input)',
+									borderRadius: '0.375rem',
+									fontSize: '0.875rem',
+								}}
 							/>
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div
+						style={{
+							display: 'grid',
+							gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+							gap: '1rem',
+						}}
+					>
 						<div>
-							<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-							<div className="space-y-2">
-								<p className="text-sm text-muted-foreground">
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+								Selected Date & Time:
+							</h3>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 									<strong>Local:</strong>{' '}
 									{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
 								</p>
-								<p className="text-sm text-muted-foreground">
+								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 									<strong>{timezone}:</strong> {formatDateTimeInTimezone(date, timezone, time)}
 								</p>
 							</div>
 						</div>
 
 						<div>
-							<h3 className="text-sm font-medium mb-2">Current Time:</h3>
-							<div className="space-y-2">
-								<p className="text-sm text-muted-foreground">
+							<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+								Current Time:
+							</h3>
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 									<strong>Local:</strong> {new Date(fixedDate).toLocaleTimeString()}
 								</p>
-								<p className="text-sm text-muted-foreground">
+								<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 									<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
 								</p>
 							</div>
@@ -508,19 +595,27 @@ export const WithTimezone: Story = {
 				</div>
 
 				<div>
-					<h3 className="text-sm font-medium mb-2">Calendar:</h3>
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Calendar:
+					</h3>
 					<Calendar
 						{...args}
 						mode="single"
 						selected={date}
 						onSelect={setDate}
-						className="rounded-md border shadow-sm"
+						style={{
+							borderRadius: '0.375rem',
+							border: '1px solid var(--border)',
+							boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+						}}
 					/>
 				</div>
 
-				<div className="p-4 bg-muted rounded-md">
-					<h4 className="text-sm font-medium mb-2">Date & Time with Timezone:</h4>
-					<p className="text-xs text-muted-foreground">
+				<div style={{ padding: '1rem', backgroundColor: 'var(--muted)', borderRadius: '0.375rem' }}>
+					<h4 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Date & Time with Timezone:
+					</h4>
+					<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 						This example demonstrates how to handle dates and times with different timezones. The
 						selected date and time are displayed in both local time and the chosen timezone. This
 						shows how you can combine calendar selection with time input and timezone conversion for

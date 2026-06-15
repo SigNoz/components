@@ -45,6 +45,11 @@ const meta: Meta<typeof ComboboxTrigger> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -76,7 +81,7 @@ export const Default: Story = {
 				: frameworks.find((f) => f.value === value)?.label || '';
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						{...args}

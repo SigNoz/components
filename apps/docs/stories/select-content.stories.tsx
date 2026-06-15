@@ -56,6 +56,11 @@ const meta: Meta<typeof SelectContent> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -78,7 +83,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent {...args}>
@@ -103,7 +108,7 @@ export const AlignedTop: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 pt-32 w-full max-w-sm">
+			<div style={{ padding: '2rem', paddingTop: '8rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent {...args}>
@@ -127,7 +132,7 @@ export const WithoutPortal: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent {...args}>
@@ -156,14 +161,14 @@ export const InsidePopover: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="outlined">Open filters</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-64">
-						<div className="space-y-4">
-							<p className="text-sm font-medium">Filter by framework</p>
+					<PopoverContent style={{ width: '16rem' }}>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+							<p style={{ fontSize: '0.875rem', fontWeight: 500 }}>Filter by framework</p>
 							<Select value={value} onChange={(v) => setValue(v as string)}>
 								<SelectTrigger placeholder="Select a framework..." />
 								<SelectContent {...args}>

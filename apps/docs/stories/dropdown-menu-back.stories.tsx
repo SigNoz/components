@@ -24,6 +24,11 @@ const meta: Meta<typeof DropdownMenuBack> = {
 			description: 'Additional CSS classes for the back button.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the back button.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onBack: { control: false, table: { category: 'Events' } },
 	},
 	parameters: {
@@ -43,7 +48,7 @@ export const Default: Story = {
 		const [step, setStep] = useState<'main' | 'settings'>('main');
 
 		return (
-			<div className="p-8">
+			<div style={{ padding: '2rem' }}>
 				<DropdownMenu onOpenChange={(open) => !open && setStep('main')}>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">

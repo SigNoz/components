@@ -30,6 +30,11 @@ const meta: Meta<typeof DropdownMenuSubTrigger> = {
 			description: 'Additional CSS classes for the sub trigger.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the sub trigger.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		leftIcon: { control: false, table: { category: 'Content' } },
 		children: { control: 'text', table: { category: 'Content' } },
 	},
@@ -49,7 +54,7 @@ export const Default: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -59,11 +64,9 @@ export const Default: Story = {
 				<DropdownMenuContent>
 					<DropdownMenuItem>Profile</DropdownMenuItem>
 					<DropdownMenuSub>
-						<DropdownMenuSubTrigger {...args} leftIcon={<Settings className="h-4 w-4" />} />
+						<DropdownMenuSubTrigger {...args} leftIcon={<Settings size={16} />} />
 						<DropdownMenuSubContent>
-							<DropdownMenuItem leftIcon={<Link className="h-4 w-4" />}>
-								Sub Item 1
-							</DropdownMenuItem>
+							<DropdownMenuItem leftIcon={<Link size={16} />}>Sub Item 1</DropdownMenuItem>
 							<DropdownMenuItem>Sub Item 2</DropdownMenuItem>
 							<DropdownMenuItem>Sub Item 3</DropdownMenuItem>
 						</DropdownMenuSubContent>

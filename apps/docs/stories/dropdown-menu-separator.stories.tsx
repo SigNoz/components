@@ -17,6 +17,11 @@ const meta: Meta<typeof DropdownMenuSeparator> = {
 			description: 'Additional CSS classes for the separator.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the separator.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -29,7 +34,7 @@ type Story = StoryObj<typeof DropdownMenuSeparator>;
 
 export const Default: Story = {
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

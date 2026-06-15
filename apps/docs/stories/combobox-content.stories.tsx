@@ -20,6 +20,11 @@ const meta: Meta<typeof ComboboxContent> = {
 			description: 'Additional CSS classes to apply to the content container.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the content container.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		align: {
 			control: 'select',
 			options: ['start', 'center', 'end'],
@@ -54,7 +59,7 @@ export const Default: Story = {
 		const [open, setOpen] = useState(true);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						placeholder="Select a framework..."

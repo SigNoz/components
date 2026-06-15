@@ -116,7 +116,7 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
 	render: () => (
-		<div className="space-y-4">
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 			{[
 				'primary',
 				'success',
@@ -130,10 +130,8 @@ export const AllVariants: Story = {
 				'sakura',
 				'aqua',
 			].map((c) => (
-				<div key={c} className="flex items-center gap-6">
-					<div style={{ width: 120 }} className="capitalize">
-						{c}
-					</div>
+				<div key={c} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+					<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
 
 					<Checkbox id={`checkbox-${c}-default`} color={c as any}>
 						Default

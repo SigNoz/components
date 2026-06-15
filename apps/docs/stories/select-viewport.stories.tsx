@@ -22,6 +22,11 @@ const meta: Meta<typeof SelectViewport> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -55,8 +60,8 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					SelectViewport is the scrolling viewport that contains the select items. SelectContent
 					uses it internally by default.
 				</p>
@@ -80,8 +85,8 @@ export const CustomMaxHeight: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					You can customize the viewport height with inline styles or CSS variables. Use
 					SelectViewport directly when you need scroll buttons.
 				</p>
@@ -109,8 +114,8 @@ export const WithGroups: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					SelectViewport works seamlessly with groups, labels, and separators.
 				</p>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
@@ -158,14 +163,14 @@ export const CustomPadding: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+				<p style={{ marginBottom: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Customize viewport padding using CSS variables or className.
 				</p>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent withViewport={false}>
-						<SelectViewport className="!p-4">
+						<SelectViewport style={{ padding: '1rem' }}>
 							{frameworks.map((f) => (
 								<SelectItem key={f.value} value={f.value}>
 									{f.label}

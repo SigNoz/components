@@ -23,6 +23,11 @@ const meta: Meta<typeof DropdownMenuLabel> = {
 			description: 'Additional CSS classes for the label.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the label.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description: 'The label text for the group.',
@@ -44,7 +49,7 @@ export const Default: Story = {
 		inset: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div style={{ padding: '2rem' }}>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

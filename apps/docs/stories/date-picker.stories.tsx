@@ -139,6 +139,11 @@ const meta: Meta<typeof DatePicker> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		popoverContentClassName: {
 			control: 'text',
 			description: 'Additional CSS classes for the popover content.',
@@ -198,10 +203,12 @@ export const Default: Story = {
 		const [timezone, setTimezone] = React.useState(args.timezone ?? 'UTC');
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date
 							? args.showTime
 								? `${date.toLocaleDateString()} at ${time}${args.showTimezone ? ` (${timezone})` : ''}`
@@ -228,10 +235,12 @@ export const DateOnly: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date ? date.toLocaleDateString() : 'No date selected'}
 					</p>
 				</div>
@@ -253,10 +262,12 @@ export const DateAndTime: Story = {
 		const [time, setTime] = React.useState('09:30:00');
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date & Time:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
 					</p>
 				</div>
@@ -281,10 +292,12 @@ export const WithTimezone: Story = {
 		const [timezone, setTimezone] = React.useState('America/New_York');
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date & Time:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
 					</p>
 				</div>
@@ -311,10 +324,12 @@ export const WithActions: Story = {
 		const [timezone, setTimezone] = React.useState('UTC');
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Selected Date & Time:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
 					</p>
 				</div>
@@ -343,12 +358,12 @@ export const DifferentButtonVariants: Story = {
 		const [date3, setDate3] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-6">
-				<div className="space-y-4">
-					<h3 className="text-sm font-medium">Button Variants:</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Button Variants:</h3>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Solid variant:</p>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Solid variant:</p>
 						<DatePicker
 							date={date1}
 							onDateChange={setDate1}
@@ -358,8 +373,10 @@ export const DifferentButtonVariants: Story = {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Outlined variant:</p>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+							Outlined variant:
+						</p>
 						<DatePicker
 							date={date2}
 							onDateChange={setDate2}
@@ -369,8 +386,8 @@ export const DifferentButtonVariants: Story = {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Ghost variant:</p>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Ghost variant:</p>
 						<DatePicker
 							date={date3}
 							onDateChange={setDate3}
@@ -391,12 +408,12 @@ export const DifferentButtonSizes: Story = {
 		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-6">
-				<div className="space-y-4">
-					<h3 className="text-sm font-medium">Button Sizes:</h3>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Button Sizes:</h3>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Small size:</p>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Small size:</p>
 						<DatePicker
 							date={date1}
 							onDateChange={setDate1}
@@ -406,8 +423,10 @@ export const DifferentButtonSizes: Story = {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Medium size (default):</p>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+							Medium size (default):
+						</p>
 						<DatePicker
 							date={date2}
 							onDateChange={setDate2}
@@ -427,10 +446,12 @@ export const Disabled: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Disabled State:</h3>
-					<p className="text-sm text-muted-foreground">
+					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+						Disabled State:
+					</h3>
+					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 						The picker is disabled and cannot be interacted with.
 					</p>
 				</div>

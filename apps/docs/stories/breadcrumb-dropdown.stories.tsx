@@ -30,6 +30,11 @@ const meta: Meta<typeof BreadcrumbDropdown> = {
 			description: 'Additional CSS classes to apply to the dropdown trigger.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the dropdown trigger.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		testId: {
 			control: 'text',
 			description: 'Test ID for automated testing.',

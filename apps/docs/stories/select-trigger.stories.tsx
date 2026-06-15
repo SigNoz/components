@@ -31,6 +31,11 @@ const meta: Meta<typeof SelectTrigger> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -56,7 +61,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger {...args} />
 					<SelectContent>
@@ -77,7 +82,7 @@ export const WithValue: Story = {
 		placeholder: 'Select a framework...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<Select defaultValue="react">
 				<SelectTrigger {...args} />
 				<SelectContent>
@@ -98,7 +103,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<Select>
 				<SelectTrigger {...args} />
 				<SelectContent>
@@ -119,13 +124,13 @@ export const WithCustomRenderValue: Story = {
 		const selectedLabel = frameworks.find((f) => f.value === value)?.label;
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger
 						placeholder="Select a framework..."
 						renderValue={() =>
 							selectedLabel ? (
-								<span className="font-semibold text-primary">{selectedLabel}</span>
+								<span style={{ fontWeight: 600, color: 'var(--primary)' }}>{selectedLabel}</span>
 							) : null
 						}
 					/>

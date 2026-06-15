@@ -21,6 +21,11 @@ const meta: Meta<typeof Skeleton> = {
 			control: 'text',
 			description: 'Additional CSS classes.',
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 };
 

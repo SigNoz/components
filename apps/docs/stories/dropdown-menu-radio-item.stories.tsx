@@ -29,6 +29,11 @@ const meta: Meta<typeof DropdownMenuRadioItem> = {
 			description: 'Additional CSS classes for the radio item.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the radio item.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onSelect: { control: false, table: { category: 'Events' } },
 		children: { control: 'text', table: { category: 'Content' } },
 	},
@@ -51,7 +56,7 @@ export const Default: Story = {
 		const [theme, setTheme] = useState('light');
 
 		return (
-			<div className="p-8">
+			<div style={{ padding: '2rem' }}>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">

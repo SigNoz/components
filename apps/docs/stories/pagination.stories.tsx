@@ -106,6 +106,11 @@ const meta: Meta<typeof Pagination> = {
 			description: 'Additional CSS classes',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		testId: {
 			control: 'text',
 			description: 'Test ID for the pagination container',
@@ -148,7 +153,9 @@ export const Default: Story = {
 		return (
 			<div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 				<div>
-					<p className="mb-2 text-sm text-gray-400">3 Pages - First Selected</p>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						3 Pages - First Selected
+					</p>
 					<Pagination
 						{...args}
 						total={30}
@@ -158,8 +165,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">3 Pages - Second Selected</p>
+				<div style={{ marginTop: '1.5rem' }}>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						3 Pages - Second Selected
+					</p>
 					<Pagination
 						{...args}
 						total={30}
@@ -169,8 +178,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">10 Pages - First Selected</p>
+				<div style={{ marginTop: '1.5rem' }}>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						10 Pages - First Selected
+					</p>
 					<Pagination
 						{...args}
 						total={100}
@@ -180,8 +191,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">10 Pages - Middle Selected (Page 7)</p>
+				<div style={{ marginTop: '1.5rem' }}>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						10 Pages - Middle Selected (Page 7)
+					</p>
 					<Pagination
 						{...args}
 						total={100}
@@ -191,8 +204,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">5 Pages - Center Aligned</p>
+				<div style={{ marginTop: '1.5rem' }}>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						5 Pages - Center Aligned
+					</p>
 					<Pagination
 						{...args}
 						total={50}
@@ -203,8 +218,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">5 Pages - End Aligned</p>
+				<div style={{ marginTop: '1.5rem' }}>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						5 Pages - End Aligned
+					</p>
 					<Pagination
 						{...args}
 						total={50}
@@ -215,8 +232,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">10 Pages - Last Selected</p>
+				<div style={{ marginTop: '1.5rem' }}>
+					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
+						10 Pages - Last Selected
+					</p>
 					<Pagination
 						{...args}
 						total={100}

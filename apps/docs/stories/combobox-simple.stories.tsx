@@ -22,6 +22,11 @@ const meta: Meta<typeof ComboboxSimple> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		items: {
 			control: 'object',
 			description: 'List of items to display (flat). Ignored when groups is provided.',
@@ -155,7 +160,7 @@ export const Default: Story = {
 		placeholder: 'Select a framework...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -170,9 +175,11 @@ export const Controlled: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString())} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -185,7 +192,7 @@ export const WithDefaultValue: Story = {
 		defaultValue: 'react',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -219,7 +226,7 @@ export const WithGroups: Story = {
 		placeholder: 'Select a technology...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -230,7 +237,7 @@ const itemsWithIcons = [
 		value: 'react',
 		label: (
 			<>
-				<Code className="mr-2 h-4 w-4" />
+				<Code size={16} style={{ marginRight: '0.5rem' }} />
 				React
 			</>
 		),
@@ -239,7 +246,7 @@ const itemsWithIcons = [
 		value: 'nodejs',
 		label: (
 			<>
-				<Terminal className="mr-2 h-4 w-4" />
+				<Terminal size={16} style={{ marginRight: '0.5rem' }} />
 				Node.js
 			</>
 		),
@@ -248,7 +255,7 @@ const itemsWithIcons = [
 		value: 'postgres',
 		label: (
 			<>
-				<Database className="mr-2 h-4 w-4" />
+				<Database size={16} style={{ marginRight: '0.5rem' }} />
 				PostgreSQL
 			</>
 		),
@@ -257,7 +264,7 @@ const itemsWithIcons = [
 		value: 'git',
 		label: (
 			<>
-				<GitBranch className="mr-2 h-4 w-4" />
+				<GitBranch size={16} style={{ marginRight: '0.5rem' }} />
 				Git
 			</>
 		),
@@ -270,7 +277,7 @@ export const WithIcons: Story = {
 		placeholder: 'Select a tool...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -286,7 +293,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'react',
 						label: (
 							<>
-								<Code className="mr-2 h-4 w-4" />
+								<Code size={16} style={{ marginRight: '0.5rem' }} />
 								React
 							</>
 						),
@@ -295,7 +302,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'vue',
 						label: (
 							<>
-								<Code className="mr-2 h-4 w-4" />
+								<Code size={16} style={{ marginRight: '0.5rem' }} />
 								Vue
 							</>
 						),
@@ -309,7 +316,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'postgres',
 						label: (
 							<>
-								<Database className="mr-2 h-4 w-4" />
+								<Database size={16} style={{ marginRight: '0.5rem' }} />
 								PostgreSQL
 							</>
 						),
@@ -318,7 +325,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'redis',
 						label: (
 							<>
-								<Database className="mr-2 h-4 w-4" />
+								<Database size={16} style={{ marginRight: '0.5rem' }} />
 								Redis
 							</>
 						),
@@ -329,7 +336,7 @@ export const WithGroupsAndIcons: Story = {
 		placeholder: 'Select a technology...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -342,7 +349,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -358,9 +365,9 @@ export const MultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
 			</div>
@@ -376,7 +383,7 @@ export const MultiSelectWithDefaultValues: Story = {
 		defaultValue: ['react', 'vue'],
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -391,7 +398,7 @@ export const MultiSelectWithMaxPills: Story = {
 		maxDisplayedPills: 2,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -408,12 +415,12 @@ export const AllowCreate: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					Type to filter, then click "Create" option to add new tags
 				</p>
 			</div>
@@ -436,9 +443,9 @@ export const AllowCreateWithCustomRender: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
 			</div>
@@ -457,12 +464,12 @@ export const TagsMode: Story = {
 		const [values, setValues] = useState<string[]>(['initial-tag']);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					Free-form tag input - no predefined options
 				</p>
 			</div>
@@ -480,9 +487,11 @@ export const AllowCreateSingle: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -502,9 +511,11 @@ export const AllowCreateSingleCustomText: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -543,9 +554,11 @@ export const WithHints: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
 			</div>
 		);
 	},
@@ -574,10 +587,12 @@ export const WithHintsAndCreate: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
+				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					Try typing "tag:" to see filtered options, or create a new tag like "tag:mynewtag"
 				</p>
 			</div>
@@ -619,9 +634,9 @@ export const MultiSelectWithHints: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Filters: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
 			</div>
@@ -653,12 +668,12 @@ export const MultiSelectWithHintsAndCreate: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					Type "tag:" to filter, or create custom tags like "tag:mynewtag"
 				</p>
 			</div>
@@ -668,9 +683,20 @@ export const MultiSelectWithHintsAndCreate: Story = {
 
 export const Loading: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-2xl space-y-8">
+		<div
+			style={{
+				padding: '2rem',
+				width: '100%',
+				maxWidth: '42rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2rem',
+			}}
+		>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Infinite Loading
+				</h3>
 				<ComboboxSimple
 					items={[]}
 					placeholder="Select a framework..."
@@ -679,7 +705,9 @@ export const Loading: Story = {
 				/>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+					Loading with Delay (5s)
+				</h3>
 				<ComboboxLoadingWithDelay />
 			</div>
 		</div>
@@ -722,10 +750,12 @@ export const WithKeywords: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
+				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					Try searching: "minute", "hour", "quarter", "half", "daily"
 				</p>
 			</div>
@@ -747,10 +777,12 @@ export const WithStringLabelsFilter: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					Selected: {value || 'none'}
+				</p>
+				<p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 					Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
 				</p>
 			</div>

@@ -37,6 +37,11 @@ const meta: Meta<typeof SelectItem> = {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
@@ -63,7 +68,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -84,24 +89,24 @@ export const WithIcons: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a tool..." />
 					<SelectContent>
 						<SelectItem value="react" textValue="React">
-							<Code className="mr-2 h-4 w-4" />
+							<Code size={16} style={{ marginRight: '0.5rem' }} />
 							React
 						</SelectItem>
 						<SelectItem value="nodejs" textValue="Node.js">
-							<Terminal className="mr-2 h-4 w-4" />
+							<Terminal size={16} style={{ marginRight: '0.5rem' }} />
 							Node.js
 						</SelectItem>
 						<SelectItem value="postgres" textValue="PostgreSQL">
-							<Database className="mr-2 h-4 w-4" />
+							<Database size={16} style={{ marginRight: '0.5rem' }} />
 							PostgreSQL
 						</SelectItem>
 						<SelectItem value="git" textValue="Git">
-							<GitBranch className="mr-2 h-4 w-4" />
+							<GitBranch size={16} style={{ marginRight: '0.5rem' }} />
 							Git
 						</SelectItem>
 					</SelectContent>
@@ -116,7 +121,7 @@ export const Disabled: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -137,7 +142,7 @@ export const InMultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 				<Select multiple value={values} onChange={(v) => setValues(v as string[])}>
 					<SelectTrigger placeholder="Select frameworks..." />
 					<SelectContent>
@@ -148,7 +153,7 @@ export const InMultiSelect: Story = {
 						))}
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">
+				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
 				</p>
 			</div>

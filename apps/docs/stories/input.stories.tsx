@@ -113,6 +113,11 @@ const meta: Meta<typeof Input> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onChange: {
 			control: false,
 			description: 'Event handler called when the input value changes.',
@@ -161,70 +166,78 @@ export const InputTypes: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-300">
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>
 					Common Input Types
 				</h3>
-				<div className="space-y-4 max-w-md">
-					<div className="space-y-2">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '28rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-text"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							Text
 						</label>
 						<Input id="type-text" type="text" placeholder="Enter text" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-email"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							Email
 						</label>
 						<Input id="type-email" type="email" placeholder="email@example.com" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-password"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							Password
 						</label>
 						<Input id="type-password" type="password" placeholder="Enter password" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-number"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							Number
 						</label>
 						<Input id="type-number" type="number" placeholder="Enter number" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-tel"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							Telephone
 						</label>
 						<Input id="type-tel" type="tel" placeholder="+1 (555) 000-0000" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-url"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							URL
 						</label>
 						<Input id="type-url" type="url" placeholder="https://example.com" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="type-search"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
+							style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}
 						>
 							Search
 						</label>
@@ -256,30 +269,53 @@ export const WithLabels: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '28rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<label
 						htmlFor="labeled-input-1"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+						style={{
+							display: 'block',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: 'var(--muted-foreground)',
+						}}
 					>
 						Full Name
 					</label>
 					<Input id="labeled-input-1" placeholder="John Doe" />
 				</div>
-				<div className="space-y-2">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<label
 						htmlFor="labeled-input-2"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+						style={{
+							display: 'block',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: 'var(--muted-foreground)',
+						}}
 					>
 						Email Address
 					</label>
 					<Input id="labeled-input-2" type="email" placeholder="john@example.com" />
 				</div>
-				<div className="space-y-2">
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<label
 						htmlFor="labeled-input-3"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+						style={{
+							display: 'block',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: 'var(--muted-foreground)',
+						}}
 					>
 						Phone Number
 					</label>
@@ -310,12 +346,25 @@ export const DisabledStates: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '28rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<label
 						htmlFor="disabled-input"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+						style={{
+							display: 'block',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: 'var(--muted-foreground)',
+						}}
 					>
 						Disabled Input
 					</label>
@@ -346,12 +395,25 @@ export const ReadOnlyStates: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '28rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<label
 						htmlFor="readonly-input"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+						style={{
+							display: 'block',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: 'var(--muted-foreground)',
+						}}
 					>
 						Read-Only Input
 					</label>
@@ -382,17 +444,32 @@ export const RequiredFields: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '1.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '28rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 					<label
 						htmlFor="required-input"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+						style={{
+							display: 'block',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: 'var(--muted-foreground)',
+						}}
 					>
-						Email Address <span className="text-red-500">*</span>
+						Email Address <span style={{ color: '#ef4444' }}>*</span>
 					</label>
 					<Input id="required-input" type="email" placeholder="Required field" required />
-					<p className="text-xs text-vanilla-600 dark:text-vanilla-400">This field is required</p>
+					<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+						This field is required
+					</p>
 				</div>
 			</div>
 		</div>
@@ -419,43 +496,73 @@ export const FormExamples: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-8 bg-background">
-			<div className="max-w-md space-y-6">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-300">Contact Form</h3>
-				<form className="space-y-4">
-					<div className="space-y-2">
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<div style={{ maxWidth: '28rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--muted-foreground)' }}>
+					Contact Form
+				</h3>
+				<form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="form-name"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+							style={{
+								display: 'block',
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								color: 'var(--muted-foreground)',
+							}}
 						>
-							Full Name <span className="text-red-500">*</span>
+							Full Name <span style={{ color: '#ef4444' }}>*</span>
 						</label>
 						<Input id="form-name" placeholder="John Doe" required />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="form-email"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+							style={{
+								display: 'block',
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								color: 'var(--muted-foreground)',
+							}}
 						>
-							Email Address <span className="text-red-500">*</span>
+							Email Address <span style={{ color: '#ef4444' }}>*</span>
 						</label>
 						<Input id="form-email" type="email" placeholder="john@example.com" required />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="form-phone"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+							style={{
+								display: 'block',
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								color: 'var(--muted-foreground)',
+							}}
 						>
 							Phone Number
 						</label>
 						<Input id="form-phone" type="tel" placeholder="+1 (555) 000-0000" />
 					</div>
-					<div className="space-y-2">
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
 						<label
 							htmlFor="form-password"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
+							style={{
+								display: 'block',
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								color: 'var(--muted-foreground)',
+							}}
 						>
-							Password <span className="text-red-500">*</span>
+							Password <span style={{ color: '#ef4444' }}>*</span>
 						</label>
 						<Input id="form-password" placeholder="Enter password" required type="password" />
 					</div>
@@ -489,8 +596,8 @@ export const PasswordInput: Story = {
 	},
 	render: (args) => {
 		return (
-			<div className="p-5 mt-5">
-				<h2 className="mb-3">Input.Password Example</h2>
+			<div style={{ padding: '1.25rem', marginTop: '1.25rem' }}>
+				<h2 style={{ marginBottom: '0.75rem' }}>Input.Password Example</h2>
 
 				<Input.Password {...args} />
 			</div>

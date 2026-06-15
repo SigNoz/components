@@ -56,7 +56,15 @@ export const Default: Story = {
 	},
 	render: (args) => (
 		<TooltipProvider {...args}>
-			<div className="p-20 flex items-center justify-center gap-4">
+			<div
+				style={{
+					padding: '5rem',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					gap: '1rem',
+				}}
+			>
 				<TooltipSimple title="First tooltip">
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me

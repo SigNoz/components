@@ -33,6 +33,11 @@ const meta: Meta<typeof DropdownMenuCheckboxItem> = {
 			description: 'Additional CSS classes for the checkbox item.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the checkbox item.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onCheckedChange: { control: false, table: { category: 'Events' } },
 		onSelect: { control: false, table: { category: 'Events' } },
 		children: { control: 'text', table: { category: 'Content' } },
@@ -57,7 +62,7 @@ export const Default: Story = {
 		const [showUrls, setShowUrls] = useState(false);
 
 		return (
-			<div className="p-8">
+			<div style={{ padding: '2rem' }}>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">

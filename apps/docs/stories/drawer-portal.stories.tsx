@@ -42,7 +42,7 @@ export const Default: Story = {
 						<DrawerTitle>Drawer portal</DrawerTitle>
 					</DrawerHeader>
 					<DrawerDescription>
-						<p className="text-sm">
+						<p style={{ fontSize: '0.875rem' }}>
 							The portal renders the drawer content and overlay outside the regular DOM tree.
 						</p>
 					</DrawerDescription>

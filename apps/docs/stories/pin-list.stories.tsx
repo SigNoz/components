@@ -74,6 +74,11 @@ const meta: Meta<typeof PinList> = {
 			description: 'Additional CSS class names to apply to the container element.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the container element.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		itemClassName: {
 			control: 'text',
 			description: 'Additional CSS class names to apply to all item elements.',
@@ -111,8 +116,8 @@ const meta: Meta<typeof PinList> = {
 	},
 	decorators: [
 		(Story) => (
-			<div className="p-8 bg-background min-h-[360px]">
-				<div className="max-w-[360px]">
+			<div style={{ padding: '2rem', backgroundColor: 'var(--background)', minHeight: '360px' }}>
+				<div style={{ maxWidth: '360px' }}>
 					<Story />
 				</div>
 			</div>
@@ -272,15 +277,17 @@ export const WithCustomClassNames: Story = {
 			createPinListItem('1', 'Logs', <FileText />, {
 				isPinned: true,
 				active: true,
-				className: 'bg-primary/10',
 			}),
 			createPinListItem('2', 'Metrics', <ChartBar />, { isPinned: false }),
 		],
 		shortcutsLabel: 'SHORTCUTS',
 		moreLabel: 'MORE',
-		className: 'bg-muted/30 p-4 rounded-lg border border-border/50',
-		itemClassName: 'hover:shadow-sm transition-all duration-200',
-		labelClassName: 'text-primary font-headers tracking-widest',
+		style: {
+			backgroundColor: 'var(--muted)',
+			padding: '1rem',
+			borderRadius: '0.5rem',
+			border: '1px solid var(--border)',
+		},
 	},
 	name: 'With Custom ClassNames',
 };
