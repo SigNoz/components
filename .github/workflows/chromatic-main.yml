@@ -1,0 +1,50 @@
+name: "Chromatic (main)"
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+    # Only on merge, and only if the merged PR carried the `run-visual-testing` label.
+    if: >-
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'run-visual-testing')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install Dependencies and Build
+        run: |
+          pnpm install
+          pnpm build
+
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          # pull_request context detects the PR head branch; force main so the
+          # build is treated as a baseline and autoAcceptChanges applies.
+          branchName: main
+          autoAcceptChanges: main
+          onlyChanged: true
