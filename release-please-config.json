@@ -23,11 +23,6 @@
 					"type": "json",
 					"path": "packages/ui/package.json",
 					"jsonpath": "$.version"
-				},
-				{
-					"type": "json",
-					"path": "packages/tailwind-config/package.json",
-					"jsonpath": "$.version"
 				}
 			],
 			"changelog-sections": [
