@@ -1,0 +1,120 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ConfirmDrawerStories from './confirm-drawer.stories';
+import * as ConfirmDrawerUrlStories from './confirm-drawer-url.stories';
+
+<Meta of={ConfirmDrawerStories} />
+
+# ConfirmDrawer
+
+A drawer preset for confirm/cancel flows. Renders a title, optional description, and footer with configurable confirm and cancel buttons.
+
+For full primitive control, see [Drawer](?path=/docs/primitive-components-drawer--docs).
+
+## How to use
+
+```tsx
+import { useState } from 'react';
+import { ConfirmDrawer, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Delete</Button>
+			<ConfirmDrawer
+				open={open}
+				onOpenChange={setOpen}
+				title="Confirm action"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={() => setOpen(false)}
+				onCancel={() => setOpen(false)}
+				width="narrow"
+			>
+				Are you sure? This action cannot be undone.
+			</ConfirmDrawer>
+		</>
+	);
+}
+```
+
+<Primary />
+
+## Async confirm
+
+Pass an async `onConfirm` handler — the confirm button shows a loading state until the promise resolves. Return `true` to close the drawer, or `false` to keep it open:
+
+```tsx
+<ConfirmDrawer
+	open={open}
+	onOpenChange={setOpen}
+	title="Delete record"
+	confirmText="Delete"
+	confirmColor="destructive"
+	onConfirm={async () => {
+		await deleteRecord();
+		return true;
+	}}
+	onCancel={() => setOpen(false)}
+>
+	This will permanently delete the record.
+</ConfirmDrawer>
+```
+
+## Props
+
+<Controls of={ConfirmDrawerStories.Default} />
+
+---
+
+## ConfirmDrawerUrl
+
+Variant of `ConfirmDrawer` that syncs the open state with a URL boolean query parameter via [nuqs](https://nuqs.dev/). Useful for shareable or bookmarkable confirmation states.
+
+### How to use
+
+Wrap your app (or page) in `NuqsAdapter` and use `useQueryState` to open the drawer by setting the URL param:
+
+```tsx
+import { ConfirmDrawerUrl, Button } from '@signozhq/ui';
+import { useQueryState, parseAsBoolean } from 'nuqs';
+import { NuqsAdapter } from 'nuqs/adapters/react';
+
+function DeleteDrawer() {
+	const [, setOpen] = useQueryState('drawer-delete-step', parseAsBoolean.withDefault(false));
+
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Open confirm drawer (URL)</Button>
+			<ConfirmDrawerUrl
+				urlKey="drawer-delete-step"
+				title="Delete from URL param"
+				confirmText="Delete"
+				cancelText="Cancel"
+				confirmColor="destructive"
+				onConfirm={async () => {
+					await new Promise((resolve) => setTimeout(resolve, 300));
+					return true;
+				}}
+				width="narrow"
+			>
+				This confirm drawer is controlled via a URL query parameter using nuqs.
+			</ConfirmDrawerUrl>
+		</>
+	);
+}
+
+export default function MyComponent() {
+	return (
+		<NuqsAdapter>
+			<DeleteDrawer />
+		</NuqsAdapter>
+	);
+}
+```
+
+### Props
+
+<Controls of={ConfirmDrawerUrlStories.Default} />
