@@ -183,7 +183,7 @@ export function groupTokensByGroup(tokens: ParsedToken[]): Map<string, ParsedTok
 		if (!grouped.has(group)) {
 			grouped.set(group, []);
 		}
-		grouped.get(group)!.push(token);
+		grouped.get(group)?.push(token);
 	}
 
 	return grouped;
@@ -197,7 +197,7 @@ export function groupTokensByCategory(tokens: ParsedToken[]): Map<string, Parsed
 		if (!grouped.has(category)) {
 			grouped.set(category, []);
 		}
-		grouped.get(category)!.push(token);
+		grouped.get(category)?.push(token);
 	}
 
 	return grouped;

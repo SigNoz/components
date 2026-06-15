@@ -134,42 +134,67 @@ export const Default: Story = {
 	),
 };
 
-export const AllVariants: Story = {
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+	},
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
-				<div key={c} style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
-					<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Variants
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
+						<div key={c} style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
+							<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
 
-					<RadioGroup color={c as RadioColorProps}>
-						<RadioGroupItem value="default" id={`radio-${c}-default`}>
-							Default
-						</RadioGroupItem>
-					</RadioGroup>
+							<RadioGroup color={c as RadioColorProps}>
+								<RadioGroupItem value="default" id={`radio-${c}-default`}>
+									Default
+								</RadioGroupItem>
+							</RadioGroup>
 
-					<RadioGroup defaultValue="selected" color={c as RadioColorProps}>
-						<RadioGroupItem value="selected" id={`radio-${c}-selected`}>
-							Selected
-						</RadioGroupItem>
-					</RadioGroup>
+							<RadioGroup defaultValue="selected" color={c as RadioColorProps}>
+								<RadioGroupItem value="selected" id={`radio-${c}-selected`}>
+									Selected
+								</RadioGroupItem>
+							</RadioGroup>
 
-					<RadioGroup color={c as RadioColorProps}>
-						<RadioGroupItem value="disabled" id={`radio-${c}-disabled`} disabled={true}>
-							Disabled
-						</RadioGroupItem>
-					</RadioGroup>
+							<RadioGroup color={c as RadioColorProps}>
+								<RadioGroupItem value="disabled" id={`radio-${c}-disabled`} disabled={true}>
+									Disabled
+								</RadioGroupItem>
+							</RadioGroup>
 
-					<RadioGroup defaultValue="disabled-selected" color={c as RadioColorProps}>
-						<RadioGroupItem
-							value="disabled-selected"
-							id={`radio-${c}-disabled-selected`}
-							disabled={true}
-						>
-							Disabled Selected
-						</RadioGroupItem>
-					</RadioGroup>
+							<RadioGroup defaultValue="disabled-selected" color={c as RadioColorProps}>
+								<RadioGroupItem
+									value="disabled-selected"
+									id={`radio-${c}-disabled-selected`}
+									disabled={true}
+								>
+									Disabled Selected
+								</RadioGroupItem>
+							</RadioGroup>
+						</div>
+					))}
 				</div>
-			))}
+			</section>
 		</div>
 	),
 };

@@ -51,8 +51,8 @@ export const Actions: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['actions']}
-			description={GROUP_DESCRIPTIONS['actions']}
+			title={GROUP_LABELS.actions}
+			description={GROUP_DESCRIPTIONS.actions}
 		/>
 	),
 };
@@ -65,8 +65,8 @@ export const Callouts: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['callouts']}
-			description={GROUP_DESCRIPTIONS['callouts']}
+			title={GROUP_LABELS.callouts}
+			description={GROUP_DESCRIPTIONS.callouts}
 		/>
 	),
 };
@@ -79,8 +79,8 @@ export const Accents: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['accents']}
-			description={GROUP_DESCRIPTIONS['accents']}
+			title={GROUP_LABELS.accents}
+			description={GROUP_DESCRIPTIONS.accents}
 		/>
 	),
 };
@@ -93,8 +93,8 @@ export const Sidebar: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['sidebar']}
-			description={GROUP_DESCRIPTIONS['sidebar']}
+			title={GROUP_LABELS.sidebar}
+			description={GROUP_DESCRIPTIONS.sidebar}
 		/>
 	),
 };
@@ -107,8 +107,8 @@ export const Charts: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['charts']}
-			description={GROUP_DESCRIPTIONS['charts']}
+			title={GROUP_LABELS.charts}
+			description={GROUP_DESCRIPTIONS.charts}
 		/>
 	),
 };
@@ -121,8 +121,8 @@ export const Typography: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['fonts']}
-			description={GROUP_DESCRIPTIONS['fonts']}
+			title={GROUP_LABELS.fonts}
+			description={GROUP_DESCRIPTIONS.fonts}
 		/>
 	),
 };
@@ -135,8 +135,8 @@ export const Base: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['base']}
-			description={GROUP_DESCRIPTIONS['base']}
+			title={GROUP_LABELS.base}
+			description={GROUP_DESCRIPTIONS.base}
 		/>
 	),
 };
@@ -149,8 +149,8 @@ export const Alerts: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['alerts']}
-			description={GROUP_DESCRIPTIONS['alerts']}
+			title={GROUP_LABELS.alerts}
+			description={GROUP_DESCRIPTIONS.alerts}
 		/>
 	),
 };
@@ -163,8 +163,8 @@ export const Legacy: Story = {
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['legacy']}
-			description={GROUP_DESCRIPTIONS['legacy']}
+			title={GROUP_LABELS.legacy}
+			description={GROUP_DESCRIPTIONS.legacy}
 		/>
 	),
 };

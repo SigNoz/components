@@ -83,89 +83,125 @@ export const Default: Story = {
 	),
 };
 
-export const PrimaryVariant: Story = {
+export const Preview: Story = {
 	render: () => (
-		<TabsRoot
-			defaultValue="overview"
+		<div
 			style={{
+				padding: '2rem',
 				display: 'flex',
 				flexDirection: 'column',
-				gap: '0.5rem',
-				alignItems: 'flex-start',
-				textAlign: 'left',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
 			}}
 		>
-			<TabsList variant="primary">
-				<TabsTrigger value="overview" variant="primary">
-					<Settings size={16} />
-					Overview
-				</TabsTrigger>
-				<TabsTrigger value="issues" variant="primary">
-					<CircleAlert size={16} />
-					Issues
-				</TabsTrigger>
-				<TabsTrigger value="history" variant="primary">
-					History
-					<History size={16} />
-				</TabsTrigger>
-			</TabsList>
-			<TabsContent value="overview">Overview content panel</TabsContent>
-			<TabsContent value="issues">Issues content panel</TabsContent>
-			<TabsContent value="history">History content panel</TabsContent>
-		</TabsRoot>
-	),
-};
-
-export const SecondaryVariant: Story = {
-	render: () => (
-		<TabsRoot
-			defaultValue="all"
-			style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
-		>
-			<TabsList variant="secondary">
-				<TabsTrigger value="all" variant="secondary">
-					All Endpoints
-				</TabsTrigger>
-				<TabsTrigger value="details" variant="secondary">
-					Endpoint Details
-				</TabsTrigger>
-				<TabsTrigger value="advanced" variant="secondary">
-					Advanced
-				</TabsTrigger>
-			</TabsList>
-			<TabsContent value="all">All endpoints content</TabsContent>
-			<TabsContent value="details">Endpoint details content</TabsContent>
-			<TabsContent value="advanced">Advanced settings content</TabsContent>
-		</TabsRoot>
-	),
-};
-
-export const WithDisabledTabs: Story = {
-	render: () => (
-		<TabsRoot
-			defaultValue="active"
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				gap: '0.5rem',
-				alignItems: 'flex-start',
-				textAlign: 'left',
-			}}
-		>
-			<TabsList variant="primary">
-				<TabsTrigger value="active" variant="primary">
-					Active Tab
-				</TabsTrigger>
-				<TabsTrigger value="disabled" variant="primary" disabled>
-					Disabled Tab
-				</TabsTrigger>
-				<TabsTrigger value="another" variant="primary">
-					Another Tab
-				</TabsTrigger>
-			</TabsList>
-			<TabsContent value="active">Active tab content</TabsContent>
-			<TabsContent value="disabled">Disabled tab content</TabsContent>
-			<TabsContent value="another">Another tab content</TabsContent>
-		</TabsRoot>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Primary Variant
+				</h3>
+				<TabsRoot
+					defaultValue="overview"
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '0.5rem',
+						alignItems: 'flex-start',
+						textAlign: 'left',
+					}}
+				>
+					<TabsList variant="primary">
+						<TabsTrigger value="overview" variant="primary">
+							<Settings size={16} />
+							Overview
+						</TabsTrigger>
+						<TabsTrigger value="issues" variant="primary">
+							<CircleAlert size={16} />
+							Issues
+						</TabsTrigger>
+						<TabsTrigger value="history" variant="primary">
+							History
+							<History size={16} />
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent value="overview">Overview content panel</TabsContent>
+					<TabsContent value="issues">Issues content panel</TabsContent>
+					<TabsContent value="history">History content panel</TabsContent>
+				</TabsRoot>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Secondary Variant
+				</h3>
+				<TabsRoot
+					defaultValue="all"
+					style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+				>
+					<TabsList variant="secondary">
+						<TabsTrigger value="all" variant="secondary">
+							All Endpoints
+						</TabsTrigger>
+						<TabsTrigger value="details" variant="secondary">
+							Endpoint Details
+						</TabsTrigger>
+						<TabsTrigger value="advanced" variant="secondary">
+							Advanced
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent value="all">All endpoints content</TabsContent>
+					<TabsContent value="details">Endpoint details content</TabsContent>
+					<TabsContent value="advanced">Advanced settings content</TabsContent>
+				</TabsRoot>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Disabled Tabs
+				</h3>
+				<TabsRoot
+					defaultValue="active"
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '0.5rem',
+						alignItems: 'flex-start',
+						textAlign: 'left',
+					}}
+				>
+					<TabsList variant="primary">
+						<TabsTrigger value="active" variant="primary">
+							Active Tab
+						</TabsTrigger>
+						<TabsTrigger value="disabled" variant="primary" disabled>
+							Disabled Tab
+						</TabsTrigger>
+						<TabsTrigger value="another" variant="primary">
+							Another Tab
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent value="active">Active tab content</TabsContent>
+					<TabsContent value="disabled">Disabled tab content</TabsContent>
+					<TabsContent value="another">Another tab content</TabsContent>
+				</TabsRoot>
+			</section>
+		</div>
 	),
 };

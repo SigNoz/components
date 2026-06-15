@@ -182,370 +182,400 @@ export const Default: Story = {
 	),
 };
 
-export const WithMinMaxConstraints: Story = {
-	args: {
-		defaultSize: '30%',
-		minSize: '20%',
-		maxSize: '60%',
-		collapsible: false,
-	},
-	render: (args) => (
-		<div style={{ margin: '1.5rem' }}>
-			<div
-				style={{
-					marginBottom: '1rem',
-					padding: '1rem',
-					backgroundColor: 'var(--muted)',
-					borderRadius: '0.5rem',
-				}}
-			>
-				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Size Constraints:</h3>
-				<ul
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
 					style={{
 						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
 						color: 'var(--muted-foreground)',
-						display: 'flex',
-						flexDirection: 'column',
-						gap: '0.25rem',
 					}}
 				>
-					<li>• Default: 30%</li>
-					<li>• Minimum: 20%</li>
-					<li>• Maximum: 60%</li>
-					<li>• Try resizing - it won't go beyond these limits!</li>
-				</ul>
-			</div>
-			<div
-				style={{
-					height: '400px',
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					overflow: 'hidden',
-				}}
-			>
-				<ResizablePanelGroup orientation="horizontal">
-					<ResizablePanel {...args}>
-						<div
+					With Min Max Constraints
+				</h3>
+				<div style={{ margin: '1.5rem' }}>
+					<div
+						style={{
+							marginBottom: '1rem',
+							padding: '1rem',
+							backgroundColor: 'var(--muted)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Size Constraints:</h3>
+						<ul
 							style={{
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
 								display: 'flex',
-								height: '100%',
-								alignItems: 'center',
-								justifyContent: 'center',
-								backgroundImage: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
+								flexDirection: 'column',
+								gap: '0.25rem',
 							}}
 						>
-							<div style={{ textAlign: 'center' }}>
-								<Settings
-									size={24}
-									style={{
-										marginLeft: 'auto',
-										marginRight: 'auto',
-										display: 'block',
-										marginBottom: '0.5rem',
-										color: '#2563eb',
-									}}
-								/>
-								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Constrained Panel</span>
+							<li>• Default: 30%</li>
+							<li>• Minimum: 20%</li>
+							<li>• Maximum: 60%</li>
+							<li>• Try resizing - it won't go beyond these limits!</li>
+						</ul>
+					</div>
+					<div
+						style={{
+							height: '400px',
+							border: '1px solid var(--border)',
+							borderRadius: '0.5rem',
+							overflow: 'hidden',
+						}}
+					>
+						<ResizablePanelGroup orientation="horizontal">
+							<ResizablePanel defaultSize="30%" minSize="20%" maxSize="60%" collapsible={false}>
 								<div
 									style={{
-										fontSize: '0.75rem',
-										color: 'var(--muted-foreground)',
-										marginTop: '0.5rem',
+										display: 'flex',
+										height: '100%',
+										alignItems: 'center',
+										justifyContent: 'center',
+										backgroundImage: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
 									}}
 								>
-									<div>Min: 20% • Max: 60%</div>
+									<div style={{ textAlign: 'center' }}>
+										<Settings
+											size={24}
+											style={{
+												marginLeft: 'auto',
+												marginRight: 'auto',
+												display: 'block',
+												marginBottom: '0.5rem',
+												color: '#2563eb',
+											}}
+										/>
+										<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Constrained Panel</span>
+										<div
+											style={{
+												fontSize: '0.75rem',
+												color: 'var(--muted-foreground)',
+												marginTop: '0.5rem',
+											}}
+										>
+											<div>Min: 20% • Max: 60%</div>
+										</div>
+									</div>
 								</div>
-							</div>
-						</div>
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-					<ResizablePanel defaultSize="70%">
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Flexible Panel</span>
-						</div>
-					</ResizablePanel>
-				</ResizablePanelGroup>
-			</div>
-		</div>
-	),
-};
-
-export const Collapsible: Story = {
-	args: {
-		defaultSize: '25%',
-		minSize: '15%',
-		maxSize: '40%',
-		collapsible: true,
-	},
-	render: (args) => (
-		<div style={{ margin: '1.5rem' }}>
-			<div
-				style={{
-					marginBottom: '1rem',
-					padding: '1rem',
-					backgroundColor: 'var(--muted)',
-					borderRadius: '0.5rem',
-				}}
-			>
-				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Collapsible Panel:</h3>
-				<ul
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+							<ResizablePanel defaultSize="70%">
+								<div
+									style={{
+										display: 'flex',
+										height: '100%',
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+								>
+									<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Flexible Panel</span>
+								</div>
+							</ResizablePanel>
+						</ResizablePanelGroup>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
 					style={{
 						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
 						color: 'var(--muted-foreground)',
-						display: 'flex',
-						flexDirection: 'column',
-						gap: '0.25rem',
 					}}
 				>
-					<li>• Drag the left panel to its minimum size to collapse it</li>
-					<li>• Click the resize handle to restore it</li>
-					<li>• Great for sidebars and tool panels!</li>
-				</ul>
-			</div>
-			<div
-				style={{
-					height: '400px',
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					overflow: 'hidden',
-				}}
-			>
-				<ResizablePanelGroup orientation="horizontal">
-					<ResizablePanel {...args}>
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								flexDirection: 'column',
-								padding: '1rem',
-								backgroundImage: 'linear-gradient(to bottom right, #f0fdf4, #d1fae5)',
-							}}
-						>
-							<Code size={20} style={{ marginBottom: '0.5rem', color: '#16a34a' }} />
-							<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Collapsible Sidebar</h3>
-							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-								Drag me to the edge!
-							</p>
-						</div>
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-					<ResizablePanel defaultSize="75%">
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<div style={{ textAlign: 'center' }}>
-								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Main Content</span>
-								<p
-									style={{
-										fontSize: '0.75rem',
-										color: 'var(--muted-foreground)',
-										marginTop: '0.25rem',
-									}}
-								>
-									Expands when sidebar collapses
-								</p>
-							</div>
-						</div>
-					</ResizablePanel>
-				</ResizablePanelGroup>
-			</div>
-		</div>
-	),
-};
-
-export const MultipleCollapsiblePanels: Story = {
-	render: () => (
-		<div style={{ margin: '1.5rem' }}>
-			<div
-				style={{
-					marginBottom: '1rem',
-					padding: '1rem',
-					backgroundColor: 'var(--muted)',
-					borderRadius: '0.5rem',
-				}}
-			>
-				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>
-					Both side panels are collapsible:
+					Collapsible
 				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Drag either side panel to its edge to collapse it
-				</p>
-			</div>
-			<div
-				style={{
-					height: '400px',
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					overflow: 'hidden',
-				}}
-			>
-				<ResizablePanelGroup orientation="horizontal">
-					<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
-						<div
+				<div style={{ margin: '1.5rem' }}>
+					<div
+						style={{
+							marginBottom: '1rem',
+							padding: '1rem',
+							backgroundColor: 'var(--muted)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Collapsible Panel:</h3>
+						<ul
 							style={{
+								fontSize: '0.875rem',
+								color: 'var(--muted-foreground)',
 								display: 'flex',
-								height: '100%',
 								flexDirection: 'column',
-								padding: '1rem',
-								backgroundColor: 'var(--muted)',
+								gap: '0.25rem',
 							}}
 						>
-							<Settings
-								size={20}
-								style={{ marginBottom: '0.5rem', color: 'var(--muted-foreground)' }}
-							/>
-							<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Left Sidebar</h3>
-							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Collapsible</p>
-						</div>
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-					<ResizablePanel defaultSize="60%">
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<div style={{ textAlign: 'center' }}>
-								<Code
-									size={32}
+							<li>• Drag the left panel to its minimum size to collapse it</li>
+							<li>• Click the resize handle to restore it</li>
+							<li>• Great for sidebars and tool panels!</li>
+						</ul>
+					</div>
+					<div
+						style={{
+							height: '400px',
+							border: '1px solid var(--border)',
+							borderRadius: '0.5rem',
+							overflow: 'hidden',
+						}}
+					>
+						<ResizablePanelGroup orientation="horizontal">
+							<ResizablePanel defaultSize="25%" minSize="15%" maxSize="40%" collapsible={true}>
+								<div
 									style={{
-										marginLeft: 'auto',
-										marginRight: 'auto',
-										display: 'block',
-										marginBottom: '0.5rem',
-										color: 'var(--muted-foreground)',
-									}}
-								/>
-								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Main Editor</span>
-								<p
-									style={{
-										fontSize: '0.75rem',
-										color: 'var(--muted-foreground)',
-										marginTop: '0.25rem',
+										display: 'flex',
+										height: '100%',
+										flexDirection: 'column',
+										padding: '1rem',
+										backgroundImage: 'linear-gradient(to bottom right, #f0fdf4, #d1fae5)',
 									}}
 								>
-									Always visible
-								</p>
-							</div>
-						</div>
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-					<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								flexDirection: 'column',
-								padding: '1rem',
-								backgroundColor: 'var(--muted)',
-							}}
-						>
-							<Settings
-								size={20}
-								style={{ marginBottom: '0.5rem', color: 'var(--muted-foreground)' }}
-							/>
-							<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Right Sidebar</h3>
-							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Collapsible</p>
-						</div>
-					</ResizablePanel>
-				</ResizablePanelGroup>
-			</div>
-		</div>
-	),
-};
-
-export const VerticalPanels: Story = {
-	args: {
-		defaultSize: '30%',
-		minSize: '20%',
-		collapsible: true,
-	},
-	render: (args) => (
-		<div style={{ margin: '1.5rem' }}>
-			<div
-				style={{
-					marginBottom: '1rem',
-					padding: '1rem',
-					backgroundColor: 'var(--muted)',
-					borderRadius: '0.5rem',
-				}}
-			>
-				<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Vertical collapsible panel:</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Drag the bottom panel down to collapse it
-				</p>
-			</div>
-			<div
-				style={{
-					height: '500px',
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					overflow: 'hidden',
-				}}
-			>
-				<ResizablePanelGroup orientation="vertical">
-					<ResizablePanel defaultSize="70%">
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<div style={{ textAlign: 'center' }}>
-								<Code
-									size={32}
+									<Code size={20} style={{ marginBottom: '0.5rem', color: '#16a34a' }} />
+									<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Collapsible Sidebar</h3>
+									<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+										Drag me to the edge!
+									</p>
+								</div>
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+							<ResizablePanel defaultSize="75%">
+								<div
 									style={{
-										marginLeft: 'auto',
-										marginRight: 'auto',
-										display: 'block',
-										marginBottom: '0.5rem',
-										color: 'var(--muted-foreground)',
+										display: 'flex',
+										height: '100%',
+										alignItems: 'center',
+										justifyContent: 'center',
 									}}
-								/>
-								<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Editor Area</span>
-							</div>
-						</div>
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-					<ResizablePanel {...args}>
-						<div
-							style={{
-								display: 'flex',
-								height: '100%',
-								flexDirection: 'column',
-								padding: '1rem',
-								backgroundColor: 'var(--muted)',
-							}}
-						>
-							<Settings
-								size={20}
-								style={{ marginBottom: '0.5rem', color: 'var(--muted-foreground)' }}
-							/>
-							<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Terminal</h3>
-							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-								Drag down to collapse
-							</p>
-						</div>
-					</ResizablePanel>
-				</ResizablePanelGroup>
-			</div>
+								>
+									<div style={{ textAlign: 'center' }}>
+										<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Main Content</span>
+										<p
+											style={{
+												fontSize: '0.75rem',
+												color: 'var(--muted-foreground)',
+												marginTop: '0.25rem',
+											}}
+										>
+											Expands when sidebar collapses
+										</p>
+									</div>
+								</div>
+							</ResizablePanel>
+						</ResizablePanelGroup>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multiple Collapsible Panels
+				</h3>
+				<div style={{ margin: '1.5rem' }}>
+					<div
+						style={{
+							marginBottom: '1rem',
+							padding: '1rem',
+							backgroundColor: 'var(--muted)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>
+							Both side panels are collapsible:
+						</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							Drag either side panel to its edge to collapse it
+						</p>
+					</div>
+					<div
+						style={{
+							height: '400px',
+							border: '1px solid var(--border)',
+							borderRadius: '0.5rem',
+							overflow: 'hidden',
+						}}
+					>
+						<ResizablePanelGroup orientation="horizontal">
+							<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
+								<div
+									style={{
+										display: 'flex',
+										height: '100%',
+										flexDirection: 'column',
+										padding: '1rem',
+										backgroundColor: 'var(--muted)',
+									}}
+								>
+									<Settings
+										size={20}
+										style={{ marginBottom: '0.5rem', color: 'var(--muted-foreground)' }}
+									/>
+									<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Left Sidebar</h3>
+									<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+										Collapsible
+									</p>
+								</div>
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+							<ResizablePanel defaultSize="60%">
+								<div
+									style={{
+										display: 'flex',
+										height: '100%',
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+								>
+									<div style={{ textAlign: 'center' }}>
+										<Code
+											size={32}
+											style={{
+												marginLeft: 'auto',
+												marginRight: 'auto',
+												display: 'block',
+												marginBottom: '0.5rem',
+												color: 'var(--muted-foreground)',
+											}}
+										/>
+										<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Main Editor</span>
+										<p
+											style={{
+												fontSize: '0.75rem',
+												color: 'var(--muted-foreground)',
+												marginTop: '0.25rem',
+											}}
+										>
+											Always visible
+										</p>
+									</div>
+								</div>
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+							<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
+								<div
+									style={{
+										display: 'flex',
+										height: '100%',
+										flexDirection: 'column',
+										padding: '1rem',
+										backgroundColor: 'var(--muted)',
+									}}
+								>
+									<Settings
+										size={20}
+										style={{ marginBottom: '0.5rem', color: 'var(--muted-foreground)' }}
+									/>
+									<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Right Sidebar</h3>
+									<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+										Collapsible
+									</p>
+								</div>
+							</ResizablePanel>
+						</ResizablePanelGroup>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Vertical Panels
+				</h3>
+				<div style={{ margin: '1.5rem' }}>
+					<div
+						style={{
+							marginBottom: '1rem',
+							padding: '1rem',
+							backgroundColor: 'var(--muted)',
+							borderRadius: '0.5rem',
+						}}
+					>
+						<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Vertical collapsible panel:</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							Drag the bottom panel down to collapse it
+						</p>
+					</div>
+					<div
+						style={{
+							height: '500px',
+							border: '1px solid var(--border)',
+							borderRadius: '0.5rem',
+							overflow: 'hidden',
+						}}
+					>
+						<ResizablePanelGroup orientation="vertical">
+							<ResizablePanel defaultSize="70%">
+								<div
+									style={{
+										display: 'flex',
+										height: '100%',
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+								>
+									<div style={{ textAlign: 'center' }}>
+										<Code
+											size={32}
+											style={{
+												marginLeft: 'auto',
+												marginRight: 'auto',
+												display: 'block',
+												marginBottom: '0.5rem',
+												color: 'var(--muted-foreground)',
+											}}
+										/>
+										<span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Editor Area</span>
+									</div>
+								</div>
+							</ResizablePanel>
+							<ResizableHandle withHandle />
+							<ResizablePanel defaultSize="30%" minSize="20%" collapsible={true}>
+								<div
+									style={{
+										display: 'flex',
+										height: '100%',
+										flexDirection: 'column',
+										padding: '1rem',
+										backgroundColor: 'var(--muted)',
+									}}
+								>
+									<Settings
+										size={20}
+										style={{ marginBottom: '0.5rem', color: 'var(--muted-foreground)' }}
+									/>
+									<h3 style={{ fontWeight: 500, marginBottom: '0.5rem' }}>Terminal</h3>
+									<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+										Drag down to collapse
+									</p>
+								</div>
+							</ResizablePanel>
+						</ResizablePanelGroup>
+					</div>
+				</div>
+			</section>
 		</div>
 	),
 };

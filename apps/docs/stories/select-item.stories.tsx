@@ -58,6 +58,77 @@ const frameworks = [
 	{ value: 'angular', label: 'Angular' },
 ];
 
+function SelectItemWithIconsExample() {
+	const [value, setValue] = useState('');
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Select value={value} onChange={(v) => setValue(v as string)}>
+				<SelectTrigger placeholder="Select a tool..." />
+				<SelectContent>
+					<SelectItem value="react" textValue="React">
+						<Code size={16} style={{ marginRight: '0.5rem' }} />
+						React
+					</SelectItem>
+					<SelectItem value="nodejs" textValue="Node.js">
+						<Terminal size={16} style={{ marginRight: '0.5rem' }} />
+						Node.js
+					</SelectItem>
+					<SelectItem value="postgres" textValue="PostgreSQL">
+						<Database size={16} style={{ marginRight: '0.5rem' }} />
+						PostgreSQL
+					</SelectItem>
+					<SelectItem value="git" textValue="Git">
+						<GitBranch size={16} style={{ marginRight: '0.5rem' }} />
+						Git
+					</SelectItem>
+				</SelectContent>
+			</Select>
+		</div>
+	);
+}
+
+function SelectItemDisabledExample() {
+	const [value, setValue] = useState('');
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Select value={value} onChange={(v) => setValue(v as string)}>
+				<SelectTrigger placeholder="Select a framework..." />
+				<SelectContent>
+					<SelectItem value="react">React</SelectItem>
+					<SelectItem value="vue" disabled>
+						Vue (disabled)
+					</SelectItem>
+					<SelectItem value="angular">Angular</SelectItem>
+				</SelectContent>
+			</Select>
+		</div>
+	);
+}
+
+function SelectItemMultiSelectExample() {
+	const [values, setValues] = useState<string[]>([]);
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Select multiple value={values} onChange={(v) => setValues(v as string[])}>
+				<SelectTrigger placeholder="Select frameworks..." />
+				<SelectContent>
+					{frameworks.map((f) => (
+						<SelectItem key={f.value} value={f.value}>
+							{f.label}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+			<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				Selected: {values.length > 0 ? values.join(', ') : 'none'}
+			</p>
+		</div>
+	);
+}
+
 export const Default: Story = {
 	args: {
 		children: 'React',
@@ -66,6 +137,7 @@ export const Default: Story = {
 	},
 	render: (args) => {
 		const [value, setValue] = useState('');
+		const { value: _itemValue, ...itemArgs } = args;
 
 		return (
 			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
@@ -73,7 +145,7 @@ export const Default: Story = {
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
 						{frameworks.map((f) => (
-							<SelectItem key={f.value} value={f.value} {...(f.value === 'react' ? args : {})}>
+							<SelectItem key={f.value} value={f.value} {...(f.value === 'react' ? itemArgs : {})}>
 								{f.value === 'react' ? args.children : f.label}
 							</SelectItem>
 						))}
@@ -84,79 +156,56 @@ export const Default: Story = {
 	},
 };
 
-export const WithIcons: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Select value={value} onChange={(v) => setValue(v as string)}>
-					<SelectTrigger placeholder="Select a tool..." />
-					<SelectContent>
-						<SelectItem value="react" textValue="React">
-							<Code size={16} style={{ marginRight: '0.5rem' }} />
-							React
-						</SelectItem>
-						<SelectItem value="nodejs" textValue="Node.js">
-							<Terminal size={16} style={{ marginRight: '0.5rem' }} />
-							Node.js
-						</SelectItem>
-						<SelectItem value="postgres" textValue="PostgreSQL">
-							<Database size={16} style={{ marginRight: '0.5rem' }} />
-							PostgreSQL
-						</SelectItem>
-						<SelectItem value="git" textValue="Git">
-							<GitBranch size={16} style={{ marginRight: '0.5rem' }} />
-							Git
-						</SelectItem>
-					</SelectContent>
-				</Select>
-			</div>
-		);
-	},
-};
-
-export const Disabled: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Select value={value} onChange={(v) => setValue(v as string)}>
-					<SelectTrigger placeholder="Select a framework..." />
-					<SelectContent>
-						<SelectItem value="react">React</SelectItem>
-						<SelectItem value="vue" disabled>
-							Vue (disabled)
-						</SelectItem>
-						<SelectItem value="angular">Angular</SelectItem>
-					</SelectContent>
-				</Select>
-			</div>
-		);
-	},
-};
-
-export const InMultiSelect: Story = {
-	render: () => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Select multiple value={values} onChange={(v) => setValues(v as string[])}>
-					<SelectTrigger placeholder="Select frameworks..." />
-					<SelectContent>
-						{frameworks.map((f) => (
-							<SelectItem key={f.value} value={f.value}>
-								{f.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-			</div>
-		);
-	},
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Icons
+				</h3>
+				<SelectItemWithIconsExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<SelectItemDisabledExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					In Multi Select
+				</h3>
+				<SelectItemMultiSelectExample />
+			</section>
+		</div>
+	),
 };

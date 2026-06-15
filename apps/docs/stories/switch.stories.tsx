@@ -98,7 +98,6 @@ const meta: Meta<typeof Switch> = {
 export default meta;
 type Story = StoryObj<typeof Switch>;
 
-// Default switch
 export const Default: Story = {
 	args: {
 		id: 'default',
@@ -109,57 +108,88 @@ export const Default: Story = {
 	},
 };
 
-export const IsLoading: Story = {
-	args: {
-		id: 'loading',
-		children: 'Loading switch',
-		isLoading: true,
-		color: 'robin',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-};
-
-export const AllVariants: Story = {
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
-				<div key={c} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-					<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Is Loading
+				</h3>
+				<Switch id="loading" isLoading color="robin">
+					Loading switch
+				</Switch>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Variants
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
+						<div key={c} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+							<div style={{ width: 120, textTransform: 'capitalize' }}>{c}</div>
 
-					<Switch id={`switch-${c}-default`} color={c as any}>
-						Default
-					</Switch>
+							<Switch id={`switch-${c}-default`} color={c as any}>
+								Default
+							</Switch>
 
-					<Switch id={`switch-${c}-checked`} defaultValue={true} color={c as any}>
-						Checked
-					</Switch>
+							<Switch id={`switch-${c}-checked`} defaultValue={true} color={c as any}>
+								Checked
+							</Switch>
 
-					<Switch id={`switch-${c}-disabled`} disabled={true} color={c as any}>
-						Disabled
-					</Switch>
+							<Switch id={`switch-${c}-disabled`} disabled={true} color={c as any}>
+								Disabled
+							</Switch>
 
-					<Switch
-						id={`switch-${c}-disabled-checked`}
-						defaultValue={true}
-						disabled={true}
-						color={c as any}
-					>
-						Disabled Checked
-					</Switch>
+							<Switch
+								id={`switch-${c}-disabled-checked`}
+								defaultValue={true}
+								disabled={true}
+								color={c as any}
+							>
+								Disabled Checked
+							</Switch>
 
-					<Switch id={`switch-${c}-loading`} isLoading={true} color={c as any}>
-						Loading
-					</Switch>
+							<Switch id={`switch-${c}-loading`} isLoading={true} color={c as any}>
+								Loading
+							</Switch>
 
-					<Switch
-						id={`switch-${c}-loading-checked`}
-						defaultValue={true}
-						isLoading={true}
-						color={c as any}
-					>
-						Loading Checked
-					</Switch>
+							<Switch
+								id={`switch-${c}-loading-checked`}
+								defaultValue={true}
+								isLoading={true}
+								color={c as any}
+							>
+								Loading Checked
+							</Switch>
+						</div>
+					))}
 				</div>
-			))}
+			</section>
 		</div>
 	),
 };

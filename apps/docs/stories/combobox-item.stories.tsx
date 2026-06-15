@@ -91,44 +91,70 @@ export const Default: Story = {
 	},
 };
 
-export const WithPrefixNull: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const [open, setOpen] = useState(true);
+function WithPrefixNullPreview() {
+	const [previewValue, setPreviewValue] = useState('');
+	const [previewOpen, setPreviewOpen] = useState(true);
 
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Combobox open={open} onOpenChange={setOpen}>
-					<ComboboxTrigger
-						placeholder="Select a framework..."
-						value={frameworks.find((f) => f.value === value)?.label || ''}
-					/>
-					{open && (
-						<ComboboxContent>
-							<ComboboxCommand>
-								<ComboboxInput placeholder="Search frameworks..." />
-								<ComboboxList>
-									{frameworks.map((f) => (
-										<ComboboxItem
-											key={f.value}
-											value={f.value}
-											onSelect={() => {
-												setValue(f.value);
-												setOpen(false);
-											}}
-											isSelected={value === f.value}
-											prefix={null}
-										>
-											{f.label}
-										</ComboboxItem>
-									))}
-									<ComboboxEmpty>No results.</ComboboxEmpty>
-								</ComboboxList>
-							</ComboboxCommand>
-						</ComboboxContent>
-					)}
-				</Combobox>
-			</div>
-		);
-	},
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Combobox open={previewOpen} onOpenChange={setPreviewOpen}>
+				<ComboboxTrigger
+					placeholder="Select a framework..."
+					value={frameworks.find((f) => f.value === previewValue)?.label || ''}
+				/>
+				{previewOpen && (
+					<ComboboxContent>
+						<ComboboxCommand>
+							<ComboboxInput placeholder="Search frameworks..." />
+							<ComboboxList>
+								{frameworks.map((f) => (
+									<ComboboxItem
+										key={f.value}
+										value={f.value}
+										onSelect={() => {
+											setPreviewValue(f.value);
+											setPreviewOpen(false);
+										}}
+										isSelected={previewValue === f.value}
+										prefix={null}
+									>
+										{f.label}
+									</ComboboxItem>
+								))}
+								<ComboboxEmpty>No results.</ComboboxEmpty>
+							</ComboboxList>
+						</ComboboxCommand>
+					</ComboboxContent>
+				)}
+			</Combobox>
+		</div>
+	);
+}
+
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Prefix Null
+				</h3>
+				<WithPrefixNullPreview />
+			</section>
+		</div>
+	),
 };

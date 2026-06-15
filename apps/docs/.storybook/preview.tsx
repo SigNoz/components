@@ -20,6 +20,9 @@ SyntaxHighlighter.registerLanguage('scss', scss);
 SyntaxHighlighter.registerLanguage('bash', bash);
 
 export const parameters: Preview['parameters'] = {
+	chromatic: {
+		disableSnapshot: true,
+	},
 	controls: {
 		expanded: true,
 		matchers: {

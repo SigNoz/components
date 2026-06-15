@@ -111,7 +111,7 @@ function groupTokensByGroup(tokens: TokenData[]): Map<string, TokenData[]> {
 		if (!grouped.has(group)) {
 			grouped.set(group, []);
 		}
-		grouped.get(group)!.push(token);
+		grouped.get(group)?.push(token);
 	}
 
 	const sortedGroups = new Map<string, TokenData[]>();

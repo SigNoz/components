@@ -77,44 +77,68 @@ export const Default: Story = {
 	),
 };
 
-export const Checked: Story = {
-	args: {
-		value: 'checked',
-		id: 'radio-item-checked',
-		children: 'Checked option',
-		disabled: false,
-	},
-	render: (args) => (
-		<RadioGroup defaultValue="checked">
-			<RadioGroupItem {...args} />
-		</RadioGroup>
-	),
-};
-
-export const Disabled: Story = {
-	args: {
-		value: 'disabled',
-		id: 'radio-item-disabled',
-		children: 'Disabled option',
-		disabled: true,
-	},
-	render: (args) => (
-		<RadioGroup>
-			<RadioGroupItem {...args} />
-		</RadioGroup>
-	),
-};
-
-export const DisabledChecked: Story = {
-	args: {
-		value: 'disabled-checked',
-		id: 'radio-item-disabled-checked',
-		children: 'Disabled checked option',
-		disabled: true,
-	},
-	render: (args) => (
-		<RadioGroup defaultValue="disabled-checked">
-			<RadioGroupItem {...args} />
-		</RadioGroup>
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Checked
+				</h3>
+				<RadioGroup defaultValue="checked">
+					<RadioGroupItem value="checked" id="radio-item-checked" disabled={false}>
+						Checked option
+					</RadioGroupItem>
+				</RadioGroup>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<RadioGroup>
+					<RadioGroupItem value="disabled" id="radio-item-disabled" disabled={true}>
+						Disabled option
+					</RadioGroupItem>
+				</RadioGroup>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled Checked
+				</h3>
+				<RadioGroup defaultValue="disabled-checked">
+					<RadioGroupItem value="disabled-checked" id="radio-item-disabled-checked" disabled={true}>
+						Disabled checked option
+					</RadioGroupItem>
+				</RadioGroup>
+			</section>
+		</div>
 	),
 };

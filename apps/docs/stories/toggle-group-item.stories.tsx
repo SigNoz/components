@@ -70,35 +70,57 @@ export const Default: Story = {
 	),
 };
 
-export const IconOnly: Story = {
-	args: {
-		value: 'bold',
-		disabled: false,
-	},
-	render: (args) => (
-		<ToggleGroup type="multiple" defaultValue={['bold']}>
-			<ToggleGroupItem {...args} aria-label="Bold">
-				<Bold size={12} />
-			</ToggleGroupItem>
-		</ToggleGroup>
-	),
-};
-
-export const Disabled: Story = {
-	args: {
-		value: 'center',
-		disabled: true,
-		children: <AlignCenter size={12} />,
-	},
-	render: (args) => (
-		<ToggleGroup type="single" defaultValue="left">
-			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft size={12} />
-			</ToggleGroupItem>
-			<ToggleGroupItem {...args} aria-label="Align center" />
-			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight size={12} />
-			</ToggleGroupItem>
-		</ToggleGroup>
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Icon Only
+				</h3>
+				<ToggleGroup type="multiple" defaultValue={['bold']}>
+					<ToggleGroupItem value="bold" disabled={false} aria-label="Bold">
+						<Bold size={12} />
+					</ToggleGroupItem>
+				</ToggleGroup>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<ToggleGroup type="single" defaultValue="left">
+					<ToggleGroupItem value="left" aria-label="Align left">
+						<AlignLeft size={12} />
+					</ToggleGroupItem>
+					<ToggleGroupItem value="center" disabled aria-label="Align center">
+						<AlignCenter size={12} />
+					</ToggleGroupItem>
+					<ToggleGroupItem value="right" aria-label="Align right">
+						<AlignRight size={12} />
+					</ToggleGroupItem>
+				</ToggleGroup>
+			</section>
+		</div>
 	),
 };

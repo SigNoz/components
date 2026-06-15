@@ -183,7 +183,7 @@ const meta: Meta<typeof DatePicker> = {
 export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
-const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
+const fixedDate = 1771949360343;
 
 export const Default: Story = {
 	args: {
@@ -230,238 +230,345 @@ export const Default: Story = {
 	},
 };
 
-export const DateOnly: Story = {
-	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Date:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{date ? date.toLocaleDateString() : 'No date selected'}
-					</p>
-				</div>
-				<DatePicker
-					date={date}
-					onDateChange={setDate}
-					showTime={false}
-					showTimezone={false}
-					placeholder="Pick a date"
-				/>
-			</div>
-		);
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-};
-
-export const DateAndTime: Story = {
 	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [time, setTime] = React.useState('09:30:00');
+		function DateOnlySection() {
+			const [dateOnlyDate, setDateOnlyDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Date & Time:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
-					</p>
-				</div>
-				<DatePicker
-					date={date}
-					onDateChange={setDate}
-					time={time}
-					onTimeChange={setTime}
-					showTime={true}
-					showTimezone={false}
-					placeholder="Pick a date and time"
-				/>
-			</div>
-		);
-	},
-};
-
-export const WithTimezone: Story = {
-	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [time, setTime] = React.useState('15:45:00');
-		const [timezone, setTimezone] = React.useState('America/New_York');
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Date & Time:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
-					</p>
-				</div>
-				<DatePicker
-					date={date}
-					onDateChange={setDate}
-					time={time}
-					onTimeChange={setTime}
-					timezone={timezone}
-					onTimezoneChange={setTimezone}
-					showTime={true}
-					showTimezone={true}
-					placeholder="Pick a date, time, and timezone"
-				/>
-			</div>
-		);
-	},
-};
-
-export const WithActions: Story = {
-	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [time, setTime] = React.useState('12:00:00');
-		const [timezone, setTimezone] = React.useState('UTC');
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Selected Date & Time:
-					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
-					</p>
-				</div>
-				<DatePicker
-					date={date}
-					onDateChange={setDate}
-					time={time}
-					onTimeChange={setTime}
-					timezone={timezone}
-					onTimezoneChange={setTimezone}
-					showTime={true}
-					showTimezone={true}
-					showActions={true}
-					closeOnSelect={false}
-					placeholder="Pick a date, time, and timezone"
-				/>
-			</div>
-		);
-	},
-};
-
-export const DifferentButtonVariants: Story = {
-	render: () => {
-		const [date1, setDate1] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [date3, setDate3] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+			return (
 				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Button Variants:</h3>
-
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Solid variant:</p>
-						<DatePicker
-							date={date1}
-							onDateChange={setDate1}
-							buttonVariant="solid"
-							showTime={false}
-							showTimezone={false}
-						/>
-					</div>
-
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-							Outlined variant:
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Selected Date:
+						</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							{dateOnlyDate ? dateOnlyDate.toLocaleDateString() : 'No date selected'}
 						</p>
-						<DatePicker
-							date={date2}
-							onDateChange={setDate2}
-							buttonVariant="outlined"
-							showTime={false}
-							showTimezone={false}
-						/>
 					</div>
-
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Ghost variant:</p>
-						<DatePicker
-							date={date3}
-							onDateChange={setDate3}
-							buttonVariant="ghost"
-							showTime={false}
-							showTimezone={false}
-						/>
-					</div>
+					<DatePicker
+						date={dateOnlyDate}
+						onDateChange={setDateOnlyDate}
+						showTime={false}
+						showTimezone={false}
+						placeholder="Pick a date"
+					/>
 				</div>
-			</div>
-		);
-	},
-};
+			);
+		}
 
-export const DifferentButtonSizes: Story = {
-	render: () => {
-		const [date1, setDate1] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
+		function DateAndTimeSection() {
+			const [dateTimeDate, setDateTimeDate] = React.useState<Date | undefined>(new Date(fixedDate));
+			const [dateTimeTime, setDateTimeTime] = React.useState('09:30:00');
 
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+			return (
 				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Button Sizes:</h3>
-
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Small size:</p>
-						<DatePicker
-							date={date1}
-							onDateChange={setDate1}
-							buttonSize="sm"
-							showTime={false}
-							showTimezone={false}
-						/>
-					</div>
-
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-						<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-							Medium size (default):
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Selected Date & Time:
+						</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							{dateTimeDate
+								? `${dateTimeDate.toLocaleDateString()} at ${dateTimeTime}`
+								: 'No date selected'}
 						</p>
-						<DatePicker
-							date={date2}
-							onDateChange={setDate2}
-							buttonSize="md"
-							showTime={false}
-							showTimezone={false}
-						/>
+					</div>
+					<DatePicker
+						date={dateTimeDate}
+						onDateChange={setDateTimeDate}
+						time={dateTimeTime}
+						onTimeChange={setDateTimeTime}
+						showTime={true}
+						showTimezone={false}
+						placeholder="Pick a date and time"
+					/>
+				</div>
+			);
+		}
+
+		function WithTimezoneSection() {
+			const [tzDate, setTzDate] = React.useState<Date | undefined>(new Date(fixedDate));
+			const [tzTime, setTzTime] = React.useState('15:45:00');
+			const [tzTimezone, setTzTimezone] = React.useState('America/New_York');
+
+			return (
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Selected Date & Time:
+						</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							{tzDate
+								? `${tzDate.toLocaleDateString()} at ${tzTime} (${tzTimezone})`
+								: 'No date selected'}
+						</p>
+					</div>
+					<DatePicker
+						date={tzDate}
+						onDateChange={setTzDate}
+						time={tzTime}
+						onTimeChange={setTzTime}
+						timezone={tzTimezone}
+						onTimezoneChange={setTzTimezone}
+						showTime={true}
+						showTimezone={true}
+						placeholder="Pick a date, time, and timezone"
+					/>
+				</div>
+			);
+		}
+
+		function WithActionsSection() {
+			const [actionsDate, setActionsDate] = React.useState<Date | undefined>(new Date(fixedDate));
+			const [actionsTime, setActionsTime] = React.useState('12:00:00');
+			const [actionsTimezone, setActionsTimezone] = React.useState('UTC');
+
+			return (
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Selected Date & Time:
+						</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							{actionsDate
+								? `${actionsDate.toLocaleDateString()} at ${actionsTime} (${actionsTimezone})`
+								: 'No date selected'}
+						</p>
+					</div>
+					<DatePicker
+						date={actionsDate}
+						onDateChange={setActionsDate}
+						time={actionsTime}
+						onTimeChange={setActionsTime}
+						timezone={actionsTimezone}
+						onTimezoneChange={setActionsTimezone}
+						showTime={true}
+						showTimezone={true}
+						showActions={true}
+						closeOnSelect={false}
+						placeholder="Pick a date, time, and timezone"
+					/>
+				</div>
+			);
+		}
+
+		function DifferentButtonVariantsSection() {
+			const [solidDate, setSolidDate] = React.useState<Date | undefined>(new Date(fixedDate));
+			const [outlinedDate, setOutlinedDate] = React.useState<Date | undefined>(new Date(fixedDate));
+			const [ghostDate, setGhostDate] = React.useState<Date | undefined>(new Date(fixedDate));
+
+			return (
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Button Variants:</h3>
+
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								Solid variant:
+							</p>
+							<DatePicker
+								date={solidDate}
+								onDateChange={setSolidDate}
+								buttonVariant="solid"
+								showTime={false}
+								showTimezone={false}
+							/>
+						</div>
+
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								Outlined variant:
+							</p>
+							<DatePicker
+								date={outlinedDate}
+								onDateChange={setOutlinedDate}
+								buttonVariant="outlined"
+								showTime={false}
+								showTimezone={false}
+							/>
+						</div>
+
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								Ghost variant:
+							</p>
+							<DatePicker
+								date={ghostDate}
+								onDateChange={setGhostDate}
+								buttonVariant="ghost"
+								showTime={false}
+								showTimezone={false}
+							/>
+						</div>
 					</div>
 				</div>
-			</div>
-		);
-	},
-};
+			);
+		}
 
-export const Disabled: Story = {
-	render: () => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+		function DifferentButtonSizesSection() {
+			const [smDate, setSmDate] = React.useState<Date | undefined>(new Date(fixedDate));
+			const [mdDate, setMdDate] = React.useState<Date | undefined>(new Date(fixedDate));
+
+			return (
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500 }}>Button Sizes:</h3>
+
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>Small size:</p>
+							<DatePicker
+								date={smDate}
+								onDateChange={setSmDate}
+								buttonSize="sm"
+								showTime={false}
+								showTimezone={false}
+							/>
+						</div>
+
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							<p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+								Medium size (default):
+							</p>
+							<DatePicker
+								date={mdDate}
+								onDateChange={setMdDate}
+								buttonSize="md"
+								showTime={false}
+								showTimezone={false}
+							/>
+						</div>
+					</div>
+				</div>
+			);
+		}
+
+		function DisabledSection() {
+			const [disabledDate, setDisabledDate] = React.useState<Date | undefined>(new Date(fixedDate));
+
+			return (
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+					<div>
+						<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
+							Disabled State:
+						</h3>
+						<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+							The picker is disabled and cannot be interacted with.
+						</p>
+					</div>
+					<DatePicker
+						date={disabledDate}
+						onDateChange={setDisabledDate}
+						disabled={true}
+						showTime={false}
+						showTimezone={false}
+					/>
+				</div>
+			);
+		}
 
 		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div>
-					<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-						Disabled State:
+			<div
+				style={{
+					padding: '2rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '2.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Date Only
 					</h3>
-					<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						The picker is disabled and cannot be interacted with.
-					</p>
-				</div>
-				<DatePicker
-					date={date}
-					onDateChange={setDate}
-					disabled={true}
-					showTime={false}
-					showTimezone={false}
-				/>
+					<DateOnlySection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Date And Time
+					</h3>
+					<DateAndTimeSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						With Timezone
+					</h3>
+					<WithTimezoneSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						With Actions
+					</h3>
+					<WithActionsSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Different Button Variants
+					</h3>
+					<DifferentButtonVariantsSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Different Button Sizes
+					</h3>
+					<DifferentButtonSizesSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Disabled
+					</h3>
+					<DisabledSection />
+				</section>
 			</div>
 		);
 	},

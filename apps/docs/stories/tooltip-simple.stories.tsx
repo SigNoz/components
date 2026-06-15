@@ -146,81 +146,120 @@ export const Default: Story = {
 	),
 };
 
-export const WithArrow: Story = {
-	args: {
-		title: 'Tooltip with arrow',
-		arrow: true,
-		side: 'top',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args: Partial<TooltipSimpleProps>) => (
-		<TooltipProvider delayDuration={0}>
-			<div
-				style={{ padding: '5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-			>
-				<TooltipSimple {...(args as TooltipSimpleProps)}>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
-						Hover me
-					</Button>
-				</TooltipSimple>
-			</div>
-		</TooltipProvider>
-	),
-};
-
-export const Positions: Story = {
 	render: () => (
-		<TooltipProvider delayDuration={0}>
-			<div
-				style={{
-					padding: '5rem',
-					display: 'flex',
-					flexWrap: 'wrap',
-					gap: '2rem',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				{(['top', 'right', 'bottom', 'left'] as const).map((side) => (
-					<TooltipSimple key={side} title={`Tooltip on ${side}`} side={side} arrow>
-						<Button
-							variant={ButtonVariant.Solid}
-							color={ButtonColor.Secondary}
-							style={{ textTransform: 'capitalize' }}
-						>
-							{side}
-						</Button>
-					</TooltipSimple>
-				))}
-			</div>
-		</TooltipProvider>
-	),
-};
-
-export const Alignments: Story = {
-	render: () => (
-		<TooltipProvider delayDuration={0}>
-			<div
-				style={{
-					padding: '5rem',
-					display: 'flex',
-					flexWrap: 'wrap',
-					gap: '2rem',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				{(['start', 'center', 'end'] as const).map((align) => (
-					<TooltipSimple key={align} title={`Align ${align}`} side="top" align={align} arrow>
-						<Button
-							variant={ButtonVariant.Solid}
-							color={ButtonColor.Secondary}
-							style={{ textTransform: 'capitalize', width: '7.5rem' }}
-						>
-							{align}
-						</Button>
-					</TooltipSimple>
-				))}
-			</div>
-		</TooltipProvider>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Arrow
+				</h3>
+				<TooltipProvider delayDuration={0}>
+					<div
+						style={{
+							padding: '5rem',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						<TooltipSimple title="Tooltip with arrow" arrow side="top">
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+								Hover me
+							</Button>
+						</TooltipSimple>
+					</div>
+				</TooltipProvider>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Positions
+				</h3>
+				<TooltipProvider delayDuration={0}>
+					<div
+						style={{
+							padding: '5rem',
+							display: 'flex',
+							flexWrap: 'wrap',
+							gap: '2rem',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						{(['top', 'right', 'bottom', 'left'] as const).map((side) => (
+							<TooltipSimple key={side} title={`Tooltip on ${side}`} side={side} arrow>
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Secondary}
+									style={{ textTransform: 'capitalize' }}
+								>
+									{side}
+								</Button>
+							</TooltipSimple>
+						))}
+					</div>
+				</TooltipProvider>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Alignments
+				</h3>
+				<TooltipProvider delayDuration={0}>
+					<div
+						style={{
+							padding: '5rem',
+							display: 'flex',
+							flexWrap: 'wrap',
+							gap: '2rem',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						{(['start', 'center', 'end'] as const).map((align) => (
+							<TooltipSimple key={align} title={`Align ${align}`} side="top" align={align} arrow>
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Secondary}
+									style={{ textTransform: 'capitalize', width: '7.5rem' }}
+								>
+									{align}
+								</Button>
+							</TooltipSimple>
+						))}
+					</div>
+				</TooltipProvider>
+			</section>
+		</div>
 	),
 };

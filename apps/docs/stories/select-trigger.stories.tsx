@@ -52,6 +52,33 @@ const frameworks = [
 	{ value: 'angular', label: 'Angular' },
 ];
 
+function SelectTriggerCustomRenderValueExample() {
+	const [value, setValue] = useState('');
+	const selectedLabel = frameworks.find((f) => f.value === value)?.label;
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Select value={value} onChange={(v) => setValue(v as string)}>
+				<SelectTrigger
+					placeholder="Select a framework..."
+					renderValue={() =>
+						selectedLabel ? (
+							<span style={{ fontWeight: 600, color: 'var(--primary)' }}>{selectedLabel}</span>
+						) : null
+					}
+				/>
+				<SelectContent>
+					{frameworks.map((f) => (
+						<SelectItem key={f.value} value={f.value}>
+							{f.label}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</div>
+	);
+}
+
 export const Default: Story = {
 	args: {
 		placeholder: 'Select a framework...',
@@ -77,72 +104,78 @@ export const Default: Story = {
 	},
 };
 
-export const WithValue: Story = {
-	args: {
-		placeholder: 'Select a framework...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<Select defaultValue="react">
-				<SelectTrigger {...args} />
-				<SelectContent>
-					{frameworks.map((f) => (
-						<SelectItem key={f.value} value={f.value}>
-							{f.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Value
+				</h3>
+				<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+					<Select defaultValue="react">
+						<SelectTrigger placeholder="Select a framework..." />
+						<SelectContent>
+							{frameworks.map((f) => (
+								<SelectItem key={f.value} value={f.value}>
+									{f.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+					<Select>
+						<SelectTrigger placeholder="Select a framework..." disabled />
+						<SelectContent>
+							{frameworks.map((f) => (
+								<SelectItem key={f.value} value={f.value}>
+									{f.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Custom Render Value
+				</h3>
+				<SelectTriggerCustomRenderValueExample />
+			</section>
 		</div>
 	),
-};
-
-export const Disabled: Story = {
-	args: {
-		placeholder: 'Select a framework...',
-		disabled: true,
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<Select>
-				<SelectTrigger {...args} />
-				<SelectContent>
-					{frameworks.map((f) => (
-						<SelectItem key={f.value} value={f.value}>
-							{f.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-		</div>
-	),
-};
-
-export const WithCustomRenderValue: Story = {
-	render: () => {
-		const [value, setValue] = useState('');
-		const selectedLabel = frameworks.find((f) => f.value === value)?.label;
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Select value={value} onChange={(v) => setValue(v as string)}>
-					<SelectTrigger
-						placeholder="Select a framework..."
-						renderValue={() =>
-							selectedLabel ? (
-								<span style={{ fontWeight: 600, color: 'var(--primary)' }}>{selectedLabel}</span>
-							) : null
-						}
-					/>
-					<SelectContent>
-						{frameworks.map((f) => (
-							<SelectItem key={f.value} value={f.value}>
-								{f.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</div>
-		);
-	},
 };

@@ -49,31 +49,53 @@ export const Default: Story = {
 	),
 };
 
-export const WithPrefixAndSuffix: Story = {
+export const Preview: Story = {
 	render: () => (
-		<div style={{ width: 520 }}>
-			<Command>
-				<CommandInput placeholder="Search commands…" />
-				<CommandList>
-					<CommandGroup heading="Actions">
-						<CommandItem
-							prefix={<span>📁</span>}
-							suffix={<CommandShortcut>⌘S</CommandShortcut>}
-							onSelect={() => {}}
-						>
-							Open settings
-						</CommandItem>
-						<CommandItem
-							prefix={<span>📄</span>}
-							suffix={<CommandShortcut>⌘N</CommandShortcut>}
-							onSelect={() => {}}
-						>
-							Create report
-						</CommandItem>
-					</CommandGroup>
-					<CommandEmpty>No results.</CommandEmpty>
-				</CommandList>
-			</Command>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Prefix And Suffix
+				</h3>
+				<div style={{ width: 520 }}>
+					<Command>
+						<CommandInput placeholder="Search commands…" />
+						<CommandList>
+							<CommandGroup heading="Actions">
+								<CommandItem
+									prefix={<span>📁</span>}
+									suffix={<CommandShortcut>⌘S</CommandShortcut>}
+									onSelect={() => {}}
+								>
+									Open settings
+								</CommandItem>
+								<CommandItem
+									prefix={<span>📄</span>}
+									suffix={<CommandShortcut>⌘N</CommandShortcut>}
+									onSelect={() => {}}
+								>
+									Create report
+								</CommandItem>
+							</CommandGroup>
+							<CommandEmpty>No results.</CommandEmpty>
+						</CommandList>
+					</Command>
+				</div>
+			</section>
 		</div>
 	),
 };

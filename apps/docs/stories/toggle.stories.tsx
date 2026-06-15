@@ -85,69 +85,116 @@ export const Default: Story = {
 	),
 };
 
-export const Pressed: Story = {
-	args: {
-		defaultValue: true,
-		size: 'default',
-		color: 'secondary',
-		disabled: false,
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => (
-		<Toggle {...args} aria-label="Toggle bold">
-			<Bold size={12} />
-		</Toggle>
-	),
-};
-
-export const Disabled: Story = {
-	args: {
-		defaultValue: false,
-		disabled: true,
-	},
-	render: (args) => (
-		<Toggle {...args} aria-label="Toggle bold">
-			<Bold size={12} />
-		</Toggle>
-	),
-};
-
-const colors: ToggleColor[] = ['primary', 'destructive', 'warning', 'secondary', 'none'];
-
-export const AllColors: Story = {
 	render: () => (
-		<div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-			{colors.map((color) => (
-				<div
-					key={color}
-					style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
 				>
-					<span style={{ fontSize: '0.875rem', textTransform: 'capitalize' }}>{color}</span>
-					<div style={{ display: 'flex', gap: '0.5rem' }}>
-						<Toggle defaultValue={false} color={color} aria-label={`${color} off`}>
-							<Bold size={12} />
-						</Toggle>
-						<Toggle defaultValue={true} color={color} aria-label={`${color} on`}>
-							<Bold size={12} />
-						</Toggle>
-					</div>
+					Pressed
+				</h3>
+				<Toggle
+					defaultValue
+					size="default"
+					color="secondary"
+					disabled={false}
+					aria-label="Toggle bold"
+				>
+					<Bold size={12} />
+				</Toggle>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<Toggle defaultValue={false} disabled aria-label="Toggle bold">
+					<Bold size={12} />
+				</Toggle>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Colors
+				</h3>
+				<div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+					{(['primary', 'destructive', 'warning', 'secondary', 'none'] as ToggleColor[]).map(
+						(color) => (
+							<div
+								key={color}
+								style={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									gap: '0.5rem',
+								}}
+							>
+								<span style={{ fontSize: '0.875rem', textTransform: 'capitalize' }}>{color}</span>
+								<div style={{ display: 'flex', gap: '0.5rem' }}>
+									<Toggle defaultValue={false} color={color} aria-label={`${color} off`}>
+										<Bold size={12} />
+									</Toggle>
+									<Toggle defaultValue color={color} aria-label={`${color} on`}>
+										<Bold size={12} />
+									</Toggle>
+								</div>
+							</div>
+						)
+					)}
 				</div>
-			))}
-		</div>
-	),
-};
-
-export const AllSizes: Story = {
-	render: () => (
-		<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-			<Toggle size="sm" aria-label="Small">
-				<Bold size={12} />
-			</Toggle>
-			<Toggle size="default" aria-label="Default">
-				<Bold size={12} />
-			</Toggle>
-			<Toggle size="lg" aria-label="Large">
-				<Bold size={12} />
-			</Toggle>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All Sizes
+				</h3>
+				<div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+					<Toggle size="sm" aria-label="Small">
+						<Bold size={12} />
+					</Toggle>
+					<Toggle size="default" aria-label="Default">
+						<Bold size={12} />
+					</Toggle>
+					<Toggle size="lg" aria-label="Large">
+						<Bold size={12} />
+					</Toggle>
+				</div>
+			</section>
 		</div>
 	),
 };

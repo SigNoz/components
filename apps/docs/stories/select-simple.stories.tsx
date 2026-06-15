@@ -116,50 +116,6 @@ const defaultItems = [
 	{ value: 'svelte', label: 'Svelte' },
 ];
 
-export const Default: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<SelectSimple {...args} />
-		</div>
-	),
-};
-
-export const Controlled: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<SelectSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {value || 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const WithDefaultValue: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-		defaultValue: 'react',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<SelectSimple {...args} />
-		</div>
-	),
-};
-
 const groups = [
 	{
 		heading: 'Frameworks',
@@ -181,18 +137,6 @@ const groups = [
 		],
 	},
 ];
-
-export const WithGroups: Story = {
-	args: {
-		groups,
-		placeholder: 'Select a technology...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<SelectSimple {...args} />
-		</div>
-	),
-};
 
 const itemsWithIcons = [
 	{
@@ -237,10 +181,66 @@ const itemsWithIcons = [
 	},
 ];
 
-export const WithIcons: Story = {
+function ControlledExample() {
+	const [value, setValue] = useState('');
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<SelectSimple
+				items={defaultItems}
+				placeholder="Select a framework..."
+				value={value}
+				onChange={(v) => setValue(v as string)}
+			/>
+			<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				Selected: {value || 'none'}
+			</p>
+		</div>
+	);
+}
+
+function MultiSelectExample() {
+	const [values, setValues] = useState<string[]>([]);
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<SelectSimple
+				items={defaultItems}
+				placeholder="Select frameworks..."
+				multiple
+				value={values}
+				onChange={(v) => setValues(v as string[])}
+			/>
+			<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				Selected: {values.length > 0 ? values.join(', ') : 'none'}
+			</p>
+		</div>
+	);
+}
+
+function MultiSelectWithIconsExample() {
+	const [values, setValues] = useState<string[]>([]);
+
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<SelectSimple
+				items={itemsWithIcons}
+				placeholder="Select tools..."
+				multiple
+				value={values}
+				onChange={(v) => setValues(v as string[])}
+			/>
+			<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				Selected: {values.length > 0 ? values.join(', ') : 'none'}
+			</p>
+		</div>
+	);
+}
+
+export const Default: Story = {
 	args: {
-		items: itemsWithIcons,
-		placeholder: 'Select a tool...',
+		items: defaultItems,
+		placeholder: 'Select a framework...',
 	},
 	render: (args) => (
 		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
@@ -249,55 +249,123 @@ export const WithIcons: Story = {
 	),
 };
 
-export const MultiSelect: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select frameworks...',
-		multiple: true,
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<SelectSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const MultiSelectWithIcons: Story = {
-	args: {
-		items: itemsWithIcons,
-		placeholder: 'Select tools...',
-		multiple: true,
-	},
-	render: (args) => {
-		const [values, setValues] = useState<string[]>([]);
-
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<SelectSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-			</div>
-		);
-	},
-};
-
-export const Disabled: Story = {
-	args: {
-		items: defaultItems,
-		placeholder: 'Select a framework...',
-		disabled: true,
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<SelectSimple {...args} />
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Controlled
+				</h3>
+				<ControlledExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Default Value
+				</h3>
+				<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+					<SelectSimple
+						items={defaultItems}
+						placeholder="Select a framework..."
+						defaultValue="react"
+					/>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Groups
+				</h3>
+				<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+					<SelectSimple groups={groups} placeholder="Select a technology..." />
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Icons
+				</h3>
+				<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+					<SelectSimple items={itemsWithIcons} placeholder="Select a tool..." />
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multi Select
+				</h3>
+				<MultiSelectExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multi Select With Icons
+				</h3>
+				<MultiSelectWithIconsExample />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Disabled
+				</h3>
+				<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+					<SelectSimple items={defaultItems} placeholder="Select a framework..." disabled />
+				</div>
+			</section>
 		</div>
 	),
 };

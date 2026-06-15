@@ -62,7 +62,7 @@ export default meta;
 
 type Story = StoryObj<typeof Kbd>;
 
-export const Playground: Story = {
+export const Default: Story = {
 	args: {
 		children: '⌘K',
 		size: 'default',
@@ -76,230 +76,21 @@ export const Playground: Story = {
 	),
 };
 
-export const AllSizes: Story = {
+export const Preview: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story: 'Three sizes are available: `sm`, `default`, and `lg`.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		size: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem' }}>
-			<Kbd size="sm">⌘K</Kbd>
-			<Kbd size="default">⌘K</Kbd>
-			<Kbd size="lg">⌘K</Kbd>
-		</div>
-	),
-};
-
-export const CommonKeys: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Common keyboard keys and symbols.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		size: { control: false },
-		asChild: { control: false },
+		chromatic: { disableSnapshot: false },
 	},
 	render: () => (
 		<div
 			style={{
-				display: 'flex',
-				flexWrap: 'wrap',
-				alignItems: 'center',
-				gap: '0.5rem',
-				padding: '1rem',
-			}}
-		>
-			{['⌘', '⌥', '⇧', '⌃', '↵', '⌫', '⇥', 'Esc', 'Space', '↑', '↓', '←', '→'].map((key) => (
-				<Kbd key={key}>{key}</Kbd>
-			))}
-		</div>
-	),
-};
-
-export const KeyboardShortcuts: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Display keyboard shortcuts inline. Combine multiple `Kbd` elements to show modifier+key combinations.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		size: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
-			<div>
-				<h3
-					style={{
-						fontSize: '0.875rem',
-						fontWeight: 500,
-						marginBottom: '0.75rem',
-						color: 'var(--muted-foreground)',
-					}}
-				>
-					Common Shortcuts
-				</h3>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-					{[
-						{ label: 'Save', keys: ['⌘', 'S'] },
-						{ label: 'Copy', keys: ['⌘', 'C'] },
-						{ label: 'Paste', keys: ['⌘', 'V'] },
-						{ label: 'Undo', keys: ['⌘', 'Z'] },
-						{ label: 'Find', keys: ['⌘', 'F'] },
-						{ label: 'Command palette', keys: ['⌘', 'K'] },
-					].map(({ label, keys }) => (
-						<div
-							key={label}
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-								maxWidth: '20rem',
-							}}
-						>
-							<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-								{label}
-							</span>
-							<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-								{keys.map((key, i) => (
-									<Kbd key={i}>{key}</Kbd>
-								))}
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-			<div>
-				<h3
-					style={{
-						fontSize: '0.875rem',
-						fontWeight: 500,
-						marginBottom: '0.75rem',
-						color: 'var(--muted-foreground)',
-					}}
-				>
-					Multi-modifier
-				</h3>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-					{[
-						{ label: 'Redo', keys: ['⌘', '⇧', 'Z'] },
-						{ label: 'Force quit', keys: ['⌘', '⌥', 'Esc'] },
-					].map(({ label, keys }) => (
-						<div
-							key={label}
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-								maxWidth: '20rem',
-							}}
-						>
-							<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-								{label}
-							</span>
-							<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-								{keys.map((key, i) => (
-									<Kbd key={i}>{key}</Kbd>
-								))}
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const InlineText: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use `Kbd` inline within text to reference key bindings in documentation or tooltips.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		size: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div
-			style={{
+				padding: '2rem',
 				display: 'flex',
 				flexDirection: 'column',
-				gap: '0.75rem',
-				padding: '1rem',
-				fontSize: '0.875rem',
-				color: 'var(--muted-foreground)',
-				maxWidth: '28rem',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
 			}}
 		>
-			<p>
-				Press <Kbd size="sm">⌘</Kbd> <Kbd size="sm">K</Kbd> to open the command palette.
-			</p>
-			<p>
-				Use <Kbd size="sm">↑</Kbd> and <Kbd size="sm">↓</Kbd> to navigate results, then{' '}
-				<Kbd size="sm">↵</Kbd> to confirm.
-			</p>
-			<p>
-				Hold <Kbd size="sm">⇧</Kbd> while clicking to select a range.
-			</p>
-		</div>
-	),
-};
-
-export const ActiveState: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use `active` to highlight a key with a subtle primary color tint and solid primary border.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		size: { control: false },
-		asChild: { control: false },
-		active: { control: false },
-	},
-	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
-			<div>
-				<h3
-					style={{
-						fontSize: '0.875rem',
-						fontWeight: 500,
-						marginBottom: '0.75rem',
-						color: 'var(--muted-foreground)',
-					}}
-				>
-					Default vs Active
-				</h3>
-				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-					<Kbd>⌘</Kbd>
-					<Kbd active>⌘</Kbd>
-				</div>
-			</div>
-			<div>
+			<section>
 				<h3
 					style={{
 						fontSize: '0.875rem',
@@ -310,19 +101,13 @@ export const ActiveState: Story = {
 				>
 					All Sizes
 				</h3>
-				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-					<Kbd size="sm" active>
-						⌘
-					</Kbd>
-					<Kbd size="default" active>
-						⌘
-					</Kbd>
-					<Kbd size="lg" active>
-						⌘
-					</Kbd>
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem' }}>
+					<Kbd size="sm">⌘K</Kbd>
+					<Kbd size="default">⌘K</Kbd>
+					<Kbd size="lg">⌘K</Kbd>
 				</div>
-			</div>
-			<div>
+			</section>
+			<section>
 				<h3
 					style={{
 						fontSize: '0.875rem',
@@ -331,13 +116,217 @@ export const ActiveState: Story = {
 						color: 'var(--muted-foreground)',
 					}}
 				>
-					Active Key in a Shortcut
+					Common Keys
 				</h3>
-				<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-					<Kbd active>⌘</Kbd>
-					<Kbd>K</Kbd>
+				<div
+					style={{
+						display: 'flex',
+						flexWrap: 'wrap',
+						alignItems: 'center',
+						gap: '0.5rem',
+						padding: '1rem',
+					}}
+				>
+					{['⌘', '⌥', '⇧', '⌃', '↵', '⌫', '⇥', 'Esc', 'Space', '↑', '↓', '←', '→'].map((key) => (
+						<Kbd key={key}>{key}</Kbd>
+					))}
 				</div>
-			</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Keyboard Shortcuts
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
+					<div>
+						<h3
+							style={{
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								marginBottom: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Common Shortcuts
+						</h3>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							{[
+								{ label: 'Save', keys: ['⌘', 'S'] },
+								{ label: 'Copy', keys: ['⌘', 'C'] },
+								{ label: 'Paste', keys: ['⌘', 'V'] },
+								{ label: 'Undo', keys: ['⌘', 'Z'] },
+								{ label: 'Find', keys: ['⌘', 'F'] },
+								{ label: 'Command palette', keys: ['⌘', 'K'] },
+							].map(({ label, keys }) => (
+								<div
+									key={label}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'space-between',
+										maxWidth: '20rem',
+									}}
+								>
+									<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+										{label}
+									</span>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+										{keys.map((key, i) => (
+											<Kbd key={i}>{key}</Kbd>
+										))}
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+					<div>
+						<h3
+							style={{
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								marginBottom: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Multi-modifier
+						</h3>
+						<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+							{[
+								{ label: 'Redo', keys: ['⌘', '⇧', 'Z'] },
+								{ label: 'Force quit', keys: ['⌘', '⌥', 'Esc'] },
+							].map(({ label, keys }) => (
+								<div
+									key={label}
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'space-between',
+										maxWidth: '20rem',
+									}}
+								>
+									<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+										{label}
+									</span>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+										{keys.map((key, i) => (
+											<Kbd key={i}>{key}</Kbd>
+										))}
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Inline Text
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '0.75rem',
+						padding: '1rem',
+						fontSize: '0.875rem',
+						color: 'var(--muted-foreground)',
+						maxWidth: '28rem',
+					}}
+				>
+					<p>
+						Press <Kbd size="sm">⌘</Kbd> <Kbd size="sm">K</Kbd> to open the command palette.
+					</p>
+					<p>
+						Use <Kbd size="sm">↑</Kbd> and <Kbd size="sm">↓</Kbd> to navigate results, then{' '}
+						<Kbd size="sm">↵</Kbd> to confirm.
+					</p>
+					<p>
+						Hold <Kbd size="sm">⇧</Kbd> while clicking to select a range.
+					</p>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Active State
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem' }}>
+					<div>
+						<h3
+							style={{
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								marginBottom: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Default vs Active
+						</h3>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+							<Kbd>⌘</Kbd>
+							<Kbd active>⌘</Kbd>
+						</div>
+					</div>
+					<div>
+						<h3
+							style={{
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								marginBottom: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							All Sizes
+						</h3>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+							<Kbd size="sm" active>
+								⌘
+							</Kbd>
+							<Kbd size="default" active>
+								⌘
+							</Kbd>
+							<Kbd size="lg" active>
+								⌘
+							</Kbd>
+						</div>
+					</div>
+					<div>
+						<h3
+							style={{
+								fontSize: '0.875rem',
+								fontWeight: 500,
+								marginBottom: '0.75rem',
+								color: 'var(--muted-foreground)',
+							}}
+						>
+							Active Key in a Shortcut
+						</h3>
+						<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+							<Kbd active>⌘</Kbd>
+							<Kbd>K</Kbd>
+						</div>
+					</div>
+				</div>
+			</section>
 		</div>
 	),
 };

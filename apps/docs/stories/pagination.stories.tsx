@@ -29,6 +29,60 @@ function ControlledPagination({
 	);
 }
 
+function PaginationWithPageChangeHandler(args: PaginationProps) {
+	const [currentPage, setCurrentPage] = useState(args.current ?? 1);
+
+	useEffect(() => {
+		if (args.current !== undefined) {
+			setCurrentPage(args.current);
+		}
+	}, [args.current]);
+
+	return (
+		<Pagination
+			{...args}
+			current={currentPage}
+			onPageChange={(page): void => {
+				setCurrentPage(page);
+				args.onPageChange?.(page);
+				console.log(`Page changed to ${page}`);
+			}}
+		/>
+	);
+}
+
+function PaginationWithPageSizeSelector(
+	args: PaginationProps & { pageSizePosition?: 'left' | 'right' }
+) {
+	const [current, setCurrent] = useState(args.current ?? 1);
+	const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
+
+	useEffect(() => {
+		if (args.current !== undefined) {
+			setCurrent(args.current);
+		}
+	}, [args.current]);
+
+	useEffect(() => {
+		if (args.pageSize !== undefined) {
+			setPageSize(args.pageSize);
+		}
+	}, [args.pageSize]);
+
+	return (
+		<Pagination
+			{...args}
+			current={current}
+			onPageChange={setCurrent}
+			pageSize={pageSize}
+			onPageSizeChange={(newSize) => {
+				setPageSize(newSize);
+				args.onPageSizeChange?.(newSize);
+			}}
+		/>
+	);
+}
+
 const meta: Meta<typeof Pagination> = {
 	title: 'Composed Components/Pagination',
 	component: Pagination,
@@ -134,273 +188,162 @@ export default meta;
 type Story = StoryObj<typeof Pagination>;
 
 export const Default: Story = {
-	render: (args) => {
-		const [currentPages, setCurrentPages] = useState({
-			p1: 1,
-			p2: 2,
-			p3: 1,
-			p4: 7,
-			p5: 3,
-			p6: 4,
-			p7: 10,
-		});
-
-		const handlePageChange = (key: keyof typeof currentPages, page: number): void => {
-			setCurrentPages((prev) => ({ ...prev, [key]: page }));
-			args.onPageChange?.(page);
-		};
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-				<div>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						3 Pages - First Selected
-					</p>
-					<Pagination
-						{...args}
-						total={30}
-						pageSize={10}
-						current={currentPages.p1}
-						onPageChange={(page): void => handlePageChange('p1', page)}
-					/>
-				</div>
-
-				<div style={{ marginTop: '1.5rem' }}>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						3 Pages - Second Selected
-					</p>
-					<Pagination
-						{...args}
-						total={30}
-						pageSize={10}
-						current={currentPages.p2}
-						onPageChange={(page): void => handlePageChange('p2', page)}
-					/>
-				</div>
-
-				<div style={{ marginTop: '1.5rem' }}>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						10 Pages - First Selected
-					</p>
-					<Pagination
-						{...args}
-						total={100}
-						pageSize={10}
-						current={currentPages.p3}
-						onPageChange={(page): void => handlePageChange('p3', page)}
-					/>
-				</div>
-
-				<div style={{ marginTop: '1.5rem' }}>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						10 Pages - Middle Selected (Page 7)
-					</p>
-					<Pagination
-						{...args}
-						total={100}
-						pageSize={10}
-						current={currentPages.p4}
-						onPageChange={(page): void => handlePageChange('p4', page)}
-					/>
-				</div>
-
-				<div style={{ marginTop: '1.5rem' }}>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						5 Pages - Center Aligned
-					</p>
-					<Pagination
-						{...args}
-						total={50}
-						pageSize={10}
-						current={currentPages.p5}
-						onPageChange={(page): void => handlePageChange('p5', page)}
-						align="center"
-					/>
-				</div>
-
-				<div style={{ marginTop: '1.5rem' }}>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						5 Pages - End Aligned
-					</p>
-					<Pagination
-						{...args}
-						total={50}
-						pageSize={10}
-						current={currentPages.p6}
-						onPageChange={(page): void => handlePageChange('p6', page)}
-						align="end"
-					/>
-				</div>
-
-				<div style={{ marginTop: '1.5rem' }}>
-					<p style={{ marginBottom: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-						10 Pages - Last Selected
-					</p>
-					<Pagination
-						{...args}
-						total={100}
-						pageSize={10}
-						current={currentPages.p7}
-						onPageChange={(page): void => handlePageChange('p7', page)}
-					/>
-				</div>
-			</div>
-		);
-	},
-};
-
-export const CenterAligned: Story = {
-	args: {
-		total: 50,
-		pageSize: 10,
-		align: 'center',
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={1} />,
-};
-
-export const EndAligned: Story = {
-	args: {
-		total: 50,
-		pageSize: 10,
-		align: 'end',
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={1} />,
-};
-
-export const CustomPageSize: Story = {
-	args: {
-		total: 100,
-		pageSize: 5,
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={1} />,
-};
-
-export const WithPageChangeHandler: Story = {
-	args: {
-		total: 50,
-	},
-	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(args.current ?? 1);
-
-		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrentPage(args.current);
-			}
-		}, [args.current]);
-
-		return (
-			<Pagination
-				{...args}
-				current={currentPage}
-				onPageChange={(page): void => {
-					setCurrentPage(page);
-					args.onPageChange?.(page);
-					console.log(`Page changed to ${page}`);
-				}}
-			/>
-		);
-	},
-};
-
-export const ThreePagesFirstSelected: Story = {
-	args: {
-		total: 30,
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={1} />,
-};
-
-export const ThreePagesSecondSelected: Story = {
-	args: {
-		total: 30,
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={2} />,
-};
-
-export const TenPagesFirstSelected: Story = {
-	args: {
-		total: 100,
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={1} />,
-};
-
-export const TenPagesLastSelected: Story = {
-	args: {
-		total: 100,
-	},
-	render: (args) => <ControlledPagination {...args} initialPage={10} />,
-};
-
-export const WithPageSizeSelector: Story = {
 	args: {
 		total: 100,
 		pageSize: 10,
-		enablePageSize: true,
 	},
-	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-		const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
-
-		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
-			}
-		}, [args.current]);
-
-		useEffect(() => {
-			if (args.pageSize !== undefined) {
-				setPageSize(args.pageSize);
-			}
-		}, [args.pageSize]);
-
-		return (
-			<Pagination
-				{...args}
-				current={current}
-				onPageChange={setCurrent}
-				pageSize={pageSize}
-				onPageSizeChange={(newSize) => {
-					setPageSize(newSize);
-					args.onPageSizeChange?.(newSize);
-				}}
-			/>
-		);
-	},
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };
 
-export const WithPageSizeSelectorLeft: Story = {
-	args: {
-		total: 100,
-		pageSize: 10,
-		enablePageSize: true,
-		pageSizePosition: 'left',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-		const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
-
-		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
-			}
-		}, [args.current]);
-
-		useEffect(() => {
-			if (args.pageSize !== undefined) {
-				setPageSize(args.pageSize);
-			}
-		}, [args.pageSize]);
-
-		return (
-			<Pagination
-				{...args}
-				current={current}
-				onPageChange={setCurrent}
-				pageSize={pageSize}
-				onPageSizeChange={(newSize) => {
-					setPageSize(newSize);
-					args.onPageSizeChange?.(newSize);
-				}}
-			/>
-		);
-	},
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Center Aligned
+				</h3>
+				<ControlledPagination total={50} pageSize={10} align="center" initialPage={1} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					End Aligned
+				</h3>
+				<ControlledPagination total={50} pageSize={10} align="end" initialPage={1} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Custom Page Size
+				</h3>
+				<ControlledPagination total={100} pageSize={5} initialPage={1} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Page Change Handler
+				</h3>
+				<PaginationWithPageChangeHandler total={50} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Three Pages First Selected
+				</h3>
+				<ControlledPagination total={30} initialPage={1} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Three Pages Second Selected
+				</h3>
+				<ControlledPagination total={30} initialPage={2} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Ten Pages First Selected
+				</h3>
+				<ControlledPagination total={100} initialPage={1} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Ten Pages Last Selected
+				</h3>
+				<ControlledPagination total={100} initialPage={10} />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Page Size Selector
+				</h3>
+				<PaginationWithPageSizeSelector total={100} pageSize={10} enablePageSize />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Page Size Selector Left
+				</h3>
+				<PaginationWithPageSizeSelector
+					total={100}
+					pageSize={10}
+					enablePageSize
+					pageSizePosition="left"
+				/>
+			</section>
+		</div>
+	),
 };

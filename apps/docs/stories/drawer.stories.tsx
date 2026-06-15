@@ -84,6 +84,52 @@ const DrawerPositionVariant = ({
 	);
 };
 
+function DrawerWithoutOverlay() {
+	const [open, setOpen] = React.useState<boolean | undefined>(false);
+
+	return (
+		<Drawer defaultOpen={false} open={open} onOpenChange={setOpen}>
+			<DrawerTrigger asChild>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					Open drawer without overlay
+				</Button>
+			</DrawerTrigger>
+			<AnimatePresence>
+				{open && (
+					<DrawerContent key="drawer-no-overlay" showOverlay={false} forceMount>
+						<DrawerHeader>
+							<DrawerTitle>Drawer without overlay</DrawerTitle>
+							<DrawerCloseButton />
+						</DrawerHeader>
+						<DrawerDescription>
+							<p style={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: '1.25rem' }}>
+								This variant keeps the background interactive by disabling the overlay while the
+								drawer is open.
+							</p>
+						</DrawerDescription>
+						<DrawerFooter>
+							<Button
+								variant={ButtonVariant.Ghost}
+								color="secondary"
+								onClick={() => setOpen(false)}
+							>
+								Cancel
+							</Button>
+							<Button
+								variant={ButtonVariant.Solid}
+								color={ButtonColor.Primary}
+								onClick={() => setOpen(false)}
+							>
+								Confirm
+							</Button>
+						</DrawerFooter>
+					</DrawerContent>
+				)}
+			</AnimatePresence>
+		</Drawer>
+	);
+}
+
 export const Default: Story = {
 	args: {
 		defaultOpen: false,
@@ -97,60 +143,33 @@ export const Default: Story = {
 	),
 };
 
-export const WithoutOverlay: Story = {
-	args: {
-		...Default.args,
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args) => {
-		const [open, setOpen] = React.useState<boolean | undefined>(args.open ?? args.defaultOpen);
-
-		return (
-			<Drawer
-				{...args}
-				open={args.open ?? open}
-				onOpenChange={(next) => {
-					setOpen(next);
-					args.onOpenChange?.(next);
-				}}
-			>
-				<DrawerTrigger asChild>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
-						Open drawer without overlay
-					</Button>
-				</DrawerTrigger>
-				<AnimatePresence>
-					{open && (
-						<DrawerContent key="drawer-no-overlay" showOverlay={false} forceMount>
-							<DrawerHeader>
-								<DrawerTitle>Drawer without overlay</DrawerTitle>
-								<DrawerCloseButton />
-							</DrawerHeader>
-							<DrawerDescription>
-								<p style={{ fontSize: '0.875rem', fontWeight: 400, lineHeight: '1.25rem' }}>
-									This variant keeps the background interactive by disabling the overlay while the
-									drawer is open.
-								</p>
-							</DrawerDescription>
-							<DrawerFooter>
-								<Button
-									variant={ButtonVariant.Ghost}
-									color="secondary"
-									onClick={() => setOpen(false)}
-								>
-									Cancel
-								</Button>
-								<Button
-									variant={ButtonVariant.Solid}
-									color={ButtonColor.Primary}
-									onClick={() => setOpen(false)}
-								>
-									Confirm
-								</Button>
-							</DrawerFooter>
-						</DrawerContent>
-					)}
-				</AnimatePresence>
-			</Drawer>
-		);
-	},
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Without Overlay
+				</h3>
+				<DrawerWithoutOverlay />
+			</section>
+		</div>
+	),
 };

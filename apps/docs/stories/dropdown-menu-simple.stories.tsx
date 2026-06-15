@@ -17,6 +17,126 @@ import { Button, DropdownMenuSimple, type MenuItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useMemo, useState } from 'react';
 
+const searchMenuItems: MenuItem[] = [
+	{ key: 'profile', label: 'Profile', icon: <User size={16} /> },
+	{ key: 'settings', label: 'Settings', icon: <Settings size={16} /> },
+	{ key: 'billing', label: 'Billing', icon: <FileText size={16} /> },
+	{ type: 'divider' },
+	{ key: 'view', label: 'View dashboard', icon: <Grid3X3 size={16} /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+	{ key: 'folder', label: 'Open folder', icon: <Folder size={16} /> },
+	{ type: 'divider' },
+	{
+		key: 'logout',
+		label: 'Log out',
+		icon: <LogOut size={16} />,
+		danger: true,
+	},
+];
+
+function CheckableMenuPreview() {
+	const [showStatusBar, setShowStatusBar] = useState(true);
+	const [showActivityBar, setShowActivityBar] = useState(false);
+	const [showPanel, setShowPanel] = useState(false);
+	const [panelPosition, setPanelPosition] = useState('bottom');
+
+	const checkboxItems: MenuItem[] = [
+		{
+			type: 'group',
+			label: 'Appearance',
+			children: [
+				{
+					type: 'checkbox',
+					key: 'status-bar',
+					label: 'Status Bar',
+					checked: showStatusBar,
+					onCheckedChange: setShowStatusBar,
+				},
+				{
+					type: 'checkbox',
+					key: 'activity-bar',
+					label: 'Activity Bar',
+					checked: showActivityBar,
+					onCheckedChange: setShowActivityBar,
+					disabled: true,
+				},
+				{
+					type: 'checkbox',
+					key: 'panel',
+					label: 'Panel',
+					checked: showPanel,
+					onCheckedChange: setShowPanel,
+				},
+			],
+		},
+	];
+
+	const radioItems: MenuItem[] = [
+		{
+			type: 'group',
+			label: 'Panel Position',
+			children: [
+				{
+					type: 'radio-group',
+					value: panelPosition,
+					onChange: setPanelPosition,
+					children: [
+						{ type: 'radio', key: 'top', label: 'Top', value: 'top' },
+						{ type: 'radio', key: 'bottom', label: 'Bottom', value: 'bottom' },
+						{ type: 'radio', key: 'right', label: 'Right', value: 'right' },
+					],
+				},
+			],
+		},
+	];
+
+	return (
+		<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+			<DropdownMenuSimple menu={{ items: checkboxItems }}>
+				<Button variant="solid" color="secondary">
+					Checkbox Items
+				</Button>
+			</DropdownMenuSimple>
+			<DropdownMenuSimple menu={{ items: radioItems }}>
+				<Button variant="solid" color="secondary">
+					Radio Group
+				</Button>
+			</DropdownMenuSimple>
+		</div>
+	);
+}
+
+function WithSearchMenuPreview() {
+	const [query, setQuery] = useState('');
+	const filteredItems = useMemo(() => {
+		if (!query.trim()) return searchMenuItems;
+		const q = query.toLowerCase();
+		return searchMenuItems.filter((item) => {
+			if ('type' in item && item.type === 'divider') return true;
+			return 'label' in item && String(item.label).toLowerCase().includes(q);
+		});
+	}, [query]);
+
+	return (
+		<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+			<DropdownMenuSimple
+				menu={{
+					items: filteredItems,
+					search: {
+						placeholder: 'Search menu...',
+						searchIcon: <Search size={16} />,
+						onSearchChange: setQuery,
+					},
+				}}
+			>
+				<Button variant="solid" color="secondary">
+					Search Menu
+				</Button>
+			</DropdownMenuSimple>
+		</div>
+	);
+}
+
 const meta: Meta<typeof DropdownMenuSimple> = {
 	title: 'Composed Components/DropdownMenuSimple',
 	component: DropdownMenuSimple,
@@ -126,643 +246,460 @@ export const Default: Story = {
 	),
 };
 
-// Basic DropdownMenuSimple
-export const Basic: Story = {
+export const Preview: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story:
-					'A simple dropdown menu with basic items and a divider. Perfect for user account menus or simple action lists.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const items: MenuItem[] = [
-			{ key: 'profile', label: 'Profile' },
-			{ key: 'settings', label: 'Settings' },
-			{ key: 'billing', label: 'Billing' },
-			{ type: 'divider' },
-			{ key: 'logout', label: 'Logout' },
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
-						Open Menu
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// With Icons
-export const WithIcons: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'DropdownMenuSimple menus support icons for enhanced visual communication. Icons can be placed on the left, right, or both sides of menu items. Use icons to make menus more scannable and intuitive.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const items1: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
-			{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
-			{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
-			{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
-			{ type: 'divider' },
-			{
-				key: 'delete',
-				label: 'Delete dashboard',
-				icon: <Trash2 size={16} />,
-				danger: true,
-			},
-		];
-
-		const items2: MenuItem[] = [
-			{
-				key: 'view',
-				label: 'View',
-				icon: <Grid3X3 size={16} />,
-				rightIcon: <Check size={16} />,
-			},
-			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
-			{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
-			{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
-			{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
-		];
-
-		const items3: MenuItem[] = [
-			{
-				key: 'view',
-				label: 'View',
-				icon: <Grid3X3 size={16} />,
-				rightIcon: <ChevronRight size={16} />,
-			},
-			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
-			{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
-			{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
-			{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
-			{ type: 'divider' },
-			{
-				key: 'delete',
-				label: 'Delete dashboard',
-				icon: <Trash2 size={16} />,
-				danger: true,
-			},
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple menu={{ items: items1 }}>
-					<Button variant="solid" color="secondary">
-						View Options
-					</Button>
-				</DropdownMenuSimple>
-
-				<DropdownMenuSimple menu={{ items: items2 }}>
-					<Button variant="solid" color="secondary">
-						With Checkmark
-					</Button>
-				</DropdownMenuSimple>
-
-				<DropdownMenuSimple menu={{ items: items3 }}>
-					<Button variant="solid" color="secondary">
-						With Arrow
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// Destructive Items
-export const Destructive: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use the danger prop to highlight destructive actions like delete or remove. Destructive items are styled in red to warn users about irreversible actions.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const items: MenuItem[] = [
-			{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
-			{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
-			{ type: 'divider' },
-			{
-				key: 'delete',
-				label: 'Delete dashboard',
-				icon: <Trash2 size={16} />,
-				danger: true,
-			},
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
-						Delete dashboard
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// Section Labels
-export const WithSectionLabels: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Organize menu items into logical groups with section labels. Groups help users navigate complex menus by categorizing related actions together.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const items: MenuItem[] = [
-			{
-				type: 'group',
-				label: 'SECTION LABEL',
-				children: [
-					{
-						key: 'view',
-						label: 'View',
-						icon: <Grid3X3 size={16} />,
-						rightIcon: <Check size={16} />,
-					},
-					{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
-					{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
-					{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
-					{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
-					{ type: 'divider' },
-					{
-						key: 'delete',
-						label: 'Delete dashboard',
-						icon: <Trash2 size={16} />,
-						danger: true,
-					},
-				],
-			},
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
-						Menu with Sections
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// Checkable Items
-export const Checkable: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'DropdownMenuSimple menus support checkbox items for toggling options and radio groups for selecting one option from a set. Perfect for settings menus and filter controls.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const [showStatusBar, setShowStatusBar] = useState(true);
-		const [showActivityBar, setShowActivityBar] = useState(false);
-		const [showPanel, setShowPanel] = useState(false);
-		const [panelPosition, setPanelPosition] = useState('bottom');
-
-		const checkboxItems: MenuItem[] = [
-			{
-				type: 'group',
-				label: 'Appearance',
-				children: [
-					{
-						type: 'checkbox',
-						key: 'status-bar',
-						label: 'Status Bar',
-						checked: showStatusBar,
-						onCheckedChange: setShowStatusBar,
-					},
-					{
-						type: 'checkbox',
-						key: 'activity-bar',
-						label: 'Activity Bar',
-						checked: showActivityBar,
-						onCheckedChange: setShowActivityBar,
-						disabled: true,
-					},
-					{
-						type: 'checkbox',
-						key: 'panel',
-						label: 'Panel',
-						checked: showPanel,
-						onCheckedChange: setShowPanel,
-					},
-				],
-			},
-		];
-
-		const radioItems: MenuItem[] = [
-			{
-				type: 'group',
-				label: 'Panel Position',
-				children: [
-					{
-						type: 'radio-group',
-						value: panelPosition,
-						onChange: setPanelPosition,
-						children: [
-							{ type: 'radio', key: 'top', label: 'Top', value: 'top' },
-							{ type: 'radio', key: 'bottom', label: 'Bottom', value: 'bottom' },
-							{ type: 'radio', key: 'right', label: 'Right', value: 'right' },
-						],
-					},
-				],
-			},
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple menu={{ items: checkboxItems }}>
-					<Button variant="solid" color="secondary">
-						Checkbox Items
-					</Button>
-				</DropdownMenuSimple>
-
-				<DropdownMenuSimple menu={{ items: radioItems }}>
-					<Button variant="solid" color="secondary">
-						Radio Group
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// Nested Menus (2-Step) - Standard Radix SubMenu
-export const NestedMenus: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Create hierarchical navigation with nested submenus. Submenus automatically open on hover and display a chevron indicator. Perfect for complex action hierarchies.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const items: MenuItem[] = [
-			{
-				type: 'group',
-				label: 'SECTION LABEL',
-				children: [
-					{
-						key: 'step2',
-						label: 'Step 2',
-						icon: <Grid3X3 size={16} />,
-						children: [
-							{
-								key: 'another-link',
-								label: 'Another link',
-								icon: <Link2 size={16} />,
-							},
-							{
-								key: 'one-link',
-								label: 'One link',
-								icon: <Grid3X3 size={16} />,
-							},
-							{
-								key: 'another-activity',
-								label: 'Another activity',
-								icon: <Grid3X3 size={16} />,
-							},
-							{ type: 'divider' },
-							{
-								key: 'delete',
-								label: 'Delete dashboard',
-								icon: <Trash2 size={16} />,
-								danger: true,
-							},
-						],
-					},
-					{
-						key: 'another-link',
-						label: 'Another link',
-						icon: <Link2 size={16} />,
-					},
-					{
-						key: 'one-link',
-						label: 'One link',
-						icon: <Grid3X3 size={16} />,
-					},
-					{
-						key: 'another-activity',
-						label: 'Another activity',
-						icon: <Grid3X3 size={16} />,
-					},
-					{ type: 'divider' },
-					{
-						key: 'delete',
-						label: 'Delete dashboard',
-						icon: <Trash2 size={16} />,
-						danger: true,
-					},
-				],
-			},
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
-						Nested Menu
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// Loading State
-export const Loading: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Display a loading state while menu items are being fetched. Useful for dynamic menus that load data from an API.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
+		chromatic: { disableSnapshot: false },
 	},
 	render: () => (
-		<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-			<DropdownMenuSimple menu={{ items: [], loading: true }}>
-				<Button variant="solid" color="secondary">
-					Loading Menu
-				</Button>
-			</DropdownMenuSimple>
-		</div>
-	),
-};
-
-const searchMenuItems: MenuItem[] = [
-	{ key: 'profile', label: 'Profile', icon: <User size={16} /> },
-	{ key: 'settings', label: 'Settings', icon: <Settings size={16} /> },
-	{ key: 'billing', label: 'Billing', icon: <FileText size={16} /> },
-	{ type: 'divider' },
-	{ key: 'view', label: 'View dashboard', icon: <Grid3X3 size={16} /> },
-	{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
-	{ key: 'folder', label: 'Open folder', icon: <Folder size={16} /> },
-	{ type: 'divider' },
-	{
-		key: 'logout',
-		label: 'Log out',
-		icon: <LogOut size={16} />,
-		danger: true,
-	},
-];
-
-// With Search
-export const WithSearch: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Add a search input at the top of the dropdown to filter menu items. Use onSearchChange to filter items based on the query. Great for long menus or when users need to find a specific option quickly.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const [query, setQuery] = useState('');
-		const filteredItems = useMemo(() => {
-			if (!query.trim()) return searchMenuItems;
-			const q = query.toLowerCase();
-			return searchMenuItems.filter((item) => {
-				if ('type' in item && item.type === 'divider') return true;
-				return 'label' in item && String(item.label).toLowerCase().includes(q);
-			});
-		}, [query]);
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
-				<DropdownMenuSimple
-					menu={{
-						items: filteredItems,
-						search: {
-							placeholder: 'Search menu...',
-							searchIcon: <Search size={16} />,
-							onSearchChange: setQuery,
-						},
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
 					}}
 				>
-					<Button variant="solid" color="secondary">
-						Search Menu
-					</Button>
-				</DropdownMenuSimple>
-			</div>
-		);
-	},
-};
-
-// All States Showcase
-export const AllStates: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'A comprehensive showcase of all dropdown menu features including default states, shortcuts, icons, groups, nested menus, and various item types. This example demonstrates the full capabilities of the component.',
-			},
-		},
-	},
-	argTypes: {
-		menu: { control: false },
-		children: { control: false },
-		align: { control: false },
-		side: { control: false },
-		sideOffset: { control: false },
-		className: { control: false },
-	},
-	render: () => {
-		const defaultItems: MenuItem[] = [
-			{ key: 'default', label: 'Default item' },
-			{ key: 'hover', label: 'Hover me' },
-			{ key: 'disabled', label: 'Disabled item', disabled: true },
-		];
-
-		const shortcutItems: MenuItem[] = [
-			{ key: 'profile', label: 'Profile', shortcut: '⇧⌘P' },
-			{ key: 'billing', label: 'Billing', shortcut: '⌘B' },
-			{ key: 'settings', label: 'Settings', shortcut: '⌘S' },
-		];
-
-		const complexItems: MenuItem[] = [
-			{
-				type: 'group',
-				label: 'My Account',
-				children: [
-					{
-						key: 'profile',
-						label: 'Profile',
-						icon: <User size={16} />,
-						shortcut: '⇧⌘P',
-					},
-					{
-						key: 'settings',
-						label: 'Settings',
-						icon: <Settings size={16} />,
-						shortcut: '⌘S',
-					},
-					{
-						key: 'keyboard',
-						label: 'Keyboard shortcuts',
-						icon: <FileText size={16} />,
-						shortcut: '⌘K',
-					},
-				],
-			},
-			{ type: 'divider' },
-			{ key: 'team', label: 'Team', icon: <Folder size={16} /> },
-			{
-				key: 'invite',
-				label: 'Invite users',
-				icon: <User size={16} />,
-				children: [
-					{ key: 'email', label: 'Email', icon: <Copy size={16} /> },
-					{ key: 'message', label: 'Message', icon: <Link2 size={16} /> },
-					{ type: 'divider' },
-					{ key: 'more', label: 'More...' },
-				],
-			},
-			{
-				key: 'new-team',
-				label: 'New Team',
-				icon: <Folder size={16} />,
-				shortcut: '⌘T',
-			},
-			{ type: 'divider' },
-			{ key: 'github', label: 'GitHub', icon: <Link2 size={16} /> },
-			{ key: 'support', label: 'Support' },
-			{ key: 'api', label: 'API', disabled: true },
-			{ type: 'divider' },
-			{
-				key: 'logout',
-				label: 'Log out',
-				icon: <LogOut size={16} />,
-				danger: true,
-				shortcut: '⇧⌘Q',
-			},
-		];
-
-		return (
-			<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Default States</h3>
-					<div style={{ display: 'flex', gap: '1rem' }}>
-						<DropdownMenuSimple menu={{ items: defaultItems }}>
-							<Button variant="solid" color="secondary">
-								Default
-							</Button>
-						</DropdownMenuSimple>
+					Basic
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{ key: 'profile', label: 'Profile' },
+								{ key: 'settings', label: 'Settings' },
+								{ key: 'billing', label: 'Billing' },
+								{ type: 'divider' },
+								{ key: 'logout', label: 'Logout' },
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							Open Menu
+						</Button>
+					</DropdownMenuSimple>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Icons
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
+								{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+								{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+								{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+								{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
+								{ type: 'divider' },
+								{
+									key: 'delete',
+									label: 'Delete dashboard',
+									icon: <Trash2 size={16} />,
+									danger: true,
+								},
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							View Options
+						</Button>
+					</DropdownMenuSimple>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{
+									key: 'view',
+									label: 'View',
+									icon: <Grid3X3 size={16} />,
+									rightIcon: <Check size={16} />,
+								},
+								{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+								{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+								{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+								{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							With Checkmark
+						</Button>
+					</DropdownMenuSimple>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{
+									key: 'view',
+									label: 'View',
+									icon: <Grid3X3 size={16} />,
+									rightIcon: <ChevronRight size={16} />,
+								},
+								{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+								{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+								{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+								{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
+								{ type: 'divider' },
+								{
+									key: 'delete',
+									label: 'Delete dashboard',
+									icon: <Trash2 size={16} />,
+									danger: true,
+								},
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							With Arrow
+						</Button>
+					</DropdownMenuSimple>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Destructive
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{ key: 'view', label: 'View', icon: <Grid3X3 size={16} /> },
+								{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+								{ type: 'divider' },
+								{
+									key: 'delete',
+									label: 'Delete dashboard',
+									icon: <Trash2 size={16} />,
+									danger: true,
+								},
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							Delete dashboard
+						</Button>
+					</DropdownMenuSimple>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Section Labels
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{
+									type: 'group',
+									label: 'SECTION LABEL',
+									children: [
+										{
+											key: 'view',
+											label: 'View',
+											icon: <Grid3X3 size={16} />,
+											rightIcon: <Check size={16} />,
+										},
+										{ key: 'copy', label: 'Copy link', icon: <Link2 size={16} /> },
+										{ key: 'open', label: 'Open', icon: <FileText size={16} /> },
+										{ key: 'duplicate', label: 'Duplicate', icon: <Copy size={16} /> },
+										{ key: 'archive', label: 'Archive', icon: <Folder size={16} /> },
+										{ type: 'divider' },
+										{
+											key: 'delete',
+											label: 'Delete dashboard',
+											icon: <Trash2 size={16} />,
+											danger: true,
+										},
+									],
+								},
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							Menu with Sections
+						</Button>
+					</DropdownMenuSimple>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Checkable
+				</h3>
+				<CheckableMenuPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Nested Menus
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+					<DropdownMenuSimple
+						menu={{
+							items: [
+								{
+									type: 'group',
+									label: 'SECTION LABEL',
+									children: [
+										{
+											key: 'step2',
+											label: 'Step 2',
+											icon: <Grid3X3 size={16} />,
+											children: [
+												{
+													key: 'another-link',
+													label: 'Another link',
+													icon: <Link2 size={16} />,
+												},
+												{
+													key: 'one-link',
+													label: 'One link',
+													icon: <Grid3X3 size={16} />,
+												},
+												{
+													key: 'another-activity',
+													label: 'Another activity',
+													icon: <Grid3X3 size={16} />,
+												},
+												{ type: 'divider' },
+												{
+													key: 'delete',
+													label: 'Delete dashboard',
+													icon: <Trash2 size={16} />,
+													danger: true,
+												},
+											],
+										},
+										{
+											key: 'another-link',
+											label: 'Another link',
+											icon: <Link2 size={16} />,
+										},
+										{
+											key: 'one-link',
+											label: 'One link',
+											icon: <Grid3X3 size={16} />,
+										},
+										{
+											key: 'another-activity',
+											label: 'Another activity',
+											icon: <Grid3X3 size={16} />,
+										},
+										{ type: 'divider' },
+										{
+											key: 'delete',
+											label: 'Delete dashboard',
+											icon: <Trash2 size={16} />,
+											danger: true,
+										},
+									],
+								},
+							],
+						}}
+					>
+						<Button variant="solid" color="secondary">
+							Nested Menu
+						</Button>
+					</DropdownMenuSimple>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Loading
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', gap: '1rem' }}>
+					<DropdownMenuSimple menu={{ items: [], loading: true }}>
+						<Button variant="solid" color="secondary">
+							Loading Menu
+						</Button>
+					</DropdownMenuSimple>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Search
+				</h3>
+				<WithSearchMenuPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					All States
+				</h3>
+				<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Default States</h3>
+						<div style={{ display: 'flex', gap: '1rem' }}>
+							<DropdownMenuSimple
+								menu={{
+									items: [
+										{ key: 'default', label: 'Default item' },
+										{ key: 'hover', label: 'Hover me' },
+										{ key: 'disabled', label: 'Disabled item', disabled: true },
+									],
+								}}
+							>
+								<Button variant="solid" color="secondary">
+									Default
+								</Button>
+							</DropdownMenuSimple>
+						</div>
+					</div>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>With Shortcuts</h3>
+						<div style={{ display: 'flex', gap: '1rem' }}>
+							<DropdownMenuSimple
+								menu={{
+									items: [
+										{ key: 'profile', label: 'Profile', shortcut: '⇧⌘P' },
+										{ key: 'billing', label: 'Billing', shortcut: '⌘B' },
+										{ key: 'settings', label: 'Settings', shortcut: '⌘S' },
+									],
+								}}
+							>
+								<Button variant="solid" color="secondary">
+									Shortcuts
+								</Button>
+							</DropdownMenuSimple>
+						</div>
+					</div>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Complex Example</h3>
+						<div style={{ display: 'flex', gap: '1rem' }}>
+							<DropdownMenuSimple
+								menu={{
+									items: [
+										{
+											type: 'group',
+											label: 'My Account',
+											children: [
+												{
+													key: 'profile',
+													label: 'Profile',
+													icon: <User size={16} />,
+													shortcut: '⇧⌘P',
+												},
+												{
+													key: 'settings',
+													label: 'Settings',
+													icon: <Settings size={16} />,
+													shortcut: '⌘S',
+												},
+												{
+													key: 'keyboard',
+													label: 'Keyboard shortcuts',
+													icon: <FileText size={16} />,
+													shortcut: '⌘K',
+												},
+											],
+										},
+										{ type: 'divider' },
+										{ key: 'team', label: 'Team', icon: <Folder size={16} /> },
+										{
+											key: 'invite',
+											label: 'Invite users',
+											icon: <User size={16} />,
+											children: [
+												{ key: 'email', label: 'Email', icon: <Copy size={16} /> },
+												{ key: 'message', label: 'Message', icon: <Link2 size={16} /> },
+												{ type: 'divider' },
+												{ key: 'more', label: 'More...' },
+											],
+										},
+										{
+											key: 'new-team',
+											label: 'New Team',
+											icon: <Folder size={16} />,
+											shortcut: '⌘T',
+										},
+										{ type: 'divider' },
+										{ key: 'github', label: 'GitHub', icon: <Link2 size={16} /> },
+										{ key: 'support', label: 'Support' },
+										{ key: 'api', label: 'API', disabled: true },
+										{ type: 'divider' },
+										{
+											key: 'logout',
+											label: 'Log out',
+											icon: <LogOut size={16} />,
+											danger: true,
+											shortcut: '⇧⌘Q',
+										},
+									],
+								}}
+								align="end"
+								style={{ width: '14rem' }}
+							>
+								<Button variant="solid" color="secondary">
+									<Ellipsis />
+								</Button>
+							</DropdownMenuSimple>
+						</div>
 					</div>
 				</div>
-
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>With Shortcuts</h3>
-					<div style={{ display: 'flex', gap: '1rem' }}>
-						<DropdownMenuSimple menu={{ items: shortcutItems }}>
-							<Button variant="solid" color="secondary">
-								Shortcuts
-							</Button>
-						</DropdownMenuSimple>
-					</div>
-				</div>
-
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>Complex Example</h3>
-					<div style={{ display: 'flex', gap: '1rem' }}>
-						<DropdownMenuSimple
-							menu={{ items: complexItems }}
-							align="end"
-							style={{ width: '14rem' }}
-						>
-							<Button variant="solid" color="secondary">
-								<Ellipsis />
-							</Button>
-						</DropdownMenuSimple>
-					</div>
-				</div>
-			</div>
-		);
-	},
+			</section>
+		</div>
+	),
 };

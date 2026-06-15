@@ -1,5 +1,5 @@
-import { Progress, type ProgressProps } from '@signozhq/ui';
-import type { Meta, StoryFn } from '@storybook/react-vite';
+import { Progress } from '@signozhq/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Progress> = {
 	title: 'Primitive Components/Progress',
@@ -92,157 +92,217 @@ const meta: Meta<typeof Progress> = {
 
 export default meta;
 
-// Default Template
-const Template: StoryFn<typeof Progress> = (args: ProgressProps) => (
-	<div style={{ width: '100%', maxWidth: '28rem', padding: '1rem' }}>
-		<Progress {...args} />
-	</div>
-);
+type Story = StoryObj<typeof Progress>;
 
-// 1. Default: A basic continuous progress bar
-export const Default = Template.bind({});
-Default.args = {
-	percent: 50,
+export const Default: Story = {
+	render: (args) => (
+		<div style={{ width: '100%', maxWidth: '28rem', padding: '1rem' }}>
+			<Progress {...args} />
+		</div>
+	),
+	args: {
+		percent: 50,
+	},
 };
 
-// 2. Sizes: Show both default and small sizes
-export const Sizes: StoryFn = () => (
-	<div
-		style={{
-			display: 'flex',
-			width: '100%',
-			maxWidth: '28rem',
-			flexDirection: 'column',
-			gap: '1.5rem',
-			padding: '1rem',
-			color: 'var(--text-vanilla-100)',
-		}}
-	>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Small Size</h3>
-			<Progress percent={70} size="small" />
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+	},
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Sizes
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						width: '100%',
+						maxWidth: '28rem',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1rem',
+						color: 'var(--text-vanilla-100)',
+					}}
+				>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Small Size
+						</h3>
+						<Progress percent={70} size="small" />
+					</div>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Default Size
+						</h3>
+						<Progress percent={70} size="default" />
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Dynamic Colors
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						width: '100%',
+						maxWidth: '28rem',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1rem',
+						color: 'var(--text-vanilla-100)',
+					}}
+				>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Critical (Red)
+						</h3>
+						<Progress percent={80} strokeColor="#ef4444" />
+					</div>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Warning (Yellow)
+						</h3>
+						<Progress percent={60} strokeColor="#eab308" />
+					</div>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Success (Green)
+						</h3>
+						<Progress percent={100} strokeColor="#22c55e" />
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Segmented
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						width: '100%',
+						maxWidth: '28rem',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1rem',
+						color: 'var(--text-vanilla-100)',
+					}}
+				>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							5 Steps, 40%
+						</h3>
+						<Progress percent={40} steps={5} />
+					</div>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							10 Steps, 70%
+						</h3>
+						<Progress percent={70} steps={10} strokeColor="#10b981" />
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Info
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						width: '100%',
+						maxWidth: '28rem',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1rem',
+						color: 'var(--text-vanilla-100)',
+					}}
+				>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Showing Info Text
+						</h3>
+						<Progress percent={45} showInfo />
+					</div>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Active Status with Info
+						</h3>
+						<Progress percent={85} showInfo status="active" />
+					</div>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Stroke Linecap
+				</h3>
+				<div
+					style={{
+						display: 'flex',
+						width: '100%',
+						maxWidth: '28rem',
+						flexDirection: 'column',
+						gap: '1.5rem',
+						padding: '1rem',
+						color: 'var(--text-vanilla-100)',
+					}}
+				>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
+							Round (Default for track, butt for indicator usually, but let's test)
+						</h3>
+						<Progress percent={50} strokeLinecap="round" />
+					</div>
+					<div>
+						<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Butt</h3>
+						<Progress percent={50} strokeLinecap="butt" />
+					</div>
+				</div>
+			</section>
 		</div>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Default Size
-			</h3>
-			<Progress percent={70} size="default" />
-		</div>
-	</div>
-);
-
-// 3. Dynamic Colors: custom hex values or design tokens
-export const DynamicColors: StoryFn = () => (
-	<div
-		style={{
-			display: 'flex',
-			width: '100%',
-			maxWidth: '28rem',
-			flexDirection: 'column',
-			gap: '1.5rem',
-			padding: '1rem',
-			color: 'var(--text-vanilla-100)',
-		}}
-	>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Critical (Red)
-			</h3>
-			<Progress percent={80} strokeColor="#ef4444" />
-		</div>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Warning (Yellow)
-			</h3>
-			<Progress percent={60} strokeColor="#eab308" />
-		</div>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Success (Green)
-			</h3>
-			<Progress percent={100} strokeColor="#22c55e" />
-		</div>
-	</div>
-);
-
-// 4. Segmented (Steps)
-export const Segmented: StoryFn = () => (
-	<div
-		style={{
-			display: 'flex',
-			width: '100%',
-			maxWidth: '28rem',
-			flexDirection: 'column',
-			gap: '1.5rem',
-			padding: '1rem',
-			color: 'var(--text-vanilla-100)',
-		}}
-	>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				5 Steps, 40%
-			</h3>
-			<Progress percent={40} steps={5} />
-		</div>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				10 Steps, 70%
-			</h3>
-			<Progress percent={70} steps={10} strokeColor="#10b981" />
-		</div>
-	</div>
-);
-
-// 5. With Info
-export const WithInfo: StoryFn = () => (
-	<div
-		style={{
-			display: 'flex',
-			width: '100%',
-			maxWidth: '28rem',
-			flexDirection: 'column',
-			gap: '1.5rem',
-			padding: '1rem',
-			color: 'var(--text-vanilla-100)',
-		}}
-	>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Showing Info Text
-			</h3>
-			<Progress percent={45} showInfo />
-		</div>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Active Status with Info
-			</h3>
-			<Progress percent={85} showInfo status="active" />
-		</div>
-	</div>
-);
-
-// 6. Stroke Linecap (Extra)
-export const StrokeLinecap: StoryFn = () => (
-	<div
-		style={{
-			display: 'flex',
-			width: '100%',
-			maxWidth: '28rem',
-			flexDirection: 'column',
-			gap: '1.5rem',
-			padding: '1rem',
-			color: 'var(--text-vanilla-100)',
-		}}
-	>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>
-				Round (Default for track, butt for indicator usually, but let's test)
-			</h3>
-			<Progress percent={50} strokeLinecap="round" />
-		</div>
-		<div>
-			<h3 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 500 }}>Butt</h3>
-			<Progress percent={50} strokeLinecap="butt" />
-		</div>
-	</div>
-);
+	),
+};

@@ -105,132 +105,175 @@ export const Default: Story = {
 	),
 };
 
-export const WithOnClick: Story = {
-	args: {
-		children: 'Category',
-		items: [
-			{ title: 'Option 1', onClick: fn() },
-			{ title: 'Option 2', onClick: fn() },
-			{ title: 'Option 3', onClick: fn() },
-		],
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbDropdown {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const ManyItems: Story = {
-	args: {
-		children: 'Select Category',
-		items: [
-			{ title: 'Documentation', href: '#' },
-			{ title: 'Components', href: '#' },
-			{ title: 'Themes', href: '#' },
-			{ title: 'Examples', href: '#' },
-			{ title: 'GitHub', href: '#' },
-		],
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbDropdown {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const WithIconsInPath: Story = {
-	args: {
-		children: 'Components',
-		items: [
-			{ title: 'General', href: '#' },
-			{ title: 'Layout', href: '#' },
-			{ title: 'Navigation', href: '#' },
-		],
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#" icon={<Home size={16} />}>
-						Home
-					</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbDropdown {...args} />
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Breadcrumb</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Dropdown</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const MultipleDropdowns: Story = {
+export const Preview: Story = {
 	render: () => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbDropdown
-						items={[
-							{ title: 'Category A', href: '#' },
-							{ title: 'Category B', href: '#' },
-						]}
-					>
-						Categories
-					</BreadcrumbDropdown>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbDropdown
-						items={[
-							{ title: 'Subcategory 1', href: '#' },
-							{ title: 'Subcategory 2', href: '#' },
-						]}
-					>
-						Subcategories
-					</BreadcrumbDropdown>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Item</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With On Click
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbDropdown
+								items={[
+									{ title: 'Option 1', onClick: fn() },
+									{ title: 'Option 2', onClick: fn() },
+									{ title: 'Option 3', onClick: fn() },
+								]}
+							>
+								Category
+							</BreadcrumbDropdown>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Many Items
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbDropdown
+								items={[
+									{ title: 'Documentation', href: '#' },
+									{ title: 'Components', href: '#' },
+									{ title: 'Themes', href: '#' },
+									{ title: 'Examples', href: '#' },
+									{ title: 'GitHub', href: '#' },
+								]}
+							>
+								Select Category
+							</BreadcrumbDropdown>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					With Icons In Path
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#" icon={<Home size={16} />}>
+								Home
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbDropdown
+								items={[
+									{ title: 'General', href: '#' },
+									{ title: 'Layout', href: '#' },
+									{ title: 'Navigation', href: '#' },
+								]}
+							>
+								Components
+							</BreadcrumbDropdown>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Breadcrumb</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Dropdown</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Multiple Dropdowns
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbDropdown
+								items={[
+									{ title: 'Category A', href: '#' },
+									{ title: 'Category B', href: '#' },
+								]}
+							>
+								Categories
+							</BreadcrumbDropdown>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbDropdown
+								items={[
+									{ title: 'Subcategory 1', href: '#' },
+									{ title: 'Subcategory 2', href: '#' },
+								]}
+							>
+								Subcategories
+							</BreadcrumbDropdown>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator />
+						<BreadcrumbItem>
+							<BreadcrumbPage>Item</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+		</div>
 	),
 };

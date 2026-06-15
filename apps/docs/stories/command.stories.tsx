@@ -72,7 +72,6 @@ const meta: Meta<any> = {
 export default meta;
 type Story = StoryObj<any>;
 
-/* Utility: shared items used across stories */
 const ITEMS = [
 	{ id: '1', label: 'Open settings', shortcut: '⌘S' },
 	{ id: '2', label: 'Toggle sidebar', shortcut: 'T' },
@@ -80,9 +79,6 @@ const ITEMS = [
 	{ id: '4', label: 'Switch workspace' },
 ];
 
-/* Stories */
-
-/* Default — minimal, renders inline Command for visual inspection */
 export const Default: Story = {
 	args: {
 		placeholder: 'Search commands…',
@@ -131,324 +127,357 @@ export const Default: Story = {
 	),
 };
 
-/** SelectWithAlert — shows an alert when an item is selected */
-export const SelectWithAlert: Story = {
-	args: {
-		placeholder: 'Select an item…',
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
 	},
-	render: (args: any) => (
-		<div style={{ width: 520 }}>
-			<Command>
-				<CommandInput placeholder={args.placeholder} />
-				<CommandList>
-					<CommandGroup heading="Selectable items">
-						{ITEMS.map((it) => (
-							<CommandItem
-								key={it.id}
-								onSelect={() => {
-									action('select')(it.label);
-									args.onSelect?.(it);
-									window.alert(`You selected: ${it.label}`);
-								}}
-							>
-								{it.label}
-								{it.shortcut && <CommandShortcut>{it.shortcut}</CommandShortcut>}
-							</CommandItem>
-						))}
-					</CommandGroup>
+	render: () => {
+		const placeholder = 'Search commands…';
 
-					<CommandSeparator />
+		function DialogSection() {
+			const [dialogOpen, setDialogOpen] = useState(false);
 
-					<CommandEmpty>No results.</CommandEmpty>
-				</CommandList>
-			</Command>
-		</div>
-	),
-};
+			return (
+				<>
+					<div style={{ margin: 12 }}>
+						<Button type="button" variant="solid" onClick={() => setDialogOpen(true)}>
+							Open Command Dialog
+						</Button>
+					</div>
 
-/** Dialog — demonstrates Command mounted inside CommandDialog */
-export const Dialog: Story = {
-	args: {
-		dialogOpen: false,
-		placeholder: 'Search or run a command…',
-	},
-	render: (args: any) => {
-		const [open, setOpen] = useState<boolean>(args.dialogOpen);
-
-		const handleOpenChange = (v: boolean) => {
-			setOpen(v);
-			args.onOpenChange?.(v);
-		};
-
-		return (
-			<>
-				<div style={{ margin: 12 }}>
-					<Button type="button" variant="solid" onClick={() => handleOpenChange(true)}>
-						Open Command Dialog
-					</Button>
-				</div>
-
-				<CommandDialog open={open} onOpenChange={handleOpenChange} position="top" offset={110}>
-					<CommandInput placeholder={args.placeholder} autoFocus={false} />
-					<CommandList>
-						<CommandGroup heading="Quick actions">
-							{ITEMS.map((it) => (
-								<CommandItem
-									key={it.id}
-									onSelect={() => {
-										action('select')(it.label);
-										args.onSelect?.(it);
-										handleOpenChange(false);
-									}}
-								>
-									{it.label}
-									{it.shortcut && <CommandShortcut>{it.shortcut}</CommandShortcut>}
-								</CommandItem>
-							))}
-						</CommandGroup>
-
-						<CommandSeparator />
-
-						<CommandEmpty>Try searching for &quot;report&quot;.</CommandEmpty>
-					</CommandList>
-				</CommandDialog>
-			</>
-		);
-	},
-};
-
-/** CreateOrSearch — auto-create new item on Enter when no results */
-export const CreateOrSearch: Story = {
-	args: {
-		placeholder: 'Search or press Enter to create',
-	},
-	render: (args: any) => {
-		const [query, setQuery] = useState('');
-		const [items, setItems] = useState(ITEMS);
-
-		const results = items.filter((it) => it.label.toLowerCase().includes(query.toLowerCase()));
-
-		const handleCreate = (name: string) => {
-			const label = name.trim() || `untitled-${Date.now()}`;
-			const newItem = { id: String(Date.now()), label };
-			setItems((prev) => [newItem, ...prev]);
-			action('create')(label);
-			args.onSelect?.(newItem);
-		};
-
-		return (
-			<div style={{ width: 520 }}>
-				<Command>
-					<CommandInput
-						placeholder={args.placeholder}
-						onValueChange={(v: string) => setQuery(v)}
-						onKeyDown={(e) => {
-							if (e.key === 'Enter' && results.length === 0) {
-								handleCreate(query);
-							}
-						}}
-					/>
-
-					<CommandList>
-						{results.length === 0 ? (
-							<CommandEmpty>
-								No results. Press <strong>Enter</strong> to create &quot;{query}&quot;
-							</CommandEmpty>
-						) : (
-							<CommandGroup heading="Results">
-								{results.map((it) => (
+					<CommandDialog open={dialogOpen} onOpenChange={setDialogOpen} position="top" offset={110}>
+						<CommandInput placeholder={placeholder} autoFocus={false} />
+						<CommandList>
+							<CommandGroup heading="Quick actions">
+								{ITEMS.map((it) => (
 									<CommandItem
 										key={it.id}
 										onSelect={() => {
 											action('select')(it.label);
-											args.onSelect?.(it);
+											setDialogOpen(false);
 										}}
 									>
 										{it.label}
+										{it.shortcut && <CommandShortcut>{it.shortcut}</CommandShortcut>}
 									</CommandItem>
 								))}
 							</CommandGroup>
-						)}
-					</CommandList>
-				</Command>
+
+							<CommandSeparator />
+
+							<CommandEmpty>Try searching for &quot;report&quot;.</CommandEmpty>
+						</CommandList>
+					</CommandDialog>
+				</>
+			);
+		}
+
+		function CreateOrSearchSection() {
+			const [createQuery, setCreateQuery] = useState('');
+			const [createItems, setCreateItems] = useState(ITEMS);
+
+			const results = createItems.filter((it) =>
+				it.label.toLowerCase().includes(createQuery.toLowerCase())
+			);
+
+			const handleCreate = (name: string) => {
+				const label = name.trim() || `untitled-${Date.now()}`;
+				const newItem = { id: String(Date.now()), label };
+				setCreateItems((prev) => [newItem, ...prev]);
+				action('create')(label);
+			};
+
+			return (
+				<div style={{ width: 520 }}>
+					<Command>
+						<CommandInput
+							placeholder={placeholder}
+							onValueChange={(v: string) => setCreateQuery(v)}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter' && results.length === 0) {
+									handleCreate(createQuery);
+								}
+							}}
+						/>
+
+						<CommandList>
+							{results.length === 0 ? (
+								<CommandEmpty>
+									No results. Press <strong>Enter</strong> to create &quot;{createQuery}&quot;
+								</CommandEmpty>
+							) : (
+								<CommandGroup heading="Results">
+									{results.map((it) => (
+										<CommandItem
+											key={it.id}
+											onSelect={() => {
+												action('select')(it.label);
+											}}
+										>
+											{it.label}
+										</CommandItem>
+									))}
+								</CommandGroup>
+							)}
+						</CommandList>
+					</Command>
+				</div>
+			);
+		}
+
+		return (
+			<div
+				style={{
+					padding: '2rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '2.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Select With Alert
+					</h3>
+					<div style={{ width: 520 }}>
+						<Command>
+							<CommandInput placeholder={placeholder} />
+							<CommandList>
+								<CommandGroup heading="Selectable items">
+									{ITEMS.map((it) => (
+										<CommandItem
+											key={it.id}
+											onSelect={() => {
+												action('select')(it.label);
+												window.alert(`You selected: ${it.label}`);
+											}}
+										>
+											{it.label}
+											{it.shortcut && <CommandShortcut>{it.shortcut}</CommandShortcut>}
+										</CommandItem>
+									))}
+								</CommandGroup>
+
+								<CommandSeparator />
+
+								<CommandEmpty>No results.</CommandEmpty>
+							</CommandList>
+						</Command>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Dialog
+					</h3>
+					<DialogSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Create Or Search
+					</h3>
+					<CreateOrSearchSection />
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Suggestions
+					</h3>
+					<div style={{ width: 520 }}>
+						<Command>
+							<CommandInput placeholder={placeholder} />
+							<CommandList>
+								<CommandEmpty>No results.</CommandEmpty>
+
+								<CommandGroup heading="Suggestions">
+									{['Calendar', 'Search Emoji', 'Calculator'].map((label) => (
+										<CommandItem
+											key={label}
+											onSelect={() => {
+												action('select')(label);
+											}}
+										>
+											{label}
+										</CommandItem>
+									))}
+								</CommandGroup>
+							</CommandList>
+						</Command>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Separators
+					</h3>
+					<div style={{ width: 520 }}>
+						<Command>
+							<CommandInput placeholder={placeholder} />
+							<CommandList>
+								<CommandGroup heading="Top picks">
+									<CommandItem
+										onSelect={() => {
+											action('select')('Alpha');
+										}}
+									>
+										Alpha
+									</CommandItem>
+									<CommandItem
+										onSelect={() => {
+											action('select')('Beta');
+										}}
+									>
+										Beta
+									</CommandItem>
+								</CommandGroup>
+
+								<CommandSeparator />
+
+								<CommandGroup heading="More suggestions">
+									<CommandItem
+										onSelect={() => {
+											action('select')('Gamma');
+										}}
+									>
+										Gamma
+									</CommandItem>
+									<CommandItem
+										onSelect={() => {
+											action('select')('Delta');
+										}}
+									>
+										Delta
+									</CommandItem>
+								</CommandGroup>
+
+								<CommandSeparator />
+
+								<CommandGroup heading="Utilities">
+									<CommandItem
+										onSelect={() => {
+											action('select')('Profile');
+										}}
+									>
+										Profile
+									</CommandItem>
+									<CommandItem
+										onSelect={() => {
+											action('select')('Settings');
+										}}
+									>
+										Settings
+									</CommandItem>
+								</CommandGroup>
+
+								<CommandEmpty>No results.</CommandEmpty>
+							</CommandList>
+						</Command>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Shortcuts Demo
+					</h3>
+					<div style={{ width: 520 }}>
+						<Command>
+							<CommandInput placeholder={placeholder} />
+							<CommandList>
+								<CommandGroup heading="Keyboard">
+									<CommandItem
+										onSelect={() => {
+											action('select')('Open settings');
+										}}
+									>
+										Open settings
+										<CommandShortcut>⌘S</CommandShortcut>
+									</CommandItem>
+
+									<CommandItem
+										onSelect={() => {
+											action('select')('Toggle sidebar');
+										}}
+									>
+										Toggle sidebar
+										<CommandShortcut>Ctrl+K</CommandShortcut>
+									</CommandItem>
+
+									<CommandItem
+										onSelect={() => {
+											action('select')('New report');
+										}}
+									>
+										Create report
+										<CommandShortcut>⌘N</CommandShortcut>
+									</CommandItem>
+								</CommandGroup>
+
+								<CommandEmpty>No results.</CommandEmpty>
+							</CommandList>
+						</Command>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Empty State
+					</h3>
+					<div style={{ width: 420 }}>
+						<Command>
+							<CommandInput placeholder={placeholder} />
+							<CommandList>
+								<CommandEmpty>
+									Nothing matched your search. Try different keywords or create a new command.
+								</CommandEmpty>
+							</CommandList>
+						</Command>
+					</div>
+				</section>
 			</div>
 		);
 	},
-};
-
-/** Suggestions — shows CommandGroup with heading="Suggestions" */
-export const Suggestions: Story = {
-	args: {
-		placeholder: 'Try: calendar, emoji, calc',
-	},
-	render: (args: any) => (
-		<div style={{ width: 520 }}>
-			<Command>
-				<CommandInput placeholder={args.placeholder} />
-				<CommandList>
-					<CommandEmpty>No results.</CommandEmpty>
-
-					<CommandGroup heading="Suggestions">
-						{['Calendar', 'Search Emoji', 'Calculator'].map((label) => (
-							<CommandItem
-								key={label}
-								onSelect={() => {
-									action('select')(label);
-									args.onSelect?.({ label });
-								}}
-							>
-								{label}
-							</CommandItem>
-						))}
-					</CommandGroup>
-				</CommandList>
-			</Command>
-		</div>
-	),
-};
-
-/** Separators — demonstrates multiple CommandSeparator sections */
-export const Separators: Story = {
-	args: {
-		placeholder: 'Sections with separators',
-	},
-	render: (args: any) => (
-		<div style={{ width: 520 }}>
-			<Command>
-				<CommandInput placeholder={args.placeholder} />
-				<CommandList>
-					<CommandGroup heading="Top picks">
-						<CommandItem
-							onSelect={() => {
-								action('select')('Alpha');
-								args.onSelect?.({ label: 'Alpha' });
-							}}
-						>
-							Alpha
-						</CommandItem>
-						<CommandItem
-							onSelect={() => {
-								action('select')('Beta');
-								args.onSelect?.({ label: 'Beta' });
-							}}
-						>
-							Beta
-						</CommandItem>
-					</CommandGroup>
-
-					<CommandSeparator />
-
-					<CommandGroup heading="More suggestions">
-						<CommandItem
-							onSelect={() => {
-								action('select')('Gamma');
-								args.onSelect?.({ label: 'Gamma' });
-							}}
-						>
-							Gamma
-						</CommandItem>
-						<CommandItem
-							onSelect={() => {
-								action('select')('Delta');
-								args.onSelect?.({ label: 'Delta' });
-							}}
-						>
-							Delta
-						</CommandItem>
-					</CommandGroup>
-
-					<CommandSeparator />
-
-					<CommandGroup heading="Utilities">
-						<CommandItem
-							onSelect={() => {
-								action('select')('Profile');
-								args.onSelect?.({ label: 'Profile' });
-							}}
-						>
-							Profile
-						</CommandItem>
-						<CommandItem
-							onSelect={() => {
-								action('select')('Settings');
-								args.onSelect?.({ label: 'Settings' });
-							}}
-						>
-							Settings
-						</CommandItem>
-					</CommandGroup>
-
-					<CommandEmpty>No results.</CommandEmpty>
-				</CommandList>
-			</Command>
-		</div>
-	),
-};
-
-/** Shortcuts — shows CommandShortcut usage next to items */
-export const ShortcutsDemo: Story = {
-	args: {
-		placeholder: 'Shortcut examples',
-	},
-	render: (args: any) => (
-		<div style={{ width: 520 }}>
-			<Command>
-				<CommandInput placeholder={args.placeholder} />
-				<CommandList>
-					<CommandGroup heading="Keyboard">
-						<CommandItem
-							onSelect={() => {
-								action('select')('Open settings');
-								args.onSelect?.({ label: 'Open settings' });
-							}}
-						>
-							Open settings
-							<CommandShortcut>⌘S</CommandShortcut>
-						</CommandItem>
-
-						<CommandItem
-							onSelect={() => {
-								action('select')('Toggle sidebar');
-								args.onSelect?.({ label: 'Toggle sidebar' });
-							}}
-						>
-							Toggle sidebar
-							<CommandShortcut>Ctrl+K</CommandShortcut>
-						</CommandItem>
-
-						<CommandItem
-							onSelect={() => {
-								action('select')('New report');
-								args.onSelect?.({ label: 'New report' });
-							}}
-						>
-							Create report
-							<CommandShortcut>⌘N</CommandShortcut>
-						</CommandItem>
-					</CommandGroup>
-
-					<CommandEmpty>No results.</CommandEmpty>
-				</CommandList>
-			</Command>
-		</div>
-	),
-};
-
-/** EmptyState: show how Component looks with no results */
-export const EmptyState: Story = {
-	args: {
-		placeholder: 'Search (no results)',
-	},
-	render: (args: any) => (
-		<div style={{ width: 420 }}>
-			<Command>
-				<CommandInput placeholder={args.placeholder} />
-				<CommandList>
-					<CommandEmpty>
-						Nothing matched your search. Try different keywords or create a new command.
-					</CommandEmpty>
-				</CommandList>
-			</Command>
-		</div>
-	),
 };

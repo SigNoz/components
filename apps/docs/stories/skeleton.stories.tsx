@@ -40,74 +40,96 @@ export const Default: Story = {
 	},
 };
 
-export const Overview: Story = {
+export const Preview: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+	},
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem' }}>
-			{/* Base variants */}
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — with title & paragraph</p>
-				<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
-			</div>
-
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — variable row widths</p>
-				<Skeleton active paragraph={{ rows: 4, width: ['100%', '95%', '80%', '60%'] }} />
-			</div>
-
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — no animation</p>
-				<Skeleton active={false} title={{ width: '40%' }} paragraph={{ rows: 3 }} />
-			</div>
-
-			{/* Skeleton.Input */}
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — small</p>
-				<Skeleton.Input active size="small" />
-			</div>
-
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — default</p>
-				<Skeleton.Input active />
-			</div>
-
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — large & block</p>
-				<Skeleton.Input active size="large" block />
-			</div>
-
-			{/* Skeleton.Button */}
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Button — small</p>
-				<Skeleton.Button active size="small" />
-			</div>
-
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Button — block</p>
-				<Skeleton.Button active block />
-			</div>
-
-			{/* Skeleton.Avatar */}
-			<div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-				<div>
-					<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Avatar — circle</p>
-					<Skeleton.Avatar active shape="circle" size={36} />
-				</div>
-				<div>
-					<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Avatar — square</p>
-					<Skeleton.Avatar active shape="square" size={36} />
-				</div>
-			</div>
-
-			{/* Composed */}
-			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Composed — avatar + content</p>
-				<div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-					<Skeleton.Avatar active shape="circle" size={48} />
-					<div style={{ flex: 1 }}>
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Overview
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem' }}>
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — with title & paragraph</p>
 						<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
 					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — variable row widths</p>
+						<Skeleton active paragraph={{ rows: 4, width: ['100%', '95%', '80%', '60%'] }} />
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — no animation</p>
+						<Skeleton active={false} title={{ width: '40%' }} paragraph={{ rows: 3 }} />
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — small</p>
+						<Skeleton.Input active size="small" />
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — default</p>
+						<Skeleton.Input active />
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>
+							Skeleton.Input — large & block
+						</p>
+						<Skeleton.Input active size="large" block />
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Button — small</p>
+						<Skeleton.Button active size="small" />
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Button — block</p>
+						<Skeleton.Button active block />
+					</div>
+
+					<div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+						<div>
+							<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Avatar — circle</p>
+							<Skeleton.Avatar active shape="circle" size={36} />
+						</div>
+						<div>
+							<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Avatar — square</p>
+							<Skeleton.Avatar active shape="square" size={36} />
+						</div>
+					</div>
+
+					<div>
+						<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Composed — avatar + content</p>
+						<div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+							<Skeleton.Avatar active shape="circle" size={48} />
+							<div style={{ flex: 1 }}>
+								<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
+			</section>
 		</div>
 	),
 };

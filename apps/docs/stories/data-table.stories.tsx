@@ -566,687 +566,839 @@ export const Basic: StoryObj<typeof DataTable<User>> = {
 	},
 };
 
-// Story: Advanced DataTable with all features
-export const Advanced: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			<div
-				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
-				}}
-			>
-				<h3
+const compactColumns: ColumnDef<User>[] = [
+	{
+		accessorKey: 'name',
+		header: 'Employee',
+		cell: ({ row }: { row: Row<User> }) => (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+				<div
 					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
+						height: '1.5rem',
+						width: '1.5rem',
+						borderRadius: '9999px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						color: '#ffffff',
+						fontSize: '0.75rem',
+						fontWeight: 500,
+						backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
 					}}
 				>
-					Advanced Employee Management
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					Full-featured data table with column reordering, resizing, pinning, row selection, and
-					more.
-				</p>
-				<DataTable {...args} />
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
 			</div>
-		</div>
-	),
-	args: {
-		columns: enhancedColumns,
-		data: users,
-		tableId: 'advanced-employees-table',
-		enableSorting: true,
-		enableFiltering: true,
-		enableGlobalFilter: true,
-		enableColumnReordering: true,
-		enableColumnResizing: true,
-		enableColumnPinning: true,
-		enableRowSelection: true,
-		enablePagination: true,
-		pageSize: 5,
-		showHeaders: true,
+		),
 	},
-};
-
-// Story: Column Reordering Demo
-export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			<div
-				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
-				}}
-			>
-				<h3
-					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
-					}}
-				>
-					Column Reordering Demo
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					Drag and drop column headers to reorder them. Try dragging the &quot;Name&quot; column to
-					different positions.
-				</p>
-				<DataTable {...args} />
-			</div>
-		</div>
-	),
-	args: {
-		columns: simpleColumns,
-		data: users,
-		tableId: 'reorder-demo-table',
-		enableColumnReordering: true,
-		enableColumnResizing: false,
-		enableSorting: false,
-		enableFiltering: false,
-		enableGlobalFilter: false,
-		enableColumnPinning: false,
-		enableRowSelection: false,
-		enablePagination: false,
-		showHeaders: true,
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+				admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
+				user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
+				moderator: { label: 'Mod', style: { backgroundColor: '#ffedd5', color: '#9a3412' } },
+				guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
+			};
+			const roleInfo = roleMap[role];
+			return <Badge style={{ fontSize: '0.75rem', ...roleInfo.style }}>{roleInfo.label}</Badge>;
+		},
 	},
-};
-
-// Story: Row Selection Demo
-export const RowSelection: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			<div
-				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
-				}}
-			>
-				<h3
-					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
-					}}
-				>
-					Row Selection Demo
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					Select individual rows or use the header checkbox to select all rows. Selected rows are
-					highlighted.
-				</p>
-				<DataTable {...args} />
-			</div>
-		</div>
-	),
-	args: {
-		columns: enhancedColumns,
-		data: users,
-		tableId: 'selection-demo-table',
-		enableSorting: true,
-		enableFiltering: true,
-		enableGlobalFilter: false,
-		enableColumnReordering: false,
-		enableColumnResizing: false,
-		enableColumnPinning: false,
-		enableRowSelection: true,
-		enablePagination: true,
-		pageSize: 5,
-		showHeaders: true,
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		cell: ({ row }: { row: Row<User> }) => {
+			const status = row.original.status;
+			const statusMap: Record<User['status'], { icon: IconComponent; style: React.CSSProperties }> =
+				{
+					active: { icon: CircleCheck, style: { color: '#16a34a' } },
+					inactive: { icon: CircleX, style: { color: '#dc2626' } },
+					pending: { icon: Clock, style: { color: '#ca8a04' } },
+					suspended: { icon: CircleAlert, style: { color: '#4b5563' } },
+				};
+			const statusInfo = statusMap[status];
+			const Icon = statusInfo.icon;
+			return <Icon style={{ height: '1rem', width: '1rem', ...statusInfo.style }} />;
+		},
 	},
-};
+];
 
-// Story: Compact View
-export const Compact: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			<div
-				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
-				}}
-			>
-				<h3
+const columnResizingColumns: ColumnDef<User>[] = [
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		cell: ({ row }: { row: Row<User> }) => (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+				<div
 					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
+						height: '1.5rem',
+						width: '1.5rem',
+						borderRadius: '9999px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						color: '#ffffff',
+						fontSize: '0.75rem',
+						fontWeight: 500,
+						backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
 					}}
 				>
-					Compact Employee List
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					A compact view with essential information only, perfect for mobile or space-constrained
-					layouts.
-				</p>
-				<DataTable {...args} />
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<span style={{ fontWeight: 500 }}>{row.original.name}</span>
 			</div>
-		</div>
-	),
-	args: {
-		columns: [
-			{
-				accessorKey: 'name',
-				header: 'Employee',
-				cell: ({ row }: { row: Row<User> }) => (
-					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-						<div
-							style={{
-								height: '1.5rem',
-								width: '1.5rem',
-								borderRadius: '9999px',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								color: '#ffffff',
-								fontSize: '0.75rem',
-								fontWeight: 500,
-								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
-							}}
-						>
-							{row.original.name
-								.split(' ')
-								.map((n: string) => n[0])
-								.join('')}
-						</div>
-						<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
-					</div>
-				),
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				cell: ({ row }: { row: Row<User> }) => {
-					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
-						admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
-						user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
-						moderator: { label: 'Mod', style: { backgroundColor: '#ffedd5', color: '#9a3412' } },
-						guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
-					};
-					const roleInfo = roleMap[role];
-					return <Badge style={{ fontSize: '0.75rem', ...roleInfo.style }}>{roleInfo.label}</Badge>;
+		),
+	},
+	{
+		accessorKey: 'email',
+		header: 'Email Address',
+		cell: ({ row }: { row: Row<User> }) => (
+			<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				{row.original.email}
+			</span>
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+				admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
+				user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
+				moderator: {
+					label: 'Moderator',
+					style: { backgroundColor: '#ffedd5', color: '#9a3412' },
 				},
-			},
-			{
-				accessorKey: 'status',
-				header: 'Status',
-				cell: ({ row }: { row: Row<User> }) => {
-					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ icon: IconComponent; style: React.CSSProperties }
-					> = {
-						active: { icon: CircleCheck, style: { color: '#16a34a' } },
-						inactive: { icon: CircleX, style: { color: '#dc2626' } },
-						pending: { icon: Clock, style: { color: '#ca8a04' } },
-						suspended: { icon: CircleAlert, style: { color: '#4b5563' } },
-					};
-					const statusInfo = statusMap[status];
-					const Icon = statusInfo.icon;
-					return <Icon style={{ height: '1rem', width: '1rem', ...statusInfo.style }} />;
-				},
-			},
-		],
-		data: users,
-		tableId: 'compact-employees-table',
-		enableSorting: true,
-		enableFiltering: false,
-		enableGlobalFilter: false,
-		enableColumnReordering: false,
-		enableColumnResizing: false,
-		enableColumnPinning: false,
-		enableRowSelection: false,
-		enablePagination: true,
-		pageSize: 10,
-		showHeaders: true,
+				guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
+			};
+			const roleInfo = roleMap[role];
+			return <Badge style={roleInfo.style}>{roleInfo.label}</Badge>;
+		},
 	},
-};
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		cell: ({ row }: { row: Row<User> }) => (
+			<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
+		),
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(salary);
+			return (
+				<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>{formatted}</div>
+			);
+		},
+	},
+];
 
-// Story: Column Resizing Demo
-export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+const allFeaturesColumns: ColumnDef<User>[] = [
+	{
+		id: 'serial',
+		header: '#',
+		cell: ({ row }: { row: Row<User> }) => (
 			<div
 				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					width: '2rem',
+					height: '2rem',
+					borderRadius: '9999px',
+					backgroundColor: 'var(--muted)',
+					color: 'var(--muted-foreground)',
+					fontSize: '0.875rem',
+					fontWeight: 500,
 				}}
 			>
-				<h3
+				{row.index + 1}
+			</div>
+		),
+		size: 60,
+	},
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		cell: ({ row }: { row: Row<User> }) => (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+				<div
 					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
+						height: '2rem',
+						width: '2rem',
+						borderRadius: '9999px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						color: '#ffffff',
+						fontSize: '0.75rem',
+						fontWeight: 500,
+						backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
 					}}
 				>
-					Column Resizing Demo
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					Hover over column headers to see the resize handle. Drag the right edge of column headers
-					to resize them. Double-click the resize handle to reset column width.
-				</p>
-				<DataTable {...args} />
-			</div>
-		</div>
-	),
-	args: {
-		columns: [
-			{
-				accessorKey: 'name',
-				header: 'Employee Name',
-				cell: ({ row }: { row: Row<User> }) => (
-					<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-						<div
-							style={{
-								height: '1.5rem',
-								width: '1.5rem',
-								borderRadius: '9999px',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								color: '#ffffff',
-								fontSize: '0.75rem',
-								fontWeight: 500,
-								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
-							}}
-						>
-							{row.original.name
-								.split(' ')
-								.map((n: string) => n[0])
-								.join('')}
-						</div>
-						<span style={{ fontWeight: 500 }}>{row.original.name}</span>
-					</div>
-				),
-			},
-			{
-				accessorKey: 'email',
-				header: 'Email Address',
-				cell: ({ row }: { row: Row<User> }) => (
-					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
+					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
+					<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
 						{row.original.email}
 					</span>
-				),
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				cell: ({ row }: { row: Row<User> }) => {
-					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
-						admin: { label: 'Admin', style: { backgroundColor: '#f3e8ff', color: '#6b21a8' } },
-						user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
-						moderator: {
-							label: 'Moderator',
-							style: { backgroundColor: '#ffedd5', color: '#9a3412' },
-						},
-						guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
-					};
-					const roleInfo = roleMap[role];
-					return <Badge style={roleInfo.style}>{roleInfo.label}</Badge>;
-				},
-			},
-			{
-				accessorKey: 'department',
-				header: 'Department',
-				cell: ({ row }: { row: Row<User> }) => (
-					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
-				),
-			},
-			{
-				accessorKey: 'salary',
-				header: 'Salary',
-				cell: ({ row }: { row: Row<User> }) => {
-					const salary = parseFloat(row.getValue('salary') as string);
-					const formatted = new Intl.NumberFormat('en-US', {
-						style: 'currency',
-						currency: 'USD',
-						minimumFractionDigits: 0,
-						maximumFractionDigits: 0,
-					}).format(salary);
-					return (
-						<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>
-							{formatted}
-						</div>
-					);
-				},
-			},
-		],
-		data: users,
-		tableId: 'resize-demo-table',
-		enableColumnResizing: true,
-		enableSorting: false,
-		enableFiltering: false,
-		enableGlobalFilter: false,
-		enableColumnReordering: false,
-		enableColumnPinning: false,
-		enableRowSelection: false,
-		enablePagination: false,
-		showHeaders: true,
-		defaultColumnWidth: 200,
-		minColumnWidth: 100,
-		maxColumnWidth: 400,
-	},
-};
-
-// Story: All Features Demo
-export const AllFeatures: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			<div
-				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
-				}}
-			>
-				<h3
-					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
-					}}
-				>
-					All Features Demo
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					This table demonstrates all available features: column reordering, resizing, sorting,
-					filtering, pinning, row selection, and pagination. Try hovering over headers to see resize
-					handles, drag columns to reorder, click headers to sort, use the filter buttons, and
-					select rows with checkboxes.
-				</p>
-				<DataTable {...args} />
+				</div>
 			</div>
-		</div>
-	),
-	args: {
-		columns: [
-			{
-				id: 'serial',
-				header: '#',
-				cell: ({ row }: { row: Row<User> }) => (
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+				admin: {
+					label: 'Admin',
+					style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
+				},
+				user: {
+					label: 'User',
+					style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
+				},
+				moderator: {
+					label: 'Moderator',
+					style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
+				},
+				guest: {
+					label: 'Guest',
+					style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
+				},
+			};
+			const roleInfo = roleMap[role];
+			return (
+				<Badge variant="outline" style={roleInfo.style}>
+					{roleInfo.label}
+				</Badge>
+			);
+		},
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		cell: ({ row }: { row: Row<User> }) => {
+			const status = row.original.status;
+			const statusMap: Record<
+				User['status'],
+				{ label: string; icon: React.ComponentType; style: React.CSSProperties }
+			> = {
+				active: {
+					label: 'Active',
+					icon: CircleCheck,
+					style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
+				},
+				inactive: {
+					label: 'Inactive',
+					icon: CircleX,
+					style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
+				},
+				pending: {
+					label: 'Pending',
+					icon: Clock,
+					style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
+				},
+				suspended: {
+					label: 'Suspended',
+					icon: CircleAlert,
+					style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
+				},
+			};
+			const statusInfo = statusMap[status];
+			const Icon = statusInfo.icon;
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<Icon />
+					<Badge variant="outline" style={statusInfo.style}>
+						{statusInfo.label}
+					</Badge>
+				</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		cell: ({ row }: { row: Row<User> }) => (
+			<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
+		),
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(salary);
+			return (
+				<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>{formatted}</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'performance',
+		header: 'Performance',
+		cell: ({ row }: { row: Row<User> }) => {
+			const performance = parseFloat(row.getValue('performance') as string);
+			const getPerformanceColor = (score: number) => {
+				if (score >= 90) return '#16a34a';
+				if (score >= 80) return '#2563eb';
+				if (score >= 70) return '#ca8a04';
+				return '#dc2626';
+			};
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 					<div
 						style={{
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'center',
-							width: '2rem',
-							height: '2rem',
+							flex: '1 1 0%',
 							borderRadius: '9999px',
-							backgroundColor: 'var(--muted)',
-							color: 'var(--muted-foreground)',
-							fontSize: '0.875rem',
-							fontWeight: 500,
+							height: '0.5rem',
+							backgroundColor: '#e5e7eb',
 						}}
 					>
-						{row.index + 1}
-					</div>
-				),
-				size: 60,
-			},
-			{
-				accessorKey: 'name',
-				header: 'Employee Name',
-				cell: ({ row }: { row: Row<User> }) => (
-					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
 						<div
 							style={{
-								height: '2rem',
-								width: '2rem',
+								width: `${performance}%`,
+								height: '0.5rem',
 								borderRadius: '9999px',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								color: '#ffffff',
-								fontSize: '0.75rem',
-								fontWeight: 500,
-								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+								backgroundColor: getPerformanceColor(performance),
 							}}
-						>
-							{row.original.name
-								.split(' ')
-								.map((n: string) => n[0])
-								.join('')}
-						</div>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
-							<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-								{row.original.email}
-							</span>
-						</div>
+						/>
 					</div>
-				),
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				cell: ({ row }: { row: Row<User> }) => {
-					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
-						admin: {
-							label: 'Admin',
-							style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
-						},
-						user: {
-							label: 'User',
-							style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
-						},
-						moderator: {
-							label: 'Moderator',
-							style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
-						},
-						guest: {
-							label: 'Guest',
-							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
-						},
-					};
-					const roleInfo = roleMap[role];
-					return (
-						<Badge variant="outline" style={roleInfo.style}>
-							{roleInfo.label}
-						</Badge>
-					);
-				},
-			},
-			{
-				accessorKey: 'status',
-				header: 'Status',
-				cell: ({ row }: { row: Row<User> }) => {
-					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ label: string; icon: React.ComponentType; style: React.CSSProperties }
-					> = {
-						active: {
-							label: 'Active',
-							icon: CircleCheck,
-							style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
-						},
-						inactive: {
-							label: 'Inactive',
-							icon: CircleX,
-							style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
-						},
-						pending: {
-							label: 'Pending',
-							icon: Clock,
-							style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
-						},
-						suspended: {
-							label: 'Suspended',
-							icon: CircleAlert,
-							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
-						},
-					};
-					const statusInfo = statusMap[status];
-					const Icon = statusInfo.icon;
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-							<Icon />
-							<Badge variant="outline" style={statusInfo.style}>
-								{statusInfo.label}
-							</Badge>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'department',
-				header: 'Department',
-				cell: ({ row }: { row: Row<User> }) => (
-					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
-				),
-			},
-			{
-				accessorKey: 'salary',
-				header: 'Salary',
-				cell: ({ row }: { row: Row<User> }) => {
-					const salary = parseFloat(row.getValue('salary') as string);
-					const formatted = new Intl.NumberFormat('en-US', {
-						style: 'currency',
-						currency: 'USD',
-						minimumFractionDigits: 0,
-						maximumFractionDigits: 0,
-					}).format(salary);
-					return (
-						<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>
-							{formatted}
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'performance',
-				header: 'Performance',
-				cell: ({ row }: { row: Row<User> }) => {
-					const performance = parseFloat(row.getValue('performance') as string);
-					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return '#16a34a';
-						if (score >= 80) return '#2563eb';
-						if (score >= 70) return '#ca8a04';
-						return '#dc2626';
-					};
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-							<div
-								style={{
-									flex: '1 1 0%',
-									borderRadius: '9999px',
-									height: '0.5rem',
-									backgroundColor: '#e5e7eb',
-								}}
-							>
-								<div
-									style={{
-										width: `${performance}%`,
-										height: '0.5rem',
-										borderRadius: '9999px',
-										backgroundColor: getPerformanceColor(performance),
-									}}
-								/>
-							</div>
-							<span
-								style={{
-									fontSize: '0.875rem',
-									fontWeight: 500,
-									color: getPerformanceColor(performance),
-								}}
-							>
-								{performance}%
-							</span>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'lastLogin',
-				header: 'Last Login',
-				cell: ({ row }: { row: Row<User> }) => {
-					const date = new Date(row.getValue('lastLogin') as string);
-					const formatted = date.toLocaleDateString('en-US', {
-						month: 'short',
-						day: 'numeric',
-						hour: '2-digit',
-						minute: '2-digit',
-					});
-					return (
-						<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-							{formatted}
-						</span>
-					);
-				},
-			},
-			{
-				id: 'actions',
-				header: 'Actions',
-				cell: () => {
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								style={{ height: '2rem', width: '2rem', padding: 0 }}
-							>
-								<Eye size={16} />
-							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								style={{ height: '2rem', width: '2rem', padding: 0 }}
-							>
-								<Pencil size={16} />
-							</Button>
-							<Button
-								variant="ghost"
-								color="destructive"
-								size="sm"
-								style={{ height: '2rem', width: '2rem', padding: 0 }}
-							>
-								<Trash2 size={16} />
-							</Button>
-						</div>
-					);
-				},
-			},
-		],
-		data: users,
-		tableId: 'all-features-table',
-		enableSorting: true,
-		enableFiltering: true,
-		enableGlobalFilter: true,
-		enableColumnReordering: true,
-		enableColumnResizing: true,
-		enableColumnPinning: true,
-		enableRowSelection: true,
-		enablePagination: true,
-		pageSize: 5,
-		showHeaders: true,
-		defaultColumnWidth: 180,
-		minColumnWidth: 100,
-		maxColumnWidth: 400,
+					<span
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: getPerformanceColor(performance),
+						}}
+					>
+						{performance}%
+					</span>
+				</div>
+			);
+		},
 	},
-};
+	{
+		accessorKey: 'lastLogin',
+		header: 'Last Login',
+		cell: ({ row }: { row: Row<User> }) => {
+			const date = new Date(row.getValue('lastLogin') as string);
+			const formatted = date.toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+			});
+			return (
+				<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{formatted}</span>
+			);
+		},
+	},
+	{
+		id: 'actions',
+		header: 'Actions',
+		cell: () => {
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+					<Button
+						variant="ghost"
+						color={ButtonColor.None}
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Eye size={16} />
+					</Button>
+					<Button
+						variant="ghost"
+						color={ButtonColor.None}
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Pencil size={16} />
+					</Button>
+					<Button
+						variant="ghost"
+						color="destructive"
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Trash2 size={16} />
+					</Button>
+				</div>
+			);
+		},
+	},
+];
+
+const virtualizationColumns: ColumnDef<User>[] = [
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		cell: ({ row }: { row: Row<User> }) => (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+				<div
+					style={{
+						height: '2rem',
+						width: '2rem',
+						borderRadius: '9999px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						color: '#ffffff',
+						fontSize: '0.75rem',
+						fontWeight: 500,
+						backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+					}}
+				>
+					{row.original.name
+						.split(' ')
+						.map((n: string) => n[0])
+						.join('')}
+				</div>
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
+					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
+					<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+						{row.original.email}
+					</span>
+				</div>
+			</div>
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		cell: ({ row }: { row: Row<User> }) => {
+			const role = row.original.role;
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+				admin: {
+					label: 'Admin',
+					style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
+				},
+				user: {
+					label: 'User',
+					style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
+				},
+				moderator: {
+					label: 'Moderator',
+					style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
+				},
+				guest: {
+					label: 'Guest',
+					style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
+				},
+			};
+			const roleInfo = roleMap[role];
+			return (
+				<Badge variant="outline" style={roleInfo.style}>
+					{roleInfo.label}
+				</Badge>
+			);
+		},
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		cell: ({ row }: { row: Row<User> }) => {
+			const status = row.original.status;
+			const statusMap: Record<
+				User['status'],
+				{ label: string; icon: React.ComponentType; style: React.CSSProperties }
+			> = {
+				active: {
+					label: 'Active',
+					icon: CircleCheck,
+					style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
+				},
+				inactive: {
+					label: 'Inactive',
+					icon: CircleX,
+					style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
+				},
+				pending: {
+					label: 'Pending',
+					icon: Clock,
+					style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
+				},
+				suspended: {
+					label: 'Suspended',
+					icon: CircleAlert,
+					style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
+				},
+			};
+			const statusInfo = statusMap[status];
+			const Icon = statusInfo.icon;
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<Icon />
+					<Badge variant="outline" style={statusInfo.style}>
+						{statusInfo.label}
+					</Badge>
+				</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		cell: ({ row }: { row: Row<User> }) => (
+			<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
+		),
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		cell: ({ row }: { row: Row<User> }) => {
+			const salary = parseFloat(row.getValue('salary') as string);
+			const formatted = new Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 0,
+			}).format(salary);
+			return (
+				<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>{formatted}</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'performance',
+		header: 'Performance',
+		cell: ({ row }: { row: Row<User> }) => {
+			const performance = parseFloat(row.getValue('performance') as string);
+			const getPerformanceColor = (score: number) => {
+				if (score >= 90) return '#16a34a';
+				if (score >= 80) return '#2563eb';
+				if (score >= 70) return '#ca8a04';
+				return '#dc2626';
+			};
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<div
+						style={{
+							flex: '1 1 0%',
+							borderRadius: '9999px',
+							height: '0.5rem',
+							backgroundColor: '#e5e7eb',
+						}}
+					>
+						<div
+							style={{
+								width: `${performance}%`,
+								height: '0.5rem',
+								borderRadius: '9999px',
+								backgroundColor: getPerformanceColor(performance),
+							}}
+						/>
+					</div>
+					<span
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							color: getPerformanceColor(performance),
+						}}
+					>
+						{performance}%
+					</span>
+				</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'lastLogin',
+		header: 'Last Login',
+		cell: ({ row }: { row: Row<User> }) => {
+			const date = new Date(row.getValue('lastLogin') as string);
+			const formatted = date.toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+			});
+			return (
+				<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>{formatted}</span>
+			);
+		},
+	},
+	{
+		id: 'actions',
+		header: 'Actions',
+		cell: () => {
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+					<Button
+						variant="ghost"
+						color={ButtonColor.None}
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Eye size={16} />
+					</Button>
+					<Button
+						variant="ghost"
+						color={ButtonColor.None}
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Pencil size={16} />
+					</Button>
+					<Button
+						variant="ghost"
+						color="destructive"
+						size="sm"
+						style={{ height: '2rem', width: '2rem', padding: 0 }}
+					>
+						<Trash2 size={16} />
+					</Button>
+				</div>
+			);
+		},
+	},
+];
+
+const stickyHeadersColumns: ColumnDef<User>[] = [
+	{
+		accessorKey: 'id',
+		header: 'ID',
+		size: 80,
+	},
+	{
+		accessorKey: 'name',
+		header: 'Employee Name',
+		size: 200,
+		cell: ({ row }: { row: Row<User> }) => (
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+				<div
+					style={{
+						height: '2rem',
+						width: '2rem',
+						borderRadius: '9999px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						color: '#ffffff',
+						fontSize: '0.75rem',
+						fontWeight: 500,
+						backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
+					}}
+				>
+					{row.original.name
+						.split(' ')
+						.map((n) => n[0])
+						.join('')
+						.toUpperCase()}
+				</div>
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
+					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
+					<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+						{row.original.email}
+					</span>
+				</div>
+			</div>
+		),
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
+				admin: { label: 'Admin', style: { backgroundColor: '#fee2e2', color: '#991b1b' } },
+				user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
+				moderator: {
+					label: 'Moderator',
+					style: { backgroundColor: '#fef9c3', color: '#854d0e' },
+				},
+				guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
+			};
+			const role = roleMap[row.original.role];
+			return <Badge style={role.style}>{role.label}</Badge>;
+		},
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const statusMap: Record<User['status'], { icon: IconComponent; style: React.CSSProperties }> =
+				{
+					active: { icon: CircleCheck, style: { color: '#16a34a' } },
+					inactive: { icon: CircleX, style: { color: '#dc2626' } },
+					pending: { icon: Clock, style: { color: '#ca8a04' } },
+					suspended: { icon: CircleAlert, style: { color: '#ea580c' } },
+				};
+			const status = statusMap[row.original.status];
+			const Icon = status.icon;
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+					<Icon size={16} />
+					<span style={{ textTransform: 'capitalize', fontSize: '0.875rem' }}>
+						{row.original.status}
+					</span>
+				</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		size: 150,
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Annual Salary',
+		size: 140,
+		cell: ({ row }: { row: Row<User> }) => (
+			<span style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
+				${row.original.salary.toLocaleString()}
+			</span>
+		),
+	},
+	{
+		accessorKey: 'performance',
+		header: 'Performance',
+		size: 120,
+		cell: ({ row }: { row: Row<User> }) => {
+			const score = row.original.performance;
+			const getPerformanceColor = (score: number) => {
+				if (score >= 90) return '#16a34a';
+				if (score >= 80) return '#2563eb';
+				if (score >= 70) return '#ca8a04';
+				return '#dc2626';
+			};
+			return (
+				<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+					<span
+						style={{ fontWeight: 500, fontSize: '0.875rem', color: getPerformanceColor(score) }}
+					>
+						{score}%
+					</span>
+					<div
+						style={{
+							width: '5rem',
+							borderRadius: '9999px',
+							height: '0.5rem',
+							overflow: 'hidden',
+							backgroundColor: '#e5e7eb',
+						}}
+					>
+						<div
+							style={{
+								height: '0.5rem',
+								borderRadius: '9999px',
+								transition: 'all 300ms',
+								backgroundColor: getPerformanceColor(score),
+								width: `${score}%`,
+							}}
+						/>
+					</div>
+				</div>
+			);
+		},
+	},
+	{
+		accessorKey: 'lastLogin',
+		header: 'Last Active',
+		size: 140,
+		cell: ({ row }: { row: Row<User> }) => (
+			<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
+				{new Date(row.original.lastLogin).toLocaleDateString()}
+			</span>
+		),
+	},
+];
+
+const infiniteScrollColumns: ColumnDef<User>[] = [
+	{
+		id: 'serial',
+		header: '#',
+		size: 72,
+		cell: ({ row }: { row: Row<User> }) => row.index + 1,
+	},
+	{
+		accessorKey: 'name',
+		header: 'Name',
+		size: 220,
+		minSize: 120,
+		maxSize: 360,
+	},
+	{
+		accessorKey: 'email',
+		header: 'Email',
+		size: 260,
+		minSize: 160,
+		maxSize: 460,
+	},
+	{
+		accessorKey: 'role',
+		header: 'Role',
+		size: 140,
+		minSize: 100,
+		maxSize: 220,
+	},
+	{
+		accessorKey: 'status',
+		header: 'Status',
+		size: 160,
+		minSize: 120,
+		maxSize: 240,
+	},
+	{
+		accessorKey: 'department',
+		header: 'Department',
+		size: 180,
+		minSize: 120,
+		maxSize: 280,
+	},
+	{
+		accessorKey: 'salary',
+		header: 'Salary',
+		size: 140,
+		minSize: 100,
+		maxSize: 220,
+	},
+	{
+		accessorKey: 'performance',
+		header: 'Performance',
+		size: 200,
+		minSize: 120,
+		maxSize: 300,
+	},
+	{
+		accessorKey: 'lastLogin',
+		header: 'Last Login',
+		size: 180,
+		minSize: 120,
+		maxSize: 260,
+	},
+];
 
 const fixedDate = 1771949360343; // 2026-02-24T16:09:20.343Z
 
@@ -1281,482 +1433,6 @@ const generateLargeDataset = (count: number, startIndex = 0): User[] => {
 };
 
 const largeDataset = generateLargeDataset(1000, 0);
-
-// Story: Virtualization with All Features
-export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
-	render: (args) => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-			<div
-				style={{
-					border: '1px solid var(--border)',
-					borderRadius: '0.5rem',
-					padding: '1.5rem',
-					backgroundColor: 'var(--background)',
-				}}
-			>
-				<h3
-					style={{
-						fontSize: '1.125rem',
-						fontWeight: 600,
-						marginBottom: '0.5rem',
-						color: 'var(--foreground)',
-					}}
-				>
-					Virtualization with All Features
-				</h3>
-				<p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}>
-					This table demonstrates virtualization with 1000 rows, plus all interactive features:
-					column reordering, resizing, sorting, filtering, and row selection. The table uses virtual
-					scrolling for optimal performance with large datasets. Try scrolling, resizing columns,
-					reordering, and selecting rows to see how virtualization maintains smooth performance.
-				</p>
-				<DataTable {...args} fixedHeight={600} />
-			</div>
-		</div>
-	),
-	args: {
-		columns: [
-			{
-				accessorKey: 'name',
-				header: 'Employee Name',
-				cell: ({ row }: { row: Row<User> }) => (
-					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-						<div
-							style={{
-								height: '2rem',
-								width: '2rem',
-								borderRadius: '9999px',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								color: '#ffffff',
-								fontSize: '0.75rem',
-								fontWeight: 500,
-								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
-							}}
-						>
-							{row.original.name
-								.split(' ')
-								.map((n: string) => n[0])
-								.join('')}
-						</div>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
-							<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-								{row.original.email}
-							</span>
-						</div>
-					</div>
-				),
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				cell: ({ row }: { row: Row<User> }) => {
-					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
-						admin: {
-							label: 'Admin',
-							style: { backgroundColor: '#f3e8ff', color: '#6b21a8', borderColor: '#e9d5ff' },
-						},
-						user: {
-							label: 'User',
-							style: { backgroundColor: '#dbeafe', color: '#1e40af', borderColor: '#bfdbfe' },
-						},
-						moderator: {
-							label: 'Moderator',
-							style: { backgroundColor: '#ffedd5', color: '#9a3412', borderColor: '#fed7aa' },
-						},
-						guest: {
-							label: 'Guest',
-							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
-						},
-					};
-					const roleInfo = roleMap[role];
-					return (
-						<Badge variant="outline" style={roleInfo.style}>
-							{roleInfo.label}
-						</Badge>
-					);
-				},
-			},
-			{
-				accessorKey: 'status',
-				header: 'Status',
-				cell: ({ row }: { row: Row<User> }) => {
-					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ label: string; icon: React.ComponentType; style: React.CSSProperties }
-					> = {
-						active: {
-							label: 'Active',
-							icon: CircleCheck,
-							style: { backgroundColor: '#dcfce7', color: '#166534', borderColor: '#bbf7d0' },
-						},
-						inactive: {
-							label: 'Inactive',
-							icon: CircleX,
-							style: { backgroundColor: '#fee2e2', color: '#991b1b', borderColor: '#fecaca' },
-						},
-						pending: {
-							label: 'Pending',
-							icon: Clock,
-							style: { backgroundColor: '#fef9c3', color: '#854d0e', borderColor: '#fef08a' },
-						},
-						suspended: {
-							label: 'Suspended',
-							icon: CircleAlert,
-							style: { backgroundColor: '#f3f4f6', color: '#1f2937', borderColor: '#e5e7eb' },
-						},
-					};
-					const statusInfo = statusMap[status];
-					const Icon = statusInfo.icon;
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-							<Icon />
-							<Badge variant="outline" style={statusInfo.style}>
-								{statusInfo.label}
-							</Badge>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'department',
-				header: 'Department',
-				cell: ({ row }: { row: Row<User> }) => (
-					<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.department}</span>
-				),
-			},
-			{
-				accessorKey: 'salary',
-				header: 'Salary',
-				cell: ({ row }: { row: Row<User> }) => {
-					const salary = parseFloat(row.getValue('salary') as string);
-					const formatted = new Intl.NumberFormat('en-US', {
-						style: 'currency',
-						currency: 'USD',
-						minimumFractionDigits: 0,
-						maximumFractionDigits: 0,
-					}).format(salary);
-					return (
-						<div style={{ fontWeight: 500, fontSize: '0.875rem', color: '#15803d' }}>
-							{formatted}
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'performance',
-				header: 'Performance',
-				cell: ({ row }: { row: Row<User> }) => {
-					const performance = parseFloat(row.getValue('performance') as string);
-					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return '#16a34a';
-						if (score >= 80) return '#2563eb';
-						if (score >= 70) return '#ca8a04';
-						return '#dc2626';
-					};
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-							<div
-								style={{
-									flex: '1 1 0%',
-									borderRadius: '9999px',
-									height: '0.5rem',
-									backgroundColor: '#e5e7eb',
-								}}
-							>
-								<div
-									style={{
-										width: `${performance}%`,
-										height: '0.5rem',
-										borderRadius: '9999px',
-										backgroundColor: getPerformanceColor(performance),
-									}}
-								/>
-							</div>
-							<span
-								style={{
-									fontSize: '0.875rem',
-									fontWeight: 500,
-									color: getPerformanceColor(performance),
-								}}
-							>
-								{performance}%
-							</span>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'lastLogin',
-				header: 'Last Login',
-				cell: ({ row }: { row: Row<User> }) => {
-					const date = new Date(row.getValue('lastLogin') as string);
-					const formatted = date.toLocaleDateString('en-US', {
-						month: 'short',
-						day: 'numeric',
-						hour: '2-digit',
-						minute: '2-digit',
-					});
-					return (
-						<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-							{formatted}
-						</span>
-					);
-				},
-			},
-			{
-				id: 'actions',
-				header: 'Actions',
-				cell: () => {
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								style={{ height: '2rem', width: '2rem', padding: 0 }}
-							>
-								<Eye size={16} />
-							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								style={{ height: '2rem', width: '2rem', padding: 0 }}
-							>
-								<Pencil size={16} />
-							</Button>
-							<Button
-								variant="ghost"
-								color="destructive"
-								size="sm"
-								style={{ height: '2rem', width: '2rem', padding: 0 }}
-							>
-								<Trash2 size={16} />
-							</Button>
-						</div>
-					);
-				},
-			},
-		],
-		data: largeDataset,
-		tableId: 'virtualization-features-table',
-		enableSorting: true,
-		enableFiltering: true,
-		enableGlobalFilter: true,
-		enableColumnReordering: true,
-		enableColumnResizing: true,
-		enableColumnPinning: true,
-		enableRowSelection: true,
-		enablePagination: false, // Disable pagination for virtualization demo
-		showHeaders: true,
-		defaultColumnWidth: 180,
-		minColumnWidth: 100,
-		maxColumnWidth: 400,
-		// Virtualization settings
-		enableVirtualization: true,
-		estimateRowSize: 60,
-		overscan: 10,
-		rowHeight: 60,
-		enableDynamicRowHeights: false,
-	},
-};
-
-// Story: Virtualized Infinite Scroll with Resize + Reorder
-export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>> = {
-	render: (args) => {
-		const itemsPerPage = 100;
-		const maxItems = 1000;
-
-		// Initialize data synchronously to avoid Chromatic snapshot race conditions
-		const [data, setData] = React.useState<User[]>(() => generateLargeDataset(itemsPerPage, 0));
-		const [loading, setLoading] = React.useState(false);
-		const [hasMore, setHasMore] = React.useState(true);
-		const [page, setPage] = React.useState(1);
-		const [orderedColumns, setOrderedColumns] = React.useState<ColumnDef<User>[]>([]);
-
-		const loadMore = React.useCallback(() => {
-			if (loading || !hasMore) return;
-			setLoading(true);
-			// Simulate API latency
-			setTimeout(() => {
-				const offset = page * itemsPerPage;
-				const remaining = Math.max(0, maxItems - offset);
-				const take = Math.min(itemsPerPage, remaining);
-				const newData = take > 0 ? generateLargeDataset(take, offset) : [];
-				setData((prev) => [...prev, ...newData]);
-				const nextPage = page + 1;
-				setPage(nextPage);
-				setLoading(false);
-				if (nextPage * itemsPerPage >= maxItems) setHasMore(false);
-			}, 600);
-		}, [loading, hasMore, page]);
-
-		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-				<div
-					style={{
-						border: '1px solid var(--border)',
-						borderRadius: '0.5rem',
-						padding: '1.5rem',
-						backgroundColor: 'var(--background)',
-					}}
-				>
-					<h3
-						style={{
-							fontSize: '1.125rem',
-							fontWeight: 600,
-							marginBottom: '0.5rem',
-							color: 'var(--foreground)',
-						}}
-					>
-						Virtualized Infinite Scroll + Reorder + Resize
-					</h3>
-					<p
-						style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '1rem' }}
-					>
-						Large dataset with virtualized rows, drag-and-drop column reordering, and on-change
-						column resizing. Scroll to load more.
-					</p>
-					<div
-						style={{
-							marginBottom: '1rem',
-							display: 'flex',
-							alignItems: 'center',
-							gap: '1rem',
-							fontSize: '0.875rem',
-							color: 'var(--muted-foreground)',
-						}}
-					>
-						<span>Rows: {data.length}</span>
-						<span>Page: {page}</span>
-						{loading && <span>Loading…</span>}
-						{!hasMore && <span style={{ color: '#16a34a' }}>All items loaded</span>}
-						{orderedColumns.length > 0 && (
-							<span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-								Order:{' '}
-								{orderedColumns
-									.map((c) =>
-										String(
-											(c as { id?: string; accessorKey?: string }).id ??
-												(c as { accessorKey?: string }).accessorKey ??
-												'?'
-										)
-									)
-									.join(' | ')}
-							</span>
-						)}
-					</div>
-					<DataTable
-						{...args}
-						data={data}
-						hasMore={hasMore}
-						onLoadMore={loadMore}
-						loadingMore={loading}
-						onColumnOrderChange={setOrderedColumns}
-					/>
-				</div>
-			</div>
-		);
-	},
-	args: {
-		columns: [
-			{
-				id: 'serial',
-				header: '#',
-				size: 72,
-				cell: ({ row }: { row: Row<User> }) => row.index + 1,
-			},
-			{
-				accessorKey: 'name',
-				header: 'Name',
-				size: 220,
-				minSize: 120,
-				maxSize: 360,
-			},
-			{
-				accessorKey: 'email',
-				header: 'Email',
-				size: 260,
-				minSize: 160,
-				maxSize: 460,
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				size: 140,
-				minSize: 100,
-				maxSize: 220,
-			},
-			{
-				accessorKey: 'status',
-				header: 'Status',
-				size: 160,
-				minSize: 120,
-				maxSize: 240,
-			},
-			{
-				accessorKey: 'department',
-				header: 'Department',
-				size: 180,
-				minSize: 120,
-				maxSize: 280,
-			},
-			{
-				accessorKey: 'salary',
-				header: 'Salary',
-				size: 140,
-				minSize: 100,
-				maxSize: 220,
-			},
-			{
-				accessorKey: 'performance',
-				header: 'Performance',
-				size: 200,
-				minSize: 120,
-				maxSize: 300,
-			},
-			{
-				accessorKey: 'lastLogin',
-				header: 'Last Login',
-				size: 180,
-				minSize: 120,
-				maxSize: 260,
-			},
-		],
-		tableId: 'virtualized-infinite-reorder-resize',
-		enableSorting: false,
-		enableFiltering: true,
-		enableGlobalFilter: false,
-		enableColumnReordering: true,
-		enableColumnResizing: true,
-		enableColumnPinning: true,
-		enableRowSelection: true,
-		enablePagination: false,
-		showHeaders: true,
-		defaultColumnWidth: 180,
-		minColumnWidth: 80,
-		maxColumnWidth: 480,
-		// Virtualization + Infinite Scroll
-		enableVirtualization: true,
-		estimateRowSize: 56,
-		overscan: 10,
-		rowHeight: 56,
-		enableInfiniteScroll: true,
-		enableScrollRestoration: false,
-		fixedHeight: 600,
-	},
-	parameters: {
-		chromatic: {
-			// Disable animations to prevent visual diffs from spinning loaders
-			pauseAnimationAtEnd: true,
-		},
-	},
-};
 
 const meta: Meta<typeof DataTable<User>> = {
 	title: 'Composed Components/DataTable',
@@ -1851,442 +1527,725 @@ The DataTable accepts all standard table features as props, allowing you to enab
 
 export default meta;
 
-export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
-	args: {
-		columns: [
-			{
-				accessorKey: 'id',
-				header: 'ID',
-				size: 80,
-			},
-			{
-				accessorKey: 'name',
-				header: 'Employee Name',
-				size: 200,
-				cell: ({ row }: { row: Row<User> }) => (
-					<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-						<div
-							style={{
-								height: '2rem',
-								width: '2rem',
-								borderRadius: '9999px',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								color: '#ffffff',
-								fontSize: '0.75rem',
-								fontWeight: 500,
-								backgroundImage: 'linear-gradient(to bottom right, #3b82f6, #9333ea)',
-							}}
-						>
-							{row.original.name
-								.split(' ')
-								.map((n) => n[0])
-								.join('')
-								.toUpperCase()}
-						</div>
-						<div style={{ display: 'flex', flexDirection: 'column' }}>
-							<span style={{ fontWeight: 500, fontSize: '0.875rem' }}>{row.original.name}</span>
-							<span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
-								{row.original.email}
-							</span>
-						</div>
-					</div>
-				),
-			},
-			{
-				accessorKey: 'role',
-				header: 'Role',
-				size: 120,
-				cell: ({ row }: { row: Row<User> }) => {
-					const roleMap: Record<User['role'], { label: string; style: React.CSSProperties }> = {
-						admin: { label: 'Admin', style: { backgroundColor: '#fee2e2', color: '#991b1b' } },
-						user: { label: 'User', style: { backgroundColor: '#dbeafe', color: '#1e40af' } },
-						moderator: {
-							label: 'Moderator',
-							style: { backgroundColor: '#fef9c3', color: '#854d0e' },
-						},
-						guest: { label: 'Guest', style: { backgroundColor: '#f3f4f6', color: '#1f2937' } },
-					};
-					const role = roleMap[row.original.role];
-					return <Badge style={role.style}>{role.label}</Badge>;
-				},
-			},
-			{
-				accessorKey: 'status',
-				header: 'Status',
-				size: 120,
-				cell: ({ row }: { row: Row<User> }) => {
-					const statusMap: Record<
-						User['status'],
-						{ icon: IconComponent; style: React.CSSProperties }
-					> = {
-						active: { icon: CircleCheck, style: { color: '#16a34a' } },
-						inactive: { icon: CircleX, style: { color: '#dc2626' } },
-						pending: { icon: Clock, style: { color: '#ca8a04' } },
-						suspended: { icon: CircleAlert, style: { color: '#ea580c' } },
-					};
-					const status = statusMap[row.original.status];
-					const Icon = status.icon;
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-							<Icon size={16} />
-							<span style={{ textTransform: 'capitalize', fontSize: '0.875rem' }}>
-								{row.original.status}
-							</span>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'department',
-				header: 'Department',
-				size: 150,
-			},
-			{
-				accessorKey: 'salary',
-				header: 'Annual Salary',
-				size: 140,
-				cell: ({ row }: { row: Row<User> }) => (
-					<span style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}>
-						${row.original.salary.toLocaleString()}
-					</span>
-				),
-			},
-			{
-				accessorKey: 'performance',
-				header: 'Performance',
-				size: 120,
-				cell: ({ row }: { row: Row<User> }) => {
-					const score = row.original.performance;
-					const getPerformanceColor = (score: number) => {
-						if (score >= 90) return '#16a34a';
-						if (score >= 80) return '#2563eb';
-						if (score >= 70) return '#ca8a04';
-						return '#dc2626';
-					};
-					return (
-						<div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-							<span
-								style={{ fontWeight: 500, fontSize: '0.875rem', color: getPerformanceColor(score) }}
-							>
-								{score}%
-							</span>
-							<div
-								style={{
-									width: '5rem',
-									borderRadius: '9999px',
-									height: '0.5rem',
-									overflow: 'hidden',
-									backgroundColor: '#e5e7eb',
-								}}
-							>
-								<div
-									style={{
-										height: '0.5rem',
-										borderRadius: '9999px',
-										transition: 'all 300ms',
-										backgroundColor: getPerformanceColor(score),
-										width: `${score}%`,
-									}}
-								/>
-							</div>
-						</div>
-					);
-				},
-			},
-			{
-				accessorKey: 'lastLogin',
-				header: 'Last Active',
-				size: 140,
-				cell: ({ row }: { row: Row<User> }) => (
-					<span style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>
-						{new Date(row.original.lastLogin).toLocaleDateString()}
-					</span>
-				),
-			},
-		],
-		data: generateLargeDataset(100), // More rows to better demonstrate scrolling
-		tableId: 'sticky-headers-table',
-		enableSorting: true,
-		enableFiltering: true,
-		enableColumnResizing: true,
-		enableColumnReordering: true,
-		enableColumnPinning: true,
-		enableRowSelection: true,
-		enableStickyHeaders: true,
-		fixedHeight: 600, // Taller for better demo
-		showHeaders: true,
-		defaultColumnWidth: 150,
-		minColumnWidth: 80,
-		maxColumnWidth: 800, // Increased to allow full width usage
-	},
+export const Preview: StoryObj<typeof DataTable<User>> = {
 	parameters: {
-		docs: {
-			description: {
-				story: `
-## Sticky Headers
-
-This example demonstrates the sticky headers feature with an employee directory. The table has a fixed height of 500px, and when you scroll through the data, the headers remain visible at the top.
-
-### Key Features:
-- **Sticky Headers**: Headers stay visible while scrolling through 100+ employee records
-- **Fixed Height**: Table container has a defined height with smooth scrolling
-- **Rich Data Display**: Shows employee avatars, performance bars, and status indicators
-- **All Interactive Features**: Includes sorting, filtering, column resizing, and row selection
-- **No Layout Shift**: Headers maintain perfect alignment during scroll
-
-### Visual Improvements:
-- **Employee Cards**: Name and email displayed together with avatar
-- **Performance Bars**: Visual progress bars for performance scores
-- **Status Indicators**: Icons with color-coded status
-- **Better Typography**: Improved text hierarchy and spacing
-
-### Usage:
-\`\`\`tsx
-<DataTable
-  columns={columns}
-  data={data}
-  tableId="sticky-table"
-  enableStickyHeaders={true}
-  fixedHeight={500}
-  enableSorting={true}
-  enableFiltering={true}
-  enableColumnResizing={true}
-  enableRowSelection={true}
-/>
-\`\`\`
-				`,
-			},
+		chromatic: {
+			disableSnapshot: false,
+			pauseAnimationAtEnd: true,
 		},
 	},
-};
+	render: function DataTablePreview() {
+		const itemsPerPage = 100;
+		const maxItems = 1000;
+		const scrollToIndexData = generateLargeDataset(200);
 
-// Story: Scroll to Index Functionality
-export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
-	args: {
-		columns: enhancedColumns,
-		data: generateLargeDataset(200), // Generate more data for better scrolling demo
-		tableId: 'scroll-to-index-table',
-		enableVirtualization: true,
-		enableStickyHeaders: true,
-		fixedHeight: 500,
-		enableSorting: true,
-		enableFiltering: true,
-		enableColumnResizing: true,
-		enableRowSelection: true,
-		estimateRowSize: 60,
-		overscan: 5,
-	},
-	render: (args) => {
-		const ScrollToIndexDemo = () => {
-			const scrollToIndexRef = React.useRef<
-				((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined
-			>();
+		const [infiniteScrollData, setInfiniteScrollData] = React.useState<User[]>(() =>
+			generateLargeDataset(itemsPerPage, 0)
+		);
+		const [infiniteScrollLoading, setInfiniteScrollLoading] = React.useState(false);
+		const [infiniteScrollHasMore, setInfiniteScrollHasMore] = React.useState(true);
+		const [infiniteScrollPage, setInfiniteScrollPage] = React.useState(1);
+		const [infiniteScrollOrderedColumns, setInfiniteScrollOrderedColumns] = React.useState<
+			ColumnDef<User>[]
+		>([]);
 
-			const handleScrollToUser = (userId: string) => {
-				const userIndex = args.data.findIndex((user) => user.id === userId);
-				console.log(`[Virtualized] Looking for user ID: ${userId}, found at index: ${userIndex}`);
-				console.log(
-					'[Virtualized] Available users:',
-					args.data.slice(0, 5).map((u) => ({ id: u.id, name: u.name }))
-				);
-				if (userIndex !== -1 && scrollToIndexRef.current) {
-					console.log(`[Virtualized] Scrolling to index: ${userIndex}`);
-					scrollToIndexRef.current(userIndex, { align: 'center' });
-				} else {
-					console.log(
-						`[Virtualized] User with ID ${userId} not found or scrollToIndexRef not available`
-					);
-				}
-			};
+		const loadMoreInfiniteScroll = React.useCallback(() => {
+			if (infiniteScrollLoading || !infiniteScrollHasMore) return;
+			setInfiniteScrollLoading(true);
+			setTimeout(() => {
+				const offset = infiniteScrollPage * itemsPerPage;
+				const remaining = Math.max(0, maxItems - offset);
+				const take = Math.min(itemsPerPage, remaining);
+				const newData = take > 0 ? generateLargeDataset(take, offset) : [];
+				setInfiniteScrollData((prev) => [...prev, ...newData]);
+				const nextPage = infiniteScrollPage + 1;
+				setInfiniteScrollPage(nextPage);
+				setInfiniteScrollLoading(false);
+				if (nextPage * itemsPerPage >= maxItems) setInfiniteScrollHasMore(false);
+			}, 600);
+		}, [infiniteScrollLoading, infiniteScrollHasMore, infiniteScrollPage]);
 
-			const handleScrollToRandom = () => {
-				if (scrollToIndexRef.current) {
-					const randomIndex = Math.floor(Math.random() * args.data.length);
-					scrollToIndexRef.current(randomIndex, { align: 'center' });
-				}
-			};
+		const scrollToIndexRef = React.useRef<
+			((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined
+		>();
 
-			return (
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-						<Button
-							onClick={() => handleScrollToUser('1')}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
-							Scroll to User 1
-						</Button>
-						<Button
-							onClick={() => handleScrollToUser('50')}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
-							Scroll to User 50
-						</Button>
-						<Button
-							onClick={() => handleScrollToUser('100')}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
-							Scroll to User 100
-						</Button>
-						<Button
-							onClick={() => handleScrollToUser('150')}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
-							Scroll to User 150
-						</Button>
-						<Button
-							onClick={() => handleScrollToUser('200')}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
-							Scroll to Last User
-						</Button>
-						<Button
-							onClick={handleScrollToRandom}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
-							Scroll to Random User
-						</Button>
-					</div>
-					<DataTable {...args} scrollToIndexRef={scrollToIndexRef} />
-				</div>
-			);
+		const handleScrollToUser = (userId: string) => {
+			const userIndex = scrollToIndexData.findIndex((user) => user.id === userId);
+			if (userIndex !== -1 && scrollToIndexRef.current) {
+				scrollToIndexRef.current(userIndex, { align: 'center' });
+			}
 		};
 
-		return <ScrollToIndexDemo />;
-	},
-	parameters: {
-		docs: {
-			description: {
-				story: `
-## Scroll to Index Functionality
+		const handleScrollToRandom = () => {
+			if (scrollToIndexRef.current) {
+				const randomIndex = Math.floor(Math.random() * scrollToIndexData.length);
+				scrollToIndexRef.current(randomIndex, { align: 'center' });
+			}
+		};
 
-This example demonstrates the new scroll to index functionality that allows you to programmatically scroll to specific rows in the table.
-
-### Key Features:
-- **Programmatic Scrolling**: Scroll to any row by its index
-- **Alignment Options**: Choose how the row is positioned in the viewport
-- **Virtualization Support**: Works seamlessly with virtualized tables
-- **Interactive Controls**: Buttons to test different scroll scenarios
-
-### Scroll Options:
-- **\`align: 'start'\`**: Align row to the top of the viewport
-- **\`align: 'center'\`**: Align row to the center of the viewport (default)
-- **\`align: 'end'\`**: Align row to the bottom of the viewport
-
-### Usage:
-\`\`\`tsx
-import { useRef } from 'react';
-
-function MyTable({ users }) {
-  const scrollToIndexRef = useRef<((rowIndex: number, options?: { align?: 'start' | 'center' | 'end' }) => void) | undefined>();
-
-  const scrollToUser = (userId: string) => {
-    const userIndex = users.findIndex(user => user.id === userId);
-    if (userIndex !== -1 && scrollToIndexRef.current) {
-      scrollToIndexRef.current(userIndex, { align: 'center' });
-    }
-  };
-
-  return (
-    <DataTable
-      columns={columns}
-      data={users}
-      tableId="my-table"
-      fixedHeight={500}
-      enableVirtualization={true}
-      scrollToIndexRef={scrollToIndexRef}
-    />
-  );
-}
-\`\`\`
-
-### Benefits:
-- **User Experience**: Allow users to quickly navigate to specific data
-- **Search Integration**: Perfect for highlighting search results
-- **Navigation**: Build custom navigation controls
-- **Performance**: Efficient scrolling even with large datasets
-				`,
-			},
-		},
-	},
-};
-
-export const IndividualColumnWidths: StoryObj<typeof DataTable<User>> = {
-	args: {
-		columns: enhancedColumns, // Uses columns with individual size/minSize/maxSize
-		data: users,
-		tableId: 'individual-widths-table',
-		enableColumnResizing: true,
-		defaultColumnWidth: 150,
-		fixedHeight: 600,
-		minColumnWidth: 80,
-		maxColumnWidth: 400,
-	},
-	parameters: {
-		docs: {
-			description: {
-				story: `
-## Individual Column Width Constraints
-
-This example demonstrates how to set individual width constraints for each column using TanStack Table's built-in properties.
-
-### Column Width Properties:
-- **\`size\`**: Default width of the column
-- **\`minSize\`**: Minimum width the column can be resized to
-- **\`maxSize\`**: Maximum width the column can be resized to
-
-### Example Configuration:
-\`\`\`tsx
-const columns: ColumnDef<User>[] = [
-  {
-    accessorKey: 'name',
-    header: 'Employee',
-    size: 250,        // Default width
-    minSize: 200,     // Minimum width
-    maxSize: 350,     // Maximum width
-    cell: ({ row }) => { /* ... */ }
-  },
-  {
-    accessorKey: 'role',
-    header: 'Role',
-    size: 120,        // Default width
-    minSize: 100,     // Minimum width
-    maxSize: 150,     // Maximum width
-    cell: ({ row }) => { /* ... */ }
-  },
-  // ... more columns
-];
-\`\`\`
-
-### Benefits:
-- **Precise Control**: Each column can have its own width constraints
-- **Better UX**: Prevents columns from becoming too narrow or too wide
-- **Responsive Design**: Columns maintain appropriate proportions
-- **Override Globals**: Individual constraints override global minColumnWidth/maxColumnWidth
-
-### Current Column Constraints:
-- **Employee**: 200-350px (default: 250px)
-- **Role**: 100-150px (default: 120px)
-- **Status**: 120-180px (default: 140px)
-- **Department**: 120-200px (default: 150px)
-- **Salary**: 100-150px (default: 120px)
-- **Performance**: 150-250px (default: 180px)
-- **Last Login**: 120-180px (default: 140px)
-				`,
-			},
-		},
+		return (
+			<div
+				style={{
+					padding: '2rem',
+					display: 'flex',
+					flexDirection: 'column',
+					gap: '2.5rem',
+					backgroundColor: 'var(--background)',
+				}}
+			>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Advanced
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Advanced Employee Management
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								Full-featured data table with column reordering, resizing, pinning, row selection,
+								and more.
+							</p>
+							<DataTable
+								columns={enhancedColumns}
+								data={users}
+								tableId="advanced-employees-table"
+								enableSorting
+								enableFiltering
+								enableGlobalFilter
+								enableColumnReordering
+								enableColumnResizing
+								enableColumnPinning
+								enableRowSelection
+								enablePagination
+								pageSize={5}
+								showHeaders
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Column Reordering
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Column Reordering Demo
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								Drag and drop column headers to reorder them. Try dragging the &quot;Name&quot;
+								column to different positions.
+							</p>
+							<DataTable
+								columns={simpleColumns}
+								data={users}
+								tableId="reorder-demo-table"
+								enableColumnReordering
+								enableColumnResizing={false}
+								enableSorting={false}
+								enableFiltering={false}
+								enableGlobalFilter={false}
+								enableColumnPinning={false}
+								enableRowSelection={false}
+								enablePagination={false}
+								showHeaders
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Row Selection
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Row Selection Demo
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								Select individual rows or use the header checkbox to select all rows. Selected rows
+								are highlighted.
+							</p>
+							<DataTable
+								columns={enhancedColumns}
+								data={users}
+								tableId="selection-demo-table"
+								enableSorting
+								enableFiltering
+								enableGlobalFilter={false}
+								enableColumnReordering={false}
+								enableColumnResizing={false}
+								enableColumnPinning={false}
+								enableRowSelection
+								enablePagination
+								pageSize={5}
+								showHeaders
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Compact
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Compact Employee List
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								A compact view with essential information only, perfect for mobile or
+								space-constrained layouts.
+							</p>
+							<DataTable
+								columns={compactColumns}
+								data={users}
+								tableId="compact-employees-table"
+								enableSorting
+								enableFiltering={false}
+								enableGlobalFilter={false}
+								enableColumnReordering={false}
+								enableColumnResizing={false}
+								enableColumnPinning={false}
+								enableRowSelection={false}
+								enablePagination
+								pageSize={10}
+								showHeaders
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Column Resizing
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Column Resizing Demo
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								Hover over column headers to see the resize handle. Drag the right edge of column
+								headers to resize them. Double-click the resize handle to reset column width.
+							</p>
+							<DataTable
+								columns={columnResizingColumns}
+								data={users}
+								tableId="resize-demo-table"
+								enableColumnResizing
+								enableSorting={false}
+								enableFiltering={false}
+								enableGlobalFilter={false}
+								enableColumnReordering={false}
+								enableColumnPinning={false}
+								enableRowSelection={false}
+								enablePagination={false}
+								showHeaders
+								defaultColumnWidth={200}
+								minColumnWidth={100}
+								maxColumnWidth={400}
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						All Features
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								All Features Demo
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								This table demonstrates all available features: column reordering, resizing,
+								sorting, filtering, pinning, row selection, and pagination.
+							</p>
+							<DataTable
+								columns={allFeaturesColumns}
+								data={users}
+								tableId="all-features-table"
+								enableSorting
+								enableFiltering
+								enableGlobalFilter
+								enableColumnReordering
+								enableColumnResizing
+								enableColumnPinning
+								enableRowSelection
+								enablePagination
+								pageSize={5}
+								showHeaders
+								defaultColumnWidth={180}
+								minColumnWidth={100}
+								maxColumnWidth={400}
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Virtualization With Features
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Virtualization with All Features
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								This table demonstrates virtualization with 1000 rows, plus all interactive
+								features.
+							</p>
+							<DataTable
+								columns={virtualizationColumns}
+								data={largeDataset}
+								tableId="virtualization-features-table"
+								enableSorting
+								enableFiltering
+								enableGlobalFilter
+								enableColumnReordering
+								enableColumnResizing
+								enableColumnPinning
+								enableRowSelection
+								enablePagination={false}
+								showHeaders
+								defaultColumnWidth={180}
+								minColumnWidth={100}
+								maxColumnWidth={400}
+								enableVirtualization
+								estimateRowSize={60}
+								overscan={10}
+								rowHeight={60}
+								enableDynamicRowHeights={false}
+								fixedHeight={600}
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Virtualized Infinite Scroll Dnd Resize
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div
+							style={{
+								border: '1px solid var(--border)',
+								borderRadius: '0.5rem',
+								padding: '1.5rem',
+								backgroundColor: 'var(--background)',
+							}}
+						>
+							<h3
+								style={{
+									fontSize: '1.125rem',
+									fontWeight: 600,
+									marginBottom: '0.5rem',
+									color: 'var(--foreground)',
+								}}
+							>
+								Virtualized Infinite Scroll + Reorder + Resize
+							</h3>
+							<p
+								style={{
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+									marginBottom: '1rem',
+								}}
+							>
+								Large dataset with virtualized rows, drag-and-drop column reordering, and on-change
+								column resizing. Scroll to load more.
+							</p>
+							<div
+								style={{
+									marginBottom: '1rem',
+									display: 'flex',
+									alignItems: 'center',
+									gap: '1rem',
+									fontSize: '0.875rem',
+									color: 'var(--muted-foreground)',
+								}}
+							>
+								<span>Rows: {infiniteScrollData.length}</span>
+								<span>Page: {infiniteScrollPage}</span>
+								{infiniteScrollLoading && <span>Loading…</span>}
+								{!infiniteScrollHasMore && (
+									<span style={{ color: '#16a34a' }}>All items loaded</span>
+								)}
+								{infiniteScrollOrderedColumns.length > 0 && (
+									<span
+										style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+									>
+										Order:{' '}
+										{infiniteScrollOrderedColumns
+											.map((c) =>
+												String(
+													(c as { id?: string; accessorKey?: string }).id ??
+														(c as { accessorKey?: string }).accessorKey ??
+														'?'
+												)
+											)
+											.join(' | ')}
+									</span>
+								)}
+							</div>
+							<DataTable
+								columns={infiniteScrollColumns}
+								data={infiniteScrollData}
+								tableId="virtualized-infinite-reorder-resize"
+								enableSorting={false}
+								enableFiltering
+								enableGlobalFilter={false}
+								enableColumnReordering
+								enableColumnResizing
+								enableColumnPinning
+								enableRowSelection
+								enablePagination={false}
+								showHeaders
+								defaultColumnWidth={180}
+								minColumnWidth={80}
+								maxColumnWidth={480}
+								enableVirtualization
+								estimateRowSize={56}
+								overscan={10}
+								rowHeight={56}
+								enableInfiniteScroll
+								enableScrollRestoration={false}
+								fixedHeight={600}
+								hasMore={infiniteScrollHasMore}
+								onLoadMore={loadMoreInfiniteScroll}
+								loadingMore={infiniteScrollLoading}
+								onColumnOrderChange={setInfiniteScrollOrderedColumns}
+							/>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Sticky Headers
+					</h3>
+					<DataTable
+						columns={stickyHeadersColumns}
+						data={generateLargeDataset(100)}
+						tableId="sticky-headers-table"
+						enableSorting
+						enableFiltering
+						enableColumnResizing
+						enableColumnReordering
+						enableColumnPinning
+						enableRowSelection
+						enableStickyHeaders
+						fixedHeight={600}
+						showHeaders
+						defaultColumnWidth={150}
+						minColumnWidth={80}
+						maxColumnWidth={800}
+					/>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Scroll To Index
+					</h3>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+							<Button
+								onClick={() => handleScrollToUser('1')}
+								variant="outlined"
+								color={ButtonColor.None}
+								size="sm"
+							>
+								Scroll to User 1
+							</Button>
+							<Button
+								onClick={() => handleScrollToUser('50')}
+								variant="outlined"
+								color={ButtonColor.None}
+								size="sm"
+							>
+								Scroll to User 50
+							</Button>
+							<Button
+								onClick={() => handleScrollToUser('100')}
+								variant="outlined"
+								color={ButtonColor.None}
+								size="sm"
+							>
+								Scroll to User 100
+							</Button>
+							<Button
+								onClick={() => handleScrollToUser('150')}
+								variant="outlined"
+								color={ButtonColor.None}
+								size="sm"
+							>
+								Scroll to User 150
+							</Button>
+							<Button
+								onClick={() => handleScrollToUser('200')}
+								variant="outlined"
+								color={ButtonColor.None}
+								size="sm"
+							>
+								Scroll to Last User
+							</Button>
+							<Button
+								onClick={handleScrollToRandom}
+								variant="outlined"
+								color={ButtonColor.None}
+								size="sm"
+							>
+								Scroll to Random User
+							</Button>
+						</div>
+						<DataTable
+							columns={enhancedColumns}
+							data={scrollToIndexData}
+							tableId="scroll-to-index-table"
+							enableVirtualization
+							enableStickyHeaders
+							fixedHeight={500}
+							enableSorting
+							enableFiltering
+							enableColumnResizing
+							enableRowSelection
+							estimateRowSize={60}
+							overscan={5}
+							scrollToIndexRef={scrollToIndexRef}
+						/>
+					</div>
+				</section>
+				<section>
+					<h3
+						style={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							marginBottom: '0.75rem',
+							color: 'var(--muted-foreground)',
+						}}
+					>
+						Individual Column Widths
+					</h3>
+					<DataTable
+						columns={enhancedColumns}
+						data={users}
+						tableId="individual-widths-table"
+						enableColumnResizing
+						defaultColumnWidth={150}
+						fixedHeight={600}
+						minColumnWidth={80}
+						maxColumnWidth={400}
+					/>
+				</section>
+			</div>
+		);
 	},
 };

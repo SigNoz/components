@@ -47,62 +47,7 @@ const frameworks = [
 	{ value: 'angular', label: 'Angular' },
 ];
 
-export const Default: Story = {
-	args: {
-		children: 'Loading options...',
-	},
-	render: (args) => (
-		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-			<Select defaultOpen>
-				<SelectTrigger placeholder="Select a framework..." />
-				<SelectContent>
-					<SelectLoading {...args} />
-				</SelectContent>
-			</Select>
-		</div>
-	),
-};
-
-export const Variations: Story = {
-	render: () => (
-		<div
-			style={{
-				padding: '2rem',
-				width: '100%',
-				maxWidth: '42rem',
-				display: 'flex',
-				flexDirection: 'column',
-				gap: '2rem',
-			}}
-		>
-			<div>
-				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-					Infinite Loading
-				</h3>
-				<InfiniteLoadingExample />
-			</div>
-			<div>
-				<h3 style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.5rem' }}>
-					Loading with Delay (5s)
-				</h3>
-				<DelayedLoadingExample />
-			</div>
-		</div>
-	),
-};
-
-function InfiniteLoadingExample() {
-	return (
-		<Select>
-			<SelectTrigger placeholder="Select a framework..." />
-			<SelectContent>
-				<SelectLoading>Fetching options...</SelectLoading>
-			</SelectContent>
-		</Select>
-	);
-}
-
-function DelayedLoadingExample() {
+function DelayedLoadingSelect() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [items, setItems] = useState<typeof frameworks>([]);
 
@@ -131,3 +76,69 @@ function DelayedLoadingExample() {
 		</Select>
 	);
 }
+
+export const Default: Story = {
+	args: {
+		children: 'Loading options...',
+	},
+	render: (args) => (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Select defaultOpen>
+				<SelectTrigger placeholder="Select a framework..." />
+				<SelectContent>
+					<SelectLoading {...args} />
+				</SelectContent>
+			</Select>
+		</div>
+	),
+};
+
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Infinite Loading
+				</h3>
+				<div style={{ width: '100%', maxWidth: '24rem' }}>
+					<Select>
+						<SelectTrigger placeholder="Select a framework..." />
+						<SelectContent>
+							<SelectLoading>Fetching options...</SelectLoading>
+						</SelectContent>
+					</Select>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Loading with Delay (5s)
+				</h3>
+				<div style={{ width: '100%', maxWidth: '24rem' }}>
+					<DelayedLoadingSelect />
+				</div>
+			</section>
+		</div>
+	),
+};

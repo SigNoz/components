@@ -99,90 +99,123 @@ export const Default: Story = {
 	},
 };
 
-export const AlignedTop: Story = {
-	args: {
-		side: 'top',
-		sideOffset: 4,
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
+function AlignedTopPreview() {
+	const [value, setValue] = useState('');
 
-		return (
-			<div style={{ padding: '2rem', paddingTop: '8rem', width: '100%', maxWidth: '24rem' }}>
-				<Select value={value} onChange={(v) => setValue(v as string)}>
-					<SelectTrigger placeholder="Select a framework..." />
-					<SelectContent {...args}>
-						{frameworks.map((f) => (
-							<SelectItem key={f.value} value={f.value}>
-								{f.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</div>
-		);
-	},
-};
+	return (
+		<div style={{ padding: '2rem', paddingTop: '8rem', width: '100%', maxWidth: '24rem' }}>
+			<Select value={value} onChange={(v) => setValue(v as string)}>
+				<SelectTrigger placeholder="Select a framework..." />
+				<SelectContent side="top" sideOffset={4}>
+					{frameworks.map((f) => (
+						<SelectItem key={f.value} value={f.value}>
+							{f.label}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</div>
+	);
+}
 
-export const WithoutPortal: Story = {
-	args: {
-		withPortal: false,
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
+function WithoutPortalPreview() {
+	const [value, setValue] = useState('');
 
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Select value={value} onChange={(v) => setValue(v as string)}>
-					<SelectTrigger placeholder="Select a framework..." />
-					<SelectContent {...args}>
-						{frameworks.map((f) => (
-							<SelectItem key={f.value} value={f.value}>
-								{f.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</div>
-		);
-	},
-};
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Select value={value} onChange={(v) => setValue(v as string)}>
+				<SelectTrigger placeholder="Select a framework..." />
+				<SelectContent withPortal={false}>
+					{frameworks.map((f) => (
+						<SelectItem key={f.value} value={f.value}>
+							{f.label}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</div>
+	);
+}
 
-/**
- * When placing a Select inside a Popover (e.g., a filter panel or form), set
- * `withPortal={false}` so the dropdown content stays within the popover DOM
- * instead of portaling to `document.body`. This avoids z-index and stacking issues.
- */
-export const InsidePopover: Story = {
-	args: {
-		withPortal: false,
-	},
-	render: (args) => {
-		const [value, setValue] = useState('');
+function InsidePopoverPreview() {
+	const [value, setValue] = useState('');
 
-		return (
-			<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
-				<Popover>
-					<PopoverTrigger asChild>
-						<Button variant="outlined">Open filters</Button>
-					</PopoverTrigger>
-					<PopoverContent style={{ width: '16rem' }}>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-							<p style={{ fontSize: '0.875rem', fontWeight: 500 }}>Filter by framework</p>
-							<Select value={value} onChange={(v) => setValue(v as string)}>
-								<SelectTrigger placeholder="Select a framework..." />
-								<SelectContent {...args}>
-									{frameworks.map((f) => (
-										<SelectItem key={f.value} value={f.value}>
-											{f.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-					</PopoverContent>
-				</Popover>
-			</div>
-		);
-	},
+	return (
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
+			<Popover>
+				<PopoverTrigger asChild>
+					<Button variant="outlined">Open filters</Button>
+				</PopoverTrigger>
+				<PopoverContent style={{ width: '16rem' }}>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+						<p style={{ fontSize: '0.875rem', fontWeight: 500 }}>Filter by framework</p>
+						<Select value={value} onChange={(v) => setValue(v as string)}>
+							<SelectTrigger placeholder="Select a framework..." />
+							<SelectContent withPortal={false}>
+								{frameworks.map((f) => (
+									<SelectItem key={f.value} value={f.value}>
+										{f.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+				</PopoverContent>
+			</Popover>
+		</div>
+	);
+}
+
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Aligned Top
+				</h3>
+				<AlignedTopPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Without Portal
+				</h3>
+				<WithoutPortalPreview />
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Inside Popover
+				</h3>
+				<InsidePopoverPreview />
+			</section>
+		</div>
+	),
 };

@@ -73,117 +73,160 @@ export const Default: Story = {
 	),
 };
 
-export const SlashSeparator: Story = {
-	args: {
-		children: '/',
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Products</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const ChevronSeparator: Story = {
-	args: {
-		children: <ChevronRight size={14} />,
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Products</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const CustomTextSeparator: Story = {
-	args: {
-		children: '→',
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Products</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const IconSeparator: Story = {
-	args: {
-		children: <Minus size={14} />,
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Home</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Products</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Current</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
-	),
-};
-
-export const ColonSeparator: Story = {
-	args: {
-		children: ':',
-	},
-	render: (args) => (
-		<Breadcrumb>
-			<BreadcrumbList>
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Location</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbLink href="#">Building</BreadcrumbLink>
-				</BreadcrumbItem>
-				<BreadcrumbSeparator {...args} />
-				<BreadcrumbItem>
-					<BreadcrumbPage>Room</BreadcrumbPage>
-				</BreadcrumbItem>
-			</BreadcrumbList>
-		</Breadcrumb>
+export const Preview: Story = {
+	render: () => (
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Slash Separator
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>/</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Products</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>/</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Chevron Separator
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>
+							<ChevronRight size={14} />
+						</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Products</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>
+							<ChevronRight size={14} />
+						</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Custom Text Separator
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>→</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Products</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>→</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Icon Separator
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Home</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>
+							<Minus size={14} />
+						</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Products</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>
+							<Minus size={14} />
+						</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbPage>Current</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Colon Separator
+				</h3>
+				<Breadcrumb>
+					<BreadcrumbList>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Location</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>:</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbLink href="#">Building</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator>:</BreadcrumbSeparator>
+						<BreadcrumbItem>
+							<BreadcrumbPage>Room</BreadcrumbPage>
+						</BreadcrumbItem>
+					</BreadcrumbList>
+				</Breadcrumb>
+			</section>
+		</div>
 	),
 };

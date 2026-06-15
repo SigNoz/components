@@ -57,70 +57,105 @@ export const Default: Story = {
 	),
 };
 
-export const Variants: Story = {
-	parameters: { controls: { disable: true } },
+export const Preview: Story = {
 	render: () => (
-		<div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
-				<Button>Day</Button>
-				<Button>Week</Button>
-				<Button>Month</Button>
-			</ButtonGroup>
-			<ButtonGroup variant={ButtonVariant.Solid}>
-				<Button>Day</Button>
-				<Button>Week</Button>
-				<Button>Month</Button>
-			</ButtonGroup>
-			<ButtonGroup variant={ButtonVariant.Ghost}>
-				<Button>Day</Button>
-				<Button>Week</Button>
-				<Button>Month</Button>
-			</ButtonGroup>
-		</div>
-	),
-};
-
-export const Sizes: Story = {
-	parameters: { controls: { disable: true } },
-	render: () => (
-		<div style={{ padding: '2rem', display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
-			{[ButtonSize.SM, ButtonSize.MD].map((size) => (
-				<ButtonGroup
-					key={size}
-					size={size}
-					variant={ButtonVariant.Outlined}
-					color={ButtonColor.Secondary}
+		<div
+			style={{
+				padding: '2rem',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '2.5rem',
+				backgroundColor: 'var(--background)',
+			}}
+		>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
 				>
-					<Button>Prev</Button>
-					<Button>Next</Button>
+					Variants
+				</h3>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+					<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
+						<Button>Day</Button>
+						<Button>Week</Button>
+						<Button>Month</Button>
+					</ButtonGroup>
+					<ButtonGroup variant={ButtonVariant.Solid}>
+						<Button>Day</Button>
+						<Button>Week</Button>
+						<Button>Month</Button>
+					</ButtonGroup>
+					<ButtonGroup variant={ButtonVariant.Ghost}>
+						<Button>Day</Button>
+						<Button>Week</Button>
+						<Button>Month</Button>
+					</ButtonGroup>
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Sizes
+				</h3>
+				<div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
+					{[ButtonSize.SM, ButtonSize.MD].map((size) => (
+						<ButtonGroup
+							key={size}
+							size={size}
+							variant={ButtonVariant.Outlined}
+							color={ButtonColor.Secondary}
+						>
+							<Button>Prev</Button>
+							<Button>Next</Button>
+						</ButtonGroup>
+					))}
+				</div>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Icon Cluster
+				</h3>
+				<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary} size="icon">
+					<Button prefix={<ChevronLeft />} aria-label="Previous" />
+					<Button prefix={<Code />} aria-label="Code" />
+					<Button prefix={<ChevronRight />} aria-label="Next" />
 				</ButtonGroup>
-			))}
-		</div>
-	),
-};
-
-export const IconCluster: Story = {
-	parameters: { controls: { disable: true } },
-	render: () => (
-		<div style={{ padding: '2rem' }}>
-			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary} size="icon">
-				<Button prefix={<ChevronLeft />} aria-label="Previous" />
-				<Button prefix={<Code />} aria-label="Code" />
-				<Button prefix={<ChevronRight />} aria-label="Next" />
-			</ButtonGroup>
-		</div>
-	),
-};
-
-export const PerButtonOverride: Story = {
-	parameters: { controls: { disable: true } },
-	render: () => (
-		<div style={{ padding: '2rem' }}>
-			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
-				<Button>Approve</Button>
-				<Button>Hold</Button>
-				<Button color={ButtonColor.Destructive}>Reject</Button>
-			</ButtonGroup>
+			</section>
+			<section>
+				<h3
+					style={{
+						fontSize: '0.875rem',
+						fontWeight: 500,
+						marginBottom: '0.75rem',
+						color: 'var(--muted-foreground)',
+					}}
+				>
+					Per Button Override
+				</h3>
+				<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
+					<Button>Approve</Button>
+					<Button>Hold</Button>
+					<Button color={ButtonColor.Destructive}>Reject</Button>
+				</ButtonGroup>
+			</section>
 		</div>
 	),
 };

@@ -1,6 +1,7 @@
 import { Button, ButtonColor, ButtonVariant, ConfirmDialog } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+
 import { confirmArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof ConfirmDialog> = {
