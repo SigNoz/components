@@ -40,6 +40,11 @@ const meta: Meta<typeof TabsTrigger> = {
 			description: 'Additional CSS classes to apply to the trigger.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the trigger.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description: 'The content displayed in the tab trigger.',

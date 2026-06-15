@@ -22,6 +22,11 @@ const meta: Meta<typeof BreadcrumbItem> = {
 			description: 'Additional CSS classes to apply to the item.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the item.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		testId: {
 			control: 'text',
 			description: 'Test ID for automated testing.',

@@ -67,6 +67,11 @@ const meta: Meta<typeof Switch> = {
 			description: 'Additional CSS classes to apply to the switch.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the switch.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		isLoading: {
 			control: 'boolean',
 			description: 'When true, shows a loading spinner in the thumb and prevents user interaction.',

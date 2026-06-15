@@ -29,6 +29,11 @@ const meta: Meta<typeof DropdownMenuRadioItem> = {
 			description: 'Additional CSS classes for the radio item.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the radio item.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		onSelect: { control: false, table: { category: 'Events' } },
 		children: { control: 'text', table: { category: 'Content' } },
 	},

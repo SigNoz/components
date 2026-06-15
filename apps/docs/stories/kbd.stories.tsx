@@ -29,6 +29,11 @@ const meta: Meta<typeof Kbd> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description: 'The key label or content.',

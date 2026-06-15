@@ -33,6 +33,11 @@ const meta: Meta<typeof DropdownMenuItem> = {
 			description: 'Additional CSS classes for the item.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the item.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		leftIcon: { control: false, table: { category: 'Content' } },
 		rightIcon: { control: false, table: { category: 'Content' } },
 		onSelect: { control: false, table: { category: 'Events' } },

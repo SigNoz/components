@@ -212,6 +212,11 @@ export default {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling' },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles for custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 } as Meta<typeof Typography>;
 

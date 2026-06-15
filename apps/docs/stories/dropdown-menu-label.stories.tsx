@@ -23,6 +23,11 @@ const meta: Meta<typeof DropdownMenuLabel> = {
 			description: 'Additional CSS classes for the label.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the label.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		children: {
 			control: 'text',
 			description: 'The label text for the group.',

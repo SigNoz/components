@@ -95,6 +95,11 @@ const meta: Meta<typeof Table> = {
 			description: 'Additional CSS classes for custom styling.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to custom styling.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',

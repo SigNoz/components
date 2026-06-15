@@ -20,6 +20,11 @@ const meta: Meta<typeof ComboboxContent> = {
 			description: 'Additional CSS classes to apply to the content container.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		style: {
+			control: false,
+			description: 'Inline styles applied to the content container.',
+			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		},
 		align: {
 			control: 'select',
 			options: ['start', 'center', 'end'],
