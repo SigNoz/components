@@ -9,7 +9,7 @@
 		"preview-storybook": "serve storybook-static",
 		"build-storybook": "storybook build -o storybook-static",
 		"clean": "rm -rf .turbo && rm -rf node_modules",
-		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes ",
+		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes  --config-file 'chromatic.config.json'",
 		"test": "vitest",
 		"test-storybook": "vitest --project=storybook"
 	},

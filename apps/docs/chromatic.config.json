@@ -1,6 +1,26 @@
 {
 	"onlyChanged": true,
 	"projectId": "Project:67150c0b65fc0b0f718b1a58",
-	"storybookBaseDir": "apps/docs",
-	"zip": true
+	"storybookBaseDir": "./apps/docs",
+	"zip": true,
+	"$schema": "https://www.chromatic.com/config-file.schema.json",
+	"storybookConfigDir": "./apps/docs/.storybook",
+	"storybookBuildDir": "./storybook-static",
+	"externals": [
+		"storybook-static/favicon-wrapper.svg",
+		"storybook-static/favicon.svg",
+		"storybook-static/nunito-sans-bold-italic.woff2",
+		"storybook-static/nunito-sans-bold.woff2",
+		"storybook-static/nunito-sans-italic.woff2",
+		"storybook-static/nunito-sans-regular.woff2",
+		"storybook-static/sb-common-assets/favicon-wrapper.svg",
+		"storybook-static/sb-common-assets/favicon.svg",
+		"storybook-static/sb-common-assets/nunito-sans-bold-italic.woff2",
+		"storybook-static/sb-common-assets/nunito-sans-bold.woff2",
+		"storybook-static/sb-common-assets/nunito-sans-italic.woff2",
+		"storybook-static/sb-common-assets/nunito-sans-regular.woff2",
+		"storybook-static/assets/iframe-BEHBz_83.css",
+		"blue-demo.css",
+		"index.css"
+	]
 }
