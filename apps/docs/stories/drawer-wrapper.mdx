@@ -1,0 +1,107 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DrawerWrapperStories from './drawer-wrapper.stories';
+
+<Meta of={DrawerWrapperStories} />
+
+# DrawerWrapper
+
+Preset that wraps `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerSubtitle`, `DrawerDescription`, and an optional footer into a single component. Pass a `title`, optional `trigger`, and children.
+
+For full primitive control, see [Drawer](?path=/docs/primitive-components-drawer--docs).
+
+## How to use
+
+```tsx
+import { DrawerWrapper, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<DrawerWrapper
+			title="Edit settings"
+			subTitle="Optional subtitle for the drawer."
+			direction="right"
+			trigger={<Button variant="solid" color="primary">Open Drawer</Button>}
+		>
+			<p>Drawer content goes here.</p>
+		</DrawerWrapper>
+	);
+}
+```
+
+<Primary />
+
+## Controlled state
+
+Pass `open` and `onOpenChange` to drive the open state externally. This also enables exit animations internally via `AnimatePresence`:
+
+```tsx
+import { useState } from 'react';
+import { DrawerWrapper, Button } from '@signozhq/ui';
+
+export default function MyComponent() {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<DrawerWrapper
+			open={open}
+			onOpenChange={setOpen}
+			title="Controlled Drawer"
+			trigger={<Button>Open</Button>}
+		>
+			<p>Drawer content goes here.</p>
+		</DrawerWrapper>
+	);
+}
+```
+
+## With footer
+
+Pass a `footer` node for confirm/cancel layouts:
+
+```tsx
+<DrawerWrapper
+	title="Edit settings"
+	direction="right"
+	trigger={<Button>Open</Button>}
+	footer={
+		<div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+			<Button variant="ghost">Cancel</Button>
+			<Button variant="solid" color="primary">Save</Button>
+		</div>
+	}
+>
+	<p>Drawer content goes here.</p>
+</DrawerWrapper>
+```
+
+## Width variants
+
+Use `width` to control the width of the drawer surface. Options: `narrow`, `base` (default), `wide`, `extra-wide`:
+
+```tsx
+<DrawerWrapper title="Wide drawer" width="wide" trigger={<Button>Open</Button>}>
+	<p>Wide drawer content.</p>
+</DrawerWrapper>
+```
+
+## Without close button
+
+Set `showCloseButton={false}` to hide the default X button. Provide your own close action in the content or footer:
+
+```tsx
+import { DrawerWrapper, DrawerClose, Button } from '@signozhq/ui';
+
+<DrawerWrapper
+	title="No close button"
+	showCloseButton={false}
+	trigger={<Button>Open</Button>}
+>
+	<DrawerClose asChild>
+		<Button>Close</Button>
+	</DrawerClose>
+</DrawerWrapper>
+```
+
+## Props
+
+<Controls of={DrawerWrapperStories.Default} />
