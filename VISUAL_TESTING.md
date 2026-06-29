@@ -5,74 +5,61 @@ changes in components. Chromatic builds the Storybook in `apps/docs`, renders ev
 story into snapshots, and diffs them against an accepted baseline. When a snapshot
 changes, the build is flagged for human review.
 
-## TL;DR
+## How to use it
 
-- Visual tests do **not** run automatically on every PR.
-- Add the **`run-visual-testing`** label to a PR to run Chromatic against it.
-- Review the diffs in the Chromatic UI (link is posted on the PR check).
-- On merge, a second workflow re-runs Chromatic and **auto-accepts** the merged
-  changes as the new `main` baseline.
+Visual tests do **not** run on every PR — they're opt-in, so you only spend snapshots
+when a change is actually visual.
 
-## How it works
+1. Open a PR with component or story changes.
+2. If the change is visual, add the **`run-visual-testing`** label. The build runs
+   immediately.
+3. Open the Chromatic link on the PR check and accept or deny each diff.
+4. Pushed more visual changes? The label was removed after the last build (see below),
+   so re-add it to run again.
+5. Get the PR reviewed and merge. On merge, the accepted changes become the new `main`
+   baseline automatically — you don't do anything extra.
 
-There are two workflows plus a shared config. The split exists so PR builds compare
-against `main`, and merged builds update the `main` baseline.
+If a PR has no visual impact, leave the label off.
 
-### 1. PR builds — `.github/workflows/chromatic-pr.yml`
+### Why the label dance
 
-Runs on pull requests targeting `main` (`opened`, `synchronize`, `reopened`,
-`labeled`).
+`run-visual-testing` is a **one-shot** trigger. When a build succeeds, the PR workflow
+swaps it for `update-visual-testing` and drops `run-visual-testing`. Two reasons:
 
-Key behaviour:
+- **One-shot keeps cost down.** Without removing it, every later push would re-snapshot.
+  Re-adding the label is a deliberate "yes, test this again."
+- **`update-visual-testing` is the merge signal.** It marks "a PR build passed at some
+  point," and the merge workflow reads it to decide whether to re-baseline. You never
+  add it by hand.
 
-- **`skip` unless labeled.** The job is skipped unless the PR carries the
-  `run-visual-testing` label:
-  ```yaml
-  skip: ${{ !contains(github.event.pull_request.labels.*.name, 'run-visual-testing') }}
-  ```
-  Adding the label (the `labeled` trigger) kicks off a build immediately. This is the
-  main cost lever — no label, no snapshots.
-- **`cancel-in-progress: true`.** Pushing new commits cancels the in-flight build so
-  only the latest commit is snapshotted.
-- **`onlyChanged: true`** (TurboSnap). Only stories affected by the changed files are
-  snapshotted, instead of the whole Storybook.
-- Checks out the PR **head SHA** so the diff reflects exactly what's in the PR.
+A failed build leaves `run-visual-testing` in place, so the next push retries and the PR
+is never marked.
 
-The build appears as a check on the PR with a link to the Chromatic UI, where you
-accept or deny each visual change.
+## Why two workflows
 
-### 2. Baseline update on merge — `.github/workflows/chromatic-main.yml`
+The split exists because a PR build and a merge build want opposite things from the same
+snapshots:
 
-Runs when a PR to `main` is **closed**, but only does work when:
-
-```yaml
-github.event.pull_request.merged == true &&
-contains(github.event.pull_request.labels.*.name, 'run-visual-testing')
-```
-
-i.e. the PR was actually merged **and** it had the `run-visual-testing` label.
-
-Key behaviour:
-
-- Checks out the **merge commit SHA**.
-- Forces the build to be treated as `main`:
-  ```yaml
-  branchName: main
-  autoAcceptChanges: main
-  ```
-  This re-baselines `main`: the changes you reviewed and merged are auto-accepted as
-  the new reference, so the next PR doesn't re-flag them.
-- **`cancel-in-progress: false`** — baseline builds must not be cancelled.
-- **`onlyChanged: true`** as well.
-
-### Why two workflows?
-
-- A PR build needs to diff against the current `main` baseline → run on the PR head.
-- A merge build needs to *become* the new `main` baseline → run on the merge commit
-  with `branchName: main` + `autoAcceptChanges: main`.
+- **PR build** (`.github/workflows/chromatic-pr.yml`) runs on the PR head and **diffs
+  against** the current `main` baseline, so you can review what changed.
+- **Merge build** (`.github/workflows/chromatic-main.yml`) runs on the merge commit and
+  **becomes** the new `main` baseline (`branchName: main` + `autoAcceptChanges: main`),
+  so the next PR doesn't re-flag changes you already accepted.
 
 Doing both in one workflow would either re-baseline on every PR (changes never get
 reviewed) or never update the baseline (every PR re-flags already-accepted changes).
+
+The merge build only runs when the PR was actually **merged** and carries
+`update-visual-testing` — a PR closed without merging, or one that never ran Chromatic,
+is skipped.
+
+Other behaviour worth knowing:
+
+- **TurboSnap (`onlyChanged: true`)** — only stories affected by the changed files are
+  snapshotted, not the whole Storybook.
+- PR builds use **`cancel-in-progress: true`** so a new push cancels the in-flight build
+  and only the latest commit is snapshotted. Merge builds use
+  **`cancel-in-progress: false`** — baseline builds must not be cancelled.
 
 ## Configuration — `apps/docs/chromatic.config.json`
 
@@ -86,7 +73,7 @@ Shared by both workflows and the local `chromatic` script.
 | `storybookBuildDir` | Prebuilt static Storybook output (`./storybook-static`). |
 | `onlyChanged` | Enables TurboSnap by default. |
 | `zip` | Uploads the build as a zip (faster for large Storybooks). |
-| `externals` | Non-source assets (fonts, css, favicons) that, when changed, should be handled by TurboSnap correctly rather than silently skipped. |
+| `externals` | Non-source assets (fonts, css, favicons) that, when changed, should invalidate TurboSnap rather than be silently skipped. |
 
 `projectToken` is **not** in this file — it comes from the `CHROMATIC_PROJECT_TOKEN`
 repository secret (CI) or your environment (local).
@@ -102,13 +89,3 @@ pnpm test-storybook   # vitest --project=storybook
 ```
 
 These verify behaviour/rendering and run independently of Chromatic's pixel diffing.
-
-## Typical workflow
-
-1. Open a PR with component or story changes.
-2. If the change is visual, add the **`run-visual-testing`** label → PR build runs.
-3. Open the Chromatic link on the PR check; accept or deny each diff.
-4. Get the PR reviewed and merge.
-5. The merge build auto-accepts the merged changes as the new `main` baseline.
-
-If a PR has no visual impact, leave the label off — no snapshots are spent.

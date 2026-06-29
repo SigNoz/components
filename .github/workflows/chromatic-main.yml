@@ -10,14 +10,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 jobs:
   chromatic:
     name: Run Chromatic
     runs-on: ubuntu-latest
-    # Only on merge, and only if the merged PR carried the `run-visual-testing` label.
     if: >-
       github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'run-visual-testing')
+      contains(github.event.pull_request.labels.*.name, 'update-visual-testing')
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
