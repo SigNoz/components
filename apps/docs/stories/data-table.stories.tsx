@@ -1,4 +1,13 @@
-import { CircleAlert, CircleCheck, CircleX, Clock, Eye, Pencil, Trash2 } from '@signozhq/icons';
+import {
+	CircleAlert,
+	CircleCheck,
+	CircleX,
+	Clock,
+	Eye,
+	type IconSize,
+	Pencil,
+	Trash2,
+} from '@signozhq/icons';
 import {
 	Badge,
 	DataTable as BaseDataTable,
@@ -9,7 +18,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-type IconComponent = React.ComponentType<{ className?: string; size?: number }>;
+type IconComponent = React.ComponentType<{ className?: string; size?: IconSize | number }>;
 
 import * as React from 'react';
 
