@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Select } from './components/select.js';
 import { SelectContent } from './components/select-content.js';
@@ -106,5 +106,23 @@ describe('Select single', () => {
 			</Select>
 		);
 		expect(screen.getByText('Banana')).toBeInTheDocument();
+	});
+
+	it('closes dropdown after selecting an item (uncontrolled with portal)', async () => {
+		render(
+			<Select>
+				<SelectTrigger placeholder="Pick" />
+				<SelectContent>
+					<SelectItem value="apple">Apple</SelectItem>
+					<SelectItem value="banana">Banana</SelectItem>
+				</SelectContent>
+			</Select>
+		);
+		fireEvent.click(screen.getByRole('combobox'));
+		expect(screen.getByRole('option', { name: 'Apple' })).toBeInTheDocument();
+		fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+		await waitFor(() => {
+			expect(screen.queryByRole('option', { name: 'Apple' })).not.toBeInTheDocument();
+		});
 	});
 });
