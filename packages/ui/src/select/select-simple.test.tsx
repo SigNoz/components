@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { SelectSimple } from './presets/select-simple.js';
 import { selectSimpleItems } from './select.test-utils.js';
@@ -24,6 +25,44 @@ describe('SelectSimple', () => {
 		fireEvent.click(screen.getByRole('option', { name: 'Vue' }));
 
 		expect(onChange).toHaveBeenCalledWith('vue');
+	});
+
+	it('closes dropdown after selecting an item', () => {
+		render(<SelectSimple items={selectSimpleItems} withPortal={false} />);
+		fireEvent.click(screen.getByRole('combobox'));
+		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();
+		fireEvent.click(screen.getByRole('option', { name: 'React' }));
+		expect(screen.queryByRole('option', { name: 'React' })).not.toBeInTheDocument();
+	});
+
+	it('closes dropdown after selecting an item (with portal)', async () => {
+		render(<SelectSimple items={selectSimpleItems} />);
+		fireEvent.click(screen.getByRole('combobox'));
+		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();
+		fireEvent.click(screen.getByRole('option', { name: 'React' }));
+		await waitFor(() => {
+			expect(screen.queryByRole('option', { name: 'React' })).not.toBeInTheDocument();
+		});
+	});
+
+	it('closes dropdown after selecting an item (controlled mode)', async () => {
+		function ControlledSelect() {
+			const [value, setValue] = React.useState<string | undefined>(undefined);
+			return (
+				<SelectSimple
+					items={selectSimpleItems}
+					value={value}
+					onChange={(v) => setValue(v as string)}
+				/>
+			);
+		}
+		render(<ControlledSelect />);
+		fireEvent.click(screen.getByRole('combobox'));
+		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();
+		fireEvent.click(screen.getByRole('option', { name: 'React' }));
+		await waitFor(() => {
+			expect(screen.queryByRole('option', { name: 'React' })).not.toBeInTheDocument();
+		});
 	});
 
 	it('displays selected value in trigger via defaultValue', () => {

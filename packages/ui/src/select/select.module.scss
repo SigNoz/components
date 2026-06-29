@@ -188,19 +188,19 @@
 
 	&[data-state='open'] {
 		animation: var(--select-content-open-animation, select-in 150ms ease-out);
+
+		&[data-side='top'] {
+			animation-name: var(--select-content-slide-up-animation, select-in, select-slide-up);
+		}
+
+		&[data-side='bottom'] {
+			animation-name: var(--select-content-slide-down-animation, select-in, select-slide-down);
+		}
 	}
 
-	&[data-state='closed'] {
-		animation: var(--select-content-close-animation, select-out 150ms ease-in);
-	}
-
-	&[data-side='top'] {
-		animation-name: var(--select-content-slide-up-animation, select-in, select-slide-up);
-	}
-
-	&[data-side='bottom'] {
-		animation-name: var(--select-content-slide-down-animation, select-in, select-slide-down);
-	}
+	// Exit animation removed: Radix 2.3.x Presence component waits for animationend
+	// event before unmounting, but the event never fires for Select, causing the
+	// popover to stay open after selection. See: https://github.com/radix-ui/primitives/pull/3894
 
 	&[data-position='popper'] {
 		width: var(--select-content-popper-width, var(--radix-select-trigger-width));

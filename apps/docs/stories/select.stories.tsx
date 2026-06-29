@@ -60,6 +60,23 @@ export const Default: Story = {
 	},
 };
 
+export const Uncontrolled: Story = {
+	render: () => (
+		<div className="p-8 w-full max-w-sm">
+			<Select defaultValue="">
+				<SelectTrigger placeholder="Select a framework..." />
+				<SelectContent>
+					{frameworks.map((f) => (
+						<SelectItem key={f.value} value={f.value}>
+							{f.label}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+		</div>
+	),
+};
+
 export const WithGroups: Story = {
 	render: () => {
 		const [value, setValue] = useState('');

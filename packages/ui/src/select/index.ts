@@ -12,7 +12,6 @@
  * | `--select-content-border-style` | `solid` |
  * | `--select-content-border-width` | `1px` |
  * | `--select-content-box-shadow` | `0 4px 6px -1px rgb(0 0 0 / 0.1), 		0 2px 4px -2...` |
- * | `--select-content-close-animation` | `select-out 150ms ease-in` |
  * | `--select-content-color` | `var(--popover-foreground)` |
  * | `--select-content-max-height` | `20rem` |
  * | `--select-content-min-width` | `8rem` |
