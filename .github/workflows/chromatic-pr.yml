@@ -10,10 +10,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   chromatic:
     name: Run Chromatic
     runs-on: ubuntu-latest
+    if: github.event.action != 'labeled' || github.event.label.name != 'update-visual-testing'
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -41,3 +46,10 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           onlyChanged: true
           skip: ${{ !contains(github.event.pull_request.labels.*.name, 'run-visual-testing') }}
+
+      - name: Mark PR as visually tested
+        if: contains(github.event.pull_request.labels.*.name, 'run-visual-testing')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr edit "$PR_NUMBER" --add-label update-visual-testing --remove-label run-visual-testing
