@@ -409,13 +409,13 @@
 		"@repo/typescript-config": "workspace:*",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/react": "^16.0.1",
-		"@types/node": "25.6.2",
+		"@types/node": "25.9.4",
 		"@types/react": "^18.2.61",
-		"@vitejs/plugin-react": "^5.1.4",
+		"@vitejs/plugin-react": "^5.2.0",
 		"jsdom": "^29.1.1",
-		"publint": "0.3.18",
+		"publint": "0.3.21",
 		"vite": "npm:rolldown-vite@7.3.1",
-		"vitest": "^4.1.8"
+		"vitest": "^4.1.9"
 	},
 	"dependencies": {
 		"@chenglou/pretext": "^0.0.8",
