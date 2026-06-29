@@ -24,6 +24,7 @@
 - `pnpm build` - Build all packages, including the Storybook site
 - `pnpm dev` - Run all packages locally and preview with Storybook
 - `pnpm lint` - Lint all packages
+- `pnpm run type-check` - Type-check the repo with `tsgo --noEmit` (also runs in CI on every push)
 - `pnpm clean` - Clean up all `node_modules` and `dist` folders
 - `pnpm run tokens` (in `packages/ui`) - Regenerate CSS token JSDoc tables in component `index.ts` files
 - `pnpm run tokens:check` (in `packages/ui`) - Fail if token docs are out of date (same check as CI)
