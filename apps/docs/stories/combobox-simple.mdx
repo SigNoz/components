@@ -232,6 +232,37 @@ import { Popover, PopoverTrigger, PopoverContent, ComboboxSimple, Button } from 
 </Popover>
 ```
 
+## Virtualization
+
+Set `virtualized` to render large lists efficiently, only visible rows are mounted. Pass `true` for sensible defaults, or an object to tune `estimatedItemHeight` and `virtualizedHeight` (both in pixels):
+
+```tsx
+// defaults
+<ComboboxSimple items={largeItems} virtualized value={value} onChange={setValue} />
+
+// tuned
+<ComboboxSimple
+	items={largeItems}
+	virtualized={{ estimatedItemHeight: 40, virtualizedHeight: 400 }}
+	value={value}
+	onChange={setValue}
+/>
+```
+
+Virtualization composes with every other feature such as `groups`, `multiple`, `maxDisplayedPills`, `allowCreate`, and `insertValue` hints all work inside a virtualized list:
+
+```tsx
+<ComboboxSimple
+	groups={largeGroups}
+	multiple
+	allowCreate
+	virtualized
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+	placeholder="Add or create filters..."
+/>
+```
+
 ## Props
 
 <Controls of={ComboboxSimpleStories.Default} />
