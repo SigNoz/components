@@ -49,6 +49,7 @@
  * | `--command-separator-background-color` | `var(--border)` |
  * | `--command-separator-height` | `1px` |
  * | `--command-separator-margin` | `0 -0.25rem` |
+ * | `--command-separator-width` | `100%` |
  */
 // #endregion css-tokens
 

@@ -133,6 +133,16 @@ const meta: Meta<typeof ComboboxSimple> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
+		virtualized: {
+			control: 'object',
+			description:
+				'Enable virtualization for large lists. Pass `true` for defaults or an object with { estimatedItemHeight, virtualizedHeight }.',
+			table: {
+				category: 'Performance',
+				type: { summary: 'boolean | { estimatedItemHeight?: number; virtualizedHeight?: number }' },
+				defaultValue: { summary: 'false' },
+			},
+		},
 	},
 	parameters: {
 		layout: 'fullscreen',
