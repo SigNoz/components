@@ -73,6 +73,21 @@
 	height: var(--combobox-trigger-icon-size, 1rem);
 	width: var(--combobox-trigger-icon-size, 1rem);
 	opacity: var(--combobox-trigger-icon-opacity, 0.5);
+	flex-shrink: 0;
+	transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+	animation: combobox-icon-in 150ms ease-out;
+}
+
+@keyframes combobox-icon-in {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	to {
+		opacity: var(--combobox-trigger-icon-opacity, 0.5);
+		transform: scale(1);
+	}
 }
 
 @keyframes combobox-spin {
@@ -231,6 +246,30 @@
 .combobox__content {
 	--popover-padding: 0px;
 	--popover-border-radius: var(--radius-1, 2px);
+}
+
+.combobox__virtual-list-wrapper {
+	max-height: none;
+	overflow: visible;
+}
+
+.combobox__virtual-scroll {
+	overflow: auto;
+	contain: strict;
+	overflow-anchor: none;
+}
+
+.combobox__virtual-list {
+	width: 100%;
+	position: relative;
+}
+
+.combobox__virtual-heading {
+	padding: var(--spacing-3, 0.375rem) var(--spacing-4, 0.5rem);
+	font-size: var(--periscope-font-size-sm, 0.75rem);
+	line-height: 1rem;
+	font-weight: var(--font-weight-medium, 500);
+	color: var(--text-muted);
 }
 
 @keyframes combobox-in {

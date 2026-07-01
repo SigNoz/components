@@ -65,6 +65,24 @@ Use `maxDisplayedPills` to cap visible pills. Overflow items appear as "+N":
 />
 ```
 
+## Clearable selection
+
+Set `allowClear` to show a clear button on hover when a value is selected. Works for both single and multi-select. In single-select, `onChange` fires with `undefined` when cleared:
+
+```tsx
+const [value, setValue] = useState<string | undefined>('react');
+
+<ComboboxSimple
+	items={items}
+	allowClear
+	value={value}
+	onChange={(v) => setValue(typeof v === 'string' ? v : undefined)}
+	placeholder="Select a framework..."
+/>
+```
+
+With `allowClear`, pressing `Delete` or `Backspace` while the trigger is focused also clears the selection.
+
 ## Grouped items
 
 Pass `groups` instead of `items` to render headings between option clusters:
@@ -230,6 +248,37 @@ import { Popover, PopoverTrigger, PopoverContent, ComboboxSimple, Button } from 
 		<ComboboxSimple items={items} value={value} onChange={setValue} withPortal={false} />
 	</PopoverContent>
 </Popover>
+```
+
+## Virtualization
+
+Set `virtualized` to render large lists efficiently, only visible rows are mounted. Pass `true` for sensible defaults, or an object to tune `estimatedItemHeight` (row height, default `32`px) and `virtualizedHeight` (container height, default `300`px):
+
+```tsx
+// defaults - 32px rows, 300px container
+<ComboboxSimple items={largeItems} virtualized value={value} onChange={setValue} />
+
+// tuned
+<ComboboxSimple
+	items={largeItems}
+	virtualized={{ estimatedItemHeight: 40, virtualizedHeight: 400 }}
+	value={value}
+	onChange={setValue}
+/>
+```
+
+Virtualization composes with every other feature such as `groups`, `multiple`, `maxDisplayedPills`, `allowCreate`, and `insertValue` hints all work inside a virtualized list:
+
+```tsx
+<ComboboxSimple
+	groups={largeGroups}
+	multiple
+	allowCreate
+	virtualized
+	value={values}
+	onChange={(v) => setValues(v as string[])}
+	placeholder="Add or create filters..."
+/>
 ```
 
 ## Props

@@ -148,7 +148,12 @@ export const SelectTrigger = React.forwardRef<
 				data-testid={testId}
 				{...props}
 			>
-				<span className={styles['select__trigger-value']}>{renderContent()}</span>
+				<span
+					data-slot={hasValue ? 'select-value' : 'select-placeholder'}
+					className={styles['select__trigger-value']}
+				>
+					{renderContent()}
+				</span>
 				{loading ? (
 					<LoaderCircle className={styles['select__trigger-spinner']} />
 				) : (

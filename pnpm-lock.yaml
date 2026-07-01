@@ -34,6 +34,9 @@ importers:
       '@signozhq/icons':
         specifier: 0.4.0
         version: 0.4.0
+      '@tanstack/react-virtual':
+        specifier: ^3.13.21
+        version: 3.14.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.0
@@ -404,6 +407,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.2.0
         version: 5.2.0(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.7.0)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))
+      '@vitest/coverage-v8':
+        specifier: ^4.0.18
+        version: 4.1.9(@vitest/browser@4.1.9)(rolldown-vite@7.3.1(patch_hash=443ebc2838548a77a744c130cadbbed23222fdf34e5d4e744c8873326789396f)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@25.6.2)(esbuild@0.25.0)(jiti@2.7.0)(sass-embedded@1.97.3)(sass@1.78.0)(yaml@2.9.0))(vitest@4.1.9)
       jsdom:
         specifier: ^29.1.1
         version: 29.1.1

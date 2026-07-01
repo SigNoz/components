@@ -128,6 +128,7 @@
   margin: var(--command-separator-margin, 0 -0.25rem);
   height: var(--command-separator-height, 1px);
   background-color: var(--command-separator-background-color, var(--border));
+  width: var(--command-separator-width, 100%);
 }
 
 .command__item {
