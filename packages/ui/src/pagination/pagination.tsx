@@ -22,6 +22,8 @@ export type PaginationContainerProps = Pick<
 	 * The test ID to apply to the pagination container.
 	 */
 	testId?: string;
+
+	showTotal?: boolean;
 };
 
 /**
@@ -437,6 +439,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			className,
 			align = 'start',
 			testId,
+			showTotal = false,
 			...props
 		},
 		ref
@@ -515,8 +518,16 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			/>
 		) : null;
 
+		const totalRange = showTotal ? (
+			<div className={styles['pagination-total']} data-slot="pagination-total">
+				Showing {Math.min((current - 1) * pageSize + 1, total)}–
+				{Math.min(current * pageSize, total)} of {total}
+			</div>
+		) : null;
+
 		return (
 			<PaginationContainer ref={ref} className={className} align={align} testId={testId} {...props}>
+				{totalRange}
 				{pageSizePosition === 'left' && selector}
 				<PaginationContent>
 					<PaginationItem>
