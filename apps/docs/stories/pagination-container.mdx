@@ -56,10 +56,7 @@ export default function MyComponent() {
 					<PaginationEllipsis />
 				</PaginationItem>
 				<PaginationItem>
-					<PaginationLink
-						isActive={current === totalPages}
-						onClick={() => setCurrent(totalPages)}
-					>
+					<PaginationLink isActive={current === totalPages} onClick={() => setCurrent(totalPages)}>
 						{totalPages}
 					</PaginationLink>
 				</PaginationItem>
@@ -119,10 +116,7 @@ export default function MyComponent() {
 					</PaginationLink>
 				</PaginationItem>
 				<PaginationItem>
-					<PaginationLink
-						isActive={current === totalPages}
-						onClick={() => setCurrent(totalPages)}
-					>
+					<PaginationLink isActive={current === totalPages} onClick={() => setCurrent(totalPages)}>
 						{totalPages}
 					</PaginationLink>
 				</PaginationItem>

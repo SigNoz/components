@@ -17,7 +17,11 @@ import { PopoverSimple, Button } from '@signozhq/ui';
 export default function MyComponent() {
 	return (
 		<PopoverSimple
-			trigger={<Button variant="solid" color="primary">Open</Button>}
+			trigger={
+				<Button variant="solid" color="primary">
+					Open
+				</Button>
+			}
 			className="w-64"
 		>
 			<p className="text-sm">Popover content here.</p>
@@ -55,13 +59,9 @@ Pass `open` and `onOpenChange` to drive the open state externally.
 ```tsx
 const [open, setOpen] = React.useState(false);
 
-<PopoverSimple
-	open={open}
-	onOpenChange={setOpen}
-	trigger={<Button>Open</Button>}
->
+<PopoverSimple open={open} onOpenChange={setOpen} trigger={<Button>Open</Button>}>
 	Controlled content
-</PopoverSimple>
+</PopoverSimple>;
 ```
 
 ## Nested popovers

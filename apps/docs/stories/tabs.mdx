@@ -21,9 +21,7 @@ const items = [
 ];
 
 export default function MyComponent() {
-	return (
-		<Tabs items={items} defaultValue="overview" />
-	);
+	return <Tabs items={items} defaultValue="overview" />;
 }
 ```
 
@@ -64,7 +62,7 @@ import { Settings, History } from '@signozhq/icons';
 		},
 	]}
 	defaultValue="settings"
-/>
+/>;
 ```
 
 ## Disabled tabs
@@ -114,7 +112,7 @@ import { Plus } from '@signozhq/icons';
 			Add view
 		</Button>
 	}
-/>
+/>;
 ```
 
 Combine both sides:
@@ -150,13 +148,7 @@ import { Tabs } from '@signozhq/ui';
 function MyComponent() {
 	const [activeTab, setActiveTab] = useState('overview');
 
-	return (
-		<Tabs
-			items={items}
-			value={activeTab}
-			onChange={setActiveTab}
-		/>
-	);
+	return <Tabs items={items} value={activeTab} onChange={setActiveTab} />;
 }
 ```
 

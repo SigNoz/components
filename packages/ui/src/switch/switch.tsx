@@ -78,7 +78,7 @@ const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root
 			isLoading = false,
 			...props
 		},
-		ref
+		ref,
 	) => (
 		<SwitchPrimitive.Root
 			ref={ref}
@@ -103,7 +103,7 @@ const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root
 				)}
 			</SwitchPrimitive.Thumb>
 		</SwitchPrimitive.Root>
-	)
+	),
 );
 SwitchBase.displayName = SwitchPrimitive.Root.displayName;
 
@@ -161,7 +161,7 @@ const SwitchWrapper = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.R
 			containerTestId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const fallbackId = useId();
 		const switchId = id || fallbackId;
@@ -188,7 +188,7 @@ const SwitchWrapper = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.R
 				)}
 			</div>
 		);
-	}
+	},
 );
 SwitchWrapper.displayName = 'Switch';
 

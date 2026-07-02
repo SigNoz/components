@@ -21,13 +21,7 @@ const items = [
 ];
 
 export default function MyComponent() {
-	return (
-		<ToggleGroupSimple
-			type="single"
-			items={items}
-			defaultValue="center"
-		/>
-	);
+	return <ToggleGroupSimple type="single" items={items} defaultValue="center" />;
 }
 ```
 
@@ -46,7 +40,7 @@ const items = [
 	{ value: 'underline', label: <Underline className="h-3 w-3" />, 'aria-label': 'Underline' },
 ];
 
-<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold']} />
+<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold']} />;
 ```
 
 ## Icon + label items
@@ -57,11 +51,25 @@ Pass a ReactNode as `label` to render an icon alongside text:
 import { LayoutGrid, List } from '@signozhq/icons';
 
 const items = [
-	{ value: 'grid', label: <><LayoutGrid className="h-6 w-6" /> Grid</> },
-	{ value: 'list', label: <><List className="h-6 w-6" /> List</> },
+	{
+		value: 'grid',
+		label: (
+			<>
+				<LayoutGrid className="h-6 w-6" /> Grid
+			</>
+		),
+	},
+	{
+		value: 'list',
+		label: (
+			<>
+				<List className="h-6 w-6" /> List
+			</>
+		),
+	},
 ];
 
-<ToggleGroupSimple type="single" items={items} defaultValue="grid" />
+<ToggleGroupSimple type="single" items={items} defaultValue="grid" />;
 ```
 
 ## Multiple selection
@@ -69,11 +77,7 @@ const items = [
 Set `type="multiple"` and pass `defaultValue` as an array to allow multiple items to be active at once:
 
 ```tsx
-<ToggleGroupSimple
-	type="multiple"
-	items={items}
-	defaultValue={['bold', 'italic']}
-/>
+<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold', 'italic']} />
 ```
 
 ## Controlled usage
@@ -107,7 +111,7 @@ const [values, setValues] = useState<string[]>(['bold']);
 	items={items}
 	value={values}
 	onChange={(v) => setValues(v as string[])}
-/>
+/>;
 ```
 
 ## Size variants
@@ -138,12 +142,7 @@ Three sizes are available: `sm`, `default`, and `lg`:
 ## Vertical orientation
 
 ```tsx
-<ToggleGroupSimple
-	type="single"
-	items={items}
-	defaultValue="center"
-	orientation="vertical"
-/>
+<ToggleGroupSimple type="single" items={items} defaultValue="center" orientation="vertical" />
 ```
 
 ## Props

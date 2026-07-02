@@ -29,11 +29,11 @@ describe('package.json exports', () => {
 
 		expect(
 			inViteNotPkg,
-			`In vite.config.ts but not package.json: ${inViteNotPkg.join(', ')}`
+			`In vite.config.ts but not package.json: ${inViteNotPkg.join(', ')}`,
 		).toEqual([]);
 		expect(
 			inPkgNotVite,
-			`In package.json but not vite.config.ts: ${inPkgNotVite.join(', ')}`
+			`In package.json but not vite.config.ts: ${inPkgNotVite.join(', ')}`,
 		).toEqual([]);
 	});
 });

@@ -186,7 +186,7 @@ export const WidthVariants: Story = {
 export const PositionVariants: Story = {
 	render: () => {
 		const [open, setOpen] = React.useState<'center' | 'top' | 'left' | 'right' | 'bottom' | null>(
-			null
+			null,
 		);
 
 		return (

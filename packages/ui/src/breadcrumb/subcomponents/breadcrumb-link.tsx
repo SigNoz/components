@@ -64,7 +64,7 @@ export const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLink
 				{children}
 			</a>
 		);
-	}
+	},
 );
 
 BreadcrumbLink.displayName = 'BreadcrumbLink';

@@ -194,7 +194,7 @@ function VirtualizedTableBody<TData>({
 							className={cn(
 								row.getIsSelected() && styles['data-table__row_selected'],
 								styles['data-table__row_clickable'],
-								enableRowExpansion && row.getCanExpand() && styles['data-table__row_expandable']
+								enableRowExpansion && row.getCanExpand() && styles['data-table__row_expandable'],
 							)}
 							onClick={(e) => {
 								if (stopPropagationOnRowClick) {
@@ -254,7 +254,7 @@ function VirtualizedTableBody<TData>({
 											}}
 											className={cn(
 												styles['data-table__expand-button'],
-												row.getIsExpanded() && styles['data-table__expand-button_expanded']
+												row.getIsExpanded() && styles['data-table__expand-button_expanded'],
 											)}
 										>
 											<ChevronRight className={styles['data-table__expand-icon']} />
@@ -293,7 +293,7 @@ function VirtualizedTableBody<TData>({
 										}}
 										className={cn(
 											isPinned === 'left' && styles['data-table__cell_pinned-left'],
-											isPinned === 'right' && styles['data-table__cell_pinned-right']
+											isPinned === 'right' && styles['data-table__cell_pinned-right'],
 										)}
 										onClick={(e) => {
 											if (stopPropagationOnCellClick) {
@@ -359,7 +359,7 @@ const AnimatedRow = React.forwardRef<
 			className={cn(
 				props.className,
 				styles['data-table__animated-row'],
-				!isExpanded && styles['data-table__animated-row_collapsed']
+				!isExpanded && styles['data-table__animated-row_collapsed'],
 			)}
 		>
 			{children}
@@ -466,7 +466,7 @@ export function DataTable<TData, TValue>({
 				'accessorKey' in column ? (column as { accessorKey?: string }).accessorKey : undefined;
 			return explicitId ?? (accessorKey as string | undefined) ?? `column-${index}`;
 		},
-		[]
+		[],
 	);
 
 	// Map of columnId -> ColumnDef for quick reordering lookups
@@ -483,7 +483,7 @@ export function DataTable<TData, TValue>({
 		(order: string[]): ColumnDef<TData, TValue>[] => {
 			return order.map((id) => columnsById.get(id)).filter(Boolean) as ColumnDef<TData, TValue>[];
 		},
-		[columnsById]
+		[columnsById],
 	);
 
 	// Initialise Column Order Array
@@ -701,7 +701,7 @@ export function DataTable<TData, TValue>({
 				tableRef.current.scrollTop = scrollTop;
 			}
 		},
-		[enableVirtualization, virtualizer, estimateRowSize]
+		[enableVirtualization, virtualizer, estimateRowSize],
 	);
 
 	// Expose scroll to index function through ref
@@ -849,9 +849,9 @@ export function DataTable<TData, TValue>({
 				}
 			},
 			100,
-			{ leading: false, trailing: true }
+			{ leading: false, trailing: true },
 		),
-		[]
+		[],
 	);
 
 	// Reset loadRequested flag when data grows
@@ -930,7 +930,7 @@ export function DataTable<TData, TValue>({
 					root,
 					rootMargin: '300px 0px 600px 0px',
 					threshold: 0,
-				}
+				},
 			);
 			observer.observe(sentinel);
 		} catch {
@@ -964,7 +964,7 @@ export function DataTable<TData, TValue>({
 			}
 			return offset;
 		},
-		[table]
+		[table],
 	);
 
 	return (
@@ -1095,7 +1095,7 @@ export function DataTable<TData, TValue>({
 														? {
 																left: getPinnedOffset(
 																	column as unknown as Column<TData, unknown>,
-																	'left'
+																	'left',
 																),
 															}
 														: {}),
@@ -1103,7 +1103,7 @@ export function DataTable<TData, TValue>({
 														? {
 																right: getPinnedOffset(
 																	column as unknown as Column<TData, unknown>,
-																	'right'
+																	'right',
 																),
 															}
 														: {}),
@@ -1112,7 +1112,7 @@ export function DataTable<TData, TValue>({
 													isDragging && styles['data-table__header_dragging'],
 													isDropTarget && styles['data-table__header_drop-target'],
 													isPinned === 'left' && styles['data-table__header_pinned-left'],
-													isPinned === 'right' && styles['data-table__header_pinned-right']
+													isPinned === 'right' && styles['data-table__header_pinned-right'],
 												)}
 												draggable={enableColumnReordering && !isResizing}
 												onDragStart={
@@ -1141,7 +1141,7 @@ export function DataTable<TData, TValue>({
 																onClick={column.getToggleSortingHandler()}
 																className={cn(
 																	styles['data-table__header-button'],
-																	isSorted && styles['data-table__header-button_active']
+																	isSorted && styles['data-table__header-button_active'],
 																)}
 															>
 																{getSortIcon(isSorted)}
@@ -1153,7 +1153,7 @@ export function DataTable<TData, TValue>({
 																className={cn(
 																	styles['data-table__header-button'],
 																	(filterValue || isFilterVisible) &&
-																		styles['data-table__header-button_active']
+																		styles['data-table__header-button_active'],
 																)}
 															>
 																<Filter className={styles['data-table__header-button-icon']} />
@@ -1164,7 +1164,7 @@ export function DataTable<TData, TValue>({
 																onClick={() => togglePin(header.id)}
 																className={cn(
 																	styles['data-table__header-button'],
-																	isPinned && styles['data-table__header-button_active']
+																	isPinned && styles['data-table__header-button_active'],
 																)}
 															>
 																{isPinned ? (
@@ -1229,7 +1229,7 @@ export function DataTable<TData, TValue>({
 															className: cn(
 																styles['data-table__resizer'],
 																header.column.getIsResizing() &&
-																	styles['data-table__resizer_resizing']
+																	styles['data-table__resizer_resizing'],
 															),
 														}}
 													/>
@@ -1292,7 +1292,7 @@ export function DataTable<TData, TValue>({
 																styles['data-table__row_clickable'],
 																enableRowExpansion &&
 																	row.getCanExpand() &&
-																	styles['data-table__row_expandable']
+																	styles['data-table__row_expandable'],
 															)}
 															style={{
 																height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
@@ -1357,7 +1357,7 @@ export function DataTable<TData, TValue>({
 																			className={cn(
 																				styles['data-table__expand-button'],
 																				row.getIsExpanded() &&
-																					styles['data-table__expand-button_expanded']
+																					styles['data-table__expand-button_expanded'],
 																			)}
 																		>
 																			<ChevronRight className={styles['data-table__expand-icon']} />
@@ -1378,7 +1378,7 @@ export function DataTable<TData, TValue>({
 																				? {
 																						left: getPinnedOffset(
 																							cell.column as Column<TData, unknown>,
-																							'left'
+																							'left',
 																						),
 																					}
 																				: {}),
@@ -1386,7 +1386,7 @@ export function DataTable<TData, TValue>({
 																				? {
 																						right: getPinnedOffset(
 																							cell.column as Column<TData, unknown>,
-																							'right'
+																							'right',
 																						),
 																					}
 																				: {}),
@@ -1395,7 +1395,7 @@ export function DataTable<TData, TValue>({
 																			styles['data-table__cell-padding'],
 																			isPinned === 'left' && styles['data-table__cell_pinned-left'],
 																			isPinned === 'right' &&
-																				styles['data-table__cell_pinned-right']
+																				styles['data-table__cell_pinned-right'],
 																		)}
 																		onClick={(e) => {
 																			if (stopPropagationOnCellClick) {
@@ -1424,7 +1424,7 @@ export function DataTable<TData, TValue>({
 														styles['data-table__row_clickable'],
 														enableRowExpansion &&
 															row.getCanExpand() &&
-															styles['data-table__row_expandable']
+															styles['data-table__row_expandable'],
 													)}
 													style={{
 														height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
@@ -1489,7 +1489,7 @@ export function DataTable<TData, TValue>({
 																	className={cn(
 																		styles['data-table__expand-button'],
 																		row.getIsExpanded() &&
-																			styles['data-table__expand-button_expanded']
+																			styles['data-table__expand-button_expanded'],
 																	)}
 																>
 																	<ChevronRight className={styles['data-table__expand-icon']} />
@@ -1510,7 +1510,7 @@ export function DataTable<TData, TValue>({
 																		? {
 																				left: getPinnedOffset(
 																					cell.column as Column<TData, unknown>,
-																					'left'
+																					'left',
 																				),
 																			}
 																		: {}),
@@ -1518,7 +1518,7 @@ export function DataTable<TData, TValue>({
 																		? {
 																				right: getPinnedOffset(
 																					cell.column as Column<TData, unknown>,
-																					'right'
+																					'right',
 																				),
 																			}
 																		: {}),
@@ -1526,7 +1526,7 @@ export function DataTable<TData, TValue>({
 																className={cn(
 																	styles['data-table__cell-padding'],
 																	isPinned === 'left' && styles['data-table__cell_pinned-left'],
-																	isPinned === 'right' && styles['data-table__cell_pinned-right']
+																	isPinned === 'right' && styles['data-table__cell_pinned-right'],
 																)}
 																onClick={(e) => {
 																	if (stopPropagationOnCellClick) {

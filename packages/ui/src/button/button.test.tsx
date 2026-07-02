@@ -24,7 +24,7 @@ describe('Button', () => {
 		render(
 			<Button disabled onClick={onClick}>
 				Disabled
-			</Button>
+			</Button>,
 		);
 		expect(screen.getByRole('button')).toBeDisabled();
 
@@ -38,7 +38,7 @@ describe('Button', () => {
 		render(
 			<Button loading onClick={onClick}>
 				Loading
-			</Button>
+			</Button>,
 		);
 		const button = screen.getByRole('button');
 		expect(button).toBeDisabled();
@@ -53,7 +53,7 @@ describe('Button', () => {
 		render(
 			<Button loading prefix={<span data-testid="prefix" />} suffix={<span data-testid="suffix" />}>
 				Load
-			</Button>
+			</Button>,
 		);
 		expect(screen.queryByTestId('prefix')).not.toBeInTheDocument();
 		expect(screen.queryByTestId('suffix')).not.toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('Button', () => {
 		render(
 			<Button prefix={<span data-testid="prefix" />} suffix={<span data-testid="suffix" />}>
 				With icons
-			</Button>
+			</Button>,
 		);
 		expect(screen.getByTestId('prefix')).toBeInTheDocument();
 		expect(screen.getByTestId('suffix')).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('Button', () => {
 		render(
 			<Button asChild testId="link-btn">
 				<a href="#">Link</a>
-			</Button>
+			</Button>,
 		);
 		const link = screen.getByTestId('link-btn');
 		expect(link.tagName).toBe('A');
@@ -112,7 +112,7 @@ describe('Button', () => {
 		render(
 			<Button variant={ButtonVariant.Action} background={ButtonBackground.Vanilla100}>
 				Action
-			</Button>
+			</Button>,
 		);
 		expect(screen.getByRole('button')).toHaveAttribute('data-background', 'vanilla-100');
 	});
@@ -135,7 +135,7 @@ describe('Button', () => {
 		render(
 			<Button onMouseEnter={onMouseEnter} onFocus={onFocus} onKeyDown={onKeyDown}>
 				Hover
-			</Button>
+			</Button>,
 		);
 		const btn = screen.getByRole('button');
 		fireEvent.mouseEnter(btn);
@@ -150,7 +150,7 @@ describe('Button', () => {
 		render(
 			<Button aria-label="Toolbar action" data-foo="bar" tabIndex={-1}>
 				X
-			</Button>
+			</Button>,
 		);
 		const btn = screen.getByRole('button');
 		expect(btn).toHaveAttribute('aria-label', 'Toolbar action');
@@ -165,7 +165,7 @@ describe('ButtonGroup', () => {
 			<ButtonGroup testId="g">
 				<Button>A</Button>
 				<Button>B</Button>
-			</ButtonGroup>
+			</ButtonGroup>,
 		);
 		const group = screen.getByTestId('g');
 		expect(group).toHaveAttribute('role', 'group');
@@ -178,7 +178,7 @@ describe('ButtonGroup', () => {
 				<Button testId="b" size={ButtonSize.MD}>
 					B
 				</Button>
-			</ButtonGroup>
+			</ButtonGroup>,
 		);
 		expect(screen.getByTestId('a')).toHaveAttribute('data-size', 'sm');
 		expect(screen.getByTestId('b')).toHaveAttribute('data-size', 'md');
@@ -191,7 +191,7 @@ describe('ButtonGroup', () => {
 				<Button testId="b" color={ButtonColor.Destructive}>
 					B
 				</Button>
-			</ButtonGroup>
+			</ButtonGroup>,
 		);
 		const a = screen.getByTestId('a');
 		const b = screen.getByTestId('b');
@@ -205,7 +205,7 @@ describe('ButtonGroup', () => {
 		render(
 			<ButtonGroup ref={ref}>
 				<Button>A</Button>
-			</ButtonGroup>
+			</ButtonGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

@@ -60,7 +60,7 @@ const IconCell = React.memo(
 				</div>
 			</div>
 		);
-	}
+	},
 );
 
 IconCell.displayName = 'IconCell';

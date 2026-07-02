@@ -25,7 +25,7 @@ export function renderSingleSelect({
 				<SelectItem value="banana">Banana</SelectItem>
 				<SelectItem value="cherry">Cherry</SelectItem>
 			</SelectContent>
-		</Select>
+		</Select>,
 	);
 }
 
@@ -46,7 +46,7 @@ export function renderMultiSelect({
 				<SelectItem value="green">Green</SelectItem>
 				<SelectItem value="blue">Blue</SelectItem>
 			</SelectContent>
-		</Select>
+		</Select>,
 	);
 }
 

@@ -38,7 +38,7 @@ describe('InputNumber — spinner controls', () => {
 				defaultValue={0}
 				incrementAriaLabel="Augmenter"
 				decrementAriaLabel="Diminuer"
-			/>
+			/>,
 		);
 		expect(screen.getByLabelText('Augmenter')).toBeInTheDocument();
 		expect(screen.getByLabelText('Diminuer')).toBeInTheDocument();

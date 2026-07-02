@@ -118,7 +118,7 @@ const Callout = forwardRef<HTMLDivElement, CalloutProps>(
 			id,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
 		const IconComponent = icon || (showIcon && defaultIcons[type]);
@@ -157,7 +157,7 @@ const Callout = forwardRef<HTMLDivElement, CalloutProps>(
 				className={cn(
 					styles['callout'],
 					size === 'small' ? styles['callout--small'] : styles['callout--medium'],
-					className
+					className,
 				)}
 				role={action === 'expandable' ? 'button' : 'alert'}
 				onClick={action === 'expandable' ? handleActionClick : undefined}
@@ -199,7 +199,7 @@ const Callout = forwardRef<HTMLDivElement, CalloutProps>(
 				)}
 			</div>
 		);
-	}
+	},
 );
 Callout.displayName = 'Callout';
 

@@ -18,7 +18,7 @@ describe('Tooltip forwardRef', () => {
 				<TooltipRoot>
 					<TooltipTrigger ref={ref}>Trigger</TooltipTrigger>
 				</TooltipRoot>
-			</TooltipProvider>
+			</TooltipProvider>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -30,7 +30,7 @@ describe('Tooltip forwardRef', () => {
 				<TooltipSimple ref={ref} title="Tooltip">
 					<button type="button">Trigger</button>
 				</TooltipSimple>
-			</TooltipProvider>
+			</TooltipProvider>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 		expect(ref.current).toHaveTextContent('Trigger');
@@ -44,7 +44,7 @@ describe('Tooltip forwardRef', () => {
 					<TooltipTrigger>Trigger</TooltipTrigger>
 					<TooltipContent ref={ref}>Content</TooltipContent>
 				</TooltipRoot>
-			</TooltipProvider>
+			</TooltipProvider>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

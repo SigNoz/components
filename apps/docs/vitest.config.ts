@@ -30,7 +30,7 @@ export default mergeConfig(
 						},
 						setupFiles: ['./.storybook/vitest.setup.ts'],
 						onUnhandledError(
-							error: (Error | { message?: string; name?: string }) & { type: string }
+							error: (Error | { message?: string; name?: string }) & { type: string },
 						) {
 							if (
 								error.name === 'SecurityError' &&
@@ -45,5 +45,5 @@ export default mergeConfig(
 				},
 			],
 		},
-	})
+	}),
 );

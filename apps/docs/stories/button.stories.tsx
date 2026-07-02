@@ -146,7 +146,7 @@ export const ButtonShowcase: Story = {
 							{VARIANTS.filter(
 								(variant) =>
 									// Only show outlined and dashed for secondary
-									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed')
+									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed'),
 							).map((variant) => (
 								<div
 									key={variant}

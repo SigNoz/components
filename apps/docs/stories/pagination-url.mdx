@@ -20,11 +20,7 @@ import { NuqsAdapter } from 'nuqs/adapters/react';
 export default function MyComponent() {
 	return (
 		<NuqsAdapter>
-			<PaginationUrl
-				urlKey="page"
-				total={100}
-				pageSize={10}
-			/>
+			<PaginationUrl urlKey="page" total={100} pageSize={10} />
 		</NuqsAdapter>
 	);
 }
@@ -46,12 +42,7 @@ Use a unique `urlKey` per component instance to avoid query-parameter conflicts 
 Add `enablePageSize` to surface a page size dropdown alongside the pagination controls:
 
 ```tsx
-<PaginationUrl
-	urlKey="page"
-	total={100}
-	pageSize={10}
-	enablePageSize
-/>
+<PaginationUrl urlKey="page" total={100} pageSize={10} enablePageSize />
 ```
 
 Position the selector on the left with `pageSizePosition`:

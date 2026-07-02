@@ -6,8 +6,10 @@ import styles from './alert-dialog.module.scss';
 
 type CheckboxColor = 'robin' | 'forest' | 'amber' | 'sienna' | 'cherry' | 'sakura' | 'aqua';
 
-export interface AlertDialogProps
-	extends Omit<DialogWrapperProps, 'showCloseButton' | 'disableOutsideClick'> {
+export interface AlertDialogProps extends Omit<
+	DialogWrapperProps,
+	'showCloseButton' | 'disableOutsideClick'
+> {
 	checkboxLabel?: string;
 	checkboxChecked?: boolean;
 	onCheckboxChange?: (checked: boolean) => void;
@@ -28,7 +30,7 @@ const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
 			className,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		return (
 			<DialogWrapper
@@ -57,7 +59,7 @@ const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
 				)}
 			</DialogWrapper>
 		);
-	}
+	},
 );
 AlertDialog.displayName = 'AlertDialog';
 

@@ -124,7 +124,7 @@ export const TooltipSimple = React.forwardRef<HTMLButtonElement, TooltipSimplePr
 			children,
 			...rootProps
 		},
-		ref
+		ref,
 	) => {
 		return (
 			<TooltipRoot data-testid={testId} {...rootProps}>
@@ -145,6 +145,6 @@ export const TooltipSimple = React.forwardRef<HTMLButtonElement, TooltipSimplePr
 				</TooltipContent>
 			</TooltipRoot>
 		);
-	}
+	},
 );
 TooltipSimple.displayName = 'TooltipSimple';

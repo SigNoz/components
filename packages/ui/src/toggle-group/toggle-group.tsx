@@ -112,7 +112,7 @@ export type ToggleGroupProps = (
 export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
 	(
 		{ className, children, size = 'default', color = 'secondary', onChange, testId, ...props },
-		ref
+		ref,
 	) => (
 		<ToggleGroupPrimitive.Root
 			ref={ref}
@@ -126,7 +126,7 @@ export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
 		>
 			{children}
 		</ToggleGroupPrimitive.Root>
-	)
+	),
 );
 ToggleGroup.displayName = 'ToggleGroup';
 
@@ -180,6 +180,6 @@ export const ToggleGroupItem = React.forwardRef<HTMLButtonElement, ToggleGroupIt
 			className={cn(styles['toggle-group-item'], className)}
 			{...props}
 		/>
-	)
+	),
 );
 ToggleGroupItem.displayName = 'ToggleGroupItem';

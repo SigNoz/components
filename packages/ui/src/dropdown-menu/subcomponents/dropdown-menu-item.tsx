@@ -95,7 +95,7 @@ export const DropdownMenuItem = React.forwardRef<
 >(
 	(
 		{ className, inset, leftIcon, rightIcon, destructive, clickable, children, testId, ...props },
-		ref
+		ref,
 	) => (
 		<DropdownMenuPrimitive.Item
 			ref={ref}
@@ -107,7 +107,7 @@ export const DropdownMenuItem = React.forwardRef<
 				inset && styles['dropdown-menu__item--inset'],
 				destructive && styles['dropdown-menu__item--destructive'],
 				clickable && styles['dropdown-menu__item--clickable'],
-				className
+				className,
 			)}
 			{...props}
 		>
@@ -115,7 +115,7 @@ export const DropdownMenuItem = React.forwardRef<
 			{children}
 			{rightIcon && <span className={styles['dropdown-menu__item-right-icon']}>{rightIcon}</span>}
 		</DropdownMenuPrimitive.Item>
-	)
+	),
 );
 
 DropdownMenuItem.displayName = 'DropdownMenuItem';

@@ -26,7 +26,9 @@ const items: MenuItem[] = [
 export default function MyComponent() {
 	return (
 		<DropdownMenuSimple menu={{ items }}>
-			<Button variant="solid" color="secondary">Open</Button>
+			<Button variant="solid" color="secondary">
+				Open
+			</Button>
 		</DropdownMenuSimple>
 	);
 }
@@ -42,15 +44,22 @@ Use `icon` for a left icon and `rightIcon` for a right icon on any item:
 import { Grid3X3, Link2, Check, Trash2 } from '@signozhq/icons';
 
 const items: MenuItem[] = [
-	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" />, rightIcon: <Check className="h-4 w-4" /> },
+	{
+		key: 'view',
+		label: 'View',
+		icon: <Grid3X3 className="h-4 w-4" />,
+		rightIcon: <Check className="h-4 w-4" />,
+	},
 	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
 	{ type: 'divider' },
 	{ key: 'delete', label: 'Delete dashboard', icon: <Trash2 className="h-4 w-4" />, danger: true },
 ];
 
 <DropdownMenuSimple menu={{ items }}>
-	<Button variant="solid" color="secondary">View Options</Button>
-</DropdownMenuSimple>
+	<Button variant="solid" color="secondary">
+		View Options
+	</Button>
+</DropdownMenuSimple>;
 ```
 
 ## Destructive Items

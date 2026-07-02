@@ -206,7 +206,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 			actions,
 			testId,
 		},
-		ref
+		ref,
 	) => {
 		const [open, setOpen] = React.useState(false);
 		const [localDate, setLocalDate] = React.useState<Date | undefined>(date);
@@ -316,7 +316,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 					value: tz.value,
 					label: tz.label,
 				})),
-			[timezones]
+			[timezones],
 		);
 
 		const displayText = formatDisplayDate(localDate, localTimezone, localTime);
@@ -338,7 +338,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 				<span
 					className={cn(
 						styles['datePicker__triggerText'],
-						isPlaceholder && styles['datePicker__triggerText--placeholder']
+						isPlaceholder && styles['datePicker__triggerText--placeholder'],
 					)}
 				>
 					{displayText}
@@ -429,7 +429,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 				</PopoverContent>
 			</Popover>
 		);
-	}
+	},
 );
 DatePicker.displayName = 'DatePicker';
 

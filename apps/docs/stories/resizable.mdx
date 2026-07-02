@@ -1,7 +1,7 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as ResizableStories from './resizable.stories';
-import * as ResizableHandleStories from "./resizable-handle.stories.tsx";
-import * as ResizablePanelStories from "./resizable-panel.stories.tsx";
+import * as ResizableHandleStories from './resizable-handle.stories.tsx';
+import * as ResizablePanelStories from './resizable-panel.stories.tsx';
 
 <Meta of={ResizableStories} />
 
@@ -14,26 +14,26 @@ A flexible resizable panel system for creating split layouts with draggable divi
 ### Basic Horizontal Layout
 
 ```tsx
-import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from '@signozhq/ui';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
 
 export default function MyComponent() {
-  return (
-        <div className="h-screen">
-      <ResizablePanelGroup orientation="horizontal">
-        <ResizablePanel defaultSize="25%">
-          <div className="flex h-full items-center justify-center">
-            <span>Sidebar</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="75%">
-          <div className="flex h-full items-center justify-center">
-            <span>Main Content</span>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
+	return (
+		<div className="h-screen">
+			<ResizablePanelGroup orientation="horizontal">
+				<ResizablePanel defaultSize="25%">
+					<div className="flex h-full items-center justify-center">
+						<span>Sidebar</span>
+					</div>
+				</ResizablePanel>
+				<ResizableHandle />
+				<ResizablePanel defaultSize="75%">
+					<div className="flex h-full items-center justify-center">
+						<span>Main Content</span>
+					</div>
+				</ResizablePanel>
+			</ResizablePanelGroup>
+		</div>
+	);
 }
 ```
 
@@ -44,26 +44,26 @@ export default function MyComponent() {
 For vertical splits (top/bottom panels instead of left/right):
 
 ```tsx
-import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from '@signozhq/ui';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
 
 export default function VerticalLayout() {
-  return (
-        <div className="h-screen">
-      <ResizablePanelGroup orientation="vertical">
-        <ResizablePanel defaultSize="70%">
-          <div className="flex h-full items-center justify-center">
-            <span>Main Content Area</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="30%">
-          <div className="flex h-full items-center justify-center">
-            <span>Bottom Panel</span>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
+	return (
+		<div className="h-screen">
+			<ResizablePanelGroup orientation="vertical">
+				<ResizablePanel defaultSize="70%">
+					<div className="flex h-full items-center justify-center">
+						<span>Main Content Area</span>
+					</div>
+				</ResizablePanel>
+				<ResizableHandle />
+				<ResizablePanel defaultSize="30%">
+					<div className="flex h-full items-center justify-center">
+						<span>Bottom Panel</span>
+					</div>
+				</ResizablePanel>
+			</ResizablePanelGroup>
+		</div>
+	);
 }
 ```
 
@@ -73,17 +73,13 @@ Control minimum and maximum panel sizes:
 
 ```tsx
 <ResizablePanelGroup orientation="horizontal">
-  <ResizablePanel 
-    defaultSize="30%" 
-    minSize="20%" 
-    maxSize="60%"
-  >
-    <div>This panel can't be smaller than 20% or larger than 60%</div>
-  </ResizablePanel>
-  <ResizableHandle />
-  <ResizablePanel defaultSize="70%">
-    <div>Flexible panel</div>
-  </ResizablePanel>
+	<ResizablePanel defaultSize="30%" minSize="20%" maxSize="60%">
+		<div>This panel can't be smaller than 20% or larger than 60%</div>
+	</ResizablePanel>
+	<ResizableHandle />
+	<ResizablePanel defaultSize="70%">
+		<div>Flexible panel</div>
+	</ResizablePanel>
 </ResizablePanelGroup>
 ```
 
@@ -93,17 +89,13 @@ Panels can collapse completely when dragged to their minimum size:
 
 ```tsx
 <ResizablePanelGroup orientation="horizontal">
-  <ResizablePanel 
-    defaultSize="25%" 
-    minSize="15%" 
-    collapsible={true}
-  >
-    <div>Drag me to the edge to collapse!</div>
-  </ResizablePanel>
-  <ResizableHandle />
-  <ResizablePanel defaultSize="75%">
-    <div>Main Content</div>
-  </ResizablePanel>
+	<ResizablePanel defaultSize="25%" minSize="15%" collapsible={true}>
+		<div>Drag me to the edge to collapse!</div>
+	</ResizablePanel>
+	<ResizableHandle />
+	<ResizablePanel defaultSize="75%">
+		<div>Main Content</div>
+	</ResizablePanel>
 </ResizablePanelGroup>
 ```
 
@@ -115,13 +107,13 @@ Add a visual drag indicator to make the handle more discoverable:
 
 ```tsx
 <ResizablePanelGroup orientation="horizontal">
-  <ResizablePanel defaultSize="50%">
-    <div>Panel 1</div>
-  </ResizablePanel>
-  <ResizableHandle withHandle />
-  <ResizablePanel defaultSize="50%">
-    <div>Panel 2</div>
-  </ResizablePanel>
+	<ResizablePanel defaultSize="50%">
+		<div>Panel 1</div>
+	</ResizablePanel>
+	<ResizableHandle withHandle />
+	<ResizablePanel defaultSize="50%">
+		<div>Panel 2</div>
+	</ResizablePanel>
 </ResizablePanelGroup>
 ```
 
@@ -133,40 +125,40 @@ Create complex layouts by nesting panel groups:
 
 ```tsx
 <ResizablePanelGroup orientation="horizontal">
-  {/* Left sidebar */}
-  <ResizablePanel defaultSize="20%" minSize="15%" maxSize="40%">
-    <div className="h-full p-4">
-      <h3>File Explorer</h3>
-    </div>
-  </ResizablePanel>
-  
-  <ResizableHandle />
-  
-  {/* Center area with vertical split */}
-  <ResizablePanel defaultSize="60%">
-    <ResizablePanelGroup orientation="vertical">
-      <ResizablePanel defaultSize="70%">
-        <div className="h-full p-4">
-          <h3>Code Editor</h3>
-        </div>
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize="30%">
-        <div className="h-full p-4">
-          <h3>Terminal</h3>
-        </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
-  </ResizablePanel>
-  
-  <ResizableHandle />
-  
-  {/* Right sidebar */}
-  <ResizablePanel defaultSize="20%" collapsible>
-    <div className="h-full p-4">
-      <h3>Properties</h3>
-    </div>
-  </ResizablePanel>
+	{/* Left sidebar */}
+	<ResizablePanel defaultSize="20%" minSize="15%" maxSize="40%">
+		<div className="h-full p-4">
+			<h3>File Explorer</h3>
+		</div>
+	</ResizablePanel>
+
+	<ResizableHandle />
+
+	{/* Center area with vertical split */}
+	<ResizablePanel defaultSize="60%">
+		<ResizablePanelGroup orientation="vertical">
+			<ResizablePanel defaultSize="70%">
+				<div className="h-full p-4">
+					<h3>Code Editor</h3>
+				</div>
+			</ResizablePanel>
+			<ResizableHandle />
+			<ResizablePanel defaultSize="30%">
+				<div className="h-full p-4">
+					<h3>Terminal</h3>
+				</div>
+			</ResizablePanel>
+		</ResizablePanelGroup>
+	</ResizablePanel>
+
+	<ResizableHandle />
+
+	{/* Right sidebar */}
+	<ResizablePanel defaultSize="20%" collapsible>
+		<div className="h-full p-4">
+			<h3>Properties</h3>
+		</div>
+	</ResizablePanel>
 </ResizablePanelGroup>
 ```
 
@@ -177,40 +169,41 @@ This creates an IDE-like layout with a file explorer, code editor with terminal,
 Save and restore panel layouts using `useDefaultLayout`:
 
 ```tsx
-import { 
-  ResizablePanelGroup, 
-  ResizablePanel, 
-  ResizableHandle,
-  useDefaultLayout 
+import {
+	ResizablePanelGroup,
+	ResizablePanel,
+	ResizableHandle,
+	useDefaultLayout,
 } from '@signozhq/ui';
 
 export default function PersistentLayout() {
-  const { defaultLayout, onLayoutChange } = useDefaultLayout({
-    groupId: 'my-dashboard-layout',
-    storage: localStorage,
-  });
+	const { defaultLayout, onLayoutChange } = useDefaultLayout({
+		groupId: 'my-dashboard-layout',
+		storage: localStorage,
+	});
 
-  return (
-        <div className="h-screen">
-      <ResizablePanelGroup
-        orientation="horizontal"
-        defaultLayout={defaultLayout}
-        onLayoutChange={onLayoutChange}
-      >
-        <ResizablePanel defaultSize="25%">
-          <div>Sidebar</div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize="75%">
-          <div>Main Content</div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
+	return (
+		<div className="h-screen">
+			<ResizablePanelGroup
+				orientation="horizontal"
+				defaultLayout={defaultLayout}
+				onLayoutChange={onLayoutChange}
+			>
+				<ResizablePanel defaultSize="25%">
+					<div>Sidebar</div>
+				</ResizablePanel>
+				<ResizableHandle />
+				<ResizablePanel defaultSize="75%">
+					<div>Main Content</div>
+				</ResizablePanel>
+			</ResizablePanelGroup>
+		</div>
+	);
 }
 ```
 
 The `useDefaultLayout` hook:
+
 - Saves panel sizes to `localStorage` as users resize
 - Restores the saved layout when the component remounts
 - Requires a unique `groupId` to identify different layouts
@@ -222,13 +215,13 @@ Prevent users from resizing specific panels:
 
 ```tsx
 <ResizablePanelGroup orientation="horizontal">
-  <ResizablePanel defaultSize="30%">
-    <div>Fixed Size Panel</div>
-  </ResizablePanel>
-  <ResizableHandle disabled />
-  <ResizablePanel defaultSize="70%">
-    <div>Main Content</div>
-  </ResizablePanel>
+	<ResizablePanel defaultSize="30%">
+		<div>Fixed Size Panel</div>
+	</ResizablePanel>
+	<ResizableHandle disabled />
+	<ResizablePanel defaultSize="70%">
+		<div>Main Content</div>
+	</ResizablePanel>
 </ResizablePanelGroup>
 ```
 

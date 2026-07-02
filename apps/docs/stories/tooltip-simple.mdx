@@ -98,11 +98,7 @@ function MyComponent() {
 
 	return (
 		<TooltipProvider>
-			<TooltipSimple
-				title="Controlled tooltip"
-				open={open}
-				onOpenChange={setOpen}
-			>
+			<TooltipSimple title="Controlled tooltip" open={open} onOpenChange={setOpen}>
 				<Button>Hover me</Button>
 			</TooltipSimple>
 		</TooltipProvider>
@@ -123,7 +119,7 @@ import { Dialog, DialogContent, TooltipSimple, Button } from '@signozhq/ui';
 			<Button>Hover me</Button>
 		</TooltipSimple>
 	</DialogContent>
-</Dialog>
+</Dialog>;
 ```
 
 ## Extra content props
@@ -131,10 +127,7 @@ import { Dialog, DialogContent, TooltipSimple, Button } from '@signozhq/ui';
 Use `tooltipContentProps` to pass additional props to the underlying `TooltipContent` without losing the preset's composition:
 
 ```tsx
-<TooltipSimple
-	title="Custom"
-	tooltipContentProps={{ className: 'max-w-xs', arrowPadding: 8 }}
->
+<TooltipSimple title="Custom" tooltipContentProps={{ className: 'max-w-xs', arrowPadding: 8 }}>
 	<Button>Hover me</Button>
 </TooltipSimple>
 ```

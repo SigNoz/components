@@ -56,7 +56,7 @@ export const ComboboxItem = React.forwardRef<
 >(
 	(
 		{ prefix, isSelected = false, insertOnInput = false, onInsert, onSelect, value, ...props },
-		ref
+		ref,
 	) => {
 		const resolvedPrefix: React.ReactNode =
 			prefix === undefined ? (
@@ -90,6 +90,6 @@ export const ComboboxItem = React.forwardRef<
 				prefix={resolvedPrefix}
 			/>
 		);
-	}
+	},
 );
 ComboboxItem.displayName = 'ComboboxItem';

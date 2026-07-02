@@ -81,7 +81,7 @@ export const SelectTrigger = React.forwardRef<
 			loading = false,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const context = useSelectContext();
 		const hasValue = context && context.value.length > 0;
@@ -163,7 +163,7 @@ export const SelectTrigger = React.forwardRef<
 				)}
 			</SelectPrimitive.Trigger>
 		);
-	}
+	},
 );
 SelectTrigger.displayName = 'SelectTrigger';
 

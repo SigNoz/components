@@ -197,7 +197,7 @@ const ComboboxSimpleInner = React.forwardRef<
 			allowClear = false,
 			...props
 		},
-		forwardedRef
+		forwardedRef,
 	) => {
 		const isVirtualized = Boolean(virtualized);
 		const estimatedItemHeight =
@@ -249,7 +249,7 @@ const ComboboxSimpleInner = React.forwardRef<
 
 		const { showCreateOption, createValue } = React.useMemo(
 			() => getCreateState(selectedValues, itemsMap, inputValue),
-			[selectedValues, itemsMap, inputValue]
+			[selectedValues, itemsMap, inputValue],
 		);
 
 		const showCreate = allowCreate && showCreateOption;
@@ -264,7 +264,7 @@ const ComboboxSimpleInner = React.forwardRef<
 				addValue(trimmed);
 				setInputValue('');
 			},
-			[selectedValues, addValue]
+			[selectedValues, addValue],
 		);
 
 		const singleCustomValue =
@@ -282,7 +282,7 @@ const ComboboxSimpleInner = React.forwardRef<
 				if (!item) return typeof value === 'string' ? value : String(value);
 				return item.displayValue ?? item.label ?? item.value;
 			},
-			[itemsMap]
+			[itemsMap],
 		);
 
 		const handleTriggerKeyDown = React.useCallback(
@@ -296,7 +296,7 @@ const ComboboxSimpleInner = React.forwardRef<
 					setInputValue('');
 				}
 			},
-			[setOpen, allowClear, clearSelection]
+			[setOpen, allowClear, clearSelection],
 		);
 
 		const handleInputKeyDown = React.useCallback(
@@ -307,7 +307,7 @@ const ComboboxSimpleInner = React.forwardRef<
 					internalRef.current?.focus();
 				}
 			},
-			[setOpen]
+			[setOpen],
 		);
 
 		const handleInsert = React.useCallback((value: string) => {
@@ -321,7 +321,7 @@ const ComboboxSimpleInner = React.forwardRef<
 				clearSelection();
 				setInputValue('');
 			},
-			[clearSelection]
+			[clearSelection],
 		);
 
 		const renderTree = React.useMemo(
@@ -336,12 +336,12 @@ const ComboboxSimpleInner = React.forwardRef<
 					createValue,
 					applyQueryFilter: true,
 				}),
-			[customValues, groups, items, inputValue, showHints, showCreate, createValue]
+			[customValues, groups, items, inputValue, showHints, showCreate, createValue],
 		);
 
 		const virtualizedRows = React.useMemo(
 			() => (isVirtualized ? treeToVirtualRows(renderTree) : []),
-			[isVirtualized, renderTree]
+			[isVirtualized, renderTree],
 		);
 
 		const Wrapper = disableTooltipProvider ? React.Fragment : TooltipProvider;
@@ -512,7 +512,7 @@ const ComboboxSimpleInner = React.forwardRef<
 				</Combobox>
 			</Wrapper>
 		);
-	}
+	},
 );
 ComboboxSimpleInner.displayName = 'ComboboxSimpleInner';
 

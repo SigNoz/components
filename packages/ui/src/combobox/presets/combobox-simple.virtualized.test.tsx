@@ -24,7 +24,7 @@ const largeItemsWithHints = [
 describe('ComboboxSimple virtualized container', () => {
 	it('renders virtual scroll container with virtualized={true}', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -41,7 +41,7 @@ describe('ComboboxSimple virtualized container', () => {
 				virtualized={{ estimatedItemHeight: 40, virtualizedHeight: 400 }}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -51,7 +51,7 @@ describe('ComboboxSimple virtualized container', () => {
 
 	it('renders virtual list container', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -62,7 +62,7 @@ describe('ComboboxSimple virtualized container', () => {
 
 	it('uses default height (300px) when virtualized={true}', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized={true} testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized={true} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -77,7 +77,7 @@ describe('ComboboxSimple virtualized container', () => {
 				virtualized={{ virtualizedHeight: 500 }}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -89,7 +89,7 @@ describe('ComboboxSimple virtualized container', () => {
 describe('ComboboxSimple virtualized rendering', () => {
 	it('renders items inside virtual list', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -108,12 +108,12 @@ describe('ComboboxSimple virtualized rendering', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple groups={groups} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
 		expect(document.querySelector('[data-slot="combobox-virtual-heading"]')).toHaveTextContent(
-			'Frontend'
+			'Frontend',
 		);
 	});
 
@@ -133,7 +133,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple groups={groups} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -157,7 +157,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple groups={groups} virtualized multiple testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} virtualized multiple testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -172,7 +172,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple groups={groups} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -191,7 +191,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 				defaultValue={['custom-tag']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -208,7 +208,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 				defaultValue={['my-custom-tag']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -227,7 +227,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 				defaultValue={['existing-tag']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -249,7 +249,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -260,7 +260,7 @@ describe('ComboboxSimple virtualized rendering', () => {
 
 	it('renders hint items in virtual list', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 
@@ -279,7 +279,7 @@ describe('ComboboxSimple virtualized selection', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		fireEvent.click(screen.getByRole('option', { name: 'Item 0' }));
@@ -297,7 +297,7 @@ describe('ComboboxSimple virtualized selection', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		fireEvent.click(screen.getByRole('option', { name: 'Item 0' }));
@@ -316,7 +316,7 @@ describe('ComboboxSimple virtualized selection', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -328,7 +328,7 @@ describe('ComboboxSimple virtualized selection', () => {
 
 	it('inserts hint value into input when clicked in virtual mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		fireEvent.click(screen.getByText('status:'));
@@ -345,7 +345,7 @@ describe('ComboboxSimple virtualized selection', () => {
 				defaultValue="item-0"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('Item 0');
 	});
@@ -361,7 +361,7 @@ describe('ComboboxSimple virtualized selection', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		fireEvent.click(screen.getByRole('option', { name: 'Item 0' }));
@@ -378,7 +378,7 @@ describe('ComboboxSimple virtualized filtering', () => {
 			{ value: 'angular', label: 'Angular' },
 		];
 		renderWithProviders(
-			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -395,7 +395,7 @@ describe('ComboboxSimple virtualized filtering', () => {
 			{ value: '30m', label: '30 minutes', keywords: ['half hour'] },
 		];
 		renderWithProviders(
-			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -411,7 +411,7 @@ describe('ComboboxSimple virtualized filtering', () => {
 			{ value: 'eu-west-1', label: 'EU West (Ireland)', displayValue: 'EU West' },
 		];
 		renderWithProviders(
-			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -427,7 +427,7 @@ describe('ComboboxSimple virtualized filtering', () => {
 			{ value: 'vue', label: 'Vue' },
 		];
 		renderWithProviders(
-			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -439,7 +439,7 @@ describe('ComboboxSimple virtualized filtering', () => {
 
 	it('hides hints in virtual mode when input matches insertValue prefix', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -456,7 +456,7 @@ describe('ComboboxSimple virtualized filtering', () => {
 				emptyPlaceholder="No items found"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -477,7 +477,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -498,7 +498,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -511,7 +511,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('closes virtual dropdown on Escape', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		expect(document.querySelector('[data-slot="combobox-virtual-scroll"]')).toBeInTheDocument();
@@ -524,7 +524,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('closes virtual dropdown and focuses trigger on Shift+Tab', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		fireEvent.click(trigger);
@@ -538,7 +538,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('opens virtual dropdown on Enter on multi-select trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized multiple testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		fireEvent.keyDown(trigger, { key: 'Enter' });
@@ -548,7 +548,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('opens virtual dropdown on Space on multi-select trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized multiple testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		fireEvent.keyDown(trigger, { key: ' ' });
@@ -565,7 +565,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		const trigger = screen.getByTestId('combo');
 		fireEvent.keyDown(trigger, { key: 'Enter' });
@@ -575,7 +575,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('keeps virtual dropdown open after Enter in multi-select mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized multiple testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -588,7 +588,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('closes virtual dropdown after Enter selection in single mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -601,7 +601,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 
 	it('inserts hint via Enter on highlighted hint row in virtual mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItemsWithHints} virtualized testId="combo" withPortal={false} />,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -622,7 +622,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		const input = screen.getByPlaceholderText('Select an option...');
@@ -638,7 +638,7 @@ describe('ComboboxSimple virtualized keyboard navigation', () => {
 describe('ComboboxSimple virtualized disabled / loading', () => {
 	it('does not open when disabled in virtualized mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized disabled testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -647,7 +647,7 @@ describe('ComboboxSimple virtualized disabled / loading', () => {
 
 	it('applies disabled attribute in virtualized mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized disabled testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -664,7 +664,7 @@ describe('ComboboxSimple virtualized disabled / loading', () => {
 				loadingPlaceholder="Loading..."
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

@@ -4,6 +4,7 @@ import {
 	CircleX,
 	Clock,
 	Eye,
+	type IconSize,
 	Pencil,
 	Trash2,
 } from '@signozhq/icons';
@@ -17,7 +18,10 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-type IconComponent = React.ComponentType<{ style?: React.CSSProperties; size?: number }>;
+type IconComponent = React.ComponentType<{
+	style?: React.CSSProperties;
+	size?: IconSize | number;
+}>;
 
 import * as React from 'react';
 
@@ -1652,8 +1656,8 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>
 										String(
 											(c as { id?: string; accessorKey?: string }).id ??
 												(c as { accessorKey?: string }).accessorKey ??
-												'?'
-										)
+												'?',
+										),
 									)
 									.join(' | ')}
 							</span>
@@ -2097,14 +2101,14 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 				console.log(`[Virtualized] Looking for user ID: ${userId}, found at index: ${userIndex}`);
 				console.log(
 					'[Virtualized] Available users:',
-					args.data.slice(0, 5).map((u) => ({ id: u.id, name: u.name }))
+					args.data.slice(0, 5).map((u) => ({ id: u.id, name: u.name })),
 				);
 				if (userIndex !== -1 && scrollToIndexRef.current) {
 					console.log(`[Virtualized] Scrolling to index: ${userIndex}`);
 					scrollToIndexRef.current(userIndex, { align: 'center' });
 				} else {
 					console.log(
-						`[Virtualized] User with ID ${userId} not found or scrollToIndexRef not available`
+						`[Virtualized] User with ID ${userId} not found or scrollToIndexRef not available`,
 					);
 				}
 			};

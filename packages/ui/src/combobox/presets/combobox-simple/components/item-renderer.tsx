@@ -7,7 +7,7 @@ export function renderItemContent(
 	item: ComboboxSimpleItem,
 	selectedValues: string[],
 	handleSelect: (v: string) => void,
-	handleInsert: (v: string) => void
+	handleInsert: (v: string) => void,
 ): React.ReactNode {
 	if (item.insertValue !== undefined) {
 		return (
@@ -32,7 +32,7 @@ export function renderItem(
 	item: ComboboxSimpleItem,
 	selectedValues: string[],
 	handleSelect: (v: string) => void,
-	handleInsert: (v: string) => void
+	handleInsert: (v: string) => void,
 ): React.ReactNode {
 	return (
 		<React.Fragment key={item.value}>

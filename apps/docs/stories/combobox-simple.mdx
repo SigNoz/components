@@ -50,7 +50,7 @@ const [values, setValues] = useState<string[]>([]);
 	placeholder="Select frameworks..."
 	value={values}
 	onChange={(v) => setValues(v as string[])}
-/>
+/>;
 ```
 
 Use `maxDisplayedPills` to cap visible pills. Overflow items appear as "+N":
@@ -78,7 +78,7 @@ const [value, setValue] = useState<string | undefined>('react');
 	value={value}
 	onChange={(v) => setValue(typeof v === 'string' ? v : undefined)}
 	placeholder="Select a framework..."
-/>
+/>;
 ```
 
 With `allowClear`, pressing `Delete` or `Backspace` while the trigger is focused also clears the selection.
@@ -90,8 +90,20 @@ Pass `groups` instead of `items` to render headings between option clusters:
 ```tsx
 <ComboboxSimple
 	groups={[
-		{ heading: 'Frameworks', items: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }] },
-		{ heading: 'Languages', items: [{ value: 'ts', label: 'TypeScript' }, { value: 'js', label: 'JavaScript' }] },
+		{
+			heading: 'Frameworks',
+			items: [
+				{ value: 'react', label: 'React' },
+				{ value: 'vue', label: 'Vue' },
+			],
+		},
+		{
+			heading: 'Languages',
+			items: [
+				{ value: 'ts', label: 'TypeScript' },
+				{ value: 'js', label: 'JavaScript' },
+			],
+		},
 	]}
 	placeholder="Select..."
 	value={value}
@@ -107,8 +119,26 @@ Use ReactNode labels. Add `displayValue` to control what shows in the trigger:
 import { Code, Database } from '@signozhq/icons';
 
 const items = [
-	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
-	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</>, displayValue: 'PostgreSQL' },
+	{
+		value: 'react',
+		label: (
+			<>
+				<Code className="mr-2 h-4 w-4" />
+				React
+			</>
+		),
+		displayValue: 'React',
+	},
+	{
+		value: 'postgres',
+		label: (
+			<>
+				<Database className="mr-2 h-4 w-4" />
+				PostgreSQL
+			</>
+		),
+		displayValue: 'PostgreSQL',
+	},
 ];
 ```
 
@@ -121,7 +151,7 @@ Pass a `displayValue` function to fully control what appears in the trigger afte
 	items={items}
 	value={value}
 	onChange={setValue}
-	displayValue={(item) => item ? `${item.displayValue ?? item.value} ✓` : 'Choose...'}
+	displayValue={(item) => (item ? `${item.displayValue ?? item.value} ✓` : 'Choose...')}
 />
 ```
 
@@ -171,7 +201,9 @@ Set `allowCreate` to let users type and press Enter to create new options. Pass 
 	items={items}
 	multiple
 	allowCreate={(inputValue) => (
-		<span>Add <strong>"{inputValue}"</strong> as new tag</span>
+		<span>
+			Add <strong>"{inputValue}"</strong> as new tag
+		</span>
 	)}
 	value={values}
 	onChange={(v) => setValues(v as string[])}
@@ -247,7 +279,7 @@ import { Popover, PopoverTrigger, PopoverContent, ComboboxSimple, Button } from 
 	<PopoverContent className="w-80">
 		<ComboboxSimple items={items} value={value} onChange={setValue} withPortal={false} />
 	</PopoverContent>
-</Popover>
+</Popover>;
 ```
 
 ## Virtualization

@@ -38,6 +38,6 @@ export type ConfirmDrawerProps = Omit<ConfirmDialogProps, 'position'> & {
 export const ConfirmDrawer = React.forwardRef<HTMLDivElement, ConfirmDrawerProps>(
 	({ direction = 'right', ...props }, ref) => {
 		return <ConfirmDialog ref={ref} {...props} position={direction} heightMode="full" />;
-	}
+	},
 );
 ConfirmDrawer.displayName = 'ConfirmDrawer';

@@ -32,6 +32,6 @@ export type DrawerCloseProps = DialogCloseProps;
  * ```
  */
 export const DrawerClose = React.forwardRef<React.ElementRef<typeof DialogClose>, DrawerCloseProps>(
-	(props, ref) => <DialogClose ref={ref} data-slot="drawer-close" {...props} />
+	(props, ref) => <DialogClose ref={ref} data-slot="drawer-close" {...props} />,
 );
 DrawerClose.displayName = 'DrawerClose';

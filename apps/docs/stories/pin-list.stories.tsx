@@ -16,7 +16,7 @@ const createPinListItem = (
 		isEnabled?: boolean;
 		active?: boolean;
 		className?: string;
-	} = {}
+	} = {},
 ): PinListItem => ({
 	key,
 	itemKey: key,

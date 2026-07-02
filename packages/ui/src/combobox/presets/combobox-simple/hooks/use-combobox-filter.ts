@@ -16,14 +16,14 @@ export function useComboboxFilter({
 }: UseComboboxFilterOptions): UseComboboxFilterReturn {
 	const hintItems = React.useMemo(
 		() => items.filter((item) => item.insertValue !== undefined),
-		[items]
+		[items],
 	);
 
 	const showHints = React.useMemo(
 		() =>
 			hintItems.length > 0 &&
 			!hintItems.some((item) => item.insertValue && inputValue.startsWith(item.insertValue)),
-		[hintItems, inputValue]
+		[hintItems, inputValue],
 	);
 
 	return { showHints };

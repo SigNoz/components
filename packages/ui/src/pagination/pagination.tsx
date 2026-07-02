@@ -78,7 +78,7 @@ export const PaginationContainer = React.forwardRef<HTMLElement, PaginationConta
 				{...props}
 			/>
 		);
-	}
+	},
 );
 PaginationContainer.displayName = 'PaginationContainer';
 
@@ -106,7 +106,7 @@ export const PaginationContent = React.forwardRef<HTMLUListElement, PaginationCo
 				{...props}
 			/>
 		);
-	}
+	},
 );
 PaginationContent.displayName = 'PaginationContent';
 
@@ -135,7 +135,7 @@ export const PaginationItem = React.forwardRef<HTMLLIElement, PaginationItemProp
 				{...props}
 			/>
 		);
-	}
+	},
 );
 PaginationItem.displayName = 'PaginationItem';
 
@@ -170,7 +170,7 @@ export const PaginationLink = React.forwardRef<HTMLButtonElement, PaginationLink
 				{children}
 			</Button>
 		);
-	}
+	},
 );
 PaginationLink.displayName = 'PaginationLink';
 
@@ -194,7 +194,7 @@ export const PaginationPrevious = React.forwardRef<HTMLButtonElement, Pagination
 				<ChevronLeft className={styles['pagination-nav-icon']} size={16} />
 			</PaginationLink>
 		);
-	}
+	},
 );
 PaginationPrevious.displayName = 'PaginationPrevious';
 
@@ -216,7 +216,7 @@ export const PaginationNext = React.forwardRef<HTMLButtonElement, PaginationNavP
 				<ChevronRight className={styles['pagination-nav-icon']} size={16} />
 			</PaginationLink>
 		);
-	}
+	},
 );
 PaginationNext.displayName = 'PaginationNext';
 
@@ -249,7 +249,7 @@ export const PaginationEllipsis = React.forwardRef<HTMLSpanElement, PaginationEl
 				<span className={styles['pagination-sr-only']}>More pages</span>
 			</span>
 		);
-	}
+	},
 );
 PaginationEllipsis.displayName = 'PaginationEllipsis';
 
@@ -307,11 +307,11 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 			testId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const pageSizeOptions = useMemo(
 			() => options.map((size) => ({ value: size.toString(), label: size.toString() })),
-			[options]
+			[options],
 		);
 
 		const handlePageSizeChange = useCallback(
@@ -321,7 +321,7 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 					onChange?.(Number(selectedVal));
 				}
 			},
-			[onChange]
+			[onChange],
 		);
 
 		return (
@@ -342,7 +342,7 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 				/>
 			</div>
 		);
-	}
+	},
 );
 
 export type PaginationProps = PaginationContainerProps & {
@@ -442,7 +442,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 			showTotal = false,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const [internalPageSize, setInternalPageSize] = useState(controlledPageSize ?? 10);
 
@@ -485,7 +485,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 				}
 				onPageChange?.(1);
 			},
-			[isPageSizeControlled, onPageSizeChange, isCurrentControlled, onPageChange]
+			[isPageSizeControlled, onPageSizeChange, isCurrentControlled, onPageChange],
 		);
 
 		const handlePageChange = useCallback(
@@ -501,7 +501,7 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 				}
 				onPageChange?.(page);
 			},
-			[isCurrentControlled, onPageChange, current, totalPages]
+			[isCurrentControlled, onPageChange, current, totalPages],
 		);
 
 		const pageNumbers = renderPageNumbers(totalPages, current);
@@ -563,6 +563,6 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 				{pageSizePosition === 'right' && selector}
 			</PaginationContainer>
 		);
-	}
+	},
 );
 Pagination.displayName = 'Pagination';

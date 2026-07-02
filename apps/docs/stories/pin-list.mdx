@@ -49,22 +49,13 @@ export default function MyComponent() {
 ### With custom labels
 
 ```tsx
-<PinList
-	items={items}
-	shortcutsLabel="FAVORITES"
-	moreLabel="ALL ITEMS"
-	onItemClick={handleClick}
-/>
+<PinList items={items} shortcutsLabel="FAVORITES" moreLabel="ALL ITEMS" onItemClick={handleClick} />
 ```
 
 ### Docked mode (collapsed sidebar)
 
 ```tsx
-<PinList
-	items={items}
-	isDocked={true}
-	onItemClick={handleClick}
-/>
+<PinList items={items} isDocked={true} onItemClick={handleClick} />
 ```
 
 <Primary />

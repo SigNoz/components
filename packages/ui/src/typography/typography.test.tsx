@@ -70,7 +70,7 @@ describe('Typography', () => {
 			render(
 				<Typography variant="title" level={1}>
 					Heading 1
-				</Typography>
+				</Typography>,
 			);
 			const element = screen.getByText('Heading 1');
 			expect(element.tagName).toBe('H1');
@@ -81,7 +81,7 @@ describe('Typography', () => {
 			render(
 				<Typography variant="title" level={3}>
 					Heading 3
-				</Typography>
+				</Typography>,
 			);
 			const element = screen.getByText('Heading 3');
 			expect(element.tagName).toBe('H3');
@@ -109,7 +109,7 @@ describe('Typography', () => {
 			render(
 				<Typography.Text color="danger" strong>
 					Styled text
-				</Typography.Text>
+				</Typography.Text>,
 			);
 			const element = screen.getByText('Styled text');
 			expect(element).toHaveAttribute('data-color', 'danger');
@@ -151,7 +151,7 @@ describe('Typography', () => {
 			render(
 				<Typography.Link href="/test" target="_blank" rel="noopener">
 					External
-				</Typography.Link>
+				</Typography.Link>,
 			);
 			const element = screen.getByText('External');
 			expect(element).toHaveAttribute('target', '_blank');

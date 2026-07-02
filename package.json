@@ -1,4 +1,6 @@
 {
+	"name": "design-system",
+	"version": "0.0.23",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -6,18 +8,23 @@
 		"publint": "turbo run publint",
 		"dev": "turbo run dev",
 		"type-check": "tsgo --noEmit -p tsconfig.json",
-		"lint": "biome check .",
-		"lint:fix": "biome check --write .",
+		"lint": "oxlint",
+		"lint:fix": "oxlint --fix",
 		"clean": "turbo run clean && rm -rf node_modules",
-		"format": "biome format --write .",
+		"format": "oxfmt",
+		"format:check": "oxfmt --check",
 		"build-storybook": "turbo run build-storybook -- --output-dir=storybook-static",
 		"chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
 		"release": "turbo run build --filter=docs^...",
 		"prepare": "husky",
 		"pre-commit": "lint-staged"
 	},
+	"dependencies": {
+		"@signozhq/design-tokens": "2.1.6",
+		"@signozhq/icons": "0.4.0",
+		"@tanstack/react-virtual": "^3.13.21"
+	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.0",
 		"@commitlint/cli": "21.1.0",
 		"@commitlint/config-conventional": "19.8.1",
 		"@repo/typescript-config": "workspace:*",
@@ -33,6 +40,8 @@
 		"husky": "9.1.7",
 		"inquirer": "11.1.0",
 		"lint-staged": "^17.0.8",
+		"oxfmt": "^0.57.0",
+		"oxlint": "^1.72.0",
 		"publint": "0.3.21",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
@@ -50,12 +59,6 @@
 		"tmp": "0.2.4"
 	},
 	"packageManager": "pnpm@10.30.3",
-	"name": "design-system",
-	"dependencies": {
-		"@signozhq/design-tokens": "2.1.6",
-		"@signozhq/icons": "0.4.0",
-		"@tanstack/react-virtual": "^3.13.21"
-	},
 	"pnpm": {
 		"overrides": {
 			"vite": "npm:rolldown-vite@7.3.1",
@@ -138,6 +141,5 @@
 			"esbuild",
 			"unrs-resolver"
 		]
-	},
-	"version": "0.0.23"
+	}
 }

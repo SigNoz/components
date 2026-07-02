@@ -88,12 +88,7 @@ export default function CalendarWithDisabledDays() {
 	const [date, setDate] = React.useState<Date | undefined>();
 
 	return (
-		<Calendar
-			mode="single"
-			selected={date}
-			onSelect={setDate}
-			disabled={[{ dayOfWeek: [0, 6] }]}
-		/>
+		<Calendar mode="single" selected={date} onSelect={setDate} disabled={[{ dayOfWeek: [0, 6] }]} />
 	);
 }
 ```

@@ -33,7 +33,7 @@ export const externalPatterns = [
 
 export default function getViteLibConfig(
 	entry: string | string[] | Record<string, string>,
-	overrides?: Partial<UserConfig>
+	overrides?: Partial<UserConfig>,
 ): UserConfig {
 	const entryResolved =
 		typeof entry === 'object' && !Array.isArray(entry)
@@ -108,7 +108,7 @@ export default function getViteLibConfig(
 								const content = (await fs.readFile(file, 'utf-8'))?.toString();
 								let updatedContent = content.replace(
 									/\/\/# sourceMappingURL=.*\.d\.ts\.map/g,
-									(match) => match.replace('.d.ts.map', '.d.cts.map')
+									(match) => match.replace('.d.ts.map', '.d.cts.map'),
 								);
 								// Update .js references to .cjs
 								updatedContent = updatedContent.replace(/(from\s+['"].*?)\.jsx(['"])/g, '$1.cjs$2');
@@ -122,7 +122,7 @@ export default function getViteLibConfig(
 								content.file = content.file.replace('.d.ts', '.d.cts');
 								await fs.writeJson(newFilePath, content);
 							}
-						})
+						}),
 					);
 				},
 			}),

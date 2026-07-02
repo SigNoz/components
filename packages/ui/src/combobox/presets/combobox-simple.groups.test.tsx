@@ -37,7 +37,7 @@ describe('ComboboxSimple groups', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple groups={noHeadingGroups} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={noHeadingGroups} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -48,7 +48,7 @@ describe('ComboboxSimple groups', () => {
 	it('selects item from group correctly', () => {
 		const onChange = vi.fn();
 		renderWithProviders(
-			<ComboboxSimple groups={groups} onChange={onChange} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} onChange={onChange} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

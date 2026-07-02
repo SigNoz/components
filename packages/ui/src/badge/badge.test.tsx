@@ -19,7 +19,7 @@ describe('Badge closable', () => {
 		render(
 			<Badge closable onClose={onClose}>
 				Test
-			</Badge>
+			</Badge>,
 		);
 
 		fireEvent.click(screen.getByRole('button', { name: /close badge/i }));
@@ -31,7 +31,7 @@ describe('Badge closable', () => {
 		render(
 			<Badge closable testId="badge">
 				Test
-			</Badge>
+			</Badge>,
 		);
 
 		fireEvent.click(screen.getByRole('button', { name: /close badge/i }));
@@ -43,7 +43,7 @@ describe('Badge closable', () => {
 		render(
 			<Badge closable testId="badge" onClose={(event) => event.preventDefault()}>
 				Test
-			</Badge>
+			</Badge>,
 		);
 
 		fireEvent.click(screen.getByRole('button', { name: /close badge/i }));
@@ -55,7 +55,7 @@ describe('Badge closable', () => {
 		render(
 			<Badge closable closeIcon={<span data-testid="custom-close-icon" />}>
 				Test
-			</Badge>
+			</Badge>,
 		);
 
 		expect(screen.getByTestId('custom-close-icon')).toBeInTheDocument();
@@ -65,12 +65,12 @@ describe('Badge closable', () => {
 		render(
 			<Badge asChild closable>
 				<button type="button">Child badge</button>
-			</Badge>
+			</Badge>,
 		);
 
 		expect(screen.getByRole('button', { name: /child badge/i })).toHaveAttribute(
 			'data-slot',
-			'badge'
+			'badge',
 		);
 		expect(screen.queryByRole('button', { name: /close badge/i })).not.toBeInTheDocument();
 	});

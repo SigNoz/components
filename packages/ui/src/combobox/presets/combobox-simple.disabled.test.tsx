@@ -8,7 +8,7 @@ setupMocks();
 describe('ComboboxSimple disabled state', () => {
 	it('does not open dropdown when disabled', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -17,7 +17,7 @@ describe('ComboboxSimple disabled state', () => {
 
 	it('applies disabled attribute to single-select trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -27,7 +27,7 @@ describe('ComboboxSimple disabled state', () => {
 
 	it('applies disabled attributes to multi-select trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple disabled testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -38,7 +38,7 @@ describe('ComboboxSimple disabled state', () => {
 
 	it('does not open on Enter key when disabled', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple disabled testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -56,7 +56,7 @@ describe('ComboboxSimple disabled state', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -71,7 +71,7 @@ describe('ComboboxSimple disabled state', () => {
 			},
 		];
 		renderWithProviders(
-			<ComboboxSimple groups={groups} disabled testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} disabled testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -81,7 +81,13 @@ describe('ComboboxSimple disabled state', () => {
 
 	it('does not show create option when disabled with allowCreate', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate disabled testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				disabled
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -90,7 +96,7 @@ describe('ComboboxSimple disabled state', () => {
 
 	it('does not open on Space key when disabled', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -101,7 +107,7 @@ describe('ComboboxSimple disabled state', () => {
 
 	it('does not open on ArrowDown when disabled', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} disabled testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');

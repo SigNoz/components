@@ -19,8 +19,10 @@ export type AvatarColor =
 	| 'aqua'
 	| 'vanilla';
 
-export interface AvatarProps
-	extends Pick<React.ComponentProps<'span'>, 'className' | 'children' | 'id' | 'style'> {
+export interface AvatarProps extends Pick<
+	React.ComponentProps<'span'>,
+	'className' | 'children' | 'id' | 'style'
+> {
 	size?: AvatarSize;
 	src?: string;
 	alt?: string;
@@ -52,7 +54,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(
 			children,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const [imgError, setImgError] = useState(false);
 
@@ -84,6 +86,6 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(
 				)}
 			</span>
 		);
-	}
+	},
 );
 Avatar.displayName = 'Avatar';

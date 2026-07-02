@@ -27,7 +27,7 @@ model only resolves the small set of flagged judgment cases.
    ```
 3. **Resolve flagged classes** per `codemod/REFERENCE.md` (dark:/gradients/standard
    palette colors/hover:/responsive). The codemod lists them per file.
-4. **Format**: `pnpm exec biome check --write apps/docs/stories`
+4. **Format**: `pnpm exec oxlint --fix apps/docs/stories && pnpm exec oxfmt apps/docs/stories`
 5. **Verify**: `pnpm --filter docs build-storybook` renders.
 
 The codemod only touches lowercase **HTML elements** (never `<Component>` props)

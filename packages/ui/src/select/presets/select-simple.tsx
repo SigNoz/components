@@ -154,7 +154,7 @@ const SelectSimpleInner = React.forwardRef<
 			loading = false,
 			loadingPlaceholder = 'Loading...',
 		},
-		ref
+		ref,
 	) => {
 		const allItems = React.useMemo(() => (groups ? flattenItems(groups) : items), [groups, items]);
 
@@ -172,7 +172,7 @@ const SelectSimpleInner = React.forwardRef<
 				if (!item) return value;
 				return item.displayValue ?? item.label;
 			},
-			[itemsMap]
+			[itemsMap],
 		);
 
 		const renderTriggerValue = React.useMemo(() => {
@@ -236,7 +236,7 @@ const SelectSimpleInner = React.forwardRef<
 				</SelectContent>
 			</Select>
 		);
-	}
+	},
 );
 SelectSimpleInner.displayName = 'SelectSimpleInner';
 

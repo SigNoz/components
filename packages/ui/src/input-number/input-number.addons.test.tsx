@@ -9,7 +9,7 @@ describe('InputNumber — addons', () => {
 			<InputNumber
 				addonBefore={<span data-testid="addon-before">unit</span>}
 				addonAfter={<span data-testid="addon-after">GiB</span>}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('addon-before')).toBeInTheDocument();
 		expect(screen.getByTestId('addon-after')).toBeInTheDocument();

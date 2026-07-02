@@ -171,7 +171,7 @@ export function TokenReference({
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 	const [activeSection, setActiveSection] = useState<'semantic' | 'primitive'>(
-		mode === 'primitive' ? 'primitive' : 'semantic'
+		mode === 'primitive' ? 'primitive' : 'semantic',
 	);
 
 	const semanticTokensData = useMemo(() => parseSemanticTokens(themeMode), [themeMode]);
@@ -183,7 +183,7 @@ export function TokenReference({
 			return semanticTokensData;
 		}
 		return semanticTokensData.filter(
-			(token) => token.group && groups.includes(token.group as SemanticTokenGroup)
+			(token) => token.group && groups.includes(token.group as SemanticTokenGroup),
 		);
 	}, [semanticTokensData, groups]);
 

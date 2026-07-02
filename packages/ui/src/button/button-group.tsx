@@ -72,9 +72,9 @@ const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
 
 		return (
 			<ButtonGroupContext.Provider value={value}>
-				{/* biome-ignore lint/a11y/useSemanticElements: <div role="group"> is the standard ButtonGroup pattern; alternatives (fieldset/menu) carry unwanted semantics. */}
 				<div
 					ref={ref}
+					// oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- <div role="group"> is the standard ButtonGroup pattern; alternatives (fieldset/menu) carry unwanted semantics.
 					role="group"
 					data-testid={testId}
 					data-size={size}
@@ -87,7 +87,7 @@ const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
 				</div>
 			</ButtonGroupContext.Provider>
 		);
-	}
+	},
 );
 ButtonGroup.displayName = 'ButtonGroup';
 

@@ -51,6 +51,6 @@ export const DropdownMenuLoading = React.forwardRef<HTMLDivElement, DropdownMenu
 				<span>{text}</span>
 			</div>
 		);
-	}
+	},
 );
 DropdownMenuLoading.displayName = 'DropdownMenuLoading';

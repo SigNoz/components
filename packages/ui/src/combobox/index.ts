@@ -103,14 +103,8 @@ export {
 	type ComboboxSimpleItem,
 	type ComboboxSimpleProps,
 } from './presets/combobox-simple.js';
-export {
-	ComboboxCommand,
-	type ComboboxCommandProps,
-} from './subcomponents/combobox-command.js';
-export {
-	ComboboxContent,
-	type ComboboxContentProps,
-} from './subcomponents/combobox-content.js';
+export { ComboboxCommand, type ComboboxCommandProps } from './subcomponents/combobox-command.js';
+export { ComboboxContent, type ComboboxContentProps } from './subcomponents/combobox-content.js';
 export {
 	ComboboxCreateItem,
 	type ComboboxCreateItemProps,
@@ -121,10 +115,7 @@ export { ComboboxHint, type ComboboxHintProps } from './subcomponents/combobox-h
 export { ComboboxInput, type ComboboxInputProps } from './subcomponents/combobox-input.js';
 export { ComboboxItem, type ComboboxItemProps } from './subcomponents/combobox-item.js';
 export { ComboboxList, type ComboboxListProps } from './subcomponents/combobox-list.js';
-export {
-	ComboboxLoading,
-	type ComboboxLoadingProps,
-} from './subcomponents/combobox-loading.js';
+export { ComboboxLoading, type ComboboxLoadingProps } from './subcomponents/combobox-loading.js';
 export {
 	ComboboxMultiTrigger,
 	type ComboboxMultiTriggerProps,
@@ -135,7 +126,4 @@ export {
 	ComboboxSeparator,
 	type ComboboxSeparatorProps,
 } from './subcomponents/combobox-separator.js';
-export {
-	ComboboxTrigger,
-	type ComboboxTriggerProps,
-} from './subcomponents/combobox-trigger.js';
+export { ComboboxTrigger, type ComboboxTriggerProps } from './subcomponents/combobox-trigger.js';

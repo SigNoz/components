@@ -64,7 +64,7 @@ export const Default: Story = {
 
 export const Uncontrolled: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-sm">
+		<div style={{ padding: '2rem', width: '100%', maxWidth: '24rem' }}>
 			<Select defaultValue="">
 				<SelectTrigger placeholder="Select a framework..." />
 				<SelectContent>

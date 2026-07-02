@@ -2,8 +2,10 @@ import { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './divider.module.scss';
 
-export interface DividerProps
-	extends Pick<React.ComponentProps<'div'>, 'className' | 'children' | 'id' | 'style'> {
+export interface DividerProps extends Pick<
+	React.ComponentProps<'div'>,
+	'className' | 'children' | 'id' | 'style'
+> {
 	type?: 'horizontal' | 'vertical';
 	dashed?: boolean;
 	plain?: boolean;
@@ -13,7 +15,7 @@ export interface DividerProps
 export const Divider = forwardRef<HTMLDivElement, DividerProps>(
 	(
 		{ className, type = 'horizontal', dashed = false, plain = false, testId, children, ...props },
-		ref
+		ref,
 	) => {
 		const hasChildren = children != null;
 		const separatorProps = hasChildren
@@ -36,6 +38,6 @@ export const Divider = forwardRef<HTMLDivElement, DividerProps>(
 				{hasChildren && <span className={styles.text}>{children}</span>}
 			</div>
 		);
-	}
+	},
 );
 Divider.displayName = 'Divider';

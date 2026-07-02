@@ -39,7 +39,7 @@ const ToggleGroupSimpleInner = React.forwardRef<HTMLDivElement, ToggleGroupSimpl
 				))}
 			</ToggleGroup>
 		);
-	}
+	},
 );
 ToggleGroupSimpleInner.displayName = 'ToggleGroupSimpleInner';
 

@@ -153,7 +153,7 @@ function truncateText(
 	maxWidth: number,
 	font: string,
 	position: TextEllipsisPosition,
-	ellipsis: string
+	ellipsis: string,
 ): { truncated: string; isTruncated: boolean } {
 	if (!text) {
 		return { truncated: text, isTruncated: false };
@@ -349,7 +349,7 @@ export function useTextEllipsisWidth<T extends HTMLElement = HTMLElement>(): {
 export const TextEllipsis = forwardRef<HTMLSpanElement, TextEllipsisProps>(
 	(
 		{ children, position = 'center', ellipsis = '...', width: externalWidth, className, title },
-		ref
+		ref,
 	) => {
 		const containerRef = useRef<HTMLSpanElement>(null);
 		const [internalWidth, setInternalWidth] = useState(0);
@@ -405,6 +405,6 @@ export const TextEllipsis = forwardRef<HTMLSpanElement, TextEllipsisProps>(
 				{truncated}
 			</span>
 		);
-	}
+	},
 );
 TextEllipsis.displayName = 'TextEllipsis';

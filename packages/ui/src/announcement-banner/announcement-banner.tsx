@@ -123,6 +123,6 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 				)}
 			</div>
 		);
-	}
+	},
 );
 AnnouncementBanner.displayName = 'AnnouncementBanner';

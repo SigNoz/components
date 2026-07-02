@@ -14,7 +14,7 @@ const range = (start: number, end: number): number[] => {
 export const renderPageNumbers = (
 	totalPages: number,
 	current: number,
-	siblingCount = 1
+	siblingCount = 1,
 ): (number | 'ellipsis')[] => {
 	// Total visible page numbers/ellipses between prev/next arrows
 	// Includes: first page, last page, current page, siblings on each side, potentially 2 ellipses

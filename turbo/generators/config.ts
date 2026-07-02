@@ -221,7 +221,7 @@ export { ${pascalCaseName} } from './${componentName}.js';
 
 					const storiesPath = path.resolve(
 						PROJECT_ROOT,
-						`apps/docs/stories/${componentName}.stories.tsx`
+						`apps/docs/stories/${componentName}.stories.tsx`,
 					);
 
 					const exampleCode = `import { ${pascalCaseName} } from '@signozhq/ui';

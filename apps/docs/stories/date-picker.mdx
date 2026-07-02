@@ -17,13 +17,7 @@ import { DatePicker } from '@signozhq/ui';
 export default function DateOnlyPicker() {
 	const [date, setDate] = React.useState<Date | undefined>(new Date());
 
-	return (
-		<DatePicker
-			date={date}
-			onDateChange={setDate}
-			placeholder="Pick a date"
-		/>
-	);
+	return <DatePicker date={date} onDateChange={setDate} placeholder="Pick a date" />;
 }
 ```
 

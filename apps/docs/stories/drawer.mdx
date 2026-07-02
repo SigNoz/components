@@ -45,7 +45,9 @@ export default function MyComponent() {
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="solid" color="primary">Open drawer</Button>
+				<Button variant="solid" color="primary">
+					Open drawer
+				</Button>
 			</DrawerTrigger>
 			<AnimatePresence>
 				{open && (
@@ -56,9 +58,13 @@ export default function MyComponent() {
 						</DrawerHeader>
 						<DrawerDescription>Description and body content.</DrawerDescription>
 						<DrawerFooter>
-							<Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+							<Button variant="ghost" onClick={() => setOpen(false)}>
+								Cancel
+							</Button>
 							<DrawerClose asChild>
-								<Button variant="solid" color="primary">Confirm</Button>
+								<Button variant="solid" color="primary">
+									Confirm
+								</Button>
 							</DrawerClose>
 						</DrawerFooter>
 					</DrawerContent>

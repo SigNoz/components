@@ -12,7 +12,11 @@ describe('SelectSimple', () => {
 
 	it('renders trigger with data-placeholder attribute when no value selected', () => {
 		render(
-			<SelectSimple items={selectSimpleItems} placeholder="Choose a framework" withPortal={false} />
+			<SelectSimple
+				items={selectSimpleItems}
+				placeholder="Choose a framework"
+				withPortal={false}
+			/>,
 		);
 		expect(screen.getByRole('combobox')).toHaveAttribute('data-placeholder');
 	});
@@ -130,7 +134,7 @@ describe('SelectSimple', () => {
 				multiple
 				defaultValue={['react', 'vue']}
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByText('React')).toBeInTheDocument();
 		expect(screen.getByText('Vue')).toBeInTheDocument();
@@ -139,7 +143,7 @@ describe('SelectSimple', () => {
 	it('supports multi-select mode: calls onChange with array on selection', () => {
 		const onChange = vi.fn();
 		render(
-			<SelectSimple items={selectSimpleItems} multiple onChange={onChange} withPortal={false} />
+			<SelectSimple items={selectSimpleItems} multiple onChange={onChange} withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByRole('combobox'));

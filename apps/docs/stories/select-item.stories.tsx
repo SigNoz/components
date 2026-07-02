@@ -73,7 +73,7 @@ export const Default: Story = {
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
 						{frameworks.map((f) => (
-							<SelectItem key={f.value} value={f.value} {...(f.value === 'react' ? args : {})}>
+							<SelectItem key={f.value} {...(f.value === 'react' ? args : {})} value={f.value}>
 								{f.value === 'react' ? args.children : f.label}
 							</SelectItem>
 						))}

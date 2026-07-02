@@ -46,7 +46,7 @@ export function renderDataTable(
 		data?: Person[];
 		tableId?: string;
 		testId?: string;
-	}
+	},
 ): {
 	getTableContainer: () => HTMLElement;
 } & RenderResult {
@@ -64,7 +64,7 @@ export function renderDataTable(
 			data={merged.data}
 			tableId={merged.tableId}
 			testId={merged.testId}
-		/>
+		/>,
 	);
 	return {
 		...result,
@@ -90,7 +90,7 @@ export function mockIntersectionObserver() {
 					return triggerFn;
 				},
 			};
-		})
+		}),
 	);
 	return { observe, disconnect, unobserve, getTrigger: () => triggerFn };
 }
@@ -109,7 +109,7 @@ export function mockResizeObserver(): {
 			observe,
 			disconnect,
 			unobserve,
-		}))
+		})),
 	);
 	return { observe, disconnect, unobserve };
 }

@@ -184,7 +184,7 @@ const RadioGroupItem = React.forwardRef<
 			containerTestId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const fallbackId = useId();
 		const radioId = props.id || fallbackId;
@@ -227,14 +227,14 @@ const RadioGroupItem = React.forwardRef<
 				<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
 			</RadioGroupPrimitive.Item>
 		);
-	}
+	},
 );
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
 
 const RadioGroupLabel = React.forwardRef<HTMLLabelElement, RadioGroupLabelProps>(
 	({ className, ...props }, ref) => {
 		return <label ref={ref} className={cn(styles['radio-group__label'], className)} {...props} />;
-	}
+	},
 );
 RadioGroupLabel.displayName = 'RadioGroupLabel';
 

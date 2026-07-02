@@ -69,7 +69,7 @@ export function Select({
 	};
 
 	const [internalValue, setInternalValue] = React.useState<string[]>(() =>
-		normalizeValue(defaultValue)
+		normalizeValue(defaultValue),
 	);
 
 	const isControlled = controlledValue !== undefined;
@@ -86,7 +86,7 @@ export function Select({
 			}
 			onOpenChange?.(newOpen);
 		},
-		[isOpenControlled, onOpenChange]
+		[isOpenControlled, onOpenChange],
 	);
 
 	const handleValueChange = React.useCallback(
@@ -110,7 +110,7 @@ export function Select({
 				handleOpenChange(false);
 			}
 		},
-		[multiple, currentValue, isControlled, onChange, handleOpenChange]
+		[multiple, currentValue, isControlled, onChange, handleOpenChange],
 	);
 
 	const handleRemove = React.useCallback(
@@ -121,7 +121,7 @@ export function Select({
 			}
 			onChange?.(multiple ? newValue : (newValue[0] ?? ''));
 		},
-		[currentValue, isControlled, onChange, multiple]
+		[currentValue, isControlled, onChange, multiple],
 	);
 
 	const contextValue = React.useMemo<SelectContextValue>(
@@ -131,7 +131,7 @@ export function Select({
 			onValueChange: handleValueChange,
 			onRemove: handleRemove,
 		}),
-		[multiple, currentValue, handleValueChange, handleRemove]
+		[multiple, currentValue, handleValueChange, handleRemove],
 	);
 
 	if (multiple) {
