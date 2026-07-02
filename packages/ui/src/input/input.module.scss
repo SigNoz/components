@@ -61,6 +61,7 @@
   align-items: center;
   width: 100%;
   height: var(--input-wrapper-height, var(--input-height, 2rem));
+  box-sizing: border-box;
   border-radius: var(--input-wrapper-border-radius, var(--input-border-radius, calc(var(--radius) - 2px)));
   border-width: var(--input-wrapper-border-width, var(--input-border-width, 1px));
   border-style: var(--input-wrapper-border-style, var(--input-border-style, solid));
