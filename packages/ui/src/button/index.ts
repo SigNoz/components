@@ -46,8 +46,8 @@
  * | `--button-destructive-link-hover-foreground` | `var(--danger-background-hover)` |
  * | `--button-destructive-outlined-foreground` | `var(--danger-background)` |
  * | `--button-destructive-solid-foreground` | `var(--danger-foreground)` |
+ * | `--button-disabled-cursor` | `not-allowed` |
  * | `--button-disabled-opacity` | `0.6` |
- * | `--button-disabled-pointer-events` | `none` |
  * | `--button-display` | `inline-flex` |
  * | `--button-focus-visible-outline` | `var(--ring) solid 2px` |
  * | `--button-focus-visible-outline-offset` | `2px` |

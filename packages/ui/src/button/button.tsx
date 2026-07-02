@@ -1,7 +1,7 @@
 import { Slot } from '@radix-ui/react-slot';
 import { LoaderCircle } from '@signozhq/icons';
 import type React from 'react';
-import { cloneElement, createContext, forwardRef, useContext } from 'react';
+import { cloneElement, createContext, forwardRef, useCallback, useContext } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './button.module.scss';
 
@@ -193,12 +193,26 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			background,
 			children,
 			testId,
+			onClick,
 			...props
 		},
 		ref
 	) => {
 		const Comp = asChild ? Slot : 'button';
 		const group = useContext(ButtonGroupContext);
+		const isDisabled = disabled || loading;
+
+		const handleClick = useCallback(
+			(e: React.MouseEvent<HTMLButtonElement>) => {
+				// I intentionally not included stopPropagation to match behavior of Antd Button
+				if (isDisabled) {
+					e.preventDefault();
+					return;
+				}
+				onClick?.(e);
+			},
+			[isDisabled, onClick]
+		);
 
 		variant ??= group?.variant ?? ButtonVariant.Solid;
 		size ??= group?.size ?? ButtonSize.MD;
@@ -228,8 +242,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 						loading && styles['button--loading'],
 						className
 					)}
-					disabled={disabled || loading}
+					data-disabled={isDisabled || undefined}
+					aria-disabled={isDisabled || undefined}
 					ref={ref}
+					onClick={handleClick}
 					{...props}
 				>
 					{children}
@@ -245,8 +261,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				data-size={size}
 				data-background={variant === ButtonVariant.Action ? background : undefined}
 				className={cn(styles['button'], loading && styles['button--loading'], className)}
-				disabled={disabled || loading}
+				disabled={isDisabled}
 				ref={ref}
+				onClick={handleClick}
 				{...props}
 			>
 				{loading ? (

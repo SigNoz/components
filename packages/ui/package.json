@@ -409,6 +409,7 @@
 		"@repo/typescript-config": "workspace:*",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/react": "^16.0.1",
+		"@testing-library/user-event": "^14.6.1",
 		"@types/node": "25.9.4",
 		"@types/react": "^18.2.61",
 		"@vitejs/plugin-react": "^5.2.0",

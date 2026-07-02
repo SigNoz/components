@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from './button.js';
@@ -30,6 +31,71 @@ describe('Button', () => {
 
 		fireEvent.click(screen.getByRole('button'));
 		expect(onClick).toHaveBeenCalledTimes(0);
+	});
+
+	it('blocks onClick when disabled', () => {
+		const onClick = vi.fn();
+
+		render(
+			<Button disabled onClick={onClick}>
+				Disabled
+			</Button>
+		);
+		const button = screen.getByRole('button');
+
+		fireEvent.click(button);
+
+		expect(onClick).not.toHaveBeenCalled();
+	});
+
+	it('stops propagation in asChild mode when disabled', () => {
+		const onClick = vi.fn();
+		const parentClick = vi.fn();
+
+		render(
+			// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+			<div onClick={parentClick}>
+				<Button asChild disabled onClick={onClick} testId="link-btn">
+					<a href="#">Learn more about buttons</a>
+				</Button>
+			</div>
+		);
+		const link = screen.getByTestId('link-btn');
+
+		fireEvent.click(link);
+
+		expect(onClick).not.toHaveBeenCalled();
+		expect(parentClick).not.toHaveBeenCalled();
+	});
+
+	it('blocks onClick when loading', () => {
+		const onClick = vi.fn();
+
+		render(
+			<Button loading onClick={onClick}>
+				Loading
+			</Button>
+		);
+		const button = screen.getByRole('button');
+
+		fireEvent.click(button);
+
+		expect(onClick).not.toHaveBeenCalled();
+	});
+
+	it('blocks onClick in asChild mode when disabled', () => {
+		const onClick = vi.fn();
+
+		render(
+			<Button asChild disabled onClick={onClick} testId="link-btn">
+				<a href="#">Learn more about buttons</a>
+			</Button>
+		);
+		const link = screen.getByTestId('link-btn');
+
+		fireEvent.click(link);
+
+		expect(onClick).not.toHaveBeenCalled();
 	});
 
 	it('disables the button and shows spinner when loading', () => {
@@ -72,7 +138,7 @@ describe('Button', () => {
 	it('renders as child element when asChild is true', () => {
 		render(
 			<Button asChild testId="link-btn">
-				<a href="#">Link</a>
+				<a href="#">Learn more about buttons</a>
 			</Button>
 		);
 		const link = screen.getByTestId('link-btn');
@@ -81,18 +147,20 @@ describe('Button', () => {
 		expect(link).toHaveAttribute('data-color', 'primary');
 	});
 
-	it('calls onClick when clicked', () => {
+	it('calls onClick when clicked', async () => {
+		const user = userEvent.setup();
 		const onClick = vi.fn();
 		render(<Button onClick={onClick}>Click me</Button>);
-		fireEvent.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button'));
 		expect(onClick).toHaveBeenCalledTimes(1);
 		expect(onClick).toHaveBeenCalledWith(expect.any(Object));
 	});
 
-	it('calls onDoubleClick when double-clicked', () => {
+	it('calls onDoubleClick when double-clicked', async () => {
+		const user = userEvent.setup();
 		const onDoubleClick = vi.fn();
 		render(<Button onDoubleClick={onDoubleClick}>Double</Button>);
-		fireEvent.doubleClick(screen.getByRole('button'));
+		await user.dblClick(screen.getByRole('button'));
 		expect(onDoubleClick).toHaveBeenCalledTimes(1);
 	});
 
@@ -128,7 +196,8 @@ describe('Button', () => {
 		expect(screen.getByRole('button')).toHaveAttribute('type', 'submit');
 	});
 
-	it('forwards native event handlers (onMouseEnter, onFocus, onKeyDown)', () => {
+	it('forwards native event handlers (onMouseEnter, onFocus, onKeyDown)', async () => {
+		const user = userEvent.setup();
 		const onMouseEnter = vi.fn();
 		const onFocus = vi.fn();
 		const onKeyDown = vi.fn();
@@ -138,9 +207,9 @@ describe('Button', () => {
 			</Button>
 		);
 		const btn = screen.getByRole('button');
-		fireEvent.mouseEnter(btn);
-		fireEvent.focus(btn);
-		fireEvent.keyDown(btn, { key: 'Enter' });
+		await user.hover(btn);
+		await user.click(btn);
+		await user.keyboard('{Enter}');
 		expect(onMouseEnter).toHaveBeenCalledTimes(1);
 		expect(onFocus).toHaveBeenCalledTimes(1);
 		expect(onKeyDown).toHaveBeenCalledTimes(1);
