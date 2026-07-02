@@ -1,5 +1,82 @@
 # Changelog
 
+## [0.1.0](https://github.com/SigNoz/components/compare/v0.0.23...v0.1.0) (2026-07-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tabs:** The prefix was renamed from --tab to --tabs
+* **radio-group:** The prefix was renamed from --radio to --radio-group
+
+### Features
+
+* **combobox:** rewrite entire component & add virtual support ([#251](https://github.com/SigNoz/components/issues/251)) ([7d2e99e](https://github.com/SigNoz/components/commit/7d2e99ef0634e89597b261dcfa607580534a8aa9))
+* **css-vars:** add script to generate docs for css vars ([c351bfd](https://github.com/SigNoz/components/commit/c351bfd3379332d52fc79b54027ee5215cff4752))
+* **input-number:** add input number component ([9bbdbed](https://github.com/SigNoz/components/commit/9bbdbed6ec42659db687ef901f6360f1ac5090d1))
+* **pagination:** add flag to show total results text ([#317](https://github.com/SigNoz/components/issues/317)) ([460fb1b](https://github.com/SigNoz/components/commit/460fb1b3c70cd048cc5446376cc82246334185b8))
+* **pagination:** add page size selector ([#261](https://github.com/SigNoz/components/issues/261)) ([a75e962](https://github.com/SigNoz/components/commit/a75e962740708b65a5006233f8028fca600b4fa1))
+* **tabs:** add alignment prop to control tab list positioning  ([#277](https://github.com/SigNoz/components/issues/277)) ([b6d64ed](https://github.com/SigNoz/components/commit/b6d64edda551ef07d03d106356b75342afb118de))
+* **tabs:** add tabBarLeftContent/tabBarRightContent extra content slots   ([#274](https://github.com/SigNoz/components/issues/274)) ([06abf33](https://github.com/SigNoz/components/commit/06abf3319c19748bba05e677b662a9c4b3f3f2e0))
+* **ui:** add css vars on definition files ([369f575](https://github.com/SigNoz/components/commit/369f575b23918b099a07f52022244e162b4caf7d))
+
+
+### Bug Fixes
+
+* **data-table:** broken type for icon component ([b75a65e](https://github.com/SigNoz/components/commit/b75a65e1e7e279f8af405bf2d4c27e1e0f03cd22))
+* **pr-comments:** address PR comments ([cb32cae](https://github.com/SigNoz/components/commit/cb32cae187c05ec31c1fbd0c4c102261b37d19a8))
+* **select:** exit animation causing bug ([b71b769](https://github.com/SigNoz/components/commit/b71b769cdf12e00722aca03bc6e77698b2af864d))
+* **skeleton:** missing export ([830d1b6](https://github.com/SigNoz/components/commit/830d1b602ee5406b35b95be975a130c63d089c9a))
+* **switch:** add isloading prop ([#272](https://github.com/SigNoz/components/issues/272)) ([00b82f7](https://github.com/SigNoz/components/commit/00b82f7276876c6a365d383768d811615b4ca2bc))
+* **tabs:** center prefix/suffix icons in tab triggers ([#290](https://github.com/SigNoz/components/issues/290)) ([22c4dc3](https://github.com/SigNoz/components/commit/22c4dc323a170565346a121adb20ec995cd6c7d4))
+
+
+### Documentation
+
+* **breadcrumb-simple:** add dedicated mdx docs for BreadcrumbSimple ([#282](https://github.com/SigNoz/components/issues/282)) ([#291](https://github.com/SigNoz/components/issues/291)) ([587a756](https://github.com/SigNoz/components/commit/587a75664149ed1ae0bfb49d2627b6f72b042eb9))
+* **ComboboxSimple:** add dedicated mdx docs for ComboboxSimple ([#292](https://github.com/SigNoz/components/issues/292)) ([aecaaba](https://github.com/SigNoz/components/commit/aecaaba7edb636a9aa11dde67a295b82fa29357e))
+* **dialog:** add dedicated mdx docs for AlertDialog, ConfirmDialog, DialogWrapper ([#298](https://github.com/SigNoz/components/issues/298)) ([c4ea30f](https://github.com/SigNoz/components/commit/c4ea30fa7125d4d289126f0d03e01d5f259485f4))
+* **drawer:** docs for drawer ([#301](https://github.com/SigNoz/components/issues/301)) ([312ca87](https://github.com/SigNoz/components/commit/312ca875f5934a8a07d17b8966a2240b6194395a))
+* **dropdown-menu-simple:** add dedicated mdx docs for DropdownMenuSimple ([#293](https://github.com/SigNoz/components/issues/293)) ([ede9cc8](https://github.com/SigNoz/components/commit/ede9cc8754c466a931d2d277b6181d8be263dc24))
+* **pagination:** add dedicated mdx docs and refactor Storybook stories ([#295](https://github.com/SigNoz/components/issues/295)) ([a50c722](https://github.com/SigNoz/components/commit/a50c722ff13dd9c6ec1255dccce4b48daf98d4d6))
+* **popover:** adding docs for PopoverSimple ([#278](https://github.com/SigNoz/components/issues/278)) ([818d8c0](https://github.com/SigNoz/components/commit/818d8c0a4ff7e29ea446f898c575b58a37613f3b))
+* **select:** adding docs for SelectSimple ([#279](https://github.com/SigNoz/components/issues/279)) ([24f0d19](https://github.com/SigNoz/components/commit/24f0d193ad7362e543de7b4d6f579345d1acd196))
+* **storybook:** split stories into Primitive and Composed Components ([#266](https://github.com/SigNoz/components/issues/266)) ([ed539e8](https://github.com/SigNoz/components/commit/ed539e88e649fb359e16794c26a29801cbd005af))
+* **tabs:** add dedicated mdx docs for TabsSimple ([#296](https://github.com/SigNoz/components/issues/296)) ([85dd105](https://github.com/SigNoz/components/commit/85dd10506f8a697ce579f20fe954611873a21f7c))
+* **toggle-group-simple:** adding docs for ToggleGroupSimple ([#280](https://github.com/SigNoz/components/issues/280)) ([96fde38](https://github.com/SigNoz/components/commit/96fde382442626102c951f44efddee136a3fa449))
+* **tooltip:** add dedicated mdx docs for TooltipSimple ([#281](https://github.com/SigNoz/components/issues/281)) ([7459221](https://github.com/SigNoz/components/commit/7459221bb62cb17ae6957251601952621e0aa813))
+
+
+### Miscellaneous Chores
+
+* **dependabot:** reduce spam of prs & add cooldown ([a4a5fc3](https://github.com/SigNoz/components/commit/a4a5fc3de40de157426d1697c0a1066258d8af65))
+* **deps-dev:** bump @typescript/native-preview ([2db550f](https://github.com/SigNoz/components/commit/2db550f740f1bbc7ffbac920534e3feecb411e90))
+* **deps-dev:** bump the development-dependencies group across 1 directory with 28 updates ([#313](https://github.com/SigNoz/components/issues/313)) ([6faef91](https://github.com/SigNoz/components/commit/6faef9130dd3ac430ecd61229a07699db56fb305))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.0 ([4858c84](https://github.com/SigNoz/components/commit/4858c84d946de266af25149c99168078a6b19266))
+* **deps:** bump actions/checkout from 6 to 7 ([f26fde5](https://github.com/SigNoz/components/commit/f26fde5ade0e7172b46b9620a4de78cdba7bf9f6))
+* **deps:** bump googleapis/release-please-action from 4 to 5 ([#310](https://github.com/SigNoz/components/issues/310)) ([6d8712b](https://github.com/SigNoz/components/commit/6d8712b4ac22b4e7638206aa0793407ac9efbe62))
+* **deps:** bump pnpm/action-setup from 4 to 6 ([#309](https://github.com/SigNoz/components/issues/309)) ([b9d2a7d](https://github.com/SigNoz/components/commit/b9d2a7df0277c860a04563de90fb23e6fbe6ee8d))
+* **deps:** bump the production-dependencies group across 1 directory with 21 updates ([4499a16](https://github.com/SigNoz/components/commit/4499a1624f716d3065fc9ee806bee5c46f60e4ea))
+* remove unused react-use to drop vulnerable js-cookie ([#307](https://github.com/SigNoz/components/issues/307)) ([1064330](https://github.com/SigNoz/components/commit/1064330502cfae483b6d78642cdfe16043087c5e))
+* update tmp package to version 0.2.7 and add version constraint in package.json ([#308](https://github.com/SigNoz/components/issues/308)) ([45f950e](https://github.com/SigNoz/components/commit/45f950ee9f4cb288950062db18104edc373da3a3))
+* update vitest ([#300](https://github.com/SigNoz/components/issues/300)) ([3be2e13](https://github.com/SigNoz/components/commit/3be2e1389ff9ff74f23251ce20f1e4cf7c14491e))
+
+
+### Code Refactoring
+
+* **alert-dialog:** ensure alert dialog vars can be overriden ([f14fffc](https://github.com/SigNoz/components/commit/f14fffcf8c4ba42c9e6cdb08197d9df487938243))
+* **avatar:** add more css vars to allow overrides ([f4d87f8](https://github.com/SigNoz/components/commit/f4d87f833047ef1c6e681e7ed926f8de4b94a277))
+* **button:** ensure internal vars are explicit declared ([8e03ea4](https://github.com/SigNoz/components/commit/8e03ea4e9f9e009cc46f1a8e782c2425e36b4de7))
+* **input-number:** ignore issue with autoFocus ([0017e15](https://github.com/SigNoz/components/commit/0017e15f1d3ef11fde76a0eb612cf34292787417))
+* **radio-group:** ensure vars has prefix of the component ([d41815c](https://github.com/SigNoz/components/commit/d41815ce45eeefcc09726651ce047e9a616cd46e))
+* **skeleton:** fix lint ([9fb027a](https://github.com/SigNoz/components/commit/9fb027a09d12ee33ff098a0e7d994d6683527a46))
+* **tabs:** rename prefix to tabs to match folder ([cac681d](https://github.com/SigNoz/components/commit/cac681d4b572f18dd9488ef50cb6296ea0be2e9c))
+
+
+### Continuous Integration
+
+* **chromatic:** update workflow to reduce snapshot count ([9a80d0c](https://github.com/SigNoz/components/commit/9a80d0c52d9f81846b9918827c489f10e878fff3))
+* **tokens-check:** ensure it only runs for changes of css ([99b82c8](https://github.com/SigNoz/components/commit/99b82c84669211c35998e63a4cc90eae4ac49c91))
+
 ## [0.0.23](https://github.com/SigNoz/components/compare/v0.0.22...v0.0.23) (2026-05-26)
 
 
