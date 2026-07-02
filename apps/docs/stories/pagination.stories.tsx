@@ -77,6 +77,15 @@ const meta: Meta<typeof Pagination> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
+		showTotal: {
+			control: 'boolean',
+			description: 'Whether to display the total range of results',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
 		pageSizeOptions: {
 			control: 'object',
 			description: 'Options for the page size selector',
@@ -384,4 +393,13 @@ export const WithPageSizeSelectorLeft: Story = {
 			/>
 		);
 	},
+};
+
+export const WithTotalResults: Story = {
+	args: {
+		total: 100,
+		pageSize: 10,
+		showTotal: true,
+	},
+	render: (args) => <ControlledPagination {...args} initialPage={1} />,
 };

@@ -79,3 +79,19 @@
 .pagination-page-size-select {
   width: fit-content;
 }
+
+.pagination-total {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--secondary-foreground);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+
+  &:first-child {
+    margin-right: var(--spacing-4, 1rem);
+  }
+
+  &:last-child {
+    margin-left: var(--spacing-4, 1rem);
+  }
+}
