@@ -76,7 +76,22 @@ const meta: Meta<typeof DropdownMenuSimple> = {
 		},
 		className: {
 			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
+			description: 'Additional CSS classes to apply to the trigger button.',
+			table: { category: 'Appearance' },
+		},
+		style: {
+			control: 'object',
+			description: 'Additional inline styles to apply to the trigger button.',
+			table: { category: 'Appearance' },
+		},
+		contentClassName: {
+			control: 'text',
+			description: 'Additional CSS classes to apply to the dropdown content.',
+			table: { category: 'Appearance' },
+		},
+		contentStyle: {
+			control: 'object',
+			description: 'Additional inline styles to apply to the dropdown content.',
 			table: { category: 'Appearance' },
 		},
 	},
@@ -746,7 +761,7 @@ export const AllStates: Story = {
 				<div className="space-y-4">
 					<h3 className="text-lg font-semibold">Complex Example</h3>
 					<div className="flex gap-4">
-						<DropdownMenuSimple menu={{ items: complexItems }} align="end" className="w-56">
+						<DropdownMenuSimple menu={{ items: complexItems }} align="end" contentClassName="w-56">
 							<Button variant="solid" color="secondary">
 								<Ellipsis />
 							</Button>
