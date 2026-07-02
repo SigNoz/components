@@ -188,6 +188,9 @@
 		border: var(--typography-code-border, 1px solid var(--l3-border));
 		padding: var(--typography-code-padding, 0.125em 0.25em);
 		border-radius: var(--typography-code-radius, var(--radius-sm));
+	}
+
+	&[data-code]:not([data-size]) {
 		font-size: var(--typography-code-font-size, 0.9em);
 	}
 
