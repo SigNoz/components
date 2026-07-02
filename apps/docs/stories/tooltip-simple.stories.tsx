@@ -1,5 +1,25 @@
 import type { TooltipSimpleProps } from '@signozhq/ui';
-import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } from '@signozhq/ui';
+import {
+	Button,
+	ButtonColor,
+	ButtonVariant,
+	Checkbox,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSimple,
+	DropdownMenuTrigger,
+	Input,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectSimple,
+	SelectTrigger,
+	SelectValue,
+	Switch,
+	TooltipProvider,
+	TooltipSimple,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TooltipSimple> = {
@@ -198,6 +218,112 @@ export const Alignments: Story = {
 						</Button>
 					</TooltipSimple>
 				))}
+			</div>
+		</TooltipProvider>
+	),
+};
+
+export const WithDisabledComponents: Story = {
+	args: {
+		title: 'This component is disabled',
+		arrow: true,
+		side: 'top',
+	},
+	render: (args: Partial<TooltipSimpleProps>) => (
+		<TooltipProvider delayDuration={0}>
+			<div className="p-20 flex flex-col gap-8">
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">Button</span>
+					<TooltipSimple {...(args as TooltipSimpleProps)}>
+						<Button
+							onClick={() => alert('Should not be called')}
+							variant={ButtonVariant.Solid}
+							color={ButtonColor.Secondary}
+							disabled
+						>
+							Disabled Button
+						</Button>
+					</TooltipSimple>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">Input</span>
+					<TooltipSimple {...(args as TooltipSimpleProps)} title="Input is disabled">
+						<Input placeholder="Disabled input" disabled />
+					</TooltipSimple>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">Switch</span>
+					<TooltipSimple {...(args as TooltipSimpleProps)} title="Switch is disabled">
+						<Switch disabled />
+					</TooltipSimple>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">Checkbox</span>
+					<TooltipSimple {...(args as TooltipSimpleProps)} title="Checkbox is disabled">
+						<Checkbox disabled />
+					</TooltipSimple>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">Select (primitive)</span>
+					<Select disabled>
+						<TooltipSimple {...(args as TooltipSimpleProps)} title="Select is disabled">
+							<SelectTrigger className="w-[180px]">
+								<SelectValue placeholder="Disabled select" />
+							</SelectTrigger>
+						</TooltipSimple>
+						<SelectContent>
+							<SelectItem value="1">Option 1</SelectItem>
+							<SelectItem value="2">Option 2</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">SelectSimple</span>
+					<TooltipSimple {...(args as TooltipSimpleProps)} title="Select is disabled">
+						<SelectSimple
+							items={[
+								{ value: '1', label: 'Option 1' },
+								{ value: '2', label: 'Option 2' },
+							]}
+							placeholder="Disabled select"
+							disabled
+						/>
+					</TooltipSimple>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">DropdownMenu (primitive)</span>
+					<DropdownMenu>
+						<TooltipSimple {...(args as TooltipSimpleProps)} title="Dropdown is disabled">
+							<DropdownMenuTrigger asChild disabled>
+								<Button variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
+									Disabled Dropdown
+								</Button>
+							</DropdownMenuTrigger>
+						</TooltipSimple>
+						<DropdownMenuContent>
+							<DropdownMenuItem>Action 1</DropdownMenuItem>
+							<DropdownMenuItem>Action 2</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+				<div className="flex flex-col gap-2">
+					<span className="text-xs text-vanilla-400">DropdownMenuSimple</span>
+					<TooltipSimple {...(args as TooltipSimpleProps)} title="Dropdown is disabled">
+						<DropdownMenuSimple
+							disabled
+							menu={{
+								items: [
+									{ key: '1', label: 'Action 1' },
+									{ key: '2', label: 'Action 2' },
+								],
+							}}
+						>
+							<Button variant={ButtonVariant.Outlined} color={ButtonColor.Secondary} disabled>
+								Disabled Dropdown
+							</Button>
+						</DropdownMenuSimple>
+					</TooltipSimple>
+				</div>
 			</div>
 		</TooltipProvider>
 	),

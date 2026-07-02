@@ -81,32 +81,40 @@ function cleanupMenuItems(items: MenuItem[]): MenuItem[] {
 	return cleaned;
 }
 
-export type DropdownProps = Omit<DropdownMenuContentProps, 'children' | 'className' | 'style'> & {
-	/**
-	 * The menu configuration including items, search, and loading state.
-	 */
-	menu: MenuProps;
-	/**
-	 * The trigger element that opens the dropdown menu.
-	 */
-	children: React.ReactNode;
-	/**
-	 * Additional class name to apply to the trigger button.
-	 */
-	className?: string;
-	/**
-	 * Additional style to apply to the trigger button.
-	 */
-	style?: React.CSSProperties;
-	/**
-	 * Additional class name to apply to the dropdown content.
-	 */
-	contentClassName?: string;
-	/**
-	 * Additional style to apply to the dropdown content.
-	 */
-	contentStyle?: React.CSSProperties;
-};
+export type DropdownProps = Omit<DropdownMenuContentProps, 'children' | 'className' | 'style'> &
+	Omit<React.HTMLAttributes<HTMLButtonElement>, 'children' | 'className' | 'style'> & {
+		/**
+		 * The menu configuration including items, search, and loading state.
+		 */
+		menu: MenuProps;
+		/**
+		 * The trigger element that opens the dropdown menu.
+		 */
+		children: React.ReactNode;
+		/**
+		 * Additional class name to apply to the trigger button.
+		 */
+		className?: string;
+		/**
+		 * Additional style to apply to the trigger button.
+		 */
+		style?: React.CSSProperties;
+		/**
+		 * Additional class name to apply to the dropdown content.
+		 */
+		contentClassName?: string;
+		/**
+		 * Additional style to apply to the dropdown content.
+		 */
+		contentStyle?: React.CSSProperties;
+		/**
+		 * When true, the menu cannot be opened. The trigger stays hoverable/focusable
+		 * (marked with `aria-disabled`) so a wrapping tooltip keeps working — unlike a
+		 * natively `disabled` trigger, which suppresses hover.
+		 * @default false
+		 */
+		disabled?: boolean;
+	};
 
 /**
  * Helper function to render menu items recursively.
@@ -258,7 +266,7 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
  * ```
  */
 export const DropdownMenuSimple = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+	React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
 	DropdownProps
 >(
 	(
@@ -270,8 +278,27 @@ export const DropdownMenuSimple = React.forwardRef<
 			style,
 			contentClassName,
 			contentStyle,
+			disabled = false,
 			onOpenAutoFocus,
-			...props
+			// Content-specific props
+			align,
+			alignOffset,
+			arrowPadding,
+			avoidCollisions,
+			collisionBoundary,
+			collisionPadding,
+			forceMount,
+			hideWhenDetached,
+			loop,
+			side,
+			sticky,
+			onCloseAutoFocus,
+			onEscapeKeyDown,
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
+			// All remaining props go to trigger (for tooltip compatibility)
+			...triggerProps
 		},
 		ref
 	) => {
@@ -367,43 +394,59 @@ export const DropdownMenuSimple = React.forwardRef<
 			[menu.search]
 		);
 
-		// Merge refs for content
-		const mergedContentRef = React.useCallback(
-			(node: HTMLDivElement | null) => {
-				contentRef.current = node;
-				if (typeof ref === 'function') {
-					ref(node);
-				} else if (ref) {
-					(ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-				}
-			},
-			[ref]
-		);
+		const [open, setOpen] = React.useState(false);
 
-		const onDropdownOpenChange = React.useCallback(
-			(open: boolean) => {
-				if (open && menu.search) {
+		const handleOpenChange = React.useCallback(
+			(next: boolean) => {
+				// Gate opening here (rather than natively disabling the trigger) so a wrapping
+				// tooltip still receives hover/focus events on the trigger.
+				if (disabled) return;
+				setOpen(next);
+				if (next && menu.search) {
 					searchInputRef.current?.focus();
-				} else if (!open) {
+				} else if (!next) {
 					menu.search?.onSearchChange?.('');
 				}
 			},
-			[menu.search]
+			[disabled, menu.search]
 		);
 
-		return (
-			<DropdownMenu onOpenChange={onDropdownOpenChange}>
-				<DropdownMenuTrigger asChild className={className} style={style}>
+		const dropdownContent = (
+			<DropdownMenu open={open} onOpenChange={handleOpenChange}>
+				<DropdownMenuTrigger
+					ref={ref}
+					asChild
+					className={className}
+					style={style}
+					aria-disabled={disabled || undefined}
+					data-disabled={disabled || undefined}
+					{...triggerProps}
+				>
 					{children}
 				</DropdownMenuTrigger>
 				<DropdownMenuContent
-					ref={mergedContentRef}
+					ref={contentRef}
 					sideOffset={sideOffset}
 					className={contentClassName}
 					style={contentStyle}
 					onOpenAutoFocus={handleOpenAutoFocus}
 					onKeyDown={handleContentKeyDown}
-					{...props}
+					align={align}
+					alignOffset={alignOffset}
+					arrowPadding={arrowPadding}
+					avoidCollisions={avoidCollisions}
+					collisionBoundary={collisionBoundary}
+					collisionPadding={collisionPadding}
+					forceMount={forceMount}
+					hideWhenDetached={hideWhenDetached}
+					loop={loop}
+					side={side}
+					sticky={sticky}
+					onCloseAutoFocus={onCloseAutoFocus}
+					onEscapeKeyDown={onEscapeKeyDown}
+					onPointerDownOutside={onPointerDownOutside}
+					onFocusOutside={onFocusOutside}
+					onInteractOutside={onInteractOutside}
 				>
 					{menu.search && (
 						<>
@@ -427,6 +470,8 @@ export const DropdownMenuSimple = React.forwardRef<
 				</DropdownMenuContent>
 			</DropdownMenu>
 		);
+
+		return dropdownContent;
 	}
 );
 

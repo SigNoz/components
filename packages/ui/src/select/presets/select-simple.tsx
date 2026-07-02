@@ -131,7 +131,7 @@ function flattenItems(groups: SelectSimpleGroup[]): SelectSimpleItem[] {
 
 const SelectSimpleInner = React.forwardRef<
 	React.ElementRef<typeof SelectTrigger>,
-	SelectSimpleProps
+	SelectSimpleProps & Omit<React.HTMLAttributes<HTMLButtonElement>, keyof SelectSimpleProps>
 >(
 	(
 		{
@@ -153,6 +153,7 @@ const SelectSimpleInner = React.forwardRef<
 			maxDisplayedPills,
 			loading = false,
 			loadingPlaceholder = 'Loading...',
+			...triggerProps
 		},
 		ref
 	) => {
@@ -230,6 +231,7 @@ const SelectSimpleInner = React.forwardRef<
 					resolveLabel={resolveLabel}
 					maxDisplayedPills={maxDisplayedPills}
 					loading={loading}
+					{...triggerProps}
 				/>
 				<SelectContent withPortal={withPortal}>
 					{loading ? <SelectLoading>{loadingPlaceholder}</SelectLoading> : content}
