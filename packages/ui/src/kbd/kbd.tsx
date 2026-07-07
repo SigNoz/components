@@ -5,8 +5,10 @@ import styles from './kbd.module.css';
 
 type KbdSize = 'sm' | 'default' | 'lg';
 
-interface KbdProps
-	extends Pick<React.ComponentProps<'kbd'>, 'className' | 'children' | 'id' | 'style'> {
+interface KbdProps extends Pick<
+	React.ComponentProps<'kbd'>,
+	'className' | 'children' | 'id' | 'style'
+> {
 	/**
 	 * The testId associated with the kbd element.
 	 */
@@ -29,7 +31,7 @@ interface KbdProps
 const Kbd = forwardRef<HTMLElement, KbdProps>(
 	(
 		{ className, size = 'default', asChild = false, active = false, testId, children, ...props },
-		ref
+		ref,
 	) => {
 		const Comp = asChild ? Slot : 'kbd';
 
@@ -46,7 +48,7 @@ const Kbd = forwardRef<HTMLElement, KbdProps>(
 				{children}
 			</Comp>
 		);
-	}
+	},
 );
 Kbd.displayName = 'Kbd';
 

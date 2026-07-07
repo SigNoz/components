@@ -42,7 +42,7 @@ describe('DataTable virtualization', () => {
 				estimateRowSize={40}
 				scrollToIndexRef={scrollToIndexRef}
 				testId="table-virt2"
-			/>
+			/>,
 		);
 		expect(scrollToIndexRef.current).toBeDefined();
 		expect(() => scrollToIndexRef.current?.(10, { align: 'center' })).not.toThrow();

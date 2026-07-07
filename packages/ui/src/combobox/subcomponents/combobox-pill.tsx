@@ -46,6 +46,6 @@ export const ComboboxPill = React.forwardRef<HTMLSpanElement, ComboboxPillProps>
 				</button>
 			</span>
 		);
-	}
+	},
 );
 ComboboxPill.displayName = 'ComboboxPill';

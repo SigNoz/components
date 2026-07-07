@@ -9,9 +9,11 @@ import {
 	SelectSeparator,
 	SelectTrigger,
 	SelectViewport,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-viewport.stories.module.css';
 
 const meta: Meta<typeof SelectViewport> = {
 	title: 'Primitive Components/Select/SelectViewport',
@@ -55,11 +57,11 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					SelectViewport is the scrolling viewport that contains the select items. SelectContent
 					uses it internally by default.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -80,16 +82,16 @@ export const CustomMaxHeight: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					You can customize the viewport height with inline styles or CSS variables. Use
 					SelectViewport directly when you need scroll buttons.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an item..." />
 					<SelectContent withViewport={false}>
 						<SelectScrollUpButton />
-						<SelectViewport style={{ maxHeight: '150px' }}>
+						<SelectViewport className={styles.viewportSmall}>
 							{manyItems.map((item) => (
 								<SelectItem key={item.value} value={item.value}>
 									{item.label}
@@ -109,15 +111,15 @@ export const WithGroups: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					SelectViewport works seamlessly with groups, labels, and separators.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a technology..." />
 					<SelectContent withViewport={false}>
 						<SelectScrollUpButton />
-						<SelectViewport style={{ maxHeight: '200px' }}>
+						<SelectViewport className={styles.viewportMedium}>
 							<SelectGroup>
 								<SelectLabel>Frameworks</SelectLabel>
 								{frameworks.map((f) => (
@@ -158,14 +160,14 @@ export const CustomPadding: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					Customize viewport padding using CSS variables or className.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent withViewport={false}>
-						<SelectViewport className="!p-4">
+						<SelectViewport className={styles.viewportPadded}>
 							{frameworks.map((f) => (
 								<SelectItem key={f.value} value={f.value}>
 									{f.label}

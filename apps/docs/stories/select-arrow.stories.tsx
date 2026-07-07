@@ -1,6 +1,14 @@
-import { Select, SelectArrow, SelectContent, SelectItem, SelectTrigger } from '@signozhq/ui';
+import {
+	Select,
+	SelectArrow,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-arrow.stories.module.css';
 
 const meta: Meta<typeof SelectArrow> = {
 	title: 'Primitive Components/Select/SelectArrow',
@@ -51,11 +59,11 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.description}>
 					SelectArrow renders an arrow element that visually connects the trigger to the content.
 					Must be rendered inside SelectContent.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -67,7 +75,9 @@ export const Default: Story = {
 						<SelectArrow />
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.selectedText}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},

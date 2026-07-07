@@ -41,6 +41,6 @@ export const DropdownMenuShortcut = forwardRef<HTMLSpanElement, DropdownMenuShor
 				{...props}
 			/>
 		);
-	}
+	},
 );
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';

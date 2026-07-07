@@ -1,6 +1,7 @@
 import { PaginationSelector } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
+import styles from './pagination-selector.stories.module.css';
 
 const meta: Meta<typeof PaginationSelector> = {
 	title: 'Primitive Components/Pagination/PaginationSelector',
@@ -70,7 +71,7 @@ export const Default: Story = {
 		}, [args.value]);
 
 		return (
-			<div style={{ padding: '24px' }}>
+			<div className={styles.container}>
 				<PaginationSelector
 					{...args}
 					value={value}

@@ -1,0 +1,8 @@
+.flexEnd {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.minHeightContainer {
+  min-height: 400px;
+}

@@ -8,6 +8,7 @@ import {
 	TooltipTrigger,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './tooltip-trigger.stories.module.css';
 
 const meta: Meta<typeof TooltipTrigger> = {
 	title: 'Primitive Components/Tooltip/TooltipTrigger',
@@ -40,7 +41,7 @@ export const Default: Story = {
 	},
 	render: (args: { asChild?: boolean }) => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-20 flex items-center justify-center">
+			<div className={`story-center ${styles.demoArea}`}>
 				<TooltipRoot>
 					<TooltipTrigger {...args}>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>

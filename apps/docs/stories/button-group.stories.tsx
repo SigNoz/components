@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Code } from '@signozhq/icons';
 import { Button, ButtonColor, ButtonGroup, ButtonSize, ButtonVariant } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './button-group.stories.module.css';
 import { COLORS, VARIANTS } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof ButtonGroup> = {
@@ -60,7 +61,7 @@ export const Default: Story = {
 export const Variants: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8 flex flex-col gap-3">
+		<div className="story-container-full story-section-sm">
 			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
 				<Button>Day</Button>
 				<Button>Week</Button>
@@ -83,7 +84,7 @@ export const Variants: Story = {
 export const Sizes: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8 flex items-end gap-4">
+		<div className={`story-container-full story-row-lg ${styles.flexRowAlignEnd}`}>
 			{[ButtonSize.SM, ButtonSize.MD].map((size) => (
 				<ButtonGroup
 					key={size}
@@ -102,7 +103,7 @@ export const Sizes: Story = {
 export const IconCluster: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary} size="icon">
 				<Button prefix={<ChevronLeft />} aria-label="Previous" />
 				<Button prefix={<Code />} aria-label="Code" />
@@ -115,7 +116,7 @@ export const IconCluster: Story = {
 export const PerButtonOverride: Story = {
 	parameters: { controls: { disable: true } },
 	render: () => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<ButtonGroup variant={ButtonVariant.Outlined} color={ButtonColor.Secondary}>
 				<Button>Approve</Button>
 				<Button>Hold</Button>

@@ -7,9 +7,11 @@ import {
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-content.stories.module.css';
 
 const meta: Meta<typeof SelectContent> = {
 	title: 'Primitive Components/Select/SelectContent',
@@ -78,7 +80,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent {...args}>
@@ -103,7 +105,7 @@ export const AlignedTop: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 pt-32 w-full max-w-sm">
+			<div className={`story-container ${styles.containerWithTopPadding}`}>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent {...args}>
@@ -127,7 +129,7 @@ export const WithoutPortal: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent {...args}>
@@ -156,14 +158,16 @@ export const InsidePopover: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button variant="outlined">Open filters</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-64">
-						<div className="space-y-4">
-							<p className="text-sm font-medium">Filter by framework</p>
+					<PopoverContent className={styles.popoverContent}>
+						<div className="story-section">
+							<Typography size="sm" weight="medium">
+								Filter by framework
+							</Typography>
 							<Select value={value} onChange={(v) => setValue(v as string)}>
 								<SelectTrigger placeholder="Select a framework..." />
 								<SelectContent {...args}>

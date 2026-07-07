@@ -49,7 +49,7 @@ Default.decorators = [
 		const Wrapped = (storyArgs: Story['args']) => {
 			const [, setOpen] = useQueryState(
 				storyArgs?.urlKey ?? 'drawer-delete-step',
-				parseAsBoolean.withDefault(false)
+				parseAsBoolean.withDefault(false),
 			);
 
 			return (

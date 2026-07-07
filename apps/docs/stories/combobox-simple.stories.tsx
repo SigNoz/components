@@ -1,7 +1,8 @@
 import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
-import { ComboboxSimple } from '@signozhq/ui';
+import { ComboboxSimple, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
+import styles from './combobox-simple.stories.module.css';
 
 const meta: Meta<typeof ComboboxSimple> = {
 	title: 'Composed Components/ComboboxSimple',
@@ -177,7 +178,7 @@ export const Default: Story = {
 		placeholder: 'Select a framework...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -192,9 +193,11 @@ export const Controlled: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v?.toString() ?? '')} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -207,7 +210,7 @@ export const WithDefaultValue: Story = {
 		defaultValue: 'react',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -241,7 +244,7 @@ export const WithGroups: Story = {
 		placeholder: 'Select a technology...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -252,7 +255,7 @@ const itemsWithIcons = [
 		value: 'react',
 		label: (
 			<>
-				<Code className="mr-2 h-4 w-4" />
+				<Code className={`icon-md ${styles.iconMarginRight}`} />
 				React
 			</>
 		),
@@ -261,7 +264,7 @@ const itemsWithIcons = [
 		value: 'nodejs',
 		label: (
 			<>
-				<Terminal className="mr-2 h-4 w-4" />
+				<Terminal className={`icon-md ${styles.iconMarginRight}`} />
 				Node.js
 			</>
 		),
@@ -270,7 +273,7 @@ const itemsWithIcons = [
 		value: 'postgres',
 		label: (
 			<>
-				<Database className="mr-2 h-4 w-4" />
+				<Database className={`icon-md ${styles.iconMarginRight}`} />
 				PostgreSQL
 			</>
 		),
@@ -279,7 +282,7 @@ const itemsWithIcons = [
 		value: 'git',
 		label: (
 			<>
-				<GitBranch className="mr-2 h-4 w-4" />
+				<GitBranch className={`icon-md ${styles.iconMarginRight}`} />
 				Git
 			</>
 		),
@@ -292,7 +295,7 @@ export const WithIcons: Story = {
 		placeholder: 'Select a tool...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -308,7 +311,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'react',
 						label: (
 							<>
-								<Code className="mr-2 h-4 w-4" />
+								<Code className={`icon-md ${styles.iconMarginRight}`} />
 								React
 							</>
 						),
@@ -317,7 +320,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'vue',
 						label: (
 							<>
-								<Code className="mr-2 h-4 w-4" />
+								<Code className={`icon-md ${styles.iconMarginRight}`} />
 								Vue
 							</>
 						),
@@ -331,7 +334,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'postgres',
 						label: (
 							<>
-								<Database className="mr-2 h-4 w-4" />
+								<Database className={`icon-md ${styles.iconMarginRight}`} />
 								PostgreSQL
 							</>
 						),
@@ -340,7 +343,7 @@ export const WithGroupsAndIcons: Story = {
 						value: 'redis',
 						label: (
 							<>
-								<Database className="mr-2 h-4 w-4" />
+								<Database className={`icon-md ${styles.iconMarginRight}`} />
 								Redis
 							</>
 						),
@@ -351,7 +354,7 @@ export const WithGroupsAndIcons: Story = {
 		placeholder: 'Select a technology...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -364,7 +367,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -380,11 +383,11 @@ export const MultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -398,7 +401,7 @@ export const MultiSelectWithDefaultValues: Story = {
 		defaultValue: ['react', 'vue'],
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -413,7 +416,7 @@ export const MultiSelectWithMaxPills: Story = {
 		maxDisplayedPills: 2,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -430,14 +433,14 @@ export const AllowCreate: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Type to filter, then click "Create" option to add new tags
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -458,11 +461,11 @@ export const AllowCreateWithCustomRender: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -479,14 +482,14 @@ export const TagsMode: Story = {
 		const [values, setValues] = useState<string[]>(['initial-tag']);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Free-form tag input - no predefined options
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -502,9 +505,11 @@ export const AllowCreateSingle: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -524,9 +529,11 @@ export const AllowCreateSingleCustomText: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -565,9 +572,11 @@ export const WithHints: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -596,12 +605,14 @@ export const WithHintsAndCreate: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Try typing "tag:" to see filtered options, or create a new tag like "tag:mynewtag"
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -641,11 +652,11 @@ export const MultiSelectWithHints: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Filters: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -675,14 +686,14 @@ export const MultiSelectWithHintsAndCreate: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Tags: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Type "tag:" to filter, or create custom tags like "tag:mynewtag"
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -690,9 +701,11 @@ export const MultiSelectWithHintsAndCreate: Story = {
 
 export const Loading: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-2xl space-y-8">
+		<div className={styles.variationsContainer}>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+					Infinite Loading
+				</Typography>
 				<ComboboxSimple
 					items={[]}
 					placeholder="Select a framework..."
@@ -701,7 +714,9 @@ export const Loading: Story = {
 				/>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+					Loading with Delay (5s)
+				</Typography>
 				<ComboboxLoadingWithDelay />
 			</div>
 		</div>
@@ -744,12 +759,14 @@ export const WithKeywords: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Try searching: "minute", "hour", "quarter", "half", "daily"
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -769,12 +786,14 @@ export const WithStringLabelsFilter: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Search by value ("us-east") or label ("Virginia", "Oregon", "Ireland")
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -786,10 +805,14 @@ export const WithAllowClear: Story = {
 		const [multiValue, setMultiValue] = useState<string[]>(['react', 'vue']);
 
 		return (
-			<div className="p-8 w-full max-w-2xl space-y-8">
+			<div className={styles.variationsContainer}>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Single Select</h3>
-					<p className="mb-2 text-xs text-muted-foreground">Hover to see clear button</p>
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Single Select
+					</Typography>
+					<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
+						Hover to see clear button
+					</Typography>
 					<ComboboxSimple
 						items={defaultItems}
 						placeholder="Select a framework..."
@@ -797,11 +820,17 @@ export const WithAllowClear: Story = {
 						onChange={(v) => setSingleValue(typeof v === 'string' ? v : undefined)}
 						allowClear
 					/>
-					<p className="mt-2 text-sm text-muted-foreground">Selected: {singleValue || 'none'}</p>
+					<Typography size="sm" color="muted" className={styles.marginTopSmall}>
+						Selected: {singleValue || 'none'}
+					</Typography>
 				</div>
 				<div>
-					<h3 className="text-sm font-medium mb-2">Multiple Select</h3>
-					<p className="mb-2 text-xs text-muted-foreground">Hover to see clear button</p>
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Multiple Select
+					</Typography>
+					<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
+						Hover to see clear button
+					</Typography>
 					<ComboboxSimple
 						items={defaultItems}
 						placeholder="Select frameworks..."
@@ -810,9 +839,9 @@ export const WithAllowClear: Story = {
 						multiple
 						allowClear
 					/>
-					<p className="mt-2 text-sm text-muted-foreground">
+					<Typography size="sm" color="muted" className={styles.marginTopSmall}>
 						Selected: {multiValue.length > 0 ? multiValue.join(', ') : 'none'}
-					</p>
+					</Typography>
 				</div>
 			</div>
 		);
@@ -872,7 +901,7 @@ export const Virtualized: Story = {
 		virtualized: true,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -885,7 +914,7 @@ export const VirtualizedWithConfig: Story = {
 		virtualized: { estimatedItemHeight: 40, virtualizedHeight: 400 },
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -898,7 +927,7 @@ export const VirtualizedWithGroups: Story = {
 		virtualized: { virtualizedHeight: 350 },
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -915,11 +944,11 @@ export const VirtualizedMultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Selected: {values.length > 0 ? `${values.length} items` : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -935,7 +964,7 @@ export const VirtualizedMultiSelectWithMaxPills: Story = {
 		maxDisplayedPills: 2,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<ComboboxSimple {...args} />
 		</div>
 	),
@@ -952,9 +981,11 @@ export const VirtualizedAllowCreate: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -972,14 +1003,14 @@ export const VirtualizedMultiAllowCreate: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Tags: {values.length > 0 ? `${values.length} tags` : 'none'}
-				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Type to filter, then click "Create" option to add new tags
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -995,12 +1026,14 @@ export const VirtualizedWithHints: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
+					Selected: {value || 'none'}
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Try typing "status:" or "priority:" hints
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -1017,11 +1050,11 @@ export const VirtualizedMultiWithHints: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Filters: {values.length > 0 ? `${values.length} active` : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -1039,14 +1072,14 @@ export const VirtualizedMultiWithHintsAndCreate: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<ComboboxSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.marginTopMedium}>
 					Filters: {values.length > 0 ? `${values.length} active` : 'none'}
-				</p>
-				<p className="mt-2 text-xs text-muted-foreground">
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginTopSmall}>
 					Try typing "status:" or "priority:" hints, or create new filters
-				</p>
+				</Typography>
 			</div>
 		);
 	},

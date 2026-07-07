@@ -1,0 +1,52 @@
+.sectionGap {
+	gap: 32px;
+}
+
+.sectionTitle {
+	margin-bottom: 16px;
+}
+
+.contentPanel {
+	padding-top: 16px;
+}
+
+.extraContentContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	padding: 24px;
+}
+
+.alignmentContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	padding: 24px;
+}
+
+.variantSection {
+	margin-bottom: 24px;
+	border-bottom: 1px solid var(--border);
+	padding-bottom: 8px;
+	text-transform: capitalize;
+}
+
+.alignmentSection {
+	margin-bottom: 40px;
+}
+
+.alignmentTitle {
+	margin-bottom: 16px;
+	text-transform: capitalize;
+}
+
+.extraVariantsContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.extraVariantLabel {
+	margin-bottom: 8px;
+	font-family: monospace;
+}

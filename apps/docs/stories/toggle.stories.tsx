@@ -1,6 +1,7 @@
 import { Bold } from '@signozhq/icons';
-import { Toggle, type ToggleColor } from '@signozhq/ui';
+import { Toggle, type ToggleColor, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './toggle.stories.module.css';
 
 const meta: Meta<typeof Toggle> = {
 	title: 'Primitive Components/Toggle',
@@ -80,7 +81,7 @@ export const Default: Story = {
 	},
 	render: (args) => (
 		<Toggle {...args} aria-label="Toggle bold">
-			<Bold className="h-3 w-3" />
+			<Bold className="icon-sm" />
 		</Toggle>
 	),
 };
@@ -94,7 +95,7 @@ export const Pressed: Story = {
 	},
 	render: (args) => (
 		<Toggle {...args} aria-label="Toggle bold">
-			<Bold className="h-3 w-3" />
+			<Bold className="icon-sm" />
 		</Toggle>
 	),
 };
@@ -106,7 +107,7 @@ export const Disabled: Story = {
 	},
 	render: (args) => (
 		<Toggle {...args} aria-label="Toggle bold">
-			<Bold className="h-3 w-3" />
+			<Bold className="icon-sm" />
 		</Toggle>
 	),
 };
@@ -115,16 +116,18 @@ const colors: ToggleColor[] = ['primary', 'destructive', 'warning', 'secondary',
 
 export const AllColors: Story = {
 	render: () => (
-		<div className="flex flex-wrap gap-4">
+		<div className="story-grid">
 			{colors.map((color) => (
-				<div key={color} className="flex flex-col items-center gap-2">
-					<span className="text-sm capitalize">{color}</span>
-					<div className="flex gap-2">
+				<div key={color} className="story-column">
+					<Typography size="sm" as="span" className={styles.capitalize}>
+						{color}
+					</Typography>
+					<div className="story-row">
 						<Toggle defaultValue={false} color={color} aria-label={`${color} off`}>
-							<Bold className="h-3 w-3" />
+							<Bold className="icon-sm" />
 						</Toggle>
 						<Toggle defaultValue={true} color={color} aria-label={`${color} on`}>
-							<Bold className="h-3 w-3" />
+							<Bold className="icon-sm" />
 						</Toggle>
 					</div>
 				</div>
@@ -135,15 +138,15 @@ export const AllColors: Story = {
 
 export const AllSizes: Story = {
 	render: () => (
-		<div className="flex items-center gap-4">
+		<div className="story-row-lg">
 			<Toggle size="sm" aria-label="Small">
-				<Bold className="h-3 w-3" />
+				<Bold className="icon-sm" />
 			</Toggle>
 			<Toggle size="default" aria-label="Default">
-				<Bold className="h-3 w-3" />
+				<Bold className="icon-sm" />
 			</Toggle>
 			<Toggle size="lg" aria-label="Large">
-				<Bold className="h-3 w-3" />
+				<Bold className="icon-sm" />
 			</Toggle>
 		</div>
 	),

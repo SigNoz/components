@@ -26,7 +26,7 @@ describe('Drawer forwardRef', () => {
 		render(
 			<Drawer>
 				<DrawerTrigger ref={ref}>Open</DrawerTrigger>
-			</Drawer>
+			</Drawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -60,7 +60,7 @@ describe('Drawer forwardRef', () => {
 		render(
 			<Drawer>
 				<DrawerClose ref={ref}>Close</DrawerClose>
-			</Drawer>
+			</Drawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -72,7 +72,7 @@ describe('Drawer forwardRef', () => {
 				<DrawerContent>
 					<DrawerCloseButton ref={ref} />
 				</DrawerContent>
-			</Drawer>
+			</Drawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -82,7 +82,7 @@ describe('Drawer forwardRef', () => {
 		render(
 			<Drawer open>
 				<DrawerContent ref={ref}>Content</DrawerContent>
-			</Drawer>
+			</Drawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -92,7 +92,7 @@ describe('Drawer forwardRef', () => {
 		render(
 			<Drawer open>
 				<DrawerOverlay ref={ref} />
-			</Drawer>
+			</Drawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -104,7 +104,7 @@ describe('Drawer forwardRef', () => {
 				<DrawerContent>
 					<DrawerTitle ref={ref}>Title</DrawerTitle>
 				</DrawerContent>
-			</Drawer>
+			</Drawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLHeadingElement);
 	});
@@ -114,7 +114,7 @@ describe('Drawer forwardRef', () => {
 		render(
 			<DrawerWrapper ref={ref} open onOpenChange={() => {}} title="Test">
 				Content
-			</DrawerWrapper>
+			</DrawerWrapper>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -131,7 +131,7 @@ describe('Drawer forwardRef', () => {
 				confirmText="Confirm"
 			>
 				Content
-			</ConfirmDrawer>
+			</ConfirmDrawer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -149,7 +149,7 @@ describe('Drawer forwardRef', () => {
 				>
 					Content
 				</ConfirmDrawerUrl>
-			</NuqsTestingAdapter>
+			</NuqsTestingAdapter>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

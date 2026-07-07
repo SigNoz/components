@@ -1,5 +1,7 @@
+import { Typography } from '@signozhq/ui';
 import type { TokenData } from './TokenRow.js';
 import { TokenRow } from './TokenRow.js';
+import styles from './TokenTable.module.css';
 
 interface TokenTableProps {
 	tokens: TokenData[];
@@ -8,26 +10,32 @@ interface TokenTableProps {
 
 export function TokenTable({ tokens, title }: TokenTableProps) {
 	if (tokens.length === 0) {
-		return <div className="text-center py-8 text-l3-foreground">No tokens found</div>;
+		return (
+			<Typography size="sm" color="muted" className={styles.emptyState}>
+				No tokens found
+			</Typography>
+		);
 	}
 
 	return (
-		<div className="rounded-lg border border-l2-border bg-l1-background overflow-hidden">
+		<div className={styles.table}>
 			{title && (
-				<div className="px-4 py-3 border-b border-l2-border bg-l2-background">
-					<h3 className="text-sm font-semibold text-l1-foreground capitalize">{title}</h3>
+				<div className={styles.tableHeader}>
+					<Typography size="sm" weight="semibold" className={styles.tableHeaderTitle}>
+						{title}
+					</Typography>
 				</div>
 			)}
 
-			<div className="hidden sm:grid grid-cols-[auto_1fr_auto_auto_auto] gap-4 px-4 py-2 border-b border-l2-border bg-l2-background text-xs font-medium text-l3-foreground uppercase tracking-wider">
-				<span className="w-12">Preview</span>
+			<div className={styles.columnHeaders}>
+				<span className={styles.previewColumn}>Preview</span>
 				<span>Token</span>
-				<span className="hidden sm:block">CSS Variable</span>
-				<span className="hidden md:block">Tailwind</span>
-				<span className="hidden lg:block">Category</span>
+				<span className={styles.cssVariableColumn}>CSS Variable</span>
+				<span className={styles.tailwindColumn}>Tailwind</span>
+				<span className={styles.categoryColumn}>Category</span>
 			</div>
 
-			<div>
+			<div className={styles.tableBody}>
 				{tokens.map((token) => (
 					<TokenRow key={token.name} token={token} showDetails={true} />
 				))}

@@ -17,14 +17,14 @@ pnpm add @signozhq/design-tokens @signozhq/ui
 In your app's main CSS file (e.g. `index.css` or `global.css`), import the following css:
 
 ```css
-@import "@signozhq/design-tokens/dist/style.css";
+@import '@signozhq/design-tokens/dist/style.css';
 @import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
 ```
 
 Then you need to add the data attribute in your element `body` or `html` to select the theme:
 
 ```html
-<html lang="en" data-theme="default">
+<html lang="en" data-theme="default"></html>
 ```
 
 If you want to toggle/change between themes, you just need to update the value of the attribute `data-theme`.

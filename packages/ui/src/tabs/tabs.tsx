@@ -155,7 +155,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 			tabBarRightContent,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		return (
 			<TabsRoot
@@ -211,7 +211,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 				</TooltipProvider>
 			</TabsRoot>
 		);
-	}
+	},
 );
 Tabs.displayName = 'Tabs';
 
@@ -283,7 +283,7 @@ export const TabsList = React.forwardRef<
 			rightContent,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const listRef = React.useRef<HTMLDivElement>(null);
 		const activeSliderRef = React.useRef<HTMLDivElement>(null);
@@ -307,14 +307,14 @@ export const TabsList = React.forwardRef<
 				slider.style.width = `${triggerRect.width}px`;
 				slider.style.opacity = '1';
 			},
-			[]
+			[],
 		);
 
 		const updateActiveSlider = React.useCallback(() => {
 			if (variant !== 'primary' || !listRef.current) return;
 
 			const activeTrigger = listRef.current.querySelector<HTMLElement>(
-				'[data-slot="tabs-trigger"][data-state="active"]'
+				'[data-slot="tabs-trigger"][data-state="active"]',
 			);
 			updateSliderPosition(activeSliderRef.current, activeTrigger);
 		}, [variant, updateSliderPosition]);
@@ -358,13 +358,13 @@ export const TabsList = React.forwardRef<
 		const handleMouseOver = React.useCallback(
 			(e: React.MouseEvent) => {
 				const trigger = (e.target as HTMLElement).closest<HTMLElement>(
-					'[data-slot="tabs-trigger"]'
+					'[data-slot="tabs-trigger"]',
 				);
 				if (trigger) {
 					updateSliderPosition(hoverSliderRef.current, trigger);
 				}
 			},
-			[updateSliderPosition]
+			[updateSliderPosition],
 		);
 
 		const handleMouseLeave = React.useCallback(() => {
@@ -441,7 +441,7 @@ export const TabsList = React.forwardRef<
 				)}
 			</div>
 		);
-	}
+	},
 );
 TabsList.displayName = 'TabsList';
 

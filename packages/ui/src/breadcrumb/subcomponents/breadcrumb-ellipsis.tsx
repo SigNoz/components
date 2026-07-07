@@ -50,7 +50,7 @@ export const BreadcrumbEllipsis = React.forwardRef<HTMLSpanElement, BreadcrumbEl
 				<span className={styles['breadcrumb-sr-only']}>More</span>
 			</span>
 		);
-	}
+	},
 );
 
 BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';

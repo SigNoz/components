@@ -9,6 +9,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import styles from './command-separator.stories.module.css';
 import { separatorArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandSeparator> = {
@@ -26,7 +27,7 @@ type Story = StoryObj<typeof CommandSeparator>;
 
 export const Default: Story = {
 	render: (args) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder="Search sections…" />
 				<CommandList>

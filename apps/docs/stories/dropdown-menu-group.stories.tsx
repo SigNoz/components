@@ -31,7 +31,7 @@ type Story = StoryObj<typeof DropdownMenuGroup>;
 
 export const Default: Story = {
 	render: () => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

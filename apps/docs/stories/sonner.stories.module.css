@@ -1,0 +1,43 @@
+.positionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.customToast {
+  background-color: #3b82f6;
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.customToastTitle {
+  font-weight: 600;
+}
+
+.customToastDescription {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.gradientToast {
+  background: linear-gradient(to right, #a855f7, #ec4899);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.warningToast {
+  background-color: #facc15;
+  color: black;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #ca8a04;
+}
+
+.warningToastDescription {
+  font-size: 14px;
+}

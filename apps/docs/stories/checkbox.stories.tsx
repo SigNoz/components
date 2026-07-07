@@ -1,5 +1,6 @@
 import { Checkbox } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './checkbox.stories.module.css';
 
 const meta: Meta<typeof Checkbox> = {
 	title: 'Primitive Components/Checkbox',
@@ -116,7 +117,7 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
 	render: () => (
-		<div className="space-y-4">
+		<div className="story-section">
 			{[
 				'primary',
 				'success',
@@ -130,10 +131,8 @@ export const AllVariants: Story = {
 				'sakura',
 				'aqua',
 			].map((c) => (
-				<div key={c} className="flex items-center gap-6">
-					<div style={{ width: 120 }} className="capitalize">
-						{c}
-					</div>
+				<div key={c} className={styles.variantRow}>
+					<div className={styles.colorLabel}>{c}</div>
 
 					<Checkbox id={`checkbox-${c}-default`} color={c as any}>
 						Default

@@ -2,11 +2,15 @@
 	"name": "@signozhq/tailwind-config",
 	"version": "0.0.23",
 	"license": "MIT",
-	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SigNoz/components.git"
+	},
 	"files": [
 		"tailwind.config.js",
 		"global.css"
 	],
+	"type": "module",
 	"main": "./tailwind.config.js",
 	"module": "./tailwind.config.js",
 	"types": "./index.d.ts",
@@ -17,6 +21,9 @@
 			"types": "./index.d.ts"
 		},
 		"./global.css": "./global.css"
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"dependencies": {
 		"@tailwindcss/postcss": "^4.3.1",
@@ -31,12 +38,5 @@
 	"peerDependencies": {
 		"@signozhq/design-tokens": "^2.1.1",
 		"tailwindcss": "^4.1.4"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/SigNoz/components.git"
 	}
 }

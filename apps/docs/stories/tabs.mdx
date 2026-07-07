@@ -21,9 +21,7 @@ const items = [
 ];
 
 export default function MyComponent() {
-	return (
-		<Tabs items={items} defaultValue="overview" />
-	);
+	return <Tabs items={items} defaultValue="overview" />;
 }
 ```
 
@@ -53,18 +51,18 @@ import { Settings, History } from '@signozhq/icons';
 		{
 			key: 'settings',
 			label: 'Settings',
-			prefixIcon: <Settings className="size-4" />,
+			prefixIcon: <Settings style={{ width: '1rem', height: '1rem' }} />,
 			children: 'Settings content',
 		},
 		{
 			key: 'history',
 			label: 'History',
-			suffixIcon: <History className="size-4" />,
+			suffixIcon: <History style={{ width: '1rem', height: '1rem' }} />,
 			children: 'History content',
 		},
 	]}
 	defaultValue="settings"
-/>
+/>;
 ```
 
 ## Disabled tabs
@@ -109,12 +107,12 @@ import { Plus } from '@signozhq/icons';
 			variant={ButtonVariant.Outlined}
 			size={ButtonSize.SM}
 			color={ButtonColor.Secondary}
-			prefix={<Plus className="size-4" />}
+			prefix={<Plus style={{ width: '1rem', height: '1rem' }} />}
 		>
 			Add view
 		</Button>
 	}
-/>
+/>;
 ```
 
 Combine both sides:
@@ -123,7 +121,7 @@ Combine both sides:
 <Tabs
 	items={items}
 	defaultValue="overview"
-	tabBarLeftContent={<span className="text-xs opacity-60">Service: frontend</span>}
+	tabBarLeftContent={<span style={{ fontSize: '0.75rem', opacity: 0.6 }}>Service: frontend</span>}
 	tabBarRightContent={<Button>Configure</Button>}
 />
 ```
@@ -150,13 +148,7 @@ import { Tabs } from '@signozhq/ui';
 function MyComponent() {
 	const [activeTab, setActiveTab] = useState('overview');
 
-	return (
-		<Tabs
-			items={items}
-			value={activeTab}
-			onChange={setActiveTab}
-		/>
-	);
+	return <Tabs items={items} value={activeTab} onChange={setActiveTab} />;
 }
 ```
 

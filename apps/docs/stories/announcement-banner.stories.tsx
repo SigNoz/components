@@ -1,6 +1,7 @@
 import { AnnouncementBanner, type AnnouncementBannerType } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+import styles from './announcement-banner.stories.module.css';
 
 const meta: Meta<typeof AnnouncementBanner> = {
 	title: 'Composed Components/AnnouncementBanner',
@@ -97,7 +98,7 @@ export const Dismissible: Story = {
 
 export const AllTypes: Story = {
 	render: () => (
-		<div className="flex flex-col gap-4 p-6">
+		<div className={`story-section ${styles.sectionPadding}`}>
 			<AnnouncementBanner type="warning">
 				Warning: Please review your configuration before continuing.
 			</AnnouncementBanner>

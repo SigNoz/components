@@ -24,8 +24,10 @@ export type BadgeColor =
 
 export type TextEllipsisPosition = TextEllipsisProps['position'];
 
-export interface BadgeProps
-	extends Pick<React.ComponentProps<'span'>, 'className' | 'children' | 'id' | 'style'> {
+export interface BadgeProps extends Pick<
+	React.ComponentProps<'span'>,
+	'className' | 'children' | 'id' | 'style'
+> {
 	/**
 	 * The testId associated with the badge.
 	 */
@@ -100,7 +102,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 			children,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const [closed, setClosed] = useState(false);
 		const isClosable = closable && !asChild;
@@ -119,7 +121,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 		// Warn if textEllipsis is used with non-string children
 		if (ellipsisPosition && typeof children !== 'string') {
 			console.warn(
-				'Badge: textEllipsis only works when children is a string. For non-string children, use CSS text-overflow (textWrap) instead.'
+				'Badge: textEllipsis only works when children is a string. For non-string children, use CSS text-overflow (textWrap) instead.',
 			);
 		}
 
@@ -177,6 +179,6 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 				)}
 			</span>
 		);
-	}
+	},
 );
 Badge.displayName = 'Badge';

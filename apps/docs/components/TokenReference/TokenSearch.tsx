@@ -1,6 +1,7 @@
 import { Search } from '@signozhq/icons';
 import { Button, Input } from '@signozhq/ui';
 import { useState } from 'react';
+import styles from './TokenSearch.module.css';
 
 interface TokenSearchProps {
 	onSearch: (query: string) => void;
@@ -24,28 +25,27 @@ export function TokenSearch({
 	};
 
 	return (
-		<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-			<div className="relative">
+		<div className={styles.container}>
+			<div className={styles.searchWrapper}>
 				{/* TODO: Update when we have support for prefix icons on Inputs */}
-				<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-l3-foreground" />
+				<Search className={styles.searchIcon} />
 
 				<Input
 					type="text"
 					value={query}
 					onChange={handleSearchChange}
 					placeholder="Search tokens..."
-					className="px-10"
+					className={styles.searchInput}
 				/>
 			</div>
 
 			{onCategoryFilter && categories && categories.length > 0 && (
-				<div className="flex flex-wrap gap-2">
+				<div className={styles.categoryFilters}>
 					<Button
 						type="button"
 						onClick={() => onCategoryFilter(null)}
 						variant={selectedCategory === null ? 'solid' : 'outlined'}
 						color={selectedCategory === null ? 'primary' : 'secondary'}
-						className="rounded-full"
 					>
 						All
 					</Button>
@@ -56,7 +56,6 @@ export function TokenSearch({
 							onClick={() => onCategoryFilter(category)}
 							variant={selectedCategory === category ? 'solid' : 'outlined'}
 							color={selectedCategory === category ? 'primary' : 'secondary'}
-							className="rounded-full"
 						>
 							{category}
 						</Button>

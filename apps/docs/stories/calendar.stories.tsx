@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Calendar } from '@signozhq/ui';
+import { Calendar, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+import styles from './calendar.stories.module.css';
 
 const meta: Meta<typeof Calendar> = {
 	title: 'Composed Components/Calendar',
@@ -204,7 +205,7 @@ export const Default: Story = {
 				mode={mode}
 				selected={selected as any}
 				onSelect={onSelect as any}
-				className="rounded-md border shadow-sm"
+				className={styles.calendarCard}
 			/>
 		);
 	},
@@ -220,19 +221,21 @@ export const SingleDateSelection: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Selected Date:
+					</Typography>
+					<Typography size="sm" color="muted">
 						{date ? date.toLocaleDateString() : 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<Calendar
 					{...args}
 					mode="single"
 					selected={date}
 					onSelect={setDate}
-					className="rounded-md border shadow-sm"
+					className={styles.calendarCard}
 				/>
 			</div>
 		);
@@ -251,23 +254,25 @@ export const DateRangeSelection: Story = {
 		});
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Range:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Selected Range:
+					</Typography>
+					<Typography size="sm" color="muted">
 						{range.from && range.to
 							? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
 							: range.from
 								? `${range.from.toLocaleDateString()} - Select end date`
 								: 'Select start date'}
-					</p>
+					</Typography>
 				</div>
 				<Calendar
 					{...args}
 					mode="range"
 					selected={range}
 					onSelect={setRange}
-					className="rounded-md border shadow-sm"
+					className={styles.calendarCard}
 				/>
 			</div>
 		);
@@ -283,21 +288,23 @@ export const MultipleDateSelection: Story = {
 		const [selected, setSelected] = React.useState<any>([]);
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Dates:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Selected Dates:
+					</Typography>
+					<Typography size="sm" color="muted">
 						{selected.length > 0
 							? selected.map((date: Date) => date.toLocaleDateString()).join(', ')
 							: 'No dates selected'}
-					</p>
+					</Typography>
 				</div>
 				<Calendar
 					{...args}
 					mode="multiple"
 					selected={selected}
 					onSelect={setSelected}
-					className="rounded-md border shadow-sm"
+					className={styles.calendarCard}
 				/>
 			</div>
 		);
@@ -313,19 +320,21 @@ export const WithDropdownNavigation: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Selected Date:
+					</Typography>
+					<Typography size="sm" color="muted">
 						{date ? date.toLocaleDateString() : 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<Calendar
 					{...args}
 					mode="single"
 					selected={date}
 					onSelect={setDate}
-					className="rounded-md border shadow-sm"
+					className={styles.calendarCard}
 				/>
 			</div>
 		);
@@ -346,7 +355,7 @@ export const HideOutsideDays: Story = {
 				mode="single"
 				selected={date}
 				onSelect={setDate}
-				className="rounded-md border shadow-sm"
+				className={styles.calendarCard}
 			/>
 		);
 	},
@@ -366,11 +375,11 @@ export const DisabledDates: Story = {
 		];
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<p className="text-sm text-muted-foreground mb-2">
+					<Typography size="sm" color="muted" className={styles.marginBottomSmall}>
 						Weekends are disabled in this example
-					</p>
+					</Typography>
 				</div>
 				<Calendar
 					{...args}
@@ -378,7 +387,7 @@ export const DisabledDates: Story = {
 					selected={date}
 					onSelect={setDate}
 					disabled={disabledDays}
-					className="rounded-md border shadow-sm"
+					className={styles.calendarCard}
 				/>
 			</div>
 		);
@@ -449,15 +458,17 @@ export const WithTimezone: Story = {
 		};
 
 		return (
-			<div className="space-y-6">
-				<div className="space-y-4">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className={styles.columnLayout}>
+				<div className="story-section">
+					<div className={styles.responsiveGrid}>
 						<div>
-							<h3 className="text-sm font-medium mb-2">Timezone Selection:</h3>
+							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+								Timezone Selection:
+							</Typography>
 							<select
 								value={timezone}
 								onChange={(e) => setTimezone(e.target.value)}
-								className="w-full px-3 py-2 border border-input rounded-md text-sm"
+								className={styles.formInput}
 							>
 								{timezones.map((tz) => (
 									<option key={tz.value} value={tz.value}>
@@ -468,64 +479,74 @@ export const WithTimezone: Story = {
 						</div>
 
 						<div>
-							<h3 className="text-sm font-medium mb-2">Time Selection:</h3>
+							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+								Time Selection:
+							</Typography>
 							<input
 								type="time"
 								value={time}
 								onChange={(e) => setTime(e.target.value)}
 								step="1"
-								className="w-full px-3 py-2 border border-input rounded-md text-sm"
+								className={styles.formInput}
 							/>
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div className={styles.responsiveGrid}>
 						<div>
-							<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-							<div className="space-y-2">
-								<p className="text-sm text-muted-foreground">
+							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+								Selected Date & Time:
+							</Typography>
+							<div className="story-section-sm">
+								<Typography size="sm" color="muted">
 									<strong>Local:</strong>{' '}
 									{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
-								</p>
-								<p className="text-sm text-muted-foreground">
+								</Typography>
+								<Typography size="sm" color="muted">
 									<strong>{timezone}:</strong> {formatDateTimeInTimezone(date, timezone, time)}
-								</p>
+								</Typography>
 							</div>
 						</div>
 
 						<div>
-							<h3 className="text-sm font-medium mb-2">Current Time:</h3>
-							<div className="space-y-2">
-								<p className="text-sm text-muted-foreground">
+							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+								Current Time:
+							</Typography>
+							<div className="story-section-sm">
+								<Typography size="sm" color="muted">
 									<strong>Local:</strong> {new Date(fixedDate).toLocaleTimeString()}
-								</p>
-								<p className="text-sm text-muted-foreground">
+								</Typography>
+								<Typography size="sm" color="muted">
 									<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
-								</p>
+								</Typography>
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div>
-					<h3 className="text-sm font-medium mb-2">Calendar:</h3>
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Calendar:
+					</Typography>
 					<Calendar
 						{...args}
 						mode="single"
 						selected={date}
 						onSelect={setDate}
-						className="rounded-md border shadow-sm"
+						className={styles.calendarCard}
 					/>
 				</div>
 
-				<div className="p-4 bg-muted rounded-md">
-					<h4 className="text-sm font-medium mb-2">Date & Time with Timezone:</h4>
-					<p className="text-xs text-muted-foreground">
+				<div className={styles.infoPanel}>
+					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+						Date & Time with Timezone:
+					</Typography>
+					<Typography size="xs" color="muted">
 						This example demonstrates how to handle dates and times with different timezones. The
 						selected date and time are displayed in both local time and the chosen timezone. This
 						shows how you can combine calendar selection with time input and timezone conversion for
 						comprehensive datetime handling in your applications.
-					</p>
+					</Typography>
 				</div>
 			</div>
 		);

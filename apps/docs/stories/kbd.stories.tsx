@@ -1,5 +1,6 @@
-import { Kbd } from '@signozhq/ui';
+import { Kbd, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './kbd.stories.module.css';
 
 const meta: Meta<typeof Kbd> = {
 	title: 'Primitive Components/Kbd',
@@ -65,7 +66,7 @@ export const Playground: Story = {
 		active: false,
 	},
 	render: (props) => (
-		<div className="p-4">
+		<div className={styles.container}>
 			<Kbd {...props} />
 		</div>
 	),
@@ -85,7 +86,7 @@ export const AllSizes: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="flex items-center gap-3 p-4">
+		<div className={`story-row ${styles.containerWithGap}`}>
 			<Kbd size="sm">⌘K</Kbd>
 			<Kbd size="default">⌘K</Kbd>
 			<Kbd size="lg">⌘K</Kbd>
@@ -107,7 +108,7 @@ export const CommonKeys: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="flex flex-wrap items-center gap-2 p-4">
+		<div className={`story-grid ${styles.container}`}>
 			{['⌘', '⌥', '⇧', '⌃', '↵', '⌫', '⇥', 'Esc', 'Space', '↑', '↓', '←', '→'].map((key) => (
 				<Kbd key={key}>{key}</Kbd>
 			))}
@@ -130,12 +131,12 @@ export const KeyboardShortcuts: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4 p-4">
+		<div className={`story-section ${styles.container}`}>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
 					Common Shortcuts
-				</h3>
-				<div className="space-y-2">
+				</Typography>
+				<div className="story-section-sm">
 					{[
 						{ label: 'Save', keys: ['⌘', 'S'] },
 						{ label: 'Copy', keys: ['⌘', 'C'] },
@@ -144,9 +145,9 @@ export const KeyboardShortcuts: Story = {
 						{ label: 'Find', keys: ['⌘', 'F'] },
 						{ label: 'Command palette', keys: ['⌘', 'K'] },
 					].map(({ label, keys }) => (
-						<div key={label} className="flex items-center justify-between max-w-xs">
-							<span className="text-sm text-vanilla-800 dark:text-vanilla-300">{label}</span>
-							<div className="flex items-center gap-1">
+						<div key={label} className={styles.shortcutRow}>
+							<Typography size="sm">{label}</Typography>
+							<div className={`story-row ${styles.keysContainer}`}>
 								{keys.map((key, i) => (
 									<Kbd key={i}>{key}</Kbd>
 								))}
@@ -156,17 +157,17 @@ export const KeyboardShortcuts: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
 					Multi-modifier
-				</h3>
-				<div className="space-y-2">
+				</Typography>
+				<div className="story-section-sm">
 					{[
 						{ label: 'Redo', keys: ['⌘', '⇧', 'Z'] },
 						{ label: 'Force quit', keys: ['⌘', '⌥', 'Esc'] },
 					].map(({ label, keys }) => (
-						<div key={label} className="flex items-center justify-between max-w-xs">
-							<span className="text-sm text-vanilla-800 dark:text-vanilla-300">{label}</span>
-							<div className="flex items-center gap-1">
+						<div key={label} className={styles.shortcutRow}>
+							<Typography size="sm">{label}</Typography>
+							<div className={`story-row ${styles.keysContainer}`}>
 								{keys.map((key, i) => (
 									<Kbd key={i}>{key}</Kbd>
 								))}
@@ -194,17 +195,17 @@ export const InlineText: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-3 p-4 text-sm text-vanilla-800 dark:text-vanilla-300 max-w-md">
-			<p>
+		<div className={`story-section ${styles.container} ${styles.maxWidthMd}`}>
+			<Typography size="sm">
 				Press <Kbd size="sm">⌘</Kbd> <Kbd size="sm">K</Kbd> to open the command palette.
-			</p>
-			<p>
+			</Typography>
+			<Typography size="sm">
 				Use <Kbd size="sm">↑</Kbd> and <Kbd size="sm">↓</Kbd> to navigate results, then{' '}
 				<Kbd size="sm">↵</Kbd> to confirm.
-			</p>
-			<p>
+			</Typography>
+			<Typography size="sm">
 				Hold <Kbd size="sm">⇧</Kbd> while clicking to select a range.
-			</p>
+			</Typography>
 		</div>
 	),
 };
@@ -225,21 +226,21 @@ export const ActiveState: Story = {
 		active: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4 p-4">
+		<div className={`story-section ${styles.container}`}>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
 					Default vs Active
-				</h3>
-				<div className="flex items-center gap-2">
+				</Typography>
+				<div className="story-row">
 					<Kbd>⌘</Kbd>
 					<Kbd active>⌘</Kbd>
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
 					All Sizes
-				</h3>
-				<div className="flex items-center gap-2">
+				</Typography>
+				<div className="story-row">
 					<Kbd size="sm" active>
 						⌘
 					</Kbd>
@@ -252,10 +253,10 @@ export const ActiveState: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
 					Active Key in a Shortcut
-				</h3>
-				<div className="flex items-center gap-1">
+				</Typography>
+				<div className={`story-row ${styles.keysContainer}`}>
 					<Kbd active>⌘</Kbd>
 					<Kbd>K</Kbd>
 				</div>

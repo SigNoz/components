@@ -5,6 +5,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { triggerArgTypes } from './shared/popover-arg-types.js';
@@ -34,7 +35,9 @@ export const Default: Story = {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-64">
-				<p className="text-sm">Use PopoverTrigger asChild to wrap any interactive element.</p>
+				<Typography size="sm">
+					Use PopoverTrigger asChild to wrap any interactive element.
+				</Typography>
 			</PopoverContent>
 		</Popover>
 	),

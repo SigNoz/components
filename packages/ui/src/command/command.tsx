@@ -52,7 +52,7 @@ export const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive
 			data-testid={testId}
 			{...props}
 		/>
-	)
+	),
 );
 Command.displayName = 'Command';
 
@@ -176,7 +176,7 @@ export const CommandInput = React.forwardRef<HTMLInputElement, CommandInputProps
 			containerTestId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -193,7 +193,7 @@ export const CommandInput = React.forwardRef<HTMLInputElement, CommandInputProps
 					ref.current = node;
 				}
 			},
-			[ref]
+			[ref],
 		);
 
 		React.useLayoutEffect(() => {
@@ -229,7 +229,7 @@ export const CommandInput = React.forwardRef<HTMLInputElement, CommandInputProps
 				/>
 			</div>
 		);
-	}
+	},
 );
 CommandInput.displayName = 'CommandInput';
 
@@ -467,6 +467,6 @@ export type CommandShortcutProps = React.HTMLAttributes<HTMLSpanElement>;
 export const CommandShortcut = React.forwardRef<HTMLSpanElement, CommandShortcutProps>(
 	({ className, ...props }, ref) => {
 		return <span ref={ref} className={cn(styles['command__shortcut'], className)} {...props} />;
-	}
+	},
 );
 CommandShortcut.displayName = 'CommandShortcut';

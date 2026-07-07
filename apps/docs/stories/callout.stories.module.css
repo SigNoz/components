@@ -1,0 +1,16 @@
+.variantsContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.restoreButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: var(--muted);
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}

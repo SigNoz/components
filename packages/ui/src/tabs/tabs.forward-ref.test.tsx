@@ -19,7 +19,7 @@ describe('Tabs forwardRef', () => {
 					<TabsTrigger value="a">Tab A</TabsTrigger>
 				</TabsList>
 				<TabsContent value="a">Content A</TabsContent>
-			</TabsRoot>
+			</TabsRoot>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -32,7 +32,7 @@ describe('Tabs forwardRef', () => {
 					<TabsTrigger value="a">Tab A</TabsTrigger>
 				</TabsList>
 				<TabsContent value="a">Content A</TabsContent>
-			</TabsRoot>
+			</TabsRoot>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -47,7 +47,7 @@ describe('Tabs forwardRef', () => {
 					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="a">Content A</TabsContent>
-			</TabsRoot>
+			</TabsRoot>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -62,7 +62,7 @@ describe('Tabs forwardRef', () => {
 				<TabsContent ref={ref} value="a">
 					Content A
 				</TabsContent>
-			</TabsRoot>
+			</TabsRoot>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

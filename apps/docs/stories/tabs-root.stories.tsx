@@ -1,6 +1,7 @@
 import { CircleAlert, History, Settings } from '@signozhq/icons';
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './tabs-root.stories.module.css';
 
 const meta: Meta<typeof TabsRoot> = {
 	title: 'Primitive Components/Tabs/Tabs',
@@ -61,7 +62,7 @@ export const Default: Story = {
 		defaultValue: 'tab1',
 	},
 	render: (args) => (
-		<TabsRoot {...args} className="flex flex-col gap-2 items-start text-left">
+		<TabsRoot {...args} className={styles.tabsContainer}>
 			<TabsList variant="primary">
 				<TabsTrigger value="tab1">Tab 1</TabsTrigger>
 				<TabsTrigger value="tab2">Tab 2</TabsTrigger>
@@ -76,19 +77,19 @@ export const Default: Story = {
 
 export const PrimaryVariant: Story = {
 	render: () => (
-		<TabsRoot defaultValue="overview" className="flex flex-col gap-2 items-start text-left">
+		<TabsRoot defaultValue="overview" className={styles.tabsContainer}>
 			<TabsList variant="primary">
 				<TabsTrigger value="overview" variant="primary">
-					<Settings className="size-4" />
+					<Settings className="icon-md" />
 					Overview
 				</TabsTrigger>
 				<TabsTrigger value="issues" variant="primary">
-					<CircleAlert className="size-4" />
+					<CircleAlert className="icon-md" />
 					Issues
 				</TabsTrigger>
 				<TabsTrigger value="history" variant="primary">
 					History
-					<History className="size-4" />
+					<History className="icon-md" />
 				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="overview">Overview content panel</TabsContent>
@@ -100,7 +101,7 @@ export const PrimaryVariant: Story = {
 
 export const SecondaryVariant: Story = {
 	render: () => (
-		<TabsRoot defaultValue="all" className="flex flex-col gap-2">
+		<TabsRoot defaultValue="all" className={styles.tabsContainerSimple}>
 			<TabsList variant="secondary">
 				<TabsTrigger value="all" variant="secondary">
 					All Endpoints
@@ -121,7 +122,7 @@ export const SecondaryVariant: Story = {
 
 export const WithDisabledTabs: Story = {
 	render: () => (
-		<TabsRoot defaultValue="active" className="flex flex-col gap-2 items-start text-left">
+		<TabsRoot defaultValue="active" className={styles.tabsContainer}>
 			<TabsList variant="primary">
 				<TabsTrigger value="active" variant="primary">
 					Active Tab

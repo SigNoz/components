@@ -71,7 +71,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
 			defaultValue,
 			...props
 		},
-		ref
+		ref,
 	) => (
 		<TogglePrimitive.Root
 			ref={ref}
@@ -85,6 +85,6 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
 			className={cn(styles.toggle, className)}
 			{...props}
 		/>
-	)
+	),
 );
 Toggle.displayName = 'Toggle';

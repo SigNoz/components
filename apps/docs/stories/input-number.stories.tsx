@@ -5,9 +5,11 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './input-number.stories.module.css';
 
 const meta: Meta<typeof InputNumber> = {
 	title: 'Primitive Components/InputNumber',
@@ -83,14 +85,18 @@ function Section({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className="space-y-3">
-			<header className="space-y-1">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-200">{title}</h3>
+		<section className="story-section">
+			<header className="story-section-sm">
+				<Typography as="h3" size="sm" weight="medium">
+					{title}
+				</Typography>
 				{description && (
-					<p className="text-xs text-vanilla-600 dark:text-vanilla-400">{description}</p>
+					<Typography size="xs" color="muted">
+						{description}
+					</Typography>
 				)}
 			</header>
-			<div className="space-y-3">{children}</div>
+			<div className="story-section">{children}</div>
 		</section>
 	);
 }
@@ -105,13 +111,15 @@ function Field({
 	children: React.ReactNode;
 }) {
 	return (
-		<label className="block space-y-1.5">
-			<span className="block text-xs font-medium text-vanilla-700 dark:text-vanilla-300">
+		<label className={styles.fieldLabel}>
+			<Typography as="span" size="xs" weight="medium" className={styles.labelText}>
 				{label}
-			</span>
+			</Typography>
 			{children}
 			{hint && (
-				<span className="block text-[11px] text-vanilla-500 dark:text-vanilla-500">{hint}</span>
+				<Typography as="span" size="xs" color="muted" className={styles.hintText}>
+					{hint}
+				</Typography>
 			)}
 		</label>
 	);
@@ -119,9 +127,12 @@ function Field({
 
 function Output({ value }: { value: number | null }) {
 	return (
-		<p className="text-[11px] text-vanilla-500 dark:text-vanilla-500">
-			onChange: <code className="font-mono">{value === null ? 'null' : value}</code>
-		</p>
+		<Typography size="xs" color="muted" className={styles.outputText}>
+			onChange:{' '}
+			<Typography as="span" code>
+				{value === null ? 'null' : value}
+			</Typography>
+		</Typography>
 	);
 }
 
@@ -139,7 +150,7 @@ export const Playground: Story = {
 		placeholder: 'Enter a number',
 	},
 	render: (args) => (
-		<div className="p-8 max-w-sm bg-background">
+		<div className="story-container">
 			<InputNumber {...args} />
 		</div>
 	),
@@ -159,7 +170,7 @@ export const States: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div className="story-container">
 			<Section title="States" description="Same input, three interactive modes.">
 				<Field label="Default">
 					<InputNumber defaultValue={3} placeholder="0" />
@@ -186,10 +197,10 @@ export const Spinner: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-md bg-background">
+		<div className="story-container-lg">
 			<Section
 				title="Spinner controls"
-				description="Click the arrows, focus and press ↑ / ↓, or scroll with the wheel when changeOnWheel is on."
+				description="Click the arrows, focus and press up / down, or scroll with the wheel when changeOnWheel is on."
 			>
 				<Field label="Stacked (default)" hint='mode="input"'>
 					<InputNumber defaultValue={3} min={1} max={10} controls />
@@ -220,7 +231,7 @@ export const Formatter: Story = {
 		const [percent, setPercent] = useState<number | null>(80);
 		const [bytes, setBytes] = useState<number | null>(1024);
 		return (
-			<div className="p-8 max-w-md bg-background">
+			<div className="story-container-lg">
 				<Section title="Formatter & parser">
 					<Field label="Currency" hint="Thousands separators + leading symbol.">
 						<InputNumber
@@ -270,8 +281,8 @@ export const Precision: Story = {
 	render: () => {
 		const [value, setValue] = useState<number | null>(1.234);
 		return (
-			<div className="p-8 max-w-sm bg-background">
-				<Field label="precision={2}" hint="Try typing 1.2345 — onChange will receive 1.23.">
+			<div className="story-container">
+				<Field label="precision={2}" hint="Try typing 1.2345 - onChange will receive 1.23.">
 					<InputNumber value={value} onChange={setValue} precision={2} step={0.01} controls />
 					<Output value={value} />
 				</Field>
@@ -295,13 +306,13 @@ export const PrefixAndSuffix: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-md bg-background">
+		<div className="story-container-lg">
 			<Section title="Inline adornments">
 				<Field label="Currency prefix">
 					<InputNumber prefix="$" defaultValue={999} precision={2} />
 				</Field>
 				<Field label="Currency prefix and unit suffix">
-					<InputNumber prefix="¥" suffix="RMB" defaultValue={1500} />
+					<InputNumber prefix="Y" suffix="RMB" defaultValue={1500} />
 				</Field>
 				<Field label="Symbol prefix only">
 					<InputNumber prefix="#" placeholder="Quantity" min={0} />
@@ -324,7 +335,7 @@ export const Addons: Story = {
 	render: () => {
 		const [unit, setUnit] = useState('GiB');
 		return (
-			<div className="p-8 max-w-md bg-background">
+			<div className="story-container-lg">
 				<Section title="Outer addons">
 					<Field label="Text addons" hint="A URL field, for example.">
 						<InputNumber addonBefore="https://" addonAfter=".com" defaultValue={42} />
@@ -385,7 +396,7 @@ export const Status: Story = {
 		},
 	},
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div className="story-container">
 			<Section title="Validation surfaces">
 				<Field label="Error" hint="Form validation failure.">
 					<InputNumber defaultValue={3} status="error" />
@@ -414,8 +425,8 @@ export const ClampOnBlur: Story = {
 	render: () => {
 		const [value, setValue] = useState<number | null>(5);
 		return (
-			<div className="p-8 max-w-sm bg-background">
-				<Field label="Clamp to 0–10" hint="Type 99 and tab/click away — value clamps to 10.">
+			<div className="story-container">
+				<Field label="Clamp to 0-10" hint="Type 99 and tab/click away - value clamps to 10.">
 					<InputNumber value={value} onChange={setValue} min={0} max={10} />
 					<Output value={value} />
 				</Field>
@@ -428,18 +439,18 @@ export const ClampOnBlur: Story = {
 /*  Appearance                                                                */
 /* -------------------------------------------------------------------------- */
 
-/** Sizes — small (24px), middle (32px), large (40px). */
+/** Sizes - small (24px), middle (32px), large (40px). */
 export const Sizes: Story = {
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div className="story-container">
 			<Section title="Sizes">
-				<Field label="Small" hint="24px height — dense toolbars, table cells.">
+				<Field label="Small" hint="24px height - dense toolbars, table cells.">
 					<InputNumber defaultValue={3} size="small" />
 				</Field>
-				<Field label="Middle (default)" hint="32px height — most forms.">
+				<Field label="Middle (default)" hint="32px height - most forms.">
 					<InputNumber defaultValue={3} size="middle" />
 				</Field>
-				<Field label="Large" hint="40px height — primary form fields, hero inputs.">
+				<Field label="Large" hint="40px height - primary form fields, hero inputs.">
 					<InputNumber defaultValue={3} size="large" />
 				</Field>
 			</Section>
@@ -447,10 +458,10 @@ export const Sizes: Story = {
 	),
 };
 
-/** Variants — outlined, filled, borderless, underlined. */
+/** Variants - outlined, filled, borderless, underlined. */
 export const Variants: Story = {
 	render: () => (
-		<div className="p-8 max-w-sm bg-background">
+		<div className="story-container">
 			<Section title="Variants">
 				<Field label="Outlined (default)">
 					<InputNumber defaultValue={3} variant="outlined" />
@@ -458,7 +469,7 @@ export const Variants: Story = {
 				<Field label="Filled" hint="Solid background, no border.">
 					<InputNumber defaultValue={3} variant="filled" />
 				</Field>
-				<Field label="Borderless" hint="No chrome — for embedding in larger surfaces.">
+				<Field label="Borderless" hint="No chrome - for embedding in larger surfaces.">
 					<InputNumber defaultValue={3} variant="borderless" />
 				</Field>
 				<Field label="Underlined" hint="Material-style underline only.">
@@ -487,35 +498,44 @@ export const KeyboardAndWheel: Story = {
 		const [keyboardEnabled, setKeyboardEnabled] = useState(true);
 		const [wheelEnabled, setWheelEnabled] = useState(true);
 		return (
-			<div className="p-8 max-w-sm bg-background space-y-4">
-				<div className="flex flex-col gap-2">
-					<label className="flex items-center gap-2 text-xs">
-						<input
-							type="checkbox"
-							checked={keyboardEnabled}
-							onChange={(e) => setKeyboardEnabled(e.target.checked)}
+			<div className="story-container">
+				<div className="story-section">
+					<div className="story-section-sm">
+						<label className="story-row">
+							<input
+								type="checkbox"
+								checked={keyboardEnabled}
+								onChange={(e) => setKeyboardEnabled(e.target.checked)}
+							/>
+							<Typography as="span" size="xs" code>
+								keyboard
+							</Typography>
+						</label>
+						<label className="story-row">
+							<input
+								type="checkbox"
+								checked={wheelEnabled}
+								onChange={(e) => setWheelEnabled(e.target.checked)}
+							/>
+							<Typography as="span" size="xs" code>
+								changeOnWheel
+							</Typography>
+						</label>
+					</div>
+					<Field
+						label="Try it"
+						hint="Focus the input, then press up / down or scroll the mouse wheel."
+					>
+						<InputNumber
+							defaultValue={5}
+							min={0}
+							max={100}
+							keyboard={keyboardEnabled}
+							changeOnWheel={wheelEnabled}
+							controls
 						/>
-						<code>keyboard</code>
-					</label>
-					<label className="flex items-center gap-2 text-xs">
-						<input
-							type="checkbox"
-							checked={wheelEnabled}
-							onChange={(e) => setWheelEnabled(e.target.checked)}
-						/>
-						<code>changeOnWheel</code>
-					</label>
+					</Field>
 				</div>
-				<Field label="Try it" hint="Focus the input, then press ↑ / ↓ or scroll the mouse wheel.">
-					<InputNumber
-						defaultValue={5}
-						min={0}
-						max={100}
-						keyboard={keyboardEnabled}
-						changeOnWheel={wheelEnabled}
-						controls
-					/>
-				</Field>
 			</div>
 		);
 	},
@@ -535,7 +555,7 @@ export const PressEnter: Story = {
 		const [submitted, setSubmitted] = useState<number | null>(null);
 		const [value, setValue] = useState<number | null>(null);
 		return (
-			<div className="p-8 max-w-sm bg-background">
+			<div className="story-container">
 				<Field
 					label="Type a number, press Enter"
 					hint={submitted === null ? 'Nothing submitted yet.' : `Last submitted: ${submitted}`}

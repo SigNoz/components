@@ -8,9 +8,11 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+import styles from './popover.stories.module.css';
 import { popoverArgTypes } from './shared/popover-arg-types.js';
 
 const SIDES = ['top', 'right', 'bottom', 'left'] as const;
@@ -33,7 +35,7 @@ export const Default: Story = {
 		defaultOpen: false,
 	},
 	render: (args) => (
-		<div className="flex flex-col gap-4">
+		<div className="story-column">
 			<Popover {...args}>
 				<PopoverTrigger asChild>
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
@@ -41,27 +43,39 @@ export const Default: Story = {
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-80">
-					<div className="grid gap-4">
-						<div className="space-y-2">
-							<h4 className="leading-none font-medium !mt-0">Dimensions</h4>
-							<p className="text-muted-foreground text-sm">Set the dimensions for the layer.</p>
+					<div className="story-section">
+						<div className="story-section-sm">
+							<Typography as="h4" weight="medium" className={styles.headingTitle}>
+								Dimensions
+							</Typography>
+							<Typography size="sm" color="muted">
+								Set the dimensions for the layer.
+							</Typography>
 						</div>
-						<div className="grid gap-2">
-							<div className="grid grid-cols-3 items-center gap-4">
-								<label htmlFor="width">Width</label>
-								<Input id="width" defaultValue="100%" className="col-span-2 h-8" />
+						<div className="story-section-sm">
+							<div className={styles.formGrid}>
+								<label htmlFor="width">
+									<Typography>Width</Typography>
+								</label>
+								<Input id="width" defaultValue="100%" className={styles.inputSmall} />
 							</div>
-							<div className="grid grid-cols-3 items-center gap-4">
-								<label htmlFor="maxWidth">Max. width</label>
-								<Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
+							<div className={styles.formGrid}>
+								<label htmlFor="maxWidth">
+									<Typography>Max. width</Typography>
+								</label>
+								<Input id="maxWidth" defaultValue="300px" className={styles.inputSmall} />
 							</div>
-							<div className="grid grid-cols-3 items-center gap-4">
-								<label htmlFor="height">Height</label>
-								<Input id="height" defaultValue="25px" className="col-span-2 h-8" />
+							<div className={styles.formGrid}>
+								<label htmlFor="height">
+									<Typography>Height</Typography>
+								</label>
+								<Input id="height" defaultValue="25px" className={styles.inputSmall} />
 							</div>
-							<div className="grid grid-cols-3 items-center gap-4">
-								<label htmlFor="maxHeight">Max. height</label>
-								<Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
+							<div className={styles.formGrid}>
+								<label htmlFor="maxHeight">
+									<Typography>Max. height</Typography>
+								</label>
+								<Input id="maxHeight" defaultValue="none" className={styles.inputSmall} />
 							</div>
 						</div>
 					</div>
@@ -80,10 +94,10 @@ export const DateAndTimePicker: Story = {
 		const [time, setTime] = React.useState('10:30:00');
 
 		return (
-			<div className="container flex gap-4">
-				<div className="flex flex-col gap-3">
-					<label htmlFor="date-picker" className="px-1 text-xs">
-						Date
+			<div className="story-row-lg">
+				<div className={`story-column ${styles.datePickerColumn}`}>
+					<label htmlFor="date-picker" className={styles.datePickerLabel}>
+						<Typography size="xs">Date</Typography>
 					</label>
 					<Popover open={open} onOpenChange={setOpen}>
 						<PopoverTrigger asChild>
@@ -91,13 +105,13 @@ export const DateAndTimePicker: Story = {
 								variant={ButtonVariant.Solid}
 								color={ButtonColor.Primary}
 								id="date-picker"
-								className="w-[360px] justify-between font-normal"
+								className={styles.datePickerTrigger}
 							>
 								{date ? `${date.toLocaleDateString()} : ${time}` : 'Select date'}
 								<ChevronDown size={16} />
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent className="w-auto overflow-hidden p-0" align="start">
+						<PopoverContent className={styles.datePickerContent} align="start">
 							<Calendar
 								mode="single"
 								selected={date}
@@ -106,9 +120,9 @@ export const DateAndTimePicker: Story = {
 									setOpen(false);
 								}}
 							/>
-							<div className="flex flex-col gap-3 p-3 border-t">
-								<label htmlFor="time-picker" className="px-1 text-xs">
-									Time
+							<div className={`story-column ${styles.timePickerSection}`}>
+								<label htmlFor="time-picker" className={styles.datePickerLabel}>
+									<Typography size="xs">Time</Typography>
 								</label>
 								<Input
 									type="time"
@@ -116,7 +130,7 @@ export const DateAndTimePicker: Story = {
 									onChange={(e) => setTime(e.target.value)}
 									id="time-picker"
 									step="1"
-									className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+									className={styles.timePickerInput}
 								/>
 							</div>
 						</PopoverContent>
@@ -133,55 +147,61 @@ export const PopoverShowcase: Story = {
 		docs: { story: { autoplay: true } },
 	},
 	render: () => (
-		<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background min-h-[600px]">
-			<div className="space-y-16">
-				<div className="space-y-4">
-					<h2 className="text-base font-semibold text-foreground">Positions</h2>
-					<div className="flex flex-wrap gap-8 items-center">
+		<div className={`story-container-full story-panel ${styles.showcaseContainer}`}>
+			<div className={styles.showcaseLayout}>
+				<div className="story-section">
+					<Typography as="h2" size="base" weight="semibold">
+						Positions
+					</Typography>
+					<div className="story-grid-lg">
 						{SIDES.map((side) => (
 							<Popover key={side}>
 								<PopoverTrigger asChild>
 									<Button
 										variant={ButtonVariant.Solid}
 										color={ButtonColor.Secondary}
-										className="capitalize"
+										className={styles.capitalizedButton}
 									>
 										{side}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent side={side} arrow>
-									<p className="text-sm">Popover on {side}</p>
+									<Typography size="sm">Popover on {side}</Typography>
 								</PopoverContent>
 							</Popover>
 						))}
 					</div>
 				</div>
 
-				<div className="space-y-4">
-					<h2 className="text-base font-semibold text-foreground">Align variations</h2>
-					<div className="flex flex-wrap gap-8">
+				<div className="story-section">
+					<Typography as="h2" size="base" weight="semibold">
+						Align variations
+					</Typography>
+					<div className="story-grid-lg">
 						{ALIGNS.map((align) => (
 							<Popover key={align}>
 								<PopoverTrigger asChild>
 									<Button
 										variant={ButtonVariant.Solid}
 										color={ButtonColor.Secondary}
-										className="capitalize"
+										className={styles.capitalizedButton}
 									>
 										{align}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent side="top" align={align} arrow>
-									<p className="text-sm">Align {align}</p>
+									<Typography size="sm">Align {align}</Typography>
 								</PopoverContent>
 							</Popover>
 						))}
 					</div>
 				</div>
 
-				<div className="space-y-4">
-					<h2 className="text-base font-semibold text-foreground">With / without arrow</h2>
-					<div className="flex gap-4">
+				<div className="story-section">
+					<Typography as="h2" size="base" weight="semibold">
+						With / without arrow
+					</Typography>
+					<div className="story-row-lg">
 						<Popover>
 							<PopoverTrigger asChild>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
@@ -189,7 +209,7 @@ export const PopoverShowcase: Story = {
 								</Button>
 							</PopoverTrigger>
 							<PopoverContent arrow={false}>
-								<p className="text-sm">No arrow</p>
+								<Typography size="sm">No arrow</Typography>
 							</PopoverContent>
 						</Popover>
 						<Popover>
@@ -199,14 +219,16 @@ export const PopoverShowcase: Story = {
 								</Button>
 							</PopoverTrigger>
 							<PopoverContent arrow>
-								<p className="text-sm">With arrow</p>
+								<Typography size="sm">With arrow</Typography>
 							</PopoverContent>
 						</Popover>
 					</div>
 				</div>
 
-				<div className="space-y-4">
-					<h2 className="text-base font-semibold text-foreground">Default open</h2>
+				<div className="story-section">
+					<Typography as="h2" size="base" weight="semibold">
+						Default open
+					</Typography>
 					<Popover defaultOpen>
 						<PopoverTrigger asChild>
 							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
@@ -214,13 +236,15 @@ export const PopoverShowcase: Story = {
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent>
-							<p className="text-sm">I am open by default</p>
+							<Typography size="sm">I am open by default</Typography>
 						</PopoverContent>
 					</Popover>
 				</div>
 
-				<div className="space-y-4">
-					<h2 className="text-base font-semibold text-foreground">Custom content</h2>
+				<div className="story-section">
+					<Typography as="h2" size="base" weight="semibold">
+						Custom content
+					</Typography>
 					<Popover>
 						<PopoverTrigger asChild>
 							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
@@ -228,11 +252,11 @@ export const PopoverShowcase: Story = {
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="w-64" arrow>
-							<div className="space-y-2">
-								<span className="font-medium">Custom popover</span>
-								<p className="text-sm text-muted-foreground">
+							<div className="story-section-sm">
+								<Typography weight="medium">Custom popover</Typography>
+								<Typography size="sm" color="muted">
 									With multiple lines and rich content.
-								</p>
+								</Typography>
 							</div>
 						</PopoverContent>
 					</Popover>

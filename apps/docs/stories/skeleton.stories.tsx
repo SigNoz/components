@@ -1,5 +1,6 @@
 import { Skeleton } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './skeleton.stories.module.css';
 
 const meta: Meta<typeof Skeleton> = {
 	title: 'Primitive Components/Skeleton',
@@ -37,68 +38,68 @@ export const Default: Story = {
 
 export const Overview: Story = {
 	render: () => (
-		<div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem' }}>
+		<div className={styles.container}>
 			{/* Base variants */}
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — with title & paragraph</p>
+				<p className={styles.sectionLabel}>Base — with title & paragraph</p>
 				<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
 			</div>
 
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — variable row widths</p>
+				<p className={styles.sectionLabel}>Base — variable row widths</p>
 				<Skeleton active paragraph={{ rows: 4, width: ['100%', '95%', '80%', '60%'] }} />
 			</div>
 
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Base — no animation</p>
+				<p className={styles.sectionLabel}>Base — no animation</p>
 				<Skeleton active={false} title={{ width: '40%' }} paragraph={{ rows: 3 }} />
 			</div>
 
 			{/* Skeleton.Input */}
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — small</p>
+				<p className={styles.sectionLabel}>Skeleton.Input — small</p>
 				<Skeleton.Input active size="small" />
 			</div>
 
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — default</p>
+				<p className={styles.sectionLabel}>Skeleton.Input — default</p>
 				<Skeleton.Input active />
 			</div>
 
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Input — large & block</p>
+				<p className={styles.sectionLabel}>Skeleton.Input — large & block</p>
 				<Skeleton.Input active size="large" block />
 			</div>
 
 			{/* Skeleton.Button */}
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Button — small</p>
+				<p className={styles.sectionLabel}>Skeleton.Button — small</p>
 				<Skeleton.Button active size="small" />
 			</div>
 
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Skeleton.Button — block</p>
+				<p className={styles.sectionLabel}>Skeleton.Button — block</p>
 				<Skeleton.Button active block />
 			</div>
 
 			{/* Skeleton.Avatar */}
-			<div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+			<div className={styles.avatarRow}>
 				<div>
-					<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Avatar — circle</p>
+					<p className={styles.sectionLabel}>Avatar — circle</p>
 					<Skeleton.Avatar active shape="circle" size={36} />
 				</div>
 				<div>
-					<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Avatar — square</p>
+					<p className={styles.sectionLabel}>Avatar — square</p>
 					<Skeleton.Avatar active shape="square" size={36} />
 				</div>
 			</div>
 
 			{/* Composed */}
 			<div>
-				<p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Composed — avatar + content</p>
-				<div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+				<p className={styles.sectionLabel}>Composed — avatar + content</p>
+				<div className={styles.composedRow}>
 					<Skeleton.Avatar active shape="circle" size={48} />
-					<div style={{ flex: 1 }}>
+					<div className={styles.composedContent}>
 						<Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />
 					</div>
 				</div>

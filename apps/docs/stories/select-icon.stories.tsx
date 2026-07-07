@@ -1,7 +1,15 @@
 import { ChevronDown, ChevronsUpDown, ChevronUp } from '@signozhq/icons';
-import { Select, SelectContent, SelectIcon, SelectItem, SelectTrigger } from '@signozhq/ui';
+import {
+	Select,
+	SelectContent,
+	SelectIcon,
+	SelectItem,
+	SelectTrigger,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-icon.stories.module.css';
 
 const meta: Meta<typeof SelectIcon> = {
 	title: 'Primitive Components/Select/SelectIcon',
@@ -42,11 +50,11 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					SelectIcon is typically used internally by SelectTrigger. This example shows the default
 					chevron icon.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -65,31 +73,37 @@ export const Default: Story = {
 export const StandaloneUsage: Story = {
 	render: () => {
 		return (
-			<div className="p-8 w-full max-w-sm space-y-6">
-				<p className="text-sm text-muted-foreground">
+			<div className={`story-container ${styles.standaloneContainer}`}>
+				<Typography size="sm" color="muted">
 					SelectIcon is primarily an internal component used by SelectTrigger. These examples show
 					the icon styling when rendered standalone.
-				</p>
+				</Typography>
 
-				<div className="space-y-4">
-					<div className="flex items-center gap-4">
-						<span className="text-sm w-32">ChevronDown:</span>
+				<div className="story-section">
+					<div className="story-row-lg">
+						<Typography size="sm" className={styles.labelWidth}>
+							ChevronDown:
+						</Typography>
 						<SelectIcon asChild>
-							<ChevronDown className="h-4 w-4" />
+							<ChevronDown className="icon-md" />
 						</SelectIcon>
 					</div>
 
-					<div className="flex items-center gap-4">
-						<span className="text-sm w-32">ChevronUp:</span>
+					<div className="story-row-lg">
+						<Typography size="sm" className={styles.labelWidth}>
+							ChevronUp:
+						</Typography>
 						<SelectIcon asChild>
-							<ChevronUp className="h-4 w-4" />
+							<ChevronUp className="icon-md" />
 						</SelectIcon>
 					</div>
 
-					<div className="flex items-center gap-4">
-						<span className="text-sm w-32">ChevronsUpDown:</span>
+					<div className="story-row-lg">
+						<Typography size="sm" className={styles.labelWidth}>
+							ChevronsUpDown:
+						</Typography>
 						<SelectIcon asChild>
-							<ChevronsUpDown className="h-4 w-4" />
+							<ChevronsUpDown className="icon-md" />
 						</SelectIcon>
 					</div>
 				</div>

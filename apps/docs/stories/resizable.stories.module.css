@@ -1,0 +1,408 @@
+.sectionContainer {
+  width: 100%;
+  padding: 1.5rem;
+  background: var(--background);
+}
+
+.sectionContainer > div {
+  width: 100%;
+}
+
+.sectionTitle {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.textCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.iconMuted {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--muted-foreground);
+}
+
+.resizableVerticalSmall {
+  height: 300px;
+}
+
+.panelContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  background: var(--muted);
+}
+
+.panelTitle {
+  margin-bottom: 0.5rem;
+}
+
+.panelContentMain {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+.fileTreeIndent {
+  margin-left: 0.75rem;
+}
+
+.editorContent {
+  flex: 1;
+  background: #020617;
+  border-radius: 0.25rem;
+  color: #4ade80;
+  padding: 0.75rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.editorContentLarge {
+  flex: 1;
+  background: #020617;
+  border-radius: 0.25rem;
+  color: #4ade80;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  overflow: auto;
+}
+
+.codeIndent {
+  margin-left: 0.5rem;
+}
+
+.chartPlaceholder {
+  height: 8rem;
+  width: 8rem;
+  margin: 0 auto 1rem;
+  background: linear-gradient(to bottom right, #60a5fa, #a855f7);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartText {
+  color: white;
+  font-weight: bold;
+}
+
+.resizableVertical {
+  height: 500px;
+}
+
+.navBar {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.statusDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.statusGreen {
+  background: #22c55e;
+}
+
+.statusYellow {
+  background: #eab308;
+}
+
+.statusRed {
+  background: #ef4444;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+}
+
+.contentTitle {
+  margin-bottom: 1rem;
+}
+
+.gradientContent {
+  flex: 1;
+  background: var(--l3-background);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  background: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.iconMargin {
+  margin-bottom: 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.chatTitle {
+  margin-bottom: 0.75rem;
+}
+
+.messagesContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.messageLeft {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.messageRight {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.messageBubble {
+  background: var(--muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  max-width: 20rem;
+}
+
+.messageBubblePrimary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  max-width: 20rem;
+}
+
+.inputAreaContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  background: var(--muted);
+}
+
+.inputContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.inputField {
+  flex: 1;
+  background: var(--background);
+  border-radius: 0.25rem;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+}
+
+.sendButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.sendButton {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.editorHeader {
+  margin-bottom: 0.75rem;
+}
+
+.codeTag {
+  font-size: 0.75rem;
+  background: var(--muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.codeLineNumber {
+  color: #6b7280;
+}
+
+.terminalOutput {
+  color: #60a5fa;
+}
+
+.cursorBlink {
+  animation: pulse 2s infinite;
+}
+
+.statusBar {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.gradientBlue {
+  flex: 1;
+  background: var(--l3-background);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconBlue {
+  margin: 0 auto 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  color: #3b82f6;
+}
+
+.terminalWarning {
+  color: #facc15;
+}
+
+.terminalHint {
+  color: #6b7280;
+}
+
+.infoSubtitle {
+  margin-top: 0.5rem;
+}
+
+.iconLarge {
+  margin: 0 auto 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  color: var(--muted-foreground);
+}
+
+.instructionPanel {
+  margin-top: 1rem;
+}
+
+.instructionTitle {
+  margin-bottom: 0.5rem;
+}
+
+.playgroundTitle {
+  margin-bottom: 0.5rem;
+}
+
+.gradientGreen {
+  flex: 1;
+  background: var(--l3-background);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconGreen {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: #16a34a;
+}
+
+.persistentSidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+  background: var(--muted);
+}
+
+.persistentContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+.fileIndent {
+  margin-left: 1rem;
+}
+
+.gradientBlueConfig {
+  background: var(--l3-background);
+}
+
+.iconBlueSmall {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: #2563eb;
+}
+
+.configInfo {
+  margin-top: 0.5rem;
+}
+
+.panelSubtitle {
+  margin-top: 0.25rem;
+}
+
+.iconMutedForeground {
+  color: var(--muted-foreground);
+}
+
+.iconMd {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--muted-foreground);
+}
+
+.iconMdBlue {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: #2563eb;
+}
+
+.iconLgBlue {
+  margin: 0 auto 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  color: #3b82f6;
+}
+
+.iconLgGreen {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: #16a34a;
+}
+
+.persistentMainContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}

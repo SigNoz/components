@@ -80,7 +80,7 @@ export const DialogCloseButton = forwardRef<HTMLButtonElement, DialogCloseButton
 				</Button>
 			</DialogClose>
 		);
-	}
+	},
 );
 
 DialogCloseButton.displayName = 'DialogCloseButton';

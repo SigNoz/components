@@ -50,19 +50,13 @@ const [values, setValues] = useState<string[]>([]);
 	placeholder="Select frameworks..."
 	value={values}
 	onChange={setValues}
-/>
+/>;
 ```
 
 Use `maxDisplayedPills` to cap visible pills. Overflow items appear as "+N":
 
 ```tsx
-<SelectSimple
-	multiple
-	items={items}
-	value={values}
-	onChange={setValues}
-	maxDisplayedPills={2}
-/>
+<SelectSimple multiple items={items} value={values} onChange={setValues} maxDisplayedPills={2} />
 ```
 
 ## Grouped items
@@ -72,8 +66,20 @@ Pass `groups` instead of `items` to render headings between option clusters:
 ```tsx
 <SelectSimple
 	groups={[
-		{ heading: 'Frameworks', items: [{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }] },
-		{ heading: 'Languages', items: [{ value: 'ts', label: 'TypeScript' }, { value: 'js', label: 'JavaScript' }] },
+		{
+			heading: 'Frameworks',
+			items: [
+				{ value: 'react', label: 'React' },
+				{ value: 'vue', label: 'Vue' },
+			],
+		},
+		{
+			heading: 'Languages',
+			items: [
+				{ value: 'ts', label: 'TypeScript' },
+				{ value: 'js', label: 'JavaScript' },
+			],
+		},
 	]}
 	placeholder="Select..."
 	value={value}
@@ -89,8 +95,26 @@ Use ReactNode labels with a `displayValue` string for what shows in the trigger:
 import { Code, Database } from '@signozhq/icons';
 
 const items = [
-	{ value: 'react', label: <><Code className="mr-2 h-4 w-4" />React</>, displayValue: 'React' },
-	{ value: 'postgres', label: <><Database className="mr-2 h-4 w-4" />PostgreSQL</>, displayValue: 'PostgreSQL' },
+	{
+		value: 'react',
+		label: (
+			<>
+				<Code style={{ marginRight: '0.5rem', width: '1rem', height: '1rem' }} />
+				React
+			</>
+		),
+		displayValue: 'React',
+	},
+	{
+		value: 'postgres',
+		label: (
+			<>
+				<Database style={{ marginRight: '0.5rem', width: '1rem', height: '1rem' }} />
+				PostgreSQL
+			</>
+		),
+		displayValue: 'PostgreSQL',
+	},
 ];
 ```
 
@@ -101,7 +125,9 @@ Or use `displayValue` as a callback to fully control the trigger label:
 	items={items}
 	value={value}
 	onChange={setValue}
-	displayValue={(selectedItems) => selectedItems.length > 0 ? `${selectedItems.length} selected` : null}
+	displayValue={(selectedItems) =>
+		selectedItems.length > 0 ? `${selectedItems.length} selected` : null
+	}
 />
 ```
 
@@ -167,10 +193,10 @@ import { Popover, PopoverTrigger, PopoverContent, SelectSimple, Button } from '@
 	<PopoverTrigger asChild>
 		<Button variant="outline">Open filters</Button>
 	</PopoverTrigger>
-	<PopoverContent className="w-80">
+	<PopoverContent style={{ width: '20rem' }}>
 		<SelectSimple items={items} value={value} onChange={setValue} withPortal={false} />
 	</PopoverContent>
-</Popover>
+</Popover>;
 ```
 
 ## Props

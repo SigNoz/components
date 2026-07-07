@@ -49,7 +49,7 @@ export const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProp
 				{...props}
 			/>
 		);
-	}
+	},
 );
 
 BreadcrumbItem.displayName = 'BreadcrumbItem';

@@ -53,7 +53,7 @@ export const Default: Story = {
 		}, [query]);
 
 		return (
-			<div className="p-8">
+			<div className="story-container-full">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">
@@ -63,7 +63,7 @@ export const Default: Story = {
 					<DropdownMenuContent>
 						<DropdownMenuSearch
 							{...args}
-							searchIcon={<Search className="h-4 w-4" />}
+							searchIcon={<Search className="icon-md" />}
 							onSearchChange={setQuery}
 						/>
 						<DropdownMenuSeparator />

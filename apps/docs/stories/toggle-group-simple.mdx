@@ -21,13 +21,7 @@ const items = [
 ];
 
 export default function MyComponent() {
-	return (
-		<ToggleGroupSimple
-			type="single"
-			items={items}
-			defaultValue="center"
-		/>
-	);
+	return <ToggleGroupSimple type="single" items={items} defaultValue="center" />;
 }
 ```
 
@@ -41,12 +35,24 @@ Add `aria-label` on each item when the label is an icon — required for screen 
 import { Bold, Italic, Underline } from '@signozhq/icons';
 
 const items = [
-	{ value: 'bold', label: <Bold className="h-3 w-3" />, 'aria-label': 'Bold' },
-	{ value: 'italic', label: <Italic className="h-3 w-3" />, 'aria-label': 'Italic' },
-	{ value: 'underline', label: <Underline className="h-3 w-3" />, 'aria-label': 'Underline' },
+	{
+		value: 'bold',
+		label: <Bold style={{ width: '0.75rem', height: '0.75rem' }} />,
+		'aria-label': 'Bold',
+	},
+	{
+		value: 'italic',
+		label: <Italic style={{ width: '0.75rem', height: '0.75rem' }} />,
+		'aria-label': 'Italic',
+	},
+	{
+		value: 'underline',
+		label: <Underline style={{ width: '0.75rem', height: '0.75rem' }} />,
+		'aria-label': 'Underline',
+	},
 ];
 
-<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold']} />
+<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold']} />;
 ```
 
 ## Icon + label items
@@ -57,11 +63,25 @@ Pass a ReactNode as `label` to render an icon alongside text:
 import { LayoutGrid, List } from '@signozhq/icons';
 
 const items = [
-	{ value: 'grid', label: <><LayoutGrid className="h-6 w-6" /> Grid</> },
-	{ value: 'list', label: <><List className="h-6 w-6" /> List</> },
+	{
+		value: 'grid',
+		label: (
+			<>
+				<LayoutGrid style={{ width: '1.5rem', height: '1.5rem' }} /> Grid
+			</>
+		),
+	},
+	{
+		value: 'list',
+		label: (
+			<>
+				<List style={{ width: '1.5rem', height: '1.5rem' }} /> List
+			</>
+		),
+	},
 ];
 
-<ToggleGroupSimple type="single" items={items} defaultValue="grid" />
+<ToggleGroupSimple type="single" items={items} defaultValue="grid" />;
 ```
 
 ## Multiple selection
@@ -69,11 +89,7 @@ const items = [
 Set `type="multiple"` and pass `defaultValue` as an array to allow multiple items to be active at once:
 
 ```tsx
-<ToggleGroupSimple
-	type="multiple"
-	items={items}
-	defaultValue={['bold', 'italic']}
-/>
+<ToggleGroupSimple type="multiple" items={items} defaultValue={['bold', 'italic']} />
 ```
 
 ## Controlled usage
@@ -107,7 +123,7 @@ const [values, setValues] = useState<string[]>(['bold']);
 	items={items}
 	value={values}
 	onChange={(v) => setValues(v as string[])}
-/>
+/>;
 ```
 
 ## Size variants
@@ -138,12 +154,7 @@ Three sizes are available: `sm`, `default`, and `lg`:
 ## Vertical orientation
 
 ```tsx
-<ToggleGroupSimple
-	type="single"
-	items={items}
-	defaultValue="center"
-	orientation="vertical"
-/>
+<ToggleGroupSimple type="single" items={items} defaultValue="center" orientation="vertical" />
 ```
 
 ## Props

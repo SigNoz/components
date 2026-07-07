@@ -209,7 +209,7 @@ export function filterTokens(
 		query?: string;
 		category?: string;
 		group?: string;
-	}
+	},
 ): ParsedToken[] {
 	return tokens.filter((token) => {
 		const matchesQuery =

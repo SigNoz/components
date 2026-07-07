@@ -8,7 +8,13 @@ setupMocks();
 describe('ComboboxSimple allowCreate', () => {
 	it('shows create option when typing new value', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				multiple
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -20,7 +26,13 @@ describe('ComboboxSimple allowCreate', () => {
 
 	it('does not show create option for existing values', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				multiple
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -40,7 +52,7 @@ describe('ComboboxSimple allowCreate', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -59,7 +71,7 @@ describe('ComboboxSimple allowCreate', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -78,7 +90,7 @@ describe('ComboboxSimple allowCreate', () => {
 				defaultValue={['existing']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -97,7 +109,7 @@ describe('ComboboxSimple allowCreate', () => {
 				defaultValue={['custom-tag']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -107,7 +119,7 @@ describe('ComboboxSimple allowCreate', () => {
 
 	it('shows create option in single-select mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} allowCreate testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -126,7 +138,7 @@ describe('ComboboxSimple allowCreate', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -140,7 +152,7 @@ describe('ComboboxSimple allowCreate', () => {
 
 	it('displays custom value in trigger after creation in single-select', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} allowCreate testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -159,7 +171,7 @@ describe('ComboboxSimple allowCreate', () => {
 				defaultValue="pre-existing-custom"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

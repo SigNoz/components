@@ -10,6 +10,7 @@ import {
 	DialogPortal,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { overlayComponentArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -42,10 +43,10 @@ export const Default: Story = {
 						<DialogTitle>Dialog overlay</DialogTitle>
 					</DialogHeader>
 					<DialogDescription>
-						<p className="text-sm font-normal leading-5 font-inter font-regular">
+						<Typography size="sm">
 							The overlay dims the background and blocks interaction with the page while the dialog
 							is open.
-						</p>
+						</Typography>
 					</DialogDescription>
 				</DialogContent>
 			</DialogPortal>

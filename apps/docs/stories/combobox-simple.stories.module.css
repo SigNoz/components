@@ -1,0 +1,24 @@
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.marginTopSmall {
+  margin-top: 0.5rem;
+}
+
+.iconMarginRight {
+  margin-right: 0.5rem;
+}
+
+.variationsContainer {
+  padding: 2rem;
+  width: 100%;
+  max-width: 42rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 0.5rem;
+}

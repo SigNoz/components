@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
-<Meta title="Design System / Overview"  />
+<Meta title="Design System / Overview" />
 
 # Overview
 
@@ -33,12 +33,12 @@ Diagram of the token hierarchy:
 ```
 
 **Why this matters:**
+
 - **Primitives** are raw color values (e.g., `robin-500: #4E74F8`)
 - **Semantic tokens** give meaning to those values (e.g., `primary-background: var(--bg-robin-500)`)
 - **Components** use semantic tokens, making theme changes automatic
 
 ---
-
 
 ## Token Usage
 
@@ -48,9 +48,9 @@ All tokens are available as CSS custom properties:
 
 ```css
 .my-element {
-  background-color: var(--l1-background);
-  color: var(--l1-foreground);
-  border: 1px solid var(--l2-border);
+	background-color: var(--l1-background);
+	color: var(--l1-foreground);
+	border: 1px solid var(--l2-border);
 }
 ```
 
@@ -59,17 +59,15 @@ All tokens are available as CSS custom properties:
 Tokens are mapped to Tailwind utility classes:
 
 ```tsx
-<div className="bg-l1-background text-l1-foreground border border-l2-border">
-  Content here
-</div>
+<div className="bg-l1-background text-l1-foreground border border-l2-border">Content here</div>
 ```
 
 ### When to Use Which
 
-| Approach | Best For |
-|----------|----------|
-| **Tailwind classes** | Component styling, responsive design, rapid prototyping |
-| **CSS variables** | Complex animations, dynamic theming, CSS-in-JS libraries |
+| Approach             | Best For                                                 |
+| -------------------- | -------------------------------------------------------- |
+| **Tailwind classes** | Component styling, responsive design, rapid prototyping  |
+| **CSS variables**    | Complex animations, dynamic theming, CSS-in-JS libraries |
 
 ---
 
@@ -82,9 +80,7 @@ The surface level system provides a consistent approach to layered UI. Each leve
 The outermost container, typically the page or app shell background.
 
 ```tsx
-<div className="bg-l1-background text-l1-foreground">
-  {/* Page content */}
-</div>
+<div className="bg-l1-background text-l1-foreground">{/* Page content */}</div>
 ```
 
 **Use for:** Main app shell, page backgrounds, root containers
@@ -97,9 +93,9 @@ Secondary surfaces that sit on top of L1.
 
 ```tsx
 <div className="bg-l1-background">
-  <div className="bg-l2-background border border-l2-border rounded-lg p-4">
-    {/* Card content */}
-  </div>
+	<div className="bg-l2-background border border-l2-border rounded-lg p-4">
+		{/* Card content */}
+	</div>
 </div>
 ```
 
@@ -113,7 +109,7 @@ Tertiary surfaces within L2 containers.
 
 ```tsx
 <div className="bg-l2-background p-4">
-  <input className="bg-l3-background border border-l3-border rounded px-3 py-2" />
+	<input className="bg-l3-background border border-l3-border rounded px-3 py-2" />
 </div>
 ```
 
@@ -141,9 +137,7 @@ Of each level:
 Each level has corresponding hover tokens:
 
 ```tsx
-<button className="bg-l2-background hover:bg-l2-background-hover">
-  Hover me
-</button>
+<button className="bg-l2-background hover:bg-l2-background-hover">Hover me</button>
 ```
 
 ---
@@ -159,11 +153,9 @@ Start with existing semantic tokens wherever possible:
 ```tsx
 // dialog.tsx
 function DialogContent({ children }) {
-  return (
-    <div className="bg-l1-background border border-l2-border rounded-lg shadow-lg">
-      {children}
-    </div>
-  );
+	return (
+		<div className="bg-l1-background border border-l2-border rounded-lg shadow-lg">{children}</div>
+	);
 }
 ```
 
@@ -174,12 +166,12 @@ For component-specific styling that doesn't fit existing tokens, define CSS cust
 ```css
 /* dialog/index.css */
 .dialog {
-  --dialog-border: var(--l2-border);
-  --dialog-close-icon: var(--l2-foreground);
+	--dialog-border: var(--l2-border);
+	--dialog-close-icon: var(--l2-foreground);
 }
 
 .alert-dialog {
-  --dialog-border: var(--danger-background);
+	--dialog-border: var(--danger-background);
 }
 ```
 
@@ -187,15 +179,9 @@ For component-specific styling that doesn't fit existing tokens, define CSS cust
 
 ```tsx
 function DialogHeader({ className, ...props }) {
-  return (
-    <div
-      className={cn(
-        'border-b border-[var(--dialog-border)] px-4 py-3',
-        className
-      )}
-      {...props}
-    />
-  );
+	return (
+		<div className={cn('border-b border-[var(--dialog-border)] px-4 py-3', className)} {...props} />
+	);
 }
 ```
 
@@ -253,36 +239,34 @@ Here's how the Dialog component from `@signozhq/ui` uses tokens:
 
 If you're migrating from the legacy token system, use this mapping:
 
-| Legacy Token | New Semantic Token | Notes |
-|--------------|-------------------|-------|
-| `background` | `l1-background` | Page-level background |
-| `foreground` | `l1-foreground` | Primary text color |
-| `card` | `l2-background` | Card backgrounds |
-| `card-foreground` | `l2-foreground` | Card text |
-| `muted` | `l3-background` | Muted backgrounds |
-| `muted-foreground` | `l3-foreground` | Muted text |
-| `primary` | `primary-background` | Primary actions |
-| `secondary` | `secondary-background` | Secondary actions |
-| `destructive` | `danger-background` | Destructive actions |
-| `accent` | `accent-primary` | Accent highlights |
-| `border` | `l1-border` or `l2-border` | Context-dependent |
+| Legacy Token       | New Semantic Token         | Notes                 |
+| ------------------ | -------------------------- | --------------------- |
+| `background`       | `l1-background`            | Page-level background |
+| `foreground`       | `l1-foreground`            | Primary text color    |
+| `card`             | `l2-background`            | Card backgrounds      |
+| `card-foreground`  | `l2-foreground`            | Card text             |
+| `muted`            | `l3-background`            | Muted backgrounds     |
+| `muted-foreground` | `l3-foreground`            | Muted text            |
+| `primary`          | `primary-background`       | Primary actions       |
+| `secondary`        | `secondary-background`     | Secondary actions     |
+| `destructive`      | `danger-background`        | Destructive actions   |
+| `accent`           | `accent-primary`           | Accent highlights     |
+| `border`           | `l1-border` or `l2-border` | Context-dependent     |
 
 ### Migration Example
 
 **Before:**
+
 ```tsx
 <div className="bg-card text-card-foreground border-border">
-  <button className="bg-primary text-primary-foreground">
-    Click
-  </button>
+	<button className="bg-primary text-primary-foreground">Click</button>
 </div>
 ```
 
 **After:**
+
 ```tsx
 <div className="bg-l2-background text-l2-foreground border-l2-border">
-  <button className="bg-primary-background text-primary-foreground">
-    Click
-  </button>
+	<button className="bg-primary-background text-primary-foreground">Click</button>
 </div>
 ```

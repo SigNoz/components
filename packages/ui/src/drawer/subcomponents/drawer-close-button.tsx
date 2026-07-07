@@ -32,7 +32,7 @@ export type DrawerCloseButtonProps = BaseDialogCloseButtonProps;
 export const DrawerCloseButton = forwardRef<HTMLButtonElement, DrawerCloseButtonProps>(
 	(props, ref) => {
 		return <BaseDialogCloseButton ref={ref} {...props} />;
-	}
+	},
 );
 
 DrawerCloseButton.displayName = 'DrawerCloseButton';

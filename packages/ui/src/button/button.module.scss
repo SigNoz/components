@@ -14,6 +14,7 @@
 	line-height: var(--button-line-height, 100%);
 	font-variant-numeric: var(--button-font-variant-numeric, slashed-zero);
 	border-color: var(--button-base-border-color, transparent);
+	border-width: var(--button-base-border-width, 0px);
 
 	&[data-color='primary'] {
 		--button-internal-background: var(--button-primary-background, var(--primary-background));

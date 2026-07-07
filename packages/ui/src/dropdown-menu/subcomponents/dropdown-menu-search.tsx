@@ -57,7 +57,7 @@ export type DropdownMenuSearchProps = Omit<InputProps, 'onChange' | 'prefix'> & 
 export const DropdownMenuSearch = React.forwardRef<HTMLInputElement, DropdownMenuSearchProps>(
 	(
 		{ className, onSearchChange, onNavigateDown, searchIcon, placeholder = 'Search...', ...props },
-		ref
+		ref,
 	) => {
 		const [value, setValue] = React.useState('');
 
@@ -92,7 +92,7 @@ export const DropdownMenuSearch = React.forwardRef<HTMLInputElement, DropdownMen
 				{...props}
 			/>
 		);
-	}
+	},
 );
 
 DropdownMenuSearch.displayName = 'DropdownMenuSearch';

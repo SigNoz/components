@@ -57,7 +57,7 @@ export const Default: Story = {
 		const [showUrls, setShowUrls] = useState(false);
 
 		return (
-			<div className="p-8">
+			<div className="story-container-full">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">

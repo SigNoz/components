@@ -20,7 +20,7 @@ describe('Resizable forwardRef', () => {
 				<ResizablePanel>Panel 1</ResizablePanel>
 				<ResizableHandle />
 				<ResizablePanel>Panel 2</ResizablePanel>
-			</ResizablePanelGroup>
+			</ResizablePanelGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

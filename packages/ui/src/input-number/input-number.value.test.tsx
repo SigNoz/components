@@ -30,7 +30,7 @@ describe('InputNumber — value, parsing, precision', () => {
 				formatter={(v) => `$ ${v}`}
 				parser={(v) => v.replace(/[^\d.-]/g, '')}
 				testId="num"
-			/>
+			/>,
 		);
 		const input = screen.getByTestId('num') as HTMLInputElement;
 		expect(input.value).toBe('$ 1000');
@@ -42,7 +42,7 @@ describe('InputNumber — value, parsing, precision', () => {
 	it('round-trips decimalSeparator for display and parsing', () => {
 		const onChange = vi.fn();
 		render(
-			<InputNumber defaultValue={1.5} decimalSeparator="," onChange={onChange} testId="num" />
+			<InputNumber defaultValue={1.5} decimalSeparator="," onChange={onChange} testId="num" />,
 		);
 		const input = screen.getByTestId('num') as HTMLInputElement;
 		expect(input.value).toBe('1,5');

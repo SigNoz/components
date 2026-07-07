@@ -67,7 +67,7 @@ export function ComboboxListContent({
 					{group.heading ? (
 						<ComboboxGroup heading={group.heading}>
 							{group.items.map((item) =>
-								renderItem(item, selectedValues, handleSelect, handleInsert)
+								renderItem(item, selectedValues, handleSelect, handleInsert),
 							)}
 						</ComboboxGroup>
 					) : (

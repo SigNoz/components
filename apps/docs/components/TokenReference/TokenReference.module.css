@@ -1,0 +1,71 @@
+.container {
+	min-height: 100vh;
+	background-color: var(--l1-background);
+	padding: 1.5rem;
+	padding-top: 0;
+}
+
+.content {
+	max-width: 80rem;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.header {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+@media (min-width: 640px) {
+	.header {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+}
+
+.headerTitle {
+	margin-top: 0.25rem;
+}
+
+.tabs {
+	display: flex;
+	gap: 0.5rem;
+	border-bottom: 1px solid var(--l2-border);
+}
+
+.controls {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+	.controls {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+}
+
+.themeToggle {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.themeButtons {
+	display: flex;
+	border-radius: 0.5rem;
+	border: 1px solid var(--l2-border);
+	overflow: hidden;
+}
+
+.tokenGroups {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}

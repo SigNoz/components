@@ -69,6 +69,6 @@ export const ConfirmDialogUrl = React.forwardRef<HTMLDivElement, ConfirmDialogUr
 				{...props}
 			/>
 		);
-	}
+	},
 );
 ConfirmDialogUrl.displayName = 'ConfirmDialogUrl';

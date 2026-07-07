@@ -17,7 +17,7 @@ export const clamp = (value: number, min: number | undefined, max: number | unde
 export const isOutOfRange = (
 	value: InputNumberValue,
 	min: number | undefined,
-	max: number | undefined
+	max: number | undefined,
 ): boolean => {
 	if (!isNumberLike(value)) return false;
 	if (max !== undefined && value > max) return true;
@@ -35,7 +35,7 @@ export const formatForDisplay = (
 	value: InputNumberValue,
 	precision: number | undefined,
 	decimalSeparator: string | undefined,
-	formatter: InputNumberProps['formatter']
+	formatter: InputNumberProps['formatter'],
 ): string => {
 	if (value === null || value === undefined) return '';
 	let display: string = precision !== undefined ? value.toFixed(precision) : String(value);
@@ -51,7 +51,7 @@ export const formatForDisplay = (
 export const parseFromInput = (
 	raw: string,
 	decimalSeparator: string | undefined,
-	parser: InputNumberProps['parser']
+	parser: InputNumberProps['parser'],
 ): InputNumberValue => {
 	let work = raw;
 	if (parser) work = parser(work);
@@ -62,7 +62,7 @@ export const parseFromInput = (
 };
 
 export const resolveControls = (
-	controls: InputNumberControls | undefined
+	controls: InputNumberControls | undefined,
 ): { enabled: boolean; upIcon: React.ReactNode; downIcon: React.ReactNode } => {
 	if (controls === false) {
 		return { enabled: false, upIcon: null, downIcon: null };

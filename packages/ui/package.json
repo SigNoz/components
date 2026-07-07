@@ -2,10 +2,20 @@
 	"name": "@signozhq/ui",
 	"version": "0.0.23",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SigNoz/components.git"
+	},
+	"files": [
+		"dist"
+	],
 	"type": "module",
+	"sideEffects": [
+		"*.css"
+	],
 	"main": "./dist/index.cjs",
-	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"import": {
@@ -388,12 +398,9 @@
 			}
 		}
 	},
-	"files": [
-		"dist"
-	],
-	"sideEffects": [
-		"*.css"
-	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"prepack": "cp ../../README.md ./README.md",
 		"build": "vite build && publint",
@@ -404,19 +411,6 @@
 		"test:run": "vitest run",
 		"tokens": "node scripts/extract-css-tokens.mjs",
 		"tokens:check": "node scripts/extract-css-tokens.mjs --check"
-	},
-	"devDependencies": {
-		"@repo/typescript-config": "workspace:*",
-		"@testing-library/jest-dom": "^6.6.3",
-		"@testing-library/react": "^16.0.1",
-		"@types/node": "25.9.4",
-		"@types/react": "^18.2.61",
-		"@vitejs/plugin-react": "^5.2.0",
-		"@vitest/coverage-v8": "^4.0.18",
-		"jsdom": "^29.1.1",
-		"publint": "0.3.21",
-		"vite": "npm:rolldown-vite@7.3.1",
-		"vitest": "^4.1.9"
 	},
 	"dependencies": {
 		"@chenglou/pretext": "^0.0.8",
@@ -450,16 +444,22 @@
 		"react-resizable-panels": "^4.11.2",
 		"sonner": "^2.0.7"
 	},
+	"devDependencies": {
+		"@repo/typescript-config": "workspace:*",
+		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/react": "^16.0.1",
+		"@types/node": "25.9.4",
+		"@types/react": "^18.2.61",
+		"@vitejs/plugin-react": "^5.2.0",
+		"@vitest/coverage-v8": "^4.0.18",
+		"jsdom": "^29.1.1",
+		"publint": "0.3.21",
+		"vite": "npm:rolldown-vite@7.3.1",
+		"vitest": "^4.1.9"
+	},
 	"peerDependencies": {
 		"@signozhq/icons": "0.3.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/SigNoz/components.git"
 	}
 }

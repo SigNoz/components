@@ -20,7 +20,7 @@ describe('ComboboxSimple single-select mode', () => {
 	it('calls onChange when item is selected', () => {
 		const onChange = vi.fn();
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} onChange={onChange} testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} onChange={onChange} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -56,14 +56,19 @@ describe('ComboboxSimple single-select mode', () => {
 
 	it('displays selected value in trigger via defaultValue', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} defaultValue="react" testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				defaultValue="react"
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('React');
 	});
 
 	it('displays selected value in trigger via controlled value', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} value="angular" testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} value="angular" testId="combo" withPortal={false} />,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('Angular');
 	});
@@ -71,7 +76,7 @@ describe('ComboboxSimple single-select mode', () => {
 	it('uses displayValue from item when provided', () => {
 		const items = [{ value: 'node', label: <span>Node.js</span>, displayValue: 'Node.js' }];
 		renderWithProviders(
-			<ComboboxSimple items={items} defaultValue="node" testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} defaultValue="node" testId="combo" withPortal={false} />,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('Node.js');
 	});
@@ -84,7 +89,7 @@ describe('ComboboxSimple single-select mode', () => {
 				displayValue={(item) => (item ? `${item.value} ✓` : 'Choose...')}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('react ✓');
 	});
@@ -96,7 +101,7 @@ describe('ComboboxSimple single-select mode', () => {
 				defaultValue="not-in-items"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('not-in-items');
 	});
@@ -109,7 +114,7 @@ describe('ComboboxSimple single-select mode', () => {
 				displayValue={displayValue}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(displayValue).toHaveBeenCalledWith(undefined);
 		expect(screen.getByTestId('combo')).toHaveTextContent('choose…');
@@ -156,7 +161,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				defaultValue={['react', 'vue']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByText('React')).toBeInTheDocument();
 		expect(screen.getByText('Vue')).toBeInTheDocument();
@@ -171,7 +176,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -190,7 +195,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -201,7 +206,7 @@ describe('ComboboxSimple multi-select mode', () => {
 
 	it('keeps dropdown open after selection in multi mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -212,7 +217,7 @@ describe('ComboboxSimple multi-select mode', () => {
 
 	it('clears input after selection in multi mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -236,7 +241,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const reactPill = screen
@@ -257,7 +262,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				maxDisplayedPills={2}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(screen.getByText('React')).toBeInTheDocument();
@@ -274,7 +279,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				defaultValue={['react', 'vue', 'angular']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(screen.getByText('React')).toBeInTheDocument();
@@ -291,7 +296,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				defaultValue={['react']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -308,7 +313,7 @@ describe('ComboboxSimple multi-select mode', () => {
 				defaultValue={['react']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -319,7 +324,7 @@ describe('ComboboxSimple multi-select mode', () => {
 
 	it('closes dropdown and focuses trigger when pressing Shift+Tab on input', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -342,7 +347,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 				value={['react', 'rogue-value']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByText('React')).toBeInTheDocument();
 		expect(screen.getByText('rogue-value')).toBeInTheDocument();
@@ -354,7 +359,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 			{ value: 'b', label: 'Beta' },
 		];
 		renderWithProviders(
-			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />,
 		);
 		expect(screen.getByText('Alpha')).toBeInTheDocument();
 	});
@@ -362,7 +367,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 	it('prefers displayValue over label when both present', () => {
 		const items = [{ value: 'a', label: <span>Alpha-icon</span>, displayValue: 'Alpha' }];
 		renderWithProviders(
-			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />,
 		);
 		expect(screen.getByText('Alpha')).toBeInTheDocument();
 		expect(screen.queryByText('Alpha-icon')).not.toBeInTheDocument();
@@ -371,7 +376,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 	it('renders ReactNode label in pill when no displayValue', () => {
 		const items = [{ value: 'a', label: <span data-testid="rich-label">Rich</span> }];
 		renderWithProviders(
-			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />,
 		);
 		expect(screen.getByTestId('rich-label')).toBeInTheDocument();
 	});
@@ -379,7 +384,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 	it('falls back to value when item has no displayValue and no label', () => {
 		const items = [{ value: 'a', label: undefined as unknown as React.ReactNode }];
 		renderWithProviders(
-			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} multiple value={['a']} testId="combo" withPortal={false} />,
 		);
 		const pill = document.querySelector('[data-slot="combobox-pill"]');
 		expect(pill).toHaveTextContent('a');
@@ -398,7 +403,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 				maxDisplayedPills={1}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByText('+2')).toBeInTheDocument();
 		const overflow = document.querySelector('[data-slot="combobox-pill-overflow"]');
@@ -414,7 +419,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 					value={[undefined as unknown as string, 'react']}
 					testId="combo"
 					withPortal={false}
-				/>
+				/>,
 			);
 		}).not.toThrow();
 		expect(screen.getByText('React')).toBeInTheDocument();
@@ -428,7 +433,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 				value={['', 'react']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		const pills = document.querySelectorAll('[data-slot="combobox-pill"]');
 		expect(pills).toHaveLength(1);
@@ -444,7 +449,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 					value={[{ id: 'react' } as unknown as string, 42 as unknown as string, 'react']}
 					testId="combo"
 					withPortal={false}
-				/>
+				/>,
 			);
 		}).not.toThrow();
 		const pills = document.querySelectorAll('[data-slot="combobox-pill"]');
@@ -461,7 +466,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		const unknownPill = screen
 			.getByText('unknown-tag')
@@ -482,7 +487,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 				value={['x']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByText('Original')).toBeInTheDocument();
 
@@ -495,7 +500,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 					testId="combo"
 					withPortal={false}
 				/>
-			</TooltipProvider>
+			</TooltipProvider>,
 		);
 		expect(screen.getByText('Updated')).toBeInTheDocument();
 	});
@@ -512,7 +517,7 @@ describe('ComboboxSimple multi-select resolveLabel', () => {
 				value={['a', 'b']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByText('Alpha')).toBeInTheDocument();
 		expect(screen.getByText('Beta')).toBeInTheDocument();
@@ -530,7 +535,7 @@ describe('ComboboxSimple controlled mode multi-select', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -607,7 +612,7 @@ describe('ComboboxSimple uncontrolled mode', () => {
 	it('manages state internally when no value prop', () => {
 		const onChange = vi.fn();
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} onChange={onChange} testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} onChange={onChange} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -624,7 +629,7 @@ describe('ComboboxSimple uncontrolled mode', () => {
 				defaultValue="angular"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(screen.getByTestId('combo')).toHaveTextContent('Angular');
@@ -632,7 +637,7 @@ describe('ComboboxSimple uncontrolled mode', () => {
 
 	it('multi-select uncontrolled updates internally', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

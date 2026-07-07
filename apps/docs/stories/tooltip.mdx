@@ -32,9 +32,9 @@ export default function MyComponent() {
 					<Button>Custom content</Button>
 				</TooltipTrigger>
 				<TooltipContent side="bottom" arrow>
-					<span className="font-medium">Custom tooltip</span>
+					<span style={{ fontWeight: 500 }}>Custom tooltip</span>
 					<br />
-					<span className="text-sm opacity-90">With multiple lines</span>
+					<span style={{ fontSize: '0.875rem', opacity: 0.9 }}>With multiple lines</span>
 				</TooltipContent>
 			</TooltipRoot>
 		</TooltipProvider>
@@ -67,7 +67,7 @@ import {
 			</TooltipRoot>
 		</TooltipProvider>
 	</DialogContent>
-</Dialog>
+</Dialog>;
 ```
 
 ## TooltipTrigger Props

@@ -10,7 +10,7 @@ describe('RadioGroup forwardRef', () => {
 		render(
 			<RadioGroup ref={ref}>
 				<RadioGroupItem value="a">A</RadioGroupItem>
-			</RadioGroup>
+			</RadioGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -22,7 +22,7 @@ describe('RadioGroup forwardRef', () => {
 				<RadioGroupItem ref={ref} value="a">
 					A
 				</RadioGroupItem>
-			</RadioGroup>
+			</RadioGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -34,7 +34,7 @@ describe('RadioGroup forwardRef', () => {
 				<RadioGroupItem value="a">
 					<RadioGroupLabel ref={ref}>Label A</RadioGroupLabel>
 				</RadioGroupItem>
-			</RadioGroup>
+			</RadioGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLLabelElement);
 	});

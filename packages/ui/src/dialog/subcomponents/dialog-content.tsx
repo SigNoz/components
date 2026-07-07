@@ -42,14 +42,14 @@ const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
 				{...rest}
 			/>
 		);
-	}
+	},
 );
 MotionContent.displayName = 'MotionContent';
 
 const getContentVariants = (
 	position: DialogPosition,
 	heightMode: DialogHeightMode,
-	animation: DialogAnimation
+	animation: DialogAnimation,
 ): Variants => {
 	const baseTransform =
 		position === 'center'
@@ -305,7 +305,7 @@ export const DialogContent = React.forwardRef<
 			animation = 'fade',
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const style = useMemo(() => {
 			const offsetMap = {
@@ -324,7 +324,7 @@ export const DialogContent = React.forwardRef<
 
 		const variants = useMemo(
 			() => getContentVariants(position, heightMode, animation),
-			[position, heightMode, animation]
+			[position, heightMode, animation],
 		);
 
 		return (
@@ -352,6 +352,6 @@ export const DialogContent = React.forwardRef<
 				</DialogPrimitive.Content>
 			</DialogPortal>
 		);
-	}
+	},
 );
 DialogContent.displayName = 'DialogContent';

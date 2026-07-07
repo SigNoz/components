@@ -39,6 +39,6 @@ export const DialogHeader = React.forwardRef<HTMLDivElement, DialogHeaderProps>(
 		>
 			{children}
 		</div>
-	)
+	),
 );
 DialogHeader.displayName = 'DialogHeader';

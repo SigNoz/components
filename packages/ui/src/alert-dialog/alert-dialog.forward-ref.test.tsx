@@ -10,7 +10,7 @@ describe('AlertDialog forwardRef', () => {
 		render(
 			<AlertDialog ref={ref} open onOpenChange={() => {}} title="Alert">
 				Content
-			</AlertDialog>
+			</AlertDialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

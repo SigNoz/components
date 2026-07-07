@@ -1,4 +1,6 @@
+import { Typography } from '@signozhq/ui';
 import { getTransformedColorTokens } from '../utils.js';
+import styles from './ColorPalette.module.css';
 
 const colors = getTransformedColorTokens();
 
@@ -12,7 +14,7 @@ function getContrastTextColor(hexColor: string): string {
 	// brightness calculation
 	const brightness = (r + g + b) / 3;
 
-	return brightness > 127 ? 'text-black' : 'text-white';
+	return brightness > 127 ? styles.textBlack : styles.textWhite;
 }
 
 function ColorPalette() {
@@ -29,27 +31,34 @@ function ColorPalette() {
 	};
 
 	return (
-		<div className="p-5">
-			<h1 className="mb-5 text-lg font-bold text-card-foreground">Pallette</h1>
+		<div className={styles.container}>
+			<Typography size="lg" weight="bold" className={styles.title}>
+				Pallette
+			</Typography>
 
 			{/* Regular colors */}
-			<div className="grid grid-cols-4 gap-5 mb-12">
+			<div className={styles.colorGrid}>
 				{colors
 					.filter((item) => item.name !== 'Gradient')
 					.map((color) => (
 						<div key={color.name}>
-							<h3 className="mt-4 text-base font-bold capitalize text-card-foreground">
+							<Typography
+								size="base"
+								weight="bold"
+								className={styles.colorCard}
+								style={{ textTransform: 'capitalize' }}
+							>
 								{color.name}
-							</h3>
-							<div className="overflow-hidden rounded-lg shadow-lg">
+							</Typography>
+							<div className={styles.colorShades}>
 								{color.shades.map((shade) => (
 									<div
 										key={shade.name}
-										className={`flex items-center justify-between w-full h-12 px-4 font-semibold ${getContrastTextColor(shade.value)}`}
+										className={`${styles.colorShade} ${getContrastTextColor(shade.value)}`}
 										style={{ backgroundColor: shade.value }}
 									>
 										<span>{shade.name}</span>
-										<span className="uppercase">{shade.value}</span>
+										<span className={styles.shadeValue}>{shade.value}</span>
 									</div>
 								))}
 							</div>
@@ -58,27 +67,36 @@ function ColorPalette() {
 			</div>
 
 			{/* Accents */}
-			<div className="mb-12">
-				<h1 className="mb-5 text-lg font-bold text-card-foreground">Accents</h1>
+			<div className={styles.accentsSection}>
+				<Typography size="lg" weight="bold" className={styles.accentsTitle}>
+					Accents
+				</Typography>
 
 				{/* Primary Accents */}
-				<div className="mb-8">
-					<h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+				<div className={styles.accentGroup}>
+					<Typography
+						size="xs"
+						weight="semibold"
+						className={styles.accentGroupTitle}
+						style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
+					>
 						PRIMARY
-					</h2>
-					<div className="flex gap-4">
+					</Typography>
+					<div className={styles.accentList}>
 						{primaryAccents.map((accentName) => {
 							const accent = getAccentColor(accentName);
 							if (!accent) return null;
 							return (
-								<div key={accent.name} className="flex flex-col gap-3">
-									<div
-										className="h-[70px] w-[150px] rounded shadow-lg"
-										style={{ backgroundColor: accent.value }}
-									/>
-									<p className="text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+								<div key={accent.name} className={styles.accentItem}>
+									<div className={styles.accentSwatch} style={{ backgroundColor: accent.value }} />
+									<Typography
+										size="xs"
+										weight="semibold"
+										className={styles.accentName}
+										style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
+									>
 										{accent.name}
-									</p>
+									</Typography>
 								</div>
 							);
 						})}
@@ -87,22 +105,29 @@ function ColorPalette() {
 
 				{/* Secondary Accents */}
 				<div>
-					<h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+					<Typography
+						size="xs"
+						weight="semibold"
+						className={styles.accentGroupTitle}
+						style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
+					>
 						SECONDARY
-					</h2>
-					<div className="flex flex-wrap gap-4">
+					</Typography>
+					<div className={styles.accentListWrap}>
 						{secondaryAccents.map((accentName) => {
 							const accent = getAccentColor(accentName);
 							if (!accent) return null;
 							return (
-								<div key={accent.name} className="flex flex-col gap-3">
-									<div
-										className="h-[70px] w-[150px] rounded shadow-lg"
-										style={{ backgroundColor: accent.value }}
-									/>
-									<p className="text-xs font-semibold uppercase tracking-wider text-card-foreground opacity-70">
+								<div key={accent.name} className={styles.accentItem}>
+									<div className={styles.accentSwatch} style={{ backgroundColor: accent.value }} />
+									<Typography
+										size="xs"
+										weight="semibold"
+										className={styles.accentName}
+										style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
+									>
 										{accent.name}
-									</p>
+									</Typography>
 								</div>
 							);
 						})}
@@ -115,16 +140,18 @@ function ColorPalette() {
 				.filter((item) => item.name === 'Gradient')
 				.map((color) => (
 					<div key={color.name}>
-						<h1 className="mb-5 text-lg font-bold text-vanilla-100">Gradients</h1>
+						<Typography size="lg" weight="bold" className={styles.gradientsTitle}>
+							Gradients
+						</Typography>
 
-						<div className="grid grid-cols-6 gap-5 mb-12">
+						<div className={styles.gradientGrid}>
 							{color.shades.map((shade) => (
-								<div className=" shadow-lg" key={shade.name}>
+								<div className={styles.gradientCard} key={shade.name}>
 									<div
-										className={`flex items-center justify-between w-full h-20 px-4 font-semibold overflow-hidden rounded-lg`}
+										className={styles.gradientSwatch}
 										style={{ backgroundImage: shade.value }}
 									></div>
-									<span className="text-vanilla-100">{shade.name}</span>
+									<Typography size="sm">{shade.name}</Typography>
 								</div>
 							))}
 						</div>

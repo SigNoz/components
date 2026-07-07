@@ -1,0 +1,15 @@
+.descriptionText {
+  margin-bottom: 1rem;
+}
+
+.viewportSmall {
+  max-height: 150px;
+}
+
+.viewportMedium {
+  max-height: 200px;
+}
+
+.viewportPadded {
+  padding: 1rem;
+}

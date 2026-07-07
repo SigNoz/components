@@ -8,8 +8,9 @@ import {
 	LayoutGrid,
 	Underline,
 } from '@signozhq/icons';
-import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
+import { ToggleGroup, ToggleGroupItem, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './toggle-group.stories.module.css';
 
 const meta: Meta<typeof ToggleGroup> = {
 	title: 'Primitive Components/ToggleGroup',
@@ -119,16 +120,16 @@ export const Default: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft className="h-3 w-3" />
+				<AlignLeft className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="center" aria-label="Align center">
-				<AlignCenter className="h-3 w-3" />
+				<AlignCenter className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight className="h-3 w-3" />
+				<AlignRight className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="justify" aria-label="Justify">
-				<AlignJustify className="h-3 w-3" />
+				<AlignJustify className="icon-sm" />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -139,33 +140,39 @@ export const ToggleGroupShowcase: Story = {
 		docs: { story: { autoplay: true } },
 	},
 	render: () => (
-		<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background">
-			<div className="space-y-12">
+		<div className="story-container-full">
+			<div className={styles.showcaseContainer}>
 				{COLORS.map((color) => (
-					<div key={color} className="space-y-4">
-						<h2 className="text-base font-semibold capitalize text-foreground">{color}</h2>
-						<div className="flex flex-wrap gap-8">
+					<div key={color} className="story-section">
+						<Typography size="base" weight="semibold" className={styles.capitalize}>
+							{color}
+						</Typography>
+						<div className={styles.colorSection}>
 							{SIZES.map((size) => (
-								<div key={size} className="space-y-2">
-									<h3 className="text-sm font-medium capitalize">{size}</h3>
+								<div key={size} className="story-section-sm">
+									<Typography size="sm" weight="medium" className={styles.capitalize}>
+										{size}
+									</Typography>
 									<ToggleGroup type="single" defaultValue="center" color={color} size={size}>
 										<ToggleGroupItem value="left" aria-label="Align left">
-											<AlignLeft className="h-3 w-3" />
+											<AlignLeft className="icon-sm" />
 										</ToggleGroupItem>
 										<ToggleGroupItem value="center" aria-label="Align center">
-											<AlignCenter className="h-3 w-3" />
+											<AlignCenter className="icon-sm" />
 										</ToggleGroupItem>
 										<ToggleGroupItem value="right" aria-label="Align right">
-											<AlignRight className="h-3 w-3" />
+											<AlignRight className="icon-sm" />
 										</ToggleGroupItem>
 										<ToggleGroupItem value="justify" aria-label="Justify">
-											<AlignJustify className="h-3 w-3" />
+											<AlignJustify className="icon-sm" />
 										</ToggleGroupItem>
 									</ToggleGroup>
 								</div>
 							))}
-							<div className="space-y-2">
-								<h3 className="text-sm font-medium">Disabled</h3>
+							<div className="story-section-sm">
+								<Typography size="sm" weight="medium">
+									Disabled
+								</Typography>
 								<ToggleGroup
 									type="single"
 									defaultValue="center"
@@ -174,16 +181,16 @@ export const ToggleGroupShowcase: Story = {
 									disabled
 								>
 									<ToggleGroupItem value="left" aria-label="Align left">
-										<AlignLeft className="h-3 w-3" />
+										<AlignLeft className="icon-sm" />
 									</ToggleGroupItem>
 									<ToggleGroupItem value="center" aria-label="Align center">
-										<AlignCenter className="h-3 w-3" />
+										<AlignCenter className="icon-sm" />
 									</ToggleGroupItem>
 									<ToggleGroupItem value="right" aria-label="Align right">
-										<AlignRight className="h-3 w-3" />
+										<AlignRight className="icon-sm" />
 									</ToggleGroupItem>
 									<ToggleGroupItem value="justify" aria-label="Justify">
-										<AlignJustify className="h-3 w-3" />
+										<AlignJustify className="icon-sm" />
 									</ToggleGroupItem>
 								</ToggleGroup>
 							</div>
@@ -205,16 +212,16 @@ export const SingleChoice: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft className="h-3 w-3" />
+				<AlignLeft className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="center" aria-label="Align center">
-				<AlignCenter className="h-3 w-3" />
+				<AlignCenter className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight className="h-3 w-3" />
+				<AlignRight className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="justify" aria-label="Justify">
-				<AlignJustify className="h-3 w-3" />
+				<AlignJustify className="icon-sm" />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -230,13 +237,13 @@ export const MultipleChoices: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="bold" aria-label="Bold">
-				<Bold className="h-3 w-3" />
+				<Bold className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="italic" aria-label="Italic">
-				<Italic className="h-3 w-3" />
+				<Italic className="icon-sm" />
 			</ToggleGroupItem>
 			<ToggleGroupItem value="underline" aria-label="Underline">
-				<Underline className="h-3 w-3" />
+				<Underline className="icon-sm" />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),
@@ -252,13 +259,13 @@ export const WithLabels: Story = {
 	render: (args) => (
 		<ToggleGroup {...args}>
 			<ToggleGroupItem value="first">
-				<LayoutGrid className="h-6 w-6" /> Label
+				<LayoutGrid className={styles.iconLarge} /> Label
 			</ToggleGroupItem>
 			<ToggleGroupItem value="second">
-				<LayoutGrid className="h-6 w-6" /> Label
+				<LayoutGrid className={styles.iconLarge} /> Label
 			</ToggleGroupItem>
 			<ToggleGroupItem value="third">
-				<LayoutGrid className="h-6 w-6" /> Label
+				<LayoutGrid className={styles.iconLarge} /> Label
 			</ToggleGroupItem>
 		</ToggleGroup>
 	),

@@ -1,4 +1,4 @@
-import { Button, ButtonColor, ButtonVariant, PopoverSimple } from '@signozhq/ui';
+import { Button, ButtonColor, ButtonVariant, PopoverSimple, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { simpleArgTypes } from './shared/popover-arg-types.js';
 
@@ -32,9 +32,9 @@ export const Default: Story = {
 				</Button>
 			}
 		>
-			<p className="text-sm">
+			<Typography size="sm">
 				Simple popover content. Pass trigger and children instead of composing subcomponents.
-			</p>
+			</Typography>
 		</PopoverSimple>
 	),
 };

@@ -1,0 +1,122 @@
+.container {
+	padding: 1.25rem;
+}
+
+.title {
+	margin-bottom: 1.25rem;
+}
+
+.colorGrid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 1.25rem;
+	margin-bottom: 3rem;
+}
+
+.colorCard {
+	margin-top: 1rem;
+}
+
+.colorShades {
+	overflow: hidden;
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.colorShade {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	height: 3rem;
+	padding: 0 1rem;
+	font-weight: 600;
+}
+
+.shadeValue {
+	text-transform: uppercase;
+}
+
+.accentsSection {
+	margin-bottom: 3rem;
+}
+
+.accentsTitle {
+	margin-bottom: 1.25rem;
+}
+
+.accentGroup {
+	margin-bottom: 2rem;
+}
+
+.accentGroupTitle {
+	margin-bottom: 1rem;
+	opacity: 0.7;
+}
+
+.accentList {
+	display: flex;
+	gap: 1rem;
+}
+
+.accentListWrap {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.accentItem {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.accentSwatch {
+	height: 70px;
+	width: 150px;
+	border-radius: 0.25rem;
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.accentName {
+	opacity: 0.7;
+}
+
+.gradientsSection {
+	margin-bottom: 3rem;
+}
+
+.gradientsTitle {
+	margin-bottom: 1.25rem;
+}
+
+.gradientGrid {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 1.25rem;
+	margin-bottom: 3rem;
+}
+
+.gradientCard {
+	box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.gradientSwatch {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	height: 5rem;
+	padding: 0 1rem;
+	font-weight: 600;
+	overflow: hidden;
+	border-radius: 0.5rem;
+}
+
+.textBlack {
+	color: black;
+}
+
+.textWhite {
+	color: white;
+}

@@ -7,8 +7,10 @@ import {
 	TooltipRoot,
 	TooltipSimple,
 	TooltipTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './tooltip.stories.module.css';
 
 const SIDES = ['top', 'right', 'bottom', 'left'] as const;
 const ALIGNS = ['start', 'center', 'end'] as const;
@@ -74,7 +76,7 @@ type Story = StoryObj<typeof TooltipRoot>;
 export const Default: Story = {
 	render: () => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-20 flex items-center justify-center">
+			<div className={`story-center ${styles.demoArea}`}>
 				<TooltipSimple title="I'm a basic tooltip" arrow>
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me
@@ -91,11 +93,13 @@ export const TooltipShowcase: Story = {
 	},
 	render: () => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background min-h-[600px]">
-				<div className="space-y-16">
-					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">Positions</h2>
-						<div className="flex flex-wrap gap-8 items-center">
+			<div className={`story-container-full ${styles.showcaseContainer}`}>
+				<div className={styles.showcaseContent}>
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Positions
+						</Typography>
+						<div className={styles.positionsContainer}>
 							{SIDES.map((side) => (
 								<TooltipRoot key={side}>
 									<TooltipTrigger asChild>
@@ -115,9 +119,11 @@ export const TooltipShowcase: Story = {
 						</div>
 					</div>
 
-					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">Align variations</h2>
-						<div className="flex flex-wrap gap-8">
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Align variations
+						</Typography>
+						<div className={styles.alignContainer}>
 							{ALIGNS.map((align) => (
 								<TooltipRoot key={align}>
 									<TooltipTrigger asChild>
@@ -137,9 +143,11 @@ export const TooltipShowcase: Story = {
 						</div>
 					</div>
 
-					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">With / without arrow</h2>
-						<div className="flex gap-4">
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							With / without arrow
+						</Typography>
+						<div className="story-row-lg">
 							<TooltipSimple title="No arrow" arrow={false}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									Without arrow
@@ -153,9 +161,11 @@ export const TooltipShowcase: Story = {
 						</div>
 					</div>
 
-					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">Delay variations</h2>
-						<div className="flex gap-4 flex-wrap">
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Delay variations
+						</Typography>
+						<div className="story-grid">
 							<TooltipSimple title="No delay (0ms)" delayDuration={0}>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 									0ms
@@ -179,8 +189,10 @@ export const TooltipShowcase: Story = {
 						</div>
 					</div>
 
-					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">Default open</h2>
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Default open
+						</Typography>
 						<TooltipSimple defaultOpen title="I am open by default">
 							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 								Hover or focus to see tooltip
@@ -188,10 +200,10 @@ export const TooltipShowcase: Story = {
 						</TooltipSimple>
 					</div>
 
-					<div className="space-y-4">
-						<h2 className="text-base font-semibold text-foreground">
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
 							Custom content (composition)
-						</h2>
+						</Typography>
 						<TooltipRoot>
 							<TooltipTrigger asChild>
 								<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
@@ -199,9 +211,13 @@ export const TooltipShowcase: Story = {
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="top" arrow>
-								<span className="font-medium">Custom tooltip</span>
+								<Typography as="span" weight="medium">
+									Custom tooltip
+								</Typography>
 								<br />
-								<span className="text-sm opacity-90">With multiple lines</span>
+								<Typography as="span" size="sm" className={styles.multilineOpacity}>
+									With multiple lines
+								</Typography>
 							</TooltipContent>
 						</TooltipRoot>
 					</div>

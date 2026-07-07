@@ -16,7 +16,7 @@ describe('AnnouncementBanner forwardRef', () => {
 		render(
 			<PersistedAnnouncementBanner ref={ref} storageKey="test">
 				Announcement
-			</PersistedAnnouncementBanner>
+			</PersistedAnnouncementBanner>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

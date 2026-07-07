@@ -22,7 +22,7 @@ describe('Select forwardRef', () => {
 				<SelectContent>
 					<SelectItem value="a">A</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -35,7 +35,7 @@ describe('Select forwardRef', () => {
 				<SelectContent ref={ref}>
 					<SelectItem value="a">A</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -50,7 +50,7 @@ describe('Select forwardRef', () => {
 						A
 					</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -66,7 +66,7 @@ describe('Select forwardRef', () => {
 						<SelectItem value="a">A</SelectItem>
 					</SelectGroup>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -82,7 +82,7 @@ describe('Select forwardRef', () => {
 						<SelectItem value="a">A</SelectItem>
 					</SelectGroup>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -97,7 +97,7 @@ describe('Select forwardRef', () => {
 					<SelectSeparator ref={ref} />
 					<SelectItem value="b">B</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -105,7 +105,11 @@ describe('Select forwardRef', () => {
 	it('SelectSimple forwards ref', () => {
 		const ref = createRef<HTMLButtonElement>();
 		render(
-			<SelectSimple ref={ref} items={[{ value: 'a', label: 'Option A' }]} placeholder="Select..." />
+			<SelectSimple
+				ref={ref}
+				items={[{ value: 'a', label: 'Option A' }]}
+				placeholder="Select..."
+			/>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});

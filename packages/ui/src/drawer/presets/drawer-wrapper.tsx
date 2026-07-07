@@ -216,7 +216,7 @@ export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps
 			closeButtonProps,
 			width = 'base',
 		},
-		ref
+		ref,
 	) => {
 		const isControlled = open !== undefined && onOpenChange !== undefined;
 		const [internalOpen, setInternalOpen] = useState(false);
@@ -226,7 +226,7 @@ export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps
 				if (!isControlled) setInternalOpen(next);
 				onOpenChange?.(next);
 			},
-			[isControlled, onOpenChange]
+			[isControlled, onOpenChange],
 		);
 		const onClickClose = useCallback(() => {
 			if (!isControlled) setInternalOpen(false);
@@ -266,6 +266,6 @@ export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps
 				<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
 			</Drawer>
 		);
-	}
+	},
 );
 DrawerWrapper.displayName = 'DrawerWrapper';

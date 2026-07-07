@@ -29,7 +29,7 @@ function Table({
 			className={cn(
 				styles['table__container'],
 				fixedHeight && styles['table__container_scrollable'],
-				containerProps?.className
+				containerProps?.className,
 			)}
 			style={
 				fixedHeight
@@ -49,7 +49,7 @@ function Table({
 				className={cn(
 					styles['table__table'],
 					fixedHeight && styles['table__table_sticky'],
-					className
+					className,
 				)}
 				{...props}
 			/>

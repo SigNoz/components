@@ -23,9 +23,11 @@ import {
 	TabsRoot,
 	TabsTrigger,
 	type TabVariants,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type * as React from 'react';
+import styles from './tabs.stories.module.css';
 
 const meta: Meta<typeof Tabs> = {
 	title: 'Composed Components/TabsSimple',
@@ -137,7 +139,7 @@ const playgroundItems: (TabItemProps & { variant?: TabVariants })[] = [
 		key: 'overview',
 		label: 'Overview',
 		children: 'Overview content panel',
-		prefixIcon: <Settings2 className="size-4" />,
+		prefixIcon: <Settings2 className="icon-md" />,
 	},
 	{
 		key: 'issues',
@@ -145,13 +147,13 @@ const playgroundItems: (TabItemProps & { variant?: TabVariants })[] = [
 		children: 'Issues content panel',
 		disabled: true,
 		disabledReason: 'Issues are temporarily unavailable',
-		prefixIcon: <CircleAlert className="size-4" />,
+		prefixIcon: <CircleAlert className="icon-md" />,
 	},
 	{
 		key: 'history',
 		label: 'History',
 		children: 'History content panel',
-		suffixIcon: <History className="size-4" />,
+		suffixIcon: <History className="icon-md" />,
 	},
 	{
 		key: 'another',
@@ -175,7 +177,7 @@ const playgroundItems: (TabItemProps & { variant?: TabVariants })[] = [
 		label: 'Settings',
 		children: 'Settings content panel',
 		variant: 'secondary',
-		prefixIcon: <Settings className="size-4" />,
+		prefixIcon: <Settings className="icon-md" />,
 		disabled: true,
 		disabledReason: 'You need admin privileges to access settings',
 	},
@@ -186,7 +188,7 @@ const defaultItems: TabItemProps[] = [
 		key: 'overview',
 		label: 'Overview',
 		children: 'Overview content panel',
-		prefixIcon: <Settings2 className="size-4" />,
+		prefixIcon: <Settings2 className="icon-md" />,
 	},
 	{
 		key: 'issues',
@@ -194,13 +196,13 @@ const defaultItems: TabItemProps[] = [
 		children: 'Issues content panel',
 		disabled: true,
 		disabledReason: 'Issues are temporarily unavailable',
-		prefixIcon: <CircleAlert className="size-4" />,
+		prefixIcon: <CircleAlert className="icon-md" />,
 	},
 	{
 		key: 'history',
 		label: 'History',
 		children: 'History content panel',
-		suffixIcon: <History className="size-4" />,
+		suffixIcon: <History className="icon-md" />,
 	},
 	{
 		key: 'another',
@@ -220,9 +222,11 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
 	render: () => (
-		<div className="space-y-8">
+		<div className={`story-section ${styles.sectionGap}`}>
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Primary Variant</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Primary Variant
+				</Typography>
 				<Tabs
 					items={playgroundItems.filter((i) => i.variant !== 'secondary')}
 					variant="primary"
@@ -231,7 +235,9 @@ export const AllVariants: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Secondary Variant</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Secondary Variant
+				</Typography>
 				<Tabs
 					items={playgroundItems
 						.filter((i) => i.variant === 'secondary')
@@ -242,21 +248,23 @@ export const AllVariants: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">With Icons</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					With Icons
+				</Typography>
 				<Tabs
 					items={[
 						{
 							key: 'apps',
 							label: 'Applications',
 							children: 'Applications list',
-							prefixIcon: <LayoutGrid className="size-4" />,
-							suffixIcon: <List className="size-4" />,
+							prefixIcon: <LayoutGrid className="icon-md" />,
+							suffixIcon: <List className="icon-md" />,
 						},
 						{
 							key: 'modules',
 							label: 'Modules',
 							children: 'Modules content',
-							prefixIcon: <Component className="size-4" />,
+							prefixIcon: <Component className="icon-md" />,
 						},
 					]}
 					variant="primary"
@@ -265,15 +273,19 @@ export const AllVariants: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Dashboard Navigation</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Dashboard Navigation
+				</Typography>
 				<Tabs
 					items={[
 						{
 							key: 'overview',
 							label: 'Overview',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Overview</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Overview
+									</Typography>
 								</div>
 							),
 						},
@@ -281,8 +293,10 @@ export const AllVariants: Story = {
 							key: 'integrations',
 							label: 'Integrations',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Integrations</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Integrations
+									</Typography>
 								</div>
 							),
 						},
@@ -290,8 +304,10 @@ export const AllVariants: Story = {
 							key: 'activity',
 							label: 'Activity',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Activity</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Activity
+									</Typography>
 								</div>
 							),
 						},
@@ -299,8 +315,10 @@ export const AllVariants: Story = {
 							key: 'domains',
 							label: 'Domains',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Domains</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Domains
+									</Typography>
 								</div>
 							),
 						},
@@ -308,8 +326,10 @@ export const AllVariants: Story = {
 							key: 'usage',
 							label: 'Usage',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Usage</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Usage
+									</Typography>
 								</div>
 							),
 						},
@@ -317,8 +337,10 @@ export const AllVariants: Story = {
 							key: 'monitoring',
 							label: 'Monitoring',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Monitoring</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Monitoring
+									</Typography>
 								</div>
 							),
 						},
@@ -326,8 +348,10 @@ export const AllVariants: Story = {
 							key: 'observability',
 							label: 'Observability',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Observability</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Observability
+									</Typography>
 								</div>
 							),
 						},
@@ -335,8 +359,10 @@ export const AllVariants: Story = {
 							key: 'storage',
 							label: 'Storage',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Storage</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Storage
+									</Typography>
 								</div>
 							),
 						},
@@ -344,8 +370,10 @@ export const AllVariants: Story = {
 							key: 'ai',
 							label: 'AI',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">AI</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										AI
+									</Typography>
 								</div>
 							),
 						},
@@ -353,8 +381,10 @@ export const AllVariants: Story = {
 							key: 'support',
 							label: 'Support',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Support</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Support
+									</Typography>
 								</div>
 							),
 						},
@@ -362,8 +392,10 @@ export const AllVariants: Story = {
 							key: 'settings',
 							label: 'Settings',
 							children: (
-								<div className="pt-4">
-									<h1 className="text-2xl font-semibold">Settings</h1>
+								<div className={styles.contentPanel}>
+									<Typography size="2xl" weight="semibold">
+										Settings
+									</Typography>
 								</div>
 							),
 						},
@@ -381,7 +413,7 @@ const primaryItems = [
 		key: 'overview',
 		label: 'Overview',
 		children: 'Overview content',
-		prefixIcon: <Settings className="size-4" />,
+		prefixIcon: <Settings className="icon-md" />,
 	},
 	{
 		key: 'issues',
@@ -389,13 +421,13 @@ const primaryItems = [
 		children: 'Issues content',
 		disabled: true,
 		disabledReason: 'Issues feature is currently under maintenance',
-		prefixIcon: <CircleAlert className="size-4" />,
+		prefixIcon: <CircleAlert className="icon-md" />,
 	},
 	{
 		key: 'history',
 		label: 'History',
 		children: 'History content',
-		suffixIcon: <History className="size-4" />,
+		suffixIcon: <History className="icon-md" />,
 	},
 ];
 
@@ -433,9 +465,11 @@ export const Secondary: Story = {
 
 export const TabBarExtraContent: Story = {
 	render: () => (
-		<div className="space-y-8 p-6">
+		<div className={styles.extraContentContainer}>
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Primary — right-only (Add view button)</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Primary — right-only (Add view button)
+				</Typography>
 				<Tabs
 					items={primaryItems}
 					variant="primary"
@@ -445,7 +479,7 @@ export const TabBarExtraContent: Story = {
 							variant={ButtonVariant.Outlined}
 							size={ButtonSize.SM}
 							color={ButtonColor.Secondary}
-							prefix={<Plus className="size-4" />}
+							prefix={<Plus className="icon-md" />}
 						>
 							Add view
 						</Button>
@@ -454,18 +488,24 @@ export const TabBarExtraContent: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Primary — both left and right content</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Primary — both left and right content
+				</Typography>
 				<Tabs
 					items={primaryItems}
 					variant="primary"
 					defaultValue="overview"
-					tabBarLeftContent={<span className="text-xs opacity-50">Service: frontend</span>}
+					tabBarLeftContent={
+						<Typography size="xs" color="muted">
+							Service: frontend
+						</Typography>
+					}
 					tabBarRightContent={
 						<Button
 							variant={ButtonVariant.Outlined}
 							size={ButtonSize.SM}
 							color={ButtonColor.Secondary}
-							prefix={<Settings className="size-4" />}
+							prefix={<Settings className="icon-md" />}
 						>
 							Configure
 						</Button>
@@ -474,7 +514,9 @@ export const TabBarExtraContent: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Secondary — right-only</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Secondary — right-only
+				</Typography>
 				<Tabs
 					items={secondaryItems}
 					variant="secondary"
@@ -484,7 +526,7 @@ export const TabBarExtraContent: Story = {
 							variant={ButtonVariant.Outlined}
 							size={ButtonSize.SM}
 							color={ButtonColor.Secondary}
-							prefix={<Plus className="size-4" />}
+							prefix={<Plus className="icon-md" />}
 						>
 							New endpoint
 						</Button>
@@ -493,18 +535,24 @@ export const TabBarExtraContent: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Secondary — left and right content</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Secondary — left and right content
+				</Typography>
 				<Tabs
 					items={secondaryItems}
 					variant="secondary"
 					defaultValue="all"
-					tabBarLeftContent={<span className="text-xs opacity-50">v2 API</span>}
+					tabBarLeftContent={
+						<Typography size="xs" color="muted">
+							v2 API
+						</Typography>
+					}
 					tabBarRightContent={
 						<Button
 							variant={ButtonVariant.Outlined}
 							size={ButtonSize.SM}
 							color={ButtonColor.Secondary}
-							prefix={<Plus className="size-4" />}
+							prefix={<Plus className="icon-md" />}
 						>
 							New endpoint
 						</Button>
@@ -513,9 +561,9 @@ export const TabBarExtraContent: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
 					Primitive TabsList — rightContent prop directly
-				</h2>
+				</Typography>
 				<TabsRoot defaultValue="tab1">
 					<TabsList
 						variant="primary"
@@ -524,7 +572,7 @@ export const TabBarExtraContent: Story = {
 								variant={ButtonVariant.Outlined}
 								size={ButtonSize.SM}
 								color={ButtonColor.Secondary}
-								prefix={<Plus className="size-4" />}
+								prefix={<Plus className="icon-md" />}
 							>
 								Add
 							</Button>
@@ -546,13 +594,17 @@ const alignmentItems: TabItemProps[] = [
 	{ key: 'settings', label: 'Settings', children: 'Settings content' },
 ];
 
-const leftExtra = <span className="text-xs opacity-60">v2 API</span>;
+const leftExtra = (
+	<Typography size="xs" color="muted">
+		v2 API
+	</Typography>
+);
 const rightExtra = (
 	<Button
 		variant={ButtonVariant.Outlined}
 		size={ButtonSize.SM}
 		color={ButtonColor.Secondary}
-		prefix={<Plus className="size-4" />}
+		prefix={<Plus className="icon-md" />}
 	>
 		Add view
 	</Button>
@@ -576,20 +628,26 @@ const extraConfigs: Record<
 
 export const Alignment: Story = {
 	render: () => (
-		<div className="space-y-12 p-6">
+		<div className={styles.alignmentContainer}>
 			{(['primary', 'secondary'] as TabVariants[]).map((variant) => (
 				<section key={variant}>
-					<h1 className="mb-6 border-b pb-2 text-xl font-bold capitalize">{variant} variant</h1>
+					<Typography size="xl" weight="bold" className={styles.variantSection}>
+						{variant} variant
+					</Typography>
 					{(['left', 'center', 'right'] as TabsAlignment[]).map((alignment) => (
-						<div key={alignment} className="mb-10">
-							<h2 className="mb-4 text-base font-semibold capitalize">{alignment} alignment</h2>
-							<div className="space-y-6">
+						<div key={alignment} className={styles.alignmentSection}>
+							<Typography size="base" weight="semibold" className={styles.alignmentTitle}>
+								{alignment} alignment
+							</Typography>
+							<div className={styles.extraVariantsContainer}>
 								{(Object.keys(extraConfigs) as ExtraVariant[]).map((extraVariant) => {
 									const { label, tabBarLeftContent, tabBarRightContent } =
 										extraConfigs[extraVariant];
 									return (
 										<div key={extraVariant}>
-											<p className="mb-2 font-mono text-xs opacity-50">{label}</p>
+											<Typography size="xs" color="muted" className={styles.extraVariantLabel}>
+												{label}
+											</Typography>
 											<Tabs
 												items={alignmentItems}
 												variant={variant}
@@ -612,9 +670,11 @@ export const Alignment: Story = {
 
 export const DisabledStates: Story = {
 	render: () => (
-		<div className="space-y-8">
+		<div className={`story-section ${styles.sectionGap}`}>
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Disabled Tabs with Custom Reasons</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Disabled Tabs with Custom Reasons
+				</Typography>
 				<Tabs
 					items={[
 						{
@@ -628,7 +688,7 @@ export const DisabledStates: Story = {
 							children: 'Locked content',
 							disabled: true,
 							disabledReason: 'This feature is locked',
-							prefixIcon: <Lock className="size-4" />,
+							prefixIcon: <Lock className="icon-md" />,
 						},
 						{
 							key: 'maintenance',
@@ -636,7 +696,7 @@ export const DisabledStates: Story = {
 							children: 'Maintenance content',
 							disabled: true,
 							disabledReason: 'This section is under maintenance',
-							prefixIcon: <Clock className="size-4" />,
+							prefixIcon: <Clock className="icon-md" />,
 						},
 						{
 							key: 'permissions',
@@ -644,7 +704,7 @@ export const DisabledStates: Story = {
 							children: 'Permissions content',
 							disabled: true,
 							disabledReason: 'You do not have permission to access this area',
-							prefixIcon: <ShieldAlert className="size-4" />,
+							prefixIcon: <ShieldAlert className="icon-md" />,
 						},
 						{
 							key: 'default',
@@ -660,7 +720,9 @@ export const DisabledStates: Story = {
 			</div>
 
 			<div>
-				<h2 className="mb-4 text-lg font-semibold">Secondary Variant Disabled States</h2>
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Secondary Variant Disabled States
+				</Typography>
 				<Tabs
 					items={[
 						{
@@ -708,20 +770,20 @@ export const IconAlignment: Story = {
 				key: 'prefix',
 				label: 'Prefix Icon',
 				children: 'Tab with a leading icon',
-				prefixIcon: <Settings2 className="size-4" />,
+				prefixIcon: <Settings2 className="icon-md" />,
 			},
 			{
 				key: 'suffix',
 				label: 'Suffix Icon',
 				children: 'Tab with a trailing icon',
-				suffixIcon: <History className="size-4" />,
+				suffixIcon: <History className="icon-md" />,
 			},
 			{
 				key: 'both',
 				label: 'Both Icons',
 				children: 'Tab with leading and trailing icons',
-				prefixIcon: <LayoutGrid className="size-4" />,
-				suffixIcon: <Component className="size-4" />,
+				prefixIcon: <LayoutGrid className="icon-md" />,
+				suffixIcon: <Component className="icon-md" />,
 			},
 		],
 	},

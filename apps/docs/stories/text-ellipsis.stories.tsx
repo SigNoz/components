@@ -1,5 +1,6 @@
-import { TextEllipsis, useTextEllipsisWidth } from '@signozhq/ui';
+import { TextEllipsis, Typography, useTextEllipsisWidth } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './text-ellipsis.stories.module.css';
 
 const meta: Meta<typeof TextEllipsis> = {
 	title: 'Primitive Components/TextEllipsis',
@@ -60,7 +61,7 @@ export const Playground: Story = {
 		ellipsis: '...',
 	},
 	render: (props) => (
-		<div style={{ width: '300px', padding: '16px' }}>
+		<div className={styles.playgroundContainer}>
 			<TextEllipsis {...props} />
 		</div>
 	),
@@ -82,28 +83,32 @@ export const EllipsisPositions: Story = {
 		width: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4 p-4">
-			<div className="flex items-center gap-3">
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-12 shrink-0">
+		<div className={styles.positionsContainer}>
+			<div className="story-row">
+				<Typography size="xs" color="muted" className={styles.positionLabel}>
 					Center:
-				</span>
-				<div style={{ width: '240px' }}>
+				</Typography>
+				<div className={styles.ellipsisContainer}>
 					<TextEllipsis position="center">
 						This is a very long text that will be truncated in the center
 					</TextEllipsis>
 				</div>
 			</div>
-			<div className="flex items-center gap-3">
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-12 shrink-0">Start:</span>
-				<div style={{ width: '240px' }}>
+			<div className="story-row">
+				<Typography size="xs" color="muted" className={styles.positionLabel}>
+					Start:
+				</Typography>
+				<div className={styles.ellipsisContainer}>
 					<TextEllipsis position="start">
 						path/to/very/long/filename/that/needs/truncation.tsx
 					</TextEllipsis>
 				</div>
 			</div>
-			<div className="flex items-center gap-3">
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-12 shrink-0">End:</span>
-				<div style={{ width: '240px' }}>
+			<div className="story-row">
+				<Typography size="xs" color="muted" className={styles.positionLabel}>
+					End:
+				</Typography>
+				<div className={styles.ellipsisContainer}>
 					<TextEllipsis position="end">
 						A long description that should be truncated at the end of the text
 					</TextEllipsis>
@@ -129,12 +134,12 @@ export const FilePaths: Story = {
 		width: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4 p-4">
+		<div className={styles.positionsContainer}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.filePathSection}>
 					Start Truncation (shows filename)
-				</h3>
-				<div className="flex flex-col gap-2" style={{ width: '280px' }}>
+				</Typography>
+				<div className={styles.filePathList}>
 					<TextEllipsis position="start">
 						/var/log/application/server/debug/2024-01-15.log
 					</TextEllipsis>
@@ -147,10 +152,10 @@ export const FilePaths: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.filePathSection}>
 					Center Truncation (shows root and filename)
-				</h3>
-				<div className="flex flex-col gap-2" style={{ width: '280px' }}>
+				</Typography>
+				<div className={styles.filePathList}>
 					<TextEllipsis position="center">
 						/var/log/application/server/debug/2024-01-15.log
 					</TextEllipsis>
@@ -179,27 +184,35 @@ export const CustomEllipsis: Story = {
 		width: { control: false },
 	},
 	render: () => (
-		<div className="space-y-3 p-4" style={{ width: '280px' }}>
+		<div className={styles.customEllipsisContainer}>
 			<div>
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Default (...)</span>
+				<Typography size="xs" color="muted">
+					Default (...)
+				</Typography>
 				<TextEllipsis ellipsis="...">
 					This is a very long text that will be truncated with default ellipsis
 				</TextEllipsis>
 			</div>
 			<div>
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Unicode (…)</span>
+				<Typography size="xs" color="muted">
+					Unicode (…)
+				</Typography>
 				<TextEllipsis ellipsis="…">
 					This is a very long text that will be truncated with unicode ellipsis
 				</TextEllipsis>
 			</div>
 			<div>
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Tilde (~)</span>
+				<Typography size="xs" color="muted">
+					Tilde (~)
+				</Typography>
 				<TextEllipsis ellipsis="~" position="start">
 					/home/user/projects/my-app/src/components/Button/index.tsx
 				</TextEllipsis>
 			</div>
 			<div>
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300">More (›)</span>
+				<Typography size="xs" color="muted">
+					More (›)
+				</Typography>
 				<TextEllipsis ellipsis=" ›" position="end">
 					Read more about this very long topic with lots of details
 				</TextEllipsis>
@@ -224,14 +237,11 @@ export const ResponsiveContainer: Story = {
 		width: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4 p-4">
-			<p className="text-xs text-vanilla-600 dark:text-vanilla-300">
+		<div className={styles.positionsContainer}>
+			<Typography size="xs" color="muted">
 				Resize the browser window to see the text adapt automatically.
-			</p>
-			<div
-				className="flex flex-col gap-2 p-3 border border-vanilla-300 dark:border-vanilla-700 rounded"
-				style={{ width: '100%', maxWidth: '400px' }}
-			>
+			</Typography>
+			<div className={`story-panel ${styles.responsivePanel}`}>
 				<TextEllipsis position="center">
 					kubernetes-deployment-production-east-us-2-replica-set
 				</TextEllipsis>
@@ -266,16 +276,12 @@ export const WithExternalWidth: Story = {
 		const { ref, width } = useTextEllipsisWidth<HTMLDivElement>();
 
 		return (
-			<div className="space-y-4 p-4">
-				<p className="text-xs text-vanilla-600 dark:text-vanilla-300">
+			<div className={styles.positionsContainer}>
+				<Typography size="xs" color="muted">
 					Using <code>useTextEllipsisWidth</code> hook to measure the container and pass width
 					externally. Current width: {width}px
-				</p>
-				<div
-					ref={ref as any}
-					className="p-3 border border-vanilla-300 dark:border-vanilla-700 rounded"
-					style={{ width: '320px' }}
-				>
+				</Typography>
+				<div ref={ref as any} className={`story-panel ${styles.externalWidthPanel}`}>
 					<TextEllipsis position="center" width={width}>
 						kubernetes-deployment-production-east-us-2
 					</TextEllipsis>
@@ -302,23 +308,23 @@ export const TooltipOnTruncation: Story = {
 		title: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4 p-4">
-			<p className="text-xs text-vanilla-600 dark:text-vanilla-300">
+		<div className={styles.positionsContainer}>
+			<Typography size="xs" color="muted">
 				Hover over the truncated text to see the full content as a tooltip.
-			</p>
-			<div className="flex flex-col gap-2" style={{ width: '240px' }}>
+			</Typography>
+			<div className={styles.tooltipList}>
 				<div>
-					<span className="text-xs text-vanilla-600 dark:text-vanilla-300 block mb-1">
+					<Typography size="xs" color="muted" className={styles.tooltipLabel}>
 						Auto title (full text):
-					</span>
+					</Typography>
 					<TextEllipsis position="center">
 						This is a very long text that will be truncated — hover to see all
 					</TextEllipsis>
 				</div>
 				<div>
-					<span className="text-xs text-vanilla-600 dark:text-vanilla-300 block mb-1">
+					<Typography size="xs" color="muted" className={styles.tooltipLabel}>
 						Custom title override:
-					</span>
+					</Typography>
 					<TextEllipsis
 						position="end"
 						title="Custom tooltip: /home/user/projects/my-app/src/components/Button/index.tsx"
@@ -327,9 +333,9 @@ export const TooltipOnTruncation: Story = {
 					</TextEllipsis>
 				</div>
 				<div>
-					<span className="text-xs text-vanilla-600 dark:text-vanilla-300 block mb-1">
+					<Typography size="xs" color="muted" className={styles.tooltipLabel}>
 						Short text (no tooltip):
-					</span>
+					</Typography>
 					<TextEllipsis position="center">Short text</TextEllipsis>
 				</div>
 			</div>

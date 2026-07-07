@@ -6,8 +6,10 @@ import {
 	PopoverAnchor,
 	PopoverContent,
 	PopoverTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './popover-anchor.stories.module.css';
 import { anchorArgTypes } from './shared/popover-arg-types.js';
 
 const meta: Meta<typeof PopoverAnchor> = {
@@ -30,8 +32,8 @@ export const Default: Story = {
 	render: (args) => (
 		<Popover>
 			<PopoverAnchor {...args}>
-				<div className="flex gap-2 items-center p-2 rounded border border-border w-fit">
-					<span className="text-sm">Row as anchor</span>
+				<div className={`story-row story-panel ${styles.anchorContainer}`}>
+					<Typography size="sm">Row as anchor</Typography>
 					<PopoverTrigger asChild>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="sm">
 							Trigger
@@ -40,7 +42,9 @@ export const Default: Story = {
 				</div>
 			</PopoverAnchor>
 			<PopoverContent className="w-56">
-				<p className="text-sm">Content positioned against the anchor row, not the trigger.</p>
+				<Typography size="sm">
+					Content positioned against the anchor row, not the trigger.
+				</Typography>
 			</PopoverContent>
 		</Popover>
 	),

@@ -1,7 +1,8 @@
 import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@signozhq/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-item.stories.module.css';
 
 const meta: Meta<typeof SelectItem> = {
 	title: 'Primitive Components/Select/SelectItem',
@@ -63,7 +64,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -84,24 +85,24 @@ export const WithIcons: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a tool..." />
 					<SelectContent>
 						<SelectItem value="react" textValue="React">
-							<Code className="mr-2 h-4 w-4" />
+							<Code className={`icon-md ${styles.iconSpacing}`} />
 							React
 						</SelectItem>
 						<SelectItem value="nodejs" textValue="Node.js">
-							<Terminal className="mr-2 h-4 w-4" />
+							<Terminal className={`icon-md ${styles.iconSpacing}`} />
 							Node.js
 						</SelectItem>
 						<SelectItem value="postgres" textValue="PostgreSQL">
-							<Database className="mr-2 h-4 w-4" />
+							<Database className={`icon-md ${styles.iconSpacing}`} />
 							PostgreSQL
 						</SelectItem>
 						<SelectItem value="git" textValue="Git">
-							<GitBranch className="mr-2 h-4 w-4" />
+							<GitBranch className={`icon-md ${styles.iconSpacing}`} />
 							Git
 						</SelectItem>
 					</SelectContent>
@@ -116,7 +117,7 @@ export const Disabled: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -137,7 +138,7 @@ export const InMultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select multiple value={values} onChange={(v) => setValues(v as string[])}>
 					<SelectTrigger placeholder="Select frameworks..." />
 					<SelectContent>
@@ -148,9 +149,9 @@ export const InMultiSelect: Story = {
 						))}
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.selectedText}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},

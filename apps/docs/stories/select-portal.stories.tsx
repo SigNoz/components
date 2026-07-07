@@ -1,6 +1,14 @@
-import { Select, SelectContent, SelectItem, SelectPortal, SelectTrigger } from '@signozhq/ui';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectPortal,
+	SelectTrigger,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-portal.stories.module.css';
 
 const meta: Meta<typeof SelectPortal> = {
 	title: 'Primitive Components/Select/SelectPortal',
@@ -34,16 +42,16 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					SelectPortal renders the content in a portal (by default to document.body). This is useful
 					when the select is inside an overflow:hidden container. SelectContent uses this internally
 					via the withPortal prop.
-				</p>
-				<div className="p-4 border rounded-lg overflow-hidden">
-					<p className="text-xs text-muted-foreground mb-2">
+				</Typography>
+				<div className={`story-panel ${styles.overflowPanel}`}>
+					<Typography size="xs" color="muted" className={styles.panelHint}>
 						This container has overflow:hidden, but the dropdown still shows outside.
-					</p>
+					</Typography>
 					<Select value={value} onChange={(v) => setValue(v as string)}>
 						<SelectTrigger placeholder="Select a framework..." />
 						<SelectContent>

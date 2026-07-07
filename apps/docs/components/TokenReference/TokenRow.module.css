@@ -1,0 +1,121 @@
+.row {
+	border-bottom: 1px solid var(--l2-border);
+}
+
+.row:last-child {
+	border-bottom: none;
+}
+
+.rowContent {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+}
+
+.swatchColumn {
+	width: 3rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tokenInfo {
+	flex: 1;
+	min-width: 0;
+}
+
+.tokenName {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.tokenNameCode {
+	font-family: monospace;
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.tokenDescription {
+	display: block;
+	margin-top: 0.125rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.cssVariable {
+	display: none;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+	.cssVariable {
+		display: flex;
+	}
+}
+
+.codeBlock {
+	font-family: monospace;
+	font-size: 0.75rem;
+}
+
+.tailwindColumn {
+	display: none;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+	.tailwindColumn {
+		display: flex;
+	}
+}
+
+.categoryBadge {
+	display: none;
+	border-radius: 9999px;
+	background-color: var(--l2-background);
+	padding: 0.125rem 0.5rem;
+	font-size: 0.75rem;
+	color: var(--l2-foreground);
+	text-transform: capitalize;
+}
+
+@media (min-width: 1024px) {
+	.categoryBadge {
+		display: inline-flex;
+	}
+}
+
+.details {
+	padding: 0 1rem 0.75rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.detailRow {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.5rem;
+	font-size: 0.75rem;
+}
+
+.detailLabelUse {
+	color: var(--accent-forest);
+	font-weight: 500;
+	flex-shrink: 0;
+}
+
+.detailLabelAvoid {
+	color: var(--accent-cherry);
+	font-weight: 500;
+	flex-shrink: 0;
+}
+
+.detailValue {
+	color: var(--l2-foreground);
+}

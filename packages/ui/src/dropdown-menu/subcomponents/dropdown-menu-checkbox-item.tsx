@@ -73,7 +73,7 @@ export const DropdownMenuCheckboxItem = React.forwardRef<
 			event.preventDefault();
 			onSelect?.(event);
 		},
-		[onSelect]
+		[onSelect],
 	);
 
 	return (

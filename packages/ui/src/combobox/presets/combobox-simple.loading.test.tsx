@@ -10,7 +10,7 @@ setupMocks();
 describe('ComboboxSimple loading state', () => {
 	it('shows loading indicator when loading is true', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} loading testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} loading testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -26,7 +26,7 @@ describe('ComboboxSimple loading state', () => {
 				loadingPlaceholder="Fetching options..."
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -42,7 +42,7 @@ describe('ComboboxSimple loading state', () => {
 				loadingPlaceholder={<span data-testid="custom-loader">Custom loader</span>}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -52,7 +52,7 @@ describe('ComboboxSimple loading state', () => {
 
 	it('hides items while loading', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} loading testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} loading testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -89,7 +89,7 @@ describe('ComboboxSimple loading state', () => {
 
 	it('does not show create option while loading', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} loading allowCreate testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} loading allowCreate testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -101,7 +101,7 @@ describe('ComboboxSimple loading state', () => {
 
 	it('shows loading in multi-select mode', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple loading testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple loading testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -116,7 +116,7 @@ describe('ComboboxSimple loading state', () => {
 		}));
 
 		renderWithProviders(
-			<ComboboxSimple items={largeItems} virtualized loading testId="combo" withPortal={false} />
+			<ComboboxSimple items={largeItems} virtualized loading testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -133,7 +133,7 @@ describe('ComboboxSimple loading state', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

@@ -5,6 +5,7 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--typography-border` | `0` |
  * | `--typography-code-background` | `var(--l3-background)` |
  * | `--typography-code-border` | `1px solid var(--l3-border)` |
  * | `--typography-code-font-family` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Co...` |
@@ -34,6 +35,7 @@
  * | `--typography-text-display` | `inline` |
  * | `--typography-title-margin-bottom` | `9px` |
  * | `--typography-title-margin-top` | `9px` |
+ * | `--typography-vertical-align` | `baseline` |
  */
 // #endregion css-tokens
 

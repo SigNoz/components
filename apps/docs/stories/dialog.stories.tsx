@@ -12,10 +12,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	DialogWrapper,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AnimatePresence } from 'motion/react';
 import React from 'react';
+import styles from './dialog.stories.module.css';
 import { overlayArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof Dialog> = {
@@ -58,11 +60,11 @@ export const Default: Story = {
 								<DialogTitle>Edit report details</DialogTitle>
 							</DialogHeader>
 							<DialogDescription>
-								<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-									<p>
+								<div className="story-column">
+									<Typography size="sm">
 										Dialog content goes here. Use the primitive dialog components for full control.
-									</p>
-									<div className="flex justify-end">
+									</Typography>
+									<div className={styles.flexEnd}>
 										<Button
 											variant={ButtonVariant.Solid}
 											color={ButtonColor.Primary}
@@ -106,8 +108,10 @@ export const Controlled: Story = {
 					</Button>
 				}
 			>
-				<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-					<p>Dialog content goes here. Uses AnimatePresence for exit animation.</p>
+				<div className="story-column">
+					<Typography size="sm">
+						Dialog content goes here. Uses AnimatePresence for exit animation.
+					</Typography>
 				</div>
 			</DialogWrapper>
 		);
@@ -120,7 +124,7 @@ export const WidthVariants: Story = {
 		const widths = ['narrow', 'base', 'wide', 'extra-wide'] as const;
 
 		return (
-			<div className="flex flex-wrap gap-4">
+			<div className="story-grid">
 				{widths.map((width) => (
 					<DialogWrapper
 						key={width}
@@ -134,9 +138,9 @@ export const WidthVariants: Story = {
 							</Button>
 						}
 					>
-						<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-							<p>This dialog uses the {width} width variant.</p>
-							<div className="flex justify-end">
+						<div className="story-column">
+							<Typography size="sm">This dialog uses the {width} width variant.</Typography>
+							<div className={styles.flexEnd}>
 								<Button
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Primary}
@@ -156,11 +160,11 @@ export const WidthVariants: Story = {
 export const PositionVariants: Story = {
 	render: () => {
 		const [open, setOpen] = React.useState<'center' | 'top' | 'left' | 'right' | 'bottom' | null>(
-			null
+			null,
 		);
 
 		return (
-			<div className="flex flex-wrap gap-4">
+			<div className="story-grid">
 				{(['center', 'top', 'left', 'right', 'bottom'] as const).map((position) => (
 					<Dialog
 						key={position}
@@ -187,8 +191,8 @@ export const PositionVariants: Story = {
 										</DialogTitle>
 									</DialogHeader>
 									<DialogDescription>
-										<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-											<p>This dialog is positioned at {position}.</p>
+										<div className="story-column">
+											<Typography size="sm">This dialog is positioned at {position}.</Typography>
 										</div>
 									</DialogDescription>
 									<DialogFooter>
@@ -212,7 +216,7 @@ export const PositionVariants: Story = {
 
 PositionVariants.decorators = [
 	(Story) => (
-		<div style={{ minHeight: 400 }}>
+		<div className={styles.minHeightContainer}>
 			<Story />
 		</div>
 	),
@@ -229,9 +233,11 @@ export const WithoutCloseButton: Story = {
 				</Button>
 			}
 		>
-			<div className="flex flex-col gap-4 text-sm font-normal leading-5 font-inter font-regular">
-				<p>This dialog has no close (X) button. Use the button below or click outside to close.</p>
-				<div className="flex justify-end">
+			<div className="story-column">
+				<Typography size="sm">
+					This dialog has no close (X) button. Use the button below or click outside to close.
+				</Typography>
+				<div className={styles.flexEnd}>
 					<DialogClose asChild>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 							Close
@@ -261,10 +267,10 @@ export const Primitive: Story = {
 								<DialogTitle icon={<Code size={16} />}>Primitive composition</DialogTitle>
 							</DialogHeader>
 							<DialogDescription>
-								<p className="text-sm font-normal leading-5 font-inter font-regular">
+								<Typography size="sm">
 									Use Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle,
 									DialogDescription and DialogFooter for full control.
-								</p>
+								</Typography>
 							</DialogDescription>
 							<DialogFooter>
 								<Button

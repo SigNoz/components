@@ -9,6 +9,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
+import styles from './command-primitive.stories.module.css';
 import { commandArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof Command> = {
@@ -32,7 +33,7 @@ export const Default: Story = {
 		const [value, setValue] = React.useState(args.value ?? '');
 
 		return (
-			<div style={{ width: 520 }}>
+			<div className={styles.container}>
 				<Command
 					value={value}
 					onValueChange={(next) => {

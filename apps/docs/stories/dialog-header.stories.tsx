@@ -8,6 +8,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { headerArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -38,9 +39,9 @@ export const Default: Story = {
 					<DialogTitle>Dialog header</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					<p className="text-sm font-normal leading-5 font-inter font-regular">
+					<Typography size="sm">
 						The header typically contains the title and optional actions.
-					</p>
+					</Typography>
 				</DialogDescription>
 			</DialogContent>
 		</Dialog>

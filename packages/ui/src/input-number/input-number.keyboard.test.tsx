@@ -13,7 +13,7 @@ describe('InputNumber — keyboard and wheel', () => {
 		expect(onChange).toHaveBeenLastCalledWith(6);
 		expect(onStep).toHaveBeenLastCalledWith(
 			6,
-			expect.objectContaining({ type: 'up', emitter: 'keydown' })
+			expect.objectContaining({ type: 'up', emitter: 'keydown' }),
 		);
 		fireEvent.keyDown(input, { key: 'ArrowDown' });
 		expect(onChange).toHaveBeenLastCalledWith(5);
@@ -29,7 +29,7 @@ describe('InputNumber — keyboard and wheel', () => {
 				onPressEnter={onPressEnter}
 				keyboard={false}
 				testId="num"
-			/>
+			/>,
 		);
 		const input = screen.getByTestId('num');
 		fireEvent.keyDown(input, { key: 'Enter' });

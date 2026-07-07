@@ -9,6 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { contentArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -43,9 +44,9 @@ export const Default: Story = {
 					<DialogTitle>Dialog content</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					<p className="text-sm font-normal leading-5 font-inter font-regular">
+					<Typography size="sm">
 						This story focuses on the DialogContent surface and its layout-related props.
-					</p>
+					</Typography>
 				</DialogDescription>
 				<DialogFooter>
 					<Button variant={ButtonVariant.Ghost} color="secondary">

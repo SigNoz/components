@@ -1,0 +1,11 @@
+.container {
+  width: 520px;
+}
+
+.containerSmall {
+  width: 420px;
+}
+
+.buttonWrapper {
+  margin: 12px;
+}

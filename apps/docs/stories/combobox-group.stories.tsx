@@ -47,7 +47,7 @@ export const Default: Story = {
 		];
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						placeholder="Select an option..."

@@ -1,0 +1,22 @@
+{
+	"$schema": "./node_modules/oxfmt/schema.json",
+	"useTabs": true,
+	"tabWidth": 2,
+	"printWidth": 100,
+	"semi": true,
+	"singleQuote": true,
+	"jsxSingleQuote": false,
+	"trailingComma": "all",
+	"ignorePatterns": [
+		"**/*.css",
+		"**/*.scss",
+		"**/*.yaml",
+		"**/*.yml",
+		"**/*.toml",
+		"**/*.html",
+		"**/*.md",
+		"**/*.patch",
+		"CHANGELOG.md",
+		"pnpm-lock.yaml"
+	]
+}

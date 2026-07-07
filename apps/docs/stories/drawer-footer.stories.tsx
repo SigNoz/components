@@ -9,6 +9,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { footerArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -39,9 +40,9 @@ export const Default: Story = {
 					<DrawerTitle>Delete this item</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<p className="text-sm">
+					<Typography size="sm">
 						Deleting this item cannot be undone and may affect related data.
-					</p>
+					</Typography>
 				</DrawerDescription>
 				<DrawerFooter {...args}>
 					<Button variant={ButtonVariant.Ghost} color="secondary">

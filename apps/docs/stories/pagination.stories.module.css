@@ -1,0 +1,12 @@
+.sectionGap {
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.labelMargin {
+  margin-bottom: 0.5rem;
+}
+
+.itemMargin {
+  margin-top: 1.5rem;
+}

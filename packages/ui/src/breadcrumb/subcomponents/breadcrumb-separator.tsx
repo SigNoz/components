@@ -56,7 +56,7 @@ export const BreadcrumbSeparator = React.forwardRef<HTMLLIElement, BreadcrumbSep
 				{children ?? DEFAULT_SEPARATOR}
 			</li>
 		);
-	}
+	},
 );
 
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';

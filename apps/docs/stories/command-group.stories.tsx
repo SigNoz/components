@@ -8,6 +8,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import styles from './command-group.stories.module.css';
 import { groupArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandGroup> = {
@@ -28,7 +29,7 @@ export const Default: Story = {
 		heading: 'General',
 	},
 	render: (args) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder="Search commands…" />
 				<CommandList>

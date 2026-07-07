@@ -66,7 +66,7 @@ export const DropdownMenuSubTrigger = React.forwardRef<
 		className={cn(
 			styles['dropdown-menu__sub-trigger'],
 			inset && styles['dropdown-menu__sub-trigger--inset'],
-			className
+			className,
 		)}
 		{...props}
 	>

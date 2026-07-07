@@ -62,7 +62,7 @@ export const ComboboxMultiTrigger = React.forwardRef<HTMLDivElement, ComboboxMul
 			disabled,
 			children,
 		},
-		ref
+		ref,
 	) => {
 		const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -98,6 +98,6 @@ export const ComboboxMultiTrigger = React.forwardRef<HTMLDivElement, ComboboxMul
 				/>
 			</div>
 		);
-	}
+	},
 );
 ComboboxMultiTrigger.displayName = 'ComboboxMultiTrigger';

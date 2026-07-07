@@ -21,6 +21,6 @@ export const DialogSubtitle = React.forwardRef<HTMLDivElement, DialogSubtitlePro
 			className={cn(styles.dialog__subtitle, className)}
 			{...props}
 		/>
-	)
+	),
 );
 DialogSubtitle.displayName = 'DialogSubtitle';

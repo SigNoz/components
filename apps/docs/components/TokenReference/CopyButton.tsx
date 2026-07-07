@@ -1,5 +1,6 @@
 import { CheckCheck, Copy } from '@signozhq/icons';
 import { useState } from 'react';
+import styles from './CopyButton.module.css';
 
 interface CopyButtonProps {
 	text: string;
@@ -23,14 +24,10 @@ export function CopyButton({ text, className = '' }: CopyButtonProps) {
 		<button
 			type="button"
 			onClick={handleCopy}
-			className={`inline-flex items-center justify-center rounded px-2 py-1 text-xs transition-colors hover:bg-l2-background ${className}`}
+			className={`${styles.button} ${className}`}
 			title={`Copy ${text}`}
 		>
-			{copied ? (
-				<CheckCheck className="text-l2-foreground" />
-			) : (
-				<Copy className="text-l2-foreground" />
-			)}
+			{copied ? <CheckCheck className={styles.icon} /> : <Copy className={styles.icon} />}
 		</button>
 	);
 }

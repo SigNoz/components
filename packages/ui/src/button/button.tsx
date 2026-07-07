@@ -58,8 +58,8 @@ export const ButtonGroupContext = createContext<ButtonGroupContextValue | null>(
  * This replaces the old CVA-based buttonVariants function
  */
 export function buttonVariants({
-	variant = 'outlined',
-	size = 'md',
+	variant: _variant = 'outlined',
+	size: _size = 'md',
 	className,
 }: {
 	variant?: ButtonVariantValue;
@@ -195,7 +195,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			testId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const Comp = asChild ? Slot : 'button';
 		const group = useContext(ButtonGroupContext);
@@ -226,7 +226,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 						styles['button'],
 						'font-inter',
 						loading && styles['button--loading'],
-						className
+						className,
 					)}
 					disabled={disabled || loading}
 					ref={ref}
@@ -273,7 +273,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 					null}
 			</Comp>
 		);
-	}
+	},
 );
 Button.displayName = 'Button';
 

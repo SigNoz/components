@@ -21,7 +21,7 @@ describe('PinList forwardRef', () => {
 						isEnabled: true,
 					},
 				]}
-			/>
+			/>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

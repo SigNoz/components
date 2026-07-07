@@ -97,7 +97,7 @@ export const SelectContent = React.forwardRef<
 			sideOffset = 4,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const content = (
 			<SelectPrimitive.Content
@@ -126,7 +126,7 @@ export const SelectContent = React.forwardRef<
 		}
 
 		return content;
-	}
+	},
 );
 SelectContent.displayName = 'SelectContent';
 

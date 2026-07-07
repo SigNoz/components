@@ -1,8 +1,8 @@
 {
 	"name": "docs",
 	"version": "0.1.21",
-	"type": "module",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"dev": "storybook dev -p 6006",
 		"build": "storybook build --docs",
@@ -17,9 +17,7 @@
 		"@radix-ui/react-tabs": "^1.1.15",
 		"@signozhq/design-tokens": "2.1.6",
 		"@signozhq/icons": "^0.4.0",
-		"@signozhq/tailwind-config": "workspace:*",
 		"@signozhq/ui": "workspace:*",
-		"@tailwindcss/vite": "^4.3.1",
 		"motion": "^11.18.2",
 		"nuqs": "^2.8.9",
 		"react": "^18.2.0",
@@ -44,13 +42,10 @@
 		"@vitest/browser-playwright": "^4.1.9",
 		"@vitest/coverage-v8": "^4.1.9",
 		"playwright": "^1.61.0",
-		"postcss": "^8.5.15",
 		"react-syntax-highlighter": "^16.1.1",
 		"remark-gfm": "^4.0.1",
 		"serve": "^14.2.1",
 		"storybook": "^10.4.6",
-		"tailwindcss": "^4.3.1",
-		"tailwindcss-animate": "^1.0.7",
 		"vite": "npm:rolldown-vite@7.3.1",
 		"vitest": "^4.1.9"
 	}

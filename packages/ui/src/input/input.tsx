@@ -143,7 +143,7 @@ const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 			containerTestId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const useWrapper = prefix !== undefined || suffix !== undefined;
 
@@ -183,7 +183,7 @@ const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
 				{suffix && <div className={styles['input-suffix']}>{suffix}</div>}
 			</div>
 		);
-	}
+	},
 );
 InputComponent.displayName = 'Input';
 
@@ -248,7 +248,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 				}
 			/>
 		);
-	}
+	},
 );
 InputPassword.displayName = 'InputPassword';
 

@@ -53,7 +53,7 @@ export function PaginationUrl({
 	const [page, setPage] = useQueryState(urlKey, parseAsInteger.withDefault(1));
 	const [urlPageSize, setUrlPageSize] = useQueryState(
 		pageSizeUrlKey,
-		parseAsInteger.withDefault(pageSize)
+		parseAsInteger.withDefault(pageSize),
 	);
 
 	const activePageSize = props.enablePageSize ? (urlPageSize ?? pageSize) : pageSize;
@@ -70,7 +70,7 @@ export function PaginationUrl({
 		(newPage: number) => {
 			setPage(newPage);
 		},
-		[setPage]
+		[setPage],
 	);
 
 	const handlePageSizeChange = useCallback(
@@ -80,7 +80,7 @@ export function PaginationUrl({
 			}
 			onPageSizeChange?.(newSize);
 		},
-		[props.enablePageSize, setUrlPageSize, onPageSizeChange]
+		[props.enablePageSize, setUrlPageSize, onPageSizeChange],
 	);
 
 	return (

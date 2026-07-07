@@ -1,5 +1,7 @@
+import { Typography } from '@signozhq/ui';
 import { ColorSwatch } from './ColorSwatch.js';
 import { CopyButton } from './CopyButton.js';
+import styles from './TokenRow.module.css';
 
 export interface TokenData {
 	name: string;
@@ -28,55 +30,49 @@ export function TokenRow({ token, showDetails = false }: TokenRowProps) {
 					: token.name;
 
 	return (
-		<div className="group border-b border-l2-border last:border-b-0">
-			<div className="flex items-center gap-4 px-4 py-3">
-				<div className="w-12 flex items-center justify-center">
+		<div className={styles.row}>
+			<div className={styles.rowContent}>
+				<div className={styles.swatchColumn}>
 					<ColorSwatch value={token.value} />
 				</div>
 
-				<div className="flex-1 min-w-0">
-					<div className="flex items-center gap-2">
-						<code className="text-sm font-mono font-medium text-l1-foreground">{token.name}</code>
+				<div className={styles.tokenInfo}>
+					<div className={styles.tokenName}>
+						<code className={styles.tokenNameCode}>{token.name}</code>
 						<CopyButton text={cssVariable} />
 					</div>
 					{token.description && (
-						<p className="text-xs text-l3-foreground mt-0.5 truncate">{token.description}</p>
+						<Typography size="xs" color="muted" className={styles.tokenDescription}>
+							{token.description}
+						</Typography>
 					)}
 				</div>
 
-				<div className="hidden sm:flex items-center gap-2">
-					<code className="text-xs font-mono bg-l2-background px-2 py-1 rounded text-l2-foreground">
-						{cssVariable}
-					</code>
+				<div className={styles.cssVariable}>
+					<code className={styles.codeBlock}>{cssVariable}</code>
 					<CopyButton text={cssVariable} />
 				</div>
 
-				<div className="hidden md:flex items-center gap-2">
-					<code className="text-xs font-mono bg-l2-background px-2 py-1 rounded text-l2-foreground">
-						{tailwindClass}
-					</code>
+				<div className={styles.tailwindColumn}>
+					<code className={styles.codeBlock}>{tailwindClass}</code>
 					<CopyButton text={tailwindClass} />
 				</div>
 
-				{token.category && (
-					<span className="hidden lg:inline-flex rounded-full bg-l2-background px-2 py-0.5 text-xs text-l2-foreground capitalize">
-						{token.category}
-					</span>
-				)}
+				{token.category && <span className={styles.categoryBadge}>{token.category}</span>}
 			</div>
 
 			{showDetails && (token.usage || token.dontUse) && (
-				<div className="px-4 pb-3 pt-0 flex flex-col gap-2">
+				<div className={styles.details}>
 					{token.usage && (
-						<div className="flex items-start gap-2 text-xs">
-							<span className="text-accent-forest font-medium shrink-0">Use:</span>
-							<span className="text-l2-foreground">{token.usage}</span>
+						<div className={styles.detailRow}>
+							<span className={styles.detailLabelUse}>Use:</span>
+							<span className={styles.detailValue}>{token.usage}</span>
 						</div>
 					)}
 					{token.dontUse && (
-						<div className="flex items-start gap-2 text-xs">
-							<span className="text-accent-cherry font-medium shrink-0">Avoid:</span>
-							<span className="text-l2-foreground">{token.dontUse}</span>
+						<div className={styles.detailRow}>
+							<span className={styles.detailLabelAvoid}>Avoid:</span>
+							<span className={styles.detailValue}>{token.dontUse}</span>
 						</div>
 					)}
 				</div>

@@ -6,9 +6,11 @@ import {
 	SelectScrollUpButton,
 	SelectTrigger,
 	SelectViewport,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-scroll-buttons.stories.module.css';
 
 const meta: Meta = {
 	title: 'Primitive Components/Select/SelectScrollButtons',
@@ -31,17 +33,17 @@ export const WithScrollButtons: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					ScrollUpButton and ScrollDownButton provide visual affordances for scrolling when the
 					content overflows. They appear at the top/bottom of the viewport when there is more
 					content to scroll.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an item..." />
 					<SelectContent withViewport={false}>
 						<SelectScrollUpButton />
-						<SelectViewport style={{ maxHeight: '200px' }}>
+						<SelectViewport className={styles.viewport}>
 							{manyItems.map((item) => (
 								<SelectItem key={item.value} value={item.value}>
 									{item.label}
@@ -51,7 +53,9 @@ export const WithScrollButtons: Story = {
 						<SelectScrollDownButton />
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.selectedText}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -62,15 +66,15 @@ export const ScrollUpButtonOnly: Story = {
 		const [value, setValue] = useState('item-50');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					SelectScrollUpButton appears when scrolled down and there is content above.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an item..." />
 					<SelectContent withViewport={false}>
 						<SelectScrollUpButton />
-						<SelectViewport style={{ maxHeight: '200px' }}>
+						<SelectViewport className={styles.viewport}>
 							{manyItems.map((item) => (
 								<SelectItem key={item.value} value={item.value}>
 									{item.label}
@@ -89,14 +93,14 @@ export const ScrollDownButtonOnly: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					SelectScrollDownButton appears when there is more content below.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an item..." />
 					<SelectContent withViewport={false}>
-						<SelectViewport style={{ maxHeight: '200px' }}>
+						<SelectViewport className={styles.viewport}>
 							{manyItems.map((item) => (
 								<SelectItem key={item.value} value={item.value}>
 									{item.label}
@@ -116,17 +120,17 @@ export const CustomScrollButtonContent: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
-				<p className="mb-4 text-sm text-muted-foreground">
+			<div className="story-container">
+				<Typography size="sm" color="muted" className={styles.descriptionText}>
 					You can provide custom content to the scroll buttons.
-				</p>
+				</Typography>
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an item..." />
 					<SelectContent withViewport={false}>
 						<SelectScrollUpButton>
-							<span className="text-xs">Scroll Up</span>
+							<Typography size="xs">Scroll Up</Typography>
 						</SelectScrollUpButton>
-						<SelectViewport style={{ maxHeight: '200px' }}>
+						<SelectViewport className={styles.viewport}>
 							{manyItems.map((item) => (
 								<SelectItem key={item.value} value={item.value}>
 									{item.label}
@@ -134,7 +138,7 @@ export const CustomScrollButtonContent: Story = {
 							))}
 						</SelectViewport>
 						<SelectScrollDownButton>
-							<span className="text-xs">Scroll Down</span>
+							<Typography size="xs">Scroll Down</Typography>
 						</SelectScrollDownButton>
 					</SelectContent>
 				</Select>

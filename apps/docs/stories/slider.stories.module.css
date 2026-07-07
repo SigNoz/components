@@ -1,0 +1,20 @@
+.sliderWrapper {
+  width: 300px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.sliderWrapperWithPadding {
+  width: 300px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+}
+
+.sliderHint {
+  margin-bottom: 8px;
+}
+
+.sliderHintTop {
+  margin-top: 8px;
+}

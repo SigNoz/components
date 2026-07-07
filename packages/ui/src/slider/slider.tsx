@@ -5,11 +5,10 @@ import { cn } from '../lib/utils.js';
 import { TooltipProvider, TooltipSimple } from '../tooltip/index.js';
 import styles from './slider.module.scss';
 
-export interface SliderProps
-	extends Omit<
-		React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
-		'onChange' | 'value' | 'defaultValue'
-	> {
+export interface SliderProps extends Omit<
+	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
+	'onChange' | 'value' | 'defaultValue'
+> {
 	value?: number | number[];
 	defaultValue?: number | number[];
 	/**
@@ -156,13 +155,13 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 			testId,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const internalValue = useMemo(() => toArray(controlledValue), [controlledValue]);
 		const internalDefaultValue = useMemo(() => toArray(defaultValue), [defaultValue]);
 
 		const [localValues, setLocalValues] = useState<number[]>(
-			internalValue || internalDefaultValue || [min]
+			internalValue || internalDefaultValue || [min],
 		);
 
 		useEffect(() => {
@@ -180,7 +179,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					onChange(range ? newValues : newValues[0]);
 				}
 			},
-			[internalValue, onChange, range]
+			[internalValue, onChange, range],
 		);
 
 		const handleValueCommit = useCallback(
@@ -189,7 +188,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					onAfterChange(range ? newValues : newValues[0]);
 				}
 			},
-			[onAfterChange, range]
+			[onAfterChange, range],
 		);
 
 		const markList = useMemo(() => {
@@ -212,7 +211,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				if (localValues.length === 1) return markVal <= localValues[0];
 				return markVal >= localValues[0] && markVal <= localValues[localValues.length - 1];
 			},
-			[localValues]
+			[localValues],
 		);
 
 		const handleMarkClick = useCallback(
@@ -241,7 +240,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 					onAfterChange(range ? newValues : newValues[0]);
 				}
 			},
-			[localValues, internalValue, onChange, onAfterChange, range]
+			[localValues, internalValue, onChange, onAfterChange, range],
 		);
 
 		const internalId = useId();
@@ -264,7 +263,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				className={cn(
 					styles['slider-root'],
 					markList.length > 0 && styles['slider-root-with-marks'],
-					className
+					className,
 				)}
 				{...props}
 			>
@@ -285,7 +284,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 								key={`slider-${internalId}-dot-${key}`}
 								className={cn(
 									styles['slider-dot'],
-									isMarkActive(markVal) && styles['slider-dot-active']
+									isMarkActive(markVal) && styles['slider-dot-active'],
 								)}
 								style={{ left: `${percent}%` }}
 							/>
@@ -335,7 +334,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				)}
 			</SliderPrimitive.Root>
 		);
-	}
+	},
 );
 Slider.displayName = 'Slider';
 

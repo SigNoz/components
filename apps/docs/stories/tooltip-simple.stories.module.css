@@ -1,0 +1,13 @@
+.demoArea {
+	padding: 80px;
+}
+
+.positionsArea {
+	padding: 80px;
+	flex-wrap: wrap;
+	gap: 32px;
+}
+
+.alignButton {
+	width: 120px;
+}

@@ -95,13 +95,13 @@ export function Calendar({
 				buttonVariants({ variant: 'ghost' }),
 				styles['calendar__button-nav'],
 				'btn-previous',
-				defaultClassNames.button_previous
+				defaultClassNames.button_previous,
 			),
 			button_next: cn(
 				buttonVariants({ variant: 'ghost' }),
 				styles['calendar__button-nav'],
 				'btn-next',
-				defaultClassNames.button_next
+				defaultClassNames.button_next,
 			),
 			month_caption: cn(styles['calendar__month-caption'], defaultClassNames.month_caption),
 			dropdowns: cn(styles['calendar__dropdowns'], defaultClassNames.dropdowns),
@@ -112,56 +112,56 @@ export function Calendar({
 				captionLayout === 'label'
 					? styles['calendar__caption-label--label']
 					: styles['calendar__caption-label--dropdown'],
-				defaultClassNames.caption_label
+				defaultClassNames.caption_label,
 			),
 			table: cn(styles['calendar__table'], 'periscope-calendar-table'),
 			weekdays: cn(
 				styles['calendar__weekdays'],
 				'periscope-calendar-weekdays',
-				defaultClassNames.weekdays
+				defaultClassNames.weekdays,
 			),
 			weekday: cn(
 				styles['calendar__weekday'],
 				'periscope-calendar-weekday',
-				defaultClassNames.weekday
+				defaultClassNames.weekday,
 			),
 			week: cn(styles['calendar__week'], 'periscope-calendar-week', defaultClassNames.week),
 			week_number_header: cn(
 				styles['calendar__week-number-header'],
 				'periscope-calendar-week-number-header',
-				defaultClassNames.week_number_header
+				defaultClassNames.week_number_header,
 			),
 			week_number: cn(
 				styles['calendar__week-number'],
 				'periscope-calendar-week-number',
-				defaultClassNames.week_number
+				defaultClassNames.week_number,
 			),
 			day: cn(styles['calendar__day'], 'group/day periscope-calendar-day', defaultClassNames.day),
 			range_start: cn(
 				styles['calendar__range-start'],
 				'periscope-calendar-range-start',
-				defaultClassNames.range_start
+				defaultClassNames.range_start,
 			),
 			range_middle: cn(
 				styles['calendar__range-middle'],
 				'periscope-calendar-range-middle',
-				defaultClassNames.range_middle
+				defaultClassNames.range_middle,
 			),
 			range_end: cn(
 				styles['calendar__range-end'],
 				'periscope-calendar-range-end',
-				defaultClassNames.range_end
+				defaultClassNames.range_end,
 			),
 			today: cn(styles['calendar__today'], 'periscope-calendar-today', defaultClassNames.today),
 			outside: cn(
 				styles['calendar__outside'],
 				'periscope-calendar-outside',
-				defaultClassNames.outside
+				defaultClassNames.outside,
 			),
 			disabled: cn(
 				styles['calendar__disabled'],
 				'periscope-calendar-disabled',
-				defaultClassNames.disabled
+				defaultClassNames.disabled,
 			),
 			hidden: cn(styles['calendar__hidden'], 'periscope-calendar-hidden', defaultClassNames.hidden),
 			...classNames,

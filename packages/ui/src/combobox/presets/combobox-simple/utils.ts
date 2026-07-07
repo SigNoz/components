@@ -20,7 +20,7 @@ export type CreateState = {
 export function getCreateState(
 	selectedValues: string[],
 	itemsMap: Map<string, ComboboxSimpleItem>,
-	inputValue: string
+	inputValue: string,
 ): CreateState {
 	const trimmed = inputValue.trim();
 	const showCreateOption =
@@ -50,7 +50,7 @@ export function buildSearchStringsMap(items: ComboboxSimpleItem[]): Map<string, 
 	for (const item of items) {
 		map.set(
 			item.value,
-			getItemSearchStrings(item).map((s) => s.toLowerCase())
+			getItemSearchStrings(item).map((s) => s.toLowerCase()),
 		);
 	}
 	return map;

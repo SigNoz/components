@@ -43,7 +43,7 @@ export const Default: Story = {
 		const [step, setStep] = useState<'main' | 'settings'>('main');
 
 		return (
-			<div className="p-8">
+			<div className="story-container-full">
 				<DropdownMenu onOpenChange={(open) => !open && setStep('main')}>
 					<DropdownMenuTrigger asChild>
 						<Button variant="solid" color="secondary">

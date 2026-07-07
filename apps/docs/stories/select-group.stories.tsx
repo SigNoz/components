@@ -6,9 +6,11 @@ import {
 	SelectLabel,
 	SelectSeparator,
 	SelectTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-group.stories.module.css';
 
 const meta: Meta<typeof SelectGroup> = {
 	title: 'Primitive Components/Select/SelectGroup',
@@ -49,7 +51,7 @@ export const Default: Story = {
 		];
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an option..." />
 					<SelectContent>
@@ -78,7 +80,7 @@ export const WithoutLabel: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select a framework..." />
 					<SelectContent>
@@ -120,7 +122,7 @@ export const MultipleGroups: Story = {
 		];
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger placeholder="Select an option..." />
 					<SelectContent>
@@ -139,7 +141,9 @@ export const MultipleGroups: Story = {
 						))}
 					</SelectContent>
 				</Select>
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.selectedText}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},

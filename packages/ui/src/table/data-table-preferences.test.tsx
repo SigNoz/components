@@ -38,7 +38,7 @@ describe('DataTable preferences', () => {
 				tableId={tableId}
 				enableRowSelection={true}
 				testId="table-pref2"
-			/>
+			/>,
 		);
 		const checkbox = screen.getAllByRole('checkbox', { name: /Select row/ })[0];
 		fireEvent.click(checkbox);
@@ -50,7 +50,7 @@ describe('DataTable preferences', () => {
 				tableId={tableId}
 				enableRowSelection={true}
 				testId="table-pref2"
-			/>
+			/>,
 		);
 		const prefs = getStoredPreferences(tableId);
 		expect(prefs.rowSelection).toBeDefined();
