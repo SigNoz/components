@@ -1,5 +1,6 @@
-import { Avatar, type AvatarColor, type AvatarSize } from '@signozhq/ui';
+import { Avatar, Typography, type AvatarColor, type AvatarSize } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './avatar.stories.module.css';
 
 const meta: Meta<typeof Avatar> = {
 	title: 'Primitive Components/Avatar',
@@ -104,13 +105,15 @@ export const AllSizes: Story = {
 	render: () => {
 		const sizes: AvatarSize[] = ['sm', 'md', 'lg', 'xl'];
 		return (
-			<div className="flex items-end gap-4">
+			<div className={`story-row-lg ${styles.flexRowAlignEnd}`}>
 				{sizes.map((size) => (
-					<div key={size} className="flex flex-col items-center gap-2">
+					<div key={size} className="story-column">
 						<Avatar size={size} color="robin">
 							{size.toUpperCase()}
 						</Avatar>
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">{size}</span>
+						<Typography size="xs" color="muted">
+							{size}
+						</Typography>
 					</div>
 				))}
 			</div>
@@ -127,18 +130,22 @@ export const Shapes: Story = {
 		},
 	},
 	render: () => (
-		<div className="flex items-center gap-4">
-			<div className="flex flex-col items-center gap-2">
+		<div className="story-row-lg">
+			<div className="story-column">
 				<Avatar size="lg" shape="circle" color="robin">
 					AB
 				</Avatar>
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300">circle</span>
+				<Typography size="xs" color="muted">
+					circle
+				</Typography>
 			</div>
-			<div className="flex flex-col items-center gap-2">
+			<div className="story-column">
 				<Avatar size="lg" shape="square" color="robin">
 					AB
 				</Avatar>
-				<span className="text-xs text-vanilla-600 dark:text-vanilla-300">square</span>
+				<Typography size="xs" color="muted">
+					square
+				</Typography>
 			</div>
 		</div>
 	),
@@ -164,13 +171,15 @@ export const AllColors: Story = {
 			'vanilla',
 		];
 		return (
-			<div className="flex gap-3 flex-wrap">
+			<div className="story-grid-lg">
 				{colors.map((color) => (
-					<div key={color} className="flex flex-col items-center gap-2">
+					<div key={color} className="story-column">
 						<Avatar size="lg" color={color}>
 							{color.slice(0, 2).toUpperCase()}
 						</Avatar>
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">{color}</span>
+						<Typography size="xs" color="muted">
+							{color}
+						</Typography>
 					</div>
 				))}
 			</div>
@@ -188,7 +197,7 @@ export const WithImage: Story = {
 		},
 	},
 	render: () => (
-		<div className="flex items-center gap-4">
+		<div className="story-row-lg">
 			<Avatar size="xl" src="https://i.pravatar.cc/96?u=1" alt="User avatar" />
 			<Avatar size="lg" src="https://i.pravatar.cc/80?u=2" alt="User avatar" />
 			<Avatar size="md" src="https://i.pravatar.cc/64?u=3" alt="User avatar" />
@@ -207,13 +216,13 @@ export const ImageFallback: Story = {
 		},
 	},
 	render: () => (
-		<div className="flex items-center gap-4">
+		<div className="story-row-lg">
 			<Avatar size="lg" src="https://broken-url.invalid/avatar.png" color="cherry">
 				JD
 			</Avatar>
-			<span className="text-sm text-vanilla-600 dark:text-vanilla-300">
+			<Typography size="sm" color="muted">
 				Broken image URL → falls back to initials
-			</span>
+			</Typography>
 		</div>
 	),
 };
@@ -228,7 +237,7 @@ export const Loading: Story = {
 		},
 	},
 	render: () => (
-		<div className="flex items-center gap-4">
+		<div className="story-row-lg">
 			<Avatar size="xl" shape="circle" loading />
 			<Avatar size="lg" shape="circle" loading />
 			<Avatar size="lg" shape="square" loading />

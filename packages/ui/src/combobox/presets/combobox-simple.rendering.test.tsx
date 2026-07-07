@@ -19,7 +19,7 @@ describe('ComboboxSimple rendering', () => {
 				placeholder="Choose..."
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveTextContent('Choose...');
 	});
@@ -32,7 +32,7 @@ describe('ComboboxSimple rendering', () => {
 				inputPlaceholder="Search items..."
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		expect(screen.getByPlaceholderText('Search items...')).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('ComboboxSimple rendering', () => {
 				placeholder="Choose..."
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		fireEvent.click(screen.getByTestId('combo'));
 		expect(screen.getByPlaceholderText('Choose...')).toBeInTheDocument();
@@ -53,14 +53,14 @@ describe('ComboboxSimple rendering', () => {
 
 	it('applies testId to trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} testId="my-combobox" withPortal={false} />
+			<ComboboxSimple items={defaultItems} testId="my-combobox" withPortal={false} />,
 		);
 		expect(screen.getByTestId('my-combobox')).toBeInTheDocument();
 	});
 
 	it('applies id to trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} id="combo-id" testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} id="combo-id" testId="combo" withPortal={false} />,
 		);
 		expect(screen.getByTestId('combo')).toHaveAttribute('id', 'combo-id');
 	});
@@ -72,7 +72,7 @@ describe('ComboboxSimple rendering', () => {
 				className="custom-class"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveClass('custom-class');
 	});
@@ -84,7 +84,7 @@ describe('ComboboxSimple rendering', () => {
 				style={{ width: '200px' }}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveStyle({ width: '200px' });
 	});
@@ -97,7 +97,7 @@ describe('ComboboxSimple rendering', () => {
 				defaultValue={['react']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -116,7 +116,7 @@ describe('ComboboxSimple rendering', () => {
 				id="multi-id"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(screen.getByTestId('combo')).toHaveAttribute('id', 'multi-id');
 	});
@@ -138,7 +138,7 @@ describe('ComboboxSimple rendering', () => {
 
 	it('uses combobox-value data-slot when value selected (single)', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} value="react" testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} value="react" testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger.querySelector('[data-slot="combobox-value"]')).toBeInTheDocument();
@@ -147,7 +147,7 @@ describe('ComboboxSimple rendering', () => {
 
 	it('uses combobox-placeholder data-slot when no value selected (multi)', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger.querySelector('[data-slot="combobox-placeholder"]')).toBeInTheDocument();
@@ -162,7 +162,7 @@ describe('ComboboxSimple rendering', () => {
 				value={['react']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger.querySelector('[data-slot="combobox-value"]')).toBeInTheDocument();
@@ -171,7 +171,7 @@ describe('ComboboxSimple rendering', () => {
 
 	it('shows spinner data-slot when loading', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} loading testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} loading testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger.querySelector('[data-slot="combobox-spinner"]')).toBeInTheDocument();
@@ -180,7 +180,7 @@ describe('ComboboxSimple rendering', () => {
 
 	it('reflects open state in aria-expanded on multi-select trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -196,7 +196,7 @@ describe('ComboboxSimple rendering', () => {
 				disableTooltipProvider
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		expect(container.querySelector('[data-testid="combo"]')).toBeInTheDocument();
 	});
@@ -204,7 +204,7 @@ describe('ComboboxSimple rendering', () => {
 	it('forwards ref to single-select trigger button', () => {
 		const ref = React.createRef<HTMLButtonElement | HTMLDivElement>();
 		renderWithProviders(
-			<ComboboxSimple ref={ref} items={defaultItems} testId="combo" withPortal={false} />
+			<ComboboxSimple ref={ref} items={defaultItems} testId="combo" withPortal={false} />,
 		);
 		expect(ref.current).not.toBeNull();
 		expect((ref.current as HTMLElement).tagName).toBe('BUTTON');
@@ -213,7 +213,7 @@ describe('ComboboxSimple rendering', () => {
 	it('forwards ref to multi-select trigger div', () => {
 		const ref = React.createRef<HTMLButtonElement | HTMLDivElement>();
 		renderWithProviders(
-			<ComboboxSimple ref={ref} items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple ref={ref} items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 		expect(ref.current).not.toBeNull();
 		expect((ref.current as HTMLElement).tagName).toBe('DIV');
@@ -227,7 +227,7 @@ describe('ComboboxSimple rendering', () => {
 				placeholder="Select items..."
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 		const trigger = screen.getByTestId('combo');
 		expect(trigger).toHaveAttribute('aria-label', 'Select items...');

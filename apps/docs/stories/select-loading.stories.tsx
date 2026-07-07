@@ -1,6 +1,14 @@
-import { Select, SelectContent, SelectItem, SelectLoading, SelectTrigger } from '@signozhq/ui';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectLoading,
+	SelectTrigger,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
+import styles from './select-loading.stories.module.css';
 
 const meta: Meta<typeof SelectLoading> = {
 	title: 'Primitive Components/Select/SelectLoading',
@@ -52,7 +60,7 @@ export const Default: Story = {
 		children: 'Loading options...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<Select defaultOpen>
 				<SelectTrigger placeholder="Select a framework..." />
 				<SelectContent>
@@ -65,14 +73,20 @@ export const Default: Story = {
 
 export const Variations: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-2xl space-y-8">
-			<div>
-				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
-				<InfiniteLoadingExample />
-			</div>
-			<div>
-				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
-				<DelayedLoadingExample />
+		<div className={`story-container-full ${styles.variationsContainer}`}>
+			<div className="story-section">
+				<div>
+					<Typography size="sm" weight="medium" className={styles.sectionHeading}>
+						Infinite Loading
+					</Typography>
+					<InfiniteLoadingExample />
+				</div>
+				<div>
+					<Typography size="sm" weight="medium" className={styles.sectionHeading}>
+						Loading with Delay (5s)
+					</Typography>
+					<DelayedLoadingExample />
+				</div>
 			</div>
 		</div>
 	),

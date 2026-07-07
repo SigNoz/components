@@ -61,7 +61,7 @@ export const SelectLoading = React.forwardRef<HTMLDivElement, SelectLoadingProps
 				<span>{children}</span>
 			</div>
 		);
-	}
+	},
 );
 
 SelectLoading.displayName = 'SelectLoading';

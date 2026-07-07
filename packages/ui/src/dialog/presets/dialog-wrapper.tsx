@@ -159,7 +159,7 @@ export const DialogWrapper = React.forwardRef<HTMLDivElement, DialogWrapperProps
 			testId,
 			id,
 		},
-		ref
+		ref,
 	) => {
 		const isControlled = open !== undefined && onOpenChange !== undefined;
 		const [internalOpen, setInternalOpen] = useState(false);
@@ -169,7 +169,7 @@ export const DialogWrapper = React.forwardRef<HTMLDivElement, DialogWrapperProps
 				if (!isControlled) setInternalOpen(next);
 				onOpenChange?.(next);
 			},
-			[isControlled, onOpenChange]
+			[isControlled, onOpenChange],
 		);
 		const onClickClose = useCallback(() => {
 			if (!isControlled) setInternalOpen(false);
@@ -207,6 +207,6 @@ export const DialogWrapper = React.forwardRef<HTMLDivElement, DialogWrapperProps
 				<AnimatePresence>{resolvedOpen ? content : null}</AnimatePresence>
 			</Dialog>
 		);
-	}
+	},
 );
 DialogWrapper.displayName = 'DialogWrapper';

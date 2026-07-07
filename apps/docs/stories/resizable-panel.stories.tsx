@@ -1,6 +1,7 @@
 import { Code, Settings } from '@signozhq/icons';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './resizable-panel.stories.module.css';
 
 const meta: Meta<typeof ResizablePanel> = {
 	title: 'Primitive Components/Resizable/ResizablePanel',
@@ -120,21 +121,32 @@ export const Default: Story = {
 		collapsible: false,
 	},
 	render: (args) => (
-		<div className="h-[400px] border rounded-lg overflow-hidden m-6">
+		<div className={`story-resizable ${styles.storyContainer}`}>
 			<ResizablePanelGroup orientation="horizontal">
 				<ResizablePanel {...args}>
-					<div className="flex h-full items-center justify-center bg-muted">
-						<div className="text-center">
-							<Code className="mx-auto mb-2 h-6 w-6 text-muted-foreground" />
-							<span className="text-sm font-medium">Resizable Panel</span>
-							<p className="text-xs text-muted-foreground mt-1">50% default size</p>
+					<div className="story-center story-muted">
+						<div className={styles.textCenter}>
+							<Code className={`icon-md ${styles.iconCentered}`} />
+							<Typography size="sm" weight="medium">
+								Resizable Panel
+							</Typography>
+							<Typography
+								size="xs"
+								color="muted"
+								display="block"
+								className={styles.descriptionSubtitle}
+							>
+								50% default size
+							</Typography>
 						</div>
 					</div>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel defaultSize="50%">
-					<div className="flex h-full items-center justify-center">
-						<span className="text-sm font-medium">Fixed Panel</span>
+					<div className="story-center">
+						<Typography size="sm" weight="medium">
+							Fixed Panel
+						</Typography>
 					</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>
@@ -150,33 +162,55 @@ export const WithMinMaxConstraints: Story = {
 		collapsible: false,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Size Constraints:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
-					<li>• Default: 30%</li>
-					<li>• Minimum: 20%</li>
-					<li>• Maximum: 60%</li>
-					<li>• Try resizing - it won't go beyond these limits!</li>
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Size Constraints:
+				</Typography>
+				<ul className="story-section-sm">
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Default: 30%
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Minimum: 20%
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Maximum: 60%
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Try resizing - it won't go beyond these limits!
+						</Typography>
+					</li>
 				</ul>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel {...args}>
-						<div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20">
-							<div className="text-center">
-								<Settings className="mx-auto mb-2 h-6 w-6 text-blue-600" />
-								<span className="text-sm font-medium">Constrained Panel</span>
-								<div className="text-xs text-muted-foreground mt-2">
-									<div>Min: 20% • Max: 60%</div>
-								</div>
+						<div className={`story-center ${styles.gradientBlueIndigo}`}>
+							<div className={styles.textCenter}>
+								<Settings className={`icon-md ${styles.iconBlue}`} />
+								<Typography size="sm" weight="medium">
+									Constrained Panel
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.constraintInfo}>
+									Min: 20% - Max: 60%
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="70%">
-						<div className="flex h-full items-center justify-center">
-							<span className="text-sm font-medium">Flexible Panel</span>
+						<div className="story-center">
+							<Typography size="sm" weight="medium">
+								Flexible Panel
+							</Typography>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -193,30 +227,52 @@ export const Collapsible: Story = {
 		collapsible: true,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Collapsible Panel:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
-					<li>• Drag the left panel to its minimum size to collapse it</li>
-					<li>• Click the resize handle to restore it</li>
-					<li>• Great for sidebars and tool panels!</li>
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Collapsible Panel:
+				</Typography>
+				<ul className="story-section-sm">
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Drag the left panel to its minimum size to collapse it
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Click the resize handle to restore it
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Great for sidebars and tool panels!
+						</Typography>
+					</li>
 				</ul>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel {...args}>
-						<div className="flex h-full flex-col p-4 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20">
-							<Code className="h-5 w-5 mb-2 text-green-600" />
-							<h3 className="font-medium mb-2">Collapsible Sidebar</h3>
-							<p className="text-xs text-muted-foreground">Drag me to the edge!</p>
+						<div className={`${styles.panelContent} ${styles.gradientGreenEmerald}`}>
+							<Code className={`icon-md ${styles.iconGreen}`} />
+							<Typography weight="medium" className={styles.panelTitle}>
+								Collapsible Sidebar
+							</Typography>
+							<Typography size="xs" color="muted">
+								Drag me to the edge!
+							</Typography>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="75%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Main Content</span>
-								<p className="text-xs text-muted-foreground mt-1">Expands when sidebar collapses</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Main Content
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.contentSubtitle}>
+									Expands when sidebar collapses
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -228,38 +284,52 @@ export const Collapsible: Story = {
 
 export const MultipleCollapsiblePanels: Story = {
 	render: () => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Both side panels are collapsible:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Both side panels are collapsible:
+				</Typography>
+				<Typography size="sm" color="muted" display="block">
 					Drag either side panel to its edge to collapse it
-				</p>
+				</Typography>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
-						<div className="flex h-full flex-col p-4 bg-muted">
-							<Settings className="h-5 w-5 mb-2 text-muted-foreground" />
-							<h3 className="font-medium mb-2">Left Sidebar</h3>
-							<p className="text-xs text-muted-foreground">Collapsible</p>
+						<div className={`story-center ${styles.sidebarPanel}`}>
+							<Settings className={`icon-md ${styles.iconStyle}`} />
+							<Typography weight="medium" className={styles.panelTitle}>
+								Left Sidebar
+							</Typography>
+							<Typography size="xs" color="muted">
+								Collapsible
+							</Typography>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="60%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<Code className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Main Editor</span>
-								<p className="text-xs text-muted-foreground mt-1">Always visible</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Code className={styles.iconLarge} />
+								<Typography size="sm" weight="medium">
+									Main Editor
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.contentSubtitle}>
+									Always visible
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
-						<div className="flex h-full flex-col p-4 bg-muted">
-							<Settings className="h-5 w-5 mb-2 text-muted-foreground" />
-							<h3 className="font-medium mb-2">Right Sidebar</h3>
-							<p className="text-xs text-muted-foreground">Collapsible</p>
+						<div className={`story-center ${styles.sidebarPanel}`}>
+							<Settings className={`icon-md ${styles.iconStyle}`} />
+							<Typography weight="medium" className={styles.panelTitle}>
+								Right Sidebar
+							</Typography>
+							<Typography size="xs" color="muted">
+								Collapsible
+							</Typography>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -275,27 +345,37 @@ export const VerticalPanels: Story = {
 		collapsible: true,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Vertical collapsible panel:</h3>
-				<p className="text-sm text-muted-foreground">Drag the bottom panel down to collapse it</p>
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Vertical collapsible panel:
+				</Typography>
+				<Typography size="sm" color="muted" display="block">
+					Drag the bottom panel down to collapse it
+				</Typography>
 			</div>
-			<div className="h-[500px] border rounded-lg overflow-hidden">
+			<div className={`story-resizable ${styles.resizableVertical}`}>
 				<ResizablePanelGroup orientation="vertical">
 					<ResizablePanel defaultSize="70%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<Code className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Editor Area</span>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Code className={styles.iconLarge} />
+								<Typography size="sm" weight="medium">
+									Editor Area
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel {...args}>
-						<div className="flex h-full flex-col p-4 bg-muted">
-							<Settings className="h-5 w-5 mb-2 text-muted-foreground" />
-							<h3 className="font-medium mb-2">Terminal</h3>
-							<p className="text-xs text-muted-foreground">Drag down to collapse</p>
+						<div className={`story-center ${styles.sidebarPanel}`}>
+							<Settings className={`icon-md ${styles.iconStyle}`} />
+							<Typography weight="medium" className={styles.panelTitle}>
+								Terminal
+							</Typography>
+							<Typography size="xs" color="muted">
+								Drag down to collapse
+							</Typography>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>

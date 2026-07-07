@@ -44,7 +44,7 @@ export const Default: Story = {
 		inset: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

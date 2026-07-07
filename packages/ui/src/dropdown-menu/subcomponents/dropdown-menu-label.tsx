@@ -44,7 +44,7 @@ export const DropdownMenuLabel = React.forwardRef<
 		className={cn(
 			styles['dropdown-menu__label'],
 			inset && styles['dropdown-menu__label--inset'],
-			className
+			className,
 		)}
 		{...props}
 	/>

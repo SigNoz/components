@@ -9,6 +9,7 @@ import {
 	DialogSubtitle,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { subtitleArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -43,9 +44,7 @@ export const Default: Story = {
 					<DialogSubtitle {...args} />
 				</DialogHeader>
 				<DialogDescription>
-					<p className="text-sm font-normal leading-5 font-inter font-regular">
-						The subtitle provides supporting text below the title.
-					</p>
+					<Typography size="sm">The subtitle provides supporting text below the title.</Typography>
 				</DialogDescription>
 			</DialogContent>
 		</Dialog>

@@ -27,7 +27,7 @@ import { Input } from '@signozhq/ui';
 export default function MyComponent() {
 	return (
 		<Input
-			prefix={<span className="text-xs text-vanilla-500">@</span>}
+			prefix={<span style={{ fontSize: '0.75rem', color: 'var(--vanilla-500)' }}>@</span>}
 			suffix={<button type="button">Clear</button>}
 			placeholder="username"
 		/>
@@ -52,4 +52,3 @@ This following example shows a basic input (using the default story):
 ## Input & Input.Password Props
 
 <Controls of={InputStories.Default} />
-

@@ -16,10 +16,7 @@ import { DialogWrapper, Button } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
-		<DialogWrapper
-			title="Edit Details"
-			trigger={<Button variant="solid">Open Dialog</Button>}
-		>
+		<DialogWrapper title="Edit Details" trigger={<Button variant="solid">Open Dialog</Button>}>
 			<p>Dialog content goes here.</p>
 		</DialogWrapper>
 	);
@@ -69,17 +66,13 @@ Set `showCloseButton={false}` to hide the default X button. Provide your own clo
 ```tsx
 import { DialogWrapper, DialogClose, Button } from '@signozhq/ui';
 
-<DialogWrapper
-	title="No close button"
-	showCloseButton={false}
-	trigger={<Button>Open</Button>}
->
+<DialogWrapper title="No close button" showCloseButton={false} trigger={<Button>Open</Button>}>
 	<div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 		<DialogClose asChild>
 			<Button>Close</Button>
 		</DialogClose>
 	</div>
-</DialogWrapper>
+</DialogWrapper>;
 ```
 
 ## Props

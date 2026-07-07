@@ -1,6 +1,7 @@
-import { Slider, TooltipProvider } from '@signozhq/ui';
+import { Slider, TooltipProvider, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+import styles from './slider.stories.module.css';
 
 const meta: Meta<typeof Slider> = {
 	title: 'Primitive Components/Slider',
@@ -157,7 +158,7 @@ export const Default: Story = {
 		step: 1,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
 		</div>
 	),
@@ -171,7 +172,7 @@ export const Range: Story = {
 		range: true,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
 		</div>
 	),
@@ -194,7 +195,7 @@ export const WithMarks: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6 pb-6">
+		<div className={styles.sliderWrapperWithPadding}>
 			<Slider {...args} />
 		</div>
 	),
@@ -215,7 +216,7 @@ export const WithTooltip: Story = {
 		),
 	],
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
 		</div>
 	),
@@ -233,7 +234,7 @@ export const CustomStyles: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
 		</div>
 	),
@@ -251,7 +252,7 @@ export const CustomClassNames: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
 		</div>
 	),
@@ -261,9 +262,11 @@ export const Controlled: Story = {
 	render: () => {
 		const [value, setValue] = React.useState(30);
 		return (
-			<div className="w-[300px] my-6 space-y-4">
+			<div className={`story-section ${styles.sliderWrapper}`}>
 				<Slider value={value} onChange={(v) => setValue(v as number)} max={100} />
-				<p className="text-sm text-gray-500">Value: {value}</p>
+				<Typography size="sm" color="muted">
+					Value: {value}
+				</Typography>
 			</div>
 		);
 	},
@@ -273,11 +276,11 @@ export const ControlledRange: Story = {
 	render: () => {
 		const [value, setValue] = React.useState([20, 80]);
 		return (
-			<div className="w-[300px] my-6 space-y-4">
+			<div className={`story-section ${styles.sliderWrapper}`}>
 				<Slider value={value} onChange={(v) => setValue(v as number[])} max={100} range />
-				<p className="text-sm text-gray-500">
+				<Typography size="sm" color="muted">
 					Range: {value[0]} - {value[1]}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -287,9 +290,11 @@ export const WithOnAfterChange: Story = {
 	render: () => {
 		const [committed, setCommitted] = React.useState(50);
 		return (
-			<div className="w-[300px] my-6 space-y-4">
+			<div className={`story-section ${styles.sliderWrapper}`}>
 				<Slider defaultValue={50} max={100} onAfterChange={(v) => setCommitted(v as number)} />
-				<p className="text-sm text-gray-500">Committed on release: {committed}</p>
+				<Typography size="sm" color="muted">
+					Committed on release: {committed}
+				</Typography>
 			</div>
 		);
 	},
@@ -303,8 +308,10 @@ export const MinMax: Story = {
 		step: 1,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
-			<p className="text-sm text-gray-500 mb-2">min=20, max=80</p>
+		<div className={styles.sliderWrapper}>
+			<Typography size="sm" color="muted" className={styles.sliderHint}>
+				min=20, max=80
+			</Typography>
 			<Slider {...args} />
 		</div>
 	),
@@ -317,7 +324,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
 		</div>
 	),
@@ -331,9 +338,11 @@ export const WithTestId: Story = {
 		id: 'slider-id',
 	},
 	render: (args) => (
-		<div className="w-[300px] my-6">
+		<div className={styles.sliderWrapper}>
 			<Slider {...args} />
-			<p className="text-sm text-gray-500 mt-2">testId="my-slider", id="slider-id"</p>
+			<Typography size="sm" color="muted" className={styles.sliderHintTop}>
+				testId="my-slider", id="slider-id"
+			</Typography>
 		</div>
 	),
 };

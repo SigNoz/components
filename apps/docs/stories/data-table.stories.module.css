@@ -1,0 +1,112 @@
+.avatar {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom right, #3b82f6, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.avatarSmall {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(to bottom right, #3b82f6, #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.columnContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressBarBackground {
+  flex: 1;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+
+.progressBarFill {
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.actionButtonsContainer {
+  gap: 0.25rem;
+}
+
+.actionButton {
+  height: 2rem;
+  width: 2rem;
+  padding: 0;
+}
+
+.deleteButton {
+  height: 2rem;
+  width: 2rem;
+  padding: 0;
+  color: #dc2626;
+}
+
+.salaryText {
+  color: #15803d;
+}
+
+.stickyPerformanceBar {
+  width: 5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  height: 0.5rem;
+  overflow: hidden;
+}
+
+.stickyPerformanceBarFill {
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: all 300ms;
+}
+
+.serialNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.statusTextCapitalize {
+  text-transform: capitalize;
+}
+
+.salaryMonospace {
+  font-family: monospace;
+}
+
+.marginBottomSm {
+  margin-bottom: 0.5rem;
+}
+
+.marginBottomMd {
+  margin-bottom: 1rem;
+}
+
+.truncatedText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

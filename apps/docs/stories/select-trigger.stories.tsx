@@ -1,6 +1,7 @@
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@signozhq/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-trigger.stories.module.css';
 
 const meta: Meta<typeof SelectTrigger> = {
 	title: 'Primitive Components/Select/SelectTrigger',
@@ -56,7 +57,7 @@ export const Default: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger {...args} />
 					<SelectContent>
@@ -77,7 +78,7 @@ export const WithValue: Story = {
 		placeholder: 'Select a framework...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<Select defaultValue="react">
 				<SelectTrigger {...args} />
 				<SelectContent>
@@ -98,7 +99,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<Select>
 				<SelectTrigger {...args} />
 				<SelectContent>
@@ -119,13 +120,15 @@ export const WithCustomRenderValue: Story = {
 		const selectedLabel = frameworks.find((f) => f.value === value)?.label;
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Select value={value} onChange={(v) => setValue(v as string)}>
 					<SelectTrigger
 						placeholder="Select a framework..."
 						renderValue={() =>
 							selectedLabel ? (
-								<span className="font-semibold text-primary">{selectedLabel}</span>
+								<Typography weight="semibold" className={styles.selectedValue}>
+									{selectedLabel}
+								</Typography>
 							) : null
 						}
 					/>

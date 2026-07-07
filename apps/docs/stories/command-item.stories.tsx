@@ -9,6 +9,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import styles from './command-item.stories.module.css';
 import { itemArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandItem> = {
@@ -30,7 +31,7 @@ export const Default: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder="Search commands…" />
 				<CommandList>
@@ -51,7 +52,7 @@ export const Default: Story = {
 
 export const WithPrefixAndSuffix: Story = {
 	render: () => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder="Search commands…" />
 				<CommandList>

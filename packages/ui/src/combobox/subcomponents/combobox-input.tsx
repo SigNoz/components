@@ -20,6 +20,6 @@ export type ComboboxInputProps = React.ComponentPropsWithoutRef<typeof CommandIn
  * ```
  */
 export const ComboboxInput = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
-	(props, ref) => <CommandInput ref={ref} data-slot="combobox-input" {...props} />
+	(props, ref) => <CommandInput ref={ref} data-slot="combobox-input" {...props} />,
 );
 ComboboxInput.displayName = 'ComboboxInput';

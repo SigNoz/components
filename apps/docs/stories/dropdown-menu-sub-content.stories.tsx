@@ -60,7 +60,7 @@ export const Default: Story = {
 		avoidCollisions: true,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">

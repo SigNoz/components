@@ -179,7 +179,7 @@ export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps
 
 			heightMode = 'content',
 		},
-		ref
+		ref,
 	) => {
 		const animation = position === 'center' ? 'fade' : 'slide';
 		const [onConfirming, setOnConfirming] = React.useState(false);
@@ -247,6 +247,6 @@ export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps
 				{isControlled ? <AnimatePresence>{open ? content : null}</AnimatePresence> : content}
 			</Dialog>
 		);
-	}
+	},
 );
 ConfirmDialog.displayName = 'ConfirmDialog';

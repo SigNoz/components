@@ -1,0 +1,19 @@
+.selectedText {
+  margin-top: 1rem;
+}
+
+.overflowHint {
+  margin-top: 0.25rem;
+}
+
+.variationsContainer {
+  max-width: 42rem;
+}
+
+.sectionHeading {
+  margin-bottom: 0.5rem;
+}
+
+.iconSpacing {
+  margin-right: 0.5rem;
+}

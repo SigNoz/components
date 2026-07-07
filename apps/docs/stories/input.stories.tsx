@@ -1,5 +1,6 @@
-import { Input } from '@signozhq/ui';
+import { Input, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './input.stories.module.css';
 
 const meta: Meta<typeof Input> = {
 	title: 'Primitive Components/Input',
@@ -161,72 +162,65 @@ export const InputTypes: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-300">
+		<div className="story-container-full">
+			<div className="story-section">
+				<Typography as="h3" size="sm" weight="medium">
 					Common Input Types
-				</h3>
-				<div className="space-y-4 max-w-md">
-					<div className="space-y-2">
-						<label
-							htmlFor="type-text"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							Text
+				</Typography>
+				<div className={`story-section ${styles.maxWidthMd}`}>
+					<div className="story-section-sm">
+						<label htmlFor="type-text">
+							<Typography size="xs" color="muted">
+								Text
+							</Typography>
 						</label>
 						<Input id="type-text" type="text" placeholder="Enter text" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="type-email"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							Email
+					<div className="story-section-sm">
+						<label htmlFor="type-email">
+							<Typography size="xs" color="muted">
+								Email
+							</Typography>
 						</label>
 						<Input id="type-email" type="email" placeholder="email@example.com" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="type-password"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							Password
+					<div className="story-section-sm">
+						<label htmlFor="type-password">
+							<Typography size="xs" color="muted">
+								Password
+							</Typography>
 						</label>
 						<Input id="type-password" type="password" placeholder="Enter password" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="type-number"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							Number
+					<div className="story-section-sm">
+						<label htmlFor="type-number">
+							<Typography size="xs" color="muted">
+								Number
+							</Typography>
 						</label>
 						<Input id="type-number" type="number" placeholder="Enter number" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="type-tel"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							Telephone
+					<div className="story-section-sm">
+						<label htmlFor="type-tel">
+							<Typography size="xs" color="muted">
+								Telephone
+							</Typography>
 						</label>
 						<Input id="type-tel" type="tel" placeholder="+1 (555) 000-0000" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="type-url"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							URL
+					<div className="story-section-sm">
+						<label htmlFor="type-url">
+							<Typography size="xs" color="muted">
+								URL
+							</Typography>
 						</label>
 						<Input id="type-url" type="url" placeholder="https://example.com" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="type-search"
-							className="block text-xs text-vanilla-600 dark:text-vanilla-400"
-						>
-							Search
+					<div className="story-section-sm">
+						<label htmlFor="type-search">
+							<Typography size="xs" color="muted">
+								Search
+							</Typography>
 						</label>
 						<Input id="type-search" type="search" placeholder="Search..." />
 					</div>
@@ -256,32 +250,29 @@ export const WithLabels: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
-					<label
-						htmlFor="labeled-input-1"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Full Name
+		<div className="story-container-full">
+			<div className={`story-section ${styles.maxWidthMd}`}>
+				<div className="story-section-sm">
+					<label htmlFor="labeled-input-1">
+						<Typography size="sm" weight="medium">
+							Full Name
+						</Typography>
 					</label>
 					<Input id="labeled-input-1" placeholder="John Doe" />
 				</div>
-				<div className="space-y-2">
-					<label
-						htmlFor="labeled-input-2"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Email Address
+				<div className="story-section-sm">
+					<label htmlFor="labeled-input-2">
+						<Typography size="sm" weight="medium">
+							Email Address
+						</Typography>
 					</label>
 					<Input id="labeled-input-2" type="email" placeholder="john@example.com" />
 				</div>
-				<div className="space-y-2">
-					<label
-						htmlFor="labeled-input-3"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Phone Number
+				<div className="story-section-sm">
+					<label htmlFor="labeled-input-3">
+						<Typography size="sm" weight="medium">
+							Phone Number
+						</Typography>
 					</label>
 					<Input id="labeled-input-3" type="tel" placeholder="+1 (555) 000-0000" />
 				</div>
@@ -310,14 +301,13 @@ export const DisabledStates: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
-					<label
-						htmlFor="disabled-input"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Disabled Input
+		<div className="story-container-full">
+			<div className={`story-section ${styles.maxWidthMd}`}>
+				<div className="story-section-sm">
+					<label htmlFor="disabled-input">
+						<Typography size="sm" weight="medium">
+							Disabled Input
+						</Typography>
 					</label>
 					<Input id="disabled-input" placeholder="Cannot edit this" disabled />
 				</div>
@@ -346,14 +336,13 @@ export const ReadOnlyStates: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
-					<label
-						htmlFor="readonly-input"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Read-Only Input
+		<div className="story-container-full">
+			<div className={`story-section ${styles.maxWidthMd}`}>
+				<div className="story-section-sm">
+					<label htmlFor="readonly-input">
+						<Typography size="sm" weight="medium">
+							Read-Only Input
+						</Typography>
 					</label>
 					<Input id="readonly-input" value="This value can be selected but not edited" readOnly />
 				</div>
@@ -382,17 +371,21 @@ export const RequiredFields: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-6 bg-background">
-			<div className="space-y-4 max-w-md">
-				<div className="space-y-2">
-					<label
-						htmlFor="required-input"
-						className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-					>
-						Email Address <span className="text-red-500">*</span>
+		<div className="story-container-full">
+			<div className={`story-section ${styles.maxWidthMd}`}>
+				<div className="story-section-sm">
+					<label htmlFor="required-input">
+						<Typography size="sm" weight="medium">
+							Email Address{' '}
+							<Typography as="span" color="danger">
+								*
+							</Typography>
+						</Typography>
 					</label>
 					<Input id="required-input" type="email" placeholder="Required field" required />
-					<p className="text-xs text-vanilla-600 dark:text-vanilla-400">This field is required</p>
+					<Typography size="xs" color="muted">
+						This field is required
+					</Typography>
 				</div>
 			</div>
 		</div>
@@ -419,43 +412,50 @@ export const FormExamples: Story = {
 		className: { control: false },
 	},
 	render: () => (
-		<div className="p-8 space-y-8 bg-background">
-			<div className="max-w-md space-y-6">
-				<h3 className="text-sm font-medium text-vanilla-800 dark:text-vanilla-300">Contact Form</h3>
-				<form className="space-y-4">
-					<div className="space-y-2">
-						<label
-							htmlFor="form-name"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-						>
-							Full Name <span className="text-red-500">*</span>
+		<div className="story-container-full">
+			<div className={`story-section ${styles.maxWidthMd}`}>
+				<Typography as="h3" size="sm" weight="medium">
+					Contact Form
+				</Typography>
+				<form className="story-section">
+					<div className="story-section-sm">
+						<label htmlFor="form-name">
+							<Typography size="sm" weight="medium">
+								Full Name{' '}
+								<Typography as="span" color="danger">
+									*
+								</Typography>
+							</Typography>
 						</label>
 						<Input id="form-name" placeholder="John Doe" required />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="form-email"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-						>
-							Email Address <span className="text-red-500">*</span>
+					<div className="story-section-sm">
+						<label htmlFor="form-email">
+							<Typography size="sm" weight="medium">
+								Email Address{' '}
+								<Typography as="span" color="danger">
+									*
+								</Typography>
+							</Typography>
 						</label>
 						<Input id="form-email" type="email" placeholder="john@example.com" required />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="form-phone"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-						>
-							Phone Number
+					<div className="story-section-sm">
+						<label htmlFor="form-phone">
+							<Typography size="sm" weight="medium">
+								Phone Number
+							</Typography>
 						</label>
 						<Input id="form-phone" type="tel" placeholder="+1 (555) 000-0000" />
 					</div>
-					<div className="space-y-2">
-						<label
-							htmlFor="form-password"
-							className="block text-sm font-medium text-vanilla-800 dark:text-vanilla-300"
-						>
-							Password <span className="text-red-500">*</span>
+					<div className="story-section-sm">
+						<label htmlFor="form-password">
+							<Typography size="sm" weight="medium">
+								Password{' '}
+								<Typography as="span" color="danger">
+									*
+								</Typography>
+							</Typography>
 						</label>
 						<Input id="form-password" placeholder="Enter password" required type="password" />
 					</div>
@@ -489,9 +489,10 @@ export const PasswordInput: Story = {
 	},
 	render: (args) => {
 		return (
-			<div className="p-5 mt-5">
-				<h2 className="mb-3">Input.Password Example</h2>
-
+			<div className="story-container-full">
+				<Typography as="h2" size="lg" weight="medium" className={styles.headerMargin}>
+					Input.Password Example
+				</Typography>
 				<Input.Password {...args} />
 			</div>
 		);

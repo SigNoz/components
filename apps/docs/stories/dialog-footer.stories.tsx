@@ -9,6 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { footerArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -39,9 +40,9 @@ export const Default: Story = {
 					<DialogTitle>Delete this step</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					<p className="text-sm font-normal leading-5 font-inter font-regular">
+					<Typography size="sm">
 						Deleting this step would stop further analytics using this step of the funnel.
-					</p>
+					</Typography>
 				</DialogDescription>
 				<DialogFooter {...args}>
 					<Button variant={ButtonVariant.Ghost} color="secondary">

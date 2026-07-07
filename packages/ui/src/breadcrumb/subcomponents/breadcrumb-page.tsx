@@ -53,7 +53,7 @@ export const BreadcrumbPage = React.forwardRef<HTMLSpanElement, BreadcrumbPagePr
 				{children}
 			</span>
 		);
-	}
+	},
 );
 
 BreadcrumbPage.displayName = 'BreadcrumbPage';

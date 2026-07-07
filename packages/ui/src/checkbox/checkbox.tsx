@@ -39,11 +39,10 @@ export const CheckboxColors: Record<Capitalize<CheckboxColor>, CheckboxColor> = 
 	Aqua: 'aqua',
 };
 
-export interface CheckboxProps
-	extends Pick<
-		React.ComponentPropsWithoutRef<'button'>,
-		'id' | 'disabled' | 'className' | 'children' | 'onClick'
-	> {
+export interface CheckboxProps extends Pick<
+	React.ComponentPropsWithoutRef<'button'>,
+	'id' | 'disabled' | 'className' | 'children' | 'onClick'
+> {
 	/**
 	 * The name of the checkbox. Submitted with its owning form as part of a name/value pair.
 	 */
@@ -95,7 +94,7 @@ const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root
 				<Check className={cn(styles['checkbox__icon'], styles['checkbox__icon--check'])} />
 			</CheckboxPrimitive.Indicator>
 		</CheckboxPrimitive.Root>
-	)
+	),
 );
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 

@@ -33,7 +33,7 @@ describe('Pagination forwardRef', () => {
 		render(
 			<PaginationContainer>
 				<PaginationContent ref={ref} />
-			</PaginationContainer>
+			</PaginationContainer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLUListElement);
 	});
@@ -45,7 +45,7 @@ describe('Pagination forwardRef', () => {
 				<PaginationContent>
 					<PaginationItem ref={ref} />
 				</PaginationContent>
-			</PaginationContainer>
+			</PaginationContainer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLLIElement);
 	});
@@ -59,7 +59,7 @@ describe('Pagination forwardRef', () => {
 						<PaginationLink ref={ref}>1</PaginationLink>
 					</PaginationItem>
 				</PaginationContent>
-			</PaginationContainer>
+			</PaginationContainer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -73,7 +73,7 @@ describe('Pagination forwardRef', () => {
 						<PaginationPrevious ref={ref} />
 					</PaginationItem>
 				</PaginationContent>
-			</PaginationContainer>
+			</PaginationContainer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -87,7 +87,7 @@ describe('Pagination forwardRef', () => {
 						<PaginationNext ref={ref} />
 					</PaginationItem>
 				</PaginationContent>
-			</PaginationContainer>
+			</PaginationContainer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -101,7 +101,7 @@ describe('Pagination forwardRef', () => {
 						<PaginationEllipsis ref={ref} />
 					</PaginationItem>
 				</PaginationContent>
-			</PaginationContainer>
+			</PaginationContainer>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLSpanElement);
 	});

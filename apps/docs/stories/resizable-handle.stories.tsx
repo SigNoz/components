@@ -1,5 +1,6 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './resizable-handle.stories.module.css';
 
 const meta: Meta<typeof ResizableHandle> = {
 	title: 'Primitive Components/Resizable/ResizableHandle',
@@ -73,17 +74,21 @@ export const Default: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="h-[400px] border rounded-lg overflow-hidden m-6">
+		<div className={`story-resizable ${styles.storyContainer}`}>
 			<ResizablePanelGroup orientation="horizontal">
 				<ResizablePanel defaultSize="50%">
-					<div className="flex h-full items-center justify-center bg-muted">
-						<span className="text-sm font-medium">Panel 1</span>
+					<div className="story-center story-muted">
+						<Typography size="sm" weight="medium">
+							Panel 1
+						</Typography>
 					</div>
 				</ResizablePanel>
 				<ResizableHandle {...args} />
 				<ResizablePanel defaultSize="50%">
-					<div className="flex h-full items-center justify-center">
-						<span className="text-sm font-medium">Panel 2</span>
+					<div className="story-center">
+						<Typography size="sm" weight="medium">
+							Panel 2
+						</Typography>
 					</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>
@@ -97,27 +102,40 @@ export const WithVisibleHandle: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Visible Handle:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Visible Handle:
+				</Typography>
+				<Typography size="sm" color="muted" display="block">
 					The dots icon makes the draggable area more discoverable for users
-				</p>
+				</Typography>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Left Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">Drag the dots to resize</p>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Left Panel
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									Drag the dots to resize
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle {...args} />
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center">
-							<span className="text-sm font-medium">Right Panel</span>
+						<div className="story-center">
+							<Typography size="sm" weight="medium">
+								Right Panel
+							</Typography>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -132,29 +150,49 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Disabled Handle:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Disabled Handle:
+				</Typography>
+				<Typography size="sm" color="muted" display="block">
 					This handle cannot be dragged. Try dragging it - nothing will happen!
-				</p>
+				</Typography>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="30%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Fixed Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">30% width</p>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Fixed Panel
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									30% width
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle {...args} />
 					<ResizablePanel defaultSize="70%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Fixed Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">70% width</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Fixed Panel
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									70% width
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -170,24 +208,30 @@ export const VerticalHandle: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Vertical Handle:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Vertical Handle:
+				</Typography>
+				<Typography size="sm" color="muted" display="block">
 					Handles work the same way in vertical layouts
-				</p>
+				</Typography>
 			</div>
-			<div className="h-[500px] border rounded-lg overflow-hidden">
+			<div className={`story-resizable ${styles.resizableVertical}`}>
 				<ResizablePanelGroup orientation="vertical">
 					<ResizablePanel defaultSize="60%">
-						<div className="flex h-full items-center justify-center">
-							<span className="text-sm font-medium">Top Panel</span>
+						<div className="story-center">
+							<Typography size="sm" weight="medium">
+								Top Panel
+							</Typography>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle {...args} />
 					<ResizablePanel defaultSize="40%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<span className="text-sm font-medium">Bottom Panel</span>
+						<div className="story-center story-muted">
+							<Typography size="sm" weight="medium">
+								Bottom Panel
+							</Typography>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -198,37 +242,54 @@ export const VerticalHandle: Story = {
 
 export const MultipleHandles: Story = {
 	render: () => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Multiple Handles:</h3>
-				<p className="text-sm text-muted-foreground">
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Multiple Handles:
+				</Typography>
+				<Typography size="sm" color="muted" display="block">
 					Each handle can have different configurations
-				</p>
+				</Typography>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="25%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Panel 1</span>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Panel 1
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={false} />
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Panel 2</span>
-								<p className="text-xs text-muted-foreground mt-1">Left: no visible handle</p>
-								<p className="text-xs text-muted-foreground">Right: with visible handle</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Panel 2
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									Left: no visible handle
+								</Typography>
+								<Typography size="xs" color="muted">
+									Right: with visible handle
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} />
 					<ResizablePanel defaultSize="25%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<span className="text-sm font-medium">Panel 3</span>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Panel 3
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
@@ -240,40 +301,79 @@ export const MultipleHandles: Story = {
 
 export const MixedHandles: Story = {
 	render: () => (
-		<div className="m-6">
-			<div className="mb-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Mixed Handle Configuration:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
-					<li>• First handle: Active with visible indicator</li>
-					<li>• Second handle: Disabled (cannot drag)</li>
+		<div className={styles.storyContainer}>
+			<div className={`story-panel ${styles.descriptionPanel}`}>
+				<Typography weight="medium" display="block" className={styles.descriptionTitle}>
+					Mixed Handle Configuration:
+				</Typography>
+				<ul className="story-section-sm">
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							First handle: Active with visible indicator
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted" display="block">
+							Second handle: Disabled (cannot drag)
+						</Typography>
+					</li>
 				</ul>
 			</div>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="33%">
-						<div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20">
-							<div className="text-center">
-								<span className="text-sm font-medium">Resizable</span>
-								<p className="text-xs text-muted-foreground mt-1">Can resize right</p>
+						<div className={`story-center ${styles.gradientBlueIndigo}`}>
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Resizable
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									Can resize right
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} disabled={false} />
 					<ResizablePanel defaultSize="34%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<span className="text-sm font-medium">Flexible</span>
-								<p className="text-xs text-muted-foreground mt-1">Can resize left</p>
-								<p className="text-xs text-muted-foreground">Cannot resize right</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Flexible
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									Can resize left
+								</Typography>
+								<Typography size="xs" color="muted">
+									Cannot resize right
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} disabled={true} />
 					<ResizablePanel defaultSize="33%">
-						<div className="flex h-full items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-900/20">
-							<div className="text-center">
-								<span className="text-sm font-medium">Fixed</span>
-								<p className="text-xs text-muted-foreground mt-1">Cannot resize</p>
+						<div className={`story-center ${styles.gradientAmberOrange}`}>
+							<div className={styles.textCenter}>
+								<Typography size="sm" weight="medium">
+									Fixed
+								</Typography>
+								<Typography
+									size="xs"
+									color="muted"
+									display="block"
+									className={styles.descriptionSubtitle}
+								>
+									Cannot resize
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>

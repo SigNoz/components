@@ -16,11 +16,11 @@ import { Toggle } from '@signozhq/ui';
 import { Bold } from '@signozhq/icons';
 
 export default function MyComponent() {
-  return (
-    <Toggle aria-label="Toggle bold" defaultValue={false}>
-      <Bold className="h-3 w-3" />
-    </Toggle>
-  );
+	return (
+		<Toggle aria-label="Toggle bold" defaultValue={false}>
+			<Bold style={{ width: '0.75rem', height: '0.75rem' }} />
+		</Toggle>
+	);
 }
 ```
 
@@ -31,13 +31,13 @@ import { Toggle } from '@signozhq/ui';
 import { Bold } from '@signozhq/icons';
 
 export default function MyComponent() {
-  const [bold, setBold] = React.useState(false);
+	const [bold, setBold] = React.useState(false);
 
-  return (
-    <Toggle aria-label="Toggle bold" value={bold} onChange={setBold}>
-      <Bold className="h-3 w-3" />
-    </Toggle>
-  );
+	return (
+		<Toggle aria-label="Toggle bold" value={bold} onChange={setBold}>
+			<Bold style={{ width: '0.75rem', height: '0.75rem' }} />
+		</Toggle>
+	);
 }
 ```
 

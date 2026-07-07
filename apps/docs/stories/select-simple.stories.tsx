@@ -1,7 +1,8 @@
 import { Code, Database, GitBranch, Terminal } from '@signozhq/icons';
-import { SelectSimple } from '@signozhq/ui';
+import { SelectSimple, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
+import styles from './select-simple.stories.module.css';
 
 const meta: Meta<typeof SelectSimple> = {
 	title: 'Composed Components/SelectSimple',
@@ -122,7 +123,7 @@ export const Default: Story = {
 		placeholder: 'Select a framework...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<SelectSimple {...args} />
 		</div>
 	),
@@ -137,9 +138,11 @@ export const Controlled: Story = {
 		const [value, setValue] = useState('');
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<SelectSimple {...args} value={value} onChange={(v) => setValue(v as string)} />
-				<p className="mt-4 text-sm text-muted-foreground">Selected: {value || 'none'}</p>
+				<Typography size="sm" color="muted" className={styles.selectedText}>
+					Selected: {value || 'none'}
+				</Typography>
 			</div>
 		);
 	},
@@ -152,7 +155,7 @@ export const WithDefaultValue: Story = {
 		defaultValue: 'react',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<SelectSimple {...args} />
 		</div>
 	),
@@ -186,7 +189,7 @@ export const WithGroups: Story = {
 		placeholder: 'Select a technology...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<SelectSimple {...args} />
 		</div>
 	),
@@ -197,7 +200,7 @@ const itemsWithIcons = [
 		value: 'react',
 		label: (
 			<>
-				<Code className="mr-2 h-4 w-4" />
+				<Code className={`icon-md ${styles.iconSpacing}`} />
 				React
 			</>
 		),
@@ -207,7 +210,7 @@ const itemsWithIcons = [
 		value: 'nodejs',
 		label: (
 			<>
-				<Terminal className="mr-2 h-4 w-4" />
+				<Terminal className={`icon-md ${styles.iconSpacing}`} />
 				Node.js
 			</>
 		),
@@ -217,7 +220,7 @@ const itemsWithIcons = [
 		value: 'postgres',
 		label: (
 			<>
-				<Database className="mr-2 h-4 w-4" />
+				<Database className={`icon-md ${styles.iconSpacing}`} />
 				PostgreSQL
 			</>
 		),
@@ -227,7 +230,7 @@ const itemsWithIcons = [
 		value: 'git',
 		label: (
 			<>
-				<GitBranch className="mr-2 h-4 w-4" />
+				<GitBranch className={`icon-md ${styles.iconSpacing}`} />
 				Git
 			</>
 		),
@@ -241,7 +244,7 @@ export const WithIcons: Story = {
 		placeholder: 'Select a tool...',
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<SelectSimple {...args} />
 		</div>
 	),
@@ -257,11 +260,11 @@ export const MultiSelect: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<SelectSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.selectedText}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -277,11 +280,11 @@ export const MultiSelectWithIcons: Story = {
 		const [values, setValues] = useState<string[]>([]);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<SelectSimple {...args} value={values} onChange={(v) => setValues(v as string[])} />
-				<p className="mt-4 text-sm text-muted-foreground">
+				<Typography size="sm" color="muted" className={styles.selectedText}>
 					Selected: {values.length > 0 ? values.join(', ') : 'none'}
-				</p>
+				</Typography>
 			</div>
 		);
 	},
@@ -294,7 +297,7 @@ export const Disabled: Story = {
 		disabled: true,
 	},
 	render: (args) => (
-		<div className="p-8 w-full max-w-sm">
+		<div className="story-container">
 			<SelectSimple {...args} />
 		</div>
 	),

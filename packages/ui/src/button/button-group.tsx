@@ -87,7 +87,7 @@ const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
 				</div>
 			</ButtonGroupContext.Provider>
 		);
-	}
+	},
 );
 ButtonGroup.displayName = 'ButtonGroup';
 

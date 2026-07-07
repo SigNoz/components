@@ -3,9 +3,11 @@ import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
+	Typography,
 	useDefaultLayout,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './resizable.stories.module.css';
 
 const meta: Meta<typeof ResizablePanelGroup> = {
 	title: 'Primitive Components/Resizable',
@@ -109,34 +111,42 @@ type Story = StoryObj<typeof ResizablePanelGroup>;
 
 export const Default: Story = {
 	render: () => (
-		<div className="space-y-8 p-6 bg-background">
+		<div className={`story-section ${styles.sectionContainer}`}>
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Horizontal Layout</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Horizontal Layout
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="25%" minSize="20%">
-							<div className="flex h-full items-center justify-center bg-muted">
-								<div className="text-center">
-									<FileText className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-									<span className="text-sm font-medium">File Explorer</span>
+							<div className="story-center story-muted">
+								<div className={styles.textCenter}>
+									<FileText className={styles.iconMuted} />
+									<Typography size="sm" weight="medium">
+										File Explorer
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="50%">
-							<div className="flex h-full items-center justify-center">
-								<div className="text-center">
-									<Code className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-									<span className="text-sm font-medium">Code Editor</span>
+							<div className="story-center">
+								<div className={styles.textCenter}>
+									<Code className={styles.iconMuted} />
+									<Typography size="sm" weight="medium">
+										Code Editor
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="25%" minSize="20%">
-							<div className="flex h-full items-center justify-center bg-muted">
-								<div className="text-center">
-									<Settings className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-									<span className="text-sm font-medium">Properties</span>
+							<div className="story-center story-muted">
+								<div className={styles.textCenter}>
+									<Settings className={styles.iconMuted} />
+									<Typography size="sm" weight="medium">
+										Properties
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -145,23 +155,29 @@ export const Default: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Vertical Layout</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Vertical Layout
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="vertical">
 						<ResizablePanel defaultSize="70%">
-							<div className="flex h-full items-center justify-center">
-								<div className="text-center">
-									<ChartBar className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-									<span className="text-sm font-medium">Main Dashboard</span>
+							<div className="story-center">
+								<div className={styles.textCenter}>
+									<ChartBar className={styles.iconMuted} />
+									<Typography size="sm" weight="medium">
+										Main Dashboard
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="30%" minSize="25%">
-							<div className="flex h-full items-center justify-center bg-muted">
-								<div className="text-center">
-									<Terminal className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-									<span className="text-sm font-medium">Console Output</span>
+							<div className="story-center story-muted">
+								<div className={styles.textCenter}>
+									<Terminal className={styles.iconMuted} />
+									<Typography size="sm" weight="medium">
+										Console Output
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -174,22 +190,32 @@ export const Default: Story = {
 
 export const HorizontalLayout: Story = {
 	render: () => (
-		<div className="space-y-6 p-6 bg-background">
+		<div className={`story-section ${styles.sectionContainer}`}>
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Two Panel Layout</h2>
-				<div className="h-[300px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Two Panel Layout
+				</Typography>
+				<div className={`story-resizable ${styles.resizableVerticalSmall}`}>
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="30%" minSize="20%" maxSize="50%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<h3 className="font-medium mb-2">Sidebar</h3>
-								<p className="text-sm text-muted-foreground">Navigation and tools</p>
+							<div className={styles.panelContent}>
+								<Typography weight="medium" className={styles.panelTitle}>
+									Sidebar
+								</Typography>
+								<Typography size="sm" color="muted">
+									Navigation and tools
+								</Typography>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="70%">
-							<div className="flex h-full flex-col p-4">
-								<h3 className="font-medium mb-2">Main Content</h3>
-								<p className="text-sm text-muted-foreground">Primary workspace area</p>
+							<div className={styles.panelContentMain}>
+								<Typography weight="medium" className={styles.panelTitle}>
+									Main Content
+								</Typography>
+								<Typography size="sm" color="muted">
+									Primary workspace area
+								</Typography>
 							</div>
 						</ResizablePanel>
 					</ResizablePanelGroup>
@@ -197,41 +223,61 @@ export const HorizontalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Three Panel Layout</h2>
-				<div className="h-[300px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Three Panel Layout
+				</Typography>
+				<div className={`story-resizable ${styles.resizableVerticalSmall}`}>
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="25%" minSize="15%" maxSize="40%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<FileText className="h-5 w-5 mb-2 text-muted-foreground" />
-								<h3 className="font-medium mb-2">Explorer</h3>
-								<div className="text-xs text-muted-foreground space-y-1">
-									<div>📁 src/</div>
-									<div className="ml-3">📄 index.ts</div>
-									<div className="ml-3">📄 app.tsx</div>
+							<div className={styles.panelContent}>
+								<FileText className={`icon-md ${styles.iconMargin}`} />
+								<Typography weight="medium" className={styles.panelTitle}>
+									Explorer
+								</Typography>
+								<div className="story-section-sm">
+									<Typography size="xs" color="muted">
+										src/
+									</Typography>
+									<Typography size="xs" color="muted" className={styles.fileTreeIndent}>
+										index.ts
+									</Typography>
+									<Typography size="xs" color="muted" className={styles.fileTreeIndent}>
+										app.tsx
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="50%">
-							<div className="flex h-full flex-col p-4">
-								<Code className="h-5 w-5 mb-2 text-muted-foreground" />
-								<h3 className="font-medium mb-2">Editor</h3>
-								<div className="flex-1 bg-slate-950 rounded text-green-400 p-3 font-mono text-xs">
+							<div className={styles.panelContentMain}>
+								<Code className={`icon-md ${styles.iconMargin}`} />
+								<Typography weight="medium" className={styles.panelTitle}>
+									Editor
+								</Typography>
+								<div className={styles.editorContent}>
 									<div>function App() {'{'}</div>
-									<div className="ml-2">return &lt;h1&gt;Hello World&lt;/h1&gt;;</div>
+									<div className={styles.codeIndent}>return &lt;h1&gt;Hello World&lt;/h1&gt;;</div>
 									<div>{'}'}</div>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="25%" minSize="20%" maxSize="40%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<Settings className="h-5 w-5 mb-2 text-muted-foreground" />
-								<h3 className="font-medium mb-2">Properties</h3>
-								<div className="text-xs text-muted-foreground space-y-2">
-									<div>Type: Component</div>
-									<div>Props: 3</div>
-									<div>State: Active</div>
+							<div className={styles.panelContent}>
+								<Settings className={`icon-md ${styles.iconMargin}`} />
+								<Typography weight="medium" className={styles.panelTitle}>
+									Properties
+								</Typography>
+								<div className="story-section-sm">
+									<Typography size="xs" color="muted">
+										Type: Component
+									</Typography>
+									<Typography size="xs" color="muted">
+										Props: 3
+									</Typography>
+									<Typography size="xs" color="muted">
+										State: Active
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -240,40 +286,60 @@ export const HorizontalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Dashboard Layout</h2>
-				<div className="h-[300px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Dashboard Layout
+				</Typography>
+				<div className={`story-resizable ${styles.resizableVerticalSmall}`}>
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="20%" minSize="15%" maxSize="30%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<ChartBar className="h-5 w-5 mb-2 text-muted-foreground" />
-								<h3 className="font-medium mb-2">Metrics</h3>
-								<div className="text-xs text-muted-foreground space-y-1">
-									<div>CPU: 45%</div>
-									<div>Memory: 2.1GB</div>
-									<div>Disk: 67%</div>
+							<div className={styles.panelContent}>
+								<ChartBar className={`icon-md ${styles.iconMargin}`} />
+								<Typography weight="medium" className={styles.panelTitle}>
+									Metrics
+								</Typography>
+								<div className="story-section-sm">
+									<Typography size="xs" color="muted">
+										CPU: 45%
+									</Typography>
+									<Typography size="xs" color="muted">
+										Memory: 2.1GB
+									</Typography>
+									<Typography size="xs" color="muted">
+										Disk: 67%
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle />
 						<ResizablePanel defaultSize="60%">
-							<div className="flex h-full items-center justify-center">
-								<div className="text-center">
-									<div className="h-32 w-32 mx-auto mb-4 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
-										<span className="text-white font-bold">CHART</span>
+							<div className="story-center">
+								<div className={styles.textCenter}>
+									<div className={styles.chartPlaceholder}>
+										<span className={styles.chartText}>CHART</span>
 									</div>
-									<span className="text-sm font-medium">Performance Graph</span>
+									<Typography size="sm" weight="medium">
+										Performance Graph
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle />
 						<ResizablePanel defaultSize="20%" minSize="15%" maxSize="30%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<Database className="h-5 w-5 mb-2 text-muted-foreground" />
-								<h3 className="font-medium mb-2">Status</h3>
-								<div className="text-xs text-muted-foreground space-y-1">
-									<div>🟢 API Online</div>
-									<div>🟢 DB Connected</div>
-									<div>🟡 Cache Warming</div>
+							<div className={styles.panelContent}>
+								<Database className={`icon-md ${styles.iconMargin}`} />
+								<Typography weight="medium" className={styles.panelTitle}>
+									Status
+								</Typography>
+								<div className="story-section-sm">
+									<Typography size="xs" color="muted">
+										API Online
+									</Typography>
+									<Typography size="xs" color="muted">
+										DB Connected
+									</Typography>
+									<Typography size="xs" color="muted">
+										Cache Warming
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -286,38 +352,50 @@ export const HorizontalLayout: Story = {
 
 export const VerticalLayout: Story = {
 	render: () => (
-		<div className="space-y-6 p-6 bg-background">
+		<div className={`story-section ${styles.sectionContainer}`}>
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Application Layout</h2>
-				<div className="h-[500px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Application Layout
+				</Typography>
+				<div className={`story-resizable ${styles.resizableVertical}`}>
 					<ResizablePanelGroup orientation="vertical">
 						<ResizablePanel defaultSize="15%" minSize="10%" maxSize="25%">
-							<div className="flex h-full items-center justify-between px-6 py-3 bg-muted border-b">
-								<h3 className="font-medium">Navigation Bar</h3>
-								<div className="flex gap-2">
-									<div className="w-2 h-2 bg-green-500 rounded-full"></div>
-									<div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-									<div className="w-2 h-2 bg-red-500 rounded-full"></div>
+							<div className={styles.navBar}>
+								<Typography weight="medium">Navigation Bar</Typography>
+								<div className="story-row">
+									<div className={`${styles.statusDot} ${styles.statusGreen}`}></div>
+									<div className={`${styles.statusDot} ${styles.statusYellow}`}></div>
+									<div className={`${styles.statusDot} ${styles.statusRed}`}></div>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="65%">
-							<div className="flex h-full flex-col p-6">
-								<h3 className="font-medium mb-4">Main Content Area</h3>
-								<div className="flex-1 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-lg flex items-center justify-center">
-									<span className="text-lg text-muted-foreground">Primary workspace content</span>
+							<div className={styles.mainContent}>
+								<Typography weight="medium" className={styles.contentTitle}>
+									Main Content Area
+								</Typography>
+								<div className={styles.gradientContent}>
+									<Typography size="lg" color="muted">
+										Primary workspace content
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="20%" minSize="15%" maxSize="30%">
-							<div className="flex h-full flex-col p-4 bg-muted border-t">
-								<Terminal className="h-5 w-5 mb-2 text-muted-foreground" />
-								<h3 className="font-medium mb-3">Footer / Status Bar</h3>
-								<div className="text-xs text-muted-foreground space-y-1">
-									<div>Ready • Line 42, Col 12</div>
-									<div>UTF-8 • TypeScript • Git:main</div>
+							<div className={styles.footerContent}>
+								<Terminal className={`icon-md ${styles.iconMargin}`} />
+								<Typography weight="medium" className={styles.chatTitle}>
+									Footer / Status Bar
+								</Typography>
+								<div className="story-section-sm">
+									<Typography size="xs" color="muted">
+										Ready - Line 42, Col 12
+									</Typography>
+									<Typography size="xs" color="muted">
+										UTF-8 - TypeScript - Git:main
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -326,26 +404,32 @@ export const VerticalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Chat Interface</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Chat Interface
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="vertical">
 						<ResizablePanel defaultSize="75%">
-							<div className="flex h-full flex-col p-4">
-								<h3 className="font-medium mb-3">Messages</h3>
-								<div className="flex-1 space-y-3">
-									<div className="flex justify-start">
-										<div className="bg-muted px-3 py-2 rounded-lg max-w-xs">
-											<p className="text-sm">Hello! How can I help you today?</p>
+							<div className={styles.panelContentMain}>
+								<Typography weight="medium" className={styles.chatTitle}>
+									Messages
+								</Typography>
+								<div className={styles.messagesContainer}>
+									<div className={styles.messageLeft}>
+										<div className={styles.messageBubble}>
+											<Typography size="sm">Hello! How can I help you today?</Typography>
 										</div>
 									</div>
-									<div className="flex justify-end">
-										<div className="bg-primary text-primary-foreground px-3 py-2 rounded-lg max-w-xs">
-											<p className="text-sm">I need help with the resizable panels.</p>
+									<div className={styles.messageRight}>
+										<div className={styles.messageBubblePrimary}>
+											<Typography size="sm">I need help with the resizable panels.</Typography>
 										</div>
 									</div>
-									<div className="flex justify-start">
-										<div className="bg-muted px-3 py-2 rounded-lg max-w-xs">
-											<p className="text-sm">Sure! You can drag the handles to resize panels.</p>
+									<div className={styles.messageLeft}>
+										<div className={styles.messageBubble}>
+											<Typography size="sm">
+												Sure! You can drag the handles to resize panels.
+											</Typography>
 										</div>
 									</div>
 								</div>
@@ -353,17 +437,18 @@ export const VerticalLayout: Story = {
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="25%" minSize="20%" maxSize="40%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<h3 className="font-medium mb-3">Input Area</h3>
-								<div className="flex-1 flex flex-col">
-									<div className="flex-1 bg-background rounded border p-2 text-sm text-muted-foreground">
-										Type your message...
+							<div className={styles.inputAreaContent}>
+								<Typography weight="medium" className={styles.chatTitle}>
+									Input Area
+								</Typography>
+								<div className={styles.inputContainer}>
+									<div className={styles.inputField}>
+										<Typography size="sm" color="muted">
+											Type your message...
+										</Typography>
 									</div>
-									<div className="flex justify-end mt-2">
-										<button
-											type="button"
-											className="bg-primary text-primary-foreground px-3 py-1 rounded text-sm"
-										>
+									<div className={styles.sendButtonContainer}>
+										<button type="button" className={styles.sendButton}>
 											Send
 										</button>
 									</div>
@@ -375,46 +460,52 @@ export const VerticalLayout: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Development Environment</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Development Environment
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="vertical">
 						<ResizablePanel defaultSize="60%">
-							<div className="flex h-full flex-col p-4">
-								<div className="flex items-center gap-2 mb-3">
-									<Code className="h-4 w-4 text-muted-foreground" />
-									<h3 className="font-medium">Code Editor</h3>
-									<span className="text-xs bg-muted px-2 py-1 rounded">main.tsx</span>
+							<div className={styles.panelContentMain}>
+								<div className={`story-row ${styles.chatTitle}`}>
+									<Code className={`icon-md ${styles.iconMutedForeground}`} />
+									<Typography weight="medium">Code Editor</Typography>
+									<span className={styles.codeTag}>main.tsx</span>
 								</div>
-								<div className="flex-1 bg-slate-950 rounded text-green-400 p-4 font-mono text-sm overflow-auto">
-									<div className="text-gray-500">1</div>
-									<div className="text-gray-500">2</div>
-									<div className="text-gray-500">3</div>
-									<div className="text-gray-500">4</div>
-									<div className="text-gray-500">5</div>
+								<div className={styles.editorContentLarge}>
+									<div className={styles.codeLineNumber}>1</div>
+									<div className={styles.codeLineNumber}>2</div>
+									<div className={styles.codeLineNumber}>3</div>
+									<div className={styles.codeLineNumber}>4</div>
+									<div className={styles.codeLineNumber}>5</div>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="25%" minSize="20%">
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<div className="flex items-center gap-2 mb-3">
-									<Terminal className="h-4 w-4 text-muted-foreground" />
-									<h3 className="font-medium">Terminal</h3>
+							<div className={styles.panelContent}>
+								<div className={`story-row ${styles.chatTitle}`}>
+									<Terminal className={`icon-md ${styles.iconMutedForeground}`} />
+									<Typography weight="medium">Terminal</Typography>
 								</div>
-								<div className="flex-1 bg-slate-950 rounded text-green-400 p-3 font-mono text-xs">
+								<div className={styles.editorContent}>
 									<div>$ npm run dev</div>
-									<div className="text-blue-400">Server running on http://localhost:3000</div>
-									<div className="animate-pulse">█</div>
+									<div className={styles.terminalOutput}>
+										Server running on http://localhost:3000
+									</div>
+									<div className={styles.cursorBlink}>|</div>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="15%" minSize="10%" maxSize="25%">
-							<div className="flex h-full items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800 border-t">
-								<div className="text-xs text-muted-foreground">
-									Problems: 0 • Warnings: 2 • Info: 5
-								</div>
-								<div className="text-xs text-muted-foreground">Ln 42, Col 12</div>
+							<div className={styles.statusBar}>
+								<Typography size="xs" color="muted">
+									Problems: 0 - Warnings: 2 - Info: 5
+								</Typography>
+								<Typography size="xs" color="muted">
+									Ln 42, Col 12
+								</Typography>
 							</div>
 						</ResizablePanel>
 					</ResizablePanelGroup>
@@ -426,52 +517,56 @@ export const VerticalLayout: Story = {
 
 export const CollapsiblePanels: Story = {
 	render: () => (
-		<div className="space-y-6 p-6 bg-background">
+		<div className={`story-section ${styles.sectionContainer}`}>
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Collapsible Sidebar</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Collapsible Sidebar
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="25%" minSize="15%" maxSize="40%" collapsible={true}>
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<div className="flex items-center gap-2 mb-4">
-									<FileText className="h-5 w-5 text-muted-foreground" />
-									<h3 className="font-medium">File Explorer</h3>
+							<div className={styles.panelContent}>
+								<div className={`story-row ${styles.contentTitle}`}>
+									<FileText className={`icon-md ${styles.iconMutedForeground}`} />
+									<Typography weight="medium">File Explorer</Typography>
 								</div>
-								<div className="text-xs text-muted-foreground space-y-2">
-									<div className="flex items-center gap-1">
-										<span>📁</span> src/
-									</div>
-									<div className="flex items-center gap-1 ml-4">
-										<span>📄</span> App.tsx
-									</div>
-									<div className="flex items-center gap-1 ml-4">
-										<span>📄</span> index.ts
-									</div>
-									<div className="flex items-center gap-1">
-										<span>📁</span> components/
-									</div>
-									<div className="flex items-center gap-1 ml-4">
-										<span>📄</span> Button.tsx
-									</div>
+								<div className="story-section-sm">
+									<Typography size="xs" color="muted">
+										src/
+									</Typography>
+									<Typography size="xs" color="muted" className={styles.fileIndent}>
+										App.tsx
+									</Typography>
+									<Typography size="xs" color="muted" className={styles.fileIndent}>
+										index.ts
+									</Typography>
+									<Typography size="xs" color="muted">
+										components/
+									</Typography>
+									<Typography size="xs" color="muted" className={styles.fileIndent}>
+										Button.tsx
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="75%">
-							<div className="flex h-full flex-col p-6">
-								<h3 className="font-medium mb-4">Code Editor</h3>
-								<div className="flex-1 bg-slate-950 rounded text-green-400 p-4 font-mono text-sm">
+							<div className={styles.mainContent}>
+								<Typography weight="medium" className={styles.contentTitle}>
+									Code Editor
+								</Typography>
+								<div className={styles.editorContentLarge}>
 									<div>import React from &apos;react&apos;;</div>
 									<div></div>
 									<div>function App() {'{'}</div>
-									<div className="ml-4">return &lt;div&gt;Hello World&lt;/div&gt;</div>
+									<div className={styles.fileIndent}>return &lt;div&gt;Hello World&lt;/div&gt;</div>
 									<div>{'}'}</div>
 									<div></div>
 									<div>export default App;</div>
 								</div>
-								<p className="text-sm text-muted-foreground mt-2">
+								<Typography size="sm" color="muted" className={styles.infoSubtitle}>
 									Try dragging the left panel all the way to collapse it!
-								</p>
+								</Typography>
 							</div>
 						</ResizablePanel>
 					</ResizablePanelGroup>
@@ -479,37 +574,43 @@ export const CollapsiblePanels: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Collapsible Bottom Panel</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Collapsible Bottom Panel
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="vertical">
 						<ResizablePanel defaultSize="70%">
-							<div className="flex h-full flex-col p-6">
-								<h3 className="font-medium mb-4">Main Workspace</h3>
-								<div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg flex items-center justify-center">
-									<div className="text-center">
-										<ChartBar className="mx-auto mb-2 h-12 w-12 text-blue-500" />
-										<span className="text-lg font-medium">Dashboard Content</span>
+							<div className={styles.mainContent}>
+								<Typography weight="medium" className={styles.contentTitle}>
+									Main Workspace
+								</Typography>
+								<div className={styles.gradientBlue}>
+									<div className={styles.textCenter}>
+										<ChartBar className={styles.iconLgBlue} />
+										<Typography size="lg" weight="medium">
+											Dashboard Content
+										</Typography>
 									</div>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="30%" minSize="20%" maxSize="50%" collapsible={true}>
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<div className="flex items-center gap-2 mb-3">
-									<Terminal className="h-5 w-5 text-muted-foreground" />
-									<h3 className="font-medium">Console</h3>
+							<div className={styles.panelContent}>
+								<div className={`story-row ${styles.chatTitle}`}>
+									<Terminal className={`icon-md ${styles.iconMutedForeground}`} />
+									<Typography weight="medium">Console</Typography>
 								</div>
-								<div className="flex-1 bg-slate-950 rounded text-green-400 p-3 font-mono text-xs">
+								<div className={styles.editorContent}>
 									<div>$ npm run dev</div>
-									<div className="text-blue-400">✓ Local server running</div>
-									<div className="text-yellow-400">⚠ 2 warnings found</div>
-									<div className="text-gray-500">Watching for changes...</div>
-									<div className="animate-pulse">█</div>
+									<div className={styles.terminalOutput}>Local server running</div>
+									<div className={styles.terminalWarning}>2 warnings found</div>
+									<div className={styles.terminalHint}>Watching for changes...</div>
+									<div className={styles.cursorBlink}>|</div>
 								</div>
-								<p className="text-xs text-muted-foreground mt-2">
+								<Typography size="xs" color="muted" className={styles.infoSubtitle}>
 									Drag this panel down to collapse it
-								</p>
+								</Typography>
 							</div>
 						</ResizablePanel>
 					</ResizablePanelGroup>
@@ -517,47 +618,67 @@ export const CollapsiblePanels: Story = {
 			</div>
 
 			<div>
-				<h2 className="text-lg font-semibold mb-4 text-foreground">Multiple Collapsible Panels</h2>
-				<div className="h-[400px] border rounded-lg overflow-hidden">
+				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+					Multiple Collapsible Panels
+				</Typography>
+				<div className="story-resizable">
 					<ResizablePanelGroup orientation="horizontal">
 						<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<div className="flex items-center gap-2 mb-3">
-									<Settings className="h-5 w-5 text-muted-foreground" />
-									<h3 className="font-medium">Tools</h3>
+							<div className={styles.panelContent}>
+								<div className={`story-row ${styles.chatTitle}`}>
+									<Settings className={`icon-md ${styles.iconMutedForeground}`} />
+									<Typography weight="medium">Tools</Typography>
 								</div>
-								<div className="text-sm text-muted-foreground space-y-2">
-									<div>🔧 Settings</div>
-									<div>📊 Analytics</div>
-									<div>🎨 Themes</div>
-									<div>🔌 Plugins</div>
+								<div className="story-section-sm">
+									<Typography size="sm" color="muted">
+										Settings
+									</Typography>
+									<Typography size="sm" color="muted">
+										Analytics
+									</Typography>
+									<Typography size="sm" color="muted">
+										Themes
+									</Typography>
+									<Typography size="sm" color="muted">
+										Plugins
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="60%">
-							<div className="flex h-full items-center justify-center">
-								<div className="text-center">
-									<Code className="mx-auto mb-2 h-12 w-12 text-muted-foreground" />
-									<span className="text-lg font-medium">Main Editor</span>
-									<p className="text-sm text-muted-foreground mt-2">
+							<div className={`story-center ${styles.gradientBlueConfig}`}>
+								<div className={styles.textCenter}>
+									<Code className={styles.iconLarge} />
+									<Typography size="lg" weight="medium">
+										Main Editor
+									</Typography>
+									<Typography size="sm" color="muted" className={styles.infoSubtitle}>
 										Both side panels can be collapsed
-									</p>
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel defaultSize="20%" minSize="15%" maxSize="35%" collapsible={true}>
-							<div className="flex h-full flex-col p-4 bg-muted">
-								<div className="flex items-center gap-2 mb-3">
-									<Database className="h-5 w-5 text-muted-foreground" />
-									<h3 className="font-medium">Inspector</h3>
+							<div className={styles.panelContent}>
+								<div className={`story-row ${styles.chatTitle}`}>
+									<Database className={`icon-md ${styles.iconMutedForeground}`} />
+									<Typography weight="medium">Inspector</Typography>
 								</div>
-								<div className="text-sm text-muted-foreground space-y-2">
-									<div>🏷️ Properties</div>
-									<div>🔍 Details</div>
-									<div>📝 Metadata</div>
-									<div>🔗 Relations</div>
+								<div className="story-section-sm">
+									<Typography size="sm" color="muted">
+										Properties
+									</Typography>
+									<Typography size="sm" color="muted">
+										Details
+									</Typography>
+									<Typography size="sm" color="muted">
+										Metadata
+									</Typography>
+									<Typography size="sm" color="muted">
+										Relations
+									</Typography>
 								</div>
 							</div>
 						</ResizablePanel>
@@ -583,49 +704,75 @@ export const PanelGroupPlayground: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">Interactive Panel Group</h2>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+		<div className={styles.sectionContainer}>
+			<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+				Interactive Panel Group
+			</Typography>
+			<div className="story-resizable">
 				<ResizablePanelGroup {...args}>
 					<ResizablePanel defaultSize="25%" minSize="20%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<FileText className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Panel 1</span>
-								<p className="text-xs text-muted-foreground mt-1">25% default size</p>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<FileText className={styles.iconMd} />
+								<Typography size="sm" weight="medium">
+									Panel 1
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.panelSubtitle}>
+									25% default size
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<Code className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Panel 2</span>
-								<p className="text-xs text-muted-foreground mt-1">50% default size</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Code className={styles.iconMd} />
+								<Typography size="sm" weight="medium">
+									Panel 2
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.panelSubtitle}>
+									50% default size
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="25%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<Settings className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Panel 3</span>
-								<p className="text-xs text-muted-foreground mt-1">25% default size</p>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<Settings className={styles.iconMd} />
+								<Typography size="sm" weight="medium">
+									Panel 3
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.panelSubtitle}>
+									25% default size
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
-			<div className="mt-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Instructions:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
-					<li>• Change the orientation to see horizontal vs vertical layouts</li>
+			<div className={`story-panel ${styles.instructionPanel}`}>
+				<Typography weight="medium" className={styles.panelTitle}>
+					Instructions:
+				</Typography>
+				<ul className="story-section-sm">
 					<li>
-						• Use useDefaultLayout with groupId for persistent layouts (see Persistent Layout story)
+						<Typography size="sm" color="muted">
+							Change the orientation to see horizontal vs vertical layouts
+						</Typography>
 					</li>
-					<li>• Drag the resize handles to adjust panel sizes</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Use useDefaultLayout with groupId for persistent layouts (see Persistent Layout story)
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Drag the resize handles to adjust panel sizes
+						</Typography>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -639,42 +786,72 @@ export const PanelPlayground: Story = {
 	args: {},
 	argTypes: {},
 	render: () => (
-		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">Interactive Panel Properties</h2>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+		<div className={styles.sectionContainer}>
+			<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+				Interactive Panel Properties
+			</Typography>
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="30%" minSize="20%" maxSize="60%" collapsible={false}>
-						<div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20">
-							<div className="text-center">
-								<ChartBar className="mx-auto mb-2 h-8 w-8 text-blue-600" />
-								<span className="text-sm font-medium">Configurable Panel</span>
-								<div className="text-xs text-muted-foreground mt-2 space-y-1">
-									<div>Default: 30%</div>
-									<div>Min: 20%</div>
-									<div>Max: 60%</div>
-									<div>Collapsible: No</div>
+						<div className={`story-center ${styles.gradientBlueConfig}`}>
+							<div className={styles.textCenter}>
+								<ChartBar className={styles.iconMdBlue} />
+								<Typography size="sm" weight="medium">
+									Configurable Panel
+								</Typography>
+								<div className={`story-section-sm ${styles.infoSubtitle}`}>
+									<Typography size="xs" color="muted">
+										Default: 30%
+									</Typography>
+									<Typography size="xs" color="muted">
+										Min: 20%
+									</Typography>
+									<Typography size="xs" color="muted">
+										Max: 60%
+									</Typography>
+									<Typography size="xs" color="muted">
+										Collapsible: No
+									</Typography>
 								</div>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="70%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<Code className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Fixed Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">Responds to left panel changes</p>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Code className={styles.iconMd} />
+								<Typography size="sm" weight="medium">
+									Fixed Panel
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.panelSubtitle}>
+									Responds to left panel changes
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
-			<div className="mt-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Try these interactions:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
-					<li>• Adjust the sliders to see how constraints affect resizing</li>
-					<li>• Enable collapsible and try dragging the panel to minimum size</li>
-					<li>• Notice how minSize and maxSize limit the resize range</li>
+			<div className={`story-panel ${styles.instructionPanel}`}>
+				<Typography weight="medium" className={styles.panelTitle}>
+					Try these interactions:
+				</Typography>
+				<ul className="story-section-sm">
+					<li>
+						<Typography size="sm" color="muted">
+							Adjust the sliders to see how constraints affect resizing
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Enable collapsible and try dragging the panel to minimum size
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Notice how minSize and maxSize limit the resize range
+						</Typography>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -688,44 +865,66 @@ export const ResizeHandlePlayground: Story = {
 	args: {},
 	argTypes: {},
 	render: () => (
-		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">Interactive Resize Handle</h2>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+		<div className={styles.sectionContainer}>
+			<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+				Interactive Resize Handle
+			</Typography>
+			<div className="story-resizable">
 				<ResizablePanelGroup orientation="horizontal">
 					<ResizablePanel defaultSize="40%">
-						<div className="flex h-full items-center justify-center bg-muted">
-							<div className="text-center">
-								<FileText className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Left Panel</span>
-								<p className="text-xs text-muted-foreground mt-1">Drag the handle to resize</p>
+						<div className="story-center story-muted">
+							<div className={styles.textCenter}>
+								<FileText className={styles.iconMd} />
+								<Typography size="sm" weight="medium">
+									Left Panel
+								</Typography>
+								<Typography size="xs" color="muted" className={styles.panelSubtitle}>
+									Drag the handle to resize
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle={true} disabled={false} />
 					<ResizablePanel defaultSize="60%">
-						<div className="flex h-full items-center justify-center">
-							<div className="text-center">
-								<Settings className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
-								<span className="text-sm font-medium">Right Panel</span>
-								<div className="text-xs text-muted-foreground mt-2 space-y-1">
-									<div>Handle visible: Yes</div>
-									<div>Disabled: No</div>
+						<div className="story-center">
+							<div className={styles.textCenter}>
+								<Settings className={styles.iconMd} />
+								<Typography size="sm" weight="medium">
+									Right Panel
+								</Typography>
+								<div className={`story-section-sm ${styles.infoSubtitle}`}>
+									<Typography size="xs" color="muted">
+										Handle visible: Yes
+									</Typography>
+									<Typography size="xs" color="muted">
+										Disabled: No
+									</Typography>
 								</div>
 							</div>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
-			<div className="mt-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Handle Options:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
+			<div className={`story-panel ${styles.instructionPanel}`}>
+				<Typography weight="medium" className={styles.panelTitle}>
+					Handle Options:
+				</Typography>
+				<ul className="story-section-sm">
 					<li>
-						• <strong>withHandle:</strong> Shows/hides the visual drag indicator
+						<Typography size="sm" color="muted">
+							<strong>withHandle:</strong> Shows/hides the visual drag indicator
+						</Typography>
 					</li>
 					<li>
-						• <strong>disabled:</strong> Prevents resizing when enabled
+						<Typography size="sm" color="muted">
+							<strong>disabled:</strong> Prevents resizing when enabled
+						</Typography>
 					</li>
-					<li>• Handle is still functional even when visual indicator is hidden</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Handle is still functional even when visual indicator is hidden
+						</Typography>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -738,64 +937,96 @@ function PersistentLayoutContent({ groupId }: { groupId: string }) {
 		storage: typeof localStorage !== 'undefined' ? localStorage : undefined,
 	});
 	return (
-		<div className="p-6 bg-background">
-			<h2 className="text-lg font-semibold mb-4 text-foreground">Persistent Layout Demo</h2>
-			<div className="h-[400px] border rounded-lg overflow-hidden">
+		<div className={styles.sectionContainer}>
+			<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+				Persistent Layout Demo
+			</Typography>
+			<div className="story-resizable">
 				<ResizablePanelGroup
 					orientation="horizontal"
 					defaultLayout={defaultLayout}
 					onLayoutChange={onLayoutChange}
 				>
 					<ResizablePanel defaultSize="25%" collapsible>
-						<div className="flex h-full flex-col p-4 bg-muted">
-							<div className="flex items-center gap-2 mb-3">
-								<Database className="h-5 w-5 text-muted-foreground" />
-								<h3 className="font-medium">Persistent Sidebar</h3>
+						<div className={styles.panelContent}>
+							<div className={`story-row ${styles.chatTitle}`}>
+								<Database className={`icon-md ${styles.iconMutedForeground}`} />
+								<Typography weight="medium">Persistent Sidebar</Typography>
 							</div>
-							<div className="text-xs text-muted-foreground space-y-2">
-								<div>This layout persists!</div>
-								<div>Resize panels and refresh the page</div>
-								<div>Your layout will be restored</div>
+							<div className="story-section-sm">
+								<Typography size="xs" color="muted">
+									This layout persists!
+								</Typography>
+								<Typography size="xs" color="muted">
+									Resize panels and refresh the page
+								</Typography>
+								<Typography size="xs" color="muted">
+									Your layout will be restored
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="50%">
-						<div className="flex h-full flex-col p-4">
-							<h3 className="font-medium mb-3">Main Content</h3>
-							<div className="flex-1 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg flex items-center justify-center">
-								<div className="text-center">
-									<Code className="mx-auto mb-2 h-8 w-8 text-green-600" />
-									<span className="font-medium">Layout Memory</span>
-									<p className="text-sm text-muted-foreground mt-2">
+						<div className={styles.persistentMainContent}>
+							<Typography weight="medium" className={styles.chatTitle}>
+								Main Content
+							</Typography>
+							<div className={styles.gradientGreen}>
+								<div className={styles.textCenter}>
+									<Code className={styles.iconLgGreen} />
+									<Typography weight="medium">Layout Memory</Typography>
+									<Typography size="sm" color="muted" className={styles.infoSubtitle}>
 										groupId: &quot;{groupId || 'demo-layout'}&quot;
-									</p>
+									</Typography>
 								</div>
 							</div>
 						</div>
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel defaultSize="25%" collapsible>
-						<div className="flex h-full flex-col p-4 bg-muted">
-							<div className="flex items-center gap-2 mb-3">
-								<Settings className="h-5 w-5 text-muted-foreground" />
-								<h3 className="font-medium">Properties Panel</h3>
+						<div className={styles.panelContent}>
+							<div className={`story-row ${styles.chatTitle}`}>
+								<Settings className={`icon-md ${styles.iconMutedForeground}`} />
+								<Typography weight="medium">Properties Panel</Typography>
 							</div>
-							<div className="text-xs text-muted-foreground space-y-2">
-								<div>Change the groupId to create different saved layouts</div>
-								<div>Each ID maintains its own layout state</div>
+							<div className="story-section-sm">
+								<Typography size="xs" color="muted">
+									Change the groupId to create different saved layouts
+								</Typography>
+								<Typography size="xs" color="muted">
+									Each ID maintains its own layout state
+								</Typography>
 							</div>
 						</div>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
-			<div className="mt-4 p-4 bg-muted rounded-lg">
-				<h3 className="font-medium mb-2">Persistence Features:</h3>
-				<ul className="text-sm text-muted-foreground space-y-1">
-					<li>• Layout automatically saved to localStorage (useDefaultLayout)</li>
-					<li>• Restore layout on page refresh or revisit</li>
-					<li>• Different groupId values create separate saved layouts</li>
-					<li>• Try resizing panels, then refresh the page to see persistence in action</li>
+			<div className={`story-panel ${styles.instructionPanel}`}>
+				<Typography weight="medium" className={styles.panelTitle}>
+					Persistence Features:
+				</Typography>
+				<ul className="story-section-sm">
+					<li>
+						<Typography size="sm" color="muted">
+							Layout automatically saved to localStorage (useDefaultLayout)
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Restore layout on page refresh or revisit
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Different groupId values create separate saved layouts
+						</Typography>
+					</li>
+					<li>
+						<Typography size="sm" color="muted">
+							Try resizing panels, then refresh the page to see persistence in action
+						</Typography>
+					</li>
 				</ul>
 			</div>
 		</div>

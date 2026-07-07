@@ -23,7 +23,7 @@ const DropdownItemComponent = React.memo<DropdownItemComponentProps>(({ item }) 
 			}
 			item.onClick?.(e);
 		},
-		[item.href, item.onClick]
+		[item.href, item.onClick],
 	);
 
 	return <DropdownMenuItem onClick={handleClick}>{item.title}</DropdownMenuItem>;
@@ -102,7 +102,7 @@ export const BreadcrumbDropdown = React.forwardRef<HTMLSpanElement, BreadcrumbDr
 				</DropdownMenuContent>
 			</DropdownMenu>
 		);
-	}
+	},
 );
 
 BreadcrumbDropdown.displayName = 'BreadcrumbDropdown';

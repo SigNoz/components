@@ -14,6 +14,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { action } from 'storybook/actions';
 
+import styles from './command.stories.module.css';
+
 const meta: Meta<any> = {
 	title: 'Primitive Components/Command',
 	component: Command,
@@ -83,7 +85,7 @@ export const Default: Story = {
 		placeholder: 'Search commands…',
 	},
 	render: (args: any) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>
@@ -132,7 +134,7 @@ export const SelectWithAlert: Story = {
 		placeholder: 'Select an item…',
 	},
 	render: (args: any) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>
@@ -177,7 +179,7 @@ export const Dialog: Story = {
 
 		return (
 			<>
-				<div style={{ margin: 12 }}>
+				<div className={styles.buttonWrapper}>
 					<Button type="button" variant="solid" onClick={() => handleOpenChange(true)}>
 						Open Command Dialog
 					</Button>
@@ -232,7 +234,7 @@ export const CreateOrSearch: Story = {
 		};
 
 		return (
-			<div style={{ width: 520 }}>
+			<div className={styles.container}>
 				<Command>
 					<CommandInput
 						placeholder={args.placeholder}
@@ -277,7 +279,7 @@ export const Suggestions: Story = {
 		placeholder: 'Try: calendar, emoji, calc',
 	},
 	render: (args: any) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>
@@ -308,7 +310,7 @@ export const Separators: Story = {
 		placeholder: 'Sections with separators',
 	},
 	render: (args: any) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>
@@ -386,7 +388,7 @@ export const ShortcutsDemo: Story = {
 		placeholder: 'Shortcut examples',
 	},
 	render: (args: any) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>
@@ -435,7 +437,7 @@ export const EmptyState: Story = {
 		placeholder: 'Search (no results)',
 	},
 	render: (args: any) => (
-		<div style={{ width: 420 }}>
+		<div className={styles.containerSmall}>
 			<Command>
 				<CommandInput placeholder={args.placeholder} />
 				<CommandList>

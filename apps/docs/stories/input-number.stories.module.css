@@ -1,0 +1,18 @@
+.fieldLabel {
+  display: block;
+}
+
+.labelText {
+  display: block;
+  margin-bottom: 0.375rem;
+}
+
+.hintText {
+  display: block;
+  margin-top: 0.375rem;
+  font-size: 11px;
+}
+
+.outputText {
+  font-size: 11px;
+}

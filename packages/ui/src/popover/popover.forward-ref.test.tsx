@@ -25,7 +25,7 @@ describe('Popover forwardRef', () => {
 		render(
 			<Popover>
 				<PopoverTrigger ref={ref}>Open</PopoverTrigger>
-			</Popover>
+			</Popover>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -37,7 +37,7 @@ describe('Popover forwardRef', () => {
 				<PopoverAnchor ref={ref} asChild>
 					<div>Anchor</div>
 				</PopoverAnchor>
-			</Popover>
+			</Popover>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -48,7 +48,7 @@ describe('Popover forwardRef', () => {
 			<Popover open>
 				<PopoverTrigger>Open</PopoverTrigger>
 				<PopoverContent ref={ref}>Content</PopoverContent>
-			</Popover>
+			</Popover>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -61,7 +61,7 @@ describe('Popover forwardRef', () => {
 				<PopoverContent>
 					<PopoverClose ref={ref}>Close</PopoverClose>
 				</PopoverContent>
-			</Popover>
+			</Popover>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -75,7 +75,7 @@ describe('Popover forwardRef', () => {
 					<PopoverArrow ref={ref} />
 					Content
 				</PopoverContent>
-			</Popover>
+			</Popover>,
 		);
 		expect(ref.current).toBeInstanceOf(SVGSVGElement);
 	});

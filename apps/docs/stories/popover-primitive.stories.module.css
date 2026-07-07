@@ -1,0 +1,15 @@
+.headingTitle {
+  line-height: 1;
+  margin-top: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputSmall {
+  height: 2rem;
+}

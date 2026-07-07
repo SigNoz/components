@@ -36,7 +36,7 @@ describe('Combobox forwardRef', () => {
 		render(
 			<Combobox>
 				<ComboboxTrigger ref={ref} placeholder="Select..." />
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -47,7 +47,7 @@ describe('Combobox forwardRef', () => {
 			<Combobox open>
 				<ComboboxTrigger placeholder="Select..." />
 				<ComboboxContent ref={ref}>Content</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -60,7 +60,7 @@ describe('Combobox forwardRef', () => {
 				inputValue=""
 				onInputChange={() => {}}
 				placeholder="Select..."
-			/>
+			/>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-multi-trigger');
@@ -71,7 +71,7 @@ describe('Combobox forwardRef', () => {
 		render(
 			<ComboboxPill ref={ref} value="react" onRemove={() => {}}>
 				React
-			</ComboboxPill>
+			</ComboboxPill>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLSpanElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-pill');
@@ -84,7 +84,7 @@ describe('Combobox forwardRef', () => {
 				ref={ref}
 				items={[{ value: 'a', label: 'Option A' }]}
 				placeholder="Select..."
-			/>
+			/>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -101,7 +101,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-command');
@@ -120,7 +120,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLInputElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-input');
@@ -138,7 +138,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-list');
@@ -156,7 +156,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-empty');
@@ -174,7 +174,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-loading');
@@ -194,7 +194,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-group');
@@ -214,7 +214,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-item');
@@ -234,7 +234,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-separator');
@@ -252,7 +252,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-create-item');
@@ -272,7 +272,7 @@ describe('Combobox forwardRef', () => {
 						</ComboboxList>
 					</ComboboxCommand>
 				</ComboboxContent>
-			</Combobox>
+			</Combobox>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'combobox-hint');

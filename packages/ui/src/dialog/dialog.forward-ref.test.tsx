@@ -26,7 +26,7 @@ describe('Dialog forwardRef', () => {
 		render(
 			<Dialog>
 				<DialogTrigger ref={ref}>Open</DialogTrigger>
-			</Dialog>
+			</Dialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -62,7 +62,7 @@ describe('Dialog forwardRef', () => {
 		render(
 			<Dialog>
 				<DialogClose ref={ref}>Close</DialogClose>
-			</Dialog>
+			</Dialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -74,7 +74,7 @@ describe('Dialog forwardRef', () => {
 				<DialogContent>
 					<DialogCloseButton ref={ref} />
 				</DialogContent>
-			</Dialog>
+			</Dialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});
@@ -84,7 +84,7 @@ describe('Dialog forwardRef', () => {
 		render(
 			<Dialog open>
 				<DialogContent ref={ref}>Content</DialogContent>
-			</Dialog>
+			</Dialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -94,7 +94,7 @@ describe('Dialog forwardRef', () => {
 		render(
 			<Dialog open>
 				<DialogOverlay ref={ref} />
-			</Dialog>
+			</Dialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'dialog-overlay');
@@ -107,7 +107,7 @@ describe('Dialog forwardRef', () => {
 				<DialogContent>
 					<DialogTitle ref={ref}>Title</DialogTitle>
 				</DialogContent>
-			</Dialog>
+			</Dialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLHeadingElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'dialog-title');
@@ -118,7 +118,7 @@ describe('Dialog forwardRef', () => {
 		render(
 			<DialogWrapper ref={ref} open onOpenChange={() => {}} title="Test">
 				Content
-			</DialogWrapper>
+			</DialogWrapper>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -135,7 +135,7 @@ describe('Dialog forwardRef', () => {
 				confirmText="Confirm"
 			>
 				Content
-			</ConfirmDialog>
+			</ConfirmDialog>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -153,7 +153,7 @@ describe('Dialog forwardRef', () => {
 				>
 					Content
 				</ConfirmDialogUrl>
-			</NuqsTestingAdapter>
+			</NuqsTestingAdapter>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

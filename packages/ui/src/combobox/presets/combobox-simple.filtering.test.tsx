@@ -27,7 +27,7 @@ describe('ComboboxSimple filtering', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple items={itemsWithKeywords} testId="combo" withPortal={false} />
+			<ComboboxSimple items={itemsWithKeywords} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -47,7 +47,7 @@ describe('ComboboxSimple filtering', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple items={itemsWithDisplayValue} testId="combo" withPortal={false} />
+			<ComboboxSimple items={itemsWithDisplayValue} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -99,7 +99,7 @@ describe('ComboboxSimple empty state', () => {
 				emptyPlaceholder="Nothing found"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

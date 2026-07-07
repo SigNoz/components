@@ -266,7 +266,7 @@ export const DropdownMenuSimple = React.forwardRef<
 			}
 			onOpenAutoFocus?.(event);
 		},
-		[menu.search, onOpenAutoFocus]
+		[menu.search, onOpenAutoFocus],
 	);
 
 	const menuItemSelector =
@@ -334,7 +334,7 @@ export const DropdownMenuSimple = React.forwardRef<
 				}
 			}
 		},
-		[menu.search]
+		[menu.search],
 	);
 
 	// Merge refs for content
@@ -347,7 +347,7 @@ export const DropdownMenuSimple = React.forwardRef<
 				(ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
 			}
 		},
-		[ref]
+		[ref],
 	);
 
 	const onDropdownOpenChange = React.useCallback(
@@ -358,7 +358,7 @@ export const DropdownMenuSimple = React.forwardRef<
 				menu.search?.onSearchChange?.('');
 			}
 		},
-		[menu.search]
+		[menu.search],
 	);
 
 	return (

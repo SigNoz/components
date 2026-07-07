@@ -8,6 +8,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { titleArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -41,7 +42,9 @@ export const Default: Story = {
 					<DrawerTitle {...args} />
 				</DrawerHeader>
 				<DrawerDescription>
-					<p className="text-sm">The title labels the drawer content for assistive technologies.</p>
+					<Typography size="sm">
+						The title labels the drawer content for assistive technologies.
+					</Typography>
 				</DrawerDescription>
 			</DrawerContent>
 		</Drawer>

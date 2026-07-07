@@ -1,8 +1,5 @@
 export default {
-	'*.{js,jsx,ts,tsx}': [
-		() => 'pnpm run type-check',
-		'biome check --write --no-errors-on-unmatched',
-	],
-	'*.{json,html,css}': ['biome format --write --no-errors-on-unmatched'],
+	'*.{js,jsx,ts,tsx}': [() => 'pnpm run type-check', 'pnpm oxlint --fix', 'pnpm oxfmt'],
+	'*.json': ['pnpm oxfmt'],
 	'packages/ui/**/*.{css,scss}': [() => 'pnpm -F @signozhq/ui tokens:check'],
 };

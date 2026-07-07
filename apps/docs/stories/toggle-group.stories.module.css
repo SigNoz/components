@@ -1,0 +1,20 @@
+.showcaseContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+}
+
+.colorSection {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 32px;
+}
+
+.capitalize {
+	text-transform: capitalize;
+}
+
+.iconLarge {
+	height: 24px;
+	width: 24px;
+}

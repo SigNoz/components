@@ -42,7 +42,7 @@ export const Default: Story = {
 		const [open, setOpen] = useState(true);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						placeholder="Select a framework..."

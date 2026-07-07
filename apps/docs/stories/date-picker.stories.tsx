@@ -1,6 +1,8 @@
-import { DatePicker } from '@signozhq/ui';
+import { DatePicker, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+
+import styles from './date-picker.stories.module.css';
 
 const meta: Meta<typeof DatePicker> = {
 	title: 'Composed Components/DatePicker',
@@ -198,16 +200,18 @@ export const Default: Story = {
 		const [timezone, setTimezone] = React.useState(args.timezone ?? 'UTC');
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+						Selected Date:
+					</Typography>
+					<Typography size="sm" color="muted" display="block">
 						{date
 							? args.showTime
 								? `${date.toLocaleDateString()} at ${time}${args.showTimezone ? ` (${timezone})` : ''}`
 								: date.toLocaleDateString()
 							: 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<DatePicker
 					{...args}
@@ -228,12 +232,14 @@ export const DateOnly: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+						Selected Date:
+					</Typography>
+					<Typography size="sm" color="muted" display="block">
 						{date ? date.toLocaleDateString() : 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<DatePicker
 					date={date}
@@ -253,12 +259,14 @@ export const DateAndTime: Story = {
 		const [time, setTime] = React.useState('09:30:00');
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+						Selected Date & Time:
+					</Typography>
+					<Typography size="sm" color="muted" display="block">
 						{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<DatePicker
 					date={date}
@@ -281,12 +289,14 @@ export const WithTimezone: Story = {
 		const [timezone, setTimezone] = React.useState('America/New_York');
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+						Selected Date & Time:
+					</Typography>
+					<Typography size="sm" color="muted" display="block">
 						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<DatePicker
 					date={date}
@@ -311,12 +321,14 @@ export const WithActions: Story = {
 		const [timezone, setTimezone] = React.useState('UTC');
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Selected Date & Time:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+						Selected Date & Time:
+					</Typography>
+					<Typography size="sm" color="muted" display="block">
 						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
-					</p>
+					</Typography>
 				</div>
 				<DatePicker
 					date={date}
@@ -343,12 +355,16 @@ export const DifferentButtonVariants: Story = {
 		const [date3, setDate3] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-6">
-				<div className="space-y-4">
-					<h3 className="text-sm font-medium">Button Variants:</h3>
+			<div className="story-section">
+				<div className="story-section">
+					<Typography size="sm" weight="medium" display="block">
+						Button Variants:
+					</Typography>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Solid variant:</p>
+					<div className="story-section-sm">
+						<Typography size="xs" color="muted" display="block">
+							Solid variant:
+						</Typography>
 						<DatePicker
 							date={date1}
 							onDateChange={setDate1}
@@ -358,8 +374,10 @@ export const DifferentButtonVariants: Story = {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Outlined variant:</p>
+					<div className="story-section-sm">
+						<Typography size="xs" color="muted" display="block">
+							Outlined variant:
+						</Typography>
 						<DatePicker
 							date={date2}
 							onDateChange={setDate2}
@@ -369,8 +387,10 @@ export const DifferentButtonVariants: Story = {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Ghost variant:</p>
+					<div className="story-section-sm">
+						<Typography size="xs" color="muted" display="block">
+							Ghost variant:
+						</Typography>
 						<DatePicker
 							date={date3}
 							onDateChange={setDate3}
@@ -391,12 +411,16 @@ export const DifferentButtonSizes: Story = {
 		const [date2, setDate2] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-6">
-				<div className="space-y-4">
-					<h3 className="text-sm font-medium">Button Sizes:</h3>
+			<div className="story-section">
+				<div className="story-section">
+					<Typography size="sm" weight="medium" display="block">
+						Button Sizes:
+					</Typography>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Small size:</p>
+					<div className="story-section-sm">
+						<Typography size="xs" color="muted" display="block">
+							Small size:
+						</Typography>
 						<DatePicker
 							date={date1}
 							onDateChange={setDate1}
@@ -406,8 +430,10 @@ export const DifferentButtonSizes: Story = {
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<p className="text-xs text-muted-foreground">Medium size (default):</p>
+					<div className="story-section-sm">
+						<Typography size="xs" color="muted" display="block">
+							Medium size (default):
+						</Typography>
 						<DatePicker
 							date={date2}
 							onDateChange={setDate2}
@@ -427,12 +453,14 @@ export const Disabled: Story = {
 		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
 
 		return (
-			<div className="space-y-4">
+			<div className="story-section">
 				<div>
-					<h3 className="text-sm font-medium mb-2">Disabled State:</h3>
-					<p className="text-sm text-muted-foreground">
+					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+						Disabled State:
+					</Typography>
+					<Typography size="sm" color="muted" display="block">
 						The picker is disabled and cannot be interacted with.
-					</p>
+					</Typography>
 				</div>
 				<DatePicker
 					date={date}

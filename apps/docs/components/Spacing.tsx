@@ -1,22 +1,26 @@
+import { Typography } from '@signozhq/ui';
 import { getTransformedSpacingTokens } from '../utils.js';
+import styles from './Spacing.module.css';
 
 const spacing = getTransformedSpacingTokens();
 const spacingKeys = Object.keys(spacing);
 
 function Spacing() {
 	return (
-		<div className="p-4">
-			<h1 className="mb-5 text-lg font-bold text-vanilla-100">Spacing Scale</h1>
+		<div className={styles.container}>
+			<Typography size="lg" weight="bold" className={styles.title}>
+				Spacing Scale
+			</Typography>
 
 			{spacingKeys.map((size) => {
 				const value = spacing[size as keyof typeof spacing];
 
 				return (
-					<div key={size} className="mb-4">
-						<span className="text-vanilla-100">
+					<div key={size} className={styles.spacingItem}>
+						<Typography size="sm">
 							{size} - {value}
-						</span>
-						<div className={`bg-slate-50 h-4`} style={{ width: value }}></div>
+						</Typography>
+						<div className={styles.spacingBar} style={{ width: value }}></div>
 					</div>
 				);
 			})}

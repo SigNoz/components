@@ -1,0 +1,91 @@
+.playgroundContainer {
+	width: 300px;
+	padding: 16px;
+}
+
+.positionsContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px;
+}
+
+.positionLabel {
+	width: 48px;
+	flex-shrink: 0;
+}
+
+.ellipsisContainer {
+	width: 240px;
+}
+
+.filePathsContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px;
+}
+
+.filePathSection {
+	margin-bottom: 8px;
+}
+
+.filePathList {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 280px;
+}
+
+.customEllipsisContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	width: 280px;
+}
+
+.responsiveContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px;
+}
+
+.responsivePanel {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+	max-width: 400px;
+}
+
+.externalWidthContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px;
+}
+
+.externalWidthPanel {
+	width: 320px;
+}
+
+.tooltipContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px;
+}
+
+.tooltipList {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 240px;
+}
+
+.tooltipLabel {
+	display: block;
+	margin-bottom: 4px;
+}

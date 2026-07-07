@@ -10,7 +10,7 @@ describe('ToggleGroup forwardRef', () => {
 		render(
 			<ToggleGroup ref={ref} type="single">
 				<ToggleGroupItem value="a">A</ToggleGroupItem>
-			</ToggleGroup>
+			</ToggleGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -22,7 +22,7 @@ describe('ToggleGroup forwardRef', () => {
 				<ToggleGroupItem ref={ref} value="a">
 					A
 				</ToggleGroupItem>
-			</ToggleGroup>
+			</ToggleGroup>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 	});

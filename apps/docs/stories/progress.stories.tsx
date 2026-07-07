@@ -1,5 +1,6 @@
-import { Progress, type ProgressProps } from '@signozhq/ui';
+import { Progress, type ProgressProps, Typography } from '@signozhq/ui';
 import type { Meta, StoryFn } from '@storybook/react-vite';
+import styles from './progress.stories.module.css';
 
 const meta: Meta<typeof Progress> = {
 	title: 'Primitive Components/Progress',
@@ -94,7 +95,7 @@ export default meta;
 
 // Default Template
 const Template: StoryFn<typeof Progress> = (args: ProgressProps) => (
-	<div className="w-full max-w-md p-4">
+	<div className={styles.progressContainer}>
 		<Progress {...args} />
 	</div>
 );
@@ -107,13 +108,17 @@ Default.args = {
 
 // 2. Sizes: Show both default and small sizes
 export const Sizes: StoryFn = () => (
-	<div className="flex w-full max-w-md flex-col gap-6 p-4 text-vanilla-100">
+	<div className={`story-section ${styles.progressContainer}`}>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Small Size</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Small Size
+			</Typography>
 			<Progress percent={70} size="small" />
 		</div>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Default Size</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Default Size
+			</Typography>
 			<Progress percent={70} size="default" />
 		</div>
 	</div>
@@ -121,17 +126,23 @@ export const Sizes: StoryFn = () => (
 
 // 3. Dynamic Colors: custom hex values or design tokens
 export const DynamicColors: StoryFn = () => (
-	<div className="flex w-full max-w-md flex-col gap-6 p-4 text-vanilla-100">
+	<div className={`story-section ${styles.progressContainer}`}>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Critical (Red)</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Critical (Red)
+			</Typography>
 			<Progress percent={80} strokeColor="#ef4444" />
 		</div>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Warning (Yellow)</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Warning (Yellow)
+			</Typography>
 			<Progress percent={60} strokeColor="#eab308" />
 		</div>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Success (Green)</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Success (Green)
+			</Typography>
 			<Progress percent={100} strokeColor="#22c55e" />
 		</div>
 	</div>
@@ -139,13 +150,17 @@ export const DynamicColors: StoryFn = () => (
 
 // 4. Segmented (Steps)
 export const Segmented: StoryFn = () => (
-	<div className="flex w-full max-w-md flex-col gap-6 p-4 text-vanilla-100">
+	<div className={`story-section ${styles.progressContainer}`}>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">5 Steps, 40%</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				5 Steps, 40%
+			</Typography>
 			<Progress percent={40} steps={5} />
 		</div>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">10 Steps, 70%</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				10 Steps, 70%
+			</Typography>
 			<Progress percent={70} steps={10} strokeColor="#10b981" />
 		</div>
 	</div>
@@ -153,13 +168,17 @@ export const Segmented: StoryFn = () => (
 
 // 5. With Info
 export const WithInfo: StoryFn = () => (
-	<div className="flex w-full max-w-md flex-col gap-6 p-4 text-vanilla-100">
+	<div className={`story-section ${styles.progressContainer}`}>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Showing Info Text</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Showing Info Text
+			</Typography>
 			<Progress percent={45} showInfo />
 		</div>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Active Status with Info</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Active Status with Info
+			</Typography>
 			<Progress percent={85} showInfo status="active" />
 		</div>
 	</div>
@@ -167,15 +186,17 @@ export const WithInfo: StoryFn = () => (
 
 // 6. Stroke Linecap (Extra)
 export const StrokeLinecap: StoryFn = () => (
-	<div className="flex w-full max-w-md flex-col gap-6 p-4 text-vanilla-100">
+	<div className={`story-section ${styles.progressContainer}`}>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">
-				Round (Default for track, butt for indicator usually, but let's test)
-			</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Round (Default for track, butt for indicator usually, but let us test)
+			</Typography>
 			<Progress percent={50} strokeLinecap="round" />
 		</div>
 		<div>
-			<h3 className="mb-2 text-sm font-medium">Butt</h3>
+			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
+				Butt
+			</Typography>
 			<Progress percent={50} strokeLinecap="butt" />
 		</div>
 	</div>

@@ -10,6 +10,7 @@ import {
 	DrawerPortal,
 	DrawerTitle,
 	DrawerTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { overlayComponentArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -42,10 +43,10 @@ export const Default: Story = {
 						<DrawerTitle>Drawer overlay</DrawerTitle>
 					</DrawerHeader>
 					<DrawerDescription>
-						<p className="text-sm">
+						<Typography size="sm">
 							The overlay dims the background and blocks interaction with the page while the drawer
 							is open.
-						</p>
+						</Typography>
 					</DrawerDescription>
 				</DrawerContent>
 			</DrawerPortal>

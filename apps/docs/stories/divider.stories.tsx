@@ -1,5 +1,6 @@
-import { Divider } from '@signozhq/ui';
+import { Divider, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './divider.stories.module.css';
 
 const meta: Meta<typeof Divider> = {
 	title: 'Primitive Components/Divider',
@@ -60,10 +61,10 @@ export const Playground: Story = {
 		plain: false,
 	},
 	render: (props) => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Content above</p>
+		<div className={styles.container}>
+			<Typography size="sm">Content above</Typography>
 			<Divider {...props} />
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Content below</p>
+			<Typography size="sm">Content below</Typography>
 		</div>
 	),
 };
@@ -77,12 +78,12 @@ export const Horizontal: Story = {
 		},
 	},
 	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Section A</p>
+		<div className={styles.container}>
+			<Typography size="sm">Section A</Typography>
 			<Divider />
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Section B</p>
+			<Typography size="sm">Section B</Typography>
 			<Divider />
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Section C</p>
+			<Typography size="sm">Section C</Typography>
 		</div>
 	),
 };
@@ -97,12 +98,12 @@ export const Vertical: Story = {
 		},
 	},
 	render: () => (
-		<div className="flex items-center gap-2" style={{ padding: '1rem' }}>
-			<span className="text-sm text-vanilla-800 dark:text-vanilla-200">Edit</span>
+		<div className={`story-row ${styles.container}`}>
+			<Typography size="sm">Edit</Typography>
 			<Divider type="vertical" />
-			<span className="text-sm text-vanilla-800 dark:text-vanilla-200">Copy</span>
+			<Typography size="sm">Copy</Typography>
 			<Divider type="vertical" />
-			<span className="text-sm text-vanilla-800 dark:text-vanilla-200">Delete</span>
+			<Typography size="sm">Delete</Typography>
 		</div>
 	),
 };
@@ -116,12 +117,12 @@ export const Dashed: Story = {
 		},
 	},
 	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Solid (default)</p>
+		<div className={styles.container}>
+			<Typography size="sm">Solid (default)</Typography>
 			<Divider />
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Dashed</p>
+			<Typography size="sm">Dashed</Typography>
 			<Divider dashed />
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">End</p>
+			<Typography size="sm">End</Typography>
 		</div>
 	),
 };
@@ -136,10 +137,10 @@ export const WithText: Story = {
 		},
 	},
 	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Login with email</p>
+		<div className={styles.container}>
+			<Typography size="sm">Login with email</Typography>
 			<Divider>OR</Divider>
-			<p className="text-sm text-vanilla-800 dark:text-vanilla-200">Login with SSO</p>
+			<Typography size="sm">Login with SSO</Typography>
 		</div>
 	),
 };
@@ -153,9 +154,9 @@ export const PlainText: Story = {
 		},
 	},
 	render: () => (
-		<div style={{ width: '100%', padding: '1rem' }}>
+		<div className={styles.container}>
 			<Divider>Default weight</Divider>
-			<div style={{ height: '1rem' }} />
+			<div className={styles.spacer} />
 			<Divider plain>Plain weight</Divider>
 		</div>
 	),

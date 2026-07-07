@@ -5,6 +5,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { contentArgTypes } from './shared/popover-arg-types.js';
@@ -37,7 +38,9 @@ export const Default: Story = {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent {...args} className="w-64">
-				<p className="text-sm">This story focuses on PopoverContent and its positioning props.</p>
+				<Typography size="sm">
+					This story focuses on PopoverContent and its positioning props.
+				</Typography>
 			</PopoverContent>
 		</Popover>
 	),

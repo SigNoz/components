@@ -24,7 +24,7 @@ describe('wrapper prop targeting regressions', () => {
 				containerTestId="email-input-container"
 				containerClassName="input-container-class"
 				containerStyle={{ paddingInline: '8px' }}
-			/>
+			/>,
 		);
 
 		const input = screen.getByRole('textbox');
@@ -52,7 +52,7 @@ describe('wrapper prop targeting regressions', () => {
 				containerStyle={{ marginBlock: '12px' }}
 			>
 				Notifications
-			</Switch>
+			</Switch>,
 		);
 
 		const control = screen.getByRole('switch', { name: 'Notifications' });
@@ -81,7 +81,7 @@ describe('wrapper prop targeting regressions', () => {
 					containerClassName="command-input-container-class"
 					containerStyle={{ paddingInline: '6px' }}
 				/>
-			</Command>
+			</Command>,
 		);
 
 		const input = screen.getByRole('combobox');
@@ -112,7 +112,7 @@ describe('wrapper prop targeting regressions', () => {
 				>
 					Option A
 				</RadioGroupItem>
-			</RadioGroup>
+			</RadioGroup>,
 		);
 
 		const item = screen.getByRole('radio', { name: 'Option A' });

@@ -10,6 +10,7 @@ import {
 	DrawerPortal,
 	DrawerTitle,
 	DrawerTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { portalArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -42,9 +43,9 @@ export const Default: Story = {
 						<DrawerTitle>Drawer portal</DrawerTitle>
 					</DrawerHeader>
 					<DrawerDescription>
-						<p className="text-sm">
+						<Typography size="sm">
 							The portal renders the drawer content and overlay outside the regular DOM tree.
-						</p>
+						</Typography>
 					</DrawerDescription>
 				</DrawerContent>
 			</DrawerPortal>

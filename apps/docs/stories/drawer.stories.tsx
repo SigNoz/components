@@ -14,6 +14,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AnimatePresence } from 'motion/react';
 import React from 'react';
+import styles from './drawer.stories.module.css';
 import { overlayArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const meta: Meta<typeof Drawer> = {
@@ -89,7 +90,7 @@ export const Default: Story = {
 		defaultOpen: false,
 	},
 	render: (args) => (
-		<div className="flex flex-wrap gap-4 p-8">
+		<div className={`story-grid ${styles.gridPadded}`}>
 			{(['left', 'right', 'top', 'bottom'] as const).map((dir) => (
 				<DrawerPositionVariant key={dir} args={args} direction={dir} />
 			))}
@@ -126,10 +127,8 @@ export const WithoutOverlay: Story = {
 								<DrawerCloseButton />
 							</DrawerHeader>
 							<DrawerDescription>
-								<p className="text-sm font-normal leading-5">
-									This variant keeps the background interactive by disabling the overlay while the
-									drawer is open.
-								</p>
+								This variant keeps the background interactive by disabling the overlay while the
+								drawer is open.
 							</DrawerDescription>
 							<DrawerFooter>
 								<Button

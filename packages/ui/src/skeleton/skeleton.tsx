@@ -128,7 +128,7 @@ const SkeletonComponent = React.forwardRef<HTMLDivElement, SkeletonProps>(
 				{paragraph !== false && <div className={styles['skeleton-paragraph']}>{paragraphRows}</div>}
 			</div>
 		);
-	}
+	},
 );
 SkeletonComponent.displayName = 'Skeleton';
 
@@ -212,7 +212,7 @@ const SkeletonInput = React.forwardRef<HTMLDivElement, SkeletonInputProps>(
 			style={style}
 			className={cn(styles['skeleton-input'], className)}
 		/>
-	)
+	),
 );
 SkeletonInput.displayName = 'SkeletonInput';
 
@@ -295,7 +295,7 @@ const SkeletonButton = React.forwardRef<HTMLDivElement, SkeletonButtonProps>(
 			style={style}
 			className={cn(styles['skeleton-button'], className)}
 		/>
-	)
+	),
 );
 SkeletonButton.displayName = 'SkeletonButton';
 
@@ -385,7 +385,7 @@ const SkeletonAvatar = React.forwardRef<HTMLDivElement, SkeletonAvatarProps>(
 				className={cn(styles['skeleton-avatar'], className)}
 			/>
 		);
-	}
+	},
 );
 SkeletonAvatar.displayName = 'SkeletonAvatar';
 

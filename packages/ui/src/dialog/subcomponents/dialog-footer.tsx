@@ -45,6 +45,6 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
 			className={cn(styles.dialog__footer, className)}
 			{...props}
 		/>
-	)
+	),
 );
 DialogFooter.displayName = 'DialogFooter';

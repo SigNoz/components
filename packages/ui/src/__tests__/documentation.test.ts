@@ -13,7 +13,7 @@ const INTRO_MDX_PATH = join(
 	'apps',
 	'docs',
 	'stories',
-	'intro.mdx'
+	'intro.mdx',
 );
 
 // Components with non-standard export names
@@ -59,7 +59,7 @@ describe('documentation', () => {
 
 		expect(
 			missing,
-			`Components missing from README.md: ${missing.join(', ')}. Add import example for each.`
+			`Components missing from README.md: ${missing.join(', ')}. Add import example for each.`,
 		).toEqual([]);
 	});
 
@@ -74,7 +74,7 @@ describe('documentation', () => {
 
 		expect(
 			missing,
-			`Components missing from intro.mdx: ${missing.join(', ')}. Add import example for each.`
+			`Components missing from intro.mdx: ${missing.join(', ')}. Add import example for each.`,
 		).toEqual([]);
 	});
 });

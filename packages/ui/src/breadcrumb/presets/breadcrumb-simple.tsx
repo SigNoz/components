@@ -26,7 +26,7 @@ export type BreadcrumbSimpleProps = BreadcrumbProps & {
 		route: BreadcrumbItemType,
 		params: Record<string, string> | undefined,
 		routes: BreadcrumbItemType[],
-		paths: string[]
+		paths: string[],
 	) => React.ReactNode;
 	/**
 	 * Route parameters to pass to itemRender.
@@ -138,7 +138,7 @@ export const BreadcrumbSimple = React.forwardRef<HTMLElement, BreadcrumbSimplePr
 							testId={testId ? `${testId}-separator-${i}` : undefined}
 						>
 							{separatorContent}
-						</BreadcrumbSeparator>
+						</BreadcrumbSeparator>,
 					);
 				}
 
@@ -183,7 +183,7 @@ export const BreadcrumbSimple = React.forwardRef<HTMLElement, BreadcrumbSimplePr
 				result.push(
 					<BreadcrumbItem key={`item-${i}`} testId={testId ? `${testId}-item-${i}` : undefined}>
 						{content}
-					</BreadcrumbItem>
+					</BreadcrumbItem>,
 				);
 			}
 
@@ -195,7 +195,7 @@ export const BreadcrumbSimple = React.forwardRef<HTMLElement, BreadcrumbSimplePr
 				<BreadcrumbList testId={testId ? `${testId}-list` : undefined}>{elements}</BreadcrumbList>
 			</Breadcrumb>
 		);
-	}
+	},
 );
 
 BreadcrumbSimple.displayName = 'BreadcrumbSimple';

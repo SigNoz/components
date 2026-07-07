@@ -20,7 +20,11 @@ export default function MyComponent() {
 			title="Edit settings"
 			subTitle="Optional subtitle for the drawer."
 			direction="right"
-			trigger={<Button variant="solid" color="primary">Open Drawer</Button>}
+			trigger={
+				<Button variant="solid" color="primary">
+					Open Drawer
+				</Button>
+			}
 		>
 			<p>Drawer content goes here.</p>
 		</DrawerWrapper>
@@ -66,7 +70,9 @@ Pass a `footer` node for confirm/cancel layouts:
 	footer={
 		<div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
 			<Button variant="ghost">Cancel</Button>
-			<Button variant="solid" color="primary">Save</Button>
+			<Button variant="solid" color="primary">
+				Save
+			</Button>
 		</div>
 	}
 >
@@ -91,15 +97,11 @@ Set `showCloseButton={false}` to hide the default X button. Provide your own clo
 ```tsx
 import { DrawerWrapper, DrawerClose, Button } from '@signozhq/ui';
 
-<DrawerWrapper
-	title="No close button"
-	showCloseButton={false}
-	trigger={<Button>Open</Button>}
->
+<DrawerWrapper title="No close button" showCloseButton={false} trigger={<Button>Open</Button>}>
 	<DrawerClose asChild>
 		<Button>Close</Button>
 	</DrawerClose>
-</DrawerWrapper>
+</DrawerWrapper>;
 ```
 
 ## Props

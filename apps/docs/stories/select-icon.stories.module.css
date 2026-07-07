@@ -1,0 +1,13 @@
+.descriptionText {
+  margin-bottom: 1rem;
+}
+
+.standaloneContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.labelWidth {
+  width: 8rem;
+}

@@ -1,6 +1,7 @@
 import { Button, ButtonColor, ButtonVariant, DrawerWrapper } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
+import styles from './drawer-wrapper.stories.module.css';
 import { wrapperArgTypes } from './shared/dialog-drawer-arg-types.js';
 
 const { width, titleIcon, ...sharedWrapperArgTypes } = wrapperArgTypes ?? {};
@@ -107,7 +108,7 @@ export const Default: Story = {
 			</p>
 		),
 		footer: (
-			<div className="flex gap-2 justify-end">
+			<div className={`story-row ${styles.footerEnd}`}>
 				<Button variant={ButtonVariant.Ghost}>Cancel</Button>
 				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
 					Save
@@ -132,7 +133,7 @@ export const Default: Story = {
 					</Button>
 				}
 				footer={
-					<div className="flex gap-2 justify-end">
+					<div className={`story-row ${styles.footerEnd}`}>
 						<Button variant="ghost" color="none" onClick={() => setOpen(false)}>
 							Cancel
 						</Button>

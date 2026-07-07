@@ -32,7 +32,11 @@ export default function SingleDatePicker() {
 			mode="single"
 			selected={date}
 			onSelect={setDate}
-			className="rounded-md border shadow-sm"
+			style={{
+				borderRadius: '0.375rem',
+				border: '1px solid var(--l2-border)',
+				boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+			}}
 		/>
 	);
 }
@@ -54,7 +58,11 @@ export default function RangePicker() {
 			mode="range"
 			selected={range}
 			onSelect={setRange}
-			className="rounded-md border shadow-sm"
+			style={{
+				borderRadius: '0.375rem',
+				border: '1px solid var(--l2-border)',
+				boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+			}}
 		/>
 	);
 }
@@ -73,7 +81,11 @@ export default function MultiplePicker() {
 			mode="multiple"
 			selected={selected}
 			onSelect={setSelected}
-			className="rounded-md border shadow-sm"
+			style={{
+				borderRadius: '0.375rem',
+				border: '1px solid var(--l2-border)',
+				boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+			}}
 		/>
 	);
 }
@@ -88,12 +100,7 @@ export default function CalendarWithDisabledDays() {
 	const [date, setDate] = React.useState<Date | undefined>();
 
 	return (
-		<Calendar
-			mode="single"
-			selected={date}
-			onSelect={setDate}
-			disabled={[{ dayOfWeek: [0, 6] }]}
-		/>
+		<Calendar mode="single" selected={date} onSelect={setDate} disabled={[{ dayOfWeek: [0, 6] }]} />
 	);
 }
 ```

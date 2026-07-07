@@ -4,8 +4,9 @@ import { useId, useMemo } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './progress.module.css';
 
-export interface ProgressProps
-	extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+export interface ProgressProps extends React.ComponentPropsWithoutRef<
+	typeof ProgressPrimitive.Root
+> {
 	/**
 	 * The completion value from 0 to 100.
 	 * @defaultValue 0
@@ -93,7 +94,7 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
 			style,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const internalId = useId();
 		// Clamp percent between 0 and 100
@@ -135,7 +136,7 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
 				{showInfo && <span className={styles.info}>{clampedPercent}%</span>}
 			</div>
 		);
-	}
+	},
 );
 
 Progress.displayName = 'Progress';

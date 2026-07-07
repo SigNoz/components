@@ -55,7 +55,7 @@ export const Default: Story = {
 		destructive: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -63,11 +63,11 @@ export const Default: Story = {
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem {...args} leftIcon={<User className="h-4 w-4" />} />
-					<DropdownMenuItem leftIcon={<Settings className="h-4 w-4" />}>Settings</DropdownMenuItem>
+					<DropdownMenuItem {...args} leftIcon={<User className="icon-md" />} />
+					<DropdownMenuItem leftIcon={<Settings className="icon-md" />}>Settings</DropdownMenuItem>
 					<DropdownMenuItem
 						destructive
-						leftIcon={<LogOut className="h-4 w-4" />}
+						leftIcon={<LogOut className="icon-md" />}
 						onSelect={() => {}}
 					>
 						Logout
@@ -85,7 +85,7 @@ export const WithShortcut: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -93,15 +93,15 @@ export const WithShortcut: Story = {
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem {...args} leftIcon={<User className="h-4 w-4" />}>
+					<DropdownMenuItem {...args} leftIcon={<User className="icon-md" />}>
 						{args.children}
 						<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 					</DropdownMenuItem>
-					<DropdownMenuItem leftIcon={<Settings className="h-4 w-4" />}>
+					<DropdownMenuItem leftIcon={<Settings className="icon-md" />}>
 						Settings
 						<DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
 					</DropdownMenuItem>
-					<DropdownMenuItem leftIcon={<Check className="h-4 w-4" />}>
+					<DropdownMenuItem leftIcon={<Check className="icon-md" />}>
 						With checkmark
 						<DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
 					</DropdownMenuItem>

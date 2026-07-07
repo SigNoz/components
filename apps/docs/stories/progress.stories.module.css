@@ -1,0 +1,15 @@
+.progressContainer {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1rem;
+  align-items: stretch;
+
+  > div {
+    width: 100%;
+  }
+}
+
+.sectionHeading {
+  display: block;
+  margin-bottom: 0.5rem;
+}

@@ -55,13 +55,14 @@ type TypographyVariant = 'title' | 'text';
 
 type TypographyColor = 'muted' | 'danger' | 'warning' | 'success';
 
+type TypographyDisplay = 'inline' | 'block';
+
 type TypographyLevel = 1 | 2 | 3 | 4 | 5;
 
-interface TypographyProps
-	extends Pick<
-		React.ComponentProps<'div'>,
-		'children' | 'className' | 'id' | 'style' | 'title' | 'role' | 'tabIndex'
-	> {
+interface TypographyProps extends Pick<
+	React.ComponentProps<'div'>,
+	'children' | 'className' | 'id' | 'style' | 'title' | 'role' | 'tabIndex'
+> {
 	/**
 	 * Click handler for the typography element.
 	 */
@@ -193,6 +194,13 @@ interface TypographyProps
 	 * @default false
 	 */
 	interactive?: boolean;
+
+	/**
+	 * CSS display property for the typography element.
+	 * - `inline` (default for text variant)
+	 * - `block` for block-level display
+	 */
+	display?: TypographyDisplay;
 }
 
 const levelTagMap: Record<TypographyLevel, TypographyElement> = {
@@ -271,10 +279,11 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 		title,
 		testId,
 		interactive,
+		display,
 		onClick,
 		...props
 	},
-	ref
+	ref,
 ) {
 	const [copied, setCopied] = useState(false);
 
@@ -328,6 +337,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 			data-level={level || undefined}
 			data-link={isLink || undefined}
 			data-interactive={isInteractive || undefined}
+			data-display={display || undefined}
 			data-testid={testId}
 			title={title}
 			className={cn(styles.typography, className)}
@@ -358,7 +368,7 @@ interface TypographyTextProps extends Omit<TypographyProps, 'variant' | 'level'>
 const TypographyText = forwardRef<HTMLElement, TypographyTextProps>(
 	function TypographyText(props, ref) {
 		return <Typography ref={ref} variant="text" {...props} />;
-	}
+	},
 );
 TypographyText.displayName = 'TypographyText';
 
@@ -366,7 +376,7 @@ interface TypographyTitleProps extends Omit<TypographyProps, 'variant'> {}
 
 const TypographyTitle = forwardRef<HTMLElement, TypographyTitleProps>(function TypographyTitle(
 	{ level = 1, ...props },
-	ref
+	ref,
 ) {
 	return <Typography ref={ref} variant="title" level={level} {...props} />;
 });
@@ -379,12 +389,13 @@ interface TypographyLinkProps extends Omit<TypographyProps, 'variant' | 'level'>
 const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(
 	function TypographyLink(props, ref) {
 		return <Typography ref={ref} as="a" {...props} />;
-	}
+	},
 );
 TypographyLink.displayName = 'TypographyLink';
 
-interface TypographyComponent
-	extends React.ForwardRefExoticComponent<TypographyProps & React.RefAttributes<HTMLElement>> {
+interface TypographyComponent extends React.ForwardRefExoticComponent<
+	TypographyProps & React.RefAttributes<HTMLElement>
+> {
 	/**
 	 * Shorthand for rendering body text. Equivalent to `<Typography variant="text">`.
 	 *
@@ -430,6 +441,7 @@ TypographyWithCompound.Link = TypographyLink;
 export type {
 	TypographyAlign,
 	TypographyColor,
+	TypographyDisplay,
 	TypographyElement,
 	TypographyLevel,
 	TypographyLinkProps,

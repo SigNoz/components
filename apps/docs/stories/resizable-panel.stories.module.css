@@ -1,0 +1,86 @@
+.storyContainer {
+  margin: 1.5rem;
+}
+
+.descriptionPanel {
+  margin-bottom: 1rem;
+}
+
+.descriptionTitle {
+  margin-bottom: 0.5rem;
+}
+
+.textCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.iconCentered {
+  margin: 0 auto 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.descriptionSubtitle {
+  margin-top: 0.25rem;
+}
+
+.gradientBlueIndigo {
+  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+}
+
+.iconBlue {
+  margin: 0 auto 0.5rem;
+  color: #2563eb;
+}
+
+.constraintInfo {
+  margin-top: 0.5rem;
+}
+
+.gradientGreenEmerald {
+  background: linear-gradient(to bottom right, #f0fdf4, #d1fae5);
+}
+
+.panelContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem;
+}
+
+.iconGreen {
+  margin-bottom: 0.5rem;
+  color: #16a34a;
+}
+
+.panelTitle {
+  margin-bottom: 0.5rem;
+}
+
+.contentSubtitle {
+  margin-top: 0.25rem;
+}
+
+.sidebarPanel {
+  flex-direction: column;
+  padding: 1rem;
+  background: var(--muted);
+}
+
+.iconStyle {
+  margin-bottom: 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.iconLarge {
+  margin: 0 auto 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--muted-foreground);
+}
+
+.resizableVertical {
+  height: 500px;
+}

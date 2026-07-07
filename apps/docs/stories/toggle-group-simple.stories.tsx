@@ -1,6 +1,7 @@
 import { Bold, Italic, LayoutGrid, List, Underline } from '@signozhq/icons';
 import { ToggleGroupSimple, type ToggleGroupSimpleItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './toggle-group-simple.stories.module.css';
 
 const meta: Meta<typeof ToggleGroupSimple> = {
 	title: 'Composed Components/ToggleGroupSimple',
@@ -87,9 +88,9 @@ const labelItems: ToggleGroupSimpleItem[] = [
 ];
 
 const iconItems: ToggleGroupSimpleItem[] = [
-	{ value: 'bold', label: <Bold className="h-3 w-3" />, 'aria-label': 'Bold' },
-	{ value: 'italic', label: <Italic className="h-3 w-3" />, 'aria-label': 'Italic' },
-	{ value: 'underline', label: <Underline className="h-3 w-3" />, 'aria-label': 'Underline' },
+	{ value: 'bold', label: <Bold className="icon-sm" />, 'aria-label': 'Bold' },
+	{ value: 'italic', label: <Italic className="icon-sm" />, 'aria-label': 'Italic' },
+	{ value: 'underline', label: <Underline className="icon-sm" />, 'aria-label': 'Underline' },
 ];
 
 const iconAndLabelItems: ToggleGroupSimpleItem[] = [
@@ -97,7 +98,7 @@ const iconAndLabelItems: ToggleGroupSimpleItem[] = [
 		value: 'grid',
 		label: (
 			<>
-				<LayoutGrid className="h-6 w-6" /> Grid
+				<LayoutGrid className={styles.iconLarge} /> Grid
 			</>
 		),
 	},
@@ -105,7 +106,7 @@ const iconAndLabelItems: ToggleGroupSimpleItem[] = [
 		value: 'list',
 		label: (
 			<>
-				<List className="h-6 w-6" /> List
+				<List className={styles.iconLarge} /> List
 			</>
 		),
 	},

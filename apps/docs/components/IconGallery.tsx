@@ -1,9 +1,10 @@
 import { Check, Copy } from '@signozhq/icons';
-import { Button, ButtonColor, ButtonSize, ButtonVariant, Input } from '@signozhq/ui';
+import { Button, ButtonColor, ButtonSize, ButtonVariant, Input, Typography } from '@signozhq/ui';
 import React, { useMemo, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { iconsManifest } from '../data/icons-manifest.js';
+import styles from './IconGallery.module.css';
 
 interface IconGalleryProps {
 	size?: number;
@@ -40,19 +41,25 @@ const IconCell = React.memo(
 		const { name, component: Icon } = icon;
 
 		return (
-			<div style={style} className="p-2">
-				<div className="flex flex-col items-center p-4 rounded-lg border border-border hover:border-primary transition-colors h-full">
-					<div className="flex items-center justify-center w-16 h-16 mb-2">
+			<div style={style} className={styles.iconCell}>
+				<div className={styles.iconCard}>
+					<div className={styles.iconWrapper}>
 						<Icon size={size} strokeWidth={strokeWidth} color={color} />
 					</div>
-					<span className="text-sm text-center mb-2">{name}</span>
+					<Typography size="sm" className={styles.iconName}>
+						{name}
+					</Typography>
 					<Button
 						variant={ButtonVariant.Ghost}
 						color={ButtonColor.None}
 						size={ButtonSize.SM}
 						onClick={() => onCopy(name)}
 						prefix={
-							copiedIcon === name ? <Check className="size-4" /> : <Copy className="size-4" />
+							copiedIcon === name ? (
+								<Check style={{ width: '1rem', height: '1rem' }} />
+							) : (
+								<Copy style={{ width: '1rem', height: '1rem' }} />
+							)
 						}
 					>
 						{copiedIcon === name ? 'Copied!' : 'Copy'}
@@ -60,7 +67,7 @@ const IconCell = React.memo(
 				</div>
 			</div>
 		);
-	}
+	},
 );
 
 IconCell.displayName = 'IconCell';
@@ -88,8 +95,8 @@ function IconGallery({ size = 24, strokeWidth = 2, color = 'currentColor' }: Ico
 	const ROW_HEIGHT = 180; // Height for each row
 
 	return (
-		<div className="flex flex-col h-[calc(100vh-100px)]">
-			<div className="flex flex-col gap-4 mb-4">
+		<div className={styles.container}>
+			<div className={styles.searchContainer}>
 				<Input
 					placeholder="Search icons..."
 					value={search}
@@ -97,7 +104,7 @@ function IconGallery({ size = 24, strokeWidth = 2, color = 'currentColor' }: Ico
 				/>
 			</div>
 
-			<div className="flex-1">
+			<div className={styles.gridContainer}>
 				<AutoSizer>
 					{({ height, width }) => {
 						const columnCount = Math.max(1, Math.floor(width / COLUMN_WIDTH));

@@ -26,10 +26,10 @@ export default function MyComponent() {
 			<PopoverTrigger asChild>
 				<Button variant="outline">Open popover</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-80">
-				<div className="space-y-2">
-					<h4 className="font-medium">Title</h4>
-					<p className="text-sm text-muted-foreground">Content goes here.</p>
+			<PopoverContent style={{ width: '20rem' }}>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+					<h4 style={{ fontWeight: 500 }}>Title</h4>
+					<p style={{ fontSize: '0.875rem', color: 'var(--l3-foreground)' }}>Content goes here.</p>
 				</div>
 			</PopoverContent>
 		</Popover>
@@ -49,9 +49,16 @@ const [open, setOpen] = React.useState(false);
 		<Button>{date ? date.toLocaleDateString() : 'Pick a date'}</Button>
 	</PopoverTrigger>
 	<PopoverContent align="start">
-		<Calendar mode="single" selected={date} onSelect={(d) => { setDate(d); setOpen(false); }} />
+		<Calendar
+			mode="single"
+			selected={date}
+			onSelect={(d) => {
+				setDate(d);
+				setOpen(false);
+			}}
+		/>
 	</PopoverContent>
-</Popover>
+</Popover>;
 ```
 
 ### PopoverAnchor
@@ -61,7 +68,7 @@ Use `PopoverAnchor` when you want the popover positioned against a different ele
 ```tsx
 <Popover>
 	<PopoverAnchor asChild>
-		<div className="flex gap-2">
+		<div style={{ display: 'flex', gap: '0.5rem' }}>
 			<span>Row as anchor</span>
 			<PopoverTrigger>Trigger</PopoverTrigger>
 		</div>
@@ -79,11 +86,13 @@ When nesting a popover inside another (e.g. a submenu or cascading picker), set 
 	<PopoverTrigger asChild>
 		<Button variant="outline">Open menu</Button>
 	</PopoverTrigger>
-	<PopoverContent className="w-64">
+	<PopoverContent style={{ width: '16rem' }}>
 		<p>Parent content</p>
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button variant="ghost" size="sm">Open submenu</Button>
+				<Button variant="ghost" size="sm">
+					Open submenu
+				</Button>
 			</PopoverTrigger>
 			<PopoverContent withPortal={false}>
 				<p>Nested popover content</p>

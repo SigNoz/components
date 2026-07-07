@@ -1,0 +1,35 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+@media (min-width: 640px) {
+	.container {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+}
+
+.searchWrapper {
+	position: relative;
+}
+
+.searchIcon {
+	position: absolute;
+	left: 0.75rem;
+	top: 50%;
+	transform: translateY(-50%);
+	color: var(--l3-foreground);
+}
+
+.searchInput {
+	padding-left: 2.5rem;
+}
+
+.categoryFilters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}

@@ -25,7 +25,7 @@ const groupsWithHints = [
 describe('ComboboxSimple hint items (insertValue)', () => {
 	it('shows hint items when input is empty', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -37,7 +37,7 @@ describe('ComboboxSimple hint items (insertValue)', () => {
 
 	it('hides hint items when input starts with hint insertValue', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -50,7 +50,7 @@ describe('ComboboxSimple hint items (insertValue)', () => {
 
 	it('inserts value into input when hint is clicked', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -62,7 +62,7 @@ describe('ComboboxSimple hint items (insertValue)', () => {
 
 	it('shows hints again after clearing input', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -77,7 +77,7 @@ describe('ComboboxSimple hint items (insertValue)', () => {
 
 	it('shows hints after deleting colon from prefix', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groupsWithHints} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -115,7 +115,7 @@ describe('ComboboxSimple hint items (insertValue)', () => {
 
 	it('works with multi-select mode', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={groupsWithHints} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groupsWithHints} multiple testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

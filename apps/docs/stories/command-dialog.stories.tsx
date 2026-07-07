@@ -10,6 +10,8 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
+import styles from './command-dialog.stories.module.css';
+
 const meta: Meta<typeof CommandDialog> = {
 	title: 'Primitive Components/Command/CommandDialog',
 	component: CommandDialog,
@@ -76,7 +78,7 @@ export const Default: Story = {
 
 		return (
 			<>
-				<div style={{ margin: 12 }}>
+				<div className={styles.buttonWrapper}>
 					<Button type="button" variant="solid" onClick={() => setOpen(true)}>
 						Open Command Dialog
 					</Button>

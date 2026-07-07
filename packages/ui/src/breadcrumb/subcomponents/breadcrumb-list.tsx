@@ -48,7 +48,7 @@ export const BreadcrumbList = React.forwardRef<HTMLOListElement, BreadcrumbListP
 				{...props}
 			/>
 		);
-	}
+	},
 );
 
 BreadcrumbList.displayName = 'BreadcrumbList';

@@ -35,7 +35,7 @@ describe('Command forwardRef', () => {
 		render(
 			<Command>
 				<CommandInput ref={ref} />
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLInputElement);
 	});
@@ -53,7 +53,7 @@ describe('Command forwardRef', () => {
 				<CommandList ref={ref}>
 					<CommandItem>Test</CommandItem>
 				</CommandList>
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -65,7 +65,7 @@ describe('Command forwardRef', () => {
 				<CommandList>
 					<CommandEmpty ref={ref}>No results</CommandEmpty>
 				</CommandList>
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -77,7 +77,7 @@ describe('Command forwardRef', () => {
 				<CommandList>
 					<CommandLoading ref={ref}>Loading...</CommandLoading>
 				</CommandList>
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -91,7 +91,7 @@ describe('Command forwardRef', () => {
 						<CommandItem>Test</CommandItem>
 					</CommandGroup>
 				</CommandList>
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -105,7 +105,7 @@ describe('Command forwardRef', () => {
 					<CommandSeparator ref={ref} />
 					<CommandItem>B</CommandItem>
 				</CommandList>
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -117,7 +117,7 @@ describe('Command forwardRef', () => {
 				<CommandList>
 					<CommandItem ref={ref}>Test</CommandItem>
 				</CommandList>
-			</Command>
+			</Command>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

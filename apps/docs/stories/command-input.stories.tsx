@@ -2,6 +2,7 @@ import { Command, CommandEmpty, CommandInput, CommandList } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
+import styles from './command-input.stories.module.css';
 import { inputArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandInput> = {
@@ -26,7 +27,7 @@ export const Default: Story = {
 		const [query, setQuery] = React.useState('');
 
 		return (
-			<div style={{ width: 520 }}>
+			<div className={styles.container}>
 				<Command>
 					<CommandInput
 						{...args}

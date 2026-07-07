@@ -172,7 +172,7 @@ const ResizablePanelGroup = React.forwardRef<HTMLDivElement, ResizablePanelGroup
 			elementRef={ref}
 			{...props}
 		/>
-	)
+	),
 );
 ResizablePanelGroup.displayName = 'ResizablePanelGroup';
 
@@ -241,7 +241,7 @@ export type ResizablePanelProps = Pick<React.ComponentPropsWithoutRef<'div'>, 'c
 		| ((
 				panelSize: PanelSize,
 				id: string | number | undefined,
-				prevPanelSize: PanelSize | undefined
+				prevPanelSize: PanelSize | undefined,
 		  ) => void)
 		| undefined;
 	/**
@@ -304,7 +304,7 @@ export type ResizablePanelProps = Pick<React.ComponentPropsWithoutRef<'div'>, 'c
 const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelProps>(
 	({ className, testId, ...props }, ref) => (
 		<Panel className={className} data-testid={testId} elementRef={ref} {...props} />
-	)
+	),
 );
 ResizablePanel.displayName = 'ResizablePanel';
 
@@ -384,7 +384,7 @@ const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
 				</div>
 			)}
 		</Separator>
-	)
+	),
 );
 ResizableHandle.displayName = 'ResizableHandle';
 

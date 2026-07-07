@@ -1,0 +1,59 @@
+.headingTitle {
+  line-height: 1;
+  margin-top: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputSmall {
+  height: 2rem;
+}
+
+.datePickerColumn {
+  gap: 0.75rem;
+}
+
+.datePickerLabel {
+  padding-inline: 0.25rem;
+}
+
+.datePickerTrigger {
+  width: 360px;
+  justify-content: space-between;
+  font-weight: normal;
+}
+
+.datePickerContent {
+  width: auto;
+  overflow: hidden;
+  padding: 0;
+}
+
+.timePickerSection {
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.timePickerInput {
+  background-color: var(--background);
+}
+
+.showcaseContainer {
+  min-height: 600px;
+}
+
+.showcaseLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.capitalizedButton {
+  text-transform: capitalize;
+}

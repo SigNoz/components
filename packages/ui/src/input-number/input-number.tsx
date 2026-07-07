@@ -368,7 +368,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 				return inputRef.current;
 			},
 		}),
-		[]
+		[],
 	);
 
 	const emitChange = React.useCallback(
@@ -376,7 +376,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			if (!isControlled) setInternalValue(next);
 			onChange?.(next);
 		},
-		[isControlled, onChange]
+		[isControlled, onChange],
 	);
 
 	const handleChange = React.useCallback(
@@ -390,7 +390,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			}
 			emitChange(roundToPrecision(parsed, precision));
 		},
-		[decimalSeparator, parser, precision, emitChange]
+		[decimalSeparator, parser, precision, emitChange],
 	);
 
 	const handleStep = React.useCallback(
@@ -422,7 +422,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			formatter,
 			emitChange,
 			onStep,
-		]
+		],
 	);
 
 	// Keep a ref to the latest step handler so the native wheel listener (below)
@@ -447,7 +447,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 				handleStep(-1, 'keydown');
 			}
 		},
-		[onKeyDown, onPressEnter, keyboard, handleStep]
+		[onKeyDown, onPressEnter, keyboard, handleStep],
 	);
 
 	// React attaches `wheel` listeners at the root as passive in modern versions,
@@ -472,7 +472,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 		(event: React.WheelEvent<HTMLInputElement>) => {
 			onWheelProp?.(event);
 		},
-		[onWheelProp]
+		[onWheelProp],
 	);
 
 	const handleFocus = React.useCallback(
@@ -484,7 +484,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			setRawInput(formatForDisplay(value, precision, decimalSeparator, formatter));
 			onFocus?.(event);
 		},
-		[value, precision, decimalSeparator, formatter, onFocus]
+		[value, precision, decimalSeparator, formatter, onFocus],
 	);
 
 	const handleBlur = React.useCallback(
@@ -499,7 +499,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			}
 			onBlur?.(event);
 		},
-		[changeOnBlur, value, min, max, precision, emitChange, onBlur]
+		[changeOnBlur, value, min, max, precision, emitChange, onBlur],
 	);
 
 	const controlsConfig = resolveControls(controls);
@@ -557,7 +557,7 @@ export const InputNumber = React.forwardRef<InputNumberRef, InputNumberProps>((p
 			className={cn(
 				styles['input-number-wrapper'],
 				className,
-				!hasAddon ? rootClassName : undefined
+				!hasAddon ? rootClassName : undefined,
 			)}
 			data-variant={variant}
 			data-size={size}

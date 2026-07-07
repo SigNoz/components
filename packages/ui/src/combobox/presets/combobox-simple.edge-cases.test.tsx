@@ -20,7 +20,7 @@ describe('ComboboxSimple edge cases - pills', () => {
 				maxDisplayedPills={0}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -37,7 +37,7 @@ describe('ComboboxSimple edge cases - pills', () => {
 				maxDisplayedPills={10}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -54,7 +54,7 @@ describe('ComboboxSimple edge cases - pills', () => {
 				defaultValue={['icon-item']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(screen.getByTestId('icon-label')).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('ComboboxSimple edge cases - displayValueFn', () => {
 				displayValue={displayValueFn}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(displayValueFn).toHaveBeenCalledWith(undefined);
@@ -86,7 +86,7 @@ describe('ComboboxSimple edge cases - displayValueFn', () => {
 				displayValue={displayValueFn}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(displayValueFn).toHaveBeenCalledWith(undefined);
@@ -104,7 +104,7 @@ describe('ComboboxSimple edge cases - custom values filtering', () => {
 				defaultValue={['my-custom-tag']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -129,7 +129,7 @@ describe('ComboboxSimple edge cases - custom values filtering', () => {
 				defaultValue={['my-tag']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -151,7 +151,7 @@ describe('ComboboxSimple edge cases - custom values filtering', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -166,7 +166,13 @@ describe('ComboboxSimple edge cases - custom values filtering', () => {
 describe('ComboboxSimple edge cases - create option visibility', () => {
 	it('create option visible with trailing space in input', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				multiple
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -179,7 +185,13 @@ describe('ComboboxSimple edge cases - create option visibility', () => {
 
 	it('create option visible when no items match', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				multiple
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -191,7 +203,13 @@ describe('ComboboxSimple edge cases - create option visibility', () => {
 
 	it('create option positioned first when input partially matches items', async () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				multiple
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -220,7 +238,7 @@ describe('ComboboxSimple edge cases - create option visibility', () => {
 				defaultValue={['custom-existing']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -269,7 +287,7 @@ describe('ComboboxSimple edge cases - create option visibility', () => {
 				defaultValue={['existing-custom']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -294,7 +312,7 @@ describe('ComboboxSimple edge cases - create option visibility', () => {
 		];
 
 		renderWithProviders(
-			<ComboboxSimple groups={groups} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple groups={groups} allowCreate multiple testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -317,7 +335,13 @@ describe('ComboboxSimple edge cases - create option visibility', () => {
 describe('ComboboxSimple edge cases - create/whitespace', () => {
 	it('ignores whitespace-only input for create option', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowCreate multiple testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				allowCreate
+				multiple
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -338,7 +362,7 @@ describe('ComboboxSimple edge cases - create/whitespace', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -357,7 +381,7 @@ describe('ComboboxSimple edge cases - empty states', () => {
 				emptyPlaceholder="Nothing found"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -375,7 +399,7 @@ describe('ComboboxSimple edge cases - empty states', () => {
 				emptyPlaceholder="Nothing found"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -395,7 +419,7 @@ describe('ComboboxSimple edge cases - empty states', () => {
 				emptyPlaceholder="Nothing found"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -416,7 +440,7 @@ describe('ComboboxSimple edge cases - empty states', () => {
 				emptyPlaceholder="No matches"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -428,7 +452,7 @@ describe('ComboboxSimple edge cases - empty states', () => {
 
 	it('handles empty items array', () => {
 		renderWithProviders(
-			<ComboboxSimple items={[]} emptyPlaceholder="No options" testId="combo" withPortal={false} />
+			<ComboboxSimple items={[]} emptyPlaceholder="No options" testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -437,7 +461,7 @@ describe('ComboboxSimple edge cases - empty states', () => {
 
 	it('handles empty groups array', () => {
 		renderWithProviders(
-			<ComboboxSimple groups={[]} emptyPlaceholder="No groups" testId="combo" withPortal={false} />
+			<ComboboxSimple groups={[]} emptyPlaceholder="No groups" testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -455,7 +479,7 @@ describe('ComboboxSimple edge cases - controlled mode', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		expect(screen.getByTestId('combo')).toHaveTextContent('React');
@@ -476,7 +500,7 @@ describe('ComboboxSimple edge cases - controlled mode', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -495,7 +519,7 @@ describe('ComboboxSimple edge cases - controlled mode', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const removeButtons = screen.getAllByRole('button', { name: /remove/i });
@@ -508,7 +532,7 @@ describe('ComboboxSimple edge cases - controlled mode', () => {
 describe('ComboboxSimple edge cases - normalizeValue', () => {
 	it('handles empty string defaultValue', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} defaultValue="" testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} defaultValue="" testId="combo" withPortal={false} />,
 		);
 
 		expect(screen.getByTestId('combo')).toHaveTextContent('Select an option...');
@@ -522,7 +546,7 @@ describe('ComboboxSimple edge cases - normalizeValue', () => {
 				defaultValue={['', 'react', '']}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -546,7 +570,7 @@ describe('ComboboxSimple edge cases - virtualized', () => {
 				virtualized={{ virtualizedHeight: 400, estimatedItemHeight: 40 }}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -567,7 +591,7 @@ describe('ComboboxSimple edge cases - virtualized', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -590,7 +614,7 @@ describe('ComboboxSimple edge cases - virtualized', () => {
 				emptyPlaceholder="Nothing here"
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -605,7 +629,7 @@ describe('ComboboxSimple edge cases - ref forwarding', () => {
 	it('forwards ref as object', () => {
 		const ref = { current: null };
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} ref={ref} testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} ref={ref} testId="combo" withPortal={false} />,
 		);
 
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
@@ -614,7 +638,7 @@ describe('ComboboxSimple edge cases - ref forwarding', () => {
 	it('forwards ref as callback', () => {
 		const refCallback = vi.fn();
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} ref={refCallback} testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} ref={refCallback} testId="combo" withPortal={false} />,
 		);
 
 		expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
@@ -623,7 +647,7 @@ describe('ComboboxSimple edge cases - ref forwarding', () => {
 	it('forwards ref in multiple mode', () => {
 		const ref = { current: null };
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple ref={ref} testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple ref={ref} testId="combo" withPortal={false} />,
 		);
 
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
@@ -650,7 +674,7 @@ describe('ComboboxSimple edge cases - items with special values', () => {
 		];
 		const onChange = vi.fn();
 		renderWithProviders(
-			<ComboboxSimple items={items} onChange={onChange} testId="combo" withPortal={false} />
+			<ComboboxSimple items={items} onChange={onChange} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));

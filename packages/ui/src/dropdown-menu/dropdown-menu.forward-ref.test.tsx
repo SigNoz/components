@@ -28,7 +28,7 @@ describe('DropdownMenu forwardRef', () => {
 		render(
 			<DropdownMenu>
 				<DropdownMenuTrigger ref={ref}>Open</DropdownMenuTrigger>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'dropdown-menu-trigger');
@@ -42,7 +42,7 @@ describe('DropdownMenu forwardRef', () => {
 				<DropdownMenuContent ref={ref}>
 					<DropdownMenuItem>Item</DropdownMenuItem>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -55,7 +55,7 @@ describe('DropdownMenu forwardRef', () => {
 				<DropdownMenuContent>
 					<DropdownMenuItem ref={ref}>Item</DropdownMenuItem>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -108,7 +108,7 @@ describe('DropdownMenu forwardRef', () => {
 						Checkbox
 					</DropdownMenuCheckboxItem>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -125,7 +125,7 @@ describe('DropdownMenu forwardRef', () => {
 						</DropdownMenuRadioItem>
 					</DropdownMenuRadioGroup>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -140,7 +140,7 @@ describe('DropdownMenu forwardRef', () => {
 						Back
 					</DropdownMenuBack>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -153,7 +153,7 @@ describe('DropdownMenu forwardRef', () => {
 				<DropdownMenuContent>
 					<DropdownMenuSearch ref={ref} placeholder="Search..." />
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLInputElement);
 	});
@@ -168,7 +168,7 @@ describe('DropdownMenu forwardRef', () => {
 						<DropdownMenuSubTrigger ref={ref}>More</DropdownMenuSubTrigger>
 					</DropdownMenuSub>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
@@ -186,7 +186,7 @@ describe('DropdownMenu forwardRef', () => {
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu>,
 		);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});

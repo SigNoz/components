@@ -13,7 +13,7 @@ An input where the user selects a value from within a given range. This componen
 import { Slider } from '@signozhq/ui';
 
 export default function MyComponent() {
-  return <Slider defaultValue={50} max={100} step={1} />;
+	return <Slider defaultValue={50} max={100} step={1} />;
 }
 ```
 
@@ -48,16 +48,16 @@ You can provide a `marks` object to display tick marks along the track. The key 
 
 ```tsx
 const marks = {
-  0: '0°C',
-  26: '26°C',
-  37: '37°C',
-  100: {
-    style: { color: '#f50' },
-    label: <strong>100°C</strong>,
-  },
+	0: '0°C',
+	26: '26°C',
+	37: '37°C',
+	100: {
+		style: { color: '#f50' },
+		label: <strong>100°C</strong>,
+	},
 };
 
-<Slider marks={marks} defaultValue={37} />
+<Slider marks={marks} defaultValue={37} />;
 ```
 
 <Story of={SliderStories.WithMarks} />
@@ -77,12 +77,12 @@ By providing a `tooltip` prop with a `formatter`, the slider thumbs will be wrap
 You can inject inline styles directly into the internal Radix parts using the `styles` prop:
 
 ```tsx
-<Slider 
-  styles={{
-    track: { backgroundColor: '#ffe4e6' },
-    range: { backgroundColor: '#e11d48' },
-    thumb: { borderColor: '#e11d48' },
-  }} 
+<Slider
+	styles={{
+		track: { backgroundColor: '#ffe4e6' },
+		range: { backgroundColor: '#e11d48' },
+		thumb: { borderColor: '#e11d48' },
+	}}
 />
 ```
 
@@ -92,9 +92,5 @@ You can inject inline styles directly into the internal Radix parts using the `s
 You can also pass standard HTML attributes like `id` and `style`, or a `testId` for testing purposes.
 
 ```tsx
-<Slider 
-  id="price-range" 
-  testId="price-slider"
-  style={{ marginTop: '20px' }} 
-/>
+<Slider id="price-range" testId="price-slider" style={{ marginTop: '20px' }} />
 ```

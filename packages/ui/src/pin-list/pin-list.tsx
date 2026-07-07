@@ -219,7 +219,7 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 			id,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const [listItems, setListItems] = React.useState(initialItems);
 		const [isMoreExpanded, setIsMoreExpanded] = React.useState(true);
@@ -230,12 +230,12 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 
 		const pinned = React.useMemo(
 			() => listItems.filter((item) => item.isPinned && item.isEnabled),
-			[listItems]
+			[listItems],
 		);
 
 		const unpinned = React.useMemo(
 			() => listItems.filter((item) => !item.isPinned && item.isEnabled),
-			[listItems]
+			[listItems],
 		);
 
 		const toggleStatus = React.useCallback(
@@ -257,14 +257,14 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 
 				onPinToggle?.({ ...item, isPinned: !item.isPinned });
 			},
-			[listItems, onPinToggle]
+			[listItems, onPinToggle],
 		);
 
 		const handleItemClick = React.useCallback(
 			(item: PinListItem) => {
 				onItemClick?.(item);
 			},
-			[onItemClick]
+			[onItemClick],
 		);
 
 		const toggleMoreExpanded = React.useCallback(() => {
@@ -273,7 +273,7 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 
 		const chevronRotation = React.useMemo(
 			() => ({ rotate: isMoreExpanded ? 0 : -90 }),
-			[isMoreExpanded]
+			[isMoreExpanded],
 		);
 
 		return (
@@ -386,7 +386,7 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 				</motion.div>
 			</TooltipProvider>
 		);
-	}
+	},
 );
 PinList.displayName = 'PinList';
 
@@ -419,7 +419,7 @@ const PinListItemComponent = React.memo(function PinListItemComponent({
 			e.stopPropagation();
 			onPinClick(item.key);
 		},
-		[onPinClick, item.key]
+		[onPinClick, item.key],
 	);
 
 	const handlePinMouseDown = React.useCallback((e: React.MouseEvent) => {

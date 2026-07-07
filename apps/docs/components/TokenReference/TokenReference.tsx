@@ -1,7 +1,8 @@
 import { colorTokens, semanticTokens } from '@signozhq/design-tokens';
-import { Button } from '@signozhq/ui';
+import { Button, Typography } from '@signozhq/ui';
 import { useMemo, useState } from 'react';
 import type { TokenData } from './TokenRow.js';
+import styles from './TokenReference.module.css';
 import { TokenSearch } from './TokenSearch.js';
 import { TokenTable } from './TokenTable.js';
 
@@ -171,7 +172,7 @@ export function TokenReference({
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 	const [activeSection, setActiveSection] = useState<'semantic' | 'primitive'>(
-		mode === 'primitive' ? 'primitive' : 'semantic'
+		mode === 'primitive' ? 'primitive' : 'semantic',
 	);
 
 	const semanticTokensData = useMemo(() => parseSemanticTokens(themeMode), [themeMode]);
@@ -183,7 +184,7 @@ export function TokenReference({
 			return semanticTokensData;
 		}
 		return semanticTokensData.filter(
-			(token) => token.group && groups.includes(token.group as SemanticTokenGroup)
+			(token) => token.group && groups.includes(token.group as SemanticTokenGroup),
 		);
 	}, [semanticTokensData, groups]);
 
@@ -229,19 +230,23 @@ export function TokenReference({
 	const showTabs = showModeTabs && mode === 'all';
 
 	return (
-		<div className="min-h-screen bg-l1-background p-6 pt-0">
-			<div className="max-w-7xl mx-auto space-y-6">
+		<div className={styles.container}>
+			<div className={styles.content}>
 				{showHeader && (
-					<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+					<div className={styles.header}>
 						<div>
-							<h1 className="text-2xl font-bold text-l1-foreground">{title}</h1>
-							<p className="text-sm text-l2-foreground mt-1">{description}</p>
+							<Typography size="2xl" weight="bold">
+								{title}
+							</Typography>
+							<Typography size="sm" color="muted" className={styles.headerTitle}>
+								{description}
+							</Typography>
 						</div>
 					</div>
 				)}
 
 				{showTabs && (
-					<div className="flex gap-2 border-b border-l2-border">
+					<div className={styles.tabs}>
 						{shouldShowSemantic && (
 							<Button
 								onClick={() => {
@@ -279,16 +284,16 @@ export function TokenReference({
 					/>
 				)}
 
-				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-					<div className="text-sm text-l3-foreground">
+				<div className={styles.controls}>
+					<Typography size="sm" color="muted">
 						Showing {filteredTokens.length} tokens
 						{searchQuery && ` matching "${searchQuery}"`}
 						{selectedCategory && ` in ${selectedCategory}`}
-					</div>
+					</Typography>
 
 					{showThemeToggle && (
-						<div className="flex items-center gap-4">
-							<div className="flex rounded-lg border border-l2-border overflow-hidden">
+						<div className={styles.themeToggle}>
+							<div className={styles.themeButtons}>
 								<Button
 									type="button"
 									onClick={() => setThemeMode('light')}
@@ -310,7 +315,7 @@ export function TokenReference({
 					)}
 				</div>
 
-				<div className="space-y-6">
+				<div className={styles.tokenGroups}>
 					{Array.from(groupedTokens.entries()).map(([group, tokens]) => (
 						<TokenTable key={group} tokens={tokens} title={GROUP_LABELS[group] || group} />
 					))}

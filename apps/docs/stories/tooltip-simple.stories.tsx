@@ -1,6 +1,7 @@
 import type { TooltipSimpleProps } from '@signozhq/ui';
 import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './tooltip-simple.stories.module.css';
 
 const meta: Meta<typeof TooltipSimple> = {
 	title: 'Composed Components/TooltipSimple',
@@ -133,7 +134,7 @@ export const Default: Story = {
 	},
 	render: (args: Partial<TooltipSimpleProps>) => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-20 flex items-center justify-center">
+			<div className={`story-center ${styles.demoArea}`}>
 				<TooltipSimple {...(args as TooltipSimpleProps)}>
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me
@@ -152,7 +153,7 @@ export const WithArrow: Story = {
 	},
 	render: (args: Partial<TooltipSimpleProps>) => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-20 flex items-center justify-center">
+			<div className={`story-center ${styles.demoArea}`}>
 				<TooltipSimple {...(args as TooltipSimpleProps)}>
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me
@@ -166,7 +167,7 @@ export const WithArrow: Story = {
 export const Positions: Story = {
 	render: () => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-20 flex flex-wrap gap-8 items-center justify-center">
+			<div className={`story-center ${styles.positionsArea}`}>
 				{(['top', 'right', 'bottom', 'left'] as const).map((side) => (
 					<TooltipSimple key={side} title={`Tooltip on ${side}`} side={side} arrow>
 						<Button
@@ -186,13 +187,13 @@ export const Positions: Story = {
 export const Alignments: Story = {
 	render: () => (
 		<TooltipProvider delayDuration={0}>
-			<div className="p-20 flex flex-wrap gap-8 items-center justify-center">
+			<div className={`story-center ${styles.positionsArea}`}>
 				{(['start', 'center', 'end'] as const).map((align) => (
 					<TooltipSimple key={align} title={`Align ${align}`} side="top" align={align} arrow>
 						<Button
 							variant={ButtonVariant.Solid}
 							color={ButtonColor.Secondary}
-							className="capitalize w-30"
+							className={`capitalize ${styles.alignButton}`}
 						>
 							{align}
 						</Button>

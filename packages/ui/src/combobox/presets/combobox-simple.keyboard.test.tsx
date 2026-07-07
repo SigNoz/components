@@ -34,7 +34,7 @@ describe('ComboboxSimple keyboard in single-select', () => {
 	it('selects item with Enter after navigation', () => {
 		const onChange = vi.fn();
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} onChange={onChange} testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} onChange={onChange} testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -62,7 +62,7 @@ describe('ComboboxSimple keyboard in single-select', () => {
 describe('ComboboxSimple keyboard in multi-select', () => {
 	it('opens on Enter key', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -73,7 +73,7 @@ describe('ComboboxSimple keyboard in multi-select', () => {
 
 	it('opens on Space key', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -84,7 +84,7 @@ describe('ComboboxSimple keyboard in multi-select', () => {
 
 	it('keeps dropdown open after Enter selection', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -105,7 +105,7 @@ describe('ComboboxSimple keyboard in multi-select', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -127,7 +127,7 @@ describe('ComboboxSimple keyboard in multi-select', () => {
 				onChange={onChange}
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		fireEvent.click(screen.getByTestId('combo'));
@@ -140,7 +140,7 @@ describe('ComboboxSimple keyboard in multi-select', () => {
 
 	it('closes on Escape and focuses trigger', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} multiple testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');

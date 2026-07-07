@@ -70,7 +70,9 @@ Place an icon before or after the label with `prefix` / `suffix`. For an icon-on
 `loading` disables the button and replaces the leading icon with a spinner. The `suffix` is hidden while loading.
 
 ```tsx
-<Button loading prefix={<Plus />}>Saving…</Button>
+<Button loading prefix={<Plus />}>
+	Saving…
+</Button>
 ```
 
 ## Action buttons
@@ -78,7 +80,7 @@ Place an icon before or after the label with `prefix` / `suffix`. For an icon-on
 `variant="action"` reads its background from the surface it's placed on via the `background` prop (`ink-500`, `ink-400`, `vanilla-100`, `vanilla-200`).
 
 ```tsx
-<div className="p-6 bg-ink-500">
+<div style={{ padding: '1.5rem', backgroundColor: 'var(--bg-ink-500)' }}>
 	<Button variant="action" background="ink-500" prefix={<ChevronLeft />}>
 		Action
 	</Button>

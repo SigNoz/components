@@ -2,6 +2,7 @@ import { Bug, ChartBar, FileText, GitBranch, Globe, Hexagon, List, Server } from
 import { PinList, type PinListItem } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type React from 'react';
+import styles from './pin-list.stories.module.css';
 
 /**
  * Helper function to create properly formatted PinList items
@@ -16,7 +17,7 @@ const createPinListItem = (
 		isEnabled?: boolean;
 		active?: boolean;
 		className?: string;
-	} = {}
+	} = {},
 ): PinListItem => ({
 	key,
 	itemKey: key,
@@ -111,8 +112,8 @@ const meta: Meta<typeof PinList> = {
 	},
 	decorators: [
 		(Story) => (
-			<div className="p-8 bg-background min-h-[360px]">
-				<div className="max-w-[360px]">
+			<div className={`story-container-full ${styles.decoratorContainer}`}>
+				<div className={styles.maxWidthContainer}>
 					<Story />
 				</div>
 			</div>

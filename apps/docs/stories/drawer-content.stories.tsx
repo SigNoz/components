@@ -9,6 +9,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { contentArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -65,9 +66,9 @@ export const Default: Story = {
 					<DrawerTitle>Drawer content</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<p className="text-sm">
+					<Typography size="sm">
 						This story focuses on the DrawerContent surface and its layout-related props.
-					</p>
+					</Typography>
 				</DrawerDescription>
 				<DrawerFooter>
 					<Button variant={ButtonVariant.Ghost} color="secondary">

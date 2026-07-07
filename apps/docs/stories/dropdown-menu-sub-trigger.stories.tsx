@@ -49,7 +49,7 @@ export const Default: Story = {
 		disabled: false,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="solid" color="secondary">
@@ -59,9 +59,9 @@ export const Default: Story = {
 				<DropdownMenuContent>
 					<DropdownMenuItem>Profile</DropdownMenuItem>
 					<DropdownMenuSub>
-						<DropdownMenuSubTrigger {...args} leftIcon={<Settings className="h-4 w-4" />} />
+						<DropdownMenuSubTrigger {...args} leftIcon={<Settings className="icon-md" />} />
 						<DropdownMenuSubContent>
-							<DropdownMenuItem leftIcon={<Link className="h-4 w-4" />}>
+							<DropdownMenuItem leftIcon={<Link className="icon-md" />}>
 								Sub Item 1
 							</DropdownMenuItem>
 							<DropdownMenuItem>Sub Item 2</DropdownMenuItem>

@@ -7,9 +7,11 @@ import {
 	ComboboxList,
 	ComboboxLoading,
 	ComboboxTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useState } from 'react';
+import styles from './combobox-loading.stories.module.css';
 
 const meta: Meta<typeof ComboboxLoading> = {
 	title: 'Primitive Components/Combobox/ComboboxLoading',
@@ -65,7 +67,7 @@ export const Default: Story = {
 		const [open, setOpen] = useState(true);
 
 		return (
-			<div className="p-8 w-full max-w-sm">
+			<div className="story-container">
 				<Combobox open={open} onOpenChange={setOpen}>
 					<ComboboxTrigger
 						placeholder="Select a framework..."
@@ -89,13 +91,17 @@ export const Default: Story = {
 
 export const Variations: Story = {
 	render: () => (
-		<div className="p-8 w-full max-w-2xl space-y-8">
+		<div className={styles.variationsContainer}>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Infinite Loading</h3>
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+					Infinite Loading
+				</Typography>
 				<InfiniteLoadingExample />
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2">Loading with Delay (5s)</h3>
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+					Loading with Delay (5s)
+				</Typography>
 				<DelayedLoadingExample />
 			</div>
 		</div>

@@ -1,0 +1,7 @@
+.decoratorContainer {
+  min-height: 360px;
+}
+
+.maxWidthContainer {
+  max-width: 360px;
+}

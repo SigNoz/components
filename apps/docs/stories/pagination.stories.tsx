@@ -1,7 +1,8 @@
-import { Pagination } from '@signozhq/ui';
+import { Pagination, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
 import { useEffect, useState } from 'react';
+import styles from './pagination.stories.module.css';
 
 type PaginationProps = ComponentProps<typeof Pagination>;
 
@@ -155,9 +156,11 @@ export const Default: Story = {
 		};
 
 		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+			<div className={`story-section ${styles.sectionGap}`}>
 				<div>
-					<p className="mb-2 text-sm text-gray-400">3 Pages - First Selected</p>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						3 Pages - First Selected
+					</Typography>
 					<Pagination
 						{...args}
 						total={30}
@@ -167,8 +170,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">3 Pages - Second Selected</p>
+				<div className={styles.itemMargin}>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						3 Pages - Second Selected
+					</Typography>
 					<Pagination
 						{...args}
 						total={30}
@@ -178,8 +183,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">10 Pages - First Selected</p>
+				<div className={styles.itemMargin}>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						10 Pages - First Selected
+					</Typography>
 					<Pagination
 						{...args}
 						total={100}
@@ -189,8 +196,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">10 Pages - Middle Selected (Page 7)</p>
+				<div className={styles.itemMargin}>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						10 Pages - Middle Selected (Page 7)
+					</Typography>
 					<Pagination
 						{...args}
 						total={100}
@@ -200,8 +209,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">5 Pages - Center Aligned</p>
+				<div className={styles.itemMargin}>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						5 Pages - Center Aligned
+					</Typography>
 					<Pagination
 						{...args}
 						total={50}
@@ -212,8 +223,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">5 Pages - End Aligned</p>
+				<div className={styles.itemMargin}>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						5 Pages - End Aligned
+					</Typography>
 					<Pagination
 						{...args}
 						total={50}
@@ -224,8 +237,10 @@ export const Default: Story = {
 					/>
 				</div>
 
-				<div className="mt-6">
-					<p className="mb-2 text-sm text-gray-400">10 Pages - Last Selected</p>
+				<div className={styles.itemMargin}>
+					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+						10 Pages - Last Selected
+					</Typography>
 					<Pagination
 						{...args}
 						total={100}

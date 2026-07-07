@@ -16,7 +16,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -33,7 +33,7 @@ describe('ComboboxSimple allowClear', () => {
 
 	it('does not show clear icon when no value selected', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} allowClear testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} allowClear testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -53,7 +53,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -77,7 +77,7 @@ describe('ComboboxSimple allowClear', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -100,7 +100,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -121,7 +121,7 @@ describe('ComboboxSimple allowClear', () => {
 				disabled
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -139,7 +139,7 @@ describe('ComboboxSimple allowClear', () => {
 				loading
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -151,7 +151,12 @@ describe('ComboboxSimple allowClear', () => {
 
 	it('does not show clear icon when allowClear is false', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} defaultValue="react" testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				defaultValue="react"
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -162,7 +167,7 @@ describe('ComboboxSimple allowClear', () => {
 
 	it('does not show clear icon when value is empty string', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} value="" allowClear testId="combo" withPortal={false} />
+			<ComboboxSimple items={defaultItems} value="" allowClear testId="combo" withPortal={false} />,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -181,7 +186,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -201,7 +206,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -226,7 +231,7 @@ describe('ComboboxSimple allowClear', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -393,7 +398,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -416,7 +421,7 @@ describe('ComboboxSimple allowClear', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -438,7 +443,7 @@ describe('ComboboxSimple allowClear', () => {
 				allowClear
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -458,7 +463,7 @@ describe('ComboboxSimple allowClear', () => {
 				multiple
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -471,7 +476,12 @@ describe('ComboboxSimple allowClear', () => {
 
 	it('does not clear on Delete/Backspace when allowClear is false', () => {
 		renderWithProviders(
-			<ComboboxSimple items={defaultItems} defaultValue="react" testId="combo" withPortal={false} />
+			<ComboboxSimple
+				items={defaultItems}
+				defaultValue="react"
+				testId="combo"
+				withPortal={false}
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');
@@ -489,7 +499,7 @@ describe('ComboboxSimple allowClear', () => {
 				disabled
 				testId="combo"
 				withPortal={false}
-			/>
+			/>,
 		);
 
 		const trigger = screen.getByTestId('combo');

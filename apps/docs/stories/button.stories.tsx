@@ -1,7 +1,15 @@
 import { Check, ChevronLeft, ChevronRight, Code, Star, Trash } from '@signozhq/icons';
-import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from '@signozhq/ui';
+import {
+	Button,
+	ButtonBackground,
+	ButtonColor,
+	ButtonSize,
+	ButtonVariant,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
+import styles from './button.stories.module.css';
 import { buttonArgTypes, COLORS, VARIANTS } from './shared/button-arg-types.js';
 
 const meta: Meta<typeof Button> = {
@@ -127,19 +135,21 @@ export const ButtonShowcase: Story = {
 		docs: { story: { autoplay: true } },
 	},
 	render: () => (
-		<div className="p-8 rounded-lg bg-vanilla-100 dark:bg-background ">
-			<div className="space-y-12">
+		<div className="story-container-full">
+			<div className={styles.columnLayout}>
 				{COLORS.map((color) => (
-					<div key={color} className="space-y-4">
-						<h2 className="text-base font-semibold capitalize text-foreground">{color}</h2>
-						<div className="flex gap-4">
+					<div key={color} className="story-section">
+						<Typography size="base" weight="semibold" className={styles.capitalizeText}>
+							{color}
+						</Typography>
+						<div className="story-row-lg">
 							{/* Filter variants based on color */}
 							{VARIANTS.filter(
 								(variant) =>
 									// Only show outlined and dashed for secondary
-									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed')
+									color === 'secondary' || !(variant === 'outlined' || variant === 'dashed'),
 							).map((variant) => (
-								<div key={variant} className="grid grid-cols-1 gap-4">
+								<div key={variant} className={styles.buttonVariantGrid}>
 									<Button
 										variant={variant}
 										color={color}
@@ -207,13 +217,17 @@ export const Sizes: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="p-8 space-y-8">
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold">Size Variations</h2>
-				<div className="space-y-8">
+		<div className={`story-container-full ${styles.sectionGapLarge}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Size Variations
+				</Typography>
+				<div className={styles.sectionGapLarge}>
 					{[ButtonSize.SM, ButtonSize.MD].map((size) => (
-						<div key={size} className="space-y-4">
-							<h3 className="text-sm font-medium capitalize">{size}</h3>
+						<div key={size} className="story-section">
+							<Typography size="sm" weight="medium" className={styles.capitalizeText}>
+								{size}
+							</Typography>
 							<Button {...args} size={size} prefix={<ChevronLeft />} suffix={<ChevronRight />}>
 								{size} Button
 							</Button>
@@ -245,16 +259,18 @@ export const IconButtons: Story = {
 		},
 	},
 	render: (args) => (
-		<div className="p-8 space-y-8 rounded-lg bg-background">
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold text-foreground">Icon Only Buttons</h2>
-				<p>
+		<div className={`story-container-full ${styles.sectionGapLarge}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Icon Only Buttons
+				</Typography>
+				<Typography>
 					Icon only buttons are buttons that only have an icon as their content. These buttons are
 					useful when you need to display an icon in a button without any text. You can just specify
 					the button as:
 					<pre>&lt;Button suffix=&#123;&lt;Code /&gt;&#125; size=&quot;icon&quot;/&gt;</pre>
-				</p>
-				<div className="flex gap-4 mt-4">
+				</Typography>
+				<div className={`story-row-lg ${styles.marginTopMedium}`}>
 					{VARIANTS.map((variant) => (
 						<Button
 							{...args}
@@ -266,13 +282,15 @@ export const IconButtons: Story = {
 					))}
 				</div>
 			</div>
-			<div className="space-y-4">
-				<h2 className="text-base font-semibold text-foreground">Icon Button Sizes</h2>
-				<p>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Icon Button Sizes
+				</Typography>
+				<Typography>
 					By default, the icon will be displayed at the size of the button. You can also specify the
 					size of the icon by passing the "size" prop to the icon.
-				</p>
-				<div className="flex gap-4 mt-4">
+				</Typography>
+				<div className={`story-row-lg ${styles.marginTopMedium}`}>
 					{[ButtonSize.SM, ButtonSize.MD, ButtonSize.Icon].map((size) => (
 						<Button {...args} key={size} size={size} prefix={<Code />} />
 					))}
@@ -304,17 +322,19 @@ export const ActionButtons: Story = {
 		background: ButtonBackground.Ink500,
 	},
 	render: () => (
-		<div className="space-y-8">
+		<div className={styles.sectionGapLarge}>
 			<div>
-				<h2 className="text-base font-semibold mb-4">Action Buttons</h2>
-				<p className="text-sm mb-4">
-					Action buttons adapt their style based on the background they`re placed on.
-				</p>
+				<Typography size="base" weight="semibold" className={styles.marginBottomMedium}>
+					Action Buttons
+				</Typography>
+				<Typography size="sm" className={styles.marginBottomMedium}>
+					Action buttons adapt their style based on the background they are placed on.
+				</Typography>
 
-				<div className="grid grid-cols-2 gap-8">
+				<div className={styles.twoColumnGrid}>
 					{/* ink-500 background */}
-					<div className="p-6 bg-ink-500 rounded-lg">
-						<p className="text-vanilla-100 mb-4">On ink-500 background</p>
+					<div className={styles.inkBackground500}>
+						<Typography className={styles.lightText}>On ink-500 background</Typography>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink500}
@@ -326,8 +346,8 @@ export const ActionButtons: Story = {
 					</div>
 
 					{/* ink-400 background */}
-					<div className="p-6 bg-ink-400 rounded-lg">
-						<p className="text-vanilla-100 mb-4">On ink-400 background</p>
+					<div className={styles.inkBackground400}>
+						<Typography className={styles.lightText}>On ink-400 background</Typography>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink400}
@@ -339,8 +359,10 @@ export const ActionButtons: Story = {
 					</div>
 
 					{/* vanilla-100 background */}
-					<div className="p-6 bg-vanilla-100 rounded-lg">
-						<p className="text-slate-500 mb-4">On vanilla-100 background</p>
+					<div className={styles.vanillaBackground100}>
+						<Typography color="muted" className={styles.mutedMarginBottom}>
+							On vanilla-100 background
+						</Typography>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla100}
@@ -352,8 +374,10 @@ export const ActionButtons: Story = {
 					</div>
 
 					{/* vanilla-200 background */}
-					<div className="p-6 bg-vanilla-200 rounded-lg">
-						<p className="text-slate-500 mb-4">On vanilla-200 background</p>
+					<div className={styles.vanillaBackground200}>
+						<Typography color="muted" className={styles.mutedMarginBottom}>
+							On vanilla-200 background
+						</Typography>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla200}
@@ -367,10 +391,12 @@ export const ActionButtons: Story = {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-3">Disabled Action Buttons</h3>
-				<div className="grid grid-cols-2 gap-8">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
+					Disabled Action Buttons
+				</Typography>
+				<div className={styles.twoColumnGrid}>
 					{/* Disabled examples */}
-					<div className="p-6 bg-ink-500 rounded-lg">
+					<div className={styles.inkBackground500}>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Ink500}
@@ -381,7 +407,7 @@ export const ActionButtons: Story = {
 							Disabled Action Button
 						</Button>
 					</div>
-					<div className="p-6 bg-vanilla-100 rounded-lg">
+					<div className={styles.vanillaBackground100}>
 						<Button
 							variant={ButtonVariant.Action}
 							background={ButtonBackground.Vanilla100}

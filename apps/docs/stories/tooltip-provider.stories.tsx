@@ -1,5 +1,6 @@
 import { Button, ButtonColor, ButtonVariant, TooltipProvider, TooltipSimple } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './tooltip-provider.stories.module.css';
 
 const meta: Meta<typeof TooltipProvider> = {
 	title: 'Primitive Components/Tooltip/TooltipProvider',
@@ -56,7 +57,7 @@ export const Default: Story = {
 	},
 	render: (args) => (
 		<TooltipProvider {...args}>
-			<div className="p-20 flex items-center justify-center gap-4">
+			<div className={`story-center ${styles.demoArea}`}>
 				<TooltipSimple title="First tooltip">
 					<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
 						Hover me

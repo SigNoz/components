@@ -44,7 +44,7 @@ export const Default: Story = {
 		asChild: true,
 	},
 	render: (args) => (
-		<div className="p-8">
+		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger {...args}>
 					<Button variant="solid" color="secondary">

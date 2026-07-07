@@ -34,19 +34,19 @@ export function useComboboxSelection({
 	setInputValue,
 }: UseComboboxSelectionOptions): UseComboboxSelectionReturn {
 	const [internalValue, setInternalValue] = React.useState<string[]>(() =>
-		normalizeValue(defaultValue)
+		normalizeValue(defaultValue),
 	);
 
 	const selectedValues = isControlled ? normalizeValue(controlledValue) : internalValue;
 
 	const customValues = React.useMemo(
 		() => selectedValues.filter((v) => !itemsMap.has(v)),
-		[selectedValues, itemsMap]
+		[selectedValues, itemsMap],
 	);
 
 	const selectedItem = React.useMemo(
 		() => (multiple ? undefined : itemsMap.get(selectedValues[0] ?? '')),
-		[multiple, itemsMap, selectedValues]
+		[multiple, itemsMap, selectedValues],
 	);
 
 	const handleSelect = React.useCallback(
@@ -65,7 +65,7 @@ export function useComboboxSelection({
 				setOpen?.(false);
 			}
 		},
-		[multiple, onChange, selectedValues, setOpen, setInputValue]
+		[multiple, onChange, selectedValues, setOpen, setInputValue],
 	);
 
 	const handleRemove = React.useCallback(
@@ -74,7 +74,7 @@ export function useComboboxSelection({
 			setInternalValue(newValues);
 			onChange?.(newValues);
 		},
-		[onChange, selectedValues]
+		[onChange, selectedValues],
 	);
 
 	const addValue = React.useCallback(
@@ -91,7 +91,7 @@ export function useComboboxSelection({
 				setOpen?.(false);
 			}
 		},
-		[multiple, onChange, selectedValues, setOpen]
+		[multiple, onChange, selectedValues, setOpen],
 	);
 
 	const clearSelection = React.useCallback(() => {

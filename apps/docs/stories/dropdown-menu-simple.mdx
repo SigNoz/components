@@ -17,16 +17,23 @@ import { Button } from '@signozhq/ui';
 import { Grid3X3, Link2, Trash2 } from '@signozhq/icons';
 
 const items: MenuItem[] = [
-	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{ key: 'view', label: 'View', icon: <Grid3X3 style={{ width: '1rem', height: '1rem' }} /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 style={{ width: '1rem', height: '1rem' }} /> },
 	{ type: 'divider' },
-	{ key: 'delete', label: 'Delete', icon: <Trash2 className="h-4 w-4" />, danger: true },
+	{
+		key: 'delete',
+		label: 'Delete',
+		icon: <Trash2 style={{ width: '1rem', height: '1rem' }} />,
+		danger: true,
+	},
 ];
 
 export default function MyComponent() {
 	return (
 		<DropdownMenuSimple menu={{ items }}>
-			<Button variant="solid" color="secondary">Open</Button>
+			<Button variant="solid" color="secondary">
+				Open
+			</Button>
 		</DropdownMenuSimple>
 	);
 }
@@ -42,15 +49,27 @@ Use `icon` for a left icon and `rightIcon` for a right icon on any item:
 import { Grid3X3, Link2, Check, Trash2 } from '@signozhq/icons';
 
 const items: MenuItem[] = [
-	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" />, rightIcon: <Check className="h-4 w-4" /> },
-	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{
+		key: 'view',
+		label: 'View',
+		icon: <Grid3X3 style={{ width: '1rem', height: '1rem' }} />,
+		rightIcon: <Check style={{ width: '1rem', height: '1rem' }} />,
+	},
+	{ key: 'copy', label: 'Copy link', icon: <Link2 style={{ width: '1rem', height: '1rem' }} /> },
 	{ type: 'divider' },
-	{ key: 'delete', label: 'Delete dashboard', icon: <Trash2 className="h-4 w-4" />, danger: true },
+	{
+		key: 'delete',
+		label: 'Delete dashboard',
+		icon: <Trash2 style={{ width: '1rem', height: '1rem' }} />,
+		danger: true,
+	},
 ];
 
 <DropdownMenuSimple menu={{ items }}>
-	<Button variant="solid" color="secondary">View Options</Button>
-</DropdownMenuSimple>
+	<Button variant="solid" color="secondary">
+		View Options
+	</Button>
+</DropdownMenuSimple>;
 ```
 
 ## Destructive Items
@@ -59,10 +78,15 @@ Set `danger: true` on any item to style it as a destructive action:
 
 ```tsx
 const items: MenuItem[] = [
-	{ key: 'view', label: 'View', icon: <Grid3X3 className="h-4 w-4" /> },
-	{ key: 'copy', label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
+	{ key: 'view', label: 'View', icon: <Grid3X3 style={{ width: '1rem', height: '1rem' }} /> },
+	{ key: 'copy', label: 'Copy link', icon: <Link2 style={{ width: '1rem', height: '1rem' }} /> },
 	{ type: 'divider' },
-	{ key: 'delete', label: 'Delete dashboard', icon: <Trash2 className="h-4 w-4" />, danger: true },
+	{
+		key: 'delete',
+		label: 'Delete dashboard',
+		icon: <Trash2 style={{ width: '1rem', height: '1rem' }} />,
+		danger: true,
+	},
 ];
 ```
 
@@ -78,10 +102,23 @@ const items: MenuItem[] = [
 		type: 'group',
 		label: 'My Account',
 		children: [
-			{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
-			{ key: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+			{
+				key: 'profile',
+				label: 'Profile',
+				icon: <User style={{ width: '1rem', height: '1rem' }} />,
+			},
+			{
+				key: 'settings',
+				label: 'Settings',
+				icon: <Settings style={{ width: '1rem', height: '1rem' }} />,
+			},
 			{ type: 'divider' },
-			{ key: 'logout', label: 'Log out', icon: <LogOut className="h-4 w-4" />, danger: true },
+			{
+				key: 'logout',
+				label: 'Log out',
+				icon: <LogOut style={{ width: '1rem', height: '1rem' }} />,
+				danger: true,
+			},
 		],
 	},
 ];
@@ -163,10 +200,14 @@ const items: MenuItem[] = [
 	{
 		key: 'invite',
 		label: 'Invite users',
-		icon: <User className="h-4 w-4" />,
+		icon: <User style={{ width: '1rem', height: '1rem' }} />,
 		children: [
-			{ key: 'email', label: 'Email', icon: <Copy className="h-4 w-4" /> },
-			{ key: 'message', label: 'Message', icon: <Link2 className="h-4 w-4" /> },
+			{ key: 'email', label: 'Email', icon: <Copy style={{ width: '1rem', height: '1rem' }} /> },
+			{
+				key: 'message',
+				label: 'Message',
+				icon: <Link2 style={{ width: '1rem', height: '1rem' }} />,
+			},
 			{ type: 'divider' },
 			{ key: 'more', label: 'More...' },
 		],
@@ -199,8 +240,12 @@ import { useMemo, useState } from 'react';
 import { Search, User, Settings } from '@signozhq/icons';
 
 const allItems: MenuItem[] = [
-	{ key: 'profile', label: 'Profile', icon: <User className="h-4 w-4" /> },
-	{ key: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
+	{ key: 'profile', label: 'Profile', icon: <User style={{ width: '1rem', height: '1rem' }} /> },
+	{
+		key: 'settings',
+		label: 'Settings',
+		icon: <Settings style={{ width: '1rem', height: '1rem' }} />,
+	},
 	{ key: 'billing', label: 'Billing' },
 	{ type: 'divider' },
 	{ key: 'logout', label: 'Log out', danger: true },
@@ -224,7 +269,7 @@ function SearchableMenu() {
 				items: filteredItems,
 				search: {
 					placeholder: 'Search menu...',
-					searchIcon: <Search className="h-4 w-4" />,
+					searchIcon: <Search style={{ width: '1rem', height: '1rem' }} />,
 					onSearchChange: setQuery,
 				},
 			}}

@@ -9,6 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AnimatePresence } from 'motion/react';
@@ -57,9 +58,9 @@ export const Default: Story = {
 								<DialogTitle>Dialog title</DialogTitle>
 							</DialogHeader>
 							<DialogDescription>
-								<p className="text-sm font-normal leading-5 font-inter font-regular">
+								<Typography size="sm">
 									Dialog content goes here. Use the primitive dialog components for full control.
-								</p>
+								</Typography>
 							</DialogDescription>
 							<DialogFooter>
 								<Button

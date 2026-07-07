@@ -1,6 +1,7 @@
 import { Command, CommandEmpty, CommandInput, CommandList } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import styles from './command-empty.stories.module.css';
 import { emptyArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandEmpty> = {
@@ -21,7 +22,7 @@ export const Default: Story = {
 		children: 'No results. Try a different search.',
 	},
 	render: (args) => (
-		<div style={{ width: 420 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder="Search…" />
 				<CommandList>

@@ -1,5 +1,6 @@
 import { type RadioColorProps, RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import styles from './radio-group.stories.module.css';
 
 // Import RadioGroupItem stories to reuse their args
 import * as RadioGroupItemStories from './radio-group-item.stories.js';
@@ -131,12 +132,10 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
 	render: () => (
-		<div className="space-y-4">
+		<div className="story-section">
 			{['robin', 'forest', 'amber', 'sienna', 'cherry', 'sakura', 'aqua'].map((c) => (
-				<div key={c} className="flex items-start gap-6">
-					<div style={{ width: 120 }} className="capitalize">
-						{c}
-					</div>
+				<div key={c} className={`story-row-lg ${styles.variantRow}`}>
+					<div className={styles.variantLabel}>{c}</div>
 
 					<RadioGroup color={c as RadioColorProps}>
 						<RadioGroupItem value="default" id={`radio-${c}-default`}>

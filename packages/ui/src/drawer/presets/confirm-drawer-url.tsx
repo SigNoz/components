@@ -35,6 +35,6 @@ export type ConfirmDrawerUrlProps = Omit<ConfirmDialogUrlProps, 'position' | 'he
 export const ConfirmDrawerUrl = React.forwardRef<HTMLDivElement, ConfirmDrawerUrlProps>(
 	({ direction = 'right', ...props }, ref) => {
 		return <ConfirmDialogUrl ref={ref} {...props} position={direction} heightMode="full" />;
-	}
+	},
 );
 ConfirmDrawerUrl.displayName = 'ConfirmDrawerUrl';

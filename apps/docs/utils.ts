@@ -100,7 +100,7 @@ export const getTransformedColorTokens = () => transformColorTokens(colorTokens.
  */
 function transformSpacingTokens(spacingTokens: SpacingTokens): Record<string, string> {
 	return Object.fromEntries(
-		Object.entries(spacingTokens.padding).map(([key, { value }]) => [key, value])
+		Object.entries(spacingTokens.padding).map(([key, { value }]) => [key, value]),
 	);
 }
 
@@ -148,7 +148,7 @@ function transformTypographyTokens(typographyTokens: TypographyTokens): Transfor
 			Object.entries(typographyTokens[property]).map(([key, { value }]) => [
 				key.toUpperCase(),
 				value,
-			])
+			]),
 		);
 
 	return {

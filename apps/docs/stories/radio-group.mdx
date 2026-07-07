@@ -39,15 +39,15 @@ import { RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
 export default function MyComponent() {
 	return (
 		<RadioGroup defaultValue="option1">
-			<div className="flex items-center space-x-2">
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 				<RadioGroupItem value="option1" id="option1-radio" />
 				<RadioGroupLabel htmlFor="option1-radio">Option 1</RadioGroupLabel>
 			</div>
-			<div className="flex items-center space-x-2">
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 				<RadioGroupItem value="option2" id="option2-radio" />
 				<RadioGroupLabel htmlFor="option2-radio">Option 2</RadioGroupLabel>
 			</div>
-			<div className="flex items-center space-x-2">
+			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
 				<RadioGroupItem value="option3" id="option3-radio" disabled />
 				<RadioGroupLabel htmlFor="option3-radio" aria-disabled="true">
 					Option 3 (Disabled)

@@ -1,0 +1,61 @@
+.gridHalfWidth {
+  max-width: 50%;
+}
+
+.marginBottomSmall {
+  margin-bottom: 0.5rem;
+}
+
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rowGapMedium {
+  gap: 0.75rem;
+}
+
+.labelWidth {
+  width: 4rem;
+}
+
+.badgeWidthContainer {
+  --badge-width: 180px;
+}
+
+.badgeWidthFull {
+  --badge-width: 100%;
+  padding: 0.5rem;
+}
+
+.badgeWidthLarge {
+  --badge-width: 200px;
+}
+
+.badgeWidthMedium {
+  --badge-width: 160px;
+}
+
+.constrainedContainer {
+  width: 220px;
+}
+
+.marginBottomMedium {
+  margin-bottom: 0.75rem;
+}
+
+.columnGapMedium {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.linkStyle {
+  cursor: pointer;
+  text-decoration: none;
+}

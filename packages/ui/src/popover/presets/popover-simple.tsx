@@ -85,7 +85,7 @@ export const PopoverSimple = React.forwardRef<HTMLDivElement, PopoverSimpleProps
 			avoidCollisions,
 			collisionPadding,
 		},
-		ref
+		ref,
 	) => {
 		return (
 			<Popover
@@ -114,6 +114,6 @@ export const PopoverSimple = React.forwardRef<HTMLDivElement, PopoverSimpleProps
 				</PopoverContent>
 			</Popover>
 		);
-	}
+	},
 );
 PopoverSimple.displayName = 'PopoverSimple';

@@ -9,6 +9,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { titleArgTypes } from './shared/dialog-drawer-arg-types.js';
@@ -42,9 +43,9 @@ export const Default: Story = {
 					<DialogTitle {...args} />
 				</DialogHeader>
 				<DialogDescription>
-					<p className="text-sm font-normal leading-5 font-inter font-regular">
+					<Typography size="sm">
 						The title labels the dialog content for assistive technologies.
-					</p>
+					</Typography>
 				</DialogDescription>
 			</DialogContent>
 		</Dialog>
@@ -68,9 +69,9 @@ export const WithIcon: Story = {
 					<DialogTitle {...args} />
 				</DialogHeader>
 				<DialogDescription>
-					<p className="text-sm font-normal leading-5 font-inter font-regular">
+					<Typography size="sm">
 						Use the icon prop to visually differentiate dialog types.
-					</p>
+					</Typography>
 				</DialogDescription>
 			</DialogContent>
 		</Dialog>

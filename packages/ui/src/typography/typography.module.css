@@ -1,12 +1,14 @@
 .typography {
 	margin: var(--typography-margin, 0);
 	padding: var(--typography-padding, 0);
+	border: var(--typography-border, 0);
 	font-family: var(--typography-font-family, inherit);
 	font-size: var(--typography-font-size, var(--periscope-font-size-base, 14px));
 	font-weight: var(--typography-font-weight, var(--font-weight-normal, 400));
 	line-height: var(--typography-line-height, var(--line-height-normal, 1.5));
 	color: var(--typography-color, inherit);
 	text-align: var(--typography-text-align, unset);
+	vertical-align: var(--typography-vertical-align, baseline);
 
 	&[data-variant='heading'] {
 		--typography-font-weight: var(--font-weight-bold, 700);
@@ -16,6 +18,14 @@
 	&[data-variant='text'] {
 		display: var(--typography-text-display, inline);
 		--typography-line-height: var(--line-height-normal, 1.5);
+	}
+
+	&[data-display='block'] {
+		display: block;
+	}
+
+	&[data-display='inline'] {
+		display: inline;
 	}
 
 	&[data-variant='title'] {

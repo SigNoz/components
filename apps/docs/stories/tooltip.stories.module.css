@@ -1,0 +1,30 @@
+.demoArea {
+	padding: 80px;
+}
+
+.showcaseContainer {
+	min-height: 600px;
+}
+
+.showcaseContent {
+	display: flex;
+	flex-direction: column;
+	gap: 64px;
+}
+
+.positionsContainer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 32px;
+	align-items: center;
+}
+
+.alignContainer {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 32px;
+}
+
+.multilineOpacity {
+	opacity: 0.9;
+}

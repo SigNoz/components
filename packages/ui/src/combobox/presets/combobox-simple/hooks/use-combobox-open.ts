@@ -19,7 +19,7 @@ export function useComboboxOpen({
 			if (disabled) return;
 			setOpenInternal(value);
 		},
-		[disabled]
+		[disabled],
 	);
 
 	return { open, setOpen };

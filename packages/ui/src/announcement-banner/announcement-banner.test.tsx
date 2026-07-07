@@ -21,7 +21,7 @@ describe('AnnouncementBanner', () => {
 		render(
 			<AnnouncementBanner>
 				<strong>Heads up</strong>
-			</AnnouncementBanner>
+			</AnnouncementBanner>,
 		);
 
 		const alert = screen.getByRole('alert');
@@ -29,16 +29,14 @@ describe('AnnouncementBanner', () => {
 		expect(alert).toHaveTextContent('Heads up');
 	});
 
-	it.each([
-		'warning',
-		'info',
-		'success',
-		'error',
-	] as const)('renders %s variant correctly', (type) => {
-		renderBanner({ type });
-		const alert = screen.getByRole('alert');
-		expect(alert).toHaveAttribute('data-type', type);
-	});
+	it.each(['warning', 'info', 'success', 'error'] as const)(
+		'renders %s variant correctly',
+		(type) => {
+			renderBanner({ type });
+			const alert = screen.getByRole('alert');
+			expect(alert).toHaveAttribute('data-type', type);
+		},
+	);
 
 	it('calls action onClick when action button is clicked', () => {
 		const onClick = vi.fn();
@@ -53,7 +51,7 @@ describe('AnnouncementBanner', () => {
 		render(
 			<AnnouncementBanner onClose={undefined} icon={null}>
 				Test message
-			</AnnouncementBanner>
+			</AnnouncementBanner>,
 		);
 
 		expect(screen.queryByRole('button', { name: /dismiss/i })).not.toBeInTheDocument();
@@ -67,7 +65,7 @@ describe('PersistedAnnouncementBanner', () => {
 		render(
 			<PersistedAnnouncementBanner storageKey={STORAGE_KEY} onDismiss={onDismiss}>
 				Test message
-			</PersistedAnnouncementBanner>
+			</PersistedAnnouncementBanner>,
 		);
 
 		fireEvent.click(screen.getByRole('button', { name: /dismiss/i }));
@@ -82,7 +80,7 @@ describe('PersistedAnnouncementBanner', () => {
 		render(
 			<PersistedAnnouncementBanner storageKey={STORAGE_KEY}>
 				Test message
-			</PersistedAnnouncementBanner>
+			</PersistedAnnouncementBanner>,
 		);
 
 		expect(screen.queryByRole('alert')).not.toBeInTheDocument();

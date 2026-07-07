@@ -95,7 +95,7 @@ export const DropdownMenuMultiStep = React.forwardRef<HTMLDivElement, DropdownMe
 				</DropdownMenuPrimitive.Root>
 			</MultiStepContext.Provider>
 		);
-	}
+	},
 );
 
 DropdownMenuMultiStep.displayName = 'DropdownMenuMultiStep';
@@ -165,7 +165,7 @@ export const DropdownMenuMultiStepContent = React.forwardRef<
 >(
 	(
 		{ primaryContent, secondaryContent, secondaryLabel, className, sideOffset = 4, ...props },
-		ref
+		ref,
 	) => {
 		const context = React.useContext(MultiStepContext);
 		if (!context) {
@@ -199,7 +199,7 @@ export const DropdownMenuMultiStepContent = React.forwardRef<
 				</DropdownMenuPrimitive.Content>
 			</DropdownMenuPortal>
 		);
-	}
+	},
 );
 
 DropdownMenuMultiStepContent.displayName = 'DropdownMenuMultiStepContent';

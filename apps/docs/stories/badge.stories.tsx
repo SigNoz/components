@@ -1,6 +1,7 @@
-import { Badge, type BadgeColor } from '@signozhq/ui';
+import { Badge, type BadgeColor, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from 'storybook/test';
+import styles from './badge.stories.module.css';
 
 // Icon Components for examples
 const CheckIcon = () => (
@@ -259,7 +260,7 @@ export const AllColors: Story = {
 	render: () => {
 		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
 		return (
-			<div className="flex gap-2 max-w-1/2 flex-wrap">
+			<div className={`story-grid ${styles.gridHalfWidth}`}>
 				{colors.map((color) => (
 					<Badge key={color} color={color}>
 						{color.charAt(0).toUpperCase() + color.slice(1)}
@@ -289,7 +290,7 @@ export const OutlineVariant: Story = {
 	render: () => {
 		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
 		return (
-			<div className="flex gap-2 flex-wrap">
+			<div className="story-grid">
 				{colors.map((color) => (
 					<Badge key={color} variant="outline" color={color}>
 						{color.charAt(0).toUpperCase() + color.slice(1)}
@@ -317,12 +318,12 @@ export const StatusIndicators: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div className="story-section">
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					System Status
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="forest">
 						<CheckIcon />
 						Online
@@ -342,10 +343,10 @@ export const StatusIndicators: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					User Status
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="forest" variant="outline">
 						<CheckIcon />
 						Active
@@ -384,48 +385,48 @@ export const NotificationCounts: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div className="story-section">
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Message Notifications
-				</h3>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
+				</Typography>
+				<div className="story-row-lg">
+					<div className="story-row">
 						<BellIcon />
-						<span className="text-vanilla-900 dark:text-vanilla-100">Messages</span>
+						<Typography>Messages</Typography>
 						<Badge color="cherry">12</Badge>
 					</div>
-					<div className="flex items-center gap-2">
+					<div className="story-row">
 						<BellIcon />
-						<span className="text-vanilla-900 dark:text-vanilla-100">Alerts</span>
+						<Typography>Alerts</Typography>
 						<Badge color="amber">3</Badge>
 					</div>
-					<div className="flex items-center gap-2">
+					<div className="story-row">
 						<BellIcon />
-						<span className="text-vanilla-900 dark:text-vanilla-100">Updates</span>
+						<Typography>Updates</Typography>
 						<Badge color="aqua">99+</Badge>
 					</div>
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					With Outline Variant
-				</h3>
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
-						<span className="text-vanilla-900 dark:text-vanilla-100">Inbox</span>
+				</Typography>
+				<div className="story-row-lg">
+					<div className="story-row">
+						<Typography>Inbox</Typography>
 						<Badge color="robin" variant="outline">
 							5
 						</Badge>
 					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-vanilla-900 dark:text-vanilla-100">Drafts</span>
+					<div className="story-row">
+						<Typography>Drafts</Typography>
 						<Badge color="vanilla" variant="outline">
 							2
 						</Badge>
 					</div>
-					<div className="flex items-center gap-2">
-						<span className="text-vanilla-900 dark:text-vanilla-100">Archive</span>
+					<div className="story-row">
+						<Typography>Archive</Typography>
 						<Badge color="sakura" variant="outline">
 							128
 						</Badge>
@@ -453,12 +454,12 @@ export const WithIcons: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div className="story-section">
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Success & Verification
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="forest">
 						<CheckIcon />
 						Verified
@@ -474,10 +475,10 @@ export const WithIcons: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Alerts & Warnings
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="amber">
 						<AlertIcon />
 						Warning
@@ -493,10 +494,10 @@ export const WithIcons: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Notifications
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="cherry">
 						<BellIcon />
 						New Alerts
@@ -528,12 +529,12 @@ export const CapitalizedText: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-4">
+		<div className="story-section">
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Priority Levels
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="cherry" capitalize>
 						Critical
 					</Badge>
@@ -549,10 +550,10 @@ export const CapitalizedText: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Status Codes
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge color="forest" variant="outline" capitalize>
 						200 OK
 					</Badge>
@@ -565,16 +566,20 @@ export const CapitalizedText: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Comparison: Normal vs Capitalized
-				</h3>
-				<div className="flex gap-4 flex-wrap">
-					<div className="flex flex-col gap-2">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Normal</span>
+				</Typography>
+				<div className="story-grid-lg">
+					<div className="story-column">
+						<Typography size="xs" color="muted">
+							Normal
+						</Typography>
 						<Badge color="robin">Active User</Badge>
 					</div>
-					<div className="flex flex-col gap-2">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300">Capitalized</span>
+					<div className="story-column">
+						<Typography size="xs" color="muted">
+							Capitalized
+						</Typography>
 						<Badge color="robin" capitalize>
 							Active User
 						</Badge>
@@ -603,31 +608,37 @@ export const TextEllipsisPositions: Story = {
 		textEllipsis: { control: false },
 	},
 	render: () => (
-		<div className="space-y-6">
+		<div className={styles.columnLayout}>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Ellipsis Positions
-				</h3>
-				<div className="flex flex-col gap-3">
-					<div className="flex items-center gap-3">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">Center:</span>
-						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
+				</Typography>
+				<div className="story-section-sm">
+					<div className={`story-row ${styles.rowGapMedium}`}>
+						<Typography size="xs" color="muted" className={styles.labelWidth}>
+							Center:
+						</Typography>
+						<div className={styles.badgeWidthContainer}>
 							<Badge color="robin" textEllipsis="center">
 								This is a very long badge text that will be truncated in the center
 							</Badge>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">Start:</span>
-						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
+					<div className={`story-row ${styles.rowGapMedium}`}>
+						<Typography size="xs" color="muted" className={styles.labelWidth}>
+							Start:
+						</Typography>
+						<div className={styles.badgeWidthContainer}>
 							<Badge color="forest" textEllipsis="start">
 								path/to/very/long/filename/that/needs/truncation.tsx
 							</Badge>
 						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<span className="text-xs text-vanilla-600 dark:text-vanilla-300 w-16">End:</span>
-						<div style={{ '--badge-width': '180px' } as React.CSSProperties}>
+					<div className={`story-row ${styles.rowGapMedium}`}>
+						<Typography size="xs" color="muted" className={styles.labelWidth}>
+							End:
+						</Typography>
+						<div className={styles.badgeWidthContainer}>
 							<Badge color="amber" textEllipsis="end">
 								A long description that should be truncated at the end
 							</Badge>
@@ -636,11 +647,11 @@ export const TextEllipsisPositions: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Boolean Shorthand (defaults to center)
-				</h3>
-				<div className="flex flex-col gap-2">
-					<div style={{ '--badge-width': '200px' } as React.CSSProperties}>
+				</Typography>
+				<div className="story-section-sm">
+					<div className={styles.badgeWidthLarge}>
 						<Badge color="aqua" textEllipsis>
 							Using textEllipsis=true defaults to center truncation
 						</Badge>
@@ -648,16 +659,16 @@ export const TextEllipsisPositions: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					With Outline Variant
-				</h3>
-				<div className="flex flex-col gap-2">
-					<div style={{ '--badge-width': '160px' } as React.CSSProperties}>
+				</Typography>
+				<div className="story-section-sm">
+					<div className={styles.badgeWidthMedium}>
 						<Badge color="cherry" variant="outline" textEllipsis="center">
 							Error: Connection timeout after 30 seconds of inactivity
 						</Badge>
 					</div>
-					<div style={{ '--badge-width': '160px' } as React.CSSProperties}>
+					<div className={styles.badgeWidthMedium}>
 						<Badge color="sakura" variant="outline" textEllipsis="end">
 							User: very.long.email.address@example.domain.com
 						</Badge>
@@ -665,15 +676,14 @@ export const TextEllipsisPositions: Story = {
 				</div>
 			</div>
 			<div>
-				<h3 className="text-sm font-medium mb-2 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
 					Container Constrained
-				</h3>
-				<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+				</Typography>
+				<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
 					Badges inside a narrow container will truncate automatically with textEllipsis
-				</p>
+				</Typography>
 				<div
-					className="flex flex-col gap-2 p-2 border border-vanilla-300 dark:border-vanilla-700 rounded"
-					style={{ width: '220px', '--badge-width': '100%' } as React.CSSProperties}
+					className={`story-panel story-section-sm ${styles.constrainedContainer} ${styles.badgeWidthFull}`}
 				>
 					<Badge color="robin" textEllipsis="center">
 						kubernetes-deployment-production-east-us-2
@@ -712,7 +722,7 @@ export const Closeable: Story = {
 		closeAriaLabel: { control: false },
 	},
 	render: () => (
-		<div className="flex gap-2 flex-wrap">
+		<div className="story-grid">
 			<Badge closable color="robin" onClose={fn()} closeAriaLabel="Remove React tag">
 				React
 			</Badge>
@@ -752,27 +762,27 @@ export const UsingAsChild: Story = {
 		asChild: { control: false },
 	},
 	render: () => (
-		<div className="space-y-6">
+		<div className={styles.columnLayout}>
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomMedium}>
 					Regular Badge vs asChild Badge
-				</h3>
-				<div className="space-y-3">
+				</Typography>
+				<div className={styles.columnGapMedium}>
 					<div>
-						<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+						<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
 							Regular Badge (non-interactive span)
-						</p>
+						</Typography>
 						<Badge color="robin">Static Badge</Badge>
 					</div>
 					<div>
-						<p className="text-xs text-vanilla-600 dark:text-vanilla-300 mb-2">
+						<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
 							asChild Badge (interactive button)
-						</p>
+						</Typography>
 						<Badge asChild color="robin">
 							<button
 								type="button"
 								onClick={() => alert('Button badge clicked!')}
-								className="!cursor-pointer"
+								className={styles.cursorPointer}
 							>
 								Interactive Badge
 							</button>
@@ -782,12 +792,16 @@ export const UsingAsChild: Story = {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomMedium}>
 					Filter & Action Badges
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge asChild color="robin" variant="outline">
-						<button type="button" onClick={() => alert('All filter')} className="!cursor-pointer">
+						<button
+							type="button"
+							onClick={() => alert('All filter')}
+							className={styles.cursorPointer}
+						>
 							All
 						</button>
 					</Badge>
@@ -795,7 +809,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Active filter')}
-							className="!cursor-pointer"
+							className={styles.cursorPointer}
 						>
 							<CheckIcon />
 							Active
@@ -805,7 +819,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Pending filter')}
-							className="!cursor-pointer"
+							className={styles.cursorPointer}
 						>
 							Pending
 						</button>
@@ -814,7 +828,7 @@ export const UsingAsChild: Story = {
 						<button
 							type="button"
 							onClick={() => alert('Remove filter')}
-							className="!cursor-pointer"
+							className={styles.cursorPointer}
 						>
 							<XIcon />
 							Clear
@@ -824,35 +838,23 @@ export const UsingAsChild: Story = {
 			</div>
 
 			<div>
-				<h3 className="text-sm font-medium mb-3 text-vanilla-800 dark:text-vanilla-300">
+				<Typography size="sm" weight="medium" className={styles.marginBottomMedium}>
 					Navigation Links
-				</h3>
-				<div className="flex gap-2 flex-wrap">
+				</Typography>
+				<div className="story-grid">
 					<Badge asChild color="aqua" variant="outline">
-						<a
-							href="#docs"
-							onClick={(e) => e.preventDefault()}
-							className="cursor-pointer no-underline"
-						>
+						<a href="#docs" onClick={(e) => e.preventDefault()} className={styles.linkStyle}>
 							Documentation
 						</a>
 					</Badge>
 					<Badge asChild color="robin">
-						<a
-							href="#guide"
-							onClick={(e) => e.preventDefault()}
-							className="cursor-pointer no-underline"
-						>
+						<a href="#guide" onClick={(e) => e.preventDefault()} className={styles.linkStyle}>
 							<InfoIcon />
 							Getting Started
 						</a>
 					</Badge>
 					<Badge asChild color="sakura" variant="outline">
-						<a
-							href="#examples"
-							onClick={(e) => e.preventDefault()}
-							className="cursor-pointer no-underline"
-						>
+						<a href="#examples" onClick={(e) => e.preventDefault()} className={styles.linkStyle}>
 							Examples
 						</a>
 					</Badge>

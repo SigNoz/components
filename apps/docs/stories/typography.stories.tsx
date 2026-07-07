@@ -2,6 +2,7 @@ import { Typography } from '@signozhq/ui';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
 import type React from 'react';
 import { getTransformedTypographyTokens } from '../utils.js';
+import styles from './typography.stories.module.css';
 
 const typography = getTransformedTypographyTokens();
 
@@ -14,11 +15,11 @@ const getFontWeight = (variant: string): string => {
 };
 
 const FontSizeShowcase: React.FC = () => (
-	<div className="p-5">
-		<h1 className="mb-5 text-lg font-bold text-vanilla-100">Font Sizes</h1>
-		<div className="grid grid-cols-1 gap-4">
+	<div className={styles.showcaseContainer}>
+		<h1 className={styles.showcaseTitle}>Font Sizes</h1>
+		<div className={styles.showcaseGrid}>
 			{Object.keys(typography.FONTSIZE).map((variant) => (
-				<div key={variant} className="text-vanilla-100">
+				<div key={variant} className={styles.showcaseItem}>
 					<h2 style={{ fontSize: getFontSize(variant) }}>
 						{variant} - {getFontSize(variant)}
 					</h2>
@@ -32,11 +33,11 @@ const FontSizeShowcase: React.FC = () => (
 );
 
 const FontWeightShowcase: React.FC = () => (
-	<div className="p-5">
-		<h1 className="mb-5 text-lg font-bold text-vanilla-100">Font Weights</h1>
-		<div className="grid grid-cols-1 gap-4">
+	<div className={styles.showcaseContainer}>
+		<h1 className={styles.showcaseTitle}>Font Weights</h1>
+		<div className={styles.showcaseGrid}>
 			{Object.keys(typography.FONTWEIGHT).map((variant) => (
-				<div key={variant} className="text-vanilla-100">
+				<div key={variant} className={styles.showcaseItem}>
 					<h2 style={{ fontWeight: getFontWeight(variant) }}>
 						{variant} - {getFontWeight(variant)}
 					</h2>
@@ -208,7 +209,7 @@ export const Playground: Story = {
 		muted: false,
 	},
 	render: (props) => (
-		<div className="p-6">
+		<div className={styles.playgroundContainer}>
 			<Typography {...props} />
 		</div>
 	),
@@ -235,13 +236,10 @@ export const SemanticSizes: Story = {
 		] as const;
 
 		return (
-			<div className="space-y-4 p-6">
+			<div className={styles.sizesContainer}>
 				{sizes.map(({ name, px }) => (
-					<div key={name} className="flex items-baseline gap-4">
-						<span
-							className="text-vanilla-400 shrink-0"
-							style={{ width: 100, fontSize: 12, textAlign: 'right' }}
-						>
+					<div key={name} className={styles.sizeRow}>
+						<span className={styles.sizeLabel}>
 							{name} ({px})
 						</span>
 						<Typography size={name}>The quick brown fox jumps over the lazy dog</Typography>
@@ -278,15 +276,10 @@ export const AllSizes: Story = {
 		] as const;
 
 		return (
-			<div className="space-y-4 p-6">
+			<div className={styles.sizesContainer}>
 				{sizes.map((s) => (
-					<div key={s} className="flex items-baseline gap-4">
-						<span
-							className="text-vanilla-400 shrink-0"
-							style={{ width: 48, fontSize: 12, textAlign: 'right' }}
-						>
-							{s}
-						</span>
+					<div key={s} className={styles.sizeRow}>
+						<span className={styles.sizeLabelSmall}>{s}</span>
 						<Typography size={s}>The quick brown fox jumps over the lazy dog</Typography>
 					</div>
 				))}
@@ -316,13 +309,10 @@ export const AllWeights: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
+		<div className={styles.sizesContainer}>
 			{ALL_WEIGHTS.map(({ name, value }) => (
-				<div key={name} className="flex items-baseline gap-4">
-					<span
-						className="text-vanilla-400 shrink-0"
-						style={{ width: 110, fontSize: 12, textAlign: 'right' }}
-					>
+				<div key={name} className={styles.sizeRow}>
+					<span className={styles.weightLabel}>
 						{name.toUpperCase()} - {value}
 					</span>
 					<Typography size="xl" weight={name}>
@@ -344,7 +334,7 @@ export const HeadingVariant: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
+		<div className={styles.sizesContainer}>
 			<Typography variant="title" as="h1" size="5xl">
 				Heading 1
 			</Typography>
@@ -377,7 +367,7 @@ export const TextVariant: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
+		<div className={styles.sizesContainer}>
 			<div>
 				<Typography size="lg">
 					This is a paragraph of body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -402,19 +392,19 @@ export const Alignment: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
-			<div className="w-100">
-				<Typography align="left" size="lg" className="w-100">
+		<div className={styles.sizesContainer}>
+			<div className={styles.alignmentRow}>
+				<Typography align="left" size="lg" className={styles.alignmentRow}>
 					Left-aligned text
 				</Typography>
 			</div>
-			<div className="w-100">
-				<Typography align="center" size="lg" className="w-100">
+			<div className={styles.alignmentRow}>
+				<Typography align="center" size="lg" className={styles.alignmentRow}>
 					Center-aligned text
 				</Typography>
 			</div>
-			<div className="w-100">
-				<Typography align="right" size="lg" className="w-100">
+			<div className={styles.alignmentRow}>
+				<Typography align="right" size="lg" className={styles.alignmentRow}>
 					Right-aligned text
 				</Typography>
 			</div>
@@ -432,9 +422,9 @@ export const Truncation: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-6 p-6" style={{ maxWidth: 400 }}>
+		<div className={styles.truncationContainer}>
 			<div>
-				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+				<Typography size="sm" muted className={styles.truncationLabel}>
 					truncate=1
 				</Typography>
 				<Typography truncate={1} size="base">
@@ -443,7 +433,7 @@ export const Truncation: Story = {
 				</Typography>
 			</div>
 			<div>
-				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+				<Typography size="sm" muted className={styles.truncationLabel}>
 					truncate=2
 				</Typography>
 				<Typography truncate={2} size="base">
@@ -453,7 +443,7 @@ export const Truncation: Story = {
 				</Typography>
 			</div>
 			<div>
-				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+				<Typography size="sm" muted className={styles.truncationLabel}>
 					truncate=3
 				</Typography>
 				<Typography truncate={3} size="base">
@@ -477,7 +467,7 @@ export const MutedState: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-2 p-6">
+		<div className={styles.colorContainer}>
 			<div>
 				<Typography size="lg" weight="bold">
 					Primary heading text
@@ -504,7 +494,7 @@ export const ColorVariants: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-2 p-6">
+		<div className={styles.colorContainer}>
 			<div>
 				<Typography>Default text</Typography>
 			</div>
@@ -533,7 +523,7 @@ export const TextDecorations: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-2 p-6">
+		<div className={styles.colorContainer}>
 			<div>
 				<Typography strong>Strong/bold text</Typography>
 			</div>
@@ -561,7 +551,7 @@ export const TitleLevels: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
+		<div className={styles.sizesContainer}>
 			<Typography.Title level={1}>Heading Level 1 (h1)</Typography.Title>
 			<Typography.Title level={2}>Heading Level 2 (h2)</Typography.Title>
 			<Typography.Title level={3}>Heading Level 3 (h3)</Typography.Title>
@@ -580,7 +570,7 @@ export const CompoundComponents: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
+		<div className={styles.sizesContainer}>
 			<div>
 				<Typography.Title level={2}>Typography.Title</Typography.Title>
 			</div>
@@ -609,7 +599,7 @@ export const Copyable: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-2 p-6">
+		<div className={styles.colorContainer}>
 			<div>
 				<Typography copyable>Click the icon to copy this text</Typography>
 			</div>
@@ -631,7 +621,7 @@ export const DisabledState: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-2 p-6">
+		<div className={styles.colorContainer}>
 			<div>
 				<Typography>Normal text</Typography>
 			</div>
@@ -652,7 +642,7 @@ export const Interactive: Story = {
 		},
 	},
 	render: () => (
-		<div className="space-y-4 p-6">
+		<div className={styles.sizesContainer}>
 			<div>
 				<Typography>Normal text (no hover effect)</Typography>
 			</div>

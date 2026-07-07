@@ -73,7 +73,7 @@ describe('Select single', () => {
 						<SelectItem value="strawberry">Strawberry</SelectItem>
 					</SelectGroup>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 
 		fireEvent.click(screen.getByRole('combobox'));
@@ -92,7 +92,7 @@ describe('Select single', () => {
 					<SelectItem value="apple">Apple</SelectItem>
 					<SelectItem value="banana">Banana</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(screen.getByText('Apple')).toBeInTheDocument();
 
@@ -103,7 +103,7 @@ describe('Select single', () => {
 					<SelectItem value="apple">Apple</SelectItem>
 					<SelectItem value="banana">Banana</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		expect(screen.getByText('Banana')).toBeInTheDocument();
 	});
@@ -116,7 +116,7 @@ describe('Select single', () => {
 					<SelectItem value="apple">Apple</SelectItem>
 					<SelectItem value="banana">Banana</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select>,
 		);
 		fireEvent.click(screen.getByRole('combobox'));
 		expect(screen.getByRole('option', { name: 'Apple' })).toBeInTheDocument();

@@ -1,0 +1,34 @@
+.storyContainer {
+  margin: 1.5rem;
+}
+
+.descriptionPanel {
+  margin-bottom: 1rem;
+}
+
+.descriptionTitle {
+  margin-bottom: 0.5rem;
+}
+
+.descriptionSubtitle {
+  margin-top: 0.25rem;
+}
+
+.textCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.resizableVertical {
+  height: 500px;
+}
+
+.gradientBlueIndigo {
+  background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+}
+
+.gradientAmberOrange {
+  background: linear-gradient(to bottom right, #fffbeb, #ffedd5);
+}

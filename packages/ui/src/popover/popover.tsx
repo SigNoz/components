@@ -124,7 +124,7 @@ export const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTrigger
 				{...props}
 			/>
 		);
-	}
+	},
 );
 PopoverTrigger.displayName = 'PopoverTrigger';
 
@@ -175,7 +175,7 @@ export const PopoverAnchor = React.forwardRef<HTMLDivElement, PopoverAnchorProps
 				{...props}
 			/>
 		);
-	}
+	},
 );
 PopoverAnchor.displayName = 'PopoverAnchor';
 
@@ -228,7 +228,7 @@ export const PopoverArrow = React.forwardRef<SVGSVGElement, PopoverArrowProps>(
 				</svg>
 			</PopoverPrimitive.Arrow>
 		);
-	}
+	},
 );
 PopoverArrow.displayName = 'PopoverArrow';
 
@@ -373,7 +373,7 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentPro
 			withPortal = true,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const popoverContent = (
 			<PopoverPrimitive.Content
@@ -395,7 +395,7 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentPro
 		}
 
 		return <PopoverPortal>{popoverContent}</PopoverPortal>;
-	}
+	},
 );
 PopoverContent.displayName = 'PopoverContent';
 
@@ -424,6 +424,6 @@ export const PopoverClose = React.forwardRef<HTMLButtonElement, PopoverCloseProp
 		return (
 			<PopoverPrimitive.Close ref={ref} data-slot="popover-close" data-testid={testId} {...props} />
 		);
-	}
+	},
 );
 PopoverClose.displayName = 'PopoverClose';

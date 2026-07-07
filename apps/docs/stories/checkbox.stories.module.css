@@ -1,0 +1,10 @@
+.variantRow {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.colorLabel {
+  width: 120px;
+  text-transform: capitalize;
+}

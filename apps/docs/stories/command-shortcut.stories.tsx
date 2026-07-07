@@ -9,6 +9,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import styles from './command-shortcut.stories.module.css';
 import { shortcutArgTypes } from './shared/command-combobox-arg-types.js';
 
 const meta: Meta<typeof CommandShortcut> = {
@@ -29,7 +30,7 @@ export const Default: Story = {
 		children: '⌘K',
 	},
 	render: (args) => (
-		<div style={{ width: 520 }}>
+		<div className={styles.container}>
 			<Command>
 				<CommandInput placeholder="Search commands…" />
 				<CommandList>
