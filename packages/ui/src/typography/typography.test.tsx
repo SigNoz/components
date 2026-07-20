@@ -208,6 +208,60 @@ describe('Typography', () => {
 		});
 	});
 
+	describe('fontFamily prop', () => {
+		it('sets --typography-font-family custom property', () => {
+			render(<Typography fontFamily="monospace">Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-font-family')).toBe('monospace');
+		});
+
+		it('does not set --typography-font-family when prop is omitted', () => {
+			render(<Typography>Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-font-family')).toBe('');
+		});
+	});
+
+	describe('letterSpacing prop', () => {
+		it('sets --typography-letter-spacing with a string value', () => {
+			render(<Typography letterSpacing="0.1em">Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-letter-spacing')).toBe('0.1em');
+		});
+
+		it('appends px when a number is provided', () => {
+			render(<Typography letterSpacing={2}>Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-letter-spacing')).toBe('2px');
+		});
+
+		it('does not set --typography-letter-spacing when prop is omitted', () => {
+			render(<Typography>Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-letter-spacing')).toBe('');
+		});
+	});
+
+	describe('textTransform prop', () => {
+		it('sets --typography-text-transform for uppercase', () => {
+			render(<Typography textTransform="uppercase">Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-text-transform')).toBe('uppercase');
+		});
+
+		it('sets --typography-text-transform for capitalize', () => {
+			render(<Typography textTransform="capitalize">Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-text-transform')).toBe('capitalize');
+		});
+
+		it('does not set --typography-text-transform when prop is omitted', () => {
+			render(<Typography>Text</Typography>);
+			const element = screen.getByText('Text');
+			expect(element.style.getPropertyValue('--typography-text-transform')).toBe('');
+		});
+	});
+
 	describe('copyable prop', () => {
 		it('renders copy button when copyable is true', () => {
 			render(<Typography copyable>Copy me</Typography>);

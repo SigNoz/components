@@ -194,6 +194,22 @@ export default {
 			description: 'Additional CSS classes.',
 			table: { category: 'Styling' },
 		},
+		fontFamily: {
+			control: 'text',
+			description: 'Override the font family.',
+			table: { category: 'Appearance' },
+		},
+		letterSpacing: {
+			control: 'text',
+			description: "Set letter spacing (e.g. '0.05em', '1px').",
+			table: { category: 'Appearance' },
+		},
+		textTransform: {
+			control: 'select',
+			options: [undefined, 'none', 'capitalize', 'uppercase', 'lowercase'],
+			description: 'Control text transformation.',
+			table: { category: 'Appearance' },
+		},
 	},
 } as Meta<typeof Typography>;
 
@@ -637,6 +653,63 @@ export const DisabledState: Story = {
 			</div>
 			<div>
 				<Typography disabled>Disabled text - cannot be selected</Typography>
+			</div>
+		</div>
+	),
+};
+
+export const TextStyleProps: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					'Use `fontFamily`, `letterSpacing`, and `textTransform` to control CSS text styling directly.',
+			},
+		},
+	},
+	render: () => (
+		<div className="space-y-4 p-6">
+			<div>
+				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+					fontFamily="monospace"
+				</Typography>
+				<Typography fontFamily="monospace">The quick brown fox jumps over the lazy dog</Typography>
+			</div>
+			<div>
+				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+					letterSpacing="0.15em"
+				</Typography>
+				<Typography letterSpacing="0.15em">The quick brown fox jumps over the lazy dog</Typography>
+			</div>
+			<div>
+				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+					textTransform="uppercase"
+				</Typography>
+				<Typography textTransform="uppercase">
+					The quick brown fox jumps over the lazy dog
+				</Typography>
+			</div>
+			<div>
+				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+					textTransform="capitalize"
+				</Typography>
+				<Typography textTransform="capitalize">
+					the quick brown fox jumps over the lazy dog
+				</Typography>
+			</div>
+			<div>
+				<Typography size="sm" muted style={{ marginBottom: 4 }}>
+					combined: fontFamily + letterSpacing + textTransform
+				</Typography>
+				<Typography
+					fontFamily="Georgia, serif"
+					letterSpacing="0.08em"
+					textTransform="uppercase"
+					size="lg"
+					weight="semibold"
+				>
+					Styled heading text
+				</Typography>
 			</div>
 		</div>
 	),

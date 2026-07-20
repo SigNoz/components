@@ -5,6 +5,8 @@
 	font-size: var(--typography-font-size, var(--periscope-font-size-base, 14px));
 	font-weight: var(--typography-font-weight, var(--font-weight-normal, 400));
 	line-height: var(--typography-line-height, var(--line-height-normal, 1.5));
+	letter-spacing: var(--typography-letter-spacing, normal);
+	text-transform: var(--typography-text-transform, none);
 	color: var(--typography-color, inherit);
 	text-align: var(--typography-text-align, unset);
 
