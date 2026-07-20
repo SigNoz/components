@@ -26,12 +26,14 @@
  * | `--typography-font-size` | `var(--periscope-font-size-h5, 16px)` |
  * | `--typography-font-weight` | `var(--font-weight-semibold, 600)` |
  * | `--typography-interactive-hover-color` | `var(--primary-background)` |
+ * | `--typography-letter-spacing` | `normal` |
  * | `--typography-line-clamp` | `1` |
  * | `--typography-line-height` | `var(--line-height-normal, 1.5)` |
  * | `--typography-margin` | `0` |
  * | `--typography-padding` | `0` |
  * | `--typography-text-align` | `right` |
  * | `--typography-text-display` | `inline` |
+ * | `--typography-text-transform` | `none` |
  * | `--typography-title-margin-bottom` | `9px` |
  * | `--typography-title-margin-top` | `9px` |
  */

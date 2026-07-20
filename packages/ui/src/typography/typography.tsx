@@ -57,6 +57,8 @@ type TypographyColor = 'muted' | 'danger' | 'warning' | 'success';
 
 type TypographyLevel = 1 | 2 | 3 | 4 | 5;
 
+type TypographyTextTransform = 'none' | 'capitalize' | 'uppercase' | 'lowercase';
+
 interface TypographyProps
 	extends Pick<
 		React.ComponentProps<'div'>,
@@ -193,6 +195,21 @@ interface TypographyProps
 	 * @default false
 	 */
 	interactive?: boolean;
+
+	/**
+	 * Override the font family.
+	 */
+	fontFamily?: string;
+
+	/**
+	 * Set the letter spacing. Accepts a CSS string (`'0.05em'`, `'1px'`) or a number (treated as px).
+	 */
+	letterSpacing?: string | number;
+
+	/**
+	 * Control text transformation.
+	 */
+	textTransform?: TypographyTextTransform;
 }
 
 const levelTagMap: Record<TypographyLevel, TypographyElement> = {
@@ -271,6 +288,9 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 		title,
 		testId,
 		interactive,
+		fontFamily,
+		letterSpacing,
+		textTransform,
 		onClick,
 		...props
 	},
@@ -293,12 +313,15 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 	const isLink = Tag === 'a' || href;
 	const isInteractive = interactive || !!onClick;
 
-	const truncateStyle: React.CSSProperties | undefined =
-		truncate !== undefined
-			? ({
-					'--typography-line-clamp': truncate,
-				} as React.CSSProperties)
-			: undefined;
+	const customStyle = {
+		...(truncate !== undefined && { '--typography-line-clamp': truncate }),
+		...(fontFamily !== undefined && { '--typography-font-family': fontFamily }),
+		...(letterSpacing !== undefined && {
+			'--typography-letter-spacing':
+				typeof letterSpacing === 'number' ? `${letterSpacing}px` : letterSpacing,
+		}),
+		...(textTransform !== undefined && { '--typography-text-transform': textTransform }),
+	} as React.CSSProperties;
 
 	const handleCopy = () => {
 		const text = typeof children === 'string' ? children : '';
@@ -331,7 +354,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 			data-testid={testId}
 			title={title}
 			className={cn(styles.typography, className)}
-			style={{ ...truncateStyle, ...style }}
+			style={{ ...customStyle, ...style }}
 			onClick={onClick}
 			{...linkProps}
 			{...props}
@@ -436,6 +459,7 @@ export type {
 	TypographyProps,
 	TypographySize,
 	TypographyTextProps,
+	TypographyTextTransform,
 	TypographyTitleProps,
 	TypographyVariant,
 	TypographyWeight,
