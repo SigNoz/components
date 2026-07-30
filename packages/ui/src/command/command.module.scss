@@ -1,58 +1,58 @@
 .command {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  flex-direction: column;
-  overflow: hidden;
+  display: var(--command-display, flex);
+  height: var(--command-height, 100%);
+  width: var(--command-width, 100%);
+  flex-direction: var(--command-flex-direction, column);
+  overflow: var(--command-overflow, hidden);
   border-radius: var(--command-border-radius, calc(var(--radius) - 2px));
   background-color: var(--command-background, var(--l2-background));
   color: var(--command-foreground, var(--foreground));
 }
 
 .command__dialog-content {
-  overflow: hidden;
-  padding: 0;
+  overflow: var(--command-dialog-content-overflow, hidden);
+  padding: var(--command-dialog-content-padding, 0);
 }
 
 .command__dialog-styles {
   & [cmdk-group-heading] {
-    padding-left: var(--spacing-4, 0.5rem);
-    padding-right: var(--spacing-4, 0.5rem);
-    font-weight: 500;
-    color: var(--text-muted);
+    padding-left: var(--command-dialog-group-heading-padding-left, var(--spacing-4, 0.5rem));
+    padding-right: var(--command-dialog-group-heading-padding-right, var(--spacing-4, 0.5rem));
+    font-weight: var(--command-dialog-group-heading-font-weight, 500);
+    color: var(--command-dialog-group-heading-color, var(--muted-foreground));
   }
 
   & [cmdk-group]:not([hidden])~[cmdk-group] {
-    padding-top: 0;
+    padding-top: var(--command-dialog-group-sibling-padding-top, 0);
   }
 
   & [cmdk-group] {
-    padding-left: var(--spacing-4, 0.5rem);
-    padding-right: var(--spacing-4, 0.5rem);
+    padding-left: var(--command-dialog-group-padding-left, var(--spacing-4, 0.5rem));
+    padding-right: var(--command-dialog-group-padding-right, var(--spacing-4, 0.5rem));
   }
 
   & [cmdk-input-wrapper] svg {
-    height: var(--spacing-12, 1.25rem);
-    width: var(--spacing-12, 1.25rem);
+    height: var(--command-dialog-input-wrapper-svg-height, var(--spacing-12, 1.25rem));
+    width: var(--command-dialog-input-wrapper-svg-width, var(--spacing-12, 1.25rem));
   }
 
   & [cmdk-input] {
-    height: var(--command-input-height, 3rem);
+    height: var(--command-dialog-input-height, 3rem);
   }
 
   & [cmdk-item] {
-    padding: var(--spacing-6 0.75rem) var(--spacing-4, 0.5rem);
+    padding: var(--command-dialog-item-padding, var(--spacing-6 0.75rem) var(--spacing-4, 0.5rem));
   }
 
   & [cmdk-item] svg {
-    height: var(--command-item-icon-size, 1.25rem);
-    width: var(--command-item-icon-size, 1.25rem);
+    height: var(--command-dialog-item-icon-size, 1.25rem);
+    width: var(--command-dialog-item-icon-size, 1.25rem);
   }
 }
 
 .command__input-wrapper {
-  display: flex;
-  align-items: center;
+  display: var(--command-input-wrapper-display, flex);
+  align-items: var(--command-input-wrapper-align-items, center);
   padding: var(--command-input-wrapper-padding, 0 var(--spacing-4, 0.5rem));
   border-width: var(--command-input-wrapper-border-width, 0px 0px 1px 0px);
   border-style: var(--command-input-wrapper-border-style, solid);
@@ -64,12 +64,12 @@
   padding: var(--command-input-icon-padding, 0px);
   height: var(--command-input-icon-size, 1rem);
   width: var(--command-input-icon-size, 1rem);
-  flex-shrink: 0;
+  flex-shrink: var(--command-input-icon-flex-shrink, 0);
   opacity: var(--command-input-icon-opacity, 0.5);
 }
 
 .command__input {
-  display: flex;
+  display: var(--command-input-display, flex);
   height: var(--command-input-height, 2.5rem);
   width: var(--command-input-width, 100%);
   border-radius: var(--command-input-border-radius, calc(var(--radius) - 2px));
@@ -77,50 +77,50 @@
   padding: var(--command-input-padding, 0);
   font-size: var(--command-input-font-size, var(--periscope-font-size-base, 13px));
   line-height: var(--command-input-line-height, 1.25rem);
-  outline: none;
+  outline: var(--command-input-outline, none);
   border-width: var(--command-input-border-width, 0px);
 
   &::placeholder {
-    color: var(--text-muted);
+    color: var(--command-input-placeholder-color, var(--muted-foreground));
   }
 
   &:disabled {
-    cursor: not-allowed;
+    cursor: var(--command-input-disabled-cursor, not-allowed);
     opacity: var(--command-input-disabled-opacity, 0.5);
   }
 }
 
 .command__list {
   max-height: var(--command-list-max-height, 18.75rem);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: var(--command-list-overflow-y, auto);
+  overflow-x: var(--command-list-overflow-x, hidden);
 }
 
 .command__empty {
   padding: var(--command-empty-padding, var(--spacing-8, 1rem));
-  text-align: center;
+  text-align: var(--command-empty-text-align, center);
   font-size: var(--command-empty-font-size, var(--periscope-font-size-base, 13px));
   line-height: var(--command-empty-line-height, 1.25rem);
 }
 
 .command__loading {
   padding: var(--command-loading-padding, var(--spacing-8, 1rem));
-  text-align: center;
+  text-align: var(--command-loading-text-align, center);
   font-size: var(--command-loading-font-size, var(--periscope-font-size-base, 13px));
   line-height: var(--command-loading-line-height, 1.25rem);
 }
 
 .command__group {
-  overflow: hidden;
+  overflow: var(--command-group-overflow, hidden);
   padding: var(--command-group-padding, var(--spacing-2, 0.25rem));
-  color: var(--text);
+  color: var(--command-group-color, var(--text));
 
   & [cmdk-group-heading] {
     padding: var(--command-group-heading-padding, var(--spacing-3, 0.375rem) var(--spacing-4, 0.5rem));
     font-size: var(--command-group-heading-font-size, var(--periscope-font-size-small, 11px));
     line-height: var(--command-group-heading-line-height, 1rem);
     font-weight: var(--command-group-heading-font-weight, var(--font-weight-medium));
-    color: var(--command-group-heading-color, var(--text-muted));
+    color: var(--command-group-heading-color, var(--muted-foreground));
   }
 }
 
@@ -132,21 +132,21 @@
 }
 
 .command__item {
-  position: relative;
-  display: flex;
-  cursor: default;
+  position: var(--command-item-position, relative);
+  display: var(--command-item-display, flex);
+  cursor: var(--command-item-cursor, default);
   gap: var(--command-item-gap, var(--spacing-4, 0.5rem));
-  user-select: none;
-  align-items: center;
+  user-select: var(--command-item-user-select, none);
+  align-items: var(--command-item-align-items, center);
   border-radius: var(--command-item-border-radius, calc(var(--radius) - 4px));
   padding: var(--command-item-padding, var(--spacing-3, 0.375rem) var(--spacing-4, 0.5rem));
   font-size: var(--command-item-font-size, var(--periscope-font-size-base, 13px));
   line-height: var(--command-item-line-height, 1.25rem);
-  outline: none;
+  outline: var(--command-item-outline, none);
 
   &[data-disabled="true"] {
-    pointer-events: none;
-    opacity: 0.5;
+    pointer-events: var(--command-item-disabled-pointer-events, none);
+    opacity: var(--command-item-disabled-opacity, 0.5);
   }
 
   &[data-selected="true"] {
@@ -155,38 +155,38 @@
   }
 
   & svg {
-    pointer-events: none;
-    height: 1rem;
-    width: 1rem;
-    flex-shrink: 0;
+    pointer-events: var(--command-item-svg-pointer-events, none);
+    height: var(--command-item-svg-size, 1rem);
+    width: var(--command-item-svg-size, 1rem);
+    flex-shrink: var(--command-item-svg-flex-shrink, 0);
   }
 
   &:hover {
-    background-color: var(--l2-background-hover);
+    background-color: var(--command-item-hover-background-color, var(--l2-background-hover));
   }
 
   &:focus-within {
-    outline: 2px solid var(--ring);
+    outline: var(--command-item-focus-outline-width, 2px) solid var(--command-item-focus-outline-color, var(--ring));
   }
 }
 
 .command__item-prefix {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
+  flex-shrink: var(--command-item-prefix-flex-shrink, 0);
+  display: var(--command-item-prefix-display, flex);
+  align-items: var(--command-item-prefix-align-items, center);
 }
 
 .command__item-suffix {
-  flex-shrink: 0;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
+  flex-shrink: var(--command-item-suffix-flex-shrink, 0);
+  margin-left: var(--command-item-suffix-margin-left, auto);
+  display: var(--command-item-suffix-display, flex);
+  align-items: var(--command-item-suffix-align-items, center);
 }
 
 .command__shortcut {
-  margin-left: auto;
-  font-size: var(--periscope-font-size-base, 13px);
-  line-height: 1rem;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
+  margin-left: var(--command-shortcut-margin-left, auto);
+  font-size: var(--command-shortcut-font-size, var(--periscope-font-size-base, 13px));
+  line-height: var(--command-shortcut-line-height, 1rem);
+  letter-spacing: var(--command-shortcut-letter-spacing, 0.05em);
+  color: var(--command-shortcut-color, var(--muted-foreground));
 }
