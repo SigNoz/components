@@ -14,12 +14,12 @@
 		"test-storybook": "vitest --project=storybook"
 	},
 	"dependencies": {
-		"@radix-ui/react-tabs": "^1.1.15",
+		"@radix-ui/react-tabs": "^1.1.19",
 		"@signozhq/design-tokens": "2.1.6",
 		"@signozhq/icons": "^0.4.0",
 		"@signozhq/ui": "workspace:*",
 		"motion": "^11.18.2",
-		"nuqs": "^2.8.9",
+		"nuqs": "^2.9.2",
 		"react": "^18.2.0",
 		"react-day-picker": "^9.9.0",
 		"react-dom": "^18.2.0",
@@ -34,7 +34,7 @@
 		"@storybook/addon-themes": "^10.4.6",
 		"@storybook/addon-vitest": "^10.4.6",
 		"@storybook/react-vite": "^10.4.6",
-		"@tailwindcss/postcss": "^4.3.1",
+		"@tailwindcss/postcss": "^4.3.3",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.2.19",
 		"@types/react-syntax-highlighter": "^15.5.13",
