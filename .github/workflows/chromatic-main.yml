@@ -43,10 +43,16 @@ jobs:
 
       - name: Run Chromatic
         uses: chromaui/action@latest
+        # The action reads the commit and branch from the pull_request context,
+        # which points at the PR head. Squash merges leave that commit
+        # unreachable from main, so the baseline lands under a SHA later runs
+        # can't resolve and TurboSnap falls back to an ancient build. Report the
+        # squash commit that actually landed on main, on main, instead.
+        env:
+          CHROMATIC_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          CHROMATIC_BRANCH: main
+          CHROMATIC_SLUG: ${{ github.repository }}
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          # pull_request context detects the PR head branch; force main so the
-          # build is treated as a baseline and autoAcceptChanges applies.
-          branchName: main
           autoAcceptChanges: main
           onlyChanged: true
