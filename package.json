@@ -64,13 +64,15 @@
 			"vite": "npm:rolldown-vite@7.3.1",
 			"@types/node": "25.6.2",
 			"sass": "1.78.0",
-			"eslint-config-prettier": "9.1.0",
-			"eslint-import-resolver-typescript": "3.10.0",
 			"ajv@<6.14.0": "^6.14.2",
 			"tmp@<0.2.6": ">=0.2.6",
-			"undici": ">=7.28.0",
 			"js-yaml": ">=4.2.0",
-			"@babel/core": ">=7.29.6"
+			"@babel/core": ">=7.29.6",
+			"postcss@<=8.5.22": ">=8.5.23",
+			"undici@>=8.0.0 <8.9.0": ">=8.9.0",
+			"fast-uri@>=3.0.0 <3.1.5": ">=3.1.5",
+			"brace-expansion@>=4.0.0 <5.0.9": ">=5.0.9",
+			"@vitest/browser@>=4.0.0 <4.1.10": ">=4.1.10"
 		},
 		"packageExtensions": {
 			"vite-plugin-lib-inject-css": {
