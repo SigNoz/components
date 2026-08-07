@@ -36,19 +36,19 @@ If you rebase the PR, then you need to make each commit conventional.
 
 These are the types configured in `release-please-config.json` and the changelog section each one lands in:
 
-| Type               | Changelog section        |
-| ------------------ | ------------------------ |
-| `feat` / `feature` | Features                 |
-| `fix`              | Bug Fixes                |
-| `perf`             | Performance Improvements |
-| `revert`           | Reverts                  |
-| `docs`             | Documentation            |
-| `style`            | Styles                   |
-| `chore`            | Miscellaneous Chores     |
-| `refactor`         | Code Refactoring         |
-| `test`             | Tests                    |
-| `build`            | Build System             |
-| `ci`               | Continuous Integration   |
+| Type       | Changelog section        |
+|------------|--------------------------|
+| `feat`     | Features                 |
+| `fix`      | Bug Fixes                |
+| `perf`     | Performance Improvements |
+| `revert`   | Reverts                  |
+| `docs`     | Documentation            |
+| `style`    | Styles                   |
+| `chore`    | Miscellaneous Chores     |
+| `refactor` | Code Refactoring         |
+| `test`     | Tests                    |
+| `build`    | Build System             |
+| `ci`       | Continuous Integration   |
 
 To flag a breaking change, add a `!` after the type/scope or a `BREAKING CHANGE:` footer:
 
