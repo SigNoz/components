@@ -43,11 +43,16 @@ snapshots:
 - **PR build** (`.github/workflows/chromatic-pr.yml`) runs on the PR head and **diffs
   against** the current `main` baseline, so you can review what changed.
 - **Merge build** (`.github/workflows/chromatic-main.yml`) runs on the merge commit and
-  **becomes** the new `main` baseline (`branchName: main` + `autoAcceptChanges: main`),
-  so the next PR doesn't re-flag changes you already accepted.
+  **becomes** the new `main` baseline (`CHROMATIC_BRANCH: main` + `autoAcceptChanges:
+  main`), so the next PR doesn't re-flag changes you already accepted.
 
 Doing both in one workflow would either re-baseline on every PR (changes never get
 reviewed) or never update the baseline (every PR re-flags already-accepted changes).
+
+The merge build also sets `CHROMATIC_SHA` to the merge commit. Left alone, the action
+reports the PR head instead, which a squash merge leaves unreachable from `main` — the
+baseline is then filed under a commit later runs can't resolve, and TurboSnap silently
+falls back to the oldest build with a reachable commit and re-snapshots everything.
 
 The merge build only runs when the PR was actually **merged** and carries
 `update-visual-testing` — a PR closed without merging, or one that never ran Chromatic,
