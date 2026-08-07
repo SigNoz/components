@@ -22,7 +22,7 @@ In a few simple steps, you need to:
 - once you decide you have enough PRs for a release, you mark the `Release PR` as ready for review and merge it
 
 > [!IMPORTANT]
-> to be able to merge the `Release PR`, you need to be part of `web-platform` team.
+> to be able to merge the `Release PR`, you need to be part of `web-core` team.
 
 Take a look at [What's a Release PR](https://github.com/googleapis/release-please#whats-a-release-pr) to learn more about this process. You can also take a look at [why we only allow rebase/squash merge](https://github.com/googleapis/release-please#linear-git-commit-history-use-squash-merge).
 
@@ -36,19 +36,19 @@ If you rebase the PR, then you need to make each commit conventional.
 
 These are the types configured in `release-please-config.json` and the changelog section each one lands in:
 
-| Type                  | Changelog section        |
-| --------------------- | ------------------------ |
-| `feat` / `feature`    | Features                 |
-| `fix`                 | Bug Fixes                |
-| `perf`                | Performance Improvements |
-| `revert`              | Reverts                  |
-| `docs`                | Documentation            |
-| `style`               | Styles                   |
-| `chore`               | Miscellaneous Chores     |
-| `refactor`            | Code Refactoring         |
-| `test`                | Tests                    |
-| `build`               | Build System             |
-| `ci`                  | Continuous Integration   |
+| Type               | Changelog section        |
+| ------------------ | ------------------------ |
+| `feat` / `feature` | Features                 |
+| `fix`              | Bug Fixes                |
+| `perf`             | Performance Improvements |
+| `revert`           | Reverts                  |
+| `docs`             | Documentation            |
+| `style`            | Styles                   |
+| `chore`            | Miscellaneous Chores     |
+| `refactor`         | Code Refactoring         |
+| `test`             | Tests                    |
+| `build`            | Build System             |
+| `ci`               | Continuous Integration   |
 
 To flag a breaking change, add a `!` after the type/scope or a `BREAKING CHANGE:` footer:
 
@@ -126,6 +126,27 @@ Leave the environment empty because the release job does not use a GitHub enviro
 > npm only lets you configure a trusted publisher on a package that already exists in the registry. For a brand new package name, the **first** publish has to be done manually by someone with publish rights on the `@signozhq` scope. Configure the trusted publisher right after that, and every later release goes through the workflow.
 
 You need admin rights on the package (or on the `@signozhq` org) to change this setting.
+
+## Pitfalls
+
+A few things can leave the release process in a broken state.
+
+### Closing the `Release PR` without merging it
+
+Release Please tracks the open `Release PR` through its branch and its labels, so closing the PR is not enough. You also have to delete the `release-please--branches--main--components--design-system` branch, and sometimes remove the `autorelease: pending` label from the closed PR. Otherwise Release Please cannot tell whether it should open a new `Release PR` or update the existing one, and the next push to `main` leaves you with no `Release PR` at all.
+
+> [!TIP]
+> If you end up in this state, ask Claude to look at the leftover branch, labels, and tags and work out what needs to be cleaned up.
+
+### The `Release` workflow failing
+
+Prefer releasing forward over retrying the same version. Retrying the same tag means undoing everything the failed run created, the `Release PR`, its labels, and the `vX.Y.Z` tag, and it is easy to leave the `Release PR` in a state Release Please cannot recover from.
+
+The simplest fix is to land an empty conventional commit on `main` and merge the `Release PR` it produces:
+
+```sh
+git commit --allow-empty -m "fix: retrigger release"
+```
 
 ## Limitations
 
