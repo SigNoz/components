@@ -125,4 +125,4 @@ If you prefer to add a component manually:
 
 ## Releasing
 
-Releases are driven by Release Please. Create a pull request with your changes and the Release Please bot will create a release draft with generated notes.
+See [RELEASE](./RELEASE.md) to learn more how the release process works.
