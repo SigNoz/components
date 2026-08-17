@@ -14,12 +14,12 @@
 		"test-storybook": "vitest --project=storybook"
 	},
 	"dependencies": {
-		"@radix-ui/react-tabs": "^1.1.19",
+		"@radix-ui/react-tabs": "^1.1.21",
 		"@signozhq/design-tokens": "2.1.6",
 		"@signozhq/icons": "^0.4.0",
 		"@signozhq/ui": "workspace:*",
 		"motion": "^11.18.2",
-		"nuqs": "^2.9.2",
+		"nuqs": "^2.9.5",
 		"react": "^18.2.0",
 		"react-day-picker": "^9.9.0",
 		"react-dom": "^18.2.0",
