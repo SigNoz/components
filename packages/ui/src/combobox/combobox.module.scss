@@ -172,6 +172,13 @@
 	}
 }
 
+.combobox__pills {
+	display: var(--combobox-pills-display, flex);
+	flex-wrap: var(--combobox-pills-flex-wrap, wrap);
+	gap: var(--combobox-pills-gap, 0.25rem);
+	align-items: var(--combobox-pills-align-items, center);
+}
+
 .combobox__pill {
 	display: var(--combobox-pill-display, inline-flex);
 	align-items: var(--combobox-pill-align-items, center);
@@ -225,8 +232,8 @@
 	height: var(--combobox-pill-height, 1.25rem);
 	padding: var(--combobox-pill-overflow-padding, 0 0.5rem);
 	border-radius: var(--combobox-pill-border-radius, var(--radius-1, 2px));
-	background-color: var(--combobox-pill-overflow-background, var(--muted));
-	color: var(--combobox-pill-overflow-color, var(--muted-foreground));
+	background-color: var(--combobox-pill-overflow-background, var(--accent));
+	color: var(--combobox-pill-overflow-color, var(--accent-foreground));
 	font-size: var(--combobox-pill-font-size, 0.75rem);
 	font-weight: var(--combobox-pill-overflow-font-weight, 500);
 	line-height: var(--combobox-pill-overflow-line-height, 1);

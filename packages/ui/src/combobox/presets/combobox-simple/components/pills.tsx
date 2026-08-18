@@ -1,6 +1,7 @@
 import type * as React from 'react';
 import { TooltipSimple } from '../../../../tooltip/index.js';
 import { ComboboxPill } from '../../../subcomponents/combobox-pill.js';
+import styles from '../../../combobox.module.scss';
 
 export type ComboboxPillsProps = {
 	values: string[];
@@ -22,10 +23,7 @@ export function ComboboxPills({
 	const hiddenValues = values.slice(maxDisplayed);
 
 	return (
-		<span
-			data-slot="combobox-pills"
-			style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', alignItems: 'center' }}
-		>
+		<span data-slot="combobox-pills" className={styles.combobox__pills}>
 			{displayedValues.map((v) => (
 				<ComboboxPill key={v} value={v} onRemove={onRemove}>
 					{resolveLabel(v)}
@@ -33,22 +31,7 @@ export function ComboboxPills({
 			))}
 			{overflowCount > 0 && (
 				<TooltipSimple title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
-					<span
-						data-slot="combobox-pill-overflow"
-						style={{
-							display: 'inline-flex',
-							alignItems: 'center',
-							justifyContent: 'center',
-							height: '1.25rem',
-							padding: '0 0.5rem',
-							borderRadius: '2px',
-							backgroundColor: 'var(--muted)',
-							color: 'var(--muted-foreground)',
-							fontSize: '0.75rem',
-							fontWeight: 500,
-							cursor: 'default',
-						}}
-					>
+					<span data-slot="combobox-pill-overflow" className={styles['combobox__pill-overflow']}>
 						+{overflowCount}
 					</span>
 				</TooltipSimple>
