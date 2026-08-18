@@ -2,7 +2,7 @@ import { X } from '@signozhq/icons';
 import { forwardRef } from 'react';
 import { Button, type ButtonProps } from '../../button/index.js';
 import { cn } from '../../lib/utils.js';
-import styles from '../dialog.module.css';
+import styles from '../dialog.module.scss';
 import { DialogClose } from './dialog-close.js';
 
 export interface DialogCloseButtonProps extends Omit<ButtonProps, 'type' | 'aria-label'> {
