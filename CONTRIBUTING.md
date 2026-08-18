@@ -1,128 +1,124 @@
 # Contributing to Signoz Components
 
-## Getting Started
+Start here, then follow the doc for what you're doing.
 
-1. Clone the repository:
-  ```sh
-   git clone git@github.com:SigNoz/components.git
-  ```
-2. Install dependencies:
-  ```sh
-   pnpm install
-  ```
-3. Build the packages:
-  ```sh
-   pnpm build
-  ```
-4. Start Storybook:
-  ```sh
-   pnpm run dev
-  ```
+| Doc | Read it for |
+| --- | --- |
+| [COMPONENT_GUIDELINES.md](./COMPONENT_GUIDELINES.md) | The standard every component is held to: layout, CSS, props, docs, stories, tests |
+| [BUILD.md](./BUILD.md) | *Why* the packaging, build and CSS work this way. Read before changing `vite.config.ts` or the styling approach |
+| [`.github/pull_request_template.md`](./.github/pull_request_template.md) | The per-PR checklist (it ships in every PR body) |
+| [COMPONENT_AUDIT_RUBRIC.md](./COMPONENT_AUDIT_RUBRIC.md) | Scoring an existing component in an audit |
+| [VISUAL_TESTING.md](./VISUAL_TESTING.md) | Chromatic and the `run-visual-testing` label |
+| [RELEASE.md](./RELEASE.md) | How a version ships, and how to cut a hotfix |
 
-## Useful Commands
-
-- `pnpm build` - Build all packages, including the Storybook site
-- `pnpm dev` - Run all packages locally and preview with Storybook
-- `pnpm lint` - Lint all packages
-- `pnpm run type-check` - Type-check the repo with `tsgo --noEmit` (also runs in CI on every push)
-- `pnpm clean` - Clean up all `node_modules` and `dist` folders
-- `pnpm run tokens` (in `packages/ui`) - Regenerate CSS token JSDoc tables in component `index.ts` files
-- `pnpm run tokens:check` (in `packages/ui`) - Fail if token docs are out of date (same check as CI)
-
-## CSS token documentation
-
-Component styles use CSS custom properties with a `--{component}-` prefix (for example `--button-primary-background`). Public customization tokens are documented in each component’s `packages/ui/src/{component}/index.ts` inside a `// #region css-tokens` block so agents and consumers can discover them without reading SCSS.
-
-After you add or change `--{component}-*` variables in a component’s `.scss` or `.css` files, regenerate the docs:
+## Getting started
 
 ```sh
-cd packages/ui
-pnpm run tokens
+git clone git@github.com:SigNoz/components.git
+pnpm install
+pnpm build     # packages/ui must be built before Storybook can import it
+pnpm dev       # Storybook on http://localhost:6006
 ```
 
-Commit the updated `index.ts` regions together with your style changes. CI runs `pnpm run tokens:check` on pull requests; if it fails, run `pnpm run tokens` locally and commit the result.
+Stories import `@signozhq/ui` as a built package, so a fresh clone needs `pnpm build` before
+`pnpm dev`. After that `pnpm dev` covers both: it runs Storybook *and* `vite build --watch` on
+`packages/ui`, so component edits rebuild and reload.
 
-Implementation-only variables should use an `-internal-` segment in the name (for example `--button-internal-background`). Those are excluded from the generated tables and are not part of the public customization API.
+## Useful commands
 
-## Adding a New Component
+| Command | What | Notes |
+| --- | --- | --- |
+| `pnpm build` | Build every package + the Storybook site | `packages/ui` runs `vite build && publint` |
+| `pnpm dev` | Storybook (`apps/docs`) + `vite build --watch` on `packages/ui` | Both are persistent turbo tasks |
+| `pnpm lint` / `pnpm lint:fix` | Lint `apps` + `packages` with `oxlint` | Runs in CI. Config `.oxlintrc.json`. `typescript/consistent-type-imports` is an error, so write `import type` |
+| `pnpm format` / `pnpm format:check` | Format with `oxfmt` | `.oxfmtrc.json`: tabs, width 100, single quotes, trailing commas. **Skips styles, markdown and YAML** (`ignorePatterns`), your editor formats those |
+| `pnpm run type-check` | `tsgo --noEmit` over the whole repo | Runs in CI and in `lint-staged` |
+| `pnpm -F @signozhq/ui test:run` | Unit + guardrail tests (jsdom, vitest) | |
+| `cd apps/docs && pnpm test-storybook` | Story render + interaction tests in real Chromium | This is what CI runs |
+| `pnpm -F @signozhq/ui tokens` | Regenerate the CSS token JSDoc tables in component `index.ts` files | Run after touching any `--{component}-*` variable |
+| `pnpm -F @signozhq/ui tokens:check` | Fail if the token tables are stale | Same check as `lint-staged` and CI |
+| `pnpm clean` | Remove every `node_modules` and `dist` | |
 
-All components live in the single package `@signozhq/ui` under `packages/ui`.
+`husky` + `lint-staged` run on commit: `type-check`, `oxlint --fix` and `oxfmt` on JS/TS/JSON,
+`tokens:check` when `packages/ui` style files change. Commit messages are validated by
+`commitlint` against [Conventional Commits](./RELEASE.md#commit-messages), and since PRs are
+squash merged, **the PR title is the commit message**, so the title has to be conventional too.
 
-### Using the Generator (Recommended)
+## Adding a new component
 
-The easiest way to add a new component is using the turbo generator:
+All components live in the single package `@signozhq/ui` under `packages/ui`. See
+[BUILD.md](./BUILD.md#1-package-topology) for why, and
+[COMPONENT_GUIDELINES.md](./COMPONENT_GUIDELINES.md) for how each file should look.
 
-1. Create a new branch:
-  ```sh
-   git checkout -b feature/new-component-name
-  ```
-2. Run the generator:
-  ```sh
-   pnpm turbo gen
-  ```
-3. Select `new-component` and follow the prompts:
-  - Enter the component name in kebab-case (e.g., `my-component`)
-  - Provide a brief description
-  - Choose whether to import from shadcn or create from scratch
-   The generator will automatically:
-  - Create the component folder at `packages/ui/src/{name}/`
-  - Add the export to `packages/ui/src/index.ts`
-  - Add the build entry to `packages/ui/vite.config.ts`
-  - Create a Storybook story at `apps/docs/stories/{name}.stories.tsx`
-  - Run `pnpm install`
-4. Build and verify:
-  ```sh
-   pnpm build
-   pnpm dev
-  ```
-5. Commit and push:
-  ```sh
-   git add .
-   git commit -m "Add new component: my-component"
-   git push origin feature/new-component-name
-  ```
-6. Open a pull request.
+There is no scaffolding generator. The `pnpm turbo gen` generator was removed because its
+output did not follow these guidelines (plain `index.css`, no `forwardRef`, no `data-*`
+variants, no token region) and it never registered the `package.json` export, so every
+generated component needed rewriting anyway. **Copy an existing component instead.**
 
-### Manual Setup
+1. Branch: `git checkout -b feat/my-component`
 
-If you prefer to add a component manually:
+2. Copy `packages/ui/src/badge/` to `packages/ui/src/my-component/` as the starting shape, then
+   follow [Code organization](./COMPONENT_GUIDELINES.md#1-code-organization). For a component
+   with subcomponents and presets, copy `packages/ui/src/dialog/` instead.
 
-1. Create a new branch:
-  ```sh
-   git checkout -b feature/new-component-name
-  ```
-2. Add the component under `packages/ui/src/`:
-  - Create a folder named after the component (e.g., `packages/ui/src/my-component/`)
-  - Add the component file (e.g., `my-component.tsx`) and an `index.ts` that re-exports the public API
-  - Add an `index.css` for component styles
-  - Follow the structure of existing components (e.g., `packages/ui/src/badge/`)
-3. Register the new export in `packages/ui/src/index.ts`:
-  ```ts
+3. Register the export in `packages/ui/src/index.ts`:
+
+   ```ts
    export * from './my-component/index.js';
-  ```
-4. Register the new entry in `packages/ui/vite.config.ts`:
-  ```ts
-   const entries: Record<string, string> = {
+   ```
+
+4. Register the build entry in `packages/ui/vite.config.ts`:
+
+   ```ts
+   export const entries: Record<string, string> = {
      // ... existing entries
      'my-component/index': 'src/my-component/index.ts',
    };
-  ```
-5. Add a Storybook story in `apps/docs/stories/`:
-  - Create `apps/docs/stories/my-component.stories.tsx`
-  - Import from `@signozhq/ui` and use the same story/doc pattern as other stories (see e.g., `badge.stories.tsx`)
-6. Build and verify:
-  ```sh
+   ```
+
+5. Register the subpath in `packages/ui/package.json`:
+
+   ```json
+   "./my-component": {
+     "import": { "types": "./dist/my-component/index.d.ts",  "import": "./dist/my-component/index.mjs" },
+     "require": { "types": "./dist/my-component/index.d.cts", "require": "./dist/my-component/index.cjs" }
+   }
+   ```
+
+6. Add the import line to root `README.md` and `apps/docs/stories/intro.mdx`.
+
+7. Add `apps/docs/stories/my-component.stories.tsx` and `my-component.mdx`, following
+   [How to create stories](./COMPONENT_GUIDELINES.md#5-how-to-create-stories).
+
+8. Regenerate the token docs: `pnpm -F @signozhq/ui tokens`
+
+9. Verify:
+
+   ```sh
+   pnpm lint
    pnpm build
+   pnpm run type-check
+   pnpm -F @signozhq/ui test:run
    pnpm dev
-  ```
-7. Commit and push:
-  ```sh
-   git add .
-   git commit -m "Add new component: my-component"
-   git push origin feature/new-component-name
-  ```
-8. Open a pull request.
+   ```
+
+   Steps 3-6 are each enforced by a test in `packages/ui/src/__tests__/`. If you missed one,
+   `test:run` names it, see [Guardrails](./BUILD.md#5-guardrails).
+
+10. Commit and push:
+
+    ```sh
+    git commit -m "feat(my-component): add my-component"
+    git push origin feat/my-component
+    ```
+
+11. Open a PR. The checklist is already in the body ,  fill it in. Add the
+    `run-visual-testing` label if the change is visual.
+
+Removing a component is the same list in reverse. Removing a `package.json` export is a
+**breaking change** and needs a `feat!:` / `fix!:` commit, see [RELEASE.md](./RELEASE.md).
 
 ## Releasing
 
-See [RELEASE](./RELEASE.md) to learn more how the release process works.
+Releases are cut by Release Please from the commits on `main`. See
+[RELEASE.md](./RELEASE.md).

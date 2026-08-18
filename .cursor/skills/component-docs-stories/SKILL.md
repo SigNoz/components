@@ -73,7 +73,7 @@ In each story file:
 
 ```ts
 const meta: Meta<typeof DialogContent> = {
-  title: 'Components/Dialog/DialogContent',
+  title: 'Primitive Components/Dialog/DialogContent',
   component: DialogContent,
   argTypes: {
     // define only meaningful public props
@@ -90,7 +90,15 @@ type Story = StoryObj<typeof DialogContent>;
 
 Conventions:
 
-- **Title**: `Components/<Component>/<Subcomponent>` where appropriate.
+- **Title**: the top-level group must be one of the groups declared in
+  `apps/docs/.storybook/preview.tsx` -> `storySort.order`:
+  `Intro`, `Design System`, `Primitive Components`, `Composed Components`, `Old Components`.
+  - Primitive + subcomponents: `Primitive Components/<Component>` and
+    `Primitive Components/<Component>/<Subcomponent>`
+  - Presets/wrappers: `Composed Components/<Preset>`
+  - `Old Components` is for deprecated components awaiting a rework-or-delete decision -
+    never put a new component there.
+  - Do not invent a new top-level group.
 - **Layout**: usually `fullscreen` for modals / overlays / layout-heavy components.
 - **Tags**: include `'autodocs'` to enable automatic docs.
 
@@ -163,7 +171,7 @@ For presets/wrappers (e.g. `DialogWrapper`, `ConfirmDialog`, `ConfirmDialogUrl`,
 
 ```ts
 const meta: Meta<typeof ConfirmDialog> = {
-  title: 'Components/Dialog/ConfirmDialog',
+  title: 'Composed Components/ConfirmDialog',
   component: ConfirmDialog,
   argTypes: {
     open: { /* state */ },
