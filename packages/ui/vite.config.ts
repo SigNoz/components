@@ -2,7 +2,7 @@ import getViteLibConfig from '@repo/typescript-config/vite.config.extend';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
-const entries: Record<string, string> = {
+export const entries: Record<string, string> = {
 	index: 'src/index.ts',
 	'alert-dialog/index': 'src/alert-dialog/index.ts',
 	'announcement-banner/index': 'src/announcement-banner/index.ts',
