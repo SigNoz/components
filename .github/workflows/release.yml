@@ -4,6 +4,21 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (e.g. 0.1.1-hotfix.0). Must not exist on npm."
+        required: true
+        type: string
+      dist_tag:
+        description: "npm dist-tag. Use 'hotfix' for pre-releases, 'latest' ONLY if this is the newest version."
+        required: true
+        default: hotfix
+        type: string
+      dry_run:
+        description: "Skip publish and tagging, just build"
+        type: boolean
+        default: false
 
 concurrency:
   group: release
@@ -20,6 +35,7 @@ env:
 
 jobs:
   release-please:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -53,3 +69,78 @@ jobs:
         run: pnpm -r publish --no-git-checks ${{ env.PUBLISH_FILTERS }}
         env:
           NPM_CONFIG_PROVENANCE: true
+
+  hotfix:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Block dispatch from main
+        if: github.ref_name == 'main'
+        run: |
+          echo "::error::Dispatch from a hotfix branch cut off a release tag, not main."
+          exit 1
+
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Validate version format
+        run: |
+          V="${{ inputs.version }}"
+          if [[ ! "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9._-]+)?$ ]]; then
+            echo "::error::Version must be semver (e.g. 0.1.1 or 0.1.1-hotfix.0)"
+            exit 1
+          fi
+
+      - name: Check tag does not exist
+        run: |
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ inputs.version }}$"; then
+            echo "::error::Tag v${{ inputs.version }} already exists"
+            exit 1
+          fi
+
+      - name: Check npm version does not exist
+        run: |
+          if npm view "@signozhq/ui@${{ inputs.version }}" version >/dev/null 2>&1; then
+            echo "::error::@signozhq/ui@${{ inputs.version }} already published"
+            exit 1
+          fi
+
+      - name: Set package versions
+        run: |
+          for p in packages/ui packages/tailwind-config; do
+            (cd "$p" && npm pkg set version="${{ inputs.version }}")
+          done
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm turbo run build ${{ env.PUBLISH_FILTERS }}
+
+      - name: Publish to npm
+        if: ${{ !inputs.dry_run }}
+        run: pnpm -r publish --no-git-checks --tag "${{ inputs.dist_tag }}" ${{ env.PUBLISH_FILTERS }}
+        env:
+          NPM_CONFIG_PROVENANCE: true
+
+      - name: Create tag and GitHub release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag "v${{ inputs.version }}"
+          git push origin "v${{ inputs.version }}"
+          gh release create "v${{ inputs.version }}" \
+            --target "${{ github.sha }}" \
+            --title "v${{ inputs.version }}" \
+            --notes "Hotfix published from \`${{ github.ref_name }}\`." \
+            --prerelease

@@ -9,7 +9,7 @@ Everything else in the workspace is private and never published: `@repo/eslint-c
 
 All published packages share a single version, which is bumped in `Release PR`. The source of truth for the current version is `.release-please-manifest.json`. 
 
-Never edit a `version` field in `package.json` by hand, Release Please writes those for you.
+Never edit a `version` field in `package.json` by hand, Release Please writes those for you. The one exception is [hotfix releases](#hotfix-releases), where the workflow sets the version at build time.
 
 ## How does a release work?
 
@@ -148,8 +148,54 @@ The simplest fix is to land an empty conventional commit on `main` and merge the
 git commit --allow-empty -m "fix: retrigger release"
 ```
 
+## Hotfix releases
+
+Use the manual workflow dispatch when you need to ship a fix without releasing everything currently staged on `main`.
+
+### When to use
+
+- A bug is reported on an already-released version (e.g., `v0.1.0`)
+- `main` has accumulated unreleased breaking changes or features you're not ready to ship
+- You need to patch the old version without including the new work
+
+### How to release a hotfix
+
+1. **Create a branch from the release tag**
+
+   ```sh
+   git checkout -b hotfix/0.1.1 v0.1.0
+   ```
+
+2. **Apply your fix** — open a PR targeting `hotfix/0.1.1` so CI runs, or commit directly
+
+3. **Trigger the workflow**
+
+   - Go to **Actions → Release → Run workflow**
+   - Select branch: `hotfix/0.1.1`
+   - Version: `0.1.1-hotfix.0` (or any unused semver/prerelease)
+   - Dist tag: `hotfix` (default) — keeps `latest` pointing at the stable release from `main`
+   - Optionally enable dry run to verify the build first
+
+4. **Close the PR / delete the branch** — the hotfix branch is throwaway, the fix lives in the tag
+
+### Important notes
+
+- **Version is set manually** — this is the one sanctioned exception to "never edit `version` by hand". The workflow writes the version into `package.json` at build time; it does not touch `.release-please-manifest.json` or `main`.
+- **No changelog** — hotfixes are pre-releases, the GitHub Release notes are minimal.
+- **Dist tag matters** — publishing with `--tag hotfix` means `npm i @signozhq/ui` still installs the latest stable. Users install the hotfix explicitly: `npm i @signozhq/ui@0.1.1-hotfix.0` or `npm i @signozhq/ui@hotfix`.
+- **Cherry-pick to main** — after the hotfix ships, cherry-pick the fix commit(s) to `main` so future releases include it.
+
+### Verifying a hotfix release
+
+```sh
+npm view @signozhq/ui versions --json | tail -5
+npm dist-tag ls @signozhq/ui
+```
+
+The new version should appear in the versions list, and `hotfix` should point to it. `latest` should still point to the last stable release from `main`.
+
 ## Limitations
 
-- There are no prereleases (`prerelease: false`) and no release channels, everything ships from `main`.
-- There is no hotfix branch. To patch an old version you have to land the fix on `main` and release forward.
+- There are no prereleases (`prerelease: false`) in the normal Release Please flow, everything ships from `main`.
+- Hotfix releases bypass Release Please entirely and are published via workflow dispatch.
 - The whole workspace is a single Release Please package (`.`), so packages cannot be versioned or released independently.
