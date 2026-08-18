@@ -54,7 +54,15 @@ To learn more about the available components, take a look at: https://periscope.
 | `@signozhq/tailwind-config` | Tailwind config, design tokens, and `global.css` (required first) |
 | `@signozhq/ui`              | All UI components (single package with subpath exports)           |
 
-All components live in `@signozhq/ui`. Import by subpath:
+All components live in `@signozhq/ui`. Import from the barrel or from the component's own
+subpath — both are published, and both tree-shake:
+
+```ts
+import { Badge } from '@signozhq/ui';         // barrel
+import { Badge } from '@signozhq/ui/badge';   // subpath
+```
+
+The full set:
 
 ```ts
 import { AlertDialog } from '@signozhq/ui';
@@ -98,4 +106,13 @@ import { Typography } from '@signozhq/ui';
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for getting started, useful commands, and how to add a new component.
+Start with [CONTRIBUTING.md](./CONTRIBUTING.md): setup, commands, and how to add a component.
+
+| Doc | Read it for |
+| --- | --- |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Setup, commands, adding a component |
+| [COMPONENT_GUIDELINES.md](./COMPONENT_GUIDELINES.md) | The standard every component is held to |
+| [BUILD.md](./BUILD.md) | Why the packaging, build and CSS work this way |
+| [COMPONENT_AUDIT_RUBRIC.md](./COMPONENT_AUDIT_RUBRIC.md) | Scoring an existing component |
+| [VISUAL_TESTING.md](./VISUAL_TESTING.md) | Chromatic and the `run-visual-testing` label |
+| [RELEASE.md](./RELEASE.md) | How a version ships, and how to cut a hotfix |
