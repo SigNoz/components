@@ -79,4 +79,5 @@
  */
 // #endregion css-tokens
 
+export type { HTMLMotionProps, Transition } from 'motion/react';
 export { PinList, type PinListItem, type PinListProps } from './pin-list.js';

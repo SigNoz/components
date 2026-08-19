@@ -13,4 +13,5 @@
  */
 // #endregion css-tokens
 
+export type { CheckedState } from '@radix-ui/react-checkbox';
 export { Checkbox, CheckboxColors, type CheckboxProps } from './checkbox.js';
