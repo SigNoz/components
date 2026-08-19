@@ -13,7 +13,7 @@ styling approach of a component. For day-to-day component work, see
 | Decision | What we do | Why |
 | --- | --- | --- |
 | Packaging | One publishable package, `@signozhq/ui`, with one subpath export per component | Ship several components in one go, maintain one package instead of many, and make changes across components that depend on each other trivial. Tree-shaking keeps consumers from paying for the whole library |
-| Bundler | Vite library mode, with `vite` aliased to `rolldown-vite` | Vite 8 was not out at the time and `rolldown-vite` was much faster. **Now superseded**; see the note below |
+| Bundler | Vite 8 library mode | Fast, native Rolldown bundler under the hood |
 | Output | Dual ESM + CJS, one output file per source file | Consumers are both bundlers and Node tooling (SSR/test runners), and per-module output is what makes tree-shaking actually work |
 | Styles | CSS Modules (`*.module.scss`) driven by CSS custom properties | Consumers can retheme any value with plain CSS, without our build tool or our class hashes |
 | CSS delivery | Injected by JS at import time (`vite-plugin-css-injected-by-js`) | `import { Badge }` must be enough. No CSS file for a consumer to remember, and no CSS-handling requirement on their bundler |
@@ -67,31 +67,6 @@ built, and components must never import from it. See
 ## 2. The build pipeline
 
 `pnpm build` runs `turbo run build`, which for `packages/ui` is `vite build && publint`.
-
-### `vite` is actually `rolldown-vite`, and this is on its way out
-
-Root `package.json` aliases and patches it:
-
-```json
-"devDependencies": { "vite": "npm:rolldown-vite@7.3.1" },
-"pnpm": {
-  "overrides": { "vite": "npm:rolldown-vite@7.3.1" },
-  "patchedDependencies": { "rolldown-vite@7.3.1": "patches/rolldown-vite@7.3.1.patch" }
-}
-```
-
-The reason is historical: Vite 8 had not been released, and `rolldown-vite` built this repo
-much faster than Vite at the time. **Vite 8 is out, so this setup is deprecated and will
-eventually be replaced by plain Vite.** Treat the alias as temporary; don't build new
-tooling that depends on it.
-
-Consequence while it lasts: every Vite-consuming dependency (Storybook, Vitest,
-`@vitejs/plugin-react`) has to accept the alias, which is why root
-`pnpm.packageExtensions` widens their `vite` peer range. If you add a Vite-based tool and
-pnpm reports an unmet `vite` peer, add it there rather than un-aliasing.
-
-The patch itself is unrelated to output: it fixes `convertToNotifyOptions` so `pollInterval`
-is only set when `usePolling` is on.
 
 ### The shared config: `getViteLibConfig`
 
