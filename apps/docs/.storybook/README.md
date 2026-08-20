@@ -21,11 +21,13 @@ This directory contains the Storybook configuration for the SigNoz Components do
 
 ## Files
 
-- `preview.js` - Main Storybook configuration with dark mode settings
+- `main.js` - Storybook framework, addons and `react-docgen-typescript` setup
+- `preview.tsx` - Global decorators, parameters, `storySort.order` and the docs page template
 - `preview.css` - Global styles including Inter font and dark theme
 - `preview-head.html` - HTML head content (fonts, favicon)
 - `manager.js` - Manager UI configuration (sidebar, panels)
-- `modeDecorator.tsx` - Dark/light mode toggle component
+- `modeDecorator.tsx` / `modeDecorator.module.css` - Dark/light mode toggle component
+- `vitest.setup.ts` - Setup for the story interaction tests (`pnpm test-storybook`)
 
 ## Customization
 
