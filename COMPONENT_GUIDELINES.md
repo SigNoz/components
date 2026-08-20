@@ -158,8 +158,7 @@ className={cn(styles.badge, className)}
   public API. Use this rather than hardcoding, because an internal variable is still readable and
   debuggable, a magic number is not.
 - **Never** write `--x: var(--x)`, and never define the same variable twice in one block. Both
-  silently break the variable, and BugBot comments on both in review
-  ([`.cursor/rules/BUGBOT.md`](./.cursor/rules/BUGBOT.md)).
+  silently break the variable.
 
 A hardcoded value is a value no consumer can theme. If you catch yourself typing a literal,
 it needs a variable, and that variable should resolve to a design token.
@@ -617,8 +616,7 @@ presets first, then the primitive composition example, then a `## X Props` +
 `radio-group.mdx`. Each `<Controls>` must point at the story module for *that* component. A
 wrong reference silently renders the wrong props table.
 
-Long-form version of this, as a Cursor skill:
-[`.cursor/skills/component-docs-stories/SKILL.md`](./.cursor/skills/component-docs-stories/SKILL.md).
+Long-form version of this as a Claude skill: `.claude/skills/component-docs-stories/SKILL.md`.
 
 ## 6. Visual QA
 
@@ -667,4 +665,3 @@ Query by role and accessible name (`getByRole('button', { name: /close badge/i }
   is this document in checkbox form. It ships with every PR body, tick it, don't delete it.
 - **Auditing an existing component**: score it with
   [COMPONENT_AUDIT_RUBRIC.md](./COMPONENT_AUDIT_RUBRIC.md) and record the total in an issue.
-- Automated review rules live in [`.cursor/rules/BUGBOT.md`](./.cursor/rules/BUGBOT.md).
