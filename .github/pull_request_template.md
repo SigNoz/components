@@ -21,11 +21,19 @@ Visual change? Add the `run-visual-testing` label to get Chromatic snapshots.
 See VISUAL_TESTING.md.
 
 The checklist below is COMPONENT_GUIDELINES.md in checkbox form. Keep the sections
-that apply to this PR and delete the rest — a docs-only or CI-only PR needs none of it.
+that apply to this PR and delete the rest. A docs-only or CI-only PR needs none of it.
 -->
 
 <details>
-<summary><b>Component checklist</b> — required for any change under <code>packages/ui/src/</code></summary>
+<summary><b>Component checklist</b> (required for any change under <code>packages/ui/src/</code>)</summary>
+
+**Philosophy** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#0-design-philosophy))
+
+- [ ] Variants represent meaningful roles (purpose), not one-off visual styling
+- [ ] All applicable states handled: default, hover, active, selected, focus, disabled, loading, invalid, read-only
+- [ ] Accessibility encoded in component: keyboard, focus, labels, ARIA (not left to consumer)
+- [ ] Complex behaviours split into composable patterns, not crammed into conflicting props
+- [ ] Escape hatches minimized; CSS overrides are last resort (if exception recurs, evolve the component)
 
 **Structure** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#1-code-organization))
 

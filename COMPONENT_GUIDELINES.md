@@ -11,6 +11,32 @@ component, and use it when you review one.
 | [COMPONENT_AUDIT_RUBRIC.md](./COMPONENT_AUDIT_RUBRIC.md) | Scoring an existing component |
 | [VISUAL_TESTING.md](./VISUAL_TESTING.md) | Chromatic snapshots and the `run-visual-testing` label |
 
+## 0. Design philosophy
+
+Five principles behind every component. Read when building; refer back when making tradeoffs.
+
+1. **Variants are roles, not styles.** `critical` is a role; `redSmallPill` is not. A variant
+   expresses *purpose*, not a one-off visual request. If a design asks for something that does
+   not fit an existing role, that's a conversation about whether to add a role, not a prop.
+
+2. **State is explicit and complete.** Every interactive component handles: default, hover,
+   active, selected, focus, disabled, loading, invalid, and read-only where applicable. Missing
+   states are bugs, not future work.
+
+3. **Accessibility lives in the base, not the consumer.** Keyboard behaviour, focus management,
+   labels, and ARIA relationships are encoded once in the component. A consumer should not have
+   to wire them.
+
+4. **Composition over configuration.** When props start contradicting each other, split the
+   behaviour into purposeful patterns. A single component with `disableX`, `overrideY`,
+   `forceZ` is usually two components pretending to be one.
+
+5. **Minimum viable escape hatch.** Expose only what real product needs require. CSS overrides
+   via custom properties are always possible, but they're a last resort, not the plan. When a
+   consumer reaches for `--badge-padding` to fix a one-off, that's evidence the component may
+   need a new size variant or prop. Record these exceptions and evolve the component rather
+   than normalizing workarounds.
+
 **The non-negotiables**, if you read nothing else:
 
 1. Styles are **CSS Modules**, and every value a consumer might want to change is a
