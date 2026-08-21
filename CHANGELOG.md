@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.1.1](https://github.com/SigNoz/components/compare/v0.1.0...v0.1.1) (2026-08-21)
+
+
+### Documentation
+
+* **build:** add docs for build.md ([#364](https://github.com/SigNoz/components/issues/364)) ([5615fe2](https://github.com/SigNoz/components/commit/5615fe27c3d94efdddb860fe46915e424b4e40c1))
+
+
+### Miscellaneous Chores
+
+* **vite:** ensure entries are single source to avoid mismatches ([#362](https://github.com/SigNoz/components/issues/362)) ([b40c710](https://github.com/SigNoz/components/commit/b40c71042a9ccd604e5753d2726e45537a2b700c))
+
+
+### Code Refactoring
+
+* **scss:** drop old index.css and rename css files to scss ([#363](https://github.com/SigNoz/components/issues/363)) ([ec9ab4d](https://github.com/SigNoz/components/commit/ec9ab4dd3437db8c3f785a1c19e1516bfec53451))
+
+
+### Continuous Integration
+
+* **release:** add way to release hotfix ([#360](https://github.com/SigNoz/components/issues/360)) ([a9c4807](https://github.com/SigNoz/components/commit/a9c480780f01d8ae25dc3ac31ef815c4c99b9ed3))
+* **test-ui:** missing lint/format ([#359](https://github.com/SigNoz/components/issues/359)) ([736dddb](https://github.com/SigNoz/components/commit/736dddbfba64b5b039d6da7f97c0f7c6915a49f9))
+
 ## [0.1.0](https://github.com/SigNoz/components/compare/v0.0.23...v0.1.0) (2026-08-19)
 
 
