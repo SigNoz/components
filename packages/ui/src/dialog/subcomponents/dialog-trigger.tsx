@@ -1,7 +1,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
-import styles from '../dialog.module.css';
+import styles from '../dialog.module.scss';
 
 export type DialogTriggerProps = Pick<
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>,

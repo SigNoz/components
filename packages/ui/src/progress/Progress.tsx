@@ -2,7 +2,7 @@ import * as ProgressPrimitive from '@radix-ui/react-progress';
 import * as React from 'react';
 import { useId, useMemo } from 'react';
 import { cn } from '../lib/utils.js';
-import styles from './progress.module.css';
+import styles from './progress.module.scss';
 
 export interface ProgressProps extends React.ComponentPropsWithoutRef<
 	typeof ProgressPrimitive.Root

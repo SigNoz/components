@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
-import styles from '../dialog.module.css';
+import styles from '../dialog.module.scss';
 
 export type DialogHeaderProps = Pick<
 	React.ComponentPropsWithoutRef<'div'>,

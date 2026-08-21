@@ -3,7 +3,7 @@ import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { cn } from '../../lib/utils.js';
-import styles from '../dialog.module.css';
+import styles from '../dialog.module.scss';
 import { DialogOverlay } from './dialog-overlay.js';
 import { DialogPortal } from './dialog-portal.js';
 

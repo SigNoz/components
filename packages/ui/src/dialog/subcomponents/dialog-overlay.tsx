@@ -2,7 +2,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
-import styles from '../dialog.module.css';
+import styles from '../dialog.module.scss';
 
 const overlayVariants: Variants = {
 	initial: { opacity: 0 },
