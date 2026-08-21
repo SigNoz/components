@@ -44,6 +44,37 @@ Commit the updated `index.ts` regions together with your style changes. CI runs 
 
 Implementation-only variables should use an `-internal-` segment in the name (for example `--button-internal-background`). Those are excluded from the generated tables and are not part of the public customization API.
 
+### CSS Modules keyframe edge case
+
+CSS Modules hashes `@keyframes` names locally (e.g., `spin` becomes `spin_abc123`). However, keyframe names inside `var()` fallbacks are treated as raw strings and not hashed:
+
+```scss
+/* BROKEN: "spin" in fallback won't match hashed @keyframes spin */
+.spinner {
+  animation: var(--custom-animation, spin 1s linear infinite);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+**Fix**: Define the keyframe name as an internal CSS variable first, then reference it in the fallback:
+
+```scss
+/* WORKS: CSS Modules hashes the variable assignment correctly */
+.spinner {
+  --component-internal-animation-name: spin;
+  animation: var(--custom-animation, var(--component-internal-animation-name) 1s linear infinite);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+This pattern ensures the keyframe reference is properly hashed while still allowing customization via the public CSS variable. Use `-internal-` in the variable name so it is excluded from token docs.
+
 ## Adding a New Component
 
 All components live in the single package `@signozhq/ui` under `packages/ui`.

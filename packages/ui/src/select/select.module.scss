@@ -187,14 +187,17 @@
 	);
 
 	&[data-state='open'] {
-		animation: var(--select-content-open-animation, select-in 150ms ease-out);
+		--select-internal-animation-name: select-in;
+		--select-internal-slide-up-animation-name: select-in, select-slide-up;
+		--select-internal-slide-down-animation-name: select-in, select-slide-down;
+		animation: var(--select-content-open-animation, var(--select-internal-animation-name) 150ms ease-out);
 
 		&[data-side='top'] {
-			animation-name: var(--select-content-slide-up-animation, select-in, select-slide-up);
+			animation-name: var(--select-content-slide-up-animation, var(--select-internal-slide-up-animation-name));
 		}
 
 		&[data-side='bottom'] {
-			animation-name: var(--select-content-slide-down-animation, select-in, select-slide-down);
+			animation-name: var(--select-content-slide-down-animation, var(--select-internal-slide-down-animation-name));
 		}
 	}
 

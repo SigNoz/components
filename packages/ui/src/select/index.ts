@@ -15,13 +15,13 @@
  * | `--select-content-color` | `var(--popover-foreground)` |
  * | `--select-content-max-height` | `20rem` |
  * | `--select-content-min-width` | `8rem` |
- * | `--select-content-open-animation` | `select-in 150ms ease-out` |
+ * | `--select-content-open-animation` | `var(--select-internal-animation-name) 150ms eas...` |
  * | `--select-content-overflow` | `hidden` |
  * | `--select-content-popper-min-width` | `var(--radix-select-trigger-width)` |
  * | `--select-content-popper-width` | `var(--radix-select-trigger-width)` |
  * | `--select-content-position` | `relative` |
- * | `--select-content-slide-down-animation` | `select-in, select-slide-down` |
- * | `--select-content-slide-up-animation` | `select-in, select-slide-up` |
+ * | `--select-content-slide-down-animation` | `var(--select-internal-slide-down-animation-name)` |
+ * | `--select-content-slide-up-animation` | `var(--select-internal-slide-up-animation-name)` |
  * | `--select-group-padding` | `0` |
  * | `--select-item-align-items` | `center` |
  * | `--select-item-border-radius` | `var(--radius-1, 2px)` |
