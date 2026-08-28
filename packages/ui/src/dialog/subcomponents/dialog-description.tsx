@@ -1,10 +1,9 @@
-import type * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../dialog.module.css';
 
 export type DialogDescriptionProps = Pick<
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>,
+	React.ComponentProps<'div'>,
 	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
@@ -29,16 +28,15 @@ export type DialogDescriptionProps = Pick<
  * </DialogContent>
  * ```
  */
-export const DialogDescription = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Description>,
-	DialogDescriptionProps
->(({ className, testId, ...props }, ref) => (
-	<div
-		ref={ref}
-		data-slot="dialog-description"
-		data-testid={testId}
-		className={cn(styles.dialog__description, className)}
-		{...props}
-	/>
-));
+export const DialogDescription = React.forwardRef<HTMLDivElement, DialogDescriptionProps>(
+	({ className, testId, ...props }, ref) => (
+		<div
+			ref={ref}
+			data-slot="dialog-description"
+			data-testid={testId}
+			className={cn(styles.dialog__description, className)}
+			{...props}
+		/>
+	),
+);
 DialogDescription.displayName = 'DialogDescription';

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { activate } from '../__tests__/interactions.js';
 import { Select } from './components/select.js';
 import { SelectContent } from './components/select-content.js';
 import { SelectGroup, SelectLabel } from './components/select-group.js';
@@ -24,7 +25,7 @@ describe('Select single', () => {
 		renderSingleSelect({ onChange });
 
 		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Banana' }));
+		activate(screen.getByRole('option', { name: 'Banana' }));
 
 		expect(onChange).toHaveBeenCalledWith('banana');
 	});
@@ -33,7 +34,7 @@ describe('Select single', () => {
 		renderSingleSelect();
 		fireEvent.click(screen.getByRole('combobox'));
 		expect(screen.getByRole('option', { name: 'Apple' })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+		activate(screen.getByRole('option', { name: 'Apple' }));
 		expect(screen.queryByRole('option', { name: 'Apple' })).not.toBeInTheDocument();
 	});
 
@@ -120,7 +121,7 @@ describe('Select single', () => {
 		);
 		fireEvent.click(screen.getByRole('combobox'));
 		expect(screen.getByRole('option', { name: 'Apple' })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+		activate(screen.getByRole('option', { name: 'Apple' }));
 		await waitFor(() => {
 			expect(screen.queryByRole('option', { name: 'Apple' })).not.toBeInTheDocument();
 		});

@@ -9,9 +9,8 @@
  * | `--tabs-active-slider-border-radius` | `2px` |
  * | `--tabs-active-slider-bottom` | `calc(var(--spacing-4, 8px) * -1)` |
  * | `--tabs-active-slider-height` | `2px` |
- * | `--tabs-active-slider-left` | `0` |
  * | `--tabs-active-slider-position` | `absolute` |
- * | `--tabs-active-slider-transition` | `transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),   ...` |
+ * | `--tabs-active-slider-transition` | `left 0.3s cubic-bezier(0.4, 0, 0.2, 1),     wid...` |
  * | `--tabs-active-slider-will-change` | `transform, width, opacity` |
  * | `--tabs-active-text-color` | `var(--l1-foreground-hover)` |
  * | `--tabs-bar-content-gap` | `var(--spacing-8, 16px)` |

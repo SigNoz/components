@@ -16,8 +16,9 @@
  * | `--popover-box-shadow` | `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2...` |
  * | `--popover-foreground` | `var(--l1-foreground)` |
  * | `--popover-padding` | `var(--spacing-8)` |
- * | `--popover-transform-origin` | `var(--radix-popover-content-transform-origin)` |
+ * | `--popover-transform-origin` | `var(--transform-origin)` |
  * | `--popover-width` | `fit-content` |
+ * | `--popover-z-index` | `50` |
  */
 // #endregion css-tokens
 

@@ -1,4 +1,4 @@
-import * as TogglePrimitive from '@radix-ui/react-toggle';
+import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
 import * as React from 'react';
 
 import { cn } from '../lib/utils.js';
@@ -73,14 +73,16 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
 		},
 		ref,
 	) => (
-		<TogglePrimitive.Root
+		<TogglePrimitive
 			ref={ref}
 			data-slot="toggle"
 			data-testid={testId}
 			data-size={size}
 			data-color={color}
 			pressed={value}
-			onPressedChange={onChange}
+			// Base UI passes `(pressed, eventDetails)`; our public `onChange`
+			// takes the boolean alone, so the second argument is dropped here.
+			onPressedChange={onChange ? (pressed: boolean) => onChange(pressed) : undefined}
 			defaultPressed={defaultValue}
 			className={cn(styles.toggle, className)}
 			{...props}

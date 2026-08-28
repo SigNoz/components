@@ -1,4 +1,4 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { ChevronDown, LoaderCircle, X } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
@@ -63,10 +63,7 @@ export type SelectTriggerProps = {
  * <SelectTrigger testId="my-select-trigger" />
  * ```
  */
-export const SelectTrigger = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Trigger>,
-	SelectTriggerProps
->(
+export const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
 	(
 		{
 			className,
@@ -130,7 +127,8 @@ export const SelectTrigger = React.forwardRef<
 				);
 			}
 
-			// Single-select: use resolveLabel if provided and has value, otherwise use Radix default
+			// Single-select: use resolveLabel if provided and has value, otherwise
+			// let the primitive render the value or the placeholder.
 			if (resolveLabel && hasValue && context) {
 				return <span>{resolveLabel(context.value[0])}</span>;
 			}
@@ -157,9 +155,9 @@ export const SelectTrigger = React.forwardRef<
 				{loading ? (
 					<LoaderCircle className={styles['select__trigger-spinner']} />
 				) : (
-					<SelectPrimitive.Icon asChild>
-						<ChevronDown className={styles['select__trigger-icon']} />
-					</SelectPrimitive.Icon>
+					<SelectPrimitive.Icon
+						render={<ChevronDown className={styles['select__trigger-icon']} />}
+					/>
 				)}
 			</SelectPrimitive.Trigger>
 		);
@@ -192,20 +190,19 @@ export type SelectValueProps = {
  * </SelectTrigger>
  * ```
  */
-export const SelectValue = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Value>,
-	SelectValueProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Value
-		ref={ref}
-		id={id}
-		className={className}
-		style={style}
-		data-slot="select-value"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.Value
+			ref={ref}
+			id={id}
+			className={className}
+			style={style}
+			data-slot="select-value"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectValue.displayName = 'SelectValue';
 
 export type SelectIconProps = {
@@ -238,18 +235,24 @@ export type SelectIconProps = {
  * </SelectIcon>
  * ```
  */
-export const SelectIcon = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Icon>,
-	SelectIconProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Icon
-		ref={ref}
-		id={id}
-		className={cn(styles['select__trigger-icon'], className)}
-		style={style}
-		data-slot="select-icon"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectIcon = React.forwardRef<HTMLSpanElement, SelectIconProps>(
+	({ className, style, id, testId, asChild, children, ...props }, ref) => {
+		const child = asChild && React.isValidElement(children) ? children : undefined;
+
+		return (
+			<SelectPrimitive.Icon
+				ref={ref}
+				id={id}
+				className={cn(styles['select__trigger-icon'], className)}
+				style={style}
+				data-slot="select-icon"
+				data-testid={testId}
+				render={child}
+				{...props}
+			>
+				{child === undefined ? children : undefined}
+			</SelectPrimitive.Icon>
+		);
+	},
+);
 SelectIcon.displayName = 'SelectIcon';

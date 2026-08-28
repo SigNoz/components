@@ -58,7 +58,13 @@ describe('wrapper prop targeting regressions', () => {
 		const control = screen.getByRole('switch', { name: 'Notifications' });
 		const container = screen.getByTestId('notifications-container');
 
-		expect(control).toHaveAttribute('id', 'notifications');
+		// BREAKING (Base UI migration): `id` now lands on the hidden input that
+		// carries the switch's value into a form, not on the interactive root.
+		// The root is a <span role="switch"> and gets its own generated id, and
+		// label association is wired through aria-labelledby automatically.
+		// Callers using `id` purely to target the visual element must switch to
+		// `testId`; callers using it for form/label wiring are unaffected.
+		expect(document.querySelector('input[type="checkbox"]')).toHaveAttribute('id', 'notifications');
 		expect(control).toHaveAttribute('data-testid', 'notifications-switch');
 		expect(control).toHaveClass('switch-class');
 		expect(control).toHaveStyle({ opacity: '0.5' });
@@ -118,7 +124,9 @@ describe('wrapper prop targeting regressions', () => {
 		const item = screen.getByRole('radio', { name: 'Option A' });
 		const container = screen.getByTestId('radio-a-container');
 
-		expect(item).toHaveAttribute('id', 'radio-a');
+		// BREAKING (Base UI migration): `id` now lands on the hidden radio input
+		// that carries the value into a form, not on the interactive root.
+		expect(document.querySelector('input[type="radio"]')).toHaveAttribute('id', 'radio-a');
 		expect(item).toHaveAttribute('data-testid', 'radio-a');
 		expect(item).toHaveClass('radio-class');
 		expect(item).toHaveStyle({ borderWidth: '2px' });

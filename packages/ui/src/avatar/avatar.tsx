@@ -1,4 +1,5 @@
-import { forwardRef, useState } from 'react';
+import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
+import { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './avatar.module.scss';
 
@@ -56,12 +57,10 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(
 		},
 		ref,
 	) => {
-		const [imgError, setImgError] = useState(false);
-
 		const resolvedColor = color ? colorMap[color] || color : undefined;
 
 		return (
-			<span
+			<AvatarPrimitive.Root
 				ref={ref}
 				data-slot="avatar"
 				data-size={size}
@@ -74,17 +73,17 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(
 			>
 				{loading ? (
 					<span className={styles.skeleton} />
-				) : src && !imgError ? (
-					<img
-						className={styles.image}
-						src={src}
-						alt={alt}
-						onError={(): void => setImgError(true)}
-					/>
 				) : (
-					<span className={styles.fallback}>{children}</span>
+					<>
+						{/* Base UI tracks the image's load/error status and reveals the
+						    fallback itself, replacing the old imgError state. */}
+						{src && <AvatarPrimitive.Image className={styles.image} src={src} alt={alt} />}
+						<AvatarPrimitive.Fallback className={styles.fallback}>
+							{children}
+						</AvatarPrimitive.Fallback>
+					</>
 				)}
-			</span>
+			</AvatarPrimitive.Root>
 		);
 	},
 );

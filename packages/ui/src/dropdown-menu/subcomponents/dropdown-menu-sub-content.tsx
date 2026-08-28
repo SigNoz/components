@@ -1,11 +1,10 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import * as React from 'react';
 
+import type { DismissHandlers } from '../../lib/dismiss-handlers.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
 import { DropdownMenuPortal } from './dropdown-menu-portal.js';
-
-type OriginalSubContentProps = React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>;
 
 export type DropdownMenuSubContentProps = {
 	/**
@@ -35,18 +34,18 @@ export type DropdownMenuSubContentProps = {
 	 * Event handler called when a `pointerdown` event happens outside of the sub content.
 	 * Can be prevented.
 	 */
-	onPointerDownOutside?: OriginalSubContentProps['onPointerDownOutside'];
+	onPointerDownOutside?: DismissHandlers['onPointerDownOutside'];
 	/**
 	 * Event handler called when the focus moves outside of the sub content.
 	 * Can be prevented.
 	 */
-	onFocusOutside?: OriginalSubContentProps['onFocusOutside'];
+	onFocusOutside?: DismissHandlers['onFocusOutside'];
 	/**
 	 * Event handler called when an interaction happens outside the sub content.
 	 * Specifically, when a `pointerdown` event happens outside or focus moves outside of it.
 	 * Can be prevented.
 	 */
-	onInteractOutside?: OriginalSubContentProps['onInteractOutside'];
+	onInteractOutside?: DismissHandlers['onInteractOutside'];
 	/**
 	 * The distance in pixels from the trigger.
 	 * @default 0
@@ -67,12 +66,12 @@ export type DropdownMenuSubContentProps = {
 	 * The element used as the collision boundary.
 	 * By default this is the viewport.
 	 */
-	collisionBoundary?: OriginalSubContentProps['collisionBoundary'];
+	collisionBoundary?: React.ComponentProps<typeof MenuPrimitive.Positioner>['collisionBoundary'];
 	/**
 	 * The distance in pixels from the boundary edges where collision detection should occur.
 	 * @default 0
 	 */
-	collisionPadding?: OriginalSubContentProps['collisionPadding'];
+	collisionPadding?: React.ComponentProps<typeof MenuPrimitive.Positioner>['collisionPadding'];
 	/**
 	 * The padding between the arrow and the edges of the content.
 	 * @default 0
@@ -105,18 +104,50 @@ export type DropdownMenuSubContentProps = {
  * </DropdownMenuSub>
  * ```
  */
-export const DropdownMenuSubContent = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
-	DropdownMenuSubContentProps
->(({ className, ...props }, ref) => (
-	<DropdownMenuPortal>
-		<DropdownMenuPrimitive.SubContent
-			ref={ref}
-			data-slot="dropdown-menu-sub-content"
-			className={cn(styles['dropdown-menu__sub-content'], className)}
-			{...props}
-		/>
-	</DropdownMenuPortal>
-));
+export const DropdownMenuSubContent = React.forwardRef<HTMLDivElement, DropdownMenuSubContentProps>(
+	(
+		{
+			className,
+			children,
+			sideOffset,
+			alignOffset,
+			collisionBoundary,
+			collisionPadding,
+			arrowPadding,
+			sticky,
+			hideWhenDetached,
+			avoidCollisions,
+			forceMount,
+			loop: _loop,
+			onEscapeKeyDown,
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
+			...props
+		},
+		ref,
+	) => (
+		<DropdownMenuPortal forceMount={forceMount}>
+			<MenuPrimitive.Positioner
+				className={styles['dropdown-menu__positioner']}
+				sideOffset={sideOffset}
+				alignOffset={alignOffset}
+				collisionBoundary={collisionBoundary}
+				collisionPadding={collisionPadding}
+				arrowPadding={arrowPadding}
+				sticky={sticky === 'always'}
+			>
+				<MenuPrimitive.Popup
+					ref={ref}
+					data-slot="dropdown-menu-sub-content"
+					className={cn(styles['dropdown-menu__sub-content'], className)}
+					{...props}
+				>
+					{children}
+				</MenuPrimitive.Popup>
+			</MenuPrimitive.Positioner>
+		</DropdownMenuPortal>
+	),
+);
 
 DropdownMenuSubContent.displayName = 'DropdownMenuSubContent';

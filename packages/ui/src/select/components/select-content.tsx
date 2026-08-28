@@ -1,8 +1,17 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { ChevronDown, ChevronUp } from '@signozhq/icons';
 import * as React from 'react';
+import { type DismissHandlers, useRegisterDismissHandlers } from '../../lib/dismiss-handlers.js';
+import { InlinePortal } from '../../lib/inline-portal.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../select.module.scss';
+
+/**
+ * Radix took a single `avoidCollisions` boolean; Base UI takes a per-axis
+ * strategy. `flip`/`shift` reproduces Radix's behaviour.
+ */
+const COLLISIONS_ON = { side: 'flip', align: 'shift' } as const;
+const COLLISIONS_OFF = { side: 'none', align: 'none' } as const;
 
 export type SelectContentProps = {
 	/** Additional CSS class names. */
@@ -52,14 +61,14 @@ export type SelectContentProps = {
 	/** Whether to prevent scrolling the body when content is open. */
 	avoidCollisions?: boolean;
 	/** Callback fired when escape key is pressed. */
-	onEscapeKeyDown?: SelectPrimitive.SelectContentProps['onEscapeKeyDown'];
+	onEscapeKeyDown?: DismissHandlers['onEscapeKeyDown'];
 	/**
 	 * Callback fired when pointer is pressed outside the content.
 	 *
 	 * ℹ️ The event is a `PointerDownOutsideEvent`; the originating pointer event is
 	 * available on `event.detail.originalEvent`.
 	 */
-	onPointerDownOutside?: SelectPrimitive.SelectContentProps['onPointerDownOutside'];
+	onPointerDownOutside?: DismissHandlers['onPointerDownOutside'];
 };
 
 /**
@@ -85,10 +94,7 @@ export type SelectContentProps = {
  * </SelectContent>
  * ```
  */
-export const SelectContent = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Content>,
-	SelectContentProps
->(
+export const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
 	(
 		{
 			className,
@@ -99,38 +105,61 @@ export const SelectContent = React.forwardRef<
 			withPortal = true,
 			withViewport = true,
 			position = 'popper',
+			side,
 			sideOffset = 4,
-			...props
+			align,
+			alignOffset,
+			avoidCollisions,
+			onEscapeKeyDown,
+			onPointerDownOutside,
 		},
 		ref,
 	) => {
+		useRegisterDismissHandlers({ onEscapeKeyDown, onPointerDownOutside });
+
 		const content = (
-			<SelectPrimitive.Content
-				ref={ref}
-				id={id}
-				className={cn(styles.select__content, className)}
-				style={style}
-				data-slot="select-content"
-				data-testid={testId}
-				position={position}
+			<SelectPrimitive.Positioner
+				className={styles.select__positioner}
+				// Radix's `position="item-aligned"` is the primitive's own
+				// item-aligned mode; `popper` is plain anchor positioning.
+				alignItemWithTrigger={position === 'item-aligned'}
+				side={side}
 				sideOffset={sideOffset}
-				{...props}
+				align={align}
+				alignOffset={alignOffset}
+				collisionAvoidance={
+					avoidCollisions === undefined
+						? undefined
+						: avoidCollisions
+							? COLLISIONS_ON
+							: COLLISIONS_OFF
+				}
 			>
-				{withViewport ? (
-					<SelectPrimitive.Viewport className={styles.select__viewport}>
-						{children}
-					</SelectPrimitive.Viewport>
-				) : (
-					children
-				)}
-			</SelectPrimitive.Content>
+				<SelectPrimitive.Popup
+					ref={ref}
+					id={id}
+					className={cn(styles.select__content, className)}
+					style={style}
+					data-slot="select-content"
+					data-testid={testId}
+					data-position={position}
+				>
+					{withViewport ? (
+						<SelectPrimitive.List className={styles.select__viewport}>
+							{children}
+						</SelectPrimitive.List>
+					) : (
+						children
+					)}
+				</SelectPrimitive.Popup>
+			</SelectPrimitive.Positioner>
 		);
 
 		if (withPortal) {
 			return <SelectPrimitive.Portal>{content}</SelectPrimitive.Portal>;
 		}
 
-		return content;
+		return <InlinePortal Portal={SelectPrimitive.Portal}>{content}</InlinePortal>;
 	},
 );
 SelectContent.displayName = 'SelectContent';
@@ -160,25 +189,24 @@ export type SelectViewportProps = {
  * </SelectContent>
  * ```
  */
-export const SelectViewport = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Viewport>,
-	SelectViewportProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Viewport
-		ref={ref}
-		id={id}
-		className={cn(styles.select__viewport, className)}
-		style={style}
-		data-slot="select-viewport"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectViewport = React.forwardRef<HTMLDivElement, SelectViewportProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.List
+			ref={ref}
+			id={id}
+			className={cn(styles.select__viewport, className)}
+			style={style}
+			data-slot="select-viewport"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectViewport.displayName = 'SelectViewport';
 
 export type SelectPortalProps = {
 	/** The container element to portal into. */
-	container?: SelectPrimitive.SelectPortalProps['container'];
+	container?: React.ComponentProps<typeof SelectPrimitive.Portal>['container'];
 	/** The content to portal. */
 	children?: React.ReactNode;
 };
@@ -223,22 +251,21 @@ export type SelectScrollUpButtonProps = {
  * </SelectContent>
  * ```
  */
-export const SelectScrollUpButton = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
-	SelectScrollUpButtonProps
->(({ className, style, id, testId, children, ...props }, ref) => (
-	<SelectPrimitive.ScrollUpButton
-		ref={ref}
-		id={id}
-		className={cn(styles['select__scroll-button'], className)}
-		style={style}
-		data-slot="select-scroll-up-button"
-		data-testid={testId}
-		{...props}
-	>
-		{children ?? <ChevronUp />}
-	</SelectPrimitive.ScrollUpButton>
-));
+export const SelectScrollUpButton = React.forwardRef<HTMLDivElement, SelectScrollUpButtonProps>(
+	({ className, style, id, testId, children, ...props }, ref) => (
+		<SelectPrimitive.ScrollUpArrow
+			ref={ref}
+			id={id}
+			className={cn(styles['select__scroll-button'], className)}
+			style={style}
+			data-slot="select-scroll-up-button"
+			data-testid={testId}
+			{...props}
+		>
+			{children ?? <ChevronUp />}
+		</SelectPrimitive.ScrollUpArrow>
+	),
+);
 SelectScrollUpButton.displayName = 'SelectScrollUpButton';
 
 export type SelectScrollDownButtonProps = {
@@ -267,22 +294,21 @@ export type SelectScrollDownButtonProps = {
  * </SelectContent>
  * ```
  */
-export const SelectScrollDownButton = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
-	SelectScrollDownButtonProps
->(({ className, style, id, testId, children, ...props }, ref) => (
-	<SelectPrimitive.ScrollDownButton
-		ref={ref}
-		id={id}
-		className={cn(styles['select__scroll-button'], className)}
-		style={style}
-		data-slot="select-scroll-down-button"
-		data-testid={testId}
-		{...props}
-	>
-		{children ?? <ChevronDown />}
-	</SelectPrimitive.ScrollDownButton>
-));
+export const SelectScrollDownButton = React.forwardRef<HTMLDivElement, SelectScrollDownButtonProps>(
+	({ className, style, id, testId, children, ...props }, ref) => (
+		<SelectPrimitive.ScrollDownArrow
+			ref={ref}
+			id={id}
+			className={cn(styles['select__scroll-button'], className)}
+			style={style}
+			data-slot="select-scroll-down-button"
+			data-testid={testId}
+			{...props}
+		>
+			{children ?? <ChevronDown />}
+		</SelectPrimitive.ScrollDownArrow>
+	),
+);
 SelectScrollDownButton.displayName = 'SelectScrollDownButton';
 
 export type SelectArrowProps = {
@@ -295,9 +321,9 @@ export type SelectArrowProps = {
 	/** Test identifier for testing libraries. */
 	testId?: string;
 	/** The width of the arrow; numbers are pixels. */
-	width?: SelectPrimitive.SelectArrowProps['width'];
+	width?: number | string;
 	/** The height of the arrow; numbers are pixels. */
-	height?: SelectPrimitive.SelectArrowProps['height'];
+	height?: number | string;
 };
 
 /**
@@ -315,18 +341,17 @@ export type SelectArrowProps = {
  * </SelectContent>
  * ```
  */
-export const SelectArrow = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Arrow>,
-	SelectArrowProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Arrow
-		ref={ref}
-		id={id}
-		className={cn(styles.select__arrow, className)}
-		style={style}
-		data-slot="select-arrow"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectArrow = React.forwardRef<HTMLDivElement, SelectArrowProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.Arrow
+			ref={ref}
+			id={id}
+			className={cn(styles.select__arrow, className)}
+			style={style}
+			data-slot="select-arrow"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectArrow.displayName = 'SelectArrow';

@@ -167,9 +167,11 @@
 	flex-shrink: var(--select-pill-overflow-flex-shrink, 0);
 }
 
+.select__positioner {
+	z-index: var(--select-positioner-z-index, 50);
+}
+
 .select__content {
-	--radix-select-content-available-width: var(--radix-select-trigger-width);
-	--radix-select-content-available-height: var(--radix-select-trigger-height);
 	position: var(--select-content-position, relative);
 	min-width: var(--select-content-min-width, 8rem);
 	max-height: var(--select-content-max-height, 20rem);
@@ -186,7 +188,7 @@
 		0 2px 4px -2px rgb(0 0 0 / 0.1)
 	);
 
-	&[data-state='open'] {
+	&[data-open] {
 		animation: var(--select-content-open-animation, select-in 150ms ease-out);
 
 		&[data-side='top'] {
@@ -198,13 +200,12 @@
 		}
 	}
 
-	// Exit animation removed: Radix 2.3.x Presence component waits for animationend
-	// event before unmounting, but the event never fires for Select, causing the
-	// popover to stay open after selection. See: https://github.com/radix-ui/primitives/pull/3894
+	// No exit animation: the popup is unmounted on close, and the enter
+	// animation above is all this surface has ever had.
 
 	&[data-position='popper'] {
-		width: var(--select-content-popper-width, var(--radix-select-trigger-width));
-		min-width: var(--select-content-popper-min-width, var(--radix-select-trigger-width));
+		width: var(--select-content-popper-width, var(--anchor-width));
+		min-width: var(--select-content-popper-min-width, var(--anchor-width));
 	}
 }
 

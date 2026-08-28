@@ -20,14 +20,29 @@
 	}
 }
 
+.popover__positioner {
+	z-index: var(--popover-z-index, 50);
+}
+
+/* Base UI reports an occluded anchor as state rather than unmounting the popup,
+   so `hideWhenDetached` is honoured in CSS. */
+.popover__positioner[data-hide-when-detached][data-anchor-hidden] {
+	visibility: hidden;
+}
+
+/* Stands in for Radix's `disableOutsidePointerEvents`: covers the page without
+   painting anything so outside elements cannot be interacted with. */
+.popover__backdrop {
+	position: fixed;
+	inset: 0;
+}
+
 .popover__content {
-	--radix-popover-content-available-width: var(--radix-popover-trigger-width);
-	--radix-popover-content-available-height: var(--radix-popover-trigger-height);
-	min-width: var(--radix-popover-trigger-width);
+	min-width: var(--anchor-width);
 	background-color: var(--popover-background, var(--l2-background));
 	color: var(--popover-foreground, var(--l1-foreground));
 	width: var(--popover-width, fit-content);
-	transform-origin: var(--popover-transform-origin, var(--radix-popover-content-transform-origin));
+	transform-origin: var(--popover-transform-origin, var(--transform-origin));
 	border-radius: var(--popover-border-radius, var(--radius-2, 4px));
 	padding: var(--popover-padding, var(--spacing-8));
 	border-width: var(--popover-border-width, 1px);
@@ -37,11 +52,11 @@
 	outline: none;
 }
 
-.popover__content[data-state="open"] {
+.popover__content[data-open] {
 	animation: popover-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.popover__content[data-state="closed"] {
+.popover__content[data-closed] {
 	animation: popover-out 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

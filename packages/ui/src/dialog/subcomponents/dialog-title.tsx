@@ -1,10 +1,10 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../dialog.module.css';
 
 export type DialogTitleProps = Pick<
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>,
+	React.ComponentProps<'h2'>,
 	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
@@ -48,19 +48,18 @@ export type DialogTitleProps = Pick<
  * </DialogContent>
  * ```
  */
-export const DialogTitle = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Title>,
-	DialogTitleProps
->(({ className, icon, children, testId, ...props }, ref) => (
-	<DialogPrimitive.Title
-		ref={ref}
-		data-slot="dialog-title"
-		data-testid={testId}
-		className={cn(styles.dialog__title, className)}
-		{...props}
-	>
-		{icon}
-		{children}
-	</DialogPrimitive.Title>
-));
+export const DialogTitle = React.forwardRef<HTMLHeadingElement, DialogTitleProps>(
+	({ className, icon, children, testId, ...props }, ref) => (
+		<DialogPrimitive.Title
+			ref={ref}
+			data-slot="dialog-title"
+			data-testid={testId}
+			className={cn(styles.dialog__title, className)}
+			{...props}
+		>
+			{icon}
+			{children}
+		</DialogPrimitive.Title>
+	),
+);
 DialogTitle.displayName = 'DialogTitle';

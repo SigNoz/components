@@ -1,4 +1,4 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { ChevronLeft } from '@signozhq/icons';
 import * as React from 'react';
 
@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
 
 export type DropdownMenuBackProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.Item>,
+	React.ComponentProps<typeof MenuPrimitive.Item>,
 	'asChild' | 'onSelect'
 > & {
 	/**
@@ -49,23 +49,21 @@ export type DropdownMenuBackProps = Omit<
  * </DropdownMenuContent>
  * ```
  */
-export const DropdownMenuBack = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-	DropdownMenuBackProps
->(({ className, label, onBack, ...props }, ref) => (
-	<DropdownMenuPrimitive.Item
-		ref={ref}
-		data-slot="dropdown-menu-back"
-		className={cn(styles['dropdown-menu__back'], className)}
-		onSelect={(e) => {
-			e.preventDefault();
-			onBack?.();
-		}}
-		{...props}
-	>
-		<ChevronLeft className={styles['dropdown-menu__back-icon']} />
-		<span>{label}</span>
-	</DropdownMenuPrimitive.Item>
-));
+export const DropdownMenuBack = React.forwardRef<HTMLDivElement, DropdownMenuBackProps>(
+	({ className, label, onBack, ...props }, ref) => (
+		<MenuPrimitive.Item
+			ref={ref}
+			data-slot="dropdown-menu-back"
+			className={cn(styles['dropdown-menu__back'], className)}
+			// Stepping back stays within the same menu, so it must not close it.
+			closeOnClick={false}
+			onClick={() => onBack?.()}
+			{...props}
+		>
+			<ChevronLeft className={styles['dropdown-menu__back-icon']} />
+			<span>{label}</span>
+		</MenuPrimitive.Item>
+	),
+);
 
 DropdownMenuBack.displayName = 'DropdownMenuBack';

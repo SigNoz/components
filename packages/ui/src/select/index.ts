@@ -17,8 +17,8 @@
  * | `--select-content-min-width` | `8rem` |
  * | `--select-content-open-animation` | `select-in 150ms ease-out` |
  * | `--select-content-overflow` | `hidden` |
- * | `--select-content-popper-min-width` | `var(--radix-select-trigger-width)` |
- * | `--select-content-popper-width` | `var(--radix-select-trigger-width)` |
+ * | `--select-content-popper-min-width` | `var(--anchor-width)` |
+ * | `--select-content-popper-width` | `var(--anchor-width)` |
  * | `--select-content-position` | `relative` |
  * | `--select-content-slide-down-animation` | `select-in, select-slide-down` |
  * | `--select-content-slide-up-animation` | `select-in, select-slide-up` |
@@ -111,6 +111,7 @@
  * | `--select-pills-display` | `flex` |
  * | `--select-pills-flex-wrap` | `wrap` |
  * | `--select-pills-overflow` | `hidden` |
+ * | `--select-positioner-z-index` | `50` |
  * | `--select-scroll-button-align-items` | `center` |
  * | `--select-scroll-button-background` | `var(--popover)` |
  * | `--select-scroll-button-color` | `var(--muted-foreground)` |

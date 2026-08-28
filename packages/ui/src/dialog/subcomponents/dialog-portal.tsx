@@ -1,4 +1,4 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import type * as React from 'react';
 
 export type DialogPortalProps = {
@@ -6,7 +6,7 @@ export type DialogPortalProps = {
 	/**
 	 * Specify a container element to portal the content into.
 	 */
-	container?: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>['container'];
+	container?: React.ComponentProps<typeof DialogPrimitive.Portal>['container'];
 	/**
 	 * Used to force mounting when more control is needed. Useful when
 	 * controlling animation with React animation libraries.
@@ -40,6 +40,13 @@ export type DialogPortalProps = {
  * </Dialog>
  * ```
  */
-export function DialogPortal({ testId, ...props }: DialogPortalProps) {
-	return <DialogPrimitive.Portal data-slot="dialog-portal" data-testid={testId} {...props} />;
+export function DialogPortal({ testId, forceMount, ...props }: DialogPortalProps) {
+	return (
+		<DialogPrimitive.Portal
+			data-slot="dialog-portal"
+			data-testid={testId}
+			keepMounted={forceMount}
+			{...props}
+		/>
+	);
 }

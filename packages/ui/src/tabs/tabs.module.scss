@@ -123,7 +123,7 @@
     color: var(--tabs-hover-text-color, var(--l1-foreground-hover));
   }
 
-  &[data-state="active"] {
+  &[data-active] {
     color: var(--tabs-active-text-color, var(--l1-foreground-hover));
   }
 
@@ -176,7 +176,7 @@
       border-right-width: var(--tabs-trigger-secondary-last-border-right-width, var(--tabs-trigger-secondary-border-width, 1px));
     }
 
-    &[data-state="active"] {
+    &[data-active] {
       border-bottom-color: var(--tabs-trigger-secondary-active-border-bottom-color, transparent);
       background-color: var(--tabs-trigger-secondary-active-bg, transparent);
     }
@@ -269,7 +269,10 @@
 
 .tabs__active-slider {
   position: var(--tabs-active-slider-position, absolute);
-  left: var(--tabs-active-slider-left, 0);
+  /* Base UI's Tabs.Indicator publishes the active tab's geometry as custom
+     properties; positioning reads them instead of inline transform/width. */
+  left: var(--active-tab-left, 0);
+  width: var(--active-tab-width, 0);
   bottom: var(--tabs-active-slider-bottom, calc(var(--spacing-4, 8px) * -1));
   height: var(--tabs-active-slider-height, 2px);
   background-color: var(--tabs-active-accent-color, var(--primary));
@@ -277,7 +280,7 @@
   will-change: var(--tabs-active-slider-will-change, transform, width, opacity);
   transition: var(
     --tabs-active-slider-transition,
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.2s ease-out
   );

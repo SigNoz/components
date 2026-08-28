@@ -1,13 +1,14 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { Check } from '@signozhq/icons';
 import * as React from 'react';
 
 import { cn } from '../../lib/utils.js';
+import { createSelectHandler } from './menu-select.js';
 import styles from '../dropdown-menu.module.scss';
 
 export type DropdownMenuRadioItemProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>,
-	'asChild'
+	React.ComponentProps<typeof MenuPrimitive.RadioItem>,
+	'render' | 'label'
 > & {
 	/**
 	 * Additional CSS classes to apply to the radio item.
@@ -54,23 +55,24 @@ export type DropdownMenuRadioItemProps = Omit<
  * </DropdownMenuContent>
  * ```
  */
-export const DropdownMenuRadioItem = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
-	DropdownMenuRadioItemProps
->(({ className, children, ...props }, ref) => (
-	<DropdownMenuPrimitive.RadioItem
-		ref={ref}
-		data-slot="dropdown-menu-radio-item"
-		className={cn(styles['dropdown-menu__radio-item'], className)}
-		{...props}
-	>
-		<span data-slot="radio-indicator" className={styles['dropdown-menu__radio-indicator']}>
-			<DropdownMenuPrimitive.ItemIndicator>
-				<Check size={14} />
-			</DropdownMenuPrimitive.ItemIndicator>
-		</span>
-		{children}
-	</DropdownMenuPrimitive.RadioItem>
-));
+export const DropdownMenuRadioItem = React.forwardRef<HTMLDivElement, DropdownMenuRadioItemProps>(
+	({ className, children, onSelect, onClick, textValue, ...props }, ref) => (
+		<MenuPrimitive.RadioItem
+			ref={ref}
+			onClick={createSelectHandler(onSelect, onClick)}
+			label={textValue}
+			data-slot="dropdown-menu-radio-item"
+			className={cn(styles['dropdown-menu__radio-item'], className)}
+			{...props}
+		>
+			<span data-slot="radio-indicator" className={styles['dropdown-menu__radio-indicator']}>
+				<MenuPrimitive.RadioItemIndicator>
+					<Check size={14} />
+				</MenuPrimitive.RadioItemIndicator>
+			</span>
+			{children}
+		</MenuPrimitive.RadioItem>
+	),
+);
 
 DropdownMenuRadioItem.displayName = 'DropdownMenuRadioItem';

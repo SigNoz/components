@@ -25,8 +25,13 @@ describe('Switch — isLoading', () => {
 	});
 
 	it('disables the switch when isLoading is true', () => {
-		render(<Switch isLoading />);
-		expect(screen.getByRole('switch')).toBeDisabled();
+		const { container } = render(<Switch isLoading />);
+
+		// The interactive root is not a native form control, so it conveys the
+		// state with aria-disabled; the native `disabled` sits on the hidden
+		// input that carries the value into a form.
+		expect(screen.getByRole('switch')).toHaveAttribute('aria-disabled', 'true');
+		expect(container.querySelector('input[type="checkbox"]')).toBeDisabled();
 	});
 
 	it('sets aria-busy when isLoading is true', () => {
@@ -50,7 +55,7 @@ describe('Switch — isLoading', () => {
 		render(<Switch isLoading disabled />);
 		const switchEl = screen.getByRole('switch');
 		expect(switchEl).toHaveAttribute('data-loading');
-		expect(switchEl).toBeDisabled();
+		expect(switchEl).toHaveAttribute('aria-disabled', 'true');
 		expect(screen.getByTestId('switch-loading-icon')).toBeInTheDocument();
 	});
 });

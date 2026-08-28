@@ -1,4 +1,4 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../select.module.scss';
@@ -28,20 +28,19 @@ export type SelectGroupProps = {
  * </SelectGroup>
  * ```
  */
-export const SelectGroup = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Group>,
-	SelectGroupProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Group
-		ref={ref}
-		id={id}
-		className={cn(styles.select__group, className)}
-		style={style}
-		data-slot="select-group"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectGroup = React.forwardRef<HTMLDivElement, SelectGroupProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.Group
+			ref={ref}
+			id={id}
+			className={cn(styles.select__group, className)}
+			style={style}
+			data-slot="select-group"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectGroup.displayName = 'SelectGroup';
 
 export type SelectLabelProps = {
@@ -68,18 +67,17 @@ export type SelectLabelProps = {
  * </SelectGroup>
  * ```
  */
-export const SelectLabel = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Label>,
-	SelectLabelProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Label
-		ref={ref}
-		id={id}
-		className={cn(styles.select__label, className)}
-		style={style}
-		data-slot="select-label"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.GroupLabel
+			ref={ref}
+			id={id}
+			className={cn(styles.select__label, className)}
+			style={style}
+			data-slot="select-label"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectLabel.displayName = 'SelectLabel';

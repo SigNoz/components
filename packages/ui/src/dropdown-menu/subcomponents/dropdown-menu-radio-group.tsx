@@ -1,9 +1,13 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import * as React from 'react';
 
-export type DropdownMenuRadioGroupProps = React.ComponentProps<
-	typeof DropdownMenuPrimitive.RadioGroup
->;
+export type DropdownMenuRadioGroupProps = Omit<
+	React.ComponentProps<typeof MenuPrimitive.RadioGroup>,
+	'onValueChange'
+> & {
+	/** Called with the newly selected value. */
+	onValueChange?: (value: string) => void;
+};
 
 /**
  * Groups multiple `DropdownMenuRadioItem` components together.
@@ -23,13 +27,21 @@ export type DropdownMenuRadioGroupProps = React.ComponentProps<
  * </DropdownMenuContent>
  * ```
  */
-export const DropdownMenuRadioGroup = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.RadioGroup>,
-	DropdownMenuRadioGroupProps
->((props, ref) => {
-	return (
-		<DropdownMenuPrimitive.RadioGroup ref={ref} data-slot="dropdown-menu-radio-group" {...props} />
-	);
-});
+export const DropdownMenuRadioGroup = React.forwardRef<HTMLDivElement, DropdownMenuRadioGroupProps>(
+	(props, ref) => {
+		const { onValueChange, ...rest } = props;
+
+		return (
+			<MenuPrimitive.RadioGroup
+				ref={ref}
+				data-slot="dropdown-menu-radio-group"
+				// Base UI reports `(value, eventDetails)`; the public callback has
+				// always taken just the value.
+				onValueChange={(value) => onValueChange?.(value as string)}
+				{...rest}
+			/>
+		);
+	},
+);
 
 DropdownMenuRadioGroup.displayName = 'DropdownMenuRadioGroup';

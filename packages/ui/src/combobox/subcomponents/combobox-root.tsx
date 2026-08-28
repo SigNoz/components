@@ -1,4 +1,4 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { Popover } from '../../popover/index.js';
 
 /**
  * Root component for the combobox. Controls open/close state of the popover.
@@ -30,4 +30,4 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
  * );
  * ```
  */
-export const Combobox = PopoverPrimitive.Root;
+export const Combobox = Popover;

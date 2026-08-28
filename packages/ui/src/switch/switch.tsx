@@ -1,4 +1,4 @@
-import * as SwitchPrimitive from '@radix-ui/react-switch';
+import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 import { LoaderCircle } from '@signozhq/icons';
 import * as React from 'react';
 import { useId } from 'react';
@@ -64,7 +64,7 @@ export type SwitchProps = Pick<
 	isLoading?: boolean;
 };
 
-const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
+const SwitchBase = React.forwardRef<HTMLElement, SwitchProps>(
 	(
 		{
 			className,
@@ -88,7 +88,10 @@ const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root
 			data-testid={testId}
 			style={style}
 			checked={value}
-			onCheckedChange={onChange}
+			// Base UI passes `(checked, eventDetails)`. Our public `onChange` is
+			// documented as taking the boolean alone, so the second argument is
+			// dropped here rather than silently widening the prop's contract.
+			onCheckedChange={onChange ? (checked: boolean) => onChange(checked) : undefined}
 			defaultChecked={defaultValue}
 			disabled={disabled || isLoading}
 			aria-busy={isLoading || undefined}
@@ -105,7 +108,7 @@ const SwitchBase = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root
 		</SwitchPrimitive.Root>
 	),
 );
-SwitchBase.displayName = SwitchPrimitive.Root.displayName;
+SwitchBase.displayName = 'SwitchBase';
 
 /**
  * A toggle switch component for binary on/off or true/false selections.
@@ -147,7 +150,7 @@ SwitchBase.displayName = SwitchPrimitive.Root.displayName;
  * <Switch isLoading>Saving…</Switch>
  * ```
  */
-const SwitchWrapper = React.forwardRef<React.ElementRef<typeof SwitchPrimitive.Root>, SwitchProps>(
+const SwitchWrapper = React.forwardRef<HTMLElement, SwitchProps>(
 	(
 		{
 			children,

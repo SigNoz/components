@@ -1,5 +1,11 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import type * as React from 'react';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
+import { DirectionProvider } from '@base-ui/react/direction-provider';
+import * as React from 'react';
+import {
+	DismissRegistryProvider,
+	runDismissHandlers,
+	useDismissRegistry,
+} from '../../lib/dismiss-handlers.js';
 
 export type DropdownMenuProps = {
 	/**
@@ -70,6 +76,39 @@ export type DropdownMenuProps = {
  * </DropdownMenu>
  * ```
  */
-export function DropdownMenu(props: DropdownMenuProps) {
-	return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+export function DropdownMenu({
+	children,
+	open,
+	defaultOpen,
+	onOpenChange,
+	modal,
+	dir,
+}: DropdownMenuProps) {
+	const registry = useDismissRegistry();
+
+	const handleOpenChange = React.useCallback(
+		(nextOpen: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
+			runDismissHandlers(registry, nextOpen, eventDetails);
+			if (eventDetails.isCanceled) {
+				return;
+			}
+			onOpenChange?.(nextOpen);
+		},
+		[onOpenChange, registry],
+	);
+
+	const menu = (
+		<MenuPrimitive.Root
+			open={open}
+			defaultOpen={defaultOpen}
+			onOpenChange={handleOpenChange}
+			modal={modal}
+		>
+			<DismissRegistryProvider registry={registry}>{children}</DismissRegistryProvider>
+		</MenuPrimitive.Root>
+	);
+
+	// Radix took the reading direction on the root; Base UI reads it from a
+	// provider, so one is introduced only when the prop is actually set.
+	return dir === undefined ? menu : <DirectionProvider direction={dir}>{menu}</DirectionProvider>;
 }

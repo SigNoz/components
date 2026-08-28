@@ -1,4 +1,4 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
@@ -10,10 +10,19 @@ const overlayVariants: Variants = {
 	exit: { opacity: 0 },
 };
 
-export type DialogOverlayProps = Pick<
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
-	'id' | 'className' | 'style'
-> & {
+export type DialogOverlayProps = {
+	/**
+	 * The id of the dialog overlay.
+	 */
+	id?: string;
+	/**
+	 * The class name of the dialog overlay.
+	 */
+	className?: string;
+	/**
+	 * Inline styles for the dialog overlay.
+	 */
+	style?: React.CSSProperties;
 	/**
 	 * Used to force mounting when more control is needed. Useful when
 	 * controlling animation with React animation libraries.
@@ -50,26 +59,29 @@ export type DialogOverlayProps = Pick<
  * </Dialog>
  * ```
  */
-export const DialogOverlay = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Overlay>,
-	DialogOverlayProps
->(({ className, style, testId, ...props }, ref) => (
-	<DialogPrimitive.Overlay
-		ref={ref}
-		data-slot="dialog-overlay"
-		data-testid={testId}
-		asChild
-		{...props}
-	>
-		<motion.div
-			className={cn(styles.dialog__overlay, className)}
-			style={style}
-			variants={overlayVariants}
-			initial="initial"
-			animate="animate"
-			exit="exit"
-			transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+export const DialogOverlay = React.forwardRef<HTMLDivElement, DialogOverlayProps>(
+	({ className, style, testId, forceMount, ...props }, ref) => (
+		<DialogPrimitive.Backdrop
+			ref={ref}
+			data-slot="dialog-overlay"
+			data-testid={testId}
+			// Base UI hides a kept-mounted backdrop as soon as it considers the dialog
+			// unmounted, which would cut off the JS-driven exit animation. With
+			// `forceMount` the caller owns the exit, so visibility stays ours.
+			{...(forceMount === true ? { hidden: false } : {})}
+			{...props}
+			render={
+				<motion.div
+					className={cn(styles.dialog__overlay, className)}
+					style={style}
+					variants={overlayVariants}
+					initial="initial"
+					animate="animate"
+					exit="exit"
+					transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+				/>
+			}
 		/>
-	</DialogPrimitive.Overlay>
-));
+	),
+);
 DialogOverlay.displayName = 'DialogOverlay';

@@ -1,11 +1,12 @@
-import * as ProgressPrimitive from '@radix-ui/react-progress';
+import { Progress as ProgressPrimitive } from '@base-ui/react/progress';
 import * as React from 'react';
 import { useId, useMemo } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './progress.module.css';
 
-export interface ProgressProps extends React.ComponentPropsWithoutRef<
-	typeof ProgressPrimitive.Root
+export interface ProgressProps extends Omit<
+	React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>,
+	'value'
 > {
 	/**
 	 * The completion value from 0 to 100.
@@ -52,6 +53,10 @@ export interface ProgressProps extends React.ComponentPropsWithoutRef<
 	 * Inline styles applied to the progress wrapper.
 	 */
 	style?: React.CSSProperties;
+	/**
+	 * Additional CSS classes applied to the progress wrapper.
+	 */
+	className?: string;
 }
 
 /**
@@ -78,7 +83,7 @@ export interface ProgressProps extends React.ComponentPropsWithoutRef<
  * <Progress percent={60} steps={5} size="small" />
  * ```
  */
-const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, ProgressProps>(
+const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
 	(
 		{
 			className,
@@ -108,17 +113,16 @@ const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root
 					className={styles.root}
 					data-size={size}
 					data-linecap={strokeLinecap}
-					value={clampedPercent}
 					{...props}
+					value={clampedPercent}
 				>
-					<ProgressPrimitive.Indicator
-						className={styles.indicator}
-						data-status={status}
-						style={{
-							transform: `translateX(-${100 - clampedPercent}%)`,
-							backgroundColor: strokeColor,
-						}}
-					/>
+					<ProgressPrimitive.Track className={styles.track}>
+						<ProgressPrimitive.Indicator
+							className={styles.indicator}
+							data-status={status}
+							style={{ backgroundColor: strokeColor }}
+						/>
+					</ProgressPrimitive.Track>
 
 					{/* Overlay dividers for steps */}
 					{steps && steps > 1 ? (

@@ -1,7 +1,8 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { useMemo } from 'react';
+import { type DismissHandlers, useRegisterDismissHandlers } from '../../lib/dismiss-handlers.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../dialog.module.css';
 import { DialogOverlay } from './dialog-overlay.js';
@@ -21,29 +22,32 @@ export const DialogPositionValue: Record<Capitalize<DialogPosition>, DialogPosit
 };
 
 type MotionContentProps = React.ComponentProps<typeof motion.div> & {
-	'data-state'?: 'open' | 'closed';
+	'data-open'?: string;
+	'data-closed'?: string;
 };
 
 const dialogContentTransition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] };
 
-const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
-	({ 'data-state': state, initial, animate, transition, exit, ...rest }, ref) => {
-		const resolvedInitial = state === 'open' ? (initial ?? 'initial') : (initial ?? 'exit');
-		const resolvedAnimate = state === 'open' ? (animate ?? 'animate') : (animate ?? 'exit');
-		const resolvedExit = exit ?? 'exit';
+const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>((props, ref) => {
+	const { initial, animate, transition, exit, ...rest } = props;
+	// Base UI reports the open state as `data-open` / `data-closed` rather than
+	// Radix's `data-state`; the attributes stay on the element for CSS and tests.
+	const isOpen = props['data-open'] !== undefined;
+	const resolvedInitial = isOpen ? (initial ?? 'initial') : (initial ?? 'exit');
+	const resolvedAnimate = isOpen ? (animate ?? 'animate') : (animate ?? 'exit');
+	const resolvedExit = exit ?? 'exit';
 
-		return (
-			<motion.div
-				ref={ref}
-				initial={resolvedInitial}
-				animate={resolvedAnimate}
-				transition={transition ?? dialogContentTransition}
-				exit={resolvedExit}
-				{...rest}
-			/>
-		);
-	},
-);
+	return (
+		<motion.div
+			ref={ref}
+			initial={resolvedInitial}
+			animate={resolvedAnimate}
+			transition={transition ?? dialogContentTransition}
+			exit={resolvedExit}
+			{...rest}
+		/>
+	);
+});
 MotionContent.displayName = 'MotionContent';
 
 const getContentVariants = (
@@ -147,31 +151,53 @@ const getContentVariants = (
 	};
 };
 
+/**
+ * Bridges Radix's cancellable auto-focus events onto Base UI's `initialFocus`
+ * and `finalFocus`, which take the decision as a return value rather than
+ * reporting it as a preventable event.
+ *
+ * `true` selects Base UI's normal focus target and `false` suppresses focusing
+ * entirely — returning `undefined` suppresses it too, so a handler that does not
+ * call `preventDefault()` must resolve to `true`.
+ */
+function useAutoFocusBridge(handler: ((event: Event) => void) | undefined, type: string) {
+	return React.useMemo(() => {
+		if (handler === undefined) {
+			return undefined;
+		}
+		return () => {
+			const event = new Event(type, { cancelable: true });
+			handler(event);
+			return !event.defaultPrevented;
+		};
+	}, [handler, type]);
+}
+
 export type DialogContentProps = Pick<
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-	'id' | 'className' | 'style' | 'asChild' | 'children'
+	React.ComponentProps<'div'>,
+	'id' | 'className' | 'style' | 'children'
 > & {
 	/**
 	 * Event handler called when the escape key is down.
 	 * Can be prevented.
 	 */
-	onEscapeKeyDown?: DialogPrimitive.DialogContentProps['onEscapeKeyDown'];
+	onEscapeKeyDown?: DismissHandlers['onEscapeKeyDown'];
 	/**
 	 * Event handler called when the a `pointerdown` event happens outside of the `DismissableLayer`.
 	 * Can be prevented.
 	 */
-	onPointerDownOutside?: DialogPrimitive.DialogContentProps['onPointerDownOutside'];
+	onPointerDownOutside?: DismissHandlers['onPointerDownOutside'];
 	/**
 	 * Event handler called when the focus moves outside of the `DismissableLayer`.
 	 * Can be prevented.
 	 */
-	onFocusOutside?: DialogPrimitive.DialogContentProps['onFocusOutside'];
+	onFocusOutside?: DismissHandlers['onFocusOutside'];
 	/**
 	 * Event handler called when an interaction happens outside the `DismissableLayer`.
 	 * Specifically, when a `pointerdown` event happens outside or focus moves outside of it.
 	 * Can be prevented.
 	 */
-	onInteractOutside?: DialogPrimitive.DialogContentProps['onInteractOutside'];
+	onInteractOutside?: DismissHandlers['onInteractOutside'];
 	/**
 	 * Handler called when the `Content` should be dismissed
 	 */
@@ -180,12 +206,12 @@ export type DialogContentProps = Pick<
 	 * Event handler called when auto-focusing on open.
 	 * Can be prevented.
 	 */
-	onOpenAutoFocus?: DialogPrimitive.DialogContentProps['onOpenAutoFocus'];
+	onOpenAutoFocus?: (event: Event) => void;
 	/**
 	 * Event handler called when auto-focusing on close.
 	 * Can be prevented.
 	 */
-	onCloseAutoFocus?: DialogPrimitive.DialogContentProps['onCloseAutoFocus'];
+	onCloseAutoFocus?: (event: Event) => void;
 	/**
 	 * Used to force mounting when more control is needed. Useful when
 	 * controlling animation with React animation libraries.
@@ -287,10 +313,7 @@ export type DialogContentProps = Pick<
  * </Dialog>
  * ```
  */
-export const DialogContent = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Content>,
-	DialogContentProps
->(
+export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
 	(
 		{
 			className,
@@ -303,6 +326,14 @@ export const DialogContent = React.forwardRef<
 			heightMode = 'content',
 			showOverlay = true,
 			animation = 'fade',
+			forceMount,
+			onEscapeKeyDown,
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
+			onOpenAutoFocus,
+			onCloseAutoFocus,
+			onDismiss: _onDismiss,
 			...props
 		},
 		ref,
@@ -327,10 +358,20 @@ export const DialogContent = React.forwardRef<
 			[position, heightMode, animation],
 		);
 
+		const initialFocus = useAutoFocusBridge(onOpenAutoFocus, 'openAutoFocus');
+		const finalFocus = useAutoFocusBridge(onCloseAutoFocus, 'closeAutoFocus');
+
+		useRegisterDismissHandlers({
+			onEscapeKeyDown,
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
+		});
+
 		return (
-			<DialogPortal data-slot="dialog-portal" forceMount={props.forceMount}>
-				{showOverlay && <DialogOverlay forceMount={props.forceMount} />}
-				<DialogPrimitive.Content
+			<DialogPortal data-slot="dialog-portal" forceMount={forceMount}>
+				{showOverlay && <DialogOverlay forceMount={forceMount} />}
+				<DialogPrimitive.Popup
 					ref={ref}
 					data-slot="dialog-content"
 					data-width={width}
@@ -338,18 +379,24 @@ export const DialogContent = React.forwardRef<
 					data-height-mode={heightMode}
 					data-animation={animation}
 					data-testid={testId}
-					asChild
-					forceMount={props.forceMount}
+					initialFocus={initialFocus}
+					finalFocus={finalFocus}
+					// Base UI hides a kept-mounted popup as soon as it considers the
+					// dialog unmounted, which would cut off the JS-driven exit
+					// animation. With `forceMount` the caller owns the exit, so
+					// visibility stays with the animation.
+					{...(forceMount === true ? { hidden: false } : {})}
 					{...props}
+					render={
+						<MotionContent
+							className={cn(styles.dialog__content, className)}
+							style={style}
+							variants={variants}
+						/>
+					}
 				>
-					<MotionContent
-						className={cn(styles.dialog__content, className)}
-						style={style}
-						variants={variants}
-					>
-						{children}
-					</MotionContent>
-				</DialogPrimitive.Content>
+					{children}
+				</DialogPrimitive.Popup>
 			</DialogPortal>
 		);
 	},

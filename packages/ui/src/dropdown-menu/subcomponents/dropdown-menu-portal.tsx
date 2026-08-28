@@ -1,7 +1,16 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import type * as React from 'react';
 
-export type DropdownMenuPortalProps = React.ComponentProps<typeof DropdownMenuPrimitive.Portal>;
+export type DropdownMenuPortalProps = Omit<
+	React.ComponentProps<typeof MenuPrimitive.Portal>,
+	'keepMounted'
+> & {
+	/**
+	 * Used to force mounting when more control is needed. Useful when
+	 * controlling animation with React animation libraries.
+	 */
+	forceMount?: boolean;
+};
 
 /**
  * Portals the dropdown menu content into `document.body`.
@@ -16,5 +25,9 @@ export type DropdownMenuPortalProps = React.ComponentProps<typeof DropdownMenuPr
  * ```
  */
 export function DropdownMenuPortal(props: DropdownMenuPortalProps) {
-	return <DropdownMenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
+	const { forceMount, ...rest } = props;
+
+	return (
+		<MenuPrimitive.Portal data-slot="dropdown-menu-portal" keepMounted={forceMount} {...rest} />
+	);
 }

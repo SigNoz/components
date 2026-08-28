@@ -1,4 +1,4 @@
-import { DragHandleDots2Icon } from '@radix-ui/react-icons';
+import { GripVertical } from '@signozhq/icons';
 import type { CSSProperties, Ref } from 'react';
 import React from 'react';
 import type {
@@ -382,7 +382,7 @@ const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleProps>(
 		>
 			{withHandle && (
 				<div className={styles['resizable-handle__icon-wrapper']}>
-					<DragHandleDots2Icon className={styles['resizable-handle__icon']} />
+					<GripVertical className={styles['resizable-handle__icon']} />
 				</div>
 			)}
 		</Separator>

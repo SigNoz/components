@@ -1,4 +1,4 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { ChevronRight } from '@signozhq/icons';
 import * as React from 'react';
 
@@ -71,7 +71,10 @@ export type DropdownMenuMultiStepProps = {
  * ```
  */
 export const DropdownMenuMultiStep = React.forwardRef<HTMLDivElement, DropdownMenuMultiStepProps>(
-	({ children, ...props }, ref) => {
+	// The root groups the parts without rendering an element, so there is
+	// nothing for a forwarded ref to attach to; it is accepted for API
+	// compatibility only.
+	({ children, ...props }, _ref) => {
 		const [currentStep, setCurrentStep] = React.useState<'primary' | 'secondary'>('primary');
 		const [open, setOpen] = React.useState(false);
 
@@ -84,15 +87,9 @@ export const DropdownMenuMultiStep = React.forwardRef<HTMLDivElement, DropdownMe
 
 		return (
 			<MultiStepContext.Provider value={{ currentStep, setCurrentStep }}>
-				<DropdownMenuPrimitive.Root
-					{...props}
-					open={open}
-					onOpenChange={setOpen}
-					// @ts-expect-error - ref is not used in the root component
-					ref={ref}
-				>
+				<MenuPrimitive.Root {...props} open={open} onOpenChange={setOpen}>
 					{children}
-				</DropdownMenuPrimitive.Root>
+				</MenuPrimitive.Root>
 			</MultiStepContext.Provider>
 		);
 	},
@@ -100,7 +97,7 @@ export const DropdownMenuMultiStep = React.forwardRef<HTMLDivElement, DropdownMe
 
 DropdownMenuMultiStep.displayName = 'DropdownMenuMultiStep';
 
-type OriginalContentProps = React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
+type PositionerProps = React.ComponentProps<typeof MenuPrimitive.Positioner>;
 
 export type DropdownMenuMultiStepContentProps = {
 	/**
@@ -128,12 +125,12 @@ export type DropdownMenuMultiStepContentProps = {
 	 * The preferred side of the trigger to render against when open.
 	 * @default "bottom"
 	 */
-	side?: OriginalContentProps['side'];
+	side?: PositionerProps['side'];
 	/**
 	 * The preferred alignment against the trigger.
 	 * @default "center"
 	 */
-	align?: OriginalContentProps['align'];
+	align?: PositionerProps['align'];
 };
 
 /**
@@ -160,7 +157,7 @@ export type DropdownMenuMultiStepContentProps = {
  * ```
  */
 export const DropdownMenuMultiStepContent = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+	HTMLDivElement,
 	DropdownMenuMultiStepContentProps
 >(
 	(
@@ -180,23 +177,27 @@ export const DropdownMenuMultiStepContent = React.forwardRef<
 
 		return (
 			<DropdownMenuPortal>
-				<DropdownMenuPrimitive.Content
-					ref={ref}
-					data-slot="dropdown-menu-multi-step-content"
+				<MenuPrimitive.Positioner
+					className={styles['dropdown-menu__positioner']}
 					sideOffset={sideOffset}
-					className={cn(styles['dropdown-menu__multi-step-content'], className)}
 					{...props}
 				>
-					{currentStep === 'primary' ? (
-						primaryContent
-					) : (
-						<>
-							<DropdownMenuBack label={secondaryLabel} onBack={handleBack} />
-							<DropdownMenuSeparator />
-							{secondaryContent}
-						</>
-					)}
-				</DropdownMenuPrimitive.Content>
+					<MenuPrimitive.Popup
+						ref={ref}
+						data-slot="dropdown-menu-multi-step-content"
+						className={cn(styles['dropdown-menu__multi-step-content'], className)}
+					>
+						{currentStep === 'primary' ? (
+							primaryContent
+						) : (
+							<>
+								<DropdownMenuBack label={secondaryLabel} onBack={handleBack} />
+								<DropdownMenuSeparator />
+								{secondaryContent}
+							</>
+						)}
+					</MenuPrimitive.Popup>
+				</MenuPrimitive.Positioner>
 			</DropdownMenuPortal>
 		);
 	},
@@ -205,7 +206,7 @@ export const DropdownMenuMultiStepContent = React.forwardRef<
 DropdownMenuMultiStepContent.displayName = 'DropdownMenuMultiStepContent';
 
 export type DropdownMenuMultiStepTriggerProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.Item>,
+	React.ComponentProps<typeof MenuPrimitive.Item>,
 	'asChild' | 'onSelect'
 > & {
 	/**
@@ -238,7 +239,7 @@ export type DropdownMenuMultiStepTriggerProps = Omit<
  * ```
  */
 export const DropdownMenuMultiStepTrigger = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+	HTMLDivElement,
 	DropdownMenuMultiStepTriggerProps
 >(({ className, leftIcon, children, ...props }, ref) => {
 	const context = React.useContext(MultiStepContext);
@@ -249,12 +250,14 @@ export const DropdownMenuMultiStepTrigger = React.forwardRef<
 	const { setCurrentStep } = context;
 
 	return (
-		<DropdownMenuPrimitive.Item
+		<MenuPrimitive.Item
 			ref={ref}
 			data-slot="dropdown-menu-multi-step-trigger"
 			className={cn(styles['dropdown-menu__multi-step-trigger'], className)}
-			onSelect={(e) => {
-				e.preventDefault();
+			// Stepping forward must not close the menu, so Base UI's own click
+			// handling (which closes it) is suppressed.
+			onClick={(event) => {
+				event.preventBaseUIHandler();
 				setCurrentStep('secondary');
 			}}
 			{...props}
@@ -264,7 +267,7 @@ export const DropdownMenuMultiStepTrigger = React.forwardRef<
 			)}
 			{children}
 			<ChevronRight className={styles['dropdown-menu__multi-step-trigger-chevron']} />
-		</DropdownMenuPrimitive.Item>
+		</MenuPrimitive.Item>
 	);
 });
 

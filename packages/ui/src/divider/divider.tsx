@@ -1,3 +1,4 @@
+import { Separator } from '@base-ui/react/separator';
 import { forwardRef } from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './divider.module.scss';
@@ -18,26 +19,28 @@ export const Divider = forwardRef<HTMLDivElement, DividerProps>(
 		ref,
 	) => {
 		const hasChildren = children != null;
-		const separatorProps = hasChildren
-			? {}
-			: ({ role: 'separator', 'aria-orientation': type } as const);
+		const sharedProps = {
+			'data-slot': 'divider',
+			'data-type': type,
+			'data-dashed': dashed || undefined,
+			'data-plain': plain || undefined,
+			'data-with-text': hasChildren || undefined,
+			'data-testid': testId,
+			className: cn(styles.divider, className),
+			...props,
+		};
 
-		return (
-			<div
-				ref={ref}
-				{...separatorProps}
-				data-slot="divider"
-				data-type={type}
-				data-dashed={dashed || undefined}
-				data-plain={plain || undefined}
-				data-with-text={hasChildren || undefined}
-				data-testid={testId}
-				className={cn(styles.divider, className)}
-				{...props}
-			>
-				{hasChildren && <span className={styles.text}>{children}</span>}
-			</div>
-		);
+		// A separator cannot contain content, so only the childless form is a
+		// real separator; the labelled form stays a plain element by design.
+		if (hasChildren) {
+			return (
+				<div ref={ref} {...sharedProps}>
+					<span className={styles.text}>{children}</span>
+				</div>
+			);
+		}
+
+		return <Separator ref={ref} orientation={type} {...sharedProps} />;
 	},
 );
 Divider.displayName = 'Divider';

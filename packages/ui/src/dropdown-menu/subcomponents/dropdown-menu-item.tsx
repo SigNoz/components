@@ -1,12 +1,13 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import * as React from 'react';
 
 import { cn } from '../../lib/utils.js';
+import { createSelectHandler } from './menu-select.js';
 import styles from '../dropdown-menu.module.scss';
 
 export type DropdownMenuItemProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.Item>,
-	'asChild'
+	React.ComponentProps<typeof MenuPrimitive.Item>,
+	'render' | 'onSelect' | 'label'
 > & {
 	/**
 	 * Additional CSS classes to apply to the item.
@@ -89,16 +90,28 @@ export type DropdownMenuItemProps = Omit<
  * </DropdownMenuItem>
  * ```
  */
-export const DropdownMenuItem = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-	DropdownMenuItemProps
->(
+export const DropdownMenuItem = React.forwardRef<HTMLDivElement, DropdownMenuItemProps>(
 	(
-		{ className, inset, leftIcon, rightIcon, destructive, clickable, children, testId, ...props },
+		{
+			className,
+			inset,
+			leftIcon,
+			rightIcon,
+			destructive,
+			clickable,
+			children,
+			testId,
+			onSelect,
+			onClick,
+			textValue,
+			...props
+		},
 		ref,
 	) => (
-		<DropdownMenuPrimitive.Item
+		<MenuPrimitive.Item
 			ref={ref}
+			onClick={createSelectHandler(onSelect, onClick)}
+			label={textValue}
 			data-slot="dropdown-menu-item"
 			data-destructive={destructive ? '' : undefined}
 			data-testid={testId}
@@ -114,7 +127,7 @@ export const DropdownMenuItem = React.forwardRef<
 			{leftIcon && <span className={styles['dropdown-menu__item-icon']}>{leftIcon}</span>}
 			{children}
 			{rightIcon && <span className={styles['dropdown-menu__item-right-icon']}>{rightIcon}</span>}
-		</DropdownMenuPrimitive.Item>
+		</MenuPrimitive.Item>
 	),
 );
 

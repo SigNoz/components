@@ -23,6 +23,20 @@
 	margin-bottom: var(--slider-root-with-marks-margin-bottom, 28px);
 }
 
+.slider-control {
+	position: var(--slider-control-position, relative);
+	display: var(--slider-control-display, flex);
+	align-items: var(--slider-control-align-items, center);
+	width: var(--slider-control-width, 100%);
+	touch-action: var(--slider-control-touch-action, none);
+
+	.slider-root[data-orientation='vertical'] & {
+		flex-direction: column;
+		width: var(--slider-control-vertical-width, 100%);
+		height: var(--slider-control-vertical-height, 100%);
+	}
+}
+
 .slider-track {
 	position: var(--slider-track-position, relative);
 	height: var(--slider-track-height, 6px);

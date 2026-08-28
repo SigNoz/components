@@ -1,5 +1,6 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import type * as React from 'react';
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
+import * as React from 'react';
+import { TooltipSettingsProvider } from './tooltip-context.js';
 
 export type TooltipProviderProps = {
 	/**
@@ -8,7 +9,7 @@ export type TooltipProviderProps = {
 	children: React.ReactNode;
 	/**
 	 * The duration from when the pointer enters the trigger until the tooltip gets opened.
-	 * @defaultValue 700
+	 * @defaultValue 0
 	 */
 	delayDuration?: number;
 	/**
@@ -23,6 +24,9 @@ export type TooltipProviderProps = {
 	disableHoverableContent?: boolean;
 	/**
 	 * The test id of the tooltip provider.
+	 *
+	 * Accepted for API compatibility only — the provider renders no element of its
+	 * own, so this has never reached the DOM.
 	 */
 	testId?: string;
 };
@@ -40,13 +44,20 @@ export type TooltipProviderProps = {
  * </TooltipProvider>
  * ```
  */
-export function TooltipProvider({ delayDuration = 0, testId, ...props }: TooltipProviderProps) {
+export function TooltipProvider({
+	delayDuration = 0,
+	skipDelayDuration = 300,
+	disableHoverableContent,
+	children,
+}: TooltipProviderProps) {
+	const settings = React.useMemo(
+		() => ({ delayDuration, disableHoverableContent }),
+		[delayDuration, disableHoverableContent],
+	);
+
 	return (
-		<TooltipPrimitive.Provider
-			data-slot="tooltip-provider"
-			data-testid={testId}
-			delayDuration={delayDuration}
-			{...props}
-		/>
+		<TooltipPrimitive.Provider delay={delayDuration} timeout={skipDelayDuration}>
+			<TooltipSettingsProvider value={settings}>{children}</TooltipSettingsProvider>
+		</TooltipPrimitive.Provider>
 	);
 }

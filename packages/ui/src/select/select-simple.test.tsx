@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { activate } from '../__tests__/interactions.js';
 import { SelectSimple } from './presets/select-simple.js';
 import { selectSimpleItems } from './select.test-utils.js';
 
@@ -26,7 +27,7 @@ describe('SelectSimple', () => {
 		render(<SelectSimple items={selectSimpleItems} onChange={onChange} withPortal={false} />);
 
 		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Vue' }));
+		activate(screen.getByRole('option', { name: 'Vue' }));
 
 		expect(onChange).toHaveBeenCalledWith('vue');
 	});
@@ -35,7 +36,7 @@ describe('SelectSimple', () => {
 		render(<SelectSimple items={selectSimpleItems} withPortal={false} />);
 		fireEvent.click(screen.getByRole('combobox'));
 		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole('option', { name: 'React' }));
+		activate(screen.getByRole('option', { name: 'React' }));
 		expect(screen.queryByRole('option', { name: 'React' })).not.toBeInTheDocument();
 	});
 
@@ -43,7 +44,7 @@ describe('SelectSimple', () => {
 		render(<SelectSimple items={selectSimpleItems} />);
 		fireEvent.click(screen.getByRole('combobox'));
 		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole('option', { name: 'React' }));
+		activate(screen.getByRole('option', { name: 'React' }));
 		await waitFor(() => {
 			expect(screen.queryByRole('option', { name: 'React' })).not.toBeInTheDocument();
 		});
@@ -63,7 +64,7 @@ describe('SelectSimple', () => {
 		render(<ControlledSelect />);
 		fireEvent.click(screen.getByRole('combobox'));
 		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole('option', { name: 'React' }));
+		activate(screen.getByRole('option', { name: 'React' }));
 		await waitFor(() => {
 			expect(screen.queryByRole('option', { name: 'React' })).not.toBeInTheDocument();
 		});
@@ -147,7 +148,7 @@ describe('SelectSimple', () => {
 		);
 
 		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Angular' }));
+		activate(screen.getByRole('option', { name: 'Angular' }));
 
 		expect(onChange).toHaveBeenCalledWith(['angular']);
 	});

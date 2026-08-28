@@ -1,4 +1,4 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { ChevronRight } from '@signozhq/icons';
 import * as React from 'react';
 
@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
 
 export type DropdownMenuSubTriggerProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger>,
+	React.ComponentProps<typeof MenuPrimitive.SubmenuTrigger>,
 	'asChild'
 > & {
 	/**
@@ -56,24 +56,23 @@ export type DropdownMenuSubTriggerProps = Omit<
  * </DropdownMenuSubTrigger>
  * ```
  */
-export const DropdownMenuSubTrigger = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
-	DropdownMenuSubTriggerProps
->(({ className, inset, leftIcon, children, ...props }, ref) => (
-	<DropdownMenuPrimitive.SubTrigger
-		ref={ref}
-		data-slot="dropdown-menu-sub-trigger"
-		className={cn(
-			styles['dropdown-menu__sub-trigger'],
-			inset && styles['dropdown-menu__sub-trigger--inset'],
-			className,
-		)}
-		{...props}
-	>
-		{leftIcon && <span className={styles['dropdown-menu__sub-trigger-icon']}>{leftIcon}</span>}
-		{children}
-		<ChevronRight className={styles['dropdown-menu__sub-trigger-chevron']} />
-	</DropdownMenuPrimitive.SubTrigger>
-));
+export const DropdownMenuSubTrigger = React.forwardRef<HTMLDivElement, DropdownMenuSubTriggerProps>(
+	({ className, inset, leftIcon, children, ...props }, ref) => (
+		<MenuPrimitive.SubmenuTrigger
+			ref={ref}
+			data-slot="dropdown-menu-sub-trigger"
+			className={cn(
+				styles['dropdown-menu__sub-trigger'],
+				inset && styles['dropdown-menu__sub-trigger--inset'],
+				className,
+			)}
+			{...props}
+		>
+			{leftIcon && <span className={styles['dropdown-menu__sub-trigger-icon']}>{leftIcon}</span>}
+			{children}
+			<ChevronRight className={styles['dropdown-menu__sub-trigger-chevron']} />
+		</MenuPrimitive.SubmenuTrigger>
+	),
+);
 
 DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger';

@@ -1,5 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { activate } from '../__tests__/interactions.js';
 import { renderMultiSelect } from './select.test-utils.js';
 
 describe('Select multi', () => {
@@ -13,24 +14,29 @@ describe('Select multi', () => {
 		renderMultiSelect({ onChange });
 
 		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Red' }));
+		activate(screen.getByRole('option', { name: 'Red' }));
 
 		expect(onChange).toHaveBeenCalledWith(['red']);
 	});
 
-	it('allows multiple selections by reopening between selections', () => {
+	/**
+	 * BEHAVIOUR CHANGE (Base UI migration): multi-select is now the primitive's
+	 * own `multiple` mode, so the popup stays open across selections. It
+	 * previously closed on every pick and had to be reopened in between, which
+	 * contradicted the "keep open for multi-select" intent in the old code.
+	 */
+	it('allows several selections without closing in between', () => {
 		const onChange = vi.fn();
 		renderMultiSelect({ onChange });
 
 		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Red' }));
-
-		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Blue' }));
+		activate(screen.getByRole('option', { name: 'Red' }));
+		activate(screen.getByRole('option', { name: 'Blue' }));
 
 		expect(onChange).toHaveBeenCalledTimes(2);
 		expect(onChange).toHaveBeenNthCalledWith(1, ['red']);
 		expect(onChange).toHaveBeenNthCalledWith(2, ['red', 'blue']);
+		expect(screen.getByRole('option', { name: 'Red' })).toBeInTheDocument();
 	});
 
 	it('displays pills for selected values', () => {
@@ -68,7 +74,7 @@ describe('Select multi', () => {
 		renderMultiSelect({ defaultValue: ['red', 'green'], onChange });
 
 		fireEvent.click(screen.getByRole('combobox'));
-		fireEvent.click(screen.getByRole('option', { name: 'Red' }));
+		activate(screen.getByRole('option', { name: 'Red' }));
 
 		expect(onChange).toHaveBeenCalledWith(['green']);
 	});

@@ -7,7 +7,7 @@ import { Progress } from './index.js';
 describe('Progress forwardRef', () => {
 	it('forwards ref', () => {
 		const ref = createRef<HTMLDivElement>();
-		render(<Progress ref={ref} value={50} />);
+		render(<Progress ref={ref} percent={50} />);
 		expect(ref.current).toBeInstanceOf(HTMLDivElement);
 	});
 });

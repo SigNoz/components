@@ -1,5 +1,10 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
 import * as React from 'react';
+import {
+	DismissRegistryProvider,
+	runDismissHandlers,
+	useDismissRegistry,
+} from '../../lib/dismiss-handlers.js';
 import { SelectContext, type SelectContextValue } from './select-context.js';
 
 export type SelectProps = {
@@ -27,8 +32,56 @@ export type SelectProps = {
 	name?: string;
 };
 
+function normalizeValue(value: string | string[] | undefined): string[] {
+	if (value === undefined) {
+		return [];
+	}
+	return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Collects `{ value, label }` for every item in the subtree.
+ *
+ * The primitive resolves the label shown in a closed trigger from the root's
+ * `items`, not from the items themselves — those live in the popup and are
+ * unmounted while it is closed. Harvesting them from the children keeps a
+ * plain `<SelectItem>` composition displaying its label without callers having
+ * to declare the options twice.
+ *
+ * Items whose label is not a plain string should set `textValue`; anything the
+ * walk cannot resolve simply falls back to the raw value.
+ */
+function collectItems(
+	node: React.ReactNode,
+	out: { label: React.ReactNode; value: string }[],
+): void {
+	React.Children.forEach(node, (child) => {
+		if (!React.isValidElement(child)) {
+			return;
+		}
+		const props = child.props as {
+			value?: unknown;
+			textValue?: string;
+			children?: React.ReactNode;
+		};
+
+		if (typeof props.value === 'string') {
+			out.push({ value: props.value, label: props.textValue ?? props.children });
+			return;
+		}
+
+		if (props.children !== undefined) {
+			collectItems(props.children, out);
+		}
+	});
+}
+
 /**
  * Root component for the select. Controls open/close state and selection.
+ *
+ * Multi-select is the primitive's own `multiple` mode rather than the manual
+ * toggling this component used to do on top of a single-select primitive, so
+ * the popup now stays open while several values are picked.
  *
  * @example
  * ```tsx
@@ -62,12 +115,16 @@ export function Select({
 	required,
 	name,
 }: SelectProps) {
-	// Normalize to array for internal state
-	const normalizeValue = (v: string | string[] | undefined): string[] => {
-		if (v === undefined) return [];
-		return Array.isArray(v) ? v : [v];
-	};
+	const registry = useDismissRegistry();
 
+	const items = React.useMemo(() => {
+		const collected: { label: React.ReactNode; value: string }[] = [];
+		collectItems(children, collected);
+		return collected;
+	}, [children]);
+
+	// The value is mirrored locally even when uncontrolled, because the trigger
+	// renders pills and the items render indicators from it.
 	const [internalValue, setInternalValue] = React.useState<string[]>(() =>
 		normalizeValue(defaultValue),
 	);
@@ -80,85 +137,71 @@ export function Select({
 	const currentOpen = isOpenControlled ? open : internalOpen;
 
 	const handleOpenChange = React.useCallback(
-		(newOpen: boolean) => {
+		(newOpen: boolean, eventDetails: SelectPrimitive.Root.ChangeEventDetails) => {
+			runDismissHandlers(registry, newOpen, eventDetails);
+			if (eventDetails.isCanceled) {
+				return;
+			}
 			if (!isOpenControlled) {
 				setInternalOpen(newOpen);
 			}
 			onOpenChange?.(newOpen);
 		},
-		[isOpenControlled, onOpenChange],
+		[isOpenControlled, onOpenChange, registry],
+	);
+
+	const commitValue = React.useCallback(
+		(next: string[]) => {
+			if (!isControlled) {
+				setInternalValue(next);
+			}
+			onChange?.(multiple ? next : (next[0] ?? ''));
+		},
+		[isControlled, multiple, onChange],
 	);
 
 	const handleValueChange = React.useCallback(
-		(selectedValue: string) => {
-			if (multiple) {
-				const newValue = currentValue.includes(selectedValue)
-					? currentValue.filter((v) => v !== selectedValue)
-					: [...currentValue, selectedValue];
-
-				if (!isControlled) {
-					setInternalValue(newValue);
-				}
-				onChange?.(newValue);
-				// Keep open for multi-select
-			} else {
-				const newValue = selectedValue;
-				if (!isControlled) {
-					setInternalValue([newValue]);
-				}
-				onChange?.(newValue);
-				handleOpenChange(false);
+		(nextValue: string | string[] | null) => {
+			if (nextValue === null) {
+				commitValue([]);
+				return;
 			}
+			commitValue(Array.isArray(nextValue) ? nextValue : [nextValue]);
 		},
-		[multiple, currentValue, isControlled, onChange, handleOpenChange],
+		[commitValue],
 	);
 
 	const handleRemove = React.useCallback(
 		(valueToRemove: string) => {
-			const newValue = currentValue.filter((v) => v !== valueToRemove);
-			if (!isControlled) {
-				setInternalValue(newValue);
-			}
-			onChange?.(multiple ? newValue : (newValue[0] ?? ''));
+			commitValue(currentValue.filter((v) => v !== valueToRemove));
 		},
-		[currentValue, isControlled, onChange, multiple],
+		[commitValue, currentValue],
 	);
 
 	const contextValue = React.useMemo<SelectContextValue>(
 		() => ({
 			multiple,
 			value: currentValue,
-			onValueChange: handleValueChange,
+			onValueChange: (value: string) => {
+				commitValue(
+					currentValue.includes(value)
+						? currentValue.filter((v) => v !== value)
+						: [...currentValue, value],
+				);
+			},
 			onRemove: handleRemove,
 		}),
-		[multiple, currentValue, handleValueChange, handleRemove],
+		[multiple, currentValue, commitValue, handleRemove],
 	);
 
-	if (multiple) {
-		// For multi-select, we use a custom implementation
-		return (
-			<SelectContext.Provider value={contextValue}>
-				<SelectPrimitive.Root
-					open={currentOpen}
-					onOpenChange={handleOpenChange}
-					disabled={disabled}
-					required={required}
-					name={name}
-					value="" // Always empty for multi-select, we manage state ourselves
-					onValueChange={handleValueChange}
-				>
-					{children}
-				</SelectPrimitive.Root>
-			</SelectContext.Provider>
-		);
-	}
-
-	// Single select uses native Radix behavior
 	return (
 		<SelectContext.Provider value={contextValue}>
 			<SelectPrimitive.Root
-				value={currentValue[0] ?? ''}
-				defaultValue={defaultValue as string | undefined}
+				items={items}
+				multiple={multiple}
+				// Base UI reads an absent selection as `null`; an empty string would
+				// count as a value and suppress the placeholder.
+				value={multiple ? currentValue : (currentValue[0] ?? null)}
 				onValueChange={handleValueChange}
 				open={currentOpen}
 				onOpenChange={handleOpenChange}
@@ -166,7 +209,7 @@ export function Select({
 				required={required}
 				name={name}
 			>
-				{children}
+				<DismissRegistryProvider registry={registry}>{children}</DismissRegistryProvider>
 			</SelectPrimitive.Root>
 		</SelectContext.Provider>
 	);

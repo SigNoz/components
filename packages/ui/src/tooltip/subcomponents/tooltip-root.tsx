@@ -1,5 +1,11 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import type * as React from 'react';
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
+import * as React from 'react';
+import {
+	DismissRegistryProvider,
+	runDismissHandlers,
+	useDismissRegistry,
+} from '../../lib/dismiss-handlers.js';
+import { TooltipSettingsProvider, useTooltipSettings } from './tooltip-context.js';
 
 export type TooltipRootProps = {
 	/**
@@ -21,7 +27,6 @@ export type TooltipRootProps = {
 	/**
 	 * The duration from when the pointer enters the trigger until the tooltip gets opened. This will
 	 * override the prop with the same name passed to Provider.
-	 * @defaultValue 700
 	 */
 	delayDuration?: number;
 	/**
@@ -31,6 +36,9 @@ export type TooltipRootProps = {
 	disableHoverableContent?: boolean;
 	/**
 	 * The test id of the tooltip root.
+	 *
+	 * Accepted for API compatibility only — the root renders no element of its own,
+	 * so this has never reached the DOM.
 	 */
 	testId?: string;
 };
@@ -53,6 +61,51 @@ export type TooltipRootProps = {
  * </TooltipProvider>
  * ```
  */
-export function TooltipRoot({ testId, ...props }: TooltipRootProps) {
-	return <TooltipPrimitive.Root data-slot="tooltip" data-testid={testId} {...props} />;
+export function TooltipRoot({
+	open,
+	defaultOpen,
+	onOpenChange,
+	delayDuration,
+	disableHoverableContent,
+	children,
+}: TooltipRootProps) {
+	const inherited = useTooltipSettings();
+	const registry = useDismissRegistry();
+
+	const settings = React.useMemo(
+		() => ({
+			delayDuration: delayDuration ?? inherited.delayDuration,
+			disableHoverableContent: disableHoverableContent ?? inherited.disableHoverableContent,
+		}),
+		[
+			delayDuration,
+			disableHoverableContent,
+			inherited.delayDuration,
+			inherited.disableHoverableContent,
+		],
+	);
+
+	const handleOpenChange = React.useCallback(
+		(nextOpen: boolean, eventDetails: TooltipPrimitive.Root.ChangeEventDetails) => {
+			runDismissHandlers(registry, nextOpen, eventDetails);
+			if (eventDetails.isCanceled) {
+				return;
+			}
+			onOpenChange?.(nextOpen);
+		},
+		[onOpenChange, registry],
+	);
+
+	return (
+		<TooltipPrimitive.Root
+			open={open}
+			defaultOpen={defaultOpen}
+			onOpenChange={handleOpenChange}
+			disableHoverablePopup={settings.disableHoverableContent}
+		>
+			<TooltipSettingsProvider value={settings}>
+				<DismissRegistryProvider registry={registry}>{children}</DismissRegistryProvider>
+			</TooltipSettingsProvider>
+		</TooltipPrimitive.Root>
+	);
 }

@@ -1,11 +1,11 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import * as React from 'react';
 
 import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
 
 export type DropdownMenuSeparatorProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.Separator>,
+	React.ComponentProps<typeof MenuPrimitive.Separator>,
 	'asChild'
 > & {
 	/**
@@ -28,16 +28,15 @@ export type DropdownMenuSeparatorProps = Omit<
  * </DropdownMenuContent>
  * ```
  */
-export const DropdownMenuSeparator = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
-	DropdownMenuSeparatorProps
->(({ className, ...props }, ref) => (
-	<DropdownMenuPrimitive.Separator
-		ref={ref}
-		data-slot="dropdown-menu-separator"
-		className={cn(styles['dropdown-menu__separator'], className)}
-		{...props}
-	/>
-));
+export const DropdownMenuSeparator = React.forwardRef<HTMLDivElement, DropdownMenuSeparatorProps>(
+	({ className, ...props }, ref) => (
+		<MenuPrimitive.Separator
+			ref={ref}
+			data-slot="dropdown-menu-separator"
+			className={cn(styles['dropdown-menu__separator'], className)}
+			{...props}
+		/>
+	),
+);
 
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';

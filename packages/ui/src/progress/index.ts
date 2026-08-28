@@ -14,14 +14,16 @@
  * | `--progress-height` | `4px` |
  * | `--progress-indicator-background` | `var(--primary-background)` |
  * | `--progress-indicator-height` | `100%` |
- * | `--progress-indicator-transition` | `transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)` |
- * | `--progress-indicator-width` | `100%` |
+ * | `--progress-indicator-position` | `absolute` |
+ * | `--progress-indicator-transition` | `width 0.3s cubic-bezier(0.4, 0, 0.2, 1)` |
  * | `--progress-info-font-size` | `var(--font-size-sm, 14px)` |
  * | `--progress-info-font-variant-numeric` | `tabular-nums` |
  * | `--progress-info-foreground` | `var(--l1-foreground)` |
  * | `--progress-info-white-space` | `nowrap` |
  * | `--progress-overflow` | `hidden` |
  * | `--progress-position` | `relative` |
+ * | `--progress-track-overflow` | `hidden` |
+ * | `--progress-track-position` | `absolute` |
  * | `--progress-width` | `100%` |
  * | `--progress-wrapper-align-items` | `center` |
  * | `--progress-wrapper-display` | `flex` |

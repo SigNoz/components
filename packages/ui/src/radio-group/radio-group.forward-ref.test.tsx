@@ -16,7 +16,7 @@ describe('RadioGroup forwardRef', () => {
 	});
 
 	it('RadioGroupItem forwards ref', () => {
-		const ref = createRef<HTMLButtonElement>();
+		const ref = createRef<HTMLElement>();
 		render(
 			<RadioGroup>
 				<RadioGroupItem ref={ref} value="a">
@@ -24,7 +24,7 @@ describe('RadioGroup forwardRef', () => {
 				</RadioGroupItem>
 			</RadioGroup>,
 		);
-		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+		expect(ref.current).toBeInstanceOf(HTMLElement);
 	});
 
 	it('RadioGroupLabel forwards ref', () => {

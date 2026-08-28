@@ -1,4 +1,3 @@
-import type * as PopoverPrimitive from '@radix-ui/react-popover';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import { PopoverContent, type PopoverContentProps } from '../../popover/index.js';
@@ -23,15 +22,14 @@ export type ComboboxContentProps = PopoverContentProps;
  * </ComboboxContent>
  * ```
  */
-export const ComboboxContent = React.forwardRef<
-	React.ElementRef<typeof PopoverPrimitive.Content>,
-	ComboboxContentProps
->(({ className, ...props }, ref) => (
-	<PopoverContent
-		ref={ref}
-		data-slot="combobox-content"
-		className={cn(className, styles.combobox__content)}
-		{...props}
-	/>
-));
+export const ComboboxContent = React.forwardRef<HTMLDivElement, ComboboxContentProps>(
+	({ className, ...props }, ref) => (
+		<PopoverContent
+			ref={ref}
+			data-slot="combobox-content"
+			className={cn(className, styles.combobox__content)}
+			{...props}
+		/>
+	),
+);
 ComboboxContent.displayName = 'ComboboxContent';

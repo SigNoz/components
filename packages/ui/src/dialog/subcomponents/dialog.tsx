@@ -1,5 +1,10 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import type * as React from 'react';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import * as React from 'react';
+import {
+	DismissRegistryProvider,
+	runDismissHandlers,
+	useDismissRegistry,
+} from '../../lib/dismiss-handlers.js';
 
 export type DialogProps = {
 	/**
@@ -79,6 +84,28 @@ export type DialogProps = {
  * );
  * ```
  */
-export function Dialog({ ...props }: DialogProps) {
-	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+export function Dialog({ open, defaultOpen, onOpenChange, modal, children }: DialogProps) {
+	const registry = useDismissRegistry();
+
+	const handleOpenChange = React.useCallback(
+		(nextOpen: boolean, eventDetails: DialogPrimitive.Root.ChangeEventDetails) => {
+			runDismissHandlers(registry, nextOpen, eventDetails);
+			if (eventDetails.isCanceled) {
+				return;
+			}
+			onOpenChange?.(nextOpen);
+		},
+		[onOpenChange, registry],
+	);
+
+	return (
+		<DialogPrimitive.Root
+			open={open}
+			defaultOpen={defaultOpen}
+			onOpenChange={handleOpenChange}
+			modal={modal}
+		>
+			<DismissRegistryProvider registry={registry}>{children}</DismissRegistryProvider>
+		</DialogPrimitive.Root>
+	);
 }

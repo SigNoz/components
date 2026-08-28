@@ -83,6 +83,7 @@
  * | `--dropdown-menu-multi-step-trigger-icon-size` | `14px` |
  * | `--dropdown-menu-multi-step-trigger-line-height` | `1` |
  * | `--dropdown-menu-multi-step-trigger-padding` | `var(--spacing-5, 10px) var(--spacing-6, 12px)` |
+ * | `--dropdown-menu-positioner-z-index` | `50` |
  * | `--dropdown-menu-radio-indicator-right` | `var(--spacing-4, 8px)` |
  * | `--dropdown-menu-radio-indicator-size` | `14px` |
  * | `--dropdown-menu-radio-item-border-radius` | `var(--radius-1, 2px)` |

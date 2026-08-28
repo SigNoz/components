@@ -6,8 +6,8 @@ import { Checkbox } from './index.js';
 
 describe('Checkbox forwardRef', () => {
 	it('forwards ref', () => {
-		const ref = createRef<HTMLButtonElement>();
+		const ref = createRef<HTMLElement>();
 		render(<Checkbox ref={ref} />);
-		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+		expect(ref.current).toBeInstanceOf(HTMLElement);
 	});
 });

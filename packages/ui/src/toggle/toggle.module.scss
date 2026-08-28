@@ -29,7 +29,7 @@
     background-color: var(--toggle-active-bg);
   }
 
-  &[data-state='on'] {
+  &[data-pressed] {
     background-color: var(--toggle-active-bg);
     color: var(--toggle-text-active);
   }

@@ -1,4 +1,4 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../select.module.scss';
@@ -26,18 +26,17 @@ export type SelectSeparatorProps = {
  * </SelectContent>
  * ```
  */
-export const SelectSeparator = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Separator>,
-	SelectSeparatorProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.Separator
-		ref={ref}
-		id={id}
-		className={cn(styles.select__separator, className)}
-		style={style}
-		data-slot="select-separator"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectSeparator = React.forwardRef<HTMLDivElement, SelectSeparatorProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.Separator
+			ref={ref}
+			id={id}
+			className={cn(styles.select__separator, className)}
+			style={style}
+			data-slot="select-separator"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectSeparator.displayName = 'SelectSeparator';

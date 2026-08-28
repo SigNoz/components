@@ -169,7 +169,7 @@ const meta: Meta<typeof Badge> = {
 		asChild: {
 			control: 'boolean',
 			description:
-				'Use Radix Slot to compose the badge as a different element (e.g., button, link). The closable prop is intended for the default span-rendered Badge.',
+				'Render the badge as a different element (e.g., button, link). The closable prop is intended for the default span-rendered Badge.',
 			table: { category: 'Composition', defaultValue: { summary: 'false' } },
 		},
 		textEllipsis: {
@@ -750,7 +750,7 @@ export const UsingAsChild: Story = {
 		docs: {
 			description: {
 				story:
-					'The `asChild` prop uses Radix UI Slot to compose the badge as a different element. This allows you to create interactive badges that maintain all badge styling while functioning as buttons, links, or other interactive elements. The badge styling is applied to the child element instead of rendering a wrapper span. For removable tags, use `closable` with the default span-rendered Badge.',
+					'The `asChild` prop composes the badge with a different element. This allows you to create interactive badges that maintain all badge styling while functioning as buttons, links, or other interactive elements. The badge styling is applied to the child element instead of rendering a wrapper span. For removable tags, use `closable` with the default span-rendered Badge.',
 			},
 		},
 	},

@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TooltipProvider } from '../../tooltip/index.js';
 import { ComboboxSimple } from './combobox-simple.js';
@@ -61,8 +60,10 @@ describe('ComboboxSimple loading state', () => {
 	});
 
 	it('shows items after loading completes', () => {
-		function LoadingToggle() {
-			const [loading, setLoading] = useState(true);
+		// The loading flag is flipped by re-rendering rather than by clicking a
+		// button outside the popover: an outside press dismisses the popover, so
+		// that would assert the dismissal rather than the loading transition.
+		function LoadingToggle({ loading }: { loading: boolean }) {
 			return (
 				<TooltipProvider>
 					<ComboboxSimple
@@ -71,17 +72,16 @@ describe('ComboboxSimple loading state', () => {
 						testId="combo"
 						withPortal={false}
 					/>
-					<button onClick={() => setLoading(false)}>Done Loading</button>
 				</TooltipProvider>
 			);
 		}
 
-		render(<LoadingToggle />);
+		const { rerender } = render(<LoadingToggle loading />);
 
 		fireEvent.click(screen.getByTestId('combo'));
 		expect(screen.getByText('Loading...')).toBeInTheDocument();
 
-		fireEvent.click(screen.getByText('Done Loading'));
+		rerender(<LoadingToggle loading={false} />);
 
 		expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 		expect(screen.getByRole('option', { name: 'React' })).toBeInTheDocument();

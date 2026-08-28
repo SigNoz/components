@@ -1,4 +1,4 @@
-import * as SliderPrimitive from '@radix-ui/react-slider';
+import { Slider as SliderPrimitive } from '@base-ui/react/slider';
 import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { cn } from '../lib/utils.js';
@@ -7,7 +7,7 @@ import styles from './slider.module.scss';
 
 export interface SliderProps extends Omit<
 	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
-	'onChange' | 'value' | 'defaultValue'
+	'onChange' | 'value' | 'defaultValue' | 'onValueChange' | 'onValueCommitted'
 > {
 	value?: number | number[];
 	defaultValue?: number | number[];
@@ -135,7 +135,7 @@ const toArray = (val: number | number[] | undefined) =>
  * />
  * ```
  */
-const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, SliderProps>(
+const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
 	(
 		{
 			className,
@@ -253,13 +253,12 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				data-testid={testId}
 				min={min}
 				max={max}
-				// Always drive Radix from localValues so handleMarkClick (which
-				// updates localValues) can actually move the thumb — Radix
-				// ignores onValueChange-only updates when it's uncontrolled.
+				// Always drive the primitive from localValues so handleMarkClick
+				// (which updates localValues) can actually move the thumb — an
+				// uncontrolled slider ignores onValueChange-only updates.
 				value={localValues}
-				defaultValue={internalDefaultValue}
-				onValueChange={handleValueChange}
-				onValueCommit={handleValueCommit}
+				onValueChange={(next) => handleValueChange(next as number[])}
+				onValueCommitted={(next) => handleValueCommit(next as number[])}
 				className={cn(
 					styles['slider-root'],
 					markList.length > 0 && styles['slider-root-with-marks'],
@@ -267,15 +266,28 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 				)}
 				{...props}
 			>
-				<SliderPrimitive.Track
-					className={cn(styles['slider-track'], classNames?.track)}
-					style={inlineStyles?.track}
-				>
-					<SliderPrimitive.Range
-						className={cn(styles['slider-range'], classNames?.range)}
-						style={inlineStyles?.range}
-					/>
-				</SliderPrimitive.Track>
+				<SliderPrimitive.Control className={styles['slider-control']}>
+					<SliderPrimitive.Track
+						className={cn(styles['slider-track'], classNames?.track)}
+						style={inlineStyles?.track}
+					>
+						<SliderPrimitive.Indicator
+							className={cn(styles['slider-range'], classNames?.range)}
+							style={inlineStyles?.range}
+						/>
+						{localValues.map((val, index) => (
+							<SliderThumb
+								// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
+								key={`slider-${internalId}-thumb-${index}`}
+								index={index}
+								value={val}
+								className={cn(styles['slider-thumb'], classNames?.thumb)}
+								style={inlineStyles?.thumb}
+								tooltip={tooltip}
+							/>
+						))}
+					</SliderPrimitive.Track>
+				</SliderPrimitive.Control>
 
 				{markList.length > 0 && (
 					<div className={styles['slider-dots']}>
@@ -291,17 +303,6 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 						))}
 					</div>
 				)}
-
-				{localValues.map((val, index) => (
-					<SliderThumb
-						// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
-						key={`slider-${internalId}-thumb-${index}`}
-						value={val}
-						className={cn(styles['slider-thumb'], classNames?.thumb)}
-						style={inlineStyles?.thumb}
-						tooltip={tooltip}
-					/>
-				))}
 
 				{markList.length > 0 && (
 					<div className={styles['slider-marks']}>
@@ -339,6 +340,7 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
 Slider.displayName = 'Slider';
 
 interface SliderThumbProps {
+	index: number;
 	value: number;
 	className: string;
 	style?: React.CSSProperties;
@@ -350,7 +352,7 @@ interface SliderThumbProps {
  * lifecycle. Radix's default behavior only shows the tooltip on hover, which
  * causes flicker as the thumb moves under the cursor during dragging.
  */
-function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
+function SliderThumb({ index, value, className, style, tooltip }: SliderThumbProps) {
 	const [isDragging, setIsDragging] = useState(false);
 	const [isHovering, setIsHovering] = useState(false);
 
@@ -363,6 +365,7 @@ function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
 
 	const thumb = (
 		<SliderPrimitive.Thumb
+			index={index}
 			className={className}
 			style={style}
 			onPointerDown={() => setIsDragging(true)}

@@ -1,4 +1,4 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Check } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
@@ -10,8 +10,12 @@ export type SelectItemProps = {
 	className?: string;
 	/** Inline styles for the element. */
 	style?: React.CSSProperties;
-	/** Unique identifier for the element. */
-	id?: string;
+	/**
+	 * BREAKING (Base UI migration): `id` is no longer accepted. The primitive
+	 * owns each item's id so that `aria-activedescendant` can point at the
+	 * highlighted option; overriding it would break keyboard highlighting.
+	 * Use `testId` to target an item.
+	 */
 	/** Test identifier for testing libraries. */
 	testId?: string;
 	/** The value of the item (used for selection). */
@@ -44,52 +48,41 @@ export type SelectItemProps = {
  * <SelectItem value="react" testId="select-item-react">React</SelectItem>
  * ```
  */
-export const SelectItem = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.Item>,
-	SelectItemProps
->(({ className, style, id, testId, indicatorClassname, children, ...props }, ref) => {
-	const context = useSelectContext();
-	const isSelected = context?.value.includes(props.value) ?? false;
+export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
+	({ className, style, testId, indicatorClassname, textValue, children, ...props }, ref) => {
+		const context = useSelectContext();
+		const isSelected = context?.value.includes(props.value) ?? false;
 
-	// For multi-select, prevent Radix from closing and handle selection ourselves
-	const handlePointerUp = (e: React.PointerEvent) => {
-		if (context?.multiple && !props.disabled) {
-			e.preventDefault();
-			context.onValueChange(props.value);
-		}
-	};
-
-	return (
-		<SelectPrimitive.Item
-			ref={ref}
-			id={id}
-			className={cn(styles.select__item, className)}
-			style={style}
-			data-slot="select-item"
-			data-testid={testId}
-			data-selected={isSelected}
-			data-multiple={context?.multiple || undefined}
-			onPointerUp={handlePointerUp}
-			{...props}
-		>
-			{context?.multiple && (
-				<span
-					className={cn(styles['select__item-indicator'], indicatorClassname, {
-						'opacity-0': !isSelected,
-					})}
-				>
-					<SelectPrimitive.ItemIndicator>
-						<Check />
-					</SelectPrimitive.ItemIndicator>
-					{isSelected && !props.disabled && <Check />}
-				</span>
-			)}
-			<SelectPrimitive.ItemText>
-				<span className={styles.select__item__container}>{children}</span>
-			</SelectPrimitive.ItemText>
-		</SelectPrimitive.Item>
-	);
-});
+		return (
+			<SelectPrimitive.Item
+				ref={ref}
+				className={cn(styles.select__item, className)}
+				style={style}
+				data-slot="select-item"
+				data-testid={testId}
+				data-multiple={context?.multiple || undefined}
+				// Base UI uses `label` for typeahead where Radix used `textValue`.
+				label={textValue}
+				{...props}
+			>
+				{context?.multiple && (
+					<span
+						className={cn(styles['select__item-indicator'], indicatorClassname, {
+							'opacity-0': !isSelected,
+						})}
+					>
+						<SelectPrimitive.ItemIndicator>
+							<Check />
+						</SelectPrimitive.ItemIndicator>
+					</span>
+				)}
+				<SelectPrimitive.ItemText>
+					<span className={styles.select__item__container}>{children}</span>
+				</SelectPrimitive.ItemText>
+			</SelectPrimitive.Item>
+		);
+	},
+);
 SelectItem.displayName = 'SelectItem';
 
 export type SelectItemTextProps = {
@@ -115,20 +108,19 @@ export type SelectItemTextProps = {
  * </SelectItem>
  * ```
  */
-export const SelectItemText = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.ItemText>,
-	SelectItemTextProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.ItemText
-		ref={ref}
-		id={id}
-		className={className}
-		style={style}
-		data-slot="select-item-text"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectItemText = React.forwardRef<HTMLDivElement, SelectItemTextProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.ItemText
+			ref={ref}
+			id={id}
+			className={className}
+			style={style}
+			data-slot="select-item-text"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectItemText.displayName = 'SelectItemText';
 
 export type SelectItemIndicatorProps = {
@@ -157,18 +149,17 @@ export type SelectItemIndicatorProps = {
  * </SelectItem>
  * ```
  */
-export const SelectItemIndicator = React.forwardRef<
-	React.ElementRef<typeof SelectPrimitive.ItemIndicator>,
-	SelectItemIndicatorProps
->(({ className, style, id, testId, ...props }, ref) => (
-	<SelectPrimitive.ItemIndicator
-		ref={ref}
-		id={id}
-		className={className}
-		style={style}
-		data-slot="select-item-indicator"
-		data-testid={testId}
-		{...props}
-	/>
-));
+export const SelectItemIndicator = React.forwardRef<HTMLDivElement, SelectItemIndicatorProps>(
+	({ className, style, id, testId, ...props }, ref) => (
+		<SelectPrimitive.ItemIndicator
+			ref={ref}
+			id={id}
+			className={className}
+			style={style}
+			data-slot="select-item-indicator"
+			data-testid={testId}
+			{...props}
+		/>
+	),
+);
 SelectItemIndicator.displayName = 'SelectItemIndicator';

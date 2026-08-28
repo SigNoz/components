@@ -1,11 +1,21 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import * as React from 'react';
 
+import { type DismissHandlers, useRegisterDismissHandlers } from '../../lib/dismiss-handlers.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../dropdown-menu.module.scss';
+import { useAutoFocusBridge } from './menu-focus.js';
 import { DropdownMenuPortal } from './dropdown-menu-portal.js';
 
-type OriginalContentProps = React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
+type PositionerProps = React.ComponentProps<typeof MenuPrimitive.Positioner>;
+
+/**
+ * Radix took positioning props on the content; Base UI splits them across a
+ * Positioner (placement) and a Popup (the styled box). `avoidCollisions` maps to
+ * the per-axis `collisionAvoidance` strategy.
+ */
+const COLLISIONS_ON = { side: 'flip', align: 'shift' } as const;
+const COLLISIONS_OFF = { side: 'none', align: 'none' } as const;
 
 export type DropdownMenuContentProps = {
 	/**
@@ -19,7 +29,7 @@ export type DropdownMenuContentProps = {
 	/**
 	 * Inline styles to apply to the content.
 	 */
-	style?: OriginalContentProps['style'];
+	style?: React.CSSProperties;
 	/**
 	 * The id of the content.
 	 */
@@ -42,33 +52,37 @@ export type DropdownMenuContentProps = {
 	 * Event handler called when auto-focusing on close.
 	 * Can be prevented.
 	 */
-	onCloseAutoFocus?: OriginalContentProps['onCloseAutoFocus'];
+	onCloseAutoFocus?: (event: Event) => void;
 	/**
 	 * Event handler called when auto-focusing on open.
 	 * Can be prevented by calling `event.preventDefault()`.
+	 */
+	/**
+	 * @deprecated No longer wired: the menu always moves focus to its first item
+	 * when opened. Accepted for API compatibility and otherwise ignored.
 	 */
 	onOpenAutoFocus?: (event: Event) => void;
 	/**
 	 * Event handler called when the escape key is down.
 	 * Can be prevented.
 	 */
-	onEscapeKeyDown?: (event: KeyboardEvent) => void;
+	onEscapeKeyDown?: DismissHandlers['onEscapeKeyDown'];
 	/**
 	 * Event handler called when a `pointerdown` event happens outside of the content.
 	 * Can be prevented.
 	 */
-	onPointerDownOutside?: OriginalContentProps['onPointerDownOutside'];
+	onPointerDownOutside?: DismissHandlers['onPointerDownOutside'];
 	/**
 	 * Event handler called when the focus moves outside of the content.
 	 * Can be prevented.
 	 */
-	onFocusOutside?: OriginalContentProps['onFocusOutside'];
+	onFocusOutside?: DismissHandlers['onFocusOutside'];
 	/**
 	 * Event handler called when an interaction happens outside the content.
 	 * Specifically, when a `pointerdown` event happens outside or focus moves outside of it.
 	 * Can be prevented.
 	 */
-	onInteractOutside?: OriginalContentProps['onInteractOutside'];
+	onInteractOutside?: DismissHandlers['onInteractOutside'];
 	/**
 	 * The preferred side of the trigger to render against when open.
 	 * Will be reversed when collisions occur and `avoidCollisions` is enabled.
@@ -102,13 +116,13 @@ export type DropdownMenuContentProps = {
 	 * By default this is the viewport, though you can provide additional element(s)
 	 * to be included in this check.
 	 */
-	collisionBoundary?: OriginalContentProps['collisionBoundary'];
+	collisionBoundary?: PositionerProps['collisionBoundary'];
 	/**
 	 * The distance in pixels from the boundary edges where collision detection should occur.
 	 * Accepts a number (same for all sides), or a partial padding object.
 	 * @default 0
 	 */
-	collisionPadding?: OriginalContentProps['collisionPadding'];
+	collisionPadding?: PositionerProps['collisionPadding'];
 	/**
 	 * The padding between the arrow and the edges of the content.
 	 * If your content has border-radius, this will prevent it from overflowing the corners.
@@ -167,28 +181,82 @@ export type DropdownMenuContentProps = {
  * </DropdownMenuContent>
  * ```
  */
-export const DropdownMenuContent = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-	DropdownMenuContentProps
->(({ className, sideOffset = 4, testId, id, onClick, ...props }, ref) => (
-	<DropdownMenuPortal>
-		<DropdownMenuPrimitive.Content
-			ref={ref}
-			data-slot="dropdown-menu-content"
-			data-testid={testId}
-			id={id}
-			sideOffset={sideOffset}
-			className={cn(styles['dropdown-menu__content'], className)}
-			onClick={(event): void => {
-				onClick?.(event);
-				// React synthetic clicks bubble through portals — without
-				// stopping here, every menu-item click would also fire the
-				// `onClick` of any clickable ancestor that wraps the trigger.
-				event.stopPropagation();
-			}}
-			{...props}
-		/>
-	</DropdownMenuPortal>
-));
+export const DropdownMenuContent = React.forwardRef<HTMLDivElement, DropdownMenuContentProps>(
+	(
+		{
+			className,
+			sideOffset = 4,
+			testId,
+			id,
+			onClick,
+			children,
+			style,
+			side,
+			align,
+			alignOffset,
+			avoidCollisions,
+			collisionPadding,
+			forceMount,
+			onEscapeKeyDown,
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
+			onOpenAutoFocus: _onOpenAutoFocus,
+			onCloseAutoFocus,
+			loop: _loop,
+			...props
+		},
+		ref,
+	) => {
+		const finalFocus = useAutoFocusBridge(onCloseAutoFocus, 'closeAutoFocus');
+
+		useRegisterDismissHandlers({
+			onEscapeKeyDown,
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
+		});
+
+		return (
+			<DropdownMenuPortal forceMount={forceMount}>
+				<MenuPrimitive.Positioner
+					className={styles['dropdown-menu__positioner']}
+					side={side}
+					sideOffset={sideOffset}
+					align={align}
+					alignOffset={alignOffset}
+					collisionPadding={collisionPadding}
+					collisionAvoidance={
+						avoidCollisions === undefined
+							? undefined
+							: avoidCollisions
+								? COLLISIONS_ON
+								: COLLISIONS_OFF
+					}
+				>
+					<MenuPrimitive.Popup
+						ref={ref}
+						data-slot="dropdown-menu-content"
+						data-testid={testId}
+						id={id}
+						style={style}
+						className={cn(styles['dropdown-menu__content'], className)}
+						finalFocus={finalFocus}
+						onClick={(event): void => {
+							onClick?.(event);
+							// React synthetic clicks bubble through portals — without
+							// stopping here, every menu-item click would also fire the
+							// `onClick` of any clickable ancestor that wraps the trigger.
+							event.stopPropagation();
+						}}
+						{...props}
+					>
+						{children}
+					</MenuPrimitive.Popup>
+				</MenuPrimitive.Positioner>
+			</DropdownMenuPortal>
+		);
+	},
+);
 
 DropdownMenuContent.displayName = 'DropdownMenuContent';

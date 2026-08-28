@@ -43,7 +43,7 @@ const meta: Meta<typeof Kbd> = {
 		},
 		asChild: {
 			control: 'boolean',
-			description: 'Use Radix Slot to compose as a different element.',
+			description: 'Render as a different element, merging the Kbd props onto the child.',
 			table: { category: 'Composition', defaultValue: { summary: 'false' } },
 		},
 		active: {

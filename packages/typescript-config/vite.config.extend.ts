@@ -26,6 +26,10 @@ export const externalPatterns = [
 	'@tanstack/react-virtual',
 	'@tanstack/react-table',
 	/@radix-ui\/.*$/,
+	// Base UI ships per-component subpaths (`@base-ui/react/switch`), all of
+	// which must stay external — bundling them would inline the whole library
+	// into every published entry.
+	/^@base-ui\/react(\/.*)?$/,
 	/^@signozhq\/.*$/,
 	'@chenglou/pretext',
 	'copy-text-to-clipboard',

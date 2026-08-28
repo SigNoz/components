@@ -51,7 +51,7 @@
   padding: 0;
   transition: border-color 150ms ease;
 
-  &[data-state="checked"] {
+  &[data-checked] {
     border-width: calc(var(--radio-group-item-size, 1rem) / 3);
     border-color: var(--radio-group-checked-background);
   }

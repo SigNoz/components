@@ -1,13 +1,14 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { Check } from '@signozhq/icons';
 import * as React from 'react';
 
 import { cn } from '../../lib/utils.js';
+import { createSelectHandler } from './menu-select.js';
 import styles from '../dropdown-menu.module.scss';
 
 export type DropdownMenuCheckboxItemProps = Omit<
-	React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>,
-	'asChild'
+	React.ComponentProps<typeof MenuPrimitive.CheckboxItem>,
+	'render' | 'onCheckedChange' | 'checked' | 'label'
 > & {
 	/**
 	 * Additional CSS classes to apply to the checkbox item.
@@ -65,34 +66,40 @@ export type DropdownMenuCheckboxItemProps = Omit<
  * ```
  */
 export const DropdownMenuCheckboxItem = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+	HTMLDivElement,
 	DropdownMenuCheckboxItemProps
->(({ className, children, checked, onSelect, ...props }, ref) => {
-	const handleSelect = React.useCallback(
-		(event: Event) => {
-			event.preventDefault();
-			onSelect?.(event);
-		},
-		[onSelect],
-	);
-
-	return (
-		<DropdownMenuPrimitive.CheckboxItem
-			ref={ref}
-			data-slot="dropdown-menu-checkbox-item"
-			className={cn(styles['dropdown-menu__checkbox-item'], className)}
-			checked={checked}
-			onSelect={handleSelect}
-			{...props}
-		>
-			<span data-slot="checkbox-indicator" className={styles['dropdown-menu__checkbox-indicator']}>
-				<DropdownMenuPrimitive.ItemIndicator>
-					<Check size={14} />
-				</DropdownMenuPrimitive.ItemIndicator>
-			</span>
-			{children}
-		</DropdownMenuPrimitive.CheckboxItem>
-	);
-});
+>(
+	(
+		{ className, children, checked, onSelect, onClick, onCheckedChange, textValue, ...props },
+		ref,
+	) => {
+		return (
+			<MenuPrimitive.CheckboxItem
+				ref={ref}
+				data-slot="dropdown-menu-checkbox-item"
+				className={cn(styles['dropdown-menu__checkbox-item'], className)}
+				// Base UI menu checkbox items are binary; an indeterminate value
+				// reads as unchecked, as it did visually before.
+				checked={checked === 'indeterminate' ? false : checked}
+				onCheckedChange={(next) => onCheckedChange?.(next)}
+				onClick={createSelectHandler(onSelect, onClick)}
+				// Toggling a checkbox has always kept the menu open.
+				closeOnClick={false}
+				label={textValue}
+				{...props}
+			>
+				<span
+					data-slot="checkbox-indicator"
+					className={styles['dropdown-menu__checkbox-indicator']}
+				>
+					<MenuPrimitive.CheckboxItemIndicator>
+						<Check size={14} />
+					</MenuPrimitive.CheckboxItemIndicator>
+				</span>
+				{children}
+			</MenuPrimitive.CheckboxItem>
+		);
+	},
+);
 
 DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem';

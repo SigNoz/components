@@ -17,6 +17,7 @@ export const ArrowUpDown = createIcon('arrow-up-down');
 export const Calendar = createIcon('calendar');
 export const X = createIcon('x');
 export const Check = createIcon('check');
+export const Copy = createIcon('copy');
 export const Slash = createIcon('slash');
 export const ChevronDown = createIcon('chevron-down');
 export const ChevronLeft = createIcon('chevron-left');

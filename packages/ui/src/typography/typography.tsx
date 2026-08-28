@@ -1,4 +1,4 @@
-import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
+import { Check, Copy } from '@signozhq/icons';
 import copy from 'copy-text-to-clipboard';
 import type React from 'react';
 import { forwardRef, useState } from 'react';
@@ -354,7 +354,7 @@ const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
 					className={styles.copyButton}
 					aria-label={copied ? 'Copied' : 'Copy to clipboard'}
 				>
-					{copied ? <CheckIcon /> : <CopyIcon />}
+					{copied ? <Check /> : <Copy />}
 				</button>
 			)}
 		</Tag>

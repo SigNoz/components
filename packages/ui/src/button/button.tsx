@@ -1,7 +1,7 @@
-import { Slot } from '@radix-ui/react-slot';
 import { LoaderCircle } from '@signozhq/icons';
 import type React from 'react';
 import { cloneElement, createContext, forwardRef, useContext } from 'react';
+import { AsChild } from '../lib/as-child.js';
 import { cn } from '../lib/utils.js';
 import styles from './button.module.scss';
 
@@ -81,7 +81,7 @@ export type ButtonProps = {
 	 */
 	size?: ButtonSizeValue;
 	/**
-	 * When `true`, render as the immediate child element (via Radix `Slot`) instead of a native
+	 * When `true`, render as the immediate child element instead of a native
 	 * `<button>`. Useful for turning a `Button` into a link. `loading`, `prefix`, and `suffix`
 	 * are not supported in this mode.
 	 * @default false
@@ -197,7 +197,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		},
 		ref,
 	) => {
-		const Comp = asChild ? Slot : 'button';
 		const group = useContext(ButtonGroupContext);
 
 		variant ??= group?.variant ?? ButtonVariant.Solid;
@@ -216,29 +215,31 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			}
 
 			return (
-				<Comp
-					data-testid={testId}
-					data-color={color}
-					data-variant={variant}
-					data-size={size}
-					data-background={variant === ButtonVariant.Action ? background : undefined}
-					className={cn(
-						styles['button'],
-						'font-inter',
-						loading && styles['button--loading'],
-						className,
-					)}
-					disabled={disabled || loading}
-					ref={ref}
-					{...props}
-				>
-					{children}
-				</Comp>
+				<AsChild
+					child={children}
+					defaultTagName="button"
+					elementRef={ref}
+					props={{
+						'data-testid': testId,
+						'data-color': color,
+						'data-variant': variant,
+						'data-size': size,
+						'data-background': variant === ButtonVariant.Action ? background : undefined,
+						className: cn(
+							styles['button'],
+							'font-inter',
+							loading && styles['button--loading'],
+							className,
+						),
+						disabled: disabled || loading,
+						...props,
+					}}
+				/>
 			);
 		}
 
 		return (
-			<Comp
+			<button
 				data-testid={testId}
 				data-color={color}
 				data-variant={variant}
@@ -271,7 +272,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 						}),
 					})) ||
 					null}
-			</Comp>
+			</button>
 		);
 	},
 );

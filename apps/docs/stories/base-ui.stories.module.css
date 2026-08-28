@@ -1,0 +1,160 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	max-width: 1000px;
+}
+
+.intro {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-width: 68ch;
+}
+
+.counts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.count {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 12px 16px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	min-width: 132px;
+}
+
+.countValue {
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.countLabel {
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--bg-vanilla-400);
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.table th {
+	text-align: left;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--bg-vanilla-400);
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--border);
+	white-space: nowrap;
+}
+
+.table td {
+	padding: 9px 12px;
+	border-bottom: 1px solid var(--border);
+	vertical-align: top;
+}
+
+.mono {
+	font-family: 'SF Mono', ui-monospace, monospace;
+	font-size: 12px;
+}
+
+.pill {
+	display: inline-block;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	padding: 2px 7px;
+	border-radius: 4px;
+	white-space: nowrap;
+}
+
+.pillDone {
+	background: var(--bg-forest-900);
+	color: var(--bg-forest-400);
+}
+
+.pillNext {
+	background: var(--bg-amber-950);
+	color: var(--bg-amber-500);
+}
+
+.pillRadix {
+	background: var(--bg-cherry-900);
+	color: var(--bg-cherry-400);
+}
+
+.pillLater {
+	background: var(--bg-slate-400);
+	color: var(--bg-vanilla-400);
+}
+
+.gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 16px;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+}
+
+.cardHead {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.cardTitle {
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.cardNote {
+	font-size: 11px;
+	color: var(--bg-vanilla-400);
+}
+
+.demo {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	min-height: 40px;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+}
+
+.caption {
+	font-size: 12px;
+	color: var(--bg-vanilla-400);
+	max-width: 68ch;
+}
+
+.num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}

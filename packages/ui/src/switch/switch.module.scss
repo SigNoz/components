@@ -99,7 +99,7 @@
     }
   }
 
-  &[data-state="checked"] &__loading-icon {
+  &[data-checked] &__loading-icon {
     color: var(--switch-loading-icon-color, var(--switch-checked-background));
   }
 
@@ -114,15 +114,15 @@
     transition: transform 150ms ease-in-out;
   }
 
-  &[data-state="checked"] {
+  &[data-checked] {
     background-color: var(--switch-checked-background);
   }
 
-  &[data-state="checked"] .switch__thumb {
+  &[data-checked] .switch__thumb {
     transform: translateX(var(--switch-thumb-size, .75rem));
   }
 
-  &[data-state="unchecked"] .switch__thumb {
+  &[data-unchecked] .switch__thumb {
     transform: translateX(0);
   }
 }

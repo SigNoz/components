@@ -14,8 +14,8 @@ beforeAll(() => {
 
 describe('Slider forwardRef', () => {
 	it('forwards ref', () => {
-		const ref = createRef<HTMLSpanElement>();
+		const ref = createRef<HTMLDivElement>();
 		render(<Slider ref={ref} defaultValue={[50]} />);
-		expect(ref.current).toBeInstanceOf(HTMLSpanElement);
+		expect(ref.current).toBeInstanceOf(HTMLElement);
 	});
 });

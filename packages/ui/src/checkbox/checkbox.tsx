@@ -1,9 +1,16 @@
-import type { CheckedState } from '@radix-ui/react-checkbox';
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { Check, Slash } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
 import styles from './checkbox.module.scss';
+
+/**
+ * The checked state of a checkbox: on, off, or a mixed/partial state.
+ *
+ * Kept as a union (rather than Base UI's separate `checked` + `indeterminate`
+ * props) so the public API of this component does not change.
+ */
+export type CheckedState = boolean | 'indeterminate';
 
 type CheckboxColor =
 	| 'primary'
@@ -78,43 +85,63 @@ export interface CheckboxProps extends Pick<
 	onChange?(checked: CheckedState): void;
 }
 
-const Checkbox = React.forwardRef<React.ElementRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
-	({ className, color = 'primary', onChange, value, defaultValue, ...props }, ref) => (
-		<CheckboxPrimitive.Root
-			ref={ref}
-			data-color={colorMap[color] || color}
-			className={cn(styles.checkbox, className)}
-			checked={value}
-			defaultChecked={defaultValue}
-			onCheckedChange={onChange}
-			{...props}
-		>
-			<CheckboxPrimitive.Indicator className={styles['checkbox__indicator']}>
-				<Slash className={cn(styles['checkbox__icon'], styles['checkbox__icon--slash'])} />
-				<Check className={cn(styles['checkbox__icon'], styles['checkbox__icon--check'])} />
-			</CheckboxPrimitive.Indicator>
-		</CheckboxPrimitive.Root>
-	),
+const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
+	({ className, color = 'primary', onChange, value, defaultValue, ...props }, ref) => {
+		// Base UI splits our `CheckedState` union into a boolean `checked` plus a
+		// separate `indeterminate` flag. `indeterminate` is not a "default" prop
+		// there, so the uncontrolled case needs local state to clear on the first
+		// interaction the way the union used to.
+		const isControlled = value !== undefined;
+		const [uncontrolledIndeterminate, setUncontrolledIndeterminate] = React.useState(
+			defaultValue === 'indeterminate',
+		);
+
+		const indeterminate = isControlled ? value === 'indeterminate' : uncontrolledIndeterminate;
+
+		return (
+			<CheckboxPrimitive.Root
+				ref={ref}
+				data-color={colorMap[color] || color}
+				className={cn(styles.checkbox, className)}
+				checked={isControlled ? (value === 'indeterminate' ? false : value) : undefined}
+				defaultChecked={
+					isControlled ? undefined : defaultValue === 'indeterminate' ? false : defaultValue
+				}
+				indeterminate={indeterminate}
+				onCheckedChange={(checked: boolean) => {
+					if (!isControlled) {
+						setUncontrolledIndeterminate(false);
+					}
+					onChange?.(checked);
+				}}
+				{...(props as Record<string, unknown>)}
+			>
+				<CheckboxPrimitive.Indicator className={styles['checkbox__indicator']}>
+					<Slash className={cn(styles['checkbox__icon'], styles['checkbox__icon--slash'])} />
+					<Check className={cn(styles['checkbox__icon'], styles['checkbox__icon--check'])} />
+				</CheckboxPrimitive.Indicator>
+			</CheckboxPrimitive.Root>
+		);
+	},
 );
-Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+Checkbox.displayName = 'Checkbox';
 
-const CheckboxWrapper = React.forwardRef<
-	React.ElementRef<typeof CheckboxPrimitive.Root>,
-	CheckboxProps
->(({ id, children, testId, className, ...props }, ref) => {
-	const fallbackId = React.useId();
+const CheckboxWrapper = React.forwardRef<HTMLElement, CheckboxProps>(
+	({ id, children, testId, className, ...props }, ref) => {
+		const fallbackId = React.useId();
 
-	return (
-		<div className={cn(styles['checkbox-wrapper'], className)} data-testid={testId}>
-			<Checkbox ref={ref} id={id || fallbackId} {...props} />
-			{children && (
-				<label htmlFor={id || fallbackId} className={styles['checkbox-wrapper__label']}>
-					{children}
-				</label>
-			)}
-		</div>
-	);
-});
+		return (
+			<div className={cn(styles['checkbox-wrapper'], className)} data-testid={testId}>
+				<Checkbox ref={ref} id={id || fallbackId} {...props} />
+				{children && (
+					<label htmlFor={id || fallbackId} className={styles['checkbox-wrapper__label']}>
+						{children}
+					</label>
+				)}
+			</div>
+		);
+	},
+);
 CheckboxWrapper.displayName = 'Checkbox';
 
 export { CheckboxWrapper as Checkbox };

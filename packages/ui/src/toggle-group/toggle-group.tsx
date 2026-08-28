@@ -1,4 +1,5 @@
-import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
+import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
+import { ToggleGroup as ToggleGroupPrimitive } from '@base-ui/react/toggle-group';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
 import type { ToggleColor } from '../toggle/index.js';
@@ -111,22 +112,57 @@ export type ToggleGroupProps = (
  */
 export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
 	(
-		{ className, children, size = 'default', color = 'secondary', onChange, testId, ...props },
+		{
+			className,
+			children,
+			size = 'default',
+			color = 'secondary',
+			onChange,
+			testId,
+			type,
+			value,
+			defaultValue,
+			loop,
+			rovingFocus,
+			...props
+		},
 		ref,
-	) => (
-		<ToggleGroupPrimitive.Root
-			ref={ref}
-			data-slot="toggle-group"
-			data-size={size}
-			data-color={color}
-			data-testid={testId}
-			className={cn(styles['toggle-group'], className)}
-			onValueChange={onChange as (value: string | string[]) => void}
-			{...props}
-		>
-			{children}
-		</ToggleGroupPrimitive.Root>
-	),
+	) => {
+		// Base UI has no `type` discriminator: the group always works in terms of
+		// an array and takes a `multiple` flag. Our public single/multiple API is
+		// preserved by widening on the way in and narrowing on the way out.
+		const isMultiple = type === 'multiple';
+		const toArray = (input: string | string[] | undefined): string[] | undefined => {
+			if (input === undefined) return undefined;
+			return Array.isArray(input) ? input : [input];
+		};
+
+		return (
+			<ToggleGroupPrimitive
+				ref={ref}
+				data-slot="toggle-group"
+				data-size={size}
+				data-color={color}
+				data-testid={testId}
+				className={cn(styles['toggle-group'], className)}
+				multiple={isMultiple}
+				value={toArray(value)}
+				defaultValue={toArray(defaultValue)}
+				loopFocus={loop}
+				onValueChange={
+					onChange
+						? (groupValue: string[]) =>
+								isMultiple
+									? (onChange as (next: string[]) => void)(groupValue)
+									: (onChange as (next: string) => void)(groupValue[0] ?? '')
+						: undefined
+				}
+				{...props}
+			>
+				{children}
+			</ToggleGroupPrimitive>
+		);
+	},
 );
 ToggleGroup.displayName = 'ToggleGroup';
 
@@ -172,7 +208,7 @@ export type ToggleGroupItemProps = {
  */
 export const ToggleGroupItem = React.forwardRef<HTMLButtonElement, ToggleGroupItemProps>(
 	({ className, value, testId, ...props }, ref) => (
-		<ToggleGroupPrimitive.Item
+		<TogglePrimitive
 			ref={ref}
 			data-slot="toggle-group-item"
 			data-testid={testId}

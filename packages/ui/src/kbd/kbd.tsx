@@ -1,5 +1,5 @@
-import { Slot } from '@radix-ui/react-slot';
 import { forwardRef } from 'react';
+import { AsChild } from '../lib/as-child.js';
 import { cn } from '../lib/utils.js';
 import styles from './kbd.module.css';
 
@@ -33,20 +33,25 @@ const Kbd = forwardRef<HTMLElement, KbdProps>(
 		{ className, size = 'default', asChild = false, active = false, testId, children, ...props },
 		ref,
 	) => {
-		const Comp = asChild ? Slot : 'kbd';
+		const elementProps = {
+			'data-slot': 'kbd',
+			'data-size': size,
+			'data-active': active || undefined,
+			'data-testid': testId,
+			className: cn(styles.kbd, className),
+			...props,
+		};
+
+		if (asChild) {
+			return (
+				<AsChild child={children} props={elementProps} defaultTagName="kbd" elementRef={ref} />
+			);
+		}
 
 		return (
-			<Comp
-				ref={ref}
-				data-slot="kbd"
-				data-size={size}
-				data-active={active || undefined}
-				data-testid={testId}
-				className={cn(styles.kbd, className)}
-				{...props}
-			>
+			<kbd ref={ref} {...elementProps}>
 				{children}
-			</Comp>
+			</kbd>
 		);
 	},
 );

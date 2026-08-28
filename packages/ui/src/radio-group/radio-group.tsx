@@ -1,4 +1,5 @@
-import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
+import { Radio } from '@base-ui/react/radio';
+import { RadioGroup as RadioGroupPrimitiveBase } from '@base-ui/react/radio-group';
 import * as React from 'react';
 import { useId } from 'react';
 import { cn } from '../lib/utils.js';
@@ -151,27 +152,36 @@ export type RadioGroupLabelProps = Pick<
  * </RadioGroup>
  * ```
  */
-const RadioGroup = React.forwardRef<
-	React.ElementRef<typeof RadioGroupPrimitive.Root>,
-	RadioGroupProps
->(({ className, onChange, color = 'robin', testId, ...props }, ref) => {
-	return (
-		<RadioGroupPrimitive.Root
-			className={cn(styles['radio-group'], className)}
-			onValueChange={onChange}
-			data-color={color}
-			data-testid={testId}
-			{...props}
-			ref={ref}
-		/>
-	);
-});
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+// The primitive is generic over its value type; our public API fixes it to a
+// string, so it is referenced through a non-generic alias.
+const RadioGroupPrimitive = RadioGroupPrimitiveBase as React.ComponentType<
+	Record<string, unknown> & { ref?: React.Ref<HTMLDivElement> }
+>;
 
-const RadioGroupItem = React.forwardRef<
-	React.ElementRef<typeof RadioGroupPrimitive.Item>,
-	RadioGroupItemProps
->(
+const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
+	({ className, onChange, color = 'robin', testId, orientation, loop: _loop, ...props }, ref) => {
+		return (
+			<RadioGroupPrimitive
+				className={cn(styles['radio-group'], className)}
+				// Base UI reports `(value, eventDetails)` with a generic value; our
+				// public `onChange` takes the selected string alone.
+				onValueChange={onChange ? (value: unknown) => onChange(String(value)) : undefined}
+				// Base UI's RadioGroup has no `orientation` prop, so it is surfaced
+				// as the ARIA attribute directly. `loop` has no equivalent at all
+				// (focus looping is handled by the composite) and is dropped here
+				// rather than forwarded, which would emit an inert DOM attribute.
+				aria-orientation={orientation}
+				data-color={color}
+				data-testid={testId}
+				{...(props as Record<string, unknown>)}
+				ref={ref}
+			/>
+		);
+	},
+);
+RadioGroup.displayName = 'RadioGroup';
+
+const RadioGroupItem = React.forwardRef<HTMLElement, RadioGroupItemProps>(
 	(
 		{
 			className,
@@ -197,7 +207,7 @@ const RadioGroupItem = React.forwardRef<
 					id={containerId}
 					style={containerStyle}
 				>
-					<RadioGroupPrimitive.Item
+					<Radio.Root
 						ref={ref}
 						className={cn(styles['radio-group__item'], className)}
 						id={radioId}
@@ -205,8 +215,8 @@ const RadioGroupItem = React.forwardRef<
 						style={style}
 						{...props}
 					>
-						<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
-					</RadioGroupPrimitive.Item>
+						<Radio.Indicator className={styles['radio-group__indicator']} />
+					</Radio.Root>
 					{children && (
 						<RadioGroupLabel htmlFor={radioId} aria-disabled={props.disabled}>
 							{children}
@@ -217,19 +227,19 @@ const RadioGroupItem = React.forwardRef<
 		}
 
 		return (
-			<RadioGroupPrimitive.Item
+			<Radio.Root
 				ref={ref}
 				className={cn(styles['radio-group__item'], className)}
 				data-testid={testId}
 				style={style}
 				{...props}
 			>
-				<RadioGroupPrimitive.Indicator className={styles['radio-group__indicator']} />
-			</RadioGroupPrimitive.Item>
+				<Radio.Indicator className={styles['radio-group__indicator']} />
+			</Radio.Root>
 		);
 	},
 );
-RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+RadioGroupItem.displayName = 'RadioGroupItem';
 
 const RadioGroupLabel = React.forwardRef<HTMLLabelElement, RadioGroupLabelProps>(
 	({ className, ...props }, ref) => {

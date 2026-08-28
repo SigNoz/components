@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { Search } from '@signozhq/icons';
 import { Command as CommandPrimitive } from 'cmdk';
 import * as React from 'react';
 import { Dialog, DialogContent, type DialogPosition } from '../dialog/index.js';
@@ -218,7 +218,7 @@ export const CommandInput = React.forwardRef<HTMLInputElement, CommandInputProps
 				id={containerId}
 				style={containerStyle}
 			>
-				<MagnifyingGlassIcon className={styles['command__input-icon']} />
+				<Search className={styles['command__input-icon']} />
 				<CommandPrimitive.Input
 					ref={setRef}
 					className={cn(styles['command__input'], className)}

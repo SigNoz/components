@@ -1,4 +1,4 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import type * as React from 'react';
 
 export type DropdownMenuSubProps = {
@@ -41,5 +41,5 @@ export type DropdownMenuSubProps = {
  * ```
  */
 export function DropdownMenuSub(props: DropdownMenuSubProps) {
-	return <DropdownMenuPrimitive.Sub data-slot="dropdown-menu-sub" {...props} />;
+	return <MenuPrimitive.SubmenuRoot {...props} />;
 }

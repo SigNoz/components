@@ -14,7 +14,6 @@
 		"test-storybook": "vitest --project=storybook"
 	},
 	"dependencies": {
-		"@radix-ui/react-tabs": "^1.1.19",
 		"@signozhq/design-tokens": "2.1.6",
 		"@signozhq/icons": "^0.4.0",
 		"@signozhq/ui": "workspace:*",

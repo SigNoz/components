@@ -94,7 +94,7 @@
     background-color: var(--toggle-group-bg-hover);
   }
 
-  &[data-state='on'] {
+  &[data-pressed] {
     background-color: var(--toggle-group-active-bg);
     color: var(--toggle-group-text-active);
     opacity: 1;

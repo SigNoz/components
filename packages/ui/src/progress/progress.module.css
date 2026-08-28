@@ -32,11 +32,20 @@
 	}
 }
 
+.track {
+	position: var(--progress-track-position, absolute);
+	inset: 0;
+	overflow: var(--progress-track-overflow, hidden);
+	border-radius: inherit;
+}
+
 .indicator {
-	width: var(--progress-indicator-width, 100%);
+	position: var(--progress-indicator-position, absolute);
+	top: 0;
+	bottom: 0;
 	height: var(--progress-indicator-height, 100%);
 	background-color: var(--progress-indicator-background, var(--primary-background));
-	transition: var(--progress-indicator-transition, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+	transition: var(--progress-indicator-transition, width 0.3s cubic-bezier(0.4, 0, 0.2, 1));
 	border-radius: var(--progress-border-radius, var(--radius-round, 9999px));
 
 	&[data-status="active"] {

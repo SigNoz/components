@@ -5,6 +5,13 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--slider-control-align-items` | `center` |
+ * | `--slider-control-display` | `flex` |
+ * | `--slider-control-position` | `relative` |
+ * | `--slider-control-touch-action` | `none` |
+ * | `--slider-control-vertical-height` | `100%` |
+ * | `--slider-control-vertical-width` | `100%` |
+ * | `--slider-control-width` | `100%` |
  * | `--slider-dot-active-border-color` | `var(--primary)` |
  * | `--slider-dot-background` | `var(--base-white)` |
  * | `--slider-dot-border` | `2px solid color-mix(in srgb, var(--primary) 30%...` |

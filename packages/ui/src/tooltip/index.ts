@@ -20,7 +20,7 @@
  * | `--tooltip-line-height` | `18px` |
  * | `--tooltip-padding` | `var(--spacing-2) var(--spacing-4)` |
  * | `--tooltip-text-wrap` | `balance` |
- * | `--tooltip-transform-origin` | `var(--radix-tooltip-content-transform-origin)` |
+ * | `--tooltip-transform-origin` | `var(--transform-origin)` |
  * | `--tooltip-width` | `fit-content` |
  * | `--tooltip-z-index` | `50` |
  */

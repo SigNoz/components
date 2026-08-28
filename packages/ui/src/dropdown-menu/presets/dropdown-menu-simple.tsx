@@ -1,4 +1,3 @@
-import type * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
 
 import { DropdownMenuCheckboxItem } from '../subcomponents/dropdown-menu-checkbox-item.js';
@@ -241,159 +240,158 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
  * ];
  * ```
  */
-export const DropdownMenuSimple = React.forwardRef<
-	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-	DropdownProps
->(({ menu, children, sideOffset = 4, className, onOpenAutoFocus, ...props }, ref) => {
-	const searchInputRef = React.useRef<HTMLInputElement>(null);
-	const contentRef = React.useRef<HTMLDivElement | null>(null);
+export const DropdownMenuSimple = React.forwardRef<HTMLDivElement, DropdownProps>(
+	({ menu, children, sideOffset = 4, className, onOpenAutoFocus, ...props }, ref) => {
+		const searchInputRef = React.useRef<HTMLInputElement>(null);
+		const contentRef = React.useRef<HTMLDivElement | null>(null);
 
-	const cleanedItems = React.useMemo(() => {
-		return cleanupMenuItems(menu.items);
-	}, [menu.items]);
+		const cleanedItems = React.useMemo(() => {
+			return cleanupMenuItems(menu.items);
+		}, [menu.items]);
 
-	const menuItems = React.useMemo(() => {
-		return renderMenuItems(cleanedItems);
-	}, [cleanedItems]);
+		const menuItems = React.useMemo(() => {
+			return renderMenuItems(cleanedItems);
+		}, [cleanedItems]);
 
-	// When search is present, prevent auto-focus on first menu item
-	// and instead focus the search input
-	const handleOpenAutoFocus = React.useCallback(
-		(event: Event) => {
-			if (menu.search) {
-				event.preventDefault();
-				searchInputRef.current?.focus();
-			}
-			onOpenAutoFocus?.(event);
-		},
-		[menu.search, onOpenAutoFocus],
-	);
+		// When search is present, prevent auto-focus on first menu item
+		// and instead focus the search input
+		const handleOpenAutoFocus = React.useCallback(
+			(event: Event) => {
+				if (menu.search) {
+					event.preventDefault();
+					searchInputRef.current?.focus();
+				}
+				onOpenAutoFocus?.(event);
+			},
+			[menu.search, onOpenAutoFocus],
+		);
 
-	const menuItemSelector =
-		'[data-slot="dropdown-menu-item"]:not([data-disabled]), ' +
-		'[data-slot="dropdown-menu-checkbox-item"]:not([data-disabled]), ' +
-		'[data-slot="dropdown-menu-radio-item"]:not([data-disabled])';
+		const menuItemSelector =
+			'[data-slot="dropdown-menu-item"]:not([data-disabled]), ' +
+			'[data-slot="dropdown-menu-checkbox-item"]:not([data-disabled]), ' +
+			'[data-slot="dropdown-menu-radio-item"]:not([data-disabled])';
 
-	// Handle ArrowDown from search to focus first menu item
-	const handleNavigateDown = React.useCallback(() => {
-		const content = contentRef.current;
-		if (!content) return;
-
-		const firstItem = content.querySelector<HTMLElement>(menuItemSelector);
-		firstItem?.focus();
-	}, []);
-
-	// Handle keyboard navigation within the dropdown
-	const handleContentKeyDown = React.useCallback(
-		(e: React.KeyboardEvent<HTMLDivElement>) => {
+		// Handle ArrowDown from search to focus first menu item
+		const handleNavigateDown = React.useCallback(() => {
 			const content = contentRef.current;
 			if (!content) return;
 
-			const items = Array.from(content.querySelectorAll<HTMLElement>(menuItemSelector));
-			const activeElement = document.activeElement as HTMLElement;
-			const currentIndex = activeElement ? items.indexOf(activeElement) : -1;
+			const firstItem = content.querySelector<HTMLElement>(menuItemSelector);
+			firstItem?.focus();
+		}, []);
 
-			// Handle ArrowUp or Shift+Tab from first item to focus search input
-			if ((e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) && menu.search) {
-				const firstItem = items[0];
-				if (activeElement === firstItem) {
-					e.preventDefault();
-					searchInputRef.current?.focus();
+		// Handle keyboard navigation within the dropdown
+		const handleContentKeyDown = React.useCallback(
+			(e: React.KeyboardEvent<HTMLDivElement>) => {
+				const content = contentRef.current;
+				if (!content) return;
+
+				const items = Array.from(content.querySelectorAll<HTMLElement>(menuItemSelector));
+				const activeElement = document.activeElement as HTMLElement;
+				const currentIndex = activeElement ? items.indexOf(activeElement) : -1;
+
+				// Handle ArrowUp or Shift+Tab from first item to focus search input
+				if ((e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) && menu.search) {
+					const firstItem = items[0];
+					if (activeElement === firstItem) {
+						e.preventDefault();
+						searchInputRef.current?.focus();
+						return;
+					}
+				}
+
+				if (e.target === searchInputRef.current) {
 					return;
 				}
-			}
 
-			if (e.target === searchInputRef.current) {
-				return;
-			}
-
-			// Handle Tab to navigate to next item
-			if (e.key === 'Tab' && !e.shiftKey && currentIndex !== -1) {
-				e.preventDefault();
-				const nextIndex = currentIndex + 1;
-				if (nextIndex < items.length) {
-					items[nextIndex].focus();
-				} else if (nextIndex === items.length && searchInputRef.current) {
-					searchInputRef.current.focus();
-				} else if (nextIndex === items.length && !searchInputRef.current && items.length > 0) {
-					items[0].focus();
+				// Handle Tab to navigate to next item
+				if (e.key === 'Tab' && !e.shiftKey && currentIndex !== -1) {
+					e.preventDefault();
+					const nextIndex = currentIndex + 1;
+					if (nextIndex < items.length) {
+						items[nextIndex].focus();
+					} else if (nextIndex === items.length && searchInputRef.current) {
+						searchInputRef.current.focus();
+					} else if (nextIndex === items.length && !searchInputRef.current && items.length > 0) {
+						items[0].focus();
+					}
+					return;
 				}
-				return;
-			}
 
-			// Handle Shift+Tab to navigate to previous item
-			if (e.key === 'Tab' && e.shiftKey && currentIndex !== -1) {
-				e.preventDefault();
-				const prevIndex = currentIndex - 1;
-				if (prevIndex >= 0) {
-					items[prevIndex].focus();
-				} else if (prevIndex === -1 && searchInputRef.current) {
-					searchInputRef.current.focus();
-				} else if (prevIndex === -1 && !searchInputRef.current && items.length > 0) {
-					items[items.length - 1].focus();
+				// Handle Shift+Tab to navigate to previous item
+				if (e.key === 'Tab' && e.shiftKey && currentIndex !== -1) {
+					e.preventDefault();
+					const prevIndex = currentIndex - 1;
+					if (prevIndex >= 0) {
+						items[prevIndex].focus();
+					} else if (prevIndex === -1 && searchInputRef.current) {
+						searchInputRef.current.focus();
+					} else if (prevIndex === -1 && !searchInputRef.current && items.length > 0) {
+						items[items.length - 1].focus();
+					}
 				}
-			}
-		},
-		[menu.search],
-	);
+			},
+			[menu.search],
+		);
 
-	// Merge refs for content
-	const mergedContentRef = React.useCallback(
-		(node: HTMLDivElement | null) => {
-			contentRef.current = node;
-			if (typeof ref === 'function') {
-				ref(node);
-			} else if (ref) {
-				(ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-			}
-		},
-		[ref],
-	);
+		// Merge refs for content
+		const mergedContentRef = React.useCallback(
+			(node: HTMLDivElement | null) => {
+				contentRef.current = node;
+				if (typeof ref === 'function') {
+					ref(node);
+				} else if (ref) {
+					(ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+				}
+			},
+			[ref],
+		);
 
-	const onDropdownOpenChange = React.useCallback(
-		(open: boolean) => {
-			if (open && menu.search) {
-				searchInputRef.current?.focus();
-			} else if (!open) {
-				menu.search?.onSearchChange?.('');
-			}
-		},
-		[menu.search],
-	);
+		const onDropdownOpenChange = React.useCallback(
+			(open: boolean) => {
+				if (open && menu.search) {
+					searchInputRef.current?.focus();
+				} else if (!open) {
+					menu.search?.onSearchChange?.('');
+				}
+			},
+			[menu.search],
+		);
 
-	return (
-		<DropdownMenu onOpenChange={onDropdownOpenChange}>
-			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-			<DropdownMenuContent
-				ref={mergedContentRef}
-				sideOffset={sideOffset}
-				className={className}
-				onOpenAutoFocus={handleOpenAutoFocus}
-				onKeyDown={handleContentKeyDown}
-				{...props}
-			>
-				{menu.search && (
-					<>
-						<DropdownMenuSearch
-							ref={searchInputRef}
-							placeholder={menu.search.placeholder}
-							searchIcon={menu.search.searchIcon}
-							onSearchChange={menu.search.onSearchChange}
-							onNavigateDown={handleNavigateDown}
+		return (
+			<DropdownMenu onOpenChange={onDropdownOpenChange}>
+				<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+				<DropdownMenuContent
+					ref={mergedContentRef}
+					sideOffset={sideOffset}
+					className={className}
+					onOpenAutoFocus={handleOpenAutoFocus}
+					onKeyDown={handleContentKeyDown}
+					{...props}
+				>
+					{menu.search && (
+						<>
+							<DropdownMenuSearch
+								ref={searchInputRef}
+								placeholder={menu.search.placeholder}
+								searchIcon={menu.search.searchIcon}
+								onSearchChange={menu.search.onSearchChange}
+								onNavigateDown={handleNavigateDown}
+							/>
+							<DropdownMenuSeparator />
+						</>
+					)}
+					{menu.loading ? (
+						<DropdownMenuLoading
+							text={typeof menu.loading === 'object' ? menu.loading.text : undefined}
 						/>
-						<DropdownMenuSeparator />
-					</>
-				)}
-				{menu.loading ? (
-					<DropdownMenuLoading
-						text={typeof menu.loading === 'object' ? menu.loading.text : undefined}
-					/>
-				) : (
-					menuItems
-				)}
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
-});
+					) : (
+						menuItems
+					)}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		);
+	},
+);
 
 DropdownMenuSimple.displayName = 'DropdownMenuSimple';

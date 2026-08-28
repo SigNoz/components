@@ -1,4 +1,4 @@
-import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
 import { Lock } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
@@ -98,6 +98,13 @@ export type TabsProps = Pick<
 	 * @default 'left'
 	 */
 	alignment?: TabsAlignment;
+	/**
+	 * Whether arrow-key focus also selects the tab. Base UI moved this from the
+	 * root (Radix's `activationMode`) onto the list; the default keeps Radix's
+	 * `automatic` behaviour.
+	 * @default true
+	 */
+	activateOnFocus?: boolean;
 };
 
 /**
@@ -140,7 +147,7 @@ export type TabsProps = Pick<
  * />
  * ```
  */
-export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
+export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
 	(
 		{
 			items,
@@ -153,6 +160,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 			testId,
 			tabBarLeftContent,
 			tabBarRightContent,
+			activationMode,
 			...props
 		},
 		ref,
@@ -173,6 +181,8 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 						alignment={alignment}
 						leftContent={tabBarLeftContent}
 						rightContent={tabBarRightContent}
+						// Radix's root-level `activationMode` is a list concern in Base UI.
+						activateOnFocus={activationMode !== 'manual'}
 					>
 						{items.map((item) => {
 							const triggerContent = (
@@ -244,6 +254,13 @@ export type TabsListProps = Pick<
 	 * @default 'left'
 	 */
 	alignment?: TabsAlignment;
+	/**
+	 * Whether arrow-key focus also selects the tab. Base UI moved this from the
+	 * root (Radix's `activationMode`) onto the list; the default preserves the
+	 * previous `automatic` behaviour.
+	 * @default true
+	 */
+	activateOnFocus?: boolean;
 };
 
 /**
@@ -268,10 +285,7 @@ export type TabsListProps = Pick<
  * </TabsList>
  * ```
  */
-export const TabsList = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.List>,
-	TabsListProps
->(
+export const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
 	(
 		{
 			className,
@@ -281,12 +295,12 @@ export const TabsList = React.forwardRef<
 			testId,
 			leftContent,
 			rightContent,
+			activateOnFocus = true,
 			...props
 		},
 		ref,
 	) => {
 		const listRef = React.useRef<HTMLDivElement>(null);
-		const activeSliderRef = React.useRef<HTMLDivElement>(null);
 		const hoverSliderRef = React.useRef<HTMLDivElement>(null);
 
 		// Combine refs
@@ -309,51 +323,6 @@ export const TabsList = React.forwardRef<
 			},
 			[],
 		);
-
-		const updateActiveSlider = React.useCallback(() => {
-			if (variant !== 'primary' || !listRef.current) return;
-
-			const activeTrigger = listRef.current.querySelector<HTMLElement>(
-				'[data-slot="tabs-trigger"][data-state="active"]',
-			);
-			updateSliderPosition(activeSliderRef.current, activeTrigger);
-		}, [variant, updateSliderPosition]);
-
-		// Update active slider on mount and when children change
-		React.useEffect(() => {
-			if (variant !== 'primary') return;
-
-			requestAnimationFrame(updateActiveSlider);
-
-			// Observe for data-state changes on triggers
-			const list = listRef.current;
-			if (!list) return;
-
-			const observer = new MutationObserver((mutations) => {
-				for (const mutation of mutations) {
-					if (mutation.type === 'attributes' && mutation.attributeName === 'data-state') {
-						updateActiveSlider();
-						break;
-					}
-				}
-			});
-
-			observer.observe(list, {
-				attributes: true,
-				attributeFilter: ['data-state'],
-				subtree: true,
-			});
-
-			return () => observer.disconnect();
-		}, [variant, updateActiveSlider]);
-
-		React.useEffect(() => {
-			if (variant !== 'primary') return;
-
-			const handleResize = () => updateActiveSlider();
-			window.addEventListener('resize', handleResize);
-			return () => window.removeEventListener('resize', handleResize);
-		}, [variant, updateActiveSlider]);
 
 		const handleMouseOver = React.useCallback(
 			(e: React.MouseEvent) => {
@@ -398,21 +367,20 @@ export const TabsList = React.forwardRef<
 							className={cn(styles.tabs__list, className)}
 							data-variant={variant}
 							data-testid={testId}
+							activateOnFocus={activateOnFocus}
 							onMouseOver={handleMouseOver}
 							onMouseLeave={handleMouseLeave}
 							{...props}
 						>
 							{children}
+							{/* Positions itself from --active-tab-left/--active-tab-width,
+							    replacing the previous data-state MutationObserver. */}
+							<TabsPrimitive.Indicator className={styles['tabs__active-slider']} />
 						</TabsPrimitive.List>
 						<div
 							ref={hoverSliderRef}
 							className={styles['tabs__hover-slider']}
 							style={{ height: '28px', opacity: 0 }}
-						/>
-						<div
-							ref={activeSliderRef}
-							className={styles['tabs__active-slider']}
-							style={{ opacity: 0 }}
 						/>
 					</div>
 				) : (
@@ -421,6 +389,7 @@ export const TabsList = React.forwardRef<
 						className={cn(styles.tabs__list, className)}
 						data-variant={variant}
 						data-testid={testId}
+						activateOnFocus={activateOnFocus}
 						{...props}
 					>
 						{children}
@@ -497,10 +466,10 @@ export type TabsTriggerProps = Pick<
  * ```
  */
 export const TabsTrigger = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Trigger>,
+	React.ElementRef<typeof TabsPrimitive.Tab>,
 	TabsTriggerProps
 >(({ className, children, variant = 'primary', disabled, testId, ...props }, ref) => (
-	<TabsPrimitive.Trigger
+	<TabsPrimitive.Tab
 		ref={ref}
 		data-slot="tabs-trigger"
 		data-variant={variant}
@@ -510,7 +479,7 @@ export const TabsTrigger = React.forwardRef<
 		{...props}
 	>
 		{children}
-	</TabsPrimitive.Trigger>
+	</TabsPrimitive.Tab>
 ));
 TabsTrigger.displayName = 'TabsTrigger';
 
@@ -564,19 +533,20 @@ export type TabsContentProps = Pick<
  * </>
  * ```
  */
-export const TabsContent = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Content>,
-	TabsContentProps
->(({ className, testId, ...props }, ref) => {
-	return (
-		<TabsPrimitive.Content
-			ref={ref}
-			className={cn(styles.tabs__content, className)}
-			data-testid={testId}
-			{...props}
-		/>
-	);
-});
+export const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
+	({ className, testId, forceMount, ...props }, ref) => {
+		return (
+			<TabsPrimitive.Panel
+				ref={ref}
+				className={cn(styles.tabs__content, className)}
+				data-testid={testId}
+				// Base UI names this `keepMounted`; the public prop stays `forceMount`.
+				keepMounted={forceMount}
+				{...props}
+			/>
+		);
+	},
+);
 TabsContent.displayName = 'TabsContent';
 
 export type TabsRootProps = Pick<
@@ -633,17 +603,21 @@ export type TabsRootProps = Pick<
  * </TabsRoot>
  * ```
  */
-export const TabsRoot = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Root>,
-	TabsRootProps
->(({ className, testId, ...props }, ref) => {
-	return (
-		<TabsPrimitive.Root
-			ref={ref}
-			className={cn(styles.tabs, className)}
-			data-testid={testId}
-			{...props}
-		/>
-	);
-});
+export const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(
+	({ className, testId, onValueChange, activationMode, ...props }, ref) => {
+		return (
+			<TabsPrimitive.Root
+				ref={ref}
+				className={cn(styles.tabs, className)}
+				data-testid={testId}
+				// Base UI reports `(value, eventDetails)`; our public callback takes
+				// the value alone. `activationMode` moved onto the list (as
+				// `activateOnFocus`), so it is not forwarded here — leaving it in
+				// would emit an inert DOM attribute.
+				onValueChange={onValueChange ? (value: unknown) => onValueChange(String(value)) : undefined}
+				{...props}
+			/>
+		);
+	},
+);
 TabsRoot.displayName = 'TabsRoot';

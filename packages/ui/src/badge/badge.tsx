@@ -1,6 +1,6 @@
-import { Slot } from '@radix-ui/react-slot';
 import { X } from '@signozhq/icons';
 import { forwardRef, type MouseEvent, type ReactNode, useState } from 'react';
+import { AsChild } from '../lib/as-child.js';
 import { cn } from '../lib/utils.js';
 import { TextEllipsis, type TextEllipsisProps } from '../text-ellipsis/index.js';
 import styles from './badge.module.scss';
@@ -58,7 +58,7 @@ export interface BadgeProps extends Pick<
 	/**
 	 * Render a close button and hide the badge after close unless onClose prevents default.
 	 * Intended for the default span-rendered Badge. When asChild is true, closeable is ignored
-	 * to preserve Slot composition behavior.
+	 * to preserve `asChild` composition behavior.
 	 * @default false
 	 */
 	closable?: boolean;
@@ -155,11 +155,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 		};
 
 		if (asChild) {
-			return (
-				<Slot ref={ref} {...badgeProps}>
-					{content}
-				</Slot>
-			);
+			return <AsChild child={content} props={badgeProps} defaultTagName="span" elementRef={ref} />;
 		}
 
 		return (

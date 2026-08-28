@@ -1,13 +1,10 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { ChevronDown } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
+import { PopoverTrigger, type PopoverTriggerProps } from '../../popover/index.js';
 import styles from '../combobox.module.scss';
 
-export type ComboboxTriggerProps = Omit<
-	React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>,
-	'value' | 'id' | 'className'
-> & {
+export type ComboboxTriggerProps = Omit<PopoverTriggerProps, 'value' | 'id' | 'className'> & {
 	/**
 	 * The id of the combobox trigger.
 	 */
@@ -44,34 +41,33 @@ export type ComboboxTriggerProps = Omit<
  * </Combobox>
  * ```
  */
-export const ComboboxTrigger = React.forwardRef<
-	React.ElementRef<typeof PopoverPrimitive.Trigger>,
-	ComboboxTriggerProps
->(({ className, placeholder, value, testId, id, asChild, children, ...props }, ref) => {
-	if (asChild) {
+export const ComboboxTrigger = React.forwardRef<HTMLButtonElement, ComboboxTriggerProps>(
+	({ className, placeholder, value, testId, id, asChild, children, ...props }, ref) => {
+		if (asChild) {
+			return (
+				<PopoverTrigger ref={ref} asChild {...props}>
+					{children}
+				</PopoverTrigger>
+			);
+		}
 		return (
-			<PopoverPrimitive.Trigger ref={ref} asChild {...props}>
-				{children}
-			</PopoverPrimitive.Trigger>
-		);
-	}
-	return (
-		<PopoverPrimitive.Trigger
-			ref={ref}
-			className={cn(styles['combobox__trigger'], className)}
-			data-slot="combobox-trigger"
-			data-testid={testId}
-			id={id}
-			{...props}
-		>
-			<span
-				data-slot={value ? 'combobox-value' : 'combobox-placeholder'}
-				className={styles['combobox__trigger-value']}
+			<PopoverTrigger
+				ref={ref}
+				className={cn(styles['combobox__trigger'], className)}
+				data-slot="combobox-trigger"
+				data-testid={testId}
+				id={id}
+				{...props}
 			>
-				{value || placeholder || 'Select an option...'}
-			</span>
-			<ChevronDown data-slot="combobox-icon" className={styles['combobox__trigger-icon']} />
-		</PopoverPrimitive.Trigger>
-	);
-});
+				<span
+					data-slot={value ? 'combobox-value' : 'combobox-placeholder'}
+					className={styles['combobox__trigger-value']}
+				>
+					{value || placeholder || 'Select an option...'}
+				</span>
+				<ChevronDown data-slot="combobox-icon" className={styles['combobox__trigger-icon']} />
+			</PopoverTrigger>
+		);
+	},
+);
 ComboboxTrigger.displayName = 'ComboboxTrigger';
