@@ -250,7 +250,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				{...props}
 			>
 				{loading ? (
-					<LoaderCircle size={iconSizes[size]} className="animate-fast-spin" />
+					<LoaderCircle size={iconSizes[size]} className={styles['animate-fast-spin']} />
 				) : (
 					(prefix &&
 						cloneElement(prefix, {
