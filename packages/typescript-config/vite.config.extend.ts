@@ -68,7 +68,7 @@ export default function getViteLibConfig(
 				fileName: (format) => (format === 'es' ? '[name].mjs' : '[name].cjs'),
 				...overrides?.build?.lib,
 			},
-			rolldownOptions: {
+			rollupOptions: {
 				platform: 'browser',
 				external: externalPatterns,
 				output: {
@@ -77,7 +77,7 @@ export default function getViteLibConfig(
 					preserveModules: true,
 					preserveModulesRoot: 'src',
 				},
-				...overrides?.build?.rolldownOptions,
+				...overrides?.build?.rollupOptions,
 			},
 		},
 		plugins: [

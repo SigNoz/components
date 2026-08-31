@@ -31,6 +31,7 @@ export type {
 	SortingState,
 	VisibilityState,
 } from '@tanstack/react-table';
+export type { Virtualizer } from '@tanstack/react-virtual';
 export type * from './data-table.js';
 export { DataTable, SelectionMode } from './data-table.js';
 export type * from './table.js';

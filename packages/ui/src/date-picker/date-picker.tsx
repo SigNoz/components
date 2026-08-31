@@ -15,7 +15,7 @@ import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover/index.js';
 import { ALL_TIMEZONES } from './constants.js';
-import styles from './date-picker.module.css';
+import styles from './date-picker.module.scss';
 
 // Extend dayjs with timezone plugins
 dayjs.extend(utc);

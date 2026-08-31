@@ -16,7 +16,7 @@ import {
 	useState,
 } from 'react';
 import { cn } from '../lib/utils.js';
-import styles from './text-ellipsis.module.css';
+import styles from './text-ellipsis.module.scss';
 
 type TextEllipsisPosition = 'start' | 'center' | 'end';
 

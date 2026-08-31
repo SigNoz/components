@@ -39,6 +39,37 @@ Stories import `@signozhq/ui` as a built package, so a fresh clone needs `pnpm b
 | `pnpm -F @signozhq/ui tokens:check` | Fail if the token tables are stale | Same check as `lint-staged` and CI |
 | `pnpm clean` | Remove every `node_modules` and `dist` | |
 
+### CSS Modules keyframe edge case
+
+CSS Modules hashes `@keyframes` names locally (e.g., `spin` becomes `spin_abc123`). However, keyframe names inside `var()` fallbacks are treated as raw strings and not hashed:
+
+```scss
+/* BROKEN: "spin" in fallback won't match hashed @keyframes spin */
+.spinner {
+  animation: var(--custom-animation, spin 1s linear infinite);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+**Fix**: Define the keyframe name as an internal CSS variable first, then reference it in the fallback:
+
+```scss
+/* WORKS: CSS Modules hashes the variable assignment correctly */
+.spinner {
+  --component-internal-animation-name: spin;
+  animation: var(--custom-animation, var(--component-internal-animation-name) 1s linear infinite);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+```
+
+This pattern ensures the keyframe reference is properly hashed while still allowing customization via the public CSS variable. Use `-internal-` in the variable name so it is excluded from token docs.
+
 `husky` + `lint-staged` run on commit: `type-check`, `oxlint --fix` and `oxfmt` on JS/TS/JSON,
 `tokens:check` when `packages/ui` style files change. Commit messages are validated by
 `commitlint` against [Conventional Commits](./RELEASE.md#commit-messages), and since PRs are

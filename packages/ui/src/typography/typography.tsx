@@ -3,7 +3,7 @@ import copy from 'copy-text-to-clipboard';
 import type React from 'react';
 import { forwardRef, useState } from 'react';
 import { cn } from '../lib/utils.js';
-import styles from './typography.module.css';
+import styles from './typography.module.scss';
 
 type TypographySize =
 	// Semantic sizes (Ant Design compatible)

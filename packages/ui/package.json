@@ -1,6 +1,6 @@
 {
 	"name": "@signozhq/ui",
-	"version": "0.0.23",
+	"version": "0.1.0",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -450,12 +450,12 @@
 		"@testing-library/react": "^16.0.1",
 		"@types/node": "25.9.4",
 		"@types/react": "^18.2.61",
-		"@vitejs/plugin-react": "^5.2.0",
-		"@vitest/coverage-v8": "^4.0.18",
+		"@vitejs/plugin-react": "^6.0.5",
+		"@vitest/coverage-v8": "^4.1.11",
 		"jsdom": "^29.1.1",
 		"publint": "0.3.21",
-		"vite": "npm:rolldown-vite@7.3.1",
-		"vitest": "^4.1.9"
+		"vite": "8.2.1",
+		"vitest": "^4.1.11"
 	},
 	"peerDependencies": {
 		"@signozhq/icons": "0.3.0",

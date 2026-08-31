@@ -52,9 +52,14 @@ export type SelectContentProps = {
 	/** Whether to prevent scrolling the body when content is open. */
 	avoidCollisions?: boolean;
 	/** Callback fired when escape key is pressed. */
-	onEscapeKeyDown?: (event: KeyboardEvent) => void;
-	/** Callback fired when pointer is pressed outside the content. */
-	onPointerDownOutside?: (event: CustomEvent) => void;
+	onEscapeKeyDown?: SelectPrimitive.SelectContentProps['onEscapeKeyDown'];
+	/**
+	 * Callback fired when pointer is pressed outside the content.
+	 *
+	 * ℹ️ The event is a `PointerDownOutsideEvent`; the originating pointer event is
+	 * available on `event.detail.originalEvent`.
+	 */
+	onPointerDownOutside?: SelectPrimitive.SelectContentProps['onPointerDownOutside'];
 };
 
 /**
@@ -173,7 +178,7 @@ SelectViewport.displayName = 'SelectViewport';
 
 export type SelectPortalProps = {
 	/** The container element to portal into. */
-	container?: HTMLElement | null;
+	container?: SelectPrimitive.SelectPortalProps['container'];
 	/** The content to portal. */
 	children?: React.ReactNode;
 };
@@ -289,10 +294,10 @@ export type SelectArrowProps = {
 	id?: string;
 	/** Test identifier for testing libraries. */
 	testId?: string;
-	/** The width of the arrow in pixels. */
-	width?: number;
-	/** The height of the arrow in pixels. */
-	height?: number;
+	/** The width of the arrow; numbers are pixels. */
+	width?: SelectPrimitive.SelectArrowProps['width'];
+	/** The height of the arrow; numbers are pixels. */
+	height?: SelectPrimitive.SelectArrowProps['height'];
 };
 
 /**

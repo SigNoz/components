@@ -5,11 +5,11 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) to
 - `@signozhq/ui`
 - `@signozhq/tailwind-config`
 
-Everything else in the workspace is private and never published: `@repo/eslint-config`, `@repo/typescript-config`, and the `docs` Storybook app.
+Everything else in the workspace is private and never published: `@repo/typescript-config` and the `docs` Storybook app.
 
 All published packages share a single version, which is bumped in `Release PR`. The source of truth for the current version is `.release-please-manifest.json`. 
 
-Never edit a `version` field in `package.json` by hand, Release Please writes those for you.
+Never edit a `version` field in `package.json` by hand, Release Please writes those for you. The one exception is [hotfix releases](#hotfix-releases), where the workflow sets the version at build time.
 
 ## How does a release work?
 
@@ -105,7 +105,7 @@ A new public package needs **three** changes, or it will fail silently:
 2. add a `--filter=<package-name>` for it to `PUBLISH_FILTERS` in [`.github/workflows/release.yml`](./.github/workflows/release.yml), otherwise it is never built or published
 3. configure a trusted publisher for it on npm, otherwise the publish step has no way to authenticate
 
-Also make sure the package is not marked `"private": true` and that it sets `"publishConfig": { "access": "public" }` — scoped packages default to restricted, and `pnpm publish` skips private packages.
+Also make sure the package is not marked `"private": true` and that it sets `"publishConfig": { "access": "public" }`, scoped packages default to restricted, and `pnpm publish` skips private packages.
 
 The root `release` script mirrors the same list for local checks, keep the two in sync.
 
@@ -148,8 +148,56 @@ The simplest fix is to land an empty conventional commit on `main` and merge the
 git commit --allow-empty -m "fix: retrigger release"
 ```
 
+## Hotfix releases
+
+Use the manual workflow dispatch when you need to ship a fix without releasing everything currently staged on `main`.
+
+### When to use
+
+- A bug is reported on an already-released version (e.g., `v0.1.0`)
+- `main` has accumulated unreleased breaking changes or features you're not ready to ship
+- You need to patch the old version without including the new work
+
+### How to release a hotfix
+
+1. **Create a branch from the release tag**, named `hotfix/*`
+
+   ```sh
+   git checkout -b hotfix/0.1.1 v0.1.0
+   ```
+
+   The workflow refuses to run from any other branch, so who can ship a hotfix is exactly who can create a `hotfix/*` branch.
+
+2. **Apply your fix**: open a PR targeting `hotfix/0.1.1` so CI runs, or commit directly
+
+3. **Trigger the workflow**
+
+   - Go to **Actions → Release → Run workflow**
+   - Select branch: `hotfix/0.1.1`
+   - Version: `0.1.1-hotfix.0`, any unused prerelease version
+   - Optionally enable dry run to verify the build first
+
+4. **Close the PR / delete the branch**: the hotfix branch is throwaway, the fix lives in the tag
+
+### Important notes
+
+- **Version is set manually**: the one exception to "never edit `version` by hand". The workflow writes the version into `package.json` at build time; it does not touch `.release-please-manifest.json` or `main`.
+- **Prereleases only**: the workflow rejects a plain version like `0.1.1`, because `0.1.1` satisfies `^0.1.0` and would land in every consumer's lockfile on their next refresh. A dist-tag does not prevent that, only the prerelease suffix keeps the hotfix out of existing ranges.
+- **No changelog**: hotfixes are pre-releases, the GitHub Release notes are minimal.
+- **Always published as `hotfix`**: the dist-tag is fixed, so `npm i @signozhq/ui` keeps installing the latest stable from `main`. Users opt in explicitly: `npm i @signozhq/ui@0.1.1-hotfix.0` or `npm i @signozhq/ui@hotfix`. Promoting a hotfix to `latest` is a deliberate `npm dist-tag add` afterwards, never part of this workflow.
+- **Cherry-pick to main**: after the hotfix ships, cherry-pick the fix commit(s) to `main` so future releases include it.
+
+### Verifying a hotfix release
+
+```sh
+pnpm view @signozhq/ui versions --json | tail -5
+pnpm dist-tag ls @signozhq/ui
+```
+
+Check that the new version appears and `hotfix` points to it. `latest` stays on the last stable release from `main`.
+
 ## Limitations
 
-- There are no prereleases (`prerelease: false`) and no release channels, everything ships from `main`.
-- There is no hotfix branch. To patch an old version you have to land the fix on `main` and release forward.
+- There are no prereleases (`prerelease: false`) in the normal Release Please flow, everything ships from `main`.
+- Hotfix releases bypass Release Please entirely and are published via workflow dispatch.
 - The whole workspace is a single Release Please package (`.`), so packages cannot be versioned or released independently.

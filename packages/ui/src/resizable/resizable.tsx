@@ -4,6 +4,7 @@ import React from 'react';
 import type {
 	GroupImperativeHandle,
 	Layout,
+	LayoutChangedMeta,
 	LayoutStorage,
 	OnGroupLayoutChange,
 	PanelImperativeHandle,
@@ -25,6 +26,7 @@ import styles from './resizable.module.scss';
 export type {
 	GroupImperativeHandle,
 	Layout,
+	LayoutChangedMeta,
 	LayoutStorage,
 	OnGroupLayoutChange,
 	PanelImperativeHandle,
@@ -81,7 +83,7 @@ export type ResizablePanelGroupProps = Pick<
 	 * ℹ️ For layout changes caused by pointer events, this method is not called until the pointer has been released.
 	 * This method is recommended when saving layouts to some storage api.
 	 */
-	onLayoutChanged?: (layout: Layout) => void | undefined;
+	onLayoutChanged?: (layout: Layout, meta: LayoutChangedMeta) => void;
 	/**
 	 * Minimum size of the resizable hit target area (either `Separator` or `Panel` edge)
 	 * This threshold ensures are large enough to avoid mis-clicks.

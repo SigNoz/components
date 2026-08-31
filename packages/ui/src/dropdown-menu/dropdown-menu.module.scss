@@ -384,9 +384,10 @@
 }
 
 .dropdown-menu__loading-spinner {
+	--dropdown-menu-internal-animation-name: spin;
 	width: var(--dropdown-menu-loading-spinner-size, 16px);
 	height: var(--dropdown-menu-loading-spinner-size, 16px);
-	animation: var(--animate-spin, spin 1s linear infinite);
+	animation: var(--animate-spin, var(--dropdown-menu-internal-animation-name) 1s linear infinite);
 }
 
 .dropdown-menu__search {

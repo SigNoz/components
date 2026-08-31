@@ -44,8 +44,8 @@
  * | `--combobox-pill-inner-gap` | `0.125rem` |
  * | `--combobox-pill-line-height` | `1` |
  * | `--combobox-pill-overflow-align-items` | `center` |
- * | `--combobox-pill-overflow-background` | `var(--muted)` |
- * | `--combobox-pill-overflow-color` | `var(--muted-foreground)` |
+ * | `--combobox-pill-overflow-background` | `var(--accent)` |
+ * | `--combobox-pill-overflow-color` | `var(--accent-foreground)` |
  * | `--combobox-pill-overflow-display` | `inline-flex` |
  * | `--combobox-pill-overflow-flex-shrink` | `0` |
  * | `--combobox-pill-overflow-font-weight` | `500` |
@@ -72,6 +72,10 @@
  * | `--combobox-pill-text-overflow` | `hidden` |
  * | `--combobox-pill-text-overflow-style` | `ellipsis` |
  * | `--combobox-pill-text-white-space` | `nowrap` |
+ * | `--combobox-pills-align-items` | `center` |
+ * | `--combobox-pills-display` | `flex` |
+ * | `--combobox-pills-flex-wrap` | `wrap` |
+ * | `--combobox-pills-gap` | `0.25rem` |
  * | `--combobox-trigger-background-color` | `transparent` |
  * | `--combobox-trigger-border-color` | `var(--input, var(--border))` |
  * | `--combobox-trigger-border-radius` | `calc(var(--radius) - 2px)` |
