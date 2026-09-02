@@ -7,7 +7,7 @@
 		"build": "turbo run build",
 		"publint": "turbo run publint",
 		"dev": "turbo run dev",
-		"type-check": "tsgo --noEmit -p tsconfig.json",
+		"type-check": "turbo run type-check",
 		"lint": "oxlint",
 		"lint:fix": "oxlint --fix",
 		"clean": "turbo run clean && rm -rf node_modules",

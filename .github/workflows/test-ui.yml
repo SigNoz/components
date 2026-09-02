@@ -80,7 +80,7 @@ jobs:
         run: pnpm build
 
       - name: Type check
-        run: pnpm run type-check
+        run: pnpm type-check
 
       - name: Run tests
         # Run the test tasks one at a time. The runner only has 4 CPUs, and the
