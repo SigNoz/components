@@ -1,6 +1,7 @@
 import getViteLibConfig from '@repo/typescript-config/vite.config.extend';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import { reactCompilerOptions } from './react-compiler.config.js';
 
 export const entries: Record<string, string> = {
 	index: 'src/index.ts',
@@ -43,4 +44,9 @@ export const entries: Record<string, string> = {
 	'typography/index': 'src/typography/index.ts',
 };
 
-export default defineConfig(getViteLibConfig(entries, { plugins: [react()] }));
+export default defineConfig(
+	getViteLibConfig(entries, {
+		// Bailouts are only reported on the build, so they stay out of the test output.
+		plugins: [react({ compiler: { ...reactCompilerOptions, logDiagnostics: true } })],
+	}),
+);
