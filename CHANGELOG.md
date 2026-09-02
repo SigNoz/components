@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.1.1](https://github.com/SigNoz/components/compare/v0.1.0...v0.1.1) (2026-09-02)
+
+
+### Features
+
+* **oxlint:** add rule to avoid google translate mistakes ([#375](https://github.com/SigNoz/components/issues/375)) ([129b6e0](https://github.com/SigNoz/components/commit/129b6e0c802450c31230a8dc8e487f5c14655909))
+
+
+### Bug Fixes
+
+* **keyframes:** not recognizing the keyframe animation names ([#371](https://github.com/SigNoz/components/issues/371)) ([4fd36c7](https://github.com/SigNoz/components/commit/4fd36c7b384e22d9b06484fe4b7036d99676798a))
+
+
+### Documentation
+
+* **build:** add docs for build.md ([#364](https://github.com/SigNoz/components/issues/364)) ([5615fe2](https://github.com/SigNoz/components/commit/5615fe27c3d94efdddb860fe46915e424b4e40c1))
+* **contributing:** add clear docs on how to contribute ([#365](https://github.com/SigNoz/components/issues/365)) ([0e8c8b0](https://github.com/SigNoz/components/commit/0e8c8b08051d076a084a8bfba5a446b929b913d6))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @typescript/native-preview ([#373](https://github.com/SigNoz/components/issues/373)) ([a0abf29](https://github.com/SigNoz/components/commit/a0abf29043cffe6ab87054af267e3fab61f61a5f))
+* **deps:** bump actions/setup-node from 6 to 7 ([#331](https://github.com/SigNoz/components/issues/331)) ([16a023c](https://github.com/SigNoz/components/commit/16a023c279111f5a30995ec0060441897ec7500a))
+* **package:** bump august deps ([#374](https://github.com/SigNoz/components/issues/374)) ([34d67fc](https://github.com/SigNoz/components/commit/34d67fc731b8c2194e452b5299061da13a51ccb7))
+* **vite:** ensure entries are single source to avoid mismatches ([#362](https://github.com/SigNoz/components/issues/362)) ([b40c710](https://github.com/SigNoz/components/commit/b40c71042a9ccd604e5753d2726e45537a2b700c))
+* **vitest-vite:** bump vitest and vite-plugin-react ([#369](https://github.com/SigNoz/components/issues/369)) ([8334751](https://github.com/SigNoz/components/commit/833475181fd47526e2ec26e01439e294885d37cf))
+
+
+### Code Refactoring
+
+* **scss:** drop old index.css and rename css files to scss ([#363](https://github.com/SigNoz/components/issues/363)) ([ec9ab4d](https://github.com/SigNoz/components/commit/ec9ab4dd3437db8c3f785a1c19e1516bfec53451))
+
+
+### Continuous Integration
+
+* **release:** add way to release hotfix ([#360](https://github.com/SigNoz/components/issues/360)) ([a9c4807](https://github.com/SigNoz/components/commit/a9c480780f01d8ae25dc3ac31ef815c4c99b9ed3))
+* **test-ui:** missing lint/format ([#359](https://github.com/SigNoz/components/issues/359)) ([736dddb](https://github.com/SigNoz/components/commit/736dddbfba64b5b039d6da7f97c0f7c6915a49f9))
+
 ## [0.1.0](https://github.com/SigNoz/components/compare/v0.0.23...v0.1.0) (2026-08-19)
 
 
