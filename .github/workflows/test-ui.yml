@@ -13,6 +13,10 @@ jobs:
       # Make sure to grab the latest version of the Playwright image
       # https://playwright.dev/docs/docker#pull-the-image
       image: mcr.microsoft.com/playwright:v1.61.0-noble
+      # Docker defaults /dev/shm to 64MB, which Playwright documents as too
+      # small for Chromium.
+      # https://playwright.dev/docs/docker#crawling-and-scraping
+      options: --ipc=host --shm-size=2gb
     steps:
       # inspired by https://mathio28.medium.com/squeezing-disk-space-from-github-actions-runners-an-engineers-guide-d5fbe4443692
       # to fix the issue with the runner running out of space
@@ -79,4 +83,9 @@ jobs:
         run: pnpm run type-check
 
       - name: Run tests
-        run: pnpm test
+        # Run the test tasks one at a time. The runner only has 4 CPUs, and the
+        # storybook browser suite loses its Chromium page far more often when it
+        # shares them with the jsdom suites. Call turbo directly: `pnpm test --
+        # --concurrency=1` would hand the flag to the package scripts, since
+        # turbo forwards everything after `--` to them.
+        run: pnpm exec turbo run test --concurrency=1
