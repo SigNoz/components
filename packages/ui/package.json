@@ -410,7 +410,8 @@
 		"test": "vitest run",
 		"test:run": "vitest run",
 		"tokens": "node scripts/extract-css-tokens.mjs",
-		"tokens:check": "node scripts/extract-css-tokens.mjs --check"
+		"tokens:check": "node scripts/extract-css-tokens.mjs --check",
+		"type-check": "tsgo --noEmit"
 	},
 	"dependencies": {
 		"@chenglou/pretext": "^0.0.8",
