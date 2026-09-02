@@ -1,5 +1,6 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"jsPlugins": ["./plugins/signoz.mjs"],
 	"plugins": ["react", "typescript", "unicorn", "oxc", "import", "jsx-a11y"],
 	"env": {
 		"browser": true,
@@ -42,13 +43,22 @@
 		"jsx-a11y/label-has-associated-control": "off",
 		"jsx-a11y/prefer-tag-over-role": "warn",
 		"jsx-a11y/role-has-required-aria-props": "warn",
-		"jsx-a11y/no-autofocus": "warn"
+		"jsx-a11y/no-autofocus": "warn",
+		"signoz/no-conditional-text-nodes-with-siblings": "off",
+		"signoz/no-return-text-nodes": "off"
 	},
 	"overrides": [
 		{
 			"files": ["**/*.stories.tsx", "**/*.stories.ts"],
 			"rules": {
 				"react-hooks/rules-of-hooks": "off"
+			}
+		},
+		{
+			"files": ["packages/ui/src/**/*.tsx", "packages/ui/src/**/*.ts"],
+			"rules": {
+				"signoz/no-conditional-text-nodes-with-siblings": "error",
+				"signoz/no-return-text-nodes": "error"
 			}
 		}
 	]
