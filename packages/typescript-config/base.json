@@ -18,7 +18,7 @@
 		"preserveWatchOutput": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"lib": ["dom", "ES2018"],
+		"lib": ["dom", "ES2022"],
 		"target": "es2018"
 	},
 	"exclude": ["node_modules"]

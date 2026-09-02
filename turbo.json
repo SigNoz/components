@@ -28,6 +28,7 @@
 			// The Playwright container image points browsers at /ms-playwright; strict
 			// env mode would otherwise hide it and Playwright would look under $HOME.
 			"passThroughEnv": ["PLAYWRIGHT_BROWSERS_PATH"]
-		}
+		},
+		"type-check": {}
 	}
 }
