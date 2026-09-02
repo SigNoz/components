@@ -87,6 +87,16 @@
 				"require": "./dist/button/index.cjs"
 			}
 		},
+		"./button-group": {
+			"import": {
+				"types": "./dist/button-group/index.d.ts",
+				"import": "./dist/button-group/index.mjs"
+			},
+			"require": {
+				"types": "./dist/button-group/index.d.cts",
+				"require": "./dist/button-group/index.cjs"
+			}
+		},
 		"./calendar": {
 			"import": {
 				"types": "./dist/calendar/index.d.ts",
