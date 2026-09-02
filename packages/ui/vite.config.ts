@@ -11,6 +11,7 @@ export const entries: Record<string, string> = {
 	'badge/index': 'src/badge/index.ts',
 	'breadcrumb/index': 'src/breadcrumb/index.ts',
 	'button/index': 'src/button/index.ts',
+	'button-group/index': 'src/button-group/index.ts',
 	'calendar/index': 'src/calendar/index.ts',
 	'callout/index': 'src/callout/index.ts',
 	'checkbox/index': 'src/checkbox/index.ts',

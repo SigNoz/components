@@ -34,3 +34,10 @@ export function getPackageJsonDeps(): string[] {
 		.filter((dep) => !dep.startsWith('@types/'))
 		.sort();
 }
+
+export function getIndexExports(): string[] {
+	const indexPath = join(__dirname, '..', 'index.ts');
+	const content = readFileSync(indexPath, 'utf-8');
+	const matches = content.matchAll(/export\s+\*\s+from\s+'\.\/([^/']+)\/index\.js'/g);
+	return [...matches].map((m) => m[1]);
+}
