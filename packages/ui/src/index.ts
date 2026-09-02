@@ -4,6 +4,7 @@ export * from './avatar/index.js';
 export * from './badge/index.js';
 export * from './breadcrumb/index.js';
 export * from './button/index.js';
+export * from './button-group/index.js';
 export * from './calendar/index.js';
 export * from './callout/index.js';
 export * from './checkbox/index.js';
