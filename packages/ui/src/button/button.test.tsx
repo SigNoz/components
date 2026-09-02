@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button, ButtonBackground, ButtonColor, ButtonSize, ButtonVariant } from './button.js';
-import { ButtonGroup } from './button-group.js';
+import { ButtonGroup } from '../button-group/button-group';
 
 describe('Button', () => {
 	it('renders as button with default props and children', () => {
