@@ -55,10 +55,6 @@
  * | `--button-font-size` | `var(--periscope-font-size-small, 11px)` |
  * | `--button-font-variant-numeric` | `slashed-zero` |
  * | `--button-gap` | `var(--spacing-3, 0.375rem)` |
- * | `--button-group-align-items` | `stretch` |
- * | `--button-group-display` | `inline-flex` |
- * | `--button-group-overlap` | `-1px` |
- * | `--button-group-radius` | `calc(var(--radius) - 2px)` |
  * | `--button-height` | `1.5rem` |
  * | `--button-justify-content` | `center` |
  * | `--button-line-height` | `100%` |
@@ -136,5 +132,3 @@ export {
 	ButtonVariant,
 	buttonVariants,
 } from './button.js';
-export type * from './button-group.js';
-export { ButtonGroup } from './button-group.js';

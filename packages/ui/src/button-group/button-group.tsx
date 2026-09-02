@@ -1,12 +1,12 @@
 import type React from 'react';
 import { forwardRef, useMemo } from 'react';
-import { cn } from '../lib/utils.js';
+import { cn } from '../lib/utils';
 import {
 	type ButtonColorValue,
 	ButtonGroupContext,
 	type ButtonSizeValue,
 	type ButtonVariantValue,
-} from './button.js';
+} from '../button';
 import styles from './button-group.module.scss';
 
 export type ButtonGroupProps = {
