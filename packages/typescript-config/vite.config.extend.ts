@@ -12,6 +12,8 @@ export const externalPatterns = [
 	'react-dom',
 	'react/jsx-runtime',
 	'react/jsx-dev-runtime',
+	// React Compiler output with `target: '18'` imports the memo cache from here.
+	'react-compiler-runtime',
 	'clsx',
 	'cmdk',
 	'sonner',
