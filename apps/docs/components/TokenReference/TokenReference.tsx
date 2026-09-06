@@ -253,8 +253,10 @@ export function TokenReference({
 									setActiveSection('semantic');
 									setSelectedCategory(null);
 								}}
-								variant={activeSection === 'semantic' ? 'solid' : 'link'}
-								color={activeSection === 'semantic' ? 'primary' : 'secondary'}
+								{...(activeSection === 'semantic'
+									? { variant: 'solid', color: 'primary' }
+									: { variant: 'link', color: 'secondary' })}
+								size="md"
 							>
 								Semantic Tokens
 							</Button>
@@ -266,8 +268,10 @@ export function TokenReference({
 									setActiveSection('primitive');
 									setSelectedCategory(null);
 								}}
-								variant={activeSection === 'primitive' ? 'solid' : 'ghost'}
-								color={activeSection === 'primitive' ? 'primary' : 'secondary'}
+								{...(activeSection === 'primitive'
+									? { variant: 'solid', color: 'primary' }
+									: { variant: 'ghost', color: 'secondary' })}
+								size="md"
 							>
 								Primitive Colors
 							</Button>
@@ -297,16 +301,20 @@ export function TokenReference({
 								<Button
 									type="button"
 									onClick={() => setThemeMode('light')}
-									variant={themeMode === 'light' ? 'solid' : 'ghost'}
-									color={themeMode === 'light' ? 'primary' : 'secondary'}
+									{...(themeMode === 'light'
+										? { variant: 'solid', color: 'primary' }
+										: { variant: 'ghost', color: 'secondary' })}
+									size="md"
 								>
 									Light
 								</Button>
 								<Button
 									type="button"
 									onClick={() => setThemeMode('dark')}
-									variant={themeMode === 'dark' ? 'solid' : 'ghost'}
-									color={themeMode === 'dark' ? 'primary' : 'secondary'}
+									{...(themeMode === 'dark'
+										? { variant: 'solid', color: 'primary' }
+										: { variant: 'ghost', color: 'secondary' })}
+									size="md"
 								>
 									Dark
 								</Button>

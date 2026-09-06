@@ -49,7 +49,7 @@ export const Default: Story = {
 				}}
 			>
 				<DialogTrigger asChild>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open dialog
 					</Button>
 				</DialogTrigger>
@@ -69,6 +69,7 @@ export const Default: Story = {
 											variant={ButtonVariant.Solid}
 											color={ButtonColor.Primary}
 											onClick={() => setOpen(false)}
+											size="md"
 										>
 											Save Changes
 										</Button>
@@ -94,7 +95,7 @@ export const Controlled: Story = {
 				title="Controlled Dialog"
 				titleIcon={<Code size={16} />}
 				trigger={
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open Controlled Dialog
 					</Button>
 				}
@@ -103,6 +104,7 @@ export const Controlled: Story = {
 						variant={ButtonVariant.Solid}
 						color={ButtonColor.Primary}
 						onClick={() => setOpen(false)}
+						size="md"
 					>
 						Close Dialog
 					</Button>
@@ -133,7 +135,7 @@ export const WidthVariants: Story = {
 						title={`${width.charAt(0).toUpperCase() + width.slice(1)} width`}
 						width={width}
 						trigger={
-							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 								Open {width}
 							</Button>
 						}
@@ -145,6 +147,7 @@ export const WidthVariants: Story = {
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Primary}
 									onClick={() => setOpen(null)}
+									size="md"
 								>
 									Close
 								</Button>
@@ -172,7 +175,7 @@ export const PositionVariants: Story = {
 						onOpenChange={(v) => setOpen(v ? position : null)}
 					>
 						<DialogTrigger asChild>
-							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 								Open {position}
 							</Button>
 						</DialogTrigger>
@@ -200,6 +203,7 @@ export const PositionVariants: Story = {
 											variant={ButtonVariant.Solid}
 											color={ButtonColor.Primary}
 											onClick={() => setOpen(null)}
+											size="md"
 										>
 											Close
 										</Button>
@@ -228,7 +232,7 @@ export const WithoutCloseButton: Story = {
 			title="Dialog without close button"
 			showCloseButton={false}
 			trigger={
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open Dialog
 				</Button>
 			}
@@ -239,7 +243,7 @@ export const WithoutCloseButton: Story = {
 				</Typography>
 				<div className={styles.flexEnd}>
 					<DialogClose asChild>
-						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 							Close
 						</Button>
 					</DialogClose>
@@ -256,7 +260,7 @@ export const Primitive: Story = {
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open primitive dialog
 					</Button>
 				</DialogTrigger>
@@ -277,6 +281,7 @@ export const Primitive: Story = {
 									variant={ButtonVariant.Ghost}
 									color="secondary"
 									onClick={() => setOpen(false)}
+									size="md"
 								>
 									Cancel
 								</Button>
@@ -284,6 +289,7 @@ export const Primitive: Story = {
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Primary}
 									onClick={() => setOpen(false)}
+									size="md"
 								>
 									Confirm
 								</Button>
