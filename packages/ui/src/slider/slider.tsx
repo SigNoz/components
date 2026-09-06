@@ -2,8 +2,8 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { cn } from '../lib/utils.js';
-import { TooltipProvider, TooltipSimple } from '../tooltip/index.js';
 import styles from './slider.module.scss';
+import { Tooltip } from '../tooltip/presets/tooltip.js';
 
 export interface SliderProps extends Omit<
 	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
@@ -374,14 +374,12 @@ function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
 	if (!tooltip) return thumb;
 
 	return (
-		<TooltipProvider delayDuration={0}>
-			<TooltipSimple
-				open={isDragging || isHovering}
-				title={tooltip.formatter ? tooltip.formatter(value) : value}
-			>
-				{thumb}
-			</TooltipSimple>
-		</TooltipProvider>
+		<Tooltip
+			open={isDragging || isHovering}
+			title={tooltip.formatter ? tooltip.formatter(value) : value}
+		>
+			{thumb}
+		</Tooltip>
 	);
 }
 
