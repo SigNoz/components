@@ -1,79 +1,184 @@
-import { Meta, Controls } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as TooltipStories from './tooltip.stories';
 import * as TooltipProviderStories from './tooltip-provider.stories';
-import * as TooltipTriggerStories from './tooltip-trigger.stories';
-import * as TooltipContentStories from './tooltip-content.stories';
 
 <Meta of={TooltipStories} />
 
 # Tooltip
 
-A customizable tooltip component with smooth animations and flexible positioning.
+A tooltip that wraps a trigger element and shows its `title` on hover, with flexible positioning.
 
-For the quick-start preset, see [TooltipSimple](?path=/docs/composed-components-tooltipsimple--docs).
+## How to use
 
-## TooltipProvider Props
-
-<Controls of={TooltipProviderStories.Default} />
-
-## Basic usage (composition)
-
-For custom content and positioning, use `TooltipRoot`, `TooltipTrigger`, and `TooltipContent`:
+Place one `TooltipProvider` at the root of the app. It sets the open and close delays and the
+portal container for every tooltip below it, so it belongs next to the other app-wide providers
+rather than around each tooltip:
 
 ```tsx
-import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipProvider } from '@signozhq/ui';
-import { Button } from '@signozhq/ui';
+import { TooltipProvider } from '@signozhq/ui';
+
+createRoot(document.getElementById('root')).render(
+	<TooltipProvider>
+		<App />
+	</TooltipProvider>,
+);
+```
+
+From there a tooltip is a wrapper around whatever triggers it:
+
+```tsx
+import { Tooltip, Button } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
-		<TooltipProvider>
-			<TooltipRoot>
-				<TooltipTrigger asChild>
-					<Button>Custom content</Button>
-				</TooltipTrigger>
-				<TooltipContent side="bottom" arrow>
-					<span style={{ fontWeight: 500 }}>Custom tooltip</span>
-					<br />
-					<span style={{ fontSize: '0.875rem', opacity: 0.9 }}>With multiple lines</span>
-				</TooltipContent>
-			</TooltipRoot>
-		</TooltipProvider>
+		<Tooltip title="Helpful information">
+			<Button variant="solid" color="secondary">
+				Hover me
+			</Button>
+		</Tooltip>
 	);
 }
 ```
 
-**Inside a modal (no portal):**
+A tooltip with no provider above it adds one on the spot, so it still works. That is a fallback,
+not the pattern to copy: a second provider halfway down the tree shadows the container and the
+delays the app configured for everything under it.
+
+<Primary />
+
+## Positioning
+
+`side` sets which side of the trigger the tooltip opens against (`top`, `right`, `bottom`, `left`). `align` controls alignment along that side (`start`, `center`, `end`):
 
 ```tsx
-import {
-	Dialog,
-	DialogContent,
-	TooltipRoot,
-	TooltipTrigger,
-	TooltipContent,
-	TooltipProvider,
-} from '@signozhq/ui';
-
-<Dialog>
-	<DialogContent>
-		<TooltipProvider>
-			<TooltipRoot>
-				<TooltipTrigger asChild>
-					<Button>Hover me</Button>
-				</TooltipTrigger>
-				<TooltipContent side="top" withPortal={false}>
-					Tooltip inside modal
-				</TooltipContent>
-			</TooltipRoot>
-		</TooltipProvider>
-	</DialogContent>
-</Dialog>;
+<Tooltip title="On the right" side="right" align="start">
+	<Button>Hover me</Button>
+</Tooltip>
 ```
 
-## TooltipTrigger Props
+Use `sideOffset` and `alignOffset` for pixel-level adjustments:
 
-<Controls of={TooltipTriggerStories.Default} />
+```tsx
+<Tooltip title="Offset" side="bottom" sideOffset={8} alignOffset={4}>
+	<Button>Hover me</Button>
+</Tooltip>
+```
 
-## TooltipContent Props
+Collision handling is not exposed: a tooltip flips to the opposite side and shifts along it on its
+own when it would otherwise run off the viewport.
 
-<Controls of={TooltipContentStories.Default} />
+## Empty title
+
+A tooltip with an empty `title` (`undefined`, `null`, `false` or `''`) renders nothing, so a
+condition belongs in the `title` rather than around the tooltip:
+
+```tsx
+<Tooltip title={isTruncated ? label : undefined}>
+	<span className="truncate">{label}</span>
+</Tooltip>
+```
+
+The trigger stays the same DOM element either way. It is never unmounted and remounted as the
+title appears and disappears, so focus, text selection and running transitions survive the
+change.
+
+## Holding one open in a story or a test
+
+`open` puts the popup on screen and keeps it there: hover and focus stop driving it, and the
+tooltip shows exactly what it is told to.
+
+```tsx
+<Tooltip title="Helpful information" open>
+	<Button>Trigger</Button>
+</Tooltip>
+```
+
+It is there for stories and tests, which is the case hover cannot cover: one pointer sits on one
+trigger, so a snapshot of several popups at once, or an assertion on the content of one, has no
+way to open them. Every popup in the showcase above is opened that way.
+
+Leave it out in app code. A tooltip belongs to the pointer, and one held open from the outside
+covers the page it is anchored over without anyone having asked for it. There is no
+`onOpenChange` to pair `open` with either, so a tooltip driven this way cannot close itself.
+
+## Rich content
+
+`title` takes any node, so a tooltip is not limited to a single line of text:
+
+```tsx
+<Tooltip
+	side="top"
+	title={
+		<>
+			<Typography as="span" weight="medium">
+				Custom tooltip
+			</Typography>
+			<br />
+			<Typography as="span" size="sm">
+				With multiple lines
+			</Typography>
+		</>
+	}
+>
+	<Button>Rich content</Button>
+</Tooltip>
+```
+
+## Inside a modal
+
+Tooltips are portalled to `document.body`. Pass `container` to keep one inside a dialog instead, which sidesteps stacking context issues:
+
+```tsx
+import { useRef } from 'react';
+import { Dialog, DialogContent, Tooltip, Button } from '@signozhq/ui';
+
+function MyComponent() {
+	const dialogRef = useRef<HTMLDivElement>(null);
+
+	return (
+		<Dialog>
+			<DialogContent ref={dialogRef}>
+				<Tooltip title="Inside modal" container={dialogRef}>
+					<Button>Hover me</Button>
+				</Tooltip>
+			</DialogContent>
+		</Dialog>
+	);
+}
+```
+
+Set it once on the provider to cover every tooltip in that subtree:
+
+```tsx
+<TooltipProvider container={dialogRef}>{children}</TooltipProvider>
+```
+
+## Nested tooltips
+
+Two tooltips anchored to the same element would open on the same hover and render on top of each other, so a tooltip inside the trigger of another one stacks into it: one popup, the title of the outer tooltip first, then the content of everything below it, with a divider between the pieces.
+
+```tsx
+<Tooltip title="Removes every rule, cannot be undone">
+	<Button disabled disabledTooltip="You need write access to edit alerts">
+		Delete every alert rule in this workspace
+	</Button>
+</Tooltip>
+```
+
+That popup reads:
+
+```
+Removes every rule, cannot be undone
+────────────────────────────────────
+You need write access to edit alerts
+```
+
+Stacking exists so a tooltip is never hidden behind another one, not as a pattern to reach for. Aim for one tooltip per element and avoid nesting them in the first place.
+
+## Props
+
+<Controls of={TooltipStories.Default} />
+
+## TooltipProvider Props
+
+<Controls of={TooltipProviderStories.Default} />

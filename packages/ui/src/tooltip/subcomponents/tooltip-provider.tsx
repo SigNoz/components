@@ -1,52 +1,69 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import type * as React from 'react';
+import {
+	type TooltipContainer,
+	TooltipConfigProvider,
+	useTooltipConfig,
+} from '../tooltip-config-context.js';
 
-export type TooltipProviderProps = {
+type OriginalProviderProps = React.ComponentProps<typeof TooltipPrimitive.Provider>;
+
+export interface TooltipProviderProps {
 	/**
-	 * The children of the tooltip provider.
+	 * The subtree the provider applies to.
 	 */
-	children: React.ReactNode;
+	children?: OriginalProviderProps['children'];
 	/**
-	 * The duration from when the pointer enters the trigger until the tooltip gets opened.
-	 * @defaultValue 700
+	 * How long to wait before opening a tooltip on hover, in milliseconds. Long enough
+	 * that a pointer passing over a trigger does not open it. Focus opens it at once.
+	 *
+	 * @default 300
 	 */
-	delayDuration?: number;
+	delay?: OriginalProviderProps['delay'];
 	/**
-	 * How much time a user has to enter another trigger without incurring a delay again.
-	 * @defaultValue 300
+	 * How long to wait before closing a tooltip once the pointer leaves, in milliseconds.
+	 *
+	 * @default 0
 	 */
-	skipDelayDuration?: number;
+	closeDelay?: OriginalProviderProps['closeDelay'];
 	/**
-	 * When `true`, trying to hover the content will result in the tooltip closing as the pointer leaves the trigger.
-	 * @defaultValue false
+	 * Another tooltip opens at once, skipping `delay`, when the previous one closed
+	 * within this many milliseconds.
+	 *
+	 * @default 400
 	 */
-	disableHoverableContent?: boolean;
+	timeout?: OriginalProviderProps['timeout'];
 	/**
-	 * The test id of the tooltip provider.
+	 * The element every tooltip below is portalled into unless it sets its own
+	 * `container`. Defaults to `document.body`.
 	 */
-	testId?: string;
-};
+	container?: TooltipContainer;
+}
+
+export function TooltipProvider({
+	container,
+	children,
+	delay = 300,
+	...props
+}: TooltipProviderProps): React.ReactNode {
+	return (
+		<TooltipConfigProvider container={container}>
+			<TooltipPrimitive.Provider delay={delay} {...props}>
+				{children}
+			</TooltipPrimitive.Provider>
+		</TooltipConfigProvider>
+	);
+}
 
 /**
- * Wraps your app (or a section of it) to provide shared configuration for all tooltips.
- * Use delayDuration to control the hover delay; set to 0 in Storybook for instant feedback.
- *
- * @example
- * ```tsx
- * <TooltipProvider delayDuration={700}>
- *   <TooltipSimple title="Helpful information">
- *     <Button>Hover me</Button>
- *   </TooltipSimple>
- * </TooltipProvider>
- * ```
+ * @access private
  */
-export function TooltipProvider({ delayDuration = 0, testId, ...props }: TooltipProviderProps) {
-	return (
-		<TooltipPrimitive.Provider
-			data-slot="tooltip-provider"
-			data-testid={testId}
-			delayDuration={delayDuration}
-			{...props}
-		/>
-	);
+export function TooltipProviderIfMissing(props: TooltipProviderProps): React.ReactNode {
+	const { hasProvider } = useTooltipConfig();
+
+	if (hasProvider) {
+		return props.children;
+	}
+
+	return <TooltipProvider {...props} />;
 }

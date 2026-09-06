@@ -2,8 +2,9 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { Lock } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
-import { TooltipProvider, TooltipSimple } from '../tooltip/index.js';
+import { Tooltip } from '../tooltip/index.js';
 import styles from './tabs.module.scss';
+import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 
 export type TabVariants = 'primary' | 'secondary';
 
@@ -167,7 +168,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 				testId={testId}
 				{...props}
 			>
-				<TooltipProvider>
+				<TooltipProviderIfMissing>
 					<TabsList
 						variant={variant}
 						alignment={alignment}
@@ -195,9 +196,9 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 							);
 
 							return item.disabled ? (
-								<TooltipSimple key={item.key} title={item.disabledReason || 'This tab is disabled'}>
+								<Tooltip key={item.key} title={item.disabledReason || 'This tab is disabled'}>
 									{triggerContent}
-								</TooltipSimple>
+								</Tooltip>
 							) : (
 								triggerContent
 							);
@@ -208,7 +209,7 @@ export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>
 							{item.children}
 						</TabsContent>
 					))}
-				</TooltipProvider>
+				</TooltipProviderIfMissing>
 			</TabsRoot>
 		);
 	},

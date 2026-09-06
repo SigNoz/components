@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import { TooltipSimple } from '../../../../tooltip/index.js';
+import { Tooltip } from '../../../../tooltip/index.js';
 import { ComboboxPill } from '../../../subcomponents/combobox-pill.js';
 import styles from '../../../combobox.module.scss';
 
@@ -30,11 +30,11 @@ export function ComboboxPills({
 				</ComboboxPill>
 			))}
 			{overflowCount > 0 && (
-				<TooltipSimple title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
+				<Tooltip title={hiddenValues.map((v) => resolveLabel(v)).join(', ')}>
 					<span data-slot="combobox-pill-overflow" className={styles['combobox__pill-overflow']}>
 						+{overflowCount}
 					</span>
-				</TooltipSimple>
+				</Tooltip>
 			)}
 		</span>
 	);
