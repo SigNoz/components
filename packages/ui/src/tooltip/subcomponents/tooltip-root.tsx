@@ -1,58 +1,36 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import type * as React from 'react';
+import { TooltipContentIdProvider } from '../tooltip-content-id-context.js';
+import { TooltipContentStackProviderIfMissing } from '../tooltip-content-stack-context.js';
+import { useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
 
-export type TooltipRootProps = {
-	/**
-	 * The tooltip trigger and content elements.
-	 */
+/**
+ * @access private
+ */
+export type TooltipRootProps = Omit<
+	React.ComponentProps<typeof TooltipPrimitive.Root>,
+	'children'
+> & {
 	children?: React.ReactNode;
-	/**
-	 * The controlled open state of the tooltip.
-	 */
-	open?: boolean;
-	/**
-	 * The open state of the tooltip when it is initially rendered.
-	 */
-	defaultOpen?: boolean;
-	/**
-	 * Event handler called when the open state of the tooltip changes.
-	 */
-	onOpenChange?: (open: boolean) => void;
-	/**
-	 * The duration from when the pointer enters the trigger until the tooltip gets opened. This will
-	 * override the prop with the same name passed to Provider.
-	 * @defaultValue 700
-	 */
-	delayDuration?: number;
-	/**
-	 * When `true`, trying to hover the content will result in the tooltip closing as the pointer leaves the trigger.
-	 * @defaultValue false
-	 */
-	disableHoverableContent?: boolean;
-	/**
-	 * The test id of the tooltip root.
-	 */
-	testId?: string;
 };
 
 /**
- * Root component that manages the open state and accessibility wiring for a tooltip.
- * Compose with `TooltipTrigger` and `TooltipContent` for custom content and positioning.
- *
- * @example
- * ```tsx
- * <TooltipProvider>
- *   <TooltipRoot>
- *     <TooltipTrigger asChild>
- *       <Button>Custom content</Button>
- *     </TooltipTrigger>
- *     <TooltipContent side="bottom" arrow>
- *       <span>Rich tooltip content</span>
- *     </TooltipContent>
- *   </TooltipRoot>
- * </TooltipProvider>
- * ```
+ * @access private
  */
-export function TooltipRoot({ testId, ...props }: TooltipRootProps) {
-	return <TooltipPrimitive.Root data-slot="tooltip" data-testid={testId} {...props} />;
+export function TooltipRoot({ children, ...props }: TooltipRootProps): React.ReactNode {
+	const insideTrigger = useIsInsideTooltipTrigger();
+
+	// A second tooltip on the same element would open on the same hover, so the parts
+	// below stack into the tooltip above instead.
+	if (insideTrigger) {
+		return children;
+	}
+
+	return (
+		<TooltipPrimitive.Root {...props}>
+			<TooltipContentIdProvider>
+				<TooltipContentStackProviderIfMissing>{children}</TooltipContentStackProviderIfMissing>
+			</TooltipContentIdProvider>
+		</TooltipPrimitive.Root>
+	);
 }

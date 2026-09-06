@@ -440,7 +440,6 @@
 		"@radix-ui/react-tabs": "^1.1.19",
 		"@radix-ui/react-toggle": "^1.1.16",
 		"@radix-ui/react-toggle-group": "^1.1.17",
-		"@radix-ui/react-tooltip": "^1.2.14",
 		"@tanstack/react-table": "^8.21.3",
 		"@tanstack/react-virtual": "^3.14.8",
 		"@types/lodash-es": "^4.17.12",
