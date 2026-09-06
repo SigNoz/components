@@ -22,7 +22,7 @@ export const Default: Story = {
 		title: 'Delete from URL param',
 		confirmText: 'Delete',
 		cancelText: 'Cancel',
-		confirmColor: 'destructive',
+		confirmColor: 'danger',
 		children: 'This confirm dialog is controlled via a URL query parameter using nuqs.',
 		width: 'narrow',
 	},
@@ -42,6 +42,7 @@ Default.decorators = [
 						variant={ButtonVariant.Solid}
 						color={ButtonColor.Primary}
 						onClick={() => setOpen(true)}
+						size="md"
 					>
 						Open confirm dialog (URL)
 					</Button>
