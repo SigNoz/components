@@ -28,6 +28,7 @@ export const externalPatterns = [
 	'@tanstack/react-virtual',
 	'@tanstack/react-table',
 	/@radix-ui\/.*$/,
+	/^@base-ui\/react(\/.*)?$/,
 	/^@signozhq\/.*$/,
 	'@chenglou/pretext',
 	'copy-text-to-clipboard',
