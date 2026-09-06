@@ -1,91 +1,76 @@
-import type React from 'react';
-import { forwardRef, useMemo } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '../lib/utils';
-import {
-	type ButtonColorValue,
-	ButtonGroupContext,
-	type ButtonSizeValue,
-	type ButtonVariantValue,
-} from '../button';
+import { type SizeType, type VariantColorType } from '../button';
 import styles from './button-group.module.scss';
 
 export type ButtonGroupProps = {
 	/**
-	 * Default `size` applied to descendant `Button`s that do not set their own `size`.
-	 * Individual buttons can still override this locally.
+	 * Mirrored on the group element as `data-size`. Not inherited by the buttons: set `size`
+	 * on every child too.
 	 */
-	size?: ButtonSizeValue;
-	/**
-	 * Default `variant` applied to descendant `Button`s that do not set their own `variant`.
-	 * Individual buttons can still override this locally.
-	 */
-	variant?: ButtonVariantValue;
-	/**
-	 * Default `color` applied to descendant `Button`s that do not set their own `color`.
-	 * Individual buttons can still override this locally (e.g. to mark one action destructive).
-	 */
-	color?: ButtonColorValue;
+	size?: SizeType;
 	/**
 	 * Forwarded to the rendered group element as `data-testid`.
 	 */
 	testId?: string;
-} & Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>;
+} & Omit<HTMLAttributes<HTMLDivElement>, 'color'> &
+	VariantColorType;
 
 /**
  * Segmented cluster of related buttons. Renders as `<div role="group">` with
  * inline-flex children, deduped internal borders, and only the outer corners
- * rounded. `size` / `variant` / `color` set on the group propagate to descendant
- * `Button`s through context — per-button props still take precedence.
+ * rounded. `size` / `variant` / `color` set on the group style the cluster itself,
+ * they are not inherited by the buttons: set them on every child too.
  *
  * @example
  * ```tsx
  * // Time-range segmented control — all three buttons share the group's variant + color
  * <ButtonGroup variant="outlined" color="secondary">
- *   <Button>Day</Button>
- *   <Button>Week</Button>
- *   <Button>Month</Button>
+ *   <Button variant="outlined" size="md" color="secondary">Day</Button>
+ *   <Button variant="outlined" size="md" color="secondary">Week</Button>
+ *   <Button variant="outlined" size="md" color="secondary">Month</Button>
  * </ButtonGroup>
  * ```
  *
  * @example
  * ```tsx
- * // Per-button override — last button opts into a destructive color
+ * // Per-button override — last button opts into a danger color
  * <ButtonGroup variant="outlined" color="secondary">
- *   <Button>Approve</Button>
- *   <Button>Hold</Button>
- *   <Button color="destructive">Reject</Button>
+ *   <Button variant="outlined" size="md" color="secondary">Approve</Button>
+ *   <Button variant="outlined" size="md" color="secondary">Hold</Button>
+ *   <Button variant="solid" size="md" color="danger">Reject</Button>
  * </ButtonGroup>
  * ```
  *
  * @example
  * ```tsx
  * // Icon-only navigation cluster
- * <ButtonGroup variant="outlined" color="secondary" size="icon">
- *   <Button prefix={<ChevronLeft />} aria-label="Previous" />
- *   <Button prefix={<ChevronRight />} aria-label="Next" />
+ * <ButtonGroup variant="outlined" color="secondary">
+ *   <Button variant="outlined" size="md" color="secondary" icon aria-label="Previous">
+ *     <ChevronLeft />
+ *   </Button>
+ *   <Button variant="outlined" size="md" color="secondary" icon aria-label="Next">
+ *     <ChevronRight />
+ *   </Button>
  * </ButtonGroup>
  * ```
  */
 const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(
 	({ size, variant, color, className, children, testId, ...props }, ref) => {
-		const value = useMemo(() => ({ size, variant, color, inGroup: true }), [size, variant, color]);
-
 		return (
-			<ButtonGroupContext.Provider value={value}>
-				{/* biome-ignore lint/a11y/useSemanticElements: <div role="group"> is the standard ButtonGroup pattern; alternatives (fieldset/menu) carry unwanted semantics. */}
-				<div
-					ref={ref}
-					role="group"
-					data-testid={testId}
-					data-size={size}
-					data-variant={variant}
-					data-color={color}
-					className={cn(styles['button-group'], className)}
-					{...props}
-				>
-					{children}
-				</div>
-			</ButtonGroupContext.Provider>
+			// biome-ignore lint/a11y/useSemanticElements: <div role="group"> is the standard ButtonGroup pattern; alternatives (fieldset/menu) carry unwanted semantics.
+			<div
+				ref={ref}
+				role="group"
+				data-testid={testId}
+				data-size={size}
+				data-variant={variant}
+				data-color={color}
+				className={cn(styles['button-group'], className)}
+				{...props}
+			>
+				{children}
+			</div>
 		);
 	},
 );

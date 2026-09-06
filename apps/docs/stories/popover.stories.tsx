@@ -38,7 +38,7 @@ export const Default: Story = {
 		<div className="story-column">
 			<Popover {...args}>
 				<PopoverTrigger asChild>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open popover
 					</Button>
 				</PopoverTrigger>
@@ -106,6 +106,7 @@ export const DateAndTimePicker: Story = {
 								color={ButtonColor.Primary}
 								id="date-picker"
 								className={styles.datePickerTrigger}
+								size="md"
 							>
 								{date ? `${date.toLocaleDateString()} : ${time}` : 'Select date'}
 								<ChevronDown size={16} />
@@ -161,6 +162,7 @@ export const PopoverShowcase: Story = {
 										variant={ButtonVariant.Solid}
 										color={ButtonColor.Secondary}
 										className={styles.capitalizedButton}
+										size="md"
 									>
 										{side}
 									</Button>
@@ -185,6 +187,7 @@ export const PopoverShowcase: Story = {
 										variant={ButtonVariant.Solid}
 										color={ButtonColor.Secondary}
 										className={styles.capitalizedButton}
+										size="md"
 									>
 										{align}
 									</Button>
@@ -204,7 +207,7 @@ export const PopoverShowcase: Story = {
 					<div className="story-row-lg">
 						<Popover>
 							<PopoverTrigger asChild>
-								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="md">
 									Without arrow
 								</Button>
 							</PopoverTrigger>
@@ -214,7 +217,7 @@ export const PopoverShowcase: Story = {
 						</Popover>
 						<Popover>
 							<PopoverTrigger asChild>
-								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+								<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="md">
 									With arrow
 								</Button>
 							</PopoverTrigger>
@@ -231,7 +234,7 @@ export const PopoverShowcase: Story = {
 					</Typography>
 					<Popover defaultOpen>
 						<PopoverTrigger asChild>
-							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary}>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="md">
 								Open by default
 							</Button>
 						</PopoverTrigger>
@@ -247,7 +250,7 @@ export const PopoverShowcase: Story = {
 					</Typography>
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+							<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 								Rich content
 							</Button>
 						</PopoverTrigger>

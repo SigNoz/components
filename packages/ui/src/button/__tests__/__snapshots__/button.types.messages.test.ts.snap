@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Button type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "disabled and disabledTooltip > a possibly undefined disabled still needs a reason > \`disabled\` typed \`boolean | undefined\` is still \`disabled\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ children: string; size: "md"; variant: "solid"; color: "primary"; disabled: boolean | undefined; }' but required in type 'ADisabledButtonMustSayWhy'.",
+  "disabled and disabledTooltip > a reason without disabled is rejected > \`disabledTooltip\` never renders unless \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ children: string; size: "md"; variant: "solid"; color: "primary"; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledButton'.",
+  "disabled and disabledTooltip > disabled without a reason is rejected > a disabled button must explain itself through \`disabledTooltip\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ children: string; size: "md"; variant: "solid"; color: "primary"; disabled: true; }' but required in type 'ADisabledButtonMustSayWhy'.",
+  "icon mode > an icon without an accessible name is rejected > an icon button has no visible text, so \`aria-label\` is required": "TS2322: Type '{ children: Element; size: "md"; variant: "solid"; color: "primary"; icon: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Property ''aria-label'' is missing in type '{ children: Element; size: "md"; variant: "solid"; color: "primary"; icon: true; }' but required in type 'IconButtonProps'.",
+  "icon mode > children are required > a button with nothing inside it is not allowed": "TS2322: Type '{ size: "md"; variant: "solid"; color: "primary"; icon: true; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Property 'children' is missing in type '{ size: "md"; variant: "solid"; color: "primary"; icon: true; "aria-label": string; }' but required in type 'ButtonBaseProps'.",
+  "icon mode > icon only accepts true > drop the prop for a text button, \`icon={false}\` is not a mode": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "icon mode > prefix and suffix are rejected, the children are the icon > \`prefix\` has no slot to render into in icon mode": "TS2322: Type '{ children: Element; size: "md"; variant: "solid"; color: "primary"; icon: true; "aria-label": string; prefix: Element; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'prefix' are incompatible.
+      Type 'Element' is not assignable to type 'undefined'.",
+  "icon mode > prefix and suffix are rejected, the children are the icon > \`suffix\` has no slot to render into in icon mode": "TS2322: Type '{ children: Element; size: "md"; variant: "solid"; color: "primary"; icon: true; "aria-label": string; suffix: Element; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'suffix' are incompatible.
+      Type 'Element' is not assignable to type 'undefined'.",
+  "icon mode > text children are rejected > icon mode renders an element, not a label": "TS2322: Type '{ children: string; size: "md"; variant: "solid"; color: "primary"; icon: true; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'children' are incompatible.
+      Type 'string' is not assignable to type 'ReactNode & ReactElement<any, string | JSXElementConstructor<any>>'.",
+  "prefix, suffix and children > children are required > a button with nothing inside it is not allowed": "TS2322: Type '{ size: "md"; variant: "solid"; color: "primary"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Type '{ size: "md"; variant: "solid"; color: "primary"; }' is not assignable to type '(IntrinsicAttributes & ButtonBaseProps & ColoredVariantProps & TextButtonProps & Record<never, never> & RefAttributes<...>) | (IntrinsicAttributes & ... 4 more ... & RefAttributes<...>)'.
+      Property 'children' is missing in type '{ size: "md"; variant: "solid"; color: "primary"; }' but required in type 'ButtonBaseProps'.",
+  "remaining props > rejects a textOverflow outside the set > \`clip\` is not a ButtonTextOverflow": "TS2322: Type '"clip"' is not assignable to type 'TextOverflowType | undefined'.",
+  "size > is required > \`size\` has no default, it must be picked explicitly": "TS2322: Type '{ children: string; variant: "solid"; color: "primary"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Type '{ children: string; variant: "solid"; color: "primary"; }' is not assignable to type '(IntrinsicAttributes & ButtonBaseProps & ColoredVariantProps & TextButtonProps & Record<never, never> & RefAttributes<...>) | (IntrinsicAttributes & ... 4 more ... & RefAttributes<...>)'.
+      Property 'size' is missing in type '{ children: string; variant: "solid"; color: "primary"; }' but required in type 'ButtonBaseProps'.",
+  "size > rejects a size outside the scale > \`lg\` is not a ButtonSize": "TS2322: Type '"lg"' is not assignable to type 'SizeType'.",
+  "test ids > rejects a raw data-testid > use \`testId\`, it survives the tooltip trigger cloning the button": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which survives the tooltip trigger cloning the button'' is missing in type '{ children: string; size: "md"; variant: "solid"; color: "primary"; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "unknown props > rejects a misspelled prop > \`onClik\` is not a prop, a generic \`T extends ButtonProps\` alone would let it through": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "variant and color > both are required > \`color\` has no default": "TS2322: Type '{ children: string; size: "md"; variant: "solid"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Type '{ children: string; size: "md"; variant: "solid"; }' is not assignable to type '(IntrinsicAttributes & ButtonBaseProps & ColoredVariantProps & TextButtonProps & Record<never, never> & RefAttributes<...>) | (IntrinsicAttributes & ... 4 more ... & RefAttributes<...>)'.
+      Property 'color' is missing in type '{ children: string; size: "md"; variant: "solid"; }' but required in type 'ColoredVariantProps'.",
+  "variant and color > both are required > \`variant\` has no default": "TS2322: Type '{ children: string; size: "md"; color: "primary"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Type '{ children: string; size: "md"; color: "primary"; }' is not assignable to type '(IntrinsicAttributes & ButtonBaseProps & ColoredVariantProps & TextButtonProps & Record<never, never> & RefAttributes<...>) | (IntrinsicAttributes & ... 4 more ... & RefAttributes<...>)'.
+      Property 'variant' is missing in type '{ children: string; size: "md"; color: "primary"; }' but required in type 'ColoredVariantProps'.",
+  "variant and color > outlined, ghost and dashed reject every other color > \`dashed\` only has a secondary treatment": "TS2322: Type '{ children: string; size: "md"; variant: "dashed"; color: "warning"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'color' are incompatible.
+      Type '"warning"' is not assignable to type '"secondary"'.",
+  "variant and color > outlined, ghost and dashed reject every other color > \`ghost\` only has a secondary treatment": "TS2322: Type '{ children: string; size: "md"; variant: "ghost"; color: "danger"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'color' are incompatible.
+      Type '"danger"' is not assignable to type '"secondary"'.",
+  "variant and color > outlined, ghost and dashed reject every other color > \`outlined\` only has a secondary treatment": "TS2322: Type '{ children: string; size: "md"; variant: "outlined"; color: "primary"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'color' are incompatible.
+      Type '"primary"' is not assignable to type '"secondary"'.",
+  "variant and color > rejects a variant outside the set > \`elevated\` is not a ButtonVariant": "TS2322: Type '"elevated"' is not assignable to type '"link" | "solid" | "outlined" | "ghost" | "dashed"'.",
+}
+`;
