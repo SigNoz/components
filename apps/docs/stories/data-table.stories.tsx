@@ -12,7 +12,6 @@ import {
 	Badge,
 	DataTable as BaseDataTable,
 	Button,
-	ButtonColor,
 	type ColumnDef,
 	type Row,
 	Typography,
@@ -425,28 +424,13 @@ const enhancedColumns: ColumnDef<User>[] = [
 		cell: () => {
 			return (
 				<div className={`story-row ${styles.actionButtonsContainer}`}>
-					<Button
-						variant="ghost"
-						color={ButtonColor.None}
-						size="sm"
-						className={styles.actionButton}
-					>
+					<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
 						<Eye className="icon-md" />
 					</Button>
-					<Button
-						variant="ghost"
-						color={ButtonColor.None}
-						size="sm"
-						className={styles.actionButton}
-					>
+					<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
 						<Pencil className="icon-md" />
 					</Button>
-					<Button
-						variant="ghost"
-						color={ButtonColor.None}
-						size="sm"
-						className={styles.deleteButton}
-					>
+					<Button variant="ghost" color="secondary" size="sm" className={styles.deleteButton}>
 						<Trash2 className="icon-md" />
 					</Button>
 				</div>
@@ -1025,28 +1009,13 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className={`story-row ${styles.actionButtonsContainer}`}>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className={styles.actionButton}
-							>
+							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
 								<Eye className="icon-md" />
 							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className={styles.actionButton}
-							>
+							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
 								<Pencil className="icon-md" />
 							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className={styles.deleteButton}
-							>
+							<Button variant="ghost" color="secondary" size="sm" className={styles.deleteButton}>
 								<Trash2 className="icon-md" />
 							</Button>
 						</div>
@@ -1305,28 +1274,13 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className={`story-row ${styles.actionButtonsContainer}`}>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className={styles.actionButton}
-							>
+							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
 								<Eye className="icon-md" />
 							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className={styles.actionButton}
-							>
+							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
 								<Pencil className="icon-md" />
 							</Button>
-							<Button
-								variant="ghost"
-								color={ButtonColor.None}
-								size="sm"
-								className={styles.deleteButton}
-							>
+							<Button variant="ghost" color="secondary" size="sm" className={styles.deleteButton}>
 								<Trash2 className="icon-md" />
 							</Button>
 						</div>
@@ -1866,7 +1820,7 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 						<Button
 							onClick={() => handleScrollToUser('1')}
 							variant="outlined"
-							color={ButtonColor.None}
+							color="secondary"
 							size="sm"
 						>
 							Scroll to User 1
@@ -1874,7 +1828,7 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 						<Button
 							onClick={() => handleScrollToUser('50')}
 							variant="outlined"
-							color={ButtonColor.None}
+							color="secondary"
 							size="sm"
 						>
 							Scroll to User 50
@@ -1882,7 +1836,7 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 						<Button
 							onClick={() => handleScrollToUser('100')}
 							variant="outlined"
-							color={ButtonColor.None}
+							color="secondary"
 							size="sm"
 						>
 							Scroll to User 100
@@ -1890,7 +1844,7 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 						<Button
 							onClick={() => handleScrollToUser('150')}
 							variant="outlined"
-							color={ButtonColor.None}
+							color="secondary"
 							size="sm"
 						>
 							Scroll to User 150
@@ -1898,17 +1852,12 @@ export const ScrollToIndex: StoryObj<typeof DataTable<User>> = {
 						<Button
 							onClick={() => handleScrollToUser('200')}
 							variant="outlined"
-							color={ButtonColor.None}
+							color="secondary"
 							size="sm"
 						>
 							Scroll to Last User
 						</Button>
-						<Button
-							onClick={handleScrollToRandom}
-							variant="outlined"
-							color={ButtonColor.None}
-							size="sm"
-						>
+						<Button onClick={handleScrollToRandom} variant="outlined" color="secondary" size="sm">
 							Scroll to Random User
 						</Button>
 					</div>

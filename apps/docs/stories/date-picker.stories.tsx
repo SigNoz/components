@@ -118,7 +118,7 @@ const meta: Meta<typeof DatePicker> = {
 		},
 		buttonColor: {
 			control: 'select',
-			options: ['primary', 'destructive', 'warning', 'secondary', 'none'],
+			options: ['primary', 'secondary', 'danger', 'warning', 'success', 'info', 'decorative'],
 			description: 'Button color for the trigger.',
 			table: {
 				category: 'Appearance',

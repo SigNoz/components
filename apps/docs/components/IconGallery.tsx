@@ -51,7 +51,7 @@ const IconCell = React.memo(
 					</Typography>
 					<Button
 						variant={ButtonVariant.Ghost}
-						color={ButtonColor.None}
+						color={ButtonColor.Secondary}
 						size={ButtonSize.SM}
 						onClick={() => onCopy(name)}
 						prefix={

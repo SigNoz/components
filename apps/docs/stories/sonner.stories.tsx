@@ -1,4 +1,4 @@
-import { Button, ButtonColor, Toaster, toast, Typography } from '@signozhq/ui';
+import { Button, Toaster, toast, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import styles from './sonner.stories.module.css';
 
@@ -18,20 +18,22 @@ export const BasicToasts: Story = {
 				Basic Toast Examples
 			</Typography>
 			<div className="story-grid">
-				<Button onClick={() => toast('Hello World!')} variant="solid" color="primary">
+				<Button onClick={() => toast('Hello World!')} variant="solid" color="primary" size="md">
 					Default Toast
 				</Button>
 				<Button
 					onClick={() => toast.success('Success! Your action was completed.')}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Success Toast
 				</Button>
 				<Button
 					onClick={() => toast.error('Error! Something went wrong.')}
 					variant="solid"
-					color="destructive"
+					color="danger"
+					size="md"
 				>
 					Error Toast
 				</Button>
@@ -39,6 +41,7 @@ export const BasicToasts: Story = {
 					onClick={() => toast.warning('Warning! Please check your input.')}
 					variant="solid"
 					color="warning"
+					size="md"
 				>
 					Warning Toast
 				</Button>
@@ -46,6 +49,7 @@ export const BasicToasts: Story = {
 					onClick={() => toast.info('Info: Here is some information.')}
 					variant="solid"
 					color="secondary"
+					size="md"
 				>
 					Info Toast
 				</Button>
@@ -71,6 +75,7 @@ export const ToastWithDescriptions: Story = {
 					}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					With Description
 				</Button>
@@ -81,7 +86,8 @@ export const ToastWithDescriptions: Story = {
 						})
 					}
 					variant="solid"
-					color="destructive"
+					color="danger"
+					size="md"
 				>
 					Error with Description
 				</Button>
@@ -93,6 +99,7 @@ export const ToastWithDescriptions: Story = {
 					}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Success with Description
 				</Button>
@@ -121,6 +128,7 @@ export const ToastWithActions: Story = {
 					}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					With Action Button
 				</Button>
@@ -135,7 +143,8 @@ export const ToastWithActions: Story = {
 						})
 					}
 					variant="solid"
-					color="destructive"
+					color="danger"
+					size="md"
 				>
 					Error with Action
 				</Button>
@@ -151,6 +160,7 @@ export const ToastWithActions: Story = {
 					}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Success with Action
 				</Button>
@@ -177,7 +187,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Top left', { position: 'top-left' })}
 							variant="outlined"
 							size="sm"
-							color={ButtonColor.None}
+							color="secondary"
 						>
 							Top Left
 						</Button>
@@ -185,7 +195,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Top center', { position: 'top-center' })}
 							variant="outlined"
 							size="sm"
-							color={ButtonColor.None}
+							color="secondary"
 						>
 							Top Center
 						</Button>
@@ -193,7 +203,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Top right', { position: 'top-right' })}
 							variant="outlined"
 							size="sm"
-							color={ButtonColor.None}
+							color="secondary"
 						>
 							Top Right
 						</Button>
@@ -208,7 +218,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Bottom left', { position: 'bottom-left' })}
 							variant="outlined"
 							size="sm"
-							color={ButtonColor.None}
+							color="secondary"
 						>
 							Bottom Left
 						</Button>
@@ -216,7 +226,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Bottom center', { position: 'bottom-center' })}
 							variant="outlined"
 							size="sm"
-							color={ButtonColor.None}
+							color="secondary"
 						>
 							Bottom Center
 						</Button>
@@ -224,7 +234,7 @@ export const ToastPositions: Story = {
 							onClick={() => toast('Bottom right', { position: 'bottom-right' })}
 							variant="outlined"
 							size="sm"
-							color={ButtonColor.None}
+							color="secondary"
 						>
 							Bottom Right
 						</Button>
@@ -248,6 +258,7 @@ export const ToastDurations: Story = {
 					onClick={() => toast('Quick message', { duration: 1000 })}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					1 Second
 				</Button>
@@ -255,6 +266,7 @@ export const ToastDurations: Story = {
 					onClick={() => toast('Standard message', { duration: 4000 })}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					4 Seconds
 				</Button>
@@ -262,6 +274,7 @@ export const ToastDurations: Story = {
 					onClick={() => toast('Long message', { duration: 8000 })}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					8 Seconds
 				</Button>
@@ -269,6 +282,7 @@ export const ToastDurations: Story = {
 					onClick={() => toast('Persistent message', { duration: Infinity })}
 					variant="solid"
 					color="warning"
+					size="md"
 				>
 					Persistent
 				</Button>
@@ -297,6 +311,7 @@ export const CustomStyledToasts: Story = {
 					}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Custom Styled
 				</Button>
@@ -311,6 +326,7 @@ export const CustomStyledToasts: Story = {
 					}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Gradient Toast
 				</Button>
@@ -325,6 +341,7 @@ export const CustomStyledToasts: Story = {
 					}
 					variant="solid"
 					color="warning"
+					size="md"
 				>
 					Custom Warning
 				</Button>
@@ -353,6 +370,7 @@ export const ToastWithPromises: Story = {
 					}}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Promise Toast
 				</Button>
@@ -375,6 +393,7 @@ export const ToastWithPromises: Story = {
 					}}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Random Promise
 				</Button>
@@ -389,6 +408,7 @@ export const ToastWithPromises: Story = {
 					}}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					File Upload
 				</Button>
@@ -415,6 +435,7 @@ export const MultipleToasts: Story = {
 					}}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Show Multiple
 				</Button>
@@ -427,6 +448,7 @@ export const MultipleToasts: Story = {
 					}}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Different Types
 				</Button>
@@ -439,6 +461,7 @@ export const MultipleToasts: Story = {
 					}}
 					variant="solid"
 					color="primary"
+					size="md"
 				>
 					Different Positions
 				</Button>
@@ -459,7 +482,7 @@ export const Default: Story = {
 				Click the buttons below to see different types of toasts in action.
 			</Typography>
 			<div className="story-grid">
-				<Button onClick={() => toast('Hello World!')} variant="solid" color="primary">
+				<Button onClick={() => toast('Hello World!')} variant="solid" color="primary" size="md">
 					Show Toast
 				</Button>
 			</div>

@@ -1,9 +1,12 @@
 .button {
 	display: var(--button-display, inline-flex);
+	flex-direction: var(--button-flex-direction, row);
 	align-items: var(--button-align-items, center);
 	justify-content: var(--button-justify-content, center);
+	gap: var(--button-gap, var(--button-internal-gap));
 	white-space: var(--button-white-space, nowrap);
-	border-radius: var(--button-border-radius, calc(var(--radius) - 2px));
+	--button-internal-border-radius: var(--button-border-radius, var(--radius-1));
+	border-radius: var(--button-internal-border-radius);
 	transition: var(--button-transition,
 			background-color 150ms ease,
 			color 150ms ease,
@@ -11,233 +14,456 @@
 	cursor: var(--button-cursor, pointer);
 	background-color: var(--button-internal-background);
 	color: var(--button-internal-solid-foreground);
-	line-height: var(--button-line-height, 100%);
 	font-variant-numeric: var(--button-font-variant-numeric, slashed-zero);
+	font-weight: var(--button-font-weight, var(--font-weight-medium));
+	// TODO: Convert this hardcoded value to semantic token
+	letter-spacing: var(--button-text-spacing, -0.005em);
 	border-color: var(--button-base-border-color, transparent);
 	border-width: var(--button-base-border-width, 0px);
+	width: var(--button-width, var(--button-internal-width, auto));
+	max-width: var(--button-max-width, var(--button-internal-max-width, 100%));
+
+	--button-internal-loading-duration: var(--button-loading-duration, 120ms);
+	--button-internal-loading-delay: var(--button-loading-delay, var(--button-internal-loading-duration));
+	--button-internal-loading-easing: var(--button-loading-easing, cubic-bezier(0.65, 0, 0.35, 1));
+	--button-internal-loading-travel: var(--button-loading-travel, 6px);
 
 	&[data-color='primary'] {
 		--button-internal-background: var(--button-primary-background, var(--primary-background));
-		--button-internal-border-color: var(--button-primary-border-color, var(--primary-background));
 		--button-internal-solid-foreground: var(--button-primary-solid-foreground, var(--primary-foreground));
-		--button-internal-outlined-foreground: var(--button-primary-outlined-foreground, var(--primary));
 		--button-internal-hover-background: var(--button-primary-hover-background, var(--primary-background-hover));
-		--button-internal-link-hover-foreground: var(--button-primary-link-hover-foreground, var(--primary-background-hover));
-		--button-internal-ghost-hover-foreground: var(--button-primary-ghost-hover-foreground, var(--primary-foreground-hover));
-	}
-
-	&[data-color='destructive'] {
-		--button-internal-background: var(--button-destructive-background, var(--danger-background));
-		--button-internal-border-color: var(--button-destructive-border-color, var(--danger-background));
-		--button-internal-solid-foreground: var(--button-destructive-solid-foreground, var(--danger-foreground));
-		--button-internal-outlined-foreground: var(--button-destructive-outlined-foreground, var(--danger-background));
-		--button-internal-hover-background: var(--button-destructive-hover-background, var(--danger-background-hover));
-		--button-internal-link-hover-foreground: var(--button-destructive-link-hover-foreground, var(--danger-background-hover));
-		--button-internal-ghost-hover-foreground: var(--button-destructive-ghost-hover-foreground, var(--danger-foreground-hover));
-	}
-
-	&[data-color='warning'] {
-		--button-internal-background: var(--button-warning-background, var(--warning-background));
-		--button-internal-border-color: var(--button-warning-border-color, var(--warning-background));
-		--button-internal-solid-foreground: var(--button-warning-solid-foreground, var(--warning-foreground));
-		--button-internal-outlined-foreground: var(--button-warning-outlined-foreground, var(--warning-background));
-		--button-internal-hover-background: var(--button-warning-hover-background, var(--warning-background-hover));
-		--button-internal-link-hover-foreground: var(--button-warning-link-hover-foreground, var(--warning-background-hover));
-		--button-internal-ghost-hover-foreground: var(--button-warning-ghost-hover-foreground, var(--warning-foreground-hover));
+		--button-internal-link-foreground: var(--button-primary-link-foreground, var(--primary-link));
+		--button-internal-link-hover-foreground: var(--button-primary-link-hover-foreground, var(--primary-hover));
 	}
 
 	&[data-color='secondary'] {
 		--button-internal-background: var(--button-secondary-background, var(--secondary-background));
-		--button-internal-border-color: var(--button-secondary-border-color, var(--secondary-border));
 		--button-internal-solid-foreground: var(--button-secondary-solid-foreground, var(--secondary-foreground));
-		--button-internal-outlined-foreground: var(--button-secondary-outlined-foreground, var(--secondary-foreground));
 		--button-internal-hover-background: var(--button-secondary-hover-background, var(--secondary-background-hover));
-		--button-internal-link-hover-foreground: var(--button-secondary-link-hover-foreground, var(--secondary-foreground-hover));
-		--button-internal-ghost-hover-foreground: var(--button-secondary-ghost-hover-foreground, var(--secondary-foreground-hover));
+		--button-internal-link-foreground: var(--button-secondary-link-foreground, var(--secondary-link));
+		--button-internal-link-hover-foreground: var(--button-secondary-link-hover-foreground, var(--secondary-link-hover));
 	}
 
-	&[data-color='none'] {
-		--button-internal-background: var(--button-none-background, var(--ghost-background));
-		--button-internal-border-color: var(--button-none-border-color, var(--ghost-border));
-		--button-internal-solid-foreground: var(--button-none-solid-foreground, var(--ghost-foreground));
-		--button-internal-outlined-foreground: var(--button-none-outlined-foreground, var(--ghost-foreground));
-		--button-internal-hover-background: var(--button-none-hover-background, var(--ghost-background-hover));
-		--button-internal-link-hover-foreground: var(--button-none-link-hover-foreground, var(--ghost-foreground-hover));
-		--button-internal-ghost-hover-foreground: var(--button-none-ghost-hover-foreground, var(--ghost-foreground-hover));
+	&[data-color='success'] {
+		--button-internal-background: var(--button-success-background, var(--success-background));
+		--button-internal-solid-foreground: var(--button-success-solid-foreground, var(--success-foreground));
+		--button-internal-hover-background: var(--button-success-hover-background, var(--success-background-hover));
+		--button-internal-link-foreground: var(--button-success-link-foreground, var(--success-link));
+		--button-internal-link-hover-foreground: var(--button-success-link-hover-foreground, var(--success-link-hover));
 	}
 
-	&[data-color='primary'],
-	&[data-color='destructive'],
-	&[data-color='warning'],
-	&[data-color='none'],
-	&[data-color='secondary'] {
-		--button-internal-action-border: var(--button-action-border, var(--action-border));
-		--button-internal-action-hover-border: var(--button-action-hover-border, var(--action-border-hover));
-		--button-internal-action-text: var(--button-action-text, var(--action-foreground));
-		--button-internal-action-hover-text: var(--button-action-hover-text, var(--action-foreground-hover));
+	&[data-color='danger'] {
+		--button-internal-background: var(--button-danger-background, var(--danger-background));
+		--button-internal-solid-foreground: var(--button-danger-solid-foreground, var(--danger-foreground));
+		--button-internal-hover-background: var(--button-danger-hover-background, var(--danger-background-hover));
+		--button-internal-link-foreground: var(--button-danger-link-foreground, var(--danger-link));
+		--button-internal-link-hover-foreground: var(--button-danger-link-hover-foreground, var(--danger-link-hover));
 	}
 
-	&[data-background='ink-500'] {
-		--button-internal-action-background: var(--button-action-ink-500-background, var(--action-background));
-		--button-internal-action-border: var(--button-action-ink-500-border, var(--action-border));
-		--button-internal-action-text: var(--button-action-ink-500-text, var(--action-foreground));
-		--button-internal-action-hover-background: var(--button-action-ink-500-hover-background, var(--action-background-hover));
-		--button-internal-action-hover-border: var(--button-action-ink-500-hover-border, var(--action-border-hover));
-		--button-internal-action-hover-text: var(--button-action-ink-500-hover-text, var(--action-foreground-hover));
+	&[data-color='warning'] {
+		--button-internal-background: var(--button-warning-background, var(--warning-background));
+		--button-internal-solid-foreground: var(--button-warning-solid-foreground, var(--warning-foreground));
+		--button-internal-hover-background: var(--button-warning-hover-background, var(--warning-background-hover));
+		--button-internal-link-foreground: var(--button-warning-link-foreground, var(--warning-link));
+		--button-internal-link-hover-foreground: var(--button-warning-link-hover-foreground, var(--warning-link-hover));
 	}
 
-	&[data-background='ink-400'] {
-		--button-internal-action-background: var(--button-action-ink-400-background, var(--action-background));
-		--button-internal-action-border: var(--button-action-ink-400-border, var(--action-border));
-		--button-internal-action-text: var(--button-action-ink-400-text, var(--action-foreground));
-		--button-internal-action-hover-background: var(--button-action-ink-400-hover-background, var(--action-background-hover));
-		--button-internal-action-hover-border: var(--button-action-ink-400-hover-border, var(--action-border-hover));
-		--button-internal-action-hover-text: var(--button-action-ink-400-hover-text, var(--action-foreground-hover));
+	&[data-color='info'] {
+		--button-internal-background: var(--button-info-background, var(--bg-aqua-500));
+		--button-internal-solid-foreground: var(--button-info-solid-foreground, var(--text-ink-500));
+		--button-internal-hover-background: var(--button-info-hover-background, var(--bg-aqua-400));
+		--button-internal-link-foreground: var(--button-info-link-foreground, var(--bg-aqua-400));
+		--button-internal-link-hover-foreground: var(--button-info-link-hover-foreground, var(--bg-aqua-500));
 	}
 
-	&[data-background='vanilla-100'] {
-		--button-internal-action-background: var(--button-action-vanilla-100-background, var(--action-background));
-		--button-internal-action-border: var(--button-action-vanilla-100-border, var(--action-border));
-		--button-internal-action-text: var(--button-action-vanilla-100-text, var(--action-foreground));
-		--button-internal-action-hover-background: var(--button-action-vanilla-100-hover-background, var(--action-background-hover));
-		--button-internal-action-hover-border: var(--button-action-vanilla-100-hover-border, var(--action-border-hover));
-		--button-internal-action-hover-text: var(--button-action-vanilla-100-hover-text, var(--action-foreground-hover));
+	&[data-color='archive'] {
+		--button-internal-background: var(--button-archive-background, var(--bg-sienna-500));
+		--button-internal-solid-foreground: var(--button-archive-solid-foreground, var(--text-ink-500));
+		--button-internal-hover-background: var(--button-archive-hover-background, var(--bg-sienna-400));
+		--button-internal-link-foreground: var(--button-archive-link-foreground, var(--bg-sienna-400));
+		--button-internal-link-hover-foreground: var(--button-archive-link-hover-foreground, var(--bg-sienna-500));
 	}
 
-	&[data-background='vanilla-200'] {
-		--button-internal-action-background: var(--button-action-vanilla-200-background, var(--action-background));
-		--button-internal-action-border: var(--button-action-vanilla-200-border, var(--action-border));
-		--button-internal-action-text: var(--button-action-vanilla-200-text, var(--action-foreground));
-		--button-internal-action-hover-background: var(--button-action-vanilla-200-hover-background, var(--action-background-hover));
-		--button-internal-action-hover-border: var(--button-action-vanilla-200-hover-border, var(--action-border-hover));
-		--button-internal-action-hover-text: var(--button-action-vanilla-200-hover-text, var(--action-foreground-hover));
+	&[data-color='highlight-danger'] {
+		--button-internal-background: var(--button-highlight-danger-background, var(--bg-sakura-500));
+		--button-internal-solid-foreground: var(--button-highlight-danger-solid-foreground, var(--text-ink-500));
+		--button-internal-hover-background: var(--button-highlight-danger-hover-background, var(--bg-sakura-400));
+		--button-internal-link-foreground: var(--button-highlight-danger-link-foreground, var(--bg-sakura-400));
+		--button-internal-link-hover-foreground: var(--button-highlight-danger-link-hover-foreground, var(--bg-sakura-500));
+	}
+
+	&:focus-visible {
+		outline-offset: var(--button-focus-visible-outline-offset, 1px);
+		outline: var(--button-focus-visible-outline, var(--ring) solid 1px);
+	}
+
+	&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
+		background-color: var(--button-hover-state-background-color, var(--button-internal-hover-background));
+	}
+
+	&:disabled:not([aria-busy="true"]),
+	&[aria-disabled="true"]:not([aria-busy="true"]) {
+		opacity: var(--button-disabled-opacity, 0.6);
+		cursor: var(--button-disabled-cursor, not-allowed);
+	}
+
+	&[aria-busy="true"] {
+		opacity: var(--button-loading-opacity, 1);
+		cursor: var(--button-loading-cursor, wait);
+	}
+
+	&__suffix-slot {
+		display: contents;
+	}
+
+	&__label {
+		display: var(--button-label-display, block);
+		min-width: var(--button-label-min-width, 0);
+		overflow: var(--button-label-overflow, hidden);
+		white-space: var(--button-label-white-space, nowrap);
+
+		&-tooltip {
+			max-width: var(--button-label-tooltip-max-width, 20rem);
+		}
+	}
+
+	&[data-text-overflow='ellipsis'] .button__label {
+		text-overflow: var(--button-label-text-overflow, ellipsis);
+	}
+
+	&[data-variant='outlined'] {
+		border: var(--button-variant-outlined-border, 1px solid var(--secondary-border));
+		background-color: var(--button-variant-outlined-background-color, var(--secondary-background));
+		color: var(--button-variant-outlined-color, var(--secondary-foreground));
+
+		&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
+			background-color: var(--button-variant-outlined-hover-background-color, var(--secondary-background-hover));
+			color: var(--button-variant-outlined-hover-color, var(--secondary-foreground-hover));
+		}
+
+		&[aria-disabled="true"]:not([aria-busy="true"]) {
+			position: var(--button-variant-outlined-disabled-position, relative);
+			// Keeps the stripe bands inside the border radius.
+			overflow: var(--button-variant-outlined-disabled-overflow, hidden);
+
+			.button__prefix-wrapper,
+			.button__label,
+			.button__suffix {
+				position: var(--button-variant-outlined-disabled-content-position, relative);
+				z-index: var(--button-variant-outlined-disabled-content-z-index, 2);
+			}
+
+			&::before,
+			&::after {
+				content: var(--button-variant-outlined-disabled-stripe-content, "");
+				position: var(--button-variant-outlined-disabled-stripe-position, absolute);
+				top: var(--button-variant-outlined-disabled-stripe-top, 0);
+				bottom: var(--button-variant-outlined-disabled-stripe-bottom, 0);
+				width: var(--button-variant-outlined-disabled-stripe-width, 16px);
+				background-image: var(--button-variant-outlined-disabled-stripe-background-image,
+						repeating-linear-gradient(-45deg,
+								transparent,
+								transparent 3px,
+								var(--button-variant-outlined-disabled-stripe-color, var(--secondary-border)) 2px,
+								var(--button-variant-outlined-disabled-stripe-color, var(--secondary-border)) 5px));
+				z-index: var(--button-variant-outlined-disabled-stripe-z-index, 1);
+				pointer-events: var(--button-variant-outlined-disabled-stripe-pointer-events, none);
+			}
+
+			&::before {
+				left: var(--button-variant-outlined-disabled-stripe-before-left, 0);
+				mask-image: var(--button-variant-outlined-disabled-stripe-before-mask-image,
+						linear-gradient(to left, transparent 5%, black 100%));
+			}
+
+			&::after {
+				right: var(--button-variant-outlined-disabled-stripe-after-right, 0);
+				mask-image: var(--button-variant-outlined-disabled-stripe-after-mask-image,
+						linear-gradient(to right, transparent 5%, black 100%));
+			}
+		}
+	}
+
+	&[data-variant='dashed'] {
+		border: var(--button-variant-dashed-border, 1px solid transparent);
+		background-color: var(--button-variant-dashed-background-color, transparent);
+		color: var(--button-variant-dashed-color, var(--secondary-foreground));
+		position: var(--button-variant-dashed-position, relative);
+
+		--button-internal-dash-border-width: var(--button-dash-border-width, 1px);
+		--button-internal-dash-stroke-width: var(--button-dash-stroke-width, 1px);
+		--button-internal-dash-length: var(--button-dash-length, 3px);
+		--button-internal-dash-gap: var(--button-dash-gap, 3px);
+		--button-internal-dash-duration: var(--button-dash-duration, 200ms);
+		--button-internal-dash-stroke: var(--button-dash-stroke, var(--secondary-border));
+
+		&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
+			background-color: var(--button-variant-dashed-hover-background-color, transparent);
+			color: var(--button-variant-dashed-hover-color, var(--secondary-foreground-hover));
+		}
+
+		&:hover:not([aria-disabled="true"]),
+		&[aria-busy="true"] {
+			--button-internal-dash-stroke: var(--button-dash-hover-stroke,
+			var(--secondary-background-hover));
+		}
+	}
+
+	&__dash-border {
+		--button-internal-dash-offset: calc(var(--button-internal-dash-stroke-width) / 2 - var(--button-internal-dash-border-width));
+		position: absolute;
+		inset-inline-start: var(--button-internal-dash-offset);
+		inset-block-start: var(--button-internal-dash-offset);
+		inline-size: calc(100% - 2 * var(--button-internal-dash-offset));
+		block-size: calc(100% - 2 * var(--button-internal-dash-offset));
+		overflow: visible;
+		pointer-events: none;
+
+		rect {
+			fill: none;
+			stroke: var(--button-internal-dash-stroke);
+			stroke-width: var(--button-internal-dash-stroke-width);
+			stroke-dasharray: var(--button-internal-dash-length) var(--button-internal-dash-gap);
+			rx: var(--button-internal-border-radius);
+			ry: var(--button-internal-border-radius);
+			transition: stroke 150ms ease;
+			animation: button-dash-march var(--button-internal-dash-duration) linear infinite;
+			animation-play-state: paused;
+		}
+	}
+
+	&[data-variant='ghost'] {
+		background-color: var(--button-variant-ghost-background-color, transparent);
+		color: var(--button-variant-ghost-color, var(--secondary-foreground));
+		position: var(--button-variant-ghost-position, relative);
+		overflow: var(--button-variant-ghost-overflow, hidden);
+
+		// on light, this used to be 12%, but since this is not controlled by semantic token
+		// I will keep as smooth as possible for any theme
+		--button-internal-ghost-glow-opacity: var(--button-ghost-glow-opacity, 22%);
+
+		 .button__prefix-wrapper,
+		 .button__label,
+		 .button__suffix {
+			position: relative;
+			z-index: var(--button-ghost-content-z-index, 1);
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			inset: var(--button-ghost-glow-inset, -4px);
+			z-index: var(--button-ghost-glow-z-index, 0);
+			pointer-events: none;
+			opacity: 0;
+			filter: blur(var(--button-ghost-glow-blur, 6px));
+			background: var(--button-ghost-glow-background,
+			linear-gradient(90deg,
+							color-mix(in srgb, var(--bg-cherry-400) var(--button-internal-ghost-glow-opacity), transparent),
+							color-mix(in srgb, var(--bg-amber-500) var(--button-internal-ghost-glow-opacity), transparent),
+							color-mix(in srgb, var(--bg-forest-400) var(--button-internal-ghost-glow-opacity), transparent),
+							color-mix(in srgb, var(--bg-aqua-400) var(--button-internal-ghost-glow-opacity), transparent),
+							color-mix(in srgb, var(--bg-robin-400) var(--button-internal-ghost-glow-opacity), transparent),
+							color-mix(in srgb, var(--bg-cherry-400) var(--button-internal-ghost-glow-opacity), transparent)));
+			// Twice the width so the gradient can slide a full period and wrap on itself.
+			background-size: var(--button-ghost-glow-background-size, 200% 100%);
+			transition: opacity var(--button-ghost-glow-fade, 600ms ease);
+			animation: button-ghost-shimmer var(--button-ghost-glow-duration, 2.5s) linear infinite;
+			animation-play-state: paused;
+		}
+
+		&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
+			background-color: var(--button-variant-ghost-hover-background-color, var(--secondary-background-hover));
+			color: var(--button-variant-ghost-hover-color, var(--secondary-foreground-hover));
+		}
+
+		&:active:not([aria-disabled="true"])::before,
+		&[aria-busy="true"]::before {
+			opacity: var(--button-ghost-glow-active-opacity, 1);
+			animation-play-state: running;
+		}
+	}
+
+	&[data-variant='link'] {
+		background-color: var(--button-variant-link-background-color, transparent);
+		font-weight: var(--button-variant-link-font-weight, var(--font-weight-medium));
+		color: var(--button-variant-link-color, var(--button-internal-link-foreground));
+
+		&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
+			background-color: var(--button-variant-link-hover-background-color, transparent);
+			color: var(--button-variant-link-hover-color, var(--button-internal-link-hover-foreground));
+		}
+	}
+
+	&[data-size='sm'] {
+		height: var(--button-height, 24px);
+		font-size: var(--button-font-size, var(--periscope-font-size-small));
+		line-height: var(--button-size-line-height, 14px);
+
+		--button-internal-icon-size: var(--button-icon-size, 12px);
+		--button-internal-gap: var(--spacing-3);
+
+		&:not([data-variant="link"]) {
+			&[data-icon="false"] {
+				padding: var(--button-padding, var(--spacing-2) var(--spacing-4));
+			}
+
+			&[data-icon="true"] {
+				padding: var(--button-padding, var(--spacing-2));
+				--button-internal-icon-size: var(--button-icon-size, 14px);
+				--button-internal-width: 24px;
+				--button-internal-max-width: 24px;
+			}
+		}
+	}
+
+	&[data-size='md'] {
+		height:  var(--button-height, 32px);
+		font-size: var(--button-font-size, var(--periscope-font-size-base));
+		line-height: var(--button-size-line-height, 16px);
+
+		--button-internal-icon-size: var(--button-icon-size, 14px);
+		--button-internal-gap: var(--spacing-3);
+
+		&:not([data-variant="link"]) {
+			&[data-icon="false"] {
+				padding: var(--button-padding, var(--spacing-4) var(--spacing-6));
+			}
+
+			&[data-icon="true"] {
+				padding: var(--button-padding, var(--spacing-4));
+				--button-internal-icon-size: var(--button-icon-size, 16px);
+				--button-internal-width: 32px;
+				--button-internal-max-width: 32px;
+			}
+		}
 	}
 }
 
-.button:focus-visible {
-	outline-offset: var(--button-focus-visible-outline-offset, 2px);
-	outline: var(--button-focus-visible-outline, var(--ring) solid 2px);
-}
-
-.button:hover {
-	background-color: var(--button-internal-hover-state-background-color, var(--button-internal-hover-background));
-}
-
-.button:disabled {
-	pointer-events: var(--button-disabled-pointer-events, none);
-	opacity: var(--button-disabled-opacity, 0.6);
-}
-
-.button--loading {
-	cursor: var(--button-loading-cursor, wait);
-}
-
-.button[data-variant='outlined'] {
-	border: var(--button-variant-outlined-border, 1px solid var(--button-internal-border-color));
-	background-color: var(--button-variant-outlined-background-color, transparent);
-	color: var(--button-variant-outlined-color, var(--button-internal-outlined-foreground));
-}
-
-.button[data-variant='outlined']:hover {
-	background-color: var(--button-variant-outlined-hover-background-color,
-			var(--button-internal-border-color));
-	color: var(--button-variant-outlined-hover-color, var(--button-internal-solid-foreground));
-}
-
-.button[data-variant='dashed'] {
-	border: var(--button-variant-dashed-border, 1px dashed var(--button-internal-border-color));
-	background-color: var(--button-variant-dashed-background-color, transparent);
-	color: var(--button-variant-dashed-color, var(--button-internal-outlined-foreground));
-}
-
-.button[data-variant='dashed']:hover {
-	background-color: var(--button-variant-dashed-hover-background-color,
-			var(--button-internal-border-color));
-	color: var(--button-variant-dashed-hover-color, var(--button-internal-solid-foreground));
-}
-
-.button[data-variant='ghost'] {
-	background-color: var(--button-variant-ghost-background-color, transparent);
-	color: var(--button-variant-ghost-color, var(--button-internal-outlined-foreground));
-}
-
-.button[data-variant='ghost']:hover {
-	background-color: var(--button-variant-ghost-hover-background-color, var(--button-internal-hover-background));
-	color: var(--button-variant-ghost-hover-color, var(--button-internal-solid-foreground));
-}
-
-.button[data-variant='link'] {
-	background-color: var(--button-variant-link-background-color, transparent);
-	font-weight: var(--button-variant-link-font-weight, 500);
-	color: var(--button-variant-link-color, var(--button-internal-outlined-foreground));
-}
-
-.button[data-variant='link']:hover {
-	background-color: var(--button-variant-link-hover-background-color, transparent);
-	color: var(--button-variant-link-hover-color, var(--button-internal-link-hover-foreground));
-}
-
-.button[data-variant='action'] {
-	border: var(--button-variant-action-border, 1px solid var(--button-internal-action-border));
-	background-color: var(--button-variant-action-background-color, var(--button-internal-action-background));
-	color: var(--button-variant-action-color, var(--button-internal-action-text));
-}
-
-.button[data-variant='action']:hover {
-	background-color: var(--button-variant-action-hover-background-color,
-			var(--button-internal-action-hover-background));
-	border-color: var(--button-variant-action-hover-border-color, var(--button-internal-action-hover-border));
-	color: var(--button-variant-action-hover-color, var(--button-internal-action-hover-text));
-}
-
-.button[data-size='sm'] {
-	height: var(--button-height, 1.5rem);
-	font-size: var(--button-font-size, var(--periscope-font-size-small, 11px));
-	line-height: var(--button-size-sm-line-height, 1.5rem);
-	gap: var(--button-gap, var(--spacing-3, 0.375rem));
-
-	&:not([data-variant="link"]) {
-		padding: var(--button-padding, var(--spacing-3, 0.375rem) var(--spacing-4, 0.5rem));
-	}
-}
-
-.button[data-size='md'] {
-	height: var(--button-height, 2rem);
-	font-size: var(--button-font-size, var(--periscope-font-size-small, 11px));
-	gap: var(--button-gap, var(--spacing-4, 0.5rem));
-
-	&:not([data-variant="link"]) {
-		padding: var(--button-padding, var(--spacing-5, 0.625rem) var(--spacing-8, 1rem));
-	}
-}
-
-.button[data-size='icon'] {
-	height: var(--button-height, 2rem);
-	width: var(--button-width, 2rem);
-	font-size: var(--button-font-size, var(--periscope-font-size-small, 11px));
-	gap: var(--button-gap, var(--spacing-4, 0.5rem));
-
-	&:not([data-variant="link"]) {
-		padding: var(--button-padding, var(--spacing-4, 0.5rem));
-	}
-}
-
-.button__loader {
-	flex-shrink: var(--button-loader-flex-shrink, 0);
+.button[data-variant='dashed']:hover:not([aria-disabled="true"]) .button__dash-border rect,
+.button[data-variant='dashed'][aria-busy="true"] .button__dash-border rect {
+	animation-play-state: running;
 }
 
 .button__prefix,
-.button__suffix {
+.button__prefix > svg,
+.button__suffix,
+.button__suffix > svg {
 	flex-shrink: var(--button-affix-flex-shrink, 0);
+	inline-size: var(--button-internal-icon-size);
+	block-size: var(--button-internal-icon-size);
 }
 
-.animate-fast-spin {
-	--button-internal-animation-name: spin;
-	animation: var(--button-animate-fast-spin, var(--button-internal-animation-name) 0.7s linear infinite);
+.button__prefix-wrapper {
+	display: var(--button-prefix-wrapper-display, grid);
+	grid-template-columns: var(--button-prefix-wrapper-grid-template-columns, 1fr);
+	block-size: var(--button-prefix-wrapper-block-size, var(--button-internal-icon-size));
+	align-items: var(--button-prefix-wrapper-align-items, center);
+	justify-items: var(--button-prefix-wrapper-justify-items, center);
+	flex-shrink: var(--button-prefix-wrapper-flex-shrink, 0);
+	overflow: var(--button-prefix-wrapper-overflow, hidden);
+	transition: var(--button-prefix-wrapper-transition,
+			grid-template-columns var(--button-internal-loading-duration) var(--button-internal-loading-easing),
+			margin-inline-end var(--button-internal-loading-duration) var(--button-internal-loading-easing));
+	// Opening up for the spinner is the first beat of the sequence.
+	transition-delay: 0s;
 }
 
-@keyframes spin {
+.button:not([aria-busy="true"]) .button__prefix-wrapper[data-empty='true'] {
+	grid-template-columns: var(--button-prefix-wrapper-collapsed-grid-template-columns, 0fr);
+	margin-inline-end: var(--button-prefix-wrapper-collapsed-margin-inline-end, calc(-1 * var(--button-internal-gap)));
+	// Closing back up is the last beat: wait for the spinner to leave first.
+	transition-delay: var(--button-internal-loading-delay);
+}
+
+.button__prefix-slot,
+.button__loader-slot {
+	grid-area: 1 / 1;
+	display: var(--button-slot-display, flex);
+	align-items: var(--button-slot-align-items, center);
+	justify-content: var(--button-slot-justify-content, center);
+	min-width: var(--button-slot-min-width, 0);
+	transition: var(--button-slot-transition,
+			opacity var(--button-internal-loading-duration) var(--button-internal-loading-easing),
+			transform var(--button-internal-loading-duration) var(--button-internal-loading-easing));
+}
+
+.button__prefix-slot {
+	opacity: var(--button-prefix-slot-visible-opacity, 1);
+	transform: var(--button-prefix-slot-visible-transform, translateY(0));
+	transition-delay: var(--button-internal-loading-delay);
+}
+
+.button__loader-slot {
+	// The ring sizes itself off the button's icon size, no shared stylesheet.
+	--spinner-size: var(--button-internal-icon-size);
+	opacity: var(--button-loader-slot-hidden-opacity, 0);
+	transform: var(--button-loader-slot-hidden-transform,
+			translateY(var(--button-internal-loading-travel)));
+	transition-delay: 0s;
+}
+
+// The spinner stays mounted for the cross-fade, so the ring is frozen while the
+// button is idle instead of turning behind an invisible slot.
+.button:not([aria-busy="true"]) .button__loader-slot [data-slot='spinner'] {
+	animation-play-state: var(--button-loader-slot-idle-animation-play-state, paused);
+}
+
+.button[aria-busy="true"] {
+	.button__prefix-slot {
+		opacity: var(--button-prefix-slot-hidden-opacity, 0);
+		transform: var(--button-prefix-slot-hidden-transform,
+				translateY(calc(-1 * var(--button-internal-loading-travel))));
+		transition-delay: 0s;
+	}
+
+	.button__loader-slot {
+		opacity: var(--button-loader-slot-visible-opacity, 1);
+		transform: var(--button-loader-slot-visible-transform, translateY(0));
+		transition-delay: var(--button-internal-loading-delay);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.button__prefix-wrapper,
+	.button:not([aria-busy="true"]) .button__prefix-wrapper[data-empty='true'],
+	.button__prefix-slot,
+	.button__loader-slot {
+		transition-duration: 0s;
+		transition-delay: 0s;
+	}
+
+	.button[data-variant='dashed']:hover:not([aria-disabled="true"]) .button__dash-border rect,
+	.button[data-variant='dashed'][aria-busy="true"] .button__dash-border rect,
+	.button[data-variant='ghost']:active:not([aria-disabled="true"])::before,
+	.button[data-variant='ghost'][aria-busy="true"]::before {
+		animation-play-state: paused;
+	}
+
+	.button[data-variant='ghost']::before {
+		transition-duration: 0s;
+	}
+}
+
+// Travels exactly one dash + gap, so the end state is pixel-identical to the
+// start and the loop never shows a seam. Counts down to 0 rather than into the
+// negatives, which SVG 1.1 called an error.
+@keyframes button-dash-march {
+	from {
+		stroke-dashoffset: calc(var(--button-internal-dash-length) + var(--button-internal-dash-gap));
+	}
+
 	to {
-		transform: var(--button-spin-transform, rotate(360deg));
+		stroke-dashoffset: 0;
+	}
+}
+
+@keyframes button-ghost-shimmer {
+	from {
+		background-position: 0% 50%;
+	}
+
+	to {
+		background-position: 200% 50%;
 	}
 }

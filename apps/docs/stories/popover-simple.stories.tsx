@@ -27,7 +27,7 @@ export const Default: Story = {
 		<PopoverSimple
 			{...args}
 			trigger={
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open popover
 				</Button>
 			}

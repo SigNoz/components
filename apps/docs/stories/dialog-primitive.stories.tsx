@@ -47,7 +47,7 @@ export const Default: Story = {
 				}}
 			>
 				<DialogTrigger asChild>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open dialog
 					</Button>
 				</DialogTrigger>
@@ -67,6 +67,7 @@ export const Default: Story = {
 									variant={ButtonVariant.Ghost}
 									color="secondary"
 									onClick={() => setOpen(false)}
+									size="md"
 								>
 									Cancel
 								</Button>
@@ -74,6 +75,7 @@ export const Default: Story = {
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Primary}
 									onClick={() => setOpen(false)}
+									size="md"
 								>
 									Confirm
 								</Button>

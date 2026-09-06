@@ -180,7 +180,13 @@ export const Dialog: Story = {
 		return (
 			<>
 				<div className={styles.buttonWrapper}>
-					<Button type="button" variant="solid" onClick={() => handleOpenChange(true)}>
+					<Button
+						type="button"
+						variant="solid"
+						onClick={() => handleOpenChange(true)}
+						size="md"
+						color="primary"
+					>
 						Open Command Dialog
 					</Button>
 				</div>

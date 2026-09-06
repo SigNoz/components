@@ -979,11 +979,14 @@ export function DataTable<TData, TValue>({
 							<Button
 								type="button"
 								variant="ghost"
-								color="none"
-								size="icon"
+								color="secondary"
+								size="md"
+								icon
+								aria-label="Clear search"
 								onClick={() => setGlobalFilter('')}
-								suffix={<X />}
-							/>
+							>
+								<X />
+							</Button>
 						)
 					}
 				/>
@@ -1189,10 +1192,14 @@ export function DataTable<TData, TValue>({
 																	<Button
 																		type="button"
 																		variant="ghost"
-																		color="none"
+																		color="secondary"
+																		size="md"
+																		icon
+																		aria-label="Clear filter"
 																		onClick={() => column.setFilterValue('')}
-																		suffix={<X />}
-																	/>
+																	>
+																		<X />
+																	</Button>
 																) : null
 															}
 														/>

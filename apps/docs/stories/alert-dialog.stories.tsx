@@ -113,7 +113,12 @@ export const Default: Story = {
 				checkboxChecked={checked}
 				onCheckboxChange={setChecked}
 				trigger={
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} prefix={<Code />}>
+					<Button
+						variant={ButtonVariant.Solid}
+						color={ButtonColor.Primary}
+						prefix={<Code />}
+						size="md"
+					>
 						Open alert dialog
 					</Button>
 				}
@@ -124,14 +129,16 @@ export const Default: Story = {
 							color="secondary"
 							prefix={<X />}
 							onClick={() => setOpen(false)}
+							size="md"
 						>
 							Cancel
 						</Button>
 						<Button
 							variant={ButtonVariant.Solid}
-							color="destructive"
+							color="danger"
 							prefix={<Trash2 />}
 							onClick={() => setOpen(false)}
+							size="md"
 						>
 							Delete Step
 						</Button>

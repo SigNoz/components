@@ -22,7 +22,7 @@ export const Default: Story = {
 		children: 'Are you sure you want to proceed? This action cannot be undone.',
 		cancelText: 'Cancel',
 		confirmText: 'Confirm',
-		confirmColor: 'destructive',
+		confirmColor: 'danger',
 		width: 'narrow',
 	},
 	render: (args) => {
@@ -34,6 +34,7 @@ export const Default: Story = {
 					variant={ButtonVariant.Solid}
 					color={ButtonColor.Primary}
 					onClick={() => setOpen(true)}
+					size="md"
 				>
 					Open confirm dialog
 				</Button>
