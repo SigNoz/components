@@ -1,7 +1,7 @@
 import { ChevronDown, LoaderCircle, X } from '@signozhq/icons';
 import * as React from 'react';
 import { cn } from '../../../lib/utils.js';
-import { TooltipProvider } from '../../../tooltip/index.js';
+import { TooltipProviderIfMissing } from '../../../tooltip/subcomponents/tooltip-provider';
 import styles from '../../combobox.module.scss';
 import { ComboboxCommand } from '../../subcomponents/combobox-command.js';
 import { ComboboxContent } from '../../subcomponents/combobox-content.js';
@@ -121,7 +121,8 @@ export type ComboboxSimpleProps = {
 	maxDisplayedPills?: number;
 	/**
 	 * Disable the internal TooltipProvider wrapper.
-	 * Set to true when ComboboxSimple is already inside a TooltipProvider.
+	 * @deprecated An outer `TooltipProvider` is detected on its own now, so this
+	 * no longer has to be set.
 	 * @default false
 	 */
 	disableTooltipProvider?: boolean;
@@ -344,7 +345,7 @@ const ComboboxSimpleInner = React.forwardRef<
 			[isVirtualized, renderTree],
 		);
 
-		const Wrapper = disableTooltipProvider ? React.Fragment : TooltipProvider;
+		const Wrapper = disableTooltipProvider ? React.Fragment : TooltipProviderIfMissing;
 
 		const dropdownContent = (
 			<ComboboxContent withPortal={withPortal}>

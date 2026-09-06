@@ -5,29 +5,36 @@
  *
  * | Token | Default |
  * |-------|---------|
- * | `--tooltip-arrow-border-radius` | `2px` |
- * | `--tooltip-arrow-height` | `10px` |
- * | `--tooltip-arrow-width` | `10px` |
- * | `--tooltip-background` | `var(--l2-background)` |
- * | `--tooltip-border-color` | `var(--l2-border)` |
- * | `--tooltip-border-radius` | `calc(var(--radius-sm) - 4px)` |
+ * | `--tooltip-backdrop-filter` | `blur(30px)` |
+ * | `--tooltip-background` | `var(--surface-3)` |
+ * | `--tooltip-border-color` | `var(--l3-border)` |
+ * | `--tooltip-border-radius` | `var(--radius-1)` |
  * | `--tooltip-border-style` | `solid` |
  * | `--tooltip-border-width` | `1px` |
- * | `--tooltip-box-shadow` | `0 6px 12px 0 rgba(0, 0, 0, 0.2)` |
- * | `--tooltip-font-size` | `var(--periscope-font-size-small)` |
+ * | `--tooltip-box-shadow` | `var(--shadow-tooltip)` |
+ * | `--tooltip-divider-background` | `var(--l2-border)` |
+ * | `--tooltip-divider-block-size` | `1px` |
+ * | `--tooltip-divider-margin-inline` | `calc(-1 * var(--spacing-4))` |
+ * | `--tooltip-font-size` | `var(--periscope-font-size-base)` |
+ * | `--tooltip-font-weight` | `var(--periscope-font-weight-regular)` |
  * | `--tooltip-foreground` | `var(--l1-foreground)` |
- * | `--tooltip-letter-spacing` | `-0.06px` |
- * | `--tooltip-line-height` | `18px` |
+ * | `--tooltip-line-height` | `var(--periscope-line-height-base)` |
+ * | `--tooltip-max-height` | `8.5rem` |
+ * | `--tooltip-max-lines` | `6` |
+ * | `--tooltip-max-width` | `26.25rem` |
+ * | `--tooltip-overflow` | `hidden` |
  * | `--tooltip-padding` | `var(--spacing-2) var(--spacing-4)` |
+ * | `--tooltip-stack-display` | `flex` |
+ * | `--tooltip-stack-flex-direction` | `column` |
+ * | `--tooltip-stack-gap` | `var(--spacing-2)` |
+ * | `--tooltip-text-align` | `start` |
  * | `--tooltip-text-wrap` | `balance` |
- * | `--tooltip-transform-origin` | `var(--radix-tooltip-content-transform-origin)` |
  * | `--tooltip-width` | `fit-content` |
  * | `--tooltip-z-index` | `50` |
  */
 // #endregion css-tokens
 
-export { TooltipSimple, type TooltipSimpleProps } from './presets/tooltip-simple.js';
-export { TooltipContent, type TooltipContentProps } from './subcomponents/tooltip-content.js';
+export { Tooltip } from './presets/tooltip.js';
+export { type TooltipProps } from './types.js';
 export { TooltipProvider, type TooltipProviderProps } from './subcomponents/tooltip-provider.js';
-export { TooltipRoot, type TooltipRootProps } from './subcomponents/tooltip-root.js';
-export { TooltipTrigger, type TooltipTriggerProps } from './subcomponents/tooltip-trigger.js';
+export { type TooltipContainer } from './tooltip-config-context.js';
