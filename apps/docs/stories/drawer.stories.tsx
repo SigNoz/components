@@ -48,7 +48,7 @@ const DrawerPositionVariant = ({
 			}}
 		>
 			<DrawerTrigger asChild>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					From {direction}
 				</Button>
 			</DrawerTrigger>
@@ -67,6 +67,7 @@ const DrawerPositionVariant = ({
 								variant={ButtonVariant.Ghost}
 								color="secondary"
 								onClick={() => setOpen(false)}
+								size="md"
 							>
 								Cancel
 							</Button>
@@ -74,6 +75,7 @@ const DrawerPositionVariant = ({
 								variant={ButtonVariant.Solid}
 								color={ButtonColor.Primary}
 								onClick={() => setOpen(false)}
+								size="md"
 							>
 								Confirm
 							</Button>
@@ -115,7 +117,7 @@ export const WithoutOverlay: Story = {
 				}}
 			>
 				<DrawerTrigger asChild>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open drawer without overlay
 					</Button>
 				</DrawerTrigger>
@@ -135,6 +137,7 @@ export const WithoutOverlay: Story = {
 									variant={ButtonVariant.Ghost}
 									color="secondary"
 									onClick={() => setOpen(false)}
+									size="md"
 								>
 									Cancel
 								</Button>
@@ -142,6 +145,7 @@ export const WithoutOverlay: Story = {
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Primary}
 									onClick={() => setOpen(false)}
+									size="md"
 								>
 									Confirm
 								</Button>

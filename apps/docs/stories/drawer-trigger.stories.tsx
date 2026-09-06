@@ -32,7 +32,7 @@ export const Default: Story = {
 	render: (args) => (
 		<Drawer>
 			<DrawerTrigger {...args}>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open drawer
 				</Button>
 			</DrawerTrigger>

@@ -31,7 +31,7 @@ export const Default: Story = {
 	render: (args) => (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open dialog
 				</Button>
 			</DialogTrigger>
@@ -45,10 +45,10 @@ export const Default: Story = {
 					</Typography>
 				</DialogDescription>
 				<DialogFooter {...args}>
-					<Button variant={ButtonVariant.Ghost} color="secondary">
+					<Button variant={ButtonVariant.Ghost} color="secondary" size="md">
 						Cancel
 					</Button>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Delete
 					</Button>
 				</DialogFooter>

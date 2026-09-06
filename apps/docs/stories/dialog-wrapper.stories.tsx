@@ -32,7 +32,7 @@ export const Default: Story = {
 		<DialogWrapper
 			{...args}
 			trigger={
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open Dialog
 				</Button>
 			}
@@ -41,7 +41,7 @@ export const Default: Story = {
 				<Typography size="sm">Dialog content goes here.</Typography>
 				<div className={styles.flexEnd}>
 					<DialogClose asChild>
-						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 							Save Changes
 						</Button>
 					</DialogClose>

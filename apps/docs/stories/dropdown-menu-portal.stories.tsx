@@ -39,7 +39,7 @@ export const Default: Story = {
 	render: (args) => (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="solid" color="secondary">
+				<Button variant="solid" color="secondary" size="md">
 					Open menu
 				</Button>
 			</DropdownMenuTrigger>

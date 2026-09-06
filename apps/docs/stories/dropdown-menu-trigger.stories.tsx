@@ -47,7 +47,7 @@ export const Default: Story = {
 		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger {...args}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Open menu
 					</Button>
 				</DropdownMenuTrigger>

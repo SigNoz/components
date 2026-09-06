@@ -109,8 +109,10 @@ export const Default: Story = {
 		),
 		footer: (
 			<div className={`story-row ${styles.footerEnd}`}>
-				<Button variant={ButtonVariant.Ghost}>Cancel</Button>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Ghost} size="md" color="secondary">
+					Cancel
+				</Button>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Save
 				</Button>
 			</div>
@@ -128,19 +130,20 @@ export const Default: Story = {
 				open={open}
 				onOpenChange={setOpen}
 				trigger={
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Open drawer
 					</Button>
 				}
 				footer={
 					<div className={`story-row ${styles.footerEnd}`}>
-						<Button variant="ghost" color="none" onClick={() => setOpen(false)}>
+						<Button variant="ghost" color="secondary" onClick={() => setOpen(false)} size="md">
 							Cancel
 						</Button>
 						<Button
 							variant={ButtonVariant.Solid}
 							color={ButtonColor.Primary}
 							onClick={() => setOpen(false)}
+							size="md"
 						>
 							Save
 						</Button>

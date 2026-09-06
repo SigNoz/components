@@ -1,0 +1,79 @@
+import { Meta, Controls, Primary, Stories } from '@storybook/addon-docs/blocks';
+import * as ButtonGroupStories from './button-group.stories';
+
+<Meta of={ButtonGroupStories} />
+
+# ButtonGroup
+
+A segmented cluster of related buttons. It renders `<div role="group">` with deduped internal
+borders and only the outer corners rounded.
+
+## How to use
+
+The group lays its children out in a row and squares off the borders between them. Each button
+carries its own `variant`, `color` and `size`, and the group takes a `variant` and a `color` of
+its own:
+
+```tsx
+import { Button, ButtonGroup } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<ButtonGroup variant="outlined" color="secondary" size="md">
+			<Button variant="outlined" color="secondary" size="md">
+				Day
+			</Button>
+			<Button variant="outlined" color="secondary" size="md">
+				Week
+			</Button>
+			<Button variant="outlined" color="secondary" size="md">
+				Month
+			</Button>
+		</ButtonGroup>
+	);
+}
+```
+
+`variant`, `color` and `size` on the group are mirrored as `data-variant`, `data-color` and
+`data-size`, ready for your own selectors and assertions.
+
+<Primary />
+
+## Mixed appearances
+
+Each member reads its own appearance, so one can differ from the rest:
+
+```tsx
+<ButtonGroup variant="outlined" color="secondary" size="md">
+	<Button variant="outlined" color="secondary" size="md">
+		Approve
+	</Button>
+	<Button variant="outlined" color="secondary" size="md">
+		Hold
+	</Button>
+	<Button variant="solid" color="danger" size="md">
+		Reject
+	</Button>
+</ButtonGroup>
+```
+
+Icon-only members work the same way, each with its own `aria-label`:
+
+```tsx
+import { ChevronLeft, ChevronRight } from '@signozhq/icons';
+
+<ButtonGroup variant="outlined" color="secondary" size="md">
+	<Button variant="outlined" color="secondary" size="md" icon aria-label="Previous">
+		<ChevronLeft />
+	</Button>
+	<Button variant="outlined" color="secondary" size="md" icon aria-label="Next">
+		<ChevronRight />
+	</Button>
+</ButtonGroup>;
+```
+
+## Props
+
+<Controls of={ButtonGroupStories.Default} />
+
+<Stories includePrimary={false} title="Examples" />

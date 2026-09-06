@@ -8,7 +8,13 @@ import {
 	type Formatters,
 	getDefaultClassNames,
 } from 'react-day-picker';
-import { Button, ButtonColor, type ButtonColorValue, buttonVariants } from '../button/index.js';
+import {
+	Button,
+	ButtonColor,
+	type ColorType,
+	buttonVariants,
+	type VariantColorType,
+} from '../button/index.js';
 import { cn } from '../lib/utils.js';
 import styles from './calendar.module.scss';
 
@@ -224,10 +230,33 @@ export function Calendar({
 	);
 }
 
-export type CalendarDayButtonProps = React.ComponentProps<
-	Exclude<typeof DayButton, 'color' | 'suffix' | 'prefix'>
+/**
+ * The `DayButton` props react-day-picker actually passes, which are also the ones `Button`
+ * forwards. Picking them keeps the spread into `Button` type-checked.
+ */
+export type CalendarDayButtonProps = Pick<
+	React.ComponentProps<typeof DayButton>,
+	| 'day'
+	| 'modifiers'
+	| 'children'
+	| 'className'
+	| 'style'
+	| 'type'
+	| 'disabled'
+	| 'tabIndex'
+	| 'aria-label'
+	| 'aria-disabled'
+	| 'onClick'
+	| 'onBlur'
+	| 'onFocus'
+	| 'onKeyDown'
+	| 'onMouseEnter'
+	| 'onMouseLeave'
 > & {
-	color?: ButtonColorValue;
+	/**
+	 * The ghost variant of the day button only renders correctly with the secondary color.
+	 */
+	color?: ColorType | (string & {});
 	suffix?: string;
 	prefix?: string;
 };
@@ -242,6 +271,9 @@ export function CalendarDayButton({
 	modifiers,
 	suffix,
 	prefix,
+	color = ButtonColor.Secondary,
+	disabled,
+	children,
 	...props
 }: CalendarDayButtonProps) {
 	const ref = React.useRef<HTMLButtonElement>(null);
@@ -256,8 +288,10 @@ export function CalendarDayButton({
 	return (
 		<Button
 			ref={ref}
-			variant="ghost"
-			size="icon"
+			// `DayButton` widens `color` to `string`, so the variant/color pair is
+			// re-asserted here.
+			{...({ variant: 'ghost', color } as VariantColorType)}
+			size="md"
 			data-day={dataDay}
 			data-selected-single={
 				modifiers.selected &&
@@ -268,11 +302,14 @@ export function CalendarDayButton({
 			data-range-start={modifiers.range_start}
 			data-range-end={modifiers.range_end}
 			data-range-middle={modifiers.range_middle}
-			color={ButtonColor.None}
+			disabled={disabled ?? false}
+			disabledTooltip={undefined}
 			prefix={prefix ? <>{prefix}</> : undefined}
 			suffix={suffix ? <>{suffix}</> : undefined}
 			className={cn(styles['calendar__day-button'], defaultClassNames.day, className)}
 			{...props}
-		/>
+		>
+			{children}
+		</Button>
 	);
 }
