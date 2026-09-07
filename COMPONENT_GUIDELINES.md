@@ -536,6 +536,37 @@ loading?: boolean;
   works when `children` is a string" is useful; "a boolean" is not.
 - Component-level JSDoc on exported helpers and contexts too (see `ButtonGroupContext`).
 
+### Component-level JSDoc
+
+The block on the exported component is the one page a consumer or an agent gets before reading
+the source. It documents behaviour the prop list cannot show: what the component does on its
+own, what two props do together, and what will surprise the reader. `Button` and `Tooltip` are
+the reference blocks. Same skeleton, same order, sections dropped when the component has
+nothing to put in them:
+
+1. **One opening sentence**: what it renders, and the primitive behind it.
+   `Renders a native <button> (Base UI Button).`
+2. **What is forwarded**, when the component passes props through to a DOM node.
+3. **The theming line**, verbatim shape:
+   ``Visual values are `--x-*` custom properties, defaults in the `css-tokens` region of
+   [./index.ts](./index.ts).``
+4. **Accessibility**, when the component decides something for the consumer, or needs
+   something from them (`icon` mode needs an `aria-label`; the spinner has no role of its own).
+5. **One `###` section per behaviour that is not obvious from the props.** Title it after the
+   thing, not the prop (`### Disabled and loading`, `### Stacking`, `### Width`). Cross-prop
+   interactions, gotchas that cost someone an hour, and how it behaves inside another component
+   all live here.
+6. **`### Asserting on it`**: where `testId` lands, then a table of the root data attributes
+   and a table of the `data-slot`s with when each is rendered. Say to use those, never the
+   hashed class names.
+7. **`@example` blocks**, most common usage first, one per distinct shape. A one-line `//`
+   comment on the later ones saying what they add.
+
+Write it in short declarative sentences, one idea per paragraph, blank line between them. State
+the consequence as its own sentence (`So the button stays tabbable`, `So the off switch is the
+title itself`). Reach for a table whenever the content is a mapping. No bold for emphasis, no
+selling, and nothing the types already say.
+
 ### The generated CSS token table
 
 `pnpm run tokens` writes it into `index.ts`. This is how consumers and agents discover the
