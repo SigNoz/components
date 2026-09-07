@@ -20,6 +20,14 @@
 		},
 		"clean": {
 			"cache": false
+		},
+		"test": {
+			"cache": false,
+			// The docs storybook tests import the built `@signozhq/ui` output.
+			"dependsOn": ["^build"],
+			// The Playwright container image points browsers at /ms-playwright; strict
+			// env mode would otherwise hide it and Playwright would look under $HOME.
+			"passThroughEnv": ["PLAYWRIGHT_BROWSERS_PATH"]
 		}
 	}
 }
