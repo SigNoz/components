@@ -22,6 +22,14 @@ export default mergeConfig(
 					],
 					test: {
 						name: 'storybook',
+						// Every story file runs in its own iframe. Chromium does not reliably
+						// collect the detached iframes between files, and under CPU pressure
+						// (CI) the renderer eventually drops its network connections, which
+						// Vitest reports as "Browser connection was closed while running
+						// tests". Vitest only forces a Chromium GC between files when the free
+						// disk space is below VITEST_CHROMIUM_GC_DISK_THRESHOLD_GB, so the
+						// `test` script sets that threshold above any disk size to force it
+						// after every file. See https://github.com/vitest-dev/vitest/issues/9437
 						browser: {
 							enabled: true,
 							provider: playwright({}),
