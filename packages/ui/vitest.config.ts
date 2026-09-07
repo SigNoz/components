@@ -20,5 +20,10 @@ export default defineConfig({
 		include: ['src/**/*.test.{ts,tsx}'],
 		setupFiles: ['./vitest.setup.ts'],
 		globals: true,
+		typecheck: {
+			enabled: true,
+			include: ['src/**/*.test-d.{ts,tsx}'],
+			tsconfig: './tsconfig.json',
+		},
 	},
 });
