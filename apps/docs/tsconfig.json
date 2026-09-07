@@ -1,5 +1,10 @@
 {
 	"extends": "@repo/typescript-config/react-library.json",
+	"compilerOptions": {
+		"paths": {
+			"@signozhq/ui": ["../../packages/ui/src/index.ts"]
+		}
+	},
 	"include": ["."],
 	"exclude": ["dist", "build", "node_modules"]
 }
