@@ -169,7 +169,8 @@ export const Simple: Story = {
 								<TableCell className="capitalize">{user.role}</TableCell>
 								<TableCell>
 									<Badge
-										variant="outline"
+										variant="outlined"
+										color="secondary"
 										className={
 											user.status === 'active'
 												? 'bg-green-100 text-green-800'
@@ -225,7 +226,8 @@ export const Enhanced: Story = {
 								<TableCell className="text-sm">{user.department}</TableCell>
 								<TableCell>
 									<Badge
-										variant="outline"
+										variant="outlined"
+										color="secondary"
 										className={
 											user.role === 'admin'
 												? 'bg-purple-100 text-purple-800 border-purple-200'
@@ -243,7 +245,8 @@ export const Enhanced: Story = {
 										{user.status === 'inactive' && <CircleX className="h-4 w-4 text-red-600" />}
 										{user.status === 'pending' && <Clock className="h-4 w-4 text-yellow-600" />}
 										<Badge
-											variant="outline"
+											variant="outlined"
+											color="secondary"
 											className={
 												user.status === 'active'
 													? 'bg-green-100 text-green-800 border-green-200'
@@ -320,7 +323,8 @@ export const WithCaption: Story = {
 								<TableCell className="capitalize">{user.role}</TableCell>
 								<TableCell>
 									<Badge
-										variant="outline"
+										variant="outlined"
+										color="secondary"
 										className={
 											user.status === 'active'
 												? 'bg-green-100 text-green-800'
@@ -417,7 +421,9 @@ export const Compact: Story = {
 									</div>
 								</TableCell>
 								<TableCell>
-									<Badge className="text-xs capitalize">{user.role}</Badge>
+									<Badge variant="outlined" color="secondary" className="text-xs capitalize">
+										{user.role}
+									</Badge>
 								</TableCell>
 								<TableCell>
 									{user.status === 'active' && <CircleCheck className="h-4 w-4 text-green-600" />}
@@ -462,7 +468,8 @@ export const WithFixedHeight: Story = {
 								<TableCell>{user.department}</TableCell>
 								<TableCell>
 									<Badge
-										variant="outline"
+										variant="outlined"
+										color="secondary"
 										className={
 											user.status === 'active'
 												? 'bg-green-100 text-green-800'
@@ -489,7 +496,11 @@ export const WithFixedHeight: Story = {
 								<TableCell className="capitalize">{user.role}</TableCell>
 								<TableCell>{user.department}</TableCell>
 								<TableCell>
-									<Badge variant="outline" className="bg-green-100 text-green-800">
+									<Badge
+										variant="outlined"
+										color="secondary"
+										className="bg-green-100 text-green-800"
+									>
 										{user.status}
 									</Badge>
 								</TableCell>

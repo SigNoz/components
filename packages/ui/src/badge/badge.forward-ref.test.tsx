@@ -7,7 +7,11 @@ import { Badge } from './index.js';
 describe('Badge forwardRef', () => {
 	it('forwards ref', () => {
 		const ref = createRef<HTMLSpanElement>();
-		render(<Badge ref={ref}>Test</Badge>);
+		render(
+			<Badge ref={ref} variant="solid" color="primary">
+				Test
+			</Badge>,
+		);
 		expect(ref.current).toBeInstanceOf(HTMLSpanElement);
 		expect(ref.current).toHaveAttribute('data-slot', 'badge');
 	});
