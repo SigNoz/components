@@ -1,9 +1,17 @@
-import { Badge, type BadgeColor, Typography } from '@signozhq/ui';
+import {
+	Badge,
+	BadgeColor,
+	type BadgeColorType,
+	BadgeTextOverflow,
+	BadgeTextTransform,
+	BadgeVariant,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { Fragment, type ReactElement } from 'react';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import styles from './badge.stories.module.css';
 
-// Icon Components for examples
 const CheckIcon = () => (
 	<svg
 		width="12"
@@ -16,21 +24,6 @@ const CheckIcon = () => (
 		strokeLinejoin="round"
 	>
 		<path d="M20 6L9 17l-5-5" />
-	</svg>
-);
-
-const XIcon = () => (
-	<svg
-		width="12"
-		height="12"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2.5"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<path d="M18 6L6 18M6 6l12 12" />
 	</svg>
 );
 
@@ -49,22 +42,6 @@ const AlertIcon = () => (
 	</svg>
 );
 
-const InfoIcon = () => (
-	<svg
-		width="12"
-		height="12"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2.5"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<circle cx="12" cy="12" r="10" />
-		<path d="M12 16v-4M12 8h.01" />
-	</svg>
-);
-
 const BellIcon = () => (
 	<svg
 		width="12"
@@ -80,132 +57,101 @@ const BellIcon = () => (
 	</svg>
 );
 
-const StarIcon = () => (
-	<svg
-		width="12"
-		height="12"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2.5"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-	</svg>
-);
+const COLORS = Object.values(BadgeColor);
 
-// Meta Configuration
 const meta: Meta<typeof Badge> = {
 	title: 'Primitive Components/Badge',
 	component: Badge,
 	args: {
-		onClose: fn(),
+		variant: 'solid',
+		color: 'primary',
+		textTransform: 'uppercase',
+		textOverflow: 'ellipsis',
 	},
 	parameters: {
 		layout: 'fullscreen',
 		docs: {
 			description: {
-				component:
-					'A versatile badge component for displaying status, counts, labels, and notifications. Supports multiple color themes, variants, and can include icons for enhanced visual communication. Perfect for status indicators, notification counts, tags, and user roles.',
+				component: 'A badge for status, counts, and labels, in the same color palette as `Button`.',
 			},
+		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/eyORbfrXMWCz9w0xEFdgWe/Periscope-%E2%80%93-Primitives-v2?node-id=12-739&p=f&m=dev',
 		},
 	},
 	argTypes: {
+		children: {
+			control: 'text',
+			description: 'The content of the badge. Can be text, numbers, or an icon plus text.',
+			table: { category: 'Content' },
+		},
+		variant: {
+			control: 'inline-radio',
+			options: Object.values(BadgeVariant),
+			description: '`outlined` only tints the border and text, no fill.',
+			table: { category: 'Appearance', type: { summary: 'BadgeVariantType' } },
+		},
+		color: {
+			control: 'select',
+			options: COLORS,
+			description: "Same palette as Button's `color`.",
+			table: { category: 'Appearance', type: { summary: 'BadgeColorType' } },
+		},
+		textTransform: {
+			control: 'inline-radio',
+			options: Object.values(BadgeTextTransform),
+			description: 'CSS text transform applied to the content.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'BadgeTextTransformType' },
+				defaultValue: { summary: 'uppercase' },
+			},
+		},
+		textOverflow: {
+			control: 'inline-radio',
+			options: Object.values(BadgeTextOverflow),
+			description:
+				'`ellipsis` truncates once something constrains the width and shows the full content in a tooltip while truncated. `none` clips with no tooltip.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'BadgeTextOverflowType' },
+				defaultValue: { summary: 'ellipsis' },
+			},
+		},
+		prefix: {
+			control: false,
+			description: 'Element rendered before the label, vertically centered with a gap.',
+			table: { category: 'Content', type: { summary: 'React.ReactElement' } },
+		},
+		suffix: {
+			control: false,
+			description: 'Element rendered after the label, vertically centered with a gap.',
+			table: { category: 'Content', type: { summary: 'React.ReactElement' } },
+		},
+		width: {
+			control: 'text',
+			description: 'Width of the badge, sizes to content when omitted.',
+			table: { category: 'Appearance', type: { summary: 'CSSProperties["width"]' } },
+		},
+		maxWidth: {
+			control: 'text',
+			description: 'Max-width of the badge, capped at 100% of its container when omitted.',
+			table: { category: 'Appearance', type: { summary: 'CSSProperties["maxWidth"]' } },
+		},
 		testId: {
 			control: 'text',
-			description: 'Test ID for the badge.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the badge.',
-			table: { category: 'Accessibility', type: { summary: 'string' } },
+			description: 'Forwarded to the rendered element as `data-testid`.',
+			table: { category: 'Testing' },
 		},
 		className: {
 			control: 'text',
 			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Styling', type: { summary: 'string' } },
+			table: { category: 'Styling' },
 		},
-		children: {
+		id: {
 			control: 'text',
-			description:
-				'The content inside the badge. Can be text, numbers, or React elements like icons.',
-			table: { category: 'Content' },
-		},
-		color: {
-			control: 'select',
-			options: [
-				'primary',
-				'secondary',
-				'success',
-				'warning',
-				'error',
-				'vanilla',
-				'robin',
-				'forest',
-				'amber',
-				'sienna',
-				'cherry',
-				'sakura',
-				'aqua',
-			],
-			description:
-				'The color theme of the badge. Each color has semantic meaning for different use cases.',
-			table: { category: 'Appearance', defaultValue: { summary: 'robin' } },
-		},
-		variant: {
-			control: 'inline-radio',
-			options: ['default', 'outline'],
-			description:
-				'The visual style. Default is filled, outline provides a more subtle appearance.',
-			table: { category: 'Appearance', defaultValue: { summary: 'default' } },
-		},
-		capitalize: {
-			control: 'boolean',
-			description: 'Transforms text to uppercase with wider letter spacing for emphasis.',
-			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-		},
-		asChild: {
-			control: 'boolean',
-			description:
-				'Use Radix Slot to compose the badge as a different element (e.g., button, link). The closable prop is intended for the default span-rendered Badge.',
-			table: { category: 'Composition', defaultValue: { summary: 'false' } },
-		},
-		textEllipsis: {
-			control: 'boolean',
-			description:
-				'Enable text truncation. Use true for center truncation, or pass start, center, or end in code.',
-			table: {
-				category: 'Behavior',
-				defaultValue: { summary: 'false' },
-				type: { summary: 'boolean | "start" | "center" | "end"' },
-			},
-		},
-		closable: {
-			control: 'boolean',
-			description:
-				'Renders a trailing close button. The badge hides after close unless onClose prevents default.',
-			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-		},
-		onClose: {
-			control: false,
-			description:
-				'Callback fired from the close button. Call event.preventDefault() to keep the badge visible.',
-			table: {
-				category: 'Events',
-				type: { summary: '(event: React.MouseEvent<HTMLButtonElement>) => void' },
-			},
-		},
-		closeIcon: {
-			control: false,
-			description: 'Custom close icon. Defaults to X from @signozhq/icons.',
-			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
-		},
-		closeAriaLabel: {
-			control: 'text',
-			description: 'Accessible label for the close button.',
-			table: { category: 'Accessibility', defaultValue: { summary: 'Close badge' } },
+			table: { category: 'Accessibility' },
 		},
 	},
 };
@@ -215,649 +161,189 @@ export default meta;
 type Story = StoryObj<typeof Badge>;
 
 export const Playground: Story = {
+	parameters: {
+		// Every state it can be driven into is covered by `BadgeShowcase`.
+		chromatic: { disableSnapshot: true },
+	},
 	args: {
 		children: 'Hello',
-		color: 'robin',
-		variant: 'default',
-		capitalize: false,
-		asChild: false,
-		closable: false,
-		closeAriaLabel: 'Close badge',
-	},
-	render: (props) => {
-		if (props.asChild) {
-			return (
-				<Badge {...props}>
-					<a href="#hi" onClick={(e) => e.preventDefault()}>
-						Random link
-					</a>
-				</Badge>
-			);
-		}
-
-		return <Badge {...props} />;
 	},
 };
 
-// Variant Examples - These appear in the Examples section
+/**
+ * One row per color, one column per variant.
+ */
+function ColorRow({ color }: { color: BadgeColorType }): ReactElement {
+	return (
+		<Fragment key={color}>
+			<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+				{color}
+			</Typography>
+			<Badge variant="solid" color={color}>
+				BADGE
+			</Badge>
+			<Badge variant="outlined" color={color}>
+				BADGE
+			</Badge>
+		</Fragment>
+	);
+}
 
-export const AllColors: Story = {
+const LONG_LABEL = 'kubernetes-deployment-production-east-us-2';
+const CONSTRAINED_WIDTH = '10rem';
+
+/**
+ * Every color/variant pair, the text transforms, a couple of real-world usages, and the two
+ * overflow modes, all in one snapshot. The truncated badge's tooltip is forced open by `play` so
+ * the snapshot carries it.
+ */
+export const BadgeShowcase: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story:
-					'The Badge component supports 8 semantic color themes. Each color is optimized for both light and dark modes, providing excellent contrast and readability.',
-			},
-		},
+		chromatic: { disableSnapshot: false },
 	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-	},
-	render: () => {
-		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
-		return (
-			<div className={`story-grid ${styles.gridHalfWidth}`}>
-				{colors.map((color) => (
-					<Badge key={color} color={color}>
-						{color.charAt(0).toUpperCase() + color.slice(1)}
-					</Badge>
-				))}
-			</div>
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const trigger = canvas.getByTestId('truncated-badge');
+
+		// Base UI opens the tooltip when the pointer enters the trigger. Synthetic events keep
+		// it open for the snapshot instead of `userEvent.hover`, which moves a real pointer.
+		fireEvent.pointerEnter(trigger);
+		fireEvent.mouseEnter(trigger);
+		fireEvent.mouseMove(trigger);
+
+		// The tooltip portals to `document.body`, outside `canvasElement`, so it has to be
+		// queried on `document` rather than `canvas` (see `ButtonShowcase` in
+		// button.stories.tsx for the same pattern).
+		await waitFor(() =>
+			expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveTextContent(LONG_LABEL),
 		);
 	},
-};
-
-export const OutlineVariant: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Outline variant provides a more subtle appearance with transparent background and colored border. Perfect for secondary information or when you want less visual weight.',
-			},
-		},
-	},
 	argTypes: {
 		children: { control: false },
 		color: { control: false },
 		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-	},
-	render: () => {
-		const colors = (meta.argTypes?.color?.options as BadgeColor[]) || [];
-		return (
-			<div className="story-grid">
-				{colors.map((color) => (
-					<Badge key={color} variant="outline" color={color}>
-						{color.charAt(0).toUpperCase() + color.slice(1)}
-					</Badge>
-				))}
-			</div>
-		);
-	},
-};
-
-export const StatusIndicators: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use badges to display system status, user status, or process states. Choose colors that match semantic meaning: green for success, red for errors, yellow for warnings, blue for info.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
+		textTransform: { control: false },
+		textOverflow: { control: false },
 	},
 	render: () => (
-		<div className="story-section">
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					System Status
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Colors
 				</Typography>
-				<div className="story-grid">
-					<Badge color="forest">
-						<CheckIcon />
-						Online
-					</Badge>
-					<Badge color="cherry">
-						<XIcon />
-						Offline
-					</Badge>
-					<Badge color="amber">
-						<AlertIcon />
-						Maintenance
-					</Badge>
-					<Badge color="aqua">
-						<InfoIcon />
-						Pending
-					</Badge>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					User Status
-				</Typography>
-				<div className="story-grid">
-					<Badge color="forest" variant="outline">
-						<CheckIcon />
-						Active
-					</Badge>
-					<Badge color="vanilla" variant="outline">
-						Idle
-					</Badge>
-					<Badge color="cherry" variant="outline">
-						<XIcon />
-						Inactive
-					</Badge>
-					<Badge color="amber" variant="outline">
-						<AlertIcon />
-						Away
-					</Badge>
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const NotificationCounts: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Perfect for displaying notification counts, unread messages, or item quantities. Works great in navigation bars, buttons, or inline with text.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div className="story-section">
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Message Notifications
-				</Typography>
-				<div className="story-row-lg">
-					<div className="story-row">
-						<BellIcon />
-						<Typography>Messages</Typography>
-						<Badge color="cherry">12</Badge>
-					</div>
-					<div className="story-row">
-						<BellIcon />
-						<Typography>Alerts</Typography>
-						<Badge color="amber">3</Badge>
-					</div>
-					<div className="story-row">
-						<BellIcon />
-						<Typography>Updates</Typography>
-						<Badge color="aqua">99+</Badge>
-					</div>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					With Outline Variant
-				</Typography>
-				<div className="story-row-lg">
-					<div className="story-row">
-						<Typography>Inbox</Typography>
-						<Badge color="robin" variant="outline">
-							5
-						</Badge>
-					</div>
-					<div className="story-row">
-						<Typography>Drafts</Typography>
-						<Badge color="vanilla" variant="outline">
-							2
-						</Badge>
-					</div>
-					<div className="story-row">
-						<Typography>Archive</Typography>
-						<Badge color="sakura" variant="outline">
-							128
-						</Badge>
-					</div>
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const WithIcons: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Badges support icons for enhanced visual communication. Icons are automatically sized and styled. Use icons to make badges more informative and scannable.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div className="story-section">
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Success & Verification
-				</Typography>
-				<div className="story-grid">
-					<Badge color="forest">
-						<CheckIcon />
-						Verified
-					</Badge>
-					<Badge color="forest" variant="outline">
-						<CheckIcon />
-						Approved
-					</Badge>
-					<Badge color="forest">
-						<StarIcon />
-						Featured
-					</Badge>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Alerts & Warnings
-				</Typography>
-				<div className="story-grid">
-					<Badge color="amber">
-						<AlertIcon />
-						Warning
-					</Badge>
-					<Badge color="cherry">
-						<XIcon />
-						Error
-					</Badge>
-					<Badge color="aqua">
-						<InfoIcon />
-						Information
-					</Badge>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Notifications
-				</Typography>
-				<div className="story-grid">
-					<Badge color="cherry">
-						<BellIcon />
-						New Alerts
-					</Badge>
-					<Badge color="robin" variant="outline">
-						<BellIcon />
-						Updates Available
-					</Badge>
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const CapitalizedText: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use the capitalize prop to transform text to uppercase with wider letter spacing. Perfect for emphasizing important labels like status codes, priority levels, or role names.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div className="story-section">
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Priority Levels
-				</Typography>
-				<div className="story-grid">
-					<Badge color="cherry" capitalize>
-						Critical
-					</Badge>
-					<Badge color="amber" capitalize>
-						High
-					</Badge>
-					<Badge color="aqua" capitalize>
-						Medium
-					</Badge>
-					<Badge color="robin" capitalize>
-						Low
-					</Badge>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Status Codes
-				</Typography>
-				<div className="story-grid">
-					<Badge color="forest" variant="outline" capitalize>
-						200 OK
-					</Badge>
-					<Badge color="amber" variant="outline" capitalize>
-						404 Not Found
-					</Badge>
-					<Badge color="cherry" variant="outline" capitalize>
-						500 Error
-					</Badge>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Comparison: Normal vs Capitalized
-				</Typography>
-				<div className="story-grid-lg">
-					<div className="story-column">
-						<Typography size="xs" color="muted">
-							Normal
-						</Typography>
-						<Badge color="robin">Active User</Badge>
-					</div>
-					<div className="story-column">
-						<Typography size="xs" color="muted">
-							Capitalized
-						</Typography>
-						<Badge color="robin" capitalize>
-							Active User
-						</Badge>
-					</div>
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const TextEllipsisPositions: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'The `textEllipsis` prop enables canvas-based text truncation with ellipsis at different positions. Use `true` or `"center"` for center truncation (default), `"start"` for start truncation, or `"end"` for end truncation. Only works with string children.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-		textEllipsis: { control: false },
-	},
-	render: () => (
-		<div className={styles.columnLayout}>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Ellipsis Positions
-				</Typography>
-				<div className="story-section-sm">
-					<div className={`story-row ${styles.rowGapMedium}`}>
-						<Typography size="xs" color="muted" className={styles.labelWidth}>
-							Center:
-						</Typography>
-						<div className={styles.badgeWidthContainer}>
-							<Badge color="robin" textEllipsis="center">
-								This is a very long badge text that will be truncated in the center
-							</Badge>
-						</div>
-					</div>
-					<div className={`story-row ${styles.rowGapMedium}`}>
-						<Typography size="xs" color="muted" className={styles.labelWidth}>
-							Start:
-						</Typography>
-						<div className={styles.badgeWidthContainer}>
-							<Badge color="forest" textEllipsis="start">
-								path/to/very/long/filename/that/needs/truncation.tsx
-							</Badge>
-						</div>
-					</div>
-					<div className={`story-row ${styles.rowGapMedium}`}>
-						<Typography size="xs" color="muted" className={styles.labelWidth}>
-							End:
-						</Typography>
-						<div className={styles.badgeWidthContainer}>
-							<Badge color="amber" textEllipsis="end">
-								A long description that should be truncated at the end
-							</Badge>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Boolean Shorthand (defaults to center)
-				</Typography>
-				<div className="story-section-sm">
-					<div className={styles.badgeWidthLarge}>
-						<Badge color="aqua" textEllipsis>
-							Using textEllipsis=true defaults to center truncation
-						</Badge>
-					</div>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					With Outline Variant
-				</Typography>
-				<div className="story-section-sm">
-					<div className={styles.badgeWidthMedium}>
-						<Badge color="cherry" variant="outline" textEllipsis="center">
-							Error: Connection timeout after 30 seconds of inactivity
-						</Badge>
-					</div>
-					<div className={styles.badgeWidthMedium}>
-						<Badge color="sakura" variant="outline" textEllipsis="end">
-							User: very.long.email.address@example.domain.com
-						</Badge>
-					</div>
-				</div>
-			</div>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-					Container Constrained
-				</Typography>
-				<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
-					Badges inside a narrow container will truncate automatically with textEllipsis
-				</Typography>
-				<div
-					className={`story-panel story-section-sm ${styles.constrainedContainer} ${styles.badgeWidthFull}`}
-				>
-					<Badge color="robin" textEllipsis="center">
-						kubernetes-deployment-production-east-us-2
-					</Badge>
-					<Badge color="forest" variant="outline" textEllipsis="start">
-						/var/log/application/server/debug/2024-01-15.log
-					</Badge>
-					<Badge color="sienna" textEllipsis="end">
-						Successfully processed 1,234 items in batch
-					</Badge>
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const Closeable: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Set `closable` to render a trailing close button. The badge hides automatically after close unless `onClose` calls `event.preventDefault()`.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-		textEllipsis: { control: false },
-		closable: { control: false },
-		onClose: { control: false },
-		closeIcon: { control: false },
-		closeAriaLabel: { control: false },
-	},
-	render: () => (
-		<div className="story-grid">
-			<Badge closable color="robin" onClose={fn()} closeAriaLabel="Remove React tag">
-				React
-			</Badge>
-			<Badge closable color="aqua" onClose={fn()} closeAriaLabel="Remove TypeScript tag">
-				TypeScript
-			</Badge>
-			<Badge closable color="forest" onClose={fn()} closeAriaLabel="Remove Next.js tag">
-				Next.js
-			</Badge>
-			<Badge
-				closable
-				color="amber"
-				closeIcon={<XIcon />}
-				onClose={(event) => event.preventDefault()}
-				closeAriaLabel="Keep warning tag"
-			>
-				Persistent
-			</Badge>
-		</div>
-	),
-};
-
-export const UsingAsChild: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'The `asChild` prop uses Radix UI Slot to compose the badge as a different element. This allows you to create interactive badges that maintain all badge styling while functioning as buttons, links, or other interactive elements. The badge styling is applied to the child element instead of rendering a wrapper span. For removable tags, use `closable` with the default span-rendered Badge.',
-			},
-		},
-	},
-	argTypes: {
-		children: { control: false },
-		color: { control: false },
-		variant: { control: false },
-		capitalize: { control: false },
-		asChild: { control: false },
-	},
-	render: () => (
-		<div className={styles.columnLayout}>
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomMedium}>
-					Regular Badge vs asChild Badge
-				</Typography>
-				<div className={styles.columnGapMedium}>
-					<div>
-						<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
-							Regular Badge (non-interactive span)
-						</Typography>
-						<Badge color="robin">Static Badge</Badge>
-					</div>
-					<div>
-						<Typography size="xs" color="muted" className={styles.marginBottomSmall}>
-							asChild Badge (interactive button)
-						</Typography>
-						<Badge asChild color="robin">
-							<button
-								type="button"
-								onClick={() => alert('Button badge clicked!')}
-								className={styles.cursorPointer}
-							>
-								Interactive Badge
-							</button>
-						</Badge>
-					</div>
+				<Typography size="sm">One row per color, solid and outlined side by side.</Typography>
+				<div className={`${styles.matrix} ${styles.marginTopMedium}`}>
+					<span />
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						solid
+					</Typography>
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						outlined
+					</Typography>
+					{COLORS.map((color) => (
+						<ColorRow key={color} color={color} />
+					))}
 				</div>
 			</div>
 
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomMedium}>
-					Filter & Action Badges
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Text transform
 				</Typography>
+				<Typography size="sm">Applied to the content regardless of variant or color.</Typography>
 				<div className="story-grid">
-					<Badge asChild color="robin" variant="outline">
-						<button
-							type="button"
-							onClick={() => alert('All filter')}
-							className={styles.cursorPointer}
+					{Object.values(BadgeTextTransform).map((textTransform) => (
+						<Badge
+							key={textTransform}
+							variant="solid"
+							color="primary"
+							textTransform={textTransform}
 						>
-							All
-						</button>
-					</Badge>
-					<Badge asChild color="forest" variant="outline">
-						<button
-							type="button"
-							onClick={() => alert('Active filter')}
-							className={styles.cursorPointer}
-						>
-							<CheckIcon />
+							{textTransform}
+						</Badge>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Usage examples
+				</Typography>
+				<Typography size="sm">System status, user status, and notification counts.</Typography>
+				<div className={`story-section ${styles.marginTopMedium}`}>
+					<div className="story-grid">
+						<Badge variant="solid" color="success" prefix={<CheckIcon />}>
+							Online
+						</Badge>
+						<Badge variant="solid" color="danger" prefix={<AlertIcon />}>
+							Offline
+						</Badge>
+						<Badge variant="outlined" color="success" prefix={<CheckIcon />}>
 							Active
-						</button>
-					</Badge>
-					<Badge asChild color="amber" variant="outline">
-						<button
-							type="button"
-							onClick={() => alert('Pending filter')}
-							className={styles.cursorPointer}
-						>
-							Pending
-						</button>
-					</Badge>
-					<Badge asChild color="cherry" variant="outline">
-						<button
-							type="button"
-							onClick={() => alert('Remove filter')}
-							className={styles.cursorPointer}
-						>
-							<XIcon />
-							Clear
-						</button>
-					</Badge>
+						</Badge>
+						<Badge variant="outlined" color="secondary">
+							Idle
+						</Badge>
+					</div>
+					<div className="story-row-lg">
+						<div className="story-row">
+							<BellIcon />
+							<Typography>Messages</Typography>
+							<Badge variant="solid" color="danger">
+								12
+							</Badge>
+						</div>
+						<div className="story-row">
+							<Typography>Inbox</Typography>
+							<Badge variant="outlined" color="primary">
+								5
+							</Badge>
+						</div>
+						<div className="story-row">
+							<Typography>Archive</Typography>
+							<Badge variant="outlined" color="archive">
+								128
+							</Badge>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<div>
-				<Typography size="sm" weight="medium" className={styles.marginBottomMedium}>
-					Navigation Links
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Overflow and tooltip
 				</Typography>
-				<div className="story-grid">
-					<Badge asChild color="aqua" variant="outline">
-						<a href="#docs" onClick={(e) => e.preventDefault()} className={styles.linkStyle}>
-							Documentation
-						</a>
+				<Typography size="sm">
+					Both are capped at <code>{CONSTRAINED_WIDTH}</code>.
+				</Typography>
+				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
+					<Typography size="sm" weight="medium">
+						ellipsis (default)
+					</Typography>
+					<Badge
+						variant="solid"
+						color="primary"
+						testId="truncated-badge"
+						textTransform="capitalize"
+						maxWidth={CONSTRAINED_WIDTH}
+					>
+						{LONG_LABEL}
 					</Badge>
-					<Badge asChild color="robin">
-						<a href="#guide" onClick={(e) => e.preventDefault()} className={styles.linkStyle}>
-							<InfoIcon />
-							Getting Started
-						</a>
+					<Typography size="sm">Truncates, full content on hover or focus.</Typography>
+
+					<Typography size="sm" weight="medium">
+						none
+					</Typography>
+					<Badge
+						variant="solid"
+						color="primary"
+						textOverflow="none"
+						textTransform="capitalize"
+						maxWidth={CONSTRAINED_WIDTH}
+					>
+						{LONG_LABEL}
 					</Badge>
-					<Badge asChild color="sakura" variant="outline">
-						<a href="#examples" onClick={(e) => e.preventDefault()} className={styles.linkStyle}>
-							Examples
-						</a>
-					</Badge>
+					<Typography size="sm">Clips at the badge's edge, no tooltip.</Typography>
 				</div>
 			</div>
 		</div>

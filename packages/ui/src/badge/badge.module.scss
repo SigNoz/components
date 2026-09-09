@@ -1,161 +1,131 @@
 .badge {
-    display: var(--badge-display, inline-flex);
-    align-items: var(--badge-align-items, center);
-    justify-content: var(--badge-justify-content, center);
-    border-radius: var(--badge-border-radius, var(--radius-round, 9999px));
-    border: var(--badge-border-width, 1px) solid var(--badge-border-color, transparent);
-    padding: var(--badge-padding, var(--spacing-2, 0.25rem) var(--spacing-4, 0.5rem));
-    font-size: var(--badge-font-size, var(--periscope-font-size-small, 11px));
-    line-height: var(--badge-line-height, 100%);
-    font-weight: var(--badge-font-weight, var(--font-weight-medium));
-    width: var(--badge-width, fit-content);
-    white-space: var(--badge-white-space, nowrap);
-    gap: var(--badge-gap, var(--spacing-2, 0.25rem));
-    overflow: var(--badge-overflow, hidden);
-    background-color: var(--badge-background);
-    color: var(--badge-foreground);
-    cursor: var(--badge-cursor, default);
-    transition-property: var(--badge-transition-property, color, box-shadow);
-    transition-timing-function: var(--badge-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
-    transition-duration: var(--badge-transition-duration, 150ms);
-    font-variant-numeric: var(--badge-font-variant-numeric, slashed-zero);
+	display: var(--badge-display, inline-flex);
+	border-radius: var(--badge-border-radius, var(--radius-round));
+	border: var(--badge-border-width, 1px) solid var(--badge-border-color, var(--badge-internal-border-color, transparent));
+	padding: var(--badge-padding, var(--spacing-2) var(--spacing-4));
+	font-size: var(--badge-font-size, var(--periscope-font-size-small));
+	line-height: var(--badge-line-height, 100%);
+	font-weight: var(--badge-font-weight, var(--font-weight-medium));
+	text-transform: var(--badge-internal-text-transform, uppercase);
+	white-space: var(--badge-white-space, nowrap);
+	height: var(--badge-height, var(--spacing-10));
+	width: var(--badge-width, var(--badge-internal-width, fit-content));
+	max-width: var(--badge-max-width, var(--badge-internal-max-width, min(100%, 7.5rem)));
+	background-color: var(--badge-internal-background);
+	color: var(--badge-internal-foreground);
+	cursor: var(--badge-cursor, default);
+	transition-property: var(--badge-transition-property, box-shadow);
+	transition-timing-function: var(--badge-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--badge-transition-duration, 150ms);
+	font-variant-numeric: var(--badge-font-variant-numeric, slashed-zero);
+	align-items: var(--badge-label-align-items, center);
+	justify-content: var(--badge-label-justify-content, flex-start);
+	gap: var(--badge-label-gap, var(--spacing-2));
 
-    & > * {
-        display: var(--badge-child-display, block);
-    }
+	&[data-color='primary'] {
+		--badge-internal-background: var(--badge-primary-background, var(--primary-background));
+		--badge-internal-foreground: var(--badge-primary-foreground, var(--primary-foreground));
+		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-primary-outlined-background) 20%, transparent);
+		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-primary-outlined-border) 40%, transparent);
+		--badge-internal-outlined-foreground: var(--badge-primary-outlined-label);
+	}
 
-    &[data-color="vanilla"] {
-        --badge-background: var(--l2-background);
-        --badge-foreground: var(--l2-foreground);
-        --badge-hover-background: var(--l2-background-hover);
-        --badge-border-color: var(--l2-border);
-        --badge-outline-color: var(--l2-foreground);
-        --badge-outline-border-color: var(--l2-border);
-        --badge-outline-hover-background-color: var(--l2-background-hover);
-    }
+	&[data-color='secondary'] {
+		--badge-internal-background: var(--badge-secondary-background, var(--surface-3));
+		--badge-internal-foreground: var(--badge-secondary-foreground, var(--secondary-foreground));
+		--badge-internal-border-color: var(--badge-secondary-border-color, var(--secondary-border));
+		--badge-internal-outlined-background: var(--badge-secondary-outlined-background);
+		--badge-internal-outlined-border: var(--badge-secondary-outlined-border);
+		--badge-internal-outlined-foreground: var(--badge-secondary-outlined-label);
+	}
 
-    &[data-color="robin"] {
-        --badge-background: var(--primary);
-        --badge-foreground: var(--primary-foreground);
-        --badge-hover-background: var(--accent-primary-hover);
-    }
+	&[data-color='danger'] {
+		--badge-internal-background: var(--badge-danger-background, var(--danger-background));
+		--badge-internal-foreground: var(--badge-danger-foreground, var(--danger-foreground));
+		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-danger-outlined-background) 20%, transparent);
+		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-danger-outlined-border) 40%, transparent);
+		--badge-internal-outlined-foreground: var(--badge-danger-outlined-label);
+	}
 
-    &[data-color="forest"] {
-        --badge-background: var(--accent-forest);
-        --badge-foreground: var(--accent-forest-foreground);
-        --badge-hover-background: var(--accent-forest-hover);
-    }
+	&[data-color='warning'] {
+		--badge-internal-background: var(--badge-warning-background, var(--warning-background));
+		--badge-internal-foreground: var(--badge-warning-foreground, var(--warning-foreground));
+		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-warning-outlined-background) 20%, transparent);
+		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-warning-outlined-border) 40%, transparent);
+		--badge-internal-outlined-foreground: var(--badge-warning-outlined-label);
+	}
 
-    &[data-color="amber"] {
-        --badge-background: var(--accent-amber);
-        --badge-foreground: var(--accent-amber-foreground);
-        --badge-hover-background: var(--accent-amber-hover);
-    }
+	&[data-color='success'] {
+		--badge-internal-background: var(--badge-success-background, var(--success-background));
+		--badge-internal-foreground: var(--badge-success-foreground, var(--success-foreground));
+		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-success-outlined-background) 20%, transparent);
+		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-success-outlined-border) 40%, transparent);
+		--badge-internal-outlined-foreground: var(--badge-success-outlined-label);
+	}
 
-    &[data-color="sienna"] {
-        --badge-background: var(--accent-sienna);
-        --badge-foreground: var(--accent-sienna-foreground);
-        --badge-hover-background: var(--accent-sienna-hover);
-    }
+	&[data-color='info'] {
+		--badge-internal-background: var(--badge-info-background, var(--bg-aqua-500));
+		--badge-internal-foreground: var(--badge-info-foreground, var(--text-ink-500));
+	}
 
-    &[data-color="cherry"] {
-        --badge-background: var(--accent-cherry);
-        --badge-foreground: var(--accent-cherry-foreground);
-        --badge-hover-background: var(--accent-cherry-hover);
-    }
+	&[data-color='archive'] {
+		--badge-internal-background: var(--badge-archive-background, var(--bg-sienna-500));
+		--badge-internal-foreground: var(--badge-archive-foreground, var(--text-ink-500));
+	}
 
-    &[data-color="sakura"] {
-        --badge-background: var(--accent-sakura);
-        --badge-foreground: var(--accent-sakura-foreground);
-        --badge-hover-background: var(--accent-sakura-hover);
-    }
+	&[data-color='highlight-danger'] {
+		--badge-internal-background: var(--badge-highlight-danger-background, var(--bg-sakura-500));
+		--badge-internal-foreground: var(--badge-highlight-danger-foreground, var(--text-ink-500));
+	}
 
-    &[data-color="aqua"] {
-        --badge-background: var(--accent-aqua);
-        --badge-foreground: var(--accent-aqua-foreground);
-        --badge-hover-background: var(--accent-aqua-hover);
-    }
-}
+	&[data-text-transform='capitalize'] {
+		--badge-internal-text-transform: capitalize;
+	}
 
-.badge:hover {
-    background-color: var(--badge-hover-background);
-}
+	&[data-text-transform='lowercase'] {
+		--badge-internal-text-transform: lowercase;
+	}
 
-.badge:focus-visible {
-    border-color: var(--badge-focus-border-color, var(--ring));
-    outline: var(--badge-focus-outline, none);
-    box-shadow: var(--badge-box-shadow, 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent));
-}
+	&[data-text-transform='uppercase'] {
+		--badge-internal-text-transform: uppercase;
+	}
 
-.badge[aria-invalid="true"] {
-    border-color: var(--badge-invalid-border-color, var(--destructive));
-    box-shadow: var(--badge-invalid-box-shadow, 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent));
-}
+	// info, archive and highlight-danger have no outlined tokens yet, so they keep tinting the
+	// solid background until the palette covers them.
+	&[data-variant='outlined'] {
+		border-color: var(--badge-outlined-border-color, var(--badge-internal-outlined-border, color-mix(in oklab, var(--badge-internal-background) 20%, transparent)));
+		background-color: var(--badge-outlined-background-color, var(--badge-internal-outlined-background, color-mix(in oklab, var(--badge-internal-background) 10%, transparent)));
+		color: var(--badge-outlined-color, var(--badge-internal-outlined-foreground, var(--badge-internal-background)));
+	}
 
-.badge[data-variant="outline"] {
-    border-color: var(--badge-outline-border-color, color-mix(in oklab, var(--badge-background) 20%, transparent));
-    background-color: var(--badge-outline-background-color, color-mix(in oklab, var(--badge-background) 10%, transparent));
-    color: var(--badge-outline-color, var(--badge-background));
-}
+	&:has([data-slot='badge-prefix'], [data-slot='badge-suffix']) {
+		display: var(--badge-display, inline-flex);
+		align-items: var(--badge-align-items, center);
+		gap: var(--badge-gap, var(--spacing-2));
+	}
 
-.badge[data-variant="outline"]:hover {
-    background-color: var(--badge-outline-hover-background-color, color-mix(in oklab, var(--badge-background) 20%, transparent));
-}
+	&__prefix,
+	&__suffix{
+		flex-shrink: var(--badge-affix-flex-shrink, 0);
+		block-size: var(--badge-affix-size, 12px);
 
-.badge[data-capitalize="true"] {
-    text-transform: uppercase;
-}
+		& > svg {
+			inline-size: var(--badge-affix-size, 12px);
+		}
+	}
 
-.badge[data-capitalize="false"] {
-    font-weight: var(--badge-capitalize-font-weight, var(--font-weight-normal));
-}
+	&__label {
+		display: var(--badge-label-display, block);
+		min-width: var(--badge-label-min-width, 0);
+		overflow: var(--badge-label-overflow, hidden);
+		white-space: var(--badge-label-white-space, nowrap);
 
-.badge[data-text-ellipsis="true"] {
-    display: flex;
-    min-width: 0;
-}
+		&-tooltip {
+			max-width: var(--badge-label-tooltip-max-width, 20rem);
+		}
+	}
 
-.badgeEllipsis {
-    flex: 1;
-    min-width: 0;
-}
-
-.closeButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: var(--badge-close-size, 0.875rem);
-    height: var(--badge-close-size, 0.875rem);
-    margin-inline-end: var(--badge-close-margin-inline-end, -0.125rem);
-    padding: 0;
-    border: 0;
-    border-radius: var(--badge-close-border-radius, var(--radius-round, 9999px));
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.closeButton:hover {
-    background-color: var(--badge-close-hover-background, color-mix(in srgb, currentColor 16%, transparent));
-}
-
-.closeButton:focus-visible {
-    outline: var(--badge-close-focus-outline, 1px solid currentColor);
-    outline-offset: var(--badge-close-focus-outline-offset, 1px);
-}
-
-.closeIcon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--badge-close-icon-size, 0.75rem);
-    height: var(--badge-close-icon-size, 0.75rem);
-    pointer-events: none;
-}
-
-.closeIcon > svg {
-    width: 100%;
-    height: 100%;
+	&[data-text-overflow='ellipsis'] &__label {
+		text-overflow: var(--badge-label-text-overflow, ellipsis);
+	}
 }

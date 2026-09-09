@@ -5,48 +5,80 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--badge-affix-flex-shrink` | `0` |
+ * | `--badge-affix-size` | `12px` |
  * | `--badge-align-items` | `center` |
- * | `--badge-background` | `var(--accent-aqua)` |
- * | `--badge-border-color` | `var(--l2-border)` |
- * | `--badge-border-radius` | `var(--radius-round, 9999px)` |
+ * | `--badge-archive-background` | `var(--bg-sienna-500)` |
+ * | `--badge-archive-foreground` | `var(--text-ink-500)` |
+ * | `--badge-border-color` | `var(--badge-internal-border-color, transparent)` |
+ * | `--badge-border-radius` | `var(--radius-round)` |
  * | `--badge-border-width` | `1px` |
- * | `--badge-box-shadow` | `0 0 0 3px color-mix(in srgb, var(--ring) 50%, t...` |
- * | `--badge-capitalize-font-weight` | `var(--font-weight-normal)` |
- * | `--badge-child-display` | `block` |
- * | `--badge-close-border-radius` | `var(--radius-round, 9999px)` |
- * | `--badge-close-focus-outline` | `1px solid currentColor` |
- * | `--badge-close-focus-outline-offset` | `1px` |
- * | `--badge-close-hover-background` | `color-mix(in srgb, currentColor 16%, transparent)` |
- * | `--badge-close-icon-size` | `0.75rem` |
- * | `--badge-close-margin-inline-end` | `-0.125rem` |
- * | `--badge-close-size` | `0.875rem` |
  * | `--badge-cursor` | `default` |
+ * | `--badge-danger-background` | `var(--danger-background)` |
+ * | `--badge-danger-foreground` | `var(--danger-foreground)` |
+ * | `--badge-danger-outlined-background` | `-` |
+ * | `--badge-danger-outlined-border` | `-` |
+ * | `--badge-danger-outlined-label` | `-` |
  * | `--badge-display` | `inline-flex` |
- * | `--badge-focus-border-color` | `var(--ring)` |
- * | `--badge-focus-outline` | `none` |
- * | `--badge-font-size` | `var(--periscope-font-size-small, 11px)` |
+ * | `--badge-font-size` | `var(--periscope-font-size-small)` |
  * | `--badge-font-variant-numeric` | `slashed-zero` |
  * | `--badge-font-weight` | `var(--font-weight-medium)` |
- * | `--badge-foreground` | `var(--accent-aqua-foreground)` |
- * | `--badge-gap` | `var(--spacing-2, 0.25rem)` |
- * | `--badge-hover-background` | `var(--accent-aqua-hover)` |
- * | `--badge-invalid-border-color` | `var(--destructive)` |
- * | `--badge-invalid-box-shadow` | `0 0 0 3px color-mix(in srgb, var(--destructive)...` |
- * | `--badge-justify-content` | `center` |
+ * | `--badge-gap` | `var(--spacing-2)` |
+ * | `--badge-height` | `var(--spacing-10)` |
+ * | `--badge-highlight-danger-background` | `var(--bg-sakura-500)` |
+ * | `--badge-highlight-danger-foreground` | `var(--text-ink-500)` |
+ * | `--badge-info-background` | `var(--bg-aqua-500)` |
+ * | `--badge-info-foreground` | `var(--text-ink-500)` |
+ * | `--badge-label-align-items` | `center` |
+ * | `--badge-label-display` | `block` |
+ * | `--badge-label-gap` | `var(--spacing-2)` |
+ * | `--badge-label-justify-content` | `flex-start` |
+ * | `--badge-label-min-width` | `0` |
+ * | `--badge-label-overflow` | `hidden` |
+ * | `--badge-label-text-overflow` | `ellipsis` |
+ * | `--badge-label-tooltip-max-width` | `20rem` |
+ * | `--badge-label-white-space` | `nowrap` |
  * | `--badge-line-height` | `100%` |
- * | `--badge-outline-background-color` | `color-mix(in oklab, var(--badge-background) 10%...` |
- * | `--badge-outline-border-color` | `var(--l2-border)` |
- * | `--badge-outline-color` | `var(--l2-foreground)` |
- * | `--badge-outline-hover-background-color` | `var(--l2-background-hover)` |
- * | `--badge-overflow` | `hidden` |
- * | `--badge-padding` | `var(--spacing-2, 0.25rem) var(--spacing-4, 0.5rem)` |
+ * | `--badge-max-width` | `var(--badge-internal-max-width, min(100%, 7.5rem))` |
+ * | `--badge-outlined-background-color` | `var(--badge-internal-outlined-background, color...` |
+ * | `--badge-outlined-border-color` | `var(--badge-internal-outlined-border, color-mix...` |
+ * | `--badge-outlined-color` | `var(--badge-internal-outlined-foreground, var(-...` |
+ * | `--badge-padding` | `var(--spacing-2) var(--spacing-4)` |
+ * | `--badge-primary-background` | `var(--primary-background)` |
+ * | `--badge-primary-foreground` | `var(--primary-foreground)` |
+ * | `--badge-primary-outlined-background` | `-` |
+ * | `--badge-primary-outlined-border` | `-` |
+ * | `--badge-primary-outlined-label` | `-` |
+ * | `--badge-secondary-background` | `var(--surface-3)` |
+ * | `--badge-secondary-border-color` | `var(--secondary-border)` |
+ * | `--badge-secondary-foreground` | `var(--secondary-foreground)` |
+ * | `--badge-secondary-outlined-background` | `-` |
+ * | `--badge-secondary-outlined-border` | `-` |
+ * | `--badge-secondary-outlined-label` | `-` |
+ * | `--badge-success-background` | `var(--success-background)` |
+ * | `--badge-success-foreground` | `var(--success-foreground)` |
+ * | `--badge-success-outlined-background` | `-` |
+ * | `--badge-success-outlined-border` | `-` |
+ * | `--badge-success-outlined-label` | `-` |
  * | `--badge-transition-duration` | `150ms` |
- * | `--badge-transition-property` | `color, box-shadow` |
+ * | `--badge-transition-property` | `box-shadow` |
  * | `--badge-transition-timing-function` | `cubic-bezier(0.4, 0, 0.2, 1)` |
+ * | `--badge-warning-background` | `var(--warning-background)` |
+ * | `--badge-warning-foreground` | `var(--warning-foreground)` |
+ * | `--badge-warning-outlined-background` | `-` |
+ * | `--badge-warning-outlined-border` | `-` |
+ * | `--badge-warning-outlined-label` | `-` |
  * | `--badge-white-space` | `nowrap` |
- * | `--badge-width` | `fit-content` |
+ * | `--badge-width` | `var(--badge-internal-width, fit-content)` |
  */
 // #endregion css-tokens
 
-export type * from './badge.js';
 export { Badge } from './badge.js';
+export { BadgeColor, BadgeTextOverflow, BadgeTextTransform, BadgeVariant } from './constants.js';
+export type {
+	BadgeColorType,
+	BadgeProps,
+	BadgeTextOverflowType,
+	BadgeTextTransformType,
+	BadgeVariantType,
+} from './types.js';

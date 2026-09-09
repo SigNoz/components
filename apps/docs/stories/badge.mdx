@@ -5,22 +5,159 @@ import * as BadgeStories from './badge.stories';
 
 # Badge
 
-The badge component is a versatile component that can be used to display various types of information.
-Use `closable` to render a trailing close button that hides the badge after close unless `onClose` prevents default.
+A `<span>` for status, counts and labels, in the same color palette as `Button`. It has color and
+variant tokens, prefix and suffix slots, a truncation tooltip, and it forwards every `aria-*` and
+`data-*` attribute.
+
+It is not interactive: no hover, focus or active styling, and no click handling. For something
+clickable, reach for `Pill`.
 
 ## How to use
+
+`variant`, `color` and the children are all required: the badge has no default appearance, every
+call site says what it is.
 
 ```tsx
 import { Badge } from '@signozhq/ui';
 
 export default function MyComponent() {
-	// the default badge is variant default with color primary
-	return <Badge>Hello</Badge>;
+	return (
+		<Badge variant="solid" color="primary">
+			Firing
+		</Badge>
+	);
 }
 ```
 
-This code above will render the following badge:
-
 <Primary />
+
+## Variants
+
+`variant` picks the visual treatment. `solid` fills the badge, `outlined` only tints the border and
+the text.
+
+```tsx
+<Badge variant="solid" color="danger">Critical</Badge>
+<Badge variant="outlined" color="danger">Critical</Badge>
+```
+
+## Colors
+
+`color` swaps the palette: `primary`, `secondary`, `danger`, `warning`, `success`, `info`,
+`archive` and `highlight-danger`. Both variants accept all eight.
+
+```tsx
+<Badge variant="solid" color="success">Resolved</Badge>
+<Badge variant="solid" color="warning">Degraded</Badge>
+<Badge variant="outlined" color="archive">Archived</Badge>
+```
+
+## Text transform
+
+`textTransform` defaults to `uppercase`, which is the badge in the design system. `capitalize` and
+`lowercase` are there for content that is neither a status nor a label, an identifier that has to
+keep its own casing, for example.
+
+```tsx
+<Badge variant="solid" color="primary">Firing</Badge>
+<Badge variant="solid" color="secondary" textTransform="capitalize">
+	Pending review
+</Badge>
+<Badge variant="outlined" color="secondary" textTransform="lowercase">
+	staging
+</Badge>
+```
+
+## Prefix and suffix
+
+`prefix` and `suffix` place an element before or after the label, vertically centered with a gap.
+Both are `aria-hidden`, so an icon that carries meaning the children don't already convey needs an
+accessible name on the badge itself.
+
+```tsx
+import { Check, TriangleAlert } from '@signozhq/icons';
+
+<Badge variant="solid" color="success" prefix={<Check />}>
+	Online
+</Badge>
+<Badge variant="outlined" color="danger" suffix={<TriangleAlert />}>
+	Offline
+</Badge>
+```
+
+## Width
+
+Without `width` the badge sizes to its content, and `max-width` is capped at `min(100%, 7.5rem)`,
+so a long label truncates on its own. `width` pins the box, `maxWidth` raises or lowers that cap.
+
+Both are written as `--badge-internal-width` and `--badge-internal-max-width`, not as
+`style.width`, so they compose with the `--badge-*` tokens and keep any `style` you pass. Numbers
+are written as `px`.
+
+```tsx
+<Badge variant="outlined" color="secondary" maxWidth="10rem">
+	kubernetes-deployment-production-east-us-2
+</Badge>
+<Badge variant="solid" color="primary" width={64}>
+	12
+</Badge>
+```
+
+## Text overflow
+
+`textOverflow` decides what happens to the content once it does not fit that width. `ellipsis` is
+the default: it truncates, marks the badge with `data-truncated`, and hands the full content to a
+tooltip, only while it is actually truncated, so content that fits never opens one. `none` clips at
+the badge's edge, with no marker and no tooltip.
+
+```tsx
+<Badge variant="outlined" color="secondary" maxWidth="10rem">
+	kubernetes-deployment-production-east-us-2
+</Badge>
+<Badge variant="outlined" color="secondary" maxWidth="10rem" textOverflow="none">
+	kubernetes-deployment-production-east-us-2
+</Badge>
+```
+
+Nothing is lost when it truncates, the content is only clipped. The badge is a non-focusable
+`<span>`, though, so the tooltip only opens on pointer hover: never put information there that
+exists nowhere else on the page.
+
+The tooltip trigger is always mounted, so the badge never remounts when the tooltip appears. The
+tooltip itself mounts only while there is something to show.
+
+## Stacked tooltips
+
+Wrapping the badge in a tooltip of your own would anchor two tooltips to the same element, opening
+both on the same hover. Instead the truncated content joins that same popup, your title first and
+the content under it, with a divider between them:
+
+```tsx
+<Tooltip title="Deployment that owns this alert">
+	<Badge variant="outlined" color="secondary" maxWidth="10rem">
+		kubernetes-deployment-production-east-us-2
+	</Badge>
+</Tooltip>
+```
+
+```
+Deployment that owns this alert
+────────────────────────────────
+kubernetes-deployment-production-east-us-2
+```
+
+## Empty content
+
+`children` is required, and a badge with nothing in it renders nothing at all: `null`, `false` and
+`''` all return no element. So a count that is not loaded yet leaves no empty pill behind.
+
+```tsx
+// renders nothing while `count` is undefined
+<Badge variant="solid" color="danger">
+	{count}
+</Badge>
+```
+
+## Props
 
 <Controls of={BadgeStories.Playground} />
