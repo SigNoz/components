@@ -278,7 +278,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 			};
 			const roleInfo = roleMap[role];
 			return (
-				<Badge variant="outline" className={roleInfo.className}>
+				<Badge variant="outlined" color="secondary" className={roleInfo.className}>
 					{roleInfo.label}
 				</Badge>
 			);
@@ -322,7 +322,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 			return (
 				<div className="story-row">
 					<Icon className="icon-md" />
-					<Badge variant="outline" className={statusInfo.className}>
+					<Badge variant="outlined" color="secondary" className={statusInfo.className}>
 						{statusInfo.label}
 					</Badge>
 				</div>
@@ -480,7 +480,11 @@ const simpleColumns: ColumnDef<User>[] = [
 				guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
 			};
 			const roleInfo = roleMap[role];
-			return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+			return (
+				<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+					{roleInfo.label}
+				</Badge>
+			);
 		},
 	},
 ];
@@ -662,7 +666,11 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
 					};
 					const roleInfo = roleMap[role];
-					return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+					return (
+						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+							{roleInfo.label}
+						</Badge>
+					);
 				},
 			},
 			{
@@ -754,7 +762,11 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
 					};
 					const roleInfo = roleMap[role];
-					return <Badge className={roleInfo.className}>{roleInfo.label}</Badge>;
+					return (
+						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+							{roleInfo.label}
+						</Badge>
+					);
 				},
 			},
 			{
@@ -877,7 +889,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outline" className={roleInfo.className}>
+						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
 							{roleInfo.label}
 						</Badge>
 					);
@@ -918,7 +930,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 					return (
 						<div className="story-row">
 							<Icon />
-							<Badge variant="outline" className={statusInfo.className}>
+							<Badge variant="outlined" color="secondary" className={statusInfo.className}>
 								{statusInfo.label}
 							</Badge>
 						</div>
@@ -1142,7 +1154,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outline" className={roleInfo.className}>
+						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
 							{roleInfo.label}
 						</Badge>
 					);
@@ -1183,7 +1195,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					return (
 						<div className="story-row">
 							<Icon />
-							<Badge variant="outline" className={statusInfo.className}>
+							<Badge variant="outlined" color="secondary" className={statusInfo.className}>
 								{statusInfo.label}
 							</Badge>
 						</div>
@@ -1630,7 +1642,11 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
 					};
 					const role = roleMap[row.original.role];
-					return <Badge className={role.className}>{role.label}</Badge>;
+					return (
+						<Badge variant="outlined" color="secondary" className={role.className}>
+							{role.label}
+						</Badge>
+					);
 				},
 			},
 			{
