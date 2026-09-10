@@ -431,7 +431,8 @@
 		"test:run": "vitest run",
 		"tokens": "node scripts/extract-css-tokens.mjs",
 		"tokens:check": "node scripts/extract-css-tokens.mjs --check",
-		"type-check": "tsgo --noEmit"
+		"type-check": "tsgo --noEmit",
+		"react-compiler:strict-check": "node scripts/check-react-compiler-strict.mjs"
 	},
 	"dependencies": {
 		"@base-ui/react": "1.7.0",
