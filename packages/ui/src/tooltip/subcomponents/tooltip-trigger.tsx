@@ -81,9 +81,17 @@ export const TooltipTrigger = React.forwardRef<HTMLButtonElement, TooltipTrigger
 
 type ElementRef = React.Ref<HTMLButtonElement> | undefined;
 
-// React 18 keeps the ref of an element next to its props, React 19 inside them.
+// React 18 keeps the ref of an element next to its props, React 19 inside them. Probing both
+// flags it as accessed: React 18 warns on `props.ref`, React 19 on `element.ref`. So pick the
+// one the running version owns instead.
+const ReactMajor = Number.parseInt(React.version, 10);
+
 function getElementRef(element: React.ReactElement): ElementRef {
-	return (element.props as { ref?: ElementRef }).ref ?? (element as { ref?: ElementRef }).ref;
+	if (ReactMajor >= 19) {
+		return (element.props as { ref?: ElementRef }).ref;
+	}
+
+	return (element as { ref?: ElementRef }).ref;
 }
 
 function setRef(ref: React.Ref<HTMLButtonElement>, node: HTMLButtonElement | null): void {

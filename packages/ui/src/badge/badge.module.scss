@@ -78,6 +78,10 @@
 		--badge-internal-foreground: var(--badge-highlight-danger-foreground, var(--text-ink-500));
 	}
 
+	&[data-text-transform='none'] {
+		--badge-internal-text-transform: none;
+	}
+
 	&[data-text-transform='capitalize'] {
 		--badge-internal-text-transform: capitalize;
 	}
@@ -98,7 +102,9 @@
 		color: var(--badge-outlined-color, var(--badge-internal-outlined-foreground, var(--badge-internal-background)));
 	}
 
-	&:has([data-slot='badge-prefix'], [data-slot='badge-suffix']) {
+	// `$=` instead of an exact match: `Pill`/`Pill.Closeable` compose this class with their own
+	// `-prefix`/`-suffix` slot names (`pill-prefix`, `pill-suffix`), not `badge-prefix/suffix`.
+	&:has([data-slot$='-prefix'], [data-slot$='-suffix']) {
 		display: var(--badge-display, inline-flex);
 		align-items: var(--badge-align-items, center);
 		gap: var(--badge-gap, var(--spacing-2));

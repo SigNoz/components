@@ -1,9 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { Button } from '../button.js';
-import { mockLabelMeasurement, resetLabelMeasurement, resize, truncate } from './test-utils.js';
+import {
+	mockLabelMeasurement,
+	resetLabelMeasurement,
+	resize,
+	truncate,
+} from '../../__tests__/test-utils.js';
 
-beforeAll(mockLabelMeasurement);
+beforeAll(() => mockLabelMeasurement('button-label'));
 afterEach(resetLabelMeasurement);
 
 describe('Button textOverflow', () => {
