@@ -3,12 +3,17 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { Button } from '../button.js';
 import { Tooltip } from '../../tooltip/index.js';
-import { mockLabelMeasurement, resetLabelMeasurement, resize, truncate } from './test-utils.js';
+import {
+	mockLabelMeasurement,
+	resetLabelMeasurement,
+	resize,
+	truncate,
+} from '../../__tests__/test-utils.js';
 
 const REASON = 'You need write access to edit alerts';
 const LABEL = 'A very long destructive label';
 
-beforeAll(mockLabelMeasurement);
+beforeAll(() => mockLabelMeasurement('button-label'));
 afterEach(resetLabelMeasurement);
 
 describe('Button reason stacked over the truncated label', () => {

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { mockLabelMeasurement, resetLabelMeasurement, truncate } from '../__tests__/test-utils.js';
 import { Badge } from './index.js';
 
 describe('Badge rendering', () => {
@@ -137,69 +138,9 @@ describe('Badge width', () => {
 	});
 });
 
-/**
- * jsdom has no layout, so every element measures 0x0 and the label never reads as
- * truncated. These fake the two properties the truncation check looks at, for the
- * label slot only, so the rest of the tree keeps its real (zero) sizes.
- */
-let labelScrollWidth = 0;
-let labelClientWidth = 0;
-
-function isLabel(element: HTMLElement): boolean {
-	return element.dataset.slot === 'badge-label';
-}
-
-const resizeCallbacks = new Set<ResizeObserverCallback>();
-
-function truncate(): void {
-	labelScrollWidth = 300;
-	labelClientWidth = 100;
-}
-
-function mockLabelMeasurement(): void {
-	const scrollWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollWidth');
-	const clientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
-
-	Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
-		configurable: true,
-		get(this: HTMLElement) {
-			return isLabel(this) ? labelScrollWidth : (scrollWidth?.get?.call(this) ?? 0);
-		},
-	});
-	Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
-		configurable: true,
-		get(this: HTMLElement) {
-			return isLabel(this) ? labelClientWidth : (clientWidth?.get?.call(this) ?? 0);
-		},
-	});
-
-	globalThis.ResizeObserver = class ResizeObserver {
-		constructor(private readonly callback: ResizeObserverCallback) {}
-
-		observe(): void {
-			resizeCallbacks.add(this.callback);
-			this.callback([], this);
-		}
-
-		unobserve(): void {
-			resizeCallbacks.delete(this.callback);
-		}
-
-		disconnect(): void {
-			resizeCallbacks.delete(this.callback);
-		}
-	};
-}
-
-function resetLabelMeasurement(): void {
-	labelScrollWidth = 0;
-	labelClientWidth = 0;
-	resizeCallbacks.clear();
-}
-
 const LABEL = 'kubernetes-deployment-production-east-us-2';
 
-beforeAll(mockLabelMeasurement);
+beforeAll(() => mockLabelMeasurement('badge-label'));
 afterEach(resetLabelMeasurement);
 
 describe('Badge overflow tooltip', () => {

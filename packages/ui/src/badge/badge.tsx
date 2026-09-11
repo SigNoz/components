@@ -1,39 +1,7 @@
-import { cloneElement, forwardRef, isValidElement, type ReactElement, useId } from 'react';
-import { cn } from '../lib/utils.js';
-import { toCssLength } from '../lib/css-length.js';
-import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
-import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
-import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
-import styles from './badge.module.scss';
-import { BadgeTextOverflow, BadgeTextTransform } from './constants.js';
+import { forwardRef, type ForwardedRef } from 'react';
+import { BadgeRoot } from './subcomponents/badge-root.js';
+import { BadgeTextTransform } from './constants.js';
 import type { BadgeProps } from './types.js';
-
-function BadgeAffix({
-	slot,
-	element,
-	className,
-}: {
-	slot: 'badge-prefix' | 'badge-suffix';
-	element: ReactElement | undefined;
-	className: string;
-}): ReactElement | null {
-	if (!isValidElement<{ className?: string }>(element)) {
-		return null;
-	}
-
-	const clonedElement = cloneElement(element, {
-		className: cn(element.props.className, className),
-	});
-
-	return (
-		<span data-slot={slot} aria-hidden="true">
-			{clonedElement}
-		</span>
-	);
-}
 
 /**
  * Renders a `<span>` for status, counts, and labels, in the same colors as `Button`.
@@ -114,76 +82,14 @@ function BadgeAffix({
  * ```
  */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
-	{
-		className,
-		variant,
-		color,
-		textTransform = BadgeTextTransform.Uppercase,
-		textOverflow = BadgeTextOverflow.Ellipsis,
-		testId,
-		width,
-		maxWidth,
-		style,
-		prefix,
-		suffix,
-		children,
-		...props
-	},
+	{ textTransform = BadgeTextTransform.Uppercase, ...props },
 	ref,
 ) {
-	const hasOverflowTooltip = textOverflow === BadgeTextOverflow.Ellipsis;
-	const [isTruncated, labelRef] = useIsLabelTruncated(hasOverflowTooltip);
-	const tooltipHandle = useTooltipHandle();
-	const tooltipContentId = useId();
-
-	if (children == null || children === false || children === '') {
-		return null;
-	}
-
-	const badgeStyle = {
-		...style,
-		...(width != null && { '--badge-internal-width': toCssLength(width) }),
-		...(maxWidth != null && { '--badge-internal-max-width': toCssLength(maxWidth) }),
-	};
-
-	const badgeEl = (
-		<span
-			data-slot="badge"
-			data-color={color}
-			data-variant={variant}
-			data-text-transform={textTransform}
-			data-text-overflow={textOverflow}
-			data-truncated={isTruncated || undefined}
-			className={cn(styles['badge'], className)}
-			ref={ref}
-			style={badgeStyle}
-			{...props}
-			{...(testId === undefined ? {} : { 'data-testid': testId })}
-		>
-			<BadgeAffix slot="badge-prefix" element={prefix} className={styles['badge__prefix']} />
-			<span ref={labelRef} data-slot="badge-label" className={styles['badge__label']}>
-				{children}
-			</span>
-			<BadgeAffix slot="badge-suffix" element={suffix} className={styles['badge__suffix']} />
-		</span>
-	);
-
-	if (!hasOverflowTooltip) {
-		return badgeEl;
-	}
-
 	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger handle={tooltipHandle} contentId={isTruncated ? tooltipContentId : undefined}>
-				{badgeEl}
-			</TooltipTrigger>
-			{isTruncated && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId} className={styles['badge__label-tooltip']}>
-						{children}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
+		<BadgeRoot
+			{...props}
+			textTransform={textTransform}
+			ref={ref as ForwardedRef<HTMLSpanElement | HTMLButtonElement>}
+		/>
 	);
 });
