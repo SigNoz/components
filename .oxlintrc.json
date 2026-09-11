@@ -79,6 +79,25 @@
 				"signoz/no-conditional-text-nodes-with-siblings": "error",
 				"signoz/no-return-text-nodes": "error"
 			}
+		},
+		{
+			"files": [
+				"packages/ui/src/badge/**/*.tsx",
+				"packages/ui/src/button/**/*.tsx",
+				"packages/ui/src/tooltip/**/*.tsx"
+			],
+			"rules": {
+				"react/incompatible-library": "error",
+				"react/refs": "error",
+				"react/set-state-in-effect": "error",
+				"react/no-deriving-state-in-effects": "error",
+				"react/capitalized-calls": "error",
+				"react/hooks": "error",
+				"react/memo-dependencies": "error",
+				"react/invariant": "error",
+				"react/syntax": "error",
+				"react/unsupported-syntax": "error"
+			}
 		}
 	]
 }
