@@ -15,6 +15,7 @@ import scss from 'react-syntax-highlighter/dist/esm/languages/prism/scss';
 import { SyntaxHighlighter } from 'storybook/internal/components';
 import { themes } from 'storybook/theming';
 import { ModeDecorator } from './modeDecorator.jsx';
+import { settleForCapture } from './settleForCapture.js';
 
 SyntaxHighlighter.registerLanguage('scss', scss);
 SyntaxHighlighter.registerLanguage('bash', bash);
@@ -72,3 +73,23 @@ export const decorators = [
 ];
 
 export const tags = ['autodocs'];
+
+export const globalTypes: Preview['globalTypes'] = {
+	motion: {
+		description:
+			'Park every animation on its last frame once the story has settled. Still is what Chromatic shoots; Live is for watching a transition.',
+		toolbar: {
+			title: 'Motion',
+			icon: 'play',
+			items: [
+				{ value: 'still', title: 'Still' },
+				{ value: 'live', title: 'Live' },
+			],
+			dynamicTitle: true,
+		},
+	},
+};
+
+export const initialGlobals: Preview['initialGlobals'] = { motion: 'still' };
+
+export const afterEach: Preview['afterEach'] = settleForCapture;
