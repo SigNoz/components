@@ -8,7 +8,11 @@ import { Switch } from './switch/switch.js';
 
 describe('wrapper prop targeting regressions', () => {
 	it('forwards style on Badge', () => {
-		render(<Badge style={{ letterSpacing: '2px' }}>L</Badge>);
+		render(
+			<Badge variant="solid" color="primary" style={{ letterSpacing: '2px' }}>
+				L
+			</Badge>,
+		);
 		expect(screen.getByText('L')).toHaveStyle({ letterSpacing: '2px' });
 	});
 
