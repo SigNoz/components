@@ -2,13 +2,17 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { Button } from '../button.js';
-import { mockLabelMeasurement, resetLabelMeasurement, truncate } from './test-utils.js';
+import {
+	mockLabelMeasurement,
+	resetLabelMeasurement,
+	truncate,
+} from '../../__tests__/test-utils.js';
 
 const BUSY = 'Deleting the rules, this can take a minute';
 const REASON = 'You need write access to edit alerts';
 const LABEL = 'Delete every alert rule in this workspace';
 
-beforeAll(mockLabelMeasurement);
+beforeAll(() => mockLabelMeasurement('button-label'));
 afterEach(resetLabelMeasurement);
 
 describe('Button loadingTooltip', () => {

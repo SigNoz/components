@@ -46,8 +46,8 @@ Five principles behind every component. Read when building; refer back when maki
 4. Props are **picked deliberately**, exposing only what the component actually needs, and
    **every prop carries JSDoc**, so a human or an agent reading the type declaration
    understands it without opening the implementation.
-5. **One story file per exported component**, subcomponents included. Symbols tagged
-   `@access private` are exempt.
+5. **One story file per root component, plus one per preset.** Subcomponent stories live in
+   their parent's file, never in a file of their own. Symbols tagged `@access private` are exempt.
 
 Reference implementations to copy from:
 
@@ -590,7 +590,7 @@ interaction test corpus, so treat them as product surface.
 | --- | --- |
 | `badge.stories.tsx` | `Primitive Components/Badge` |
 | `dialog-primitive.stories.tsx` | `Primitive Components/Dialog` |
-| `dialog-content.stories.tsx` | `Primitive Components/Dialog/DialogContent` |
+| `drawer-wrapper.stories.tsx` | `Composed Components/Drawer/DrawerWrapper` |
 | `confirm-dialog.stories.tsx` | `Composed Components/ConfirmDialog` |
 
 Top-level groups are fixed by `storySort.order` in `apps/docs/.storybook/preview.tsx`:
@@ -602,20 +602,25 @@ Top-level groups are fixed by `storySort.order` in `apps/docs/.storybook/preview
   Never put a new component there.
 - Don't invent a new top-level group.
 
-**One story file per exported component**, subcomponents included. That is what makes
-per-component Controls tables possible. Symbols tagged `@access private` are exempt: they are
-not public API, so they get no story and no Controls table. Bind `Meta` to the actual symbol:
+**One story file per root component, plus one per preset.** A subcomponent never gets a file of
+its own: `Meta` binds the parent, and the subcomponent gets a story in that same file with
+`argTypes` overridden for any props it adds, drops or re-types, so its `<Controls>` table stays
+accurate. Symbols tagged `@access private` are exempt: they are not public API, so they get no
+story and no Controls table. Files such as `dialog-content.stories.tsx` predate this rule; don't
+add more, and don't migrate them as a side effect of an unrelated change.
+
+A preset is a root of its own, so it gets a file, and its `Meta` binds the preset:
 
 ```tsx
-const meta: Meta<typeof DialogContent> = {
-  title: 'Primitive Components/Dialog/DialogContent',
-  component: DialogContent,
+const meta: Meta<typeof ConfirmDialog> = {
+  title: 'Composed Components/ConfirmDialog',
+  component: ConfirmDialog,
   tags: ['autodocs'],
   parameters: { layout: 'fullscreen' },
   argTypes: { /* ... */ },
 };
 export default meta;
-type Story = StoryObj<typeof DialogContent>;
+type Story = StoryObj<typeof ConfirmDialog>;
 ```
 
 `tags: ['autodocs']` is already global in `preview.tsx`, as is the docs page template
@@ -669,8 +674,8 @@ argTypes: {
    Realistic args, no hooks in `args`.
 2. **One story per meaningful state**: each variant, each colour, sizes, loading, disabled,
    invalid, with icon, long/truncated content, empty state.
-3. **Subcomponent stories render inside a realistic parent**: `DialogContent` inside a
-   `Dialog`, `RadioGroupItem` inside a `RadioGroup`.
+3. **Subcomponent stories sit in the parent's file and render inside a realistic parent**:
+   `DialogContent` inside a `Dialog`, `RadioGroupItem` inside a `RadioGroup`.
 4. **Interactive stories own their state** via `useState` in `render`, or via a decorator.
    URL-driven presets need a `NuqsAdapter` decorator plus `useQueryState` in the decorator,
    keeping `args` hook-free.
@@ -706,10 +711,9 @@ Short description, then a real usage snippet.
 For a component with subcomponents and presets, order the page the way people adopt it:
 presets first, then the primitive composition example, then a `## X Props` +
 `<Controls of={XStories.Default} />` section per subcomponent. Copy `dialog.mdx` /
-`radio-group.mdx`. Each `<Controls>` must point at the story module for *that* component. A
-wrong reference silently renders the wrong props table.
-
-Long-form version of this as a Claude skill: `.claude/skills/component-docs-stories/SKILL.md`.
+`radio-group.mdx`. Each `<Controls>` must point at the story for *that* piece, which may live in
+the parent's story module when the subcomponent shares it. A wrong reference silently renders the
+wrong props table.
 
 ## 6. Visual QA
 

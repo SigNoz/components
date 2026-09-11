@@ -247,6 +247,16 @@
 				"require": "./dist/pin-list/index.cjs"
 			}
 		},
+		"./pill": {
+			"import": {
+				"types": "./dist/pill/index.d.ts",
+				"import": "./dist/pill/index.mjs"
+			},
+			"require": {
+				"types": "./dist/pill/index.d.cts",
+				"require": "./dist/pill/index.cjs"
+			}
+		},
 		"./popover": {
 			"import": {
 				"types": "./dist/popover/index.d.ts",
