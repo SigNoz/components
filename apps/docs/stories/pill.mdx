@@ -1,0 +1,155 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PillStories from './pill.stories';
+
+<Meta of={PillStories} />
+
+# Pill
+
+A native `<button>`, rendered through `Badge`'s root with `as="button"`. It has the same color and
+variant tokens as `Badge`, plus truncation and width controls, and it forwards every `aria-*` and
+`data-*` attribute.
+
+`Badge` is the non-interactive `<span>` for status and counts. `Pill` is the clickable one, with no
+`prefix`/`suffix` slots: for a label that only has to be read, reach for `Badge`.
+
+## How to use
+
+`variant`, `color` and the children are all required, same as `Badge`: the pill has no default
+appearance, every call site says what it is.
+
+```tsx
+import { Pill } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Pill variant="outlined" color="secondary" onClick={() => setFilter('env:prod')}>
+			env:prod
+		</Pill>
+	);
+}
+```
+
+<Primary />
+
+## Variants
+
+Pill has a single visual treatment: `outlined` tints the border and the text with no fill. The
+`variant` prop stays for API parity with `Badge`, but `solid` is not offered.
+
+```tsx
+<Pill variant="outlined" color="secondary">
+	env:prod
+</Pill>
+```
+
+## Colors
+
+`color` swaps the palette behind the outlined tint: `primary`, `secondary`, `danger`, `warning`,
+`success`, `info`, `archive` and `highlight-danger`.
+
+```tsx
+<Pill variant="outlined" color="danger">Critical</Pill>
+<Pill variant="outlined" color="warning">Degraded</Pill>
+<Pill variant="outlined" color="archive">Archived</Pill>
+```
+
+## Text transform
+
+Unlike `Badge`, `textTransform` defaults to `none`: a pill is content the user picked or typed, so
+it keeps its own case. `capitalize` and `lowercase` are the only transforms on offer, `uppercase` is
+not one of them.
+
+```tsx
+<Pill variant="outlined" color="secondary">checkout-service</Pill>
+<Pill variant="outlined" color="secondary" textTransform="capitalize">firing</Pill>
+```
+
+## Hover, focus and keyboard
+
+Being a real `<button>`, hover, `:focus-visible` and Enter/Space activation all come from the
+platform, nothing to wire up. Hover deepens the tint: the fill steps from 20% to 30% and the border
+from 40% to 60%.
+
+## Disabled and invalid
+
+`disabled` is the native button attribute, so the browser blocks clicks and keyboard activation and
+drops the pill from the tab order. `aria-invalid` repaints the border and the label with
+`--destructive`, over whatever `color` picked.
+
+```tsx
+<Pill variant="outlined" color="secondary" disabled>env:prod</Pill>
+<Pill variant="outlined" color="secondary" aria-invalid>env:prod</Pill>
+```
+
+## Width
+
+Without `width` the pill sizes to its content, and `maxWidth` caps it. Both are written as
+`--pill-internal-width` and `--pill-internal-max-width`, not as `style.width`, so they compose with
+the `--pill-*` tokens and keep any `style` you pass. Numbers are written as `px`.
+
+```tsx
+<Pill variant="outlined" color="secondary" maxWidth="10rem">
+	checkout-service-production-east-us-2
+</Pill>
+<Pill variant="outlined" color="primary" width={64}>
+	12
+</Pill>
+```
+
+## Text overflow
+
+`textOverflow` decides what happens to the content once it does not fit that width. `ellipsis` is
+the default: it truncates, marks the pill with `data-truncated`, and hands the full content to a
+tooltip, only while it is actually truncated, so content that fits never opens one. `none` clips at
+the pill's edge, with no marker and no tooltip.
+
+```tsx
+<Pill variant="outlined" color="secondary" maxWidth="10rem">
+	checkout-service-production-east-us-2
+</Pill>
+<Pill variant="outlined" color="secondary" maxWidth="10rem" textOverflow="none">
+	checkout-service-production-east-us-2
+</Pill>
+```
+
+## Empty content
+
+`children` is required, and a pill with nothing in it renders nothing at all: `null`, `false` and
+`''` all return no element. So a filter that is not set yet leaves no empty pill behind.
+
+```tsx
+// renders nothing while `filter` is undefined
+<Pill variant="outlined" color="secondary">
+	{filter}
+</Pill>
+```
+
+## Pill.Closeable
+
+A dismissible pill: fixed neutral fill, no `variant` or `color` to pick. Renders two focus stops,
+the pill body and the close icon. The body is a `<span role="button">`, the close icon is a real
+`<button>`. `onClose` is required. Activating the close icon calls `onClose`, never `onClick`, and
+stops the click from reaching the body. With the body focused, `Backspace` and `Delete` call
+`onClose` too, so a chip is removable without tabbing to its icon.
+
+The body is named by its label, so the close button's own name never leaks into it. That name
+defaults to `Remove {children}` for string children and to `Remove` otherwise; give
+`closeAriaLabel` when several chips sit together.
+
+```tsx
+<Pill.Closeable onClick={openFilter} onClose={() => removeFilter('env')}>
+	env:prod
+</Pill.Closeable>
+
+<Pill.Closeable onClose={dropEnvFilter} closeAriaLabel="Remove the environment filter">
+	<code>env:prod</code>
+</Pill.Closeable>
+```
+
+## Props
+
+<Controls of={PillStories.Playground} />
+
+### Pill.Closeable props
+
+<Controls of={PillStories.Closeable} />
