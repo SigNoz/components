@@ -1,5 +1,9 @@
 const STILL_CLASS = 'sb-still';
 
+interface CaptureHooks {
+	__signozSnapPinnedScrollers?: () => void;
+}
+
 /**
  * A list that keeps itself pinned to the bottom settles a few pixels short of
  * it, and where it stops depends on the order its items were measured in.
@@ -26,4 +30,9 @@ export const settleForCapture = ({ globals }: { globals: Record<string, unknown>
 	document.documentElement.classList.toggle(STILL_CLASS, globals.motion !== 'live');
 
 	snapPinnedScrollers();
+
+	// The local harness runs this again once the page has gone quiet: a list is
+	// often still measuring when `afterEach` fires, and there is no event that
+	// says it stopped.
+	(window as unknown as CaptureHooks).__signozSnapPinnedScrollers = snapPinnedScrollers;
 };

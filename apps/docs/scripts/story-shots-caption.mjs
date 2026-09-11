@@ -94,10 +94,10 @@ const fontArgs = (role) => {
 /** Readable at fit-to-width, whatever the image is. */
 export const pointsize = (width) => Math.min(Math.max(Math.round(width / 45), 24), 140);
 
-// `label:` expands ImageMagick's own escapes and reads a file when the text
-// starts with @, so story names and arg values go through neither.
 export const bodyFont = () => fontArgs('body');
 
+// `label:` expands ImageMagick's own escapes and reads a file when the text
+// starts with @, so story names and arg values go through neither.
 export const literal = (text) => text.replaceAll('%', '%%').replace(/^@/, ' @');
 
 /** The gutter is the opposite of the theme, so the band keeps an edge. */

@@ -11,6 +11,7 @@
 		"clean": "rm -rf .turbo && rm -rf node_modules",
 		"chromatic": "pnpm dlx chromatic --exit-zero-on-changes  --config-file 'chromatic.config.json'",
 		"diff:shots": "node scripts/story-shots-diff.mjs",
+		"shots": "node scripts/story-shots.mjs",
 		"test": "vitest",
 		"test-storybook": "vitest --project=storybook"
 	},
