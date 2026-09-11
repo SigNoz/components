@@ -5,6 +5,8 @@ on:
     branches:
       - main
     types: [closed]
+  # Manual run to seed or repair the `main` baseline. Only honoured on `main`.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,14 +20,15 @@ jobs:
     name: Run Chromatic
     runs-on: ubuntu-latest
     if: >-
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'update-visual-testing')
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'update-visual-testing'))
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -43,16 +46,20 @@ jobs:
 
       - name: Run Chromatic
         uses: chromaui/action@latest
-        # The action reads the commit and branch from the pull_request context,
-        # which points at the PR head. Squash merges leave that commit
-        # unreachable from main, so the baseline lands under a SHA later runs
-        # can't resolve and TurboSnap falls back to an ancient build. Report the
-        # squash commit that actually landed on main, on main, instead.
-        env:
-          CHROMATIC_SHA: ${{ github.event.pull_request.merge_commit_sha }}
-          CHROMATIC_BRANCH: main
-          CHROMATIC_SLUG: ${{ github.repository }}
+        # On `pull_request` the action reports the PR head commit and branch. A squash
+        # merge leaves that commit unreachable from main, so the baseline lands under a
+        # SHA later runs can't resolve and TurboSnap falls back to an ancient build.
+        # Report the squash commit that actually landed on main, on main, instead.
+        #
+        # These must be action inputs, not `env`. The action overwrites the
+        # CHROMATIC_BRANCH and CHROMATIC_SLUG environment variables with values from
+        # the event payload; only CHROMATIC_SHA survives. See chromaui/action main.ts:
+        #   process.env.CHROMATIC_BRANCH = branchName || branch;
+        #   process.env.CHROMATIC_SLUG = repositorySlug || slug;
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          branchName: main
+          repositorySlug: ${{ github.repository }}
+          chromaticSha: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
           autoAcceptChanges: main
           onlyChanged: true
