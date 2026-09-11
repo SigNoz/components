@@ -17,3 +17,5 @@ apps/packages-playground/
 **/yalc.lock
 packages/ui/README.md
 COMPONENT_AUDIT_RESULTS.md
+
+.story-shots/
