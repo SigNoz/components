@@ -22,19 +22,19 @@ export const Default: Story = {
 	render: (args) => (
 		<DialogWrapper
 			trigger={
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open dialog
 				</Button>
 			}
 			footer={
 				<>
 					<DialogClose {...args}>
-						<Button variant={ButtonVariant.Ghost} color="secondary">
+						<Button variant={ButtonVariant.Ghost} color="secondary" size="md">
 							Cancel
 						</Button>
 					</DialogClose>
 					<DialogClose {...args}>
-						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 							Close
 						</Button>
 					</DialogClose>

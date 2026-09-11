@@ -286,7 +286,7 @@ export const TooltipShowcase: Story = {
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Secondary}
 									size={ButtonSize.MD}
-									style={{ width: TRIGGER_WIDTH }}
+									width={TRIGGER_WIDTH}
 								>
 									{side} / {align}
 								</Button>
@@ -312,7 +312,7 @@ export const TooltipShowcase: Story = {
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Secondary}
 									size={ButtonSize.MD}
-									style={{ width: TRIGGER_WIDTH }}
+									width={TRIGGER_WIDTH}
 								>
 									{label}
 								</Button>
@@ -470,7 +470,8 @@ export const TooltipShowcase: Story = {
 							<Button
 								variant={ButtonVariant.Ghost}
 								color={ButtonColor.Secondary}
-								size={ButtonSize.Icon}
+								size={ButtonSize.MD}
+								icon
 								aria-label="What this metric means"
 							>
 								<Info />

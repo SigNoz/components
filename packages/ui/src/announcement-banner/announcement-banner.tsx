@@ -103,6 +103,7 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 							color="primary"
 							className={styles.banner__action}
 							onClick={action.onClick}
+							size="md"
 						>
 							{action.label}
 						</Button>
@@ -116,10 +117,12 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 						aria-label="Dismiss"
 						variant="solid"
 						color="primary"
-						size="icon"
-						suffix={<X size={14} />}
+						size="md"
+						icon
 						onClick={onClose}
-					/>
+					>
+						<X size={14} />
+					</Button>
 				)}
 			</div>
 		);

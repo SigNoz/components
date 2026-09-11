@@ -1,22 +1,27 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as ButtonStories from './button.stories';
-import * as ButtonGroupStories from './button-group.stories';
-import { Button } from '@signozhq/ui';
 
 <Meta of={ButtonStories} />
 
 # Button
 
-A versatile button that maps to a native `<button>` (or any child via `asChild`). Supports color/variant/size tokens, prefix/suffix slots, loading state, and forwards every native `HTMLButtonElement` attribute + event handler.
+A native `<button>`, rendered through Base UI's `Button`. It has color, variant and size tokens,
+prefix and suffix slots, a loading state, and it forwards every `aria-*` and `data-*` attribute.
 
 ## How to use
+
+`variant`, `color`, `size` and the children are all required: the button has no default
+appearance, every call site says what it is.
 
 ```tsx
 import { Button } from '@signozhq/ui';
 
 export default function MyComponent() {
-	// the default button is a solid button with the primary color
-	return <Button>Click Me</Button>;
+	return (
+		<Button variant="solid" color="primary" size="md">
+			Click Me
+		</Button>
+	);
 }
 ```
 
@@ -24,119 +29,169 @@ export default function MyComponent() {
 
 ## Variants
 
-`variant` controls the visual treatment. `solid` is the default; `outlined` + `dashed` work best paired with `color="secondary"`; `ghost` is a borderless text-only button; `link` styles the button as inline text; `action` reads its background from the surrounding surface (see [Action buttons](#action-buttons)).
+`variant` picks the visual treatment. `solid` is filled, `outlined` and `dashed` are bordered,
+`ghost` is borderless, and `link` styles the button as inline text.
+
+`solid` and `link` take every `color`. The other three only exist in the secondary treatment, so
+`color="secondary"` is the only value they accept. Anything else is a type error.
 
 ```tsx
-<Button variant="solid">Solid</Button>
-<Button variant="outlined" color="secondary">Outlined</Button>
-<Button variant="dashed" color="secondary">Dashed</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="link">Link</Button>
+<Button variant="solid" color="primary" size="md">Solid</Button>
+<Button variant="outlined" color="secondary" size="md">Outlined</Button>
+<Button variant="dashed" color="secondary" size="md">Dashed</Button>
+<Button variant="ghost" color="secondary" size="md">Ghost</Button>
+<Button variant="link" color="primary" size="md">Link</Button>
 ```
 
 ## Colors
 
-`color` swaps the palette behind any variant. Pair with `variant` to get the right combination.
+`color` swaps the palette behind `solid` and `link`: `primary`, `secondary`, `danger`, `warning`,
+`success`, `info`, `archive` and `highlight-danger`.
 
 ```tsx
-<Button>Primary</Button>
-<Button color="destructive">Destructive</Button>
-<Button color="warning">Warning</Button>
-<Button variant="outlined" color="secondary">Secondary</Button>
+<Button variant="solid" color="primary" size="md">Primary</Button>
+<Button variant="solid" color="danger" size="md">Danger</Button>
+<Button variant="solid" color="warning" size="md">Warning</Button>
+<Button variant="link" color="success" size="md">Success</Button>
 ```
 
 ## Sizes
 
-`size="sm"` and `size="md"` (default) cover the common cases. `size="icon"` produces a square button sized for a single icon child.
+`size="sm"` is 24px tall, `size="md"` is 32px. In `icon` mode both are square.
 
 ```tsx
-<Button size="sm">Small</Button>
-<Button size="md">Medium</Button>
-<Button size="icon" aria-label="More"><Ellipsis /></Button>
+<Button variant="solid" color="primary" size="sm">Small</Button>
+<Button variant="solid" color="primary" size="md">Medium</Button>
 ```
 
-## Icons (prefix / suffix)
+## Icons
 
-Place an icon before or after the label with `prefix` / `suffix`. For an icon-only button, combine `prefix` with `size="icon"`.
+`prefix` and `suffix` place an element before or after the label. For an icon-only button, set
+`icon` and pass the icon as the only child: `prefix` and `suffix` are not allowed in that mode,
+and `aria-label` is required because there is no text to announce.
 
 ```tsx
-<Button prefix={<Plus />}>Create alert</Button>
-<Button suffix={<ChevronRight />} variant="outlined" color="secondary">Next</Button>
-<Button size="icon" prefix={<Code />} aria-label="Code" />
+import { ChevronRight, Ellipsis, Plus } from '@signozhq/icons';
+
+<Button variant="solid" color="primary" size="md" prefix={<Plus />}>
+	Create alert
+</Button>
+<Button variant="outlined" color="secondary" size="md" suffix={<ChevronRight />}>
+	Next
+</Button>
+<Button variant="ghost" color="secondary" size="md" icon aria-label="More actions">
+	<Ellipsis />
+</Button>
 ```
 
 ## Loading
 
-`loading` disables the button and replaces the leading icon with a spinner. The `suffix` is hidden while loading.
+`loading` stops the button from responding to clicks and keyboard activation, and cross-fades a
+spinner over the `prefix` slot. The label and `suffix` stay visible.
 
 ```tsx
-<Button loading prefix={<Plus />}>
-	Saving…
+<Button variant="solid" color="primary" size="md" loading prefix={<Plus />}>
+	Saving...
 </Button>
 ```
 
-## Action buttons
-
-`variant="action"` reads its background from the surface it's placed on via the `background` prop (`ink-500`, `ink-400`, `vanilla-100`, `vanilla-200`).
+`loadingTooltip` is optional and says what the button is busy with, on hover or focus, for as long
+as `loading` is true. The spinner alone is already a valid busy state, so reach for it when the
+wait is long enough that the user deserves to know what is happening.
 
 ```tsx
-<div style={{ padding: '1.5rem', backgroundColor: 'var(--bg-ink-500)' }}>
-	<Button variant="action" background="ink-500" prefix={<ChevronLeft />}>
-		Action
+<Button
+	variant="solid"
+	color="primary"
+	size="md"
+	loading={isSaving}
+	loadingTooltip="Saving your changes"
+	prefix={<Plus />}
+>
+	Save
+</Button>
+```
+
+## Text overflow
+
+`textOverflow` decides what happens to the label when it does not fit the width of the button.
+`ellipsis` is the default: it truncates the label and shows the full text in a tooltip on hover or
+focus, and only while the label is actually truncated, so a label that fits never opens one.
+`none` clips the label at the edge of the button, with no ellipsis marker and no tooltip.
+
+```tsx
+<Button variant="solid" color="primary" size="md" width="12rem">
+	Delete every alert rule in this workspace
+</Button>
+<Button variant="solid" color="primary" size="md" width="12rem" textOverflow="none">
+	Delete every alert rule in this workspace
+</Button>
+```
+
+The tooltip belongs to `ellipsis` alone, and icon buttons (`icon`) have no label, so they never
+get one.
+
+## Disabled
+
+`disabledTooltip` is mandatory whenever `disabled` is set, and it only opens while the button is
+disabled. The two travel together in both directions: a `disabledTooltip` without `disabled` is a
+type error too.
+
+```tsx
+<Button
+	variant="solid"
+	color="primary"
+	size="md"
+	disabled={!canEdit}
+	disabledTooltip="You need write access to edit alerts"
+>
+	Edit alert
+</Button>
+```
+
+A native `disabled` button receives no hover or focus events, so the tooltip would be unreachable
+on it, and clicking a button that goes native-disabled mid-interaction throws the focus away. The
+button therefore never uses the native attribute: it carries `aria-disabled` instead, which keeps
+clicks and keyboard activation blocked but leaves the button hoverable and in the tab order.
+
+## Stacked tooltips
+
+The button owns up to two tooltips at a time: a reason, and the full text of a truncated label.
+Two tooltips anchored to the same element would open on the same hover and render on top of each
+other, so both go into one popup, the reason first and the label under it, with a divider between
+them.
+
+The reason slot holds `loadingTooltip` while the button is loading, and `disabledTooltip` while it
+is disabled and idle. Only one of them can ever show.
+
+Wrapping the button in a tooltip of your own adds your title to that same popup, above both:
+
+```tsx
+<Tooltip title="Removes every rule, cannot be undone">
+	<Button
+		variant="solid"
+		color="primary"
+		size="md"
+		width="12rem"
+		disabled={!canEdit}
+		disabledTooltip="You need write access to edit alerts"
+	>
+		Delete every alert rule in this workspace
 	</Button>
-</div>
+</Tooltip>
 ```
 
-## `asChild`
-
-Render the button as the immediate child element (via Radix `Slot`) instead of a native `<button>`. Use this to turn a `Button` into a link while keeping its styling.
-
-```tsx
-<Button asChild variant="link" color="primary">
-	<a href="/docs">Read the docs</a>
-</Button>
+```
+Removes every rule, cannot be undone
+────────────────────────────────────
+You need write access to edit alerts
+────────────────────────────────────
+Delete every alert rule in this workspace
 ```
 
-`loading`, `prefix`, and `suffix` are not supported in this mode.
+While `loading`, `disabledTooltip` drops out because the spinner already says the button is busy,
+and `loadingTooltip` takes its place. A truncated label keeps its entry either way.
 
-## Native attributes
-
-`ButtonProps` extends `HTMLButtonElement`'s attribute surface. All standard event handlers (`onClick`, `onMouseEnter`/`Leave`, `onFocus`/`Blur`, `onKeyDown`/`Up`, etc.) plus `aria-*`, `data-*`, `tabIndex`, `id`, `title`, and `type="submit" | "button" | "reset"` are typed and forwarded.
-
-```tsx
-<form onSubmit={onSubmit}>
-	<Button type="submit">Submit</Button>
-</form>
-```
-
-## ButtonGroup
-
-`ButtonGroup` is a segmented cluster of related buttons. It renders `<div role="group">` with deduped internal borders and only the outer corners rounded. `size`, `variant`, and `color` set on the group are inherited by descendant `Button`s through context — per-button props still take precedence.
-
-```tsx
-import { Button, ButtonGroup } from '@signozhq/ui';
-
-<ButtonGroup variant="outlined" color="secondary">
-	<Button>Day</Button>
-	<Button>Week</Button>
-	<Button>Month</Button>
-</ButtonGroup>;
-```
-
-Override the color of a single member without touching the rest of the group:
-
-```tsx
-<ButtonGroup variant="outlined" color="secondary">
-	<Button>Approve</Button>
-	<Button>Hold</Button>
-	<Button color="destructive">Reject</Button>
-</ButtonGroup>
-```
-
-## Button Props
+## Props
 
 <Controls of={ButtonStories.Default} />
-
-## ButtonGroup Props
-
-<Controls of={ButtonGroupStories.Default} />

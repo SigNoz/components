@@ -34,7 +34,7 @@ export const Default: Story = {
 	render: (args) => (
 		<Drawer>
 			<DrawerTrigger asChild>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open drawer
 				</Button>
 			</DrawerTrigger>
@@ -46,11 +46,11 @@ export const Default: Story = {
 					This drawer uses DrawerClose in the footer for the close action.
 				</DrawerDescription>
 				<DrawerFooter>
-					<Button variant={ButtonVariant.Ghost} color="secondary">
+					<Button variant={ButtonVariant.Ghost} color="secondary" size="md">
 						Cancel
 					</Button>
 					<DrawerClose {...args}>
-						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 							Close
 						</Button>
 					</DrawerClose>
