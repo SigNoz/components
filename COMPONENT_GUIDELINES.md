@@ -46,7 +46,8 @@ Five principles behind every component. Read when building; refer back when maki
 4. Props are **picked deliberately**, exposing only what the component actually needs, and
    **every prop carries JSDoc**, so a human or an agent reading the type declaration
    understands it without opening the implementation.
-5. **One story file per exported component**, subcomponents included.
+5. **One story file per exported component**, subcomponents included. Symbols tagged
+   `@access private` are exempt.
 
 Reference implementations to copy from:
 
@@ -93,11 +94,14 @@ packages/ui/src/dialog/
 
 Rules:
 
-- **`subcomponents/`** holds the composable primitives. One file per exported component, named
-  after it in kebab-case (`dialog-close-button.tsx` for `DialogCloseButton`). `select/` uses
-  `components/` for this. That is drift, not an alternative. Use `subcomponents/`.
-- **`presets/`** holds the batteries-included versions. A preset must be buildable from the
-  exported primitives. If it needs something the primitives don't expose, expose it.
+- **`subcomponents/`** holds the parts a component is composed from. One file per component,
+  named after it in kebab-case (`dialog-close-button.tsx` for `DialogCloseButton`). `select/`
+  uses `components/` for this. That is drift, not an alternative. Use `subcomponents/`.
+- **`presets/`** holds the batteries-included versions, built from the subcomponents.
+- A composed component exports only the composed surface. Its subcomponents stay out of
+  `index.ts` and carry `@access private` (`tooltip/` exports `Tooltip`, not `TooltipTrigger` or
+  `TooltipContent`). Another component that needs one imports it by relative path, and a change
+  to that subcomponent has to keep those imports working.
 - Shared non-component logic goes in `utils.ts` (see `pagination/utils.ts`) or a `lib/`
   subfolder (`table/lib/`). Cross-component helpers go in `src/lib/`.
 - One style file per component directory is the norm; add `{subcomponent}.module.scss` only
@@ -129,6 +133,33 @@ export { Badge } from './badge.js';
 - Every type referenced by a public prop must be exported here. A prop typed with something a
   consumer can't import is a bug: they cannot declare their own handler or hold the value in a
   typed variable.
+- `@access private` in a symbol's JSDoc marks it as not public API: the subcomponents a
+  composed component is built from, its contexts and hooks. Nothing outside the package may
+  rely on it, it needs no story or MDX section, and it can change without a major version. A
+  symbol can carry the tag and still be exported when another component in this repo needs it
+  (`TooltipProviderIfMissing`).
+- Applying it is mechanical: **every `export` in the component directory that `index.ts` does
+  not re-export carries the tag**, props types as much as components (`TooltipTriggerProps`
+  next to `TooltipTrigger`), contexts, providers and hooks included. A symbol that is never
+  exported from its own file needs nothing, it is already unreachable.
+- A symbol listed in `index.ts` must **not** carry the tag. Public and private at once is a
+  bug: it exempts a real part of the surface from its story, MDX section and prop docs.
+- The tag goes last in the JSDoc block, after the prose and the other tags, separated by a
+  blank ` *` line. A symbol with no prose gets a block holding only the tag:
+
+```tsx
+/**
+ * Where the tooltip content is portalled to.
+ *
+ * @access private
+ */
+export type TooltipPortalProps = ...;
+
+/**
+ * @access private
+ */
+export type TooltipRootProps = ...;
+```
 
 ### Import hygiene
 
@@ -345,7 +376,6 @@ export interface BadgeProps extends Pick<
   testId?: string;
   variant?: BadgeVariant;
   color?: BadgeColor;
-  asChild?: boolean;
 }
 ```
 
@@ -458,8 +488,8 @@ the lowercase string that lands in `data-*`, and never a TS `enum`.
 
 | Convention | Rule |
 | --- | --- |
-| `forwardRef` | Every component forwards its ref to the real DOM node, and sets `Component.displayName = 'Component'` |
-| `asChild` | Support it (via `@radix-ui/react-slot`) wherever a consumer might want to swap the element. Document what it disables: `Badge` ignores `closable` under `asChild`; `Button` doesn't support `loading`/`prefix`/`suffix` |
+| `forwardRef` | Every component forwards its ref to the real DOM node. Name the render function, `forwardRef(function Badge(props, ref) { ... })`, so DevTools and stack traces show the name. An explicit `Component.displayName` does the same and stays valid where it already exists |
+| Providers | A component that needs a provider wraps itself in `XProviderIfMissing` (see `TooltipProviderIfMissing`), never in `XProvider`. It adds the provider when none is above and reuses the existing one otherwise, so the component never fails for want of a provider and never shadows what the app configured. Apps place `XProvider` once near the root |
 | `testId` | Always present; forwarded as `data-testid`. Don't make consumers use `className` for test hooks |
 | Defaults | Set in the destructuring (`variant = 'default'`), and mirrored in an `@default` JSDoc tag |
 | Controlled/uncontrolled | Follow Radix naming: `value`/`defaultValue`/`onChange`, `open`/`defaultOpen`/`onOpenChange` |
@@ -542,7 +572,8 @@ Top-level groups are fixed by `storySort.order` in `apps/docs/.storybook/preview
 - Don't invent a new top-level group.
 
 **One story file per exported component**, subcomponents included. That is what makes
-per-component Controls tables possible. Bind `Meta` to the actual symbol:
+per-component Controls tables possible. Symbols tagged `@access private` are exempt: they are
+not public API, so they get no story and no Controls table. Bind `Meta` to the actual symbol:
 
 ```tsx
 const meta: Meta<typeof DialogContent> = {
@@ -617,9 +648,14 @@ Layout: use the shared classes in `apps/docs/index.css` (`story-container`, `sto
 `story-grid`, `story-row`, `story-panel`, `icon-md`) or a `{name}.stories.module.css`. No
 Tailwind classes, and no ad-hoc inline `style` where a shared class exists.
 
+Snapshotted stories add `story-freeze-animations` to the story root: it pauses every animation
+at its first frame and drops every transition, document-wide, so a Chromatic capture cannot
+land mid-spinner or mid-marching-border. Leave it off the stories whose animation is the point.
+
 ### The MDX page
 
-One `{component}.mdx` per component, wiring Controls per exported piece:
+One `{component}.mdx` per component, wiring Controls per exported piece (`@access private`
+ones excluded):
 
 ```mdx
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
@@ -669,7 +705,7 @@ Visual changes need the `run-visual-testing` label on the PR to get Chromatic sn
 
 | File | Covers |
 | --- | --- |
-| `{name}.test.tsx` | Behaviour: each variant renders, callbacks fire, controlled + uncontrolled, keyboard interaction, `asChild` composition |
+| `{name}.test.tsx` | Behaviour: each variant renders, callbacks fire, controlled + uncontrolled, keyboard interaction |
 | `{name}.forward-ref.test.tsx` | `ref.current` is the expected element instance and carries `data-slot` |
 | `{name}.test-utils.tsx` | Shared render helpers, when several test files need them |
 | `apps/docs/stories/*.stories.tsx` | Render + interaction in a real browser via `@storybook/addon-vitest` |

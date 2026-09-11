@@ -74,13 +74,13 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] `{Component}Props` exported; only the props the component actually needs are exposed
 - [ ] Upstream-owned prop types borrowed by indexed access (`OriginalProps['x']`), never restated by hand
 - [ ] Every type named by a public prop is exported from `index.ts`
-- [ ] `forwardRef` + `displayName`; `asChild`, `testId` supported
+- [ ] `forwardRef` with a named render function (or `displayName`); `testId` supported
 - [ ] Defaults in the destructuring; controlled/uncontrolled naming follows Radix
 
 **Docs** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#4-how-to-document-props))
 
 - [ ] JSDoc on **every** public prop, with `@default` where applicable
-- [ ] Story file per exported component, correct `title` group
+- [ ] Story file per root component and per preset, subcomponent stories in the parent's file (`@access private` ones exempt), correct `title` group
 - [ ] `argTypes` complete with `category`, `type.summary`, `defaultValue.summary`
 - [ ] Stories for every meaningful state, not just the happy path
 - [ ] `{component}.mdx` with a usage snippet and a `<Controls>` per exported piece

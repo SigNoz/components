@@ -103,7 +103,8 @@ const meta: Meta<typeof ComboboxSimple> = {
 		},
 		disableTooltipProvider: {
 			control: 'boolean',
-			description: 'Disable internal TooltipProvider when already inside one.',
+			description:
+				'Deprecated. An outer TooltipProvider is detected on its own, so this no longer has to be set.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'boolean' },

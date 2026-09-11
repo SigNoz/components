@@ -8,8 +8,9 @@ import {
 } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/utils.js';
-import { TooltipProvider, TooltipSimple } from '../tooltip/index.js';
+import { Tooltip } from '../tooltip/index.js';
 import styles from './pin-list.module.scss';
+import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 
 /**
  * Represents a single item in the PinList component.
@@ -277,7 +278,7 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 		);
 
 		return (
-			<TooltipProvider>
+			<TooltipProviderIfMissing>
 				<motion.div
 					ref={ref}
 					className={cn(styles['container'], className)}
@@ -384,7 +385,7 @@ const PinList = React.forwardRef<HTMLDivElement, PinListProps>(
 						</div>
 					</LayoutGroup>
 				</motion.div>
-			</TooltipProvider>
+			</TooltipProviderIfMissing>
 		);
 	},
 );
@@ -456,7 +457,7 @@ const PinListItemComponent = React.memo(function PinListItemComponent({
 					{item.label}
 				</div>
 			</div>
-			<TooltipSimple title={tooltipTitle}>
+			<Tooltip title={tooltipTitle}>
 				<div
 					className={styles['item-pin-button']}
 					data-visible={isPinned || isHovered}
@@ -469,7 +470,7 @@ const PinListItemComponent = React.memo(function PinListItemComponent({
 						<Pin className={styles['item-icon']} />
 					)}
 				</div>
-			</TooltipSimple>
+			</Tooltip>
 		</motion.button>
 	);
 });
