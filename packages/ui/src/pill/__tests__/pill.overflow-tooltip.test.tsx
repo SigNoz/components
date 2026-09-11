@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
-import { Button } from '../button.js';
+
+import { Pill } from '../pill.js';
 import {
 	mockLabelMeasurement,
 	resetLabelMeasurement,
@@ -9,19 +10,19 @@ import {
 	truncate,
 } from '../../__tests__/test-utils.js';
 
-const LABEL = 'A very long destructive label';
+const LABEL = 'checkout-service-production-east-us-2';
 
-beforeAll(() => mockLabelMeasurement('button-label'));
+beforeAll(() => mockLabelMeasurement('pill-label'));
 afterEach(resetLabelMeasurement);
 
-describe('Button overflow tooltip', () => {
-	it('shows the full label on hover once the text is ellipsed', async () => {
+describe('Pill overflow tooltip', () => {
+	it('shows the full content on hover once it is truncated', async () => {
 		const user = userEvent.setup();
 		truncate();
 		render(
-			<Button size="md" variant="solid" color="primary">
+			<Pill variant="outlined" color="primary">
 				{LABEL}
-			</Button>,
+			</Pill>,
 		);
 
 		await user.hover(screen.getByRole('button'));
@@ -29,13 +30,13 @@ describe('Button overflow tooltip', () => {
 		expect(await screen.findByRole('tooltip')).toHaveTextContent(LABEL);
 	});
 
-	it('shows the full label on keyboard focus too', async () => {
+	it('shows the full content on keyboard focus too', async () => {
 		const user = userEvent.setup();
 		truncate();
 		render(
-			<Button size="md" variant="solid" color="primary">
+			<Pill variant="outlined" color="primary">
 				{LABEL}
-			</Button>,
+			</Pill>,
 		);
 
 		await user.tab();
@@ -43,20 +44,31 @@ describe('Button overflow tooltip', () => {
 		expect(await screen.findByRole('tooltip')).toHaveTextContent(LABEL);
 	});
 
-	it('ties the button to the popup with aria-describedby', async () => {
+	it('ties the pill to the popup with aria-describedby', async () => {
 		const user = userEvent.setup();
 		truncate();
 		render(
-			<Button size="md" variant="solid" color="primary">
+			<Pill variant="outlined" color="primary">
 				{LABEL}
-			</Button>,
+			</Pill>,
 		);
-		const button = screen.getByRole('button');
+		const pill = screen.getByRole('button');
 
-		await user.hover(button);
+		await user.hover(pill);
 
 		const tooltip = await screen.findByRole('tooltip');
-		expect(button).toHaveAttribute('aria-describedby', tooltip.id);
+		expect(pill).toHaveAttribute('aria-describedby', tooltip.id);
+	});
+
+	it('marks the pill as truncated', () => {
+		truncate();
+		render(
+			<Pill variant="outlined" color="primary" testId="pill">
+				{LABEL}
+			</Pill>,
+		);
+
+		expect(screen.getByTestId('pill')).toHaveAttribute('data-truncated', 'true');
 	});
 
 	it('closes again on blur', async () => {
@@ -64,9 +76,9 @@ describe('Button overflow tooltip', () => {
 		truncate();
 		render(
 			<>
-				<Button size="md" variant="solid" color="primary">
+				<Pill variant="outlined" color="primary">
 					{LABEL}
-				</Button>
+				</Pill>
 				<input data-testid="input" />
 			</>,
 		);
@@ -80,13 +92,13 @@ describe('Button overflow tooltip', () => {
 	});
 });
 
-describe('Button overflow tooltip while the label fits', () => {
+describe('Pill overflow tooltip while the content fits', () => {
 	it('puts nothing in the DOM at all', async () => {
 		const user = userEvent.setup();
 		render(
-			<Button size="md" variant="solid" color="primary">
+			<Pill variant="outlined" color="primary">
 				Short
-			</Button>,
+			</Pill>,
 		);
 
 		await user.hover(screen.getByRole('button'));
@@ -96,13 +108,23 @@ describe('Button overflow tooltip while the label fits', () => {
 		expect(screen.getByRole('button')).not.toHaveAttribute('aria-describedby');
 	});
 
-	it('closes an open popup when a resize makes the label fit', async () => {
+	it('does not mark itself truncated', () => {
+		render(
+			<Pill variant="outlined" color="primary" testId="pill">
+				Short
+			</Pill>,
+		);
+
+		expect(screen.getByTestId('pill')).not.toHaveAttribute('data-truncated');
+	});
+
+	it('closes an open popup when a resize makes the content fit', async () => {
 		const user = userEvent.setup();
 		truncate();
 		render(
-			<Button size="md" variant="solid" color="primary">
+			<Pill variant="outlined" color="primary">
 				{LABEL}
-			</Button>,
+			</Pill>,
 		);
 
 		await user.hover(screen.getByRole('button'));
@@ -117,33 +139,33 @@ describe('Button overflow tooltip while the label fits', () => {
 		const user = userEvent.setup();
 		truncate();
 		render(
-			<Button size="md" variant="solid" color="primary">
+			<Pill variant="outlined" color="primary">
 				{LABEL}
-			</Button>,
+			</Pill>,
 		);
-		const button = screen.getByRole('button');
+		const pill = screen.getByRole('button');
 
-		await user.hover(button);
+		await user.hover(pill);
 		expect(await screen.findByRole('tooltip')).toBeInTheDocument();
-		await user.unhover(button);
+		await user.unhover(pill);
 
 		resize(300, 300);
-		await user.hover(button);
+		await user.hover(pill);
 
 		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 	});
 });
 
-describe('Button overflow tooltip opt-outs', () => {
+describe('Pill overflow tooltip opt-outs', () => {
 	it.each(['hidden', 'visible'] as const)(
-		'is never mounted for textOverflow=%s',
+		'is never mounted for textOverflow="%s"',
 		async (textOverflow) => {
 			const user = userEvent.setup();
 			truncate();
 			render(
-				<Button size="md" variant="solid" color="primary" textOverflow={textOverflow}>
+				<Pill variant="outlined" color="primary" textOverflow={textOverflow}>
 					{LABEL}
-				</Button>,
+				</Pill>,
 			);
 
 			await user.hover(screen.getByRole('button'));
@@ -153,77 +175,46 @@ describe('Button overflow tooltip opt-outs', () => {
 	);
 
 	it.each(['hidden', 'visible'] as const)(
-		'does not even make the button a trigger for textOverflow=%s',
+		'does not even make the pill a trigger for textOverflow="%s"',
 		(textOverflow) => {
 			truncate();
 			render(
-				<Button size="md" variant="solid" color="primary" textOverflow={textOverflow}>
+				<Pill variant="outlined" color="primary" textOverflow={textOverflow}>
 					{LABEL}
-				</Button>,
+				</Pill>,
 			);
 
 			expect(screen.getByRole('button')).not.toHaveAttribute('data-slot', 'tooltip-trigger');
 		},
 	);
-
-	it('is never mounted for an icon button', async () => {
-		const user = userEvent.setup();
-		truncate();
-		render(
-			<Button size="md" variant="solid" color="primary" icon aria-label="Star">
-				<span data-testid="icon" />
-			</Button>,
-		);
-
-		await user.hover(screen.getByRole('button'));
-
-		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-	});
 });
 
-describe('Button overflow tooltip element identity', () => {
+describe('Pill overflow tooltip element identity', () => {
 	it('keeps the same element, and its focus, across a truncation flip', () => {
 		render(
-			<Button size="md" variant="solid" color="primary" testId="btn">
+			<Pill variant="outlined" color="primary" testId="pill">
 				{LABEL}
-			</Button>,
+			</Pill>,
 		);
-		const button = screen.getByTestId('btn');
-		button.focus();
+		const pill = screen.getByTestId('pill');
+		pill.focus();
 
 		resize(300, 100);
-		expect(screen.getByTestId('btn')).toBe(button);
-		expect(button).toHaveFocus();
+		expect(screen.getByTestId('pill')).toBe(pill);
+		expect(pill).toHaveFocus();
 
 		resize(300, 300);
-		expect(screen.getByTestId('btn')).toBe(button);
-		expect(button).toHaveFocus();
-	});
-
-	it('leaves focus where it was when the button was not focused', () => {
-		render(
-			<>
-				<Button size="md" variant="solid" color="primary" testId="btn">
-					{LABEL}
-				</Button>
-				<input data-testid="input" />
-			</>,
-		);
-		const input = screen.getByTestId('input');
-		input.focus();
-
-		resize(300, 100);
-
-		expect(input).toHaveFocus();
+		expect(screen.getByTestId('pill')).toBe(pill);
+		expect(pill).toHaveFocus();
 	});
 
 	it('keeps rendering a native button through the tooltip trigger', () => {
 		render(
-			<Button size="md" variant="solid" color="primary" testId="btn">
+			<Pill variant="outlined" color="primary" testId="pill">
 				Label
-			</Button>,
+			</Pill>,
 		);
 
-		expect(screen.getByTestId('btn').tagName).toBe('BUTTON');
+		expect(screen.getByTestId('pill').tagName).toBe('BUTTON');
 	});
 });

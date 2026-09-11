@@ -3,13 +3,15 @@ import { act } from '@testing-library/react';
 /**
  * jsdom has no layout, so every element measures 0x0 and no label ever reads as
  * truncated. These fake the two properties the truncation check looks at, for
- * the label slot only, so the rest of the tree keeps its real (zero) sizes.
+ * the label slot of the component under test, so the rest of the tree keeps its
+ * real (zero) sizes.
  */
+let labelSlot = '';
 let labelScrollWidth = 0;
 let labelClientWidth = 0;
 
 function isLabel(element: HTMLElement): boolean {
-	return element.dataset.slot === 'button-label';
+	return element.dataset.slot === labelSlot;
 }
 
 /** Callbacks of every live ResizeObserver, so a resize can be replayed by hand. */
@@ -33,8 +35,14 @@ export function resize(scrollWidth: number, clientWidth: number): void {
 	});
 }
 
-/** Call from `beforeAll`: installs the label measurement and ResizeObserver fakes. */
-export function mockLabelMeasurement(): void {
+/**
+ * Call from `beforeAll`: installs the label measurement and ResizeObserver fakes.
+ * `slot` is the `data-slot` the component stamps on its label, so `Badge` passes
+ * `badge-label`, `Button` passes `button-label` and `Pill` passes `pill-label`.
+ */
+export function mockLabelMeasurement(slot: string): void {
+	labelSlot = slot;
+
 	const scrollWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollWidth');
 	const clientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
 
