@@ -7,6 +7,7 @@ import {
 	useMemo,
 	useState,
 } from 'react';
+import { hasRenderableContent } from '../lib/utils.js';
 import { useIsInsideTooltipTrigger } from './tooltip-trigger-context.js';
 
 /**
@@ -34,13 +35,13 @@ type TooltipContentStackApi = {
 const NO_ENTRIES: TooltipContentStackEntry[] = [];
 
 /**
- * Whether a node is worth opening a tooltip for. `null`, `undefined`, `false` and
- * an empty string all render nothing, so they are treated as no content at all.
+ * Whether a node is worth opening a tooltip for, which is the same question as whether it renders
+ * anything at all.
  *
  * @access private
  */
 export function hasTooltipContent(content: ReactNode): boolean {
-	return content != null && content !== false && content !== '';
+	return hasRenderableContent(content);
 }
 
 const noop = (): void => {};
