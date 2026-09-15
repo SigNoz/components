@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/SigNoz/components/compare/v0.1.1...v0.1.2) (2026-09-15)
+
+
+### Features
+
+* **react-compiler:** enable support for compiler ([#376](https://github.com/SigNoz/components/issues/376)) ([a34da63](https://github.com/SigNoz/components/commit/a34da63cc22094af0d2688485d60e227d5e0e63b))
+
 ## [0.1.1](https://github.com/SigNoz/components/compare/v0.1.0...v0.1.1) (2026-09-02)
 
 
