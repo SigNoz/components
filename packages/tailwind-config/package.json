@@ -32,8 +32,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "25.9.4",
-		"publint": "0.3.21",
-		"tsdown": "^0.22.3"
+		"publint": "0.3.21"
 	},
 	"peerDependencies": {
 		"@signozhq/design-tokens": "^2.1.1",
