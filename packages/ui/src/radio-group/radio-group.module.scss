@@ -1,89 +1,202 @@
+// Base UI puts the state on the radio itself, not on the group: `data-checked` / `data-unchecked`,
+// `data-disabled` and `data-readonly`. The row wrapper reads them back with `:has()` so one rule
+// covers an item that disabled itself and a whole group that was disabled from above.
 .radio-group {
-  display: grid;
-  gap: 0.5rem;
+	display: var(--radio-group-display, grid);
+	gap: var(--radio-group-internal-gap);
 
-  &[data-color="robin"] {
-    --radio-group-checked-background: var(--accent-primary);
-  }
+	--radio-group-internal-border-width: var(--radio-group-border-width, 2px);
+	--radio-group-internal-border-color: var(--radio-group-border);
+	--radio-group-internal-label-color: var(--radio-group-label);
+	--radio-group-internal-label-hover-color: var(--radio-group-label-hover);
 
-  &[data-color="forest"] {
-    --radio-group-checked-background: var(--accent-forest);
-  }
+	// The one scale the design spec draws: a 16px dial around an 8px dot, which leaves a 2px ring of
+	// background between the border and the dot. A surface that needs a denser group overrides the
+	// custom properties below rather than picking a size, so every group on a page still lines up.
+	--radio-group-internal-size: var(--radio-group-size, 16px);
+	--radio-group-internal-dot-size: var(--radio-group-dot-size, 8px);
+	--radio-group-internal-gap: var(--radio-group-gap, var(--spacing-4));
+	--radio-group-internal-label-gap: var(--radio-group-label-gap, var(--spacing-4));
+	--radio-group-internal-label-font-size: var(--radio-group-label-font-size, var(--periscope-font-size-base));
+	--radio-group-internal-label-line-height: var(--radio-group-label-line-height, 18px);
 
-  &[data-color="amber"] {
-    --radio-group-checked-background: var(--accent-amber);
-  }
+	&[data-color='primary'] {
+		--radio-group-internal-checked-background: var(--radio-group-primary-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-primary-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-primary-dot);
+	}
 
-  &[data-color="sienna"] {
-    --radio-group-checked-background: var(--accent-sienna);
-  }
+	&[data-color='secondary'] {
+		--radio-group-internal-checked-background: var(--radio-group-secondary-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-secondary-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-secondary-dot);
+	}
 
-  &[data-color="cherry"] {
-    --radio-group-checked-background: var(--accent-cherry);
-  }
+	&[data-color='success'] {
+		--radio-group-internal-checked-background: var(--radio-group-success-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-success-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-success-dot);
+	}
 
-  &[data-color="sakura"] {
-    --radio-group-checked-background: var(--accent-sakura);
-  }
+	&[data-color='warning'] {
+		--radio-group-internal-checked-background: var(--radio-group-warning-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-warning-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-warning-dot);
+	}
 
-  &[data-color="aqua"] {
-    --radio-group-checked-background: var(--accent-aqua);
-  }
+	&[data-color='danger'] {
+		--radio-group-internal-checked-background: var(--radio-group-danger-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-danger-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-danger-dot);
+	}
+
+	&[data-color='info'] {
+		--radio-group-internal-checked-background: var(--radio-group-info-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-info-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-info-dot);
+	}
+
+	&[data-color='archive'] {
+		--radio-group-internal-checked-background: var(--radio-group-archive-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-archive-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-archive-dot);
+	}
+
+	&[data-color='highlight-danger'] {
+		--radio-group-internal-checked-background: var(--radio-group-highlight-danger-background);
+		--radio-group-internal-hover-border-color: var(--radio-group-highlight-danger-border-hover);
+		--radio-group-internal-dot-color: var(--radio-group-highlight-danger-dot);
+	}
+
+	&[data-text-overflow='wrap'] .radio-group__label {
+		white-space: var(--radio-group-wrap-white-space, normal);
+		overflow-wrap: var(--radio-group-wrap-overflow-wrap, anywhere);
+	}
+
+	// A label is a node, so it can hold an `Input` or a `Button`. Clipping cuts that control's focus
+	// ring, which is drawn outside its border box, so this mode stops clipping instead.
+	&[data-text-overflow='visible'] .radio-group__label {
+		overflow: var(--radio-group-label-overflow, visible);
+	}
+
+	&[data-text-overflow='ellipsis'] .radio-group__label {
+		text-overflow: var(--radio-group-label-text-overflow, ellipsis);
+	}
 }
 
+// The dial sits on the first line of the label and stays there. Centring the row instead would tie
+// the dial's position to the label's height, so a label that grows (a second line under `wrap`, or
+// an `Input` or a `Button` mounted inside it) would move the control the user is about to click.
 .radio-group__item-wrapper {
-  display: flex;
-  gap: var(--spacing-4, 0.5rem);
-  align-items: center;
-  justify-content: flex-start;
+	display: var(--radio-group-item-display, flex);
+	gap: var(--radio-group-internal-label-gap);
+	align-items: var(--radio-group-item-align-items, flex-start);
+	justify-content: var(--radio-group-item-justify-content, flex-start);
+	// The whole row is the hit target, so hover has to fire from the label as well as the dial.
+	cursor: var(--radio-group-cursor, pointer);
+	min-width: var(--radio-group-item-min-width, 0);
+
+	&:has([data-unchecked]:not([data-disabled]):not([data-readonly])):hover {
+		.radio-group__item {
+			border-color: var(--radio-group-hover-border-color, var(--radio-group-internal-hover-border-color));
+		}
+	}
+
+	// Hover and checked land on the same label colour: two halves of one state, per the spec.
+	&:has([data-checked]),
+	&:not(:has([data-disabled])):not(:has([data-readonly])):hover {
+		.radio-group__label {
+			color: var(--radio-group-internal-label-hover-color);
+		}
+	}
+
+	// An unselected radio is a 2px ring and nothing else, not enough ink to read as unavailable at
+	// the opacity a filled disc can carry, so the two fade by different amounts.
+	&:has([data-disabled]) {
+		opacity: var(--radio-group-disabled-opacity, 0.4);
+		cursor: var(--radio-group-disabled-cursor, not-allowed);
+	}
+
+	&:has([data-disabled][data-checked]) {
+		opacity: var(--radio-group-disabled-checked-opacity, 0.6);
+	}
+
+	// Read-only keeps the dot at full colour, dimmed rather than neutralised: the group still has to
+	// show which option is chosen, which is the only reason to render it rather than static text.
+	&:has([data-readonly]) {
+		opacity: var(--radio-group-readonly-opacity, 0.8);
+		cursor: var(--radio-group-readonly-cursor, not-allowed);
+	}
 }
 
 .radio-group__item {
-  display: flex;
-  height: var(--radio-group-item-size, 1rem);
-  width: var(--radio-group-item-size, 1rem);
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  border: 2px solid var(--radio-group-item-border-color, var(--l3-background));
-  cursor: pointer;
-  background-color: transparent;
-  padding: 0;
-  transition: border-color 150ms ease;
+	display: var(--radio-group-item-control-display, flex);
+	box-sizing: border-box;
+	// Centred on the first line box rather than on the row, which is the same pixel as long as the
+	// label is one line of text and the only pixel that holds still once it is not.
+	margin-block-start: var(--radio-group-item-margin-block-start,
+			calc((var(--radio-group-internal-label-line-height) - var(--radio-group-internal-size)) / 2));
+	block-size: var(--radio-group-internal-size);
+	inline-size: var(--radio-group-internal-size);
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border-radius: var(--radio-group-border-radius, var(--radius-round));
+	border: var(--radio-group-internal-border-width) solid var(--radio-group-internal-border-color);
+	background-color: var(--radio-group-background, transparent);
+	cursor: inherit;
+	transition: var(--radio-group-transition,
+			background-color 150ms ease,
+			border-color 150ms ease,
+			color 150ms ease);
 
-  &[data-state="checked"] {
-    border-width: calc(var(--radio-group-item-size, 1rem) / 3);
-    border-color: var(--radio-group-checked-background);
-  }
+	&[data-checked] {
+		background-color: var(--radio-group-checked-background, var(--radio-group-internal-checked-background));
+		border-color: var(--radio-group-checked-border-color, var(--radio-group-internal-checked-background));
+	}
 
-  &:focus-visible {
-    outline-offset: -1px;
-    outline: 2px solid var(--radio-group-checked-background);
-  }
-
-  &:hover {
-    border-color: var(--radio-group-checked-background);
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
+	// The ring can never be suppressed on a radio: arrow keys move focus and selection together, so
+	// without it the selection looks like it is changing at random. It is a circle rather than a
+	// rounded square because it follows the dial's own shape.
+	&:focus-visible {
+		outline: var(--radio-group-focus-visible-outline, 1px solid var(--ring));
+		outline-offset: var(--radio-group-focus-visible-outline-offset, 1px);
+	}
 }
 
 .radio-group__indicator {
-  height: 100%;
-  width: 100%;
-  background-color: var(--radio-group-checked-indicator-background, var(--base-white));
-  border-radius: 9999px;
+	block-size: var(--radio-group-internal-dot-size);
+	inline-size: var(--radio-group-internal-dot-size);
+	border-radius: var(--radio-group-dot-border-radius, var(--radius-round));
+	background-color: var(--radio-group-dot-color, var(--radio-group-internal-dot-color));
 }
 
 .radio-group__label {
-  cursor: pointer;
-  user-select: none;
+	min-width: var(--radio-group-label-min-width, 0);
+	// The row keeps one line of label height even when the label renders something shorter than a
+	// line of text, so a group does not change height with its content.
+	min-block-size: var(--radio-group-internal-label-line-height);
+	overflow: var(--radio-group-label-overflow, hidden);
+	white-space: var(--radio-group-label-white-space, nowrap);
+	color: var(--radio-group-internal-label-color);
+	font-size: var(--radio-group-internal-label-font-size);
+	font-weight: var(--radio-group-label-font-weight, var(--font-weight-normal));
+	line-height: var(--radio-group-internal-label-line-height);
+	// TODO: Convert this hardcoded value to semantic token
+	letter-spacing: var(--radio-group-label-letter-spacing, -0.005em);
+	user-select: none;
+	cursor: inherit;
+	transition: var(--radio-group-label-transition, color 150ms ease);
 
-  .radio-group__item:disabled ~ & {
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
+	&-tooltip {
+		max-width: var(--radio-group-label-tooltip-max-width, 20rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.radio-group__item,
+	.radio-group__label {
+		transition: none;
+	}
 }
