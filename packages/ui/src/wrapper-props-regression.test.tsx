@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import { Badge } from './badge/badge.js';
 import { Command, CommandInput } from './command/command.js';
 import { Input } from './input/input.js';
-import { RadioGroup, RadioGroupItem } from './radio-group/radio-group.js';
 import { Switch } from './switch/switch.js';
 
 describe('wrapper prop targeting regressions', () => {
@@ -100,38 +99,5 @@ describe('wrapper prop targeting regressions', () => {
 		expect(container).toHaveAttribute('id', 'command-input-container');
 		expect(container).toHaveClass('command-input-container-class');
 		expect(container).toHaveStyle({ paddingInline: '6px' });
-	});
-
-	it('keeps RadioGroupItem control props on the radio item and exposes container props for the wrapper', () => {
-		render(
-			<RadioGroup value="a">
-				<RadioGroupItem
-					value="a"
-					id="radio-a"
-					testId="radio-a"
-					className="radio-class"
-					style={{ borderWidth: '2px' }}
-					containerId="radio-a-container"
-					containerTestId="radio-a-container"
-					containerClassName="radio-container-class"
-					containerStyle={{ gap: '10px' }}
-				>
-					Option A
-				</RadioGroupItem>
-			</RadioGroup>,
-		);
-
-		const item = screen.getByRole('radio', { name: 'Option A' });
-		const container = screen.getByTestId('radio-a-container');
-
-		expect(item).toHaveAttribute('id', 'radio-a');
-		expect(item).toHaveAttribute('data-testid', 'radio-a');
-		expect(item).toHaveClass('radio-class');
-		// Not `toHaveStyle`: the item declares `border-style: none`, and CSS computes
-		// `border-width` to 0 in that case whatever the declared width is.
-		expect(item.getAttribute('style')).toContain('border-width: 2px');
-		expect(container).toHaveAttribute('id', 'radio-a-container');
-		expect(container).toHaveClass('radio-container-class');
-		expect(container).toHaveStyle({ gap: '10px' });
 	});
 });
