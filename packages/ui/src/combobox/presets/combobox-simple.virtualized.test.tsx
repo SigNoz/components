@@ -1,13 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ComboboxSimple } from './combobox-simple.js';
-import {
-	renderWithProviders,
-	setupMocks,
-	setupVirtualMocks,
-} from './combobox-simple.test-utils.js';
+import { renderWithProviders, setupVirtualMocks } from './combobox-simple.test-utils.js';
 
-setupMocks();
 setupVirtualMocks();
 
 const largeItems = Array.from({ length: 100 }, (_, i) => ({

@@ -1,0 +1,99 @@
+name: Test Runtime Benchmark
+
+# Throwaway workflow. Times jsdom against the browser-mode providers on a single
+# runner so the comparison is not confounded by runner-to-runner variance, which
+# on this repo has been as large as 1.6x between consecutive runs.
+
+on:
+  push:
+    branches:
+      - chore/bench-browser-mode-tests
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.0-noble
+    steps:
+      - name: Aggressive cleanup
+        run: |
+          rm -rf /usr/lib/jvm /usr/share/dotnet /usr/share/swift /usr/local/.ghcup
+          rm -rf /usr/local/julia* /usr/local/lib/android /opt/microsoft /opt/google
+          rm -rf /opt/az /usr/local/share/powershell /opt/hostedtoolcache
+          df -h
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Record runner spec
+        run: |
+          echo "nproc=$(nproc)"
+          free -g || true
+
+      - name: Benchmark
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+        run: |
+          set +e
+          : > /tmp/bench.tsv
+
+          # $1 label, $2 UI_TEST_MODE, rest: command
+          bench() {
+            label="$1"; shift
+            mode="$1"; shift
+            echo "::group::$label"
+            start=$(date +%s)
+            UI_TEST_MODE="$mode" "$@"
+            status=$?
+            end=$(date +%s)
+            echo "::endgroup::"
+            printf '%s\t%s\t%s\n' "$label" "$((end - start))" "$status" >> /tmp/bench.tsv
+            echo "RESULT $label $((end - start))s exit=$status"
+          }
+
+          # @signozhq/ui alone: isolates the provider question. `preview` is
+          # expected to fail: it has no headless mode, so it cannot run in CI at
+          # all. It is timed anyway so the run carries the evidence.
+          bench "ui-only jsdom"      jsdom      pnpm --filter @signozhq/ui test
+          bench "ui-only playwright" playwright pnpm --filter @signozhq/ui test
+          bench "ui-only preview"    preview    pnpm --filter @signozhq/ui test
+
+          # Full `pnpm test`, which is what CI actually runs. docs:test is always
+          # browser mode, so this measures contention between the two suites.
+          bench "full turbo jsdom"      jsdom      pnpm test
+          bench "full turbo playwright" playwright pnpm test
+
+          {
+            echo "### Test runtime benchmark"
+            echo ""
+            echo "Runner: \`$(nproc)\` cores"
+            echo ""
+            echo "| config | seconds | exit |"
+            echo "| --- | ---: | ---: |"
+            awk -F'\t' '{printf "| %s | %s | %s |\n", $1, $2, $3}' /tmp/bench.tsv
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          cat /tmp/bench.tsv
