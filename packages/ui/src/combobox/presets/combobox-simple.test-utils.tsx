@@ -1,19 +1,6 @@
 import { type RenderResult, render } from '@testing-library/react';
-import { beforeAll, vi } from 'vitest';
+import { beforeAll } from 'vitest';
 import { TooltipProvider } from '../../tooltip/index.js';
-
-class ResizeObserverMock {
-	observe = vi.fn();
-	unobserve = vi.fn();
-	disconnect = vi.fn();
-}
-
-export function setupMocks() {
-	beforeAll(() => {
-		global.ResizeObserver = ResizeObserverMock;
-		Element.prototype.scrollIntoView = vi.fn();
-	});
-}
 
 export function setupVirtualMocks(): void {
 	beforeAll(() => {

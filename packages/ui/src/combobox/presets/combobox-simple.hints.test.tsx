@@ -1,9 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ComboboxSimple } from './combobox-simple.js';
-import { renderWithProviders, setupMocks } from './combobox-simple.test-utils.js';
-
-setupMocks();
+import { renderWithProviders } from './combobox-simple.test-utils.js';
 
 const groupsWithHints = [
 	{

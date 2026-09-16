@@ -17,6 +17,7 @@
 		"chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
 		"release": "turbo run build --filter=@signozhq/ui --filter=@signozhq/tailwind-config",
 		"prepare": "husky",
+		"test": "turbo run test",
 		"pre-commit": "lint-staged"
 	},
 	"dependencies": {

@@ -17,3 +17,8 @@ apps/packages-playground/
 **/yalc.lock
 packages/ui/README.md
 COMPONENT_AUDIT_RESULTS.md
+
+# Vitest browser-mode artifacts
+**/__screenshots__
+**/.vitest-attachments
+**/.vitest

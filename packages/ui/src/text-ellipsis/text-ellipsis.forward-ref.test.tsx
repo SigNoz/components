@@ -1,16 +1,8 @@
 import { render } from '@testing-library/react';
 import { createRef } from 'react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { TextEllipsis } from './index.js';
-
-beforeAll(() => {
-	global.ResizeObserver = class ResizeObserver {
-		observe() {}
-		unobserve() {}
-		disconnect() {}
-	};
-});
 
 describe('TextEllipsis forwardRef', () => {
 	it('forwards ref', () => {
