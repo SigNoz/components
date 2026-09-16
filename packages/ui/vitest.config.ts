@@ -4,6 +4,7 @@ import getViteLibConfig from '@repo/typescript-config/vite.config.extend';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 import { preview } from '@vitest/browser-preview';
+import { webdriverio } from '@vitest/browser-webdriverio';
 import { defineConfig } from 'vitest/config';
 import { reactCompilerOptions } from './react-compiler.config.js';
 import { entries } from './vite.config.js';
@@ -11,7 +12,7 @@ import { entries } from './vite.config.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Benchmark switch. Unset behaves like `playwright`; `jsdom` restores the old
-// single-project setup so CI can time both on the same runner.
+// single-project setup so CI can time every option on the same runner.
 const mode = process.env['UI_TEST_MODE'] ?? 'playwright';
 
 // Assertions about files on disk (built output, package.json exports, tsc
@@ -44,6 +45,32 @@ const jsdomConfig = defineConfig({
 	},
 });
 
+// The Playwright container ships Chrome under /ms-playwright rather than on
+// PATH, so webdriverio has to be pointed at it explicitly.
+const chromeBinary = process.env['CHROME_BIN'];
+
+// `preview` drives a visible window and rejects `headless: true` outright, so CI
+// runs it under xvfb instead. webdriverio names the browser `chrome`, not
+// `chromium`.
+const browserOptions = {
+	webdriverio: {
+		provider: webdriverio({
+			capabilities: {
+				'goog:chromeOptions': {
+					...(chromeBinary ? { binary: chromeBinary } : {}),
+					args: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+				},
+			},
+		}),
+		headless: true,
+		browser: 'chrome',
+	},
+	preview: { provider: preview(), headless: false, browser: 'chromium' },
+	playwright: { provider: playwright({}), headless: true, browser: 'chromium' },
+} as const;
+
+const selected = browserOptions[mode as keyof typeof browserOptions] ?? browserOptions.playwright;
+
 const browserConfig = defineConfig({
 	test: {
 		projects: [
@@ -57,9 +84,9 @@ const browserConfig = defineConfig({
 					globals: true,
 					browser: {
 						enabled: true,
-						provider: mode === 'preview' ? preview() : playwright({}),
-						headless: true,
-						instances: [{ browser: 'chromium' }],
+						provider: selected.provider,
+						headless: selected.headless,
+						instances: [{ browser: selected.browser }],
 					},
 				},
 			},

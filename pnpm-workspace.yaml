@@ -6,4 +6,13 @@ minimumReleaseAge: 2880 # 2d
 minimumReleaseAgeStrict: true
 minimumReleaseAgeExclude:
  - '@signozhq/*'
+ # Benchmark branch only. Do not merge: these relax the supply-chain guards so
+ # the run can time vitest 5.0.1 and the webdriverio provider.
+ - 'vitest'
+ - '@vitest/*'
+# Benchmark branch only. Do not merge. `@wdio/repl` stopped publishing with
+# provenance attestation, which `trustPolicy: no-downgrade` correctly rejects.
+# Exempted here solely to time the webdriverio provider against the others.
+trustPolicyExclude:
+ - '@wdio/repl@9.16.2'
 blockExoticSubdeps: true

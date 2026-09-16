@@ -9,6 +9,7 @@ on:
     branches:
       - chore/bench-browser-mode-tests
       - chore/bench-vitest-5
+      - chore/bench-wdio-preview
   workflow_dispatch:
 
 concurrency:
@@ -54,6 +55,13 @@ jobs:
           echo "nproc=$(nproc)"
           free -g || true
 
+      # `preview` has no headless mode, so it needs a display to run at all.
+      - name: Install xvfb
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq xvfb
+          echo "CHROME_BIN=$(find /ms-playwright -name chrome -type f -path '*chrome-linux*' | head -1)" >> "$GITHUB_ENV"
+
       - name: Benchmark
         env:
           PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
@@ -75,17 +83,48 @@ jobs:
             echo "RESULT $label $((end - start))s exit=$status"
           }
 
-          # @signozhq/ui alone: isolates the provider question. `preview` is
-          # expected to fail: it has no headless mode, so it cannot run in CI at
-          # all. It is timed anyway so the run carries the evidence.
-          bench "ui-only jsdom"      jsdom      pnpm --filter @signozhq/ui test
-          bench "ui-only playwright" playwright pnpm --filter @signozhq/ui test
-          bench "ui-only preview"    preview    pnpm --filter @signozhq/ui test
+          # `preview` refuses headless mode and waits for a browser to connect to
+          # the URL it prints. Give it an X display and connect Chrome by hand.
+          run_preview() {
+            Xvfb :99 -screen 0 1280x1024x24 >/dev/null 2>&1 &
+            xvfb_pid=$!
+            export DISPLAY=:99
+            pnpm --filter @signozhq/ui test > /tmp/preview.log 2>&1 &
+            vitest_pid=$!
+            url=""
+            for _ in $(seq 1 90); do
+              url=$(grep -oE 'http://[0-9.]+:[0-9]+/__vitest_test__/\?sessionId=[a-z0-9-]+' /tmp/preview.log | head -1)
+              [ -n "$url" ] && break
+              kill -0 "$vitest_pid" 2>/dev/null || break
+              sleep 1
+            done
+            chrome_pid=""
+            if [ -n "$url" ]; then
+              echo "connecting $CHROME_BIN to $url"
+              "$CHROME_BIN" --no-sandbox --disable-dev-shm-usage --disable-gpu "$url" >/dev/null 2>&1 &
+              chrome_pid=$!
+            else
+              echo "preview never printed a runner URL"
+            fi
+            wait "$vitest_pid"
+            preview_status=$?
+            [ -n "$chrome_pid" ] && kill "$chrome_pid" 2>/dev/null
+            kill "$xvfb_pid" 2>/dev/null
+            tail -25 /tmp/preview.log
+            return $preview_status
+          }
+
+          # @signozhq/ui alone: isolates the provider question.
+          bench "ui-only jsdom"       jsdom       pnpm --filter @signozhq/ui test
+          bench "ui-only playwright"  playwright  pnpm --filter @signozhq/ui test
+          bench "ui-only webdriverio" webdriverio pnpm --filter @signozhq/ui test
+          bench "ui-only preview"     preview     run_preview
 
           # Full `pnpm test`, which is what CI actually runs. docs:test is always
           # browser mode, so this measures contention between the two suites.
-          bench "full turbo jsdom"      jsdom      pnpm test
-          bench "full turbo playwright" playwright pnpm test
+          bench "full turbo jsdom"       jsdom       pnpm test
+          bench "full turbo playwright"  playwright  pnpm test
+          bench "full turbo webdriverio" webdriverio pnpm test
 
           {
             echo "### Test runtime benchmark"
