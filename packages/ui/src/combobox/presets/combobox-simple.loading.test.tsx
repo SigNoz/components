@@ -3,9 +3,7 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TooltipProvider } from '../../tooltip/index.js';
 import { ComboboxSimple } from './combobox-simple.js';
-import { defaultItems, renderWithProviders, setupMocks } from './combobox-simple.test-utils.js';
-
-setupMocks();
+import { defaultItems, renderWithProviders } from './combobox-simple.test-utils.js';
 
 describe('ComboboxSimple loading state', () => {
 	it('shows loading indicator when loading is true', () => {
