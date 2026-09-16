@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Tooltip } from '../presets/tooltip.js';
@@ -59,7 +59,7 @@ describe('Tooltip open', () => {
 		expect(screen.getByRole('tooltip')).toBeInTheDocument();
 	});
 
-	it('follows the open prop', () => {
+	it('follows the open prop', async () => {
 		const { rerender } = render(
 			<Tooltip open={false} title={TITLE}>
 				<button type="button">Hover</button>
@@ -79,7 +79,8 @@ describe('Tooltip open', () => {
 				<button type="button">Hover</button>
 			</Tooltip>,
 		);
-		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+		// The close is animated, so the node outlives the prop flip in a real browser.
+		await waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument());
 	});
 
 	it('describes the trigger with the content', () => {
