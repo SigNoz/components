@@ -116,8 +116,8 @@ Check: JSDoc comments on props
 
 ### 5. Stories & MDX
 - 0: No story, wrong title group, or one story with no argTypes
-- 1: Default story + some argTypes but no per-subcomponent stories or no MDX
-- 2: Story per exported component, full argTypes, MDX with usage + Controls
+- 1: Default story + some argTypes but subcomponents with no story at all or no MDX
+- 2: One file per root component and per preset with subcomponent stories in the parent file, full argTypes, MDX with usage + Controls
 
 Check: apps/docs/src/stories/ for *.stories.tsx and *.mdx files
 
