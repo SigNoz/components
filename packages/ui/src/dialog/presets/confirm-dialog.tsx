@@ -122,7 +122,7 @@ export type ConfirmDialogProps = {
  *   title="Confirm action"
  *   confirmText="Confirm"
  *   cancelText="Cancel"
- *   confirmColor="destructive"
+ *   confirmColor="danger"
  *   onConfirm={async () => {
  *     await api.doSomething();
  *     return true; // close dialog
@@ -140,7 +140,7 @@ export type ConfirmDialogProps = {
  * <ConfirmDialog
  *   title="Delete item"
  *   confirmText="Delete"
- *   confirmColor="destructive"
+ *   confirmColor="danger"
  *   disableOutsideClick
  *   onConfirm={async () => {
  *     const ok = await deleteItem();
@@ -170,7 +170,7 @@ export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps
 
 			confirmText,
 			onConfirm,
-			confirmColor = 'destructive',
+			confirmColor = 'danger',
 			confirmIcon,
 
 			disableOutsideClick = false,
@@ -221,6 +221,7 @@ export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps
 						type="button"
 						variant="ghost"
 						color="secondary"
+						size="md"
 						onClick={onCancel}
 						prefix={cancelIcon}
 					>
@@ -231,6 +232,7 @@ export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps
 						type="button"
 						variant="solid"
 						color={confirmColor}
+						size="md"
 						loading={onConfirming}
 						onClick={onConfirmProxy}
 						prefix={confirmIcon}

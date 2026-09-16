@@ -33,7 +33,7 @@ export const Default: Story = {
 	render: (args) => (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open popover
 				</Button>
 			</PopoverTrigger>

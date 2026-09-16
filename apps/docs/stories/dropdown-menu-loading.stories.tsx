@@ -39,7 +39,7 @@ export const Default: Story = {
 		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Open menu
 					</Button>
 				</DropdownMenuTrigger>
@@ -59,7 +59,7 @@ export const CustomText: Story = {
 		<div className="story-container-full">
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Open menu
 					</Button>
 				</DropdownMenuTrigger>
