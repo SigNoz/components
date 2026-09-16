@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - chore/bench-browser-mode-tests
+      - chore/bench-vitest-5
   workflow_dispatch:
 
 concurrency:

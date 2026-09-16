@@ -21,3 +21,4 @@ COMPONENT_AUDIT_RESULTS.md
 # Vitest browser-mode failure artifacts
 **/__screenshots__
 **/.vitest-attachments
+**/.vitest
