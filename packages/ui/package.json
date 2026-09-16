@@ -485,6 +485,8 @@
 		"@types/node": "25.9.4",
 		"@types/react": "^18.2.61",
 		"@vitejs/plugin-react": "^6.1.1",
+		"@vitest/browser-playwright": "^4.1.11",
+		"@vitest/browser-preview": "^4.1.11",
 		"@vitest/coverage-v8": "^4.1.11",
 		"jsdom": "^30.0.1",
 		"oxc-transform-react": "^0.145.0",

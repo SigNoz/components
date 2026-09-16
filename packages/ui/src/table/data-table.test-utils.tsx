@@ -76,12 +76,18 @@ export function mockIntersectionObserver() {
 	const observe = vi.fn<() => IntersectionObserver['observe']>();
 	const disconnect = vi.fn<() => IntersectionObserver['disconnect']>();
 	const unobserve = vi.fn<() => IntersectionObserver['unobserve']>();
-	let triggerFn: ((isIntersecting: boolean) => void) | null = null;
+	const callbacks: ((entries: IntersectionObserverEntry[]) => void)[] = [];
+	// A real browser constructs more than one observer per render, so keeping only
+	// the latest callback loses the sentinel's. Fan the trigger out to all of them.
+	const triggerFn = (isIntersecting: boolean) => {
+		for (const callback of callbacks) {
+			callback([{ isIntersecting } as IntersectionObserverEntry]);
+		}
+	};
 	vi.stubGlobal(
 		'IntersectionObserver',
 		vi.fn().mockImplementation((callback: (entries: IntersectionObserverEntry[]) => void) => {
-			triggerFn = (isIntersecting: boolean) =>
-				callback([{ isIntersecting } as IntersectionObserverEntry]);
+			callbacks.push(callback);
 			return {
 				observe,
 				disconnect,
@@ -92,7 +98,12 @@ export function mockIntersectionObserver() {
 			};
 		}),
 	);
-	return { observe, disconnect, unobserve, getTrigger: () => triggerFn };
+	return {
+		observe,
+		disconnect,
+		unobserve,
+		getTrigger: () => (callbacks.length > 0 ? triggerFn : null),
+	};
 }
 
 export function mockResizeObserver(): {

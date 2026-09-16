@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { createRef } from 'react';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
 	Combobox,
@@ -20,15 +20,6 @@ import {
 	ComboboxSimple,
 	ComboboxTrigger,
 } from './index.js';
-
-beforeAll(() => {
-	global.ResizeObserver = class ResizeObserver {
-		observe() {}
-		unobserve() {}
-		disconnect() {}
-	};
-	Element.prototype.scrollIntoView = vi.fn();
-});
 
 describe('Combobox forwardRef', () => {
 	it('ComboboxTrigger forwards ref', () => {

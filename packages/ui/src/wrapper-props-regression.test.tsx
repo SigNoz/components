@@ -36,7 +36,9 @@ describe('wrapper prop targeting regressions', () => {
 		expect(input).toHaveAttribute('id', 'email-input');
 		expect(input).toHaveAttribute('data-testid', 'email-input');
 		expect(input).toHaveClass('input-class');
-		expect(input).toHaveStyle({ width: '240px' });
+		// Not `toHaveStyle`: the adorned input is a flex item with `flex: 1`, so the
+		// browser resolves its used width from the container, not from this declaration.
+		expect(input.getAttribute('style')).toContain('width: 240px');
 		expect(container).toHaveAttribute('id', 'email-input-container');
 		expect(container).toHaveClass('input-container-class');
 		expect(container).toHaveStyle({ paddingInline: '8px' });
