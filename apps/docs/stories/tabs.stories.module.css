@@ -123,3 +123,8 @@
 .overflowFrame::after {
 	content: 'frame end';
 }
+
+/* Doubles the label cap, so the same tabs are shown against a raised limit. */
+.wideLabels {
+	--tabs-label-max-inline-size: 240px;
+}

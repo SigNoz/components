@@ -37,6 +37,9 @@ type TabsItemBaseType = {
 	/**
 	 * What the user reads on the tab itself. Also the tab's accessible name.
 	 *
+	 * @note Capped at `--tabs-label-max-inline-size` (120px). Past it the label truncates and shows
+	 * its full text in a tooltip. Override the variable to change the cap, or set it to `none`.
+	 *
 	 * @note A node that renders nothing (`null`, `false` or an empty string) falls back to the text
 	 * `<No label>`, and that tab carries `data-empty-label`. The tab still renders: a view that
 	 * disappears from the bar leaves the group without saying so.

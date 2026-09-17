@@ -165,8 +165,23 @@ the right place after a back or forward.
 `tabBarStartContent` and `tabBarEndContent` keep their size, so a bar too narrow for its tabs
 scrolls the tabs rather than pushing a button off the end.
 
-Truncation and overflow answer different problems: one tab wider than the visible strip truncates
-and shows its full label in a tooltip, many tabs scroll.
+Truncation and overflow answer different problems: a label past its cap truncates and shows its
+full text in a tooltip, many tabs scroll.
+
+## Label width
+
+A label is capped at `--tabs-label-max-inline-size`, 120px by default, so one long label cannot
+take the whole bar. Override it per call site, or set it to `none` to let a tab size to its label:
+
+```tsx
+<Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
+	items={items}
+	style={{ '--tabs-label-max-inline-size': '200px' } as CSSProperties}
+/>
+```
 
 ## No content padding
 

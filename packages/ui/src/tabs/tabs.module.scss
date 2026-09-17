@@ -19,6 +19,9 @@
   --tabs-internal-bar-content-block-gap: 0;
   --tabs-internal-bar-rule-block-end: 0 solid transparent;
   --tabs-internal-bar-rule-inline-end: 0 solid transparent;
+  --tabs-internal-order-spacer-start: 1;
+  --tabs-internal-order-list: 2;
+  --tabs-internal-order-spacer-end: 3;
   --tabs-internal-list-flex-direction: row;
   --tabs-internal-list-align-items: center;
   --tabs-internal-list-primary-gap: var(--spacing-12);
@@ -160,7 +163,7 @@
   flex-direction: var(--tabs-internal-list-flex-direction);
   align-items: var(--tabs-list-inner-align-items, var(--tabs-internal-list-inner-align-items));
   position: var(--tabs-list-inner-position, relative);
-  order: 2;
+  order: var(--tabs-internal-order-list);
 
   flex-grow: var(--tabs-list-viewport-flex-grow, 0);
   flex-shrink: var(--tabs-list-viewport-flex-shrink, 1);
@@ -201,7 +204,7 @@
   );
 
   &::-webkit-scrollbar {
-    display: none;
+    display: var(--tabs-list-viewport-scrollbar-display, none);
   }
 
   [data-variant="primary"] & {
@@ -279,7 +282,7 @@
     display: var(--tabs-list-primary-display, inline-flex);
     align-items: var(--tabs-list-primary-align-items, var(--tabs-internal-list-align-items));
     gap: var(--tabs-list-primary-gap, var(--tabs-internal-list-primary-gap));
-    position: relative;
+    position: var(--tabs-list-primary-position, relative);
   }
 
   &[data-variant="secondary"] {
@@ -292,7 +295,7 @@
 // rather than a child of the scroll port, which keeps `role="tab"` the only role
 // in the tablist and keeps the secondary bar rule unbroken underneath it.
 .tabs__scroll-button {
-  order: 2;
+  order: var(--tabs-internal-order-list);
   flex-grow: var(--tabs-scroll-button-flex-grow, 0);
   flex-shrink: var(--tabs-scroll-button-flex-shrink, 0);
   flex-basis: var(--tabs-scroll-button-flex-basis, auto);
@@ -357,7 +360,7 @@
   flex-basis: var(--tabs-border-spacer-flex-basis, 0%);
   min-inline-size: var(--tabs-border-spacer-min-inline-size, var(--tabs-internal-spacer-min-inline, 0));
   min-block-size: var(--tabs-border-spacer-min-block-size, var(--tabs-internal-spacer-min-block, 0));
-  order: 1;
+  order: var(--tabs-internal-order-spacer-start);
 
   [data-variant="secondary"] & {
     border-block-end: var(--tabs-internal-bar-rule-block-end);
@@ -370,7 +373,7 @@
       var(--tabs-internal-spacer-grow-flex-grow, 1)
     );
     flex-shrink: var(--tabs-border-spacer-grow-flex-shrink, 0);
-    order: 3;
+    order: var(--tabs-internal-order-spacer-end);
   }
 }
 
@@ -396,12 +399,15 @@
 
     display: var(--tabs-trigger-primary-display, inline-flex);
     align-items: var(--tabs-trigger-primary-align-items, center);
+    // Only shows once a tab is wider than its content, which is what a vertical
+    // rail does: its tabs stretch to the rail's width. Same as secondary.
+    justify-content: var(--tabs-trigger-primary-justify-content, center);
     gap: var(--tabs-internal-primary-gap);
     // A tab does not give way, the scroll port scrolls instead. A tab wider than
     // the visible strip is still capped here, so that one truncates.
     flex: var(--tabs-trigger-primary-flex, 0 0 auto);
     max-inline-size: var(--tabs-trigger-primary-max-inline-size, 100%);
-    border-radius: var(--tabs-trigger-primary-border-radius, var(--radius-1));
+    border-radius: var(--tabs-trigger-primary-border-radius, var(--tabs-primary-radius));
     padding: var(--tabs-trigger-primary-padding, var(--spacing-3));
     white-space: var(--tabs-trigger-primary-white-space, nowrap);
     font-size: var(--tabs-trigger-primary-font-size, var(--periscope-font-size-base));
@@ -521,7 +527,7 @@
       }
 
       &::before {
-        inset-inline-start: 0;
+        inset-inline-start: var(--tabs-trigger-secondary-disabled-stripe-inset-inline, 0);
         mask-image: var(
           --tabs-trigger-secondary-disabled-stripe-before-mask-image,
           linear-gradient(to left, transparent 5%, black 100%)
@@ -529,7 +535,7 @@
       }
 
       &::after {
-        inset-inline-end: 0;
+        inset-inline-end: var(--tabs-trigger-secondary-disabled-stripe-inset-inline, 0);
         mask-image: var(
           --tabs-trigger-secondary-disabled-stripe-after-mask-image,
           linear-gradient(to right, transparent 5%, black 100%)
@@ -669,7 +675,7 @@
   }
 
   &[data-no-content-padding] {
-    padding: 0;
+    padding: var(--tabs-content-no-padding-padding, 0);
   }
 
   &:focus-visible {
@@ -689,10 +695,13 @@
 }
 
 .tabs__label {
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  min-inline-size: var(--tabs-label-min-inline-size, 0);
+  // Past this the label truncates and shows its full text in a tooltip, so one
+  // long label cannot take the bar. No spacing token is this size.
+  max-inline-size: var(--tabs-label-max-inline-size, 120px);
+  overflow: var(--tabs-label-overflow, hidden);
+  white-space: var(--tabs-label-white-space, nowrap);
+  text-overflow: var(--tabs-label-text-overflow, ellipsis);
 }
 
 // The dot marks the selected tab, shown only under `[data-active]` below. A
