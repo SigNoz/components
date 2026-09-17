@@ -22,6 +22,19 @@ import styles from './tabs.stories.module.css';
 const meta: Meta<typeof Tabs> = {
 	title: 'Composed Components/Tabs',
 	component: Tabs,
+	parameters: {
+		layout: 'fullscreen',
+		docs: {
+			description: {
+				component:
+					'A tab bar and its panels, built from an `items` array. Horizontal or a vertical rail, and it scrolls once it holds more tabs than it has room for.',
+			},
+		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/eyORbfrXMWCz9w0xEFdgWe/Periscope-%E2%80%93-Primitives-v2?node-id=12-744&p=f&m=dev',
+		},
+	},
 	argTypes: {
 		items: {
 			control: false,
@@ -31,7 +44,7 @@ const meta: Meta<typeof Tabs> = {
 		children: {
 			control: false,
 			description:
-				'The one panel shown for whichever tab is active, for items that carry `render` rather than their own `children`. A router `Outlet` in practice.',
+				'The one panel shown for whichever tab is active, for items that carry `render`. A router `Outlet` in practice.',
 			table: { category: 'Content', type: { summary: 'ReactNode' } },
 		},
 		variant: {
@@ -44,20 +57,19 @@ const meta: Meta<typeof Tabs> = {
 			control: 'select',
 			options: ['horizontal', 'vertical'],
 			description:
-				'The layout flow of the tab bar and its panels. `vertical` turns the bar into a rail beside the panel, and every side-named prop follows it.',
+				'`vertical` turns the bar into a rail beside the panel, and every side-named prop follows it.',
 			table: { category: 'Layout', type: { summary: "'horizontal' | 'vertical'" } },
 		},
 		alignment: {
 			control: 'select',
 			options: ['start', 'center', 'end'],
 			description:
-				'How the tab bar positions itself along its own axis within its container. `start` is the left edge of a horizontal bar and the top edge of a vertical one.',
+				"Where the tab list sits along the bar's own axis. `start` is the left edge horizontally, the top edge vertically.",
 			table: { category: 'Layout', type: { summary: "'start' | 'center' | 'end'" } },
 		},
 		defaultValue: {
 			control: 'text',
-			description:
-				'The active item key on the first render. Falls back to the first item when omitted.',
+			description: 'The active item key on the first render. Falls back to the first item.',
 			table: { category: 'State', type: { summary: 'string' } },
 		},
 		value: {
@@ -72,14 +84,12 @@ const meta: Meta<typeof Tabs> = {
 		},
 		tabBarStartContent: {
 			control: false,
-			description:
-				"Content rendered before the tab list, along the bar's own axis. Keeps its size while the list scrolls.",
+			description: 'Rendered before the tab list. Keeps its size while the list scrolls.',
 			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
 		},
 		tabBarEndContent: {
 			control: false,
-			description:
-				"Content rendered after the tab list, along the bar's own axis. Keeps its size while the list scrolls.",
+			description: 'Rendered after the tab list. Keeps its size while the list scrolls.',
 			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
 		},
 		noTabContentPadding: {
@@ -98,17 +108,14 @@ const meta: Meta<typeof Tabs> = {
 		},
 		className: {
 			control: 'text',
-			description: 'Additional CSS classes to apply to the root.',
+			description: 'Additional CSS classes for the root.',
 			table: { category: 'Styling', type: { summary: 'string' } },
 		},
 		testId: {
 			control: 'text',
-			description: 'Test ID applied to the root. Also names every tab.',
+			description: 'Forwarded to the root as `data-testid`. Also names every tab.',
 			table: { category: 'Testing', type: { summary: 'string' } },
 		},
-	},
-	parameters: {
-		layout: 'fullscreen',
 	},
 	tags: ['autodocs'],
 };
@@ -141,9 +148,8 @@ const defaultItems: TabsItemProps[] = [
 ];
 
 /**
- * More tabs than any of the frames below can hold, which is what the overflow examples need. The
- * icons and the disabled tab are kept so the scrolling strip is shown carrying everything a normal
- * bar carries, not a row of bare labels.
+ * More tabs than any frame below can hold. Icons and a disabled tab are kept, so the scrolling
+ * strip carries what a real bar carries.
  */
 const manyItems: TabsItemProps[] = [
 	{
@@ -214,9 +220,8 @@ function isVertical(orientation: TabsOrientationType): boolean {
 }
 
 /**
- * A frame with its start and end edges drawn, so an alignment that moves the bar inside its
- * container is visible rather than implied. Horizontally that means constraining the width; a
- * vertical rail only has room to move, or to overflow, once its height is constrained instead.
+ * A frame with its start and end edges drawn, so the bar moving inside its container is visible.
+ * Horizontal constrains the width, vertical the height.
  */
 function AxisFrame({
 	orientation,
@@ -321,16 +326,12 @@ function Section({ title, children }: { title: string; children: ReactNode }): R
 }
 
 /**
- * Every state the bar has, rendered at one orientation. The two showcase stories are this component
- * and nothing else, so a rule that holds on one axis is shown holding on the other rather than
- * being claimed to.
+ * Every state the bar has, at one orientation. Both showcase stories render this and nothing else,
+ * so a rule that holds on one axis is shown holding on the other.
  */
 function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): ReactElement {
 	return (
-		// Freezing is the toolbar's live/still toggle, never a class baked into a story. The
-		// bar's one animation, `tabs-dot-in`, is an entry, so pausing it holds the selected
-		// tab's dot at `scale(0.2)` and `opacity: 0` and the mark disappears. Worth knowing
-		// before reaching for `still` here.
+		// Freezing is the toolbar's live/still toggle, never a class baked into a story.
 		<div className={`story-section ${styles.sectionGap}`}>
 			<Section title="Primary">
 				<AxisFrame orientation={orientation}>
@@ -421,7 +422,7 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 						tabBarEndContent={addViewButton}
 					/>
 					<LabelledTabs
-						label="Primary, --tabs-bar-content-start-order / --tabs-bar-content-end-order: 2"
+						label="Primary, both bar-content order vars: 2"
 						variant="primary"
 						orientation={orientation}
 						alignment="start"
@@ -430,7 +431,7 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 						tabBarEndContent={addViewButton}
 					/>
 					<LabelledTabs
-						label="Secondary, --tabs-bar-content-start-order / --tabs-bar-content-end-order: 2"
+						label="Secondary, both bar-content order vars: 2"
 						variant="secondary"
 						orientation={orientation}
 						alignment="start"
@@ -444,7 +445,7 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 			<Section title="Content that takes the free space">
 				<div className={styles.exampleStack}>
 					<LabelledTabs
-						label="Primary, --tabs-extra-content-end-flex-grow: 1 with --tabs-border-spacer-grow-flex-grow: 0"
+						label="Primary, --tabs-extra-content-end-flex-grow: 1, spacer grow: 0"
 						variant="primary"
 						orientation={orientation}
 						alignment="start"
@@ -452,7 +453,7 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 						tabBarEndContent={addViewButton}
 					/>
 					<LabelledTabs
-						label="Secondary, same two vars"
+						label="Secondary, the same two vars"
 						variant="secondary"
 						orientation={orientation}
 						alignment="start"
@@ -481,12 +482,8 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 				</div>
 			</Section>
 
-			{/*
-			 * There is no prop for any of this. A strip too long for its frame scrolls, and the two
-			 * arrows appear at its ends; every tab stays a real tab, so the arrow keys still reach all
-			 * of them. The third example is the one worth reading: the bar content keeps its size and it
-			 * is the strip that gives way, rather than the button being pushed off the end.
-			 */}
+			{/* No prop drives any of this. The third example is the one to read: the bar content
+			    keeps its size and the strip is what gives way. */}
 			<Section title="Overflow">
 				<div className={styles.exampleStack}>
 					<LabelledTabs
@@ -522,8 +519,8 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 }
 
 /**
- * Stands in for the router: real tabs read `value` off `useLocation()` and never need `onChange`,
- * but Storybook has no router, so the hash the anchors navigate to is mirrored into state here.
+ * Stands in for the router. Real tabs read `value` off `useLocation()` and need no `onChange`, but
+ * Storybook has no router, so the hash is mirrored into state here.
  */
 function RoutedTabs(): ReactElement {
 	const [route, setRoute] = useState('overview');
@@ -588,9 +585,9 @@ export const VerticalShowcase: Story = {
 };
 
 /**
- * Tabs that navigate. Each item carries `render` instead of `children`, so the tab is a real
- * anchor: middle click, "open in new tab" and the URL in the status bar all work. The panel is the
- * bar's own children, and a disabled item falls back to a `<button>` that cannot be followed.
+ * Each item carries `render` instead of `children`, so the tab is a real anchor: middle click and
+ * "open in new tab" work. The panel is the bar's own children, and a disabled item falls back to a
+ * `<button>` that cannot be followed.
  */
 export const Navigation: Story = {
 	render: () => <RoutedTabs />,

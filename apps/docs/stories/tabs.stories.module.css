@@ -1,8 +1,7 @@
 /*
- * `.story-section` is a flex column with `align-items: flex-start`, so every
- * child shrinks to fit its content. A percentage width inside one would then
- * resolve against that shrunk box instead of the page, so the sections are
- * stretched back to the full canvas width here.
+ * `.story-section` is a flex column with `align-items: flex-start`, so a
+ * percentage width inside one resolves against the shrunk box rather than the
+ * page. The sections are stretched back to the full canvas width here.
  */
 .sectionGap {
 	gap: 32px;
@@ -33,11 +32,8 @@
 	margin-bottom: 4px;
 }
 
-/*
- * The alignment and extra-content examples only say anything while the bar is
- * narrower than the page, so every example sits in this frame: half the page
- * wide, with its start and end edges drawn.
- */
+/* The alignment examples only say anything while the bar is narrower than the
+ * page, so each sits in this frame: half the page, edges drawn. */
 .widthFrame {
 	position: relative;
 	width: 50%;
@@ -67,30 +63,22 @@
 	right: 4px;
 }
 
-/*
- * Extra content is pinned to the bar's edges by default. Both `order` vars set
- * to the list's own order put a block back beside the list, the side it sits on
- * decided by which block it is.
- */
+/* Both `order` vars set to the list's own order put a content block back beside
+ * the list instead of on the bar's edge. */
 .contentNearList {
 	--tabs-bar-content-start-order: 2;
 	--tabs-bar-content-end-order: 2;
 }
 
-/*
- * The free space next to the list belongs to a spacer by default. Handing it to
- * the content block instead is two vars: the block grows, the spacer stops.
- */
+/* The free space next to the list belongs to a spacer. Handing it to the content
+ * block instead is two vars: the block grows, the spacer stops. */
 .contentGrows {
 	--tabs-extra-content-end-flex-grow: 1;
 	--tabs-border-spacer-grow-flex-grow: 0;
 }
 
-/*
- * A vertical rail runs along the block axis, so what has to be constrained for
- * alignment and overflow to say anything is the height, not the width. The frame
- * is a flex row so the bar beside it can take the rest.
- */
+/* A rail runs along the block axis, so the height is what has to be constrained.
+ * A flex row, so the panel beside the rail takes the rest. */
 .heightFrame {
 	position: relative;
 	display: flex;
@@ -120,11 +108,8 @@
 	bottom: 2px;
 }
 
-/*
- * Tight enough that the strip cannot fit, which is the whole point of the
- * overflow examples. Applied on top of whichever axis frame is in play, so it
- * only ever narrows the axis the bar runs on.
- */
+/* Tight enough that the strip cannot fit. Applied on top of whichever axis frame
+ * is in play. */
 .overflowFrame {
 	width: 420px;
 	min-width: 0;
