@@ -16,6 +16,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type MouseEventHandler, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import { allModes } from '../.storybook/modes.js';
 import styles from './tabs.stories.module.css';
 
 const meta: Meta<typeof Tabs> = {
@@ -326,12 +327,10 @@ function Section({ title, children }: { title: string; children: ReactNode }): R
  */
 function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): ReactElement {
 	return (
-		// Deliberately not `story-freeze-animations`, which is
-		// `animation-play-state: paused` on everything. The one animation the bar has,
-		// `tabs-dot-in`, is an entry: pausing it holds the selected tab's dot at its first
-		// frame, `scale(0.2)` and `opacity: 0`, so the dot becomes an invisible speck that
-		// still takes its slot in the trigger and reads as a phantom gap. Freezing is for
-		// animations that loop, as `Button`'s do.
+		// Freezing is the toolbar's live/still toggle, never a class baked into a story. The
+		// bar's one animation, `tabs-dot-in`, is an entry, so pausing it holds the selected
+		// tab's dot at `scale(0.2)` and `opacity: 0` and the mark disappears. Worth knowing
+		// before reaching for `still` here.
 		<div className={`story-section ${styles.sectionGap}`}>
 			<Section title="Primary">
 				<AxisFrame orientation={orientation}>
@@ -576,14 +575,14 @@ export const Default: Story = {
 
 export const HorizontalShowcase: Story = {
 	parameters: {
-		chromatic: { disableSnapshot: false, disableAnimations: true },
+		chromatic: { disableSnapshot: false, modes: allModes },
 	},
 	render: () => <TabsShowcase orientation="horizontal" />,
 };
 
 export const VerticalShowcase: Story = {
 	parameters: {
-		chromatic: { disableSnapshot: false, disableAnimations: true },
+		chromatic: { disableSnapshot: false, modes: allModes },
 	},
 	render: () => <TabsShowcase orientation="vertical" />,
 };

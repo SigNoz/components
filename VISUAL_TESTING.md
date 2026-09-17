@@ -65,10 +65,18 @@ The same applies to random colours, shuffled lists, or anything pulling live dat
 Animations cause flaky snapshots because Chromatic might capture mid-transition frames.
 Three options:
 
-- **Disable globally**: add `chromatic: { disableAnimations: true }` in story parameters.
+- **Snapshot it still**: add `chromatic: { disableSnapshot: false, modes: allModes }`, importing
+  `allModes` from `apps/docs/.storybook/modes.ts`. The `still` mode sets the `motion` global the
+  Motion toolbar item sets by hand, and which is the default anyway: no animation runs, no
+  transition is left in flight, and every element sits on the style it has once it has settled.
+  The mode's name shows on the diff in Chromatic.
 - **Wait for completion**: use the `play` function to wait until the animation settles.
 - **Skip the story**: for pure animation demos, use `chromatic: { disable: true }` so
   they're excluded from visual diffing entirely.
+
+Do not reach for `chromatic: { disableAnimations: true }`. What it leaves on screen is
+Chromatic's to define and cannot be checked from here; a mode can be opened in the browser at
+`?globals=motion:still` and read.
 
 ### Use preview stories for visual testing
 
