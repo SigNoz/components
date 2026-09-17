@@ -171,6 +171,42 @@ describe('Tabs rendering', () => {
 		);
 	});
 
+	it("lets an item's own testId win over the derived one", () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="start"
+				items={[
+					{ key: 'overview', label: 'Overview', children: 'Overview content', testId: 'first-tab' },
+					{ key: 'settings', label: 'Settings', children: 'Settings content' },
+				]}
+				testId="my-tabs"
+			/>,
+		);
+
+		expect(screen.getByTestId('first-tab')).toBe(screen.getByRole('tab', { name: 'Overview' }));
+		expect(screen.queryByTestId('my-tabs-item-overview')).toBeNull();
+		expect(screen.getByTestId('my-tabs-item-settings')).toBe(
+			screen.getByRole('tab', { name: 'Settings' }),
+		);
+	});
+
+	it('names an item from its own testId even when the bar has none', () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="start"
+				items={[
+					{ key: 'overview', label: 'Overview', children: 'Overview content', testId: 'first-tab' },
+				]}
+			/>,
+		);
+
+		expect(screen.getByTestId('first-tab')).toBe(screen.getByRole('tab', { name: 'Overview' }));
+	});
+
 	it('renders no item testId when the bar has none', () => {
 		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
