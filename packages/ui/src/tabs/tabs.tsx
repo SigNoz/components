@@ -1,650 +1,295 @@
-import * as TabsPrimitive from '@radix-ui/react-tabs';
-import { Lock } from '@signozhq/icons';
-import * as React from 'react';
+import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
+import {
+	forwardRef,
+	type MouseEventHandler,
+	type ReactElement,
+	type RefAttributes,
+	useMemo,
+	useRef,
+} from 'react';
 import { cn } from '../lib/utils.js';
-import { Tooltip } from '../tooltip/index.js';
-import styles from './tabs.module.scss';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
+import { TabsTrigger } from './subcomponents/tabs-trigger.js';
+import styles from './tabs.module.scss';
+import { TabsVariant } from './constants.js';
+import type { TabsProps, ValidateTabsProps } from './types.js';
 
-export type TabVariants = 'primary' | 'secondary';
+function updateHoverSliderPosition(
+	slider: HTMLDivElement | null,
+	list: HTMLElement | null,
+	trigger: HTMLElement | null,
+): void {
+	if (!slider) {
+		return;
+	}
 
-export type TabsAlignment = 'left' | 'center' | 'right';
+	if (!list || !trigger) {
+		slider.style.opacity = '0';
+		return;
+	}
 
-export type TabItemProps = {
-	/**
-	 * Unique identifier for the tab item.
-	 */
-	key: string;
-	/**
-	 * The label content displayed in the tab trigger.
-	 */
-	label: React.ReactNode;
-	/**
-	 * The content displayed when the tab is active.
-	 */
-	children: React.ReactNode;
-	/**
-	 * When true, prevents the user from interacting with the tab.
-	 */
-	disabled?: boolean;
-	/**
-	 * Tooltip message shown when the tab is disabled.
-	 */
-	disabledReason?: string;
-	/**
-	 * Icon displayed before the tab label.
-	 */
-	prefixIcon?: React.ReactNode;
-	/**
-	 * Icon displayed after the tab label.
-	 */
-	suffixIcon?: React.ReactNode;
-};
+	const listRect = list.getBoundingClientRect();
+	const triggerRect = trigger.getBoundingClientRect();
 
-export type TabsProps = Pick<
-	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'style' | 'children'
-> & {
-	/**
-	 * The testId associated with the tabs.
-	 */
-	testId?: string;
-	/**
-	 * Array of tab items to render.
-	 */
-	items: TabItemProps[];
-	/**
-	 * The visual style variant of the tabs.
-	 * @default 'primary'
-	 */
-	variant?: TabVariants;
-	/**
-	 * The value of the tab that should be active when initially rendered.
-	 * Use when you do not need to control the state of the tabs.
-	 */
-	defaultValue?: string;
-	/**
-	 * The controlled value of the tab to activate.
-	 * Should be used in conjunction with onChange.
-	 */
-	value?: string;
-	/**
-	 * Event handler called when the active tab changes.
-	 */
-	onChange?: (key: string) => void;
-	/**
-	 * The orientation of the tabs.
-	 */
-	orientation?: 'horizontal' | 'vertical';
-	/**
-	 * The direction of navigation when using keyboard.
-	 */
-	dir?: 'ltr' | 'rtl';
-	/**
-	 * When automatic, tabs are activated when receiving focus.
-	 * When manual, tabs are activated when clicked.
-	 * @default 'automatic'
-	 */
-	activationMode?: 'automatic' | 'manual';
-	/**
-	 * Content rendered to the left of the tab list, in the same horizontal row.
-	 */
-	tabBarLeftContent?: React.ReactNode;
-	/**
-	 * Content rendered to the right of the tab list, in the same horizontal row.
-	 */
-	tabBarRightContent?: React.ReactNode;
-	/**
-	 * Controls the alignment of the tab list within its container.
-	 * @default 'left'
-	 */
-	alignment?: TabsAlignment;
-};
+	slider.style.transform = `translateX(${triggerRect.left - listRect.left}px)`;
+	slider.style.width = `${triggerRect.width}px`;
+	slider.style.opacity = '1';
+}
 
-/**
- * Tabs component for organizing content into separate views.
- *
- * @example
- * ```tsx
- * // Basic usage with primary variant
- * <Tabs
- *   items={[
- *     { key: 'tab1', label: 'Tab 1', children: <div>Content 1</div> },
- *     { key: 'tab2', label: 'Tab 2', children: <div>Content 2</div> },
- *   ]}
- * />
- * ```
- *
- * @example
- * ```tsx
- * // Secondary variant with controlled state
- * const [activeTab, setActiveTab] = React.useState('tab1');
- * <Tabs
- *   variant="secondary"
- *   value={activeTab}
- *   onChange={setActiveTab}
- *   items={[
- *     { key: 'tab1', label: 'Overview', children: <div>Overview content</div> },
- *     { key: 'tab2', label: 'Details', children: <div>Details content</div> },
- *   ]}
- * />
- * ```
- *
- * @example
- * ```tsx
- * // With icons and disabled tabs
- * <Tabs
- *   items={[
- *     { key: 'tab1', label: 'Home', prefixIcon: <HomeIcon />, children: <div>Home</div> },
- *     { key: 'tab2', label: 'Settings', disabled: true, disabledReason: 'Coming soon', children: <div>Settings</div> },
- *   ]}
- * />
- * ```
- */
-export const Tabs = React.forwardRef<React.ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
-	(
-		{
-			items,
-			onChange,
-			defaultValue,
-			value,
-			variant = 'primary',
-			alignment,
-			className,
-			testId,
-			tabBarLeftContent,
-			tabBarRightContent,
-			...props
-		},
-		ref,
-	) => {
-		return (
-			<TabsRoot
-				ref={ref}
-				onValueChange={onChange}
-				defaultValue={defaultValue ?? items[0]?.key}
-				value={value}
-				className={className}
-				testId={testId}
-				{...props}
-			>
-				<TooltipProviderIfMissing>
-					<TabsList
-						variant={variant}
-						alignment={alignment}
-						leftContent={tabBarLeftContent}
-						rightContent={tabBarRightContent}
-					>
-						{items.map((item) => {
-							const triggerContent = (
-								<TabsTrigger
-									key={item.key}
-									value={item.key}
-									disabled={item.disabled}
-									variant={variant}
-								>
-									{item.disabled ? (
-										<Lock className={styles.tabs__icon} size={16} />
-									) : (
-										item.prefixIcon && <span className={styles.tabs__icon}>{item.prefixIcon}</span>
-									)}
-									{item.label}
-									{!item.disabled && item.suffixIcon && (
-										<span className={styles.tabs__icon}>{item.suffixIcon}</span>
-									)}
-								</TabsTrigger>
-							);
-
-							return item.disabled ? (
-								<Tooltip key={item.key} title={item.disabledReason || 'This tab is disabled'}>
-									{triggerContent}
-								</Tooltip>
-							) : (
-								triggerContent
-							);
-						})}
-					</TabsList>
-					{items.map((item) => (
-						<TabsContent key={item.key} value={item.key}>
-							{item.children}
-						</TabsContent>
-					))}
-				</TooltipProviderIfMissing>
-			</TabsRoot>
-		);
+const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
+	{
+		className,
+		items,
+		variant,
+		orientation,
+		alignment,
+		value,
+		defaultValue,
+		onChange,
+		tabBarLeftContent,
+		tabBarRightContent,
+		noTabContentPadding = false,
+		testId,
+		...props
 	},
-);
-Tabs.displayName = 'Tabs';
+	ref,
+) {
+	const listRef = useRef<HTMLDivElement>(null);
+	const hoverSliderRef = useRef<HTMLDivElement>(null);
 
-export type TabsListProps = Pick<
-	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'style' | 'children'
-> & {
-	/**
-	 * The testId associated with the tabs list.
-	 */
-	testId?: string;
-	/**
-	 * The visual style variant of the tabs list.
-	 */
-	variant?: TabVariants;
-	/**
-	 * When true, keyboard navigation will loop from last tab to first, and vice versa.
-	 */
-	loop?: boolean;
-	/**
-	 * Content rendered to the left of the tab list, in the same horizontal row.
-	 */
-	leftContent?: React.ReactNode;
-	/**
-	 * Content rendered to the right of the tab list, in the same horizontal row.
-	 */
-	rightContent?: React.ReactNode;
-	/**
-	 * Controls the alignment of the tab list within its container.
-	 * @default 'left'
-	 */
-	alignment?: TabsAlignment;
-};
+	const onValueChange = useMemo(
+		() =>
+			onChange === undefined
+				? undefined
+				: (next: unknown): void => {
+						if (typeof next !== 'string') {
+							return;
+						}
 
-/**
- * Container for tab triggers that provides navigation and styling.
- *
- * @example
- * ```tsx
- * // Basic usage with TabsTrigger children
- * <TabsList>
- *   <TabsTrigger value="tab1">Tab 1</TabsTrigger>
- *   <TabsTrigger value="tab2">Tab 2</TabsTrigger>
- * </TabsList>
- * ```
- *
- * @example
- * ```tsx
- * // Secondary variant with keyboard loop navigation
- * <TabsList variant="secondary" loop>
- *   <TabsTrigger value="overview">Overview</TabsTrigger>
- *   <TabsTrigger value="analytics">Analytics</TabsTrigger>
- *   <TabsTrigger value="reports">Reports</TabsTrigger>
- * </TabsList>
- * ```
- */
-export const TabsList = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.List>,
-	TabsListProps
->(
-	(
-		{
-			className,
-			variant = 'primary',
-			alignment = 'left',
-			children,
-			testId,
-			leftContent,
-			rightContent,
-			...props
-		},
-		ref,
-	) => {
-		const listRef = React.useRef<HTMLDivElement>(null);
-		const activeSliderRef = React.useRef<HTMLDivElement>(null);
-		const hoverSliderRef = React.useRef<HTMLDivElement>(null);
+						onChange(next);
+					},
+		[onChange],
+	);
 
-		// Combine refs
-		React.useImperativeHandle(ref, () => listRef.current as HTMLDivElement);
+	const isPrimary = variant === TabsVariant.Primary;
 
-		const updateSliderPosition = React.useCallback(
-			(slider: HTMLDivElement | null, trigger: HTMLElement | null) => {
-				if (!slider || !trigger || !listRef.current) {
-					if (slider) slider.style.opacity = '0';
-					return;
-				}
+	const handleMouseOver: MouseEventHandler<HTMLDivElement> = (event) => {
+		const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-slot="tabs-item"]');
+		updateHoverSliderPosition(hoverSliderRef.current, listRef.current, trigger);
+	};
 
-				const listRect = listRef.current.getBoundingClientRect();
-				const triggerRect = trigger.getBoundingClientRect();
-				const offset = triggerRect.left - listRect.left;
+	const handleMouseLeave: MouseEventHandler<HTMLDivElement> = () => {
+		updateHoverSliderPosition(hoverSliderRef.current, null, null);
+	};
 
-				slider.style.transform = `translateX(${offset}px)`;
-				slider.style.width = `${triggerRect.width}px`;
-				slider.style.opacity = '1';
-			},
-			[],
-		);
-
-		const updateActiveSlider = React.useCallback(() => {
-			if (variant !== 'primary' || !listRef.current) return;
-
-			const activeTrigger = listRef.current.querySelector<HTMLElement>(
-				'[data-slot="tabs-trigger"][data-state="active"]',
-			);
-			updateSliderPosition(activeSliderRef.current, activeTrigger);
-		}, [variant, updateSliderPosition]);
-
-		// Update active slider on mount and when children change
-		React.useEffect(() => {
-			if (variant !== 'primary') return;
-
-			requestAnimationFrame(updateActiveSlider);
-
-			// Observe for data-state changes on triggers
-			const list = listRef.current;
-			if (!list) return;
-
-			const observer = new MutationObserver((mutations) => {
-				for (const mutation of mutations) {
-					if (mutation.type === 'attributes' && mutation.attributeName === 'data-state') {
-						updateActiveSlider();
-						break;
-					}
-				}
-			});
-
-			observer.observe(list, {
-				attributes: true,
-				attributeFilter: ['data-state'],
-				subtree: true,
-			});
-
-			return () => observer.disconnect();
-		}, [variant, updateActiveSlider]);
-
-		React.useEffect(() => {
-			if (variant !== 'primary') return;
-
-			const handleResize = () => updateActiveSlider();
-			window.addEventListener('resize', handleResize);
-			return () => window.removeEventListener('resize', handleResize);
-		}, [variant, updateActiveSlider]);
-
-		const handleMouseOver = React.useCallback(
-			(e: React.MouseEvent) => {
-				const trigger = (e.target as HTMLElement).closest<HTMLElement>(
-					'[data-slot="tabs-trigger"]',
-				);
-				if (trigger) {
-					updateSliderPosition(hoverSliderRef.current, trigger);
-				}
-			},
-			[updateSliderPosition],
-		);
-
-		const handleMouseLeave = React.useCallback(() => {
-			const slider = hoverSliderRef.current;
-			if (slider) slider.style.opacity = '0';
-		}, []);
-
-		return (
-			<div
-				className={styles['tabs__list-wrapper']}
-				data-variant={variant}
-				data-alignment={alignment}
-				data-has-extra-content={leftContent || rightContent ? '' : undefined}
-				data-has-left-content={leftContent ? '' : undefined}
-				data-has-right-content={rightContent ? '' : undefined}
-			>
-				{variant === 'secondary' && (
+	return (
+		<TabsPrimitive.Root
+			ref={ref}
+			data-slot="tabs"
+			className={cn(styles.tabs, className)}
+			value={value}
+			defaultValue={defaultValue ?? items[0]?.key}
+			onValueChange={onValueChange}
+			orientation={orientation}
+			{...props}
+			{...(testId === undefined ? {} : { 'data-testid': testId })}
+		>
+			<TooltipProviderIfMissing>
+				<div
+					data-slot="tabs-list-wrapper"
+					className={styles['tabs__list-wrapper']}
+					data-variant={variant}
+					data-alignment={alignment}
+					data-no-content-padding={noTabContentPadding || undefined}
+					data-has-extra-content={tabBarLeftContent || tabBarRightContent ? '' : undefined}
+					data-has-left-content={tabBarLeftContent ? '' : undefined}
+					data-has-right-content={tabBarRightContent ? '' : undefined}
+				>
 					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
-				)}
 
-				{leftContent && (
-					<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>
-						{leftContent}
-					</div>
-				)}
+					{tabBarLeftContent != null && (
+						<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>
+							{tabBarLeftContent}
+						</div>
+					)}
 
-				{variant === 'primary' ? (
 					<div className={styles['tabs__list-inner']}>
 						<TabsPrimitive.List
 							ref={listRef}
-							className={cn(styles.tabs__list, className)}
+							className={styles.tabs__list}
 							data-variant={variant}
-							data-testid={testId}
-							onMouseOver={handleMouseOver}
-							onMouseLeave={handleMouseLeave}
-							{...props}
+							onMouseOver={isPrimary ? handleMouseOver : undefined}
+							onMouseLeave={isPrimary ? handleMouseLeave : undefined}
 						>
-							{children}
+							{items.map((item) => (
+								<TabsTrigger key={item.key} item={item} variant={variant} groupTestId={testId} />
+							))}
+
+							{isPrimary && (
+								<TabsPrimitive.Indicator
+									data-slot="tabs-active-slider"
+									className={styles['tabs__active-slider']}
+									renderBeforeHydration
+								/>
+							)}
 						</TabsPrimitive.List>
-						<div
-							ref={hoverSliderRef}
-							className={styles['tabs__hover-slider']}
-							style={{ height: '28px', opacity: 0 }}
-						/>
-						<div
-							ref={activeSliderRef}
-							className={styles['tabs__active-slider']}
-							style={{ opacity: 0 }}
-						/>
-					</div>
-				) : (
-					<TabsPrimitive.List
-						ref={listRef}
-						className={cn(styles.tabs__list, className)}
-						data-variant={variant}
-						data-testid={testId}
-						{...props}
-					>
-						{children}
-					</TabsPrimitive.List>
-				)}
 
-				{rightContent && (
-					<div data-slot="tab-extra-content-right" className={styles['tabs__extra-content']}>
-						{rightContent}
+						{isPrimary && (
+							<div
+								ref={hoverSliderRef}
+								data-slot="tabs-hover-slider"
+								className={styles['tabs__hover-slider']}
+								style={{ opacity: 0 }}
+							/>
+						)}
 					</div>
-				)}
 
-				{variant === 'secondary' && (
+					{tabBarRightContent != null && (
+						<div data-slot="tab-extra-content-right" className={styles['tabs__extra-content']}>
+							{tabBarRightContent}
+						</div>
+					)}
+
 					<div
 						data-slot="tab-spacer-grow"
 						className={cn(styles['tabs__border-spacer'], styles['tabs__border-spacer--grow'])}
 					/>
-				)}
-			</div>
-		);
-	},
-);
-TabsList.displayName = 'TabsList';
+				</div>
 
-export type TabsTriggerProps = Pick<
-	React.ComponentPropsWithoutRef<'button'>,
-	'id' | 'className' | 'style' | 'children' | 'onMouseEnter' | 'onMouseDown' | 'onMouseLeave'
-> & {
-	/**
-	 * The testId associated with the tabs trigger.
-	 */
-	testId?: string;
-	/**
-	 * The unique value that associates the trigger with a content panel.
-	 */
-	value: string;
-	/**
-	 * When true, prevents the user from interacting with the tab.
-	 */
-	disabled?: boolean;
-	/**
-	 * The visual style variant of the trigger.
-	 */
-	variant?: TabVariants;
-};
-
-/**
- * Interactive button that activates its associated tab content panel.
- *
- * @example
- * ```tsx
- * // Basic tab trigger
- * <TabsTrigger value="settings">Settings</TabsTrigger>
- * ```
- *
- * @example
- * ```tsx
- * // Disabled trigger with secondary variant
- * <TabsTrigger value="admin" variant="secondary" disabled>
- *   Admin Panel
- * </TabsTrigger>
- * ```
- *
- * @example
- * ```tsx
- * // With custom event handlers
- * <TabsTrigger
- *   value="dashboard"
- *   onMouseEnter={() => prefetchData()}
- *   onMouseLeave={() => cancelPrefetch()}
- * >
- *   Dashboard
- * </TabsTrigger>
- * ```
- */
-export const TabsTrigger = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Trigger>,
-	TabsTriggerProps
->(({ className, children, variant = 'primary', disabled, testId, ...props }, ref) => (
-	<TabsPrimitive.Trigger
-		ref={ref}
-		data-slot="tabs-trigger"
-		data-variant={variant}
-		data-testid={testId}
-		className={cn(styles.tabs__trigger, className)}
-		disabled={disabled}
-		{...props}
-	>
-		{children}
-	</TabsPrimitive.Trigger>
-));
-TabsTrigger.displayName = 'TabsTrigger';
-
-export type TabsContentProps = Pick<
-	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'style' | 'children'
-> & {
-	/**
-	 * The testId associated with the tabs content.
-	 */
-	testId?: string;
-	/**
-	 * The unique value that associates the content with a trigger.
-	 */
-	value: string;
-	/**
-	 * When true, content is kept mounted in the DOM when inactive.
-	 */
-	forceMount?: true;
-};
-
-/**
- * Container for the content associated with a tab trigger.
- *
- * @example
- * ```tsx
- * // Basic tab content
- * <TabsContent value="profile">
- *   <ProfileSettings />
- * </TabsContent>
- * ```
- *
- * @example
- * ```tsx
- * // With forceMount to keep content in DOM when inactive
- * <TabsContent value="video" forceMount>
- *   <VideoPlayer />
- * </TabsContent>
- * ```
- *
- * @example
- * ```tsx
- * // Multiple content panels with custom styling
- * <>
- *   <TabsContent value="code" className="p-4">
- *     <CodeEditor />
- *   </TabsContent>
- *   <TabsContent value="preview" className="p-4">
- *     <LivePreview />
- *   </TabsContent>
- * </>
- * ```
- */
-export const TabsContent = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Content>,
-	TabsContentProps
->(({ className, testId, ...props }, ref) => {
-	return (
-		<TabsPrimitive.Content
-			ref={ref}
-			className={cn(styles.tabs__content, className)}
-			data-testid={testId}
-			{...props}
-		/>
+				{items.map((item) => (
+					<TabsPrimitive.Panel
+						key={item.key}
+						value={item.key}
+						data-slot="tabs-panel"
+						data-no-content-padding={noTabContentPadding || undefined}
+						className={styles.tabs__content}
+					>
+						{item.children}
+					</TabsPrimitive.Panel>
+				))}
+			</TooltipProviderIfMissing>
+		</TabsPrimitive.Root>
 	);
 });
-TabsContent.displayName = 'TabsContent';
-
-export type TabsRootProps = Pick<
-	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'style' | 'children'
-> & {
-	/**
-	 * The testId associated with the tabs root.
-	 */
-	testId?: string;
-	/**
-	 * The direction of navigation when using keyboard.
-	 */
-	dir?: 'ltr' | 'rtl';
-	/**
-	 * The value of the tab that should be active when initially rendered.
-	 * Use when you do not need to control the state of the tabs.
-	 */
-	defaultValue?: string;
-	/**
-	 * The controlled value of the tab to activate.
-	 * Should be used in conjunction with onValueChange.
-	 */
-	value?: string;
-	/**
-	 * Event handler called when the active tab changes.
-	 */
-	onValueChange?: (value: string) => void;
-	/**
-	 * The orientation of the tabs.
-	 */
-	orientation?: 'horizontal' | 'vertical';
-	/**
-	 * When automatic, tabs are activated when receiving focus.
-	 * When manual, tabs are activated when clicked.
-	 * @default 'automatic'
-	 */
-	activationMode?: 'automatic' | 'manual';
-};
 
 /**
- * Root container for primitive tabs composition.
- * Use this when you need full control over the tabs structure.
+ * Renders a tab bar and its panels from `items` (Base UI `Tabs`).
+ *
+ * The bar owns its markup: there are no children to compose, and no `TabsTrigger`/`TabsContent` to
+ * import. Every `aria-*` and any `data-*` are forwarded to the root.
+ *
+ * Visual values are `--tabs-*` custom properties, defaults in the `css-tokens` region of
+ * [./index.ts](./index.ts).
+ *
+ * ### Items
+ *
+ * Each item is `{ key, label, children }`, plus optional `prefixIcon`/`suffixIcon`. `key` is what
+ * `value`/`onChange` carry and what associates a tab with its panel.
+ *
+ * An item can disable itself with `disabled` + `disabledTooltip`, which blocks that tab alone.
+ * Base UI keeps a disabled tab focusable and hoverable (`aria-disabled`, not the native attribute),
+ * so its tooltip stays reachable, the same guarantee `Button` relies on for `disabledTooltip`.
+ *
+ * A label that renders nothing (`null`, `false` or an empty string) falls back to the text
+ * `<No label>`, and that label carries `data-empty-label`. The tab is never dropped: a view that
+ * disappears from the bar removes it from the group without saying so.
+ *
+ * ### Selection
+ *
+ * Arrow keys move focus between tabs without activating them. A focused tab is only activated by
+ * `Enter`/`Space`, or by click. This is Base UI's default (`activateOnFocus={false}`), left as is.
+ *
+ * ### Truncation
+ *
+ * Every label is measured and re-measured on resize. While it does not fit, the label carries
+ * `data-truncated` and shows the full text in a tooltip. There is no `textOverflow` prop, unlike
+ * `Button`/`RadioGroup`: truncation is always on.
+ *
+ * A disabled tab's `disabledTooltip` stacks above the truncated label, reason first.
+ *
+ * ### Tab bar layout
+ *
+ * `alignment` positions the tab list within its container. `tabBarLeftContent`/
+ * `tabBarRightContent` render extra content in the same row, pinned to the bar's outer edges rather
+ * than to the list. To keep a block beside the list instead, set
+ * `--tabs-bar-content-left-order`/`--tabs-bar-content-right-order` to `2`.
+ *
+ * The room between the list and a content block belongs to a spacer, and `alignment` only picks
+ * which spacer takes it. Hand it to the content block instead with
+ * `--tabs-extra-content-flex-grow: 1` (or the per-side
+ * `--tabs-extra-content-left-flex-grow`/`--tabs-extra-content-right-flex-grow`), usually alongside
+ * `--tabs-border-spacer-grow-flex-grow: 0`. A block that should also give room back needs
+ * `--tabs-extra-content-flex-shrink: 1` and `--tabs-extra-content-min-width: 0`, since a flex item
+ * will not shrink below its content otherwise.
+ *
+ * ### Content padding
+ *
+ * `noTabContentPadding` removes the padding around the active panel, for a panel that wants to
+ * manage its own spacing (for example, a panel that is itself a table or a full-bleed chart). On
+ * `variant="primary"` it also drops the bar's own inline padding, so the first and last tab line up
+ * with the panel's edge.
+ *
+ * ### Asserting on it
+ *
+ * `testId` is `data-testid` and also names every tab: an item with no `testId` of its own is
+ * addressable as `` `${testId}-item-${key}` ``.
+ *
+ * | root attribute | value |
+ * |---|---|
+ * | `data-slot` | `"tabs"` |
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `tabs-list-wrapper` | always, the row holding the list and any extra content, `data-no-content-padding` while `noTabContentPadding` is set |
+ * | `tabs-item` | one per item, the tab button, carries the item's `testId` |
+ * | `tabs-label` | the measured label, `data-empty-label` while it is the fallback |
+ * | `tabs-active-slider` | `variant="primary"` only, tracks the active tab (Base UI `Tabs.Indicator`) |
+ * | `tabs-hover-slider` | `variant="primary"` only, tracks the hovered tab |
+ * | `tabs-panel` | one per item, `data-no-content-padding` while `noTabContentPadding` is set |
  *
  * @example
  * ```tsx
- * <TabsRoot defaultValue="tab1">
- *   <TabsList variant="primary">
- *     <TabsTrigger value="tab1">Tab 1</TabsTrigger>
- *     <TabsTrigger value="tab2">Tab 2</TabsTrigger>
- *   </TabsList>
- *   <TabsContent value="tab1">Content 1</TabsContent>
- *   <TabsContent value="tab2">Content 2</TabsContent>
- * </TabsRoot>
+ * <Tabs
+ *   variant="primary"
+ *   orientation="horizontal"
+ *   alignment="left"
+ *   defaultValue="overview"
+ *   items={[
+ *     { key: 'overview', label: 'Overview', children: <div>Overview content</div> },
+ *     { key: 'settings', label: 'Settings', children: <div>Settings content</div> },
+ *   ]}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Disabled tab with its reason, controlled state
+ * const [active, setActive] = useState('overview');
+ * <Tabs
+ *   variant="secondary"
+ *   orientation="horizontal"
+ *   alignment="left"
+ *   value={active}
+ *   onChange={setActive}
+ *   items={[
+ *     { key: 'overview', label: 'Overview', children: 'Overview content' },
+ *     {
+ *       key: 'billing',
+ *       label: 'Billing',
+ *       children: 'Billing content',
+ *       disabled: true,
+ *       disabledTooltip: 'Ask an admin for access',
+ *     },
+ *   ]}
+ * />
  * ```
  */
-export const TabsRoot = React.forwardRef<
-	React.ElementRef<typeof TabsPrimitive.Root>,
-	TabsRootProps
->(({ className, testId, ...props }, ref) => {
-	return (
-		<TabsPrimitive.Root
-			ref={ref}
-			className={cn(styles.tabs, className)}
-			data-testid={testId}
-			{...props}
-		/>
-	);
-});
-TabsRoot.displayName = 'TabsRoot';
+export const Tabs = TabsImpl as <T extends TabsProps>(
+	props: T &
+		ValidateTabsProps<T> &
+		// `T` is inferred from the call site, so `T extends TabsProps` alone never runs excess property
+		// checks. Every key outside the props (a typo, an attribute the bar does not forward on
+		// purpose) is pinned to `never` instead.
+		Record<Exclude<keyof T, keyof TabsProps | keyof RefAttributes<HTMLDivElement>>, never> &
+		RefAttributes<HTMLDivElement>,
+) => ReactElement;
