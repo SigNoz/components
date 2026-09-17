@@ -19,8 +19,7 @@ export type TabsScrollDirectionType =
  * What a navigating tab renders as, taken from Base UI's own `render` prop.
  *
  * Either the element to render in the tab's place, which keeps its own props and receives the
- * tab's on top, or a function handed those props and the tab's state (`active`, `disabled`,
- * `orientation`, `tabActivationDirection`).
+ * tab's on top, or a function handed those props and the tab's state.
  */
 export type TabsItemRenderType = NonNullable<OriginalTabProps['render']>;
 
@@ -40,7 +39,7 @@ type TabsItemBaseType = {
 	 *
 	 * @note A node that renders nothing (`null`, `false` or an empty string) falls back to the text
 	 * `<No label>`, and that tab carries `data-empty-label`. The tab still renders: a view that
-	 * disappears from the bar removes it from the group without saying so.
+	 * disappears from the bar leaves the group without saying so.
 	 */
 	label: ReactNode;
 	/**
@@ -55,6 +54,14 @@ type TabsItemBaseType = {
 	 * @note Hidden while `disabled` is true.
 	 */
 	suffixIcon?: ReactNode;
+	/**
+	 * Forwarded to the tab as `data-testid`. Survives the tooltip trigger cloning the tab.
+	 *
+	 * @note Optional because the bar names its tabs for you: with a `testId` on the bar, an item
+	 * with none of its own is addressable as `` `${groupTestId}-item-${key}` ``. Write this only to
+	 * give one tab a name of its own, which then wins.
+	 */
+	testId?: string;
 };
 
 /**
@@ -62,8 +69,7 @@ type TabsItemBaseType = {
  *
  * A tab either owns a panel or navigates, never both. An item with `children` renders a `<button>`
  * and the bar renders that item's panel. An item with `render` renders whatever the call site hands
- * over, a router `Link` in practice, and the panel is the bar's own `children` (an `Outlet`), which
- * belongs to the router rather than to any one item.
+ * over, and the panel is the bar's own `children`.
  */
 type TabsItemContentType =
 	| {
@@ -79,8 +85,8 @@ type TabsItemContentType =
 			 * Renders this tab as something else, keeping `role="tab"`, the keyboard behaviour and
 			 * every `data-*` the bar stamps.
 			 *
-			 * @note For a real anchor, so a tab can be middle-clicked, opened in a new tab and read
-			 * off the status bar. `<Link to="/logs" />` is the whole prop.
+			 * @note For a real anchor, so a tab can be middle-clicked and opened in a new tab.
+			 * `<Link to="/logs" />` is the whole prop.
 			 *
 			 * @note Ignored while `disabled` is true: an anchor stays reachable through middle click
 			 * and the context menu, so a disabled tab renders the plain `<button>` instead.
@@ -120,9 +126,9 @@ export type TabsItemProps = TabsItemBaseType &
 	);
 
 /**
- * The rules below are the ones the item union cannot express on its own, because they pair a prop
- * on the bar with the shape of `items`. Each is an object whose single required key is the sentence
- * the compiler should print, the same device `RadioGroup` uses.
+ * The rules the item union cannot express on its own, because they pair a prop on the bar with the
+ * shape of `items`. Each is an object whose single required key is the sentence the compiler
+ * prints, the same device `RadioGroup` uses.
  */
 interface TheTestIdPropIsCalledTestId {
 	'`data-testid` is written as the `testId` prop, which also names every tab': never;
@@ -141,12 +147,12 @@ interface ThePanelComesFromTheItemThatOwnsIt {
 }
 
 /**
- * True while every item in `items` has `Shape`, false while any of them does not, and false when
- * the shape of `items` is unknown.
+ * True while every item in `items` has `Shape`, false otherwise and false when the shape of `items`
+ * is unknown.
  *
- * `items` written inline is a literal, so `I` is the union of those exact objects and the answer is
- * real. `items` passed as a `TabsItemProps[]` variable makes `I` the whole union, which satisfies
- * no shape, so every rule below stands down rather than firing on a call site it cannot read.
+ * `items` written inline is a literal, so `I` is the union of those exact objects. `items` passed
+ * as a `TabsItemProps[]` variable makes `I` the whole union, which satisfies no shape, so every
+ * rule below stands down rather than firing on a call site it cannot read.
  */
 type TabsItemsAllHave<T, Shape> = T extends { items: readonly (infer I)[] }
 	? [I] extends [Shape]
@@ -185,14 +191,14 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		 */
 		items: TabsItemProps[];
 		/**
-		 * The one panel shown for whichever tab is active, for a bar whose tabs navigate rather than
-		 * hold their own content. A router `Outlet` in practice.
+		 * The one panel shown for whichever tab is active, for a bar whose tabs navigate. A router
+		 * `Outlet` in practice.
 		 *
 		 * @note Only for items that carry `render`. An item with `children` brings its own panel, and
 		 * writing both is a type error.
 		 *
-		 * @note Optional even then: a bar whose panel is rendered elsewhere in the tree (a layout
-		 * route holding the `Outlet` above or beside the bar) leaves this out and renders tabs alone.
+		 * @note Optional even then: a bar whose panel is rendered elsewhere in the tree leaves this
+		 * out and renders tabs alone.
 		 */
 		children?: ReactNode;
 		/**
@@ -262,7 +268,7 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		 * Forwarded to the rendered element as `data-testid`.
 		 *
 		 * @note Also names every tab: an item with no `testId` of its own is addressable as
-		 * `` `${testId}-item-${key}` ``.
+		 * `` `${testId}-item-${key}` ``. An item's own `testId` wins.
 		 */
 		testId?: string;
 		/**
