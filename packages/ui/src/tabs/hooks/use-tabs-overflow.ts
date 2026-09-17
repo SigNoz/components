@@ -1,11 +1,11 @@
 import { type RefCallback, useCallback, useEffect, useRef, useState } from 'react';
 import { TabsOrientation } from '../constants.js';
 import type { TabsOrientationType } from '../types.js';
+import { readTabsAxis } from '../utils.js';
 
 /**
  * `scrollWidth`/`clientWidth` are rounded to integers, so a strip that fits can still report a one
- * pixel overflow on fractional layouts. Same reasoning and same number as
- * `lib/useIsLabelTruncated.tsx`.
+ * pixel overflow on fractional layouts. Same number as `lib/useIsLabelTruncated.tsx`.
  */
 const SCROLL_OVERFLOW_TOLERANCE_PX = 1;
 
@@ -53,32 +53,13 @@ export type UseTabsOverflowReturn = {
 	scrollTowardsEnd: () => void;
 };
 
-type Axis = {
-	scrollSize: number;
-	clientSize: number;
-	/** How far the strip has already travelled from its start, on either writing direction. */
-	travelled: number;
-	/** How much is left before the far end. */
-	remaining: number;
-};
-
-function readAxis(viewport: HTMLElement, isVertical: boolean): Axis {
-	const scrollSize = isVertical ? viewport.scrollHeight : viewport.scrollWidth;
-	const clientSize = isVertical ? viewport.clientHeight : viewport.clientWidth;
-	// An RTL viewport counts `scrollLeft` down from zero, so the absolute value is the distance
-	// travelled on both directions and neither flag needs to know which one it is on.
-	const travelled = isVertical ? viewport.scrollTop : Math.abs(viewport.scrollLeft);
-
-	return { scrollSize, clientSize, travelled, remaining: scrollSize - clientSize - travelled };
-}
-
 /**
  * Keeps an overflowing tab strip scrollable: reports whether it overflows and how far it can still
  * travel, moves it a step at a time, and brings the active tab back into view.
  *
- * Nothing here listens for the strip moving under its own steam. Base UI's indicator measures a tab
- * against the list, and both live inside the viewport, so that delta is already scroll invariant,
- * and the browser scrolls a newly focused tab into view on its own.
+ * Nothing here listens for the strip moving on its own. Base UI's indicator measures a tab against
+ * the list and both live inside the viewport, so that delta is already scroll invariant, and the
+ * browser scrolls a newly focused tab into view by itself.
  *
  * Motion is not decided here either: `scrollBy` without a `behavior` follows the element's CSS
  * `scroll-behavior`, which the stylesheet drops to `auto` under `prefers-reduced-motion`.
@@ -106,7 +87,7 @@ export function useTabsOverflow({
 			return;
 		}
 
-		const { scrollSize, clientSize, travelled, remaining } = readAxis(viewport, isVertical);
+		const { scrollSize, clientSize, travelled, remaining } = readTabsAxis(viewport, isVertical);
 
 		setIsOverflowing(scrollSize - clientSize > SCROLL_OVERFLOW_TOLERANCE_PX);
 		setCanScrollToStart(travelled > SCROLL_OVERFLOW_TOLERANCE_PX);
@@ -131,9 +112,8 @@ export function useTabsOverflow({
 				return;
 			}
 
-			// The viewport changes when the window or the bar's extra content does; the list changes
-			// when an item is added, removed or relabelled. Watching both covers every way the two
-			// sizes this hook compares can move.
+			// The viewport changes with the window or the bar's extra content, the list with an item
+			// added, removed or relabelled. Watching both covers every way the two sizes move.
 			const resizeObserver = new ResizeObserver(measure);
 			resizeObserver.observe(node);
 
@@ -162,11 +142,11 @@ export function useTabsOverflow({
 				return;
 			}
 
-			const { clientSize } = readAxis(viewport, isVertical);
+			const { clientSize } = readTabsAxis(viewport, isVertical);
 			const step = Math.round(clientSize * SCROLL_STEP_RATIO) * sign;
 
-			// An RTL viewport scrolls towards negative `scrollLeft`, so "towards the end" is a negative
-			// delta there. `scrollBy` takes physical deltas on both directions.
+			// An RTL viewport scrolls towards negative `scrollLeft`, and `scrollBy` takes physical
+			// deltas on both directions.
 			const directionSign = !isVertical && getComputedStyle(viewport).direction === 'rtl' ? -1 : 1;
 
 			viewport.scrollBy(isVertical ? { top: step } : { left: step * directionSign });
@@ -198,8 +178,7 @@ export function useTabsOverflow({
 			: tabRect.right - viewportRect.right;
 
 		// Rect deltas rather than `Element.scrollIntoView`, which walks every scrollable ancestor and
-		// would scroll the page whenever the bar itself sits below the fold. Physical deltas, so this
-		// is right on both writing directions without a sign.
+		// would scroll the page whenever the bar sits below the fold.
 		const delta = before < 0 ? before : after > 0 ? after : 0;
 
 		if (delta === 0) {
@@ -207,8 +186,8 @@ export function useTabsOverflow({
 			return;
 		}
 
-		// The first alignment is the bar arriving already scrolled, not the bar moving, so it does not
-		// animate. Every later one is a real change of tab and does.
+		// The first alignment is the bar arriving already scrolled, so it does not animate. Every
+		// later one is a real change of tab and does.
 		const previousBehavior = viewport.style.scrollBehavior;
 
 		if (!hasAligned.current) {
