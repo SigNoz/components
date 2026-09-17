@@ -264,6 +264,9 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  *
  * ### Truncation and overflow
  *
+ * A label is capped at `--tabs-label-max-inline-size` (120px), so one long label cannot take the
+ * whole bar. Raise or lower it per call site, or set it to `none` to let a tab size to its label.
+ *
  * Every label is measured and re-measured on resize. While it does not fit, the label carries
  * `data-truncated` and shows the full text in a tooltip. There is no `textOverflow` prop, unlike
  * `Button`/`RadioGroup`: truncation is always on.

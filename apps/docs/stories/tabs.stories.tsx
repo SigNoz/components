@@ -187,6 +187,27 @@ const manyItems: TabsItemProps[] = [
 	},
 ];
 
+/** Labels past the 120px cap, so the truncation and its tooltip are shown rather than described. */
+const longLabelItems: TabsItemProps[] = [
+	{
+		key: 'overview',
+		label: 'Overview',
+		children: 'Overview content panel',
+		prefixIcon: <Settings2 className="icon-md" />,
+	},
+	{
+		key: 'deployments',
+		label: 'kubernetes-deployment-production-east-us-2',
+		children: 'Deployments content panel',
+	},
+	{
+		key: 'exceptions',
+		label: 'Unhandled exceptions by service',
+		children: 'Exceptions content panel',
+		suffixIcon: <History className="icon-md" />,
+	},
+];
+
 const alignments: TabsAlignmentType[] = [
 	TabsAlignment.Start,
 	TabsAlignment.Center,
@@ -484,6 +505,33 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 
 			{/* No prop drives any of this. The third example is the one to read: the bar content
 			    keeps its size and the strip is what gives way. */}
+			<Section title="Label width">
+				<div className={styles.exampleStack}>
+					<LabelledTabs
+						label="Primary, default cap of 120px"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						items={longLabelItems}
+					/>
+					<LabelledTabs
+						label="Primary, --tabs-label-max-inline-size: 240px"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						items={longLabelItems}
+						className={styles.wideLabels}
+					/>
+					<LabelledTabs
+						label="Secondary, default cap of 120px"
+						variant="secondary"
+						orientation={orientation}
+						alignment="start"
+						items={longLabelItems}
+					/>
+				</div>
+			</Section>
+
 			<Section title="Overflow">
 				<div className={styles.exampleStack}>
 					<LabelledTabs
