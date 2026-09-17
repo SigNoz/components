@@ -7,7 +7,8 @@ import * as TabsStories from './tabs.stories';
 
 Renders a tab bar and its panels from an `items` array, with primary and secondary variants,
 prefix/suffix icons, disabled tabs with a required tooltip reason, and optional tab bar extra
-content.
+content. A tab can also navigate instead of holding a panel, see
+[Tabs that navigate](#tabs-that-navigate).
 
 ## How to use
 
@@ -141,6 +142,52 @@ spacing:
 ```tsx
 <Tabs variant="primary" orientation="horizontal" alignment="left" items={items} noTabContentPadding />
 ```
+
+## Tabs that navigate
+
+An item that carries `render` instead of `children` renders as whatever you hand over, a router
+`Link` in practice, and keeps `role="tab"`, the arrow keys and every `data-*` the bar stamps. The
+tab is then a real anchor, so middle click, "open in new tab" and the URL in the status bar work,
+which no `onChange` handler can give you.
+
+Those items have no panel of their own. The panel is the bar's `children`, rendered for whichever
+tab is active:
+
+```tsx
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Tabs } from '@signozhq/ui';
+
+function ServiceTabs() {
+	const { pathname } = useLocation();
+
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="left"
+			value={pathname.split('/').at(-1)}
+			items={[
+				{ key: 'overview', label: 'Overview', render: <Link to="overview" /> },
+				{ key: 'logs', label: 'Logs', render: <Link to="logs" /> },
+			]}
+		>
+			<Outlet />
+		</Tabs>
+	);
+}
+```
+
+Leave the `children` out when the `Outlet` already lives elsewhere in the tree, and the bar renders
+tabs alone.
+
+Such a bar is controlled: `value` comes from the router, so back and forward move it too.
+`defaultValue` is refused, and so is passing `children` alongside items that bring their own.
+`onChange` still fires on click, which makes it useful for analytics, but it is not how the
+navigation happens.
+
+A `disabled` item ignores `render` and falls back to the plain `<button>`: an anchor is still
+followed by a middle click and still offers "open in new tab", so rendering one would be a lock
+anybody can walk around.
 
 ## Controlled state
 

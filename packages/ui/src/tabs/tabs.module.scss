@@ -151,6 +151,9 @@
   background-color: var(--tabs-trigger-background-color, transparent);
   border: var(--tabs-trigger-border, none);
 
+  /* A navigating tab renders as an anchor, which the user agent underlines. */
+  text-decoration: var(--tabs-trigger-text-decoration, none);
+
   &:hover {
     color: var(--tabs-hover-text-color, var(--l1-foreground-hover));
   }
