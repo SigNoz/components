@@ -1,10 +1,82 @@
+// Orientation is one axis switch, declared once.
+//
+// Logical properties (`inline-size`, `border-inline-end`) flip with writing mode and direction, not
+// with `flex-direction`, so they cannot express horizontal against vertical. They are still the
+// right tool for RTL, and both jobs appear below. What flips the axis is a set of
+// `--tabs-internal-*` variables declared on the root and inherited by every descendant, plus a
+// handful of `[data-orientation="vertical"]` blocks for the places where the property itself
+// changes rather than its value (which border collapses, which corners round, which edge the
+// indicator runs along).
+//
+// Base UI stamps `data-orientation` on the root, the list, every tab, the panel and the indicator,
+// so nothing here is stamped by us except on the hover slider, which is ours.
 .tabs {
+  --tabs-internal-flex-direction: column;
+  --tabs-internal-wrapper-flex-direction: row;
+  --tabs-internal-wrapper-inline-size: 100%;
+  --tabs-internal-wrapper-align-items: center;
+  --tabs-internal-wrapper-padding-inline: var(--spacing-6, 12px);
+  --tabs-internal-wrapper-padding-block: 0;
+  --tabs-internal-spacer-min-inline: 0;
+  --tabs-internal-spacer-min-block: 0;
+  --tabs-internal-bar-content-inline-gap: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
+  --tabs-internal-bar-content-block-gap: 0;
+  --tabs-internal-bar-rule-block-end: 0 solid transparent;
+  --tabs-internal-bar-rule-inline-end: 0 solid transparent;
+  --tabs-internal-disabled-stripe-size: var(--spacing-12, 24px);
+  --tabs-internal-list-flex-direction: row;
+  --tabs-internal-list-align-items: center;
+  --tabs-internal-list-primary-gap: var(--spacing-12, 24px);
+  --tabs-internal-list-min-inline: 0;
+  --tabs-internal-list-min-block: auto;
+  --tabs-internal-list-inner-align-items: flex-start;
+  --tabs-internal-viewport-overflow-inline: auto;
+  --tabs-internal-viewport-overflow-block: hidden;
+  --tabs-internal-viewport-min-inline: 0;
+  --tabs-internal-viewport-min-block: auto;
+  --tabs-internal-hover-slider-inline-size: auto;
+  --tabs-internal-hover-slider-block-size: 100%;
+
   display: var(--tabs-display, flex);
-  flex-direction: var(--tabs-flex-direction, column);
+  flex-direction: var(--tabs-flex-direction, var(--tabs-internal-flex-direction));
   gap: var(--tabs-gap, var(--spacing-4, 8px));
+
+  // A rail can only scroll if something bounds its height. A percentage maximum
+  // computes to `none` while the parent's height is auto, so this does nothing
+  // until the bar is actually put in a box, and then it stops the rail from
+  // growing straight out of it.
+  &[data-orientation="vertical"] {
+    max-block-size: var(--tabs-vertical-max-block-size, 100%);
+
+    --tabs-internal-flex-direction: row;
+    --tabs-internal-wrapper-flex-direction: column;
+    --tabs-internal-wrapper-inline-size: auto;
+    --tabs-internal-wrapper-align-items: stretch;
+    --tabs-internal-wrapper-padding-inline: 0;
+    --tabs-internal-wrapper-padding-block: var(--spacing-6, 12px);
+    --tabs-internal-bar-content-inline-gap: 0;
+    --tabs-internal-bar-content-block-gap: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
+    --tabs-internal-list-flex-direction: column;
+    --tabs-internal-list-align-items: stretch;
+    // The gap between two stacked tabs is read as vertical rhythm rather than as
+    // the space between two words, so the horizontal figure is far too airy.
+    --tabs-internal-list-primary-gap: var(--spacing-4, 8px);
+    // A stacked tab is about as tall as the horizontal band is wide, so two
+    // bands at the horizontal size would cover the whole tab and hide its label.
+    --tabs-internal-disabled-stripe-size: var(--spacing-6, 12px);
+    --tabs-internal-list-min-inline: auto;
+    --tabs-internal-list-min-block: 0;
+    --tabs-internal-list-inner-align-items: stretch;
+    --tabs-internal-viewport-overflow-inline: hidden;
+    --tabs-internal-viewport-overflow-block: auto;
+    --tabs-internal-viewport-min-inline: auto;
+    --tabs-internal-viewport-min-block: 0;
+    --tabs-internal-hover-slider-inline-size: 100%;
+    --tabs-internal-hover-slider-block-size: auto;
+  }
 }
 
-// `tabBarLeftContent`/`tabBarRightContent` sit at the bar's outer edges, and the
+// `tabBarStartContent`/`tabBarEndContent` sit at the bar's outer edges, and the
 // spacers between them and the list take whatever space is left. Which spacer
 // grows is what `alignment` means, so alignment sets an internal var rather than
 // the property: a call site that wants the content block to take the room
@@ -12,59 +84,169 @@
 // `--tabs-border-spacer-*-flex-grow` and `--tabs-extra-content-flex-grow`
 // without having to outweigh an alignment rule. The two `order` vars are the
 // way back to content that hugs the list: set both to `2`.
+//
+// None of this is axis-specific: `flex-grow`, `flex-shrink` and `order` always
+// mean the main axis, so the whole model carries over to a vertical rail
+// unchanged. That is what `start`/`end` buys over `left`/`right`.
 .tabs__list-wrapper {
+  flex-direction: var(--tabs-internal-wrapper-flex-direction);
+
   &[data-variant="primary"] {
     display: var(--tabs-list-wrapper-primary-display, flex);
-    width: var(--tabs-list-wrapper-primary-width, 100%);
-    align-items: var(--tabs-list-wrapper-primary-align-items, center);
-    text-align: var(--tabs-list-wrapper-primary-text-align, left);
-    padding-inline: var(--tabs-list-wrapper-primary-padding-inline, var(--spacing-6, 12px));
+    inline-size: var(
+      --tabs-list-wrapper-primary-inline-size,
+      var(--tabs-internal-wrapper-inline-size)
+    );
+    align-items: var(
+      --tabs-list-wrapper-primary-align-items,
+      var(--tabs-internal-wrapper-align-items)
+    );
+    text-align: var(--tabs-list-wrapper-primary-text-align, start);
+    padding-inline: var(
+      --tabs-list-wrapper-primary-padding-inline,
+      var(--tabs-internal-wrapper-padding-inline)
+    );
+    padding-block: var(
+      --tabs-list-wrapper-primary-padding-block,
+      var(--tabs-internal-wrapper-padding-block)
+    );
 
     // `noTabContentPadding` is the bar saying it manages its own spacing, so the
     // inset that keeps the first and last tab off the container edge goes with
     // the panel's padding rather than outliving it.
     &[data-no-content-padding] {
       padding-inline: var(--tabs-list-wrapper-primary-no-content-padding-inline, 0);
+      padding-block: var(--tabs-list-wrapper-primary-no-content-padding-block, 0);
     }
   }
 
   &[data-variant="secondary"] {
     display: var(--tabs-list-wrapper-secondary-display, flex);
-    width: var(--tabs-list-wrapper-secondary-width, 100%);
+    inline-size: var(
+      --tabs-list-wrapper-secondary-inline-size,
+      var(--tabs-internal-wrapper-inline-size)
+    );
 
     // The rule needs a run of its own before the first trigger and after the
     // last one. `primary` paints no rule, so its spacers start at zero.
-    --tabs-internal-spacer-min-width: var(--spacing-8, 16px);
+    --tabs-internal-spacer-min-inline: var(--spacing-8, 16px);
+    --tabs-internal-bar-rule-block-end: var(--tabs-border-width, 1px) solid
+      var(--tabs-border-color, var(--tabs-border));
   }
 
-  &[data-alignment="left"] {
-    --tabs-internal-spacer-left-flex-grow: 0;
+  &[data-alignment="start"] {
+    --tabs-internal-spacer-start-flex-grow: 0;
     --tabs-internal-spacer-grow-flex-grow: 1;
   }
 
   &[data-alignment="center"] {
-    --tabs-internal-spacer-left-flex-grow: 1;
+    --tabs-internal-spacer-start-flex-grow: 1;
     --tabs-internal-spacer-grow-flex-grow: 1;
   }
 
-  &[data-alignment="right"] {
-    --tabs-internal-spacer-left-flex-grow: 1;
+  &[data-alignment="end"] {
+    --tabs-internal-spacer-start-flex-grow: 1;
     --tabs-internal-spacer-grow-flex-grow: 0;
   }
 
   // A content block already holds the bar gap in its own padding, so the spacer
   // next to it drops its minimum rather than spending the gap twice.
-  &[data-has-left-content] [data-slot="tab-spacer-left"],
-  &[data-has-right-content] [data-slot="tab-spacer-grow"] {
-    --tabs-internal-spacer-min-width: 0;
+  &[data-has-start-content] [data-slot="tab-spacer-start"],
+  &[data-has-end-content] [data-slot="tab-spacer-end"] {
+    --tabs-internal-spacer-min-inline: 0;
+    --tabs-internal-spacer-min-block: 0;
   }
 }
 
+// A vertical rail draws its run down the side facing the panel, not under the tabs.
+.tabs[data-orientation="vertical"] .tabs__list-wrapper[data-variant="secondary"] {
+  --tabs-internal-spacer-min-inline: 0;
+  --tabs-internal-spacer-min-block: var(--spacing-8, 16px);
+  --tabs-internal-bar-rule-block-end: 0 solid transparent;
+  --tabs-internal-bar-rule-inline-end: var(--tabs-border-width, 1px) solid
+    var(--tabs-border-color, var(--tabs-border));
+}
+
+// The scroll port. The strip overflows this box and scrolls inside it; the tabs
+// themselves never shrink (see `.tabs__trigger`), so a bar with more tabs than
+// room scrolls rather than squashing every label at once.
+//
+// It is the only flex item here that gives way. The extra content keeps its size
+// and the spacers have a `0%` basis, so every pixel the wrapper has to find
+// comes out of this box, which is what makes an overflowing bar scroll its tabs
+// instead of pushing a button off the end.
 .tabs__list-inner {
   display: var(--tabs-list-inner-display, inline-flex);
-  align-items: var(--tabs-list-inner-align-items, flex-start);
+  flex-direction: var(--tabs-internal-list-flex-direction);
+  align-items: var(--tabs-list-inner-align-items, var(--tabs-internal-list-inner-align-items));
   position: var(--tabs-list-inner-position, relative);
   order: 2;
+
+  flex-grow: var(--tabs-list-viewport-flex-grow, 0);
+  flex-shrink: var(--tabs-list-viewport-flex-shrink, 1);
+  flex-basis: var(--tabs-list-viewport-flex-basis, auto);
+  min-inline-size: var(--tabs-list-viewport-min-inline-size, var(--tabs-internal-viewport-min-inline));
+  min-block-size: var(--tabs-list-viewport-min-block-size, var(--tabs-internal-viewport-min-block));
+
+  overflow-x: var(--tabs-internal-viewport-overflow-inline);
+  overflow-y: var(--tabs-internal-viewport-overflow-block);
+  overscroll-behavior: var(--tabs-list-viewport-overscroll-behavior, contain);
+  scroll-behavior: var(--tabs-list-viewport-scroll-behavior, smooth);
+  // The strip has its own arrows and its own keyboard, and a bar is too short to
+  // aim a scrollbar at anyway.
+  scrollbar-width: var(--tabs-list-viewport-scrollbar-width, none);
+
+  // A scroll container clips at its padding box, so padding is the knob that
+  // moves the clip edge outwards and an equal negative margin gives the room
+  // straight back: the margin box stays the size it was, so the wrapper's
+  // centring and the panel below it do not move.
+  //
+  // Every side needs the trigger's focus ring (a 1px outline at a 1px offset).
+  // The side facing the panel additionally needs the primary indicator, which
+  // hangs `--tabs-active-slider-offset` outside the list's own box.
+  --tabs-internal-slider-bleed: 0px;
+  --tabs-internal-viewport-bleed-block-end: var(--tabs-internal-slider-bleed);
+  --tabs-internal-viewport-bleed-inline-end: 0px;
+
+  padding: var(--tabs-list-viewport-bleed, 2px);
+  margin: calc(-1 * var(--tabs-list-viewport-bleed, 2px));
+  padding-block-end: calc(
+    var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-block-end)
+  );
+  margin-block-end: calc(
+    -1 * (var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-block-end))
+  );
+  padding-inline-end: calc(
+    var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-inline-end)
+  );
+  margin-inline-end: calc(
+    -1 * (var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-inline-end))
+  );
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-variant="primary"] & {
+    --tabs-internal-slider-bleed: calc(
+      var(--tabs-active-slider-offset, var(--spacing-4, 8px)) +
+        var(--tabs-active-slider-thickness, 2px)
+    );
+  }
+
+  .tabs[data-orientation="vertical"] & {
+    --tabs-internal-viewport-bleed-block-end: 0px;
+    --tabs-internal-viewport-bleed-inline-end: var(--tabs-internal-slider-bleed);
+  }
+}
+
+// Motion belongs to CSS, so the hook calls `scrollBy` with no `behavior` and
+// every scroll in the component obeys this one switch: the arrows, the browser's
+// own focus scrolling, and Base UI's keyboard scroll.
+@media (prefers-reduced-motion: reduce) {
+  .tabs__list-inner {
+    scroll-behavior: auto;
+  }
 }
 
 .tabs__extra-content {
@@ -73,45 +255,117 @@
   flex-grow: var(--tabs-extra-content-flex-grow, 0);
   flex-shrink: var(--tabs-extra-content-flex-shrink, 0);
   flex-basis: var(--tabs-extra-content-flex-basis, auto);
-  // `auto` is the content's own width, which is what keeps a button from being
+  // `auto` is the content's own size, which is what keeps a button from being
   // squeezed. A block that is allowed to grow usually wants `0` here too, or it
   // never shrinks back below its content.
-  min-width: var(--tabs-extra-content-min-width, auto);
+  min-inline-size: var(--tabs-extra-content-min-inline-size, auto);
 
-  &[data-slot="tab-extra-content-left"] {
-    order: var(--tabs-bar-content-left-order, 0);
-    padding-right: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
-    flex-grow: var(--tabs-extra-content-left-flex-grow, var(--tabs-extra-content-flex-grow, 0));
-    flex-shrink: var(--tabs-extra-content-left-flex-shrink, var(--tabs-extra-content-flex-shrink, 0));
-    min-width: var(--tabs-extra-content-left-min-width, var(--tabs-extra-content-min-width, auto));
-  }
-
-  &[data-slot="tab-extra-content-right"] {
-    order: var(--tabs-bar-content-right-order, 4);
-    padding-left: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
-    flex-grow: var(--tabs-extra-content-right-flex-grow, var(--tabs-extra-content-flex-grow, 0));
+  &[data-slot="tab-extra-content-start"] {
+    order: var(--tabs-bar-content-start-order, 0);
+    padding-inline-end: var(--tabs-internal-bar-content-inline-gap);
+    padding-block-end: var(--tabs-internal-bar-content-block-gap);
+    flex-grow: var(--tabs-extra-content-start-flex-grow, var(--tabs-extra-content-flex-grow, 0));
     flex-shrink: var(
-      --tabs-extra-content-right-flex-shrink,
+      --tabs-extra-content-start-flex-shrink,
       var(--tabs-extra-content-flex-shrink, 0)
     );
-    min-width: var(--tabs-extra-content-right-min-width, var(--tabs-extra-content-min-width, auto));
+    min-inline-size: var(
+      --tabs-extra-content-start-min-inline-size,
+      var(--tabs-extra-content-min-inline-size, auto)
+    );
+  }
+
+  &[data-slot="tab-extra-content-end"] {
+    order: var(--tabs-bar-content-end-order, 4);
+    padding-inline-start: var(--tabs-internal-bar-content-inline-gap);
+    padding-block-start: var(--tabs-internal-bar-content-block-gap);
+    flex-grow: var(--tabs-extra-content-end-flex-grow, var(--tabs-extra-content-flex-grow, 0));
+    flex-shrink: var(--tabs-extra-content-end-flex-shrink, var(--tabs-extra-content-flex-shrink, 0));
+    min-inline-size: var(
+      --tabs-extra-content-end-min-inline-size,
+      var(--tabs-extra-content-min-inline-size, auto)
+    );
   }
 
   [data-variant="secondary"] & {
-    border-bottom: var(--tabs-border-width, 1px) solid var(--tabs-border-color, var(--tabs-border));
+    border-block-end: var(--tabs-internal-bar-rule-block-end);
+    border-inline-end: var(--tabs-internal-bar-rule-inline-end);
   }
 }
 
 .tabs__list {
+  flex-direction: var(--tabs-internal-list-flex-direction);
+  // The list follows the scroll port down so the strip can overflow it. Without
+  // this the list would never shrink below its content and nothing could scroll.
+  min-inline-size: var(--tabs-list-min-inline-size, var(--tabs-internal-list-min-inline));
+  min-block-size: var(--tabs-list-min-block-size, var(--tabs-internal-list-min-block));
+
   &[data-variant="primary"] {
     display: var(--tabs-list-primary-display, inline-flex);
-    align-items: var(--tabs-list-primary-align-items, center);
-    gap: var(--tabs-list-primary-gap, var(--spacing-12, 24px));
+    align-items: var(--tabs-list-primary-align-items, var(--tabs-internal-list-align-items));
+    gap: var(--tabs-list-primary-gap, var(--tabs-internal-list-primary-gap));
     position: relative;
   }
 
   &[data-variant="secondary"] {
     display: var(--tabs-list-secondary-display, flex);
+    align-items: var(--tabs-list-secondary-align-items, var(--tabs-internal-list-align-items));
+  }
+}
+
+// One of the two arrows flanking an overflowing strip. It is a peer of the
+// spacers and the extra content rather than a child of the scroll port, which
+// keeps `role="tab"` the only role inside the tablist and, because it stretches
+// on the cross axis like they do, keeps the secondary bar rule unbroken
+// underneath it at every alignment.
+.tabs__scroll-button {
+  order: 2;
+  flex-grow: var(--tabs-scroll-button-flex-grow, 0);
+  flex-shrink: var(--tabs-scroll-button-flex-shrink, 0);
+  flex-basis: var(--tabs-scroll-button-flex-basis, auto);
+  align-self: var(--tabs-scroll-button-align-self, stretch);
+  display: var(--tabs-scroll-button-display, inline-flex);
+  align-items: var(--tabs-scroll-button-align-items, center);
+  justify-content: var(--tabs-scroll-button-justify-content, center);
+  padding-inline: var(--tabs-scroll-button-padding-inline, var(--spacing-2, 4px));
+  padding-block: var(--tabs-scroll-button-padding-block, 0);
+  border: var(--tabs-scroll-button-border, none);
+  background-color: var(--tabs-scroll-button-background-color, transparent);
+  color: var(--tabs-scroll-button-color, var(--tabs-text-color, var(--l1-foreground)));
+  cursor: var(--tabs-scroll-button-cursor, pointer);
+
+  &:hover:not(:disabled) {
+    color: var(--tabs-scroll-button-hover-color, var(--l1-foreground-hover));
+    background-color: var(
+      --tabs-scroll-button-hover-background-color,
+      var(--tabs-primary-background-hover)
+    );
+  }
+
+  &:disabled {
+    opacity: var(--tabs-scroll-button-disabled-opacity, 0.4);
+    cursor: var(--tabs-scroll-button-disabled-cursor, default);
+  }
+
+  &:focus-visible {
+    outline: var(--tabs-scroll-button-focus-visible-outline, var(--ring) solid 1px);
+    outline-offset: var(--tabs-scroll-button-focus-visible-outline-offset, 1px);
+  }
+
+  & svg:not([class*="size-"]) {
+    inline-size: var(--tabs-scroll-button-icon-size, 14px);
+    block-size: var(--tabs-scroll-button-icon-size, 14px);
+  }
+
+  [data-variant="secondary"] & {
+    border-block-end: var(--tabs-internal-bar-rule-block-end);
+    border-inline-end: var(--tabs-internal-bar-rule-inline-end);
+  }
+
+  // The start arrow is the right-hand one under RTL, the same mirroring the
+  // calendar's month chevrons need.
+  .tabs[data-orientation="horizontal"] &:dir(rtl) svg {
+    transform: var(--tabs-scroll-button-rtl-icon-transform, scaleX(-1));
   }
 }
 
@@ -125,14 +379,16 @@
 // flex items with no gap between them, so each side stays a single unbroken run
 // at every alignment.
 .tabs__border-spacer {
-  flex-grow: var(--tabs-border-spacer-flex-grow, var(--tabs-internal-spacer-left-flex-grow, 0));
+  flex-grow: var(--tabs-border-spacer-flex-grow, var(--tabs-internal-spacer-start-flex-grow, 0));
   flex-shrink: var(--tabs-border-spacer-flex-shrink, 1);
   flex-basis: var(--tabs-border-spacer-flex-basis, 0%);
-  min-width: var(--tabs-border-spacer-min-width, var(--tabs-internal-spacer-min-width, 0));
+  min-inline-size: var(--tabs-border-spacer-min-inline-size, var(--tabs-internal-spacer-min-inline, 0));
+  min-block-size: var(--tabs-border-spacer-min-block-size, var(--tabs-internal-spacer-min-block, 0));
   order: 1;
 
   [data-variant="secondary"] & {
-    border-bottom: var(--tabs-border-width, 1px) solid var(--tabs-border-color, var(--tabs-border));
+    border-block-end: var(--tabs-internal-bar-rule-block-end);
+    border-inline-end: var(--tabs-internal-bar-rule-inline-end);
   }
 
   &--grow {
@@ -168,7 +424,11 @@
     display: var(--tabs-trigger-primary-display, inline-flex);
     align-items: var(--tabs-trigger-primary-align-items, center);
     gap: var(--tabs-internal-primary-gap);
-    max-width: 100%;
+    // A tab does not give way: the strip overflows the list and the scroll port
+    // scrolls it. A single tab wider than the visible strip is still capped by
+    // `max-inline-size`, so that one truncates and shows its tooltip.
+    flex: var(--tabs-trigger-primary-flex, 0 0 auto);
+    max-inline-size: var(--tabs-trigger-primary-max-inline-size, 100%);
     border-radius: var(--tabs-trigger-primary-border-radius, var(--tabs-primary-radius));
     padding: var(--tabs-trigger-primary-padding, var(--spacing-3, 6px));
     white-space: var(--tabs-trigger-primary-white-space, nowrap);
@@ -208,9 +468,9 @@
     --tabs-internal-secondary-gap: var(--tabs-trigger-secondary-gap, var(--spacing-4, 8px));
 
     display: var(--tabs-trigger-secondary-display, inline-flex);
-    height: var(--tabs-trigger-secondary-height, 100%);
-    flex: var(--tabs-trigger-secondary-flex, 0);
-    max-width: 100%;
+    // See the primary trigger: a tab holds its size so the strip can scroll.
+    flex: var(--tabs-trigger-secondary-flex, 0 0 auto);
+    max-inline-size: var(--tabs-trigger-secondary-max-inline-size, 100%);
     align-items: var(--tabs-trigger-secondary-align-items, center);
     justify-content: var(--tabs-trigger-secondary-justify-content, center);
     gap: var(--tabs-internal-secondary-gap);
@@ -222,12 +482,20 @@
     border-width: var(--tabs-trigger-secondary-border-width, 1px);
     border-style: var(--tabs-trigger-secondary-border-style, solid);
     border-color: var(--tabs-trigger-secondary-border-color, var(--tabs-border));
-    border-right-width: var(--tabs-trigger-secondary-border-right-width, 0px);
+    // Neighbouring tabs share one edge, so all but the last drop the one facing
+    // the next tab. `:first-child`/`:last-child` rather than `:*-of-type`: a bar
+    // can mix `<a>` tabs with a disabled `<button>` one, which would give a
+    // type-based selector two firsts and two lasts. Secondary renders neither
+    // slider, so the list's children are exactly the tabs.
+    border-inline-end-width: var(--tabs-trigger-secondary-border-inline-end-width, 0px);
     background-color: var(--tabs-trigger-secondary-bg, var(--tabs-secondary-background));
     color: var(--tabs-trigger-secondary-color, var(--tabs-secondary-label));
 
-    &:last-of-type {
-      border-right-width: var(--tabs-trigger-secondary-last-border-right-width, var(--tabs-trigger-secondary-border-width, 1px));
+    &:last-child {
+      border-inline-end-width: var(
+        --tabs-trigger-secondary-last-border-inline-end-width,
+        var(--tabs-trigger-secondary-border-width, 1px)
+      );
     }
 
     &:hover:not([data-disabled]):not([data-active]) {
@@ -236,7 +504,7 @@
     }
 
     &[data-active] {
-      border-bottom-color: var(--tabs-trigger-secondary-active-border-bottom-color, transparent);
+      border-block-end-color: var(--tabs-trigger-secondary-active-border-block-end-color, transparent);
       background-color: var(--tabs-trigger-secondary-active-bg, transparent);
       color: var(--tabs-trigger-secondary-active-color, var(--tabs-secondary-label-active));
 
@@ -254,12 +522,13 @@
       );
     }
 
-    &:first-of-type {
-      border-top-left-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
+    // Logical corners, so the rounded pair mirrors under RTL for free.
+    &:first-child {
+      border-start-start-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
     }
 
-    &:last-of-type {
-      border-top-right-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
+    &:last-child {
+      border-start-end-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
     }
 
     &[data-disabled] {
@@ -272,9 +541,11 @@
       &::after {
         content: var(--tabs-trigger-secondary-disabled-stripe-content, "");
         position: var(--tabs-trigger-secondary-disabled-stripe-position, absolute);
-        top: var(--tabs-trigger-secondary-disabled-stripe-top, 0);
-        bottom: var(--tabs-trigger-secondary-disabled-stripe-bottom, 0);
-        width: var(--tabs-trigger-secondary-disabled-stripe-width, var(--spacing-12));
+        inset-block: var(--tabs-trigger-secondary-disabled-stripe-inset-block, 0);
+        inline-size: var(
+          --tabs-trigger-secondary-disabled-stripe-size,
+          var(--tabs-internal-disabled-stripe-size)
+        );
         background-image: var(
           --tabs-trigger-secondary-disabled-stripe-background-image,
           repeating-linear-gradient(
@@ -290,7 +561,7 @@
       }
 
       &::before {
-        left: var(--tabs-trigger-secondary-disabled-stripe-before-left, 0);
+        inset-inline-start: 0;
         mask-image: var(
           --tabs-trigger-secondary-disabled-stripe-before-mask-image,
           linear-gradient(to left, transparent 5%, black 100%)
@@ -298,7 +569,7 @@
       }
 
       &::after {
-        right: var(--tabs-trigger-secondary-disabled-stripe-after-right, 0);
+        inset-inline-end: 0;
         mask-image: var(
           --tabs-trigger-secondary-disabled-stripe-after-mask-image,
           linear-gradient(to right, transparent 5%, black 100%)
@@ -309,12 +580,12 @@
       // so any overflow other than `visible` drops its automatic minimum size
       // to 0 and collapses it. Each band rounds its own outer corner instead,
       // and only the two corners the trigger itself rounds.
-      &:first-of-type::before {
-        border-top-left-radius: inherit;
+      &:first-child::before {
+        border-start-start-radius: inherit;
       }
 
-      &:last-of-type::after {
-        border-top-right-radius: inherit;
+      &:last-child::after {
+        border-start-end-radius: inherit;
       }
 
       & > * {
@@ -332,19 +603,100 @@
       }
     }
   }
+
+  // Stacked tabs share their block edges instead of their inline ones, and the
+  // rounded pair moves to the rail's outer corners. The property changes rather
+  // than its value, so this is an override block and not another variable.
+  &[data-variant="secondary"][data-orientation="vertical"] {
+    border-inline-end-width: var(--tabs-trigger-secondary-border-width, 1px);
+    border-block-end-width: var(--tabs-trigger-secondary-border-block-end-width, 0px);
+
+    &:last-child {
+      border-block-end-width: var(--tabs-trigger-secondary-border-width, 1px);
+    }
+
+    &:first-child {
+      border-start-end-radius: 0;
+    }
+
+    &:last-child {
+      border-start-end-radius: 0;
+      border-end-start-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
+    }
+
+    &[data-active] {
+      border-block-end-color: var(--tabs-trigger-secondary-border-color, var(--tabs-border));
+      border-inline-end-color: var(
+        --tabs-trigger-secondary-active-border-inline-end-color,
+        transparent
+      );
+    }
+
+    // The bands run along the block edges of a stacked tab, not its inline ones.
+    &[data-disabled] {
+      &::before,
+      &::after {
+        inset-block: auto;
+        inset-inline: 0;
+        inline-size: auto;
+        block-size: var(
+          --tabs-trigger-secondary-disabled-stripe-size,
+          var(--tabs-internal-disabled-stripe-size)
+        );
+      }
+
+      &::before {
+        inset-block-start: 0;
+        mask-image: var(
+          --tabs-trigger-secondary-disabled-stripe-vertical-before-mask-image,
+          linear-gradient(to top, transparent 5%, black 100%)
+        );
+      }
+
+      &::after {
+        inset-block-end: 0;
+        mask-image: var(
+          --tabs-trigger-secondary-disabled-stripe-vertical-after-mask-image,
+          linear-gradient(to bottom, transparent 5%, black 100%)
+        );
+      }
+
+      &:first-child::before {
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+      }
+
+      &:last-child::after {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+      }
+    }
+  }
 }
 
+// Sized on the cross axis here and on the main axis by the script that tracks
+// the hovered tab, which writes `transform` and the main-axis size inline. It is
+// a child of the list, like Base UI's own indicator, so it is measured against
+// the same box the tabs are and travels with the strip when it scrolls.
+//
+// `left`/`top` stay physical: the delta written inline is physical, so anchoring
+// at the inline start would run `translateX` the wrong way under RTL.
 .tabs__hover-slider {
   position: var(--tabs-hover-slider-position, absolute);
   left: var(--tabs-hover-slider-left, 0);
+  top: var(--tabs-hover-slider-top, 0);
+  inline-size: var(--tabs-internal-hover-slider-inline-size);
+  block-size: var(--tabs-internal-hover-slider-block-size);
+  pointer-events: var(--tabs-hover-slider-pointer-events, none);
   background-color: var(--tabs-hover-slider-bg, color-mix(in srgb, var(--l1-foreground) 10%, transparent));
   border-radius: var(--tabs-hover-slider-border-radius, 2px);
   z-index: var(--tabs-hover-slider-z-index, 0);
-  will-change: var(--tabs-hover-slider-will-change, transform, width, opacity);
+  will-change: var(--tabs-hover-slider-will-change, transform, width, height, opacity);
   transition: var(
     --tabs-hover-slider-transition,
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.15s ease-out
   );
 }
@@ -352,25 +704,49 @@
 // Same duration and easing as the hover slider above — the spec requires the
 // two moving marks to be choreographed identically, or they visibly separate
 // whenever both move at once.
+//
+// The along-axis inset is physical because Base UI publishes physical deltas
+// (`--active-tab-left`, `--active-tab-top`); the edge the rule sits on is
+// logical, so it mirrors under RTL.
 .tabs__active-slider {
   position: var(--tabs-active-slider-position, absolute);
   left: var(--active-tab-left, 0);
   width: var(--active-tab-width, 0);
-  bottom: var(--tabs-active-slider-bottom, calc(var(--spacing-4, 8px) * -1));
-  height: var(--tabs-active-slider-height, 2px);
+  inset-block-end: calc(-1 * var(--tabs-active-slider-offset, var(--spacing-4, 8px)));
+  height: var(--tabs-active-slider-thickness, 2px);
   background-color: var(--tabs-active-accent-color, var(--tabs-primary-indicator));
   border-radius: var(--tabs-active-slider-border-radius, 2px);
-  will-change: var(--tabs-active-slider-will-change, left, width);
+  will-change: var(--tabs-active-slider-will-change, left, width, top, height);
   transition: var(
     --tabs-active-slider-transition,
     left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+    width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.2s cubic-bezier(0.4, 0, 0.2, 1)
   );
+
+  // A rail runs down the side facing the panel instead of under the tabs.
+  &[data-orientation="vertical"] {
+    left: auto;
+    inset-block-end: auto;
+    inset-inline-end: calc(-1 * var(--tabs-active-slider-offset, var(--spacing-4, 8px)));
+    top: var(--active-tab-top, 0);
+    height: var(--active-tab-height, 0);
+    width: var(--tabs-active-slider-thickness, 2px);
+  }
 }
 
 .tabs__content {
   margin: var(--tabs-content-margin, var(--spacing-4, 8px) 0px 0px 0px);
   padding: var(--tabs-content-padding, var(--spacing-4, 8px));
+
+  &[data-orientation="vertical"] {
+    margin: var(--tabs-content-vertical-margin, 0px);
+    margin-inline-start: var(--tabs-content-vertical-margin-inline-start, var(--spacing-4, 8px));
+    flex: var(--tabs-content-vertical-flex, 1 1 auto);
+    // A wide panel must not push the rail out of the viewport.
+    min-inline-size: var(--tabs-content-vertical-min-inline-size, 0);
+  }
 
   &[data-no-content-padding] {
     padding: 0;

@@ -30,7 +30,7 @@ afterEach(resetLabelMeasurement);
 describe('Tabs disabledTooltip', () => {
 	it('shows the reason on hover', async () => {
 		const user = userEvent.setup();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		await user.hover(screen.getByRole('tab', { name: 'Billing' }));
 
@@ -39,7 +39,7 @@ describe('Tabs disabledTooltip', () => {
 
 	it('says nothing for a tab that is usable', async () => {
 		const user = userEvent.setup();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		await user.hover(screen.getByRole('tab', { name: 'Overview' }));
 
@@ -48,7 +48,7 @@ describe('Tabs disabledTooltip', () => {
 
 	it('hides the reason again when the pointer leaves', async () => {
 		const user = userEvent.setup();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 		const billing = screen.getByRole('tab', { name: 'Billing' });
 
 		await user.hover(billing);
@@ -61,7 +61,7 @@ describe('Tabs disabledTooltip', () => {
 
 	it('is reachable by keyboard focus, since the tab stays focusable while disabled', async () => {
 		const user = userEvent.setup();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		await user.tab();
 		await user.keyboard('{ArrowRight}');
@@ -78,7 +78,9 @@ describe('Tabs truncation', () => {
 
 	it('marks the label truncated once it does not fit', () => {
 		truncate();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={LONG_ITEMS} />);
+		render(
+			<Tabs variant="primary" orientation="horizontal" alignment="start" items={LONG_ITEMS} />,
+		);
 
 		expect(screen.getByText(LONG_LABEL)).toHaveAttribute('data-truncated');
 	});
@@ -86,7 +88,9 @@ describe('Tabs truncation', () => {
 	it('shows the full label on hover', async () => {
 		const user = userEvent.setup();
 		truncate();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={LONG_ITEMS} />);
+		render(
+			<Tabs variant="primary" orientation="horizontal" alignment="start" items={LONG_ITEMS} />,
+		);
 
 		await user.hover(screen.getByText(LONG_LABEL));
 
@@ -95,7 +99,9 @@ describe('Tabs truncation', () => {
 
 	it('says nothing while the label fits', async () => {
 		const user = userEvent.setup();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={LONG_ITEMS} />);
+		render(
+			<Tabs variant="primary" orientation="horizontal" alignment="start" items={LONG_ITEMS} />,
+		);
 
 		await user.hover(screen.getByText(LONG_LABEL));
 
@@ -109,7 +115,7 @@ describe('Tabs truncation', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={[
 					{
 						key: 'production',
@@ -133,7 +139,9 @@ describe('Tabs truncation', () => {
 	it('closes an open popup when a resize makes the label fit', async () => {
 		const user = userEvent.setup();
 		truncate();
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={LONG_ITEMS} />);
+		render(
+			<Tabs variant="primary" orientation="horizontal" alignment="start" items={LONG_ITEMS} />,
+		);
 
 		await user.hover(screen.getByText(LONG_LABEL));
 		expect(await screen.findByRole('tooltip')).toBeInTheDocument();
