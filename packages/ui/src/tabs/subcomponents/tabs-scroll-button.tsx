@@ -59,17 +59,15 @@ const LABELS = {
 /**
  * One of the two arrows flanking an overflowing tab strip.
  *
- * A plain `<button>` rather than our own `Button`: this is bar chrome that has to match the strip's
- * box and carry the secondary variant's rule, and `Button` brings a padding, radius, border and
- * focus ring that would all have to be overridden back off.
+ * A plain `<button>` rather than our own `Button`: this is bar chrome, and `Button` brings a
+ * padding, radius, border and focus ring that would all have to be overridden back off.
  *
- * It stays focusable and named. The tablist's arrow keys already reach every tab, so the button is
- * redundant for most keyboard users, but a switch device or a magnifier has no arrow keys to send
- * and a labelled button is the only thing it can drive.
+ * It stays focusable and named. The tablist's arrow keys already reach every tab, but a switch
+ * device has no arrow keys to send and a labelled button is the only thing it can drive.
  *
  * It renders as a sibling of the viewport rather than inside `Tabs.List`, which keeps `role="tab"`
- * as the only role in the tablist, and it stretches on the cross axis so the secondary bar rule
- * runs through it without a break.
+ * the only role in the tablist, and it stretches on the cross axis so the secondary bar rule runs
+ * through it unbroken.
  *
  * @access private
  */

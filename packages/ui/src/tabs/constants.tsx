@@ -23,8 +23,8 @@ export const TabsOrientation = {
 /**
  * Which end of the bar a scroll button scrolls towards.
  *
- * The same two values as {@link TabsAlignment}'s outer pair, and for the same reason: `start` is
- * left or top depending on the orientation.
+ * {@link TabsAlignment}'s outer pair, for the same reason: `start` is left or top depending on the
+ * orientation.
  */
 export const TabsScrollDirection = {
 	Start: 'start',
@@ -34,7 +34,7 @@ export const TabsScrollDirection = {
 /**
  * What a tab shows when its `label` renders nothing.
  *
- * A label is hardcoded at nearly every call site, so an empty one is a bug rather than a state. The
- * tab still renders: hiding it would take a view out of the bar silently.
+ * An empty label is a bug rather than a state, but the tab still renders: hiding it would take a
+ * view out of the bar silently.
  */
 export const TABS_EMPTY_LABEL = '<No label>';

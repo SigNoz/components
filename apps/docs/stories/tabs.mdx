@@ -5,11 +5,11 @@ import * as TabsStories from './tabs.stories';
 
 # Tabs
 
-Renders a tab bar and its panels from an `items` array, with primary and secondary variants,
-prefix/suffix icons, disabled tabs with a required tooltip reason, and optional tab bar extra
-content. The bar runs horizontally or as a [vertical rail](#vertical-tabs), and
-[scrolls](#overflow) when it holds more tabs than it has room for. A tab can also navigate instead
-of holding a panel, see [Tabs that navigate](#tabs-that-navigate).
+Renders a tab bar and its panels from an `items` array: two variants, prefix and suffix icons,
+disabled tabs with a required reason, and optional bar content. The bar runs horizontally or as a
+[vertical rail](#vertical-tabs), and [scrolls](#overflow) once it holds more tabs than it has room
+for. A tab can navigate instead of holding a panel, see
+[Tabs that navigate](#tabs-that-navigate).
 
 ## How to use
 
@@ -39,19 +39,17 @@ export default function MyComponent() {
 
 ## Variants
 
-Switch between `primary` (default) and `secondary` styles with the `variant` prop:
+`primary` is an underline indicator with a hover slider, `secondary` a joined strip with a bottom
+rule:
 
 ```tsx
-// Primary — underline indicator with hover slider
 <Tabs variant="primary" orientation="horizontal" alignment="start" items={items} defaultValue="overview" />
-
-// Secondary — pill-style tabs with a bottom border
 <Tabs variant="secondary" orientation="horizontal" alignment="start" items={items} defaultValue="overview" />
 ```
 
 ## With icons
 
-Add `prefixIcon` or `suffixIcon` to tab items to display icons alongside the label:
+`prefixIcon` and `suffixIcon` sit either side of the label:
 
 ```tsx
 import { Settings, History } from '@signozhq/icons';
@@ -80,8 +78,8 @@ import { Settings, History } from '@signozhq/icons';
 
 ## Disabled tabs
 
-A disabled tab must always say why: `disabledTooltip` is required whenever `disabled` is set, and
-shows on hover or keyboard focus.
+A disabled tab must say why: `disabledTooltip` is required whenever `disabled` is set, and shows on
+hover or keyboard focus.
 
 ```tsx
 <Tabs
@@ -104,8 +102,8 @@ shows on hover or keyboard focus.
 
 ## Tab bar extra content
 
-Render additional content before or after the tab list with `tabBarStartContent` and
-`tabBarEndContent`. Start is the left edge of a horizontal bar and the top edge of a vertical one:
+`tabBarStartContent` and `tabBarEndContent` render beside the tab list. Start is the left edge of a
+horizontal bar and the top edge of a vertical one:
 
 ```tsx
 import { Button, ButtonVariant, ButtonSize, ButtonColor } from '@signozhq/ui';
@@ -132,9 +130,8 @@ import { Plus } from '@signozhq/icons';
 
 ## Alignment
 
-Control how the tab list positions itself along its own axis within its container using the
-`alignment` prop (`start`, `center`, `end`). On a horizontal bar `start` is the left edge; on a
-vertical one it is the top edge.
+`alignment` (`start`, `center`, `end`) places the tab list along the bar's own axis within its
+container.
 
 ## Vertical tabs
 
@@ -153,25 +150,23 @@ tabs.
 ```
 
 Every side-named prop follows the bar rather than the screen, which is why `alignment` and the two
-bar content props are named start and end.
-
-A rail only has room to overflow once something bounds its height, so give the bar or an ancestor
-one.
+bar content props are named start and end. A rail only has room to overflow once something bounds
+its height, so give the bar or an ancestor one.
 
 ## Overflow
 
 A bar with more tabs than it has room for scrolls, and two chevron buttons appear at its ends.
 There is no prop for this, the same way there is no `textOverflow` prop: it is always on.
 
-Every tab stays a real `role="tab"` while the strip scrolls, so the arrow keys reach all of them
-and the browser keeps the focused one in view. Selecting a tab that is out of view scrolls it back,
-which is what keeps a router-driven bar pointing at the right place after a back or forward.
+Every tab stays a real `role="tab"` while the strip scrolls, so the arrow keys reach all of them.
+Selecting a tab that is out of view scrolls it back, which keeps a router-driven bar pointing at
+the right place after a back or forward.
 
 `tabBarStartContent` and `tabBarEndContent` keep their size, so a bar too narrow for its tabs
 scrolls the tabs rather than pushing a button off the end.
 
-Truncation and overflow are different answers to different problems: a single tab wider than the
-visible strip still truncates and shows its full label in a tooltip; many tabs scroll.
+Truncation and overflow answer different problems: one tab wider than the visible strip truncates
+and shows its full label in a tooltip, many tabs scroll.
 
 ## No content padding
 
@@ -192,8 +187,7 @@ spacing:
 
 An item that carries `render` instead of `children` renders as whatever you hand over, a router
 `Link` in practice, and keeps `role="tab"`, the arrow keys and every `data-*` the bar stamps. The
-tab is then a real anchor, so middle click, "open in new tab" and the URL in the status bar work,
-which no `onChange` handler can give you.
+tab is then a real anchor, so middle click and "open in new tab" work.
 
 Those items have no panel of their own. The panel is the bar's `children`, rendered for whichever
 tab is active:
@@ -222,21 +216,20 @@ function ServiceTabs() {
 }
 ```
 
-Leave the `children` out when the `Outlet` already lives elsewhere in the tree, and the bar renders
+Leave `children` out when the `Outlet` already lives elsewhere in the tree, and the bar renders
 tabs alone.
 
 Such a bar is controlled: `value` comes from the router, so back and forward move it too.
 `defaultValue` is refused, and so is passing `children` alongside items that bring their own.
-`onChange` still fires on click, which makes it useful for analytics, but it is not how the
-navigation happens.
+`onChange` still fires on click, which is useful for analytics, but it is not how the navigation
+happens.
 
 A `disabled` item ignores `render` and falls back to the plain `<button>`: an anchor is still
-followed by a middle click and still offers "open in new tab", so rendering one would be a lock
-anybody can walk around.
+followed by a middle click, so rendering one would be a lock anybody can walk around.
 
 ## Controlled state
 
-Pass `value` and `onChange` to drive the active tab from external state:
+`value` and `onChange` drive the active tab from outside:
 
 ```tsx
 import { useState } from 'react';
