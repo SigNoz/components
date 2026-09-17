@@ -128,3 +128,23 @@
 .wideLabels {
 	--tabs-label-max-inline-size: 240px;
 }
+
+/* The state matrix: a label column, then one column per state. */
+.matrix {
+	display: grid;
+	grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+	gap: 16px 32px;
+	align-items: start;
+	justify-items: start;
+	overflow-x: auto;
+	padding-bottom: 4px;
+}
+
+.matrixLabel {
+	white-space: nowrap;
+}
+
+.sectionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 16px;
+}
