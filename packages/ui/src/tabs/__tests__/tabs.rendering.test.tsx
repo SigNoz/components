@@ -9,6 +9,15 @@ const ITEMS: TabsItemProps[] = [
 	{ key: 'settings', label: 'Settings', children: 'Settings content' },
 ];
 
+/**
+ * A bar whose tabs navigate: no panel of their own, an anchor each, and a single panel handed to
+ * the bar as children (an `Outlet` in a real app).
+ */
+const NAV_ITEMS: TabsItemProps[] = [
+	{ key: 'overview', label: 'Overview', render: <a href="#overview" /> },
+	{ key: 'logs', label: 'Logs', render: <a href="#logs" /> },
+];
+
 describe('Tabs rendering', () => {
 	it('renders one tab per item, named by its label', () => {
 		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
@@ -228,5 +237,84 @@ describe('Tabs rendering', () => {
 		expect(root).toHaveStyle({ gap: '10px' });
 		expect(root).toHaveAttribute('aria-label', 'Views');
 		expect(root).toHaveAttribute('data-analytics', 'views-tabs');
+	});
+
+	it('renders a navigating tab as the element its item asks for', () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="left"
+				items={NAV_ITEMS}
+				value="overview"
+				testId="tabs"
+			>
+				Routed content
+			</Tabs>,
+		);
+
+		const tab = screen.getByRole('tab', { name: 'Logs' });
+		expect(tab.tagName).toBe('A');
+		expect(tab).toHaveAttribute('href', '#logs');
+		expect(tab).toHaveAttribute('data-slot', 'tabs-item');
+		expect(tab).toHaveAttribute('data-testid', 'tabs-item-logs');
+	});
+
+	it('shows the bar children as the panel of whichever tab is active', () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="left"
+				items={NAV_ITEMS}
+				value="logs"
+			>
+				Routed content
+			</Tabs>,
+		);
+
+		const panel = screen.getByRole('tabpanel');
+		expect(panel).toHaveTextContent('Routed content');
+		expect(panel).toHaveAttribute('aria-labelledby', screen.getByRole('tab', { name: 'Logs' }).id);
+	});
+
+	it('renders no panel at all when a navigating bar has no children', () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="left"
+				items={NAV_ITEMS}
+				value="overview"
+			/>,
+		);
+
+		expect(screen.queryByRole('tabpanel')).not.toBeInTheDocument();
+		expect(screen.getAllByRole('tab')).toHaveLength(2);
+	});
+
+	it('falls back to a button for a disabled navigating tab, so it cannot be followed', () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="left"
+				value="overview"
+				items={[
+					{ key: 'overview', label: 'Overview', render: <a href="#overview" /> },
+					{
+						key: 'billing',
+						label: 'Billing',
+						render: <a href="#billing" />,
+						disabled: true,
+						disabledTooltip: 'Ask an admin',
+					},
+				]}
+			/>,
+		);
+
+		const tab = screen.getByRole('tab', { name: 'Billing' });
+		expect(tab.tagName).toBe('BUTTON');
+		expect(tab).not.toHaveAttribute('href');
 	});
 });

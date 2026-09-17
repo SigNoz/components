@@ -82,7 +82,7 @@ function TabsLockIcon({ className }: { className?: string }): ReactElement {
  * @access private
  */
 export function TabsTrigger({ item, variant, groupTestId }: TabsTriggerProps): ReactElement {
-	const { key, label, disabled, disabledTooltip, prefixIcon, suffixIcon } = item;
+	const { key, label, disabled, disabledTooltip, prefixIcon, suffixIcon, render } = item;
 	const tooltipContentId = useId();
 	const tooltipHandle = useTooltipHandle();
 
@@ -109,10 +109,18 @@ export function TabsTrigger({ item, variant, groupTestId }: TabsTriggerProps): R
 		return entries.length === 0 ? null : <TooltipStack items={entries} />;
 	}, [hasDisabledTooltip, disabledTooltip, isLabelOverflowing, resolvedLabel]);
 
+	// A disabled tab drops `render`. An anchor is still followed by a middle click and still offers
+	// "open in new tab" from the context menu, so the only way to actually block one is not to render
+	// it. `nativeButton` tells Base UI the element it renders is not a `<button>`, which is what keeps
+	// Space activating a link.
+	const renderProps =
+		render === undefined || disabled ? {} : { render, nativeButton: false as const };
+
 	const triggerEl = (
 		<TabsPrimitive.Tab
 			value={key}
 			disabled={disabled}
+			{...renderProps}
 			data-slot="tabs-item"
 			data-variant={variant}
 			className={styles.tabs__trigger}

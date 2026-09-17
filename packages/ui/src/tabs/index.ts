@@ -162,6 +162,7 @@
  * | `--tabs-trigger-secondary-padding` | `var(--spacing-4, 8px) var(--spacing-16, 32px)` |
  * | `--tabs-trigger-secondary-transition` | `color 150ms ease` |
  * | `--tabs-trigger-secondary-white-space` | `nowrap` |
+ * | `--tabs-trigger-text-decoration` | `none` |
  */
 // #endregion css-tokens
 
@@ -170,6 +171,7 @@ export { TabsAlignment, TabsOrientation, TabsVariant, TABS_EMPTY_LABEL } from '.
 export type {
 	TabsAlignmentType,
 	TabsItemProps,
+	TabsItemRenderType,
 	TabsOrientationType,
 	TabsProps,
 	TabsVariantType,

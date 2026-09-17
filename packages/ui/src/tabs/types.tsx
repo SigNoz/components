@@ -1,12 +1,24 @@
+import type { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
 import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
 import type { TabsAlignment, TabsOrientation, TabsVariant } from './constants.js';
+
+type OriginalTabProps = ComponentProps<typeof TabsPrimitive.Tab>;
 
 export type TabsVariantType = (typeof TabsVariant)[keyof typeof TabsVariant];
 export type TabsAlignmentType = (typeof TabsAlignment)[keyof typeof TabsAlignment];
 export type TabsOrientationType = (typeof TabsOrientation)[keyof typeof TabsOrientation];
 
 /**
- * Everything a tab carries regardless of whether it can be selected.
+ * What a navigating tab renders as, taken from Base UI's own `render` prop.
+ *
+ * Either the element to render in the tab's place, which keeps its own props and receives the
+ * tab's on top, or a function handed those props and the tab's state (`active`, `disabled`,
+ * `orientation`, `tabActivationDirection`).
+ */
+export type TabsItemRenderType = NonNullable<OriginalTabProps['render']>;
+
+/**
+ * Everything a tab carries regardless of what it renders as, or whether it can be selected.
  */
 type TabsItemBaseType = {
 	/**
@@ -25,10 +37,6 @@ type TabsItemBaseType = {
 	 */
 	label: ReactNode;
 	/**
-	 * The panel shown while this tab is active.
-	 */
-	children: ReactNode;
-	/**
 	 * Element rendered before the label.
 	 *
 	 * @note Replaced by a lock icon while `disabled` is true.
@@ -43,6 +51,37 @@ type TabsItemBaseType = {
 };
 
 /**
+ * What the tab shows, and what element it renders as.
+ *
+ * A tab either owns a panel or navigates, never both. An item with `children` renders a `<button>`
+ * and the bar renders that item's panel. An item with `render` renders whatever the call site hands
+ * over, a router `Link` in practice, and the panel is the bar's own `children` (an `Outlet`), which
+ * belongs to the router rather than to any one item.
+ */
+type TabsItemContentType =
+	| {
+			/**
+			 * The panel shown while this tab is active.
+			 */
+			children: ReactNode;
+			render?: never;
+	  }
+	| {
+			children?: never;
+			/**
+			 * Renders this tab as something else, keeping `role="tab"`, the keyboard behaviour and
+			 * every `data-*` the bar stamps.
+			 *
+			 * @note For a real anchor, so a tab can be middle-clicked, opened in a new tab and read
+			 * off the status bar. `<Link to="/logs" />` is the whole prop.
+			 *
+			 * @note Ignored while `disabled` is true: an anchor stays reachable through middle click
+			 * and the context menu, so a disabled tab renders the plain `<button>` instead.
+			 */
+			render: TabsItemRenderType;
+	  };
+
+/**
  * One tab in the bar.
  *
  * `disabled` and `disabledTooltip` travel together. Items are plain data rather than call sites, so
@@ -50,6 +89,7 @@ type TabsItemBaseType = {
  * `ValidateRadioGroupProps` for the call-site version of the same rule).
  */
 export type TabsItemProps = TabsItemBaseType &
+	TabsItemContentType &
 	(
 		| {
 				disabled?: never;
@@ -72,9 +112,40 @@ export type TabsItemProps = TabsItemBaseType &
 		  }
 	);
 
+/**
+ * The rules below are the ones the item union cannot express on its own, because they pair a prop
+ * on the bar with the shape of `items`. Each is an object whose single required key is the sentence
+ * the compiler should print, the same device `RadioGroup` uses.
+ */
 interface TheTestIdPropIsCalledTestId {
 	'`data-testid` is written as the `testId` prop, which also names every tab': never;
 }
+
+interface ANavigatingTabBarTakesItsValueFromTheRouter {
+	'every item has `render`, so the active tab is wherever the router is: pass `value`': never;
+}
+
+interface ANavigatingTabBarHasNoDefaultValue {
+	'`defaultValue` cannot hold a bar whose tabs navigate, pass `value` from the router instead': never;
+}
+
+interface ThePanelComesFromTheItemThatOwnsIt {
+	'`children` is the panel for tabs that navigate, an item with its own `children` already has one': never;
+}
+
+/**
+ * True while every item in `items` has `Shape`, false while any of them does not, and false when
+ * the shape of `items` is unknown.
+ *
+ * `items` written inline is a literal, so `I` is the union of those exact objects and the answer is
+ * real. `items` passed as a `TabsItemProps[]` variable makes `I` the whole union, which satisfies
+ * no shape, so every rule below stands down rather than firing on a call site it cannot read.
+ */
+type TabsItemsAllHave<T, Shape> = T extends { items: readonly (infer I)[] }
+	? [I] extends [Shape]
+		? true
+		: false
+	: false;
 
 /**
  * Extra constraints layered on top of {@link TabsProps} at the call site.
@@ -86,17 +157,37 @@ interface TheTestIdPropIsCalledTestId {
  * itself, and `unknown` from the passing branch absorbs the rest. Such a wrapper is checked at its
  * own call sites instead.
  */
-export type ValidateTabsProps<T> = T extends { 'data-testid': unknown }
+export type ValidateTabsProps<T> = (T extends { 'data-testid': unknown }
 	? TheTestIdPropIsCalledTestId
-	: unknown;
+	: unknown) &
+	(TabsItemsAllHave<T, { render: unknown }> extends true
+		? (T extends { value: unknown } ? unknown : ANavigatingTabBarTakesItsValueFromTheRouter) &
+				(T extends { defaultValue: unknown } ? ANavigatingTabBarHasNoDefaultValue : unknown)
+		: unknown) &
+	(TabsItemsAllHave<T, { children: unknown }> extends true
+		? T extends { children: unknown }
+			? ThePanelComesFromTheItemThatOwnsIt
+			: unknown
+		: unknown);
 
 export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
 	AriaAttributes & {
 		/**
-		 * The tabs, in the order they are rendered. The component owns its whole markup, so there are
-		 * no children to compose.
+		 * The tabs, in the order they are rendered. The component owns the bar's markup, so the tabs
+		 * themselves are never composed as children.
 		 */
 		items: TabsItemProps[];
+		/**
+		 * The one panel shown for whichever tab is active, for a bar whose tabs navigate rather than
+		 * hold their own content. A router `Outlet` in practice.
+		 *
+		 * @note Only for items that carry `render`. An item with `children` brings its own panel, and
+		 * writing both is a type error.
+		 *
+		 * @note Optional even then: a bar whose panel is rendered elsewhere in the tree (a layout
+		 * route holding the `Outlet` above or beside the bar) leaves this out and renders tabs alone.
+		 */
+		children?: ReactNode;
 		/**
 		 * The visual style of the tab bar.
 		 */
@@ -113,6 +204,9 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		 * The controlled active item's `key`.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
+		 *
+		 * @note Required when every item carries `render`: the router owns which tab is active, and
+		 * a bar keeping its own state would drift from the URL on back and forward.
 		 */
 		value?: string;
 		/**

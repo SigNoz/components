@@ -12,6 +12,7 @@ import {
 	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import styles from './tabs.stories.module.css';
 
@@ -23,6 +24,12 @@ const meta: Meta<typeof Tabs> = {
 			control: false,
 			description: 'Array of tab items to render.',
 			table: { category: 'Content', type: { summary: 'TabsItemProps[]' } },
+		},
+		children: {
+			control: false,
+			description:
+				'The one panel shown for whichever tab is active, for items that carry `render` rather than their own `children`. A router `Outlet` in practice.',
+			table: { category: 'Content', type: { summary: 'ReactNode' } },
 		},
 		variant: {
 			control: 'select',
@@ -230,6 +237,39 @@ function AlignmentGroup({
 	);
 }
 
+/**
+ * Stands in for the router: real tabs read `value` off `useLocation()` and never need `onChange`,
+ * but Storybook has no router, so the hash the anchors navigate to is mirrored into state here.
+ */
+function RoutedTabs(): ReactElement {
+	const [route, setRoute] = useState('overview');
+
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="left"
+			value={route}
+			onChange={setRoute}
+			items={[
+				{ key: 'overview', label: 'Overview', render: <a href="#overview" /> },
+				{ key: 'logs', label: 'Logs', render: <a href="#logs" /> },
+				{
+					key: 'billing',
+					label: 'Billing',
+					render: <a href="#billing" />,
+					disabled: true,
+					disabledTooltip: 'Ask an admin for access',
+				},
+			]}
+		>
+			<Typography size="base">
+				{`Routed content for /${route}. In an app this is a single <Outlet />.`}
+			</Typography>
+		</Tabs>
+	);
+}
+
 export const Default: Story = {
 	args: {
 		items: defaultItems,
@@ -397,4 +437,16 @@ export const Showcase: Story = {
 			</div>
 		</div>
 	),
+};
+
+/**
+ * Tabs that navigate. Each item carries `render` instead of `children`, so the tab is a real
+ * anchor: middle click, "open in new tab" and the URL in the status bar all work. The panel is the
+ * bar's own children, and a disabled item falls back to a `<button>` that cannot be followed.
+ */
+export const Navigation: Story = {
+	render: () => <RoutedTabs />,
+	parameters: {
+		layout: 'padded',
+	},
 };
