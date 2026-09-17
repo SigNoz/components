@@ -41,9 +41,8 @@ export type TabsTriggerProps = {
 /**
  * The padlock that stands in for a disabled tab's `prefixIcon`.
  *
- * Drawn here rather than taken from `@signozhq/icons` because the design asks for a closed-body
- * padlock the icon set does not carry. It paints in `currentColor`, so it follows the disabled
- * label colour each variant sets instead of pinning one grey.
+ * Drawn here rather than taken from `@signozhq/icons`, which carries no closed-body padlock. It
+ * paints in `currentColor`, so it follows the disabled label colour each variant sets.
  *
  * @access private
  */
@@ -91,14 +90,15 @@ export function TabsTrigger({
 	orientation,
 	groupTestId,
 }: TabsTriggerProps): ReactElement {
-	const { key, label, disabled, disabledTooltip, prefixIcon, suffixIcon, render } = item;
+	const { key, label, testId, disabled, disabledTooltip, prefixIcon, suffixIcon, render } = item;
 	const tooltipContentId = useId();
 	const tooltipHandle = useTooltipHandle();
 
 	const isLabelEmpty = !hasRenderableContent(label);
 	const resolvedLabel = isLabelEmpty ? TABS_EMPTY_LABEL : label;
 
-	const resolvedTestId = groupTestId === undefined ? undefined : `${groupTestId}-item-${key}`;
+	const resolvedTestId =
+		testId ?? (groupTestId === undefined ? undefined : `${groupTestId}-item-${key}`);
 
 	// Tabs have no configurable text-overflow mode, unlike Button/RadioGroup: truncation is always on.
 	const [isLabelOverflowing, labelRef] = useIsLabelTruncated(true);
@@ -118,10 +118,9 @@ export function TabsTrigger({
 		return entries.length === 0 ? null : <TooltipStack items={entries} />;
 	}, [hasDisabledTooltip, disabledTooltip, isLabelOverflowing, resolvedLabel]);
 
-	// A disabled tab drops `render`. An anchor is still followed by a middle click and still offers
-	// "open in new tab" from the context menu, so the only way to actually block one is not to render
-	// it. `nativeButton` tells Base UI the element it renders is not a `<button>`, which is what keeps
-	// Space activating a link.
+	// A disabled tab drops `render`: an anchor is still followed by a middle click and the context
+	// menu, so the only way to block one is not to render it. `nativeButton` tells Base UI the
+	// element is not a `<button>`, which is what keeps Space activating a link.
 	const renderProps =
 		render === undefined || disabled ? {} : { render, nativeButton: false as const };
 
@@ -156,8 +155,6 @@ export function TabsTrigger({
 		</TabsPrimitive.Tab>
 	);
 
-	// Truncation is unconditional, so a tooltip is always possible once the label overflows, the same
-	// reasoning Button applies to its default `textOverflow="ellipsis"` mode.
 	return (
 		<TooltipProviderIfMissing>
 			<TooltipTrigger
@@ -168,11 +165,7 @@ export function TabsTrigger({
 			</TooltipTrigger>
 			{tooltipContent !== null && (
 				<TooltipRoot handle={tooltipHandle}>
-					{/*
-					 * A vertical rail stacks its tabs, so a tooltip above one covers the tab before it.
-					 * Opening to the right clears the rail instead. A horizontal bar keeps the tooltip's
-					 * own default side.
-					 */}
+					{/* A rail stacks its tabs, so a tooltip above one covers the tab before it. */}
 					<TooltipContent
 						id={tooltipContentId}
 						side={orientation === TabsOrientation.Vertical ? 'right' : undefined}

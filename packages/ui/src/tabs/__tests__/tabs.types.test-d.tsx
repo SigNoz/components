@@ -254,6 +254,15 @@ describe('test ids', () => {
 		// @ts-expect-error - use `testId`, it also names every tab
 		assertType(<Tabs {...BASE} items={ITEMS} data-testid="views" />);
 	});
+
+	test('accepts a testId on an item', () => {
+		assertType(
+			<Tabs
+				{...BASE}
+				items={[{ key: 'overview', label: 'Overview', children: 'Overview', testId: 'overview' }]}
+			/>,
+		);
+	});
 });
 
 describe('remaining props', () => {
