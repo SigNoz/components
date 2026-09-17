@@ -4,65 +4,59 @@
   gap: var(--tabs-gap, var(--spacing-4, 8px));
 }
 
+// `tabBarLeftContent`/`tabBarRightContent` sit at the bar's outer edges, and the
+// spacers between them and the list take whatever space is left. Which spacer
+// grows is what `alignment` means, so alignment sets an internal var rather than
+// the property: a call site that wants the content block to take the room
+// instead (a search field, a button pulled up against the tabs) overrides
+// `--tabs-border-spacer-*-flex-grow` and `--tabs-extra-content-flex-grow`
+// without having to outweigh an alignment rule. The two `order` vars are the
+// way back to content that hugs the list: set both to `2`.
 .tabs__list-wrapper {
   &[data-variant="primary"] {
-    display: var(--tabs-list-wrapper-primary-display, inline-flex);
+    display: var(--tabs-list-wrapper-primary-display, flex);
+    width: var(--tabs-list-wrapper-primary-width, 100%);
     align-items: var(--tabs-list-wrapper-primary-align-items, center);
     text-align: var(--tabs-list-wrapper-primary-text-align, left);
-    gap: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
-  }
+    padding-inline: var(--tabs-list-wrapper-primary-padding-inline, var(--spacing-6, 12px));
 
-  &[data-variant="primary"][data-has-extra-content] {
-    display: var(--tabs-list-wrapper-primary-extra-content-display, flex);
-  }
-
-  &[data-variant="primary"][data-alignment="center"] {
-    display: flex;
-    justify-content: center;
-  }
-
-  &[data-variant="primary"][data-alignment="right"] {
-    display: flex;
-    justify-content: flex-end;
+    // `noTabContentPadding` is the bar saying it manages its own spacing, so the
+    // inset that keeps the first and last tab off the container edge goes with
+    // the panel's padding rather than outliving it.
+    &[data-no-content-padding] {
+      padding-inline: var(--tabs-list-wrapper-primary-no-content-padding-inline, 0);
+    }
   }
 
   &[data-variant="secondary"] {
     display: var(--tabs-list-wrapper-secondary-display, flex);
     width: var(--tabs-list-wrapper-secondary-width, 100%);
-    padding-left: var(--tabs-list-wrapper-secondary-padding-left, var(--spacing-8, 16px));
 
-    // Left content replaces the visual role of spacer-left; collapse it to
-    // keep the border continuous without adding extra gap.
-    &[data-alignment="left"][data-has-left-content] {
-      [data-slot="tab-spacer-left"] {
-        flex: 0 0 0px;
-        min-width: 0;
-      }
-    }
+    // The rule needs a run of its own before the first trigger and after the
+    // last one. `primary` paints no rule, so its spacers start at zero.
+    --tabs-internal-spacer-min-width: var(--spacing-8, 16px);
+  }
 
-    &[data-alignment="center"] {
-      padding-left: 0;
+  &[data-alignment="left"] {
+    --tabs-internal-spacer-left-flex-grow: 0;
+    --tabs-internal-spacer-grow-flex-grow: 1;
+  }
 
-      [data-slot="tab-spacer-left"] {
-        flex: 1;
-        min-width: 0;
-      }
+  &[data-alignment="center"] {
+    --tabs-internal-spacer-left-flex-grow: 1;
+    --tabs-internal-spacer-grow-flex-grow: 1;
+  }
 
-      [data-slot="tab-spacer-grow"] {
-        flex: 1;
-        min-width: 0;
-      }
-    }
+  &[data-alignment="right"] {
+    --tabs-internal-spacer-left-flex-grow: 1;
+    --tabs-internal-spacer-grow-flex-grow: 0;
+  }
 
-    &[data-alignment="right"] {
-      [data-slot="tab-spacer-left"] {
-        flex-grow: 1;
-      }
-
-      [data-slot="tab-spacer-grow"] {
-        flex-grow: 0;
-      }
-    }
+  // A content block already holds the bar gap in its own padding, so the spacer
+  // next to it drops its minimum rather than spending the gap twice.
+  &[data-has-left-content] [data-slot="tab-spacer-left"],
+  &[data-has-right-content] [data-slot="tab-spacer-grow"] {
+    --tabs-internal-spacer-min-width: 0;
   }
 }
 
@@ -70,23 +64,41 @@
   display: var(--tabs-list-inner-display, inline-flex);
   align-items: var(--tabs-list-inner-align-items, flex-start);
   position: var(--tabs-list-inner-position, relative);
+  order: 2;
 }
 
 .tabs__extra-content {
   display: var(--tabs-extra-content-display, flex);
   align-items: var(--tabs-extra-content-align-items, center);
+  flex-grow: var(--tabs-extra-content-flex-grow, 0);
   flex-shrink: var(--tabs-extra-content-flex-shrink, 0);
+  flex-basis: var(--tabs-extra-content-flex-basis, auto);
+  // `auto` is the content's own width, which is what keeps a button from being
+  // squeezed. A block that is allowed to grow usually wants `0` here too, or it
+  // never shrinks back below its content.
+  min-width: var(--tabs-extra-content-min-width, auto);
+
+  &[data-slot="tab-extra-content-left"] {
+    order: var(--tabs-bar-content-left-order, 0);
+    padding-right: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
+    flex-grow: var(--tabs-extra-content-left-flex-grow, var(--tabs-extra-content-flex-grow, 0));
+    flex-shrink: var(--tabs-extra-content-left-flex-shrink, var(--tabs-extra-content-flex-shrink, 0));
+    min-width: var(--tabs-extra-content-left-min-width, var(--tabs-extra-content-min-width, auto));
+  }
+
+  &[data-slot="tab-extra-content-right"] {
+    order: var(--tabs-bar-content-right-order, 4);
+    padding-left: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
+    flex-grow: var(--tabs-extra-content-right-flex-grow, var(--tabs-extra-content-flex-grow, 0));
+    flex-shrink: var(
+      --tabs-extra-content-right-flex-shrink,
+      var(--tabs-extra-content-flex-shrink, 0)
+    );
+    min-width: var(--tabs-extra-content-right-min-width, var(--tabs-extra-content-min-width, auto));
+  }
 
   [data-variant="secondary"] & {
-    border-bottom: var(--tabs-border-spacer-border-width, 1px) solid var(--tabs-border-color, var(--l1-border));
-  }
-
-  [data-variant="secondary"] &[data-slot="tab-extra-content-left"] {
-    padding-right: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
-  }
-
-  [data-variant="secondary"] &[data-slot="tab-extra-content-right"] {
-    padding-left: var(--tabs-bar-content-gap, var(--spacing-8, 16px));
+    border-bottom: var(--tabs-border-width, 1px) solid var(--tabs-border-color, var(--tabs-border));
   }
 }
 
@@ -95,6 +107,7 @@
     display: var(--tabs-list-primary-display, inline-flex);
     align-items: var(--tabs-list-primary-align-items, center);
     gap: var(--tabs-list-primary-gap, var(--spacing-12, 24px));
+    position: relative;
   }
 
   &[data-variant="secondary"] {
@@ -102,14 +115,33 @@
   }
 }
 
+// Both variants render the spacers, since both need the free space between the
+// list and the bar's extra content to live somewhere the list itself does not.
+// Only `secondary` paints on them: the bar rule is drawn by the elements
+// flanking the list, never by the wrapper. A border on the wrapper would run
+// behind the triggers too, and the secondary active trigger is deliberately
+// open to the panel below (transparent background, transparent bottom border),
+// so a rule crossing it closes that notch. The flanking elements are adjacent
+// flex items with no gap between them, so each side stays a single unbroken run
+// at every alignment.
 .tabs__border-spacer {
-  min-width: var(--tabs-border-spacer-min-width, var(--spacing-8, 16px));
-  flex: var(--tabs-border-spacer-flex, 0);
-  border-bottom: var(--tabs-border-spacer-border-width, 1px) solid var(--tabs-border-color, var(--l1-border));
+  flex-grow: var(--tabs-border-spacer-flex-grow, var(--tabs-internal-spacer-left-flex-grow, 0));
+  flex-shrink: var(--tabs-border-spacer-flex-shrink, 1);
+  flex-basis: var(--tabs-border-spacer-flex-basis, 0%);
+  min-width: var(--tabs-border-spacer-min-width, var(--tabs-internal-spacer-min-width, 0));
+  order: 1;
+
+  [data-variant="secondary"] & {
+    border-bottom: var(--tabs-border-width, 1px) solid var(--tabs-border-color, var(--tabs-border));
+  }
 
   &--grow {
+    flex-grow: var(
+      --tabs-border-spacer-grow-flex-grow,
+      var(--tabs-internal-spacer-grow-flex-grow, 1)
+    );
     flex-shrink: var(--tabs-border-spacer-grow-flex-shrink, 0);
-    flex-grow: var(--tabs-border-spacer-grow-flex-grow, 1);
+    order: 3;
   }
 }
 
@@ -123,80 +155,115 @@
     color: var(--tabs-hover-text-color, var(--l1-foreground-hover));
   }
 
-  &[data-state="active"] {
+  &[data-active] {
     color: var(--tabs-active-text-color, var(--l1-foreground-hover));
   }
 
   &[data-variant="primary"] {
+    --tabs-internal-primary-gap: var(--tabs-trigger-primary-gap, var(--spacing-4, 8px));
+
     display: var(--tabs-trigger-primary-display, inline-flex);
     align-items: var(--tabs-trigger-primary-align-items, center);
-    gap: var(--tabs-trigger-primary-gap, var(--spacing-4, 8px));
-    border-radius: var(--tabs-trigger-primary-border-radius, 2px);
-    padding: var(--tabs-trigger-primary-padding, var(--spacing-2, 4px) var(--spacing-3, 6px));
+    gap: var(--tabs-internal-primary-gap);
+    max-width: 100%;
+    border-radius: var(--tabs-trigger-primary-border-radius, var(--tabs-primary-radius));
+    padding: var(--tabs-trigger-primary-padding, var(--spacing-3, 6px));
     white-space: var(--tabs-trigger-primary-white-space, nowrap);
     font-size: var(--tabs-trigger-primary-font-size, var(--periscope-font-size-base, 13px));
     font-weight: var(--tabs-trigger-primary-font-weight, var(--font-weight-normal, 400));
     line-height: var(--tabs-trigger-primary-line-height, 20px);
     position: var(--tabs-trigger-primary-position, relative);
     z-index: var(--tabs-trigger-primary-z-index, 10);
+    color: var(--tabs-trigger-primary-color, var(--tabs-primary-label));
 
-    &:focus-visible {
-      outline-offset: var(--tabs-trigger-primary-focus-visible-outline-offset, 2px);
-      outline: var(--tabs-trigger-primary-focus-visible-outline, var(--ring) solid 2px);
+    &:hover:not([data-disabled]) {
+      background-color: var(--tabs-trigger-primary-hover-background, var(--tabs-primary-background-hover));
+      color: var(--tabs-trigger-primary-hover-color, var(--tabs-primary-label-hover));
     }
 
-    &:disabled {
-      color: var(
-        --tabs-trigger-primary-disabled-color,
-        color-mix(in srgb, var(--tabs-text-color, var(--l1-foreground)) 50%, transparent)
-      );
+    &[data-active] {
+      color: var(--tabs-trigger-primary-active-color, var(--tabs-primary-label-hover));
+    }
+
+    &:focus-visible {
+      outline-offset: var(--tabs-trigger-primary-focus-visible-outline-offset, 1px);
+      outline: var(--tabs-trigger-primary-focus-visible-outline, var(--ring) solid 1px);
+    }
+
+    &[data-disabled] {
+      opacity: var(--tabs-trigger-primary-disabled-opacity, 0.6);
       cursor: var(--tabs-trigger-primary-disabled-cursor, not-allowed);
+    }
+
+    .tabs__icon svg:not([class*="size-"]) {
+      width: var(--tabs-trigger-primary-icon-width, 14px);
+      height: var(--tabs-trigger-primary-icon-height, 14px);
     }
   }
 
   &[data-variant="secondary"] {
+    --tabs-internal-secondary-gap: var(--tabs-trigger-secondary-gap, var(--spacing-4, 8px));
+
     display: var(--tabs-trigger-secondary-display, inline-flex);
     height: var(--tabs-trigger-secondary-height, 100%);
     flex: var(--tabs-trigger-secondary-flex, 0);
+    max-width: 100%;
     align-items: var(--tabs-trigger-secondary-align-items, center);
     justify-content: var(--tabs-trigger-secondary-justify-content, center);
-    gap: var(--tabs-trigger-secondary-gap, var(--spacing-2, 4px));
+    gap: var(--tabs-internal-secondary-gap);
     white-space: var(--tabs-trigger-secondary-white-space, nowrap);
-    padding: var(--tabs-trigger-secondary-padding, var(--spacing-2, 4px) var(--spacing-10, 20px));
+    padding: var(--tabs-trigger-secondary-padding, var(--spacing-4, 8px) var(--spacing-16, 32px));
     font-size: var(--tabs-trigger-secondary-font-size, var(--periscope-font-size-base, 13px));
     cursor: var(--tabs-trigger-secondary-cursor, pointer);
     transition: var(--tabs-trigger-secondary-transition, color 150ms ease);
     border-width: var(--tabs-trigger-secondary-border-width, 1px);
     border-style: var(--tabs-trigger-secondary-border-style, solid);
-    border-color: var(--tabs-trigger-secondary-border-color, var(--l1-border));
+    border-color: var(--tabs-trigger-secondary-border-color, var(--tabs-border));
     border-right-width: var(--tabs-trigger-secondary-border-right-width, 0px);
-    background-color: var(--tabs-trigger-secondary-bg, var(--l2-background));
+    background-color: var(--tabs-trigger-secondary-bg, var(--tabs-secondary-background));
+    color: var(--tabs-trigger-secondary-color, var(--tabs-secondary-label));
 
     &:last-of-type {
       border-right-width: var(--tabs-trigger-secondary-last-border-right-width, var(--tabs-trigger-secondary-border-width, 1px));
     }
 
-    &[data-state="active"] {
+    &:hover:not([data-disabled]):not([data-active]) {
+      background-color: var(--tabs-trigger-secondary-hover-bg, var(--tabs-secondary-background-hover));
+      color: var(--tabs-trigger-secondary-hover-color, var(--tabs-secondary-label-hover));
+    }
+
+    &[data-active] {
       border-bottom-color: var(--tabs-trigger-secondary-active-border-bottom-color, transparent);
       background-color: var(--tabs-trigger-secondary-active-bg, transparent);
+      color: var(--tabs-trigger-secondary-active-color, var(--tabs-secondary-label-active));
+
+      .tabs__dot {
+        display: var(--tabs-internal-secondary-dot-display, block);
+      }
+    }
+
+    .tabs__dot {
+      // The dot sits closer to the label than the trigger's own flex gap, and there is no per-item
+      // gap in flexbox. Pulling back by the difference tracks the gap when a call site overrides it.
+      margin-inline-start: calc(
+        var(--tabs-trigger-secondary-dot-gap, var(--spacing-2, 4px)) -
+          var(--tabs-internal-secondary-gap)
+      );
     }
 
     &:first-of-type {
-      border-top-left-radius: var(--tabs-trigger-secondary-border-radius, 4px);
+      border-top-left-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
     }
 
     &:last-of-type {
-      border-top-right-radius: var(--tabs-trigger-secondary-border-radius, 4px);
+      border-top-right-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
     }
 
-    &:disabled {
+    &[data-disabled] {
       position: var(--tabs-trigger-secondary-disabled-position, relative);
       z-index: var(--tabs-trigger-secondary-disabled-z-index, 0);
       cursor: var(--tabs-trigger-secondary-disabled-cursor, not-allowed);
-      color: var(
-        --tabs-trigger-secondary-disabled-color,
-        color-mix(in srgb, var(--tabs-text-color, var(--l1-foreground)) 50%, transparent)
-      );
+      color: var(--tabs-trigger-secondary-disabled-color, var(--tabs-secondary-label-disabled));
 
       &::before,
       &::after {
@@ -204,26 +271,26 @@
         position: var(--tabs-trigger-secondary-disabled-stripe-position, absolute);
         top: var(--tabs-trigger-secondary-disabled-stripe-top, 0);
         bottom: var(--tabs-trigger-secondary-disabled-stripe-bottom, 0);
-        width: var(--tabs-trigger-secondary-disabled-stripe-width, 25px);
-        height: var(--tabs-trigger-secondary-disabled-stripe-height, 100%);
+        width: var(--tabs-trigger-secondary-disabled-stripe-width, var(--spacing-12));
         background-image: var(
           --tabs-trigger-secondary-disabled-stripe-background-image,
           repeating-linear-gradient(
             -45deg,
             transparent,
-            transparent 2px,
-            var(--tabs-border-color, var(--l1-border)) 2px,
-            var(--tabs-border-color, var(--l1-border)) 4px
+            transparent 1px,
+            var(--tabs-trigger-secondary-disabled-stripe-color, var(--tabs-secondary-stripe-disabled)) 3px,
+            var(--tabs-trigger-secondary-disabled-stripe-color, var(--tabs-secondary-stripe-disabled)) 3px
           )
         );
         z-index: var(--tabs-trigger-secondary-disabled-stripe-z-index, 1);
+        pointer-events: var(--tabs-trigger-secondary-disabled-stripe-pointer-events, none);
       }
 
       &::before {
         left: var(--tabs-trigger-secondary-disabled-stripe-before-left, 0);
         mask-image: var(
           --tabs-trigger-secondary-disabled-stripe-before-mask-image,
-          linear-gradient(to left, transparent 0%, black 100%)
+          linear-gradient(to left, transparent 5%, black 100%)
         );
       }
 
@@ -231,8 +298,20 @@
         right: var(--tabs-trigger-secondary-disabled-stripe-after-right, 0);
         mask-image: var(
           --tabs-trigger-secondary-disabled-stripe-after-mask-image,
-          linear-gradient(to right, transparent 0%, black 100%)
+          linear-gradient(to right, transparent 5%, black 100%)
         );
+      }
+
+      // The trigger cannot clip the bands: it is a flex item with a `0` basis,
+      // so any overflow other than `visible` drops its automatic minimum size
+      // to 0 and collapses it. Each band rounds its own outer corner instead,
+      // and only the two corners the trigger itself rounds.
+      &:first-of-type::before {
+        border-top-left-radius: inherit;
+      }
+
+      &:last-of-type::after {
+        border-top-right-radius: inherit;
       }
 
       & > * {
@@ -267,25 +346,32 @@
   );
 }
 
+// Same duration and easing as the hover slider above — the spec requires the
+// two moving marks to be choreographed identically, or they visibly separate
+// whenever both move at once.
 .tabs__active-slider {
   position: var(--tabs-active-slider-position, absolute);
-  left: var(--tabs-active-slider-left, 0);
+  left: var(--active-tab-left, 0);
+  width: var(--active-tab-width, 0);
   bottom: var(--tabs-active-slider-bottom, calc(var(--spacing-4, 8px) * -1));
   height: var(--tabs-active-slider-height, 2px);
-  background-color: var(--tabs-active-accent-color, var(--primary));
+  background-color: var(--tabs-active-accent-color, var(--tabs-primary-indicator));
   border-radius: var(--tabs-active-slider-border-radius, 2px);
-  will-change: var(--tabs-active-slider-will-change, transform, width, opacity);
+  will-change: var(--tabs-active-slider-will-change, left, width);
   transition: var(
     --tabs-active-slider-transition,
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.2s ease-out
+    left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.2s cubic-bezier(0.4, 0, 0.2, 1)
   );
 }
 
 .tabs__content {
   margin: var(--tabs-content-margin, var(--spacing-4, 8px) 0px 0px 0px);
   padding: var(--tabs-content-padding, var(--spacing-4, 8px));
+
+  &[data-no-content-padding] {
+    padding: 0;
+  }
 
   &:focus-visible {
     outline: var(--tabs-content-focus-visible-outline, none);
@@ -301,4 +387,50 @@
   display: var(--tabs-icon-display, inline-flex);
   align-items: var(--tabs-icon-align-items, center);
   flex-shrink: var(--tabs-icon-flex-shrink, 0);
+}
+
+.tabs__label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// The dot marks the selected tab, so it is laid out only under `[data-active]`
+// below. A display change cannot be transitioned, but it does start an
+// animation, so the dot arrives on the same rise-and-fade the Button's spinner
+// uses when it takes over the prefix slot.
+.tabs__dot {
+  display: none;
+  animation: tabs-dot-in var(--tabs-trigger-secondary-dot-duration, 180ms)
+    var(--tabs-trigger-secondary-dot-easing, cubic-bezier(0.34, 1.2, 0.64, 1));
+  flex-shrink: var(--tabs-trigger-secondary-dot-flex-shrink, 0);
+  inline-size: var(--tabs-trigger-secondary-dot-size, var(--spacing-2, 4px));
+  block-size: var(--tabs-trigger-secondary-dot-size, var(--spacing-2, 4px));
+  border-radius: var(--tabs-trigger-secondary-dot-border-radius, var(--radius-round, 999999px));
+  // The token set names one tabs accent, `--tabs-primary-indicator`, and the dot is the accent mark
+  // whichever variant carries it.
+  background-color: var(--tabs-trigger-secondary-dot-background-color, var(--tabs-primary-indicator));
+}
+
+// Growing out of nothing carries the arrival on its own, so the rise is small
+// and the scale does most of the work. The easing overshoots slightly past `1`,
+// which is what keeps a 4px mark from looking like it simply switched on.
+@keyframes tabs-dot-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--tabs-trigger-secondary-dot-travel, var(--spacing-2, 4px)))
+      scale(var(--tabs-trigger-secondary-dot-enter-scale, 0.2));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs__dot {
+    animation-duration: 0s;
+  }
 }

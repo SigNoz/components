@@ -3,11 +3,11 @@ import * as TabsStories from './tabs.stories';
 
 <Meta of={TabsStories} />
 
-# TabsSimple
+# Tabs
 
-Preset that accepts an `items` array and renders a tabbed interface with primary and secondary variants, prefix/suffix icons, disabled states with tooltips, and optional tab bar extra content.
-
-For full primitive control, see [Tabs](?path=/docs/primitive-components-tabs-tabs--docs).
+Renders a tab bar and its panels from an `items` array, with primary and secondary variants,
+prefix/suffix icons, disabled tabs with a required tooltip reason, and optional tab bar extra
+content.
 
 ## How to use
 
@@ -21,7 +21,15 @@ const items = [
 ];
 
 export default function MyComponent() {
-	return <Tabs items={items} defaultValue="overview" />;
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="left"
+			items={items}
+			defaultValue="overview"
+		/>
+	);
 }
 ```
 
@@ -32,11 +40,11 @@ export default function MyComponent() {
 Switch between `primary` (default) and `secondary` styles with the `variant` prop:
 
 ```tsx
-// Primary variant (default) — underline indicator with hover slider
-<Tabs items={items} variant="primary" defaultValue="overview" />
+// Primary — underline indicator with hover slider
+<Tabs variant="primary" orientation="horizontal" alignment="left" items={items} defaultValue="overview" />
 
-// Secondary variant — pill-style tabs with a bottom border
-<Tabs items={items} variant="secondary" defaultValue="overview" />
+// Secondary — pill-style tabs with a bottom border
+<Tabs variant="secondary" orientation="horizontal" alignment="left" items={items} defaultValue="overview" />
 ```
 
 ## With icons
@@ -47,6 +55,10 @@ Add `prefixIcon` or `suffixIcon` to tab items to display icons alongside the lab
 import { Settings, History } from '@signozhq/icons';
 
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="left"
+	defaultValue="settings"
 	items={[
 		{
 			key: 'settings',
@@ -61,45 +73,46 @@ import { Settings, History } from '@signozhq/icons';
 			children: 'History content',
 		},
 	]}
-	defaultValue="settings"
 />;
 ```
 
 ## Disabled tabs
 
-Disabled tabs automatically display a lock icon (replacing any `prefixIcon`) and show a tooltip on hover. Use `disabledReason` to customise the tooltip message:
+A disabled tab must always say why: `disabledTooltip` is required whenever `disabled` is set, and
+shows on hover or keyboard focus.
 
 ```tsx
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="left"
+	defaultValue="active"
 	items={[
 		{ key: 'active', label: 'Active', children: 'Active content' },
 		{
 			key: 'locked',
 			label: 'Issues',
 			disabled: true,
-			disabledReason: 'Feature is under maintenance',
+			disabledTooltip: 'Feature is under maintenance',
 			children: 'Issues content',
 		},
-		{
-			key: 'beta',
-			label: 'Beta',
-			disabled: true,
-			children: 'Beta content',
-		},
 	]}
-	defaultValue="active"
 />
 ```
 
 ## Tab bar extra content
 
-Render additional content to the left or right of the tab list with `tabBarLeftContent` and `tabBarRightContent`:
+Render additional content to the left or right of the tab list with `tabBarLeftContent` and
+`tabBarRightContent`:
 
 ```tsx
 import { Button, ButtonVariant, ButtonSize, ButtonColor } from '@signozhq/ui';
 import { Plus } from '@signozhq/icons';
 
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="left"
 	items={items}
 	defaultValue="overview"
 	tabBarRightContent={
@@ -115,27 +128,19 @@ import { Plus } from '@signozhq/icons';
 />;
 ```
 
-Combine both sides:
-
-```tsx
-<Tabs
-	items={items}
-	defaultValue="overview"
-	tabBarLeftContent={<span style={{ fontSize: '0.75rem', opacity: 0.6 }}>Service: frontend</span>}
-	tabBarRightContent={<Button>Configure</Button>}
-/>
-```
-
 ## Alignment
 
-Control how the tab list positions itself within its container using the `alignment` prop (`left`, `center`, `right`):
+Control how the tab list positions itself within its container using the `alignment` prop (`left`,
+`center`, `right`).
+
+## No content padding
+
+`noTabContentPadding` removes the padding around the active panel, for a panel that manages its own
+spacing:
 
 ```tsx
-<Tabs items={items} alignment="center" defaultValue="overview" />
-<Tabs items={items} alignment="right" defaultValue="overview" />
+<Tabs variant="primary" orientation="horizontal" alignment="left" items={items} noTabContentPadding />
 ```
-
-Alignment works alongside `tabBarLeftContent` and `tabBarRightContent` — the tab list shifts between the extra content slots.
 
 ## Controlled state
 
@@ -146,9 +151,18 @@ import { useState } from 'react';
 import { Tabs } from '@signozhq/ui';
 
 function MyComponent() {
-	const [activeTab, setActiveTab] = useState('overview');
+	const [active, setActive] = useState('overview');
 
-	return <Tabs items={items} value={activeTab} onChange={setActiveTab} />;
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="left"
+			items={items}
+			value={active}
+			onChange={setActive}
+		/>
+	);
 }
 ```
 

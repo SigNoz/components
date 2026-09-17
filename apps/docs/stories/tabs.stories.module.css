@@ -1,52 +1,87 @@
+/*
+ * `.story-section` is a flex column with `align-items: flex-start`, so every
+ * child shrinks to fit its content. A percentage width inside one would then
+ * resolve against that shrunk box instead of the page, so the sections are
+ * stretched back to the full canvas width here.
+ */
 .sectionGap {
 	gap: 32px;
+	align-self: stretch;
+	width: 100%;
+}
+
+.sectionGap > * {
+	width: 100%;
 }
 
 .sectionTitle {
 	margin-bottom: 16px;
 }
 
-.contentPanel {
-	padding-top: 16px;
+.subsectionTitle {
+	margin-bottom: 8px;
 }
 
-.extraContentContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 32px;
-	padding: 24px;
-}
-
-.alignmentContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 48px;
-	padding: 24px;
-}
-
-.variantSection {
-	margin-bottom: 24px;
-	border-bottom: 1px solid var(--border);
-	padding-bottom: 8px;
-	text-transform: capitalize;
-}
-
-.alignmentSection {
-	margin-bottom: 40px;
-}
-
-.alignmentTitle {
-	margin-bottom: 16px;
-	text-transform: capitalize;
-}
-
-.extraVariantsContainer {
+.exampleStack {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
 }
 
-.extraVariantLabel {
-	margin-bottom: 8px;
-	font-family: monospace;
+.exampleLabel {
+	color: var(--muted-foreground);
+	margin-bottom: 4px;
+}
+
+/*
+ * The alignment and extra-content examples only say anything while the bar is
+ * narrower than the page, so every example sits in this frame: half the page
+ * wide, with its start and end edges drawn.
+ */
+.widthFrame {
+	position: relative;
+	width: 50%;
+	min-width: 360px;
+	padding: 24px 0 8px;
+	border-left: 1px dashed var(--muted-foreground);
+	border-right: 1px dashed var(--muted-foreground);
+}
+
+.widthFrame::before,
+.widthFrame::after {
+	position: absolute;
+	top: 4px;
+	font-size: 10px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--muted-foreground);
+}
+
+.widthFrame::before {
+	content: '50% start';
+	left: 4px;
+}
+
+.widthFrame::after {
+	content: '50% end';
+	right: 4px;
+}
+
+/*
+ * Extra content is pinned to the bar's edges by default. Both `order` vars set
+ * to the list's own order put a block back beside the list, the side it sits on
+ * decided by which block it is.
+ */
+.contentNearList {
+	--tabs-bar-content-left-order: 2;
+	--tabs-bar-content-right-order: 2;
+}
+
+/*
+ * The free space next to the list belongs to a spacer by default. Handing it to
+ * the content block instead is two vars: the block grows, the spacer stops.
+ */
+.contentGrows {
+	--tabs-extra-content-right-flex-grow: 1;
+	--tabs-border-spacer-grow-flex-grow: 0;
 }
