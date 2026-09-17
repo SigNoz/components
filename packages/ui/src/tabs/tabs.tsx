@@ -161,7 +161,13 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 							onMouseLeave={isPrimary ? handleMouseLeave : undefined}
 						>
 							{items.map((item) => (
-								<TabsTrigger key={item.key} item={item} variant={variant} groupTestId={testId} />
+								<TabsTrigger
+									key={item.key}
+									item={item}
+									variant={variant}
+									orientation={orientation}
+									groupTestId={testId}
+								/>
 							))}
 
 							{isPrimary && (
