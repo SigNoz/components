@@ -9,15 +9,18 @@ import {
 } from 'react';
 import { cn } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
+import { useTabsOverflow } from './hooks/use-tabs-overflow.js';
+import { TabsScrollButton } from './subcomponents/tabs-scroll-button.js';
 import { TabsTrigger } from './subcomponents/tabs-trigger.js';
 import styles from './tabs.module.scss';
-import { TabsVariant } from './constants.js';
+import { TabsOrientation, TabsScrollDirection, TabsVariant } from './constants.js';
 import type { TabsProps, ValidateTabsProps } from './types.js';
 
 function updateHoverSliderPosition(
 	slider: HTMLDivElement | null,
 	list: HTMLElement | null,
 	trigger: HTMLElement | null,
+	isVertical: boolean,
 ): void {
 	if (!slider) {
 		return;
@@ -31,8 +34,19 @@ function updateHoverSliderPosition(
 	const listRect = list.getBoundingClientRect();
 	const triggerRect = trigger.getBoundingClientRect();
 
-	slider.style.transform = `translateX(${triggerRect.left - listRect.left}px)`;
-	slider.style.width = `${triggerRect.width}px`;
+	// Both rects are read from the same scrolled box, so the delta holds however far the strip has
+	// travelled. The size of the other axis is cleared rather than left behind: an orientation flip
+	// would otherwise keep the width the previous axis wrote.
+	if (isVertical) {
+		slider.style.transform = `translateY(${triggerRect.top - listRect.top}px)`;
+		slider.style.height = `${triggerRect.height}px`;
+		slider.style.width = '';
+	} else {
+		slider.style.transform = `translateX(${triggerRect.left - listRect.left}px)`;
+		slider.style.width = `${triggerRect.width}px`;
+		slider.style.height = '';
+	}
+
 	slider.style.opacity = '1';
 }
 
@@ -47,8 +61,8 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 		value,
 		defaultValue,
 		onChange,
-		tabBarLeftContent,
-		tabBarRightContent,
+		tabBarStartContent,
+		tabBarEndContent,
 		noTabContentPadding = false,
 		testId,
 		...props
@@ -73,14 +87,24 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 	);
 
 	const isPrimary = variant === TabsVariant.Primary;
+	const isVertical = orientation === TabsOrientation.Vertical;
+
+	const {
+		viewportRef,
+		isOverflowing,
+		canScrollToStart,
+		canScrollToEnd,
+		scrollTowardsStart,
+		scrollTowardsEnd,
+	} = useTabsOverflow({ orientation, activeKey: value ?? defaultValue ?? items[0]?.key });
 
 	const handleMouseOver: MouseEventHandler<HTMLDivElement> = (event) => {
 		const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-slot="tabs-item"]');
-		updateHoverSliderPosition(hoverSliderRef.current, listRef.current, trigger);
+		updateHoverSliderPosition(hoverSliderRef.current, listRef.current, trigger, isVertical);
 	};
 
 	const handleMouseLeave: MouseEventHandler<HTMLDivElement> = () => {
-		updateHoverSliderPosition(hoverSliderRef.current, null, null);
+		updateHoverSliderPosition(hoverSliderRef.current, null, null, isVertical);
 	};
 
 	return (
@@ -102,19 +126,33 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 					data-variant={variant}
 					data-alignment={alignment}
 					data-no-content-padding={noTabContentPadding || undefined}
-					data-has-extra-content={tabBarLeftContent || tabBarRightContent ? '' : undefined}
-					data-has-left-content={tabBarLeftContent ? '' : undefined}
-					data-has-right-content={tabBarRightContent ? '' : undefined}
+					data-has-start-content={tabBarStartContent ? '' : undefined}
+					data-has-end-content={tabBarEndContent ? '' : undefined}
 				>
-					<div data-slot="tab-spacer-left" className={styles['tabs__border-spacer']} />
+					<div data-slot="tab-spacer-start" className={styles['tabs__border-spacer']} />
 
-					{tabBarLeftContent != null && (
-						<div data-slot="tab-extra-content-left" className={styles['tabs__extra-content']}>
-							{tabBarLeftContent}
+					{tabBarStartContent != null && (
+						<div data-slot="tab-extra-content-start" className={styles['tabs__extra-content']}>
+							{tabBarStartContent}
 						</div>
 					)}
 
-					<div className={styles['tabs__list-inner']}>
+					{isOverflowing && (
+						<TabsScrollButton
+							direction={TabsScrollDirection.Start}
+							orientation={orientation}
+							variant={variant}
+							disabled={!canScrollToStart}
+							onScroll={scrollTowardsStart}
+							groupTestId={testId}
+						/>
+					)}
+
+					<div
+						ref={viewportRef}
+						data-slot="tabs-list-viewport"
+						className={styles['tabs__list-inner']}
+					>
 						<TabsPrimitive.List
 							ref={listRef}
 							className={styles.tabs__list}
@@ -133,26 +171,45 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 									renderBeforeHydration
 								/>
 							)}
-						</TabsPrimitive.List>
 
-						{isPrimary && (
-							<div
-								ref={hoverSliderRef}
-								data-slot="tabs-hover-slider"
-								className={styles['tabs__hover-slider']}
-								style={{ opacity: 0 }}
-							/>
-						)}
+							{/*
+							 * Inside the list rather than beside it, so its containing block is the same box
+							 * the hovered tab is measured against. That delta is then scroll invariant and
+							 * the mark travels with the strip, exactly as Base UI's own indicator does.
+							 * `role="presentation"` because a tablist takes no other role among its children.
+							 */}
+							{isPrimary && (
+								<div
+									ref={hoverSliderRef}
+									role="presentation"
+									data-slot="tabs-hover-slider"
+									data-orientation={orientation}
+									className={styles['tabs__hover-slider']}
+									style={{ opacity: 0 }}
+								/>
+							)}
+						</TabsPrimitive.List>
 					</div>
 
-					{tabBarRightContent != null && (
-						<div data-slot="tab-extra-content-right" className={styles['tabs__extra-content']}>
-							{tabBarRightContent}
+					{isOverflowing && (
+						<TabsScrollButton
+							direction={TabsScrollDirection.End}
+							orientation={orientation}
+							variant={variant}
+							disabled={!canScrollToEnd}
+							onScroll={scrollTowardsEnd}
+							groupTestId={testId}
+						/>
+					)}
+
+					{tabBarEndContent != null && (
+						<div data-slot="tab-extra-content-end" className={styles['tabs__extra-content']}>
+							{tabBarEndContent}
 						</div>
 					)}
 
 					<div
-						data-slot="tab-spacer-grow"
+						data-slot="tab-spacer-end"
 						className={cn(styles['tabs__border-spacer'], styles['tabs__border-spacer--grow'])}
 					/>
 				</div>
@@ -229,28 +286,50 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * Arrow keys move focus between tabs without activating them. A focused tab is only activated by
  * `Enter`/`Space`, or by click. This is Base UI's default (`activateOnFocus={false}`), left as is.
  *
- * ### Truncation
+ * ### Orientation
+ *
+ * `orientation="vertical"` turns the bar into a rail beside its panel: the tabs stack, the arrow
+ * keys become up and down, and the primary indicator runs down the rail's inner edge instead of
+ * under the tabs. Every side-named prop follows the bar rather than the screen, which is why
+ * `alignment` and the two bar content props are named start and end: start is the left edge of a
+ * horizontal bar and the top edge of a vertical one.
+ *
+ * A vertical rail only overflows if something bounds its height, so give it or an ancestor one.
+ *
+ * ### Truncation and overflow
  *
  * Every label is measured and re-measured on resize. While it does not fit, the label carries
  * `data-truncated` and shows the full text in a tooltip. There is no `textOverflow` prop, unlike
  * `Button`/`RadioGroup`: truncation is always on.
  *
+ * More tabs than the bar can hold is a different problem, and has a different answer: the strip
+ * scrolls, and two arrows appear at its ends. A tab is only truncated when it alone is wider than
+ * the visible strip. There is no prop for this either.
+ *
+ * Every tab stays a real `role="tab"` while the strip scrolls, so the arrow keys reach all of them
+ * and the browser keeps the focused one in view. Selecting a tab that is out of view scrolls it
+ * back. The arrows are named buttons rather than decoration, for the pointer and switch users who
+ * never send an arrow key to the tablist.
+ *
+ * Bar content is what the strip gives way to: `tabBarStartContent`/`tabBarEndContent` keep their
+ * size, so a bar too narrow for its tabs scrolls the tabs rather than pushing a button off the end.
+ *
  * A disabled tab's `disabledTooltip` stacks above the truncated label, reason first.
  *
  * ### Tab bar layout
  *
- * `alignment` positions the tab list within its container. `tabBarLeftContent`/
- * `tabBarRightContent` render extra content in the same row, pinned to the bar's outer edges rather
- * than to the list. To keep a block beside the list instead, set
- * `--tabs-bar-content-left-order`/`--tabs-bar-content-right-order` to `2`.
+ * `alignment` positions the tab list within its container. `tabBarStartContent`/
+ * `tabBarEndContent` render extra content in the same row (or column), pinned to the bar's outer
+ * edges rather than to the list. To keep a block beside the list instead, set
+ * `--tabs-bar-content-start-order`/`--tabs-bar-content-end-order` to `2`.
  *
  * The room between the list and a content block belongs to a spacer, and `alignment` only picks
  * which spacer takes it. Hand it to the content block instead with
  * `--tabs-extra-content-flex-grow: 1` (or the per-side
- * `--tabs-extra-content-left-flex-grow`/`--tabs-extra-content-right-flex-grow`), usually alongside
+ * `--tabs-extra-content-start-flex-grow`/`--tabs-extra-content-end-flex-grow`), usually alongside
  * `--tabs-border-spacer-grow-flex-grow: 0`. A block that should also give room back needs
- * `--tabs-extra-content-flex-shrink: 1` and `--tabs-extra-content-min-width: 0`, since a flex item
- * will not shrink below its content otherwise.
+ * `--tabs-extra-content-flex-shrink: 1` and `--tabs-extra-content-min-inline-size: 0`, since a flex
+ * item will not shrink below its content otherwise.
  *
  * ### Content padding
  *
@@ -262,7 +341,8 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * ### Asserting on it
  *
  * `testId` is `data-testid` and also names every tab: an item with no `testId` of its own is
- * addressable as `` `${testId}-item-${key}` ``.
+ * addressable as `` `${testId}-item-${key}` ``. The two scroll arrows are
+ * `` `${testId}-scroll-start` `` and `` `${testId}-scroll-end` ``.
  *
  * | root attribute | value |
  * |---|---|
@@ -271,6 +351,8 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * | `data-slot` | rendered |
  * |---|---|
  * | `tabs-list-wrapper` | always, the row holding the list and any extra content, `data-no-content-padding` while `noTabContentPadding` is set |
+ * | `tabs-list-viewport` | always, the box the tab strip scrolls inside |
+ * | `tabs-scroll-button` | one per end while the strip overflows, `data-direction` is `start` or `end` |
  * | `tabs-item` | one per item, the tab button, carries the item's `testId` |
  * | `tabs-label` | the measured label, `data-empty-label` while it is the fallback |
  * | `tabs-active-slider` | `variant="primary"` only, tracks the active tab (Base UI `Tabs.Indicator`) |
@@ -282,7 +364,22 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * <Tabs
  *   variant="primary"
  *   orientation="horizontal"
- *   alignment="left"
+ *   alignment="start"
+ *   defaultValue="overview"
+ *   items={[
+ *     { key: 'overview', label: 'Overview', children: <div>Overview content</div> },
+ *     { key: 'settings', label: 'Settings', children: <div>Settings content</div> },
+ *   ]}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // A vertical rail: the tabs stack and the panel sits beside them
+ * <Tabs
+ *   variant="secondary"
+ *   orientation="vertical"
+ *   alignment="start"
  *   defaultValue="overview"
  *   items={[
  *     { key: 'overview', label: 'Overview', children: <div>Overview content</div> },
@@ -298,7 +395,7 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * <Tabs
  *   variant="primary"
  *   orientation="horizontal"
- *   alignment="left"
+ *   alignment="start"
  *   value={pathname.split('/').at(-1)}
  *   items={[
  *     { key: 'overview', label: 'Overview', render: <Link to="overview" /> },
@@ -316,7 +413,7 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * <Tabs
  *   variant="secondary"
  *   orientation="horizontal"
- *   alignment="left"
+ *   alignment="start"
  *   value={active}
  *   onChange={setActive}
  *   items={[

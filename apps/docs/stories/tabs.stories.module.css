@@ -73,8 +73,8 @@
  * decided by which block it is.
  */
 .contentNearList {
-	--tabs-bar-content-left-order: 2;
-	--tabs-bar-content-right-order: 2;
+	--tabs-bar-content-start-order: 2;
+	--tabs-bar-content-end-order: 2;
 }
 
 /*
@@ -82,6 +82,59 @@
  * the content block instead is two vars: the block grows, the spacer stops.
  */
 .contentGrows {
-	--tabs-extra-content-right-flex-grow: 1;
+	--tabs-extra-content-end-flex-grow: 1;
 	--tabs-border-spacer-grow-flex-grow: 0;
+}
+
+/*
+ * A vertical rail runs along the block axis, so what has to be constrained for
+ * alignment and overflow to say anything is the height, not the width. The frame
+ * is a flex row so the bar beside it can take the rest.
+ */
+.heightFrame {
+	position: relative;
+	display: flex;
+	height: 260px;
+	padding: 8px 24px;
+	border-top: 1px dashed var(--muted-foreground);
+	border-bottom: 1px dashed var(--muted-foreground);
+}
+
+.heightFrame::before,
+.heightFrame::after {
+	position: absolute;
+	right: 4px;
+	font-size: 10px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--muted-foreground);
+}
+
+.heightFrame::before {
+	content: 'frame start';
+	top: 2px;
+}
+
+.heightFrame::after {
+	content: 'frame end';
+	bottom: 2px;
+}
+
+/*
+ * Tight enough that the strip cannot fit, which is the whole point of the
+ * overflow examples. Applied on top of whichever axis frame is in play, so it
+ * only ever narrows the axis the bar runs on.
+ */
+.overflowFrame {
+	width: 420px;
+	min-width: 0;
+}
+
+/* The frame is a fixed width here, not half the page, so it says so. */
+.overflowFrame::before {
+	content: 'frame start';
+}
+
+.overflowFrame::after {
+	content: 'frame end';
 }

@@ -7,8 +7,9 @@ import * as TabsStories from './tabs.stories';
 
 Renders a tab bar and its panels from an `items` array, with primary and secondary variants,
 prefix/suffix icons, disabled tabs with a required tooltip reason, and optional tab bar extra
-content. A tab can also navigate instead of holding a panel, see
-[Tabs that navigate](#tabs-that-navigate).
+content. The bar runs horizontally or as a [vertical rail](#vertical-tabs), and
+[scrolls](#overflow) when it holds more tabs than it has room for. A tab can also navigate instead
+of holding a panel, see [Tabs that navigate](#tabs-that-navigate).
 
 ## How to use
 
@@ -26,7 +27,7 @@ export default function MyComponent() {
 		<Tabs
 			variant="primary"
 			orientation="horizontal"
-			alignment="left"
+			alignment="start"
 			items={items}
 			defaultValue="overview"
 		/>
@@ -42,10 +43,10 @@ Switch between `primary` (default) and `secondary` styles with the `variant` pro
 
 ```tsx
 // Primary — underline indicator with hover slider
-<Tabs variant="primary" orientation="horizontal" alignment="left" items={items} defaultValue="overview" />
+<Tabs variant="primary" orientation="horizontal" alignment="start" items={items} defaultValue="overview" />
 
 // Secondary — pill-style tabs with a bottom border
-<Tabs variant="secondary" orientation="horizontal" alignment="left" items={items} defaultValue="overview" />
+<Tabs variant="secondary" orientation="horizontal" alignment="start" items={items} defaultValue="overview" />
 ```
 
 ## With icons
@@ -58,7 +59,7 @@ import { Settings, History } from '@signozhq/icons';
 <Tabs
 	variant="primary"
 	orientation="horizontal"
-	alignment="left"
+	alignment="start"
 	defaultValue="settings"
 	items={[
 		{
@@ -86,7 +87,7 @@ shows on hover or keyboard focus.
 <Tabs
 	variant="primary"
 	orientation="horizontal"
-	alignment="left"
+	alignment="start"
 	defaultValue="active"
 	items={[
 		{ key: 'active', label: 'Active', children: 'Active content' },
@@ -103,8 +104,8 @@ shows on hover or keyboard focus.
 
 ## Tab bar extra content
 
-Render additional content to the left or right of the tab list with `tabBarLeftContent` and
-`tabBarRightContent`:
+Render additional content before or after the tab list with `tabBarStartContent` and
+`tabBarEndContent`. Start is the left edge of a horizontal bar and the top edge of a vertical one:
 
 ```tsx
 import { Button, ButtonVariant, ButtonSize, ButtonColor } from '@signozhq/ui';
@@ -113,10 +114,10 @@ import { Plus } from '@signozhq/icons';
 <Tabs
 	variant="primary"
 	orientation="horizontal"
-	alignment="left"
+	alignment="start"
 	items={items}
 	defaultValue="overview"
-	tabBarRightContent={
+	tabBarEndContent={
 		<Button
 			variant={ButtonVariant.Outlined}
 			size={ButtonSize.SM}
@@ -131,8 +132,46 @@ import { Plus } from '@signozhq/icons';
 
 ## Alignment
 
-Control how the tab list positions itself within its container using the `alignment` prop (`left`,
-`center`, `right`).
+Control how the tab list positions itself along its own axis within its container using the
+`alignment` prop (`start`, `center`, `end`). On a horizontal bar `start` is the left edge; on a
+vertical one it is the top edge.
+
+## Vertical tabs
+
+`orientation="vertical"` turns the bar into a rail beside its panel: the tabs stack, the arrow keys
+become up and down, and the primary indicator runs down the rail's inner edge instead of under the
+tabs.
+
+```tsx
+<Tabs
+	variant="secondary"
+	orientation="vertical"
+	alignment="start"
+	items={items}
+	defaultValue="overview"
+/>
+```
+
+Every side-named prop follows the bar rather than the screen, which is why `alignment` and the two
+bar content props are named start and end.
+
+A rail only has room to overflow once something bounds its height, so give the bar or an ancestor
+one.
+
+## Overflow
+
+A bar with more tabs than it has room for scrolls, and two chevron buttons appear at its ends.
+There is no prop for this, the same way there is no `textOverflow` prop: it is always on.
+
+Every tab stays a real `role="tab"` while the strip scrolls, so the arrow keys reach all of them
+and the browser keeps the focused one in view. Selecting a tab that is out of view scrolls it back,
+which is what keeps a router-driven bar pointing at the right place after a back or forward.
+
+`tabBarStartContent` and `tabBarEndContent` keep their size, so a bar too narrow for its tabs
+scrolls the tabs rather than pushing a button off the end.
+
+Truncation and overflow are different answers to different problems: a single tab wider than the
+visible strip still truncates and shows its full label in a tooltip; many tabs scroll.
 
 ## No content padding
 
@@ -140,7 +179,13 @@ Control how the tab list positions itself within its container using the `alignm
 spacing:
 
 ```tsx
-<Tabs variant="primary" orientation="horizontal" alignment="left" items={items} noTabContentPadding />
+<Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
+	items={items}
+	noTabContentPadding
+/>
 ```
 
 ## Tabs that navigate
@@ -164,7 +209,7 @@ function ServiceTabs() {
 		<Tabs
 			variant="primary"
 			orientation="horizontal"
-			alignment="left"
+			alignment="start"
 			value={pathname.split('/').at(-1)}
 			items={[
 				{ key: 'overview', label: 'Overview', render: <Link to="overview" /> },
@@ -204,7 +249,7 @@ function MyComponent() {
 		<Tabs
 			variant="primary"
 			orientation="horizontal"
-			alignment="left"
+			alignment="start"
 			items={items}
 			value={active}
 			onChange={setActive}

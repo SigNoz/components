@@ -20,7 +20,7 @@ const NAV_ITEMS: TabsItemProps[] = [
 
 describe('Tabs rendering', () => {
 	it('renders one tab per item, named by its label', () => {
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		expect(screen.getAllByRole('tab')).toHaveLength(2);
 		expect(screen.getByRole('tab', { name: 'Overview' })).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('Tabs rendering', () => {
 	});
 
 	it('groups the tabs under a tablist role', () => {
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		expect(screen.getByRole('tablist')).toBeInTheDocument();
 	});
@@ -38,7 +38,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				defaultValue="overview"
 			/>,
@@ -76,7 +76,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				testId="tabs"
 			/>,
@@ -92,7 +92,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={[
 					{
 						key: 'overview',
@@ -115,7 +115,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={[
 					{
 						key: 'overview',
@@ -144,7 +144,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={[{ key: 'overview', label: '', children: 'Overview content' }]}
 			/>,
 		);
@@ -157,7 +157,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				testId="my-tabs"
 			/>,
@@ -172,7 +172,7 @@ describe('Tabs rendering', () => {
 	});
 
 	it('renders no item testId when the bar has none', () => {
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		for (const tab of screen.getAllByRole('tab')) {
 			expect(tab).not.toHaveAttribute('data-testid');
@@ -184,7 +184,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				noTabContentPadding
 			/>,
@@ -194,25 +194,31 @@ describe('Tabs rendering', () => {
 	});
 
 	it('does not mark the panel when noTabContentPadding is left at its default', () => {
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		expect(screen.getByRole('tabpanel')).not.toHaveAttribute('data-no-content-padding');
 	});
 
-	it('renders tabBarLeftContent and tabBarRightContent alongside the list', () => {
+	it('renders tabBarStartContent and tabBarEndContent alongside the list', () => {
 		render(
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
-				tabBarLeftContent={<span data-testid="left" />}
-				tabBarRightContent={<span data-testid="right" />}
+				tabBarStartContent={<span data-testid="bar-start" />}
+				tabBarEndContent={<span data-testid="bar-end" />}
 			/>,
 		);
 
-		expect(screen.getByTestId('left')).toBeInTheDocument();
-		expect(screen.getByTestId('right')).toBeInTheDocument();
+		expect(screen.getByTestId('bar-start')).toBeInTheDocument();
+		expect(screen.getByTestId('bar-end')).toBeInTheDocument();
+		expect(document.querySelector('[data-slot="tab-extra-content-start"]')).toContainElement(
+			screen.getByTestId('bar-start'),
+		);
+		expect(document.querySelector('[data-slot="tab-extra-content-end"]')).toContainElement(
+			screen.getByTestId('bar-end'),
+		);
 	});
 
 	it('forwards id, className, style, aria and data attributes to the root', () => {
@@ -220,7 +226,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				testId="tabs"
 				id="views"
@@ -244,7 +250,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={NAV_ITEMS}
 				value="overview"
 				testId="tabs"
@@ -265,7 +271,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={NAV_ITEMS}
 				value="logs"
 			>
@@ -283,7 +289,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={NAV_ITEMS}
 				value="overview"
 			/>,
@@ -298,7 +304,7 @@ describe('Tabs rendering', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				value="overview"
 				items={[
 					{ key: 'overview', label: 'Overview', render: <a href="#overview" /> },

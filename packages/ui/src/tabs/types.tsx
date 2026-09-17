@@ -1,12 +1,19 @@
 import type { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
 import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
-import type { TabsAlignment, TabsOrientation, TabsVariant } from './constants.js';
+import type {
+	TabsAlignment,
+	TabsOrientation,
+	TabsScrollDirection,
+	TabsVariant,
+} from './constants.js';
 
 type OriginalTabProps = ComponentProps<typeof TabsPrimitive.Tab>;
 
 export type TabsVariantType = (typeof TabsVariant)[keyof typeof TabsVariant];
 export type TabsAlignmentType = (typeof TabsAlignment)[keyof typeof TabsAlignment];
 export type TabsOrientationType = (typeof TabsOrientation)[keyof typeof TabsOrientation];
+export type TabsScrollDirectionType =
+	(typeof TabsScrollDirection)[keyof typeof TabsScrollDirection];
 
 /**
  * What a navigating tab renders as, taken from Base UI's own `render` prop.
@@ -194,10 +201,15 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		variant: TabsVariantType;
 		/**
 		 * The layout flow of the tab bar and its panels.
+		 *
+		 * @note `vertical` turns the bar into a rail beside the panel, and every side-named prop
+		 * below follows it: `start` becomes the top edge and `end` the bottom one.
 		 */
 		orientation: TabsOrientationType;
 		/**
-		 * How the tab bar positions itself within its container.
+		 * How the tab bar positions itself along its own axis within its container.
+		 *
+		 * @note `start` is the left edge of a horizontal bar and the top edge of a vertical one.
 		 */
 		alignment: TabsAlignmentType;
 		/**
@@ -221,13 +233,25 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		 */
 		onChange?: (key: string) => void;
 		/**
-		 * Content rendered to the left of the tab list, in the same row.
+		 * Content rendered before the tab list, in the same row or column as the bar.
+		 *
+		 * @note `start` is the left edge while `orientation` is `horizontal` and the top edge while
+		 * it is `vertical`.
+		 *
+		 * @note Keeps its size while the list scrolls. A bar too narrow for its tabs shrinks the
+		 * list, never this block.
 		 */
-		tabBarLeftContent?: ReactNode;
+		tabBarStartContent?: ReactNode;
 		/**
-		 * Content rendered to the right of the tab list, in the same row.
+		 * Content rendered after the tab list, in the same row or column as the bar.
+		 *
+		 * @note `end` is the right edge while `orientation` is `horizontal` and the bottom edge
+		 * while it is `vertical`.
+		 *
+		 * @note Keeps its size while the list scrolls. A bar too narrow for its tabs shrinks the
+		 * list, never this block.
 		 */
-		tabBarRightContent?: ReactNode;
+		tabBarEndContent?: ReactNode;
 		/**
 		 * When true, removes the padding around the active panel.
 		 *

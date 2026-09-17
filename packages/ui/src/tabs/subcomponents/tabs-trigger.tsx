@@ -159,9 +159,7 @@ export function TabsTrigger({ item, variant, groupTestId }: TabsTriggerProps): R
 			</TooltipTrigger>
 			{tooltipContent !== null && (
 				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId} className={styles['tabs__label-tooltip']}>
-						{tooltipContent}
-					</TooltipContent>
+					<TooltipContent id={tooltipContentId}>{tooltipContent}</TooltipContent>
 				</TooltipRoot>
 			)}
 		</TooltipProviderIfMissing>

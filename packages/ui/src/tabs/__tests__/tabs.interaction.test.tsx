@@ -31,7 +31,7 @@ function ControlledTabs({ onChange }: { onChange: (key: string) => void }): JSX.
 		<Tabs
 			variant="primary"
 			orientation="horizontal"
-			alignment="left"
+			alignment="start"
 			items={ITEMS}
 			value={value}
 			onChange={(next) => {
@@ -50,7 +50,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				onChange={onChange}
 			/>,
@@ -70,7 +70,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				defaultValue="overview"
 				onChange={onChange}
@@ -94,7 +94,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				defaultValue="overview"
 				onChange={onChange}
@@ -125,7 +125,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				value="overview"
 				onChange={() => {}}
@@ -145,7 +145,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				onChange={onChange}
 			/>,
@@ -157,7 +157,7 @@ describe('Tabs interaction', () => {
 	});
 
 	it('starts on the first item when no defaultValue is given', () => {
-		render(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
 		expect(screen.getByRole('tab', { name: 'Overview' })).toHaveAttribute('data-active');
 	});
@@ -168,7 +168,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				defaultValue="overview"
 				items={[
 					{ key: 'overview', label: 'Overview', children: 'Overview content' },
@@ -198,7 +198,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				defaultValue="overview"
 				onChange={onChange}
 				items={[
@@ -227,7 +227,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				defaultValue="overview"
 				onChange={onChange}
 				items={[
@@ -257,7 +257,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={NAV_ITEMS}
 				value="overview"
 				onChange={onChange}
@@ -277,7 +277,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={NAV_ITEMS}
 				value="overview"
 				onChange={onChange}
@@ -298,7 +298,7 @@ describe('Tabs interaction', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				value="overview"
 				onChange={onChange}
 				items={[

@@ -16,7 +16,7 @@ describe('Tabs forwardRef', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				testId="tabs"
 				ref={ref}
@@ -34,7 +34,7 @@ describe('Tabs forwardRef', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				testId="tabs"
 				ref={(node) => {

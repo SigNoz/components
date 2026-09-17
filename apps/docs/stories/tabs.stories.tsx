@@ -8,6 +8,8 @@ import {
 	TabsAlignment,
 	type TabsAlignmentType,
 	type TabsItemProps,
+	TabsOrientation,
+	type TabsOrientationType,
 	type TabsVariantType,
 	Typography,
 } from '@signozhq/ui';
@@ -40,14 +42,16 @@ const meta: Meta<typeof Tabs> = {
 		orientation: {
 			control: 'select',
 			options: ['horizontal', 'vertical'],
-			description: 'The layout flow of the tab bar and its panels.',
+			description:
+				'The layout flow of the tab bar and its panels. `vertical` turns the bar into a rail beside the panel, and every side-named prop follows it.',
 			table: { category: 'Layout', type: { summary: "'horizontal' | 'vertical'" } },
 		},
 		alignment: {
 			control: 'select',
-			options: ['left', 'center', 'right'],
-			description: 'How the tab bar positions itself within its container.',
-			table: { category: 'Layout', type: { summary: "'left' | 'center' | 'right'" } },
+			options: ['start', 'center', 'end'],
+			description:
+				'How the tab bar positions itself along its own axis within its container. `start` is the left edge of a horizontal bar and the top edge of a vertical one.',
+			table: { category: 'Layout', type: { summary: "'start' | 'center' | 'end'" } },
 		},
 		defaultValue: {
 			control: 'text',
@@ -65,14 +69,16 @@ const meta: Meta<typeof Tabs> = {
 			description: 'Called with the newly active item key.',
 			table: { category: 'Events', type: { summary: '(key: string) => void' } },
 		},
-		tabBarLeftContent: {
+		tabBarStartContent: {
 			control: false,
-			description: 'Content rendered to the left of the tab list, in the same row.',
+			description:
+				"Content rendered before the tab list, along the bar's own axis. Keeps its size while the list scrolls.",
 			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
 		},
-		tabBarRightContent: {
+		tabBarEndContent: {
 			control: false,
-			description: 'Content rendered to the right of the tab list, in the same row.',
+			description:
+				"Content rendered after the tab list, along the bar's own axis. Keeps its size while the list scrolls.",
 			table: { category: 'Content', type: { summary: 'React.ReactNode' } },
 		},
 		noTabContentPadding: {
@@ -133,10 +139,51 @@ const defaultItems: TabsItemProps[] = [
 	},
 ];
 
+/**
+ * More tabs than any of the frames below can hold, which is what the overflow examples need. The
+ * icons and the disabled tab are kept so the scrolling strip is shown carrying everything a normal
+ * bar carries, not a row of bare labels.
+ */
+const manyItems: TabsItemProps[] = [
+	{
+		key: 'overview',
+		label: 'Overview',
+		children: 'Overview content panel',
+		prefixIcon: <Settings2 className="icon-md" />,
+	},
+	{ key: 'logs', label: 'Logs', children: 'Logs content panel' },
+	{ key: 'traces', label: 'Traces', children: 'Traces content panel' },
+	{ key: 'metrics', label: 'Metrics', children: 'Metrics content panel' },
+	{ key: 'alerts', label: 'Alerts', children: 'Alerts content panel' },
+	{ key: 'dashboards', label: 'Dashboards', children: 'Dashboards content panel' },
+	{
+		key: 'exceptions',
+		label: 'Exceptions',
+		children: 'Exceptions content panel',
+		prefixIcon: <CircleAlert className="icon-md" />,
+	},
+	{ key: 'service-map', label: 'Service map', children: 'Service map content panel' },
+	{ key: 'integrations', label: 'Integrations', children: 'Integrations content panel' },
+	{ key: 'api-keys', label: 'API keys', children: 'API keys content panel' },
+	{
+		key: 'billing',
+		label: 'Billing',
+		children: 'Billing content panel',
+		disabled: true,
+		disabledTooltip: 'Ask an admin for access',
+	},
+	{
+		key: 'settings',
+		label: 'Settings',
+		children: 'Settings content panel',
+		suffixIcon: <History className="icon-md" />,
+	},
+];
+
 const alignments: TabsAlignmentType[] = [
-	TabsAlignment.Left,
+	TabsAlignment.Start,
 	TabsAlignment.Center,
-	TabsAlignment.Right,
+	TabsAlignment.End,
 ];
 
 const filterButton = (
@@ -161,46 +208,67 @@ const addViewButton = (
 	</Button>
 );
 
+function isVertical(orientation: TabsOrientationType): boolean {
+	return orientation === TabsOrientation.Vertical;
+}
+
 /**
- * Half-page frame with its start and end edges drawn, so an alignment that
- * moves the bar inside its container is visible rather than implied.
+ * A frame with its start and end edges drawn, so an alignment that moves the bar inside its
+ * container is visible rather than implied. Horizontally that means constraining the width; a
+ * vertical rail only has room to move, or to overflow, once its height is constrained instead.
  */
-function WidthFrame({ children }: { children: ReactNode }): ReactElement {
-	return <div className={styles.widthFrame}>{children}</div>;
+function AxisFrame({
+	orientation,
+	overflow = false,
+	children,
+}: {
+	orientation: TabsOrientationType;
+	overflow?: boolean;
+	children: ReactNode;
+}): ReactElement {
+	const base = isVertical(orientation) ? styles.heightFrame : styles.widthFrame;
+
+	return <div className={overflow ? `${base} ${styles.overflowFrame}` : base}>{children}</div>;
 }
 
 function LabelledTabs({
 	label,
 	variant,
+	orientation,
 	alignment,
 	className,
-	tabBarLeftContent,
-	tabBarRightContent,
+	items = defaultItems,
+	overflow = false,
+	tabBarStartContent,
+	tabBarEndContent,
 }: {
 	label: string;
 	variant: TabsVariantType;
+	orientation: TabsOrientationType;
 	alignment: TabsAlignmentType;
 	className?: string;
-	tabBarLeftContent?: ReactNode;
-	tabBarRightContent?: ReactNode;
+	items?: TabsItemProps[];
+	overflow?: boolean;
+	tabBarStartContent?: ReactNode;
+	tabBarEndContent?: ReactNode;
 }): ReactElement {
 	return (
 		<div>
 			<Typography size="sm" weight="medium" className={styles.exampleLabel}>
 				{label}
 			</Typography>
-			<WidthFrame>
+			<AxisFrame orientation={orientation} overflow={overflow}>
 				<Tabs
-					items={defaultItems}
+					items={items}
 					variant={variant}
-					orientation="horizontal"
+					orientation={orientation}
 					alignment={alignment}
-					defaultValue="overview"
+					defaultValue={items[0]?.key}
 					className={className}
-					tabBarLeftContent={tabBarLeftContent}
-					tabBarRightContent={tabBarRightContent}
+					tabBarStartContent={tabBarStartContent}
+					tabBarEndContent={tabBarEndContent}
 				/>
-			</WidthFrame>
+			</AxisFrame>
 		</div>
 	);
 }
@@ -208,13 +276,15 @@ function LabelledTabs({
 function AlignmentGroup({
 	title,
 	variant,
-	tabBarLeftContent,
-	tabBarRightContent,
+	orientation,
+	tabBarStartContent,
+	tabBarEndContent,
 }: {
 	title: string;
 	variant: TabsVariantType;
-	tabBarLeftContent?: ReactNode;
-	tabBarRightContent?: ReactNode;
+	orientation: TabsOrientationType;
+	tabBarStartContent?: ReactNode;
+	tabBarEndContent?: ReactNode;
 }): ReactElement {
 	return (
 		<div>
@@ -227,12 +297,227 @@ function AlignmentGroup({
 						key={alignment}
 						label={`alignment="${alignment}"`}
 						variant={variant}
+						orientation={orientation}
 						alignment={alignment}
-						tabBarLeftContent={tabBarLeftContent}
-						tabBarRightContent={tabBarRightContent}
+						tabBarStartContent={tabBarStartContent}
+						tabBarEndContent={tabBarEndContent}
 					/>
 				))}
 			</div>
+		</div>
+	);
+}
+
+function Section({ title, children }: { title: string; children: ReactNode }): ReactElement {
+	return (
+		<div>
+			<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+				{title}
+			</Typography>
+			{children}
+		</div>
+	);
+}
+
+/**
+ * Every state the bar has, rendered at one orientation. The two showcase stories are this component
+ * and nothing else, so a rule that holds on one axis is shown holding on the other rather than
+ * being claimed to.
+ */
+function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): ReactElement {
+	return (
+		// Deliberately not `story-freeze-animations`, which is
+		// `animation-play-state: paused` on everything. The one animation the bar has,
+		// `tabs-dot-in`, is an entry: pausing it holds the selected tab's dot at its first
+		// frame, `scale(0.2)` and `opacity: 0`, so the dot becomes an invisible speck that
+		// still takes its slot in the trigger and reads as a phantom gap. Freezing is for
+		// animations that loop, as `Button`'s do.
+		<div className={`story-section ${styles.sectionGap}`}>
+			<Section title="Primary">
+				<AxisFrame orientation={orientation}>
+					<Tabs
+						items={defaultItems}
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						defaultValue="overview"
+					/>
+				</AxisFrame>
+			</Section>
+
+			<Section title="Secondary">
+				<AxisFrame orientation={orientation}>
+					<Tabs
+						items={defaultItems}
+						variant="secondary"
+						orientation={orientation}
+						alignment="start"
+						defaultValue="overview"
+					/>
+				</AxisFrame>
+			</Section>
+
+			<Section title="No content padding">
+				<AxisFrame orientation={orientation}>
+					<Tabs
+						items={defaultItems}
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						defaultValue="overview"
+						noTabContentPadding
+					/>
+				</AxisFrame>
+			</Section>
+
+			<Section title="Alignment">
+				<div className={styles.exampleStack}>
+					<AlignmentGroup title="Primary" variant="primary" orientation={orientation} />
+					<AlignmentGroup title="Secondary" variant="secondary" orientation={orientation} />
+				</div>
+			</Section>
+
+			<Section title="Start content, every alignment">
+				<div className={styles.exampleStack}>
+					<AlignmentGroup
+						title="Primary"
+						variant="primary"
+						orientation={orientation}
+						tabBarStartContent={filterButton}
+					/>
+					<AlignmentGroup
+						title="Secondary"
+						variant="secondary"
+						orientation={orientation}
+						tabBarStartContent={filterButton}
+					/>
+				</div>
+			</Section>
+
+			<Section title="End content, every alignment">
+				<div className={styles.exampleStack}>
+					<AlignmentGroup
+						title="Primary"
+						variant="primary"
+						orientation={orientation}
+						tabBarEndContent={addViewButton}
+					/>
+					<AlignmentGroup
+						title="Secondary"
+						variant="secondary"
+						orientation={orientation}
+						tabBarEndContent={addViewButton}
+					/>
+				</div>
+			</Section>
+
+			<Section title="Content beside the list">
+				<div className={styles.exampleStack}>
+					<LabelledTabs
+						label="Primary, default: content on the bar's edges"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						tabBarStartContent={filterButton}
+						tabBarEndContent={addViewButton}
+					/>
+					<LabelledTabs
+						label="Primary, --tabs-bar-content-start-order / --tabs-bar-content-end-order: 2"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						className={styles.contentNearList}
+						tabBarStartContent={filterButton}
+						tabBarEndContent={addViewButton}
+					/>
+					<LabelledTabs
+						label="Secondary, --tabs-bar-content-start-order / --tabs-bar-content-end-order: 2"
+						variant="secondary"
+						orientation={orientation}
+						alignment="start"
+						className={styles.contentNearList}
+						tabBarStartContent={filterButton}
+						tabBarEndContent={addViewButton}
+					/>
+				</div>
+			</Section>
+
+			<Section title="Content that takes the free space">
+				<div className={styles.exampleStack}>
+					<LabelledTabs
+						label="Primary, --tabs-extra-content-end-flex-grow: 1 with --tabs-border-spacer-grow-flex-grow: 0"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						className={styles.contentGrows}
+						tabBarEndContent={addViewButton}
+					/>
+					<LabelledTabs
+						label="Secondary, same two vars"
+						variant="secondary"
+						orientation={orientation}
+						alignment="start"
+						className={styles.contentGrows}
+						tabBarEndContent={addViewButton}
+					/>
+				</div>
+			</Section>
+
+			<Section title="Start and end content, every alignment">
+				<div className={styles.exampleStack}>
+					<AlignmentGroup
+						title="Primary"
+						variant="primary"
+						orientation={orientation}
+						tabBarStartContent={filterButton}
+						tabBarEndContent={addViewButton}
+					/>
+					<AlignmentGroup
+						title="Secondary"
+						variant="secondary"
+						orientation={orientation}
+						tabBarStartContent={filterButton}
+						tabBarEndContent={addViewButton}
+					/>
+				</div>
+			</Section>
+
+			{/*
+			 * There is no prop for any of this. A strip too long for its frame scrolls, and the two
+			 * arrows appear at its ends; every tab stays a real tab, so the arrow keys still reach all
+			 * of them. The third example is the one worth reading: the bar content keeps its size and it
+			 * is the strip that gives way, rather than the button being pushed off the end.
+			 */}
+			<Section title="Overflow">
+				<div className={styles.exampleStack}>
+					<LabelledTabs
+						label="Primary, more tabs than the frame holds"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						items={manyItems}
+						overflow
+					/>
+					<LabelledTabs
+						label="Secondary, more tabs than the frame holds"
+						variant="secondary"
+						orientation={orientation}
+						alignment="start"
+						items={manyItems}
+						overflow
+					/>
+					<LabelledTabs
+						label="Primary, overflowing with start and end content"
+						variant="primary"
+						orientation={orientation}
+						alignment="start"
+						items={manyItems}
+						overflow
+						tabBarStartContent={filterButton}
+						tabBarEndContent={addViewButton}
+					/>
+				</div>
+			</Section>
 		</div>
 	);
 }
@@ -248,7 +533,7 @@ function RoutedTabs(): ReactElement {
 		<Tabs
 			variant="primary"
 			orientation="horizontal"
-			alignment="left"
+			alignment="start"
 			value={route}
 			onChange={setRoute}
 			items={[
@@ -275,168 +560,23 @@ export const Default: Story = {
 		items: defaultItems,
 		variant: 'primary',
 		orientation: 'horizontal',
-		alignment: 'left',
+		alignment: 'start',
 		defaultValue: 'overview',
 	},
 };
 
-export const Showcase: Story = {
-	render: () => (
-		<div className={`story-section ${styles.sectionGap}`}>
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Primary
-				</Typography>
-				<WidthFrame>
-					<Tabs
-						items={defaultItems}
-						variant="primary"
-						orientation="horizontal"
-						alignment="left"
-						defaultValue="overview"
-					/>
-				</WidthFrame>
-			</div>
+export const HorizontalShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, disableAnimations: true },
+	},
+	render: () => <TabsShowcase orientation="horizontal" />,
+};
 
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Secondary
-				</Typography>
-				<WidthFrame>
-					<Tabs
-						items={defaultItems}
-						variant="secondary"
-						orientation="horizontal"
-						alignment="left"
-						defaultValue="overview"
-					/>
-				</WidthFrame>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					No content padding
-				</Typography>
-				<WidthFrame>
-					<Tabs
-						items={defaultItems}
-						variant="primary"
-						orientation="horizontal"
-						alignment="left"
-						defaultValue="overview"
-						noTabContentPadding
-					/>
-				</WidthFrame>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Alignment
-				</Typography>
-				<div className={styles.exampleStack}>
-					<AlignmentGroup title="Primary" variant="primary" />
-					<AlignmentGroup title="Secondary" variant="secondary" />
-				</div>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Left content, every alignment
-				</Typography>
-				<div className={styles.exampleStack}>
-					<AlignmentGroup title="Primary" variant="primary" tabBarLeftContent={filterButton} />
-					<AlignmentGroup title="Secondary" variant="secondary" tabBarLeftContent={filterButton} />
-				</div>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Right content, every alignment
-				</Typography>
-				<div className={styles.exampleStack}>
-					<AlignmentGroup title="Primary" variant="primary" tabBarRightContent={addViewButton} />
-					<AlignmentGroup
-						title="Secondary"
-						variant="secondary"
-						tabBarRightContent={addViewButton}
-					/>
-				</div>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Content beside the list
-				</Typography>
-				<div className={styles.exampleStack}>
-					<LabelledTabs
-						label="Primary, default: content on the bar's edges"
-						variant="primary"
-						alignment="left"
-						tabBarLeftContent={filterButton}
-						tabBarRightContent={addViewButton}
-					/>
-					<LabelledTabs
-						label="Primary, --tabs-bar-content-left-order / --tabs-bar-content-right-order: 2"
-						variant="primary"
-						alignment="left"
-						className={styles.contentNearList}
-						tabBarLeftContent={filterButton}
-						tabBarRightContent={addViewButton}
-					/>
-					<LabelledTabs
-						label="Secondary, --tabs-bar-content-left-order / --tabs-bar-content-right-order: 2"
-						variant="secondary"
-						alignment="left"
-						className={styles.contentNearList}
-						tabBarLeftContent={filterButton}
-						tabBarRightContent={addViewButton}
-					/>
-				</div>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Content that takes the free space
-				</Typography>
-				<div className={styles.exampleStack}>
-					<LabelledTabs
-						label="Primary, --tabs-extra-content-right-flex-grow: 1 with --tabs-border-spacer-grow-flex-grow: 0"
-						variant="primary"
-						alignment="left"
-						className={styles.contentGrows}
-						tabBarRightContent={addViewButton}
-					/>
-					<LabelledTabs
-						label="Secondary, same two vars"
-						variant="secondary"
-						alignment="left"
-						className={styles.contentGrows}
-						tabBarRightContent={addViewButton}
-					/>
-				</div>
-			</div>
-
-			<div>
-				<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
-					Left and right content, every alignment
-				</Typography>
-				<div className={styles.exampleStack}>
-					<AlignmentGroup
-						title="Primary"
-						variant="primary"
-						tabBarLeftContent={filterButton}
-						tabBarRightContent={addViewButton}
-					/>
-					<AlignmentGroup
-						title="Secondary"
-						variant="secondary"
-						tabBarLeftContent={filterButton}
-						tabBarRightContent={addViewButton}
-					/>
-				</div>
-			</div>
-		</div>
-	),
+export const VerticalShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, disableAnimations: true },
+	},
+	render: () => <TabsShowcase orientation="vertical" />,
 };
 
 /**
