@@ -84,6 +84,7 @@
 			"files": [
 				"packages/ui/src/badge/**/*.tsx",
 				"packages/ui/src/button/**/*.tsx",
+				"packages/ui/src/tabs/**/*.tsx",
 				"packages/ui/src/tooltip/**/*.tsx"
 			],
 			"rules": {
