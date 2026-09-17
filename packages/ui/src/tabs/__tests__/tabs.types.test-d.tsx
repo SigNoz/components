@@ -30,7 +30,7 @@ const ITEMS: TabsItemProps[] = [
  * `TabsItemProps[]` hides which shape each item has, so the rules that read `items` need a literal:
  * that is what `PANEL_ITEM` and `NAV_ITEM` are for.
  */
-const BASE = { variant: 'primary', orientation: 'horizontal', alignment: 'left' } as const;
+const BASE = { variant: 'primary', orientation: 'horizontal', alignment: 'start' } as const;
 const PANEL_ITEM = { key: 'overview', label: 'Overview', children: 'Overview content' };
 const NAV_ITEM = { key: 'overview', label: 'Overview', render: <a href="/overview" /> };
 const noop = (): void => {};
@@ -39,7 +39,7 @@ const tabsRef = createRef<HTMLDivElement>();
 describe('items', () => {
 	test('is required', () => {
 		// @ts-expect-error - a tab bar with nothing to show is not allowed
-		assertType(<Tabs variant="primary" orientation="horizontal" alignment="left" />);
+		assertType(<Tabs variant="primary" orientation="horizontal" alignment="start" />);
 	});
 
 	test('accepts a key, a label and children', () => {
@@ -84,47 +84,47 @@ describe('items', () => {
 
 describe('variant', () => {
 	test('accepts every TabsVariant', () => {
-		assertType(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		assertType(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 		assertType(
-			<Tabs variant="secondary" orientation="horizontal" alignment="left" items={ITEMS} />,
+			<Tabs variant="secondary" orientation="horizontal" alignment="start" items={ITEMS} />,
 		);
 	});
 
 	test('is required', () => {
 		// @ts-expect-error - `variant` has no default, it must be picked explicitly
-		assertType(<Tabs orientation="horizontal" alignment="left" items={ITEMS} />);
+		assertType(<Tabs orientation="horizontal" alignment="start" items={ITEMS} />);
 	});
 
 	test('rejects a variant outside the set', () => {
 		// @ts-expect-error - `outline` is not a TabsVariant
-		assertType(<Tabs variant="outline" orientation="horizontal" alignment="left" items={ITEMS} />);
+		assertType(<Tabs variant="outline" orientation="horizontal" alignment="start" items={ITEMS} />);
 	});
 });
 
 describe('orientation', () => {
 	test('accepts every TabsOrientation', () => {
-		assertType(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
-		assertType(<Tabs variant="primary" orientation="vertical" alignment="left" items={ITEMS} />);
+		assertType(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
+		assertType(<Tabs variant="primary" orientation="vertical" alignment="start" items={ITEMS} />);
 	});
 
 	test('is required', () => {
 		// @ts-expect-error - `orientation` has no default, it must be picked explicitly
-		assertType(<Tabs variant="primary" alignment="left" items={ITEMS} />);
+		assertType(<Tabs variant="primary" alignment="start" items={ITEMS} />);
 	});
 
 	test('rejects an orientation outside the set', () => {
 		// @ts-expect-error - `diagonal` is not a TabsOrientation
-		assertType(<Tabs variant="primary" orientation="diagonal" alignment="left" items={ITEMS} />);
+		assertType(<Tabs variant="primary" orientation="diagonal" alignment="start" items={ITEMS} />);
 	});
 });
 
 describe('alignment', () => {
 	test('accepts every TabsAlignment', () => {
-		assertType(<Tabs variant="primary" orientation="horizontal" alignment="left" items={ITEMS} />);
+		assertType(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 		assertType(
 			<Tabs variant="primary" orientation="horizontal" alignment="center" items={ITEMS} />,
 		);
-		assertType(<Tabs variant="primary" orientation="horizontal" alignment="right" items={ITEMS} />);
+		assertType(<Tabs variant="primary" orientation="horizontal" alignment="end" items={ITEMS} />);
 	});
 
 	test('is required', () => {
@@ -140,13 +140,26 @@ describe('alignment', () => {
 	});
 });
 
+describe('tab bar content', () => {
+	test('accepts content at either end of the bar', () => {
+		assertType(
+			<Tabs {...BASE} items={ITEMS} tabBarStartContent={<span />} tabBarEndContent={<span />} />,
+		);
+	});
+
+	test('rejects the old left and right names', () => {
+		// @ts-expect-error - renamed to `tabBarStartContent`, there is no alias
+		assertType(<Tabs {...BASE} items={ITEMS} tabBarLeftContent={<span />} />);
+	});
+});
+
 describe('value, defaultValue and onChange', () => {
 	test('accepts a controlled value', () => {
 		assertType(
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				value="overview"
 				onChange={noop}
@@ -159,7 +172,7 @@ describe('value, defaultValue and onChange', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				defaultValue="overview"
 			/>,
@@ -171,7 +184,7 @@ describe('value, defaultValue and onChange', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				onChange={(key: string) => key}
 			/>,
@@ -229,7 +242,7 @@ describe('test ids', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				testId="views"
 				data-state="open"
@@ -249,7 +262,7 @@ describe('remaining props', () => {
 			<Tabs
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 				id="views"
 				aria-label="Views"
@@ -267,7 +280,7 @@ describe('unknown props', () => {
 				ref={tabsRef}
 				variant="primary"
 				orientation="horizontal"
-				alignment="left"
+				alignment="start"
 				items={ITEMS}
 			/>,
 		);
