@@ -319,4 +319,37 @@ describe('Tabs interaction', () => {
 		expect(onChange).not.toHaveBeenCalled();
 		expect(window.location.hash).toBe('#overview');
 	});
+
+	// The dot is positioned rather than laid out precisely so that this holds. As a flex item it
+	// widened the selected tab by its own size plus a gap, which moved every tab after it.
+	it('keeps a secondary tab one width whether or not it carries the dot', async () => {
+		const user = userEvent.setup();
+		render(
+			<Tabs
+				variant="secondary"
+				orientation="horizontal"
+				alignment="start"
+				items={ITEMS}
+				defaultValue="overview"
+			/>,
+		);
+
+		const settings = screen.getByRole('tab', { name: 'Settings' });
+		const label = settings.querySelector<HTMLElement>('[data-slot="tabs-label"]')!;
+		const unselectedWidth = settings.getBoundingClientRect().width;
+		const unselectedLabelLeft = label.getBoundingClientRect().left;
+
+		await user.click(settings);
+
+		await waitFor(() => {
+			expect(settings).toHaveAttribute('data-active');
+		});
+
+		const dot = settings.querySelector<HTMLElement>('[data-slot="tabs-dot"]')!;
+
+		expect(getComputedStyle(dot).display).toBe('block');
+		expect(getComputedStyle(dot).position).toBe('absolute');
+		expect(settings.getBoundingClientRect().width).toBeCloseTo(unselectedWidth, 1);
+		expect(label.getBoundingClientRect().left).toBeCloseTo(unselectedLabelLeft, 1);
+	});
 });

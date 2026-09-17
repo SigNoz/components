@@ -112,10 +112,12 @@
  * | `--tabs-scroll-button-focus-visible-outline-offset` | `1px` |
  * | `--tabs-scroll-button-hover-background-color` | `var(--tabs-primary-background-hover)` |
  * | `--tabs-scroll-button-hover-color` | `var(--l1-foreground-hover)` |
- * | `--tabs-scroll-button-icon-size` | `14px` |
+ * | `--tabs-scroll-button-icon-size` | `16px` |
  * | `--tabs-scroll-button-justify-content` | `center` |
- * | `--tabs-scroll-button-padding-block` | `0` |
- * | `--tabs-scroll-button-padding-inline` | `var(--spacing-2, 4px)` |
+ * | `--tabs-scroll-button-min-block-size` | `var(--spacing-12, 24px)` |
+ * | `--tabs-scroll-button-min-inline-size` | `var(--spacing-12, 24px)` |
+ * | `--tabs-scroll-button-padding-block` | `var(--spacing-3, 6px)` |
+ * | `--tabs-scroll-button-padding-inline` | `var(--spacing-3, 6px)` |
  * | `--tabs-scroll-button-rtl-icon-transform` | `scaleX(-1)` |
  * | `--tabs-secondary-background` | `-` |
  * | `--tabs-secondary-background-hover` | `-` |
@@ -178,9 +180,7 @@
  * | `--tabs-trigger-secondary-disabled-stripe-inset-block` | `0` |
  * | `--tabs-trigger-secondary-disabled-stripe-pointer-events` | `none` |
  * | `--tabs-trigger-secondary-disabled-stripe-position` | `absolute` |
- * | `--tabs-trigger-secondary-disabled-stripe-size` | `var(--tabs-internal-disabled-stripe-size)` |
- * | `--tabs-trigger-secondary-disabled-stripe-vertical-after-mask-image` | `linear-gradient(to bottom, transparent 5%, blac...` |
- * | `--tabs-trigger-secondary-disabled-stripe-vertical-before-mask-image` | `linear-gradient(to top, transparent 5%, black 1...` |
+ * | `--tabs-trigger-secondary-disabled-stripe-size` | `var(--spacing-12, 24px)` |
  * | `--tabs-trigger-secondary-disabled-stripe-z-index` | `1` |
  * | `--tabs-trigger-secondary-disabled-z-index` | `0` |
  * | `--tabs-trigger-secondary-display` | `inline-flex` |
@@ -190,7 +190,10 @@
  * | `--tabs-trigger-secondary-dot-easing` | `cubic-bezier(0.34, 1.2, 0.64, 1)` |
  * | `--tabs-trigger-secondary-dot-enter-scale` | `0.2` |
  * | `--tabs-trigger-secondary-dot-flex-shrink` | `0` |
- * | `--tabs-trigger-secondary-dot-gap` | `var(--spacing-2, 4px)` |
+ * | `--tabs-trigger-secondary-dot-inset-block` | `0` |
+ * | `--tabs-trigger-secondary-dot-inset-inline-end` | `var(--spacing-6, 12px)` |
+ * | `--tabs-trigger-secondary-dot-margin-block` | `auto` |
+ * | `--tabs-trigger-secondary-dot-position` | `absolute` |
  * | `--tabs-trigger-secondary-dot-size` | `var(--spacing-2, 4px)` |
  * | `--tabs-trigger-secondary-dot-travel` | `var(--spacing-2, 4px)` |
  * | `--tabs-trigger-secondary-flex` | `0 0 auto` |
@@ -205,6 +208,7 @@
  * | `--tabs-trigger-secondary-last-border-inline-end-width` | `var(--tabs-trigger-secondary-border-width, 1px)` |
  * | `--tabs-trigger-secondary-max-inline-size` | `100%` |
  * | `--tabs-trigger-secondary-padding` | `var(--spacing-4, 8px) var(--spacing-16, 32px)` |
+ * | `--tabs-trigger-secondary-position` | `relative` |
  * | `--tabs-trigger-secondary-transition` | `color 150ms ease` |
  * | `--tabs-trigger-secondary-white-space` | `nowrap` |
  * | `--tabs-trigger-text-decoration` | `none` |

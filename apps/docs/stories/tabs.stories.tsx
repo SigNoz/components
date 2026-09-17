@@ -14,7 +14,7 @@ import {
 	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { type MouseEventHandler, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import styles from './tabs.stories.module.css';
 
@@ -528,6 +528,7 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
  */
 function RoutedTabs(): ReactElement {
 	const [route, setRoute] = useState('overview');
+	const avoidNavigateOnClick: MouseEventHandler = (e) => e.preventDefault();
 
 	return (
 		<Tabs
@@ -537,12 +538,20 @@ function RoutedTabs(): ReactElement {
 			value={route}
 			onChange={setRoute}
 			items={[
-				{ key: 'overview', label: 'Overview', render: <a href="#overview" /> },
-				{ key: 'logs', label: 'Logs', render: <a href="#logs" /> },
+				{
+					key: 'overview',
+					label: 'Overview',
+					render: <a href="#overview" onClick={avoidNavigateOnClick} aria-label="overview" />,
+				},
+				{
+					key: 'logs',
+					label: 'Logs',
+					render: <a href="#logs" onClick={avoidNavigateOnClick} aria-label="logs" />,
+				},
 				{
 					key: 'billing',
 					label: 'Billing',
-					render: <a href="#billing" />,
+					render: <a href="#billing" onClick={avoidNavigateOnClick} aria-label="billing" />,
 					disabled: true,
 					disabledTooltip: 'Ask an admin for access',
 				},

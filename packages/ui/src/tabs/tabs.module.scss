@@ -23,7 +23,6 @@
   --tabs-internal-bar-content-block-gap: 0;
   --tabs-internal-bar-rule-block-end: 0 solid transparent;
   --tabs-internal-bar-rule-inline-end: 0 solid transparent;
-  --tabs-internal-disabled-stripe-size: var(--spacing-12, 24px);
   --tabs-internal-list-flex-direction: row;
   --tabs-internal-list-align-items: center;
   --tabs-internal-list-primary-gap: var(--spacing-12, 24px);
@@ -61,9 +60,6 @@
     // The gap between two stacked tabs is read as vertical rhythm rather than as
     // the space between two words, so the horizontal figure is far too airy.
     --tabs-internal-list-primary-gap: var(--spacing-4, 8px);
-    // A stacked tab is about as tall as the horizontal band is wide, so two
-    // bands at the horizontal size would cover the whole tab and hide its label.
-    --tabs-internal-disabled-stripe-size: var(--spacing-6, 12px);
     --tabs-internal-list-min-inline: auto;
     --tabs-internal-list-min-block: 0;
     --tabs-internal-list-inner-align-items: stretch;
@@ -327,8 +323,13 @@
   display: var(--tabs-scroll-button-display, inline-flex);
   align-items: var(--tabs-scroll-button-align-items, center);
   justify-content: var(--tabs-scroll-button-justify-content, center);
-  padding-inline: var(--tabs-scroll-button-padding-inline, var(--spacing-2, 4px));
-  padding-block: var(--tabs-scroll-button-padding-block, 0);
+  padding-inline: var(--tabs-scroll-button-padding-inline, var(--spacing-3, 6px));
+  padding-block: var(--tabs-scroll-button-padding-block, var(--spacing-3, 6px));
+  // A 14px chevron in 4px of padding was a 22px target horizontally and a 14px
+  // one vertically, where the button is sized by its content on the bar's axis.
+  // 24px on both is the smallest target WCAG 2.2 calls adequate.
+  min-inline-size: var(--tabs-scroll-button-min-inline-size, var(--spacing-12, 24px));
+  min-block-size: var(--tabs-scroll-button-min-block-size, var(--spacing-12, 24px));
   border: var(--tabs-scroll-button-border, none);
   background-color: var(--tabs-scroll-button-background-color, transparent);
   color: var(--tabs-scroll-button-color, var(--tabs-text-color, var(--l1-foreground)));
@@ -353,8 +354,8 @@
   }
 
   & svg:not([class*="size-"]) {
-    inline-size: var(--tabs-scroll-button-icon-size, 14px);
-    block-size: var(--tabs-scroll-button-icon-size, 14px);
+    inline-size: var(--tabs-scroll-button-icon-size, 16px);
+    block-size: var(--tabs-scroll-button-icon-size, 16px);
   }
 
   [data-variant="secondary"] & {
@@ -468,6 +469,8 @@
     --tabs-internal-secondary-gap: var(--tabs-trigger-secondary-gap, var(--spacing-4, 8px));
 
     display: var(--tabs-trigger-secondary-display, inline-flex);
+    // Containing block for the dot, which is positioned rather than laid out.
+    position: var(--tabs-trigger-secondary-position, relative);
     // See the primary trigger: a tab holds its size so the strip can scroll.
     flex: var(--tabs-trigger-secondary-flex, 0 0 auto);
     max-inline-size: var(--tabs-trigger-secondary-max-inline-size, 100%);
@@ -513,15 +516,6 @@
       }
     }
 
-    .tabs__dot {
-      // The dot sits closer to the label than the trigger's own flex gap, and there is no per-item
-      // gap in flexbox. Pulling back by the difference tracks the gap when a call site overrides it.
-      margin-inline-start: calc(
-        var(--tabs-trigger-secondary-dot-gap, var(--spacing-2, 4px)) -
-          var(--tabs-internal-secondary-gap)
-      );
-    }
-
     // Logical corners, so the rounded pair mirrors under RTL for free.
     &:first-child {
       border-start-start-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1, 2px));
@@ -542,10 +536,7 @@
         content: var(--tabs-trigger-secondary-disabled-stripe-content, "");
         position: var(--tabs-trigger-secondary-disabled-stripe-position, absolute);
         inset-block: var(--tabs-trigger-secondary-disabled-stripe-inset-block, 0);
-        inline-size: var(
-          --tabs-trigger-secondary-disabled-stripe-size,
-          var(--tabs-internal-disabled-stripe-size)
-        );
+        inline-size: var(--tabs-trigger-secondary-disabled-stripe-size, var(--spacing-12, 24px));
         background-image: var(
           --tabs-trigger-secondary-disabled-stripe-background-image,
           repeating-linear-gradient(
@@ -632,44 +623,11 @@
       );
     }
 
-    // The bands run along the block edges of a stacked tab, not its inline ones.
-    &[data-disabled] {
-      &::before,
-      &::after {
-        inset-block: auto;
-        inset-inline: 0;
-        inline-size: auto;
-        block-size: var(
-          --tabs-trigger-secondary-disabled-stripe-size,
-          var(--tabs-internal-disabled-stripe-size)
-        );
-      }
-
-      &::before {
-        inset-block-start: 0;
-        mask-image: var(
-          --tabs-trigger-secondary-disabled-stripe-vertical-before-mask-image,
-          linear-gradient(to top, transparent 5%, black 100%)
-        );
-      }
-
-      &::after {
-        inset-block-end: 0;
-        mask-image: var(
-          --tabs-trigger-secondary-disabled-stripe-vertical-after-mask-image,
-          linear-gradient(to bottom, transparent 5%, black 100%)
-        );
-      }
-
-      &:first-child::before {
-        border-start-start-radius: inherit;
-        border-start-end-radius: inherit;
-      }
-
-      &:last-child::after {
-        border-end-start-radius: inherit;
-        border-end-end-radius: inherit;
-      }
+    // The bands stay on the inline edges, as they are horizontally. Only the
+    // corner they meet moves: a stacked rail rounds its inline-start pair, so
+    // the leading band is the one that rounds at both ends of the rail.
+    &[data-disabled]:last-child::before {
+      border-end-start-radius: inherit;
     }
   }
 }
@@ -775,12 +733,27 @@
   text-overflow: ellipsis;
 }
 
-// The dot marks the selected tab, so it is laid out only under `[data-active]`
+// The dot marks the selected tab, so it is shown only under `[data-active]`
 // below. A display change cannot be transitioned, but it does start an
 // animation, so the dot arrives on the same rise-and-fade the Button's spinner
 // uses when it takes over the prefix slot.
+//
+// It is positioned rather than laid out. As a flex item it was a sibling of the
+// label and the suffix icon, so selecting a tab widened it by the dot plus a
+// gap, pushed the suffix icon along and left a gap the eye reads as an empty
+// slot on every tab that has no dot. Out of flow it marks the tab without
+// moving anything in it, and every tab keeps one width whichever is selected.
+// It sits in the trigger's trailing padding, which is far wider than the mark,
+// so it clears the label at its longest (the label stops at the padding edge
+// and truncates) and clears a suffix icon.
 .tabs__dot {
   display: none;
+  position: var(--tabs-trigger-secondary-dot-position, absolute);
+  inset-inline-end: var(--tabs-trigger-secondary-dot-inset-inline-end, var(--spacing-6, 12px));
+  // Centred on the cross axis by an auto margin against both insets, which
+  // leaves `transform` free for the entry animation.
+  inset-block: var(--tabs-trigger-secondary-dot-inset-block, 0);
+  margin-block: var(--tabs-trigger-secondary-dot-margin-block, auto);
   animation: tabs-dot-in var(--tabs-trigger-secondary-dot-duration, 180ms)
     var(--tabs-trigger-secondary-dot-easing, cubic-bezier(0.34, 1.2, 0.64, 1));
   flex-shrink: var(--tabs-trigger-secondary-dot-flex-shrink, 0);
