@@ -38,6 +38,7 @@ function updateHoverSliderPosition(
 
 const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 	{
+		children,
 		className,
 		items,
 		variant,
@@ -156,17 +157,25 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 					/>
 				</div>
 
-				{items.map((item) => (
-					<TabsPrimitive.Panel
-						key={item.key}
-						value={item.key}
-						data-slot="tabs-panel"
-						data-no-content-padding={noTabContentPadding || undefined}
-						className={styles.tabs__content}
-					>
-						{item.children}
-					</TabsPrimitive.Panel>
-				))}
+				{items.map((item) => {
+					// An item that navigates has no content of its own, so every tab shows the bar's own
+					// panel instead. One panel per item rather than a single one keyed on the active value:
+					// Base UI mounts only the open panel, so the router still renders once, and each tab
+					// keeps an `aria-controls` that points at something.
+					const panelContent = item.children === undefined ? children : item.children;
+
+					return panelContent === undefined ? null : (
+						<TabsPrimitive.Panel
+							key={item.key}
+							value={item.key}
+							data-slot="tabs-panel"
+							data-no-content-padding={noTabContentPadding || undefined}
+							className={styles.tabs__content}
+						>
+							{panelContent}
+						</TabsPrimitive.Panel>
+					);
+				})}
 			</TooltipProviderIfMissing>
 		</TabsPrimitive.Root>
 	);
@@ -175,8 +184,9 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 /**
  * Renders a tab bar and its panels from `items` (Base UI `Tabs`).
  *
- * The bar owns its markup: there are no children to compose, and no `TabsTrigger`/`TabsContent` to
- * import. Every `aria-*` and any `data-*` are forwarded to the root.
+ * The bar owns its markup: there is no `TabsTrigger`/`TabsContent` to import, and the only thing
+ * composed as children is the router-owned panel described under Navigation tabs. Every `aria-*`
+ * and any `data-*` are forwarded to the root.
  *
  * Visual values are `--tabs-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts).
@@ -184,7 +194,8 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * ### Items
  *
  * Each item is `{ key, label, children }`, plus optional `prefixIcon`/`suffixIcon`. `key` is what
- * `value`/`onChange` carry and what associates a tab with its panel.
+ * `value`/`onChange` carry and what associates a tab with its panel. An item that navigates carries
+ * `render` in place of `children`, see Navigation tabs.
  *
  * An item can disable itself with `disabled` + `disabledTooltip`, which blocks that tab alone.
  * Base UI keeps a disabled tab focusable and hoverable (`aria-disabled`, not the native attribute),
@@ -193,6 +204,25 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * A label that renders nothing (`null`, `false` or an empty string) falls back to the text
  * `<No label>`, and that label carries `data-empty-label`. The tab is never dropped: a view that
  * disappears from the bar removes it from the group without saying so.
+ *
+ * ### Navigation tabs
+ *
+ * A tab whose item carries `render` renders as whatever the call site hands over, a router `Link`
+ * in practice, while keeping `role="tab"`, the arrow-key behaviour and every `data-*` the bar
+ * stamps. That makes the tab a real anchor: middle click, "open in new tab" and the URL in the
+ * status bar all work, which no amount of `onChange` gives you.
+ *
+ * Those items have no `children` of their own. The panel is the bar's `children` instead, an
+ * `Outlet`, and it is rendered for whichever tab is active. Leave it out when the `Outlet` already
+ * lives elsewhere in the tree, and the bar renders tabs alone.
+ *
+ * Such a bar is controlled: `value` comes from the router, so the browser's back and forward move
+ * it too. `defaultValue` is refused, and so is mixing the bar's `children` with items that bring
+ * their own.
+ *
+ * A `disabled` item ignores `render` and falls back to the plain `<button>`. An anchor is still
+ * followed by a middle click and still offers "open in new tab", so rendering one would be a lock
+ * anybody can walk around.
  *
  * ### Selection
  *
@@ -245,7 +275,7 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  * | `tabs-label` | the measured label, `data-empty-label` while it is the fallback |
  * | `tabs-active-slider` | `variant="primary"` only, tracks the active tab (Base UI `Tabs.Indicator`) |
  * | `tabs-hover-slider` | `variant="primary"` only, tracks the hovered tab |
- * | `tabs-panel` | one per item, `data-no-content-padding` while `noTabContentPadding` is set |
+ * | `tabs-panel` | one per item that has a panel, `data-no-content-padding` while `noTabContentPadding` is set |
  *
  * @example
  * ```tsx
@@ -259,6 +289,24 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  *     { key: 'settings', label: 'Settings', children: <div>Settings content</div> },
  *   ]}
  * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Tabs that navigate: each one is a real link, the panel is the router's
+ * const { pathname } = useLocation();
+ * <Tabs
+ *   variant="primary"
+ *   orientation="horizontal"
+ *   alignment="left"
+ *   value={pathname.split('/').at(-1)}
+ *   items={[
+ *     { key: 'overview', label: 'Overview', render: <Link to="overview" /> },
+ *     { key: 'logs', label: 'Logs', render: <Link to="logs" /> },
+ *   ]}
+ * >
+ *   <Outlet />
+ * </Tabs>
  * ```
  *
  * @example

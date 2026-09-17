@@ -24,6 +24,15 @@ const ITEMS: TabsItemProps[] = [
 	{ key: 'overview', label: 'Overview', children: 'Overview content' },
 	{ key: 'settings', label: 'Settings', children: 'Settings content' },
 ];
+
+/**
+ * The three required props, spread so a case still fits on the opening tag line. `items` typed as
+ * `TabsItemProps[]` hides which shape each item has, so the rules that read `items` need a literal:
+ * that is what `PANEL_ITEM` and `NAV_ITEM` are for.
+ */
+const BASE = { variant: 'primary', orientation: 'horizontal', alignment: 'left' } as const;
+const PANEL_ITEM = { key: 'overview', label: 'Overview', children: 'Overview content' };
+const NAV_ITEM = { key: 'overview', label: 'Overview', render: <a href="/overview" /> };
 const noop = (): void => {};
 const tabsRef = createRef<HTMLDivElement>();
 
@@ -42,8 +51,8 @@ describe('items', () => {
 		assertType<TabsItemProps>({ label: 'Overview', children: 'content' });
 	});
 
-	test('rejects an item without children', () => {
-		// @ts-expect-error - the panel shown while the tab is active cannot be left out
+	test('rejects an item that neither shows a panel nor navigates', () => {
+		// @ts-expect-error - an item carries `children` or `render`, one of the two
 		assertType<TabsItemProps>({ key: 'overview', label: 'Overview' });
 	});
 
@@ -124,8 +133,8 @@ describe('alignment', () => {
 	});
 
 	test('rejects an alignment outside the set', () => {
-		// @ts-expect-error - `justify` is not a TabsAlignment
 		assertType(
+			// @ts-expect-error - `justify` is not a TabsAlignment
 			<Tabs variant="primary" orientation="horizontal" alignment="justify" items={ITEMS} />,
 		);
 	});
@@ -171,17 +180,46 @@ describe('value, defaultValue and onChange', () => {
 });
 
 describe('children', () => {
-	test('are rejected, the bar renders from items', () => {
-		// @ts-expect-error - there is no slot to compose into, pass `items` instead
-		assertType(
-			<Tabs
-				variant="primary"
-				orientation="horizontal"
-				alignment="left"
-				items={ITEMS}
-				children={<span />}
-			/>,
-		);
+	test('are rejected while every item brings its own panel', () => {
+		// @ts-expect-error - that item's `children` is already its panel
+		assertType(<Tabs {...BASE} items={[PANEL_ITEM]} children={<span />} />);
+	});
+
+	test('are the panel for a bar whose tabs navigate', () => {
+		assertType(<Tabs {...BASE} items={[NAV_ITEM]} value="overview" children={<span />} />);
+	});
+});
+
+describe('navigating items', () => {
+	test('accepts an item that renders as an element of its own', () => {
+		assertType<TabsItemProps>({ key: 'logs', label: 'Logs', render: <a href="/logs" /> });
+	});
+
+	test('accepts an item that renders through a function', () => {
+		assertType<TabsItemProps>({
+			key: 'logs',
+			label: 'Logs',
+			render: (props) => <a {...props} href="/logs" />,
+		});
+	});
+
+	test('rejects an item that both navigates and owns a panel', () => {
+		// @ts-expect-error - a tab either shows its own panel or navigates, never both
+		assertType<TabsItemProps>({ key: 'l', label: 'L', children: 'c', render: <a href="/l" /> });
+	});
+
+	test('requires a controlled value once every tab navigates', () => {
+		// @ts-expect-error - the router owns which tab is active, so the bar cannot keep its own
+		assertType(<Tabs {...BASE} items={[NAV_ITEM]} />);
+	});
+
+	test('rejects a defaultValue once every tab navigates', () => {
+		// @ts-expect-error - `defaultValue` cannot hold a bar whose tabs navigate
+		assertType(<Tabs {...BASE} items={[NAV_ITEM]} value="o" defaultValue="o" />);
+	});
+
+	test('accepts a controlled bar of navigating tabs', () => {
+		assertType(<Tabs {...BASE} items={[NAV_ITEM]} value="overview" onChange={noop} />);
 	});
 });
 
@@ -201,15 +239,7 @@ describe('test ids', () => {
 
 	test('rejects a raw data-testid', () => {
 		// @ts-expect-error - use `testId`, it also names every tab
-		assertType(
-			<Tabs
-				variant="primary"
-				orientation="horizontal"
-				alignment="left"
-				items={ITEMS}
-				data-testid="views"
-			/>,
-		);
+		assertType(<Tabs {...BASE} items={ITEMS} data-testid="views" />);
 	});
 });
 
@@ -245,14 +275,6 @@ describe('unknown props', () => {
 
 	test('rejects a misspelled prop', () => {
 		// @ts-expect-error - `onChage` is not a prop, a generic `T extends TabsProps` would let it through
-		assertType(
-			<Tabs
-				variant="primary"
-				orientation="horizontal"
-				alignment="left"
-				items={ITEMS}
-				onChage={noop}
-			/>,
-		);
+		assertType(<Tabs {...BASE} items={ITEMS} onChage={noop} />);
 	});
 });
