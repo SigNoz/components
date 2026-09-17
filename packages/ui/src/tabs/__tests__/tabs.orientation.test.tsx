@@ -149,6 +149,27 @@ describe('Tabs orientation', () => {
 		);
 	});
 
+	// The hatching says "this side is blocked off", and a stacked rail's blocked sides are still
+	// its left and right ones, so the bands do not follow the bar's axis the way everything else does.
+	it('keeps the disabled bands on the inline edges while vertical', () => {
+		render(
+			<Tabs
+				variant="secondary"
+				orientation="vertical"
+				alignment="start"
+				items={[...ITEMS, { key: 'billing', label: 'Billing', disabled: true, children: 'B' }]}
+			/>,
+		);
+
+		const disabled = screen.getByRole('tab', { name: 'Billing' });
+		const band = getComputedStyle(disabled, '::before');
+
+		// Against the padding box, which is what `inset-block: 0` resolves against.
+		expect(Number.parseFloat(band.height)).toBeCloseTo(disabled.clientHeight, 0);
+		expect(Number.parseFloat(band.width)).toBeLessThan(disabled.clientWidth);
+		expect(band.left).toBe('0px');
+	});
+
 	it('collapses the shared edge of a stacked secondary strip', () => {
 		render(<Tabs variant="secondary" orientation="vertical" alignment="start" items={ITEMS} />);
 
