@@ -10,11 +10,12 @@ import {
 	type TabsItemProps,
 	TabsOrientation,
 	type TabsOrientationType,
+	TabsVariant,
 	type TabsVariantType,
 	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type MouseEventHandler, useState } from 'react';
+import { type CSSProperties, Fragment, type MouseEventHandler, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import { allModes } from '../.storybook/modes.js';
 import styles from './tabs.stories.module.css';
@@ -214,6 +215,109 @@ const alignments: TabsAlignmentType[] = [
 	TabsAlignment.End,
 ];
 
+const variants: TabsVariantType[] = [TabsVariant.Primary, TabsVariant.Secondary];
+
+/**
+ * The columns of the state matrix. `hover` and `focus` cannot be reached by a snapshot on their
+ * own, `storybook-addon-pseudo-states` forces them through the `[data-state-cell]` selectors in
+ * the showcase parameters. `disabled` is an item prop, so it needs no pseudo.
+ */
+const states = ['default', 'hover', 'focus', 'disabled'] as const;
+
+type State = (typeof states)[number];
+
+/**
+ * Two tabs per cell, one active and one not, because half the trigger rules only apply to one of
+ * the two: secondary tints on hover only while the tab is inactive. No item carries `children`, so
+ * the cell is the bar alone, which is what the matrix is about.
+ */
+const stateItems: TabsItemProps[] = [
+	{
+		key: 'active',
+		label: 'Active',
+		children: undefined,
+		prefixIcon: <Settings2 className="icon-md" />,
+	},
+	{ key: 'idle', label: 'Idle', children: undefined, suffixIcon: <History className="icon-md" /> },
+];
+
+const disabledStateItems: TabsItemProps[] = [
+	{
+		key: 'active',
+		label: 'Active',
+		children: undefined,
+		prefixIcon: <Settings2 className="icon-md" />,
+	},
+	{
+		key: 'idle',
+		label: 'Idle',
+		children: undefined,
+		disabled: true,
+		disabledTooltip: 'Ask an admin for access',
+	},
+];
+
+function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
+	return (
+		<>
+			<span />
+			{columns.map((column) => (
+				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+					{column}
+				</Typography>
+			))}
+		</>
+	);
+}
+
+function matrixStyle(columns: number): CSSProperties {
+	return { '--matrix-columns': columns } as CSSProperties;
+}
+
+/**
+ * One bar per variant in a single state. The wrapper is what the pseudo selectors match, so every
+ * tab in the cell carries the state at once.
+ */
+function StateCell({
+	variant,
+	orientation,
+	state,
+}: {
+	variant: TabsVariantType;
+	orientation: TabsOrientationType;
+	state: State;
+}): ReactElement {
+	return (
+		<div data-state-cell={state}>
+			<Tabs
+				items={state === 'disabled' ? disabledStateItems : stateItems}
+				variant={variant}
+				orientation={orientation}
+				alignment="start"
+				defaultValue="active"
+			/>
+		</div>
+	);
+}
+
+function StateMatrix({ orientation }: { orientation: TabsOrientationType }): ReactElement {
+	return (
+		<div className={styles.matrix} style={matrixStyle(states.length)}>
+			<MatrixHeader columns={[...states]} />
+			{variants.map((variant) => (
+				<Fragment key={variant}>
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						{variant}
+					</Typography>
+					{states.map((state) => (
+						<StateCell key={state} variant={variant} orientation={orientation} state={state} />
+					))}
+				</Fragment>
+			))}
+		</div>
+	);
+}
+
 const filterButton = (
 	<Button
 		variant={ButtonVariant.Outlined}
@@ -354,6 +458,16 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 	return (
 		// Freezing is the toolbar's live/still toggle, never a class baked into a story.
 		<div className={`story-section ${styles.sectionGap}`}>
+			<Section title="States">
+				<Typography size="sm" display="block" className={styles.sectionNote}>
+					One row per variant, one column per state. Both tabs in a cell are forced together, so
+					each state is shown on the active tab and an inactive one at once. Primary's hover slider
+					tracks a real pointer, so a forced hover paints the trigger's own background and nothing
+					slides.
+				</Typography>
+				<StateMatrix orientation={orientation} />
+			</Section>
+
 			<Section title="Primary">
 				<AxisFrame orientation={orientation}>
 					<Tabs
@@ -618,17 +732,24 @@ export const Default: Story = {
 	},
 };
 
-export const HorizontalShowcase: Story = {
-	parameters: {
-		chromatic: { disableSnapshot: false, modes: allModes },
+/**
+ * Shared by both showcases, so a state forced on one axis is forced on the other.
+ */
+const showcaseParameters = {
+	chromatic: { disableSnapshot: false, modes: allModes },
+	pseudo: {
+		hover: '[data-state-cell="hover"] [data-slot="tabs-item"]',
+		focusVisible: '[data-state-cell="focus"] [data-slot="tabs-item"]',
 	},
+};
+
+export const HorizontalShowcase: Story = {
+	parameters: showcaseParameters,
 	render: () => <TabsShowcase orientation="horizontal" />,
 };
 
 export const VerticalShowcase: Story = {
-	parameters: {
-		chromatic: { disableSnapshot: false, modes: allModes },
-	},
+	parameters: showcaseParameters,
 	render: () => <TabsShowcase orientation="vertical" />,
 };
 
