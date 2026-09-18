@@ -69,19 +69,6 @@ describe('Tabs disabledTooltip', () => {
 		expect(screen.getByRole('tab', { name: 'Billing' })).toHaveFocus();
 		expect(await screen.findByRole('tooltip')).toHaveTextContent(ITEM_REASON);
 	});
-
-	it('opens beside the tab on a vertical rail, where above would cover the tab before it', async () => {
-		const user = userEvent.setup();
-		render(<Tabs variant="primary" orientation="vertical" alignment="start" items={ITEMS} />);
-
-		await user.hover(screen.getByRole('tab', { name: 'Billing' }));
-
-		await screen.findByRole('tooltip');
-		expect(document.querySelector('[data-slot="tooltip-positioner"]')).toHaveAttribute(
-			'data-side',
-			'right',
-		);
-	});
 });
 
 describe('Tabs truncation', () => {

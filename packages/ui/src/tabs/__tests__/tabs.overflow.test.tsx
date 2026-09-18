@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Tabs } from '../tabs.js';
-import type { TabsItemProps, TabsOrientationType } from '../types.js';
+import type { TabsItemProps } from '../types.js';
 
 /**
  * Real layout and a real `ResizeObserver`, so nothing here may import `mockLabelMeasurement`: it
@@ -18,13 +18,10 @@ const MANY_ITEMS: TabsItemProps[] = Array.from({ length: 12 }, (_, index) => ({
 
 const FEW_ITEMS: TabsItemProps[] = MANY_ITEMS.slice(0, 2);
 
-function renderInFrame(
-	ui: ReactElement,
-	{ size, orientation }: { size: number; orientation: TabsOrientationType },
-): ReturnType<typeof render> {
+function renderInFrame(ui: ReactElement, { size }: { size: number }): ReturnType<typeof render> {
 	return render(ui, {
 		wrapper: ({ children }: { children: ReactNode }) => (
-			<div style={orientation === 'vertical' ? { height: size } : { width: size }}>{children}</div>
+			<div style={{ width: size }}>{children}</div>
 		),
 	});
 }
@@ -49,7 +46,7 @@ describe('Tabs overflow', () => {
 	it('renders no arrows while every tab fits', async () => {
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={FEW_ITEMS} />,
-			{ size: 800, orientation: 'horizontal' },
+			{ size: 800 },
 		);
 
 		await waitFor(() => {
@@ -63,7 +60,7 @@ describe('Tabs overflow', () => {
 	it('renders both arrows once the strip overflows, and disables the one that cannot move', async () => {
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -77,7 +74,7 @@ describe('Tabs overflow', () => {
 	it('squashes no tab: the strip overflows and the viewport scrolls', async () => {
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -91,7 +88,7 @@ describe('Tabs overflow', () => {
 	it('keeps the arrows out of the tablist', async () => {
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -107,7 +104,7 @@ describe('Tabs overflow', () => {
 	it('names the arrows after the direction they scroll', async () => {
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -116,20 +113,6 @@ describe('Tabs overflow', () => {
 
 		expect(screen.getByRole('button', { name: 'Scroll tabs left' })).toBe(scrollButton('start'));
 		expect(screen.getByRole('button', { name: 'Scroll tabs right' })).toBe(scrollButton('end'));
-	});
-
-	it('names the arrows after the axis while vertical', async () => {
-		renderInFrame(
-			<Tabs variant="primary" orientation="vertical" alignment="start" items={MANY_ITEMS} />,
-			{ size: 120, orientation: 'vertical' },
-		);
-
-		await waitFor(() => {
-			expect(scrollButton('end')).not.toBeNull();
-		});
-
-		expect(screen.getByRole('button', { name: 'Scroll tabs up' })).toBe(scrollButton('start'));
-		expect(screen.getByRole('button', { name: 'Scroll tabs down' })).toBe(scrollButton('end'));
 	});
 
 	it('derives a test id for each arrow from the bar', async () => {
@@ -141,7 +124,7 @@ describe('Tabs overflow', () => {
 				items={MANY_ITEMS}
 				testId="tabs"
 			/>,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -155,7 +138,7 @@ describe('Tabs overflow', () => {
 		const user = userEvent.setup();
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -173,7 +156,7 @@ describe('Tabs overflow', () => {
 	it('disables the end arrow once the strip is fully scrolled', async () => {
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -188,24 +171,6 @@ describe('Tabs overflow', () => {
 		});
 	});
 
-	it('scrolls on the block axis while vertical', async () => {
-		const user = userEvent.setup();
-		renderInFrame(
-			<Tabs variant="primary" orientation="vertical" alignment="start" items={MANY_ITEMS} />,
-			{ size: 120, orientation: 'vertical' },
-		);
-
-		await waitFor(() => {
-			expect(scrollButton('end')).not.toBeNull();
-		});
-
-		await user.click(scrollButton('end')!);
-
-		await waitFor(() => {
-			expect(viewport().scrollTop).toBeGreaterThan(0);
-		});
-	});
-
 	// The bar's own content is what the strip gives way to, not the other way round.
 	it('shrinks the strip rather than pushing the bar content out', async () => {
 		renderInFrame(
@@ -216,7 +181,7 @@ describe('Tabs overflow', () => {
 				items={MANY_ITEMS}
 				tabBarEndContent={<button type="button">Add view</button>}
 			/>,
-			{ size: 360, orientation: 'horizontal' },
+			{ size: 360 },
 		);
 
 		await waitFor(() => {
@@ -248,7 +213,7 @@ describe('Tabs overflow', () => {
 
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -276,7 +241,7 @@ describe('Tabs overflow', () => {
 				items={MANY_ITEMS}
 				value="item-0"
 			/>,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -306,7 +271,7 @@ describe('Tabs overflow', () => {
 		const user = userEvent.setup();
 		renderInFrame(
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {
@@ -337,7 +302,7 @@ describe('Tabs overflow', () => {
 				items={MANY_ITEMS}
 				style={{ '--tabs-border': 'rgb(1, 2, 3)' } as CSSProperties}
 			/>,
-			{ size: 320, orientation: 'horizontal' },
+			{ size: 320 },
 		);
 
 		await waitFor(() => {

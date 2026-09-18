@@ -1,6 +1,4 @@
 import { type RefCallback, useCallback, useEffect, useRef, useState } from 'react';
-import { TabsOrientation } from '../constants.js';
-import type { TabsOrientationType } from '../types.js';
 import { readTabsAxis } from '../utils.js';
 
 /**
@@ -20,10 +18,6 @@ const SCROLL_STEP_RATIO = 0.8;
  */
 export type UseTabsOverflowOptions = {
 	/**
-	 * The bar's `orientation`, which decides the axis every measurement reads.
-	 */
-	orientation: TabsOrientationType;
-	/**
 	 * The active item's `key`. A change scrolls that tab back into view.
 	 */
 	activeKey: string | undefined;
@@ -38,7 +32,7 @@ export type UseTabsOverflowReturn = {
 	 */
 	viewportRef: RefCallback<HTMLDivElement>;
 	/**
-	 * True while the strip is longer than the viewport along the bar's own axis.
+	 * True while the strip is wider than the viewport.
 	 */
 	isOverflowing: boolean;
 	/**
@@ -66,12 +60,7 @@ export type UseTabsOverflowReturn = {
  *
  * @access private
  */
-export function useTabsOverflow({
-	orientation,
-	activeKey,
-}: UseTabsOverflowOptions): UseTabsOverflowReturn {
-	const isVertical = orientation === TabsOrientation.Vertical;
-
+export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsOverflowReturn {
 	const viewportNode = useRef<HTMLDivElement | null>(null);
 	const observer = useRef<ResizeObserver | null>(null);
 	const hasAligned = useRef(false);
@@ -87,12 +76,12 @@ export function useTabsOverflow({
 			return;
 		}
 
-		const { scrollSize, clientSize, travelled, remaining } = readTabsAxis(viewport, isVertical);
+		const { scrollSize, clientSize, travelled, remaining } = readTabsAxis(viewport);
 
 		setIsOverflowing(scrollSize - clientSize > SCROLL_OVERFLOW_TOLERANCE_PX);
 		setCanScrollToStart(travelled > SCROLL_OVERFLOW_TOLERANCE_PX);
 		setCanScrollToEnd(remaining > SCROLL_OVERFLOW_TOLERANCE_PX);
-	}, [isVertical]);
+	}, []);
 
 	const viewportRef = useCallback<RefCallback<HTMLDivElement>>(
 		(node) => {
@@ -134,25 +123,22 @@ export function useTabsOverflow({
 		[measure],
 	);
 
-	const scrollByStep = useCallback(
-		(sign: 1 | -1): void => {
-			const viewport = viewportNode.current;
+	const scrollByStep = useCallback((sign: 1 | -1): void => {
+		const viewport = viewportNode.current;
 
-			if (!viewport) {
-				return;
-			}
+		if (!viewport) {
+			return;
+		}
 
-			const { clientSize } = readTabsAxis(viewport, isVertical);
-			const step = Math.round(clientSize * SCROLL_STEP_RATIO) * sign;
+		const { clientSize } = readTabsAxis(viewport);
+		const step = Math.round(clientSize * SCROLL_STEP_RATIO) * sign;
 
-			// An RTL viewport scrolls towards negative `scrollLeft`, and `scrollBy` takes physical
-			// deltas on both directions.
-			const directionSign = !isVertical && getComputedStyle(viewport).direction === 'rtl' ? -1 : 1;
+		// An RTL viewport scrolls towards negative `scrollLeft`, and `scrollBy` takes physical
+		// deltas on both directions.
+		const directionSign = getComputedStyle(viewport).direction === 'rtl' ? -1 : 1;
 
-			viewport.scrollBy(isVertical ? { top: step } : { left: step * directionSign });
-		},
-		[isVertical],
-	);
+		viewport.scrollBy({ left: step * directionSign });
+	}, []);
 
 	const scrollTowardsStart = useCallback((): void => scrollByStep(-1), [scrollByStep]);
 	const scrollTowardsEnd = useCallback((): void => scrollByStep(1), [scrollByStep]);
@@ -172,10 +158,8 @@ export function useTabsOverflow({
 
 		const viewportRect = viewport.getBoundingClientRect();
 		const tabRect = tab.getBoundingClientRect();
-		const before = isVertical ? tabRect.top - viewportRect.top : tabRect.left - viewportRect.left;
-		const after = isVertical
-			? tabRect.bottom - viewportRect.bottom
-			: tabRect.right - viewportRect.right;
+		const before = tabRect.left - viewportRect.left;
+		const after = tabRect.right - viewportRect.right;
 
 		// Rect deltas rather than `Element.scrollIntoView`, which walks every scrollable ancestor and
 		// would scroll the page whenever the bar sits below the fold.
@@ -194,10 +178,10 @@ export function useTabsOverflow({
 			viewport.style.scrollBehavior = 'auto';
 		}
 
-		viewport.scrollBy(isVertical ? { top: delta } : { left: delta });
+		viewport.scrollBy({ left: delta });
 		viewport.style.scrollBehavior = previousBehavior;
 		hasAligned.current = true;
-	}, [activeKey, isVertical]);
+	}, [activeKey]);
 
 	return {
 		viewportRef,

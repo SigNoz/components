@@ -6,10 +6,9 @@ import * as TabsStories from './tabs.stories';
 # Tabs
 
 Renders a tab bar and its panels from an `items` array: two variants, prefix and suffix icons,
-disabled tabs with a required reason, and optional bar content. The bar runs horizontally or as a
-[vertical rail](#vertical-tabs), and [scrolls](#overflow) once it holds more tabs than it has room
-for. A tab can navigate instead of holding a panel, see
-[Tabs that navigate](#tabs-that-navigate).
+disabled tabs with a required reason, and optional bar content. The bar runs horizontally, and
+[scrolls](#overflow) once it holds more tabs than it has room for. A tab can navigate instead of
+holding a panel, see [Tabs that navigate](#tabs-that-navigate).
 
 ## How to use
 
@@ -102,8 +101,8 @@ hover or keyboard focus.
 
 ## Tab bar extra content
 
-`tabBarStartContent` and `tabBarEndContent` render beside the tab list. Start is the left edge of a
-horizontal bar and the top edge of a vertical one:
+`tabBarStartContent` and `tabBarEndContent` render beside the tab list. Start is the left edge,
+mirrored under RTL:
 
 ```tsx
 import { Button, ButtonVariant, ButtonSize, ButtonColor } from '@signozhq/ui';
@@ -130,28 +129,14 @@ import { Plus } from '@signozhq/icons';
 
 ## Alignment
 
-`alignment` (`start`, `center`, `end`) places the tab list along the bar's own axis within its
-container.
+`alignment` (`start`, `center`, `end`) places the tab list within its container. `start` is the left
+edge, mirrored under RTL, which is why `alignment` and the two bar content props are named start and
+end rather than left and right.
 
-## Vertical tabs
+## Orientation
 
-`orientation="vertical"` turns the bar into a rail beside its panel: the tabs stack, the arrow keys
-become up and down, and the primary indicator runs down the rail's inner edge instead of under the
-tabs.
-
-```tsx
-<Tabs
-	variant="secondary"
-	orientation="vertical"
-	alignment="start"
-	items={items}
-	defaultValue="overview"
-/>
-```
-
-Every side-named prop follows the bar rather than the screen, which is why `alignment` and the two
-bar content props are named start and end. A rail only has room to overflow once something bounds
-its height, so give the bar or an ancestor one.
+`orientation="horizontal"` is the only value. It is required rather than defaulted so the bar states
+its axis, and it is what Base UI stamps as `data-orientation`. There is no vertical rail.
 
 ## Overflow
 

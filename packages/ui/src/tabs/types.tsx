@@ -211,14 +211,14 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		/**
 		 * The layout flow of the tab bar and its panels.
 		 *
-		 * @note `vertical` turns the bar into a rail beside the panel, and every side-named prop
-		 * below follows it: `start` becomes the top edge and `end` the bottom one.
+		 * @note `horizontal` is the only value. The prop is kept so the bar states its axis, which
+		 * is also what Base UI stamps as `data-orientation`.
 		 */
 		orientation: TabsOrientationType;
 		/**
-		 * How the tab bar positions itself along its own axis within its container.
+		 * How the tab bar positions itself within its container.
 		 *
-		 * @note `start` is the left edge of a horizontal bar and the top edge of a vertical one.
+		 * @note `start` is the left edge, mirrored under RTL.
 		 */
 		alignment: TabsAlignmentType;
 		/**
@@ -242,20 +242,18 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		 */
 		onChange?: (key: string) => void;
 		/**
-		 * Content rendered before the tab list, in the same row or column as the bar.
+		 * Content rendered before the tab list, in the same row as the bar.
 		 *
-		 * @note `start` is the left edge while `orientation` is `horizontal` and the top edge while
-		 * it is `vertical`.
+		 * @note `start` is the left edge, mirrored under RTL.
 		 *
 		 * @note Keeps its size while the list scrolls. A bar too narrow for its tabs shrinks the
 		 * list, never this block.
 		 */
 		tabBarStartContent?: ReactNode;
 		/**
-		 * Content rendered after the tab list, in the same row or column as the bar.
+		 * Content rendered after the tab list, in the same row as the bar.
 		 *
-		 * @note `end` is the right edge while `orientation` is `horizontal` and the bottom edge
-		 * while it is `vertical`.
+		 * @note `end` is the right edge, mirrored under RTL.
 		 *
 		 * @note Keeps its size while the list scrolls. A bar too narrow for its tabs shrinks the
 		 * list, never this block.
