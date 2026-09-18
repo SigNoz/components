@@ -3,11 +3,12 @@ import * as TabsStories from './tabs.stories';
 
 <Meta of={TabsStories} />
 
-# TabsSimple
+# Tabs
 
-Preset that accepts an `items` array and renders a tabbed interface with primary and secondary variants, prefix/suffix icons, disabled states with tooltips, and optional tab bar extra content.
-
-For full primitive control, see [Tabs](?path=/docs/primitive-components-tabs-tabs--docs).
+Renders a tab bar and its panels from an `items` array: two variants, prefix and suffix icons,
+disabled tabs with a required reason, and optional bar content. The bar runs horizontally, and
+[scrolls](#overflow) once it holds more tabs than it has room for. A tab can navigate instead of
+holding a panel, see [Tabs that navigate](#tabs-that-navigate).
 
 ## How to use
 
@@ -21,7 +22,15 @@ const items = [
 ];
 
 export default function MyComponent() {
-	return <Tabs items={items} defaultValue="overview" />;
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="start"
+			items={items}
+			defaultValue="overview"
+		/>
+	);
 }
 ```
 
@@ -29,24 +38,26 @@ export default function MyComponent() {
 
 ## Variants
 
-Switch between `primary` (default) and `secondary` styles with the `variant` prop:
+`primary` is an underline indicator with a hover slider, `secondary` a joined strip with a bottom
+rule:
 
 ```tsx
-// Primary variant (default) — underline indicator with hover slider
-<Tabs items={items} variant="primary" defaultValue="overview" />
-
-// Secondary variant — pill-style tabs with a bottom border
-<Tabs items={items} variant="secondary" defaultValue="overview" />
+<Tabs variant="primary" orientation="horizontal" alignment="start" items={items} defaultValue="overview" />
+<Tabs variant="secondary" orientation="horizontal" alignment="start" items={items} defaultValue="overview" />
 ```
 
 ## With icons
 
-Add `prefixIcon` or `suffixIcon` to tab items to display icons alongside the label:
+`prefixIcon` and `suffixIcon` sit either side of the label:
 
 ```tsx
 import { Settings, History } from '@signozhq/icons';
 
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
+	defaultValue="settings"
 	items={[
 		{
 			key: 'settings',
@@ -61,48 +72,49 @@ import { Settings, History } from '@signozhq/icons';
 			children: 'History content',
 		},
 	]}
-	defaultValue="settings"
 />;
 ```
 
 ## Disabled tabs
 
-Disabled tabs automatically display a lock icon (replacing any `prefixIcon`) and show a tooltip on hover. Use `disabledReason` to customise the tooltip message:
+A disabled tab must say why: `disabledTooltip` is required whenever `disabled` is set, and shows on
+hover or keyboard focus.
 
 ```tsx
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
+	defaultValue="active"
 	items={[
 		{ key: 'active', label: 'Active', children: 'Active content' },
 		{
 			key: 'locked',
 			label: 'Issues',
 			disabled: true,
-			disabledReason: 'Feature is under maintenance',
+			disabledTooltip: 'Feature is under maintenance',
 			children: 'Issues content',
 		},
-		{
-			key: 'beta',
-			label: 'Beta',
-			disabled: true,
-			children: 'Beta content',
-		},
 	]}
-	defaultValue="active"
 />
 ```
 
 ## Tab bar extra content
 
-Render additional content to the left or right of the tab list with `tabBarLeftContent` and `tabBarRightContent`:
+`tabBarStartContent` and `tabBarEndContent` render beside the tab list. Start is the left edge,
+mirrored under RTL:
 
 ```tsx
 import { Button, ButtonVariant, ButtonSize, ButtonColor } from '@signozhq/ui';
 import { Plus } from '@signozhq/icons';
 
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
 	items={items}
 	defaultValue="overview"
-	tabBarRightContent={
+	tabBarEndContent={
 		<Button
 			variant={ButtonVariant.Outlined}
 			size={ButtonSize.SM}
@@ -115,40 +127,127 @@ import { Plus } from '@signozhq/icons';
 />;
 ```
 
-Combine both sides:
+## Alignment
+
+`alignment` (`start`, `center`, `end`) places the tab list within its container. `start` is the left
+edge, mirrored under RTL, which is why `alignment` and the two bar content props are named start and
+end rather than left and right.
+
+## Orientation
+
+`orientation="horizontal"` is the only value. It is required rather than defaulted so the bar states
+its axis, and it is what Base UI stamps as `data-orientation`. There is no vertical rail.
+
+## Overflow
+
+A bar with more tabs than it has room for scrolls, and two chevron buttons appear at its ends.
+There is no prop for this, the same way there is no `textOverflow` prop: it is always on.
+
+Every tab stays a real `role="tab"` while the strip scrolls, so the arrow keys reach all of them.
+Selecting a tab that is out of view scrolls it back, which keeps a router-driven bar pointing at
+the right place after a back or forward.
+
+`tabBarStartContent` and `tabBarEndContent` keep their size, so a bar too narrow for its tabs
+scrolls the tabs rather than pushing a button off the end.
+
+Truncation and overflow answer different problems: a label past its cap truncates and shows its
+full text in a tooltip, many tabs scroll.
+
+## Label width
+
+A label is capped at `--tabs-label-max-inline-size`, 120px by default, so one long label cannot
+take the whole bar. Override it per call site, or set it to `none` to let a tab size to its label:
 
 ```tsx
 <Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
 	items={items}
-	defaultValue="overview"
-	tabBarLeftContent={<span style={{ fontSize: '0.75rem', opacity: 0.6 }}>Service: frontend</span>}
-	tabBarRightContent={<Button>Configure</Button>}
+	style={{ '--tabs-label-max-inline-size': '200px' } as CSSProperties}
 />
 ```
 
-## Alignment
+## No content padding
 
-Control how the tab list positions itself within its container using the `alignment` prop (`left`, `center`, `right`):
+`noTabContentPadding` removes the padding around the active panel, for a panel that manages its own
+spacing:
 
 ```tsx
-<Tabs items={items} alignment="center" defaultValue="overview" />
-<Tabs items={items} alignment="right" defaultValue="overview" />
+<Tabs
+	variant="primary"
+	orientation="horizontal"
+	alignment="start"
+	items={items}
+	noTabContentPadding
+/>
 ```
 
-Alignment works alongside `tabBarLeftContent` and `tabBarRightContent` — the tab list shifts between the extra content slots.
+## Tabs that navigate
+
+An item that carries `render` instead of `children` renders as whatever you hand over, a router
+`Link` in practice, and keeps `role="tab"`, the arrow keys and every `data-*` the bar stamps. The
+tab is then a real anchor, so middle click and "open in new tab" work.
+
+Those items have no panel of their own. The panel is the bar's `children`, rendered for whichever
+tab is active:
+
+```tsx
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Tabs } from '@signozhq/ui';
+
+function ServiceTabs() {
+	const { pathname } = useLocation();
+
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="start"
+			value={pathname.split('/').at(-1)}
+			items={[
+				{ key: 'overview', label: 'Overview', render: <Link to="overview" /> },
+				{ key: 'logs', label: 'Logs', render: <Link to="logs" /> },
+			]}
+		>
+			<Outlet />
+		</Tabs>
+	);
+}
+```
+
+Leave `children` out when the `Outlet` already lives elsewhere in the tree, and the bar renders
+tabs alone.
+
+Such a bar is controlled: `value` comes from the router, so back and forward move it too.
+`defaultValue` is refused, and so is passing `children` alongside items that bring their own.
+`onChange` still fires on click, which is useful for analytics, but it is not how the navigation
+happens.
+
+A `disabled` item ignores `render` and falls back to the plain `<button>`: an anchor is still
+followed by a middle click, so rendering one would be a lock anybody can walk around.
 
 ## Controlled state
 
-Pass `value` and `onChange` to drive the active tab from external state:
+`value` and `onChange` drive the active tab from outside:
 
 ```tsx
 import { useState } from 'react';
 import { Tabs } from '@signozhq/ui';
 
 function MyComponent() {
-	const [activeTab, setActiveTab] = useState('overview');
+	const [active, setActive] = useState('overview');
 
-	return <Tabs items={items} value={activeTab} onChange={setActiveTab} />;
+	return (
+		<Tabs
+			variant="primary"
+			orientation="horizontal"
+			alignment="start"
+			items={items}
+			value={active}
+			onChange={setActive}
+		/>
+	);
 }
 ```
 

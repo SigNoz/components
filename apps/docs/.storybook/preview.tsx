@@ -19,6 +19,58 @@ import { ModeDecorator } from './modeDecorator.jsx';
 SyntaxHighlighter.registerLanguage('scss', scss);
 SyntaxHighlighter.registerLanguage('bash', bash);
 
+/**
+ * Globals rather than parameters, because a Chromatic mode is a named set of globals (see
+ * `modes.ts`): anything a snapshot has to vary has to be one, and the toolbar control comes free.
+ * `ModeDecorator` reads all three and applies them to the document.
+ */
+export const globalTypes: Preview['globalTypes'] = {
+	theme: {
+		description: 'SigNoz color scheme',
+		toolbar: {
+			title: 'Theme',
+			icon: 'paintbrush',
+			items: [
+				{ value: 'dark', title: 'Dark' },
+				{ value: 'light', title: 'Light' },
+			],
+			dynamicTitle: true,
+		},
+	},
+	motion: {
+		description:
+			'Park every animation on its last frame once the story has settled. Still is what both capture stacks shoot; Live is for watching a transition.',
+		toolbar: {
+			title: 'Motion',
+			icon: 'play',
+			items: [
+				{ value: 'still', title: 'Still' },
+				{ value: 'live', title: 'Live' },
+			],
+			dynamicTitle: true,
+		},
+	},
+	// Enable once we finish the migration of the components (with new Semantic Tokens)
+	// palette: {
+	// 	description: 'Token sheet the components read',
+	// 	toolbar: {
+	// 		title: 'Palette',
+	// 		icon: 'paintbrushalt',
+	// 		items: [
+	// 			{ value: 'default', title: 'Default' },
+	// 			{ value: 'blue-demo', title: 'Blue demo' },
+	// 		],
+	// 		dynamicTitle: true,
+	// 	},
+	// },
+};
+
+export const initialGlobals: Preview['initialGlobals'] = {
+	theme: 'dark',
+	palette: 'default',
+	motion: 'still',
+};
+
 export const parameters: Preview['parameters'] = {
 	controls: {
 		expanded: true,

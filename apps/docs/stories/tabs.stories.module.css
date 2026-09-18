@@ -1,52 +1,118 @@
+/*
+ * `.story-section` is a flex column with `align-items: flex-start`, so a
+ * percentage width inside one resolves against the shrunk box rather than the
+ * page. The sections are stretched back to the full canvas width here.
+ */
 .sectionGap {
 	gap: 32px;
+	align-self: stretch;
+	width: 100%;
+}
+
+.sectionGap > * {
+	width: 100%;
 }
 
 .sectionTitle {
 	margin-bottom: 16px;
 }
 
-.contentPanel {
-	padding-top: 16px;
+.subsectionTitle {
+	margin-bottom: 8px;
 }
 
-.extraContentContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 32px;
-	padding: 24px;
-}
-
-.alignmentContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 48px;
-	padding: 24px;
-}
-
-.variantSection {
-	margin-bottom: 24px;
-	border-bottom: 1px solid var(--border);
-	padding-bottom: 8px;
-	text-transform: capitalize;
-}
-
-.alignmentSection {
-	margin-bottom: 40px;
-}
-
-.alignmentTitle {
-	margin-bottom: 16px;
-	text-transform: capitalize;
-}
-
-.extraVariantsContainer {
+.exampleStack {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
 }
 
-.extraVariantLabel {
-	margin-bottom: 8px;
-	font-family: monospace;
+.exampleLabel {
+	color: var(--muted-foreground);
+	margin-bottom: 4px;
+}
+
+/* The alignment examples only say anything while the bar is narrower than the
+ * page, so each sits in this frame: half the page, edges drawn. */
+.widthFrame {
+	position: relative;
+	width: 50%;
+	min-width: 360px;
+	padding: 24px 0 8px;
+	border-left: 1px dashed var(--muted-foreground);
+	border-right: 1px dashed var(--muted-foreground);
+}
+
+.widthFrame::before,
+.widthFrame::after {
+	position: absolute;
+	top: 4px;
+	font-size: 10px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--muted-foreground);
+}
+
+.widthFrame::before {
+	content: '50% start';
+	left: 4px;
+}
+
+.widthFrame::after {
+	content: '50% end';
+	right: 4px;
+}
+
+/* Both `order` vars set to the list's own order put a content block back beside
+ * the list instead of on the bar's edge. */
+.contentNearList {
+	--tabs-bar-content-start-order: 2;
+	--tabs-bar-content-end-order: 2;
+}
+
+/* The free space next to the list belongs to a spacer. Handing it to the content
+ * block instead is two vars: the block grows, the spacer stops. */
+.contentGrows {
+	--tabs-extra-content-end-flex-grow: 1;
+	--tabs-border-spacer-grow-flex-grow: 0;
+}
+
+/* Tight enough that the strip cannot fit. Applied on top of the width frame. */
+.overflowFrame {
+	width: 420px;
+	min-width: 0;
+}
+
+/* The frame is a fixed width here, not half the page, so it says so. */
+.overflowFrame::before {
+	content: 'frame start';
+}
+
+.overflowFrame::after {
+	content: 'frame end';
+}
+
+/* Doubles the label cap, so the same tabs are shown against a raised limit. */
+.wideLabels {
+	--tabs-label-max-inline-size: 240px;
+}
+
+/* The state matrix: a label column, then one column per state. */
+.matrix {
+	display: grid;
+	grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+	gap: 16px 32px;
+	align-items: start;
+	justify-items: start;
+	overflow-x: auto;
+	padding-bottom: 4px;
+}
+
+.matrixLabel {
+	white-space: nowrap;
+}
+
+.sectionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 16px;
 }
