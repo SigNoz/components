@@ -1,132 +1,297 @@
+// Logical properties carry the RTL work, so an edge is named inline or block wherever the value
+// mirrors.
+//
+// Colour arrives through the `--toggle-group-internal-*` pairs: `data-variant` and `data-color`
+// point them at the package tokens, and every rule below reads the internal name alone. Adding a
+// colour is one block, not a pass over the whole file.
 .toggle-group {
-  display: var(--toggle-group-display, flex);
-  width: var(--toggle-group-width, fit-content);
-  align-items: var(--toggle-group-align-items, center);
-  justify-content: var(--toggle-group-justify-content, unset);
-  flex-direction: var(--toggle-group-flex-direction, row);
-  border-radius: var(--toggle-group-radius, var(--radius-md));
-  border: var(--toggle-group-border-width, 1px) var(--toggle-group-border-style, solid) var(--toggle-group-border);
-  background-color: var(--toggle-group-bg);
+  display: var(--toggle-group-display, inline-flex);
+  align-items: var(--toggle-group-align-items, stretch);
+
+  // The `width`/`maxWidth` props arrive as the internal pair, so a token still outranks a call site.
+  inline-size: var(--toggle-group-inline-size, var(--toggle-group-internal-inline-size, fit-content));
+  max-inline-size: var(
+    --toggle-group-max-inline-size,
+    var(--toggle-group-internal-max-inline-size, 100%)
+  );
+
+  border: var(--toggle-group-border-width, 1px) solid
+    var(--toggle-group-border-color, var(--toggle-group-border));
+  border-radius: var(--toggle-group-border-radius, var(--radius-1));
+  background-color: var(--toggle-group-background-color, var(--toggle-group-internal-background));
+
+  // The buttons are square and the bar is not, so the corners are the bar's to clip. It also keeps
+  // the scrolling strip inside the border.
   overflow: var(--toggle-group-overflow, hidden);
 
-  &[data-color='primary'] {
-    --toggle-group-bg: var(--toggle-group-primary-bg, var(--l1-background));
-    --toggle-group-text: var(--toggle-group-primary-text, var(--l1-foreground));
-    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--l1-foreground-hover));
-    --toggle-group-border: var(--toggle-group-primary-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-primary-active-bg, var(--primary-background));
-    --toggle-group-bg-hover: var(--toggle-group-primary-bg-hover, var(--primary-background-hover));
+  &[data-variant='outlined'][data-color='secondary'] {
+    --toggle-group-internal-background: var(--toggle-group-secondary-outlined-background);
+    --toggle-group-internal-background-hover: var(
+      --toggle-group-secondary-outlined-background-hover
+    );
+    --toggle-group-internal-background-pressed: var(
+      --toggle-group-secondary-outlined-background-active
+    );
+    --toggle-group-internal-label: var(--toggle-group-secondary-outlined-label);
+    --toggle-group-internal-label-hover: var(--toggle-group-secondary-outlined-label-hover);
+    --toggle-group-internal-label-pressed: var(--toggle-group-secondary-outlined-label-active);
+    --toggle-group-internal-label-disabled: var(--toggle-group-secondary-outlined-label-disabled);
   }
 
-  &[data-color='destructive'] {
-    --toggle-group-bg: var(--toggle-group-destructive-bg, var(--l1-background));
-    --toggle-group-text: var(--toggle-group-destructive-text, var(--l1-foreground));
-    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--l1-foreground-hover));
-    --toggle-group-border: var(--toggle-group-destructive-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-destructive-active-bg, var(--danger-background));
-    --toggle-group-bg-hover: var(--toggle-group-destructive-bg-hover, var(--danger-background-hover));
+  // Both sizes are 32px tall and differ in horizontal padding alone. `md` is roughly triple `sm`,
+  // which is what makes it a two- or three-option control rather than a toolbar one.
+  &[data-size='sm'] {
+    --toggle-group-internal-button-padding-inline: var(--spacing-6);
   }
 
-  &[data-color='warning'] {
-    --toggle-group-bg: var(--toggle-group-warning-bg, var(--l1-background));
-    --toggle-group-text: var(--toggle-group-warning-text, var(--l1-foreground));
-    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--warning-foreground-contrast));
-    --toggle-group-border: var(--toggle-group-warning-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-warning-active-bg, var(--warning-background));
-    --toggle-group-bg-hover: var(--toggle-group-warning-bg-hover, var(--warning-background-hover));
+  &[data-size='md'] {
+    --toggle-group-internal-button-padding-inline: var(--spacing-12);
   }
 
-  &[data-color='secondary'] {
-    --toggle-group-bg: var(--toggle-group-secondary-bg, var(--l1-background));
-    --toggle-group-text: var(--toggle-group-secondary-text, var(--l1-foreground));
-    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--l1-foreground-hover));
-    --toggle-group-border: var(--toggle-group-secondary-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-secondary-active-bg, var(--l1-background-hover));
-    --toggle-group-bg-hover: var(--toggle-group-secondary-bg-hover, var(--l1-background-hover));
+  &[data-disabled] {
+    opacity: var(--toggle-group-disabled-opacity, 0.6);
+    cursor: var(--toggle-group-disabled-cursor, not-allowed);
   }
 
-  &[data-color='none'] {
-    --toggle-group-bg: var(--toggle-group-none-bg, transparent);
-    --toggle-group-text: var(--toggle-group-none-text, var(--l1-foreground));
-    --toggle-group-text-active: var(--toggle-group-primary-text-active, var(--l1-foreground-hover));
-    --toggle-group-border: var(--toggle-group-none-border, var(--l2-border));
-    --toggle-group-active-bg: var(--toggle-group-none-active-bg, var(--l1-background-hover));
-    --toggle-group-bg-hover: var(--toggle-group-none-bg-hover, var(--l1-background-hover));
+  // A locked bar fades less than a disabled one and keeps its label colours: the value is still
+  // there to be read, it just cannot move. `readOnly` outranks `disabled`, so the two never meet.
+  &[data-readonly] {
+    opacity: var(--toggle-group-readonly-opacity, 0.8);
+    cursor: var(--toggle-group-readonly-cursor, not-allowed);
   }
 }
 
-.toggle-group-item {
-  display: var(--toggle-group-item-display, inline-flex);
-  align-items: var(--toggle-group-item-align-items, center);
-  justify-content: var(--toggle-group-item-justify-content, center);
-  gap: var(--toggle-group-item-gap, var(--spacing-4, 0.5rem));
-  min-width: 0;
-  flex: 1 1 auto;
-  border-radius: var(--toggle-group-item-border-radius, 0px);
-  border-color: var(--toggle-group-item-border-color, transparent);
-  border-width: var(--toggle-group-item-border-width, 0);
-  border-left: var(--toggle-group-item-border-width, 1px) var(--toggle-group-item-border-style, solid) var(--toggle-group-border);
-  box-shadow: none;
-  color: var(--toggle-group-item-text, var(--toggle-group-text));
-  cursor: pointer;
-  font-size: var(--toggle-group-item-font-size, var(--periscope-font-size-small, 11px));
-  font-weight: var(--toggle-group-item-font-weight, var(--font-weight-normal));
-  line-height: var(--toggle-group-item-line-height, 1.25rem);
-  letter-spacing: var(--tracking-tighter);
-  outline: none;
-  transition-property: color, background-color, border-color, opacity;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: var(--toggle-group-item-transition-duration, 150ms);
-  background-color: var(--toggle-group-item-bg, transparent);
+// The scroll port. The strip overflows this box and scrolls inside it, and the buttons never shrink
+// (see `.toggle-group__button`). It is the only flex item here that gives way, so every pixel the
+// bar has to find comes out of this box rather than off an arrow.
+.toggle-group__viewport {
+  display: var(--toggle-group-viewport-display, flex);
+  flex-grow: var(--toggle-group-viewport-flex-grow, 1);
+  flex-shrink: var(--toggle-group-viewport-flex-shrink, 1);
+  flex-basis: var(--toggle-group-viewport-flex-basis, auto);
+  min-inline-size: var(--toggle-group-viewport-min-inline-size, 0);
 
-  &:first-child {
-    border-left-width: 0;
+  overflow-x: var(--toggle-group-viewport-overflow-x, auto);
+  overflow-y: var(--toggle-group-viewport-overflow-y, hidden);
+  overscroll-behavior: var(--toggle-group-viewport-overscroll-behavior, contain);
+  scroll-behavior: var(--toggle-group-viewport-scroll-behavior, smooth);
+  // The strip has its own arrows and its own keyboard.
+  scrollbar-width: var(--toggle-group-viewport-scrollbar-width, none);
+
+  &::-webkit-scrollbar {
+    display: var(--toggle-group-viewport-scrollbar-display, none);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-group__viewport {
+    scroll-behavior: auto;
+  }
+}
+
+.toggle-group__list {
+  display: var(--toggle-group-list-display, inline-flex);
+  flex-direction: var(--toggle-group-list-flex-direction, row);
+  align-items: var(--toggle-group-list-align-items, stretch);
+}
+
+.toggle-group__button {
+  display: var(--toggle-group-button-display, inline-flex);
+  align-items: var(--toggle-group-button-align-items, center);
+  justify-content: var(--toggle-group-button-justify-content, center);
+  gap: var(--toggle-group-button-gap, var(--spacing-3));
+
+  // A segmented control that squeezes its options is unreadable, so the strip scrolls instead.
+  flex-grow: var(--toggle-group-button-flex-grow, 0);
+  flex-shrink: var(--toggle-group-button-flex-shrink, 0);
+  flex-basis: var(--toggle-group-button-flex-basis, auto);
+
+  block-size: var(--toggle-group-button-block-size, var(--spacing-16));
+  padding-inline: var(
+    --toggle-group-button-padding-inline,
+    var(--toggle-group-internal-button-padding-inline)
+  );
+  padding-block: var(--toggle-group-button-padding-block, var(--spacing-5));
+
+  border: var(--toggle-group-button-border, none);
+  border-radius: var(--toggle-group-button-border-radius, 0);
+  background-color: var(--toggle-group-button-background-color, transparent);
+  color: var(--toggle-group-button-color, var(--toggle-group-internal-label));
+
+  font-size: var(--toggle-group-button-font-size, var(--periscope-font-size-small));
+  font-weight: var(--toggle-group-button-font-weight, var(--font-weight-normal));
+  line-height: var(--toggle-group-button-line-height, 1);
+  white-space: var(--toggle-group-button-white-space, nowrap);
+  cursor: var(--toggle-group-button-cursor, pointer);
+
+  transition: background-color var(--toggle-group-transition-duration, 150ms) ease,
+    color var(--toggle-group-transition-duration, 150ms) ease;
+
+  // A joined row reads as one control, so the seam between two segments is the bar's own rule
+  // rather than a gap.
+  & + & {
+    border-inline-start: var(--toggle-group-button-divider-width, 1px) solid
+      var(--toggle-group-button-divider-color, var(--toggle-group-border));
   }
 
-  &:focus,
+  &:hover:not([aria-disabled='true']) {
+    background-color: var(
+      --toggle-group-button-hover-background-color,
+      var(--toggle-group-internal-background-hover)
+    );
+    color: var(--toggle-group-button-hover-color, var(--toggle-group-internal-label-hover));
+  }
+
+  // Pressed is the filled state here, the opposite of secondary tabs: this is a set of buttons
+  // where one is depressed, not a folder where one is open. Hover lands at half this fill, so it
+  // previews what pressing will look like.
+  &[data-pressed] {
+    background-color: var(
+      --toggle-group-button-pressed-background-color,
+      var(--toggle-group-internal-background-pressed)
+    );
+    color: var(--toggle-group-button-pressed-color, var(--toggle-group-internal-label-pressed));
+  }
+
+  // Never the native `:disabled`, on any path: the attribute takes every pointer event with it and
+  // the tooltip with them, and every path owes the user a reason. `aria-disabled` is therefore on a
+  // button the bar has turned off, on one the item has, and on one a read-only bar has locked.
+  &[aria-disabled='true'] {
+    cursor: var(--toggle-group-button-disabled-cursor, not-allowed);
+  }
+
+  // The disabled label colour belongs to the disabled paths alone. A locked button keeps its own,
+  // pressed fill included, and the root dims it as a whole instead.
+  &[aria-disabled='true']:not([data-readonly]) {
+    color: var(--toggle-group-button-disabled-color, var(--toggle-group-internal-label-disabled));
+  }
+
+  // `data-disabled` is the item's own, which is why it is the one that dims: a lone blocked option
+  // is easy to miss on the label colour alone. A bar that is off as a whole dims from the root
+  // instead, border included, and dimming both would land at 0.36.
+  &[data-disabled] {
+    opacity: var(--toggle-group-button-disabled-opacity, 0.6);
+  }
+
   &:focus-visible {
-    z-index: 10;
-    background-color: var(--toggle-group-bg-hover);
+    outline: var(--toggle-group-button-focus-visible-outline, var(--ring) solid 1px);
+    // Inwards: the bar clips at its border, and an outset ring would be cut in half.
+    outline-offset: var(--toggle-group-button-focus-visible-outline-offset, -2px);
   }
 
-  &:hover {
-    color: var(--toggle-group-text-active);
-    background-color: var(--toggle-group-bg-hover);
+  & svg:not([class*='size-']) {
+    inline-size: var(--toggle-group-button-icon-size, 12px);
+    block-size: var(--toggle-group-button-icon-size, 12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-group__button {
+    transition: none;
+  }
+}
+
+// The label is the only part that truncates, so an icon beside it keeps its size whatever the text
+// does. `flex-shrink: 0` is what holds that.
+.toggle-group__affix {
+  display: var(--toggle-group-affix-display, inline-flex);
+  align-items: var(--toggle-group-affix-align-items, center);
+  justify-content: var(--toggle-group-affix-justify-content, center);
+  flex-shrink: var(--toggle-group-affix-flex-shrink, 0);
+}
+
+.toggle-group__label {
+  min-inline-size: var(--toggle-group-label-min-inline-size, 0);
+  // Past this the label truncates and shows its full text in a tooltip, so one long label cannot
+  // take the bar. No spacing token is this size.
+  max-inline-size: var(--toggle-group-label-max-inline-size, 120px);
+  overflow: var(--toggle-group-label-overflow, hidden);
+  white-space: var(--toggle-group-label-white-space, nowrap);
+  text-overflow: var(--toggle-group-label-text-overflow, ellipsis);
+}
+
+// An arrow is chrome, not a sixth option, and a transparent one flush against the strip reads as a
+// segment that happens to hold a chevron. Three things separate it: an opaque surface of its own,
+// a rule against the strip, and a shadow the options pass under.
+.toggle-group__scroll-button {
+  // The shadow falls on the options rather than behind them.
+  position: var(--toggle-group-scroll-button-position, relative);
+  z-index: var(--toggle-group-scroll-button-z-index, 1);
+
+  flex-grow: var(--toggle-group-scroll-button-flex-grow, 0);
+  flex-shrink: var(--toggle-group-scroll-button-flex-shrink, 0);
+  flex-basis: var(--toggle-group-scroll-button-flex-basis, auto);
+  align-self: var(--toggle-group-scroll-button-align-self, stretch);
+  display: var(--toggle-group-scroll-button-display, inline-flex);
+  align-items: var(--toggle-group-scroll-button-align-items, center);
+  justify-content: var(--toggle-group-scroll-button-justify-content, center);
+
+  // 24px is the smallest target WCAG 2.2 calls adequate. The bar is 32px tall, so only the inline
+  // axis needs saying.
+  min-inline-size: var(--toggle-group-scroll-button-min-inline-size, var(--spacing-12));
+  padding-inline: var(--toggle-group-scroll-button-padding-inline, var(--spacing-2));
+  padding-block: var(--toggle-group-scroll-button-padding-block, 0);
+
+  border: var(--toggle-group-scroll-button-border, none);
+  background-color: var(
+    --toggle-group-scroll-button-background-color,
+    var(--toggle-group-scroll-button-background)
+  );
+  color: var(--toggle-group-scroll-button-color, var(--toggle-group-scroll-button-label));
+  cursor: var(--toggle-group-scroll-button-cursor, pointer);
+
+  // No offset, so one declaration serves both ends and RTL needs no second one. The bar clips at
+  // its own border, so only the half falling on the strip is ever drawn.
+  box-shadow: var(
+    --toggle-group-scroll-button-shadow,
+    0 0 8px 2px var(--toggle-group-scroll-button-shadow-color)
+  );
+
+  // The hard edge, on whichever side the strip is.
+  &[data-direction='start'] {
+    border-inline-end: var(--toggle-group-scroll-button-divider-width, 1px) solid
+      var(--toggle-group-scroll-button-divider-color, var(--toggle-group-border));
   }
 
-  &[data-state='on'] {
-    background-color: var(--toggle-group-active-bg);
-    color: var(--toggle-group-text-active);
-    opacity: 1;
+  &[data-direction='end'] {
+    border-inline-start: var(--toggle-group-scroll-button-divider-width, 1px) solid
+      var(--toggle-group-scroll-button-divider-color, var(--toggle-group-border));
   }
 
+  &:hover:not(:disabled) {
+    background-color: var(
+      --toggle-group-scroll-button-hover-background-color,
+      var(--toggle-group-scroll-button-background-hover)
+    );
+    color: var(
+      --toggle-group-scroll-button-hover-color,
+      var(--toggle-group-scroll-button-label-hover)
+    );
+  }
+
+  // Dimming the whole arrow would leak the strip through its surface, so the chevron alone goes
+  // grey. The shadow goes with it: nothing is passing under an arrow that cannot travel.
   &:disabled {
-    pointer-events: none;
-    opacity: var(--toggle-group-item-disabled-opacity, 0.5);
+    color: var(
+      --toggle-group-scroll-button-disabled-color,
+      var(--toggle-group-internal-label-disabled)
+    );
+    box-shadow: var(--toggle-group-scroll-button-disabled-shadow, none);
+    cursor: var(--toggle-group-scroll-button-disabled-cursor, default);
   }
 
-  svg {
-    pointer-events: none;
-    flex-shrink: 0;
-    width: var(--toggle-group-item-icon-size, 0.75rem);
-    height: var(--toggle-group-item-icon-size, 0.75rem);
+  &:focus-visible {
+    outline: var(--toggle-group-scroll-button-focus-visible-outline, var(--ring) solid 1px);
+    outline-offset: var(--toggle-group-scroll-button-focus-visible-outline-offset, -2px);
   }
 
-  .toggle-group[data-size='default'] & {
-    height: var(--toggle-group-item-size, 2.25rem);
-    padding-left: var(--toggle-group-item-padding-left, var(--spacing-6, 0.75rem));
-    padding-right: var(--toggle-group-item-padding-right, var(--spacing-6, 0.75rem));
+  & svg:not([class*='size-']) {
+    inline-size: var(--toggle-group-scroll-button-icon-size, 14px);
+    block-size: var(--toggle-group-scroll-button-icon-size, 14px);
   }
 
-  .toggle-group[data-size='sm'] & {
-    height: var(--toggle-group-item-size, 2rem);
-    padding-left: var(--toggle-group-item-padding-left, var(--spacing-4, 0.5rem));
-    padding-right: var(--toggle-group-item-padding-right, var(--spacing-4, 0.5rem));
-  }
-
-  .toggle-group[data-size='lg'] & {
-    height: var(--toggle-group-item-size, 2.5rem);
-    padding-left: var(--toggle-group-item-padding-left, var(--spacing-8, 1rem));
-    padding-right: var(--toggle-group-item-padding-right, var(--spacing-8, 1rem));
+  // The start arrow is the right-hand one under RTL.
+  &:dir(rtl) svg {
+    transform: var(--toggle-group-scroll-button-rtl-icon-transform, scaleX(-1));
   }
 }

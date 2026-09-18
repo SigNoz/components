@@ -5,79 +5,136 @@
  *
  * | Token | Default |
  * |-------|---------|
- * | `--toggle-group-active-bg` | `var(--toggle-group-none-active-bg, var(--l1-bac...` |
- * | `--toggle-group-align-items` | `center` |
- * | `--toggle-group-bg` | `var(--toggle-group-none-bg, transparent)` |
- * | `--toggle-group-bg-hover` | `var(--toggle-group-none-bg-hover, var(--l1-back...` |
- * | `--toggle-group-border` | `var(--toggle-group-none-border, var(--l2-border))` |
- * | `--toggle-group-border-style` | `solid` |
+ * | `--toggle-group-affix-align-items` | `center` |
+ * | `--toggle-group-affix-display` | `inline-flex` |
+ * | `--toggle-group-affix-flex-shrink` | `0` |
+ * | `--toggle-group-affix-justify-content` | `center` |
+ * | `--toggle-group-align-items` | `stretch` |
+ * | `--toggle-group-background-color` | `var(--toggle-group-internal-background)` |
+ * | `--toggle-group-border` | `-` |
+ * | `--toggle-group-border-color` | `var(--toggle-group-border)` |
+ * | `--toggle-group-border-radius` | `var(--radius-1)` |
  * | `--toggle-group-border-width` | `1px` |
- * | `--toggle-group-destructive-active-bg` | `var(--danger-background)` |
- * | `--toggle-group-destructive-bg` | `var(--l1-background)` |
- * | `--toggle-group-destructive-bg-hover` | `var(--danger-background-hover)` |
- * | `--toggle-group-destructive-border` | `var(--l2-border)` |
- * | `--toggle-group-destructive-text` | `var(--l1-foreground)` |
- * | `--toggle-group-display` | `flex` |
- * | `--toggle-group-flex-direction` | `row` |
- * | `--toggle-group-item-align-items` | `center` |
- * | `--toggle-group-item-bg` | `transparent` |
- * | `--toggle-group-item-border-color` | `transparent` |
- * | `--toggle-group-item-border-radius` | `0px` |
- * | `--toggle-group-item-border-style` | `solid` |
- * | `--toggle-group-item-border-width` | `0` |
- * | `--toggle-group-item-disabled-opacity` | `0.5` |
- * | `--toggle-group-item-display` | `inline-flex` |
- * | `--toggle-group-item-font-size` | `var(--periscope-font-size-small, 11px)` |
- * | `--toggle-group-item-font-weight` | `var(--font-weight-normal)` |
- * | `--toggle-group-item-gap` | `var(--spacing-4, 0.5rem)` |
- * | `--toggle-group-item-icon-size` | `0.75rem` |
- * | `--toggle-group-item-justify-content` | `center` |
- * | `--toggle-group-item-line-height` | `1.25rem` |
- * | `--toggle-group-item-padding-left` | `var(--spacing-6, 0.75rem)` |
- * | `--toggle-group-item-padding-right` | `var(--spacing-6, 0.75rem)` |
- * | `--toggle-group-item-size` | `2.25rem` |
- * | `--toggle-group-item-text` | `var(--toggle-group-text)` |
- * | `--toggle-group-item-transition-duration` | `150ms` |
- * | `--toggle-group-justify-content` | `unset` |
- * | `--toggle-group-none-active-bg` | `var(--l1-background-hover)` |
- * | `--toggle-group-none-bg` | `transparent` |
- * | `--toggle-group-none-bg-hover` | `var(--l1-background-hover)` |
- * | `--toggle-group-none-border` | `var(--l2-border)` |
- * | `--toggle-group-none-text` | `var(--l1-foreground)` |
+ * | `--toggle-group-button-align-items` | `center` |
+ * | `--toggle-group-button-background-color` | `transparent` |
+ * | `--toggle-group-button-block-size` | `var(--spacing-16)` |
+ * | `--toggle-group-button-border` | `none` |
+ * | `--toggle-group-button-border-radius` | `0` |
+ * | `--toggle-group-button-color` | `var(--toggle-group-internal-label)` |
+ * | `--toggle-group-button-cursor` | `pointer` |
+ * | `--toggle-group-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
+ * | `--toggle-group-button-disabled-cursor` | `not-allowed` |
+ * | `--toggle-group-button-disabled-opacity` | `0.6` |
+ * | `--toggle-group-button-display` | `inline-flex` |
+ * | `--toggle-group-button-divider-color` | `var(--toggle-group-border)` |
+ * | `--toggle-group-button-divider-width` | `1px` |
+ * | `--toggle-group-button-flex-basis` | `auto` |
+ * | `--toggle-group-button-flex-grow` | `0` |
+ * | `--toggle-group-button-flex-shrink` | `0` |
+ * | `--toggle-group-button-focus-visible-outline` | `var(--ring) solid 1px` |
+ * | `--toggle-group-button-focus-visible-outline-offset` | `-2px` |
+ * | `--toggle-group-button-font-size` | `var(--periscope-font-size-small)` |
+ * | `--toggle-group-button-font-weight` | `var(--font-weight-normal)` |
+ * | `--toggle-group-button-gap` | `var(--spacing-3)` |
+ * | `--toggle-group-button-hover-background-color` | `var(--toggle-group-internal-background-hover)` |
+ * | `--toggle-group-button-hover-color` | `var(--toggle-group-internal-label-hover)` |
+ * | `--toggle-group-button-icon-size` | `12px` |
+ * | `--toggle-group-button-justify-content` | `center` |
+ * | `--toggle-group-button-line-height` | `1` |
+ * | `--toggle-group-button-padding-block` | `var(--spacing-5)` |
+ * | `--toggle-group-button-padding-inline` | `var(--toggle-group-internal-button-padding-inline)` |
+ * | `--toggle-group-button-pressed-background-color` | `var(--toggle-group-internal-background-pressed)` |
+ * | `--toggle-group-button-pressed-color` | `var(--toggle-group-internal-label-pressed)` |
+ * | `--toggle-group-button-white-space` | `nowrap` |
+ * | `--toggle-group-disabled-cursor` | `not-allowed` |
+ * | `--toggle-group-disabled-opacity` | `0.6` |
+ * | `--toggle-group-display` | `inline-flex` |
+ * | `--toggle-group-inline-size` | `var(--toggle-group-internal-inline-size, fit-co...` |
+ * | `--toggle-group-label-max-inline-size` | `120px` |
+ * | `--toggle-group-label-min-inline-size` | `0` |
+ * | `--toggle-group-label-overflow` | `hidden` |
+ * | `--toggle-group-label-text-overflow` | `ellipsis` |
+ * | `--toggle-group-label-white-space` | `nowrap` |
+ * | `--toggle-group-list-align-items` | `stretch` |
+ * | `--toggle-group-list-display` | `inline-flex` |
+ * | `--toggle-group-list-flex-direction` | `row` |
+ * | `--toggle-group-max-inline-size` | `var(--toggle-group-internal-max-inline-size, 100%)` |
  * | `--toggle-group-overflow` | `hidden` |
- * | `--toggle-group-primary-active-bg` | `var(--primary-background)` |
- * | `--toggle-group-primary-bg` | `var(--l1-background)` |
- * | `--toggle-group-primary-bg-hover` | `var(--primary-background-hover)` |
- * | `--toggle-group-primary-border` | `var(--l2-border)` |
- * | `--toggle-group-primary-text` | `var(--l1-foreground)` |
- * | `--toggle-group-primary-text-active` | `var(--l1-foreground-hover)` |
- * | `--toggle-group-radius` | `var(--radius-md)` |
- * | `--toggle-group-secondary-active-bg` | `var(--l1-background-hover)` |
- * | `--toggle-group-secondary-bg` | `var(--l1-background)` |
- * | `--toggle-group-secondary-bg-hover` | `var(--l1-background-hover)` |
- * | `--toggle-group-secondary-border` | `var(--l2-border)` |
- * | `--toggle-group-secondary-text` | `var(--l1-foreground)` |
- * | `--toggle-group-text` | `var(--toggle-group-none-text, var(--l1-foregrou...` |
- * | `--toggle-group-text-active` | `var(--toggle-group-primary-text-active, var(--l...` |
- * | `--toggle-group-warning-active-bg` | `var(--warning-background)` |
- * | `--toggle-group-warning-bg` | `var(--l1-background)` |
- * | `--toggle-group-warning-bg-hover` | `var(--warning-background-hover)` |
- * | `--toggle-group-warning-border` | `var(--l2-border)` |
- * | `--toggle-group-warning-text` | `var(--l1-foreground)` |
- * | `--toggle-group-width` | `fit-content` |
+ * | `--toggle-group-readonly-cursor` | `not-allowed` |
+ * | `--toggle-group-readonly-opacity` | `0.8` |
+ * | `--toggle-group-scroll-button-align-items` | `center` |
+ * | `--toggle-group-scroll-button-align-self` | `stretch` |
+ * | `--toggle-group-scroll-button-background` | `-` |
+ * | `--toggle-group-scroll-button-background-color` | `var(--toggle-group-scroll-button-background)` |
+ * | `--toggle-group-scroll-button-background-hover` | `-` |
+ * | `--toggle-group-scroll-button-border` | `none` |
+ * | `--toggle-group-scroll-button-color` | `var(--toggle-group-scroll-button-label)` |
+ * | `--toggle-group-scroll-button-cursor` | `pointer` |
+ * | `--toggle-group-scroll-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
+ * | `--toggle-group-scroll-button-disabled-cursor` | `default` |
+ * | `--toggle-group-scroll-button-disabled-shadow` | `none` |
+ * | `--toggle-group-scroll-button-display` | `inline-flex` |
+ * | `--toggle-group-scroll-button-divider-color` | `var(--toggle-group-border)` |
+ * | `--toggle-group-scroll-button-divider-width` | `1px` |
+ * | `--toggle-group-scroll-button-flex-basis` | `auto` |
+ * | `--toggle-group-scroll-button-flex-grow` | `0` |
+ * | `--toggle-group-scroll-button-flex-shrink` | `0` |
+ * | `--toggle-group-scroll-button-focus-visible-outline` | `var(--ring) solid 1px` |
+ * | `--toggle-group-scroll-button-focus-visible-outline-offset` | `-2px` |
+ * | `--toggle-group-scroll-button-hover-background-color` | `var(--toggle-group-scroll-button-background-hover)` |
+ * | `--toggle-group-scroll-button-hover-color` | `var(--toggle-group-scroll-button-label-hover)` |
+ * | `--toggle-group-scroll-button-icon-size` | `14px` |
+ * | `--toggle-group-scroll-button-justify-content` | `center` |
+ * | `--toggle-group-scroll-button-label` | `-` |
+ * | `--toggle-group-scroll-button-label-hover` | `-` |
+ * | `--toggle-group-scroll-button-min-inline-size` | `var(--spacing-12)` |
+ * | `--toggle-group-scroll-button-padding-block` | `0` |
+ * | `--toggle-group-scroll-button-padding-inline` | `var(--spacing-2)` |
+ * | `--toggle-group-scroll-button-position` | `relative` |
+ * | `--toggle-group-scroll-button-rtl-icon-transform` | `scaleX(-1)` |
+ * | `--toggle-group-scroll-button-shadow` | `0 0 8px 2px var(--toggle-group-scroll-button-sh...` |
+ * | `--toggle-group-scroll-button-shadow-color` | `-` |
+ * | `--toggle-group-scroll-button-z-index` | `1` |
+ * | `--toggle-group-secondary-outlined-background` | `-` |
+ * | `--toggle-group-secondary-outlined-background-active` | `-` |
+ * | `--toggle-group-secondary-outlined-background-hover` | `-` |
+ * | `--toggle-group-secondary-outlined-label` | `-` |
+ * | `--toggle-group-secondary-outlined-label-active` | `-` |
+ * | `--toggle-group-secondary-outlined-label-disabled` | `-` |
+ * | `--toggle-group-secondary-outlined-label-hover` | `-` |
+ * | `--toggle-group-transition-duration` | `150ms` |
+ * | `--toggle-group-viewport-display` | `flex` |
+ * | `--toggle-group-viewport-flex-basis` | `auto` |
+ * | `--toggle-group-viewport-flex-grow` | `1` |
+ * | `--toggle-group-viewport-flex-shrink` | `1` |
+ * | `--toggle-group-viewport-min-inline-size` | `0` |
+ * | `--toggle-group-viewport-overflow-x` | `auto` |
+ * | `--toggle-group-viewport-overflow-y` | `hidden` |
+ * | `--toggle-group-viewport-overscroll-behavior` | `contain` |
+ * | `--toggle-group-viewport-scroll-behavior` | `smooth` |
+ * | `--toggle-group-viewport-scrollbar-display` | `none` |
+ * | `--toggle-group-viewport-scrollbar-width` | `none` |
  */
 // #endregion css-tokens
 
+export { ToggleGroup } from './toggle-group.js';
 export {
-	ToggleGroupSimple,
-	type ToggleGroupSimpleItem,
-	type ToggleGroupSimpleProps,
-} from './presets/toggle-group-simple.js';
-export {
-	type ToggleColor,
-	ToggleColorValue,
-	ToggleGroup,
-	ToggleGroupItem,
-	type ToggleGroupItemProps,
-	type ToggleGroupProps,
-} from './toggle-group.js';
+	ToggleGroupColor,
+	ToggleGroupScrollDirection,
+	ToggleGroupSize,
+	ToggleGroupType,
+	ToggleGroupVariant,
+	TOGGLE_GROUP_EMPTY_LABEL,
+} from './constants.js';
+export type {
+	ToggleGroupColorType,
+	ToggleGroupDisableType,
+	ToggleGroupItemProps,
+	ToggleGroupProps,
+	ToggleGroupReadOnlyType,
+	ToggleGroupScrollDirectionType,
+	ToggleGroupSizeType,
+	ToggleGroupTypeType,
+	ToggleGroupVariantType,
+	ValidateToggleGroupProps,
+} from './types.js';

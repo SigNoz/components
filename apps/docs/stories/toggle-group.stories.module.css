@@ -2,19 +2,37 @@
 	display: flex;
 	flex-direction: column;
 	gap: 48px;
+	width: 100%;
 }
 
-.colorSection {
+.sectionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 16px;
+}
+
+.exampleStack {
 	display: flex;
-	flex-wrap: wrap;
-	gap: 32px;
+	flex-direction: column;
+	gap: 24px;
+	align-items: flex-start;
 }
 
-.capitalize {
-	text-transform: capitalize;
+/* The state matrix: a label column, then one column per state. */
+.matrix {
+	display: grid;
+	grid-template-columns: max-content repeat(5, max-content);
+	gap: 16px 32px;
+	align-items: center;
+	justify-items: start;
+	overflow-x: auto;
+	padding-bottom: 4px;
 }
 
-.iconLarge {
-	height: 24px;
-	width: 24px;
+.matrixLabel {
+	white-space: nowrap;
+}
+
+/* Tight enough that the bar cannot fit its options, so the arrows appear. */
+.overflowFrame {
+	width: 320px;
 }
