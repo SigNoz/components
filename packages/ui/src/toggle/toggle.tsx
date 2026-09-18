@@ -49,8 +49,8 @@ export type ToggleProps = Pick<
 };
 
 /**
- * A two-state button that can be toggled on or off. For grouped toggles, use ToggleGroup with
- * ToggleGroupItem, or ToggleGroupSimple for an items-based API.
+ * A two-state button that can be toggled on or off. For a joined row of options, use ToggleGroup,
+ * which builds its buttons from an `items` array.
  *
  * @example Standalone toggle
  * ```tsx
