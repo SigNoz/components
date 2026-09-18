@@ -8,8 +8,6 @@ import {
 	TabsAlignment,
 	type TabsAlignmentType,
 	type TabsItemProps,
-	TabsOrientation,
-	type TabsOrientationType,
 	TabsVariant,
 	type TabsVariantType,
 	Typography,
@@ -28,7 +26,7 @@ const meta: Meta<typeof Tabs> = {
 		docs: {
 			description: {
 				component:
-					'A tab bar and its panels, built from an `items` array. Horizontal or a vertical rail, and it scrolls once it holds more tabs than it has room for.',
+					'A tab bar and its panels, built from an `items` array. It scrolls once it holds more tabs than it has room for.',
 			},
 		},
 		design: {
@@ -56,16 +54,15 @@ const meta: Meta<typeof Tabs> = {
 		},
 		orientation: {
 			control: 'select',
-			options: ['horizontal', 'vertical'],
-			description:
-				'`vertical` turns the bar into a rail beside the panel, and every side-named prop follows it.',
-			table: { category: 'Layout', type: { summary: "'horizontal' | 'vertical'" } },
+			options: ['horizontal'],
+			description: 'The axis the bar runs on. `horizontal` is the only value.',
+			table: { category: 'Layout', type: { summary: "'horizontal'" } },
 		},
 		alignment: {
 			control: 'select',
 			options: ['start', 'center', 'end'],
 			description:
-				"Where the tab list sits along the bar's own axis. `start` is the left edge horizontally, the top edge vertically.",
+				'Where the tab list sits in its container. `start` is the left edge, mirrored under RTL.',
 			table: { category: 'Layout', type: { summary: "'start' | 'center' | 'end'" } },
 		},
 		defaultValue: {
@@ -278,21 +275,13 @@ function matrixStyle(columns: number): CSSProperties {
  * One bar per variant in a single state. The wrapper is what the pseudo selectors match, so every
  * tab in the cell carries the state at once.
  */
-function StateCell({
-	variant,
-	orientation,
-	state,
-}: {
-	variant: TabsVariantType;
-	orientation: TabsOrientationType;
-	state: State;
-}): ReactElement {
+function StateCell({ variant, state }: { variant: TabsVariantType; state: State }): ReactElement {
 	return (
 		<div data-state-cell={state}>
 			<Tabs
 				items={state === 'disabled' ? disabledStateItems : stateItems}
 				variant={variant}
-				orientation={orientation}
+				orientation="horizontal"
 				alignment="start"
 				defaultValue="active"
 			/>
@@ -300,7 +289,7 @@ function StateCell({
 	);
 }
 
-function StateMatrix({ orientation }: { orientation: TabsOrientationType }): ReactElement {
+function StateMatrix(): ReactElement {
 	return (
 		<div className={styles.matrix} style={matrixStyle(states.length)}>
 			<MatrixHeader columns={[...states]} />
@@ -310,7 +299,7 @@ function StateMatrix({ orientation }: { orientation: TabsOrientationType }): Rea
 						{variant}
 					</Typography>
 					{states.map((state) => (
-						<StateCell key={state} variant={variant} orientation={orientation} state={state} />
+						<StateCell key={state} variant={variant} state={state} />
 					))}
 				</Fragment>
 			))}
@@ -340,24 +329,17 @@ const addViewButton = (
 	</Button>
 );
 
-function isVertical(orientation: TabsOrientationType): boolean {
-	return orientation === TabsOrientation.Vertical;
-}
-
 /**
  * A frame with its start and end edges drawn, so the bar moving inside its container is visible.
- * Horizontal constrains the width, vertical the height.
  */
-function AxisFrame({
-	orientation,
+function WidthFrame({
 	overflow = false,
 	children,
 }: {
-	orientation: TabsOrientationType;
 	overflow?: boolean;
 	children: ReactNode;
 }): ReactElement {
-	const base = isVertical(orientation) ? styles.heightFrame : styles.widthFrame;
+	const base = styles.widthFrame;
 
 	return <div className={overflow ? `${base} ${styles.overflowFrame}` : base}>{children}</div>;
 }
@@ -365,7 +347,6 @@ function AxisFrame({
 function LabelledTabs({
 	label,
 	variant,
-	orientation,
 	alignment,
 	className,
 	items = defaultItems,
@@ -375,7 +356,6 @@ function LabelledTabs({
 }: {
 	label: string;
 	variant: TabsVariantType;
-	orientation: TabsOrientationType;
 	alignment: TabsAlignmentType;
 	className?: string;
 	items?: TabsItemProps[];
@@ -388,18 +368,18 @@ function LabelledTabs({
 			<Typography size="sm" weight="medium" className={styles.exampleLabel}>
 				{label}
 			</Typography>
-			<AxisFrame orientation={orientation} overflow={overflow}>
+			<WidthFrame overflow={overflow}>
 				<Tabs
 					items={items}
 					variant={variant}
-					orientation={orientation}
+					orientation="horizontal"
 					alignment={alignment}
 					defaultValue={items[0]?.key}
 					className={className}
 					tabBarStartContent={tabBarStartContent}
 					tabBarEndContent={tabBarEndContent}
 				/>
-			</AxisFrame>
+			</WidthFrame>
 		</div>
 	);
 }
@@ -407,13 +387,11 @@ function LabelledTabs({
 function AlignmentGroup({
 	title,
 	variant,
-	orientation,
 	tabBarStartContent,
 	tabBarEndContent,
 }: {
 	title: string;
 	variant: TabsVariantType;
-	orientation: TabsOrientationType;
 	tabBarStartContent?: ReactNode;
 	tabBarEndContent?: ReactNode;
 }): ReactElement {
@@ -428,7 +406,6 @@ function AlignmentGroup({
 						key={alignment}
 						label={`alignment="${alignment}"`}
 						variant={variant}
-						orientation={orientation}
 						alignment={alignment}
 						tabBarStartContent={tabBarStartContent}
 						tabBarEndContent={tabBarEndContent}
@@ -451,10 +428,9 @@ function Section({ title, children }: { title: string; children: ReactNode }): R
 }
 
 /**
- * Every state the bar has, at one orientation. Both showcase stories render this and nothing else,
- * so a rule that holds on one axis is shown holding on the other.
+ * Every state the bar has. The showcase story renders this and nothing else.
  */
-function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): ReactElement {
+function TabsShowcase(): ReactElement {
 	return (
 		// Freezing is the toolbar's live/still toggle, never a class baked into a story.
 		<div className={`story-section ${styles.sectionGap}`}>
@@ -465,84 +441,64 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					tracks a real pointer, so a forced hover paints the trigger's own background and nothing
 					slides.
 				</Typography>
-				<StateMatrix orientation={orientation} />
+				<StateMatrix />
 			</Section>
 
 			<Section title="Primary">
-				<AxisFrame orientation={orientation}>
+				<WidthFrame>
 					<Tabs
 						items={defaultItems}
 						variant="primary"
-						orientation={orientation}
+						orientation="horizontal"
 						alignment="start"
 						defaultValue="overview"
 					/>
-				</AxisFrame>
+				</WidthFrame>
 			</Section>
 
 			<Section title="Secondary">
-				<AxisFrame orientation={orientation}>
+				<WidthFrame>
 					<Tabs
 						items={defaultItems}
 						variant="secondary"
-						orientation={orientation}
+						orientation="horizontal"
 						alignment="start"
 						defaultValue="overview"
 					/>
-				</AxisFrame>
+				</WidthFrame>
 			</Section>
 
 			<Section title="No content padding">
-				<AxisFrame orientation={orientation}>
+				<WidthFrame>
 					<Tabs
 						items={defaultItems}
 						variant="primary"
-						orientation={orientation}
+						orientation="horizontal"
 						alignment="start"
 						defaultValue="overview"
 						noTabContentPadding
 					/>
-				</AxisFrame>
+				</WidthFrame>
 			</Section>
 
 			<Section title="Alignment">
 				<div className={styles.exampleStack}>
-					<AlignmentGroup title="Primary" variant="primary" orientation={orientation} />
-					<AlignmentGroup title="Secondary" variant="secondary" orientation={orientation} />
+					<AlignmentGroup title="Primary" variant="primary" />
+					<AlignmentGroup title="Secondary" variant="secondary" />
 				</div>
 			</Section>
 
 			<Section title="Start content, every alignment">
 				<div className={styles.exampleStack}>
-					<AlignmentGroup
-						title="Primary"
-						variant="primary"
-						orientation={orientation}
-						tabBarStartContent={filterButton}
-					/>
-					<AlignmentGroup
-						title="Secondary"
-						variant="secondary"
-						orientation={orientation}
-						tabBarStartContent={filterButton}
-					/>
+					<AlignmentGroup title="Primary" variant="primary" tabBarStartContent={filterButton} />
+					<AlignmentGroup title="Secondary" variant="secondary" tabBarStartContent={filterButton} />
 				</div>
 			</Section>
 
 			<Section title="End content, every alignment">
 				<div className={styles.exampleStack}>
-					<AlignmentGroup
-						title="Primary"
-						variant="primary"
-						orientation={orientation}
-						tabBarEndContent={addViewButton}
-					/>
-					<AlignmentGroup
-						title="Secondary"
-						variant="secondary"
-						orientation={orientation}
-						tabBarEndContent={addViewButton}
-					/>
+					<AlignmentGroup title="Primary" variant="primary" tabBarEndContent={addViewButton} />
+					<AlignmentGroup title="Secondary" variant="secondary" tabBarEndContent={addViewButton} />
 				</div>
 			</Section>
 
@@ -551,7 +507,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Primary, default: content on the bar's edges"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						tabBarStartContent={filterButton}
 						tabBarEndContent={addViewButton}
@@ -559,7 +514,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Primary, both bar-content order vars: 2"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						className={styles.contentNearList}
 						tabBarStartContent={filterButton}
@@ -568,7 +522,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Secondary, both bar-content order vars: 2"
 						variant="secondary"
-						orientation={orientation}
 						alignment="start"
 						className={styles.contentNearList}
 						tabBarStartContent={filterButton}
@@ -582,7 +535,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Primary, --tabs-extra-content-end-flex-grow: 1, spacer grow: 0"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						className={styles.contentGrows}
 						tabBarEndContent={addViewButton}
@@ -590,7 +542,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Secondary, the same two vars"
 						variant="secondary"
-						orientation={orientation}
 						alignment="start"
 						className={styles.contentGrows}
 						tabBarEndContent={addViewButton}
@@ -603,14 +554,12 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<AlignmentGroup
 						title="Primary"
 						variant="primary"
-						orientation={orientation}
 						tabBarStartContent={filterButton}
 						tabBarEndContent={addViewButton}
 					/>
 					<AlignmentGroup
 						title="Secondary"
 						variant="secondary"
-						orientation={orientation}
 						tabBarStartContent={filterButton}
 						tabBarEndContent={addViewButton}
 					/>
@@ -624,14 +573,12 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Primary, default cap of 120px"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						items={longLabelItems}
 					/>
 					<LabelledTabs
 						label="Primary, --tabs-label-max-inline-size: 240px"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						items={longLabelItems}
 						className={styles.wideLabels}
@@ -639,7 +586,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Secondary, default cap of 120px"
 						variant="secondary"
-						orientation={orientation}
 						alignment="start"
 						items={longLabelItems}
 					/>
@@ -651,7 +597,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Primary, more tabs than the frame holds"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						items={manyItems}
 						overflow
@@ -659,7 +604,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Secondary, more tabs than the frame holds"
 						variant="secondary"
-						orientation={orientation}
 						alignment="start"
 						items={manyItems}
 						overflow
@@ -667,7 +611,6 @@ function TabsShowcase({ orientation }: { orientation: TabsOrientationType }): Re
 					<LabelledTabs
 						label="Primary, overflowing with start and end content"
 						variant="primary"
-						orientation={orientation}
 						alignment="start"
 						items={manyItems}
 						overflow
@@ -732,25 +675,15 @@ export const Default: Story = {
 	},
 };
 
-/**
- * Shared by both showcases, so a state forced on one axis is forced on the other.
- */
-const showcaseParameters = {
-	chromatic: { disableSnapshot: false, modes: allModes },
-	pseudo: {
-		hover: '[data-state-cell="hover"] [data-slot="tabs-item"]',
-		focusVisible: '[data-state-cell="focus"] [data-slot="tabs-item"]',
-	},
-};
-
 export const HorizontalShowcase: Story = {
-	parameters: showcaseParameters,
-	render: () => <TabsShowcase orientation="horizontal" />,
-};
-
-export const VerticalShowcase: Story = {
-	parameters: showcaseParameters,
-	render: () => <TabsShowcase orientation="vertical" />,
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		pseudo: {
+			hover: '[data-state-cell="hover"] [data-slot="tabs-item"]',
+			focusVisible: '[data-state-cell="focus"] [data-slot="tabs-item"]',
+		},
+	},
+	render: () => <TabsShowcase />,
 };
 
 /**
