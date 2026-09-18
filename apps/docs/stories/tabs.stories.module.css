@@ -77,39 +77,7 @@
 	--tabs-border-spacer-grow-flex-grow: 0;
 }
 
-/* A rail runs along the block axis, so the height is what has to be constrained.
- * A flex row, so the panel beside the rail takes the rest. */
-.heightFrame {
-	position: relative;
-	display: flex;
-	height: 260px;
-	padding: 8px 24px;
-	border-top: 1px dashed var(--muted-foreground);
-	border-bottom: 1px dashed var(--muted-foreground);
-}
-
-.heightFrame::before,
-.heightFrame::after {
-	position: absolute;
-	right: 4px;
-	font-size: 10px;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-	color: var(--muted-foreground);
-}
-
-.heightFrame::before {
-	content: 'frame start';
-	top: 2px;
-}
-
-.heightFrame::after {
-	content: 'frame end';
-	bottom: 2px;
-}
-
-/* Tight enough that the strip cannot fit. Applied on top of whichever axis frame
- * is in play. */
+/* Tight enough that the strip cannot fit. Applied on top of the width frame. */
 .overflowFrame {
 	width: 420px;
 	min-width: 0;

@@ -4,10 +4,10 @@ export const TabsVariant = {
 } as const;
 
 /**
- * Where the tab list sits inside the bar, along the axis the bar runs on.
+ * Where the tab list sits inside the bar.
  *
- * `start` is the left edge while `orientation` is `horizontal` and the top edge while it is
- * `vertical`, which is why these are not named left/right.
+ * `start` is the left edge and `end` the right one, mirrored under RTL, which is why these are
+ * not named left/right.
  */
 export const TabsAlignment = {
 	Start: 'start',
@@ -15,16 +15,18 @@ export const TabsAlignment = {
 	End: 'end',
 } as const;
 
+/**
+ * The axis the bar runs on. Horizontal only: there is no vertical rail.
+ */
 export const TabsOrientation = {
 	Horizontal: 'horizontal',
-	Vertical: 'vertical',
 } as const;
 
 /**
  * Which end of the bar a scroll button scrolls towards.
  *
- * {@link TabsAlignment}'s outer pair, for the same reason: `start` is left or top depending on the
- * orientation.
+ * {@link TabsAlignment}'s outer pair, and named start/end for the same reason: each one mirrors
+ * under RTL.
  */
 export const TabsScrollDirection = {
 	Start: 'start',

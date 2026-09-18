@@ -1,102 +1,36 @@
-// Orientation is one axis switch, declared once.
+// The bar is a row of tabs above its panel.
 //
-// Logical properties flip with direction, not with `flex-direction`, so they cannot express
-// horizontal against vertical. The axis flips through `--tabs-internal-*` variables inherited from
-// the root, plus a `[data-orientation="vertical"]` block wherever the property itself changes
-// rather than its value. Logical properties still do the RTL work.
+// Logical properties carry the RTL work, so an edge is named inline or block wherever the value
+// mirrors. The two sliders are the exception, and say why where they are declared.
 //
-// Base UI stamps `data-orientation` everywhere but the hover slider, which is ours.
+// The three `--tabs-internal-order-*` values are shared by the list, the arrows and the spacers,
+// which is the only reason they are variables rather than literals.
 .tabs {
-  --tabs-internal-flex-direction: column;
-  --tabs-internal-wrapper-flex-direction: row;
-  --tabs-internal-wrapper-inline-size: 100%;
-  --tabs-internal-wrapper-align-items: center;
-  --tabs-internal-wrapper-padding-inline: var(--spacing-6);
-  --tabs-internal-wrapper-padding-block: 0;
   --tabs-internal-spacer-min-inline: 0;
-  --tabs-internal-spacer-min-block: 0;
-  --tabs-internal-bar-content-inline-gap: var(--tabs-bar-content-gap, var(--spacing-8));
-  --tabs-internal-bar-content-block-gap: 0;
   --tabs-internal-bar-rule-block-end: 0 solid transparent;
-  --tabs-internal-bar-rule-inline-end: 0 solid transparent;
   --tabs-internal-order-spacer-start: 1;
   --tabs-internal-order-list: 2;
   --tabs-internal-order-spacer-end: 3;
-  --tabs-internal-list-flex-direction: row;
-  --tabs-internal-list-align-items: center;
-  --tabs-internal-list-primary-gap: var(--spacing-12);
-  --tabs-internal-list-min-inline: 0;
-  --tabs-internal-list-min-block: auto;
-  --tabs-internal-list-inner-align-items: flex-start;
-  --tabs-internal-viewport-overflow-inline: auto;
-  --tabs-internal-viewport-overflow-block: hidden;
-  --tabs-internal-viewport-min-inline: 0;
-  --tabs-internal-viewport-min-block: auto;
-  --tabs-internal-hover-slider-inline-size: auto;
-  --tabs-internal-hover-slider-block-size: 100%;
 
   display: var(--tabs-display, flex);
-  flex-direction: var(--tabs-flex-direction, var(--tabs-internal-flex-direction));
+  flex-direction: var(--tabs-flex-direction, column);
   gap: var(--tabs-gap, var(--spacing-4));
-
-  // A percentage maximum computes to `none` while the parent's height is auto, so
-  // this binds the rail only once the bar is actually put in a box.
-  &[data-orientation="vertical"] {
-    max-block-size: var(--tabs-vertical-max-block-size, 100%);
-
-    --tabs-internal-flex-direction: row;
-    --tabs-internal-wrapper-flex-direction: column;
-    --tabs-internal-wrapper-inline-size: auto;
-    --tabs-internal-wrapper-align-items: stretch;
-    --tabs-internal-wrapper-padding-inline: 0;
-    --tabs-internal-wrapper-padding-block: var(--spacing-6);
-    --tabs-internal-bar-content-inline-gap: 0;
-    --tabs-internal-bar-content-block-gap: var(--tabs-bar-content-gap, var(--spacing-8));
-    --tabs-internal-list-flex-direction: column;
-    --tabs-internal-list-align-items: stretch;
-    // Stacked tabs read as vertical rhythm, where the horizontal figure is too airy.
-    --tabs-internal-list-primary-gap: var(--spacing-4);
-    --tabs-internal-list-min-inline: auto;
-    --tabs-internal-list-min-block: 0;
-    --tabs-internal-list-inner-align-items: stretch;
-    --tabs-internal-viewport-overflow-inline: hidden;
-    --tabs-internal-viewport-overflow-block: auto;
-    --tabs-internal-viewport-min-inline: auto;
-    --tabs-internal-viewport-min-block: 0;
-    --tabs-internal-hover-slider-inline-size: 100%;
-    --tabs-internal-hover-slider-block-size: auto;
-  }
 }
 
 // Bar content sits at the outer edges, and the spacers between it and the list
 // take what is left. `alignment` picks which spacer grows, through an internal
 // var rather than the property, so a call site can hand the room to the content
 // block instead without outweighing an alignment rule.
-//
-// `flex-grow`, `flex-shrink` and `order` always mean the main axis, so the model
-// carries over to a vertical rail unchanged.
 .tabs__list-wrapper {
-  flex-direction: var(--tabs-internal-wrapper-flex-direction);
+  flex-direction: var(--tabs-list-wrapper-flex-direction, row);
 
   &[data-variant="primary"] {
     display: var(--tabs-list-wrapper-primary-display, flex);
-    inline-size: var(
-      --tabs-list-wrapper-primary-inline-size,
-      var(--tabs-internal-wrapper-inline-size)
-    );
-    align-items: var(
-      --tabs-list-wrapper-primary-align-items,
-      var(--tabs-internal-wrapper-align-items)
-    );
+    inline-size: var(--tabs-list-wrapper-primary-inline-size, 100%);
+    align-items: var(--tabs-list-wrapper-primary-align-items, center);
     text-align: var(--tabs-list-wrapper-primary-text-align, start);
-    padding-inline: var(
-      --tabs-list-wrapper-primary-padding-inline,
-      var(--tabs-internal-wrapper-padding-inline)
-    );
-    padding-block: var(
-      --tabs-list-wrapper-primary-padding-block,
-      var(--tabs-internal-wrapper-padding-block)
-    );
+    padding-inline: var(--tabs-list-wrapper-primary-padding-inline, var(--spacing-6));
+    padding-block: var(--tabs-list-wrapper-primary-padding-block, 0);
 
     // The bar manages its own spacing, so the inset that keeps the first and last
     // tab off the container edge goes with the panel's padding.
@@ -108,10 +42,7 @@
 
   &[data-variant="secondary"] {
     display: var(--tabs-list-wrapper-secondary-display, flex);
-    inline-size: var(
-      --tabs-list-wrapper-secondary-inline-size,
-      var(--tabs-internal-wrapper-inline-size)
-    );
+    inline-size: var(--tabs-list-wrapper-secondary-inline-size, 100%);
 
     // The rule needs a run before the first trigger and after the last. `primary`
     // paints no rule, so its spacers start at zero.
@@ -140,17 +71,7 @@
   &[data-has-start-content] [data-slot="tab-spacer-start"],
   &[data-has-end-content] [data-slot="tab-spacer-end"] {
     --tabs-internal-spacer-min-inline: 0;
-    --tabs-internal-spacer-min-block: 0;
   }
-}
-
-// A vertical rail draws its run down the side facing the panel, not under the tabs.
-.tabs[data-orientation="vertical"] .tabs__list-wrapper[data-variant="secondary"] {
-  --tabs-internal-spacer-min-inline: 0;
-  --tabs-internal-spacer-min-block: var(--spacing-8);
-  --tabs-internal-bar-rule-block-end: 0 solid transparent;
-  --tabs-internal-bar-rule-inline-end: var(--tabs-border-width, 1px) solid
-    var(--tabs-border-color, var(--tabs-border));
 }
 
 // The scroll port. The strip overflows this box and scrolls inside it, and the
@@ -160,19 +81,19 @@
 // find comes out of this box rather than off a bar content block.
 .tabs__list-inner {
   display: var(--tabs-list-inner-display, inline-flex);
-  flex-direction: var(--tabs-internal-list-flex-direction);
-  align-items: var(--tabs-list-inner-align-items, var(--tabs-internal-list-inner-align-items));
+  flex-direction: var(--tabs-list-inner-flex-direction, row);
+  align-items: var(--tabs-list-inner-align-items, flex-start);
   position: var(--tabs-list-inner-position, relative);
   order: var(--tabs-internal-order-list);
 
   flex-grow: var(--tabs-list-viewport-flex-grow, 0);
   flex-shrink: var(--tabs-list-viewport-flex-shrink, 1);
   flex-basis: var(--tabs-list-viewport-flex-basis, auto);
-  min-inline-size: var(--tabs-list-viewport-min-inline-size, var(--tabs-internal-viewport-min-inline));
-  min-block-size: var(--tabs-list-viewport-min-block-size, var(--tabs-internal-viewport-min-block));
+  min-inline-size: var(--tabs-list-viewport-min-inline-size, 0);
+  min-block-size: var(--tabs-list-viewport-min-block-size, auto);
 
-  overflow-x: var(--tabs-internal-viewport-overflow-inline);
-  overflow-y: var(--tabs-internal-viewport-overflow-block);
+  overflow-x: var(--tabs-list-viewport-overflow-x, auto);
+  overflow-y: var(--tabs-list-viewport-overflow-y, hidden);
   overscroll-behavior: var(--tabs-list-viewport-overscroll-behavior, contain);
   scroll-behavior: var(--tabs-list-viewport-scroll-behavior, smooth);
   // The strip has its own arrows and its own keyboard.
@@ -182,25 +103,15 @@
   // outwards and an equal negative margin gives the room back: the margin box
   // keeps its size and nothing around the bar moves.
   //
-  // Every side has to clear the trigger's focus ring. The side facing the panel
-  // also clears the primary indicator, which hangs outside the list's own box.
+  // Every side has to clear the trigger's focus ring. The block-end side also
+  // clears the primary indicator, which hangs below the list's own box.
   --tabs-internal-slider-bleed: 0px;
-  --tabs-internal-viewport-bleed-block-end: var(--tabs-internal-slider-bleed);
-  --tabs-internal-viewport-bleed-inline-end: 0px;
 
   padding: var(--tabs-list-viewport-bleed, 2px);
   margin: calc(-1 * var(--tabs-list-viewport-bleed, 2px));
-  padding-block-end: calc(
-    var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-block-end)
-  );
+  padding-block-end: calc(var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-slider-bleed));
   margin-block-end: calc(
-    -1 * (var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-block-end))
-  );
-  padding-inline-end: calc(
-    var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-inline-end)
-  );
-  margin-inline-end: calc(
-    -1 * (var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-viewport-bleed-inline-end))
+    -1 * (var(--tabs-list-viewport-bleed, 2px) + var(--tabs-internal-slider-bleed))
   );
 
   &::-webkit-scrollbar {
@@ -212,11 +123,6 @@
       var(--tabs-active-slider-offset, var(--spacing-4)) +
         var(--tabs-active-slider-thickness, 2px)
     );
-  }
-
-  .tabs[data-orientation="vertical"] & {
-    --tabs-internal-viewport-bleed-block-end: 0px;
-    --tabs-internal-viewport-bleed-inline-end: var(--tabs-internal-slider-bleed);
   }
 }
 
@@ -240,8 +146,7 @@
 
   &[data-slot="tab-extra-content-start"] {
     order: var(--tabs-bar-content-start-order, 0);
-    padding-inline-end: var(--tabs-internal-bar-content-inline-gap);
-    padding-block-end: var(--tabs-internal-bar-content-block-gap);
+    padding-inline-end: var(--tabs-bar-content-gap, var(--spacing-8));
     flex-grow: var(--tabs-extra-content-start-flex-grow, var(--tabs-extra-content-flex-grow, 0));
     flex-shrink: var(
       --tabs-extra-content-start-flex-shrink,
@@ -255,8 +160,7 @@
 
   &[data-slot="tab-extra-content-end"] {
     order: var(--tabs-bar-content-end-order, 4);
-    padding-inline-start: var(--tabs-internal-bar-content-inline-gap);
-    padding-block-start: var(--tabs-internal-bar-content-block-gap);
+    padding-inline-start: var(--tabs-bar-content-gap, var(--spacing-8));
     flex-grow: var(--tabs-extra-content-end-flex-grow, var(--tabs-extra-content-flex-grow, 0));
     flex-shrink: var(--tabs-extra-content-end-flex-shrink, var(--tabs-extra-content-flex-shrink, 0));
     min-inline-size: var(
@@ -267,27 +171,26 @@
 
   [data-variant="secondary"] & {
     border-block-end: var(--tabs-internal-bar-rule-block-end);
-    border-inline-end: var(--tabs-internal-bar-rule-inline-end);
   }
 }
 
 .tabs__list {
-  flex-direction: var(--tabs-internal-list-flex-direction);
+  flex-direction: var(--tabs-list-flex-direction, row);
   // The list follows the scroll port down, or it never shrinks below its content
   // and nothing can scroll.
-  min-inline-size: var(--tabs-list-min-inline-size, var(--tabs-internal-list-min-inline));
-  min-block-size: var(--tabs-list-min-block-size, var(--tabs-internal-list-min-block));
+  min-inline-size: var(--tabs-list-min-inline-size, 0);
+  min-block-size: var(--tabs-list-min-block-size, auto);
 
   &[data-variant="primary"] {
     display: var(--tabs-list-primary-display, inline-flex);
-    align-items: var(--tabs-list-primary-align-items, var(--tabs-internal-list-align-items));
-    gap: var(--tabs-list-primary-gap, var(--tabs-internal-list-primary-gap));
+    align-items: var(--tabs-list-primary-align-items, center);
+    gap: var(--tabs-list-primary-gap, var(--spacing-12));
     position: var(--tabs-list-primary-position, relative);
   }
 
   &[data-variant="secondary"] {
     display: var(--tabs-list-secondary-display, flex);
-    align-items: var(--tabs-list-secondary-align-items, var(--tabs-internal-list-align-items));
+    align-items: var(--tabs-list-secondary-align-items, center);
   }
 }
 
@@ -338,11 +241,10 @@
 
   [data-variant="secondary"] & {
     border-block-end: var(--tabs-internal-bar-rule-block-end);
-    border-inline-end: var(--tabs-internal-bar-rule-inline-end);
   }
 
   // The start arrow is the right-hand one under RTL.
-  .tabs[data-orientation="horizontal"] &:dir(rtl) svg {
+  &:dir(rtl) svg {
     transform: var(--tabs-scroll-button-rtl-icon-transform, scaleX(-1));
   }
 }
@@ -359,12 +261,11 @@
   flex-shrink: var(--tabs-border-spacer-flex-shrink, 1);
   flex-basis: var(--tabs-border-spacer-flex-basis, 0%);
   min-inline-size: var(--tabs-border-spacer-min-inline-size, var(--tabs-internal-spacer-min-inline, 0));
-  min-block-size: var(--tabs-border-spacer-min-block-size, var(--tabs-internal-spacer-min-block, 0));
+  min-block-size: var(--tabs-border-spacer-min-block-size, 0);
   order: var(--tabs-internal-order-spacer-start);
 
   [data-variant="secondary"] & {
     border-block-end: var(--tabs-internal-bar-rule-block-end);
-    border-inline-end: var(--tabs-internal-bar-rule-inline-end);
   }
 
   &--grow {
@@ -399,8 +300,7 @@
 
     display: var(--tabs-trigger-primary-display, inline-flex);
     align-items: var(--tabs-trigger-primary-align-items, center);
-    // Only shows once a tab is wider than its content, which is what a vertical
-    // rail does: its tabs stretch to the rail's width. Same as secondary.
+    // Only shows once a tab is wider than its content. Same as secondary.
     justify-content: var(--tabs-trigger-primary-justify-content, center);
     gap: var(--tabs-internal-primary-gap);
     // A tab does not give way, the scroll port scrolls instead. A tab wider than
@@ -568,40 +468,6 @@
       }
     }
   }
-
-  // Stacked tabs share their block edges instead of their inline ones, and the
-  // rounded pair moves to the rail's outer corners.
-  &[data-variant="secondary"][data-orientation="vertical"] {
-    border-inline-end-width: var(--tabs-trigger-secondary-border-width, 1px);
-    border-block-end-width: var(--tabs-trigger-secondary-border-block-end-width, 0px);
-
-    &:last-child {
-      border-block-end-width: var(--tabs-trigger-secondary-border-width, 1px);
-    }
-
-    &:first-child {
-      border-start-end-radius: 0;
-    }
-
-    &:last-child {
-      border-start-end-radius: 0;
-      border-end-start-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1));
-    }
-
-    &[data-active] {
-      border-block-end-color: var(--tabs-trigger-secondary-border-color, var(--tabs-border));
-      border-inline-end-color: var(
-        --tabs-trigger-secondary-active-border-inline-end-color,
-        transparent
-      );
-    }
-
-    // The bands stay on the inline edges. A stacked rail rounds its inline-start
-    // pair, so the leading band is the one that rounds at both ends.
-    &[data-disabled]:last-child::before {
-      border-end-start-radius: inherit;
-    }
-  }
 }
 
 // Sized on the cross axis here, on the main axis by the script that tracks the
@@ -613,18 +479,17 @@
   position: var(--tabs-hover-slider-position, absolute);
   left: var(--tabs-hover-slider-left, 0);
   top: var(--tabs-hover-slider-top, 0);
-  inline-size: var(--tabs-internal-hover-slider-inline-size);
-  block-size: var(--tabs-internal-hover-slider-block-size);
+  inline-size: var(--tabs-hover-slider-inline-size, auto);
+  block-size: var(--tabs-hover-slider-block-size, 100%);
   pointer-events: var(--tabs-hover-slider-pointer-events, none);
   background-color: var(--tabs-hover-slider-bg, color-mix(in srgb, var(--l1-foreground) 10%, transparent));
   border-radius: var(--tabs-hover-slider-border-radius, 2px);
   z-index: var(--tabs-hover-slider-z-index, 0);
-  will-change: var(--tabs-hover-slider-will-change, transform, width, height, opacity);
+  will-change: var(--tabs-hover-slider-will-change, transform, width, opacity);
   transition: var(
     --tabs-hover-slider-transition,
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.15s ease-out
   );
 }
@@ -642,37 +507,17 @@
   height: var(--tabs-active-slider-thickness, 2px);
   background-color: var(--tabs-active-accent-color, var(--tabs-primary-indicator));
   border-radius: var(--tabs-active-slider-border-radius, 2px);
-  will-change: var(--tabs-active-slider-will-change, left, width, top, height);
+  will-change: var(--tabs-active-slider-will-change, left, width);
   transition: var(
     --tabs-active-slider-transition,
     left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+    width 0.2s cubic-bezier(0.4, 0, 0.2, 1)
   );
-
-  // A rail runs down the side facing the panel instead of under the tabs.
-  &[data-orientation="vertical"] {
-    left: auto;
-    inset-block-end: auto;
-    inset-inline-end: calc(-1 * var(--tabs-active-slider-offset, var(--spacing-4)));
-    top: var(--active-tab-top, 0);
-    height: var(--active-tab-height, 0);
-    width: var(--tabs-active-slider-thickness, 2px);
-  }
 }
 
 .tabs__content {
   margin: var(--tabs-content-margin, var(--spacing-4) 0px 0px 0px);
   padding: var(--tabs-content-padding, var(--spacing-4));
-
-  &[data-orientation="vertical"] {
-    margin: var(--tabs-content-vertical-margin, 0px);
-    margin-inline-start: var(--tabs-content-vertical-margin-inline-start, var(--spacing-4));
-    flex: var(--tabs-content-vertical-flex, 1 1 auto);
-    // A wide panel must not push the rail out of the viewport.
-    min-inline-size: var(--tabs-content-vertical-min-inline-size, 0);
-  }
 
   &[data-no-content-padding] {
     padding: var(--tabs-content-no-padding-padding, 0);

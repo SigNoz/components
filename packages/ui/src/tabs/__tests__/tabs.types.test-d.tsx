@@ -104,7 +104,6 @@ describe('variant', () => {
 describe('orientation', () => {
 	test('accepts every TabsOrientation', () => {
 		assertType(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
-		assertType(<Tabs variant="primary" orientation="vertical" alignment="start" items={ITEMS} />);
 	});
 
 	test('is required', () => {
@@ -115,6 +114,11 @@ describe('orientation', () => {
 	test('rejects an orientation outside the set', () => {
 		// @ts-expect-error - `diagonal` is not a TabsOrientation
 		assertType(<Tabs variant="primary" orientation="diagonal" alignment="start" items={ITEMS} />);
+	});
+
+	test('rejects vertical, which the bar no longer renders', () => {
+		// @ts-expect-error - there is no vertical rail
+		assertType(<Tabs variant="primary" orientation="vertical" alignment="start" items={ITEMS} />);
 	});
 });
 

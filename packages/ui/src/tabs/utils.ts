@@ -1,5 +1,5 @@
 /**
- * How far the viewport has scrolled along one axis, and how much is left.
+ * How far the viewport has scrolled along the bar's axis, and how much is left.
  *
  * @access private
  */
@@ -13,17 +13,17 @@ export type TabsAxis = {
 };
 
 /**
- * Measures the scroll viewport along the axis the bar runs on.
+ * Measures the scroll viewport along the bar's axis.
  *
  * An RTL viewport counts `scrollLeft` down from zero, so `travelled` is the absolute value and
  * neither end flag has to know which direction it is on.
  *
  * @access private
  */
-export function readTabsAxis(viewport: HTMLElement, isVertical: boolean): TabsAxis {
-	const scrollSize = isVertical ? viewport.scrollHeight : viewport.scrollWidth;
-	const clientSize = isVertical ? viewport.clientHeight : viewport.clientWidth;
-	const travelled = isVertical ? viewport.scrollTop : Math.abs(viewport.scrollLeft);
+export function readTabsAxis(viewport: HTMLElement): TabsAxis {
+	const scrollSize = viewport.scrollWidth;
+	const clientSize = viewport.clientWidth;
+	const travelled = Math.abs(viewport.scrollLeft);
 
 	return { scrollSize, clientSize, travelled, remaining: scrollSize - clientSize - travelled };
 }
@@ -43,8 +43,7 @@ export function hideHoverSlider(slider: HTMLDivElement | null): void {
  * Sizes the hover mark to `trigger` and moves it there, or hides it when there is nothing to track.
  *
  * Both rects are read from the same scrolled box, so the delta holds however far the strip has
- * travelled. The size of the other axis is cleared rather than left behind, or an orientation flip
- * keeps whatever the previous axis wrote.
+ * travelled.
  *
  * @access private
  */
@@ -52,7 +51,6 @@ export function moveHoverSlider(
 	slider: HTMLDivElement | null,
 	list: HTMLElement | null,
 	trigger: HTMLElement | null,
-	isVertical: boolean,
 ): void {
 	if (!slider) {
 		return;
@@ -66,15 +64,7 @@ export function moveHoverSlider(
 	const listRect = list.getBoundingClientRect();
 	const triggerRect = trigger.getBoundingClientRect();
 
-	if (isVertical) {
-		slider.style.transform = `translateY(${triggerRect.top - listRect.top}px)`;
-		slider.style.height = `${triggerRect.height}px`;
-		slider.style.width = '';
-	} else {
-		slider.style.transform = `translateX(${triggerRect.left - listRect.left}px)`;
-		slider.style.width = `${triggerRect.width}px`;
-		slider.style.height = '';
-	}
-
+	slider.style.transform = `translateX(${triggerRect.left - listRect.left}px)`;
+	slider.style.width = `${triggerRect.width}px`;
 	slider.style.opacity = '1';
 }

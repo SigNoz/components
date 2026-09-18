@@ -1,8 +1,8 @@
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from '@signozhq/icons';
+import { ChevronLeft, ChevronRight } from '@signozhq/icons';
 import type { ReactElement } from 'react';
-import { TabsOrientation, TabsScrollDirection } from '../constants.js';
+import { TabsScrollDirection } from '../constants.js';
 import styles from '../tabs.module.scss';
-import type { TabsOrientationType, TabsScrollDirectionType, TabsVariantType } from '../types.js';
+import type { TabsScrollDirectionType, TabsVariantType } from '../types.js';
 
 /**
  * @access private
@@ -12,10 +12,6 @@ export type TabsScrollButtonProps = {
 	 * Which end of the strip this button scrolls towards.
 	 */
 	direction: TabsScrollDirectionType;
-	/**
-	 * The bar's `orientation`, which picks the arrow and what the label calls the direction.
-	 */
-	orientation: TabsOrientationType;
 	/**
 	 * The bar's `variant`, so the button can carry the secondary bar rule.
 	 */
@@ -35,25 +31,15 @@ export type TabsScrollButtonProps = {
 };
 
 const ICONS = {
-	[TabsOrientation.Horizontal]: {
-		[TabsScrollDirection.Start]: ChevronLeft,
-		[TabsScrollDirection.End]: ChevronRight,
-	},
-	[TabsOrientation.Vertical]: {
-		[TabsScrollDirection.Start]: ChevronUp,
-		[TabsScrollDirection.End]: ChevronDown,
-	},
+	[TabsScrollDirection.Start]: ChevronLeft,
+	[TabsScrollDirection.End]: ChevronRight,
 } as const;
 
+// Left and right rather than start and end: the arrow points at a side of the screen, and RTL
+// flips the icon (see `.tabs__scroll-button`) so each label still names the side it points at.
 const LABELS = {
-	[TabsOrientation.Horizontal]: {
-		[TabsScrollDirection.Start]: 'Scroll tabs left',
-		[TabsScrollDirection.End]: 'Scroll tabs right',
-	},
-	[TabsOrientation.Vertical]: {
-		[TabsScrollDirection.Start]: 'Scroll tabs up',
-		[TabsScrollDirection.End]: 'Scroll tabs down',
-	},
+	[TabsScrollDirection.Start]: 'Scroll tabs left',
+	[TabsScrollDirection.End]: 'Scroll tabs right',
 } as const;
 
 /**
@@ -73,13 +59,12 @@ const LABELS = {
  */
 export function TabsScrollButton({
 	direction,
-	orientation,
 	variant,
 	disabled,
 	onScroll,
 	groupTestId,
 }: TabsScrollButtonProps): ReactElement {
-	const Icon = ICONS[orientation][direction];
+	const Icon = ICONS[direction];
 	const testId = groupTestId === undefined ? undefined : `${groupTestId}-scroll-${direction}`;
 
 	return (
@@ -90,7 +75,7 @@ export function TabsScrollButton({
 			data-variant={variant}
 			className={styles['tabs__scroll-button']}
 			disabled={disabled}
-			aria-label={LABELS[orientation][direction]}
+			aria-label={LABELS[direction]}
 			onClick={onScroll}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>

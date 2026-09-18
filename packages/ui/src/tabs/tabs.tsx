@@ -13,7 +13,7 @@ import { useTabsOverflow } from './hooks/use-tabs-overflow.js';
 import { TabsScrollButton } from './subcomponents/tabs-scroll-button.js';
 import { TabsTrigger } from './subcomponents/tabs-trigger.js';
 import styles from './tabs.module.scss';
-import { TabsOrientation, TabsScrollDirection, TabsVariant } from './constants.js';
+import { TabsScrollDirection, TabsVariant } from './constants.js';
 import type { TabsProps, ValidateTabsProps } from './types.js';
 import { hideHoverSlider, moveHoverSlider } from './utils.js';
 
@@ -54,7 +54,6 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 	);
 
 	const isPrimary = variant === TabsVariant.Primary;
-	const isVertical = orientation === TabsOrientation.Vertical;
 
 	const {
 		viewportRef,
@@ -63,11 +62,11 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 		canScrollToEnd,
 		scrollTowardsStart,
 		scrollTowardsEnd,
-	} = useTabsOverflow({ orientation, activeKey: value ?? defaultValue ?? items[0]?.key });
+	} = useTabsOverflow({ activeKey: value ?? defaultValue ?? items[0]?.key });
 
 	const handleMouseOver: MouseEventHandler<HTMLDivElement> = (event) => {
 		const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-slot="tabs-item"]');
-		moveHoverSlider(hoverSliderRef.current, listRef.current, trigger, isVertical);
+		moveHoverSlider(hoverSliderRef.current, listRef.current, trigger);
 	};
 
 	const handleMouseLeave: MouseEventHandler<HTMLDivElement> = () => {
@@ -107,7 +106,6 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 					{isOverflowing && (
 						<TabsScrollButton
 							direction={TabsScrollDirection.Start}
-							orientation={orientation}
 							variant={variant}
 							disabled={!canScrollToStart}
 							onScroll={scrollTowardsStart}
@@ -128,13 +126,7 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 							onMouseLeave={isPrimary ? handleMouseLeave : undefined}
 						>
 							{items.map((item) => (
-								<TabsTrigger
-									key={item.key}
-									item={item}
-									variant={variant}
-									orientation={orientation}
-									groupTestId={testId}
-								/>
+								<TabsTrigger key={item.key} item={item} variant={variant} groupTestId={testId} />
 							))}
 
 							{isPrimary && (
@@ -155,7 +147,6 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 									ref={hoverSliderRef}
 									role="presentation"
 									data-slot="tabs-hover-slider"
-									data-orientation={orientation}
 									className={styles['tabs__hover-slider']}
 									style={{ opacity: 0 }}
 								/>
@@ -166,7 +157,6 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 					{isOverflowing && (
 						<TabsScrollButton
 							direction={TabsScrollDirection.End}
-							orientation={orientation}
 							variant={variant}
 							disabled={!canScrollToEnd}
 							onScroll={scrollTowardsEnd}
@@ -254,13 +244,11 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
  *
  * ### Orientation
  *
- * `orientation="vertical"` turns the bar into a rail beside its panel: the tabs stack, the arrow
- * keys become up and down, and the primary indicator runs down the rail's inner edge.
+ * `orientation="horizontal"` is the only value, and it is required rather than defaulted so the
+ * bar states its axis. There is no vertical rail.
  *
- * Every side-named prop follows the bar rather than the screen, which is why `alignment` and the
- * two bar content props are named start and end.
- *
- * A vertical rail only overflows if something bounds its height, so give it or an ancestor one.
+ * `alignment` and the two bar content props are still named start and end, because each mirrors
+ * under RTL.
  *
  * ### Truncation and overflow
  *

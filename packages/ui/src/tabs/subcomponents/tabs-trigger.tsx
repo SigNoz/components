@@ -12,9 +12,9 @@ import {
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
 import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
-import { TABS_EMPTY_LABEL, TabsOrientation, TabsVariant } from '../constants.js';
+import { TABS_EMPTY_LABEL, TabsVariant } from '../constants.js';
 import styles from '../tabs.module.scss';
-import type { TabsItemProps, TabsOrientationType, TabsVariantType } from '../types.js';
+import type { TabsItemProps, TabsVariantType } from '../types.js';
 
 /**
  * @access private
@@ -28,10 +28,6 @@ export type TabsTriggerProps = {
 	 * The bar's `variant`.
 	 */
 	variant: TabsVariantType;
-	/**
-	 * The bar's `orientation`, which decides the side the tooltip opens on.
-	 */
-	orientation: TabsOrientationType;
 	/**
 	 * The bar's own `testId`, used to name this tab when the item does not name itself.
 	 */
@@ -84,12 +80,7 @@ function TabsLockIcon({ className }: { className?: string }): ReactElement {
  *
  * @access private
  */
-export function TabsTrigger({
-	item,
-	variant,
-	orientation,
-	groupTestId,
-}: TabsTriggerProps): ReactElement {
+export function TabsTrigger({ item, variant, groupTestId }: TabsTriggerProps): ReactElement {
 	const { key, label, testId, disabled, disabledTooltip, prefixIcon, suffixIcon, render } = item;
 	const tooltipContentId = useId();
 	const tooltipHandle = useTooltipHandle();
@@ -165,13 +156,7 @@ export function TabsTrigger({
 			</TooltipTrigger>
 			{tooltipContent !== null && (
 				<TooltipRoot handle={tooltipHandle}>
-					{/* A rail stacks its tabs, so a tooltip above one covers the tab before it. */}
-					<TooltipContent
-						id={tooltipContentId}
-						side={orientation === TabsOrientation.Vertical ? 'right' : undefined}
-					>
-						{tooltipContent}
-					</TooltipContent>
+					<TooltipContent id={tooltipContentId}>{tooltipContent}</TooltipContent>
 				</TooltipRoot>
 			)}
 		</TooltipProviderIfMissing>
