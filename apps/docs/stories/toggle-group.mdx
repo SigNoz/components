@@ -1,59 +1,293 @@
-import { Meta, Controls, Story } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as ToggleGroupStories from './toggle-group.stories';
-import * as ToggleGroupItemStories from './toggle-group-item.stories';
 
 <Meta of={ToggleGroupStories} />
 
 # ToggleGroup
 
-A set of two-state buttons that can be toggled on or off, in single or multiple selection mode.
+A segmented button bar, rendered through Base UI's `ToggleGroup`. It takes its options as data,
+fills the pressed one, truncates long labels into a tooltip, scrolls once the options stop fitting,
+and it forwards every `aria-*` and `data-*` attribute to the root.
 
-For the quick-start preset, see [ToggleGroupSimple](?path=/docs/composed-components-togglegroupsimple--docs).
+Reach for it when every option is a persistent view state and there are no more than five of them.
+For an action, use `Button`. For more options than that, a dropdown.
 
-## Basic usage (composition)
+## How to use
 
-For full control over each option, use `ToggleGroup` with `ToggleGroupItem` as children:
+`type`, `variant`, `color`, `size` and `items` are all required: the bar has no default appearance
+and nothing to render without options. There are no children to compose, the bar owns its own
+markup.
 
 ```tsx
-import { ToggleGroup, ToggleGroupItem } from '@signozhq/ui';
-import { AlignLeft, AlignCenter, AlignRight } from '@signozhq/icons';
+import { ToggleGroup } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function LayoutPicker() {
 	return (
-		<ToggleGroup type="single" defaultValue="center">
-			<ToggleGroupItem value="left" aria-label="Align left">
-				<AlignLeft style={{ width: '0.75rem', height: '0.75rem' }} />
-			</ToggleGroupItem>
-			<ToggleGroupItem value="center" aria-label="Align center">
-				<AlignCenter style={{ width: '0.75rem', height: '0.75rem' }} />
-			</ToggleGroupItem>
-			<ToggleGroupItem value="right" aria-label="Align right">
-				<AlignRight style={{ width: '0.75rem', height: '0.75rem' }} />
-			</ToggleGroupItem>
-		</ToggleGroup>
+		<ToggleGroup
+			type="single"
+			variant="outlined"
+			color="secondary"
+			size="sm"
+			defaultValue="list"
+			onChange={setLayout}
+			items={[
+				{ value: 'list', label: 'List' },
+				{ value: 'grid', label: 'Grid' },
+				{ value: 'table', label: 'Table' },
+			]}
+		/>
 	);
 }
 ```
 
-For multiple selection:
+<Primary />
+
+## Items
+
+Each entry is `{ value, label }`, plus an optional `prefix`, `suffix` and `testId`, and an optional
+`disabled` + `disabledTooltip` pair. `value` is what `value`, `defaultValue` and `onChange` carry,
+so it is unique within the bar: two items sharing one are indistinguishable to the component.
+
+`label` is the button's text and its accessible name. It is capped, so keep it to text and put an
+icon in `prefix` or `suffix`.
 
 ```tsx
-<ToggleGroup type="multiple" defaultValue={['bold']}>
-	<ToggleGroupItem value="bold" aria-label="Bold">
-		<Bold style={{ width: '0.75rem', height: '0.75rem' }} />
-	</ToggleGroupItem>
-	<ToggleGroupItem value="italic" aria-label="Italic">
-		<Italic style={{ width: '0.75rem', height: '0.75rem' }} />
-	</ToggleGroupItem>
-</ToggleGroup>
+const LAYOUT_ITEMS = [
+	{ value: 'list', label: 'List' },
+	{ value: 'grid', label: 'Grid', testId: 'grid-layout' },
+	{ value: 'table', label: 'Table' },
+];
 ```
 
-<Story of={ToggleGroupStories.Default} />
+A label that renders nothing (`null`, `false` or an empty string) falls back to the text
+`<No label>`, marks its label element with `data-empty-label` and logs an error. The button is never
+dropped: an option that disappears leaves the bar without saying so.
 
-## ToggleGroup Props
+## Selection
+
+`type="single"` presses one button at a time and reports a string. `type="multiple"` presses any
+number of them and reports an array.
+
+```tsx
+<ToggleGroup
+	type="multiple"
+	variant="outlined"
+	color="secondary"
+	size="md"
+	value={severities}
+	onChange={setSeverities}
+	items={[
+		{ value: 'warning', label: 'Warning' },
+		{ value: 'error', label: 'Error' },
+	]}
+/>
+```
+
+Once something is pressed the bar keeps reporting a value: the press that would leave it empty is
+cancelled, so `onChange` is not called. `allowClear` hands that press back, and the bar then reports
+the empty string, or the empty array for `type="multiple"`. A bar that starts with nothing pressed
+stays that way until the first press either way.
+
+Pressed is the filled state. Hovering an unpressed button paints half that fill, so the hover is a
+preview of what pressing it will look like.
+
+## Controlled and uncontrolled
+
+`defaultValue` presses one option on the first render and then leaves the bar to keep its own state.
+`value` and `onChange` hand that state to you.
+
+```tsx
+const [layout, setLayout] = useState('list');
+
+<ToggleGroup
+	type="single"
+	variant="outlined"
+	color="secondary"
+	size="sm"
+	value={layout}
+	onChange={setLayout}
+	items={LAYOUT_ITEMS}
+/>;
+```
+
+A `single` bar reads and writes a string, and the empty string is how it says nothing is pressed. A
+`multiple` bar reads and writes `string[]`, and the empty array says the same.
+
+## Sizes
+
+Both sizes are 32px tall and differ in horizontal padding alone. `md` is roughly triple `sm`, which
+makes it a two- or three-option control rather than a toolbar one.
+
+```tsx
+<ToggleGroup type="single" variant="outlined" color="secondary" size="sm" items={LAYOUT_ITEMS} />
+<ToggleGroup type="single" variant="outlined" color="secondary" size="md" items={LAYOUT_ITEMS} />
+```
+
+`variant="outlined"` and `color="secondary"` are the only values the design spec draws today. The
+props are kept so every call site states its treatment.
+
+## Icons
+
+`prefix` and `suffix` place an element before or after the label, inside the button. They sit
+outside the truncation cap, so the icon keeps its size while the text truncates. An icon never goes
+in `label`.
+
+```tsx
+import { ChevronDown, LayoutGrid, List } from '@signozhq/icons';
+
+items={[
+	{ value: 'list', label: 'List', prefix: <List /> },
+	{ value: 'grid', label: 'Grid', prefix: <LayoutGrid /> },
+	{ value: 'table', label: 'Table', suffix: <ChevronDown /> },
+]}
+```
+
+## Truncation
+
+A label is capped at 120px (`--toggle-group-label-max-inline-size`). Past it the label truncates,
+carries `data-truncated` and shows its full text in a tooltip, only while it is actually truncated,
+so a label that fits never opens one.
+
+The visible text is only clipped, so the accessible name is already the full label.
+
+## Overflow
+
+A bar narrower than its options scrolls, with an arrow at each end. The options never shrink: a
+segmented control that squeezes them is unreadable.
+
+Each arrow is a button of its own, named `Scroll options left` and `Scroll options right`, and a
+press moves the strip most of a screenful. An arrow is natively disabled while the strip cannot
+travel that way, so it leaves the tab order at that end.
+
+Changing the pressed value scrolls that button back into view.
+
+## Blocking one option
+
+An option that cannot be picked says why. `disabled` and `disabledTooltip` travel together in both
+directions: one without the other is a type error.
+
+```tsx
+items={[
+	{ value: 'logs', label: 'Logs', prefix: <FileText /> },
+	{ value: 'traces', label: 'Traces' },
+	{
+		value: 'profiles',
+		label: 'Profiles',
+		disabled: true,
+		disabledTooltip: 'Profiling is not enabled for this workspace',
+	},
+]}
+```
+
+The button carries `aria-disabled` rather than the native attribute, so it stays hoverable and
+focusable and its reason stays reachable. It also carries `data-disabled`, which says this one
+option is blocked inside a bar that is otherwise live.
+
+## Disabled and read-only
+
+The bar's own `disabled` makes the same pairing, and blocks every option instead of one:
+
+```tsx
+<ToggleGroup
+	type="single"
+	variant="outlined"
+	color="secondary"
+	size="sm"
+	disabled
+	disabledTooltip="This workspace is read only"
+	items={LAYOUT_ITEMS}
+/>
+```
+
+`readOnly` locks the value instead of turning the bar off, and takes its own reason:
+
+```tsx
+<ToggleGroup
+	type="single"
+	variant="outlined"
+	color="secondary"
+	size="sm"
+	value={layout}
+	onChange={setLayout}
+	readOnly={isSaving}
+	readOnlyTooltip="Saving your changes"
+	items={LAYOUT_ITEMS}
+/>
+```
+
+`readOnly` outranks `disabled`. While it is set the bar is not disabled at all, `readOnlyTooltip` is
+the only reason shown, and `disabledTooltip` and every option's own reason are suppressed: a locked
+bar has one reason, not one per button.
+
+A locked bar dims less than a disabled one and keeps its label colors, so the pressed option stays
+readable. Its buttons carry `aria-disabled` and `data-readonly`, and the bar keeps its tab stop, so
+the reason is reachable by pointer and by keyboard on both paths.
+
+## Keyboard
+
+The bar is a single tab stop, because only one option is in the tab order at a time. Arrow keys then
+move focus between the options and loop at either end, and `Enter` or `Space` presses the focused
+one. Focus moves on its own: the pressed value only changes on a press.
+
+Arrow keys stop moving while the bar is disabled or read-only, because every option is inert and
+there is nowhere to take them. The tab stop stays, which is how the reason is reached.
+
+An overflowing bar adds its two arrows as tab stops of their own, one at each side of the options.
+
+## Stacked tooltips
+
+A button can own three tooltips at a time: why the bar cannot be used, why this option cannot, and
+the full text of a truncated label. Tooltips anchored to the same button would open on the same
+hover and render on top of each other, so they go into one popup, most general first, with a divider
+between them.
+
+```
+This workspace is read only
+─────────────────────────────────────────
+Profiling is not enabled for this workspace
+─────────────────────────────────────────
+Everything that happened in the last seven days
+```
+
+While the bar is read-only its reason is the only one shown, and the item reasons go quiet. A
+truncated label keeps its entry on every path.
+
+The trigger is mounted from the props rather than from whether there is something to show right now,
+so a button never remounts when a tooltip appears and never loses its focus. The tooltip itself
+mounts only while there is content for it.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names every button: with `testId="layout"`, the
+options are `layout-button-list`, `layout-button-grid` and so on, and the arrows are
+`layout-scroll-start` and `layout-scroll-end`. An item's own `testId` wins where it is written.
+
+```tsx
+<ToggleGroup
+	type="single"
+	variant="outlined"
+	color="secondary"
+	size="sm"
+	testId="layout"
+	items={LAYOUT_ITEMS}
+/>
+// screen.getByTestId('layout-button-grid')
+```
+
+Otherwise reach for the roles and the data attributes, never the hashed class names:
+
+| `data-slot`                                  | rendered                                                                                                                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `toggle-group`                               | the root, `data-disabled` while the bar is off, `data-readonly` while its value is locked                                                                                      |
+| `toggle-group-viewport`                      | the box the strip scrolls inside                                                                                                                                               |
+| `toggle-group-list`                          | the group itself, `data-multiple` while `type="multiple"`                                                                                                                      |
+| `toggle-group-button`                        | one per item, `data-pressed` while pressed, `data-disabled` while that option alone is blocked, `data-readonly` while the bar is locked, `aria-disabled` on any of those paths |
+| `toggle-group-prefix`, `toggle-group-suffix` | only when the item carries one                                                                                                                                                 |
+| `toggle-group-label`                         | the measured element, `data-truncated` while it does not fit, `data-empty-label` while it is the fallback                                                                      |
+| `toggle-group-scroll-button`                 | only while the strip overflows, `data-direction` says which end                                                                                                                |
+
+The root also mirrors `variant`, `color` and `size` on `data-variant`, `data-color` and `data-size`.
+
+## Props
 
 <Controls of={ToggleGroupStories.Default} />
-
-## ToggleGroupItem Props
-
-<Controls of={ToggleGroupItemStories.Default} />
