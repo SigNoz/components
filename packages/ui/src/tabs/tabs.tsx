@@ -8,9 +8,9 @@ import {
 	useRef,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import { cn } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { useTabsOverflow } from './hooks/use-tabs-overflow.js';
 import { TabsScrollButton } from './subcomponents/tabs-scroll-button.js';
 import { TabsTrigger } from './subcomponents/tabs-trigger.js';
 import styles from './tabs.module.scss';
@@ -66,7 +66,10 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 		canScrollToEnd,
 		scrollTowardsStart,
 		scrollTowardsEnd,
-	} = useTabsOverflow({ activeKey: value ?? defaultValue ?? items[0]?.key });
+	} = useOverflowScroll({
+		activeKey: value ?? defaultValue ?? items[0]?.key,
+		activeItemSelector: '[data-slot="tabs-item"][data-active]',
+	});
 
 	const handleMouseOver: MouseEventHandler<HTMLDivElement> = (event) => {
 		const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-slot="tabs-item"]');

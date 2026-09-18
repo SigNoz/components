@@ -1,34 +1,4 @@
 /**
- * How far the viewport has scrolled along the bar's axis, and how much is left.
- *
- * @access private
- */
-export type TabsAxis = {
-	scrollSize: number;
-	clientSize: number;
-	/** How far the strip has already travelled from its start, on either writing direction. */
-	travelled: number;
-	/** How much is left before the far end. */
-	remaining: number;
-};
-
-/**
- * Measures the scroll viewport along the bar's axis.
- *
- * An RTL viewport counts `scrollLeft` down from zero, so `travelled` is the absolute value and
- * neither end flag has to know which direction it is on.
- *
- * @access private
- */
-export function readTabsAxis(viewport: HTMLElement): TabsAxis {
-	const scrollSize = viewport.scrollWidth;
-	const clientSize = viewport.clientWidth;
-	const travelled = Math.abs(viewport.scrollLeft);
-
-	return { scrollSize, clientSize, travelled, remaining: scrollSize - clientSize - travelled };
-}
-
-/**
  * Takes the hover mark off the bar.
  *
  * @access private
