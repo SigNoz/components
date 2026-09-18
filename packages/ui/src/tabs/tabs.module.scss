@@ -1,10 +1,7 @@
-// The bar is a row of tabs above its panel.
-//
 // Logical properties carry the RTL work, so an edge is named inline or block wherever the value
 // mirrors. The two sliders are the exception, and say why where they are declared.
 //
-// The three `--tabs-internal-order-*` values are shared by the list, the arrows and the spacers,
-// which is the only reason they are variables rather than literals.
+// The three `--tabs-internal-order-*` values are shared by the list, the arrows and the spacers.
 .tabs {
   --tabs-internal-spacer-min-inline: 0;
   --tabs-internal-bar-rule-block-end: 0 solid transparent;
@@ -15,6 +12,10 @@
   display: var(--tabs-display, flex);
   flex-direction: var(--tabs-flex-direction, column);
   gap: var(--tabs-gap, var(--spacing-4));
+
+  // The `width`/`maxWidth` props arrive as the internal pair, so a token still outranks a call site.
+  inline-size: var(--tabs-inline-size, var(--tabs-internal-inline-size, 100%));
+  max-inline-size: var(--tabs-max-inline-size, var(--tabs-internal-max-inline-size, 100%));
 }
 
 // Bar content sits at the outer edges, and the spacers between it and the list
@@ -74,11 +75,9 @@
   }
 }
 
-// The scroll port. The strip overflows this box and scrolls inside it, and the
-// tabs never shrink (see `.tabs__trigger`).
-//
-// It is the only flex item here that gives way, so every pixel the wrapper has to
-// find comes out of this box rather than off a bar content block.
+// The scroll port. The strip overflows this box and scrolls inside it, and the tabs never shrink
+// (see `.tabs__trigger`). It is the only flex item here that gives way, so every pixel the wrapper
+// has to find comes out of this box rather than off a bar content block.
 .tabs__list-inner {
   display: var(--tabs-list-inner-display, inline-flex);
   flex-direction: var(--tabs-list-inner-flex-direction, row);
@@ -99,12 +98,10 @@
   // The strip has its own arrows and its own keyboard.
   scrollbar-width: var(--tabs-list-viewport-scrollbar-width, none);
 
-  // A scroll container clips at its padding box, so padding moves the clip edge
-  // outwards and an equal negative margin gives the room back: the margin box
-  // keeps its size and nothing around the bar moves.
-  //
-  // Every side has to clear the trigger's focus ring. The block-end side also
-  // clears the primary indicator, which hangs below the list's own box.
+  // A scroll container clips at its padding box, so padding moves the clip edge outwards and an
+  // equal negative margin gives the room back: the margin box keeps its size and nothing around the
+  // bar moves. Every side clears the trigger's focus ring, and block-end also clears the primary
+  // indicator, which hangs below the list's own box.
   --tabs-internal-slider-bleed: 0px;
 
   padding: var(--tabs-list-viewport-bleed, 2px);
@@ -126,8 +123,8 @@
   }
 }
 
-// The hook calls `scrollBy` with no `behavior`, so every scroll in the component
-// obeys this one switch: the arrows, focus scrolling and Base UI's keyboard scroll.
+// The hook calls `scrollBy` with no `behavior`, so this one switch covers the arrows, focus
+// scrolling and Base UI's keyboard scroll.
 @media (prefers-reduced-motion: reduce) {
   .tabs__list-inner {
     scroll-behavior: auto;
@@ -194,9 +191,9 @@
   }
 }
 
-// One of the two arrows flanking an overflowing strip. A peer of the spacers
-// rather than a child of the scroll port, which keeps `role="tab"` the only role
-// in the tablist and keeps the secondary bar rule unbroken underneath it.
+// One of the two arrows flanking an overflowing strip. A peer of the spacers rather than a child of
+// the scroll port, which keeps `role="tab"` the only role in the tablist and keeps the secondary bar
+// rule unbroken underneath it.
 .tabs__scroll-button {
   order: var(--tabs-internal-order-list);
   flex-grow: var(--tabs-scroll-button-flex-grow, 0);
@@ -249,13 +246,13 @@
   }
 }
 
-// Both variants render the spacers, which is where the free space between the
-// list and the bar content lives. Only `secondary` paints on them.
+// Both variants render the spacers, which hold the free space between the list and the bar content.
+// Only `secondary` paints on them.
 //
-// The bar rule is drawn by the elements flanking the list, never by the wrapper:
-// a border there would also run behind the active trigger, which is deliberately
-// open to the panel below. The flanking elements are adjacent flex items with no
-// gap, so each side stays one unbroken run at every alignment.
+// The bar rule is drawn by the elements flanking the list, never by the wrapper: a border there
+// would also run behind the active trigger, which is deliberately open to the panel below. Those
+// elements are adjacent flex items with no gap, so each side stays one unbroken run at every
+// alignment.
 .tabs__border-spacer {
   flex-grow: var(--tabs-border-spacer-flex-grow, var(--tabs-internal-spacer-start-flex-grow, 0));
   flex-shrink: var(--tabs-border-spacer-flex-shrink, 1);
@@ -284,7 +281,7 @@
   background-color: var(--tabs-trigger-background-color, transparent);
   border: var(--tabs-trigger-border, none);
 
-  /* A navigating tab renders as an anchor, which the user agent underlines. */
+  // A navigating tab renders as an anchor, which the user agent underlines.
   text-decoration: var(--tabs-trigger-text-decoration, none);
 
   &:hover {
@@ -300,11 +297,10 @@
 
     display: var(--tabs-trigger-primary-display, inline-flex);
     align-items: var(--tabs-trigger-primary-align-items, center);
-    // Only shows once a tab is wider than its content. Same as secondary.
     justify-content: var(--tabs-trigger-primary-justify-content, center);
     gap: var(--tabs-internal-primary-gap);
-    // A tab does not give way, the scroll port scrolls instead. A tab wider than
-    // the visible strip is still capped here, so that one truncates.
+    // A tab does not give way, the scroll port scrolls instead. A tab wider than the visible strip
+    // is still capped here, so that one truncates.
     flex: var(--tabs-trigger-primary-flex, 0 0 auto);
     max-inline-size: var(--tabs-trigger-primary-max-inline-size, 100%);
     border-radius: var(--tabs-trigger-primary-border-radius, var(--tabs-primary-radius));
@@ -348,7 +344,6 @@
     display: var(--tabs-trigger-secondary-display, inline-flex);
     // Containing block for the dot, which is positioned rather than laid out.
     position: var(--tabs-trigger-secondary-position, relative);
-    // See the primary trigger: a tab holds its size so the strip can scroll.
     flex: var(--tabs-trigger-secondary-flex, 0 0 auto);
     max-inline-size: var(--tabs-trigger-secondary-max-inline-size, 100%);
     align-items: var(--tabs-trigger-secondary-align-items, center);
@@ -362,10 +357,10 @@
     border-width: var(--tabs-trigger-secondary-border-width, 1px);
     border-style: var(--tabs-trigger-secondary-border-style, solid);
     border-color: var(--tabs-trigger-secondary-border-color, var(--tabs-border));
-    // Neighbouring tabs share one edge, so all but the last drop the one facing
-    // the next tab. `:first-child`/`:last-child` rather than `:*-of-type`, since a
-    // bar can mix `<a>` tabs with a disabled `<button>` one. Secondary renders
-    // neither slider, so the list's children are exactly the tabs.
+    // Neighbouring tabs share one edge, so all but the last drop the one facing the next tab.
+    // `:first-child`/`:last-child` rather than `:*-of-type`, since a bar can mix `<a>` tabs with a
+    // disabled `<button>` one. Secondary renders neither slider, so the list's children are exactly
+    // the tabs.
     border-inline-end-width: var(--tabs-trigger-secondary-border-inline-end-width, 0px);
     background-color: var(--tabs-trigger-secondary-bg, var(--tabs-secondary-background));
     color: var(--tabs-trigger-secondary-color, var(--tabs-secondary-label));
@@ -392,7 +387,6 @@
       }
     }
 
-    // Logical corners, so the rounded pair mirrors under RTL for free.
     &:first-child {
       border-start-start-radius: var(--tabs-trigger-secondary-border-radius, var(--radius-1));
     }
@@ -442,9 +436,9 @@
         );
       }
 
-      // The trigger cannot clip the bands: any overflow other than `visible` drops
-      // its automatic minimum size to 0 and collapses it. Each band rounds its own
-      // outer corner instead, and only where the trigger rounds too.
+      // The trigger cannot clip the bands: any overflow other than `visible` drops its automatic
+      // minimum size to 0 and collapses it. Each band rounds its own outer corner instead, and only
+      // where the trigger rounds too.
       &:first-child::before {
         border-start-start-radius: inherit;
       }
@@ -470,11 +464,9 @@
   }
 }
 
-// Sized on the cross axis here, on the main axis by the script that tracks the
-// hovered tab. A child of the list, like Base UI's own indicator, so it measures
-// against the same box the tabs do and travels with the strip.
-//
-// `left`/`top` stay physical, because the delta written inline is.
+// Sized on the cross axis here, on the main axis by the script that tracks the hovered tab. A child
+// of the list, like Base UI's own indicator, so it measures against the same box the tabs do and
+// travels with the strip. `left`/`top` stay physical, because the delta written inline is.
 .tabs__hover-slider {
   position: var(--tabs-hover-slider-position, absolute);
   left: var(--tabs-hover-slider-left, 0);
@@ -494,11 +486,9 @@
   );
 }
 
-// Same duration and easing as the hover slider, or the two marks separate
-// whenever both move at once.
-//
-// The along-axis inset is physical, since Base UI publishes physical deltas. The
-// edge the rule sits on is logical, so it mirrors under RTL.
+// Same duration and easing as the hover slider, or the two marks separate whenever both move at
+// once. The along-axis inset is physical, since Base UI publishes physical deltas, while the edge
+// the rule sits on is logical and mirrors under RTL.
 .tabs__active-slider {
   position: var(--tabs-active-slider-position, absolute);
   left: var(--active-tab-left, 0);
@@ -549,19 +539,17 @@
   text-overflow: var(--tabs-label-text-overflow, ellipsis);
 }
 
-// The dot marks the selected tab, shown only under `[data-active]` below. A
-// display change cannot be transitioned but does start an animation, which is how
-// the dot arrives on a rise and fade.
+// The dot marks the selected tab, shown only under `[data-active]`. A display change cannot be
+// transitioned but does start an animation, which is how the dot arrives on a rise and fade.
 //
-// It is positioned rather than laid out, and sits in the trigger's trailing
-// padding. As a flex item it widened the selected tab by the dot plus a gap and
-// left an empty slot on every tab without one.
+// It is positioned rather than laid out, and sits in the trigger's trailing padding. As a flex item
+// it widened the selected tab by the dot plus a gap and left an empty slot on every tab without one.
 .tabs__dot {
   display: none;
   position: var(--tabs-trigger-secondary-dot-position, absolute);
   inset-inline-end: var(--tabs-trigger-secondary-dot-inset-inline-end, var(--spacing-6));
-  // Centred on the cross axis by an auto margin against both insets, which
-  // leaves `transform` free for the entry animation.
+  // Centred on the cross axis by an auto margin against both insets, which leaves `transform` free
+  // for the entry animation.
   inset-block: var(--tabs-trigger-secondary-dot-inset-block, 0);
   margin-block: var(--tabs-trigger-secondary-dot-margin-block, auto);
   animation: tabs-dot-in var(--tabs-trigger-secondary-dot-duration, 180ms)
@@ -574,8 +562,6 @@
   background-color: var(--tabs-trigger-secondary-dot-background-color, var(--tabs-primary-indicator));
 }
 
-// The scale does most of the work and the easing overshoots slightly past `1`,
-// which keeps a 4px mark from looking like it simply switched on.
 @keyframes tabs-dot-in {
   from {
     opacity: 0;

@@ -99,6 +99,24 @@ const meta: Meta<typeof Tabs> = {
 				defaultValue: { summary: 'false' },
 			},
 		},
+		width: {
+			control: 'text',
+			description: 'Width of the bar and its panels. 100% of the container when omitted.',
+			table: {
+				category: 'Layout',
+				type: { summary: 'CSSProperties["width"]' },
+				defaultValue: { summary: '100%' },
+			},
+		},
+		maxWidth: {
+			control: 'text',
+			description: 'Max-width of the bar and its panels. 100% of the container when omitted.',
+			table: {
+				category: 'Layout',
+				type: { summary: 'CSSProperties["maxWidth"]' },
+				defaultValue: { summary: '100%' },
+			},
+		},
 		id: {
 			control: 'text',
 			description: 'A unique identifier for the tab bar.',
