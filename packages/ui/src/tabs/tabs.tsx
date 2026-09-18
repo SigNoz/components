@@ -7,6 +7,7 @@ import {
 	useMemo,
 	useRef,
 } from 'react';
+import { toCssLength } from '../lib/css-length.js';
 import { cn } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { useTabsOverflow } from './hooks/use-tabs-overflow.js';
@@ -32,6 +33,9 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 		tabBarEndContent,
 		noTabContentPadding = false,
 		testId,
+		width,
+		maxWidth,
+		style,
 		...props
 	},
 	ref,
@@ -73,11 +77,18 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 		hideHoverSlider(hoverSliderRef.current);
 	};
 
+	const tabsStyle = {
+		...style,
+		...(width != null && { '--tabs-internal-inline-size': toCssLength(width) }),
+		...(maxWidth != null && { '--tabs-internal-max-inline-size': toCssLength(maxWidth) }),
+	};
+
 	return (
 		<TabsPrimitive.Root
 			ref={ref}
 			data-slot="tabs"
 			className={cn(styles.tabs, className)}
+			style={tabsStyle}
 			value={value}
 			defaultValue={defaultValue ?? items[0]?.key}
 			onValueChange={onValueChange}
