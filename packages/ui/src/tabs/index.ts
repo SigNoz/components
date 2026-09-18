@@ -61,6 +61,7 @@
  * | `--tabs-icon-align-items` | `center` |
  * | `--tabs-icon-display` | `inline-flex` |
  * | `--tabs-icon-flex-shrink` | `0` |
+ * | `--tabs-inline-size` | `var(--tabs-internal-inline-size, 100%)` |
  * | `--tabs-label-max-inline-size` | `120px` |
  * | `--tabs-label-min-inline-size` | `0` |
  * | `--tabs-label-overflow` | `hidden` |
@@ -102,6 +103,7 @@
  * | `--tabs-list-wrapper-primary-text-align` | `start` |
  * | `--tabs-list-wrapper-secondary-display` | `flex` |
  * | `--tabs-list-wrapper-secondary-inline-size` | `100%` |
+ * | `--tabs-max-inline-size` | `var(--tabs-internal-max-inline-size, 100%)` |
  * | `--tabs-primary-background-hover` | `-` |
  * | `--tabs-primary-indicator` | `-` |
  * | `--tabs-primary-label` | `-` |

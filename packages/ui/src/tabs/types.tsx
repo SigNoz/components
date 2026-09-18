@@ -1,5 +1,5 @@
 import type { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
-import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode } from 'react';
 import type {
 	TabsAlignment,
 	TabsOrientation,
@@ -265,6 +265,24 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		 * @default false
 		 */
 		noTabContentPadding?: boolean;
+		/**
+		 * The width of the whole component, the bar and its panels. Written as the
+		 * `--tabs-internal-inline-size` custom property, so it composes with the tokens instead of
+		 * overwriting `style.width`. Numbers are written as `px`.
+		 *
+		 * @note Sizes no single tab: a tab holds its own size and the strip scrolls instead.
+		 *
+		 * @default "100%"
+		 */
+		width?: CSSProperties['width'];
+		/**
+		 * The max-width of the whole component, the bar and its panels. Written as the
+		 * `--tabs-internal-max-inline-size` custom property, so it composes with the tokens. Numbers
+		 * are written as `px`.
+		 *
+		 * @default "100%"
+		 */
+		maxWidth?: CSSProperties['maxWidth'];
 		/**
 		 * Forwarded to the rendered element as `data-testid`.
 		 *
