@@ -1,5 +1,4 @@
 import { type RefCallback, useCallback, useEffect, useRef, useState } from 'react';
-import { readTabsAxis } from '../utils.js';
 
 /**
  * `scrollWidth`/`clientWidth` are rounded to integers, so a strip that fits can still report a one
@@ -14,19 +13,54 @@ const SCROLL_OVERFLOW_TOLERANCE_PX = 1;
 const SCROLL_STEP_RATIO = 0.8;
 
 /**
+ * How far the viewport has scrolled along its inline axis, and how much is left.
+ *
  * @access private
  */
-export type UseTabsOverflowOptions = {
+export type OverflowAxis = {
+	scrollSize: number;
+	clientSize: number;
+	/** How far the strip has already travelled from its start, on either writing direction. */
+	travelled: number;
+	/** How much is left before the far end. */
+	remaining: number;
+};
+
+/**
+ * Measures the scroll viewport along its inline axis.
+ *
+ * An RTL viewport counts `scrollLeft` down from zero, so `travelled` is the absolute value and
+ * neither end flag has to know which direction it is on.
+ *
+ * @access private
+ */
+export function readOverflowAxis(viewport: HTMLElement): OverflowAxis {
+	const scrollSize = viewport.scrollWidth;
+	const clientSize = viewport.clientWidth;
+	const travelled = Math.abs(viewport.scrollLeft);
+
+	return { scrollSize, clientSize, travelled, remaining: scrollSize - clientSize - travelled };
+}
+
+/**
+ * @access private
+ */
+export type UseOverflowScrollOptions = {
 	/**
-	 * The active item's `key`. A change scrolls that tab back into view.
+	 * The active item's key. A change scrolls that item back into view.
 	 */
 	activeKey: string | undefined;
+	/**
+	 * Finds the active item inside the viewport, so it can be brought back into view. A tab bar
+	 * passes `[data-slot="tabs-item"][data-active]`, a toggle group its own pressed button.
+	 */
+	activeItemSelector: string;
 };
 
 /**
  * @access private
  */
-export type UseTabsOverflowReturn = {
+export type UseOverflowScrollReturn = {
 	/**
 	 * Attach to the scroll viewport.
 	 */
@@ -48,19 +82,25 @@ export type UseTabsOverflowReturn = {
 };
 
 /**
- * Keeps an overflowing tab strip scrollable: reports whether it overflows and how far it can still
- * travel, moves it a step at a time, and brings the active tab back into view.
+ * Keeps an overflowing horizontal strip scrollable: reports whether it overflows and how far it can
+ * still travel, moves it a step at a time, and brings the active item back into view.
  *
- * Nothing here listens for the strip moving on its own. Base UI's indicator measures a tab against
- * the list and both live inside the viewport, so that delta is already scroll invariant, and the
- * browser scrolls a newly focused tab into view by itself.
+ * Shared by `Tabs` and `ToggleGroup`, which scroll the same way and differ only in what marks the
+ * active item.
+ *
+ * Nothing here listens for the strip moving on its own. Base UI's tab indicator measures an item
+ * against the list and both live inside the viewport, so that delta is already scroll invariant, and
+ * the browser scrolls a newly focused item into view by itself.
  *
  * Motion is not decided here either: `scrollBy` without a `behavior` follows the element's CSS
- * `scroll-behavior`, which the stylesheet drops to `auto` under `prefers-reduced-motion`.
+ * `scroll-behavior`, which each stylesheet drops to `auto` under `prefers-reduced-motion`.
  *
  * @access private
  */
-export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsOverflowReturn {
+export function useOverflowScroll({
+	activeKey,
+	activeItemSelector,
+}: UseOverflowScrollOptions): UseOverflowScrollReturn {
 	const viewportNode = useRef<HTMLDivElement | null>(null);
 	const observer = useRef<ResizeObserver | null>(null);
 	const hasAligned = useRef(false);
@@ -76,7 +116,7 @@ export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsO
 			return;
 		}
 
-		const { scrollSize, clientSize, travelled, remaining } = readTabsAxis(viewport);
+		const { scrollSize, clientSize, travelled, remaining } = readOverflowAxis(viewport);
 
 		setIsOverflowing(scrollSize - clientSize > SCROLL_OVERFLOW_TOLERANCE_PX);
 		setCanScrollToStart(travelled > SCROLL_OVERFLOW_TOLERANCE_PX);
@@ -130,7 +170,7 @@ export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsO
 			return;
 		}
 
-		const { clientSize } = readTabsAxis(viewport);
+		const { clientSize } = readOverflowAxis(viewport);
 		const step = Math.round(clientSize * SCROLL_STEP_RATIO) * sign;
 
 		// An RTL viewport scrolls towards negative `scrollLeft`, and `scrollBy` takes physical
@@ -150,19 +190,19 @@ export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsO
 			return;
 		}
 
-		const tab = viewport.querySelector<HTMLElement>('[data-slot="tabs-item"][data-active]');
+		const item = viewport.querySelector<HTMLElement>(activeItemSelector);
 
-		if (!tab) {
+		if (!item) {
 			return;
 		}
 
 		const viewportRect = viewport.getBoundingClientRect();
-		const tabRect = tab.getBoundingClientRect();
-		const before = tabRect.left - viewportRect.left;
-		const after = tabRect.right - viewportRect.right;
+		const itemRect = item.getBoundingClientRect();
+		const before = itemRect.left - viewportRect.left;
+		const after = itemRect.right - viewportRect.right;
 
 		// Rect deltas rather than `Element.scrollIntoView`, which walks every scrollable ancestor and
-		// would scroll the page whenever the bar sits below the fold.
+		// would scroll the page whenever the strip sits below the fold.
 		const delta = before < 0 ? before : after > 0 ? after : 0;
 
 		if (delta === 0) {
@@ -170,8 +210,8 @@ export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsO
 			return;
 		}
 
-		// The first alignment is the bar arriving already scrolled, so it does not animate. Every
-		// later one is a real change of tab and does.
+		// The first alignment is the strip arriving already scrolled, so it does not animate. Every
+		// later one is a real change of item and does.
 		const previousBehavior = viewport.style.scrollBehavior;
 
 		if (!hasAligned.current) {
@@ -181,7 +221,7 @@ export function useTabsOverflow({ activeKey }: UseTabsOverflowOptions): UseTabsO
 		viewport.scrollBy({ left: delta });
 		viewport.style.scrollBehavior = previousBehavior;
 		hasAligned.current = true;
-	}, [activeKey]);
+	}, [activeKey, activeItemSelector]);
 
 	return {
 		viewportRef,
