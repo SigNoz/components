@@ -63,7 +63,8 @@ describe('wrapper prop targeting regressions', () => {
 		const control = screen.getByRole('switch', { name: 'Notifications' });
 		const container = screen.getByTestId('notifications-container');
 
-		expect(control).toHaveAttribute('id', 'notifications');
+		// Base UI puts `id` on the hidden input, the element a consumer `htmlFor` points at.
+		expect(document.querySelector('input#notifications')).not.toBeNull();
 		expect(control).toHaveAttribute('data-testid', 'notifications-switch');
 		expect(control).toHaveClass('switch-class');
 		expect(control).toHaveStyle({ opacity: '0.5' });
