@@ -5,20 +5,183 @@ import * as SwitchStories from './switch.stories';
 
 # Switch
 
-A toggle switch component for binary on/off or true/false selections.
+An on/off toggle, rendered through Base UI's `Switch`. It carries its own label and description,
+tints the on-state track with the same color palette as `Badge`, truncates a long label into a
+tooltip, and it forwards every `aria-*` and `data-*` attribute to the switch itself.
+
+A switch commits immediately. No save button, no confirmation: if the action needs confirming, it
+isn't a switch, it's a `Checkbox` in a form. Keep the change optimistic with a rollback path, and
+report a failed commit with a toast, not a silent revert.
+
+Label it with the thing being toggled ("Notifications"), not with a verb ("Enable notifications"):
+the knob's position carries the state.
 
 ## How to use
+
+Everything is optional. A switch with `children` renders a labelled row; without them it renders
+bare, with no wrapper element at all.
 
 ```tsx
 import { Switch } from '@signozhq/ui';
 
 export default function MyComponent() {
-	return <Switch>Enable notifications</Switch>;
+	const [is24h, setIs24h] = useState(false);
+
+	return (
+		<Switch value={is24h} onChange={setIs24h}>
+			Display timestamp in 24-hour format
+		</Switch>
+	);
 }
 ```
 
-This code above will render the following switch:
-
 <Primary />
+
+## Label and description
+
+`children` is the label. It renders inside a `<label>` that wraps the switch, so clicking the text
+toggles and the label is the accessible name, through `aria-labelledby`. The whole row is the hit
+target: hovering the text morphs the knob the same way hovering the track does.
+
+`description` is a muted second line under the label, announced through `aria-describedby`. Beside
+one, the label steps up to medium weight and reads as the row's title.
+
+`children` that render nothing (`null`, `false` or an empty string) count as not passed: the
+switch renders without the label, exactly as if `children` had been left out.
+
+A bare switch has no name of its own, so give it one:
+
+```tsx
+<Switch aria-label="Pin the side nav" value={isPinned} onChange={setIsPinned} />
+```
+
+## Text placement and the settings row
+
+`textPlacement="right"` (the default) is the plain toggle row: switch first, text after.
+`textPlacement="left"` is the settings row: text first, switch after. The DOM order follows the
+visual order, so a screen reader reads the row the way it looks.
+
+To push the switch to the far edge, give the row a width and let the wrapper justify apart:
+
+```tsx
+<Switch
+	textPlacement="left"
+	width="100%"
+	style={{ '--switch-container-justify': 'space-between' } as React.CSSProperties}
+	description="Use the 24-hour convention while showing timestamps on the console."
+	value={is24h}
+	onChange={setIs24h}
+>
+	Display timestamp in 24-hour format
+</Switch>
+```
+
+## Colors
+
+Same palette as `Badge`'s `color`, defaulting to `primary`. The color only tints the track while
+the switch is on: an off switch has nothing to announce yet, so every color shares the same neutral
+track. The knob keeps one color across the whole palette, deliberately — it is the physical object
+being moved, not a status indicator.
+
+Don't use the semantic colors decoratively. A `danger` switch means turning it on is dangerous.
+
+## Controlled and uncontrolled
+
+`value` + `onChange` is the controlled pair; `defaultValue` alone is the uncontrolled one. Writing
+`value` and `defaultValue` together is a type error: `value` makes the switch controlled for its
+whole life, so the default could never apply.
+
+`onChange` receives the new checked state as its one argument, and nothing else.
+
+The controlled prop is `value`, not `checked`: every input in this library shares the
+`value`/`defaultValue`/`onChange` naming, whatever the underlying primitive calls them.
+
+## Disabled and read-only
+
+`disabled` blocks the switch, `readOnly` locks its value. Both require their reason
+(`disabledTooltip`, `readOnlyTooltip`), shown in a tooltip from anywhere on the row. Neither leaves
+the keyboard: the switch is a `<span role="switch">`, so both are announced through `aria-disabled`
+and `aria-readonly` while it keeps its tab stop and stays hoverable. That is what makes the two
+tooltips reachable.
+
+`readOnly` outranks `disabled`, the way `loading` outranks it on `Button`: while it is set the
+switch is not disabled at all, and `readOnlyTooltip` is the reason shown.
+
+Read-only is the state for a value that is saving right now — the old `isLoading` prop is gone, no
+other input in this library supports loading:
+
+```tsx
+<Switch
+	value={isEnforced}
+	onChange={setIsEnforced}
+	readOnly={isSaving}
+	readOnlyTooltip="Saving your changes"
+>
+	Enforce SSO
+</Switch>
+```
+
+## Text overflow
+
+`textOverflow="ellipsis"` (the default) measures the label and re-measures on resize. While it does
+not fit it carries `data-truncated` and shows the full text in a tooltip. `wrap` lets the text take
+as many lines as it needs, `hidden` clips it, and `visible` clips nothing — none of those three
+shows a tooltip.
+
+The switch's own reason stacks above the truncated label in one popup, reason first.
+
+## Width
+
+`width` and `maxWidth` size the labelled row, written as the `--switch-internal-width` and
+`--switch-internal-max-width` custom properties so they compose with the tokens instead of
+overwriting `style.width`. Numbers are written as `px`.
+
+They never size the track: the 28×16 pill is `--switch-track-width`, `--switch-track-height`,
+`--switch-thumb-size` and `--switch-thumb-inset`, and the knob's travel is derived from all four,
+so any of them can change alone without breaking the geometry.
+
+## In a form
+
+`name` makes the hidden checkbox input submit `"on"` while the switch is on, like a native
+checkbox, and `required` blocks submission until it is. `id` lands on that hidden input, which is
+the element an external `htmlFor` points at.
+
+Because the label wraps the control, a form library has to bind through props, not through element
+injection: pass `value` and `onChange` from the field yourself.
+
+```tsx
+<Switch name="enable_flattening" value={field.value} onChange={field.onChange}>
+	Enable JSON flattening
+</Switch>
+```
+
+## Asserting on it
+
+`testId` is `data-testid` on the switch itself and survives the tooltip trigger cloning the
+element; `containerTestId` names the wrapper. Otherwise use the data attributes, never the hashed
+class names. The switch keeps `role="switch"` and `aria-checked`, so `getByRole('switch')` works.
+
+| root attribute | value |
+|---|---|
+| `data-slot` | `"switch"` |
+| `data-color` | mirrors the prop |
+| `data-checked` / `data-unchecked` | the current state |
+| `data-disabled`, `data-readonly`, `data-required` | present while set |
+
+| wrapper attribute | value |
+|---|---|
+| `data-slot` | `"switch-container"` |
+| `data-text-placement` | `right` (default) or `left` |
+| `data-text-overflow` | `ellipsis` (default), `wrap`, `visible` or `hidden` |
+
+| `data-slot` | rendered |
+|---|---|
+| `switch-thumb` | always, the knob |
+| `switch-container` | the `<label>` wrapper, only with text or a `container*` prop |
+| `switch-text` | the text column, only with a label or description |
+| `switch-label` | only with a label, the measured element, `data-truncated` while it does not fit |
+| `switch-description` | only with a `description` |
+
+## Props
 
 <Controls of={SwitchStories.Default} />
