@@ -282,13 +282,6 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * text take more lines, `hidden` clips it, and `visible` clips nothing. None of those three shows
  * a tooltip. The switch's own reason stacks above the truncated label, reason first.
  *
- * ### In a form
- *
- * `name` makes the hidden input submit `"on"` while checked, like a native checkbox, and
- * `required` blocks submission until it is. Because the label wraps the control, an antd
- * `Form.Item` with `valuePropName="checked"` cannot inject state from outside: pass `value` and
- * `onChange` yourself.
- *
  * ### Asserting on it
  *
  * `testId` is `data-testid` on the switch itself and survives the tooltip trigger cloning the
