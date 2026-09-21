@@ -21,53 +21,48 @@
 	block-size: var(--switch-internal-track-height);
 	flex-shrink: 0;
 	border-radius: var(--switch-border-radius, var(--radius-round));
-	background-color: var(--switch-track-background, var(--l3-border));
+	background-color: var(--switch-track-background);
 	cursor: var(--switch-cursor, pointer);
 	transition: var(--switch-transition, background-color 150ms ease);
 
 	&[data-color='primary'] {
-		--switch-internal-checked-background: var(--switch-primary-background, var(--primary-background));
-		--switch-internal-checked-hover-background: var(--switch-primary-hover-background, var(--primary-background-hover));
+		--switch-internal-checked-background: var(--switch-primary-background);
+		--switch-internal-checked-hover-background: var(--switch-primary-hover-background);
 	}
 
 	&[data-color='secondary'] {
-		--switch-internal-checked-background: var(--switch-secondary-background, var(--secondary-background));
-		--switch-internal-checked-hover-background: var(--switch-secondary-hover-background, var(--secondary-background-hover));
+		--switch-internal-checked-background: var(--switch-secondary-background);
+		--switch-internal-checked-hover-background: var(--switch-secondary-hover-background);
 	}
 
 	&[data-color='danger'] {
-		--switch-internal-checked-background: var(--switch-danger-background, var(--danger-background));
-		--switch-internal-checked-hover-background: var(--switch-danger-hover-background, var(--danger-background-hover));
+		--switch-internal-checked-background: var(--switch-danger-background);
+		--switch-internal-checked-hover-background: var(--switch-danger-hover-background);
 	}
 
 	&[data-color='warning'] {
-		--switch-internal-checked-background: var(--switch-warning-background, var(--warning-background));
-		--switch-internal-checked-hover-background: var(--switch-warning-hover-background, var(--warning-background-hover));
+		--switch-internal-checked-background: var(--switch-warning-background);
+		--switch-internal-checked-hover-background: var(--switch-warning-hover-background);
 	}
 
 	&[data-color='success'] {
-		--switch-internal-checked-background: var(--switch-success-background, var(--success-background));
-		--switch-internal-checked-hover-background: var(--switch-success-hover-background, var(--success-background-hover));
+		--switch-internal-checked-background: var(--switch-success-background);
+		--switch-internal-checked-hover-background: var(--switch-success-hover-background);
 	}
 
-	// The semantic palette does not cover these three yet, so they resolve to primitives, and
-	// their hover shade is mixed from the base because no `-hover` primitive exists either.
 	&[data-color='info'] {
-		--switch-internal-checked-background: var(--switch-info-background, var(--bg-aqua-500));
-		--switch-internal-checked-hover-background: var(--switch-info-hover-background,
-				color-mix(in oklab, var(--bg-aqua-500) 88%, var(--l1-foreground)));
+		--switch-internal-checked-background: var(--switch-info-background);
+		--switch-internal-checked-hover-background: var(--switch-info-hover-background);
 	}
 
 	&[data-color='archive'] {
-		--switch-internal-checked-background: var(--switch-archive-background, var(--bg-sienna-500));
-		--switch-internal-checked-hover-background: var(--switch-archive-hover-background,
-				color-mix(in oklab, var(--bg-sienna-500) 88%, var(--l1-foreground)));
+		--switch-internal-checked-background: var(--switch-archive-background);
+		--switch-internal-checked-hover-background: var(--switch-archive-hover-background);
 	}
 
 	&[data-color='highlight-danger'] {
-		--switch-internal-checked-background: var(--switch-highlight-danger-background, var(--bg-sakura-500));
-		--switch-internal-checked-hover-background: var(--switch-highlight-danger-hover-background,
-				color-mix(in oklab, var(--bg-sakura-500) 88%, var(--l1-foreground)));
+		--switch-internal-checked-background: var(--switch-highlight-danger-background);
+		--switch-internal-checked-hover-background: var(--switch-highlight-danger-hover-background);
 	}
 
 	&[data-checked] {
@@ -102,7 +97,7 @@
 	--switch-internal-thumb-width: calc(var(--switch-internal-thumb-size) + var(--switch-thumb-hover-extend, 2px));
 
 	&[data-unchecked] {
-		background-color: var(--switch-track-hover-background, var(--l3-background-hover));
+		background-color: var(--switch-track-hover-background);
 	}
 
 	&[data-checked] {
@@ -127,7 +122,7 @@
 	inline-size: var(--switch-internal-thumb-width);
 	block-size: var(--switch-internal-thumb-height);
 	border-radius: var(--switch-thumb-border-radius, var(--radius-round));
-	background-color: var(--switch-thumb-background, var(--primary-foreground));
+	background-color: var(--switch-thumb-background);
 	box-shadow: var(--switch-thumb-shadow, 0 1px 3px 0 color-mix(in srgb, black 30%, transparent));
 	translate: var(--switch-internal-thumb-x) -50%;
 	transition: var(--switch-thumb-transition,
@@ -212,7 +207,7 @@
 	min-block-size: var(--switch-internal-label-line-height);
 	overflow: var(--switch-label-overflow, hidden);
 	white-space: var(--switch-label-white-space, nowrap);
-	color: var(--switch-label-color, var(--l1-foreground));
+	color: var(--switch-label-color);
 	font-size: var(--switch-label-font-size, var(--periscope-font-size-base));
 	font-weight: var(--switch-label-font-weight, var(--font-weight-normal));
 	line-height: var(--switch-internal-label-line-height);
@@ -233,7 +228,7 @@
 	min-width: 0;
 	overflow: var(--switch-description-overflow, hidden);
 	white-space: var(--switch-description-white-space, nowrap);
-	color: var(--switch-description-color, var(--l2-foreground));
+	color: var(--switch-description-color);
 	font-size: var(--switch-description-font-size, var(--periscope-font-size-base));
 	line-height: var(--switch-description-line-height, 18px);
 	cursor: inherit;
