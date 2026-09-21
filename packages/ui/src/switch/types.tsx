@@ -152,10 +152,8 @@ export type SwitchProps = Pick<
 		 * palette: it is the physical object being moved, not a status indicator.
 		 *
 		 * Same palette as `Badge`'s `color`.
-		 *
-		 * @default 'primary'
 		 */
-		color?: SwitchColorType;
+		color: SwitchColorType;
 		/**
 		 * A muted second line under the label, announced through `aria-describedby`.
 		 *
@@ -166,13 +164,10 @@ export type SwitchProps = Pick<
 		/**
 		 * Which side of the switch the label and description sit on.
 		 *
-		 * `right` is the plain toggle row. `left` is the settings row: text first, switch after,
-		 * and pairing it with `width` plus the `--switch-container-justify` custom property pushes
-		 * the switch to the far edge.
-		 *
-		 * @default 'right'
+		 * `right` is the plain toggle row, sized to its content. `left` is the settings row: text
+		 * first, the row fills its container, and the switch sits at the far edge.
 		 */
-		textPlacement?: SwitchTextPlacementType;
+		textPlacement: SwitchTextPlacementType;
 		/**
 		 * Controls how the label behaves when it does not fit.
 		 *

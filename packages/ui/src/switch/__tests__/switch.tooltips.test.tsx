@@ -10,7 +10,13 @@ describe('Switch disabledTooltip', () => {
 	it('shows the reason on hover', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch testId="switch" disabled disabledTooltip={DISABLED_REASON}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				disabled
+				disabledTooltip={DISABLED_REASON}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -23,7 +29,7 @@ describe('Switch disabledTooltip', () => {
 	it('shows the reason from the label too: the whole row is the trigger', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch disabled disabledTooltip={DISABLED_REASON}>
+			<Switch color="primary" textPlacement="right" disabled disabledTooltip={DISABLED_REASON}>
 				Wrap text
 			</Switch>,
 		);
@@ -36,7 +42,14 @@ describe('Switch disabledTooltip', () => {
 	it('shows the reason on a bare switch as well', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch testId="switch" aria-label="Wrap text" disabled disabledTooltip={DISABLED_REASON} />,
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				disabled
+				disabledTooltip={DISABLED_REASON}
+			/>,
 		);
 
 		await user.hover(screen.getByTestId('switch'));
@@ -47,7 +60,13 @@ describe('Switch disabledTooltip', () => {
 	it('hides the reason again when the pointer leaves', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch testId="switch" disabled disabledTooltip={DISABLED_REASON}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				disabled
+				disabledTooltip={DISABLED_REASON}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -65,6 +84,8 @@ describe('Switch disabledTooltip', () => {
 		const user = userEvent.setup();
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				testId="switch"
 				disabled
 				disabledTooltip={<span data-testid="reason">Ask an admin</span>}
@@ -81,7 +102,13 @@ describe('Switch disabledTooltip', () => {
 	it('says nothing while the switch is usable', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch testId="switch" disabled={false} disabledTooltip={DISABLED_REASON}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				disabled={false}
+				disabledTooltip={DISABLED_REASON}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -96,7 +123,13 @@ describe('Switch readOnlyTooltip', () => {
 	it('shows the reason on hover', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch testId="switch" readOnly readOnlyTooltip={READ_ONLY_REASON}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				readOnly
+				readOnlyTooltip={READ_ONLY_REASON}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -110,6 +143,8 @@ describe('Switch readOnlyTooltip', () => {
 		const user = userEvent.setup();
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				testId="switch"
 				disabled
 				disabledTooltip={DISABLED_REASON}
@@ -132,7 +167,14 @@ describe('Switch tooltip stacking', () => {
 	it('stacks the reason above the truncated label, reason first', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch testId="switch" width={120} disabled disabledTooltip={DISABLED_REASON}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				width={120}
+				disabled
+				disabledTooltip={DISABLED_REASON}
+			>
 				A label far too long for a one hundred and twenty pixel row
 			</Switch>,
 		);

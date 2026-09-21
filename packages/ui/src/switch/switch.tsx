@@ -13,7 +13,7 @@ import {
 	type TooltipContentStackEntry,
 } from '../tooltip/tooltip-content-stack-context.js';
 import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
-import { SwitchColor, SwitchTextOverflow, SwitchTextPlacement } from './constants.js';
+import { SwitchTextOverflow, SwitchTextPlacement } from './constants.js';
 import styles from './switch.module.scss';
 import type { SwitchProps, ValidateSwitchProps } from './types.js';
 
@@ -24,8 +24,8 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 		style,
 		children,
 		description,
-		color = SwitchColor.Primary,
-		textPlacement = SwitchTextPlacement.Right,
+		color,
+		textPlacement,
 		textOverflow = SwitchTextOverflow.Ellipsis,
 		disabled,
 		disabledTooltip,
@@ -255,9 +255,8 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  *
  * ```tsx
  * <Switch
+ *   color="primary"
  *   textPlacement="left"
- *   width="100%"
- *   style={{ '--switch-container-justify': 'space-between' } as React.CSSProperties}
  *   description="Use the 24-hour convention while showing timestamps on the console."
  *   value={is24h}
  *   onChange={setIs24h}
@@ -311,7 +310,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  *
  * @example
  * ```tsx
- * <Switch value={isWrapped} onChange={setIsWrapped}>
+ * <Switch color="primary" textPlacement="right" value={isWrapped} onChange={setIsWrapped}>
  *   Wrap text
  * </Switch>
  * ```
@@ -319,13 +318,21 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * @example
  * ```tsx
  * // Bare switch: no label, no wrapper element, name it yourself
- * <Switch aria-label="Pin the side nav" value={isPinned} onChange={setIsPinned} />
+ * <Switch
+ *   color="primary"
+ *   textPlacement="right"
+ *   aria-label="Pin the side nav"
+ *   value={isPinned}
+ *   onChange={setIsPinned}
+ * />
  * ```
  *
  * @example
  * ```tsx
  * // Locked while the change is saving
  * <Switch
+ *   color="primary"
+ *   textPlacement="right"
  *   value={isEnforced}
  *   onChange={setIsEnforced}
  *   readOnly={isSaving}

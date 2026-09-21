@@ -5,7 +5,7 @@ import { Switch } from '../switch.js';
 describe('Switch width and maxWidth', () => {
 	it('writes width onto the wrapper as a custom property, numbers as px', () => {
 		render(
-			<Switch containerTestId="container" width={240}>
+			<Switch color="primary" textPlacement="right" containerTestId="container" width={240}>
 				Wrap text
 			</Switch>,
 		);
@@ -17,7 +17,7 @@ describe('Switch width and maxWidth', () => {
 
 	it('keeps a string width as written', () => {
 		render(
-			<Switch containerTestId="container" width="20rem">
+			<Switch color="primary" textPlacement="right" containerTestId="container" width="20rem">
 				Wrap text
 			</Switch>,
 		);
@@ -29,7 +29,7 @@ describe('Switch width and maxWidth', () => {
 
 	it('writes maxWidth the same way', () => {
 		render(
-			<Switch containerTestId="container" maxWidth={160}>
+			<Switch color="primary" textPlacement="right" containerTestId="container" maxWidth={160}>
 				Wrap text
 			</Switch>,
 		);
@@ -41,7 +41,13 @@ describe('Switch width and maxWidth', () => {
 
 	it('composes with a consumer style instead of replacing it', () => {
 		render(
-			<Switch containerTestId="container" width={240} containerStyle={{ marginBlock: '12px' }}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				containerTestId="container"
+				width={240}
+				containerStyle={{ marginBlock: '12px' }}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -52,7 +58,15 @@ describe('Switch width and maxWidth', () => {
 	});
 
 	it('lands on the bare switch when there is no wrapper, without resizing the track', () => {
-		render(<Switch testId="switch" aria-label="Wrap text" width={240} />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				width={240}
+			/>,
+		);
 
 		const root = screen.getByTestId('switch');
 		expect(root.style.getPropertyValue('--switch-internal-width')).toBe('240px');
@@ -61,7 +75,11 @@ describe('Switch width and maxWidth', () => {
 	});
 
 	it('never writes the properties it was not given', () => {
-		render(<Switch containerTestId="container">Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" containerTestId="container">
+				Wrap text
+			</Switch>,
+		);
 
 		const container = screen.getByTestId('container');
 		expect(container.style.getPropertyValue('--switch-internal-width')).toBe('');
