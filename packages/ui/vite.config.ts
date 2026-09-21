@@ -41,7 +41,6 @@ export const entries: Record<string, string> = {
 	'table/index': 'src/table/index.ts',
 	'tabs/index': 'src/tabs/index.ts',
 	'text-ellipsis/index': 'src/text-ellipsis/index.ts',
-	'toggle/index': 'src/toggle/index.ts',
 	'toggle-group/index': 'src/toggle-group/index.ts',
 	'tooltip/index': 'src/tooltip/index.ts',
 	'typography/index': 'src/typography/index.ts',
