@@ -465,7 +465,7 @@ That is the failure mode to keep in mind: a narrowed copy is invisible to our ow
 breaks people downstream. Borrowing the type makes it impossible. The components most exposed
 to it are the ones wrapping a third-party primitive with little or no derivation, `select`
 (18 hand-written prop types, none derived), `tabs`, `radio-group`, `toggle-group`, `switch`,
-`toggle`, `checkbox`, plus `table`, where TanStack's own types cross the prop boundary. Prefer
+`checkbox`, plus `table`, where TanStack's own types cross the prop boundary. Prefer
 borrowing there before adding anything new.
 
 ### Variant values
