@@ -57,17 +57,15 @@ A bare switch has no name of its own, so give it one:
 
 ## Text placement and the settings row
 
-`textPlacement="right"` (the default) is the plain toggle row: switch first, text after.
-`textPlacement="left"` is the settings row: text first, switch after. The DOM order follows the
-visual order, so a screen reader reads the row the way it looks.
-
-To push the switch to the far edge, give the row a width and let the wrapper justify apart:
+`textPlacement="right"` is the plain toggle row: switch first, text after, sized to its content.
+`textPlacement="left"` is the settings row: text first, the row fills its container, and the
+switch sits at the far edge. The DOM order follows the visual order, so a screen reader reads the
+row the way it looks.
 
 ```tsx
 <Switch
+	color="primary"
 	textPlacement="left"
-	width="100%"
-	style={{ '--switch-container-justify': 'space-between' } as React.CSSProperties}
 	description="Use the 24-hour convention while showing timestamps on the console."
 	value={is24h}
 	onChange={setIs24h}
@@ -78,7 +76,7 @@ To push the switch to the far edge, give the row a width and let the wrapper jus
 
 ## Colors
 
-Same palette as `Badge`'s `color`, defaulting to `primary`. The color only tints the track while
+Same palette as `Badge`'s `color`. The color only tints the track while
 the switch is on: an off switch has nothing to announce yet, so every color shares the same neutral
 track. The knob keeps one color across the whole palette, deliberately — it is the physical object
 being moved, not a status indicator.
@@ -171,7 +169,7 @@ class names. The switch keeps `role="switch"` and `aria-checked`, so `getByRole(
 | wrapper attribute     | value                                               |
 | --------------------- | --------------------------------------------------- |
 | `data-slot`           | `"switch-container"`                                |
-| `data-text-placement` | `right` (default) or `left`                         |
+| `data-text-placement` | `right` or `left`, mirrors the prop                 |
 | `data-text-overflow`  | `ellipsis` (default), `wrap`, `visible` or `hidden` |
 
 | `data-slot`          | rendered                                                                        |

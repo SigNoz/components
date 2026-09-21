@@ -249,9 +249,9 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * `children` that render nothing (`null`, `false` or an empty string) count as not passed: the
  * switch renders without a label, per the spec's empty-text behavior.
  *
- * `textPlacement="left"` puts the text before the switch, the settings-row shape. Pair it with
- * `width` (or a stretching parent) and `--switch-container-justify: space-between` to push the
- * switch to the far edge:
+ * `textPlacement="left"` is the settings row: text first, the row fills its container, and the
+ * switch sits at the far edge. `textPlacement="right"` is the plain toggle row, sized to its
+ * content.
  *
  * ```tsx
  * <Switch
@@ -305,7 +305,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * | wrapper attribute | value |
  * |---|---|
  * | `data-slot` | `"switch-container"` |
- * | `data-text-placement` | `right` (default) or `left` |
+ * | `data-text-placement` | `right` or `left`, mirrors the prop |
  * | `data-text-overflow` | `ellipsis` (default), `wrap`, `visible` or `hidden` |
  *
  * | `data-slot` | rendered |

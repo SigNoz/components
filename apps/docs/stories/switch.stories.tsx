@@ -62,12 +62,8 @@ const meta: Meta<typeof Switch> = {
 			control: 'inline-radio',
 			options: ['right', 'left'],
 			description:
-				'Which side of the switch the text sits on. `left` is the settings-row shape: text first, switch after. Pair it with `width` and the `--switch-container-justify` custom property to push the switch to the far edge.',
-			table: {
-				category: 'Appearance',
-				type: { summary: 'SwitchTextPlacementType' },
-				defaultValue: { summary: 'right' },
-			},
+				'Which side of the switch the text sits on. `right` is the plain toggle row, sized to its content. `left` is the settings row: text first, the row fills its container, and the switch sits at the far edge.',
+			table: { category: 'Appearance', type: { summary: 'SwitchTextPlacementType' } },
 		},
 		textOverflow: {
 			control: 'inline-radio',
@@ -248,10 +244,6 @@ function matrixStyle(columns: number): CSSProperties {
 
 const CONSTRAINED_WIDTH = '14rem';
 
-const SETTINGS_ROW_STYLE = {
-	'--switch-container-justify': 'space-between',
-} as CSSProperties;
-
 export const SwitchShowcase: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, modes: allModes },
@@ -300,12 +292,17 @@ export const SwitchShowcase: Story = {
 					Label
 				</Typography>
 				<Typography size="sm">
-					The label is part of the hit target: clicking it toggles, hovering it morphs the knob. By
-					default the text follows the switch; <code>textPlacement="left"</code> puts it first.
+					The label is part of the hit target: clicking it toggles, hovering it morphs the knob.
+					<code>textPlacement="right"</code> hugs its content; <code>textPlacement="left"</code>{' '}
+					fills the row and parks the switch at the far edge.
 				</Typography>
 				<div className={`${styles.labelColumn} ${styles.marginTopMedium}`}>
-					<Switch defaultValue>Wrap text</Switch>
-					<Switch textPlacement="left">Wrap text</Switch>
+					<Switch color="primary" textPlacement="right" defaultValue>
+						Wrap text
+					</Switch>
+					<Switch color="primary" textPlacement="left">
+						Wrap text
+					</Switch>
 				</div>
 			</div>
 
@@ -314,15 +311,13 @@ export const SwitchShowcase: Story = {
 					The settings row
 				</Typography>
 				<Typography size="sm">
-					<code>textPlacement="left"</code>, a <code>description</code>, a <code>width</code>, and
-					<code>--switch-container-justify: space-between</code> push the switch to the far edge:
-					the row two dozen consumer stylesheets used to hand-roll.
+					<code>textPlacement="left"</code> on its own: the row fills its container and the switch
+					sits at the far edge, the shape two dozen consumer stylesheets used to hand-roll.
 				</Typography>
-				<div className={styles.marginTopMedium}>
+				<div className={`${styles.settingsRow} ${styles.marginTopMedium}`}>
 					<Switch
+						color="primary"
 						textPlacement="left"
-						width="32rem"
-						style={SETTINGS_ROW_STYLE}
 						description="Use the 24-hour convention while showing timestamps on the console."
 						defaultValue
 					>

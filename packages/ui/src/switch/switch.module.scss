@@ -150,6 +150,11 @@
 	cursor: var(--switch-cursor, pointer);
 	user-select: none;
 
+	&[data-text-placement='left'] {
+		inline-size: var(--switch-internal-width, 100%);
+		justify-content: var(--switch-container-justify, space-between);
+	}
+
 	.switch {
 		margin-block-start: var(--switch-margin-block-start,
 				calc((var(--switch-internal-label-line-height) - var(--switch-internal-track-height)) / 2));
