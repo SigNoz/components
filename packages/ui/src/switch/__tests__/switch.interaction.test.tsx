@@ -9,6 +9,8 @@ function ControlledSwitch({ onChange }: { onChange: (checked: boolean) => void }
 
 	return (
 		<Switch
+			color="primary"
+			textPlacement="right"
 			value={checked}
 			onChange={(next) => {
 				setChecked(next);
@@ -24,7 +26,11 @@ describe('Switch interaction', () => {
 	it('toggles on click and reports the new state', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<Switch onChange={onChange}>Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" onChange={onChange}>
+				Wrap text
+			</Switch>,
+		);
 
 		await user.click(screen.getByRole('switch', { name: 'Wrap text' }));
 
@@ -36,7 +42,7 @@ describe('Switch interaction', () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(
-			<Switch defaultValue onChange={onChange}>
+			<Switch color="primary" textPlacement="right" defaultValue onChange={onChange}>
 				Wrap text
 			</Switch>,
 		);
@@ -50,7 +56,11 @@ describe('Switch interaction', () => {
 	it('toggles when the label is clicked', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<Switch onChange={onChange}>Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" onChange={onChange}>
+				Wrap text
+			</Switch>,
+		);
 
 		await user.click(screen.getByText('Wrap text'));
 
@@ -61,7 +71,12 @@ describe('Switch interaction', () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(
-			<Switch onChange={onChange} description="Use the 24-hour convention">
+			<Switch
+				color="primary"
+				textPlacement="right"
+				onChange={onChange}
+				description="Use the 24-hour convention"
+			>
 				Display in 24-hour format
 			</Switch>,
 		);
@@ -77,7 +92,11 @@ describe('Switch interaction', () => {
 	it('calls onChange once per click, on the switch and on the label alike', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<Switch onChange={onChange}>Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" onChange={onChange}>
+				Wrap text
+			</Switch>,
+		);
 
 		await user.click(screen.getByRole('switch'));
 		expect(onChange).toHaveBeenCalledTimes(1);
@@ -89,7 +108,11 @@ describe('Switch interaction', () => {
 	it('toggles with the keyboard', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<Switch onChange={onChange}>Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" onChange={onChange}>
+				Wrap text
+			</Switch>,
+		);
 
 		await user.tab();
 		expect(screen.getByRole('switch')).toHaveFocus();
@@ -114,7 +137,7 @@ describe('Switch interaction', () => {
 	it('never moves a controlled switch the consumer did not move', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch value={false} onChange={() => {}}>
+			<Switch color="primary" textPlacement="right" value={false} onChange={() => {}}>
 				Wrap text
 			</Switch>,
 		);
@@ -127,7 +150,11 @@ describe('Switch interaction', () => {
 	it('calls onChange with the checked state alone, not with Base UI event details', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<Switch onChange={onChange}>Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" onChange={onChange}>
+				Wrap text
+			</Switch>,
+		);
 
 		await user.click(screen.getByRole('switch'));
 
@@ -140,7 +167,13 @@ describe('Switch disabled', () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(
-			<Switch disabled disabledTooltip="Ask an admin" onChange={onChange}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				disabled
+				disabledTooltip="Ask an admin"
+				onChange={onChange}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -155,7 +188,13 @@ describe('Switch disabled', () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(
-			<Switch disabled disabledTooltip="Ask an admin" onChange={onChange}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				disabled
+				disabledTooltip="Ask an admin"
+				onChange={onChange}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -171,7 +210,14 @@ describe('Switch readOnly', () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(
-			<Switch defaultValue readOnly readOnlyTooltip="Saving your changes" onChange={onChange}>
+			<Switch
+				color="primary"
+				textPlacement="right"
+				defaultValue
+				readOnly
+				readOnlyTooltip="Saving your changes"
+				onChange={onChange}
+			>
 				Wrap text
 			</Switch>,
 		);
@@ -185,6 +231,8 @@ describe('Switch readOnly', () => {
 	it('outranks disabled: the switch is locked, not disabled', () => {
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				testId="switch"
 				aria-label="Wrap text"
 				disabled
@@ -203,7 +251,7 @@ describe('Switch readOnly', () => {
 	it('keeps its tab stop', async () => {
 		const user = userEvent.setup();
 		render(
-			<Switch readOnly readOnlyTooltip="Saving your changes">
+			<Switch color="primary" textPlacement="right" readOnly readOnlyTooltip="Saving your changes">
 				Wrap text
 			</Switch>,
 		);

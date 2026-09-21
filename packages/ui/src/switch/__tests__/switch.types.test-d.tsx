@@ -26,167 +26,257 @@ declare const maybeReadOnly: boolean | undefined;
 
 describe('color', () => {
 	test('accepts every SwitchColor', () => {
-		assertType(<Switch color="primary" />);
-		assertType(<Switch color="secondary" />);
-		assertType(<Switch color="danger" />);
-		assertType(<Switch color="warning" />);
-		assertType(<Switch color="success" />);
-		assertType(<Switch color="info" />);
-		assertType(<Switch color="archive" />);
-		assertType(<Switch color="highlight-danger" />);
+		assertType(<Switch color="primary" textPlacement="right" />);
+		assertType(<Switch color="secondary" textPlacement="right" />);
+		assertType(<Switch color="danger" textPlacement="right" />);
+		assertType(<Switch color="warning" textPlacement="right" />);
+		assertType(<Switch color="success" textPlacement="right" />);
+		assertType(<Switch color="info" textPlacement="right" />);
+		assertType(<Switch color="archive" textPlacement="right" />);
+		assertType(<Switch color="highlight-danger" textPlacement="right" />);
 	});
 
-	test('is optional, the default is primary', () => {
-		assertType(<Switch />);
+	test('is required', () => {
+		// @ts-expect-error - `color` has no default, it must be picked explicitly
+		assertType(<Switch textPlacement="right" />);
 	});
 
 	test('rejects a color outside the palette', () => {
 		// @ts-expect-error - `cherry` is the legacy palette, not a SwitchColor
-		assertType(<Switch color="cherry" />);
+		assertType(<Switch color="cherry" textPlacement="right" />);
+	});
+});
+
+describe('textPlacement', () => {
+	test('accepts both sides', () => {
+		assertType(
+			<Switch color="primary" textPlacement="right">
+				Wrap text
+			</Switch>,
+		);
+		assertType(
+			<Switch color="primary" textPlacement="left">
+				Wrap text
+			</Switch>,
+		);
+	});
+
+	test('is required', () => {
+		// @ts-expect-error - `textPlacement` has no default, it must be picked explicitly
+		assertType(<Switch color="primary">Wrap text</Switch>);
+	});
+
+	test('rejects a placement outside the set', () => {
+		// @ts-expect-error - `start` is not a SwitchTextPlacement, the sides are `left` and `right`
+		assertType(<Switch color="primary" textPlacement="start" />);
 	});
 });
 
 describe('label and description', () => {
 	test('children are the label and description rides along', () => {
-		assertType(<Switch>Wrap text</Switch>);
-		assertType(<Switch description="Use the 24-hour convention">24-hour format</Switch>);
-		assertType(<Switch textPlacement="left">Wrap text</Switch>);
-	});
-
-	test('rejects a textPlacement outside the set', () => {
-		// @ts-expect-error - `start` is not a SwitchTextPlacement, the sides are `left` and `right`
-		assertType(<Switch textPlacement="start">Wrap text</Switch>);
+		assertType(
+			<Switch color="primary" textPlacement="right">
+				Wrap text
+			</Switch>,
+		);
+		assertType(
+			<Switch color="primary" textPlacement="left" description="Use the 24-hour convention">
+				24-hour format
+			</Switch>,
+		);
 	});
 
 	test('rejects a textOverflow outside the set', () => {
 		// @ts-expect-error - `clip` is not a SwitchTextOverflow
-		assertType(<Switch textOverflow="clip">Wrap text</Switch>);
+		assertType(<Switch color="primary" textPlacement="right" textOverflow="clip" />);
 	});
 
 	test('accepts every textOverflow', () => {
-		assertType(<Switch textOverflow="ellipsis">Wrap text</Switch>);
-		assertType(<Switch textOverflow="wrap">Wrap text</Switch>);
-		assertType(<Switch textOverflow="hidden">Wrap text</Switch>);
-		assertType(<Switch textOverflow="visible">Wrap text</Switch>);
+		assertType(
+			<Switch color="primary" textPlacement="right" textOverflow="ellipsis">
+				Wrap text
+			</Switch>,
+		);
+		assertType(
+			<Switch color="primary" textPlacement="right" textOverflow="wrap">
+				Wrap text
+			</Switch>,
+		);
+		assertType(
+			<Switch color="primary" textPlacement="right" textOverflow="hidden">
+				Wrap text
+			</Switch>,
+		);
+		assertType(
+			<Switch color="primary" textPlacement="right" textOverflow="visible">
+				Wrap text
+			</Switch>,
+		);
 	});
 });
 
 describe('disabled and disabledTooltip', () => {
 	test('accepts the pair', () => {
-		assertType(<Switch disabled disabledTooltip="Why" />);
-		assertType(<Switch disabled={false} disabledTooltip="Why" />);
+		assertType(<Switch color="primary" textPlacement="right" disabled disabledTooltip="Why" />);
+		assertType(
+			<Switch color="primary" textPlacement="right" disabled={false} disabledTooltip="Why" />,
+		);
 	});
 
 	test('accepts an explicit undefined reason as the opt-out', () => {
-		assertType(<Switch disabled disabledTooltip={undefined} />);
+		assertType(
+			<Switch color="primary" textPlacement="right" disabled disabledTooltip={undefined} />,
+		);
 	});
 
 	test('a possibly undefined disabled still needs a reason', () => {
 		// @ts-expect-error - `disabled` typed `boolean | undefined` is still `disabled`
-		assertType(<Switch disabled={maybeDisabled} />);
+		assertType(<Switch color="primary" textPlacement="right" disabled={maybeDisabled} />);
 	});
 
 	test('disabled without a reason is rejected', () => {
 		// @ts-expect-error - a disabled switch must explain itself through `disabledTooltip`
-		assertType(<Switch disabled />);
+		assertType(<Switch color="primary" textPlacement="right" disabled />);
 	});
 
 	test('a reason without disabled is rejected', () => {
 		// @ts-expect-error - `disabledTooltip` never renders unless `disabled` is set
-		assertType(<Switch disabledTooltip="Why" />);
+		assertType(<Switch color="primary" textPlacement="right" disabledTooltip="Why" />);
 	});
 });
 
 describe('readOnly and readOnlyTooltip', () => {
 	test('accepts the pair', () => {
-		assertType(<Switch readOnly readOnlyTooltip="Saving" />);
+		assertType(<Switch color="primary" textPlacement="right" readOnly readOnlyTooltip="Saving" />);
 	});
 
 	test('accepts an explicit undefined reason as the opt-out', () => {
-		assertType(<Switch readOnly readOnlyTooltip={undefined} />);
+		assertType(
+			<Switch color="primary" textPlacement="right" readOnly readOnlyTooltip={undefined} />,
+		);
 	});
 
 	test('a possibly undefined readOnly still needs a reason', () => {
 		// @ts-expect-error - `readOnly` typed `boolean | undefined` is still `readOnly`
-		assertType(<Switch readOnly={maybeReadOnly} />);
+		assertType(<Switch color="primary" textPlacement="right" readOnly={maybeReadOnly} />);
 	});
 
 	test('readOnly without a reason is rejected', () => {
 		// @ts-expect-error - a locked switch must explain itself through `readOnlyTooltip`
-		assertType(<Switch readOnly />);
+		assertType(<Switch color="primary" textPlacement="right" readOnly />);
 	});
 
 	test('a reason without readOnly is rejected', () => {
 		// @ts-expect-error - `readOnlyTooltip` never renders unless `readOnly` is set
-		assertType(<Switch readOnlyTooltip="Saving" />);
+		assertType(<Switch color="primary" textPlacement="right" readOnlyTooltip="Saving" />);
 	});
 
 	test('both pairs live together', () => {
-		assertType(<Switch disabled disabledTooltip="Why" readOnly readOnlyTooltip="Saving" />);
+		assertType(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				disabled
+				disabledTooltip="Why"
+				readOnly
+				readOnlyTooltip="Saving"
+			/>,
+		);
 	});
 });
 
 describe('value, defaultValue and onChange', () => {
 	test('accepts a controlled value', () => {
-		assertType(<Switch value onChange={noop} />);
-		assertType(<Switch value={false} onChange={noop} />);
+		assertType(<Switch color="primary" textPlacement="right" value onChange={noop} />);
+		assertType(<Switch color="primary" textPlacement="right" value={false} onChange={noop} />);
 	});
 
 	test('accepts an uncontrolled default', () => {
-		assertType(<Switch defaultValue />);
+		assertType(<Switch color="primary" textPlacement="right" defaultValue />);
 	});
 
 	test('rejects value and defaultValue together', () => {
 		// @ts-expect-error - `value` makes the switch controlled for life, `defaultValue` is dead beside it
-		assertType(<Switch value defaultValue onChange={noop} />);
+		assertType(<Switch color="primary" textPlacement="right" value defaultValue onChange={noop} />);
 	});
 
 	test('hands onChange the new checked state', () => {
-		assertType(<Switch onChange={(checked: boolean) => checked} />);
+		assertType(
+			<Switch color="primary" textPlacement="right" onChange={(checked: boolean) => checked} />,
+		);
 	});
 
 	test('rejects the Radix and antd spellings', () => {
 		// @ts-expect-error - the controlled prop is called `value`
-		assertType(<Switch checked onChange={noop} />);
+		assertType(<Switch color="primary" textPlacement="right" checked onChange={noop} />);
 		// @ts-expect-error - the uncontrolled prop is called `defaultValue`
-		assertType(<Switch defaultChecked />);
+		assertType(<Switch color="primary" textPlacement="right" defaultChecked />);
 		// @ts-expect-error - the change handler is called `onChange`
-		assertType(<Switch onCheckedChange={noop} />);
+		assertType(<Switch color="primary" textPlacement="right" onCheckedChange={noop} />);
 	});
 });
 
 describe('test ids', () => {
 	test('accepts testId, containerTestId and arbitrary data attributes', () => {
-		assertType(<Switch testId="wrap" containerTestId="wrap-row" data-state="open" />);
+		assertType(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="wrap"
+				containerTestId="wrap-row"
+				data-state="open"
+			/>,
+		);
 	});
 
 	test('rejects a raw data-testid', () => {
 		// @ts-expect-error - use `testId`, it survives the tooltip trigger cloning the switch
-		assertType(<Switch data-testid="wrap" />);
+		assertType(<Switch color="primary" textPlacement="right" data-testid="wrap" />);
 	});
 });
 
 describe('remaining props', () => {
 	test('accepts the presentational and native ones', () => {
-		assertType(<Switch id="wrap" name="wrap" required aria-label="Wrap text" />);
-		assertType(<Switch width={240} maxWidth="100%" />);
-		assertType(<Switch containerId="row" containerClassName="row" containerStyle={{}} />);
-		assertType(<Switch containerRef={containerRef}>Wrap text</Switch>);
+		assertType(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				id="wrap"
+				name="wrap"
+				required
+				aria-label="Wrap text"
+			/>,
+		);
+		assertType(<Switch color="primary" textPlacement="right" width={240} maxWidth="100%" />);
+		assertType(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				containerId="row"
+				containerClassName="row"
+				containerStyle={{}}
+			/>,
+		);
+		assertType(
+			<Switch color="primary" textPlacement="right" containerRef={containerRef}>
+				Wrap text
+			</Switch>,
+		);
 	});
 });
 
 describe('unknown props', () => {
 	test('accepts key and ref', () => {
-		assertType(<Switch key="row" ref={switchRef} />);
+		assertType(<Switch key="row" ref={switchRef} color="primary" textPlacement="right" />);
 	});
 
 	test('rejects a misspelled prop', () => {
 		// @ts-expect-error - `onChage` is not a prop, a generic `T extends SwitchProps` would let it through
-		assertType(<Switch onChage={noop} />);
+		assertType(<Switch color="primary" textPlacement="right" onChage={noop} />);
 	});
 
 	test('rejects the dropped isLoading prop', () => {
 		// @ts-expect-error - `isLoading` was dropped in the rework, no other input supports loading
-		assertType(<Switch isLoading />);
+		assertType(<Switch color="primary" textPlacement="right" isLoading />);
 	});
 });

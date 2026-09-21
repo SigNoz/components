@@ -47,6 +47,8 @@ describe('wrapper prop targeting regressions', () => {
 	it('keeps Switch control props on the switch root and exposes container props for the wrapper', () => {
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				id="notifications"
 				testId="notifications-switch"
 				className="switch-class"

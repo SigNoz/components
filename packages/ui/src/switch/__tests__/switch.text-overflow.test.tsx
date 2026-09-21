@@ -17,7 +17,11 @@ afterEach(resetLabelMeasurement);
 describe('Switch textOverflow=ellipsis', () => {
 	it('marks the label truncated once it does not fit', () => {
 		truncate();
-		render(<Switch>{LONG_LABEL}</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right">
+				{LONG_LABEL}
+			</Switch>,
+		);
 
 		expect(screen.getByText(LONG_LABEL)).toHaveAttribute('data-truncated');
 	});
@@ -25,7 +29,11 @@ describe('Switch textOverflow=ellipsis', () => {
 	it('shows the full label on hover', async () => {
 		const user = userEvent.setup();
 		truncate();
-		render(<Switch>{LONG_LABEL}</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right">
+				{LONG_LABEL}
+			</Switch>,
+		);
 
 		await user.hover(screen.getByText(LONG_LABEL));
 
@@ -34,7 +42,11 @@ describe('Switch textOverflow=ellipsis', () => {
 
 	it('says nothing while the label fits', async () => {
 		const user = userEvent.setup();
-		render(<Switch>{LONG_LABEL}</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right">
+				{LONG_LABEL}
+			</Switch>,
+		);
 
 		await user.hover(screen.getByText(LONG_LABEL));
 
@@ -43,7 +55,11 @@ describe('Switch textOverflow=ellipsis', () => {
 
 	it('unmarks the label when a resize makes it fit', async () => {
 		truncate();
-		render(<Switch>{LONG_LABEL}</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right">
+				{LONG_LABEL}
+			</Switch>,
+		);
 		expect(screen.getByText(LONG_LABEL)).toHaveAttribute('data-truncated');
 
 		resize(300, 300);
@@ -58,7 +74,11 @@ describe('Switch textOverflow opt-outs', () => {
 		async (textOverflow) => {
 			const user = userEvent.setup();
 			truncate();
-			render(<Switch textOverflow={textOverflow}>{LONG_LABEL}</Switch>);
+			render(
+				<Switch color="primary" textPlacement="right" textOverflow={textOverflow}>
+					{LONG_LABEL}
+				</Switch>,
+			);
 
 			await user.hover(screen.getByText(LONG_LABEL));
 

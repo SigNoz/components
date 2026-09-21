@@ -52,11 +52,7 @@ const meta: Meta<typeof Switch> = {
 			options: COLORS,
 			description:
 				"Same palette as Badge's `color`. Tints the track while the switch is on; the knob keeps one color across the palette.",
-			table: {
-				category: 'Appearance',
-				type: { summary: 'SwitchColorType' },
-				defaultValue: { summary: 'primary' },
-			},
+			table: { category: 'Appearance', type: { summary: 'SwitchColorType' } },
 		},
 		textPlacement: {
 			control: 'inline-radio',
@@ -192,6 +188,8 @@ type Story = StoryObj<typeof Switch>;
 
 export const Default: Story = {
 	args: {
+		color: 'primary',
+		textPlacement: 'right',
 		children: 'Wrap text',
 		defaultValue: true,
 	},
@@ -219,8 +217,19 @@ function StateCell({ color, state }: { color: SwitchColorType; state: State }): 
 
 	return (
 		<div data-state-cell={state} className={styles.stateCell}>
-			<Switch color={color} aria-label={`${color} off, ${state}`} {...blocking} />
-			<Switch color={color} aria-label={`${color} on, ${state}`} defaultValue {...blocking} />
+			<Switch
+				color={color}
+				textPlacement="right"
+				aria-label={`${color} off, ${state}`}
+				{...blocking}
+			/>
+			<Switch
+				color={color}
+				textPlacement="right"
+				aria-label={`${color} on, ${state}`}
+				defaultValue
+				{...blocking}
+			/>
 		</div>
 	);
 }
@@ -341,7 +350,13 @@ export const SwitchShowcase: Story = {
 							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
 								{textOverflow}
 							</Typography>
-							<Switch width={CONSTRAINED_WIDTH} textOverflow={textOverflow} defaultValue>
+							<Switch
+								color="primary"
+								textPlacement="right"
+								width={CONSTRAINED_WIDTH}
+								textOverflow={textOverflow}
+								defaultValue
+							>
 								{LONG_LABEL}
 							</Switch>
 							<span />
@@ -359,7 +374,7 @@ export const SwitchShowcase: Story = {
 					it with <code>aria-label</code>.
 				</Typography>
 				<div className={styles.marginTopMedium}>
-					<Switch aria-label="Wrap text" defaultValue />
+					<Switch color="primary" textPlacement="right" aria-label="Wrap text" defaultValue />
 				</div>
 			</div>
 		</div>

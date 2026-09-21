@@ -4,13 +4,17 @@ import { Switch } from '../switch.js';
 
 describe('Switch rendering', () => {
 	it('renders a switch named by its label', () => {
-		render(<Switch>Wrap text</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right">
+				Wrap text
+			</Switch>,
+		);
 
 		expect(screen.getByRole('switch', { name: 'Wrap text' })).toBeInTheDocument();
 	});
 
 	it('renders bare with no children: no wrapper, no label element', () => {
-		render(<Switch testId="switch" aria-label="Wrap text" />);
+		render(<Switch color="primary" textPlacement="right" testId="switch" aria-label="Wrap text" />);
 
 		const root = screen.getByTestId('switch');
 		expect(root).toBe(screen.getByRole('switch', { name: 'Wrap text' }));
@@ -20,7 +24,7 @@ describe('Switch rendering', () => {
 
 	it('wraps the switch in a label container when children are passed', () => {
 		render(
-			<Switch testId="switch" containerTestId="container">
+			<Switch color="primary" textPlacement="right" testId="switch" containerTestId="container">
 				Wrap text
 			</Switch>,
 		);
@@ -32,7 +36,14 @@ describe('Switch rendering', () => {
 	});
 
 	it('renders the wrapper for a container prop alone, with no text column', () => {
-		render(<Switch aria-label="Wrap text" containerTestId="container" />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				aria-label="Wrap text"
+				containerTestId="container"
+			/>,
+		);
 
 		const container = screen.getByTestId('container');
 		expect(container).toHaveAttribute('data-slot', 'switch-container');
@@ -41,7 +52,13 @@ describe('Switch rendering', () => {
 
 	it('stamps the slots', () => {
 		render(
-			<Switch testId="switch" containerTestId="container" description="Use the 24-hour convention">
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				containerTestId="container"
+				description="Use the 24-hour convention"
+			>
 				Display timestamp in 24-hour format
 			</Switch>,
 		);
@@ -54,23 +71,31 @@ describe('Switch rendering', () => {
 		expect(container.querySelector('[data-slot="switch-description"]')).toBeInTheDocument();
 	});
 
-	it('defaults color to primary and mirrors an explicit one', () => {
-		const { rerender } = render(<Switch testId="switch" aria-label="Wrap text" />);
+	it('mirrors color on the root', () => {
+		const { rerender } = render(
+			<Switch color="primary" textPlacement="right" testId="switch" aria-label="Wrap text" />,
+		);
 		expect(screen.getByTestId('switch')).toHaveAttribute('data-color', 'primary');
 
-		rerender(<Switch testId="switch" aria-label="Wrap text" color="danger" />);
+		rerender(
+			<Switch color="danger" textPlacement="right" testId="switch" aria-label="Wrap text" />,
+		);
 		expect(screen.getByTestId('switch')).toHaveAttribute('data-color', 'danger');
 	});
 
-	it('mirrors textPlacement and textOverflow on the wrapper, with their defaults', () => {
-		const { rerender } = render(<Switch containerTestId="container">Wrap text</Switch>);
+	it('mirrors textPlacement and textOverflow on the wrapper', () => {
+		const { rerender } = render(
+			<Switch color="primary" textPlacement="right" containerTestId="container">
+				Wrap text
+			</Switch>,
+		);
 		expect(screen.getByTestId('container')).toHaveAttribute('data-text-placement', 'right');
 		expect(screen.getByTestId('container')).toHaveAttribute('data-text-overflow', 'ellipsis');
 
 		// Re-queried after the rerender: moving off `ellipsis` unmounts the tooltip trigger, which
 		// remounts the row.
 		rerender(
-			<Switch containerTestId="container" textPlacement="left" textOverflow="wrap">
+			<Switch color="primary" textPlacement="left" textOverflow="wrap" containerTestId="container">
 				Wrap text
 			</Switch>,
 		);
@@ -78,14 +103,18 @@ describe('Switch rendering', () => {
 		expect(screen.getByTestId('container')).toHaveAttribute('data-text-overflow', 'wrap');
 	});
 
-	it('puts the text after the switch by default and before it for textPlacement="left"', () => {
-		const { rerender } = render(<Switch containerTestId="container">Wrap text</Switch>);
+	it('puts the text after the switch for "right" and before it for "left"', () => {
+		const { rerender } = render(
+			<Switch color="primary" textPlacement="right" containerTestId="container">
+				Wrap text
+			</Switch>,
+		);
 		const container = screen.getByTestId('container');
 
 		expect(container.firstElementChild).toHaveAttribute('data-slot', 'switch');
 
 		rerender(
-			<Switch containerTestId="container" textPlacement="left">
+			<Switch color="primary" textPlacement="left" containerTestId="container">
 				Wrap text
 			</Switch>,
 		);
@@ -95,6 +124,8 @@ describe('Switch rendering', () => {
 	it('forwards className, style, aria and data attributes to the switch itself', () => {
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				testId="switch"
 				className="custom"
 				style={{ marginInline: '4px' }}
@@ -113,6 +144,8 @@ describe('Switch rendering', () => {
 	it('keeps container props on the wrapper, away from the switch', () => {
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				testId="switch"
 				containerTestId="container"
 				containerId="row"
@@ -131,21 +164,45 @@ describe('Switch rendering', () => {
 	});
 
 	it('checks the defaultValue on first render', () => {
-		render(<Switch aria-label="Wrap text" defaultValue />);
+		render(<Switch color="primary" textPlacement="right" aria-label="Wrap text" defaultValue />);
 
 		expect(screen.getByRole('switch', { name: 'Wrap text' })).toBeChecked();
 	});
 
 	it('checks the controlled value', () => {
-		const { rerender } = render(<Switch aria-label="Wrap text" value onChange={() => {}} />);
+		const { rerender } = render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				aria-label="Wrap text"
+				value
+				onChange={() => {}}
+			/>,
+		);
 		expect(screen.getByRole('switch')).toBeChecked();
 
-		rerender(<Switch aria-label="Wrap text" value={false} onChange={() => {}} />);
+		rerender(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				aria-label="Wrap text"
+				value={false}
+				onChange={() => {}}
+			/>,
+		);
 		expect(screen.getByRole('switch')).not.toBeChecked();
 	});
 
 	it('submits under its name through the hidden input', () => {
-		render(<Switch aria-label="Wrap text" name="wrap" defaultValue />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				aria-label="Wrap text"
+				name="wrap"
+				defaultValue
+			/>,
+		);
 
 		const input = document.querySelector<HTMLInputElement>('input[name="wrap"]');
 		expect(input).not.toBeNull();
@@ -153,13 +210,25 @@ describe('Switch rendering', () => {
 	});
 
 	it('marks itself required', () => {
-		render(<Switch testId="switch" aria-label="Wrap text" required />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				required
+			/>,
+		);
 
 		expect(screen.getByTestId('switch')).toHaveAttribute('aria-required', 'true');
 	});
 
 	it('describes the switch from its description', () => {
-		render(<Switch description="Use the 24-hour convention">Display in 24-hour format</Switch>);
+		render(
+			<Switch color="primary" textPlacement="right" description="Use the 24-hour convention">
+				Display in 24-hour format
+			</Switch>,
+		);
 
 		expect(
 			screen.getByRole('switch', { name: 'Display in 24-hour format' }),
@@ -172,7 +241,15 @@ describe('Switch rendering', () => {
 // styling regression.
 describe('Switch styling hooks', () => {
 	it('marks a checked switch', () => {
-		render(<Switch testId="switch" aria-label="Wrap text" defaultValue />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				defaultValue
+			/>,
+		);
 		const root = screen.getByTestId('switch');
 
 		expect(root).toHaveAttribute('data-checked');
@@ -180,7 +257,16 @@ describe('Switch styling hooks', () => {
 	});
 
 	it('marks an unchecked switch', () => {
-		render(<Switch testId="switch" aria-label="Wrap text" value={false} onChange={() => {}} />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				value={false}
+				onChange={() => {}}
+			/>,
+		);
 		const root = screen.getByTestId('switch');
 
 		expect(root).toHaveAttribute('data-unchecked');
@@ -192,7 +278,14 @@ describe('Switch styling hooks', () => {
 	// read at all.
 	it('keeps the disabled switch hoverable and in the tab order', () => {
 		render(
-			<Switch testId="switch" aria-label="Wrap text" disabled disabledTooltip="Ask an admin" />,
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				disabled
+				disabledTooltip="Ask an admin"
+			/>,
 		);
 
 		const root = screen.getByTestId('switch');
@@ -204,7 +297,16 @@ describe('Switch styling hooks', () => {
 	});
 
 	it('marks the switch readonly while staying enabled', () => {
-		render(<Switch testId="switch" aria-label="Wrap text" readOnly readOnlyTooltip="Saving" />);
+		render(
+			<Switch
+				color="primary"
+				textPlacement="right"
+				testId="switch"
+				aria-label="Wrap text"
+				readOnly
+				readOnlyTooltip="Saving"
+			/>,
+		);
 
 		const root = screen.getByTestId('switch');
 		expect(root).toHaveAttribute('data-readonly');
@@ -220,7 +322,7 @@ describe('Switch empty label', () => {
 		['an empty string', ''],
 	])('renders bare when children render %s', (_name, label) => {
 		render(
-			<Switch testId="switch" aria-label="Wrap text">
+			<Switch color="primary" textPlacement="right" testId="switch" aria-label="Wrap text">
 				{label}
 			</Switch>,
 		);
@@ -232,6 +334,8 @@ describe('Switch empty label', () => {
 	it('renders a description alone, with no label element', () => {
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				aria-label="24-hour format"
 				description="Use the 24-hour convention"
 				containerTestId="container"

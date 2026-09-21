@@ -18,8 +18,9 @@ the knob's position carries the state.
 
 ## How to use
 
-Everything is optional. A switch with `children` renders a labelled row; without them it renders
-bare, with no wrapper element at all.
+`color` and `textPlacement` are required: the switch has no default appearance and no default
+side for its text. A switch with `children` renders a labelled row; without them it renders bare,
+with no wrapper element at all.
 
 ```tsx
 import { Switch } from '@signozhq/ui';
@@ -28,7 +29,7 @@ export default function MyComponent() {
 	const [is24h, setIs24h] = useState(false);
 
 	return (
-		<Switch value={is24h} onChange={setIs24h}>
+		<Switch color="primary" textPlacement="right" value={is24h} onChange={setIs24h}>
 			Display timestamp in 24-hour format
 		</Switch>
 	);
@@ -52,7 +53,13 @@ switch renders without the label, exactly as if `children` had been left out.
 A bare switch has no name of its own, so give it one:
 
 ```tsx
-<Switch aria-label="Pin the side nav" value={isPinned} onChange={setIsPinned} />
+<Switch
+	color="primary"
+	textPlacement="right"
+	aria-label="Pin the side nav"
+	value={isPinned}
+	onChange={setIsPinned}
+/>
 ```
 
 ## Text placement and the settings row
@@ -110,6 +117,8 @@ other input in this library supports loading:
 
 ```tsx
 <Switch
+	color="primary"
+	textPlacement="right"
 	value={isEnforced}
 	onChange={setIsEnforced}
 	readOnly={isSaving}
