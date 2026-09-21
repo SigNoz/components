@@ -137,31 +137,6 @@ shows a tooltip.
 
 The switch's own reason stacks above the truncated label in one popup, reason first.
 
-## Width
-
-`width` and `maxWidth` size the labelled row, written as the `--switch-internal-width` and
-`--switch-internal-max-width` custom properties so they compose with the tokens instead of
-overwriting `style.width`. Numbers are written as `px`.
-
-They never size the track: the 28×16 pill is `--switch-track-width`, `--switch-track-height`,
-`--switch-thumb-size` and `--switch-thumb-inset`, and the knob's travel is derived from all four,
-so any of them can change alone without breaking the geometry.
-
-## In a form
-
-`name` makes the hidden checkbox input submit `"on"` while the switch is on, like a native
-checkbox, and `required` blocks submission until it is. `id` lands on that hidden input, which is
-the element an external `htmlFor` points at.
-
-Because the label wraps the control, a form library has to bind through props, not through element
-injection: pass `value` and `onChange` from the field yourself.
-
-```tsx
-<Switch name="enable_flattening" value={field.value} onChange={field.onChange}>
-	Enable JSON flattening
-</Switch>
-```
-
 ## Asserting on it
 
 `testId` is `data-testid` on the switch itself and survives the tooltip trigger cloning the
