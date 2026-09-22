@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Checkbox } from '../checkbox/index.js';
+import type { CheckboxProps } from '../checkbox/index.js';
 import { DialogWrapper, type DialogWrapperProps } from '../dialog/index.js';
 import { cn } from '../lib/utils.js';
 import styles from './alert-dialog.module.scss';
-
-type CheckboxColor = 'robin' | 'forest' | 'amber' | 'sienna' | 'cherry' | 'sakura' | 'aqua';
 
 export interface AlertDialogProps extends Omit<
 	DialogWrapperProps,
@@ -13,7 +12,7 @@ export interface AlertDialogProps extends Omit<
 	checkboxLabel?: string;
 	checkboxChecked?: boolean;
 	onCheckboxChange?: (checked: boolean) => void;
-	checkboxColor?: CheckboxColor;
+	checkboxColor?: CheckboxProps['color'];
 	footer?: React.ReactNode;
 }
 
@@ -24,7 +23,7 @@ const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
 			checkboxLabel,
 			checkboxChecked,
 			onCheckboxChange,
-			checkboxColor = 'cherry',
+			checkboxColor = 'danger',
 			title,
 			titleIcon,
 			className,
@@ -48,11 +47,8 @@ const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
 					<Checkbox
 						color={checkboxColor}
 						value={checkboxChecked}
-						className={styles.alert__dialog__checkbox}
-						onChange={(checked: boolean | 'indeterminate') => {
-							const isChecked = checked === true;
-							onCheckboxChange?.(isChecked);
-						}}
+						containerClassName={styles.alert__dialog__checkbox}
+						onChange={onCheckboxChange}
 					>
 						{checkboxLabel}
 					</Checkbox>
