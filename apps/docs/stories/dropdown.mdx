@@ -64,14 +64,14 @@ it, because Base UI names the popup from the trigger and an icon button has no t
 Six kinds, told apart by a `type` that is required on every entry, the plain action row included.
 `value` is the identity of each one: it keys the list and names the row's `data-testid`.
 
-| `type` | What it renders |
-| --- | --- |
-| `item` | One action. Takes `onClick`, `destructive`, `prefix`, and either `suffix` or `shortcut` |
-| `checkbox` | A row that toggles a setting. Owns its checkbox, so it takes no `prefix` |
-| `radio-group` | A set of options of which one is picked. Owns its radios |
-| `submenu` | A row that opens a menu of its own. Owns the chevron, so it takes no `suffix` |
-| `group` | A section heading and the rows under it. Not interactive, skipped by the arrow keys |
-| `separator` | A rule. Dropped when it would land first, last, or next to another one |
+| `type`        | What it renders                                                                         |
+| ------------- | --------------------------------------------------------------------------------------- |
+| `item`        | One action. Takes `onClick`, `destructive`, `prefix`, and either `suffix` or `shortcut` |
+| `checkbox`    | A row that toggles a setting. Owns its checkbox, so it takes no `prefix`                |
+| `radio-group` | A set of options of which one is picked. Owns its radios                                |
+| `submenu`     | A row that opens a menu of its own. Owns the chevron, so it takes no `suffix`           |
+| `group`       | A section heading and the rows under it. Not interactive, skipped by the arrow keys     |
+| `separator`   | A rule. Dropped when it would land first, last, or next to another one                  |
 
 A row blocks itself with `disabled` + `disabledTooltip`, or says it is waiting with `loading` +
 `loadingTooltip`. `loading` outranks `disabled`, the way it does on `Button`. Neither takes the row
@@ -103,11 +103,11 @@ against whichever row the highlight happens to be on, which is rarely the one th
 
 Every row renders with Base UI's `closeOnClick` off, so `onClick` decides:
 
-| It returns | What happens |
-| --- | --- |
-| `undefined` or `true` | The menu closes at once |
-| `false` | The menu stays open |
-| a promise | The row goes `data-pending`, the rest of the list goes inert, and the menu closes when it resolves, unless it resolves `false` |
+| It returns            | What happens                                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `undefined` or `true` | The menu closes at once                                                                                                        |
+| `false`               | The menu stays open                                                                                                            |
+| a promise             | The row goes `data-pending`, the rest of the list goes inert, and the menu closes when it resolves, unless it resolves `false` |
 
 A rejection keeps the menu open, clears the row and raises a `toast.error` carrying the error's
 message. That needs a `<Toaster />` mounted somewhere in the app; without one the failure is silent.
