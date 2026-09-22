@@ -13,7 +13,7 @@ const ITEMS: DropdownItemType[] = [
 
 function renderDropdown(props: Partial<Parameters<typeof Dropdown>[0]> = {}) {
 	return render(
-		<Dropdown side="bottom" align="start" items={ITEMS} testId="menu" {...props}>
+		<Dropdown nativeButton side="bottom" align="start" items={ITEMS} testId="menu" {...props}>
 			<button type="button">Actions</button>
 		</Dropdown>,
 	);
@@ -44,6 +44,7 @@ describe('Dropdown keyboard', () => {
 		const onClick = vi.fn();
 		render(
 			<Dropdown
+				nativeButton
 				side="bottom"
 				align="start"
 				testId="menu"
@@ -62,6 +63,7 @@ describe('Dropdown keyboard', () => {
 	it('closes one level at a time with Escape', async () => {
 		render(
 			<Dropdown
+				nativeButton
 				side="bottom"
 				align="start"
 				testId="menu"
@@ -112,6 +114,7 @@ describe('Dropdown keyboard', () => {
 		const onClick = vi.fn();
 		render(
 			<Dropdown
+				nativeButton
 				side="bottom"
 				align="start"
 				testId="menu"

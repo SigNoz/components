@@ -1,12 +1,13 @@
 import { Menu } from '@base-ui/react/menu';
 import type { ReactNode } from 'react';
 import { DROPDOWN_EMPTY_CONTENT, DropdownItemKind } from '../constants.js';
-import { useDropdownContext } from '../dropdown-context.js';
+import { DropdownScope, useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownItemType } from '../types.js';
 import { DropdownCheckboxItem } from './dropdown-checkbox-item.js';
 import { DropdownGroup } from './dropdown-group.js';
 import { DropdownItem } from './dropdown-item.js';
+import { DropdownLink } from './dropdown-link.js';
 import { DropdownRadioGroup } from './dropdown-radio-group.js';
 import type { DropdownTooltipSide } from './dropdown-row.js';
 import { DropdownSubmenu } from './dropdown-submenu.js';
@@ -19,7 +20,7 @@ import { DropdownSubmenu } from './dropdown-submenu.js';
  *
  * @access private
  */
-function DropdownEmpty(): ReactNode {
+function DropdownEmpty({ content }: { content: ReactNode }): ReactNode {
 	const { testId: dropdownTestId } = useDropdownContext();
 	const resolvedTestId = dropdownTestId === undefined ? undefined : `${dropdownTestId}-empty`;
 
@@ -30,7 +31,7 @@ function DropdownEmpty(): ReactNode {
 			className={styles['dropdown__empty']}
 			{...(resolvedTestId === undefined ? {} : { 'data-testid': resolvedTestId })}
 		>
-			{DROPDOWN_EMPTY_CONTENT}
+			{content}
 		</div>
 	);
 }
@@ -44,6 +45,11 @@ export type DropdownItemsProps = {
 	 * Which side the rows' tooltips open against: away from the menu holding them.
 	 */
 	side: DropdownTooltipSide;
+	/**
+	 * What to show when `items` is empty. Only the root passes it: a submenu with nothing in it is
+	 * a consumer bug and keeps the `<No content>` marker.
+	 */
+	noContent?: ReactNode;
 };
 
 /**
@@ -51,9 +57,13 @@ export type DropdownItemsProps = {
  *
  * @access private
  */
-export function DropdownItems({ items, side }: DropdownItemsProps): ReactNode {
+export function DropdownItems({
+	items,
+	side,
+	noContent = DROPDOWN_EMPTY_CONTENT,
+}: DropdownItemsProps): ReactNode {
 	if (items.length === 0) {
-		return <DropdownEmpty />;
+		return <DropdownEmpty content={noContent} />;
 	}
 
 	return (
@@ -71,19 +81,25 @@ export function DropdownItems({ items, side }: DropdownItemsProps): ReactNode {
 					case DropdownItemKind.Group:
 						return (
 							<DropdownGroup key={item.value} item={item}>
-								<DropdownItems items={item.items} side={side} />
+								<DropdownScope value={item.value}>
+									<DropdownItems items={item.items} side={side} />
+								</DropdownScope>
 							</DropdownGroup>
 						);
 					case DropdownItemKind.RadioGroup:
-						return <DropdownRadioGroup key={item.value} item={item} side={side} />;
+						return <DropdownRadioGroup key={item.name} item={item} side={side} />;
+					case DropdownItemKind.Link:
+						return <DropdownLink key={item.value} item={item} side={side} />;
 					case DropdownItemKind.Checkbox:
-						return <DropdownCheckboxItem key={item.value} item={item} side={side} />;
+						return <DropdownCheckboxItem key={item.name} item={item} side={side} />;
 					case DropdownItemKind.Submenu:
 						return (
 							<DropdownSubmenu key={item.value} item={item} side={side}>
 								{/* A row inside a submenu opens its tooltip to the right, away from
 								    the menu the submenu grew out of. */}
-								<DropdownItems items={item.items} side="right" />
+								<DropdownScope value={item.value}>
+									<DropdownItems items={item.items} side="right" />
+								</DropdownScope>
 							</DropdownSubmenu>
 						);
 					default:

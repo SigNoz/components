@@ -1,8 +1,9 @@
 import { Menu } from '@base-ui/react/menu';
-import { Check } from '@signozhq/icons';
 import type { ReactNode } from 'react';
+import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownCheckboxItemType } from '../types.js';
+import { DropdownCheckboxControl } from './dropdown-control.js';
 import {
 	DropdownRowBody,
 	DropdownRowTooltip,
@@ -21,23 +22,30 @@ export type DropdownCheckboxItemProps = {
 /**
  * One row that toggles a setting.
  *
- * The checkbox takes the leading slot, which is why the kind has no `prefix`: a row carries at most
+ * The checkbox takes the trailing slot, which is why the kind has no `suffix`: a row carries at most
  * one selection control, and a call site cannot place a second one because it never places the
  * first.
  *
  * @access private
  */
 export function DropdownCheckboxItem({ item, side }: DropdownCheckboxItemProps): ReactNode {
-	const { label, value, testId, disabled, disabledTooltip, loading, loadingTooltip } = item;
+	const { label, name, testId, disabled, disabledTooltip, loading, loadingTooltip } = item;
+	const { rememberedSelections, rememberSelection } = useDropdownContext();
 	const [row, labelRef] = useDropdownRow({
 		label,
-		value,
+		value: name,
 		testId,
 		disabled,
 		disabledTooltip,
 		loading,
 		loadingTooltip,
 	});
+
+	// Always controlled from here: an uncontrolled row's state lives on the menu, which outlives the
+	// popup and the row alike.
+	const remembered = rememberedSelections[row.rowKey];
+	const checked =
+		item.value ?? (typeof remembered === 'boolean' ? remembered : (item.defaultValue ?? false));
 
 	return (
 		<DropdownRowTooltip row={row} side={side}>
@@ -48,31 +56,26 @@ export function DropdownCheckboxItem({ item, side }: DropdownCheckboxItemProps):
 				aria-disabled={row.isInert || undefined}
 				className={styles['dropdown__item']}
 				closeOnClick={false}
-				checked={item.checked}
-				defaultChecked={item.defaultChecked}
-				onCheckedChange={(checked, eventDetails) => {
+				checked={checked}
+				onCheckedChange={(nextChecked, eventDetails) => {
 					if (row.isInert) {
 						eventDetails.cancel();
 						return;
 					}
 
-					item.onChange?.(checked);
+					if (item.value === undefined) {
+						rememberSelection(row.rowKey, nextChecked);
+					}
+
+					item.onChange?.(nextChecked);
 				}}
 				{...(row.resolvedTestId === undefined ? {} : { 'data-testid': row.resolvedTestId })}
 			>
 				<DropdownRowBody
 					row={row}
 					labelRef={labelRef}
-					prefix={
-						<Menu.CheckboxItemIndicator
-							keepMounted
-							data-slot="dropdown-item-indicator"
-							className={styles['dropdown__item-control']}
-						>
-							<Check />
-						</Menu.CheckboxItemIndicator>
-					}
-					suffix={item.suffix}
+					prefix={item.prefix}
+					suffix={<DropdownCheckboxControl />}
 				/>
 			</Menu.CheckboxItem>
 		</DropdownRowTooltip>

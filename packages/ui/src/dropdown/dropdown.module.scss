@@ -13,28 +13,52 @@
   --dropdown-internal-item-label-disabled: var(--dropdown-item-label-disabled);
   --dropdown-internal-item-background: var(--dropdown-item-background);
   --dropdown-internal-item-background-hover: var(--dropdown-item-background-hover);
-  --dropdown-internal-item-destructive-label: var(--dropdown-item-destructive-label);
-  --dropdown-internal-item-destructive-label-hover: var(--dropdown-item-destructive-label-hover);
-  --dropdown-internal-item-destructive-background-hover: var(
-    --dropdown-item-destructive-background-hover
+  --dropdown-internal-item-danger-label: var(--dropdown-item-danger-label);
+  --dropdown-internal-item-danger-label-hover: var(--dropdown-item-danger-label-hover);
+  --dropdown-internal-item-danger-background-hover: var(
+    --dropdown-item-danger-background-hover
   );
   --dropdown-internal-item-icon: var(--dropdown-item-icon);
-  --dropdown-internal-item-indicator: var(--dropdown-item-indicator);
+  --dropdown-internal-item-icon-hover: var(--dropdown-item-icon-hover);
+  // Not in `@signozhq/design-tokens` yet, so each falls back to the semantic token it mirrors.
+  --dropdown-internal-item-control-border: var(--dropdown-item-control-border, var(--l3-foreground));
+  --dropdown-internal-item-control-border-hover: var(
+    --dropdown-item-control-border-hover,
+    var(--primary-background-hover)
+  );
+  --dropdown-internal-item-control-checked-background: var(
+    --dropdown-item-control-checked-background,
+    var(--primary-background)
+  );
+  --dropdown-internal-item-control-checked-foreground: var(
+    --dropdown-item-control-checked-foreground,
+    var(--primary-foreground)
+  );
   --dropdown-internal-group-label: var(--dropdown-group-label);
   --dropdown-internal-separator: var(--dropdown-separator);
   --dropdown-internal-search-placeholder: var(--dropdown-search-placeholder);
+  --dropdown-internal-search-icon: var(--dropdown-search-icon);
   --dropdown-internal-search-border: var(--dropdown-search-border);
-  --dropdown-internal-focus-ring: var(--dropdown-focus-ring);
-  --dropdown-internal-scroll-fade: var(--dropdown-scroll-fade);
+  --dropdown-internal-loading-label: var(--dropdown-loading-label);
+  --dropdown-internal-item-focus-ring: var(--dropdown-item-focus-ring);
 
   display: var(--dropdown-display, flex);
   flex-direction: var(--dropdown-flex-direction, column);
 
-  // Never narrower than the trigger: a menu that is is read as belonging to something else.
-  // `--anchor-width` is Base UI's, set on the positioner this popup sits in.
-  min-inline-size: max(var(--dropdown-min-inline-size, 12rem), var(--anchor-width, 0px));
   // The `contentMaxWidth` prop arrives as the internal pair, so a token still outranks a call site.
-  max-inline-size: var(--dropdown-max-inline-size, var(--dropdown-internal-max-inline-size, 20rem));
+  --dropdown-internal-resolved-max-inline-size: var(
+    --dropdown-max-inline-size,
+    var(--dropdown-internal-max-inline-size, 15.75rem)
+  );
+
+  // Never narrower than the trigger: a narrower menu reads as belonging to something else.
+  // `--anchor-width` is Base UI's, set on the positioner this popup sits in. The floor gives way to
+  // a smaller maximum, which would otherwise lose: a min-width wins over a max-width.
+  min-inline-size: max(
+    min(var(--dropdown-min-inline-size, 12rem), var(--dropdown-internal-resolved-max-inline-size)),
+    var(--anchor-width, 0px)
+  );
+  max-inline-size: var(--dropdown-internal-resolved-max-inline-size);
   // `--available-height` is Base UI's: the popup shrinks rather than overflowing the viewport.
   max-block-size: var(--dropdown-max-popup-block-size, var(--available-height, none));
 
@@ -45,6 +69,10 @@
   border-radius: var(--dropdown-border-radius, var(--radius-2));
   background-color: var(--dropdown-internal-background);
   box-shadow: var(--dropdown-internal-shadow);
+
+  // `--surface-3` is translucent in dark, so the fill alone leaves the page legible through the
+  // menu. The blur is the other half of that surface, the same pairing `Tooltip` makes.
+  backdrop-filter: var(--dropdown-backdrop-filter, blur(40px));
 
   // The popup clips at its own corners, so a row's hover fill never paints over the radius.
   overflow: var(--dropdown-overflow, hidden);
@@ -88,11 +116,14 @@
   // The fade marks a clipped edge, and only a clipped edge: a list scrolled to its top has nothing
   // above it to hint at. `mask-image` rather than a gradient overlay, so the row under it fades
   // instead of being covered by an opaque copy of the popup's fill.
+  //
+  // A mask reads alpha alone, so the opaque stop is black rather than a colour token: a translucent
+  // one would dim every row between the two fades, not only the band.
   &[data-scroll-start] {
     mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      var(--dropdown-internal-scroll-fade) var(--dropdown-scroll-fade-size, var(--spacing-10))
+      #000 var(--dropdown-scroll-fade-size, var(--spacing-10))
     );
   }
 
@@ -100,7 +131,7 @@
     mask-image: linear-gradient(
       to top,
       transparent 0,
-      var(--dropdown-internal-scroll-fade) var(--dropdown-scroll-fade-size, var(--spacing-10))
+      #000 var(--dropdown-scroll-fade-size, var(--spacing-10))
     );
   }
 
@@ -108,8 +139,8 @@
     mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      var(--dropdown-internal-scroll-fade) var(--dropdown-scroll-fade-size, var(--spacing-10)),
-      var(--dropdown-internal-scroll-fade)
+      #000 var(--dropdown-scroll-fade-size, var(--spacing-10)),
+      #000
         calc(100% - var(--dropdown-scroll-fade-size, var(--spacing-10))),
       transparent 100%
     );
@@ -137,18 +168,38 @@
   cursor: var(--dropdown-item-cursor, pointer);
   user-select: var(--dropdown-item-user-select, none);
 
-  // Hover and roving focus are both marked, and they say different things: the fill is the pointer,
-  // the ring is the keyboard. Focus is never expressed as a background change.
-  &[data-highlighted] {
+  // The fill is the pointer and the ring is the keyboard. Focus never changes the background.
+  //
+  // An inert row keeps its highlight stop, so its tooltip stays reachable, but not the fill: the
+  // fill promises a click will work. Guarded on `aria-disabled` rather than `[data-disabled]`
+  // because it comes from `isInert`, which also covers a row held by another row's async action.
+  &[data-highlighted]:not([aria-disabled='true']) {
     background-color: var(--dropdown-internal-item-background-hover);
     color: var(--dropdown-internal-item-label-hover);
+
+    // The glyph tracks the label rather than holding its resting colour: a row whose label goes
+    // white while its icon stays dim reads as half-disabled.
+    .dropdown__item-affix {
+      color: var(--dropdown-internal-item-icon-hover);
+    }
   }
 
   // Inwards, the one sanctioned exception: the popup clips at its border, and an outset ring on the
   // first or last row would be cut in half.
   &:focus-visible {
-    outline: var(--dropdown-focus-outline-width, 1px) solid var(--dropdown-internal-focus-ring);
+    outline: var(--dropdown-focus-outline-width, 1px) solid
+      var(--dropdown-internal-item-focus-ring);
     outline-offset: var(--dropdown-focus-outline-offset, -1px);
+  }
+
+  // The pointer never takes the ring. Hovering a row focuses it, and a programmatic focus inherits
+  // the last `:focus-visible` state, so a menu opened from the keyboard would drag the ring along
+  // under the mouse.
+  //
+  // An explicit `none` rather than `:not(:hover)` on the rule above: a host page with a blanket
+  // `*:focus-visible { outline: ... }` would paint its own ring into the gap that leaves.
+  &:focus-visible:hover {
+    outline: var(--dropdown-item-hover-outline, none);
   }
 
   // Never the native `disabled` attribute, on any path: it takes every pointer event with it, and
@@ -158,18 +209,41 @@
     cursor: var(--dropdown-item-disabled-cursor, not-allowed);
   }
 
-  // The disabled label colour belongs to the disabled path alone. A row waiting on something keeps
-  // its own colours: it is not blocked, it is busy, and the spinner is what says so.
-  &[data-disabled] {
-    color: var(--dropdown-internal-item-label-disabled);
+  // A busy row dims, but less than a disabled one, so the two states do not look alike. The whole
+  // row dims, spinner included: dimming the label alone reads as two separate states.
+  &[data-loading] {
+    opacity: var(--dropdown-item-loading-opacity, 0.8);
   }
 
-  &[data-destructive] {
-    color: var(--dropdown-internal-item-destructive-label);
+  // The glyph carries the danger colour in both states, which is what the label does: the fill is
+  // the only thing the hover changes on this row.
+  &[data-danger] {
+    color: var(--dropdown-internal-item-danger-label);
 
-    &[data-highlighted] {
-      background-color: var(--dropdown-internal-item-destructive-background-hover);
-      color: var(--dropdown-internal-item-destructive-label-hover);
+    .dropdown__item-affix {
+      color: var(--dropdown-internal-item-danger-label);
+    }
+
+    &[data-highlighted]:not([aria-disabled='true']) {
+      background-color: var(--dropdown-internal-item-danger-background-hover);
+      color: var(--dropdown-internal-item-danger-label-hover);
+
+      .dropdown__item-affix {
+        color: var(--dropdown-internal-item-danger-label-hover);
+      }
+    }
+  }
+
+  // The disabled label colour belongs to the disabled path alone. A row waiting on something keeps
+  // its own colours: it is not blocked, it is busy, and the spinner is what says so.
+  //
+  // After `[data-danger]` on purpose: the two tie on specificity, and a blocked destructive row
+  // painted in the danger colour looks usable.
+  &[data-disabled] {
+    color: var(--dropdown-internal-item-label-disabled);
+
+    .dropdown__item-affix {
+      color: var(--dropdown-internal-item-label-disabled);
     }
   }
 }
@@ -190,25 +264,89 @@
   }
 }
 
-// The checkbox and the radio dot share this box, so a list mixing the two keeps one column.
+// The checkbox and the radio dial share this box, so a list mixing the two keeps one column. Both
+// are drawn here rather than borrowed from `Checkbox` and `RadioGroup`: the row is already the
+// control, and those two bring a button, a label and a focus stop of their own.
+//
+// Painted while unticked too: the empty box is what marks the row as a choice.
 .dropdown__item-control {
   display: var(--dropdown-item-control-display, inline-flex);
   align-items: var(--dropdown-item-control-align-items, center);
   justify-content: var(--dropdown-item-control-justify-content, center);
+  box-sizing: border-box;
 
   inline-size: var(--dropdown-item-control-size, 16px);
   block-size: var(--dropdown-item-control-size, 16px);
 
-  color: var(--dropdown-internal-item-indicator);
+  border: var(--dropdown-item-control-border-width, 2px) solid
+    var(--dropdown-internal-item-control-border);
+  background-color: var(--dropdown-item-control-background, transparent);
 
-  // Kept mounted while unticked so the column does not move when a row is picked.
-  &:not([data-checked]) {
-    visibility: var(--dropdown-item-control-unchecked-visibility, hidden);
+  transition: var(
+    --dropdown-item-control-transition,
+    background-color 150ms ease,
+    border-color 150ms ease
+  );
+
+  &[data-checked] {
+    border-color: var(--dropdown-internal-item-control-checked-background);
+    background-color: var(--dropdown-internal-item-control-checked-background);
   }
 
-  & svg:not([class*='size-']) {
-    inline-size: var(--dropdown-item-icon-size, 14px);
-    block-size: var(--dropdown-item-icon-size, 14px);
+  // Scoped to the resting box: a ticked one is already filled, and an inert row takes no hover.
+  .dropdown__item[data-highlighted]:not([aria-disabled='true']) &:not([data-checked]) {
+    border-color: var(--dropdown-internal-item-control-border-hover);
+  }
+
+  // The row dims its label on the disabled path alone, and the control follows it there. A row
+  // that is only busy keeps its control lit: the row-wide opacity already says so.
+  .dropdown__item[data-disabled] & {
+    opacity: var(--dropdown-item-control-disabled-opacity, 0.4);
+  }
+
+  .dropdown__item[data-disabled] &[data-checked] {
+    opacity: var(--dropdown-item-control-disabled-checked-opacity, 0.6);
+  }
+}
+
+.dropdown__item-control--checkbox {
+  border-radius: var(--dropdown-item-checkbox-border-radius, 2px);
+}
+
+.dropdown__item-control--radio {
+  border-radius: var(--dropdown-item-radio-border-radius, var(--radius-round));
+}
+
+// Scoped through the affix slot on purpose: that slot sizes every bare `svg` inside it at (0,2,1),
+// and the tick is not an icon of the row, it is the inside of the box.
+.dropdown__item-affix .dropdown__item-control .dropdown__item-control-check {
+  inline-size: var(--dropdown-item-checkbox-check-size, 12px);
+  block-size: var(--dropdown-item-checkbox-check-size, 12px);
+
+  color: var(--dropdown-internal-item-control-checked-foreground);
+  visibility: hidden;
+}
+
+.dropdown__item-affix .dropdown__item-control[data-checked] .dropdown__item-control-check {
+  visibility: visible;
+}
+
+.dropdown__item-control-dot {
+  inline-size: var(--dropdown-item-radio-dot-size, 8px);
+  block-size: var(--dropdown-item-radio-dot-size, 8px);
+
+  border-radius: var(--dropdown-item-radio-dot-border-radius, var(--radius-round));
+  background-color: var(--dropdown-internal-item-control-checked-foreground);
+  visibility: hidden;
+
+  [data-checked] > & {
+    visibility: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown__item-control {
+    transition: none;
   }
 }
 
@@ -269,7 +407,7 @@
   justify-content: var(--dropdown-search-affix-justify-content, center);
   flex-shrink: var(--dropdown-search-affix-flex-shrink, 0);
 
-  color: var(--dropdown-internal-search-placeholder);
+  color: var(--dropdown-internal-search-icon);
 
   & svg:not([class*='size-']) {
     inline-size: var(--dropdown-item-icon-size, 14px);
@@ -309,7 +447,7 @@
 
   padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
 
-  color: var(--dropdown-internal-item-label);
+  color: var(--dropdown-internal-loading-label);
 }
 
 .dropdown__empty {

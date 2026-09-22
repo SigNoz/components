@@ -25,7 +25,7 @@ function deferred<T>(): {
 
 function renderDropdown(items: DropdownItemType[]) {
 	return render(
-		<Dropdown side="bottom" align="start" items={items} testId="menu">
+		<Dropdown nativeButton side="bottom" align="start" items={items} testId="menu">
 			<button type="button">Actions</button>
 		</Dropdown>,
 	);
@@ -121,5 +121,66 @@ describe('Dropdown async actions', () => {
 
 		expect(onClick).toHaveBeenCalledTimes(1);
 		gate.resolve();
+	});
+	it('leaves a reopened menu alone when an action from the previous opening settles', async () => {
+		const gate = deferred<void>();
+		renderDropdown([
+			{ type: 'item', value: 'archive', label: 'Archive', onClick: () => gate.promise },
+		]);
+		await openDropdown();
+
+		await userEvent.click(screen.getByRole('menuitem', { name: 'Archive' }));
+		await userEvent.keyboard('{Escape}');
+		await waitFor(() => {
+			expect(screen.queryByRole('menu')).toBeNull();
+		});
+		await openDropdown();
+
+		gate.resolve();
+		await gate.promise;
+		await new Promise((resolve) => setTimeout(resolve, 50));
+
+		expect(screen.getByRole('menu')).toBeInTheDocument();
+	});
+
+	it('marks only the row that was clicked, when another row shares its value', async () => {
+		const gate = deferred<void>();
+		renderDropdown([
+			{ type: 'item', value: 'delete', label: 'Delete', onClick: () => gate.promise },
+			{
+				type: 'radio-group',
+				name: 'mode',
+				items: [{ label: 'Delete mode', value: 'delete', testId: 'radio-delete' }],
+			},
+		]);
+		await openDropdown();
+
+		await userEvent.click(screen.getByRole('menuitem', { name: 'Delete' }));
+
+		await waitFor(() => {
+			expect(screen.getByTestId('menu-item-delete')).toHaveAttribute('data-pending', 'true');
+		});
+		expect(screen.getByTestId('radio-delete')).not.toHaveAttribute('data-loading');
+		gate.resolve();
+	});
+
+	it('raises a toast and keeps the menu open when the handler throws', async () => {
+		const error = vi.spyOn(toast, 'error').mockImplementation(() => '');
+		renderDropdown([
+			{
+				type: 'item',
+				value: 'archive',
+				label: 'Archive',
+				onClick: () => {
+					throw new Error('read only');
+				},
+			},
+		]);
+		await openDropdown();
+
+		await userEvent.click(screen.getByRole('menuitem', { name: 'Archive' }));
+
+		expect(error).toHaveBeenCalledWith('read only');
+		expect(screen.getByRole('menu')).toBeInTheDocument();
 	});
 });

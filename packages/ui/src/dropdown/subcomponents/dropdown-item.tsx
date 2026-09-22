@@ -1,11 +1,10 @@
 import { Menu } from '@base-ui/react/menu';
 import type { MouseEvent, ReactNode } from 'react';
 import { Kbd } from '../../kbd/kbd.js';
-import { toast } from '../../sonner/sonner.js';
-import { DROPDOWN_ACTION_ERROR_MESSAGE } from '../constants.js';
 import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownActionItemType } from '../types.js';
+import { reportDropdownActionError } from '../utils.js';
 import {
 	DropdownRowBody,
 	DropdownRowTooltip,
@@ -15,12 +14,6 @@ import {
 
 function isPromise(value: unknown): value is Promise<boolean | void> {
 	return typeof (value as Promise<unknown> | undefined)?.then === 'function';
-}
-
-function toErrorMessage(error: unknown): string {
-	return error instanceof Error && error.message !== ''
-		? error.message
-		: DROPDOWN_ACTION_ERROR_MESSAGE;
 }
 
 /**
@@ -41,7 +34,7 @@ export type DropdownItemProps = {
  */
 export function DropdownItem({ item, side }: DropdownItemProps): ReactNode {
 	const { label, value, testId, disabled, disabledTooltip, loading, loadingTooltip } = item;
-	const { close, setPendingValue } = useDropdownContext();
+	const { close, trackPendingAction } = useDropdownContext();
 	const [row, labelRef] = useDropdownRow({
 		label,
 		value,
@@ -53,7 +46,6 @@ export function DropdownItem({ item, side }: DropdownItemProps): ReactNode {
 	});
 
 	// Every row renders with `closeOnClick={false}`, so closing is this handler's decision alone.
-	// That is the whole reason the menu holds an `actionsRef` internally.
 	function handleClick(event: MouseEvent): void {
 		if (row.isInert) {
 			return;
@@ -64,7 +56,16 @@ export function DropdownItem({ item, side }: DropdownItemProps): ReactNode {
 			return;
 		}
 
-		const result = item.onClick(event);
+		let result: ReturnType<NonNullable<typeof item.onClick>>;
+
+		// A handler that throws before it has a promise to reject fails the same way a rejection
+		// does: the menu stays open and the toast says why.
+		try {
+			result = item.onClick(event);
+		} catch (error) {
+			reportDropdownActionError(error);
+			return;
+		}
 
 		if (result === false) {
 			return;
@@ -75,27 +76,14 @@ export function DropdownItem({ item, side }: DropdownItemProps): ReactNode {
 			return;
 		}
 
-		setPendingValue(value);
-		result.then(
-			(resolved) => {
-				setPendingValue(null);
-
-				if (resolved !== false) {
-					close();
-				}
-			},
-			(error: unknown) => {
-				setPendingValue(null);
-				toast.error(toErrorMessage(error));
-			},
-		);
+		trackPendingAction(row.rowKey, result);
 	}
 
 	return (
 		<DropdownRowTooltip row={row} side={side}>
 			<Menu.Item
 				data-slot="dropdown-item"
-				data-destructive={item.destructive || undefined}
+				data-danger={item.danger || undefined}
 				data-disabled={row.isDisabled || undefined}
 				data-loading={row.isLoading || undefined}
 				data-pending={row.isPending || undefined}

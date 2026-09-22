@@ -10,7 +10,7 @@ describe('Dropdown forwardRef', () => {
 	it('forwards the ref to the trigger element', () => {
 		const ref = createRef<HTMLButtonElement>();
 		render(
-			<Dropdown side="bottom" align="start" items={ITEMS} testId="menu" ref={ref}>
+			<Dropdown nativeButton side="bottom" align="start" items={ITEMS} testId="menu" ref={ref}>
 				<button type="button">Actions</button>
 			</Dropdown>,
 		);
@@ -24,6 +24,7 @@ describe('Dropdown forwardRef', () => {
 		const seen: Array<HTMLButtonElement | null> = [];
 		const { unmount } = render(
 			<Dropdown
+				nativeButton
 				side="bottom"
 				align="start"
 				items={ITEMS}
