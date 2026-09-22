@@ -1,23 +1,40 @@
-.showcaseContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 48px;
+/* The showcase holds every menu open at once, so each one needs a cell of its own to open into. */
+.showcaseGrid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 360px));
+	align-items: start;
+	gap: 24px 80px;
 	width: 100%;
+}
+
+/* Tall enough that a popup never reaches the cell under it, which is what keeps the grid readable
+   while eight menus are open. */
+.cell {
+	min-block-size: 440px;
+}
+
+/* The menu holding every kind is the tallest, and its submenu opens to the right of it. */
+.cellWide {
+	grid-column: 1 / -1;
+	min-block-size: 640px;
+}
+
+.cellShort {
+	min-block-size: 300px;
 }
 
 .sectionNote {
 	color: var(--muted-foreground);
-	margin-bottom: 16px;
+	max-inline-size: 46ch;
 }
 
-.exampleRow {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 24px;
-	align-items: flex-start;
-}
-
-/* The popup opens downwards, so every story needs room under its trigger. */
+/* The playground opens downwards, so it needs room under its trigger too. */
 .roomBelow {
 	min-height: 320px;
+}
+
+.triggerRow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
 }
