@@ -180,8 +180,6 @@ export type CheckboxProps = Pick<
 		/**
 		 * Identifies the field when the owning form is submitted. Base UI renders a hidden
 		 * checkbox input that carries it.
-		 *
-		 * @note Also the first fallback for the label when `children` renders nothing.
 		 */
 		name?: string;
 		/**

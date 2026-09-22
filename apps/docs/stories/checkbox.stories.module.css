@@ -51,13 +51,13 @@
   align-items: center;
 }
 
-/* A 24px dashed frame around a bare checkbox: the built-in 4px hit-area ring around the 16px box.
+/* A 20px dashed frame around a bare checkbox: the built-in 2px hit-area ring around the 16px box.
    The frame is exactly the pointer target, while the box's layout footprint stays 16px. */
 .hitAreaCell {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   outline: 1px dashed var(--l3-foreground, #666);
 }

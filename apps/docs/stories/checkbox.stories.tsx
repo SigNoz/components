@@ -38,7 +38,7 @@ const meta: Meta<typeof Checkbox> = {
 		children: {
 			control: 'text',
 			description:
-				'The label, and the accessible name. Clicking it toggles. Without it the checkbox renders bare, with no wrapper element at all: name it with `aria-label` instead. Children that render nothing fall back to `name`, then to `"<No label>"` — a broken label stays visible instead of hiding a form control.',
+				'The label, and the accessible name. Clicking it toggles. Without it the checkbox renders bare, with no wrapper element at all: name it with `aria-label` instead. Children that render nothing count as not passed.',
 			table: { category: 'Content', type: { summary: 'ReactNode' } },
 		},
 		color: {
@@ -112,7 +112,7 @@ const meta: Meta<typeof Checkbox> = {
 		name: {
 			control: 'text',
 			description:
-				'Identifies the field when the owning form is submitted; the hidden input submits `"on"` while checked, like a native checkbox. Also the first fallback for the label when `children` renders nothing.',
+				'Identifies the field when the owning form is submitted; the hidden input submits `"on"` while checked, like a native checkbox.',
 			table: { category: 'Behavior', type: { summary: 'string' } },
 		},
 		required: {
@@ -334,18 +334,16 @@ export const CheckboxShowcase: Story = {
 					Labels
 				</Typography>
 				<Typography size="sm">
-					The label is part of the hit target: clicking it toggles. A label that renders nothing
-					falls back to <code>name</code>, then to <code>&lt;No label&gt;</code> — a broken label
-					should look broken, not hide a form control.
+					The label is part of the hit target: clicking it toggles. Children that render nothing
+					count as not passed, so the checkbox renders bare — name it with <code>aria-label</code>.
 				</Typography>
 				<div className={`${styles.labelColumn} ${styles.marginTopMedium}`}>
 					<Checkbox color="primary" defaultValue>
 						Wrap text
 					</Checkbox>
-					<Checkbox color="primary" name="wrap_text">
+					<Checkbox color="primary" aria-label="Wrap text">
 						{''}
 					</Checkbox>
-					<Checkbox color="primary">{''}</Checkbox>
 				</div>
 			</div>
 
@@ -410,7 +408,7 @@ export const CheckboxShowcase: Story = {
 					Hit area
 				</Typography>
 				<Typography size="sm">
-					The 16px box carries a built-in 4px ring, dashed here: the pointer target is 24px while
+					The 16px box carries a built-in 2px ring, dashed here: the pointer target is 20px while
 					the layout footprint stays 16px. The ring never paints any state, only the box does.
 				</Typography>
 				<div className={styles.marginTopMedium}>

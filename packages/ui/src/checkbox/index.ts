@@ -68,7 +68,7 @@
 // #endregion css-tokens
 
 export { Checkbox } from './checkbox.js';
-export { CHECKBOX_EMPTY_LABEL, CheckboxColor, CheckboxTextOverflow } from './constants.js';
+export { CheckboxColor, CheckboxTextOverflow } from './constants.js';
 export type {
 	CheckboxColorType,
 	CheckboxDisableType,

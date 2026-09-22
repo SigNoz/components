@@ -267,35 +267,31 @@ describe('Checkbox styling hooks', () => {
 	});
 });
 
-// A checkbox that was given a label keeps one even when it renders nothing: a broken label should
-// look broken, not hide a form control. `name` is the nearest human-readable stand-in, and the
-// `<No label>` constant is the last resort.
 describe('Checkbox empty label', () => {
 	it.each([
 		['null', null],
 		['false', false],
 		['an empty string', ''],
-	])('falls back to <No label> when children render %s and there is no name', (_name, label) => {
+	])('children that render %s count as not passed, no label and no wrapper', (_name, label) => {
 		render(
-			<Checkbox color="primary" containerTestId="container">
+			<Checkbox color="primary" testId="checkbox">
 				{label}
 			</Checkbox>,
 		);
 
-		const labelEl = screen.getByTestId('container').querySelector('[data-slot="checkbox-label"]');
-		expect(labelEl).toHaveTextContent('<No label>');
-		expect(labelEl).toHaveAttribute('data-empty-label');
+		const root = screen.getByTestId('checkbox');
+		expect(root.closest('[data-slot="checkbox-container"]')).toBeNull();
+		expect(document.querySelector('[data-slot="checkbox-label"]')).toBeNull();
 	});
 
-	it('falls back to the name prop first, without the empty-label mark', () => {
+	it('a container prop still mounts the wrapper, but never a label element', () => {
 		render(
-			<Checkbox color="primary" name="tos" containerTestId="container">
+			<Checkbox color="primary" containerTestId="container">
 				{''}
 			</Checkbox>,
 		);
 
-		const labelEl = screen.getByTestId('container').querySelector('[data-slot="checkbox-label"]');
-		expect(labelEl).toHaveTextContent('tos');
-		expect(labelEl).not.toHaveAttribute('data-empty-label');
+		const container = screen.getByTestId('container');
+		expect(container.querySelector('[data-slot="checkbox-label"]')).toBeNull();
 	});
 });

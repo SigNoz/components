@@ -14,7 +14,7 @@ import {
 	type TooltipContentStackEntry,
 } from '../tooltip/tooltip-content-stack-context.js';
 import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
-import { CHECKBOX_EMPTY_LABEL, CheckboxTextOverflow } from './constants.js';
+import { CheckboxTextOverflow } from './constants.js';
 import styles from './checkbox.module.scss';
 import type { CheckboxProps, ValidateCheckboxProps } from './types.js';
 
@@ -68,12 +68,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		[onChange],
 	);
 
-	// A checkbox that was given a label keeps one even when it renders nothing: a broken label
-	// should look broken, not hide a form control. `name` is the nearest human-readable stand-in,
-	// and the constant is the last resort.
-	const hasLabel = children !== undefined;
-	const isLabelEmpty = hasLabel && !hasRenderableContent(children);
-	const resolvedLabel = isLabelEmpty ? (name ?? CHECKBOX_EMPTY_LABEL) : children;
+	const hasLabel = hasRenderableContent(children);
 	const hasContainer =
 		hasLabel ||
 		containerClassName !== undefined ||
@@ -98,7 +93,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		}
 
 		if (isLabelTruncated) {
-			entries.push({ id: 'label', content: resolvedLabel });
+			entries.push({ id: 'label', content: children });
 		}
 
 		return entries.length === 0 ? null : <TooltipStack items={entries} />;
@@ -108,7 +103,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		hasDisabledTooltip,
 		disabledTooltip,
 		isLabelTruncated,
-		resolvedLabel,
+		children,
 	]);
 
 	// The trigger mounts from the props, not from whether there is content right now, so the
@@ -176,10 +171,9 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 					ref={labelRef}
 					data-slot="checkbox-label"
 					data-truncated={isLabelTruncated || undefined}
-					data-empty-label={(isLabelEmpty && name === undefined) || undefined}
 					className={styles['checkbox__label']}
 				>
-					{resolvedLabel}
+					{children}
 				</span>
 			)}
 		</label>
@@ -222,7 +216,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * `aria-readonly`. Every `aria-*` and any `data-*` are forwarded to it.
  *
  * Visual values are `--checkbox-*` custom properties, defaults in the `css-tokens` region of
- * `./index.ts`. The 16px box carries a built-in 4px hit-area ring, so the pointer target is 24px
+ * `./index.ts`. The 16px box carries a built-in 2px hit-area ring, so the pointer target is 20px
  * while the layout footprint stays 16px; the ring never paints any state, only the box does.
  *
  * ### Label
@@ -232,9 +226,8 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * `aria-labelledby`. Without it the checkbox renders bare, with no wrapper at all: give it a name
  * with `aria-label`.
  *
- * `children` that render nothing (`null`, `false` or an empty string) fall back to the `name`
- * prop, then to `"<No label>"` with `data-empty-label` set: a broken label stays visible instead
- * of silently hiding a form control.
+ * `children` that render nothing (`null`, `false` or an empty string) count as not passed: the
+ * checkbox renders without a label.
  *
  * ### Indeterminate
  *
@@ -290,7 +283,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * | `checkbox-box` | always, the 16px visual box |
  * | `checkbox-indicator` | while checked or indeterminate, holds the glyph |
  * | `checkbox-container` | the `<label>` wrapper, only with a label or a `container*` prop |
- * | `checkbox-label` | only with a label, the measured element, `data-truncated` while it does not fit, `data-empty-label` on the `"<No label>"` fallback |
+ * | `checkbox-label` | only with a label, the measured element, `data-truncated` while it does not fit |
  *
  * @example
  * ```tsx
