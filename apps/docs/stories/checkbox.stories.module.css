@@ -1,10 +1,63 @@
-.variantRow {
+.columnLayout {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.colorLabel {
-  width: 120px;
-  text-transform: capitalize;
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 1.25rem 2rem;
+  align-items: start;
+  justify-items: start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  padding-right: 1rem;
+}
+
+.matrixLabel {
+  white-space: nowrap;
+}
+
+.stateCell {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.labelColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.selectAllChildren {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-left: 1.5rem;
+}
+
+.overflowGrid {
+  display: grid;
+  grid-template-columns: max-content 14rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* A 24px dashed frame around a bare checkbox: the built-in 4px hit-area ring around the 16px box.
+   The frame is exactly the pointer target, while the box's layout footprint stays 16px. */
+.hitAreaCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  outline: 1px dashed var(--l3-foreground, #666);
 }

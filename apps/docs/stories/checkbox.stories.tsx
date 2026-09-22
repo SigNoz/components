@@ -1,169 +1,424 @@
-import { Checkbox } from '@signozhq/ui';
+import {
+	Checkbox,
+	CheckboxColor,
+	type CheckboxColorType,
+	CheckboxTextOverflow,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { type CSSProperties, Fragment, type ReactElement, useState } from 'react';
+import { fn } from 'storybook/test';
+import { allModes } from '../.storybook/modes.js';
 import styles from './checkbox.stories.module.css';
+
+const COLORS = Object.values(CheckboxColor);
+
+const LONG_LABEL = 'Display every timestamp on the console in the 24-hour format';
 
 const meta: Meta<typeof Checkbox> = {
 	title: 'Primitive Components/Checkbox',
 	component: Checkbox,
+	args: {
+		onChange: fn(),
+	},
+	parameters: {
+		layout: 'fullscreen',
+		docs: {
+			description: {
+				component:
+					'One independent yes/no choice that something else commits — a form, an apply button. Label rides along in a `<label>` wrapper; without it the checkbox renders bare.',
+			},
+		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/eyORbfrXMWCz9w0xEFdgWe/Periscope-%E2%80%93-Primitives-v2?node-id=4628-34798',
+		},
+	},
 	argTypes: {
 		children: {
 			control: 'text',
 			description:
-				'The content inside the checkbox. Typically used for adding text or other elements alongside the checkbox.',
-			table: { category: 'Content' },
+				'The label, and the accessible name. Clicking it toggles. Without it the checkbox renders bare, with no wrapper element at all: name it with `aria-label` instead. Children that render nothing fall back to `name`, then to `"<No label>"` — a broken label stays visible instead of hiding a form control.',
+			table: { category: 'Content', type: { summary: 'ReactNode' } },
 		},
 		color: {
 			control: 'select',
-			options: [
-				'primary',
-				'success',
-				'warning',
-				'error',
-				'robin',
-				'forest',
-				'amber',
-				'sienna',
-				'cherry',
-				'sakura',
-				'aqua',
-			],
+			options: COLORS,
 			description:
-				'The color theme of the checkbox. Each color has semantic meaning for different use cases.',
-			table: { category: 'Appearance', defaultValue: { summary: 'primary' } },
+				"Same palette as Badge's `color`. Fills the box while checked or indeterminate; the unchecked box keeps a neutral border for every color. Required: the checked fill is a semantic statement, so the call site has to make it.",
+			table: {
+				category: 'Appearance',
+				type: { summary: 'CheckboxColorType' },
+			},
+		},
+		indeterminate: {
+			control: 'boolean',
+			description:
+				'Shows the mixed state: a dash instead of the check mark, announced as `aria-checked="mixed"`. Purely visual on top of the checked state — clicking still reports the next boolean through `onChange`, and deriving it from a tree\'s children is the call site\'s job.',
+			table: { category: 'State', type: { summary: 'boolean' } },
+		},
+		textOverflow: {
+			control: 'inline-radio',
+			options: Object.values(CheckboxTextOverflow),
+			description:
+				'`ellipsis` (default) truncates the label and shows it in full in a tooltip. `wrap` lets it take more lines, `hidden` clips it, `visible` clips nothing. None of the last three shows a tooltip.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'CheckboxTextOverflowType' },
+				defaultValue: { summary: 'ellipsis' },
+			},
+		},
+		value: {
+			control: 'boolean',
+			description: 'The controlled checked state. Use with `onChange`, never with `defaultValue`.',
+			table: { category: 'State', type: { summary: 'boolean' } },
+		},
+		defaultValue: {
+			control: 'boolean',
+			description: 'The checked state on first render, for a checkbox that keeps its own state.',
+			table: { category: 'State', type: { summary: 'boolean' } },
 		},
 		disabled: {
 			control: 'boolean',
-			description: 'Prevents user interaction and displays the checkbox in a disabled state.',
-			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-		},
-		required: {
-			control: 'boolean',
 			description:
-				'When true, indicates that the user must check the checkbox before the owning form can be submitted.',
+				'Blocks the checkbox. Announced through `aria-disabled`, so it stays hoverable and keeps its tab stop and the reason stays reachable. Requires `disabledTooltip`. Suppressed entirely while `readOnly` is true.',
 			table: {
-				category: 'Behavior',
-				defaultValue: { summary: 'false' },
+				category: 'State',
 				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
 			},
 		},
-		id: {
+		disabledTooltip: {
 			control: 'text',
 			description:
-				'A unique identifier for the checkbox. Links the checkbox with its label for accessibility.',
-			table: { category: 'Accessibility' },
+				'Why the checkbox cannot be used. Only renders while `disabled` is true, and never while `readOnly` is.',
+			table: { category: 'State', type: { summary: 'ReactNode' } },
+		},
+		readOnly: {
+			control: 'boolean',
+			description:
+				'Locks the value while the checkbox stays focusable. Requires `readOnlyTooltip`. Outranks `disabled`, which does not render at all while this is set.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		readOnlyTooltip: {
+			control: 'text',
+			description: 'Why the value is locked. Only renders while `readOnly` is true.',
+			table: { category: 'State', type: { summary: 'ReactNode' } },
 		},
 		name: {
 			control: 'text',
 			description:
-				'The name of the checkbox. Submitted with its owning form as part of a name/value pair.',
-			table: { category: 'Form', type: { summary: 'string' } },
+				'Identifies the field when the owning form is submitted; the hidden input submits `"on"` while checked, like a native checkbox. Also the first fallback for the label when `children` renders nothing.',
+			table: { category: 'Behavior', type: { summary: 'string' } },
 		},
-		value: {
-			control: 'select',
-			options: [true, false, 'indeterminate'],
-			description:
-				'The controlled checked state of the checkbox. Use when you need to control its checked state.',
-			table: { category: 'Form', type: { summary: 'boolean' } },
+		required: {
+			control: 'boolean',
+			description: 'The owning form cannot be submitted until the checkbox is checked.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
 		},
-		defaultValue: {
-			control: 'select',
-			options: [true, false, 'indeterminate'],
-			description:
-				'The initial checked state of the checkbox. Use when you do not need to control its checked state.',
-			table: { category: 'Form', defaultValue: { summary: 'false' } },
-		},
-		testId: {
+		width: {
 			control: 'text',
-			description: 'The testId associated with the checkbox for testing purposes.',
-			table: { category: 'Testing', type: { summary: 'string' } },
+			description:
+				'The width of the labelled row, written as the `--checkbox-internal-width` custom property. Numbers are px. Sizes the row, never the 16px box.',
+			table: { category: 'Behavior', type: { summary: "CSSProperties['width']" } },
 		},
-		className: {
+		maxWidth: {
 			control: 'text',
-			description: 'Additional CSS classes to apply to the checkbox.',
-			table: { category: 'Styling', type: { summary: 'string' } },
+			description:
+				'The max-width of the labelled row, written as `--checkbox-internal-max-width`. Defaults to `100%` of the container.',
+			table: { category: 'Behavior', type: { summary: "CSSProperties['maxWidth']" } },
 		},
 		onChange: {
 			control: false,
-			description: 'The callback invoked when the checked state of the checkbox changes.',
-			table: { category: 'Events', type: { summary: '(checked: CheckedState) => void' } },
+			description:
+				'Called with the new checked state, and with nothing else. Never fires while `disabled` or `readOnly`.',
+			table: { category: 'Events', type: { summary: '(checked: boolean) => void' } },
 		},
-	},
-	parameters: {
-		layout: 'fullscreen',
-		design: [
-			{
-				name: 'Figma',
-				type: 'figma',
-				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-742&p=f',
-			},
-		],
+		testId: {
+			control: 'text',
+			description:
+				'Forwarded to the checkbox itself as `data-testid`. The wrapper is named by `containerTestId` instead.',
+			table: { category: 'Testing' },
+		},
+		containerTestId: {
+			control: 'text',
+			description: 'Forwarded to the `<label>` wrapper as `data-testid`.',
+			table: { category: 'Testing' },
+		},
+		className: {
+			control: 'text',
+			description: 'Additional CSS classes for the checkbox itself.',
+			table: { category: 'Styling' },
+		},
+		containerClassName: {
+			control: 'text',
+			description:
+				'Additional CSS classes for the wrapper. Any `container*` prop forces the wrapper to render even with no label.',
+			table: { category: 'Styling' },
+		},
+		id: {
+			control: 'text',
+			description:
+				'Lands on the hidden checkbox input, which is the element an external `htmlFor` points at.',
+			table: { category: 'Accessibility' },
+		},
+		tabIndex: {
+			control: 'number',
+			description:
+				'Forwarded to the checkbox. A disabled checkbox keeps its tab stop by default, so `disabledTooltip` stays reachable without a pointer.',
+			table: { category: 'Accessibility', type: { summary: 'number' } },
+		},
+		'aria-label': {
+			control: 'text',
+			description:
+				'The accessible name for a bare checkbox. With a label as `children` the name comes from it instead.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
 	},
 };
 
 export default meta;
 type Story = StoryObj<typeof Checkbox>;
 
-// Default checkbox
 export const Default: Story = {
 	args: {
-		id: 'default',
-		children: 'Default checkbox',
-		defaultValue: false,
-		disabled: false,
-		required: false,
 		color: 'primary',
+		children: 'Enable request tracing',
+		defaultValue: true,
 	},
 };
 
-export const AllVariants: Story = {
-	render: () => (
-		<div className="story-section">
-			{[
-				'primary',
-				'success',
-				'warning',
-				'error',
-				'robin',
-				'forest',
-				'amber',
-				'sienna',
-				'cherry',
-				'sakura',
-				'aqua',
-			].map((c) => (
-				<div key={c} className={styles.variantRow}>
-					<div className={styles.colorLabel}>{c}</div>
+/**
+ * `hover` and `focus` cannot be reached by a snapshot on their own, so
+ * `storybook-addon-pseudo-states` forces them through the `[data-state-cell]` selectors in the
+ * story parameters. `disabled` and `readonly` are real props, so they need no pseudo.
+ *
+ * Each cell holds an unchecked, a checked and an indeterminate box: unchecked shows the neutral
+ * border every color shares, the other two are where the palette actually lands.
+ */
+const STATES = ['default', 'hover', 'focus', 'disabled', 'readonly'] as const;
 
-					<Checkbox id={`checkbox-${c}-default`} color={c as any}>
-						Default
-					</Checkbox>
+type State = (typeof STATES)[number];
 
-					<Checkbox id={`checkbox-${c}-checked`} defaultValue={true} color={c as any}>
-						Checked
-					</Checkbox>
+function StateCell({ color, state }: { color: CheckboxColorType; state: State }): ReactElement {
+	const blocking =
+		state === 'disabled'
+			? ({ disabled: true, disabledTooltip: 'Ask an admin for access' } as const)
+			: state === 'readonly'
+				? ({ readOnly: true, readOnlyTooltip: 'Saving your changes' } as const)
+				: {};
 
-					<Checkbox
-						id={`checkbox-${c}-indeterminate`}
-						defaultValue={'indeterminate' as any}
-						color={c as any}
-					>
-						Indeterminate
-					</Checkbox>
+	return (
+		<div data-state-cell={state} className={styles.stateCell}>
+			<Checkbox color={color} aria-label={`${color} unchecked, ${state}`} {...blocking} />
+			<Checkbox
+				color={color}
+				aria-label={`${color} checked, ${state}`}
+				defaultValue
+				{...blocking}
+			/>
+			<Checkbox
+				color={color}
+				aria-label={`${color} indeterminate, ${state}`}
+				defaultValue
+				indeterminate
+				{...blocking}
+			/>
+		</div>
+	);
+}
 
-					<Checkbox id={`checkbox-${c}-disabled`} disabled={true} color={c as any}>
-						Disabled
-					</Checkbox>
-
-					<Checkbox
-						id={`checkbox-${c}-disabled-checked`}
-						defaultValue={true}
-						disabled={true}
-						color={c as any}
-					>
-						Disabled Checked
-					</Checkbox>
-				</div>
+function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
+	return (
+		<>
+			<span />
+			{columns.map((column) => (
+				<Typography size="sm" weight="medium" key={column} className={styles.matrixLabel}>
+					{column}
+				</Typography>
 			))}
+		</>
+	);
+}
+
+function matrixStyle(columns: number): CSSProperties {
+	return { '--matrix-columns': columns } as CSSProperties;
+}
+
+const CONSTRAINED_WIDTH = '14rem';
+
+function SelectAllDemo(): ReactElement {
+	const [traces, setTraces] = useState(true);
+	const [logs, setLogs] = useState(false);
+
+	const all = traces && logs;
+	const some = traces || logs;
+
+	const onSelectAll = (checked: boolean): void => {
+		setTraces(checked);
+		setLogs(checked);
+	};
+
+	return (
+		<div className={styles.labelColumn}>
+			<Checkbox color="primary" value={all} indeterminate={some && !all} onChange={onSelectAll}>
+				Select all signals
+			</Checkbox>
+			<div className={styles.selectAllChildren}>
+				<Checkbox color="primary" value={traces} onChange={setTraces}>
+					Traces
+				</Checkbox>
+				<Checkbox color="primary" value={logs} onChange={setLogs}>
+					Logs
+				</Checkbox>
+			</div>
+		</div>
+	);
+}
+
+export const CheckboxShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		pseudo: {
+			// Hover only recolors the border of the unchecked box; a checked box already tells its
+			// story with the fill.
+			hover: '[data-state-cell="hover"] [data-slot="checkbox"]',
+			// The ring wraps the box only, never the label.
+			focusVisible: '[data-state-cell="focus"] [data-slot="checkbox"]',
+		},
+	},
+	argTypes: {
+		children: { control: false },
+		color: { control: false },
+	},
+	render: () => (
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					States
+				</Typography>
+				<Typography size="sm">
+					One row per color, one column per state, each cell unchecked, checked, then indeterminate.
+					The unchecked border is the same neutral for every color, an unchecked box has no status
+					to report yet. Hover recolors the border of the unchecked box only. Disabled fades to 0.6,
+					read-only to 0.8.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(STATES.length)}
+				>
+					<MatrixHeader columns={[...STATES]} />
+					{COLORS.map((color) => (
+						<Fragment key={color}>
+							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								{color}
+							</Typography>
+							{STATES.map((state) => (
+								<StateCell key={state} color={color as CheckboxColorType} state={state} />
+							))}
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Labels
+				</Typography>
+				<Typography size="sm">
+					The label is part of the hit target: clicking it toggles. A label that renders nothing
+					falls back to <code>name</code>, then to <code>&lt;No label&gt;</code> — a broken label
+					should look broken, not hide a form control.
+				</Typography>
+				<div className={`${styles.labelColumn} ${styles.marginTopMedium}`}>
+					<Checkbox color="primary" defaultValue>
+						Wrap text
+					</Checkbox>
+					<Checkbox color="primary" name="wrap_text">
+						{''}
+					</Checkbox>
+					<Checkbox color="primary">{''}</Checkbox>
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Indeterminate
+				</Typography>
+				<Typography size="sm">
+					The mixed state is visual only, derived by the call site from the children: the parent is
+					checked while all children are, indeterminate while some are. Clicking it still reports
+					the next boolean.
+				</Typography>
+				<div className={styles.marginTopMedium}>
+					<SelectAllDemo />
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Overflow
+				</Typography>
+				<Typography size="sm">
+					Capped at <code>{CONSTRAINED_WIDTH}</code>. <code>ellipsis</code> shows the full label in
+					a tooltip on hover, <code>wrap</code> takes more lines, <code>hidden</code> clips, and
+					<code>visible</code> paints past the cap.
+				</Typography>
+				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
+					{Object.values(CheckboxTextOverflow).map((textOverflow) => (
+						<Fragment key={textOverflow}>
+							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								{textOverflow}
+							</Typography>
+							<Checkbox
+								color="primary"
+								width={CONSTRAINED_WIDTH}
+								textOverflow={textOverflow}
+								defaultValue
+							>
+								{LONG_LABEL}
+							</Checkbox>
+							<span />
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Bare
+				</Typography>
+				<Typography size="sm">
+					With no children there is no wrapper element at all, the checkbox is its own flex item.
+					Name it with <code>aria-label</code>.
+				</Typography>
+				<div className={styles.marginTopMedium}>
+					<Checkbox color="primary" aria-label="Wrap text" defaultValue />
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Hit area
+				</Typography>
+				<Typography size="sm">
+					The 16px box carries a built-in 4px ring, dashed here: the pointer target is 24px while
+					the layout footprint stays 16px. The ring never paints any state, only the box does.
+				</Typography>
+				<div className={styles.marginTopMedium}>
+					<span className={styles.hitAreaCell}>
+						<Checkbox color="primary" aria-label="Hit area demo" defaultValue />
+					</span>
+				</div>
+			</div>
 		</div>
 	),
 };
