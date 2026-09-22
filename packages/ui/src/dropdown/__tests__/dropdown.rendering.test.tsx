@@ -1,18 +1,20 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DROPDOWN_EMPTY_CONTENT, DROPDOWN_EMPTY_LABEL } from '../constants.js';
+import { Badge } from '../../badge/index.js';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType } from '../types.js';
 import { openDropdown } from './dropdown.test-utils.js';
 
 const ITEMS: DropdownItemType[] = [
 	{ type: 'item', value: 'rename', label: 'Rename' },
-	{ type: 'item', value: 'delete', label: 'Delete', destructive: true },
+	{ type: 'item', value: 'delete', label: 'Delete', danger: true },
 ];
 
 function renderDropdown(props: Partial<Parameters<typeof Dropdown>[0]> = {}) {
 	return render(
-		<Dropdown side="bottom" align="start" items={ITEMS} testId="menu" {...props}>
+		<Dropdown nativeButton side="bottom" align="start" items={ITEMS} testId="menu" {...props}>
 			<button type="button">Actions</button>
 		</Dropdown>,
 	);
@@ -58,12 +60,12 @@ describe('Dropdown rendering', () => {
 		expect(screen.queryByTestId('menu-item-rename')).toBeNull();
 	});
 
-	it('marks a destructive row', async () => {
+	it('marks a danger row', async () => {
 		renderDropdown();
 		await openDropdown();
 
-		expect(screen.getByTestId('menu-item-delete')).toHaveAttribute('data-destructive', 'true');
-		expect(screen.getByTestId('menu-item-rename')).not.toHaveAttribute('data-destructive');
+		expect(screen.getByTestId('menu-item-delete')).toHaveAttribute('data-danger', 'true');
+		expect(screen.getByTestId('menu-item-rename')).not.toHaveAttribute('data-danger');
 	});
 
 	it('falls back to <No label> for a label that renders nothing', async () => {
@@ -87,16 +89,38 @@ describe('Dropdown rendering', () => {
 		expect(warn).toHaveBeenCalledWith('Dropdown: `items` is empty, showing the empty row.');
 	});
 
+	it('renders noContent in the empty row without warning', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		renderDropdown({ items: [], noContent: <span>No dashboards yet</span> });
+		await openDropdown();
+
+		expect(screen.getByTestId('menu-empty')).toHaveTextContent('No dashboards yet');
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('keeps the default text and the warning on an empty submenu', async () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		renderDropdown({
+			noContent: 'Nothing here',
+			items: [{ type: 'submenu', value: 'move', label: 'Move to', items: [] }],
+		});
+		await openDropdown();
+
+		expect(warn).toHaveBeenCalledWith(
+			'Dropdown: the submenu "move" has no items, showing the empty row.',
+		);
+	});
+
 	it('renders each kind of row', async () => {
 		renderDropdown({
 			items: [
 				{ type: 'item', value: 'rename', label: 'Rename' },
 				{ type: 'separator', value: 'rule' },
-				{ type: 'checkbox', value: 'pinned', label: 'Pinned', defaultChecked: true },
+				{ type: 'checkbox', name: 'pinned', label: 'Pinned', defaultValue: true },
 				{
 					type: 'radio-group',
-					value: 'sort',
-					defaultSelectedValue: 'name',
+					name: 'sort',
+					defaultValue: 'name',
 					items: [
 						{ label: 'By name', value: 'name' },
 						{ label: 'By date', value: 'date' },
@@ -152,13 +176,81 @@ describe('Dropdown rendering', () => {
 		expect(screen.getByTestId('menu-loading')).toHaveTextContent('Fetching actions');
 	});
 
-	it('puts aria-* on the popup and data-* on the trigger', async () => {
+	it('puts aria-* and data-* on the popup, and the testId on the trigger', async () => {
 		renderDropdown({ 'aria-label': 'Row actions', 'data-analytics': 'row-menu' });
 		const popup = await openDropdown();
 
 		expect(popup).toHaveAttribute('aria-label', 'Row actions');
-		expect(screen.getByTestId('menu')).toHaveAttribute('data-analytics', 'row-menu');
-		expect(screen.getByTestId('menu')).not.toHaveAttribute('aria-label', 'Row actions');
+		expect(popup).toHaveAttribute('data-analytics', 'row-menu');
+		expect(screen.getByTestId('menu')).not.toHaveAttribute('data-analytics');
+	});
+
+	it('puts className and style on the popup, and on a submenu popup too', async () => {
+		renderDropdown({
+			className: 'above-the-panel',
+			style: { zIndex: 1100 },
+			items: [
+				{
+					type: 'submenu',
+					value: 'download',
+					label: 'Download',
+					items: [{ type: 'item', value: 'csv', label: 'CSV' }],
+				},
+			],
+		});
+		const popup = await openDropdown();
+
+		expect(popup).toHaveClass('above-the-panel');
+		expect(popup.style.zIndex).toBe('1100');
+
+		await userEvent.click(screen.getByTestId('menu-item-download'));
+
+		const row = await screen.findByRole('menuitem', { name: 'CSV' });
+		const submenu = row.closest<HTMLElement>('[data-slot="dropdown-popup"]');
+		expect(submenu).toHaveAttribute('data-submenu');
+		expect(submenu).toHaveClass('above-the-panel');
+		expect(submenu?.style.zIndex).toBe('1100');
+	});
+
+	it('renders a link row as the element it was given', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'link',
+					value: 'docs',
+					label: 'Documentation',
+					render: <a href="/docs" />,
+				},
+			],
+		});
+		await openDropdown();
+
+		const row = screen.getByTestId('menu-item-docs');
+		expect(row.tagName).toBe('A');
+		expect(row).toHaveAttribute('href', '/docs');
+		expect(row).toHaveAttribute('data-slot', 'dropdown-link');
+		expect(row).toHaveAttribute('role', 'menuitem');
+	});
+
+	it('drops render on an inert link row, so a middle click cannot walk around it', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'link',
+					value: 'docs',
+					label: 'Documentation',
+					render: <a href="/docs" />,
+					disabled: true,
+					disabledTooltip: 'Not for your role',
+				},
+			],
+		});
+		await openDropdown();
+
+		const row = screen.getByTestId('menu-item-docs');
+		expect(row.tagName).not.toBe('A');
+		expect(row).not.toHaveAttribute('href');
+		expect(row).toHaveAttribute('aria-disabled', 'true');
 	});
 
 	it('writes the size props as custom properties on the popup', async () => {
@@ -167,5 +259,73 @@ describe('Dropdown rendering', () => {
 
 		expect(popup.style.getPropertyValue('--dropdown-internal-max-inline-size')).toBe('480px');
 		expect(popup.style.getPropertyValue('--dropdown-internal-max-block-size')).toBe('30rem');
+	});
+	it('opens from a trigger that is not a native button', async () => {
+		const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+		render(
+			<Dropdown side="bottom" align="start" items={ITEMS} testId="menu" nativeButton={false}>
+				<Badge>Status</Badge>
+			</Dropdown>,
+		);
+
+		const trigger = screen.getByRole('button', { name: 'Status' });
+		expect(trigger.tagName).toBe('SPAN');
+		expect(trigger).not.toHaveAttribute('type');
+
+		trigger.focus();
+		await userEvent.keyboard('{Enter}');
+
+		expect(await screen.findByRole('menu')).toBeInTheDocument();
+		expect(error).not.toHaveBeenCalled();
+	});
+
+	it('does not warn about an empty items list while loading', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		renderDropdown({ items: [], loading: true });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('does not warn about an empty items list the server filtered down', () => {
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		renderDropdown({ items: [], searchInputProps: { filter: false } });
+
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('drops the stray separators of a group and a submenu too', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'group',
+					value: 'edit',
+					label: 'Edit',
+					items: [
+						{ type: 'separator', value: 'lead' },
+						{ type: 'item', value: 'rename', label: 'Rename' },
+					],
+				},
+				{
+					type: 'submenu',
+					value: 'more',
+					label: 'More',
+					items: [
+						{ type: 'item', value: 'export', label: 'Export' },
+						{ type: 'separator', value: 'one' },
+						{ type: 'separator', value: 'two' },
+						{ type: 'item', value: 'import', label: 'Import' },
+						{ type: 'separator', value: 'trail' },
+					],
+				},
+			],
+		});
+		await openDropdown();
+
+		expect(screen.queryAllByRole('separator')).toHaveLength(0);
+
+		await userEvent.click(screen.getByRole('menuitem', { name: 'More' }));
+		await screen.findByRole('menuitem', { name: 'Export' });
+
+		expect(screen.getAllByRole('separator')).toHaveLength(1);
 	});
 });

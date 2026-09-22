@@ -22,7 +22,7 @@ import type {
 	DropdownCheckboxItemType,
 	DropdownGroupItemType,
 	DropdownItemType,
-	DropdownLeafItemType,
+	DropdownLinkItemType,
 	DropdownRadioGroupItemType,
 	DropdownSubmenuItemType,
 } from '../types.js';
@@ -36,7 +36,7 @@ const ref = createRef<HTMLButtonElement>();
 describe('root props', () => {
 	test('accepts the required four, plus a ref', () => {
 		assertType(
-			<Dropdown side="bottom" align="start" items={ONE} ref={ref}>
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} ref={ref}>
 				{btn}
 			</Dropdown>,
 		);
@@ -45,7 +45,7 @@ describe('root props', () => {
 	test('rejects a menu with no side', () => {
 		assertType(
 			// @ts-expect-error - placement is never incidental, the call site states it
-			<Dropdown align="start" items={ONE}>
+			<Dropdown nativeButton align="start" items={ONE}>
 				{btn}
 			</Dropdown>,
 		);
@@ -54,7 +54,7 @@ describe('root props', () => {
 	test('rejects a menu with no align', () => {
 		assertType(
 			// @ts-expect-error - placement is never incidental, the call site states it
-			<Dropdown side="bottom" items={ONE}>
+			<Dropdown nativeButton side="bottom" items={ONE}>
 				{btn}
 			</Dropdown>,
 		);
@@ -63,7 +63,7 @@ describe('root props', () => {
 	test('rejects a menu with nothing in it', () => {
 		assertType(
 			// @ts-expect-error - `items` is what the menu renders, it cannot be left out
-			<Dropdown side="bottom" align="start">
+			<Dropdown nativeButton side="bottom" align="start">
 				{btn}
 			</Dropdown>,
 		);
@@ -72,7 +72,7 @@ describe('root props', () => {
 	test('rejects a raw data-testid', () => {
 		assertType(
 			// @ts-expect-error - the prop is called `testId`
-			<Dropdown side="bottom" align="start" items={ONE} data-testid="m">
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} data-testid="m">
 				{btn}
 			</Dropdown>,
 		);
@@ -80,8 +80,62 @@ describe('root props', () => {
 
 	test('rejects a prop the menu does not have', () => {
 		assertType(
-			// @ts-expect-error - gating is the trigger's job, the menu has no `disabled`
-			<Dropdown side="bottom" align="start" items={ONE} disabled>
+			// @ts-expect-error - the menu owns its open state, there is no `open`
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} open>
+				{btn}
+			</Dropdown>,
+		);
+	});
+
+	test('rejects a menu that does not say whether its trigger is a button', () => {
+		assertType(
+			// @ts-expect-error - `nativeButton` has to match the trigger, so it has no default
+			<Dropdown side="bottom" align="start" items={ONE}>
+				{btn}
+			</Dropdown>,
+		);
+	});
+
+	test('rejects a disabled menu with no reason', () => {
+		assertType(
+			// @ts-expect-error - a disabled menu has to tell the user why it cannot be opened
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} disabled>
+				{btn}
+			</Dropdown>,
+		);
+	});
+
+	test('rejects a reason with no disabled', () => {
+		assertType(
+			// @ts-expect-error - `disabledTooltip` only renders while `disabled` is set
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} disabledTooltip="Why">
+				{btn}
+			</Dropdown>,
+		);
+	});
+
+	test('accepts disabled with its reason, or with an explicit undefined', () => {
+		assertType(
+			<Dropdown
+				nativeButton
+				side="bottom"
+				align="start"
+				items={ONE}
+				disabled
+				disabledTooltip="No edit access"
+			>
+				{btn}
+			</Dropdown>,
+		);
+		assertType(
+			<Dropdown
+				nativeButton
+				side="bottom"
+				align="start"
+				items={ONE}
+				disabled={false}
+				disabledTooltip={undefined}
+			>
 				{btn}
 			</Dropdown>,
 		);
@@ -90,6 +144,7 @@ describe('root props', () => {
 	test('accepts aria-*, data-*, the size props and the search row', () => {
 		assertType(
 			<Dropdown
+				nativeButton
 				side="bottom"
 				align="start"
 				items={ONE}
@@ -98,6 +153,7 @@ describe('root props', () => {
 				contentMaxWidth={320}
 				contentMaxHeight="30rem"
 				searchInputProps={{ filter: false }}
+				onOpenChange={() => {}}
 				testId="menu"
 			>
 				{btn}
@@ -200,21 +256,64 @@ describe('the action row', () => {
 	});
 });
 
+describe('the link row', () => {
+	test('accepts an element to render as, and both slots', () => {
+		assertType<DropdownLinkItemType>({
+			type: 'link',
+			value: 'docs',
+			label: 'Docs',
+			render: <a href="/docs">Docs</a>,
+			prefix: icon,
+			suffix: icon,
+		});
+	});
+
+	test('rejects a link row with nothing to render as', () => {
+		assertType<DropdownLinkItemType>(
+			// @ts-expect-error - the row is whatever you hand over, so there is nothing to default to
+			{ type: 'link', value: 'docs', label: 'Docs' },
+		);
+	});
+
+	test('rejects a handler, because navigation is the action', () => {
+		assertType<DropdownLinkItemType>(
+			// @ts-expect-error - put the handler on the element you render
+			{ type: 'link', value: 'docs', label: 'Docs', render: <a href="/docs" />, onClick: () => {} },
+		);
+	});
+
+	test('rejects a disabled link row with no reason', () => {
+		assertType<DropdownLinkItemType>(
+			// @ts-expect-error - a blocked row has to tell the user why
+			{ type: 'link', value: 'docs', label: 'Docs', render: <a href="/docs" />, disabled: true },
+		);
+	});
+});
+
 describe('the checkbox row', () => {
-	test('accepts the checked triple', () => {
+	test('accepts the value triple', () => {
 		assertType<DropdownCheckboxItemType>({
 			type: 'checkbox',
-			value: 'e',
+			name: 'e',
 			label: 'E',
-			checked: true,
+			value: true,
 			onChange: () => {},
 		});
 	});
 
-	test('rejects a prefix, because the checkbox takes that slot', () => {
+	test('accepts a leading icon, because the check sits opposite it', () => {
+		assertType<DropdownCheckboxItemType>({
+			type: 'checkbox',
+			name: 'e',
+			label: 'E',
+			prefix: icon,
+		});
+	});
+
+	test('rejects a suffix, because the check takes that slot', () => {
 		assertType<DropdownCheckboxItemType>(
-			// @ts-expect-error - a row carries one selection control, and it owns the leading slot
-			{ type: 'checkbox', value: 'e', label: 'E', prefix: icon },
+			// @ts-expect-error - a row carries one selection control, and it owns the trailing slot
+			{ type: 'checkbox', name: 'e', label: 'E', suffix: icon },
 		);
 	});
 });
@@ -223,8 +322,8 @@ describe('the radio group row', () => {
 	test('accepts its options and its selection', () => {
 		assertType<DropdownRadioGroupItemType>({
 			type: 'radio-group',
-			value: 'f',
-			selectedValue: 'g',
+			name: 'f',
+			value: 'g',
 			onChange: () => {},
 			items: [{ value: 'g', label: 'G' }],
 		});
@@ -233,8 +332,17 @@ describe('the radio group row', () => {
 	test('rejects an option with no value', () => {
 		assertType<DropdownRadioGroupItemType>(
 			// @ts-expect-error - `value` is what `onChange` reports
-			{ type: 'radio-group', value: 'f', items: [{ label: 'G' }] },
+			{ type: 'radio-group', name: 'f', items: [{ label: 'G' }] },
 		);
+	});
+
+	test('rejects a suffix on an option, because the check takes that slot', () => {
+		assertType<DropdownRadioGroupItemType>({
+			type: 'radio-group',
+			name: 'f',
+			// @ts-expect-error - the selection check owns the trailing slot and is not overridable
+			items: [{ value: 'g', label: 'G', suffix: icon }],
+		});
 	});
 });
 
@@ -252,17 +360,34 @@ describe('nesting', () => {
 	});
 
 	test('rejects a submenu inside a submenu', () => {
-		assertType<DropdownSubmenuItemType>(
-			// @ts-expect-error - one level of nesting, held by the type rather than by a check
-			{ type: 'submenu', value: 'c', label: 'C', items: [SUBMENU] },
-		);
+		assertType<DropdownSubmenuItemType>({
+			type: 'submenu',
+			value: 'c',
+			label: 'C',
+			items: [
+				// @ts-expect-error - one level of nesting, held by the type rather than by a check
+				{ type: 'submenu', value: 'e', label: 'E', items: [] },
+			],
+		});
 	});
 
 	test('rejects a submenu inside a group inside a submenu', () => {
-		assertType<DropdownSubmenuItemType>(
-			// @ts-expect-error - a group is a heading, not a way around the one-level rule
-			{ type: 'submenu', value: 'c', label: 'C', items: [GROUP_OF_SUBMENU] },
-		);
+		assertType<DropdownSubmenuItemType>({
+			type: 'submenu',
+			value: 'c',
+			label: 'C',
+			items: [
+				{
+					type: 'group',
+					value: 'd',
+					label: 'D',
+					items: [
+						// @ts-expect-error - a group is a heading, not a way around the one-level rule
+						{ type: 'submenu', value: 'e', label: 'E', items: [] },
+					],
+				},
+			],
+		});
 	});
 
 	test('accepts a submenu inside a group at the root', () => {
@@ -270,15 +395,20 @@ describe('nesting', () => {
 			type: 'group',
 			value: 'd',
 			label: 'D',
-			items: [SUBMENU],
+			items: [{ type: 'submenu', value: 'c', label: 'C', items: [] }],
 		});
 	});
 
 	test('rejects a group inside a group', () => {
-		assertType<DropdownGroupItemType>(
-			// @ts-expect-error - a heading under a heading has no meaning
-			{ type: 'group', value: 'd', label: 'D', items: [LEAF_GROUP] },
-		);
+		assertType<DropdownGroupItemType>({
+			type: 'group',
+			value: 'd',
+			label: 'D',
+			items: [
+				// @ts-expect-error - a heading under a heading has no meaning
+				{ type: 'group', value: 'e', label: 'E', items: [] },
+			],
+		});
 	});
 
 	test('rejects a suffix on a submenu, because the chevron takes that slot', () => {
@@ -288,12 +418,3 @@ describe('nesting', () => {
 		);
 	});
 });
-
-const SUBMENU: DropdownSubmenuItemType = { type: 'submenu', value: 'c', label: 'C', items: [] };
-const LEAF_GROUP: DropdownGroupItemType<DropdownLeafItemType> = {
-	type: 'group',
-	value: 'd',
-	label: 'D',
-	items: [],
-};
-const GROUP_OF_SUBMENU: DropdownGroupItemType = { ...LEAF_GROUP, items: [SUBMENU] };

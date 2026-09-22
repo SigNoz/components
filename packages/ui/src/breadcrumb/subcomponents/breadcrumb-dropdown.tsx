@@ -80,6 +80,7 @@ export const BreadcrumbDropdown = React.forwardRef<HTMLButtonElement, Breadcrumb
 
 		return (
 			<Dropdown
+				nativeButton
 				side="bottom"
 				align="start"
 				items={menuItems}

@@ -11,6 +11,7 @@ const LONG_LABEL = 'Rename this dashboard and every panel that points at it, acr
 function renderDropdown(items: DropdownItemType[], contentMaxWidth?: number) {
 	return render(
 		<Dropdown
+			nativeButton
 			side="bottom"
 			align="start"
 			items={items}
@@ -122,7 +123,7 @@ describe('Dropdown tooltips', () => {
 		renderDropdown([
 			{
 				type: 'checkbox',
-				value: 'pinned',
+				name: 'pinned',
 				label: 'Pinned',
 				disabled: true,
 				disabledTooltip: 'Pinning is off for this workspace',
@@ -134,6 +135,24 @@ describe('Dropdown tooltips', () => {
 
 		await waitFor(() => {
 			expect(queryOpenTooltip()).toHaveTextContent('Pinning is off for this workspace');
+		});
+	});
+	it('shows the reason of a disabled radio group on its options', async () => {
+		renderDropdown([
+			{
+				type: 'radio-group',
+				name: 'sort',
+				disabled: true,
+				disabledTooltip: 'Upgrade to change sort',
+				items: [{ label: 'By name', value: 'name' }],
+			},
+		]);
+		await openDropdown();
+
+		await userEvent.hover(screen.getByRole('menuitemradio', { name: 'By name' }));
+
+		await waitFor(() => {
+			expect(queryOpenTooltip()).toHaveTextContent('Upgrade to change sort');
 		});
 	});
 });

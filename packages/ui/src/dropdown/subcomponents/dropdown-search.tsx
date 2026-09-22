@@ -51,9 +51,8 @@ export function DropdownSearch({
 	// Only the keys that mean "leave the field" reach it.
 	function handleKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
 		if (!DROPDOWN_SEARCH_PASSTHROUGH_KEYS.includes(event.key)) {
-			// `Enter` lands here too, and doing nothing is the point: a search field that fires an
-			// action on `Enter` fires it against whichever row the highlight happens to be on,
-			// which is rarely the one the user was reading while typing. Arrow into the list first.
+			// `Enter` stops here on purpose. Passed through, it would fire whichever row the
+			// highlight happens to be on, which is rarely the one the user was reading.
 			event.stopPropagation();
 
 			if (event.key === 'Enter') {

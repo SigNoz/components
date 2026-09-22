@@ -1,12 +1,13 @@
 /**
  * What kind of row an entry of `items` renders.
  *
- * The discriminant is required on every entry, including the plain action row. A union where five
- * members carry a discriminant and one declares `type?: never` cannot narrow on an excess property
- * check: TypeScript gives up and blames whichever member came first.
+ * The discriminant is required on every entry, including the plain action row. A union where every
+ * member but one carries a discriminant and that one declares `type?: never` cannot narrow on an
+ * excess property check: TypeScript gives up and blames whichever member came first.
  */
 export const DropdownItemKind = {
 	Item: 'item',
+	Link: 'link',
 	Submenu: 'submenu',
 	Group: 'group',
 	Separator: 'separator',
@@ -23,7 +24,7 @@ export const DropdownItemKind = {
 export const DROPDOWN_EMPTY_LABEL = '<No label>';
 
 /**
- * What a menu shows when it has nothing to put in it.
+ * What a menu shows when it has nothing to put in it, unless `noContent` says otherwise.
  *
  * An empty `items` is a consumer bug, so it also logs a warning. An empty search result is a state
  * rather than a bug, so it shows this row and logs nothing.

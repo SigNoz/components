@@ -15,7 +15,7 @@ import {
 } from '../../tooltip/tooltip-content-stack-context.js';
 import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import { DROPDOWN_EMPTY_LABEL } from '../constants.js';
-import { useDropdownContext } from '../dropdown-context.js';
+import { useDropdownContext, useDropdownRowKey } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 
 /**
@@ -43,6 +43,10 @@ export type DropdownRowParams = {
  * @access private
  */
 export type DropdownRowState = {
+	/**
+	 * The row's identity across the whole menu. See {@link useDropdownRowKey}.
+	 */
+	rowKey: string;
 	/**
 	 * The label, or the `<No label>` fallback when it renders nothing.
 	 */
@@ -90,18 +94,19 @@ export function useDropdownRow({
 	loading,
 	loadingTooltip,
 }: DropdownRowParams): [DropdownRowState, RefCallback<HTMLSpanElement>] {
-	const { testId: dropdownTestId, pendingValue } = useDropdownContext();
+	const { testId: dropdownTestId, pendingRowKey } = useDropdownContext();
+	const rowKey = useDropdownRowKey(value);
 	const tooltipContentId = useId();
 	const tooltipHandle = useTooltipHandle();
 
-	const isPending = pendingValue === value;
+	const isPending = pendingRowKey === rowKey;
 	// `loading` outranks `disabled`, the way it does on `Button`: while the row is waiting it is
 	// not disabled at all, and its reason is what the row is waiting for.
 	const isLoading = loading === true || isPending;
 	const isDisabled = !isLoading && disabled === true;
 	// An async action holds the whole list, so a row that is neither disabled nor loading still
 	// cannot be picked while another one is in flight.
-	const isInert = isLoading || isDisabled || pendingValue !== null;
+	const isInert = isLoading || isDisabled || pendingRowKey !== null;
 
 	const isLabelEmpty = !hasRenderableContent(label);
 	const resolvedLabel = isLabelEmpty ? DROPDOWN_EMPTY_LABEL : label;
@@ -146,6 +151,7 @@ export function useDropdownRow({
 	// far as the React Compiler is concerned, and every read off it during render is then a bailout.
 	return [
 		{
+			rowKey,
 			resolvedLabel,
 			isLabelEmpty,
 			isLabelOverflowing,

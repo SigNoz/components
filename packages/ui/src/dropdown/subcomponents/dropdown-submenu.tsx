@@ -1,6 +1,7 @@
 import { Menu } from '@base-ui/react/menu';
 import { ChevronRight } from '@signozhq/icons';
 import { type ReactNode, useEffect } from 'react';
+import { cn } from '../../lib/utils.js';
 import { DROPDOWN_SIDE_OFFSET } from '../constants.js';
 import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
@@ -32,7 +33,7 @@ export type DropdownSubmenuProps = {
  */
 export function DropdownSubmenu({ item, side, children }: DropdownSubmenuProps): ReactNode {
 	const { label, value, testId, disabled, disabledTooltip, loading, loadingTooltip } = item;
-	const { container, popupStyle } = useDropdownContext();
+	const { container, popupStyle, popupClassName } = useDropdownContext();
 	const [row, labelRef] = useDropdownRow({
 		label,
 		value,
@@ -94,7 +95,7 @@ export function DropdownSubmenu({ item, side, children }: DropdownSubmenuProps):
 					<Menu.Popup
 						data-slot="dropdown-popup"
 						data-submenu=""
-						className={styles['dropdown']}
+						className={cn(styles['dropdown'], popupClassName)}
 						style={popupStyle}
 					>
 						<DropdownViewport>{children}</DropdownViewport>

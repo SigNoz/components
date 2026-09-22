@@ -1,5 +1,6 @@
 import { isValidElement, type ReactNode } from 'react';
-import { DropdownItemKind } from './constants.js';
+import { toast } from '../sonner/sonner.js';
+import { DROPDOWN_ACTION_ERROR_MESSAGE, DropdownItemKind } from './constants.js';
 import type { DropdownItemType, DropdownRadioItemType } from './types.js';
 
 /**
@@ -21,7 +22,9 @@ export function toSearchText(node: ReactNode): string {
 	}
 
 	if (Array.isArray(node)) {
-		return node.map(toSearchText).join(' ');
+		// Adjacent JSX text renders with nothing between the parts, so `<>Delete {n} rows</>` reads
+		// as one string on screen and has to read as the same one here.
+		return node.map(toSearchText).join('');
 	}
 
 	if (isValidElement<{ children?: ReactNode }>(node)) {
@@ -105,6 +108,8 @@ export function cleanupSeparators<T extends DropdownItemType>(items: readonly T[
  * submenu, the query that got you there is behind you. A radio group survives on its options, and
  * renders with only those.
  *
+ * The separator cleanup runs at every level, with or without a query.
+ *
  * @access private
  */
 export function filterDropdownItems<T extends DropdownItemType>(
@@ -112,11 +117,6 @@ export function filterDropdownItems<T extends DropdownItemType>(
 	query: string,
 ): T[] {
 	const normalized = query.trim().toLowerCase();
-
-	if (normalized === '') {
-		return cleanupSeparators(items);
-	}
-
 	const kept: T[] = [];
 
 	for (const item of items) {
@@ -130,7 +130,8 @@ export function filterDropdownItems<T extends DropdownItemType>(
 			// the two. The shape is unchanged, only the list is shorter.
 			const rows = filterDropdownItems(item.items, normalized);
 
-			if (rows.length > 0) {
+			// Only a query drops a heading. Without one, the group renders whatever it holds.
+			if (normalized === '' || rows.length > 0) {
 				kept.push({ ...item, items: rows } as T);
 			}
 
@@ -142,7 +143,7 @@ export function filterDropdownItems<T extends DropdownItemType>(
 				matchesQuery(option, normalized),
 			);
 
-			if (options.length > 0) {
+			if (normalized === '' || options.length > 0) {
 				kept.push({ ...item, items: options } as T);
 			}
 
@@ -151,7 +152,7 @@ export function filterDropdownItems<T extends DropdownItemType>(
 
 		if (item.type === DropdownItemKind.Submenu) {
 			if (matchesQuery(item, normalized) || matchesDeep(item.items, normalized)) {
-				kept.push(item);
+				kept.push({ ...item, items: filterDropdownItems(item.items, '') } as T);
 			}
 
 			continue;
@@ -163,4 +164,15 @@ export function filterDropdownItems<T extends DropdownItemType>(
 	}
 
 	return cleanupSeparators(kept);
+}
+
+/**
+ * Raises the toast a failed `onClick` gets, thrown or rejected, carrying the error's message.
+ *
+ * @access private
+ */
+export function reportDropdownActionError(error: unknown): void {
+	toast.error(
+		error instanceof Error && error.message !== '' ? error.message : DROPDOWN_ACTION_ERROR_MESSAGE,
+	);
 }

@@ -4,20 +4,29 @@ import type { DropdownItemKind } from './constants.js';
 
 type OriginalPositionerProps = Menu.Positioner.Props;
 type OriginalPortalProps = Menu.Portal.Props;
+type OriginalItemProps = Menu.Item.Props;
 
 export type DropdownItemKindType = (typeof DropdownItemKind)[keyof typeof DropdownItemKind];
+
+/**
+ * What a navigating row renders as, taken from Base UI's own `render` prop.
+ *
+ * Either the element to render in the row's place, which keeps its own props and receives the
+ * row's on top, or a function handed those props and the row's state.
+ */
+export type DropdownItemRenderType = NonNullable<OriginalItemProps['render']>;
 
 /**
  * `disabled` and `disabledTooltip` travel together on a row.
  *
  * Rows are plain data rather than call sites, so a union expresses the pairing here, unlike the
  * component's own props (see {@link ValidateDropdownProps}).
+ *
+ * @note The empty branch goes last, here and in every union a row is built from. The compiler
+ * explains a failed assignment against the last member, so a row missing some other prop is told
+ * about that prop instead of about `disabledTooltip`.
  */
 export type DropdownItemDisabledType =
-	| {
-			disabled?: never;
-			disabledTooltip?: never;
-	  }
 	| {
 			/**
 			 * When true, blocks this row alone.
@@ -37,6 +46,10 @@ export type DropdownItemDisabledType =
 			 * give.
 			 */
 			disabledTooltip: ReactNode;
+	  }
+	| {
+			disabled?: never;
+			disabledTooltip?: never;
 	  };
 
 /**
@@ -44,10 +57,6 @@ export type DropdownItemDisabledType =
  * DropdownItemDisabledType} does.
  */
 export type DropdownItemLoadingType =
-	| {
-			loading?: never;
-			loadingTooltip?: never;
-	  }
 	| {
 			/**
 			 * When true, the row is waiting on something of its own: a spinner takes the leading
@@ -69,6 +78,10 @@ export type DropdownItemLoadingType =
 			 * give.
 			 */
 			loadingTooltip: ReactNode;
+	  }
+	| {
+			loading?: never;
+			loadingTooltip?: never;
 	  };
 
 /**
@@ -86,7 +99,8 @@ type DropdownRowBaseType = {
 	/**
 	 * This row's identity. Keys the list and names the row's `data-testid`.
 	 *
-	 * @note Unique among its siblings. Two rows sharing one are indistinguishable to the component.
+	 * @note Unique among its siblings. Two siblings sharing one are indistinguishable to the
+	 * component. Rows at different levels may share one.
 	 */
 	value: string;
 	/**
@@ -136,7 +150,6 @@ export type DropdownActionItemType = DropdownRowBaseType &
 	DropdownItemDisabledType &
 	DropdownItemLoadingType &
 	(
-		| (DropdownRowSuffixType & { shortcut?: never })
 		| {
 				suffix?: never;
 				/**
@@ -148,6 +161,7 @@ export type DropdownActionItemType = DropdownRowBaseType &
 				 */
 				shortcut: ReactNode;
 		  }
+		| (DropdownRowSuffixType & { shortcut?: never })
 	) & {
 		type: typeof DropdownItemKind.Item;
 		/**
@@ -159,58 +173,107 @@ export type DropdownActionItemType = DropdownRowBaseType &
 		 * @note A promise puts the row in `data-pending`, holds the rest of the list inert, and
 		 * closes the menu once it resolves, unless it resolves `false`.
 		 *
-		 * @note A rejection keeps the menu open, clears the pending state and raises a
-		 * `toast.error`, which needs a `<Toaster />` mounted in the app to be seen.
+		 * @note A rejection, or a synchronous throw, keeps the menu open, clears the pending state
+		 * and raises a `toast.error`, which needs a `<Toaster />` mounted in the app to be seen.
+		 *
+		 * @note A promise that settles after the menu has closed leaves the menu alone, even if it
+		 * has been reopened since. A rejection still raises its toast.
 		 */
 		onClick?: (event: MouseEvent) => Promise<boolean | void> | boolean | void;
 		/**
-		 * When true, paints the row in the destructive foreground.
+		 * When true, paints the row in the danger foreground.
 		 *
 		 * @note Design asks for these last in the menu and separated from the rest. That is
 		 * documentation: the component renders `items` in the order it is given.
 		 *
 		 * @default false
 		 */
-		destructive?: boolean;
+		danger?: boolean;
+	};
+
+/**
+ * One row that navigates. The action row's counterpart: it has no `onClick`, it has a `render`.
+ *
+ * The row is whatever the call site hands over, a router `Link` in practice, so it is a real
+ * anchor: middle click, "open in new tab" and the URL in the status bar all work. That is the
+ * whole reason the kind exists, and the reason it takes no `href` of its own: a link component
+ * takes a `to`, a `href`, a `params` object or nothing at all, and the component cannot know
+ * which.
+ */
+export type DropdownLinkItemType = DropdownRowBaseType &
+	DropdownRowPrefixType &
+	DropdownRowSuffixType &
+	DropdownItemDisabledType &
+	DropdownItemLoadingType & {
+		type: typeof DropdownItemKind.Link;
+		/**
+		 * Renders this row as something else, keeping `role="menuitem"`, the keyboard walk, the
+		 * tooltips and the row's `data-testid`. `<Link to="/logs" />` is the whole prop.
+		 *
+		 * @note Ignored while the row is inert, through `disabled`, `loading`, or another row's
+		 * async action. An anchor stays reachable through middle click and the context menu, so
+		 * the only way to block one is not to render it: the row falls back to the plain,
+		 * non-navigating one.
+		 *
+		 * @note The menu closes when the row is picked. Navigation is the action, so there is no
+		 * return value to read and no `onClick` here: put the handler on the element you render.
+		 */
+		render: DropdownItemRenderType;
 	};
 
 /**
  * One row that toggles a setting.
  *
- * The row owns its checkbox, which is what enforces the rule that a row carries at most one
- * selection control: there is no slot to put a second one in.
+ * The row draws its own checkbox in the trailing slot, which is why there is no `suffix`: a row
+ * carries at most one selection control, and there is no slot to put a second one in.
  */
-export type DropdownCheckboxItemType = DropdownRowBaseType &
-	DropdownRowSuffixType &
+export type DropdownCheckboxItemType = Omit<DropdownRowBaseType, 'value'> &
+	DropdownRowPrefixType &
 	DropdownItemDisabledType &
 	DropdownItemLoadingType & {
 		type: typeof DropdownItemKind.Checkbox;
 		/**
+		 * This row's identity. Keys the list and names the row's `data-testid`, as
+		 * `` `${dropdownTestId}-item-${name}` ``.
+		 *
+		 * @note Named `name` rather than `value`, the identity the other rows carry, because
+		 * `value` is the selection here, the way it is on `Checkbox` and `Switch`.
+		 *
+		 * @note Unique among its siblings. Two siblings sharing one are indistinguishable to the
+		 * component. Rows at different levels may share one.
+		 */
+		name: string;
+		/**
 		 * Whether the row is ticked.
 		 *
-		 * @note Use with `onChange`. For an uncontrolled row use `defaultChecked` instead.
+		 * @note Use with `onChange`. For an uncontrolled row use `defaultValue` instead.
 		 */
-		checked?: boolean;
+		value?: boolean;
 		/**
 		 * Whether the row is ticked on the first render, for a row that keeps its own state.
 		 *
-		 * @note Use with `onChange`. For a controlled row use `checked` instead.
+		 * @note Use with `onChange`. For a controlled row use `value` instead.
+		 *
+		 * @note The state lives on the menu, so it survives the menu closing and the search hiding
+		 * the row. It resets when the `Dropdown` itself unmounts.
 		 */
-		defaultChecked?: boolean;
+		defaultValue?: boolean;
 		/**
 		 * Called with the new state when the row is ticked or unticked.
 		 *
 		 * @note Never called while the row is disabled, loading, or while another row's async
 		 * action is in flight.
 		 */
-		onChange?: (checked: boolean) => void;
+		onChange?: (value: boolean) => void;
 	};
 
 /**
  * One option inside a `radio-group` row.
+ *
+ * The row draws its own radio in the trailing slot, which is why there is no `suffix`.
  */
 export type DropdownRadioItemType = DropdownRowBaseType &
-	DropdownRowSuffixType &
+	DropdownRowPrefixType &
 	DropdownItemDisabledType &
 	DropdownItemLoadingType;
 
@@ -223,24 +286,30 @@ export type DropdownRadioGroupItemType = DropdownItemDisabledType & {
 	type: typeof DropdownItemKind.RadioGroup;
 	/**
 	 * This group's identity. Keys the list and names the group's `data-testid`.
+	 *
+	 * @note Named `name` rather than `value`, the identity the other rows carry, because `value`
+	 * is the selection here, the way it is on `RadioGroup`. A `checkbox` row does the same.
 	 */
-	value: string;
+	name: string;
 	/**
 	 * The controlled selection, which is one of the options' `value`s.
 	 *
-	 * @note Use with `onChange`. For an uncontrolled group use `defaultSelectedValue` instead.
+	 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
 	 */
-	selectedValue?: string;
+	value?: string;
 	/**
 	 * The option selected on the first render, for a group that keeps its own state.
 	 *
-	 * @note Use with `onChange`. For a controlled group use `selectedValue` instead.
+	 * @note Use with `onChange`. For a controlled group use `value` instead.
+	 *
+	 * @note The state lives on the menu, the same way a checkbox row's `defaultValue` does.
 	 */
-	defaultSelectedValue?: string;
+	defaultValue?: string;
 	/**
 	 * Called with the newly selected option's `value`.
 	 *
-	 * @note Never called while the group is disabled, or while a row's async action is in flight.
+	 * @note Never called for a disabled or loading option, while the group is disabled, or while a
+	 * row's async action is in flight.
 	 */
 	onChange?: (value: string) => void;
 	/**
@@ -268,6 +337,7 @@ export type DropdownSeparatorItemType = {
  */
 export type DropdownLeafItemType =
 	| DropdownActionItemType
+	| DropdownLinkItemType
 	| DropdownCheckboxItemType
 	| DropdownRadioGroupItemType
 	| DropdownSeparatorItemType;
@@ -343,7 +413,7 @@ export type DropdownSubmenuItemType = DropdownRowBaseType &
 	};
 
 /**
- * One entry of `items`. Six kinds, told apart by `type`.
+ * One entry of `items`. Seven kinds, told apart by `type`.
  */
 export type DropdownItemType =
 	| DropdownLeafItemType
@@ -392,11 +462,19 @@ export type DropdownSearchInputProps = {
 };
 
 /**
- * The rule below is the one a union cannot express without blowing up {@link DropdownProps} into a
- * cross product. It is an object whose single required key is the sentence the compiler should
- * print, so a violation reads as `Property '<the sentence>' is missing ... but required in type
- * '<the rule name>'` instead of pointing at an unrelated prop.
+ * The rules below are objects whose single required key is the sentence the compiler should print,
+ * the same device `ToggleGroup`, `RadioGroup` and `Button` use, so a violation reads as `Property
+ * '<the sentence>' is missing ... but required in type '<the rule name>'` instead of pointing at an
+ * unrelated prop.
  */
+interface ADisabledDropdownMustSayWhy {
+	'`disabled` needs `disabledTooltip`, a disabled control has to tell the user why it cannot be used': never;
+}
+
+interface ADisabledReasonNeedsADisabledDropdown {
+	'`disabledTooltip` only renders while `disabled` is set, add `disabled` or drop the tooltip': never;
+}
+
 interface TheTestIdPropIsCalledTestId {
 	'`data-testid` is written as the `testId` prop, which lands on the trigger and names every row': never;
 }
@@ -407,13 +485,20 @@ interface TheTestIdPropIsCalledTestId {
  * Resolves to `unknown` (which disappears from an intersection) while the props are valid, and to a
  * rule object when they are not.
  *
- * Gating the whole menu is the trigger's job, so there is no `disabled` pair here to validate: the
- * consumer owns the trigger node, and `Button`, `Badge` and `Input` each carry their own
- * `disabled` + `disabledTooltip`.
+ * The pairing rules look at which props the call site writes, not at their values, the way
+ * `ValidateButtonProps` does: `disabledTooltip={undefined}` is the explicit opt-out.
  */
-export type ValidateDropdownProps<T> = T extends { 'data-testid': unknown }
-	? TheTestIdPropIsCalledTestId
-	: unknown;
+export type ValidateDropdownProps<T> = (T extends { disabled: boolean | undefined }
+	? T extends { disabledTooltip: ReactNode }
+		? unknown
+		: ADisabledDropdownMustSayWhy
+	: unknown) &
+	(T extends { disabledTooltip: ReactNode }
+		? T extends { disabled: boolean | undefined }
+			? unknown
+			: ADisabledReasonNeedsADisabledDropdown
+		: unknown) &
+	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
 export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
 	AriaAttributes & {
@@ -421,16 +506,58 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'st
 		 * The rows, in the order they are rendered. The menu owns its markup, so there are no
 		 * children to compose.
 		 *
-		 * @note An empty list renders the `<No content>` row and logs a warning. A menu with
-		 * nothing in it is a consumer bug rather than a state, which is why there is no
-		 * `emptyContent` prop.
+		 * @note An empty list renders the `noContent` row, and logs a warning when `noContent` is
+		 * not set.
 		 */
 		items: DropdownItemType[];
 		/**
 		 * The trigger. Rendered as the element you pass, with the menu's props merged into it, so
-		 * it keeps its own type, its own `disabled` and its own tooltip.
+		 * it keeps its own `disabled` and its own tooltip.
+		 *
+		 * @note A trigger that does not render a `<button>` needs `nativeButton={false}`.
 		 */
 		children: ReactNode;
+		/**
+		 * When true, the menu does not open, and the trigger carries `aria-disabled` and
+		 * `data-disabled`.
+		 *
+		 * @note Requires `disabledTooltip`.
+		 *
+		 * @note `aria-disabled` rather than the native `disabled`, so the trigger stays hoverable
+		 * and focusable and the reason stays reachable. A `Button` trigger paints itself disabled
+		 * from it.
+		 *
+		 * @note Closes the menu if it is open when this turns true.
+		 *
+		 * @default false
+		 */
+		disabled?: boolean;
+		/**
+		 * Why the menu cannot be opened. Shown in a tooltip on the trigger, and only while
+		 * `disabled` is true.
+		 *
+		 * @note Only allowed alongside `disabled`. Pass `undefined` explicitly when there is no
+		 * reason to give.
+		 */
+		disabledTooltip?: ReactNode;
+		/**
+		 * Whether the trigger renders a native `<button>`. Base UI only sees the element the child
+		 * renders after it mounts, so the menu has to be told up front.
+		 *
+		 * With `true`, Base UI leaves the element to the browser, which already gives a `<button>`
+		 * its role, focus, `disabled` and `Enter` and `Space` activation. With `false`, Base UI
+		 * adds those itself: `role="button"`, `tabIndex`, `aria-disabled` and the key handlers.
+		 *
+		 * @note Leave it on for `Button` or a plain `<button>`, and set it to `false` for anything
+		 * else, such as `Badge` or a `<span>`. It cannot be `false` for every trigger: the value
+		 * has to match the element, and Base UI logs an error whenever it does not. `true` on a
+		 * `Badge` also leaves it with no button role and an `Enter` key that does nothing, and
+		 * `false` on a `Button` adds a `role` and an `aria-disabled` it does not need.
+		 *
+		 * @note Required. The value has to match the trigger, and a default of `true` is silently
+		 * wrong for every `Badge` or `<span>` trigger.
+		 */
+		nativeButton: boolean;
 		/**
 		 * How the popup is aligned along the side it opens against.
 		 *
@@ -455,7 +582,7 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'st
 		 * @note So it composes with the tokens instead of overwriting `style.maxWidth`. A number is
 		 * written as `px`, and any `style` you pass is kept.
 		 *
-		 * @default '20rem'
+		 * @default '15.75rem'
 		 */
 		contentMaxWidth?: number | string;
 		/**
@@ -489,16 +616,37 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'st
 		 */
 		loadingContent?: ReactNode;
 		/**
+		 * What the non-interactive row shows when there is nothing to list: an empty `items`, or
+		 * a query that matches nothing.
+		 *
+		 * @note Setting it declares an empty `items` a state, so no warning is logged. It does not
+		 * reach submenus: an empty submenu keeps `<No content>` and its warning.
+		 *
+		 * @default '<No content>'
+		 */
+		noContent?: ReactNode;
+		/**
 		 * The pinned search row. Passing the object is what renders it, so `{}` is a search row
 		 * with every default.
 		 */
 		searchInputProps?: DropdownSearchInputProps;
 		/**
+		 * Called when the menu opens and when it closes.
+		 *
+		 * @note The menu owns its open state. This reports it, it does not drive it: there is no
+		 * `open` or `defaultOpen`.
+		 *
+		 * @note For the state a trigger cannot read off itself. The trigger already carries
+		 * `data-popup-open` while the menu is open, so a purely visual rule reaches it in CSS
+		 * without this.
+		 */
+		onOpenChange?: (open: boolean) => void;
+		/**
 		 * Forwarded to the trigger as `data-testid`, and the stem every row is named from.
 		 */
 		testId?: string;
 		/**
-		 * Any `data-*` prop is accepted and forwarded to the trigger.
+		 * Any `data-*` prop is accepted and forwarded to the popup, alongside `aria-*`.
 		 */
 		[key: `data-${string}`]: unknown;
 	};
