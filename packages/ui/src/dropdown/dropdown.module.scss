@@ -1,9 +1,5 @@
-// Logical properties carry the RTL work, so an edge is named inline or block wherever the value
-// mirrors.
-//
-// Colour arrives through the `--dropdown-internal-*` pairs below. Every rule reads an internal
-// name, never a semantic token directly, so a re-theme moves one component and nothing else.
-// The semantic tokens themselves live in `@signozhq/design-tokens`.
+// Rules read colour only through the `--dropdown-internal-*` pairs below, never a semantic token
+// directly.
 .dropdown {
   --dropdown-internal-background: var(--dropdown-background);
   --dropdown-internal-border: var(--dropdown-border);
@@ -51,15 +47,14 @@
     var(--dropdown-internal-max-inline-size, 15.75rem)
   );
 
-  // Never narrower than the trigger: a narrower menu reads as belonging to something else.
-  // `--anchor-width` is Base UI's, set on the positioner this popup sits in. The floor gives way to
-  // a smaller maximum, which would otherwise lose: a min-width wins over a max-width.
+  // Never narrower than the trigger (`--anchor-width` comes from Base UI). The floor is clamped to
+  // the maximum because a min-width wins over a max-width.
   min-inline-size: max(
     min(var(--dropdown-min-inline-size, 12rem), var(--dropdown-internal-resolved-max-inline-size)),
     var(--anchor-width, 0px)
   );
   max-inline-size: var(--dropdown-internal-resolved-max-inline-size);
-  // `--available-height` is Base UI's: the popup shrinks rather than overflowing the viewport.
+  // `--available-height` comes from Base UI and keeps the popup inside the viewport.
   max-block-size: var(--dropdown-max-popup-block-size, var(--available-height, none));
 
   padding-block: var(--dropdown-padding-block, var(--spacing-2));
@@ -70,15 +65,12 @@
   background-color: var(--dropdown-internal-background);
   box-shadow: var(--dropdown-internal-shadow);
 
-  // `--surface-3` is translucent in dark, so the fill alone leaves the page legible through the
-  // menu. The blur is the other half of that surface, the same pairing `Tooltip` makes.
+  // `--surface-3` is translucent in dark mode. Without the blur the page shows through the menu.
   backdrop-filter: var(--dropdown-backdrop-filter, blur(40px));
 
-  // The popup clips at its own corners, so a row's hover fill never paints over the radius.
+  // Keeps a row's hover fill inside the radius.
   overflow: var(--dropdown-overflow, hidden);
 
-  // A menu is instant: it is the answer to a click that has already happened, and an animation
-  // between the click and the list is time the user spends waiting to read.
   transition: var(--dropdown-transition, none);
 
   &:focus-visible {
@@ -87,7 +79,7 @@
 }
 
 .dropdown__positioner {
-  // Above the page, under a dialog. Base UI positions but does not stack.
+  // Base UI positions but does not stack.
   z-index: var(--dropdown-z-index, 50);
 
   &:focus-visible {
@@ -95,30 +87,23 @@
   }
 }
 
-// The only part that scrolls. The search row is a sibling of this box, which is what keeps it
-// pinned while the rows travel under it.
+// The only part that scrolls. The search row is a sibling of this box, which keeps it pinned.
 .dropdown__viewport {
   display: var(--dropdown-viewport-display, flex);
   flex-direction: var(--dropdown-viewport-flex-direction, column);
   gap: var(--dropdown-item-gap, var(--spacing-2));
 
   min-block-size: var(--dropdown-viewport-min-block-size, 0);
-  // The `contentMaxHeight` prop arrives as the internal pair. It caps the rows alone: the search
-  // row is outside this box and stays whatever this is.
+  // The `contentMaxHeight` prop arrives as the internal pair. It caps the rows, not the search row.
   max-block-size: var(--dropdown-max-block-size, var(--dropdown-internal-max-block-size, 20rem));
 
   overflow-y: var(--dropdown-viewport-overflow-y, auto);
-  // A menu never scrolls sideways: a label that does not fit truncates instead.
   overflow-x: var(--dropdown-viewport-overflow-x, hidden);
   overscroll-behavior: var(--dropdown-viewport-overscroll-behavior, contain);
   scrollbar-width: var(--dropdown-viewport-scrollbar-width, thin);
 
-  // The fade marks a clipped edge, and only a clipped edge: a list scrolled to its top has nothing
-  // above it to hint at. `mask-image` rather than a gradient overlay, so the row under it fades
-  // instead of being covered by an opaque copy of the popup's fill.
-  //
-  // A mask reads alpha alone, so the opaque stop is black rather than a colour token: a translucent
-  // one would dim every row between the two fades, not only the band.
+  // `mask-image` rather than a gradient overlay, so the row fades instead of being covered. A mask
+  // reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
   &[data-scroll-start] {
     mask-image: linear-gradient(
       to bottom,
@@ -160,63 +145,49 @@
 
   font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
   font-weight: var(--dropdown-item-font-weight, var(--font-weight-normal));
-  // The row's whole height arithmetic rests on this: 20px of label plus twice the block padding is
-  // the 40px pitch, and it is constant because nothing here wraps.
+  // 20px label plus block padding gives the 40px row pitch. Holds only because nothing wraps.
   line-height: var(--dropdown-item-line-height, var(--line-height-20));
   white-space: var(--dropdown-item-white-space, nowrap);
 
   cursor: var(--dropdown-item-cursor, pointer);
   user-select: var(--dropdown-item-user-select, none);
 
-  // The fill is the pointer and the ring is the keyboard. Focus never changes the background.
-  //
-  // An inert row keeps its highlight stop, so its tooltip stays reachable, but not the fill: the
-  // fill promises a click will work. Guarded on `aria-disabled` rather than `[data-disabled]`
-  // because it comes from `isInert`, which also covers a row held by another row's async action.
+  // Guarded on `aria-disabled`, not `[data-disabled]`: it comes from `isInert`, which also covers
+  // a row blocked by another row's async action. An inert row keeps its highlight stop (so its
+  // tooltip stays reachable) but not the fill.
   &[data-highlighted]:not([aria-disabled='true']) {
     background-color: var(--dropdown-internal-item-background-hover);
     color: var(--dropdown-internal-item-label-hover);
 
-    // The glyph tracks the label rather than holding its resting colour: a row whose label goes
-    // white while its icon stays dim reads as half-disabled.
     .dropdown__item-affix {
       color: var(--dropdown-internal-item-icon-hover);
     }
   }
 
-  // Inwards, the one sanctioned exception: the popup clips at its border, and an outset ring on the
-  // first or last row would be cut in half.
+  // Inset: the popup clips its overflow, so an outset ring on the first or last row gets cut.
   &:focus-visible {
     outline: var(--dropdown-focus-outline-width, 1px) solid
       var(--dropdown-internal-item-focus-ring);
     outline-offset: var(--dropdown-focus-outline-offset, -1px);
   }
 
-  // The pointer never takes the ring. Hovering a row focuses it, and a programmatic focus inherits
-  // the last `:focus-visible` state, so a menu opened from the keyboard would drag the ring along
-  // under the mouse.
-  //
-  // An explicit `none` rather than `:not(:hover)` on the rule above: a host page with a blanket
-  // `*:focus-visible { outline: ... }` would paint its own ring into the gap that leaves.
+  // Hover focuses the row and inherits the last `:focus-visible` state, so the ring would follow
+  // the mouse. Explicit `none` rather than `:not(:hover)` above, so a host page's blanket
+  // `*:focus-visible` outline cannot paint into the gap.
   &:focus-visible:hover {
     outline: var(--dropdown-item-hover-outline, none);
   }
 
-  // Never the native `disabled` attribute, on any path: it takes every pointer event with it, and
-  // the row's reason with them. `aria-disabled` keeps the row hoverable, focusable and inert at
-  // once, the same trade `Button` and `ToggleGroup` make.
+  // Never use the native `disabled` attribute: it drops pointer events and breaks the reason
+  // tooltip. `aria-disabled` keeps the row hoverable and focusable.
   &[aria-disabled='true'] {
     cursor: var(--dropdown-item-disabled-cursor, not-allowed);
   }
 
-  // A busy row dims, but less than a disabled one, so the two states do not look alike. The whole
-  // row dims, spinner included: dimming the label alone reads as two separate states.
   &[data-loading] {
     opacity: var(--dropdown-item-loading-opacity, 0.8);
   }
 
-  // The glyph carries the danger colour in both states, which is what the label does: the fill is
-  // the only thing the hover changes on this row.
   &[data-danger] {
     color: var(--dropdown-internal-item-danger-label);
 
@@ -234,11 +205,8 @@
     }
   }
 
-  // The disabled label colour belongs to the disabled path alone. A row waiting on something keeps
-  // its own colours: it is not blocked, it is busy, and the spinner is what says so.
-  //
-  // After `[data-danger]` on purpose: the two tie on specificity, and a blocked destructive row
-  // painted in the danger colour looks usable.
+  // Must stay after `[data-danger]`: same specificity, and a disabled danger row must not look
+  // usable. A loading row keeps its own colours.
   &[data-disabled] {
     color: var(--dropdown-internal-item-label-disabled);
 
@@ -248,8 +216,6 @@
   }
 }
 
-// The slots keep their size whatever the label does, which is what makes the label the only part
-// that truncates.
 .dropdown__item-affix {
   display: var(--dropdown-item-affix-display, inline-flex);
   align-items: var(--dropdown-item-affix-align-items, center);
@@ -264,11 +230,8 @@
   }
 }
 
-// The checkbox and the radio dial share this box, so a list mixing the two keeps one column. Both
-// are drawn here rather than borrowed from `Checkbox` and `RadioGroup`: the row is already the
-// control, and those two bring a button, a label and a focus stop of their own.
-//
-// Painted while unticked too: the empty box is what marks the row as a choice.
+// Drawn here rather than reusing `Checkbox` / `RadioGroup`: the row is already the control, and
+// those bring their own button, label and focus stop.
 .dropdown__item-control {
   display: var(--dropdown-item-control-display, inline-flex);
   align-items: var(--dropdown-item-control-align-items, center);
@@ -293,13 +256,11 @@
     background-color: var(--dropdown-internal-item-control-checked-background);
   }
 
-  // Scoped to the resting box: a ticked one is already filled, and an inert row takes no hover.
   .dropdown__item[data-highlighted]:not([aria-disabled='true']) &:not([data-checked]) {
     border-color: var(--dropdown-internal-item-control-border-hover);
   }
 
-  // The row dims its label on the disabled path alone, and the control follows it there. A row
-  // that is only busy keeps its control lit: the row-wide opacity already says so.
+  // Disabled only. A loading row already dims through its own opacity.
   .dropdown__item[data-disabled] & {
     opacity: var(--dropdown-item-control-disabled-opacity, 0.4);
   }
@@ -317,8 +278,7 @@
   border-radius: var(--dropdown-item-radio-border-radius, var(--radius-round));
 }
 
-// Scoped through the affix slot on purpose: that slot sizes every bare `svg` inside it at (0,2,1),
-// and the tick is not an icon of the row, it is the inside of the box.
+// Scoped through the affix slot to beat its bare `svg` sizing rule (0,2,1).
 .dropdown__item-affix .dropdown__item-control .dropdown__item-control-check {
   inline-size: var(--dropdown-item-checkbox-check-size, 12px);
   block-size: var(--dropdown-item-checkbox-check-size, 12px);
@@ -365,7 +325,6 @@
   gap: var(--dropdown-item-gap, var(--spacing-2));
 }
 
-// A heading, not a row: it takes no highlight stop and the arrow keys pass over it.
 .dropdown__group-label {
   padding-block: var(--dropdown-group-label-padding-block, var(--spacing-3));
   padding-inline: var(--dropdown-group-label-padding-inline, var(--spacing-6));
@@ -382,13 +341,11 @@
 .dropdown__separator {
   block-size: var(--dropdown-separator-thickness, 1px);
   margin-block: var(--dropdown-separator-margin-block, var(--spacing-2));
-  // Full bleed: the popup pads its rows, and a rule that stops short of the edge reads as a row.
   margin-inline: var(--dropdown-separator-margin-inline, 0);
 
   background-color: var(--dropdown-internal-separator);
 }
 
-// A sibling of the viewport rather than a row inside it, which is what pins it.
 .dropdown__search {
   display: var(--dropdown-search-display, flex);
   align-items: var(--dropdown-search-align-items, center);
@@ -415,8 +372,6 @@
   }
 }
 
-// The field brings no box of its own: the pinned row is the box, and a second border inside it
-// would read as a control sitting on the menu rather than part of it.
 .dropdown__search-input {
   flex-grow: var(--dropdown-search-input-flex-grow, 1);
   min-inline-size: var(--dropdown-search-input-min-inline-size, 0);
@@ -432,14 +387,12 @@
     color: var(--dropdown-internal-search-placeholder);
   }
 
-  // The pinned row is already the field's outline, and the menu's own ring belongs to the rows.
+  // The pinned row already outlines the field; the focus ring belongs to the rows.
   &:focus-visible {
     outline: var(--dropdown-search-input-focus-visible-outline, none);
   }
 }
 
-// Neither of these is a row: both take the rows' padding so the popup keeps its rhythm, and neither
-// takes a highlight stop.
 .dropdown__loading {
   display: var(--dropdown-loading-display, flex);
   align-items: var(--dropdown-loading-align-items, center);
