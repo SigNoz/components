@@ -4,7 +4,8 @@ import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Calendar } from '../calendar.js';
 // From the public entry point, because that is where a consumer marking days reaches it.
-import { CalendarDayButton, type CalendarDayButtonProps } from '../index.js';
+import { CalendarDayButton } from '../subcomponents/calendar-day-button.js';
+import type { CalendarDayButtonProps } from '../types.js';
 import { JUNE_11_2025, dayButton, june } from './calendar.test-utils.js';
 
 /** Declared here so react-day-picker is handed the same component on every render. */

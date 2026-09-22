@@ -12,17 +12,7 @@ import { CalendarButton } from './calendar-button.js';
  * `Calendar` passes it as `components.DayButton`. It takes focus itself whenever react-day-picker
  * marks the day `focused`, which is how arrow-key navigation moves across the grid.
  *
- * Pass it again through `components.DayButton` with a `prefix` or a `suffix` to mark a day, for
- * instance with a dot on the days that have data.
- *
- * @example
- * ```tsx
- * function MarkedDay(props: CalendarDayButtonProps) {
- *   return <CalendarDayButton {...props} suffix={hasData(props.day.date) ? <Dot /> : undefined} />;
- * }
- *
- * <Calendar mode="single" components={{ DayButton: MarkedDay }} />;
- * ```
+ * @access private
  */
 export function CalendarDayButton({
 	className,

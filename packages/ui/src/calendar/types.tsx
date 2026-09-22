@@ -85,6 +85,8 @@ export type CalendarDropdownProps = OriginalDropdownProps;
 /**
  * What {@link CalendarDayButton} takes. Everything but `prefix`, `suffix` and `testId` is
  * react-day-picker's, handed to `components.DayButton`.
+ *
+ * @access private
  */
 export type CalendarDayButtonProps = Pick<
 	OriginalDayButtonProps,
