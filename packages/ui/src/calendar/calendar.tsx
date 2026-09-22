@@ -1,114 +1,202 @@
-import { ChevronDown, ChevronLeft, ChevronRight } from '@signozhq/icons';
-import * as React from 'react';
+import { forwardRef, useMemo } from 'react';
 import {
 	type ClassNames,
-	type DayButton,
 	DayPicker,
 	type DayPickerProps,
+	defaultDateLib,
 	type Formatters,
 	getDefaultClassNames,
 } from 'react-day-picker';
-import {
-	Button,
-	ButtonColor,
-	type ColorType,
-	buttonVariants,
-	type VariantColorType,
-} from '../button/index.js';
-import { cn } from '../lib/utils.js';
+import { CalendarContext } from './calendar-context.js';
 import styles from './calendar.module.scss';
-
-export type CalendarProps = React.ComponentProps<Exclude<typeof DayPicker, 'color'>> & {
-	/**
-	 * The testId associated with the calendar.
-	 */
-	testId?: string;
-	/**
-	 * The id of the calendar.
-	 */
-	id?: string;
-};
+import { cn } from '../lib/utils.js';
+import { CalendarChevron } from './subcomponents/calendar-chevron.js';
+import { CalendarDayButton } from './subcomponents/calendar-day-button.js';
+import {
+	CalendarMonthsDropdown,
+	CalendarYearsDropdown,
+} from './subcomponents/calendar-dropdown.js';
+import {
+	CalendarNextMonthButton,
+	CalendarPreviousMonthButton,
+} from './subcomponents/calendar-nav-button.js';
+import { CalendarMonth } from './subcomponents/calendar-month.js';
+import { CalendarRoot } from './subcomponents/calendar-root.js';
+import { CalendarWeekNumber } from './subcomponents/calendar-week-number.js';
+import type { CalendarProps } from './types.js';
 
 const defaultClassNames = getDefaultClassNames();
 
+const CALENDAR_COMPONENTS = {
+	Root: CalendarRoot,
+	Month: CalendarMonth,
+	Chevron: CalendarChevron,
+	PreviousMonthButton: CalendarPreviousMonthButton,
+	NextMonthButton: CalendarNextMonthButton,
+	MonthsDropdown: CalendarMonthsDropdown,
+	YearsDropdown: CalendarYearsDropdown,
+	DayButton: CalendarDayButton,
+	WeekNumber: CalendarWeekNumber,
+} satisfies DayPickerProps['components'];
+
 /**
- * Calendar is a styled wrapper around [React DayPicker](https://daypicker.dev/).
- * It accepts the same props as DayPicker; see the [DayPicker API](https://daypicker.dev/api/interfaces/PropsBase) for the full list.
+ * Renders a month grid ([React DayPicker](https://daypicker.dev/)).
+ *
+ * Every DayPicker prop is forwarded, so the selection modes, matchers, locales and time-zone
+ * support are upstream's. See the [DayPicker API](https://daypicker.dev/api/interfaces/PropsBase)
+ * for the full list. What this adds is the SigNoz look and a `testId`.
+ *
+ * Visual values are `--calendar-*` custom properties, defaults in the `css-tokens` region of
+ * [./index.ts](./index.ts).
+ *
+ * ### Its buttons
+ *
+ * The month arrows and the date cells are one component, styled from `--calendar-button-*` rather
+ * than from `Button`. A date cell is square, borderless and sized off the grid, which none of
+ * `Button`'s sizes are, so the two are deliberately not shared.
+ *
+ * ### Cell size
+ *
+ * `--calendar-cell-size` is the side of a month arrow, of a date cell and of the week-number
+ * column. The rest of the grid measures against it, so one variable resizes the calendar.
+ *
+ * ### Selection
+ *
+ * `mode` decides what `selected` and `onSelect` are. A day inside a range carries
+ * `data-range-start`, `data-range-middle` or `data-range-end` rather than `data-selected-single`,
+ * so the three positions are painted apart.
+ *
+ * ### Disabled days
+ *
+ * `disabled` takes upstream's matchers. react-day-picker disables the button natively, except on
+ * the focused day, where it uses `aria-disabled` so the day stays reachable by keyboard. Both are
+ * styled, and both dim by `--calendar-button-disabled-opacity` once, on the button.
+ *
+ * ### Where a day is painted
+ *
+ * On the button, never on the `<td>` around it. The button declares its own `color`, so a colour
+ * set on the cell never reaches the day number, and the button covers the cell, so a background set
+ * there is either hidden or has to be undone again for each selection state.
+ *
+ * ### Class names
+ *
+ * `className` lands on the root. `classNames` names one part of the grid at a time, and each entry
+ * is appended to the calendar's own class for that part rather than replacing it, so overriding
+ * `day` does not strip the day styling.
+ *
+ * ### The ref
+ *
+ * It lands on the root `<div>`, alongside react-day-picker's own, so setting `animate` does not
+ * take it away.
+ *
+ * ### Asserting on it
+ *
+ * `testId` lands on the root, and every part below derives its own from it, so one prop names the
+ * whole calendar. Pass nothing and no part carries a `data-testid`.
+ *
+ * | part | `data-testid` |
+ * |---|---|
+ * | root | `{testId}` |
+ * | month arrows | `{testId}-nav-previous`, `{testId}-nav-next` |
+ * | caption dropdowns | `{stem}-dropdown-month`, `{stem}-dropdown-year` |
+ * | week number | `{stem}-week-number-{week}` |
+ * | date cell | `{stem}-button-{DD-MM-YYYY}` |
+ *
+ * `{stem}` is `{testId}` while one month is displayed. react-day-picker renders a caption, a week
+ * number and a day button per displayed month, so with `numberOfMonths` above one the stem becomes
+ * `{testId}-month-{n}`, counting the months from one as they are laid out.
+ *
+ * Otherwise use the data attributes, never the hashed class names.
+ *
+ * | root attribute | value |
+ * |---|---|
+ * | `data-slot` | `"calendar"` |
+ * | `data-mode` | mirrors `mode`, written by react-day-picker |
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `calendar-month` | one per displayed month, the caption and the grid together |
+ * | `calendar-button` | every month arrow and every date cell, `data-variant` says which |
+ * | `calendar-day-button-label` | inside each date cell, holds the day number |
+ * | `calendar-week-number` | only while `showWeekNumber` is set |
+ *
+ * A date cell carries the day it stands for and the state it is in, and so does the `<td>` around
+ * it, which react-day-picker writes itself.
+ *
+ * | date cell attribute | set when |
+ * |---|---|
+ * | `data-day` | always, the day as `YYYY-MM-DD` in Latin digits, unless `numerals` or a non-Gregorian `dateLib` is set |
+ * | `data-today` | the day is today |
+ * | `data-outside` | the day belongs to a neighbouring month |
+ * | `data-selected-single` | selected, and not part of a range |
+ * | `data-range-start`, `data-range-middle`, `data-range-end` | the day's position in a range |
+ *
+ * The `<td>` adds `data-disabled`, `data-hidden`, `data-focused`, `data-selected` and, on an
+ * outside day, `data-month` with the month it really belongs to.
  *
  * @example
  * ```tsx
- * // Basic calendar (no selection)
- * <Calendar />
- * ```
+ * const [date, setDate] = useState<Date>();
  *
- * @example
- * ```tsx
- * // Single date selection
- * const [date, setDate] = React.useState<Date | undefined>();
  * <Calendar mode="single" selected={date} onSelect={setDate} />
  * ```
  *
  * @example
  * ```tsx
- * // Date range selection
- * const [range, setRange] = React.useState<{ from?: Date; to?: Date }>({});
- * <Calendar mode="range" selected={range} onSelect={setRange} />
+ * // A range, with month and year dropdowns in place of the plain caption
+ * <Calendar mode="range" selected={range} onSelect={setRange} captionLayout="dropdown" />
  * ```
  *
  * @example
  * ```tsx
- * // Multiple dates selection
- * const [selected, setSelected] = React.useState<Date[]>([]);
- * <Calendar mode="multiple" selected={selected} onSelect={setSelected} />
+ * // Weekends cannot be picked
+ * <Calendar mode="single" selected={date} onSelect={setDate} disabled={[{ dayOfWeek: [0, 6] }]} />
  * ```
  *
  * @example
  * ```tsx
- * // Disable specific days (e.g. weekends)
- * <Calendar
- *   mode="single"
- *   selected={date}
- *   onSelect={setDate}
- *   disabled={[{ dayOfWeek: [0, 6] }]}
- * />
+ * // Every part is addressable from the one testId
+ * <Calendar mode="single" testId="report-start" />;
+ *
+ * screen.getByTestId('report-start-button-11-06-2025');
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Two months, so each one is named apart
+ * <Calendar mode="range" numberOfMonths={2} testId="report" />;
+ *
+ * screen.getByTestId('report-month-2-button-01-07-2025');
  * ```
  */
-export function Calendar({
-	className,
-	classNames,
-	showOutsideDays = true,
-	captionLayout = 'label',
-	formatters,
-	components,
-	testId,
-	id,
-	...props
-}: CalendarProps) {
-	const calendarFormatters = React.useMemo<Partial<Formatters>>(() => {
+export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calendar(
+	{
+		className,
+		classNames,
+		showOutsideDays = true,
+		captionLayout = 'label',
+		formatters,
+		components,
+		testId,
+		...props
+	},
+	ref,
+) {
+	const calendarFormatters = useMemo<Partial<Formatters>>(() => {
 		return {
-			formatMonthDropdown: (date: Date) => date.toLocaleString('default', { month: 'short' }),
+			// Through the date library react-day-picker hands the formatter, so the shortened name
+			// follows `locale` and `timeZone` the way the caption and the aria labels do.
+			formatMonthDropdown: (date, dateLib = defaultDateLib) => dateLib.format(date, 'LLL'),
 			...formatters,
 		};
 	}, [formatters]);
 
-	const calendarClassNames = React.useMemo<Partial<ClassNames>>(() => {
-		return {
-			root: cn(styles['calendar__root'], 'periscope-calendar', defaultClassNames.root),
+	const calendarClassNames = useMemo<Partial<ClassNames>>(() => {
+		const ownClassNames: Partial<ClassNames> = {
+			root: cn(styles['calendar'], defaultClassNames.root),
 			months: cn(styles['calendar__months'], defaultClassNames.months),
 			month: cn(styles['calendar__month'], defaultClassNames.month),
 			nav: cn(styles['calendar__nav'], defaultClassNames.nav),
-			button_previous: cn(
-				buttonVariants({ variant: 'ghost' }),
-				styles['calendar__button-nav'],
-				'btn-previous',
-				defaultClassNames.button_previous,
-			),
-			button_next: cn(
-				buttonVariants({ variant: 'ghost' }),
-				styles['calendar__button-nav'],
-				'btn-next',
-				defaultClassNames.button_next,
-			),
 			month_caption: cn(styles['calendar__month-caption'], defaultClassNames.month_caption),
 			dropdowns: cn(styles['calendar__dropdowns'], defaultClassNames.dropdowns),
 			dropdown_root: cn(styles['calendar__dropdown-root'], defaultClassNames.dropdown_root),
@@ -120,196 +208,55 @@ export function Calendar({
 					: styles['calendar__caption-label--dropdown'],
 				defaultClassNames.caption_label,
 			),
-			table: cn(styles['calendar__table'], 'periscope-calendar-table'),
-			weekdays: cn(
-				styles['calendar__weekdays'],
-				'periscope-calendar-weekdays',
-				defaultClassNames.weekdays,
-			),
-			weekday: cn(
-				styles['calendar__weekday'],
-				'periscope-calendar-weekday',
-				defaultClassNames.weekday,
-			),
-			week: cn(styles['calendar__week'], 'periscope-calendar-week', defaultClassNames.week),
+			month_grid: cn(styles['calendar__month-grid'], defaultClassNames.month_grid),
+			weekdays: cn(styles['calendar__weekdays'], defaultClassNames.weekdays),
+			weekday: cn(styles['calendar__weekday'], defaultClassNames.weekday),
+			week: cn(styles['calendar__week'], defaultClassNames.week),
 			week_number_header: cn(
 				styles['calendar__week-number-header'],
-				'periscope-calendar-week-number-header',
 				defaultClassNames.week_number_header,
 			),
-			week_number: cn(
-				styles['calendar__week-number'],
-				'periscope-calendar-week-number',
-				defaultClassNames.week_number,
-			),
-			day: cn(styles['calendar__day'], 'group/day periscope-calendar-day', defaultClassNames.day),
-			range_start: cn(
-				styles['calendar__range-start'],
-				'periscope-calendar-range-start',
-				defaultClassNames.range_start,
-			),
-			range_middle: cn(
-				styles['calendar__range-middle'],
-				'periscope-calendar-range-middle',
-				defaultClassNames.range_middle,
-			),
-			range_end: cn(
-				styles['calendar__range-end'],
-				'periscope-calendar-range-end',
-				defaultClassNames.range_end,
-			),
-			today: cn(styles['calendar__today'], 'periscope-calendar-today', defaultClassNames.today),
-			outside: cn(
-				styles['calendar__outside'],
-				'periscope-calendar-outside',
-				defaultClassNames.outside,
-			),
-			disabled: cn(
-				styles['calendar__disabled'],
-				'periscope-calendar-disabled',
-				defaultClassNames.disabled,
-			),
-			hidden: cn(styles['calendar__hidden'], 'periscope-calendar-hidden', defaultClassNames.hidden),
-			...classNames,
+			week_number: cn(styles['calendar__week-number'], defaultClassNames.week_number),
+			day: cn(styles['calendar__day'], defaultClassNames.day),
+			hidden: cn(styles['calendar__hidden'], defaultClassNames.hidden),
 		};
-	}, []);
 
-	const calendarComponents = React.useMemo<DayPickerProps['components']>(() => {
-		return {
-			// eslint-disable-next-line react/prop-types
-			Root: ({ className: rootClassName, rootRef, ...rootProps }) => {
-				return (
-					<div
-						data-slot="calendar"
-						data-testid={testId}
-						id={id}
-						ref={rootRef}
-						className={cn(rootClassName)}
-						{...rootProps}
-					/>
-				);
-			},
-			// eslint-disable-next-line react/prop-types
-			Chevron: ({ className, orientation, ...props }) => {
-				if (orientation === 'left') {
-					return <ChevronLeft className={cn(styles['calendar__chevron'], className)} {...props} />;
-				}
+		if (classNames === undefined) {
+			return ownClassNames;
+		}
 
-				if (orientation === 'right') {
-					return <ChevronRight className={cn(styles['calendar__chevron'], className)} {...props} />;
-				}
+		// Merged per part rather than replaced, so a consumer naming one of them keeps the styling
+		// the calendar puts there, the same way `className` merges on the root.
+		const mergedClassNames: Partial<ClassNames> = { ...ownClassNames };
 
-				return <ChevronDown className={cn(styles['calendar__chevron'], className)} {...props} />;
-			},
-			DayButton: CalendarDayButton,
-			WeekNumber: ({ children, ...props }) => {
-				return (
-					<td {...props}>
-						<div
-							className={cn(styles['calendar__week-number-cell'], 'periscope-calendar-week-number')}
-						>
-							{children}
-						</div>
-					</td>
-				);
-			},
-			...components,
-		};
+		for (const part of Object.keys(classNames) as Array<keyof ClassNames>) {
+			// react-day-picker's own class for a part it styles and the calendar does not, so naming
+			// `footer` adds to `rdp-footer` rather than replacing it.
+			mergedClassNames[part] = cn(ownClassNames[part] ?? defaultClassNames[part], classNames[part]);
+		}
+
+		return mergedClassNames;
+	}, [captionLayout, classNames]);
+
+	const calendarComponents = useMemo<DayPickerProps['components']>(() => {
+		return { ...CALENDAR_COMPONENTS, ...components };
 	}, [components]);
 
-	return (
-		<DayPicker
-			showOutsideDays={showOutsideDays}
-			className={cn(styles['calendar'], 'group/calendar', className)}
-			captionLayout={captionLayout}
-			formatters={calendarFormatters}
-			classNames={calendarClassNames}
-			components={calendarComponents}
-			{...props}
-		/>
-	);
-}
-
-/**
- * The `DayButton` props react-day-picker actually passes, which are also the ones `Button`
- * forwards. Picking them keeps the spread into `Button` type-checked.
- */
-export type CalendarDayButtonProps = Pick<
-	React.ComponentProps<typeof DayButton>,
-	| 'day'
-	| 'modifiers'
-	| 'children'
-	| 'className'
-	| 'style'
-	| 'type'
-	| 'disabled'
-	| 'tabIndex'
-	| 'aria-label'
-	| 'aria-disabled'
-	| 'onClick'
-	| 'onBlur'
-	| 'onFocus'
-	| 'onKeyDown'
-	| 'onMouseEnter'
-	| 'onMouseLeave'
-> & {
-	/**
-	 * The ghost variant of the day button only renders correctly with the secondary color.
-	 */
-	color?: ColorType | (string & {});
-	suffix?: string;
-	prefix?: string;
-};
-
-/**
- * Custom day cell button used by Calendar. Typically passed via `components.DayButton`;
- * can be overridden for custom day rendering.
- */
-export function CalendarDayButton({
-	className,
-	day,
-	modifiers,
-	suffix,
-	prefix,
-	color = ButtonColor.Secondary,
-	disabled,
-	children,
-	...props
-}: CalendarDayButtonProps) {
-	const ref = React.useRef<HTMLButtonElement>(null);
-	React.useEffect(() => {
-		if (modifiers.focused) ref.current?.focus();
-	}, [modifiers.focused]);
-
-	const dataDay = React.useMemo(() => {
-		return day.date.toLocaleDateString();
-	}, [day.date]);
+	const contextValue = useMemo(() => ({ rootRef: ref, testId }), [ref, testId]);
 
 	return (
-		<Button
-			ref={ref}
-			// `DayButton` widens `color` to `string`, so the variant/color pair is
-			// re-asserted here.
-			{...({ variant: 'ghost', color } as VariantColorType)}
-			size="md"
-			data-day={dataDay}
-			data-selected-single={
-				modifiers.selected &&
-				!modifiers.range_start &&
-				!modifiers.range_end &&
-				!modifiers.range_middle
-			}
-			data-range-start={modifiers.range_start}
-			data-range-end={modifiers.range_end}
-			data-range-middle={modifiers.range_middle}
-			disabled={disabled ?? false}
-			disabledTooltip={undefined}
-			prefix={prefix ? <>{prefix}</> : undefined}
-			suffix={suffix ? <>{suffix}</> : undefined}
-			className={cn(styles['calendar__day-button'], defaultClassNames.day, className)}
-			{...props}
-		>
-			{children}
-		</Button>
+		<CalendarContext.Provider value={contextValue}>
+			<DayPicker
+				data-slot="calendar"
+				showOutsideDays={showOutsideDays}
+				className={className}
+				captionLayout={captionLayout}
+				formatters={calendarFormatters}
+				classNames={calendarClassNames}
+				components={calendarComponents}
+				{...props}
+				{...(testId === undefined ? {} : { 'data-testid': testId })}
+			/>
+		</CalendarContext.Provider>
 	);
-}
+});
