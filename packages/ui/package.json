@@ -187,6 +187,16 @@
 				"require": "./dist/drawer/index.cjs"
 			}
 		},
+		"./dropdown": {
+			"import": {
+				"types": "./dist/dropdown/index.d.ts",
+				"import": "./dist/dropdown/index.mjs"
+			},
+			"require": {
+				"types": "./dist/dropdown/index.d.cts",
+				"require": "./dist/dropdown/index.cjs"
+			}
+		},
 		"./dropdown-menu": {
 			"import": {
 				"types": "./dist/dropdown-menu/index.d.ts",

@@ -81,7 +81,7 @@ function cleanupMenuItems(items: MenuItem[]): MenuItem[] {
 	return cleaned;
 }
 
-export type DropdownProps = Omit<DropdownMenuContentProps, 'children'> & {
+export type DropdownMenuSimpleProps = Omit<DropdownMenuContentProps, 'children'> & {
 	/**
 	 * The menu configuration including items, search, and loading state.
 	 */
@@ -243,7 +243,7 @@ function renderMenuItems(items: MenuItem[], keyPath: string[] = []): React.React
  */
 export const DropdownMenuSimple = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-	DropdownProps
+	DropdownMenuSimpleProps
 >(({ menu, children, sideOffset = 4, className, onOpenAutoFocus, ...props }, ref) => {
 	const searchInputRef = React.useRef<HTMLInputElement>(null);
 	const contentRef = React.useRef<HTMLDivElement | null>(null);
