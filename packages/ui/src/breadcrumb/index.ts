@@ -6,10 +6,14 @@
  * | Token | Default |
  * |-------|---------|
  * | `--breadcrumb-dropdown-align-items` | `center` |
+ * | `--breadcrumb-dropdown-appearance` | `none` |
+ * | `--breadcrumb-dropdown-background-color` | `transparent` |
+ * | `--breadcrumb-dropdown-border` | `none` |
  * | `--breadcrumb-dropdown-border-radius` | `calc(var(--radius) - 2px)` |
  * | `--breadcrumb-dropdown-color` | `var(--l1-foreground)` |
  * | `--breadcrumb-dropdown-cursor` | `pointer` |
  * | `--breadcrumb-dropdown-display` | `inline-flex` |
+ * | `--breadcrumb-dropdown-font` | `inherit` |
  * | `--breadcrumb-dropdown-gap` | `var(--spacing-2, 4px)` |
  * | `--breadcrumb-dropdown-hover-background-color` | `var(--l1-background-hover)` |
  * | `--breadcrumb-dropdown-hover-color` | `var(--l1-foreground-hover)` |
