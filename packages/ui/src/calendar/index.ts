@@ -76,21 +76,8 @@
  */
 // #endregion css-tokens
 
-/**
- * Changes to the component, which the compiler catches only in part:
- *
- * | Before | Now |
- * |---|---|
- * | `mode` optional | required, see {@link CalendarProps} |
- * | `CalendarDayButtonProps.color` and `type` | removed, a date cell is always `type="button"` and painted from the tokens |
- * | `data-day` from `toLocaleDateString()`, e.g. `6/11/2025` | `YYYY-MM-DD`, e.g. `2025-06-11` |
- * | global `periscope-calendar-*`, `btn-previous` and `btn-next` classes | removed, select on `data-slot` and `data-variant` |
- * | a `classNames` entry replaced the calendar's class for that part | appended to it, so the calendar styling stays |
- */
-
 export { Calendar } from './calendar.js';
-export { CalendarDayButton } from './subcomponents/calendar-day-button.js';
-export type { CalendarDayButtonProps, CalendarProps } from './types.js';
+export type { CalendarProps } from './types.js';
 
 // The types a `Calendar` prop is declared with, so a consumer can hold a selection or write a
 // matcher without depending on react-day-picker themselves.
