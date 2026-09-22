@@ -1,287 +1,367 @@
+// Colour arrives through the `--calendar-internal-*` pairs below. Every rule reads an internal
+// name, never a semantic token directly, so a re-theme moves one component and nothing else. The
+// semantic tokens themselves live in `@signozhq/design-tokens`.
 .calendar {
-  background-color: var(--calendar-background, var(--background));
-  padding: var(--calendar-padding, var(--spacing-6, 0.75rem));
-  --cell-size: var(--calendar-cell-size, var(--spacing-8, 1rem));
+	--calendar-internal-background: var(--calendar-background);
+	--calendar-internal-button-background: var(--calendar-button-background);
+	--calendar-internal-button-background-hover: var(--calendar-button-background-hover);
+	--calendar-internal-button-background-active: var(--calendar-button-background-active);
+	--calendar-internal-button-label: var(--calendar-button-label);
+	--calendar-internal-button-label-hover: var(--calendar-button-label-hover);
+	--calendar-internal-button-focus-ring: var(--calendar-button-focus-ring);
+	--calendar-internal-day-selected-background: var(--calendar-day-selected-background);
+	--calendar-internal-day-selected-background-hover: var(--calendar-day-selected-background-hover);
+	--calendar-internal-day-selected-label: var(--calendar-day-selected-label);
+	--calendar-internal-day-range-edge-background: var(--calendar-day-range-edge-background);
+	--calendar-internal-day-range-edge-background-hover: var(--calendar-day-range-edge-background-hover);
+	--calendar-internal-day-range-edge-label: var(--calendar-day-range-edge-label);
+	--calendar-internal-day-range-middle-background: var(--calendar-day-range-middle-background);
+	--calendar-internal-day-range-middle-background-hover: var(--calendar-day-range-middle-background-hover);
+	--calendar-internal-day-range-middle-label: var(--calendar-day-range-middle-label);
+	--calendar-internal-day-today-background: var(--calendar-day-today-background);
+	--calendar-internal-day-today-label: var(--calendar-day-today-label);
+	--calendar-internal-day-outside-label: var(--calendar-day-outside-label);
+	--calendar-internal-day-disabled-label: var(--calendar-day-disabled-label);
+	--calendar-internal-weekday-label: var(--calendar-weekday-label);
+	--calendar-internal-week-number-label: var(--calendar-week-number-label);
+	--calendar-internal-select-background: var(--calendar-select-background);
+	--calendar-internal-select-border: var(--calendar-select-border);
+	--calendar-internal-select-border-focus: var(--calendar-select-border-focus);
+	--calendar-internal-select-icon: var(--calendar-select-icon);
+	--calendar-internal-select-shadow: var(--calendar-select-shadow);
+	--calendar-internal-select-shadow-focus: var(--calendar-select-shadow-focus);
 
-  &[data-slot="card-content"],
-  &[data-slot="popover-content"] {
-    background-color: transparent;
-  }
+	--calendar-internal-cell-size: var(--calendar-cell-size, var(--spacing-16));
+	--calendar-internal-transition-duration: var(--calendar-transition-duration, 150ms);
+
+	width: fit-content;
+	background-color: var(--calendar-internal-background);
+	padding: var(--calendar-padding, var(--spacing-6));
 }
 
-.calendar__root {
-  width: fit-content;
-}
-
-/* RTL support for navigation buttons */
-:dir(rtl) .calendar :global(.rdp-button_next > svg) {
-  transform: rotate(180deg);
-}
-
-:dir(rtl) .calendar :global(.rdp-button_previous > svg) {
-  transform: rotate(180deg);
-}
+/* Month layout */
 
 .calendar__months {
-  display: flex;
-  gap: var(--calendar-months-gap, var(--spacing-8, 1rem));
-  flex-direction: column;
-  position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: var(--calendar-months-gap, var(--spacing-8));
+	position: relative;
 
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
+	@media (min-width: 768px) {
+		flex-direction: row;
+	}
 }
 
 .calendar__month {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: var(--calendar-month-gap, var(--spacing-8, 1rem));
-}
-
-.calendar__nav {
-  display: flex;
-  align-items: center;
-  gap: var(--calendar-nav-gap, var(--spacing-2, 0.25rem));
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	gap: var(--calendar-month-gap, var(--spacing-8));
 }
 
 .calendar__month-caption {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: var(--cell-size);
-  width: 100%;
-  padding-left: var(--cell-size);
-  padding-right: var(--cell-size);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--calendar-internal-cell-size);
+	width: 100%;
+	// The nav row is absolutely positioned over the caption, so the label keeps one cell clear on
+	// each side for the arrows to sit in.
+	padding-left: var(--calendar-internal-cell-size);
+	padding-right: var(--calendar-internal-cell-size);
 }
 
+/* Navigation */
+
+.calendar__nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--calendar-nav-gap, var(--spacing-2));
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+
+.calendar__chevron {
+	width: var(--calendar-chevron-size, var(--spacing-8));
+	height: var(--calendar-chevron-size, var(--spacing-8));
+}
+
+/* Caption label and dropdowns */
+
 .calendar__dropdowns {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-size: var(--calendar-dropdown-font-size, var(--periscope-font-size-small, 11px));
-  font-weight: var(--calendar-dropdown-font-weight, 500);
-  justify-content: center;
-  height: var(--cell-size);
-  gap: var(--calendar-dropdown-gap, var(--spacing-3, 0.375rem));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: var(--calendar-internal-cell-size);
+	gap: var(--calendar-dropdown-gap, var(--spacing-3));
+	font-size: var(--calendar-dropdown-font-size, var(--periscope-font-size-small));
+	font-weight: var(--calendar-dropdown-font-weight, var(--font-weight-medium));
 }
 
 .calendar__dropdown-root {
-  position: relative;
-  border: var(--calendar-dropdown-border, 1px solid var(--input));
-  box-shadow: var(--calendar-dropdown-box-shadow, 0 1px 2px 0 rgb(0 0 0 / 0.05));
-  border-radius: var(--calendar-dropdown-border-radius, calc(var(--radius) - 2px));
+	position: relative;
+	border: var(--calendar-dropdown-border-width, 1px) solid var(--calendar-internal-select-border);
+	border-radius: var(--calendar-dropdown-border-radius, var(--radius-1));
+	box-shadow: var(--calendar-internal-select-shadow);
 
-  &:has(:focus) {
-    border-color: var(--ring);
-    box-shadow: var(--calendar-dropdown-focus-box-shadow, 0 0 0 3px color-mix(in srgb, var(--ring) 50%, transparent));
-  }
+	&:has(:focus) {
+		border-color: var(--calendar-internal-select-border-focus);
+		box-shadow: var(--calendar-internal-select-shadow-focus);
+	}
 }
 
+// The native select is laid invisible over the label, so it keeps its own picker and its own
+// keyboard behaviour while the label is what gets painted.
 .calendar__dropdown {
-  position: absolute;
-  background-color: var(--calendar-dropdown-background, var(--popover));
-  inset: 0;
-  opacity: 0;
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	background-color: var(--calendar-internal-select-background);
 }
 
 .calendar__caption-label {
-  user-select: none;
-  font-weight: var(--calendar-caption-label-font-weight, var(--font-weight-medium));
+	user-select: none;
+	font-weight: var(--calendar-caption-label-font-weight, var(--font-weight-medium));
 }
 
 .calendar__caption-label--label {
-  font-size: var(--calendar-caption-label-font-size, var(--periscope-font-size-small, 11px));
+	font-size: var(--calendar-caption-label-font-size, var(--periscope-font-size-small));
 }
 
 .calendar__caption-label--dropdown {
-  border-radius: var(--calendar-caption-label-dropdown-border-radius, calc(var(--radius) - 2px));
-  padding: var(--calendar-caption-label-dropdown-padding, 0 var(--spacing-2, 0.25rem) 0 var(--spacing-4, 0.5rem));
-  display: flex;
-  align-items: center;
-  gap: var(--calendar-caption-label-dropdown-gap, var(--spacing-2, 0.25rem));
-  font-size: var(--calendar-caption-label-dropdown-font-size, var(--periscope-font-size-small, 11px));
-  height: var(--calendar-caption-label-dropdown-height, 2rem);
+	display: flex;
+	align-items: center;
+	gap: var(--calendar-caption-label-dropdown-gap, var(--spacing-2));
+	height: var(--calendar-caption-label-dropdown-height, var(--spacing-16));
+	padding: var(--calendar-caption-label-dropdown-padding, 0 var(--spacing-2) 0 var(--spacing-4));
+	border-radius: var(--calendar-caption-label-dropdown-border-radius, var(--radius-1));
+	font-size: var(--calendar-caption-label-dropdown-font-size, var(--periscope-font-size-small));
+
+	svg {
+		width: var(--calendar-caption-label-dropdown-svg-size, var(--spacing-7));
+		height: var(--calendar-caption-label-dropdown-svg-size, var(--spacing-7));
+		color: var(--calendar-internal-select-icon);
+	}
 }
 
-.calendar__caption-label--dropdown svg {
-  color: var(--calendar-caption-label-dropdown-svg-color, var(--muted-foreground));
-  width: var(--calendar-caption-label-dropdown-svg-width, 0.875rem);
-  height: var(--calendar-caption-label-dropdown-svg-height, 0.875rem);
+/* Day grid */
+
+.calendar__month-grid {
+	width: 100%;
+	border-collapse: collapse;
 }
 
-.calendar__table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
+// The gap and the margin below repeat what a week row and a day cell use, so a weekday letter
+// sits over the column it names instead of drifting across the row.
 .calendar__weekdays {
-  display: flex;
-  margin: var(--calendar-weekdays-margin, 0px 0px var(--spacing-4, 0.5rem) 0px);
+	display: flex;
+	gap: var(--calendar-week-gap, var(--spacing-4));
+	margin-bottom: var(--calendar-weekdays-margin-bottom, var(--spacing-4));
 }
 
 .calendar__weekday {
-  color: var(--calendar-weekday-color, var(--muted-foreground));
-  border-radius: var(--calendar-weekday-border-radius, calc(var(--radius) - 2px));
-  flex: 1;
-  font-weight: var(--calendar-weekday-font-weight, var(--font-weight-normal));
-  font-size: var(--calendar-weekday-font-size, var(--periscope-font-size-small, 11px));
-  user-select: none;
+	flex: 1;
+	// Without this a header keeps its letters' min-content width, and the seven of them stop
+	// matching the day columns as soon as the calendar is squeezed.
+	min-width: 0;
+	margin-inline: var(--calendar-day-margin, var(--spacing-2));
+	user-select: none;
+	color: var(--calendar-internal-weekday-label);
+	border-radius: var(--calendar-weekday-border-radius, var(--radius-1));
+	font-weight: var(--calendar-weekday-font-weight, var(--font-weight-normal));
+	font-size: var(--calendar-weekday-font-size, var(--periscope-font-size-small));
 }
 
 .calendar__week {
-  display: flex;
-  gap: var(--calendar-week-gap, var(--spacing-4, 0.5rem));
-  width: 100%;
+	display: flex;
+	gap: var(--calendar-week-gap, var(--spacing-4));
+	width: 100%;
 }
 
 .calendar__week-number-header {
-  user-select: none;
-  width: var(--cell-size);
+	user-select: none;
+	width: var(--calendar-internal-cell-size);
 }
 
+// The week number heads a row that is taller than the number's own box, so the cell centres it
+// rather than leaving it at the top of the row.
 .calendar__week-number {
-  font-size: var(--calendar-week-number-font-size, var(--periscope-font-size-small, 11px));
-  user-select: none;
-  color: var(--calendar-week-number-color, var(--muted-foreground));
+	display: flex;
+	align-items: center;
+	user-select: none;
+	color: var(--calendar-internal-week-number-label);
+	font-size: var(--calendar-week-number-font-size, var(--periscope-font-size-small));
 }
 
-.calendar__day {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  text-align: center;
-  aspect-ratio: 1;
-  user-select: none;
-  cursor: pointer;
-  margin: var(--calendar-day-margin, var(--spacing-2));
-}
-
-.calendar__range-start {
-  border-top-left-radius: var(--calendar-range-start-border-radius, 0.375rem);
-  border-bottom-left-radius: var(--calendar-range-start-border-radius, 0.375rem);
-}
-
-.calendar__range-middle {
-  border-radius: 0;
-}
-
-.calendar__range-end {
-  border-top-right-radius: var(--calendar-range-end-border-radius, 0.375rem);
-  border-bottom-right-radius: var(--calendar-range-end-border-radius, 0.375rem);
-}
-
-.calendar__today {
-  background-color: var(--calendar-today-background-color, var(--accent));
-  color: var(--calendar-today-color, var(--accent-foreground));
-  border-radius: var(--calendar-today-border-radius, calc(var(--radius) - 2px));
-
-  &[data-selected="true"] {
-    border-radius: 0;
-  }
-}
-
-.calendar__range-start,
-.calendar__range-end {
-  &.calendar__today {
-    background-color: transparent;
-  }
-}
-
-.calendar__outside {
-  color: var(--calendar-outside-color, var(--muted-foreground));
-
-  &[aria-selected="true"] {
-    color: var(--calendar-outside-selected-color, var(--muted-foreground));
-  }
-}
-
-.calendar__disabled {
-  color: var(--calendar-disabled-color, var(--muted-foreground));
-  opacity: var(--calendar-disabled-opacity, 0.5);
-}
-
-.calendar__hidden {
-  visibility: hidden;
-}
-
-/* Navigation button styles */
-.calendar__button-nav {
-  width: var(--cell-size);
-  height: var(--cell-size);
-  padding: var(--calendar-button-nav-padding, 0);
-  user-select: none;
-
-  &[aria-disabled="true"] {
-    opacity: var(--calendar-button-nav-disabled-opacity, 0.5);
-  }
-}
-
-/* Chevron icon styles */
-.calendar__chevron {
-  width: var(--calendar-chevron-width, 1rem);
-  height: var(--calendar-chevron-height, 1rem);
-  cursor: pointer;
-}
-
-/* Week number cell */
 .calendar__week-number-cell {
-  display: flex;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	width: var(--calendar-internal-cell-size);
+	height: var(--calendar-internal-cell-size);
 }
 
-/* Day button styles */
-.calendar__day-button {
-  aspect-ratio: 1;
-  min-width: var(--cell-size);
-  --button-padding: 0;
+// The cell, not the button inside it. `.calendar__week` makes the row a flex container, which
+// blockifies every cell, so the margin does apply here.
+.calendar__day {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: var(--calendar-day-margin, var(--spacing-2));
+	text-align: center;
+	aspect-ratio: 1;
+	user-select: none;
+}
 
-  &[data-selected-single="true"] {
-    background-color: var(--calendar-selected-single-background-color, var(--primary));
-    color: var(--calendar-selected-single-color, var(--primary-foreground));
-  }
+// Every day state is painted on the button rather than here. The button declares its own `color`,
+// which beats anything the cell hands down, and it covers the cell, so a background put here is
+// either invisible or has to be undone again for each selection state.
+.calendar__hidden {
+	visibility: hidden;
+}
 
-  &[data-range-middle="true"] {
-    background-color: var(--calendar-range-middle-background-color, var(--accent));
-    color: var(--calendar-range-middle-color, var(--accent-foreground));
-  }
+/* Buttons */
 
-  &[data-range-start="true"],
-  &[data-range-end="true"] {
-    background-color: var(--calendar-range-start-end-background-color, var(--primary));
-    color: var(--calendar-range-start-end-color, var(--primary-foreground));
-  }
+.calendar__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--calendar-button-gap, var(--spacing-3));
+	white-space: nowrap;
+	border: none;
+	border-radius: var(--calendar-button-border-radius, var(--radius-1));
+	background-color: var(--calendar-internal-button-background);
+	color: var(--calendar-internal-button-label);
+	font-weight: var(--calendar-button-font-weight, var(--font-weight-medium));
+	font-variant-numeric: slashed-zero;
+	// TODO: Convert this hardcoded value to a semantic token, the same one Button is waiting on.
+	letter-spacing: var(--calendar-button-letter-spacing, -0.005em);
+	cursor: var(--calendar-button-cursor, pointer);
+	user-select: none;
+	transition:
+		background-color var(--calendar-internal-transition-duration) ease,
+		color var(--calendar-internal-transition-duration) ease;
 
-  &[data-range-end="true"] {
-    border-radius: var(--calendar-range-end-default-border-radius, calc(var(--radius) - 2px));
-    border-top-right-radius: var(--calendar-range-end-border-radius, 0.375rem);
-    border-bottom-right-radius: var(--calendar-range-end-border-radius, 0.375rem);
-  }
+	&:hover:not(:disabled):not([aria-disabled="true"]) {
+		background-color: var(--calendar-internal-button-background-hover);
+		color: var(--calendar-internal-button-label-hover);
+	}
 
-  &[data-range-middle="true"] {
-    border-radius: 0;
-  }
+	&:active:not(:disabled):not([aria-disabled="true"]) {
+		background-color: var(--calendar-internal-button-background-active);
+	}
 
-  &[data-range-start="true"] {
-    border-radius: var(--calendar-range-start-default-border-radius, calc(var(--radius) - 2px));
-    border-top-left-radius: var(--calendar-range-start-border-radius, 0.375rem);
-    border-bottom-left-radius: var(--calendar-range-start-border-radius, 0.375rem);
-  }
+	&:focus-visible {
+		outline: var(--calendar-internal-button-focus-ring) solid
+			var(--calendar-button-focus-outline-width, 1px);
+		outline-offset: var(--calendar-button-focus-outline-offset, 1px);
+	}
 
-  & span {
-    font-size: var(--calendar-day-button-span-font-size, var(--periscope-font-size-small, 11px));
-    opacity: var(--calendar-day-button-span-opacity, 0.7);
-  }
+	&:disabled,
+	&[aria-disabled="true"] {
+		opacity: var(--calendar-button-disabled-opacity, 0.6);
+		cursor: var(--calendar-button-disabled-cursor, not-allowed);
+	}
+}
+
+.calendar__button[data-variant="nav"] {
+	width: var(--calendar-internal-cell-size);
+	height: var(--calendar-internal-cell-size);
+	padding: var(--calendar-nav-button-padding, 0);
+}
+
+// Both arrows mirror together: the grid itself is laid out right to left, so the arrow pointing at
+// the previous month is the one on the right.
+:dir(rtl) .calendar__button[data-variant="nav"] > svg {
+	transform: rotate(180deg);
+}
+
+.calendar__button[data-variant="day"] {
+	width: 100%;
+	height: var(--calendar-internal-cell-size);
+	min-width: var(--calendar-internal-cell-size);
+	padding: var(--calendar-day-button-padding, 0);
+
+	// The day states the cell is marked with, repeated here because the cell cannot reach the day
+	// number: this button declares its own `color`. Selection follows and outranks them by source
+	// order.
+	&[data-outside="true"] {
+		color: var(--calendar-internal-day-outside-label);
+	}
+
+	&[data-today="true"] {
+		background-color: var(--calendar-internal-day-today-background);
+		color: var(--calendar-internal-day-today-label);
+	}
+
+	&:disabled,
+	&[aria-disabled="true"] {
+		color: var(--calendar-internal-day-disabled-label);
+	}
+
+	// Each selection state repeats hover and active inside its own block. The plain hover above
+	// counts two `:not()` arguments towards its specificity, so it outweighs a bare selection
+	// selector and would otherwise paint a hovered selected day in the unselected colour.
+	&[data-selected-single="true"] {
+		background-color: var(--calendar-internal-day-selected-background);
+		color: var(--calendar-internal-day-selected-label);
+
+		&:hover:not(:disabled):not([aria-disabled="true"]),
+		&:active:not(:disabled):not([aria-disabled="true"]) {
+			background-color: var(--calendar-internal-day-selected-background-hover);
+			color: var(--calendar-internal-day-selected-label);
+		}
+	}
+
+	&[data-range-middle="true"] {
+		background-color: var(--calendar-internal-day-range-middle-background);
+		color: var(--calendar-internal-day-range-middle-label);
+		border-radius: 0;
+
+		&:hover:not(:disabled):not([aria-disabled="true"]),
+		&:active:not(:disabled):not([aria-disabled="true"]) {
+			background-color: var(--calendar-internal-day-range-middle-background-hover);
+			color: var(--calendar-internal-day-range-middle-label);
+		}
+	}
+
+	&[data-range-start="true"],
+	&[data-range-end="true"] {
+		background-color: var(--calendar-internal-day-range-edge-background);
+		color: var(--calendar-internal-day-range-edge-label);
+
+		&:hover:not(:disabled):not([aria-disabled="true"]),
+		&:active:not(:disabled):not([aria-disabled="true"]) {
+			background-color: var(--calendar-internal-day-range-edge-background-hover);
+			color: var(--calendar-internal-day-range-edge-label);
+		}
+	}
+
+	&[data-range-start="true"] {
+		border-start-start-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
+		border-end-start-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
+	}
+
+	&[data-range-end="true"] {
+		border-start-end-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
+		border-end-end-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
+	}
+}
+
+.calendar__day-button-label,
+.calendar__day-button-affix {
+	font-size: var(--calendar-day-button-font-size, var(--periscope-font-size-small));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.calendar__button {
+		transition: none;
+	}
 }

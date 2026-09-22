@@ -5,112 +5,206 @@ import * as CalendarStories from './calendar.stories';
 
 # Calendar
 
-Calendar is a styled re-export of [React DayPicker](https://daypicker.dev/). It uses the same API as DayPicker; for the full list of props and behavior, see the [DayPicker documentation](https://daypicker.dev/).
+A month grid built on [React DayPicker](https://daypicker.dev/). Every DayPicker prop is forwarded,
+so the selection modes, matchers, locales and time-zone support are upstream's. What this adds is
+the SigNoz look and a `testId`.
+
+Use it when the grid itself belongs on the page, such as a panel that always shows the month. To
+pick a date from a field in a form or a toolbar, use `DatePicker`, which puts this calendar in a
+popover behind an input.
 
 ## How to use
 
-### Basic usage (no selection)
+`mode` is the one required prop. Everything else is DayPicker's, with three differences from
+upstream:
+
+- `mode` is required here. Upstream it is optional, and a calendar without one renders no day
+  buttons.
+- `showOutsideDays` defaults to `true`, so the grid keeps six even rows.
+- `captionLayout` defaults to `'label'`.
 
 ```tsx
 import { Calendar } from '@signozhq/ui';
+import { useState } from 'react';
 
-export default function MyComponent() {
-	return <Calendar />;
+export default function ReportStart() {
+	const [date, setDate] = useState<Date>();
+
+	return <Calendar mode="single" selected={date} onSelect={setDate} />;
 }
 ```
-
-### Single date selection
-
-```tsx
-import { Calendar } from '@signozhq/ui';
-
-export default function SingleDatePicker() {
-	const [date, setDate] = React.useState<Date | undefined>();
-
-	return (
-		<Calendar
-			mode="single"
-			selected={date}
-			onSelect={setDate}
-			style={{
-				borderRadius: '0.375rem',
-				border: '1px solid var(--l2-border)',
-				boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-			}}
-		/>
-	);
-}
-```
-
-### Date range selection
-
-```tsx
-import { Calendar } from '@signozhq/ui';
-
-export default function RangePicker() {
-	const [range, setRange] = React.useState<{
-		from: Date | undefined;
-		to: Date | undefined;
-	}>({ from: undefined, to: undefined });
-
-	return (
-		<Calendar
-			mode="range"
-			selected={range}
-			onSelect={setRange}
-			style={{
-				borderRadius: '0.375rem',
-				border: '1px solid var(--l2-border)',
-				boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-			}}
-		/>
-	);
-}
-```
-
-### Multiple dates selection
-
-```tsx
-import { Calendar } from '@signozhq/ui';
-
-export default function MultiplePicker() {
-	const [selected, setSelected] = React.useState<Date[]>([]);
-
-	return (
-		<Calendar
-			mode="multiple"
-			selected={selected}
-			onSelect={setSelected}
-			style={{
-				borderRadius: '0.375rem',
-				border: '1px solid var(--l2-border)',
-				boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-			}}
-		/>
-	);
-}
-```
-
-### Disabling specific days (e.g. weekends)
-
-```tsx
-import { Calendar } from '@signozhq/ui';
-
-export default function CalendarWithDisabledDays() {
-	const [date, setDate] = React.useState<Date | undefined>();
-
-	return (
-		<Calendar mode="single" selected={date} onSelect={setDate} disabled={[{ dayOfWeek: [0, 6] }]} />
-	);
-}
-```
-
-Default calendar with single selection:
 
 <Primary />
 
-## Calendar Props
+## Selection
 
-The component accepts all [DayPicker props](https://daypicker.dev/api/interfaces/PropsBase). Common options are listed below.
+`mode` decides what `selected` holds and what `onSelect` receives:
+
+| `mode`     | `selected` and `onSelect` value |
+| ---------- | ------------------------------- |
+| `single`   | `Date \| undefined`             |
+| `multiple` | `Date[] \| undefined`           |
+| `range`    | `DateRange \| undefined`        |
+
+```tsx
+import { Calendar, type DateRange } from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function ReportWindow() {
+	const [range, setRange] = useState<DateRange | undefined>();
+
+	return <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />;
+}
+```
+
+- `required` stops a click on the selected day from clearing it, so `onSelect` never receives
+  `undefined`.
+- `min` and `max` bound how many days a `multiple` or `range` selection may hold.
+
+A day inside a range carries `data-range-start`, `data-range-middle` or `data-range-end` rather
+than `data-selected-single`, so the three positions are painted apart.
+
+## Caption and navigation
+
+The month arrows sit over the caption row, one cell wide each.
+
+- `captionLayout="dropdown"` swaps the caption for a month and a year dropdown. Bound the years
+  with `startMonth` and `endMonth`.
+- At the edge of `startMonth` or `endMonth` the arrow stays in place with `aria-disabled`, so the
+  caption does not shift.
+- `hideNavigation` drops the arrows.
+- `numberOfMonths` lays out more than one month side by side.
+
+```tsx
+<Calendar
+	mode="single"
+	captionLayout="dropdown"
+	startMonth={new Date(2024, 0)}
+	endMonth={new Date(2026, 11)}
+/>
+```
+
+The calendar owns the displayed month unless you pass `month`. Use `defaultMonth` to open on a
+month and let the user move from there. Use `month` and `onMonthChange` when something else, such
+as a preset button, has to move it.
+
+## Days that cannot be picked
+
+`disabled` takes the same matchers as upstream: a date, a range, a day of the week, or a predicate.
+`hidden` takes the same matchers and removes the day from the grid.
+
+```tsx
+<Calendar mode="single" selected={date} onSelect={setDate} disabled={[{ dayOfWeek: [0, 6] }]} />
+```
+
+react-day-picker disables the button natively, except on the focused day, where it uses
+`aria-disabled` so the day stays reachable by keyboard.
+
+## Keyboard and focus
+
+The arrow keys move between days, `PageUp` and `PageDown` between months, `Home` and `End` to the
+edges of the week. react-day-picker moves focus by setting the day's `focused` modifier, and the
+day button calls `focus()` on itself when it sees it.
+
+A custom `DayButton` that does not render `CalendarDayButton` loses this, and the arrow keys stop
+moving focus. See [Marking a day](#marking-a-day).
+
+## Locale and time zone
+
+`locale`, `timeZone`, `weekStartsOn` and `numerals` are upstream's. The calendar follows them
+everywhere it writes a date itself:
+
+- The short month names in the dropdown caption are formatted through the calendar's date library,
+  so they follow `locale` and `timeZone` like the rest of the caption.
+- `data-day` is formatted through the same library. It is `YYYY-MM-DD` in Latin digits only while
+  neither `numerals` nor a non-Gregorian `dateLib` is set.
+
+## Marking a day
+
+`CalendarDayButton` is the date cell. Pass it back through `components.DayButton` with a `prefix` or
+a `suffix` to mark the days that have something to say.
+
+```tsx
+import { Calendar, CalendarDayButton, type CalendarDayButtonProps } from '@signozhq/ui';
+
+function MarkedDay(props: CalendarDayButtonProps) {
+	return <CalendarDayButton {...props} suffix={hasData(props.day.date) ? <Dot /> : undefined} />;
+}
+
+<Calendar mode="single" components={{ DayButton: MarkedDay }} />;
+```
+
+- Spread every prop you receive. They carry the click, the keyboard handlers, the `focused`
+  modifier and the day's state.
+- Render `CalendarDayButton`, never your own `<button>`. It owns the focus call, the state
+  attributes and the derived `testId`.
+- `prefix` and `suffix` render in `calendar-day-button-prefix` and `calendar-day-button-suffix`
+  slots beside the day number, and keep their size.
+- A `testId` passed to `CalendarDayButton` replaces the derived one for that day.
+
+## The ref
+
+The ref lands on the root `<div>`, next to react-day-picker's own. Setting `animate` does not take
+it away.
+
+## Asserting on it
+
+`testId` lands on the root, and every part below derives its own from it, so one prop names the
+whole calendar.
+
+```tsx
+<Calendar mode="single" testId="report-start" />;
+
+screen.getByTestId('report-start-nav-next');
+screen.getByTestId('report-start-button-11-06-2025');
+```
+
+| Part              | `data-testid`                                   |
+| ----------------- | ----------------------------------------------- |
+| root              | `{testId}`                                      |
+| month arrows      | `{testId}-nav-previous`, `{testId}-nav-next`    |
+| caption dropdowns | `{stem}-dropdown-month`, `{stem}-dropdown-year` |
+| week number       | `{stem}-week-number-{week}`                     |
+| date cell         | `{stem}-button-{DD-MM-YYYY}`                    |
+
+`{stem}` is `{testId}` while one month is displayed. react-day-picker renders a caption, a week
+number and a day button per displayed month, so with `numberOfMonths` above one the stem becomes
+`{testId}-month-{n}`, counting the months from one as they are laid out.
+
+```tsx
+<Calendar mode="range" numberOfMonths={2} testId="report-start" />;
+
+screen.getByTestId('report-start-month-2-button-01-07-2025');
+```
+
+Pass no `testId` and no part carries one. Otherwise use the data attributes below, never the hashed
+class names.
+
+| Root attribute | Value                                       |
+| -------------- | ------------------------------------------- |
+| `data-slot`    | `"calendar"`                                |
+| `data-mode`    | mirrors `mode`, written by react-day-picker |
+
+| `data-slot`                                                | Rendered                                                         |
+| ---------------------------------------------------------- | ---------------------------------------------------------------- |
+| `calendar-month`                                           | one per displayed month, the caption and the grid together       |
+| `calendar-button`                                          | every month arrow and every date cell, `data-variant` says which |
+| `calendar-day-button-label`                                | inside each date cell, holds the day number                      |
+| `calendar-day-button-prefix`, `calendar-day-button-suffix` | inside a date cell, only while `prefix` or `suffix` is set       |
+| `calendar-week-number`                                     | only while `showWeekNumber` is set                               |
+
+| Date cell attribute                                       | Set when                                                                            |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `data-day`                                                | always, the day as `YYYY-MM-DD` (see [Locale and time zone](#locale-and-time-zone)) |
+| `data-today`                                              | the day is today                                                                    |
+| `data-outside`                                            | the day belongs to a neighbouring month                                             |
+| `data-selected-single`                                    | selected, and not part of a range                                                   |
+| `data-range-start`, `data-range-middle`, `data-range-end` | the day's position in a range                                                       |
+
+The `<td>` around the button adds react-day-picker's own `data-disabled`, `data-hidden`,
+`data-focused`, `data-selected` and, on an outside day, `data-month` with the month it really
+belongs to.
+
+## Props
 
 <Controls of={CalendarStories.Default} />
