@@ -407,7 +407,7 @@
 		"dev": "vite build --watch",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
 		"publint": "publint",
-		"test": "vitest",
+		"test": "vitest run",
 		"test:run": "vitest run",
 		"tokens": "node scripts/extract-css-tokens.mjs",
 		"tokens:check": "node scripts/extract-css-tokens.mjs --check"
@@ -452,12 +452,13 @@
 		"@types/node": "25.9.4",
 		"@types/react": "^18.2.61",
 		"@vitejs/plugin-react": "^6.1.1",
-		"@vitest/coverage-v8": "^4.1.11",
+		"@vitest/browser-playwright": "5.0.1",
+		"@vitest/coverage-v8": "^5.0.1",
 		"jsdom": "^30.0.1",
 		"oxc-transform-react": "^0.145.0",
 		"publint": "0.3.21",
 		"vite": "8.2.1",
-		"vitest": "^4.1.11"
+		"vitest": "^5.0.1"
 	},
 	"peerDependencies": {
 		"@signozhq/icons": "0.3.0",

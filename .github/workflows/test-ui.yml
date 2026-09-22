@@ -79,5 +79,4 @@ jobs:
         run: pnpm run type-check
 
       - name: Run tests
-        working-directory: apps/docs
-        run: pnpm run test-storybook
+        run: pnpm test

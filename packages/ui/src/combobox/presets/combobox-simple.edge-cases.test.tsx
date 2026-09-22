@@ -4,11 +4,8 @@ import { ComboboxSimple } from './combobox-simple.js';
 import {
 	defaultItems,
 	renderWithProviders,
-	setupMocks,
 	setupVirtualMocks,
 } from './combobox-simple.test-utils.js';
-
-setupMocks();
 
 describe('ComboboxSimple edge cases - pills', () => {
 	it('handles maxDisplayedPills=0 showing overflow badge for all', () => {

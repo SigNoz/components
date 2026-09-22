@@ -6,4 +6,6 @@ minimumReleaseAge: 2880 # 2d
 minimumReleaseAgeStrict: true
 minimumReleaseAgeExclude:
  - '@signozhq/*'
+ - 'vitest'
+ - '@vitest/*'
 blockExoticSubdeps: true

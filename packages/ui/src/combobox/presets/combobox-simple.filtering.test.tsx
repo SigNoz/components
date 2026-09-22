@@ -1,9 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ComboboxSimple } from './combobox-simple.js';
-import { defaultItems, renderWithProviders, setupMocks } from './combobox-simple.test-utils.js';
-
-setupMocks();
+import { defaultItems, renderWithProviders } from './combobox-simple.test-utils.js';
 
 describe('ComboboxSimple filtering', () => {
 	it('filters items with fuzzy matching', () => {
