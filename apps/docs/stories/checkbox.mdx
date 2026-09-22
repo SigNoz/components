@@ -152,24 +152,24 @@ element; `containerTestId` names the wrapper. Otherwise use the data attributes,
 class names. The checkbox keeps `role="checkbox"` and `aria-checked`, so `getByRole('checkbox')`
 works.
 
-| root attribute                                    | value                                           |
-| ------------------------------------------------- | ----------------------------------------------- |
-| `data-slot`                                       | `"checkbox"`                                    |
-| `data-color`                                      | mirrors the prop                                |
+| root attribute                                    | value                                            |
+| ------------------------------------------------- | ------------------------------------------------ |
+| `data-slot`                                       | `"checkbox"`                                     |
+| `data-color`                                      | mirrors the prop                                 |
 | `data-checked` / `data-unchecked`                 | the current state, neither while `indeterminate` |
-| `data-indeterminate`                              | present while `indeterminate`                   |
-| `data-disabled`, `data-readonly`, `data-required` | present while set                               |
+| `data-indeterminate`                              | present while `indeterminate`                    |
+| `data-disabled`, `data-readonly`, `data-required` | present while set                                |
 
 | wrapper attribute    | value                                               |
 | -------------------- | --------------------------------------------------- |
 | `data-slot`          | `"checkbox-container"`                              |
 | `data-text-overflow` | `ellipsis` (default), `wrap`, `visible` or `hidden` |
 
-| `data-slot`          | rendered                                                                                                                              |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `checkbox-box`       | always, the 16px visual box                                                                                                            |
-| `checkbox-indicator` | while checked or indeterminate, holds the glyph                                                                                        |
-| `checkbox-container` | the `<label>` wrapper, only with a label or a `container*` prop                                                                        |
+| `data-slot`          | rendered                                                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `checkbox-box`       | always, the 16px visual box                                                                                                        |
+| `checkbox-indicator` | while checked or indeterminate, holds the glyph                                                                                    |
+| `checkbox-container` | the `<label>` wrapper, only with a label or a `container*` prop                                                                    |
 | `checkbox-label`     | only with a label, the measured element, `data-truncated` while it does not fit, `data-empty-label` on the `"<No label>"` fallback |
 
 ## Props
