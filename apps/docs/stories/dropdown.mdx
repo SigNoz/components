@@ -1,0 +1,129 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DropdownStories from './dropdown.stories';
+
+<Meta of={DropdownStories} />
+
+# Dropdown
+
+A menu, rendered through Base UI's `Menu`. It takes its rows as data, hangs them off a trigger you
+provide, filters itself when you give it a search row, truncates long labels into a tooltip, and
+decides when to close from what a row's `onClick` returns.
+
+Reach for it when a surface has more actions than fit as buttons, or when an action needs a choice
+made before it runs. For two to five persistent view states, use `ToggleGroup`. For picking a value
+out of a list, use `Select` or `Combobox`.
+
+## How to use
+
+`items`, `children`, `side` and `align` are all required: the menu has nothing to render without
+rows, nothing to hang off without a trigger, and no default placement. There are no subcomponents to
+compose, the menu owns its own markup.
+
+```tsx
+import { Dropdown } from '@signozhq/ui';
+
+export default function RowActions({ onRename, onDelete }) {
+	return (
+		<Dropdown
+			side="bottom"
+			align="start"
+			items={[
+				{ type: 'item', value: 'rename', label: 'Rename', onClick: onRename },
+				{ type: 'separator', value: 'before-danger' },
+				{ type: 'item', value: 'delete', label: 'Delete', destructive: true, onClick: onDelete },
+			]}
+		>
+			<Button variant="outlined" color="secondary" size="md">
+				Actions
+			</Button>
+		</Dropdown>
+	);
+}
+```
+
+<Primary />
+
+<Controls of={DropdownStories.Playground} />
+
+## The trigger
+
+`children` is rendered as the element you pass, with the menu's props merged into it. So a `Button`
+keeps its own type, its own `disabled` and its own tooltip, and there is no second button wrapped
+around it.
+
+There is no `disabled` on the menu. Gating is the trigger's job, and `Button`, `Badge` and `Input`
+each already carry a `disabled` + `disabledTooltip` pair. A second gate here would be a third way to
+say the same thing, and it would have to agree with the trigger's own.
+
+Every `data-*` you pass lands on the trigger. Every `aria-*` lands on the **popup**, which is the
+part you cannot reach: it is portalled out of your tree. An icon-only trigger is the case that needs
+it, because Base UI names the popup from the trigger and an icon button has no text to name it with.
+
+## The rows
+
+Six kinds, told apart by a `type` that is required on every entry, the plain action row included.
+`value` is the identity of each one: it keys the list and names the row's `data-testid`.
+
+| `type` | What it renders |
+| --- | --- |
+| `item` | One action. Takes `onClick`, `destructive`, `prefix`, and either `suffix` or `shortcut` |
+| `checkbox` | A row that toggles a setting. Owns its checkbox, so it takes no `prefix` |
+| `radio-group` | A set of options of which one is picked. Owns its radios |
+| `submenu` | A row that opens a menu of its own. Owns the chevron, so it takes no `suffix` |
+| `group` | A section heading and the rows under it. Not interactive, skipped by the arrow keys |
+| `separator` | A rule. Dropped when it would land first, last, or next to another one |
+
+A row blocks itself with `disabled` + `disabledTooltip`, or says it is waiting with `loading` +
+`loadingTooltip`. `loading` outranks `disabled`, the way it does on `Button`. Neither takes the row
+out of the keyboard walk, which is what keeps the reason reachable.
+
+A submenu goes one level deep, and the type is what holds that: `items` on a submenu will not take
+another submenu. A group is a heading rather than a nesting level, so a submenu inside one is still
+depth 1, and only another group is refused there.
+
+## Search
+
+Passing `searchInputProps` renders the pinned search row, and the menu filters `items` itself:
+case-insensitive substring, against each row's label when it renders to text, and against its
+`searchMetadata`. An icon-only row is findable through `searchMetadata` alone.
+
+A group survives when any of its rows match and renders with only those. A submenu survives on its
+own label or on anything under it, and keeps every one of its rows: once you are inside, the query
+that got you there is behind you.
+
+`filter: false` turns the filtering off for a menu whose rows arrive already filtered from a server.
+The query still reaches `onChange`, and `loading` on the search row swaps its glyph for a spinner
+while the request is out. The query clears when the menu closes.
+
+`Enter` in the search field does nothing. A search field that fires an action on `Enter` fires it
+against whichever row the highlight happens to be on, which is rarely the one the user was reading.
+`ArrowDown` moves to the first row, and `ArrowUp` from there comes back to the field.
+
+## Closing
+
+Every row renders with Base UI's `closeOnClick` off, so `onClick` decides:
+
+| It returns | What happens |
+| --- | --- |
+| `undefined` or `true` | The menu closes at once |
+| `false` | The menu stays open |
+| a promise | The row goes `data-pending`, the rest of the list goes inert, and the menu closes when it resolves, unless it resolves `false` |
+
+A rejection keeps the menu open, clears the row and raises a `toast.error` carrying the error's
+message. That needs a `<Toaster />` mounted somewhere in the app; without one the failure is silent.
+A handler that wants its own copy catches its own error and resolves `false`.
+
+## Nothing to show
+
+An empty `items`, at the root or on a submenu, renders one non-interactive row reading
+`<No content>` and logs a warning. That is a consumer bug rather than a state, which is why there is
+no `emptyContent` prop. A query that matches nothing renders the same row and logs nothing: that one
+is a state.
+
+## Asserting on it
+
+`testId` is `data-testid` on the trigger, and it names everything else: a row is
+`` `${testId}-item-${value}` ``, a group `` `${testId}-group-${value}` ``, a radio group
+`` `${testId}-radio-group-${value}` ``, and the search, loading and empty rows are
+`` `${testId}-search` ``, `` `${testId}-loading` `` and `` `${testId}-empty` ``. A row's own `testId`
+wins. Otherwise use the `data-slot` attributes, never the hashed class names.
