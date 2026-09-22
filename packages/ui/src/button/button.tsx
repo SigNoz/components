@@ -23,27 +23,9 @@ import {
 import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import styles from './button.module.scss';
 import { ButtonTextOverflow, ButtonVariant } from './constants.js';
-import type { ButtonProps, SizeType, ValidateButtonProps, VariantType } from './types.js';
+import type { ButtonProps, ValidateButtonProps } from './types.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { toCssLength } from '../lib/css-length';
-
-/**
- * Helper function to generate button class names for use in other components
- * This replaces the old CVA-based buttonVariants function
- *
- * @deprecated
- */
-export function buttonVariants({
-	variant: _variant = 'outlined',
-	size: _size = 'md',
-	className,
-}: {
-	variant?: VariantType;
-	size?: SizeType;
-	className?: string;
-} = {}) {
-	return cn(styles['button'], className);
-}
 
 function ButtonPrefix({ prefix }: { prefix?: ReactElement }): ReactElement {
 	const clonedElement = isValidElement<{ className?: string }>(prefix)
