@@ -1,0 +1,138 @@
+// #region css-tokens
+/**
+ * CSS Tokens for dropdown
+ * Prefix: `--dropdown-`
+ *
+ * | Token | Default |
+ * |-------|---------|
+ * | `--dropdown-background` | `-` |
+ * | `--dropdown-border` | `-` |
+ * | `--dropdown-border-radius` | `var(--radius-2)` |
+ * | `--dropdown-border-width` | `1px` |
+ * | `--dropdown-display` | `flex` |
+ * | `--dropdown-flex-direction` | `column` |
+ * | `--dropdown-focus-outline-offset` | `-1px` |
+ * | `--dropdown-focus-outline-width` | `1px` |
+ * | `--dropdown-focus-ring` | `-` |
+ * | `--dropdown-focus-visible-outline` | `none` |
+ * | `--dropdown-group-display` | `flex` |
+ * | `--dropdown-group-flex-direction` | `column` |
+ * | `--dropdown-group-label` | `-` |
+ * | `--dropdown-group-label-font-size` | `var(--periscope-font-size-small)` |
+ * | `--dropdown-group-label-font-weight` | `var(--font-weight-bold)` |
+ * | `--dropdown-group-label-letter-spacing` | `0.04em` |
+ * | `--dropdown-group-label-line-height` | `var(--line-height-18)` |
+ * | `--dropdown-group-label-padding-block` | `var(--spacing-3)` |
+ * | `--dropdown-group-label-padding-inline` | `var(--spacing-6)` |
+ * | `--dropdown-group-label-text-transform` | `uppercase` |
+ * | `--dropdown-item-affix-align-items` | `center` |
+ * | `--dropdown-item-affix-display` | `inline-flex` |
+ * | `--dropdown-item-affix-flex-shrink` | `0` |
+ * | `--dropdown-item-affix-justify-content` | `center` |
+ * | `--dropdown-item-align-items` | `center` |
+ * | `--dropdown-item-background` | `-` |
+ * | `--dropdown-item-background-hover` | `-` |
+ * | `--dropdown-item-border-radius` | `var(--radius-1)` |
+ * | `--dropdown-item-control-align-items` | `center` |
+ * | `--dropdown-item-control-display` | `inline-flex` |
+ * | `--dropdown-item-control-justify-content` | `center` |
+ * | `--dropdown-item-control-size` | `16px` |
+ * | `--dropdown-item-control-unchecked-visibility` | `hidden` |
+ * | `--dropdown-item-cursor` | `pointer` |
+ * | `--dropdown-item-destructive-background-hover` | `-` |
+ * | `--dropdown-item-destructive-label` | `-` |
+ * | `--dropdown-item-destructive-label-hover` | `-` |
+ * | `--dropdown-item-disabled-cursor` | `not-allowed` |
+ * | `--dropdown-item-display` | `flex` |
+ * | `--dropdown-item-font-size` | `var(--periscope-font-size-base)` |
+ * | `--dropdown-item-font-weight` | `var(--font-weight-normal)` |
+ * | `--dropdown-item-gap` | `var(--spacing-2)` |
+ * | `--dropdown-item-icon` | `-` |
+ * | `--dropdown-item-icon-size` | `14px` |
+ * | `--dropdown-item-indicator` | `-` |
+ * | `--dropdown-item-label` | `-` |
+ * | `--dropdown-item-label-disabled` | `-` |
+ * | `--dropdown-item-label-flex-grow` | `1` |
+ * | `--dropdown-item-label-hover` | `-` |
+ * | `--dropdown-item-label-min-inline-size` | `0` |
+ * | `--dropdown-item-label-overflow` | `hidden` |
+ * | `--dropdown-item-label-text-overflow` | `ellipsis` |
+ * | `--dropdown-item-label-white-space` | `nowrap` |
+ * | `--dropdown-item-line-height` | `var(--line-height-20)` |
+ * | `--dropdown-item-padding` | `var(--spacing-5) var(--spacing-6)` |
+ * | `--dropdown-item-slot-gap` | `var(--spacing-4)` |
+ * | `--dropdown-item-user-select` | `none` |
+ * | `--dropdown-item-white-space` | `nowrap` |
+ * | `--dropdown-loading-align-items` | `center` |
+ * | `--dropdown-loading-display` | `flex` |
+ * | `--dropdown-loading-justify-content` | `center` |
+ * | `--dropdown-max-block-size` | `var(--dropdown-internal-max-block-size, 20rem)` |
+ * | `--dropdown-max-inline-size` | `var(--dropdown-internal-max-inline-size, 20rem)` |
+ * | `--dropdown-max-popup-block-size` | `var(--available-height, none)` |
+ * | `--dropdown-min-inline-size` | `12rem` |
+ * | `--dropdown-overflow` | `hidden` |
+ * | `--dropdown-padding-block` | `var(--spacing-2)` |
+ * | `--dropdown-padding-inline` | `0` |
+ * | `--dropdown-positioner-focus-visible-outline` | `none` |
+ * | `--dropdown-scroll-fade` | `-` |
+ * | `--dropdown-scroll-fade-size` | `var(--spacing-10)` |
+ * | `--dropdown-search-affix-align-items` | `center` |
+ * | `--dropdown-search-affix-display` | `inline-flex` |
+ * | `--dropdown-search-affix-flex-shrink` | `0` |
+ * | `--dropdown-search-affix-justify-content` | `center` |
+ * | `--dropdown-search-align-items` | `center` |
+ * | `--dropdown-search-border` | `-` |
+ * | `--dropdown-search-border-width` | `1px` |
+ * | `--dropdown-search-display` | `flex` |
+ * | `--dropdown-search-flex-shrink` | `0` |
+ * | `--dropdown-search-gap` | `var(--spacing-4)` |
+ * | `--dropdown-search-input-background-color` | `transparent` |
+ * | `--dropdown-search-input-border` | `none` |
+ * | `--dropdown-search-input-flex-grow` | `1` |
+ * | `--dropdown-search-input-focus-visible-outline` | `none` |
+ * | `--dropdown-search-input-min-inline-size` | `0` |
+ * | `--dropdown-search-padding` | `var(--spacing-5) var(--spacing-6)` |
+ * | `--dropdown-search-placeholder` | `-` |
+ * | `--dropdown-separator` | `-` |
+ * | `--dropdown-separator-margin-block` | `var(--spacing-2)` |
+ * | `--dropdown-separator-margin-inline` | `0` |
+ * | `--dropdown-separator-thickness` | `1px` |
+ * | `--dropdown-shadow` | `-` |
+ * | `--dropdown-transition` | `none` |
+ * | `--dropdown-viewport-display` | `flex` |
+ * | `--dropdown-viewport-flex-direction` | `column` |
+ * | `--dropdown-viewport-min-block-size` | `0` |
+ * | `--dropdown-viewport-overflow-x` | `hidden` |
+ * | `--dropdown-viewport-overflow-y` | `auto` |
+ * | `--dropdown-viewport-overscroll-behavior` | `contain` |
+ * | `--dropdown-viewport-scrollbar-width` | `thin` |
+ * | `--dropdown-z-index` | `50` |
+ */
+// #endregion css-tokens
+
+export {
+	DROPDOWN_EMPTY_CONTENT,
+	DROPDOWN_EMPTY_LABEL,
+	DROPDOWN_SIDE_OFFSET,
+	DropdownItemKind,
+} from './constants.js';
+export { Dropdown } from './dropdown.js';
+export type {
+	DropdownActionItemType,
+	DropdownCheckboxItemType,
+	DropdownGroupChildType,
+	DropdownGroupItemType,
+	DropdownItemDisabledType,
+	DropdownItemKindType,
+	DropdownItemLoadingType,
+	DropdownItemType,
+	DropdownLeafItemType,
+	DropdownProps,
+	DropdownRadioGroupItemType,
+	DropdownRadioItemType,
+	DropdownSearchInputProps,
+	DropdownSeparatorItemType,
+	DropdownSubmenuChildType,
+	DropdownSubmenuItemType,
+	ValidateDropdownProps,
+} from './types.js';

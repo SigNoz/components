@@ -1,4 +1,7 @@
-export { DropdownMenuSimple, type DropdownProps } from '../presets/dropdown-menu-simple.js';
+export {
+	DropdownMenuSimple,
+	type DropdownMenuSimpleProps,
+} from '../presets/dropdown-menu-simple.js';
 export { DropdownMenuBack, type DropdownMenuBackProps } from './dropdown-menu-back.js';
 export {
 	DropdownMenuCheckboxItem,

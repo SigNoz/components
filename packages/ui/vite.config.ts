@@ -21,6 +21,7 @@ export const entries: Record<string, string> = {
 	'dialog/index': 'src/dialog/index.ts',
 	'divider/index': 'src/divider/index.ts',
 	'drawer/index': 'src/drawer/index.ts',
+	'dropdown/index': 'src/dropdown/index.ts',
 	'dropdown-menu/index': 'src/dropdown-menu/index.ts',
 	'skeleton/index': 'src/skeleton/index.ts',
 	'input/index': 'src/input/index.ts',
