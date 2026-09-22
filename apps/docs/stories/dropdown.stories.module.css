@@ -1,0 +1,23 @@
+.showcaseContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	width: 100%;
+}
+
+.sectionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 16px;
+}
+
+.exampleRow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+	align-items: flex-start;
+}
+
+/* The popup opens downwards, so every story needs room under its trigger. */
+.roomBelow {
+	min-height: 320px;
+}
