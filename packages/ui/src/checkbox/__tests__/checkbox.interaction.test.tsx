@@ -66,7 +66,7 @@ describe('Checkbox interaction', () => {
 		expect(onChange).toHaveBeenCalledWith(true);
 	});
 
-	// The root span carries a 4px hit-area ring around the 16px box, so the pointer target is the
+	// The root span carries a 2px hit-area ring around the 16px box, so the pointer target is the
 	// whole span, not only the painted box.
 	it('toggles from a click on the bare root span, hit area included', async () => {
 		const user = userEvent.setup();

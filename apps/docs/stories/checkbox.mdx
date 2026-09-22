@@ -14,7 +14,7 @@ A checkbox collects a choice that something else commits — a form, an apply bu
 action with a visible consequence is a `Switch`; exactly one choice out of several is a
 `RadioGroup`.
 
-The 16px box carries a built-in 4px hit-area ring, so the pointer target is 24px while the layout
+The 16px box carries a built-in 2px hit-area ring, so the pointer target is 20px while the layout
 footprint stays 16px. The ring never paints any state, only the box does.
 
 ## How to use
@@ -43,12 +43,10 @@ export default function MyComponent() {
 `children` is the label. It renders inside a `<label>` that wraps the checkbox, so clicking the
 text toggles and the label is the accessible name, through `aria-labelledby`.
 
-`children` that render nothing (`null`, `false` or an empty string) do not hide the label: a
-checkbox that was given one keeps one, because a broken label should look broken, not silently
-hide a form control. The text falls back to the `name` prop first, then to `"<No label>"` with
-`data-empty-label` set on the label element.
+`children` that render nothing (`null`, `false` or an empty string) count as not passed: the
+checkbox renders without a label.
 
-A bare checkbox — no `children` at all — has no wrapper and no name of its own, so give it one:
+A bare checkbox has no wrapper and no name of its own, so give it one:
 
 ```tsx
 <Checkbox color="primary" aria-label="Select row" value={isSelected} onChange={setIsSelected} />
@@ -165,12 +163,12 @@ works.
 | `data-slot`          | `"checkbox-container"`                              |
 | `data-text-overflow` | `ellipsis` (default), `wrap`, `visible` or `hidden` |
 
-| `data-slot`          | rendered                                                                                                                           |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `checkbox-box`       | always, the 16px visual box                                                                                                        |
-| `checkbox-indicator` | while checked or indeterminate, holds the glyph                                                                                    |
-| `checkbox-container` | the `<label>` wrapper, only with a label or a `container*` prop                                                                    |
-| `checkbox-label`     | only with a label, the measured element, `data-truncated` while it does not fit, `data-empty-label` on the `"<No label>"` fallback |
+| `data-slot`          | rendered                                                                        |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `checkbox-box`       | always, the 16px visual box                                                     |
+| `checkbox-indicator` | while checked or indeterminate, holds the glyph                                 |
+| `checkbox-container` | the `<label>` wrapper, only with a label or a `container*` prop                 |
+| `checkbox-label`     | only with a label, the measured element, `data-truncated` while it does not fit |
 
 ## Props
 

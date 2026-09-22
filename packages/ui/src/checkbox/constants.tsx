@@ -15,10 +15,3 @@ export const CheckboxTextOverflow = {
 	Visible: 'visible',
 	Ellipsis: 'ellipsis',
 } as const;
-
-/**
- * The label shown when `children` is passed but renders nothing. A broken label stays visible
- * instead of silently hiding a form control. The `name` prop is tried first; this string is the
- * last resort.
- */
-export const CHECKBOX_EMPTY_LABEL = '<No label>';

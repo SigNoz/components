@@ -63,9 +63,9 @@ describe('Checkbox width and maxWidth', () => {
 
 		const root = screen.getByTestId('checkbox');
 		expect(root.style.getPropertyValue('--checkbox-internal-width')).toBe('240px');
-		// The box is sized by `--checkbox-size`, never by the row width: 16px plus the 4px
+		// The box is sized by `--checkbox-size`, never by the row width: 16px plus the 2px
 		// hit-area ring on each side.
-		expect(root.getBoundingClientRect().width).toBe(24);
+		expect(root.getBoundingClientRect().width).toBe(20);
 	});
 
 	it('never writes the properties it was not given', () => {

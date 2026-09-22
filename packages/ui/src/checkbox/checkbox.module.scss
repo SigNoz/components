@@ -4,10 +4,10 @@
 // whole row.
 .checkbox {
 	--checkbox-internal-size: var(--checkbox-size, 16px);
-	// The 4px ring around the 16px box that makes the pointer target 24px. The negative margin
+	// The 2px ring around the 16px box that makes the pointer target 20px. The negative margin
 	// below cancels it out of layout, so the row's gap and the first-line alignment keep working
 	// off the box's own 16px. The ring is a hit target only: every visual state paints on the box.
-	--checkbox-internal-hit-area: 4px;
+	--checkbox-internal-hit-area: 2px;
 
 	display: inline-flex;
 	flex-shrink: 0;
