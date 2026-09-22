@@ -77,51 +77,7 @@
 // #endregion css-tokens
 
 /**
- * The tokens below were renamed or merged when the calendar moved to the `--calendar-internal-*`
- * pairs above. The rest kept their names. The old names are gone rather than aliased, and a
- * stylesheet still setting one parses without error, so a theme written against them goes quiet
- * rather than failing.
- *
- * | Old | New |
- * |---|---|
- * | `--calendar-selected-single-background-color` | `--calendar-day-selected-background` |
- * | `--calendar-selected-single-color` | `--calendar-day-selected-label` |
- * | `--calendar-range-start-end-background-color` | `--calendar-day-range-edge-background` |
- * | `--calendar-range-start-end-color` | `--calendar-day-range-edge-label` |
- * | `--calendar-range-middle-background-color` | `--calendar-day-range-middle-background` |
- * | `--calendar-range-middle-color` | `--calendar-day-range-middle-label` |
- * | `--calendar-range-start-border-radius`, `--calendar-range-end-border-radius` | `--calendar-range-edge-border-radius` |
- * | `--calendar-range-start-default-border-radius`, `--calendar-range-end-default-border-radius` | `--calendar-button-border-radius` |
- * | `--calendar-today-border-radius` | `--calendar-button-border-radius` |
- * | `--calendar-today-background-color` | `--calendar-day-today-background` |
- * | `--calendar-today-color` | `--calendar-day-today-label` |
- * | `--calendar-outside-color` | `--calendar-day-outside-label` |
- * | `--calendar-disabled-color` | `--calendar-day-disabled-label` |
- * | `--calendar-disabled-opacity` | `--calendar-button-disabled-opacity` |
- * | `--calendar-weekday-color` | `--calendar-weekday-label` |
- * | `--calendar-week-number-color` | `--calendar-week-number-label` |
- * | `--calendar-weekdays-margin` | `--calendar-weekdays-margin-bottom` |
- * | `--calendar-chevron-width`, `--calendar-chevron-height` | `--calendar-chevron-size` |
- * | `--calendar-caption-label-dropdown-svg-width`, `-height` | `--calendar-caption-label-dropdown-svg-size` |
- * | `--calendar-caption-label-dropdown-svg-color` | `--calendar-select-icon` |
- * | `--calendar-dropdown-background` | `--calendar-select-background` |
- * | `--calendar-dropdown-border` | `--calendar-dropdown-border-width` and `--calendar-select-border` |
- * | `--calendar-dropdown-box-shadow` | `--calendar-select-shadow` |
- * | `--calendar-dropdown-focus-box-shadow` | `--calendar-select-shadow-focus` |
- * | `--calendar-button-nav-padding` | `--calendar-nav-button-padding` |
- * | `--calendar-button-nav-disabled-opacity` | `--calendar-button-disabled-opacity` |
- * | `--calendar-day-button-span-font-size` | `--calendar-day-button-font-size` |
- *
- * `--calendar-day-button-span-opacity` and `--calendar-outside-selected-color` have no successor:
- * the day number is always painted at full opacity, and an outside day inside a selection is
- * painted as the selection.
- *
- * `--calendar-dropdown-border` was a shorthand. It is split in two: `--calendar-dropdown-border-width`
- * takes the width and `--calendar-select-border` takes only the colour, so `1px solid red` becomes
- * `--calendar-dropdown-border-width: 1px` and `--calendar-select-border: red`. A shorthand set on
- * `--calendar-select-border` makes the border invalid, and the dropdown renders with none.
- *
- * Changes to the component itself, which the compiler catches only in part:
+ * Changes to the component, which the compiler catches only in part:
  *
  * | Before | Now |
  * |---|---|
