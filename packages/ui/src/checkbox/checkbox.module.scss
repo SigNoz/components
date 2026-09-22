@@ -1,125 +1,217 @@
+// Base UI puts the state on the checkbox itself: `data-checked` / `data-unchecked` (neither while
+// indeterminate, which stamps `data-indeterminate` instead), `data-disabled` and `data-readonly`.
+// The labelled wrapper reads them back with `:has()` so one rule covers a bare checkbox and a
+// whole row.
 .checkbox {
-    height: var(--checkbox-size, 1rem);
-    width: var(--checkbox-size, 1rem);
-    flex-shrink: 0;
-    border-radius: var(--checkbox-border-radius, calc(var(--radius) - 2px));
-    border: 2px solid var(--checkbox-border-color, var(--l3-background));
-    cursor: pointer;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+	--checkbox-internal-size: var(--checkbox-size, 16px);
+	// The 4px ring around the 16px box that makes the pointer target 24px. The negative margin
+	// below cancels it out of layout, so the row's gap and the first-line alignment keep working
+	// off the box's own 16px. The ring is a hit target only: every visual state paints on the box.
+	--checkbox-internal-hit-area: 4px;
 
-    &[data-color="robin"] {
-        --checkbox-checked-background: var(--accent-primary);
-    }
+	display: inline-flex;
+	flex-shrink: 0;
+	padding: var(--checkbox-internal-hit-area);
+	margin: calc(-1 * var(--checkbox-internal-hit-area));
+	cursor: var(--checkbox-cursor, pointer);
 
-    &[data-color="forest"] {
-        --checkbox-checked-background: var(--accent-forest);
-    }
+	&[data-color='primary'] {
+		--checkbox-internal-checked-background: var(--checkbox-primary-background, var(--primary-background));
+		--checkbox-internal-checked-foreground: var(--checkbox-primary-foreground, var(--primary-foreground));
+		--checkbox-internal-hover-border-color: var(--checkbox-primary-border-hover, var(--primary-background-hover));
+	}
 
-    &[data-color="amber"] {
-        --checkbox-checked-background: var(--accent-amber);
-    }
+	// `--secondary-background` is a 60%-transparent surface, close to invisible as a 16px fill, so
+	// secondary resolves to the solid grays the radio group's theme tokens use for the same role.
+	&[data-color='secondary'] {
+		--checkbox-internal-checked-background: var(--checkbox-secondary-background, var(--l2-foreground));
+		--checkbox-internal-checked-foreground: var(--checkbox-secondary-foreground, var(--l1-background));
+		--checkbox-internal-hover-border-color: var(--checkbox-secondary-border-hover, var(--l1-foreground-hover));
+	}
 
-    &[data-color="sienna"] {
-        --checkbox-checked-background: var(--accent-sienna);
-    }
+	&[data-color='danger'] {
+		--checkbox-internal-checked-background: var(--checkbox-danger-background, var(--danger-background));
+		--checkbox-internal-checked-foreground: var(--checkbox-danger-foreground, var(--danger-foreground));
+		--checkbox-internal-hover-border-color: var(--checkbox-danger-border-hover, var(--danger-background-hover));
+	}
 
-    &[data-color="cherry"] {
-        --checkbox-checked-background: var(--accent-cherry);
-    }
+	&[data-color='warning'] {
+		--checkbox-internal-checked-background: var(--checkbox-warning-background, var(--warning-background));
+		--checkbox-internal-checked-foreground: var(--checkbox-warning-foreground, var(--warning-foreground));
+		--checkbox-internal-hover-border-color: var(--checkbox-warning-border-hover, var(--warning-background-hover));
+	}
 
-    &[data-color="sakura"] {
-        --checkbox-checked-background: var(--accent-sakura);
-    }
+	&[data-color='success'] {
+		--checkbox-internal-checked-background: var(--checkbox-success-background, var(--success-background));
+		--checkbox-internal-checked-foreground: var(--checkbox-success-foreground, var(--success-foreground));
+		--checkbox-internal-hover-border-color: var(--checkbox-success-border-hover, var(--success-background-hover));
+	}
 
-    &[data-color="aqua"] {
-        --checkbox-checked-background: var(--accent-aqua);
-    }
+	// The semantic palette does not cover these three yet, so they resolve to the primitives the
+	// radio group's theme tokens use: light fills, a dark glyph, and the -400 step for hover.
+	&[data-color='info'] {
+		--checkbox-internal-checked-background: var(--checkbox-info-background, var(--bg-aqua-500));
+		--checkbox-internal-checked-foreground: var(--checkbox-info-foreground, var(--text-ink-500));
+		--checkbox-internal-hover-border-color: var(--checkbox-info-border-hover, var(--bg-aqua-400));
+	}
 
-    &:not([data-state="indeterminate"]) {
-        &[data-color="forest"],
-        &[data-color="amber"],
-        &[data-color="sienna"],
-        &[data-color="cherry"],
-        &[data-color="sakura"],
-        &[data-color="aqua"] {
-            --checkbox-checked-icon-foreground: var(--control-icon-foreground-contrast);
-        }
-    }
+	&[data-color='archive'] {
+		--checkbox-internal-checked-background: var(--checkbox-archive-background, var(--bg-sienna-500));
+		--checkbox-internal-checked-foreground: var(--checkbox-archive-foreground, var(--text-ink-500));
+		--checkbox-internal-hover-border-color: var(--checkbox-archive-border-hover, var(--bg-sienna-400));
+	}
 
-    &:focus-visible {
-        outline-offset: -1px;
-        outline: 2px solid var(--checkbox-checked-background);
-    }
+	&[data-color='highlight-danger'] {
+		--checkbox-internal-checked-background: var(--checkbox-highlight-danger-background, var(--bg-sakura-500));
+		--checkbox-internal-checked-foreground: var(--checkbox-highlight-danger-foreground, var(--text-ink-500));
+		--checkbox-internal-hover-border-color: var(--checkbox-highlight-danger-border-hover, var(--bg-sakura-400));
+	}
 
-    &:hover {
-        border-color: var(--checkbox-checked-background);
-    }
+	// The ring hugs the box, not the box plus label: focus belongs to the control; the click
+	// target is a separate, larger thing.
+	&:focus-visible {
+		outline: none;
 
-    &:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
+		.checkbox__box {
+			outline: var(--checkbox-focus-visible-outline, 1px solid var(--ring));
+			outline-offset: var(--checkbox-focus-visible-outline-offset, 1px);
+		}
+	}
 
-        &:hover {
-            box-shadow: none;
-            border-color: var(--border);
-        }
-    }
+	&[data-disabled] {
+		opacity: var(--checkbox-disabled-opacity, 0.6);
+		cursor: var(--checkbox-disabled-cursor, not-allowed);
+	}
 
-    &[data-state="checked"] {
-        background-color: var(--checkbox-checked-background);
-        border-color: transparent;
-    }
-
-    &__indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: currentColor;
-    }
-
-    &__icon {
-        height: calc(var(--checkbox-size, 1rem) - var(--spacing-2, 0.25rem));
-        width: calc(var(--checkbox-size, 1rem) - var(--spacing-2, 0.25rem));
-        color: var(--checkbox-checked-icon-foreground, var(--control-icon-foreground));
-        padding-left: calc(var(--checkbox-size, 1rem) / 16);
-    }
-
-    &[data-state="indeterminate"] .checkbox__icon {
-      height: calc(var(--checkbox-size, 1rem) - var(--spacing-4, 0.5rem));
-      width: calc(var(--checkbox-size, 1rem) - var(--spacing-4, 0.5rem));
-    }
-
-    &__icon--slash {
-      display: none;
-    }
-
-    &[data-state="indeterminate"] {
-      .checkbox__icon--slash {
-        display: flex;
-      }
-      .checkbox__icon--check {
-        display: none;
-      }
-    }
+	&[data-readonly] {
+		opacity: var(--checkbox-readonly-opacity, 0.8);
+		cursor: var(--checkbox-readonly-cursor, not-allowed);
+	}
 }
 
-.checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-
-    &__label {
-        cursor: pointer;
-        user-select: none;
-    }
+.checkbox__box {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--checkbox-internal-size);
+	block-size: var(--checkbox-internal-size);
+	border: var(--checkbox-border-width, 1.5px) solid var(--checkbox-border, var(--l3-foreground));
+	border-radius: var(--checkbox-border-radius, var(--radius-1));
+	background-color: var(--checkbox-background, transparent);
+	transition: var(--checkbox-transition, background-color 150ms ease, border-color 150ms ease);
 }
 
-.checkbox:disabled ~ .checkbox-wrapper__label {
-    cursor: not-allowed;
-    opacity: 0.7;
+// Indeterminate fills like checked: `data-checked` is absent while the state is mixed, so the two
+// attributes always travel together in "filled" rules.
+.checkbox[data-checked] .checkbox__box,
+.checkbox[data-indeterminate] .checkbox__box {
+	border-color: var(--checkbox-checked-border, var(--checkbox-internal-checked-background));
+	background-color: var(--checkbox-checked-background, var(--checkbox-internal-checked-background));
+}
+
+// Hover fires from the box, its hit-area ring, or the whole labelled row: the label is part of
+// the hit target. Only the unchecked box reacts, per the design: a filled box already says
+// everything its color has to say.
+.checkbox[data-unchecked]:not([data-disabled]):not([data-readonly]):hover .checkbox__box,
+.checkbox-container:hover .checkbox[data-unchecked]:not([data-disabled]):not([data-readonly]) .checkbox__box {
+	border-color: var(--checkbox-border-hover, var(--checkbox-internal-hover-border-color));
+}
+
+.checkbox__indicator {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--checkbox-checked-foreground, var(--checkbox-internal-checked-foreground));
+
+	svg {
+		inline-size: var(--checkbox-icon-size, 12px);
+		block-size: var(--checkbox-icon-size, 12px);
+	}
+}
+
+.checkbox-container {
+	// The `.checkbox` margin below needs the label line-height before the label's own declaration
+	// applies, so the wrapper carries the same value.
+	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, 18px);
+
+	display: var(--checkbox-container-display, inline-flex);
+	// The box sits on the first line of the label and stays there. Centring the row instead would
+	// tie its position to the text's height, so a wrapped second line would move the control the
+	// user is about to click.
+	align-items: var(--checkbox-container-align-items, flex-start);
+	gap: var(--checkbox-gap, var(--spacing-5));
+	inline-size: var(--checkbox-internal-width, auto);
+	max-inline-size: var(--checkbox-internal-max-width, 100%);
+	min-width: var(--checkbox-container-min-width, 0);
+	// The whole row is the hit target, so the pointer reads as interactive from the text too.
+	cursor: var(--checkbox-cursor, pointer);
+	user-select: none;
+
+	.checkbox {
+		// First-line centring, minus the hit-area ring this margin replaces on the block-start
+		// side (the shorthand above pulled it out of layout; this override has to keep doing so).
+		margin-block-start: var(--checkbox-margin-block-start,
+				calc((var(--checkbox-internal-label-line-height) - var(--checkbox-internal-size)) / 2 -
+					var(--checkbox-internal-hit-area)));
+	}
+
+	&:has([data-disabled]) {
+		cursor: var(--checkbox-disabled-cursor, not-allowed);
+
+		.checkbox__label {
+			opacity: var(--checkbox-disabled-opacity, 0.6);
+		}
+	}
+
+	&:has([data-readonly]) {
+		cursor: var(--checkbox-readonly-cursor, not-allowed);
+
+		.checkbox__label {
+			opacity: var(--checkbox-readonly-opacity, 0.8);
+		}
+	}
+
+	&[data-text-overflow='wrap'] .checkbox__label {
+		white-space: var(--checkbox-wrap-white-space, normal);
+		overflow-wrap: var(--checkbox-wrap-overflow-wrap, anywhere);
+	}
+
+	// A label is a node, so it can hold something that draws outside its own box, like a `Badge`
+	// with a focus ring. This mode stops clipping instead of cutting that ring.
+	&[data-text-overflow='visible'] .checkbox__label {
+		overflow: var(--checkbox-text-overflow-visible, visible);
+	}
+
+	&[data-text-overflow='ellipsis'] .checkbox__label {
+		text-overflow: var(--checkbox-text-text-overflow, ellipsis);
+	}
+}
+
+.checkbox__label {
+	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, 18px);
+
+	min-width: 0;
+	// The row keeps one line of label height even when the label renders something shorter, so a
+	// row does not change height with its content.
+	min-block-size: var(--checkbox-internal-label-line-height);
+	overflow: var(--checkbox-label-overflow, hidden);
+	white-space: var(--checkbox-label-white-space, nowrap);
+	color: var(--checkbox-label-color, var(--l1-foreground));
+	font-size: var(--checkbox-label-font-size, var(--periscope-font-size-base));
+	font-weight: var(--checkbox-label-font-weight, var(--font-weight-normal));
+	line-height: var(--checkbox-internal-label-line-height);
+	cursor: inherit;
+	transition: var(--checkbox-label-transition, opacity 150ms ease);
+
+	&-tooltip {
+		max-width: var(--checkbox-label-tooltip-max-width, 20rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.checkbox__box,
+	.checkbox__label {
+		transition: none;
+	}
 }
