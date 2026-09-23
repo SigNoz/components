@@ -122,11 +122,11 @@ const meta: Meta<typeof Dropdown> = {
 		noContent: {
 			control: false,
 			description:
-				'What the non-interactive row shows when there is nothing to list: an empty `items`, or a query that matches nothing. Setting it silences the empty `items` warning. Submenus keep `<No content>`.',
+				'What the non-interactive row shows when there is nothing to list: an empty `items`, or a query that matches nothing. Setting it silences the empty `items` warning. Submenus keep `No results found :/`.',
 			table: {
 				category: 'State',
 				type: { summary: 'ReactNode' },
-				defaultValue: { summary: "'<No content>'" },
+				defaultValue: { summary: "'No results found :/'" },
 			},
 		},
 		searchInputProps: {
@@ -599,7 +599,7 @@ function DropdownShowcaseLayout(): ReactElement {
 				<ShowcaseCell
 					className={styles.cellShort}
 					title="Nothing matched"
-					note="A query nothing matches renders one non-interactive `<No content>` row and logs nothing: that one is a state. An empty `items` renders the same row and warns, unless `noContent` replaces the text."
+					note="A query nothing matches renders one non-interactive `No results found :/` row and logs nothing: that one is a state. An empty `items` renders the same row and warns, unless `noContent` replaces the text."
 				>
 					<Dropdown
 						nativeButton
