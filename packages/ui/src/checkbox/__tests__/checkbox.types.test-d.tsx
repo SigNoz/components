@@ -84,11 +84,13 @@ describe('label and textOverflow', () => {
 });
 
 describe('indeterminate', () => {
-	test('accepts indeterminate alone', () => {
-		assertType(<Checkbox color="primary" indeterminate />);
+	test('is one more value of the checked state, controlled or uncontrolled', () => {
+		assertType(<Checkbox color="primary" value="indeterminate" onChange={noop} />);
+		assertType(<Checkbox color="primary" defaultValue="indeterminate" />);
 	});
 
-	test('accepts indeterminate on a controlled checkbox', () => {
+	test('rejects the Base UI split into a boolean prop', () => {
+		// @ts-expect-error - the mixed state is `value="indeterminate"`, not its own prop
 		assertType(<Checkbox color="primary" indeterminate value={false} onChange={noop} />);
 	});
 });
@@ -213,8 +215,7 @@ describe('remaining props', () => {
 		assertType(
 			<Checkbox
 				color="success"
-				value
-				indeterminate
+				value="indeterminate"
 				onChange={noop}
 				name="tos"
 				required

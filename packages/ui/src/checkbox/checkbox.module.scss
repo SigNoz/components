@@ -9,62 +9,61 @@
 	// off the box's own 16px. The ring is a hit target only: every visual state paints on the box.
 	--checkbox-internal-hit-area: 2px;
 
-	display: inline-flex;
-	flex-shrink: 0;
+	--checkbox-internal-border-width: var(--checkbox-border-width, 1.5px);
+	--checkbox-internal-border-color: var(--checkbox-border);
+
+	display: var(--checkbox-display, inline-flex);
+	flex-shrink: var(--checkbox-flex-shrink, 0);
 	padding: var(--checkbox-internal-hit-area);
 	margin: calc(-1 * var(--checkbox-internal-hit-area));
 	cursor: var(--checkbox-cursor, pointer);
 
 	&[data-color='primary'] {
-		--checkbox-internal-checked-background: var(--checkbox-primary-background, var(--primary-background));
-		--checkbox-internal-checked-foreground: var(--checkbox-primary-foreground, var(--primary-foreground));
-		--checkbox-internal-hover-border-color: var(--checkbox-primary-border-hover, var(--primary-background-hover));
+		--checkbox-internal-checked-background: var(--checkbox-primary-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-primary-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-primary-border-hover);
 	}
 
-	// `--secondary-background` is a 60%-transparent surface, close to invisible as a 16px fill, so
-	// secondary resolves to the solid grays the radio group's theme tokens use for the same role.
 	&[data-color='secondary'] {
-		--checkbox-internal-checked-background: var(--checkbox-secondary-background, var(--l2-foreground));
-		--checkbox-internal-checked-foreground: var(--checkbox-secondary-foreground, var(--l1-background));
-		--checkbox-internal-hover-border-color: var(--checkbox-secondary-border-hover, var(--l1-foreground-hover));
+		--checkbox-internal-checked-background: var(--checkbox-secondary-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-secondary-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-secondary-border-hover);
 	}
 
 	&[data-color='danger'] {
-		--checkbox-internal-checked-background: var(--checkbox-danger-background, var(--danger-background));
-		--checkbox-internal-checked-foreground: var(--checkbox-danger-foreground, var(--danger-foreground));
-		--checkbox-internal-hover-border-color: var(--checkbox-danger-border-hover, var(--danger-background-hover));
+		--checkbox-internal-checked-background: var(--checkbox-danger-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-danger-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-danger-border-hover);
 	}
 
 	&[data-color='warning'] {
-		--checkbox-internal-checked-background: var(--checkbox-warning-background, var(--warning-background));
-		--checkbox-internal-checked-foreground: var(--checkbox-warning-foreground, var(--warning-foreground));
-		--checkbox-internal-hover-border-color: var(--checkbox-warning-border-hover, var(--warning-background-hover));
+		--checkbox-internal-checked-background: var(--checkbox-warning-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-warning-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-warning-border-hover);
 	}
 
 	&[data-color='success'] {
-		--checkbox-internal-checked-background: var(--checkbox-success-background, var(--success-background));
-		--checkbox-internal-checked-foreground: var(--checkbox-success-foreground, var(--success-foreground));
-		--checkbox-internal-hover-border-color: var(--checkbox-success-border-hover, var(--success-background-hover));
+		--checkbox-internal-checked-background: var(--checkbox-success-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-success-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-success-border-hover);
 	}
 
-	// The semantic palette does not cover these three yet, so they resolve to the primitives the
-	// radio group's theme tokens use: light fills, a dark glyph, and the -400 step for hover.
 	&[data-color='info'] {
-		--checkbox-internal-checked-background: var(--checkbox-info-background, var(--bg-aqua-500));
-		--checkbox-internal-checked-foreground: var(--checkbox-info-foreground, var(--text-ink-500));
-		--checkbox-internal-hover-border-color: var(--checkbox-info-border-hover, var(--bg-aqua-400));
+		--checkbox-internal-checked-background: var(--checkbox-info-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-info-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-info-border-hover);
 	}
 
 	&[data-color='archive'] {
-		--checkbox-internal-checked-background: var(--checkbox-archive-background, var(--bg-sienna-500));
-		--checkbox-internal-checked-foreground: var(--checkbox-archive-foreground, var(--text-ink-500));
-		--checkbox-internal-hover-border-color: var(--checkbox-archive-border-hover, var(--bg-sienna-400));
+		--checkbox-internal-checked-background: var(--checkbox-archive-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-archive-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-archive-border-hover);
 	}
 
 	&[data-color='highlight-danger'] {
-		--checkbox-internal-checked-background: var(--checkbox-highlight-danger-background, var(--bg-sakura-500));
-		--checkbox-internal-checked-foreground: var(--checkbox-highlight-danger-foreground, var(--text-ink-500));
-		--checkbox-internal-hover-border-color: var(--checkbox-highlight-danger-border-hover, var(--bg-sakura-400));
+		--checkbox-internal-checked-background: var(--checkbox-highlight-danger-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-highlight-danger-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-highlight-danger-border-hover);
 	}
 
 	// The ring hugs the box, not the box plus label: focus belongs to the control; the click
@@ -91,12 +90,12 @@
 
 .checkbox__box {
 	box-sizing: border-box;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: var(--checkbox-box-display, flex);
+	align-items: var(--checkbox-box-align-items, center);
+	justify-content: var(--checkbox-box-justify-content, center);
 	inline-size: var(--checkbox-internal-size);
 	block-size: var(--checkbox-internal-size);
-	border: var(--checkbox-border-width, 1.5px) solid var(--checkbox-border, var(--l3-foreground));
+	border: var(--checkbox-internal-border-width) solid var(--checkbox-internal-border-color);
 	border-radius: var(--checkbox-border-radius, var(--radius-1));
 	background-color: var(--checkbox-background, transparent);
 	transition: var(--checkbox-transition, background-color 150ms ease, border-color 150ms ease);
@@ -197,7 +196,7 @@
 	min-block-size: var(--checkbox-internal-label-line-height);
 	overflow: var(--checkbox-label-overflow, hidden);
 	white-space: var(--checkbox-label-white-space, nowrap);
-	color: var(--checkbox-label-color, var(--l1-foreground));
+	color: var(--checkbox-label-color, var(--checkbox-label));
 	font-size: var(--checkbox-label-font-size, var(--periscope-font-size-base));
 	font-weight: var(--checkbox-label-font-weight, var(--font-weight-normal));
 	line-height: var(--checkbox-internal-label-line-height);

@@ -174,13 +174,12 @@ describe('Checkbox interaction', () => {
 		expect(onChange.mock.calls[0]).toEqual([true]);
 	});
 
-	// Indeterminate is purely visual on top of the checked state, so a click still reports the
-	// next boolean.
+	// The mixed state is one more value of `value`, so a click still reports the next boolean.
 	it('still reports the next boolean while indeterminate', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
 		render(
-			<Checkbox color="primary" indeterminate onChange={onChange}>
+			<Checkbox color="primary" value="indeterminate" onChange={onChange}>
 				Select all
 			</Checkbox>,
 		);

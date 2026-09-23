@@ -18,19 +18,19 @@ describe('CheckboxProps against Base UI', () => {
 		expectTypeOf<CheckboxProps['required']>().toExtend<UpstreamCheckboxProps['required']>();
 		expectTypeOf<CheckboxProps['name']>().toExtend<UpstreamCheckboxProps['name']>();
 		expectTypeOf<CheckboxProps['id']>().toExtend<UpstreamCheckboxProps['id']>();
-		expectTypeOf<CheckboxProps['indeterminate']>().toExtend<
-			UpstreamCheckboxProps['indeterminate']
-		>();
 	});
 
-	test('the checked props are what the primitive takes', () => {
-		// `value`/`defaultValue` here are booleans that land on the primitive's
-		// `checked`/`defaultChecked`; Base UI's own `value` is the submitted form string, which
-		// this component does not expose.
-		expectTypeOf<CheckboxProps['value']>().toExtend<UpstreamCheckboxProps['checked']>();
-		expectTypeOf<CheckboxProps['defaultValue']>().toExtend<
-			UpstreamCheckboxProps['defaultChecked']
+	test('the checked props are what the primitive takes, once the union is unpacked', () => {
+		// `value` is `boolean | 'indeterminate'`; the component unpacks it into the primitive's
+		// `checked` boolean plus its `indeterminate` boolean. Base UI's own `value` is the
+		// submitted form string, which this component does not expose.
+		expectTypeOf<Exclude<NonNullable<CheckboxProps['value']>, 'indeterminate'>>().toExtend<
+			NonNullable<UpstreamCheckboxProps['checked']>
 		>();
+		expectTypeOf<Exclude<NonNullable<CheckboxProps['defaultValue']>, 'indeterminate'>>().toExtend<
+			NonNullable<UpstreamCheckboxProps['defaultChecked']>
+		>();
+		expectTypeOf<boolean>().toExtend<NonNullable<UpstreamCheckboxProps['indeterminate']>>();
 	});
 
 	test('onChange accepts every state the primitive reports', () => {

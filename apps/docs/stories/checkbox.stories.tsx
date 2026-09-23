@@ -51,12 +51,6 @@ const meta: Meta<typeof Checkbox> = {
 				type: { summary: 'CheckboxColorType' },
 			},
 		},
-		indeterminate: {
-			control: 'boolean',
-			description:
-				'Shows the mixed state: a dash instead of the check mark, announced as `aria-checked="mixed"`. Purely visual on top of the checked state — clicking still reports the next boolean through `onChange`, and deriving it from a tree\'s children is the call site\'s job.',
-			table: { category: 'State', type: { summary: 'boolean' } },
-		},
 		textOverflow: {
 			control: 'inline-radio',
 			options: Object.values(CheckboxTextOverflow),
@@ -69,14 +63,18 @@ const meta: Meta<typeof Checkbox> = {
 			},
 		},
 		value: {
-			control: 'boolean',
-			description: 'The controlled checked state. Use with `onChange`, never with `defaultValue`.',
-			table: { category: 'State', type: { summary: 'boolean' } },
+			control: 'inline-radio',
+			options: [true, false, 'indeterminate'],
+			description:
+				'The controlled checked state. `"indeterminate"` shows the mixed state: a dash instead of the check mark, announced as `aria-checked="mixed"`; clicking it reports `true` through `onChange`, and deriving it from a tree\'s children is the call site\'s job. Use with `onChange`, never with `defaultValue`.',
+			table: { category: 'State', type: { summary: "boolean | 'indeterminate'" } },
 		},
 		defaultValue: {
-			control: 'boolean',
-			description: 'The checked state on first render, for a checkbox that keeps its own state.',
-			table: { category: 'State', type: { summary: 'boolean' } },
+			control: 'inline-radio',
+			options: [true, false, 'indeterminate'],
+			description:
+				'The checked state on first render, for a checkbox that keeps its own state. `"indeterminate"` shows the dash until the first toggle.',
+			table: { category: 'State', type: { summary: "boolean | 'indeterminate'" } },
 		},
 		disabled: {
 			control: 'boolean',
@@ -228,8 +226,7 @@ function StateCell({ color, state }: { color: CheckboxColorType; state: State })
 			<Checkbox
 				color={color}
 				aria-label={`${color} indeterminate, ${state}`}
-				defaultValue
-				indeterminate
+				defaultValue="indeterminate"
 				{...blocking}
 			/>
 		</div>
@@ -269,7 +266,11 @@ function SelectAllDemo(): ReactElement {
 
 	return (
 		<div className={styles.labelColumn}>
-			<Checkbox color="primary" value={all} indeterminate={some && !all} onChange={onSelectAll}>
+			<Checkbox
+				color="primary"
+				value={all ? true : some ? 'indeterminate' : false}
+				onChange={onSelectAll}
+			>
 				Select all signals
 			</Checkbox>
 			<div className={styles.selectAllChildren}>
@@ -352,9 +353,10 @@ export const CheckboxShowcase: Story = {
 					Indeterminate
 				</Typography>
 				<Typography size="sm">
-					The mixed state is visual only, derived by the call site from the children: the parent is
-					checked while all children are, indeterminate while some are. Clicking it still reports
-					the next boolean.
+					The mixed state is one more value of <code>value</code>, derived by the call site from the
+					children: the parent is checked while all children are,{' '}
+					<code>&quot;indeterminate&quot;</code> while some are. Clicking it reports{' '}
+					<code>true</code>.
 				</Typography>
 				<div className={styles.marginTopMedium}>
 					<SelectAllDemo />
