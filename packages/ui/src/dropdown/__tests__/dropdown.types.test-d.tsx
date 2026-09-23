@@ -234,24 +234,12 @@ describe('the action row', () => {
 		);
 	});
 
-	test('accepts a handler returning void, a boolean or a promise', () => {
+	test('accepts a handler returning void', () => {
 		assertType<DropdownActionItemType>({
 			type: 'item',
 			value: 'b',
 			label: 'B',
 			onClick: () => {},
-		});
-		assertType<DropdownActionItemType>({
-			type: 'item',
-			value: 'b',
-			label: 'B',
-			onClick: () => false,
-		});
-		assertType<DropdownActionItemType>({
-			type: 'item',
-			value: 'b',
-			label: 'B',
-			onClick: async () => true,
 		});
 	});
 });

@@ -74,12 +74,7 @@ export type DropdownRadioGroupProps = {
  * @access private
  */
 export function DropdownRadioGroup({ item, side }: DropdownRadioGroupProps): ReactNode {
-	const {
-		testId: dropdownTestId,
-		pendingRowKey,
-		rememberedSelections,
-		rememberSelection,
-	} = useDropdownContext();
+	const { testId: dropdownTestId, rememberedSelections, rememberSelection } = useDropdownContext();
 	const groupKey = useDropdownRowKey(item.name);
 	const isGroupDisabled = item.disabled === true;
 	const resolvedTestId =
@@ -100,12 +95,11 @@ export function DropdownRadioGroup({ item, side }: DropdownRadioGroupProps): Rea
 			onValueChange={(value: unknown, eventDetails) => {
 				// The options are `aria-disabled` rather than disabled, so Base UI selects them
 				// whatever they say. An inert option is refused here, and so is every option while
-				// the group is disabled or an async action holds the list.
+				// the group is disabled.
 				const option = item.items.find((candidate) => candidate.value === value);
 
 				if (
 					isGroupDisabled ||
-					pendingRowKey !== null ||
 					typeof value !== 'string' ||
 					option?.disabled === true ||
 					option?.loading === true

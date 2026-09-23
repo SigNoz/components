@@ -88,29 +88,4 @@ describe('Dropdown hover on an inert row', () => {
 		expect(getComputedStyle(row).color).toBe(LABEL);
 		expect(getComputedStyle(row).opacity).toBe('0.8');
 	});
-
-	it('leaves every other row unpainted while one row is pending', async () => {
-		render(
-			<Dropdown
-				nativeButton
-				side="bottom"
-				align="start"
-				testId="menu"
-				items={[
-					{ type: 'item', value: 'a', label: 'Alpha', onClick: () => new Promise(() => {}) },
-					{ type: 'item', value: 'b', label: 'Bravo' },
-				]}
-			>
-				<button type="button">Actions</button>
-			</Dropdown>,
-		);
-		await openDropdown();
-
-		await userEvent.click(screen.getByRole('menuitem', { name: 'Alpha' }));
-
-		const other = screen.getByRole('menuitem', { name: 'Bravo' });
-		await userEvent.hover(other);
-
-		expect(getComputedStyle(other).backgroundColor).toBe(TRANSPARENT);
-	});
 });

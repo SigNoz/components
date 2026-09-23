@@ -153,8 +153,8 @@
   user-select: var(--dropdown-item-user-select, none);
 
   // Guarded on `aria-disabled`, not `[data-disabled]`: it comes from `isInert`, which also covers
-  // a row blocked by another row's async action. An inert row keeps its highlight stop (so its
-  // tooltip stays reachable) but not the fill.
+  // a loading row. An inert row keeps its highlight stop (so its tooltip stays reachable) but not
+  // the fill.
   &[data-highlighted]:not([aria-disabled='true']) {
     background-color: var(--dropdown-internal-item-background-hover);
     color: var(--dropdown-internal-item-label-hover);

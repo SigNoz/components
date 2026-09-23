@@ -60,6 +60,53 @@ describe('Dropdown rendering', () => {
 		expect(screen.queryByTestId('menu-item-rename')).toBeNull();
 	});
 
+	it('puts a loading row spinner in place of its prefix', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'item',
+					value: 'rename',
+					label: 'Rename',
+					prefix: <svg data-testid="rename-icon" />,
+					suffix: <svg data-testid="rename-suffix" />,
+					loading: true,
+					loadingTooltip: 'Saving',
+				},
+			],
+		});
+		await openDropdown();
+
+		const row = screen.getByTestId('menu-item-rename');
+		const prefix = row.querySelector('[data-slot="dropdown-item-prefix"]');
+		const suffix = row.querySelector('[data-slot="dropdown-item-suffix"]');
+		expect(prefix?.querySelector('[data-slot="spinner"]')).not.toBeNull();
+		expect(screen.queryByTestId('rename-icon')).toBeNull();
+		expect(suffix?.querySelector('[data-slot="spinner"]')).toBeNull();
+		expect(screen.getByTestId('rename-suffix')).toBeInTheDocument();
+	});
+
+	it('puts a loading row spinner in the trailing slot when the row has no prefix', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'item',
+					value: 'rename',
+					label: 'Rename',
+					shortcut: 'R',
+					loading: true,
+					loadingTooltip: 'Saving',
+				},
+			],
+		});
+		await openDropdown();
+
+		const row = screen.getByTestId('menu-item-rename');
+		const suffix = row.querySelector('[data-slot="dropdown-item-suffix"]');
+		expect(row.querySelector('[data-slot="dropdown-item-prefix"]')).toBeNull();
+		expect(suffix?.querySelector('[data-slot="spinner"]')).not.toBeNull();
+		expect(suffix).not.toHaveTextContent('R');
+	});
+
 	it('marks a danger row', async () => {
 		renderDropdown();
 		await openDropdown();

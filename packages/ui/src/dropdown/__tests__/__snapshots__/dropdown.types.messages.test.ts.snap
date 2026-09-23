@@ -28,7 +28,7 @@ exports[`Dropdown type error messages > prints a message that names the constrai
         Property 'disabled' is missing in type '{ type: "item"; value: string; label: string; disabledTooltip: string; }' but required in type '{ disabled: boolean; disabledTooltip: ReactNode; }'.",
   "the action row > rejects a row with no type > the discriminant is required on every entry, the plain row included": "TS2345: Argument of type '{ value: string; label: string; }' is not assignable to parameter of type 'DropdownActionItemType'.
     Type '{ value: string; label: string; }' is not assignable to type 'DropdownRowBaseType & DropdownRowPrefixType & { disabled?: undefined; disabledTooltip?: undefined; } & { loading?: undefined; loadingTooltip?: undefined; } & DropdownRowSuffixType & { ...; } & { ...; }'.
-      Property 'type' is missing in type '{ value: string; label: string; }' but required in type '{ type: "item"; onClick?: ((event: MouseEvent<Element, MouseEvent>) => boolean | void | Promise<boolean | void>) | undefined; danger?: boolean | undefined; }'.",
+      Property 'type' is missing in type '{ value: string; label: string; }' but required in type '{ type: "item"; onClick?: ((event: MouseEvent<Element, MouseEvent>) => void) | undefined; danger?: boolean | undefined; }'.",
   "the action row > rejects a shortcut next to a suffix > both take the trailing slot": "TS2345: Argument of type '{ type: "item"; value: string; label: string; shortcut: string; suffix: JSX.Element; }' is not assignable to parameter of type 'DropdownActionItemType'.
     Types of property 'suffix' are incompatible.
       Type 'Element' is not assignable to type 'undefined'.",
