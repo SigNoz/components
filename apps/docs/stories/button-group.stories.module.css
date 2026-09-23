@@ -1,3 +1,68 @@
-.flexRowAlignEnd {
-  align-items: flex-end;
+.showcaseContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	width: 100%;
+}
+
+.sectionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 16px;
+	max-width: 60rem;
+}
+
+.exampleStack {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	align-items: flex-start;
+}
+
+/* The state matrix: a label column, then one column per state. */
+.matrix {
+	display: grid;
+	grid-template-columns: max-content repeat(6, max-content);
+	gap: 16px 32px;
+	align-items: center;
+	justify-items: start;
+	overflow-x: auto;
+	padding-bottom: 4px;
+}
+
+.matrixLabel {
+	white-space: nowrap;
+}
+
+/* A composition matrix: a label column, then one column per member state. */
+.compositionMatrix {
+	grid-template-columns: max-content repeat(3, max-content);
+}
+
+.compositionGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: flex-start;
+}
+
+.compositionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 8px;
+	max-width: 60rem;
+}
+
+/* A dashed outline shows how much room each group was given. Drag the corner to change it. */
+.resizableFrame {
+	resize: horizontal;
+	overflow: hidden;
+	width: 24rem;
+	min-width: 2.5rem;
+	max-width: 100%;
+	padding: 8px;
+	outline: 1px dashed var(--l3-border);
+}
+
+/* The held-open menu is portalled below the frame, so the section keeps room for it. */
+.roomBelow {
+	margin-bottom: 16rem;
 }

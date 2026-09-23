@@ -1,79 +1,198 @@
-import { Meta, Controls, Primary, Stories } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as ButtonGroupStories from './button-group.stories';
 
 <Meta of={ButtonGroupStories} />
 
 # ButtonGroup
 
-A segmented cluster of related buttons. It renders `<div role="group">` with deduped internal
-borders and only the outer corners rounded.
+A cluster of adjacent actions that reads as one control. It renders `<div role="group">` and one
+Base UI `Button` per entry of `items`, collapses the members that do not fit into a menu, and
+forwards every `aria-*` and `data-*` attribute to the root. Neighbors share a single hairline, and
+only the outer corners are rounded.
+
+Every member is an action. A group has no selected member: for a view state with one option
+picked, use `ToggleGroup`. For a single action, use `Button`. For actions that do not need to stay
+visible, use `Dropdown`.
 
 ## How to use
 
-The group lays its children out in a row and squares off the borders between them. Each button
-carries its own `variant`, `color` and `size`, and the group takes a `variant` and a `color` of
-its own:
+`variant`, `color`, `size` and `items` are all required: the group has no default appearance and
+nothing to render without members. There are no children to compose, the group owns its markup.
 
 ```tsx
-import { Button, ButtonGroup } from '@signozhq/ui';
+import { ButtonGroup } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function DashboardActions() {
 	return (
-		<ButtonGroup variant="outlined" color="secondary" size="md">
-			<Button variant="outlined" color="secondary" size="md">
-				Day
-			</Button>
-			<Button variant="outlined" color="secondary" size="md">
-				Week
-			</Button>
-			<Button variant="outlined" color="secondary" size="md">
-				Month
-			</Button>
-		</ButtonGroup>
+		<ButtonGroup
+			variant="outlined"
+			color="secondary"
+			size="md"
+			items={[
+				{ value: 'refresh', label: 'Refresh', onClick: refresh },
+				{ value: 'share', label: 'Share', onClick: openShareDialog },
+				{ value: 'export', label: 'Export', onClick: exportCsv },
+			]}
+		/>
 	);
 }
 ```
 
-`variant`, `color` and `size` on the group are mirrored as `data-variant`, `data-color` and
-`data-size`, ready for your own selectors and assertions.
+`variant="outlined"` and `color="secondary"` are the only values the design spec draws today. The
+props are kept so every call site states its treatment.
 
 <Primary />
 
-## Mixed appearances
+## Sizes
 
-Each member reads its own appearance, so one can differ from the rest:
-
-```tsx
-<ButtonGroup variant="outlined" color="secondary" size="md">
-	<Button variant="outlined" color="secondary" size="md">
-		Approve
-	</Button>
-	<Button variant="outlined" color="secondary" size="md">
-		Hold
-	</Button>
-	<Button variant="solid" color="danger" size="md">
-		Reject
-	</Button>
-</ButtonGroup>
-```
-
-Icon-only members work the same way, each with its own `aria-label`:
+`size="sm"` is 24px tall, `size="md"` is 32px. Every member takes the group's size, so sizes never
+mix inside one group.
 
 ```tsx
-import { ChevronLeft, ChevronRight } from '@signozhq/icons';
-
-<ButtonGroup variant="outlined" color="secondary" size="md">
-	<Button variant="outlined" color="secondary" size="md" icon aria-label="Previous">
-		<ChevronLeft />
-	</Button>
-	<Button variant="outlined" color="secondary" size="md" icon aria-label="Next">
-		<ChevronRight />
-	</Button>
-</ButtonGroup>;
+<ButtonGroup variant="outlined" color="secondary" size="sm" items={ACTIONS} />
+<ButtonGroup variant="outlined" color="secondary" size="md" items={ACTIONS} />
 ```
+
+## Members
+
+An item is one of three shapes:
+
+- A text member: `label`, with an optional `prefix` and `suffix` icon.
+- An icon member: `icon` and `ariaLabel`. The name is required because there is no text to read.
+- A link member: `render`, a router `Link` in practice. The label and icons still come from the
+  item. A link member takes no `onClick`, the handler goes on the element you render. The
+  element's own children are dropped, so write `<Link to="/docs" />`, not
+  `<Link to="/docs">Docs</Link>`.
+
+```tsx
+import { ChevronLeft, ChevronRight, Download } from '@signozhq/icons';
+
+<ButtonGroup
+	variant="outlined"
+	color="secondary"
+	size="md"
+	items={[
+		{ value: 'previous', icon: <ChevronLeft />, ariaLabel: 'Previous page', onClick: previous },
+		{ value: 'next', icon: <ChevronRight />, ariaLabel: 'Next page', onClick: next },
+		{ value: 'export', label: 'Export', prefix: <Download />, onClick: exportCsv },
+		{ value: 'docs', label: 'Docs', render: <Link to="/docs" /> },
+	]}
+/>;
+```
+
+`value` keys the list and names the member's test id, so it is unique within the group: two items
+sharing one are indistinguishable to the component.
+
+A label that renders nothing (`null`, `false` or an empty string) falls back to the text
+`<No label>`, marks its label element with `data-empty-label` and logs an error. The member is
+never dropped: an action that disappears leaves the group without saying so.
+
+## Overflow
+
+The group is `width` wide when you set it, and sizes to its members otherwise. It is capped at
+`maxWidth`, `100%` of its container by default. A number is written as `px` for both.
+
+When the members do not fit, they collapse from the end behind an ellipsis member. The ellipsis
+opens a `Dropdown` that lists exactly the collapsed members.
+
+- No ellipsis while everything fits.
+- When the first member no longer fits beside the ellipsis, only the ellipsis stays.
+- The ellipsis is named `Show 1 more option` or `Show N more options` for screen readers.
+- The thresholds follow the room the group actually has, not the viewport, so the same group
+  collapses differently next to a long title.
+
+Put the member that matters most first: collapse always starts at the end.
+
+A menu row shows the label alone, with no icons. An icon member uses its `ariaLabel` as the row
+text. A link member stays a link, so middle click still works from the menu. A member's disabled or
+loading reason comes with it into the menu. While the group is disabled or loading, the menu does
+not open, and the ellipsis shows the group's reason.
+
+## Text overflow
+
+A label is capped at 120px (`--button-group-label-max-inline-size`). `textOverflow` picks what
+happens past it:
+
+- `ellipsis` (default) truncates it, marks the member with `data-truncated` and shows the full text
+  in a tooltip, only while it is truncated.
+- `hidden` clips it with no marker and no tooltip.
+- `visible` clips nothing and lets the label paint outside its box.
+
+## Disabled and loading
+
+`disabled` and `loading` on the group apply to every member. Each item also takes its own.
+
+```tsx
+<ButtonGroup
+	variant="outlined"
+	color="secondary"
+	size="md"
+	disabled={isLocked}
+	disabledTooltip="This dashboard is locked"
+	items={[
+		{ value: 'refresh', label: 'Refresh', onClick: refresh },
+		{
+			value: 'export',
+			label: 'Export',
+			onClick: exportCsv,
+			disabled: !isPaid,
+			disabledTooltip: 'Exporting needs a paid plan',
+		},
+	]}
+/>
+```
+
+- `disabled` and `disabledTooltip` travel together in both directions, on the group and on an
+  item: one without the other is a type error. Pass `undefined` explicitly when there is no reason
+  to give.
+- On an item, `loading` and `loadingTooltip` travel together the same way. On the group,
+  `loadingTooltip` is optional, because a spinner alone is already a valid busy state.
+- Members carry `aria-disabled`, never the native `disabled`, so they stay tabbable and the reason
+  stays reachable.
+- `loading` shows a spinner in the prefix slot, adds `aria-busy` and blocks presses. The member
+  stays focusable.
+
+## Stacked tooltips
+
+A member can own three tooltips at a time: the group's reason, its own reason, and the full text of
+a truncated label. They go into one popup, most general first, with a divider between them.
+
+```
+This dashboard is locked
+────────────────────────────
+Exporting needs a paid plan
+────────────────────────────
+Export every panel as a CSV file
+```
+
+Loading outranks disabled. While the group or the member is loading, the reasons are the group's
+`loadingTooltip` and then the member's, and every disabled reason drops out. A truncated label
+keeps its entry either way.
+
+## Keyboard
+
+Each member is its own tab stop, and `Enter` or `Space` presses it. There is no arrow-key
+navigation between members, unlike `ToggleGroup`. The ellipsis is a tab stop too, and opens the
+menu with the same keys.
+
+## Asserting on it
+
+| Element                                 | `data-testid`                                               |
+| --------------------------------------- | ----------------------------------------------------------- |
+| Group                                   | `testId`                                                    |
+| Member, visible or in the overflow menu | `` `${testId}-item-${value}` ``, or the item's own `testId` |
+| Ellipsis                                | `` `${testId}-overflow` ``                                  |
+
+The group also carries `data-slot="button-group"`, `data-variant`, `data-color`, `data-size`,
+`data-text-overflow`, and `data-overflowing` while a member is collapsed. Each member carries
+`data-slot="button-group-item"`, `data-position` (`only`, `start`, `middle` or `end`), and
+`data-truncated` while its label does not fit.
+
+- Assert `aria-disabled` rather than `toBeDisabled()`, because members never carry the native
+  attribute.
+- The group keeps a hidden copy of every member to measure the row, so `getByText('Export')` finds
+  two matches. Query with `getByRole` or `getByTestId` instead. Never use the hashed class names.
 
 ## Props
 
 <Controls of={ButtonGroupStories.Default} />
-
-<Stories includePrimary={false} title="Examples" />
