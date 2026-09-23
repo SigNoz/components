@@ -60,7 +60,7 @@ export type DropdownItemLoadingType =
 	| {
 			/**
 			 * When true, the row is waiting on something of its own: a spinner takes the leading
-			 * slot and the row goes inert.
+			 * slot, or the trailing one when the row has no prefix, and the row goes inert.
 			 *
 			 * @note Requires `loadingTooltip`.
 			 *
@@ -127,7 +127,8 @@ type DropdownRowPrefixType = {
 	/**
 	 * Element rendered at the start of the row. An icon, sized to `--dropdown-item-icon-size`.
 	 *
-	 * @note Replaced by a spinner while the row is loading or its async `onClick` is in flight.
+	 * @note Replaced by a spinner while the row is loading. A row without one shows the spinner in
+	 * the trailing slot instead, in place of the suffix.
 	 */
 	prefix?: ReactElement;
 };
@@ -165,21 +166,12 @@ export type DropdownActionItemType = DropdownRowBaseType &
 	) & {
 		type: typeof DropdownItemKind.Item;
 		/**
-		 * Called when the row is picked.
+		 * Called when the row is picked. The menu closes right after.
 		 *
-		 * @note The return value decides whether the menu closes. `false` keeps it open, and
-		 * `undefined` or `true` closes it at once.
-		 *
-		 * @note A promise puts the row in `data-pending`, holds the rest of the list inert, and
-		 * closes the menu once it resolves, unless it resolves `false`.
-		 *
-		 * @note A rejection, or a synchronous throw, keeps the menu open, clears the pending state
-		 * and raises a `toast.error`, which needs a `<Toaster />` mounted in the app to be seen.
-		 *
-		 * @note A promise that settles after the menu has closed leaves the menu alone, even if it
-		 * has been reopened since. A rejection still raises its toast.
+		 * @note Not called while the row is `disabled` or `loading`. To show work in flight, set
+		 * `loading` on the row from your own state.
 		 */
-		onClick?: (event: MouseEvent) => Promise<boolean | void> | boolean | void;
+		onClick?: (event: MouseEvent) => void;
 		/**
 		 * When true, paints the row in the danger foreground.
 		 *
@@ -210,8 +202,7 @@ export type DropdownLinkItemType = DropdownRowBaseType &
 		 * Renders this row as something else, keeping `role="menuitem"`, the keyboard walk, the
 		 * tooltips and the row's `data-testid`. `<Link to="/logs" />` is the whole prop.
 		 *
-		 * @note Ignored while the row is inert, through `disabled`, `loading`, or another row's
-		 * async action. An anchor stays reachable through middle click and the context menu, so
+		 * @note Ignored while the row is inert, through `disabled` or `loading`. An anchor stays reachable through middle click and the context menu, so
 		 * the only way to block one is not to render it: the row falls back to the plain,
 		 * non-navigating one.
 		 *
@@ -261,8 +252,7 @@ export type DropdownCheckboxItemType = Omit<DropdownRowBaseType, 'value'> &
 		/**
 		 * Called with the new state when the row is ticked or unticked.
 		 *
-		 * @note Never called while the row is disabled, loading, or while another row's async
-		 * action is in flight.
+		 * @note Never called while the row is disabled or loading.
 		 */
 		onChange?: (value: boolean) => void;
 	};
@@ -308,8 +298,7 @@ export type DropdownRadioGroupItemType = DropdownItemDisabledType & {
 	/**
 	 * Called with the newly selected option's `value`.
 	 *
-	 * @note Never called for a disabled or loading option, while the group is disabled, or while a
-	 * row's async action is in flight.
+	 * @note Never called for a disabled or loading option, or while the group is disabled.
 	 */
 	onChange?: (value: string) => void;
 	/**

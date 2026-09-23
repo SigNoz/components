@@ -29,7 +29,7 @@ import { DropdownLoading } from './subcomponents/dropdown-loading.js';
 import { DropdownSearch } from './subcomponents/dropdown-search.js';
 import { DropdownViewport } from './subcomponents/dropdown-viewport.js';
 import type { DropdownProps, ValidateDropdownProps } from './types.js';
-import { filterDropdownItems, reportDropdownActionError } from './utils.js';
+import { filterDropdownItems } from './utils.js';
 
 const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropdown(
 	{
@@ -60,13 +60,9 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	const popupRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [query, setQuery] = useState('');
-	const [pendingRowKey, setPendingRowKey] = useState<string | null>(null);
 	const [rememberedSelections, setRememberedSelections] = useState<
 		Readonly<Record<string, boolean | string>>
 	>({});
-	// Counts openings and closings, so an action can tell whether the menu it started in is still
-	// the one on screen when it settles.
-	const sessionRef = useRef(0);
 
 	const isFiltering = searchInputProps !== undefined && searchInputProps.filter !== false;
 	const visibleItems = useMemo(
@@ -101,37 +97,6 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	const tooltipContentId = useId();
 	const hasDisabledTooltip = disabled && hasTooltipContent(disabledTooltip);
 
-	const trackPendingAction = useCallback(
-		(rowKey: string, action: Promise<boolean | void>): void => {
-			const session = sessionRef.current;
-			setPendingRowKey(rowKey);
-
-			action.then(
-				(resolved) => {
-					if (sessionRef.current !== session) {
-						return;
-					}
-
-					setPendingRowKey(null);
-
-					if (resolved !== false) {
-						close();
-					}
-				},
-				(error: unknown) => {
-					// The failure is still worth reporting after the menu has closed: the user
-					// started it, and nothing else will tell them.
-					reportDropdownActionError(error);
-
-					if (sessionRef.current === session) {
-						setPendingRowKey(null);
-					}
-				},
-			);
-		},
-		[close],
-	);
-
 	const rememberSelection = useCallback((rowKey: string, selection: boolean | string): void => {
 		setRememberedSelections((current) => ({ ...current, [rowKey]: selection }));
 	}, []);
@@ -157,25 +122,13 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 		(): DropdownContextValue => ({
 			testId,
 			close,
-			pendingRowKey,
-			trackPendingAction,
 			rememberedSelections,
 			rememberSelection,
 			container,
 			popupStyle,
 			popupClassName: className,
 		}),
-		[
-			testId,
-			close,
-			pendingRowKey,
-			trackPendingAction,
-			rememberedSelections,
-			rememberSelection,
-			container,
-			popupStyle,
-			className,
-		],
+		[testId, close, rememberedSelections, rememberSelection, container, popupStyle, className],
 	);
 
 	// `ArrowDown` in the search field hands the highlight to the first row; this hands it back.
@@ -223,17 +176,11 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 					return;
 				}
 
-				sessionRef.current += 1;
-
-				if (!open) {
-					setPendingRowKey(null);
-
-					if (query !== '') {
-						setQuery('');
-						// A server-filtered menu would otherwise keep the rows of a query the
-						// field no longer shows.
-						searchInputProps?.onChange?.('');
-					}
+				if (!open && query !== '') {
+					setQuery('');
+					// A server-filtered menu would otherwise keep the rows of a query the field
+					// no longer shows.
+					searchInputProps?.onChange?.('');
 				}
 
 				onOpenChange?.(open);
@@ -276,9 +223,6 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 						onKeyDownCapture={handlePopupKeyDown}
 					>
 						<DropdownProvider value={contextValue}>
-							{/* TODO: mount a `<Toaster />` when the app has none, the way
-							    `TooltipProviderIfMissing` does for tooltips. A rejected `onClick`
-							    raises `toast.error`, which is silent without one. */}
 							<TooltipProviderIfMissing>
 								{searchInputProps !== undefined && (
 									<DropdownSearch
@@ -437,19 +381,13 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * against whichever row the highlight happens to be on, which is rarely the one the user was
  * reading. Arrow into the list first.
  *
- * ### Closing, and async actions
+ * ### Closing, and loading rows
  *
- * Every row renders with Base UI's `closeOnClick` off, so `onClick` decides:
+ * Picking an `item` row calls its `onClick` and closes the menu. The component does not wait on
+ * what the handler starts: to show work in flight, set `loading` on the row from your own state.
  *
- * | It returns | What happens |
- * |---|---|
- * | `undefined` or `true` | The menu closes at once |
- * | `false` | The menu stays open |
- * | a promise | The row goes `data-pending`, the rest of the list goes inert, and the menu closes when it resolves, unless it resolves `false` |
- *
- * A rejection, or an error thrown before any promise exists, keeps the menu open, clears the row and
- * raises a `toast.error` carrying the error's message. That needs a `<Toaster />` mounted somewhere in the app; without one the failure is
- * silent. A handler that wants its own copy catches its own error and resolves `false`.
+ * A loading row goes inert and shows a spinner. The spinner takes the prefix's place when the row
+ * has one, and the trailing slot otherwise, so a row without an icon keeps its label in place.
  *
  * ### Tooltips
  *
@@ -481,13 +419,13 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * | `dropdown-search` | only with `searchInputProps`, a sibling of the viewport so it stays pinned |
  * | `dropdown-search-input`, `dropdown-search-prefix` | inside the search row |
  * | `dropdown-search-suffix` | inside the search row, only when `searchInputProps.suffix` is set |
- * | `dropdown-item` | one per `item` row, `data-danger`, `data-disabled`, `data-loading` and `data-pending` as they apply |
+ * | `dropdown-item` | one per `item` row, `data-danger`, `data-disabled` and `data-loading` as they apply |
  * | `dropdown-link` | one per `link` row, `data-disabled` and `data-loading` as they apply |
  * | `dropdown-checkbox-item`, `dropdown-radio-item` | one per row of that kind |
  * | `dropdown-radio-group` | one per `radio-group` row, `data-disabled` while the whole group is |
  * | `dropdown-submenu-trigger` | one per `submenu` row |
  * | `dropdown-submenu-chevron` | the trailing glyph of a `submenu` row |
- * | `dropdown-item-prefix`, `dropdown-item-suffix` | only when the row has one, the prefix also while a spinner is in it, the suffix always on a checkbox or radio row |
+ * | `dropdown-item-prefix`, `dropdown-item-suffix` | only when the row has one, the suffix also while a spinner is in it on a row without a prefix, and always on a checkbox or radio row |
  * | `dropdown-item-label` | the measured element, `data-truncated` while it does not fit, `data-empty-label` while it is the fallback |
  * | `dropdown-item-indicator` | inside a checkbox or radio row, `data-checked` while it is selected |
  * | `dropdown-group`, `dropdown-group-label` | one per `group` row |
@@ -514,7 +452,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  *
  * @example
  * ```tsx
- * // Searchable, and one row waits on the server before the menu closes
+ * // Searchable, with a row that shows a spinner while its request is out
  * <Dropdown
  *   nativeButton
  *   side="bottom"
@@ -524,7 +462,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  *   items={[
  *     { type: 'group', value: 'edit', label: 'Edit', items: [
  *       { type: 'item', value: 'rename', label: 'Rename', prefix: <Pencil /> },
- *       { type: 'item', value: 'archive', label: 'Archive', onClick: () => archive(id) },
+ *       { type: 'item', value: 'archive', label: 'Archive', onClick: () => archive(id),
+ *         loading: isArchiving, loadingTooltip: 'Archiving' },
  *     ] },
  *     { type: 'checkbox', name: 'pinned', label: 'Pinned', value: pinned, onChange: setPinned },
  *   ]}

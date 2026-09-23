@@ -287,32 +287,26 @@ search row stays, so the user can keep typing.
 
 ## Closing
 
-Every row runs with Base UI's `closeOnClick` off. The return value of `onClick` decides:
-
-| It returns            | What happens                                                                                                                  |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `undefined` or `true` | The menu closes at once                                                                                                       |
-| `false`               | The menu stays open                                                                                                           |
-| a promise             | The row goes `data-pending` and the rest of the list goes inert. The menu closes when it resolves, unless it resolves `false` |
+Picking an `item` row calls its `onClick` and closes the menu. `onClick` returns nothing, and the
+menu does not wait on anything it starts.
 
 ```tsx
 {
 	type: 'item',
 	value: 'duplicate',
 	label: 'Duplicate',
-	onClick: async () => {
-		await duplicateDashboard(id);
+	onClick: () => {
+		void duplicateDashboard(id);
 	},
 }
 ```
 
-When the handler fails, the menu stays open, the row clears, and a `toast.error` shows the error's
-message. This covers a rejected promise and a synchronous throw.
+To show that a row is waiting, set `loading` on it from your own state, with a `loadingTooltip`
+saying what it waits for. A loading row goes inert and shows a spinner:
 
-- The toast needs a `<Toaster />` mounted in the app. Without one the failure is silent.
-- For your own message, catch the error in the handler and resolve `false`.
-- A promise that settles after the menu closed leaves the menu alone, even if it has reopened since.
-  A rejection still raises its toast.
+- On a row with a `prefix`, the spinner takes the prefix's place.
+- On a row without one, the spinner takes the trailing slot, in place of any `suffix` or
+  `shortcut`. The label stays where it is instead of moving right.
 
 ## Nothing to show
 

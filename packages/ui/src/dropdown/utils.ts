@@ -1,6 +1,5 @@
 import { isValidElement, type ReactNode } from 'react';
-import { toast } from '../sonner/sonner.js';
-import { DROPDOWN_ACTION_ERROR_MESSAGE, DropdownItemKind } from './constants.js';
+import { DropdownItemKind } from './constants.js';
 import type { DropdownItemType, DropdownRadioItemType } from './types.js';
 
 /**
@@ -164,15 +163,4 @@ export function filterDropdownItems<T extends DropdownItemType>(
 	}
 
 	return cleanupSeparators(kept);
-}
-
-/**
- * Raises the toast a failed `onClick` gets, thrown or rejected, carrying the error's message.
- *
- * @access private
- */
-export function reportDropdownActionError(error: unknown): void {
-	toast.error(
-		error instanceof Error && error.message !== '' ? error.message : DROPDOWN_ACTION_ERROR_MESSAGE,
-	);
 }

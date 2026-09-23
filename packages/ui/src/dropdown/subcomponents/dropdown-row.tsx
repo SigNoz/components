@@ -55,20 +55,15 @@ export type DropdownRowState = {
 	isLabelOverflowing: boolean;
 	resolvedTestId: string | undefined;
 	/**
-	 * True while the row says it is waiting, through its own `loading` or through an async
-	 * `onClick` still in flight.
+	 * True while the row's `loading` applies.
 	 */
 	isLoading: boolean;
-	/**
-	 * True only for the row whose async `onClick` is in flight.
-	 */
-	isPending: boolean;
 	/**
 	 * True while the row's own `disabled` applies, which `loading` outranks.
 	 */
 	isDisabled: boolean;
 	/**
-	 * True while the row cannot be picked, for any reason including another row's pending action.
+	 * True while the row cannot be picked, loading or disabled.
 	 */
 	isInert: boolean;
 	tooltipContent: ReactNode;
@@ -94,19 +89,16 @@ export function useDropdownRow({
 	loading,
 	loadingTooltip,
 }: DropdownRowParams): [DropdownRowState, RefCallback<HTMLSpanElement>] {
-	const { testId: dropdownTestId, pendingRowKey } = useDropdownContext();
+	const { testId: dropdownTestId } = useDropdownContext();
 	const rowKey = useDropdownRowKey(value);
 	const tooltipContentId = useId();
 	const tooltipHandle = useTooltipHandle();
 
-	const isPending = pendingRowKey === rowKey;
 	// `loading` outranks `disabled`, the way it does on `Button`: while the row is waiting it is
 	// not disabled at all, and its reason is what the row is waiting for.
-	const isLoading = loading === true || isPending;
+	const isLoading = loading === true;
 	const isDisabled = !isLoading && disabled === true;
-	// An async action holds the whole list, so a row that is neither disabled nor loading still
-	// cannot be picked while another one is in flight.
-	const isInert = isLoading || isDisabled || pendingRowKey !== null;
+	const isInert = isLoading || isDisabled;
 
 	const isLabelEmpty = !hasRenderableContent(label);
 	const resolvedLabel = isLabelEmpty ? DROPDOWN_EMPTY_LABEL : label;
@@ -157,7 +149,6 @@ export function useDropdownRow({
 			isLabelOverflowing,
 			resolvedTestId,
 			isLoading,
-			isPending,
 			isDisabled,
 			isInert,
 			tooltipContent,
@@ -206,6 +197,10 @@ export function DropdownRowTooltip({
 /**
  * The three slots a row is made of: the leading one, the measured label, and the trailing one.
  *
+ * While the row is loading, the spinner takes the leading slot when the row has a prefix, and the
+ * trailing slot otherwise. A row without a prefix keeps its label where it is, instead of having
+ * it pushed right by a slot that was not there before.
+ *
  * @access private
  */
 export function DropdownRowBody({
@@ -219,11 +214,15 @@ export function DropdownRowBody({
 	prefix?: ReactNode;
 	suffix?: ReactNode;
 }): ReactNode {
+	const hasPrefix = prefix !== undefined;
+	const resolvedPrefix = row.isLoading && hasPrefix ? <Spinner /> : prefix;
+	const resolvedSuffix = row.isLoading && !hasPrefix ? <Spinner /> : suffix;
+
 	return (
 		<>
-			{(row.isLoading || prefix !== undefined) && (
+			{hasPrefix && (
 				<span data-slot="dropdown-item-prefix" className={styles['dropdown__item-affix']}>
-					{row.isLoading ? <Spinner /> : prefix}
+					{resolvedPrefix}
 				</span>
 			)}
 			<span
@@ -235,9 +234,9 @@ export function DropdownRowBody({
 			>
 				{row.resolvedLabel}
 			</span>
-			{suffix !== undefined && (
+			{resolvedSuffix !== undefined && (
 				<span data-slot="dropdown-item-suffix" className={styles['dropdown__item-affix']}>
-					{suffix}
+					{resolvedSuffix}
 				</span>
 			)}
 		</>

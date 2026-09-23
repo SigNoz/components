@@ -40,16 +40,6 @@ export const DROPDOWN_EMPTY_CONTENT = '<No content>';
 export const DROPDOWN_SIDE_OFFSET = 4;
 
 /**
- * What the toast says when an async `onClick` rejects with something that is not an `Error`.
- *
- * A handler that wants its own copy catches its own error and resolves `false`, which keeps the
- * menu open and raises nothing.
- *
- * @access private
- */
-export const DROPDOWN_ACTION_ERROR_MESSAGE = 'Something went wrong.';
-
-/**
  * The accessible name of the pinned search row, used when `searchInputProps.placeholder` gives no
  * other one. A field the user cannot see a label for still needs one.
  *

@@ -15,21 +15,9 @@ export type DropdownContextValue = {
 	 * Closes the whole menu, submenus included.
 	 *
 	 * @note Every row renders with `closeOnClick={false}`, so the action and link rows call this
-	 * themselves: an action row only once its `onClick` result says so.
+	 * themselves, once the row is known to be pickable.
 	 */
 	close: () => void;
-	/**
-	 * The key of the row whose async action is in flight, or `null`. See {@link useDropdownRowKey}.
-	 */
-	pendingRowKey: string | null;
-	/**
-	 * Holds a row pending until its action settles, then closes the menu unless it resolved
-	 * `false`, or raises a toast when it rejected.
-	 *
-	 * @note An action that settles after the menu has closed changes nothing but the toast. The
-	 * menu may have been reopened by then, and that opening is not the one the action belongs to.
-	 */
-	trackPendingAction: (rowKey: string, action: Promise<boolean | void>) => void;
 	/**
 	 * The state an uncontrolled checkbox or radio group picked, by row key.
 	 *
@@ -60,8 +48,6 @@ export type DropdownContextValue = {
 const NOT_IN_A_DROPDOWN: DropdownContextValue = {
 	testId: undefined,
 	close: (): void => {},
-	pendingRowKey: null,
-	trackPendingAction: (): void => {},
 	rememberedSelections: {},
 	rememberSelection: (): void => {},
 	container: undefined,

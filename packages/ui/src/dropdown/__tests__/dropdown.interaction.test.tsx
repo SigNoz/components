@@ -39,15 +39,6 @@ describe('Dropdown interaction', () => {
 		});
 	});
 
-	it('keeps the menu open when the handler returns false', async () => {
-		renderDropdown([{ type: 'item', value: 'rename', label: 'Rename', onClick: () => false }]);
-		await openDropdown();
-
-		await userEvent.click(screen.getByRole('menuitem', { name: 'Rename' }));
-
-		expect(screen.getByRole('menu')).toBeInTheDocument();
-	});
-
 	it('blocks a disabled row and keeps it reachable', async () => {
 		const onClick = vi.fn();
 		renderDropdown([

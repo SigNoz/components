@@ -17,8 +17,6 @@ import {
 	ButtonVariant,
 	Dropdown,
 	type DropdownItemType,
-	toast,
-	Toaster,
 	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -185,31 +183,10 @@ const TRIGGER_PROPS = {
 	size: 'md',
 } as const;
 
-function wait(ms: number): Promise<void> {
-	return new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
-}
-
 const DEFAULT_ITEMS: DropdownItemType[] = [
 	{ type: 'item', value: 'rename', label: 'Rename', prefix: <Pencil />, shortcut: 'R' },
 	{ type: 'item', value: 'pin', label: 'Pin to the top', prefix: <Bookmark /> },
-	{
-		type: 'item',
-		value: 'copy',
-		label: 'Copy link (returns false, so the menu stays open)',
-		prefix: <Copy />,
-		onClick: () => false,
-	},
-	{
-		type: 'item',
-		value: 'publish',
-		label: 'Publish (rejects, so it raises a toast)',
-		onClick: async () => {
-			await wait(1200);
-			throw new Error('The workspace is read only');
-		},
-	},
+	{ type: 'item', value: 'copy', label: 'Copy link', prefix: <Copy /> },
 	{ type: 'separator', value: 'before-danger' },
 	{
 		type: 'item',
@@ -217,13 +194,11 @@ const DEFAULT_ITEMS: DropdownItemType[] = [
 		label: 'Delete',
 		prefix: <Trash />,
 		danger: true,
-		onClick: () => wait(1200),
 	},
 ];
 
 /**
- * The playground the Controls table drives. Two rows are async, so the closing contract can be
- * watched: `Publish` rejects into a toast, and `Delete` holds the list until it resolves.
+ * The playground the Controls table drives.
  */
 export const Default: Story = {
 	args: {
@@ -239,96 +214,11 @@ export const Default: Story = {
 	decorators: [
 		(Story): ReactElement => (
 			<div className={styles.roomBelow}>
-				<Toaster />
 				<Story />
 			</div>
 		),
 	],
 };
-
-/**
- * Every way an async `onClick` can end, on rows you can actually click.
- *
- * `DropdownShowcase` holds the in-flight frame still for the snapshot, so it can only ever show the
- * spinner. The contract is about what happens *after* that frame, which needs promises that settle:
- *
- * | The row | Its promise | What the menu does |
- * |---|---|---|
- * | Deploy | resolves `undefined` | closes |
- * | Deploy and stay | resolves `false` | stays open |
- * | Publish | rejects | stays open, and the component raises `toast.error` itself |
- *
- * Each row also raises a toast of its own as it starts and finishes, so the order is legible: the
- * whole list goes inert while any one of them is in flight. The error toast on `Publish` is the
- * component's, not this story's, which is why it needs the `<Toaster />` mounted below.
- */
-export const AsyncOutcomes: Story = {
-	parameters: {
-		// Promises that settle on a timer cannot be snapshotted without racing the capture.
-		chromatic: { disableSnapshot: true },
-	},
-	decorators: [
-		(Story): ReactElement => (
-			<div className={styles.roomBelow}>
-				<Toaster />
-				<Story />
-			</div>
-		),
-	],
-	args: {
-		testId: 'dropdown-async',
-		children: <Button {...TRIGGER_PROPS}>Run something</Button>,
-		items: [
-			{
-				type: 'item',
-				value: 'deploy',
-				label: 'Deploy (resolves, so the menu closes)',
-				onClick: async () => {
-					toast.info('Deploying…');
-					await wait(1200);
-					toast.success('Deployed');
-				},
-			},
-			{
-				type: 'item',
-				value: 'deploy-stay',
-				label: 'Deploy and stay (resolves false, so the menu stays open)',
-				onClick: async () => {
-					toast.info('Deploying, keeping the menu open…');
-					await wait(1200);
-					toast.success('Deployed, and the menu is still here');
-
-					return false;
-				},
-			},
-			{
-				type: 'item',
-				value: 'publish',
-				label: 'Publish (rejects, so the component raises a toast)',
-				onClick: async () => {
-					toast.info('Publishing…');
-					await wait(1200);
-					throw new Error('The workspace is read only');
-				},
-			},
-			{ type: 'separator', value: 'before-sync' },
-			{
-				type: 'item',
-				value: 'rollback',
-				label: 'Roll back (synchronous, closes at once)',
-				prefix: <Copy />,
-			},
-		],
-	},
-};
-
-/**
- * Never settles, so the row it belongs to stays in `data-pending` and holds its menu inert for
- * the snapshot.
- */
-const PENDING_FOREVER: Promise<void> = new Promise(() => {
-	// The showcase wants the in-flight frame, so this deliberately never resolves.
-});
 
 const SERVICE_ITEMS: DropdownItemType[] = Array.from({ length: 24 }, (_, index) => ({
 	type: 'item' as const,
@@ -343,7 +233,7 @@ const SHOWCASE_MENUS = [
 	'showcase-kinds',
 	'showcase-states',
 	'showcase-labels',
-	'showcase-pending',
+	'showcase-spinner',
 	'showcase-search',
 	'showcase-server-search',
 	'showcase-loading',
@@ -590,32 +480,36 @@ function DropdownShowcaseLayout(): ReactElement {
 				</ShowcaseCell>
 
 				<ShowcaseCell
-					title="An action in flight"
-					note="`onClick` returned a promise, so its row carries `data-pending` and takes the spinner, and every other row in the menu goes inert until it settles. This one never settles, because the frame is the point. See the `AsyncOutcomes` story for what happens after it: resolving closes the menu, resolving `false` keeps it open, and a rejection keeps it open and raises a `toast.error`."
+					title="Where the spinner goes"
+					note="A loading row puts its spinner in place of the prefix when it has one. A row with no prefix puts it in the trailing slot instead, in place of any suffix or shortcut, so its label does not move when the spinner appears."
 				>
 					<Dropdown
 						nativeButton
 						side="bottom"
 						align="start"
-						testId="showcase-pending"
+						testId="showcase-spinner"
 						items={[
 							{
 								type: 'item',
-								value: 'deploy',
-								label: 'Deploy',
-								onClick: () => PENDING_FOREVER,
+								value: 'with-prefix',
+								label: 'With a prefix',
+								prefix: <Copy />,
+								shortcut: 'C',
+								loading: true,
+								loadingTooltip: 'Copying',
 							},
-							{ type: 'item', value: 'rollback', label: 'Roll back', prefix: <Copy /> },
 							{
 								type: 'item',
-								value: 'delete',
-								label: 'Delete',
-								prefix: <Trash />,
-								danger: true,
+								value: 'without-prefix',
+								label: 'Without a prefix',
+								shortcut: 'D',
+								loading: true,
+								loadingTooltip: 'Deploying',
 							},
+							{ type: 'item', value: 'idle', label: 'Idle, for comparison', shortcut: 'I' },
 						]}
 					>
-						<Button {...TRIGGER_PROPS}>Run something</Button>
+						<Button {...TRIGGER_PROPS}>Spinner</Button>
 					</Dropdown>
 				</ShowcaseCell>
 
@@ -846,9 +740,6 @@ export const DropdownShowcase: Story = {
 			target: { value: 'nothing matches this' },
 		});
 
-		// The handler returns a promise that never settles, so the row stays in flight.
-		fireEvent.click(getShowcaseNode('showcase-pending-item-deploy'));
-
 		// Scrolled off both ends, the only position where both edges fade.
 		const overflowViewport = getShowcaseNode(
 			'showcase-overflow-item-service-00',
@@ -872,7 +763,6 @@ export const DropdownShowcase: Story = {
 			expect(document.querySelectorAll('[data-slot="dropdown-popup"]')).toHaveLength(
 				SHOWCASE_MENUS.length + 1,
 			);
-			expect(getShowcaseNode('showcase-pending-item-deploy')).toHaveAttribute('data-pending');
 			expect(document.querySelectorAll('[data-slot="tooltip-content"]')).toHaveLength(1);
 		});
 	},
