@@ -392,7 +392,7 @@ export type DropdownSubmenuItemType = DropdownRowBaseType &
 		/**
 		 * The rows of the submenu, in the order they are rendered.
 		 *
-		 * @note An empty list opens a popup holding the `<No content>` row and logs a warning. A
+		 * @note An empty list opens a popup holding the `No results found :/` row and logs a warning. A
 		 * submenu with nothing in it is a consumer bug rather than a state.
 		 *
 		 * @note Another submenu cannot go in here. One level of nesting is the limit, and the type
@@ -609,9 +609,9 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'st
 		 * a query that matches nothing.
 		 *
 		 * @note Setting it declares an empty `items` a state, so no warning is logged. It does not
-		 * reach submenus: an empty submenu keeps `<No content>` and its warning.
+		 * reach submenus: an empty submenu keeps `No results found :/` and its warning.
 		 *
-		 * @default '<No content>'
+		 * @default 'No results found :/'
 		 */
 		noContent?: ReactNode;
 		/**

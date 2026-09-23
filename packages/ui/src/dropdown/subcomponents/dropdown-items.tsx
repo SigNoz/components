@@ -47,7 +47,7 @@ export type DropdownItemsProps = {
 	side: DropdownTooltipSide;
 	/**
 	 * What to show when `items` is empty. Only the root passes it: a submenu with nothing in it is
-	 * a consumer bug and keeps the `<No content>` marker.
+	 * a consumer bug and keeps the `No results found :/` marker.
 	 */
 	noContent?: ReactNode;
 };

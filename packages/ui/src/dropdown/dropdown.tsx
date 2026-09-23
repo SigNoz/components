@@ -342,13 +342,13 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * ### Nothing to show
  *
  * An empty `items`, at the root or on a submenu, renders one non-interactive row reading
- * `<No content>` and logs a warning.
+ * `No results found :/` and logs a warning.
  *
  * A query that matches nothing renders the same row and logs nothing. That one is a state, and so
  * is an empty `items` while `loading` is true or while `searchInputProps.filter` is `false`.
  *
  * `noContent` replaces the text of the root's row, and passing it declares an empty `items` a
- * state, so the warning goes. A submenu keeps `<No content>` and its warning: a submenu with
+ * state, so the warning goes. A submenu keeps `No results found :/` and its warning: a submenu with
  * nothing in it is still a consumer bug.
  *
  * ### Search

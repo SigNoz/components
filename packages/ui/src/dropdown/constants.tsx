@@ -29,7 +29,7 @@ export const DROPDOWN_EMPTY_LABEL = '<No label>';
  * An empty `items` is a consumer bug, so it also logs a warning. An empty search result is a state
  * rather than a bug, so it shows this row and logs nothing.
  */
-export const DROPDOWN_EMPTY_CONTENT = '<No content>';
+export const DROPDOWN_EMPTY_CONTENT = 'No results found :/';
 
 /**
  * The gap between the trigger and the popup, in pixels.
