@@ -1,36 +1,328 @@
+// Colour arrives through the `--button-group-internal-*` pairs below. Every rule reads an internal
+// name, never a semantic token directly, so a re-theme moves one component and nothing else. The
+// semantic tokens themselves live in `@signozhq/design-tokens`.
 .button-group {
+	&[data-variant='outlined'][data-color='secondary'] {
+		--button-group-internal-background: var(--button-group-secondary-outlined-background);
+		--button-group-internal-background-hover: var(--button-group-secondary-outlined-background-hover);
+		--button-group-internal-label: var(--button-group-secondary-outlined-label);
+		--button-group-internal-label-hover: var(--button-group-secondary-outlined-label-hover);
+		--button-group-internal-border: var(--button-group-secondary-outlined-border);
+		--button-group-internal-disabled-stripe: var(--button-group-secondary-outlined-disabled-stripe);
+	}
+
+	--button-group-internal-focus-ring: var(--button-group-focus-ring);
+	--button-group-internal-radius: var(--button-group-radius, var(--radius-1));
+	--button-group-internal-overlap: var(--button-group-overlap, -1px);
+
+	--button-group-internal-loading-duration: var(--button-group-loading-duration, 120ms);
+	--button-group-internal-loading-delay: var(--button-group-loading-delay, var(--button-group-internal-loading-duration));
+	--button-group-internal-loading-easing: var(--button-group-loading-easing, cubic-bezier(0.65, 0, 0.35, 1));
+	--button-group-internal-loading-travel: var(--button-group-loading-travel, 6px);
+
+	// A column, so the measuring row underneath adds its width to the group's intrinsic size and no
+	// height. The group then only shrinks when its container does.
 	display: var(--button-group-display, inline-flex);
-	align-items: var(--button-group-align-items, stretch);
+	flex-direction: var(--button-group-flex-direction, column);
+	min-width: var(--button-group-min-width, 0);
+	width: var(--button-group-width, var(--button-group-internal-width, auto));
+	max-width: var(--button-group-max-width, var(--button-group-internal-max-width, 100%));
+	vertical-align: var(--button-group-vertical-align, middle);
+
+	&[data-size='sm'] {
+		--button-group-internal-height: var(--button-group-height, 24px);
+		--button-group-internal-font-size: var(--button-group-font-size, var(--periscope-font-size-small));
+		--button-group-internal-line-height: var(--button-group-line-height, 14px);
+		--button-group-internal-icon-size: var(--button-group-icon-size, 12px);
+		--button-group-internal-icon-only-size: var(--button-group-icon-only-size, 12px);
+		--button-group-internal-gap: var(--button-group-gap, var(--spacing-3));
+		--button-group-internal-padding: var(--button-group-padding, var(--spacing-2) var(--spacing-4));
+		--button-group-internal-icon-only-padding: var(--button-group-icon-only-padding, var(--spacing-3));
+	}
+
+	&[data-size='md'] {
+		--button-group-internal-height: var(--button-group-height, 32px);
+		--button-group-internal-font-size: var(--button-group-font-size, var(--periscope-font-size-base));
+		--button-group-internal-line-height: var(--button-group-line-height, 16px);
+		--button-group-internal-icon-size: var(--button-group-icon-size, 12px);
+		--button-group-internal-icon-only-size: var(--button-group-icon-only-size, 12px);
+		--button-group-internal-gap: var(--button-group-gap, var(--spacing-3));
+		--button-group-internal-padding: var(--button-group-padding, var(--spacing-4) var(--spacing-6));
+		--button-group-internal-icon-only-padding: var(--button-group-icon-only-padding, var(--spacing-5));
+	}
+
+	&__row {
+		position: var(--button-group-row-position, relative);
+		display: var(--button-group-row-display, flex);
+		align-items: var(--button-group-row-align-items, stretch);
+	}
+
+	// Height zero and clipped, so it takes no space and paints nothing, but the full-set width the
+	// group writes on it still counts towards the group's own. Capped at the group, so it never
+	// pushes past it.
+	&__measure {
+		position: var(--button-group-measure-position, relative);
+		display: var(--button-group-measure-display, flex);
+		max-inline-size: var(--button-group-measure-max-inline-size, 100%);
+		height: var(--button-group-measure-height, 0);
+		overflow: var(--button-group-measure-overflow, hidden);
+		visibility: var(--button-group-measure-visibility, hidden);
+		pointer-events: var(--button-group-measure-pointer-events, none);
+	}
+
+	// Out of the flow, so a group whose members all fit does not reserve room for an ellipsis.
+	&__measure-overflow {
+		position: var(--button-group-measure-overflow-position, absolute);
+		inset-block-start: var(--button-group-measure-overflow-inset-block-start, 0);
+		inset-inline-start: var(--button-group-measure-overflow-inset-inline-start, 0);
+	}
+
+	&__item {
+		position: var(--button-group-item-position, relative);
+		// Its own stacking context, so the disabled stripes stay under its content and a raised
+		// neighbour is not painted over by them.
+		isolation: var(--button-group-item-isolation, isolate);
+		box-sizing: var(--button-group-item-box-sizing, border-box);
+		flex: var(--button-group-item-flex, 0 0 auto);
+		display: var(--button-group-item-display, inline-flex);
+		flex-direction: var(--button-group-item-flex-direction, row);
+		align-items: var(--button-group-item-align-items, center);
+		justify-content: var(--button-group-item-justify-content, center);
+		gap: var(--button-group-internal-gap);
+		margin: var(--button-group-item-margin, 0);
+		height: var(--button-group-internal-height);
+		padding: var(--button-group-internal-padding);
+		max-width: var(--button-group-item-max-width, none);
+		white-space: var(--button-group-item-white-space, nowrap);
+		font-family: var(--button-group-font-family, inherit);
+		font-size: var(--button-group-internal-font-size);
+		line-height: var(--button-group-internal-line-height);
+		font-variant-numeric: var(--button-group-font-variant-numeric, slashed-zero);
+		font-weight: var(--button-group-font-weight, var(--font-weight-medium));
+		letter-spacing: var(--button-group-text-spacing, -0.005em);
+		text-decoration: var(--button-group-text-decoration, none);
+		border: var(--button-group-border-width, 1px) var(--button-group-border-style, solid) var(--button-group-internal-border);
+		border-radius: var(--button-group-item-border-radius, 0);
+		background-color: var(--button-group-internal-background);
+		color: var(--button-group-internal-label);
+		cursor: var(--button-group-cursor, pointer);
+		transition: var(--button-group-transition,
+				background-color 150ms ease,
+				color 150ms ease,
+				border-color 150ms ease);
+
+		// Still laid out at its own width, so it can be measured, but out of the flow, invisible and
+		// out of the accessibility tree.
+		&[data-collapsed='true'] {
+			position: var(--button-group-item-collapsed-position, absolute);
+			inset-block-start: var(--button-group-item-collapsed-inset-block-start, 0);
+			inset-inline-start: var(--button-group-item-collapsed-inset-inline-start, 0);
+			inline-size: var(--button-group-item-collapsed-inline-size, max-content);
+			visibility: var(--button-group-item-collapsed-visibility, hidden);
+			pointer-events: var(--button-group-item-collapsed-pointer-events, none);
+		}
+
+		// Every member but the first pulls back over its neighbour by the border width, so the two
+		// edges collapse into one shared hairline instead of a 2px seam.
+		&:not([data-position='start']):not([data-position='only']) {
+			margin-inline-start: var(--button-group-internal-overlap);
+		}
+
+		&[data-position='only'] {
+			border-radius: var(--button-group-internal-radius);
+		}
+
+		&[data-position='start'] {
+			border-start-start-radius: var(--button-group-internal-radius);
+			border-end-start-radius: var(--button-group-internal-radius);
+		}
+
+		&[data-position='end'] {
+			border-start-end-radius: var(--button-group-internal-radius);
+			border-end-end-radius: var(--button-group-internal-radius);
+		}
+
+		&[data-icon='true'] {
+			--button-group-internal-icon-size: var(--button-group-internal-icon-only-size);
+			padding: var(--button-group-internal-icon-only-padding);
+			width: var(--button-group-internal-height);
+		}
+
+		// On a shared border whichever sibling paints last owns the hairline, so the member the user
+		// is on is raised above its neighbours, for its hover border and its focus ring alike.
+		&:hover:not([aria-busy='true']):not([aria-disabled='true']) {
+			z-index: var(--button-group-item-hover-z-index, 1);
+			background-color: var(--button-group-internal-background-hover);
+			color: var(--button-group-internal-label-hover);
+		}
+
+		// The outline follows the member's own corners, so a middle member keeps a square ring and
+		// the head and tail round only their outer side.
+		&:focus-visible {
+			z-index: var(--button-group-item-focus-z-index, 2);
+			outline-offset: var(--button-group-focus-visible-outline-offset, 1px);
+			outline: var(--button-group-focus-visible-outline, var(--button-group-internal-focus-ring) solid 1px);
+		}
+
+		&[aria-disabled='true']:not([aria-busy='true']) {
+			opacity: var(--button-group-disabled-opacity, 0.6);
+			cursor: var(--button-group-disabled-cursor, not-allowed);
+			// Keeps the stripe bands inside the border radius.
+			overflow: var(--button-group-disabled-overflow, hidden);
+
+			.button-group__prefix-wrapper,
+			.button-group__label,
+			.button-group__suffix {
+				position: var(--button-group-disabled-content-position, relative);
+				z-index: var(--button-group-disabled-content-z-index, 2);
+			}
+
+			&::before,
+			&::after {
+				content: var(--button-group-disabled-stripe-content, '');
+				position: var(--button-group-disabled-stripe-position, absolute);
+				top: var(--button-group-disabled-stripe-top, 0);
+				bottom: var(--button-group-disabled-stripe-bottom, 0);
+				width: var(--button-group-disabled-stripe-width, 16px);
+				background-image: var(--button-group-disabled-stripe-background-image,
+						repeating-linear-gradient(-45deg,
+							transparent,
+							transparent 3px,
+							var(--button-group-internal-disabled-stripe) 2px,
+							var(--button-group-internal-disabled-stripe) 5px));
+				z-index: var(--button-group-disabled-stripe-z-index, 1);
+				pointer-events: var(--button-group-disabled-stripe-pointer-events, none);
+			}
+
+			&::before {
+				left: var(--button-group-disabled-stripe-before-left, 0);
+				mask-image: var(--button-group-disabled-stripe-before-mask-image,
+						linear-gradient(to left, transparent 5%, black 100%));
+			}
+
+			&::after {
+				right: var(--button-group-disabled-stripe-after-right, 0);
+				mask-image: var(--button-group-disabled-stripe-after-mask-image,
+						linear-gradient(to right, transparent 5%, black 100%));
+			}
+		}
+
+		&[aria-busy='true'] {
+			cursor: var(--button-group-loading-cursor, wait);
+		}
+	}
+
+	&__label {
+		display: var(--button-group-label-display, block);
+		min-width: var(--button-group-label-min-width, 0);
+		max-inline-size: var(--button-group-label-max-inline-size, 120px);
+		overflow: var(--button-group-label-overflow, hidden);
+		white-space: var(--button-group-label-white-space, nowrap);
+	}
+
+	&__label[data-label]::before {
+		content: var(--button-group-label-content, attr(data-label));
+	}
+
+	&__tooltip {
+		max-width: var(--button-group-tooltip-max-width, 20rem);
+	}
+
+	// A label can hold a node that draws outside its own box. Clipping cuts that, so this mode stops
+	// clipping instead of marking the cut.
+	&__item[data-text-overflow='visible'] &__label {
+		overflow: var(--button-group-label-overflow, visible);
+	}
+
+	&__item[data-text-overflow='ellipsis'] &__label {
+		text-overflow: var(--button-group-label-text-overflow, ellipsis);
+	}
+
+	&__suffix-slot {
+		display: var(--button-group-suffix-slot-display, contents);
+	}
+
+	&__prefix,
+	&__prefix > svg,
+	&__suffix,
+	&__suffix > svg {
+		flex-shrink: var(--button-group-icon-flex-shrink, 0);
+		inline-size: var(--button-group-internal-icon-size);
+		block-size: var(--button-group-internal-icon-size);
+	}
+
+	&__prefix-wrapper {
+		display: var(--button-group-prefix-wrapper-display, grid);
+		grid-template-columns: var(--button-group-prefix-wrapper-grid-template-columns, 1fr);
+		block-size: var(--button-group-internal-icon-size);
+		align-items: var(--button-group-prefix-wrapper-align-items, center);
+		justify-items: var(--button-group-prefix-wrapper-justify-items, center);
+		flex-shrink: var(--button-group-prefix-wrapper-flex-shrink, 0);
+		overflow: var(--button-group-prefix-wrapper-overflow, hidden);
+		transition: var(--button-group-prefix-wrapper-transition,
+				grid-template-columns var(--button-group-internal-loading-duration) var(--button-group-internal-loading-easing),
+				margin-inline-end var(--button-group-internal-loading-duration) var(--button-group-internal-loading-easing));
+		// Opening up for the spinner is the first beat of the sequence.
+		transition-delay: var(--button-group-prefix-wrapper-transition-delay, 0s);
+	}
+
+	&__item:not([aria-busy='true']) &__prefix-wrapper[data-empty='true'] {
+		grid-template-columns: var(--button-group-prefix-wrapper-empty-grid-template-columns, 0fr);
+		margin-inline-end: var(--button-group-prefix-wrapper-empty-margin-inline-end, calc(-1 * var(--button-group-internal-gap)));
+		// Closing back up is the last beat: wait for the spinner to leave first.
+		transition-delay: var(--button-group-internal-loading-delay);
+	}
+
+	&__prefix-slot,
+	&__loader-slot {
+		grid-area: var(--button-group-slot-grid-area, 1 / 1);
+		display: var(--button-group-slot-display, flex);
+		align-items: var(--button-group-slot-align-items, center);
+		justify-content: var(--button-group-slot-justify-content, center);
+		min-width: var(--button-group-slot-min-width, 0);
+		transition: var(--button-group-slot-transition,
+				opacity var(--button-group-internal-loading-duration) var(--button-group-internal-loading-easing),
+				transform var(--button-group-internal-loading-duration) var(--button-group-internal-loading-easing));
+	}
+
+	&__prefix-slot {
+		opacity: var(--button-group-prefix-slot-opacity, 1);
+		transform: var(--button-group-prefix-slot-transform, translateY(0));
+		transition-delay: var(--button-group-internal-loading-delay);
+	}
+
+	&__loader-slot {
+		--spinner-size: var(--button-group-internal-icon-size);
+		opacity: var(--button-group-loader-slot-opacity, 0);
+		transform: var(--button-group-loader-slot-transform, translateY(var(--button-group-internal-loading-travel)));
+		transition-delay: var(--button-group-loader-slot-transition-delay, 0s);
+	}
+
+	// The spinner stays mounted for the cross-fade, so the ring is frozen while the member is idle
+	// instead of turning behind an invisible slot.
+	&__item:not([aria-busy='true']) &__loader-slot [data-slot='spinner'] {
+		animation-play-state: var(--button-group-loader-idle-animation-play-state, paused);
+	}
+
+	&__item[aria-busy='true'] &__prefix-slot {
+		opacity: var(--button-group-prefix-slot-busy-opacity, 0);
+		transform: var(--button-group-prefix-slot-busy-transform, translateY(calc(-1 * var(--button-group-internal-loading-travel))));
+		transition-delay: var(--button-group-prefix-slot-busy-transition-delay, 0s);
+	}
+
+	&__item[aria-busy='true'] &__loader-slot {
+		opacity: var(--button-group-loader-slot-busy-opacity, 1);
+		transform: var(--button-group-loader-slot-busy-transform, translateY(0));
+		transition-delay: var(--button-group-internal-loading-delay);
+	}
 }
 
-/* Inner buttons share borders (overlap by 1px) and lose corner rounding. */
-.button-group > * {
-	border-radius: 0;
-	position: relative;
-	/* The dashed variant draws its border as an SVG rect, and a single `rx` cannot
-	   express the per-corner rounding a grouped button has. Squaring it off leaves
-	   only the group's two outer corners uncurved, instead of rounding all four. */
-	--button-border-radius: 0;
-}
-
-.button-group > * + * {
-	margin-left: var(--button-group-overlap, -1px);
-}
-
-.button-group > *:first-child {
-	border-top-left-radius: var(--button-group-radius, calc(var(--radius) - 2px));
-	border-bottom-left-radius: var(--button-group-radius, calc(var(--radius) - 2px));
-}
-
-.button-group > *:last-child {
-	border-top-right-radius: var(--button-group-radius, calc(var(--radius) - 2px));
-	border-bottom-right-radius: var(--button-group-radius, calc(var(--radius) - 2px));
-}
-
-/* Bring hovered / focused buttons forward so their borders aren't clipped. */
-.button-group > *:hover,
-.button-group > *:focus,
-.button-group > *:focus-visible,
-.button-group > *:active {
-	z-index: 1;
+@media (prefers-reduced-motion: reduce) {
+	.button-group__prefix-wrapper,
+	.button-group__item:not([aria-busy='true']) .button-group__prefix-wrapper[data-empty='true'],
+	.button-group__prefix-slot,
+	.button-group__loader-slot {
+		transition-duration: 0s;
+		transition-delay: 0s;
+	}
 }
