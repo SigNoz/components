@@ -1,6 +1,6 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { Check, Minus } from '@signozhq/icons';
-import { forwardRef, type ReactElement, type RefAttributes, useId, useMemo } from 'react';
+import { forwardRef, type ReactElement, type RefAttributes, useId, useMemo, useState } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { cn, hasRenderableContent } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
@@ -26,7 +26,6 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		children,
 		tabIndex,
 		color,
-		indeterminate,
 		textOverflow = CheckboxTextOverflow.Ellipsis,
 		disabled,
 		disabledTooltip,
@@ -55,16 +54,23 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 
 	const isReadOnly = readOnly === true;
 
+	// `'indeterminate'` is one more value of `value`, while Base UI splits it into a boolean prop
+	// beside `checked`; the union is unpacked here. An uncontrolled checkbox needs one piece of
+	// state for it: the dash shows until the first toggle, then the internal boolean takes over.
+	const [uncontrolledIndeterminate, setUncontrolledIndeterminate] = useState(
+		defaultValue === 'indeterminate',
+	);
+	const indeterminate = value === undefined ? uncontrolledIndeterminate : value === 'indeterminate';
+
 	// Base UI hands the change two arguments, the value and its event details. The extra argument
 	// stops at this boundary so `onChange` keeps the one-argument shape every input in this
 	// library shares.
 	const onCheckedChange = useMemo(
 		() =>
-			onChange === undefined
-				? undefined
-				: (checked: boolean): void => {
-						onChange(checked);
-					},
+			(checked: boolean): void => {
+				setUncontrolledIndeterminate(false);
+				onChange?.(checked);
+			},
 		[onChange],
 	);
 
@@ -123,8 +129,8 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			data-color={color}
 			className={cn(styles['checkbox'], className)}
 			style={hasContainer ? style : { ...style, ...sizeStyle }}
-			checked={value}
-			defaultChecked={defaultValue}
+			checked={value === undefined ? undefined : value === true}
+			defaultChecked={defaultValue === undefined ? undefined : defaultValue === true}
 			onCheckedChange={onCheckedChange}
 			indeterminate={indeterminate}
 			disabled={isReadOnly ? false : disabled}
@@ -148,7 +154,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 					data-slot="checkbox-indicator"
 					className={styles['checkbox__indicator']}
 				>
-					{indeterminate === true ? <Minus strokeWidth={3} /> : <Check strokeWidth={3} />}
+					{indeterminate ? <Minus strokeWidth={3} /> : <Check strokeWidth={3} />}
 				</CheckboxPrimitive.Indicator>
 			</span>
 		</CheckboxPrimitive.Root>
@@ -231,10 +237,10 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  *
  * ### Indeterminate
  *
- * `indeterminate` shows the mixed state, a dash instead of the check mark, announced as
- * `aria-checked="mixed"`. It is purely visual on top of the checked state: clicking still reports
- * the next boolean through `onChange`, and deriving the mixed state from a tree's children is the
- * call site's job.
+ * `value="indeterminate"` shows the mixed state, a dash instead of the check mark, announced as
+ * `aria-checked="mixed"`. Clicking a mixed checkbox reports `true` through `onChange`; deriving
+ * `'indeterminate'` from a tree's children is the call site's job. An uncontrolled
+ * `defaultValue="indeterminate"` shows the dash until the first toggle.
  *
  * ### Disabled and read-only
  *
@@ -303,8 +309,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * // Select-all over a partly selected list
  * <Checkbox
  *   color="primary"
- *   value={allSelected}
- *   indeterminate={someSelected && !allSelected}
+ *   value={allSelected ? true : someSelected ? 'indeterminate' : false}
  *   onChange={setAllSelected}
  * >
  *   Select all

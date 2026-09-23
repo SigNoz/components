@@ -54,16 +54,15 @@ A bare checkbox has no wrapper and no name of its own, so give it one:
 
 ## Indeterminate
 
-`indeterminate` shows the mixed state: a dash instead of the check mark, announced as
-`aria-checked="mixed"`. It is purely visual on top of the checked state — clicking still reports
-the next boolean through `onChange`, and deriving the mixed state from a tree's children is the
-call site's job:
+`value="indeterminate"` shows the mixed state: a dash instead of the check mark, announced as
+`aria-checked="mixed"`. Clicking a mixed checkbox reports `true` through `onChange`; deriving
+`'indeterminate'` from a tree's children is the call site's job. An uncontrolled
+`defaultValue="indeterminate"` shows the dash until the first toggle.
 
 ```tsx
 <Checkbox
 	color="primary"
-	value={allSelected}
-	indeterminate={someSelected && !allSelected}
+	value={allSelected ? true : someSelected ? 'indeterminate' : false}
 	onChange={setAllSelected}
 >
 	Select all

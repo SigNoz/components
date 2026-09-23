@@ -6,6 +6,12 @@ export type CheckboxTextOverflowType =
 	(typeof CheckboxTextOverflow)[keyof typeof CheckboxTextOverflow];
 
 /**
+ * The checked state: `true`, `false`, or the mixed `'indeterminate'` shown as a dash. One value
+ * rather than a separate boolean prop, so a select-all derives its whole state in one expression.
+ */
+export type CheckboxValueType = boolean | 'indeterminate';
+
+/**
  * `disabled` and `disabledTooltip` travel together, enforced by {@link ValidateCheckboxProps}
  * rather than by a union of the two shapes: a union here would be multiplied by
  * {@link CheckboxReadOnlyType} into a four member cross product that TypeScript cannot narrow
@@ -132,8 +138,8 @@ export type ValidateCheckboxProps<T> = (T extends { disabled: boolean | undefine
 			? unknown
 			: AReadOnlyReasonNeedsAReadOnlyCheckbox
 		: unknown) &
-	(T extends { value: boolean | undefined }
-		? T extends { defaultValue: boolean | undefined }
+	(T extends { value: CheckboxValueType | undefined }
+		? T extends { defaultValue: CheckboxValueType | undefined }
 			? ACheckboxIsControlledOrUncontrolledNeverBoth
 			: unknown
 		: unknown) &
@@ -154,15 +160,6 @@ export type CheckboxProps = Pick<
 		 * statement, so the call site has to make it.
 		 */
 		color: CheckboxColorType;
-		/**
-		 * Shows the mixed state: a dash instead of the check mark, announced as
-		 * `aria-checked="mixed"`. For a parent in a tree whose children are partly selected.
-		 *
-		 * @note Purely visual on top of the checked state. Clicking still reports the next boolean
-		 * through `onChange`; deriving `indeterminate` from the children's state is the call
-		 * site's job.
-		 */
-		indeterminate?: boolean;
 		/**
 		 * Controls how the label behaves when it does not fit.
 		 *
@@ -189,18 +186,24 @@ export type CheckboxProps = Pick<
 		 */
 		required?: boolean;
 		/**
-		 * The controlled checked state.
+		 * The controlled checked state. `'indeterminate'` shows the mixed state: a dash instead
+		 * of the check mark, announced as `aria-checked="mixed"`, for a parent in a tree whose
+		 * children are partly selected.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled checkbox use `defaultValue` instead,
 		 * never both.
+		 *
+		 * @note Clicking a mixed checkbox reports `true` through `onChange`; deriving
+		 * `'indeterminate'` from the children's state is the call site's job.
 		 */
-		value?: boolean;
+		value?: CheckboxValueType;
 		/**
 		 * The checked state on first render, for a checkbox that keeps its own state.
+		 * `'indeterminate'` shows the dash until the first toggle.
 		 *
 		 * @note Use with `onChange`. For a controlled checkbox use `value` instead, never both.
 		 */
-		defaultValue?: boolean;
+		defaultValue?: CheckboxValueType;
 		/**
 		 * Called with the new checked state.
 		 *

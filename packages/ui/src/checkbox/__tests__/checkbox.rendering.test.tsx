@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Checkbox } from '../checkbox.js';
 
@@ -180,7 +181,15 @@ describe('Checkbox rendering', () => {
 
 describe('Checkbox indeterminate', () => {
 	it('announces the mixed state instead of a checked one', () => {
-		render(<Checkbox color="primary" testId="checkbox" aria-label="Select all" indeterminate />);
+		render(
+			<Checkbox
+				color="primary"
+				testId="checkbox"
+				aria-label="Select all"
+				value="indeterminate"
+				onChange={() => {}}
+			/>,
+		);
 
 		const root = screen.getByTestId('checkbox');
 		expect(root).toHaveAttribute('aria-checked', 'mixed');
@@ -190,10 +199,37 @@ describe('Checkbox indeterminate', () => {
 	});
 
 	it('shows the minus glyph, not the check', () => {
-		render(<Checkbox color="primary" aria-label="Select all" indeterminate />);
+		render(
+			<Checkbox
+				color="primary"
+				aria-label="Select all"
+				value="indeterminate"
+				onChange={() => {}}
+			/>,
+		);
 
 		expect(screen.getByTestId('minus')).toBeInTheDocument();
 		expect(screen.queryByTestId('check')).not.toBeInTheDocument();
+	});
+
+	it('an uncontrolled default shows the dash until the first toggle', async () => {
+		const user = userEvent.setup();
+		render(
+			<Checkbox
+				color="primary"
+				testId="checkbox"
+				aria-label="Select all"
+				defaultValue="indeterminate"
+			/>,
+		);
+
+		const root = screen.getByTestId('checkbox');
+		expect(root).toHaveAttribute('aria-checked', 'mixed');
+
+		await user.click(root);
+		expect(root).toHaveAttribute('aria-checked', 'true');
+		expect(root).not.toHaveAttribute('data-indeterminate');
+		expect(screen.getByTestId('check')).toBeInTheDocument();
 	});
 });
 
