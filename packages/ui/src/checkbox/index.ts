@@ -10,6 +10,7 @@
  * | `--checkbox-archive-foreground` | `-` |
  * | `--checkbox-background` | `transparent` |
  * | `--checkbox-border` | `-` |
+ * | `--checkbox-border-color` | `var(--checkbox-border)` |
  * | `--checkbox-border-hover` | `var(--checkbox-internal-hover-border-color)` |
  * | `--checkbox-border-radius` | `var(--radius-1)` |
  * | `--checkbox-border-width` | `1.5px` |
@@ -30,7 +31,8 @@
  * | `--checkbox-disabled-opacity` | `0.6` |
  * | `--checkbox-display` | `inline-flex` |
  * | `--checkbox-flex-shrink` | `0` |
- * | `--checkbox-focus-visible-outline` | `1px solid var(--ring)` |
+ * | `--checkbox-focus-ring` | `-` |
+ * | `--checkbox-focus-visible-outline` | `1px solid var(--checkbox-focus-ring)` |
  * | `--checkbox-focus-visible-outline-offset` | `1px` |
  * | `--checkbox-gap` | `var(--spacing-5)` |
  * | `--checkbox-highlight-danger-background` | `-` |

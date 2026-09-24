@@ -10,7 +10,7 @@
 	--checkbox-internal-hit-area: 2px;
 
 	--checkbox-internal-border-width: var(--checkbox-border-width, 1.5px);
-	--checkbox-internal-border-color: var(--checkbox-border);
+	--checkbox-internal-border-color: var(--checkbox-border-color, var(--checkbox-border));
 
 	display: var(--checkbox-display, inline-flex);
 	flex-shrink: var(--checkbox-flex-shrink, 0);
@@ -72,7 +72,7 @@
 		outline: none;
 
 		.checkbox__box {
-			outline: var(--checkbox-focus-visible-outline, 1px solid var(--ring));
+			outline: var(--checkbox-focus-visible-outline, 1px solid var(--checkbox-focus-ring));
 			outline-offset: var(--checkbox-focus-visible-outline-offset, 1px);
 		}
 	}
