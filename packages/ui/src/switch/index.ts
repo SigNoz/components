@@ -17,21 +17,24 @@
  * | `--switch-cursor` | `pointer` |
  * | `--switch-danger-background` | `-` |
  * | `--switch-danger-hover-background` | `-` |
- * | `--switch-description-color` | `-` |
+ * | `--switch-description` | `-` |
+ * | `--switch-description-color` | `var(--switch-description)` |
  * | `--switch-description-font-size` | `var(--periscope-font-size-base)` |
  * | `--switch-description-line-height` | `18px` |
  * | `--switch-description-overflow` | `hidden` |
  * | `--switch-description-white-space` | `nowrap` |
  * | `--switch-disabled-cursor` | `not-allowed` |
  * | `--switch-disabled-opacity` | `0.6` |
- * | `--switch-focus-visible-outline` | `1px solid var(--ring)` |
+ * | `--switch-focus-ring` | `-` |
+ * | `--switch-focus-visible-outline` | `1px solid var(--switch-focus-ring)` |
  * | `--switch-focus-visible-outline-offset` | `1px` |
  * | `--switch-gap` | `var(--spacing-4)` |
  * | `--switch-highlight-danger-background` | `-` |
  * | `--switch-highlight-danger-hover-background` | `-` |
  * | `--switch-info-background` | `-` |
  * | `--switch-info-hover-background` | `-` |
- * | `--switch-label-color` | `-` |
+ * | `--switch-label` | `-` |
+ * | `--switch-label-color` | `var(--switch-label)` |
  * | `--switch-label-font-size` | `var(--periscope-font-size-base)` |
  * | `--switch-label-font-weight` | `var(--font-weight-normal)` |
  * | `--switch-label-line-height` | `18px` |
@@ -53,6 +56,7 @@
  * | `--switch-text-text-overflow` | `ellipsis` |
  * | `--switch-text-transition` | `opacity 150ms ease` |
  * | `--switch-thumb-background` | `-` |
+ * | `--switch-thumb-background-color` | `var(--switch-thumb-background)` |
  * | `--switch-thumb-border-radius` | `var(--radius-round)` |
  * | `--switch-thumb-hover-extend` | `2px` |
  * | `--switch-thumb-inset` | `2px` |
@@ -62,8 +66,10 @@
  * | `--switch-thumb-size` | `12px` |
  * | `--switch-thumb-transition` | `translate 150ms ease-out, 			inline-size 150ms ...` |
  * | `--switch-track-background` | `-` |
+ * | `--switch-track-background-color` | `var(--switch-track-background)` |
  * | `--switch-track-height` | `16px` |
  * | `--switch-track-hover-background` | `-` |
+ * | `--switch-track-hover-background-color` | `var(--switch-track-hover-background)` |
  * | `--switch-track-width` | `28px` |
  * | `--switch-transition` | `background-color 150ms ease` |
  * | `--switch-warning-background` | `-` |
