@@ -25,6 +25,8 @@
 	border-width: var(--button-base-border-width, 0px);
 	width: var(--button-width, var(--button-internal-width, auto));
 	max-width: var(--button-max-width, var(--button-internal-max-width, 100%));
+	min-width: var(--button-min-width, var(--button-internal-min-width, auto));
+	flex-shrink: var(--button-flex-shrink, var(--button-internal-flex-shrink, 1));
 
 	--button-internal-loading-duration: var(--button-loading-duration, 120ms);
 	--button-internal-loading-delay: var(--button-loading-delay, var(--button-internal-loading-duration));
@@ -138,6 +140,16 @@
 
 	&[data-text-overflow='ellipsis'] .button__label {
 		text-overflow: var(--button-label-text-overflow, ellipsis);
+	}
+
+	// A flex item never shrinks below its content, so the label could not truncate inside a row.
+	&[data-text-overflow='ellipsis'] {
+		--button-internal-min-width: 0;
+	}
+
+	// The icon button has a fixed size, so shrinking it in a row only squeezes the icon.
+	&[data-icon='true'] {
+		--button-internal-flex-shrink: 0;
 	}
 
 	&[data-variant='outlined'] {

@@ -117,6 +117,10 @@
   align-items: center;
   justify-content: center;
 
+  // The variant rules outrank this class, so their position goes through their own custom property.
+  --button-variant-ghost-position: absolute;
+  --button-variant-dashed-position: absolute;
+  --button-variant-outlined-disabled-position: absolute;
   position: absolute;
   top: var(--spacing-4, .5rem);
   right: var(--spacing-4, .5rem);
