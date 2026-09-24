@@ -17,7 +17,6 @@
  * | `--date-picker-field-gap` | `var(--spacing-4, 8px)` |
  * | `--date-picker-field-input-width` | `50%` |
  * | `--date-picker-icon-color` | `var(--l2-foreground)` |
- * | `--date-picker-icon-size` | `16px` |
  * | `--date-picker-label-color` | `var(--l2-foreground)` |
  * | `--date-picker-label-font-size` | `12px` |
  * | `--date-picker-label-font-weight` | `400` |

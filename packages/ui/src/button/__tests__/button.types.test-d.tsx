@@ -337,6 +337,21 @@ describe('unknown props', () => {
 			</Button>,
 		);
 	});
+
+	test('rejects className and style, the look comes from the props and tokens', () => {
+		assertType(
+			// @ts-expect-error - `className` is not a prop
+			<Button size="md" variant="solid" color="primary" className="x">
+				Label
+			</Button>,
+		);
+		assertType(
+			// @ts-expect-error - `style` is not a prop
+			<Button size="md" variant="solid" color="primary" style={{}}>
+				Label
+			</Button>,
+		);
+	});
 });
 
 describe('remaining props', () => {

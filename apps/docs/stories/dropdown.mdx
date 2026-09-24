@@ -90,9 +90,8 @@ tooltip would never open.
 
 ## Popup props
 
-Props written on the menu describe the popup, not the trigger. `aria-*`, `data-*`, `className` and
-`style` all land on the popup, because it is portalled out of your tree and you cannot reach it any
-other way. Anything meant for the trigger goes on the trigger itself. `testId` is the one exception.
+Props written on the menu describe the popup, not the trigger. `aria-*` and `data-*` land on the
+popup, because it is portalled out of your tree and you cannot reach it any other way. Anything meant for the trigger goes on the trigger itself. `testId` is the one exception.
 
 Two common reasons to pass them:
 
@@ -101,11 +100,8 @@ Two common reasons to pass them:
 - `data-*` for an outside-click guard that reads `closest()`. The popup is not inside the element
   the guard watches.
 
-`className` and `style` reach every submenu popup too. Submenus are portalled beside the menu, so no
-selector of yours would span both otherwise.
-
 ```tsx
-<Dropdown className={styles.aboveFloatingPanel} aria-label="Row actions" {...rest}>
+<Dropdown aria-label="Row actions" {...rest}>
 	<Button variant="ghost" color="secondary" size="md" icon aria-label="Row actions">
 		<Ellipsis />
 	</Button>

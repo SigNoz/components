@@ -2,6 +2,7 @@ import { ChevronDown } from '@signozhq/icons';
 import {
 	Button,
 	ButtonColor,
+	ButtonTextOverflow,
 	ButtonVariant,
 	Calendar,
 	Input,
@@ -17,6 +18,10 @@ import { popoverArgTypes } from './shared/popover-arg-types.js';
 
 const SIDES = ['top', 'right', 'bottom', 'left'] as const;
 const ALIGNS = ['start', 'center', 'end'] as const;
+
+function capitalize(word: string): string {
+	return word.charAt(0).toUpperCase() + word.slice(1);
+}
 
 const meta: Meta<typeof Popover> = {
 	title: 'Primitive Components/Popover',
@@ -102,14 +107,14 @@ export const DateAndTimePicker: Story = {
 					<Popover open={open} onOpenChange={setOpen}>
 						<PopoverTrigger asChild>
 							<Button
-								variant={ButtonVariant.Solid}
-								color={ButtonColor.Primary}
+								variant={ButtonVariant.Outlined}
+								color={ButtonColor.Secondary}
 								id="date-picker"
-								className={styles.datePickerTrigger}
+								textOverflow={ButtonTextOverflow.Visible}
 								size="md"
+								suffix={<ChevronDown size={16} />}
 							>
 								{date ? `${date.toLocaleDateString()} : ${time}` : 'Select date'}
-								<ChevronDown size={16} />
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className={styles.datePickerContent} align="start">
@@ -158,13 +163,8 @@ export const PopoverShowcase: Story = {
 						{SIDES.map((side) => (
 							<Popover key={side}>
 								<PopoverTrigger asChild>
-									<Button
-										variant={ButtonVariant.Solid}
-										color={ButtonColor.Secondary}
-										className={styles.capitalizedButton}
-										size="md"
-									>
-										{side}
+									<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="md">
+										{capitalize(side)}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent side={side} arrow>
@@ -183,13 +183,8 @@ export const PopoverShowcase: Story = {
 						{ALIGNS.map((align) => (
 							<Popover key={align}>
 								<PopoverTrigger asChild>
-									<Button
-										variant={ButtonVariant.Solid}
-										color={ButtonColor.Secondary}
-										className={styles.capitalizedButton}
-										size="md"
-									>
-										{align}
+									<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size="md">
+										{capitalize(align)}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent side="top" align={align} arrow>

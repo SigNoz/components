@@ -12,9 +12,6 @@
 }
 
 .datePicker__triggerIcon {
-	flex-shrink: 0;
-	width: var(--date-picker-icon-size, 16px);
-	height: var(--date-picker-icon-size, 16px);
 	color: var(--date-picker-icon-color, var(--l2-foreground));
 }
 

@@ -31,18 +31,12 @@ export type DropdownContextValue = {
 	 */
 	container: Menu.Portal.Props['container'];
 	/**
-	 * The consumer's `style`, plus the size custom properties `contentMaxWidth` and
-	 * `contentMaxHeight` wrote.
+	 * The size custom properties `contentMaxWidth` and `contentMaxHeight` wrote.
 	 *
 	 * A submenu is portalled to the same container rather than nested inside the menu's popup, so
 	 * nothing cascades into it. It is handed the same declarations instead.
 	 */
 	popupStyle: CSSProperties | undefined;
-	/**
-	 * The consumer's `className`, for the same reason: a rule written for the menu has to reach
-	 * the submenu popups too, and no selector spans two portals.
-	 */
-	popupClassName: string | undefined;
 };
 
 const NOT_IN_A_DROPDOWN: DropdownContextValue = {
@@ -52,7 +46,6 @@ const NOT_IN_A_DROPDOWN: DropdownContextValue = {
 	rememberSelection: (): void => {},
 	container: undefined,
 	popupStyle: undefined,
-	popupClassName: undefined,
 };
 
 const DropdownContext = createContext<DropdownContextValue>(NOT_IN_A_DROPDOWN);

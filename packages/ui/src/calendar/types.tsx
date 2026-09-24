@@ -19,7 +19,32 @@ type OriginalWeekNumberProps = ComponentProps<typeof WeekNumber>;
 export type CalendarButtonVariantType =
 	(typeof CalendarButtonVariant)[keyof typeof CalendarButtonVariant];
 
-export type CalendarProps = DayPickerProps & {
+/**
+ * The react-day-picker props that restyle the calendar from the call site.
+ *
+ * @access private
+ */
+type DayPickerStyleProp =
+	| 'className'
+	| 'classNames'
+	| 'style'
+	| 'styles'
+	| 'modifiersClassNames'
+	| 'modifiersStyles';
+
+/**
+ * `DayPickerProps` without {@link DayPickerStyleProp}. Omitted per member, since `DayPickerProps`
+ * is a union over `mode` and a plain `Omit` would collapse it.
+ *
+ * @access private
+ */
+type CalendarDayPickerProps = DayPickerProps extends infer Props
+	? Props extends unknown
+		? Omit<Props, DayPickerStyleProp>
+		: never
+	: never;
+
+export type CalendarProps = CalendarDayPickerProps & {
 	/**
 	 * What `selected` and `onSelect` are: one `Date`, a `Date[]` or a `DateRange`.
 	 *

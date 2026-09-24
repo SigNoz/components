@@ -201,14 +201,23 @@ describe('remaining props', () => {
 		);
 		assertType(<Checkbox color="primary" tabIndex={-1} />);
 		assertType(<Checkbox color="primary" width={240} maxWidth="100%" />);
-		assertType(
-			<Checkbox color="primary" containerId="row" containerClassName="row" containerStyle={{}} />,
-		);
+		assertType(<Checkbox color="primary" containerId="row" />);
 		assertType(
 			<Checkbox color="primary" containerRef={containerRef}>
 				Accept the terms
 			</Checkbox>,
 		);
+	});
+
+	test('rejects className and style on the checkbox and on its wrapper', () => {
+		// @ts-expect-error - `className` is not a prop
+		assertType(<Checkbox color="primary" className="x" />);
+		// @ts-expect-error - `style` is not a prop
+		assertType(<Checkbox color="primary" style={{}} />);
+		// @ts-expect-error - `containerClassName` is not a prop
+		assertType(<Checkbox color="primary" containerClassName="x" />);
+		// @ts-expect-error - `containerStyle` is not a prop
+		assertType(<Checkbox color="primary" containerStyle={{}} />);
 	});
 
 	test('accepts the full shape at once', () => {

@@ -198,7 +198,7 @@ export type ValidateRadioGroupProps<T> = (T extends { disabled: boolean | undefi
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
+export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes &
 	RadioGroupDisableType &
 	RadioGroupReadOnlyType & {

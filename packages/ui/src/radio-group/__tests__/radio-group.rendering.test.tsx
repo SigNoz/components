@@ -67,15 +67,13 @@ describe('RadioGroup rendering', () => {
 		);
 	});
 
-	it('forwards id, className, style, aria and data attributes to the root', () => {
+	it('forwards id, aria and data attributes to the root', () => {
 		render(
 			<RadioGroup
 				color="primary"
 				items={ITEMS}
 				testId="group"
 				id="environment"
-				className="custom"
-				style={{ gap: '10px' }}
 				aria-label="Environment"
 				data-analytics="env-picker"
 			/>,
@@ -83,8 +81,6 @@ describe('RadioGroup rendering', () => {
 
 		const group = screen.getByTestId('group');
 		expect(group).toHaveAttribute('id', 'environment');
-		expect(group).toHaveClass('custom');
-		expect(group).toHaveStyle({ gap: '10px' });
 		expect(group).toHaveAttribute('aria-label', 'Environment');
 		expect(group).toHaveAttribute('data-analytics', 'env-picker');
 	});

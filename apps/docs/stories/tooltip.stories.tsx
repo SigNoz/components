@@ -82,17 +82,6 @@ const meta: Meta<typeof Tooltip> = {
 				'The element this tooltip is portalled into. Defaults to the one the surrounding TooltipProvider set, and to `document.body` without one.',
 			table: { category: 'Behavior', type: { summary: 'HTMLElement | ShadowRoot | RefObject' } },
 		},
-		className: {
-			control: 'text',
-			description:
-				'Class name of the tooltip content. Merges with the styles of the component instead of replacing them.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		style: {
-			control: false,
-			description: 'Inline styles of the tooltip content.',
-			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
-		},
 		id: {
 			control: 'text',
 			description: 'Id of the tooltip content. One is generated when it is left out.',
@@ -227,6 +216,25 @@ const LIFTED_CAPS = {
 } as CSSProperties;
 
 /**
+ * The popup is portalled, so the tokens cannot reach it from an ancestor of the trigger. It is
+ * portalled into the element that carries them instead, held in state for the same reason as
+ * `ContainerDemo` below.
+ */
+function LiftedCapsDemo(): ReactElement {
+	const [host, setHost] = useState<HTMLDivElement | null>(null);
+
+	return (
+		<div ref={setHost} style={LIFTED_CAPS}>
+			<Tooltip open title={<MetricCard wide />} side="bottom" align="start" container={host}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size={ButtonSize.MD}>
+					Same card, caps lifted
+				</Button>
+			</Tooltip>
+		</div>
+	);
+}
+
+/**
  * The tooltip is portalled into the panel instead of `document.body`, which is what keeps one
  * inside a dialog or a drawer. The element only exists after the first render, so it is held in
  * state rather than a ref.
@@ -355,8 +363,8 @@ export const TooltipShowcase: Story = {
 						the popup grows as tall as the card. Width is the cap that still bites: past{' '}
 						<code>26.25rem</code> the popup clips the card, and it has no scrollbar to reach the
 						rest with. Lift both <code>--tooltip-width</code> and <code>--tooltip-max-width</code>{' '}
-						to let the popup measure the card, or move the content to a popover once it is large
-						enough to read rather than glance at.
+						on the element the popup is portalled into to let it measure the card, or move the
+						content to a popover once it is large enough to read rather than glance at.
 					</Typography>
 					<div className={styles.elementColumn}>
 						<Tooltip open title={<MetricCard />} side="bottom" align="start">
@@ -377,21 +385,7 @@ export const TooltipShowcase: Story = {
 								Card wider than the cap
 							</Button>
 						</Tooltip>
-						<Tooltip
-							open
-							title={<MetricCard wide />}
-							side="bottom"
-							align="start"
-							style={LIFTED_CAPS}
-						>
-							<Button
-								variant={ButtonVariant.Solid}
-								color={ButtonColor.Secondary}
-								size={ButtonSize.MD}
-							>
-								Same card, caps lifted
-							</Button>
-						</Tooltip>
+						<LiftedCapsDemo />
 					</div>
 				</div>
 

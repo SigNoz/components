@@ -39,24 +39,6 @@ describe('Switch width and maxWidth', () => {
 		).toBe('160px');
 	});
 
-	it('composes with a consumer style instead of replacing it', () => {
-		render(
-			<Switch
-				color="primary"
-				textPlacement="right"
-				containerTestId="container"
-				width={240}
-				containerStyle={{ marginBlock: '12px' }}
-			>
-				Wrap text
-			</Switch>,
-		);
-
-		const container = screen.getByTestId('container');
-		expect(container.style.getPropertyValue('--switch-internal-width')).toBe('240px');
-		expect(container).toHaveStyle({ marginBlock: '12px' });
-	});
-
 	it('lands on the bare switch when there is no wrapper, without resizing the track', () => {
 		render(
 			<Switch

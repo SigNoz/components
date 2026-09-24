@@ -151,17 +151,6 @@ const meta: Meta<typeof Checkbox> = {
 			description: 'Forwarded to the `<label>` wrapper as `data-testid`.',
 			table: { category: 'Testing' },
 		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for the checkbox itself.',
-			table: { category: 'Styling' },
-		},
-		containerClassName: {
-			control: 'text',
-			description:
-				'Additional CSS classes for the wrapper. Any `container*` prop forces the wrapper to render even with no label.',
-			table: { category: 'Styling' },
-		},
 		id: {
 			control: 'text',
 			description:

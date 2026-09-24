@@ -220,4 +220,11 @@ describe('unknown props', () => {
 		// @ts-expect-error - `onChage` is not a prop, a generic `T extends RadioGroupProps` would let it through
 		assertType(<RadioGroup color="primary" items={ITEMS} onChage={noop} />);
 	});
+
+	test('rejects className and style, the look comes from the props and tokens', () => {
+		// @ts-expect-error - `className` is not a prop
+		assertType(<RadioGroup color="primary" items={ITEMS} className="x" />);
+		// @ts-expect-error - `style` is not a prop
+		assertType(<RadioGroup color="primary" items={ITEMS} style={{}} />);
+	});
 });

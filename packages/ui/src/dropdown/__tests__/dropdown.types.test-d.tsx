@@ -42,6 +42,21 @@ describe('root props', () => {
 		);
 	});
 
+	test('rejects className and style, the look comes from the props and tokens', () => {
+		assertType(
+			// @ts-expect-error - `className` is not a prop
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} className="x">
+				{btn}
+			</Dropdown>,
+		);
+		assertType(
+			// @ts-expect-error - `style` is not a prop
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} style={{}}>
+				{btn}
+			</Dropdown>,
+		);
+	});
+
 	test('rejects a menu with no side', () => {
 		assertType(
 			// @ts-expect-error - placement is never incidental, the call site states it

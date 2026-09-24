@@ -270,17 +270,10 @@ describe('Tooltip stacked content lifecycle', () => {
 });
 
 describe('Tooltip stacked props', () => {
-	it('puts className, style, id, testId and data-* on the trigger element it clones', () => {
+	it('puts id, testId and data-* on the trigger element it clones', () => {
 		render(
 			<Tooltip title="Outer title">
-				<Tooltip
-					title="Inner title"
-					className="inner-class"
-					style={{ color: 'red' }}
-					id="inner-id"
-					testId="inner"
-					data-inner="yes"
-				>
+				<Tooltip title="Inner title" id="inner-id" testId="inner" data-inner="yes">
 					<button type="button" className="own-class">
 						Hover
 					</button>
@@ -289,8 +282,7 @@ describe('Tooltip stacked props', () => {
 		);
 
 		const trigger = screen.getByRole('button');
-		expect(trigger).toHaveClass('own-class', 'inner-class');
-		expect(trigger).toHaveStyle({ color: 'rgb(255, 0, 0)' });
+		expect(trigger).toHaveClass('own-class');
 		expect(trigger).toHaveAttribute('id', 'inner-id');
 		expect(trigger).toHaveAttribute('data-testid', 'inner');
 		expect(trigger).toHaveAttribute('data-inner', 'yes');
@@ -324,7 +316,7 @@ describe('Tooltip stacked props', () => {
 
 	it('keeps the props of the wrapping tooltip on the popup', () => {
 		render(
-			<Tooltip open title="Outer title" testId="outer" className="outer-class">
+			<Tooltip open title="Outer title" testId="outer">
 				<Tooltip title="Inner title" testId="inner">
 					<button type="button">Hover</button>
 				</Tooltip>
@@ -333,7 +325,6 @@ describe('Tooltip stacked props', () => {
 
 		const tooltip = screen.getByRole('tooltip');
 		expect(tooltip).toHaveAttribute('data-testid', 'outer');
-		expect(tooltip).toHaveClass('outer-class');
 		expect(screen.getByRole('button')).toHaveAttribute('data-testid', 'inner');
 	});
 
