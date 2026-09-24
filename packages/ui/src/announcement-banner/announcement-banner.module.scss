@@ -17,7 +17,7 @@
     .banner__action,
     .banner__dismiss {
       --button-primary-background: var(--callout-warning-border);
-      --button-primary-hover-background: color-mix(in srgb, var(--callout-warning-border) 60%, transparent);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-warning-border) 60%, transparent);
       --button-primary-solid-foreground: var(--callout-warning-title);
     }
   }
@@ -29,7 +29,7 @@
     .banner__action,
     .banner__dismiss {
       --button-primary-background: var(--callout-primary-border);
-      --button-primary-hover-background: color-mix(in srgb, var(--callout-primary-border) 60%, transparent);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-primary-border) 60%, transparent);
       --button-primary-solid-foreground: var(--callout-primary-title);
     }
   }
@@ -41,7 +41,7 @@
     .banner__action,
     .banner__dismiss {
       --button-primary-background: var(--callout-error-border);
-      --button-primary-hover-background: color-mix(in srgb, var(--callout-error-border) 60%, transparent);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-error-border) 60%, transparent);
       --button-primary-solid-foreground: var(--callout-error-title);
     }
   }
@@ -53,7 +53,7 @@
     .banner__action,
     .banner__dismiss {
       --button-primary-background: var(--callout-success-border);
-      --button-primary-hover-background: color-mix(in srgb, var(--callout-success-border) 60%, transparent);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-success-border) 60%, transparent);
       --button-primary-solid-foreground: var(--callout-success-title);
     }
   }
