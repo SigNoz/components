@@ -25,27 +25,23 @@
   overflow: var(--toggle-group-overflow, hidden);
 
   &[data-variant='outlined'][data-color='secondary'] {
-    --toggle-group-internal-background: var(--toggle-group-secondary-outlined-background);
-    --toggle-group-internal-background-hover: var(
-      --toggle-group-secondary-outlined-background-hover
-    );
-    --toggle-group-internal-background-pressed: var(
-      --toggle-group-secondary-outlined-background-active
-    );
-    --toggle-group-internal-label: var(--toggle-group-secondary-outlined-label);
-    --toggle-group-internal-label-hover: var(--toggle-group-secondary-outlined-label-hover);
-    --toggle-group-internal-label-pressed: var(--toggle-group-secondary-outlined-label-active);
-    --toggle-group-internal-label-disabled: var(--toggle-group-secondary-outlined-label-disabled);
+    --toggle-group-internal-background: var(--toggle-group-secondary-outlined-background-color, var(--toggle-group-secondary-outlined-background));
+    --toggle-group-internal-background-hover: var(--toggle-group-secondary-outlined-hover-background-color, var(--toggle-group-secondary-outlined-background-hover));
+    --toggle-group-internal-background-pressed: var(--toggle-group-secondary-outlined-pressed-background-color, var(--toggle-group-secondary-outlined-background-active));
+    --toggle-group-internal-label: var(--toggle-group-secondary-outlined-color, var(--toggle-group-secondary-outlined-label));
+    --toggle-group-internal-label-hover: var(--toggle-group-secondary-outlined-hover-color, var(--toggle-group-secondary-outlined-label-hover));
+    --toggle-group-internal-label-pressed: var(--toggle-group-secondary-outlined-pressed-color, var(--toggle-group-secondary-outlined-label-active));
+    --toggle-group-internal-label-disabled: var(--toggle-group-secondary-outlined-disabled-color, var(--toggle-group-secondary-outlined-label-disabled));
   }
 
   // Both sizes are 32px tall and differ in horizontal padding alone. `md` is roughly triple `sm`,
   // which is what makes it a two- or three-option control rather than a toolbar one.
   &[data-size='sm'] {
-    --toggle-group-internal-button-padding-inline: var(--spacing-6);
+    --toggle-group-internal-button-padding-inline: var(--toggle-group-sm-button-padding-inline, var(--spacing-6));
   }
 
   &[data-size='md'] {
-    --toggle-group-internal-button-padding-inline: var(--spacing-12);
+    --toggle-group-internal-button-padding-inline: var(--toggle-group-md-button-padding-inline, var(--spacing-12));
   }
 
   &[data-disabled] {
@@ -174,7 +170,7 @@
   }
 
   &:focus-visible {
-    outline: var(--toggle-group-button-focus-visible-outline, var(--ring) solid 1px);
+    outline: var(--toggle-group-button-focus-visible-outline, var(--toggle-group-focus-ring) solid 1px);
     // Inwards: the bar clips at its border, and an outset ring would be cut in half.
     outline-offset: var(--toggle-group-button-focus-visible-outline-offset, -2px);
   }
@@ -281,7 +277,7 @@
   }
 
   &:focus-visible {
-    outline: var(--toggle-group-scroll-button-focus-visible-outline, var(--ring) solid 1px);
+    outline: var(--toggle-group-scroll-button-focus-visible-outline, var(--toggle-group-focus-ring) solid 1px);
     outline-offset: var(--toggle-group-scroll-button-focus-visible-outline-offset, -2px);
   }
 
