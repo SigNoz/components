@@ -107,7 +107,7 @@
   height: fit-content;
   gap: var(--dialog-header-gap, var(--spacing-2, 0.25rem));
 
-  .dialog__close__icon_button ~ & {
+  &--with-close {
     padding-right: calc((var(--spacing-8, 1rem) * 2) + var(--dialog-close-button-size, 2rem));
   }
 }
@@ -117,10 +117,6 @@
   align-items: center;
   justify-content: center;
 
-  // The variant rules outrank this class, so their position goes through their own custom property.
-  --button-variant-ghost-position: absolute;
-  --button-variant-dashed-position: absolute;
-  --button-variant-outlined-disabled-position: absolute;
   position: absolute;
   top: var(--spacing-4, .5rem);
   right: var(--spacing-4, .5rem);
