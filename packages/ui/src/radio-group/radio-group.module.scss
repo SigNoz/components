@@ -6,9 +6,9 @@
 	gap: var(--radio-group-internal-gap);
 
 	--radio-group-internal-border-width: var(--radio-group-border-width, 2px);
-	--radio-group-internal-border-color: var(--radio-group-border);
-	--radio-group-internal-label-color: var(--radio-group-label);
-	--radio-group-internal-label-hover-color: var(--radio-group-label-hover);
+	--radio-group-internal-border-color: var(--radio-group-border-color, var(--radio-group-border));
+	--radio-group-internal-label-color: var(--radio-group-label-color, var(--radio-group-label));
+	--radio-group-internal-label-hover-color: var(--radio-group-label-hover-color, var(--radio-group-label-hover));
 
 	// The one scale the design spec draws: a 16px dial around an 8px dot, which leaves a 2px ring of
 	// background between the border and the dot. A surface that needs a denser group overrides the
@@ -21,51 +21,51 @@
 	--radio-group-internal-label-line-height: var(--radio-group-label-line-height, 18px);
 
 	&[data-color='primary'] {
-		--radio-group-internal-checked-background: var(--radio-group-primary-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-primary-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-primary-dot);
+		--radio-group-internal-checked-background: var(--radio-group-primary-checked-background-color, var(--radio-group-primary-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-primary-hover-border-color, var(--radio-group-primary-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-primary-dot-color, var(--radio-group-primary-dot));
 	}
 
 	&[data-color='secondary'] {
-		--radio-group-internal-checked-background: var(--radio-group-secondary-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-secondary-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-secondary-dot);
+		--radio-group-internal-checked-background: var(--radio-group-secondary-checked-background-color, var(--radio-group-secondary-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-secondary-hover-border-color, var(--radio-group-secondary-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-secondary-dot-color, var(--radio-group-secondary-dot));
 	}
 
 	&[data-color='success'] {
-		--radio-group-internal-checked-background: var(--radio-group-success-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-success-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-success-dot);
+		--radio-group-internal-checked-background: var(--radio-group-success-checked-background-color, var(--radio-group-success-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-success-hover-border-color, var(--radio-group-success-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-success-dot-color, var(--radio-group-success-dot));
 	}
 
 	&[data-color='warning'] {
-		--radio-group-internal-checked-background: var(--radio-group-warning-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-warning-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-warning-dot);
+		--radio-group-internal-checked-background: var(--radio-group-warning-checked-background-color, var(--radio-group-warning-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-warning-hover-border-color, var(--radio-group-warning-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-warning-dot-color, var(--radio-group-warning-dot));
 	}
 
 	&[data-color='danger'] {
-		--radio-group-internal-checked-background: var(--radio-group-danger-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-danger-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-danger-dot);
+		--radio-group-internal-checked-background: var(--radio-group-danger-checked-background-color, var(--radio-group-danger-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-danger-hover-border-color, var(--radio-group-danger-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-danger-dot-color, var(--radio-group-danger-dot));
 	}
 
 	&[data-color='info'] {
-		--radio-group-internal-checked-background: var(--radio-group-info-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-info-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-info-dot);
+		--radio-group-internal-checked-background: var(--radio-group-info-checked-background-color, var(--radio-group-info-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-info-hover-border-color, var(--radio-group-info-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-info-dot-color, var(--radio-group-info-dot));
 	}
 
 	&[data-color='archive'] {
-		--radio-group-internal-checked-background: var(--radio-group-archive-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-archive-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-archive-dot);
+		--radio-group-internal-checked-background: var(--radio-group-archive-checked-background-color, var(--radio-group-archive-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-archive-hover-border-color, var(--radio-group-archive-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-archive-dot-color, var(--radio-group-archive-dot));
 	}
 
 	&[data-color='highlight-danger'] {
-		--radio-group-internal-checked-background: var(--radio-group-highlight-danger-background);
-		--radio-group-internal-hover-border-color: var(--radio-group-highlight-danger-border-hover);
-		--radio-group-internal-dot-color: var(--radio-group-highlight-danger-dot);
+		--radio-group-internal-checked-background: var(--radio-group-highlight-danger-checked-background-color, var(--radio-group-highlight-danger-background));
+		--radio-group-internal-hover-border-color: var(--radio-group-highlight-danger-hover-border-color, var(--radio-group-highlight-danger-border-hover));
+		--radio-group-internal-dot-color: var(--radio-group-highlight-danger-dot-color, var(--radio-group-highlight-danger-dot));
 	}
 
 	&[data-text-overflow='wrap'] .radio-group__label {
@@ -160,7 +160,7 @@
 	// without it the selection looks like it is changing at random. It is a circle rather than a
 	// rounded square because it follows the dial's own shape.
 	&:focus-visible {
-		outline: var(--radio-group-focus-visible-outline, 1px solid var(--ring));
+		outline: var(--radio-group-focus-visible-outline, 1px solid var(--radio-group-focus-ring));
 		outline-offset: var(--radio-group-focus-visible-outline-offset, 1px);
 	}
 }
