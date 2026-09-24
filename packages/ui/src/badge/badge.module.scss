@@ -23,59 +23,68 @@
 	gap: var(--badge-label-gap, var(--spacing-2));
 
 	&[data-color='primary'] {
-		--badge-internal-background: var(--badge-primary-background, var(--primary-background));
-		--badge-internal-foreground: var(--badge-primary-foreground, var(--primary-foreground));
-		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-primary-outlined-background) 20%, transparent);
-		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-primary-outlined-border) 40%, transparent);
-		--badge-internal-outlined-foreground: var(--badge-primary-outlined-label);
+		--badge-internal-background: var(--badge-primary-background-color, var(--badge-primary-background));
+		--badge-internal-foreground: var(--badge-primary-color, var(--badge-primary-foreground));
+		--badge-internal-outlined-background: var(--badge-primary-outlined-background-color, color-mix(in oklab, var(--badge-primary-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-primary-outlined-border-color, color-mix(in oklab, var(--badge-primary-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-primary-outlined-color, var(--badge-primary-outlined-label));
 	}
 
 	&[data-color='secondary'] {
-		--badge-internal-background: var(--badge-secondary-background, var(--surface-3));
-		--badge-internal-foreground: var(--badge-secondary-foreground, var(--secondary-foreground));
-		--badge-internal-border-color: var(--badge-secondary-border-color, var(--secondary-border));
-		--badge-internal-outlined-background: var(--badge-secondary-outlined-background);
-		--badge-internal-outlined-border: var(--badge-secondary-outlined-border);
-		--badge-internal-outlined-foreground: var(--badge-secondary-outlined-label);
+		--badge-internal-background: var(--badge-secondary-background-color, var(--badge-secondary-background));
+		--badge-internal-foreground: var(--badge-secondary-color, var(--badge-secondary-foreground));
+		--badge-internal-border-color: var(--badge-secondary-border-color, var(--badge-secondary-border));
+		--badge-internal-outlined-background: var(--badge-secondary-outlined-background-color, var(--badge-secondary-outlined-background));
+		--badge-internal-outlined-border: var(--badge-secondary-outlined-border-color, var(--badge-secondary-outlined-border));
+		--badge-internal-outlined-foreground: var(--badge-secondary-outlined-color, var(--badge-secondary-outlined-label));
 	}
 
 	&[data-color='danger'] {
-		--badge-internal-background: var(--badge-danger-background, var(--danger-background));
-		--badge-internal-foreground: var(--badge-danger-foreground, var(--danger-foreground));
-		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-danger-outlined-background) 20%, transparent);
-		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-danger-outlined-border) 40%, transparent);
-		--badge-internal-outlined-foreground: var(--badge-danger-outlined-label);
+		--badge-internal-background: var(--badge-danger-background-color, var(--badge-danger-background));
+		--badge-internal-foreground: var(--badge-danger-color, var(--badge-danger-foreground));
+		--badge-internal-outlined-background: var(--badge-danger-outlined-background-color, color-mix(in oklab, var(--badge-danger-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-danger-outlined-border-color, color-mix(in oklab, var(--badge-danger-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-danger-outlined-color, var(--badge-danger-outlined-label));
 	}
 
 	&[data-color='warning'] {
-		--badge-internal-background: var(--badge-warning-background, var(--warning-background));
-		--badge-internal-foreground: var(--badge-warning-foreground, var(--warning-foreground));
-		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-warning-outlined-background) 20%, transparent);
-		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-warning-outlined-border) 40%, transparent);
-		--badge-internal-outlined-foreground: var(--badge-warning-outlined-label);
+		--badge-internal-background: var(--badge-warning-background-color, var(--badge-warning-background));
+		--badge-internal-foreground: var(--badge-warning-color, var(--badge-warning-foreground));
+		--badge-internal-outlined-background: var(--badge-warning-outlined-background-color, color-mix(in oklab, var(--badge-warning-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-warning-outlined-border-color, color-mix(in oklab, var(--badge-warning-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-warning-outlined-color, var(--badge-warning-outlined-label));
 	}
 
 	&[data-color='success'] {
-		--badge-internal-background: var(--badge-success-background, var(--success-background));
-		--badge-internal-foreground: var(--badge-success-foreground, var(--success-foreground));
-		--badge-internal-outlined-background: color-mix(in oklab, var(--badge-success-outlined-background) 20%, transparent);
-		--badge-internal-outlined-border: color-mix(in oklab, var(--badge-success-outlined-border) 40%, transparent);
-		--badge-internal-outlined-foreground: var(--badge-success-outlined-label);
+		--badge-internal-background: var(--badge-success-background-color, var(--badge-success-background));
+		--badge-internal-foreground: var(--badge-success-color, var(--badge-success-foreground));
+		--badge-internal-outlined-background: var(--badge-success-outlined-background-color, color-mix(in oklab, var(--badge-success-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-success-outlined-border-color, color-mix(in oklab, var(--badge-success-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-success-outlined-color, var(--badge-success-outlined-label));
 	}
 
 	&[data-color='info'] {
-		--badge-internal-background: var(--badge-info-background, var(--bg-aqua-500));
-		--badge-internal-foreground: var(--badge-info-foreground, var(--text-ink-500));
+		--badge-internal-background: var(--badge-info-background-color, var(--badge-info-background));
+		--badge-internal-foreground: var(--badge-info-color, var(--badge-info-foreground));
+		--badge-internal-outlined-background: var(--badge-info-outlined-background-color, color-mix(in oklab, var(--badge-info-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-info-outlined-border-color, color-mix(in oklab, var(--badge-info-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-info-outlined-color, var(--badge-info-outlined-label));
 	}
 
 	&[data-color='archive'] {
-		--badge-internal-background: var(--badge-archive-background, var(--bg-sienna-500));
-		--badge-internal-foreground: var(--badge-archive-foreground, var(--text-ink-500));
+		--badge-internal-background: var(--badge-archive-background-color, var(--badge-archive-background));
+		--badge-internal-foreground: var(--badge-archive-color, var(--badge-archive-foreground));
+		--badge-internal-outlined-background: var(--badge-archive-outlined-background-color, color-mix(in oklab, var(--badge-archive-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-archive-outlined-border-color, color-mix(in oklab, var(--badge-archive-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-archive-outlined-color, var(--badge-archive-outlined-label));
 	}
 
 	&[data-color='highlight-danger'] {
-		--badge-internal-background: var(--badge-highlight-danger-background, var(--bg-sakura-500));
-		--badge-internal-foreground: var(--badge-highlight-danger-foreground, var(--text-ink-500));
+		--badge-internal-background: var(--badge-highlight-danger-background-color, var(--badge-highlight-danger-background));
+		--badge-internal-foreground: var(--badge-highlight-danger-color, var(--badge-highlight-danger-foreground));
+		--badge-internal-outlined-background: var(--badge-highlight-danger-outlined-background-color, color-mix(in oklab, var(--badge-highlight-danger-outlined-background) 20%, transparent));
+		--badge-internal-outlined-border: var(--badge-highlight-danger-outlined-border-color, color-mix(in oklab, var(--badge-highlight-danger-outlined-border) 40%, transparent));
+		--badge-internal-outlined-foreground: var(--badge-highlight-danger-outlined-color, var(--badge-highlight-danger-outlined-label));
 	}
 
 	&[data-text-transform='capitalize'] {
@@ -90,12 +99,10 @@
 		--badge-internal-text-transform: uppercase;
 	}
 
-	// info, archive and highlight-danger have no outlined tokens yet, so they keep tinting the
-	// solid background until the palette covers them.
 	&[data-variant='outlined'] {
-		border-color: var(--badge-outlined-border-color, var(--badge-internal-outlined-border, color-mix(in oklab, var(--badge-internal-background) 20%, transparent)));
-		background-color: var(--badge-outlined-background-color, var(--badge-internal-outlined-background, color-mix(in oklab, var(--badge-internal-background) 10%, transparent)));
-		color: var(--badge-outlined-color, var(--badge-internal-outlined-foreground, var(--badge-internal-background)));
+		border-color: var(--badge-outlined-border-color, var(--badge-internal-outlined-border));
+		background-color: var(--badge-outlined-background-color, var(--badge-internal-outlined-background));
+		color: var(--badge-outlined-color, var(--badge-internal-outlined-foreground));
 	}
 
 	&:has([data-slot='badge-prefix'], [data-slot='badge-suffix']) {
