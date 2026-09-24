@@ -1,6 +1,8 @@
 import { AnimatePresence } from 'motion/react';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
+import { cn } from '../../lib/utils.js';
+import styles from '../dialog.module.scss';
 import {
 	Dialog,
 	DialogCloseButton,
@@ -190,7 +192,7 @@ export const DialogWrapper = React.forwardRef<HTMLDivElement, DialogWrapperProps
 				id={id}
 			>
 				{(title || subTitle) && (
-					<DialogHeader>
+					<DialogHeader className={cn(showCloseButton && styles['dialog__header--with-close'])}>
 						{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
 						{subTitle && <DialogSubtitle>{subTitle}</DialogSubtitle>}
 					</DialogHeader>
