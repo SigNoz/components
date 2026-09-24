@@ -1,5 +1,8 @@
 .button {
 	display: var(--button-display, inline-flex);
+	// The label and affixes carry a z-index over the ghost glow and the disabled stripes. Isolated,
+	// that z-index orders them inside the button only, never above a popup that covers it.
+	isolation: var(--button-isolation, isolate);
 	flex-direction: var(--button-flex-direction, row);
 	align-items: var(--button-align-items, center);
 	justify-content: var(--button-justify-content, center);
