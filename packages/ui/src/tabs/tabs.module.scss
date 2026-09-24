@@ -47,7 +47,7 @@
 
     // The rule needs a run before the first trigger and after the last. `primary`
     // paints no rule, so its spacers start at zero.
-    --tabs-internal-spacer-min-inline: var(--spacing-8);
+    --tabs-internal-spacer-min-inline: var(--tabs-secondary-border-spacer-min-inline-size, var(--spacing-8));
     --tabs-internal-bar-rule-block-end: var(--tabs-border-width, 1px) solid
       var(--tabs-border-color, var(--tabs-border));
   }
@@ -210,11 +210,11 @@
   min-block-size: var(--tabs-scroll-button-min-block-size, var(--spacing-12));
   border: var(--tabs-scroll-button-border, none);
   background-color: var(--tabs-scroll-button-background-color, transparent);
-  color: var(--tabs-scroll-button-color, var(--tabs-text-color, var(--l1-foreground)));
+  color: var(--tabs-scroll-button-color, var(--tabs-text-color, var(--tabs-label)));
   cursor: var(--tabs-scroll-button-cursor, pointer);
 
   &:hover:not(:disabled) {
-    color: var(--tabs-scroll-button-hover-color, var(--l1-foreground-hover));
+    color: var(--tabs-scroll-button-hover-color, var(--tabs-label-hover));
     background-color: var(
       --tabs-scroll-button-hover-background-color,
       var(--tabs-primary-background-hover)
@@ -227,7 +227,7 @@
   }
 
   &:focus-visible {
-    outline: var(--tabs-scroll-button-focus-visible-outline, var(--ring) solid 1px);
+    outline: var(--tabs-scroll-button-focus-visible-outline, var(--tabs-focus-ring) solid 1px);
     outline-offset: var(--tabs-scroll-button-focus-visible-outline-offset, 1px);
   }
 
@@ -277,7 +277,7 @@
 
 .tabs__trigger {
   cursor: var(--tabs-trigger-cursor, pointer);
-  color: var(--tabs-text-color, var(--l1-foreground));
+  color: var(--tabs-text-color, var(--tabs-label));
   background-color: var(--tabs-trigger-background-color, transparent);
   border: var(--tabs-trigger-border, none);
 
@@ -285,11 +285,11 @@
   text-decoration: var(--tabs-trigger-text-decoration, none);
 
   &:hover {
-    color: var(--tabs-hover-text-color, var(--l1-foreground-hover));
+    color: var(--tabs-hover-text-color, var(--tabs-label-hover));
   }
 
   &[data-active] {
-    color: var(--tabs-active-text-color, var(--l1-foreground-hover));
+    color: var(--tabs-active-text-color, var(--tabs-label-hover));
   }
 
   &[data-variant="primary"] {
@@ -324,7 +324,7 @@
 
     &:focus-visible {
       outline-offset: var(--tabs-trigger-primary-focus-visible-outline-offset, 1px);
-      outline: var(--tabs-trigger-primary-focus-visible-outline, var(--ring) solid 1px);
+      outline: var(--tabs-trigger-primary-focus-visible-outline, var(--tabs-focus-ring) solid 1px);
     }
 
     &[data-disabled] {
@@ -474,7 +474,7 @@
   inline-size: var(--tabs-hover-slider-inline-size, auto);
   block-size: var(--tabs-hover-slider-block-size, 100%);
   pointer-events: var(--tabs-hover-slider-pointer-events, none);
-  background-color: var(--tabs-hover-slider-bg, color-mix(in srgb, var(--l1-foreground) 10%, transparent));
+  background-color: var(--tabs-hover-slider-background-color, var(--tabs-hover-slider-background));
   border-radius: var(--tabs-hover-slider-border-radius, 2px);
   z-index: var(--tabs-hover-slider-z-index, 0);
   will-change: var(--tabs-hover-slider-will-change, transform, width, opacity);
@@ -517,8 +517,8 @@
     outline: var(--tabs-content-focus-visible-outline, none);
     box-shadow: var(
       --tabs-content-focus-visible-box-shadow,
-      0 0 0 2px var(--ring),
-      0 0 0 4px var(--ring-offset-color, var(--l1-background))
+      0 0 0 2px var(--tabs-focus-ring),
+      0 0 0 4px var(--tabs-content-focus-visible-ring-offset-color, var(--tabs-focus-ring-offset))
     );
   }
 }
