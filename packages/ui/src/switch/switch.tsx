@@ -8,7 +8,7 @@ import {
 	useMemo,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { hasRenderableContent } from '../lib/utils.js';
+import { hasRenderableContent, omitStyleProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -136,7 +136,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			name={name}
 			aria-labelledby={hasLabel ? labelId : undefined}
 			aria-describedby={hasDescription ? descriptionId : undefined}
-			{...props}
+			{...omitStyleProps(props)}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			<SwitchPrimitive.Thumb data-slot="switch-thumb" className={styles['switch__thumb']} />

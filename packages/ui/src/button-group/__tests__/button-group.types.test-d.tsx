@@ -214,6 +214,13 @@ describe('attributes', () => {
 			<ButtonGroup {...BASE} onClick={noop} />,
 		);
 	});
+
+	test('rejects className and style, the look comes from the props and tokens', () => {
+		// @ts-expect-error - `className` is not a prop
+		assertType(<ButtonGroup {...BASE} className="x" />);
+		// @ts-expect-error - `style` is not a prop
+		assertType(<ButtonGroup {...BASE} style={{}} />);
+	});
 });
 
 describe('ButtonGroup entry point types', () => {

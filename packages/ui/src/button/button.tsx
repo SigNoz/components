@@ -9,7 +9,7 @@ import {
 	useId,
 	useMemo,
 } from 'react';
-import { cn } from '../lib/utils.js';
+import { cn, omitStyleProps } from '../lib/utils.js';
 import { Spinner } from '../spinner/spinner.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
@@ -216,6 +216,12 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 	);
 });
 
+// The public button drops `className` and `style` at runtime too, so a value that gets past the
+// types does not replace the button's own class. `InternalButton` keeps both.
+const PublicButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(props, ref) {
+	return <ButtonImpl ref={ref} {...omitStyleProps(props)} />;
+});
+
 /**
  * Renders a native `<button>` (Base UI `Button`).
  *
@@ -349,7 +355,7 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
  * </Button>
  * ```
  */
-export const Button = ButtonImpl as <T extends ButtonProps>(
+export const Button = PublicButton as <T extends ButtonProps>(
 	props: T &
 		ValidateButtonProps<T> &
 		// `T` is inferred from the call site, so `T extends ButtonProps` alone never runs excess

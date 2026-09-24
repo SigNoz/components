@@ -8,8 +8,9 @@ import {
 	getDefaultClassNames,
 } from 'react-day-picker';
 import { CalendarContext } from './calendar-context.js';
+import { DAY_PICKER_STYLE_PROPS } from './constants.js';
 import styles from './calendar.module.scss';
-import { cn } from '../lib/utils.js';
+import { cn, omitStyleProps } from '../lib/utils.js';
 import { CalendarChevron } from './subcomponents/calendar-chevron.js';
 import { CalendarDayButton } from './subcomponents/calendar-day-button.js';
 import {
@@ -227,7 +228,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
 				formatters={calendarFormatters}
 				classNames={calendarClassNames}
 				components={calendarComponents}
-				{...props}
+				{...omitStyleProps(props, DAY_PICKER_STYLE_PROPS)}
 				{...(testId === undefined ? {} : { 'data-testid': testId })}
 			/>
 		</CalendarContext.Provider>

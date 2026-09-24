@@ -224,7 +224,7 @@ export type ValidateButtonGroupProps<T> = (T extends { disabled: boolean | undef
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type ButtonGroupProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
+export type ButtonGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes & {
 		/**
 		 * The visual treatment. `outlined` is the only one a group is built from.

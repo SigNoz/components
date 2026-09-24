@@ -7,6 +7,7 @@ import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
 import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import { RadioGroupTextOverflow } from './constants.js';
+import { omitStyleProps } from '../lib/utils.js';
 import styles from './radio-group.module.scss';
 import { RadioGroupItem } from './subcomponents/radio-group-item.js';
 import type { RadioGroupProps, ValidateRadioGroupProps } from './types.js';
@@ -79,7 +80,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			value={value}
 			defaultValue={defaultValue}
 			onValueChange={onValueChange}
-			{...props}
+			{...omitStyleProps(props)}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			{items.map((item) => (

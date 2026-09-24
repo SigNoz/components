@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { omitStyleProps } from '../../lib/utils.js';
 import { TooltipContent } from '../subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../subcomponents/tooltip-provider.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
@@ -131,7 +132,7 @@ const TooltipParts = React.forwardRef<HTMLButtonElement, TooltipProps>(function 
 	{ title, children, open, ...props },
 	ref,
 ) {
-	const { stacked, triggerProps, contentProps } = useStackedTooltipProps(props);
+	const { stacked, triggerProps, contentProps } = useStackedTooltipProps(omitStyleProps(props));
 	const handle = useTooltipHandle();
 	const generatedId = React.useId();
 	const contentId = contentProps.id ?? generatedId;
