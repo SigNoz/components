@@ -6,7 +6,7 @@ import type {
 	MonthsDropdown,
 	WeekNumber,
 } from 'react-day-picker';
-import type { CalendarButtonVariant } from './constants.js';
+import type { CalendarButtonVariant, DAY_PICKER_STYLE_PROPS } from './constants.js';
 
 type OriginalDayButtonProps = ComponentProps<typeof DayButton>;
 type OriginalChevronProps = ComponentProps<typeof Chevron>;
@@ -24,13 +24,7 @@ export type CalendarButtonVariantType =
  *
  * @access private
  */
-type DayPickerStyleProp =
-	| 'className'
-	| 'classNames'
-	| 'style'
-	| 'styles'
-	| 'modifiersClassNames'
-	| 'modifiersStyles';
+type DayPickerStyleProp = (typeof DAY_PICKER_STYLE_PROPS)[number];
 
 /**
  * `DayPickerProps` without {@link DayPickerStyleProp}. Omitted per member, since `DayPickerProps`

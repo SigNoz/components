@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
+import { omitStyleProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { ToggleGroupScrollDirection, ToggleGroupType } from './constants.js';
 import { ToggleGroupButton } from './subcomponents/toggle-group-button.js';
@@ -121,7 +122,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 			data-readonly={isReadOnly || undefined}
 			className={styles['toggle-group']}
 			style={toggleGroupStyle}
-			{...props}
+			{...omitStyleProps(props)}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			<TooltipProviderIfMissing>

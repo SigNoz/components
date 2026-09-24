@@ -10,7 +10,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { hasRenderableContent } from '../lib/utils.js';
+import { hasRenderableContent, omitStyleProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -145,7 +145,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			required={required}
 			name={name}
 			aria-labelledby={hasLabel ? labelId : undefined}
-			{...props}
+			{...omitStyleProps(props)}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			<span data-slot="checkbox-box" className={styles['checkbox__box']}>
