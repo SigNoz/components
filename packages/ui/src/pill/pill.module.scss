@@ -38,115 +38,115 @@
 
 	&:focus-visible {
 		outline-offset: var(--pill-focus-visible-outline-offset, 1px);
-		outline: var(--pill-focus-visible-outline, var(--ring) solid 1px);
+		outline: var(--pill-focus-visible-outline, var(--pill-focus-ring) solid 1px);
 	}
 }
 
 // Root `Pill` (`<button>`, always `variant="outlined"`). The `[data-variant]` qualifier raises this
 // over `Badge`'s own `[data-variant='outlined']` block, so nothing falls back to `--badge-*`.
 .pill[data-slot='pill'][data-variant='outlined'] {
-	background-color: var(--pill-internal-background);
+	background-color: var(--pill-background-color, var(--pill-internal-background));
 	border-color: var(--pill-border-color, var(--pill-internal-border-color));
-	color: var(--pill-internal-foreground);
+	color: var(--pill-color, var(--pill-internal-foreground));
 
 	&:not(:disabled):not([data-disabled]):hover {
-		background-color: var(--pill-hover-background, var(--pill-internal-hover-background));
+		background-color: var(--pill-hover-background-color, var(--pill-internal-hover-background));
 		border-color: var(--pill-hover-border-color, var(--pill-internal-hover-border-color));
-		color: var(--pill-hover-foreground, var(--pill-internal-hover-foreground));
+		color: var(--pill-hover-color, var(--pill-internal-hover-foreground));
 	}
 }
 
 .pill[data-slot='pill'][data-color='primary'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-primary-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-primary-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-primary-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-primary-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-primary-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-primary-label-hover);
+	--pill-internal-background: var(--pill-primary-background-color, color-mix(in oklab, var(--pill-primary-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-primary-border-color, color-mix(in oklab, var(--pill-primary-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-primary-color, var(--pill-primary-label));
+	--pill-internal-hover-background: var(--pill-primary-hover-background-color, color-mix(in oklab, var(--pill-primary-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-primary-hover-border-color, color-mix(in oklab, var(--pill-primary-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-primary-hover-color, var(--pill-primary-label-hover));
 }
 
 .pill[data-slot='pill'][data-color='success'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-success-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-success-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-success-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-success-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-success-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-success-label-hover);
+	--pill-internal-background: var(--pill-success-background-color, color-mix(in oklab, var(--pill-success-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-success-border-color, color-mix(in oklab, var(--pill-success-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-success-color, var(--pill-success-label));
+	--pill-internal-hover-background: var(--pill-success-hover-background-color, color-mix(in oklab, var(--pill-success-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-success-hover-border-color, color-mix(in oklab, var(--pill-success-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-success-hover-color, var(--pill-success-label-hover));
 }
 
 .pill[data-slot='pill'][data-color='warning'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-warning-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-warning-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-warning-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-warning-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-warning-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-warning-label-hover);
+	--pill-internal-background: var(--pill-warning-background-color, color-mix(in oklab, var(--pill-warning-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-warning-border-color, color-mix(in oklab, var(--pill-warning-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-warning-color, var(--pill-warning-label));
+	--pill-internal-hover-background: var(--pill-warning-hover-background-color, color-mix(in oklab, var(--pill-warning-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-warning-hover-border-color, color-mix(in oklab, var(--pill-warning-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-warning-hover-color, var(--pill-warning-label-hover));
 }
 
 .pill[data-slot='pill'][data-color='danger'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-danger-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-danger-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-danger-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-danger-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-danger-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-danger-label-hover);
+	--pill-internal-background: var(--pill-danger-background-color, color-mix(in oklab, var(--pill-danger-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-danger-border-color, color-mix(in oklab, var(--pill-danger-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-danger-color, var(--pill-danger-label));
+	--pill-internal-hover-background: var(--pill-danger-hover-background-color, color-mix(in oklab, var(--pill-danger-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-danger-hover-border-color, color-mix(in oklab, var(--pill-danger-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-danger-hover-color, var(--pill-danger-label-hover));
 }
 
 .pill[data-slot='pill'][data-color='info'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-info-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-info-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-info-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-info-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-info-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-info-label-hover);
+	--pill-internal-background: var(--pill-info-background-color, color-mix(in oklab, var(--pill-info-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-info-border-color, color-mix(in oklab, var(--pill-info-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-info-color, var(--pill-info-label));
+	--pill-internal-hover-background: var(--pill-info-hover-background-color, color-mix(in oklab, var(--pill-info-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-info-hover-border-color, color-mix(in oklab, var(--pill-info-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-info-hover-color, var(--pill-info-label-hover));
 }
 
 .pill[data-slot='pill'][data-color='archive'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-archive-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-archive-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-archive-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-archive-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-archive-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-archive-label-hover);
+	--pill-internal-background: var(--pill-archive-background-color, color-mix(in oklab, var(--pill-archive-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-archive-border-color, color-mix(in oklab, var(--pill-archive-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-archive-color, var(--pill-archive-label));
+	--pill-internal-hover-background: var(--pill-archive-hover-background-color, color-mix(in oklab, var(--pill-archive-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-archive-hover-border-color, color-mix(in oklab, var(--pill-archive-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-archive-hover-color, var(--pill-archive-label-hover));
 }
 
 .pill[data-slot='pill'][data-color='highlight-danger'] {
-	--pill-internal-background: color-mix(in oklab, var(--pill-highlight-danger-background) 20%, transparent);
-	--pill-internal-border-color: color-mix(in oklab, var(--pill-highlight-danger-border) 40%, transparent);
-	--pill-internal-foreground: var(--pill-highlight-danger-label);
-	--pill-internal-hover-background: color-mix(in oklab, var(--pill-highlight-danger-background) 30%, transparent);
-	--pill-internal-hover-border-color: color-mix(in oklab, var(--pill-highlight-danger-border) 60%, transparent);
-	--pill-internal-hover-foreground: var(--pill-highlight-danger-label-hover);
+	--pill-internal-background: var(--pill-highlight-danger-background-color, color-mix(in oklab, var(--pill-highlight-danger-background) 20%, transparent));
+	--pill-internal-border-color: var(--pill-highlight-danger-border-color, color-mix(in oklab, var(--pill-highlight-danger-border) 40%, transparent));
+	--pill-internal-foreground: var(--pill-highlight-danger-color, var(--pill-highlight-danger-label));
+	--pill-internal-hover-background: var(--pill-highlight-danger-hover-background-color, color-mix(in oklab, var(--pill-highlight-danger-background) 30%, transparent));
+	--pill-internal-hover-border-color: var(--pill-highlight-danger-hover-border-color, color-mix(in oklab, var(--pill-highlight-danger-border) 60%, transparent));
+	--pill-internal-hover-foreground: var(--pill-highlight-danger-hover-color, var(--pill-highlight-danger-label-hover));
 }
 
 // `secondary` is the untinted outline, so its border does not step up on hover the way the
 // chromatic tints do, and `@signozhq/design-tokens` publishes no `--pill-outlined-border-hover`.
 .pill[data-slot='pill'][data-color='secondary'] {
-	--pill-internal-background: var(--pill-outlined-background);
-	--pill-internal-border-color: var(--pill-outlined-border);
-	--pill-internal-foreground: var(--pill-outlined-label);
-	--pill-internal-hover-background: var(--pill-outlined-background-hover);
-	--pill-internal-hover-border-color: var(--pill-outlined-border);
-	--pill-internal-hover-foreground: var(--pill-outlined-label-hover);
+	--pill-internal-background: var(--pill-secondary-background-color, var(--pill-outlined-background));
+	--pill-internal-border-color: var(--pill-secondary-border-color, var(--pill-outlined-border));
+	--pill-internal-foreground: var(--pill-secondary-color, var(--pill-outlined-label));
+	--pill-internal-hover-background: var(--pill-secondary-hover-background-color, var(--pill-outlined-background-hover));
+	--pill-internal-hover-border-color: var(--pill-secondary-hover-border-color, var(--pill-outlined-border));
+	--pill-internal-hover-foreground: var(--pill-secondary-hover-color, var(--pill-outlined-label-hover));
 }
 
 .pill.pill-closeable[data-slot='pill'] {
-	--pill-internal-background: var(--pill-rect-solid-background);
+	--pill-internal-background: var(--pill-closeable-background-color, var(--pill-rect-solid-background));
 	--pill-internal-border-color: transparent;
-	--pill-internal-foreground: var(--pill-rect-solid-label);
-	--pill-internal-hover-background: var(--pill-rect-solid-background-hover);
+	--pill-internal-foreground: var(--pill-closeable-color, var(--pill-rect-solid-label));
+	--pill-internal-hover-background: var(--pill-closeable-hover-background-color, var(--pill-rect-solid-background-hover));
 	--pill-internal-hover-border-color: transparent;
-	--pill-internal-hover-foreground: var(--pill-rect-solid-label-hover);
-	background-color: var(--pill-internal-background);
+	--pill-internal-hover-foreground: var(--pill-closeable-hover-color, var(--pill-rect-solid-label-hover));
+	background-color: var(--pill-background-color, var(--pill-internal-background));
 	border-color: var(--pill-border-color, var(--pill-internal-border-color));
-	color: var(--pill-internal-foreground);
+	color: var(--pill-color, var(--pill-internal-foreground));
 	border-radius: var(--pill-closeable-border-radius, var(--radius-1-5));
 	gap: var(--pill-closeable-gap, var(--spacing-2));
 
 	&:not([data-disabled]):hover {
-		background-color: var(--pill-hover-background, var(--pill-internal-hover-background));
+		background-color: var(--pill-hover-background-color, var(--pill-internal-hover-background));
 		border-color: var(--pill-hover-border-color, var(--pill-internal-hover-border-color));
-		color: var(--pill-hover-foreground, var(--pill-internal-hover-foreground));
+		color: var(--pill-hover-color, var(--pill-internal-hover-foreground));
 	}
 }
 
@@ -155,10 +155,10 @@
 // weigh the same (one class + two attributes, or two classes + one attribute), so this has to come
 // last to win.
 .pill[data-slot='pill'][aria-invalid='true'] {
-	--pill-internal-border-color: var(--pill-invalid-border-color, var(--destructive));
-	--pill-internal-foreground: var(--pill-invalid-label, var(--destructive));
-	--pill-internal-hover-border-color: var(--pill-invalid-border-color, var(--destructive));
-	--pill-internal-hover-foreground: var(--pill-invalid-label, var(--destructive));
+	--pill-internal-border-color: var(--pill-invalid-border-color, var(--pill-invalid-border));
+	--pill-internal-foreground: var(--pill-invalid-color, var(--pill-invalid-label));
+	--pill-internal-hover-border-color: var(--pill-invalid-border-color, var(--pill-invalid-border));
+	--pill-internal-hover-foreground: var(--pill-invalid-color, var(--pill-invalid-label));
 }
 
 .pill__close {
@@ -170,19 +170,19 @@
 	justify-content: center;
 	inline-size: var(--pill-close-icon-size, 12px);
 	block-size: var(--pill-close-icon-size, 12px);
-	color: var(--pill-rect-solid-dismiss-icon, var(--l2-foreground));
+	color: var(--pill-close-color, var(--pill-rect-solid-dismiss-icon));
 
 	&:disabled {
 		cursor: var(--pill-close-disabled-cursor, not-allowed);
 	}
 
 	&:not(:disabled):hover {
-		color: var(--pill-rect-solid-dismiss-icon-hover, var(--l1-foreground));
+		color: var(--pill-close-hover-color, var(--pill-rect-solid-dismiss-icon-hover));
 	}
 
 	&:focus-visible {
 		outline-offset: var(--pill-close-focus-visible-outline-offset, -2px);
-		outline: var(--pill-close-focus-visible-outline, var(--ring) solid 1px);
+		outline: var(--pill-close-focus-visible-outline, var(--pill-focus-ring) solid 1px);
 	}
 
 	& > svg {
