@@ -82,6 +82,7 @@
  * | `--button-info-link-hover` | `-` |
  * | `--button-info-link-hover-color` | `var(--button-info-link-hover)` |
  * | `--button-info-solid-foreground` | `var(--button-info-label)` |
+ * | `--button-isolation` | `isolate` |
  * | `--button-justify-content` | `center` |
  * | `--button-label-display` | `block` |
  * | `--button-label-min-width` | `0` |

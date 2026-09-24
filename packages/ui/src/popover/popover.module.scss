@@ -21,6 +21,8 @@
 }
 
 .popover__content {
+	// Radix copies this onto the wrapper that positions the popover.
+	z-index: var(--popover-z-index, 50);
 	--radix-popover-content-available-width: var(--radix-popover-trigger-width);
 	--radix-popover-content-available-height: var(--radix-popover-trigger-height);
 	min-width: var(--radix-popover-trigger-width);
