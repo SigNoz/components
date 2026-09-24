@@ -8,7 +8,7 @@ import {
 	type RefAttributes,
 	useMemo,
 } from 'react';
-import { cn, omitStyleProps } from '../lib/utils.js';
+import { cn, type RejectedProps } from '../lib/utils.js';
 import { Spinner } from '../spinner/spinner.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../tooltip/subcomponents/tooltip-stack.js';
@@ -202,8 +202,11 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 
 // The public button drops `className` and `style` at runtime too, so a value that gets past the
 // types does not replace the button's own class. `InternalButton` keeps both.
-const PublicButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(props, ref) {
-	return <ButtonImpl ref={ref} {...omitStyleProps(props)} />;
+const PublicButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+	{ className: _className, style: _style, ...props }: ButtonProps & RejectedProps,
+	ref,
+) {
+	return <ButtonImpl ref={ref} {...props} />;
 });
 
 /**

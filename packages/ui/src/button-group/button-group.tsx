@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { mergeRefs } from '../lib/merge-refs.js';
-import { cn, omitStyleProps } from '../lib/utils.js';
+import { cn, type RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import styles from './button-group.module.scss';
 import {
@@ -38,8 +38,10 @@ const ButtonGroupImpl = forwardRef<HTMLDivElement, ButtonGroupProps>(function Bu
 		textOverflow = ButtonGroupTextOverflow.Ellipsis,
 		testId,
 		children: _children,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: ButtonGroupProps & RejectedProps,
 	ref,
 ) {
 	const group: ButtonGroupState = { testId, disabled, disabledTooltip, loading, loadingTooltip };
@@ -74,7 +76,7 @@ const ButtonGroupImpl = forwardRef<HTMLDivElement, ButtonGroupProps>(function Bu
 			data-overflowing={hasOverflow || undefined}
 			className={styles['button-group']}
 			style={groupStyle}
-			{...omitStyleProps(props)}
+			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			<TooltipProviderIfMissing>

@@ -18,32 +18,13 @@ export function hasRenderableContent(content: ReactNode): boolean {
 export type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
 
 /**
- * The props a component takes its look from instead of `className` and `style`.
+ * `className` and `style` as optional unknowns, for a component whose types reject both and that
+ * spreads the rest onto its element. Widening its props with this lets it destructure the two away,
+ * so a value that gets past the types (a cast, an untyped spread, a JavaScript caller) does not
+ * replace the component's own class or inline style.
  *
  * @access private
  */
-const STYLE_PROPS = ['className', 'style'] as const;
-
-/**
- * `props` without `className` and `style`, for a component whose types reject both and that
- * spreads the rest onto its element. A value that gets past the types (a cast, an untyped spread,
- * a JavaScript caller) would otherwise replace the component's own class or inline style.
- *
- * @access private
- */
-export function omitStyleProps<T extends object>(
-	props: T,
-	keys: readonly string[] = STYLE_PROPS,
-): T {
-	if (!keys.some((key) => key in props)) {
-		return props;
-	}
-
-	const rest = { ...props } as Record<string, unknown>;
-
-	for (const key of keys) {
-		delete rest[key];
-	}
-
-	return rest as T;
-}
+export type RejectedProps<K extends PropertyKey = 'className' | 'style'> = Partial<
+	Record<K, unknown>
+>;
