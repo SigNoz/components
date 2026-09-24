@@ -42,6 +42,7 @@
  * | `--button-disabled-opacity` | `0.6` |
  * | `--button-display` | `inline-flex` |
  * | `--button-flex-direction` | `row` |
+ * | `--button-flex-shrink` | `var(--button-internal-flex-shrink, 1)` |
  * | `--button-focus-ring` | `-` |
  * | `--button-focus-visible-outline` | `var(--button-focus-ring) solid 1px` |
  * | `--button-focus-visible-outline-offset` | `1px` |
@@ -102,6 +103,7 @@
  * | `--button-loading-opacity` | `1` |
  * | `--button-loading-travel` | `6px` |
  * | `--button-max-width` | `var(--button-internal-max-width, 100%)` |
+ * | `--button-min-width` | `var(--button-internal-min-width, auto)` |
  * | `--button-padding` | `var(--spacing-2) var(--spacing-4)` |
  * | `--button-prefix-slot-hidden-opacity` | `0` |
  * | `--button-prefix-slot-hidden-transform` | `translateY(calc(-1 * var(--button-internal-load...` |
