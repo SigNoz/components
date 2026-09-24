@@ -31,7 +31,7 @@
  * | `--toggle-group-button-flex-basis` | `auto` |
  * | `--toggle-group-button-flex-grow` | `0` |
  * | `--toggle-group-button-flex-shrink` | `0` |
- * | `--toggle-group-button-focus-visible-outline` | `var(--ring) solid 1px` |
+ * | `--toggle-group-button-focus-visible-outline` | `var(--toggle-group-focus-ring) solid 1px` |
  * | `--toggle-group-button-focus-visible-outline-offset` | `-2px` |
  * | `--toggle-group-button-font-size` | `var(--periscope-font-size-small)` |
  * | `--toggle-group-button-font-weight` | `var(--font-weight-normal)` |
@@ -49,6 +49,7 @@
  * | `--toggle-group-disabled-cursor` | `not-allowed` |
  * | `--toggle-group-disabled-opacity` | `0.6` |
  * | `--toggle-group-display` | `inline-flex` |
+ * | `--toggle-group-focus-ring` | `-` |
  * | `--toggle-group-inline-size` | `var(--toggle-group-internal-inline-size, fit-co...` |
  * | `--toggle-group-label-max-inline-size` | `120px` |
  * | `--toggle-group-label-min-inline-size` | `0` |
@@ -59,6 +60,7 @@
  * | `--toggle-group-list-display` | `inline-flex` |
  * | `--toggle-group-list-flex-direction` | `row` |
  * | `--toggle-group-max-inline-size` | `var(--toggle-group-internal-max-inline-size, 100%)` |
+ * | `--toggle-group-md-button-padding-inline` | `var(--spacing-12)` |
  * | `--toggle-group-overflow` | `hidden` |
  * | `--toggle-group-readonly-cursor` | `not-allowed` |
  * | `--toggle-group-readonly-opacity` | `0.8` |
@@ -79,7 +81,7 @@
  * | `--toggle-group-scroll-button-flex-basis` | `auto` |
  * | `--toggle-group-scroll-button-flex-grow` | `0` |
  * | `--toggle-group-scroll-button-flex-shrink` | `0` |
- * | `--toggle-group-scroll-button-focus-visible-outline` | `var(--ring) solid 1px` |
+ * | `--toggle-group-scroll-button-focus-visible-outline` | `var(--toggle-group-focus-ring) solid 1px` |
  * | `--toggle-group-scroll-button-focus-visible-outline-offset` | `-2px` |
  * | `--toggle-group-scroll-button-hover-background-color` | `var(--toggle-group-scroll-button-background-hover)` |
  * | `--toggle-group-scroll-button-hover-color` | `var(--toggle-group-scroll-button-label-hover)` |
@@ -97,11 +99,19 @@
  * | `--toggle-group-scroll-button-z-index` | `1` |
  * | `--toggle-group-secondary-outlined-background` | `-` |
  * | `--toggle-group-secondary-outlined-background-active` | `-` |
+ * | `--toggle-group-secondary-outlined-background-color` | `var(--toggle-group-secondary-outlined-background)` |
  * | `--toggle-group-secondary-outlined-background-hover` | `-` |
+ * | `--toggle-group-secondary-outlined-color` | `var(--toggle-group-secondary-outlined-label)` |
+ * | `--toggle-group-secondary-outlined-disabled-color` | `var(--toggle-group-secondary-outlined-label-dis...` |
+ * | `--toggle-group-secondary-outlined-hover-background-color` | `var(--toggle-group-secondary-outlined-backgroun...` |
+ * | `--toggle-group-secondary-outlined-hover-color` | `var(--toggle-group-secondary-outlined-label-hover)` |
  * | `--toggle-group-secondary-outlined-label` | `-` |
  * | `--toggle-group-secondary-outlined-label-active` | `-` |
  * | `--toggle-group-secondary-outlined-label-disabled` | `-` |
  * | `--toggle-group-secondary-outlined-label-hover` | `-` |
+ * | `--toggle-group-secondary-outlined-pressed-background-color` | `var(--toggle-group-secondary-outlined-backgroun...` |
+ * | `--toggle-group-secondary-outlined-pressed-color` | `var(--toggle-group-secondary-outlined-label-act...` |
+ * | `--toggle-group-sm-button-padding-inline` | `var(--spacing-6)` |
  * | `--toggle-group-transition-duration` | `150ms` |
  * | `--toggle-group-viewport-display` | `flex` |
  * | `--toggle-group-viewport-flex-basis` | `auto` |
