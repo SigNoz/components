@@ -1,19 +1,14 @@
-import type { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import type { ReactElement, ReactNode, RefCallback } from 'react';
-import { useId, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { hasRenderableContent } from '../../lib/utils.js';
 import { Spinner } from '../../spinner/spinner.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import { DROPDOWN_EMPTY_LABEL } from '../constants.js';
 import { useDropdownContext, useDropdownRowKey } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
@@ -67,8 +62,6 @@ export type DropdownRowState = {
 	 */
 	isInert: boolean;
 	tooltipContent: ReactNode;
-	tooltipContentId: string;
-	tooltipHandle: ReturnType<typeof TooltipPrimitive.createHandle>;
 };
 
 /**
@@ -91,8 +84,6 @@ export function useDropdownRow({
 }: DropdownRowParams): [DropdownRowState, RefCallback<HTMLSpanElement>] {
 	const { testId: dropdownTestId } = useDropdownContext();
 	const rowKey = useDropdownRowKey(value);
-	const tooltipContentId = useId();
-	const tooltipHandle = useTooltipHandle();
 
 	// `loading` outranks `disabled`, the way it does on `Button`: while the row is waiting it is
 	// not disabled at all, and its reason is what the row is waiting for.
@@ -152,8 +143,6 @@ export function useDropdownRow({
 			isDisabled,
 			isInert,
 			tooltipContent,
-			tooltipContentId,
-			tooltipHandle,
 		},
 		labelRef,
 	];
@@ -176,21 +165,9 @@ export function DropdownRowTooltip({
 	children: ReactElement;
 }): ReactNode {
 	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={row.tooltipHandle}
-				contentId={row.tooltipContent === null ? undefined : row.tooltipContentId}
-			>
-				{children}
-			</TooltipTrigger>
-			{row.tooltipContent !== null && (
-				<TooltipRoot handle={row.tooltipHandle}>
-					<TooltipContent id={row.tooltipContentId} side={side}>
-						{row.tooltipContent}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
+		<TooltipAnchor content={row.tooltipContent} contentProps={{ side }}>
+			{children}
+		</TooltipAnchor>
 	);
 }
 

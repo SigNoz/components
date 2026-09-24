@@ -8,18 +8,14 @@ import {
 	type RefAttributes,
 	useCallback,
 	useEffect,
-	useId,
 	useMemo,
 	useRef,
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import { DROPDOWN_ROW_SELECTOR, DROPDOWN_SIDE_OFFSET } from './constants.js';
 import { type DropdownContextValue, DropdownProvider } from './dropdown-context.js';
 import styles from './dropdown.module.scss';
@@ -90,8 +86,6 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 		}
 	}, [disabled, close]);
 
-	const tooltipHandle = useTooltipHandle();
-	const tooltipContentId = useId();
 	const hasDisabledTooltip = disabled && hasTooltipContent(disabledTooltip);
 
 	const rememberSelection = useCallback((rowKey: string, selection: boolean | string): void => {
@@ -186,19 +180,9 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 			) : (
 				// Wrapped whenever a reason is passed, not only while it shows, so toggling
 				// `disabled` does not remount the trigger and drop its focus.
-				<TooltipProviderIfMissing>
-					<TooltipTrigger
-						handle={tooltipHandle}
-						contentId={hasDisabledTooltip ? tooltipContentId : null}
-					>
-						{trigger}
-					</TooltipTrigger>
-					{hasDisabledTooltip && (
-						<TooltipRoot handle={tooltipHandle}>
-							<TooltipContent id={tooltipContentId}>{disabledTooltip}</TooltipContent>
-						</TooltipRoot>
-					)}
-				</TooltipProviderIfMissing>
+				<TooltipAnchor content={hasDisabledTooltip ? disabledTooltip : null}>
+					{trigger}
+				</TooltipAnchor>
 			)}
 			<Menu.Portal container={container}>
 				<Menu.Positioner

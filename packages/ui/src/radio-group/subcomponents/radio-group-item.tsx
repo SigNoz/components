@@ -1,16 +1,12 @@
 import { Radio } from '@base-ui/react/radio';
 import { type ReactElement, useId, useMemo } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import { hasRenderableContent } from '../../lib/utils.js';
 import { RADIO_GROUP_EMPTY_LABEL, RadioGroupTextOverflow } from '../constants.js';
 import styles from '../radio-group.module.scss';
@@ -55,8 +51,6 @@ export function RadioGroupItem({
 }: RadioGroupItemProps): ReactElement {
 	const { label, value, testId, disabled, disabledTooltip } = item;
 	const labelId = useId();
-	const tooltipContentId = useId();
-	const tooltipHandle = useTooltipHandle();
 
 	const isLabelEmpty = !hasRenderableContent(label);
 	const resolvedLabel = isLabelEmpty ? RADIO_GROUP_EMPTY_LABEL : label;
@@ -125,20 +119,11 @@ export function RadioGroupItem({
 	}
 
 	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={tooltipHandle}
-				contentId={tooltipContent === null ? undefined : tooltipContentId}
-			>
-				{itemEl}
-			</TooltipTrigger>
-			{tooltipContent !== null && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId} className={styles['radio-group__label-tooltip']}>
-						{tooltipContent}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
+		<TooltipAnchor
+			content={tooltipContent}
+			contentProps={{ className: styles['radio-group__label-tooltip'] }}
+		>
+			{itemEl}
+		</TooltipAnchor>
 	);
 }

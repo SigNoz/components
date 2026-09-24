@@ -1,17 +1,13 @@
 import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
-import { type ReactElement, useId, useMemo } from 'react';
+import { type ReactElement, useMemo } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { hasRenderableContent } from '../../lib/utils.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import { TABS_EMPTY_LABEL, TabsVariant } from '../constants.js';
 import styles from '../tabs.module.scss';
 import type { TabsItemProps, TabsVariantType } from '../types.js';
@@ -82,8 +78,6 @@ function TabsLockIcon({ className }: { className?: string }): ReactElement {
  */
 export function TabsTrigger({ item, variant, groupTestId }: TabsTriggerProps): ReactElement {
 	const { key, label, testId, disabled, disabledTooltip, prefixIcon, suffixIcon, render } = item;
-	const tooltipContentId = useId();
-	const tooltipHandle = useTooltipHandle();
 
 	const isLabelEmpty = !hasRenderableContent(label);
 	const resolvedLabel = isLabelEmpty ? TABS_EMPTY_LABEL : label;
@@ -146,19 +140,5 @@ export function TabsTrigger({ item, variant, groupTestId }: TabsTriggerProps): R
 		</TabsPrimitive.Tab>
 	);
 
-	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={tooltipHandle}
-				contentId={tooltipContent === null ? undefined : tooltipContentId}
-			>
-				{triggerEl}
-			</TooltipTrigger>
-			{tooltipContent !== null && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId}>{tooltipContent}</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
-	);
+	return <TooltipAnchor content={tooltipContent}>{triggerEl}</TooltipAnchor>;
 }

@@ -6,19 +6,15 @@ import {
 	type MouseEvent,
 	type ReactElement,
 	type Ref,
-	useId,
 } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { cn } from '../../lib/utils.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import styles from '../button-group.module.scss';
 import { ButtonGroupTextOverflow } from '../constants.js';
 import type { ButtonGroupPositionType, ButtonGroupTextOverflowType } from '../types.js';
@@ -108,8 +104,6 @@ export const ButtonGroupMember = forwardRef<HTMLElement, ButtonGroupMemberProps>
 		}
 
 		const tooltipContent = entries.length === 0 ? null : <TooltipStack items={entries} />;
-		const tooltipHandle = useTooltipHandle();
-		const tooltipContentId = useId();
 
 		// `data-slot` after the spread, so the overflow menu's trigger props do not rename the
 		// ellipsis. A collapsed member leaves its `testId` to its menu row.
@@ -160,21 +154,12 @@ export const ButtonGroupMember = forwardRef<HTMLElement, ButtonGroupMemberProps>
 		// The trigger stays mounted whether or not there is anything to say, so the member never
 		// remounts, and never drops its focus, when a reason or a truncated label appears.
 		return (
-			<>
-				<TooltipTrigger
-					handle={tooltipHandle}
-					contentId={tooltipContent == null ? undefined : tooltipContentId}
-				>
-					{memberEl}
-				</TooltipTrigger>
-				{tooltipContent != null && (
-					<TooltipRoot handle={tooltipHandle}>
-						<TooltipContent id={tooltipContentId} className={styles['button-group__tooltip']}>
-							{tooltipContent}
-						</TooltipContent>
-					</TooltipRoot>
-				)}
-			</>
+			<TooltipAnchor
+				content={tooltipContent}
+				contentProps={{ className: styles['button-group__tooltip'] }}
+			>
+				{memberEl}
+			</TooltipAnchor>
 		);
 	},
 );

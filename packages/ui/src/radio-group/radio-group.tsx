@@ -1,11 +1,7 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
-import { forwardRef, type ReactElement, type RefAttributes, useId, useMemo } from 'react';
-import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
+import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import { RadioGroupTextOverflow } from './constants.js';
 import { omitStyleProps } from '../lib/utils.js';
 import styles from './radio-group.module.scss';
@@ -31,9 +27,6 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 	},
 	ref,
 ) {
-	const tooltipHandle = useTooltipHandle();
-	const tooltipContentId = useId();
-
 	const isReadOnly = readOnly === true;
 
 	// Base UI hands the change two arguments, the value and its event details, and types the value
@@ -99,21 +92,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		return groupEl;
 	}
 
-	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={tooltipHandle}
-				contentId={tooltipContent === null ? undefined : tooltipContentId}
-			>
-				{groupEl}
-			</TooltipTrigger>
-			{tooltipContent !== null && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId}>{tooltipContent}</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
-	);
+	return <TooltipAnchor content={tooltipContent}>{groupEl}</TooltipAnchor>;
 });
 
 /**
