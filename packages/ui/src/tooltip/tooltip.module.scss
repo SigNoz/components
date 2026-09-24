@@ -4,9 +4,8 @@
 }
 
 .tooltip__content {
-	// TODO: spec wants `surface-3` in dark and `surface-1` in light; needs a tooltip surface token.
-	background-color: var(--tooltip-background, var(--surface-3));
-	color: var(--tooltip-foreground, var(--l1-foreground));
+	background-color: var(--tooltip-background-color, var(--tooltip-background));
+	color: var(--tooltip-foreground, var(--tooltip-label));
 	width: var(--tooltip-width, fit-content);
 	max-width: var(--tooltip-max-width, 26.25rem);
 	// for now, I won't enable this because this has potential to break many places on signoz/signoz
@@ -21,10 +20,8 @@
 	line-height: var(--tooltip-line-height, var(--periscope-line-height-base));
 	border-width: var(--tooltip-border-width, 1px);
 	border-style: var(--tooltip-border-style, solid);
-	// TODO: spec wants `L2/border` in dark and `L3/border` in light; light is one step off
-	// until a tooltip border token exists.
-	border-color: var(--tooltip-border-color, var(--l3-border));
-	box-shadow: var(--tooltip-box-shadow, var(--shadow-tooltip));
+	border-color: var(--tooltip-border-color, var(--tooltip-border));
+	box-shadow: var(--tooltip-box-shadow, var(--tooltip-shadow));
 	backdrop-filter: var(--tooltip-backdrop-filter, blur(30px));
 	// Backstop: past six lines the content belongs in a popover.
 	display: -webkit-box;
@@ -41,6 +38,6 @@
 
 .tooltip__divider {
 	block-size: var(--tooltip-divider-block-size, 1px);
-	background-color: var(--tooltip-divider-background, var(--l2-border));
+	background-color: var(--tooltip-divider-background-color, var(--tooltip-divider));
 	margin-inline: var(--tooltip-divider-margin-inline, calc(-1 * var(--spacing-4)));
 }
