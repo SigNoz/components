@@ -2,7 +2,6 @@ import {
 	cloneElement,
 	forwardRef,
 	isValidElement,
-	useId,
 	type CSSProperties,
 	type ElementType,
 	type KeyboardEventHandler,
@@ -12,11 +11,7 @@ import {
 import { toCssLength } from '../../lib/css-length.js';
 import { cn } from '../../lib/utils.js';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../badge.module.scss';
 import { BadgeTextOverflow } from '../constants.js';
 import type { BadgeColorType, BadgeProps, BadgeVariantType } from '../types.js';
@@ -160,8 +155,6 @@ export const BadgeRoot = forwardRef<HTMLSpanElement | HTMLButtonElement, BadgeRo
 	) {
 		const hasOverflowTooltip = textOverflow === BadgeTextOverflow.Ellipsis;
 		const [isTruncated, labelRef] = useIsLabelTruncated(hasOverflowTooltip);
-		const tooltipHandle = useTooltipHandle();
-		const tooltipContentId = useId();
 
 		if (children == null || children === false || children === '') {
 			return null;
@@ -217,21 +210,12 @@ export const BadgeRoot = forwardRef<HTMLSpanElement | HTMLButtonElement, BadgeRo
 		}
 
 		return (
-			<TooltipProviderIfMissing>
-				<TooltipTrigger
-					handle={tooltipHandle}
-					contentId={isTruncated ? tooltipContentId : undefined}
-				>
-					{badgeEl}
-				</TooltipTrigger>
-				{isTruncated && (
-					<TooltipRoot handle={tooltipHandle}>
-						<TooltipContent id={tooltipContentId} className={styles['badge__label-tooltip']}>
-							{children}
-						</TooltipContent>
-					</TooltipRoot>
-				)}
-			</TooltipProviderIfMissing>
+			<TooltipAnchor
+				content={isTruncated ? children : null}
+				contentProps={{ className: styles['badge__label-tooltip'] }}
+			>
+				{badgeEl}
+			</TooltipAnchor>
 		);
 	},
 );

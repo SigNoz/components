@@ -45,7 +45,7 @@ export function TooltipProvider({
 	children,
 	delay = 300,
 	...props
-}: TooltipProviderProps): React.ReactNode {
+}: TooltipProviderProps): React.ReactElement {
 	return (
 		<TooltipConfigProvider container={container}>
 			<TooltipPrimitive.Provider delay={delay} {...props}>

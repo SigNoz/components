@@ -6,21 +6,16 @@ import {
 	type MouseEventHandler,
 	type ReactElement,
 	type RefAttributes,
-	useId,
 	useMemo,
 } from 'react';
 import { cn, omitStyleProps } from '../lib/utils.js';
 import { Spinner } from '../spinner/spinner.js';
-import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
-import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import styles from './button.module.scss';
 import { ButtonTextOverflow, ButtonVariant } from './constants.js';
 import type { ButtonProps, ButtonStyleProps, ValidateButtonProps } from './types.js';
@@ -137,8 +132,6 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 	]);
 
 	const hasTooltip = hasOverflowTooltip || disabledTooltip != null || loadingTooltip != null;
-	const tooltipHandle = useTooltipHandle();
-	const tooltipContentId = useId();
 
 	// the only click event is not supported by default to disable by base-ui
 	// https://github.com/mui/base-ui/blob/e8526f762853350691ee3a9bd7ead9d3d6e95bd3/packages/react/src/internals/use-button/useButton.ts#L104
@@ -198,21 +191,12 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 	}
 
 	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={tooltipHandle}
-				contentId={tooltipContent == null ? undefined : tooltipContentId}
-			>
-				{buttonEl}
-			</TooltipTrigger>
-			{tooltipContent != null && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId} className={styles['button__label-tooltip']}>
-						{tooltipContent}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
+		<TooltipAnchor
+			content={tooltipContent}
+			contentProps={{ className: styles['button__label-tooltip'] }}
+		>
+			{buttonEl}
+		</TooltipAnchor>
 	);
 });
 

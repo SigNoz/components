@@ -1,17 +1,13 @@
 import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
-import { type ReactElement, type ReactNode, useEffect, useId, useMemo } from 'react';
+import { type ReactElement, type ReactNode, useEffect, useMemo } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { hasRenderableContent } from '../../lib/utils.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import { TOGGLE_GROUP_EMPTY_LABEL } from '../constants.js';
 import styles from '../toggle-group.module.scss';
 import type { ToggleGroupItemProps } from '../types.js';
@@ -68,8 +64,6 @@ export function ToggleGroupButton({
 	// tracked apart: only the disabled path repaints the label.
 	const isDisabled = groupDisabled || Boolean(disabled);
 	const isLocked = isDisabled || groupReadOnly;
-	const tooltipContentId = useId();
-	const tooltipHandle = useTooltipHandle();
 
 	const isLabelEmpty = !hasRenderableContent(label);
 	const resolvedLabel = isLabelEmpty ? TOGGLE_GROUP_EMPTY_LABEL : label;
@@ -177,19 +171,5 @@ export function ToggleGroupButton({
 		</TogglePrimitive>
 	);
 
-	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={tooltipHandle}
-				contentId={tooltipContent === null ? undefined : tooltipContentId}
-			>
-				{buttonEl}
-			</TooltipTrigger>
-			{tooltipContent !== null && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId}>{tooltipContent}</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
-	);
+	return <TooltipAnchor content={tooltipContent}>{buttonEl}</TooltipAnchor>;
 }
