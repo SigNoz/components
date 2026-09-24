@@ -240,15 +240,4 @@ export const buttonArgTypes: Meta<typeof Button>['argTypes'] = {
 		description: 'Forwarded to the rendered element.',
 		table: { category: 'Styling', type: { summary: 'string' } },
 	},
-	className: {
-		control: 'text',
-		description: 'Merged after the component class, never replaces it.',
-		table: { category: 'Styling', type: { summary: 'string' } },
-	},
-	style: {
-		control: false,
-		description:
-			'Merged with the `width` / `maxWidth` custom properties. The place to override `--button-*` tokens per call site.',
-		table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
-	},
 };

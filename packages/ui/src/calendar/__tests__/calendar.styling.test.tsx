@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import type { CSSProperties } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Calendar } from '../calendar.js';
@@ -31,13 +31,9 @@ const LABELS = {
 describe('Calendar styling', () => {
 	it('sizes a date cell, a month arrow and the week-number column off one variable', () => {
 		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				showWeekNumber
-				style={{ '--calendar-cell-size': '40px' } as CSSProperties}
-				testId="calendar"
-			/>,
+			<div style={{ '--calendar-cell-size': '40px' } as CSSProperties}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} showWeekNumber testId="calendar" />
+			</div>,
 		);
 
 		const weekNumber = document.querySelector('[data-slot="calendar-week-number"]');
@@ -49,13 +45,16 @@ describe('Calendar styling', () => {
 
 	it('sizes the chevron apart from the arrow it sits in', () => {
 		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
+			<div
 				style={
-					{ '--calendar-cell-size': '32px', '--calendar-chevron-size': '16px' } as CSSProperties
+					{
+						'--calendar-cell-size': '32px',
+						'--calendar-chevron-size': '16px',
+					} as CSSProperties
 				}
-			/>,
+			>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} />
+			</div>,
 		);
 
 		const arrow = navButtons().next;
@@ -86,13 +85,14 @@ describe('Calendar styling', () => {
 
 	it('paints a selected day from the selection token, not the button one', () => {
 		render(
-			<Calendar
-				mode="single"
-				selected={JUNE_11_2025}
-				onSelect={vi.fn()}
-				defaultMonth={JUNE_11_2025}
-				style={COLOURS}
-			/>,
+			<div style={COLOURS}>
+				<Calendar
+					mode="single"
+					selected={JUNE_11_2025}
+					onSelect={vi.fn()}
+					defaultMonth={JUNE_11_2025}
+				/>
+			</div>,
 		);
 
 		expect(getComputedStyle(dayButton(JUNE_11_2025)).backgroundColor).toBe('rgb(2, 2, 2)');
@@ -101,13 +101,14 @@ describe('Calendar styling', () => {
 
 	it('paints the three positions of a range apart', () => {
 		render(
-			<Calendar
-				mode="range"
-				selected={{ from: june(10), to: june(12) }}
-				onSelect={vi.fn()}
-				defaultMonth={JUNE_11_2025}
-				style={COLOURS}
-			/>,
+			<div style={COLOURS}>
+				<Calendar
+					mode="range"
+					selected={{ from: june(10), to: june(12) }}
+					onSelect={vi.fn()}
+					defaultMonth={JUNE_11_2025}
+				/>
+			</div>,
 		);
 
 		expect(getComputedStyle(dayButton(june(10))).backgroundColor).toBe('rgb(3, 3, 3)');
@@ -126,13 +127,9 @@ describe('Calendar styling', () => {
 
 	it('paints the day number of an outside, a today and a disabled day apart', () => {
 		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				today={june(11)}
-				disabled={[june(5)]}
-				style={LABELS}
-			/>,
+			<div style={LABELS}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} today={june(11)} disabled={[june(5)]} />
+			</div>,
 		);
 
 		// The colour has to land on the button: it declares one of its own, which beats anything the
@@ -145,14 +142,15 @@ describe('Calendar styling', () => {
 
 	it('paints a selected day as selected even on today', () => {
 		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				today={june(11)}
-				selected={june(11)}
-				onSelect={vi.fn()}
-				style={LABELS}
-			/>,
+			<div style={LABELS}>
+				<Calendar
+					mode="single"
+					defaultMonth={JUNE_11_2025}
+					today={june(11)}
+					selected={june(11)}
+					onSelect={vi.fn()}
+				/>
+			</div>,
 		);
 
 		expect(getComputedStyle(dayButton(june(11))).color).toBe('rgb(55, 55, 55)');
@@ -160,12 +158,9 @@ describe('Calendar styling', () => {
 
 	it('dims a disabled day once, on the button', () => {
 		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				disabled={[june(5)]}
-				style={{ '--calendar-button-disabled-opacity': '0.6' } as CSSProperties}
-			/>,
+			<div style={{ '--calendar-button-disabled-opacity': '0.6' } as CSSProperties}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} disabled={[june(5)]} />
+			</div>,
 		);
 
 		const day = dayButton(june(5));
@@ -180,7 +175,11 @@ describe('Calendar styling', () => {
 		['the gaps a theme sets', GRID_TRACKS],
 		['no room to breathe', {} as CSSProperties],
 	])('sits each weekday header over the column it names, with %s', (_name, style) => {
-		render(<Calendar mode="single" defaultMonth={JUNE_11_2025} style={style} />);
+		render(
+			<div style={style}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} />
+			</div>,
+		);
 
 		const headers = [...document.querySelectorAll('thead th')];
 		const firstWeek = dayButton(june(1)).closest('tr') as HTMLElement;
@@ -196,18 +195,5 @@ describe('Calendar styling', () => {
 
 			expect(Math.abs(drift)).toBeLessThanOrEqual(1);
 		}
-	});
-
-	it('merges a style of its own onto the root', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				testId="calendar"
-				style={{ padding: '3px' }}
-			/>,
-		);
-
-		expect(getComputedStyle(screen.getByTestId('calendar')).padding).toBe('3px');
 	});
 });

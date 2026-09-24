@@ -82,44 +82,31 @@ describe('Checkbox rendering', () => {
 		expect(screen.getByTestId('container')).toHaveAttribute('data-text-overflow', 'wrap');
 	});
 
-	it('forwards className, style, aria and data attributes to the checkbox itself', () => {
+	it('forwards aria and data attributes to the checkbox itself', () => {
 		render(
 			<Checkbox
 				color="primary"
 				testId="checkbox"
-				className="custom"
-				style={{ marginInline: '4px' }}
 				aria-label="Accept the terms"
 				data-analytics="tos-checkbox"
 			/>,
 		);
 
 		const root = screen.getByTestId('checkbox');
-		expect(root).toHaveClass('custom');
-		expect(root).toHaveStyle({ marginInline: '4px' });
 		expect(root).toHaveAttribute('aria-label', 'Accept the terms');
 		expect(root).toHaveAttribute('data-analytics', 'tos-checkbox');
 	});
 
 	it('keeps container props on the wrapper, away from the checkbox', () => {
 		render(
-			<Checkbox
-				color="primary"
-				testId="checkbox"
-				containerTestId="container"
-				containerId="row"
-				containerClassName="row-class"
-				containerStyle={{ marginBlock: '12px' }}
-			>
+			<Checkbox color="primary" testId="checkbox" containerTestId="container" containerId="row">
 				Accept the terms
 			</Checkbox>,
 		);
 
 		const container = screen.getByTestId('container');
 		expect(container).toHaveAttribute('id', 'row');
-		expect(container).toHaveClass('row-class');
-		expect(container).toHaveStyle({ marginBlock: '12px' });
-		expect(screen.getByTestId('checkbox')).not.toHaveClass('row-class');
+		expect(screen.getByTestId('checkbox')).not.toHaveAttribute('id', 'row');
 	});
 
 	it('checks the defaultValue on first render', () => {

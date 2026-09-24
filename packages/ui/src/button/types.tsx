@@ -191,8 +191,6 @@ export interface ButtonBaseProps
 		Pick<
 			ButtonHTMLAttributes<HTMLButtonElement>,
 			| 'id'
-			| 'className'
-			| 'style'
 			| 'tabIndex'
 			| 'autoFocus'
 			| 'type'
@@ -262,7 +260,7 @@ export interface ButtonBaseProps
 	loadingTooltip?: ReactNode;
 	/**
 	 * The width of this button. Written as the `--button-internal-width` custom property, so it
-	 * composes with the tokens instead of overwriting `style.width`. Numbers are written as `px`.
+	 * composes with the tokens. Numbers are written as `px`.
 	 * Without it the button sizes to its content.
 	 */
 	width?: CSSProperties['width'];
@@ -285,3 +283,11 @@ export interface ButtonBaseProps
 }
 
 export type ButtonProps = ButtonBaseProps & VariantColorType & IconPrefixSuffixType;
+
+/**
+ * `className` and `style`, for the library's own components that build on `Button`. The package
+ * does not export them: outside it a button is styled through its props and `--button-*` tokens.
+ *
+ * @access private
+ */
+export type ButtonStyleProps = Pick<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'style'>;

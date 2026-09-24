@@ -137,11 +137,6 @@ const meta: Meta<typeof RadioGroup> = {
 				'Forwarded to the rendered element as `data-testid`. Also names every row, as `${testId}-item-${value}`, unless the item carries a `testId` of its own.',
 			table: { category: 'Testing' },
 		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Styling' },
-		},
 		id: {
 			control: 'text',
 			table: { category: 'Accessibility' },
@@ -408,13 +403,14 @@ export const RadioGroupShowcase: Story = {
 							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
 								{textOverflow}
 							</Typography>
-							<RadioGroup
-								color="primary"
-								className={styles.narrow}
-								textOverflow={textOverflow}
-								defaultValue="staging"
-								items={LONG_ITEMS}
-							/>
+							<div className={styles.narrow}>
+								<RadioGroup
+									color="primary"
+									textOverflow={textOverflow}
+									defaultValue="staging"
+									items={LONG_ITEMS}
+								/>
+							</div>
 							<span />
 						</Fragment>
 					))}

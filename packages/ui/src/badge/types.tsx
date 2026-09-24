@@ -11,7 +11,7 @@ export type BadgeColorType = (typeof BadgeColor)[keyof typeof BadgeColor];
 export type BadgeTextOverflowType = (typeof BadgeTextOverflow)[keyof typeof BadgeTextOverflow];
 export type BadgeTextTransformType = (typeof BadgeTextTransform)[keyof typeof BadgeTextTransform];
 
-export type BadgeProps = Pick<React.ComponentProps<'span'>, 'className' | 'id' | 'style'> & {
+export type BadgeProps = Pick<React.ComponentProps<'span'>, 'id'> & {
 	/**
 	 * Forwarded to the rendered element as `data-testid`.
 	 */

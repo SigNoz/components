@@ -248,15 +248,7 @@ describe('remaining props', () => {
 			/>,
 		);
 		assertType(<Switch color="primary" textPlacement="right" width={240} maxWidth="100%" />);
-		assertType(
-			<Switch
-				color="primary"
-				textPlacement="right"
-				containerId="row"
-				containerClassName="row"
-				containerStyle={{}}
-			/>,
-		);
+		assertType(<Switch color="primary" textPlacement="right" containerId="row" />);
 		assertType(
 			<Switch color="primary" textPlacement="right" containerRef={containerRef}>
 				Wrap text
@@ -278,5 +270,16 @@ describe('unknown props', () => {
 	test('rejects the dropped isLoading prop', () => {
 		// @ts-expect-error - `isLoading` was dropped in the rework, no other input supports loading
 		assertType(<Switch color="primary" textPlacement="right" isLoading />);
+	});
+
+	test('rejects className and style on the switch and on its wrapper', () => {
+		// @ts-expect-error - `className` is not a prop
+		assertType(<Switch color="primary" textPlacement="right" className="x" />);
+		// @ts-expect-error - `style` is not a prop
+		assertType(<Switch color="primary" textPlacement="right" style={{}} />);
+		// @ts-expect-error - `containerClassName` is not a prop
+		assertType(<Switch color="primary" textPlacement="right" containerClassName="x" />);
+		// @ts-expect-error - `containerStyle` is not a prop
+		assertType(<Switch color="primary" textPlacement="right" containerStyle={{}} />);
 	});
 });

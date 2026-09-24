@@ -78,11 +78,10 @@ const CALENDAR_COMPONENTS = {
  * set on the cell never reaches the day number, and the button covers the cell, so a background set
  * there is either hidden or has to be undone again for each selection state.
  *
- * ### Class names
+ * ### Styling
  *
- * `className` lands on the root. `classNames` names one part of the grid at a time, and each entry
- * is appended to the calendar's own class for that part rather than replacing it, so overriding
- * `day` does not strip the day styling.
+ * Through the `--calendar-*` tokens only. react-day-picker's `className`, `classNames`, `style`,
+ * `styles`, `modifiersClassNames` and `modifiersStyles` are not accepted.
  *
  * ### The ref
  *
@@ -170,16 +169,7 @@ const CALENDAR_COMPONENTS = {
  * ```
  */
 export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calendar(
-	{
-		className,
-		classNames,
-		showOutsideDays = true,
-		captionLayout = 'label',
-		formatters,
-		components,
-		testId,
-		...props
-	},
+	{ showOutsideDays = true, captionLayout = 'label', formatters, components, testId, ...props },
 	ref,
 ) {
 	const calendarFormatters = useMemo<Partial<Formatters>>(() => {
@@ -192,7 +182,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
 	}, [formatters]);
 
 	const calendarClassNames = useMemo<Partial<ClassNames>>(() => {
-		const ownClassNames: Partial<ClassNames> = {
+		return {
 			root: cn(styles['calendar'], defaultClassNames.root),
 			months: cn(styles['calendar__months'], defaultClassNames.months),
 			month: cn(styles['calendar__month'], defaultClassNames.month),
@@ -220,23 +210,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
 			day: cn(styles['calendar__day'], defaultClassNames.day),
 			hidden: cn(styles['calendar__hidden'], defaultClassNames.hidden),
 		};
-
-		if (classNames === undefined) {
-			return ownClassNames;
-		}
-
-		// Merged per part rather than replaced, so a consumer naming one of them keeps the styling
-		// the calendar puts there, the same way `className` merges on the root.
-		const mergedClassNames: Partial<ClassNames> = { ...ownClassNames };
-
-		for (const part of Object.keys(classNames) as Array<keyof ClassNames>) {
-			// react-day-picker's own class for a part it styles and the calendar does not, so naming
-			// `footer` adds to `rdp-footer` rather than replacing it.
-			mergedClassNames[part] = cn(ownClassNames[part] ?? defaultClassNames[part], classNames[part]);
-		}
-
-		return mergedClassNames;
-	}, [captionLayout, classNames]);
+	}, [captionLayout]);
 
 	const calendarComponents = useMemo<DayPickerProps['components']>(() => {
 		return { ...CALENDAR_COMPONENTS, ...components };
@@ -249,7 +223,6 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
 			<DayPicker
 				data-slot="calendar"
 				showOutsideDays={showOutsideDays}
-				className={className}
 				captionLayout={captionLayout}
 				formatters={calendarFormatters}
 				classNames={calendarClassNames}

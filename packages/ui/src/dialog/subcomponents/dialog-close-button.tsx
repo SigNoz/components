@@ -1,7 +1,8 @@
 import { X } from '@signozhq/icons';
 import { forwardRef } from 'react';
+import { InternalButton } from '../../button/button.js';
+import type { ButtonStyleProps } from '../../button/types.js';
 import {
-	Button,
 	type ButtonProps,
 	type ColorType,
 	type SizeType,
@@ -25,41 +26,42 @@ export type DialogCloseButtonProps = Omit<
 	| 'color'
 	| 'disabled'
 	| 'disabledTooltip'
-> & {
-	/**
-	 * Accessible label for screen readers.
-	 * @default "Close"
-	 */
-	ariaLabel?: string;
-	/**
-	 * Optional icon rendered inside the button. Defaults to a close icon.
-	 */
-	icon?: React.ReactElement;
-	/**
-	 * Visual style of the button.
-	 * @default "ghost"
-	 */
-	variant?: VariantType;
-	/**
-	 * Height + padding token.
-	 * @default "md"
-	 */
-	size?: SizeType;
-	/**
-	 * Color scheme applied to the variant. Only `solid` and `link` support colors
-	 * other than `secondary`.
-	 * @default "secondary"
-	 */
-	color?: ColorType;
-	/**
-	 * When true, the button does not close the dialog on click.
-	 */
-	disabled?: boolean;
-	/**
-	 * Reason shown in a tooltip while the button is disabled.
-	 */
-	disabledTooltip?: React.ReactNode;
-};
+> &
+	ButtonStyleProps & {
+		/**
+		 * Accessible label for screen readers.
+		 * @default "Close"
+		 */
+		ariaLabel?: string;
+		/**
+		 * Optional icon rendered inside the button. Defaults to a close icon.
+		 */
+		icon?: React.ReactElement;
+		/**
+		 * Visual style of the button.
+		 * @default "ghost"
+		 */
+		variant?: VariantType;
+		/**
+		 * Height + padding token.
+		 * @default "md"
+		 */
+		size?: SizeType;
+		/**
+		 * Color scheme applied to the variant. Only `solid` and `link` support colors
+		 * other than `secondary`.
+		 * @default "secondary"
+		 */
+		color?: ColorType;
+		/**
+		 * When true, the button does not close the dialog on click.
+		 */
+		disabled?: boolean;
+		/**
+		 * Reason shown in a tooltip while the button is disabled.
+		 */
+		disabledTooltip?: React.ReactNode;
+	};
 
 /**
  * Icon button that closes the dialog. Renders an X icon by default.
@@ -121,7 +123,7 @@ export const DialogCloseButton = forwardRef<HTMLButtonElement, DialogCloseButton
 	) => {
 		return (
 			<DialogClose asChild>
-				<Button
+				<InternalButton
 					ref={ref}
 					type="button"
 					aria-label={ariaLabel}
@@ -137,7 +139,7 @@ export const DialogCloseButton = forwardRef<HTMLButtonElement, DialogCloseButton
 					{...buttonProps}
 				>
 					{icon}
-				</Button>
+				</InternalButton>
 			</DialogClose>
 		);
 	},

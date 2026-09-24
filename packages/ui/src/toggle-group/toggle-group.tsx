@@ -1,8 +1,13 @@
 import { ToggleGroup as ToggleGroupPrimitive } from '@base-ui/react/toggle-group';
-import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
+import {
+	type CSSProperties,
+	forwardRef,
+	type ReactElement,
+	type RefAttributes,
+	useMemo,
+} from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
-import { cn } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { ToggleGroupScrollDirection, ToggleGroupType } from './constants.js';
 import { ToggleGroupButton } from './subcomponents/toggle-group-button.js';
@@ -30,7 +35,6 @@ function toGroupValue(value: string | string[] | undefined): string[] | undefine
 
 const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function ToggleGroup(
 	{
-		className,
 		items,
 		type,
 		variant,
@@ -47,7 +51,6 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		testId,
 		width,
 		maxWidth,
-		style,
 		...props
 	},
 	ref,
@@ -101,12 +104,11 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 	});
 
 	const toggleGroupStyle = {
-		...style,
 		...(width != null && { '--toggle-group-internal-inline-size': toCssLength(width) }),
 		...(maxWidth != null && {
 			'--toggle-group-internal-max-inline-size': toCssLength(maxWidth),
 		}),
-	};
+	} as CSSProperties;
 
 	return (
 		<div
@@ -117,7 +119,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 			data-size={size}
 			data-disabled={isDisabled || undefined}
 			data-readonly={isReadOnly || undefined}
-			className={cn(styles['toggle-group'], className)}
+			className={styles['toggle-group']}
 			style={toggleGroupStyle}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
@@ -284,8 +286,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * `width` and `maxWidth` are written as inline `--toggle-group-internal-inline-size` and
  * `--toggle-group-internal-max-inline-size`.
  *
- * So they compose with the tokens instead of overwriting `style.width`. Numbers are written as
- * `px`, and any `style` you pass is kept.
+ * So they compose with the tokens. Numbers are written as `px`.
  *
  * They size the bar, never one button: a button holds its own size and the bar scrolls instead.
  *

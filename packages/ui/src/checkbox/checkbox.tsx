@@ -1,8 +1,16 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { Check, Minus } from '@signozhq/icons';
-import { forwardRef, type ReactElement, type RefAttributes, useId, useMemo, useState } from 'react';
+import {
+	type CSSProperties,
+	forwardRef,
+	type ReactElement,
+	type RefAttributes,
+	useId,
+	useMemo,
+	useState,
+} from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { cn, hasRenderableContent } from '../lib/utils.js';
+import { hasRenderableContent } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -21,8 +29,6 @@ import type { CheckboxProps, ValidateCheckboxProps } from './types.js';
 const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbox(
 	{
 		id,
-		className,
-		style,
 		children,
 		tabIndex,
 		color,
@@ -39,8 +45,6 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		testId,
 		width,
 		maxWidth,
-		containerClassName,
-		containerStyle,
 		containerId,
 		containerTestId,
 		containerRef,
@@ -76,12 +80,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 
 	const hasLabel = hasRenderableContent(children);
 	const hasContainer =
-		hasLabel ||
-		containerClassName !== undefined ||
-		containerStyle !== undefined ||
-		containerId !== undefined ||
-		containerTestId !== undefined ||
-		containerRef != null;
+		hasLabel || containerId !== undefined || containerTestId !== undefined || containerRef != null;
 
 	const hasOverflowTooltip = hasLabel && textOverflow === CheckboxTextOverflow.Ellipsis;
 	const [isLabelTruncated, labelRef] = useIsLabelTruncated(hasOverflowTooltip);
@@ -119,7 +118,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 	const sizeStyle = {
 		...(width == null ? {} : { '--checkbox-internal-width': toCssLength(width) }),
 		...(maxWidth == null ? {} : { '--checkbox-internal-max-width': toCssLength(maxWidth) }),
-	};
+	} as CSSProperties;
 
 	const checkboxEl = (
 		<CheckboxPrimitive.Root
@@ -127,8 +126,8 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			id={id}
 			data-slot="checkbox"
 			data-color={color}
-			className={cn(styles['checkbox'], className)}
-			style={hasContainer ? style : { ...style, ...sizeStyle }}
+			className={styles['checkbox']}
+			style={hasContainer ? undefined : sizeStyle}
 			checked={value === undefined ? undefined : value === true}
 			defaultChecked={defaultValue === undefined ? undefined : defaultValue === true}
 			onCheckedChange={onCheckedChange}
@@ -166,8 +165,8 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			id={containerId}
 			data-slot="checkbox-container"
 			data-text-overflow={textOverflow}
-			className={cn(styles['checkbox-container'], containerClassName)}
-			style={{ ...containerStyle, ...sizeStyle }}
+			className={styles['checkbox-container']}
+			style={sizeStyle}
 			{...(containerTestId === undefined ? {} : { 'data-testid': containerTestId })}
 		>
 			{checkboxEl}

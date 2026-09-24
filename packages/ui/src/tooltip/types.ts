@@ -56,19 +56,6 @@ export interface TooltipProps {
 	 */
 	container?: TooltipContainer;
 	/**
-	 * Class name of the tooltip content. Merges with the styles of the component
-	 * instead of replacing them.
-	 *
-	 * @note Reach for it only when nothing else works: padding and colours belong in
-	 * the component, not at the call site.
-	 */
-	className?: string;
-	/**
-	 * Inline styles of the tooltip content, for the exceptional case a class name
-	 * cannot cover.
-	 */
-	style?: React.CSSProperties;
-	/**
 	 * Id of the tooltip content. One is generated when it is left out.
 	 */
 	id?: string;
@@ -79,7 +66,7 @@ export interface TooltipProps {
 	/**
 	 * Any `data-*` attribute is forwarded to the tooltip content, the only element this
 	 * component renders of its own. A stacked tooltip has no content, so its `data-*` land
-	 * on the trigger it clones, next to its `className` and `style`.
+	 * on the trigger it clones.
 	 */
 	[dataAttribute: `data-${string}`]: unknown;
 }

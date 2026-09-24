@@ -111,7 +111,7 @@ describe('container', () => {
 describe('remaining props', () => {
 	test('accepts the presentational and test ones', () => {
 		assertType(
-			<Tooltip title="Text" className="x" style={{ color: 'red' }} id="tip">
+			<Tooltip title="Text" id="tip">
 				{trigger}
 			</Tooltip>,
 		);
@@ -165,6 +165,21 @@ describe('remaining props', () => {
 		assertType(
 			// @ts-expect-error - `onOpenChange` is not exposed
 			<Tooltip title="Text" onOpenChange={() => {}}>
+				{trigger}
+			</Tooltip>,
+		);
+	});
+
+	test('rejects className and style, the popup is styled by its tokens', () => {
+		assertType(
+			// @ts-expect-error - `className` is not a prop
+			<Tooltip title="Text" className="x">
+				{trigger}
+			</Tooltip>,
+		);
+		assertType(
+			// @ts-expect-error - `style` is not a prop
+			<Tooltip title="Text" style={{}}>
 				{trigger}
 			</Tooltip>,
 		);

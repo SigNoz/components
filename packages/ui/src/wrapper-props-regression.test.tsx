@@ -1,21 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Badge } from './badge/badge.js';
 import { Checkbox } from './checkbox/checkbox.js';
 import { Command, CommandInput } from './command/command.js';
 import { Input } from './input/input.js';
 import { Switch } from './switch/switch.js';
 
 describe('wrapper prop targeting regressions', () => {
-	it('forwards style on Badge', () => {
-		render(
-			<Badge variant="solid" color="primary" style={{ letterSpacing: '2px' }}>
-				L
-			</Badge>,
-		);
-		expect(screen.getByText('L')).toHaveStyle({ letterSpacing: '2px' });
-	});
-
 	it('keeps Input control props on the input and exposes container props for adorned inputs', () => {
 		render(
 			<Input
@@ -52,12 +42,8 @@ describe('wrapper prop targeting regressions', () => {
 				textPlacement="right"
 				id="notifications"
 				testId="notifications-switch"
-				className="switch-class"
-				style={{ opacity: 0.5 }}
 				containerId="notifications-container"
 				containerTestId="notifications-container"
-				containerClassName="switch-container-class"
-				containerStyle={{ marginBlock: '12px' }}
 			>
 				Notifications
 			</Switch>,
@@ -69,11 +55,7 @@ describe('wrapper prop targeting regressions', () => {
 		// Base UI puts `id` on the hidden input, the element a consumer `htmlFor` points at.
 		expect(document.querySelector('input#notifications')).not.toBeNull();
 		expect(control).toHaveAttribute('data-testid', 'notifications-switch');
-		expect(control).toHaveClass('switch-class');
-		expect(control).toHaveStyle({ opacity: '0.5' });
 		expect(container).toHaveAttribute('id', 'notifications-container');
-		expect(container).toHaveClass('switch-container-class');
-		expect(container).toHaveStyle({ marginBlock: '12px' });
 	});
 
 	it('keeps Checkbox control props on the checkbox root and exposes container props for the wrapper', () => {
@@ -82,12 +64,8 @@ describe('wrapper prop targeting regressions', () => {
 				color="primary"
 				id="tos"
 				testId="tos-checkbox"
-				className="checkbox-class"
-				style={{ opacity: 0.5 }}
 				containerId="tos-container"
 				containerTestId="tos-container"
-				containerClassName="checkbox-container-class"
-				containerStyle={{ marginBlock: '12px' }}
 			>
 				Accept the terms
 			</Checkbox>,
@@ -99,11 +77,7 @@ describe('wrapper prop targeting regressions', () => {
 		// Base UI puts `id` on the hidden input, the element a consumer `htmlFor` points at.
 		expect(document.querySelector('input#tos')).not.toBeNull();
 		expect(control).toHaveAttribute('data-testid', 'tos-checkbox');
-		expect(control).toHaveClass('checkbox-class');
-		expect(control).toHaveStyle({ opacity: '0.5' });
 		expect(container).toHaveAttribute('id', 'tos-container');
-		expect(container).toHaveClass('checkbox-container-class');
-		expect(container).toHaveStyle({ marginBlock: '12px' });
 	});
 
 	it('keeps CommandInput control props on the input and exposes container props for the wrapper', () => {

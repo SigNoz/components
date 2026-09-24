@@ -26,7 +26,15 @@
   max-width: 100%;
 }
 
+/*
+ * The card around a calendar, on a wrapper because the calendar takes no class. The wrapper paints
+ * the background so the calendar's own square one cannot poke past the rounded corners.
+ */
 .calendarCard {
+  width: fit-content;
+  max-width: 100%;
+  background-color: var(--calendar-background);
+  --calendar-background-color: transparent;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: 0 1px 2px 0 color-mix(in srgb, var(--foreground) 5%, transparent);

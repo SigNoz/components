@@ -32,8 +32,7 @@ import type { BadgeProps } from './types.js';
  * `width` and `maxWidth` are written as inline `--badge-internal-width` and
  * `--badge-internal-max-width`.
  *
- * So they compose with the tokens instead of overwriting `style.width`. Numbers are written as
- * `px`, and any `style` you pass is kept.
+ * So they compose with the tokens. Numbers are written as `px`.
  *
  * ### Asserting on it
  *

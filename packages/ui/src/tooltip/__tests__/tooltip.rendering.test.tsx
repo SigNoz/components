@@ -121,28 +121,6 @@ describe('Tooltip content rendering', () => {
 		expect(screen.getByRole('tooltip')).toHaveAttribute('data-slot', 'tooltip-content');
 	});
 
-	it('keeps the component class next to a custom className', () => {
-		render(
-			<Tooltip open title="Helpful information" className="custom-class">
-				<button type="button">Hover</button>
-			</Tooltip>,
-		);
-
-		const tooltip = screen.getByRole('tooltip');
-		expect(tooltip).toHaveClass('custom-class');
-		expect(tooltip.className.split(' ').length).toBeGreaterThan(1);
-	});
-
-	it('forwards style to the content', () => {
-		render(
-			<Tooltip open title="Helpful information" style={{ color: 'red' }}>
-				<button type="button">Hover</button>
-			</Tooltip>,
-		);
-
-		expect(screen.getByRole('tooltip')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-	});
-
 	it('renders a rich title, not only text', () => {
 		render(
 			<Tooltip open title={<strong data-testid="rich">Ask an admin</strong>}>

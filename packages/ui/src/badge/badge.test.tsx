@@ -124,18 +124,6 @@ describe('Badge width', () => {
 		expect(style.getPropertyValue('--badge-internal-width')).toBe('');
 		expect(style.getPropertyValue('--badge-internal-max-width')).toBe('');
 	});
-
-	it('keeps the caller style alongside the custom properties', () => {
-		render(
-			<Badge variant="solid" color="primary" width="10rem" style={{ marginTop: '4px' }}>
-				Active
-			</Badge>,
-		);
-
-		const badge = screen.getByText('Active').closest('[data-slot="badge"]') as HTMLElement;
-		expect(badge).toHaveStyle({ marginTop: '4px' });
-		expect(badge.style.getPropertyValue('--badge-internal-width')).toBe('10rem');
-	});
 });
 
 const LABEL = 'kubernetes-deployment-production-east-us-2';
