@@ -7,9 +7,12 @@
  * |-------|---------|
  * | `--dropdown-backdrop-filter` | `blur(40px)` |
  * | `--dropdown-background` | `-` |
+ * | `--dropdown-background-color` | `var(--dropdown-background)` |
  * | `--dropdown-border` | `-` |
+ * | `--dropdown-border-color` | `var(--dropdown-border)` |
  * | `--dropdown-border-radius` | `var(--radius-2)` |
  * | `--dropdown-border-width` | `1px` |
+ * | `--dropdown-box-shadow` | `var(--dropdown-shadow)` |
  * | `--dropdown-display` | `flex` |
  * | `--dropdown-flex-direction` | `column` |
  * | `--dropdown-focus-outline-offset` | `-1px` |
@@ -18,6 +21,7 @@
  * | `--dropdown-group-display` | `flex` |
  * | `--dropdown-group-flex-direction` | `column` |
  * | `--dropdown-group-label` | `-` |
+ * | `--dropdown-group-label-color` | `var(--dropdown-group-label)` |
  * | `--dropdown-group-label-font-size` | `var(--periscope-font-size-small)` |
  * | `--dropdown-group-label-font-weight` | `var(--font-weight-bold)` |
  * | `--dropdown-group-label-letter-spacing` | `0.04em` |
@@ -31,36 +35,51 @@
  * | `--dropdown-item-affix-justify-content` | `center` |
  * | `--dropdown-item-align-items` | `center` |
  * | `--dropdown-item-background` | `-` |
+ * | `--dropdown-item-background-color` | `var(--dropdown-item-background)` |
  * | `--dropdown-item-background-hover` | `-` |
  * | `--dropdown-item-border-radius` | `var(--radius-1)` |
  * | `--dropdown-item-checkbox-border-radius` | `2px` |
  * | `--dropdown-item-checkbox-check-size` | `12px` |
+ * | `--dropdown-item-color` | `var(--dropdown-item-label)` |
  * | `--dropdown-item-control-align-items` | `center` |
  * | `--dropdown-item-control-background` | `transparent` |
- * | `--dropdown-item-control-border` | `var(--l3-foreground)` |
- * | `--dropdown-item-control-border-hover` | `var(--primary-background-hover)` |
+ * | `--dropdown-item-control-border` | `-` |
+ * | `--dropdown-item-control-border-color` | `var(--dropdown-item-control-border)` |
+ * | `--dropdown-item-control-border-hover` | `-` |
  * | `--dropdown-item-control-border-width` | `2px` |
- * | `--dropdown-item-control-checked-background` | `var(--primary-background)` |
- * | `--dropdown-item-control-checked-foreground` | `var(--primary-foreground)` |
+ * | `--dropdown-item-control-checked-background` | `-` |
+ * | `--dropdown-item-control-checked-background-color` | `var(--dropdown-item-control-checked-background)` |
+ * | `--dropdown-item-control-checked-color` | `var(--dropdown-item-control-checked-foreground)` |
+ * | `--dropdown-item-control-checked-foreground` | `-` |
  * | `--dropdown-item-control-disabled-checked-opacity` | `0.6` |
  * | `--dropdown-item-control-disabled-opacity` | `0.4` |
  * | `--dropdown-item-control-display` | `inline-flex` |
+ * | `--dropdown-item-control-hover-border-color` | `var(--dropdown-item-control-border-hover)` |
  * | `--dropdown-item-control-justify-content` | `center` |
  * | `--dropdown-item-control-size` | `16px` |
  * | `--dropdown-item-control-transition` | `background-color 150ms ease,     border-color 1...` |
  * | `--dropdown-item-cursor` | `pointer` |
  * | `--dropdown-item-danger-background-hover` | `-` |
+ * | `--dropdown-item-danger-color` | `var(--dropdown-item-danger-label)` |
+ * | `--dropdown-item-danger-hover-background-color` | `var(--dropdown-item-danger-background-hover)` |
+ * | `--dropdown-item-danger-hover-color` | `var(--dropdown-item-danger-label-hover)` |
  * | `--dropdown-item-danger-label` | `-` |
  * | `--dropdown-item-danger-label-hover` | `-` |
+ * | `--dropdown-item-disabled-color` | `var(--dropdown-item-label-disabled)` |
  * | `--dropdown-item-disabled-cursor` | `not-allowed` |
  * | `--dropdown-item-display` | `flex` |
  * | `--dropdown-item-focus-ring` | `-` |
+ * | `--dropdown-item-focus-ring-color` | `var(--dropdown-item-focus-ring)` |
  * | `--dropdown-item-font-size` | `var(--periscope-font-size-base)` |
  * | `--dropdown-item-font-weight` | `var(--font-weight-normal)` |
  * | `--dropdown-item-gap` | `var(--spacing-2)` |
+ * | `--dropdown-item-hover-background-color` | `var(--dropdown-item-background-hover)` |
+ * | `--dropdown-item-hover-color` | `var(--dropdown-item-label-hover)` |
  * | `--dropdown-item-hover-outline` | `none` |
  * | `--dropdown-item-icon` | `-` |
+ * | `--dropdown-item-icon-color` | `var(--dropdown-item-icon)` |
  * | `--dropdown-item-icon-hover` | `-` |
+ * | `--dropdown-item-icon-hover-color` | `var(--dropdown-item-icon-hover)` |
  * | `--dropdown-item-icon-size` | `14px` |
  * | `--dropdown-item-label` | `-` |
  * | `--dropdown-item-label-disabled` | `-` |
@@ -83,6 +102,7 @@
  * | `--dropdown-loading-display` | `flex` |
  * | `--dropdown-loading-justify-content` | `center` |
  * | `--dropdown-loading-label` | `-` |
+ * | `--dropdown-loading-label-color` | `var(--dropdown-loading-label)` |
  * | `--dropdown-max-block-size` | `var(--dropdown-internal-max-block-size, 20rem)` |
  * | `--dropdown-max-inline-size` | `var(--dropdown-internal-max-inline-size, 15.75rem)` |
  * | `--dropdown-max-popup-block-size` | `var(--available-height, none)` |
@@ -98,11 +118,13 @@
  * | `--dropdown-search-affix-justify-content` | `center` |
  * | `--dropdown-search-align-items` | `center` |
  * | `--dropdown-search-border` | `-` |
+ * | `--dropdown-search-border-color` | `var(--dropdown-search-border)` |
  * | `--dropdown-search-border-width` | `1px` |
  * | `--dropdown-search-display` | `flex` |
  * | `--dropdown-search-flex-shrink` | `0` |
  * | `--dropdown-search-gap` | `var(--spacing-4)` |
  * | `--dropdown-search-icon` | `-` |
+ * | `--dropdown-search-icon-color` | `var(--dropdown-search-icon)` |
  * | `--dropdown-search-input-background-color` | `transparent` |
  * | `--dropdown-search-input-border` | `none` |
  * | `--dropdown-search-input-flex-grow` | `1` |
@@ -110,7 +132,9 @@
  * | `--dropdown-search-input-min-inline-size` | `0` |
  * | `--dropdown-search-padding` | `var(--spacing-5) var(--spacing-6)` |
  * | `--dropdown-search-placeholder` | `-` |
+ * | `--dropdown-search-placeholder-color` | `var(--dropdown-search-placeholder)` |
  * | `--dropdown-separator` | `-` |
+ * | `--dropdown-separator-background-color` | `var(--dropdown-separator)` |
  * | `--dropdown-separator-margin-block` | `var(--spacing-2)` |
  * | `--dropdown-separator-margin-inline` | `0` |
  * | `--dropdown-separator-thickness` | `1px` |

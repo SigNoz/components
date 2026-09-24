@@ -1,42 +1,30 @@
 // Rules read colour only through the `--dropdown-internal-*` pairs below, never a semantic token
 // directly.
 .dropdown {
-  --dropdown-internal-background: var(--dropdown-background);
-  --dropdown-internal-border: var(--dropdown-border);
-  --dropdown-internal-shadow: var(--dropdown-shadow);
-  --dropdown-internal-item-label: var(--dropdown-item-label);
-  --dropdown-internal-item-label-hover: var(--dropdown-item-label-hover);
-  --dropdown-internal-item-label-disabled: var(--dropdown-item-label-disabled);
-  --dropdown-internal-item-background: var(--dropdown-item-background);
-  --dropdown-internal-item-background-hover: var(--dropdown-item-background-hover);
-  --dropdown-internal-item-danger-label: var(--dropdown-item-danger-label);
-  --dropdown-internal-item-danger-label-hover: var(--dropdown-item-danger-label-hover);
-  --dropdown-internal-item-danger-background-hover: var(
-    --dropdown-item-danger-background-hover
-  );
-  --dropdown-internal-item-icon: var(--dropdown-item-icon);
-  --dropdown-internal-item-icon-hover: var(--dropdown-item-icon-hover);
-  // Not in `@signozhq/design-tokens` yet, so each falls back to the semantic token it mirrors.
-  --dropdown-internal-item-control-border: var(--dropdown-item-control-border, var(--l3-foreground));
-  --dropdown-internal-item-control-border-hover: var(
-    --dropdown-item-control-border-hover,
-    var(--primary-background-hover)
-  );
-  --dropdown-internal-item-control-checked-background: var(
-    --dropdown-item-control-checked-background,
-    var(--primary-background)
-  );
-  --dropdown-internal-item-control-checked-foreground: var(
-    --dropdown-item-control-checked-foreground,
-    var(--primary-foreground)
-  );
-  --dropdown-internal-group-label: var(--dropdown-group-label);
-  --dropdown-internal-separator: var(--dropdown-separator);
-  --dropdown-internal-search-placeholder: var(--dropdown-search-placeholder);
-  --dropdown-internal-search-icon: var(--dropdown-search-icon);
-  --dropdown-internal-search-border: var(--dropdown-search-border);
-  --dropdown-internal-loading-label: var(--dropdown-loading-label);
-  --dropdown-internal-item-focus-ring: var(--dropdown-item-focus-ring);
+  --dropdown-internal-background: var(--dropdown-background-color, var(--dropdown-background));
+  --dropdown-internal-border: var(--dropdown-border-color, var(--dropdown-border));
+  --dropdown-internal-shadow: var(--dropdown-box-shadow, var(--dropdown-shadow));
+  --dropdown-internal-item-label: var(--dropdown-item-color, var(--dropdown-item-label));
+  --dropdown-internal-item-label-hover: var(--dropdown-item-hover-color, var(--dropdown-item-label-hover));
+  --dropdown-internal-item-label-disabled: var(--dropdown-item-disabled-color, var(--dropdown-item-label-disabled));
+  --dropdown-internal-item-background: var(--dropdown-item-background-color, var(--dropdown-item-background));
+  --dropdown-internal-item-background-hover: var(--dropdown-item-hover-background-color, var(--dropdown-item-background-hover));
+  --dropdown-internal-item-danger-label: var(--dropdown-item-danger-color, var(--dropdown-item-danger-label));
+  --dropdown-internal-item-danger-label-hover: var(--dropdown-item-danger-hover-color, var(--dropdown-item-danger-label-hover));
+  --dropdown-internal-item-danger-background-hover: var(--dropdown-item-danger-hover-background-color, var(--dropdown-item-danger-background-hover));
+  --dropdown-internal-item-icon: var(--dropdown-item-icon-color, var(--dropdown-item-icon));
+  --dropdown-internal-item-icon-hover: var(--dropdown-item-icon-hover-color, var(--dropdown-item-icon-hover));
+  --dropdown-internal-item-control-border: var(--dropdown-item-control-border-color, var(--dropdown-item-control-border));
+  --dropdown-internal-item-control-border-hover: var(--dropdown-item-control-hover-border-color, var(--dropdown-item-control-border-hover));
+  --dropdown-internal-item-control-checked-background: var(--dropdown-item-control-checked-background-color, var(--dropdown-item-control-checked-background));
+  --dropdown-internal-item-control-checked-foreground: var(--dropdown-item-control-checked-color, var(--dropdown-item-control-checked-foreground));
+  --dropdown-internal-group-label: var(--dropdown-group-label-color, var(--dropdown-group-label));
+  --dropdown-internal-separator: var(--dropdown-separator-background-color, var(--dropdown-separator));
+  --dropdown-internal-search-placeholder: var(--dropdown-search-placeholder-color, var(--dropdown-search-placeholder));
+  --dropdown-internal-search-icon: var(--dropdown-search-icon-color, var(--dropdown-search-icon));
+  --dropdown-internal-search-border: var(--dropdown-search-border-color, var(--dropdown-search-border));
+  --dropdown-internal-loading-label: var(--dropdown-loading-label-color, var(--dropdown-loading-label));
+  --dropdown-internal-item-focus-ring: var(--dropdown-item-focus-ring-color, var(--dropdown-item-focus-ring));
 
   display: var(--dropdown-display, flex);
   flex-direction: var(--dropdown-flex-direction, column);
