@@ -10,7 +10,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { hasRenderableContent, omitStyleProps } from '../lib/utils.js';
+import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../tooltip/subcomponents/tooltip-stack.js';
@@ -44,8 +44,10 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		containerId,
 		containerTestId,
 		containerRef,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: CheckboxProps & RejectedProps,
 	ref,
 ) {
 	const labelId = useId();
@@ -139,7 +141,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			required={required}
 			name={name}
 			aria-labelledby={hasLabel ? labelId : undefined}
-			{...omitStyleProps(props)}
+			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			<span data-slot="checkbox-box" className={styles['checkbox__box']}>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { omitStyleProps } from '../../lib/utils.js';
+import type { RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { useStackedTooltipProps } from '../tooltip-stacked-props.js';
 import type { TooltipProps } from '../types.js';
@@ -105,10 +105,17 @@ import type { TooltipProps } from '../types.js';
  * ```
  */
 export const Tooltip = React.forwardRef<HTMLButtonElement, TooltipProps>(function Tooltip(
-	{ title, children, open, ...props },
+	{
+		title,
+		children,
+		open,
+		className: _className,
+		style: _style,
+		...props
+	}: TooltipProps & RejectedProps,
 	ref,
 ) {
-	const { triggerProps, contentProps } = useStackedTooltipProps(omitStyleProps(props));
+	const { triggerProps, contentProps } = useStackedTooltipProps(props);
 
 	return (
 		<TooltipAnchor

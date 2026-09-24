@@ -3,7 +3,7 @@ import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'reac
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
 import { RadioGroupTextOverflow } from './constants.js';
-import { omitStyleProps } from '../lib/utils.js';
+import type { RejectedProps } from '../lib/utils.js';
 import styles from './radio-group.module.scss';
 import { RadioGroupItem } from './subcomponents/radio-group-item.js';
 import type { RadioGroupProps, ValidateRadioGroupProps } from './types.js';
@@ -23,8 +23,10 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		defaultValue,
 		onChange,
 		testId,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: RadioGroupProps & RejectedProps,
 	ref,
 ) {
 	const isReadOnly = readOnly === true;
@@ -73,7 +75,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			value={value}
 			defaultValue={defaultValue}
 			onValueChange={onValueChange}
-			{...omitStyleProps(props)}
+			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
 			{items.map((item) => (
