@@ -1,6 +1,5 @@
 import { Search } from '@signozhq/icons';
 import { type KeyboardEvent, type MutableRefObject, type ReactNode, useId } from 'react';
-import { Spinner } from '../../spinner/spinner.js';
 import {
 	DROPDOWN_ROW_SELECTOR,
 	DROPDOWN_SEARCH_LABEL,
@@ -9,6 +8,7 @@ import {
 import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownSearchInputProps } from '../types.js';
+import { DropdownAffix } from './dropdown-affix.js';
 
 /**
  * @access private
@@ -77,9 +77,14 @@ export function DropdownSearch({
 
 	return (
 		<div data-slot="dropdown-search" className={styles['dropdown__search']}>
-			<span data-slot="dropdown-search-prefix" className={styles['dropdown__search-affix']}>
-				{loading === true ? <Spinner /> : (prefix ?? <Search />)}
-			</span>
+			<DropdownAffix
+				slot="dropdown-search-prefix"
+				testId={resolvedTestId && `${resolvedTestId}-prefix`}
+				className={styles['dropdown__search-affix']}
+				loading={loading === true}
+			>
+				{prefix ?? <Search />}
+			</DropdownAffix>
 			<input
 				ref={inputRef}
 				id={inputId}

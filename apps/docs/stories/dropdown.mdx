@@ -304,6 +304,10 @@ saying what it waits for. A loading row goes inert and shows a spinner:
 - On a row without one, the spinner takes the trailing slot, in place of any `suffix` or
   `shortcut`. The label stays where it is instead of moving right.
 
+The spinner cross-fades with whatever it replaces, both when loading starts and when it stops,
+the way it does on `Button`. An empty trailing slot opens up for it and closes again after it
+leaves, and reduced motion turns the motion off. The search glyph swaps the same way.
+
 ## Nothing to show
 
 An empty `items` renders one non-interactive `No results found :/` row and logs a warning. A search that
@@ -319,14 +323,25 @@ There is no warning while the menu is `loading`, or when search runs with `filte
 
 `testId` becomes `data-testid` on the trigger, and it names everything under it:
 
-| Element     | `data-testid`                         |
-| ----------- | ------------------------------------- |
-| row         | `` `${testId}-item-${value}` ``       |
-| group       | `` `${testId}-group-${value}` ``      |
-| radio group | `` `${testId}-radio-group-${name}` `` |
-| search row  | `` `${testId}-search` ``              |
-| loading row | `` `${testId}-loading` ``             |
-| empty row   | `` `${testId}-empty` ``               |
+| Element            | `data-testid`                         |
+| ------------------ | ------------------------------------- |
+| row                | `` `${testId}-item-${value}` ``       |
+| row prefix         | `` `${rowTestId}-prefix` ``           |
+| row suffix         | `` `${rowTestId}-suffix` ``           |
+| group              | `` `${testId}-group-${value}` ``      |
+| radio group        | `` `${testId}-radio-group-${name}` `` |
+| search row         | `` `${testId}-search` ``              |
+| search prefix      | `` `${testId}-search-prefix` ``       |
+| slot content       | `` `${slotTestId}-content` ``         |
+| slot spinner layer | `` `${slotTestId}-loading` ``         |
+| slot spinner       | `` `${slotTestId}-spinner` ``         |
+| loading row        | `` `${testId}-loading` ``             |
+| empty row          | `` `${testId}-empty` ``               |
+
+`rowTestId` is the row's own `testId` or the generated one, and `slotTestId` is the prefix,
+suffix or search prefix id. A slot carries `data-loading` while its spinner shows and
+`data-empty` when it has no content. Its content and spinner both stay mounted, so assert on
+`data-loading` rather than on the content being gone.
 
 A row's own `testId` wins where it is written. Otherwise use the `data-slot` attributes, never the
 hashed class names.
