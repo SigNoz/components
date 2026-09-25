@@ -10,6 +10,14 @@ const overlayVariants: Variants = {
 	exit: { opacity: 0 },
 };
 
+/**
+ * Passing any `onUpdate` makes motion skip WAAPI and animate on the main thread.
+ * On WAAPI, motion cancels the finished exit animation before it writes the final
+ * value to inline style, so for a frame the element falls back to its open-state
+ * style and the dialog flashes back to full opacity right before unmounting.
+ */
+export const syncMotionStyle = () => {};
+
 export type DialogOverlayProps = Pick<
 	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
 	'id' | 'className' | 'style'
@@ -68,6 +76,7 @@ export const DialogOverlay = React.forwardRef<
 			initial="initial"
 			animate="animate"
 			exit="exit"
+			onUpdate={syncMotionStyle}
 			transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
 		/>
 	</DialogPrimitive.Overlay>
