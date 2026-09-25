@@ -5,6 +5,14 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--dropdown-affix-collapsed-grid-template-columns` | `0fr` |
+ * | `--dropdown-affix-collapsed-overflow` | `hidden` |
+ * | `--dropdown-affix-grid-template-columns` | `1fr` |
+ * | `--dropdown-affix-justify-items` | `center` |
+ * | `--dropdown-affix-layer-align-items` | `center` |
+ * | `--dropdown-affix-layer-display` | `inline-flex` |
+ * | `--dropdown-affix-layer-justify-content` | `center` |
+ * | `--dropdown-affix-overflow` | `visible` |
  * | `--dropdown-backdrop-filter` | `blur(40px)` |
  * | `--dropdown-background` | `-` |
  * | `--dropdown-background-color` | `var(--dropdown-background)` |
@@ -30,7 +38,7 @@
  * | `--dropdown-group-label-padding-inline` | `var(--spacing-6)` |
  * | `--dropdown-group-label-text-transform` | `uppercase` |
  * | `--dropdown-item-affix-align-items` | `center` |
- * | `--dropdown-item-affix-display` | `inline-flex` |
+ * | `--dropdown-item-affix-display` | `inline-grid` |
  * | `--dropdown-item-affix-flex-shrink` | `0` |
  * | `--dropdown-item-affix-justify-content` | `center` |
  * | `--dropdown-item-align-items` | `center` |
@@ -99,10 +107,14 @@
  * | `--dropdown-item-user-select` | `none` |
  * | `--dropdown-item-white-space` | `nowrap` |
  * | `--dropdown-loading-align-items` | `center` |
+ * | `--dropdown-loading-delay` | `var(--dropdown-internal-loading-duration)` |
  * | `--dropdown-loading-display` | `flex` |
+ * | `--dropdown-loading-duration` | `120ms` |
+ * | `--dropdown-loading-easing` | `cubic-bezier(0.65, 0, 0.35, 1)` |
  * | `--dropdown-loading-justify-content` | `center` |
  * | `--dropdown-loading-label` | `-` |
  * | `--dropdown-loading-label-color` | `var(--dropdown-loading-label)` |
+ * | `--dropdown-loading-travel` | `6px` |
  * | `--dropdown-max-block-size` | `var(--dropdown-internal-max-block-size, 20rem)` |
  * | `--dropdown-max-inline-size` | `var(--dropdown-internal-max-inline-size, 15.75rem)` |
  * | `--dropdown-max-popup-block-size` | `var(--available-height, none)` |
@@ -113,7 +125,7 @@
  * | `--dropdown-positioner-focus-visible-outline` | `none` |
  * | `--dropdown-scroll-fade-size` | `var(--spacing-10)` |
  * | `--dropdown-search-affix-align-items` | `center` |
- * | `--dropdown-search-affix-display` | `inline-flex` |
+ * | `--dropdown-search-affix-display` | `inline-grid` |
  * | `--dropdown-search-affix-flex-shrink` | `0` |
  * | `--dropdown-search-affix-justify-content` | `center` |
  * | `--dropdown-search-align-items` | `center` |

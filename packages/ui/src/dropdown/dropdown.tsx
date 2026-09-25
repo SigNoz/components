@@ -380,7 +380,11 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * `` `${testId}-item-${value}` ``, a group `` `${testId}-group-${value}` ``, a radio group
  * `` `${testId}-radio-group-${name}` ``, and the search row, the loading row and the empty row are
  * `` `${testId}-search` ``, `` `${testId}-loading` `` and `` `${testId}-empty` ``. A row's own
- * `testId` wins. Otherwise use the data attributes, never the hashed class names.
+ * `testId` wins. A row's slots hang off the row's test id, `` `${rowTestId}-prefix` `` and
+ * `` `${rowTestId}-suffix` ``, and the search icon is `` `${testId}-search-prefix` ``. Each slot
+ * holds `` `${slotTestId}-content` `` and `` `${slotTestId}-loading` ``, and the spinner in it is
+ * `` `${slotTestId}-spinner` ``. Otherwise
+ * use the data attributes, never the hashed class names.
  *
  * | popup attribute | value |
  * |---|---|
@@ -393,7 +397,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * | `dropdown-positioner` | always, the box the popup is placed in |
  * | `dropdown-viewport` | always, the scrolling part, `data-scroll-start` and `data-scroll-end` while that edge clips a row |
  * | `dropdown-search` | only with `searchInputProps`, a sibling of the viewport so it stays pinned |
- * | `dropdown-search-input`, `dropdown-search-prefix` | inside the search row |
+ * | `dropdown-search-input`, `dropdown-search-prefix` | inside the search row, the prefix with `data-loading` while `searchInputProps.loading` is true |
  * | `dropdown-search-suffix` | inside the search row, only when `searchInputProps.suffix` is set |
  * | `dropdown-item` | one per `item` row, `data-danger`, `data-disabled` and `data-loading` as they apply |
  * | `dropdown-link` | one per `link` row, `data-disabled` and `data-loading` as they apply |
@@ -401,7 +405,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * | `dropdown-radio-group` | one per `radio-group` row, `data-disabled` while the whole group is |
  * | `dropdown-submenu-trigger` | one per `submenu` row |
  * | `dropdown-submenu-chevron` | the trailing glyph of a `submenu` row |
- * | `dropdown-item-prefix`, `dropdown-item-suffix` | only when the row has one, the suffix also while a spinner is in it on a row without a prefix, and always on a checkbox or radio row |
+ * | `dropdown-item-prefix`, `dropdown-item-suffix` | only when the row has one, the suffix always on a row without a prefix (collapsed while empty and idle, it takes the spinner), and always on a checkbox or radio row. `data-loading` while the spinner shows, `data-empty` without content |
+ * | `<slot>-content`, `<slot>-loading` | inside `dropdown-item-prefix`, `dropdown-item-suffix` and `dropdown-search-prefix`: the content and the spinner, stacked and cross-faded. The spinner is always mounted and paused while hidden |
  * | `dropdown-item-label` | the measured element, `data-truncated` while it does not fit, `data-empty-label` while it is the fallback |
  * | `dropdown-item-indicator` | inside a checkbox or radio row, `data-checked` while it is selected |
  * | `dropdown-group`, `dropdown-group-label` | one per `group` row |
