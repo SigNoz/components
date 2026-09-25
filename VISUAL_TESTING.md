@@ -233,20 +233,35 @@ snapshots:
 - **PR build** (`.github/workflows/chromatic-pr.yml`) runs on the PR head and **diffs
   against** the current `main` baseline, so you can review what changed.
 - **Merge build** (`.github/workflows/chromatic-main.yml`) runs on the merge commit and
-  **becomes** the new `main` baseline (`CHROMATIC_BRANCH: main` + `autoAcceptChanges:
-  main`), so the next PR doesn't re-flag changes you already accepted.
+  **becomes** the new `main` baseline (`branchName: main` + `autoAcceptChanges: main`),
+  so the next PR doesn't re-flag changes you already accepted.
 
 Doing both in one workflow would either re-baseline on every PR (changes never get
 reviewed) or never update the baseline (every PR re-flags already-accepted changes).
 
-The merge build also sets `CHROMATIC_SHA` to the merge commit. Left alone, the action
-reports the PR head instead, which a squash merge leaves unreachable from `main` — the
+The merge build also passes the merge commit as `chromaticSha`. Left alone, the action
+reports the PR head instead, which a squash merge leaves unreachable from `main`. The
 baseline is then filed under a commit later runs can't resolve, and TurboSnap silently
 falls back to the oldest build with a reachable commit and re-snapshots everything.
+
+Both overrides have to be **action inputs** (`branchName`, `repositorySlug`,
+`chromaticSha`). The action overwrites the `CHROMATIC_BRANCH` and `CHROMATIC_SLUG`
+environment variables with values taken from the event payload, so setting them via
+`env` is silently ignored. Only `CHROMATIC_SHA` survives as an environment variable.
 
 The merge build only runs when the PR was actually **merged** and carries
 `update-visual-testing`. A PR closed without merging, or one that never ran Chromatic,
 is skipped.
+
+### Seeding or repairing the `main` baseline
+
+The merge build can also be started by hand: Actions → **Chromatic (main)** → **Run
+workflow** on `main`. It snapshots the current `main` head and records it on branch
+`main`, auto-accepted. Do this once after changing how the workflow reports commits, or
+whenever a PR build log shows `Missing commit detected` followed by hundreds of changed
+files. That message means TurboSnap could not resolve the last baseline commit and fell
+back to an old build, so every PR re-snapshots the whole Storybook until a fresh,
+reachable baseline exists.
 
 Other behaviour worth knowing:
 
