@@ -292,6 +292,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * So they compose with the tokens. Numbers are written as `px`.
  *
  * They size the bar, never one button: a button holds its own size and the bar scrolls instead.
+ * A bar wider than its options shares the spare room between the buttons.
  *
  * ### Asserting on it
  *

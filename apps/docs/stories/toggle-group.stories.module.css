@@ -36,3 +36,11 @@
 .overflowFrame {
 	width: 320px;
 }
+
+/* Wider than any bar's options, so the spare room is visible. */
+.fullWidthFrame {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	width: 480px;
+}
