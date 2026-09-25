@@ -97,3 +97,102 @@ describe('Button icon mode', () => {
 		expect(document.querySelector('[data-slot="spinner"]')).toBeInTheDocument();
 	});
 });
+
+describe('Button icon mode size', () => {
+	const squares = [
+		['sm', 24],
+		['md', 32],
+	] as const;
+
+	function Icon() {
+		return <svg aria-hidden="true" viewBox="0 0 16 16" />;
+	}
+
+	it.each(squares)(
+		'holds its %s square in a row that hands down --button-flex-shrink: 1',
+		(size, square) => {
+			render(
+				<div style={{ display: 'flex', width: 10, ['--button-flex-shrink' as string]: 1 }}>
+					<Button size={size} variant="solid" color="primary" icon aria-label="Star">
+						<Icon />
+					</Button>
+				</div>,
+			);
+
+			expect(screen.getByRole('button').getBoundingClientRect().width).toBe(square);
+		},
+	);
+
+	it.each(squares)('holds its %s square against a consumer flex: 1 1 0', (size, square) => {
+		render(
+			<>
+				<style>{'.squeeze > * { flex: 1 1 0; }'}</style>
+				<div className="squeeze" style={{ display: 'flex', width: 10 }}>
+					<Button size={size} variant="solid" color="primary" icon aria-label="Star">
+						<Icon />
+					</Button>
+				</div>
+			</>,
+		);
+
+		expect(screen.getByRole('button').getBoundingClientRect().width).toBe(square);
+	});
+
+	it.each(squares)('holds its %s height in a flex column shorter than it', (size, square) => {
+		render(
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					height: 10,
+					['--button-flex-shrink' as string]: 1,
+				}}
+			>
+				<Button size={size} variant="solid" color="primary" icon aria-label="Star">
+					<Icon />
+				</Button>
+			</div>,
+		);
+
+		expect(screen.getByRole('button').getBoundingClientRect().height).toBe(square);
+	});
+
+	it('still takes a width or maxWidth below its square', () => {
+		render(
+			<div style={{ display: 'flex', gap: 4 }}>
+				<Button size="md" variant="solid" color="primary" icon aria-label="Star" width={20}>
+					<Icon />
+				</Button>
+				<Button size="md" variant="solid" color="primary" icon aria-label="Pin" maxWidth={16}>
+					<Icon />
+				</Button>
+			</div>,
+		);
+
+		expect(screen.getByRole('button', { name: 'Star' }).getBoundingClientRect().width).toBe(20);
+		expect(screen.getByRole('button', { name: 'Pin' }).getBoundingClientRect().width).toBe(16);
+	});
+
+	it('holds a link icon at its content width in a container narrower than it', () => {
+		render(
+			<>
+				<div style={{ display: 'flex' }}>
+					<Button size="md" variant="link" color="primary" icon aria-label="Roomy">
+						<Icon />
+					</Button>
+				</div>
+				<div style={{ display: 'flex', width: 4, ['--button-flex-shrink' as string]: 1 }}>
+					<Button size="md" variant="link" color="primary" icon aria-label="Narrow">
+						<Icon />
+					</Button>
+				</div>
+			</>,
+		);
+
+		const roomy = screen.getByRole('button', { name: 'Roomy' }).getBoundingClientRect().width;
+		expect(roomy).toBeGreaterThan(4);
+		expect(screen.getByRole('button', { name: 'Narrow' }).getBoundingClientRect().width).toBe(
+			roomy,
+		);
+	});
+});

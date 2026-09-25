@@ -103,6 +103,7 @@
  * | `--button-loading-opacity` | `1` |
  * | `--button-loading-travel` | `6px` |
  * | `--button-max-width` | `var(--button-internal-max-width, 100%)` |
+ * | `--button-min-height` | `var(--button-internal-min-height, auto)` |
  * | `--button-min-width` | `var(--button-internal-min-width, auto)` |
  * | `--button-padding` | `var(--spacing-2) var(--spacing-4)` |
  * | `--button-prefix-slot-hidden-opacity` | `0` |
