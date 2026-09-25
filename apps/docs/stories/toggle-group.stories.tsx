@@ -425,6 +425,32 @@ function ToggleGroupShowcaseLayout(): ReactElement {
 						</div>
 					</div>
 				</ShowcaseSection>
+
+				<ShowcaseSection
+					title="Full width"
+					note="A bar wider than its buttons shares the spare room between them, so the options reach the border instead of sitting at the start with an empty run after them."
+				>
+					<div className={styles.fullWidthFrame}>
+						<ToggleGroup
+							type="single"
+							variant={ToggleGroupVariant.Outlined}
+							color={ToggleGroupColor.Secondary}
+							size={ToggleGroupSize.MD}
+							defaultValue="list"
+							width="100%"
+							items={LAYOUT_ITEMS}
+						/>
+						<ToggleGroup
+							type="single"
+							variant={ToggleGroupVariant.Outlined}
+							color={ToggleGroupColor.Secondary}
+							size={ToggleGroupSize.SM}
+							defaultValue="grid"
+							width="100%"
+							items={ICON_ITEMS}
+						/>
+					</div>
+				</ShowcaseSection>
 			</div>
 		</div>
 	);
