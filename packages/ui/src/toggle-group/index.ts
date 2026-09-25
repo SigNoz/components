@@ -74,7 +74,7 @@
  * | `--toggle-group-scroll-button-color` | `var(--toggle-group-scroll-button-label)` |
  * | `--toggle-group-scroll-button-cursor` | `pointer` |
  * | `--toggle-group-scroll-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
- * | `--toggle-group-scroll-button-disabled-cursor` | `default` |
+ * | `--toggle-group-scroll-button-disabled-cursor` | `not-allowed` |
  * | `--toggle-group-scroll-button-disabled-shadow` | `none` |
  * | `--toggle-group-scroll-button-display` | `inline-flex` |
  * | `--toggle-group-scroll-button-divider-color` | `var(--toggle-group-border)` |

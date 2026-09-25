@@ -223,7 +223,7 @@
 
   &:disabled {
     opacity: var(--tabs-scroll-button-disabled-opacity, 0.4);
-    cursor: var(--tabs-scroll-button-disabled-cursor, default);
+    cursor: var(--tabs-scroll-button-disabled-cursor, not-allowed);
   }
 
   &:focus-visible {
