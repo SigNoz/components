@@ -364,10 +364,14 @@
 }
 
 .button__prefix,
-.button__prefix > svg,
-.button__suffix,
-.button__suffix > svg {
+.button__suffix {
 	flex-shrink: var(--button-affix-flex-shrink, 0);
+}
+
+// Only a bare icon gets the icon size. Any other element keeps its own size, and sizing an icon
+// nested inside it is the consumer's job.
+svg.button__prefix,
+svg.button__suffix {
 	inline-size: var(--button-internal-icon-size);
 	block-size: var(--button-internal-icon-size);
 }
@@ -375,11 +379,13 @@
 .button__prefix-wrapper {
 	display: var(--button-prefix-wrapper-display, grid);
 	grid-template-columns: var(--button-prefix-wrapper-grid-template-columns, 1fr);
-	block-size: var(--button-prefix-wrapper-block-size, var(--button-internal-icon-size));
+	block-size: var(--button-prefix-wrapper-block-size, auto);
 	align-items: var(--button-prefix-wrapper-align-items, center);
 	justify-items: var(--button-prefix-wrapper-justify-items, center);
 	flex-shrink: var(--button-prefix-wrapper-flex-shrink, 0);
-	overflow: var(--button-prefix-wrapper-overflow, hidden);
+	// A custom prefix can draw outside its box, such as a badge dot or a shadow, so the wrapper
+	// only clips while it is collapsed.
+	overflow: var(--button-prefix-wrapper-overflow, visible);
 	transition: var(--button-prefix-wrapper-transition,
 			grid-template-columns var(--button-internal-loading-duration) var(--button-internal-loading-easing),
 			margin-inline-end var(--button-internal-loading-duration) var(--button-internal-loading-easing));
@@ -389,6 +395,7 @@
 
 .button:not([aria-busy="true"]) .button__prefix-wrapper[data-empty='true'] {
 	grid-template-columns: var(--button-prefix-wrapper-collapsed-grid-template-columns, 0fr);
+	overflow: var(--button-prefix-wrapper-collapsed-overflow, hidden);
 	margin-inline-end: var(--button-prefix-wrapper-collapsed-margin-inline-end, calc(-1 * var(--button-internal-gap)));
 	// Closing back up is the last beat: wait for the spinner to leave first.
 	transition-delay: var(--button-internal-loading-delay);
