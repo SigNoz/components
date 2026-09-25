@@ -4,6 +4,7 @@
 }
 
 .tooltip__content {
+	box-sizing: border-box;
 	background-color: var(--tooltip-background-color, var(--tooltip-background));
 	color: var(--tooltip-foreground, var(--tooltip-label));
 	width: var(--tooltip-width, fit-content);
