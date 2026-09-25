@@ -13,6 +13,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { usePopupContainer } from '../lib/popup-container.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
@@ -49,6 +50,9 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	},
 	ref,
 ) {
+	const popupContainer = usePopupContainer();
+	// Inside a dialog the menu goes into its panel, where the focus trap lets the keyboard in.
+	const portalContainer = container === undefined ? popupContainer : container;
 	const actionsRef = useRef<MenuRootActions | null>(null);
 	const popupRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -114,10 +118,10 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 			close,
 			rememberedSelections,
 			rememberSelection,
-			container,
+			container: portalContainer,
 			popupStyle,
 		}),
-		[testId, close, rememberedSelections, rememberSelection, container, popupStyle],
+		[testId, close, rememberedSelections, rememberSelection, portalContainer, popupStyle],
 	);
 
 	// `ArrowDown` in the search field hands the highlight to the first row; this hands it back.
@@ -184,7 +188,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 					{trigger}
 				</TooltipAnchor>
 			)}
-			<Menu.Portal container={container}>
+			<Menu.Portal container={portalContainer}>
 				<Menu.Positioner
 					side={side}
 					align={align}

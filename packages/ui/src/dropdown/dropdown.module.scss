@@ -71,6 +71,14 @@
 .dropdown__positioner {
   // Base UI positions but does not stack.
   z-index: var(--dropdown-z-index, 50);
+  // A modal drawer or dialog sets `pointer-events: none` on the body. A menu portalled there,
+  // into a `container` outside the panel, would have no row that can be clicked. Base UI still
+  // switches it off inline while the menu is closed.
+  pointer-events: auto;
+  // Base UI places the positioner with `left`, so its width would otherwise shrink to what is
+  // left of the containing block. Inside a dialog that is a zero-size layer. The popup still
+  // caps itself between its minimum and maximum inline size.
+  width: max-content;
 
   &:focus-visible {
     outline: var(--dropdown-positioner-focus-visible-outline, none);
