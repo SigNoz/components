@@ -5,6 +5,7 @@ import {
 	useTooltipContentStackEntries,
 } from '../tooltip-content-stack-context.js';
 import { useTooltipHandle } from '../tooltip-handle.js';
+import { TooltipLayerProvider } from '../tooltip-layer.js';
 import { useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
 import { TooltipContent, type TooltipContentProps } from './tooltip-content.js';
 import { TooltipProviderIfMissing } from './tooltip-provider.js';
@@ -62,11 +63,23 @@ const TooltipAnchorParts = React.forwardRef<HTMLButtonElement, TooltipAnchorProp
 		const contentId = contentProps?.id ?? generatedId;
 		const stackedEntries = useTooltipContentStackEntries();
 		const hasContent = hasTooltipContent(content) || (!stacked && stackedEntries.length > 0);
+		const [trigger, setTrigger] = React.useState<HTMLButtonElement | null>(null);
+		const triggerRef = React.useCallback(
+			(node: HTMLButtonElement | null) => {
+				setTrigger(node);
+				if (typeof ref === 'function') {
+					ref(node);
+				} else if (ref != null) {
+					ref.current = node;
+				}
+			},
+			[ref],
+		);
 
 		return (
 			<>
 				<TooltipTrigger
-					ref={ref}
+					ref={triggerRef}
 					handle={handle}
 					contentId={hasContent ? contentId : null}
 					{...triggerProps}
@@ -74,11 +87,13 @@ const TooltipAnchorParts = React.forwardRef<HTMLButtonElement, TooltipAnchorProp
 					{children}
 				</TooltipTrigger>
 				{hasContent && (
-					<TooltipRoot handle={handle} open={open}>
-						<TooltipContent {...contentProps} id={contentId}>
-							{content}
-						</TooltipContent>
-					</TooltipRoot>
+					<TooltipLayerProvider value={trigger}>
+						<TooltipRoot handle={handle} open={open}>
+							<TooltipContent {...contentProps} id={contentId}>
+								{content}
+							</TooltipContent>
+						</TooltipRoot>
+					</TooltipLayerProvider>
 				)}
 			</>
 		);
