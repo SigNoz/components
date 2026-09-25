@@ -69,6 +69,8 @@ describe('Tabs overflow', () => {
 
 		expect(scrollButton('start')).toBeDisabled();
 		expect(scrollButton('end')).toBeEnabled();
+		expect(getComputedStyle(scrollButton('start') as HTMLElement).cursor).toBe('not-allowed');
+		expect(getComputedStyle(scrollButton('end') as HTMLElement).cursor).toBe('pointer');
 	});
 
 	it('squashes no tab: the strip overflows and the viewport scrolls', async () => {

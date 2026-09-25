@@ -278,7 +278,7 @@
       var(--toggle-group-internal-label-disabled)
     );
     box-shadow: var(--toggle-group-scroll-button-disabled-shadow, none);
-    cursor: var(--toggle-group-scroll-button-disabled-cursor, default);
+    cursor: var(--toggle-group-scroll-button-disabled-cursor, not-allowed);
   }
 
   &:focus-visible {
