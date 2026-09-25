@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.2](https://github.com/SigNoz/components/compare/v0.1.1...v0.1.2) (2026-09-25)
+
+
+### Features
+
+* **react-compiler:** enable support for compiler ([#376](https://github.com/SigNoz/components/issues/376)) ([a34da63](https://github.com/SigNoz/components/commit/a34da63cc22094af0d2688485d60e227d5e0e63b))
+* **turbo:** add root test script ([#377](https://github.com/SigNoz/components/issues/377)) ([b6985ce](https://github.com/SigNoz/components/commit/b6985ced5b6f7f81046db652c2fd60201a1aeb74))
+* **turbo:** add type-check script to packages ([#378](https://github.com/SigNoz/components/issues/378)) ([9724693](https://github.com/SigNoz/components/commit/97246930da57ba1882afdb0c803a42a5738a23fd))
+
 ## [0.1.1](https://github.com/SigNoz/components/compare/v0.1.0...v0.1.1) (2026-09-02)
 
 
