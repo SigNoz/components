@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import { cn } from '../../lib/utils.js';
 import styles from '../dialog.module.scss';
-import { DialogOverlay } from './dialog-overlay.js';
+import { DialogOverlay, syncMotionStyle } from './dialog-overlay.js';
 import { DialogPortal } from './dialog-portal.js';
 
 export type DialogPosition = 'top' | 'center' | 'left' | 'right' | 'bottom';
@@ -39,6 +39,7 @@ const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
 				animate={resolvedAnimate}
 				transition={transition ?? dialogContentTransition}
 				exit={resolvedExit}
+				onUpdate={syncMotionStyle}
 				{...rest}
 			/>
 		);
