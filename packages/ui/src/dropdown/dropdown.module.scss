@@ -35,6 +35,8 @@
     var(--dropdown-internal-max-inline-size, 15.75rem)
   );
 
+  box-sizing: border-box;
+
   // Never narrower than the trigger (`--anchor-width` comes from Base UI). The floor is clamped to
   // the maximum because a min-width wins over a max-width.
   min-inline-size: max(
