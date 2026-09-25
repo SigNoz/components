@@ -39,7 +39,8 @@ import type { TooltipProps } from '../types.js';
  * - `role="tooltip"`, `id` from `id` or generated, trigger points at it with `aria-describedby`.
  * - Every `data-*` from the call site lands here, the only element the component renders itself.
  *   `data-slot` is the exception, it stays `tooltip-content`.
- * - Portalled into `container`, else the provider's container, else `document.body`.
+ * - Portalled into `container`, else the provider's container, else the panel of the `Dialog` or
+ *   `Drawer` it sits in, else `document.body`.
  * - Clamped to 6 lines (`--tooltip-max-lines`) at 26.25rem. Longer content wants a popover.
  *
  * ### A disabled trigger never opens
