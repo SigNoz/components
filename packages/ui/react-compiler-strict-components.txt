@@ -1,5 +1,6 @@
 badge
 button
+checkbox
 switch
 tabs
 toggle-group
