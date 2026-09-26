@@ -6,3 +6,53 @@
   width: 120px;
   text-transform: capitalize;
 }
+
+.narrow {
+  width: 220px;
+}
+
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 1.25rem 2rem;
+  align-items: start;
+  justify-items: start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  padding-right: 1rem;
+}
+
+.matrixLabel {
+  white-space: nowrap;
+}
+
+.overflowGrid {
+  display: grid;
+  grid-template-columns: max-content 14rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Top-aligned, so the text stays on the line the dial is centred on. */
+.controlLabel {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* The row is a pointer target with unselectable text. A field inside it is neither. */
+.otherInput {
+  width: 12rem;
+  cursor: text;
+  user-select: text;
+}
