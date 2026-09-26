@@ -1,25 +1,3 @@
-import type { Ref } from 'react';
-
-/**
- * Point several refs at the same node.
- *
- * The calendar's root needs this because react-day-picker keeps a ref of its own there while
- * `animate` is set, and the consumer's `ref` has to reach the same element.
- *
- * @access private
- */
-export function mergeRefs<T>(...refs: Array<Ref<T> | undefined>): (node: T | null) => void {
-	return (node) => {
-		for (const ref of refs) {
-			if (typeof ref === 'function') {
-				ref(node);
-			} else if (ref != null) {
-				(ref as { current: T | null }).current = node;
-			}
-		}
-	};
-}
-
 /**
  * The day as `DD-MM-YYYY`, for the `testId` a day button falls back to.
  *

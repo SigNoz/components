@@ -14,6 +14,7 @@ import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import scss from 'react-syntax-highlighter/dist/esm/languages/prism/scss';
 import { SyntaxHighlighter } from 'storybook/internal/components';
 import { themes } from 'storybook/theming';
+import { LinkGuardDecorator } from './linkGuard.jsx';
 import { ModeDecorator } from './modeDecorator.jsx';
 
 SyntaxHighlighter.registerLanguage('scss', scss);
@@ -121,6 +122,7 @@ export const decorators = [
 		</NuqsAdapter>
 	),
 	ModeDecorator,
+	LinkGuardDecorator,
 ];
 
 export const tags = ['autodocs'];
