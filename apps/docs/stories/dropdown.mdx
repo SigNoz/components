@@ -1,0 +1,340 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DropdownStories from './dropdown.stories';
+
+<Meta of={DropdownStories} />
+
+# Dropdown
+
+A menu, rendered through Base UI's `Menu`. It takes its rows as data, opens from a trigger you
+provide, filters itself when given a search row, and truncates long labels into a tooltip.
+
+Use it when a surface has more actions than fit as buttons. For two to five view states, use
+`ToggleGroup`. To pick a value out of a list, use `Select` or `Combobox`.
+
+## How to use
+
+`items`, `children`, `side`, `align` and `nativeButton` are required. There are no subcomponents to
+compose: the menu owns its own markup.
+
+```tsx
+import { Button, Dropdown } from '@signozhq/ui';
+
+export default function RowActions({ onRename, onDelete }) {
+	return (
+		<Dropdown
+			nativeButton
+			side="bottom"
+			align="start"
+			items={[
+				{ type: 'item', value: 'rename', label: 'Rename', onClick: onRename },
+				{ type: 'separator', value: 'before-danger' },
+				{ type: 'item', value: 'delete', label: 'Delete', danger: true, onClick: onDelete },
+			]}
+		>
+			<Button variant="outlined" color="secondary" size="md">
+				Actions
+			</Button>
+		</Dropdown>
+	);
+}
+```
+
+<Primary />
+
+## The trigger
+
+`children` is the trigger. The menu merges its props into the element you pass, so a `Button` keeps
+its own type and tooltip, and no second button wraps it.
+
+`nativeButton` says whether that element renders a native `<button>`:
+
+- `true` for `Button` or a plain `<button>`. The browser already gives it a role, focus and
+  keyboard activation.
+- `false` for anything else, such as `Badge` or a `<span>`. Base UI then adds `role="button"`,
+  `tabIndex`, `aria-disabled` and the key handlers.
+
+```tsx
+<Dropdown side="bottom" align="start" items={items} nativeButton={false}>
+	<Badge>Filters</Badge>
+</Dropdown>
+```
+
+The value must match the element. Base UI logs an error on a mismatch in either direction. The menu
+cannot detect it for you, because Base UI only sees the element after the first render.
+
+## Disabled
+
+`disabled` + `disabledTooltip` block the whole menu. It does not open, and the reason shows in a
+tooltip on the trigger. The two travel together: one without the other is a type error.
+
+```tsx
+<Dropdown
+	side="bottom"
+	align="start"
+	nativeButton
+	items={items}
+	disabled={!canEdit}
+	disabledTooltip="You need edit access to change this dashboard"
+>
+	<Button variant="outlined" color="secondary" size="md">
+		Actions
+	</Button>
+</Dropdown>
+```
+
+The trigger gets `aria-disabled` and `data-disabled`, never the native `disabled`, so it stays
+hoverable and the reason stays reachable. A `Button` trigger paints itself disabled from that.
+
+Do not also set `disabled` on the trigger. A native disabled button takes no pointer events, so the
+tooltip would never open.
+
+## Popup props
+
+Props written on the menu describe the popup, not the trigger. `aria-*`, `data-*`, `className` and
+`style` all land on the popup, because it is portalled out of your tree and you cannot reach it any
+other way. Anything meant for the trigger goes on the trigger itself. `testId` is the one exception.
+
+Two common reasons to pass them:
+
+- `aria-label` for an icon-only trigger. Base UI names the popup from the trigger, and an icon has
+  no text.
+- `data-*` for an outside-click guard that reads `closest()`. The popup is not inside the element
+  the guard watches.
+
+`className` and `style` reach every submenu popup too. Submenus are portalled beside the menu, so no
+selector of yours would span both otherwise.
+
+```tsx
+<Dropdown className={styles.aboveFloatingPanel} aria-label="Row actions" {...rest}>
+	<Button variant="ghost" color="secondary" size="md" icon aria-label="Row actions">
+		<Ellipsis />
+	</Button>
+</Dropdown>
+```
+
+`contentMaxWidth` (default `15.75rem`) and `contentMaxHeight` (default `20rem`) size the popup.
+`container` portals it somewhere other than `document.body`, such as a dialog.
+
+## Open state
+
+The menu owns its open state, so there is no `open` and no `defaultOpen`. `onOpenChange` reports
+each change.
+
+A purely visual rule does not need it: the trigger carries `data-popup-open` while the menu is open.
+
+## The rows
+
+Each entry has a required `type`, the plain action row included, and a `value` that identifies it.
+
+| `type`        | What it renders                                                                      |
+| ------------- | ------------------------------------------------------------------------------------ |
+| `item`        | One action. Takes `onClick`, `danger`, `prefix`, and either `suffix` or `shortcut`   |
+| `link`        | One row that navigates. Takes `render` instead of `onClick`, plus both slots         |
+| `checkbox`    | A row that toggles a setting. Owns its checkbox, so it takes no `suffix`             |
+| `radio-group` | A set of options of which one is picked. Owns its radios                             |
+| `submenu`     | A row that opens a menu of its own. Owns the chevron, so it takes no `suffix`        |
+| `group`       | A section heading and the rows under it. Not interactive, skipped by the arrow keys  |
+| `separator`   | A rule. Dropped when it would land first, last, or next to another one, at any level |
+
+A `checkbox` and a `radio-group` are the exceptions to `value`. Their identity is `name`, because
+`value` is their selection, the way it is on `Checkbox` and `RadioGroup`.
+
+```tsx
+const items = [
+	{ type: 'item', value: 'copy', label: 'Copy link', shortcut: '⌘C', onClick: copy },
+	{ type: 'checkbox', name: 'wrap', label: 'Wrap lines', defaultValue: true },
+	{
+		type: 'radio-group',
+		name: 'density',
+		defaultValue: 'comfortable',
+		items: [
+			{ value: 'compact', label: 'Compact' },
+			{ value: 'comfortable', label: 'Comfortable' },
+		],
+	},
+	{ type: 'separator', value: 'before-more' },
+	{
+		type: 'submenu',
+		value: 'export',
+		label: 'Export',
+		items: [
+			{ type: 'item', value: 'csv', label: 'CSV', onClick: exportCsv },
+			{ type: 'item', value: 'json', label: 'JSON', onClick: exportJson },
+		],
+	},
+];
+```
+
+An uncontrolled `checkbox` or `radio-group` (`defaultValue`) keeps its state on the menu. It survives the menu closing and the search hiding the row.
+
+## Blocked and waiting rows
+
+A row blocks itself with `disabled` + `disabledTooltip`. It says it is waiting with `loading` +
+`loadingTooltip`.
+
+```tsx
+{
+	type: 'item',
+	value: 'delete',
+	label: 'Delete',
+	disabled: !canDelete,
+	disabledTooltip: 'Only the owner can delete this dashboard',
+}
+```
+
+- `loading` outranks `disabled`, the same as on `Button`.
+- Neither state removes the row from the keyboard walk, so the reason stays reachable.
+- A disabled `radio-group` shows its own reason on every option.
+
+## Truncation
+
+Every label truncates. There is no prop to turn it off: a label wider than the popup
+(`contentMaxWidth`) ends in an ellipsis, so every row keeps the same height. `RadioGroup` and
+`ToggleGroup` do the same with `ellipsis`.
+
+A truncated label carries `data-truncated` and shows its full text in a tooltip. The tooltip opens
+only while the label is truncated, so a label that fits never opens one.
+
+- `prefix`, `suffix` and `shortcut` sit outside the label, so they keep their size while the text
+  truncates.
+- A row that also has a `disabledTooltip` or `loadingTooltip` shows one tooltip, with the reason
+  first and the full label under it.
+- The tooltip opens to the left of a row in the menu, and to the right of a row in a submenu. It
+  never covers the rows beside it.
+
+## Links
+
+A `link` row renders as whatever you pass to `render`, a router `Link` in practice. The row is a
+real anchor, so middle click, "open in new tab" and the status bar URL all work.
+
+```tsx
+{
+	type: 'link',
+	value: 'settings',
+	label: 'Settings',
+	render: <Link to="/settings" />,
+}
+```
+
+There is no `href` prop. Link components take `to`, `href`, `params` or nothing, so the row leaves
+that to `render`.
+
+An inert link row drops `render` and falls back to a plain row. Middle click still follows an
+anchor, so the only way to block one is not to render it.
+
+## Nesting
+
+A submenu goes one level deep. The types enforce it: a submenu's `items` refuse another submenu.
+
+A group is a heading, not a nesting level. A submenu inside a group is still depth 1. A group inside
+a group is refused.
+
+## Search
+
+Pass `searchInputProps` to render a pinned search row. The menu then filters `items` itself:
+
+- Case-insensitive substring match.
+- Against each row's label, when the label renders to text.
+- Against the row's `searchMetadata`. An icon-only row is findable through this alone.
+
+```tsx
+<Dropdown
+	nativeButton
+	side="bottom"
+	align="start"
+	items={items}
+	searchInputProps={{ placeholder: 'Search actions' }}
+>
+	<Button variant="outlined" color="secondary" size="md">
+		Actions
+	</Button>
+</Dropdown>
+```
+
+A group stays when any of its rows match, and shows only those rows. A submenu stays when its own
+label or anything under it matches, and it keeps all of its rows.
+
+Keys in the search field:
+
+- `ArrowDown` moves to the first row. `ArrowUp` from there returns to the field.
+- `Enter` does nothing. It would fire whichever row happens to be highlighted, which is rarely the
+  one the user was reading.
+
+## Server-side search
+
+`filter: false` turns the built-in filtering off, for rows that arrive already filtered. The query
+still reaches `onChange`, and `loading` swaps the search glyph for a spinner.
+
+```tsx
+<Dropdown
+	nativeButton
+	side="bottom"
+	align="start"
+	items={results}
+	searchInputProps={{ filter: false, loading: isFetching, onChange: setQuery }}
+>
+	<Button variant="outlined" color="secondary" size="md">
+		Add service
+	</Button>
+</Dropdown>
+```
+
+The query clears when the menu closes, and a non-empty query is reported to `onChange` as `''`. So
+the list never keeps results for a query the field no longer shows.
+
+`loading` on the menu itself replaces the rows with `loadingContent`, or a spinner by default. The
+search row stays, so the user can keep typing.
+
+## Closing
+
+Picking an `item` row calls its `onClick` and closes the menu. `onClick` returns nothing, and the
+menu does not wait on anything it starts.
+
+```tsx
+{
+	type: 'item',
+	value: 'duplicate',
+	label: 'Duplicate',
+	onClick: () => {
+		void duplicateDashboard(id);
+	},
+}
+```
+
+To show that a row is waiting, set `loading` on it from your own state, with a `loadingTooltip`
+saying what it waits for. A loading row goes inert and shows a spinner:
+
+- On a row with a `prefix`, the spinner takes the prefix's place.
+- On a row without one, the spinner takes the trailing slot, in place of any `suffix` or
+  `shortcut`. The label stays where it is instead of moving right.
+
+## Nothing to show
+
+An empty `items` renders one non-interactive `No results found :/` row and logs a warning. A search that
+matches nothing renders the same row, with no warning: that one is a normal state.
+
+`noContent` replaces that text at the root, and declares an empty list a normal state, so the
+warning goes. A submenu always keeps `No results found :/` and its warning, because an empty submenu is a
+bug.
+
+There is no warning while the menu is `loading`, or when search runs with `filter: false`.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the trigger, and it names everything under it:
+
+| Element     | `data-testid`                         |
+| ----------- | ------------------------------------- |
+| row         | `` `${testId}-item-${value}` ``       |
+| group       | `` `${testId}-group-${value}` ``      |
+| radio group | `` `${testId}-radio-group-${name}` `` |
+| search row  | `` `${testId}-search` ``              |
+| loading row | `` `${testId}-loading` ``             |
+| empty row   | `` `${testId}-empty` ``               |
+
+A row's own `testId` wins where it is written. Otherwise use the `data-slot` attributes, never the
+hashed class names.
+
+## Props
+
+<Controls of={DropdownStories.Default} />

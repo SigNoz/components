@@ -39,26 +39,11 @@ html.dark .docs-story > div:first-of-type {
 	background-color: #0b0c0e !important;
 }
 
-/* Global font settings - only apply to Storybook UI elements */
-.sb-show-main * {
-	font-family:
-		'Inter',
-		-apple-system,
-		BlinkMacSystemFont,
-		'Segoe UI',
-		'Roboto',
-		'Oxygen',
-		'Ubuntu',
-		'Cantarell',
-		'Fira Sans',
-		'Droid Sans',
-		'Helvetica Neue',
-		sans-serif;
-
-	-webkit-font-smoothing: antialiased;
-
-	-moz-osx-font-smoothing: grayscale;
-}
+/*
+ * The font lives on `html` in `index.css` rather than on `.sb-show-main *` here. A rule on every
+ * element inside the canvas cannot reach a portalled popup, and it outranks the monospace a `Kbd`
+ * or a code `Typography` asks for.
+ */
 
 /* Improved typography for better readability - only for Storybook UI */
 
@@ -113,32 +98,17 @@ code {
 	padding: 0;
 }
 
-/* Better focus states for accessibility - only for keyboard navigation */
-*:focus-visible {
-	outline: 2px solid #3b82f6;
-
-	outline-offset: 2px;
-}
-
-/* Smooth transitions */
-
-* {
-	transition:
-		color 0.2s ease,
-		background-color 0.2s ease;
-}
-
-/* Disable outline only on cmdk elements */
-[data-story-block='true'] [cmdk-input],
-[data-story-block='true'] [cmdk-input]:focus,
-[data-story-block='true'] [cmdk-root] *:focus {
-	outline: none !important;
-}
-
-[cmdk-input]:focus {
-	outline: none !important;
-	outline-offset: 0 !important;
-}
+/*
+ * No blanket `*:focus-visible` outline and no blanket `*` transition here.
+ *
+ * Every component in this library owns its focus ring and its timing: a menu is instant, a button
+ * is not, and a row marks the pointer with a fill and the keyboard with an inset stroke. A rule on
+ * `*` reaches inside all of them and paints a second, hardcoded ring the component cannot see,
+ * which is what put a blue outline on a hovered `Dropdown` row. The cmdk `outline: none !important`
+ * block that used to sit here was undoing the same rule for one component.
+ *
+ * A story that renders raw HTML still gets the browser's own focus ring.
+ */
 
 /* Style Stories component title and spacing */
 .sb-show-main h2:has(+ div[class*='sbdocs-story']),
