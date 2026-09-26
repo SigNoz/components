@@ -114,6 +114,9 @@ Rules:
 
 Use shared classes from `apps/docs/index.css`:
 - `story-container`, `story-section`, `story-grid`, `story-row`, `story-panel`, `icon-md`
+- `story-freeze-animations` on the story root of a snapshotted story: pauses every animation at
+  frame 0 and drops every transition, document-wide (portals included). Skip it when the
+  animation is what the story shows.
 
 No Tailwind classes. No ad-hoc inline `style` where shared class exists.
 
