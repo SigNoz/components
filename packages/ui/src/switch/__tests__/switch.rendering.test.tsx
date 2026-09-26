@@ -121,22 +121,18 @@ describe('Switch rendering', () => {
 		expect(container.firstElementChild).toHaveAttribute('data-slot', 'switch-text');
 	});
 
-	it('forwards className, style, aria and data attributes to the switch itself', () => {
+	it('forwards aria and data attributes to the switch itself', () => {
 		render(
 			<Switch
 				color="primary"
 				textPlacement="right"
 				testId="switch"
-				className="custom"
-				style={{ marginInline: '4px' }}
 				aria-label="Wrap text"
 				data-analytics="wrap-toggle"
 			/>,
 		);
 
 		const root = screen.getByTestId('switch');
-		expect(root).toHaveClass('custom');
-		expect(root).toHaveStyle({ marginInline: '4px' });
 		expect(root).toHaveAttribute('aria-label', 'Wrap text');
 		expect(root).toHaveAttribute('data-analytics', 'wrap-toggle');
 	});
@@ -149,8 +145,6 @@ describe('Switch rendering', () => {
 				testId="switch"
 				containerTestId="container"
 				containerId="row"
-				containerClassName="row-class"
-				containerStyle={{ marginBlock: '12px' }}
 			>
 				Wrap text
 			</Switch>,
@@ -158,9 +152,7 @@ describe('Switch rendering', () => {
 
 		const container = screen.getByTestId('container');
 		expect(container).toHaveAttribute('id', 'row');
-		expect(container).toHaveClass('row-class');
-		expect(container).toHaveStyle({ marginBlock: '12px' });
-		expect(screen.getByTestId('switch')).not.toHaveClass('row-class');
+		expect(screen.getByTestId('switch')).not.toHaveAttribute('id', 'row');
 	});
 
 	it('checks the defaultValue on first render', () => {

@@ -20,52 +20,6 @@ describe('Calendar rendering', () => {
 		expect(screen.getByTestId('calendar')).toHaveAttribute('data-mode', 'range');
 	});
 
-	it('merges className onto the root instead of replacing the calendar class', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				testId="calendar"
-				className="custom-class"
-			/>,
-		);
-
-		const root = screen.getByTestId('calendar');
-
-		expect(root).toHaveClass('custom-class');
-		expect(root).toHaveClass('rdp-root');
-	});
-
-	it('appends a classNames entry to the calendar class for that part', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				classNames={{ day: 'custom-day', root: 'custom-root' }}
-				testId="calendar"
-			/>,
-		);
-
-		const cell = dayButton(JUNE_11_2025).closest('td');
-
-		expect(cell).toHaveClass('custom-day');
-		expect(cell).toHaveClass('rdp-day');
-		expect(screen.getByTestId('calendar')).toHaveClass('custom-root', 'rdp-root');
-	});
-
-	it('keeps a classNames entry the calendar does not style itself', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				classNames={{ footer: 'custom-footer' }}
-				footer="Hi"
-			/>,
-		);
-
-		expect(screen.getByText('Hi')).toHaveClass('custom-footer');
-	});
-
 	it('renders one day button per day in the month', () => {
 		render(<Calendar mode="single" defaultMonth={JUNE_11_2025} showOutsideDays={false} />);
 

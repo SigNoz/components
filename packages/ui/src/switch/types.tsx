@@ -140,10 +140,7 @@ export type ValidateSwitchProps<T> = (T extends { disabled: boolean | undefined 
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type SwitchProps = Pick<
-	ComponentProps<'button'>,
-	'id' | 'className' | 'style' | 'children'
-> &
+export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 	AriaAttributes &
 	SwitchDisableType &
 	SwitchReadOnlyType & {
@@ -233,16 +230,6 @@ export type SwitchProps = Pick<
 		 * row is capped at `100%` of its container.
 		 */
 		maxWidth?: CSSProperties['maxWidth'];
-		/**
-		 * Additional CSS classes for the `<label>` wrapper that holds the switch and its text.
-		 *
-		 * @note Any `container*` prop forces the wrapper to render even with no label.
-		 */
-		containerClassName?: string;
-		/**
-		 * Inline styles for the wrapper.
-		 */
-		containerStyle?: CSSProperties;
 		/**
 		 * The `id` of the wrapper.
 		 */

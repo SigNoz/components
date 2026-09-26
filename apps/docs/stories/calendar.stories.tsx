@@ -150,18 +150,6 @@ const meta: Meta<typeof Calendar> = {
 			description: 'Called with the new month whenever the calendar navigates.',
 			table: { category: 'Events' },
 		},
-		className: {
-			control: 'text',
-			description: "Merged onto the root element, after the calendar's own class.",
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		classNames: {
-			control: false,
-			description:
-				"One class per part of the grid, appended to the calendar's own class for that part " +
-				'rather than replacing it.',
-			table: { category: 'Styling', type: { summary: 'Partial<ClassNames>' } },
-		},
 		testId: {
 			control: 'text',
 			description:
@@ -195,11 +183,8 @@ function storyOnSelect(args: object): ((...selection: unknown[]) => void) | unde
 function CalendarPlayground({
 	mode = 'single',
 	onSelect,
-	className,
 	...args
 }: CalendarPlaygroundProps): ReactElement {
-	const calendarClassName = className ? `${styles.calendarCard} ${className}` : styles.calendarCard;
-
 	const [single, setSingle] = useState<Date | undefined>(TODAY);
 	const [multiple, setMultiple] = useState<Date[]>([day(9), day(11)]);
 	const [range, setRange] = useState<{ from: Date | undefined; to?: Date }>({
@@ -219,7 +204,6 @@ function CalendarPlayground({
 					setMultiple(value ?? []);
 					onSelect?.(value);
 				}}
-				className={calendarClassName}
 			/>
 		);
 	}
@@ -236,7 +220,6 @@ function CalendarPlayground({
 					setRange(value ?? { from: undefined });
 					onSelect?.(value);
 				}}
-				className={calendarClassName}
 			/>
 		);
 	}
@@ -252,7 +235,6 @@ function CalendarPlayground({
 				setSingle(value);
 				onSelect?.(value);
 			}}
-			className={calendarClassName}
 		/>
 	);
 }
@@ -264,42 +246,49 @@ export const Default: Story = {
 	},
 	render: ({ mode, ...args }) => (
 		<div className="story-container-full">
-			<CalendarPlayground
-				testId="default-calendar"
-				{...args}
-				mode={mode}
-				onSelect={storyOnSelect(args)}
-			/>
+			<div className={styles.calendarCard}>
+				<CalendarPlayground
+					testId="default-calendar"
+					{...args}
+					mode={mode}
+					onSelect={storyOnSelect(args)}
+				/>
+			</div>
 		</div>
 	),
 };
 
-function Example({ title, children }: { title: string; children: ReactNode }): ReactElement {
+/**
+ * `pseudoStates` marks the card the showcase forces hover, focus and active inside, so the same
+ * days in every other calendar on the page are left alone.
+ */
+function Example({
+	title,
+	pseudoStates = false,
+	children,
+}: {
+	title: string;
+	pseudoStates?: boolean;
+	children: ReactNode;
+}): ReactElement {
 	return (
 		<div className={styles.calendarCell}>
 			<Typography size="sm" weight="medium" className={styles.caption}>
 				{title}
 			</Typography>
-			{children}
+			<div className={styles.calendarCard} data-pseudo-states={pseudoStates || undefined}>
+				{children}
+			</div>
 		</div>
 	);
 }
 
 /**
- * The days the showcase forces a pseudo-state onto, keyed by the class the matcher writes on
- * the cell. `storybook-addon-pseudo-states` matches the button inside it.
+ * The date cell `storybook-addon-pseudo-states` forces a state onto, found by the `data-day` the
+ * cell carries (`yyyy-MM-dd`) inside a card marked `pseudoStates`.
  */
-const PSEUDO_MODIFIERS = {
-	pseudoHover: day(2),
-	pseudoFocus: day(3),
-	pseudoActive: day(4),
-};
-
-const PSEUDO_CLASS_NAMES = {
-	pseudoHover: 'pseudo-hover',
-	pseudoFocus: 'pseudo-focus',
-	pseudoActive: 'pseudo-active',
-};
+const pseudoDay = (date: number): string =>
+	`[data-pseudo-states] [data-day="2025-06-${String(date).padStart(2, '0')}"]`;
 
 /**
  * Every selection mode, caption, grid option and day state in one snapshot.
@@ -308,9 +297,9 @@ export const CalendarShowcase: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, modes: allModes },
 		pseudo: {
-			hover: '.pseudo-hover [data-variant="day"]',
-			focusVisible: '.pseudo-focus [data-variant="day"]',
-			active: '.pseudo-active [data-variant="day"]',
+			hover: pseudoDay(2),
+			focusVisible: pseudoDay(3),
+			active: pseudoDay(4),
 		},
 	},
 	render: () => (
@@ -332,7 +321,6 @@ export const CalendarShowcase: Story = {
 								defaultMonth={TODAY}
 								selected={TODAY}
 								onSelect={fn()}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="range">
@@ -342,7 +330,6 @@ export const CalendarShowcase: Story = {
 								defaultMonth={TODAY}
 								selected={{ from: day(9), to: day(13) }}
 								onSelect={fn()}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="multiple">
@@ -352,7 +339,6 @@ export const CalendarShowcase: Story = {
 								defaultMonth={TODAY}
 								selected={[day(3), day(11), day(20)]}
 								onSelect={fn()}
-								className={styles.calendarCard}
 							/>
 						</Example>
 					</div>
@@ -369,12 +355,7 @@ export const CalendarShowcase: Story = {
 					</Typography>
 					<div className={styles.calendarGrid}>
 						<Example title="label caption">
-							<Calendar
-								mode="single"
-								today={TODAY}
-								defaultMonth={TODAY}
-								className={styles.calendarCard}
-							/>
+							<Calendar mode="single" today={TODAY} defaultMonth={TODAY} />
 						</Example>
 						<Example title="dropdown caption">
 							<Calendar
@@ -384,7 +365,6 @@ export const CalendarShowcase: Story = {
 								defaultMonth={TODAY}
 								startMonth={new Date(2024, 0)}
 								endMonth={new Date(2026, 11)}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="previous month disabled">
@@ -393,17 +373,10 @@ export const CalendarShowcase: Story = {
 								today={TODAY}
 								defaultMonth={TODAY}
 								startMonth={new Date(2025, 5)}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="no navigation">
-							<Calendar
-								mode="single"
-								hideNavigation
-								today={TODAY}
-								defaultMonth={TODAY}
-								className={styles.calendarCard}
-							/>
+							<Calendar mode="single" hideNavigation today={TODAY} defaultMonth={TODAY} />
 						</Example>
 						<Example title="two months">
 							<Calendar
@@ -413,7 +386,6 @@ export const CalendarShowcase: Story = {
 								defaultMonth={TODAY}
 								selected={{ from: day(25), to: new Date(2025, 6, 4) }}
 								onSelect={fn()}
-								className={styles.calendarCard}
 							/>
 						</Example>
 					</div>
@@ -429,31 +401,13 @@ export const CalendarShowcase: Story = {
 					</Typography>
 					<div className={styles.calendarGrid}>
 						<Example title="outside days hidden">
-							<Calendar
-								mode="single"
-								showOutsideDays={false}
-								today={TODAY}
-								defaultMonth={TODAY}
-								className={styles.calendarCard}
-							/>
+							<Calendar mode="single" showOutsideDays={false} today={TODAY} defaultMonth={TODAY} />
 						</Example>
 						<Example title="week numbers">
-							<Calendar
-								mode="single"
-								showWeekNumber
-								today={TODAY}
-								defaultMonth={TODAY}
-								className={styles.calendarCard}
-							/>
+							<Calendar mode="single" showWeekNumber today={TODAY} defaultMonth={TODAY} />
 						</Example>
 						<Example title="six weeks, always">
-							<Calendar
-								mode="single"
-								fixedWeeks
-								today={TODAY}
-								defaultMonth={TODAY}
-								className={styles.calendarCard}
-							/>
+							<Calendar mode="single" fixedWeeks today={TODAY} defaultMonth={TODAY} />
 						</Example>
 						<Example title="no weekday row, week starts Monday">
 							<Calendar
@@ -462,7 +416,6 @@ export const CalendarShowcase: Story = {
 								weekStartsOn={1}
 								today={TODAY}
 								defaultMonth={TODAY}
-								className={styles.calendarCard}
 							/>
 						</Example>
 					</div>
@@ -480,26 +433,16 @@ export const CalendarShowcase: Story = {
 						natively, so it takes no pointer and no focus.
 					</Typography>
 					<div className={styles.calendarGrid}>
-						<Example title="hover, focus, active">
-							<Calendar
-								mode="single"
-								today={TODAY}
-								defaultMonth={TODAY}
-								modifiers={PSEUDO_MODIFIERS}
-								modifiersClassNames={PSEUDO_CLASS_NAMES}
-								className={styles.calendarCard}
-							/>
+						<Example title="hover, focus, active" pseudoStates>
+							<Calendar mode="single" today={TODAY} defaultMonth={TODAY} />
 						</Example>
-						<Example title="hover, focus, active on a selection">
+						<Example title="hover, focus, active on a selection" pseudoStates>
 							<Calendar
 								mode="range"
 								today={TODAY}
 								defaultMonth={TODAY}
 								selected={{ from: day(2), to: day(4) }}
 								onSelect={fn()}
-								modifiers={PSEUDO_MODIFIERS}
-								modifiersClassNames={PSEUDO_CLASS_NAMES}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="weekends disabled">
@@ -508,7 +451,6 @@ export const CalendarShowcase: Story = {
 								today={TODAY}
 								defaultMonth={TODAY}
 								disabled={[{ dayOfWeek: [0, 6] }]}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="selected and disabled together">
@@ -519,7 +461,6 @@ export const CalendarShowcase: Story = {
 								selected={TODAY}
 								onSelect={fn()}
 								disabled={[{ before: day(9) }]}
-								className={styles.calendarCard}
 							/>
 						</Example>
 						<Example title="footer">
@@ -530,7 +471,6 @@ export const CalendarShowcase: Story = {
 								selected={TODAY}
 								onSelect={fn()}
 								footer="Pick the day the report starts on."
-								className={styles.calendarCard}
 							/>
 						</Example>
 					</div>

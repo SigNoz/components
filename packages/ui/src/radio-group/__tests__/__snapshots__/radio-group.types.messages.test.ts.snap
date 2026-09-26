@@ -24,6 +24,8 @@ exports[`RadioGroup type error messages > prints a message that names the constr
   "remaining props > rejects a textOverflow outside the set > \`clip\` is not a RadioGroupTextOverflow": "TS2322: Type '"clip"' is not assignable to type 'RadioGroupTextOverflowType | undefined'.",
   "test ids > rejects a raw data-testid > use \`testId\`, it survives the tooltip trigger cloning the group": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which survives the tooltip trigger cloning the group'' is missing in type '{ color: "primary"; items: RadioGroupItemType[]; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
   "unknown props > rejects a misspelled prop > \`onChage\` is not a prop, a generic \`T extends RadioGroupProps\` would let it through": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "unknown props > rejects className and style, the look comes from the props and tokens > \`className\` is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "unknown props > rejects className and style, the look comes from the props and tokens > \`style\` is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
   "value, defaultValue and onChange > rejects a null default, an uncontrolled group starts empty on its own > drop \`defaultValue\` for an empty group": "TS2322: Type 'null' is not assignable to type 'string | undefined'.",
 }
 `;

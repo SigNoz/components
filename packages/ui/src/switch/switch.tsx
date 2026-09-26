@@ -1,7 +1,14 @@
 import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
-import { forwardRef, type ReactElement, type RefAttributes, useId, useMemo } from 'react';
+import {
+	type CSSProperties,
+	forwardRef,
+	type ReactElement,
+	type RefAttributes,
+	useId,
+	useMemo,
+} from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { cn, hasRenderableContent } from '../lib/utils.js';
+import { hasRenderableContent } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -20,8 +27,6 @@ import type { SwitchProps, ValidateSwitchProps } from './types.js';
 const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 	{
 		id,
-		className,
-		style,
 		children,
 		description,
 		color,
@@ -39,8 +44,6 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 		testId,
 		width,
 		maxWidth,
-		containerClassName,
-		containerStyle,
 		containerId,
 		containerTestId,
 		containerRef,
@@ -72,12 +75,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 	const hasLabel = hasRenderableContent(children);
 	const hasText = hasLabel || hasDescription;
 	const hasContainer =
-		hasText ||
-		containerClassName !== undefined ||
-		containerStyle !== undefined ||
-		containerId !== undefined ||
-		containerTestId !== undefined ||
-		containerRef != null;
+		hasText || containerId !== undefined || containerTestId !== undefined || containerRef != null;
 
 	const hasOverflowTooltip = hasLabel && textOverflow === SwitchTextOverflow.Ellipsis;
 	const [isLabelTruncated, labelRef] = useIsLabelTruncated(hasOverflowTooltip);
@@ -115,7 +113,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 	const sizeStyle = {
 		...(width == null ? {} : { '--switch-internal-width': toCssLength(width) }),
 		...(maxWidth == null ? {} : { '--switch-internal-max-width': toCssLength(maxWidth) }),
-	};
+	} as CSSProperties;
 
 	const switchEl = (
 		<SwitchPrimitive.Root
@@ -123,8 +121,8 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			id={id}
 			data-slot="switch"
 			data-color={color}
-			className={cn(styles['switch'], className)}
-			style={hasContainer ? style : { ...style, ...sizeStyle }}
+			className={styles['switch']}
+			style={hasContainer ? undefined : sizeStyle}
 			checked={value}
 			defaultChecked={defaultValue}
 			onCheckedChange={onCheckedChange}
@@ -177,8 +175,8 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			data-slot="switch-container"
 			data-text-placement={textPlacement}
 			data-text-overflow={textOverflow}
-			className={cn(styles['switch-container'], containerClassName)}
-			style={{ ...containerStyle, ...sizeStyle }}
+			className={styles['switch-container']}
+			style={sizeStyle}
 			{...(containerTestId === undefined ? {} : { 'data-testid': containerTestId })}
 		>
 			{textPlacement === SwitchTextPlacement.Left ? (

@@ -44,12 +44,7 @@ const AlertDialog = React.forwardRef<HTMLDivElement, AlertDialogProps>(
 				{children}
 
 				{checkboxLabel && (
-					<Checkbox
-						color={checkboxColor}
-						value={checkboxChecked}
-						containerClassName={styles.alert__dialog__checkbox}
-						onChange={onCheckboxChange}
-					>
+					<Checkbox color={checkboxColor} value={checkboxChecked} onChange={onCheckboxChange}>
 						{checkboxLabel}
 					</Checkbox>
 				)}

@@ -1,7 +1,7 @@
 import { CircleAlert, CircleCheckBig, Info, TriangleAlert, X } from '@signozhq/icons';
 import type { ReactNode } from 'react';
 import React from 'react';
-import { Button } from '../button/index.js';
+import { InternalButton } from '../button/button.js';
 import { cn } from '../lib/utils.js';
 import styles from './announcement-banner.module.scss';
 
@@ -97,7 +97,7 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 					)}
 					<div className={styles['banner__message']}>{children}</div>
 					{action && (
-						<Button
+						<InternalButton
 							type="button"
 							variant="solid"
 							color="primary"
@@ -106,12 +106,12 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 							size="md"
 						>
 							{action.label}
-						</Button>
+						</InternalButton>
 					)}
 				</div>
 
 				{onClose && (
-					<Button
+					<InternalButton
 						className={styles['banner__dismiss']}
 						type="button"
 						aria-label="Dismiss"
@@ -122,7 +122,7 @@ export const AnnouncementBanner = React.forwardRef<HTMLDivElement, AnnouncementB
 						onClick={onClose}
 					>
 						<X size={14} />
-					</Button>
+					</InternalButton>
 				)}
 			</div>
 		);

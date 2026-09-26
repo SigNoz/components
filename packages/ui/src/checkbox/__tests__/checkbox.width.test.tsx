@@ -39,23 +39,6 @@ describe('Checkbox width and maxWidth', () => {
 		).toBe('160px');
 	});
 
-	it('composes with a consumer style instead of replacing it', () => {
-		render(
-			<Checkbox
-				color="primary"
-				containerTestId="container"
-				width={240}
-				containerStyle={{ marginBlock: '12px' }}
-			>
-				Accept the terms
-			</Checkbox>,
-		);
-
-		const container = screen.getByTestId('container');
-		expect(container.style.getPropertyValue('--checkbox-internal-width')).toBe('240px');
-		expect(container).toHaveStyle({ marginBlock: '12px' });
-	});
-
 	it('lands on the bare checkbox when there is no wrapper, without resizing the box', () => {
 		render(
 			<Checkbox color="primary" testId="checkbox" aria-label="Accept the terms" width={240} />,

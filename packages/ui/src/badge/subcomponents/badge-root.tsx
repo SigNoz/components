@@ -3,6 +3,7 @@ import {
 	forwardRef,
 	isValidElement,
 	useId,
+	type CSSProperties,
 	type ElementType,
 	type KeyboardEventHandler,
 	type MouseEventHandler,
@@ -84,6 +85,18 @@ export type BadgeRootProps = Omit<BadgeProps, 'variant' | 'color'> & {
 	 * @access private
 	 */
 	tabIndex?: number;
+	/**
+	 * `Pill` merges its own class in. `Badge` exposes none.
+	 *
+	 * @access private
+	 */
+	className?: string;
+	/**
+	 * `Pill` forwards the style its size props build. `Badge` exposes none.
+	 *
+	 * @access private
+	 */
+	style?: CSSProperties;
 	/**
 	 * Stamped as `id` on the label span. `Pill.Closeable` points its own `aria-labelledby` at it,
 	 * so its accessible name is the label alone and never sweeps in the nested close button's

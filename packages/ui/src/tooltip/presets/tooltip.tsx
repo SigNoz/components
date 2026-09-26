@@ -67,7 +67,7 @@ import type { TooltipProps } from '../types.js';
  * | prop, on the nested tooltip | goes |
  * |---|---|
  * | `title` | into the popup of the outer tooltip |
- * | `className`, `style`, `id`, `testId`, `data-*` | onto the trigger element, not the popup |
+ * | `id`, `testId`, `data-*` | onto the trigger element, not the popup |
  * | `side`, `align`, `sideOffset`, `alignOffset`, `container`, `open` | nowhere, the outer tooltip owns the popup |
  *
  * ### Do not nest two by hand

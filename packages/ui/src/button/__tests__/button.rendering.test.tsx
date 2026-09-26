@@ -54,18 +54,6 @@ describe('Button rendering', () => {
 		expect(screen.getByRole('button')).not.toHaveAttribute('data-testid');
 	});
 
-	it('keeps the component class next to a custom className', () => {
-		render(
-			<Button size="md" variant="solid" color="primary" className="custom-class">
-				Label
-			</Button>,
-		);
-
-		const button = screen.getByRole('button');
-		expect(button).toHaveClass('custom-class');
-		expect(button.className.split(' ').length).toBeGreaterThan(1);
-	});
-
 	it('forwards id, tabIndex and aria attributes', () => {
 		render(
 			<Button
@@ -196,23 +184,5 @@ describe('Button width', () => {
 		const { style } = screen.getByRole('button');
 		expect(style.getPropertyValue('--button-internal-width')).toBe('');
 		expect(style.getPropertyValue('--button-internal-max-width')).toBe('');
-	});
-
-	it('keeps the caller style alongside the custom properties', () => {
-		render(
-			<Button
-				size="md"
-				variant="solid"
-				color="primary"
-				width="10rem"
-				style={{ color: 'red', marginTop: '4px' }}
-			>
-				Label
-			</Button>,
-		);
-
-		const button = screen.getByRole('button');
-		expect(button).toHaveStyle({ color: 'rgb(255, 0, 0)', marginTop: '4px' });
-		expect(button.style.getPropertyValue('--button-internal-width')).toBe('10rem');
 	});
 });

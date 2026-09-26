@@ -489,7 +489,7 @@ export type ValidateDropdownProps<T> = (T extends { disabled: boolean | undefine
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
+export type DropdownProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes & {
 		/**
 		 * The rows, in the order they are rendered. The menu owns its markup, so there are no
@@ -568,8 +568,7 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'st
 		/**
 		 * How wide the popup may get, written as `--dropdown-internal-max-inline-size`.
 		 *
-		 * @note So it composes with the tokens instead of overwriting `style.maxWidth`. A number is
-		 * written as `px`, and any `style` you pass is kept.
+		 * @note So it composes with the tokens. A number is written as `px`.
 		 *
 		 * @default '15.75rem'
 		 */

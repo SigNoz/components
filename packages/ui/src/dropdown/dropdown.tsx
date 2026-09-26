@@ -14,7 +14,6 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { cn } from '../lib/utils.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
@@ -50,8 +49,6 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 		nativeButton,
 		testId,
 		id,
-		className,
-		style,
 		...props
 	},
 	ref,
@@ -101,13 +98,12 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 		setRememberedSelections((current) => ({ ...current, [rowKey]: selection }));
 	}, []);
 
-	// The size props compose with the tokens instead of overwriting `style.maxWidth`, the way
-	// `ToggleGroup`'s `width` and `maxWidth` do. The consumer's own `style` travels with them, so
-	// a submenu popup is declared the same way the root one is.
+	// The size props are written as custom properties so they compose with the tokens, the way
+	// `ToggleGroup`'s `width` and `maxWidth` do. A submenu popup is declared the same way the root
+	// one is.
 	const popupStyle = useMemo(
 		() =>
 			({
-				...style,
 				...(contentMaxWidth != null && {
 					'--dropdown-internal-max-inline-size': toCssLength(contentMaxWidth),
 				}),
@@ -115,7 +111,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 					'--dropdown-internal-max-block-size': toCssLength(contentMaxHeight),
 				}),
 			}) as CSSProperties,
-		[style, contentMaxWidth, contentMaxHeight],
+		[contentMaxWidth, contentMaxHeight],
 	);
 
 	const contextValue = useMemo(
@@ -126,9 +122,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 			rememberSelection,
 			container,
 			popupStyle,
-			popupClassName: className,
 		}),
-		[testId, close, rememberedSelections, rememberSelection, container, popupStyle, className],
+		[testId, close, rememberedSelections, rememberSelection, container, popupStyle],
 	);
 
 	// `ArrowDown` in the search field hands the highlight to the first row; this hands it back.
@@ -218,7 +213,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 						ref={popupRef}
 						id={id}
 						data-slot="dropdown-popup"
-						className={cn(styles['dropdown'], className)}
+						className={styles['dropdown']}
 						style={popupStyle}
 						onKeyDownCapture={handlePopupKeyDown}
 					>
@@ -253,7 +248,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * Renders a menu from `items`, hung off a trigger you provide (Base UI `Menu`).
  *
  * The menu owns its markup: there are no subcomponents to import and nothing to compose. Every prop
- * you write on it describes the popup: `aria-*`, `data-*`, `className` and `style` all land there.
+ * you write on it describes the popup: `aria-*` and `data-*` land there.
  * `testId` is the exception, because it names the trigger.
  *
  * Visual values are `--dropdown-*` custom properties, defaults in the `css-tokens` region of
@@ -280,7 +275,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  *
  * ### What lands on the popup
  *
- * `aria-*`, `data-*`, `className` and `style` go to the popup, not to the trigger. The trigger is
+ * `aria-*` and `data-*` go to the popup, not to the trigger. The trigger is
  * your node, so anything meant for it goes on it directly; the popup is portalled and is the part
  * you cannot reach.
  *
@@ -288,9 +283,6 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * trigger, so an icon button with no text leaves the menu unnamed. An outside-click guard reading
  * `closest()` is the case that needs `data-*`: the popup is not inside the element the guard
  * watches, so it has to be able to mark itself.
- *
- * `className` and `style` reach every submenu popup too. A submenu is portalled beside the menu
- * rather than nested inside it, so no selector of yours would otherwise span the two.
  *
  * ### Opening and closing
  *

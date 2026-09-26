@@ -148,8 +148,6 @@ const meta: Meta<typeof Dropdown> = {
 			table: { category: 'Behavior', type: { summary: 'boolean' } },
 		},
 		id: { control: 'text', table: { category: 'Styling' } },
-		className: { control: 'text', table: { category: 'Styling' } },
-		style: { control: false, table: { category: 'Styling' } },
 		testId: { control: 'text', table: { category: 'Testing' } },
 	},
 	parameters: {

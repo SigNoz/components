@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import * as React from 'react';
+import { InternalButton } from '../button/button.js';
 import { Button, type ColorType, type SizeType, type VariantColorType } from '../button/index.js';
 import { Calendar } from '../calendar/index.js';
 import { ComboboxSimple, type ComboboxSimpleItem } from '../combobox/index.js';
@@ -338,7 +339,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 		const isPlaceholder = displayText === placeholder;
 
 		const defaultTrigger = (
-			<Button
+			<InternalButton
 				ref={ref}
 				// TypeScript cannot correlate the two destructured props back to the
 				// variant/color union, so the pair is re-asserted here.
@@ -360,7 +361,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 				>
 					{displayText}
 				</span>
-			</Button>
+			</InternalButton>
 		);
 
 		const defaultActions = (
