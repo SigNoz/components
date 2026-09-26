@@ -47,6 +47,8 @@ describe('wrapper prop targeting regressions', () => {
 	it('keeps Switch control props on the switch root and exposes container props for the wrapper', () => {
 		render(
 			<Switch
+				color="primary"
+				textPlacement="right"
 				id="notifications"
 				testId="notifications-switch"
 				className="switch-class"
@@ -63,7 +65,8 @@ describe('wrapper prop targeting regressions', () => {
 		const control = screen.getByRole('switch', { name: 'Notifications' });
 		const container = screen.getByTestId('notifications-container');
 
-		expect(control).toHaveAttribute('id', 'notifications');
+		// Base UI puts `id` on the hidden input, the element a consumer `htmlFor` points at.
+		expect(document.querySelector('input#notifications')).not.toBeNull();
 		expect(control).toHaveAttribute('data-testid', 'notifications-switch');
 		expect(control).toHaveClass('switch-class');
 		expect(control).toHaveStyle({ opacity: '0.5' });

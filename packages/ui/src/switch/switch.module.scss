@@ -1,128 +1,248 @@
-@keyframes switch-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.switch-wrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-4, 0.5rem);
-}
-
-.switch-label {
-  cursor: pointer;
-  user-select: none;
-}
-
+// Base UI puts the state on the switch itself: `data-checked` / `data-unchecked`,
+// `data-disabled` and `data-readonly`. The labelled wrapper reads them back with `:has()` so one
+// rule covers a bare switch and a whole row.
 .switch {
-  display: inline-flex;
-  height: var(--switch-height, 1rem);
-  width: var(--switch-width, 1.75rem);
-  flex-shrink: 0;
-  cursor: pointer;
-  align-items: center;
-  border-radius: var(--switch-border-radius, 9999px);
-  border: 2px solid transparent;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.30);
-  transition: background-color 150ms ease-in-out;
-  background-color: var(--l3-background);
-  padding: 0;
+	// The knob's travel is derived from the four size tokens, so any of them can change alone and
+	// the geometry holds; the hover and press morphs only redefine the knob box.
+	--switch-internal-track-width: var(--switch-track-width, 28px);
+	--switch-internal-track-height: var(--switch-track-height, 16px);
+	--switch-internal-thumb-size: var(--switch-thumb-size, 12px);
+	--switch-internal-thumb-inset: var(--switch-thumb-inset, 2px);
+	--switch-internal-thumb-width: var(--switch-internal-thumb-size);
+	--switch-internal-thumb-height: var(--switch-internal-thumb-size);
+	--switch-internal-travel: calc(var(--switch-internal-track-width) -
+			var(--switch-internal-thumb-width) - 2 * var(--switch-internal-thumb-inset));
+	--switch-internal-thumb-x: 0px;
 
-  &[data-color="robin"] {
-    --switch-checked-background: var(--accent-primary);
-  }
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	inline-size: var(--switch-internal-track-width);
+	block-size: var(--switch-internal-track-height);
+	flex-shrink: 0;
+	border-radius: var(--switch-border-radius, var(--radius-round));
+	background-color: var(--switch-track-background-color, var(--switch-track-background));
+	cursor: var(--switch-cursor, pointer);
+	transition: var(--switch-transition, background-color 150ms ease);
 
-  &[data-color="forest"] {
-    --switch-checked-background: var(--accent-forest);
-  }
+	&[data-color='primary'] {
+		--switch-internal-checked-background: var(--switch-primary-background);
+		--switch-internal-checked-hover-background: var(--switch-primary-hover-background);
+	}
 
-  &[data-color="amber"] {
-    --switch-checked-background: var(--accent-amber);
-  }
+	&[data-color='secondary'] {
+		--switch-internal-checked-background: var(--switch-secondary-background);
+		--switch-internal-checked-hover-background: var(--switch-secondary-hover-background);
+	}
 
-  &[data-color="sienna"] {
-    --switch-checked-background: var(--accent-sienna);
-  }
+	&[data-color='danger'] {
+		--switch-internal-checked-background: var(--switch-danger-background);
+		--switch-internal-checked-hover-background: var(--switch-danger-hover-background);
+	}
 
-  &[data-color="cherry"] {
-    --switch-checked-background: var(--accent-cherry);
-  }
+	&[data-color='warning'] {
+		--switch-internal-checked-background: var(--switch-warning-background);
+		--switch-internal-checked-hover-background: var(--switch-warning-hover-background);
+	}
 
-  &[data-color="sakura"] {
-    --switch-checked-background: var(--accent-sakura);
-  }
+	&[data-color='success'] {
+		--switch-internal-checked-background: var(--switch-success-background);
+		--switch-internal-checked-hover-background: var(--switch-success-hover-background);
+	}
 
-  &[data-color="aqua"] {
-    --switch-checked-background: var(--accent-aqua);
-  }
+	&[data-color='info'] {
+		--switch-internal-checked-background: var(--switch-info-background);
+		--switch-internal-checked-hover-background: var(--switch-info-hover-background);
+	}
 
-  &:focus-visible {
-    outline-offset: -1px;
-    outline: 2px solid var(--switch-checked-background);
-  }
+	&[data-color='archive'] {
+		--switch-internal-checked-background: var(--switch-archive-background);
+		--switch-internal-checked-hover-background: var(--switch-archive-hover-background);
+	}
 
-  &:disabled:not([data-loading]) {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
+	&[data-color='highlight-danger'] {
+		--switch-internal-checked-background: var(--switch-highlight-danger-background);
+		--switch-internal-checked-hover-background: var(--switch-highlight-danger-hover-background);
+	}
 
-  &:disabled:not([data-loading]) ~ .switch-label {
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
+	&[data-checked] {
+		--switch-internal-thumb-x: var(--switch-internal-travel);
 
-  &[data-loading] {
-    cursor: wait;
-    opacity: 0.7;
-  }
+		background-color: var(--switch-checked-background, var(--switch-internal-checked-background));
+	}
 
-  &[data-loading] ~ .switch-label {
-    cursor: wait;
-  }
+	// The ring hugs the track and follows its pill radius. It never wraps the label: the label is
+	// not the focus target, and enclosing it makes a 28px control look like a row.
+	&:focus-visible {
+		outline: var(--switch-focus-visible-outline, 1px solid var(--switch-focus-ring));
+		outline-offset: var(--switch-focus-visible-outline-offset, 1px);
+	}
 
-  &[data-loading] &__thumb {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+	&[data-disabled] {
+		opacity: var(--switch-disabled-opacity, 0.6);
+		cursor: var(--switch-disabled-cursor, not-allowed);
+	}
 
-  &__loading-icon {
-    width: var(--switch-loading-icon-size, .5rem);
-    height: var(--switch-loading-icon-size, .5rem);
-    flex-shrink: 0;
-    animation: switch-spin 0.7s linear infinite;
-    color: var(--switch-loading-icon-color, var(--text-ink-500));
+	&[data-readonly] {
+		opacity: var(--switch-readonly-opacity, 0.8);
+		cursor: var(--switch-readonly-cursor, not-allowed);
+	}
+}
 
-    @media (prefers-reduced-motion: reduce) {
-      animation: none;
-    }
-  }
+// Hover fires from the whole row, not just the 28px track: the label is part of the hit target.
+// The hover and press morphs are custom-property swaps rather than direct declarations, so the
+// knob's transition carries them and the derived travel re-computes from the new width.
+.switch:not([data-disabled]):not([data-readonly]):hover,
+.switch-container:hover .switch:not([data-disabled]):not([data-readonly]) {
+	--switch-internal-thumb-width: calc(var(--switch-internal-thumb-size) + var(--switch-thumb-hover-extend, 2px));
 
-  &[data-state="checked"] &__loading-icon {
-    color: var(--switch-loading-icon-color, var(--switch-checked-background));
-  }
+	&[data-unchecked] {
+		background-color: var(--switch-track-hover-background-color, var(--switch-track-hover-background));
+	}
 
-  &__thumb {
-    display: block;
-    height: var(--switch-thumb-size, .75rem);
-    width: var(--switch-thumb-size, .75rem);
-    pointer-events: none;
-    border-radius: 9999px;
-    background-color: var(--base-white);
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-    transition: transform 150ms ease-in-out;
-  }
+	&[data-checked] {
+		background-color: var(--switch-checked-hover-background, var(--switch-internal-checked-hover-background));
+	}
+}
 
-  &[data-state="checked"] {
-    background-color: var(--switch-checked-background);
-  }
+.switch:not([data-disabled]):not([data-readonly]):active,
+.switch-container:active .switch:not([data-disabled]):not([data-readonly]) {
+	--switch-internal-thumb-width: calc(var(--switch-internal-thumb-size) + var(--switch-thumb-press-extend, 3px));
+	--switch-internal-thumb-height: calc(var(--switch-internal-thumb-size) - var(--switch-thumb-press-shrink, 3px));
+}
 
-  &[data-state="checked"] .switch__thumb {
-    transform: translateX(var(--switch-thumb-size, .75rem));
-  }
+.switch__thumb {
+	position: absolute;
+	// Vertical centring rides on the -50% half of `translate`, so the press squish stays centred
+	// however far it shrinks; the horizontal half is the travel, which is 0 while unchecked and
+	// re-derived from the knob's current width while it morphs, so a checked knob stretches
+	// toward the centre and keeps its outer edge parked at the inset.
+	inset-block-start: 50%;
+	inset-inline-start: var(--switch-internal-thumb-inset);
+	inline-size: var(--switch-internal-thumb-width);
+	block-size: var(--switch-internal-thumb-height);
+	border-radius: var(--switch-thumb-border-radius, var(--radius-round));
+	background-color: var(--switch-thumb-background-color, var(--switch-thumb-background));
+	box-shadow: var(--switch-thumb-shadow, 0 1px 3px 0 color-mix(in srgb, black 30%, transparent));
+	translate: var(--switch-internal-thumb-x) -50%;
+	transition: var(--switch-thumb-transition,
+			translate 150ms ease-out,
+			inline-size 150ms ease-out,
+			block-size 150ms ease-out);
+}
 
-  &[data-state="unchecked"] .switch__thumb {
-    transform: translateX(0);
-  }
+.switch-container {
+	// The `.switch` margin below needs the label line-height before the label's own declaration
+	// applies, so the wrapper carries the same value.
+	--switch-internal-label-line-height: var(--switch-label-line-height, 18px);
+
+	display: var(--switch-container-display, inline-flex);
+	// The switch sits on the first line of the label and stays there. Centring the row instead
+	// would tie its position to the text's height, so a description or a wrapped second line
+	// would move the control the user is about to click.
+	align-items: var(--switch-container-align-items, flex-start);
+	justify-content: var(--switch-container-justify, flex-start);
+	gap: var(--switch-gap, var(--spacing-4));
+	inline-size: var(--switch-internal-width, auto);
+	max-inline-size: var(--switch-internal-max-width, 100%);
+	min-width: var(--switch-container-min-width, 0);
+	// The whole row is the hit target, so the pointer reads as interactive from the text too.
+	cursor: var(--switch-cursor, pointer);
+	user-select: none;
+
+	&[data-text-placement='left'] {
+		inline-size: var(--switch-internal-width, 100%);
+		justify-content: var(--switch-container-justify, space-between);
+	}
+
+	.switch {
+		margin-block-start: var(--switch-margin-block-start,
+				calc((var(--switch-internal-label-line-height) - var(--switch-internal-track-height)) / 2));
+	}
+
+	&:has([data-disabled]) {
+		cursor: var(--switch-disabled-cursor, not-allowed);
+
+		.switch__text {
+			opacity: var(--switch-disabled-opacity, 0.6);
+		}
+	}
+
+	&:has([data-readonly]) {
+		cursor: var(--switch-readonly-cursor, not-allowed);
+
+		.switch__text {
+			opacity: var(--switch-readonly-opacity, 0.8);
+		}
+	}
+
+	&[data-text-overflow='wrap'] .switch__label,
+	&[data-text-overflow='wrap'] .switch__description {
+		white-space: var(--switch-wrap-white-space, normal);
+		overflow-wrap: var(--switch-wrap-overflow-wrap, anywhere);
+	}
+
+	// A label is a node, so it can hold something that draws outside its own box, like a `Badge`
+	// with a focus ring. This mode stops clipping instead of cutting that ring.
+	&[data-text-overflow='visible'] .switch__label,
+	&[data-text-overflow='visible'] .switch__description {
+		overflow: var(--switch-text-overflow-visible, visible);
+	}
+
+	&[data-text-overflow='ellipsis'] .switch__label,
+	&[data-text-overflow='ellipsis'] .switch__description {
+		text-overflow: var(--switch-text-text-overflow, ellipsis);
+	}
+}
+
+.switch__text {
+	display: flex;
+	flex-direction: column;
+	gap: var(--switch-text-gap, var(--spacing-2));
+	min-width: var(--switch-text-min-width, 0);
+	transition: var(--switch-text-transition, opacity 150ms ease);
+}
+
+.switch__label {
+	--switch-internal-label-line-height: var(--switch-label-line-height, 18px);
+
+	min-width: 0;
+	// The row keeps one line of label height even when the label renders something shorter, so a
+	// row does not change height with its content.
+	min-block-size: var(--switch-internal-label-line-height);
+	overflow: var(--switch-label-overflow, hidden);
+	white-space: var(--switch-label-white-space, nowrap);
+	color: var(--switch-label-color, var(--switch-label));
+	font-size: var(--switch-label-font-size, var(--periscope-font-size-base));
+	font-weight: var(--switch-label-font-weight, var(--font-weight-normal));
+	line-height: var(--switch-internal-label-line-height);
+	cursor: inherit;
+
+	&-tooltip {
+		max-width: var(--switch-label-tooltip-max-width, 20rem);
+	}
+}
+
+// With a description under it, the label reads as the row's title, so its default weight steps
+// up; an explicit `--switch-label-font-weight` still wins in both shapes.
+.switch__text:has(.switch__description) .switch__label {
+	font-weight: var(--switch-label-font-weight, var(--font-weight-medium));
+}
+
+.switch__description {
+	min-width: 0;
+	overflow: var(--switch-description-overflow, hidden);
+	white-space: var(--switch-description-white-space, nowrap);
+	color: var(--switch-description-color, var(--switch-description));
+	font-size: var(--switch-description-font-size, var(--periscope-font-size-base));
+	line-height: var(--switch-description-line-height, 18px);
+	cursor: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.switch,
+	.switch__thumb,
+	.switch__text {
+		transition: none;
+	}
 }
