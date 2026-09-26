@@ -1,0 +1,25 @@
+.spinner {
+	inline-size: var(--spinner-size, 12px);
+	block-size: var(--spinner-size, 12px);
+	flex-shrink: var(--spinner-flex-shrink, 0);
+	border-radius: var(--spinner-border-radius, 50%);
+	border-style: var(--spinner-border-style, solid);
+	border-width: var(--spinner-thickness, 1.5px);
+	border-color: var(--spinner-track-color, color-mix(in srgb, currentColor 22%, transparent));
+	border-block-start-color: var(--spinner-head-color, color-mix(in srgb, currentColor 88%, transparent));
+	animation: spinner-rotate var(--spinner-duration, 0.7s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	// The rotation is the only thing saying work is in flight, so it is slowed
+	// rather than stopped.
+	.spinner {
+		animation-duration: var(--spinner-reduced-motion-duration, 1.6s);
+	}
+}
+
+@keyframes spinner-rotate {
+	to {
+		transform: var(--spinner-rotate-transform, rotate(360deg));
+	}
+}
