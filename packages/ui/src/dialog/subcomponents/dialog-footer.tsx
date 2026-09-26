@@ -29,7 +29,7 @@ export type DialogFooterProps = Pick<
  *     <Button variant="ghost" color="secondary" onClick={onCancel}>
  *       Cancel
  *     </Button>
- *     <Button variant="solid" color="destructive" onClick={onConfirm}>
+ *     <Button variant="solid" color="danger" onClick={onConfirm}>
  *       Delete Step
  *     </Button>
  *   </DialogFooter>

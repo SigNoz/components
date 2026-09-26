@@ -4,17 +4,6 @@
   gap: 3rem;
 }
 
-.capitalizeText {
-  display: block;
-  text-transform: capitalize;
-}
-
-.buttonVariantGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
 .sectionGapLarge {
   display: flex;
   flex-direction: column;
@@ -25,53 +14,24 @@
   margin-top: 1rem;
 }
 
-.marginBottomMedium {
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.twoColumnGrid {
+.matrix {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  justify-items: start;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
-.inkBackground500 {
-  padding: 1.5rem;
-  background-color: var(--bg-ink-500);
-  border-radius: 0.5rem;
+.matrixLabel {
+  white-space: nowrap;
 }
 
-.inkBackground400 {
-  padding: 1.5rem;
-  background-color: var(--bg-ink-400);
-  border-radius: 0.5rem;
-}
-
-.vanillaBackground100 {
-  padding: 1.5rem;
-  background-color: var(--bg-vanilla-100);
-  border-radius: 0.5rem;
-}
-
-.vanillaBackground200 {
-  padding: 1.5rem;
-  background-color: var(--bg-vanilla-200);
-  border-radius: 0.5rem;
-}
-
-.lightText {
-  display: block;
-  color: var(--text-vanilla-100);
-  margin-bottom: 1rem;
-}
-
-.mutedMarginBottom {
-  display: block;
-  margin-bottom: 1rem;
-}
-
-.marginBottomSmall {
-  display: block;
-  margin-bottom: 0.75rem;
+.overflowGrid {
+  display: grid;
+  grid-template-columns: max-content 12rem minmax(0, 1fr);
+  gap: 8rem 1.5rem;
+  padding-block-start: 4rem;
+  align-items: center;
 }

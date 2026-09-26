@@ -3,12 +3,7 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import * as React from 'react';
-import {
-	Button,
-	type ButtonColorValue,
-	type ButtonSizeValue,
-	type ButtonVariantValue,
-} from '../button/index.js';
+import { Button, type ColorType, type SizeType, type VariantColorType } from '../button/index.js';
 import { Calendar } from '../calendar/index.js';
 import { ComboboxSimple, type ComboboxSimpleItem } from '../combobox/index.js';
 import { Input } from '../input/index.js';
@@ -89,20 +84,10 @@ export type DatePickerProps = {
 	 */
 	popoverContentClassName?: string;
 	/**
-	 * Button variant.
-	 * @default 'outlined'
-	 */
-	buttonVariant?: ButtonVariantValue;
-	/**
-	 * Button color.
-	 * @default 'secondary'
-	 */
-	buttonColor?: ButtonColorValue;
-	/**
 	 * Button size.
 	 * @default 'md'
 	 */
-	buttonSize?: ButtonSizeValue;
+	buttonSize?: SizeType;
 	/**
 	 * Calendar props.
 	 */
@@ -129,7 +114,37 @@ export type DatePickerProps = {
 	 * Test ID for the date picker.
 	 */
 	testId?: string;
-};
+} & DatePickerTriggerAppearance;
+
+/**
+ * Variant/color of the trigger button. Follows the same pairing rules as `Button`:
+ * `solid` and `link` accept every color, the other variants are secondary only.
+ */
+export type DatePickerTriggerAppearance =
+	| {
+			/**
+			 * Button variant.
+			 * @default 'outlined'
+			 */
+			buttonVariant?: 'solid' | 'link';
+			/**
+			 * Button color.
+			 * @default 'secondary'
+			 */
+			buttonColor?: ColorType;
+	  }
+	| {
+			/**
+			 * Button variant.
+			 * @default 'outlined'
+			 */
+			buttonVariant?: 'outlined' | 'ghost' | 'dashed';
+			/**
+			 * Button color.
+			 * @default 'secondary'
+			 */
+			buttonColor?: 'secondary';
+	  };
 
 export const TIMEZONES = ALL_TIMEZONES.map((tz) => ({
 	value: tz,
@@ -325,9 +340,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 		const defaultTrigger = (
 			<Button
 				ref={ref}
-				variant={buttonVariant}
-				color={buttonColor}
+				// TypeScript cannot correlate the two destructured props back to the
+				// variant/color union, so the pair is re-asserted here.
+				{...({ variant: buttonVariant, color: buttonColor } as VariantColorType)}
 				disabled={disabled}
+				disabledTooltip={undefined}
 				size={buttonSize}
 				className={cn(styles['datePicker__trigger'], className)}
 				style={style}

@@ -230,21 +230,22 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 				suffix={
 					<Button
 						type="button"
-						color="none"
+						color="secondary"
 						variant="link"
-						size="icon"
+						size="md"
+						icon
 						onClick={togglePasswordVisibility}
 						aria-label={showPassword ? 'Hide password' : 'Show password'}
 						tabIndex={-1}
-						disabled={props.disabled}
-						suffix={
-							showPassword ? (
-								<EyeOff aria-hidden="true" strokeWidth={2} />
-							) : (
-								<Eye aria-hidden="true" strokeWidth={2} />
-							)
-						}
-					/>
+						disabled={props.disabled ?? false}
+						disabledTooltip={undefined}
+					>
+						{showPassword ? (
+							<EyeOff aria-hidden="true" strokeWidth={2} />
+						) : (
+							<Eye aria-hidden="true" strokeWidth={2} />
+						)}
+					</Button>
 				}
 			/>
 		);
