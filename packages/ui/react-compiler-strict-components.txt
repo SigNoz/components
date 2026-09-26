@@ -2,4 +2,5 @@ badge
 button
 switch
 tabs
+toggle-group
 tooltip
