@@ -1,554 +1,541 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { Calendar, Typography } from '@signozhq/ui';
+import { Calendar, type CalendarProps, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import React from 'react';
+import { type ReactElement, type ReactNode, useState } from 'react';
+import { fn } from 'storybook/test';
+import { allModes } from '../.storybook/modes.js';
 import styles from './calendar.stories.module.css';
 
+/** Wednesday 11 June 2025: mid-week, mid-month, so every story reads the same on every run. */
+const TODAY = new Date(2025, 5, 11);
+
+const day = (date: number): Date => new Date(2025, 5, date);
+
+/**
+ * `CalendarProps` is a union discriminated on `mode`, and each arm types `selected` and `onSelect`
+ * differently. `Omit` over that union keeps only the props every arm shares, which is what the
+ * playground can forward blindly; the selection itself is picked per mode below.
+ */
+type CalendarPlaygroundProps = Omit<CalendarProps, 'mode' | 'selected' | 'onSelect'> & {
+	mode?: 'single' | 'multiple' | 'range';
+	onSelect?: (...selection: unknown[]) => void;
+};
+
 const meta: Meta<typeof Calendar> = {
-	title: 'Composed Components/Calendar',
+	title: 'Primitive Components/Calendar',
 	component: Calendar,
+	args: {
+		onSelect: fn(),
+		mode: 'single',
+		captionLayout: 'label',
+		showOutsideDays: true,
+		numberOfMonths: 1,
+	},
 	argTypes: {
-		testId: {
-			control: 'text',
-			description: 'Test ID for the calendar.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the calendar.',
-			table: { category: 'Accessibility', type: { summary: 'string' } },
-		},
 		mode: {
-			control: { type: 'select' },
-			options: ['single', 'range', 'multiple'],
-			description:
-				'Enable selection of a single day, multiple days, or a range of days. See https://daypicker.dev/docs/selection-modes',
-			table: { category: 'Selection', type: { summary: "'single' | 'range' | 'multiple'" } },
-		},
-		required: {
-			control: 'boolean',
-			description: 'Whether the selection is required.',
-			table: { category: 'Selection', type: { summary: 'boolean' } },
-		},
-		showOutsideDays: {
-			control: 'boolean',
-			description: 'Show the outside days (days falling in the next or the previous month).',
+			control: 'select',
+			options: ['single', 'multiple', 'range'],
+			description: 'How many days can be selected at once, and what `selected` holds.',
 			table: {
-				category: 'Display',
-				defaultValue: { summary: 'true' },
-				type: { summary: 'boolean' },
+				category: 'Selection',
+				type: { summary: "'single' | 'multiple' | 'range'" },
 			},
-		},
-		captionLayout: {
-			control: { type: 'select' },
-			options: ['label', 'dropdown', 'dropdown-months', 'dropdown-years'],
-			description:
-				'Show dropdowns to navigate between months or years. "label" displays month/year as text.',
-			table: {
-				category: 'Display',
-				defaultValue: { summary: 'label' },
-				type: { summary: "'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years'" },
-			},
-		},
-		numberOfMonths: {
-			control: { type: 'number', min: 1 },
-			description: 'The number of displayed months.',
-			table: { category: 'Display', defaultValue: { summary: '1' }, type: { summary: 'number' } },
-		},
-		fixedWeeks: {
-			control: 'boolean',
-			description: 'Display always 6 weeks per month.',
-			table: { category: 'Display', type: { summary: 'boolean' } },
-		},
-		hideWeekdays: {
-			control: 'boolean',
-			description: 'Hide the row displaying the weekday names.',
-			table: { category: 'Display', type: { summary: 'boolean' } },
-		},
-		showWeekNumber: {
-			control: 'boolean',
-			description: 'Show the week numbers column.',
-			table: { category: 'Display', type: { summary: 'boolean' } },
-		},
-		hideNavigation: {
-			control: 'boolean',
-			description: 'Hide the navigation buttons (prev/next month).',
-			table: { category: 'Navigation', type: { summary: 'boolean' } },
-		},
-		disableNavigation: {
-			control: 'boolean',
-			description: 'Disable navigation between months.',
-			table: { category: 'Navigation', type: { summary: 'boolean' } },
-		},
-		pagedNavigation: {
-			control: 'boolean',
-			description: 'Paginate month navigation by numberOfMonths.',
-			table: { category: 'Navigation', type: { summary: 'boolean' } },
-		},
-		reverseMonths: {
-			control: 'boolean',
-			description: 'Render months in reversed order when numberOfMonths > 1.',
-			table: { category: 'Navigation', type: { summary: 'boolean' } },
-		},
-		navLayout: {
-			control: { type: 'select' },
-			options: ['around', 'after'],
-			description: 'Position of the navigation buttons relative to the caption.',
-			table: { category: 'Navigation', type: { summary: "'around' | 'after'" } },
-		},
-		animate: {
-			control: 'boolean',
-			description: 'Animate navigating between months.',
-			table: { category: 'Display', type: { summary: 'boolean' } },
-		},
-		defaultMonth: {
-			control: false,
-			description: 'The initial month to show. Use with uncontrolled calendar.',
-			table: { category: 'Navigation', type: { summary: 'Date' } },
-		},
-		month: {
-			control: false,
-			description: 'The displayed month (controlled). Use with onMonthChange.',
-			table: { category: 'Navigation', type: { summary: 'Date' } },
-		},
-		startMonth: {
-			control: false,
-			description: 'The earliest month for navigation.',
-			table: { category: 'Navigation', type: { summary: 'Date' } },
-		},
-		endMonth: {
-			control: false,
-			description: 'The latest month for navigation.',
-			table: { category: 'Navigation', type: { summary: 'Date' } },
-		},
-		disabled: {
-			control: false,
-			description: 'Matcher(s) for disabled days. Disabled days cannot be selected.',
-			table: { category: 'Selection', type: { summary: 'Matcher | Matcher[]' } },
-		},
-		hidden: {
-			control: false,
-			description: 'Matcher(s) for hidden days. Hidden days are not displayed.',
-			table: { category: 'Display', type: { summary: 'Matcher | Matcher[]' } },
-		},
-		today: {
-			control: false,
-			description: "The date to use as 'today' for styling.",
-			table: { category: 'Display', type: { summary: 'Date' } },
-		},
-		locale: {
-			control: false,
-			description: 'Locale object for localization. Pass a locale from react-day-picker/locale.',
-			table: { category: 'Localization', type: { summary: 'DayPickerLocale' } },
-		},
-		weekStartsOn: {
-			control: { type: 'select' },
-			options: [0, 1, 2, 3, 4, 5, 6],
-			description: 'The index of the first day of the week (0 = Sunday).',
-			table: { category: 'Localization', type: { summary: '0 | 1 | 2 | 3 | 4 | 5 | 6' } },
-		},
-		timeZone: {
-			control: 'text',
-			description: 'IANA time zone or UTC offset for the calendar (experimental).',
-			table: { category: 'Localization', type: { summary: 'string' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Class name for the root element.',
-			table: { category: 'Styling', type: { summary: 'string' } },
 		},
 		selected: {
 			control: false,
-			description: 'Selected date(s) or range. Type depends on mode.',
-			table: { category: 'Selection' },
+			description: 'The current selection. Its shape follows `mode`.',
+			table: { category: 'Selection', type: { summary: 'Date | Date[] | DateRange' } },
+		},
+		required: {
+			control: 'boolean',
+			description: 'Stops the selection from being cleared once a day has been picked.',
+			table: { category: 'Selection', type: { summary: 'boolean' } },
+		},
+		disabled: {
+			control: false,
+			description: 'Matchers for the days that cannot be picked.',
+			table: { category: 'Selection', type: { summary: 'Matcher | Matcher[]' } },
+		},
+		captionLayout: {
+			control: 'select',
+			options: ['label', 'dropdown', 'dropdown-months', 'dropdown-years'],
+			description:
+				'Whether the month and year read as plain text or as dropdowns you can navigate with.',
+			table: {
+				category: 'Appearance',
+				type: { summary: "'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years'" },
+				defaultValue: { summary: 'label' },
+			},
+		},
+		showOutsideDays: {
+			control: 'boolean',
+			description: 'Fills the first and last week with the days of the neighbouring months.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'true' },
+			},
+		},
+		numberOfMonths: {
+			control: { type: 'number', min: 1, max: 3 },
+			description: 'How many months are shown side by side.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'number' },
+				defaultValue: { summary: '1' },
+			},
+		},
+		fixedWeeks: {
+			control: 'boolean',
+			description: 'Always draws six weeks, so the grid does not change height between months.',
+			table: { category: 'Appearance', type: { summary: 'boolean' } },
+		},
+		hideWeekdays: {
+			control: 'boolean',
+			description: 'Drops the row of weekday names above the grid.',
+			table: { category: 'Appearance', type: { summary: 'boolean' } },
+		},
+		showWeekNumber: {
+			control: 'boolean',
+			description: 'Adds a column with the number of each week in the year.',
+			table: { category: 'Appearance', type: { summary: 'boolean' } },
+		},
+		hideNavigation: {
+			control: 'boolean',
+			description: 'Drops the month arrows.',
+			table: { category: 'Behavior', type: { summary: 'boolean' } },
+		},
+		disableNavigation: {
+			control: 'boolean',
+			description: 'Keeps the calendar on one month, arrows and dropdowns included.',
+			table: { category: 'Behavior', type: { summary: 'boolean' } },
+		},
+		animate: {
+			control: 'boolean',
+			description: 'Slides between months instead of swapping them.',
+			table: { category: 'Behavior', type: { summary: 'boolean' } },
+		},
+		weekStartsOn: {
+			control: 'select',
+			options: [0, 1, 2, 3, 4, 5, 6],
+			description: 'Which day the week starts on, `0` being Sunday.',
+			table: { category: 'Behavior', type: { summary: '0 | 1 | 2 | 3 | 4 | 5 | 6' } },
+		},
+		timeZone: {
+			control: 'text',
+			description: 'IANA time zone the days are resolved in. Experimental upstream.',
+			table: { category: 'Behavior', type: { summary: 'string' } },
+		},
+		locale: {
+			control: false,
+			description: 'A locale from `react-day-picker/locale`, which renames every label.',
+			table: { category: 'Behavior', type: { summary: 'Locale' } },
+		},
+		components: {
+			control: false,
+			description: "Replaces one of react-day-picker's own components, `DayButton` included.",
+			table: { category: 'Behavior', type: { summary: 'Partial<CustomComponents>' } },
+		},
+		footer: {
+			control: 'text',
+			description: 'Rendered under the grid in a live region, for a hint or the current selection.',
+			table: { category: 'Accessibility', type: { summary: 'ReactNode' } },
 		},
 		onSelect: {
 			control: false,
-			description: 'Called when selection changes.',
+			description: 'Called with the new selection whenever a day is picked.',
 			table: { category: 'Events' },
 		},
 		onMonthChange: {
 			control: false,
-			description: 'Called when the user navigates between months.',
+			description: 'Called with the new month whenever the calendar navigates.',
 			table: { category: 'Events' },
 		},
-		footer: {
+		className: {
 			control: 'text',
-			description: 'Footer content (e.g. for screen readers).',
-			table: { category: 'Accessibility', type: { summary: 'ReactNode | string' } },
+			description: "Merged onto the root element, after the calendar's own class.",
+			table: { category: 'Styling', type: { summary: 'string' } },
 		},
+		classNames: {
+			control: false,
+			description:
+				"One class per part of the grid, appended to the calendar's own class for that part " +
+				'rather than replacing it.',
+			table: { category: 'Styling', type: { summary: 'Partial<ClassNames>' } },
+		},
+		testId: {
+			control: 'text',
+			description:
+				'Forwarded to the root element as `data-testid`, and the stem every part below derives ' +
+				'its own from, a date cell ending in `-button-{DD-MM-YYYY}`.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+	},
+	parameters: {
+		layout: 'fullscreen',
+		backgrounds: { disable: true },
+		controls: { disable: false },
+		docs: { source: { type: 'code' } },
 	},
 };
 
 export default meta;
 type Story = StoryObj<typeof Calendar>;
 
-const fixedDate = 1771949360343;
+/**
+ * `onSelect` is not a key of every arm of the union, so it cannot be read off the story args by
+ * name. The story sets it, this finds it, and the playground decides which arm it belongs to.
+ */
+function storyOnSelect(args: object): ((...selection: unknown[]) => void) | undefined {
+	return 'onSelect' in args ? (args.onSelect as (...selection: unknown[]) => void) : undefined;
+}
+
+/**
+ * Drives whichever selection the `mode` control is on, so one playground covers all three.
+ */
+function CalendarPlayground({
+	mode = 'single',
+	onSelect,
+	className,
+	...args
+}: CalendarPlaygroundProps): ReactElement {
+	const calendarClassName = className ? `${styles.calendarCard} ${className}` : styles.calendarCard;
+
+	const [single, setSingle] = useState<Date | undefined>(TODAY);
+	const [multiple, setMultiple] = useState<Date[]>([day(9), day(11)]);
+	const [range, setRange] = useState<{ from: Date | undefined; to?: Date }>({
+		from: day(9),
+		to: day(13),
+	});
+
+	if (mode === 'multiple') {
+		return (
+			<Calendar
+				{...args}
+				mode="multiple"
+				today={TODAY}
+				defaultMonth={TODAY}
+				selected={multiple}
+				onSelect={(value) => {
+					setMultiple(value ?? []);
+					onSelect?.(value);
+				}}
+				className={calendarClassName}
+			/>
+		);
+	}
+
+	if (mode === 'range') {
+		return (
+			<Calendar
+				{...args}
+				mode="range"
+				today={TODAY}
+				defaultMonth={TODAY}
+				selected={range}
+				onSelect={(value) => {
+					setRange(value ?? { from: undefined });
+					onSelect?.(value);
+				}}
+				className={calendarClassName}
+			/>
+		);
+	}
+
+	return (
+		<Calendar
+			{...args}
+			mode="single"
+			today={TODAY}
+			defaultMonth={TODAY}
+			selected={single}
+			onSelect={(value) => {
+				setSingle(value);
+				onSelect?.(value);
+			}}
+			className={calendarClassName}
+		/>
+	);
+}
 
 export const Default: Story = {
-	args: {
-		mode: 'single',
-		showOutsideDays: true,
-		captionLayout: 'label',
+	parameters: {
+		// Playground: every state it can be driven into is covered by `CalendarShowcase`.
+		chromatic: { disableSnapshot: true },
 	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [range, setRange] = React.useState<{ from?: Date; to?: Date }>({});
-		const [multiple, setMultiple] = React.useState<Date[]>([]);
-		const mode = args.mode ?? 'single';
-		const selected = mode === 'range' ? range : mode === 'multiple' ? multiple : date;
-		const onSelect = mode === 'range' ? setRange : mode === 'multiple' ? setMultiple : setDate;
-		return (
-			<Calendar
+	render: ({ mode, ...args }) => (
+		<div className="story-container-full">
+			<CalendarPlayground
+				testId="default-calendar"
 				{...args}
 				mode={mode}
-				selected={selected as any}
-				onSelect={onSelect as any}
-				className={styles.calendarCard}
+				onSelect={storyOnSelect(args)}
 			/>
-		);
-	},
+		</div>
+	),
 };
 
-export const SingleDateSelection: Story = {
-	args: {
-		mode: 'single',
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
+function Example({ title, children }: { title: string; children: ReactNode }): ReactElement {
+	return (
+		<div className={styles.calendarCell}>
+			<Typography size="sm" weight="medium" className={styles.caption}>
+				{title}
+			</Typography>
+			{children}
+		</div>
+	);
+}
 
-		return (
-			<div className="story-section">
-				<div>
-					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-						Selected Date:
-					</Typography>
-					<Typography size="sm" color="muted">
-						{date ? date.toLocaleDateString() : 'No date selected'}
-					</Typography>
-				</div>
-				<Calendar
-					{...args}
-					mode="single"
-					selected={date}
-					onSelect={setDate}
-					className={styles.calendarCard}
-				/>
-			</div>
-		);
-	},
+/**
+ * The days the showcase forces a pseudo-state onto, keyed by the class the matcher writes on
+ * the cell. `storybook-addon-pseudo-states` matches the button inside it.
+ */
+const PSEUDO_MODIFIERS = {
+	pseudoHover: day(2),
+	pseudoFocus: day(3),
+	pseudoActive: day(4),
 };
 
-export const DateRangeSelection: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [range, setRange] = React.useState<any>({
-			from: undefined,
-			to: undefined,
-		});
-
-		return (
-			<div className="story-section">
-				<div>
-					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-						Selected Range:
-					</Typography>
-					<Typography size="sm" color="muted">
-						{range.from && range.to
-							? `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`
-							: range.from
-								? `${range.from.toLocaleDateString()} - Select end date`
-								: 'Select start date'}
-					</Typography>
-				</div>
-				<Calendar
-					{...args}
-					mode="range"
-					selected={range}
-					onSelect={setRange}
-					className={styles.calendarCard}
-				/>
-			</div>
-		);
-	},
+const PSEUDO_CLASS_NAMES = {
+	pseudoHover: 'pseudo-hover',
+	pseudoFocus: 'pseudo-focus',
+	pseudoActive: 'pseudo-active',
 };
 
-export const MultipleDateSelection: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
+/**
+ * Every selection mode, caption, grid option and day state in one snapshot.
+ */
+export const CalendarShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		pseudo: {
+			hover: '.pseudo-hover [data-variant="day"]',
+			focusVisible: '.pseudo-focus [data-variant="day"]',
+			active: '.pseudo-active [data-variant="day"]',
+		},
 	},
-	render: (args) => {
-		const [selected, setSelected] = React.useState<any>([]);
-
-		return (
-			<div className="story-section">
-				<div>
-					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-						Selected Dates:
-					</Typography>
-					<Typography size="sm" color="muted">
-						{selected.length > 0
-							? selected.map((date: Date) => date.toLocaleDateString()).join(', ')
-							: 'No dates selected'}
-					</Typography>
-				</div>
-				<Calendar
-					{...args}
-					mode="multiple"
-					selected={selected}
-					onSelect={setSelected}
-					className={styles.calendarCard}
-				/>
-			</div>
-		);
-	},
-};
-
-export const WithDropdownNavigation: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'dropdown',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
-			<div className="story-section">
-				<div>
-					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-						Selected Date:
-					</Typography>
-					<Typography size="sm" color="muted">
-						{date ? date.toLocaleDateString() : 'No date selected'}
-					</Typography>
-				</div>
-				<Calendar
-					{...args}
-					mode="single"
-					selected={date}
-					onSelect={setDate}
-					className={styles.calendarCard}
-				/>
-			</div>
-		);
-	},
-};
-
-export const HideOutsideDays: Story = {
-	args: {
-		showOutsideDays: false,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		return (
-			<Calendar
-				{...args}
-				mode="single"
-				selected={date}
-				onSelect={setDate}
-				className={styles.calendarCard}
-			/>
-		);
-	},
-};
-
-export const DisabledDates: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-
-		// Disable weekends
-		const disabledDays = [
-			{ dayOfWeek: [0, 6] }, // Sunday and Saturday
-		];
-
-		return (
-			<div className="story-section">
-				<div>
-					<Typography size="sm" color="muted" className={styles.marginBottomSmall}>
-						Weekends are disabled in this example
-					</Typography>
-				</div>
-				<Calendar
-					{...args}
-					mode="single"
-					selected={date}
-					onSelect={setDate}
-					disabled={disabledDays}
-					className={styles.calendarCard}
-				/>
-			</div>
-		);
-	},
-};
-
-export const WithTimezone: Story = {
-	args: {
-		showOutsideDays: true,
-		captionLayout: 'label',
-	},
-	render: (args) => {
-		const [date, setDate] = React.useState<Date | undefined>(new Date(fixedDate));
-		const [timezone, setTimezone] = React.useState('UTC');
-		const [time, setTime] = React.useState('12:00:00');
-
-		// Common timezones
-		const timezones = [
-			{ value: 'UTC', label: 'UTC' },
-			{ value: 'America/New_York', label: 'Eastern Time' },
-			{ value: 'America/Chicago', label: 'Central Time' },
-			{ value: 'America/Denver', label: 'Mountain Time' },
-			{ value: 'America/Los_Angeles', label: 'Pacific Time' },
-			{ value: 'Europe/London', label: 'London' },
-			{ value: 'Europe/Paris', label: 'Paris' },
-			{ value: 'Asia/Tokyo', label: 'Tokyo' },
-			{ value: 'Asia/Shanghai', label: 'Shanghai' },
-			{ value: 'Australia/Sydney', label: 'Sydney' },
-		];
-
-		// Format date and time in selected timezone
-		const formatDateTimeInTimezone = (date: Date | undefined, tz: string, timeStr: string) => {
-			if (!date) return 'No date selected';
-
-			try {
-				// Create a date with the selected time
-				const [hours, minutes, seconds] = timeStr.split(':').map(Number);
-				const dateWithTime = new Date(date);
-				dateWithTime.setHours(hours, minutes, seconds || 0);
-
-				// Format in the selected timezone
-				return new Intl.DateTimeFormat('en-US', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit',
-					timeZone: tz,
-				}).format(dateWithTime);
-			} catch {
-				return `${date.toLocaleDateString()} at ${timeStr}`;
-			}
-		};
-
-		// Get current time in selected timezone
-		const getCurrentTimeInTimezone = (tz: string) => {
-			try {
-				return new Intl.DateTimeFormat('en-US', {
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit',
-					timeZone: tz,
-				}).format(new Date(fixedDate));
-			} catch {
-				return new Date(fixedDate).toLocaleTimeString();
-			}
-		};
-
-		return (
+	render: () => (
+		<div className="story-container-full">
 			<div className={styles.columnLayout}>
 				<div className="story-section">
-					<div className={styles.responsiveGrid}>
-						<div>
-							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-								Timezone Selection:
-							</Typography>
-							<select
-								value={timezone}
-								onChange={(e) => setTimezone(e.target.value)}
-								className={styles.formInput}
-							>
-								{timezones.map((tz) => (
-									<option key={tz.value} value={tz.value}>
-										{tz.label}
-									</option>
-								))}
-							</select>
-						</div>
-
-						<div>
-							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-								Time Selection:
-							</Typography>
-							<input
-								type="time"
-								value={time}
-								onChange={(e) => setTime(e.target.value)}
-								step="1"
-								className={styles.formInput}
+					<Typography size="base" weight="semibold">
+						Selection
+					</Typography>
+					<Typography size="sm">
+						<code>mode</code> decides what <code>selected</code> holds. A day inside a range is
+						painted from its position in that range, not as a selected day.
+					</Typography>
+					<div className={styles.calendarGrid}>
+						<Example title="single">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={TODAY}
+								onSelect={fn()}
+								className={styles.calendarCard}
 							/>
-						</div>
-					</div>
-
-					<div className={styles.responsiveGrid}>
-						<div>
-							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-								Selected Date & Time:
-							</Typography>
-							<div className="story-section-sm">
-								<Typography size="sm" color="muted">
-									<strong>Local:</strong>{' '}
-									{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
-								</Typography>
-								<Typography size="sm" color="muted">
-									<strong>{timezone}:</strong> {formatDateTimeInTimezone(date, timezone, time)}
-								</Typography>
-							</div>
-						</div>
-
-						<div>
-							<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-								Current Time:
-							</Typography>
-							<div className="story-section-sm">
-								<Typography size="sm" color="muted">
-									<strong>Local:</strong> {new Date(fixedDate).toLocaleTimeString()}
-								</Typography>
-								<Typography size="sm" color="muted">
-									<strong>{timezone}:</strong> {getCurrentTimeInTimezone(timezone)}
-								</Typography>
-							</div>
-						</div>
+						</Example>
+						<Example title="range">
+							<Calendar
+								mode="range"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={{ from: day(9), to: day(13) }}
+								onSelect={fn()}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="multiple">
+							<Calendar
+								mode="multiple"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={[day(3), day(11), day(20)]}
+								onSelect={fn()}
+								className={styles.calendarCard}
+							/>
+						</Example>
 					</div>
 				</div>
 
-				<div>
-					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-						Calendar:
+				<div className="story-section">
+					<Typography size="base" weight="semibold">
+						Caption and navigation
 					</Typography>
-					<Calendar
-						{...args}
-						mode="single"
-						selected={date}
-						onSelect={setDate}
-						className={styles.calendarCard}
-					/>
+					<Typography size="sm">
+						The arrows sit over the caption row, one cell wide each. At the edge of{' '}
+						<code>startMonth</code> / <code>endMonth</code> the arrow stays in place and carries{' '}
+						<code>aria-disabled</code>, so it keeps its slot in the layout.
+					</Typography>
+					<div className={styles.calendarGrid}>
+						<Example title="label caption">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="dropdown caption">
+							<Calendar
+								mode="single"
+								captionLayout="dropdown"
+								today={TODAY}
+								defaultMonth={TODAY}
+								startMonth={new Date(2024, 0)}
+								endMonth={new Date(2026, 11)}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="previous month disabled">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								startMonth={new Date(2025, 5)}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="no navigation">
+							<Calendar
+								mode="single"
+								hideNavigation
+								today={TODAY}
+								defaultMonth={TODAY}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="two months">
+							<Calendar
+								mode="range"
+								numberOfMonths={2}
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={{ from: day(25), to: new Date(2025, 6, 4) }}
+								onSelect={fn()}
+								className={styles.calendarCard}
+							/>
+						</Example>
+					</div>
 				</div>
 
-				<div className={styles.infoPanel}>
-					<Typography size="sm" weight="medium" className={styles.marginBottomSmall}>
-						Date & Time with Timezone:
+				<div className="story-section">
+					<Typography size="base" weight="semibold">
+						Grid
 					</Typography>
-					<Typography size="xs" color="muted">
-						This example demonstrates how to handle dates and times with different timezones. The
-						selected date and time are displayed in both local time and the chosen timezone. This
-						shows how you can combine calendar selection with time input and timezone conversion for
-						comprehensive datetime handling in your applications.
+					<Typography size="sm">
+						Everything in the grid measures against <code>--calendar-cell-size</code>, the
+						week-number column and the month arrows included.
 					</Typography>
+					<div className={styles.calendarGrid}>
+						<Example title="outside days hidden">
+							<Calendar
+								mode="single"
+								showOutsideDays={false}
+								today={TODAY}
+								defaultMonth={TODAY}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="week numbers">
+							<Calendar
+								mode="single"
+								showWeekNumber
+								today={TODAY}
+								defaultMonth={TODAY}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="six weeks, always">
+							<Calendar
+								mode="single"
+								fixedWeeks
+								today={TODAY}
+								defaultMonth={TODAY}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="no weekday row, week starts Monday">
+							<Calendar
+								mode="single"
+								hideWeekdays
+								weekStartsOn={1}
+								today={TODAY}
+								defaultMonth={TODAY}
+								className={styles.calendarCard}
+							/>
+						</Example>
+					</div>
+				</div>
+
+				<div className="story-section">
+					<Typography size="base" weight="semibold">
+						Day states
+					</Typography>
+					<Typography size="sm">
+						<code>hover</code>, <code>focus</code> and <code>active</code> are forced by{' '}
+						<code>storybook-addon-pseudo-states</code> onto the 2nd, 3rd and 4th of the month. The
+						second calendar selects those same three days, so a day keeps its selection colour while
+						it is hovered rather than falling back to the plain one. A disabled day is disabled
+						natively, so it takes no pointer and no focus.
+					</Typography>
+					<div className={styles.calendarGrid}>
+						<Example title="hover, focus, active">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								modifiers={PSEUDO_MODIFIERS}
+								modifiersClassNames={PSEUDO_CLASS_NAMES}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="hover, focus, active on a selection">
+							<Calendar
+								mode="range"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={{ from: day(2), to: day(4) }}
+								onSelect={fn()}
+								modifiers={PSEUDO_MODIFIERS}
+								modifiersClassNames={PSEUDO_CLASS_NAMES}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="weekends disabled">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								disabled={[{ dayOfWeek: [0, 6] }]}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="selected and disabled together">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={TODAY}
+								onSelect={fn()}
+								disabled={[{ before: day(9) }]}
+								className={styles.calendarCard}
+							/>
+						</Example>
+						<Example title="footer">
+							<Calendar
+								mode="single"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={TODAY}
+								onSelect={fn()}
+								footer="Pick the day the report starts on."
+								className={styles.calendarCard}
+							/>
+						</Example>
+					</div>
 				</div>
 			</div>
-		);
-	},
+		</div>
+	),
 };

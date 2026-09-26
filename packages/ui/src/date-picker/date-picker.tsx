@@ -402,6 +402,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 							mode="single"
 							selected={localDate}
 							onSelect={handleDateSelect}
+							testId={testId ? `${testId}-calendar` : undefined}
 							{...calendarProps}
 						/>
 					</div>
