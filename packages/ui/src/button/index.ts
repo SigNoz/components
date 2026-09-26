@@ -103,6 +103,7 @@
  * | `--button-loading-opacity` | `1` |
  * | `--button-loading-travel` | `6px` |
  * | `--button-max-width` | `var(--button-internal-max-width, 100%)` |
+ * | `--button-min-height` | `var(--button-internal-min-height, auto)` |
  * | `--button-min-width` | `var(--button-internal-min-width, auto)` |
  * | `--button-padding` | `var(--spacing-2) var(--spacing-4)` |
  * | `--button-prefix-slot-hidden-opacity` | `0` |
@@ -110,14 +111,15 @@
  * | `--button-prefix-slot-visible-opacity` | `1` |
  * | `--button-prefix-slot-visible-transform` | `translateY(0)` |
  * | `--button-prefix-wrapper-align-items` | `center` |
- * | `--button-prefix-wrapper-block-size` | `var(--button-internal-icon-size)` |
+ * | `--button-prefix-wrapper-block-size` | `auto` |
  * | `--button-prefix-wrapper-collapsed-grid-template-columns` | `0fr` |
  * | `--button-prefix-wrapper-collapsed-margin-inline-end` | `calc(-1 * var(--button-internal-gap))` |
+ * | `--button-prefix-wrapper-collapsed-overflow` | `hidden` |
  * | `--button-prefix-wrapper-display` | `grid` |
  * | `--button-prefix-wrapper-flex-shrink` | `0` |
  * | `--button-prefix-wrapper-grid-template-columns` | `1fr` |
  * | `--button-prefix-wrapper-justify-items` | `center` |
- * | `--button-prefix-wrapper-overflow` | `hidden` |
+ * | `--button-prefix-wrapper-overflow` | `visible` |
  * | `--button-prefix-wrapper-transition` | `grid-template-columns var(--button-internal-loa...` |
  * | `--button-primary-background` | `-` |
  * | `--button-primary-background-color` | `var(--button-primary-background)` |

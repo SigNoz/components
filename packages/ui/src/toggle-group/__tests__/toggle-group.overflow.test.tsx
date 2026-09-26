@@ -94,6 +94,8 @@ describe('ToggleGroup overflow', () => {
 
 		expect(scrollButton('start')).toBeDisabled();
 		expect(scrollButton('end')).toBeEnabled();
+		expect(getComputedStyle(scrollButton('start') as HTMLElement).cursor).toBe('not-allowed');
+		expect(getComputedStyle(scrollButton('end') as HTMLElement).cursor).toBe('pointer');
 
 		const end = scrollButton('end');
 

@@ -9,7 +9,7 @@ import {
 } from 'react-day-picker';
 import { CalendarContext } from './calendar-context.js';
 import styles from './calendar.module.scss';
-import { cn } from '../lib/utils.js';
+import { cn, type RejectedProps } from '../lib/utils.js';
 import { CalendarChevron } from './subcomponents/calendar-chevron.js';
 import { CalendarDayButton } from './subcomponents/calendar-day-button.js';
 import {
@@ -23,7 +23,7 @@ import {
 import { CalendarMonth } from './subcomponents/calendar-month.js';
 import { CalendarRoot } from './subcomponents/calendar-root.js';
 import { CalendarWeekNumber } from './subcomponents/calendar-week-number.js';
-import type { CalendarProps } from './types.js';
+import type { CalendarProps, DayPickerStyleProp } from './types.js';
 
 const defaultClassNames = getDefaultClassNames();
 
@@ -169,7 +169,20 @@ const CALENDAR_COMPONENTS = {
  * ```
  */
 export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calendar(
-	{ showOutsideDays = true, captionLayout = 'label', formatters, components, testId, ...props },
+	{
+		showOutsideDays = true,
+		captionLayout = 'label',
+		formatters,
+		components,
+		testId,
+		className: _className,
+		classNames: _classNames,
+		style: _style,
+		styles: _styles,
+		modifiersClassNames: _modifiersClassNames,
+		modifiersStyles: _modifiersStyles,
+		...props
+	}: CalendarProps & RejectedProps<DayPickerStyleProp>,
 	ref,
 ) {
 	const calendarFormatters = useMemo<Partial<Formatters>>(() => {

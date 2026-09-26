@@ -1,8 +1,14 @@
 import { Ellipsis } from '@signozhq/icons';
-import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
+import {
+	type CSSProperties,
+	forwardRef,
+	type ReactElement,
+	type RefAttributes,
+	useMemo,
+} from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { mergeRefs } from '../lib/merge-refs.js';
-import { cn } from '../lib/utils.js';
+import { cn, type RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import styles from './button-group.module.scss';
 import {
@@ -31,11 +37,11 @@ const ButtonGroupImpl = forwardRef<HTMLDivElement, ButtonGroupProps>(function Bu
 		maxWidth,
 		textOverflow = ButtonGroupTextOverflow.Ellipsis,
 		testId,
-		className,
-		style,
 		children: _children,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: ButtonGroupProps & RejectedProps,
 	ref,
 ) {
 	const group: ButtonGroupState = { testId, disabled, disabledTooltip, loading, loadingTooltip };
@@ -51,10 +57,9 @@ const ButtonGroupImpl = forwardRef<HTMLDivElement, ButtonGroupProps>(function Bu
 	const segmentCount = visibleCount + (hasOverflow ? 1 : 0);
 
 	const groupStyle = {
-		...style,
 		...(width != null && { '--button-group-internal-width': toCssLength(width) }),
 		...(maxWidth != null && { '--button-group-internal-max-width': toCssLength(maxWidth) }),
-	};
+	} as CSSProperties;
 
 	return (
 		<div
@@ -69,7 +74,7 @@ const ButtonGroupImpl = forwardRef<HTMLDivElement, ButtonGroupProps>(function Bu
 			data-disabled={disabled || undefined}
 			data-loading={loading || undefined}
 			data-overflowing={hasOverflow || undefined}
-			className={cn(styles['button-group'], className)}
+			className={styles['button-group']}
 			style={groupStyle}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}

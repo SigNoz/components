@@ -1,4 +1,5 @@
 import { forwardRef, type ForwardedRef } from 'react';
+import type { RejectedProps } from '../lib/utils.js';
 import { BadgeRoot } from './subcomponents/badge-root.js';
 import { BadgeTextTransform } from './constants.js';
 import type { BadgeProps } from './types.js';
@@ -82,7 +83,12 @@ import type { BadgeProps } from './types.js';
  * ```
  */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
-	{ textTransform = BadgeTextTransform.Uppercase, ...props },
+	{
+		textTransform = BadgeTextTransform.Uppercase,
+		className: _className,
+		style: _style,
+		...props
+	}: BadgeProps & RejectedProps,
 	ref,
 ) {
 	return (

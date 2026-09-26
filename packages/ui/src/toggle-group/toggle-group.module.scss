@@ -85,10 +85,14 @@
   }
 }
 
+// The list fills the viewport, so a bar wider than its options hands the spare room to the buttons
+// instead of leaving it as an empty run inside the border. Its minimum is still its content, so a
+// bar too narrow for its options scrolls as before.
 .toggle-group__list {
   display: var(--toggle-group-list-display, inline-flex);
   flex-direction: var(--toggle-group-list-flex-direction, row);
   align-items: var(--toggle-group-list-align-items, stretch);
+  flex-grow: var(--toggle-group-list-flex-grow, 1);
 }
 
 .toggle-group__button {
@@ -97,8 +101,9 @@
   justify-content: var(--toggle-group-button-justify-content, center);
   gap: var(--toggle-group-button-gap, var(--spacing-3));
 
-  // A segmented control that squeezes its options is unreadable, so the strip scrolls instead.
-  flex-grow: var(--toggle-group-button-flex-grow, 0);
+  // A segmented control that squeezes its options is unreadable, so the strip scrolls instead. Any
+  // room past the content is shared out, so the options reach the border of a wide bar.
+  flex-grow: var(--toggle-group-button-flex-grow, 1);
   flex-shrink: var(--toggle-group-button-flex-shrink, 0);
   flex-basis: var(--toggle-group-button-flex-basis, auto);
 
@@ -273,7 +278,7 @@
       var(--toggle-group-internal-label-disabled)
     );
     box-shadow: var(--toggle-group-scroll-button-disabled-shadow, none);
-    cursor: var(--toggle-group-scroll-button-disabled-cursor, default);
+    cursor: var(--toggle-group-scroll-button-disabled-cursor, not-allowed);
   }
 
   &:focus-visible {

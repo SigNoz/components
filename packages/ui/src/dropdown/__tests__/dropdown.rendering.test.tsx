@@ -76,12 +76,13 @@ describe('Dropdown rendering', () => {
 		});
 		await openDropdown();
 
-		const row = screen.getByTestId('menu-item-rename');
-		const prefix = row.querySelector('[data-slot="dropdown-item-prefix"]');
-		const suffix = row.querySelector('[data-slot="dropdown-item-suffix"]');
-		expect(prefix?.querySelector('[data-slot="spinner"]')).not.toBeNull();
-		expect(screen.queryByTestId('rename-icon')).toBeNull();
-		expect(suffix?.querySelector('[data-slot="spinner"]')).toBeNull();
+		expect(screen.getByTestId('menu-item-rename-prefix')).toHaveAttribute('data-loading');
+		expect(screen.getByTestId('menu-item-rename-prefix-content')).toHaveAttribute(
+			'aria-hidden',
+			'true',
+		);
+		expect(screen.getByTestId('menu-item-rename-prefix-spinner')).toBeInTheDocument();
+		expect(screen.getByTestId('menu-item-rename-suffix')).not.toHaveAttribute('data-loading');
 		expect(screen.getByTestId('rename-suffix')).toBeInTheDocument();
 	});
 
@@ -100,11 +101,33 @@ describe('Dropdown rendering', () => {
 		});
 		await openDropdown();
 
-		const row = screen.getByTestId('menu-item-rename');
-		const suffix = row.querySelector('[data-slot="dropdown-item-suffix"]');
-		expect(row.querySelector('[data-slot="dropdown-item-prefix"]')).toBeNull();
-		expect(suffix?.querySelector('[data-slot="spinner"]')).not.toBeNull();
-		expect(suffix).not.toHaveTextContent('R');
+		expect(screen.queryByTestId('menu-item-rename-prefix')).toBeNull();
+		expect(screen.getByTestId('menu-item-rename-suffix')).toHaveAttribute('data-loading');
+		expect(screen.getByTestId('menu-item-rename-suffix-content')).toHaveAttribute(
+			'aria-hidden',
+			'true',
+		);
+		expect(screen.getByTestId('menu-item-rename-suffix-spinner')).toBeInTheDocument();
+	});
+
+	it('keeps an idle row without a prefix ready to grow a spinner in its trailing slot', async () => {
+		renderDropdown({
+			items: [{ type: 'item', value: 'rename', label: 'Rename' }],
+		});
+		await openDropdown();
+
+		const suffix = screen.getByTestId('menu-item-rename-suffix');
+		expect(suffix).toHaveAttribute('data-empty');
+		expect(suffix).not.toHaveAttribute('data-loading');
+	});
+
+	it('names the search prefix after the search row', async () => {
+		renderDropdown({ searchInputProps: { placeholder: 'Find', loading: true } });
+		await openDropdown();
+
+		expect(screen.getByTestId('menu-search-prefix')).toHaveAttribute('data-loading');
+		expect(screen.getByTestId('menu-search-prefix-content')).toHaveAttribute('aria-hidden', 'true');
+		expect(screen.getByTestId('menu-search-prefix-spinner')).toBeInTheDocument();
 	});
 
 	it('marks a danger row', async () => {

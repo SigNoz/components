@@ -35,6 +35,8 @@
     var(--dropdown-internal-max-inline-size, 15.75rem)
   );
 
+  box-sizing: border-box;
+
   // Never narrower than the trigger (`--anchor-width` comes from Base UI). The floor is clamped to
   // the maximum because a min-width wins over a max-width.
   min-inline-size: max(
@@ -69,6 +71,14 @@
 .dropdown__positioner {
   // Base UI positions but does not stack.
   z-index: var(--dropdown-z-index, 50);
+  // A modal drawer or dialog sets `pointer-events: none` on the body. A menu portalled there,
+  // into a `container` outside the panel, would have no row that can be clicked. Base UI still
+  // switches it off inline while the menu is closed.
+  pointer-events: auto;
+  // Base UI places the positioner with `left`, so its width would otherwise shrink to what is
+  // left of the containing block. Inside a dialog that is a zero-size layer. The popup still
+  // caps itself between its minimum and maximum inline size.
+  width: max-content;
 
   &:focus-visible {
     outline: var(--dropdown-positioner-focus-visible-outline, none);
@@ -205,7 +215,7 @@
 }
 
 .dropdown__item-affix {
-  display: var(--dropdown-item-affix-display, inline-flex);
+  display: var(--dropdown-item-affix-display, inline-grid);
   align-items: var(--dropdown-item-affix-align-items, center);
   justify-content: var(--dropdown-item-affix-justify-content, center);
   flex-shrink: var(--dropdown-item-affix-flex-shrink, 0);
@@ -347,7 +357,7 @@
 }
 
 .dropdown__search-affix {
-  display: var(--dropdown-search-affix-display, inline-flex);
+  display: var(--dropdown-search-affix-display, inline-grid);
   align-items: var(--dropdown-search-affix-align-items, center);
   justify-content: var(--dropdown-search-affix-justify-content, center);
   flex-shrink: var(--dropdown-search-affix-flex-shrink, 0);
@@ -357,6 +367,88 @@
   & svg:not([class*='size-']) {
     inline-size: var(--dropdown-item-icon-size, 14px);
     block-size: var(--dropdown-item-icon-size, 14px);
+  }
+}
+
+// The leading and trailing slots of a row, and the search prefix. Content and spinner share one
+// grid cell and cross-fade, in the same three beats as `Button`: the slot opens, the content
+// leaves, the spinner arrives. Stopping plays them backwards.
+.dropdown__affix {
+  --dropdown-internal-loading-duration: var(--dropdown-loading-duration, 120ms);
+  --dropdown-internal-loading-delay: var(--dropdown-loading-delay, var(--dropdown-internal-loading-duration));
+  --dropdown-internal-loading-easing: var(--dropdown-loading-easing, cubic-bezier(0.65, 0, 0.35, 1));
+  --dropdown-internal-loading-travel: var(--dropdown-loading-travel, 6px);
+
+  grid-template-columns: var(--dropdown-affix-grid-template-columns, 1fr);
+  justify-items: var(--dropdown-affix-justify-items, center);
+  // Content can draw outside its box, so the slot only clips while it is collapsed.
+  overflow: var(--dropdown-affix-overflow, visible);
+
+  transition:
+    grid-template-columns var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing),
+    margin-inline-start var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing);
+  transition-delay: 0s;
+}
+
+// Only a trailing slot is ever empty, so the gap it gives back is the one before it.
+.dropdown__affix[data-empty]:not([data-loading]) {
+  grid-template-columns: var(--dropdown-affix-collapsed-grid-template-columns, 0fr);
+  overflow: var(--dropdown-affix-collapsed-overflow, hidden);
+  margin-inline-start: calc(-1 * var(--dropdown-item-slot-gap, var(--spacing-4)));
+  transition-delay: var(--dropdown-internal-loading-delay);
+}
+
+.dropdown__affix-content,
+.dropdown__affix-loader {
+  grid-area: 1 / 1;
+  display: var(--dropdown-affix-layer-display, inline-flex);
+  align-items: var(--dropdown-affix-layer-align-items, center);
+  justify-content: var(--dropdown-affix-layer-justify-content, center);
+  min-inline-size: 0;
+
+  transition:
+    opacity var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing),
+    transform var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing);
+}
+
+.dropdown__affix-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--dropdown-internal-loading-delay);
+}
+
+.dropdown__affix-loader {
+  opacity: 0;
+  transform: translateY(var(--dropdown-internal-loading-travel));
+  transition-delay: 0s;
+}
+
+// Frozen while hidden instead of turning behind an invisible layer.
+.dropdown__affix:not([data-loading]) .dropdown__affix-loader [data-slot='spinner'] {
+  animation-play-state: paused;
+}
+
+.dropdown__affix[data-loading] {
+  .dropdown__affix-content {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--dropdown-internal-loading-travel)));
+    transition-delay: 0s;
+  }
+
+  .dropdown__affix-loader {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: var(--dropdown-internal-loading-delay);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown__affix,
+  .dropdown__affix[data-empty]:not([data-loading]),
+  .dropdown__affix-content,
+  .dropdown__affix-loader {
+    transition-duration: 0s;
+    transition-delay: 0s;
   }
 }
 

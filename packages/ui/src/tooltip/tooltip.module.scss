@@ -1,9 +1,18 @@
 .tooltip__positioner {
 	// TODO: After migrating the tooltips/dialogs/everything, need to revisit these values to make sure they are needed/not conflict with Antd
 	z-index: var(--tooltip-z-index, 50);
+	// A modal drawer or dialog sets `pointer-events: none` on the body. A popup portalled there,
+	// into a `container` outside the panel, would let the pointer fall through and close before
+	// its text can be selected. Base UI still switches it off inline while the popup closes.
+	pointer-events: auto;
+	// Base UI places the positioner with `left`, so its width would otherwise shrink to what is
+	// left of the containing block. Inside a dialog that is a zero-size layer, which wraps the
+	// popup one word per line. The popup still caps itself at `--tooltip-max-width`.
+	width: max-content;
 }
 
 .tooltip__content {
+	box-sizing: border-box;
 	background-color: var(--tooltip-background-color, var(--tooltip-background));
 	color: var(--tooltip-foreground, var(--tooltip-label));
 	width: var(--tooltip-width, fit-content);

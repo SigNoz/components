@@ -8,18 +8,14 @@ import {
 	useMemo,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { hasRenderableContent } from '../lib/utils.js';
+import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
-import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import { SwitchTextOverflow, SwitchTextPlacement } from './constants.js';
 import styles from './switch.module.scss';
 import type { SwitchProps, ValidateSwitchProps } from './types.js';
@@ -47,14 +43,14 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 		containerId,
 		containerTestId,
 		containerRef,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: SwitchProps & RejectedProps,
 	ref,
 ) {
 	const labelId = useId();
 	const descriptionId = useId();
-	const tooltipContentId = useId();
-	const tooltipHandle = useTooltipHandle();
 
 	const isReadOnly = readOnly === true;
 
@@ -200,21 +196,12 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 	}
 
 	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={tooltipHandle}
-				contentId={tooltipContent === null ? undefined : tooltipContentId}
-			>
-				{controlEl}
-			</TooltipTrigger>
-			{tooltipContent !== null && (
-				<TooltipRoot handle={tooltipHandle}>
-					<TooltipContent id={tooltipContentId} className={styles['switch__label-tooltip']}>
-						{tooltipContent}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
+		<TooltipAnchor
+			content={tooltipContent}
+			contentProps={{ className: styles['switch__label-tooltip'] }}
+		>
+			{controlEl}
+		</TooltipAnchor>
 	);
 });
 

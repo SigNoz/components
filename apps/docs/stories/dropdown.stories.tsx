@@ -85,7 +85,7 @@ const meta: Meta<typeof Dropdown> = {
 		container: {
 			control: false,
 			description:
-				'The element the popup is portalled into. Pass the dialog or drawer element to keep the menu inside it.',
+				'The element the popup is portalled into. Defaults to `document.body`, or to the panel of the `Dialog` or `Drawer` the menu sits in.',
 			table: { category: 'Layout', type: { summary: 'HTMLElement | RefObject' } },
 		},
 		disabled: {

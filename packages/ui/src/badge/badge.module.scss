@@ -1,5 +1,6 @@
 .badge {
 	display: var(--badge-display, inline-flex);
+	box-sizing: border-box;
 	border-radius: var(--badge-border-radius, var(--radius-round));
 	border: var(--badge-border-width, 1px) solid var(--badge-border-color, var(--badge-internal-border-color, transparent));
 	padding: var(--badge-padding, var(--spacing-2) var(--spacing-4));

@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
+import type { RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { ToggleGroupScrollDirection, ToggleGroupType } from './constants.js';
 import { ToggleGroupButton } from './subcomponents/toggle-group-button.js';
@@ -51,8 +52,10 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		testId,
 		width,
 		maxWidth,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: ToggleGroupProps & RejectedProps,
 	ref,
 ) {
 	const isMultiple = type === ToggleGroupType.Multiple;
@@ -289,6 +292,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * So they compose with the tokens. Numbers are written as `px`.
  *
  * They size the bar, never one button: a button holds its own size and the bar scrolls instead.
+ * A bar wider than its options shares the spare room between the buttons.
  *
  * ### Asserting on it
  *

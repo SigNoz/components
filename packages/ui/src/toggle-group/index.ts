@@ -29,7 +29,7 @@
  * | `--toggle-group-button-divider-color` | `var(--toggle-group-border)` |
  * | `--toggle-group-button-divider-width` | `1px` |
  * | `--toggle-group-button-flex-basis` | `auto` |
- * | `--toggle-group-button-flex-grow` | `0` |
+ * | `--toggle-group-button-flex-grow` | `1` |
  * | `--toggle-group-button-flex-shrink` | `0` |
  * | `--toggle-group-button-focus-visible-outline` | `var(--toggle-group-focus-ring) solid 1px` |
  * | `--toggle-group-button-focus-visible-outline-offset` | `-2px` |
@@ -59,6 +59,7 @@
  * | `--toggle-group-list-align-items` | `stretch` |
  * | `--toggle-group-list-display` | `inline-flex` |
  * | `--toggle-group-list-flex-direction` | `row` |
+ * | `--toggle-group-list-flex-grow` | `1` |
  * | `--toggle-group-max-inline-size` | `var(--toggle-group-internal-max-inline-size, 100%)` |
  * | `--toggle-group-md-button-padding-inline` | `var(--spacing-12)` |
  * | `--toggle-group-overflow` | `hidden` |
@@ -73,7 +74,7 @@
  * | `--toggle-group-scroll-button-color` | `var(--toggle-group-scroll-button-label)` |
  * | `--toggle-group-scroll-button-cursor` | `pointer` |
  * | `--toggle-group-scroll-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
- * | `--toggle-group-scroll-button-disabled-cursor` | `default` |
+ * | `--toggle-group-scroll-button-disabled-cursor` | `not-allowed` |
  * | `--toggle-group-scroll-button-disabled-shadow` | `none` |
  * | `--toggle-group-scroll-button-display` | `inline-flex` |
  * | `--toggle-group-scroll-button-divider-color` | `var(--toggle-group-border)` |

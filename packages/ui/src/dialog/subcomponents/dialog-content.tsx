@@ -2,9 +2,10 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { useMemo } from 'react';
+import { PopupContainer } from '../../lib/popup-container.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../dialog.module.scss';
-import { DialogOverlay } from './dialog-overlay.js';
+import { DialogOverlay, syncMotionStyle } from './dialog-overlay.js';
 import { DialogPortal } from './dialog-portal.js';
 
 export type DialogPosition = 'top' | 'center' | 'left' | 'right' | 'bottom';
@@ -39,6 +40,7 @@ const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
 				animate={resolvedAnimate}
 				transition={transition ?? dialogContentTransition}
 				exit={resolvedExit}
+				onUpdate={syncMotionStyle}
 				{...rest}
 			/>
 		);
@@ -236,6 +238,10 @@ export type DialogContentProps = Pick<
  * Animated dialog panel that renders the actual dialog surface inside a
  * portal with overlay. Controls width and position.
  *
+ * A `Tooltip` or `Dropdown` inside, without a `container` of its own, is portalled into the
+ * panel rather than the body. The modal traps focus in the panel and turns pointer events off
+ * outside it, so a popup in the body could be neither clicked nor reached with the keyboard.
+ *
  * @example
  * ```tsx
  * <Dialog>
@@ -347,7 +353,7 @@ export const DialogContent = React.forwardRef<
 						style={style}
 						variants={variants}
 					>
-						{children}
+						<PopupContainer>{children}</PopupContainer>
 					</MotionContent>
 				</DialogPrimitive.Content>
 			</DialogPortal>

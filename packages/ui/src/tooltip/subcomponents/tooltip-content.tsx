@@ -3,6 +3,7 @@ import {
 	useRegisterTooltipContent,
 	useTooltipContentStackEntries,
 } from '../tooltip-content-stack-context.js';
+import { useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
 import { TooltipPopup, type TooltipPopupProps } from './tooltip-popup.js';
 import { TooltipPortal, type TooltipPortalProps } from './tooltip-portal.js';
 import { TooltipPositioner, type TooltipPositionerProps } from './tooltip-positioner.js';
@@ -25,8 +26,11 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentPro
 	) {
 		const entries = useTooltipContentStackEntries();
 		const stacked = useRegisterTooltipContent(children);
+		const insideTrigger = useIsInsideTooltipTrigger();
 
-		if (stacked) {
+		// Inside a trigger the root above is skipped, so there is no root to portal from.
+		// Without a stack to fold into, the content has nowhere to go.
+		if (stacked || insideTrigger) {
 			return null;
 		}
 

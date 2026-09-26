@@ -1,5 +1,6 @@
 .button {
 	display: var(--button-display, inline-flex);
+	box-sizing: border-box;
 	// The label and affixes carry a z-index over the ghost glow and the disabled stripes. Isolated,
 	// that z-index orders them inside the button only, never above a popup that covers it.
 	isolation: var(--button-isolation, isolate);
@@ -26,6 +27,7 @@
 	width: var(--button-width, var(--button-internal-width, auto));
 	max-width: var(--button-max-width, var(--button-internal-max-width, 100%));
 	min-width: var(--button-min-width, var(--button-internal-min-width, auto));
+	min-height: var(--button-min-height, var(--button-internal-min-height, auto));
 	flex-shrink: var(--button-flex-shrink, var(--button-internal-flex-shrink, 1));
 
 	--button-internal-loading-duration: var(--button-loading-duration, 120ms);
@@ -147,9 +149,22 @@
 		--button-internal-min-width: 0;
 	}
 
-	// The icon button has a fixed size, so shrinking it in a row only squeezes the icon.
+	// The icon button has a fixed size, so shrinking it only squeezes the icon. `flex-shrink: 0` loses
+	// to an inherited `--button-flex-shrink`, a consumer's `flex: 1 1 0` or a short flex column, so
+	// the minimums pin it to the size it has with nothing pressing on it.
 	&[data-icon='true'] {
 		--button-internal-flex-shrink: 0;
+		--button-internal-min-width: min(
+			var(--button-width, var(--button-internal-width)),
+			var(--button-max-width, var(--button-internal-max-width))
+		);
+		--button-internal-min-height: var(--button-internal-height);
+	}
+
+	// A link icon has no fixed width, so its content is its size. Not `auto`: the prefix wrapper's
+	// `fr` track has no min-content width, so the automatic minimum is only the padding.
+	&[data-icon='true'][data-variant='link'] {
+		--button-internal-min-width: max-content;
 	}
 
 	&[data-variant='outlined'] {
@@ -314,7 +329,8 @@
 	}
 
 	&[data-size='sm'] {
-		height: var(--button-height, 24px);
+		--button-internal-height: var(--button-height, 24px);
+		height: var(--button-internal-height);
 		font-size: var(--button-font-size, var(--periscope-font-size-small));
 		line-height: var(--button-size-line-height, 14px);
 
@@ -336,7 +352,8 @@
 	}
 
 	&[data-size='md'] {
-		height:  var(--button-height, 32px);
+		--button-internal-height: var(--button-height, 32px);
+		height: var(--button-internal-height);
 		font-size: var(--button-font-size, var(--periscope-font-size-base));
 		line-height: var(--button-size-line-height, 16px);
 
@@ -364,10 +381,14 @@
 }
 
 .button__prefix,
-.button__prefix > svg,
-.button__suffix,
-.button__suffix > svg {
+.button__suffix {
 	flex-shrink: var(--button-affix-flex-shrink, 0);
+}
+
+// Only a bare icon gets the icon size. Any other element keeps its own size, and sizing an icon
+// nested inside it is the consumer's job.
+svg.button__prefix,
+svg.button__suffix {
 	inline-size: var(--button-internal-icon-size);
 	block-size: var(--button-internal-icon-size);
 }
@@ -375,11 +396,13 @@
 .button__prefix-wrapper {
 	display: var(--button-prefix-wrapper-display, grid);
 	grid-template-columns: var(--button-prefix-wrapper-grid-template-columns, 1fr);
-	block-size: var(--button-prefix-wrapper-block-size, var(--button-internal-icon-size));
+	block-size: var(--button-prefix-wrapper-block-size, auto);
 	align-items: var(--button-prefix-wrapper-align-items, center);
 	justify-items: var(--button-prefix-wrapper-justify-items, center);
 	flex-shrink: var(--button-prefix-wrapper-flex-shrink, 0);
-	overflow: var(--button-prefix-wrapper-overflow, hidden);
+	// A custom prefix can draw outside its box, such as a badge dot or a shadow, so the wrapper
+	// only clips while it is collapsed.
+	overflow: var(--button-prefix-wrapper-overflow, visible);
 	transition: var(--button-prefix-wrapper-transition,
 			grid-template-columns var(--button-internal-loading-duration) var(--button-internal-loading-easing),
 			margin-inline-end var(--button-internal-loading-duration) var(--button-internal-loading-easing));
@@ -389,6 +412,7 @@
 
 .button:not([aria-busy="true"]) .button__prefix-wrapper[data-empty='true'] {
 	grid-template-columns: var(--button-prefix-wrapper-collapsed-grid-template-columns, 0fr);
+	overflow: var(--button-prefix-wrapper-collapsed-overflow, hidden);
 	margin-inline-end: var(--button-prefix-wrapper-collapsed-margin-inline-end, calc(-1 * var(--button-internal-gap)));
 	// Closing back up is the last beat: wait for the spinner to leave first.
 	transition-delay: var(--button-internal-loading-delay);
