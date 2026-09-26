@@ -120,11 +120,19 @@ button,
 	background-color: var(--muted);
 }
 
-body:has(.story-freeze-animations),
-body:has(.story-freeze-animations) *,
-body:has(.story-freeze-animations) *::before,
-body:has(.story-freeze-animations) *::after {
-	animation-play-state: paused !important;
+/*
+ * The "still" motion global, set from the `Motion` toolbar item or by the `still` Chromatic mode
+ * and put on `<body>` by `ModeDecorator`. `animation: none` rather than `animation-play-state: paused`: pausing holds an
+ * element at the animation's first frame, which for an entry animation that grows in from
+ * `scale(0.2)` and `opacity: 0` means it disappears while keeping its slot in the layout. Removing
+ * the animation instead settles every element on the style it has when nothing is running, which is
+ * what both a snapshot and a reader want.
+ */
+body.story-freeze-animations,
+body.story-freeze-animations *,
+body.story-freeze-animations *::before,
+body.story-freeze-animations *::after {
+	animation: none !important;
 	transition: none !important;
 }
 

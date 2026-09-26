@@ -684,9 +684,13 @@ Layout: use the shared classes in `apps/docs/index.css` (`story-container`, `sto
 `story-grid`, `story-row`, `story-panel`, `icon-md`) or a `{name}.stories.module.css`. No
 Tailwind classes, and no ad-hoc inline `style` where a shared class exists.
 
-Snapshotted stories add `story-freeze-animations` to the story root: it pauses every animation
-at its first frame and drops every transition, document-wide, so a Chromatic capture cannot
-land mid-spinner or mid-marching-border. Leave it off the stories whose animation is the point.
+Animation is a toolbar control, not a story class. **Motion** is **still** by default, which drops
+every animation and every transition document-wide and leaves each element on the style it has once
+it has settled; **live** is for watching a transition. Because it is a Storybook global, a
+snapshotted story gets the same state from
+`chromatic: { disableSnapshot: false, modes: allModes }` (`allModes` from
+`apps/docs/.storybook/modes.ts`) rather than from any class in its `render`. **Theme** (dark/light)
+is the other global and works the same way.
 
 ### The MDX page
 
