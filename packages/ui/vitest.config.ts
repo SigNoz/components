@@ -52,6 +52,11 @@ export default defineConfig({
 					environment: 'node',
 					include: nodeOnlyTests,
 					globals: true,
+					typecheck: {
+						enabled: true,
+						include: ['src/**/*.test-d.{ts,tsx}'],
+						tsconfig: './tsconfig.json',
+					},
 				},
 			},
 		],
