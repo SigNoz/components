@@ -327,6 +327,16 @@
 				"require": "./dist/sonner/index.cjs"
 			}
 		},
+		"./spinner": {
+			"import": {
+				"types": "./dist/spinner/index.d.ts",
+				"import": "./dist/spinner/index.mjs"
+			},
+			"require": {
+				"types": "./dist/spinner/index.d.cts",
+				"require": "./dist/spinner/index.cjs"
+			}
+		},
 		"./switch": {
 			"import": {
 				"types": "./dist/switch/index.d.ts",
