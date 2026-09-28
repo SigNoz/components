@@ -1,30 +1,101 @@
-.demoArea {
-	padding: 80px;
+.playground {
+	padding: 5rem;
 }
 
-.showcaseContainer {
-	min-height: 600px;
-}
-
-.showcaseContent {
+.showcase {
 	display: flex;
 	flex-direction: column;
-	gap: 64px;
+	gap: 5rem;
 }
 
-.positionsContainer {
+/*
+ * One column per side, one row per align. Placement is only true to the props while the trigger
+ * is inside the viewport, so this section and the offsets below it stay in the first screen: a
+ * tooltip anchored past the fold is pushed back against its trigger by collision handling.
+ */
+.placementGrid {
+	display: grid;
+	grid-template-columns: repeat(4, max-content);
+	gap: 4rem 6rem;
+	padding: 4rem 6rem;
+	justify-content: start;
+}
+
+.offsetRow {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 32px;
-	align-items: center;
+	gap: 6rem;
+	padding-block: 3rem 4rem;
 }
 
-.alignContainer {
+/* Every section below opens on the default side, so each row needs the room above it. */
+.contentColumn {
 	display: flex;
-	flex-wrap: wrap;
-	gap: 32px;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 9rem;
+	padding-block-start: 9rem;
 }
 
-.multilineOpacity {
-	opacity: 0.9;
+.stackColumn {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8rem;
+	padding-block-start: 6rem;
+}
+
+.triggerColumn {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4rem;
+	padding-block-start: 4rem;
+}
+
+.textTrigger {
+	text-decoration: underline dotted;
+	text-underline-offset: 3px;
+	cursor: help;
+}
+
+.containerPanel {
+	display: flex;
+	align-items: flex-end;
+	position: relative;
+	overflow: hidden;
+	width: 26rem;
+	min-height: 9rem;
+}
+
+/*
+ * A card is taller than the line of text every other section opens, so each row needs the height
+ * of a whole popup under it.
+ */
+.elementColumn {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 20rem;
+	padding-block: 2rem 16rem;
+}
+
+.metricCard {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-width: 16rem;
+}
+
+.metricRow {
+	display: flex;
+	justify-content: space-between;
+	gap: 2rem;
+	border-block-start: 1px solid var(--border);
+	padding-block-start: 0.25rem;
+}
+
+/* Wider than the 26.25rem the popup caps itself at, which is the point of the example. */
+.wideCard {
+	width: 40rem;
 }
