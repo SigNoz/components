@@ -1,0 +1,31 @@
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  justify-items: start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  padding-right: 1rem;
+}
+
+.matrixLabel {
+  white-space: nowrap;
+}
+
+.overflowGrid {
+  display: grid;
+  grid-template-columns: max-content 12rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+}

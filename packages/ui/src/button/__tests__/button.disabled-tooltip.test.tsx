@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button.js';
-import { queryOpenTooltip } from './test-utils.js';
+import { queryOpenTooltip } from '../../__tests__/test-utils.js';
 
 const REASON = 'You need write access to edit alerts';
 

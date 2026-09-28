@@ -21,6 +21,7 @@ export const BadgeTextOverflow = {
 } as const;
 
 export const BadgeTextTransform = {
+	None: 'none',
 	Capitalize: 'capitalize',
 	Uppercase: 'uppercase',
 	Lowercase: 'lowercase',
