@@ -225,7 +225,7 @@
  */
 // #endregion css-tokens
 
-export { Button, buttonVariants } from './button.js';
+export { Button } from './button.js';
 export { ButtonTextOverflow, ButtonColor, ButtonSize, ButtonVariant } from './constants.js';
 export type {
 	ButtonBaseProps,
