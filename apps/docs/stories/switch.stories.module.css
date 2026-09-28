@@ -1,10 +1,49 @@
-.variantRow {
-	display: flex;
-	align-items: center;
-	gap: 24px;
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.variantLabel {
-	width: 120px;
-	text-transform: capitalize;
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 1.25rem 2rem;
+  align-items: start;
+  justify-items: start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  padding-right: 1rem;
+}
+
+.matrixLabel {
+  white-space: nowrap;
+}
+
+.stateCell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.labelColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 20rem;
+}
+
+.settingsRow {
+  max-width: 32rem;
+}
+
+.overflowGrid {
+  display: grid;
+  grid-template-columns: max-content 14rem minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
 }
