@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 import * as React from 'react';
 import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { InternalButton } from '../button/button.js';
+import type { ButtonStyleProps } from '../button/types.js';
 import {
-	Button,
 	type ButtonProps,
 	ButtonSize,
 	type ColorType,
@@ -181,7 +182,8 @@ export type PaginationLinkProps = {
 } & Omit<
 	ButtonProps,
 	'variant' | 'size' | 'color' | 'children' | 'disabled' | 'disabledTooltip' | 'icon'
->;
+> &
+	ButtonStyleProps;
 
 /**
  * Button for a specific page number. Set `isActive` when it represents the
@@ -204,7 +206,7 @@ export const PaginationLink = React.forwardRef<HTMLButtonElement, PaginationLink
 		ref,
 	) => {
 		return (
-			<Button
+			<InternalButton
 				ref={ref}
 				testId={testId}
 				aria-current={isActive ? 'page' : undefined}
@@ -223,7 +225,7 @@ export const PaginationLink = React.forwardRef<HTMLButtonElement, PaginationLink
 				{...props}
 			>
 				{children}
-			</Button>
+			</InternalButton>
 		);
 	},
 );

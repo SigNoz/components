@@ -23,7 +23,7 @@ import {
 import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import styles from './button.module.scss';
 import { ButtonTextOverflow, ButtonVariant } from './constants.js';
-import type { ButtonProps, ValidateButtonProps } from './types.js';
+import type { ButtonProps, ButtonStyleProps, ValidateButtonProps } from './types.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { toCssLength } from '../lib/css-length';
 
@@ -81,7 +81,7 @@ function ButtonSuffix({ suffix }: { suffix?: ReactElement | null }): ReactElemen
 	);
 }
 
-const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>(function Button(
 	{
 		className,
 		variant,
@@ -280,8 +280,7 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
  * `width` and `maxWidth` are written as inline `--button-internal-width` and
  * `--button-internal-max-width`.
  *
- * So they compose with the tokens instead of overwriting `style.width`. Numbers are written as
- * `px`, and any `style` you pass is kept.
+ * So they compose with the tokens. Numbers are written as `px`.
  *
  * ### Asserting on it
  *
@@ -357,5 +356,24 @@ export const Button = ButtonImpl as <T extends ButtonProps>(
 		// property checks. Every key outside the props (a typo, a native attribute the button does
 		// not forward on purpose) is pinned to `never` instead.
 		Record<Exclude<keyof T, keyof ButtonProps | keyof RefAttributes<HTMLButtonElement>>, never> &
+		RefAttributes<HTMLButtonElement>,
+) => ReactElement;
+
+/**
+ * `Button` plus `className` and `style`, for the library's own components that build on it. Not
+ * exported from the package.
+ *
+ * @access private
+ */
+export const InternalButton = ButtonImpl as <T extends ButtonProps & ButtonStyleProps>(
+	props: T &
+		ValidateButtonProps<T> &
+		Record<
+			Exclude<
+				keyof T,
+				keyof ButtonProps | keyof ButtonStyleProps | keyof RefAttributes<HTMLButtonElement>
+			>,
+			never
+		> &
 		RefAttributes<HTMLButtonElement>,
 ) => ReactElement;

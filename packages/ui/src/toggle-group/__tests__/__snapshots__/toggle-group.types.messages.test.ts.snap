@@ -24,6 +24,8 @@ exports[`ToggleGroup type error messages > prints a message that names the const
     Type '{ label: string; }' is not assignable to type 'ToggleGroupItemBaseType & { disabled: boolean; disabledTooltip: ReactNode; }'.
       Property 'value' is missing in type '{ label: string; }' but required in type 'ToggleGroupItemBaseType'.",
   "root props > rejects a prop the bar does not have > \`orientation\` was rejected: there is no vertical segmented bar": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects className and style, the look comes from the props and tokens > \`className\` is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects className and style, the look comes from the props and tokens > \`style\` is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
   "root props > rejects data-testid in favour of testId > \`data-testid\` is written as \`testId\`, which also names every button": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which also names every button'' is missing in type '{ items: ToggleGroupItemProps[]; "data-testid": string; variant: "outlined"; color: "secondary"; size: "md"; type: "single"; }' but required in type 'TheTestIdPropIsCalledTestId'.",
   "selection > rejects a handler taking an array on a single bar > \`onChange\` carries the string a single bar reports": "TS2322: Type '{ items: ToggleGroupItemProps[]; onChange: (v: string[]) => string[]; variant: "outlined"; color: "secondary"; size: "md"; type: "single"; }' is not assignable to type 'IntrinsicAttributes & (ToggleGroupProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
     Types of property 'onChange' are incompatible.

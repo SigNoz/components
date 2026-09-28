@@ -157,17 +157,6 @@ const meta: Meta<typeof Switch> = {
 			description: 'Forwarded to the `<label>` wrapper as `data-testid`.',
 			table: { category: 'Testing' },
 		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for the switch itself.',
-			table: { category: 'Styling' },
-		},
-		containerClassName: {
-			control: 'text',
-			description:
-				'Additional CSS classes for the wrapper. Any `container*` prop forces the wrapper to render even with no label.',
-			table: { category: 'Styling' },
-		},
 		id: {
 			control: 'text',
 			description:

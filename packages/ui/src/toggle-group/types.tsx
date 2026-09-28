@@ -299,7 +299,7 @@ export type ToggleGroupReadOnlyType = {
 	readOnlyTooltip?: ReactNode;
 };
 
-export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
+export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes &
 	ToggleGroupSelectionType &
 	ToggleGroupDisableType &

@@ -1,6 +1,5 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes, useId, useMemo } from 'react';
-import { cn } from '../lib/utils.js';
 import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
@@ -14,7 +13,6 @@ import type { RadioGroupProps, ValidateRadioGroupProps } from './types.js';
 
 const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGroup(
 	{
-		className,
 		items,
 		color,
 		textOverflow = RadioGroupTextOverflow.Ellipsis,
@@ -73,7 +71,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			data-slot="radio-group"
 			data-color={color}
 			data-text-overflow={textOverflow}
-			className={cn(styles['radio-group'], className)}
+			className={styles['radio-group']}
 			disabled={isReadOnly ? false : disabled}
 			readOnly={readOnly}
 			required={required}

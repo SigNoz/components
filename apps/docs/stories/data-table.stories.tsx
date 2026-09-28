@@ -258,27 +258,23 @@ const enhancedColumns: ColumnDef<User>[] = [
 		maxSize: 150, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.getValue('role') as User['role'];
-			const roleMap: Record<User['role'], { label: string; className: string }> = {
+			const roleMap: Record<User['role'], { label: string }> = {
 				admin: {
 					label: 'Admin',
-					className: 'bg-purple-100 text-purple-800 border-purple-200',
 				},
 				user: {
 					label: 'User',
-					className: 'bg-blue-100 text-blue-800 border-blue-200',
 				},
 				moderator: {
 					label: 'Moderator',
-					className: 'bg-orange-100 text-orange-800 border-orange-200',
 				},
 				guest: {
 					label: 'Guest',
-					className: 'bg-gray-100 text-gray-800 border-gray-200',
 				},
 			};
 			const roleInfo = roleMap[role];
 			return (
-				<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+				<Badge variant="outlined" color="secondary">
 					{roleInfo.label}
 				</Badge>
 			);
@@ -292,29 +288,22 @@ const enhancedColumns: ColumnDef<User>[] = [
 		maxSize: 180, // Maximum width
 		cell: ({ row }: { row: Row<User> }) => {
 			const status = row.getValue('status') as User['status'];
-			const statusMap: Record<
-				User['status'],
-				{ label: string; icon: IconComponent; className: string }
-			> = {
+			const statusMap: Record<User['status'], { label: string; icon: IconComponent }> = {
 				active: {
 					label: 'Active',
 					icon: CircleCheck,
-					className: 'bg-green-100 text-green-800 border-green-200',
 				},
 				inactive: {
 					label: 'Inactive',
 					icon: CircleX,
-					className: 'bg-red-100 text-red-800 border-red-200',
 				},
 				pending: {
 					label: 'Pending',
 					icon: Clock,
-					className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
 				},
 				suspended: {
 					label: 'Suspended',
 					icon: CircleAlert,
-					className: 'bg-gray-100 text-gray-800 border-gray-200',
 				},
 			};
 			const statusInfo = statusMap[status];
@@ -322,7 +311,7 @@ const enhancedColumns: ColumnDef<User>[] = [
 			return (
 				<div className="story-row">
 					<Icon className="icon-md" />
-					<Badge variant="outlined" color="secondary" className={statusInfo.className}>
+					<Badge variant="outlined" color="secondary">
 						{statusInfo.label}
 					</Badge>
 				</div>
@@ -424,13 +413,13 @@ const enhancedColumns: ColumnDef<User>[] = [
 		cell: () => {
 			return (
 				<div className={`story-row ${styles.actionButtonsContainer}`}>
-					<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
+					<Button variant="ghost" color="secondary" size="sm" width="2rem">
 						<Eye className="icon-md" />
 					</Button>
-					<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
+					<Button variant="ghost" color="secondary" size="sm" width="2rem">
 						<Pencil className="icon-md" />
 					</Button>
-					<Button variant="ghost" color="secondary" size="sm" className={styles.deleteButton}>
+					<Button variant="ghost" color="secondary" size="sm" width="2rem">
 						<Trash2 className="icon-md" />
 					</Button>
 				</div>
@@ -470,18 +459,17 @@ const simpleColumns: ColumnDef<User>[] = [
 		header: 'Role',
 		cell: ({ row }: { row: Row<User> }) => {
 			const role = row.original.role;
-			const roleMap: Record<User['role'], { label: string; className: string }> = {
-				admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-				user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+			const roleMap: Record<User['role'], { label: string }> = {
+				admin: { label: 'Admin' },
+				user: { label: 'User' },
 				moderator: {
 					label: 'Moderator',
-					className: 'bg-orange-100 text-orange-800',
 				},
-				guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+				guest: { label: 'Guest' },
 			};
 			const roleInfo = roleMap[role];
 			return (
-				<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+				<Badge variant="outlined" color="secondary">
 					{roleInfo.label}
 				</Badge>
 			);
@@ -659,15 +647,15 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
-						moderator: { label: 'Mod', className: 'bg-orange-100 text-orange-800' },
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+					const roleMap: Record<User['role'], { label: string }> = {
+						admin: { label: 'Admin' },
+						user: { label: 'User' },
+						moderator: { label: 'Mod' },
+						guest: { label: 'Guest' },
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+						<Badge variant="outlined" color="secondary">
 							{roleInfo.label}
 						</Badge>
 					);
@@ -752,18 +740,17 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: { label: 'Admin', className: 'bg-purple-100 text-purple-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+					const roleMap: Record<User['role'], { label: string }> = {
+						admin: { label: 'Admin' },
+						user: { label: 'User' },
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800',
 						},
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						guest: { label: 'Guest' },
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+						<Badge variant="outlined" color="secondary">
 							{roleInfo.label}
 						</Badge>
 					);
@@ -869,27 +856,23 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
+					const roleMap: Record<User['role'], { label: string }> = {
 						admin: {
 							label: 'Admin',
-							className: 'bg-purple-100 text-purple-800 border-purple-200',
 						},
 						user: {
 							label: 'User',
-							className: 'bg-blue-100 text-blue-800 border-blue-200',
 						},
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800 border-orange-200',
 						},
 						guest: {
 							label: 'Guest',
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
 						},
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+						<Badge variant="outlined" color="secondary">
 							{roleInfo.label}
 						</Badge>
 					);
@@ -900,29 +883,22 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				cell: ({ row }: { row: Row<User> }) => {
 					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ label: string; icon: React.ComponentType; className: string }
-					> = {
+					const statusMap: Record<User['status'], { label: string; icon: React.ComponentType }> = {
 						active: {
 							label: 'Active',
 							icon: CircleCheck,
-							className: 'bg-green-100 text-green-800 border-green-200',
 						},
 						inactive: {
 							label: 'Inactive',
 							icon: CircleX,
-							className: 'bg-red-100 text-red-800 border-red-200',
 						},
 						pending: {
 							label: 'Pending',
 							icon: Clock,
-							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
 						},
 						suspended: {
 							label: 'Suspended',
 							icon: CircleAlert,
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
 						},
 					};
 					const statusInfo = statusMap[status];
@@ -930,7 +906,7 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 					return (
 						<div className="story-row">
 							<Icon />
-							<Badge variant="outlined" color="secondary" className={statusInfo.className}>
+							<Badge variant="outlined" color="secondary">
 								{statusInfo.label}
 							</Badge>
 						</div>
@@ -1021,13 +997,13 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className={`story-row ${styles.actionButtonsContainer}`}>
-							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
+							<Button variant="ghost" color="secondary" size="sm" width="2rem">
 								<Eye className="icon-md" />
 							</Button>
-							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
+							<Button variant="ghost" color="secondary" size="sm" width="2rem">
 								<Pencil className="icon-md" />
 							</Button>
-							<Button variant="ghost" color="secondary" size="sm" className={styles.deleteButton}>
+							<Button variant="ghost" color="secondary" size="sm" width="2rem">
 								<Trash2 className="icon-md" />
 							</Button>
 						</div>
@@ -1134,27 +1110,23 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				cell: ({ row }: { row: Row<User> }) => {
 					const role = row.original.role;
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
+					const roleMap: Record<User['role'], { label: string }> = {
 						admin: {
 							label: 'Admin',
-							className: 'bg-purple-100 text-purple-800 border-purple-200',
 						},
 						user: {
 							label: 'User',
-							className: 'bg-blue-100 text-blue-800 border-blue-200',
 						},
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-orange-100 text-orange-800 border-orange-200',
 						},
 						guest: {
 							label: 'Guest',
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
 						},
 					};
 					const roleInfo = roleMap[role];
 					return (
-						<Badge variant="outlined" color="secondary" className={roleInfo.className}>
+						<Badge variant="outlined" color="secondary">
 							{roleInfo.label}
 						</Badge>
 					);
@@ -1165,29 +1137,22 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				header: 'Status',
 				cell: ({ row }: { row: Row<User> }) => {
 					const status = row.original.status;
-					const statusMap: Record<
-						User['status'],
-						{ label: string; icon: React.ComponentType; className: string }
-					> = {
+					const statusMap: Record<User['status'], { label: string; icon: React.ComponentType }> = {
 						active: {
 							label: 'Active',
 							icon: CircleCheck,
-							className: 'bg-green-100 text-green-800 border-green-200',
 						},
 						inactive: {
 							label: 'Inactive',
 							icon: CircleX,
-							className: 'bg-red-100 text-red-800 border-red-200',
 						},
 						pending: {
 							label: 'Pending',
 							icon: Clock,
-							className: 'bg-yellow-100 text-yellow-800 border-yellow-200',
 						},
 						suspended: {
 							label: 'Suspended',
 							icon: CircleAlert,
-							className: 'bg-gray-100 text-gray-800 border-gray-200',
 						},
 					};
 					const statusInfo = statusMap[status];
@@ -1195,7 +1160,7 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 					return (
 						<div className="story-row">
 							<Icon />
-							<Badge variant="outlined" color="secondary" className={statusInfo.className}>
+							<Badge variant="outlined" color="secondary">
 								{statusInfo.label}
 							</Badge>
 						</div>
@@ -1286,13 +1251,13 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				cell: () => {
 					return (
 						<div className={`story-row ${styles.actionButtonsContainer}`}>
-							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
+							<Button variant="ghost" color="secondary" size="sm" width="2rem">
 								<Eye className="icon-md" />
 							</Button>
-							<Button variant="ghost" color="secondary" size="sm" className={styles.actionButton}>
+							<Button variant="ghost" color="secondary" size="sm" width="2rem">
 								<Pencil className="icon-md" />
 							</Button>
-							<Button variant="ghost" color="secondary" size="sm" className={styles.deleteButton}>
+							<Button variant="ghost" color="secondary" size="sm" width="2rem">
 								<Trash2 className="icon-md" />
 							</Button>
 						</div>
@@ -1632,18 +1597,17 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Role',
 				size: 120,
 				cell: ({ row }: { row: Row<User> }) => {
-					const roleMap: Record<User['role'], { label: string; className: string }> = {
-						admin: { label: 'Admin', className: 'bg-red-100 text-red-800' },
-						user: { label: 'User', className: 'bg-blue-100 text-blue-800' },
+					const roleMap: Record<User['role'], { label: string }> = {
+						admin: { label: 'Admin' },
+						user: { label: 'User' },
 						moderator: {
 							label: 'Moderator',
-							className: 'bg-yellow-100 text-yellow-800',
 						},
-						guest: { label: 'Guest', className: 'bg-gray-100 text-gray-800' },
+						guest: { label: 'Guest' },
 					};
 					const role = roleMap[row.original.role];
 					return (
-						<Badge variant="outlined" color="secondary" className={role.className}>
+						<Badge variant="outlined" color="secondary">
 							{role.label}
 						</Badge>
 					);

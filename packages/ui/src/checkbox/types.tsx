@@ -145,10 +145,7 @@ export type ValidateCheckboxProps<T> = (T extends { disabled: boolean | undefine
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type CheckboxProps = Pick<
-	ComponentProps<'button'>,
-	'id' | 'className' | 'style' | 'children' | 'tabIndex'
-> &
+export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | 'tabIndex'> &
 	AriaAttributes &
 	CheckboxDisableType &
 	CheckboxReadOnlyType & {
@@ -231,16 +228,6 @@ export type CheckboxProps = Pick<
 		 * it the row is capped at `100%` of its container.
 		 */
 		maxWidth?: CSSProperties['maxWidth'];
-		/**
-		 * Additional CSS classes for the `<label>` wrapper that holds the checkbox and its label.
-		 *
-		 * @note Any `container*` prop forces the wrapper to render even with no label.
-		 */
-		containerClassName?: string;
-		/**
-		 * Inline styles for the wrapper.
-		 */
-		containerStyle?: CSSProperties;
 		/**
 		 * The `id` of the wrapper.
 		 */

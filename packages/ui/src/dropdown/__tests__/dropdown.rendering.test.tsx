@@ -232,33 +232,6 @@ describe('Dropdown rendering', () => {
 		expect(screen.getByTestId('menu')).not.toHaveAttribute('data-analytics');
 	});
 
-	it('puts className and style on the popup, and on a submenu popup too', async () => {
-		renderDropdown({
-			className: 'above-the-panel',
-			style: { zIndex: 1100 },
-			items: [
-				{
-					type: 'submenu',
-					value: 'download',
-					label: 'Download',
-					items: [{ type: 'item', value: 'csv', label: 'CSV' }],
-				},
-			],
-		});
-		const popup = await openDropdown();
-
-		expect(popup).toHaveClass('above-the-panel');
-		expect(popup.style.zIndex).toBe('1100');
-
-		await userEvent.click(screen.getByTestId('menu-item-download'));
-
-		const row = await screen.findByRole('menuitem', { name: 'CSV' });
-		const submenu = row.closest<HTMLElement>('[data-slot="dropdown-popup"]');
-		expect(submenu).toHaveAttribute('data-submenu');
-		expect(submenu).toHaveClass('above-the-panel');
-		expect(submenu?.style.zIndex).toBe('1100');
-	});
-
 	it('renders a link row as the element it was given', async () => {
 		renderDropdown({
 			items: [

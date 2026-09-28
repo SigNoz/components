@@ -216,4 +216,11 @@ describe('root props', () => {
 		// @ts-expect-error - `orientation` was rejected: there is no vertical segmented bar
 		assertType(<ToggleGroup type="single" {...BASE} items={ITEMS} orientation="vertical" />);
 	});
+
+	test('rejects className and style, the look comes from the props and tokens', () => {
+		// @ts-expect-error - `className` is not a prop
+		assertType(<ToggleGroup type="single" {...BASE} items={ITEMS} className="x" />);
+		// @ts-expect-error - `style` is not a prop
+		assertType(<ToggleGroup type="single" {...BASE} items={ITEMS} style={{}} />);
+	});
 });
