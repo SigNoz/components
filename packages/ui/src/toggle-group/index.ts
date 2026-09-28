@@ -62,7 +62,8 @@
  * | `--toggle-group-list-flex-grow` | `1` |
  * | `--toggle-group-max-inline-size` | `var(--toggle-group-internal-max-inline-size, 100%)` |
  * | `--toggle-group-md-button-padding-inline` | `var(--spacing-12)` |
- * | `--toggle-group-overflow` | `hidden` |
+ * | `--toggle-group-min-inline-size` | `0` |
+ * | `--toggle-group-overflow` | `clip` |
  * | `--toggle-group-readonly-cursor` | `not-allowed` |
  * | `--toggle-group-readonly-opacity` | `0.8` |
  * | `--toggle-group-scroll-button-align-items` | `center` |

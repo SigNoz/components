@@ -22,7 +22,12 @@
 
   // The buttons are square and the bar is not, so the corners are the bar's to clip. It also keeps
   // the scrolling strip inside the border.
-  overflow: var(--toggle-group-overflow, hidden);
+  //
+  // `clip`, not `hidden`: a scroll container loses its automatic minimum size, so a column flex
+  // parent short on space would squash the bar below its buttons. The inline minimum is dropped
+  // by hand instead, which is what lets a row parent hand the overflow to the scrolling strip.
+  overflow: var(--toggle-group-overflow, clip);
+  min-inline-size: var(--toggle-group-min-inline-size, 0);
 
   &[data-variant='outlined'][data-color='secondary'] {
     --toggle-group-internal-background: var(--toggle-group-secondary-outlined-background-color, var(--toggle-group-secondary-outlined-background));
