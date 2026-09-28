@@ -15,6 +15,7 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type CSSProperties, Fragment, type ReactElement, useEffect, useState } from 'react';
 import { expect, fireEvent, fn, waitFor, within } from 'storybook/test';
+import { allModes } from '../.storybook/modes.js';
 import styles from './button.stories.module.css';
 import {
 	buttonArgTypes,
@@ -306,7 +307,7 @@ const FORCED_TOOLTIPS = [
  */
 export const ButtonShowcase: Story = {
 	parameters: {
-		chromatic: { disableSnapshot: false, disableAnimations: true },
+		chromatic: { disableSnapshot: false, modes: allModes },
 		pseudo: {
 			hover: '[data-pseudo="hover"]',
 			focusVisible: '[data-pseudo="focus"]',
@@ -333,10 +334,11 @@ export const ButtonShowcase: Story = {
 			),
 		);
 	},
-	// `story-freeze-animations`: the dashed border marches on hover, the ghost glow shimmers
-	// while active and the spinner never stops, so the snapshot would catch each one mid-frame.
+	// The dashed border marches on hover, the ghost glow shimmers while active and the spinner never
+	// stops. Chromatic's own `disableAnimations` settles all three for the snapshot; the toolbar's
+	// live/still toggle does the same by hand when you want to read one frame in the browser.
 	render: () => (
-		<div className="story-container-full story-freeze-animations">
+		<div className="story-container-full">
 			<div className={styles.columnLayout}>
 				<div className="story-section">
 					<Typography size="base" weight="semibold">
