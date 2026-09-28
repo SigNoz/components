@@ -25,6 +25,7 @@ import {
 	SECONDARY_ONLY_VARIANTS,
 	VARIANTS,
 } from './shared/button-arg-types.js';
+import { waitForEffects } from './shared/play.js';
 
 const meta: Meta<typeof Button> = {
 	title: 'Primitive Components/Button',
@@ -316,6 +317,15 @@ export const ButtonShowcase: Story = {
 	},
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
+
+		// A label only gets its tooltip once it has been measured as truncated, so hovering any
+		// earlier finds no popup to open.
+		await waitFor(() => {
+			for (const testId of FORCED_TOOLTIPS) {
+				expect(canvas.getByTestId(testId)).toHaveAttribute('data-truncated');
+			}
+		});
+		await waitForEffects();
 
 		for (const testId of FORCED_TOOLTIPS) {
 			const trigger = canvas.getByTestId(testId);

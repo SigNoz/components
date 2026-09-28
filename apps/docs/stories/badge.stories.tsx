@@ -11,6 +11,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Fragment, type ReactElement } from 'react';
 import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import styles from './badge.stories.module.css';
+import { waitForEffects } from './shared/play.js';
 
 const CheckIcon = () => (
 	<svg
@@ -199,6 +200,10 @@ export const BadgeShowcase: Story = {
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
 		const trigger = canvas.getByTestId('truncated-badge');
+
+		// The tooltip only exists once the label has been measured as truncated.
+		await waitFor(() => expect(trigger).toHaveAttribute('data-truncated'));
+		await waitForEffects();
 
 		// Base UI opens the tooltip when the pointer enters the trigger. Synthetic events keep
 		// it open for the snapshot instead of `userEvent.hover`, which moves a real pointer.

@@ -12,6 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type CSSProperties, Fragment, type ReactElement } from 'react';
 import { expect, fireEvent, fn, waitFor, within } from 'storybook/test';
 import styles from './pill.stories.module.css';
+import { waitForEffects } from './shared/play.js';
 
 const COLORS = Object.values(PillColor);
 const VARIANT = PillVariant.Outlined;
@@ -253,6 +254,10 @@ export const PillShowcase: Story = {
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
 		const trigger = canvas.getByTestId('truncated-pill');
+
+		// The tooltip only exists once the label has been measured as truncated.
+		await waitFor(() => expect(trigger).toHaveAttribute('data-truncated'));
+		await waitForEffects();
 
 		fireEvent.pointerEnter(trigger);
 		fireEvent.mouseEnter(trigger);
