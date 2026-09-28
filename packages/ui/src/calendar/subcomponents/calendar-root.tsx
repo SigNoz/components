@@ -1,7 +1,7 @@
 import { type ComponentProps, type ReactElement, useContext, useMemo } from 'react';
 import type { Root } from 'react-day-picker';
 import { CalendarContext } from '../calendar-context.js';
-import { mergeRefs } from '../utils.js';
+import { mergeRefs } from '../../lib/merge-refs.js';
 
 /**
  * The calendar's root element.

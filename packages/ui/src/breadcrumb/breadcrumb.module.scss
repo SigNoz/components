@@ -4,7 +4,7 @@
 	align-items: var(--breadcrumb-root-align-items, center);
 	font-size: var(--breadcrumb-root-font-size, var(--periscope-font-size-base, 13px));
 	line-height: var(--breadcrumb-root-line-height, var(--line-height-20, 20px));
-	color: var(--breadcrumb-root-color, var(--l1-foreground));
+	color: var(--breadcrumb-root-color, var(--breadcrumb-label));
 }
 
 .breadcrumb-list {
@@ -27,7 +27,7 @@
 	display: var(--breadcrumb-link-display, inline-flex);
 	align-items: var(--breadcrumb-link-align-items, center);
 	gap: var(--breadcrumb-link-gap, var(--spacing-2, 4px));
-	color: var(--breadcrumb-link-color, var(--l1-foreground));
+	color: var(--breadcrumb-link-color, var(--breadcrumb-label));
 	text-decoration: var(--breadcrumb-link-text-decoration, none);
 	transition: var(--breadcrumb-link-transition, color 0.15s ease-in-out, background-color 0.15s ease-in-out);
 	cursor: var(--breadcrumb-link-cursor, pointer);
@@ -35,12 +35,12 @@
 	padding: var(--breadcrumb-link-padding, var(--spacing-2, 4px) var(--spacing-1, 2px));
 
 	&:hover {
-		color: var(--breadcrumb-link-hover-color, var(--l1-foreground-hover));
-		background-color: var(--breadcrumb-link-hover-background-color, var(--l1-background-hover));
+		color: var(--breadcrumb-link-hover-color, var(--breadcrumb-label-hover));
+		background-color: var(--breadcrumb-link-hover-background-color, var(--breadcrumb-background-hover));
 	}
 
 	&:focus-visible {
-		outline: var(--breadcrumb-link-focus-visible-outline, 2px solid var(--ring));
+		outline: var(--breadcrumb-link-focus-visible-outline, 2px solid var(--breadcrumb-focus-ring));
 		outline-offset: var(--breadcrumb-link-focus-visible-outline-offset, 2px);
 		border-radius: var(--breadcrumb-link-focus-visible-border-radius, 2px);
 	}
@@ -50,7 +50,7 @@
 	display: var(--breadcrumb-page-display, inline-flex);
 	align-items: var(--breadcrumb-page-align-items, center);
 	gap: var(--breadcrumb-page-gap, var(--spacing-2, 4px));
-	color: var(--breadcrumb-page-color, var(--l1-foreground));
+	color: var(--breadcrumb-page-color, var(--breadcrumb-label));
 	font-weight: var(--breadcrumb-page-font-weight, 400);
 	cursor: var(--breadcrumb-page-cursor, default);
 }
@@ -59,7 +59,7 @@
 	display: var(--breadcrumb-separator-display, inline-flex);
 	align-items: var(--breadcrumb-separator-align-items, center);
 	justify-content: var(--breadcrumb-separator-justify-content, center);
-	color: var(--breadcrumb-separator-color, var(--l1-foreground));
+	color: var(--breadcrumb-separator-color, var(--breadcrumb-label));
 
 	svg {
 		flex-shrink: var(--breadcrumb-separator-svg-flex-shrink, 0);
@@ -72,7 +72,7 @@
 	justify-content: var(--breadcrumb-ellipsis-justify-content, center);
 	width: var(--breadcrumb-ellipsis-width, 1.5rem);
 	height: var(--breadcrumb-ellipsis-height, 1.5rem);
-	color: var(--breadcrumb-ellipsis-color, var(--l1-foreground));
+	color: var(--breadcrumb-ellipsis-color, var(--breadcrumb-label));
 	cursor: var(--breadcrumb-ellipsis-cursor, default);
 }
 
@@ -87,15 +87,15 @@
 	display: var(--breadcrumb-dropdown-display, inline-flex);
 	align-items: var(--breadcrumb-dropdown-align-items, center);
 	gap: var(--breadcrumb-dropdown-gap, var(--spacing-2, 4px));
-	color: var(--breadcrumb-dropdown-color, var(--l1-foreground));
+	color: var(--breadcrumb-dropdown-color, var(--breadcrumb-label));
 	cursor: var(--breadcrumb-dropdown-cursor, pointer);
 	transition: var(--breadcrumb-dropdown-transition, color 0.15s ease-in-out, background-color 0.15s ease-in-out);
 	border-radius: var(--breadcrumb-dropdown-border-radius, calc(var(--radius) - 2px));
 	padding: var(--breadcrumb-dropdown-padding, var(--spacing-2, 4px) var(--spacing-1, 2px));
 
 	&:hover {
-		color: var(--breadcrumb-dropdown-hover-color, var(--l1-foreground-hover));
-		background-color: var(--breadcrumb-dropdown-hover-background-color, var(--l1-background-hover));
+		color: var(--breadcrumb-dropdown-hover-color, var(--breadcrumb-label-hover));
+		background-color: var(--breadcrumb-dropdown-hover-background-color, var(--breadcrumb-background-hover));
 	}
 }
 
