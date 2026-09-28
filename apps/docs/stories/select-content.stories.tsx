@@ -161,7 +161,9 @@ export const InsidePopover: Story = {
 			<div className="story-container">
 				<Popover>
 					<PopoverTrigger asChild>
-						<Button variant="outlined">Open filters</Button>
+						<Button variant="outlined" size="md" color="secondary">
+							Open filters
+						</Button>
 					</PopoverTrigger>
 					<PopoverContent className={styles.popoverContent}>
 						<div className="story-section">

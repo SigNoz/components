@@ -18,6 +18,7 @@
  * | `--popover-padding` | `var(--spacing-8)` |
  * | `--popover-transform-origin` | `var(--radix-popover-content-transform-origin)` |
  * | `--popover-width` | `fit-content` |
+ * | `--popover-z-index` | `50` |
  */
 // #endregion css-tokens
 

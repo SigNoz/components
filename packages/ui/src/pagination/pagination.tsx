@@ -1,7 +1,14 @@
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 import * as React from 'react';
 import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, type ButtonProps, ButtonSize } from '../button/index.js';
+import {
+	Button,
+	type ButtonProps,
+	ButtonSize,
+	type ColorType,
+	type VariantColorType,
+	type VariantType,
+} from '../button/index.js';
 import { cn } from '../lib/utils.js';
 import { SelectSimple } from '../select/index.js';
 import styles from './pagination.module.scss';
@@ -145,26 +152,74 @@ export type PaginationLinkProps = {
 	 * If the link is not active, the button will be styled as a ghost button.
 	 */
 	isActive?: boolean;
-} & ButtonProps;
+	/**
+	 * Visual style of the button. Defaults to `solid` when active, `ghost` otherwise.
+	 */
+	variant?: VariantType;
+	/**
+	 * Height + padding token.
+	 *
+	 * @default md
+	 */
+	size?: ButtonProps['size'];
+	/**
+	 * Color scheme applied to the variant. Defaults to `primary` when active, `secondary` otherwise.
+	 */
+	color?: ColorType;
+	/**
+	 * Content of the button, usually the page number.
+	 */
+	children?: React.ReactNode;
+	/**
+	 * When true, the page cannot be selected.
+	 */
+	disabled?: boolean;
+	/**
+	 * Reason shown in a tooltip while the button is disabled.
+	 */
+	disabledTooltip?: React.ReactNode;
+} & Omit<
+	ButtonProps,
+	'variant' | 'size' | 'color' | 'children' | 'disabled' | 'disabledTooltip' | 'icon'
+>;
 
 /**
  * Button for a specific page number. Set `isActive` when it represents the
  * current page. Accepts all `Button` props.
  */
 export const PaginationLink = React.forwardRef<HTMLButtonElement, PaginationLinkProps>(
-	({ className, testId, isActive, size = ButtonSize.Icon, disabled, children, ...props }, ref) => {
+	(
+		{
+			className,
+			testId,
+			isActive,
+			size = ButtonSize.MD,
+			variant,
+			color,
+			disabled,
+			disabledTooltip,
+			children,
+			...props
+		},
+		ref,
+	) => {
 		return (
 			<Button
 				ref={ref}
-				data-testid={testId}
+				testId={testId}
 				aria-current={isActive ? 'page' : undefined}
 				tabIndex={disabled ? -1 : undefined}
 				data-slot="pagination-link"
-				variant={isActive ? 'solid' : 'ghost'}
-				color={isActive ? 'primary' : 'none'}
+				// TypeScript cannot correlate the two props back to the variant/color union,
+				// so the pair is re-asserted here.
+				{...({
+					variant: variant ?? (isActive ? 'solid' : 'ghost'),
+					color: color ?? (isActive ? 'primary' : 'secondary'),
+				} as VariantColorType)}
 				size={size}
-				className={styles['pagination-link']}
-				disabled={disabled}
+				className={cn(styles['pagination-link'], className)}
+				disabled={disabled ?? false}
+				disabledTooltip={disabledTooltip}
 				{...props}
 			>
 				{children}
@@ -180,11 +235,11 @@ export type PaginationNavProps = Omit<PaginationLinkProps, 'children' | 'isActiv
  * Button to navigate to the previous page. Disable when on the first page.
  */
 export const PaginationPrevious = React.forwardRef<HTMLButtonElement, PaginationNavProps>(
-	({ className, testId, disabled, size = 'icon', ...props }, ref) => {
+	({ className, testId, disabled, size = ButtonSize.MD, ...props }, ref) => {
 		return (
 			<PaginationLink
 				ref={ref}
-				data-testid={testId}
+				testId={testId}
 				aria-label="Go to previous page"
 				size={size}
 				className={cn(className)}
@@ -202,11 +257,11 @@ PaginationPrevious.displayName = 'PaginationPrevious';
  * Button to navigate to the next page. Disable when on the last page.
  */
 export const PaginationNext = React.forwardRef<HTMLButtonElement, PaginationNavProps>(
-	({ className, testId, disabled, size, ...props }, ref) => {
+	({ className, testId, disabled, size = ButtonSize.MD, ...props }, ref) => {
 		return (
 			<PaginationLink
 				ref={ref}
-				data-testid={testId}
+				testId={testId}
 				aria-label="Go to next page"
 				size={size}
 				className={cn(className)}
@@ -545,7 +600,6 @@ export const Pagination = React.forwardRef<HTMLDivElement, PaginationProps>(
 								<PaginationLink
 									onClick={(e) => handlePageChange(e, page)}
 									isActive={page === current}
-									key={page}
 								>
 									{page}
 								</PaginationLink>

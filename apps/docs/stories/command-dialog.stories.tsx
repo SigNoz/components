@@ -79,7 +79,13 @@ export const Default: Story = {
 		return (
 			<>
 				<div className={styles.buttonWrapper}>
-					<Button type="button" variant="solid" onClick={() => setOpen(true)}>
+					<Button
+						type="button"
+						variant="solid"
+						onClick={() => setOpen(true)}
+						size="md"
+						color="primary"
+					>
 						Open Command Dialog
 					</Button>
 				</div>

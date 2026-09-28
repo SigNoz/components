@@ -57,7 +57,7 @@ export const Default: Story = {
 	render: (args) => (
 		<Drawer>
 			<DrawerTrigger asChild>
-				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+				<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 					Open drawer
 				</Button>
 			</DrawerTrigger>
@@ -71,10 +71,10 @@ export const Default: Story = {
 					</Typography>
 				</DrawerDescription>
 				<DrawerFooter>
-					<Button variant={ButtonVariant.Ghost} color="secondary">
+					<Button variant={ButtonVariant.Ghost} color="secondary" size="md">
 						Secondary action
 					</Button>
-					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary}>
+					<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">
 						Primary action
 					</Button>
 				</DrawerFooter>

@@ -7,6 +7,10 @@
 .button-group > * {
 	border-radius: 0;
 	position: relative;
+	/* The dashed variant draws its border as an SVG rect, and a single `rx` cannot
+	   express the per-corner rounding a grouped button has. Squaring it off leaves
+	   only the group's two outer corners uncurved, instead of rounding all four. */
+	--button-border-radius: 0;
 }
 
 .button-group > * + * {

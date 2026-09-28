@@ -44,8 +44,10 @@ export function TokenSearch({
 					<Button
 						type="button"
 						onClick={() => onCategoryFilter(null)}
-						variant={selectedCategory === null ? 'solid' : 'outlined'}
-						color={selectedCategory === null ? 'primary' : 'secondary'}
+						{...(selectedCategory === null
+							? { variant: 'solid', color: 'primary' }
+							: { variant: 'outlined', color: 'secondary' })}
+						size="md"
 					>
 						All
 					</Button>
@@ -54,8 +56,10 @@ export function TokenSearch({
 							key={category}
 							type="button"
 							onClick={() => onCategoryFilter(category)}
-							variant={selectedCategory === category ? 'solid' : 'outlined'}
-							color={selectedCategory === category ? 'primary' : 'secondary'}
+							{...(selectedCategory === category
+								? { variant: 'solid', color: 'primary' }
+								: { variant: 'outlined', color: 'secondary' })}
+							size="md"
 						>
 							{category}
 						</Button>

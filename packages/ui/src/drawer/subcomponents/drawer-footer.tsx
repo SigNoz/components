@@ -22,7 +22,7 @@ export type DrawerFooterProps = DialogFooterProps;
  *     </DrawerDescription>
  *     <DrawerFooter>
  *       <Button variant="ghost" color="secondary">Cancel</Button>
- *       <Button variant="solid" color="destructive">Delete</Button>
+ *       <Button variant="solid" color="danger">Delete</Button>
  *     </DrawerFooter>
  *   </DrawerContent>
  * </Drawer>

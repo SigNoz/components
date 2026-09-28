@@ -114,7 +114,7 @@ export const Default: Story = {
 	render: (args) => (
 		<div className="story-container-full">
 			<DropdownMenuSimple {...args}>
-				<Button variant="solid" color="secondary">
+				<Button variant="solid" color="secondary" size="md">
 					Open
 				</Button>
 			</DropdownMenuSimple>
@@ -152,7 +152,7 @@ export const Basic: Story = {
 		return (
 			<div className="story-row-lg">
 				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Open Menu
 					</Button>
 				</DropdownMenuSimple>
@@ -231,19 +231,19 @@ export const WithIcons: Story = {
 		return (
 			<div className="story-row-lg">
 				<DropdownMenuSimple menu={{ items: items1 }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						View Options
 					</Button>
 				</DropdownMenuSimple>
 
 				<DropdownMenuSimple menu={{ items: items2 }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						With Checkmark
 					</Button>
 				</DropdownMenuSimple>
 
 				<DropdownMenuSimple menu={{ items: items3 }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						With Arrow
 					</Button>
 				</DropdownMenuSimple>
@@ -286,7 +286,7 @@ export const Destructive: Story = {
 		return (
 			<div className="story-row-lg">
 				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Delete dashboard
 					</Button>
 				</DropdownMenuSimple>
@@ -343,7 +343,7 @@ export const WithSectionLabels: Story = {
 		return (
 			<div className="story-row-lg">
 				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Menu with Sections
 					</Button>
 				</DropdownMenuSimple>
@@ -429,13 +429,13 @@ export const Checkable: Story = {
 		return (
 			<div className="story-row-lg">
 				<DropdownMenuSimple menu={{ items: checkboxItems }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Checkbox Items
 					</Button>
 				</DropdownMenuSimple>
 
 				<DropdownMenuSimple menu={{ items: radioItems }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Radio Group
 					</Button>
 				</DropdownMenuSimple>
@@ -526,7 +526,7 @@ export const NestedMenus: Story = {
 		return (
 			<div className="story-row-lg">
 				<DropdownMenuSimple menu={{ items }}>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Nested Menu
 					</Button>
 				</DropdownMenuSimple>
@@ -556,7 +556,7 @@ export const Loading: Story = {
 	render: () => (
 		<div className="story-row-lg">
 			<DropdownMenuSimple menu={{ items: [], loading: true }}>
-				<Button variant="solid" color="secondary">
+				<Button variant="solid" color="secondary" size="md">
 					Loading Menu
 				</Button>
 			</DropdownMenuSimple>
@@ -622,7 +622,7 @@ export const WithSearch: Story = {
 						},
 					}}
 				>
-					<Button variant="solid" color="secondary">
+					<Button variant="solid" color="secondary" size="md">
 						Search Menu
 					</Button>
 				</DropdownMenuSimple>
@@ -728,7 +728,7 @@ export const AllStates: Story = {
 					</Typography>
 					<div className="story-row-lg">
 						<DropdownMenuSimple menu={{ items: defaultItems }}>
-							<Button variant="solid" color="secondary">
+							<Button variant="solid" color="secondary" size="md">
 								Default
 							</Button>
 						</DropdownMenuSimple>
@@ -741,7 +741,7 @@ export const AllStates: Story = {
 					</Typography>
 					<div className="story-row-lg">
 						<DropdownMenuSimple menu={{ items: shortcutItems }}>
-							<Button variant="solid" color="secondary">
+							<Button variant="solid" color="secondary" size="md">
 								Shortcuts
 							</Button>
 						</DropdownMenuSimple>
@@ -754,7 +754,7 @@ export const AllStates: Story = {
 					</Typography>
 					<div className="story-row-lg">
 						<DropdownMenuSimple menu={{ items: complexItems }} align="end" className="w-56">
-							<Button variant="solid" color="secondary">
+							<Button variant="solid" color="secondary" size="md">
 								<Ellipsis />
 							</Button>
 						</DropdownMenuSimple>
