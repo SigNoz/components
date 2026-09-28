@@ -12,9 +12,22 @@
 	border-color: var(--border);
 }
 
-*:focus-visible {
-	outline: 2px solid var(--ring);
-	outline-offset: 2px;
+/*
+ * On the root, not on the canvas. Every popup in this library is portalled to `document.body`, so a
+ * font set on the Storybook canvas alone leaves menus, tooltips and dialogs rendering in the
+ * browser's default serif while the page around them is Inter.
+ */
+html {
+	font-family:
+		var(--font-sans, 'Inter'),
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		'Roboto',
+		'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -22,7 +35,21 @@ body {
 	color: var(--foreground);
 }
 
-/* Button reset - from Tailwind preflight */
+/* Form control reset - from Tailwind preflight. Controls do not inherit the font on their own. */
+button,
+input,
+optgroup,
+select,
+textarea,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
 button,
 [type='button'],
 [type='reset'],
@@ -33,10 +60,6 @@ button,
 	border: none;
 	padding: 0;
 	cursor: pointer;
-	font-family: inherit;
-	font-size: inherit;
-	line-height: inherit;
-	color: inherit;
 }
 
 /* Story layout classes */

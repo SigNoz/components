@@ -1,0 +1,401 @@
+// Rules read colour only through the `--dropdown-internal-*` pairs below, never a semantic token
+// directly.
+.dropdown {
+  --dropdown-internal-background: var(--dropdown-background-color, var(--dropdown-background));
+  --dropdown-internal-border: var(--dropdown-border-color, var(--dropdown-border));
+  --dropdown-internal-shadow: var(--dropdown-box-shadow, var(--dropdown-shadow));
+  --dropdown-internal-item-label: var(--dropdown-item-color, var(--dropdown-item-label));
+  --dropdown-internal-item-label-hover: var(--dropdown-item-hover-color, var(--dropdown-item-label-hover));
+  --dropdown-internal-item-label-disabled: var(--dropdown-item-disabled-color, var(--dropdown-item-label-disabled));
+  --dropdown-internal-item-background: var(--dropdown-item-background-color, var(--dropdown-item-background));
+  --dropdown-internal-item-background-hover: var(--dropdown-item-hover-background-color, var(--dropdown-item-background-hover));
+  --dropdown-internal-item-danger-label: var(--dropdown-item-danger-color, var(--dropdown-item-danger-label));
+  --dropdown-internal-item-danger-label-hover: var(--dropdown-item-danger-hover-color, var(--dropdown-item-danger-label-hover));
+  --dropdown-internal-item-danger-background-hover: var(--dropdown-item-danger-hover-background-color, var(--dropdown-item-danger-background-hover));
+  --dropdown-internal-item-icon: var(--dropdown-item-icon-color, var(--dropdown-item-icon));
+  --dropdown-internal-item-icon-hover: var(--dropdown-item-icon-hover-color, var(--dropdown-item-icon-hover));
+  --dropdown-internal-item-control-border: var(--dropdown-item-control-border-color, var(--dropdown-item-control-border));
+  --dropdown-internal-item-control-border-hover: var(--dropdown-item-control-hover-border-color, var(--dropdown-item-control-border-hover));
+  --dropdown-internal-item-control-checked-background: var(--dropdown-item-control-checked-background-color, var(--dropdown-item-control-checked-background));
+  --dropdown-internal-item-control-checked-foreground: var(--dropdown-item-control-checked-color, var(--dropdown-item-control-checked-foreground));
+  --dropdown-internal-group-label: var(--dropdown-group-label-color, var(--dropdown-group-label));
+  --dropdown-internal-separator: var(--dropdown-separator-background-color, var(--dropdown-separator));
+  --dropdown-internal-search-placeholder: var(--dropdown-search-placeholder-color, var(--dropdown-search-placeholder));
+  --dropdown-internal-search-icon: var(--dropdown-search-icon-color, var(--dropdown-search-icon));
+  --dropdown-internal-search-border: var(--dropdown-search-border-color, var(--dropdown-search-border));
+  --dropdown-internal-loading-label: var(--dropdown-loading-label-color, var(--dropdown-loading-label));
+  --dropdown-internal-item-focus-ring: var(--dropdown-item-focus-ring-color, var(--dropdown-item-focus-ring));
+
+  display: var(--dropdown-display, flex);
+  flex-direction: var(--dropdown-flex-direction, column);
+
+  // The `contentMaxWidth` prop arrives as the internal pair, so a token still outranks a call site.
+  --dropdown-internal-resolved-max-inline-size: var(
+    --dropdown-max-inline-size,
+    var(--dropdown-internal-max-inline-size, 15.75rem)
+  );
+
+  // Never narrower than the trigger (`--anchor-width` comes from Base UI). The floor is clamped to
+  // the maximum because a min-width wins over a max-width.
+  min-inline-size: max(
+    min(var(--dropdown-min-inline-size, 12rem), var(--dropdown-internal-resolved-max-inline-size)),
+    var(--anchor-width, 0px)
+  );
+  max-inline-size: var(--dropdown-internal-resolved-max-inline-size);
+  // `--available-height` comes from Base UI and keeps the popup inside the viewport.
+  max-block-size: var(--dropdown-max-popup-block-size, var(--available-height, none));
+
+  padding-block: var(--dropdown-padding-block, var(--spacing-2));
+  padding-inline: var(--dropdown-padding-inline, 0);
+
+  border: var(--dropdown-border-width, 1px) solid var(--dropdown-internal-border);
+  border-radius: var(--dropdown-border-radius, var(--radius-2));
+  background-color: var(--dropdown-internal-background);
+  box-shadow: var(--dropdown-internal-shadow);
+
+  // `--surface-3` is translucent in dark mode. Without the blur the page shows through the menu.
+  backdrop-filter: var(--dropdown-backdrop-filter, blur(40px));
+
+  // Keeps a row's hover fill inside the radius.
+  overflow: var(--dropdown-overflow, hidden);
+
+  transition: var(--dropdown-transition, none);
+
+  &:focus-visible {
+    outline: var(--dropdown-focus-visible-outline, none);
+  }
+}
+
+.dropdown__positioner {
+  // Base UI positions but does not stack.
+  z-index: var(--dropdown-z-index, 50);
+
+  &:focus-visible {
+    outline: var(--dropdown-positioner-focus-visible-outline, none);
+  }
+}
+
+// The only part that scrolls. The search row is a sibling of this box, which keeps it pinned.
+.dropdown__viewport {
+  display: var(--dropdown-viewport-display, flex);
+  flex-direction: var(--dropdown-viewport-flex-direction, column);
+  gap: var(--dropdown-item-gap, var(--spacing-2));
+
+  min-block-size: var(--dropdown-viewport-min-block-size, 0);
+  // The `contentMaxHeight` prop arrives as the internal pair. It caps the rows, not the search row.
+  max-block-size: var(--dropdown-max-block-size, var(--dropdown-internal-max-block-size, 20rem));
+
+  overflow-y: var(--dropdown-viewport-overflow-y, auto);
+  overflow-x: var(--dropdown-viewport-overflow-x, hidden);
+  overscroll-behavior: var(--dropdown-viewport-overscroll-behavior, contain);
+  scrollbar-width: var(--dropdown-viewport-scrollbar-width, thin);
+
+  // `mask-image` rather than a gradient overlay, so the row fades instead of being covered. A mask
+  // reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
+  &[data-scroll-start] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--dropdown-scroll-fade-size, var(--spacing-10))
+    );
+  }
+
+  &[data-scroll-end] {
+    mask-image: linear-gradient(
+      to top,
+      transparent 0,
+      #000 var(--dropdown-scroll-fade-size, var(--spacing-10))
+    );
+  }
+
+  &[data-scroll-start][data-scroll-end] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--dropdown-scroll-fade-size, var(--spacing-10)),
+      #000
+        calc(100% - var(--dropdown-scroll-fade-size, var(--spacing-10))),
+      transparent 100%
+    );
+  }
+}
+
+.dropdown__item {
+  display: var(--dropdown-item-display, flex);
+  align-items: var(--dropdown-item-align-items, center);
+  gap: var(--dropdown-item-slot-gap, var(--spacing-4));
+
+  padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
+
+  border-radius: var(--dropdown-item-border-radius, var(--radius-1));
+  background-color: var(--dropdown-internal-item-background);
+  color: var(--dropdown-internal-item-label);
+
+  font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
+  font-weight: var(--dropdown-item-font-weight, var(--font-weight-normal));
+  // 20px label plus block padding gives the 40px row pitch. Holds only because nothing wraps.
+  line-height: var(--dropdown-item-line-height, var(--line-height-20));
+  white-space: var(--dropdown-item-white-space, nowrap);
+
+  cursor: var(--dropdown-item-cursor, pointer);
+  user-select: var(--dropdown-item-user-select, none);
+
+  // Guarded on `aria-disabled`, not `[data-disabled]`: it comes from `isInert`, which also covers
+  // a loading row. An inert row keeps its highlight stop (so its tooltip stays reachable) but not
+  // the fill.
+  &[data-highlighted]:not([aria-disabled='true']) {
+    background-color: var(--dropdown-internal-item-background-hover);
+    color: var(--dropdown-internal-item-label-hover);
+
+    .dropdown__item-affix {
+      color: var(--dropdown-internal-item-icon-hover);
+    }
+  }
+
+  // Inset: the popup clips its overflow, so an outset ring on the first or last row gets cut.
+  &:focus-visible {
+    outline: var(--dropdown-focus-outline-width, 1px) solid
+      var(--dropdown-internal-item-focus-ring);
+    outline-offset: var(--dropdown-focus-outline-offset, -1px);
+  }
+
+  // Hover focuses the row and inherits the last `:focus-visible` state, so the ring would follow
+  // the mouse. Explicit `none` rather than `:not(:hover)` above, so a host page's blanket
+  // `*:focus-visible` outline cannot paint into the gap.
+  &:focus-visible:hover {
+    outline: var(--dropdown-item-hover-outline, none);
+  }
+
+  // Never use the native `disabled` attribute: it drops pointer events and breaks the reason
+  // tooltip. `aria-disabled` keeps the row hoverable and focusable.
+  &[aria-disabled='true'] {
+    cursor: var(--dropdown-item-disabled-cursor, not-allowed);
+  }
+
+  &[data-loading] {
+    opacity: var(--dropdown-item-loading-opacity, 0.8);
+  }
+
+  &[data-danger] {
+    color: var(--dropdown-internal-item-danger-label);
+
+    .dropdown__item-affix {
+      color: var(--dropdown-internal-item-danger-label);
+    }
+
+    &[data-highlighted]:not([aria-disabled='true']) {
+      background-color: var(--dropdown-internal-item-danger-background-hover);
+      color: var(--dropdown-internal-item-danger-label-hover);
+
+      .dropdown__item-affix {
+        color: var(--dropdown-internal-item-danger-label-hover);
+      }
+    }
+  }
+
+  // Must stay after `[data-danger]`: same specificity, and a disabled danger row must not look
+  // usable. A loading row keeps its own colours.
+  &[data-disabled] {
+    color: var(--dropdown-internal-item-label-disabled);
+
+    .dropdown__item-affix {
+      color: var(--dropdown-internal-item-label-disabled);
+    }
+  }
+}
+
+.dropdown__item-affix {
+  display: var(--dropdown-item-affix-display, inline-flex);
+  align-items: var(--dropdown-item-affix-align-items, center);
+  justify-content: var(--dropdown-item-affix-justify-content, center);
+  flex-shrink: var(--dropdown-item-affix-flex-shrink, 0);
+
+  color: var(--dropdown-internal-item-icon);
+
+  & svg:not([class*='size-']) {
+    inline-size: var(--dropdown-item-icon-size, 14px);
+    block-size: var(--dropdown-item-icon-size, 14px);
+  }
+}
+
+// Drawn here rather than reusing `Checkbox` / `RadioGroup`: the row is already the control, and
+// those bring their own button, label and focus stop.
+.dropdown__item-control {
+  display: var(--dropdown-item-control-display, inline-flex);
+  align-items: var(--dropdown-item-control-align-items, center);
+  justify-content: var(--dropdown-item-control-justify-content, center);
+  box-sizing: border-box;
+
+  inline-size: var(--dropdown-item-control-size, 16px);
+  block-size: var(--dropdown-item-control-size, 16px);
+
+  border: var(--dropdown-item-control-border-width, 2px) solid
+    var(--dropdown-internal-item-control-border);
+  background-color: var(--dropdown-item-control-background, transparent);
+
+  transition: var(
+    --dropdown-item-control-transition,
+    background-color 150ms ease,
+    border-color 150ms ease
+  );
+
+  &[data-checked] {
+    border-color: var(--dropdown-internal-item-control-checked-background);
+    background-color: var(--dropdown-internal-item-control-checked-background);
+  }
+
+  .dropdown__item[data-highlighted]:not([aria-disabled='true']) &:not([data-checked]) {
+    border-color: var(--dropdown-internal-item-control-border-hover);
+  }
+
+  // Disabled only. A loading row already dims through its own opacity.
+  .dropdown__item[data-disabled] & {
+    opacity: var(--dropdown-item-control-disabled-opacity, 0.4);
+  }
+
+  .dropdown__item[data-disabled] &[data-checked] {
+    opacity: var(--dropdown-item-control-disabled-checked-opacity, 0.6);
+  }
+}
+
+.dropdown__item-control--checkbox {
+  border-radius: var(--dropdown-item-checkbox-border-radius, 2px);
+}
+
+.dropdown__item-control--radio {
+  border-radius: var(--dropdown-item-radio-border-radius, var(--radius-round));
+}
+
+// Scoped through the affix slot to beat its bare `svg` sizing rule (0,2,1).
+.dropdown__item-affix .dropdown__item-control .dropdown__item-control-check {
+  inline-size: var(--dropdown-item-checkbox-check-size, 12px);
+  block-size: var(--dropdown-item-checkbox-check-size, 12px);
+
+  color: var(--dropdown-internal-item-control-checked-foreground);
+  visibility: hidden;
+}
+
+.dropdown__item-affix .dropdown__item-control[data-checked] .dropdown__item-control-check {
+  visibility: visible;
+}
+
+.dropdown__item-control-dot {
+  inline-size: var(--dropdown-item-radio-dot-size, 8px);
+  block-size: var(--dropdown-item-radio-dot-size, 8px);
+
+  border-radius: var(--dropdown-item-radio-dot-border-radius, var(--radius-round));
+  background-color: var(--dropdown-internal-item-control-checked-foreground);
+  visibility: hidden;
+
+  [data-checked] > & {
+    visibility: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown__item-control {
+    transition: none;
+  }
+}
+
+.dropdown__item-label {
+  flex-grow: var(--dropdown-item-label-flex-grow, 1);
+  min-inline-size: var(--dropdown-item-label-min-inline-size, 0);
+
+  overflow: var(--dropdown-item-label-overflow, hidden);
+  white-space: var(--dropdown-item-label-white-space, nowrap);
+  text-overflow: var(--dropdown-item-label-text-overflow, ellipsis);
+}
+
+.dropdown__group {
+  display: var(--dropdown-group-display, flex);
+  flex-direction: var(--dropdown-group-flex-direction, column);
+  gap: var(--dropdown-item-gap, var(--spacing-2));
+}
+
+.dropdown__group-label {
+  padding-block: var(--dropdown-group-label-padding-block, var(--spacing-3));
+  padding-inline: var(--dropdown-group-label-padding-inline, var(--spacing-6));
+
+  color: var(--dropdown-internal-group-label);
+
+  font-size: var(--dropdown-group-label-font-size, var(--periscope-font-size-small));
+  font-weight: var(--dropdown-group-label-font-weight, var(--font-weight-bold));
+  line-height: var(--dropdown-group-label-line-height, var(--line-height-18));
+  text-transform: var(--dropdown-group-label-text-transform, uppercase);
+  letter-spacing: var(--dropdown-group-label-letter-spacing, 0.04em);
+}
+
+.dropdown__separator {
+  block-size: var(--dropdown-separator-thickness, 1px);
+  margin-block: var(--dropdown-separator-margin-block, var(--spacing-2));
+  margin-inline: var(--dropdown-separator-margin-inline, 0);
+
+  background-color: var(--dropdown-internal-separator);
+}
+
+.dropdown__search {
+  display: var(--dropdown-search-display, flex);
+  align-items: var(--dropdown-search-align-items, center);
+  gap: var(--dropdown-search-gap, var(--spacing-4));
+  flex-shrink: var(--dropdown-search-flex-shrink, 0);
+
+  padding: var(--dropdown-search-padding, var(--spacing-5) var(--spacing-6));
+
+  border-block-end: var(--dropdown-search-border-width, 1px) solid
+    var(--dropdown-internal-search-border);
+}
+
+.dropdown__search-affix {
+  display: var(--dropdown-search-affix-display, inline-flex);
+  align-items: var(--dropdown-search-affix-align-items, center);
+  justify-content: var(--dropdown-search-affix-justify-content, center);
+  flex-shrink: var(--dropdown-search-affix-flex-shrink, 0);
+
+  color: var(--dropdown-internal-search-icon);
+
+  & svg:not([class*='size-']) {
+    inline-size: var(--dropdown-item-icon-size, 14px);
+    block-size: var(--dropdown-item-icon-size, 14px);
+  }
+}
+
+.dropdown__search-input {
+  flex-grow: var(--dropdown-search-input-flex-grow, 1);
+  min-inline-size: var(--dropdown-search-input-min-inline-size, 0);
+
+  border: var(--dropdown-search-input-border, none);
+  background-color: var(--dropdown-search-input-background-color, transparent);
+  color: var(--dropdown-internal-item-label);
+
+  font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
+  line-height: var(--dropdown-item-line-height, var(--line-height-20));
+
+  &::placeholder {
+    color: var(--dropdown-internal-search-placeholder);
+  }
+
+  // The pinned row already outlines the field; the focus ring belongs to the rows.
+  &:focus-visible {
+    outline: var(--dropdown-search-input-focus-visible-outline, none);
+  }
+}
+
+.dropdown__loading {
+  display: var(--dropdown-loading-display, flex);
+  align-items: var(--dropdown-loading-align-items, center);
+  justify-content: var(--dropdown-loading-justify-content, center);
+
+  padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
+
+  color: var(--dropdown-internal-loading-label);
+}
+
+.dropdown__empty {
+  padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
+
+  color: var(--dropdown-internal-item-label-disabled);
+
+  font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
+  line-height: var(--dropdown-item-line-height, var(--line-height-20));
+}

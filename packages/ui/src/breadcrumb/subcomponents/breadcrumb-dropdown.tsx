@@ -1,38 +1,13 @@
 import { ChevronDown } from '@signozhq/icons';
 import * as React from 'react';
-import { useCallback } from 'react';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '../../dropdown-menu/index.js';
+import { Dropdown } from '../../dropdown/dropdown.js';
+import type { DropdownItemType } from '../../dropdown/types.js';
 import { cn } from '../../lib/utils.js';
 import styles from '../breadcrumb.module.scss';
 import type { BreadcrumbDropdownItem } from './breadcrumb-types.js';
 
-type DropdownItemComponentProps = {
-	item: BreadcrumbDropdownItem;
-};
-
-const DropdownItemComponent = React.memo<DropdownItemComponentProps>(({ item }) => {
-	const handleClick = useCallback(
-		(e: React.MouseEvent<HTMLDivElement>) => {
-			if (item.href) {
-				window.location.href = item.href;
-			}
-			item.onClick?.(e);
-		},
-		[item.href, item.onClick],
-	);
-
-	return <DropdownMenuItem onClick={handleClick}>{item.title}</DropdownMenuItem>;
-});
-
-DropdownItemComponent.displayName = 'DropdownItemComponent';
-
 export type BreadcrumbDropdownProps = Pick<
-	React.ComponentPropsWithoutRef<'span'>,
+	React.ComponentPropsWithoutRef<'button'>,
 	'id' | 'className' | 'style' | 'title' | 'aria-label' | 'aria-labelledby' | 'aria-describedby'
 > & {
 	/**
@@ -52,6 +27,9 @@ export type BreadcrumbDropdownProps = Pick<
 /**
  * Dropdown menu for breadcrumb items with multiple sub-options.
  * Useful for showing child pages or alternate paths.
+ *
+ * The trigger is a `<button>`, so it is reachable with the keyboard on its own. The menu itself is
+ * a `Dropdown`: no search, no section labels, one action per entry.
  *
  * @example
  * ```tsx
@@ -79,28 +57,46 @@ export type BreadcrumbDropdownProps = Pick<
  * </BreadcrumbDropdown>
  * ```
  */
-export const BreadcrumbDropdown = React.forwardRef<HTMLSpanElement, BreadcrumbDropdownProps>(
+export const BreadcrumbDropdown = React.forwardRef<HTMLButtonElement, BreadcrumbDropdownProps>(
 	({ className, testId, items, children, ...props }, ref) => {
+		const menuItems = React.useMemo<DropdownItemType[]>(
+			() =>
+				items.map((item, index) => ({
+					type: 'item',
+					// `href` is the natural identity, and the index covers the entries that only have a
+					// handler.
+					value: item.href ?? `item-${index}`,
+					label: item.title,
+					onClick: (event: React.MouseEvent): void => {
+						if (item.href) {
+							window.location.href = item.href;
+						}
+
+						item.onClick?.(event);
+					},
+				})),
+			[items],
+		);
+
 		return (
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<span
-						ref={ref}
-						data-testid={testId}
-						data-slot="breadcrumb-dropdown"
-						className={cn(styles['breadcrumb-dropdown'], className)}
-						{...props}
-					>
-						{children}
-						<ChevronDown size={14} className={styles['breadcrumb-dropdown-icon']} />
-					</span>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start">
-					{items.map((item) => (
-						<DropdownItemComponent key={item.href ?? String(item.title)} item={item} />
-					))}
-				</DropdownMenuContent>
-			</DropdownMenu>
+			<Dropdown
+				nativeButton
+				side="bottom"
+				align="start"
+				items={menuItems}
+				ref={ref}
+				{...(testId === undefined ? {} : { testId })}
+			>
+				<button
+					type="button"
+					data-slot="breadcrumb-dropdown"
+					className={cn(styles['breadcrumb-dropdown'], className)}
+					{...props}
+				>
+					{children}
+					<ChevronDown size={14} className={styles['breadcrumb-dropdown-icon']} />
+				</button>
+			</Dropdown>
 		);
 	},
 );

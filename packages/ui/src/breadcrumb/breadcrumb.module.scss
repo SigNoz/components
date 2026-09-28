@@ -77,6 +77,13 @@
 }
 
 .breadcrumb-dropdown {
+	// A native button, so the trigger is keyboard reachable without anything added to it. The
+	// browser's own chrome is reset here rather than in a global stylesheet.
+	appearance: var(--breadcrumb-dropdown-appearance, none);
+	border: var(--breadcrumb-dropdown-border, none);
+	background-color: var(--breadcrumb-dropdown-background-color, transparent);
+	font: var(--breadcrumb-dropdown-font, inherit);
+
 	display: var(--breadcrumb-dropdown-display, inline-flex);
 	align-items: var(--breadcrumb-dropdown-align-items, center);
 	gap: var(--breadcrumb-dropdown-gap, var(--spacing-2, 4px));
@@ -96,7 +103,7 @@
 	flex-shrink: var(--breadcrumb-dropdown-icon-flex-shrink, 0);
 	transition: var(--breadcrumb-dropdown-icon-transition, transform 0.15s ease-in-out);
 
-	[data-state='open'] > & {
+	[data-popup-open] > & {
 		transform: var(--breadcrumb-dropdown-icon-open-transform, rotate(180deg));
 	}
 }
