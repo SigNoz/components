@@ -5,20 +5,170 @@ import * as CheckboxStories from './checkbox.stories';
 
 # Checkbox
 
-A customizable checkbox component for user selections.
+One independent yes/no choice, rendered through Base UI's `Checkbox`: a `<span role="checkbox">`
+over a hidden checkbox input. It carries its own label, fills the checked box with the same color
+palette as `Badge`, truncates a long label into a tooltip, and it forwards every `aria-*` and
+`data-*` attribute to the checkbox itself.
+
+A checkbox collects a choice that something else commits — a form, an apply button. An immediate
+action with a visible consequence is a `Switch`; exactly one choice out of several is a
+`RadioGroup`.
+
+The 16px box carries a built-in 2px hit-area ring, so the pointer target is 20px while the layout
+footprint stays 16px. The ring never paints any state, only the box does.
 
 ## How to use
+
+`color` is required; everything else is optional. A checkbox with `children` renders a labelled
+row; without them it renders bare, with no wrapper element at all.
 
 ```tsx
 import { Checkbox } from '@signozhq/ui';
 
 export default function MyComponent() {
-	return <Checkbox>Default checkbox</Checkbox>;
+	const [isWrapped, setIsWrapped] = useState(false);
+
+	return (
+		<Checkbox color="primary" value={isWrapped} onChange={setIsWrapped}>
+			Wrap text
+		</Checkbox>
+	);
 }
 ```
 
-This code above will render the following checkbox:
-
 <Primary />
+
+## Label
+
+`children` is the label. It renders inside a `<label>` that wraps the checkbox, so clicking the
+text toggles and the label is the accessible name, through `aria-labelledby`.
+
+`children` that render nothing (`null`, `false` or an empty string) count as not passed: the
+checkbox renders without a label.
+
+A bare checkbox has no wrapper and no name of its own, so give it one:
+
+```tsx
+<Checkbox color="primary" aria-label="Select row" value={isSelected} onChange={setIsSelected} />
+```
+
+## Indeterminate
+
+`value="indeterminate"` shows the mixed state: a dash instead of the check mark, announced as
+`aria-checked="mixed"`. Clicking a mixed checkbox reports `true` through `onChange`; deriving
+`'indeterminate'` from a tree's children is the call site's job. An uncontrolled
+`defaultValue="indeterminate"` shows the dash until the first toggle.
+
+```tsx
+<Checkbox
+	color="primary"
+	value={allSelected ? true : someSelected ? 'indeterminate' : false}
+	onChange={setAllSelected}
+>
+	Select all
+</Checkbox>
+```
+
+## Colors
+
+Same palette as `Badge`'s and `Switch`'s `color`, and required: the checked fill is a semantic
+statement, so the call site has to make it. The color only fills the box while it is checked or
+indeterminate — an unchecked box has no status to report yet, so every color shares the same
+neutral border. Hover recolors that border, and only on the unchecked box.
+
+Don't use the semantic colors decoratively. A `danger` checkbox means checking it opts into
+something dangerous.
+
+## Controlled and uncontrolled
+
+`value` + `onChange` is the controlled pair; `defaultValue` alone is the uncontrolled one. Writing
+`value` and `defaultValue` together is a type error: `value` makes the checkbox controlled for its
+whole life, so the default could never apply.
+
+`onChange` receives the new checked state as its one argument, and nothing else.
+
+The controlled prop is `value`, not `checked`: every input in this library shares the
+`value`/`defaultValue`/`onChange` naming, whatever the underlying primitive calls them.
+
+## Disabled and read-only
+
+`disabled` blocks the checkbox, `readOnly` locks its value. Both require their reason
+(`disabledTooltip`, `readOnlyTooltip`), shown in a tooltip from anywhere on the row. Neither
+leaves the keyboard: the checkbox is a `<span role="checkbox">`, so both are announced through
+`aria-disabled` and `aria-readonly` while it keeps its tab stop and stays hoverable. That is what
+makes the two tooltips reachable.
+
+`readOnly` outranks `disabled`, the way `loading` outranks it on `Button`: while it is set the
+checkbox is not disabled at all, and `readOnlyTooltip` is the reason shown. Visually a disabled
+checkbox fades to 0.6, a read-only one only to 0.8 — its value still means something.
+
+```tsx
+<Checkbox
+	color="primary"
+	value={isEnforced}
+	onChange={setIsEnforced}
+	readOnly={isSaving}
+	readOnlyTooltip="Saving your changes"
+>
+	Enforce SSO
+</Checkbox>
+```
+
+## Text overflow
+
+`textOverflow="ellipsis"` (the default) measures the label and re-measures on resize. While it
+does not fit it carries `data-truncated` and shows the full text in a tooltip. `wrap` lets the
+text take as many lines as it needs, `hidden` clips it, and `visible` clips nothing — none of
+those three shows a tooltip.
+
+The checkbox's own reason stacks above the truncated label in one popup, reason first.
+
+`width` and `maxWidth` size the labelled row, written as the `--checkbox-internal-width` and
+`--checkbox-internal-max-width` custom properties. They never size the 16px box, which reads
+`--checkbox-size`.
+
+## In a form
+
+`name` makes the hidden checkbox input submit `"on"` while checked, like a native checkbox, and
+`required` blocks submission until it is. `id` lands on that hidden input, which is the element an
+external `htmlFor` points at.
+
+Because the label wraps the control, a form library has to bind through props, not through element
+injection: pass `value` and `onChange` from the field yourself.
+
+```tsx
+<Checkbox color="primary" name="enable_flattening" value={field.value} onChange={field.onChange}>
+	Enable JSON flattening
+</Checkbox>
+```
+
+## Asserting on it
+
+`testId` is `data-testid` on the checkbox itself and survives the tooltip trigger cloning the
+element; `containerTestId` names the wrapper. Otherwise use the data attributes, never the hashed
+class names. The checkbox keeps `role="checkbox"` and `aria-checked`, so `getByRole('checkbox')`
+works.
+
+| root attribute                                    | value                                            |
+| ------------------------------------------------- | ------------------------------------------------ |
+| `data-slot`                                       | `"checkbox"`                                     |
+| `data-color`                                      | mirrors the prop                                 |
+| `data-checked` / `data-unchecked`                 | the current state, neither while `indeterminate` |
+| `data-indeterminate`                              | present while `indeterminate`                    |
+| `data-disabled`, `data-readonly`, `data-required` | present while set                                |
+
+| wrapper attribute    | value                                               |
+| -------------------- | --------------------------------------------------- |
+| `data-slot`          | `"checkbox-container"`                              |
+| `data-text-overflow` | `ellipsis` (default), `wrap`, `visible` or `hidden` |
+
+| `data-slot`          | rendered                                                                        |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `checkbox-box`       | always, the 16px visual box                                                     |
+| `checkbox-indicator` | while checked or indeterminate, holds the glyph                                 |
+| `checkbox-container` | the `<label>` wrapper, only with a label or a `container*` prop                 |
+| `checkbox-label`     | only with a label, the measured element, `data-truncated` while it does not fit |
+
+## Props
 
 <Controls of={CheckboxStories.Default} />

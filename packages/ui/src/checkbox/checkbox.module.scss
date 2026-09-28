@@ -1,125 +1,216 @@
+// Base UI puts the state on the checkbox itself: `data-checked` / `data-unchecked` (neither while
+// indeterminate, which stamps `data-indeterminate` instead), `data-disabled` and `data-readonly`.
+// The labelled wrapper reads them back with `:has()` so one rule covers a bare checkbox and a
+// whole row.
 .checkbox {
-    height: var(--checkbox-size, 1rem);
-    width: var(--checkbox-size, 1rem);
-    flex-shrink: 0;
-    border-radius: var(--checkbox-border-radius, calc(var(--radius) - 2px));
-    border: 2px solid var(--checkbox-border-color, var(--l3-background));
-    cursor: pointer;
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+	--checkbox-internal-size: var(--checkbox-size, 16px);
+	// The 2px ring around the 16px box that makes the pointer target 20px. The negative margin
+	// below cancels it out of layout, so the row's gap and the first-line alignment keep working
+	// off the box's own 16px. The ring is a hit target only: every visual state paints on the box.
+	--checkbox-internal-hit-area: 2px;
 
-    &[data-color="robin"] {
-        --checkbox-checked-background: var(--accent-primary);
-    }
+	--checkbox-internal-border-width: var(--checkbox-border-width, 1.5px);
+	--checkbox-internal-border-color: var(--checkbox-border-color, var(--checkbox-border));
 
-    &[data-color="forest"] {
-        --checkbox-checked-background: var(--accent-forest);
-    }
+	display: var(--checkbox-display, inline-flex);
+	flex-shrink: var(--checkbox-flex-shrink, 0);
+	padding: var(--checkbox-internal-hit-area);
+	margin: calc(-1 * var(--checkbox-internal-hit-area));
+	cursor: var(--checkbox-cursor, pointer);
 
-    &[data-color="amber"] {
-        --checkbox-checked-background: var(--accent-amber);
-    }
+	&[data-color='primary'] {
+		--checkbox-internal-checked-background: var(--checkbox-primary-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-primary-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-primary-border-hover);
+	}
 
-    &[data-color="sienna"] {
-        --checkbox-checked-background: var(--accent-sienna);
-    }
+	&[data-color='secondary'] {
+		--checkbox-internal-checked-background: var(--checkbox-secondary-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-secondary-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-secondary-border-hover);
+	}
 
-    &[data-color="cherry"] {
-        --checkbox-checked-background: var(--accent-cherry);
-    }
+	&[data-color='danger'] {
+		--checkbox-internal-checked-background: var(--checkbox-danger-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-danger-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-danger-border-hover);
+	}
 
-    &[data-color="sakura"] {
-        --checkbox-checked-background: var(--accent-sakura);
-    }
+	&[data-color='warning'] {
+		--checkbox-internal-checked-background: var(--checkbox-warning-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-warning-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-warning-border-hover);
+	}
 
-    &[data-color="aqua"] {
-        --checkbox-checked-background: var(--accent-aqua);
-    }
+	&[data-color='success'] {
+		--checkbox-internal-checked-background: var(--checkbox-success-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-success-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-success-border-hover);
+	}
 
-    &:not([data-state="indeterminate"]) {
-        &[data-color="forest"],
-        &[data-color="amber"],
-        &[data-color="sienna"],
-        &[data-color="cherry"],
-        &[data-color="sakura"],
-        &[data-color="aqua"] {
-            --checkbox-checked-icon-foreground: var(--control-icon-foreground-contrast);
-        }
-    }
+	&[data-color='info'] {
+		--checkbox-internal-checked-background: var(--checkbox-info-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-info-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-info-border-hover);
+	}
 
-    &:focus-visible {
-        outline-offset: -1px;
-        outline: 2px solid var(--checkbox-checked-background);
-    }
+	&[data-color='archive'] {
+		--checkbox-internal-checked-background: var(--checkbox-archive-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-archive-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-archive-border-hover);
+	}
 
-    &:hover {
-        border-color: var(--checkbox-checked-background);
-    }
+	&[data-color='highlight-danger'] {
+		--checkbox-internal-checked-background: var(--checkbox-highlight-danger-background);
+		--checkbox-internal-checked-foreground: var(--checkbox-highlight-danger-foreground);
+		--checkbox-internal-hover-border-color: var(--checkbox-highlight-danger-border-hover);
+	}
 
-    &:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
+	// The ring hugs the box, not the box plus label: focus belongs to the control; the click
+	// target is a separate, larger thing.
+	&:focus-visible {
+		outline: none;
 
-        &:hover {
-            box-shadow: none;
-            border-color: var(--border);
-        }
-    }
+		.checkbox__box {
+			outline: var(--checkbox-focus-visible-outline, 1px solid var(--checkbox-focus-ring));
+			outline-offset: var(--checkbox-focus-visible-outline-offset, 1px);
+		}
+	}
 
-    &[data-state="checked"] {
-        background-color: var(--checkbox-checked-background);
-        border-color: transparent;
-    }
+	&[data-disabled] {
+		opacity: var(--checkbox-disabled-opacity, 0.6);
+		cursor: var(--checkbox-disabled-cursor, not-allowed);
+	}
 
-    &__indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: currentColor;
-    }
-
-    &__icon {
-        height: calc(var(--checkbox-size, 1rem) - var(--spacing-2, 0.25rem));
-        width: calc(var(--checkbox-size, 1rem) - var(--spacing-2, 0.25rem));
-        color: var(--checkbox-checked-icon-foreground, var(--control-icon-foreground));
-        padding-left: calc(var(--checkbox-size, 1rem) / 16);
-    }
-
-    &[data-state="indeterminate"] .checkbox__icon {
-      height: calc(var(--checkbox-size, 1rem) - var(--spacing-4, 0.5rem));
-      width: calc(var(--checkbox-size, 1rem) - var(--spacing-4, 0.5rem));
-    }
-
-    &__icon--slash {
-      display: none;
-    }
-
-    &[data-state="indeterminate"] {
-      .checkbox__icon--slash {
-        display: flex;
-      }
-      .checkbox__icon--check {
-        display: none;
-      }
-    }
+	&[data-readonly] {
+		opacity: var(--checkbox-readonly-opacity, 0.8);
+		cursor: var(--checkbox-readonly-cursor, not-allowed);
+	}
 }
 
-.checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-
-    &__label {
-        cursor: pointer;
-        user-select: none;
-    }
+.checkbox__box {
+	box-sizing: border-box;
+	display: var(--checkbox-box-display, flex);
+	align-items: var(--checkbox-box-align-items, center);
+	justify-content: var(--checkbox-box-justify-content, center);
+	inline-size: var(--checkbox-internal-size);
+	block-size: var(--checkbox-internal-size);
+	border: var(--checkbox-internal-border-width) solid var(--checkbox-internal-border-color);
+	border-radius: var(--checkbox-border-radius, var(--radius-1));
+	background-color: var(--checkbox-background, transparent);
+	transition: var(--checkbox-transition, background-color 150ms ease, border-color 150ms ease);
 }
 
-.checkbox:disabled ~ .checkbox-wrapper__label {
-    cursor: not-allowed;
-    opacity: 0.7;
+// Indeterminate fills like checked: `data-checked` is absent while the state is mixed, so the two
+// attributes always travel together in "filled" rules.
+.checkbox[data-checked] .checkbox__box,
+.checkbox[data-indeterminate] .checkbox__box {
+	border-color: var(--checkbox-checked-border, var(--checkbox-internal-checked-background));
+	background-color: var(--checkbox-checked-background, var(--checkbox-internal-checked-background));
+}
+
+// Hover fires from the box, its hit-area ring, or the whole labelled row: the label is part of
+// the hit target. Only the unchecked box reacts, per the design: a filled box already says
+// everything its color has to say.
+.checkbox[data-unchecked]:not([data-disabled]):not([data-readonly]):hover .checkbox__box,
+.checkbox-container:hover .checkbox[data-unchecked]:not([data-disabled]):not([data-readonly]) .checkbox__box {
+	border-color: var(--checkbox-border-hover, var(--checkbox-internal-hover-border-color));
+}
+
+.checkbox__indicator {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--checkbox-checked-foreground, var(--checkbox-internal-checked-foreground));
+
+	svg {
+		inline-size: var(--checkbox-icon-size, 12px);
+		block-size: var(--checkbox-icon-size, 12px);
+	}
+}
+
+.checkbox-container {
+	// The `.checkbox` margin below needs the label line-height before the label's own declaration
+	// applies, so the wrapper carries the same value.
+	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, 18px);
+
+	display: var(--checkbox-container-display, inline-flex);
+	// The box sits on the first line of the label and stays there. Centring the row instead would
+	// tie its position to the text's height, so a wrapped second line would move the control the
+	// user is about to click.
+	align-items: var(--checkbox-container-align-items, flex-start);
+	gap: var(--checkbox-gap, var(--spacing-5));
+	inline-size: var(--checkbox-internal-width, auto);
+	max-inline-size: var(--checkbox-internal-max-width, 100%);
+	min-width: var(--checkbox-container-min-width, 0);
+	// The whole row is the hit target, so the pointer reads as interactive from the text too.
+	cursor: var(--checkbox-cursor, pointer);
+	user-select: none;
+
+	.checkbox {
+		// First-line centring, minus the hit-area ring this margin replaces on the block-start
+		// side (the shorthand above pulled it out of layout; this override has to keep doing so).
+		margin-block-start: var(--checkbox-margin-block-start,
+				calc((var(--checkbox-internal-label-line-height) - var(--checkbox-internal-size)) / 2 -
+					var(--checkbox-internal-hit-area)));
+	}
+
+	&:has([data-disabled]) {
+		cursor: var(--checkbox-disabled-cursor, not-allowed);
+
+		.checkbox__label {
+			opacity: var(--checkbox-disabled-opacity, 0.6);
+		}
+	}
+
+	&:has([data-readonly]) {
+		cursor: var(--checkbox-readonly-cursor, not-allowed);
+
+		.checkbox__label {
+			opacity: var(--checkbox-readonly-opacity, 0.8);
+		}
+	}
+
+	&[data-text-overflow='wrap'] .checkbox__label {
+		white-space: var(--checkbox-wrap-white-space, normal);
+		overflow-wrap: var(--checkbox-wrap-overflow-wrap, anywhere);
+	}
+
+	// A label is a node, so it can hold something that draws outside its own box, like a `Badge`
+	// with a focus ring. This mode stops clipping instead of cutting that ring.
+	&[data-text-overflow='visible'] .checkbox__label {
+		overflow: var(--checkbox-text-overflow-visible, visible);
+	}
+
+	&[data-text-overflow='ellipsis'] .checkbox__label {
+		text-overflow: var(--checkbox-text-text-overflow, ellipsis);
+	}
+}
+
+.checkbox__label {
+	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, 18px);
+
+	min-width: 0;
+	// The row keeps one line of label height even when the label renders something shorter, so a
+	// row does not change height with its content.
+	min-block-size: var(--checkbox-internal-label-line-height);
+	overflow: var(--checkbox-label-overflow, hidden);
+	white-space: var(--checkbox-label-white-space, nowrap);
+	color: var(--checkbox-label-color, var(--checkbox-label));
+	font-size: var(--checkbox-label-font-size, var(--periscope-font-size-base));
+	font-weight: var(--checkbox-label-font-weight, var(--font-weight-normal));
+	line-height: var(--checkbox-internal-label-line-height);
+	cursor: inherit;
+	transition: var(--checkbox-label-transition, opacity 150ms ease);
+
+	&-tooltip {
+		max-width: var(--checkbox-label-tooltip-max-width, 20rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.checkbox__box,
+	.checkbox__label {
+		transition: none;
+	}
 }
