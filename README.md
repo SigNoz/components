@@ -101,7 +101,6 @@ import { Table } from '@signozhq/ui';
 import { Tabs } from '@signozhq/ui';
 import { TextEllipsis } from '@signozhq/ui';
 import { Toaster } from '@signozhq/ui';
-import { Toggle } from '@signozhq/ui';
 import { ToggleGroup } from '@signozhq/ui';
 import { Tooltip } from '@signozhq/ui';
 import { Typography } from '@signozhq/ui';
