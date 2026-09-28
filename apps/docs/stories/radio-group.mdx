@@ -1,75 +1,305 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as RadioGroupStories from './radio-group.stories';
-import * as RadioGroupItemStories from './radio-group-item.stories';
-import * as RadioGroupLabelStories from './radio-group-label.stories';
 
 <Meta of={RadioGroupStories} />
 
 # RadioGroup
 
-A radio group component for selecting a single option from a list of choices.
+A single-choice control, rendered through Base UI's `RadioGroup` and `Radio`. It takes its options
+as data, tints the checked one with the same color palette as `Button`, truncates long labels into
+a tooltip, and it forwards every `aria-*` and `data-*` attribute to the root.
+
+One choice, one answer. For an independent on/off, reach for `Checkbox` or `Switch`: a radio group
+of one is neither, and it can never be unchecked once it has been touched.
 
 ## How to use
 
-### Basic usage (with inline labels)
+`items` and `color` are required: the group has no default appearance and nothing to render without
+options. There are no children to compose, the group owns its own markup.
 
 ```tsx
-import { RadioGroup, RadioGroupItem } from '@signozhq/ui';
+import { RadioGroup } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
-		<RadioGroup defaultValue="option1">
-			<RadioGroupItem value="option1">Option 1</RadioGroupItem>
-			<RadioGroupItem value="option2">Option 2</RadioGroupItem>
-			<RadioGroupItem value="option3">Option 3</RadioGroupItem>
-		</RadioGroup>
+		<RadioGroup
+			color="primary"
+			name="environment"
+			defaultValue="staging"
+			items={[
+				{ label: 'Staging', value: 'staging' },
+				{ label: 'Production', value: 'production' },
+			]}
+		/>
 	);
 }
 ```
-
-When you pass children to `RadioGroupItem`, it automatically renders an inline label associated with the radio button.
-
-### With RadioGroupLabel (for custom layouts)
-
-If you prefer to use separate label elements for more control over styling or layout, use the `RadioGroupLabel` component:
-
-```tsx
-import { RadioGroup, RadioGroupItem, RadioGroupLabel } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<RadioGroup defaultValue="option1">
-			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-				<RadioGroupItem value="option1" id="option1-radio" />
-				<RadioGroupLabel htmlFor="option1-radio">Option 1</RadioGroupLabel>
-			</div>
-			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-				<RadioGroupItem value="option2" id="option2-radio" />
-				<RadioGroupLabel htmlFor="option2-radio">Option 2</RadioGroupLabel>
-			</div>
-			<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-				<RadioGroupItem value="option3" id="option3-radio" disabled />
-				<RadioGroupLabel htmlFor="option3-radio" aria-disabled="true">
-					Option 3 (Disabled)
-				</RadioGroupLabel>
-			</div>
-		</RadioGroup>
-	);
-}
-```
-
-This following example shows a radio group with three options (using code from first example above):
 
 <Primary />
 
-## RadioGroup Props
+## Items
+
+Each entry is `{ label, value }`, plus an optional `testId`, and an optional `disabled` +
+`disabledTooltip` pair. `value` is what `onChange` reports and what the form submits, so it is
+unique within the group: two items sharing one check together.
+
+`label` is required, and there is no way around it. It is the item's accessible name as well as its
+text, and a radio's whole job is to be distinguishable from its peers, so an unlabelled radio in a
+group of labelled ones is an option nobody can pick on purpose.
+
+A label that renders nothing (`null`, `false` or an empty string) falls back to the text
+`<No label>`, and that row carries `data-empty-label`. The row is never dropped: an option that
+disappears takes an answer out of the group without saying so, and a form control that is quietly
+missing is worse than one that is visibly wrong.
+
+```tsx
+const items = [
+	{ label: 'Staging', value: 'staging' },
+	{ label: 'Production', value: 'production', testId: 'prod-radio' },
+	{ label: 'Local', value: 'local' },
+];
+```
+
+Ship a default selection, and keep the list short. A group with nothing checked is a question with
+no answer showing, and past about five options the list is a `Select`, not a set of radios.
+
+A `label` is a node, so it can hold more than text. When it holds anything that draws outside its
+own box, a focus ring above all, pass `textOverflow="visible"`: every other mode clips the label and
+the ring with it. Row height and alignment covers the rest of what a label like that needs.
+
+## Colors
+
+`color` swaps the palette of the checked dial, its dot and the hover tint: `primary`, `secondary`,
+`danger`, `warning`, `success`, `info`, `archive` and `highlight-danger`. Unchecked items are
+neutral in every color.
+
+```tsx
+<RadioGroup color="primary" items={items} defaultValue="staging" />
+<RadioGroup color="danger" items={items} defaultValue="staging" />
+<RadioGroup color="success" items={items} defaultValue="staging" />
+```
+
+Hover tints the border of an unchecked item and brightens its label. It never fills the dial:
+a filled dial means chosen, and a hovered option that looks chosen is a lie.
+
+## Controlled and uncontrolled
+
+`defaultValue` checks one item on the first render and then leaves the group to keep its own state.
+`value` and `onChange` hand that state to you.
+
+```tsx
+const [environment, setEnvironment] = useState<string | null>('staging');
+
+<RadioGroup color="primary" items={items} value={environment} onChange={setEnvironment} />;
+```
+
+`value` accepts `null`, which is the empty group. It is the only way to write one: `undefined` makes
+the group uncontrolled for the rest of its life, so a controlled group that starts with nothing
+checked passes `null`.
+
+`onChange` is typed `(value: string) => void` and never fires with `null`. Only a radio reports a
+change, and it reports its own `value`, so the empty group is something the call site writes rather
+than something the group hands back.
+
+Base UI passes its own event details as a second argument. The wrapper drops it, so `onChange`
+receives the value and nothing else.
+
+## Labelling the group
+
+The root is the `role="radiogroup"`, and `required`, `disabled` and `readOnly` are announced on it
+as `aria-required`, `aria-disabled` and `aria-readonly`.
+
+Each item labels its own answer. The group still has to state the question once, and
+`aria-labelledby` is how: point it at whatever asks it.
+
+```tsx
+<Typography.Text id="environment-question">Which environment?</Typography.Text>
+<RadioGroup color="primary" items={items} aria-labelledby="environment-question" />
+```
+
+Labelling every option is necessary and not sufficient. Without a name on the group, a screen
+reader announces a list of answers to a question nobody asked.
+
+## Keyboard
+
+Tab enters and leaves the group as a single stop, because only one item is in the tab order at a
+time. Tab lands on the checked item, or on the first one when nothing is checked. Arrow keys then
+move between options and change the selection as they go, so focus and selection travel together.
+
+Disabled items are skipped by the arrow keys entirely.
+
+## Blocking one option
+
+An item explains itself: `disabled` and `disabledTooltip` travel together, and the types require the
+pair in both directions. A `disabledTooltip` with no `disabled` is an error too.
+
+```tsx
+<RadioGroup
+	color="primary"
+	defaultValue="staging"
+	items={[
+		{ label: 'Staging', value: 'staging' },
+		{
+			label: 'Production',
+			value: 'production',
+			disabled: true,
+			disabledTooltip: 'Ask an admin for production access',
+		},
+	]}
+/>
+```
+
+Use this when one answer is out of reach and the rest are still live. If the whole choice is fixed,
+that is `readOnly` on the group, not a disabled item per row.
+
+## Disabled and read-only
+
+`disabled` blocks the whole group. `readOnly` locks its value while every item stays interactive to
+the keyboard, so the user can still arrow through and read what is checked. Both require their
+reason, and both are shown in a tooltip on hover or focus for as long as they are set.
+
+```tsx
+<RadioGroup
+	color="primary"
+	items={items}
+	disabled={!canEdit}
+	disabledTooltip="You need write access to change the environment"
+/>
+
+<RadioGroup
+	color="primary"
+	items={items}
+	readOnly={isSaving}
+	readOnlyTooltip="Saving your changes"
+/>
+```
+
+`readOnly` outranks `disabled`, the way `loading` outranks it on `Button`. While `readOnly` is set
+the group is not disabled at all and `disabledTooltip` does not render: a locked choice has one
+reason, and it is the one that is true right now.
+
+Neither state leaves the keyboard. Base UI renders each radio as a `<span role="radio">` rather than
+a native `<button>`, so `disabled` is announced through `aria-disabled` and the group keeps its tab
+stop and stays hoverable. A natively disabled control receives no hover or focus events, which
+would put the reason out of reach exactly when it is needed.
+
+A read-only group keeps the checked dot at full color, only dimmed. It still has to show which
+option is chosen, which is the only reason to render it rather than static text. Arrow keys keep
+moving focus and refuse to change the selection, and the tooltip says why: a group that silently
+swallowed the arrow keys would read as broken.
+
+## Text overflow
+
+`textOverflow` decides what happens to a label that does not fit. `ellipsis` is the default: it
+truncates, marks the label with `data-truncated`, and hands the full text to a tooltip, only while
+it is actually truncated, so a label that fits never opens one. `wrap` lets the label take another
+line. `hidden` clips at the edge. `visible` clips nothing and lets the label paint outside its box.
+
+```tsx
+<RadioGroup color="primary" items={longItems} />
+<RadioGroup color="primary" items={longItems} textOverflow="wrap" />
+<RadioGroup color="primary" items={longItems} textOverflow="hidden" />
+<RadioGroup color="primary" items={longItems} textOverflow="visible" />
+```
+
+The tooltip belongs to `ellipsis` alone. `wrap`, `hidden` and `visible` never open one, so `hidden`
+is the only mode that can lose text with no way to read it back.
+
+## Row height and alignment
+
+The dial is centred on the first line of its label, never on the row, and the row reserves one line
+of label height. A label is a `ReactNode`, so it can hold an `Input`, a `Button` or
+anything else taller than a line of text, and when it does only the space under the row grows. The
+control the user is about to click stays where it was.
+
+Centring on the row would tie the dial's position to whatever the label renders: mount a field in a
+label and every dial in the group moves, including the one under the cursor.
+
+A label that holds a control takes `textOverflow="visible"`. Every other mode clips the label, and a
+clipped label cuts the control's focus ring, which is drawn outside its border box. Top-align the
+label's own row too, so its text stays on the line the dial is centred on:
+
+```tsx
+// .control-label { display: inline-flex; align-items: flex-start; gap: 0.5rem }
+<RadioGroup
+	color="primary"
+	textOverflow="visible"
+	items={[
+		{
+			value: 'custom',
+			label: (
+				<span className="control-label">
+					Custom
+					<Input aria-label="Custom environment name" />
+				</span>
+			),
+		},
+	]}
+/>
+```
+
+Style the group through its props and its `--radio-group-*` custom properties, which are the whole
+override surface. A rule written against `[data-slot='radio-group-label']` reaches into markup the
+component owns: the data attributes are there to assert on, not to style.
+
+## Stacked tooltips
+
+An item can own two tooltips at a time: its own reason, and the full text of a truncated label. Two
+tooltips anchored to the same row would open on the same hover and render on top of each other, so
+both go into one popup, the reason first and the label under it, with a divider between them.
+
+```
+Ask an admin for production access
+──────────────────────────────────
+Production, the one every customer is looking at right now
+```
+
+While the group is showing its own reason, item tooltips go quiet. A blocked group has one
+explanation, not one per row, and the group's popup owns the hover for all of them.
+
+The trigger is mounted from the props rather than from whether there is something to show right
+now, so the group never remounts when a tooltip appears and no row loses its focus. The tooltip
+itself mounts only while there is content for it.
+
+## In a form
+
+`name` identifies the field on submit, and it is what makes the group write a hidden input per item.
+`required` stops the form submitting until one item is checked.
+
+```tsx
+<form onSubmit={onSubmit}>
+	<RadioGroup color="primary" items={items} name="environment" required />
+</form>
+```
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root and survives the tooltip trigger cloning the group.
+
+It also names every row. With `testId="environment"` on the group, the radios are
+`environment-item-staging`, `environment-item-production` and so on, without a single item saying
+anything. An item's own `testId` wins where it is written, and with no `testId` on the group a row
+is only addressable when it names itself.
+
+```tsx
+<RadioGroup color="primary" testId="environment" items={items} />
+// screen.getByTestId('environment-item-staging')
+```
+
+Otherwise reach for the roles and the data attributes, never the hashed class names:
+
+| `data-slot`             | rendered                                                                                                  |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| `radio-group`           | the root, `role="radiogroup"`                                                                             |
+| `radio-group-item`      | one per item, the `<label>` wrapping the row                                                              |
+| `radio-group-control`   | the radio itself, `role="radio"`, carries the item's `testId`                                             |
+| `radio-group-indicator` | the dot, only while that item is checked                                                                  |
+| `radio-group-label`     | the measured element, `data-truncated` while it does not fit, `data-empty-label` while it is the fallback |
+
+The root mirrors `color` on `data-color` and `textOverflow` on `data-text-overflow`. State lives on
+the radio rather than the group: `data-checked` / `data-unchecked`, `data-disabled` and
+`data-readonly`.
+
+## Props
 
 <Controls of={RadioGroupStories.Default} />
-
-## RadioGroupItem Props
-
-<Controls of={RadioGroupItemStories.Default} />
-
-## RadioGroupLabel Props
-
-<Controls of={RadioGroupLabelStories.Default} />
