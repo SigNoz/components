@@ -26,6 +26,12 @@ type Story = StoryObj<typeof TokenReference>;
 export const AllTokens: Story = {
 	name: 'All Tokens',
 	args: {},
+	parameters: {
+		// Every token on one page renders well past Chromatic's 25,000,000 px snapshot limit, which
+		// fails the build. The group stories below snapshot the same rows, and the component
+		// showcases snapshot the component tokens where they are used.
+		chromatic: { disableSnapshot: true },
+	},
 	render: (args) => <TokenReference {...args} />,
 };
 

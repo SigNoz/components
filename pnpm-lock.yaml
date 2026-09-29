@@ -28,8 +28,8 @@ importers:
   .:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: 2.1.6
-        version: 2.1.6
+        specifier: 2.2.0
+        version: 2.2.0
       '@signozhq/icons':
         specifier: 0.4.0
         version: 0.4.0
@@ -119,8 +119,8 @@ importers:
         specifier: ^1.1.19
         version: 1.1.19(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@signozhq/design-tokens':
-        specifier: 2.1.6
-        version: 2.1.6
+        specifier: 2.2.0
+        version: 2.2.0
       '@signozhq/icons':
         specifier: ^0.4.0
         version: 0.4.0
@@ -2268,8 +2268,8 @@ packages:
   '@signozhq/design-tokens@2.1.2':
     resolution: {integrity: sha512-fL3HGmXUjkPEgPTzpdO1fg6BpNZXC/Vzc/QDFpo652aEuX3Sx01aqYr+zrQXvwcCwj/SSQWM+7xtVTyNi4JeKg==}
 
-  '@signozhq/design-tokens@2.1.6':
-    resolution: {integrity: sha512-n0cH4TRS1Xj7BR38HGiwIBDekIOAnDgl2JyYmAyUvws0L1nlE0txSHO5NiOBJ22Dm8uMva0v5/rOHxpKsGQbsw==}
+  '@signozhq/design-tokens@2.2.0':
+    resolution: {integrity: sha512-FjLU0TJ4AITWjAi3ebU5gjlG409DYVPAxXgji8bFYMF66gsllOmStbZIGsuf3ZJ/IUgERsraDfQsf/glTQiC5g==}
 
   '@signozhq/icons@0.3.0':
     resolution: {integrity: sha512-ZA6kGWf2t7XzQGSaeWtSpkWAiONwKliNKUR01KHl/tuWGZmijJ89pYrEJD9S8wLn8cO2XgIkS2JaEkQfThgIqQ==}
@@ -6866,7 +6866,7 @@ snapshots:
 
   '@signozhq/design-tokens@2.1.2': {}
 
-  '@signozhq/design-tokens@2.1.6': {}
+  '@signozhq/design-tokens@2.2.0': {}
 
   '@signozhq/icons@0.3.0': {}
 

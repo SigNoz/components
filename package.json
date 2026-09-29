@@ -21,7 +21,7 @@
 		"pre-commit": "lint-staged"
 	},
 	"dependencies": {
-		"@signozhq/design-tokens": "2.1.6",
+		"@signozhq/design-tokens": "2.2.0",
 		"@signozhq/icons": "0.4.0",
 		"@tanstack/react-virtual": "^3.14.8"
 	},

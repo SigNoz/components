@@ -24,6 +24,7 @@ import { type ReactElement, type ReactNode, useState } from 'react';
 import { expect, fireEvent, fn, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './dropdown.stories.module.css';
+import { waitForEffects } from './shared/play.js';
 
 const meta: Meta<typeof Dropdown> = {
 	title: 'Composed Components/Dropdown',
@@ -702,6 +703,8 @@ export const DropdownShowcase: Story = {
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
 
+		await waitForEffects();
+
 		// Base UI opens a menu on `mousedown`, and an open menu dismisses itself on a `mousedown`
 		// or a `pointerdown` outside it, on a document listener it only registers once it has
 		// settled. Opening every menu in one synchronous block beats that listener, which is what
@@ -721,6 +724,9 @@ export const DropdownShowcase: Story = {
 				SHOWCASE_MENUS.length,
 			),
 		);
+
+		// The rows below were only just mounted with their menus.
+		await waitForEffects();
 
 		// The submenu is opened by hover rather than by a press, which would dismiss the other
 		// seven menus. Base UI only lets a submenu open on hover once the pointer has moved over
