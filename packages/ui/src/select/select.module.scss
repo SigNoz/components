@@ -115,8 +115,10 @@
 	border-radius: var(--select-pill-border-radius, var(--radius-1, 2px));
 	background-color: var(--select-pill-background, var(--accent));
 	color: var(--select-pill-color, var(--accent-foreground));
-	font-size: var(--select-pill-font-size, 0.75rem);
-	line-height: var(--select-pill-line-height, 1);
+	// The input's own 13px, on an 18px line box: a unitless 1 would clip descenders at the text's
+	// `overflow: hidden`.
+	font-size: var(--select-pill-font-size, var(--periscope-font-size-base));
+	line-height: var(--select-pill-line-height, var(--line-height-18));
 }
 
 .select__pill-text {
@@ -161,7 +163,8 @@
 	border-radius: var(--select-pill-border-radius, var(--radius-1, 2px));
 	background-color: var(--select-pill-overflow-background, var(--muted));
 	color: var(--select-pill-overflow-color, var(--muted-foreground));
-	font-size: var(--select-pill-font-size, 0.75rem);
+	// Same size as the pills beside it, from the same token.
+	font-size: var(--select-pill-font-size, var(--periscope-font-size-base));
 	font-weight: var(--select-pill-overflow-font-weight, 500);
 	line-height: var(--select-pill-overflow-line-height, 1);
 	flex-shrink: var(--select-pill-overflow-flex-shrink, 0);
