@@ -21,12 +21,13 @@
 	// so I will keep it disabled until we figure out a good way to migrate all places usint it
 	//max-height: var(--tooltip-max-height, 8.5rem);
 	border-radius: var(--tooltip-border-radius, var(--radius-1));
-	padding: var(--tooltip-padding, var(--spacing-2) var(--spacing-4));
+	// With the 1px border and the 18px line height, one line is 24px tall.
+	padding: var(--tooltip-padding, var(--spacing-1) var(--spacing-4));
 	font-size: var(--tooltip-font-size, var(--periscope-font-size-base));
 	font-weight: var(--tooltip-font-weight, var(--periscope-font-weight-regular));
 	text-wrap: var(--tooltip-text-wrap, balance);
 	text-align: var(--tooltip-text-align, start);
-	line-height: var(--tooltip-line-height, var(--periscope-line-height-base));
+	line-height: var(--tooltip-line-height, var(--line-height-18));
 	border-width: var(--tooltip-border-width, 1px);
 	border-style: var(--tooltip-border-style, solid);
 	border-color: var(--tooltip-border-color, var(--tooltip-border));

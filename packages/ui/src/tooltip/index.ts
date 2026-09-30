@@ -22,12 +22,12 @@
  * | `--tooltip-font-weight` | `var(--periscope-font-weight-regular)` |
  * | `--tooltip-foreground` | `var(--tooltip-label)` |
  * | `--tooltip-label` | `-` |
- * | `--tooltip-line-height` | `var(--periscope-line-height-base)` |
+ * | `--tooltip-line-height` | `var(--line-height-18)` |
  * | `--tooltip-max-height` | `8.5rem` |
  * | `--tooltip-max-lines` | `6` |
  * | `--tooltip-max-width` | `26.25rem` |
  * | `--tooltip-overflow` | `hidden` |
- * | `--tooltip-padding` | `var(--spacing-2) var(--spacing-4)` |
+ * | `--tooltip-padding` | `var(--spacing-1) var(--spacing-4)` |
  * | `--tooltip-shadow` | `-` |
  * | `--tooltip-stack-display` | `flex` |
  * | `--tooltip-stack-flex-direction` | `column` |
