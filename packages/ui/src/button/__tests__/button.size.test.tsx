@@ -58,6 +58,7 @@ describe('Button height', () => {
 		);
 
 		expect(screen.getByRole('button').getBoundingClientRect().height).toBe(24);
+		expect(getComputedStyle(screen.getByRole('button')).padding).toBe('0px');
 	});
 
 	it('holds an md link icon at 24px in a flex column shorter than it', () => {
@@ -125,12 +126,8 @@ describe('Button collapsed prefix', () => {
 			</Button>,
 		);
 
-		// A link sets no padding of its own, so the content edge is wherever the host page's button
-		// reset leaves it (Chromium's UA padding here).
-		const padding = Number.parseFloat(getComputedStyle(screen.getByRole('button')).paddingLeft);
-
 		expect(getComputedStyle(slot('button-prefix-wrapper')).marginInlineEnd).toBe('-6px');
-		expect(edgeToLabel()).toBeCloseTo(padding, 1);
+		expect(edgeToLabel()).toBeCloseTo(0, 1);
 	});
 
 	it('gives back the gap --button-gap sets, not the size default', () => {

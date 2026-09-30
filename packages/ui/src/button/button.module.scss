@@ -312,6 +312,9 @@
 	}
 
 	&[data-variant='link'] {
+		// Set, not left out: an unset padding falls through to the UA's 1px 6px on a `<button>`. Not
+		// `--button-padding`: a link has no padding, so a value scoped for the other variants skips it.
+		padding: 0;
 		background-color: var(--button-variant-link-background-color, transparent);
 		font-weight: var(--button-variant-link-font-weight, var(--font-weight-medium));
 		color: var(--button-variant-link-color, var(--button-internal-link-foreground));
