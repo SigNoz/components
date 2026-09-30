@@ -31,7 +31,7 @@ import { pillSizeStyle } from './utils.js';
  * ### Invalid
  *
  * `aria-invalid="true"` repaints the border and label with `--destructive`, over whatever
- * `color` picked.
+ * `color` picked. The fill stays the one `color` gave it.
  *
  * ### Case
  *

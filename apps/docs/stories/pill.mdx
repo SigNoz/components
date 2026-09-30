@@ -73,12 +73,15 @@ from 40% to 60%.
 ## Disabled and invalid
 
 `disabled` is the native button attribute, so the browser blocks clicks and keyboard activation and
-drops the pill from the tab order. `aria-invalid` repaints the border and the label with
-`--destructive`, over whatever `color` picked.
+drops the pill from the tab order. `aria-invalid` repaints the border and the label red, over
+whatever `color` picked, and leaves the fill to `color`. On `Pill.Closeable` it also swaps the
+neutral fill for the danger pill's tint (20%, 30% on hover) and paints the close icon in the label
+colour.
 
 ```tsx
 <Pill variant="outlined" color="secondary" disabled>env:prod</Pill>
 <Pill variant="outlined" color="secondary" aria-invalid>env:prod</Pill>
+<Pill.Closeable onClose={removeFilter} aria-invalid>env:prod</Pill.Closeable>
 ```
 
 ## Width

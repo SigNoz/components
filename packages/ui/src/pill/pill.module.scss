@@ -16,15 +16,21 @@
 	--badge-label-justify-content: var(--pill-justify-content, center);
 	--badge-border-radius: var(--pill-border-radius, var(--radius-round));
 	--badge-border-width: var(--pill-border-width, 1px);
-	--badge-padding: var(--pill-padding, var(--spacing-2) var(--spacing-4));
+	// Padding and line height mirror Badge's defaults; see `padding` in badge.module.scss.
+	--badge-padding: var(--pill-padding, 0 var(--spacing-4));
 	--badge-font-size: var(--pill-font-size, var(--periscope-font-size-small));
-	--badge-line-height: var(--pill-line-height, 100%);
+	--badge-line-height: var(--pill-line-height, var(--line-height-18));
 	--badge-font-weight: var(--pill-font-weight, var(--font-weight-medium));
 	--badge-white-space: var(--pill-white-space, nowrap);
 	--badge-height: var(--pill-height, var(--spacing-10));
 	--badge-width: var(--pill-width, var(--pill-internal-width, fit-content));
 	--badge-max-width: var(--pill-max-width, var(--pill-internal-max-width, min(100%, 7.5rem)));
 	--badge-font-variant-numeric: var(--pill-font-variant-numeric, slashed-zero);
+	// No fallback: an unset `--pill-*` leaves the `Badge` var unset, so `Badge` keeps its own
+	// default for tracking, the single-character circle and the minimum width.
+	--badge-letter-spacing: var(--pill-letter-spacing);
+	--badge-single-char-padding-inline: var(--pill-single-char-padding-inline);
+	--badge-min-width: var(--pill-min-width);
 	cursor: var(--pill-cursor, pointer);
 	transition-property: var(--pill-transition-property, background-color, border-color, color);
 	transition-duration: var(--pill-transition-duration, 150ms);
@@ -142,6 +148,10 @@
 	color: var(--pill-color, var(--pill-internal-foreground));
 	border-radius: var(--pill-closeable-border-radius, var(--radius-1-5));
 	gap: var(--pill-closeable-gap, var(--spacing-2));
+	// The close button is `Badge`'s suffix, so `Badge` insets it as it does an icon: by default as
+	// far from the end as from the top and bottom, measured on the button's own size.
+	--badge-affix-size: var(--pill-close-icon-size, 12px);
+	--badge-affix-padding-inline: var(--pill-closeable-padding-inline-end);
 
 	&:not([data-disabled]):hover {
 		background-color: var(--pill-hover-background-color, var(--pill-internal-hover-background));
@@ -161,6 +171,15 @@
 	--pill-internal-hover-foreground: var(--pill-invalid-color, var(--pill-invalid-label));
 }
 
+// Closeable only: a root `Pill` keeps the fill its `color` gave it. The fill is tinted the same
+// way as the `data-color` blocks. One class more than the block above, so it wins in any order.
+.pill.pill-closeable[data-slot='pill'][aria-invalid='true'] {
+	--pill-internal-background: var(--pill-invalid-background-color, color-mix(in oklab, var(--pill-invalid-background) 20%, transparent));
+	--pill-internal-hover-background: var(--pill-invalid-hover-background-color, color-mix(in oklab, var(--pill-invalid-background) 30%, transparent));
+	--pill-internal-close-color: var(--pill-invalid-close-color, var(--pill-invalid-dismiss-icon));
+	--pill-internal-close-hover-color: var(--pill-invalid-close-hover-color, var(--pill-invalid-dismiss-icon-hover));
+}
+
 .pill__close {
 	all: unset;
 	display: flex;
@@ -170,14 +189,14 @@
 	justify-content: center;
 	inline-size: var(--pill-close-icon-size, 12px);
 	block-size: var(--pill-close-icon-size, 12px);
-	color: var(--pill-close-color, var(--pill-rect-solid-dismiss-icon));
+	color: var(--pill-close-color, var(--pill-internal-close-color, var(--pill-rect-solid-dismiss-icon)));
 
 	&:disabled {
 		cursor: var(--pill-close-disabled-cursor, not-allowed);
 	}
 
 	&:not(:disabled):hover {
-		color: var(--pill-close-hover-color, var(--pill-rect-solid-dismiss-icon-hover));
+		color: var(--pill-close-hover-color, var(--pill-internal-close-hover-color, var(--pill-rect-solid-dismiss-icon-hover)));
 	}
 
 	&:focus-visible {
