@@ -28,7 +28,6 @@ export const ButtonGroupSize = {
  */
 export const ButtonGroupTextOverflow = {
 	Hidden: 'hidden',
-	Visible: 'visible',
 	Ellipsis: 'ellipsis',
 } as const;
 

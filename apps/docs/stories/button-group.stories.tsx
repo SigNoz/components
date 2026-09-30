@@ -480,7 +480,7 @@ function ButtonGroupShowcaseLayout(): ReactElement {
 						))}
 						<CompositionGroup
 							title="Edge cases"
-							note="A label past its 120px cap truncates and shows the full text in a tooltip. An empty label falls back to <No label> rather than hiding the action. A single member keeps all four corners."
+							note="A label past its 120px cap truncates and shows the full text in a tooltip, or with textOverflow hidden clips at the member's edge with no marker. An empty label falls back to <No label> rather than hiding the action. A single member keeps all four corners."
 						>
 							<ButtonGroup
 								variant="outlined"
@@ -493,6 +493,19 @@ function ButtonGroupShowcaseLayout(): ReactElement {
 										onClick: noop,
 									},
 									{ value: 'empty', label: '', onClick: noop },
+								]}
+							/>
+							<ButtonGroup
+								variant="outlined"
+								color="secondary"
+								size="md"
+								textOverflow={ButtonGroupTextOverflow.Hidden}
+								items={[
+									{
+										value: 'long',
+										label: 'Everything that happened in the last twenty four hours',
+										onClick: noop,
+									},
 								]}
 							/>
 							<ButtonGroup

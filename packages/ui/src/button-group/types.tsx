@@ -303,8 +303,7 @@ export type ButtonGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * (`--button-group-label-max-inline-size`, 120px).
 		 *
 		 * `ellipsis` truncates the label and shows the full text in a tooltip, only while it is
-		 * truncated. `hidden` clips it with no marker and no tooltip. `visible` clips nothing and
-		 * lets the label paint outside its box.
+		 * truncated. `hidden` clips it with no marker and no tooltip.
 		 *
 		 * @default 'ellipsis'
 		 */

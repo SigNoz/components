@@ -40,5 +40,6 @@ exports[`ButtonGroup type error messages > prints a message that names the const
       Type '{ label: string; onClick: () => void; }' is not assignable to type 'ButtonGroupItemBaseType & ButtonGroupTextItemType & ButtonGroupActionItemType & { disabled?: undefined; disabledTooltip?: undefined; } & { ...; }'.
         Property 'value' is missing in type '{ label: string; onClick: () => void; }' but required in type 'ButtonGroupItemBaseType'.",
   "items > take no children > members come from \`items\`": "TS2322: Type 'Element' is not assignable to type 'undefined'.",
+  "textOverflow > rejects visible, which let a label paint outside its member > a label always stays inside its member": "TS2322: Type '"visible"' is not assignable to type 'ButtonGroupTextOverflowType | undefined'.",
 }
 `;
