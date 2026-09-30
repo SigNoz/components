@@ -8,6 +8,10 @@
   display: var(--toggle-group-display, inline-flex);
   align-items: var(--toggle-group-align-items, stretch);
 
+  // Not left to a global reset, which signoz-v3 lacks: without it a `width="100%"` bar overflows
+  // its parent by its two borders.
+  box-sizing: border-box;
+
   // The `width`/`maxWidth` props arrive as the internal pair, so a token still outranks a call site.
   inline-size: var(--toggle-group-inline-size, var(--toggle-group-internal-inline-size, fit-content));
   max-inline-size: var(
@@ -39,8 +43,9 @@
     --toggle-group-internal-label-disabled: var(--toggle-group-secondary-outlined-disabled-color, var(--toggle-group-secondary-outlined-label-disabled));
   }
 
-  // Both sizes are 32px tall and differ in horizontal padding alone. `md` is roughly triple `sm`,
-  // which is what makes it a two- or three-option control rather than a toolbar one.
+  // Both sizes are 32px tall, the bar's border included, and differ in horizontal padding alone.
+  // `md` is roughly triple `sm`, which is what makes it a two- or three-option control rather than
+  // a toolbar one.
   &[data-size='sm'] {
     --toggle-group-internal-button-padding-inline: var(--toggle-group-sm-button-padding-inline, var(--spacing-6));
   }
@@ -112,12 +117,18 @@
   flex-shrink: var(--toggle-group-button-flex-shrink, 0);
   flex-basis: var(--toggle-group-button-flex-basis, auto);
 
-  block-size: var(--toggle-group-button-block-size, var(--spacing-16));
+  // The bar is 32px outside, so a button is 32px less the bar's two borders. `border-box` holds
+  // that height when a token adds padding or a border back; signoz-v3 has no global reset.
+  box-sizing: border-box;
+  block-size: var(
+    --toggle-group-button-block-size,
+    calc(var(--spacing-16) - 2 * var(--toggle-group-border-width, 1px))
+  );
   padding-inline: var(
     --toggle-group-button-padding-inline,
     var(--toggle-group-internal-button-padding-inline)
   );
-  padding-block: var(--toggle-group-button-padding-block, var(--spacing-5));
+  padding-block: var(--toggle-group-button-padding-block, 0);
 
   border: var(--toggle-group-button-border, none);
   border-radius: var(--toggle-group-button-border-radius, 0);
@@ -181,8 +192,8 @@
 
   &:focus-visible {
     outline: var(--toggle-group-button-focus-visible-outline, var(--toggle-group-focus-ring) solid 1px);
-    // Inwards: the bar clips at its border, and an outset ring would be cut in half.
-    outline-offset: var(--toggle-group-button-focus-visible-outline-offset, -2px);
+    // Inset by the ring's width: the bar clips at its border, so an outset ring would be halved.
+    outline-offset: var(--toggle-group-button-focus-visible-outline-offset, -1px);
   }
 
   & svg:not([class*='size-']) {
@@ -233,7 +244,8 @@
   justify-content: var(--toggle-group-scroll-button-justify-content, center);
 
   // 24px is the smallest target WCAG 2.2 calls adequate. The bar is 32px tall, so only the inline
-  // axis needs saying.
+  // axis needs saying. `border-box` keeps the padding and the divider inside those 24px.
+  box-sizing: border-box;
   min-inline-size: var(--toggle-group-scroll-button-min-inline-size, var(--spacing-12));
   padding-inline: var(--toggle-group-scroll-button-padding-inline, var(--spacing-2));
   padding-block: var(--toggle-group-scroll-button-padding-block, 0);

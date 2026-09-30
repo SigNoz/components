@@ -57,7 +57,7 @@ const meta: Meta<typeof ToggleGroup> = {
 			control: 'select',
 			options: ['sm', 'md'],
 			description:
-				'Height + padding token. Both sizes are 32px tall and differ in horizontal padding alone.',
+				'Height + padding token. Both sizes are 32px tall, the border included, and differ in horizontal padding alone.',
 			table: { category: 'Appearance', type: { summary: "'sm' | 'md'" } },
 		},
 		value: {
@@ -317,7 +317,7 @@ function ToggleGroupShowcaseLayout(): ReactElement {
 			<div className={styles.showcaseContainer}>
 				<ShowcaseSection
 					title="Sizes and states"
-					note="One row per size, one column per state. Both sizes are 32px tall: md triples the horizontal padding, so it is for two- or three-option bars rather than a toolbar. The last three columns are the blocked paths: the bar's own disabled prop, one option blocked inside a live bar, then a read-only bar, which fades less and keeps its label colours because its value is still there to be read."
+					note="One row per size, one column per state. Both sizes are 32px tall, the border included: md triples the horizontal padding, so it is for two- or three-option bars rather than a toolbar. The last three columns are the blocked paths: the bar's own disabled prop, one option blocked inside a live bar, then a read-only bar, which fades less and keeps its label colours because its value is still there to be read."
 				>
 					<div className={styles.matrix}>
 						<span />

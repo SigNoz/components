@@ -327,7 +327,8 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * Height + padding token.
 		 *
-		 * @note Both sizes are 32px tall and differ in horizontal padding alone.
+		 * @note Both sizes are 32px tall, the bar's border included, and differ in horizontal
+		 * padding alone.
 		 */
 		size: ToggleGroupSizeType;
 		/**
