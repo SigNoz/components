@@ -65,6 +65,30 @@ describe('Button loading spinner', () => {
 		expect(slot).toContainElement(document.querySelector('[data-slot="spinner"]'));
 	});
 
+	it('spins the ring while loading and holds it still while idle', () => {
+		const { rerender } = render(
+			<Button size="md" variant="solid" color="primary" loading>
+				Saving…
+			</Button>,
+		);
+		const spinner = document.querySelector('[data-slot="spinner"]');
+		if (!spinner) {
+			throw new Error('No spinner rendered');
+		}
+
+		expect(getComputedStyle(spinner).animationName).not.toBe('none');
+		expect(getComputedStyle(spinner).animationIterationCount).toBe('infinite');
+		expect(getComputedStyle(spinner).animationPlayState).toBe('running');
+
+		rerender(
+			<Button size="md" variant="solid" color="primary">
+				Save
+			</Button>,
+		);
+
+		expect(getComputedStyle(spinner).animationPlayState).toBe('paused');
+	});
+
 	it('keeps the spinner mounted while idle, the swap is a css cross-fade', () => {
 		render(
 			<Button size="md" variant="solid" color="primary">

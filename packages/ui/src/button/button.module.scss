@@ -134,12 +134,6 @@
 		}
 	}
 
-	// A label can hold a node that draws outside its own box, such as a focus ring. Clipping cuts
-	// that, so this mode stops clipping instead of marking the cut.
-	&[data-text-overflow='visible'] .button__label {
-		overflow: var(--button-label-overflow, visible);
-	}
-
 	&[data-text-overflow='ellipsis'] .button__label {
 		text-overflow: var(--button-label-text-overflow, ellipsis);
 	}
@@ -358,7 +352,14 @@
 		line-height: var(--button-size-line-height, 16px);
 
 		--button-internal-icon-size: var(--button-icon-size, 14px);
-		--button-internal-gap: var(--spacing-3);
+		--button-internal-gap: var(--spacing-4);
+
+		// A link has no padding, so at md it keeps sm's height and gap. Nested because a top-level
+		// variant rule would lose to this block on source order.
+		&[data-variant="link"] {
+			--button-internal-height: var(--button-height, 24px);
+			--button-internal-gap: var(--spacing-3);
+		}
 
 		&:not([data-variant="link"]) {
 			&[data-icon="false"] {
@@ -413,7 +414,8 @@ svg.button__suffix {
 .button:not([aria-busy="true"]) .button__prefix-wrapper[data-empty='true'] {
 	grid-template-columns: var(--button-prefix-wrapper-collapsed-grid-template-columns, 0fr);
 	overflow: var(--button-prefix-wrapper-collapsed-overflow, hidden);
-	margin-inline-end: var(--button-prefix-wrapper-collapsed-margin-inline-end, calc(-1 * var(--button-internal-gap)));
+	// The gap the button actually lays out, `--button-gap` included, or the label moves off centre.
+	margin-inline-end: var(--button-prefix-wrapper-collapsed-margin-inline-end, calc(-1 * var(--button-gap, var(--button-internal-gap))));
 	// Closing back up is the last beat: wait for the spinner to leave first.
 	transition-delay: var(--button-internal-loading-delay);
 }

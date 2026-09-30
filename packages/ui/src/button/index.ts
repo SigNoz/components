@@ -113,7 +113,7 @@
  * | `--button-prefix-wrapper-align-items` | `center` |
  * | `--button-prefix-wrapper-block-size` | `auto` |
  * | `--button-prefix-wrapper-collapsed-grid-template-columns` | `0fr` |
- * | `--button-prefix-wrapper-collapsed-margin-inline-end` | `calc(-1 * var(--button-internal-gap))` |
+ * | `--button-prefix-wrapper-collapsed-margin-inline-end` | `calc(-1 * var(--button-gap, var(--button-intern...` |
  * | `--button-prefix-wrapper-collapsed-overflow` | `hidden` |
  * | `--button-prefix-wrapper-display` | `grid` |
  * | `--button-prefix-wrapper-flex-shrink` | `0` |

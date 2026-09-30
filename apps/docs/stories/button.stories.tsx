@@ -477,24 +477,6 @@ export const ButtonShowcase: Story = {
 						</Typography>
 
 						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
-							visible
-						</Typography>
-						<Button
-							variant={ButtonVariant.Solid}
-							color={ButtonColor.Primary}
-							size={ButtonSize.MD}
-							width={CONSTRAINED_WIDTH}
-							textOverflow={ButtonTextOverflow.Visible}
-							prefix={<Trash />}
-							testId="overflow-visible"
-						>
-							{LONG_LABEL}
-						</Button>
-						<Typography size="sm">
-							Clips nothing, the label paints outside the button's box. No tooltip.
-						</Typography>
-
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
 							disabled + truncated
 						</Typography>
 						<Button

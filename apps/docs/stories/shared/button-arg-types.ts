@@ -100,7 +100,8 @@ export const buttonArgTypes: Meta<typeof Button>['argTypes'] = {
 	size: {
 		control: 'select',
 		options: ['sm', 'md'],
-		description: 'Height and padding token. Required. `sm` is 24px, `md` is 32px.',
+		description:
+			'Height and padding token. Required. `sm` is 24px, `md` is 32px. A `link` button is 24px at both sizes.',
 		table: { category: 'Appearance', type: { summary: 'SizeType' } },
 	},
 	icon: {
@@ -113,7 +114,7 @@ export const buttonArgTypes: Meta<typeof Button>['argTypes'] = {
 		control: 'select',
 		options: Object.values(ButtonTextOverflow),
 		description:
-			'What happens to the label when it does not fit. `ellipsis` truncates and shows the full text in a tooltip, only while it is actually truncated. `hidden` clips at the edge with no marker and no tooltip. `visible` clips nothing and lets the label paint outside the box.',
+			'What happens to the label when it does not fit. `ellipsis` truncates and shows the full text in a tooltip, only while it is actually truncated. `hidden` clips at the edge with no marker and no tooltip.',
 		table: {
 			category: 'Appearance',
 			type: { summary: 'TextOverflowType' },

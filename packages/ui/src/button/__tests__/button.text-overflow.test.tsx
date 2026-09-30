@@ -22,7 +22,7 @@ describe('Button textOverflow', () => {
 		expect(screen.getByRole('button')).toHaveAttribute('data-text-overflow', 'ellipsis');
 	});
 
-	it.each(['hidden', 'visible', 'ellipsis'] as const)(
+	it.each(['hidden', 'ellipsis'] as const)(
 		'exposes textOverflow=%s as data-text-overflow',
 		(textOverflow) => {
 			render(
@@ -151,19 +151,16 @@ describe('Button truncation flag', () => {
 		await waitFor(() => expect(screen.getByRole('button')).toHaveAttribute('data-truncated'));
 	});
 
-	it.each(['hidden', 'visible'] as const)(
-		'never flags textOverflow=%s, which does not truncate',
-		(textOverflow) => {
-			truncate();
-			render(
-				<Button size="md" variant="solid" color="primary" textOverflow={textOverflow}>
-					A very long label
-				</Button>,
-			);
+	it('never flags textOverflow=hidden, which does not truncate', () => {
+		truncate();
+		render(
+			<Button size="md" variant="solid" color="primary" textOverflow="hidden">
+				A very long label
+			</Button>,
+		);
 
-			expect(screen.getByRole('button')).not.toHaveAttribute('data-truncated');
-		},
-	);
+		expect(screen.getByRole('button')).not.toHaveAttribute('data-truncated');
+	});
 
 	it('never flags an icon button, which has no label to truncate', () => {
 		truncate();

@@ -251,8 +251,7 @@ const PublicButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
  * While it does not fit: `data-truncated`, plus a tooltip with the full text. The visible text
  * is only clipped, so the accessible name is already the full label.
  *
- * `hidden` clips with no tooltip, `visible` clips nothing and lets the label paint outside its
- * box. Icon buttons have no label to measure.
+ * `hidden` clips with no tooltip. Icon buttons have no label to measure.
  *
  * ### Its tooltips
  *

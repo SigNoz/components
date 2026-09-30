@@ -381,4 +381,13 @@ describe('remaining props', () => {
 			</Button>,
 		);
 	});
+
+	test('rejects the removed visible textOverflow', () => {
+		assertType(
+			// @ts-expect-error - `visible` let the label paint outside the button and was removed
+			<Button size="md" variant="solid" color="primary" textOverflow="visible">
+				Label
+			</Button>,
+		);
+	});
 });
