@@ -135,7 +135,7 @@
   align-items: var(--dropdown-item-align-items, center);
   gap: var(--dropdown-item-slot-gap, var(--spacing-4));
 
-  padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
+  padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
   border-radius: var(--dropdown-item-border-radius, var(--radius-1));
   background-color: var(--dropdown-internal-item-background);
@@ -143,8 +143,9 @@
 
   font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
   font-weight: var(--dropdown-item-font-weight, var(--font-weight-normal));
-  // 20px label plus block padding gives the 40px row pitch. Holds only because nothing wraps.
-  line-height: var(--dropdown-item-line-height, var(--line-height-20));
+  // An 18px label between 8px of block padding gives the 34px row, and the 4px item gap a 38px
+  // pitch. Holds only because nothing wraps.
+  line-height: var(--dropdown-item-line-height, var(--line-height-18));
   white-space: var(--dropdown-item-white-space, nowrap);
 
   cursor: var(--dropdown-item-cursor, pointer);
@@ -461,7 +462,9 @@
   color: var(--dropdown-internal-item-label);
 
   font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
-  line-height: var(--dropdown-item-line-height, var(--line-height-20));
+  // Still the 20px line, on a token of its own: the search row's height is a question of its own,
+  // not settled by the 34px rows.
+  line-height: var(--dropdown-search-input-line-height, var(--line-height-20));
 
   &::placeholder {
     color: var(--dropdown-internal-search-placeholder);
@@ -478,16 +481,16 @@
   align-items: var(--dropdown-loading-align-items, center);
   justify-content: var(--dropdown-loading-justify-content, center);
 
-  padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
+  padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
   color: var(--dropdown-internal-loading-label);
 }
 
 .dropdown__empty {
-  padding: var(--dropdown-item-padding, var(--spacing-5) var(--spacing-6));
+  padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
   color: var(--dropdown-internal-item-label-disabled);
 
   font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
-  line-height: var(--dropdown-item-line-height, var(--line-height-20));
+  line-height: var(--dropdown-item-line-height, var(--line-height-18));
 }
