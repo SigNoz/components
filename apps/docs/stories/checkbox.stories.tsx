@@ -45,7 +45,7 @@ const meta: Meta<typeof Checkbox> = {
 			control: 'select',
 			options: COLORS,
 			description:
-				"Same palette as Badge's `color`. Fills the box while checked or indeterminate; the unchecked box keeps a neutral border for every color. Required: the checked fill is a semantic statement, so the call site has to make it.",
+				"Same palette as Badge's `color`, without `secondary`. Fills the box while checked or indeterminate; the unchecked box keeps a neutral border for every color. Required: the checked fill is a semantic statement, so the call site has to make it.",
 			table: {
 				category: 'Appearance',
 				type: { summary: 'CheckboxColorType' },

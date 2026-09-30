@@ -153,8 +153,8 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 * Fills the box while the checkbox is checked or indeterminate; the unchecked box keeps a
 		 * neutral border for every color, because an unchecked box has no status to report yet.
 		 *
-		 * Same palette as `Badge`'s `color`. Required: the box's checked fill is a semantic
-		 * statement, so the call site has to make it.
+		 * Same palette as `Badge`'s `color`, without `secondary`. Required: the box's checked fill
+		 * is a semantic statement, so the call site has to make it.
 		 */
 		color: CheckboxColorType;
 		/**

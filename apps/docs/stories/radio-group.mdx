@@ -6,8 +6,8 @@ import * as RadioGroupStories from './radio-group.stories';
 # RadioGroup
 
 A single-choice control, rendered through Base UI's `RadioGroup` and `Radio`. It takes its options
-as data, tints the checked one with the same color palette as `Button`, truncates long labels into
-a tooltip, and it forwards every `aria-*` and `data-*` attribute to the root.
+as data, tints the checked one with `Button`'s color palette (without `secondary`), truncates long
+labels into a tooltip, and it forwards every `aria-*` and `data-*` attribute to the root.
 
 One choice, one answer. For an independent on/off, reach for `Checkbox` or `Switch`: a radio group
 of one is neither, and it can never be unchecked once it has been touched.
@@ -69,9 +69,11 @@ the ring with it. Row height and alignment covers the rest of what a label like 
 
 ## Colors
 
-`color` swaps the palette of the checked dial, its dot and the hover tint: `primary`, `secondary`,
-`danger`, `warning`, `success`, `info`, `archive` and `highlight-danger`. Unchecked items are
-neutral in every color.
+`color` swaps the palette of the checked dial, its dot and the hover tint: `primary`, `danger`,
+`warning`, `success`, `info`, `archive` and `highlight-danger`. Unchecked items are neutral in every
+color.
+
+There is no `secondary`: the design system has no secondary radio or checkbox.
 
 ```tsx
 <RadioGroup color="primary" items={items} defaultValue="staging" />

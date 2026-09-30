@@ -27,7 +27,6 @@ declare const maybeReadOnly: boolean | undefined;
 describe('color', () => {
 	test('accepts every CheckboxColor', () => {
 		assertType(<Checkbox color="primary" />);
-		assertType(<Checkbox color="secondary" />);
 		assertType(<Checkbox color="danger" />);
 		assertType(<Checkbox color="warning" />);
 		assertType(<Checkbox color="success" />);
@@ -46,6 +45,11 @@ describe('color', () => {
 		assertType(<Checkbox color="cherry" />);
 		// @ts-expect-error - `robin` is the legacy palette, not a CheckboxColor
 		assertType(<Checkbox color="robin" />);
+	});
+
+	test('rejects secondary, which Badge and Switch keep and Checkbox dropped', () => {
+		// @ts-expect-error - `secondary` is not a CheckboxColor, the checkbox palette dropped it
+		assertType(<Checkbox color="secondary" />);
 	});
 });
 

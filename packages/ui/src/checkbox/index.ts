@@ -57,9 +57,6 @@
  * | `--checkbox-primary-foreground` | `-` |
  * | `--checkbox-readonly-cursor` | `not-allowed` |
  * | `--checkbox-readonly-opacity` | `0.8` |
- * | `--checkbox-secondary-background` | `-` |
- * | `--checkbox-secondary-border-hover` | `-` |
- * | `--checkbox-secondary-foreground` | `-` |
  * | `--checkbox-size` | `16px` |
  * | `--checkbox-success-background` | `-` |
  * | `--checkbox-success-border-hover` | `-` |

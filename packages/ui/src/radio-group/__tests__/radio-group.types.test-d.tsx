@@ -67,7 +67,6 @@ describe('items', () => {
 describe('color', () => {
 	test('accepts every RadioGroupColor', () => {
 		assertType(<RadioGroup color="primary" items={ITEMS} />);
-		assertType(<RadioGroup color="secondary" items={ITEMS} />);
 		assertType(<RadioGroup color="danger" items={ITEMS} />);
 		assertType(<RadioGroup color="warning" items={ITEMS} />);
 		assertType(<RadioGroup color="success" items={ITEMS} />);
@@ -84,6 +83,11 @@ describe('color', () => {
 	test('rejects a color outside the palette', () => {
 		// @ts-expect-error - `forest` is not a RadioGroupColor
 		assertType(<RadioGroup color="forest" items={ITEMS} />);
+	});
+
+	test('rejects secondary, which the palette dropped', () => {
+		// @ts-expect-error - `secondary` is no longer a RadioGroupColor
+		assertType(<RadioGroup color="secondary" items={ITEMS} />);
 	});
 });
 

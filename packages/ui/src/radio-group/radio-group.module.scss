@@ -26,12 +26,6 @@
 		--radio-group-internal-dot-color: var(--radio-group-primary-dot-color, var(--radio-group-primary-dot));
 	}
 
-	&[data-color='secondary'] {
-		--radio-group-internal-checked-background: var(--radio-group-secondary-checked-background-color, var(--radio-group-secondary-background));
-		--radio-group-internal-hover-border-color: var(--radio-group-secondary-hover-border-color, var(--radio-group-secondary-border-hover));
-		--radio-group-internal-dot-color: var(--radio-group-secondary-dot-color, var(--radio-group-secondary-dot));
-	}
-
 	&[data-color='success'] {
 		--radio-group-internal-checked-background: var(--radio-group-success-checked-background-color, var(--radio-group-success-background));
 		--radio-group-internal-hover-border-color: var(--radio-group-success-hover-border-color, var(--radio-group-success-border-hover));

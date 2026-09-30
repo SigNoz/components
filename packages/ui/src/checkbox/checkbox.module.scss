@@ -24,12 +24,6 @@
 		--checkbox-internal-hover-border-color: var(--checkbox-primary-border-hover);
 	}
 
-	&[data-color='secondary'] {
-		--checkbox-internal-checked-background: var(--checkbox-secondary-background);
-		--checkbox-internal-checked-foreground: var(--checkbox-secondary-foreground);
-		--checkbox-internal-hover-border-color: var(--checkbox-secondary-border-hover);
-	}
-
 	&[data-color='danger'] {
 		--checkbox-internal-checked-background: var(--checkbox-danger-background);
 		--checkbox-internal-checked-foreground: var(--checkbox-danger-foreground);
