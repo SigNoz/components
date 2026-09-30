@@ -64,6 +64,12 @@ export default function ReportWindow() {
 A day inside a range carries `data-range-start`, `data-range-middle` or `data-range-end` rather
 than `data-selected-single`, so the three positions are painted apart.
 
+A range reads as one band. Its days paint across the gaps between them, the two ends are rounded
+on their outer side only, and the band stops at the edge of a week row. With `numberOfMonths` above
+one, an outside day whose own month is also displayed is not painted as part of the range, because
+that month already shows it. Its attributes still say where it falls in the range. The first
+month's leading and the last month's trailing outside days have no other copy, so they paint.
+
 ## Caption and navigation
 
 The month arrows sit over the caption row, one cell wide each.
@@ -99,6 +105,20 @@ as a preset button, has to move it.
 
 react-day-picker disables the button natively, except on the focused day, where it uses
 `aria-disabled` so the day stays reachable by keyboard.
+
+## Footer
+
+`footer` renders under the grid in react-day-picker's polite live region, so a screen reader reads
+it out when it changes. It is set at the size and in the colour of the weekday labels.
+
+```tsx
+<Calendar
+	mode="single"
+	selected={date}
+	onSelect={setDate}
+	footer="Pick the day the report starts on."
+/>
+```
 
 ## Keyboard and focus
 
@@ -174,6 +194,7 @@ class names.
 | `data-day`                                                | always, the day as `YYYY-MM-DD` (see [Locale and time zone](#locale-and-time-zone)) |
 | `data-today`                                              | the day is today                                                                    |
 | `data-outside`                                            | the day belongs to a neighbouring month                                             |
+| `data-duplicate`                                          | an outside day whose own month is displayed too                                     |
 | `data-selected-single`                                    | selected, and not part of a range                                                   |
 | `data-range-start`, `data-range-middle`, `data-range-end` | the day's position in a range                                                       |
 

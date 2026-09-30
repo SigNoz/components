@@ -23,6 +23,7 @@
 	--calendar-internal-day-outside-label: var(--calendar-day-outside-color, var(--calendar-day-outside-label));
 	--calendar-internal-day-disabled-label: var(--calendar-day-disabled-color, var(--calendar-day-disabled-label));
 	--calendar-internal-weekday-label: var(--calendar-weekday-color, var(--calendar-weekday-label));
+	--calendar-internal-footer-label: var(--calendar-footer-color, var(--calendar-internal-weekday-label));
 	--calendar-internal-week-number-label: var(--calendar-week-number-color, var(--calendar-week-number-label));
 	--calendar-internal-select-background: var(--calendar-select-background-color, var(--calendar-select-background));
 	--calendar-internal-select-border: var(--calendar-select-border-color, var(--calendar-select-border));
@@ -34,10 +35,23 @@
 	--calendar-internal-cell-size: var(--calendar-cell-size, var(--spacing-16));
 	--calendar-internal-transition-duration: var(--calendar-transition-duration, 150ms);
 
+	// How far a range day paints into the gap beside it, so two neighbours meet mid-gap. Keep it on
+	// the same variables and fallbacks that space `.calendar__week` and `.calendar__day`.
+	--calendar-internal-range-bridge: calc(
+		var(--calendar-week-gap, var(--spacing-4)) / 2 + var(--calendar-day-margin, var(--spacing-2))
+	);
+	// `box-shadow` offsets are physical, so the bridges are flipped by hand when the grid runs
+	// right to left.
+	--calendar-internal-range-direction: 1;
+
 	box-sizing: border-box;
 	width: fit-content;
 	background-color: var(--calendar-internal-background);
 	padding: var(--calendar-padding, var(--spacing-6));
+
+	&:dir(rtl) {
+		--calendar-internal-range-direction: -1;
+	}
 }
 
 /* Month layout */
@@ -325,44 +339,112 @@
 		}
 	}
 
+	// The band is each day's `box-shadow`, which takes the button's own box, so it keeps the day's
+	// height and corners without a second element. These set how far each side reaches; the rules
+	// after the block zero a side whose neighbour is not painted.
 	&[data-range-middle="true"] {
-		background-color: var(--calendar-internal-day-range-middle-background);
-		color: var(--calendar-internal-day-range-middle-label);
-		border-radius: 0;
+		--calendar-internal-range-reach-start: var(--calendar-internal-range-bridge);
+		--calendar-internal-range-reach-end: var(--calendar-internal-range-bridge);
+	}
 
-		&:hover:not(:disabled):not([aria-disabled="true"]),
-		&:active:not(:disabled):not([aria-disabled="true"]) {
-			background-color: var(--calendar-internal-day-range-middle-background-hover);
+	&[data-range-start="true"]:not([data-range-end="true"]) {
+		--calendar-internal-range-reach-end: var(--calendar-internal-range-bridge);
+	}
+
+	&[data-range-end="true"]:not([data-range-start="true"]) {
+		--calendar-internal-range-reach-start: var(--calendar-internal-range-bridge);
+	}
+
+	// An outside day whose own month is displayed too is skipped: painting it would draw the range
+	// twice, with a second end. The first month's leading and the last month's trailing outside days
+	// have no other copy, so they paint.
+	&:not([data-duplicate="true"]) {
+		&[data-range-start="true"],
+		&[data-range-middle="true"],
+		&[data-range-end="true"] {
+			box-shadow:
+				calc(-1 * var(--calendar-internal-range-direction) * var(--calendar-internal-range-reach-start, 0px))
+					0 0 0 var(--calendar-internal-day-range-middle-background),
+				calc(var(--calendar-internal-range-direction) * var(--calendar-internal-range-reach-end, 0px))
+					0 0 0 var(--calendar-internal-day-range-middle-background);
+		}
+
+		&[data-range-middle="true"] {
+			background-color: var(--calendar-internal-day-range-middle-background);
 			color: var(--calendar-internal-day-range-middle-label);
+			border-radius: 0;
+
+			&:hover:not(:disabled):not([aria-disabled="true"]),
+			&:active:not(:disabled):not([aria-disabled="true"]) {
+				background-color: var(--calendar-internal-day-range-middle-background-hover);
+				color: var(--calendar-internal-day-range-middle-label);
+			}
 		}
-	}
 
-	&[data-range-start="true"],
-	&[data-range-end="true"] {
-		background-color: var(--calendar-internal-day-range-edge-background);
-		color: var(--calendar-internal-day-range-edge-label);
-
-		&:hover:not(:disabled):not([aria-disabled="true"]),
-		&:active:not(:disabled):not([aria-disabled="true"]) {
-			background-color: var(--calendar-internal-day-range-edge-background-hover);
+		&[data-range-start="true"],
+		&[data-range-end="true"] {
+			background-color: var(--calendar-internal-day-range-edge-background);
 			color: var(--calendar-internal-day-range-edge-label);
+
+			&:hover:not(:disabled):not([aria-disabled="true"]),
+			&:active:not(:disabled):not([aria-disabled="true"]) {
+				background-color: var(--calendar-internal-day-range-edge-background-hover);
+				color: var(--calendar-internal-day-range-edge-label);
+			}
+		}
+
+		// An end rounds its outer corners only, so it runs straight into the band. The `:not()`
+		// guards keep a one-day range, which is both ends, rounded on all four.
+		&[data-range-start="true"] {
+			border-start-start-radius: var(--calendar-range-edge-border-radius, var(--radius-2));
+			border-end-start-radius: var(--calendar-range-edge-border-radius, var(--radius-2));
+		}
+
+		&[data-range-end="true"] {
+			border-start-end-radius: var(--calendar-range-edge-border-radius, var(--radius-2));
+			border-end-end-radius: var(--calendar-range-edge-border-radius, var(--radius-2));
+		}
+
+		&[data-range-start="true"]:not([data-range-end="true"]) {
+			border-start-end-radius: 0;
+			border-end-end-radius: 0;
+		}
+
+		&[data-range-end="true"]:not([data-range-start="true"]) {
+			border-start-start-radius: 0;
+			border-end-start-radius: 0;
 		}
 	}
+}
 
-	&[data-range-start="true"] {
-		border-start-start-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
-		border-end-start-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
-	}
+// Zero the reach toward a neighbour that is not painted, or the band sticks half a gap out into
+// empty space.
+.calendar__week > .calendar__day:first-of-type > .calendar__button[data-variant="day"],
+.calendar__day[data-hidden] + .calendar__day > .calendar__button[data-variant="day"],
+.calendar__day:has(> [data-duplicate]) + .calendar__day > .calendar__button[data-variant="day"] {
+	--calendar-internal-range-reach-start: 0px;
+}
 
-	&[data-range-end="true"] {
-		border-start-end-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
-		border-end-end-radius: var(--calendar-range-edge-border-radius, var(--radius-3));
-	}
+.calendar__week > .calendar__day:last-of-type > .calendar__button[data-variant="day"],
+.calendar__day:has(+ .calendar__day[data-hidden]) > .calendar__button[data-variant="day"],
+.calendar__day:has(+ .calendar__day > [data-duplicate]) > .calendar__button[data-variant="day"] {
+	--calendar-internal-range-reach-end: 0px;
 }
 
 .calendar__day-button-label,
 .calendar__day-button-affix {
 	font-size: var(--calendar-day-button-font-size, var(--periscope-font-size-small));
+}
+
+/* Footer */
+
+// Sets its own size and colour: otherwise it inherits the page's, well above the 11px labels
+// around it.
+.calendar__footer {
+	margin-top: var(--calendar-footer-margin-top, var(--spacing-4));
+	color: var(--calendar-internal-footer-label);
+	font-size: var(--calendar-footer-font-size, var(--periscope-font-size-small));
+	line-height: var(--calendar-footer-line-height, var(--line-height-18));
 }
 
 @media (prefers-reduced-motion: reduce) {

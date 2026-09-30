@@ -311,7 +311,9 @@ export const CalendarShowcase: Story = {
 					</Typography>
 					<Typography size="sm">
 						<code>mode</code> decides what <code>selected</code> holds. A day inside a range is
-						painted from its position in that range, not as a selected day.
+						painted from its position in that range, not as a selected day, and the range reads as
+						one band that stops at the edge of each week row and flips with the text direction. With
+						one month displayed, it runs on into the outside days of the next.
 					</Typography>
 					<div className={styles.calendarGrid}>
 						<Example title="single">
@@ -329,6 +331,25 @@ export const CalendarShowcase: Story = {
 								today={TODAY}
 								defaultMonth={TODAY}
 								selected={{ from: day(9), to: day(13) }}
+								onSelect={fn()}
+							/>
+						</Example>
+						<Example title="range across weeks, right to left">
+							<Calendar
+								mode="range"
+								dir="rtl"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={{ from: day(12), to: day(24) }}
+								onSelect={fn()}
+							/>
+						</Example>
+						<Example title="range into the next month">
+							<Calendar
+								mode="range"
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={{ from: day(25), to: new Date(2025, 6, 4) }}
 								onSelect={fn()}
 							/>
 						</Example>
@@ -402,6 +423,16 @@ export const CalendarShowcase: Story = {
 					<div className={styles.calendarGrid}>
 						<Example title="outside days hidden">
 							<Calendar mode="single" showOutsideDays={false} today={TODAY} defaultMonth={TODAY} />
+						</Example>
+						<Example title="range next to hidden outside days">
+							<Calendar
+								mode="range"
+								showOutsideDays={false}
+								today={TODAY}
+								defaultMonth={TODAY}
+								selected={{ from: day(28), to: new Date(2025, 6, 3) }}
+								onSelect={fn()}
+							/>
 						</Example>
 						<Example title="week numbers">
 							<Calendar mode="single" showWeekNumber today={TODAY} defaultMonth={TODAY} />

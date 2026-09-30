@@ -72,12 +72,16 @@
  * | `--calendar-dropdown-font-size` | `var(--periscope-font-size-small)` |
  * | `--calendar-dropdown-font-weight` | `var(--font-weight-medium)` |
  * | `--calendar-dropdown-gap` | `var(--spacing-3)` |
+ * | `--calendar-footer-color` | `var(--calendar-internal-weekday-label)` |
+ * | `--calendar-footer-font-size` | `var(--periscope-font-size-small)` |
+ * | `--calendar-footer-line-height` | `var(--line-height-18)` |
+ * | `--calendar-footer-margin-top` | `var(--spacing-4)` |
  * | `--calendar-month-gap` | `var(--spacing-8)` |
  * | `--calendar-months-gap` | `var(--spacing-8)` |
  * | `--calendar-nav-button-padding` | `0` |
  * | `--calendar-nav-gap` | `var(--spacing-2)` |
  * | `--calendar-padding` | `var(--spacing-6)` |
- * | `--calendar-range-edge-border-radius` | `var(--radius-3)` |
+ * | `--calendar-range-edge-border-radius` | `var(--radius-2)` |
  * | `--calendar-select-background` | `-` |
  * | `--calendar-select-background-color` | `var(--calendar-select-background)` |
  * | `--calendar-select-border` | `-` |
