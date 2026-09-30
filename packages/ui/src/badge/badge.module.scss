@@ -3,14 +3,19 @@
 	box-sizing: border-box;
 	border-radius: var(--badge-border-radius, var(--radius-round));
 	border: var(--badge-border-width, 1px) solid var(--badge-border-color, var(--badge-internal-border-color, transparent));
-	padding: var(--badge-padding, var(--spacing-2) var(--spacing-4));
+	// No block padding, so the 18px line box fills the 20px height inside the border. A shorter
+	// line box clips descenders at the label's `overflow: hidden`.
+	padding: var(--badge-padding, 0 var(--spacing-4));
 	font-size: var(--badge-font-size, var(--periscope-font-size-small));
-	line-height: var(--badge-line-height, 100%);
+	line-height: var(--badge-line-height, var(--line-height-18));
+	// Per case, see the `data-text-transform` blocks. The fallback matches the uppercase default.
+	letter-spacing: var(--badge-letter-spacing, var(--badge-internal-letter-spacing, 0.04em));
 	font-weight: var(--badge-font-weight, var(--font-weight-medium));
 	text-transform: var(--badge-internal-text-transform, uppercase);
 	white-space: var(--badge-white-space, nowrap);
 	height: var(--badge-height, var(--spacing-10));
 	width: var(--badge-width, var(--badge-internal-width, fit-content));
+	min-width: var(--badge-min-width, var(--badge-internal-min-width, auto));
 	max-width: var(--badge-max-width, var(--badge-internal-max-width, min(100%, 7.5rem)));
 	background-color: var(--badge-internal-background);
 	color: var(--badge-internal-foreground);
@@ -20,8 +25,11 @@
 	transition-duration: var(--badge-transition-duration, 150ms);
 	font-variant-numeric: var(--badge-font-variant-numeric, slashed-zero);
 	align-items: var(--badge-label-align-items, center);
-	justify-content: var(--badge-label-justify-content, flex-start);
+	justify-content: var(--badge-label-justify-content, var(--badge-internal-justify-content, flex-start));
 	gap: var(--badge-label-gap, var(--spacing-2));
+	// Padding on a side that holds an icon, so the icon's inset from that edge, border included,
+	// matches its inset from the top and bottom.
+	--badge-internal-affix-padding-inline: calc((var(--badge-height, var(--spacing-10)) - var(--badge-affix-size, 12px)) / 2 - var(--badge-border-width, 1px));
 
 	&[data-color='primary'] {
 		--badge-internal-background: var(--badge-primary-background-color, var(--badge-primary-background));
@@ -90,18 +98,22 @@
 
 	&[data-text-transform='none'] {
 		--badge-internal-text-transform: none;
+		--badge-internal-letter-spacing: 0;
 	}
 
 	&[data-text-transform='capitalize'] {
 		--badge-internal-text-transform: capitalize;
+		--badge-internal-letter-spacing: 0;
 	}
 
 	&[data-text-transform='lowercase'] {
 		--badge-internal-text-transform: lowercase;
+		--badge-internal-letter-spacing: 0;
 	}
 
 	&[data-text-transform='uppercase'] {
 		--badge-internal-text-transform: uppercase;
+		--badge-internal-letter-spacing: 0.04em;
 	}
 
 	&[data-variant='outlined'] {
@@ -116,6 +128,30 @@
 		display: var(--badge-display, inline-flex);
 		align-items: var(--badge-align-items, center);
 		gap: var(--badge-gap, var(--spacing-2));
+	}
+
+	// Flex, so the slot is exactly the icon's height. As an inline box the icon sits on the 18px
+	// line's baseline and rides above center.
+	& > [data-slot$='-prefix'],
+	& > [data-slot$='-suffix'] {
+		display: var(--badge-affix-slot-display, flex);
+	}
+
+	// `>` so a slot nested inside the label (another component's `-prefix`) does not count.
+	&:has(> [data-slot$='-prefix']) {
+		padding-inline-start: var(--badge-affix-padding-inline, var(--badge-internal-affix-padding-inline));
+	}
+
+	&:has(> [data-slot$='-suffix']) {
+		padding-inline-end: var(--badge-affix-padding-inline, var(--badge-internal-affix-padding-inline));
+	}
+
+	// `min-width` rather than `width`, so the circle also holds where `--badge-width` is set (`Pill`
+	// sets it) and a wider `width` still wins.
+	&[data-single-char] {
+		--badge-internal-min-width: var(--badge-height, var(--spacing-10));
+		--badge-internal-justify-content: center;
+		padding-inline: var(--badge-single-char-padding-inline, 0);
 	}
 
 	&__prefix,

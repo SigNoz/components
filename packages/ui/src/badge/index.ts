@@ -6,7 +6,9 @@
  * | Token | Default |
  * |-------|---------|
  * | `--badge-affix-flex-shrink` | `0` |
+ * | `--badge-affix-padding-inline` | `var(--badge-internal-affix-padding-inline)` |
  * | `--badge-affix-size` | `12px` |
+ * | `--badge-affix-slot-display` | `flex` |
  * | `--badge-align-items` | `center` |
  * | `--badge-archive-background` | `-` |
  * | `--badge-archive-background-color` | `var(--badge-archive-background)` |
@@ -61,18 +63,20 @@
  * | `--badge-label-align-items` | `center` |
  * | `--badge-label-display` | `block` |
  * | `--badge-label-gap` | `var(--spacing-2)` |
- * | `--badge-label-justify-content` | `flex-start` |
+ * | `--badge-label-justify-content` | `var(--badge-internal-justify-content, flex-start)` |
  * | `--badge-label-min-width` | `0` |
  * | `--badge-label-overflow` | `hidden` |
  * | `--badge-label-text-overflow` | `ellipsis` |
  * | `--badge-label-tooltip-max-width` | `20rem` |
  * | `--badge-label-white-space` | `nowrap` |
- * | `--badge-line-height` | `100%` |
+ * | `--badge-letter-spacing` | `var(--badge-internal-letter-spacing, 0.04em)` |
+ * | `--badge-line-height` | `var(--line-height-18)` |
  * | `--badge-max-width` | `var(--badge-internal-max-width, min(100%, 7.5rem))` |
+ * | `--badge-min-width` | `var(--badge-internal-min-width, auto)` |
  * | `--badge-outlined-background-color` | `var(--badge-internal-outlined-background)` |
  * | `--badge-outlined-border-color` | `var(--badge-internal-outlined-border)` |
  * | `--badge-outlined-color` | `var(--badge-internal-outlined-foreground)` |
- * | `--badge-padding` | `var(--spacing-2) var(--spacing-4)` |
+ * | `--badge-padding` | `0 var(--spacing-4)` |
  * | `--badge-primary-background` | `-` |
  * | `--badge-primary-background-color` | `var(--badge-primary-background)` |
  * | `--badge-primary-color` | `var(--badge-primary-foreground)` |
@@ -95,6 +99,7 @@
  * | `--badge-secondary-outlined-border-color` | `var(--badge-secondary-outlined-border)` |
  * | `--badge-secondary-outlined-color` | `var(--badge-secondary-outlined-label)` |
  * | `--badge-secondary-outlined-label` | `-` |
+ * | `--badge-single-char-padding-inline` | `0` |
  * | `--badge-success-background` | `-` |
  * | `--badge-success-background-color` | `var(--badge-success-background)` |
  * | `--badge-success-color` | `var(--badge-success-foreground)` |

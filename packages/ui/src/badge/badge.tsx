@@ -47,6 +47,7 @@ import type { BadgeProps } from './types.js';
  * | `data-text-transform` | mirrors `textTransform` |
  * | `data-text-overflow` | mirrors `textOverflow` |
  * | `data-truncated` | present only while the content does not fit |
+ * | `data-single-char` | present only when `children` is a one-character string or number and there is no `prefix` or `suffix` |
  *
  * | `data-slot` | rendered |
  * |---|---|
@@ -59,6 +60,14 @@ import type { BadgeProps } from './types.js';
  * `prefix` and `suffix` sit either side of the label, vertically centered with a gap. Both are
  * `aria-hidden`, so give the badge an accessible name if they carry meaning `children` doesn't
  * already convey.
+ *
+ * The side that holds an icon takes `--badge-affix-padding-inline` instead of `--badge-padding`,
+ * so the icon sits as far from that edge as from the top and bottom.
+ *
+ * ### Single character
+ *
+ * A one-character `children`, such as a count of `5`, draws as a circle: no side padding and a
+ * width that floors at the height. See `data-single-char` above.
  *
  * @example
  * ```tsx

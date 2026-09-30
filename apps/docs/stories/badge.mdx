@@ -58,6 +58,8 @@ the text.
 `lowercase` are there for content that is neither a status nor a label, an identifier that has to
 keep its own casing, for example.
 
+Uppercase is tracked at `0.04em`, every other case at `0`.
+
 ```tsx
 <Badge variant="solid" color="primary">Firing</Badge>
 <Badge variant="solid" color="secondary" textTransform="capitalize">
@@ -74,6 +76,9 @@ keep its own casing, for example.
 Both are `aria-hidden`, so an icon that carries meaning the children don't already convey needs an
 accessible name on the badge itself.
 
+The side that holds an icon trims its padding, so a 12px icon sits 4px from that edge, the same as
+from the top and the bottom.
+
 ```tsx
 import { Check, TriangleAlert } from '@signozhq/icons';
 
@@ -83,6 +88,17 @@ import { Check, TriangleAlert } from '@signozhq/icons';
 <Badge variant="outlined" color="danger" suffix={<TriangleAlert />}>
 	Offline
 </Badge>
+```
+
+## Single character
+
+A badge whose children are one character, a string or a number, with no `prefix` or `suffix`, is a
+circle: it gets `data-single-char`, loses its side padding and is at least as wide as it is tall.
+From two characters on it keeps the side padding and grows with the content.
+
+```tsx
+<Badge variant="solid" color="danger">5</Badge>
+<Badge variant="solid" color="danger">12</Badge>
 ```
 
 ## Width
