@@ -34,6 +34,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] Accessibility encoded in component: keyboard, focus, labels, ARIA (not left to consumer)
 - [ ] Complex behaviours split into composable patterns, not crammed into conflicting props
 - [ ] Escape hatches minimized; CSS overrides are last resort (if exception recurs, evolve the component)
+- [ ] No `className` or `style` prop on the root, a wrapper or a part (`containerClassName`, `classNames`, `styles`); a `@ts-expect-error` case per rejected prop in `{name}.types.test-d.tsx`
 
 **Structure** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#1-code-organization))
 
