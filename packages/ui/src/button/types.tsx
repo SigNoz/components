@@ -194,6 +194,7 @@ export interface ButtonBaseProps
 			| 'tabIndex'
 			| 'autoFocus'
 			| 'type'
+			| 'form'
 			| 'onClick'
 			| 'onDoubleClick'
 			| 'onKeyDown'

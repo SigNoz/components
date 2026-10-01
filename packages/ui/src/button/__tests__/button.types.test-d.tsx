@@ -371,6 +371,11 @@ describe('remaining props', () => {
 				Label
 			</Button>,
 		);
+		assertType(
+			<Button size="md" variant="solid" color="primary" type="submit" form="settings">
+				Label
+			</Button>,
+		);
 	});
 
 	test('rejects a textOverflow outside the set', () => {
