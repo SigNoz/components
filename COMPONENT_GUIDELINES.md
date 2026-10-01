@@ -35,7 +35,8 @@ Five principles behind every component. Read when building; refer back when maki
    via custom properties are always possible, but they're a last resort, not the plan. When a
    consumer reaches for `--badge-padding` to fix a one-off, that's evidence the component may
    need a new size variant or prop. Record these exceptions and evolve the component rather
-   than normalizing workarounds.
+   than normalizing workarounds. `className` and `style` are not an escape hatch at all, see
+   [No `className` or `style`](#no-classname-or-style).
 
 **The non-negotiables**, if you read nothing else:
 
@@ -43,10 +44,12 @@ Five principles behind every component. Read when building; refer back when maki
    `--{component}-*` custom property. No hardcoded values.
 2. Anything **not** meant to be overridden is named `--{component}-internal-{thing}`.
 3. Subcomponents live in **`subcomponents/`**, opinionated compositions in **`presets/`**.
-4. Props are **picked deliberately**, exposing only what the component actually needs, and
+4. A component **does not accept `className` or `style`**, on its root or on any wrapper or
+   part. Looks come from props, variants and `--{component}-*` custom properties.
+5. Props are **picked deliberately**, exposing only what the component actually needs, and
    **every prop carries JSDoc**, so a human or an agent reading the type declaration
    understands it without opening the implementation.
-5. **One story file per root component, plus one per preset.** Subcomponent stories live in
+6. **One story file per root component, plus one per preset.** Subcomponent stories live in
    their parent's file, never in a file of their own. Symbols tagged `@access private` are exempt.
 
 Reference implementations to copy from:
@@ -183,7 +186,7 @@ Full rationale in [BUILD.md](./BUILD.md#3-styling). The rules:
 ```tsx
 import styles from './badge.module.scss';
 
-className={cn(styles.badge, className)}
+className={styles.badge}
 ```
 
 - Always `.scss`. There are no `.module.css` files left in `packages/ui`, and no plain
@@ -191,7 +194,8 @@ className={cn(styles.badge, className)}
 - Sass is for **nesting** and the rare `@mixin` (`skeleton.module.scss`). No Sass variables,
   colour functions or `@use` graphs, a Sass variable is compiled away and a consumer can
   never reach it, so values belong in custom properties.
-- Always merge the incoming `className` last: `cn(styles.badge, className)`.
+- The root class is `styles.badge` and nothing else. A component takes no `className`, so there
+  is nothing to merge in. Use `cn()` only to combine the component's own classes.
 - Don't import CSS from another component's module; CSS Modules hash per file. Share a custom
   property instead.
 - Keep every selector scoped to the component class. A bare `[data-color]` selector applies to
@@ -230,7 +234,7 @@ const badgeProps = {
   'data-variant': variant,
   'data-color': colorMap[color] || color,
   'data-testid': testId,
-  className: cn(styles.badge, className),
+  className: styles.badge,
 };
 ```
 
@@ -371,7 +375,7 @@ nothing else:
 ```tsx
 export interface BadgeProps extends Pick<
   React.ComponentProps<'span'>,
-  'className' | 'children' | 'id' | 'style'
+  'children' | 'id'
 > {
   testId?: string;
   variant?: BadgeVariant;
@@ -438,9 +442,9 @@ Conventions:
   props by hand instead of spreading a type: it's what a consumer or an agent reads off the
   declaration, and it ships in the published `.d.ts`.
 
-`Pick<React.ComponentProps<'span'>, ...>` is for the props nobody needs prose for: `className`,
-`style`, `id`, `children`. Anything a consumer has to make a decision about gets its own
-documented line.
+`Pick<React.ComponentProps<'span'>, ...>` is for the props nobody needs prose for: `id`,
+`children`. Never pick `className` or `style`. Anything a consumer has to make a decision about
+gets its own documented line.
 
 What not to do, restating a signature by hand:
 
@@ -490,13 +494,58 @@ the lowercase string that lands in `data-*`, and never a TS `enum`.
 | --- | --- |
 | `forwardRef` | Every component forwards its ref to the real DOM node. Name the render function, `forwardRef(function Badge(props, ref) { ... })`, so DevTools and stack traces show the name. An explicit `Component.displayName` does the same and stays valid where it already exists |
 | Providers | A component that needs a provider wraps itself in `XProviderIfMissing` (see `TooltipProviderIfMissing`), never in `XProvider`. It adds the provider when none is above and reuses the existing one otherwise, so the component never fails for want of a provider and never shadows what the app configured. Apps place `XProvider` once near the root |
-| `testId` | Always present; forwarded as `data-testid`. Don't make consumers use `className` for test hooks |
+| `testId` | Always present; forwarded as `data-testid`. Consumers have no `className` to hang a test hook on |
 | Defaults | Set in the destructuring (`variant = 'default'`), and mirrored in an `@default` JSDoc tag |
 | Controlled/uncontrolled | Follow Radix naming: `value`/`defaultValue`/`onChange`, `open`/`defaultOpen`/`onOpenChange` |
-| Escape hatches | `className` and `style` merge, never replace |
+| Escape hatches | No `className`, no `style`, no `classNames` or `styles` maps. See [No `className` or `style`](#no-classname-or-style) |
 | Accessibility | Interactive elements get a real role and a labellable prop (`closeAriaLabel`, `aria-label`). `jsx-a11y` rules are on |
 | Cancellable callbacks | If a callback can veto the default behaviour, use the DOM idiom: run the handler, then check `event.defaultPrevented` (see `Badge`'s `onClose`) |
 | No console noise in the happy path | `console.warn` only for genuine misuse, as `Badge` does for `textEllipsis` with non-string children |
+
+### No `className` or `style`
+
+A component does not accept `className` or `style`. This covers the root, every wrapper
+(`containerClassName`, `containerStyle`), every part (`classNames`, `styles`, `contentClassName`)
+and third-party style props such as react-day-picker's `modifiersClassNames`. A consumer can
+reach the look of a component in three ways, in this order:
+
+1. A **prop or variant** (`variant`, `color`, `size`, `width`, `maxWidth`).
+2. A **`--{component}-*` custom property**, set from the consumer's own CSS, for a one-off
+   the variants do not cover. Treat each one as a request to add a prop.
+3. A new **role** in the component, when the same one-off shows up twice.
+
+Why: a class merged onto the root competes with the component's CSS on specificity and source
+order, so the result depends on bundle order. An inline `style` beats every token and cannot be
+themed. Both turn each component's markup into public API that no release can change safely.
+
+How to apply it:
+
+- **Never put `className` or `style` in a props type**, not through `Pick`, not through a spread
+  of `ComponentProps<'x'>`. When a props type extends a DOM or third-party type, `Omit` them. If
+  the type is a union, omit per member, since a plain `Omit` collapses it (see `CalendarProps`).
+- **Reject them in the types, not only at runtime.** Build the component with the exact-props
+  pattern (`T & Validate{Component}Props<T> & Record<Exclude<keyof T, keyof Props>, never>`), so
+  a stray `className` is a type error that points at the prop. Add a `@ts-expect-error` case for
+  each rejected prop to `{name}.types.test-d.tsx`.
+- **Pass-through props still land where they must.** `aria-*` and `data-*` on a portalled popup
+  go to the popup, because that is the only way to reach it. `className` and `style` do not.
+- **Sizing is a prop.** `width` and `maxWidth` write `--{component}-internal-width` and
+  `--{component}-internal-max-width` on the element. They compose with the tokens and never touch
+  `style.width`. Numbers are written as `px`, through `toCssLength`.
+- **The component's own inline `style` is allowed**, and only for those internal custom
+  properties. Cast to `CSSProperties` once, and write nothing the consumer passed in.
+- **Library components that build on another one** may need to style it. Export an
+  `Internal{Component}` from the component file with the `@access private` tag, typed
+  `Props & {Component}StyleProps`, and keep it out of `index.ts` (see `InternalButton`,
+  `ButtonStyleProps`). Outside the package a component is only reachable through its public
+  props.
+- **Docs and stories follow.** Do not show `className` or `style` in a story, an MDX example or
+  a JSDoc snippet. A story that needs layout wraps the component in a `*.stories.module.css`
+  class instead. Delete the tests that asserted the old merge behaviour.
+
+Removing a prop from a component that has it is a breaking change: use `feat(x)!:` or
+`refactor(x)!:` and describe the migration (a prop, a variant, or a custom property) in the
+commit body.
 
 ## 4. How to document props
 
@@ -756,6 +805,11 @@ pnpm -F @signozhq/ui test:run     # jsdom unit + guardrail tests
 pnpm run type-check
 cd apps/docs && pnpm test-storybook
 ```
+
+Every component with exact-props typing has a `{name}.types.test-d.tsx`. It carries one
+`@ts-expect-error` case per prop the component must reject, `className` and `style` included, plus
+`containerClassName` and `containerStyle` where a wrapper exists. Do not write a test that passes
+a `className` and expects it on the DOM.
 
 Query by role and accessible name (`getByRole('button', { name: /close badge/i })`) or by
 `testId`. Don't assert on hashed CSS Module class names.
