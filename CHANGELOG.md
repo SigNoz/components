@@ -1,5 +1,71 @@
 # Changelog
 
+## [0.2.0](https://github.com/SigNoz/components/compare/v0.1.1...v0.2.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **button-group:** rework component on an items API with overflow ([#410](https://github.com/SigNoz/components/issues/410))
+* **ui:** remove className and style overrides from the reworked components ([#411](https://github.com/SigNoz/components/issues/411))
+* **calendar:** restructure calendar, move colours to semantic tokens and drop buttonVariants ([#409](https://github.com/SigNoz/components/issues/409))
+* **dropdown:** add Dropdown on Base UI Menu and drop DropdownMenu ([#408](https://github.com/SigNoz/components/issues/408))
+* **checkbox:** rework checkbox component ([#407](https://github.com/SigNoz/components/issues/407))
+* **toggle:** drop the standalone Toggle component ([#406](https://github.com/SigNoz/components/issues/406))
+* **toggle-group:** rebuild the segmented button on Base UI with an items API ([#400](https://github.com/SigNoz/components/issues/400))
+* **switch:** rework switch component ([#405](https://github.com/SigNoz/components/issues/405))
+* **tabs:** rework component on a single items API ([#399](https://github.com/SigNoz/components/issues/399))
+* **radio-group:** rework component on a single items API ([#397](https://github.com/SigNoz/components/issues/397))
+* **pill:** add Pill component built on a shared badge root ([#391](https://github.com/SigNoz/components/issues/391))
+* **badge:** rework component with variant and color props ([#388](https://github.com/SigNoz/components/issues/388))
+* **tooltip:** rework component on top of @base-ui/react ([#382](https://github.com/SigNoz/components/issues/382))
+* **button-group:** The export of the button was migrated from /button to /button-group
+
+### Features
+
+* **badge:** rework component with variant and color props ([#388](https://github.com/SigNoz/components/issues/388)) ([c6d0f80](https://github.com/SigNoz/components/commit/c6d0f802054767d006f777d1ba51a5e49d823aa9))
+* **button-group:** rework component on an items API with overflow ([#410](https://github.com/SigNoz/components/issues/410)) ([43aa6b0](https://github.com/SigNoz/components/commit/43aa6b0a9d43f8566d2aabba2ce6550d48829cc4))
+* **button:** rework component on top of @base-ui/react ([#383](https://github.com/SigNoz/components/issues/383)) ([b3444b2](https://github.com/SigNoz/components/commit/b3444b22096b95467961f294f7a65634991abb99))
+* **calendar:** restructure calendar, move colours to semantic tokens and drop buttonVariants ([#409](https://github.com/SigNoz/components/issues/409)) ([03055e1](https://github.com/SigNoz/components/commit/03055e1f34ecd4395d2aa630c5df13dde6627d85))
+* **checkbox:** rework checkbox component ([#407](https://github.com/SigNoz/components/issues/407)) ([3509e3d](https://github.com/SigNoz/components/commit/3509e3d1c62ef6b9b2312d704feede2051e6265a))
+* **dropdown:** add Dropdown on Base UI Menu and drop DropdownMenu ([#408](https://github.com/SigNoz/components/issues/408)) ([e4cb44a](https://github.com/SigNoz/components/commit/e4cb44a29f2eae3b36ff8921a38ece125707b8a0))
+* **pill:** add Pill component built on a shared badge root ([#391](https://github.com/SigNoz/components/issues/391)) ([80c430e](https://github.com/SigNoz/components/commit/80c430edee0b63b1f9236296d79704882f6cfe36))
+* **radio-group:** rework component on a single items API ([#397](https://github.com/SigNoz/components/issues/397)) ([b11b499](https://github.com/SigNoz/components/commit/b11b49942a3e68a70be328ac4f73d635fddae975))
+* **react-compiler:** enable support for compiler ([#376](https://github.com/SigNoz/components/issues/376)) ([a34da63](https://github.com/SigNoz/components/commit/a34da63cc22094af0d2688485d60e227d5e0e63b))
+* **spinner:** add new component ([#384](https://github.com/SigNoz/components/issues/384)) ([3d92ddd](https://github.com/SigNoz/components/commit/3d92dddf06d2c392eca88e9c2ac41196ba96a8f7))
+* **switch:** rework switch component ([#405](https://github.com/SigNoz/components/issues/405)) ([14cbafd](https://github.com/SigNoz/components/commit/14cbafd5dbfa59f514fc57644c65277961432c94))
+* **tabs:** rework component on a single items API ([#399](https://github.com/SigNoz/components/issues/399)) ([6e78128](https://github.com/SigNoz/components/commit/6e781287429e16db9b7926828419ba3cbd43a5c0))
+* **toggle-group:** rebuild the segmented button on Base UI with an items API ([#400](https://github.com/SigNoz/components/issues/400)) ([7fc234c](https://github.com/SigNoz/components/commit/7fc234c8474535f9efc147e0944cfdf5ab6df623))
+* **toggle:** drop the standalone Toggle component ([#406](https://github.com/SigNoz/components/issues/406)) ([aae1cba](https://github.com/SigNoz/components/commit/aae1cba257d0f9980e7c3d81ec4daab9cd5782c1))
+* **tooling:** add @base-ui/react, storybook pseudo-states addon and vitest type checking ([#381](https://github.com/SigNoz/components/issues/381)) ([00322e6](https://github.com/SigNoz/components/commit/00322e6d80b20dc7f7f02594b8ae35ecb217d1d8))
+* **tooltip:** rework component on top of @base-ui/react ([#382](https://github.com/SigNoz/components/issues/382)) ([94359cd](https://github.com/SigNoz/components/commit/94359cd0e7efdf55fddda43e74e4a4425a0dcd2a))
+* **turbo:** add root test script ([#377](https://github.com/SigNoz/components/issues/377)) ([b6985ce](https://github.com/SigNoz/components/commit/b6985ced5b6f7f81046db652c2fd60201a1aeb74))
+* **turbo:** add type-check script to packages ([#378](https://github.com/SigNoz/components/issues/378)) ([9724693](https://github.com/SigNoz/components/commit/97246930da57ba1882afdb0c803a42a5738a23fd))
+
+
+### Bug Fixes
+
+* **ui:** post-merge fixes for the component rework stack ([#412](https://github.com/SigNoz/components/issues/412)) ([245b398](https://github.com/SigNoz/components/commit/245b39895314d9b7fe1a0317449d784fde629634))
+
+
+### Documentation
+
+* **guidelines:** document the component-level JSDoc block ([#385](https://github.com/SigNoz/components/issues/385)) ([5a5d2b4](https://github.com/SigNoz/components/commit/5a5d2b4c39131526876e5f852d8bb87c4c98dacc))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the development-dependencies group across 1 directory with 17 updates ([#422](https://github.com/SigNoz/components/issues/422)) ([d72af14](https://github.com/SigNoz/components/commit/d72af14146c938b588f86501a4f1f007e4916648))
+* **design-tokens:** bump package to 2.2.0 ([#421](https://github.com/SigNoz/components/issues/421)) ([310df79](https://github.com/SigNoz/components/commit/310df7991259b546554e05936f316474dffb4686))
+* **react-compiler:** fail CI on compiler bailouts in hardened components ([#390](https://github.com/SigNoz/components/issues/390)) ([1d05a54](https://github.com/SigNoz/components/commit/1d05a545ec56c92f5884f49404b306b16556210d))
+* **skills:** remove component-docs-stories skill ([#389](https://github.com/SigNoz/components/issues/389)) ([f4aef6c](https://github.com/SigNoz/components/commit/f4aef6c22f3e399ab3f6b791e7f5fca9ed06f19f))
+* **storybook:** update dependencies and fix audit ([#387](https://github.com/SigNoz/components/issues/387)) ([0770d0f](https://github.com/SigNoz/components/commit/0770d0fdcf460ebc3295aebece66033549f5d42e))
+
+
+### Code Refactoring
+
+* **button-group:** extract out of button component ([#380](https://github.com/SigNoz/components/issues/380)) ([0a05b3e](https://github.com/SigNoz/components/commit/0a05b3e7163144038cfc8fa5ac341c19abd429b1))
+* **ui:** remove className and style overrides from the reworked components ([#411](https://github.com/SigNoz/components/issues/411)) ([8398ace](https://github.com/SigNoz/components/commit/8398ace07f99c60c4df469ea3fa3a1e9fe42a0d6))
+
 ## [0.1.1](https://github.com/SigNoz/components/compare/v0.1.0...v0.1.1) (2026-09-02)
 
 
