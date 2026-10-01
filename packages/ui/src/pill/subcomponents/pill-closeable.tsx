@@ -71,6 +71,13 @@ export type PillCloseableProps = Omit<PillProps, 'variant' | 'color' | 'onClick'
  * it from the tab order (`tabIndex={-1}`), and blocks its click/keyboard handling by hand. The
  * close button is a real `<button>` and gets the native attribute instead.
  *
+ * ### Invalid
+ *
+ * `aria-invalid="true"` repaints the border, the label and the close icon with the invalid colour,
+ * and swaps the neutral fill for a tint of the invalid background. Override them with
+ * `--pill-invalid-background-color`, `--pill-invalid-hover-background-color`,
+ * `--pill-invalid-close-color` and `--pill-invalid-close-hover-color`.
+ *
  * ### Asserting on it
  *
  * | `data-slot` | rendered |

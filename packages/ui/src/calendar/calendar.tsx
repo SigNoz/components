@@ -9,7 +9,7 @@ import {
 } from 'react-day-picker';
 import { CalendarContext } from './calendar-context.js';
 import styles from './calendar.module.scss';
-import { cn } from '../lib/utils.js';
+import { cn, type RejectedProps } from '../lib/utils.js';
 import { CalendarChevron } from './subcomponents/calendar-chevron.js';
 import { CalendarDayButton } from './subcomponents/calendar-day-button.js';
 import {
@@ -23,7 +23,7 @@ import {
 import { CalendarMonth } from './subcomponents/calendar-month.js';
 import { CalendarRoot } from './subcomponents/calendar-root.js';
 import { CalendarWeekNumber } from './subcomponents/calendar-week-number.js';
-import type { CalendarProps } from './types.js';
+import type { CalendarProps, DayPickerStyleProp } from './types.js';
 
 const defaultClassNames = getDefaultClassNames();
 
@@ -66,6 +66,16 @@ const CALENDAR_COMPONENTS = {
  * `data-range-start`, `data-range-middle` or `data-range-end` rather than `data-selected-single`,
  * so the three positions are painted apart.
  *
+ * A range reads as one band that stops at the edge of each week row. With `numberOfMonths` above
+ * one, an outside day whose own month is also displayed is not painted as part of the range: that
+ * month already shows it. The first month's leading and the last month's trailing outside days
+ * have no other copy, so they paint.
+ *
+ * ### Footer
+ *
+ * `footer` renders under the grid in react-day-picker's live region, at the size and in the colour
+ * of the weekday labels, through `--calendar-footer-*`.
+ *
  * ### Disabled days
  *
  * `disabled` takes upstream's matchers. react-day-picker disables the button natively, except on
@@ -76,7 +86,8 @@ const CALENDAR_COMPONENTS = {
  *
  * On the button, never on the `<td>` around it. The button declares its own `color`, so a colour
  * set on the cell never reaches the day number, and the button covers the cell, so a background set
- * there is either hidden or has to be undone again for each selection state.
+ * there is either hidden or has to be undone again for each selection state. The range band is the
+ * button's own `box-shadow`, so it is painted there too.
  *
  * ### Styling
  *
@@ -127,6 +138,7 @@ const CALENDAR_COMPONENTS = {
  * | `data-day` | always, the day as `YYYY-MM-DD` in Latin digits, unless `numerals` or a non-Gregorian `dateLib` is set |
  * | `data-today` | the day is today |
  * | `data-outside` | the day belongs to a neighbouring month |
+ * | `data-duplicate` | an outside day whose own month is displayed too |
  * | `data-selected-single` | selected, and not part of a range |
  * | `data-range-start`, `data-range-middle`, `data-range-end` | the day's position in a range |
  *
@@ -169,7 +181,20 @@ const CALENDAR_COMPONENTS = {
  * ```
  */
 export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calendar(
-	{ showOutsideDays = true, captionLayout = 'label', formatters, components, testId, ...props },
+	{
+		showOutsideDays = true,
+		captionLayout = 'label',
+		formatters,
+		components,
+		testId,
+		className: _className,
+		classNames: _classNames,
+		style: _style,
+		styles: _styles,
+		modifiersClassNames: _modifiersClassNames,
+		modifiersStyles: _modifiersStyles,
+		...props
+	}: CalendarProps & RejectedProps<DayPickerStyleProp>,
 	ref,
 ) {
 	const calendarFormatters = useMemo<Partial<Formatters>>(() => {
@@ -209,6 +234,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
 			week_number: cn(styles['calendar__week-number'], defaultClassNames.week_number),
 			day: cn(styles['calendar__day'], defaultClassNames.day),
 			hidden: cn(styles['calendar__hidden'], defaultClassNames.hidden),
+			footer: cn(styles['calendar__footer'], defaultClassNames.footer),
 		};
 	}, [captionLayout]);
 

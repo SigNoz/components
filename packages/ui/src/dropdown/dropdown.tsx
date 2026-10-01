@@ -8,18 +8,15 @@ import {
 	type RefAttributes,
 	useCallback,
 	useEffect,
-	useId,
 	useMemo,
 	useRef,
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { TooltipContent } from '../tooltip/subcomponents/tooltip-content.js';
+import { usePopupContainer } from '../lib/popup-container.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../tooltip/subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../tooltip/subcomponents/tooltip-trigger.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../tooltip/tooltip-handle.js';
 import { DROPDOWN_ROW_SELECTOR, DROPDOWN_SIDE_OFFSET } from './constants.js';
 import { type DropdownContextValue, DropdownProvider } from './dropdown-context.js';
 import styles from './dropdown.module.scss';
@@ -53,6 +50,9 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	},
 	ref,
 ) {
+	const popupContainer = usePopupContainer();
+	// Inside a dialog the menu goes into its panel, where the focus trap lets the keyboard in.
+	const portalContainer = container === undefined ? popupContainer : container;
 	const actionsRef = useRef<MenuRootActions | null>(null);
 	const popupRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -90,8 +90,6 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 		}
 	}, [disabled, close]);
 
-	const tooltipHandle = useTooltipHandle();
-	const tooltipContentId = useId();
 	const hasDisabledTooltip = disabled && hasTooltipContent(disabledTooltip);
 
 	const rememberSelection = useCallback((rowKey: string, selection: boolean | string): void => {
@@ -120,10 +118,10 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 			close,
 			rememberedSelections,
 			rememberSelection,
-			container,
+			container: portalContainer,
 			popupStyle,
 		}),
-		[testId, close, rememberedSelections, rememberSelection, container, popupStyle],
+		[testId, close, rememberedSelections, rememberSelection, portalContainer, popupStyle],
 	);
 
 	// `ArrowDown` in the search field hands the highlight to the first row; this hands it back.
@@ -186,21 +184,11 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 			) : (
 				// Wrapped whenever a reason is passed, not only while it shows, so toggling
 				// `disabled` does not remount the trigger and drop its focus.
-				<TooltipProviderIfMissing>
-					<TooltipTrigger
-						handle={tooltipHandle}
-						contentId={hasDisabledTooltip ? tooltipContentId : null}
-					>
-						{trigger}
-					</TooltipTrigger>
-					{hasDisabledTooltip && (
-						<TooltipRoot handle={tooltipHandle}>
-							<TooltipContent id={tooltipContentId}>{disabledTooltip}</TooltipContent>
-						</TooltipRoot>
-					)}
-				</TooltipProviderIfMissing>
+				<TooltipAnchor content={hasDisabledTooltip ? disabledTooltip : null}>
+					{trigger}
+				</TooltipAnchor>
 			)}
-			<Menu.Portal container={container}>
+			<Menu.Portal container={portalContainer}>
 				<Menu.Positioner
 					side={side}
 					align={align}
@@ -396,7 +384,11 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * `` `${testId}-item-${value}` ``, a group `` `${testId}-group-${value}` ``, a radio group
  * `` `${testId}-radio-group-${name}` ``, and the search row, the loading row and the empty row are
  * `` `${testId}-search` ``, `` `${testId}-loading` `` and `` `${testId}-empty` ``. A row's own
- * `testId` wins. Otherwise use the data attributes, never the hashed class names.
+ * `testId` wins. A row's slots hang off the row's test id, `` `${rowTestId}-prefix` `` and
+ * `` `${rowTestId}-suffix` ``, and the search icon is `` `${testId}-search-prefix` ``. Each slot
+ * holds `` `${slotTestId}-content` `` and `` `${slotTestId}-loading` ``, and the spinner in it is
+ * `` `${slotTestId}-spinner` ``. Otherwise
+ * use the data attributes, never the hashed class names.
  *
  * | popup attribute | value |
  * |---|---|
@@ -409,7 +401,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * | `dropdown-positioner` | always, the box the popup is placed in |
  * | `dropdown-viewport` | always, the scrolling part, `data-scroll-start` and `data-scroll-end` while that edge clips a row |
  * | `dropdown-search` | only with `searchInputProps`, a sibling of the viewport so it stays pinned |
- * | `dropdown-search-input`, `dropdown-search-prefix` | inside the search row |
+ * | `dropdown-search-input`, `dropdown-search-prefix` | inside the search row, the prefix with `data-loading` while `searchInputProps.loading` is true |
  * | `dropdown-search-suffix` | inside the search row, only when `searchInputProps.suffix` is set |
  * | `dropdown-item` | one per `item` row, `data-danger`, `data-disabled` and `data-loading` as they apply |
  * | `dropdown-link` | one per `link` row, `data-disabled` and `data-loading` as they apply |
@@ -417,7 +409,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * | `dropdown-radio-group` | one per `radio-group` row, `data-disabled` while the whole group is |
  * | `dropdown-submenu-trigger` | one per `submenu` row |
  * | `dropdown-submenu-chevron` | the trailing glyph of a `submenu` row |
- * | `dropdown-item-prefix`, `dropdown-item-suffix` | only when the row has one, the suffix also while a spinner is in it on a row without a prefix, and always on a checkbox or radio row |
+ * | `dropdown-item-prefix`, `dropdown-item-suffix` | only when the row has one, the suffix always on a row without a prefix (collapsed while empty and idle, it takes the spinner), and always on a checkbox or radio row. `data-loading` while the spinner shows, `data-empty` without content |
+ * | `<slot>-content`, `<slot>-loading` | inside `dropdown-item-prefix`, `dropdown-item-suffix` and `dropdown-search-prefix`: the content and the spinner, stacked and cross-faded. The spinner is always mounted and paused while hidden |
  * | `dropdown-item-label` | the measured element, `data-truncated` while it does not fit, `data-empty-label` while it is the fallback |
  * | `dropdown-item-indicator` | inside a checkbox or radio row, `data-checked` while it is selected |
  * | `dropdown-group`, `dropdown-group-label` | one per `group` row |

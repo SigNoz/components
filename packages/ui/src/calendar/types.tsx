@@ -24,7 +24,7 @@ export type CalendarButtonVariantType =
  *
  * @access private
  */
-type DayPickerStyleProp =
+export type DayPickerStyleProp =
 	| 'className'
 	| 'classNames'
 	| 'style'

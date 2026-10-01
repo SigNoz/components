@@ -8,10 +8,7 @@ import { Dialog, DialogContent, DialogTitle } from './index.js';
 // dialog's stacking context, and the dialog covers it whenever its z-index wins. Inside the
 // dialog element it stacks with the dialog and stays visible.
 describe('Dialog with a tooltip inside', () => {
-	// TODO: fix in the dialog rework. `DialogContent` should hand nested tooltips its own
-	// element as the portal container (a `TooltipProvider container={...}` around `children`),
-	// so a consumer never has to pass `container` by hand.
-	it.fails('portals a nested tooltip into the dialog content', () => {
+	it('portals a nested tooltip into the dialog content', () => {
 		render(
 			<Dialog open>
 				<DialogContent aria-describedby={undefined}>

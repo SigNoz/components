@@ -2,7 +2,6 @@ import {
 	cloneElement,
 	forwardRef,
 	isValidElement,
-	useId,
 	type CSSProperties,
 	type ElementType,
 	type KeyboardEventHandler,
@@ -12,11 +11,7 @@ import {
 import { toCssLength } from '../../lib/css-length.js';
 import { cn } from '../../lib/utils.js';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../badge.module.scss';
 import { BadgeTextOverflow } from '../constants.js';
 import type { BadgeColorType, BadgeProps, BadgeVariantType } from '../types.js';
@@ -124,6 +119,27 @@ export type BadgeRootProps = Omit<BadgeProps, 'variant' | 'color'> & {
 	interactiveSuffix?: boolean;
 };
 
+// One per module: building a segmenter loads locale data.
+const graphemes =
+	typeof Intl.Segmenter === 'function'
+		? new Intl.Segmenter(undefined, { granularity: 'grapheme' })
+		: undefined;
+
+/**
+ * Whether the text is one visible character. Counted in graphemes, so a glyph built from several
+ * code points (an emoji with a variation selector or a skin tone, a decomposed accent) is one.
+ * Where `Intl.Segmenter` is missing, code points are the closest count.
+ */
+function isOneCharacter(text: string): boolean {
+	if (graphemes === undefined) {
+		return [...text].length === 1;
+	}
+
+	const segments = graphemes.segment(text)[Symbol.iterator]();
+
+	return segments.next().done !== true && segments.next().done === true;
+}
+
 /**
  * Shared rendering for `Badge` and `Pill`: label, truncation tooltip, prefix/suffix, width and
  * testId wiring. Not part of the package's public surface, reach it through `Badge` (`span`, the
@@ -160,12 +176,16 @@ export const BadgeRoot = forwardRef<HTMLSpanElement | HTMLButtonElement, BadgeRo
 	) {
 		const hasOverflowTooltip = textOverflow === BadgeTextOverflow.Ellipsis;
 		const [isTruncated, labelRef] = useIsLabelTruncated(hasOverflowTooltip);
-		const tooltipHandle = useTooltipHandle();
-		const tooltipContentId = useId();
 
 		if (children == null || children === false || children === '') {
 			return null;
 		}
+
+		const isSingleChar =
+			(typeof children === 'string' || typeof children === 'number') &&
+			isOneCharacter(String(children)) &&
+			!isValidElement(prefix) &&
+			!isValidElement(suffix);
 
 		const badgeStyle = {
 			...style,
@@ -183,6 +203,7 @@ export const BadgeRoot = forwardRef<HTMLSpanElement | HTMLButtonElement, BadgeRo
 				data-text-transform={textTransform}
 				data-text-overflow={textOverflow}
 				data-truncated={isTruncated || undefined}
+				data-single-char={isSingleChar || undefined}
 				className={cn(styles['badge'], className)}
 				ref={ref}
 				style={badgeStyle}
@@ -217,21 +238,12 @@ export const BadgeRoot = forwardRef<HTMLSpanElement | HTMLButtonElement, BadgeRo
 		}
 
 		return (
-			<TooltipProviderIfMissing>
-				<TooltipTrigger
-					handle={tooltipHandle}
-					contentId={isTruncated ? tooltipContentId : undefined}
-				>
-					{badgeEl}
-				</TooltipTrigger>
-				{isTruncated && (
-					<TooltipRoot handle={tooltipHandle}>
-						<TooltipContent id={tooltipContentId} className={styles['badge__label-tooltip']}>
-							{children}
-						</TooltipContent>
-					</TooltipRoot>
-				)}
-			</TooltipProviderIfMissing>
+			<TooltipAnchor
+				content={isTruncated ? children : null}
+				contentProps={{ className: styles['badge__label-tooltip'] }}
+			>
+				{badgeEl}
+			</TooltipAnchor>
 		);
 	},
 );

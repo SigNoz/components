@@ -20,11 +20,11 @@
  * | `--pill-border-color` | `var(--pill-internal-border-color)` |
  * | `--pill-border-radius` | `var(--radius-round)` |
  * | `--pill-border-width` | `1px` |
- * | `--pill-close-color` | `var(--pill-rect-solid-dismiss-icon)` |
+ * | `--pill-close-color` | `var(--pill-internal-close-color, var(--pill-rec...` |
  * | `--pill-close-disabled-cursor` | `not-allowed` |
  * | `--pill-close-focus-visible-outline` | `var(--pill-focus-ring) solid 1px` |
  * | `--pill-close-focus-visible-outline-offset` | `-2px` |
- * | `--pill-close-hover-color` | `var(--pill-rect-solid-dismiss-icon-hover)` |
+ * | `--pill-close-hover-color` | `var(--pill-internal-close-hover-color, var(--pi...` |
  * | `--pill-close-icon-size` | `12px` |
  * | `--pill-closeable-background-color` | `var(--pill-rect-solid-background)` |
  * | `--pill-closeable-border-radius` | `var(--radius-1-5)` |
@@ -32,6 +32,7 @@
  * | `--pill-closeable-gap` | `var(--spacing-2)` |
  * | `--pill-closeable-hover-background-color` | `var(--pill-rect-solid-background-hover)` |
  * | `--pill-closeable-hover-color` | `var(--pill-rect-solid-label-hover)` |
+ * | `--pill-closeable-padding-inline-end` | `-` |
  * | `--pill-color` | `var(--pill-internal-foreground)` |
  * | `--pill-cursor` | `pointer` |
  * | `--pill-danger-background` | `-` |
@@ -77,19 +78,28 @@
  * | `--pill-info-hover-color` | `var(--pill-info-label-hover)` |
  * | `--pill-info-label` | `-` |
  * | `--pill-info-label-hover` | `-` |
+ * | `--pill-invalid-background` | `-` |
+ * | `--pill-invalid-background-color` | `color-mix(in oklab, var(--pill-invalid-backgrou...` |
  * | `--pill-invalid-border` | `-` |
  * | `--pill-invalid-border-color` | `var(--pill-invalid-border)` |
+ * | `--pill-invalid-close-color` | `var(--pill-invalid-dismiss-icon)` |
+ * | `--pill-invalid-close-hover-color` | `var(--pill-invalid-dismiss-icon-hover)` |
  * | `--pill-invalid-color` | `var(--pill-invalid-label)` |
+ * | `--pill-invalid-dismiss-icon` | `-` |
+ * | `--pill-invalid-dismiss-icon-hover` | `-` |
+ * | `--pill-invalid-hover-background-color` | `color-mix(in oklab, var(--pill-invalid-backgrou...` |
  * | `--pill-invalid-label` | `-` |
  * | `--pill-justify-content` | `center` |
- * | `--pill-line-height` | `100%` |
+ * | `--pill-letter-spacing` | `-` |
+ * | `--pill-line-height` | `var(--line-height-18)` |
  * | `--pill-max-width` | `var(--pill-internal-max-width, min(100%, 7.5rem))` |
+ * | `--pill-min-width` | `-` |
  * | `--pill-outlined-background` | `-` |
  * | `--pill-outlined-background-hover` | `-` |
  * | `--pill-outlined-border` | `-` |
  * | `--pill-outlined-label` | `-` |
  * | `--pill-outlined-label-hover` | `-` |
- * | `--pill-padding` | `var(--spacing-2) var(--spacing-4)` |
+ * | `--pill-padding` | `0 var(--spacing-4)` |
  * | `--pill-primary-background` | `-` |
  * | `--pill-primary-background-color` | `color-mix(in oklab, var(--pill-primary-backgrou...` |
  * | `--pill-primary-border` | `-` |
@@ -112,6 +122,7 @@
  * | `--pill-secondary-hover-background-color` | `var(--pill-outlined-background-hover)` |
  * | `--pill-secondary-hover-border-color` | `var(--pill-outlined-border)` |
  * | `--pill-secondary-hover-color` | `var(--pill-outlined-label-hover)` |
+ * | `--pill-single-char-padding-inline` | `-` |
  * | `--pill-success-background` | `-` |
  * | `--pill-success-background-color` | `color-mix(in oklab, var(--pill-success-backgrou...` |
  * | `--pill-success-border` | `-` |

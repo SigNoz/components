@@ -371,12 +371,26 @@ describe('remaining props', () => {
 				Label
 			</Button>,
 		);
+		assertType(
+			<Button size="md" variant="solid" color="primary" type="submit" form="settings">
+				Label
+			</Button>,
+		);
 	});
 
 	test('rejects a textOverflow outside the set', () => {
 		assertType(
 			// @ts-expect-error - `clip` is not a ButtonTextOverflow
 			<Button size="md" variant="solid" color="primary" textOverflow="clip">
+				Label
+			</Button>,
+		);
+	});
+
+	test('rejects the removed visible textOverflow', () => {
+		assertType(
+			// @ts-expect-error - `visible` let the label paint outside the button and was removed
+			<Button size="md" variant="solid" color="primary" textOverflow="visible">
 				Label
 			</Button>,
 		);

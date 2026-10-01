@@ -1,16 +1,7 @@
 import * as React from 'react';
-import { TooltipContent } from '../subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
-import {
-	hasTooltipContent,
-	TooltipContentStackProvider,
-	useTooltipContentStackEntries,
-} from '../tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../tooltip-handle.js';
+import type { RejectedProps } from '../../lib/utils.js';
+import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { useStackedTooltipProps } from '../tooltip-stacked-props.js';
-import { useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
 import type { TooltipProps } from '../types.js';
 
 /**
@@ -48,7 +39,8 @@ import type { TooltipProps } from '../types.js';
  * - `role="tooltip"`, `id` from `id` or generated, trigger points at it with `aria-describedby`.
  * - Every `data-*` from the call site lands here, the only element the component renders itself.
  *   `data-slot` is the exception, it stays `tooltip-content`.
- * - Portalled into `container`, else the provider's container, else `document.body`.
+ * - Portalled into `container`, else the provider's container, else the panel of the `Dialog` or
+ *   `Drawer` it sits in, else `document.body`.
  * - Clamped to 6 lines (`--tooltip-max-lines`) at 26.25rem. Longer content wants a popover.
  *
  * ### A disabled trigger never opens
@@ -113,48 +105,28 @@ import type { TooltipProps } from '../types.js';
  * });
  * ```
  */
-export const Tooltip = React.forwardRef<HTMLButtonElement, TooltipProps>(
-	function Tooltip(props, ref) {
-		const stacked = useIsInsideTooltipTrigger();
-		const tooltip = <TooltipParts ref={ref} {...props} />;
-
-		// The trigger and the root are siblings, so their stack has to sit above both.
-		return (
-			<TooltipProviderIfMissing>
-				{stacked ? tooltip : <TooltipContentStackProvider>{tooltip}</TooltipContentStackProvider>}
-			</TooltipProviderIfMissing>
-		);
-	},
-);
-
-const TooltipParts = React.forwardRef<HTMLButtonElement, TooltipProps>(function TooltipParts(
-	{ title, children, open, ...props },
+export const Tooltip = React.forwardRef<HTMLButtonElement, TooltipProps>(function Tooltip(
+	{
+		title,
+		children,
+		open,
+		className: _className,
+		style: _style,
+		...props
+	}: TooltipProps & RejectedProps,
 	ref,
 ) {
-	const { stacked, triggerProps, contentProps } = useStackedTooltipProps(props);
-	const handle = useTooltipHandle();
-	const generatedId = React.useId();
-	const contentId = contentProps.id ?? generatedId;
-	const stackedEntries = useTooltipContentStackEntries();
-	const hasContent = hasTooltipContent(title) || (!stacked && stackedEntries.length > 0);
+	const { triggerProps, contentProps } = useStackedTooltipProps(props);
 
 	return (
-		<>
-			<TooltipTrigger
-				ref={ref}
-				handle={handle}
-				contentId={hasContent ? contentId : null}
-				{...triggerProps}
-			>
-				{children}
-			</TooltipTrigger>
-			{hasContent && (
-				<TooltipRoot handle={handle} open={open}>
-					<TooltipContent {...contentProps} id={contentId}>
-						{title}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</>
+		<TooltipAnchor
+			ref={ref}
+			content={title}
+			open={open}
+			contentProps={contentProps}
+			{...triggerProps}
+		>
+			{children}
+		</TooltipAnchor>
 	);
 });

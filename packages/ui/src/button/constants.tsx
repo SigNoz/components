@@ -24,6 +24,5 @@ export const ButtonColor = {
 
 export const ButtonTextOverflow = {
 	Hidden: 'hidden',
-	Visible: 'visible',
 	Ellipsis: 'ellipsis',
 } as const;

@@ -74,11 +74,11 @@
  * | `--select-pill-border-radius` | `var(--radius-1, 2px)` |
  * | `--select-pill-color` | `var(--accent-foreground)` |
  * | `--select-pill-display` | `inline-flex` |
- * | `--select-pill-font-size` | `0.75rem` |
+ * | `--select-pill-font-size` | `var(--periscope-font-size-base)` |
  * | `--select-pill-gap` | `0.25rem` |
  * | `--select-pill-height` | `1.25rem` |
  * | `--select-pill-inner-gap` | `0.125rem` |
- * | `--select-pill-line-height` | `1` |
+ * | `--select-pill-line-height` | `var(--line-height-18)` |
  * | `--select-pill-overflow-align-items` | `center` |
  * | `--select-pill-overflow-background` | `var(--muted)` |
  * | `--select-pill-overflow-color` | `var(--muted-foreground)` |

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import type { CSSProperties } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Calendar } from '../calendar.js';
@@ -26,6 +26,14 @@ const LABELS = {
 	'--calendar-day-disabled-label': 'rgb(33, 33, 33)',
 	'--calendar-day-today-label': 'rgb(44, 44, 44)',
 	'--calendar-day-selected-label': 'rgb(55, 55, 55)',
+} as CSSProperties;
+
+/** The tokens the footer measures against, so its computed style is something the test chose. */
+const FOOTER_TOKENS = {
+	'--spacing-4': '8px',
+	'--periscope-font-size-small': '11px',
+	'--line-height-18': '18px',
+	'--calendar-weekday-label': 'rgb(7, 7, 7)',
 } as CSSProperties;
 
 describe('Calendar styling', () => {
@@ -195,5 +203,40 @@ describe('Calendar styling', () => {
 
 			expect(Math.abs(drift)).toBeLessThanOrEqual(1);
 		}
+	});
+
+	it('follows a weekday colour override, and takes its own', () => {
+		const { rerender } = render(
+			<div
+				style={{ ...FOOTER_TOKENS, '--calendar-weekday-color': 'rgb(8, 8, 8)' } as CSSProperties}
+			>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} footer="Pick the day." />
+			</div>,
+		);
+
+		expect(getComputedStyle(screen.getByText('Pick the day.')).color).toBe('rgb(8, 8, 8)');
+
+		rerender(
+			<div
+				style={
+					{
+						...FOOTER_TOKENS,
+						'--calendar-footer-color': 'rgb(9, 9, 9)',
+						'--calendar-footer-margin-top': '12px',
+						'--calendar-footer-font-size': '13px',
+						'--calendar-footer-line-height': '20px',
+					} as CSSProperties
+				}
+			>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} footer="Pick the day." />
+			</div>,
+		);
+
+		const footer = getComputedStyle(screen.getByText('Pick the day.'));
+
+		expect(footer.color).toBe('rgb(9, 9, 9)');
+		expect(footer.marginTop).toBe('12px');
+		expect(footer.fontSize).toBe('13px');
+		expect(footer.lineHeight).toBe('20px');
 	});
 });

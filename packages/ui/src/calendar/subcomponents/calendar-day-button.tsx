@@ -1,4 +1,5 @@
 import { type ReactElement, useEffect, useMemo, useRef } from 'react';
+import { useDayPicker } from 'react-day-picker';
 import { useCalendarTestIdStem } from '../calendar-context.js';
 import styles from '../calendar.module.scss';
 import { CalendarButtonVariant } from '../constants.js';
@@ -26,6 +27,7 @@ export function CalendarDayButton({
 }: CalendarDayButtonProps): ReactElement {
 	const ref = useRef<HTMLButtonElement>(null);
 	const stem = useCalendarTestIdStem();
+	const { months } = useDayPicker();
 
 	// react-day-picker moves focus by flipping this modifier rather than by touching the DOM, so
 	// the button it lands on is the one that has to call `focus()`.
@@ -47,6 +49,11 @@ export function CalendarDayButton({
 	const isSelectedSingle =
 		modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle;
 
+	// An outside day whose own month is displayed too shows twice. Only the copy in its own month
+	// paints a range, so the range is not drawn twice with a second end.
+	const isDuplicate =
+		day.outside && months.some((month) => day.dateLib.isSameMonth(month.date, day.date));
+
 	return (
 		<CalendarButton
 			ref={ref}
@@ -56,6 +63,7 @@ export function CalendarDayButton({
 			data-day={day.isoDate}
 			data-today={modifiers.today || undefined}
 			data-outside={day.outside || undefined}
+			data-duplicate={isDuplicate || undefined}
 			data-selected-single={isSelectedSingle || undefined}
 			data-range-start={modifiers.range_start || undefined}
 			data-range-middle={modifiers.range_middle || undefined}

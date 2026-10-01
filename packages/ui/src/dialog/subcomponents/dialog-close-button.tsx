@@ -117,6 +117,7 @@ export const DialogCloseButton = forwardRef<HTMLButtonElement, DialogCloseButton
 			color = 'secondary',
 			disabled,
 			disabledTooltip,
+			style,
 			...buttonProps
 		},
 		ref,
@@ -136,6 +137,12 @@ export const DialogCloseButton = forwardRef<HTMLButtonElement, DialogCloseButton
 					disabledTooltip={disabledTooltip}
 					data-slot="dialog-close-button"
 					className={cn(styles.dialog__close__icon_button, className)}
+					style={{
+						'--button-variant-ghost-position': 'absolute',
+						'--button-variant-dashed-position': 'absolute',
+						'--button-variant-outlined-disabled-position': 'absolute',
+						...style,
+					}}
 					{...buttonProps}
 				>
 					{icon}

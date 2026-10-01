@@ -585,7 +585,8 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * The element the popup is portalled into.
 		 *
-		 * @note Pass the dialog or drawer element to keep the menu inside it.
+		 * @note Inside a `Dialog` or `Drawer` the default is an element in its panel, where the focus
+		 * trap of the modal lets the keyboard reach the rows.
 		 *
 		 * @default document.body
 		 */

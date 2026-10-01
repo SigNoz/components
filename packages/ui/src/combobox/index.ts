@@ -39,10 +39,10 @@
  * | `--combobox-pill-border-radius` | `var(--radius-1, 2px)` |
  * | `--combobox-pill-color` | `var(--accent-foreground)` |
  * | `--combobox-pill-display` | `inline-flex` |
- * | `--combobox-pill-font-size` | `0.75rem` |
+ * | `--combobox-pill-font-size` | `var(--periscope-font-size-base)` |
  * | `--combobox-pill-height` | `1.25rem` |
  * | `--combobox-pill-inner-gap` | `0.125rem` |
- * | `--combobox-pill-line-height` | `1` |
+ * | `--combobox-pill-line-height` | `var(--line-height-18)` |
  * | `--combobox-pill-overflow-align-items` | `center` |
  * | `--combobox-pill-overflow-background` | `var(--accent)` |
  * | `--combobox-pill-overflow-color` | `var(--accent-foreground)` |

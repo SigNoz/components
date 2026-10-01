@@ -78,12 +78,6 @@
  * | `--radio-group-primary-hover-border-color` | `var(--radio-group-primary-border-hover)` |
  * | `--radio-group-readonly-cursor` | `not-allowed` |
  * | `--radio-group-readonly-opacity` | `0.8` |
- * | `--radio-group-secondary-background` | `-` |
- * | `--radio-group-secondary-border-hover` | `-` |
- * | `--radio-group-secondary-checked-background-color` | `var(--radio-group-secondary-background)` |
- * | `--radio-group-secondary-dot` | `-` |
- * | `--radio-group-secondary-dot-color` | `var(--radio-group-secondary-dot)` |
- * | `--radio-group-secondary-hover-border-color` | `var(--radio-group-secondary-border-hover)` |
  * | `--radio-group-size` | `16px` |
  * | `--radio-group-success-background` | `-` |
  * | `--radio-group-success-border-hover` | `-` |

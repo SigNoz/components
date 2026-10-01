@@ -224,7 +224,7 @@ export type ValidateButtonGroupProps<T> = (T extends { disabled: boolean | undef
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type ButtonGroupProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
+export type ButtonGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes & {
 		/**
 		 * The visual treatment. `outlined` is the only one a group is built from.
@@ -303,8 +303,7 @@ export type ButtonGroupProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 
 		 * (`--button-group-label-max-inline-size`, 120px).
 		 *
 		 * `ellipsis` truncates the label and shows the full text in a tooltip, only while it is
-		 * truncated. `hidden` clips it with no marker and no tooltip. `visible` clips nothing and
-		 * lets the label paint outside its box.
+		 * truncated. `hidden` clips it with no marker and no tooltip.
 		 *
 		 * @default 'ellipsis'
 		 */

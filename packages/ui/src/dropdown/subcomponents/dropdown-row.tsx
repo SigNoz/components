@@ -1,22 +1,17 @@
-import type { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import type { ReactElement, ReactNode, RefCallback } from 'react';
-import { useId, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { hasRenderableContent } from '../../lib/utils.js';
-import { Spinner } from '../../spinner/spinner.js';
-import { TooltipContent } from '../../tooltip/subcomponents/tooltip-content.js';
-import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
-import { TooltipRoot } from '../../tooltip/subcomponents/tooltip-root.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import { TooltipTrigger } from '../../tooltip/subcomponents/tooltip-trigger.js';
 import {
 	hasTooltipContent,
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
-import { useTooltipHandle } from '../../tooltip/tooltip-handle.js';
 import { DROPDOWN_EMPTY_LABEL } from '../constants.js';
 import { useDropdownContext, useDropdownRowKey } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
+import { DropdownAffix } from './dropdown-affix.js';
 
 /**
  * Which side a row's tooltip opens against: away from the menu it belongs to, so it never covers
@@ -67,8 +62,6 @@ export type DropdownRowState = {
 	 */
 	isInert: boolean;
 	tooltipContent: ReactNode;
-	tooltipContentId: string;
-	tooltipHandle: ReturnType<typeof TooltipPrimitive.createHandle>;
 };
 
 /**
@@ -91,8 +84,6 @@ export function useDropdownRow({
 }: DropdownRowParams): [DropdownRowState, RefCallback<HTMLSpanElement>] {
 	const { testId: dropdownTestId } = useDropdownContext();
 	const rowKey = useDropdownRowKey(value);
-	const tooltipContentId = useId();
-	const tooltipHandle = useTooltipHandle();
 
 	// `loading` outranks `disabled`, the way it does on `Button`: while the row is waiting it is
 	// not disabled at all, and its reason is what the row is waiting for.
@@ -152,8 +143,6 @@ export function useDropdownRow({
 			isDisabled,
 			isInert,
 			tooltipContent,
-			tooltipContentId,
-			tooltipHandle,
 		},
 		labelRef,
 	];
@@ -176,21 +165,9 @@ export function DropdownRowTooltip({
 	children: ReactElement;
 }): ReactNode {
 	return (
-		<TooltipProviderIfMissing>
-			<TooltipTrigger
-				handle={row.tooltipHandle}
-				contentId={row.tooltipContent === null ? undefined : row.tooltipContentId}
-			>
-				{children}
-			</TooltipTrigger>
-			{row.tooltipContent !== null && (
-				<TooltipRoot handle={row.tooltipHandle}>
-					<TooltipContent id={row.tooltipContentId} side={side}>
-						{row.tooltipContent}
-					</TooltipContent>
-				</TooltipRoot>
-			)}
-		</TooltipProviderIfMissing>
+		<TooltipAnchor content={row.tooltipContent} contentProps={{ side }}>
+			{children}
+		</TooltipAnchor>
 	);
 }
 
@@ -215,15 +192,18 @@ export function DropdownRowBody({
 	suffix?: ReactNode;
 }): ReactNode {
 	const hasPrefix = prefix !== undefined;
-	const resolvedPrefix = row.isLoading && hasPrefix ? <Spinner /> : prefix;
-	const resolvedSuffix = row.isLoading && !hasPrefix ? <Spinner /> : suffix;
 
 	return (
 		<>
 			{hasPrefix && (
-				<span data-slot="dropdown-item-prefix" className={styles['dropdown__item-affix']}>
-					{resolvedPrefix}
-				</span>
+				<DropdownAffix
+					slot="dropdown-item-prefix"
+					testId={row.resolvedTestId && `${row.resolvedTestId}-prefix`}
+					className={styles['dropdown__item-affix']}
+					loading={row.isLoading}
+				>
+					{prefix}
+				</DropdownAffix>
 			)}
 			<span
 				ref={labelRef}
@@ -234,10 +214,17 @@ export function DropdownRowBody({
 			>
 				{row.resolvedLabel}
 			</span>
-			{resolvedSuffix !== undefined && (
-				<span data-slot="dropdown-item-suffix" className={styles['dropdown__item-affix']}>
-					{resolvedSuffix}
-				</span>
+			{/* Mounted on every row without a prefix, collapsed while idle and empty, so the
+			spinner has a slot to grow into and shrink out of. */}
+			{(!hasPrefix || suffix !== undefined) && (
+				<DropdownAffix
+					slot="dropdown-item-suffix"
+					testId={row.resolvedTestId && `${row.resolvedTestId}-suffix`}
+					className={styles['dropdown__item-affix']}
+					loading={row.isLoading && !hasPrefix}
+				>
+					{suffix}
+				</DropdownAffix>
 			)}
 		</>
 	);

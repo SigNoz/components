@@ -196,6 +196,18 @@ describe('disabled', () => {
 	});
 });
 
+describe('textOverflow', () => {
+	test('accepts hidden and ellipsis', () => {
+		assertType(<ButtonGroup {...BASE} textOverflow="hidden" />);
+		assertType(<ButtonGroup {...BASE} textOverflow="ellipsis" />);
+	});
+
+	test('rejects visible, which let a label paint outside its member', () => {
+		// @ts-expect-error - a label always stays inside its member
+		assertType(<ButtonGroup {...BASE} textOverflow="visible" />);
+	});
+});
+
 describe('attributes', () => {
 	test('forwards data-*, aria-* and the ref', () => {
 		assertType(<ButtonGroup {...BASE} data-owner="alerts" aria-label="Range" ref={groupRef} />);
@@ -213,6 +225,13 @@ describe('attributes', () => {
 			// @ts-expect-error - onClick belongs to the members
 			<ButtonGroup {...BASE} onClick={noop} />,
 		);
+	});
+
+	test('rejects className and style, the look comes from the props and tokens', () => {
+		// @ts-expect-error - `className` is not a prop
+		assertType(<ButtonGroup {...BASE} className="x" />);
+		// @ts-expect-error - `style` is not a prop
+		assertType(<ButtonGroup {...BASE} style={{}} />);
 	});
 });
 

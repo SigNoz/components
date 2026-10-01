@@ -162,8 +162,12 @@ describe('ButtonGroup overflow measurement', () => {
 	});
 
 	it('keeps the row inside the group padding', async () => {
+		// The group takes no `style`, so the padding comes from a stylesheet rule instead.
 		renderInFrame(
-			<ButtonGroup {...BASE} items={MANY_ITEMS} style={{ paddingInline: 30 }} testId="group" />,
+			<>
+				<style>{'[data-testid="group"] { padding-inline: 30px; }'}</style>
+				<ButtonGroup {...BASE} items={MANY_ITEMS} testId="group" />
+			</>,
 			{ size: 300 },
 		);
 

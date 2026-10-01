@@ -1,10 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import type { ReactNode } from 'react';
 import { Tooltip } from '../presets/tooltip.js';
+import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { TooltipContent } from '../subcomponents/tooltip-content.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
 import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
+import { useTooltipHandle } from '../tooltip-handle.js';
 
 describe('Tooltip inside another tooltip', () => {
 	it('adds its title to the wrapping popup instead of opening a second one', async () => {
@@ -361,5 +364,56 @@ describe('TooltipRoot inside a trigger', () => {
 		expect(screen.getByTestId('inner')).toBeInTheDocument();
 		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
 		expect(screen.getByRole('tooltip')).toHaveTextContent('Outer titleInner title');
+	});
+});
+
+describe('Tooltip inside a trigger that has no stack above it', () => {
+	function HandleTooltip({ children }: { children: ReactNode }): ReactNode {
+		const handle = useTooltipHandle();
+
+		return (
+			<>
+				<TooltipTrigger handle={handle}>{children}</TooltipTrigger>
+				<TooltipRoot handle={handle} open>
+					<TooltipContent>Outer title</TooltipContent>
+				</TooltipRoot>
+			</>
+		);
+	}
+
+	it('shows only the outer popup, without a portal no root owns', () => {
+		render(
+			<HandleTooltip>
+				<span>
+					<Tooltip open title="Inner title">
+						<button type="button">Hover</button>
+					</Tooltip>
+				</span>
+			</HandleTooltip>,
+		);
+
+		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
+		expect(screen.getByRole('tooltip')).toHaveTextContent('Outer title');
+	});
+});
+
+describe('TooltipAnchor with nothing to say itself', () => {
+	it('opens for the tooltip stacked into its trigger', async () => {
+		const user = userEvent.setup();
+		render(
+			<TooltipAnchor content={null}>
+				<span>
+					<Tooltip title="Inner title">
+						<button type="button">Hover</button>
+					</Tooltip>
+				</span>
+			</TooltipAnchor>,
+		);
+
+		await user.hover(screen.getByRole('button'));
+
+		const tooltip = await screen.findByRole('tooltip');
+		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
+		expect(tooltip).toHaveTextContent('Inner title');
 	});
 });

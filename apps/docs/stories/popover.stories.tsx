@@ -110,7 +110,7 @@ export const DateAndTimePicker: Story = {
 								variant={ButtonVariant.Outlined}
 								color={ButtonColor.Secondary}
 								id="date-picker"
-								textOverflow={ButtonTextOverflow.Visible}
+								textOverflow={ButtonTextOverflow.Hidden}
 								size="md"
 								suffix={<ChevronDown size={16} />}
 							>

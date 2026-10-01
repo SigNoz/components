@@ -121,7 +121,7 @@
  * | `--tabs-scroll-button-border` | `none` |
  * | `--tabs-scroll-button-color` | `var(--tabs-text-color, var(--tabs-label))` |
  * | `--tabs-scroll-button-cursor` | `pointer` |
- * | `--tabs-scroll-button-disabled-cursor` | `default` |
+ * | `--tabs-scroll-button-disabled-cursor` | `not-allowed` |
  * | `--tabs-scroll-button-disabled-opacity` | `0.4` |
  * | `--tabs-scroll-button-display` | `inline-flex` |
  * | `--tabs-scroll-button-flex-basis` | `auto` |

@@ -194,6 +194,7 @@ export interface ButtonBaseProps
 			| 'tabIndex'
 			| 'autoFocus'
 			| 'type'
+			| 'form'
 			| 'onClick'
 			| 'onDoubleClick'
 			| 'onKeyDown'
@@ -221,11 +222,7 @@ export interface ButtonBaseProps
 	 *
 	 * `ellipsis` truncates the label and shows the full text in a tooltip on
 	 * hover/focus, and only while the label is actually truncated. `hidden` clips the
-	 * label at the button's edge, no marker and no tooltip. `visible` clips nothing and
-	 * lets the label paint outside its box.
-	 *
-	 * @note Reach for `visible` when the label holds something that draws outside its own box,
-	 * such as a focus ring: every other mode clips the label, and a clipped label cuts that ring.
+	 * label at the button's edge, no marker and no tooltip.
 	 *
 	 * @note The tooltip is exclusive to `ellipsis`.
 	 *

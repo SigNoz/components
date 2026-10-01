@@ -1,6 +1,5 @@
 export const CheckboxColor = {
 	Primary: 'primary',
-	Secondary: 'secondary',
 	Danger: 'danger',
 	Warning: 'warning',
 	Success: 'success',

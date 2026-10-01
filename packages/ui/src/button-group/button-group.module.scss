@@ -46,7 +46,8 @@
 		--button-group-internal-line-height: var(--button-group-line-height, 16px);
 		--button-group-internal-icon-size: var(--button-group-icon-size, 12px);
 		--button-group-internal-icon-only-size: var(--button-group-icon-only-size, 12px);
-		--button-group-internal-gap: var(--button-group-gap, var(--spacing-3));
+		// Same gap as `Button` at this size.
+		--button-group-internal-gap: var(--button-group-gap, var(--spacing-4));
 		--button-group-internal-padding: var(--button-group-padding, var(--spacing-4) var(--spacing-6));
 		--button-group-internal-icon-only-padding: var(--button-group-icon-only-padding, var(--spacing-5));
 	}
@@ -226,12 +227,6 @@
 
 	&__tooltip {
 		max-width: var(--button-group-tooltip-max-width, 20rem);
-	}
-
-	// A label can hold a node that draws outside its own box. Clipping cuts that, so this mode stops
-	// clipping instead of marking the cut.
-	&__item[data-text-overflow='visible'] &__label {
-		overflow: var(--button-group-label-overflow, visible);
 	}
 
 	&__item[data-text-overflow='ellipsis'] &__label {

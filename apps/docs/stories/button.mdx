@@ -57,7 +57,10 @@ export default function MyComponent() {
 
 ## Sizes
 
-`size="sm"` is 24px tall, `size="md"` is 32px. In `icon` mode both are square.
+`size="sm"` is 24px tall, `size="md"` is 32px. In `icon` mode both are square. A `link` sets no
+padding of its own and is 24px tall at either size.
+
+The gap between an icon and the label is 8px at `md` and 6px at `sm`. A `link` keeps 6px at both.
 
 ```tsx
 <Button variant="solid" color="primary" size="sm">Small</Button>
@@ -117,18 +120,14 @@ wait is long enough that the user deserves to know what is happening.
 `textOverflow` decides what happens to the label when it does not fit the width of the button.
 `ellipsis` is the default: it truncates the label and shows the full text in a tooltip on hover or
 focus, and only while the label is actually truncated, so a label that fits never opens one.
-`hidden` clips the label at the edge of the button, with no ellipsis marker and no tooltip.
-`visible` clips nothing and lets the label paint outside the button's box, which is what a label
-holding something with a focus ring needs.
+`hidden` clips the label at the edge of the button, with no ellipsis marker and no tooltip. The
+label never paints outside the button.
 
 ```tsx
 <Button variant="solid" color="primary" size="md" width="12rem">
 	Delete every alert rule in this workspace
 </Button>
 <Button variant="solid" color="primary" size="md" width="12rem" textOverflow="hidden">
-	Delete every alert rule in this workspace
-</Button>
-<Button variant="solid" color="primary" size="md" width="12rem" textOverflow="visible">
 	Delete every alert rule in this workspace
 </Button>
 ```

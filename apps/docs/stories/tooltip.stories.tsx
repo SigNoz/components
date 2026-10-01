@@ -235,9 +235,9 @@ function LiftedCapsDemo(): ReactElement {
 }
 
 /**
- * The tooltip is portalled into the panel instead of `document.body`, which is what keeps one
- * inside a dialog or a drawer. The element only exists after the first render, so it is held in
- * state rather than a ref.
+ * The tooltip is portalled into the panel instead of `document.body`. A `Dialog` or `Drawer` does
+ * this for the tooltips inside it on its own. The element only exists after the first render, so
+ * it is held in state rather than a ref.
  */
 function ContainerDemo(): ReactElement {
 	const [panel, setPanel] = useState<HTMLDivElement | null>(null);
@@ -483,8 +483,8 @@ export const TooltipShowcase: Story = {
 					</Typography>
 					<Typography size="sm">
 						<code>container</code> is the element the popup is portalled into,{' '}
-						<code>document.body</code> by default. Pass the dialog or drawer element to keep the
-						tooltip inside it and out of a stacking context it would otherwise sit behind.
+						<code>document.body</code> by default. Inside a <code>Dialog</code> or{' '}
+						<code>Drawer</code> the default is its panel, so the modal leaves the tooltip hoverable.
 					</Typography>
 					<ContainerDemo />
 				</div>

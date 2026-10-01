@@ -96,3 +96,71 @@ describe('Button inside a form', () => {
 		expect(onSubmit).not.toHaveBeenCalled();
 	});
 });
+
+function renderFormWithOutsideButton(button: React.ReactNode, onSubmit = vi.fn()) {
+	render(
+		<>
+			<form
+				id="outside-form"
+				onSubmit={(event) => {
+					event.preventDefault();
+					onSubmit();
+				}}
+			>
+				<input name="name" defaultValue="" />
+			</form>
+			{button}
+		</>,
+	);
+
+	return onSubmit;
+}
+
+describe('Button outside its form', () => {
+	it('submits the form named by `form`', async () => {
+		const user = userEvent.setup();
+		const onSubmit = renderFormWithOutsideButton(
+			<Button size="md" variant="solid" color="primary" type="submit" form="outside-form">
+				Submit
+			</Button>,
+		);
+
+		await user.click(screen.getByRole('button'));
+
+		expect(onSubmit).toHaveBeenCalledTimes(1);
+	});
+
+	it('does not submit while disabled', async () => {
+		const user = userEvent.setup();
+		const onSubmit = renderFormWithOutsideButton(
+			<Button
+				size="md"
+				variant="solid"
+				color="primary"
+				type="submit"
+				form="outside-form"
+				disabled
+				disabledTooltip="Fill the form first"
+			>
+				Submit
+			</Button>,
+		);
+
+		await user.click(screen.getByRole('button'));
+
+		expect(onSubmit).not.toHaveBeenCalled();
+	});
+
+	it('does not submit while loading', async () => {
+		const user = userEvent.setup();
+		const onSubmit = renderFormWithOutsideButton(
+			<Button size="md" variant="solid" color="primary" type="submit" form="outside-form" loading>
+				Submitting…
+			</Button>,
+		);
+
+		await user.click(screen.getByRole('button'));
+
+		expect(onSubmit).not.toHaveBeenCalled();
+	});
+});

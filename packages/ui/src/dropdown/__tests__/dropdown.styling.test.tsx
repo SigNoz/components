@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Dropdown } from '../index.js';
-import type { DropdownItemType } from '../types.js';
+import type { DropdownItemType, DropdownProps } from '../types.js';
 import { openDropdown } from './dropdown.test-utils.js';
 
 /**
@@ -31,7 +31,7 @@ afterEach(() => {
 
 function renderDropdown(
 	items: DropdownItemType[],
-	props: { contentMaxWidth?: number; contentMaxHeight?: number } = {},
+	props: Pick<DropdownProps, 'contentMaxWidth' | 'contentMaxHeight' | 'searchInputProps'> = {},
 ) {
 	return render(
 		<Dropdown nativeButton side="bottom" align="start" items={items} testId="menu" {...props}>
@@ -98,5 +98,62 @@ describe('Dropdown styling', () => {
 		const popup = await openDropdown();
 
 		expect(popup.getBoundingClientRect().width).toBe(192);
+	});
+});
+
+describe('Dropdown row size', () => {
+	/**
+	 * The spacing and line-height tokens the rows read, with the numbers `@signozhq/design-tokens`
+	 * ships. Without them every padding computes to zero.
+	 */
+	let sizes: HTMLStyleElement;
+
+	beforeEach(() => {
+		sizes = document.createElement('style');
+		sizes.textContent = `:root {
+			--spacing-2: 4px;
+			--spacing-4: 8px;
+			--spacing-6: 12px;
+			--line-height-18: 18px;
+			--periscope-font-size-base: 13px;
+		}`;
+		document.head.append(sizes);
+	});
+
+	afterEach(() => {
+		sizes.remove();
+	});
+
+	it('still takes --dropdown-item-padding and --dropdown-item-line-height from the call site', async () => {
+		sizes.textContent += `:root {
+			--dropdown-item-padding: 10px 12px;
+			--dropdown-item-line-height: 20px;
+		}`;
+		renderDropdown([{ type: 'item', value: 'rename', label: 'Rename' }]);
+		await openDropdown();
+
+		expect(screen.getByRole('menuitem', { name: 'Rename' }).getBoundingClientRect().height).toBe(
+			40,
+		);
+	});
+
+	// The search row's height is not settled by the rows, so a row line height leaves it alone.
+	it('keeps the search field on its own line height', async () => {
+		sizes.textContent += `:root {
+			--line-height-20: 20px;
+			--dropdown-item-line-height: 16px;
+		}`;
+		renderDropdown([{ type: 'item', value: 'rename', label: 'Rename' }], {
+			searchInputProps: { placeholder: 'Find' },
+		});
+		await openDropdown();
+
+		const search = screen.getByTestId('menu-search');
+
+		expect(getComputedStyle(search).lineHeight).toBe('20px');
+
+		sizes.textContent += `:root { --dropdown-search-input-line-height: 24px; }`;
+
+		expect(getComputedStyle(search).lineHeight).toBe('24px');
 	});
 });

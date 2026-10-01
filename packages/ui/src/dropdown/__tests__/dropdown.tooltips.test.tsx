@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { queryOpenTooltip } from '../../__tests__/test-utils.js';
+import { Button } from '../../button/index.js';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType } from '../types.js';
 import { openDropdown } from './dropdown.test-utils.js';
@@ -153,6 +154,27 @@ describe('Dropdown tooltips', () => {
 
 		await waitFor(() => {
 			expect(queryOpenTooltip()).toHaveTextContent('Upgrade to change sort');
+		});
+	});
+
+	it('opens for a button in the label that has a reason of its own', async () => {
+		renderDropdown([
+			{
+				type: 'item',
+				value: 'rename',
+				label: (
+					<Button size="md" variant="ghost" color="secondary" loading loadingTooltip="Checking">
+						Rename
+					</Button>
+				),
+			},
+		]);
+		await openDropdown();
+
+		await userEvent.hover(screen.getByTestId('menu-item-rename'));
+
+		await waitFor(() => {
+			expect(queryOpenTooltip()).toHaveTextContent('Checking');
 		});
 	});
 });

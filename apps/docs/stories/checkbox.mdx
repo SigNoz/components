@@ -71,10 +71,10 @@ A bare checkbox has no wrapper and no name of its own, so give it one:
 
 ## Colors
 
-Same palette as `Badge`'s and `Switch`'s `color`, and required: the checked fill is a semantic
-statement, so the call site has to make it. The color only fills the box while it is checked or
-indeterminate — an unchecked box has no status to report yet, so every color shares the same
-neutral border. Hover recolors that border, and only on the unchecked box.
+Same palette as `Badge`'s and `Switch`'s `color` without `secondary`, and required: the checked
+fill is a semantic statement, so the call site has to make it. The color only fills the box while
+it is checked or indeterminate. An unchecked box has no status to report yet, so every color shares
+the same neutral border. Hover recolors that border, and only on the unchecked box.
 
 Don't use the semantic colors decoratively. A `danger` checkbox means checking it opts into
 something dangerous.

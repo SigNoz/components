@@ -284,6 +284,9 @@ export const BadgeShowcase: Story = {
 						<Badge variant="outlined" color="secondary">
 							Idle
 						</Badge>
+						<Badge variant="outlined" color="warning" suffix={<AlertIcon />}>
+							Degraded
+						</Badge>
 					</div>
 					<div className="story-row-lg">
 						<div className="story-row">

@@ -17,7 +17,7 @@
  * | `--toggle-group-border-width` | `1px` |
  * | `--toggle-group-button-align-items` | `center` |
  * | `--toggle-group-button-background-color` | `transparent` |
- * | `--toggle-group-button-block-size` | `var(--spacing-16)` |
+ * | `--toggle-group-button-block-size` | `calc(var(--spacing-16) - 2 * var(--toggle-group...` |
  * | `--toggle-group-button-border` | `none` |
  * | `--toggle-group-button-border-radius` | `0` |
  * | `--toggle-group-button-color` | `var(--toggle-group-internal-label)` |
@@ -29,10 +29,10 @@
  * | `--toggle-group-button-divider-color` | `var(--toggle-group-border)` |
  * | `--toggle-group-button-divider-width` | `1px` |
  * | `--toggle-group-button-flex-basis` | `auto` |
- * | `--toggle-group-button-flex-grow` | `0` |
+ * | `--toggle-group-button-flex-grow` | `1` |
  * | `--toggle-group-button-flex-shrink` | `0` |
  * | `--toggle-group-button-focus-visible-outline` | `var(--toggle-group-focus-ring) solid 1px` |
- * | `--toggle-group-button-focus-visible-outline-offset` | `-2px` |
+ * | `--toggle-group-button-focus-visible-outline-offset` | `-1px` |
  * | `--toggle-group-button-font-size` | `var(--periscope-font-size-small)` |
  * | `--toggle-group-button-font-weight` | `var(--font-weight-normal)` |
  * | `--toggle-group-button-gap` | `var(--spacing-3)` |
@@ -41,7 +41,7 @@
  * | `--toggle-group-button-icon-size` | `12px` |
  * | `--toggle-group-button-justify-content` | `center` |
  * | `--toggle-group-button-line-height` | `1` |
- * | `--toggle-group-button-padding-block` | `var(--spacing-5)` |
+ * | `--toggle-group-button-padding-block` | `0` |
  * | `--toggle-group-button-padding-inline` | `var(--toggle-group-internal-button-padding-inline)` |
  * | `--toggle-group-button-pressed-background-color` | `var(--toggle-group-internal-background-pressed)` |
  * | `--toggle-group-button-pressed-color` | `var(--toggle-group-internal-label-pressed)` |
@@ -59,9 +59,11 @@
  * | `--toggle-group-list-align-items` | `stretch` |
  * | `--toggle-group-list-display` | `inline-flex` |
  * | `--toggle-group-list-flex-direction` | `row` |
+ * | `--toggle-group-list-flex-grow` | `1` |
  * | `--toggle-group-max-inline-size` | `var(--toggle-group-internal-max-inline-size, 100%)` |
  * | `--toggle-group-md-button-padding-inline` | `var(--spacing-12)` |
- * | `--toggle-group-overflow` | `hidden` |
+ * | `--toggle-group-min-inline-size` | `0` |
+ * | `--toggle-group-overflow` | `clip` |
  * | `--toggle-group-readonly-cursor` | `not-allowed` |
  * | `--toggle-group-readonly-opacity` | `0.8` |
  * | `--toggle-group-scroll-button-align-items` | `center` |
@@ -73,7 +75,7 @@
  * | `--toggle-group-scroll-button-color` | `var(--toggle-group-scroll-button-label)` |
  * | `--toggle-group-scroll-button-cursor` | `pointer` |
  * | `--toggle-group-scroll-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
- * | `--toggle-group-scroll-button-disabled-cursor` | `default` |
+ * | `--toggle-group-scroll-button-disabled-cursor` | `not-allowed` |
  * | `--toggle-group-scroll-button-disabled-shadow` | `none` |
  * | `--toggle-group-scroll-button-display` | `inline-flex` |
  * | `--toggle-group-scroll-button-divider-color` | `var(--toggle-group-border)` |

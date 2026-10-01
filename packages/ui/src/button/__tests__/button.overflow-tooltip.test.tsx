@@ -135,36 +135,30 @@ describe('Button overflow tooltip while the label fits', () => {
 });
 
 describe('Button overflow tooltip opt-outs', () => {
-	it.each(['hidden', 'visible'] as const)(
-		'is never mounted for textOverflow=%s',
-		async (textOverflow) => {
-			const user = userEvent.setup();
-			truncate();
-			render(
-				<Button size="md" variant="solid" color="primary" textOverflow={textOverflow}>
-					{LABEL}
-				</Button>,
-			);
+	it('is never mounted for textOverflow=hidden', async () => {
+		const user = userEvent.setup();
+		truncate();
+		render(
+			<Button size="md" variant="solid" color="primary" textOverflow="hidden">
+				{LABEL}
+			</Button>,
+		);
 
-			await user.hover(screen.getByRole('button'));
+		await user.hover(screen.getByRole('button'));
 
-			expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-		},
-	);
+		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+	});
 
-	it.each(['hidden', 'visible'] as const)(
-		'does not even make the button a trigger for textOverflow=%s',
-		(textOverflow) => {
-			truncate();
-			render(
-				<Button size="md" variant="solid" color="primary" textOverflow={textOverflow}>
-					{LABEL}
-				</Button>,
-			);
+	it('does not even make the button a trigger for textOverflow=hidden', () => {
+		truncate();
+		render(
+			<Button size="md" variant="solid" color="primary" textOverflow="hidden">
+				{LABEL}
+			</Button>,
+		);
 
-			expect(screen.getByRole('button')).not.toHaveAttribute('data-slot', 'tooltip-trigger');
-		},
-	);
+		expect(screen.getByRole('button')).not.toHaveAttribute('data-slot', 'tooltip-trigger');
+	});
 
 	it('is never mounted for an icon button', async () => {
 		const user = userEvent.setup();

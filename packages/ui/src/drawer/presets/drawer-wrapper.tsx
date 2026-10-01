@@ -6,6 +6,8 @@ import {
 	type DialogCloseButtonProps,
 	type DialogSize,
 } from '../../dialog/index.js';
+import styles from '../../dialog/dialog.module.scss';
+import { cn } from '../../lib/utils.js';
 import {
 	Drawer,
 	DrawerContent,
@@ -249,7 +251,13 @@ export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps
 				{...drawerContentProps}
 			>
 				{(title || subTitle) && (
-					<DrawerHeader {...drawerHeaderProps}>
+					<DrawerHeader
+						{...drawerHeaderProps}
+						className={cn(
+							showCloseButton && styles['dialog__header--with-close'],
+							drawerHeaderProps?.className,
+						)}
+					>
 						{title && <DrawerTitle {...drawerTitleProps}>{title}</DrawerTitle>}
 						{subTitle && <DrawerSubtitle {...drawerSubtitleProps}>{subTitle}</DrawerSubtitle>}
 					</DrawerHeader>

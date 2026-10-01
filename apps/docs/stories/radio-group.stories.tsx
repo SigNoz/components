@@ -55,7 +55,7 @@ const meta: Meta<typeof RadioGroup> = {
 		color: {
 			control: 'select',
 			options: COLORS,
-			description: "Same palette as Button's `color`. Tints the checked item.",
+			description: "Button's `color` palette, without `secondary`. Tints the checked item.",
 			table: { category: 'Appearance', type: { summary: 'RadioGroupColorType' } },
 		},
 		textOverflow: {
@@ -393,7 +393,7 @@ export const RadioGroupShowcase: Story = {
 				</Typography>
 				<Typography size="sm">
 					Capped at <code>{CONSTRAINED_WIDTH}</code>. <code>ellipsis</code> shows the full label in
-					a tooltip on hover, <code>wrap</code> takes a second line, <code>none</code> clips, and
+					a tooltip on hover, <code>wrap</code> takes a second line, <code>hidden</code> clips, and
 					<code>visible</code> paints past the cap, which is what keeps a control's focus ring in a
 					label.
 				</Typography>

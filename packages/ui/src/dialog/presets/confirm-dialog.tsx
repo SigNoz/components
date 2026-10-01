@@ -12,6 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '../index.js';
+import styles from '../dialog.module.scss';
 
 export type ConfirmDialogProps = {
 	/**
@@ -211,7 +212,7 @@ export const ConfirmDialog = React.forwardRef<HTMLDivElement, ConfirmDialogProps
 				heightMode={heightMode}
 			>
 				{title && (
-					<DialogHeader>
+					<DialogHeader className={styles['dialog__header--with-close']}>
 						{title && <DialogTitle icon={titleIcon}>{title}</DialogTitle>}
 					</DialogHeader>
 				)}
