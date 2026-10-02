@@ -8,6 +8,7 @@ import { Callout } from './callout/callout.js';
 import { Checkbox } from './checkbox/checkbox.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
+import { Progress } from './progress/progress.js';
 import { RadioGroup } from './radio-group/radio-group.js';
 import { Switch } from './switch/switch.js';
 import { ToggleGroup } from './toggle-group/index.js';
@@ -158,6 +159,12 @@ describe('className and style that get past the types', () => {
 		render(<Switch color="primary" testId="switch" {...STRAY} />);
 
 		expectNoStrayStyle(screen.getByTestId('switch'));
+	});
+
+	it('do not reach Progress', () => {
+		render(<Progress color="primary" percent={40} testId="progress" {...STRAY} />);
+
+		expectNoStrayStyle(screen.getByTestId('progress'));
 	});
 
 	it('do not reach RadioGroup', () => {

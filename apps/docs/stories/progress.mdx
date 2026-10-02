@@ -1,52 +1,185 @@
-import { Meta, Canvas, Controls, Primary } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as ProgressStories from './progress.stories';
-import { Progress } from '@signozhq/ui';
 
 <Meta of={ProgressStories} />
 
 # Progress
 
-The `Progress` component is used to display the current progress of an operation flow. It supports multiple sizes, custom colors, segmented steps, and status animations.
+A determinate bar that shows a percent, rendered through Base UI's `Progress`. It is for a metric in
+a table cell or a card (CPU, memory, error rate, share of a total), and for a task with a known end
+(a checklist, a download). It forwards every `aria-*` and `data-*` attribute to the root.
+
+A wait with no known end is not a progress. Use `Spinner` for it.
 
 ## How to use
+
+`percent` and `color` are required: the bar has no default status. Name the bar with `aria-label` or `aria-labelledby`: it has no
+visible label of its own, and the column header of a table does not name it.
 
 ```tsx
 import { Progress } from '@signozhq/ui';
 
-export default function MyComponent() {
-	// A default continuous progress bar at 50%
-	return <Progress percent={50} />;
+export default function CpuCell({ cpu }: { cpu: number }) {
+	return <Progress percent={cpu} color={cpuColor(cpu)} showInfo aria-label="CPU usage" />;
 }
 ```
 
-This code above will render the following progress bar:
-
 <Primary />
 
+## Colors
+
+`color` is the status of the bar: `primary`, `secondary`, `success`, `danger`,
+`warning`, `info`, `archive` and `highlight-danger`. They are the same hues as `Badge`, so a status
+that is a badge in one place and a bar in another keeps its color.
+
+Pick the color from a threshold on the metric, never from how the value feels, and keep the
+thresholds of one metric in one helper. Then the same 80% reads the same in every column.
+
+```tsx
+function cpuColor(cpu: number): ProgressColorType {
+	if (cpu >= 90) return 'danger';
+	if (cpu >= 60) return 'warning';
+	return 'success';
+}
+```
+
+The color is never the only signal: the value text, or the number next to the bar, carries the data.
+Keep `danger` for a value where reaching capacity is a real problem, not for one that is only near
+it.
+
+## Value text
+
+`showInfo` writes the percent to the right of the bar, rounded to at most 2 decimals with no trailing
+zeros: `33.333` shows `33.33%` and `5` shows `5%`. A call site that already rounds with `toFixed(1)`
+or `toFixed(2)` keeps its text.
+
+The fill stops at 0 and 100, the text does not. A CPU request at 140% shows `140%` over a full bar,
+so the number never lies about the data.
+
+```tsx
+<Progress percent={140} color="danger" showInfo aria-label="CPU request" />
+```
+
+The digits are tabular, with a slashed zero, so every digit has the same width. The text still
+grows when the number gains a digit, and the bar gets shorter. `infoWidth` gives the text a minimum
+width, aligned to the end, so a bar that refreshes keeps its length and a column of bars lines up.
+Pick the width of the longest text the bar shows. A longer text still shows whole.
+
+```tsx
+<Progress percent={cpu} color={cpuColor(cpu)} showInfo infoWidth={40} aria-label="CPU usage" />
+```
+
+## Empty value
+
+A `percent` that is not a finite number (`NaN`, `Infinity`, or a value missing at runtime) renders
+the empty track and the text `-`, and a screen reader hears `No data`.
+
+The bar is never hidden. A table column with a missing bar shifts, and hides that the data is
+missing.
+
+## Layout
+
+The root fills the width of its parent, and has no margin and no minimum width. A table cell that
+needs one sets it on the parent. The bar takes the width the value text
+leaves and can shrink to nothing. The value text never shrinks and never truncates, since the number
+is the data.
+
+```tsx
+<td className="cpu-cell">
+	<Progress percent={cpu} color={cpuColor(cpu)} showInfo aria-label="CPU usage" />
+</td>
+```
+
+The bar is 6px high, with a 2px radius on the track and on the fill. There is no size and no line
+cap to pick.
+
+## Steps
+
+`steps` splits the track into equal segments, each with the 2px radius of the track. The gap between
+two segments is transparent, so the surface behind the progress shows through it and the bar works
+on any surface.
+
+The fill stays continuous across the segments: `percent={50}` with `steps={5}` fills two and a half.
+
+```tsx
+<Progress
+	percent={(done / total) * 100}
+	color="primary"
+	steps={total}
+	aria-label="Setup checklist"
+/>
+```
+
+A `steps` below 2 renders the continuous bar. A `steps` that is not an integer is a bug: it also
+renders the continuous bar, and warns in the console.
+
+## Running task
+
+`active` marks a task that is running. The fill eases to each new `percent`, and diagonal stripes
+move across it until `percent` reaches 100.
+
+```tsx
+<Progress
+	percent={downloaded}
+	color="primary"
+	active={isDownloading}
+	showInfo
+	aria-label="Trace download"
+/>
+```
+
+Without `active` the fill jumps to the new value. A table refreshes dozens of bars at once, and a
+transition on each would turn the data into motion. So never set `active` on a metric bar.
+
+With `prefers-reduced-motion: reduce`, the stripes hold still and the fill does not ease.
+
+## Accessibility
+
+The root is the `role="progressbar"`, with `aria-valuemin="0"`, `aria-valuemax="100"`,
+`aria-valuenow` at the clamped `percent` and `aria-valuetext` at the value text. A screen reader
+reads `140%`, not `100`. The value text is `aria-hidden`, since `aria-valuetext` already reads it.
+
+The bar is not focusable, has no keys and does not react to hover. A screen reader reaches it in
+reading order.
+
+```tsx
+<Typography.Text id="memory-label">Memory</Typography.Text>
+<Progress percent={memory} color={memoryColor(memory)} aria-labelledby="memory-label" />
+```
+
+## Migrating
+
+| Before                              | Now                                                                                                   |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `strokeColor={Color.BG_FOREST_500}` | `color="success"`. Robin is `primary`, amber `warning`, cherry `danger` and sakura `highlight-danger` |
+| `strokeLinecap`                     | removed, the radius is fixed                                                                          |
+| `size`                              | removed, the height is fixed                                                                          |
+| `status="active"`                   | `active`                                                                                              |
+| `status="normal"`                   | removed                                                                                               |
+| `value`, `min`, `max`               | `percent`, the range is always 0 to 100                                                               |
+| no `strokeColor`                    | `color="primary"`, the color is required                                                              |
+| `className`, `style`                | removed, the look comes from `color`                                                                  |
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and the prefix of the parts. With `testId="cpu"` the
+parts are `cpu-track`, `cpu-indicator` and, with `showInfo`, `cpu-value`.
+
+Otherwise reach for the role and the data attributes, never the hashed class names:
+
+| `data-slot`          | rendered                                                 |
+| -------------------- | -------------------------------------------------------- |
+| `progress`           | the root, `role="progressbar"`                           |
+| `progress-track`     | always                                                   |
+| `progress-indicator` | always, inside the track, its inline `width` is the fill |
+| `progress-value`     | only with `showInfo`                                     |
+
+The segments of `steps` are not elements, so they have no test ID and no slot.
+
+The root mirrors `color` on `data-color`, the number of segments on `data-steps` and `active` on
+`data-active`. Base UI adds `data-complete` once `percent` reaches 100, and `data-progressing`
+before that.
+
+## Props
+
 <Controls of={ProgressStories.Default} />
-
-## Examples
-
-### Segmented Progress
-
-You can divide the progress bar into equal visual segments by providing the `steps` prop.
-
-<Canvas of={ProgressStories.Segmented} />
-
-### Dynamic Colors
-
-You can override the progress indicator's background color dynamically using the `strokeColor` prop, which is useful for indicating severity levels.
-
-<Canvas of={ProgressStories.DynamicColors} />
-
-### Sizes
-
-The component supports `default` and `small` sizes.
-
-<Canvas of={ProgressStories.Sizes} />
-
-### Status and Info
-
-You can display the current percentage using `showInfo`, and apply a striped animation by setting `status="active"`.
-
-<Canvas of={ProgressStories.WithInfo} />
