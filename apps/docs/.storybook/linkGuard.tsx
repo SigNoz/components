@@ -1,11 +1,31 @@
 import { Toaster, toast } from '@signozhq/ui';
-import { type ReactElement, useEffect } from 'react';
+import type { ReactElement } from 'react';
+import { useEffect } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
 
 /**
- * Its own toaster, so the notice never lands in a `Toaster` a story renders, and a story's toasts
- * never land here.
+ * The one `Toaster` of the preview. The toast stack is global, so a second `Toaster` would draw
+ * every toast twice, and the docs page mounts every story at once. It lives in a root of its own
+ * rather than in a story, so no story's lifecycle decides whether it is there.
+ *
+ * A story that renders a `Toaster` of its own, to drive its props, opts out with
+ * `parameters.ownToaster` and runs in an iframe on the docs page.
  */
-const TOASTER_ID = 'storybook-link-guard';
+let sharedToaster: { root: Root; host: HTMLElement } | undefined;
+
+function setSharedToaster(enabled: boolean): void {
+	if (enabled && sharedToaster === undefined) {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const root = createRoot(host);
+		root.render(<Toaster />);
+		sharedToaster = { root, host };
+	} else if (!enabled && sharedToaster !== undefined) {
+		sharedToaster.root.unmount();
+		sharedToaster.host.remove();
+		sharedToaster = undefined;
+	}
+}
 
 /**
  * Anything a story renders, including what it portals to `document.body`. The docs page chrome
@@ -27,26 +47,27 @@ function handleClick(event: MouseEvent): void {
 	}
 
 	event.preventDefault();
-	toast(`Navigation blocked. This link would go to ${anchor.getAttribute('href')}`, {
-		toasterId: TOASTER_ID,
-	});
+	toast.info(`Navigation blocked. This link would go to ${anchor.getAttribute('href')}`);
 }
 
 /**
  * Stops a link inside a story from navigating the preview iframe away from it, and says where it
- * would have gone instead.
+ * would have gone instead. It also mounts the shared `Toaster` for every story that does not
+ * bring its own.
  */
-export function LinkGuardDecorator(Story: () => ReactElement): ReactElement {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function LinkGuardDecorator(Story: () => ReactElement, context: any): ReactElement {
+	const ownToaster = context.parameters?.ownToaster === true;
+
 	useEffect(() => {
 		document.addEventListener('click', handleClick, true);
 
 		return () => document.removeEventListener('click', handleClick, true);
 	}, []);
 
-	return (
-		<>
-			<Story />
-			<Toaster id={TOASTER_ID} position="bottom-center" />
-		</>
-	);
+	useEffect(() => {
+		setSharedToaster(!ownToaster);
+	}, [ownToaster]);
+
+	return <Story />;
 }

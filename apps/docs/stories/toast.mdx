@@ -1,0 +1,238 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ToastStories from './toast.stories';
+
+<Meta of={ToastStories} />
+
+# Toast
+
+Short, transient feedback about something that just happened, rendered through Base UI's `Toast`.
+It comes in two parts: `toast` raises a toast from anywhere, and `Toaster` draws every toast raised.
+`Toaster` forwards `id`, `className`, `style` and every `aria-*` and `data-*` attribute to the
+viewport. A toast takes no props of its own: everything it shows comes from the `toast` call.
+
+A toast closes on its own and can be missed. If the user has to read it or act on it, it is not a
+toast: reach for `Callout`, `AnnouncementBanner` or `AlertDialog`.
+
+## How to use
+
+Mount one `Toaster` at the root of the app, with no children. Then call `toast` from anywhere,
+hooks and plain modules included:
+
+```tsx
+import { Toaster, toast } from '@signozhq/ui';
+
+createRoot(document.getElementById('root')).render(
+	<>
+		<Toaster />
+		<App />
+	</>,
+);
+
+// anywhere else
+toast.success('Panel saved');
+```
+
+Every `Toaster` draws every toast, so a second one shows each toast twice. A call made while no
+`Toaster` is mounted is lost without an error. Put it before the app, as above: it starts listening
+in an effect, and effects run in tree order, so a toast raised in an effect of the app on its first
+render reaches it.
+
+<Primary />
+
+## Variants
+
+The method picks the variant. It sets the icon, how long the toast stays on screen and how a
+screen reader announces it. `success`, `info` and `warning` close on their own, after 5 seconds
+unless `timeout` on `Toaster` says otherwise. `danger` never closes on its own, so it requires an
+`action`: there is no default button, and the app picks its label and language. `loading` shows a
+spinner and stays until it is replaced.
+
+```tsx
+toast.success('Panel saved');
+toast.info('Copied to clipboard');
+toast.warning('Quota almost reached');
+toast.danger('Could not save the panel', { action: { label: 'Close' } });
+toast.loading('Saving the panel');
+```
+
+## Description
+
+`description` adds a line of secondary text under the title.
+
+```tsx
+toast.danger('Could not save the panel', {
+	description: 'Try again in a moment.',
+	action: { label: 'Close' },
+});
+```
+
+## Action
+
+`action` puts a button on the right. The button is also the way out: it runs `onClick`, then closes
+the toast. `label` is what it says, such as `Undo` or `Cancel`. A toast with an `action` stays until
+it is dismissed, whatever its variant.
+
+```tsx
+toast.success('Panel deleted', {
+	description: 'It is gone from the dashboard.',
+	action: { label: 'Undo', onClick: restore },
+});
+
+// A button that only closes the toast
+toast.info('Export started', { action: { label: 'Cancel' } });
+```
+
+The button undoes what the toast reports. Never put an irreversible action there, such as delete,
+discard or revoke: use a confirm dialog.
+
+An `onClick` that calls `event.preventDefault()` keeps the toast open, such as when the undo
+failed and the toast should stay for another try.
+
+```tsx
+toast.success('Panel deleted', {
+	action: {
+		label: 'Undo',
+		onClick: (event) => {
+			if (!restore()) {
+				event.preventDefault();
+			}
+		},
+	},
+});
+```
+
+## Dismissing
+
+`timeout` on `Toaster` is how long `success`, `info` and `warning` stay on screen, in milliseconds,
+5000 by default. `0` keeps them until they are dismissed. It does not change `danger`, `loading` or
+a toast with an `action`, which always stay. Raising the same toast again restarts its timer.
+
+```tsx
+<Toaster timeout={8000} />
+```
+
+The timer pauses while the pointer is over the stack or focus is inside it. Swiping a toast toward
+the edge it sits against, or toward the nearest side, dismisses it. `toast.dismiss` closes one
+toast by its `id`, or every toast with no argument.
+
+```tsx
+const id = toast.info('Export started', { action: { label: 'Cancel' } });
+
+toast.dismiss(id);
+toast.dismiss();
+```
+
+## Deduplication
+
+A call with the `id` of a visible toast updates that toast in place and adds no second one. Without
+an `id`, a string title gives `<variant>:<title>`, so ten clicks on "Copied to clipboard" show one
+toast.
+
+Pass an `id` when two toasts share a title but must stay separate, or to replace a toast with
+another variant, such as a `loading` toast by its result:
+
+```tsx
+toast.loading('Saving the panel', { id: 'save' });
+// later
+toast.success('Panel saved', { id: 'save' });
+```
+
+## Promises
+
+`toast.promise` is one toast that goes from `loading` to `success` or `danger` as the promise
+settles. `success` and `error` take a title, or a function that gets the value or the reason.
+`errorAction` is required: it is the button of the `danger` toast a rejection leaves, as on
+`toast.danger`.
+
+```tsx
+toast.promise(save(), {
+	loading: 'Saving the panel',
+	success: 'Panel saved',
+	error: (reason) => `Could not save: ${String(reason)}`,
+	errorAction: { label: 'Close' },
+});
+```
+
+It returns the promise it was given, so awaiting it rejects as the original does. Calling it
+without awaiting is safe: a rejection shows on the toast and is not reported as unhandled. A toast
+dismissed while the promise is pending stays closed when it settles.
+
+A `success` or `error` function that throws closes the toast, so a bug in it does not leave the
+spinner running. Its error is reported as an unhandled rejection, and the promise returned is not
+affected.
+
+`id` and `testId` work as on the other calls and hold in every state. With an `id`, a visible
+toast with that `id` turns into the loading toast. An empty `loading` shows no toast until the
+promise settles, and a toast that settles on an empty title closes.
+
+## Position and stack
+
+`position` on `Toaster` moves the whole stack: `top-left`, `top-center`, `top-right` (the default),
+`bottom-left`, `bottom-center` or `bottom-right`. There is no position per call. `offset` is the
+distance from the edges of the window, 16px by default. A number is in px, a string is any CSS
+length.
+
+```tsx
+<Toaster position="bottom-center" offset={32} />
+```
+
+The newest toast sits against the edge and the older ones peek out behind it. `limit` is how many
+the stack shows, 3 by default. Any toast past it waits until one closes. The stack spreads on hover
+and on focus inside it. At the bottom it grows upward.
+
+```tsx
+<Toaster limit={5} />
+```
+
+## Dialogs and drawers
+
+The toasts portal into `document.body`, or into the panel of the `Dialog` or `Drawer` the
+`Toaster` sits in. `container` moves them anywhere else, such as a shadow root.
+
+They stack above dialogs, popovers and tooltips, because a toast often reports what a click inside
+one of them just did. Over a modal dialog the button stays clickable, and clicking it does not
+close the dialog.
+
+## Empty text
+
+A call with no title and no description shows nothing, takes no place in the stack and returns
+`''`. So a message that is not loaded yet leaves no empty toast behind.
+
+```tsx
+// shows nothing while `message` is empty
+toast.info(message);
+```
+
+## Test ids
+
+`testId` on `Toaster` is `data-testid` on the viewport. Each toast gets `<testId>-toast-<id>`, or
+the `testId` it was raised with. Each part of a toast adds a suffix to that: `-content`, `-icon`,
+`-title`, `-description` and `-action`.
+
+```tsx
+<Toaster testId="toaster" />;
+
+toast.success('Panel saved', { testId: 'save-toast' });
+// save-toast, save-toast-title, save-toast-icon, ...
+```
+
+`toast` does not need a mounted `Toaster`, so a test that mocks it renders none.
+
+## Accessibility
+
+- The viewport is a landmark named `Notifications`. `F6` moves focus to it.
+- `toast.danger` is announced assertively, every other variant politely.
+- A toast never takes focus when it arrives. Tab reaches its button, newest first. The button is
+  named by its label and closes the toast.
+- While the stack is collapsed, the button is hidden from assistive technology until it has focus,
+  and a `danger` toast with it, since a separate alert region announces it. Moving focus into the
+  stack, with `F6` or Tab, brings both back.
+- The icon is hidden from assistive technology, so the title has to say what happened.
+- The title is an `h2`, so keep it short.
+
+## Props
+
+`variant`, `title`, `description` and `actionLabel` are story only: they stand for the arguments of
+the `toast` call, so the playground can drive one. Every other row is a prop of `Toaster`.
+
+<Controls of={ToastStories.Default} />

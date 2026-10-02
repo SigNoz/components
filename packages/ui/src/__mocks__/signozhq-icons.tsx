@@ -36,6 +36,7 @@ export const MousePointerClick = createIcon('mouse-pointer-click');
 export const Pin = createIcon('pin');
 export const PinOff = createIcon('pin-off');
 export const Search = createIcon('search');
+export const SolidAlertCircle = createIcon('solid-alert-circle');
 export const SolidAlertTriangle = createIcon('solid-alert-triangle');
 export const SolidCheckCircle2 = createIcon('solid-check-circle-2');
 export const SolidInfoCircle = createIcon('solid-info-circle');

@@ -1,0 +1,361 @@
+.toaster {
+  --toast-internal-offset: var(
+    --toast-viewport-offset,
+    var(--toast-internal-viewport-offset, var(--spacing-8))
+  );
+
+  position: var(--toast-viewport-position, fixed);
+  // The toast reports what a click inside a dialog, a popover or a tooltip just did, so it cannot
+  // sit behind one. Ours are at 50, but an antd modal or drawer is at 1000 and each one nested in
+  // another adds 1000, so no value on that scale stays on top. This is the sonner Toaster's value.
+  z-index: var(--toast-viewport-z-index, 999999999);
+  box-sizing: var(--toast-viewport-box-sizing, border-box);
+  margin: var(--toast-viewport-margin, 0);
+  padding: var(--toast-viewport-padding, 0);
+  // 26.25rem is the 420px of the design.
+  inline-size: var(--toast-viewport-inline-size, 26.25rem);
+  max-inline-size: var(
+    --toast-viewport-max-inline-size,
+    calc(100vw - 2 * var(--toast-internal-offset))
+  );
+  // The viewport has no surface of its own, so a click beside a toast reaches the page below.
+  // Each toast turns it back on, which also keeps it clickable while a modal dialog has turned
+  // pointer events off on the body.
+  pointer-events: var(--toast-viewport-pointer-events, none);
+
+  &[data-position^='top'] {
+    top: var(--toast-internal-offset);
+  }
+
+  &[data-position^='bottom'] {
+    bottom: var(--toast-internal-offset);
+  }
+
+  &[data-position$='left'] {
+    left: var(--toast-internal-offset);
+  }
+
+  &[data-position$='right'] {
+    right: var(--toast-internal-offset);
+  }
+
+  &[data-position$='center'] {
+    left: var(--toast-viewport-center-left, 50%);
+    transform: var(--toast-viewport-center-transform, translateX(-50%));
+  }
+}
+
+// Rules read colour only through the `--toast-internal-*` pairs below, never a semantic token
+// directly.
+.toast {
+  --toast-internal-background: var(--toast-background-color, var(--toast-background));
+  --toast-internal-border: var(--toast-border-color, var(--toast-border));
+  --toast-internal-shadow: var(--toast-box-shadow, var(--toast-shadow));
+  --toast-internal-title-color: var(--toast-title-color, var(--toast-title));
+  --toast-internal-description-color: var(--toast-description-color, var(--toast-description));
+  --toast-internal-icon-color: var(--toast-info-icon-color, var(--toast-info-icon));
+  --toast-internal-action-label: var(--toast-action-color, var(--toast-action-label));
+  --toast-internal-action-label-hover: var(
+    --toast-action-hover-color,
+    var(--toast-action-label-hover)
+  );
+  --toast-internal-action-background-hover: var(
+    --toast-action-hover-background-color,
+    var(--toast-action-background-hover)
+  );
+  --toast-internal-action-divider: var(--toast-action-divider-color, var(--toast-action-divider));
+  --toast-internal-border-width: var(--toast-border-width, 1px);
+  --toast-internal-border-radius: var(--toast-border-radius, var(--radius-2));
+  --toast-internal-focus-outline: var(
+    --toast-focus-visible-outline,
+    var(--toast-focus-ring) solid 1px
+  );
+  --toast-internal-focus-outline-offset: var(--toast-focus-visible-outline-offset, 1px);
+  --toast-internal-duration: var(--toast-transition-duration, 150ms);
+  --toast-internal-easing: var(--toast-transition-timing-function, ease);
+  --toast-internal-gap: var(--toast-stack-gap, var(--spacing-4));
+  --toast-internal-scale-step: var(--toast-stack-scale-step, 0.05);
+  // Above every index the stack can reach, so the newest toast paints on top.
+  --toast-internal-z-index-base: var(--toast-stack-z-index, 1000);
+  // Newest toast sits against the edge. Older ones peek out behind it, toward the page centre.
+  --toast-internal-direction: 1;
+  // Collapsed, every toast is as tall as the newest, so the stack reads as one slab.
+  --toast-internal-height: var(--toast-frontmost-height, var(--toast-height));
+  --toast-internal-travel: var(--toast-transition-travel, var(--spacing-4));
+  // How far the toast floats in from and out to, added to where it sits. Zero at rest.
+  --toast-internal-float-x: 0px;
+  --toast-internal-float-y: 0px;
+
+  position: var(--toast-position, absolute);
+  inset-inline: var(--toast-inset-inline, 0);
+  box-sizing: var(--toast-box-sizing, border-box);
+  display: var(--toast-display, flex);
+  align-items: var(--toast-align-items, stretch);
+  inline-size: var(--toast-inline-size, 100%);
+  block-size: var(--toast-internal-height);
+  pointer-events: var(--toast-pointer-events, auto);
+  border: var(--toast-internal-border-width) var(--toast-border-style, solid)
+    var(--toast-internal-border);
+  border-radius: var(--toast-internal-border-radius);
+  background-color: var(--toast-internal-background);
+  box-shadow: var(--toast-internal-shadow);
+  // No hover colour on the surface. Hover only pauses the timer and spreads the stack.
+  color: var(--toast-internal-title-color);
+  font-size: var(--toast-font-size, var(--periscope-font-size-base));
+  font-weight: var(--toast-font-weight, var(--periscope-font-weight-regular));
+  line-height: var(--toast-line-height, var(--line-height-20));
+  // Base UI numbers the toasts from the newest, 0, and sets `--toast-index` on each.
+  z-index: calc(var(--toast-internal-z-index-base) - var(--toast-index, 0));
+  transform-origin: var(--toast-transform-origin, top center);
+  transition-property: var(--toast-transition-property, opacity, transform, block-size);
+  transition-duration: var(--toast-internal-duration);
+  transition-timing-function: var(--toast-internal-easing);
+  transform: translateX(calc(var(--toast-swipe-movement-x, 0px) + var(--toast-internal-float-x)))
+    translateY(
+      calc(
+        var(--toast-swipe-movement-y, 0px) + var(--toast-internal-float-y) +
+          var(--toast-internal-direction) * var(--toast-index, 0) * var(--toast-internal-gap)
+      )
+    )
+    scale(calc(1 - var(--toast-index, 0) * var(--toast-internal-scale-step)));
+
+  // Only the icon follows the variant. The surface is the same for every toast.
+  &[data-type='success'] {
+    --toast-internal-icon-color: var(--toast-success-icon-color, var(--toast-success-icon));
+  }
+
+  &[data-type='warning'] {
+    --toast-internal-icon-color: var(--toast-warning-icon-color, var(--toast-warning-icon));
+  }
+
+  &[data-type='danger'] {
+    --toast-internal-icon-color: var(--toast-danger-icon-color, var(--toast-danger-icon));
+  }
+
+  &[data-type='loading'] {
+    --toast-internal-icon-color: var(--toast-loading-icon-color, var(--toast-loading-icon));
+  }
+
+  .toaster[data-position^='top'] > & {
+    top: var(--toast-top, 0);
+  }
+
+  .toaster[data-position^='bottom'] > & {
+    --toast-internal-direction: -1;
+
+    bottom: var(--toast-bottom, 0);
+    transform-origin: var(--toast-bottom-transform-origin, bottom center);
+  }
+
+  // Keeps the pointer on the toast while it crosses the gap to the next one, so the stack does
+  // not collapse in between.
+  &::after {
+    content: '';
+    position: var(--toast-bridge-position, absolute);
+    inset-inline: var(--toast-bridge-inset-inline, 0);
+    block-size: var(--toast-bridge-block-size, calc(var(--toast-internal-gap) + 1px));
+
+    .toaster[data-position^='top'] > & {
+      top: var(--toast-bridge-top, 100%);
+    }
+
+    .toaster[data-position^='bottom'] > & {
+      bottom: var(--toast-bridge-bottom, 100%);
+    }
+  }
+
+  // Hover and focus inside the stack spread it: each toast at its own height, the gap between.
+  &[data-expanded] {
+    block-size: var(--toast-height);
+    transform: translateX(calc(var(--toast-swipe-movement-x, 0px) + var(--toast-internal-float-x)))
+      translateY(
+        calc(
+          var(--toast-swipe-movement-y, 0px) + var(--toast-internal-float-y) +
+            var(--toast-internal-direction) *
+            (var(--toast-offset-y, 0px) + var(--toast-index, 0) * var(--toast-internal-gap))
+        )
+      );
+  }
+
+  // Past the `limit` the stack shows.
+  &[data-limited] {
+    opacity: var(--toast-limited-opacity, 0);
+    pointer-events: var(--toast-limited-pointer-events, none);
+  }
+
+  // A gentle float in and out, toward the edge the stack sits against. It starts from where the
+  // toast sits, so a toast in a spread stack or dragged by a swipe does not jump back first.
+  &[data-starting-style],
+  &[data-ending-style] {
+    --toast-internal-float-y: calc(
+      var(--toast-internal-direction) * -1 * var(--toast-internal-travel)
+    );
+  }
+
+  &[data-starting-style] {
+    opacity: var(--toast-enter-opacity, 0);
+  }
+
+  &[data-ending-style] {
+    opacity: var(--toast-exit-opacity, 0);
+  }
+
+  // A toast swiped sideways keeps going the way it was swiped.
+  &[data-ending-style][data-swipe-direction='left'],
+  &[data-ending-style][data-swipe-direction='right'] {
+    --toast-internal-float-y: 0px;
+  }
+
+  &[data-ending-style][data-swipe-direction='left'] {
+    --toast-internal-float-x: calc(-1 * var(--toast-internal-travel));
+  }
+
+  &[data-ending-style][data-swipe-direction='right'] {
+    --toast-internal-float-x: var(--toast-internal-travel);
+  }
+
+  &:focus-visible {
+    outline: var(--toast-internal-focus-outline);
+    outline-offset: var(--toast-internal-focus-outline-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    --toast-internal-travel: 0px;
+  }
+}
+
+.toast__content {
+  display: var(--toast-content-display, flex);
+  flex: var(--toast-content-flex, 1 1 auto);
+  min-inline-size: var(--toast-content-min-inline-size, 0);
+  align-items: var(--toast-content-align-items, flex-start);
+  gap: var(--toast-content-gap, var(--spacing-5));
+  // The design measures the padding from the outer edge of the toast, so the border comes off it.
+  padding-block: calc(
+    var(--toast-content-padding-block, var(--spacing-7)) - var(--toast-internal-border-width)
+  );
+  padding-inline: calc(
+    var(--toast-content-padding-inline, var(--spacing-8)) - var(--toast-internal-border-width)
+  );
+  transition-property: var(--toast-content-transition-property, opacity);
+  transition-duration: var(--toast-internal-duration);
+  transition-timing-function: var(--toast-internal-easing);
+
+  // Behind the newest toast the text would show through the gap. Spreading the stack brings it
+  // back.
+  &[data-behind] {
+    opacity: var(--toast-content-behind-opacity, 0);
+  }
+
+  .toast[data-expanded] &[data-behind] {
+    opacity: var(--toast-content-behind-expanded-opacity, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.toast__icon {
+  --toast-internal-icon-size: var(--toast-icon-size, var(--size-icon-toast));
+  // The spinner is 12px unless told otherwise.
+  --spinner-size: var(--toast-internal-icon-size);
+
+  display: var(--toast-icon-display, inline-flex);
+  flex: var(--toast-icon-flex, none);
+  align-items: var(--toast-icon-align-items, center);
+  // The height of a line of text, so the icon sits on the first line of a wrapped message.
+  block-size: var(--toast-line-height, var(--line-height-20));
+  color: var(--toast-internal-icon-color);
+  line-height: var(--toast-icon-line-height, 0);
+
+  svg {
+    inline-size: var(--toast-internal-icon-size);
+    block-size: var(--toast-internal-icon-size);
+  }
+
+  // The solid icons ship a white disc and a dark glyph written into the SVG. The disc takes the
+  // colour of the variant and the glyph is cut out of it, down to the toast surface.
+  svg [fill='#fff'] {
+    fill: var(--toast-icon-disc-color, currentcolor);
+  }
+
+  svg [stroke='#fff'] {
+    stroke: var(--toast-icon-disc-color, currentcolor);
+  }
+
+  svg [stroke='#121317'] {
+    stroke: var(--toast-icon-glyph-color, var(--toast-internal-background));
+  }
+}
+
+.toast__text {
+  display: var(--toast-text-display, flex);
+  flex: var(--toast-text-flex, 1 1 auto);
+  flex-direction: var(--toast-text-flex-direction, column);
+  min-inline-size: var(--toast-text-min-inline-size, 0);
+  overflow-wrap: var(--toast-text-overflow-wrap, anywhere);
+}
+
+.toast__title {
+  margin: var(--toast-title-margin, 0);
+  font: var(--toast-title-font, inherit);
+  color: var(--toast-internal-title-color);
+}
+
+.toast__description {
+  margin: var(--toast-description-margin, 0);
+  color: var(--toast-internal-description-color);
+}
+
+.toast__action {
+  --toast-internal-action-radius: calc(
+    var(--toast-internal-border-radius) - var(--toast-internal-border-width)
+  );
+
+  flex: var(--toast-action-flex, none);
+  box-sizing: var(--toast-action-box-sizing, border-box);
+  inline-size: var(--toast-action-inline-size, var(--spacing-48));
+  margin: var(--toast-action-margin, 0);
+  padding-inline: var(--toast-action-padding-inline, var(--spacing-4));
+  border: var(--toast-action-border, 0);
+  border-inline-start:
+    var(--toast-action-divider-width, 1px) var(--toast-action-divider-style, solid)
+    var(--toast-internal-action-divider);
+  border-start-end-radius: var(--toast-internal-action-radius);
+  border-end-end-radius: var(--toast-internal-action-radius);
+  background: var(--toast-action-background, none);
+  color: var(--toast-internal-action-label);
+  font: var(--toast-action-font, inherit);
+  font-size: var(--toast-action-font-size, var(--periscope-font-size-small));
+  line-height: var(--toast-action-line-height, var(--line-height-18));
+  cursor: var(--toast-action-cursor, pointer);
+  transition-property: var(--toast-action-transition-property, opacity, background-color, color);
+  transition-duration: var(--toast-internal-duration);
+  transition-timing-function: var(--toast-internal-easing);
+
+  // Behind the newest toast, like the content next to it.
+  .toast__content[data-behind] ~ & {
+    opacity: var(--toast-action-behind-opacity, 0);
+  }
+
+  .toast[data-expanded] .toast__content[data-behind] ~ & {
+    opacity: var(--toast-action-behind-expanded-opacity, 1);
+  }
+
+  &:hover {
+    background-color: var(--toast-internal-action-background-hover);
+    color: var(--toast-internal-action-label-hover);
+  }
+
+  &:focus-visible {
+    outline: var(--toast-internal-focus-outline);
+    outline-offset: var(--toast-internal-focus-outline-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
