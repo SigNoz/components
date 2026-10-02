@@ -1,99 +1,166 @@
-.wrapper {
-	display: var(--progress-wrapper-display, flex);
-	align-items: var(--progress-wrapper-align-items, center);
-	gap: var(--progress-wrapper-gap, var(--spacing-4, 8px));
-	width: var(--progress-wrapper-width, 100%);
-}
+// Base UI writes the fill as an inline `width` on the indicator, and marks every part with
+// `data-progressing` or `data-complete`.
+.progress {
+	display: var(--progress-display, flex);
+	align-items: var(--progress-align-items, center);
+	gap: var(--progress-gap, var(--spacing-4));
+	width: var(--progress-width, var(--progress-internal-width, 100%));
+	max-width: var(--progress-max-width, var(--progress-internal-max-width, 100%));
 
-.root {
-	position: var(--progress-position, relative);
-	overflow: var(--progress-overflow, hidden);
-	background-color: var(--progress-background, var(--l3-background));
-	width: var(--progress-width, 100%);
-	/* Fix for overflow hidden in Safari */
-	transform: translateZ(0);
-	height: var(--progress-height, 8px);
-	border-radius: var(--progress-border-radius, 9999px);
+	--progress-internal-border-radius: var(--progress-border-radius, var(--radius-1));
 
-	&[data-size="default"] {
-		--progress-height: 8px;
-	}
-
-	&[data-size="small"] {
-		--progress-height: 4px;
-	}
-
-	&[data-linecap="round"] {
-		--progress-border-radius: var(--radius-round, 9999px);
-	}
-
-	&[data-linecap="butt"] {
-		--progress-border-radius: 0;
-	}
-}
-
-.indicator {
-	width: var(--progress-indicator-width, 100%);
-	height: var(--progress-indicator-height, 100%);
-	background-color: var(--progress-indicator-background, var(--primary-background));
-	transition: var(--progress-indicator-transition, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1));
-	border-radius: var(--progress-border-radius, var(--radius-round, 9999px));
-
-	&[data-status="active"] {
-		position: relative;
-	}
-
-	&[data-status="active"]::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-image: linear-gradient(
-				-45deg,
-				rgba(255, 255, 255, 0.25) 25%,
-				transparent 25%,
-				transparent 50%,
-				rgba(255, 255, 255, 0.25) 50%,
-				rgba(255, 255, 255, 0.25) 75%,
-				transparent 75%,
-				transparent
+	&[data-color='primary'] {
+		--progress-internal-indicator: var(
+			--progress-primary-indicator-background-color,
+			var(--progress-primary-indicator)
 		);
-		background-size: var(--progress-active-stripe-size, 1.5rem 1.5rem);
-		animation: progress-active var(--progress-active-animation-duration, 1.5s) linear infinite;
-		border-radius: inherit;
 	}
 
-}
-
-@keyframes progress-active {
-	0% {
-		background-position: 1.5rem 0;
+	&[data-color='secondary'] {
+		--progress-internal-indicator: var(
+			--progress-secondary-indicator-background-color,
+			var(--progress-secondary-indicator)
+		);
 	}
-	100% {
-		background-position: 0 0;
+
+	&[data-color='success'] {
+		--progress-internal-indicator: var(
+			--progress-success-indicator-background-color,
+			var(--progress-success-indicator)
+		);
+	}
+
+	&[data-color='danger'] {
+		--progress-internal-indicator: var(
+			--progress-danger-indicator-background-color,
+			var(--progress-danger-indicator)
+		);
+	}
+
+	&[data-color='warning'] {
+		--progress-internal-indicator: var(
+			--progress-warning-indicator-background-color,
+			var(--progress-warning-indicator)
+		);
+	}
+
+	&[data-color='info'] {
+		--progress-internal-indicator: var(
+			--progress-info-indicator-background-color,
+			var(--progress-info-indicator)
+		);
+	}
+
+	&[data-color='archive'] {
+		--progress-internal-indicator: var(
+			--progress-archive-indicator-background-color,
+			var(--progress-archive-indicator)
+		);
+	}
+
+	&[data-color='highlight-danger'] {
+		--progress-internal-indicator: var(
+			--progress-highlight-danger-indicator-background-color,
+			var(--progress-highlight-danger-indicator)
+		);
 	}
 }
 
-.stepDividers {
-	position: absolute;
-	inset: 0;
-	pointer-events: none;
+.progress__track {
+	flex: var(--progress-track-flex, 1 1 0);
+	min-width: var(--progress-track-min-width, 0);
+	height: var(--progress-track-height, var(--spacing-3));
+	overflow: var(--progress-track-overflow, hidden);
+	border-radius: var(--progress-internal-border-radius);
+	background-color: var(--progress-track-background-color, var(--progress-track));
 }
 
-.stepDivider {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	width: var(--progress-divider-width, 2px);
-	background-color: var(--progress-divider-background, var(--l1-background));
-	transform: translateX(-50%);
+.progress__indicator {
+	height: var(--progress-indicator-height, 100%);
+	border-radius: var(--progress-internal-border-radius);
+	background-color: var(--progress-internal-indicator);
 }
 
-.info {
-	font-variant-numeric: var(--progress-info-font-variant-numeric, tabular-nums);
-	font-size: var(--progress-info-font-size, var(--font-size-sm, 14px));
-	color: var(--progress-info-foreground, var(--l1-foreground));
-	white-space: var(--progress-info-white-space, nowrap);
+.progress__value {
+	flex-shrink: var(--progress-value-flex-shrink, 0);
+	white-space: var(--progress-value-white-space, nowrap);
+	color: var(--progress-value-color, var(--progress-value));
+	font-size: var(--progress-value-font-size, var(--periscope-font-size-base));
+	font-weight: var(--progress-value-font-weight, var(--periscope-font-weight-regular));
+	line-height: var(--progress-value-line-height, var(--periscope-line-height-base));
+	font-variant-numeric: var(--progress-value-font-variant-numeric, tabular-nums);
+}
+
+// A mask, not painted gaps, so the surface behind the progress shows through them. The `+ gap` in
+// the period makes the last segment end on the edge of the track. A mask reads only alpha, so
+// `black` means "keep" and is not a colour to replace with a token.
+.progress[data-steps] .progress__track {
+	--progress-internal-step-gap: var(--progress-step-gap, var(--spacing-1));
+	--progress-internal-step-period: calc(
+		(100% + var(--progress-internal-step-gap)) / var(--progress-internal-steps)
+	);
+
+	mask-image: var(
+		--progress-track-steps-mask-image,
+		repeating-linear-gradient(
+			to right,
+			black 0 calc(var(--progress-internal-step-period) - var(--progress-internal-step-gap)),
+			transparent 0 var(--progress-internal-step-period)
+		)
+	);
+}
+
+// Not on the default indicator: a table refreshes dozens of metric bars at once.
+.progress[data-active] .progress__indicator {
+	--progress-internal-stripe-size: var(--progress-stripe-size, 1.5rem);
+	--progress-internal-stripe-color: var(
+		--progress-active-stripe-color,
+		var(--progress-active-stripe)
+	);
+	--progress-internal-stripe-rest-x: 0px;
+
+	background-image: var(
+		--progress-indicator-active-background-image,
+		linear-gradient(
+			-45deg,
+			var(--progress-internal-stripe-color) 25%,
+			transparent 25% 50%,
+			var(--progress-internal-stripe-color) 50% 75%,
+			transparent 75%
+		)
+	);
+	background-size: var(--progress-internal-stripe-size) var(--progress-internal-stripe-size);
+	transition-property: var(--progress-indicator-active-transition-property, width);
+	transition-duration: var(--progress-indicator-active-transition-duration, 0.3s);
+	transition-timing-function: var(
+		--progress-indicator-active-transition-timing-function,
+		cubic-bezier(0.4, 0, 0.2, 1)
+	);
+	// Bare: CSS Modules renames the keyframes, and does not rename a name inside a `var()`.
+	animation-name: progress-stripes;
+	animation-duration: var(--progress-indicator-active-animation-duration, 1.5s);
+	animation-timing-function: var(--progress-indicator-active-animation-timing-function, linear);
+	animation-iteration-count: var(--progress-indicator-active-animation-iteration-count, infinite);
+
+	&[data-complete] {
+		animation-name: var(--progress-indicator-complete-animation-name, none);
+	}
+}
+
+// The frames are one stripe size apart, one gradient tile, so the loop has no seam.
+@keyframes progress-stripes {
+	from {
+		background-position-x: var(--progress-internal-stripe-size);
+	}
+
+	to {
+		background-position-x: var(--progress-internal-stripe-rest-x);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.progress[data-active] .progress__indicator {
+		transition: none;
+		animation: none;
+	}
 }
