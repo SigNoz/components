@@ -327,16 +327,6 @@
 				"require": "./dist/slider/index.cjs"
 			}
 		},
-		"./sonner": {
-			"import": {
-				"types": "./dist/sonner/index.d.ts",
-				"import": "./dist/sonner/index.mjs"
-			},
-			"require": {
-				"types": "./dist/sonner/index.d.cts",
-				"require": "./dist/sonner/index.cjs"
-			}
-		},
 		"./spinner": {
 			"import": {
 				"types": "./dist/spinner/index.d.ts",
@@ -385,6 +375,16 @@
 			"require": {
 				"types": "./dist/text-ellipsis/index.d.cts",
 				"require": "./dist/text-ellipsis/index.cjs"
+			}
+		},
+		"./toast": {
+			"import": {
+				"types": "./dist/toast/index.d.ts",
+				"import": "./dist/toast/index.mjs"
+			},
+			"require": {
+				"types": "./dist/toast/index.d.cts",
+				"require": "./dist/toast/index.cjs"
 			}
 		},
 		"./toggle-group": {
@@ -455,12 +455,10 @@
 		"dayjs": "^1.11.21",
 		"lodash-es": "^4.18.1",
 		"motion": "^11.11.17",
-		"next-themes": "^0.4.6",
 		"nuqs": "^2.9.2",
 		"react-compiler-runtime": "^1.0.0",
 		"react-day-picker": "^9.8.1",
-		"react-resizable-panels": "^4.12.2",
-		"sonner": "^2.0.7"
+		"react-resizable-panels": "^4.12.2"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",

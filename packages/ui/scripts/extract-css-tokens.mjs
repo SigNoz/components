@@ -7,6 +7,17 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UI_SRC_DIR = join(__dirname, '../src');
 
+// Custom properties a primitive sets on its own elements at runtime. A component reads them, but
+// they share the component prefix and are not theming hooks, so they stay out of the docs.
+const PRIMITIVE_VARS = new Set([
+	'--toast-frontmost-height',
+	'--toast-height',
+	'--toast-index',
+	'--toast-offset-y',
+	'--toast-swipe-movement-x',
+	'--toast-swipe-movement-y',
+]);
+
 const REGION_START = '// #region css-tokens';
 const REGION_END = '// #endregion css-tokens';
 
@@ -113,7 +124,11 @@ function filterComponentVars(variables, prefix) {
 	const allVars = new Set([...variables.definitions.keys(), ...variables.usages.keys()]);
 
 	for (const varName of allVars) {
-		if (!varName.startsWith(prefix) || varName.includes('-internal-')) {
+		if (
+			!varName.startsWith(prefix) ||
+			varName.includes('-internal-') ||
+			PRIMITIVE_VARS.has(varName)
+		) {
 			continue;
 		}
 		const defaultValue = variables.definitions.get(varName) || variables.usages.get(varName) || '';
