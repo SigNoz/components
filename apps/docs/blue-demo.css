@@ -117,6 +117,7 @@
 	--announcement-banner-error-title: #b91c1c;
 	--announcement-banner-error-description: #b91c1c;
 	--kbd-active-background: color-mix(in srgb, #0284c7, transparent 90%);
+	--dropdown-item-danger-background-hover: color-mix(in srgb, #dc2626, transparent 90%);
 	--accent-primary: #0284c7;
 	--accent-primary-hover: #0369a1;
 	--accent-primary-foreground: #ffffff;
@@ -258,6 +259,7 @@
 	--announcement-banner-error-title: #f87171;
 	--announcement-banner-error-description: #f87171;
 	--kbd-active-background: color-mix(in srgb, #38bdf8, transparent 90%);
+	--dropdown-item-danger-background-hover: color-mix(in srgb, #ef4444, transparent 90%);
 	--accent-primary: #38bdf8;
 	--accent-primary-hover: #0ea5e9;
 	--accent-primary-foreground: #0c1929;
