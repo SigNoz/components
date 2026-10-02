@@ -5,8 +5,9 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--kbd-active-background` | `-` |
  * | `--kbd-align-items` | `center` |
- * | `--kbd-background` | `var(--callout-primary-background)` |
+ * | `--kbd-background` | `var(--kbd-active-background)` |
  * | `--kbd-border-color` | `var(--primary-background)` |
  * | `--kbd-border-radius` | `var(--radius-md)` |
  * | `--kbd-border-width` | `1px` |
