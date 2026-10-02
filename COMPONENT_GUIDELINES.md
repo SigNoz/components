@@ -51,6 +51,9 @@ Five principles behind every component. Read when building; refer back when maki
    their parent's file, never in a file of their own. Static members (`Callout.Expandable`) are
    the exception: they share one `{name}-components.stories.tsx` next to the root's file.
    Symbols tagged `@access private` are exempt.
+6. **No comment by default.** A code comment stays only when it brings context from outside the
+   file or stops an edit from causing a bug. Read every comment in the diff against
+   [Code comments](#code-comments) before you finish.
 
 Reference implementations to copy from:
 
@@ -635,9 +638,10 @@ nothing to put in them:
 4. **Accessibility**, when the component decides something for the consumer, or needs
    something from them (`icon` mode needs an `aria-label`; the spinner has no role of its own).
 5. **One `###` section per behaviour that is not obvious from the props.** Title it after the
-   thing, not the prop (`### Disabled and loading`, `### Stacking`, `### Width`). Cross-prop
+   thing, not the prop (`### Disabled and loading`, `### Stacking`). Cross-prop
    interactions, gotchas that cost someone an hour, and how it behaves inside another component
-   all live here.
+   all live here. `width` and `maxWidth` never get a section, a sentence or an `@example`. They
+   are plain props, and their prop JSDoc is all they need.
 6. **`### Asserting on it`**: where `testId` lands, then a table of the root data attributes
    and a table of the `data-slot`s with when each is rendered. Say to use those, never the
    hashed class names.
@@ -660,6 +664,80 @@ documentation.
 Add an import line for the component to root `README.md` and to
 `apps/docs/stories/intro.mdx`. `packages/ui/src/__tests__/documentation.test.ts` fails the
 build if you don't.
+
+### Code comments
+
+Default to no comment. Most comments written while building a component restate what the code,
+the component JSDoc or the spec already says, and then a reviewer has to ask for them to go.
+Write the code first, then add a comment only where it passes the test below.
+
+JSDoc on the public surface is for the consumer, and the sections above cover it. Everything
+else is a code comment, written for the next person who edits the file: `//` and `/* */` in
+`.ts`, `.tsx` and `.scss`, JSDoc on anything that is not exported, and comments in tests and
+stories.
+
+#### The test
+
+Ask two questions of every comment. Keep it only if one answer is yes.
+
+1. Does it carry context from outside this file that the reader needs on this line? What a
+   dependency does on its own (Base UI clamps `value`, and renders `null` as indeterminate), or
+   why a line breaks a rule of this document (`black` in a mask is alpha, not a colour to swap
+   for a token).
+2. Does it stop a likely edit from causing a bug? A prop written after the spread so a stray
+   value cannot win, a keyframe name left bare, a value that looks redundant, an alternative
+   that looks simpler and is wrong (`toFixed(2)` pads `5` to `5.00`).
+
+"It explains the code" is not a yes. Code that needs explaining gets a better name or a simpler
+shape first.
+
+#### Always delete
+
+- A restatement of the code, a name, a type or a test name. `// The bar can shrink to 0` over
+  `min-width: 0`. `/** The value text of an empty percent. */` over `EMPTY_VALUE_TEXT`.
+- A copy of something written elsewhere. Consumer behaviour lives in the component JSDoc, design
+  reasons live in the spec and its Decision Log. Write each fact there once, not again in the
+  SCSS, the types and the tests.
+- The reason a prop does not exist (`there is no size to pick`). The `@ts-expect-error` reason in
+  the type tests records it.
+- History: `was Radix`, `previously`, `now`, `new`, `replaces`. That belongs in the commit
+  message and the changelog.
+- Narration of the task: `as requested`, `per review`, `fix for the bug where`.
+- Labels and banners: `// Root`, `// Styles`, `// Handlers`, `// --- helpers ---`.
+- A paragraph at the top of a file about lines further down. Move each fact to its line, or drop
+  it.
+
+#### Form
+
+- On the line it explains, or directly above it.
+- One or two short sentences in the present tense: the fact, then the consequence.
+- Name the source of an outside fact (`Base UI`, `CSS Modules`, `JSX`).
+- No `Note:`, `IMPORTANT`, bold or capitals for emphasis.
+
+#### Examples
+
+From the Progress cleanup:
+
+| Before | After |
+| --- | --- |
+| `/** What a screen reader hears for that case, in place of the dash. */` on `EMPTY_ARIA_VALUE_TEXT` | Deleted. The name and its one use say it. |
+| `// One radius on the track and the fill, from the design spec: there is no line cap to pick.` | Deleted. It is the reason for a missing prop. |
+| `// The number is the data, so it never shrinks and never truncates.` over `flex-shrink: 0` and `white-space: nowrap` | Deleted. The declarations say it, and the component JSDoc says it for the consumer. |
+| `// The range is the component's, whatever reaches the spread.` over `min={0}` and `max={100}` | `// Base UI's defaults, written after the spread so a stray min or max cannot move the range.` |
+| `// Where a stripe loop ends, the rest state progress-stripes moves back from.` | Moved to the keyframes and rewritten: `// The frames are one stripe size apart, one gradient tile, so the loop has no seam.` |
+
+#### Not covered by this rule
+
+- `// #region css-tokens` and `// #endregion css-tokens`. `pnpm run tokens` writes and reads them.
+- `// @ts-expect-error - <reason>` in the type tests. The reason is the label of the case in the
+  `*.types.messages.test.ts` snapshot, so it stays, as one short clause.
+- A lint suppression, which keeps its reason.
+
+#### Before you finish
+
+Read every comment in your diff against the test, including the ones you wrote earlier in the
+same change, and delete what fails. A reviewer asking for a comment cleanup means this step was
+skipped.
 
 ## 5. How to create stories
 

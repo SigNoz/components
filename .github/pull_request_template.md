@@ -81,6 +81,8 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **Docs** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#4-how-to-document-props))
 
 - [ ] JSDoc on **every** public prop, with `@default` where applicable
+- [ ] No component JSDoc section or `@example` for `width` and `maxWidth`
+- [ ] Code comments only add context from outside the file or stop a bug, never restate the code
 - [ ] Story file per root component and per preset, subcomponent stories in the parent's file, static members in `{name}-components.stories.tsx` (`@access private` ones exempt), correct `title` group
 - [ ] `argTypes` complete with `category`, `type.summary`, `defaultValue.summary`
 - [ ] Stories for every meaningful state, not just the happy path
