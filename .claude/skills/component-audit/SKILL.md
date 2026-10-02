@@ -96,7 +96,7 @@ Check: index.ts exports, directory structure, naming conventions
 ### 2. CSS & Tokens
 - 0: Hardcoded values, primitive colors, Tailwind remnants, global selectors
 - 1: Tokenized but has literal fallbacks or class-based variants
-- 2: Every value is --{component}-* var resolving to semantic token, no fallback
+- 2: Every declaration is a --{component}-* var (layout and resets included), every colour and variant colour a hook onto a semantic token, no literal fallback on tokens
 
 Check: *.module.scss, CSS custom properties, data-* variants
 

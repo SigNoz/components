@@ -40,8 +40,9 @@ Five principles behind every component. Read when building; refer back when maki
 
 **The non-negotiables**, if you read nothing else:
 
-1. Styles are **CSS Modules**, and every value a consumer might want to change is a
-   `--{component}-*` custom property. No hardcoded values.
+1. Styles are **CSS Modules**, and **every declaration** reads its value through a
+   `--{component}-*` custom property, layout and resets included, with the default in the
+   fallback. Colours default to a design token, never a literal.
 2. Anything **not** meant to be overridden is named `--{component}-internal-{thing}`.
 3. Subcomponents live in **`subcomponents/`**, opinionated compositions in **`presets/`**.
 4. A component **does not accept `className` or `style`**, on its root or on any wrapper or
@@ -50,7 +51,9 @@ Five principles behind every component. Read when building; refer back when maki
    **every prop carries JSDoc**, so a human or an agent reading the type declaration
    understands it without opening the implementation.
 6. **One story file per root component, plus one per preset.** Subcomponent stories live in
-   their parent's file, never in a file of their own. Symbols tagged `@access private` are exempt.
+   their parent's file, never in a file of their own. Static members (`Callout.Expandable`) are
+   the exception: they share one `{name}-components.stories.tsx` next to the root's file.
+   Symbols tagged `@access private` are exempt.
 
 Reference implementations to copy from:
 
@@ -105,6 +108,14 @@ Rules:
   `index.ts` and carry `@access private` (`tooltip/` exports `Tooltip`, not `TooltipTrigger` or
   `TooltipContent`). Another component that needs one imports it by relative path, and a change
   to that subcomponent has to keep those imports working.
+- A part a consumer uses on its own, in place of the root, hangs off the root as a static member
+  instead: `Pill.Closeable`, `Callout.Expandable`, `Callout.Link`. The part lives in
+  `subcomponents/`, the root attaches it with `Object.assign(Root, { Closeable: PillCloseable })`,
+  and `index.ts` exports the root plus the part's props type, never the part itself. Such a part
+  is public API: no `@access private`, JSDoc on every prop, a story in
+  `{name}-components.stories.tsx` and a `<Controls>` of its own in the MDX. Its component JSDoc
+  says how it is reached ("Reached as `Pill.Closeable`, not imported on its own"), and its
+  `displayName` is the dotted name.
 - Shared non-component logic goes in `utils.ts` (see `pagination/utils.ts`) or a `lib/`
   subfolder (`table/lib/`). Cross-component helpers go in `src/lib/`.
 - One style file per component directory is the norm; add `{subcomponent}.module.scss` only
@@ -144,7 +155,10 @@ export { Badge } from './badge.js';
 - Applying it is mechanical: **every `export` in the component directory that `index.ts` does
   not re-export carries the tag**, props types as much as components (`TooltipTriggerProps`
   next to `TooltipTrigger`), contexts, providers and hooks included. A symbol that is never
-  exported from its own file needs nothing, it is already unreachable.
+  exported from its own file needs nothing, it is already unreachable. The one exception is a
+  part attached as a static member of an exported root (`PillCloseable`, reached as
+  `Pill.Closeable`): it is public through the root, so it carries no tag even though `index.ts`
+  does not list it.
 - A symbol listed in `index.ts` must **not** carry the tag. Public and private at once is a
   bug: it exempts a real part of the surface from its story, MDX section and prop docs.
 - The tag goes last in the JSDoc block, after the prose and the other tags, separated by a
@@ -201,13 +215,14 @@ className={styles.badge}
 - Keep every selector scoped to the component class. A bare `[data-color]` selector applies to
   every matching element on the page, write `.checkbox[data-color="forest"]` instead.
 
-### Every overridable value goes through a custom property
+### Every declaration goes through a custom property
 
 ```scss
 .badge {
+    display: var(--badge-display, inline-flex);
     padding: var(--badge-padding, var(--spacing-4));
     font-size: var(--badge-font-size, var(--periscope-font-size-small));
-    background-color: var(--badge-background);
+    background-color: var(--badge-background-color, var(--badge-background));
 }
 ```
 
@@ -216,13 +231,75 @@ className={styles.badge}
   token. **Two links, not three: do not add a literal fallback to a design token.**
 - Anything **not** meant to be overridden carries an `-internal-` segment
   (`--button-internal-background`). Those are excluded from the generated docs and are not
-  public API. Use this rather than hardcoding, because an internal variable is still readable and
-  debuggable, a magic number is not.
+  public API.
 - **Never** write `--x: var(--x)`, and never define the same variable twice in one block. Both
   silently break the variable.
 
-A hardcoded value is a value no consumer can theme. If you catch yourself typing a literal,
-it needs a variable, and that variable should resolve to a design token.
+A hardcoded value is a value no consumer can change. **Every declaration reads its value
+through a `--{component}-*` variable, whatever the property.** There is no list of values that
+are "only layout": `display: flex`, `flex-direction: column`, `margin: 0`, `min-inline-size: 0`,
+`overflow-wrap: anywhere`, `cursor: pointer`, the `opacity: 0` of a state, `solid` and `ease`
+all get a variable. The default sits in the fallback, so nothing changes until a consumer
+overrides it.
+
+```scss
+.badge__text {
+    display: var(--badge-text-display, flex);
+    flex-direction: var(--badge-text-flex-direction, column);
+    min-inline-size: var(--badge-text-min-inline-size, 0);
+    overflow-wrap: var(--badge-text-overflow-wrap, anywhere);
+}
+```
+
+Name the variable `--{component}-{part}-{state}-{property}`. The part is the BEM element, left
+out on the root. The state is the data attribute or pseudo-class of the rule, left out in the
+default rule. The property is the CSS property as written in the declaration, so
+`.toast__content[data-behind] { opacity }` reads `--toast-content-behind-opacity`. A value that
+feeds several declarations is named after what it is instead, like `--toast-icon-size` or
+`--toast-stack-gap`.
+
+What already counts as wrapped:
+
+- A value written only from variables, such as `color: var(--toast-internal-title-color)` or a
+  `calc()` over variables. The arithmetic in a `calc()` (`-1 *`, `1 -`, `/ 2`) is not a value.
+  A literal inside it is: `calc(var(--gap) + 1px)` goes into a fallback whole.
+- An `-internal-` variable that holds a sign or a rest state the rules swap, such as
+  `--toast-internal-direction: 1` or `--toast-internal-float-x: 0px`. Any other literal in an
+  internal variable reads from a public one first:
+  `--toast-internal-scale-step: var(--toast-stack-scale-step, 0.05)`.
+
+A shorthand that lists properties, such as `transition: opacity 150ms ease, color 150ms ease`,
+splits into longhands so each part has its variable: `transition-property`,
+`transition-duration` and `transition-timing-function`.
+
+Three declarations stay bare, because an override would break a promise the component makes:
+
+- Anything inside `@media (prefers-reduced-motion: reduce)`.
+- `display: none` on `[hidden]`.
+- `content` that only creates a pseudo-element.
+
+#### Colours
+
+The default of every colour is a design token, never a literal. The rule reads that token
+through an override hook, so a consumer changes the colour without redefining the token:
+`color: var(--toast-title-color, var(--toast-title))`. The token is named for its role
+(`--toast-title`), the hook adds the property it sets (`--toast-title-color`).
+
+A variant gets the same treatment, one hook per colour per variant, so a consumer can change
+one variant alone. The variant re-points an `-internal-` variable, and the rules read only the
+internal one:
+
+```scss
+.callout[data-color='success'] {
+    --callout-internal-background: var(
+        --callout-success-background-color,
+        var(--callout-success-background)
+    );
+}
+```
+
+`transparent`, `currentcolor` and `inherit` are allowed as fallbacks, because they pick no
+colour from the palette.
 
 ### Variants are data attributes, not class matrices
 
@@ -240,8 +317,11 @@ const badgeProps = {
 
 ```scss
 .badge[data-color="forest"] {
-    --badge-background: var(--accent-forest);
-    --badge-foreground: var(--accent-forest-foreground);
+    --badge-internal-background: var(--badge-forest-background-color, var(--accent-forest));
+    --badge-internal-foreground: var(
+        --badge-forest-foreground-color,
+        var(--accent-forest-foreground)
+    );
 }
 .badge[data-variant="outline"] { /* ... */ }
 ```
@@ -307,8 +387,9 @@ Rules:
   anyway for the component to have any colour at all.
 - Never a hex or `rgb()` literal for colour. Use `color-mix(in srgb|oklab, ...)` for derived
   shades, not `rgba()` over a token.
-- **No token matches?** Use a literal, and treat that as a signal the token set may need
-  extending. Raise it rather than quietly inventing a one-off scale.
+- **No token matches?** Use a literal as the fallback of the component variable,
+  `var(--badge-border-width, 1px)`, never bare in the property. Treat it as a signal the token
+  set may need extending, and raise it rather than quietly inventing a one-off scale.
 
 > [!NOTE]
 > **Legacy pattern, being cleaned up.** Most existing style files still read
@@ -342,7 +423,8 @@ retime or remove them) and must be disabled under reduced motion:
 
 ```scss
 .badge {
-    transition: background-color var(--badge-transition-duration, 150ms) ease;
+    transition: background-color var(--badge-transition-duration, 150ms)
+        var(--badge-transition-timing-function, ease);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -658,6 +740,46 @@ accurate. Symbols tagged `@access private` are exempt: they are not public API, 
 story and no Controls table. Files such as `dialog-content.stories.tsx` predate this rule; don't
 add more, and don't migrate them as a side effect of an unrelated change.
 
+Static members are the exception. All the static members of one root share a second file,
+`{name}-components.stories.tsx`, next to the root's file, so the root's file keeps only the
+states of the root. `callout-components.stories.tsx` is the reference. That file:
+
+- titles its `Meta` `<Group>/<Root>/Components`, so the parts sit under the root in the sidebar;
+- binds the root in `Meta` and sets `tags: ['!autodocs']`, since the parts are documented on the
+  root's MDX page and get no docs page of their own;
+- takes the root's `argTypes` and `parameters` from `stories/shared/{name}-arg-types.ts`, which
+  the root's file imports too.
+
+Each story there is typed by its own component, overrides `argTypes` for the props the part adds,
+and excludes the root args it does not take, so its table lists only the props it accepts:
+
+```tsx
+const meta: Meta<typeof Callout> = {
+  title: 'Primitive Components/Callout/Components',
+  component: Callout,
+  tags: ['!autodocs'],
+  parameters: calloutParameters,
+  argTypes: calloutArgTypes,
+};
+export default meta;
+
+export const Link: StoryObj<typeof Callout.Link> = {
+  parameters: {
+    // The callout props are declared on the parent `Meta`; `Callout.Link` has none of them.
+    controls: { exclude: ['color', 'size', 'icon'] },
+  },
+  argTypes: { /* the props it adds */ },
+  render: (args) => (
+    <Callout color="primary" size="md" icon={<SolidInfoCircle />}>
+      Read the <Callout.Link {...args} />.
+    </Callout>
+  ),
+};
+```
+
+`Pill.Closeable` predates this rule and still has its story in `pill.stories.tsx`; don't migrate
+it as a side effect of an unrelated change.
+
 A preset is a root of its own, so it gets a file, and its `Meta` binds the preset:
 
 ```tsx
@@ -724,7 +846,9 @@ argTypes: {
 2. **One story per meaningful state**: each variant, each colour, sizes, loading, disabled,
    invalid, with icon, long/truncated content, empty state.
 3. **Subcomponent stories sit in the parent's file and render inside a realistic parent**:
-   `DialogContent` inside a `Dialog`, `RadioGroupItem` inside a `RadioGroup`.
+   `DialogContent` inside a `Dialog`, `RadioGroupItem` inside a `RadioGroup`. Static members sit
+   in `{name}-components.stories.tsx` instead, and render inside a parent the same way
+   (`Callout.Link` inside a `Callout`).
 4. **Interactive stories own their state** via `useState` in `render`, or via a decorator.
    URL-driven presets need a `NuqsAdapter` decorator plus `useQueryState` in the decorator,
    keeping `args` hook-free.
@@ -765,8 +889,11 @@ For a component with subcomponents and presets, order the page the way people ad
 presets first, then the primitive composition example, then a `## X Props` +
 `<Controls of={XStories.Default} />` section per subcomponent. Copy `dialog.mdx` /
 `radio-group.mdx`. Each `<Controls>` must point at the story for *that* piece, which may live in
-the parent's story module when the subcomponent shares it. A wrong reference silently renders the
-wrong props table.
+the parent's story module when the subcomponent shares it. A static member's story lives in the
+`-components` module, which the MDX imports next to the root's
+(`import * as CalloutComponentsStories from './callout-components.stories';`, then
+`<Controls of={CalloutComponentsStories.Link} />`). A wrong reference silently renders the wrong
+props table.
 
 ## 6. Visual QA
 
