@@ -48,6 +48,23 @@ const MotionContent = React.forwardRef<HTMLDivElement, MotionContentProps>(
 );
 MotionContent.displayName = 'MotionContent';
 
+type OutsideEvent = { target: EventTarget | null; preventDefault(): void };
+
+/**
+ * A toast sits outside the panel without being the page behind it: pressing or focusing it
+ * must not close the dialog, so `handler` never sees it. The `Toaster` is portalled into the
+ * body, and Radix only skips its own toasts (a `DismissableLayer` branch).
+ */
+function ignoreToasts<Event extends OutsideEvent>(handler: ((event: Event) => void) | undefined) {
+	return (event: Event) => {
+		if (event.target instanceof Element && event.target.closest('[data-slot="toaster"]')) {
+			event.preventDefault();
+			return;
+		}
+		handler?.(event);
+	};
+}
+
 const getContentVariants = (
 	position: DialogPosition,
 	heightMode: DialogHeightMode,
@@ -242,6 +259,9 @@ export type DialogContentProps = Pick<
  * panel rather than the body. The modal traps focus in the panel and turns pointer events off
  * outside it, so a popup in the body could be neither clicked nor reached with the keyboard.
  *
+ * A toast stays where the `Toaster` put it. Pressing its button does not close the dialog,
+ * but the focus trap keeps `F6` and Tab from reaching it until the dialog closes.
+ *
  * @example
  * ```tsx
  * <Dialog>
@@ -309,6 +329,9 @@ export const DialogContent = React.forwardRef<
 			heightMode = 'content',
 			showOverlay = true,
 			animation = 'fade',
+			onPointerDownOutside,
+			onFocusOutside,
+			onInteractOutside,
 			...props
 		},
 		ref,
@@ -346,6 +369,9 @@ export const DialogContent = React.forwardRef<
 					data-testid={testId}
 					asChild
 					forceMount={props.forceMount}
+					onPointerDownOutside={ignoreToasts(onPointerDownOutside)}
+					onFocusOutside={ignoreToasts(onFocusOutside)}
+					onInteractOutside={ignoreToasts(onInteractOutside)}
 					{...props}
 				>
 					<MotionContent
