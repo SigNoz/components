@@ -1,268 +1,348 @@
-import { Star, Sun, Zap } from '@signozhq/icons';
-import { Callout, Typography } from '@signozhq/ui';
+import {
+	SolidAlertTriangle,
+	SolidCheckCircle2,
+	SolidInfoCircle,
+	SolidXCircle,
+} from '@signozhq/icons';
+import { Callout, type CalloutColorType, type CalloutSizeType, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { type CSSProperties, Fragment, type ReactElement } from 'react';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import styles from './callout.stories.module.css';
+import {
+	COLORS,
+	calloutArgTypes,
+	calloutParameters,
+	DESCRIPTION,
+	SIZES,
+	TITLE,
+} from './shared/callout-arg-types.js';
+import { waitForEffects } from './shared/play.js';
+
+const ICONS: Record<CalloutColorType, ReactElement> = {
+	primary: <SolidInfoCircle />,
+	secondary: <SolidInfoCircle />,
+	success: <SolidCheckCircle2 />,
+	danger: <SolidXCircle />,
+	warning: <SolidAlertTriangle />,
+	info: <SolidInfoCircle />,
+	archive: <SolidInfoCircle />,
+	'highlight-danger': <SolidXCircle />,
+};
 
 const meta: Meta<typeof Callout> = {
 	title: 'Primitive Components/Callout',
 	component: Callout,
 	parameters: {
-		layout: 'fullscreen',
-		design: {
-			type: 'figma',
-			url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-749&m=dev',
+		...calloutParameters,
+		docs: {
+			description: {
+				component:
+					'A static message with a severity: a tinted box with an icon and a description, always visible.',
+			},
 		},
 	},
-	argTypes: {
-		testId: {
-			control: 'text',
-			description: 'Test ID for the callout.',
-			table: { category: 'Testing', type: { summary: 'string' } },
-		},
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the callout.',
-			table: { category: 'Accessibility', type: { summary: 'string' } },
-		},
-		title: {
-			control: 'text',
-			description: 'The main title of the callout.',
-			table: { category: 'Content' },
-		},
-		children: {
-			control: 'text',
-			description: 'Additional descriptive text for the callout.',
-			table: { category: 'Content' },
-		},
-		type: {
-			control: 'select',
-			options: ['info', 'success', 'warning', 'error'],
-			description: 'Determines the default color scheme and icon.',
-			table: { category: 'Appearance', defaultValue: { summary: 'info' } },
-		},
-		showIcon: {
-			control: 'boolean',
-			description: 'Whether to show the default icon based on the type.',
-			table: { category: 'Appearance', defaultValue: { summary: 'true' } },
-		},
-		icon: {
-			control: false,
-			description:
-				'Custom ReactNode to use as the icon. Overrides default icon if `showIcon` is also true.',
-			table: { category: 'Appearance' },
-		},
-		color: {
-			control: 'select',
-			options: ['robin', 'forest', 'amber', 'cherry', 'sienna', 'aqua'],
-			description: 'Overrides the default color derived from `type`. Uses predefined color names.',
-			table: { category: 'Appearance' },
-		},
-		size: {
-			control: 'radio',
-			options: ['small', 'medium'],
-			description: 'The size of the callout component.',
-			table: { category: 'Appearance', defaultValue: { summary: 'small' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Customization' },
-		},
-		action: {
-			control: 'radio',
-			options: ['none', 'dismissible', 'expandable'],
-			description:
-				'Action button type: none (no button), dismissible (X button), or expandable (chevron toggle).',
-			table: { category: 'Behavior', defaultValue: { summary: 'none' } },
-		},
-		onClick: {
-			action: 'action-clicked',
-			description: 'Function called when the action button (dismiss or expand) is clicked.',
-			table: { category: 'Events', type: { summary: '() => void' } },
-		},
-	},
+	argTypes: calloutArgTypes,
 	args: {
-		type: 'info',
-		showIcon: true,
-		size: 'medium',
-		title: 'Important Information',
-		children: 'This is additional information that provides more context about the callout.',
-		action: 'none',
+		color: 'primary',
+		size: 'md',
+		icon: <SolidInfoCircle />,
+		children: DESCRIPTION,
 	},
 };
 
 export default meta;
+
 type Story = StoryObj<typeof Callout>;
 
-// Default story
 export const Default: Story = {
-	args: {
-		type: 'info',
-		showIcon: true,
-		size: 'medium',
-		title: 'Important Information',
-		children: 'This is additional information that provides more context about the callout.',
-		action: 'none',
+	parameters: {
+		// Every state it can be driven into is covered by `CalloutShowcase`.
+		chromatic: { disableSnapshot: true },
 	},
 };
 
-// All variants overview
-export const AllVariants: Story = {
-	render: () => (
-		<div className={styles.variantsContainer}>
-			{/* Type Variations */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Types
-				</Typography>
-				<Callout type="info" size="medium" title="Info Callout">
-					This is an informational message.
-				</Callout>
-				<Callout type="success" size="medium" title="Success Callout">
-					Operation completed successfully.
-				</Callout>
-				<Callout type="warning" size="medium" title="Warning Callout">
-					Please review your settings carefully.
-				</Callout>
-				<Callout type="error" size="medium" title="Error Callout">
-					An unexpected error occurred.
-				</Callout>
-			</div>
+/**
+ * `hover` and `focus` cannot be reached by a snapshot on their own, so
+ * `storybook-addon-pseudo-states` forces them on the controls inside the `[data-state-cell]`
+ * cells. The callout itself has no hover state.
+ */
+const STATES = ['default', 'hover', 'focus'] as const;
 
-			{/* Size Variations */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Sizes
-				</Typography>
-				<Callout type="info" size="small" title="Small Callout">
-					This is a small callout.
-				</Callout>
-				<Callout type="info" size="medium" title="Medium Callout">
-					This is a medium callout with more space for content.
-				</Callout>
-			</div>
+type State = (typeof STATES)[number];
 
-			{/* Content Variations */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Content Variations
-				</Typography>
-				<Callout type="info" size="medium" title="Only Title" />
-				<Callout type="info" size="medium" showIcon>
-					Only description without a title.
-				</Callout>
-				<Callout type="info" size="medium" showIcon={false} title="No Icon">
-					This callout has no icon.
-				</Callout>
-			</div>
+const CONTROL_SLOTS = ['callout-toggle', 'callout-close', 'callout-link'];
 
-			{/* Custom Icon */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Custom Icons
-				</Typography>
-				<Callout type="info" size="medium" icon={<Star aria-hidden />} title="Star Icon">
-					Custom star icon instead of default.
-				</Callout>
-				<Callout type="warning" size="medium" icon={<Zap aria-hidden />} title="Zap Icon">
-					Custom zap icon with warning colors.
-				</Callout>
-				<Callout color="sienna" size="medium" icon={<Sun aria-hidden />} title="Sun Icon">
-					Custom sun icon with sienna colors.
-				</Callout>
-			</div>
+function stateSelector(state: Exclude<State, 'default'>): string[] {
+	return CONTROL_SLOTS.map((slot) => `[data-state-cell="${state}"] [data-slot="${slot}"]`);
+}
 
-			{/* Custom Colors */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Custom Colors
+function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
+	return (
+		<>
+			<span />
+			{columns.map((column) => (
+				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+					{column}
 				</Typography>
-				<Callout color="robin" size="medium" title="Robin Color">
-					Using custom robin color.
-				</Callout>
-				<Callout color="forest" size="medium" title="Forest Color">
-					Using custom forest color.
-				</Callout>
-				<Callout color="amber" size="medium" title="Amber Color">
-					Using custom amber color.
-				</Callout>
-				<Callout color="cherry" size="medium" title="Cherry Color">
-					Using custom cherry color.
-				</Callout>
-				<Callout color="sienna" size="medium" title="Sienna Color">
-					Using custom sienna color.
-				</Callout>
-				<Callout color="aqua" size="medium" title="Aqua Color">
-					Using custom aqua color.
-				</Callout>
-			</div>
+			))}
+		</>
+	);
+}
 
-			{/* Dismissible */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Dismissible
-				</Typography>
-				<DismissibleExample type="info" title="Dismissible Info">
-					Click the X to dismiss this callout.
-				</DismissibleExample>
-				<DismissibleExample type="success" title="Dismissible Success">
-					This success message can be dismissed.
-				</DismissibleExample>
-			</div>
+function matrixStyle(columns: number): CSSProperties {
+	return { '--matrix-columns': columns } as CSSProperties;
+}
 
-			{/* Expandable */}
-			<div className="story-section">
-				<Typography size="lg" weight="semibold">
-					Expandable
-				</Typography>
-				<Callout type="info" size="medium" title="Expandable Callout" action="expandable">
-					Click the chevron to toggle this content.
-				</Callout>
-				<Callout
-					type="warning"
-					size="medium"
-					showIcon
-					title="Expandable Warning"
-					action="expandable"
-				>
-					This warning can be expanded or collapsed.
-				</Callout>
-			</div>
-		</div>
-	),
+const VARIANTS = ['callout', 'expanded', 'collapsed', 'closeable'] as const;
+
+type Variant = (typeof VARIANTS)[number];
+
+const VARIANT_LABELS: Record<Variant, string> = {
+	callout: 'Callout',
+	expanded: 'Expandable, expanded',
+	collapsed: 'Expandable, collapsed',
+	closeable: 'Closeable',
 };
 
-// Helper component for dismissible examples
-function DismissibleExample({
-	type,
-	title,
-	children,
-}: {
-	type: 'info' | 'success' | 'warning' | 'error';
-	title: string;
-	children?: string;
-}) {
-	const [isVisible, setIsVisible] = useState(true);
+/**
+ * Text on both sides of a link, so one description shows the plain text and the link of its color.
+ * A callout without a link draws the same text, so it needs no cell of its own.
+ */
+// Short enough to fit a matrix cell at `md` in a 1200px snapshot, so no cell shows the ellipsis.
+const SHORT_TITLE = 'Instrumentation';
 
-	if (!isVisible) {
+const LINKED_DESCRIPTION = (
+	<>
+		Instrumentation turns your code into logs, metrics and traces. Read the{' '}
+		<Callout.Link href="https://signoz.io/docs">documentation</Callout.Link> to set it up.
+	</>
+);
+
+// The matrices show the close button, so a click on it keeps the callout on screen.
+function keepOpen(): void {}
+
+function VariantCell({
+	variant,
+	color,
+	size,
+}: {
+	variant: Variant;
+	color: CalloutColorType;
+	size: CalloutSizeType;
+}): ReactElement {
+	const props = { color, size, icon: ICONS[color] };
+
+	if (variant === 'callout') {
+		return <Callout {...props}>{LINKED_DESCRIPTION}</Callout>;
+	}
+
+	if (variant === 'closeable') {
 		return (
-			<button onClick={() => setIsVisible(true)} className={styles.restoreButton}>
-				Restore "{title}"
-			</button>
+			<Callout.Closeable {...props} closed={false} onClose={keepOpen}>
+				{LINKED_DESCRIPTION}
+			</Callout.Closeable>
 		);
 	}
 
 	return (
-		<Callout
-			type={type}
-			size="medium"
-			showIcon
-			title={title}
-			action="dismissible"
-			onClick={() => setIsVisible(false)}
-		>
-			{children}
-		</Callout>
+		<Callout.Expandable {...props} title={SHORT_TITLE} defaultExpanded={variant === 'expanded'}>
+			{LINKED_DESCRIPTION}
+		</Callout.Expandable>
 	);
 }
+
+const LONG_TITLE =
+	'What is instrumentation, and why does every service in this cluster need it before it can report traces?';
+
+/**
+ * Every color in every variant at both sizes, the click target of the title row, the controls in
+ * each state, the empty and long content, and the scrolling description, all in one snapshot. The
+ * tooltip of the truncated title is forced open by `play` so the snapshot carries it.
+ */
+export const CalloutShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false },
+		pseudo: {
+			hover: stateSelector('hover'),
+			focusVisible: stateSelector('focus'),
+		},
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const title = canvas.getByTestId('truncated-callout-title');
+		// The tooltip sits on the title row, the button around the title.
+		const toggle = canvas.getByTestId('truncated-callout-toggle');
+
+		// The tooltip only exists once the title has been measured as truncated.
+		await waitFor(() => expect(title).toHaveAttribute('data-truncated'));
+		await waitForEffects();
+
+		fireEvent.pointerEnter(toggle);
+		fireEvent.mouseEnter(toggle);
+		fireEvent.mouseMove(toggle);
+
+		await waitFor(() =>
+			expect(within(document.body).getByRole('tooltip')).toHaveTextContent(LONG_TITLE),
+		);
+	},
+	argTypes: {
+		children: { control: false },
+		color: { control: false },
+		size: { control: false },
+	},
+	render: () => (
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Variants
+				</Typography>
+				<Typography size="sm">
+					Every color in every variant, once per size. Each description holds a{' '}
+					<code>Callout.Link</code>, and a collapsed callout hides it with the description.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(VARIANTS.length)}
+				>
+					<MatrixHeader columns={VARIANTS.map((variant) => VARIANT_LABELS[variant])} />
+					{SIZES.map((size) => (
+						<Fragment key={size}>
+							<Typography size="sm" weight="semibold" className={styles.matrixGroup}>
+								{size}
+							</Typography>
+							{COLORS.map((color) => (
+								<Fragment key={color}>
+									<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+										{color}
+									</Typography>
+									{VARIANTS.map((variant) => (
+										<VariantCell key={variant} variant={variant} color={color} size={size} />
+									))}
+								</Fragment>
+							))}
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Title hit area
+				</Typography>
+				<Typography size="sm">
+					The tint marks the title row of <code>Callout.Expandable</code>, the one button that
+					toggles it. It spans the row with the chevron, and the description is outside it.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.hitArea} ${styles.marginTopMedium}`}
+					style={matrixStyle(SIZES.length)}
+				>
+					<MatrixHeader columns={SIZES} />
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						expandable
+					</Typography>
+					{SIZES.map((size) => (
+						<VariantCell key={size} variant="expanded" color="primary" size={size} />
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					States
+				</Typography>
+				<Typography size="sm">
+					The title row, the close button and the link in each state. <code>hover</code> and{' '}
+					<code>focus</code> are forced by <code>storybook-addon-pseudo-states</code>.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(STATES.length)}
+				>
+					<MatrixHeader columns={[...STATES]} />
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						expandable
+					</Typography>
+					{STATES.map((state) => (
+						<div key={state} data-state-cell={state}>
+							<Callout.Expandable
+								color="primary"
+								size="sm"
+								icon={<SolidInfoCircle />}
+								title={TITLE}
+								defaultExpanded
+							>
+								Read the <Callout.Link href="https://signoz.io/docs">documentation</Callout.Link>.
+							</Callout.Expandable>
+						</div>
+					))}
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						closeable
+					</Typography>
+					{STATES.map((state) => (
+						<div key={state} data-state-cell={state}>
+							<Callout.Closeable
+								color="warning"
+								size="sm"
+								icon={<SolidAlertTriangle />}
+								closed={false}
+								onClose={keepOpen}
+							>
+								Your trial ends in 3 days.
+							</Callout.Closeable>
+						</div>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Empty and long content
+				</Typography>
+				<Typography size="sm">
+					An empty <code>Callout</code> renders nothing. <code>Callout.Expandable</code> shows
+					placeholders instead, and truncates a long title with a tooltip.
+				</Typography>
+				<div className={`${styles.stack} ${styles.marginTopMedium}`}>
+					<Callout.Expandable
+						color="danger"
+						size="sm"
+						icon={<SolidXCircle />}
+						title=""
+						defaultExpanded
+					>
+						{''}
+					</Callout.Expandable>
+					<Callout.Expandable
+						color="primary"
+						size="sm"
+						icon={<SolidInfoCircle />}
+						title={LONG_TITLE}
+						defaultExpanded={false}
+						testId="truncated-callout"
+					>
+						{DESCRIPTION}
+					</Callout.Expandable>
+					<Callout color="primary" size="sm" icon={<SolidInfoCircle />}>
+						{`A description with a word that cannot wrap: ${'instrumentation'.repeat(8)}.`}
+					</Callout>
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Overflow
+				</Typography>
+				<Typography size="sm">
+					In a parent with no height left, the description scrolls and the icon stays pinned.
+				</Typography>
+				<div className={`${styles.constrained} ${styles.marginTopMedium}`}>
+					<Callout color="success" size="sm" icon={<SolidCheckCircle2 />}>
+						{DESCRIPTION}
+					</Callout>
+				</div>
+			</div>
+		</div>
+	),
+};

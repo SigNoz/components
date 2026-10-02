@@ -1,139 +1,325 @@
 .callout {
-  position: relative;
-  width: 100%;
-  border-radius: var(--radius-2, 0.5rem);
-  border: 1px solid transparent;
-  display: flex;
-  gap: var(--spacing-4, 0.5rem);
-  align-items: flex-start;
+	display: var(--callout-display, flex);
+	align-items: var(--callout-align-items, flex-start);
+	box-sizing: var(--callout-box-sizing, border-box);
+	gap: var(--callout-gap, var(--spacing-5));
+	width: var(--callout-width, var(--callout-internal-width, 100%));
+	max-width: var(--callout-max-width, var(--callout-internal-max-width, 100%));
+	height: var(--callout-height, var(--callout-internal-height, auto));
+	max-height: var(--callout-max-height, var(--callout-internal-max-height, 100%));
+	min-height: var(--callout-min-height, 0);
+	padding: var(--callout-padding, var(--spacing-6) var(--spacing-5));
+	border: var(--callout-border-width, 1px) var(--callout-border-style, solid)
+		var(--callout-internal-border, transparent);
+	border-radius: var(--callout-border-radius, var(--radius-2));
+	background: var(--callout-internal-background, transparent);
+	color: var(--callout-internal-description, inherit);
+	font-size: var(--callout-internal-font-size);
+	font-weight: var(--callout-description-font-weight, var(--periscope-font-weight-regular));
+	line-height: var(--callout-internal-line-height);
+	letter-spacing: var(--callout-internal-letter-spacing);
+	// The padding of the title row and of the chevron and close boxes. Each takes it back with a
+	// negative margin, so a larger hit area never moves the layout.
+	--callout-internal-button-padding: var(--callout-button-padding, var(--spacing-2));
 
-  --callout-icon-color: currentColor;
-  --callout-title-color: var(--text-card-foreground);
-  --callout-description-color: var(--text-muted-foreground);
-  padding: var(--callout-padding, var(--spacing-8, 1rem));
+	// The type of the Figma text styles, Paragraph/400 for the description and Label/500 for the
+	// title, at Base for `sm` and at Medium for `md`. The title shares the size and the letter
+	// spacing.
+	&[data-size='sm'] {
+		--callout-internal-icon-size: var(--callout-icon-size, var(--size-icon-callout-sm));
+		--callout-internal-content-gap: var(--callout-content-gap, var(--spacing-3));
+		--callout-internal-font-size: var(--callout-font-size, var(--periscope-font-size-base));
+		--callout-internal-line-height: var(--callout-description-line-height, var(--periscope-line-height-base));
+		--callout-internal-letter-spacing: var(--callout-letter-spacing, var(--letter-spacing-0-5));
+	}
 
-  &[role="button"] {
-    cursor: pointer;
-  }
+	&[data-size='md'] {
+		--callout-internal-icon-size: var(--callout-icon-size, var(--size-icon-callout-md));
+		--callout-internal-content-gap: var(--callout-content-gap, var(--spacing-4));
+		--callout-internal-font-size: var(--callout-font-size, var(--periscope-font-size-medium));
+		--callout-internal-line-height: var(--callout-description-line-height, var(--line-height-26));
+		--callout-internal-letter-spacing: var(--callout-letter-spacing, var(--letter-spacing-0));
+	}
 
-  &--small {
-    font-size: var(--callout-font-size-small, var(--periscope-font-size-base, 13px));
-    line-height: var(--callout-line-height-small, 1.25rem);
-  }
+	// Links take the semantic link pair of the same intent, not a `callout-{color}-*` token, because
+	// it carries a per-mode ramp step for text.
+	&[data-color='primary'] {
+		--callout-internal-background: var(--callout-primary-background-color, var(--callout-primary-background));
+		--callout-internal-border: var(--callout-primary-border-color, var(--callout-primary-border));
+		--callout-internal-background-hover: var(--callout-primary-hover-background-color, var(--callout-primary-background-hover));
+		--callout-internal-title: var(--callout-primary-title-color, var(--callout-primary-title));
+		--callout-internal-description: var(--callout-primary-description-color, var(--callout-primary-description));
+		--callout-internal-icon: var(--callout-primary-icon-color, var(--callout-primary-icon));
+		--callout-internal-link: var(--callout-primary-link-color, var(--primary-link));
+		--callout-internal-link-hover: var(--callout-primary-link-hover-color, var(--primary-link-hover));
+	}
 
-  &--medium {
-    font-size: var(--callout-font-size-medium, var(--periscope-font-size-medium, 16px));
-    line-height: var(--callout-line-height-medium, 1.5rem);
-  }
+	&[data-color='secondary'] {
+		--callout-internal-background: var(--callout-secondary-background-color, var(--callout-secondary-background));
+		--callout-internal-border: var(--callout-secondary-border-color, var(--callout-secondary-border));
+		--callout-internal-background-hover: var(--callout-secondary-hover-background-color, var(--callout-secondary-background-hover));
+		--callout-internal-title: var(--callout-secondary-title-color, var(--callout-secondary-title));
+		--callout-internal-description: var(--callout-secondary-description-color, var(--callout-secondary-description));
+		--callout-internal-icon: var(--callout-secondary-icon-color, var(--callout-secondary-icon));
+		--callout-internal-link: var(--callout-secondary-link-color, var(--secondary-link));
+		--callout-internal-link-hover: var(--callout-secondary-link-hover-color, var(--secondary-link-hover));
+	}
 
-  &[data-color="robin"] {
-    --callout-icon-color: var(--callout-primary-icon);
-    --callout-title-color: var(--callout-primary-title);
-    --callout-description-color: var(--callout-primary-description);
-    background: var(--callout-primary-background);
-    border-color: var(--callout-primary-border);
-  }
+	&[data-color='success'] {
+		--callout-internal-background: var(--callout-success-background-color, var(--callout-success-background));
+		--callout-internal-border: var(--callout-success-border-color, var(--callout-success-border));
+		--callout-internal-background-hover: var(--callout-success-hover-background-color, var(--callout-success-background-hover));
+		--callout-internal-title: var(--callout-success-title-color, var(--callout-success-title));
+		--callout-internal-description: var(--callout-success-description-color, var(--callout-success-description));
+		--callout-internal-icon: var(--callout-success-icon-color, var(--callout-success-icon));
+		--callout-internal-link: var(--callout-success-link-color, var(--success-link));
+		--callout-internal-link-hover: var(--callout-success-link-hover-color, var(--success-link-hover));
+	}
 
-  &[data-color="cherry"] {
-    --callout-icon-color: var(--callout-error-icon);
-    --callout-title-color: var(--callout-error-title);
-    --callout-description-color: var(--callout-error-description);
-    background: var(--callout-error-background);
-    border-color: var(--callout-error-border);
-  }
+	&[data-color='warning'] {
+		--callout-internal-background: var(--callout-warning-background-color, var(--callout-warning-background));
+		--callout-internal-border: var(--callout-warning-border-color, var(--callout-warning-border));
+		--callout-internal-background-hover: var(--callout-warning-hover-background-color, var(--callout-warning-background-hover));
+		--callout-internal-title: var(--callout-warning-title-color, var(--callout-warning-title));
+		--callout-internal-description: var(--callout-warning-description-color, var(--callout-warning-description));
+		--callout-internal-icon: var(--callout-warning-icon-color, var(--callout-warning-icon));
+		--callout-internal-link: var(--callout-warning-link-color, var(--warning-link));
+		--callout-internal-link-hover: var(--callout-warning-link-hover-color, var(--warning-link-hover));
+	}
 
-  &[data-color="amber"] {
-    --callout-icon-color: var(--callout-warning-icon);
-    --callout-title-color: var(--callout-warning-title);
-    --callout-description-color: var(--callout-warning-description);
-    background: var(--callout-warning-background);
-    border-color: var(--callout-warning-border);
-  }
+	&[data-color='danger'] {
+		--callout-internal-background: var(--callout-danger-background-color, var(--callout-danger-background));
+		--callout-internal-border: var(--callout-danger-border-color, var(--callout-danger-border));
+		--callout-internal-background-hover: var(--callout-danger-hover-background-color, var(--callout-danger-background-hover));
+		--callout-internal-title: var(--callout-danger-title-color, var(--callout-danger-title));
+		--callout-internal-description: var(--callout-danger-description-color, var(--callout-danger-description));
+		--callout-internal-icon: var(--callout-danger-icon-color, var(--callout-danger-icon));
+		--callout-internal-link: var(--callout-danger-link-color, var(--danger-link));
+		--callout-internal-link-hover: var(--callout-danger-link-hover-color, var(--danger-link-hover));
+	}
 
-  &[data-color="sienna"] {
-    --callout-icon-color: var(--callout-sienna-icon);
-    --callout-title-color: var(--callout-sienna-title);
-    --callout-description-color: var(--callout-sienna-description);
-    background: var(--callout-sienna-background);
-    border-color: var(--callout-sienna-border);
-  }
+	&[data-color='info'] {
+		--callout-internal-background: var(--callout-info-background-color, var(--callout-info-background));
+		--callout-internal-border: var(--callout-info-border-color, var(--callout-info-border));
+		--callout-internal-background-hover: var(--callout-info-hover-background-color, var(--callout-info-background-hover));
+		--callout-internal-title: var(--callout-info-title-color, var(--callout-info-title));
+		--callout-internal-description: var(--callout-info-description-color, var(--callout-info-description));
+		--callout-internal-icon: var(--callout-info-icon-color, var(--callout-info-icon));
+		--callout-internal-link: var(--callout-info-link-color, var(--info-link));
+		--callout-internal-link-hover: var(--callout-info-link-hover-color, var(--info-link-hover));
+	}
 
-  &[data-color="forest"] {
-    --callout-icon-color: var(--callout-success-icon);
-    --callout-title-color: var(--callout-success-title);
-    --callout-description-color: var(--callout-success-description);
-    background: var(--callout-success-background);
-    border-color: var(--callout-success-border);
-  }
+	&[data-color='archive'] {
+		--callout-internal-background: var(--callout-archive-background-color, var(--callout-archive-background));
+		--callout-internal-border: var(--callout-archive-border-color, var(--callout-archive-border));
+		--callout-internal-background-hover: var(--callout-archive-hover-background-color, var(--callout-archive-background-hover));
+		--callout-internal-title: var(--callout-archive-title-color, var(--callout-archive-title));
+		--callout-internal-description: var(--callout-archive-description-color, var(--callout-archive-description));
+		--callout-internal-icon: var(--callout-archive-icon-color, var(--callout-archive-icon));
+		--callout-internal-link: var(--callout-archive-link-color, var(--archive-link));
+		--callout-internal-link-hover: var(--callout-archive-link-hover-color, var(--archive-link-hover));
+	}
 
-  &[data-color="aqua"] {
-    --callout-icon-color: var(--callout-aqua-icon);
-    --callout-title-color: var(--callout-aqua-title);
-    --callout-description-color: var(--callout-aqua-description);
-    background: var(--callout-aqua-background);
-    border-color: var(--callout-aqua-border);
-  }
+	&[data-color='highlight-danger'] {
+		--callout-internal-background: var(--callout-highlight-danger-background-color, var(--callout-highlight-danger-background));
+		--callout-internal-border: var(--callout-highlight-danger-border-color, var(--callout-highlight-danger-border));
+		--callout-internal-background-hover: var(--callout-highlight-danger-hover-background-color, var(--callout-highlight-danger-background-hover));
+		--callout-internal-title: var(--callout-highlight-danger-title-color, var(--callout-highlight-danger-title));
+		--callout-internal-description: var(--callout-highlight-danger-description-color, var(--callout-highlight-danger-description));
+		--callout-internal-icon: var(--callout-highlight-danger-icon-color, var(--callout-highlight-danger-icon));
+		--callout-internal-link: var(--callout-highlight-danger-link-color, var(--highlight-danger-link));
+		--callout-internal-link-hover: var(--callout-highlight-danger-link-hover-color, var(--highlight-danger-link-hover));
+	}
+}
 
-  &__icon {
-    margin-top: var(--spacing-2, 0.25rem);
-    color: var(--callout-icon-color);
-    flex-shrink: 0;
-    line-height: 0;
-  }
+.callout__icon {
+	display: var(--callout-icon-display, flex);
+	flex-shrink: var(--callout-icon-flex-shrink, 0);
+	align-self: var(--callout-icon-align-self, flex-start);
+	// Centers the icon on the first line of the description.
+	margin-top: calc((var(--callout-internal-line-height) - var(--callout-internal-icon-size)) / 2);
+	color: var(--callout-internal-icon, currentcolor);
 
-  &__content {
-    display: grid;
-    gap: var(--spacing-4, 0.5rem);
-    flex: 1 1 0%;
-    min-width: 0;
-  }
+	// The size of the icon belongs to the callout, the one passed on the element is ignored.
+	& > svg {
+		inline-size: var(--callout-internal-icon-size);
+		block-size: var(--callout-internal-icon-size);
+	}
 
-  &__title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-height: 1rem;
-    font-weight: var(--callout-title-font-weight, var(--font-weight-medium));
-    letter-spacing: var(--callout-title-letter-spacing, -0.01em);
-    color: var(--callout-title-color, var(--letter-spacing-tighter, -0.05em));
-  }
+	// The solid icons ship a white disc and a dark glyph written into the SVG. The disc takes the
+	// color of the callout and the glyph is cut out of it, down to the page surface: the callout
+	// background is a translucent tint, so it cannot stand in for what sits behind it. A callout on
+	// another surface, a card or a dialog, points the glyph at that surface instead.
+	svg [fill='#fff'] {
+		fill: var(--callout-icon-disc-color, currentcolor);
+	}
 
-  &__description {
-    display: grid;
-    justify-items: start;
-    gap: var(--spacing-2, 0.25rem);
-    color: var(--callout-description-color);
-    font-weight: var(--callout-description-font-weight, var(--font-weight-normal));
-    line-height: 1.25rem;
-  }
+	svg [stroke='#fff'] {
+		stroke: var(--callout-icon-disc-color, currentcolor);
+	}
 
-  &__close {
-    align-self: flex-start;
-    padding: var(--spacing-2, 0.25rem);
-    border-radius: calc(var(--radius) - 4px);
-    transition: colors 100ms ease-out;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    color: var(--callout-description-color);
+	svg [stroke='#121317'] {
+		stroke: var(--callout-icon-glyph-color, var(--l1-background));
+	}
+}
 
-    &:hover {
-      color: var(--callout-title-color);
-    }
-  }
+// `Callout.Expandable` starts with the title row, which is as tall as the icon, so the icon sits
+// on the padding edge.
+.callout[data-has-title] > .callout__icon {
+	margin-top: var(--callout-icon-has-title-margin-top, 0);
+}
 
-  &__action {
-    align-self: flex-start;
-    padding: var(--spacing-2, 0.25rem);
-    border-radius: calc(var(--radius) - 4px);
-    transition: colors 100ms ease-out;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    color: var(--callout-description-color);
+.callout__content {
+	display: var(--callout-content-display, flex);
+	flex: var(--callout-content-flex, 1 1 0%);
+	flex-direction: var(--callout-content-flex-direction, column);
+	// Stretch, so a `max-height` on the callout clamps the content and the description scrolls
+	// instead of the content overflowing the box.
+	align-self: var(--callout-content-align-self, stretch);
+	min-width: var(--callout-content-min-width, 0);
+	min-height: var(--callout-content-min-height, 0);
+	gap: var(--callout-internal-content-gap);
+}
 
-    &:hover {
-      color: var(--callout-title-color);
-    }
-  }
+// The title row of `Callout.Expandable`, one button that holds the title and the chevron. It takes
+// the padding and the negative margin of the chevron box, so the focus ring wraps the chevron box
+// without moving the layout.
+.callout__toggle {
+	display: var(--callout-toggle-display, flex);
+	flex-shrink: var(--callout-toggle-flex-shrink, 0);
+	align-items: var(--callout-toggle-align-items, center);
+	gap: var(--callout-internal-content-gap);
+	min-width: var(--callout-toggle-min-width, 0);
+	padding: var(--callout-internal-button-padding);
+	margin: calc(-1 * var(--callout-internal-button-padding));
+	border: var(--callout-toggle-border, none);
+	border-radius: var(--callout-button-border-radius, var(--radius-1));
+	background: var(--callout-toggle-background, transparent);
+	color: var(--callout-internal-title, inherit);
+	font: var(--callout-toggle-font, inherit);
+	letter-spacing: var(--callout-toggle-letter-spacing, inherit);
+	text-align: var(--callout-toggle-text-align, start);
+	cursor: var(--callout-toggle-cursor, pointer);
+
+	&:focus-visible {
+		outline: var(--callout-focus-visible-outline, var(--ring) solid 1px);
+		outline-offset: var(--callout-focus-visible-outline-offset, 1px);
+	}
+}
+
+// The ellipsis sits on the title and not on the row, so a long title never pushes the chevron out.
+.callout__title {
+	flex: var(--callout-title-flex, 1 1 auto);
+	min-width: var(--callout-title-min-width, 0);
+	overflow: var(--callout-title-overflow, hidden);
+	text-overflow: var(--callout-title-text-overflow, ellipsis);
+	white-space: var(--callout-title-white-space, nowrap);
+	font-weight: var(--callout-title-font-weight, var(--periscope-font-weight-medium));
+	line-height: var(--callout-title-line-height, var(--line-height-none));
+	// Inter draws about 1.25em from the top of an accent to the bottom of a descender, more than the
+	// 1em line box of the Figma title, so `overflow: hidden` would cut both. The padding grows the
+	// clip box to fit them and the negative margin takes it back, so the row keeps its height.
+	// Another font may reach further.
+	--callout-internal-title-clip-padding: var(--callout-title-clip-padding, 0.125em);
+
+	padding-block: var(--callout-internal-title-clip-padding);
+	margin-block: calc(-1 * var(--callout-internal-title-clip-padding));
+	font-variant-numeric: var(--callout-title-font-variant-numeric, slashed-zero lining-nums tabular-nums);
+	font-feature-settings: var(--callout-title-font-feature-settings, 'ss01');
+}
+
+.callout__description {
+	min-height: var(--callout-description-min-height, 0);
+	// The scroll box would cut the focus ring of a link that touches its edge, 1px of outline plus
+	// 1px of offset. The padding makes room for it and the negative margin takes it back, so a
+	// thicker focus outline needs a larger padding to match.
+	--callout-internal-description-focus-padding: var(--callout-description-focus-padding, var(--spacing-1));
+
+	padding: var(--callout-internal-description-focus-padding);
+	margin: calc(-1 * var(--callout-internal-description-focus-padding));
+	overflow: var(--callout-description-overflow, auto);
+	overflow-wrap: var(--callout-description-overflow-wrap, anywhere);
+	font-variant-numeric: var(--callout-description-font-variant-numeric, slashed-zero);
+
+	&[hidden] {
+		display: none;
+	}
+
+	&:focus-visible {
+		outline: var(--callout-focus-visible-outline, var(--ring) solid 1px);
+		outline-offset: var(--callout-focus-visible-outline-offset, 1px);
+	}
+}
+
+// The chevron box and the close button. The content box is the icon size, as in Figma, so the
+// padding only grows the hover background.
+.callout__button {
+	display: var(--callout-button-display, flex);
+	flex-shrink: var(--callout-button-flex-shrink, 0);
+	align-items: var(--callout-button-align-items, center);
+	justify-content: var(--callout-button-justify-content, center);
+	box-sizing: var(--callout-button-box-sizing, content-box);
+	inline-size: var(--callout-internal-icon-size);
+	block-size: var(--callout-internal-icon-size);
+	padding: var(--callout-internal-button-padding);
+	margin: calc(-1 * var(--callout-internal-button-padding));
+	border: var(--callout-button-border, none);
+	border-radius: var(--callout-button-border-radius, var(--radius-1));
+	background: var(--callout-button-background, transparent);
+	color: var(--callout-internal-icon, currentcolor);
+	cursor: var(--callout-button-cursor, pointer);
+	transition-property: var(--callout-button-transition-property, color, background-color);
+	transition-timing-function: var(--callout-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--callout-transition-duration, 150ms);
+
+	// The whole title row toggles, so hovering any of it lights the chevron.
+	&:hover,
+	.callout__toggle:hover > & {
+		background: var(--callout-button-hover-background, var(--callout-internal-background-hover, transparent));
+		color: var(--callout-internal-title, currentcolor);
+	}
+
+	&:focus-visible {
+		outline: var(--callout-focus-visible-outline, var(--ring) solid 1px);
+		outline-offset: var(--callout-focus-visible-outline-offset, 1px);
+	}
+
+	& > svg {
+		inline-size: var(--callout-button-icon-inline-size, 100%);
+		block-size: var(--callout-button-icon-block-size, 100%);
+	}
+}
+
+// The close button sits in the first line of the description, so it is centered on it.
+.callout > .callout__button {
+	margin-top: calc(
+		(var(--callout-internal-line-height) - var(--callout-internal-icon-size)) / 2 -
+			var(--callout-internal-button-padding)
+	);
+}
+
+.callout__link {
+	color: var(--callout-internal-link, inherit);
+	text-decoration: var(--callout-link-text-decoration, underline);
+	cursor: var(--callout-link-cursor, pointer);
+	transition-property: var(--callout-link-transition-property, color);
+	transition-timing-function: var(--callout-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--callout-transition-duration, 150ms);
+
+	&:hover {
+		color: var(--callout-internal-link-hover, inherit);
+	}
+
+	&:focus-visible {
+		outline: var(--callout-focus-visible-outline, var(--ring) solid 1px);
+		outline-offset: var(--callout-focus-visible-outline-offset, 1px);
+		border-radius: var(--callout-link-border-radius, var(--radius-1));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.callout__button,
+	.callout__link {
+		transition: none;
+	}
 }
