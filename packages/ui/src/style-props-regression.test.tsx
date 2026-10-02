@@ -4,6 +4,7 @@ import { Badge } from './badge/badge.js';
 import { Button } from './button/button.js';
 import { ButtonGroup } from './button-group/index.js';
 import { Calendar } from './calendar/calendar.js';
+import { Callout } from './callout/callout.js';
 import { Checkbox } from './checkbox/checkbox.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
@@ -73,6 +74,56 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('calendar'));
 		expect(document.querySelector('.stray')).toBeNull();
+	});
+
+	it('do not reach Callout or its variants', () => {
+		const icon = <svg />;
+		render(
+			<>
+				<Callout color="primary" size="sm" icon={icon} testId="callout" {...STRAY}>
+					a{' '}
+					<Callout.Link href="/docs" testId="callout-link" {...STRAY}>
+						docs
+					</Callout.Link>
+				</Callout>
+				<Callout.Expandable
+					color="primary"
+					size="sm"
+					icon={icon}
+					title="t"
+					defaultExpanded
+					testId="expandable"
+					{...STRAY}
+				>
+					a
+				</Callout.Expandable>
+				<Callout.Closeable
+					color="primary"
+					size="sm"
+					icon={icon}
+					testId="closeable"
+					closed={false}
+					onClose={() => {}}
+					{...STRAY}
+				>
+					a
+				</Callout.Closeable>
+				<Callout.CloseablePersisted
+					storageKey="k"
+					color="primary"
+					size="sm"
+					icon={icon}
+					testId="persisted"
+					{...STRAY}
+				>
+					a
+				</Callout.CloseablePersisted>
+			</>,
+		);
+
+		for (const testId of ['callout', 'callout-link', 'expandable', 'closeable', 'persisted']) {
+			expectNoStrayStyle(screen.getByTestId(testId));
+		}
 	});
 
 	it('do not reach Checkbox', () => {

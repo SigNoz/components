@@ -33,7 +33,7 @@
     }
 
     &[data-active] {
-        --kbd-background: var(--callout-primary-background);
+        --kbd-background: var(--kbd-active-background);
         --kbd-foreground: var(--primary-background);
         --kbd-border-color: var(--primary-background);
     }

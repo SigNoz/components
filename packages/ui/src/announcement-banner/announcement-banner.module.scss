@@ -11,50 +11,50 @@
   letter-spacing: var(--announcement-banner-letter-spacing, -0.065px);
 
   &--warning {
-    background-color: var(--callout-warning-background);
-    color: var(--callout-warning-description);
+    background-color: var(--announcement-banner-warning-background);
+    color: var(--announcement-banner-warning-description);
 
     .banner__action,
     .banner__dismiss {
-      --button-primary-background: var(--callout-warning-border);
-      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-warning-border) 60%, transparent);
-      --button-primary-solid-foreground: var(--callout-warning-title);
+      --button-primary-background: var(--announcement-banner-warning-border);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--announcement-banner-warning-border) 60%, transparent);
+      --button-primary-solid-foreground: var(--announcement-banner-warning-title);
     }
   }
 
   &--info {
-    background-color: var(--callout-primary-background);
-    color: var(--callout-primary-description);
+    background-color: var(--announcement-banner-primary-background);
+    color: var(--announcement-banner-primary-description);
 
     .banner__action,
     .banner__dismiss {
-      --button-primary-background: var(--callout-primary-border);
-      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-primary-border) 60%, transparent);
-      --button-primary-solid-foreground: var(--callout-primary-title);
+      --button-primary-background: var(--announcement-banner-primary-border);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--announcement-banner-primary-border) 60%, transparent);
+      --button-primary-solid-foreground: var(--announcement-banner-primary-title);
     }
   }
 
   &--error {
-    background-color: var(--callout-error-background);
-    color: var(--callout-error-description);
+    background-color: var(--announcement-banner-error-background);
+    color: var(--announcement-banner-error-description);
 
     .banner__action,
     .banner__dismiss {
-      --button-primary-background: var(--callout-error-border);
-      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-error-border) 60%, transparent);
-      --button-primary-solid-foreground: var(--callout-error-title);
+      --button-primary-background: var(--announcement-banner-error-border);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--announcement-banner-error-border) 60%, transparent);
+      --button-primary-solid-foreground: var(--announcement-banner-error-title);
     }
   }
 
   &--success {
-    background-color: var(--callout-success-background);
-    color: var(--callout-success-description);
+    background-color: var(--announcement-banner-success-background);
+    color: var(--announcement-banner-success-description);
 
     .banner__action,
     .banner__dismiss {
-      --button-primary-background: var(--callout-success-border);
-      --button-primary-hover-background-color: color-mix(in srgb, var(--callout-success-border) 60%, transparent);
-      --button-primary-solid-foreground: var(--callout-success-title);
+      --button-primary-background: var(--announcement-banner-success-border);
+      --button-primary-hover-background-color: color-mix(in srgb, var(--announcement-banner-success-border) 60%, transparent);
+      --button-primary-solid-foreground: var(--announcement-banner-success-title);
     }
   }
 
