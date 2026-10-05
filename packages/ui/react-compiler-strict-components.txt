@@ -12,3 +12,4 @@ callout
 progress
 combobox
 select
+slider

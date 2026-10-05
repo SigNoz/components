@@ -1,96 +1,215 @@
-import { Meta, Controls, Primary, Story } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as SliderStories from './slider.stories';
+import * as SliderComponentsStories from './slider-components.stories';
 
 <Meta of={SliderStories} />
 
 # Slider
 
-An input where the user selects a value from within a given range. This component serves as a drop-in replacement for the Ant Design Slider, supporting legacy props while utilizing `@radix-ui/react-slider` primitives under the hood.
+Picks one number from a continuous scale, rendered through Base UI's `Slider`. It is for a setting
+with a known range (fill opacity in the panel editor), and for an estimate where the exact number
+does not matter (the onboarding scale questions). `Slider.Range` picks a lower and an upper bound
+(the duration quick filter).
 
 ## How to use
+
+The slider has no visible label. Name it with `aria-labelledby`, pointing at the label next to it,
+or with `aria-label`. A `<label htmlFor>` does not work, since the input id is internal.
 
 ```tsx
 import { Slider } from '@signozhq/ui';
 
-export default function MyComponent() {
-	return <Slider defaultValue={50} max={100} step={1} />;
+export default function FillOpacity({ opacity, setOpacity }) {
+	return (
+		<>
+			<Typography.Text id="opacity-label">Fill opacity</Typography.Text>
+			<Slider
+				color="primary"
+				min={0}
+				max={1}
+				step={0.01}
+				value={opacity}
+				onChange={setOpacity}
+				aria-labelledby="opacity-label"
+			/>
+		</>
+	);
 }
 ```
 
-This code above will render the following slider:
-
 <Primary />
 
-<Controls of={SliderStories.Default} />
+`color` is required, with no default. It takes the same hues as `Badge`, and paints the fill, the
+thumb border and the mark dots inside the fill. The track and the other dots are tints of it.
 
-## Ant Design Compatibility
+`onChange` is called on every change: while the thumb drags, on a click on the track or a mark, and
+on each key press. `onAfterChange` is called once when a change ends: on pointer release, on each
+key press, and on a click on a mark. Use it for work that should not run on every pixel of a drag,
+such as applying a filter.
 
-This component maps common Ant Design `Slider` props to their Radix UI equivalents seamlessly.
+## Range
 
-### Events
-
-- **`onChange`**: Fired when the value changes during dragging. Maps to Radix's `onValueChange`.
-- **`onAfterChange`**: Fired when `mouseup` or `keyup` happens. Maps to Radix's `onValueCommit`.
-
-### Range Slider
-
-To use a dual-thumb range slider, set the `range` prop to `true` and provide an array of values.
+`Slider.Range` takes every prop of `Slider`. The value and its callbacks hold a pair, the lower bound
+first, so no call site casts the value it receives.
 
 ```tsx
-<Slider range defaultValue={[25, 75]} />
-```
-
-<Story of={SliderStories.Range} />
-
-### Marks
-
-You can provide a `marks` object to display tick marks along the track. The key should be a number, and the value can be a string or a React node.
-
-```tsx
-const marks = {
-	0: '0°C',
-	26: '26°C',
-	37: '37°C',
-	100: {
-		style: { color: '#f50' },
-		label: <strong>100°C</strong>,
-	},
-};
-
-<Slider marks={marks} defaultValue={37} />;
-```
-
-<Story of={SliderStories.WithMarks} />
-
-### Tooltips
-
-By providing a `tooltip` prop with a `formatter`, the slider thumbs will be wrapped in tooltips displaying the current value.
-
-```tsx
-<Slider tooltip={{ formatter: (val) => `${val}%` }} defaultValue={25} />
-```
-
-<Story of={SliderStories.WithTooltip} />
-
-### Custom Styles
-
-You can inject inline styles directly into the internal Radix parts using the `styles` prop:
-
-```tsx
-<Slider
-	styles={{
-		track: { backgroundColor: '#ffe4e6' },
-		range: { backgroundColor: '#e11d48' },
-		thumb: { borderColor: '#e11d48' },
-	}}
+<Slider.Range
+	color="primary"
+	min={0}
+	max={100000}
+	value={duration}
+	onChange={setDuration}
+	onAfterChange={applyDurationFilter}
+	tooltip
+	formatValue={(value) => `${value} ms`}
+	aria-label="Duration"
 />
 ```
 
-<Story of={SliderStories.CustomStyles} />
-### Common Props
+The fill runs between the two thumbs. A click on the track moves the closest thumb, and when both
+hold the same value, a click or a drag moves the thumb on the side it goes to. A thumb stops
+when it reaches the other one, and the two can hold the same value, so a filter can select one
+exact value. A drag on one thumb never changes the value of the other.
 
-You can also pass standard HTML attributes like `id` and `style`, or a `testId` for testing purposes.
+## Value tooltip
+
+`tooltip` shows the value of each thumb above it. It opens on hover, on press and on keyboard focus,
+and stays open while the thumb drags, even when the pointer leaves the thumb.
+
+`formatValue` formats the value for the tooltip and for `aria-valuetext`, so a screen reader reads
+the same text the tooltip shows. Without it, both use the raw number.
+
+Do not wrap the slider in a `Tooltip`. Use `tooltip` and `formatValue`.
+
+## Marks
+
+`marks` are labels under the track, keyed by the value they point at. Each mark also draws a dot on
+the track. A click on a label or its dot moves the closest thumb to the mark value, and calls
+`onChange` and `onAfterChange` once each. When the two thumbs of a range hold the same value, the
+thumb on the side of the mark moves.
+
+The label row sits inside the slider, so the slider grows taller and the next element moves down
+with no margin. A label at `min` aligns with the start of the track, one at `max` with its end, and
+every other one is centred on its value. A mark outside `min` and `max` is not rendered.
+
+Each label has the room up to halfway to the mark on each side, or up to the end of the slider when
+there is no mark on that side, so two labels never cover each other. A centred label takes the same
+room on both sides of its value. `textOverflow` says what a longer label does:
+
+| `textOverflow`       | a label longer than its room                                    |
+| -------------------- | --------------------------------------------------------------- |
+| `ellipsis` (default) | truncates, and shows in full in a tooltip under it on hover     |
+| `wrap`               | breaks into lines, and the label row grows to the tallest label |
+
+A disabled or read-only reason stacks above the label in the same tooltip.
+
+A slider that stands for a log scale runs from 0 to 100. Key the marks by the slider value, and
+compute the label in `formatValue` from the value it receives:
 
 ```tsx
-<Slider id="price-range" testId="price-slider" style={{ marginTop: '20px' }} />
+<Slider
+	color="primary"
+	value={position}
+	onChange={setPosition}
+	marks={{ 0: '1 GB', 25: '10 GB', 50: '100 GB', 75: '1 TB', 100: '10 TB' }}
+	tooltip
+	formatValue={(position) => formatVolume(10 ** (position / 25))}
+	aria-labelledby="logs-volume-label"
+/>
 ```
+
+Marks are not tab stops, and the label row is hidden from screen readers. The arrows, `Home` and
+`End` already reach every value.
+
+## Keys
+
+Each thumb is one tab stop. The arrows move one `step`. `PageUp`, `PageDown` and `Shift` with an arrow
+move one large step: 10% of `max - min`, rounded to a multiple of `step`, and at least one `step`.
+`Home` and `End` move to `min` and `max`, or to the other thumb of a range.
+
+## Value out of the scale
+
+A `value` that is not a finite number renders the thumb at `min`. A value below `min` or above `max`
+renders the thumb at the nearest end, and the tooltip and `aria-valuetext` show the value of the
+thumb. The slider never calls `onChange` to correct a value, so a duration typed above `max` in the
+input next to the slider keeps its value.
+
+## Forms
+
+Each thumb input carries `name` and `form`, so the slider submits with its form like a native range
+input. `Slider.Range` submits two values under the same `name`, the lower bound first. `required` is
+accepted so a form can pass the same field props to every control, and has no effect: a slider always
+holds a value.
+
+## Layout
+
+The slider fills the width of its parent and has no margin. The track runs from edge to edge, and a
+thumb at `min` or `max` stays inside it, so the parent needs no margin or padding to make room.
+
+The slider is never narrower than two thumbs. In a narrower parent it paints outside the parent.
+
+A row that prints the value next to the slider owns that layout:
+
+```tsx
+<div className="config-row">
+	<Typography.Text id="opacity-label">Fill opacity</Typography.Text>
+	<div className="config-slider">
+		<Slider color="primary" value={opacity} onChange={setOpacity} aria-labelledby="opacity-label" />
+	</div>
+	<Typography.Text>{opacity.toFixed(2)}</Typography.Text>
+</div>
+```
+
+```css
+.config-slider {
+	flex: 1;
+	min-width: 0;
+}
+```
+
+## Migrating
+
+| Before                                    | Now                                                                                |
+| ----------------------------------------- | ---------------------------------------------------------------------------------- |
+| no `color`                                | `color="primary"` keeps the look. `color` is required, with no default             |
+| `<Slider range value={[a, b]} />`         | `<Slider.Range value={[a, b]} />`                                                  |
+| `onChange={(v) => set(v as number)}`      | `onChange={set}`, the value is a `number` on `Slider` and a pair on `Slider.Range` |
+| `tooltip={{ formatter }}`                 | `tooltip` and `formatValue`, which returns a string                                |
+| `marks={{ 0: { label, style } }}`         | `marks={{ 0: 'label' }}`, a mark is a string                                       |
+| `styles`, `classNames`                    | removed, the parts take no style or class. `color="primary"` keeps the fill color  |
+| `className`, `style`                      | removed. Use `width` and `maxWidth`, and put `flex` on a wrapper the row owns      |
+| a negative margin to undo the track inset | removed, the track runs edge to edge                                               |
+| `orientation`, `inverted`, `dir`          | removed, the slider is horizontal only                                             |
+| `onValueChange`, `onValueCommit`          | `onChange`, `onAfterChange`                                                        |
+| `asChild`                                 | removed                                                                            |
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and the prefix of the parts. With `testId="volume"` the
+parts are `volume-track`, `volume-indicator`, `volume-thumb-0` (and `volume-thumb-1` on
+`Slider.Range`) and `volume-mark-50` for a mark at 50.
+
+Otherwise reach for the role and the data attributes, never the hashed class names:
+
+| `data-slot`        | rendered                                                                |
+| ------------------ | ----------------------------------------------------------------------- |
+| `slider`           | the root                                                                |
+| `slider-control`   | always, the area a press moves a thumb in                               |
+| `slider-track`     | always                                                                  |
+| `slider-indicator` | always, inside the track, the fill                                      |
+| `slider-thumb`     | one per value, with `data-index`                                        |
+| `slider-mark-dot`  | one per mark, `data-active` inside the fill                             |
+| `slider-marks`     | only with `marks`, the label row, `aria-hidden`                         |
+| `slider-mark`      | one per mark, `data-active` inside the fill, `data-truncated` while cut |
+
+The root has `data-color` with the `color` in force, `data-disabled` while disabled and not read-only, `data-readonly` while read-only,
+`data-dragging` while a thumb moves under the pointer, `data-range` on `Slider.Range`, and
+`data-text-overflow` with the `textOverflow` in force.
+
+## Slider props
+
+<Controls of={SliderStories.Default} />
+
+## Slider.Range props
+
+<Controls of={SliderComponentsStories.Range} />

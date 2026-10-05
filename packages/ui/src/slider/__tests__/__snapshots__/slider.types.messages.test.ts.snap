@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Slider type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "Slider value > rejects a handler that takes a pair > \`Slider\` reports a number, never a pair": "TS2322: Type '(value: SliderRangeValue) => SliderRangeValue' is not assignable to type '(value: number) => void'.
+    Types of parameters 'value' and 'value' are incompatible.
+      Type 'number' is not assignable to type 'SliderRangeValue'.",
+  "Slider value > rejects a pair, which is Slider.Range > a pair is a range, write \`Slider.Range\`": "TS2322: Type 'number[]' is not assignable to type 'number'.",
+  "Slider.Range value > rejects a single number > a range holds a lower and an upper bound": "TS2322: Type 'number' is not assignable to type 'readonly [number, number]'.",
+  "Slider.Range value > rejects three values > a range holds exactly two values": "TS2322: Type 'number' is not assignable to type 'undefined'.",
+  "color > is required, with no default > pick the color, there is no default": "TS2741: Property 'color' is missing in type '{ value: [number, number]; }' but required in type '{ [key: \`data-\${string}\`]: unknown; min?: number | undefined; max?: number | undefined; step?: number | undefined; color: SliderColorType; marks?: Record<number, string> | undefined; ... 12 more ...; testId?: string | undefined; }'.",
+  "color > rejects a color outside the Badge palette > a raw color does not follow the theme": "TS2322: Type '"#4E74F8"' is not assignable to type 'SliderColorType'.",
+  "disabled and disabledTooltip > a possibly undefined disabled still needs a reason > \`disabled\` typed \`boolean | undefined\` is still \`disabled\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ color: "primary"; value: number; disabled: boolean | undefined; }' but required in type 'ADisabledSliderMustSayWhy'.",
+  "disabled and disabledTooltip > a reason without disabled is rejected > \`disabledTooltip\` never renders unless \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ color: "primary"; value: number; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledSlider'.",
+  "disabled and disabledTooltip > applies the same rules to Slider.Range > \`disabledTooltip\` never renders unless \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ color: "primary"; value: [number, number]; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledSlider'.",
+  "disabled and disabledTooltip > applies the same rules to Slider.Range > a disabled range must explain itself through \`disabledTooltip\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ color: "primary"; value: [number, number]; disabled: true; }' but required in type 'ADisabledSliderMustSayWhy'.",
+  "disabled and disabledTooltip > disabled without a reason is rejected > a disabled slider must explain itself through \`disabledTooltip\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ color: "primary"; value: number; disabled: true; }' but required in type 'ADisabledSliderMustSayWhy'.",
+  "readOnly and readOnlyTooltip > a possibly undefined readOnly still needs a reason > \`readOnly\` typed \`boolean | undefined\` is still \`readOnly\`": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ color: "primary"; value: number; readOnly: boolean | undefined; }' but required in type 'AReadOnlySliderMustSayWhy'.",
+  "readOnly and readOnlyTooltip > a reason without readOnly is rejected > \`readOnlyTooltip\` never renders unless \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ color: "primary"; value: number; readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlySlider'.",
+  "readOnly and readOnlyTooltip > applies the same rules to Slider.Range > \`readOnlyTooltip\` never renders unless \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ color: "primary"; value: [number, number]; readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlySlider'.",
+  "readOnly and readOnlyTooltip > applies the same rules to Slider.Range > a locked range must explain itself through \`readOnlyTooltip\`": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ color: "primary"; value: [number, number]; readOnly: true; }' but required in type 'AReadOnlySliderMustSayWhy'.",
+  "readOnly and readOnlyTooltip > readOnly without a reason is rejected > a locked slider must explain itself through \`readOnlyTooltip\`": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ color: "primary"; value: number; readOnly: true; }' but required in type 'AReadOnlySliderMustSayWhy'.",
+  "rejected props > rejects a mark that is not a string > a mark label is a string": "TS2322: Type '{ label: string; style: {}; }' is not assignable to type 'string'.",
+  "rejected props > rejects asChild, the slider renders its own elements > the slider has no \`asChild\` or \`render\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects className, the size has its own props > use \`width\` and \`maxWidth\` for the size": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects classNames, the parts take no class > the parts of the slider take no class": "TS2322: Type '{ track: string; }' is not assignable to type 'never'.",
+  "rejected props > rejects formatValue returning a node, it feeds aria-valuetext > \`formatValue\` returns a string, it is read by screen readers": "TS2322: Type '(value: number) => Element' is not assignable to type '(value: number) => string'.
+    Type 'Element' is not assignable to type 'string'.",
+  "rejected props > rejects minStepsBetweenThumbs, the thumbs can hold the same value > the two thumbs of a range can hold the same value": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "rejected props > rejects onValueChange, replaced by onChange > write \`onChange\`": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects onValueCommitted, replaced by onAfterChange > write \`onAfterChange\`": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects orientation, the slider is horizontal only > the slider is horizontal only": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects range, replaced by Slider.Range > write \`Slider.Range\` for two thumbs": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects style, the size has its own props > use \`width\` and \`maxWidth\` for the size": "TS2322: Type '{ flex: number; }' is not assignable to type 'never'.",
+  "rejected props > rejects styles, the parts take no style > the parts of the slider take no style": "TS2322: Type '{ range: { backgroundColor: string; }; }' is not assignable to type 'never'.",
+  "rejected props > rejects the aria attributes the slider writes itself > \`formatValue\` writes \`aria-valuetext\`": "TS2322: Type '{ color: "primary"; value: [number, number]; "aria-valuetext": string; }' is not assignable to type 'Record<"aria-valuetext", never>'.
+    Types of property '"aria-valuetext"' are incompatible.
+      Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects the aria attributes the slider writes itself > write \`readOnly\`, the slider sets \`aria-readonly\` on the thumb input": "TS2322: Type '{ color: "primary"; value: number; "aria-readonly": true; }' is not assignable to type 'Record<"aria-readonly", never>'.
+    Types of property '"aria-readonly"' are incompatible.
+      Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects the tooltip object, replaced by tooltip and formatValue > write \`tooltip\` and \`formatValue\`": "TS2322: Type '{ formatter: StringConstructor; }' is not assignable to type 'boolean | undefined'.",
+}
+`;

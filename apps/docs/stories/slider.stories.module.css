@@ -1,20 +1,98 @@
-.sliderWrapper {
-  width: 300px;
-  margin-top: 24px;
-  margin-bottom: 24px;
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.sliderWrapperWithPadding {
-  width: 300px;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  padding-bottom: 24px;
+.marginTopMedium {
+  margin-top: 1rem;
 }
 
-.sliderHint {
-  margin-bottom: 8px;
+/* One label column, one slider column. The slider fills its cell, as it fills its parent. */
+.rows {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 24rem);
+  gap: 1.5rem 2rem;
+  align-items: center;
+  width: 100%;
 }
 
-.sliderHintTop {
-  margin-top: 8px;
+/* One label column, then one slider column for each shape. */
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(2, minmax(0, 20rem));
+  gap: 1.5rem 2rem;
+  align-items: center;
+  width: 100%;
+}
+
+.rowLabel {
+  white-space: nowrap;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* The row owns its layout: the slider takes the space the label and the value leave. */
+.configRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.configSlider {
+  flex: 1;
+  min-width: 0;
+}
+
+.configValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.narrow {
+  width: 6rem;
+}
+
+/* The box the slider fills, so whatever paints outside it shows. */
+.bounds {
+  outline: 1px dashed var(--l3-border);
+}
+
+/* A flex row with the slider as a direct child, as a row with no wrapper of its own puts it. */
+.squeezedRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 14rem;
+}
+
+.squeezedRow > [data-slot='slider'] {
+  outline: 1px dashed var(--l3-border);
+}
+
+.tiny {
+  width: 2rem;
+}
+
+/* Narrower than the 18px thumb. */
+.thinnerThanThumb {
+  width: 0.75rem;
+}
+
+.zero {
+  width: 0;
+}
+
+/* `resize` needs `overflow: hidden`, so the padding leaves room for what paints outside the slider. */
+.resizable {
+  resize: horizontal;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 24rem;
+  min-width: 4rem;
+  max-width: 100%;
+  padding: 0.5rem 2rem;
 }
