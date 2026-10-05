@@ -12,6 +12,7 @@ import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
 import { Progress } from './progress/progress.js';
 import { RadioGroup } from './radio-group/radio-group.js';
 import { Select } from './select/index.js';
+import { Slider } from './slider/index.js';
 import { Switch } from './switch/switch.js';
 import { ForceOpenProvider } from './testing/index.js';
 import { ToggleGroup } from './toggle-group/index.js';
@@ -177,6 +178,18 @@ describe('className and style that get past the types', () => {
 		render(<Progress color="primary" percent={40} testId="progress" {...STRAY} />);
 
 		expectNoStrayStyle(screen.getByTestId('progress'));
+	});
+
+	it('do not reach Slider nor Slider.Range', () => {
+		render(
+			<>
+				<Slider color="primary" aria-label="Volume" testId="slider" {...STRAY} />
+				<Slider.Range color="primary" aria-label="Duration" testId="range" {...STRAY} />
+			</>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('slider'));
+		expectNoStrayStyle(screen.getByTestId('range'));
 	});
 
 	it('do not reach RadioGroup', () => {

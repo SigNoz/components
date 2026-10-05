@@ -1,143 +1,273 @@
-.slider-root {
-	position: var(--slider-root-position, relative);
-	display: var(--slider-root-display, flex);
-	width: var(--slider-root-width, 100%);
-	touch-action: var(--slider-root-touch-action, none);
-	user-select: var(--slider-root-user-select, none);
-	align-items: var(--slider-root-align-items, center);
+.slider {
+	--slider-internal-thumb-size: var(--slider-thumb-size, 18px);
 
-	&[data-orientation='vertical'] {
-		flex-direction: var(--slider-root-vertical-flex-direction, column);
-		width: var(--slider-root-vertical-width, 20px);
-		height: var(--slider-root-vertical-height, 100px);
+	display: var(--slider-display, flex);
+	flex-direction: var(--slider-flex-direction, column);
+	gap: var(--slider-gap, var(--spacing-2));
+	position: var(--slider-position, relative);
+	isolation: var(--slider-isolation, isolate);
+	width: var(--slider-width, var(--slider-internal-width, 100%));
+	max-width: var(--slider-max-width, var(--slider-internal-max-width, 100%));
+	// Room for two thumbs side by side. A narrower parent gets a slider that paints outside it,
+	// instead of a thumb wider than the track.
+	min-width: var(--slider-min-width, calc(var(--slider-internal-thumb-size) * 2));
+	touch-action: var(--slider-touch-action, none);
+	user-select: var(--slider-user-select, none);
+
+	&[data-color='primary'] {
+		--slider-internal-indicator: var(
+			--slider-primary-indicator-color,
+			var(--slider-primary-indicator)
+		);
+	}
+
+	&[data-color='secondary'] {
+		--slider-internal-indicator: var(
+			--slider-secondary-indicator-color,
+			var(--slider-secondary-indicator)
+		);
+	}
+
+	&[data-color='success'] {
+		--slider-internal-indicator: var(
+			--slider-success-indicator-color,
+			var(--slider-success-indicator)
+		);
+	}
+
+	&[data-color='danger'] {
+		--slider-internal-indicator: var(
+			--slider-danger-indicator-color,
+			var(--slider-danger-indicator)
+		);
+	}
+
+	&[data-color='warning'] {
+		--slider-internal-indicator: var(
+			--slider-warning-indicator-color,
+			var(--slider-warning-indicator)
+		);
+	}
+
+	&[data-color='info'] {
+		--slider-internal-indicator: var(
+			--slider-info-indicator-color,
+			var(--slider-info-indicator)
+		);
+	}
+
+	&[data-color='archive'] {
+		--slider-internal-indicator: var(
+			--slider-archive-indicator-color,
+			var(--slider-archive-indicator)
+		);
+	}
+
+	&[data-color='highlight-danger'] {
+		--slider-internal-indicator: var(
+			--slider-highlight-danger-indicator-color,
+			var(--slider-highlight-danger-indicator)
+		);
+	}
+
+	&[data-readonly] {
+		opacity: var(--slider-readonly-opacity, 0.8);
 	}
 
 	&[data-disabled] {
-		.slider-track {
-			opacity: var(--slider-track-disabled-opacity, 0.5);
-		}
+		opacity: var(--slider-disabled-opacity, 0.6);
 	}
 }
 
-.slider-root-with-marks {
-	margin-bottom: var(--slider-root-with-marks-margin-bottom, 28px);
+.slider__control {
+	display: var(--slider-control-display, flex);
+	align-items: var(--slider-control-align-items, center);
+	position: var(--slider-control-position, relative);
+	height: var(--slider-internal-thumb-size);
+	cursor: var(--slider-control-cursor, pointer);
 }
 
-.slider-track {
-	position: var(--slider-track-position, relative);
-	height: var(--slider-track-height, 6px);
+.slider__track {
 	width: var(--slider-track-width, 100%);
-	flex-grow: var(--slider-track-flex-grow, 1);
-	overflow: var(--slider-track-overflow, hidden);
-	border-radius: var(--slider-track-border-radius, 9999px);
-	background-color: var(--slider-track-background, color-mix(in srgb, var(--primary) 10%, transparent));
-	// Inset the track by half the thumb width on each side so its visible
-	// edges line up with the first and last marks. Radix shifts the thumb
-	// inward by `thumbWidth/2` at the extremes to keep it within bounds —
-	// matching the track keeps thumb, range fill, dots, and marks in sync.
-	margin-left: var(--slider-track-margin-x, calc(var(--slider-thumb-width, 18px) / 2));
-	margin-right: var(--slider-track-margin-x, calc(var(--slider-thumb-width, 18px) / 2));
-
-	.slider-root[data-orientation='vertical'] & {
-		width: var(--slider-track-vertical-width, 6px);
-		height: var(--slider-track-vertical-height, 100%);
-		margin-left: 0;
-		margin-right: 0;
-		margin-top: var(--slider-track-vertical-margin-y, calc(var(--slider-thumb-height, 18px) / 2));
-		margin-bottom: var(--slider-track-vertical-margin-y, calc(var(--slider-thumb-height, 18px) / 2));
-	}
+	height: var(--slider-track-height, var(--spacing-3));
+	border-radius: var(--slider-track-border-radius, var(--radius-round));
+	background-color: var(
+		--slider-track-background-color,
+		color-mix(in srgb, var(--slider-internal-indicator) 10%, transparent)
+	);
 }
 
-.slider-range {
-	position: var(--slider-range-position, absolute);
-	height: var(--slider-range-height, 100%);
-	background-color: var(--slider-range-background, var(--primary));
-
-	.slider-root[data-orientation='vertical'] & {
-		width: var(--slider-range-vertical-width, 100%);
-	}
+.slider__indicator {
+	border-radius: var(--slider-indicator-border-radius, var(--radius-round));
+	background-color: var(--slider-indicator-background-color, var(--slider-internal-indicator));
 }
 
-.slider-thumb {
-	display: var(--slider-thumb-display, block);
-	height: var(--slider-thumb-height, 18px);
-	width: var(--slider-thumb-width, 18px);
-	border-radius: var(--slider-thumb-border-radius, 50%);
-	border: var(--slider-thumb-border, 2px solid var(--primary));
-	background-color: var(--slider-thumb-background, var(--base-white));
-	box-shadow: var(--slider-thumb-box-shadow, 0 1px 3px 0 rgba(0, 0, 0, 0.1));
-	transition: var(--slider-thumb-transition, background-color 150ms ease-in-out);
+.slider__thumb {
+	box-sizing: var(--slider-thumb-box-sizing, border-box);
+	// Above the mark dots, which come later in the root.
+	z-index: var(--slider-thumb-z-index, 1);
+	width: var(--slider-internal-thumb-size);
+	height: var(--slider-internal-thumb-size);
+	border-width: var(--slider-thumb-border-width, 2px);
+	border-style: var(--slider-thumb-border-style, solid);
+	border-color: var(--slider-thumb-border-color, var(--slider-internal-indicator));
+	border-radius: var(--slider-thumb-border-radius, var(--radius-round));
+	background-color: var(--slider-thumb-background-color, var(--base-white));
+	box-shadow: var(
+		--slider-thumb-box-shadow,
+		0 1px 3px 0 color-mix(in srgb, var(--base-black) 10%, transparent)
+	);
 	cursor: var(--slider-thumb-cursor, grab);
 
-	&:hover {
-		background-color: var(--slider-thumb-hover-background, var(--base-white));
-	}
-
-	&:active {
-		cursor: var(--slider-thumb-active-cursor, grabbing);
-	}
-
-	&:focus-visible {
-		outline: var(--slider-thumb-focus-outline, none);
-		box-shadow: var(--slider-thumb-focus-box-shadow, 0 0 0 2px var(--base-white), 0 0 0 4px var(--primary));
-	}
-
-	&[data-disabled] {
-		cursor: var(--slider-thumb-disabled-cursor, not-allowed);
-		opacity: var(--slider-thumb-disabled-opacity, 0.5);
+	&:has(:focus-visible) {
+		outline: var(--slider-thumb-focus-visible-outline, 1px solid var(--ring));
+		outline-offset: var(--slider-thumb-focus-visible-outline-offset, 1px);
 	}
 }
 
-.slider-dots {
-	position: var(--slider-dots-position, absolute);
-	top: var(--slider-dots-top, 50%);
-	// Inset by half the thumb width so a dot at `${percent}%` lines up with the
-	// thumb's center — Radix shifts the thumb inward by `thumbWidth/2` at the
-	// extremes to keep it within the track bounds.
-	left: var(--slider-dots-left, calc(var(--slider-thumb-width, 18px) / 2));
-	width: var(--slider-dots-width, calc(100% - var(--slider-thumb-width, 18px)));
-	height: 0;
-	pointer-events: var(--slider-dots-pointer-events, none);
+.slider[data-dragging] {
+	.slider__control,
+	.slider__thumb {
+		cursor: var(--slider-dragging-cursor, grabbing);
+	}
 }
 
-.slider-dot {
-	position: var(--slider-dot-position, absolute);
-	top: 0;
-	width: var(--slider-dot-width, 8px);
-	height: var(--slider-dot-height, 8px);
-	border-radius: var(--slider-dot-border-radius, 50%);
-	background-color: var(--slider-dot-background, var(--base-white));
-	border: var(--slider-dot-border,
-			2px solid color-mix(in srgb, var(--primary) 30%, transparent));
-	transform: var(--slider-dot-transform, translate(-50%, -50%));
-	box-sizing: border-box;
+.slider__mark-dot {
+	--slider-internal-mark-dot-size: var(--slider-mark-dot-size, var(--spacing-4));
+
+	box-sizing: var(--slider-mark-dot-box-sizing, border-box);
+	position: var(--slider-mark-dot-position, absolute);
+	top: calc(var(--slider-internal-thumb-size) / 2);
+	// Base UI places a thumb centre from half a thumb in at `min` to half a thumb in at `max`
+	// (`thumbAlignment="edge"`), so a dot at a value sits under the thumb holding it.
+	inset-inline-start: var(
+		--slider-mark-dot-inset-inline-start,
+		calc(
+			var(--slider-internal-thumb-size) / 2 + (100% - var(--slider-internal-thumb-size)) *
+				var(--slider-internal-mark-position)
+		)
+	);
+	translate: var(--slider-mark-dot-translate, -50% -50%);
+	width: var(--slider-internal-mark-dot-size);
+	height: var(--slider-internal-mark-dot-size);
+	border-width: var(--slider-mark-dot-border-width, 2px);
+	border-style: var(--slider-mark-dot-border-style, solid);
+	border-color: var(
+		--slider-mark-dot-border-color,
+		color-mix(in srgb, var(--slider-internal-indicator) 30%, transparent)
+	);
+	border-radius: var(--slider-mark-dot-border-radius, var(--radius-round));
+	background-color: var(--slider-mark-dot-background-color, var(--base-white));
+	cursor: var(--slider-mark-dot-cursor, pointer);
+
+	&[data-active] {
+		border-color: var(--slider-mark-dot-active-border-color, var(--slider-internal-indicator));
+	}
 }
 
-.slider-dot-active {
-	border-color: var(--slider-dot-active-border-color, var(--primary));
+// One grid cell for every label, so the row is as tall as its tallest label and each label is
+// placed by an offset inside the cell.
+.slider__marks {
+	--slider-internal-marks-gap: var(--slider-marks-gap, var(--spacing-4, 8px));
+
+	display: var(--slider-marks-display, grid);
+	grid-template-columns: var(--slider-marks-grid-template-columns, minmax(0, 1fr));
 }
 
-.slider-marks {
-	position: var(--slider-marks-position, absolute);
-	top: var(--slider-marks-top, calc(50% + 12px));
-	// Match the thumb's in-bounds offset so mark labels align with the thumb.
-	left: var(--slider-marks-left, calc(var(--slider-thumb-width, 18px) / 2));
-	width: var(--slider-marks-width, calc(100% - var(--slider-thumb-width, 18px)));
-	font-size: var(--slider-marks-font-size, 11px);
-	pointer-events: var(--slider-marks-pointer-events, none);
-}
+.slider__mark {
+	// Where the label points, from the start of the slider. A thumb centre runs from half a thumb
+	// in at `min` to half a thumb in at `max`, and so does this.
+	--slider-internal-mark-travel: calc(100% - var(--slider-internal-thumb-size));
+	--slider-internal-mark-anchor: calc(
+		var(--slider-internal-thumb-size) / 2 + var(--slider-internal-mark-travel) *
+			var(--slider-internal-mark-position)
+	);
+	// The room from the anchor to each side: halfway to the next mark, less half the gap between
+	// two labels. The halves come from the marks, so no label is measured.
+	--slider-internal-mark-room-start: calc(
+		var(--slider-internal-mark-travel) * var(--slider-internal-mark-half-gap-start) -
+			var(--slider-internal-marks-gap) / 2
+	);
+	--slider-internal-mark-room-end: calc(
+		var(--slider-internal-mark-travel) * var(--slider-internal-mark-half-gap-end) -
+			var(--slider-internal-marks-gap) / 2
+	);
+	// A centred label takes the same room on both sides of its anchor.
+	--slider-internal-mark-max-width: calc(
+		2 * min(var(--slider-internal-mark-room-start), var(--slider-internal-mark-room-end))
+	);
 
-.slider-mark {
-	position: var(--slider-mark-position, absolute);
-	transform: var(--slider-mark-transform, translateX(-50%));
+	grid-area: var(--slider-mark-grid-area, 1 / 1);
+	justify-self: var(--slider-mark-justify-self, start);
+	position: var(--slider-mark-position, relative);
+	inset-inline-start: var(--slider-mark-inset-inline-start, var(--slider-internal-mark-anchor));
+	translate: var(--slider-mark-translate, -50% 0);
+	max-width: var(--slider-mark-max-width, var(--slider-internal-mark-max-width));
 	white-space: var(--slider-mark-white-space, nowrap);
+	text-align: var(--slider-mark-text-align, center);
 	color: var(--slider-mark-color, var(--l3-foreground));
+	font-size: var(--slider-mark-font-size, var(--periscope-font-size-small));
+	line-height: var(--slider-mark-line-height, 16px);
 	cursor: var(--slider-mark-cursor, pointer);
-	pointer-events: var(--slider-mark-pointer-events, auto);
 
-	&:focus-visible {
-		outline: var(--slider-mark-focus-outline, 2px solid var(--primary));
-		outline-offset: var(--slider-mark-focus-outline-offset, 2px);
-		border-radius: var(--slider-mark-focus-border-radius, 2px);
+	// With no mark on a side, the room runs to that end of the slider.
+	&:first-child {
+		--slider-internal-mark-room-start: var(--slider-internal-mark-anchor);
+	}
+
+	&:last-child {
+		--slider-internal-mark-room-end: calc(100% - var(--slider-internal-mark-anchor));
+	}
+
+	// A label at an end of the slider grows away from it, so it takes the room of both sides.
+	&[data-edge] {
+		--slider-internal-mark-max-width: calc(
+			var(--slider-internal-mark-room-start) + var(--slider-internal-mark-room-end)
+		);
+	}
+
+	&[data-edge='start'] {
+		inset-inline-start: var(--slider-mark-start-inset-inline-start, 0);
+		translate: var(--slider-mark-start-translate, none);
+		text-align: var(--slider-mark-start-text-align, start);
+	}
+
+	&[data-edge='end'] {
+		justify-self: var(--slider-mark-end-justify-self, end);
+		inset-inline-start: var(--slider-mark-end-inset-inline-start, 0);
+		translate: var(--slider-mark-end-translate, none);
+		text-align: var(--slider-mark-end-text-align, end);
+	}
+}
+
+.slider[data-text-overflow='ellipsis'] .slider__mark {
+	overflow: var(--slider-mark-ellipsis-overflow, hidden);
+	text-overflow: var(--slider-mark-text-overflow, ellipsis);
+}
+
+.slider[data-text-overflow='wrap'] .slider__mark {
+	white-space: var(--slider-mark-wrap-white-space, normal);
+	overflow-wrap: var(--slider-mark-wrap-overflow-wrap, anywhere);
+}
+
+.slider[data-readonly] {
+	cursor: var(--slider-readonly-cursor, not-allowed);
+
+	.slider__control,
+	.slider__thumb,
+	.slider__mark-dot,
+	.slider__mark {
+		cursor: var(--slider-readonly-cursor, not-allowed);
+	}
+}
+
+.slider[data-disabled] {
+	cursor: var(--slider-disabled-cursor, not-allowed);
+
+	.slider__control,
+	.slider__thumb,
+	.slider__mark-dot,
+	.slider__mark {
+		cursor: var(--slider-disabled-cursor, not-allowed);
 	}
 }
