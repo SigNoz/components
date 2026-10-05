@@ -1,37 +1,7 @@
-import { isValidElement, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { cleanupSeparators, toSearchText } from '../lib/search-text.js';
 import { DropdownItemKind } from './constants.js';
 import type { DropdownItemType, DropdownRadioItemType } from './types.js';
-
-/**
- * The text a node puts on screen, as far as it can be read without rendering it.
- *
- * Strings and numbers are the text itself, and an array or a fragment is the text of its parts. An
- * element is opaque: its children may come from a component the menu cannot run. That is what
- * `searchMetadata` is for.
- *
- * @access private
- */
-export function toSearchText(node: ReactNode): string {
-	if (typeof node === 'string') {
-		return node;
-	}
-
-	if (typeof node === 'number') {
-		return String(node);
-	}
-
-	if (Array.isArray(node)) {
-		// Adjacent JSX text renders with nothing between the parts, so `<>Delete {n} rows</>` reads
-		// as one string on screen and has to read as the same one here.
-		return node.map(toSearchText).join('');
-	}
-
-	if (isValidElement<{ children?: ReactNode }>(node)) {
-		return toSearchText(node.props.children);
-	}
-
-	return '';
-}
 
 type SearchableRow = {
 	label?: ReactNode;
@@ -64,39 +34,6 @@ function matchesDeep(items: readonly DropdownItemType[], query: string): boolean
 
 		return matchesQuery(item, query);
 	});
-}
-
-/**
- * Drops the separators that have nothing to separate: one that would land first, one that would
- * land last, and the second of any two in a row.
- *
- * @access private
- */
-export function cleanupSeparators<T extends DropdownItemType>(items: readonly T[]): T[] {
-	const cleaned: T[] = [];
-
-	for (const item of items) {
-		if (item.type !== DropdownItemKind.Separator) {
-			cleaned.push(item);
-			continue;
-		}
-
-		if (cleaned.length === 0) {
-			continue;
-		}
-
-		if (cleaned[cleaned.length - 1]?.type === DropdownItemKind.Separator) {
-			continue;
-		}
-
-		cleaned.push(item);
-	}
-
-	while (cleaned.length > 0 && cleaned[cleaned.length - 1]?.type === DropdownItemKind.Separator) {
-		cleaned.pop();
-	}
-
-	return cleaned;
 }
 
 /**
@@ -162,5 +99,5 @@ export function filterDropdownItems<T extends DropdownItemType>(
 		}
 	}
 
-	return cleanupSeparators(kept);
+	return cleanupSeparators(kept, (item) => item.type === DropdownItemKind.Separator);
 }

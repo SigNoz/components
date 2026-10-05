@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType, DropdownProps } from '../types.js';
@@ -73,6 +73,38 @@ describe('Dropdown styling', () => {
 		const mask = getComputedStyle(viewport as HTMLElement).maskImage;
 		expect(mask).toContain('linear-gradient');
 		expect(mask).not.toContain('0.6)');
+	});
+
+	it('moves the fades to the edges that clip rows as the list scrolls', async () => {
+		renderDropdown(
+			Array.from({ length: 20 }, (_, index) => ({
+				type: 'item' as const,
+				value: `row-${index}`,
+				label: `Row ${index}`,
+			})),
+			{ contentMaxHeight: 120 },
+		);
+		const popup = await openDropdown();
+		const viewport = popup.querySelector<HTMLElement>(
+			'[data-slot="dropdown-viewport"]',
+		) as HTMLElement;
+
+		await waitFor(() => {
+			expect(viewport).toHaveAttribute('data-scroll-end');
+		});
+		expect(viewport).not.toHaveAttribute('data-scroll-start');
+
+		viewport.scrollTop = 40;
+		await waitFor(() => {
+			expect(viewport).toHaveAttribute('data-scroll-start');
+		});
+		expect(viewport).toHaveAttribute('data-scroll-end');
+
+		viewport.scrollTop = viewport.scrollHeight;
+		await waitFor(() => {
+			expect(viewport).not.toHaveAttribute('data-scroll-end');
+		});
+		expect(viewport).toHaveAttribute('data-scroll-start');
 	});
 
 	it('draws the checkbox tick at its own size, not the icon size', async () => {
