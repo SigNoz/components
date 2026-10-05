@@ -1,12 +1,4 @@
-import {
-	InputNumber,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-	Typography,
-} from '@signozhq/ui';
+import { InputNumber, Select, type SelectItemType, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import styles from './input-number.stories.module.css';
@@ -70,6 +62,12 @@ const meta: Meta<typeof InputNumber> = {
 export default meta;
 
 type Story = StoryObj<typeof InputNumber>;
+
+const UNITS: SelectItemType[] = [
+	{ type: 'item', value: 'MiB', label: 'MiB' },
+	{ type: 'item', value: 'GiB', label: 'GiB' },
+	{ type: 'item', value: 'TiB', label: 'TiB' },
+];
 
 /* -------------------------------------------------------------------------- */
 /*  Shared layout helpers                                                     */
@@ -347,31 +345,33 @@ export const Addons: Story = {
 						<InputNumber
 							defaultValue={500}
 							addonAfter={
-								<Select value={unit} onChange={(v) => setUnit(v as string)}>
-									<SelectTrigger aria-label="unit">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="MiB">MiB</SelectItem>
-										<SelectItem value="GiB">GiB</SelectItem>
-										<SelectItem value="TiB">TiB</SelectItem>
-									</SelectContent>
-								</Select>
+								<Select
+									aria-label="Unit"
+									placeholder="Unit"
+									width="5rem"
+									items={UNITS}
+									value={unit}
+									onChange={setUnit}
+								/>
 							}
 						/>
 					</Field>
-					<Field label="Disabled embedded Select" hint="Pass `disabled` to the Select itself.">
+					<Field
+						label="Disabled embedded Select"
+						hint="Pass `disabled` and `disabledTooltip` to the Select itself."
+					>
 						<InputNumber
 							defaultValue={500}
 							addonAfter={
-								<Select value="GiB" disabled>
-									<SelectTrigger aria-label="unit">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="GiB">GiB</SelectItem>
-									</SelectContent>
-								</Select>
+								<Select
+									aria-label="Unit"
+									placeholder="Unit"
+									width="5rem"
+									items={UNITS}
+									value="GiB"
+									disabled
+									disabledTooltip="The unit is fixed for this quota"
+								/>
 							}
 						/>
 					</Field>

@@ -1,118 +1,239 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as SelectStories from './select.stories';
-import * as SelectTriggerStories from './select-trigger.stories';
-import * as SelectContentStories from './select-content.stories';
-import * as SelectItemStories from './select-item.stories';
-import * as SelectGroupStories from './select-group.stories';
-import * as SelectLoadingStories from './select-loading.stories';
 
 <Meta of={SelectStories} />
 
 # Select
 
-Lightweight dropdown select built on Radix UI Select. Use for single or multi-value selection without search. For searchable dropdowns, use Combobox.
+A field that picks one value, or several, from a short list, rendered through Base UI's `Select`.
+It takes its rows as data, and looks like `Combobox` closed and like `Dropdown` once open: the same
+field, rows, group headings, separators and empty row.
 
-For the quick-start preset, see [SelectSimple](?path=/docs/composed-components-selectsimple--docs).
+Use it for a list short enough to read. When the list needs a search, use `Combobox`, which takes the
+same rows. For a menu of actions, use `Dropdown`.
 
-## Basic select (composition)
+## How to use
 
-For full control, compose the subcomponents manually:
+`items` and `placeholder` are required. There are no subcomponents to compose: the select owns its
+markup.
 
 ```tsx
-import {
-	Select,
-	SelectTrigger,
-	SelectContent,
-	SelectItem,
-	SelectGroup,
-	SelectLabel,
-	SelectSeparator,
-} from '@signozhq/ui';
+import { Select } from '@signozhq/ui';
 import { useState } from 'react';
 
-const frameworks = [
-	{ value: 'react', label: 'React' },
-	{ value: 'vue', label: 'Vue' },
-];
-
-export default function MyComponent() {
-	const [value, setValue] = useState('');
+export default function FrameworkField() {
+	const [framework, setFramework] = useState<string | undefined>();
 
 	return (
-		<Select value={value} onChange={(v) => setValue(v as string)}>
-			<SelectTrigger placeholder="Select a framework..." />
-			<SelectContent>
-				{frameworks.map((f) => (
-					<SelectItem key={f.value} value={f.value}>
-						{f.label}
-					</SelectItem>
-				))}
-			</SelectContent>
-		</Select>
+		<Select
+			aria-label="Framework"
+			placeholder="Select a framework..."
+			items={[
+				{ type: 'item', value: 'react', label: 'React' },
+				{ type: 'item', value: 'vue', label: 'Vue' },
+				{ type: 'item', value: 'angular', label: 'Angular' },
+			]}
+			value={framework}
+			onChange={setFramework}
+		/>
 	);
 }
 ```
 
 <Primary />
 
-## Select inside a popover
+## Naming the field
 
-When rendering a select inside a popover or modal, pass `withPortal={false}` to `SelectContent` so the dropdown stays in the same DOM tree and avoids z-index issues:
+The trigger is `role="combobox"`. Name it with `aria-label`, with `aria-labelledby` pointing at a
+visible label, or with a `<label htmlFor>` pointing at its `id`, in single and multiple mode alike.
+The list takes the same name. With none of them, the trigger falls back to the `placeholder`, which
+is not a label.
 
 ```tsx
-import {
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	Select,
-	SelectTrigger,
-	SelectContent,
-	SelectItem,
-	Button,
-} from '@signozhq/ui';
-
-<Popover>
-	<PopoverTrigger asChild>
-		<Button variant="outline">Open</Button>
-	</PopoverTrigger>
-	<PopoverContent>
-		<Select value={value} onChange={(v) => setValue(v as string)}>
-			<SelectTrigger placeholder="Select..." />
-			<SelectContent withPortal={false}>
-				<SelectItem value="react">React</SelectItem>
-				<SelectItem value="vue">Vue</SelectItem>
-			</SelectContent>
-		</Select>
-	</PopoverContent>
-</Popover>;
+<label htmlFor="provider">Provider</label>
+<Select id="provider" placeholder="Select a provider..." items={providers} />
 ```
 
-## Select vs Combobox
+## The rows
 
-| Feature       | Select           | Combobox                  |
-| ------------- | ---------------- | ------------------------- |
-| Search/filter | No               | Yes                       |
-| Multi-select  | Yes (with pills) | Manual                    |
-| Best for      | Simple dropdowns | Large lists, async search |
+Every row carries a `type`:
 
-## Subcomponents
+| `type`      | What it is                                                                                      |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| `item`      | A value the user can pick. `value` is what `onChange` reports.                                  |
+| `group`     | A heading and the rows under it. A group cannot hold another group.                             |
+| `separator` | A rule between two runs of rows. Dropped when it would land first, last or next to another one. |
 
-### SelectTrigger
+An `item` takes a `prefix` and a `suffix` around the label, and `disabled` + `disabledTooltip`. A
+disabled row stays reachable with the arrow keys, so its reason shows on hover. `displayValue` is the
+text the trigger and the chips show in place of the label. A single trigger also shows the selected
+row's `prefix` before the value, so put an icon there rather than inside the label.
 
-<Controls of={SelectTriggerStories.Default} />
+```tsx
+<Select
+	aria-label="Database"
+	placeholder="Select a database..."
+	items={[
+		{ type: 'item', value: 'postgres', label: 'PostgreSQL', prefix: <Database /> },
+		{
+			type: 'item',
+			value: 'mysql',
+			label: 'MySQL',
+			prefix: <Database />,
+			disabled: true,
+			disabledTooltip: 'Not supported yet',
+		},
+	]}
+/>
+```
 
-### SelectContent
+A label that renders nothing shows `<No label>`.
 
-<Controls of={SelectContentStories.Default} />
+## Values
 
-### SelectItem
+`value` is a `string`, or a `string[]` with `multiple`. Writing `value` makes the select controlled,
+even with `undefined`. Leave it out and use `defaultValue` for one that keeps its own state.
 
-<Controls of={SelectItemStories.Default} />
+`onChange` gets a `string` in single mode and a `string[]` with `multiple`, so there is nothing to
+cast. A single select has no way to clear its value once picked.
 
-### SelectGroup
+```tsx
+const [frameworks, setFrameworks] = useState<string[]>([]);
 
-<Controls of={SelectGroupStories.Default} />
+<Select
+	multiple
+	aria-label="Frameworks"
+	placeholder="Select frameworks..."
+	items={frameworkItems}
+	value={frameworks}
+	onChange={setFrameworks}
+/>;
+```
 
-### SelectLoading
+A multiple select shows a chip per value. `maxDisplayedPills` folds the rest into a `+N` chip, whose
+tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them.
 
-<Controls of={SelectLoadingStories.Default} />
+A selected value that `items` does not have shows as itself in the trigger and in its chip.
+
+## What the trigger shows
+
+`displayValue` replaces what the trigger shows. A single select passes the selected row, and the
+result takes the place of the row's `prefix`, `displayValue` and label. A multiple select passes the
+selected rows, and the result takes the place of the chips. Both run while nothing is selected too,
+with `undefined` or `[]`.
+
+```tsx
+<Select
+	multiple
+	aria-label="Services"
+	placeholder="Select services..."
+	items={serviceItems}
+	displayValue={(rows) => (rows.length === 0 ? 'All services' : `${rows.length} services`)}
+/>
+```
+
+## Loading and empty
+
+`loading` puts a spinner in the trigger and replaces the rows with `loadingContent`, or a spinner
+row. The popup still opens.
+
+An empty `items` shows one row with `noContent`, `No results found :/` by default, and logs a warning
+unless `noContent` is set or `loading` is true.
+
+## Invalid
+
+`aria-invalid` reaches the trigger like any other `aria-*` prop and turns its border red. Set it from
+the form's validation, next to an error message the trigger points at with `aria-describedby`.
+
+```tsx
+<Select
+	aria-label="Framework"
+	placeholder="Select a framework..."
+	aria-invalid={error !== undefined}
+	aria-describedby="framework-error"
+	items={items}
+/>
+```
+
+## Keyboard
+
+- `Enter`, `Space` and the arrow keys on the trigger open the popup and move the focus to the
+  selected row, or to the first one.
+- The arrow keys move the highlight and stop at the first and the last row. `Home` and `End` jump
+  to them.
+- Typing a letter moves to the next row that starts with it. On a closed single trigger it picks
+  that row, the way a native `<select>` does.
+- `Enter` and `Space` pick the highlighted row. A single select closes, a multiple one stays open.
+- `Escape` closes the popup and gives the focus back to the trigger. Inside a `Dialog`, it closes
+  only the popup.
+
+## Inside a popover, dialog or drawer
+
+Inside a `Dialog` or `Drawer` the popup goes into the panel on its own. Inside a modal or drawer from
+another library, such as antd's, the popup stays in the body and stacks above it. Inside anything
+else that closes on a press outside it, such as a `Popover`, pass `container` an element inside it.
+
+```tsx
+const containerRef = useRef<HTMLDivElement>(null);
+
+<PopoverContent>
+	<Select
+		aria-label="Environment"
+		placeholder="Select an environment..."
+		items={environments}
+		container={containerRef}
+	/>
+	<div ref={containerRef} />
+</PopoverContent>;
+```
+
+## Holding the popup open in a story or a test
+
+`ForceOpenProvider`, from `@signozhq/ui/testing`, puts the popup of every Select under it on screen
+and keeps it there: clicks, keys, selections and presses outside stop driving it. Stories need it
+because two popups never stay open together on their own. A disabled or read-only select stays
+closed. The select has no `open` prop: in app code the user opens and closes it.
+
+```tsx
+import { ForceOpenProvider } from '@signozhq/ui/testing';
+
+<ForceOpenProvider>
+	<Select aria-label="Framework" placeholder="Select a framework..." items={frameworks} />
+</ForceOpenProvider>;
+```
+
+## Asserting on it
+
+`testId` is `data-testid` on the trigger and names every part: `${testId}-item-${value}`,
+`${testId}-group-${value}`, `${testId}-chip-${value}` and `${testId}-chip-${value}-remove`, plus
+`${testId}-chip-overflow`, `-loading` and `-empty`. Otherwise use the `data-slot` attributes,
+`select-trigger`, `select-popup`, `select-item` and the rest, never the class names.
+
+A disabled trigger is not `disabled` in the DOM: assert `aria-disabled="true"` instead of
+`toBeDisabled()`.
+
+## Migrating from `SelectSimple` and the primitives
+
+| Before                                                                  | `Select`                                                        |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `SelectSimple`                                                          | `Select`                                                        |
+| `{ value, label }`                                                      | `{ type: 'item', value, label }`                                |
+| `label: <><Icon /> Text</>`, `displayValue: 'Text'`                     | `label: 'Text', prefix: <Icon />`                               |
+| `groups={[{ heading, items }]}`                                         | `items={[{ type: 'group', value, label: heading, items }]}`     |
+| `placeholder`, optional                                                 | `placeholder`, required                                         |
+| `onChange={(next) => set(next as string)}`                              | `onChange={set}`, typed by `multiple`                           |
+| `displayValue={(items) => ...}`                                         | The same with `multiple`, `(item) => ...` without               |
+| `loadingPlaceholder`                                                    | `loadingContent`                                                |
+| `withPortal={false}`                                                    | Nothing inside a `Dialog` or `Drawer`, `container` elsewhere    |
+| `defaultOpen`                                                           | Nothing, the select owns its open state                         |
+| `className` for the width                                               | `width` and `maxWidth`                                          |
+| A trigger height override to match `Input`                              | Nothing, the trigger is already that height                     |
+| `disabled`                                                              | `disabled` and `disabledTooltip`                                |
+| `Select`, `SelectTrigger`, `SelectContent`, `SelectItem` and the others | `Select` with `items`                                           |
+| `SelectValue` with children                                             | The row's label, its `displayValue`, or the `displayValue` prop |
+| An icon-only trigger with the chevron hidden                            | `Dropdown` with a `Button` trigger and radio rows               |
+| `toBeDisabled()` on the trigger                                         | `toHaveAttribute('aria-disabled', 'true')`                      |
+
+## Props
+
+<Controls of={SelectStories.Default} />

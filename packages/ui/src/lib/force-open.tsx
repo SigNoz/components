@@ -10,8 +10,8 @@ export type ForceOpenProviderProps = {
 };
 
 /**
- * Holds open the popup of every `Combobox`, `Dropdown` and `Tooltip` under it, for a story or a
- * test that needs popups on screen. While held, no click, key or selection closes one.
+ * Holds open the popup of every `Select`, `Combobox`, `Dropdown` and `Tooltip` under it, for a
+ * story or a test that needs popups on screen. While held, no click, key or selection closes one.
  *
  * Several popups stay open side by side. Opened by hand, the last one would take the focus and
  * close the others.
