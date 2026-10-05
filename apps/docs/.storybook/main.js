@@ -35,6 +35,9 @@ const config = {
 	},
 	typescript: {
 		reactDocgen: 'react-docgen-typescript',
+		// `storybook dev` reads `packages/ui` source (see `vite.config.ts`), which sits outside this
+		// TypeScript project, so docgen would only log a skip warning for each file.
+		reactDocgenTypescriptOptions: { exclude: ['**/*.stories.tsx', '**/packages/ui/src/**'] },
 	},
 };
 

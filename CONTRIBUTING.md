@@ -16,13 +16,13 @@ Start here, then follow the doc for what you're doing.
 ```sh
 git clone git@github.com:SigNoz/components.git
 pnpm install
-pnpm build     # packages/ui must be built before Storybook can import it
 pnpm dev       # Storybook on http://localhost:6006
 ```
 
-Stories import `@signozhq/ui` as a built package, so a fresh clone needs `pnpm build` before
-`pnpm dev`. After that `pnpm dev` covers both: it runs Storybook *and* `vite build --watch` on
-`packages/ui`, so component edits rebuild and reload.
+`storybook dev` imports `@signozhq/ui` from `packages/ui/src` (alias in `apps/docs/vite.config.ts`),
+so component edits hot-reload and a fresh clone needs no build first. `storybook build` (what
+Chromatic uploads) and the story tests import the built `dist`, which the `vite build --watch` in
+`pnpm dev` keeps fresh.
 
 ## Useful commands
 
