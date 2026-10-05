@@ -6,7 +6,7 @@ import * as React from 'react';
 import { InternalButton } from '../button/button.js';
 import { Button, type ColorType, type SizeType, type VariantColorType } from '../button/index.js';
 import { Calendar } from '../calendar/index.js';
-import { ComboboxSimple, type ComboboxSimpleItem } from '../combobox/index.js';
+import { Combobox, type ComboboxOptionItemType } from '../combobox/index.js';
 import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover/index.js';
@@ -228,6 +228,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 		const [localDate, setLocalDate] = React.useState<Date | undefined>(date);
 		const [localTime, setLocalTime] = React.useState(time);
 		const [localTimezone, setLocalTimezone] = React.useState(timezone);
+		const timezonePopupRef = React.useRef<HTMLDivElement>(null);
 
 		// Update local state when props change
 		React.useEffect(() => {
@@ -325,10 +326,10 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 			setOpen(false);
 		};
 
-		// Convert timezones to ComboboxSimpleItem format
-		const timezoneItems: ComboboxSimpleItem[] = React.useMemo(
+		const timezoneItems: ComboboxOptionItemType[] = React.useMemo(
 			() =>
 				timezones.map((tz) => ({
+					type: 'item' as const,
 					value: tz.value,
 					label: tz.label,
 				})),
@@ -430,13 +431,21 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 								<div className={styles['datePicker__fieldRow']}>
 									<label className={styles['datePicker__fieldLabel']}>Timezone</label>
 									<div className={styles['datePicker__timezoneCombobox']}>
-										<ComboboxSimple
-											withPortal={false}
+										<Combobox
+											aria-label="Timezone"
+											container={timezonePopupRef}
 											items={timezoneItems}
 											value={localTimezone}
-											onChange={(value) => handleTimezoneChange(value as string)}
+											onChange={(value) => {
+												if (value !== undefined) {
+													handleTimezoneChange(value);
+												}
+											}}
 											placeholder="Select timezone..."
+											searchInputProps={{ placeholder: 'Search timezones' }}
 										/>
+										{/* Inside the popover, so a press in the list is not a press outside it. */}
+										<div ref={timezonePopupRef} />
 									</div>
 								</div>
 							)}

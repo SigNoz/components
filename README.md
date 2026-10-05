@@ -107,8 +107,8 @@ import { Typography } from '@signozhq/ui';
 ```
 
 `@signozhq/ui/testing` holds helpers for stories and tests, and is not in the barrel.
-`ForceOpenProvider` holds open the popup of every `Dropdown` and `Tooltip` under it, which neither
-of them takes as a prop:
+`ForceOpenProvider` holds open the popup of every `Combobox`, `Dropdown` and `Tooltip` under it,
+which none of them takes as a prop:
 
 ```tsx
 import { ForceOpenProvider } from '@signozhq/ui/testing';

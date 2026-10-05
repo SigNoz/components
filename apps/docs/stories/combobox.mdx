@@ -1,0 +1,354 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ComboboxStories from './combobox.stories';
+
+<Meta of={ComboboxStories} />
+
+# Combobox
+
+A field that picks one value, or several, from a list the user can search, rendered through Base
+UI's `Combobox`. It takes its rows as data, filters them itself, and looks like `Dropdown` once
+open: the same search row, rows, group headings, separators and empty row.
+
+Use it when the list is long enough to need a search, or when the user may type a value of their
+own. For a menu of actions, use `Dropdown`. For a handful of values with no search, use `Select`.
+
+## How to use
+
+`items` is required. There are no subcomponents to compose: the combobox owns its markup.
+
+```tsx
+import { Combobox } from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function FrameworkField() {
+	const [framework, setFramework] = useState<string | undefined>();
+
+	return (
+		<Combobox
+			aria-label="Framework"
+			placeholder="Select a framework..."
+			searchInputProps={{ placeholder: 'Search frameworks' }}
+			items={[
+				{ type: 'item', value: 'react', label: 'React' },
+				{ type: 'item', value: 'vue', label: 'Vue' },
+				{ type: 'item', value: 'angular', label: 'Angular' },
+			]}
+			value={framework}
+			onChange={setFramework}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Naming the field
+
+The trigger is `role="combobox"`. Name it with `aria-label`, with `aria-labelledby` pointing at a
+visible label, or with a `<label htmlFor>` pointing at its `id`, in single and multiple mode alike.
+The popup takes the same name. With none of them, the trigger falls back to the `placeholder`,
+which is not a label.
+
+`placeholder` and `searchInputProps.placeholder` are required. `placeholder` is what the trigger
+shows while nothing is selected. `searchInputProps.placeholder` is the placeholder of the search row
+and its accessible name.
+
+## The rows
+
+Every row carries a `type`:
+
+| `type`      | What it is                                                                                      |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| `item`      | A value the user can pick. `value` is what `onChange` reports.                                  |
+| `hint`      | Writes its `insertValue` into the search row instead of selecting.                              |
+| `group`     | A heading and the rows under it. A group cannot hold another group.                             |
+| `separator` | A rule between two runs of rows. Dropped when it would land first, last or next to another one. |
+
+An `item` takes a `prefix` and a `suffix` around the label, and `disabled` + `disabledTooltip`. A
+disabled row stays reachable with the arrow keys, so its reason shows on hover. `displayValue` is the
+text the trigger and the chips show in place of the label. A single trigger also shows the selected
+row's `prefix` before the value, so put an icon there rather than inside a node label.
+
+```tsx
+<Combobox
+	aria-label="Tool"
+	placeholder="Select a tool..."
+	searchInputProps={{ placeholder: 'Search tools' }}
+	items={[
+		{ type: 'item', value: 'postgres', label: 'PostgreSQL', prefix: <Database /> },
+		{
+			type: 'item',
+			value: 'mysql',
+			label: 'MySQL',
+			prefix: <Database />,
+			disabled: true,
+			disabledTooltip: 'Not supported yet',
+		},
+	]}
+/>
+```
+
+A label that renders nothing shows `<No label>`.
+
+## Values
+
+`value` is a `string`, or a `string[]` with `multiple`. Writing `value` makes the combobox
+controlled, even with `undefined`. Leave it out and use `defaultValue` for one that keeps its own
+state.
+
+`onChange` gets `string | undefined` in single mode, `undefined` when the value is cleared, and a
+`string[]` with `multiple`.
+
+```tsx
+const [tags, setTags] = useState<string[]>([]);
+
+<Combobox
+	multiple
+	aria-label="Tags"
+	placeholder="Select tags..."
+	searchInputProps={{ placeholder: 'Search tags' }}
+	items={tagItems}
+	value={tags}
+	onChange={setTags}
+/>;
+```
+
+A multiple combobox shows a chip per value. `maxDisplayedPills` folds the rest into a `+N` chip,
+whose tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them.
+
+`displayValue` decides what a single trigger shows for the selected row, in place of the row's
+`prefix`, `displayValue` and label. It also runs while nothing is selected, with `undefined`.
+
+```tsx
+<Combobox
+	aria-label="Framework"
+	placeholder="Select a framework..."
+	searchInputProps={{ placeholder: 'Search frameworks' }}
+	items={items}
+	displayValue={(item) => (item ? `Framework: ${item.value}` : 'Any framework')}
+/>
+```
+
+## Clearing
+
+`allowClear` shows a clear button over the chevron while the pointer is over a combobox that has a
+value. `Delete` and `Backspace` on the focused trigger clear it too.
+
+## Search
+
+The search row is always there. The combobox matches the query against the label when it renders to
+text, the `value`, the `displayValue`, the `insertValue` and the `searchMetadata` of each row. The
+match is a substring, case and accent insensitive: `cafe` finds `Café`, `rct` does not find `React`.
+
+A group survives when any of its rows match, and renders with only those.
+
+```tsx
+const durations = [
+	{ type: 'item', value: '30', label: '30 minutes', searchMetadata: 'half hour 30m' },
+	{ type: 'item', value: '60', label: '1 hour', searchMetadata: '60 minutes 1h' },
+];
+```
+
+`searchInputProps` is required and holds the search row's `placeholder`, `prefix`, `suffix`,
+`loading`, `filter` and `onChange`. The query clears when the popup closes, and a non-empty one is
+reported to `onChange` as `''`.
+
+## Server-side search
+
+`searchInputProps.filter: false` keeps every row the server sent. Fetch from
+`searchInputProps.onChange`, and show the request with `searchInputProps.loading`, which swaps the
+search glyph for a spinner and keeps the rows.
+
+```tsx
+<Combobox
+	aria-label="Billing model"
+	placeholder="Select a billing model..."
+	items={rules.map((rule) => ({ type: 'item', value: rule.id, label: rule.name }))}
+	searchInputProps={{
+		placeholder: 'Search billing models',
+		filter: false,
+		onChange: setSearch,
+		loading: isFetching,
+	}}
+	value={ruleId}
+	onChange={setRuleId}
+/>
+```
+
+`loading` on the combobox itself replaces the rows with `loadingContent`, or a spinner, and puts a
+spinner in the trigger.
+
+## Creating values
+
+`allowCreate` leads the list with a `Create "<query>"` row while the trimmed query matches no row's
+`value`, hints included, and no selected value. The match ignores case, so `react` is not offered
+next to `React`. Picking it, or pressing `Enter` while it is highlighted, selects the query. A
+function words the row.
+
+```tsx
+<Combobox
+	multiple
+	aria-label="Tags"
+	placeholder="Select or create tags..."
+	searchInputProps={{ placeholder: 'Search tags' }}
+	items={[]}
+	allowCreate={(query) => `Add tag "${query}"`}
+	value={tags}
+	onChange={setTags}
+/>
+```
+
+A selected value that `items` does not have shows as itself in the trigger, and under a `Custom`
+group at the top of the list, where it can be unselected.
+
+## Hints
+
+A `hint` row writes its `insertValue` into the search row and keeps the popup open, so the user
+carries on typing. Hints show until the query starts with the `insertValue` of one of them, case
+and accent insensitive, leading spaces ignored.
+
+```tsx
+<Combobox
+	aria-label="Filter"
+	placeholder="Filter by..."
+	searchInputProps={{ placeholder: 'Search filters' }}
+	items={[
+		{ type: 'hint', value: 'hint-status', label: 'status:', insertValue: 'status:' },
+		{ type: 'item', value: 'status:active', label: 'Status: Active' },
+		{ type: 'item', value: 'status:closed', label: 'Status: Closed' },
+	]}
+/>
+```
+
+## Footer action
+
+`footerAction` pins a row under the list for an action that is not a value, such as creating a
+record somewhere else. It stays put while the rows scroll, `Tab` from the search row reaches it, and
+the popup closes after its `onClick`.
+
+```tsx
+<Combobox
+	aria-label="Billing model"
+	placeholder="Select a billing model..."
+	searchInputProps={{ placeholder: 'Search billing models' }}
+	items={items}
+	footerAction={{ label: 'Create a billing model', prefix: <Plus />, onClick: openCreateDialog }}
+/>
+```
+
+## Invalid
+
+`aria-invalid` reaches the trigger like any other `aria-*` prop and turns its border the destructive
+colour. Set it from the form's validation, next to an error message the trigger points at with
+`aria-describedby`.
+
+```tsx
+<Combobox
+	aria-label="Framework"
+	placeholder="Select a framework..."
+	searchInputProps={{ placeholder: 'Search frameworks' }}
+	aria-invalid={error !== undefined}
+	aria-describedby="framework-error"
+	items={items}
+/>
+```
+
+## Keyboard
+
+- `Enter`, `Space` and the arrow keys on the trigger open the popup and move the focus to the
+  search row.
+- The arrow keys move the highlight and wrap. The first match is highlighted while typing, so
+  `Enter` picks it.
+- A single combobox closes on a pick. A multiple one stays open and clears the query.
+- `Escape` closes the popup and gives the focus back to the trigger. Inside a `Dialog`, it closes
+  only the popup.
+
+## Large lists
+
+`virtualized` mounts only the rows in view. Every other feature works with it. Group headings become
+plain rows of the list.
+
+```tsx
+<Combobox
+	aria-label="Host"
+	placeholder="Select a host..."
+	searchInputProps={{ placeholder: 'Search hosts' }}
+	items={hostItems}
+	virtualized
+/>
+```
+
+## Inside a popover, dialog or drawer
+
+Inside a `Dialog` or `Drawer` the popup goes into the panel on its own. Inside a modal or drawer from
+another library, such as antd's, the popup stays in the body and stacks above it. Inside anything
+else that closes on a press outside it, such as a `Popover`, pass `container` an element inside it.
+
+```tsx
+const containerRef = useRef<HTMLDivElement>(null);
+
+<PopoverContent>
+	<Combobox
+		aria-label="Timezone"
+		placeholder="Select a timezone..."
+		searchInputProps={{ placeholder: 'Search timezones' }}
+		items={timezones}
+		container={containerRef}
+	/>
+	<div ref={containerRef} />
+</PopoverContent>;
+```
+
+## Holding the popup open in a story or a test
+
+`ForceOpenProvider`, from `@signozhq/ui/testing`, puts the popup of every Combobox under it on screen
+and keeps it there: clicks, keys, selections and presses outside stop driving it. Stories need it
+because two popups never stay open together on their own. A disabled or read-only combobox stays
+closed. The combobox has no `open` prop: in app code the user opens and closes it.
+
+```tsx
+import { ForceOpenProvider } from '@signozhq/ui/testing';
+
+<ForceOpenProvider>
+	<Combobox
+		aria-label="Framework"
+		placeholder="Select a framework..."
+		items={frameworks}
+		searchInputProps={{ placeholder: 'Search' }}
+	/>
+</ForceOpenProvider>;
+```
+
+## Asserting on it
+
+`testId` is `data-testid` on the trigger and names every part: `${testId}-item-${value}`,
+`${testId}-hint-${value}`, `${testId}-group-${value}`, `${testId}-custom-${value}`,
+`${testId}-chip-${value}` and `${testId}-chip-${value}-remove`, plus `${testId}-create`,
+`-chip-overflow`, `-clear`, `-search`, `-loading`, `-empty` and `-footer-action`. Otherwise use the
+`data-slot` attributes, `combobox-trigger`, `combobox-popup`, `combobox-item` and the rest, never
+the class names.
+
+## Migrating from `ComboboxSimple`
+
+| `ComboboxSimple`                                                  | `Combobox`                                                   |
+| ----------------------------------------------------------------- | ------------------------------------------------------------ |
+| `{ value, label }`                                                | `{ type: 'item', value, label }`                             |
+| `label: <><Icon /> Text</>`, `displayValue: 'Text'`               | `label: 'Text', prefix: <Icon />`                            |
+| `groups={[{ heading, items }]}`                                   | `items={[{ type: 'group', value, label: heading, items }]}`  |
+| `{ value, label, insertValue }`                                   | `{ type: 'hint', value, label, insertValue }`                |
+| `keywords: ['a', 'b']`                                            | `searchMetadata: 'a b'`                                      |
+| `placeholder`, optional                                           | `placeholder`, required                                      |
+| `inputPlaceholder`                                                | `searchInputProps.placeholder`, required                     |
+| `emptyPlaceholder`                                                | `noContent`                                                  |
+| `loadingPlaceholder`                                              | `loadingContent`                                             |
+| `withPortal={false}`                                              | Nothing inside a `Dialog` or `Drawer`, `container` elsewhere |
+| `virtualized={{ virtualizedHeight }}`                             | `virtualized` and `contentMaxHeight`                         |
+| `className` for the width                                         | `width` and `maxWidth`                                       |
+| `disabled`                                                        | `disabled` and `disabledTooltip`                             |
+| `disableTooltipProvider`                                          | Nothing, an outer provider is found on its own               |
+| `Combobox`, `ComboboxTrigger`, `ComboboxItem` and the other parts | `Combobox` with `items`, or `Dropdown` for a menu of toggles |
+| `[data-slot='combobox-content']`                                  | `[data-slot='combobox-popup']`                               |
+
+## Props
+
+<Controls of={ComboboxStories.Default} />
