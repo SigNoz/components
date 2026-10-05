@@ -12,9 +12,10 @@ import {
 	toast,
 	Typography,
 } from '@signozhq/ui';
+import { PersistToastsProvider } from '@signozhq/ui/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, useEffect, useState } from 'react';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './toast.stories.module.css';
 
@@ -231,23 +232,28 @@ type FrameName = 'spread' | 'collapsed-top' | 'collapsed-bottom';
  *
  * The frame only exists after the first render, so it is held in state rather than a ref, and
  * the `Toaster` waits for it instead of mounting into `document.body` first.
+ *
+ * `persist` puts the `Toaster` under a `PersistToastsProvider`: no timer, no limit, held spread.
  */
 function ToastFrame({
 	frame,
 	position,
 	className,
+	persist = false,
 }: {
 	frame: FrameName;
 	position: ToastPositionType;
 	className: string;
+	persist?: boolean;
 }): ReactElement {
 	const [host, setHost] = useState<HTMLDivElement | null>(null);
+	const toaster = host !== null && (
+		<Toaster position={position} container={host} aria-label={`Notifications, ${frame}`} />
+	);
 
 	return (
 		<div ref={setHost} className={`${styles.frame} ${className}`} data-frame={frame}>
-			{host !== null && (
-				<Toaster position={position} container={host} aria-label={`Notifications, ${frame}`} />
-			)}
+			{persist ? <PersistToastsProvider>{toaster}</PersistToastsProvider> : toaster}
 		</div>
 	);
 }
@@ -282,9 +288,8 @@ const FRAMES = 3;
  * and the states of the button, in one snapshot. The toasts are the story: they are raised on
  * load, and each frame draws them with a `Toaster` of its own.
  *
- * The spread frame is held spread by a hover, which also pauses its timers, so a toast that
- * closes after five seconds does not race the snapshot there. Moving the real pointer over it and
- * out again lets it collapse and close them.
+ * The spread frame is held spread by `PersistToastsProvider`, which also stops its timers, so a
+ * toast that closes after five seconds does not race the snapshot there.
  */
 export const ToastShowcase: Story = {
 	parameters: {
@@ -299,12 +304,13 @@ export const ToastShowcase: Story = {
 					</Typography>
 					<Typography size="sm">
 						The stack spread, the way hover or focus inside it spreads it, newest first. It shows
-						three toasts and holds the rest behind, so the frame lifts that limit to put every
-						variant on screen. <code>danger</code> requires a button, named <code>Close</code> here,
-						and the two toasts under <code>loading</code> force the hover and focus state of the
-						button.
+						three toasts and holds the rest behind, so the frame sits under{' '}
+						<code>PersistToastsProvider</code>, which lifts that limit and keeps it spread, to put
+						every variant on screen. <code>danger</code> requires a button, named <code>Close</code>{' '}
+						here, and the two toasts under <code>loading</code> force the hover and focus state of
+						the button.
 					</Typography>
-					<ToastFrame frame="spread" position="top-right" className={styles.spread} />
+					<ToastFrame frame="spread" position="top-right" className={styles.spread} persist />
 				</div>
 
 				<div className="story-section">
@@ -346,7 +352,6 @@ export const ToastShowcase: Story = {
 		);
 
 		const spread = frame('spread');
-		await userEvent.hover(spread.querySelector('[data-slot="toast"]') as HTMLElement);
 
 		// `storybook-addon-pseudo-states` applies its classes once, as the story mounts, and these
 		// toasts are raised after that. So the classes it would have applied are applied here.

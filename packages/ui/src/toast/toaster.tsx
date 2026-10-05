@@ -4,6 +4,7 @@ import { usePopupContainer } from '../lib/popup-container.js';
 import { DEFAULT_LIMIT, DEFAULT_TIMEOUT, ToastPosition } from './constants.js';
 import { ToastList } from './subcomponents/toast-list.js';
 import { ToastViewport } from './subcomponents/toast-viewport.js';
+import { usePersistToasts } from './persist-toasts.js';
 import { toastManager } from './toast.js';
 import type { ToasterProps } from './types.js';
 
@@ -34,6 +35,12 @@ import type { ToasterProps } from './types.js';
  *
  * `timeout` is how long `success`, `info` and `warning` stay on screen. `danger`, `loading` and a
  * toast with an `action` stay until they are dismissed, whatever it is.
+ *
+ * ### In a story or a test
+ *
+ * Under a `PersistToastsProvider`, from `@signozhq/ui/testing`, no timer closes a toast, the
+ * stack shows every toast whatever the `limit`, and it stays spread. `timeout` and `limit` are
+ * ignored there.
  *
  * ### Where it is portalled
  *
@@ -98,9 +105,14 @@ export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster
 	ref,
 ) {
 	const popupContainer = usePopupContainer();
+	const persist = usePersistToasts();
 
 	return (
-		<ToastPrimitive.Provider toastManager={toastManager} limit={limit} timeout={timeout}>
+		<ToastPrimitive.Provider
+			toastManager={toastManager}
+			limit={persist ? Number.POSITIVE_INFINITY : limit}
+			timeout={persist ? 0 : timeout}
+		>
 			<ToastPrimitive.Portal container={container === undefined ? popupContainer : container}>
 				<ToastViewport ref={ref} position={position} testId={testId} {...props}>
 					<ToastList position={position} testId={testId} />

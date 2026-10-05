@@ -218,6 +218,30 @@ toast.success('Panel saved', { testId: 'save-toast' });
 
 `toast` does not need a mounted `Toaster`, so a test that mocks it renders none.
 
+## Keeping toasts on screen in a story or a test
+
+`PersistToastsProvider`, from `@signozhq/ui/testing`, keeps every toast of a `Toaster` under it on
+screen. No timer closes a toast, the stack shows every toast whatever the `limit`, and it stays
+spread, each button exposed to assistive technology. `timeout` and `limit` are ignored there.
+
+```tsx
+import { PersistToastsProvider } from '@signozhq/ui/testing';
+
+<PersistToastsProvider>
+	<Page />
+	<Toaster />
+</PersistToastsProvider>;
+```
+
+The page raises its toasts with `toast` as it always does, so a story of a screen that reports a
+save shows that toast without mocking `toast` or racing a five second timer. The button, a swipe
+and `toast.dismiss` still close a toast. The spread frame in the showcase above is drawn that way.
+In a test, pass it to `render` as the `wrapper`, and no fake timers are needed to keep a toast
+around.
+
+Leave it out in app code. A toast is meant to close on its own, and a stack that never collapses
+covers the page under it.
+
 ## Accessibility
 
 - The viewport is a landmark named `Notifications`. `F6` moves focus to it.

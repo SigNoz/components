@@ -37,13 +37,3 @@
 .collapsed {
 	block-size: 7.25rem;
 }
-
-/*
- * The stack shows three toasts and holds the rest behind, which is no use for a frame that is
- * there to show every variant. The ones past the limit are made visible here, and nothing else is
- * touched: every toast in the frame is the component as it ships.
- */
-.spread :global([data-slot='toast'][data-limited]) {
-	opacity: 1;
-	pointer-events: auto;
-}
