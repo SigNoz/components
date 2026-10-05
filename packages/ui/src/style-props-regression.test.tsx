@@ -6,6 +6,7 @@ import { ButtonGroup } from './button-group/index.js';
 import { Calendar } from './calendar/calendar.js';
 import { Callout } from './callout/callout.js';
 import { Checkbox } from './checkbox/checkbox.js';
+import { Combobox } from './combobox/index.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
 import { Progress } from './progress/progress.js';
@@ -138,6 +139,22 @@ describe('className and style that get past the types', () => {
 		render(<Switch color="primary" testId="switch" {...STRAY} />);
 
 		expectNoStrayStyle(screen.getByTestId('switch'));
+	});
+
+	it('do not reach Combobox', () => {
+		render(
+			<Combobox
+				placeholder="Select a framework..."
+				searchInputProps={{ placeholder: 'Search' }}
+				aria-label="Framework"
+				items={[{ type: 'item', value: 'react', label: 'React' }]}
+				testId="combobox"
+				{...STRAY}
+			/>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('combobox'));
+		expectNoStrayStyle(document.querySelector('[data-slot="combobox"]'));
 	});
 
 	it('do not reach Progress', () => {
