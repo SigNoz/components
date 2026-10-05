@@ -13,6 +13,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { useForceOpen } from '../lib/force-open.js';
 import { usePopupContainer } from '../lib/popup-container.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -91,6 +92,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	}, [disabled, close]);
 
 	const hasDisabledTooltip = disabled && hasTooltipContent(disabledTooltip);
+	// Controlled only under a `ForceOpenProvider`. Everywhere else the menu owns its open state.
+	const forcedOpen = useForceOpen() ? !disabled : undefined;
 
 	const rememberSelection = useCallback((rowKey: string, selection: boolean | string): void => {
 		setRememberedSelections((current) => ({ ...current, [rowKey]: selection }));
@@ -157,6 +160,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	return (
 		<Menu.Root
 			actionsRef={actionsRef}
+			open={forcedOpen}
 			modal={false}
 			loopFocus
 			highlightItemOnHover

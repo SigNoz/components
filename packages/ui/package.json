@@ -397,6 +397,16 @@
 				"require": "./dist/toggle-group/index.cjs"
 			}
 		},
+		"./testing": {
+			"import": {
+				"types": "./dist/testing/index.d.ts",
+				"import": "./dist/testing/index.mjs"
+			},
+			"require": {
+				"types": "./dist/testing/index.d.cts",
+				"require": "./dist/testing/index.cjs"
+			}
+		},
 		"./tooltip": {
 			"import": {
 				"types": "./dist/tooltip/index.d.ts",

@@ -1,21 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { getComponentDirs, getPackageJsonExports, getViteConfigEntries } from './utils.js';
+import { getEntryDirs, getPackageJsonExports, getViteConfigEntries } from './utils.js';
 
 describe('package.json exports', () => {
 	it('all component directories with index.ts are exported in package.json', () => {
-		const componentDirs = getComponentDirs();
+		const entryDirs = getEntryDirs();
 		const pkgExports = getPackageJsonExports();
 
-		const missing = componentDirs.filter((dir) => !pkgExports.includes(dir));
+		const missing = entryDirs.filter((dir) => !pkgExports.includes(dir));
 
 		expect(missing, `Missing package.json exports for: ${missing.join(', ')}`).toEqual([]);
 	});
 
 	it('all package.json exports have corresponding component directories', () => {
-		const componentDirs = new Set(getComponentDirs());
+		const entryDirs = new Set(getEntryDirs());
 		const pkgExports = getPackageJsonExports();
 
-		const orphaned = pkgExports.filter((entry) => !componentDirs.has(entry));
+		const orphaned = pkgExports.filter((entry) => !entryDirs.has(entry));
 
 		expect(orphaned, `Orphaned package.json exports: ${orphaned.join(', ')}`).toEqual([]);
 	});

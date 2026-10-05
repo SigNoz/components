@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType } from '../types.js';
 import { openDropdown } from './dropdown.test-utils.js';
@@ -532,5 +533,47 @@ describe('Dropdown interaction', () => {
 
 		expect(screen.getByRole('menuitem', { name: 'Delete 5 rows' })).toBeInTheDocument();
 		expect(screen.queryByRole('menuitem', { name: 'Rename' })).toBeNull();
+	});
+});
+
+describe('Dropdown under ForceOpenProvider', () => {
+	it('keeps the menu on screen whatever the user does', async () => {
+		const onClick = vi.fn();
+		render(
+			<Dropdown
+				nativeButton
+				side="bottom"
+				align="start"
+				items={[{ type: 'item', value: 'rename', label: 'Rename', onClick }]}
+			>
+				<button type="button">Actions</button>
+			</Dropdown>,
+			{ wrapper: ForceOpenProvider },
+		);
+
+		await userEvent.click(await screen.findByRole('menuitem', { name: 'Rename' }));
+		await userEvent.keyboard('{Escape}');
+		await userEvent.click(document.body);
+
+		expect(onClick).toHaveBeenCalledTimes(1);
+		expect(screen.getByRole('menu')).toBeInTheDocument();
+	});
+
+	it('leaves a disabled menu closed', () => {
+		render(
+			<Dropdown
+				nativeButton
+				side="bottom"
+				align="start"
+				items={[{ type: 'item', value: 'rename', label: 'Rename' }]}
+				disabled
+				disabledTooltip="No edit access"
+			>
+				<button type="button">Actions</button>
+			</Dropdown>,
+			{ wrapper: ForceOpenProvider },
+		);
+
+		expect(screen.queryByRole('menu')).toBeNull();
 	});
 });

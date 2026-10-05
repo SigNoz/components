@@ -136,18 +136,10 @@ describe('remaining props', () => {
 		);
 	});
 
-	test('accepts open', () => {
+	test('rejects open, a story or a test holds a tooltip open with ForceOpenProvider', () => {
 		assertType(
+			// @ts-expect-error - `open` is not a prop
 			<Tooltip title="Text" open>
-				{trigger}
-			</Tooltip>,
-		);
-	});
-
-	test('rejects an open that is not a boolean', () => {
-		assertType(
-			// @ts-expect-error - `open` is a boolean
-			<Tooltip title="Text" open="yes">
 				{trigger}
 			</Tooltip>,
 		);

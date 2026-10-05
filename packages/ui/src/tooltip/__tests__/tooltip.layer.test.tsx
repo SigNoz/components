@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 
 function positionerZIndex(): string {
@@ -11,9 +12,10 @@ function positionerZIndex(): string {
 describe('Tooltip layer', () => {
 	it('keeps the default z-index for a trigger outside any layer', () => {
 		render(
-			<Tooltip open title="Page">
+			<Tooltip title="Page">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positionerZIndex()).toBe('50');
@@ -23,11 +25,12 @@ describe('Tooltip layer', () => {
 		render(
 			<div style={{ position: 'fixed', zIndex: 1000 }}>
 				<div style={{ position: 'relative', zIndex: 5 }}>
-					<Tooltip open title="Drawer">
+					<Tooltip title="Drawer">
 						<button type="button">Hover</button>
 					</Tooltip>
 				</div>
 			</div>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positionerZIndex()).toBe('1001');
@@ -36,10 +39,11 @@ describe('Tooltip layer', () => {
 	it('never goes below --tooltip-z-index', () => {
 		render(
 			<div style={{ position: 'relative', zIndex: 10 }}>
-				<Tooltip open title="Sticky header">
+				<Tooltip title="Sticky header">
 					<button type="button">Hover</button>
 				</Tooltip>
 			</div>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positionerZIndex()).toBe('50');
@@ -48,11 +52,12 @@ describe('Tooltip layer', () => {
 	it('stays under an overlay that covers a trigger outside it', () => {
 		render(
 			<>
-				<Tooltip open title="Behind">
+				<Tooltip title="Behind">
 					<button type="button">Hover</button>
 				</Tooltip>
 				<div style={{ position: 'fixed', inset: 0, zIndex: 1000 }} />
 			</>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(Number(positionerZIndex())).toBeLessThan(1000);

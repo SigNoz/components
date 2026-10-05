@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Drawer, DrawerContent, DrawerTitle } from '../../drawer/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipProvider } from '../subcomponents/tooltip-provider.js';
@@ -49,11 +50,12 @@ describe('Tooltip inside a modal', () => {
 			<Drawer open>
 				<DrawerContent>
 					<DrawerTitle>Settings</DrawerTitle>
-					<Tooltip open title={TITLE}>
+					<Tooltip title={TITLE}>
 						<button type="button">Hover</button>
 					</Tooltip>
 				</DrawerContent>
 			</Drawer>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(drawerPanel().contains(await screen.findByRole('tooltip'))).toBe(true);
@@ -65,18 +67,19 @@ describe('Tooltip inside a modal', () => {
 		const title = 'A title long enough to wrap at every word';
 		render(
 			<>
-				<Tooltip open title={title} testId="outside">
+				<Tooltip title={title} testId="outside">
 					<button type="button">Outside</button>
 				</Tooltip>
 				<Drawer open>
 					<DrawerContent>
 						<DrawerTitle>Settings</DrawerTitle>
-						<Tooltip open title={title} testId="inside">
+						<Tooltip title={title} testId="inside">
 							<button type="button">Inside</button>
 						</Tooltip>
 					</DrawerContent>
 				</Drawer>
 			</>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		const inside = await screen.findByTestId('inside');
@@ -95,12 +98,13 @@ describe('Tooltip inside a modal', () => {
 				<Drawer open>
 					<DrawerContent>
 						<DrawerTitle>Settings</DrawerTitle>
-						<Tooltip open title={TITLE}>
+						<Tooltip title={TITLE}>
 							<button type="button">Hover</button>
 						</Tooltip>
 					</DrawerContent>
 				</Drawer>
 			</TooltipProvider>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		// The drawer hides everything outside it from the accessibility tree, so no role query.

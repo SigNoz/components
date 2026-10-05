@@ -9,6 +9,7 @@ import {
 	TooltipProvider,
 	Typography,
 } from '@signozhq/ui';
+import { ForceOpenProvider } from '@signozhq/ui/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type CSSProperties, type ReactElement, type ReactNode, useState } from 'react';
 import styles from './tooltip.stories.module.css';
@@ -69,12 +70,6 @@ const meta: Meta<typeof Tooltip> = {
 				type: { summary: 'number' },
 				defaultValue: { summary: '0' },
 			},
-		},
-		open: {
-			control: 'boolean',
-			description:
-				'Whether the tooltip is open, for a story or a test that needs a popup on screen rather than for app code. Set, neither hover nor focus changes it.',
-			table: { category: 'Behavior', type: { summary: 'boolean' } },
 		},
 		container: {
 			control: false,
@@ -225,7 +220,7 @@ function LiftedCapsDemo(): ReactElement {
 
 	return (
 		<div ref={setHost} style={LIFTED_CAPS}>
-			<Tooltip open title={<MetricCard wide />} side="bottom" align="start" container={host}>
+			<Tooltip title={<MetricCard wide />} side="bottom" align="start" container={host}>
 				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size={ButtonSize.MD}>
 					Same card, caps lifted
 				</Button>
@@ -248,7 +243,6 @@ function ContainerDemo(): ReactElement {
 				title="Portalled into the panel, not into document.body"
 				align="start"
 				container={panel}
-				open
 			>
 				<Button variant={ButtonVariant.Solid} color={ButtonColor.Secondary} size={ButtonSize.MD}>
 					Inside a container
@@ -260,235 +254,237 @@ function ContainerDemo(): ReactElement {
 
 /**
  * Every placement, offset, content shape, stack and trigger in one snapshot, with each tooltip
- * held open by `open`. Hover could never do this: Base UI groups the
- * tooltips under one provider and closes the open one as the next opens, and one pointer can
- * only sit on one trigger anyway.
+ * held open by `ForceOpenProvider`. Hover could never do this: Base UI groups the tooltips under
+ * one provider and closes the open one as the next opens, and one pointer can only sit on one
+ * trigger anyway.
  */
 export const TooltipShowcase: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, disableAnimations: true },
 	},
 	render: () => (
-		<div className="story-container-full">
-			<div className={styles.showcase}>
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Placement
-					</Typography>
-					<Typography size="sm">
-						<code>side</code> picks which side of the trigger the tooltip opens against,{' '}
-						<code>align</code> where it sits along that side. Both are preferences: a tooltip flips
-						to the opposite side and shifts along it on its own rather than running off the
-						viewport.
-					</Typography>
-					<div className={styles.placementGrid}>
-						{PLACEMENTS.map(({ side, align }) => (
-							<Tooltip
-								key={`${side}-${align}`}
-								open
-								title={`${side} / ${align}`}
-								side={side}
-								align={align}
-							>
-								<Button
-									variant={ButtonVariant.Solid}
-									color={ButtonColor.Secondary}
-									size={ButtonSize.MD}
-									width={TRIGGER_WIDTH}
+		<ForceOpenProvider>
+			<div className="story-container-full">
+				<div className={styles.showcase}>
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Placement
+						</Typography>
+						<Typography size="sm">
+							<code>side</code> picks which side of the trigger the tooltip opens against,{' '}
+							<code>align</code> where it sits along that side. Both are preferences: a tooltip
+							flips to the opposite side and shifts along it on its own rather than running off the
+							viewport.
+						</Typography>
+						<div className={styles.placementGrid}>
+							{PLACEMENTS.map(({ side, align }) => (
+								<Tooltip
+									key={`${side}-${align}`}
+									title={`${side} / ${align}`}
+									side={side}
+									align={align}
 								>
-									{side} / {align}
-								</Button>
-							</Tooltip>
-						))}
+									<Button
+										variant={ButtonVariant.Solid}
+										color={ButtonColor.Secondary}
+										size={ButtonSize.MD}
+										width={TRIGGER_WIDTH}
+									>
+										{side} / {align}
+									</Button>
+								</Tooltip>
+							))}
+						</div>
 					</div>
-				</div>
 
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Offsets
-					</Typography>
-					<Typography size="sm">
-						<code>sideOffset</code> is the gap between the tooltip and the trigger, 4px by default.{' '}
-						<code>alignOffset</code> slides the tooltip along the side it opens against, and only
-						does anything for <code>align=&quot;start&quot;</code> or{' '}
-						<code>align=&quot;end&quot;</code>.
-					</Typography>
-					<div className={styles.offsetRow}>
-						{OFFSETS.map(({ label, props }) => (
-							<Tooltip key={label} open title={label} side="bottom" {...props}>
-								<Button
-									variant={ButtonVariant.Solid}
-									color={ButtonColor.Secondary}
-									size={ButtonSize.MD}
-									width={TRIGGER_WIDTH}
-								>
-									{label}
-								</Button>
-							</Tooltip>
-						))}
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Offsets
+						</Typography>
+						<Typography size="sm">
+							<code>sideOffset</code> is the gap between the tooltip and the trigger, 4px by
+							default. <code>alignOffset</code> slides the tooltip along the side it opens against,
+							and only does anything for <code>align=&quot;start&quot;</code> or{' '}
+							<code>align=&quot;end&quot;</code>.
+						</Typography>
+						<div className={styles.offsetRow}>
+							{OFFSETS.map(({ label, props }) => (
+								<Tooltip key={label} title={label} side="bottom" {...props}>
+									<Button
+										variant={ButtonVariant.Solid}
+										color={ButtonColor.Secondary}
+										size={ButtonSize.MD}
+										width={TRIGGER_WIDTH}
+									>
+										{label}
+									</Button>
+								</Tooltip>
+							))}
+						</div>
 					</div>
-				</div>
 
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Content
-					</Typography>
-					<Typography size="sm">
-						<code>title</code> takes any node. The popup caps its width at <code>26.25rem</code> and
-						clamps itself at six lines, and an empty title (<code>undefined</code>,{' '}
-						<code>null</code>, <code>false</code> or <code>&apos;&apos;</code>) renders no popup at
-						all while leaving the trigger the element it already was.
-					</Typography>
-					<div className={styles.contentColumn}>
-						{CONTENT.map(({ label, title }) => (
-							<Tooltip key={label} open title={title} align="start">
-								<Button
-									variant={ButtonVariant.Solid}
-									color={ButtonColor.Secondary}
-									size={ButtonSize.MD}
-								>
-									{label}
-								</Button>
-							</Tooltip>
-						))}
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Content
+						</Typography>
+						<Typography size="sm">
+							<code>title</code> takes any node. The popup caps its width at <code>26.25rem</code>{' '}
+							and clamps itself at six lines, and an empty title (<code>undefined</code>,{' '}
+							<code>null</code>, <code>false</code> or <code>&apos;&apos;</code>) renders no popup
+							at all while leaving the trigger the element it already was.
+						</Typography>
+						<div className={styles.contentColumn}>
+							{CONTENT.map(({ label, title }) => (
+								<Tooltip key={label} title={title} align="start">
+									<Button
+										variant={ButtonVariant.Solid}
+										color={ButtonColor.Secondary}
+										size={ButtonSize.MD}
+									>
+										{label}
+									</Button>
+								</Tooltip>
+							))}
+						</div>
 					</div>
-				</div>
 
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Element content
-					</Typography>
-					<Typography size="sm">
-						The six-line clamp counts lines of text, so a card of rows is never cut short by it and
-						the popup grows as tall as the card. Width is the cap that still bites: past{' '}
-						<code>26.25rem</code> the popup clips the card, and it has no scrollbar to reach the
-						rest with. Lift both <code>--tooltip-width</code> and <code>--tooltip-max-width</code>{' '}
-						on the element the popup is portalled into to let it measure the card, or move the
-						content to a popover once it is large enough to read rather than glance at.
-					</Typography>
-					<div className={styles.elementColumn}>
-						<Tooltip open title={<MetricCard />} side="bottom" align="start">
-							<Button
-								variant={ButtonVariant.Solid}
-								color={ButtonColor.Secondary}
-								size={ButtonSize.MD}
-							>
-								Card inside the caps
-							</Button>
-						</Tooltip>
-						<Tooltip open title={<MetricCard wide />} side="bottom" align="start">
-							<Button
-								variant={ButtonVariant.Solid}
-								color={ButtonColor.Secondary}
-								size={ButtonSize.MD}
-							>
-								Card wider than the cap
-							</Button>
-						</Tooltip>
-						<LiftedCapsDemo />
-					</div>
-				</div>
-
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Stacking
-					</Typography>
-					<Typography size="sm">
-						Two tooltips anchored to the same element would open on the same hover and render on top
-						of each other, so a tooltip inside the trigger of another one adds its title to that
-						popup instead: the outer title first, a divider, then everything below it. An empty
-						title adds nothing, and only the outer tooltip carries the placement props.
-					</Typography>
-					<div className={styles.stackColumn}>
-						<Tooltip open title="Outer title" align="start">
-							<Tooltip title="Inner title">
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Element content
+						</Typography>
+						<Typography size="sm">
+							The six-line clamp counts lines of text, so a card of rows is never cut short by it
+							and the popup grows as tall as the card. Width is the cap that still bites: past{' '}
+							<code>26.25rem</code> the popup clips the card, and it has no scrollbar to reach the
+							rest with. Lift both <code>--tooltip-width</code> and <code>--tooltip-max-width</code>{' '}
+							on the element the popup is portalled into to let it measure the card, or move the
+							content to a popover once it is large enough to read rather than glance at.
+						</Typography>
+						<div className={styles.elementColumn}>
+							<Tooltip title={<MetricCard />} side="bottom" align="start">
 								<Button
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Secondary}
 									size={ButtonSize.MD}
 								>
-									Two entries
+									Card inside the caps
 								</Button>
 							</Tooltip>
-						</Tooltip>
-						<Tooltip open title="Outer title" align="start">
-							<Tooltip title="Middle title">
+							<Tooltip title={<MetricCard wide />} side="bottom" align="start">
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Secondary}
+									size={ButtonSize.MD}
+								>
+									Card wider than the cap
+								</Button>
+							</Tooltip>
+							<LiftedCapsDemo />
+						</div>
+					</div>
+
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Stacking
+						</Typography>
+						<Typography size="sm">
+							Two tooltips anchored to the same element would open on the same hover and render on
+							top of each other, so a tooltip inside the trigger of another one adds its title to
+							that popup instead: the outer title first, a divider, then everything below it. An
+							empty title adds nothing, and only the outer tooltip carries the placement props.
+						</Typography>
+						<div className={styles.stackColumn}>
+							<Tooltip title="Outer title" align="start">
 								<Tooltip title="Inner title">
 									<Button
 										variant={ButtonVariant.Solid}
 										color={ButtonColor.Secondary}
 										size={ButtonSize.MD}
 									>
-										Three entries
+										Two entries
 									</Button>
 								</Tooltip>
 							</Tooltip>
-						</Tooltip>
-						<Tooltip open title="Outer title" align="start">
-							<Tooltip title={undefined}>
+							<Tooltip title="Outer title" align="start">
+								<Tooltip title="Middle title">
+									<Tooltip title="Inner title">
+										<Button
+											variant={ButtonVariant.Solid}
+											color={ButtonColor.Secondary}
+											size={ButtonSize.MD}
+										>
+											Three entries
+										</Button>
+									</Tooltip>
+								</Tooltip>
+							</Tooltip>
+							<Tooltip title="Outer title" align="start">
+								<Tooltip title={undefined}>
+									<Button
+										variant={ButtonVariant.Solid}
+										color={ButtonColor.Secondary}
+										size={ButtonSize.MD}
+									>
+										Empty inner title
+									</Button>
+								</Tooltip>
+							</Tooltip>
+						</div>
+					</div>
+
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Triggers
+						</Typography>
+						<Typography size="sm">
+							The trigger is the element it was given, not a wrapper around it, so the tooltip adds
+							nothing to the layout. Children that are not an element get a plain{' '}
+							<code>button</code> to hang off.
+						</Typography>
+						<div className={styles.triggerColumn}>
+							<Tooltip title="Trigger: a Button" align="start">
 								<Button
 									variant={ButtonVariant.Solid}
 									color={ButtonColor.Secondary}
 									size={ButtonSize.MD}
 								>
-									Empty inner title
+									Button
 								</Button>
 							</Tooltip>
-						</Tooltip>
+							<Tooltip title="Trigger: the span itself" align="start">
+								<span className={styles.textTrigger}>Inline text</span>
+							</Tooltip>
+							<Tooltip title="Trigger: an icon button" align="start">
+								<Button
+									variant={ButtonVariant.Ghost}
+									color={ButtonColor.Secondary}
+									size={ButtonSize.MD}
+									icon
+									aria-label="What this metric means"
+								>
+									<Info />
+								</Button>
+							</Tooltip>
+							<Tooltip title="Trigger: a button the tooltip rendered itself" align="start">
+								A bare string child
+							</Tooltip>
+						</div>
 					</div>
-				</div>
 
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Triggers
-					</Typography>
-					<Typography size="sm">
-						The trigger is the element it was given, not a wrapper around it, so the tooltip adds
-						nothing to the layout. Children that are not an element get a plain <code>button</code>{' '}
-						to hang off.
-					</Typography>
-					<div className={styles.triggerColumn}>
-						<Tooltip open title="Trigger: a Button" align="start">
-							<Button
-								variant={ButtonVariant.Solid}
-								color={ButtonColor.Secondary}
-								size={ButtonSize.MD}
-							>
-								Button
-							</Button>
-						</Tooltip>
-						<Tooltip open title="Trigger: the span itself" align="start">
-							<span className={styles.textTrigger}>Inline text</span>
-						</Tooltip>
-						<Tooltip open title="Trigger: an icon button" align="start">
-							<Button
-								variant={ButtonVariant.Ghost}
-								color={ButtonColor.Secondary}
-								size={ButtonSize.MD}
-								icon
-								aria-label="What this metric means"
-							>
-								<Info />
-							</Button>
-						</Tooltip>
-						<Tooltip open title="Trigger: a button the tooltip rendered itself" align="start">
-							A bare string child
-						</Tooltip>
+					<div className="story-section">
+						<Typography size="base" weight="semibold">
+							Container
+						</Typography>
+						<Typography size="sm">
+							<code>container</code> is the element the popup is portalled into,{' '}
+							<code>document.body</code> by default. Inside a <code>Dialog</code> or{' '}
+							<code>Drawer</code> the default is its panel, so the modal leaves the tooltip
+							hoverable.
+						</Typography>
+						<ContainerDemo />
 					</div>
-				</div>
-
-				<div className="story-section">
-					<Typography size="base" weight="semibold">
-						Container
-					</Typography>
-					<Typography size="sm">
-						<code>container</code> is the element the popup is portalled into,{' '}
-						<code>document.body</code> by default. Inside a <code>Dialog</code> or{' '}
-						<code>Drawer</code> the default is its panel, so the modal leaves the tooltip hoverable.
-					</Typography>
-					<ContainerDemo />
 				</div>
 			</div>
-		</div>
+		</ForceOpenProvider>
 	),
 };

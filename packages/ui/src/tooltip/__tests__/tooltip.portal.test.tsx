@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipPopup } from '../subcomponents/tooltip-popup.js';
 import { TooltipPortal } from '../subcomponents/tooltip-portal.js';
@@ -28,9 +29,10 @@ afterEach(() => {
 describe('Tooltip portal container', () => {
 	it('portals into document.body by default', () => {
 		const { container: root } = render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		const tooltip = screen.getByRole('tooltip');
@@ -41,9 +43,10 @@ describe('Tooltip portal container', () => {
 	it('portals into the container element it was given', () => {
 		const container = makeContainer();
 		render(
-			<Tooltip open container={container} title="Helpful information">
+			<Tooltip container={container} title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(container).toContainElement(screen.getByRole('tooltip'));
@@ -54,10 +57,11 @@ describe('Tooltip portal container', () => {
 		render(
 			<>
 				<div ref={ref} data-testid="container" />
-				<Tooltip open container={ref} title="Helpful information">
+				<Tooltip container={ref} title="Helpful information">
 					<button type="button">Hover</button>
 				</Tooltip>
 			</>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByTestId('container')).toContainElement(screen.getByRole('tooltip'));
@@ -67,10 +71,11 @@ describe('Tooltip portal container', () => {
 		const container = makeContainer();
 		render(
 			<TooltipProvider container={container}>
-				<Tooltip open title="Helpful information">
+				<Tooltip title="Helpful information">
 					<button type="button">Hover</button>
 				</Tooltip>
 			</TooltipProvider>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(container).toContainElement(screen.getByRole('tooltip'));
@@ -81,10 +86,11 @@ describe('Tooltip portal container', () => {
 		const own = makeContainer();
 		render(
 			<TooltipProvider container={fromProvider}>
-				<Tooltip open container={own} title="Helpful information">
+				<Tooltip container={own} title="Helpful information">
 					<button type="button">Hover</button>
 				</Tooltip>
 			</TooltipProvider>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(own).toContainElement(screen.getByRole('tooltip'));
@@ -97,11 +103,12 @@ describe('Tooltip portal container', () => {
 		render(
 			<TooltipProvider container={outer}>
 				<TooltipProvider container={inner}>
-					<Tooltip open title="Helpful information">
+					<Tooltip title="Helpful information">
 						<button type="button">Hover</button>
 					</Tooltip>
 				</TooltipProvider>
 			</TooltipProvider>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(inner).toContainElement(screen.getByRole('tooltip'));
@@ -113,11 +120,12 @@ describe('Tooltip portal container', () => {
 		render(
 			<TooltipProvider container={container}>
 				<TooltipProviderIfMissing>
-					<Tooltip open title="Helpful information">
+					<Tooltip title="Helpful information">
 						<button type="button">Hover</button>
 					</Tooltip>
 				</TooltipProviderIfMissing>
 			</TooltipProvider>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(container).toContainElement(screen.getByRole('tooltip'));

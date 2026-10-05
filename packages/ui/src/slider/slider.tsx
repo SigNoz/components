@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { cn } from '../lib/utils.js';
 import styles from './slider.module.scss';
-import { Tooltip } from '../tooltip/presets/tooltip.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 
 export interface SliderProps extends Omit<
 	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
@@ -374,12 +374,12 @@ function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
 	if (!tooltip) return thumb;
 
 	return (
-		<Tooltip
+		<TooltipAnchor
 			open={isDragging || isHovering}
-			title={tooltip.formatter ? tooltip.formatter(value) : value}
+			content={tooltip.formatter ? tooltip.formatter(value) : value}
 		>
 			{thumb}
-		</Tooltip>
+		</TooltipAnchor>
 	);
 }
 

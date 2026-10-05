@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import type { ReactNode } from 'react';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
@@ -152,13 +153,14 @@ describe('Tooltip inside another tooltip', () => {
 	it('keeps its own tooltip when it is not inside another trigger', () => {
 		render(
 			<>
-				<Tooltip open title="First">
+				<Tooltip title="First">
 					<button type="button">First</button>
 				</Tooltip>
-				<Tooltip open title="Second">
+				<Tooltip title="Second">
 					<button type="button">Second</button>
 				</Tooltip>
 			</>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getAllByRole('tooltip')).toHaveLength(2);
@@ -319,11 +321,12 @@ describe('Tooltip stacked props', () => {
 
 	it('keeps the props of the wrapping tooltip on the popup', () => {
 		render(
-			<Tooltip open title="Outer title" testId="outer">
+			<Tooltip title="Outer title" testId="outer">
 				<Tooltip title="Inner title" testId="inner">
 					<button type="button">Hover</button>
 				</Tooltip>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		const tooltip = screen.getByRole('tooltip');
@@ -333,11 +336,12 @@ describe('Tooltip stacked props', () => {
 
 	it('mounts no root, portal or content of its own', () => {
 		render(
-			<Tooltip open title="Outer title">
+			<Tooltip title="Outer title">
 				<Tooltip title="Inner title">
 					<button type="button">Hover</button>
 				</Tooltip>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(document.querySelectorAll('[data-slot="tooltip-content"]')).toHaveLength(1);
@@ -385,11 +389,12 @@ describe('Tooltip inside a trigger that has no stack above it', () => {
 		render(
 			<HandleTooltip>
 				<span>
-					<Tooltip open title="Inner title">
+					<Tooltip title="Inner title">
 						<button type="button">Hover</button>
 					</Tooltip>
 				</span>
 			</HandleTooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
