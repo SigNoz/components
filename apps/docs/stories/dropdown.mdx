@@ -62,32 +62,6 @@ its own type and tooltip, and no second button wraps it.
 The value must match the element. Base UI logs an error on a mismatch in either direction. The menu
 cannot detect it for you, because Base UI only sees the element after the first render.
 
-## Disabled
-
-`disabled` + `disabledTooltip` block the whole menu. It does not open, and the reason shows in a
-tooltip on the trigger. The two travel together: one without the other is a type error.
-
-```tsx
-<Dropdown
-	side="bottom"
-	align="start"
-	nativeButton
-	items={items}
-	disabled={!canEdit}
-	disabledTooltip="You need edit access to change this dashboard"
->
-	<Button variant="outlined" color="secondary" size="md">
-		Actions
-	</Button>
-</Dropdown>
-```
-
-The trigger gets `aria-disabled` and `data-disabled`, never the native `disabled`, so it stays
-hoverable and the reason stays reachable. A `Button` trigger paints itself disabled from that.
-
-Do not also set `disabled` on the trigger. A native disabled button takes no pointer events, so the
-tooltip would never open.
-
 ## Popup props
 
 Props written on the menu describe the popup, not the trigger. `aria-*` and `data-*` land on the
