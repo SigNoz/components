@@ -103,3 +103,41 @@ describe('Dropdown inside a modal', () => {
 		outside.remove();
 	});
 });
+
+function isOnTop(element: HTMLElement): boolean {
+	const { left, top, width, height } = element.getBoundingClientRect();
+
+	return element.contains(document.elementFromPoint(left + width / 2, top + height / 2));
+}
+
+// A modal from another library, such as antd's, has no panel to portal into. The menu goes to the
+// body and has to stack above the layer its trigger sits in, and each submenu above the menu.
+describe('Dropdown inside a layer from another library', () => {
+	it('stacks the menu and its submenu above the layer', async () => {
+		render(
+			<div style={{ position: 'fixed', inset: 0, zIndex: 1000 }}>
+				<Dropdown
+					nativeButton
+					items={[
+						{
+							type: 'submenu',
+							value: 'export',
+							label: 'Export',
+							items: [{ type: 'item', value: 'csv', label: 'As CSV' }],
+						},
+					]}
+				>
+					<button type="button">Actions</button>
+				</Dropdown>
+			</div>,
+		);
+		await openDropdown();
+		const submenuRow = screen.getByRole('menuitem', { name: 'Export' });
+
+		expect(isOnTop(submenuRow)).toBe(true);
+
+		await userEvent.click(submenuRow);
+
+		expect(isOnTop(await screen.findByRole('menuitem', { name: 'As CSV' }))).toBe(true);
+	});
+});
