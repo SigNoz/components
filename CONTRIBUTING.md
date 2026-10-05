@@ -33,7 +33,7 @@ Chromatic uploads) and the story tests import the built `dist`, which the `vite 
 | `pnpm lint` / `pnpm lint:fix` | Lint `apps` + `packages` with `oxlint` | Runs in CI. Config `.oxlintrc.json`. `typescript/consistent-type-imports` is an error, so write `import type` |
 | `pnpm format` / `pnpm format:check` | Format with `oxfmt` | `.oxfmtrc.json`: tabs, width 100, single quotes, trailing commas. **Skips styles, markdown and YAML** (`ignorePatterns`), your editor formats those |
 | `pnpm run type-check` | `tsgo --noEmit` over the whole repo | Runs in CI and in `lint-staged` |
-| `pnpm -F @signozhq/ui test:run` | Unit + guardrail tests (jsdom, vitest) | |
+| `pnpm -F @signozhq/ui test:run` | Component tests in Chromium, guardrail and type tests in Node (vitest) | |
 | `cd apps/docs && pnpm test-storybook` | Story render + interaction tests in real Chromium | This is what CI runs |
 | `pnpm -F @signozhq/ui tokens` | Regenerate the CSS token JSDoc tables in component `index.ts` files | Run after touching any `--{component}-*` variable |
 | `pnpm -F @signozhq/ui tokens:check` | Fail if the token tables are stale | Same check as `lint-staged` and CI |
