@@ -40,14 +40,6 @@ export const DROPDOWN_EMPTY_CONTENT = 'No results found :/';
 export const DROPDOWN_SIDE_OFFSET = 4;
 
 /**
- * The accessible name of the pinned search row, used when `searchInputProps.placeholder` gives no
- * other one. A field the user cannot see a label for still needs one.
- *
- * @access private
- */
-export const DROPDOWN_SEARCH_LABEL = 'Search';
-
-/**
  * The keys the search row lets through to the menu. Every other key stops at the field, so Base
  * UI's typeahead does not race the text the user is typing.
  *

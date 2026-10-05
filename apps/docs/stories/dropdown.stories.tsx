@@ -133,7 +133,7 @@ const meta: Meta<typeof Dropdown> = {
 		searchInputProps: {
 			control: false,
 			description:
-				'The pinned search row. Passing the object is what renders it, so `{}` is a search row with every default. Holds `placeholder`, `prefix`, `suffix`, `loading`, `filter` and `onChange`.',
+				'The pinned search row. Passing the object is what renders it. Holds `placeholder`, which is required and names the field, `prefix`, `suffix`, `loading`, `filter` and `onChange`.',
 			table: { category: 'Behavior', type: { summary: 'DropdownSearchInputProps' } },
 		},
 		onOpenChange: {

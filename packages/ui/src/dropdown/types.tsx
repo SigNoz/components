@@ -414,9 +414,12 @@ export type DropdownItemType =
  */
 export type DropdownSearchInputProps = {
 	/**
-	 * Placeholder text for the search field.
+	 * Placeholder text for the search field, and its accessible name.
+	 *
+	 * @note Required. The field has no visible label, so this is what tells the user what it
+	 * searches.
 	 */
-	placeholder?: string;
+	placeholder: string;
 	/**
 	 * Element rendered at the start of the field. Defaults to the search glyph.
 	 */
@@ -615,8 +618,7 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		noContent?: ReactNode;
 		/**
-		 * The pinned search row. Passing the object is what renders it, so `{}` is a search row
-		 * with every default.
+		 * The pinned search row. Passing the object is what renders it.
 		 */
 		searchInputProps?: DropdownSearchInputProps;
 		/**

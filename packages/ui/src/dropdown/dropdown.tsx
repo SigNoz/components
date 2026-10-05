@@ -341,6 +341,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * case-insensitive substring, against each row's label when it renders to text and against its
  * `searchMetadata`. An icon-only row is findable through `searchMetadata` alone.
  *
+ * `searchInputProps.placeholder` is required. It is the field's placeholder and its accessible name.
+ *
  * A group survives when any of its rows match and renders with only those. A submenu survives on
  * its own label or on anything under it, and keeps every one of its rows: once you are inside, the
  * query that got you there is behind you. A separator that would end up first, last, or next to
