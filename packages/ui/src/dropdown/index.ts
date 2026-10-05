@@ -19,11 +19,14 @@
  * | `--dropdown-border` | `-` |
  * | `--dropdown-border-color` | `var(--dropdown-border)` |
  * | `--dropdown-border-radius` | `var(--radius-2)` |
+ * | `--dropdown-border-style` | `solid` |
  * | `--dropdown-border-width` | `1px` |
  * | `--dropdown-box-shadow` | `var(--dropdown-shadow)` |
+ * | `--dropdown-box-sizing` | `border-box` |
  * | `--dropdown-display` | `flex` |
  * | `--dropdown-flex-direction` | `column` |
  * | `--dropdown-focus-outline-offset` | `-1px` |
+ * | `--dropdown-focus-outline-style` | `solid` |
  * | `--dropdown-focus-outline-width` | `1px` |
  * | `--dropdown-focus-visible-outline` | `none` |
  * | `--dropdown-group-display` | `flex` |
@@ -54,7 +57,9 @@
  * | `--dropdown-item-control-border` | `-` |
  * | `--dropdown-item-control-border-color` | `var(--dropdown-item-control-border)` |
  * | `--dropdown-item-control-border-hover` | `-` |
+ * | `--dropdown-item-control-border-style` | `solid` |
  * | `--dropdown-item-control-border-width` | `2px` |
+ * | `--dropdown-item-control-box-sizing` | `border-box` |
  * | `--dropdown-item-control-checked-background` | `-` |
  * | `--dropdown-item-control-checked-background-color` | `var(--dropdown-item-control-checked-background)` |
  * | `--dropdown-item-control-checked-color` | `var(--dropdown-item-control-checked-foreground)` |
@@ -123,6 +128,8 @@
  * | `--dropdown-padding-block` | `var(--spacing-2)` |
  * | `--dropdown-padding-inline` | `0` |
  * | `--dropdown-positioner-focus-visible-outline` | `none` |
+ * | `--dropdown-positioner-inline-size` | `max-content` |
+ * | `--dropdown-positioner-pointer-events` | `auto` |
  * | `--dropdown-scroll-fade-size` | `var(--spacing-10)` |
  * | `--dropdown-search-affix-align-items` | `center` |
  * | `--dropdown-search-affix-display` | `inline-grid` |
@@ -131,6 +138,7 @@
  * | `--dropdown-search-align-items` | `center` |
  * | `--dropdown-search-border` | `-` |
  * | `--dropdown-search-border-color` | `var(--dropdown-search-border)` |
+ * | `--dropdown-search-border-style` | `solid` |
  * | `--dropdown-search-border-width` | `1px` |
  * | `--dropdown-search-display` | `flex` |
  * | `--dropdown-search-flex-shrink` | `0` |
