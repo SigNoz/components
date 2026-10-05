@@ -165,7 +165,9 @@
   }
 
   // Hover and focus inside the stack spread it: each toast at its own height, the gap between.
-  &[data-expanded] {
+  // A `PersistToastsProvider` holds it spread.
+  &[data-expanded],
+  .toaster--spread > & {
     block-size: var(--toast-height);
     transform: translateX(calc(var(--toast-swipe-movement-x, 0px) + var(--toast-internal-float-x)))
       translateY(
@@ -249,7 +251,8 @@
     opacity: var(--toast-content-behind-opacity, 0);
   }
 
-  .toast[data-expanded] &[data-behind] {
+  .toast[data-expanded] &[data-behind],
+  .toaster--spread &[data-behind] {
     opacity: var(--toast-content-behind-expanded-opacity, 1);
   }
 
@@ -341,7 +344,8 @@
     opacity: var(--toast-action-behind-opacity, 0);
   }
 
-  .toast[data-expanded] .toast__content[data-behind] ~ & {
+  .toast[data-expanded] .toast__content[data-behind] ~ &,
+  .toaster--spread .toast__content[data-behind] ~ & {
     opacity: var(--toast-action-behind-expanded-opacity, 1);
   }
 

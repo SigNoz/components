@@ -5,6 +5,7 @@ import { partTestId } from '../lib/utils.js';
 import { DEFAULT_LIMIT, DEFAULT_TIMEOUT, TOAST_POSITIONS, ToastPosition } from './constants.js';
 import { ToastList } from './subcomponents/toast-list.js';
 import { ToastViewport } from './subcomponents/toast-viewport.js';
+import { persistedToastManagers, usePersistToasts } from './persist-toasts.js';
 import { forgetVisibleToasts, setDefaultPosition, toastManagers } from './toast.js';
 import type { ToasterProps } from './types.js';
 
@@ -41,6 +42,12 @@ import type { ToasterProps } from './types.js';
  * `timeout` is how long `success`, `info` and `warning` stay on screen. `danger`, `loading` and a
  * toast with an `action` stay until they are dismissed, whatever it is. A `timeout` on the call
  * replaces it for that toast.
+ *
+ * ### In a story or a test
+ *
+ * Under a `PersistToastsProvider`, from `@signozhq/ui/testing`, no timer closes a toast, the
+ * stack shows every toast whatever the `limit`, and it stays spread. `timeout` and `limit` are
+ * ignored there, and so is a `timeout` on the call.
  *
  * ### Where it is portalled
  *
@@ -108,6 +115,8 @@ export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster
 	ref,
 ) {
 	const popupContainer = usePopupContainer();
+	const persist = usePersistToasts();
+	const managers = persist ? persistedToastManagers : toastManagers;
 	// A raw `data-testid` is suffixed per position like `testId`, so no two viewports share one.
 	const viewportTestId = testId ?? (typeof dataTestId === 'string' ? dataTestId : undefined);
 
@@ -125,9 +134,9 @@ export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster
 				return (
 					<ToastPrimitive.Provider
 						key={stack}
-						toastManager={toastManagers[stack]}
-						limit={limit}
-						timeout={timeout}
+						toastManager={managers[stack]}
+						limit={persist ? Number.POSITIVE_INFINITY : limit}
+						timeout={persist ? 0 : timeout}
 					>
 						<ToastPrimitive.Portal container={container === undefined ? popupContainer : container}>
 							<ToastViewport

@@ -39,16 +39,6 @@
 }
 
 /*
- * The stack shows three toasts and holds the rest behind, which is no use for a frame that is
- * there to show every variant. The ones past the limit are made visible here, and nothing else is
- * touched: every toast in the frame is the component as it ships.
- */
-.spread :global([data-slot='toast'][data-limited]) {
-	opacity: 1;
-	pointer-events: auto;
-}
-
-/*
  * Every `Toaster` draws a stack per position, and the showcase raises its toasts in two of them.
  * Each frame shows only the stack of its own position.
  */

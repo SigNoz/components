@@ -2,6 +2,7 @@ import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import { forwardRef, type ReactNode } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
 import { cn } from '../../lib/utils.js';
+import { usePersistToasts } from '../persist-toasts.js';
 import styles from '../toast.module.scss';
 import type { ToasterProps, ToastPositionType } from '../types.js';
 
@@ -27,6 +28,7 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 	{ className, style, position, isDefault, offset, testId, ...props },
 	ref,
 ) {
+	const spread = usePersistToasts();
 	const { toasts } = ToastPrimitive.useToastManager();
 	// One landmark per position would list six for one `Toaster`. The other stacks become one only
 	// while they hold a toast. Each stays a live region either way, so its first toast is announced.
@@ -36,7 +38,7 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 		<ToastPrimitive.Viewport
 			ref={ref}
 			aria-label="Notifications"
-			className={cn(styles['toaster'], className)}
+			className={cn(styles['toaster'], spread && styles['toaster--spread'], className)}
 			style={{
 				...style,
 				...(offset != null && { '--toast-internal-viewport-offset': toCssLength(offset) }),

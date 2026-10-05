@@ -2,6 +2,7 @@ import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import type { ReactNode } from 'react';
 import { partTestId } from '../../lib/utils.js';
 import { SWIPE_DIRECTION } from '../constants.js';
+import { usePersistToasts } from '../persist-toasts.js';
 import styles from '../toast.module.scss';
 import type { ToastData, ToastPositionType } from '../types.js';
 import { ToastIcon } from './toast-icon.js';
@@ -22,6 +23,7 @@ export type ToastItemProps = {
  */
 export function ToastItem({ toast, position, testId }: ToastItemProps): ReactNode {
 	const action = toast.data?.action;
+	const spread = usePersistToasts();
 
 	return (
 		<ToastPrimitive.Root
@@ -55,6 +57,10 @@ export function ToastItem({ toast, position, testId }: ToastItemProps): ReactNod
 					className={styles['toast__action']}
 					data-slot="toast-action"
 					data-testid={partTestId(testId, 'action')}
+					// Base UI hides the button from assistive technology while the stack is collapsed. A
+					// stack held spread shows it, so it exposes it too. Passed only then: an `undefined`
+					// here would replace the value Base UI computes.
+					{...(spread && { 'aria-hidden': false })}
 					onClick={(event) => {
 						action.onClick?.(event);
 						// Base UI closes the toast after this handler. `preventDefault` is the DOM idiom for a

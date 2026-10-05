@@ -121,6 +121,19 @@ render(
 );
 ```
 
+`PersistToastsProvider` keeps every toast of a `Toaster` under it on screen: no timer closes one,
+the stack shows them all whatever the `limit`, and it stays spread. A story of a page shows the
+toasts the page raises without mocking `toast`:
+
+```tsx
+import { PersistToastsProvider } from '@signozhq/ui/testing';
+
+<PersistToastsProvider>
+	<Page />
+	<Toaster />
+</PersistToastsProvider>;
+```
+
 ## Contributing
 
 Start with [CONTRIBUTING.md](./CONTRIBUTING.md): setup, commands, and how to add a component.
