@@ -589,7 +589,8 @@ export type DropdownProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * The element the popup is portalled into.
 		 *
 		 * @note Inside a `Dialog` or `Drawer` the default is an element in its panel, where the focus
-		 * trap of the modal lets the keyboard reach the rows.
+		 * trap of the modal lets the keyboard reach the rows. Anywhere else the popup goes to the body
+		 * and stacks just above the layer its trigger sits in, such as an antd `Modal` or `Drawer`.
 		 *
 		 * @default document.body
 		 */

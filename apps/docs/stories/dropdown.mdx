@@ -109,7 +109,9 @@ Two common reasons to pass them:
 ```
 
 `contentMaxWidth` (default `15.75rem`) and `contentMaxHeight` (default `20rem`) size the popup.
-`container` portals it somewhere other than `document.body`, such as a dialog.
+`container` portals it somewhere other than `document.body`. Inside a `Dialog` or `Drawer` it goes
+into the panel on its own. Inside a modal or drawer from another library, such as antd's, it stays
+in the body and stacks above it.
 
 ## Open state
 
