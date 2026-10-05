@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Select type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "disabled and readOnly > rejects a disabled reason with no disabled > \`disabledTooltip\` only renders while \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ placeholder: string; items: SelectItemType[]; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledSelect'.",
+  "disabled and readOnly > rejects a disabled select with no reason > a disabled select has to tell the user why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ placeholder: string; items: SelectItemType[]; disabled: true; }' but required in type 'ADisabledSelectMustSayWhy'.",
+  "disabled and readOnly > rejects a readOnly reason with no readOnly > \`readOnlyTooltip\` only renders while \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ placeholder: string; items: SelectItemType[]; readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlySelect'.",
+  "disabled and readOnly > rejects a readOnly select with no reason > a read-only select has to tell the user why": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a read-only control has to tell the user why it cannot be changed'' is missing in type '{ placeholder: string; items: SelectItemType[]; readOnly: true; }' but required in type 'AReadOnlySelectMustSayWhy'.",
+  "root props > rejects a raw data-testid > the prop is called \`testId\`": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which lands on the trigger and names every row'' is missing in type '{ placeholder: string; items: SelectItemType[]; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "root props > rejects a select with no placeholder > the trigger has to show something while nothing is selected": "TS2322: Type '{ items: SelectItemType[]; }' is not assignable to type 'IntrinsicAttributes & (SelectProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Property 'placeholder' is missing in type '{ items: SelectItemType[]; }' but required in type '{ [key: \`data-\${string}\`]: unknown; items: SelectItemType[]; placeholder: string; loading?: boolean | undefined; loadingContent?: ReactNode; noContent?: ReactNode; ... 9 more ...; testId?: string | undefined; }'.",
+  "root props > rejects a select with nothing in it > \`items\` is what the select lists, it cannot be left out": "TS2322: Type '{ placeholder: string; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (SelectProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Property 'items' is missing in type '{ placeholder: string; "aria-label": string; }' but required in type '{ [key: \`data-\${string}\`]: unknown; items: SelectItemType[]; placeholder: string; loading?: boolean | undefined; loadingContent?: ReactNode; noContent?: ReactNode; ... 9 more ...; testId?: string | undefined; }'.",
+  "root props > rejects className and style, the size comes from width and maxWidth > \`className\` is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects className and style, the size comes from width and maxWidth > \`style\` is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "root props > rejects the props SelectSimple had > \`groups\` is now a \`group\` row in \`items\`": "TS2322: Type 'never[]' is not assignable to type 'never'.",
+  "root props > rejects the props SelectSimple had > \`loadingPlaceholder\` is now \`loadingContent\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props SelectSimple had > \`withPortal\` is now \`container\`": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "root props > rejects the props SelectSimple had > a story or a test holds it open with \`ForceOpenProvider\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props SelectSimple had > the select owns its open state": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rows > rejects a disabled row with no reason > a disabled row has to tell the user why": "TS2322: Type '{ type: "item"; value: string; label: string; disabled: true; }' is not assignable to type 'SelectOptionItemType'.
+    Type '{ type: "item"; value: string; label: string; disabled: true; }' is not assignable to type '{ disabled: boolean; disabledTooltip: ReactNode; } & { type: "item"; label: ReactNode; value: string; displayValue?: string | undefined; prefix?: ReactElement<any, string | JSXElementConstructor<...>> | undefined; suffix?: ReactElement<...> | undefined; testId?: string | undefined; }'.
+      Property 'disabledTooltip' is missing in type '{ type: "item"; value: string; label: string; disabled: true; }' but required in type '{ disabled: boolean; disabledTooltip: ReactNode; }'.",
+  "rows > rejects a group in a group > a group is a heading, not a nesting level": "TS2322: Type '"group"' is not assignable to type '"item" | "separator"'.",
+  "rows > rejects a hint row, the select has no search > a hint writes into a search row, which a select does not have": "TS2322: Type '"hint"' is not assignable to type '"item" | "group" | "separator"'.",
+  "rows > rejects a row with no type > every row carries \`type\`": "TS2322: Type '{ value: string; label: string; }' is not assignable to type 'SelectItemType'.
+    Type '{ value: string; label: string; }' is missing the following properties from type 'SelectGroupItemType': type, items",
+  "value > rejects a string with multiple > a multiple select holds an array": "TS2322: Type '{ placeholder: string; multiple: true; items: SelectItemType[]; value: string; }' is not assignable to type 'IntrinsicAttributes & (SelectProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Types of property 'value' are incompatible.
+      Type 'string' is not assignable to type 'string[]'.",
+  "value > rejects an array without multiple > a single select holds one value": "TS2322: Type '{ placeholder: string; items: SelectItemType[]; value: string[]; }' is not assignable to type 'IntrinsicAttributes & (SelectProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Property 'multiple' is missing in type '{ placeholder: string; items: SelectItemType[]; value: string[]; }' but required in type 'SelectMultipleProps'.",
+  "value > rejects an onChange that takes the other shape > a single select reports a string": "TS2322: Type '{ placeholder: string; items: SelectItemType[]; onChange: (value: string[]) => string[]; }' is not assignable to type 'IntrinsicAttributes & (SelectProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Property 'multiple' is missing in type '{ placeholder: string; items: SelectItemType[]; onChange: (value: string[]) => string[]; }' but required in type 'SelectMultipleProps'.",
+  "value > rejects maxDisplayedPills without multiple > only a multiple select shows chips": "TS2322: Type '{ placeholder: string; items: SelectItemType[]; maxDisplayedPills: number; }' is not assignable to type 'IntrinsicAttributes & (SelectProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Property 'multiple' is missing in type '{ placeholder: string; items: SelectItemType[]; maxDisplayedPills: number; }' but required in type 'SelectMultipleProps'.",
+}
+`;

@@ -1,11 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-
-import { Select } from './components/select.js';
-import { SelectContent } from './components/select-content.js';
-import { SelectItem } from './components/select-item.js';
-import { SelectTrigger } from './components/select-trigger.js';
-import { renderMultiSelect } from './select.test-utils.js';
+import { Select } from '../index.js';
+import { FRAMEWORKS } from './select.test-utils.js';
 
 /**
  * The type tokens live in `@signozhq/design-tokens` and are not loaded here, so they are declared
@@ -16,7 +12,7 @@ let tokens: HTMLStyleElement;
 beforeEach(() => {
 	tokens = document.createElement('style');
 	tokens.textContent = `:root {
-		--periscope-font-size-base: 13px;
+		--periscope-font-size-small: 11px;
 		--line-height-18: 18px;
 	}`;
 	document.head.append(tokens);
@@ -26,11 +22,19 @@ afterEach(() => {
 	tokens.remove();
 });
 
-describe('Select multi pills type', () => {
-	it('keeps the descenders inside the text clip', () => {
-		renderMultiSelect({ defaultValue: ['green'] });
+describe('Select chips type', () => {
+	it('keeps the descenders inside the label clip', () => {
+		render(
+			<Select
+				multiple
+				placeholder="Select frameworks..."
+				aria-label="Frameworks"
+				items={[{ type: 'item', value: 'go', label: 'Gyp' }]}
+				defaultValue={['go']}
+			/>,
+		);
 
-		const text = screen.getByText('green');
+		const text = screen.getByText('Gyp');
 		const range = document.createRange();
 		range.selectNodeContents(text);
 		const glyphs = range.getBoundingClientRect();
@@ -42,20 +46,20 @@ describe('Select multi pills type', () => {
 		expect(glyphs.bottom).toBeLessThanOrEqual(box.bottom);
 	});
 
-	it('sets the overflow count at the size of the pills beside it', () => {
+	it('sets the overflow count at the size of the chips beside it', () => {
 		render(
-			<Select multiple defaultValue={['red', 'green', 'blue']}>
-				<SelectTrigger placeholder="Pick options" maxDisplayedPills={1} />
-				<SelectContent withPortal={false}>
-					<SelectItem value="red">Red</SelectItem>
-					<SelectItem value="green">Green</SelectItem>
-					<SelectItem value="blue">Blue</SelectItem>
-				</SelectContent>
-			</Select>,
+			<Select
+				multiple
+				placeholder="Select frameworks..."
+				aria-label="Frameworks"
+				items={FRAMEWORKS}
+				defaultValue={['react', 'vue', 'angular']}
+				maxDisplayedPills={1}
+			/>,
 		);
 
 		expect(getComputedStyle(screen.getByText('+2')).fontSize).toBe(
-			getComputedStyle(screen.getByText('red')).fontSize,
+			getComputedStyle(screen.getByText('React')).fontSize,
 		);
 	});
 });
