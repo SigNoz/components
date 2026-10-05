@@ -82,8 +82,11 @@ describe('Dropdown inside a modal', () => {
 
 		const menu = await openDropdown();
 
-		expect(menu.getBoundingClientRect().width).toBe(
+		// The drawer is still sliding in, and a rect measured through a fractional translate
+		// comes back a float32 step short of the layout width.
+		expect(menu.getBoundingClientRect().width).toBeCloseTo(
 			Number.parseFloat(getComputedStyle(menu).maxInlineSize),
+			2,
 		);
 		wrapping.remove();
 	});
