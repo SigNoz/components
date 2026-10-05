@@ -277,8 +277,8 @@ speed. Same setup as `signoz/signoz`.
 **`oxfmt` skips styles, markdown, YAML** (`ignorePatterns` in `.oxfmtrc.json`). Your editor
 formats those; CI won't reformat a style-only diff.
 
-Other tools: `tsgo` (`@typescript/native-preview`) for type checking, `vitest` in jsdom for
-unit tests, `vitest` in Chromium for interaction tests, `@storybook/react-vite` for docs,
+Other tools: `tsgo` (`@typescript/native-preview`) for type checking, `vitest` in Chromium for
+component tests and in Node for guardrail and type tests, `@storybook/react-vite` for docs,
 Chromatic for snapshots ([VISUAL_TESTING.md](./VISUAL_TESTING.md)), Release Please for
 publishing ([RELEASE.md](./RELEASE.md)). See
 [CONTRIBUTING.md](./CONTRIBUTING.md#useful-commands) for commands.
