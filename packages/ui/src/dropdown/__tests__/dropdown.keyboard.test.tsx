@@ -99,7 +99,7 @@ describe('Dropdown keyboard', () => {
 	});
 
 	it('keeps typed characters in the search field instead of running typeahead', async () => {
-		renderDropdown({ searchInputProps: {} });
+		renderDropdown({ searchInputProps: { placeholder: 'Search' } });
 		await openDropdown();
 
 		const field = screen.getByTestId('menu-search');
@@ -118,7 +118,7 @@ describe('Dropdown keyboard', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{}}
+				searchInputProps={{ placeholder: 'Search' }}
 				items={[{ type: 'item', value: 'rename', label: 'Rename', onClick }]}
 			>
 				<button type="button">Actions</button>
@@ -134,7 +134,7 @@ describe('Dropdown keyboard', () => {
 	});
 
 	it('moves to the first row on ArrowDown and back to the field on ArrowUp', async () => {
-		renderDropdown({ searchInputProps: {} });
+		renderDropdown({ searchInputProps: { placeholder: 'Search' } });
 		await openDropdown();
 
 		const field = screen.getByTestId('menu-search');
@@ -153,7 +153,7 @@ describe('Dropdown keyboard', () => {
 	});
 
 	it('closes from the search field on Escape', async () => {
-		renderDropdown({ searchInputProps: {} });
+		renderDropdown({ searchInputProps: { placeholder: 'Search' } });
 		await openDropdown();
 
 		await userEvent.click(screen.getByTestId('menu-search'));

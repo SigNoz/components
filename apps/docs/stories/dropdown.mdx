@@ -227,7 +227,8 @@ a group is refused.
 
 ## Search
 
-Pass `searchInputProps` to render a pinned search row. The menu then filters `items` itself:
+Pass `searchInputProps` to render a pinned search row. Its `placeholder` is required: the field has
+no visible label, so the placeholder is its accessible name. The menu then filters `items` itself:
 
 - Case-insensitive substring match.
 - Against each row's label, when the label renders to text.
@@ -267,7 +268,12 @@ still reaches `onChange`, and `loading` swaps the search glyph for a spinner.
 	side="bottom"
 	align="start"
 	items={results}
-	searchInputProps={{ filter: false, loading: isFetching, onChange: setQuery }}
+	searchInputProps={{
+		placeholder: 'Find a service',
+		filter: false,
+		loading: isFetching,
+		onChange: setQuery,
+	}}
 >
 	<Button variant="outlined" color="secondary" size="md">
 		Add service

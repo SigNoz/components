@@ -156,6 +156,15 @@ describe('root props', () => {
 		);
 	});
 
+	test('rejects a search row with no placeholder', () => {
+		assertType(
+			// @ts-expect-error - the search row has to tell the user what it searches
+			<Dropdown nativeButton side="bottom" align="start" items={ONE} searchInputProps={{}}>
+				{btn}
+			</Dropdown>,
+		);
+	});
+
 	test('accepts aria-*, data-*, the size props and the search row', () => {
 		assertType(
 			<Dropdown
@@ -167,7 +176,7 @@ describe('root props', () => {
 				data-analytics="menu"
 				contentMaxWidth={320}
 				contentMaxHeight="30rem"
-				searchInputProps={{ filter: false }}
+				searchInputProps={{ filter: false, placeholder: 'Find' }}
 				onOpenChange={() => {}}
 				testId="menu"
 			>
