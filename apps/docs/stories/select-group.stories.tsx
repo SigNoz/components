@@ -9,7 +9,7 @@ import {
 	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import styles from './select-group.stories.module.css';
 
 const meta: Meta<typeof SelectGroup> = {
@@ -56,9 +56,9 @@ export const Default: Story = {
 					<SelectTrigger placeholder="Select an option..." />
 					<SelectContent>
 						{allItems.map((group, idx) => (
-							<>
-								{idx > 0 && <SelectSeparator key={`sep-${group.heading}`} />}
-								<SelectGroup key={group.heading} {...args}>
+							<Fragment key={group.heading}>
+								{idx > 0 && <SelectSeparator />}
+								<SelectGroup {...args}>
 									<SelectLabel>{group.heading}</SelectLabel>
 									{group.items.map((item) => (
 										<SelectItem key={item.value} value={item.value}>
@@ -66,7 +66,7 @@ export const Default: Story = {
 										</SelectItem>
 									))}
 								</SelectGroup>
-							</>
+							</Fragment>
 						))}
 					</SelectContent>
 				</Select>
@@ -127,9 +127,9 @@ export const MultipleGroups: Story = {
 					<SelectTrigger placeholder="Select an option..." />
 					<SelectContent>
 						{groups.map((group, idx) => (
-							<>
-								{idx > 0 && <SelectSeparator key={`sep-${group.heading}`} />}
-								<SelectGroup key={group.heading}>
+							<Fragment key={group.heading}>
+								{idx > 0 && <SelectSeparator />}
+								<SelectGroup>
 									<SelectLabel>{group.heading}</SelectLabel>
 									{group.items.map((item) => (
 										<SelectItem key={item.value} value={item.value}>
@@ -137,7 +137,7 @@ export const MultipleGroups: Story = {
 										</SelectItem>
 									))}
 								</SelectGroup>
-							</>
+							</Fragment>
 						))}
 					</SelectContent>
 				</Select>

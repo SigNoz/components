@@ -283,8 +283,9 @@ Chromatic for snapshots ([VISUAL_TESTING.md](./VISUAL_TESTING.md)), Release Plea
 publishing ([RELEASE.md](./RELEASE.md)). See
 [CONTRIBUTING.md](./CONTRIBUTING.md#useful-commands) for commands.
 
-**Storybook gotcha:** `react-docgen-typescript` only parses the docs app's sources. Stories
-import from `dist`, so props tables come from `argTypes`, not component JSDoc. See
+**Storybook gotcha:** `react-docgen-typescript` only parses the docs app's sources. `storybook
+build` imports from `dist` and `storybook dev` from `packages/ui/src`, which docgen excludes, so
+props tables come from `argTypes`, not component JSDoc. See
 [COMPONENT_GUIDELINES.md](./COMPONENT_GUIDELINES.md#jsdoc-on-every-public-prop).
 
 ## 5. Guardrails
