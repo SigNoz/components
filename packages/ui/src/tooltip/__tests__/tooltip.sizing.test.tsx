@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 
 /**
@@ -36,9 +37,10 @@ describe('Tooltip sizing', () => {
 		}`;
 
 		render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(popupHeight()).toBe(30);

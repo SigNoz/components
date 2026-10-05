@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
 import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
@@ -69,9 +70,10 @@ describe('Tooltip trigger rendering', () => {
 describe('Tooltip content rendering', () => {
 	it('marks the trigger, positioner and content with their slot', () => {
 		render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('button')).toHaveAttribute('data-slot', 'tooltip-trigger');
@@ -81,9 +83,10 @@ describe('Tooltip content rendering', () => {
 
 	it('exposes testId as data-testid on the content, not the trigger', () => {
 		render(
-			<Tooltip open title="Helpful information" testId="tooltip">
+			<Tooltip title="Helpful information" testId="tooltip">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).toHaveAttribute('data-testid', 'tooltip');
@@ -92,9 +95,10 @@ describe('Tooltip content rendering', () => {
 
 	it('leaves data-testid off the content when no testId is given', () => {
 		render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).not.toHaveAttribute('data-testid');
@@ -102,9 +106,10 @@ describe('Tooltip content rendering', () => {
 
 	it('forwards data-* to the content, not to the trigger', () => {
 		render(
-			<Tooltip open title="Helpful information" data-state-of="the world">
+			<Tooltip title="Helpful information" data-state-of="the world">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).toHaveAttribute('data-state-of', 'the world');
@@ -113,9 +118,10 @@ describe('Tooltip content rendering', () => {
 
 	it('keeps its own slot when the call site sends a data-slot', () => {
 		render(
-			<Tooltip open title="Helpful information" data-slot="mine">
+			<Tooltip title="Helpful information" data-slot="mine">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).toHaveAttribute('data-slot', 'tooltip-content');
@@ -123,9 +129,10 @@ describe('Tooltip content rendering', () => {
 
 	it('renders a rich title, not only text', () => {
 		render(
-			<Tooltip open title={<strong data-testid="rich">Ask an admin</strong>}>
+			<Tooltip title={<strong data-testid="rich">Ask an admin</strong>}>
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).toContainElement(screen.getByTestId('rich'));
@@ -133,9 +140,10 @@ describe('Tooltip content rendering', () => {
 
 	it('renders a lone title bare, without the stack wrapper', () => {
 		render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(document.querySelector('[data-slot="tooltip-stack"]')).toBeNull();

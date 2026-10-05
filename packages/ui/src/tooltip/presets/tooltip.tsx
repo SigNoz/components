@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useForceOpen } from '../../lib/force-open.js';
 import type { RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { useStackedTooltipProps } from '../tooltip-stacked-props.js';
@@ -60,7 +61,7 @@ import type { TooltipProps } from '../types.js';
  * |---|---|
  * | `title` | into the popup of the outer tooltip |
  * | `id`, `testId`, `data-*` | onto the trigger element, not the popup |
- * | `side`, `align`, `sideOffset`, `alignOffset`, `container`, `open` | nowhere, the outer tooltip owns the popup |
+ * | `side`, `align`, `sideOffset`, `alignOffset`, `container` | nowhere, the outer tooltip owns the popup |
  *
  * ### Do not nest two by hand
  *
@@ -106,23 +107,17 @@ import type { TooltipProps } from '../types.js';
  * ```
  */
 export const Tooltip = React.forwardRef<HTMLButtonElement, TooltipProps>(function Tooltip(
-	{
-		title,
-		children,
-		open,
-		className: _className,
-		style: _style,
-		...props
-	}: TooltipProps & RejectedProps,
+	{ title, children, className: _className, style: _style, ...props }: TooltipProps & RejectedProps,
 	ref,
 ) {
 	const { triggerProps, contentProps } = useStackedTooltipProps(props);
+	const forcedOpen = useForceOpen();
 
 	return (
 		<TooltipAnchor
 			ref={ref}
 			content={title}
-			open={open}
+			open={forcedOpen || undefined}
 			contentProps={contentProps}
 			{...triggerProps}
 		>

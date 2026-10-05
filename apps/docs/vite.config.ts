@@ -14,6 +14,11 @@ const uiSource = {
 	find: /^@signozhq\/ui$/,
 	replacement: path.resolve(dirname, '../../packages/ui/src/index.ts'),
 };
+// The same source as `uiSource`, so the provider and the components share one context.
+const uiTestingSource = {
+	find: /^@signozhq\/ui\/testing$/,
+	replacement: path.resolve(dirname, '../../packages/ui/src/testing/index.ts'),
+};
 
 export default defineConfig(({ mode }) => ({
 	plugins: [
@@ -25,5 +30,5 @@ export default defineConfig(({ mode }) => ({
 			exclude: [/\/node_modules\//, /\/\.storybook\//],
 		}),
 	],
-	resolve: { alias: mode === 'development' ? [uiSource] : [] },
+	resolve: { alias: mode === 'development' ? [uiSource, uiTestingSource] : [] },
 }));

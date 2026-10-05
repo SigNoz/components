@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 
 describe('Tooltip empty title', () => {
@@ -27,9 +28,10 @@ describe('Tooltip empty title', () => {
 
 	it('renders no tooltip for an empty controlled title even while open', () => {
 		render(
-			<Tooltip open title="">
+			<Tooltip title="">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
@@ -49,9 +51,10 @@ describe('Tooltip empty title', () => {
 describe('Tooltip non-empty title', () => {
 	it('treats 0 as content', () => {
 		render(
-			<Tooltip open title={0}>
+			<Tooltip title={0}>
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).toHaveTextContent('0');
@@ -59,14 +62,15 @@ describe('Tooltip non-empty title', () => {
 
 	it('updates the content when the title changes while open', () => {
 		const { rerender } = render(
-			<Tooltip open title="Before">
+			<Tooltip title="Before">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 		expect(screen.getByRole('tooltip')).toHaveTextContent('Before');
 
 		rerender(
-			<Tooltip open title="After">
+			<Tooltip title="After">
 				<button type="button">Hover</button>
 			</Tooltip>,
 		);

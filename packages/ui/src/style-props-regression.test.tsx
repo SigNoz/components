@@ -11,6 +11,7 @@ import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
 import { Progress } from './progress/progress.js';
 import { RadioGroup } from './radio-group/radio-group.js';
 import { Switch } from './switch/switch.js';
+import { ForceOpenProvider } from './testing/index.js';
 import { ToggleGroup } from './toggle-group/index.js';
 import { Tooltip } from './tooltip/presets/tooltip.js';
 
@@ -198,9 +199,10 @@ describe('className and style that get past the types', () => {
 
 	it('do not reach the Tooltip popup', () => {
 		render(
-			<Tooltip open title="Helpful information" {...STRAY}>
+			<Tooltip title="Helpful information" {...STRAY}>
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expectNoStrayStyle(screen.getByRole('tooltip'));

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 
 function positioner(): Element | null {
@@ -9,9 +10,10 @@ function positioner(): Element | null {
 describe('Tooltip positioning', () => {
 	it('opens on top, centered, by default', () => {
 		render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positioner()).toHaveAttribute('data-side', 'top');
@@ -20,9 +22,10 @@ describe('Tooltip positioning', () => {
 
 	it.each(['top', 'right', 'bottom', 'left'] as const)('opens against side="%s"', (side) => {
 		render(
-			<Tooltip open title="Helpful information" side={side}>
+			<Tooltip title="Helpful information" side={side}>
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positioner()).toHaveAttribute('data-side', side);
@@ -30,9 +33,10 @@ describe('Tooltip positioning', () => {
 
 	it.each(['start', 'center', 'end'] as const)('aligns to align="%s"', (align) => {
 		render(
-			<Tooltip open title="Helpful information" align={align}>
+			<Tooltip title="Helpful information" align={align}>
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positioner()).toHaveAttribute('data-align', align);
@@ -40,9 +44,10 @@ describe('Tooltip positioning', () => {
 
 	it('marks the positioner and the content as open', () => {
 		render(
-			<Tooltip open title="Helpful information">
+			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(positioner()).toHaveAttribute('data-open');

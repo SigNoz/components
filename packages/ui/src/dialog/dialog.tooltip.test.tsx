@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../testing/index.js';
 import { Tooltip } from '../tooltip/presets/tooltip.js';
 import { Dialog, DialogContent, DialogTitle } from './index.js';
 
@@ -13,11 +14,12 @@ describe('Dialog with a tooltip inside', () => {
 			<Dialog open>
 				<DialogContent aria-describedby={undefined}>
 					<DialogTitle>Title</DialogTitle>
-					<Tooltip open title="Helpful information">
+					<Tooltip title="Helpful information">
 						<button type="button">Hover</button>
 					</Tooltip>
 				</DialogContent>
 			</Dialog>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('dialog')).toContainElement(screen.getByRole('tooltip'));
@@ -30,7 +32,7 @@ describe('Dialog with a tooltip inside', () => {
 			return (
 				<DialogContent ref={setPanel} aria-describedby={undefined}>
 					<DialogTitle>Title</DialogTitle>
-					<Tooltip open container={panel} title="Helpful information">
+					<Tooltip container={panel} title="Helpful information">
 						<button type="button">Hover</button>
 					</Tooltip>
 				</DialogContent>
@@ -41,6 +43,7 @@ describe('Dialog with a tooltip inside', () => {
 			<Dialog open>
 				<Content />
 			</Dialog>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('dialog')).toContainElement(screen.getByRole('tooltip'));

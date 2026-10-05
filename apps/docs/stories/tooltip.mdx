@@ -84,22 +84,27 @@ change.
 
 ## Holding one open in a story or a test
 
-`open` puts the popup on screen and keeps it there: hover and focus stop driving it, and the
-tooltip shows exactly what it is told to.
+`ForceOpenProvider`, from `@signozhq/ui/testing`, puts the popup of every tooltip under it on
+screen and keeps it there: hover and focus stop driving it.
 
 ```tsx
-<Tooltip title="Helpful information" open>
-	<Button>Trigger</Button>
-</Tooltip>
+import { ForceOpenProvider } from '@signozhq/ui/testing';
+
+<ForceOpenProvider>
+	<Tooltip title="Helpful information">
+		<Button>Trigger</Button>
+	</Tooltip>
+</ForceOpenProvider>;
 ```
 
 It is there for stories and tests, which is the case hover cannot cover: one pointer sits on one
 trigger, so a snapshot of several popups at once, or an assertion on the content of one, has no
-way to open them. Every popup in the showcase above is opened that way.
+way to open them. Every popup in the showcase above is opened that way. In a test, pass it to
+`render` as the `wrapper`.
 
 Leave it out in app code. A tooltip belongs to the pointer, and one held open from the outside
-covers the page it is anchored over without anyone having asked for it. There is no
-`onOpenChange` to pair `open` with either, so a tooltip driven this way cannot close itself.
+covers the page it is anchored over without anyone having asked for it. `Tooltip` takes no
+`open`, so a tooltip cannot be driven from the outside at all.
 
 ## Rich content
 

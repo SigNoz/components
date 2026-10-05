@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipContent } from '../subcomponents/tooltip-content.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
@@ -11,9 +12,10 @@ const TITLE = 'Helpful information';
 describe('Tooltip accessibility', () => {
 	it('exposes the content with role="tooltip"', () => {
 		render(
-			<Tooltip open title={TITLE}>
+			<Tooltip title={TITLE}>
 				<button type="button">Hover</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('tooltip')).toHaveTextContent(TITLE);
@@ -115,11 +117,12 @@ describe('Tooltip accessibility', () => {
 
 	it('keeps the accessible name of the trigger', () => {
 		render(
-			<Tooltip open title={TITLE}>
+			<Tooltip title={TITLE}>
 				<button type="button" aria-label="Delete">
 					<span aria-hidden="true">x</span>
 				</button>
 			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
 		);
 
 		expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
