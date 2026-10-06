@@ -5,26 +5,130 @@ import * as DividerStories from './divider.stories';
 
 # Divider
 
-The divider component is a separator for visually dividing content. It supports horizontal and vertical orientations, dashed lines, and optional text labels.
+A 1px line that separates two blocks of content (horizontal) or two items in a row (vertical). A
+horizontal divider can carry a short label in the middle. The divider is informational only: it has
+no hover, no focus and no events.
 
 ## How to use
 
 ```tsx
 import { Divider } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function AlertDetails() {
 	return (
-		<div>
-			<p>Content above</p>
+		<section className="alert-details">
+			<AlertSummary />
 			<Divider />
-			<p>Content below</p>
-		</div>
+			<AlertHistory />
+		</section>
 	);
 }
 ```
 
-This code above will render the following divider:
-
 <Primary />
 
-<Controls of={DividerStories.Playground} />
+## Orientation
+
+`orientation` is `horizontal` by default. A vertical divider sits between two pieces of inline text,
+or between two items in a row. The divider renders a `<span>`, so it can sit inside a paragraph:
+
+```tsx
+<Typography.Text>
+	Back
+	<Divider orientation="vertical" />
+	{metricName}
+</Typography.Text>
+```
+
+## Layout
+
+A horizontal divider fills the width of its parent and does not shrink in a flex column. `width`
+sets a shorter line, and `maxWidth` caps it at the width of the parent by default. It adds no space
+above or below it. The parent sets the space with `gap`, or `spacing` sets it on the divider:
+
+```tsx
+<Divider spacing={16} />
+```
+
+`spacing` takes one length for both sides, or two in a string for the space above, then below:
+`spacing="10px 16px"`. Numbers are written as `px`.
+
+A vertical divider is 0.9em tall, so it follows the font size of the text around it, and it is
+centred on the text line. In a flex row it is centred like any other item. `height` sets a fixed length, and `maxHeight` caps it at the height of
+the parent by default. It adds 8px on each side, so it needs no wrapper between two pieces of
+inline text. In a row that already has a `gap`, `spacing={0}` drops that space:
+
+```tsx
+<div className="toolbar">
+	<Button variant="ghost" color="secondary" size="sm">
+		Edit
+	</Button>
+	<Divider orientation="vertical" height={16} spacing={0} />
+	<Button variant="ghost" color="secondary" size="sm">
+		Copy
+	</Button>
+</div>
+```
+
+The types reject `width` and `maxWidth` on a vertical divider, and `height` and `maxHeight` on a
+horizontal one.
+
+## Dashed
+
+`dashed` draws the line dashed instead of solid, in both orientations. On a divider with a label,
+both lines are dashed.
+
+```tsx
+<Divider dashed />
+```
+
+## Label
+
+`children` puts a label in the middle of a horizontal divider. The label is centred and stays on
+one line. It is never truncated: the two lines beside it shrink first, so keep it short.
+
+The label sets no font or colour, so it inherits them from the parent. To style it, pass a
+`Typography` as the label:
+
+```tsx
+<Divider>
+	<Typography.Text color="muted" weight="medium">
+		Or get started with these sample alerts
+	</Typography.Text>
+</Divider>
+```
+
+Only a horizontal divider has a label. The types reject `children` on a vertical divider.
+
+`false`, `null`, an empty string and an empty fragment are no label. Any other element is a label,
+even a component that renders nothing, so pass `undefined` when there is no label.
+
+## Accessibility
+
+A divider without a label has `role="separator"` and `aria-orientation` set to its orientation.
+
+A divider with a label has no role. The children of a `separator` are presentational, so a screen
+reader would skip the label. Without the role, the label is read as plain text. An `aria-label` or
+`aria-labelledby` keeps the role, and a screen reader reads that name instead of the label.
+
+The divider is not focusable and is skipped by `Tab`. No key does anything on it.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the divider, and it names the label:
+
+| Element | `data-testid`           |
+| ------- | ----------------------- |
+| label   | `` `${testId}-label` `` |
+
+The label renders only on a horizontal divider with `children`. A divider with a label has no
+`role`, so find it by test ID rather than by `role="separator"`.
+
+The root mirrors `orientation` on `data-orientation`, carries `data-dashed` while `dashed` is set,
+and `data-has-label` while the label renders.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={DividerStories.Default} />
