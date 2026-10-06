@@ -16,7 +16,6 @@ export * from './divider/index.js';
 export * from './drawer/index.js';
 export * from './dropdown/index.js';
 export * from './input/index.js';
-export * from './input-number/index.js';
 export * from './kbd/index.js';
 export * from './pagination/index.js';
 export * from './pin-list/index.js';
