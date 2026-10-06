@@ -61,7 +61,7 @@ export const inputArgTypes: Meta<typeof Input>['argTypes'] = {
 		control: 'inline-radio',
 		options: Object.values(InputSize),
 		description:
-			'The height of the field: `base` is 32px, `large` is 40px. The text size does not change.',
+			'The height of the field: `base` is 32px, `large` is 40px. The text size does not change. Inside a `Field` the field supplies the default.',
 		table: {
 			category: 'Appearance',
 			type: { summary: 'InputSizeType' },
@@ -83,7 +83,7 @@ export const inputArgTypes: Meta<typeof Input>['argTypes'] = {
 		control: 'select',
 		options: [undefined, ...Object.values(InputStatus)],
 		description:
-			'The validation state: tints the border and the background and renders a matching icon at the trailing edge. `danger` also announces itself as `aria-invalid`.',
+			'The validation state: tints the border and the background and renders a matching icon at the trailing edge. `danger` also announces itself as `aria-invalid`. Inside a `Field` the field supplies the default.',
 		table: { category: 'Appearance', type: { summary: 'InputStatusType' } },
 	},
 	noFocusRing: {
@@ -139,7 +139,8 @@ export const inputArgTypes: Meta<typeof Input>['argTypes'] = {
 	},
 	required: {
 		control: 'boolean',
-		description: 'The owning form cannot be submitted while the field is empty.',
+		description:
+			'The owning form cannot be submitted while the field is empty. Inside a `Field`, its `required` supplies the default.',
 		table: {
 			category: 'Behavior',
 			type: { summary: 'boolean' },
@@ -164,12 +165,14 @@ export const inputArgTypes: Meta<typeof Input>['argTypes'] = {
 	},
 	'aria-label': {
 		control: 'text',
-		description: 'The name of the field when it has no visible label of its own.',
+		description:
+			'The name of the field when it is not inside a `Field` and has no visible label of its own.',
 		table: { category: 'Accessibility', type: { summary: 'string' } },
 	},
 	id: {
 		control: 'text',
-		description: 'Forwarded to the native input, so a label can point at it with htmlFor.',
+		description:
+			'Forwarded to the native input. Inside a `Field`, the generated id its label points at is the default.',
 		table: { category: 'Accessibility', type: { summary: 'string' } },
 	},
 	testId: {

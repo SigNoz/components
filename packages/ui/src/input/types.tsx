@@ -13,6 +13,9 @@ type InputAppearanceProps = {
 	/**
 	 * The height of the field: `base` is 32px, `large` is 40px. The text size does not change.
 	 *
+	 * @note Inside a `Field` the field's `size` is the default, so the frame and the label scale
+	 * together. This prop wins when both are set.
+	 *
 	 * @default 'base'
 	 */
 	size?: InputSizeType;
@@ -31,6 +34,9 @@ type InputAppearanceProps = {
 	 * trailing edge of the field.
 	 *
 	 * @note `danger` also announces itself as `aria-invalid`.
+	 *
+	 * @note Inside a `Field` the field's `status` is the default, so the message below and the
+	 * field tint together. This prop wins when both are set.
 	 *
 	 * @note `success` is confirmation of a completed check (name available, connection verified),
 	 * not a resting state for a valid field.

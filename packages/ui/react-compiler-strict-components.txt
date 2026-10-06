@@ -13,6 +13,7 @@ progress
 combobox
 select
 slider
+field
 input
 command
 divider

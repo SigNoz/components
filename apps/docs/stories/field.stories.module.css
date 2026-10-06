@@ -1,0 +1,12 @@
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+/* Fields stack 16px apart, the rhythm the Field page documents for base fields. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 33rem;
+}
