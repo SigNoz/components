@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Checkbox } from './checkbox/checkbox.js';
-import { Command, CommandInput } from './command/command.js';
 import { Switch } from './switch/switch.js';
 
 describe('wrapper prop targeting regressions', () => {
@@ -48,34 +47,5 @@ describe('wrapper prop targeting regressions', () => {
 		expect(document.querySelector('input#tos')).not.toBeNull();
 		expect(control).toHaveAttribute('data-testid', 'tos-checkbox');
 		expect(container).toHaveAttribute('id', 'tos-container');
-	});
-
-	it('keeps CommandInput control props on the input and exposes container props for the wrapper', () => {
-		render(
-			<Command>
-				<CommandInput
-					placeholder="Search"
-					id="command-input"
-					testId="command-input"
-					className="command-input-class"
-					style={{ fontSize: '14px' }}
-					containerId="command-input-container"
-					containerTestId="command-input-container"
-					containerClassName="command-input-container-class"
-					containerStyle={{ paddingInline: '6px' }}
-				/>
-			</Command>,
-		);
-
-		const input = screen.getByRole('combobox');
-		const container = screen.getByTestId('command-input-container');
-
-		expect(input).toHaveAttribute('id', 'command-input');
-		expect(input).toHaveAttribute('data-testid', 'command-input');
-		expect(input).toHaveClass('command-input-class');
-		expect(input).toHaveStyle({ fontSize: '14px' });
-		expect(container).toHaveAttribute('id', 'command-input-container');
-		expect(container).toHaveClass('command-input-container-class');
-		expect(container).toHaveStyle({ paddingInline: '6px' });
 	});
 });

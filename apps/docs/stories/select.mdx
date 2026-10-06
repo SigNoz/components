@@ -204,35 +204,27 @@ import { ForceOpenProvider } from '@signozhq/ui/testing';
 
 ## Asserting on it
 
-`testId` is `data-testid` on the trigger and names every part: `${testId}-item-${value}`,
-`${testId}-group-${value}`, `${testId}-chip-${value}` and `${testId}-chip-${value}-remove`, plus
-`${testId}-chip-overflow`, `-loading` and `-empty`. Otherwise use the `data-slot` attributes,
-`select-trigger`, `select-popup`, `select-item` and the rest, never the class names.
+`testId` becomes `data-testid` on the trigger, and it names everything under it:
+
+| Element            | `data-testid`                          |
+| ------------------ | -------------------------------------- |
+| row                | `` `${testId}-item-${value}` ``        |
+| row prefix         | `` `${rowTestId}-prefix` ``            |
+| row suffix         | `` `${rowTestId}-suffix` ``            |
+| group              | `` `${testId}-group-${value}` ``       |
+| chip               | `` `${testId}-chip-${value}` ``        |
+| chip remove button | `` `${testId}-chip-${value}-remove` `` |
+| chip overflow      | `` `${testId}-chip-overflow` ``        |
+| loading row        | `` `${testId}-loading` ``              |
+| empty row          | `` `${testId}-empty` ``                |
+
+`rowTestId` is the row's own `testId` or the generated one. A row or a group with its own `testId`
+keeps it. The popup parts render only while it is open.
 
 A disabled trigger is not `disabled` in the DOM: assert `aria-disabled="true"` instead of
 `toBeDisabled()`.
 
-## Migrating from `SelectSimple` and the primitives
-
-| Before                                                                  | `Select`                                                        |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `SelectSimple`                                                          | `Select`                                                        |
-| `{ value, label }`                                                      | `{ type: 'item', value, label }`                                |
-| `label: <><Icon /> Text</>`, `displayValue: 'Text'`                     | `label: 'Text', prefix: <Icon />`                               |
-| `groups={[{ heading, items }]}`                                         | `items={[{ type: 'group', value, label: heading, items }]}`     |
-| `placeholder`, optional                                                 | `placeholder`, required                                         |
-| `onChange={(next) => set(next as string)}`                              | `onChange={set}`, typed by `multiple`                           |
-| `displayValue={(items) => ...}`                                         | The same with `multiple`, `(item) => ...` without               |
-| `loadingPlaceholder`                                                    | `loadingContent`                                                |
-| `withPortal={false}`                                                    | Nothing inside a `Dialog` or `Drawer`, `container` elsewhere    |
-| `defaultOpen`                                                           | Nothing, the select owns its open state                         |
-| `className` for the width                                               | `width` and `maxWidth`                                          |
-| A trigger height override to match `Input`                              | Nothing, the trigger is already that height                     |
-| `disabled`                                                              | `disabled` and `disabledTooltip`                                |
-| `Select`, `SelectTrigger`, `SelectContent`, `SelectItem` and the others | `Select` with `items`                                           |
-| `SelectValue` with children                                             | The row's label, its `displayValue`, or the `displayValue` prop |
-| An icon-only trigger with the chevron hidden                            | `Dropdown` with a `Button` trigger and radio rows               |
-| `toBeDisabled()` on the trigger                                         | `toHaveAttribute('aria-disabled', 'true')`                      |
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props
 

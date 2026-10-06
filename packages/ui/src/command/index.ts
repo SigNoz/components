@@ -5,131 +5,154 @@
  *
  * | Token | Default |
  * |-------|---------|
- * | `--command-background` | `var(--l2-background)` |
- * | `--command-border-radius` | `calc(var(--radius) - 2px)` |
- * | `--command-dialog-content-overflow` | `hidden` |
- * | `--command-dialog-content-padding` | `0` |
- * | `--command-dialog-group-heading-color` | `var(--muted-foreground)` |
- * | `--command-dialog-group-heading-font-weight` | `500` |
- * | `--command-dialog-group-heading-padding-left` | `var(--spacing-4, 0.5rem)` |
- * | `--command-dialog-group-heading-padding-right` | `var(--spacing-4, 0.5rem)` |
- * | `--command-dialog-group-padding-left` | `var(--spacing-4, 0.5rem)` |
- * | `--command-dialog-group-padding-right` | `var(--spacing-4, 0.5rem)` |
- * | `--command-dialog-group-sibling-padding-top` | `0` |
- * | `--command-dialog-input-height` | `3rem` |
- * | `--command-dialog-input-wrapper-svg-height` | `var(--spacing-12, 1.25rem)` |
- * | `--command-dialog-input-wrapper-svg-width` | `var(--spacing-12, 1.25rem)` |
- * | `--command-dialog-item-icon-size` | `1.25rem` |
- * | `--command-dialog-item-padding` | `var(--spacing-6 0.75rem) var(--spacing-4, 0.5rem)` |
+ * | `--command-backdrop` | `-` |
+ * | `--command-backdrop-color` | `var(--command-backdrop)` |
+ * | `--command-backdrop-filter` | `blur(40px)` |
+ * | `--command-backdrop-inset` | `0` |
+ * | `--command-backdrop-position` | `fixed` |
+ * | `--command-background` | `-` |
+ * | `--command-background-color` | `var(--command-background)` |
+ * | `--command-border` | `-` |
+ * | `--command-border-color` | `var(--command-border)` |
+ * | `--command-border-radius` | `var(--radius-2)` |
+ * | `--command-border-style` | `solid` |
+ * | `--command-border-width` | `1px` |
+ * | `--command-box-shadow` | `var(--command-shadow)` |
+ * | `--command-box-sizing` | `border-box` |
  * | `--command-display` | `flex` |
- * | `--command-empty-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--command-empty-line-height` | `1.25rem` |
- * | `--command-empty-padding` | `var(--spacing-8, 1rem)` |
- * | `--command-empty-text-align` | `center` |
+ * | `--command-empty-color` | `var(--command-empty-label)` |
+ * | `--command-empty-label` | `-` |
  * | `--command-flex-direction` | `column` |
- * | `--command-foreground` | `var(--foreground)` |
- * | `--command-group-color` | `var(--text)` |
- * | `--command-group-heading-color` | `var(--muted-foreground)` |
- * | `--command-group-heading-font-size` | `var(--periscope-font-size-small, 11px)` |
- * | `--command-group-heading-font-weight` | `var(--font-weight-medium)` |
- * | `--command-group-heading-line-height` | `1rem` |
- * | `--command-group-heading-padding` | `var(--spacing-3, 0.375rem) var(--spacing-4, 0.5...` |
- * | `--command-group-overflow` | `hidden` |
- * | `--command-group-padding` | `var(--spacing-2, 0.25rem)` |
- * | `--command-height` | `100%` |
- * | `--command-input-background` | `transparent` |
- * | `--command-input-border-radius` | `calc(var(--radius) - 2px)` |
- * | `--command-input-border-width` | `0px` |
- * | `--command-input-disabled-cursor` | `not-allowed` |
- * | `--command-input-disabled-opacity` | `0.5` |
- * | `--command-input-display` | `flex` |
- * | `--command-input-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--command-input-height` | `2.5rem` |
- * | `--command-input-icon-flex-shrink` | `0` |
- * | `--command-input-icon-margin` | `0px var(--spacing-4, 0.5rem) 0px 0px` |
- * | `--command-input-icon-opacity` | `0.5` |
- * | `--command-input-icon-padding` | `0px` |
- * | `--command-input-icon-size` | `1rem` |
- * | `--command-input-line-height` | `1.25rem` |
- * | `--command-input-outline` | `none` |
- * | `--command-input-padding` | `0` |
- * | `--command-input-placeholder-color` | `var(--muted-foreground)` |
- * | `--command-input-width` | `100%` |
- * | `--command-input-wrapper-align-items` | `center` |
- * | `--command-input-wrapper-border-color` | `var(--border)` |
- * | `--command-input-wrapper-border-style` | `solid` |
- * | `--command-input-wrapper-border-width` | `0px 0px 1px 0px` |
- * | `--command-input-wrapper-display` | `flex` |
- * | `--command-input-wrapper-padding` | `0 var(--spacing-4, 0.5rem)` |
+ * | `--command-focus-visible-outline` | `none` |
+ * | `--command-group-display` | `flex` |
+ * | `--command-group-flex-direction` | `column` |
+ * | `--command-group-label` | `-` |
+ * | `--command-group-label-box-sizing` | `border-box` |
+ * | `--command-group-label-color` | `var(--command-group-label)` |
+ * | `--command-group-label-font-size` | `var(--periscope-font-size-small)` |
+ * | `--command-group-label-font-weight` | `var(--font-weight-bold)` |
+ * | `--command-group-label-letter-spacing` | `0.04em` |
+ * | `--command-group-label-line-height` | `var(--line-height-18)` |
+ * | `--command-group-label-padding-block` | `var(--spacing-3)` |
+ * | `--command-group-label-padding-inline` | `var(--spacing-6)` |
+ * | `--command-group-label-text-transform` | `uppercase` |
+ * | `--command-group-label-user-select` | `none` |
+ * | `--command-inline-size` | `100%` |
+ * | `--command-inset-block-start` | `110px` |
+ * | `--command-inset-inline` | `0` |
+ * | `--command-item-affix-align-items` | `center` |
+ * | `--command-item-affix-display` | `inline-grid` |
+ * | `--command-item-affix-flex-shrink` | `0` |
+ * | `--command-item-affix-justify-content` | `center` |
  * | `--command-item-align-items` | `center` |
- * | `--command-item-border-radius` | `calc(var(--radius) - 4px)` |
- * | `--command-item-cursor` | `default` |
- * | `--command-item-disabled-opacity` | `0.5` |
- * | `--command-item-disabled-pointer-events` | `none` |
+ * | `--command-item-background` | `-` |
+ * | `--command-item-background-color` | `var(--command-item-background)` |
+ * | `--command-item-background-hover` | `-` |
+ * | `--command-item-border` | `none` |
+ * | `--command-item-border-radius` | `var(--radius-1)` |
+ * | `--command-item-box-sizing` | `border-box` |
+ * | `--command-item-color` | `var(--command-item-label)` |
+ * | `--command-item-cursor` | `pointer` |
+ * | `--command-item-disabled-color` | `var(--command-item-label-disabled)` |
+ * | `--command-item-disabled-cursor` | `not-allowed` |
  * | `--command-item-display` | `flex` |
- * | `--command-item-focus-outline-color` | `var(--ring)` |
- * | `--command-item-focus-outline-width` | `2px` |
- * | `--command-item-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--command-item-gap` | `var(--spacing-4, 0.5rem)` |
- * | `--command-item-hover-background-color` | `var(--l2-background-hover)` |
- * | `--command-item-line-height` | `1.25rem` |
- * | `--command-item-outline` | `none` |
- * | `--command-item-padding` | `var(--spacing-3, 0.375rem) var(--spacing-4, 0.5...` |
- * | `--command-item-position` | `relative` |
- * | `--command-item-prefix-align-items` | `center` |
- * | `--command-item-prefix-display` | `flex` |
- * | `--command-item-prefix-flex-shrink` | `0` |
- * | `--command-item-selected-background-color` | `var(--l2-background-hover)` |
- * | `--command-item-selected-color` | `var(--accent-foreground)` |
- * | `--command-item-suffix-align-items` | `center` |
- * | `--command-item-suffix-display` | `flex` |
- * | `--command-item-suffix-flex-shrink` | `0` |
- * | `--command-item-suffix-margin-left` | `auto` |
- * | `--command-item-svg-flex-shrink` | `0` |
- * | `--command-item-svg-pointer-events` | `none` |
- * | `--command-item-svg-size` | `1rem` |
+ * | `--command-item-focus-outline` | `none` |
+ * | `--command-item-font-family` | `inherit` |
+ * | `--command-item-font-size` | `var(--periscope-font-size-base)` |
+ * | `--command-item-font-weight` | `var(--font-weight-normal)` |
+ * | `--command-item-gap` | `var(--spacing-2)` |
+ * | `--command-item-highlighted-background-color` | `var(--command-item-background-hover)` |
+ * | `--command-item-highlighted-color` | `var(--command-item-label-hover)` |
+ * | `--command-item-highlighted-icon-color` | `var(--command-item-icon-hover)` |
+ * | `--command-item-icon` | `-` |
+ * | `--command-item-icon-color` | `var(--command-item-icon)` |
+ * | `--command-item-icon-hover` | `-` |
+ * | `--command-item-icon-size` | `14px` |
+ * | `--command-item-inline-size` | `100%` |
+ * | `--command-item-label` | `-` |
+ * | `--command-item-label-disabled` | `-` |
+ * | `--command-item-label-flex-grow` | `1` |
+ * | `--command-item-label-hover` | `-` |
+ * | `--command-item-label-min-inline-size` | `0` |
+ * | `--command-item-label-overflow-wrap` | `anywhere` |
+ * | `--command-item-line-height` | `var(--line-height-18)` |
+ * | `--command-item-loading-opacity` | `0.8` |
+ * | `--command-item-margin` | `0` |
+ * | `--command-item-padding` | `var(--spacing-4) var(--spacing-6)` |
+ * | `--command-item-slot-gap` | `var(--spacing-4)` |
+ * | `--command-item-text-align` | `start` |
  * | `--command-item-user-select` | `none` |
- * | `--command-list-max-height` | `18.75rem` |
- * | `--command-list-overflow-x` | `hidden` |
- * | `--command-list-overflow-y` | `auto` |
- * | `--command-loading-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--command-loading-line-height` | `1.25rem` |
- * | `--command-loading-padding` | `var(--spacing-8, 1rem)` |
- * | `--command-loading-text-align` | `center` |
+ * | `--command-layer-position` | `relative` |
+ * | `--command-list-display` | `flex` |
+ * | `--command-list-flex-direction` | `column` |
+ * | `--command-list-focus-visible-outline` | `none` |
+ * | `--command-margin-block` | `0` |
+ * | `--command-margin-inline` | `auto` |
+ * | `--command-max-block-size` | `calc(100dvh - var(--command-inset-block-start, ...` |
+ * | `--command-max-inline-size` | `var(--command-internal-max-inline-size, 32rem)` |
  * | `--command-overflow` | `hidden` |
- * | `--command-separator-background-color` | `var(--border)` |
- * | `--command-separator-height` | `1px` |
- * | `--command-separator-margin` | `0 -0.25rem` |
- * | `--command-separator-width` | `100%` |
- * | `--command-shortcut-color` | `var(--muted-foreground)` |
- * | `--command-shortcut-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--command-shortcut-letter-spacing` | `0.05em` |
- * | `--command-shortcut-line-height` | `1rem` |
- * | `--command-shortcut-margin-left` | `auto` |
- * | `--command-width` | `100%` |
+ * | `--command-padding-block` | `var(--spacing-2)` |
+ * | `--command-padding-inline` | `0` |
+ * | `--command-position` | `fixed` |
+ * | `--command-scroll-fade-size` | `var(--spacing-10)` |
+ * | `--command-search-affix-align-items` | `center` |
+ * | `--command-search-affix-display` | `inline-grid` |
+ * | `--command-search-affix-flex-shrink` | `0` |
+ * | `--command-search-affix-justify-content` | `center` |
+ * | `--command-search-align-items` | `center` |
+ * | `--command-search-border` | `-` |
+ * | `--command-search-border-color` | `var(--command-search-border)` |
+ * | `--command-search-border-style` | `solid` |
+ * | `--command-search-border-width` | `1px` |
+ * | `--command-search-display` | `flex` |
+ * | `--command-search-flex-shrink` | `0` |
+ * | `--command-search-gap` | `var(--spacing-4)` |
+ * | `--command-search-icon` | `-` |
+ * | `--command-search-icon-color` | `var(--command-search-icon)` |
+ * | `--command-search-input-background-color` | `transparent` |
+ * | `--command-search-input-border` | `none` |
+ * | `--command-search-input-flex-grow` | `1` |
+ * | `--command-search-input-focus-visible-outline` | `none` |
+ * | `--command-search-input-font-family` | `inherit` |
+ * | `--command-search-input-line-height` | `var(--line-height-20)` |
+ * | `--command-search-input-margin` | `0` |
+ * | `--command-search-input-min-inline-size` | `0` |
+ * | `--command-search-input-padding` | `0` |
+ * | `--command-search-padding` | `var(--spacing-5) var(--spacing-6)` |
+ * | `--command-search-placeholder` | `-` |
+ * | `--command-search-placeholder-color` | `var(--command-search-placeholder)` |
+ * | `--command-shadow` | `-` |
+ * | `--command-viewport-display` | `flex` |
+ * | `--command-viewport-flex-direction` | `column` |
+ * | `--command-viewport-max-block-size` | `var(--command-internal-max-block-size, 20rem)` |
+ * | `--command-viewport-min-block-size` | `0` |
+ * | `--command-viewport-overflow-x` | `hidden` |
+ * | `--command-viewport-overflow-y` | `auto` |
+ * | `--command-viewport-overscroll-behavior` | `contain` |
+ * | `--command-viewport-scrollbar-width` | `thin` |
+ * | `--command-visually-hidden-block-size` | `1px` |
+ * | `--command-visually-hidden-border` | `0` |
+ * | `--command-visually-hidden-clip-path` | `inset(50%)` |
+ * | `--command-visually-hidden-inline-size` | `1px` |
+ * | `--command-visually-hidden-margin` | `-1px` |
+ * | `--command-visually-hidden-overflow` | `hidden` |
+ * | `--command-visually-hidden-padding` | `0` |
+ * | `--command-visually-hidden-position` | `absolute` |
+ * | `--command-visually-hidden-white-space` | `nowrap` |
+ * | `--command-z-index` | `50` |
  */
 // #endregion css-tokens
 
-export { defaultFilter as commandDefaultFilter } from 'cmdk';
-export {
-	Command,
-	CommandDialog,
-	type CommandDialogProps,
-	CommandEmpty,
-	type CommandEmptyProps,
-	CommandGroup,
-	type CommandGroupProps,
-	CommandInput,
-	type CommandInputProps,
-	CommandItem,
-	type CommandItemProps,
-	CommandList,
-	type CommandListProps,
-	CommandLoading,
-	type CommandLoadingProps,
-	type CommandProps,
-	CommandSeparator,
-	type CommandSeparatorProps,
-	CommandShortcut,
-	type CommandShortcutProps,
-} from './command.js';
+export { Command } from './command.js';
+export { COMMAND_EMPTY_CONTENT, COMMAND_EMPTY_LABEL, CommandItemKind } from './constants.js';
+export type {
+	CommandActionItemType,
+	CommandGroupItemType,
+	CommandItemDisabledType,
+	CommandItemKindType,
+	CommandItemLoadingType,
+	CommandItemType,
+	CommandProps,
+	CommandSearchInputProps,
+	ValidateCommandProps,
+} from './types.js';
