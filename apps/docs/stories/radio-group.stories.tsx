@@ -244,13 +244,14 @@ function OtherOptionGroup(): ReactElement {
 						<span className={styles.controlLabel}>
 							Other
 							{value === OTHER_VALUE && (
-								<Input
-									className={styles.otherInput}
-									aria-label="Custom environment name"
-									placeholder="staging-eu"
-									value={customName}
-									onChange={(event) => setCustomName(event.target.value)}
-								/>
+								<span className={styles.otherInput}>
+									<Input
+										aria-label="Custom environment name"
+										placeholder="staging-eu"
+										value={customName}
+										onChange={(event) => setCustomName(event.target.value)}
+									/>
+								</span>
 							)}
 						</span>
 					),

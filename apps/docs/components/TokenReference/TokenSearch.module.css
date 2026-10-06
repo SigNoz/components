@@ -16,17 +16,6 @@
 	position: relative;
 }
 
-.searchIcon {
-	position: absolute;
-	left: 0.75rem;
-	top: 50%;
-	transform: translateY(-50%);
-	color: var(--l3-foreground);
-}
-
-.searchInput {
-	padding-left: 2.5rem;
-}
 
 .categoryFilters {
 	display: flex;

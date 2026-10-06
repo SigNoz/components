@@ -1,7 +1,16 @@
-.maxWidthMd {
-  max-width: 28rem;
+.marginTopMedium {
+  margin-top: 1rem;
 }
 
-.headerMargin {
-  margin-bottom: 0.75rem;
+/* One label column, one field column. The field fills its cell, as it fills its parent. */
+.rows {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 33rem);
+  gap: 1.5rem 2rem;
+  align-items: center;
+  width: 100%;
+}
+
+.rowLabel {
+  white-space: nowrap;
 }

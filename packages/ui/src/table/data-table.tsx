@@ -1178,31 +1178,32 @@ export function DataTable<TData, TValue>({
 														)}
 													</div>
 													{canFilter && isFilterVisible && (
-														<Input
-															className={styles['data-table__filter-input']}
-															placeholder={
-																typeof header.column.columnDef.header === 'string'
-																	? `Filter ${header.column.columnDef.header}...`
-																	: 'Filter values...'
-															}
-															value={(filterValue ?? '') as string}
-															onChange={(e) => column.setFilterValue(e.target.value)}
-															suffix={
-																filterValue ? (
-																	<Button
-																		type="button"
-																		variant="ghost"
-																		color="secondary"
-																		size="md"
-																		icon
-																		aria-label="Clear filter"
-																		onClick={() => column.setFilterValue('')}
-																	>
-																		<X />
-																	</Button>
-																) : null
-															}
-														/>
+														<div className={styles['data-table__filter-input']}>
+															<Input
+																placeholder={
+																	typeof header.column.columnDef.header === 'string'
+																		? `Filter ${header.column.columnDef.header}...`
+																		: 'Filter values...'
+																}
+																value={(filterValue ?? '') as string}
+																onChange={(e) => column.setFilterValue(e.target.value)}
+																suffix={
+																	filterValue ? (
+																		<Button
+																			type="button"
+																			variant="ghost"
+																			color="secondary"
+																			size="md"
+																			icon
+																			aria-label="Clear filter"
+																			onClick={() => column.setFilterValue('')}
+																		>
+																			<X />
+																		</Button>
+																	) : null
+																}
+															/>
+														</div>
 													)}
 												</div>
 												{enableColumnResizing && (

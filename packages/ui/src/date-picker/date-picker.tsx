@@ -421,7 +421,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
 										value={localTime}
 										onChange={(e) => handleTimeChange(e.target.value)}
 										step="1"
-										className={styles['datePicker__timeInput']}
+										width="var(--date-picker-time-input-width, 50%)"
 									/>
 								</div>
 							)}
