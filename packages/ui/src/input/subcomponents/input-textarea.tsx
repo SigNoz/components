@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../input.module.scss';
 import type { InputTextAreaProps } from '../types.js';
-import { getReasonTooltip, splitAttributes } from '../utils.js';
+import { getReasonTooltip, splitAttributes, useFieldControl } from '../utils.js';
 import { InputFrame } from './input-frame.js';
 
 /**
@@ -44,8 +44,7 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 		}: InputTextAreaProps & RejectedProps,
 		ref,
 	) {
-		const resolvedSize = size ?? 'base';
-		const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
+		const field = useFieldControl({ id, status, size, required, ariaDescribedBy, ariaInvalid });
 		const { control, data } = splitAttributes(props);
 		const isDisabled = disabled && !readOnly;
 		const { reason, hasReasonAnchor } = getReasonTooltip({
@@ -57,9 +56,9 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 
 		return (
 			<InputFrame
-				size={resolvedSize}
+				size={field.size}
 				variant={variant}
-				status={status}
+				status={field.status}
 				noFocusRing={noFocusRing}
 				disabled={isDisabled}
 				readOnly={readOnly}
@@ -76,12 +75,12 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 				<textarea
 					{...control}
 					ref={ref}
-					id={id}
-					required={required}
+					id={field.id}
+					required={field.required}
 					disabled={isDisabled}
 					readOnly={readOnly}
-					aria-describedby={ariaDescribedBy}
-					aria-invalid={resolvedInvalid}
+					aria-describedby={field.ariaDescribedBy}
+					aria-invalid={field.ariaInvalid}
 					className={styles['input__field']}
 					data-slot="input-field"
 					data-testid={partTestId(testId, 'field')}

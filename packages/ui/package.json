@@ -197,6 +197,16 @@
 				"require": "./dist/dropdown/index.cjs"
 			}
 		},
+		"./field": {
+			"import": {
+				"types": "./dist/field/index.d.ts",
+				"import": "./dist/field/index.mjs"
+			},
+			"require": {
+				"types": "./dist/field/index.d.cts",
+				"require": "./dist/field/index.cjs"
+			}
+		},
 		"./input": {
 			"import": {
 				"types": "./dist/input/index.d.ts",

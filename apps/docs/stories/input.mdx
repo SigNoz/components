@@ -10,19 +10,24 @@ A one-line text field: a native `<input>` inside a frame that owns the border, t
 validation states and the `prefix`/`suffix` slots. `Input.Password`, `Input.TextArea` and
 `Input.Number` swap the control and keep the frame.
 
-The input has no visible label of its own. Name it with `aria-label` or `aria-labelledby`, or with
-a `<label htmlFor>` that matches `id`.
+The input is just the field. Its label and its validation message belong to `Field`, which wraps
+any one control and owns that layout; see the `Field` page.
 
 ## How to use
 
 Every native input prop lands on the `<input>`, so react-hook-form's `register()` spreads straight
-onto it.
+onto it. Name a bare input with `aria-label`, or put it inside a `Field`, whose label reaches it on
+its own.
 
 ```tsx
-import { Input } from '@signozhq/ui';
+import { Field, Input } from '@signozhq/ui';
 
-export default function OrganisationSearch() {
-	return <Input placeholder="For eg. Simpsonville..." aria-label="Organisation" />;
+export default function OrganisationField({ register, errors }) {
+	return (
+		<Field label="Your Organisation Name" error={errors.organisation?.message}>
+			<Input placeholder="For eg. Simpsonville..." {...register('organisation')} />
+		</Field>
+	);
 }
 ```
 
@@ -31,6 +36,7 @@ export default function OrganisationSearch() {
 ## Sizes and variants
 
 `size` is the height of the field: `base` is 32px, `large` is 40px. The text does not change size.
+Inside a `Field` the field's `size` is the default, so the frame and the label scale together.
 
 `variant="unstyled"` drops the border and the background and keeps everything else: padding,
 height, text, and the focus ring, which is the only thing marking focus there.
@@ -40,6 +46,9 @@ height, text, and the focus ring, which is the only thing marking focus there.
 `status` tints the border and the background and renders a matching icon at the trailing edge,
 after the `suffix`. `danger` also announces itself as `aria-invalid`. `success` is confirmation of
 a completed check (name available, connection verified), not a resting state for a valid field.
+
+Inside a `Field`, the field's `status` is the default and its message lands in the input's
+`aria-describedby`.
 
 ## Focus
 
@@ -72,15 +81,16 @@ event, and the field steps with the buttons at its trailing edge, the arrow keys
 
 ## Migrating
 
-| Before                                 | Now                                                                              |
-| -------------------------------------- | -------------------------------------------------------------------------------- |
-| `className`, `style`                   | removed. Use `width`/`maxWidth`, the `--input-*` custom properties, or a wrapper |
-| `containerClassName`, `containerStyle` | removed, there is one frame and it owns its layout                               |
-| `containerId`, `containerTestId`       | removed. `testId` names the frame, `` `${testId}-field` `` the input             |
-| `size={20}` (character width)          | removed, `size` is `'base' \| 'large'`. Use `width`                              |
-| `data-testid` on the input             | `testId` lands on the frame; the input is `` `${testId}-field` ``                |
-| `<InputNumber />`                      | `<Input.Number />`, whose `onChange` reports `number \| null`                    |
-| antd `Input.TextArea`                  | `<Input.TextArea />`                                                             |
+| Before                                     | Now                                                                                   |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `className`, `style`                       | removed. Use `width`/`maxWidth`, the `--input-*` custom properties, or a wrapper       |
+| `containerClassName`, `containerStyle`     | removed, there is one frame and it owns its layout                                     |
+| `containerId`, `containerTestId`           | removed. `testId` names the frame, `` `${testId}-field` `` the input                    |
+| `size={20}` (character width)              | removed, `size` is `'base' \| 'large'`. Use `width`                                    |
+| `data-testid` on the input                 | `testId` lands on the frame; the input is `` `${testId}-field` ``                       |
+| `<InputNumber />`                          | `<Input.Number />`, whose `onChange` reports `number \| null`                           |
+| antd `Input.TextArea`                      | `<Input.TextArea />`                                                                   |
+| a label and error layout around the input  | `<Field label error>` owns both                                                        |
 
 ## Asserting on it
 
@@ -90,17 +100,17 @@ password toggle `org-toggle`, and the step buttons `org-step-up` and `org-step-d
 
 Otherwise reach for the role and the data attributes, never the hashed class names:
 
-| `data-slot`             | rendered                                             |
-| ----------------------- | ---------------------------------------------------- |
-| `input`                 | the frame                                            |
-| `input-field`           | always, the native control                           |
-| `input-prefix`          | while `prefix` renders something                     |
-| `input-suffix`          | while `suffix` renders something                     |
-| `input-status-icon`     | while `status` is set, `aria-hidden`                 |
-| `input-password-toggle` | on `Input.Password`                                  |
-| `input-stepper`         | on `Input.Number` with `controls`                    |
-| `input-step-up`         | on `Input.Number` with `controls`, disabled at `max` |
-| `input-step-down`       | on `Input.Number` with `controls`, disabled at `min` |
+| `data-slot`             | rendered                                              |
+| ----------------------- | ------------------------------------------------------ |
+| `input`                 | the frame                                              |
+| `input-field`           | always, the native control                             |
+| `input-prefix`          | while `prefix` renders something                       |
+| `input-suffix`          | while `suffix` renders something                       |
+| `input-status-icon`     | while `status` is set, `aria-hidden`                   |
+| `input-password-toggle` | on `Input.Password`                                    |
+| `input-stepper`         | on `Input.Number` with `controls`                      |
+| `input-step-up`         | on `Input.Number` with `controls`, disabled at `max`   |
+| `input-step-down`       | on `Input.Number` with `controls`, disabled at `min`   |
 
 The frame has `data-size`, `data-variant`, `data-status` while one is set, `data-disabled` while
 disabled and not read-only, `data-readonly` while read-only, `data-no-focus-ring` with

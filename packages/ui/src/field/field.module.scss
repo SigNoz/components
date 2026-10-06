@@ -1,0 +1,116 @@
+// The status lives on the root as `data-status`, so the label and the message color from one
+// attribute, and the control inside tints itself through context rather than CSS.
+.field {
+	--field-internal-label: var(--field-label-color, var(--field-label));
+	--field-internal-label-hover: var(--field-label-hover-color, var(--field-label-hover));
+	--field-internal-label-icon: var(--field-label-icon-color, var(--field-label-icon));
+	--field-internal-message: var(--field-message-color, initial);
+	--field-internal-message-icon: var(--field-message-icon-color, initial);
+
+	display: var(--field-display, flex);
+	flex-direction: var(--field-direction, column);
+	// Double the control's internal rhythm, so the field binds to its own label and message more
+	// strongly than to its neighbours in a stack.
+	gap: var(--field-gap, var(--spacing-4));
+
+	&[data-status='success'] {
+		--field-internal-label: var(--field-success-label-color, var(--field-success-label));
+		--field-internal-message: var(--field-success-message-color, var(--field-success-message));
+		--field-internal-message-icon: var(--field-success-icon-color, var(--field-success-icon));
+	}
+
+	&[data-status='warning'] {
+		--field-internal-label: var(--field-warning-label-color, var(--field-warning-label));
+		--field-internal-message: var(--field-warning-message-color, var(--field-warning-message));
+		--field-internal-message-icon: var(--field-warning-icon-color, var(--field-warning-icon));
+	}
+
+	&[data-status='danger'] {
+		--field-internal-label: var(--field-danger-label-color, var(--field-danger-label));
+		--field-internal-message: var(--field-danger-message-color, var(--field-danger-message));
+		--field-internal-message-icon: var(--field-danger-icon-color, var(--field-danger-icon));
+	}
+
+	// The label brightens with the control under the pointer, one state in two places. Never while
+	// a status colors the label instead.
+	&:not([data-status]):has([data-slot='input']:not([data-disabled]):not([data-readonly]):hover) {
+		.field__label {
+			color: var(--field-internal-label-hover);
+		}
+	}
+}
+
+.field__label-row {
+	display: var(--field-label-row-display, flex);
+	align-items: var(--field-label-row-align-items, center);
+	gap: var(--field-label-gap, var(--spacing-4));
+}
+
+.field__label {
+	display: var(--field-label-display, inline-flex);
+	align-items: var(--field-label-align-items, baseline);
+	gap: var(--field-required-marker-gap, var(--spacing-1));
+	color: var(--field-internal-label);
+	font-family: var(--field-label-font-family, inherit);
+	font-size: var(--field-label-font-size, var(--periscope-font-size-base));
+	font-weight: var(--field-label-font-weight, var(--font-weight-normal));
+	line-height: var(--field-label-line-height, 20px);
+	// TODO: Convert this hardcoded value to semantic token
+	letter-spacing: var(--field-label-letter-spacing, -0.005em);
+	transition: var(--field-label-transition, color 150ms ease);
+}
+
+.field__label-icon {
+	display: var(--field-label-icon-display, inline-flex);
+	align-items: var(--field-label-icon-align-items, center);
+	flex-shrink: 0;
+	color: var(--field-internal-label-icon);
+
+	svg {
+		inline-size: var(--field-icon-size, 14px);
+		block-size: var(--field-icon-size, 14px);
+		flex-shrink: 0;
+	}
+}
+
+.field__required-marker {
+	color: var(--field-required-marker-color, var(--field-required-marker));
+}
+
+.field__message {
+	display: var(--field-message-display, flex);
+	align-items: var(--field-message-align-items, flex-start);
+	gap: var(--field-message-gap, var(--spacing-3));
+	color: var(--field-internal-message);
+}
+
+.field__message-icon {
+	display: var(--field-message-icon-display, inline-flex);
+	flex-shrink: 0;
+	// Inset from the top so the icon optically centres on the first line of the message and stays
+	// put when it wraps.
+	padding-block-start: var(--field-message-icon-offset, var(--spacing-1));
+	color: var(--field-internal-message-icon);
+
+	svg {
+		inline-size: var(--field-icon-size, 14px);
+		block-size: var(--field-icon-size, 14px);
+		flex-shrink: 0;
+	}
+}
+
+.field__message-text {
+	min-inline-size: var(--field-message-text-min-inline-size, 0);
+	font-family: var(--field-message-font-family, inherit);
+	font-size: var(--field-message-font-size, var(--periscope-font-size-small));
+	font-weight: var(--field-message-font-weight, var(--font-weight-normal));
+	line-height: var(--field-message-line-height, 18px);
+	// TODO: Convert this hardcoded value to semantic token
+	letter-spacing: var(--field-message-letter-spacing, -0.005em);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.field__label {
+		transition: none;
+	}
+}

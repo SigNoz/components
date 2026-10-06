@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Field type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "label and children > both are required > a field exists to own its label": "TS2741: Property 'label' is missing in type '{ children: Element; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactNode; label: ReactNode; labelIcon?: ReactNode; error?: ReactNode; status?: FieldStatusType | undefined; ... 4 more ...; testId?: string | undefined; }'.",
+  "label and children > both are required > a field with no control labels nothing": "TS2741: Property 'children' is missing in type '{ label: string; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactNode; label: ReactNode; labelIcon?: ReactNode; error?: ReactNode; status?: FieldStatusType | undefined; ... 4 more ...; testId?: string | undefined; }'.",
+  "rejected props > a prop that does not exist is rejected > the message always sits below the control": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > className and style are not props > the layout is fixed, visual overrides go through \`--field-*\`": "TS2322: Type '{ gap: number; }' is not assignable to type 'never'.",
+  "rejected props > data-testid is spelled testId > \`data-testid\` is written as the \`testId\` prop": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, matching every other component'' is missing in type '{ children: Element; label: string; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "status, message and error > error stands alone > \`error\` already says \`status="danger"\` and the message": "TS2741: Property ''\`message\` needs \`status\`, the message row is a validation state and takes its color and icon from one'' is missing in type '{ children: Element; label: string; error: string; message: string; }' but required in type 'AFieldMessageNeedsItsStatus'.",
+  "status, message and error > status and message travel together > a status with nothing to say belongs on the control itself": "TS2741: Property ''\`status\` needs \`message\`, a status with nothing to say belongs on the control itself'' is missing in type '{ children: Element; label: string; status: "danger"; }' but required in type 'AFieldStatusNeedsItsMessage'.",
+  "status, message and error > status and message travel together > the message row is a validation state, it takes its color from one": "TS2741: Property ''\`message\` needs \`status\`, the message row is a validation state and takes its color and icon from one'' is missing in type '{ children: Element; label: string; message: string; }' but required in type 'AFieldMessageNeedsItsStatus'.",
+}
+`;

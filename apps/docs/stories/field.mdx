@@ -1,0 +1,71 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as FieldStories from './field.stories';
+
+<Meta of={FieldStories} />
+
+# Field
+
+The label, the control and the validation message of one form field, in the one layout the design
+system draws: label above, message below. The call site arranges nothing, which is the point: a
+field that moved its label or restyled its message would not read as the same form anymore.
+
+The control is `children`, and the field reaches it through context rather than props: it hands
+down the id its `<label>` points at, `status`, `size` and `required`, and puts the message id in
+the control's `aria-describedby`. The control's own props win. `Input` and its members read all of
+it today; other controls adopt the same contract as they are reworked.
+
+## How to use
+
+```tsx
+import { Field, Input } from '@signozhq/ui';
+
+export default function OrganisationField({ register, errors }) {
+	return (
+		<Field label="Your Organisation Name" error={errors.organisation?.message}>
+			<Input placeholder="For eg. Simpsonville..." {...register('organisation')} />
+		</Field>
+	);
+}
+```
+
+`error` is the shorthand for `status="danger"` with `message`, built for form libraries that hand
+over one string. A value that renders nothing (an untouched `errors.organisation?.message`) shows
+no message and sets no status, so the wiring above is complete as written.
+
+<Primary />
+
+## Status
+
+`status` + `message` show a validation state: the label and the message take the status color, the
+message row renders the status icon, and the control inside tints itself through context. `success`
+is confirmation of a completed check (name available, connection verified), not a resting state for
+a valid field.
+
+## Spacing
+
+The label is 8px above the control and the message 8px below it, double the control's own internal
+rhythm, so a field binds to its own label more strongly than to its neighbours. Stack base fields
+16px apart, large fields 24px. Rows of fields align on the field, not on the label top: a wrapping
+label would otherwise drop its field out of line.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and the prefix of the parts: `${testId}-label` and
+`${testId}-message`.
+
+Otherwise reach for the data attributes, never the hashed class names:
+
+| `data-slot`             | rendered                                        |
+| ----------------------- | ------------------------------------------------ |
+| `field`                 | the root                                         |
+| `field-label-row`       | always                                           |
+| `field-label-icon`      | while `labelIcon` renders something, `aria-hidden` |
+| `field-label`           | always, the `<label>`                            |
+| `field-required-marker` | while `required`, `aria-hidden`                  |
+| `field-message`         | while a message renders, holds the status icon   |
+
+The root has `data-size`, and `data-status` while one is set (`danger` while `error` renders).
+
+## Field props
+
+<Controls of={FieldStories.Default} />

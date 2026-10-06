@@ -75,7 +75,8 @@ export function getFrameAttributes({
 }
 
 /**
- * The trailing icon of a validation state.
+ * The trailing icon of a validation state, matching the message icon a `Field` renders for the
+ * same status.
  *
  * @access private
  */

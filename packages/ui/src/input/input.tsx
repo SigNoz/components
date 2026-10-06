@@ -25,8 +25,14 @@ import type {
  * Visual values are `--input-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts).
  *
- * The input has no visible label of its own. Name it with `aria-label` or `aria-labelledby`, or
- * with a `<label htmlFor>` that matches `id`.
+ * The input has no visible label of its own. Put it inside a `Field`, whose label reaches it on
+ * its own, or name it with `aria-label`/`aria-labelledby`.
+ *
+ * ### Inside a `Field`
+ *
+ * A surrounding `Field` supplies defaults the input's own props win over: the `id` its label
+ * points at, `status`, `size` and `required`. The field's message id lands in `aria-describedby`.
+ * There is no prop to wire: rendering the input as the field's child is the whole contract.
  *
  * ### Status
  *
@@ -84,6 +90,13 @@ import type {
  * <Input placeholder="For eg. Simpsonville..." prefix={<Search />} aria-label="Organisation" />
  * ```
  *
+ * @example
+ * ```tsx
+ * // react-hook-form
+ * <Field label="Your Organisation Name" error={errors.organisation?.message}>
+ *   <Input placeholder="For eg. Simpsonville..." {...register('organisation')} />
+ * </Field>
+ * ```
  */
 const InputRoot = forwardRef<HTMLInputElement, InputProps>(function Input(props, ref) {
 	return <InputBase {...props} ref={ref} />;

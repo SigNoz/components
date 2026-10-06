@@ -5,7 +5,7 @@ import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../input.module.scss';
 import type { InputNumberProps } from '../types.js';
-import { getReasonTooltip, splitAttributes } from '../utils.js';
+import { getReasonTooltip, splitAttributes, useFieldControl } from '../utils.js';
 import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
 
 /**
@@ -77,8 +77,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 	}: InputNumberProps & RejectedProps,
 	ref,
 ) {
-	const resolvedSize = size ?? 'base';
-	const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
+	const field = useFieldControl({ id, status, size, required, ariaDescribedBy, ariaInvalid });
 	const { control, data } = splitAttributes(props);
 	const isDisabled = disabled && !readOnly;
 	const { reason, hasReasonAnchor } = getReasonTooltip({
@@ -91,7 +90,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 	const numberField = (
 		<NumberFieldPrimitive.Root
 			className={styles['input__number-root']}
-			id={id}
+			id={field.id}
 			value={value}
 			defaultValue={defaultValue}
 			onValueChange={onChange && ((next) => onChange(next))}
@@ -103,7 +102,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 			snapOnStep={snapOnStep}
 			format={format}
 			locale={locale}
-			required={required}
+			required={field.required}
 			disabled={isDisabled}
 			readOnly={readOnly}
 			name={name}
@@ -111,9 +110,9 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		>
 			<NumberFieldPrimitive.Group
 				{...getFrameAttributes({
-					size: resolvedSize,
+					size: field.size,
 					variant,
-					status: status,
+					status: field.status,
 					noFocusRing,
 					disabled: isDisabled,
 					readOnly,
@@ -124,7 +123,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 					dataAttributes: data,
 				})}
 			>
-				<InputFrameSlots prefix={prefix} suffix={suffix} status={status} testId={testId}>
+				<InputFrameSlots prefix={prefix} suffix={suffix} status={field.status} testId={testId}>
 					<NumberFieldPrimitive.Input
 						{...control}
 						ref={ref}
@@ -134,8 +133,8 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 						onBlur={onBlur}
 						onFocus={onFocus}
 						onKeyDown={onKeyDown}
-						aria-describedby={ariaDescribedBy}
-						aria-invalid={resolvedInvalid}
+						aria-describedby={field.ariaDescribedBy}
+						aria-invalid={field.ariaInvalid}
 						className={styles['input__field']}
 						data-slot="input-field"
 						data-testid={partTestId(testId, 'field')}
