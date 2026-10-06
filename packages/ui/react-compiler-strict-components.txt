@@ -13,4 +13,5 @@ progress
 combobox
 select
 slider
+command
 divider
