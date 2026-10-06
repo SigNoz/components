@@ -15,3 +15,5 @@ select
 slider
 field
 input
+command
+divider

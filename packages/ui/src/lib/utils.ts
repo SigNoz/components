@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
-import type { ReactNode } from 'react';
+import { Fragment, isValidElement, type ReactNode } from 'react';
 
 export function cn(...inputs: ClassValue[]) {
 	return clsx(inputs);
@@ -7,12 +7,19 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Whether a node puts anything on the screen. `null`, `undefined`, both booleans and the empty
- * string all render nothing, and so does an array holding only those, so a component holding one
- * of them has been handed no content at all.
+ * string all render nothing, and so does an array or a fragment holding only those, so a component
+ * holding one of them has been handed no content at all.
+ *
+ * Any other element counts as content, since what a component renders is only known once it has
+ * rendered. A component that returns `null` still counts.
  */
 export function hasRenderableContent(content: ReactNode): boolean {
 	if (Array.isArray(content)) {
 		return content.some(hasRenderableContent);
+	}
+
+	if (isValidElement<{ children?: ReactNode }>(content) && content.type === Fragment) {
+		return hasRenderableContent(content.props.children);
 	}
 
 	// `true` is a valid node that renders nothing, the same as `false`.

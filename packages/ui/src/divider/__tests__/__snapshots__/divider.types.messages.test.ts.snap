@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Divider type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "children > is rejected on a vertical divider > only a horizontal divider has a label": "TS2322: Type '{ children: string; orientation: "vertical"; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Types of property 'children' are incompatible.
+      Type 'string' is not assignable to type 'OnlyAHorizontalDividerHasALabel'.",
+  "length and spacing > rejects height on a horizontal divider > a horizontal divider takes \`width\` for its length": "TS2322: Type '{ height: number; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Type '{ height: number; }' is not assignable to type '{ orientation?: "horizontal" | undefined; children?: ReactNode; width?: Width<string | number> | undefined; maxWidth?: MaxWidth<string | number> | undefined; spacing?: MarginBlock<...> | undefined; height?: OnlyAVerticalDividerTakesAHeight | undefined; maxHeight?: OnlyAVerticalDividerTakesAHeight | undefined; }'.
+      Types of property 'height' are incompatible.
+        Type 'number' is not assignable to type 'OnlyAVerticalDividerTakesAHeight'.",
+  "length and spacing > rejects maxHeight on a horizontal divider > a horizontal divider takes \`maxWidth\` for its length": "TS2322: Type '{ maxHeight: number; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Type '{ maxHeight: number; }' is not assignable to type '{ orientation?: "horizontal" | undefined; children?: ReactNode; width?: Width<string | number> | undefined; maxWidth?: MaxWidth<string | number> | undefined; spacing?: MarginBlock<...> | undefined; height?: OnlyAVerticalDividerTakesAHeight | undefined; maxHeight?: OnlyAVerticalDividerTakesAHeight | undefined; }'.
+      Types of property 'maxHeight' are incompatible.
+        Type 'number' is not assignable to type 'OnlyAVerticalDividerTakesAHeight'.",
+  "length and spacing > rejects maxWidth on a vertical divider > a vertical divider takes \`height\` for its length": "TS2322: Type '{ orientation: "vertical"; maxWidth: number; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Types of property 'maxWidth' are incompatible.
+      Type 'number' is not assignable to type 'OnlyAHorizontalDividerTakesAWidth'.",
+  "length and spacing > rejects width on a vertical divider > a vertical divider takes \`height\` for its length": "TS2322: Type '{ orientation: "vertical"; width: number; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Types of property 'width' are incompatible.
+      Type 'number' is not assignable to type 'OnlyAHorizontalDividerTakesAWidth'.",
+  "orientation > rejects a value outside the two > \`left\` is a label position, and the label is always centred": "TS2322: Type '"left"' is not assignable to type '"horizontal" | "vertical" | undefined'.",
+  "rejected props > rejects className, length and spacing have their own props > use \`spacing\` for the margin, \`width\` or \`height\` for the length": "TS2322: Type '{ className: string; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'className' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+  "rejected props > rejects color, every divider has the same color > the color is not a choice of the call site": "TS2322: Type '{ color: string; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'color' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+  "rejected props > rejects onClick, the divider has no events > the divider is informational only": "TS2322: Type '{ onClick: () => void; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'onClick' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+  "rejected props > rejects orientationMargin, the label is always centred > the label is always centred": "TS2322: Type '{ children: string; orientationMargin: number; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'orientationMargin' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+  "rejected props > rejects plain, the label is styled with Typography > wrap the label in Typography to set its weight": "TS2322: Type '{ children: string; plain: true; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'plain' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+  "rejected props > rejects style, length and spacing have their own props > use \`spacing\` for the margin, \`width\` or \`height\` for the length": "TS2322: Type '{ style: { marginBlock: number; }; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'style' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+  "rejected props > rejects type, replaced by orientation > \`type="vertical"\` is written \`orientation="vertical"\`": "TS2322: Type '{ type: string; }' is not assignable to type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.
+    Property 'type' does not exist on type 'IntrinsicAttributes & (DividerProps & RefAttributes<HTMLSpanElement>)'.",
+}
+`;

@@ -125,7 +125,7 @@ Which is why `package.json` exports carry two type entries per subpath, not one:
 ### Externals
 
 `externalPatterns` in `vite.config.extend.ts` is the single list of what we do **not**
-bundle: React, every `@radix-ui/*`, every `@signozhq/*`, `clsx`, `cmdk`, `dayjs`,
+bundle: React, every `@radix-ui/*`, every `@base-ui/*`, every `@signozhq/*`, `clsx`, `dayjs`,
 `lodash-es`, `@tanstack/*`, `motion/react`, `nuqs`, and friends.
 
 Rule of thumb: **anything a consumer could also install must be external.** Bundling a copy
