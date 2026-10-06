@@ -198,24 +198,22 @@ the console.
 
 ## Asserting on it
 
-`testId` becomes `data-testid` on the root, and the parts derive theirs from it. With
-`testId="trial"`, the parts are `trial-icon`, `trial-title`, `trial-description`, `trial-toggle` and
-`trial-close`. `Callout.Link` takes a `testId` of its own.
+`testId` becomes `data-testid` on the root, and it names everything under it:
 
-Otherwise reach for the roles and the data attributes, never the hashed class names:
+| Element          | `data-testid`                 |
+| ---------------- | ----------------------------- |
+| icon             | `` `${testId}-icon` ``        |
+| title            | `` `${testId}-title` ``       |
+| description      | `` `${testId}-description` `` |
+| title row button | `` `${testId}-toggle` ``      |
+| close button     | `` `${testId}-close` ``       |
 
-| `data-slot`           | rendered                                                        |
-| --------------------- | --------------------------------------------------------------- |
-| `callout`             | the root, `role="status"` or `role="alert"`, none if expandable |
-| `callout-icon`        | the icon                                                        |
-| `callout-toggle`      | the title row button, `Callout.Expandable` only                 |
-| `callout-title`       | the title, `data-truncated` while it does not fit               |
-| `callout-description` | the description                                                 |
-| `callout-close`       | the close button, `Callout.Closeable` and its persisted form    |
-| `callout-link`        | each `Callout.Link`                                             |
+The title row button renders only on `Callout.Expandable`, and the close button only on
+`Callout.Closeable` and `Callout.CloseablePersisted`. `Callout.Link` takes a `testId` of its own.
 
-The root mirrors `color` on `data-color` and `size` on `data-size`. `Callout.Expandable` adds
-`data-has-title`, and `data-expanded` while expanded.
+The root carries `data-color` and `data-size`, and `data-expanded` while expanded.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props
 

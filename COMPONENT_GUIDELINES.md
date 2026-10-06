@@ -924,6 +924,39 @@ the parent's story module when the subcomponent shares it. A static member's sto
 `<Controls of={CalloutComponentsStories.Link} />`). A wrong reference silently renders the wrong
 props table.
 
+Never add a migration section (`## Migrating`, `## Migrating from X`) or a before and now table to
+a page. The page documents the component as it is today. What changed between versions goes in the
+changeset and the PR description.
+
+`## Asserting on it` sits right before the props. Write it like `dropdown.mdx`:
+
+1. One sentence that says where `testId` lands: "`testId` becomes `data-testid` on the trigger,
+   and it names everything under it:".
+2. A table with one row per part that has a test ID. The columns are `Element` and
+   `` `data-testid` ``, and each value is a template literal in double backticks
+   (`` `${testId}-item-${value}` ``), so the page shows the exact string a test builds.
+3. Short notes under the table for what a test would get wrong without them: a part that renders
+   only in some state, an id named from something other than `testId` (a row's own `testId`), a
+   part that stays mounted, and the root data attributes worth asserting on.
+4. The last line: "Otherwise use the `data-slot` attributes, never the hashed class names."
+
+The full list of `data-slot` values belongs in the component JSDoc, not in the page.
+
+```mdx
+## Asserting on it
+
+`testId` becomes `data-testid` on the trigger, and it names everything under it:
+
+| Element | `data-testid`                   |
+| ------- | ------------------------------- |
+| row     | `` `${testId}-item-${value}` `` |
+| empty   | `` `${testId}-empty` ``         |
+
+The empty row renders only when there is nothing to show. A row's own `testId` wins.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+```
+
 ## 6. Visual QA
 
 Tokens and types can be reviewed from the diff. The visual result cannot, so check it in
