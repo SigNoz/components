@@ -9,6 +9,7 @@ import { Checkbox } from './checkbox/checkbox.js';
 import { Combobox } from './combobox/index.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
+import { Input } from './input/index.js';
 import { Progress } from './progress/progress.js';
 import { RadioGroup } from './radio-group/radio-group.js';
 import { Select } from './select/index.js';
@@ -172,6 +173,12 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('select'));
 		expectNoStrayStyle(document.querySelector('[data-slot="select"]'));
+	});
+
+	it('do not reach Input', () => {
+		render(<Input placeholder="Search" testId="input" {...STRAY} />);
+
+		expectNoStrayStyle(screen.getByTestId('input'));
 	});
 
 	it('do not reach Progress', () => {

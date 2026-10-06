@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "Input.Number > rejects a string value > the value is a number, \`null\` while empty": "TS2322: Type 'string' is not assignable to type 'number'.",
+  "Input.Number > rejects an event-shaped onChange > \`onChange\` reports the parsed value, not the event": "TS2322: Type '(event: { target: unknown; }) => void' is not assignable to type '(value: number | null) => void'.
+    Types of parameters 'event' and 'value' are incompatible.
+      Type 'number | null' is not assignable to type '{ target: unknown; }'.
+        Type 'null' is not assignable to type '{ target: unknown; }'.",
+  "Input.Number > rejects type and pattern, the primitive owns parsing > the control is always a number field": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Input.Password > enforces the pairing rules too > a disabled control has to say why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ disabled: true; }' but required in type 'ADisabledInputMustSayWhy'.",
+  "Input.Password > rejects suffix, the toggle owns the slot > the toggle owns the suffix slot": "TS2322: Type 'Element' is not assignable to type 'never'.",
+  "Input.Password > rejects type, the toggle owns it > the visibility toggle is what switches \`password\` and \`text\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Input.TextArea > rejects an input ref > the control is a textarea": "TS2322: Type 'RefObject<HTMLInputElement>' is not assignable to type 'RefObject<HTMLInputElement> & (LegacyRef<HTMLTextAreaElement> | undefined)'.
+    Type 'RefObject<HTMLInputElement>' is not assignable to type 'RefObject<HTMLInputElement> & ((instance: HTMLTextAreaElement | null) => void)'.
+      Type 'RefObject<HTMLInputElement>' is not assignable to type '(instance: HTMLTextAreaElement | null) => void'.
+        Type 'RefObject<HTMLInputElement>' provides no match for the signature '(instance: HTMLTextAreaElement | null): void'.",
+  "Input.TextArea > rejects prefix and suffix > adornments belong to a one-line field": "TS2322: Type 'Element' is not assignable to type 'never'.",
+  "disabled and read-only pairing > a forwarded \`boolean | undefined\` still counts as disabled > a disabled control has to say why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ disabled: boolean | undefined; }' but required in type 'ADisabledInputMustSayWhy'.",
+  "disabled and read-only pairing > disabled requires disabledTooltip > a disabled control has to say why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ disabled: true; }' but required in type 'ADisabledInputMustSayWhy'.",
+  "disabled and read-only pairing > disabledTooltip requires disabled > the reason only renders while \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledInput'.",
+  "disabled and read-only pairing > readOnly requires readOnlyTooltip > a locked control has to say why": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ readOnly: boolean | undefined; }' but required in type 'AReadOnlyInputMustSayWhy'.",
+  "disabled and read-only pairing > readOnlyTooltip requires readOnly > the reason only renders while \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlyInput'.",
+  "native props > rejects a prop that does not exist > \`onPressEnter\` is antd, submit on Enter comes from the owning form": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "native props > rejects className and style > visual overrides go through the \`--input-*\` custom properties": "TS2322: Type '{ color: string; }' is not assignable to type 'never'.",
+  "native props > rejects the native size attribute, the prop means the frame height > \`size\` is \`'base' | 'large'\`, not the character-width attribute": "TS2322: Type 'number' is not assignable to type 'InputSizeType | undefined'.",
+  "testId > data-testid is spelled testId > \`data-testid\` is written as the \`testId\` prop": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which survives the tooltip trigger cloning the frame'' is missing in type '{ "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+}
+`;

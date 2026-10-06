@@ -52,6 +52,7 @@
 
 /* The row is a pointer target with unselectable text. A field inside it is neither. */
 .otherInput {
+  display: inline-flex;
   width: 12rem;
   cursor: text;
   user-select: text;

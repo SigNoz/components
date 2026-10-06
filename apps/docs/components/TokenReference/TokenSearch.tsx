@@ -27,15 +27,12 @@ export function TokenSearch({
 	return (
 		<div className={styles.container}>
 			<div className={styles.searchWrapper}>
-				{/* TODO: Update when we have support for prefix icons on Inputs */}
-				<Search className={styles.searchIcon} />
-
 				<Input
 					type="text"
 					value={query}
 					onChange={handleSearchChange}
 					placeholder="Search tokens..."
-					className={styles.searchInput}
+					prefix={<Search />}
 				/>
 			</div>
 
