@@ -1,66 +1,73 @@
+// `width`, `maxWidth`, `height`, `maxHeight` and `spacing` arrive as `--divider-internal-*` custom
+// properties in the inline style, and only on the orientation that reads them.
 .divider {
-    margin: var(--divider-margin, 0);
-    padding: 0;
-    border: none;
-    font-variant: none;
-    flex-shrink: 0;
+	--divider-internal-border-width: var(--divider-border-width, 1px);
+	--divider-internal-border-style: var(--divider-border-style, solid);
+	--divider-internal-border-color: var(--divider-border-color, var(--divider-border));
+
+	flex-shrink: var(--divider-flex-shrink, 0);
+
+	&[data-dashed] {
+		--divider-internal-border-style: var(--divider-dashed-border-style, dashed);
+	}
+
+	&[data-orientation='horizontal'] {
+		display: var(--divider-horizontal-display, flex);
+		align-items: var(--divider-horizontal-align-items, center);
+		gap: var(--divider-horizontal-gap, var(--spacing-6));
+		width: var(--divider-horizontal-width, var(--divider-internal-width, 100%));
+		max-width: var(--divider-horizontal-max-width, var(--divider-internal-max-width, 100%));
+		margin-block: var(--divider-horizontal-margin-block, var(--divider-internal-spacing, 0));
+
+		&::before,
+		&::after {
+			flex: var(--divider-line-flex, 1 1 0);
+			border-block-start-width: var(--divider-internal-border-width);
+			border-block-start-style: var(--divider-internal-border-style);
+			border-block-start-color: var(--divider-internal-border-color);
+		}
+
+		&::before {
+			content: '';
+		}
+
+		&[data-has-label]::after {
+			content: '';
+		}
+	}
+
+	// The empty `::before` sits at the middle of the divider and gives it its baseline. In a line of
+	// text, `vertical-align` lifts that middle above the text baseline by half the x-height, plus a
+	// nudge onto the centre of the text. A flex row ignores `vertical-align` and centres the divider.
+	&[data-orientation='vertical'] {
+		display: var(--divider-vertical-display, inline-flex);
+		align-items: var(--divider-vertical-align-items, center);
+		height: var(--divider-vertical-height, var(--divider-internal-height, 0.9em));
+		max-height: var(--divider-vertical-max-height, var(--divider-internal-max-height, 100%));
+		margin-inline: var(
+			--divider-vertical-margin-inline,
+			var(--divider-internal-spacing, var(--spacing-4))
+		);
+		vertical-align: var(--divider-vertical-vertical-align, calc(0.5ex + 0.06em));
+		border-inline-start-width: var(--divider-internal-border-width);
+		border-inline-start-style: var(--divider-internal-border-style);
+		border-inline-start-color: var(--divider-internal-border-color);
+
+		&::before {
+			content: '';
+		}
+	}
 }
 
-/* Horizontal */
-.divider[data-type="horizontal"] {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    min-width: 100%;
-    border-block-start: var(--divider-border-width, 1px) solid var(--divider-color, var(--l2-border, #e5e7eb));
-}
+.divider__label {
+	// The inline length and spacing of this divider would otherwise reach a divider in the label.
+	--divider-internal-spacing: initial;
+	--divider-internal-width: initial;
+	--divider-internal-max-width: initial;
+	--divider-internal-height: initial;
+	--divider-internal-max-height: initial;
 
-.divider[data-type="horizontal"][data-dashed] {
-    border-block-start-style: dashed;
-}
-
-/* Horizontal with text */
-.divider[data-type="horizontal"][data-with-text] {
-    border-block-start: none;
-    gap: var(--divider-text-gap, 1em);
-}
-
-.divider[data-type="horizontal"][data-with-text]::before,
-.divider[data-type="horizontal"][data-with-text]::after {
-    content: '';
-    flex: 1;
-    border-block-start: var(--divider-border-width, 1px) solid var(--divider-color, var(--l2-border, #e5e7eb));
-}
-
-.divider[data-type="horizontal"][data-with-text][data-dashed]::before,
-.divider[data-type="horizontal"][data-with-text][data-dashed]::after {
-    border-block-start-style: dashed;
-}
-
-/* Vertical */
-.divider[data-type="vertical"] {
-    display: inline-block;
-    position: relative;
-    top: -0.06em;
-    vertical-align: middle;
-    height: 0.9em;
-    margin-inline: var(--divider-vertical-margin, 8px);
-    border-inline-start: var(--divider-border-width, 1px) solid var(--divider-color, var(--l2-border, #e5e7eb));
-}
-
-.divider[data-type="vertical"][data-dashed] {
-    border-inline-start-style: dashed;
-}
-
-/* Text styling */
-.text {
-    display: inline-block;
-    font-weight: var(--divider-text-font-weight, 500);
-    font-size: var(--divider-text-font-size, 14px);
-    white-space: nowrap;
-    color: var(--divider-text-color, var(--l2-foreground, inherit));
-}
-
-.divider[data-plain] .text {
-    font-weight: var(--divider-plain-text-font-weight, 400);
+	// No font or colour: the label inherits them, and the caller styles it with Typography.
+	flex-shrink: var(--divider-label-flex-shrink, 0);
+	white-space: var(--divider-label-white-space, nowrap);
 }
