@@ -15,7 +15,7 @@
  * | `--button-group-disabled-overflow` | `hidden` |
  * | `--button-group-disabled-stripe-after-mask-image` | `linear-gradient(to right, transparent 5%, black...` |
  * | `--button-group-disabled-stripe-after-right` | `0` |
- * | `--button-group-disabled-stripe-background-image` | `repeating-linear-gradient(-45deg, 							transp...` |
+ * | `--button-group-disabled-stripe-background-image` | `repeating-linear-gradient(-45deg, transparent, ...` |
  * | `--button-group-disabled-stripe-before-left` | `0` |
  * | `--button-group-disabled-stripe-before-mask-image` | `linear-gradient(to left, transparent 5%, black ...` |
  * | `--button-group-disabled-stripe-bottom` | `0` |
@@ -128,7 +128,7 @@
  * | `--button-group-text-decoration` | `none` |
  * | `--button-group-text-spacing` | `-0.005em` |
  * | `--button-group-tooltip-max-width` | `20rem` |
- * | `--button-group-transition` | `background-color 150ms ease, 				color 150ms ea...` |
+ * | `--button-group-transition` | `background-color 150ms ease, color 150ms ease, ...` |
  * | `--button-group-vertical-align` | `middle` |
  * | `--button-group-width` | `var(--button-group-internal-width, auto)` |
  */

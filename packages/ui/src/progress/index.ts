@@ -20,7 +20,7 @@
  * | `--progress-indicator-active-animation-duration` | `1.5s` |
  * | `--progress-indicator-active-animation-iteration-count` | `infinite` |
  * | `--progress-indicator-active-animation-timing-function` | `linear` |
- * | `--progress-indicator-active-background-image` | `linear-gradient( 			-45deg, 			var(--progress-i...` |
+ * | `--progress-indicator-active-background-image` | `linear-gradient( -45deg, var(--progress-interna...` |
  * | `--progress-indicator-active-transition-duration` | `0.3s` |
  * | `--progress-indicator-active-transition-property` | `width` |
  * | `--progress-indicator-active-transition-timing-function` | `cubic-bezier(0.4, 0, 0.2, 1)` |
@@ -44,10 +44,10 @@
  * | `--progress-track-height` | `var(--spacing-3)` |
  * | `--progress-track-min-width` | `0` |
  * | `--progress-track-overflow` | `hidden` |
- * | `--progress-track-steps-mask-image` | `linear-gradient( 			to right, 			transparent va...` |
+ * | `--progress-track-steps-mask-image` | `linear-gradient( to right, transparent var(--pr...` |
  * | `--progress-track-steps-mask-position` | `0 0, 0 50%, 0 0, 0 0, 0 0, 0 0` |
  * | `--progress-track-steps-mask-repeat` | `repeat-x` |
- * | `--progress-track-steps-mask-size` | `var(--progress-internal-step-period) 100%, 		va...` |
+ * | `--progress-track-steps-mask-size` | `var(--progress-internal-step-period) 100%, var(...` |
  * | `--progress-value` | `-` |
  * | `--progress-value-color` | `var(--progress-value)` |
  * | `--progress-value-flex-shrink` | `0` |

@@ -85,7 +85,7 @@
  * | `--radio-group-success-dot` | `-` |
  * | `--radio-group-success-dot-color` | `var(--radio-group-success-dot)` |
  * | `--radio-group-success-hover-border-color` | `var(--radio-group-success-border-hover)` |
- * | `--radio-group-transition` | `background-color 150ms ease, 			border-color 15...` |
+ * | `--radio-group-transition` | `background-color 150ms ease, border-color 150ms...` |
  * | `--radio-group-warning-background` | `-` |
  * | `--radio-group-warning-border-hover` | `-` |
  * | `--radio-group-warning-checked-background-color` | `var(--radio-group-warning-background)` |
