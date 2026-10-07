@@ -7,8 +7,8 @@ export type CalloutSizeType = (typeof CalloutSize)[keyof typeof CalloutSize];
 export type CalloutProps = {
 	/**
 	 * Forwarded to the callout as `data-testid`. The parts derive theirs from it, as
-	 * `{testId}-icon`, `{testId}-title`, `{testId}-description`, `{testId}-toggle` and
-	 * `{testId}-close`.
+	 * `{testId}-icon`, `{testId}-title`, `{testId}-description`, `{testId}-toggle`,
+	 * `{testId}-close` and `{testId}-action`.
 	 */
 	testId?: string;
 	/**
@@ -38,7 +38,7 @@ export type CalloutProps = {
 	/**
 	 * The description of the callout. It wraps, and scrolls once the callout has no height left.
 	 *
-	 * @note `Callout` and `Callout.Closeable` render nothing while it is empty.
+	 * @note `Callout`, `Callout.Closeable` and `Callout.Action` render nothing while it is empty.
 	 */
 	children: ReactNode;
 	/**

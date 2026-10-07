@@ -71,10 +71,15 @@ const STATES = ['default', 'hover', 'focus'] as const;
 
 type State = (typeof STATES)[number];
 
-const CONTROL_SLOTS = ['callout-toggle', 'callout-close', 'callout-link'];
+const CONTROLS = [
+	'[data-slot="callout-toggle"]',
+	'[data-slot="callout-close"]',
+	'[data-slot="callout-link"]',
+	'[data-slot="callout-button"]',
+];
 
 function stateSelector(state: Exclude<State, 'default'>): string[] {
-	return CONTROL_SLOTS.map((slot) => `[data-state-cell="${state}"] [data-slot="${slot}"]`);
+	return CONTROLS.map((control) => `[data-state-cell="${state}"] ${control}`);
 }
 
 function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
@@ -121,6 +126,8 @@ const LINKED_DESCRIPTION = (
 
 // The matrices show the close button, so a click on it keeps the callout on screen.
 function keepOpen(): void {}
+
+const ACTION = <Callout.Button>Refresh</Callout.Button>;
 
 function VariantCell({
 	variant,
@@ -228,6 +235,42 @@ export const CalloutShowcase: Story = {
 
 			<div className="story-section">
 				<Typography size="base" weight="semibold">
+					Action
+				</Typography>
+				<Typography size="sm">
+					<code>Callout.Action</code> in every color at both sizes, with a{' '}
+					<code>Callout.Button</code> in the color of the callout. The action sits where the close
+					button does, centered on the first line of the description, and leaves the height of the
+					callout alone.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(SIZES.length)}
+				>
+					<MatrixHeader columns={SIZES} />
+					{COLORS.map((color) => (
+						<Fragment key={color}>
+							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								{color}
+							</Typography>
+							{SIZES.map((size) => (
+								<Callout.Action
+									key={size}
+									color={color}
+									size={size}
+									icon={ICONS[color]}
+									action={ACTION}
+								>
+									{LINKED_DESCRIPTION}
+								</Callout.Action>
+							))}
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
 					Title hit area
 				</Typography>
 				<Typography size="sm">
@@ -253,8 +296,9 @@ export const CalloutShowcase: Story = {
 					States
 				</Typography>
 				<Typography size="sm">
-					The title row, the close button and the link in each state. <code>hover</code> and{' '}
-					<code>focus</code> are forced by <code>storybook-addon-pseudo-states</code>.
+					The title row, the close button, the button of an action and the link in each state.{' '}
+					<code>hover</code> and <code>focus</code> are forced by{' '}
+					<code>storybook-addon-pseudo-states</code>.
 				</Typography>
 				<div
 					className={`${styles.matrix} ${styles.marginTopMedium}`}
@@ -291,6 +335,21 @@ export const CalloutShowcase: Story = {
 							>
 								Your trial ends in 3 days.
 							</Callout.Closeable>
+						</div>
+					))}
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						action
+					</Typography>
+					{STATES.map((state) => (
+						<div key={state} data-state-cell={state}>
+							<Callout.Action
+								color="warning"
+								size="sm"
+								icon={<SolidAlertTriangle />}
+								action={ACTION}
+							>
+								New data is available for this view.
+							</Callout.Action>
 						</div>
 					))}
 				</div>

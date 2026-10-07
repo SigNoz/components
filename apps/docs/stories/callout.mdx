@@ -7,8 +7,8 @@ import * as CalloutComponentsStories from './callout-components.stories';
 # Callout
 
 A tinted message with a severity: an icon and a description, always visible. A plain `Callout` has
-no title and no chevron. Expansion, dismissal and links come from sub-components, so the static one
-stays static.
+no title and no chevron. Expansion, dismissal, actions and links come from sub-components, so the
+static one stays static.
 
 `color`, `size`, `icon` and the children are all required. The callout has no default appearance,
 every call site says what it is.
@@ -57,8 +57,9 @@ ignored. It takes the color of the callout, and a color set on the icon element 
 
 ## Empty content
 
-`Callout` and `Callout.Closeable` render nothing while the children are empty, since a tinted box
-with only an icon carries no message. `null`, `false` and `''` all return no element.
+`Callout`, `Callout.Closeable` and `Callout.Action` render nothing while the children are empty,
+since a tinted box with only an icon carries no message. `null`, `false` and `''` all return no
+element.
 
 ```tsx
 // renders nothing while `error` is undefined
@@ -84,8 +85,8 @@ first, so a long word never forces a horizontal scroll.
 
 ## Keyboard
 
-The callout itself is not focusable. The title row, the close button and the links take focus, in the
-order they show on screen. `Esc` does nothing, a callout is not an overlay.
+The callout itself is not focusable. The title row, the close button, the action and the links take
+focus, in the order they show on screen. `Esc` does nothing, a callout is not an overlay.
 
 The description is never made focusable. When it scrolls, Chromium and Firefox let a keyboard user
 focus it and scroll with the arrow keys on their own (Chromium only while it holds no link). Safari
@@ -177,6 +178,55 @@ the others.
 
 None of the sub-components is both expandable and closeable.
 
+## Callout.Action
+
+A callout with an action where `Callout.Closeable` has its close button: on the right edge, centered
+on the first line of the description. Use it for a message the user can act on, such as stale data
+with a button that refreshes it.
+
+The callout renders `action` as given and adds no handler, name or state to it, so the action owns
+its click, its label and anything it shows while it runs. It does not grow the callout, so keep it
+about one line tall: `Callout.Button` and a `Button` with `size="sm"` fit both sizes. An `action`
+that renders nothing leaves a plain `Callout`.
+
+```tsx
+<Callout.Action
+	color="warning"
+	size="sm"
+	icon={<SolidAlertTriangle />}
+	action={<Callout.Button onClick={refetch}>Refresh</Callout.Button>}
+>
+	New data is available for this view.
+</Callout.Action>
+```
+
+The action sits inside the live region, so a screen reader reads its label with the message.
+
+## Callout.Button
+
+A solid button in the color of the callout around it, for the `action` of `Callout.Action`. It is a
+`Button` with `variant="solid"`, the `color` of the callout and `size="sm"`, so it fits the first
+line of both sizes and never drifts from the tint. It takes every other prop of `Button`, such as
+`onClick`, `prefix`, `loading` and `disabled` with `disabledTooltip`. It has no `variant`, `color`,
+`size`, `className` or `style`.
+
+```tsx
+<Callout.Action
+	color="danger"
+	size="sm"
+	icon={<SolidXCircle />}
+	action={
+		<Callout.Button loading={isRetrying} onClick={retry}>
+			Retry
+		</Callout.Button>
+	}
+>
+	The request failed.
+</Callout.Action>
+```
+
+A button outside a callout renders as `secondary` and warns on the console.
+
 ## Callout.Link
 
 A link for use inside the children. It draws in the link color of the callout around it and inherits
@@ -208,8 +258,8 @@ the console.
 ## Asserting on it
 
 `testId` becomes `data-testid` on the root, and the parts derive theirs from it. With
-`testId="trial"`, the parts are `trial-icon`, `trial-title`, `trial-description`, `trial-toggle` and
-`trial-close`. `Callout.Link` takes a `testId` of its own.
+`testId="trial"`, the parts are `trial-icon`, `trial-title`, `trial-description`, `trial-toggle`,
+`trial-close` and `trial-action`. `Callout.Button` and `Callout.Link` take a `testId` of their own.
 
 Otherwise reach for the roles and the data attributes, never the hashed class names:
 
@@ -221,6 +271,8 @@ Otherwise reach for the roles and the data attributes, never the hashed class na
 | `callout-title`       | the title, `data-truncated` while it does not fit               |
 | `callout-description` | the description                                                 |
 | `callout-close`       | the close button, `Callout.Closeable` and its persisted form    |
+| `callout-action`      | the box around the action, `Callout.Action` only                |
+| `callout-button`      | each `Callout.Button`                                           |
 | `callout-link`        | each `Callout.Link`                                             |
 
 The root mirrors `color` on `data-color` and `size` on `data-size`. `Callout.Expandable` adds
@@ -241,6 +293,14 @@ The root mirrors `color` on `data-color` and `size` on `data-size`. `Callout.Exp
 ### Callout.CloseablePersisted props
 
 <Controls of={CalloutComponentsStories.CloseablePersisted} />
+
+### Callout.Action props
+
+<Controls of={CalloutComponentsStories.Action} />
+
+### Callout.Button props
+
+<Controls of={CalloutComponentsStories.Button} />
 
 ### Callout.Link props
 

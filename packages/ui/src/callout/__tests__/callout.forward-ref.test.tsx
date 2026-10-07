@@ -13,6 +13,7 @@ describe('Callout forwardRef', () => {
 			createRef<HTMLDivElement>(),
 			createRef<HTMLDivElement>(),
 			createRef<HTMLDivElement>(),
+			createRef<HTMLDivElement>(),
 		];
 
 		render(
@@ -49,6 +50,9 @@ describe('Callout forwardRef', () => {
 				>
 					a
 				</Callout.CloseablePersisted>
+				<Callout.Action ref={refs[4]} color="primary" size="sm" icon={icon} action="Refresh">
+					a
+				</Callout.Action>
 			</>,
 		);
 

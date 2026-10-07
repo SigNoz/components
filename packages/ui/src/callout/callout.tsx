@@ -1,5 +1,7 @@
 import { forwardRef } from 'react';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
+import { CalloutAction } from './subcomponents/callout-action.js';
+import { CalloutButton } from './subcomponents/callout-button.js';
 import { CalloutCloseable } from './subcomponents/callout-closeable.js';
 import { CalloutCloseablePersisted } from './subcomponents/callout-closeable-persisted.js';
 import { CalloutExpandable } from './subcomponents/callout-expandable.js';
@@ -10,8 +12,9 @@ import type { CalloutProps } from './types.js';
 /**
  * A static message with a severity: a tinted box with an icon and a description, always visible,
  * with no chevron. Use `Callout.Expandable` for a description the user can hide,
- * `Callout.Closeable` and `Callout.CloseablePersisted` for one the user can dismiss, and
- * `Callout.Link` for a link inside the description.
+ * `Callout.Closeable` and `Callout.CloseablePersisted` for one the user can dismiss,
+ * `Callout.Action` for one with an action such as a refresh button, `Callout.Button` for that
+ * button, and `Callout.Link` for a link inside the description.
  *
  * Every `aria-*` and any `data-*` are forwarded. There is no `className` or `style`.
  *
@@ -88,5 +91,7 @@ export const Callout = Object.assign(CalloutRoot, {
 	Expandable: CalloutExpandable,
 	Closeable: CalloutCloseable,
 	CloseablePersisted: CalloutCloseablePersisted,
+	Action: CalloutAction,
+	Button: CalloutButton,
 	Link: CalloutLink,
 });

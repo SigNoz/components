@@ -77,7 +77,7 @@ export const calloutArgTypes: Meta<typeof Callout>['argTypes'] = {
 	testId: {
 		control: 'text',
 		description:
-			'Forwarded as `data-testid`. The parts derive theirs from it: `-icon`, `-title`, `-description`, `-toggle` and `-close`.',
+			'Forwarded as `data-testid`. The parts derive theirs from it: `-icon`, `-title`, `-description`, `-toggle`, `-close` and `-action`.',
 		table: { category: 'Testing', type: { summary: 'string' } },
 	},
 	id: {

@@ -118,10 +118,32 @@ describe('className and style that get past the types', () => {
 				>
 					a
 				</Callout.CloseablePersisted>
+				<Callout.Action
+					color="primary"
+					size="sm"
+					icon={icon}
+					testId="action"
+					action={
+						<Callout.Button testId="callout-button" {...STRAY}>
+							Refresh
+						</Callout.Button>
+					}
+					{...STRAY}
+				>
+					a
+				</Callout.Action>
 			</>,
 		);
 
-		for (const testId of ['callout', 'callout-link', 'expandable', 'closeable', 'persisted']) {
+		for (const testId of [
+			'callout',
+			'callout-link',
+			'expandable',
+			'closeable',
+			'persisted',
+			'action',
+			'callout-button',
+		]) {
 			expectNoStrayStyle(screen.getByTestId(testId));
 		}
 	});

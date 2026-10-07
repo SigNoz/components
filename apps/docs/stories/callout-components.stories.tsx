@@ -1,6 +1,6 @@
 import { SolidAlertTriangle, SolidInfoCircle } from '@signozhq/icons';
 import {
-	Button,
+	Button as UiButton,
 	Callout,
 	type CalloutCloseablePersistedProps,
 	type CalloutCloseableProps,
@@ -86,7 +86,7 @@ function CloseablePlayground({ onClose, ...props }: CalloutCloseableProps): Reac
 				finalFocus={showRef}
 			/>
 			<div>
-				<Button
+				<UiButton
 					ref={showRef}
 					variant="outlined"
 					color="secondary"
@@ -94,7 +94,7 @@ function CloseablePlayground({ onClose, ...props }: CalloutCloseableProps): Reac
 					onClick={() => setClosed(false)}
 				>
 					Show it again
-				</Button>
+				</UiButton>
 			</div>
 		</div>
 	);
@@ -160,7 +160,7 @@ function CloseablePersistedPlayground(props: CalloutCloseablePersistedProps): Re
 		<div className={styles.stack}>
 			<Callout.CloseablePersisted key={mount} {...props} finalFocus={clearRef} />
 			<div>
-				<Button
+				<UiButton
 					ref={clearRef}
 					variant="outlined"
 					color="secondary"
@@ -171,7 +171,7 @@ function CloseablePersistedPlayground(props: CalloutCloseablePersistedProps): Re
 					}}
 				>
 					Clear the saved dismissal
-				</Button>
+				</UiButton>
 			</div>
 		</div>
 	);
@@ -221,6 +221,124 @@ export const CloseablePersisted: StoryObj<typeof Callout.CloseablePersisted> = {
 		},
 	},
 	render: (args) => <CloseablePersistedPlayground {...args} />,
+};
+
+/**
+ * `Callout.Action` adds an action where `Callout.Closeable` has its close button, such as a button
+ * that refreshes stale data.
+ */
+export const Action: StoryObj<typeof Callout.Action> = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+	},
+	args: {
+		color: 'warning',
+		size: 'sm',
+		icon: <SolidAlertTriangle />,
+		children: 'New data is available for this view.',
+		action: <Callout.Button onClick={fn()}>Refresh</Callout.Button>,
+	},
+	argTypes: {
+		action: {
+			control: false,
+			description:
+				'Required. The element on the right edge, centered on the first line of the description, such as a `Callout.Button`. It does not grow the callout, so keep it about one line tall. One that renders nothing leaves a plain `Callout`.',
+			table: { category: 'Content', type: { summary: 'ReactNode' } },
+		},
+	},
+	render: (args) => <Callout.Action {...args} />,
+};
+
+/**
+ * `Callout.Button` is a solid `Button` in the color of the callout around it, for the `action` of
+ * `Callout.Action`. It has no `variant`, `color` or `size`.
+ */
+export const Button: StoryObj<typeof Callout.Button> = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+		// The callout props are declared on the parent `Meta`; `Callout.Button` has none of them.
+		controls: {
+			include: [
+				'children',
+				'prefix',
+				'loading',
+				'disabled',
+				'disabledTooltip',
+				'onClick',
+				'testId',
+			],
+		},
+	},
+	args: {
+		children: 'Refresh',
+		loading: false,
+		disabled: false,
+		onClick: fn(),
+	},
+	argTypes: {
+		children: {
+			control: 'text',
+			description: 'Required. The label of the button.',
+			table: { category: 'Content', type: { summary: 'ReactNode' } },
+		},
+		prefix: {
+			control: false,
+			description: 'An icon before the label.',
+			table: { category: 'Content', type: { summary: 'ReactElement' } },
+		},
+		loading: {
+			control: 'boolean',
+			description:
+				'Shows a spinner over the `prefix` and ignores clicks. The button stays focusable.',
+			table: {
+				category: 'State',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		disabled: {
+			control: 'boolean',
+			description: 'Disables the button. Requires `disabledTooltip`, the reason shown on hover.',
+			table: { category: 'State', type: { summary: 'boolean' } },
+		},
+		disabledTooltip: {
+			control: 'text',
+			description: 'Why the button is disabled, shown in a tooltip while `disabled` is set.',
+			table: { category: 'State', type: { summary: 'ReactNode' } },
+		},
+		onClick: {
+			control: false,
+			description: 'Runs when the button is clicked.',
+			table: { category: 'Events', type: { summary: 'MouseEventHandler' } },
+		},
+		testId: {
+			control: 'text',
+			description: 'Forwarded to the button as `data-testid`.',
+			table: { category: 'Testing', type: { summary: 'string' } },
+		},
+	},
+	// Only the button props reach `Callout.Button`, the callout args of the parent `Meta` stay out.
+	render: ({ children, prefix, loading, disabled, disabledTooltip, onClick, testId }) => (
+		<Callout.Action
+			color="warning"
+			size="sm"
+			icon={<SolidAlertTriangle />}
+			action={
+				<Callout.Button
+					prefix={prefix}
+					loading={loading}
+					disabled={disabled}
+					disabledTooltip={disabledTooltip}
+					onClick={onClick}
+					testId={testId}
+				>
+					{children}
+				</Callout.Button>
+			}
+		>
+			New data is available for this view.
+		</Callout.Action>
+	),
 };
 
 /**

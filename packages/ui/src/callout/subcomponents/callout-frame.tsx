@@ -1,6 +1,7 @@
 import { cloneElement, forwardRef, type ReactElement, type ReactNode } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../callout.module.scss';
+import { CalloutColorContext } from '../callout-context.js';
 import { ALERT_COLORS } from '../constants.js';
 import type { CalloutProps } from '../types.js';
 import { calloutSizeStyle } from '../utils.js';
@@ -16,7 +17,8 @@ export type CalloutFrameProps = CalloutProps &
 		 */
 		header?: ReactNode;
 		/**
-		 * The close button of `Callout.Closeable`, after the content on the right edge.
+		 * The close button of `Callout.Closeable` or the action of `Callout.Action`, after the
+		 * content on the right edge.
 		 */
 		trailing?: ReactNode;
 		/**
@@ -68,32 +70,35 @@ export const CalloutFrame = forwardRef<HTMLDivElement, CalloutFrameProps>(functi
 		children,
 	});
 
+	// `Callout.Button` reads the color to paint itself in it.
 	return (
-		<div
-			{...props}
-			ref={ref}
-			data-slot="callout"
-			data-color={color}
-			data-size={size}
-			data-has-title={header !== undefined || undefined}
-			role={liveRole}
-			className={styles['callout']}
-			style={calloutSizeStyle({ width, maxWidth, height, maxHeight })}
-			{...(testId === undefined ? {} : { 'data-testid': testId })}
-		>
-			<span
-				data-slot="callout-icon"
-				className={styles['callout__icon']}
-				aria-hidden="true"
-				data-testid={partTestId(testId, 'icon')}
+		<CalloutColorContext.Provider value={color}>
+			<div
+				{...props}
+				ref={ref}
+				data-slot="callout"
+				data-color={color}
+				data-size={size}
+				data-has-title={header !== undefined || undefined}
+				role={liveRole}
+				className={styles['callout']}
+				style={calloutSizeStyle({ width, maxWidth, height, maxHeight })}
+				{...(testId === undefined ? {} : { 'data-testid': testId })}
 			>
-				{icon}
-			</span>
-			<div className={styles['callout__content']}>
-				{header}
-				{description}
+				<span
+					data-slot="callout-icon"
+					className={styles['callout__icon']}
+					aria-hidden="true"
+					data-testid={partTestId(testId, 'icon')}
+				>
+					{icon}
+				</span>
+				<div className={styles['callout__content']}>
+					{header}
+					{description}
+				</div>
+				{trailing}
 			</div>
-			{trailing}
-		</div>
+		</CalloutColorContext.Provider>
 	);
 });

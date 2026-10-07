@@ -310,6 +310,15 @@
 	);
 }
 
+// The action of `Callout.Action`. The box is one line tall and centers the action on it, so an
+// action taller than the line spills evenly into the padding instead of growing the callout.
+.callout__action {
+	display: var(--callout-action-display, flex);
+	flex-shrink: var(--callout-action-flex-shrink, 0);
+	align-items: var(--callout-action-align-items, center);
+	block-size: var(--callout-internal-line-height);
+}
+
 .callout__link {
 	color: var(--callout-internal-link, inherit);
 	text-decoration: var(--callout-link-text-decoration, underline);

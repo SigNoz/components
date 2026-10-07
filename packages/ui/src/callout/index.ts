@@ -5,6 +5,9 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--callout-action-align-items` | `center` |
+ * | `--callout-action-display` | `flex` |
+ * | `--callout-action-flex-shrink` | `0` |
  * | `--callout-align-items` | `flex-start` |
  * | `--callout-archive-background` | `-` |
  * | `--callout-archive-background-color` | `var(--callout-archive-background)` |
@@ -206,6 +209,11 @@ export {
 	CalloutColor,
 	CalloutSize,
 } from './constants.js';
+export type { CalloutActionProps } from './subcomponents/callout-action.js';
+export type {
+	CalloutButtonProps,
+	ValidateCalloutButtonProps,
+} from './subcomponents/callout-button.js';
 export type { CalloutCloseableProps } from './subcomponents/callout-closeable.js';
 export type { CalloutCloseablePersistedProps } from './subcomponents/callout-closeable-persisted.js';
 export type { CalloutExpandableProps } from './subcomponents/callout-expandable.js';
