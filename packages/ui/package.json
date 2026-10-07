@@ -452,7 +452,7 @@
 		"nuqs": "^2.9.2",
 		"react-compiler-runtime": "^1.0.0",
 		"react-day-picker": "^9.8.1",
-		"react-resizable-panels": "^4.12.2"
+		"react-resizable-panels": "4.12.2"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",

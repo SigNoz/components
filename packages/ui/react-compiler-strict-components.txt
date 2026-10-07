@@ -16,3 +16,4 @@ slider
 input
 command
 divider
+resizable

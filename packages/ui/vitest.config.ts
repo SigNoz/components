@@ -11,7 +11,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // These assert on files on disk (built output, package.json exports, tsc
 // diagnostics) and need `node:fs`, which the browser bundler externalizes.
-const nodeOnlyTests = ['src/__tests__/*.test.ts', 'src/**/*.types.messages.test.ts'];
+// `*.server.test.tsx` renders on the server, where there is no `window`.
+const nodeOnlyTests = [
+	'src/__tests__/*.test.ts',
+	'src/**/*.types.messages.test.ts',
+	'src/**/*.server.test.tsx',
+];
 
 const shared = {
 	...getViteLibConfig(entries, { plugins: [react({ compiler: reactCompilerOptions })] }),

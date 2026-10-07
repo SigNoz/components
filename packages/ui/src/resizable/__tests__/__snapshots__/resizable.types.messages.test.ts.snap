@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Resizable type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "items > rejects a panel with an id instead of a value > a panel is named by \`value\`": "TS2353: Object literal may only specify known properties, and 'id' does not exist in type 'ResizableItemType'.",
+  "items > rejects a panel with no label > \`label\` names the handle and is required": "TS2741: Property 'label' is missing in type '{ value: string; children: string; }' but required in type 'ResizableItemType'.",
+  "items > rejects a size given as a number > \`240\` has no unit": "TS2322: Type 'number' is not assignable to type 'ResizableSizeType | undefined'.",
+  "items > rejects a size in a unit other than %, px or rem > \`vh\` is not one of the units": "TS2322: Type '"50vh"' is not assignable to type 'ResizableSizeType | undefined'.",
+  "items > rejects a size with no unit > \`'25'\` has no unit": "TS2322: Type '"25"' is not assignable to type 'ResizableSizeType | undefined'.",
+  "items > rejects the panel props of the library > \`collapsible\` has no use-case": "TS2353: Object literal may only specify known properties, and 'collapsible' does not exist in type 'ResizableItemType'.",
+  "root props > rejects a Resizable with no orientation > \`orientation\` is required": "TS2741: Property 'orientation' is missing in type '{ items: ResizableItemType[]; }' but required in type '{ [key: \`data-\${string}\`]: unknown; items: readonly ResizableItemType[]; orientation: ResizableOrientationType; storageKey?: string | undefined; storage?: ResizableStorageType | undefined; testId?: string | undefined; 'data-testid'?: ResizableDataTestIdIsWrittenAsTestId | undefined; }'.",
+  "root props > rejects a storage without getItem and setItem > a storage needs \`setItem\` too": "TS2741: Property 'setItem' is missing in type '{ getItem: () => null; }' but required in type 'ResizableStorageType'.",
+  "root props > rejects an orientation outside the two > \`diagonal\` is not an orientation": "TS2322: Type '"diagonal"' is not assignable to type 'ResizableOrientationType'.",
+  "root props > rejects children, the panels come from items > \`children\` is not a prop, pass the panels in \`items\`": "TS2322: Type '{ items: ResizableItemType[]; orientation: "horizontal"; children: Element; }' is not assignable to type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.
+    Property 'children' does not exist on type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.",
+  "root props > rejects className and style, the component owns its look > \`className\` is not a prop": "TS2322: Type '{ items: ResizableItemType[]; orientation: "horizontal"; className: string; }' is not assignable to type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.
+    Property 'className' does not exist on type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.",
+  "root props > rejects className and style, the component owns its look > \`style\` is not a prop": "TS2322: Type '{ items: ResizableItemType[]; orientation: "horizontal"; style: {}; }' is not assignable to type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.
+    Property 'style' does not exist on type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.",
+  "root props > rejects data-testid, the prop is testId > \`data-testid\` is written as \`testId\`": "TS2322: Type '{ items: ResizableItemType[]; orientation: "horizontal"; "data-testid": string; }' is not assignable to type '{ [key: \`data-\${string}\`]: unknown; items: readonly ResizableItemType[]; orientation: ResizableOrientationType; storageKey?: string | undefined; storage?: ResizableStorageType | undefined; testId?: string | undefined; 'data-testid'?: ResizableDataTestIdIsWrittenAsTestId | undefined; }'.
+    Types of property ''data-testid'' are incompatible.
+      Type 'string' is not assignable to type 'ResizableDataTestIdIsWrittenAsTestId'.",
+  "root props > rejects the props of the library > \`defaultLayout\` is replaced by \`storageKey\`": "TS2322: Type '{ items: ResizableItemType[]; orientation: "horizontal"; defaultLayout: { a: number; }; }' is not assignable to type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.
+    Property 'defaultLayout' does not exist on type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.",
+  "root props > rejects the props of the library > \`disabled\` has no use-case": "TS2322: Type '{ items: ResizableItemType[]; orientation: "horizontal"; disabled: true; }' is not assignable to type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.
+    Property 'disabled' does not exist on type 'IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & AriaAttributes & { ...; } & RefAttributes<...>'.",
+}
+`;

@@ -540,10 +540,10 @@ onLayoutChanged?: (layout: Layout) => void;
 onLayoutChanged?: OriginalGroupProps['onLayoutChanged'];
 ```
 
-`resizable.tsx` still has this bug today: `react-resizable-panels` types
+`resizable.tsx` once had this bug: `react-resizable-panels` types
 `GroupProps.onLayoutChanged` as `(layout: Layout, meta: LayoutChangedMeta) => void`, our copy
-declares `(layout: Layout) => void`. `pnpm run type-check` passes, because nothing in this repo
-compares the two. The error only lands in the consumer:
+declared `(layout: Layout) => void`. `pnpm run type-check` passed, because nothing in this repo
+compares the two. The error only landed in the consumer:
 
 ```
 error TS2322: Type '(layout: Layout, meta: LayoutChangedMeta) => void' is not
