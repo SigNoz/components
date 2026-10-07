@@ -2,6 +2,7 @@ import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
+import { TooltipTriggerBoundary } from '../tooltip/tooltip-trigger-context.js';
 import { RadioGroupTextOverflow } from './constants.js';
 import type { RejectedProps } from '../lib/utils.js';
 import styles from './radio-group.module.scss';
@@ -78,15 +79,18 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
-			{items.map((item) => (
-				<RadioGroupItem
-					key={item.value}
-					item={item}
-					textOverflow={textOverflow}
-					tooltipsSuppressed={tooltipContent !== null}
-					groupTestId={testId}
-				/>
-			))}
+			{/* Each row opens its own tooltip, not one stacked into the group's. */}
+			<TooltipTriggerBoundary>
+				{items.map((item) => (
+					<RadioGroupItem
+						key={item.value}
+						item={item}
+						textOverflow={textOverflow}
+						tooltipsSuppressed={tooltipContent !== null}
+						groupTestId={testId}
+					/>
+				))}
+			</TooltipTriggerBoundary>
 		</RadioGroupPrimitive>
 	);
 
