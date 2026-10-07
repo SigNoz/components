@@ -175,12 +175,6 @@
 		}
 	}
 
-	// A label can hold a node that draws outside its own box, such as a focus ring. Clipping cuts
-	// that, so this mode stops clipping instead of marking the cut.
-	&[data-text-overflow='visible'] &__label {
-		overflow: var(--badge-label-overflow, visible);
-	}
-
 	&[data-text-overflow='ellipsis'] &__label {
 		text-overflow: var(--badge-label-text-overflow, ellipsis);
 	}

@@ -113,7 +113,7 @@ const meta: Meta<typeof Badge> = {
 			control: 'inline-radio',
 			options: Object.values(BadgeTextOverflow),
 			description:
-				'`ellipsis` truncates once something constrains the width and shows the full content in a tooltip while truncated. `hidden` clips with no tooltip. `visible` clips nothing and lets the content paint outside the box.',
+				'`ellipsis` truncates once something constrains the width and shows the full content in a tooltip while truncated. `hidden` clips with no tooltip.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'BadgeTextOverflowType' },
@@ -347,22 +347,6 @@ export const BadgeShowcase: Story = {
 						{LONG_LABEL}
 					</Badge>
 					<Typography size="sm">Clips at the badge's edge, no tooltip.</Typography>
-
-					<Typography size="sm" weight="medium">
-						visible
-					</Typography>
-					<Badge
-						variant="solid"
-						color="primary"
-						textOverflow="visible"
-						textTransform="capitalize"
-						maxWidth={CONSTRAINED_WIDTH}
-					>
-						{LONG_LABEL}
-					</Badge>
-					<Typography size="sm">
-						Clips nothing, the content paints outside the badge's box. No tooltip.
-					</Typography>
 				</div>
 			</div>
 		</div>

@@ -170,20 +170,17 @@ describe('Badge overflow tooltip', () => {
 		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 	});
 
-	it.each(['hidden', 'visible'] as const)(
-		'opts out of the tooltip entirely with textOverflow="%s"',
-		async (textOverflow) => {
-			const user = userEvent.setup();
-			truncate();
-			render(
-				<Badge variant="solid" color="primary" textOverflow={textOverflow}>
-					{LABEL}
-				</Badge>,
-			);
+	it('opts out of the tooltip entirely with textOverflow="hidden"', async () => {
+		const user = userEvent.setup();
+		truncate();
+		render(
+			<Badge variant="solid" color="primary" textOverflow="hidden">
+				{LABEL}
+			</Badge>,
+		);
 
-			await user.hover(screen.getByText(LABEL));
+		await user.hover(screen.getByText(LABEL));
 
-			expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-		},
-	);
+		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+	});
 });

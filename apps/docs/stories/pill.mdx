@@ -104,17 +104,13 @@ the `--pill-*` tokens and keep any `style` you pass. Numbers are written as `px`
 `textOverflow` decides what happens to the content once it does not fit that width. `ellipsis` is
 the default: it truncates, marks the pill with `data-truncated`, and hands the full content to a
 tooltip, only while it is actually truncated, so content that fits never opens one. `hidden` clips
-at the pill's edge, with no marker and no tooltip. `visible` clips nothing and lets the content
-paint outside the pill's box.
+at the pill's edge, with no marker and no tooltip.
 
 ```tsx
 <Pill variant="outlined" color="secondary" maxWidth="10rem">
 	checkout-service-production-east-us-2
 </Pill>
 <Pill variant="outlined" color="secondary" maxWidth="10rem" textOverflow="hidden">
-	checkout-service-production-east-us-2
-</Pill>
-<Pill variant="outlined" color="secondary" maxWidth="10rem" textOverflow="visible">
 	checkout-service-production-east-us-2
 </Pill>
 ```

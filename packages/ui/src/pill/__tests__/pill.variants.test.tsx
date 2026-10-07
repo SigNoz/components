@@ -38,13 +38,13 @@ describe('Pill style tokens', () => {
 		expect(screen.getByRole('button')).toHaveAttribute('data-text-overflow', 'ellipsis');
 	});
 
-	it.each(['hidden', 'visible'] as const)('mirrors textOverflow="%s"', (textOverflow) => {
+	it('mirrors textOverflow="hidden"', () => {
 		render(
-			<Pill variant="outlined" color="primary" textOverflow={textOverflow}>
+			<Pill variant="outlined" color="primary" textOverflow="hidden">
 				Label
 			</Pill>,
 		);
 
-		expect(screen.getByRole('button')).toHaveAttribute('data-text-overflow', textOverflow);
+		expect(screen.getByRole('button')).toHaveAttribute('data-text-overflow', 'hidden');
 	});
 });

@@ -157,36 +157,30 @@ describe('Pill overflow tooltip while the content fits', () => {
 });
 
 describe('Pill overflow tooltip opt-outs', () => {
-	it.each(['hidden', 'visible'] as const)(
-		'is never mounted for textOverflow="%s"',
-		async (textOverflow) => {
-			const user = userEvent.setup();
-			truncate();
-			render(
-				<Pill variant="outlined" color="primary" textOverflow={textOverflow}>
-					{LABEL}
-				</Pill>,
-			);
+	it('is never mounted for textOverflow="hidden"', async () => {
+		const user = userEvent.setup();
+		truncate();
+		render(
+			<Pill variant="outlined" color="primary" textOverflow="hidden">
+				{LABEL}
+			</Pill>,
+		);
 
-			await user.hover(screen.getByRole('button'));
+		await user.hover(screen.getByRole('button'));
 
-			expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-		},
-	);
+		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+	});
 
-	it.each(['hidden', 'visible'] as const)(
-		'does not even make the pill a trigger for textOverflow="%s"',
-		(textOverflow) => {
-			truncate();
-			render(
-				<Pill variant="outlined" color="primary" textOverflow={textOverflow}>
-					{LABEL}
-				</Pill>,
-			);
+	it('does not even make the pill a trigger for textOverflow="hidden"', () => {
+		truncate();
+		render(
+			<Pill variant="outlined" color="primary" textOverflow="hidden">
+				{LABEL}
+			</Pill>,
+		);
 
-			expect(screen.getByRole('button')).not.toHaveAttribute('data-slot', 'tooltip-trigger');
-		},
-	);
+		expect(screen.getByRole('button')).not.toHaveAttribute('data-slot', 'tooltip-trigger');
+	});
 });
 
 describe('Pill overflow tooltip element identity', () => {

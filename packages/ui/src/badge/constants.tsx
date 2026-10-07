@@ -16,7 +16,6 @@ export const BadgeColor = {
 
 export const BadgeTextOverflow = {
 	Hidden: 'hidden',
-	Visible: 'visible',
 	Ellipsis: 'ellipsis',
 } as const;
 
