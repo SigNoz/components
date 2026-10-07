@@ -56,7 +56,7 @@ describe('Callout.Link', () => {
 		expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer');
 	});
 
-	it('renders through `render`, keeps its own props and runs onClick first', async () => {
+	it('renders through `render`, keeps its own props and runs its onClick first', async () => {
 		const user = userEvent.setup();
 		const order: string[] = [];
 		render(
@@ -76,7 +76,7 @@ describe('Callout.Link', () => {
 
 		await user.click(link);
 
-		expect(order).toEqual(['callout', 'router']);
+		expect(order).toEqual(['router', 'callout']);
 	});
 
 	it('renders plain text and warns without a destination', () => {
@@ -155,6 +155,29 @@ describe('Callout.Link', () => {
 		);
 
 		expect(screen.getByRole('link')).toHaveAttribute('rel', 'nofollow noopener noreferrer');
+	});
+
+	it('keeps its href, target and children over undefined ones on the render element', () => {
+		render(
+			<Callout color="primary" size="sm" icon={icon}>
+				<Callout.Link
+					href="/docs"
+					target="_blank"
+					render={
+						<RouterLink href={undefined} target={undefined}>
+							{undefined}
+						</RouterLink>
+					}
+				>
+					docs
+				</Callout.Link>
+			</Callout>,
+		);
+
+		const link = screen.getByRole('link', { name: 'docs' });
+		expect(link).toHaveAttribute('href', '/docs');
+		expect(link).toHaveAttribute('target', '_blank');
+		expect(link).toHaveAttribute('rel', 'noopener noreferrer');
 	});
 
 	it('keeps the rel of the render element without a _blank target', () => {

@@ -1,6 +1,6 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type ReactElement, type ReactNode, useState } from 'react';
+import { createRef, type ReactElement, type ReactNode, type RefObject, useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Callout } from '../callout.js';
@@ -14,9 +14,11 @@ afterEach(() => window.localStorage.clear());
 function ClosedByState({
 	children = 'a',
 	onClose,
+	finalFocus,
 }: {
 	children?: ReactNode;
 	onClose?: () => void;
+	finalFocus?: RefObject<HTMLElement | null>;
 }): ReactElement {
 	const [closed, setClosed] = useState(false);
 
@@ -35,6 +37,7 @@ function ClosedByState({
 					onClose?.();
 					setClosed(true);
 				}}
+				finalFocus={finalFocus}
 			>
 				{children}
 			</Callout.Closeable>
@@ -73,20 +76,27 @@ describe('Callout.Closeable', () => {
 		expect(screen.getByTestId('c')).toBeInTheDocument();
 	});
 
-	it('stays on screen when onClose leaves closed false', async () => {
+	it('stays on screen, with focus on its button, when onClose leaves closed false', async () => {
 		const user = userEvent.setup();
 		const onClose = vi.fn();
+		const finalFocus = createRef<HTMLButtonElement>();
 		render(
-			<Callout.Closeable
-				color="warning"
-				size="sm"
-				icon={icon}
-				testId="c"
-				closed={false}
-				onClose={onClose}
-			>
-				a
-			</Callout.Closeable>,
+			<>
+				<Callout.Closeable
+					color="warning"
+					size="sm"
+					icon={icon}
+					testId="c"
+					closed={false}
+					onClose={onClose}
+					finalFocus={finalFocus}
+				>
+					a
+				</Callout.Closeable>
+				<button ref={finalFocus} type="button">
+					Target
+				</button>
+			</>,
 		);
 
 		await user.click(screen.getByRole('button', { name: 'Dismiss' }));
@@ -125,15 +135,30 @@ describe('Callout.Closeable', () => {
 		expect(screen.queryByTestId('c')).not.toBeInTheDocument();
 	});
 
-	it('moves focus to the next element after a keyboard dismiss', async () => {
+	it('moves focus to finalFocus once onClose closes it', async () => {
+		const user = userEvent.setup();
+		const finalFocus = createRef<HTMLButtonElement>();
+		render(
+			<>
+				<ClosedByState finalFocus={finalFocus} />
+				<button type="button">After</button>
+				<button ref={finalFocus} type="button">
+					Target
+				</button>
+			</>,
+		);
+
+		screen.getByRole('button', { name: 'Dismiss' }).focus();
+		await user.keyboard('{Enter}');
+
+		expect(screen.getByRole('button', { name: 'Target' })).toHaveFocus();
+	});
+
+	it('moves no focus without finalFocus', async () => {
 		const user = userEvent.setup();
 		render(
 			<>
-				<button type="button">Before</button>
 				<ClosedByState />
-				<button type="button" disabled>
-					Disabled
-				</button>
 				<button type="button">After</button>
 			</>,
 		);
@@ -141,25 +166,23 @@ describe('Callout.Closeable', () => {
 		screen.getByRole('button', { name: 'Dismiss' }).focus();
 		await user.keyboard('{Enter}');
 
-		expect(screen.getByRole('button', { name: 'After' })).toHaveFocus();
+		expect(screen.queryByTestId('c')).not.toBeInTheDocument();
+		expect(document.body).toHaveFocus();
 	});
 
-	it('moves focus to the element before when nothing follows', async () => {
+	it('keeps focus where onClose moved it over finalFocus', async () => {
 		const user = userEvent.setup();
-		render(<ClosedByState />);
-
-		screen.getByRole('button', { name: 'Dismiss' }).focus();
-		await user.keyboard('{Enter}');
-
-		expect(screen.getByRole('button', { name: 'Show' })).toHaveFocus();
-	});
-
-	it('keeps focus where onClose moved it', async () => {
-		const user = userEvent.setup();
+		const finalFocus = createRef<HTMLButtonElement>();
 		render(
 			<>
 				<input aria-label="Search" />
-				<ClosedByState onClose={() => screen.getByRole('textbox', { name: 'Search' }).focus()} />
+				<ClosedByState
+					onClose={() => screen.getByRole('textbox', { name: 'Search' }).focus()}
+					finalFocus={finalFocus}
+				/>
+				<button ref={finalFocus} type="button">
+					Target
+				</button>
 			</>,
 		);
 
@@ -167,6 +190,34 @@ describe('Callout.Closeable', () => {
 		await user.keyboard('{Enter}');
 
 		expect(screen.getByRole('textbox', { name: 'Search' })).toHaveFocus();
+	});
+
+	it('takes no focus that was not in the callout', () => {
+		const finalFocus = createRef<HTMLButtonElement>();
+		render(
+			<>
+				<ClosedByState finalFocus={finalFocus} />
+				<button ref={finalFocus} type="button">
+					Target
+				</button>
+			</>,
+		);
+
+		// A mouse click in Safari, which does not focus the button.
+		fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
+
+		expect(screen.queryByTestId('c')).not.toBeInTheDocument();
+		expect(document.body).toHaveFocus();
+	});
+
+	it('closes with a null finalFocus', async () => {
+		const user = userEvent.setup();
+		render(<ClosedByState finalFocus={null as unknown as RefObject<HTMLElement | null>} />);
+
+		screen.getByRole('button', { name: 'Dismiss' }).focus();
+		await user.keyboard('{Enter}');
+
+		expect(screen.queryByTestId('c')).not.toBeInTheDocument();
 	});
 
 	it('renders nothing for empty children', () => {
@@ -294,6 +345,32 @@ describe('Callout.CloseablePersisted', () => {
 		await user.click(screen.getByRole('button', { name: 'Dismiss' }));
 
 		expect(onClose).toHaveBeenCalledTimes(1);
+	});
+
+	it('moves focus to finalFocus once the dismissal hides it', async () => {
+		const user = userEvent.setup();
+		const finalFocus = createRef<HTMLButtonElement>();
+		render(
+			<>
+				<Callout.CloseablePersisted
+					storageKey="k"
+					color="primary"
+					size="sm"
+					icon={icon}
+					finalFocus={finalFocus}
+				>
+					a
+				</Callout.CloseablePersisted>
+				<button ref={finalFocus} type="button">
+					Target
+				</button>
+			</>,
+		);
+
+		screen.getByRole('button', { name: 'Dismiss' }).focus();
+		await user.keyboard('{Enter}');
+
+		expect(screen.getByRole('button', { name: 'Target' })).toHaveFocus();
 	});
 
 	it('hides every callout with the same storageKey', async () => {

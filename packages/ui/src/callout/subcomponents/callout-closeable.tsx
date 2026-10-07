@@ -1,5 +1,5 @@
 import { X } from '@signozhq/icons';
-import { forwardRef } from 'react';
+import { forwardRef, type RefObject } from 'react';
 import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import styles from '../callout.module.scss';
 import type { CalloutProps } from '../types.js';
@@ -18,6 +18,17 @@ export type CalloutCloseableProps = CalloutProps & {
 	 */
 	onClose: () => void;
 	/**
+	 * The element that takes focus once `onClose` closes the callout, such as the control that
+	 * opened it or the next one in the flow. Without it, focus is not moved and falls to the page
+	 * body with the close button.
+	 *
+	 * @note Focus that `onClose` moves stays where it was put.
+	 *
+	 * @note Only focus that was in the callout moves. A mouse click that does not focus the close
+	 * button, as in Safari, moves none.
+	 */
+	finalFocus?: RefObject<HTMLElement | null>;
+	/**
 	 * The accessible name of the close button. Worth setting when several closeable callouts sit
 	 * on one page, so a screen reader user can tell their buttons apart, and to translate it.
 	 *
@@ -35,10 +46,11 @@ export type CalloutCloseableProps = CalloutProps & {
  * a callout that holds a new message after a dismissal needs nothing more. Use
  * `Callout.CloseablePersisted` for one that stays hidden after a reload, which owns the state.
  *
- * When the close button had focus and `onClose` closes the callout, focus moves to the next
- * tabbable element after the callout, or to the last one before it when nothing follows. `onClose`
- * can move it somewhere else instead. A `closed` set later, after an `await`, leaves focus on the
- * page body.
+ * The callout does not guess where focus goes once it closes. When `onClose` closes it, focus moves
+ * to `finalFocus`, unless `onClose` moved it somewhere else. Only focus that was in the callout
+ * moves, so a mouse click that does not focus the close button, as in Safari, moves none. Without
+ * `finalFocus`, focus is not moved and falls to the page body with the close button. A `closed` set
+ * later, after an `await`, moves no focus either.
  *
  * Like `Callout`, it renders nothing while `children` is empty. The close button is named
  * `Dismiss`, or `closeAriaLabel` when set.
@@ -69,7 +81,7 @@ export type CalloutCloseableProps = CalloutProps & {
  */
 export const CalloutCloseable = forwardRef<HTMLDivElement, CalloutCloseableProps>(
 	function CalloutCloseable(
-		{ closed, onClose, closeAriaLabel = 'Dismiss', children, ...props },
+		{ closed, onClose, finalFocus, closeAriaLabel = 'Dismiss', children, ...props },
 		ref,
 	) {
 		const { testId } = props;
@@ -88,7 +100,7 @@ export const CalloutCloseable = forwardRef<HTMLDivElement, CalloutCloseableProps
 						data-slot="callout-close"
 						className={styles['callout__button']}
 						aria-label={closeAriaLabel}
-						onClick={(event) => closeAndMoveFocus(event.currentTarget, onClose)}
+						onClick={(event) => closeAndMoveFocus(event.currentTarget, onClose, finalFocus)}
 						data-testid={partTestId(testId, 'close')}
 					>
 						<X aria-hidden="true" />

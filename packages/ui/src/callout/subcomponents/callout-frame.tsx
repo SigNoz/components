@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { cloneElement, forwardRef, type ReactElement, type ReactNode } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../callout.module.scss';
 import { ALERT_COLORS } from '../constants.js';
@@ -19,15 +19,14 @@ export type CalloutFrameProps = CalloutProps &
 		 * The close button of `Callout.Closeable`, after the content on the right edge.
 		 */
 		trailing?: ReactNode;
-		expanded?: boolean;
 		/**
-		 * The `id` of the description, which the title row points `aria-controls` at.
+		 * The element that renders the description, the collapsible panel of
+		 * `Callout.Expandable`. The `className`, `data-slot`, `data-testid` and `children` of the
+		 * description replace its own.
+		 *
+		 * @default <div />
 		 */
-		descriptionId?: string;
-		/**
-		 * Hides the description while keeping it mounted, so `aria-controls` has a target.
-		 */
-		descriptionHidden?: boolean;
+		descriptionRender?: ReactElement;
 	};
 
 /**
@@ -49,9 +48,7 @@ export const CalloutFrame = forwardRef<HTMLDivElement, CalloutFrameProps>(functi
 		testId,
 		header,
 		trailing,
-		expanded,
-		descriptionId,
-		descriptionHidden,
+		descriptionRender,
 		className: _className,
 		style: _style,
 		...props
@@ -64,6 +61,12 @@ export const CalloutFrame = forwardRef<HTMLDivElement, CalloutFrameProps>(functi
 	// it gets no live role.
 	const liveRole =
 		header === undefined ? (ALERT_COLORS.has(color) ? 'alert' : 'status') : undefined;
+	const description = cloneElement(descriptionRender ?? <div />, {
+		'data-slot': 'callout-description',
+		className: styles['callout__description'],
+		'data-testid': partTestId(testId, 'description'),
+		children,
+	});
 
 	return (
 		<div
@@ -73,7 +76,6 @@ export const CalloutFrame = forwardRef<HTMLDivElement, CalloutFrameProps>(functi
 			data-color={color}
 			data-size={size}
 			data-has-title={header !== undefined || undefined}
-			data-expanded={expanded || undefined}
 			role={liveRole}
 			className={styles['callout']}
 			style={calloutSizeStyle({ width, maxWidth, height, maxHeight })}
@@ -89,15 +91,7 @@ export const CalloutFrame = forwardRef<HTMLDivElement, CalloutFrameProps>(functi
 			</span>
 			<div className={styles['callout__content']}>
 				{header}
-				<div
-					id={descriptionId}
-					data-slot="callout-description"
-					className={styles['callout__description']}
-					hidden={descriptionHidden}
-					data-testid={partTestId(testId, 'description')}
-				>
-					{children}
-				</div>
+				{description}
 			</div>
 			{trailing}
 		</div>

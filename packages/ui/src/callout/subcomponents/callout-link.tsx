@@ -1,18 +1,16 @@
-import * as React from 'react';
+import { useRender } from '@base-ui/react/use-render';
 import {
+	cloneElement,
 	createElement,
 	forwardRef,
 	isValidElement,
 	useEffect,
-	useMemo,
 	type AriaAttributes,
-	type MouseEvent,
 	type MouseEventHandler,
 	type ReactElement,
 	type ReactNode,
 } from 'react';
-import { getElementRef, setRef } from '../../lib/merge-refs.js';
-import { cn, type RejectedProps } from '../../lib/utils.js';
+import type { RejectedProps } from '../../lib/utils.js';
 import styles from '../callout.module.scss';
 import { withBlankTargetRel } from '../utils.js';
 
@@ -24,15 +22,18 @@ export type CalloutLinkProps = {
 	href?: string;
 	/**
 	 * Where the link opens. `_blank`, here or on the `render` element, adds `noopener` and
-	 * `noreferrer` to the `rel` of the `render` element, which keeps its other values.
+	 * `noreferrer` to the `rel` of the `render` element, which keeps its other values. A `target`
+	 * on the `render` element wins.
 	 */
 	target?: string;
 	/**
-	 * The element that renders the link, such as the link of the router the consumer uses. The
-	 * callout clones it and passes it `className`, `data-slot`, `target`, `rel`, `onClick`, `ref`,
-	 * `aria-*` and `children`. Its own `className` and `ref` are kept next to the ones of the
-	 * callout. The router element keeps its own props like `to`, and it should forward the rest to
-	 * the `a` it renders.
+	 * The element that renders the link, such as the link of the router the consumer uses. It
+	 * takes the `className`, `data-slot`, `href`, `target`, `rel`, `onClick`, `ref`, `aria-*` and
+	 * `children` of the callout, merged as the `render` prop of Base UI merges them: a prop set on
+	 * the element wins, its `className` and `ref` are kept next to the ones of the callout, and its
+	 * `onClick` runs first. An `href`, `target` or `children` the element leaves `undefined` takes
+	 * the one of the callout. The router element keeps its own props like `to`, and it should forward
+	 * the rest to the `a` it renders.
 	 *
 	 * @note A `render` element that does not render an `a` loses the link role.
 	 *
@@ -40,12 +41,13 @@ export type CalloutLinkProps = {
 	 */
 	render?: ReactElement;
 	/**
-	 * Runs when the user clicks the link, before the handler of the `render` element. The callout
+	 * Runs when the user clicks the link, after the handler of the `render` element. The callout
 	 * never calls `preventDefault`, so the router decides if the navigation is client-side.
 	 */
 	onClick?: MouseEventHandler<HTMLElement>;
 	/**
-	 * The text of the link, which is its label. It replaces the children of the `render` element.
+	 * The text of the link, which is its label. Leave the `render` element without children, since
+	 * its own would win.
 	 */
 	children: ReactNode;
 	/**
@@ -101,21 +103,10 @@ export const CalloutLink = forwardRef<HTMLElement, CalloutLinkProps>(function Ca
 	const element = (isValidElement(render) ? render : createElement('a')) as ReactElement<
 		Record<string, unknown>
 	>;
-	const renderProps = element.props;
-	const elementRef = getElementRef<HTMLElement>(element);
-	// `cloneElement` below replaces the ref of the `render` element, so the two are merged first.
-	const mergedRef = useMemo(
-		() =>
-			ref == null || elementRef == null
-				? (ref ?? elementRef)
-				: (node: HTMLElement | null) => {
-						setRef(ref, node);
-						setRef(elementRef, node);
-					},
-		[ref, elementRef],
-	);
-	const hasDestination = href != null || renderProps['href'] != null || renderProps['to'] != null;
-	const resolvedTarget = target ?? (renderProps['target'] as string | undefined);
+	const elementProps = element.props;
+	const resolvedHref = (elementProps['href'] as string | undefined) ?? href;
+	const resolvedTarget = (elementProps['target'] as string | undefined) ?? target;
+	const hasDestination = resolvedHref != null || elementProps['to'] != null;
 	const sharedProps = {
 		'data-slot': 'callout-link',
 		...(testId === undefined ? {} : { 'data-testid': testId }),
@@ -127,36 +118,30 @@ export const CalloutLink = forwardRef<HTMLElement, CalloutLinkProps>(function Ca
 		}
 	}, [hasDestination]);
 
-	if (!hasDestination) {
-		return <span {...sharedProps}>{children}</span>;
-	}
-
-	const ownOnClick = renderProps['onClick'] as MouseEventHandler<HTMLElement> | undefined;
-
-	// The ref is only handed to the rendered element, never read here. The React Compiler treats a
-	// ref passed to the named `cloneElement` import as read during render and skips the component,
-	// so the call goes through the `React` namespace, as the tooltip trigger does.
-	return React.cloneElement(
-		element,
-		// eslint-disable-next-line react/refs
-		{
-			...aria,
-			...sharedProps,
-			className: cn(styles['callout__link'], renderProps['className'] as string | undefined),
-			...(href == null ? {} : { href }),
+	const link = useRender({
+		enabled: hasDestination,
+		// The props of the element win over the ones below, an `undefined` one too. So `href`,
+		// `target` and `children` go on the element itself, where the ones it leaves `undefined` take
+		// the ones of the callout, and `noopener` and `noreferrer` join its `rel`. Only the props that
+		// are set: an `undefined` one is still passed to the element, and a router link that spreads
+		// its props after its own `href` would lose it.
+		render: cloneElement(element, {
+			...(resolvedHref == null ? {} : { href: resolvedHref }),
 			...(resolvedTarget == null ? {} : { target: resolvedTarget }),
 			...(resolvedTarget === '_blank'
-				? {
-						rel: withBlankTargetRel(renderProps['rel'] as string | undefined),
-					}
+				? { rel: withBlankTargetRel(elementProps['rel'] as string | undefined) }
 				: {}),
-			...(mergedRef == null ? {} : { ref: mergedRef }),
-			onClick: (event: MouseEvent<HTMLElement>) => {
-				onClick?.(event);
-				ownOnClick?.(event);
-			},
+			children: elementProps['children'] ?? children,
+		}),
+		ref,
+		props: {
+			...aria,
+			...sharedProps,
+			className: styles['callout__link'],
+			...(onClick == null ? {} : { onClick }),
 		},
-		children,
-	);
+	});
+
+	return link ?? <span {...sharedProps}>{children}</span>;
 });
 CalloutLink.displayName = 'Callout.Link';

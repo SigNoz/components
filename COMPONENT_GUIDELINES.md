@@ -554,6 +554,31 @@ to it are the ones wrapping a third-party primitive with little or no derivation
 `checkbox`, plus `table`, where TanStack's own types cross the prop boundary. Prefer
 borrowing there before adding anything new.
 
+### `useRender` or `cloneElement`
+
+`useRender` (`@base-ui/react/use-render`) is for a `render` prop the **consumer** passes, an
+element we don't control. It merges our props into it the Base UI way: `className` joins, refs
+merge, event handlers chain, and every other prop of the element wins. `Callout.Link` is the
+reference: the router link a consumer passes keeps its `to`, `className` and `onClick`.
+
+That merge, the handler wrapping and a merged-ref hook run on every render. Don't use it when
+we own the element:
+
+- A sub-component hands one of our own elements to a shared frame, as `Callout.Expandable`
+  hands `<Collapsible.Panel hiddenUntilFound />` to `CalloutFrame`. There is nothing to merge,
+  so `cloneElement(descriptionRender ?? <div />, props)` does the job, and the plain callouts
+  that pass nothing pay nothing. `CalloutFrame` once ran `useRender` for every callout to
+  output that same `<div>`.
+- The element never changes: write the JSX.
+
+Switch to `useRender` once an internal element sets props that must merge with ours
+(`className`, `ref`, handlers).
+
+One trap when you do use it: an `undefined` prop on the render element still wins the merge.
+`render={<TrackedLink href={props.href} />}` with `props.href` unset drops the `href` the
+callout set. Fill the values the element leaves `undefined` on the element itself before
+passing it, as `Callout.Link` does for `href`, `target` and `children`.
+
 ### Variant values
 
 Both shapes exist in the codebase and neither is mandated:

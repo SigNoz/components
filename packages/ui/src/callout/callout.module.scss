@@ -241,8 +241,15 @@
 	overflow-wrap: var(--callout-description-overflow-wrap, anywhere);
 	font-variant-numeric: var(--callout-description-font-variant-numeric, slashed-zero);
 
+	// Collapsed, `Callout.Expandable` sets `hidden="until-found"`, which hides the content but keeps
+	// the box, so find in page can reach it. Out of the flow, it adds no gap below the title row.
+	// The box sits on the title row and does not scroll with a parent scroll box, so it drops the
+	// focus padding and takes no clicks: it never blocks the title row or what scrolls under it.
 	&[hidden] {
-		display: none;
+		position: absolute;
+		padding: 0;
+		margin: 0;
+		pointer-events: none;
 	}
 
 	&:focus-visible {
@@ -287,6 +294,11 @@
 	& > svg {
 		inline-size: var(--callout-button-icon-inline-size, 100%);
 		block-size: var(--callout-button-icon-block-size, 100%);
+	}
+
+	// Base UI marks the title row `data-panel-open` while expanded, which turns the chevron up.
+	.callout__toggle[data-panel-open] > & > svg {
+		transform: rotate(180deg);
 	}
 }
 

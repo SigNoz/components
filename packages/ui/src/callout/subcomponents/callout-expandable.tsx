@@ -1,5 +1,6 @@
-import { ChevronDown, ChevronUp } from '@signozhq/icons';
-import { forwardRef, useId, useState, type ReactNode } from 'react';
+import { Collapsible } from '@base-ui/react/collapsible';
+import { ChevronDown } from '@signozhq/icons';
+import { forwardRef, type ReactNode } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
@@ -35,9 +36,11 @@ export type CalloutExpandableProps = CalloutProps & {
  *
  * ### Collapse
  *
- * Collapsed hides the description with `hidden` and keeps it mounted. The title row has
- * `aria-expanded` and `aria-controls` pointing at the description, and its name is the title.
- * The root carries `data-has-title`, and `data-expanded` while expanded.
+ * A Base UI collapsible: the callout is its root, the title row its trigger and the description
+ * its panel. Collapsed hides the description with `hidden="until-found"` and keeps it mounted, so
+ * find in page reaches its text and expands the callout. The title row has `aria-expanded`, and
+ * `aria-controls` pointing at the description while expanded, and its name is the title. The root
+ * carries `data-has-title`, and `data-open` or `data-closed`.
  *
  * ### Empty
  *
@@ -70,24 +73,17 @@ export type CalloutExpandableProps = CalloutProps & {
  */
 export const CalloutExpandable = forwardRef<HTMLDivElement, CalloutExpandableProps>(
 	function CalloutExpandable({ title, defaultExpanded, children, ...props }, ref) {
-		const [expanded, setExpanded] = useState(defaultExpanded);
 		const [isTruncated, labelRef] = useIsLabelTruncated(true);
-		const descriptionId = useId();
 		const { testId } = props;
-		const Chevron = expanded ? ChevronUp : ChevronDown;
 		const titleContent = hasRenderableContent(title) ? title : CALLOUT_EMPTY_TITLE;
 
 		// The whole row is the button: people click the title about as often as the chevron. The
 		// tooltip sits on the button too, so keyboard focus opens it, not only a hover.
 		const header = (
 			<TooltipAnchor content={isTruncated ? titleContent : null}>
-				<button
-					type="button"
+				<Collapsible.Trigger
 					data-slot="callout-toggle"
 					className={styles['callout__toggle']}
-					aria-expanded={expanded}
-					aria-controls={descriptionId}
-					onClick={() => setExpanded((open) => !open)}
 					data-testid={partTestId(testId, 'toggle')}
 				>
 					<span
@@ -100,23 +96,26 @@ export const CalloutExpandable = forwardRef<HTMLDivElement, CalloutExpandablePro
 						{titleContent}
 					</span>
 					<span className={styles['callout__button']} aria-hidden="true">
-						<Chevron />
+						<ChevronDown />
 					</span>
-				</button>
+				</Collapsible.Trigger>
 			</TooltipAnchor>
 		);
 
 		return (
-			<CalloutFrame
-				{...props}
-				ref={ref}
-				expanded={expanded}
-				header={header}
-				descriptionId={descriptionId}
-				descriptionHidden={!expanded}
-			>
-				{hasRenderableContent(children) ? children : CALLOUT_EMPTY_DESCRIPTION}
-			</CalloutFrame>
+			<Collapsible.Root
+				defaultOpen={defaultExpanded}
+				render={
+					<CalloutFrame
+						{...props}
+						ref={ref}
+						header={header}
+						descriptionRender={<Collapsible.Panel hiddenUntilFound />}
+					>
+						{hasRenderableContent(children) ? children : CALLOUT_EMPTY_DESCRIPTION}
+					</CalloutFrame>
+				}
+			/>
 		);
 	},
 );

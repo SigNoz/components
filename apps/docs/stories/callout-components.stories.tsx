@@ -6,7 +6,7 @@ import {
 	type CalloutCloseableProps,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactElement, useState } from 'react';
+import { type ReactElement, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
 import styles from './callout.stories.module.css';
 import {
@@ -68,10 +68,11 @@ export const Expandable: StoryObj<typeof Callout.Expandable> = {
 
 /**
  * Owns `closed`, as a consumer does, and shows the callout again from a button so the story is not
- * left empty after one click.
+ * left empty after one click. The button is `finalFocus`, so focus lands on it after a dismissal.
  */
 function CloseablePlayground({ onClose, ...props }: CalloutCloseableProps): ReactElement {
 	const [closed, setClosed] = useState(false);
+	const showRef = useRef<HTMLButtonElement>(null);
 
 	return (
 		<div className={styles.stack}>
@@ -82,9 +83,16 @@ function CloseablePlayground({ onClose, ...props }: CalloutCloseableProps): Reac
 					setClosed(true);
 					onClose();
 				}}
+				finalFocus={showRef}
 			/>
 			<div>
-				<Button variant="outlined" color="secondary" size="sm" onClick={() => setClosed(false)}>
+				<Button
+					ref={showRef}
+					variant="outlined"
+					color="secondary"
+					size="sm"
+					onClick={() => setClosed(false)}
+				>
 					Show it again
 				</Button>
 			</div>
@@ -120,6 +128,12 @@ export const Closeable: StoryObj<typeof Callout.Closeable> = {
 				'Required. Runs when the close button is clicked. Set `closed` here to hide the callout.',
 			table: { category: 'Events', type: { summary: '() => void' } },
 		},
+		finalFocus: {
+			control: false,
+			description:
+				'The element that takes focus once `onClose` closes the callout. Without it, focus is not moved. Here, the button below.',
+			table: { category: 'Accessibility', type: { summary: 'RefObject<HTMLElement | null>' } },
+		},
 		closeAriaLabel: {
 			control: 'text',
 			description:
@@ -136,16 +150,18 @@ export const Closeable: StoryObj<typeof Callout.Closeable> = {
 
 /**
  * Clears the saved dismissal and mounts the callout again, so the story is not left empty after
- * one click.
+ * one click. The button is `finalFocus`, so focus lands on it after a dismissal.
  */
 function CloseablePersistedPlayground(props: CalloutCloseablePersistedProps): ReactElement {
 	const [mount, setMount] = useState(0);
+	const clearRef = useRef<HTMLButtonElement>(null);
 
 	return (
 		<div className={styles.stack}>
-			<Callout.CloseablePersisted key={mount} {...props} />
+			<Callout.CloseablePersisted key={mount} {...props} finalFocus={clearRef} />
 			<div>
 				<Button
+					ref={clearRef}
 					variant="outlined"
 					color="secondary"
 					size="sm"
@@ -187,6 +203,12 @@ export const CloseablePersisted: StoryObj<typeof Callout.CloseablePersisted> = {
 				'Runs after the close button is clicked, once the dismissal is saved. For side effects only.',
 			table: { category: 'Events', type: { summary: '() => void' } },
 		},
+		finalFocus: {
+			control: false,
+			description:
+				'The element that takes focus once `onClose` closes the callout. Without it, focus is not moved. Here, the button below.',
+			table: { category: 'Accessibility', type: { summary: 'RefObject<HTMLElement | null>' } },
+		},
 		closeAriaLabel: {
 			control: 'text',
 			description:
@@ -223,7 +245,7 @@ export const Link: StoryObj<typeof Callout.Link> = {
 		children: {
 			control: 'text',
 			description:
-				'Required. The text of the link, which is its label. It replaces the children of the `render` element.',
+				'Required. The text of the link, which is its label. Leave the `render` element without children, since its own would win.',
 			table: { category: 'Content', type: { summary: 'ReactNode' } },
 		},
 		href: {
@@ -235,13 +257,13 @@ export const Link: StoryObj<typeof Callout.Link> = {
 		target: {
 			control: 'text',
 			description:
-				'Where the link opens. `_blank`, here or on the `render` element, adds `noopener` and `noreferrer` to the `rel` of the `render` element.',
+				'Where the link opens. `_blank`, here or on the `render` element, adds `noopener` and `noreferrer` to the `rel` of the `render` element. A `target` on the `render` element wins.',
 			table: { category: 'Behavior', type: { summary: 'string' } },
 		},
 		render: {
 			control: false,
 			description:
-				'The element that renders the link, such as a router link. It keeps its own props, like `to`.',
+				'The element that renders the link, such as a router link. It keeps its own props, like `to`, and a prop set on it wins over the one of the link.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'ReactElement' },
@@ -251,7 +273,7 @@ export const Link: StoryObj<typeof Callout.Link> = {
 		onClick: {
 			control: false,
 			description:
-				'Runs on click, before the handler of the `render` element. It never prevents the navigation.',
+				'Runs on click, after the handler of the `render` element. It never prevents the navigation.',
 			table: { category: 'Events', type: { summary: 'MouseEventHandler' } },
 		},
 		testId: {

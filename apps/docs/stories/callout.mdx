@@ -110,8 +110,11 @@ the state is uncontrolled.
 ```
 
 The whole title row is one button, so a click on the title or on the chevron toggles. A click on the
-description does nothing, since it holds links and text to select. The row is named by the title and
-points at the description.
+description does nothing, since it holds links and text to select. The row is named by the title, and
+while expanded it points at the description with `aria-controls`.
+
+Collapsed, the description stays in the page, hidden until found: find in page reaches its text
+and expands the callout.
 
 The title is a single line. A long one ends in an ellipsis, and a tooltip shows the whole of it
 while it is cut, on hover and on keyboard focus. Pass a string, since the ellipsis and the tooltip only work with a string.
@@ -126,15 +129,19 @@ A callout with a close button on the right edge. It keeps no state: it renders n
 is `true`, and the close button calls `onClose`, where you set `closed`. Setting `closed` back to
 `false` shows it again, for example when a new message arrives after a dismissal.
 
-When the close button had focus and `onClose` closes the callout, focus moves to the next tabbable
-element after the callout, or to the last one before it when nothing follows. Focus `onClose` moves
-somewhere else stays there. A `closed` set later, after an `await`, leaves focus on the page body.
+The callout does not guess where focus goes once it closes. Pass `finalFocus`, a ref to the element
+that should take focus, such as the control that opened the callout or the next one in the flow.
+When `onClose` closes the callout, focus moves there, unless `onClose` moved it somewhere else.
+Only focus that was in the callout moves, so a mouse click that does not focus the close button, as
+in Safari, moves none. Without `finalFocus`, focus is not moved and falls to the page body with the
+close button. A `closed` set later, after an `await`, moves no focus either.
 
 The close button is named `Dismiss`. Give `closeAriaLabel` when several closeable callouts sit on one
 page, so a screen reader user can tell their buttons apart, and to translate it.
 
 ```tsx
 const [closed, setClosed] = useState(false);
+const upgradeRef = useRef<HTMLButtonElement>(null);
 
 <Callout.Closeable
 	color="warning"
@@ -142,6 +149,7 @@ const [closed, setClosed] = useState(false);
 	icon={<SolidAlertTriangle />}
 	closed={closed}
 	onClose={() => setClosed(true)}
+	finalFocus={upgradeRef}
 	closeAriaLabel="Dismiss the trial notice"
 >
 	Your trial ends in 3 days.
@@ -185,9 +193,10 @@ its type. It has no `className` or `style`.
 ```
 
 Pass `render` for a router link. The callout imports no router, so the click is a client-side
-navigation and a modified click still opens a new tab. With a `_blank` target, `noopener` and
-`noreferrer` join the `rel` of the `render` element, which keeps its other values. Its own `ref`
-and `className` are kept too.
+navigation and a modified click still opens a new tab. The props merge as the `render` prop of Base
+UI merges them: a prop set on the `render` element wins, its `ref` and `className` are kept next to
+the ones of the link, and its `onClick` runs first. With a `_blank` target, `noopener` and
+`noreferrer` join the `rel` of the `render` element, which keeps its other values.
 
 ```tsx
 <Callout.Link render={<Link to="/alerts" />}>alerts</Callout.Link>
@@ -215,7 +224,7 @@ Otherwise reach for the roles and the data attributes, never the hashed class na
 | `callout-link`        | each `Callout.Link`                                             |
 
 The root mirrors `color` on `data-color` and `size` on `data-size`. `Callout.Expandable` adds
-`data-has-title`, and `data-expanded` while expanded.
+`data-has-title`, `data-open` while expanded and `data-closed` while collapsed.
 
 ## Props
 
