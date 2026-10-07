@@ -1,3 +1,9 @@
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
 .marginTopMedium {
   margin-top: 1rem;
 }
@@ -13,4 +19,36 @@
 
 .rowLabel {
   white-space: nowrap;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 1.25rem 1.5rem;
+  align-items: start;
+  justify-items: start;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  padding-right: 1rem;
+}
+
+.matrixLabel {
+  white-space: nowrap;
+}
+
+.stateCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* The field fills this, which is what it does in a parent. A bare input is 100% wide. */
+.field {
+  width: 16rem;
+}
+
+.bounded {
+  width: 12rem;
+  outline: 1px dashed var(--l3-foreground, #666);
+  padding: 0.75rem;
 }
