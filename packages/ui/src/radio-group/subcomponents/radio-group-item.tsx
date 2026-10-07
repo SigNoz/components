@@ -1,13 +1,7 @@
 import { Radio } from '@base-ui/react/radio';
-import { type ReactElement, useId, useMemo } from 'react';
-import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
+import type { ReactElement } from 'react';
+import { useGroupItem } from '../../lib/use-group-item.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
-import { TooltipStack } from '../../tooltip/subcomponents/tooltip-stack.js';
-import {
-	hasTooltipContent,
-	type TooltipContentStackEntry,
-} from '../../tooltip/tooltip-content-stack-context.js';
-import { hasRenderableContent } from '../../lib/utils.js';
 import { RADIO_GROUP_EMPTY_LABEL, RadioGroupTextOverflow } from '../constants.js';
 import styles from '../radio-group.module.scss';
 import type { RadioGroupItemType, RadioGroupTextOverflowType } from '../types.js';
@@ -49,38 +43,23 @@ export function RadioGroupItem({
 	tooltipsSuppressed,
 	groupTestId,
 }: RadioGroupItemProps): ReactElement {
-	const { label, value, testId, disabled, disabledTooltip } = item;
-	const labelId = useId();
-
-	const isLabelEmpty = !hasRenderableContent(label);
-	const resolvedLabel = isLabelEmpty ? RADIO_GROUP_EMPTY_LABEL : label;
-
-	const resolvedTestId =
-		testId ?? (groupTestId === undefined ? undefined : `${groupTestId}-item-${value}`);
-
-	const hasOverflowTooltip = textOverflow === RadioGroupTextOverflow.Ellipsis;
-	const [isLabelOverflowing, labelRef] = useIsLabelTruncated(hasOverflowTooltip);
-	const hasDisabledTooltip = Boolean(disabled) && hasTooltipContent(disabledTooltip);
-
-	const tooltipContent = useMemo(() => {
-		if (tooltipsSuppressed) {
-			return null;
-		}
-
-		const entries: TooltipContentStackEntry[] = [];
-
-		if (hasDisabledTooltip) {
-			entries.push({ id: 'disabled-tooltip', content: disabledTooltip });
-		}
-
-		if (isLabelOverflowing) {
-			entries.push({ id: 'label', content: resolvedLabel });
-		}
-
-		return entries.length === 0 ? null : <TooltipStack items={entries} />;
-	}, [tooltipsSuppressed, hasDisabledTooltip, disabledTooltip, isLabelOverflowing, resolvedLabel]);
-
-	const hasTooltip = hasOverflowTooltip || disabledTooltip != null;
+	const { value, disabled } = item;
+	const {
+		labelId,
+		resolvedLabel,
+		isLabelEmpty,
+		isLabelTruncated,
+		labelRef,
+		testId,
+		hasTooltip,
+		tooltipProps,
+	} = useGroupItem({
+		item,
+		groupTestId,
+		emptyLabel: RADIO_GROUP_EMPTY_LABEL,
+		measureLabel: textOverflow === RadioGroupTextOverflow.Ellipsis,
+		suppressed: tooltipsSuppressed,
+	});
 
 	const itemEl = (
 		<label
@@ -94,7 +73,7 @@ export function RadioGroupItem({
 				aria-labelledby={labelId}
 				data-slot="radio-group-control"
 				className={styles['radio-group__item']}
-				{...(resolvedTestId === undefined ? {} : { 'data-testid': resolvedTestId })}
+				{...(testId === undefined ? {} : { 'data-testid': testId })}
 			>
 				<Radio.Indicator
 					data-slot="radio-group-indicator"
@@ -105,7 +84,7 @@ export function RadioGroupItem({
 				id={labelId}
 				ref={labelRef}
 				data-slot="radio-group-label"
-				data-truncated={isLabelOverflowing || undefined}
+				data-truncated={isLabelTruncated || undefined}
 				data-empty-label={isLabelEmpty || undefined}
 				className={styles['radio-group__label']}
 			>
@@ -120,7 +99,7 @@ export function RadioGroupItem({
 
 	return (
 		<TooltipAnchor
-			content={tooltipContent}
+			{...tooltipProps}
 			contentProps={{ className: styles['radio-group__label-tooltip'] }}
 		>
 			{itemEl}
