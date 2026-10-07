@@ -62,6 +62,7 @@
  * | `--select-group-label-padding-inline` | `var(--spacing-6)` |
  * | `--select-group-label-text-transform` | `uppercase` |
  * | `--select-icon-align-items` | `center` |
+ * | `--select-icon-chips-block-size` | `var(--select-internal-chip-block-size)` |
  * | `--select-icon-color` | `var(--select-trigger-icon)` |
  * | `--select-icon-display` | `inline-flex` |
  * | `--select-icon-flex-shrink` | `0` |
@@ -77,7 +78,7 @@
  * | `--select-item-background-color` | `var(--select-item-background)` |
  * | `--select-item-background-hover` | `-` |
  * | `--select-item-border` | `none` |
- * | `--select-item-border-radius` | `var(--radius-1)` |
+ * | `--select-item-border-radius` | `0` |
  * | `--select-item-box-sizing` | `border-box` |
  * | `--select-item-color` | `var(--select-item-label)` |
  * | `--select-item-control-align-items` | `center` |
@@ -151,6 +152,7 @@
  * | `--select-list-overflow-x` | `hidden` |
  * | `--select-list-overflow-y` | `auto` |
  * | `--select-list-overscroll-behavior` | `contain` |
+ * | `--select-list-scroll-padding-block` | `var(--select-scroll-fade-size, var(--spacing-10))` |
  * | `--select-list-scrollbar-width` | `thin` |
  * | `--select-loading-align-items` | `center` |
  * | `--select-loading-color` | `var(--select-loading-label)` |
@@ -175,7 +177,7 @@
  * | `--select-popup-max-inline-size` | `var(--select-internal-max-inline-size, 15.75rem)` |
  * | `--select-popup-min-inline-size` | `12rem` |
  * | `--select-popup-overflow` | `hidden` |
- * | `--select-popup-padding-block` | `var(--spacing-2)` |
+ * | `--select-popup-padding-block` | `0` |
  * | `--select-popup-padding-inline` | `0` |
  * | `--select-position` | `relative` |
  * | `--select-positioner-focus-visible-outline` | `none` |
@@ -185,7 +187,7 @@
  * | `--select-separator` | `-` |
  * | `--select-separator-background-color` | `var(--select-separator)` |
  * | `--select-separator-flex-shrink` | `0` |
- * | `--select-separator-margin-block` | `var(--spacing-2)` |
+ * | `--select-separator-margin-block` | `0` |
  * | `--select-separator-margin-inline` | `0` |
  * | `--select-separator-thickness` | `1px` |
  * | `--select-shadow` | `-` |
@@ -199,6 +201,8 @@
  * | `--select-trigger-border-style` | `solid` |
  * | `--select-trigger-border-width` | `1px` |
  * | `--select-trigger-box-sizing` | `border-box` |
+ * | `--select-trigger-chips-align-items` | `flex-start` |
+ * | `--select-trigger-chips-inset` | `5px` |
  * | `--select-trigger-color` | `var(--select-trigger-label)` |
  * | `--select-trigger-cursor` | `pointer` |
  * | `--select-trigger-disabled-color` | `var(--select-trigger-label-disabled)` |

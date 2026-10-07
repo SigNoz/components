@@ -11,6 +11,10 @@
   --select-internal-chip-label: var(--select-chip-color, var(--select-chip-label));
   --select-internal-chip-remove-icon: var(--select-chip-remove-color, var(--select-chip-remove-icon));
   --select-internal-chip-remove-icon-hover: var(--select-chip-remove-hover-color, var(--select-chip-remove-icon-hover));
+  --select-internal-chip-block-size: var(--select-chip-block-size, 1.25rem);
+  // The space a 2rem trigger leaves above and below one row of chips. A trigger with chips keeps it
+  // on the inline start too, so the chips sit as far from the left edge as from the top one.
+  --select-internal-chips-inset: var(--select-trigger-chips-inset, 5px);
 
   position: var(--select-position, relative);
   display: var(--select-display, flex);
@@ -81,6 +85,13 @@
     opacity: var(--select-trigger-readonly-opacity, 0.8);
     cursor: var(--select-trigger-readonly-cursor, not-allowed);
   }
+
+  // Grows a row at a time as the chips wrap. The icon stays on the first row, not in the middle.
+  &:has(> .select__chips) {
+    align-items: var(--select-trigger-chips-align-items, flex-start);
+    padding-block: var(--select-internal-chips-inset);
+    padding-inline-start: var(--select-internal-chips-inset);
+  }
 }
 
 .select:hover > .select__trigger:not([aria-disabled='true'], [aria-readonly='true']) {
@@ -132,6 +143,11 @@
     block-size: var(--select-icon-size, 14px);
   }
 
+  // One chip row tall, so it centres on the first row of chips.
+  .select__trigger:has(> .select__chips) > & {
+    block-size: var(--select-icon-chips-block-size, var(--select-internal-chip-block-size));
+  }
+
   // The chevron offers a popup a read-only select never opens. Hidden, not removed, so toggling
   // `readOnly` does not move the value. The spinner stays.
   .select[data-readonly]:not([data-disabled], [data-loading]) & {
@@ -153,7 +169,7 @@
   align-items: var(--select-chip-align-items, center);
   gap: var(--select-chip-gap, var(--spacing-1));
   box-sizing: var(--select-chip-box-sizing, border-box);
-  block-size: var(--select-chip-block-size, 1.25rem);
+  block-size: var(--select-internal-chip-block-size);
   min-inline-size: var(--select-chip-min-inline-size, 0);
   padding-inline: var(--select-chip-padding-inline, var(--spacing-3));
 
@@ -254,7 +270,7 @@
   // `--available-height` comes from Base UI and keeps the popup inside the viewport.
   max-block-size: var(--select-popup-max-block-size, var(--available-height, none));
 
-  padding-block: var(--select-popup-padding-block, var(--spacing-2));
+  padding-block: var(--select-popup-padding-block, 0);
   padding-inline: var(--select-popup-padding-inline, 0);
 
   border-width: var(--select-popup-border-width, 1px);
@@ -287,6 +303,11 @@
   overflow-x: var(--select-list-overflow-x, hidden);
   overscroll-behavior: var(--select-list-overscroll-behavior, contain);
   scrollbar-width: var(--select-list-scrollbar-width, thin);
+  // A row the keyboard reaches scrolls in clear of the fade, not under it.
+  scroll-padding-block: var(
+    --select-list-scroll-padding-block,
+    var(--select-scroll-fade-size, var(--spacing-10))
+  );
 
   &:focus-visible {
     outline: var(--select-list-focus-visible-outline, none);
@@ -331,7 +352,7 @@
   padding: var(--select-item-padding, var(--spacing-4) var(--spacing-6));
 
   border: var(--select-item-border, none);
-  border-radius: var(--select-item-border-radius, var(--radius-1));
+  border-radius: var(--select-item-border-radius, 0);
   background-color: var(--select-internal-item-background);
   color: var(--select-internal-item-label);
 
@@ -486,7 +507,7 @@
 .select__separator {
   flex-shrink: var(--select-separator-flex-shrink, 0);
   block-size: var(--select-separator-thickness, 1px);
-  margin-block: var(--select-separator-margin-block, var(--spacing-2));
+  margin-block: var(--select-separator-margin-block, 0);
   margin-inline: var(--select-separator-margin-inline, 0);
 
   background-color: var(--select-internal-separator);
