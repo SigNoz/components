@@ -83,6 +83,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 
 - [ ] JSDoc on **every** public prop, with `@default` where applicable
 - [ ] No component JSDoc section or `@example` for `width` and `maxWidth`
+- [ ] Component JSDoc repeats nothing the prop JSDoc says, and describes no look, motion or token value
 - [ ] Code comments only add context from outside the file or stop a bug, never restate the code
 - [ ] Story file per root component and per preset, subcomponent stories in the parent's file, static members in `{name}-components.stories.tsx` (`@access private` ones exempt), correct `title` group
 - [ ] `argTypes` complete with `category`, `type.summary`, `defaultValue.summary`

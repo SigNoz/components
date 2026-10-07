@@ -713,9 +713,10 @@ nothing to put in them:
    something from them (`icon` mode needs an `aria-label`; the spinner has no role of its own).
 5. **One `###` section per behaviour that is not obvious from the props.** Title it after the
    thing, not the prop (`### Disabled and loading`, `### Stacking`). Cross-prop
-   interactions, gotchas that cost someone an hour, and how it behaves inside another component
-   all live here. `width` and `maxWidth` never get a section, a sentence or an `@example`. They
-   are plain props, and their prop JSDoc is all they need.
+   interactions, behaviour no single prop owns (the keyboard, the layout against its parent),
+   and how it behaves inside another component all live here. A gotcha about one prop is an
+   `@note` on that prop, not a section. `width` and `maxWidth` never get a section, a sentence
+   or an `@example`. They are plain props, and their prop JSDoc is all they need.
 6. **`### Asserting on it`**: where `testId` lands, then a table of the root data attributes
    and a table of the `data-slot`s with when each is rendered. Say to use those, never the
    hashed class names.
@@ -726,6 +727,27 @@ Write it in short declarative sentences, one idea per paragraph, blank line betw
 the consequence as its own sentence (`So the button stays tabbable`, `So the off switch is the
 title itself`). Reach for a table whenever the content is a mapping. No bold for emphasis, no
 selling, and nothing the types already say.
+
+#### One place per fact
+
+The prop JSDoc and this block are read side by side, in the same editor hover. A fact written in
+both is read twice, and the two copies drift apart on the next edit. So each fact has one owner:
+
+- A fact about one prop, its gotcha included, is a sentence or an `@note` on that prop. A section
+  that only ever names one prop (`### Choice, not action`, all about `onChange`) belongs there.
+- The block keeps what no single prop owns: what two props do together, the keyboard, the layout
+  against the parent, the accessible name, the test IDs.
+- A section that would only repeat what each prop says is dropped.
+
+Also leave out:
+
+- How it looks or moves: fades, tints, the order of elements inside it, animation beats,
+  `prefers-reduced-motion`. The stories show the look, and the spec owns the motion.
+- A token's default value (`never narrower than 10rem`). The generated token table owns it, and
+  the prose goes stale the day the token changes.
+
+Before you finish, take every sentence that names exactly one prop and look for it in that prop's
+JSDoc. When it is there, delete the sentence from the block.
 
 ### The generated CSS token table
 
