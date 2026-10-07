@@ -267,6 +267,16 @@
 				"require": "./dist/progress/index.cjs"
 			}
 		},
+		"./radio-cards": {
+			"import": {
+				"types": "./dist/radio-cards/index.d.ts",
+				"import": "./dist/radio-cards/index.mjs"
+			},
+			"require": {
+				"types": "./dist/radio-cards/index.d.cts",
+				"require": "./dist/radio-cards/index.cjs"
+			}
+		},
 		"./radio-group": {
 			"import": {
 				"types": "./dist/radio-group/index.d.ts",

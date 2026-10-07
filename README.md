@@ -89,6 +89,7 @@ import { Progress } from '@signozhq/ui';
 import { PinList } from '@signozhq/ui';
 import { Pill } from '@signozhq/ui';
 import { Popover } from '@signozhq/ui';
+import { RadioCards } from '@signozhq/ui';
 import { RadioGroup } from '@signozhq/ui';
 import { Resizable } from '@signozhq/ui';
 import { Select } from '@signozhq/ui';

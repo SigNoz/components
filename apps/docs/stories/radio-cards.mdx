@@ -1,0 +1,199 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as RadioCardsStories from './radio-cards.stories';
+import * as RadioCardsComponentsStories from './radio-cards-components.stories';
+
+<Meta of={RadioCardsStories} />
+
+# RadioCards
+
+A form field where each option is a card, rendered through Base UI's `RadioGroup` and `Radio`. The
+whole card is the control, so the radio and its label are one target. `RadioCards` picks one option,
+and `RadioCards.Multiple` picks several.
+
+Radio cards fit a short list that the user reads at a glance, such as the onboarding questions or
+the panel type. A long list is a `Select`, or a `Combobox` when the user searches.
+
+## How to use
+
+The group needs a name: the question its cards answer. Point `aria-labelledby` at the visible
+question above it, or use `aria-label` when there is none. Leaving both out is a type error.
+
+```tsx
+import { RadioCards, Typography } from '@signozhq/ui';
+
+export default function MigrationQuestion({ timeline, setTimeline }) {
+	return (
+		<>
+			<Typography.Text id="migration-question">When do you plan to migrate?</Typography.Text>
+			<RadioCards
+				aria-labelledby="migration-question"
+				columns={2}
+				name="migrationTimeline"
+				value={timeline}
+				onChange={setTimeline}
+				items={[
+					{ label: 'This month', value: 'month' },
+					{ label: 'This quarter', value: 'quarter' },
+					{ label: 'This year', value: 'year' },
+					{ label: 'Not sure yet', value: 'unsure' },
+				]}
+			/>
+		</>
+	);
+}
+```
+
+<Primary />
+
+## Cards
+
+A card holds the `prefix` and the `label`, in that order, on one row. `prefix` is an icon. It is
+hidden from screen readers, so when the icon is the only thing that tells two cards apart, its name
+goes in the `label`.
+
+The label takes text and inline formatting only. A card is one control: a link, a button or an input
+inside it cannot be reached by a screen reader, and a click on it would check the card too. A field
+that belongs to one option goes under the group, and shows while that option is checked.
+
+A checked card is marked by its tint and by a check after the label. The items take no `suffix`,
+since that slot holds the check. On a check, the slot opens and then the check slides in, the same
+beats as a loading `Button`. Unchecking plays them backwards. Under `prefers-reduced-motion` the
+check moves at once.
+
+A label that renders nothing shows `<No label>`, and the card still renders. An empty `items`
+renders no card and logs a warning. Of two items with the same `value`, only the first renders, and
+the group logs a warning.
+
+## Choice, not action
+
+`onChange` runs on a click, on `Space`, and on each arrow key as the focus walks the cards. So an
+`onChange` that navigates, creates a record or opens a dialog runs on the first arrow key press. The
+action belongs to a button next to the group, such as `Next` or `Add panel`.
+
+## Clearing
+
+A click on the checked card changes nothing, the same as a native radio, so the call site clears the
+group by writing `value={null}`. `allowClear` hands that click back: a click or `Space` on the
+checked card unchecks it, and `onChange` reports `null`. The types then ask for an `onChange` that
+takes `null`.
+
+```tsx
+const [signal, setSignal] = useState<string | null>(null);
+
+<RadioCards aria-label="Signal" allowClear value={signal} onChange={setSignal} items={SIGNALS} />;
+```
+
+A group is controlled when `value` is set on its first render, so a controlled group with nothing
+checked writes `null`, never `undefined`. A `value` that turns `undefined` later shows no card
+checked, and a `value` that appears on a group that started without one is ignored. Both log a
+warning.
+
+`RadioCards.Multiple` keeps one card checked once something is checked: the click that would
+uncheck the last card is cancelled, so `onChange` is not called. `allowClear` hands it back, and the
+group then reports the empty array. A group that starts with nothing checked stays that way until
+the first check either way. A value that matches no item, or a checked card that is disabled, does
+not count as the card the group keeps. On `RadioCards.Multiple` the empty value is `[]`, and the
+same rule for `undefined` applies.
+
+## Multiple
+
+`RadioCards.Multiple` takes every prop of `RadioCards`. `value`, `defaultValue` and `onChange` hold
+the list of checked values, and every checked card shows its check. `onChange` reports the list in
+the order of `items`, not the order the cards were checked in.
+
+```tsx
+<RadioCards.Multiple
+	aria-labelledby="tools-question"
+	columns={2}
+	name="observabilityTools"
+	value={tools}
+	onChange={setTools}
+	items={[
+		{ label: 'Datadog', value: 'datadog' },
+		{ label: 'Grafana / Prometheus', value: 'grafana' },
+	]}
+/>
+```
+
+## Keyboard
+
+| Key                    | `RadioCards`                                               | `RadioCards.Multiple`               |
+| ---------------------- | ---------------------------------------------------------- | ----------------------------------- |
+| `Tab`                  | One tab stop, on the checked card or the first enabled one | Each enabled card is a tab stop     |
+| Arrows                 | Move to the next or previous card and check it, wrapping   | Nothing                             |
+| `Space`                | Checks the focused card, or unchecks it with `allowClear`  | Checks or unchecks the focused card |
+| `Enter`, `Home`, `End` | Nothing, and `Enter` does not submit the form              | Nothing                             |
+
+The arrows follow the order of `items`, not the grid, whatever `columns` is. They skip a disabled
+card.
+
+## Layout
+
+The cards fill the parent in a grid. `columns` caps the cards per row, and the cards in a row share
+its width equally. A card never gets narrower than its minimum width: a row with no room for
+`columns` cards holds fewer, and the rest wrap, so the call site needs no media query. Without
+`columns`, a row holds as many cards as fit.
+
+`columns={1}` stacks the cards. A `columns` equal to the number of items puts every card in one row.
+A `columns` that is not a whole number from 1 up is ignored, with a warning.
+
+`textOverflow` says what a long label does:
+
+| `textOverflow`       | a label longer than its card                                                 |
+| -------------------- | ---------------------------------------------------------------------------- |
+| `ellipsis` (default) | stays on one line, truncates, and shows in full in a tooltip while it is cut |
+| `wrap`               | takes more lines, and the cards of a row take the height of the tallest one  |
+
+Only the label shrinks, the icons keep their size and stay on the first line. A disabled card's
+reason comes first in the same tooltip.
+
+The group does not scroll and has no max height. The parent owns the scroll.
+
+## Disabled and read-only
+
+`disabled` fades every card and blocks the check. The group keeps one tab stop and the cards stay
+hoverable, so `disabledTooltip` stays reachable, and the group is left out of the submit. While the group's reason
+shows, it takes the place of each card's own reason.
+
+`readOnly` fades the cards less and keeps the checked tint, since the value is real. The focus still
+moves and no card changes, and the group is still submitted. `readOnlyTooltip` shows on hover and on
+focus. `readOnly` outranks `disabled`: with both set, only `readOnlyTooltip` shows.
+
+Both need their reason (`disabledTooltip`, `readOnlyTooltip`). A card disables itself with
+`disabled` and `disabledTooltip` on its item.
+
+## Forms
+
+Each card renders a hidden native input with `name` and `form`. `RadioCards` submits the checked
+`value` like a native radio group, and `RadioCards.Multiple` submits one `name` entry per checked
+card, like a native checkbox list. `required` blocks the submit while no card is checked, on both.
+A value that matches no item submits nothing, so it does not count as checked. A checked card that
+is disabled submits nothing either: `RadioCards.Multiple` does not count it, and `RadioCards` does,
+as a native radio group counts a disabled checked radio.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names everything under it:
+
+| Element     | `data-testid`                          |
+| ----------- | -------------------------------------- |
+| card        | `` `${testId}-item-${value}` ``        |
+| prefix icon | `` `${testId}-item-${value}-prefix` `` |
+
+The card is the element with `role="radio"`, or `role="checkbox"` on `RadioCards.Multiple`. A card's
+own `testId` wins, and names its icon the same way. The icon renders only when the item has one.
+
+The root carries `data-columns`, `data-text-overflow`, and `data-disabled`, `data-readonly` and
+`data-multiple` while they apply. A card carries `data-checked` or `data-unchecked`, and
+`data-disabled`. A label carries `data-truncated` while it is cut, and `data-empty-label` while it
+shows `<No label>`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## RadioCards props
+
+<Controls of={RadioCardsStories.Default} />
+
+## RadioCards.Multiple props
+
+<Controls of={RadioCardsComponentsStories.Multiple} />

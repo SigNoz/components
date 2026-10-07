@@ -1,0 +1,50 @@
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.stateMatrix {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 36rem);
+  gap: 1rem 2rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.stateLabel {
+  text-transform: capitalize;
+}
+
+.layoutList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.layoutRow {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 36rem);
+  gap: 2rem;
+  align-items: start;
+}
+
+.narrow {
+  grid-template-columns: 8rem 22rem;
+}
+
+.narrowWide {
+  width: 100%;
+  max-width: 36rem;
+  margin-top: 1rem;
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 36rem;
+  margin-top: 1rem;
+}

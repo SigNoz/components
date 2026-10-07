@@ -16,4 +16,5 @@ slider
 input
 command
 divider
+radio-cards
 resizable
