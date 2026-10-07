@@ -344,7 +344,7 @@ export const ButtonShowcase: Story = {
 			),
 		);
 	},
-	// The dashed border marches on hover, the ghost glow shimmers while active and the spinner never
+	// The dashed border marches on hover, the ghost glow shimmers while loading and the spinner never
 	// stops. Chromatic's own `disableAnimations` settles all three for the snapshot; the toolbar's
 	// live/still toggle does the same by hand when you want to read one frame in the browser.
 	render: () => (
@@ -357,9 +357,9 @@ export const ButtonShowcase: Story = {
 					<Typography size="sm">
 						One row per variant/color pair the types allow, one column per state. <code>hover</code>
 						, <code>focus</code> and <code>active</code> are forced by{' '}
-						<code>storybook-addon-pseudo-states</code>. Only <code>ghost</code> styles{' '}
-						<code>active</code>, and only <code>outlined</code> restyles <code>disabled</code> (the
-						stripes), the rest carry the shared opacity.
+						<code>storybook-addon-pseudo-states</code>. No variant styles <code>active</code>, and
+						only <code>outlined</code> restyles <code>disabled</code> (the stripes), the rest carry
+						the shared opacity.
 					</Typography>
 					<div
 						className={`${styles.matrix} ${styles.marginTopMedium}`}

@@ -304,9 +304,8 @@
 			color: var(--button-variant-ghost-hover-color, var(--button-secondary-ghost-label-hover));
 		}
 
-		&:active:not([aria-disabled="true"])::before,
 		&[aria-busy="true"]::before {
-			opacity: var(--button-ghost-glow-active-opacity, 1);
+			opacity: var(--button-ghost-glow-loading-opacity, 1);
 			animation-play-state: running;
 		}
 	}
@@ -482,7 +481,6 @@ svg.button__suffix {
 
 	.button[data-variant='dashed']:hover:not([aria-disabled="true"]) .button__dash-border rect,
 	.button[data-variant='dashed'][aria-busy="true"] .button__dash-border rect,
-	.button[data-variant='ghost']:active:not([aria-disabled="true"])::before,
 	.button[data-variant='ghost'][aria-busy="true"]::before {
 		animation-play-state: paused;
 	}
