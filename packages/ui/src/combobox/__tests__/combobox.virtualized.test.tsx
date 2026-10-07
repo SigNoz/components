@@ -119,6 +119,26 @@ describe('Combobox virtualized', () => {
 		expect(searchInput()).toHaveValue('');
 	});
 
+	it('marks only the last row, which carries no gap after it', async () => {
+		render(
+			<Combobox
+				placeholder="Select a framework..."
+				searchInputProps={{ placeholder: 'Search' }}
+				aria-label="Framework"
+				items={HOSTS}
+				virtualized
+			/>,
+		);
+		await openCombobox();
+
+		await userEvent.keyboard('host-42');
+
+		const rows = screen.getAllByRole('option').map((option) => option.closest('[data-index]'));
+
+		expect(rows.at(-1)).toHaveAttribute('data-last');
+		expect(rows.filter((row) => row?.hasAttribute('data-last'))).toHaveLength(1);
+	});
+
 	it('renders group headings as rows of the list', async () => {
 		render(
 			<Combobox

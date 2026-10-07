@@ -102,6 +102,8 @@ export function ComboboxVirtualRows({
 				}
 
 				const style = { transform: `translateY(${virtualRow.start}px)` };
+				// No row follows the last one, so it drops the gap its padding stands for.
+				const isLast = virtualRow.index === rows.length - 1 || undefined;
 
 				if (row.kind === 'separator') {
 					return (
@@ -109,6 +111,7 @@ export function ComboboxVirtualRows({
 							key={virtualRow.key}
 							ref={virtualizer.measureElement}
 							data-index={virtualRow.index}
+							data-last={isLast}
 							className={styles['combobox__virtual-row']}
 							style={style}
 						>
@@ -126,6 +129,7 @@ export function ComboboxVirtualRows({
 							key={virtualRow.key}
 							ref={virtualizer.measureElement}
 							data-index={virtualRow.index}
+							data-last={isLast}
 							data-slot="combobox-group-label"
 							className={cn(styles['combobox__virtual-row'], styles['combobox__group-label'])}
 							style={style}
@@ -140,6 +144,7 @@ export function ComboboxVirtualRows({
 						key={virtualRow.key}
 						ref={virtualizer.measureElement}
 						data-index={virtualRow.index}
+						data-last={isLast}
 						className={styles['combobox__virtual-row']}
 						style={style}
 					>

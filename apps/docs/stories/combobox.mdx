@@ -114,7 +114,8 @@ const [tags, setTags] = useState<string[]>([]);
 ```
 
 A multiple combobox shows a chip per value. `maxDisplayedPills` folds the rest into a `+N` chip,
-whose tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them.
+whose tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them. The
+chevron stays on the first row.
 
 `displayValue` decides what a single trigger shows for the selected row, in place of the row's
 `prefix`, `displayValue` and label. It also runs while nothing is selected, with `undefined`.

@@ -12,6 +12,10 @@
   --combobox-internal-chip-label: var(--combobox-chip-color, var(--combobox-chip-label));
   --combobox-internal-chip-remove-icon: var(--combobox-chip-remove-color, var(--combobox-chip-remove-icon));
   --combobox-internal-chip-remove-icon-hover: var(--combobox-chip-remove-hover-color, var(--combobox-chip-remove-icon-hover));
+  --combobox-internal-chip-block-size: var(--combobox-chip-block-size, 1.25rem);
+  // The space a 2rem trigger leaves above and below one row of chips. A trigger with chips keeps it
+  // on the inline start too, so the chips sit as far from the left edge as from the top one.
+  --combobox-internal-chips-inset: var(--combobox-trigger-chips-inset, 5px);
 
   position: var(--combobox-position, relative);
   display: var(--combobox-display, flex);
@@ -82,6 +86,13 @@
     opacity: var(--combobox-trigger-readonly-opacity, 0.8);
     cursor: var(--combobox-trigger-readonly-cursor, not-allowed);
   }
+
+  // Grows a row at a time as the chips wrap. The icon stays on the first row, not in the middle.
+  &:has(> .combobox__chips) {
+    align-items: var(--combobox-trigger-chips-align-items, flex-start);
+    padding-block: var(--combobox-internal-chips-inset);
+    padding-inline-start: var(--combobox-internal-chips-inset);
+  }
 }
 
 // On the root, so the pointer over the clear button, which overlaps the trigger, still counts.
@@ -134,6 +145,11 @@
     block-size: var(--combobox-icon-size, 14px);
   }
 
+  // One chip row tall, so it centres on the first row of chips.
+  .combobox__trigger:has(> .combobox__chips) > & {
+    block-size: var(--combobox-icon-chips-block-size, var(--combobox-internal-chip-block-size));
+  }
+
   .combobox[data-clearable]:hover & {
     visibility: var(--combobox-icon-clearable-visibility, hidden);
   }
@@ -172,6 +188,15 @@
     visibility: var(--combobox-clear-hover-visibility, visible);
   }
 
+  // Over the chevron, on the first row of chips.
+  .combobox:has(> .combobox__trigger > .combobox__chips) > & {
+    inset-block: var(
+      --combobox-clear-chips-inset-block,
+      calc(var(--combobox-trigger-border-width, 1px) + var(--combobox-internal-chips-inset)) auto
+    );
+    block-size: var(--combobox-clear-chips-block-size, var(--combobox-internal-chip-block-size));
+  }
+
   &:hover {
     color: var(--combobox-internal-trigger-icon-hover);
   }
@@ -191,7 +216,7 @@
   align-items: var(--combobox-chip-align-items, center);
   gap: var(--combobox-chip-gap, var(--spacing-1));
   box-sizing: var(--combobox-chip-box-sizing, border-box);
-  block-size: var(--combobox-chip-block-size, 1.25rem);
+  block-size: var(--combobox-internal-chip-block-size);
   min-inline-size: var(--combobox-chip-min-inline-size, 0);
   padding-inline: var(--combobox-chip-padding-inline, var(--spacing-3));
 
@@ -296,7 +321,7 @@
   // `--available-height` comes from Base UI and keeps the popup inside the viewport.
   max-block-size: var(--combobox-popup-max-block-size, var(--available-height, none));
 
-  padding-block: var(--combobox-popup-padding-block, var(--spacing-2));
+  padding-block: var(--combobox-popup-padding-block, 0);
   padding-inline: var(--combobox-popup-padding-inline, 0);
 
   border-width: var(--combobox-popup-border-width, 1px);
@@ -381,6 +406,11 @@
   overflow-x: var(--combobox-viewport-overflow-x, hidden);
   overscroll-behavior: var(--combobox-viewport-overscroll-behavior, contain);
   scrollbar-width: var(--combobox-viewport-scrollbar-width, thin);
+  // A row the keyboard reaches scrolls in clear of the fade, not under it.
+  scroll-padding-block: var(
+    --combobox-viewport-scroll-padding-block,
+    var(--combobox-scroll-fade-size, var(--spacing-10))
+  );
 
   // A mask reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
   &[data-scroll-start] {
@@ -432,6 +462,10 @@
   inset-inline: var(--combobox-virtual-row-inset-inline, 0);
   box-sizing: var(--combobox-virtual-row-box-sizing, border-box);
   padding-block-end: var(--combobox-item-gap, var(--spacing-2));
+
+  &[data-last] {
+    padding-block-end: 0;
+  }
 }
 
 .combobox__item {
@@ -445,7 +479,7 @@
   padding: var(--combobox-item-padding, var(--spacing-4) var(--spacing-6));
 
   border: var(--combobox-item-border, none);
-  border-radius: var(--combobox-item-border-radius, var(--radius-1));
+  border-radius: var(--combobox-item-border-radius, 0);
   background-color: var(--combobox-internal-item-background);
   color: var(--combobox-internal-item-label);
 
@@ -606,7 +640,7 @@
 
 .combobox__separator {
   block-size: var(--combobox-separator-thickness, 1px);
-  margin-block: var(--combobox-separator-margin-block, var(--spacing-2));
+  margin-block: var(--combobox-separator-margin-block, 0);
   margin-inline: var(--combobox-separator-margin-inline, 0);
 
   background-color: var(--combobox-internal-separator);
@@ -638,8 +672,8 @@
   display: var(--combobox-footer-display, flex);
   flex-direction: var(--combobox-footer-flex-direction, column);
   flex-shrink: var(--combobox-footer-flex-shrink, 0);
-  margin-block-start: var(--combobox-footer-margin-block-start, var(--spacing-2));
-  padding-block-start: var(--combobox-footer-padding-block-start, var(--spacing-2));
+  margin-block-start: var(--combobox-footer-margin-block-start, 0);
+  padding-block-start: var(--combobox-footer-padding-block-start, 0);
 
   border-block-start-width: var(--combobox-footer-border-width, 1px);
   border-block-start-style: var(--combobox-footer-border-style, solid);
