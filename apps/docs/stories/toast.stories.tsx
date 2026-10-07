@@ -14,7 +14,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, useEffect, useState } from 'react';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './toast.stories.module.css';
 
@@ -27,6 +27,7 @@ type ToastStoryArgs = ToasterProps & {
 	title?: string;
 	description?: string;
 	actionLabel?: string;
+	count?: number;
 };
 
 const meta: Meta<ToastStoryArgs> = {
@@ -152,22 +153,21 @@ type Story = StoryObj<ToastStoryArgs>;
 // One id for the playground toast, so a change in the controls updates it in place.
 const PLAYGROUND_ID = 'playground';
 
-function raisePlaygroundToast({
-	variant = 'success',
-	title,
-	description,
-	actionLabel,
-}: ToastStoryArgs): void {
+function raiseStoryToast(
+	{ variant = 'success', title, description, actionLabel }: ToastStoryArgs,
+	id?: string,
+): string {
 	const action = actionLabel ? { label: actionLabel } : undefined;
-	const options = { id: PLAYGROUND_ID, description, action };
-	// `toast.danger` requires a button, so the playground names one when the controls do not.
-	const id =
-		variant === 'danger'
-			? toast.danger(title, { ...options, action: action ?? { label: 'Close' } })
-			: toast[variant](title, options);
+	const options = { id, description, action };
+	// `toast.danger` requires a button, so the stories name one when the controls do not.
+	return variant === 'danger'
+		? toast.danger(title, { ...options, action: action ?? { label: 'Close' } })
+		: toast[variant](title, options);
+}
 
+function raisePlaygroundToast(args: ToastStoryArgs): void {
 	// Nothing to show, so the toast of the previous controls has to go.
-	if (id === '') {
+	if (raiseStoryToast(args, PLAYGROUND_ID) === '') {
 		toast.dismiss(PLAYGROUND_ID);
 	}
 }
@@ -220,6 +220,106 @@ export const Default: Story = {
 		chromatic: { disableSnapshot: true },
 	},
 	render: (args: ToastStoryArgs) => <ToastPlayground {...args} />,
+};
+
+// Numbers every toast `ManyToasts` raises, across clicks, so no two share a title and none is
+// merged into another. A toast that closes before it is shown leaves a gap in the count.
+let manyToastsRaised = 0;
+
+function raiseManyToasts({ count = 20, ...args }: ToastStoryArgs): void {
+	for (let index = 0; index < count; index++) {
+		manyToastsRaised += 1;
+		raiseStoryToast({ ...args, title: `Toast ${manyToastsRaised}` });
+	}
+}
+
+function ManyToastsDemo({
+	variant,
+	description,
+	actionLabel,
+	count,
+	...toasterProps
+}: ToastStoryArgs): ReactElement {
+	return (
+		<div className={`story-center ${styles.playground}`}>
+			<div className="story-row">
+				<Button
+					variant={ButtonVariant.Solid}
+					color={ButtonColor.Primary}
+					size={ButtonSize.MD}
+					onClick={() => raiseManyToasts({ count, variant, description, actionLabel })}
+				>
+					Raise {count} toasts
+				</Button>
+				<Button
+					variant={ButtonVariant.Solid}
+					color={ButtonColor.Secondary}
+					size={ButtonSize.MD}
+					onClick={() => toast.dismiss()}
+				>
+					Dismiss all
+				</Button>
+			</div>
+			<Toaster {...toasterProps} />
+		</div>
+	);
+}
+
+/**
+ * Many toasts raised at once, against the window. The stack shows the newest `limit` and the
+ * rest wait behind it, hidden. A waiting toast still has its timer running, so with a `timeout`
+ * it can close before it is shown. A `timeout` of `0`, or an `actionLabel`, keeps every toast
+ * until it is dismissed, so each one comes forward as the ones in front close.
+ *
+ * The timers pause while the pointer is over the stack, focus is inside it, or the window is not
+ * focused. Here a click in the Controls panel takes the focus from the canvas, so the toasts stay
+ * until the canvas is clicked again.
+ *
+ * Raise `limit` to spread more of them on hover. The stack is not scrollable, so a spread stack
+ * taller than the window runs past its edge.
+ */
+export const ManyToasts: Story = {
+	args: {
+		position: 'top-right',
+		offset: 16,
+		limit: 3,
+		timeout: 5000,
+		variant: 'info',
+		description: '',
+		actionLabel: '',
+		count: 20,
+	},
+	argTypes: {
+		title: { table: { disable: true } },
+		count: {
+			control: { type: 'number', min: 1 },
+			description: 'Story only: how many toasts one click raises.',
+			table: { category: 'Content', type: { summary: 'number' } },
+		},
+	},
+	parameters: {
+		// Timers close the toasts while the snapshot is taken. `ToastShowcase` covers the stack.
+		chromatic: { disableSnapshot: true },
+	},
+	render: (args: ToastStoryArgs) => <ManyToastsDemo {...args} />,
+	play: async ({ args, canvasElement }) => {
+		const { count = 20, limit = 3 } = args;
+		const toasts = () => [
+			...canvasElement.ownerDocument.querySelectorAll<HTMLElement>('[data-slot="toast"]'),
+		];
+
+		toast.dismiss();
+		await waitFor(() => expect(toasts()).toHaveLength(0));
+
+		await userEvent.click(within(canvasElement).getByRole('button', { name: /^Raise/ }));
+		await waitFor(() => expect(toasts()).toHaveLength(count));
+
+		// Newest first: the first `limit` are shown, every other one waits behind them.
+		const shown = Math.min(limit, count);
+		for (const [index, item] of toasts().entries()) {
+			await expect(item.hasAttribute('data-limited')).toBe(index >= shown);
+		}
+	},
 };
 
 type FrameName = 'spread' | 'collapsed-top' | 'collapsed-bottom';
