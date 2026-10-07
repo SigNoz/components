@@ -47,7 +47,7 @@
   // `--available-height` comes from Base UI and keeps the popup inside the viewport.
   max-block-size: var(--dropdown-max-popup-block-size, var(--available-height, none));
 
-  padding-block: var(--dropdown-padding-block, var(--spacing-2));
+  padding-block: var(--dropdown-padding-block, 0);
   padding-inline: var(--dropdown-padding-inline, 0);
 
   border-width: var(--dropdown-border-width, 1px);
@@ -101,6 +101,11 @@
   overflow-x: var(--dropdown-viewport-overflow-x, hidden);
   overscroll-behavior: var(--dropdown-viewport-overscroll-behavior, contain);
   scrollbar-width: var(--dropdown-viewport-scrollbar-width, thin);
+  // A row the keyboard reaches scrolls in clear of the fade, not under it.
+  scroll-padding-block: var(
+    --dropdown-viewport-scroll-padding-block,
+    var(--dropdown-scroll-fade-size, var(--spacing-10))
+  );
 
   // `mask-image` rather than a gradient overlay, so the row fades instead of being covered. A mask
   // reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
@@ -139,7 +144,7 @@
 
   padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
-  border-radius: var(--dropdown-item-border-radius, var(--radius-1));
+  border-radius: var(--dropdown-item-border-radius, 0);
   background-color: var(--dropdown-internal-item-background);
   color: var(--dropdown-internal-item-label);
 
@@ -343,7 +348,7 @@
 
 .dropdown__separator {
   block-size: var(--dropdown-separator-thickness, 1px);
-  margin-block: var(--dropdown-separator-margin-block, var(--spacing-2));
+  margin-block: var(--dropdown-separator-margin-block, 0);
   margin-inline: var(--dropdown-separator-margin-inline, 0);
 
   background-color: var(--dropdown-internal-separator);
