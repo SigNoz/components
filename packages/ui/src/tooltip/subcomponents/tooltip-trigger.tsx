@@ -66,18 +66,66 @@ export const TooltipTrigger = React.forwardRef<HTMLButtonElement, TooltipTrigger
 			} as React.Attributes);
 		}
 
+		// An `aria-describedby` written on the trigger replaces the popup, as on the slider thumbs
+		// where the value is already announced.
+		const ownDescribedBy =
+			'aria-describedby' in props
+				? props['aria-describedby']
+				: contentId === null
+					? undefined
+					: (contentId ?? inheritedContentId);
+
+		if (!React.isValidElement<TriggerChildProps>(children)) {
+			return (
+				<TooltipTriggerProvider>
+					<TooltipPrimitive.Trigger
+						ref={ref}
+						data-slot="tooltip-trigger"
+						handle={handle}
+						{...testIdProps}
+						{...props}
+						aria-describedby={ownDescribedBy}
+					>
+						{children}
+					</TooltipPrimitive.Trigger>
+				</TooltipTriggerProvider>
+			);
+		}
+
+		// Base UI merges the props of the `render` element over its own, so the child's `id` and
+		// `aria-describedby` would replace the trigger's: the id Base UI tracks the trigger by, and
+		// the popup it describes. The trigger takes the child's id, and the two descriptions join.
+		const childDescribedBy = children.props['aria-describedby'];
+		const describedBy = joinIdRefs(ownDescribedBy, childDescribedBy);
+
 		return (
 			<TooltipTriggerProvider>
 				<TooltipPrimitive.Trigger
 					ref={ref}
 					data-slot="tooltip-trigger"
 					handle={handle}
-					aria-describedby={contentId === null ? undefined : (contentId ?? inheritedContentId)}
 					{...testIdProps}
 					{...props}
-					{...(React.isValidElement(children) ? { render: children } : { children })}
+					id={props.id ?? children.props.id}
+					aria-describedby={describedBy}
+					render={
+						childDescribedBy === undefined
+							? children
+							: React.cloneElement(children, { 'aria-describedby': describedBy })
+					}
 				/>
 			</TooltipTriggerProvider>
 		);
 	},
 );
+
+type TriggerChildProps = {
+	id?: string;
+	'aria-describedby'?: string;
+};
+
+function joinIdRefs(...lists: Array<string | undefined>): string | undefined {
+	const ids = new Set(lists.flatMap((list) => list?.split(/\s+/).filter(Boolean) ?? []));
+
+	return ids.size === 0 ? undefined : [...ids].join(' ');
+}

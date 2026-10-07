@@ -21,7 +21,8 @@ export type TooltipAnchorProps = Omit<
 > & {
 	/**
 	 * What this element has to say. Empty content still opens a popup when a tooltip
-	 * nested in the trigger stacks an entry onto it.
+	 * nested in the trigger stacks an entry onto it. With neither, the trigger is
+	 * disabled, so a tooltip around it still opens on hover and focus.
 	 */
 	content: React.ReactNode;
 	/**
@@ -83,6 +84,10 @@ const TooltipAnchorParts = React.forwardRef<HTMLButtonElement, TooltipAnchorProp
 					handle={handle}
 					contentId={hasContent ? contentId : null}
 					{...triggerProps}
+					// Base UI ignores hover and focus on an enabled trigger nested in another one, so a
+					// trigger with nothing to say would keep the tooltip around it from opening. A stacked
+					// trigger is the child itself, which must not get `disabled`.
+					{...(!stacked && !hasContent ? { disabled: true } : {})}
 				>
 					{children}
 				</TooltipTrigger>

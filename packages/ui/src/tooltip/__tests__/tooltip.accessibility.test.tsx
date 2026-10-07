@@ -37,6 +37,45 @@ describe('Tooltip accessibility', () => {
 		expect(await screen.findByRole('tooltip')).toHaveAttribute('id', describedBy);
 	});
 
+	it('joins the description the trigger element brings with the content', async () => {
+		const user = userEvent.setup();
+		render(
+			<>
+				<p id="delete-hint">Removes it for everyone</p>
+				<Tooltip title={TITLE}>
+					<button type="button" aria-describedby="delete-hint">
+						Delete
+					</button>
+				</Tooltip>
+			</>,
+		);
+		const trigger = screen.getByRole('button');
+
+		await user.hover(trigger);
+
+		const tooltip = await screen.findByRole('tooltip');
+		expect(trigger).toHaveAttribute('aria-describedby', `${tooltip.id} delete-hint`);
+		expect(trigger).toHaveAccessibleDescription(`${TITLE} Removes it for everyone`);
+	});
+
+	it('keeps the id the trigger element brings, and opens from it', async () => {
+		const user = userEvent.setup();
+		render(
+			<Tooltip title={TITLE}>
+				<button type="button" id="delete-button">
+					Delete
+				</button>
+			</Tooltip>,
+		);
+		const trigger = screen.getByRole('button');
+
+		await user.hover(trigger);
+
+		expect(await screen.findByRole('tooltip')).toHaveTextContent(TITLE);
+		expect(trigger).toHaveAttribute('id', 'delete-button');
+		expect(trigger).toHaveAttribute('data-popup-open');
+	});
+
 	it('uses the id the caller set for both the content and aria-describedby', async () => {
 		const user = userEvent.setup();
 		render(
