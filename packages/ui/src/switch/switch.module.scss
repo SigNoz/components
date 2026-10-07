@@ -3,13 +3,12 @@
 // rule covers a bare switch and a whole row.
 .switch {
 	// The knob's travel is derived from the four size tokens, so any of them can change alone and
-	// the geometry holds; the hover and press morphs only redefine the knob box.
+	// the geometry holds; the hover morph only redefines the knob width.
 	--switch-internal-track-width: var(--switch-track-width, 28px);
 	--switch-internal-track-height: var(--switch-track-height, 16px);
 	--switch-internal-thumb-size: var(--switch-thumb-size, 12px);
 	--switch-internal-thumb-inset: var(--switch-thumb-inset, 2px);
 	--switch-internal-thumb-width: var(--switch-internal-thumb-size);
-	--switch-internal-thumb-height: var(--switch-internal-thumb-size);
 	--switch-internal-travel: calc(var(--switch-internal-track-width) -
 			var(--switch-internal-thumb-width) - 2 * var(--switch-internal-thumb-inset));
 	--switch-internal-thumb-x: 0px;
@@ -90,8 +89,8 @@
 }
 
 // Hover fires from the whole row, not just the 28px track: the label is part of the hit target.
-// The hover and press morphs are custom-property swaps rather than direct declarations, so the
-// knob's transition carries them and the derived travel re-computes from the new width.
+// The hover morph is a custom-property swap rather than a direct declaration, so the knob's
+// transition carries it and the derived travel re-computes from the new width.
 .switch:not([data-disabled]):not([data-readonly]):hover,
 .switch-container:hover .switch:not([data-disabled]):not([data-readonly]) {
 	--switch-internal-thumb-width: calc(var(--switch-internal-thumb-size) + var(--switch-thumb-hover-extend, 2px));
@@ -105,30 +104,20 @@
 	}
 }
 
-.switch:not([data-disabled]):not([data-readonly]):active,
-.switch-container:active .switch:not([data-disabled]):not([data-readonly]) {
-	--switch-internal-thumb-width: calc(var(--switch-internal-thumb-size) + var(--switch-thumb-press-extend, 3px));
-	--switch-internal-thumb-height: calc(var(--switch-internal-thumb-size) - var(--switch-thumb-press-shrink, 3px));
-}
-
 .switch__thumb {
 	position: absolute;
-	// Vertical centring rides on the -50% half of `translate`, so the press squish stays centred
-	// however far it shrinks; the horizontal half is the travel, which is 0 while unchecked and
-	// re-derived from the knob's current width while it morphs, so a checked knob stretches
-	// toward the centre and keeps its outer edge parked at the inset.
+	// Vertical centring rides on the -50% half of `translate`; the horizontal half is the travel,
+	// which is 0 while unchecked and re-derived from the knob's current width while it morphs, so
+	// a checked knob stretches toward the centre and keeps its outer edge parked at the inset.
 	inset-block-start: 50%;
 	inset-inline-start: var(--switch-internal-thumb-inset);
 	inline-size: var(--switch-internal-thumb-width);
-	block-size: var(--switch-internal-thumb-height);
+	block-size: var(--switch-internal-thumb-size);
 	border-radius: var(--switch-thumb-border-radius, var(--radius-round));
 	background-color: var(--switch-thumb-background-color, var(--switch-thumb-background));
 	box-shadow: var(--switch-thumb-shadow, 0 1px 3px 0 color-mix(in srgb, black 30%, transparent));
 	translate: var(--switch-internal-thumb-x) -50%;
-	transition: var(--switch-thumb-transition,
-			translate 150ms ease-out,
-			inline-size 150ms ease-out,
-			block-size 150ms ease-out);
+	transition: var(--switch-thumb-transition, translate 150ms ease-out, inline-size 150ms ease-out);
 }
 
 .switch-container {

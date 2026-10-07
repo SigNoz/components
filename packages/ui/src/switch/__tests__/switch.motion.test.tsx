@@ -30,8 +30,8 @@ describe('Switch motion', () => {
 
 		expect(getComputedStyle(track).transitionProperty).toBe('background-color');
 		expect(getComputedStyle(track).transitionDuration).toBe('0.15s');
-		expect(getComputedStyle(thumb).transitionProperty).toBe('translate, inline-size, block-size');
-		expect(getComputedStyle(thumb).transitionDuration).toBe('0.15s, 0.15s, 0.15s');
+		expect(getComputedStyle(thumb).transitionProperty).toBe('translate, inline-size');
+		expect(getComputedStyle(thumb).transitionDuration).toBe('0.15s, 0.15s');
 	});
 
 	it('drops both transitions under prefers-reduced-motion', async () => {
