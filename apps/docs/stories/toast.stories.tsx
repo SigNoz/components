@@ -37,7 +37,8 @@ const meta: Meta<ToastStoryArgs> = {
 		position: {
 			control: 'select',
 			options: Object.values(ToastPosition),
-			description: 'Where every toast of the app stacks. One position means one stack.',
+			description:
+				'Where a toast raised with no `position` stacks. Each position keeps a stack of its own.',
 			table: {
 				category: 'Appearance',
 				type: {
@@ -154,11 +155,11 @@ type Story = StoryObj<ToastStoryArgs>;
 const PLAYGROUND_ID = 'playground';
 
 function raiseStoryToast(
-	{ variant = 'success', title, description, actionLabel }: ToastStoryArgs,
+	{ variant = 'success', title, description, actionLabel, position }: ToastStoryArgs,
 	id?: string,
 ): string {
 	const action = actionLabel ? { label: actionLabel } : undefined;
-	const options = { id, description, action };
+	const options = { id, description, action, position };
 	// `toast.danger` requires a button, so the stories name one when the controls do not.
 	return variant === 'danger'
 		? toast.danger(title, { ...options, action: action ?? { label: 'Close' } })
@@ -179,11 +180,14 @@ function ToastPlayground({
 	actionLabel,
 	...toasterProps
 }: ToastStoryArgs): ReactElement {
+	const { position } = toasterProps;
+
 	// The `Toaster` below subscribes in an effect, and a child's effects run before its parent's,
-	// so it is listening by the time this raises the toast.
+	// so it is listening by the time this raises the toast. The call names the `position` of the
+	// controls, so a change there moves the toast on screen instead of leaving it where it is.
 	useEffect(() => {
-		raisePlaygroundToast({ variant, title, description, actionLabel });
-	}, [variant, title, description, actionLabel]);
+		raisePlaygroundToast({ variant, title, description, actionLabel, position });
+	}, [variant, title, description, actionLabel, position]);
 
 	return (
 		<div className={`story-center ${styles.playground}`}>
@@ -191,7 +195,7 @@ function ToastPlayground({
 				variant={ButtonVariant.Solid}
 				color={ButtonColor.Secondary}
 				size={ButtonSize.MD}
-				onClick={() => raisePlaygroundToast({ variant, title, description, actionLabel })}
+				onClick={() => raisePlaygroundToast({ variant, title, description, actionLabel, position })}
 			>
 				Show it again
 			</Button>
@@ -322,12 +326,82 @@ export const ManyToasts: Story = {
 	},
 };
 
+function PositionsDemo({
+	variant: _variant,
+	title: _title,
+	description: _description,
+	actionLabel: _actionLabel,
+	count: _count,
+	...toasterProps
+}: ToastStoryArgs): ReactElement {
+	return (
+		<div className={`story-center ${styles.playground}`}>
+			<div className={styles.positions}>
+				{Object.values(ToastPosition).map((position) => (
+					<Button
+						key={position}
+						variant={ButtonVariant.Solid}
+						color={ButtonColor.Secondary}
+						size={ButtonSize.MD}
+						onClick={() => toast.info(`Raised at ${position}`, { position })}
+					>
+						{position}
+					</Button>
+				))}
+			</div>
+			<Toaster {...toasterProps} />
+		</div>
+	);
+}
+
+/**
+ * `position` on the call puts a toast in another stack than the one of the `Toaster`. Each
+ * position keeps a stack of its own, with its own `limit`, and spreads on its own.
+ */
+export const Positions: Story = {
+	args: {
+		position: 'top-right',
+		offset: 16,
+		limit: 3,
+		timeout: 5000,
+	},
+	argTypes: {
+		variant: { table: { disable: true } },
+		title: { table: { disable: true } },
+		description: { table: { disable: true } },
+		actionLabel: { table: { disable: true } },
+	},
+	parameters: {
+		// Timers close the toasts while the snapshot is taken. `ToastShowcase` covers the stack.
+		chromatic: { disableSnapshot: true },
+	},
+	render: (args: ToastStoryArgs) => <PositionsDemo {...args} />,
+	play: async ({ canvasElement }) => {
+		const stack = (position: ToastPositionType) =>
+			canvasElement.ownerDocument.querySelector(
+				`[data-slot="toaster"][data-position="${position}"]`,
+			) as HTMLElement;
+
+		toast.dismiss();
+
+		for (const position of Object.values(ToastPosition)) {
+			await userEvent.click(within(canvasElement).getByRole('button', { name: position }));
+			await waitFor(() =>
+				expect(stack(position).querySelector('[data-slot="toast-title"]')).toHaveTextContent(
+					`Raised at ${position}`,
+				),
+			);
+		}
+	},
+};
+
 type FrameName = 'spread' | 'collapsed-top' | 'collapsed-bottom';
 
 /**
  * A `Toaster` that stacks inside a frame on the page instead of against the window. Every
  * `Toaster` draws every toast, so the frames show the same toasts, and each keeps its own hover
- * state and timers: one can be spread while the others stay collapsed.
+ * state and timers: one can be spread while the others stay collapsed. A frame shows only the
+ * stack of its own `position`.
  *
  * The frame only exists after the first render, so it is held in state rather than a ref, and
  * the `Toaster` waits for it instead of mounting into `document.body` first.
@@ -344,7 +418,12 @@ function ToastFrame({
 	const [host, setHost] = useState<HTMLDivElement | null>(null);
 
 	return (
-		<div ref={setHost} className={`${styles.frame} ${className}`} data-frame={frame}>
+		<div
+			ref={setHost}
+			className={`${styles.frame} ${className}`}
+			data-frame={frame}
+			data-corner={position}
+		>
 			{host !== null && (
 				<Toaster position={position} container={host} aria-label={`Notifications, ${frame}`} />
 			)}
@@ -356,26 +435,44 @@ const LONG_TITLE =
 	'The export of the dashboard is still running, and the file will be in your downloads when it ends';
 
 /**
- * Raised oldest first. The last three stay until dismissed, so the collapsed frames, which show
- * only the newest three and keep their timers running, do not change while they are on screen.
+ * Raised oldest first, in the stack of `position`. The last three stay until dismissed, so the
+ * collapsed frames, which show only the newest three and keep their timers running, do not change
+ * while they are on screen.
+ *
+ * The same toasts go to two stacks, so each has an `id` of its own: the one its title gives would
+ * move the toast from the first stack to the second.
  */
-function raiseShowcaseToasts(): void {
-	toast.info(LONG_TITLE);
-	toast.info('Copied to clipboard');
-	toast.success('Panel saved');
-	toast.warning('Quota almost reached');
-	toast.info('Button focused', { action: { label: 'Cancel' }, testId: 'toast-focus' });
-	toast.info('Button hovered', { action: { label: 'Cancel' }, testId: 'toast-hover' });
-	toast.loading('Saving the panel');
-	toast.danger('Could not save the panel', { action: { label: 'Close' } });
+function raiseShowcaseToasts(position: ToastPositionType): void {
+	const at = (name: string) => ({ position, id: `${position}:${name}` });
+
+	toast.info(LONG_TITLE, at('long'));
+	toast.info('Copied to clipboard', at('copied'));
+	toast.success('Panel saved', at('saved'));
+	toast.warning('Quota almost reached', at('quota'));
+	toast.info('Button focused', {
+		...at('focus'),
+		action: { label: 'Cancel' },
+		testId: 'toast-focus',
+	});
+	toast.info('Button hovered', {
+		...at('hover'),
+		action: { label: 'Cancel' },
+		testId: 'toast-hover',
+	});
+	toast.loading('Saving the panel', at('saving'));
+	toast.danger('Could not save the panel', { ...at('failed'), action: { label: 'Close' } });
 	toast.success('Panel deleted', {
+		...at('deleted'),
 		description: 'It is gone from the dashboard.',
 		action: { label: 'Undo' },
 	});
 }
 
 const SHOWCASE_TOASTS = 9;
+// The showcase raises its toasts at the top and at the bottom.
+const SHOWCASE_STACKS = 2;
 const FRAMES = 3;
+const POSITIONS = Object.values(ToastPosition).length;
 
 /**
  * Every variant and content shape, the stack spread and collapsed, at the top and at the bottom,
@@ -433,15 +530,18 @@ export const ToastShowcase: Story = {
 			canvasElement.querySelector(`[data-frame="${name}"]`) as HTMLElement;
 
 		await waitFor(() =>
-			expect(canvasElement.querySelectorAll('[data-slot="toaster"]')).toHaveLength(FRAMES),
+			expect(canvasElement.querySelectorAll('[data-slot="toaster"]')).toHaveLength(
+				FRAMES * POSITIONS,
+			),
 		);
 
 		toast.dismiss();
-		raiseShowcaseToasts();
+		raiseShowcaseToasts('top-right');
+		raiseShowcaseToasts('bottom-right');
 
 		await waitFor(() =>
 			expect(canvasElement.querySelectorAll('[data-slot="toast"]')).toHaveLength(
-				SHOWCASE_TOASTS * FRAMES,
+				SHOWCASE_TOASTS * SHOWCASE_STACKS * FRAMES,
 			),
 		);
 

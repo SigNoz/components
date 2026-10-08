@@ -18,6 +18,13 @@ export const ToastPosition = {
 } as const;
 
 /**
+ * Every position, each with a stack of its own.
+ *
+ * @access private
+ */
+export const TOAST_POSITIONS: readonly ToastPositionType[] = Object.values(ToastPosition);
+
+/**
  * @access private
  */
 export const DEFAULT_LIMIT = 3;

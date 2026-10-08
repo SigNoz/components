@@ -8,7 +8,7 @@ export type ToastPositionType = (typeof ToastPosition)[keyof typeof ToastPositio
 export interface ToasterProps
 	extends Pick<ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'style'>, AriaAttributes {
 	/**
-	 * Where every toast of the app stacks. One position means one stack.
+	 * Where a toast raised with no `position` stacks. Each position keeps a stack of its own.
 	 *
 	 * @default 'top-right'
 	 */
@@ -40,8 +40,9 @@ export interface ToasterProps
 	 */
 	container?: ComponentPropsWithoutRef<typeof ToastPrimitive.Portal>['container'];
 	/**
-	 * Alias for `data-testid`, set on the viewport. A toast gets `<testId>-toast-<id>`, and each
-	 * part of it a further suffix (`-content`, `-icon`, `-title`, `-description`, `-action`).
+	 * Alias for `data-testid`, set on the viewport of `position`. The viewport of another position
+	 * gets `<testId>-<position>`. A toast gets `<testId>-toast-<id>`, and each part of it a further
+	 * suffix (`-content`, `-icon`, `-title`, `-description`, `-action`).
 	 */
 	testId?: string;
 	/**
@@ -87,9 +88,29 @@ export interface ToastOptions {
 	 * Alias for `data-testid`, set on the toast.
 	 */
 	testId?: string;
+	/**
+	 * How long the toast stays on screen, in milliseconds. `0` keeps it until it is dismissed.
+	 *
+	 * Not taken by `toast.danger` and `toast.loading`, which stay until dismissed or replaced.
+	 *
+	 * @default the `timeout` of the `Toaster`, or `0` for a toast with an `action`
+	 */
+	timeout?: number;
+	/**
+	 * The stack the toast goes to. Each position keeps a stack of its own.
+	 *
+	 * Without it, a toast with the `id` of a visible one stays where that one is. With it, that
+	 * toast moves here.
+	 *
+	 * @default the `position` of the `Toaster`
+	 */
+	position?: ToastPositionType;
 }
 
-export interface ToastDangerOptions extends ToastOptions {
+/**
+ * No `timeout`: a `danger` toast stays until it is dismissed.
+ */
+export interface ToastDangerOptions extends Omit<ToastOptions, 'timeout'> {
 	/**
 	 * The button on the right, required: a `danger` toast never closes on its own, so it needs a
 	 * way out from the keyboard. With no `onClick` it only closes the toast, so label it that way,
@@ -125,6 +146,12 @@ export interface ToastPromiseOptions<Value> {
 	 * Alias for `data-testid`, set on the toast in every state.
 	 */
 	testId?: string;
+	/**
+	 * The stack the toast goes to, in every state, as on the other calls.
+	 *
+	 * @default the `position` of the `Toaster`
+	 */
+	position?: ToastPositionType;
 }
 
 /**

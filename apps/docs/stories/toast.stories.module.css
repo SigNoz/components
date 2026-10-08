@@ -47,3 +47,20 @@
 	opacity: 1;
 	pointer-events: auto;
 }
+
+/*
+ * Every `Toaster` draws a stack per position, and the showcase raises its toasts in two of them.
+ * Each frame shows only the stack of its own position.
+ */
+.frame[data-corner='top-right'] :global([data-slot='toaster']:not([data-position='top-right'])),
+.frame[data-corner='bottom-right']
+	:global([data-slot='toaster']:not([data-position='bottom-right'])) {
+	display: none;
+}
+
+/* One button per position, laid out as the corners and edges they stand for. */
+.positions {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	gap: 0.5rem;
+}

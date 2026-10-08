@@ -1,17 +1,19 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { usePopupContainer } from '../lib/popup-container.js';
-import { DEFAULT_LIMIT, DEFAULT_TIMEOUT, ToastPosition } from './constants.js';
+import { partTestId } from '../lib/utils.js';
+import { DEFAULT_LIMIT, DEFAULT_TIMEOUT, TOAST_POSITIONS, ToastPosition } from './constants.js';
 import { ToastList } from './subcomponents/toast-list.js';
 import { ToastViewport } from './subcomponents/toast-viewport.js';
-import { toastManager } from './toast.js';
+import { forgetVisibleToasts, setDefaultPosition, toastManagers } from './toast.js';
 import type { ToasterProps } from './types.js';
 
 /**
  * Renders every toast raised through `toast` (Base UI `Toast`). Mount it once, at the app root,
  * with no children.
  *
- * Only `id`, `className`, `style`, `aria-*` and `data-*` are forwarded, all to the viewport.
+ * Only `id`, `className`, `style`, `aria-*` and `data-*` are forwarded, to the viewport. `id` and
+ * the `ref` go to the viewport of `position` only.
  * The toasts are drawn by the component and take no props of their own: raise them with `toast`.
  *
  * Visual values are `--toast-*` custom properties, defaults in the `css-tokens` region of
@@ -25,15 +27,20 @@ import type { ToasterProps } from './types.js';
  *
  * ### Stack
  *
- * `position` moves the whole stack, there is no per-call position. `offset` sets its distance
- * from the edges of the window. Newest first, `limit` visible, the rest wait behind. The stack
- * spreads on hover and on focus inside it, and the timers pause meanwhile. Swiping a toast toward
- * the edge it sits against dismisses it.
+ * Each position keeps a stack of its own, with its own viewport. `position` is where a toast
+ * raised with no `position` goes. `offset` sets the distance of every stack from the edges of the
+ * window. Newest first, `limit` visible per stack, the rest wait behind. A stack spreads on hover
+ * and on focus inside it, and its timers pause meanwhile. Swiping a toast toward the edge it sits
+ * against dismisses it.
+ *
+ * The viewport of `position` is a landmark. Another one is a landmark only while it holds a toast,
+ * so an empty corner does not show up in the landmark list.
  *
  * ### Timeout
  *
  * `timeout` is how long `success`, `info` and `warning` stay on screen. `danger`, `loading` and a
- * toast with an `action` stay until they are dismissed, whatever it is.
+ * toast with an `action` stay until they are dismissed, whatever it is. A `timeout` on the call
+ * replaces it for that toast.
  *
  * ### Where it is portalled
  *
@@ -54,20 +61,21 @@ import type { ToasterProps } from './types.js';
  *
  * ### Asserting on it
  *
- * `testId` is `data-testid` on the viewport. Each toast gets `<testId>-toast-<id>`, or the
+ * `testId`, or a raw `data-testid`, is `data-testid` on the viewport of `position`, and
+ * `<testId>-<position>` on the others. Each toast gets `<testId>-toast-<id>`, or the
  * `testId` it was raised with, and each part of it a suffix: `-content`, `-icon`, `-title`,
  * `-description`, `-action`. Otherwise use the data attributes, never the hashed class names.
  *
  * | Attribute | on |
  * |---|---|
- * | `data-position` | the viewport |
+ * | `data-position` | each viewport |
  * | `data-type` | the toast and its title, description and action: `success`, `info`, `warning`, `danger` or `loading` |
  * | `data-expanded` | the toast, while the stack is spread |
  * | `data-limited` | a toast past the `limit` the stack shows |
  *
  * | `data-slot` | rendered |
  * |---|---|
- * | `toaster` | the viewport |
+ * | `toaster` | each viewport, the one of `position` first |
  * | `toast` | each toast, `role="dialog"`, `role="alertdialog"` for `danger` |
  * | `toast-content` | the row holding the icon and the text |
  * | `toast-icon` | the icon, `aria-hidden` |
@@ -93,19 +101,49 @@ export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster
 		timeout = DEFAULT_TIMEOUT,
 		container,
 		testId,
+		'data-testid': dataTestId,
+		id,
 		...props
 	},
 	ref,
 ) {
 	const popupContainer = usePopupContainer();
+	// A raw `data-testid` is suffixed per position like `testId`, so no two viewports share one.
+	const viewportTestId = testId ?? (typeof dataTestId === 'string' ? dataTestId : undefined);
+
+	useEffect(() => forgetVisibleToasts(), []);
+	useEffect(() => setDefaultPosition(position), [position]);
+
+	// The stack of `position` first, so it is the first `[data-slot="toaster"]` in the document.
+	const positions = [position, ...TOAST_POSITIONS.filter((other) => other !== position)];
 
 	return (
-		<ToastPrimitive.Provider toastManager={toastManager} limit={limit} timeout={timeout}>
-			<ToastPrimitive.Portal container={container === undefined ? popupContainer : container}>
-				<ToastViewport ref={ref} position={position} testId={testId} {...props}>
-					<ToastList position={position} testId={testId} />
-				</ToastViewport>
-			</ToastPrimitive.Portal>
-		</ToastPrimitive.Provider>
+		<>
+			{positions.map((stack) => {
+				const isDefault = stack === position;
+
+				return (
+					<ToastPrimitive.Provider
+						key={stack}
+						toastManager={toastManagers[stack]}
+						limit={limit}
+						timeout={timeout}
+					>
+						<ToastPrimitive.Portal container={container === undefined ? popupContainer : container}>
+							<ToastViewport
+								ref={isDefault ? ref : undefined}
+								id={isDefault ? id : undefined}
+								position={stack}
+								isDefault={isDefault}
+								testId={isDefault ? viewportTestId : partTestId(viewportTestId, stack)}
+								{...props}
+							>
+								<ToastList position={stack} testId={testId} />
+							</ToastViewport>
+						</ToastPrimitive.Portal>
+					</ToastPrimitive.Provider>
+				);
+			})}
+		</>
 	);
 });

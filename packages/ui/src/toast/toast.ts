@@ -1,22 +1,74 @@
-import { Toast as ToastPrimitive } from '@base-ui/react/toast';
+import { Toast as ToastPrimitive, type ToastManager } from '@base-ui/react/toast';
 import type { ReactNode } from 'react';
 import { hasRenderableContent } from '../lib/utils.js';
-import { ToastVariant } from './constants.js';
+import { TOAST_POSITIONS, ToastPosition, ToastVariant } from './constants.js';
 import type {
 	ToastDangerOptions,
 	ToastData,
 	ToastOptions,
+	ToastPositionType,
 	ToastPromiseOptions,
 	ToastVariantType,
 } from './types.js';
 import { managerOptions } from './utils.js';
 
 /**
- * The one manager every `toast.*` call goes through and every `Toaster` subscribes to.
+ * One manager per position, so each keeps a stack of its own. Every `Toaster` subscribes to all
+ * of them.
  *
  * @access private
  */
-export const toastManager = ToastPrimitive.createToastManager<ToastData>();
+export const toastManagers = Object.fromEntries(
+	TOAST_POSITIONS.map((position) => [position, ToastPrimitive.createToastManager<ToastData>()]),
+) as Record<ToastPositionType, ToastManager<ToastData>>;
+
+// Where a call with no `position` goes: the `position` of the mounted `Toaster`.
+let defaultPosition: ToastPositionType = ToastPosition.TopRight;
+
+// The position of every toast on screen, so a call with its `id` and no `position` finds it.
+const visiblePositions = new Map<string, ToastPositionType>();
+
+/**
+ * @access private
+ */
+export function setDefaultPosition(position: ToastPositionType): void {
+	defaultPosition = position;
+}
+
+/**
+ * A `Toaster` mounts with every stack empty, so a toast remembered from before is not on screen:
+ * it was raised with no `Toaster` mounted, or drawn by one that has unmounted since.
+ *
+ * @access private
+ */
+export function forgetVisibleToasts(): void {
+	visiblePositions.clear();
+}
+
+function dismiss(id?: string): void {
+	for (const manager of Object.values(toastManagers)) {
+		manager.close(id);
+	}
+}
+
+function add(
+	position: ToastPositionType | undefined,
+	options: ReturnType<typeof managerOptions> & { id?: string },
+): string {
+	const current = options.id === undefined ? undefined : visiblePositions.get(options.id);
+	const target = position ?? current ?? defaultPosition;
+
+	// A `position` other than the one the toast is at moves it.
+	if (current !== undefined && current !== target) {
+		toastManagers[current].close(options.id);
+	}
+
+	let id = '';
+	id = toastManagers[target].add({ ...options, onClose: () => visiblePositions.delete(id) });
+	visiblePositions.set(id, target);
+
+	return id;
+}
 
 function show(variant: ToastVariantType, title: ReactNode, options?: ToastOptions): string {
 	// Nothing to read, so nothing to announce and no place taken in the stack.
@@ -24,7 +76,7 @@ function show(variant: ToastVariantType, title: ReactNode, options?: ToastOption
 		return '';
 	}
 
-	return toastManager.add({
+	return add(options?.position, {
 		...managerOptions(variant, title, options),
 		id: options?.id ?? (typeof title === 'string' ? `${variant}:${title}` : undefined),
 	});
@@ -32,16 +84,16 @@ function show(variant: ToastVariantType, title: ReactNode, options?: ToastOption
 
 function promise<Value>(
 	value: Promise<Value>,
-	{ loading, success, error, errorAction, id, testId }: ToastPromiseOptions<Value>,
+	{ loading, success, error, errorAction, id, testId, position }: ToastPromiseOptions<Value>,
 ): Promise<Value> {
 	// No `id` derived from the title: two requests with the same loading title are two toasts.
 	let current = hasRenderableContent(loading)
-		? toastManager.add({ ...managerOptions(ToastVariant.Loading, loading, { testId }), id })
+		? add(position, { ...managerOptions(ToastVariant.Loading, loading, { testId }), id })
 		: undefined;
 
 	const close = () => {
 		if (current !== undefined) {
-			toastManager.close(current);
+			dismiss(current);
 		}
 	};
 
@@ -65,9 +117,14 @@ function promise<Value>(
 		}
 
 		if (current === undefined) {
-			current = toastManager.add({ ...managerOptions(variant, title, options), id });
-		} else {
-			toastManager.update(current, managerOptions(variant, title, options));
+			current = add(position, { ...managerOptions(variant, title, options), id });
+			return;
+		}
+
+		// Not there once it was dismissed while the promise was pending, and it stays closed.
+		const at = visiblePositions.get(current);
+		if (at !== undefined) {
+			toastManagers[at].update(current, managerOptions(variant, title, options));
 		}
 	};
 
@@ -106,8 +163,10 @@ function promise<Value>(
  * | `toast.danger` | danger | never |
  * | `toast.loading` | spinner | never, it is replaced |
  *
- * A toast with an `action` also stays until it is dismissed. The timer pauses on hover and on
- * focus inside the stack. `toast.danger` is announced assertively, the rest politely.
+ * A toast with an `action` also stays until it is dismissed. `timeout` on the call replaces all of
+ * this for that toast, `0` keeping it. `toast.danger` and `toast.loading` take none. The timer pauses
+ * on hover and on focus inside the stack. `toast.danger` is announced assertively, the rest
+ * politely.
  *
  * ### The button
  *
@@ -119,10 +178,16 @@ function promise<Value>(
  * so the app picks the word and its language. The other variants have no button unless they are
  * given one.
  *
+ * ### Position
+ *
+ * `position` puts the toast in another stack than the one of the `Toaster`. Each position keeps a
+ * stack of its own, with its own `limit`.
+ *
  * ### Deduplication
  *
  * A call with the `id` of a visible toast updates that toast in place. Without an `id` it is
  * `<variant>:<title>` for a string title, so ten clicks on "Copied to clipboard" show one toast.
+ * The update stays where the toast is, unless the call names another `position`, which moves it.
  *
  * Pass an `id` when two toasts share a title but must stay separate, or to replace a toast with
  * another variant, such as a `loading` toast by its result.
@@ -142,11 +207,17 @@ function promise<Value>(
  * unhandled rejection. The promise returned is not affected.
  *
  * An empty `loading` shows no toast until the promise settles. A toast that settles on an empty
- * title closes. `id` and `testId` work as on the other calls, and hold in every state.
+ * title closes. `id`, `testId` and `position` work as on the other calls, and hold in every state.
  *
  * @example
  * ```tsx
  * toast.success('Panel saved');
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // In the bottom-left stack, whatever the position of the Toaster
+ * toast.info('Query copied', { position: 'bottom-left' });
  * ```
  *
  * @example
@@ -186,9 +257,10 @@ export const toast = {
 	danger: (title: ReactNode, options: ToastDangerOptions) =>
 		show(ToastVariant.Danger, title, options),
 	/** Work in flight. Stays until replaced, usually by the result with the same `id`. */
-	loading: (title: ReactNode, options?: ToastOptions) => show(ToastVariant.Loading, title, options),
+	loading: (title: ReactNode, options?: Omit<ToastOptions, 'timeout'>) =>
+		show(ToastVariant.Loading, title, options),
 	/** One toast that goes from loading to success or danger as `value` settles. */
 	promise,
-	/** Closes the toast with this `id`, or every toast with no argument. */
-	dismiss: (id?: string) => toastManager.close(id),
+	/** Closes the toast with this `id`, wherever it is, or every toast with no argument. */
+	dismiss,
 };

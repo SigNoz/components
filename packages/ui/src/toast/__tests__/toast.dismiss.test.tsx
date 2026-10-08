@@ -105,6 +105,58 @@ describe('toast dismissing', () => {
 			expect(toasts()).toHaveLength(1);
 		});
 
+		describe('on the call', () => {
+			it('replaces the timeout of the Toaster for that toast', async () => {
+				render(<Toaster timeout={1000} />);
+				raise(() => {
+					toast.success('Longer', { timeout: 3000 });
+					toast.success('Default');
+				});
+				await findToast('Longer');
+
+				await advance(1100);
+				await vi.waitFor(() => expect(toasts()).toHaveLength(1));
+
+				await advance(2000);
+				await vi.waitFor(() => expect(toasts()).toHaveLength(0));
+			});
+
+			it('closes a toast with an action, which stays otherwise', async () => {
+				render(<Toaster />);
+				raise(() => toast.success('Brief', { action: { label: 'Undo' }, timeout: 1000 }));
+				await findToast('Brief');
+
+				await advance(1100);
+
+				await vi.waitFor(() => expect(toasts()).toHaveLength(0));
+			});
+
+			it('keeps the toast with a timeout of 0', async () => {
+				render(<Toaster timeout={1000} />);
+				raise(() => toast.success('Stays', { timeout: 0 }));
+				await findToast('Stays');
+
+				await advance(20_000);
+
+				expect(toasts()).toHaveLength(1);
+			});
+
+			it.each([
+				// @ts-expect-error - a danger toast takes no timeout
+				['danger', () => toast.danger('Stays', { action: { label: 'Close' }, timeout: 1000 })],
+				// @ts-expect-error - a loading toast takes no timeout
+				['loading', () => toast.loading('Stays', { timeout: 1000 })],
+			])('never closes %s, even from a call the types refuse', async (_name, call) => {
+				render(<Toaster />);
+				raise(call);
+				await findToast('Stays');
+
+				await advance(20_000);
+
+				expect(toasts()).toHaveLength(1);
+			});
+		});
+
 		it('restarts the timer when the same toast is raised again', async () => {
 			render(<Toaster />);
 			raise(() => toast.success('Copied'));

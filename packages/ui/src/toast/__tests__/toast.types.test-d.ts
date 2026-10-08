@@ -27,6 +27,33 @@ describe('toast.danger', () => {
 	});
 });
 
+describe('position and timeout', () => {
+	test('accept a position and a timeout on a call', () => {
+		assertType<string>(toast.info('Copied', { position: 'bottom-left', timeout: 2000 }));
+		assertType<Promise<void>>(
+			toast.promise(save, {
+				loading: 'Saving',
+				success: 'Saved',
+				error: 'Failed',
+				errorAction: { label: 'Close' },
+				position: 'bottom-left',
+			}),
+		);
+	});
+
+	test('refuse a position that is not one', () => {
+		// @ts-expect-error - not a position
+		assertType(toast.info('Copied', { position: 'middle' }));
+	});
+
+	test('refuse a timeout on danger and loading, which stay until dismissed or replaced', () => {
+		// @ts-expect-error - a danger toast stays until it is dismissed
+		assertType(toast.danger('Could not save', { action: { label: 'Close' }, timeout: 2000 }));
+		// @ts-expect-error - a loading toast stays until it is replaced
+		assertType(toast.loading('Saving', { timeout: 2000 }));
+	});
+});
+
 describe('toast.promise', () => {
 	test('requires an errorAction, for the danger toast it turns into', () => {
 		// @ts-expect-error - the rejected toast would have no way out

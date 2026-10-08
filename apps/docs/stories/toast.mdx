@@ -7,8 +7,8 @@ import * as ToastStories from './toast.stories';
 
 Short, transient feedback about something that just happened, rendered through Base UI's `Toast`.
 It comes in two parts: `toast` raises a toast from anywhere, and `Toaster` draws every toast raised.
-`Toaster` forwards `id`, `className`, `style` and every `aria-*` and `data-*` attribute to the
-viewport. A toast takes no props of its own: everything it shows comes from the `toast` call.
+`Toaster` forwards `className`, `style` and every `aria-*` and `data-*` attribute to its viewports,
+one per position, and `id` to the viewport of its `position`. A toast takes no props of its own: everything it shows comes from the `toast` call.
 
 A toast closes on its own and can be missed. If the user has to read it or act on it, it is not a
 toast: reach for `Callout`, `AnnouncementBanner` or `AlertDialog`.
@@ -105,10 +105,16 @@ toast.success('Panel deleted', {
 
 `timeout` on `Toaster` is how long `success`, `info` and `warning` stay on screen, in milliseconds,
 5000 by default. `0` keeps them until they are dismissed. It does not change `danger`, `loading` or
-a toast with an `action`, which always stay. Raising the same toast again restarts its timer.
+a toast with an `action`, which stay. Raising the same toast again restarts its timer.
+
+`timeout` on a call replaces all of that for one toast, a toast with an `action` included. `0`
+keeps it. `toast.danger` and `toast.loading` take none: they stay until dismissed or replaced.
 
 ```tsx
-<Toaster timeout={8000} />
+<Toaster timeout={8000} />;
+
+toast.success('Link copied', { timeout: 2000 });
+toast.info('Export started', { action: { label: 'Cancel' }, timeout: 10_000 });
 ```
 
 The timer pauses while the pointer is over the stack or focus is inside it. Swiping a toast toward
@@ -126,7 +132,8 @@ toast.dismiss();
 
 A call with the `id` of a visible toast updates that toast in place and adds no second one. Without
 an `id`, a string title gives `<variant>:<title>`, so ten clicks on "Copied to clipboard" show one
-toast.
+toast. The update stays in the stack the toast is in, unless the call names another `position`,
+which moves it there.
 
 Pass an `id` when two toasts share a title but must stay separate, or to replace a toast with
 another variant, such as a `loading` toast by its result:
@@ -161,23 +168,25 @@ A `success` or `error` function that throws closes the toast, so a bug in it doe
 spinner running. Its error is reported as an unhandled rejection, and the promise returned is not
 affected.
 
-`id` and `testId` work as on the other calls and hold in every state. With an `id`, a visible
+`id`, `testId` and `position` work as on the other calls and hold in every state. With an `id`, a visible
 toast with that `id` turns into the loading toast. An empty `loading` shows no toast until the
 promise settles, and a toast that settles on an empty title closes.
 
 ## Position and stack
 
-`position` on `Toaster` moves the whole stack: `top-left`, `top-center`, `top-right` (the default),
-`bottom-left`, `bottom-center` or `bottom-right`. There is no position per call. `offset` is the
-distance from the edges of the window, 16px by default. A number is in px, a string is any CSS
-length.
+Each position keeps a stack of its own: `top-left`, `top-center`, `top-right`, `bottom-left`,
+`bottom-center` and `bottom-right`. `position` on `Toaster` is where a toast goes, `top-right` by
+default. `position` on a call puts that toast in another stack. `offset` is the distance of every
+stack from the edges of the window, 16px by default. A number is in px, a string is any CSS length.
 
 ```tsx
-<Toaster position="bottom-center" offset={32} />
+<Toaster position="bottom-center" offset={32} />;
+
+toast.info('Query copied', { position: 'top-right' });
 ```
 
 The newest toast sits against the edge and the older ones peek out behind it. `limit` is how many
-the stack shows, 3 by default. Any toast past it waits until one closes. The stack spreads on hover
+each stack shows, 3 by default. Any toast past it waits until one closes. The stack spreads on hover
 and on focus inside it. At the bottom it grows upward.
 
 ```tsx
@@ -205,7 +214,8 @@ toast.info(message);
 
 ## Test ids
 
-`testId` on `Toaster` is `data-testid` on the viewport. Each toast gets `<testId>-toast-<id>`, or
+`testId` on `Toaster` is `data-testid` on the viewport of its `position`, and
+`<testId>-<position>` on the others. Each toast gets `<testId>-toast-<id>`, or
 the `testId` it was raised with. Each part of a toast adds a suffix to that: `-content`, `-icon`,
 `-title`, `-description` and `-action`.
 
@@ -220,7 +230,9 @@ toast.success('Panel saved', { testId: 'save-toast' });
 
 ## Accessibility
 
-- The viewport is a landmark named `Notifications`. `F6` moves focus to it.
+- The viewport of the `position` of `Toaster` is a landmark named `Notifications`. Another stack
+  is one only while it holds a toast, so empty corners stay out of the landmark list. `F6` moves
+  focus to a stack that holds a toast.
 - `toast.danger` is announced assertively, every other variant politely.
 - A toast never takes focus when it arrives. Tab reaches its button, newest first. The button is
   named by its label and closes the toast.
