@@ -58,6 +58,14 @@
 	display: none;
 }
 
+/* The position buttons, with the one that raises a toast in each position under them. */
+.timed {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
 /* One button per position, laid out as the corners and edges they stand for. */
 .positions {
 	display: grid;

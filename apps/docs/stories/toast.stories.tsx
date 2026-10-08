@@ -28,6 +28,7 @@ type ToastStoryArgs = ToasterProps & {
 	description?: string;
 	actionLabel?: string;
 	count?: number;
+	callTimeout?: number;
 };
 
 const meta: Meta<ToastStoryArgs> = {
@@ -326,7 +327,43 @@ export const ManyToasts: Story = {
 	},
 };
 
-function PositionsDemo({
+const POSITIONS_IN_ORDER = Object.values(ToastPosition);
+
+function describeTimeout(timeout: number | undefined): string {
+	if (timeout === undefined) {
+		return 'closes after the timeout of the Toaster';
+	}
+
+	return timeout === 0 ? 'stays until dismissed' : `closes after ${timeout / 1000}s`;
+}
+
+// Numbers every toast `PositionsAndTimeouts` raises, across clicks.
+let timedToastsRaised = 0;
+
+/**
+ * One toast at `position`, with `timeout` on the call. The number makes every title unique, so
+ * each click adds a toast instead of updating the last one, and toasts at two positions never
+ * share the `id` a title gives, which would move the first one to the second.
+ */
+function raiseTimedToast(position: ToastPositionType, timeout: number | undefined): void {
+	timedToastsRaised += 1;
+	toast.info(`#${timedToastsRaised} ${position}: ${describeTimeout(timeout)}`, {
+		position,
+		timeout,
+		// A toast that stays needs a way out from the keyboard.
+		action: timeout === 0 ? { label: 'Close' } : undefined,
+	});
+}
+
+// One toast per position, each closing a second after the one before it.
+function raiseInEveryPosition(): void {
+	for (const [index, position] of POSITIONS_IN_ORDER.entries()) {
+		raiseTimedToast(position, (index + 1) * 1000);
+	}
+}
+
+function PositionsAndTimeoutsDemo({
+	callTimeout,
 	variant: _variant,
 	title: _title,
 	description: _description,
@@ -336,18 +373,28 @@ function PositionsDemo({
 }: ToastStoryArgs): ReactElement {
 	return (
 		<div className={`story-center ${styles.playground}`}>
-			<div className={styles.positions}>
-				{Object.values(ToastPosition).map((position) => (
-					<Button
-						key={position}
-						variant={ButtonVariant.Solid}
-						color={ButtonColor.Secondary}
-						size={ButtonSize.MD}
-						onClick={() => toast.info(`Raised at ${position}`, { position })}
-					>
-						{position}
-					</Button>
-				))}
+			<div className={styles.timed}>
+				<div className={styles.positions}>
+					{POSITIONS_IN_ORDER.map((position) => (
+						<Button
+							key={position}
+							variant={ButtonVariant.Solid}
+							color={ButtonColor.Secondary}
+							size={ButtonSize.MD}
+							onClick={() => raiseTimedToast(position, callTimeout)}
+						>
+							{position}
+						</Button>
+					))}
+				</div>
+				<Button
+					variant={ButtonVariant.Solid}
+					color={ButtonColor.Primary}
+					size={ButtonSize.MD}
+					onClick={raiseInEveryPosition}
+				>
+					One in every position
+				</Button>
 			</div>
 			<Toaster {...toasterProps} />
 		</div>
@@ -355,41 +402,67 @@ function PositionsDemo({
 }
 
 /**
- * `position` on the call puts a toast in another stack than the one of the `Toaster`. Each
- * position keeps a stack of its own, with its own `limit`, and spreads on its own.
+ * `position` and `timeout` on the call. Each position keeps a stack of its own, with its own
+ * `limit`. A position button raises a toast in that stack with `callTimeout` as its `timeout`:
+ * empty falls back to the `timeout` of the `Toaster`, and `0` keeps the toast until it is
+ * dismissed. Every click adds a numbered toast. "One in every position" raises six toasts that
+ * close a second apart, top-left first.
+ *
+ * The timers pause while the pointer is over a stack, focus is inside it, or the window is not
+ * focused. Here a click in the Controls panel takes the focus from the canvas, so the toasts stay
+ * until the canvas is clicked again.
  */
-export const Positions: Story = {
+export const PositionsAndTimeouts: Story = {
 	args: {
 		position: 'top-right',
 		offset: 16,
 		limit: 3,
 		timeout: 5000,
+		callTimeout: 2000,
 	},
 	argTypes: {
 		variant: { table: { disable: true } },
 		title: { table: { disable: true } },
 		description: { table: { disable: true } },
 		actionLabel: { table: { disable: true } },
+		callTimeout: {
+			control: { type: 'number', min: 0, step: 500 },
+			description:
+				'Story only: `timeout` of the call, in milliseconds. `0` keeps the toast until it is dismissed. Empty falls back to the `timeout` of the `Toaster`.',
+			table: { category: 'Content', type: { summary: 'number' } },
+		},
 	},
 	parameters: {
 		// Timers close the toasts while the snapshot is taken. `ToastShowcase` covers the stack.
 		chromatic: { disableSnapshot: true },
 	},
-	render: (args: ToastStoryArgs) => <PositionsDemo {...args} />,
+	render: (args: ToastStoryArgs) => <PositionsAndTimeoutsDemo {...args} />,
 	play: async ({ canvasElement }) => {
-		const stack = (position: ToastPositionType) =>
-			canvasElement.ownerDocument.querySelector(
-				`[data-slot="toaster"][data-position="${position}"]`,
-			) as HTMLElement;
+		const titles = (position: ToastPositionType) => [
+			...canvasElement.ownerDocument.querySelectorAll(
+				`[data-slot="toaster"][data-position="${position}"] [data-slot="toast"]:not([data-ending-style]) [data-slot="toast-title"]`,
+			),
+		];
+		const title = (position: ToastPositionType) => titles(position)[0];
 
 		toast.dismiss();
 
-		for (const position of Object.values(ToastPosition)) {
-			await userEvent.click(within(canvasElement).getByRole('button', { name: position }));
+		// Each click adds a numbered toast instead of updating the last one.
+		const topLeft = within(canvasElement).getByRole('button', { name: 'top-left' });
+		await userEvent.click(topLeft);
+		await userEvent.click(topLeft);
+		await waitFor(() => expect(titles('top-left')).toHaveLength(2));
+		const [newest, older] = titles('top-left');
+		await expect(newest?.textContent).not.toBe(older?.textContent);
+
+		toast.dismiss();
+		await userEvent.click(
+			within(canvasElement).getByRole('button', { name: 'One in every position' }),
+		);
+
+		for (const [index, position] of POSITIONS_IN_ORDER.entries()) {
 			await waitFor(() =>
-				expect(stack(position).querySelector('[data-slot="toast-title"]')).toHaveTextContent(
-					`Raised at ${position}`,
-				),
+				expect(title(position)).toHaveTextContent(`${position}: closes after ${index + 1}s`),
 			);
 		}
 	},
