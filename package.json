@@ -8,11 +8,11 @@
 		"publint": "turbo run publint",
 		"dev": "turbo run dev",
 		"type-check": "turbo run type-check",
-		"lint": "oxlint",
+		"lint": "oxlint && pnpm -F @signozhq/ui react-compiler:strict-check && pnpm -F @signozhq/ui tokens:check",
 		"lint:fix": "oxlint --fix",
 		"clean": "turbo run clean && rm -rf node_modules",
-		"format": "oxfmt",
-		"format:check": "oxfmt --check",
+		"fmt": "oxfmt --check",
+		"fmt:fix": "oxfmt",
 		"build-storybook": "turbo run build-storybook -- --output-dir=storybook-static",
 		"chromatic": "pnpm install && pnpm build --filter=docs^... && turbo run chromatic --",
 		"release": "turbo run build --filter=@signozhq/ui --filter=@signozhq/tailwind-config",
@@ -58,7 +58,15 @@
 		"semver": ">=7.5.2",
 		"tmp": "0.2.4"
 	},
-	"packageManager": "pnpm@10.30.3",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "10.30.3"
+		}
+	},
+	"engines": {
+		"pnpm": ">=10.30.3 <11"
+	},
 	"pnpm": {
 		"overrides": {
 			"@types/node": "25.6.2",
