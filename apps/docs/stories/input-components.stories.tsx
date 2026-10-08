@@ -36,6 +36,7 @@ export const Password: StoryObj<typeof Input.Password> = {
 	parameters: {
 		controls: { exclude: ['type', 'suffix'] },
 	},
+	render: (args) => <Input.Password {...args} />,
 };
 
 /**
@@ -53,7 +54,9 @@ export const TextArea: StoryObj<typeof Input.TextArea> = {
 	args: {
 		placeholder: 'Describe the incident...',
 		'aria-label': 'Description',
-		rows: 4,
+		rows: 2,
+		size: 'large',
+		noFocusRing: false,
 	},
 	parameters: {
 		controls: { exclude: ['type', 'prefix', 'suffix'] },
@@ -65,6 +68,7 @@ export const TextArea: StoryObj<typeof Input.TextArea> = {
 			table: { category: 'Appearance', type: { summary: 'number' } },
 		},
 	},
+	render: (args) => <Input.TextArea {...args} />,
 };
 
 /**
