@@ -1,0 +1,133 @@
+name: jsci
+
+on:
+  pull_request:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+permissions:
+  contents: read
+
+jobs:
+  fmt:
+    # Primus needs org secrets, which pull_request withholds from forks and dependabot.
+    # A maintainer adds the safe-to-test label to run it on those through pull_request_target.
+    if: &primus-gate |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && ! github.event.pull_request.head.repo.fork && github.event.pull_request.user.login != 'dependabot[bot]' && ! contains(github.event.pull_request.labels.*.name, 'safe-to-test')) ||
+      (github.event_name == 'pull_request_target' && github.event.label.name == 'safe-to-test')
+    permissions:
+      contents: read
+      id-token: write
+    uses: signoz/primus.workflows/.github/workflows/js-fmt.yaml@main
+    secrets: inherit
+    with: &primus-inputs
+      PRIMUS_REF: main
+      NODE_VERSION: "24"
+      JS_SRC: .
+      JS_PKG_MANAGER: pnpm
+      # Same as devEngines.packageManager in package.json. Primus runs setup-node before
+      # pnpm, and setup-node fails to find pnpm when package.json has a packageManager field.
+      PNPM_VERSION: 10.30.3
+  lint:
+    if: *primus-gate
+    permissions:
+      contents: read
+      id-token: write
+    uses: signoz/primus.workflows/.github/workflows/js-lint.yaml@main
+    secrets: inherit
+    with: *primus-inputs
+  type-check:
+    if: *primus-gate
+    permissions:
+      contents: read
+      id-token: write
+    uses: signoz/primus.workflows/.github/workflows/js-type-check.yaml@main
+    secrets: inherit
+    with: *primus-inputs
+  test:
+    # Needs no secrets, so it runs on pull_request for every PR and skips the labeled rerun.
+    if: github.event_name != 'pull_request_target'
+    runs-on: ubuntu-latest
+    # Both suites run in Chromium. Keep the tag in sync with playwright in pnpm-lock.yaml.
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.0-noble
+    steps:
+      # inspired by https://mathio28.medium.com/squeezing-disk-space-from-github-actions-runners-an-engineers-guide-d5fbe4443692
+      # to fix the issue with the runner running out of space
+      - name: aggressive-cleanup
+        run: |
+          # Remove Java (JDKs)
+          rm -rf /usr/lib/jvm
+
+          # Remove .NET SDKs
+          rm -rf /usr/share/dotnet
+
+          # Remove Swift toolchain
+          rm -rf /usr/share/swift
+
+          # Remove Haskell (GHC)
+          rm -rf /usr/local/.ghcup
+
+          # Remove Julia
+          rm -rf /usr/local/julia*
+
+          # Remove Android SDKs
+          rm -rf /usr/local/lib/android
+
+          # Remove Microsoft/Edge and Google Chrome builds
+          rm -rf /opt/microsoft /opt/google
+
+          # Remove Azure CLI
+          rm -rf /opt/az
+
+          # Remove PowerShell
+          rm -rf /usr/local/share/powershell
+
+          # Remove CodeQL and other toolcaches
+          rm -rf /opt/hostedtoolcache
+
+          df -h
+      - name: self-checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install-pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - name: node-install
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: test
+        run: pnpm test
+  build:
+    # Needs no secrets, so it runs on pull_request for every PR and skips the labeled rerun.
+    if: github.event_name != 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - name: self-checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install-pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - name: node-install
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: build
+        run: pnpm build
