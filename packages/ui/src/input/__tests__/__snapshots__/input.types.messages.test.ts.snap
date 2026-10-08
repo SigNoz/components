@@ -3,8 +3,8 @@
 exports[`Input type error messages > prints a message that names the constraint that failed 1`] = `
 {
   "Input.Number > rejects a string value > the value is a number, \`null\` while empty": "TS2322: Type 'string' is not assignable to type 'number'.",
-  "Input.Number > rejects an event-shaped onChange > \`onChange\` reports the parsed value, not the event": "TS2322: Type '(event: { target: unknown; }) => void' is not assignable to type '(value: number | null) => void'.
-    Types of parameters 'event' and 'value' are incompatible.
+  "Input.Number > rejects an event-shaped onChange > \`onChange\` reports the parsed value, not the event": "TS2322: Type '(_event: { target: unknown; }) => void' is not assignable to type '(value: number | null) => void'.
+    Types of parameters '_event' and 'value' are incompatible.
       Type 'number | null' is not assignable to type '{ target: unknown; }'.
         Type 'null' is not assignable to type '{ target: unknown; }'.",
   "Input.Number > rejects type and pattern, the primitive owns parsing > the control is always a number field": "TS2322: Type 'string' is not assignable to type 'never'.",

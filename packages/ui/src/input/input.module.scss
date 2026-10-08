@@ -145,6 +145,18 @@
 
 .input__status-icon {
 	color: var(--input-internal-status-icon);
+
+	svg [fill='#fff'] {
+		fill: var(--input-icon-disc-color, currentcolor);
+	}
+
+	svg [stroke='#fff'] {
+		stroke: var(--input-icon-disc-color, currentcolor);
+	}
+
+	svg [stroke='#121317'] {
+		stroke: var(--input-icon-glyph-color, var(--l1-background));
+	}
 }
 
 .input__password-toggle {

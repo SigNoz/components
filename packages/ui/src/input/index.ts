@@ -44,6 +44,8 @@
  * | `--input-hover-border-color` | `var(--input-border-hover)` |
  * | `--input-icon` | `-` |
  * | `--input-icon-color` | `var(--input-icon)` |
+ * | `--input-icon-disc-color` | `currentcolor` |
+ * | `--input-icon-glyph-color` | `var(--l1-background)` |
  * | `--input-icon-size` | `14px` |
  * | `--input-large-height` | `40px` |
  * | `--input-letter-spacing` | `-0.005em` |

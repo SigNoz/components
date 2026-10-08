@@ -70,18 +70,6 @@ event, and the field steps with the buttons at its trailing edge, the arrow keys
 `largeStep`) and `Home`/`End`. It is not a target for `register()`; use a react-hook-form
 `Controller`.
 
-## Migrating
-
-| Before                                 | Now                                                                              |
-| -------------------------------------- | -------------------------------------------------------------------------------- |
-| `className`, `style`                   | removed. Use `width`/`maxWidth`, the `--input-*` custom properties, or a wrapper |
-| `containerClassName`, `containerStyle` | removed, there is one frame and it owns its layout                               |
-| `containerId`, `containerTestId`       | removed. `testId` names the frame, `` `${testId}-field` `` the input             |
-| `size={20}` (character width)          | removed, `size` is `'base' \| 'large'`. Use `width`                              |
-| `data-testid` on the input             | `testId` lands on the frame; the input is `` `${testId}-field` ``                |
-| `<InputNumber />`                      | `<Input.Number />`, whose `onChange` reports `number \| null`                    |
-| antd `Input.TextArea`                  | `<Input.TextArea />`                                                             |
-
 ## Asserting on it
 
 `testId` becomes `data-testid` on the frame, and the prefix of the parts. With `testId="org"` the

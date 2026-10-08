@@ -258,14 +258,18 @@ export const Showcase: Story = {
 					</Row>
 					<Row label="suffix text">
 						<Field>
-							<Input suffix="ms" placeholder="500" aria-label="Suffix" />
+							<Input
+								suffix={<Typography size="sm">ms</Typography>}
+								placeholder="500"
+								aria-label="Suffix"
+							/>
 						</Field>
 					</Row>
 					<Row label="both, with a status">
 						<Field>
 							<Input
 								prefix={<Search />}
-								suffix="ms"
+								suffix={<Typography size="sm">ms</Typography>}
 								status="danger"
 								placeholder="500"
 								aria-label="Both"
@@ -299,7 +303,7 @@ export const Showcase: Story = {
 						<div className={styles.bounded}>
 							<Input
 								prefix={<Search />}
-								suffix="ms"
+								suffix={<Typography size="sm">ms</Typography>}
 								defaultValue={LONG_VALUE}
 								aria-label="Long value with slots"
 							/>
@@ -309,7 +313,7 @@ export const Showcase: Story = {
 						<div className={styles.bounded}>
 							<Input
 								prefix={<Search />}
-								suffix="ms"
+								suffix={<Typography size="sm">ms</Typography>}
 								status="danger"
 								defaultValue={LONG_VALUE}
 								aria-label="Long value with status"
