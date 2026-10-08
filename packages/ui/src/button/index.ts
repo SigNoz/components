@@ -51,13 +51,13 @@
  * | `--button-font-weight` | `var(--font-weight-medium)` |
  * | `--button-gap` | `var(--button-internal-gap)` |
  * | `--button-ghost-content-z-index` | `1` |
- * | `--button-ghost-glow-active-opacity` | `1` |
  * | `--button-ghost-glow-background` | `linear-gradient(90deg, 							color-mix(in srgb...` |
  * | `--button-ghost-glow-background-size` | `200% 100%` |
  * | `--button-ghost-glow-blur` | `6px` |
  * | `--button-ghost-glow-duration` | `2.5s` |
  * | `--button-ghost-glow-fade` | `600ms ease` |
  * | `--button-ghost-glow-inset` | `-4px` |
+ * | `--button-ghost-glow-loading-opacity` | `1` |
  * | `--button-ghost-glow-opacity` | `-` |
  * | `--button-ghost-glow-z-index` | `0` |
  * | `--button-height` | `24px` |

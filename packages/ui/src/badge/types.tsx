@@ -37,7 +37,7 @@ export type BadgeProps = Pick<React.ComponentProps<'span'>, 'id'> & {
 	/**
 	 * `ellipsis` truncates the content and shows the full content in a tooltip on hover/focus,
 	 * only while it is actually truncated. `hidden` clips at the badge's edge, no marker and no
-	 * tooltip. `visible` clips nothing and lets the content paint outside its box.
+	 * tooltip.
 	 *
 	 * @note The tooltip is exclusive to `ellipsis`.
 	 *

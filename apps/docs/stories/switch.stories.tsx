@@ -265,7 +265,7 @@ export const SwitchShowcase: Story = {
 				<Typography size="sm">
 					One row per color, one column per state, each cell off then on. The off track is the same
 					neutral for every color, an unchecked switch has nothing to announce yet. Hover widens the
-					knob into a pill, pressing squishes it. Disabled fades to 0.6, read-only to 0.8.
+					knob into a pill. Disabled fades to 0.6, read-only to 0.8.
 				</Typography>
 				<div
 					className={`${styles.matrix} ${styles.marginTopMedium}`}

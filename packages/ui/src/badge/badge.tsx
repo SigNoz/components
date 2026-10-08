@@ -19,8 +19,7 @@ import type { BadgeProps } from './types.js';
  * While it does not fit: `data-truncated`, plus a tooltip with the full content. The visible
  * content is only clipped, so nothing is lost, just hidden until hovered or focused.
  *
- * `hidden` clips with no tooltip, `visible` clips nothing and lets the content paint outside its
- * box.
+ * `hidden` clips with no tooltip.
  *
  * The trigger is always mounted, so the element never remounts when a tooltip appears. The
  * tooltip root and popup mount only while there is something to show.

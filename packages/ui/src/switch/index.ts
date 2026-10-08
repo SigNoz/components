@@ -60,11 +60,9 @@
  * | `--switch-thumb-border-radius` | `var(--radius-round)` |
  * | `--switch-thumb-hover-extend` | `2px` |
  * | `--switch-thumb-inset` | `2px` |
- * | `--switch-thumb-press-extend` | `3px` |
- * | `--switch-thumb-press-shrink` | `3px` |
  * | `--switch-thumb-shadow` | `0 1px 3px 0 color-mix(in srgb, black 30%, trans...` |
  * | `--switch-thumb-size` | `12px` |
- * | `--switch-thumb-transition` | `translate 150ms ease-out, 			inline-size 150ms ...` |
+ * | `--switch-thumb-transition` | `translate 150ms ease-out, inline-size 150ms eas...` |
  * | `--switch-track-background` | `-` |
  * | `--switch-track-background-color` | `var(--switch-track-background)` |
  * | `--switch-track-height` | `16px` |

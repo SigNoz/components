@@ -70,7 +70,7 @@ const meta: Meta<typeof Pill> = {
 			control: 'inline-radio',
 			options: Object.values(PillTextOverflow),
 			description:
-				'`ellipsis` (default) shows the full content in a tooltip while truncated. `hidden` clips with no tooltip. `visible` clips nothing and lets the content paint outside the box.',
+				'`ellipsis` (default) shows the full content in a tooltip while truncated. `hidden` clips with no tooltip.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'PillTextOverflowType' },

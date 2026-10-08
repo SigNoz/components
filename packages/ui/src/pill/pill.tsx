@@ -41,8 +41,7 @@ import { pillSizeStyle } from './utils.js';
  * ### Truncation
  *
  * Same as `Badge`: `textOverflow="ellipsis"` (the default) measures the content and shows the
- * full text in a tooltip while it does not fit. `hidden` clips with no tooltip, `visible` clips
- * nothing and lets the content paint outside its box.
+ * full text in a tooltip while it does not fit. `hidden` clips with no tooltip.
  *
  * ### Asserting on it
  *

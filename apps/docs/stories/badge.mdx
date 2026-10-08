@@ -123,17 +123,13 @@ Both are written as `--badge-internal-width` and `--badge-internal-max-width`, n
 `textOverflow` decides what happens to the content once it does not fit that width. `ellipsis` is
 the default: it truncates, marks the badge with `data-truncated`, and hands the full content to a
 tooltip, only while it is actually truncated, so content that fits never opens one. `hidden` clips
-at the badge's edge, with no marker and no tooltip. `visible` clips nothing and lets the content
-paint outside the badge's box.
+at the badge's edge, with no marker and no tooltip.
 
 ```tsx
 <Badge variant="outlined" color="secondary" maxWidth="10rem">
 	kubernetes-deployment-production-east-us-2
 </Badge>
 <Badge variant="outlined" color="secondary" maxWidth="10rem" textOverflow="hidden">
-	kubernetes-deployment-production-east-us-2
-</Badge>
-<Badge variant="outlined" color="secondary" maxWidth="10rem" textOverflow="visible">
 	kubernetes-deployment-production-east-us-2
 </Badge>
 ```
