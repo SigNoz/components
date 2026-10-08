@@ -18,3 +18,4 @@ command
 divider
 radio-cards
 resizable
+alert-strip

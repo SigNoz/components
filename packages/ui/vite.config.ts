@@ -6,7 +6,7 @@ import { reactCompilerOptions } from './react-compiler.config.js';
 export const entries: Record<string, string> = {
 	index: 'src/index.ts',
 	'alert-dialog/index': 'src/alert-dialog/index.ts',
-	'announcement-banner/index': 'src/announcement-banner/index.ts',
+	'alert-strip/index': 'src/alert-strip/index.ts',
 	'avatar/index': 'src/avatar/index.ts',
 	'badge/index': 'src/badge/index.ts',
 	'breadcrumb/index': 'src/breadcrumb/index.ts',

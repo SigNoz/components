@@ -1,0 +1,302 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as AlertStripStories from './alert-strip.stories';
+import * as AlertStripComponentsStories from './alert-strip-components.stories';
+
+<Meta of={AlertStripStories} />
+
+# AlertStrip
+
+A full-width strip for a state of the account or the instance that holds until someone fixes it:
+billing, quota, license and degradation notices.
+
+`color`, `side` and the children are required. The plain `AlertStrip` cannot be closed, since a billing or
+license strip must stay until the condition is fixed. Use `AlertStrip.Closeable` or
+`AlertStrip.CloseablePersisted` for a message the user can dismiss.
+
+## How to use
+
+```tsx
+import { AlertStrip } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<AlertStrip
+			color="warning"
+			side="bottom"
+			suffix={<AlertStrip.Button onClick={openBilling}>Upgrade</AlertStrip.Button>}
+		>
+			Warning: your trial ends in 3 days. Upgrade to keep your data.
+		</AlertStrip>
+	);
+}
+```
+
+<Primary />
+
+## When to use it
+
+- For a state that holds until someone fixes it, about the account or the instance. A save that
+  worked or a request that failed once is a toast.
+- A message about one page, inside that page, is a `Callout`.
+- Put the actions, `AlertStrip.Button` or `AlertStrip.Link`, in `suffix`. A link can also sit
+  inside the sentence.
+- Do not put a plain `Button` or a plain `a` inside a strip. A plain button keeps its own fill, which
+  fights the strip, and a hand-picked link color drifts from it.
+
+## Colors
+
+`color` is one of `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `archive` and
+`highlight-danger`, the same names as Badge and Callout. Each color takes the hue it has in Badge.
+`color` sets the fill and the live region role.
+
+The strip draws no severity icon, so the color alone does not carry the severity. Name it in the
+message, as in "Warning: your trial ends in 3 days." An icon in `prefix` does not change that, since
+a screen reader does not read it.
+
+## Prefix and suffix
+
+`prefix` renders before the message, at the start of the region, such as an icon. `suffix` renders
+after it, at the end of the region and before the close button of `AlertStrip.Closeable`. Put the
+actions there, `AlertStrip.Button` and `AlertStrip.Link`, one or more. The message fills the space
+between them, so the suffix lines up at the end whatever the length of the message.
+
+Both keep their size: neither shrinks nor wraps, so the message wraps first. Neither renders while
+empty.
+
+The strip sets the size of an icon in `prefix`, the one passed on the element is ignored. The icon
+takes the text color of the strip, and a `color` set on the icon element wins. The `Solid*` icons
+paint their disc in the text color and their glyph in the fill of the strip.
+
+```tsx
+<AlertStrip.Closeable
+	color="warning"
+	side="bottom"
+	closed={closed}
+	onClose={() => setClosed(true)}
+	prefix={<SolidAlertTriangle aria-hidden="true" />}
+	suffix={
+		<>
+			<AlertStrip.Link href="/plans">Compare plans</AlertStrip.Link>
+			<AlertStrip.Button onClick={upgrade}>Upgrade</AlertStrip.Button>
+		</>
+	}
+>
+	Warning: your trial ends in 3 days.
+</AlertStrip.Closeable>
+```
+
+## Placement
+
+The strip renders in normal flow at the full width of its parent, so it pushes the content around
+it aside. It is not a portal, not sticky and not fixed, and it has no outer margin.
+
+`side` is the edge of the page the strip sits on, `top` or `bottom`. The bar runs along that edge,
+across the whole parent, and the region in the middle rises from it. `side` only draws the strip for
+that edge, so render it there. Figma shows it on the bottom edge of the page.
+
+Where it renders, and which strip shows when several conditions apply, belong to you. The strip
+does not know about other strips and does not queue or rank them.
+
+### Measuring it
+
+The `ref` reaches the root on every variant, and the root spans the whole strip, bar included. When
+the strip floats over the page, such as one fixed to the bottom of the viewport, observe the ref to
+keep the page clear of it. A second line makes the strip taller, so watch it with a `ResizeObserver`
+instead of measuring once. The ref is `null` while the strip renders nothing, so a callback ref also
+hears it close.
+
+```tsx
+const [stripHeight, setStripHeight] = useState(0);
+const observer = useRef<ResizeObserver | null>(null);
+
+const stripRef = useCallback((strip: HTMLDivElement | null) => {
+	observer.current?.disconnect();
+	observer.current = null;
+	if (!strip) {
+		setStripHeight(0);
+		return;
+	}
+	observer.current = new ResizeObserver(([entry]) => {
+		setStripHeight(entry.borderBoxSize[0].blockSize);
+	});
+	observer.current.observe(strip);
+}, []);
+
+<>
+	<main style={{ paddingBottom: stripHeight }}>{children}</main>
+	<div className={styles.fixedToBottom}>
+		<AlertStrip.CloseablePersisted
+			ref={stripRef}
+			storageKey="trial-ending-v1"
+			color="warning"
+			side="bottom"
+		>
+			Warning: your trial ends in 3 days.
+		</AlertStrip.CloseablePersisted>
+	</div>
+</>;
+```
+
+## Empty content
+
+The strip renders nothing while the children are empty, since a colored row with nothing in it tells
+the user nothing. `null`, `false` and `''` all return no element, even with a `prefix` or a
+`suffix`.
+
+## Overflow
+
+The content sits in a centered region, which shrinks with a narrower parent.
+
+Long content wraps to a second line and the strip grows to fit it, while the prefix and the suffix
+keep their size. It never scrolls and never truncates. Keep the copy to two lines: the strip does not cut a third one, since a cut could hide
+the date or the action.
+
+The children render in inline flow, so links and bold text can sit inside the sentence.
+
+## Live region
+
+The strip is `role="alert"` for `danger` and `highlight-danger`, and `role="status"` for every other
+color. There is no prop to change it. The role covers the whole strip, so a screen reader reads the
+message and the labels of the buttons and the links, in the suffix too.
+
+A strip on the page at first render is not announced by most screen readers. It is read in document
+order, where you render it.
+
+## Keyboard
+
+The strip itself is not focusable. The links of the message take focus first, then the actions of
+the suffix, and then the close button. `Esc` does nothing, a strip is not an overlay.
+
+## AlertStrip.Closeable
+
+A strip with a close button at the end of the region, after the suffix. It keeps no state: it
+renders nothing while `closed` is `true`, and the close button calls `onClose`, where you set
+`closed`. Setting `closed` back to `false` shows it again.
+
+The strip does not guess where focus goes once it closes. Pass `finalFocus`, a ref to the element
+that should take focus, such as the main content. When `onClose` closes the strip, focus moves
+there, unless `onClose` moved it somewhere else. Only focus that was in the strip moves, so a mouse
+click that does not focus the close button, as in Safari, moves none. Without `finalFocus`, focus is
+not moved and falls to the page body with the close button.
+
+The close button is named `Dismiss`. Give `closeAriaLabel` when several closeable strips sit on one
+page, so a screen reader user can tell their buttons apart, and to translate it.
+
+```tsx
+const [closed, setClosed] = useState(false);
+const mainRef = useRef<HTMLElement>(null);
+
+<AlertStrip.Closeable
+	color="warning"
+	side="bottom"
+	closed={closed}
+	onClose={() => setClosed(true)}
+	finalFocus={mainRef}
+	closeAriaLabel="Dismiss the trial notice"
+>
+	Warning: your trial ends in 3 days.
+</AlertStrip.Closeable>;
+```
+
+## AlertStrip.CloseablePersisted
+
+A closeable strip that stays hidden after a reload. It owns its state, so it takes no `closed`, and
+`onClose` is only for side effects. It saves the dismissal in `localStorage` under `storageKey` as
+`"true"`. On the client it reads the entry on the first render, so a dismissed strip never flashes
+in. A server render shows the strip, which hides right after hydration when the entry says so.
+Closing one hides every other strip with the same `storageKey`, in this tab and in the others.
+
+When `localStorage` is not available, the strip shows, and the close button hides it until the next
+reload.
+
+```tsx
+<AlertStrip.CloseablePersisted storageKey="no-auth-banner-v1" color="warning" side="bottom">
+	Warning: you are in impersonation mode.{' '}
+	<AlertStrip.Link href="https://signoz.io/docs" target="_blank">
+		Learn more
+	</AlertStrip.Link>
+</AlertStrip.CloseablePersisted>
+```
+
+## AlertStrip.Button
+
+An action the user can take about the message, in `suffix`. It is a small `Button` that the strip
+paints the same way on every color, so it never drifts from the strip. It takes every other
+prop of `Button`, such as `onClick`, `prefix`, `loading` and `disabled` with `disabledTooltip`, and
+`loading` wins when both are set. It has no `variant`, `color`, `size`, `suffix`, `className` or
+`style`.
+
+The `prefix` icon takes the color of the label. The label stays on one line, and the button never
+shrinks.
+
+```tsx
+<AlertStrip
+	color="danger"
+	side="bottom"
+	suffix={
+		<AlertStrip.Button prefix={<CreditCard />} loading={isPaying} onClick={payBill}>
+			Pay the bill
+		</AlertStrip.Button>
+	}
+>
+	Danger: your last payment failed.
+</AlertStrip>
+```
+
+## AlertStrip.Link
+
+A navigation the user can take about the message, in `suffix` or inside the sentence. It has
+the same props as `Callout.Link`, draws in the text color of the strip, underlined, and inherits its
+type. It has no `className`, `style`, disabled or loading state.
+
+Pass `render` for a router link. The strip imports no router, so the click is a client-side
+navigation and a modified click still opens a new tab. The props merge as the `render` prop of Base
+UI merges them: a prop set on the `render` element wins, its `ref` and `className` are kept next to
+the ones of the link, and its `onClick` runs first. With a `_blank` target, `noopener` and
+`noreferrer` join the `rel` of the `render` element, which keeps its other values.
+
+```tsx
+<AlertStrip.Link render={<Link to="/billing" />}>Upgrade</AlertStrip.Link>
+```
+
+A link with neither `href` nor a destination on the `render` element renders plain text and warns on
+the console.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names everything under it:
+
+| Element      | `data-testid`             |
+| ------------ | ------------------------- |
+| prefix       | `` `${testId}-prefix` ``  |
+| content      | `` `${testId}-content` `` |
+| suffix       | `` `${testId}-suffix` ``  |
+| close button | `` `${testId}-close` ``   |
+
+The prefix and the suffix render only while set. The close button renders only on
+`AlertStrip.Closeable` and `AlertStrip.CloseablePersisted`.
+`AlertStrip.Button` and `AlertStrip.Link` take a `testId` of their own.
+
+The root carries `data-color` and `data-side`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={AlertStripStories.Default} />
+
+### AlertStrip.Closeable props
+
+<Controls of={AlertStripComponentsStories.Closeable} />
+
+### AlertStrip.CloseablePersisted props
+
+<Controls of={AlertStripComponentsStories.CloseablePersisted} />
+
+### AlertStrip.Button props
+
+<Controls of={AlertStripComponentsStories.Button} />
+
+### AlertStrip.Link props
+
+<Controls of={AlertStripComponentsStories.Link} />

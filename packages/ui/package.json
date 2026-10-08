@@ -37,14 +37,14 @@
 				"require": "./dist/alert-dialog/index.cjs"
 			}
 		},
-		"./announcement-banner": {
+		"./alert-strip": {
 			"import": {
-				"types": "./dist/announcement-banner/index.d.ts",
-				"import": "./dist/announcement-banner/index.mjs"
+				"types": "./dist/alert-strip/index.d.ts",
+				"import": "./dist/alert-strip/index.mjs"
 			},
 			"require": {
-				"types": "./dist/announcement-banner/index.d.cts",
-				"require": "./dist/announcement-banner/index.cjs"
+				"types": "./dist/alert-strip/index.d.cts",
+				"require": "./dist/alert-strip/index.cjs"
 			}
 		},
 		"./avatar": {

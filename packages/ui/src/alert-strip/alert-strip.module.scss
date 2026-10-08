@@ -1,0 +1,329 @@
+@use 'sass:list';
+
+.alert-strip {
+	display: var(--alert-strip-display, flex);
+	justify-content: var(--alert-strip-justify-content, center);
+	box-sizing: var(--alert-strip-box-sizing, border-box);
+	width: var(--alert-strip-width, 100%);
+	min-height: var(--alert-strip-min-height, 2rem);
+	margin: 0;
+	color: var(--alert-strip-internal-foreground, inherit);
+	font-size: var(--alert-strip-font-size, var(--periscope-font-size-base));
+	font-weight: var(--alert-strip-font-weight, var(--periscope-font-weight-medium));
+	// Figma draws one line at `line-height: 1`. A second line needs room, and one line still sits in
+	// the middle of the strip.
+	line-height: var(--alert-strip-line-height, var(--periscope-line-height-base));
+	letter-spacing: var(--alert-strip-letter-spacing, -0.005em);
+	--alert-strip-internal-bar-height: var(--alert-strip-bar-height, 8px);
+	--alert-strip-internal-end-inline-size: var(--alert-strip-end-inline-size, 54px);
+	--alert-strip-internal-decoration: var(--alert-strip-decoration-color, var(--alert-strip-decoration));
+	--alert-strip-internal-button-background: var(--alert-strip-button-background-color, var(--alert-strip-button-background));
+	--alert-strip-internal-button-background-hover: var(--alert-strip-button-hover-background-color, var(--alert-strip-button-background-hover));
+	--alert-strip-internal-button-foreground: var(--alert-strip-button-foreground-color, var(--alert-strip-button-foreground));
+	// The shared ring is the primary blue, which the primary fill would hide, so the controls take a
+	// ring in the text color of the strip.
+	--alert-strip-internal-focus-visible-outline: var(--alert-strip-focus-visible-outline, var(--alert-strip-internal-foreground) solid 1px);
+
+	// The bar along the edge of the page, on both sides of the region, which paints its own part. A
+	// plain color fills the box as the browser snaps it to the pixel grid, so no column of the page
+	// shows where the bar meets a region that starts between two pixels.
+	&::before,
+	&::after {
+		content: '';
+		flex: 1 1 0%;
+		align-self: flex-end;
+		min-width: 0;
+		block-size: var(--alert-strip-internal-bar-height);
+		background: var(--alert-strip-internal-background);
+	}
+
+	&[data-side='top']::before,
+	&[data-side='top']::after {
+		align-self: flex-start;
+	}
+
+	&[data-color='primary'] {
+		--alert-strip-internal-background: var(--alert-strip-primary-background-color, var(--alert-strip-primary-background));
+		--alert-strip-internal-foreground: var(--alert-strip-primary-foreground-color, var(--alert-strip-primary-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-primary-link-hover-color, var(--alert-strip-primary-link-hover));
+	}
+
+	&[data-color='secondary'] {
+		--alert-strip-internal-background: var(--alert-strip-secondary-background-color, var(--alert-strip-secondary-background));
+		--alert-strip-internal-foreground: var(--alert-strip-secondary-foreground-color, var(--alert-strip-secondary-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-secondary-link-hover-color, var(--alert-strip-secondary-link-hover));
+	}
+
+	&[data-color='success'] {
+		--alert-strip-internal-background: var(--alert-strip-success-background-color, var(--alert-strip-success-background));
+		--alert-strip-internal-foreground: var(--alert-strip-success-foreground-color, var(--alert-strip-success-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-success-link-hover-color, var(--alert-strip-success-link-hover));
+	}
+
+	&[data-color='danger'] {
+		--alert-strip-internal-background: var(--alert-strip-danger-background-color, var(--alert-strip-danger-background));
+		--alert-strip-internal-foreground: var(--alert-strip-danger-foreground-color, var(--alert-strip-danger-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-danger-link-hover-color, var(--alert-strip-danger-link-hover));
+	}
+
+	&[data-color='warning'] {
+		--alert-strip-internal-background: var(--alert-strip-warning-background-color, var(--alert-strip-warning-background));
+		--alert-strip-internal-foreground: var(--alert-strip-warning-foreground-color, var(--alert-strip-warning-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-warning-link-hover-color, var(--alert-strip-warning-link-hover));
+	}
+
+	&[data-color='info'] {
+		--alert-strip-internal-background: var(--alert-strip-info-background-color, var(--alert-strip-info-background));
+		--alert-strip-internal-foreground: var(--alert-strip-info-foreground-color, var(--alert-strip-info-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-info-link-hover-color, var(--alert-strip-info-link-hover));
+	}
+
+	&[data-color='archive'] {
+		--alert-strip-internal-background: var(--alert-strip-archive-background-color, var(--alert-strip-archive-background));
+		--alert-strip-internal-foreground: var(--alert-strip-archive-foreground-color, var(--alert-strip-archive-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-archive-link-hover-color, var(--alert-strip-archive-link-hover));
+	}
+
+	&[data-color='highlight-danger'] {
+		--alert-strip-internal-background: var(--alert-strip-highlight-danger-background-color, var(--alert-strip-highlight-danger-background));
+		--alert-strip-internal-foreground: var(--alert-strip-highlight-danger-foreground-color, var(--alert-strip-highlight-danger-foreground));
+		--alert-strip-internal-link-hover: var(--alert-strip-highlight-danger-link-hover-color, var(--alert-strip-highlight-danger-link-hover));
+	}
+}
+
+// The left slant after Figma, in the 54 by 24 units of an end: from its foot on the bar, up the
+// curve and the straight line, round the top corner to the top edge. The curves are sampled into
+// short lines.
+$slant: (
+	11 24,
+	12.34 23.9,
+	13.73 23.59,
+	15.13 23.11,
+	16.55 22.46,
+	17.97 21.67,
+	19.38 20.74,
+	20.76 19.7,
+	22.11 18.55,
+	23.4 17.33,
+	24.64 16.04,
+	36.8 1.44,
+	37.43 0.83,
+	38.18 0.38,
+	39 0.1,
+	39.87 0
+);
+
+// The outline of the region as one polygon: the bar, both slants and the top edge, so the fill is
+// painted once and no seam shows between its parts. A unit is 1/54 of the end across and 1/24 of
+// the height above the bar down, so the slant stretches with the height of the strip and keeps its
+// width. `$side` is the edge the bar runs along. The corners of the bar sit 1px past the box, so
+// the box draws its edges.
+@function region-outline($side) {
+	$end: var(--alert-strip-internal-end-inline-size);
+	$bar: var(--alert-strip-internal-bar-height);
+	$edge: calc(100% + 1px);
+	$bar-edge: calc(100% - #{$bar});
+	@if $side == top {
+		$edge: -1px;
+		$bar-edge: $bar;
+	}
+	$left: (-1px $edge, -1px $bar-edge);
+	$right: (calc(100% + 1px) $bar-edge, calc(100% + 1px) $edge);
+	@each $x, $y in $slant {
+		$from-bar: calc((100% - #{$bar}) * #{$y} / 24);
+		@if $side == top {
+			$from-bar: calc(100% - (100% - #{$bar}) * #{$y} / 24);
+		}
+		$left: list.append($left, calc(#{$end} * #{$x} / 54) $from-bar, comma);
+		$right: list.join((calc(100% - #{$end} * #{$x} / 54) $from-bar,), $right, comma);
+	}
+	@return polygon(list.join($left, $right, comma));
+}
+
+// The content sits between the two tapered ends, centered, and shrinks with a narrower parent.
+.alert-strip__region {
+	position: relative;
+	isolation: isolate;
+	display: var(--alert-strip-region-display, flex);
+	flex: var(--alert-strip-region-flex, 0 1 942px);
+	min-width: var(--alert-strip-region-min-width, 0);
+
+	// The fill of the region: the tapered ends, the body between them and the bar under them, cut
+	// out of one box, so a translucent fill is painted once.
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: var(--alert-strip-internal-background);
+		clip-path: region-outline(bottom);
+	}
+
+	// At the top of the page the bar runs along the top edge, and the ends hang from it upside down.
+	.alert-strip[data-side='top'] &::before {
+		clip-path: region-outline(top);
+	}
+}
+
+// One end of the region holds the dots, over the slant the region paints.
+.alert-strip__end {
+	position: relative;
+	flex-shrink: 0;
+	inline-size: var(--alert-strip-internal-end-inline-size);
+
+	// The end after the content is the same drawing, mirrored.
+	&:last-child {
+		transform: scaleX(-1);
+	}
+
+	// At the top of the page the dots follow the slant upside down. `scale` applies on top of the
+	// mirror of the last end.
+	.alert-strip[data-side='top'] & {
+		scale: 1 -1;
+	}
+}
+
+// The dots keep their size and stay on the bar, by the foot of the slant, as the strip grows. Their
+// last row dips 1px into the bar, as Figma draws it. Centered, they would crowd the slant, which
+// does not move sideways at mid height as it stretches.
+.alert-strip__dots {
+	position: absolute;
+	inset-block-end: calc(var(--alert-strip-internal-bar-height) - 1px);
+	inset-inline-start: var(--alert-strip-dots-inset-inline-start, 31px);
+	inline-size: var(--alert-strip-dots-size, 18px);
+	block-size: var(--alert-strip-dots-size, 18px);
+	fill: var(--alert-strip-internal-decoration);
+}
+
+.alert-strip__body {
+	display: var(--alert-strip-body-display, flex);
+	flex: var(--alert-strip-body-flex, 1 1 0%);
+	align-items: var(--alert-strip-body-align-items, center);
+	gap: var(--alert-strip-body-gap, var(--spacing-2));
+	min-width: var(--alert-strip-body-min-width, 0);
+	padding: var(--alert-strip-body-padding, var(--spacing-1) var(--spacing-2));
+
+	// `AlertStrip.Button` is a secondary `sm` button, painted here through its custom properties,
+	// in the suffix and in the content alike.
+	[data-slot='alert-strip-button'] {
+		--button-secondary-background-color: var(--alert-strip-internal-button-background);
+		--button-secondary-hover-background-color: var(--alert-strip-internal-button-background-hover);
+		--button-secondary-solid-foreground: var(--alert-strip-internal-button-foreground);
+		--button-focus-visible-outline: var(--alert-strip-internal-focus-visible-outline);
+	}
+}
+
+// The prefix and the suffix keep their size, so the content wraps before them.
+.alert-strip__prefix {
+	display: var(--alert-strip-prefix-display, flex);
+	flex-shrink: 0;
+	align-items: center;
+	gap: var(--alert-strip-prefix-gap, var(--spacing-2));
+
+	// The size of an icon belongs to the strip, the one passed on the element is ignored. It matches
+	// the icons of the close button and of `AlertStrip.Button`.
+	& > svg {
+		inline-size: var(--alert-strip-prefix-icon-size, 12px);
+		block-size: var(--alert-strip-prefix-icon-size, 12px);
+	}
+
+	// The solid icons ship a white disc and a dark glyph written into the SVG. The disc takes the text
+	// color of the strip and the glyph is cut out of it, down to the opaque fill of the strip.
+	svg [fill='#fff'] {
+		fill: var(--alert-strip-prefix-icon-disc-color, currentcolor);
+	}
+
+	svg [stroke='#fff'] {
+		stroke: var(--alert-strip-prefix-icon-disc-color, currentcolor);
+	}
+
+	svg [stroke='#121317'] {
+		stroke: var(--alert-strip-prefix-icon-glyph-color, var(--alert-strip-internal-background));
+	}
+}
+
+// With the gap of the body, the margin keeps the actions 8px off the message, as Figma draws the
+// button after it.
+.alert-strip__suffix {
+	display: var(--alert-strip-suffix-display, flex);
+	flex-shrink: 0;
+	align-items: center;
+	gap: var(--alert-strip-suffix-gap, var(--spacing-2));
+	margin-inline-start: var(--alert-strip-suffix-margin-inline-start, var(--spacing-2));
+}
+
+// Inline flow, so a link or a button can sit inside the sentence. A long word wraps instead of
+// pushing the suffix and the close button out.
+.alert-strip__content {
+	flex: var(--alert-strip-content-flex, 1 1 0%);
+	min-width: var(--alert-strip-content-min-width, 0);
+	overflow-wrap: var(--alert-strip-content-overflow-wrap, anywhere);
+	font-variant-numeric: var(--alert-strip-content-font-variant-numeric, slashed-zero lining-nums tabular-nums);
+	font-feature-settings: var(--alert-strip-content-font-feature-settings, 'ss01');
+
+	// The margin keeps a button inside the sentence off the message when JSX drops the space before
+	// it.
+	[data-slot='alert-strip-button'] {
+		margin-inline-start: var(--alert-strip-button-margin-inline-start, var(--spacing-4));
+		vertical-align: var(--alert-strip-button-vertical-align, middle);
+	}
+}
+
+.alert-strip__close {
+	display: var(--alert-strip-close-display, flex);
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	inline-size: var(--alert-strip-close-size, 24px);
+	block-size: var(--alert-strip-close-size, 24px);
+	padding: 0;
+	border: var(--alert-strip-close-border, none);
+	border-radius: var(--alert-strip-close-border-radius, var(--radius-1));
+	background: var(--alert-strip-internal-button-background);
+	color: var(--alert-strip-internal-button-foreground);
+	cursor: var(--alert-strip-close-cursor, pointer);
+	transition-property: var(--alert-strip-close-transition-property, background-color);
+	transition-timing-function: var(--alert-strip-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--alert-strip-transition-duration, 150ms);
+
+	&:hover {
+		background: var(--alert-strip-internal-button-background-hover);
+	}
+
+	&:focus-visible {
+		outline: var(--alert-strip-internal-focus-visible-outline);
+		outline-offset: var(--alert-strip-focus-visible-outline-offset, 1px);
+	}
+
+	& > svg {
+		inline-size: var(--alert-strip-close-icon-size, 12px);
+		block-size: var(--alert-strip-close-icon-size, 12px);
+	}
+}
+
+.alert-strip__link {
+	color: var(--alert-strip-internal-foreground, inherit);
+	text-decoration: var(--alert-strip-link-text-decoration, underline);
+	cursor: var(--alert-strip-link-cursor, pointer);
+	transition-property: var(--alert-strip-link-transition-property, color);
+	transition-timing-function: var(--alert-strip-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--alert-strip-transition-duration, 150ms);
+
+	&:hover {
+		color: var(--alert-strip-internal-link-hover, inherit);
+	}
+
+	&:focus-visible {
+		outline: var(--alert-strip-internal-focus-visible-outline);
+		outline-offset: var(--alert-strip-focus-visible-outline-offset, 1px);
+		border-radius: var(--alert-strip-link-border-radius, var(--radius-1));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.alert-strip__close,
+	.alert-strip__link {
+		transition: none;
+	}
+}
