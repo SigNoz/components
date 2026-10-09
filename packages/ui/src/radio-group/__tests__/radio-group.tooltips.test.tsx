@@ -239,6 +239,28 @@ describe('RadioGroup item disabledTooltip', () => {
 		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 	});
 
+	it('opens on the item, not the group, while the group reason is unused', async () => {
+		const user = userEvent.setup();
+		render(
+			<RadioGroup
+				color="primary"
+				items={ITEMS_WITH_A_DISABLED_ONE}
+				disabled={false}
+				disabledTooltip={DISABLED_REASON}
+				testId="group"
+			/>,
+		);
+
+		await user.hover(screen.getByText('Staging'));
+		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+
+		await user.hover(screen.getByText('Production'));
+
+		const tooltip = await screen.findByRole('tooltip');
+		expect(tooltip).toHaveTextContent(ITEM_REASON);
+		expect(screen.getByTestId('group')).not.toHaveAttribute('aria-describedby');
+	});
+
 	it('stops saying it the moment the item becomes usable', async () => {
 		const user = userEvent.setup();
 		const { rerender } = render(<RadioGroup color="primary" items={ITEMS_WITH_A_DISABLED_ONE} />);

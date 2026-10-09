@@ -9,6 +9,7 @@ import { TooltipContent } from '../subcomponents/tooltip-content.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
 import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
 import { useTooltipHandle } from '../tooltip-handle.js';
+import { TooltipTriggerBoundary } from '../tooltip-trigger-context.js';
 
 describe('Tooltip inside another tooltip', () => {
 	it('adds its title to the wrapping popup instead of opening a second one', async () => {
@@ -420,5 +421,26 @@ describe('TooltipAnchor with nothing to say itself', () => {
 		const tooltip = await screen.findByRole('tooltip');
 		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
 		expect(tooltip).toHaveTextContent('Inner title');
+	});
+
+	it('lets the tooltip around it open, outside the trigger context', async () => {
+		const user = userEvent.setup();
+		render(
+			<TooltipAnchor content="Outer title">
+				<div>
+					<TooltipTriggerBoundary>
+						<TooltipAnchor content={null}>
+							<button type="button">Hover</button>
+						</TooltipAnchor>
+					</TooltipTriggerBoundary>
+				</div>
+			</TooltipAnchor>,
+		);
+		const button = screen.getByRole('button');
+
+		await user.hover(button);
+
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('Outer title');
+		expect(button).toHaveAttribute('data-trigger-disabled');
 	});
 });

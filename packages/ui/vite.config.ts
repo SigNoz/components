@@ -30,6 +30,7 @@ export const entries: Record<string, string> = {
 	'pill/index': 'src/pill/index.ts',
 	'popover/index': 'src/popover/index.ts',
 	'progress/index': 'src/progress/index.ts',
+	'radio-cards/index': 'src/radio-cards/index.ts',
 	'radio-group/index': 'src/radio-group/index.ts',
 	'resizable/index': 'src/resizable/index.ts',
 	'select/index': 'src/select/index.ts',

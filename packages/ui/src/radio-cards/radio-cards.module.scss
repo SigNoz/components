@@ -1,0 +1,185 @@
+// Base UI puts the state on each card, not on the group: `data-checked` / `data-unchecked`,
+// `data-disabled` and `data-readonly`. A group that is disabled or read-only marks every card, so
+// the card rules cover both.
+.radio-cards {
+	--radio-cards-internal-gap: var(--radio-cards-gap, var(--spacing-6));
+	--radio-cards-internal-column-min-size: var(--radio-cards-column-min-size, 10rem);
+	--radio-cards-internal-icon-size: var(--radio-cards-icon-size, 12px);
+	--radio-cards-internal-label-line-height: var(--radio-cards-label-line-height, var(--periscope-line-height-base));
+
+	display: var(--radio-cards-display, grid);
+	// A grid sized to its content has no width for the percentage tracks to share, so it collapses
+	// to one card per row in a flex column or any other shrink-to-fit parent.
+	inline-size: var(--radio-cards-inline-size, 100%);
+	grid-template-columns: var(--radio-cards-grid-template-columns,
+			repeat(auto-fill, minmax(min(100%, var(--radio-cards-internal-column-min-size)), 1fr)));
+	gap: var(--radio-cards-internal-gap);
+
+	// A track is the larger of the minimum width and an equal share of the row, so a row never
+	// holds more than `columns` cards, and holds fewer once a share would go under the minimum.
+	&[data-columns] {
+		grid-template-columns: var(--radio-cards-columns-grid-template-columns,
+				repeat(auto-fill,
+					minmax(min(100%,
+							max(var(--radio-cards-internal-column-min-size),
+								calc((100% - (var(--radio-cards-internal-columns) - 1) * var(--radio-cards-internal-gap)) / var(--radio-cards-internal-columns)))),
+						1fr)));
+	}
+
+	&[data-text-overflow='wrap'] .radio-cards__label {
+		white-space: var(--radio-cards-wrap-label-white-space, normal);
+		overflow-wrap: var(--radio-cards-wrap-label-overflow-wrap, anywhere);
+	}
+
+	&[data-text-overflow='ellipsis'] .radio-cards__label {
+		text-overflow: var(--radio-cards-ellipsis-label-text-overflow, ellipsis);
+	}
+}
+
+.radio-cards__item {
+	--radio-cards-internal-background: var(--radio-cards-background-color, var(--radio-cards-background));
+	--radio-cards-internal-border-color: var(--radio-cards-border-color, var(--radio-cards-border));
+	--radio-cards-internal-label-color: var(--radio-cards-label-color, var(--radio-cards-label));
+	--radio-cards-internal-icon-color: var(--radio-cards-icon-color, var(--radio-cards-icon));
+	--radio-cards-internal-border-width: var(--radio-cards-item-border-width, 1px);
+	--radio-cards-internal-item-gap: var(--radio-cards-item-gap, var(--spacing-4));
+	--radio-cards-internal-check-duration: var(--radio-cards-check-duration, 120ms);
+	--radio-cards-internal-check-delay: var(--radio-cards-check-delay, var(--radio-cards-internal-check-duration));
+	--radio-cards-internal-check-easing: var(--radio-cards-check-easing, cubic-bezier(0.65, 0, 0.35, 1));
+	--radio-cards-internal-check-travel: var(--radio-cards-check-travel, 6px);
+
+	display: var(--radio-cards-item-display, flex);
+	// The icon slots are one label line tall, so the icons stay on the first line of a wrapped label.
+	align-items: var(--radio-cards-item-align-items, flex-start);
+	gap: var(--radio-cards-internal-item-gap);
+	box-sizing: var(--radio-cards-item-box-sizing, border-box);
+	min-inline-size: var(--radio-cards-item-min-inline-size, 0);
+	// Figma draws the border inside the card, so the padding gives its width back and a one-line
+	// card stays 32px tall.
+	padding-block: var(--radio-cards-item-padding-block,
+			calc(var(--spacing-3) - var(--radio-cards-internal-border-width)));
+	padding-inline: var(--radio-cards-item-padding-inline,
+			calc(var(--spacing-6) - var(--radio-cards-internal-border-width)));
+	border-width: var(--radio-cards-internal-border-width);
+	border-style: var(--radio-cards-item-border-style, solid);
+	border-color: var(--radio-cards-internal-border-color);
+	border-radius: var(--radio-cards-item-border-radius, var(--radius-1));
+	background-color: var(--radio-cards-internal-background);
+	color: var(--radio-cards-internal-icon-color);
+	cursor: var(--radio-cards-item-cursor, pointer);
+	user-select: var(--radio-cards-item-user-select, none);
+	transition-property: var(--radio-cards-item-transition-property, background-color, border-color, color);
+	transition-duration: var(--radio-cards-item-transition-duration, 150ms);
+	transition-timing-function: var(--radio-cards-item-transition-timing-function, ease);
+
+	&[data-unchecked]:not([data-disabled]):not([data-readonly]):hover {
+		--radio-cards-internal-background: var(--radio-cards-hover-background-color, var(--radio-cards-background-hover));
+		--radio-cards-internal-label-color: var(--radio-cards-hover-label-color, var(--radio-cards-label-hover));
+		--radio-cards-internal-icon-color: var(--radio-cards-hover-icon-color, var(--radio-cards-icon-hover));
+	}
+
+	&[data-checked] {
+		--radio-cards-internal-background: var(--radio-cards-checked-background-color, var(--radio-cards-checked-background));
+		--radio-cards-internal-border-color: var(--radio-cards-checked-border-color, var(--radio-cards-checked-border));
+		--radio-cards-internal-label-color: var(--radio-cards-checked-label-color, var(--radio-cards-checked-label));
+		--radio-cards-internal-icon-color: var(--radio-cards-checked-icon-color, var(--radio-cards-checked-icon));
+	}
+
+	&:focus-visible {
+		outline-width: var(--radio-cards-item-focus-visible-outline-width, 1px);
+		outline-style: var(--radio-cards-item-focus-visible-outline-style, solid);
+		outline-color: var(--radio-cards-item-focus-visible-outline-color, var(--radio-cards-focus-ring));
+		outline-offset: var(--radio-cards-item-focus-visible-outline-offset, 1px);
+	}
+
+	&[data-readonly] {
+		opacity: var(--radio-cards-item-readonly-opacity, 0.8);
+		cursor: var(--radio-cards-item-readonly-cursor, not-allowed);
+	}
+
+	&[data-disabled] {
+		opacity: var(--radio-cards-item-disabled-opacity, 0.6);
+		cursor: var(--radio-cards-item-disabled-cursor, not-allowed);
+	}
+}
+
+.radio-cards__prefix,
+.radio-cards__indicator {
+	display: var(--radio-cards-icon-display, inline-flex);
+	align-items: var(--radio-cards-icon-align-items, center);
+	justify-content: var(--radio-cards-icon-justify-content, center);
+	flex-shrink: var(--radio-cards-icon-flex-shrink, 0);
+	block-size: var(--radio-cards-internal-label-line-height);
+
+	& svg {
+		inline-size: var(--radio-cards-internal-icon-size);
+		block-size: var(--radio-cards-internal-icon-size);
+	}
+}
+
+// The check moves in the same beats as the loading state of `Button`: the slot opens, then the
+// check arrives. Unchecking plays them backwards, so the label gets its room back last. The check
+// has a fixed size, so the slot animates its width, not a `0fr` grid track as `Button` does: the
+// card sizes the slot to its content, and a grid track sized that way never goes under the icon.
+.radio-cards__indicator {
+	inline-size: var(--radio-cards-indicator-inline-size, var(--radio-cards-internal-icon-size));
+	overflow: var(--radio-cards-indicator-overflow, visible);
+	transition-property: var(--radio-cards-indicator-transition-property, inline-size, margin-inline-start);
+	transition-duration: var(--radio-cards-internal-check-duration);
+	transition-timing-function: var(--radio-cards-internal-check-easing);
+	transition-delay: var(--radio-cards-indicator-transition-delay, 0s);
+
+	& svg {
+		flex-shrink: var(--radio-cards-check-flex-shrink, 0);
+		opacity: var(--radio-cards-check-opacity, 1);
+		transform: var(--radio-cards-check-transform, translateY(0));
+		transition-property: var(--radio-cards-check-transition-property, opacity, transform);
+		transition-duration: var(--radio-cards-internal-check-duration);
+		transition-timing-function: var(--radio-cards-internal-check-easing);
+		transition-delay: var(--radio-cards-internal-check-delay);
+	}
+}
+
+// The slot is the last one in the card, so the gap it gives back is the one before it.
+.radio-cards__item[data-unchecked] .radio-cards__indicator {
+	inline-size: var(--radio-cards-indicator-unchecked-inline-size, 0);
+	overflow: var(--radio-cards-indicator-unchecked-overflow, hidden);
+	margin-inline-start: calc(-1 * var(--radio-cards-internal-item-gap));
+	transition-delay: var(--radio-cards-internal-check-delay);
+
+	& svg {
+		opacity: var(--radio-cards-check-unchecked-opacity, 0);
+		transform: var(--radio-cards-check-unchecked-transform, translateY(var(--radio-cards-internal-check-travel)));
+		transition-delay: var(--radio-cards-check-unchecked-transition-delay, 0s);
+	}
+}
+
+.radio-cards__label {
+	flex-grow: var(--radio-cards-label-flex-grow, 1);
+	min-inline-size: var(--radio-cards-label-min-inline-size, 0);
+	overflow: var(--radio-cards-label-overflow, hidden);
+	white-space: var(--radio-cards-label-white-space, nowrap);
+	color: var(--radio-cards-internal-label-color);
+	font-size: var(--radio-cards-label-font-size, var(--periscope-font-size-base));
+	font-weight: var(--radio-cards-label-font-weight, var(--font-weight-medium));
+	line-height: var(--radio-cards-internal-label-line-height);
+	// Figma's -0.5% letter spacing. The package has no token in `em`.
+	letter-spacing: var(--radio-cards-label-letter-spacing, -0.005em);
+	font-variant-numeric: var(--radio-cards-label-font-variant-numeric, slashed-zero);
+	transition-property: var(--radio-cards-label-transition-property, color);
+	transition-duration: var(--radio-cards-label-transition-duration, 150ms);
+	transition-timing-function: var(--radio-cards-label-transition-timing-function, ease);
+}
+
+.radio-cards__tooltip {
+	max-inline-size: var(--radio-cards-tooltip-max-inline-size, 20rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.radio-cards__item,
+	.radio-cards__label,
+	.radio-cards__indicator,
+	.radio-cards__indicator svg {
+		transition: none;
+	}
+}

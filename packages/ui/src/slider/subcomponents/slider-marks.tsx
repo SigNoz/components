@@ -162,9 +162,6 @@ function SliderMarkLabel({
 					/>
 				) : null
 			}
-			// Base UI ignores hover on an enabled trigger nested in another one, so a label that
-			// fits would keep the reason of the root from opening.
-			disabled={!isTruncated}
 			// Above the label it would cover the track and the thumbs.
 			contentProps={{ side: 'bottom' }}
 		>

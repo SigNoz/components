@@ -1,7 +1,8 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
+import { resolveGroupReason } from '../lib/group-reason.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
-import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
+import { TooltipTriggerBoundary } from '../tooltip/tooltip-trigger-context.js';
 import { RadioGroupTextOverflow } from './constants.js';
 import type { RejectedProps } from '../lib/utils.js';
 import styles from './radio-group.module.scss';
@@ -29,8 +30,6 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 	}: RadioGroupProps & RejectedProps,
 	ref,
 ) {
-	const isReadOnly = readOnly === true;
-
 	// Base UI hands the change two arguments, the value and its event details, and types the value
 	// as `string | null` because the generic also covers the `value` prop. Only a radio reports a
 	// change, and it reports its own `value`, so `null` never arrives here: both the extra argument
@@ -48,18 +47,11 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 					},
 		[onChange],
 	);
-	const hasReadOnlyTooltip = isReadOnly && hasTooltipContent(readOnlyTooltip);
-	const hasDisabledTooltip = !isReadOnly && Boolean(disabled) && hasTooltipContent(disabledTooltip);
-
-	const tooltipContent = useMemo(() => {
-		if (hasReadOnlyTooltip) {
-			return readOnlyTooltip;
-		}
-
-		return hasDisabledTooltip ? disabledTooltip : null;
-	}, [hasReadOnlyTooltip, readOnlyTooltip, hasDisabledTooltip, disabledTooltip]);
-
-	const hasTooltip = disabledTooltip != null || readOnlyTooltip != null;
+	const {
+		isDisabled,
+		reason: tooltipContent,
+		hasReasonAnchor: hasTooltip,
+	} = resolveGroupReason({ disabled, disabledTooltip, readOnly, readOnlyTooltip });
 
 	const groupEl = (
 		<RadioGroupPrimitive<string | null>
@@ -68,7 +60,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			data-color={color}
 			data-text-overflow={textOverflow}
 			className={styles['radio-group']}
-			disabled={isReadOnly ? false : disabled}
+			disabled={isDisabled}
 			readOnly={readOnly}
 			required={required}
 			name={name}
@@ -78,15 +70,18 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
-			{items.map((item) => (
-				<RadioGroupItem
-					key={item.value}
-					item={item}
-					textOverflow={textOverflow}
-					tooltipsSuppressed={tooltipContent !== null}
-					groupTestId={testId}
-				/>
-			))}
+			{/* Each row opens its own tooltip, not one stacked into the group's. */}
+			<TooltipTriggerBoundary>
+				{items.map((item) => (
+					<RadioGroupItem
+						key={item.value}
+						item={item}
+						textOverflow={textOverflow}
+						tooltipsSuppressed={tooltipContent !== null}
+						groupTestId={testId}
+					/>
+				))}
+			</TooltipTriggerBoundary>
 		</RadioGroupPrimitive>
 	);
 
