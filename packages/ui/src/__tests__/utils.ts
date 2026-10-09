@@ -3,7 +3,14 @@ import { join } from 'node:path';
 
 const IGNORED_DIRS = new Set(['lib', '__mocks__', '__tests__']);
 
-export function getComponentDirs(): string[] {
+// Entries that ship as a subpath only: no component, no `src/index.ts` export, no docs entry.
+// `testing` holds the helpers for stories and tests.
+const SUBPATH_ONLY_ENTRIES = new Set(['testing']);
+
+/**
+ * Every directory with an `index.ts`, each one a package entry.
+ */
+export function getEntryDirs(): string[] {
 	const srcPath = join(__dirname, '..');
 	return readdirSync(srcPath).filter((name) => {
 		if (IGNORED_DIRS.has(name)) return false;
@@ -11,6 +18,13 @@ export function getComponentDirs(): string[] {
 		if (!statSync(fullPath).isDirectory()) return false;
 		return existsSync(join(fullPath, 'index.ts'));
 	});
+}
+
+/**
+ * The entries that hold a component, which the root `src/index.ts` and the docs list.
+ */
+export function getComponentDirs(): string[] {
+	return getEntryDirs().filter((name) => !SUBPATH_ONLY_ENTRIES.has(name));
 }
 
 export function getViteConfigEntries(): string[] {

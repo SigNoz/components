@@ -1,6 +1,5 @@
 import type * as React from 'react';
 import type { TooltipPositionerProps } from './subcomponents/tooltip-positioner.js';
-import type { TooltipRootProps } from './subcomponents/tooltip-root.js';
 import type { TooltipContainer } from './tooltip-config-context.js';
 
 type OriginalPositionerProps = TooltipPositionerProps;
@@ -40,15 +39,6 @@ export interface TooltipProps {
 	 * @default 0
 	 */
 	alignOffset?: OriginalPositionerProps['alignOffset'];
-	/**
-	 * Whether the tooltip is open. Set, the tooltip shows exactly what it is told to and
-	 * neither hover nor focus changes that.
-	 *
-	 * @note For a story or a test that needs a popup on screen, not for app code: a
-	 * tooltip belongs to the pointer, and holding one open from the outside takes that
-	 * away. Leave it out and let hover and focus drive it.
-	 */
-	open?: TooltipRootProps['open'];
 	/**
 	 * The element the tooltip is portalled into. Defaults to the one the surrounding
 	 * `TooltipProvider` was given, and to `document.body` without one. Pass the

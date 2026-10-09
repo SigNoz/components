@@ -106,6 +106,34 @@ import { Tooltip } from '@signozhq/ui';
 import { Typography } from '@signozhq/ui';
 ```
 
+`@signozhq/ui/testing` holds helpers for stories and tests, and is not in the barrel.
+`ForceOpenProvider` holds open the popup of every `Dropdown` and `Tooltip` under it, which neither
+of them takes as a prop:
+
+```tsx
+import { ForceOpenProvider } from '@signozhq/ui/testing';
+
+render(
+	<Tooltip title="Helpful information">
+		<button type="button">Hover</button>
+	</Tooltip>,
+	{ wrapper: ForceOpenProvider },
+);
+```
+
+`PersistToastsProvider` keeps every toast of a `Toaster` under it on screen: no timer closes one,
+the stack shows them all whatever the `limit`, and it stays spread. A story of a page shows the
+toasts the page raises without mocking `toast`:
+
+```tsx
+import { PersistToastsProvider } from '@signozhq/ui/testing';
+
+<PersistToastsProvider>
+	<Page />
+	<Toaster />
+</PersistToastsProvider>;
+```
+
 ## Contributing
 
 Start with [CONTRIBUTING.md](./CONTRIBUTING.md): setup, commands, and how to add a component.
