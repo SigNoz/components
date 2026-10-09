@@ -1,203 +1,382 @@
-import { Progress, type ProgressProps, Typography } from '@signozhq/ui';
-import type { Meta, StoryFn } from '@storybook/react-vite';
+import { Button, Progress, ProgressColor, Typography } from '@signozhq/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { type CSSProperties, Fragment, type ReactElement, useState } from 'react';
+import { allModes } from '../.storybook/modes.js';
 import styles from './progress.stories.module.css';
+
+const COLORS = Object.values(ProgressColor);
 
 const meta: Meta<typeof Progress> = {
 	title: 'Primitive Components/Progress',
 	component: Progress,
+	parameters: {
+		layout: 'fullscreen',
+		docs: {
+			description: {
+				component:
+					'A determinate bar that shows a percent: a metric in a table cell or a card, or a task with a known end.',
+			},
+		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/eyORbfrXMWCz9w0xEFdgWe/Periscope-%E2%80%93-Primitives-v2?node-id=5835-8650&m=dev',
+		},
+	},
 	argTypes: {
 		percent: {
-			control: { type: 'range', min: 0, max: 100 },
-			description: 'The completion value of the progress bar, from 0 to 100.',
-			table: { category: 'Data', type: { summary: 'number' }, defaultValue: { summary: '0' } },
-		},
-		steps: {
-			control: 'number',
+			control: { type: 'range', min: 0, max: 150, step: 0.5 },
 			description:
-				'If provided, divides the progress bar into equal visual segments instead of a continuous bar.',
-			table: { category: 'Appearance', type: { summary: 'number | undefined' } },
-		},
-		strokeLinecap: {
-			control: 'select',
-			options: ['butt', 'round'],
-			description: 'Controls the edge styling of the progress indicator.',
-			table: {
-				category: 'Appearance',
-				type: { summary: "'butt' | 'round'" },
-				defaultValue: { summary: "'butt'" },
-			},
-		},
-		strokeColor: {
-			control: 'color',
-			description: "A CSS color value to dynamically override the indicator's background color.",
-			table: { category: 'Appearance', type: { summary: 'string' } },
-		},
-		size: {
-			control: 'select',
-			options: ['small', 'default'],
-			description: 'The vertical thickness of the progress bar.',
-			table: {
-				category: 'Appearance',
-				type: { summary: "'small' | 'default'" },
-				defaultValue: { summary: "'default'" },
-			},
+				'The completion, from 0 to 100. The fill stops at 0 and 100, the value text does not. A value that is not a finite number renders the empty track and the text `-`.',
+			table: { category: 'Content', type: { summary: 'number' } },
 		},
 		showInfo: {
 			control: 'boolean',
-			description: 'If true, renders the percent value as text next to the progress bar.',
+			description:
+				'Shows the percent as text to the right of the bar, rounded to at most 2 decimals. The text never truncates, the bar shrinks first.',
 			table: {
 				category: 'Content',
 				type: { summary: 'boolean' },
 				defaultValue: { summary: 'false' },
 			},
 		},
-		status: {
+		infoWidth: {
+			control: 'text',
+			description:
+				'The minimum width of the value text, aligned to the end, so the bar keeps its length while the number changes. Numbers are written as `px`. A longer text still shows whole. Only applies with `showInfo`.',
+			table: { category: 'Content', type: { summary: 'CSSProperties["width"]' } },
+		},
+		color: {
 			control: 'select',
-			options: ['normal', 'active'],
-			description: "If 'active', applies a subtle striped animation to the progress bar.",
+			options: COLORS,
+			description:
+				'The status of the bar, picked from a threshold on the metric. Required, with no default. The color is never the only signal: the value text, or the number next to the bar, carries the data.',
+			table: { category: 'Appearance', type: { summary: 'ProgressColorType' } },
+		},
+		steps: {
+			control: { type: 'number', min: 0, max: 20, step: 1 },
+			description:
+				'Splits the bar into equal segments with a transparent gap between them. The fill stays continuous across the segments. Below 2 renders the continuous bar.',
+			table: { category: 'Appearance', type: { summary: 'number' } },
+		},
+		active: {
+			control: 'boolean',
+			description:
+				'Marks a task that is running: the fill shows moving stripes and eases to each new `percent`. The stripes stop at 100. Not for a metric bar.',
 			table: {
 				category: 'State',
-				type: { summary: "'normal' | 'active'" },
-				defaultValue: { summary: "'normal'" },
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
 			},
 		},
-		className: {
+		width: {
 			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Styling', type: { summary: 'string' } },
+			description:
+				'The width of the progress. It fills its parent when omitted. Numbers are written as `px`. A narrow width shrinks the bar first, never the value text.',
+			table: { category: 'Appearance', type: { summary: 'CSSProperties["width"]' } },
 		},
-		style: {
-			control: 'object',
-			description: 'Inline styles applied to the progress wrapper.',
-			table: { category: 'Styling', type: { summary: 'React.CSSProperties' } },
+		maxWidth: {
+			control: 'text',
+			description: 'The max-width of the progress. Numbers are written as `px`.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'CSSProperties["maxWidth"]' },
+				defaultValue: { summary: '100%' },
+			},
+		},
+		'aria-label': {
+			control: 'text',
+			description:
+				'What the bar measures. The bar has no visible label of its own, so give it a name here or through `aria-labelledby`.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
+		},
+		'aria-labelledby': {
+			control: 'text',
+			description: 'The id of the element that names the bar, in place of `aria-label`.',
+			table: { category: 'Accessibility', type: { summary: 'string' } },
 		},
 		id: {
 			control: 'text',
-			description: 'A unique identifier for the progress bar.',
+			description: 'Forwarded to the root, the `role="progressbar"` element.',
 			table: { category: 'Accessibility', type: { summary: 'string' } },
 		},
 		testId: {
 			control: 'text',
-			description: 'Test ID for the progress bar.',
+			description:
+				'Forwarded to the root as `data-testid`, and the prefix of the parts: `${testId}-track`, `${testId}-indicator` and `${testId}-value`.',
 			table: { category: 'Testing', type: { summary: 'string' } },
 		},
 	},
-	parameters: {
-		layout: 'padded',
-		backgrounds: {
-			default: 'dark',
-			values: [{ name: 'dark', value: '#1a1a1a' }],
-		},
+	args: {
+		percent: 64,
+		showInfo: true,
+		color: 'primary',
+		'aria-label': 'CPU usage',
 	},
 };
 
 export default meta;
 
-// Default Template
-const Template: StoryFn<typeof Progress> = (args: ProgressProps) => (
-	<div className={styles.progressContainer}>
-		<Progress {...args} />
-	</div>
-);
+type Story = StoryObj<typeof Progress>;
 
-// 1. Default: A basic continuous progress bar
-export const Default = Template.bind({});
-Default.args = {
-	percent: 50,
+export const Default: Story = {
+	decorators: [
+		(Story) => (
+			<div className="story-container">
+				<Story />
+			</div>
+		),
+	],
+	parameters: {
+		// Every state it can be driven into is covered by `ProgressShowcase`.
+		chromatic: { disableSnapshot: true },
+	},
 };
 
-// 2. Sizes: Show both default and small sizes
-export const Sizes: StoryFn = () => (
-	<div className={`story-section ${styles.progressContainer}`}>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Small Size
+function Row({ label, children }: { label: string; children: ReactElement }): ReactElement {
+	return (
+		<>
+			<Typography size="sm" weight="medium" className={styles.rowLabel}>
+				{label}
 			</Typography>
-			<Progress percent={70} size="small" />
-		</div>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Default Size
-			</Typography>
-			<Progress percent={70} size="default" />
-		</div>
-	</div>
-);
+			{children}
+		</>
+	);
+}
 
-// 3. Dynamic Colors: custom hex values or design tokens
-export const DynamicColors: StoryFn = () => (
-	<div className={`story-section ${styles.progressContainer}`}>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Critical (Red)
-			</Typography>
-			<Progress percent={80} strokeColor="#ef4444" />
-		</div>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Warning (Yellow)
-			</Typography>
-			<Progress percent={60} strokeColor="#eab308" />
-		</div>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Success (Green)
-			</Typography>
-			<Progress percent={100} strokeColor="#22c55e" />
-		</div>
-	</div>
-);
+// One column per state, so a change to one fill, or to the segments or stripes over it, shows in the
+// row of that color.
+const COLOR_STATES: Array<{ label: string; steps?: number; active?: boolean }> = [
+	{ label: 'continuous' },
+	{ label: '5 steps', steps: 5 },
+	{ label: 'active', active: true },
+];
 
-// 4. Segmented (Steps)
-export const Segmented: StoryFn = () => (
-	<div className={`story-section ${styles.progressContainer}`}>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				5 Steps, 40%
-			</Typography>
-			<Progress percent={40} steps={5} />
-		</div>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				10 Steps, 70%
-			</Typography>
-			<Progress percent={70} steps={10} strokeColor="#10b981" />
-		</div>
-	</div>
-);
+function matrixStyle(columns: number): CSSProperties {
+	return { '--matrix-columns': columns } as CSSProperties;
+}
 
-// 5. With Info
-export const WithInfo: StoryFn = () => (
-	<div className={`story-section ${styles.progressContainer}`}>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Showing Info Text
-			</Typography>
-			<Progress percent={45} showInfo />
-		</div>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Active Status with Info
-			</Typography>
-			<Progress percent={85} showInfo status="active" />
-		</div>
-	</div>
-);
+const VALUE_TEXTS: Array<{ label: string; percent: number }> = [
+	{ label: 'whole', percent: 5 },
+	{ label: 'rounded to 2 decimals', percent: 33.333 },
+	{ label: 'complete', percent: 100 },
+	{ label: 'over 100', percent: 140 },
+	{ label: 'below 0', percent: -5 },
+	{ label: 'no data', percent: Number.NaN },
+];
 
-// 6. Stroke Linecap (Extra)
-export const StrokeLinecap: StoryFn = () => (
-	<div className={`story-section ${styles.progressContainer}`}>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Round (Default for track, butt for indicator usually, but let us test)
-			</Typography>
-			<Progress percent={50} strokeLinecap="round" />
+const STEPS: Array<{ label: string; percent: number; steps: number }> = [
+	{ label: '5 steps, empty', percent: 0, steps: 5 },
+	{ label: '5 steps, 50%', percent: 50, steps: 5 },
+	{ label: '5 steps, full', percent: 100, steps: 5 },
+	{ label: '10 steps, 70%', percent: 70, steps: 10 },
+	{ label: '1 step', percent: 50, steps: 1 },
+];
+
+const SURFACES = ['surface-1', 'surface-2', 'surface-3'] as const;
+
+const CELLS = [
+	{ label: '12rem', className: styles.cellWide },
+	{ label: '6rem', className: styles.cellMedium },
+	{ label: '3rem', className: styles.cellNarrow },
+];
+
+/**
+ * Each click moves the task forward by a fifth, so the fill eases to the next value. It is a button
+ * rather than a timer, which keeps the snapshot of the showcase still.
+ */
+function RunningTask(): ReactElement {
+	const [percent, setPercent] = useState(20);
+	const isDone = percent >= 100;
+
+	return (
+		<div className={styles.task}>
+			<Progress color="primary" percent={percent} active showInfo aria-label="Trace download" />
+			<Button
+				size="md"
+				variant="outlined"
+				color="secondary"
+				onClick={() => setPercent(isDone ? 0 : percent + 20)}
+			>
+				{isDone ? 'Restart' : 'Advance'}
+			</Button>
 		</div>
-		<div>
-			<Typography as="h3" size="sm" weight="medium" className={styles.sectionHeading}>
-				Butt
-			</Typography>
-			<Progress percent={50} strokeLinecap="butt" />
+	);
+}
+
+/**
+ * Every color in each state, the value text in each of its cases, the segments, the running task, the bar on
+ * each surface and in a narrow cell, all in one snapshot. The stripes of `active` only move with
+ * the Motion toolbar item on live.
+ */
+export const ProgressShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+	},
+	argTypes: {
+		percent: { control: false },
+		color: { control: false },
+		steps: { control: false },
+		active: { control: false },
+		showInfo: { control: false },
+	},
+	render: () => (
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Colors
+				</Typography>
+				<Typography size="sm">
+					The same hues as Badge. Pick the color from a threshold on the metric, and keep the
+					thresholds of one metric in one helper so the same value reads the same in every column.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(COLOR_STATES.length)}
+				>
+					<span />
+					{COLOR_STATES.map(({ label }) => (
+						<Typography key={label} size="sm" weight="medium" className={styles.rowLabel}>
+							{label}
+						</Typography>
+					))}
+					{COLORS.map((color) => (
+						<Fragment key={color}>
+							<Typography size="sm" weight="medium" className={styles.rowLabel}>
+								{color}
+							</Typography>
+							{COLOR_STATES.map(({ label, steps, active }) => (
+								<Progress
+									key={label}
+									percent={64}
+									color={color}
+									steps={steps}
+									active={active}
+									showInfo
+									aria-label={`${color} ${label}`}
+								/>
+							))}
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Value text
+				</Typography>
+				<Typography size="sm">
+					Rounded to at most 2 decimals, with no trailing zeros. The fill clamps to the track and
+					the text does not, so 140 reads 140% over a full bar. A value that is not a finite number
+					keeps the empty track and shows a dash.
+				</Typography>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					{VALUE_TEXTS.map(({ label, percent }) => (
+						<Row key={label} label={label}>
+							<Progress color="primary" percent={percent} showInfo aria-label={label} />
+						</Row>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Steps
+				</Typography>
+				<Typography size="sm">
+					Equal segments with a transparent gap. The fill runs on across them, so 50% of 5 fills two
+					and a half. Below 2 is the continuous bar.
+				</Typography>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					{STEPS.map(({ label, percent, steps }) => (
+						<Row key={label} label={label}>
+							<Progress
+								color="primary"
+								percent={percent}
+								steps={steps}
+								showInfo
+								aria-label={label}
+							/>
+						</Row>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Running task
+				</Typography>
+				<Typography size="sm">
+					Only <code>active</code> moves: the fill eases to each new value and stripes cross it,
+					until the task reaches 100. A metric bar jumps to its new value.
+				</Typography>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					<Row label="advancing">
+						<RunningTask />
+					</Row>
+					<Row label="running">
+						<Progress color="primary" percent={35} active showInfo aria-label="Running" />
+					</Row>
+					<Row label="steps">
+						<Progress
+							color="primary"
+							percent={60}
+							steps={5}
+							active
+							showInfo
+							aria-label="Checklist"
+						/>
+					</Row>
+					<Row label="done">
+						<Progress color="primary" percent={100} active showInfo aria-label="Done" />
+					</Row>
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Surfaces
+				</Typography>
+				<Typography size="sm">
+					The track keeps its contrast on every surface, and the gaps between segments show the
+					surface behind them.
+				</Typography>
+				<div className={`${styles.surfaces} ${styles.marginTopMedium}`}>
+					{SURFACES.map((surface) => (
+						<div key={surface} className={styles.surface} data-surface={surface}>
+							<Typography size="sm" weight="medium">
+								{surface}
+							</Typography>
+							<Progress color="primary" percent={45} showInfo aria-label={`${surface} usage`} />
+							<Progress
+								color="primary"
+								percent={45}
+								steps={5}
+								showInfo
+								aria-label={`${surface} checklist`}
+							/>
+						</div>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Narrow cell
+				</Typography>
+				<Typography size="sm">
+					The root fills its parent. When space runs out the bar shrinks, down to nothing, and the
+					value text never truncates.
+				</Typography>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					{CELLS.map(({ label, className }) => (
+						<Row key={label} label={label}>
+							<div className={className}>
+								<Progress percent={87.25} color="warning" showInfo aria-label="Memory usage" />
+							</div>
+						</Row>
+					))}
+				</div>
+			</div>
 		</div>
-	</div>
-);
+	),
+};

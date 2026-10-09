@@ -1,15 +1,78 @@
-.progressContainer {
-  width: 100%;
-  max-width: 28rem;
-  padding: 1rem;
-  align-items: stretch;
-
-  > div {
-    width: 100%;
-  }
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.sectionHeading {
-  display: block;
-  margin-bottom: 0.5rem;
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+/* One label column, one bar column. The bar fills its cell, as it fills a table cell. */
+.rows {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 24rem);
+  gap: 1rem 2rem;
+  align-items: center;
+  width: 100%;
+}
+
+/* One label column, then one bar column per state. */
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), minmax(0, 16rem));
+  gap: 1rem 2rem;
+  align-items: center;
+  width: 100%;
+}
+
+.rowLabel {
+  white-space: nowrap;
+}
+
+/* The bar takes what the button leaves, so the button keeps its label. */
+.task {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 1rem;
+}
+
+.surfaces {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 16rem));
+  gap: 1rem;
+}
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--l2-border);
+  border-radius: var(--radius-2);
+}
+
+.surface[data-surface='surface-1'] {
+  background-color: var(--surface-1);
+}
+
+.surface[data-surface='surface-2'] {
+  background-color: var(--surface-2);
+}
+
+.surface[data-surface='surface-3'] {
+  background-color: var(--surface-3);
+}
+
+.cellWide {
+  width: 12rem;
+}
+
+.cellMedium {
+  width: 6rem;
+}
+
+.cellNarrow {
+  width: 3rem;
 }
