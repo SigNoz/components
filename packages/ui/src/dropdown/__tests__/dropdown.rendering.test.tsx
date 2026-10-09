@@ -121,6 +121,15 @@ describe('Dropdown rendering', () => {
 		expect(suffix).not.toHaveAttribute('data-loading');
 	});
 
+	it('names the search field after its placeholder', async () => {
+		renderDropdown({ searchInputProps: { placeholder: 'Find an action' } });
+		await openDropdown();
+
+		const field = screen.getByRole('textbox', { name: 'Find an action' });
+		expect(field).toBe(screen.getByTestId('menu-search'));
+		expect(field).toHaveAttribute('placeholder', 'Find an action');
+	});
+
 	it('names the search prefix after the search row', async () => {
 		renderDropdown({ searchInputProps: { placeholder: 'Find', loading: true } });
 		await openDropdown();
@@ -231,7 +240,7 @@ describe('Dropdown rendering', () => {
 	});
 
 	it('replaces the rows while loading, and keeps the search row', async () => {
-		renderDropdown({ loading: true, searchInputProps: {} });
+		renderDropdown({ loading: true, searchInputProps: { placeholder: 'Search' } });
 		await openDropdown();
 
 		expect(screen.getByTestId('menu-loading')).toBeInTheDocument();
@@ -331,7 +340,7 @@ describe('Dropdown rendering', () => {
 
 	it('does not warn about an empty items list the server filtered down', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-		renderDropdown({ items: [], searchInputProps: { filter: false } });
+		renderDropdown({ items: [], searchInputProps: { filter: false, placeholder: 'Search' } });
 
 		expect(warn).not.toHaveBeenCalled();
 	});

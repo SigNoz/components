@@ -1,7 +1,6 @@
 import { Menu } from '@base-ui/react/menu';
 import { ChevronRight } from '@signozhq/icons';
-import { type ReactNode, useEffect } from 'react';
-import { DROPDOWN_SIDE_OFFSET } from '../constants.js';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownSubmenuItemType } from '../types.js';
@@ -11,6 +10,7 @@ import {
 	type DropdownTooltipSide,
 	useDropdownRow,
 } from './dropdown-row.js';
+import { DropdownPositioner } from './dropdown-positioner.js';
 import { DropdownViewport } from './dropdown-viewport.js';
 
 /**
@@ -43,6 +43,8 @@ export function DropdownSubmenu({ item, side, children }: DropdownSubmenuProps):
 		loadingTooltip,
 	});
 
+	const [trigger, setTrigger] = useState<HTMLElement | null>(null);
+
 	const isEmpty = item.items.length === 0;
 
 	// The fallback keeps the popup readable, and this says the submenu is empty rather than letting
@@ -68,6 +70,7 @@ export function DropdownSubmenu({ item, side, children }: DropdownSubmenuProps):
 		>
 			<DropdownRowTooltip row={row} side={side}>
 				<Menu.SubmenuTrigger
+					ref={setTrigger}
 					data-slot="dropdown-submenu-trigger"
 					data-disabled={row.isDisabled || undefined}
 					data-loading={row.isLoading || undefined}
@@ -84,13 +87,7 @@ export function DropdownSubmenu({ item, side, children }: DropdownSubmenuProps):
 				</Menu.SubmenuTrigger>
 			</DropdownRowTooltip>
 			<Menu.Portal container={container}>
-				<Menu.Positioner
-					side="inline-end"
-					align="start"
-					sideOffset={DROPDOWN_SIDE_OFFSET}
-					data-slot="dropdown-positioner"
-					className={styles['dropdown__positioner']}
-				>
+				<DropdownPositioner trigger={trigger} side="inline-end" align="start">
 					<Menu.Popup
 						data-slot="dropdown-popup"
 						data-submenu=""
@@ -99,7 +96,7 @@ export function DropdownSubmenu({ item, side, children }: DropdownSubmenuProps):
 					>
 						<DropdownViewport>{children}</DropdownViewport>
 					</Menu.Popup>
-				</Menu.Positioner>
+				</DropdownPositioner>
 			</Menu.Portal>
 		</Menu.SubmenuRoot>
 	);

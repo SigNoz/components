@@ -1,16 +1,6 @@
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useScrollEdges } from '../../lib/use-scroll-edges.js';
 import styles from '../dropdown.module.scss';
-
-// `scrollHeight`/`clientHeight` are rounded to integers, so a list that fits can still report a one
-// pixel overflow on fractional layouts.
-const SCROLL_TOLERANCE_PX = 1;
-
-type ScrollEdges = {
-	start: boolean;
-	end: boolean;
-};
-
-const NO_EDGES: ScrollEdges = { start: false, end: false };
 
 /**
  * The scrolling part of a popup, and the two attributes that say which of its edges is clipping
@@ -28,49 +18,11 @@ const NO_EDGES: ScrollEdges = { start: false, end: false };
  * @access private
  */
 export function DropdownViewport({ children }: { children: ReactNode }): ReactNode {
-	const viewportRef = useRef<HTMLDivElement | null>(null);
-	const [edges, setEdges] = useState<ScrollEdges>(NO_EDGES);
-
-	const measure = useCallback((): void => {
-		const node = viewportRef.current;
-
-		if (node === null) {
-			setEdges(NO_EDGES);
-			return;
-		}
-
-		const maxScroll = node.scrollHeight - node.clientHeight;
-
-		setEdges({
-			start: node.scrollTop > SCROLL_TOLERANCE_PX,
-			end: maxScroll - node.scrollTop > SCROLL_TOLERANCE_PX,
-		});
-	}, []);
-
-	useEffect(() => {
-		const node = viewportRef.current;
-
-		if (node === null || typeof ResizeObserver === 'undefined') {
-			return;
-		}
-
-		measure();
-
-		const observer = new ResizeObserver(measure);
-		observer.observe(node);
-
-		for (const child of Array.from(node.children)) {
-			observer.observe(child);
-		}
-
-		return () => {
-			observer.disconnect();
-		};
-	}, [measure]);
+	const { ref, edges, measure } = useScrollEdges<HTMLDivElement>();
 
 	return (
 		<div
-			ref={viewportRef}
+			ref={ref}
 			data-slot="dropdown-viewport"
 			data-scroll-start={edges.start || undefined}
 			data-scroll-end={edges.end || undefined}

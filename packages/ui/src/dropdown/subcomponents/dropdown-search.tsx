@@ -1,10 +1,6 @@
 import { Search } from '@signozhq/icons';
 import { type KeyboardEvent, type MutableRefObject, type ReactNode, useId } from 'react';
-import {
-	DROPDOWN_ROW_SELECTOR,
-	DROPDOWN_SEARCH_LABEL,
-	DROPDOWN_SEARCH_PASSTHROUGH_KEYS,
-} from '../constants.js';
+import { DROPDOWN_ROW_SELECTOR, DROPDOWN_SEARCH_PASSTHROUGH_KEYS } from '../constants.js';
 import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownSearchInputProps } from '../types.js';
@@ -93,7 +89,7 @@ export function DropdownSearch({
 				data-slot="dropdown-search-input"
 				className={styles['dropdown__search-input']}
 				placeholder={placeholder}
-				aria-label={placeholder ?? DROPDOWN_SEARCH_LABEL}
+				aria-label={placeholder}
 				value={query}
 				onChange={(event) => {
 					onQueryChange(event.target.value);

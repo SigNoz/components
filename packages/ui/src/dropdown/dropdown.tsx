@@ -14,15 +14,17 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useForceOpen } from '../lib/force-open.js';
+import { mergeRefs } from '../lib/merge-refs.js';
 import { usePopupContainer } from '../lib/popup-container.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
-import { DROPDOWN_ROW_SELECTOR, DROPDOWN_SIDE_OFFSET } from './constants.js';
+import { DROPDOWN_ROW_SELECTOR } from './constants.js';
 import { type DropdownContextValue, DropdownProvider } from './dropdown-context.js';
 import styles from './dropdown.module.scss';
 import { DropdownItems } from './subcomponents/dropdown-items.js';
 import { DropdownLoading } from './subcomponents/dropdown-loading.js';
+import { DropdownPositioner } from './subcomponents/dropdown-positioner.js';
 import { DropdownSearch } from './subcomponents/dropdown-search.js';
 import { DropdownViewport } from './subcomponents/dropdown-viewport.js';
 import type { DropdownProps, ValidateDropdownProps } from './types.js';
@@ -57,6 +59,9 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 	const actionsRef = useRef<MenuRootActions | null>(null);
 	const popupRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
+	// State, not a ref: the positioner reads the layer the trigger sits in when it mounts.
+	const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+	const triggerRef = useMemo(() => mergeRefs(ref, setTriggerElement), [ref]);
 	const [query, setQuery] = useState('');
 	const [rememberedSelections, setRememberedSelections] = useState<
 		Readonly<Record<string, boolean | string>>
@@ -147,7 +152,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 
 	const trigger = (
 		<Menu.Trigger
-			ref={ref}
+			ref={triggerRef}
 			data-slot="dropdown-trigger"
 			nativeButton={nativeButton}
 			aria-disabled={disabled || undefined}
@@ -193,13 +198,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 				</TooltipAnchor>
 			)}
 			<Menu.Portal container={portalContainer}>
-				<Menu.Positioner
-					side={side}
-					align={align}
-					sideOffset={DROPDOWN_SIDE_OFFSET}
-					data-slot="dropdown-positioner"
-					className={styles['dropdown__positioner']}
-				>
+				<DropdownPositioner trigger={triggerElement} side={side} align={align}>
 					<Menu.Popup
 						{...props}
 						ref={popupRef}
@@ -230,7 +229,7 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 							</TooltipProviderIfMissing>
 						</DropdownProvider>
 					</Menu.Popup>
-				</Menu.Positioner>
+				</DropdownPositioner>
 			</Menu.Portal>
 		</Menu.Root>
 	);
@@ -340,6 +339,8 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * Passing `searchInputProps` renders the pinned search row, and the menu filters `items` itself:
  * case-insensitive substring, against each row's label when it renders to text and against its
  * `searchMetadata`. An icon-only row is findable through `searchMetadata` alone.
+ *
+ * `searchInputProps.placeholder` is required. It is the field's placeholder and its accessible name.
  *
  * A group survives when any of its rows match and renders with only those. A submenu survives on
  * its own label or on anything under it, and keeps every one of its rows: once you are inside, the

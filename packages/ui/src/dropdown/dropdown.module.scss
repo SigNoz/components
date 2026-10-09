@@ -35,7 +35,7 @@
     var(--dropdown-internal-max-inline-size, 15.75rem)
   );
 
-  box-sizing: border-box;
+  box-sizing: var(--dropdown-box-sizing, border-box);
 
   // Never narrower than the trigger (`--anchor-width` comes from Base UI). The floor is clamped to
   // the maximum because a min-width wins over a max-width.
@@ -47,10 +47,12 @@
   // `--available-height` comes from Base UI and keeps the popup inside the viewport.
   max-block-size: var(--dropdown-max-popup-block-size, var(--available-height, none));
 
-  padding-block: var(--dropdown-padding-block, var(--spacing-2));
+  padding-block: var(--dropdown-padding-block, 0);
   padding-inline: var(--dropdown-padding-inline, 0);
 
-  border: var(--dropdown-border-width, 1px) solid var(--dropdown-internal-border);
+  border-width: var(--dropdown-border-width, 1px);
+  border-style: var(--dropdown-border-style, solid);
+  border-color: var(--dropdown-internal-border);
   border-radius: var(--dropdown-border-radius, var(--radius-2));
   background-color: var(--dropdown-internal-background);
   box-shadow: var(--dropdown-internal-shadow);
@@ -74,11 +76,11 @@
   // A modal drawer or dialog sets `pointer-events: none` on the body. A menu portalled there,
   // into a `container` outside the panel, would have no row that can be clicked. Base UI still
   // switches it off inline while the menu is closed.
-  pointer-events: auto;
+  pointer-events: var(--dropdown-positioner-pointer-events, auto);
   // Base UI places the positioner with `left`, so its width would otherwise shrink to what is
   // left of the containing block. Inside a dialog that is a zero-size layer. The popup still
   // caps itself between its minimum and maximum inline size.
-  width: max-content;
+  inline-size: var(--dropdown-positioner-inline-size, max-content);
 
   &:focus-visible {
     outline: var(--dropdown-positioner-focus-visible-outline, none);
@@ -99,6 +101,11 @@
   overflow-x: var(--dropdown-viewport-overflow-x, hidden);
   overscroll-behavior: var(--dropdown-viewport-overscroll-behavior, contain);
   scrollbar-width: var(--dropdown-viewport-scrollbar-width, thin);
+  // A row the keyboard reaches scrolls in clear of the fade, not under it.
+  scroll-padding-block: var(
+    --dropdown-viewport-scroll-padding-block,
+    var(--dropdown-scroll-fade-size, var(--spacing-10))
+  );
 
   // `mask-image` rather than a gradient overlay, so the row fades instead of being covered. A mask
   // reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
@@ -137,7 +144,7 @@
 
   padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
-  border-radius: var(--dropdown-item-border-radius, var(--radius-1));
+  border-radius: var(--dropdown-item-border-radius, 0);
   background-color: var(--dropdown-internal-item-background);
   color: var(--dropdown-internal-item-label);
 
@@ -165,8 +172,9 @@
 
   // Inset: the popup clips its overflow, so an outset ring on the first or last row gets cut.
   &:focus-visible {
-    outline: var(--dropdown-focus-outline-width, 1px) solid
-      var(--dropdown-internal-item-focus-ring);
+    outline-width: var(--dropdown-focus-outline-width, 1px);
+    outline-style: var(--dropdown-focus-outline-style, solid);
+    outline-color: var(--dropdown-internal-item-focus-ring);
     outline-offset: var(--dropdown-focus-outline-offset, -1px);
   }
 
@@ -235,13 +243,14 @@
   display: var(--dropdown-item-control-display, inline-flex);
   align-items: var(--dropdown-item-control-align-items, center);
   justify-content: var(--dropdown-item-control-justify-content, center);
-  box-sizing: border-box;
+  box-sizing: var(--dropdown-item-control-box-sizing, border-box);
 
   inline-size: var(--dropdown-item-control-size, 16px);
   block-size: var(--dropdown-item-control-size, 16px);
 
-  border: var(--dropdown-item-control-border-width, 2px) solid
-    var(--dropdown-internal-item-control-border);
+  border-width: var(--dropdown-item-control-border-width, 2px);
+  border-style: var(--dropdown-item-control-border-style, solid);
+  border-color: var(--dropdown-internal-item-control-border);
   background-color: var(--dropdown-item-control-background, transparent);
 
   transition: var(
@@ -339,7 +348,7 @@
 
 .dropdown__separator {
   block-size: var(--dropdown-separator-thickness, 1px);
-  margin-block: var(--dropdown-separator-margin-block, var(--spacing-2));
+  margin-block: var(--dropdown-separator-margin-block, 0);
   margin-inline: var(--dropdown-separator-margin-inline, 0);
 
   background-color: var(--dropdown-internal-separator);
@@ -353,8 +362,9 @@
 
   padding: var(--dropdown-search-padding, var(--spacing-5) var(--spacing-6));
 
-  border-block-end: var(--dropdown-search-border-width, 1px) solid
-    var(--dropdown-internal-search-border);
+  border-block-end-width: var(--dropdown-search-border-width, 1px);
+  border-block-end-style: var(--dropdown-search-border-style, solid);
+  border-block-end-color: var(--dropdown-internal-search-border);
 }
 
 .dropdown__search-affix {

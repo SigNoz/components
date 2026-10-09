@@ -228,7 +228,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{}}
+				searchInputProps={{ placeholder: 'Search' }}
 				items={[{ type: 'item', value: 'rename', label: 'Rename' }]}
 			>
 				<button type="button">Actions</button>
@@ -251,7 +251,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{ filter: false, onChange }}
+				searchInputProps={{ filter: false, onChange, placeholder: 'Search' }}
 				items={[
 					{ type: 'item', value: 'rename', label: 'Rename' },
 					{ type: 'item', value: 'delete', label: 'Delete' },
@@ -275,7 +275,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{}}
+				searchInputProps={{ placeholder: 'Search' }}
 				items={[
 					{
 						type: 'group',
@@ -309,7 +309,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{}}
+				searchInputProps={{ placeholder: 'Search' }}
 				items={[
 					{
 						type: 'submenu',
@@ -448,7 +448,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{}}
+				searchInputProps={{ placeholder: 'Search' }}
 				items={[
 					{ type: 'checkbox', name: 'pinned', label: 'Pinned', defaultValue: false },
 					{
@@ -493,7 +493,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{ filter: false, onChange }}
+				searchInputProps={{ filter: false, onChange, placeholder: 'Search' }}
 				items={[{ type: 'item', value: 'alpha', label: 'Alpha' }]}
 			>
 				<button type="button">Actions</button>
@@ -518,7 +518,7 @@ describe('Dropdown interaction', () => {
 				side="bottom"
 				align="start"
 				testId="menu"
-				searchInputProps={{}}
+				searchInputProps={{ placeholder: 'Search' }}
 				items={[
 					{ type: 'item', value: 'delete', label: <>Delete {count} rows</> },
 					{ type: 'item', value: 'rename', label: 'Rename' },

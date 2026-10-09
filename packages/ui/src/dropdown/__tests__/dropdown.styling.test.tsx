@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType, DropdownProps } from '../types.js';
@@ -75,6 +76,67 @@ describe('Dropdown styling', () => {
 		expect(mask).not.toContain('0.6)');
 	});
 
+	it('moves the fades to the edges that clip rows as the list scrolls', async () => {
+		renderDropdown(
+			Array.from({ length: 20 }, (_, index) => ({
+				type: 'item' as const,
+				value: `row-${index}`,
+				label: `Row ${index}`,
+			})),
+			{ contentMaxHeight: 120 },
+		);
+		const popup = await openDropdown();
+		const viewport = popup.querySelector<HTMLElement>(
+			'[data-slot="dropdown-viewport"]',
+		) as HTMLElement;
+
+		await waitFor(() => {
+			expect(viewport).toHaveAttribute('data-scroll-end');
+		});
+		expect(viewport).not.toHaveAttribute('data-scroll-start');
+
+		viewport.scrollTop = 40;
+		await waitFor(() => {
+			expect(viewport).toHaveAttribute('data-scroll-start');
+		});
+		expect(viewport).toHaveAttribute('data-scroll-end');
+
+		viewport.scrollTop = viewport.scrollHeight;
+		await waitFor(() => {
+			expect(viewport).not.toHaveAttribute('data-scroll-end');
+		});
+		expect(viewport).toHaveAttribute('data-scroll-start');
+	});
+
+	it('scrolls the row the keyboard reaches clear of the bottom fade', async () => {
+		renderDropdown(
+			Array.from({ length: 20 }, (_, index) => ({
+				type: 'item' as const,
+				value: `row-${index}`,
+				label: `Row ${index}`,
+			})),
+			{ contentMaxHeight: 120 },
+		);
+		const popup = await openDropdown();
+		const viewport = popup.querySelector<HTMLElement>(
+			'[data-slot="dropdown-viewport"]',
+		) as HTMLElement;
+
+		// Past the rows that fit, so every step scrolls.
+		for (let step = 0; step < 8; step += 1) {
+			await userEvent.keyboard('{ArrowDown}');
+		}
+
+		const row = popup.querySelector('[data-slot="dropdown-item"][data-highlighted]') as HTMLElement;
+
+		// Guards the subject: a row that fits from the start needs no scroll at all.
+		expect(row).toHaveTextContent('Row 7');
+		expect(viewport).toHaveAttribute('data-scroll-end');
+		expect(
+			viewport.getBoundingClientRect().bottom - row.getBoundingClientRect().bottom,
+		).toBeGreaterThanOrEqual(20);
+	});
+
 	it('draws the checkbox tick at its own size, not the icon size', async () => {
 		renderDropdown([{ type: 'checkbox', name: 'pinned', label: 'Pinned', defaultValue: true }]);
 		await openDropdown();
@@ -135,6 +197,28 @@ describe('Dropdown row size', () => {
 		expect(screen.getByRole('menuitem', { name: 'Rename' }).getBoundingClientRect().height).toBe(
 			40,
 		);
+	});
+
+	it('starts the rows at the popup edge and spaces a separator by the row gap', async () => {
+		renderDropdown([
+			{ type: 'item', value: 'rename', label: 'Rename' },
+			{ type: 'item', value: 'copy', label: 'Copy' },
+			{ type: 'separator', value: 'danger' },
+			{ type: 'item', value: 'delete', label: 'Delete' },
+		]);
+		const popup = (await openDropdown()).getBoundingClientRect();
+
+		const rename = screen.getByRole('menuitem', { name: 'Rename' }).getBoundingClientRect();
+		const copy = screen.getByRole('menuitem', { name: 'Copy' }).getBoundingClientRect();
+		const separator = screen.getByRole('separator').getBoundingClientRect();
+		const remove = screen.getByRole('menuitem', { name: 'Delete' }).getBoundingClientRect();
+
+		// The popup's 1px border is the only thing above the first row and below the last.
+		expect(rename.top - popup.top).toBe(1);
+		expect(popup.bottom - remove.bottom).toBe(1);
+		expect(copy.top - rename.bottom).toBe(4);
+		expect(separator.top - copy.bottom).toBe(4);
+		expect(remove.top - separator.bottom).toBe(4);
 	});
 
 	// The search row's height is not settled by the rows, so a row line height leaves it alone.
