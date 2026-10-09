@@ -1,10 +1,5 @@
-import { forwardRef, useSyncExternalStore } from 'react';
-import {
-	isDismissed,
-	isDismissedOnServer,
-	saveDismissal,
-	subscribeToDismissals,
-} from '../dismissal-store.js';
+import { forwardRef } from 'react';
+import { saveDismissal, useDismissed } from '../../lib/dismissal-store.js';
 import { CalloutCloseable, type CalloutCloseableProps } from './callout-closeable.js';
 
 export type CalloutCloseablePersistedProps = Omit<CalloutCloseableProps, 'closed' | 'onClose'> & {
@@ -47,11 +42,7 @@ export type CalloutCloseablePersistedProps = Omit<CalloutCloseableProps, 'closed
  */
 export const CalloutCloseablePersisted = forwardRef<HTMLDivElement, CalloutCloseablePersistedProps>(
 	function CalloutCloseablePersisted({ storageKey, onClose, ...props }, ref) {
-		const closed = useSyncExternalStore(
-			subscribeToDismissals,
-			() => isDismissed(storageKey),
-			isDismissedOnServer,
-		);
+		const closed = useDismissed(storageKey);
 
 		return (
 			<CalloutCloseable

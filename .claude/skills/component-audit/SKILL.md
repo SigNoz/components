@@ -142,7 +142,7 @@ return results.filter(Boolean)
 
 ```js
 const components = [
-  'alert-dialog', 'announcement-banner', 'avatar', 'badge', 'breadcrumb',
+  'alert-dialog', 'alert-strip', 'avatar', 'badge', 'breadcrumb',
   'button', 'calendar', 'callout', 'checkbox', 'combobox', 'command',
   'date-picker', 'dialog', 'divider', 'drawer', 'dropdown-menu', 'input',
   'input-number', 'kbd', 'pagination', 'pin-list', 'popover', 'progress',

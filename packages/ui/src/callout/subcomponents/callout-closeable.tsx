@@ -1,9 +1,9 @@
 import { X } from '@signozhq/icons';
 import { forwardRef, type RefObject } from 'react';
+import { closeAndMoveFocus } from '../../lib/close-and-move-focus.js';
 import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import styles from '../callout.module.scss';
 import type { CalloutProps } from '../types.js';
-import { closeAndMoveFocus } from '../utils.js';
 import { CalloutFrame } from './callout-frame.js';
 
 export type CalloutCloseableProps = CalloutProps & {
@@ -100,7 +100,13 @@ export const CalloutCloseable = forwardRef<HTMLDivElement, CalloutCloseableProps
 						data-slot="callout-close"
 						className={styles['callout__button']}
 						aria-label={closeAriaLabel}
-						onClick={(event) => closeAndMoveFocus(event.currentTarget, onClose, finalFocus)}
+						onClick={(event) =>
+							closeAndMoveFocus(
+								event.currentTarget.closest<HTMLElement>('[data-slot="callout"]'),
+								onClose,
+								finalFocus,
+							)
+						}
 						data-testid={partTestId(testId, 'close')}
 					>
 						<X aria-hidden="true" />
