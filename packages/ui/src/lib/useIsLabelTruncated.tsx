@@ -11,15 +11,12 @@ function isLabelTruncated(label: HTMLElement): boolean {
 
 export function useIsLabelTruncated(enabled: boolean): [boolean, RefCallback<HTMLSpanElement>] {
 	const [truncated, setTruncated] = useState(false);
-	const observers = useRef<Array<MutationObserver | ResizeObserver>>([]);
+	const stopMeasuring = useRef<(() => void) | null>(null);
 
 	const labelRef = useCallback(
 		(node: HTMLSpanElement | null): void => {
-			for (const observer of observers.current) {
-				observer.disconnect();
-			}
-
-			observers.current = [];
+			stopMeasuring.current?.();
+			stopMeasuring.current = null;
 
 			if (
 				!node ||
@@ -38,7 +35,14 @@ export function useIsLabelTruncated(enabled: boolean): [boolean, RefCallback<HTM
 			const mutationObserver = new MutationObserver(measure);
 			mutationObserver.observe(node, { characterData: true, childList: true, subtree: true });
 
-			observers.current = [resizeObserver, mutationObserver];
+			const { fonts } = node.ownerDocument;
+			fonts?.addEventListener('loadingdone', measure);
+
+			stopMeasuring.current = (): void => {
+				resizeObserver.disconnect();
+				mutationObserver.disconnect();
+				fonts?.removeEventListener('loadingdone', measure);
+			};
 		},
 		[enabled],
 	);
