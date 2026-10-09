@@ -16,13 +16,13 @@ Start here, then follow the doc for what you're doing.
 ```sh
 git clone git@github.com:SigNoz/components.git
 pnpm install
-pnpm build     # packages/ui must be built before Storybook can import it
 pnpm dev       # Storybook on http://localhost:6006
 ```
 
-Stories import `@signozhq/ui` as a built package, so a fresh clone needs `pnpm build` before
-`pnpm dev`. After that `pnpm dev` covers both: it runs Storybook *and* `vite build --watch` on
-`packages/ui`, so component edits rebuild and reload.
+`storybook dev` imports `@signozhq/ui` from `packages/ui/src` (alias in `apps/docs/vite.config.ts`),
+so component edits hot-reload and a fresh clone needs no build first. `storybook build` (what
+Chromatic uploads) and the story tests import the built `dist`, which the `vite build --watch` in
+`pnpm dev` keeps fresh.
 
 ## Useful commands
 
@@ -33,7 +33,7 @@ Stories import `@signozhq/ui` as a built package, so a fresh clone needs `pnpm b
 | `pnpm lint` / `pnpm lint:fix` | Lint `apps` + `packages` with `oxlint` | Runs in CI. Config `.oxlintrc.json`. `typescript/consistent-type-imports` is an error, so write `import type` |
 | `pnpm format` / `pnpm format:check` | Format with `oxfmt` | `.oxfmtrc.json`: tabs, width 100, single quotes, trailing commas. **Skips styles, markdown and YAML** (`ignorePatterns`), your editor formats those |
 | `pnpm run type-check` | `tsgo --noEmit` over the whole repo | Runs in CI and in `lint-staged` |
-| `pnpm -F @signozhq/ui test:run` | Unit + guardrail tests (jsdom, vitest) | |
+| `pnpm -F @signozhq/ui test:run` | Component tests in Chromium, guardrail and type tests in Node (vitest) | |
 | `cd apps/docs && pnpm test-storybook` | Story render + interaction tests in real Chromium | This is what CI runs |
 | `pnpm -F @signozhq/ui tokens` | Regenerate the CSS token JSDoc tables in component `index.ts` files | Run after touching any `--{component}-*` variable |
 | `pnpm -F @signozhq/ui tokens:check` | Fail if the token tables are stale | Same check as `lint-staged` and CI |
