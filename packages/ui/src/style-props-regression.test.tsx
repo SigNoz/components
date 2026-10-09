@@ -11,6 +11,7 @@ import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
 import { Progress } from './progress/progress.js';
 import { RadioGroup } from './radio-group/radio-group.js';
+import { Select } from './select/index.js';
 import { Switch } from './switch/switch.js';
 import { ForceOpenProvider } from './testing/index.js';
 import { ToggleGroup } from './toggle-group/index.js';
@@ -177,6 +178,21 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('combobox'));
 		expectNoStrayStyle(document.querySelector('[data-slot="combobox"]'));
+	});
+
+	it('do not reach Select', () => {
+		render(
+			<Select
+				placeholder="Select a framework..."
+				aria-label="Framework"
+				items={[{ type: 'item', value: 'react', label: 'React' }]}
+				testId="select"
+				{...STRAY}
+			/>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('select'));
+		expectNoStrayStyle(document.querySelector('[data-slot="select"]'));
 	});
 
 	it('do not reach Progress', () => {

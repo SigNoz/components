@@ -1,357 +1,536 @@
+.select {
+  --select-internal-trigger-background: var(--select-trigger-background-color, var(--select-trigger-background));
+  --select-internal-trigger-border: var(--select-trigger-border-color, var(--select-trigger-border));
+  --select-internal-trigger-border-hover: var(--select-trigger-hover-border-color, var(--select-trigger-border-hover));
+  --select-internal-trigger-focus-ring: var(--select-trigger-focus-ring-color, var(--select-trigger-focus-ring));
+  --select-internal-trigger-label: var(--select-trigger-color, var(--select-trigger-label));
+  --select-internal-trigger-label-disabled: var(--select-trigger-disabled-color, var(--select-trigger-label-disabled));
+  --select-internal-trigger-placeholder: var(--select-placeholder-color, var(--select-trigger-placeholder));
+  --select-internal-trigger-icon: var(--select-icon-color, var(--select-trigger-icon));
+  --select-internal-chip-background: var(--select-chip-background-color, var(--select-chip-background));
+  --select-internal-chip-label: var(--select-chip-color, var(--select-chip-label));
+  --select-internal-chip-remove-icon: var(--select-chip-remove-color, var(--select-chip-remove-icon));
+  --select-internal-chip-remove-icon-hover: var(--select-chip-remove-hover-color, var(--select-chip-remove-icon-hover));
+  --select-internal-chip-block-size: var(--select-chip-block-size, 1.25rem);
+  // The space a 2rem trigger leaves above and below one row of chips. A trigger with chips keeps it
+  // on the inline start too, so the chips sit as far from the left edge as from the top one.
+  --select-internal-chips-inset: var(--select-trigger-chips-inset, 5px);
+
+  position: var(--select-position, relative);
+  display: var(--select-display, flex);
+  box-sizing: var(--select-box-sizing, border-box);
+  inline-size: var(--select-width, var(--select-internal-width, 100%));
+  max-inline-size: var(--select-max-width, var(--select-internal-max-width, 100%));
+}
+
 .select__trigger {
-	display: var(--select-trigger-display, flex);
-	height: var(--select-trigger-height, 2.25rem);
-	width: var(--select-trigger-width, 100%);
-	align-items: var(--select-trigger-align-items, center);
-	justify-content: var(--select-trigger-justify-content, space-between);
-	white-space: var(--select-trigger-white-space, nowrap);
-	border-radius: var(--select-trigger-border-radius, calc(var(--radius) - 2px));
-	border-width: var(--select-trigger-border-width, 1px);
-	border-style: var(--select-trigger-border-style, solid);
-	border-color: var(--select-trigger-border-color, var(--input, var(--border)));
-	background-color: var(--select-trigger-background-color, transparent);
-	padding: var(--select-trigger-padding, var(--spacing-4, 0.5rem) var(--spacing-6, 0.75rem));
-	font-size: var(--select-trigger-font-size, var(--periscope-font-size-base, 13px));
-	line-height: var(--select-trigger-line-height, 1.25rem);
-	box-shadow: var(--select-trigger-box-shadow, 0 1px 2px 0 rgb(0 0 0 / 0.05));
-	cursor: var(--select-trigger-cursor, pointer);
-	gap: var(--select-trigger-gap, var(--spacing-2, 0.25rem));
+  display: var(--select-trigger-display, flex);
+  align-items: var(--select-trigger-align-items, center);
+  gap: var(--select-trigger-gap, var(--spacing-4));
+  flex-grow: var(--select-trigger-flex-grow, 1);
+  box-sizing: var(--select-trigger-box-sizing, border-box);
+  min-inline-size: var(--select-trigger-min-inline-size, 0);
+  // A multiple trigger grows when its chips wrap, so the height is a floor.
+  min-block-size: var(--select-trigger-min-block-size, 2rem);
+  margin: var(--select-trigger-margin, 0);
 
-	&:focus-visible {
-		outline: var(--select-trigger-outline-width, 2px) solid
-			var(--select-trigger-outline-color, var(--ring));
-		outline-offset: var(--select-trigger-outline-offset, 2px);
-	}
+  padding-block: var(--select-trigger-padding-block, var(--spacing-2));
+  padding-inline-start: var(--select-trigger-padding-inline-start, var(--spacing-6));
+  padding-inline-end: var(--select-trigger-padding-inline-end, var(--spacing-4));
 
-	&:disabled,
-	&[data-disabled] {
-		cursor: var(--select-trigger-disabled-cursor, not-allowed);
-		opacity: var(--select-trigger-disabled-opacity, 0.5);
-	}
+  border-width: var(--select-trigger-border-width, 1px);
+  border-style: var(--select-trigger-border-style, solid);
+  border-color: var(--select-internal-trigger-border);
+  border-radius: var(--select-trigger-border-radius, var(--radius-1));
+  background-color: var(--select-internal-trigger-background);
+  color: var(--select-internal-trigger-label);
 
-	&[data-placeholder] {
-		color: var(--select-trigger-placeholder-color, var(--muted-foreground));
-	}
+  font-family: var(--select-trigger-font-family, inherit);
+  font-size: var(--select-trigger-font-size, var(--periscope-font-size-base));
+  font-weight: var(--select-trigger-font-weight, var(--font-weight-normal));
+  line-height: var(--select-trigger-line-height, var(--line-height-18));
+  text-align: var(--select-trigger-text-align, start);
+
+  cursor: var(--select-trigger-cursor, pointer);
+
+  transition-property: var(--select-trigger-transition-property, border-color);
+  transition-duration: var(--select-trigger-transition-duration, 150ms);
+  transition-timing-function: var(--select-trigger-transition-timing-function, ease);
+
+  &:focus-visible {
+    outline-width: var(--select-trigger-focus-outline-width, 1px);
+    outline-style: var(--select-trigger-focus-outline-style, solid);
+    outline-color: var(--select-internal-trigger-focus-ring);
+    outline-offset: var(--select-trigger-focus-outline-offset, 1px);
+  }
+
+  // Re-points both pairs, so the hover and open rules keep the colour too.
+  &[aria-invalid='true'] {
+    --select-internal-trigger-border: var(--select-trigger-invalid-border-color, var(--destructive));
+    --select-internal-trigger-border-hover: var(--select-trigger-invalid-border-color, var(--destructive));
+  }
+
+  &[data-popup-open] {
+    border-color: var(--select-internal-trigger-border-hover);
+  }
+
+  // Never the native `disabled`: it drops pointer events and breaks the reason tooltip.
+  &[aria-disabled='true'] {
+    color: var(--select-internal-trigger-label-disabled);
+    cursor: var(--select-trigger-disabled-cursor, not-allowed);
+  }
+
+  // Faded like the other read-only controls, and keeps its colours: the value is still there to read.
+  &[aria-readonly='true']:not([aria-disabled='true']) {
+    opacity: var(--select-trigger-readonly-opacity, 0.8);
+    cursor: var(--select-trigger-readonly-cursor, not-allowed);
+  }
+
+  // Grows a row at a time as the chips wrap. The icon stays on the first row, not in the middle.
+  &:has(> .select__chips) {
+    align-items: var(--select-trigger-chips-align-items, flex-start);
+    padding-block: var(--select-internal-chips-inset);
+    padding-inline-start: var(--select-internal-chips-inset);
+  }
 }
 
-.select__trigger-value {
-	display: var(--select-trigger-value-display, flex);
-	align-items: var(--select-trigger-value-align-items, center);
-	gap: var(--select-trigger-value-gap, var(--spacing-4, 0.5rem));
-	font-size: var(--select-trigger-value-font-size, var(--periscope-font-size-base, 13px));
-	line-height: var(--select-trigger-value-line-height, 1.25rem);
-	overflow: var(--select-trigger-value-overflow, hidden);
-	flex: var(--select-trigger-value-flex, 1);
-	min-width: var(--select-trigger-value-min-width, 0);
-
-	// Style Radix's inner span wrapper for proper inline layout
-	& > span {
-		display: var(--select-trigger-value-inner-display, inline-flex);
-		align-items: var(--select-trigger-value-inner-align-items, center);
-		gap: var(--select-trigger-value-inner-gap, var(--spacing-2, 0.25rem));
-	}
-
-	& svg {
-		height: var(--select-trigger-value-icon-size, 1rem);
-		width: var(--select-trigger-value-icon-size, 1rem);
-		flex-shrink: var(--select-trigger-value-icon-flex-shrink, 0);
-	}
+.select:hover > .select__trigger:not([aria-disabled='true'], [aria-readonly='true']) {
+  border-color: var(--select-internal-trigger-border-hover);
 }
 
-.select__trigger-icon {
-	height: var(--select-trigger-icon-size, 1rem);
-	width: var(--select-trigger-icon-size, 1rem);
-	opacity: var(--select-trigger-icon-opacity, 0.5);
-	flex-shrink: var(--select-trigger-icon-flex-shrink, 0);
+.select__value,
+.select__placeholder {
+  flex-grow: var(--select-value-flex-grow, 1);
+  min-inline-size: var(--select-value-min-inline-size, 0);
+
+  overflow: var(--select-value-overflow, hidden);
+  white-space: var(--select-value-white-space, nowrap);
+  text-overflow: var(--select-value-text-overflow, ellipsis);
 }
 
-@keyframes select-spin {
-	from {
-		transform: rotate(0deg);
-	}
+// Its own flex item, so the trigger centres it whatever it holds. Inside the value it would be an
+// inline box on the text baseline, above centre.
+.select__value-prefix {
+  display: var(--select-value-prefix-display, inline-grid);
+  align-items: var(--select-value-prefix-align-items, center);
+  justify-content: var(--select-value-prefix-justify-content, center);
+  flex-shrink: var(--select-value-prefix-flex-shrink, 0);
 
-	to {
-		transform: rotate(360deg);
-	}
+  & svg:not([class*='size-']) {
+    inline-size: var(--select-value-prefix-size, 14px);
+    block-size: var(--select-value-prefix-size, 14px);
+  }
 }
 
-.select__trigger-spinner {
-	height: var(--select-trigger-icon-size, 1rem);
-	width: var(--select-trigger-icon-size, 1rem);
-	opacity: var(--select-trigger-icon-opacity, 0.5);
-	flex-shrink: var(--select-trigger-icon-flex-shrink, 0);
-	animation: select-spin 1s linear infinite;
+.select__placeholder {
+  color: var(--select-internal-trigger-placeholder);
+
+  [aria-disabled='true'] > & {
+    color: var(--select-internal-trigger-label-disabled);
+  }
 }
 
-.select__loading {
-	display: var(--select-loading-display, flex);
-	align-items: var(--select-loading-align-items, center);
-	justify-content: var(--select-loading-justify-content, center);
-	gap: var(--select-loading-gap, 0.5rem);
-	padding: var(--select-loading-padding, 0.75rem 0.5rem);
-	color: var(--select-loading-color, var(--muted-foreground));
-	font-size: var(--select-loading-font-size, var(--periscope-font-size-base, 13px));
+.select__icon {
+  display: var(--select-icon-display, inline-flex);
+  align-items: var(--select-icon-align-items, center);
+  justify-content: var(--select-icon-justify-content, center);
+  flex-shrink: var(--select-icon-flex-shrink, 0);
+
+  color: var(--select-internal-trigger-icon);
+
+  & svg {
+    inline-size: var(--select-icon-size, 14px);
+    block-size: var(--select-icon-size, 14px);
+  }
+
+  // One chip row tall, so it centres on the first row of chips.
+  .select__trigger:has(> .select__chips) > & {
+    block-size: var(--select-icon-chips-block-size, var(--select-internal-chip-block-size));
+  }
+
+  // The chevron offers a popup a read-only select never opens. Hidden, not removed, so toggling
+  // `readOnly` does not move the value. The spinner stays.
+  .select[data-readonly]:not([data-disabled], [data-loading]) & {
+    visibility: var(--select-icon-readonly-visibility, hidden);
+  }
 }
 
-.select__loading-spinner {
-	width: var(--select-loading-spinner-size, 1rem);
-	height: var(--select-loading-spinner-size, 1rem);
-	animation: select-spin 1s linear infinite;
+.select__chips {
+  display: var(--select-chips-display, flex);
+  flex-wrap: var(--select-chips-flex-wrap, wrap);
+  align-items: var(--select-chips-align-items, center);
+  gap: var(--select-chips-gap, var(--spacing-2));
+  flex-grow: var(--select-chips-flex-grow, 1);
+  min-inline-size: var(--select-chips-min-inline-size, 0);
 }
 
-.select__pills {
-	display: var(--select-pills-display, flex);
-	flex-wrap: var(--select-pills-flex-wrap, wrap);
-	gap: var(--select-pill-gap, 0.25rem);
-	overflow: var(--select-pills-overflow, hidden);
+.select__chip {
+  display: var(--select-chip-display, inline-flex);
+  align-items: var(--select-chip-align-items, center);
+  gap: var(--select-chip-gap, var(--spacing-1));
+  box-sizing: var(--select-chip-box-sizing, border-box);
+  block-size: var(--select-internal-chip-block-size);
+  min-inline-size: var(--select-chip-min-inline-size, 0);
+  padding-inline: var(--select-chip-padding-inline, var(--spacing-3));
+
+  border-radius: var(--select-chip-border-radius, var(--radius-1));
+  background-color: var(--select-internal-chip-background);
+  color: var(--select-internal-chip-label);
+
+  font-size: var(--select-chip-font-size, var(--periscope-font-size-small));
+  line-height: var(--select-chip-line-height, var(--line-height-18));
+  white-space: var(--select-chip-white-space, nowrap);
 }
 
-.select__pill {
-	display: var(--select-pill-display, inline-flex);
-	align-items: var(--select-pill-align-items, center);
-	gap: var(--select-pill-inner-gap, 0.125rem);
-	height: var(--select-pill-height, 1.25rem);
-	padding: var(--select-pill-padding, 0 0.375rem);
-	border-radius: var(--select-pill-border-radius, var(--radius-1, 2px));
-	background-color: var(--select-pill-background, var(--accent));
-	color: var(--select-pill-color, var(--accent-foreground));
-	// The input's own 13px, on an 18px line box: a unitless 1 would clip descenders at the text's
-	// `overflow: hidden`.
-	font-size: var(--select-pill-font-size, var(--periscope-font-size-base));
-	line-height: var(--select-pill-line-height, var(--line-height-18));
+.select__chip-label {
+  max-inline-size: var(--select-chip-label-max-inline-size, 8rem);
+
+  overflow: var(--select-chip-label-overflow, hidden);
+  text-overflow: var(--select-chip-label-text-overflow, ellipsis);
 }
 
-.select__pill-text {
-	max-width: var(--select-pill-text-max-width, 8rem);
-	overflow: var(--select-pill-text-overflow, hidden);
-	text-overflow: var(--select-pill-text-overflow-style, ellipsis);
-	white-space: var(--select-pill-text-white-space, nowrap);
+.select__chip-remove {
+  display: var(--select-chip-remove-display, inline-flex);
+  align-items: var(--select-chip-remove-align-items, center);
+  justify-content: var(--select-chip-remove-justify-content, center);
+  flex-shrink: var(--select-chip-remove-flex-shrink, 0);
+  margin: var(--select-chip-remove-margin, 0);
+  padding: var(--select-chip-remove-padding, 0);
+
+  border: var(--select-chip-remove-border, none);
+  background-color: var(--select-chip-remove-background-color, transparent);
+  color: var(--select-internal-chip-remove-icon);
+
+  cursor: var(--select-chip-remove-cursor, pointer);
+
+  & svg {
+    inline-size: var(--select-chip-remove-icon-size, 10px);
+    block-size: var(--select-chip-remove-icon-size, 10px);
+  }
+
+  &:hover {
+    color: var(--select-internal-chip-remove-icon-hover);
+  }
 }
 
-.select__pill-remove {
-	display: var(--select-pill-remove-display, flex);
-	align-items: var(--select-pill-remove-align-items, center);
-	justify-content: var(--select-pill-remove-justify-content, center);
-	width: var(--select-pill-remove-size, 0.875rem);
-	height: var(--select-pill-remove-size, 0.875rem);
-	padding: var(--select-pill-remove-padding, 0);
-	border: var(--select-pill-remove-border, none);
-	background: var(--select-pill-remove-background, transparent);
-	color: var(--select-pill-remove-color, inherit);
-	cursor: var(--select-pill-remove-cursor, pointer);
-	border-radius: var(--select-pill-remove-border-radius, 2px);
-	opacity: var(--select-pill-remove-opacity, 0.7);
-	transition: var(--select-pill-remove-transition, opacity 150ms);
+.select__positioner {
+  // Base UI positions but does not stack.
+  z-index: var(--select-z-index, 50);
+  // A modal drawer or dialog sets `pointer-events: none` on the body. A popup portalled into a
+  // `container` outside the panel would have no row that can be clicked.
+  pointer-events: var(--select-positioner-pointer-events, auto);
+  // Base UI places the positioner with `left`, so its width would otherwise shrink to what is left
+  // of the containing block. Inside a dialog that is a zero-size layer.
+  inline-size: var(--select-positioner-inline-size, max-content);
 
-	&:hover {
-		opacity: var(--select-pill-remove-hover-opacity, 1);
-		background-color: var(--select-pill-remove-hover-background, rgb(0 0 0 / 0.1));
-	}
-
-	& svg {
-		width: var(--select-pill-remove-icon-size, 0.625rem);
-		height: var(--select-pill-remove-icon-size, 0.625rem);
-	}
+  &:focus-visible {
+    outline: var(--select-positioner-focus-visible-outline, none);
+  }
 }
 
-.select__pill-overflow {
-	display: var(--select-pill-overflow-display, inline-flex);
-	align-items: var(--select-pill-overflow-align-items, center);
-	justify-content: var(--select-pill-overflow-justify-content, center);
-	height: var(--select-pill-height, 1.25rem);
-	padding: var(--select-pill-overflow-padding, 0 0.5rem);
-	border-radius: var(--select-pill-border-radius, var(--radius-1, 2px));
-	background-color: var(--select-pill-overflow-background, var(--muted));
-	color: var(--select-pill-overflow-color, var(--muted-foreground));
-	// Same size as the pills beside it, from the same token.
-	font-size: var(--select-pill-font-size, var(--periscope-font-size-base));
-	font-weight: var(--select-pill-overflow-font-weight, 500);
-	line-height: var(--select-pill-overflow-line-height, 1);
-	flex-shrink: var(--select-pill-overflow-flex-shrink, 0);
+// Portalled out of `.select`, so it declares its own colour pairs.
+.select__popup {
+  --select-internal-background: var(--select-popup-background-color, var(--select-background));
+  --select-internal-border: var(--select-popup-border-color, var(--select-border));
+  --select-internal-shadow: var(--select-popup-box-shadow, var(--select-shadow));
+  --select-internal-item-label: var(--select-item-color, var(--select-item-label));
+  --select-internal-item-label-hover: var(--select-item-highlighted-color, var(--select-item-label-hover));
+  --select-internal-item-label-disabled: var(--select-item-disabled-color, var(--select-item-label-disabled));
+  --select-internal-item-background: var(--select-item-background-color, var(--select-item-background));
+  --select-internal-item-background-hover: var(--select-item-highlighted-background-color, var(--select-item-background-hover));
+  --select-internal-item-icon: var(--select-item-icon-color, var(--select-item-icon));
+  --select-internal-item-icon-hover: var(--select-item-highlighted-icon-color, var(--select-item-icon-hover));
+  --select-internal-item-indicator: var(--select-item-indicator-color, var(--select-item-indicator));
+  --select-internal-item-control-border: var(--select-item-control-border-color, var(--select-item-control-border));
+  --select-internal-item-control-border-hover: var(--select-item-control-highlighted-border-color, var(--select-item-control-border-hover));
+  --select-internal-item-control-checked-background: var(--select-item-control-selected-background-color, var(--select-item-control-checked-background));
+  --select-internal-item-control-checked-foreground: var(--select-item-control-selected-color, var(--select-item-control-checked-foreground));
+  --select-internal-group-label: var(--select-group-label-color, var(--select-group-label));
+  --select-internal-separator: var(--select-separator-background-color, var(--select-separator));
+  --select-internal-loading-label: var(--select-loading-color, var(--select-loading-label));
+  --select-internal-empty-label: var(--select-empty-color, var(--select-empty-label));
+
+  // The `contentMaxWidth` prop arrives as the internal pair, so a token still outranks a call site.
+  --select-internal-resolved-max-inline-size: var(
+    --select-popup-max-inline-size,
+    var(--select-internal-max-inline-size, 15.75rem)
+  );
+
+  display: var(--select-popup-display, flex);
+  flex-direction: var(--select-popup-flex-direction, column);
+  box-sizing: var(--select-popup-box-sizing, border-box);
+
+  // Never narrower than the trigger (`--anchor-width` comes from Base UI). A min-width wins over a
+  // max-width, so a trigger wider than the maximum widens the popup to match.
+  min-inline-size: max(
+    min(var(--select-popup-min-inline-size, 12rem), var(--select-internal-resolved-max-inline-size)),
+    var(--anchor-width, 0px)
+  );
+  max-inline-size: max(var(--select-internal-resolved-max-inline-size), var(--anchor-width, 0px));
+  // `--available-height` comes from Base UI and keeps the popup inside the viewport.
+  max-block-size: var(--select-popup-max-block-size, var(--available-height, none));
+
+  padding-block: var(--select-popup-padding-block, 0);
+  padding-inline: var(--select-popup-padding-inline, 0);
+
+  border-width: var(--select-popup-border-width, 1px);
+  border-style: var(--select-popup-border-style, solid);
+  border-color: var(--select-internal-border);
+  border-radius: var(--select-popup-border-radius, var(--radius-2));
+  background-color: var(--select-internal-background);
+  box-shadow: var(--select-internal-shadow);
+
+  // `--surface-3` is translucent in dark mode. Without the blur the page shows through the popup.
+  backdrop-filter: var(--select-popup-backdrop-filter, blur(40px));
+
+  // Keeps a row's hover fill inside the radius.
+  overflow: var(--select-popup-overflow, hidden);
+
+  &:focus-visible {
+    outline: var(--select-popup-focus-visible-outline, none);
+  }
 }
 
-.select__content {
-	--radix-select-content-available-width: var(--radix-select-trigger-width);
-	--radix-select-content-available-height: var(--radix-select-trigger-height);
-	position: var(--select-content-position, relative);
-	min-width: var(--select-content-min-width, 8rem);
-	max-height: var(--select-content-max-height, 20rem);
-	overflow: var(--select-content-overflow, hidden);
-	border-radius: var(--select-content-border-radius, var(--radius-1, 2px));
-	border-width: var(--select-content-border-width, 1px);
-	border-style: var(--select-content-border-style, solid);
-	border-color: var(--select-content-border-color, var(--border));
-	background-color: var(--select-content-background, var(--popover));
-	color: var(--select-content-color, var(--popover-foreground));
-	box-shadow: var(
-		--select-content-box-shadow,
-		0 4px 6px -1px rgb(0 0 0 / 0.1),
-		0 2px 4px -2px rgb(0 0 0 / 0.1)
-	);
+.select__list {
+  display: var(--select-list-display, flex);
+  flex-direction: var(--select-list-flex-direction, column);
+  gap: var(--select-item-gap, var(--spacing-2));
 
-	&[data-state='open'] {
-		--select-internal-animation-name: select-in;
-		--select-internal-slide-up-animation-name: select-in, select-slide-up;
-		--select-internal-slide-down-animation-name: select-in, select-slide-down;
-		animation: var(--select-content-open-animation, var(--select-internal-animation-name) 150ms ease-out);
+  min-block-size: var(--select-list-min-block-size, 0);
+  max-block-size: var(--select-max-block-size, var(--select-internal-max-block-size, 20rem));
 
-		&[data-side='top'] {
-			animation-name: var(--select-content-slide-up-animation, var(--select-internal-slide-up-animation-name));
-		}
+  overflow-y: var(--select-list-overflow-y, auto);
+  overflow-x: var(--select-list-overflow-x, hidden);
+  overscroll-behavior: var(--select-list-overscroll-behavior, contain);
+  scrollbar-width: var(--select-list-scrollbar-width, thin);
+  // A row the keyboard reaches scrolls in clear of the fade, not under it.
+  scroll-padding-block: var(
+    --select-list-scroll-padding-block,
+    var(--select-scroll-fade-size, var(--spacing-10))
+  );
 
-		&[data-side='bottom'] {
-			animation-name: var(--select-content-slide-down-animation, var(--select-internal-slide-down-animation-name));
-		}
-	}
+  &:focus-visible {
+    outline: var(--select-list-focus-visible-outline, none);
+  }
 
-	// Exit animation removed: Radix 2.3.x Presence component waits for animationend
-	// event before unmounting, but the event never fires for Select, causing the
-	// popover to stay open after selection. See: https://github.com/radix-ui/primitives/pull/3894
+  // A mask reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
+  &[data-scroll-start] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--select-scroll-fade-size, var(--spacing-10))
+    );
+  }
 
-	&[data-position='popper'] {
-		width: var(--select-content-popper-width, var(--radix-select-trigger-width));
-		min-width: var(--select-content-popper-min-width, var(--radix-select-trigger-width));
-	}
-}
+  &[data-scroll-end] {
+    mask-image: linear-gradient(
+      to top,
+      transparent 0,
+      #000 var(--select-scroll-fade-size, var(--spacing-10))
+    );
+  }
 
-.select__viewport {
-	padding: var(--select-viewport-padding, 0.25rem);
-	width: var(--select-viewport-width, 100%);
+  &[data-scroll-start][data-scroll-end] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--select-scroll-fade-size, var(--spacing-10)),
+      #000 calc(100% - var(--select-scroll-fade-size, var(--spacing-10))),
+      transparent 100%
+    );
+  }
 }
 
 .select__item {
-	position: var(--select-item-position, relative);
-	display: var(--select-item-display, flex);
-	width: var(--select-item-width, 100%);
-	cursor: var(--select-item-cursor, pointer);
-	user-select: var(--select-item-user-select, none);
-	align-items: var(--select-item-align-items, center);
-	gap: var(--select-item-gap, 0.5rem);
-	border-radius: var(--select-item-border-radius, var(--radius-1, 2px));
-	padding: var(--select-item-padding, 0.375rem 0.5rem);
-	font-size: var(--select-item-font-size, var(--periscope-font-size-base, 13px));
-	line-height: var(--select-item-line-height, 1.25rem);
-	outline: var(--select-item-outline, none);
-	transition: var(--select-item-transition, background-color 150ms, color 150ms);
+  display: var(--select-item-display, flex);
+  align-items: var(--select-item-align-items, center);
+  gap: var(--select-item-slot-gap, var(--spacing-4));
+  box-sizing: var(--select-item-box-sizing, border-box);
+  inline-size: var(--select-item-inline-size, 100%);
+  margin: var(--select-item-margin, 0);
 
-	&[data-multiple="true"] {
-		padding-left: var(--select-item-padding-left, 1.75rem);
-	}
+  padding: var(--select-item-padding, var(--spacing-4) var(--spacing-6));
 
-	&[data-highlighted] {
-		background-color: var(--select-item-highlight-background, var(--accent));
-		color: var(--select-item-highlight-color, var(--accent-foreground));
-	}
+  border: var(--select-item-border, none);
+  border-radius: var(--select-item-border-radius, 0);
+  background-color: var(--select-internal-item-background);
+  color: var(--select-internal-item-label);
 
-	&[data-disabled] {
-		pointer-events: var(--select-item-disabled-pointer-events, none);
-		opacity: var(--select-item-disabled-opacity, 0.5);
-	}
+  font-family: var(--select-item-font-family, inherit);
+  font-size: var(--select-item-font-size, var(--periscope-font-size-base));
+  font-weight: var(--select-item-font-weight, var(--font-weight-normal));
+  line-height: var(--select-item-line-height, var(--line-height-18));
+  text-align: var(--select-item-text-align, start);
+  white-space: var(--select-item-white-space, nowrap);
 
-	& svg {
-		height: var(--select-item-icon-size, 1rem);
-		width: var(--select-item-icon-size, 1rem);
-		flex-shrink: var(--select-item-icon-flex-shrink, 0);
-	}
+  cursor: var(--select-item-cursor, pointer);
+  user-select: var(--select-item-user-select, none);
+
+  // A disabled row keeps its highlight stop, so its tooltip stays reachable, but not the fill.
+  &[data-highlighted]:not([aria-disabled='true']) {
+    background-color: var(--select-internal-item-background-hover);
+    color: var(--select-internal-item-label-hover);
+
+    .select__item-affix {
+      color: var(--select-internal-item-icon-hover);
+    }
+  }
+
+  &:focus-visible {
+    outline: var(--select-item-focus-outline, none);
+  }
+
+  &[aria-disabled='true'] {
+    color: var(--select-internal-item-label-disabled);
+    cursor: var(--select-item-disabled-cursor, not-allowed);
+
+    .select__item-affix {
+      color: var(--select-internal-item-label-disabled);
+    }
+  }
+}
+
+.select__item-affix {
+  display: var(--select-item-affix-display, inline-grid);
+  align-items: var(--select-item-affix-align-items, center);
+  justify-content: var(--select-item-affix-justify-content, center);
+  flex-shrink: var(--select-item-affix-flex-shrink, 0);
+
+  color: var(--select-internal-item-icon);
+
+  & svg:not([class*='size-']) {
+    inline-size: var(--select-item-icon-size, 14px);
+    block-size: var(--select-item-icon-size, 14px);
+  }
+}
+
+.select__item-label {
+  flex-grow: var(--select-item-label-flex-grow, 1);
+  min-inline-size: var(--select-item-label-min-inline-size, 0);
+
+  overflow: var(--select-item-label-overflow, hidden);
+  white-space: var(--select-item-label-white-space, nowrap);
+  text-overflow: var(--select-item-label-text-overflow, ellipsis);
 }
 
 .select__item-indicator {
-	position: var(--select-item-indicator-position, absolute);
-	left: var(--select-item-indicator-left, 0.5rem);
-	display: var(--select-item-indicator-display, flex);
-	align-items: var(--select-item-indicator-align-items, center);
-	justify-content: var(--select-item-indicator-justify-content, center);
-	width: var(--select-item-indicator-size, 1rem);
-	height: var(--select-item-indicator-size, 1rem);
+  display: var(--select-item-indicator-display, inline-grid);
+  align-items: var(--select-item-indicator-align-items, center);
+  justify-content: var(--select-item-indicator-justify-content, center);
+  flex-shrink: var(--select-item-indicator-flex-shrink, 0);
 
-	& svg {
-		width: var(--select-item-indicator-icon-size, 0.875rem);
-		height: var(--select-item-indicator-icon-size, 0.875rem);
-	}
+  color: var(--select-internal-item-indicator);
+  visibility: var(--select-item-indicator-visibility, hidden);
+
+  .select__item[data-selected] > & {
+    visibility: var(--select-item-indicator-selected-visibility, visible);
+  }
+}
+
+.select__item-indicator .select__item-indicator-check {
+  inline-size: var(--select-item-icon-size, 14px);
+  block-size: var(--select-item-icon-size, 14px);
+}
+
+// Drawn here rather than reusing `Checkbox`: the row is already the control, and `Checkbox` brings
+// its own button, label and focus stop.
+.select__item-control {
+  display: var(--select-item-control-display, inline-flex);
+  align-items: var(--select-item-control-align-items, center);
+  justify-content: var(--select-item-control-justify-content, center);
+  flex-shrink: var(--select-item-control-flex-shrink, 0);
+  box-sizing: var(--select-item-control-box-sizing, border-box);
+
+  inline-size: var(--select-item-control-size, 16px);
+  block-size: var(--select-item-control-size, 16px);
+
+  border-width: var(--select-item-control-border-width, 2px);
+  border-style: var(--select-item-control-border-style, solid);
+  border-color: var(--select-internal-item-control-border);
+  border-radius: var(--select-item-control-border-radius, var(--radius-1));
+  background-color: var(--select-item-control-background-color, transparent);
+
+  transition-property: var(--select-item-control-transition-property, background-color, border-color);
+  transition-duration: var(--select-item-control-transition-duration, 150ms);
+  transition-timing-function: var(--select-item-control-transition-timing-function, ease);
+
+  .select__item[data-selected] > & {
+    border-color: var(--select-internal-item-control-checked-background);
+    background-color: var(--select-internal-item-control-checked-background);
+  }
+
+  .select__item[data-highlighted]:not([data-selected], [aria-disabled='true']) > & {
+    border-color: var(--select-internal-item-control-border-hover);
+  }
+}
+
+.select__item-control .select__item-control-check {
+  inline-size: var(--select-item-control-check-size, 12px);
+  block-size: var(--select-item-control-check-size, 12px);
+
+  color: var(--select-internal-item-control-checked-foreground);
+  visibility: var(--select-item-control-check-visibility, hidden);
+}
+
+.select__item[data-selected] > .select__item-control .select__item-control-check {
+  visibility: var(--select-item-control-check-selected-visibility, visible);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select__trigger,
+  .select__item-control {
+    transition: none;
+  }
 }
 
 .select__group {
-	padding: var(--select-group-padding, 0);
+  display: var(--select-group-display, flex);
+  flex-direction: var(--select-group-flex-direction, column);
+  gap: var(--select-item-gap, var(--spacing-2));
 }
 
-.select__label {
-	padding: var(--select-label-padding, 0.375rem 0.5rem);
-	padding-left: var(--select-label-padding-left, 1.75rem);
-	font-size: var(--select-label-font-size, 0.75rem);
-	font-weight: var(--select-label-font-weight, 500);
-	color: var(--select-label-color, var(--muted-foreground));
+.select__group-label {
+  box-sizing: var(--select-group-label-box-sizing, border-box);
+  padding-block: var(--select-group-label-padding-block, var(--spacing-3));
+  padding-inline: var(--select-group-label-padding-inline, var(--spacing-6));
+
+  color: var(--select-internal-group-label);
+
+  font-size: var(--select-group-label-font-size, var(--periscope-font-size-small));
+  font-weight: var(--select-group-label-font-weight, var(--font-weight-bold));
+  line-height: var(--select-group-label-line-height, var(--line-height-18));
+  text-transform: var(--select-group-label-text-transform, uppercase);
+  letter-spacing: var(--select-group-label-letter-spacing, 0.04em);
 }
 
+// The list is a capped flex column, which shrinks an item with no content to nothing.
 .select__separator {
-	margin: var(--select-separator-margin, 0.25rem 0);
-	height: var(--select-separator-height, 1px);
-	background-color: var(--select-separator-color, var(--border));
+  flex-shrink: var(--select-separator-flex-shrink, 0);
+  block-size: var(--select-separator-thickness, 1px);
+  margin-block: var(--select-separator-margin-block, 0);
+  margin-inline: var(--select-separator-margin-inline, 0);
+
+  background-color: var(--select-internal-separator);
 }
 
-.select__item__container {
-	display: var(--select-item-container-display, inline-flex);
-	align-items: var(--select-item-container-align-items, center);
-	gap: var(--select-item-container-gap, var(--spacing-2, 0.25rem));
+.select__loading {
+  display: var(--select-loading-display, flex);
+  align-items: var(--select-loading-align-items, center);
+  justify-content: var(--select-loading-justify-content, center);
 
-	// Style any nested span wrapper for proper inline layout
-	& > span {
-		display: var(--select-item-container-inner-display, inline-flex);
-		align-items: var(--select-item-container-inner-align-items, center);
-		gap: var(--select-item-container-inner-gap, var(--spacing-2, 0.25rem));
-	}
+  padding: var(--select-item-padding, var(--spacing-4) var(--spacing-6));
+
+  color: var(--select-internal-loading-label);
+
+  font-size: var(--select-item-font-size, var(--periscope-font-size-base));
+  line-height: var(--select-item-line-height, var(--line-height-18));
 }
 
-.select__scroll-button {
-	display: var(--select-scroll-button-display, flex);
-	align-items: var(--select-scroll-button-align-items, center);
-	justify-content: var(--select-scroll-button-justify-content, center);
-	height: var(--select-scroll-button-height, 1.5rem);
-	cursor: var(--select-scroll-button-cursor, default);
-	background-color: var(--select-scroll-button-background, var(--popover));
-	color: var(--select-scroll-button-color, var(--muted-foreground));
+.select__empty {
+  padding: var(--select-item-padding, var(--spacing-4) var(--spacing-6));
 
-	& svg {
-		width: var(--select-scroll-button-icon-size, 1rem);
-		height: var(--select-scroll-button-icon-size, 1rem);
-	}
-}
+  color: var(--select-internal-empty-label);
 
-.select__arrow {
-	fill: var(--select-arrow-fill, var(--popover));
-}
-
-@keyframes select-in {
-	from {
-		opacity: 0;
-		transform: scale(0.95);
-	}
-
-	to {
-		opacity: 1;
-		transform: scale(1);
-	}
-}
-
-@keyframes select-out {
-	from {
-		opacity: 1;
-		transform: scale(1);
-	}
-
-	to {
-		opacity: 0;
-		transform: scale(0.95);
-	}
-}
-
-@keyframes select-slide-up {
-	from {
-		transform: translateY(0.5rem);
-	}
-}
-
-@keyframes select-slide-down {
-	from {
-		transform: translateY(-0.5rem);
-	}
+  font-size: var(--select-item-font-size, var(--periscope-font-size-base));
+  line-height: var(--select-item-line-height, var(--line-height-18));
 }

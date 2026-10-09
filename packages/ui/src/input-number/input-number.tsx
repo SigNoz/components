@@ -237,14 +237,17 @@ export type InputNumberProps = Simplify<BaseProps>;
  * <InputNumber
  *   defaultValue={500}
  *   addonAfter={
- *     <Select defaultValue="GiB">
- *       <SelectTrigger><SelectValue /></SelectTrigger>
- *       <SelectContent>
- *         <SelectItem value="MiB">MiB</SelectItem>
- *         <SelectItem value="GiB">GiB</SelectItem>
- *         <SelectItem value="TiB">TiB</SelectItem>
- *       </SelectContent>
- *     </Select>
+ *     <Select
+ *       aria-label="Unit"
+ *       placeholder="Unit"
+ *       width="5rem"
+ *       defaultValue="GiB"
+ *       items={[
+ *         { type: 'item', value: 'MiB', label: 'MiB' },
+ *         { type: 'item', value: 'GiB', label: 'GiB' },
+ *         { type: 'item', value: 'TiB', label: 'TiB' },
+ *       ]}
+ *     />
  *   }
  * />
  * ```

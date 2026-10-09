@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Minus } from '@signozhq/icons';
 import * as React from 'react';
-import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { type MouseEvent, useCallback, useEffect, useId, useMemo, useState } from 'react';
 import { InternalButton } from '../button/button.js';
 import type { ButtonStyleProps } from '../button/types.js';
 import {
@@ -11,7 +11,7 @@ import {
 	type VariantType,
 } from '../button/index.js';
 import { cn } from '../lib/utils.js';
-import { SelectSimple } from '../select/index.js';
+import { Select, type SelectOptionItemType } from '../select/index.js';
 import styles from './pagination.module.scss';
 import { renderPageNumbers } from './utils.js';
 
@@ -366,17 +366,20 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 		},
 		ref,
 	) => {
+		const labelId = useId();
 		const pageSizeOptions = useMemo(
-			() => options.map((size) => ({ value: size.toString(), label: size.toString() })),
+			() =>
+				options.map((size): SelectOptionItemType => ({
+					type: 'item',
+					value: size.toString(),
+					label: size.toString(),
+				})),
 			[options],
 		);
 
 		const handlePageSizeChange = useCallback(
-			(val: string | string[]) => {
-				const selectedVal = Array.isArray(val) ? val[0] : val;
-				if (selectedVal) {
-					onChange?.(Number(selectedVal));
-				}
+			(val: string) => {
+				onChange?.(Number(val));
 			},
 			[onChange],
 		);
@@ -389,13 +392,16 @@ export const PaginationSelector = React.forwardRef<HTMLDivElement, PaginationSel
 				className={cn(styles['pagination-page-size'], className)}
 				{...props}
 			>
-				<span className={styles['pagination-page-size-label']}>{label}</span>
-				<SelectSimple
-					className={styles['pagination-page-size-select']}
+				<span id={labelId} className={styles['pagination-page-size-label']}>
+					{label}
+				</span>
+				<Select
+					aria-labelledby={labelId}
+					placeholder="Select..."
+					width="fit-content"
 					items={pageSizeOptions}
 					value={value.toString()}
 					onChange={handlePageSizeChange}
-					withPortal={false}
 				/>
 			</div>
 		);
