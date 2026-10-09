@@ -1,206 +1,97 @@
-import {
-	ChevronDown,
-	ChevronUp,
-	SolidAlertTriangle,
-	SolidCheckCircle2,
-	SolidInfoCircle,
-	SolidXCircle,
-	X,
-} from '@signozhq/icons';
-import React, { forwardRef } from 'react';
-import { cn } from '../lib/utils.js';
-import styles from './callout.module.scss';
-
-export type CalloutColor = 'robin' | 'forest' | 'amber' | 'cherry' | 'sakura' | 'aqua';
-
-export type CalloutProps = Pick<
-	React.ComponentProps<'div'>,
-	'id' | 'className' | 'style' | 'children'
-> & {
-	title?: React.ReactNode;
-	type?: 'info' | 'success' | 'warning' | 'error';
-	showIcon?: boolean;
-	icon?: React.ReactNode;
-	color?: CalloutColor | (string & {});
-	size?: 'small' | 'medium';
-	action?: 'none' | 'dismissible' | 'expandable';
-	defaultExpanded?: boolean;
-	onClick?: () => void;
-	testId?: string;
-};
-
-const typeToColorMap = {
-	info: 'robin',
-	success: 'forest',
-	warning: 'amber',
-	error: 'cherry',
-} as const;
-
-const defaultIcons = {
-	info: <SolidInfoCircle />,
-	success: <SolidCheckCircle2 />,
-	warning: <SolidAlertTriangle />,
-	error: <SolidXCircle />,
-};
+import { forwardRef } from 'react';
+import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
+import { CalloutAction } from './subcomponents/callout-action.js';
+import { CalloutButton } from './subcomponents/callout-button.js';
+import { CalloutCloseable } from './subcomponents/callout-closeable.js';
+import { CalloutCloseablePersisted } from './subcomponents/callout-closeable-persisted.js';
+import { CalloutExpandable } from './subcomponents/callout-expandable.js';
+import { CalloutFrame } from './subcomponents/callout-frame.js';
+import { CalloutLink } from './subcomponents/callout-link.js';
+import type { CalloutProps } from './types.js';
 
 /**
- * A callout component for displaying informational messages with optional icons and descriptions.
- * Supports multiple color variants, sizes, and interactive actions (dismissible/expandable).
+ * A static message with a severity: a tinted box with an icon and a description, always visible,
+ * with no chevron. Use `Callout.Expandable` for a description the user can hide,
+ * `Callout.Closeable` and `Callout.CloseablePersisted` for one the user can dismiss,
+ * `Callout.Action` for one with an action such as a refresh button, `Callout.Button` for that
+ * button, and `Callout.Link` for a link inside the description.
+ *
+ * Every `aria-*` and any `data-*` are forwarded. There is no `className` or `style`.
+ *
+ * Visual values are `--callout-*` custom properties, defaults in the `css-tokens` region of
+ * [./index.ts](./index.ts).
+ *
+ * ### Live region
+ *
+ * `role="alert"` for `danger` and `highlight-danger`, `role="status"` for every other `color`.
+ * There is no prop to change it. `Callout.Expandable` has no live role, so expanding it does not
+ * read the callout again. A callout on the page at first render is not announced by most
+ * screen readers, so use `danger` for a message that appears after a user action or a failed
+ * request, not for a permanent note.
+ *
+ * ### Empty
+ *
+ * It renders nothing while `children` is empty, since a tinted box with only an icon carries no
+ * message.
+ *
+ * ### Overflow
+ *
+ * Without `width` it fills its parent, and `maxWidth` caps it at `100%`. It has no outer margin,
+ * the parent owns the spacing. The height grows with the content. Once `maxHeight` (default
+ * `100%`) or `height` leaves no room, the description scrolls and the icon stays pinned.
+ *
+ * Text wraps first, so a long word never forces a horizontal scroll. The description is never
+ * made focusable. Chromium and Firefox let a keyboard user focus a scrolling description on their
+ * own (Chromium only while it holds no link), Safari does not.
+ *
+ * ### Asserting on it
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `callout` | the root, carries `testId` |
+ * | `callout-icon` | the icon |
+ * | `callout-description` | the description |
+ *
+ * The root also carries `data-color` and `data-size`.
  *
  * @example
  * ```tsx
- * // Basic info callout
- * <Callout title="What is instrumentation?" />
+ * <Callout color="danger" size="sm" icon={<SolidXCircle />}>
+ *   The request failed. Try again in a moment.
+ * </Callout>
  * ```
  *
  * @example
  * ```tsx
- * // With description and icon
- * <Callout
- *   title="Success!"
- *   description="Your changes have been saved."
- *   type="success"
- *   showIcon
- * />
- * ```
- *
- * @example
- * ```tsx
- * // Dismissible error callout
- * <Callout
- *   title="Error occurred"
- *   description="Please try again later."
- *   type="error"
- *   showIcon
- *   action="dismissible"
- *   onActionClick={() => console.log('dismissed')}
- * />
- * ```
- *
- * @example
- * ```tsx
- * // Expandable callout (toggles description visibility)
- * <Callout
- *   title="Collapsible information"
- *   description="This description can be toggled."
- *   type="info"
- *   showIcon
- *   action="expandable"
- *   onClick={() => console.log('toggled')}
- * />
- * ```
- *
- * @example
- * ```tsx
- * // Medium size with custom color
- * <Callout
- *   title="Custom callout"
- *   color="aqua"
- *   size="medium"
- * />
+ * <Callout color="primary" size="md" icon={<SolidInfoCircle />}>
+ *   Read the{' '}
+ *   <Callout.Link href="https://signoz.io/docs" target="_blank">
+ *     docs
+ *   </Callout.Link>
+ *   .
+ * </Callout>
  * ```
  */
-const Callout = forwardRef<HTMLDivElement, CalloutProps>(
-	(
-		{
-			className,
-			title,
-			children,
-			type = 'info',
-			showIcon = true,
-			icon,
-			color,
-			size = 'small',
-			action = 'none',
-			onClick,
-			defaultExpanded = true,
-			testId,
-			id,
-			...props
-		},
-		ref,
-	) => {
-		const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
-		const IconComponent = icon || (showIcon && defaultIcons[type]);
+const CalloutRoot = forwardRef<HTMLDivElement, CalloutProps>(function Callout(
+	{ children, ...props }: CalloutProps & RejectedProps,
+	ref,
+) {
+	if (!hasRenderableContent(children)) {
+		return null;
+	}
 
-		const handleActionClick = React.useCallback(() => {
-			if (action === 'expandable') {
-				setIsExpanded((expand) => !expand);
-			}
-			onClick?.();
-		}, [onClick, action]);
+	return (
+		<CalloutFrame {...props} ref={ref}>
+			{children}
+		</CalloutFrame>
+	);
+});
 
-		const iconComponent = React.useMemo(() => {
-			return IconComponent ? (
-				<div className={styles['callout__icon']}>
-					{React.isValidElement(IconComponent) ? (
-						React.cloneElement(IconComponent as React.ReactElement, {
-							'aria-hidden': true,
-							className: cn((IconComponent as React.ReactElement).props?.className),
-							color: 'var(--callout-icon-color)',
-							size: size === 'medium' ? 16 : 12,
-						})
-					) : (
-						<span style={{ color: 'var(--callout-icon-color)' }}>{IconComponent}</span>
-					)}
-				</div>
-			) : null;
-		}, [IconComponent, size]);
-
-		return (
-			<div
-				ref={ref}
-				data-slot="callout"
-				data-color={color ?? typeToColorMap[type]}
-				data-testid={testId}
-				id={id}
-				className={cn(
-					styles['callout'],
-					size === 'small' ? styles['callout--small'] : styles['callout--medium'],
-					className,
-				)}
-				role={action === 'expandable' ? 'button' : 'alert'}
-				onClick={action === 'expandable' ? handleActionClick : undefined}
-				{...props}
-			>
-				{iconComponent}
-				<div className={styles['callout__content']}>
-					{title && (
-						<div data-slot="callout-title" className={styles['callout__title']}>
-							{title}
-						</div>
-					)}
-					{children && action !== 'expandable' && (
-						<div data-slot="callout-description" className={styles['callout__description']}>
-							{children}
-						</div>
-					)}
-					{children && action === 'expandable' && isExpanded && (
-						<div data-slot="callout-description" className={styles['callout__description']}>
-							{children}
-						</div>
-					)}
-				</div>
-				{action !== 'none' && (
-					<button
-						type="button"
-						aria-label={action === 'dismissible' ? 'Close' : isExpanded ? 'Collapse' : 'Expand'}
-						className={styles['callout__action']}
-						onClick={action === 'dismissible' ? handleActionClick : undefined}
-					>
-						{action === 'dismissible' ? (
-							<X size={size === 'medium' ? 16 : 14} />
-						) : isExpanded ? (
-							<ChevronUp size={size === 'medium' ? 16 : 14} />
-						) : (
-							<ChevronDown size={size === 'medium' ? 16 : 14} />
-						)}
-					</button>
-				)}
-			</div>
-		);
-	},
-);
-Callout.displayName = 'Callout';
-
-export { Callout };
+export const Callout = Object.assign(CalloutRoot, {
+	Expandable: CalloutExpandable,
+	Closeable: CalloutCloseable,
+	CloseablePersisted: CalloutCloseablePersisted,
+	Action: CalloutAction,
+	Button: CalloutButton,
+	Link: CalloutLink,
+});

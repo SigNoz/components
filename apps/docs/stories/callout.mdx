@@ -1,85 +1,307 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as CalloutStories from './callout.stories';
+import * as CalloutComponentsStories from './callout-components.stories';
 
 <Meta of={CalloutStories} />
 
 # Callout
 
-A versatile callout component to display important messages to the user, with various types, sizes, and custom styling options.
+A tinted message with a severity: an icon and a description, always visible. A plain `Callout` has
+no title and no chevron. Expansion, dismissal, actions and links come from sub-components, so the
+static one stays static.
+
+`color`, `size`, `icon` and the children are all required. The callout has no default appearance,
+every call site says what it is.
 
 ## How to use
 
-### Basic usage
-
 ```tsx
+import { SolidInfoCircle } from '@signozhq/icons';
 import { Callout } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
-		<Callout type="info" size="medium" title="Important Information">
-			This is additional information that provides more context about the callout.
+		<Callout color="primary" size="md" icon={<SolidInfoCircle />}>
+			Instrumentation is the code that produces telemetry.
 		</Callout>
 	);
 }
 ```
-
-### With custom icon
-
-```tsx
-import { Callout } from '@signozhq/ui';
-import { Star } from '@signozhq/icons';
-
-export default function MyComponent() {
-	return (
-		<Callout type="info" icon={<Star />} title="Featured Item">
-			This item has been marked as featured.
-		</Callout>
-	);
-}
-```
-
-### Dismissible callout
-
-```tsx
-import { Callout } from '@signozhq/ui';
-import { useState } from 'react';
-
-export default function MyComponent() {
-	const [isVisible, setIsVisible] = useState(true);
-
-	if (!isVisible) return null;
-
-	return (
-		<Callout
-			type="info"
-			title="Dismissible Message"
-			action="dismissible"
-			onActionClick={() => setIsVisible(false)}
-		>
-			Click the X to dismiss this callout.
-		</Callout>
-	);
-}
-```
-
-### Expandable callout
-
-```tsx
-import { Callout } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<Callout type="info" showIcon title="Expandable Content" action="expandable">
-			Click the chevron to toggle this content.
-		</Callout>
-	);
-}
-```
-
-This following example shows a default callout:
 
 <Primary />
+
+## Colors
+
+`color` is one of `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `archive` and
+`highlight-danger`. It sets the tint and the live region role.
+
+Every color has its own tint. `secondary` is the neutral surface, and `info`, `archive` and
+`highlight-danger` take the hues Badge uses for the same names.
+
+```tsx
+<Callout color="danger" size="sm" icon={<SolidXCircle />}>
+	The request failed. Try again in a moment.
+</Callout>
+```
+
+## Sizes
+
+`size` is `sm` or `md`. It sets the type scale and the icon size, 12 at `sm` and 16 at `md`. Both
+sizes have the same padding.
+
+## Icon
+
+The icon is required, because it carries the severity for users who cannot tell the tints apart. It
+is hidden from assistive tech. The callout sets its size, and the one passed on the element is
+ignored. It takes the color of the callout, and a color set on the icon element wins.
+
+## Empty content
+
+`Callout`, `Callout.Closeable` and `Callout.Action` render nothing while the children are empty,
+since a tinted box with only an icon carries no message. `null`, `false` and `''` all return no
+element.
+
+```tsx
+// renders nothing while `error` is undefined
+<Callout color="danger" size="sm" icon={<SolidXCircle />}>
+	{error}
+</Callout>
+```
+
+## Overflow
+
+Without `width` the callout fills its parent, and `maxWidth` caps it at the width of the parent. It
+has no outer margin, so the parent owns the spacing around it.
+
+The height grows with the content. When the parent has no vertical space left, `maxHeight` stops
+the growth and the description scrolls, while the icon and the title row stay pinned. Text wraps
+first, so a long word never forces a horizontal scroll.
+
+```tsx
+<Callout color="primary" size="sm" icon={<SolidInfoCircle />} maxWidth={742}>
+	A note that should not grow wider than the form it sits in.
+</Callout>
+```
+
+## Keyboard
+
+The callout itself is not focusable. The title row, the close button, the action and the links take
+focus, in the order they show on screen. `Esc` does nothing, a callout is not an overlay.
+
+The description is never made focusable. When it scrolls, Chromium and Firefox let a keyboard user
+focus it and scroll with the arrow keys on their own (Chromium only while it holds no link). Safari
+does not, so avoid a `height` or `maxHeight` that makes a long description scroll.
+
+## Callout.Expandable
+
+A callout whose description the user can hide. It is the only callout with a `title`, since the
+title row and the chevron are what stay visible when collapsed. `defaultExpanded` is required, and
+the state is uncontrolled.
+
+```tsx
+<Callout.Expandable
+	color="primary"
+	size="md"
+	icon={<SolidInfoCircle />}
+	title="What is instrumentation?"
+	defaultExpanded
+>
+	Instrumentation is the code that produces telemetry.
+</Callout.Expandable>
+```
+
+The whole title row is one button, so a click on the title or on the chevron toggles. A click on the
+description does nothing, since it holds links and text to select. The row is named by the title, and
+while expanded it points at the description with `aria-controls`.
+
+Collapsed, the description stays in the page, hidden until found: find in page reaches its text
+and expands the callout.
+
+The title is a single line. A long one ends in an ellipsis, and a tooltip shows the whole of it
+while it is cut, on hover and on keyboard focus. Pass a string, since the ellipsis and the tooltip only work with a string.
+
+It never hides: an empty title shows `<No title>` and an empty description shows `<No description>`,
+so a broken message stays visible. Both are exported, as `CALLOUT_EMPTY_TITLE` and
+`CALLOUT_EMPTY_DESCRIPTION`.
+
+## Callout.Closeable
+
+A callout with a close button on the right edge. It keeps no state: it renders nothing while `closed`
+is `true`, and the close button calls `onClose`, where you set `closed`. Setting `closed` back to
+`false` shows it again, for example when a new message arrives after a dismissal.
+
+The callout does not guess where focus goes once it closes. Pass `finalFocus`, a ref to the element
+that should take focus, such as the control that opened the callout or the next one in the flow.
+When `onClose` closes the callout, focus moves there, unless `onClose` moved it somewhere else.
+Only focus that was in the callout moves, so a mouse click that does not focus the close button, as
+in Safari, moves none. Without `finalFocus`, focus is not moved and falls to the page body with the
+close button. A `closed` set later, after an `await`, moves no focus either.
+
+The close button is named `Dismiss`. Give `closeAriaLabel` when several closeable callouts sit on one
+page, so a screen reader user can tell their buttons apart, and to translate it.
+
+```tsx
+const [closed, setClosed] = useState(false);
+const upgradeRef = useRef<HTMLButtonElement>(null);
+
+<Callout.Closeable
+	color="warning"
+	size="md"
+	icon={<SolidAlertTriangle />}
+	closed={closed}
+	onClose={() => setClosed(true)}
+	finalFocus={upgradeRef}
+	closeAriaLabel="Dismiss the trial notice"
+>
+	Your trial ends in 3 days.
+</Callout.Closeable>;
+```
+
+## Callout.CloseablePersisted
+
+A closeable callout that stays hidden after a reload. It owns its state, so it takes no `closed`, and
+`onClose` is only for side effects. It saves the dismissal in `localStorage` under `storageKey` as
+`"true"`, the value the app already writes, so a hand-rolled dismissal migrates without showing the
+callout again. Closing one hides every other callout with the same `storageKey`, in this tab and in
+the others.
+
+```tsx
+<Callout.CloseablePersisted
+	storageKey="license-callout-dismissed"
+	color="primary"
+	size="md"
+	icon={<SolidInfoCircle />}
+>
+	Add a license key to unlock all features.
+</Callout.CloseablePersisted>
+```
+
+None of the sub-components is both expandable and closeable.
+
+## Callout.Action
+
+A callout with an action where `Callout.Closeable` has its close button: on the right edge, centered
+on the first line of the description. Use it for a message the user can act on, such as stale data
+with a button that refreshes it.
+
+The callout renders `action` as given and adds no handler, name or state to it, so the action owns
+its click, its label and anything it shows while it runs. It does not grow the callout, so keep it
+about one line tall: `Callout.Button` and a `Button` with `size="sm"` fit both sizes. An `action`
+that renders nothing leaves a plain `Callout`.
+
+```tsx
+<Callout.Action
+	color="warning"
+	size="sm"
+	icon={<SolidAlertTriangle />}
+	action={<Callout.Button onClick={refetch}>Refresh</Callout.Button>}
+>
+	New data is available for this view.
+</Callout.Action>
+```
+
+The action sits inside the live region, so a screen reader reads its label with the message.
+
+## Callout.Button
+
+A solid button in the color of the callout around it, for the `action` of `Callout.Action`. It is a
+`Button` with `variant="solid"`, the `color` of the callout and `size="sm"`, so it fits the first
+line of both sizes and never drifts from the tint. It takes every other prop of `Button`, such as
+`onClick`, `prefix`, `loading` and `disabled` with `disabledTooltip`. It has no `variant`, `color`,
+`size`, `className` or `style`.
+
+```tsx
+<Callout.Action
+	color="danger"
+	size="sm"
+	icon={<SolidXCircle />}
+	action={
+		<Callout.Button loading={isRetrying} onClick={retry}>
+			Retry
+		</Callout.Button>
+	}
+>
+	The request failed.
+</Callout.Action>
+```
+
+A button outside a callout renders as `secondary` and warns on the console.
+
+## Callout.Link
+
+A link for use inside the children. It draws in the link color of the callout around it and inherits
+its type. It has no `className` or `style`.
+
+```tsx
+<Callout color="primary" size="md" icon={<SolidInfoCircle />}>
+	Read the{' '}
+	<Callout.Link href="https://signoz.io/docs" target="_blank">
+		docs
+	</Callout.Link>
+	.
+</Callout>
+```
+
+Pass `render` for a router link. The callout imports no router, so the click is a client-side
+navigation and a modified click still opens a new tab. The props merge as the `render` prop of Base
+UI merges them: a prop set on the `render` element wins, its `ref` and `className` are kept next to
+the ones of the link, and its `onClick` runs first. With a `_blank` target, `noopener` and
+`noreferrer` join the `rel` of the `render` element, which keeps its other values.
+
+```tsx
+<Callout.Link render={<Link to="/alerts" />}>alerts</Callout.Link>
+```
+
+A link with neither `href` nor a destination on the `render` element renders plain text and warns on
+the console.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and the parts derive theirs from it. With
+`testId="trial"`, the parts are `trial-icon`, `trial-title`, `trial-description`, `trial-toggle`,
+`trial-close` and `trial-action`. `Callout.Button` and `Callout.Link` take a `testId` of their own.
+
+Otherwise reach for the roles and the data attributes, never the hashed class names:
+
+| `data-slot`           | rendered                                                        |
+| --------------------- | --------------------------------------------------------------- |
+| `callout`             | the root, `role="status"` or `role="alert"`, none if expandable |
+| `callout-icon`        | the icon                                                        |
+| `callout-toggle`      | the title row button, `Callout.Expandable` only                 |
+| `callout-title`       | the title, `data-truncated` while it does not fit               |
+| `callout-description` | the description                                                 |
+| `callout-close`       | the close button, `Callout.Closeable` and its persisted form    |
+| `callout-action`      | the box around the action, `Callout.Action` only                |
+| `callout-button`      | each `Callout.Button`                                           |
+| `callout-link`        | each `Callout.Link`                                             |
+
+The root mirrors `color` on `data-color` and `size` on `data-size`. `Callout.Expandable` adds
+`data-has-title`, `data-open` while expanded and `data-closed` while collapsed.
 
 ## Props
 
 <Controls of={CalloutStories.Default} />
+
+### Callout.Expandable props
+
+<Controls of={CalloutComponentsStories.Expandable} />
+
+### Callout.Closeable props
+
+<Controls of={CalloutComponentsStories.Closeable} />
+
+### Callout.CloseablePersisted props
+
+<Controls of={CalloutComponentsStories.CloseablePersisted} />
+
+### Callout.Action props
+
+<Controls of={CalloutComponentsStories.Action} />
+
+### Callout.Button props
+
+<Controls of={CalloutComponentsStories.Button} />
+
+### Callout.Link props
+
+<Controls of={CalloutComponentsStories.Link} />

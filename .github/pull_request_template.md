@@ -48,8 +48,9 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **CSS** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#2-css-organization))
 
 - [ ] `{name}.module.scss`, no Tailwind, no CVA, no Sass variables
-- [ ] Every overridable value is `var(--{component}-x, <design token>)`; no hardcoded values
-- [ ] No literal fallback on a design token (`var(--spacing-4, 8px)`); a bare literal only where no token matches
+- [ ] Every declaration is `var(--{component}-x, <default>)`, layout and resets included; only reduced-motion rules, `display: none` on `[hidden]` and pseudo-element `content` stay bare
+- [ ] Every colour, variant colours included, is a hook onto a design token (`var(--callout-success-background-color, var(--callout-success-background))`), never a literal
+- [ ] No literal fallback on a design token (`var(--spacing-4, 8px)`); a literal default only where no token matches
 - [ ] Colours use semantic tokens only, with no `--bg-*` / `--text-*` primitives referenced from a component
 - [ ] Values that must not be overridden use `--{component}-internal-*`
 - [ ] No `--x: var(--x)` and no duplicated variable definitions
@@ -81,7 +82,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **Docs** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#4-how-to-document-props))
 
 - [ ] JSDoc on **every** public prop, with `@default` where applicable
-- [ ] Story file per root component and per preset, subcomponent stories in the parent's file (`@access private` ones exempt), correct `title` group
+- [ ] Story file per root component and per preset, subcomponent stories in the parent's file, static members in `{name}-components.stories.tsx` (`@access private` ones exempt), correct `title` group
 - [ ] `argTypes` complete with `category`, `type.summary`, `defaultValue.summary`
 - [ ] Stories for every meaningful state, not just the happy path
 - [ ] `{component}.mdx` with a usage snippet and a `<Controls>` per exported piece

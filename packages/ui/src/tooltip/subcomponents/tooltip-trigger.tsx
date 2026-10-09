@@ -1,5 +1,6 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import * as React from 'react';
+import { getElementRef, setRef } from '../../lib/merge-refs.js';
 import { cn } from '../../lib/utils.js';
 import { useTooltipContentId } from '../tooltip-content-id-context.js';
 import { TooltipTriggerProvider, useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
@@ -29,7 +30,9 @@ export const TooltipTrigger = React.forwardRef<HTMLButtonElement, TooltipTrigger
 	function TooltipTrigger({ testId, handle, contentId, children, ...props }, ref) {
 		const inheritedContentId = useTooltipContentId();
 		const insideTrigger = useIsInsideTooltipTrigger();
-		const childRef = React.isValidElement(children) ? getElementRef(children) : undefined;
+		const childRef = React.isValidElement(children)
+			? getElementRef<HTMLButtonElement>(children)
+			: undefined;
 		// `cloneElement` below replaces the ref of the child, so the two are merged first.
 		const mergedRef = React.useMemo(
 			() =>
@@ -78,26 +81,3 @@ export const TooltipTrigger = React.forwardRef<HTMLButtonElement, TooltipTrigger
 		);
 	},
 );
-
-type ElementRef = React.Ref<HTMLButtonElement> | undefined;
-
-// React 18 keeps the ref of an element next to its props, React 19 inside them. Probing both
-// flags it as accessed: React 18 warns on `props.ref`, React 19 on `element.ref`. So pick the
-// one the running version owns instead.
-const ReactMajor = Number.parseInt(React.version, 10);
-
-function getElementRef(element: React.ReactElement): ElementRef {
-	if (ReactMajor >= 19) {
-		return (element.props as { ref?: ElementRef }).ref;
-	}
-
-	return (element as { ref?: ElementRef }).ref;
-}
-
-function setRef(ref: React.Ref<HTMLButtonElement>, node: HTMLButtonElement | null): void {
-	if (typeof ref === 'function') {
-		ref(node);
-	} else if (ref != null) {
-		(ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
-	}
-}
