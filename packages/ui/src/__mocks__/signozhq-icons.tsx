@@ -34,6 +34,7 @@ export const Lock = createIcon('lock');
 export const Minus = createIcon('minus');
 export const MousePointerClick = createIcon('mouse-pointer-click');
 export const Pin = createIcon('pin');
+export const Plus = createIcon('plus');
 export const PinOff = createIcon('pin-off');
 export const Search = createIcon('search');
 export const SolidAlertCircle = createIcon('solid-alert-circle');

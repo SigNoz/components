@@ -1,0 +1,41 @@
+/* The playground opens downwards, so it needs room under its trigger. */
+.playground {
+  padding: 2rem;
+  width: 100%;
+  max-width: 24rem;
+  min-height: 26rem;
+}
+
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.triggerGrid {
+  display: grid;
+  grid-template-columns: max-content 16rem minmax(0, 1fr);
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+
+.matrixLabel {
+  white-space: nowrap;
+}
+
+/* The showcase holds every popup open at once, so each one needs a cell of its own to open into. */
+.showcaseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 18rem));
+  align-items: start;
+  gap: 1.5rem 4rem;
+}
+
+/* Tall enough that a popup never reaches the cell under it: the search row plus a full list. */
+.cell {
+  min-block-size: 34rem;
+}
