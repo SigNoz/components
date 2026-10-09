@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.3.0](https://github.com/SigNoz/components/compare/v0.2.0...v0.3.0) (2026-10-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **alert-strip:** replace AnnouncementBanner with AlertStrip ([#444](https://github.com/SigNoz/components/issues/444))
+* **resizable:** rework Resizable with an items API and saved layouts ([#441](https://github.com/SigNoz/components/issues/441))
+* **command:** rework Command on Base UI with an items API ([#438](https://github.com/SigNoz/components/issues/438))
+* **divider:** rework Divider with orientation, length and spacing props ([#436](https://github.com/SigNoz/components/issues/436))
+* **slider:** rework Slider on Base UI with colours and add Slider.Range ([#435](https://github.com/SigNoz/components/issues/435))
+* **select:** rework Select on Base UI with an items API ([#434](https://github.com/SigNoz/components/issues/434))
+* **combobox:** rework Combobox on Base UI with an items API ([#433](https://github.com/SigNoz/components/issues/433))
+* **dropdown:** require a search placeholder and stack above another library's modal ([#432](https://github.com/SigNoz/components/issues/432))
+* **testing:** add @signozhq/ui/testing with ForceOpenProvider and PersistToastsProvider ([#431](https://github.com/SigNoz/components/issues/431))
+* **progress:** rework Progress on Base UI with semantic colours, steps and an active state ([#427](https://github.com/SigNoz/components/issues/427))
+* **toast:** replace the sonner wrapper with a Toast component ([#425](https://github.com/SigNoz/components/issues/425))
+* **callout:** rework Callout and add Expandable, Closeable, CloseablePersisted and Link parts ([#424](https://github.com/SigNoz/components/issues/424))
+
+### Features
+
+* **alert-strip:** replace AnnouncementBanner with AlertStrip ([#444](https://github.com/SigNoz/components/issues/444)) ([5dda24a](https://github.com/SigNoz/components/commit/5dda24a035437aaaeb44313bce9037621d7c5b63))
+* **callout:** rework Callout and add Expandable, Closeable, CloseablePersisted and Link parts ([#424](https://github.com/SigNoz/components/issues/424)) ([ce3b884](https://github.com/SigNoz/components/commit/ce3b884aa66381e710601d4b46111097abc15e37))
+* **combobox:** rework Combobox on Base UI with an items API ([#433](https://github.com/SigNoz/components/issues/433)) ([c61ce7a](https://github.com/SigNoz/components/commit/c61ce7af3ee3dd961d87f97bb2ba1c95e63d125d))
+* **command:** rework Command on Base UI with an items API ([#438](https://github.com/SigNoz/components/issues/438)) ([05b3db6](https://github.com/SigNoz/components/commit/05b3db6da4d7f33fc6450da5280f6ff3595d2dd1))
+* **divider:** rework Divider with orientation, length and spacing props ([#436](https://github.com/SigNoz/components/issues/436)) ([ef02aed](https://github.com/SigNoz/components/commit/ef02aed5a6e7f1dece92958721a417e6e6de44c2))
+* **dropdown:** require a search placeholder and stack above another library's modal ([#432](https://github.com/SigNoz/components/issues/432)) ([2348cb4](https://github.com/SigNoz/components/commit/2348cb46f761a898da697f62d5f790df044ee61d))
+* **input:** input rework ([#437](https://github.com/SigNoz/components/issues/437)) ([c406770](https://github.com/SigNoz/components/commit/c406770dacefb709ba251d399088130aba9390f8))
+* **progress:** rework Progress on Base UI with semantic colours, steps and an active state ([#427](https://github.com/SigNoz/components/issues/427)) ([827508f](https://github.com/SigNoz/components/commit/827508f4819fa72c0396e0bbf048a8b57ce729bb))
+* **radio-cards:** add RadioCards and RadioCards.Multiple ([#442](https://github.com/SigNoz/components/issues/442)) ([0fed866](https://github.com/SigNoz/components/commit/0fed866c8e9ca601218392e98bc44cd3b51e9607))
+* **resizable:** rework Resizable with an items API and saved layouts ([#441](https://github.com/SigNoz/components/issues/441)) ([ca0073d](https://github.com/SigNoz/components/commit/ca0073df5261da9fdce0954d507be0ebe25732ea))
+* **select:** rework Select on Base UI with an items API ([#434](https://github.com/SigNoz/components/issues/434)) ([d5554b0](https://github.com/SigNoz/components/commit/d5554b003ec49671bea7f91828d8431c6f161605))
+* **slider:** rework Slider on Base UI with colours and add Slider.Range ([#435](https://github.com/SigNoz/components/issues/435)) ([cba29c8](https://github.com/SigNoz/components/commit/cba29c8466a4e60b1d40e85d5d4f8187a4b30bc6))
+* **testing:** add @signozhq/ui/testing with ForceOpenProvider and PersistToastsProvider ([#431](https://github.com/SigNoz/components/issues/431)) ([698796f](https://github.com/SigNoz/components/commit/698796f529a3438753a2ac70427cd1fa9945f0f5))
+* **toast:** replace the sonner wrapper with a Toast component ([#425](https://github.com/SigNoz/components/issues/425)) ([13db388](https://github.com/SigNoz/components/commit/13db388495621f8851973f14e35bd4ccb6a15fa5))
+
+
+### Bug Fixes
+
+* **ui:** post-merge fixes for Badge, Pill, Button and Switch ([#443](https://github.com/SigNoz/components/issues/443)) ([0c07c36](https://github.com/SigNoz/components/commit/0c07c360444629521d05b1cd72b34ff07ac528ee))
+
+
+### Documentation
+
+* add AGENTS.md with CLAUDE.md symlink ([#393](https://github.com/SigNoz/components/issues/393)) ([4d7c4e0](https://github.com/SigNoz/components/commit/4d7c4e0313807852a937b4df38ef3002dee8bddf))
+* **guidelines:** ban className and style props ([#423](https://github.com/SigNoz/components/issues/423)) ([733c8f5](https://github.com/SigNoz/components/commit/733c8f570b2cfee799e0b45fe102e38dfb4e948d))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the development-dependencies group with 11 updates ([#428](https://github.com/SigNoz/components/issues/428)) ([60499a5](https://github.com/SigNoz/components/commit/60499a5040e31bb3b89b8f229497688ff34d6982))
+* **design-tokens:** bump package to 2.3.0 ([#446](https://github.com/SigNoz/components/issues/446)) ([c8475f4](https://github.com/SigNoz/components/commit/c8475f479eedaefa96395f482571449c63eba727))
+* **docs:** read ui source in storybook dev and compile stories with React Compiler ([#430](https://github.com/SigNoz/components/issues/430)) ([8255d64](https://github.com/SigNoz/components/commit/8255d64351ae07ec44415e241b6d6edee451a937))
+
+
+### Continuous Integration
+
+* **chromatic:** report main baselines on main at the merge commit ([#395](https://github.com/SigNoz/components/issues/395)) ([3161f6f](https://github.com/SigNoz/components/commit/3161f6f4d39f307bcc045c519cfbde7de0c6519c))
+* **jsci:** run fmt, lint and type-check through primus workflows ([#445](https://github.com/SigNoz/components/issues/445)) ([e1febe7](https://github.com/SigNoz/components/commit/e1febe771e349846c53a3f6527ac91b711262436))
+
 ## [0.2.0](https://github.com/SigNoz/components/compare/v0.1.1...v0.2.0) (2026-10-01)
 
 
