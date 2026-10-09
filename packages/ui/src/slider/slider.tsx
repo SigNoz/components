@@ -1,386 +1,177 @@
-import * as SliderPrimitive from '@radix-ui/react-slider';
-import React, { useCallback, useEffect, useId, useMemo, useState } from 'react';
-
-import { cn } from '../lib/utils.js';
-import styles from './slider.module.scss';
-import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
-
-export interface SliderProps extends Omit<
-	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
-	'onChange' | 'value' | 'defaultValue'
-> {
-	value?: number | number[];
-	defaultValue?: number | number[];
-	/**
-	 * Tick marks along the track. The key is the numerical value, and the value can be a string, a React node, or an object with label and style.
-	 */
-	marks?: Record<number, React.ReactNode | { style?: React.CSSProperties; label: React.ReactNode }>;
-	/**
-	 * Configuration for the tooltip wrapped around the slider thumb.
-	 */
-	tooltip?: { formatter?: (value: number) => React.ReactNode };
-	/**
-	 * Callback fired when the value changes during dragging.
-	 */
-	onChange?: (value: number | number[]) => void;
-	/**
-	 * Callback fired when `mouseup` or `keyup` happens.
-	 */
-	onAfterChange?: (value: number | number[]) => void;
-	/**
-	 * If true, renders a dual-thumb slider for range selection.
-	 */
-	range?: boolean;
-	/**
-	 * Custom inline styles for the internal track, range, and thumb elements.
-	 *
-	 * @example
-	 * ```tsx
-	 * // Custom track fill color
-	 * <Slider styles={{ range: { backgroundColor: '#4E74F8' } }} />
-	 * ```
-	 */
-	styles?: {
-		track?: React.CSSProperties;
-		range?: React.CSSProperties;
-		thumb?: React.CSSProperties;
-	};
-	/**
-	 * Custom CSS class names for the internal track, range, and thumb elements.
-	 *
-	 * @example
-	 * ```tsx
-	 * // Apply custom classes
-	 * <Slider classNames={{ track: 'bg-gray-200', range: 'bg-blue-500', thumb: 'border-blue-500' }} />
-	 * ```
-	 */
-	classNames?: {
-		track?: string;
-		range?: string;
-		thumb?: string;
-	};
-	/**
-	 * Test ID for testing purposes (mapped to data-testid).
-	 */
-	testId?: string;
-	/**
-	 * Unique identifier for the slider root element.
-	 */
-	id?: string;
-	/**
-	 * Inline style for the slider root element.
-	 */
-	style?: React.CSSProperties;
-}
-
-const toArray = (val: number | number[] | undefined) =>
-	Array.isArray(val) ? val : val !== undefined ? [val] : undefined;
+import { forwardRef, type ReactElement, type RefAttributes } from 'react';
+import { SliderFrame } from './subcomponents/slider-frame.js';
+import { SliderRange } from './subcomponents/slider-range.js';
+import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types.js';
 
 /**
- * Slider component for selecting a value or range from a continuous set of values.
+ * Picks one number from a continuous scale (Base UI `Slider`): a setting with a known range, or an
+ * estimate where the exact number does not matter. Use `Slider.Range` for a lower and an upper
+ * bound.
+ *
+ * Every `aria-*` goes to the thumb input, which is the `role="slider"`. Any `data-*` goes to the
+ * root.
+ *
+ * `className` and `style` are not props, and a value that gets past the types is dropped.
+ *
+ * Visual values are `--slider-*` custom properties, defaults in the `css-tokens` region of
+ * [./index.ts](./index.ts).
+ *
+ * The slider has no visible label. Name it with `aria-labelledby`, pointing at the label next to
+ * it, or with `aria-label`. A `<label htmlFor>` does not work, since the input id is internal.
+ *
+ * Each thumb input carries `min`, `max`, `aria-valuenow` and `aria-valuetext`, from `formatValue`.
+ * So a screen reader reads `1,000 GB` and not `50`.
+ *
+ * ### Color
+ *
+ * `color` paints the fill, the thumb border and the dots inside the fill, from the same hues as
+ * `Badge`. The track and the other dots are tints of it. It is required, with no default.
+ *
+ * ### Keys
+ *
+ * Each thumb is one tab stop, a native `<input type="range">`. The arrows move one `step`.
+ * `PageUp`, `PageDown` and `Shift` with an arrow move one large step: 10% of `max - min`, rounded
+ * to a multiple of `step`, and at least one `step`. `Home` and `End` move to `min` and `max`.
+ *
+ * Each key press calls `onChange` and `onAfterChange` once.
+ *
+ * ### Value out of range
+ *
+ * A `value` that is not a finite number renders the thumb at `min`. A value below `min` or above
+ * `max` renders the thumb at the nearest end, and the tooltip and `aria-valuetext` show the value
+ * of the thumb. The slider never calls `onChange` to correct a value.
+ *
+ * ### Disabled and read-only
+ *
+ * `disabled` fades the whole slider and blocks drag, a click on the track or on a mark, and the
+ * keys. The thumbs leave the tab order, and the slider is left out of the form submit. Hover still
+ * opens `disabledTooltip`.
+ *
+ * `readOnly` fades it less and blocks the same changes, and `onChange` and `onAfterChange` are not
+ * called. The thumbs stay in the tab order with `aria-readonly="true"`, and the slider is still
+ * submitted. `readOnlyTooltip` opens on hover and on keyboard focus.
+ *
+ * `readOnly` outranks `disabled`: with both, the slider is only read-only.
+ *
+ * Each state travels with its reason, the way it does on `Switch`: `disabled` with
+ * `disabledTooltip`, `readOnly` with `readOnlyTooltip`. Pass the reason as `undefined` when there
+ * is none to give.
+ *
+ * ### Tooltips
+ *
+ * `tooltip` shows the value of each thumb above it. It opens on hover, on press and on keyboard
+ * focus, and stays open while the thumb drags. Only one tooltip shows at a time: the value tooltip
+ * never opens while `disabled`, nor while `readOnly` with a `readOnlyTooltip`.
+ *
+ * Do not wrap the slider in a `Tooltip`. Use `tooltip` and `formatValue`.
+ *
+ * ### Marks
+ *
+ * Each mark draws a dot on the track and a label under it. The label row sits inside the root, so
+ * the root grows taller and nothing paints outside it. A label at `min` aligns with the start of
+ * the track, one at `max` with its end, and every other one is centred on its value.
+ *
+ * Each label has the room up to halfway to the mark on each side, less a small gap, or up to the
+ * end of the slider when there is no mark on that side. A centred label takes the same room on
+ * both sides of its value. `textOverflow` says what a longer label does: `ellipsis` (the default)
+ * truncates it and shows it in full in a tooltip under it on hover, and `wrap` breaks it into
+ * lines.
+ *
+ * A click on a label or its dot moves the closest thumb to the mark value, and calls `onChange`
+ * and `onAfterChange` once each.
+ *
+ * ### Layout
+ *
+ * The root fills the width of its parent. The track runs from edge to edge of the root, and a
+ * thumb at `min` or `max` stays inside it, so the parent needs no margin to make room.
+ *
+ * The root is never narrower than two thumbs. In a narrower parent it paints outside the parent.
+ *
+ * ### Asserting on it
+ *
+ * `testId` is `data-testid` on the root, and the prefix of the parts. Otherwise use the role and
+ * the data attributes, never the hashed class names.
+ *
+ * | root attribute | value |
+ * |---|---|
+ * | `data-slot` | `"slider"` |
+ * | `data-color` | mirrors the prop |
+ * | `data-disabled` | present while disabled, and not read-only |
+ * | `data-readonly` | present while `readOnly` |
+ * | `data-dragging` | present while a thumb moves under the pointer |
+ * | `data-range` | present on `Slider.Range` |
+ * | `data-text-overflow` | `"ellipsis"` or `"wrap"` |
+ *
+ * | `data-slot` | rendered | `data-testid` |
+ * |---|---|---|
+ * | `slider-control` | always, the area a press moves a thumb in | none |
+ * | `slider-track` | always | `${testId}-track` |
+ * | `slider-indicator` | always, inside the track, the fill | `${testId}-indicator` |
+ * | `slider-thumb` | one per value, with `data-index` | `${testId}-thumb-${index}` |
+ * | `slider-mark-dot` | one per mark, `data-active` inside the fill | none |
+ * | `slider-marks` | only with `marks`, the label row, `aria-hidden` | none |
+ * | `slider-mark` | one per mark, `data-active` inside the fill, `data-truncated` while cut | `${testId}-mark-${value}` |
  *
  * @example
  * ```tsx
- * // Basic usage
- * <Slider defaultValue={50} max={100} step={1} />
- * ```
- *
- * @example
- * ```tsx
- * // Range slider with two thumbs
- * <Slider defaultValue={[25, 75]} max={100} range />
- * ```
- *
- * @example
- * ```tsx
- * // With marks
+ * <Typography.Text id="opacity-label">Fill opacity</Typography.Text>
  * <Slider
- *   defaultValue={50}
- *   marks={{
- *     0: '0°C',
- *     26: '26°C',
- *     37: '37°C',
- *     100: { style: { color: '#f50' }, label: <strong>100°C</strong> },
- *   }}
+ *   color="primary"
+ *   min={0}
+ *   max={1}
+ *   step={0.01}
+ *   value={opacity}
+ *   onChange={setOpacity}
+ *   aria-labelledby="opacity-label"
  * />
  * ```
  *
  * @example
  * ```tsx
- * // With tooltip
- * <Slider defaultValue={25} tooltip={{ formatter: (val) => `${val}%` }} />
- * ```
- *
- * @example
- * ```tsx
- * // Custom styles (inline)
+ * // Marks and a value tooltip, on a scale that stands for a log scale
  * <Slider
- *   styles={{
- *     track: { backgroundColor: '#ffe4e6' },
- *     range: { backgroundColor: '#e11d48' },
- *     thumb: { borderColor: '#e11d48' },
- *   }}
- * />
- * ```
- *
- * @example
- * ```tsx
- * // Custom classNames (Tailwind/CSS modules)
- * <Slider
- *   classNames={{
- *     track: 'bg-gray-200',
- *     range: 'bg-blue-500',
- *     thumb: 'border-blue-500',
- *   }}
+ *   color="primary"
+ *   value={position}
+ *   onChange={setPosition}
+ *   marks={{ 0: '1 GB', 25: '10 GB', 50: '100 GB', 75: '1 TB', 100: '10 TB' }}
+ *   tooltip
+ *   formatValue={(value) => formatVolume(value)}
+ *   aria-labelledby="logs-volume-label"
  * />
  * ```
  */
-const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, SliderProps>(
-	(
-		{
-			className,
-			marks,
-			tooltip,
-			onChange,
-			onAfterChange,
-			range,
-			styles: inlineStyles,
-			classNames,
-			value: controlledValue,
-			defaultValue,
-			min = 0,
-			max = 100,
-			id,
-			style,
-			testId,
-			...props
-		},
-		ref,
-	) => {
-		const internalValue = useMemo(() => toArray(controlledValue), [controlledValue]);
-		const internalDefaultValue = useMemo(() => toArray(defaultValue), [defaultValue]);
-
-		const [localValues, setLocalValues] = useState<number[]>(
-			internalValue || internalDefaultValue || [min],
-		);
-
-		useEffect(() => {
-			if (internalValue !== undefined) {
-				setLocalValues(internalValue);
-			}
-		}, [internalValue]);
-
-		const handleValueChange = useCallback(
-			(newValues: number[]) => {
-				if (internalValue === undefined) {
-					setLocalValues(newValues);
-				}
-				if (onChange) {
-					onChange(range ? newValues : newValues[0]);
-				}
-			},
-			[internalValue, onChange, range],
-		);
-
-		const handleValueCommit = useCallback(
-			(newValues: number[]) => {
-				if (onAfterChange) {
-					onAfterChange(range ? newValues : newValues[0]);
-				}
-			},
-			[onAfterChange, range],
-		);
-
-		const markList = useMemo(() => {
-			if (!marks) return [];
-			return Object.entries(marks).map(([key, markObj]) => {
-				const markVal = Number(key);
-				const percent = ((markVal - min) / (max - min)) * 100;
-
-				const isObject =
-					typeof markObj === 'object' && markObj !== null && !React.isValidElement(markObj);
-				const label = isObject && 'label' in markObj ? (markObj as any).label : markObj;
-				const markStyle = isObject && 'style' in markObj ? (markObj as any).style : {};
-
-				return { key, markVal, percent, label, markStyle };
-			});
-		}, [marks, min, max]);
-
-		const isMarkActive = useCallback(
-			(markVal: number) => {
-				if (localValues.length === 1) return markVal <= localValues[0];
-				return markVal >= localValues[0] && markVal <= localValues[localValues.length - 1];
-			},
-			[localValues],
-		);
-
-		const handleMarkClick = useCallback(
-			(markVal: number) => {
-				let newValues: number[];
-				if (localValues.length === 1) {
-					newValues = [markVal];
-				} else {
-					const lastIndex = localValues.length - 1;
-					const distToFirst = Math.abs(localValues[0] - markVal);
-					const distToLast = Math.abs(localValues[lastIndex] - markVal);
-					newValues =
-						distToFirst <= distToLast
-							? [markVal, ...localValues.slice(1)]
-							: [...localValues.slice(0, lastIndex), markVal];
-					newValues = [...newValues].sort((a, b) => a - b);
-				}
-
-				if (internalValue === undefined) {
-					setLocalValues(newValues);
-				}
-				if (onChange) {
-					onChange(range ? newValues : newValues[0]);
-				}
-				if (onAfterChange) {
-					onAfterChange(range ? newValues : newValues[0]);
-				}
-			},
-			[localValues, internalValue, onChange, onAfterChange, range],
-		);
-
-		const internalId = useId();
-
-		return (
-			<SliderPrimitive.Root
-				ref={ref}
-				id={id}
-				style={style}
-				data-testid={testId}
-				min={min}
-				max={max}
-				// Always drive Radix from localValues so handleMarkClick (which
-				// updates localValues) can actually move the thumb — Radix
-				// ignores onValueChange-only updates when it's uncontrolled.
-				value={localValues}
-				defaultValue={internalDefaultValue}
-				onValueChange={handleValueChange}
-				onValueCommit={handleValueCommit}
-				className={cn(
-					styles['slider-root'],
-					markList.length > 0 && styles['slider-root-with-marks'],
-					className,
-				)}
-				{...props}
-			>
-				<SliderPrimitive.Track
-					className={cn(styles['slider-track'], classNames?.track)}
-					style={inlineStyles?.track}
-				>
-					<SliderPrimitive.Range
-						className={cn(styles['slider-range'], classNames?.range)}
-						style={inlineStyles?.range}
-					/>
-				</SliderPrimitive.Track>
-
-				{markList.length > 0 && (
-					<div className={styles['slider-dots']}>
-						{markList.map(({ key, markVal, percent }) => (
-							<span
-								key={`slider-${internalId}-dot-${key}`}
-								className={cn(
-									styles['slider-dot'],
-									isMarkActive(markVal) && styles['slider-dot-active'],
-								)}
-								style={{ left: `${percent}%` }}
-							/>
-						))}
-					</div>
-				)}
-
-				{localValues.map((val, index) => (
-					<SliderThumb
-						// biome-ignore lint/suspicious/noArrayIndexKey: Thumbs order does not change
-						key={`slider-${internalId}-thumb-${index}`}
-						value={val}
-						className={cn(styles['slider-thumb'], classNames?.thumb)}
-						style={inlineStyles?.thumb}
-						tooltip={tooltip}
-					/>
-				))}
-
-				{markList.length > 0 && (
-					<div className={styles['slider-marks']}>
-						{markList.map(({ key, markVal, percent, label, markStyle }) => (
-							// biome-ignore lint/a11y/useSemanticElements: span is intentional to avoid native button styling on slider marks
-							<span
-								key={`slider-${internalId}-mark-${key}`}
-								className={styles['slider-mark']}
-								style={{ left: `${percent}%`, ...markStyle }}
-								role="button"
-								tabIndex={0}
-								// Stop pointerdown from bubbling to Radix's slider root —
-								// otherwise Radix would snap the thumb to the cursor's
-								// x-position inside the label (so clicking the left edge
-								// of "10 GB" lands below 10, the right edge above 10),
-								// overriding our exact handleMarkClick(markVal) jump.
-								onPointerDown={(event) => event.stopPropagation()}
-								onClick={() => handleMarkClick(markVal)}
-								onKeyDown={(event) => {
-									if (event.key === 'Enter' || event.key === ' ') {
-										event.preventDefault();
-										handleMarkClick(markVal);
-									}
-								}}
-							>
-								{label}
-							</span>
-						))}
-					</div>
-				)}
-			</SliderPrimitive.Root>
-		);
-	},
-);
-Slider.displayName = 'Slider';
-
-interface SliderThumbProps {
-	value: number;
-	className: string;
-	style?: React.CSSProperties;
-	tooltip?: SliderProps['tooltip'];
-}
-
-/**
- * Internal thumb wrapper that keeps the tooltip open for the entire drag/focus
- * lifecycle. Radix's default behavior only shows the tooltip on hover, which
- * causes flicker as the thumb moves under the cursor during dragging.
- */
-function SliderThumb({ value, className, style, tooltip }: SliderThumbProps) {
-	const [isDragging, setIsDragging] = useState(false);
-	const [isHovering, setIsHovering] = useState(false);
-
-	useEffect(() => {
-		if (!isDragging) return;
-		const handlePointerUp = () => setIsDragging(false);
-		window.addEventListener('pointerup', handlePointerUp);
-		return () => window.removeEventListener('pointerup', handlePointerUp);
-	}, [isDragging]);
-
-	const thumb = (
-		<SliderPrimitive.Thumb
-			className={className}
-			style={style}
-			onPointerDown={() => setIsDragging(true)}
-			onPointerEnter={() => setIsHovering(true)}
-			onPointerLeave={() => setIsHovering(false)}
+const SliderRoot = forwardRef<HTMLDivElement, SliderProps>(function Slider(
+	{ value, defaultValue, onChange, onAfterChange, ...props },
+	ref,
+) {
+	return (
+		<SliderFrame
+			{...props}
+			ref={ref}
+			range={false}
+			value={value === undefined ? undefined : [value]}
+			defaultValue={defaultValue === undefined ? undefined : [defaultValue]}
+			onChange={onChange && ((values) => onChange(values[0]))}
+			onAfterChange={onAfterChange && ((values) => onAfterChange(values[0]))}
 		/>
 	);
+});
 
-	if (!tooltip) return thumb;
-
-	return (
-		<TooltipAnchor
-			open={isDragging || isHovering}
-			content={tooltip.formatter ? tooltip.formatter(value) : value}
-		>
-			{thumb}
-		</TooltipAnchor>
-	);
-}
-
-export { Slider };
+// `T` is inferred from the call site, so `T extends SliderProps` alone never runs excess property
+// checks. Every key outside the props is pinned to `never` instead.
+export const Slider = Object.assign(SliderRoot, { Range: SliderRange }) as (<T extends SliderProps>(
+	props: T &
+		ValidateSliderProps<T> &
+		Record<Exclude<keyof T, keyof SliderProps | keyof RefAttributes<HTMLDivElement>>, never> &
+		RefAttributes<HTMLDivElement>,
+) => ReactElement) & {
+	Range: <T extends SliderRangeProps>(
+		props: T &
+			ValidateSliderProps<T> &
+			Record<
+				Exclude<keyof T, keyof SliderRangeProps | keyof RefAttributes<HTMLDivElement>>,
+				never
+			> &
+			RefAttributes<HTMLDivElement>,
+	) => ReactElement;
+};

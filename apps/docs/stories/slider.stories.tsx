@@ -1,149 +1,23 @@
-import { Slider, TooltipProvider, Typography } from '@signozhq/ui';
+import { Slider, SliderColor, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import React from 'react';
+import { Fragment, type ReactElement, type ReactNode, useState } from 'react';
+import { fn } from 'storybook/test';
+import { allModes } from '../.storybook/modes.js';
+import { sliderArgTypes, sliderParameters, VOLUME_MARKS } from './shared/slider-arg-types.js';
 import styles from './slider.stories.module.css';
 
 const meta: Meta<typeof Slider> = {
 	title: 'Primitive Components/Slider',
 	component: Slider,
-	parameters: {
-		layout: 'centered',
-	},
+	parameters: sliderParameters,
+	argTypes: sliderArgTypes,
 	args: {
-		min: 0,
-		max: 100,
-		step: 1,
-		disabled: false,
-	},
-	argTypes: {
-		value: {
-			control: 'object',
-			description: 'Controlled value. Use number for single slider, number[] for range slider.',
-			table: {
-				type: { summary: 'number | number[]' },
-			},
-		},
-		defaultValue: {
-			control: 'object',
-			description:
-				'Initial value when uncontrolled. Use number for single slider, number[] for range slider.',
-			table: {
-				type: { summary: 'number | number[]' },
-			},
-		},
-		min: {
-			control: { type: 'number' },
-			description: 'Minimum value of the slider.',
-			table: {
-				type: { summary: 'number' },
-				defaultValue: { summary: '0' },
-			},
-		},
-		max: {
-			control: { type: 'number' },
-			description: 'Maximum value of the slider.',
-			table: {
-				type: { summary: 'number' },
-				defaultValue: { summary: '100' },
-			},
-		},
-		step: {
-			control: { type: 'number' },
-			description: 'Step increment between values.',
-			table: {
-				type: { summary: 'number' },
-				defaultValue: { summary: '1' },
-			},
-		},
-		range: {
-			control: 'boolean',
-			description: 'If true, renders a dual-thumb slider for range selection.',
-			table: {
-				type: { summary: 'boolean' },
-			},
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'If true, the slider is disabled.',
-			table: {
-				type: { summary: 'boolean' },
-			},
-		},
-		marks: {
-			control: 'object',
-			description:
-				'Tick marks along the track. Keys are values, values are labels or { style, label } objects.',
-			table: {
-				type: {
-					summary: 'Record<number, ReactNode | { style?: CSSProperties; label: ReactNode }>',
-				},
-			},
-		},
-		tooltip: {
-			control: 'object',
-			description: 'Tooltip configuration with formatter function.',
-			table: {
-				type: { summary: '{ formatter?: (value: number) => ReactNode }' },
-			},
-		},
-		onChange: {
-			action: 'changed',
-			description: 'Callback fired when the value changes during dragging.',
-			table: {
-				type: { summary: '(value: number | number[]) => void' },
-			},
-		},
-		onAfterChange: {
-			action: 'committed',
-			description: 'Callback fired when mouseup or keyup happens (value committed).',
-			table: {
-				type: { summary: '(value: number | number[]) => void' },
-			},
-		},
-		styles: {
-			control: 'object',
-			description: 'Custom inline styles for track, range, and thumb elements.',
-			table: {
-				type: {
-					summary: '{ track?: CSSProperties; range?: CSSProperties; thumb?: CSSProperties }',
-				},
-			},
-		},
-		classNames: {
-			control: 'object',
-			description: 'Custom CSS class names for track, range, and thumb elements.',
-			table: {
-				type: { summary: '{ track?: string; range?: string; thumb?: string }' },
-			},
-		},
-		testId: {
-			control: 'text',
-			description: 'Test ID for testing purposes (mapped to data-testid).',
-			table: {
-				type: { summary: 'string' },
-			},
-		},
-		id: {
-			control: 'text',
-			description: 'Unique identifier for the slider root element.',
-			table: {
-				type: { summary: 'string' },
-			},
-		},
-		className: {
-			control: 'text',
-			description: 'CSS class name for the slider root element.',
-			table: {
-				type: { summary: 'string' },
-			},
-		},
-		style: {
-			control: 'object',
-			description: 'Inline style for the slider root element.',
-			table: {
-				type: { summary: 'CSSProperties' },
-			},
-		},
+		color: 'primary',
+		defaultValue: 40,
+		tooltip: true,
+		'aria-label': 'Volume',
+		onChange: fn(),
+		onAfterChange: fn(),
 	},
 };
 
@@ -152,197 +26,395 @@ export default meta;
 type Story = StoryObj<typeof Slider>;
 
 export const Default: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const Range: Story = {
-	args: {
-		defaultValue: [25, 75],
-		max: 100,
-		step: 1,
-		range: true,
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const WithMarks: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-		marks: {
-			0: `1 GB`,
-			25: `10 GB`,
-			50: `100 GB`,
-			75: `1,000 GB`,
-			100: {
-				style: { color: '#f50' },
-				label: <strong>10,000 GB</strong>,
-			},
-		},
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapperWithPadding}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const WithTooltip: Story = {
-	args: {
-		defaultValue: 25,
-		max: 100,
-		step: 1,
-		tooltip: { formatter: (val) => `${val}%` },
-	},
 	decorators: [
 		(Story) => (
-			<TooltipProvider>
+			<div className="story-container">
 				<Story />
-			</TooltipProvider>
+			</div>
 		),
 	],
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-		</div>
-	),
+	parameters: {
+		// Every state it can be driven into is covered by `SliderShowcase`.
+		chromatic: { disableSnapshot: true },
+	},
+	// Remounts on a new `defaultValue`, since the value is uncontrolled.
+	render: (args) => <Slider key={String(args.defaultValue)} {...args} />,
 };
 
-export const CustomStyles: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-		styles: {
-			track: { backgroundColor: '#ffe4e6' },
-			range: { backgroundColor: '#e11d48' },
-			thumb: { borderColor: '#e11d48' },
-		},
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const CustomClassNames: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		step: 1,
-		classNames: {
-			track: 'bg-slate-200',
-			range: 'bg-emerald-500',
-			thumb: 'border-emerald-500',
-		},
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const Controlled: Story = {
-	render: () => {
-		const [value, setValue] = React.useState(30);
-		return (
-			<div className={`story-section ${styles.sliderWrapper}`}>
-				<Slider value={value} onChange={(v) => setValue(v as number)} max={100} />
-				<Typography size="sm" color="muted">
-					Value: {value}
-				</Typography>
-			</div>
-		);
-	},
-};
-
-export const ControlledRange: Story = {
-	render: () => {
-		const [value, setValue] = React.useState([20, 80]);
-		return (
-			<div className={`story-section ${styles.sliderWrapper}`}>
-				<Slider value={value} onChange={(v) => setValue(v as number[])} max={100} range />
-				<Typography size="sm" color="muted">
-					Range: {value[0]} - {value[1]}
-				</Typography>
-			</div>
-		);
-	},
-};
-
-export const WithOnAfterChange: Story = {
-	render: () => {
-		const [committed, setCommitted] = React.useState(50);
-		return (
-			<div className={`story-section ${styles.sliderWrapper}`}>
-				<Slider defaultValue={50} max={100} onAfterChange={(v) => setCommitted(v as number)} />
-				<Typography size="sm" color="muted">
-					Committed on release: {committed}
-				</Typography>
-			</div>
-		);
-	},
-};
-
-export const MinMax: Story = {
-	args: {
-		defaultValue: 50,
-		min: 20,
-		max: 80,
-		step: 1,
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Typography size="sm" color="muted" className={styles.sliderHint}>
-				min=20, max=80
+function Row({ label, children }: { label: string; children: ReactNode }): ReactElement {
+	return (
+		<>
+			<Typography size="sm" weight="medium" className={styles.rowLabel}>
+				{label}
 			</Typography>
-			<Slider {...args} />
-		</div>
-	),
-};
+			{children}
+		</>
+	);
+}
 
-export const Disabled: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		disabled: true,
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-		</div>
-	),
-};
-
-export const WithTestId: Story = {
-	args: {
-		defaultValue: 50,
-		max: 100,
-		testId: 'my-slider',
-		id: 'slider-id',
-	},
-	render: (args) => (
-		<div className={styles.sliderWrapper}>
-			<Slider {...args} />
-			<Typography size="sm" color="muted" className={styles.sliderHintTop}>
-				testId="my-slider", id="slider-id"
+function Section({
+	title,
+	description,
+	children,
+}: {
+	title: string;
+	description: ReactNode;
+	children: ReactNode;
+}): ReactElement {
+	return (
+		<div className="story-section">
+			<Typography size="base" weight="semibold">
+				{title}
 			</Typography>
+			<Typography size="sm">{description}</Typography>
+			<div className={`${styles.rows} ${styles.marginTopMedium}`}>{children}</div>
+		</div>
+	);
+}
+
+const LONG_MARKS = {
+	0: 'No retention',
+	25: 'One week of hot storage',
+	50: 'One month of hot storage',
+	75: 'Six months in cold storage',
+	100: 'Forever, archived',
+};
+
+/**
+ * The onboarding scale questions: the slider runs from 0 to 100 and stands for a log scale. The
+ * marks are keyed by the slider value, and `formatValue` computes the label from it.
+ */
+function formatVolume(position: number): string {
+	const gigabytes = 10 ** (position / 25);
+
+	return gigabytes >= 1000
+		? `${(gigabytes / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 })} TB`
+		: `${gigabytes.toLocaleString('en-US', { maximumFractionDigits: 0 })} GB`;
+}
+
+/**
+ * The `ConfigSlider` row of the panel editor: the label, the slider, and the value it prints in
+ * its own wrapper.
+ */
+function OpacityRow(): ReactElement {
+	const [opacity, setOpacity] = useState(0.7);
+
+	return (
+		<div className={styles.configRow}>
+			<Typography size="sm" id="opacity-label">
+				Fill opacity
+			</Typography>
+			<div className={styles.configSlider}>
+				<Slider
+					color="primary"
+					min={0}
+					max={1}
+					step={0.01}
+					value={opacity}
+					onChange={setOpacity}
+					aria-labelledby="opacity-label"
+				/>
+			</div>
+			<Typography size="sm" className={styles.configValue}>
+				{opacity.toFixed(2)}
+			</Typography>
+		</div>
+	);
+}
+
+/**
+ * Owns the value, as a consumer does, and prints what each callback received.
+ */
+function DurationFilter(): ReactElement {
+	const [value, setValue] = useState<[number, number]>([200, 8000]);
+	const [applied, setApplied] = useState<[number, number]>(value);
+
+	return (
+		<div className={styles.stack}>
+			<Slider.Range
+				color="primary"
+				min={0}
+				max={10000}
+				step={100}
+				value={value}
+				onChange={setValue}
+				onAfterChange={setApplied}
+				tooltip
+				formatValue={(duration) => `${duration} ms`}
+				aria-label="Duration"
+			/>
+			<Typography size="sm">
+				Dragging {value[0]} to {value[1]} ms, filter applied at {applied[0]} to {applied[1]} ms
+			</Typography>
+		</div>
+	);
+}
+
+const COLORS = Object.values(SliderColor);
+
+/**
+ * Every shape and state in one snapshot: each color with and without marks, one thumb and two,
+ * marks and their alignment, a value out of the scale, disabled and read-only, and the slider in
+ * a narrow parent.
+ */
+export const SliderShowcase: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => (
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<div className="story-section">
+				<Typography size="base" weight="semibold">
+					Colors
+				</Typography>
+				<Typography size="sm">
+					The same hues as Badge. The color paints the fill, the thumb border and the dots inside
+					the fill. The track and the other dots are tints of it.
+				</Typography>
+				<div className={`${styles.matrix} ${styles.marginTopMedium}`}>
+					<span />
+					<Typography size="sm" weight="medium" className={styles.rowLabel}>
+						normal
+					</Typography>
+					<Typography size="sm" weight="medium" className={styles.rowLabel}>
+						marks
+					</Typography>
+					{COLORS.map((color) => (
+						<Fragment key={color}>
+							<Typography size="sm" weight="medium" className={styles.rowLabel}>
+								{color}
+							</Typography>
+							<Slider color={color} defaultValue={40} aria-label={`${color} normal`} />
+							<Slider
+								color={color}
+								defaultValue={50}
+								marks={VOLUME_MARKS}
+								aria-label={`${color} marks`}
+							/>
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<Section
+				title="One thumb and two"
+				description="The fill runs from the start of the track to the thumb, or between the two thumbs of a range. A thumb at either end stays inside the track."
+			>
+				<Row label="at min">
+					<Slider color="primary" defaultValue={0} aria-label="At min" />
+				</Row>
+				<Row label="at 40">
+					<Slider color="primary" defaultValue={40} aria-label="At 40" />
+				</Row>
+				<Row label="at max">
+					<Slider color="primary" defaultValue={100} aria-label="At max" />
+				</Row>
+				<Row label="range">
+					<Slider.Range color="primary" defaultValue={[20, 70]} aria-label="Range" />
+				</Row>
+				<Row label="range, same value">
+					<Slider.Range color="primary" defaultValue={[50, 50]} aria-label="Same value" />
+				</Row>
+				<Row label="range, both ends">
+					<Slider.Range color="primary" aria-label="Both ends" />
+				</Row>
+			</Section>
+
+			<Section
+				title="Marks"
+				description="A dot on the track and a label under it. The label at min aligns with the start of the track, the one at max with its end, every other one is centred on its value. The dots inside the fill are active."
+			>
+				<Row label="log scale">
+					<Slider
+						color="primary"
+						defaultValue={50}
+						marks={VOLUME_MARKS}
+						tooltip
+						formatValue={formatVolume}
+						aria-label="Logs volume"
+					/>
+				</Row>
+				<Row label="range">
+					<Slider.Range
+						color="primary"
+						defaultValue={[25, 75]}
+						marks={VOLUME_MARKS}
+						aria-label="Volume range"
+					/>
+				</Row>
+				<Row label="inside the scale">
+					<Slider
+						color="primary"
+						defaultValue={30}
+						min={10}
+						max={90}
+						marks={{ 0: 'dropped', 10: '10', 30: '30', 90: '90', 95: 'dropped' }}
+						aria-label="Inside the scale"
+					/>
+				</Row>
+			</Section>
+
+			<Section
+				title="Value out of the scale"
+				description="A value that is not a finite number renders the thumb at min. One outside the scale renders it at the nearest end. The slider never corrects the value."
+			>
+				<Row label="NaN">
+					<Slider color="primary" value={Number.NaN} aria-label="NaN" />
+				</Row>
+				<Row label="below min">
+					<Slider color="primary" value={-20} aria-label="Below min" />
+				</Row>
+				<Row label="above max">
+					<Slider color="primary" value={140} aria-label="Above max" />
+				</Row>
+			</Section>
+
+			<Section
+				title="Disabled and read-only"
+				description="Disabled fades the whole slider and takes the thumbs out of the tab order. Read-only fades it less, keeps the thumbs focusable, and blocks every change. Hover opens the reason."
+			>
+				<Row label="disabled">
+					<Slider
+						color="primary"
+						defaultValue={40}
+						marks={VOLUME_MARKS}
+						disabled
+						disabledTooltip="Pick a data source first"
+						aria-label="Disabled"
+					/>
+				</Row>
+				<Row label="read-only">
+					<Slider
+						color="primary"
+						defaultValue={40}
+						marks={VOLUME_MARKS}
+						readOnly
+						readOnlyTooltip="Set by the workspace admin"
+						aria-label="Read-only"
+					/>
+				</Row>
+				<Row label="range, read-only">
+					<Slider.Range
+						color="primary"
+						defaultValue={[20, 70]}
+						readOnly
+						readOnlyTooltip="Set by the workspace admin"
+						aria-label="Read-only range"
+					/>
+				</Row>
+			</Section>
+
+			<Section
+				title="Layout"
+				description="The root fills its parent, with no margin, and the track runs edge to edge. The row that prints a value next to the slider owns that layout."
+			>
+				<Row label="panel editor">
+					<OpacityRow />
+				</Row>
+				<Row label="width 160">
+					<Slider color="primary" defaultValue={40} width={160} aria-label="Width 160" />
+				</Row>
+				<Row label="narrow parent">
+					<div className={styles.narrow}>
+						<Slider
+							color="primary"
+							defaultValue={40}
+							marks={{ 0: '0', 100: '100' }}
+							aria-label="Narrow"
+						/>
+					</div>
+				</Row>
+				<Row label="duration filter">
+					<DurationFilter />
+				</Row>
+			</Section>
+
+			<Section
+				title="Not enough space"
+				description="The dashed outline is the parent the slider fills. Each label has the room up to halfway to the mark on each side, or up to the end of the slider. A longer label truncates and shows in full in a tooltip under it on hover, or wraps with textOverflow wrap. The slider is never narrower than two thumbs. Drag the corner of the last frame to try any width."
+			>
+				<Row label="long labels">
+					<div className={styles.bounds}>
+						<Slider color="primary" defaultValue={40} marks={LONG_MARKS} aria-label="Long labels" />
+					</div>
+				</Row>
+				<Row label="long labels, wrap">
+					<div className={styles.bounds}>
+						<Slider
+							color="primary"
+							defaultValue={40}
+							marks={LONG_MARKS}
+							textOverflow="wrap"
+							aria-label="Long labels, wrap"
+						/>
+					</div>
+				</Row>
+				<Row label="long label near an end">
+					<div className={styles.bounds}>
+						<Slider
+							color="primary"
+							defaultValue={40}
+							marks={{ 5: 'Five percent of the quota', 95: 'Ninety-five percent of the quota' }}
+							aria-label="Long label near an end"
+						/>
+					</div>
+				</Row>
+				<Row label="labels wider than the track">
+					<div className={`${styles.bounds} ${styles.narrow}`}>
+						<Slider
+							color="primary"
+							defaultValue={40}
+							marks={{ 0: 'One gigabyte a day', 100: 'Ten terabytes a day' }}
+							aria-label="Labels wider than the track"
+						/>
+					</div>
+				</Row>
+				<Row label="beside a long label">
+					<div className={styles.squeezedRow}>
+						<Typography size="sm">Retention for the logs of every environment</Typography>
+						<Slider
+							color="primary"
+							defaultValue={40}
+							marks={{ 0: '0', 100: '100' }}
+							aria-label="Squeezed"
+						/>
+					</div>
+				</Row>
+				<Row label="width 2rem, range">
+					<div className={`${styles.bounds} ${styles.tiny}`}>
+						<Slider.Range color="primary" defaultValue={[20, 70]} aria-label="Width 2rem" />
+					</div>
+				</Row>
+				<Row label="narrower than the thumb">
+					<div className={`${styles.bounds} ${styles.thinnerThanThumb}`}>
+						<Slider color="primary" defaultValue={40} aria-label="Narrower than the thumb" />
+					</div>
+				</Row>
+				<Row label="width 0">
+					<div className={`${styles.bounds} ${styles.zero}`}>
+						<Slider
+							color="primary"
+							defaultValue={40}
+							marks={{ 0: '0', 100: '100' }}
+							aria-label="Width 0"
+						/>
+					</div>
+				</Row>
+				<Row label="resizable">
+					<div className={styles.resizable}>
+						<div className={styles.bounds}>
+							<Slider.Range
+								color="primary"
+								defaultValue={[25, 75]}
+								marks={LONG_MARKS}
+								tooltip
+								aria-label="Resizable"
+							/>
+						</div>
+					</div>
+				</Row>
+			</Section>
 		</div>
 	),
 };
