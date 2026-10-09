@@ -147,38 +147,23 @@ reading order.
 <Progress percent={memory} color={memoryColor(memory)} aria-labelledby="memory-label" />
 ```
 
-## Migrating
-
-| Before                              | Now                                                                                                   |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `strokeColor={Color.BG_FOREST_500}` | `color="success"`. Robin is `primary`, amber `warning`, cherry `danger` and sakura `highlight-danger` |
-| `strokeLinecap`                     | removed, the radius is fixed                                                                          |
-| `size`                              | removed, the height is fixed                                                                          |
-| `status="active"`                   | `active`                                                                                              |
-| `status="normal"`                   | removed                                                                                               |
-| `value`, `min`, `max`               | `percent`, the range is always 0 to 100                                                               |
-| no `strokeColor`                    | `color="primary"`, the color is required                                                              |
-| `className`, `style`                | removed, the look comes from `color`                                                                  |
-
 ## Asserting on it
 
-`testId` becomes `data-testid` on the root, and the prefix of the parts. With `testId="cpu"` the
-parts are `cpu-track`, `cpu-indicator` and, with `showInfo`, `cpu-value`.
+`testId` becomes `data-testid` on the root, and it names everything under it:
 
-Otherwise reach for the role and the data attributes, never the hashed class names:
+| Element    | `data-testid`               |
+| ---------- | --------------------------- |
+| track      | `` `${testId}-track` ``     |
+| fill       | `` `${testId}-indicator` `` |
+| value text | `` `${testId}-value` ``     |
 
-| `data-slot`          | rendered                                                 |
-| -------------------- | -------------------------------------------------------- |
-| `progress`           | the root, `role="progressbar"`                           |
-| `progress-track`     | always                                                   |
-| `progress-indicator` | always, inside the track, its inline `width` is the fill |
-| `progress-value`     | only with `showInfo`                                     |
+The value text renders only with `showInfo`. The inline `width` of the fill is the clamped
+`percent`. The segments of `steps` are not elements, so they have no test ID.
 
-The segments of `steps` are not elements, so they have no test ID and no slot.
+The root carries `data-color`, `data-steps` while segmented, `data-active` while `active`, and
+`data-complete` once `percent` reaches 100.
 
-The root mirrors `color` on `data-color`, the number of segments on `data-steps` and `active` on
-`data-active`. Base UI adds `data-complete` once `percent` reaches 100, and `data-progressing`
-before that.
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props
 

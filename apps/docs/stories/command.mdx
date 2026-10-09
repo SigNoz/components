@@ -1,165 +1,225 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as CommandStories from './command.stories';
-import * as CommandPrimitiveStories from './command-primitive.stories';
-import * as CommandDialogStories from './command-dialog.stories';
-import * as CommandInputStories from './command-input.stories';
-import * as CommandListStories from './command-list.stories';
-import * as CommandGroupStories from './command-group.stories';
-import * as CommandItemStories from './command-item.stories';
-import * as CommandEmptyStories from './command-empty.stories';
-import * as CommandSeparatorStories from './command-separator.stories';
-import * as CommandShortcutStories from './command-shortcut.stories';
 
 <Meta of={CommandStories} />
 
 # Command
 
-Use `CommandDialog` to mount the command palette in a modal/portal, or compose the low-level primitives for inline palettes.
+The command palette: a modal dialog with a search field over a list of actions, rendered through
+Base UI's `Autocomplete` inside Base UI's `Dialog`. The user types, the list narrows and ranks, and
+`Enter` or a click runs the highlighted row. It looks like the popup of `Dropdown`, `Combobox` and `Select`:
+the same search row, rows, group headings and empty row.
+
+Use it for the app-wide palette that `⌘K` opens. For a menu of actions on a button, use
+`Dropdown`. For a field that picks a value, use `Combobox` or `Select`.
 
 ## How to use
 
-### Inline Command
-
-Use `Command`, `CommandInput`, `CommandList`, and `CommandItem` for an inline searchable list:
+`items`, `label`, `open`, `onOpenChange` and `searchInputProps` are required. There are no
+subcomponents to compose: the palette owns its markup.
 
 ```tsx
-import {
-	Command,
-	CommandInput,
-	CommandList,
-	CommandGroup,
-	CommandItem,
-	CommandEmpty,
-} from '@signozhq/ui';
+import { Command } from '@signozhq/ui';
+import { useEffect, useState } from 'react';
 
-export default function MyComponent() {
+export default function Palette() {
+	const [open, setOpen] = useState(false);
+
+	useEffect(() => {
+		function toggle(event: KeyboardEvent) {
+			if (event.key === 'k' && (event.metaKey || event.ctrlKey) && !event.defaultPrevented) {
+				event.preventDefault();
+				setOpen((current) => !current);
+			}
+		}
+
+		document.addEventListener('keydown', toggle);
+		return () => document.removeEventListener('keydown', toggle);
+	}, []);
+
 	return (
-		<Command>
-			<CommandInput placeholder="Search…" />
-			<CommandList>
-				<CommandGroup heading="General">
-					<CommandItem onSelect={() => {}}>Open settings</CommandItem>
-					<CommandItem onSelect={() => {}}>Toggle sidebar</CommandItem>
-				</CommandGroup>
-				<CommandEmpty>No results.</CommandEmpty>
-			</CommandList>
-		</Command>
+		<Command
+			label="Command palette"
+			open={open}
+			onOpenChange={setOpen}
+			searchInputProps={{ placeholder: 'Search…' }}
+			items={[
+				{
+					type: 'group',
+					value: 'navigation',
+					label: 'Navigation',
+					items: [
+						{
+							type: 'item',
+							value: 'home',
+							label: 'Go to Home',
+							prefix: <House />,
+							shortcut: 'Shift+H',
+							onClick: () => navigate('/home'),
+						},
+					],
+				},
+			]}
+		/>
 	);
 }
 ```
 
 <Primary />
 
-## Command Props
+## Opening and closing
 
-<Controls of={CommandPrimitiveStories.Default} />
+The palette has no trigger, so the app holds `open`. The component does not listen for `⌘K` or
+`Ctrl+K`: bind the shortcut in the app and set `open`.
 
-## Default Story Props
+The palette opens near the top of the viewport and grows downward, so the field stays still while
+the list changes height. The focus moves to the field on open and returns to where it was on close.
 
-<Controls of={CommandStories.Default} />
+The palette is at most `32rem` wide, and the list at most `20rem` tall before it scrolls.
+`contentMaxWidth` and `contentMaxHeight` change those caps, and a number is read as pixels. The
+palette still stops short of the bottom of the viewport, so on a short one the list scrolls sooner.
 
-## CommandDialog
+Inside the palette `Ctrl+K` moves the highlight up and calls `preventDefault()`. A listener that
+toggles the palette skips an event whose `defaultPrevented` is true, as above, or `Ctrl+K` closes
+it.
 
-Mount the command palette in a dialog for a global command menu (e.g. ⌘K):
+The backdrop and the panel share one layer, so they stack together. The palette stacks above the
+layer the focus was in when it opened, such as a modal from another library.
+
+Picking a row runs its `onClick`, then calls `onOpenChange(false)`, also when `onClick` throws.
+`Escape` and a click outside call `onOpenChange(false)` too. Drop the `setOpen(false)` your
+handlers used to call.
+
+## Naming the palette
+
+`label` names the dialog and its search field. It is not shown. The placeholder is not a name, so
+`label` is required.
+
+## The rows
+
+Every row carries a `type`:
+
+| `type`  | What it is                                                               |
+| ------- | ------------------------------------------------------------------------ |
+| `item`  | An action. `onClick` runs it.                                            |
+| `group` | A heading and the rows under it. A group holds rows only, never a group. |
+
+An `item` takes a `prefix` icon, and either a `suffix` icon or a `shortcut`. The shortcut renders
+through `Kbd` in the trailing slot. It is a label only: the component does not bind the key. Screen
+readers announce it as the row's description, after the label. A shortcut that renders nothing,
+such as `isMac && '⌘K'` off a Mac, leaves the slot empty. Row icons render at 14px whatever size
+the element carries.
+
+A label that renders nothing (`null`, `false` or `''`) shows `<No label>`, and the row stays. A long
+label wraps to the next line, and the icon and the shortcut stay on its first line.
+
+## Blocked and waiting rows
+
+A row blocks itself with `disabled` + `disabledTooltip`. It says it is waiting with `loading` +
+`loadingTooltip`.
 
 ```tsx
-import {
-	CommandDialog,
-	CommandInput,
-	CommandList,
-	CommandGroup,
-	CommandItem,
-	CommandEmpty,
-	CommandShortcut,
-} from '@signozhq/ui';
-import { useState } from 'react';
-
-export default function MyComponent() {
-	const [open, setOpen] = useState(false);
-
-	return (
-		<>
-			<button onClick={() => setOpen(true)}>Open Command Dialog</button>
-			<CommandDialog open={open} onOpenChange={setOpen} position="top" offset={110}>
-				<CommandInput placeholder="Search or run a command…" />
-				<CommandList>
-					<CommandGroup heading="Quick actions">
-						<CommandItem onSelect={() => setOpen(false)}>
-							Open settings
-							<CommandShortcut>⌘S</CommandShortcut>
-						</CommandItem>
-						<CommandItem onSelect={() => setOpen(false)}>Toggle sidebar</CommandItem>
-					</CommandGroup>
-					<CommandEmpty>No results.</CommandEmpty>
-				</CommandList>
-			</CommandDialog>
-		</>
-	);
+{
+	type: 'item',
+	value: 'delete',
+	label: 'Delete dashboard',
+	disabled: !canDelete,
+	disabledTooltip: 'Only the owner can delete this dashboard',
+	onClick: deleteDashboard,
 }
 ```
 
-## CommandDialog Props
+- `loading` outranks `disabled`, the same as on `Button`.
+- Neither row runs its `onClick` on a click or on `Enter`, and the palette stays open.
+- Neither state removes the row from the keyboard walk, so the reason stays reachable.
+- The reason opens in a tooltip beside the row while the row is highlighted, from the keyboard as
+  from the pointer. Screen readers read it as the row's description, before the shortcut.
 
-<Controls of={CommandDialogStories.Default} />
+A loading row shows a spinner in place of its `prefix`. A row without a `prefix` shows it in the
+trailing slot instead, in place of any `suffix` or `shortcut`, so the label stays where it is.
 
-## Primitive Props
+## Search
 
-### CommandInput
+The query letters must appear in order and may skip characters: `dshb` finds `Dashboards`. Each row
+matches on its label, when the label renders to text, and on its `searchMetadata`, ignoring case. A
+letter at the start of a word scores better than one in the middle.
 
-<Controls of={CommandInputStories.Default} />
+As in cmdk, the rows outside any group come first, best first, wherever they sit in `items`. The
+groups follow, sorted by their best row, with their rows best first. A group with no match
+disappears, heading included. With an empty query every row shows, in the order of `items`.
 
-### CommandList
+```tsx
+{ type: 'item', value: 'members', label: 'Members', searchMetadata: 'team users invite', onClick: openMembers }
+```
 
-<Controls of={CommandListStories.Default} />
+Every change to the query reaches `searchInputProps.onChange`. The query clears when the palette
+closes, and a non-empty one is reported as `''`. `noContent` is what the list shows when no row
+matches, and `noContent={null}` shows nothing.
 
-### CommandGroup
+## Server-side search
 
-<Controls of={CommandGroupStories.Default} />
+`searchInputProps.filter: false` turns the filtering and the ranking off, and the rows show in the
+order of `items`. Fetch from `searchInputProps.onChange`, and show the request with
+`searchInputProps.loading`, which swaps the search glyph for a spinner and keeps the field usable.
+`noContent` then shows only while `items` is empty and `loading` is false.
 
-### CommandItem
+```tsx
+<Command
+	label="Search everything"
+	open={open}
+	onOpenChange={setOpen}
+	searchInputProps={{
+		placeholder: 'Search…',
+		filter: false,
+		loading: isFetching,
+		onChange: setQuery,
+	}}
+	items={results}
+/>
+```
 
-<Controls of={CommandItemStories.Default} />
+## Keyboard
 
-### CommandEmpty
+The focus stays in the search field, and rows never take it.
 
-<Controls of={CommandEmptyStories.Default} />
+| Key                             | Highlights                                                         |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `ArrowDown`, `Ctrl+N`, `Ctrl+J` | The next row, wrapping to the first                                |
+| `ArrowUp`, `Ctrl+P`, `Ctrl+K`   | The previous row, wrapping to the last                             |
+| `Home`, `Meta+ArrowUp`          | The first row                                                      |
+| `End`, `Meta+ArrowDown`         | The last row                                                       |
+| `Alt+ArrowDown`                 | The first row of the next group, or the next row when none follows |
+| `Alt+ArrowUp`                   | The first row of the previous group, or the previous row           |
 
-### CommandSeparator
+None of them moves the caret in the field. With a modifier, `Home` and `End` stay the field's, so
+`Shift+Home` selects the query. The first row is highlighted on open and after every change to the
+query, so `Enter` runs the best match, with or without a modifier. `Escape` closes the palette.
 
-<Controls of={CommandSeparatorStories.Default} />
+## Asserting on it
 
-### CommandShortcut
+`testId` becomes `data-testid` on the dialog panel, and it names everything under it:
 
-<Controls of={CommandShortcutStories.Default} />
+| Element       | `data-testid`                    |
+| ------------- | -------------------------------- |
+| search input  | `` `${testId}-search` ``         |
+| search prefix | `` `${testId}-search-prefix` ``  |
+| search suffix | `` `${testId}-search-suffix` ``  |
+| group         | `` `${testId}-group-${value}` `` |
+| row           | `` `${testId}-item-${value}` ``  |
+| row prefix    | `` `${rowTestId}-prefix` ``      |
+| row suffix    | `` `${rowTestId}-suffix` ``      |
+| empty row     | `` `${testId}-empty` ``          |
 
-## Create or search
+`rowTestId` is the row's own `testId` or the generated one. A row or a group with its own `testId`
+keeps it. The search suffix renders only with `searchInputProps.suffix`.
 
-Use `CommandEmpty` and custom keyboard handling to let users create a new item when there are no matches (e.g. press Enter to create):
+The highlighted row carries `data-highlighted` and `aria-selected="true"`. A disabled row carries
+`data-disabled` and a loading row `data-loading`, and both carry `aria-disabled="true"`. The slot
+that shows a loading row's spinner carries `data-loading` too. The search prefix carries
+`data-loading` while `searchInputProps.loading` is true.
 
-## CreateOrSearch Props
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
-<Controls of={CommandStories.CreateOrSearch} />
+## Props
 
-## Suggestions
-
-Static suggestion group with heading.
-
-<Controls of={CommandStories.Suggestions} />
-
-## Separators
-
-Multiple groups separated by `CommandSeparator`.
-
-<Controls of={CommandStories.Separators} />
-
-## Shortcuts
-
-Show keyboard shortcuts next to items with `CommandShortcut`.
-
-<Controls of={CommandStories.ShortcutsDemo} />
-
-## Empty state
-
-Custom empty message when no results match the search.
-
-<Controls of={CommandStories.EmptyState} />
+<Controls of={CommandStories.Default} />

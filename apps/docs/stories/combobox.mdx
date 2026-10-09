@@ -322,33 +322,31 @@ import { ForceOpenProvider } from '@signozhq/ui/testing';
 
 ## Asserting on it
 
-`testId` is `data-testid` on the trigger and names every part: `${testId}-item-${value}`,
-`${testId}-hint-${value}`, `${testId}-group-${value}`, `${testId}-custom-${value}`,
-`${testId}-chip-${value}` and `${testId}-chip-${value}-remove`, plus `${testId}-create`,
-`-chip-overflow`, `-clear`, `-search`, `-loading`, `-empty` and `-footer-action`. Otherwise use the
-`data-slot` attributes, `combobox-trigger`, `combobox-popup`, `combobox-item` and the rest, never
-the class names.
+`testId` becomes `data-testid` on the trigger, and it names everything under it:
 
-## Migrating from `ComboboxSimple`
+| Element            | `data-testid`                          |
+| ------------------ | -------------------------------------- |
+| row                | `` `${testId}-item-${value}` ``        |
+| row prefix         | `` `${rowTestId}-prefix` ``            |
+| row suffix         | `` `${rowTestId}-suffix` ``            |
+| hint row           | `` `${testId}-hint-${value}` ``        |
+| group              | `` `${testId}-group-${value}` ``       |
+| custom value row   | `` `${testId}-custom-${value}` ``      |
+| create row         | `` `${testId}-create` ``               |
+| chip               | `` `${testId}-chip-${value}` ``        |
+| chip remove button | `` `${testId}-chip-${value}-remove` `` |
+| chip overflow      | `` `${testId}-chip-overflow` ``        |
+| clear button       | `` `${testId}-clear` ``                |
+| search input       | `` `${testId}-search` ``               |
+| search prefix      | `` `${testId}-search-prefix` ``        |
+| loading row        | `` `${testId}-loading` ``              |
+| empty row          | `` `${testId}-empty` ``                |
+| footer action      | `` `${testId}-footer-action` ``        |
 
-| `ComboboxSimple`                                                  | `Combobox`                                                   |
-| ----------------------------------------------------------------- | ------------------------------------------------------------ |
-| `{ value, label }`                                                | `{ type: 'item', value, label }`                             |
-| `label: <><Icon /> Text</>`, `displayValue: 'Text'`               | `label: 'Text', prefix: <Icon />`                            |
-| `groups={[{ heading, items }]}`                                   | `items={[{ type: 'group', value, label: heading, items }]}`  |
-| `{ value, label, insertValue }`                                   | `{ type: 'hint', value, label, insertValue }`                |
-| `keywords: ['a', 'b']`                                            | `searchMetadata: 'a b'`                                      |
-| `placeholder`, optional                                           | `placeholder`, required                                      |
-| `inputPlaceholder`                                                | `searchInputProps.placeholder`, required                     |
-| `emptyPlaceholder`                                                | `noContent`                                                  |
-| `loadingPlaceholder`                                              | `loadingContent`                                             |
-| `withPortal={false}`                                              | Nothing inside a `Dialog` or `Drawer`, `container` elsewhere |
-| `virtualized={{ virtualizedHeight }}`                             | `virtualized` and `contentMaxHeight`                         |
-| `className` for the width                                         | `width` and `maxWidth`                                       |
-| `disabled`                                                        | `disabled` and `disabledTooltip`                             |
-| `disableTooltipProvider`                                          | Nothing, an outer provider is found on its own               |
-| `Combobox`, `ComboboxTrigger`, `ComboboxItem` and the other parts | `Combobox` with `items`, or `Dropdown` for a menu of toggles |
-| `[data-slot='combobox-content']`                                  | `[data-slot='combobox-popup']`                               |
+`rowTestId` is the row's own `testId` or the generated one. A row, a group or the footer action
+with its own `testId` keeps it. The popup parts render only while it is open.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props
 

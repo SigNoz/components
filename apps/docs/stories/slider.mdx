@@ -167,44 +167,24 @@ A row that prints the value next to the slider owns that layout:
 }
 ```
 
-## Migrating
-
-| Before                                    | Now                                                                                |
-| ----------------------------------------- | ---------------------------------------------------------------------------------- |
-| no `color`                                | `color="primary"` keeps the look. `color` is required, with no default             |
-| `<Slider range value={[a, b]} />`         | `<Slider.Range value={[a, b]} />`                                                  |
-| `onChange={(v) => set(v as number)}`      | `onChange={set}`, the value is a `number` on `Slider` and a pair on `Slider.Range` |
-| `tooltip={{ formatter }}`                 | `tooltip` and `formatValue`, which returns a string                                |
-| `marks={{ 0: { label, style } }}`         | `marks={{ 0: 'label' }}`, a mark is a string                                       |
-| `styles`, `classNames`                    | removed, the parts take no style or class. `color="primary"` keeps the fill color  |
-| `className`, `style`                      | removed. Use `width` and `maxWidth`, and put `flex` on a wrapper the row owns      |
-| a negative margin to undo the track inset | removed, the track runs edge to edge                                               |
-| `orientation`, `inverted`, `dir`          | removed, the slider is horizontal only                                             |
-| `onValueChange`, `onValueCommit`          | `onChange`, `onAfterChange`                                                        |
-| `asChild`                                 | removed                                                                            |
-
 ## Asserting on it
 
-`testId` becomes `data-testid` on the root, and the prefix of the parts. With `testId="volume"` the
-parts are `volume-track`, `volume-indicator`, `volume-thumb-0` (and `volume-thumb-1` on
-`Slider.Range`) and `volume-mark-50` for a mark at 50.
+`testId` becomes `data-testid` on the root, and it names everything under it:
 
-Otherwise reach for the role and the data attributes, never the hashed class names:
+| Element    | `data-testid`                    |
+| ---------- | -------------------------------- |
+| track      | `` `${testId}-track` ``          |
+| fill       | `` `${testId}-indicator` ``      |
+| thumb      | `` `${testId}-thumb-${index}` `` |
+| mark label | `` `${testId}-mark-${value}` ``  |
 
-| `data-slot`        | rendered                                                                |
-| ------------------ | ----------------------------------------------------------------------- |
-| `slider`           | the root                                                                |
-| `slider-control`   | always, the area a press moves a thumb in                               |
-| `slider-track`     | always                                                                  |
-| `slider-indicator` | always, inside the track, the fill                                      |
-| `slider-thumb`     | one per value, with `data-index`                                        |
-| `slider-mark-dot`  | one per mark, `data-active` inside the fill                             |
-| `slider-marks`     | only with `marks`, the label row, `aria-hidden`                         |
-| `slider-mark`      | one per mark, `data-active` inside the fill, `data-truncated` while cut |
+`index` is `0` on `Slider`. On `Slider.Range` it is `0` for the lower bound and `1` for the upper
+one. A mark label renders only with `marks`, and carries `data-truncated` while it is cut.
 
-The root has `data-color` with the `color` in force, `data-disabled` while disabled and not read-only, `data-readonly` while read-only,
-`data-dragging` while a thumb moves under the pointer, `data-range` on `Slider.Range`, and
-`data-text-overflow` with the `textOverflow` in force.
+The root carries `data-color` and `data-text-overflow`, and `data-disabled`, `data-readonly`,
+`data-dragging` and `data-range` while they apply.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Slider props
 
