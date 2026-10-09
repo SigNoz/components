@@ -146,8 +146,8 @@ const components = [
   'button', 'calendar', 'callout', 'checkbox', 'combobox', 'command',
   'date-picker', 'dialog', 'divider', 'drawer', 'dropdown-menu', 'input',
   'input-number', 'kbd', 'pagination', 'pin-list', 'popover', 'progress',
-  'radio-group', 'resizable', 'select', 'skeleton', 'slider', 'sonner',
-  'switch', 'table', 'tabs', 'text-ellipsis', 'toggle-group',
+  'radio-group', 'resizable', 'select', 'skeleton', 'slider',
+  'switch', 'table', 'tabs', 'text-ellipsis', 'toast', 'toggle-group',
   'tooltip', 'typography'
 ]
 

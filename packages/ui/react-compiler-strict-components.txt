@@ -7,4 +7,5 @@ toggle-group
 tooltip
 dropdown
 calendar
+toast
 callout

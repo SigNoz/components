@@ -1,0 +1,74 @@
+.playground {
+	min-height: 100vh;
+}
+
+.showcase {
+	display: flex;
+	flex-direction: column;
+	gap: 3rem;
+}
+
+.frames {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+}
+
+/*
+ * The viewport is `position: fixed`, against the window. Layout containment makes the frame its
+ * containing block instead, so each `Toaster` stacks against a corner of its own frame and the
+ * frames can sit on the page side by side. As wide as the 26.25rem toast and its 1rem offset on
+ * each side.
+ */
+.frame {
+	position: relative;
+	contain: layout;
+	inline-size: 28.25rem;
+	border: 1px dashed var(--l2-border);
+	border-radius: var(--radius-2);
+}
+
+/* Nine toasts spread, one of them two lines tall and one with a description. */
+.spread {
+	block-size: 35.5rem;
+}
+
+/* The newest toast, with its description, and the two peeking out behind it. */
+.collapsed {
+	block-size: 7.25rem;
+}
+
+/*
+ * The stack shows three toasts and holds the rest behind, which is no use for a frame that is
+ * there to show every variant. The ones past the limit are made visible here, and nothing else is
+ * touched: every toast in the frame is the component as it ships.
+ */
+.spread :global([data-slot='toast'][data-limited]) {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/*
+ * Every `Toaster` draws a stack per position, and the showcase raises its toasts in two of them.
+ * Each frame shows only the stack of its own position.
+ */
+.frame[data-corner='top-right'] :global([data-slot='toaster']:not([data-position='top-right'])),
+.frame[data-corner='bottom-right']
+	:global([data-slot='toaster']:not([data-position='bottom-right'])) {
+	display: none;
+}
+
+/* The position buttons, with the one that raises a toast in each position under them. */
+.timed {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+/* One button per position, laid out as the corners and edges they stand for. */
+.positions {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	gap: 0.5rem;
+}

@@ -16,8 +16,6 @@ export const externalPatterns = [
 	'react-compiler-runtime',
 	'clsx',
 	'cmdk',
-	'sonner',
-	'next-themes',
 	'motion/react',
 	'react-day-picker',
 	/^lodash-es(\/.*)?$/,
