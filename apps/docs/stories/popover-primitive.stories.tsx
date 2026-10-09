@@ -62,13 +62,13 @@ export const Default: Story = {
 								<label htmlFor="width">
 									<Typography>Width</Typography>
 								</label>
-								<Input id="width" defaultValue="100%" className={styles.inputSmall} />
+								<Input id="width" defaultValue="100%" />
 							</div>
 							<div className={styles.formGrid}>
 								<label htmlFor="maxWidth">
 									<Typography>Max. width</Typography>
 								</label>
-								<Input id="maxWidth" defaultValue="300px" className={styles.inputSmall} />
+								<Input id="maxWidth" defaultValue="300px" />
 							</div>
 						</div>
 					</div>

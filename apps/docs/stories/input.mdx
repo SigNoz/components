@@ -1,54 +1,111 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as InputStories from './input.stories';
+import * as InputComponentsStories from './input-components.stories';
 
 <Meta of={InputStories} />
 
 # Input
 
-A flexible text input component with support for prefixes, suffixes, and a dedicated password variant.
+A one-line text field: a native `<input>` inside a frame that owns the border, the sizes, the
+validation states and the `prefix`/`suffix` slots. `Input.Password`, `Input.TextArea` and
+`Input.Number` swap the control and keep the frame.
+
+The input has no visible label of its own. Name it with `aria-label` or `aria-labelledby`, or with
+a `<label htmlFor>` that matches `id`.
 
 ## How to use
 
-### Basic usage
+Every native input prop lands on the `<input>`, so react-hook-form's `register()` spreads straight
+onto it.
 
 ```tsx
 import { Input } from '@signozhq/ui';
 
-export default function MyComponent() {
-	return <Input placeholder="Enter text" />;
+export default function OrganisationSearch() {
+	return <Input placeholder="For eg. Simpsonville..." aria-label="Organisation" />;
 }
 ```
-
-### With prefix and suffix
-
-```tsx
-import { Input } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return (
-		<Input
-			prefix={<span style={{ fontSize: '0.75rem', color: 'var(--vanilla-500)' }}>@</span>}
-			suffix={<button type="button">Clear</button>}
-			placeholder="username"
-		/>
-	);
-}
-```
-
-### Password input
-
-```tsx
-import { Input } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return <Input.Password placeholder="Enter password" />;
-}
-```
-
-This following example shows a basic input (using the default story):
 
 <Primary />
 
-## Input & Input.Password Props
+## Sizes and variants
+
+`size` is the height of the field: `base` is 32px, `large` is 40px. The text does not change size.
+
+`variant="unstyled"` drops the border and the background and keeps everything else: padding,
+height, text, and the focus ring, which is the only thing marking focus there.
+
+## Status
+
+`status` tints the border and the background and renders a matching icon at the trailing edge,
+after the `suffix`. `danger` also announces itself as `aria-invalid`. `success` is confirmation of
+a completed check (name available, connection verified), not a resting state for a valid field.
+
+## Focus
+
+Keyboard focus draws a 1px ring one pixel outside the field edge, on `:focus-visible` only. The
+border itself never changes color on focus: the ring is the one focus signal, the same as every
+other control. `noFocusRing` is for a surface that draws a focus treatment of its own; never use it
+with `variant="unstyled"`.
+
+## Disabled and read-only
+
+`disabled` fades the field, blocks typing, and leaves it out of the tab order and the form submit.
+Hover still opens `disabledTooltip`. `readOnly` fades it less and locks the value; the field keeps
+its tab stop and its value stays selectable and copyable. `readOnly` outranks `disabled`.
+
+Each state travels with its reason: `disabled` with `disabledTooltip`, `readOnly` with
+`readOnlyTooltip`. Pass the reason as `undefined` when there is none to give.
+
+## Members
+
+`Input.Password` is `Input` with a visibility toggle in the suffix slot: no `type` and no `suffix`
+of its own.
+
+`Input.TextArea` is the multi-line field. It grows with its `rows`, resizes vertically by hand, and
+has no `prefix`/`suffix`.
+
+`Input.Number` holds a number, `null` while empty. `onChange` reports the parsed value, not the
+event, and the field steps with the buttons at its trailing edge, the arrow keys (`Shift` for
+`largeStep`) and `Home`/`End`. It is not a target for `register()`; use a react-hook-form
+`Controller`.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the frame, and the prefix of the parts. With `testId="org"` the
+input is `org-field`, the slots `org-prefix` and `org-suffix`, the status icon `org-status`, the
+password toggle `org-toggle`, and the step buttons `org-step-up` and `org-step-down`.
+
+Otherwise reach for the role and the data attributes, never the hashed class names:
+
+| `data-slot`             | rendered                                             |
+| ----------------------- | ---------------------------------------------------- |
+| `input`                 | the frame                                            |
+| `input-field`           | always, the native control                           |
+| `input-prefix`          | while `prefix` renders something                     |
+| `input-suffix`          | while `suffix` renders something                     |
+| `input-status-icon`     | while `status` is set, `aria-hidden`                 |
+| `input-password-toggle` | on `Input.Password`                                  |
+| `input-stepper`         | on `Input.Number` with `controls`                    |
+| `input-step-up`         | on `Input.Number` with `controls`, disabled at `max` |
+| `input-step-down`       | on `Input.Number` with `controls`, disabled at `min` |
+
+The frame has `data-size`, `data-variant`, `data-status` while one is set, `data-disabled` while
+disabled and not read-only, `data-readonly` while read-only, `data-no-focus-ring` with
+`noFocusRing`, and `data-member` (`password`, `textarea` or `number`) on the members.
+
+## Input props
 
 <Controls of={InputStories.Default} />
+
+## Input.Password props
+
+<Controls of={InputComponentsStories.Password} />
+
+## Input.TextArea props
+
+<Controls of={InputComponentsStories.TextArea} />
+
+## Input.Number props
+
+<Controls of={InputComponentsStories.Number} />

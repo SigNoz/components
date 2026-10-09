@@ -62,25 +62,25 @@ export const Default: Story = {
 								<label htmlFor="width">
 									<Typography>Width</Typography>
 								</label>
-								<Input id="width" defaultValue="100%" className={styles.inputSmall} />
+								<Input id="width" defaultValue="100%" />
 							</div>
 							<div className={styles.formGrid}>
 								<label htmlFor="maxWidth">
 									<Typography>Max. width</Typography>
 								</label>
-								<Input id="maxWidth" defaultValue="300px" className={styles.inputSmall} />
+								<Input id="maxWidth" defaultValue="300px" />
 							</div>
 							<div className={styles.formGrid}>
 								<label htmlFor="height">
 									<Typography>Height</Typography>
 								</label>
-								<Input id="height" defaultValue="25px" className={styles.inputSmall} />
+								<Input id="height" defaultValue="25px" />
 							</div>
 							<div className={styles.formGrid}>
 								<label htmlFor="maxHeight">
 									<Typography>Max. height</Typography>
 								</label>
-								<Input id="maxHeight" defaultValue="none" className={styles.inputSmall} />
+								<Input id="maxHeight" defaultValue="none" />
 							</div>
 						</div>
 					</div>
@@ -136,7 +136,6 @@ export const DateAndTimePicker: Story = {
 									onChange={(e) => setTime(e.target.value)}
 									id="time-picker"
 									step="1"
-									className={styles.timePickerInput}
 								/>
 							</div>
 						</PopoverContent>

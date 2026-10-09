@@ -1,127 +1,21 @@
-import { Input, Typography } from '@signozhq/ui';
+import { Search } from '@signozhq/icons';
+import { Input, type InputProps, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { type CSSProperties, Fragment, type ReactElement, type ReactNode, useState } from 'react';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
+import { allModes } from '../.storybook/modes.js';
+import { inputArgTypes, inputParameters } from './shared/input-arg-types.js';
 import styles from './input.stories.module.css';
 
 const meta: Meta<typeof Input> = {
 	title: 'Primitive Components/Input',
 	component: Input,
-	parameters: {
-		layout: 'fullscreen',
-		design: [
-			{
-				name: 'Figma',
-				type: 'figma',
-				url: 'https://www.figma.com/design/egMidgk6VJDXTumxcCYUl1/Periscope---Primitives?node-id=12-742&p=f',
-			},
-		],
-		docs: {
-			description: {
-				component:
-					'A flexible input component with light and dark theme support. Supports various input types including password, proper accessibility, and seamless integration with forms. Perfect for text entry, search fields, password inputs, and form validation.',
-			},
-		},
-	},
-	argTypes: {
-		id: {
-			control: 'text',
-			description: 'A unique identifier for the input.',
-			table: { category: 'Accessibility', type: { summary: 'string' } },
-		},
-		name: {
-			control: 'text',
-			description:
-				'The name of the input. Submitted with its owning form as part of a name/value pair.',
-			table: { category: 'Form', type: { summary: 'string' } },
-		},
-		placeholder: {
-			control: 'text',
-			description: 'Placeholder text displayed when the input is empty.',
-			table: { category: 'Form', type: { summary: 'string' } },
-		},
-		type: {
-			control: 'select',
-			options: [
-				'text',
-				'email',
-				'password',
-				'number',
-				'tel',
-				'url',
-				'search',
-				'date',
-				'time',
-				'datetime-local',
-			],
-			description:
-				'The input type. Determines the keyboard layout and validation behavior. Use type="password" for password inputs.',
-			table: {
-				category: 'Behavior',
-				defaultValue: { summary: 'text' },
-				type: { summary: 'string' },
-			},
-		},
-		disabled: {
-			control: 'boolean',
-			description:
-				'Whether the input is disabled and non-interactive. Disabled inputs cannot be focused or edited.',
-			table: {
-				category: 'Behavior',
-				defaultValue: { summary: 'false' },
-				type: { summary: 'boolean' },
-			},
-		},
-		required: {
-			control: 'boolean',
-			description: 'Whether the input is required. Browsers will prevent form submission if empty.',
-			table: {
-				category: 'Behavior',
-				defaultValue: { summary: 'false' },
-				type: { summary: 'boolean' },
-			},
-		},
-		readOnly: {
-			control: 'boolean',
-			description:
-				'Whether the input is read-only. Read-only inputs can be focused but not edited.',
-			table: {
-				category: 'Behavior',
-				defaultValue: { summary: 'false' },
-				type: { summary: 'boolean' },
-			},
-		},
-		value: {
-			control: 'text',
-			description: 'The controlled value of the input.',
-			table: { category: 'Form', type: { summary: 'string' } },
-		},
-		defaultValue: {
-			control: 'text',
-			description: 'The default uncontrolled value of the input.',
-			table: { category: 'Form', type: { summary: 'string' } },
-		},
-		prefix: {
-			control: false,
-			description: 'Optional element rendered before the input, such as an icon or label.',
-			table: { category: 'Appearance', type: { summary: 'React.ReactNode' } },
-		},
-		suffix: {
-			control: false,
-			description: 'Optional element rendered after the input, such as an icon or action button.',
-			table: { category: 'Appearance', type: { summary: 'React.ReactNode' } },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		onChange: {
-			control: false,
-			description: 'Event handler called when the input value changes.',
-			table: {
-				category: 'Events',
-				type: { summary: '(event: React.ChangeEvent<HTMLInputElement>) => void' },
-			},
-		},
+	parameters: inputParameters,
+	argTypes: inputArgTypes,
+	args: {
+		placeholder: 'For eg. Simpsonville...',
+		'aria-label': 'Organisation name',
+		onChange: fn(),
 	},
 };
 
@@ -129,372 +23,517 @@ export default meta;
 
 type Story = StoryObj<typeof Input>;
 
-// Default input story (Primary)
 export const Default: Story = {
-	args: {
-		placeholder: 'Enter text...',
-		type: 'text',
-		disabled: false,
-		required: false,
-		readOnly: false,
+	decorators: [
+		(Story) => (
+			<div className="story-container">
+				<Story />
+			</div>
+		),
+	],
+	parameters: {
+		// Every state it can be driven into is covered by `Showcase`.
+		chromatic: { disableSnapshot: true },
 	},
 };
 
-// Variant Examples - These appear in the Examples section
+/**
+ * `hover` and `focus` cannot be reached by a snapshot on their own, so
+ * `storybook-addon-pseudo-states` forces them through the `[data-pseudo]` selectors in the
+ * story parameters. `disabled` and `readOnly` are real props, so they need no pseudo.
+ *
+ * Each cell holds an empty field, then a filled one. The empty one is where the placeholder
+ * color shows, including its hover color.
+ */
+const STATES = ['default', 'hover', 'focus', 'disabled', 'readonly'] as const;
 
-export const InputTypes: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Input component supports various HTML input types. Each type provides appropriate keyboard layouts and validation on mobile devices.',
-			},
-		},
-	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
-	},
-	render: () => (
-		<div className="story-container-full">
-			<div className="story-section">
-				<Typography as="h3" size="sm" weight="medium">
-					Common Input Types
+type State = (typeof STATES)[number];
+
+type LockedProps = Pick<
+	InputProps,
+	'disabled' | 'disabledTooltip' | 'readOnly' | 'readOnlyTooltip'
+> & {
+	'data-pseudo'?: 'hover' | 'focus';
+};
+
+function stateProps(state: State): LockedProps {
+	switch (state) {
+		case 'disabled':
+			return { disabled: true, disabledTooltip: 'Ask an admin to unlock this field' };
+		case 'readonly':
+			return { readOnly: true, readOnlyTooltip: 'Saving your changes' };
+		case 'hover':
+			return { 'data-pseudo': 'hover' };
+		case 'focus':
+			return { 'data-pseudo': 'focus' };
+		default:
+			return {};
+	}
+}
+
+type Appearance = {
+	id: string;
+	label: string;
+	props: Pick<InputProps, 'size' | 'status' | 'variant'>;
+};
+
+const APPEARANCES: Appearance[] = [
+	{ id: 'base', label: 'base', props: {} },
+	{ id: 'large', label: 'large', props: { size: 'large' } },
+	{ id: 'success', label: 'success', props: { status: 'success' } },
+	{ id: 'warning', label: 'warning', props: { status: 'warning' } },
+	{ id: 'danger', label: 'danger', props: { status: 'danger' } },
+	{ id: 'unstyled', label: 'unstyled', props: { variant: 'unstyled' } },
+];
+
+const LONG_VALUE = 'Springfield Heights Observatory, 1842 West Canary Lane';
+
+function matrixStyle(columns: number): CSSProperties {
+	return { '--matrix-columns': columns } as CSSProperties;
+}
+
+function MatrixHeader({ columns }: { columns: readonly string[] }): ReactElement {
+	return (
+		<>
+			<span />
+			{columns.map((column) => (
+				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+					{column}
 				</Typography>
-				<div className={`story-section ${styles.maxWidthMd}`}>
-					<div className="story-section-sm">
-						<label htmlFor="type-text">
-							<Typography size="xs" color="muted">
-								Text
-							</Typography>
-						</label>
-						<Input id="type-text" type="text" placeholder="Enter text" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="type-email">
-							<Typography size="xs" color="muted">
-								Email
-							</Typography>
-						</label>
-						<Input id="type-email" type="email" placeholder="email@example.com" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="type-password">
-							<Typography size="xs" color="muted">
-								Password
-							</Typography>
-						</label>
-						<Input id="type-password" type="password" placeholder="Enter password" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="type-number">
-							<Typography size="xs" color="muted">
-								Number
-							</Typography>
-						</label>
-						<Input id="type-number" type="number" placeholder="Enter number" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="type-tel">
-							<Typography size="xs" color="muted">
-								Telephone
-							</Typography>
-						</label>
-						<Input id="type-tel" type="tel" placeholder="+1 (555) 000-0000" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="type-url">
-							<Typography size="xs" color="muted">
-								URL
-							</Typography>
-						</label>
-						<Input id="type-url" type="url" placeholder="https://example.com" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="type-search">
-							<Typography size="xs" color="muted">
-								Search
-							</Typography>
-						</label>
-						<Input id="type-search" type="search" placeholder="Search..." />
-					</div>
-				</div>
-			</div>
-		</div>
-	),
-};
+			))}
+		</>
+	);
+}
 
-export const WithLabels: Story = {
+function Field({ children }: { children: ReactNode }): ReactElement {
+	return <div className={styles.field}>{children}</div>;
+}
+
+function StateCell({ appearance, state }: { appearance: Appearance; state: State }): ReactElement {
+	const shared = { ...appearance.props, ...stateProps(state) };
+
+	return (
+		<div className={styles.stateCell}>
+			<Field>
+				<Input
+					{...shared}
+					placeholder="For eg. Simpsonville..."
+					aria-label={`${appearance.label} ${state} empty`}
+				/>
+			</Field>
+			<Field>
+				<Input {...shared} defaultValue="Springfield" aria-label={`${appearance.label} ${state}`} />
+			</Field>
+		</div>
+	);
+}
+
+function Row({ label, children }: { label: string; children: ReactNode }): ReactElement {
+	return (
+		<>
+			<Typography size="sm" weight="medium" className={styles.rowLabel}>
+				{label}
+			</Typography>
+			{children}
+		</>
+	);
+}
+
+function Section({
+	title,
+	description,
+	children,
+}: {
+	title: string;
+	description: ReactNode;
+	children: ReactNode;
+}): ReactElement {
+	return (
+		<div className="story-section">
+			<Typography size="base" weight="semibold">
+				{title}
+			</Typography>
+			<Typography size="sm">{description}</Typography>
+			{children}
+		</div>
+	);
+}
+
+export const Showcase: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story:
-					'Inputs should always be paired with labels for accessibility. Labels help screen readers and provide context for users.',
-			},
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+		pseudo: {
+			// The hover border is on the frame. The toggle and the steppers paint their own hover.
+			hover:
+				'[data-pseudo="hover"], [data-pseudo="hover"] [data-slot="input-password-toggle"], [data-pseudo="hover"] [data-slot="input-step-up"], [data-pseudo="hover"] [data-slot="input-step-down"]',
+			// The ring is `:has(.input__field:focus-visible)` on the frame, so the class lands on the control.
+			focusVisible: '[data-pseudo="focus"] [data-slot="input-field"]',
 		},
 	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
-	},
 	render: () => (
-		<div className="story-container-full">
-			<div className={`story-section ${styles.maxWidthMd}`}>
-				<div className="story-section-sm">
-					<label htmlFor="labeled-input-1">
-						<Typography size="sm" weight="medium">
-							Full Name
-						</Typography>
-					</label>
-					<Input id="labeled-input-1" placeholder="John Doe" />
-				</div>
-				<div className="story-section-sm">
-					<label htmlFor="labeled-input-2">
-						<Typography size="sm" weight="medium">
-							Email Address
-						</Typography>
-					</label>
-					<Input id="labeled-input-2" type="email" placeholder="john@example.com" />
-				</div>
-				<div className="story-section-sm">
-					<label htmlFor="labeled-input-3">
-						<Typography size="sm" weight="medium">
-							Phone Number
-						</Typography>
-					</label>
-					<Input id="labeled-input-3" type="tel" placeholder="+1 (555) 000-0000" />
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const DisabledStates: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Disabled inputs are non-interactive and visually indicate they cannot be edited. Use disabled state when an input is not applicable or waiting for user action.',
-			},
-		},
-	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
-	},
-	render: () => (
-		<div className="story-container-full">
-			<div className={`story-section ${styles.maxWidthMd}`}>
-				<div className="story-section-sm">
-					<label htmlFor="disabled-input">
-						<Typography size="sm" weight="medium">
-							Disabled Input
-						</Typography>
-					</label>
-					<Input id="disabled-input" placeholder="Cannot edit this" disabled />
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const ReadOnlyStates: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Read-only inputs can be focused and selected but cannot be edited. Useful for displaying values that users can copy but not modify.',
-			},
-		},
-	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
-	},
-	render: () => (
-		<div className="story-container-full">
-			<div className={`story-section ${styles.maxWidthMd}`}>
-				<div className="story-section-sm">
-					<label htmlFor="readonly-input">
-						<Typography size="sm" weight="medium">
-							Read-Only Input
-						</Typography>
-					</label>
-					<Input id="readonly-input" value="This value can be selected but not edited" readOnly />
-				</div>
-			</div>
-		</div>
-	),
-};
-
-export const RequiredFields: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Required inputs indicate that a field must be filled before form submission. Browsers will show validation messages if left empty.',
-			},
-		},
-	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
-	},
-	render: () => (
-		<div className="story-container-full">
-			<div className={`story-section ${styles.maxWidthMd}`}>
-				<div className="story-section-sm">
-					<label htmlFor="required-input">
-						<Typography size="sm" weight="medium">
-							Email Address{' '}
-							<Typography as="span" color="danger">
-								*
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<Section
+				title="States"
+				description="One row per appearance, one column per state, each cell empty then filled. base is 32px, large is 40px, and the text size does not change. Hover darkens the border and the placeholder, and never while a status, disabled, or read-only is set: the status border wins. danger also announces itself as aria-invalid. Success is confirmation of a completed check, not a resting state for a valid field. Disabled fades to 0.4, read-only to 0.8. Unstyled drops the border and the background and keeps the focus ring."
+			>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(STATES.length)}
+				>
+					<MatrixHeader columns={['default', 'hover', 'focus', 'disabled', 'read-only']} />
+					{APPEARANCES.map((appearance) => (
+						<Fragment key={appearance.id}>
+							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								{appearance.label}
 							</Typography>
-						</Typography>
-					</label>
-					<Input id="required-input" type="email" placeholder="Required field" required />
-					<Typography size="xs" color="muted">
-						This field is required
+							{STATES.map((state) => (
+								<StateCell
+									key={`${appearance.id}-${state}`}
+									appearance={appearance}
+									state={state}
+								/>
+							))}
+						</Fragment>
+					))}
+				</div>
+			</Section>
+
+			<Section
+				title="Focus ring"
+				description="The ring is the one focus signal, drawn on keyboard focus only. noFocusRing removes it. On an unstyled field the ring is all that marks focus, so the two do not go together."
+			>
+				<div className={`${styles.matrix} ${styles.marginTopMedium}`} style={matrixStyle(2)}>
+					<MatrixHeader columns={['focus', 'noFocusRing']} />
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						default
 					</Typography>
+					<Field>
+						<Input data-pseudo="focus" defaultValue="Springfield" aria-label="Focused" />
+					</Field>
+					<Field>
+						<Input
+							data-pseudo="focus"
+							noFocusRing
+							defaultValue="Springfield"
+							aria-label="No focus ring"
+						/>
+					</Field>
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						unstyled
+					</Typography>
+					<Field>
+						<Input
+							data-pseudo="focus"
+							variant="unstyled"
+							defaultValue="Springfield"
+							aria-label="Unstyled focused"
+						/>
+					</Field>
+					<Field>
+						<Input
+							data-pseudo="focus"
+							variant="unstyled"
+							noFocusRing
+							defaultValue="Springfield"
+							aria-label="Unstyled no focus ring"
+						/>
+					</Field>
 				</div>
-			</div>
+			</Section>
+
+			<Section
+				title="Prefix and suffix"
+				description="Slots inside the field, before and after the text. The status icon renders after the suffix."
+			>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					<Row label="prefix icon">
+						<Field>
+							<Input
+								prefix={<Search />}
+								placeholder="For eg. Simpsonville..."
+								aria-label="Prefix"
+							/>
+						</Field>
+					</Row>
+					<Row label="suffix text">
+						<Field>
+							<Input
+								suffix={<Typography size="sm">ms</Typography>}
+								placeholder="500"
+								aria-label="Suffix"
+							/>
+						</Field>
+					</Row>
+					<Row label="both, with a status">
+						<Field>
+							<Input
+								prefix={<Search />}
+								suffix={<Typography size="sm">ms</Typography>}
+								status="danger"
+								placeholder="500"
+								aria-label="Both"
+							/>
+						</Field>
+					</Row>
+					<Row label="large, with a prefix">
+						<Field>
+							<Input
+								size="large"
+								prefix={<Search />}
+								placeholder="For eg. Simpsonville..."
+								aria-label="Large prefix"
+							/>
+						</Field>
+					</Row>
+				</div>
+			</Section>
+
+			<Section
+				title="Long value"
+				description="The dashed outline is the parent. The field fills it and the text scrolls inside, so a long value never pushes the prefix, the suffix, or the status icon out."
+			>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					<Row label="long value">
+						<div className={styles.bounded}>
+							<Input defaultValue={LONG_VALUE} aria-label="Long value" />
+						</div>
+					</Row>
+					<Row label="with prefix and suffix">
+						<div className={styles.bounded}>
+							<Input
+								prefix={<Search />}
+								suffix={<Typography size="sm">ms</Typography>}
+								defaultValue={LONG_VALUE}
+								aria-label="Long value with slots"
+							/>
+						</div>
+					</Row>
+					<Row label="with a status">
+						<div className={styles.bounded}>
+							<Input
+								prefix={<Search />}
+								suffix={<Typography size="sm">ms</Typography>}
+								status="danger"
+								defaultValue={LONG_VALUE}
+								aria-label="Long value with status"
+							/>
+						</div>
+					</Row>
+					<Row label="textarea">
+						<div className={styles.bounded}>
+							<Input.TextArea rows={4} defaultValue={LONG_VALUE} aria-label="Long description" />
+						</div>
+					</Row>
+				</div>
+			</Section>
+
+			<Section
+				title="Disabled and read-only"
+				description="Read-only outranks disabled. With both, the field is only read-only: it keeps its tab stop and its value stays selectable."
+			>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					<Row label="both">
+						<Field>
+							<Input
+								disabled
+								disabledTooltip="Ask an admin to unlock this field"
+								readOnly
+								readOnlyTooltip="Saving your changes"
+								defaultValue="Springfield"
+								aria-label="Read-only outranks disabled"
+							/>
+						</Field>
+					</Row>
+				</div>
+			</Section>
+
+			<Section
+				title="Width"
+				description="The field fills its parent. width and maxWidth bound it without a wrapper."
+			>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					<Row label="width 240">
+						<Input width={240} placeholder="For eg. Simpsonville..." aria-label="Width 240" />
+					</Row>
+					<Row label="maxWidth 240">
+						<Input
+							maxWidth={240}
+							placeholder="For eg. Simpsonville..."
+							aria-label="Max width 240"
+						/>
+					</Row>
+				</div>
+			</Section>
+
+			<Section
+				title="Members"
+				description="Input.Password, Input.TextArea and Input.Number keep the same frame. The password toggle and the number steppers show their hover color in the hover column. A textarea grows with its rows and aligns the status icon with the first line."
+			>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(STATES.length)}
+				>
+					<MatrixHeader columns={['default', 'hover', 'focus', 'disabled', 'read-only']} />
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						password
+					</Typography>
+					{STATES.map((state) => (
+						<Field key={`password-${state}`}>
+							<Input.Password
+								{...stateProps(state)}
+								placeholder="Enter password"
+								autoComplete="new-password"
+								aria-label={`Password ${state}`}
+							/>
+						</Field>
+					))}
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						textarea
+					</Typography>
+					{STATES.map((state) => (
+						<Field key={`textarea-${state}`}>
+							<Input.TextArea
+								{...stateProps(state)}
+								rows={3}
+								defaultValue={'Line one\nLine two'}
+								aria-label={`Description ${state}`}
+							/>
+						</Field>
+					))}
+					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						number
+					</Typography>
+					{STATES.map((state) => (
+						<Field key={`number-${state}`}>
+							<Input.Number
+								{...stateProps(state)}
+								defaultValue={3}
+								min={0}
+								max={10}
+								aria-label={`Count ${state}`}
+							/>
+						</Field>
+					))}
+				</div>
+			</Section>
+
+			<Section
+				title="Member details"
+				description="The status icon on a textarea sits on the first line. The step buttons disable at min and max. controls={false} removes them. A number takes the same prefix slot as a text field."
+			>
+				<div className={`${styles.rows} ${styles.marginTopMedium}`}>
+					<Row label="textarea, danger">
+						<Field>
+							<Input.TextArea
+								rows={3}
+								status="danger"
+								defaultValue={'Line one\nLine two'}
+								aria-label="Description danger"
+							/>
+						</Field>
+					</Row>
+					<Row label="number at min">
+						<Field>
+							<Input.Number defaultValue={0} min={0} max={10} aria-label="Count at min" />
+						</Field>
+					</Row>
+					<Row label="number at max">
+						<Field>
+							<Input.Number defaultValue={10} min={0} max={10} aria-label="Count at max" />
+						</Field>
+					</Row>
+					<Row label="number, no controls">
+						<Field>
+							<Input.Number
+								defaultValue={3}
+								min={0}
+								max={10}
+								controls={false}
+								aria-label="Count without controls"
+							/>
+						</Field>
+					</Row>
+					<Row label="number, large, prefix">
+						<Field>
+							<Input.Number
+								size="large"
+								defaultValue={3}
+								prefix={<Search />}
+								aria-label="Large count"
+							/>
+						</Field>
+					</Row>
+				</div>
+			</Section>
 		</div>
 	),
 };
 
-export const FormExamples: Story = {
+function ControlledInput(): ReactElement {
+	const [value, setValue] = useState('');
+
+	return (
+		<Input
+			aria-label="Organisation name"
+			placeholder="For eg. Simpsonville..."
+			value={value}
+			onChange={(event) => setValue(event.target.value)}
+			testId="controlled-input"
+		/>
+	);
+}
+
+export const Typing: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story:
-					'Complete form examples showing how to use Input components in real-world scenarios with proper labels, validation, and accessibility.',
-			},
-		},
+		chromatic: { disableSnapshot: true },
+		controls: { disable: true },
 	},
-	argTypes: {
-		placeholder: { control: false },
-		type: { control: false },
-		disabled: { control: false },
-		required: { control: false },
-		readOnly: { control: false },
-		value: { control: false },
-		defaultValue: { control: false },
-		className: { control: false },
+	decorators: [
+		(Story) => (
+			<div className="story-container">
+				<Story />
+			</div>
+		),
+	],
+	render: () => <ControlledInput />,
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const field = canvas.getByRole('textbox');
+
+		await userEvent.type(field, 'Simpsonville');
+
+		await expect(field).toHaveValue('Simpsonville');
 	},
+};
+
+export const DisabledTooltip: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+		controls: { disable: true },
+	},
+	decorators: [
+		(Story) => (
+			<div className="story-container">
+				<Story />
+			</div>
+		),
+	],
 	render: () => (
-		<div className="story-container-full">
-			<div className={`story-section ${styles.maxWidthMd}`}>
-				<Typography as="h3" size="sm" weight="medium">
-					Contact Form
-				</Typography>
-				<form className="story-section">
-					<div className="story-section-sm">
-						<label htmlFor="form-name">
-							<Typography size="sm" weight="medium">
-								Full Name{' '}
-								<Typography as="span" color="danger">
-									*
-								</Typography>
-							</Typography>
-						</label>
-						<Input id="form-name" placeholder="John Doe" required />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="form-email">
-							<Typography size="sm" weight="medium">
-								Email Address{' '}
-								<Typography as="span" color="danger">
-									*
-								</Typography>
-							</Typography>
-						</label>
-						<Input id="form-email" type="email" placeholder="john@example.com" required />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="form-phone">
-							<Typography size="sm" weight="medium">
-								Phone Number
-							</Typography>
-						</label>
-						<Input id="form-phone" type="tel" placeholder="+1 (555) 000-0000" />
-					</div>
-					<div className="story-section-sm">
-						<label htmlFor="form-password">
-							<Typography size="sm" weight="medium">
-								Password{' '}
-								<Typography as="span" color="danger">
-									*
-								</Typography>
-							</Typography>
-						</label>
-						<Input id="form-password" placeholder="Enter password" required type="password" />
-					</div>
-				</form>
-			</div>
-		</div>
+		<Input
+			aria-label="Organisation name"
+			disabled
+			disabledTooltip="Ask an admin to unlock this field"
+			testId="disabled-input"
+		/>
 	),
-};
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
 
-export const PasswordInput: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Password input variant with a built-in visibility toggle. The type is fixed to "password" and cannot be changed.',
-			},
-		},
-	},
-	argTypes: {
-		placeholder: { control: 'text' },
-		type: { control: false },
-		disabled: { control: 'boolean' },
-		required: { control: 'boolean' },
-		readOnly: { control: 'boolean' },
-	},
-	args: {
-		placeholder: 'Enter password',
-		disabled: false,
-		required: false,
-		readOnly: false,
-	},
-	render: (args) => {
-		return (
-			<div className="story-container-full">
-				<Typography as="h2" size="lg" weight="medium" className={styles.headerMargin}>
-					Input.Password Example
-				</Typography>
-				<Input.Password {...args} />
-			</div>
-		);
+		await userEvent.hover(canvas.getByTestId('disabled-input'));
+
+		await waitFor(() => {
+			expect(document.body).toHaveTextContent('Ask an admin to unlock this field');
+		});
 	},
 };
