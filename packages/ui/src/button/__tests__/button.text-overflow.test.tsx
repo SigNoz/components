@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { Button } from '../button.js';
 import {
@@ -149,6 +149,29 @@ describe('Button truncation flag', () => {
 		);
 
 		await waitFor(() => expect(screen.getByRole('button')).toHaveAttribute('data-truncated'));
+	});
+
+	it('re-measures when a web font finishes loading, which widens the text but resizes nothing', () => {
+		const fonts = new EventTarget();
+		Object.defineProperty(document, 'fonts', { configurable: true, value: fonts });
+
+		try {
+			render(
+				<Button size="md" variant="solid" color="primary">
+					A very long destructive label
+				</Button>,
+			);
+			expect(screen.getByRole('button')).not.toHaveAttribute('data-truncated');
+
+			truncate();
+			act(() => {
+				fonts.dispatchEvent(new Event('loadingdone'));
+			});
+
+			expect(screen.getByRole('button')).toHaveAttribute('data-truncated');
+		} finally {
+			Reflect.deleteProperty(document, 'fonts');
+		}
 	});
 
 	it('never flags textOverflow=hidden, which does not truncate', () => {
