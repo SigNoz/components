@@ -51,7 +51,7 @@
  * | `--button-font-weight` | `var(--font-weight-medium)` |
  * | `--button-gap` | `var(--button-internal-gap)` |
  * | `--button-ghost-content-z-index` | `1` |
- * | `--button-ghost-glow-background` | `linear-gradient(90deg, 							color-mix(in srgb...` |
+ * | `--button-ghost-glow-background` | `linear-gradient(90deg, color-mix(in srgb, var(-...` |
  * | `--button-ghost-glow-background-size` | `200% 100%` |
  * | `--button-ghost-glow-blur` | `6px` |
  * | `--button-ghost-glow-duration` | `2.5s` |
@@ -171,7 +171,7 @@
  * | `--button-success-link-hover-color` | `var(--button-success-link-hover)` |
  * | `--button-success-solid-foreground` | `var(--button-success-label)` |
  * | `--button-text-spacing` | `-0.005em` |
- * | `--button-transition` | `background-color 150ms ease, 			color 150ms eas...` |
+ * | `--button-transition` | `background-color 150ms ease, color 150ms ease, ...` |
  * | `--button-variant-dashed-background-color` | `transparent` |
  * | `--button-variant-dashed-border` | `1px solid transparent` |
  * | `--button-variant-dashed-color` | `var(--button-secondary-dashed-label)` |
@@ -199,7 +199,7 @@
  * | `--button-variant-outlined-disabled-position` | `relative` |
  * | `--button-variant-outlined-disabled-stripe-after-mask-image` | `linear-gradient(to right, transparent 5%, black...` |
  * | `--button-variant-outlined-disabled-stripe-after-right` | `0` |
- * | `--button-variant-outlined-disabled-stripe-background-image` | `repeating-linear-gradient(-45deg, 								trans...` |
+ * | `--button-variant-outlined-disabled-stripe-background-image` | `repeating-linear-gradient(-45deg, transparent, ...` |
  * | `--button-variant-outlined-disabled-stripe-before-left` | `0` |
  * | `--button-variant-outlined-disabled-stripe-before-mask-image` | `linear-gradient(to left, transparent 5%, black ...` |
  * | `--button-variant-outlined-disabled-stripe-bottom` | `0` |

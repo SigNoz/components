@@ -1,278 +1,217 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as ResizableStories from './resizable.stories';
-import * as ResizableHandleStories from './resizable-handle.stories.tsx';
-import * as ResizablePanelStories from './resizable-panel.stories.tsx';
 
 <Meta of={ResizableStories} />
 
 # Resizable
 
-A flexible resizable panel system for creating split layouts with draggable dividers. This is a re-export of [react-resizable-panels](https://react-resizable-panels.vercel.app/) with SigNoz design tokens applied for consistent styling across the design system.
+Two or more panels, side by side or stacked, with a handle between each pair. The user drags a
+handle, or moves it from the keyboard, to give one panel more room and its neighbour less. The
+layout can be saved, so the sizes the user leaves come back on the next visit.
 
 ## How to use
 
-### Basic Horizontal Layout
+The panels come from `items`. Each row carries its content in `children`, and the component draws a
+handle between each pair:
 
 ```tsx
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
+import { Resizable } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function PanelEditor() {
 	return (
-		<div style={{ height: '100vh' }}>
-			<ResizablePanelGroup orientation="horizontal">
-				<ResizablePanel defaultSize="25%">
-					<div
-						style={{
-							display: 'flex',
-							height: '100%',
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}
-					>
-						<span>Sidebar</span>
-					</div>
-				</ResizablePanel>
-				<ResizableHandle />
-				<ResizablePanel defaultSize="75%">
-					<div
-						style={{
-							display: 'flex',
-							height: '100%',
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}
-					>
-						<span>Main Content</span>
-					</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		</div>
+		<Resizable
+			orientation="horizontal"
+			items={[
+				{
+					value: 'editor',
+					label: 'Query editor',
+					defaultSize: '75%',
+					minSize: '60%',
+					children: <QueryEditor />,
+				},
+				{ value: 'settings', label: 'Panel settings', children: <PanelSettings /> },
+			]}
+		/>
 	);
 }
 ```
 
-**Important**: The `ResizablePanelGroup` should have a defined height (using a container with `h-screen`, `h-full`, or a specific height class). Without a height, the panels won't be visible.
+`orientation` is required. `horizontal` puts the panels side by side, `vertical` stacks them.
 
-### Vertical Layout
-
-For vertical splits (top/bottom panels instead of left/right):
-
-```tsx
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@signozhq/ui';
-
-export default function VerticalLayout() {
-	return (
-		<div style={{ height: '100vh' }}>
-			<ResizablePanelGroup orientation="vertical">
-				<ResizablePanel defaultSize="70%">
-					<div
-						style={{
-							display: 'flex',
-							height: '100%',
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}
-					>
-						<span>Main Content Area</span>
-					</div>
-				</ResizablePanel>
-				<ResizableHandle />
-				<ResizablePanel defaultSize="30%">
-					<div
-						style={{
-							display: 'flex',
-							height: '100%',
-							alignItems: 'center',
-							justifyContent: 'center',
-						}}
-					>
-						<span>Bottom Panel</span>
-					</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		</div>
-	);
-}
-```
-
-### Panel Size Constraints
-
-Control minimum and maximum panel sizes:
-
-```tsx
-<ResizablePanelGroup orientation="horizontal">
-	<ResizablePanel defaultSize="30%" minSize="20%" maxSize="60%">
-		<div>This panel can't be smaller than 20% or larger than 60%</div>
-	</ResizablePanel>
-	<ResizableHandle />
-	<ResizablePanel defaultSize="70%">
-		<div>Flexible panel</div>
-	</ResizablePanel>
-</ResizablePanelGroup>
-```
-
-### Collapsible Panels
-
-Panels can collapse completely when dragged to their minimum size:
-
-```tsx
-<ResizablePanelGroup orientation="horizontal">
-	<ResizablePanel defaultSize="25%" minSize="15%" collapsible={true}>
-		<div>Drag me to the edge to collapse!</div>
-	</ResizablePanel>
-	<ResizableHandle />
-	<ResizablePanel defaultSize="75%">
-		<div>Main Content</div>
-	</ResizablePanel>
-</ResizablePanelGroup>
-```
-
-When `collapsible` is enabled, dragging the panel to its minimum size will collapse it entirely. Users can click the resize handle to restore it.
-
-### Resize Handle with Visual Indicator
-
-Add a visual drag indicator to make the handle more discoverable:
-
-```tsx
-<ResizablePanelGroup orientation="horizontal">
-	<ResizablePanel defaultSize="50%">
-		<div>Panel 1</div>
-	</ResizablePanel>
-	<ResizableHandle withHandle />
-	<ResizablePanel defaultSize="50%">
-		<div>Panel 2</div>
-	</ResizablePanel>
-</ResizablePanelGroup>
-```
-
-The `withHandle` prop displays a dots icon that makes the draggable area more visible.
-
-### Nested Layouts
-
-Create complex layouts by nesting panel groups:
-
-```tsx
-<ResizablePanelGroup orientation="horizontal">
-	{/* Left sidebar */}
-	<ResizablePanel defaultSize="20%" minSize="15%" maxSize="40%">
-		<div style={{ height: '100%', padding: '1rem' }}>
-			<h3>File Explorer</h3>
-		</div>
-	</ResizablePanel>
-
-	<ResizableHandle />
-
-	{/* Center area with vertical split */}
-	<ResizablePanel defaultSize="60%">
-		<ResizablePanelGroup orientation="vertical">
-			<ResizablePanel defaultSize="70%">
-				<div style={{ height: '100%', padding: '1rem' }}>
-					<h3>Code Editor</h3>
-				</div>
-			</ResizablePanel>
-			<ResizableHandle />
-			<ResizablePanel defaultSize="30%">
-				<div style={{ height: '100%', padding: '1rem' }}>
-					<h3>Terminal</h3>
-				</div>
-			</ResizablePanel>
-		</ResizablePanelGroup>
-	</ResizablePanel>
-
-	<ResizableHandle />
-
-	{/* Right sidebar */}
-	<ResizablePanel defaultSize="20%" collapsible>
-		<div style={{ height: '100%', padding: '1rem' }}>
-			<h3>Properties</h3>
-		</div>
-	</ResizablePanel>
-</ResizablePanelGroup>
-```
-
-This creates an IDE-like layout with a file explorer, code editor with terminal, and a collapsible properties panel.
-
-### Persistent Layouts
-
-Save and restore panel layouts using `useDefaultLayout`:
-
-```tsx
-import {
-	ResizablePanelGroup,
-	ResizablePanel,
-	ResizableHandle,
-	useDefaultLayout,
-} from '@signozhq/ui';
-
-export default function PersistentLayout() {
-	const { defaultLayout, onLayoutChange } = useDefaultLayout({
-		groupId: 'my-dashboard-layout',
-		storage: localStorage,
-	});
-
-	return (
-		<div style={{ height: '100vh' }}>
-			<ResizablePanelGroup
-				orientation="horizontal"
-				defaultLayout={defaultLayout}
-				onLayoutChange={onLayoutChange}
-			>
-				<ResizablePanel defaultSize="25%">
-					<div>Sidebar</div>
-				</ResizablePanel>
-				<ResizableHandle />
-				<ResizablePanel defaultSize="75%">
-					<div>Main Content</div>
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		</div>
-	);
-}
-```
-
-The `useDefaultLayout` hook:
-
-- Saves panel sizes to `localStorage` as users resize
-- Restores the saved layout when the component remounts
-- Requires a unique `groupId` to identify different layouts
-- Falls back to `defaultSize` props on first render
-
-### Disabled Resize Handle
-
-Prevent users from resizing specific panels:
-
-```tsx
-<ResizablePanelGroup orientation="horizontal">
-	<ResizablePanel defaultSize="30%">
-		<div>Fixed Size Panel</div>
-	</ResizablePanel>
-	<ResizableHandle disabled />
-	<ResizablePanel defaultSize="70%">
-		<div>Main Content</div>
-	</ResizablePanel>
-</ResizablePanelGroup>
-```
-
-## Examples
-
-This example demonstrates common resizable panel layouts:
+`label` is never shown. It names the handle after the panel for a screen reader, so every row needs
+one, the last included.
 
 <Primary />
 
-## Resizable Panel Group Props
+## Sizes
+
+`defaultSize`, `minSize` and `maxSize` are strings with a unit: `'25%'`, `'240px'` or `'15rem'`. A
+percentage is a share of the root along `orientation`. A number, or a string with no unit, does not
+type check.
+
+The panels without a `defaultSize` share the room the others leave, in equal parts. `minSize`
+defaults to `0%` and `maxSize` to `100%`. A panel stops at its limits, and the handle stops with it.
+
+When the root changes size, the unit of `defaultSize` says what the panel keeps:
+
+| `defaultSize` | When the root grows or shrinks               |
+| ------------- | -------------------------------------------- |
+| `px` or `rem` | The panel keeps its size in pixels           |
+| `%` or none   | The panel keeps its share, within its limits |
+
+A side panel at `'240px'` stays 240px wide in a wider window, and the panel next to it grows. When
+every panel is in `px` or `rem`, the last one takes the change and the component logs a warning.
+
+`onResize` on a row is called with the size of that panel in pixels: its width in a horizontal
+Resizable, its height in a vertical one. It runs on mount and each time the size changes, while
+dragging, on each key press, on a double-click and when the root changes size:
+
+```tsx
+const [treeWidth, setTreeWidth] = useState(450);
+
+<Resizable
+	orientation="horizontal"
+	items={[
+		{
+			value: 'tree',
+			label: 'Span tree',
+			defaultSize: '450px',
+			minSize: '240px',
+			maxSize: '900px',
+			onResize: setTreeWidth,
+			children: <SpanTree />,
+		},
+		{ value: 'timeline', label: 'Timeline', children: <Timeline /> },
+	]}
+/>;
+```
+
+## Moving a handle
+
+The handle takes the pointer within a band around its line, 10px wide with a mouse and 20px with
+touch. Its line changes colour on hover, while the user drags, and while the handle has focus. A
+press on the band focuses the handle, so after a drag the line keeps its colour until the focus
+moves on. The cursor points the way the handle can still move.
+
+A double-click puts the panel before the handle back to its `defaultSize`. When that panel has none,
+the panel after it is reset instead. When neither has one, the double-click does nothing.
+
+Each handle is a focus stop, in the order of `items`. Panels are not, and the content inside a panel
+keeps its own focus order. On a focused handle:
+
+| Key                          | Does                                                    |
+| ---------------------------- | ------------------------------------------------------- |
+| `ArrowLeft` and `ArrowRight` | Move a horizontal handle by 5% of the root              |
+| `ArrowUp` and `ArrowDown`    | Move a vertical handle by 5% of the root                |
+| `Home` and `End`             | Move the handle as far as the limits allow, each way    |
+| `F6` and `Shift+F6`          | Move the focus to the next or previous handle, and wrap |
+
+The arrows of the other axis do nothing, and do not scroll the page. `Enter` does nothing.
+
+## Saving the layout
+
+`storageKey` saves the layout to `localStorage` when a drag ends, after each key press and after a
+double-click, and restores it on the next mount, within the current limits. Without it, the panels
+start from their `defaultSize` on every mount.
+
+A panel whose `defaultSize` is in `px` or `rem` gets its pixels back on the next visit, and the other
+panels share the rest as they were saved, the same as when the root changes size. A dock saved at
+480px in a wide window comes back at 480px in a narrow one.
+
+A new `storageKey` on a mounted Resizable applies the layout saved under it. With none saved there,
+the panels stay where they are, and the next resize saves under the new key. A Resizable hidden when
+its `storageKey` changes, in a closed tab for example, applies the layout once it shows.
+
+Each `orientation` keeps its own layout, so a Resizable that turns vertical on a narrow screen does
+not read the widths saved on a wide one as heights.
+
+`storage` takes any object with `getItem` and `setItem`, for example to scope the key:
+
+```tsx
+<Resizable
+	orientation="horizontal"
+	storageKey="panel-editor"
+	storage={layoutStorage}
+	items={items}
+/>
+```
+
+A saved layout that does not parse, or a `storage` that throws, falls back to the `defaultSize`s.
+
+## Panels that come and go
+
+Each set of panel `value`s keeps its own layout. To hide a panel, leave its row out of `items`. When
+it comes back, every panel gets back the size it had. Without `storageKey` this holds while the
+Resizable stays mounted, with `storageKey` across visits too. Each order of the `value`s counts as
+its own set: when `items` change order, the panels take the layout of the new order, or their
+`defaultSize`s.
+
+```tsx
+<Resizable
+	orientation="horizontal"
+	items={[
+		{ value: 'trace', label: 'Trace', children: <Trace /> },
+		...(isDocked
+			? [
+					{
+						value: 'span-details',
+						label: 'Span details',
+						defaultSize: '480px',
+						children: <SpanDetails />,
+					},
+				]
+			: []),
+	]}
+/>
+```
+
+With one row, the panel fills the root and there is no handle. An empty `items` renders the root
+with nothing inside and logs a warning. Two rows with the same `value` render the first of them only,
+and log a warning.
+
+## Filling the room
+
+The root fills the room its parent gives it: all of a block parent, and the room its siblings leave
+in a flex parent. Under a header in a flex column, it takes the height the header leaves. A vertical
+Resizable in a parent with no height has no room for its panels.
+
+A panel whose content is larger than the panel scrolls, in both directions, and the other panels do
+not move. A child with `height: 100%` fills its panel, so a Resizable nested in a panel fills it with
+no wrapper. Each Resizable has its own handles, keys and saved layout.
+
+## Accessibility
+
+Each handle has `role="separator"` and follows the window splitter pattern. It controls the panel
+before it: its name is that panel's `label`, `aria-controls` points at that panel, and
+`aria-valuenow` gives the panel's size in percent of the root. `aria-valuemin` and `aria-valuemax`
+give the panel's limits on the first handle only, because `react-resizable-panels` works out the
+limits of every handle by moving the first one. `aria-orientation` is the direction of the line, so
+`vertical` in a horizontal Resizable.
+
+The grip in the middle of the line is hidden from assistive technology. Panels have no role. The
+root has none either, unless it gets `aria-label` or `aria-labelledby`: then it is a `group` with
+that name.
+
+An empty or blank `label` leaves its handle with no name, and the component logs a warning. The last
+panel has no handle, so its `label` is not checked.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names every panel and handle:
+
+| Element | `data-testid`                     |
+| ------- | --------------------------------- |
+| panel   | `` `${testId}-panel-${value}` ``  |
+| handle  | `` `${testId}-handle-${value}` `` |
+
+The panel test ID sits on the box that scrolls, so a test or a call site can set `scrollLeft` or
+`scrollTop` on it. A handle takes the `value` of the panel before it, so `${testId}-handle-preview`
+sits between `preview` and the next panel. The last panel has no handle.
+
+The root mirrors `orientation` on `data-orientation`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
 
 <Controls of={ResizableStories.Default} />
-
-## Resizable Handle Props
-
-<Controls of={ResizableHandleStories.Default} />
-
-# Resizable Panel Props
-
-<Controls of={ResizablePanelStories.Default} />
-
-## Additional Resources
-
-For more detailed information about the underlying react-resizable-panels library, visit the [official documentation](https://react-resizable-panels.vercel.app/).
-
-**Note**: While the official documentation provides comprehensive API details and advanced features (like conditional panels, imperative API, and custom storage), remember that our implementation uses SigNoz design tokens for consistent theming across the design system.

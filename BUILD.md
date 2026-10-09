@@ -303,8 +303,7 @@ lists that must agree. Each test names exactly what is missing.
 A fifth class has no test: prop types restated by hand over an upstream primitive drift
 silently on upgrade, so components are supposed to borrow the upstream type per prop instead
 ([COMPONENT_GUIDELINES.md](./COMPONENT_GUIDELINES.md#wrapping-a-third-party-primitive)).
-Convention only, already broken: `resizable` still narrows `onLayoutChanged`, and nothing in
-CI notices.
+Convention only: nothing in CI notices a narrowed copy.
 
 ## 6. Adding or removing an entry point
 

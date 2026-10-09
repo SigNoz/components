@@ -1,64 +1,86 @@
-.resizable-group {
-  display: flex;
-  height: 100%;
-  width: 100%;
+// react-resizable-panels writes the layout of the root, the panels and the handles as inline
+// styles (display, flex, overflow and the size of the root), so none of it is declared here.
 
-  &[aria-orientation="horizontal"] {
-    flex-direction: column;
-  }
+.resizable__panel {
+	box-sizing: var(--resizable-panel-box-sizing, border-box);
+	inline-size: var(--resizable-panel-inline-size, 100%);
+	block-size: var(--resizable-panel-block-size, 100%);
+	overflow: var(--resizable-panel-overflow, auto);
 }
 
-.resizable-panel {
-  /* Panel styles managed by react-resizable-panels */
+.resizable__handle {
+	--resizable-internal-handle-color: var(--resizable-handle-color, var(--l2-border));
+
+	position: var(--resizable-handle-position, relative);
+	display: var(--resizable-handle-display, flex);
+	align-items: var(--resizable-handle-align-items, center);
+	justify-content: var(--resizable-handle-justify-content, center);
+	outline: var(--resizable-handle-outline, none);
+	background-color: var(--resizable-internal-handle-color);
+	transition-property: var(--resizable-handle-transition-property, background-color);
+	transition-duration: var(--resizable-handle-transition-duration, 150ms);
+	transition-timing-function: var(--resizable-handle-transition-timing-function, ease);
+
+	// The library sets `data-separator` to `hover` over the band around the line, to `active` while
+	// dragging, and to `focus` while the handle has focus, hovered or not. A press on the band
+	// focuses the handle, so after a drag only `focus` is left to colour it under the pointer.
+	&[data-separator='hover'],
+	&[data-separator='active'],
+	&[data-separator='focus'] {
+		--resizable-internal-handle-color: var(--resizable-handle-active-color, var(--primary));
+	}
 }
 
-.resizable-handle {
-  position: relative;
-  display: flex;
-  width: 1px;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--border);
-  transition: background-color 150ms ease;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transform: translateX(-50%);
-    width: 0.25rem;
-  }
-
-  &[aria-orientation="horizontal"] {
-    height: 1px;
-    width: 100%;
-  }
-
-  &[aria-orientation="horizontal"]::after {
-    transform: translateY(-50%);
-    height: 0.25rem;
-    width: 100%;
-    left: 0;
-  }
-
-  &[aria-orientation="horizontal"] .resizable-handle__icon-wrapper {
-    transform: rotate(90deg);
-  }
+.resizable[data-orientation='horizontal'] > .resizable__handle {
+	inline-size: var(--resizable-handle-thickness, 1px);
 }
 
-.resizable-handle__icon-wrapper {
-  z-index: 10;
-  display: flex;
-  height: 1rem;
-  width: 0.75rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.125rem;
-  border: 1px solid var(--border);
-  background-color: var(--border);
+.resizable[data-orientation='vertical'] > .resizable__handle {
+	block-size: var(--resizable-handle-thickness, 1px);
 }
 
-.resizable-handle__icon {
-  height: 0.625rem;
-  width: 0.625rem;
+.resizable__grip {
+	position: var(--resizable-grip-position, relative);
+	z-index: var(--resizable-grip-z-index, 1);
+	display: var(--resizable-grip-display, flex);
+	flex-shrink: var(--resizable-grip-flex-shrink, 0);
+	align-items: var(--resizable-grip-align-items, center);
+	justify-content: var(--resizable-grip-justify-content, center);
+	box-sizing: var(--resizable-grip-box-sizing, border-box);
+	inline-size: var(--resizable-grip-inline-size, var(--spacing-6));
+	block-size: var(--resizable-grip-block-size, var(--spacing-8));
+	border-width: var(--resizable-grip-border-width, 1px);
+	border-style: var(--resizable-grip-border-style, solid);
+	border-color: var(--resizable-internal-handle-color);
+	border-radius: var(--resizable-grip-border-radius, var(--radius-1));
+	background-color: var(--resizable-grip-background-color, var(--l2-background));
+	color: var(--resizable-grip-color, var(--l2-foreground));
+	pointer-events: var(--resizable-grip-pointer-events, none);
+	transition-property: var(--resizable-grip-transition-property, border-color);
+	transition-duration: var(--resizable-handle-transition-duration, 150ms);
+	transition-timing-function: var(--resizable-handle-transition-timing-function, ease);
+
+	.resizable__handle:focus-visible > & {
+		outline-width: var(--resizable-grip-focus-visible-outline-width, 1px);
+		outline-style: var(--resizable-grip-focus-visible-outline-style, solid);
+		outline-color: var(--resizable-grip-focus-visible-outline-color, var(--ring));
+		outline-offset: var(--resizable-grip-focus-visible-outline-offset, 1px);
+	}
+}
+
+.resizable[data-orientation='vertical'] > .resizable__handle > .resizable__grip {
+	rotate: var(--resizable-grip-vertical-rotate, 90deg);
+}
+
+.resizable__grip-icon {
+	flex-shrink: var(--resizable-grip-icon-flex-shrink, 0);
+	inline-size: var(--resizable-grip-icon-size, var(--spacing-5));
+	block-size: var(--resizable-grip-icon-size, var(--spacing-5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.resizable__handle,
+	.resizable__grip {
+		transition: none;
+	}
 }

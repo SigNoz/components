@@ -149,7 +149,7 @@ function generateTokenComment(componentName, vars, prefix) {
 	lines.push(' * |-------|---------|');
 
 	for (const v of vars) {
-		const escapedValue = (v.defaultValue || '-').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+		const escapedValue = (v.defaultValue || '-').replace(/\|/g, '\\|').replace(/\s+/g, ' ');
 		const truncatedValue =
 			escapedValue.length > 50 ? escapedValue.slice(0, 47) + '...' : escapedValue;
 		lines.push(` * | \`${v.name}\` | \`${truncatedValue}\` |`);

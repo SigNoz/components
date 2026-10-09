@@ -90,7 +90,7 @@ import { PinList } from '@signozhq/ui';
 import { Pill } from '@signozhq/ui';
 import { Popover } from '@signozhq/ui';
 import { RadioGroup } from '@signozhq/ui';
-import { ResizablePanelGroup } from '@signozhq/ui';
+import { Resizable } from '@signozhq/ui';
 import { Select } from '@signozhq/ui';
 import { Skeleton } from '@signozhq/ui';
 import { Slider } from '@signozhq/ui';

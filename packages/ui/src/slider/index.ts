@@ -36,7 +36,7 @@
  * | `--slider-mark-dot-border-width` | `2px` |
  * | `--slider-mark-dot-box-sizing` | `border-box` |
  * | `--slider-mark-dot-cursor` | `pointer` |
- * | `--slider-mark-dot-inset-inline-start` | `calc( 			var(--slider-internal-thumb-size) / 2 ...` |
+ * | `--slider-mark-dot-inset-inline-start` | `calc( var(--slider-internal-thumb-size) / 2 + (...` |
  * | `--slider-mark-dot-position` | `absolute` |
  * | `--slider-mark-dot-size` | `var(--spacing-4)` |
  * | `--slider-mark-dot-translate` | `-50% -50%` |

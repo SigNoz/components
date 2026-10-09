@@ -18,7 +18,6 @@ const INTRO_MDX_PATH = join(
 
 // Components with non-standard export names
 const DIR_TO_EXPORT_MAP: Record<string, string> = {
-	resizable: 'ResizablePanelGroup',
 	toast: 'Toaster',
 };
 

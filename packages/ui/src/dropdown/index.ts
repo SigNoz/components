@@ -70,7 +70,7 @@
  * | `--dropdown-item-control-hover-border-color` | `var(--dropdown-item-control-border-hover)` |
  * | `--dropdown-item-control-justify-content` | `center` |
  * | `--dropdown-item-control-size` | `16px` |
- * | `--dropdown-item-control-transition` | `background-color 150ms ease,     border-color 1...` |
+ * | `--dropdown-item-control-transition` | `background-color 150ms ease, border-color 150ms...` |
  * | `--dropdown-item-cursor` | `pointer` |
  * | `--dropdown-item-danger-background-hover` | `-` |
  * | `--dropdown-item-danger-color` | `var(--dropdown-item-danger-label)` |

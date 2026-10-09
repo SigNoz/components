@@ -10,7 +10,7 @@
  * | `--tabs-active-slider-offset` | `var(--spacing-4)` |
  * | `--tabs-active-slider-position` | `absolute` |
  * | `--tabs-active-slider-thickness` | `2px` |
- * | `--tabs-active-slider-transition` | `left 0.2s cubic-bezier(0.4, 0, 0.2, 1),     wid...` |
+ * | `--tabs-active-slider-transition` | `left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0...` |
  * | `--tabs-active-slider-will-change` | `left, width` |
  * | `--tabs-active-text-color` | `var(--tabs-label-hover)` |
  * | `--tabs-bar-content-end-order` | `4` |
@@ -26,7 +26,7 @@
  * | `--tabs-border-spacer-min-block-size` | `0` |
  * | `--tabs-border-spacer-min-inline-size` | `var(--tabs-internal-spacer-min-inline, 0)` |
  * | `--tabs-border-width` | `1px` |
- * | `--tabs-content-focus-visible-box-shadow` | `0 0 0 2px var(--tabs-focus-ring),       0 0 0 4...` |
+ * | `--tabs-content-focus-visible-box-shadow` | `0 0 0 2px var(--tabs-focus-ring), 0 0 0 4px var...` |
  * | `--tabs-content-focus-visible-outline` | `none` |
  * | `--tabs-content-focus-visible-ring-offset-color` | `var(--tabs-focus-ring-offset)` |
  * | `--tabs-content-margin` | `var(--spacing-4) 0px 0px 0px` |
@@ -58,7 +58,7 @@
  * | `--tabs-hover-slider-pointer-events` | `none` |
  * | `--tabs-hover-slider-position` | `absolute` |
  * | `--tabs-hover-slider-top` | `0` |
- * | `--tabs-hover-slider-transition` | `transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),   ...` |
+ * | `--tabs-hover-slider-transition` | `transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), wi...` |
  * | `--tabs-hover-slider-will-change` | `transform, width, opacity` |
  * | `--tabs-hover-slider-z-index` | `0` |
  * | `--tabs-hover-text-color` | `var(--tabs-label-hover)` |
@@ -192,7 +192,7 @@
  * | `--tabs-trigger-secondary-disabled-cursor` | `not-allowed` |
  * | `--tabs-trigger-secondary-disabled-position` | `relative` |
  * | `--tabs-trigger-secondary-disabled-stripe-after-mask-image` | `linear-gradient(to right, transparent 5%, black...` |
- * | `--tabs-trigger-secondary-disabled-stripe-background-image` | `repeating-linear-gradient(             -45deg, ...` |
+ * | `--tabs-trigger-secondary-disabled-stripe-background-image` | `repeating-linear-gradient( -45deg, transparent,...` |
  * | `--tabs-trigger-secondary-disabled-stripe-before-mask-image` | `linear-gradient(to left, transparent 5%, black ...` |
  * | `--tabs-trigger-secondary-disabled-stripe-color` | `var(--tabs-secondary-stripe-disabled)` |
  * | `--tabs-trigger-secondary-disabled-stripe-content` | `""` |
