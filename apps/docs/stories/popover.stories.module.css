@@ -1,43 +1,77 @@
-.headingTitle {
-  line-height: 1;
-  margin-top: 0;
+/* The playground opens downwards, so it needs room under its trigger. */
+.roomBelow {
+	min-block-size: 320px;
 }
 
-.formGrid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  align-items: center;
-  gap: 1rem;
+.panel {
+	display: flex;
+	flex-direction: column;
+	inline-size: 17.5rem;
 }
 
-/* Button takes no class, so the trigger's font weight sits on the column around it. */
-.datePickerColumn {
-  gap: 0.75rem;
-  --button-font-weight: normal;
+.search {
+	padding: 0.5rem;
+	border-block-end: 1px solid var(--l2-border);
 }
 
-.datePickerLabel {
-  padding-inline: 0.25rem;
+.list {
+	margin: 0;
+	padding: 0.25rem 0;
+	list-style: none;
+	overflow: auto;
 }
 
-.datePickerContent {
-  width: auto;
-  overflow: hidden;
-  padding: 0;
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.5rem 0.75rem;
+	color: var(--l1-foreground);
 }
 
-.timePickerSection {
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-top: 1px solid var(--border);
+.rowMeta {
+	color: var(--l2-foreground);
 }
 
-.showcaseContainer {
-  min-height: 600px;
+.footer {
+	padding: 0.5rem;
+	border-block-start: 1px solid var(--l2-border);
 }
 
-.showcaseLayout {
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	inline-size: 17.5rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.inputRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	inline-size: 22.5rem;
+}
+
+.dialogBody {
+	padding: 1rem;
+	min-block-size: 16rem;
+}
+
+.note {
+	color: var(--l2-foreground);
+	max-inline-size: 36rem;
 }

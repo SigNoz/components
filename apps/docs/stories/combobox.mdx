@@ -288,16 +288,22 @@ else that closes on a press outside it, such as a `Popover`, pass `container` an
 ```tsx
 const containerRef = useRef<HTMLDivElement>(null);
 
-<PopoverContent>
-	<Combobox
-		aria-label="Timezone"
-		placeholder="Select a timezone..."
-		searchInputProps={{ placeholder: 'Search timezones' }}
-		items={timezones}
-		container={containerRef}
-	/>
-	<div ref={containerRef} />
-</PopoverContent>;
+<Popover
+	nativeButton
+	side="bottom"
+	align="start"
+	trigger={<Button variant="outlined">Timezone</Button>}
+>
+	<div ref={containerRef}>
+		<Combobox
+			aria-label="Timezone"
+			placeholder="Select a timezone..."
+			searchInputProps={{ placeholder: 'Search timezones' }}
+			items={timezones}
+			container={containerRef}
+		/>
+	</div>
+</Popover>;
 ```
 
 ## Holding the popup open in a story or a test

@@ -1,119 +1,100 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as PopoverStories from './popover.stories';
-import * as PopoverPrimitiveStories from './popover-primitive.stories';
-import * as PopoverTriggerStories from './popover-trigger.stories';
-import * as PopoverContentStories from './popover-content.stories';
-import * as PopoverAnchorStories from './popover-anchor.stories';
 
 <Meta of={PopoverStories} />
 
 # Popover
 
-Displays rich content in a portal, triggered by a button. Use for tooltips, menus, date pickers, and similar patterns.
+A floating panel hung off a trigger, rendered through Base UI's Popover. It opens on a click. The
+popup is a `role="dialog"`: focus moves into it, nothing is trapped, and Escape closes it.
 
-For the quick-start preset, see [PopoverSimple](?path=/docs/composed-components-popoversimple--docs).
+A surface that opens on hover is a tooltip. A menu at the pointer is a context menu. Rows of
+actions are a dropdown. A popover is the panel that is none of those: a form, a picker, a
+typeahead.
 
-## Primitive composition
+## How to use
 
-For full control, use the low-level building blocks: `Popover`, `PopoverTrigger`, `PopoverContent`, and optionally `PopoverAnchor`.
+`trigger`, `children`, `side`, `align` and `nativeButton` are required. There are no
+subcomponents to compose: the popover owns its own markup. `children` is the popup. `trigger` is
+the element it hangs off.
 
 ```tsx
-import { Popover, PopoverTrigger, PopoverContent, Button } from '@signozhq/ui';
+import { Button, Popover } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function SaveView({ open, onOpenChange }) {
 	return (
-		<Popover>
-			<PopoverTrigger asChild>
-				<Button variant="outline">Open popover</Button>
-			</PopoverTrigger>
-			<PopoverContent style={{ width: '20rem' }}>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-					<h4 style={{ fontWeight: 500 }}>Title</h4>
-					<p style={{ fontSize: '0.875rem', color: 'var(--l3-foreground)' }}>Content goes here.</p>
-				</div>
-			</PopoverContent>
+		<Popover
+			nativeButton
+			side="bottom"
+			align="end"
+			trigger={<Button variant="outlined">Save view</Button>}
+			open={open}
+			onOpenChange={onOpenChange}
+			aria-label="Save view"
+		>
+			<SaveViewForm onDone={() => onOpenChange(false)} />
 		</Popover>
 	);
 }
 ```
 
+The shell has no padding. The content owns all of it, edge to edge, which is what lets a divider
+or a search row run full-bleed.
+
+`nativeButton` says whether `trigger` renders a native `<button>`. It is required: a default of
+`true` is silently wrong for anything that is not a button. Set it to `false` for a badge, a link,
+or an input.
+
 <Primary />
 
-### Controlled mode
+<Controls />
+
+## Opening and closing
+
+The trigger opens it on a press, Enter or Space. It closes on Escape, on an outside press, and
+when focus leaves it. `onOpenChange` reports every change, and `eventDetails.reason` says why.
+`eventDetails.cancel()` vetoes the change.
+
+The popover owns its open state. Controlled `open` is for what the popup cannot know by itself: a
+form that closes only when its save succeeds, or a list that keeps one popover open at a time.
+Nothing starts open on the first render.
+
+## Placement
+
+`side` and `align` are required. The gap is a fixed 4px and the alignment offset is fixed at 0.
+The popup flips to the opposite side and shifts along its alignment axis to stay in view.
+
+`width`, `maxWidth` and `maxHeight` size the shell. Past `maxHeight`, or the room the viewport
+leaves, the content scrolls.
+
+`anchor` points the popup at something that is not the trigger, such as the input row of a
+typeahead. The trigger is still required. `initialFocus={false}` leaves the caret where it was.
+
+## Inside a dialog
+
+Anywhere else the popup goes to the body. Inside a `Dialog` or `Drawer` it portals into the panel,
+where the focus trap lets the keyboard reach the content.
+
+## What this is not
+
+- Hover content, including a key-value description, is a `Tooltip`.
+- A menu of rows that closes when one is picked is a `Dropdown`.
+- A menu that opens at the pointer, with no trigger element, is a context menu.
+
+## Asserting on it
+
+`testId` is `data-testid` on the trigger, and the popup is `` `${testId}-popup` ``. The popup
+renders only while open.
+
+`ForceOpenProvider`, from `@signozhq/ui/testing`, holds every popover under it open. Stories and
+screenshots use it. Call sites do not.
 
 ```tsx
-const [open, setOpen] = React.useState(false);
+import { ForceOpenProvider } from '@signozhq/ui/testing';
 
-<Popover open={open} onOpenChange={setOpen}>
-	<PopoverTrigger asChild>
-		<Button>{date ? date.toLocaleDateString() : 'Pick a date'}</Button>
-	</PopoverTrigger>
-	<PopoverContent align="start">
-		<Calendar
-			mode="single"
-			selected={date}
-			onSelect={(d) => {
-				setDate(d);
-				setOpen(false);
-			}}
-		/>
-	</PopoverContent>
-</Popover>;
+<ForceOpenProvider>
+	<Popover nativeButton side="bottom" align="start" trigger={<Button>Open</Button>}>
+		<p>Held open for the screenshot.</p>
+	</Popover>
+</ForceOpenProvider>;
 ```
-
-### PopoverAnchor
-
-Use `PopoverAnchor` when you want the popover positioned against a different element than the trigger:
-
-```tsx
-<Popover>
-	<PopoverAnchor asChild>
-		<div style={{ display: 'flex', gap: '0.5rem' }}>
-			<span>Row as anchor</span>
-			<PopoverTrigger>Trigger</PopoverTrigger>
-		</div>
-	</PopoverAnchor>
-	<PopoverContent>Content positioned against the anchor row</PopoverContent>
-</Popover>
-```
-
-### Popover inside another popover
-
-When nesting a popover inside another (e.g. a submenu or cascading picker), set `withPortal={false}` on the inner `PopoverContent`. This keeps the nested content in the parent popover's DOM hierarchy instead of portaling to `document.body`, avoiding z-index and stacking issues.
-
-```tsx
-<Popover>
-	<PopoverTrigger asChild>
-		<Button variant="outline">Open menu</Button>
-	</PopoverTrigger>
-	<PopoverContent style={{ width: '16rem' }}>
-		<p>Parent content</p>
-		<Popover>
-			<PopoverTrigger asChild>
-				<Button variant="ghost" size="sm">
-					Open submenu
-				</Button>
-			</PopoverTrigger>
-			<PopoverContent withPortal={false}>
-				<p>Nested popover content</p>
-			</PopoverContent>
-		</Popover>
-	</PopoverContent>
-</Popover>
-```
-
-## Popover Props
-
-<Controls of={PopoverPrimitiveStories.Default} />
-
-## PopoverTrigger Props
-
-<Controls of={PopoverTriggerStories.Default} />
-
-## PopoverContent Props
-
-<Controls of={PopoverContentStories.Default} />
-
-## PopoverAnchor Props
-
-<Controls of={PopoverAnchorStories.Default} />
