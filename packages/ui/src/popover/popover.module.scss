@@ -1,61 +1,74 @@
-@keyframes popover-in {
-	from {
-		opacity: 0;
-		transform: scale(0.95);
-	}
-	to {
-		opacity: 1;
-		transform: scale(1);
-	}
-}
+// Rules read colour only through the `--popover-internal-*` pairs below, never a semantic token
+// directly.
+.popover {
+	--popover-internal-background: var(--popover-background-color, var(--popover-background));
+	--popover-internal-foreground: var(--popover-foreground-color, var(--popover-foreground));
+	--popover-internal-border: var(--popover-border-color, var(--popover-border));
+	--popover-internal-shadow: var(--popover-box-shadow, var(--popover-shadow));
 
-@keyframes popover-out {
-	from {
-		opacity: 1;
-		transform: scale(1);
-	}
-	to {
-		opacity: 0;
-		transform: scale(0.95);
-	}
-}
+	display: var(--popover-display, flex);
+	flex-direction: var(--popover-flex-direction, column);
 
-.popover__content {
-	// Radix copies this onto the wrapper that positions the popover.
-	z-index: var(--popover-z-index, 50);
-	--radix-popover-content-available-width: var(--radix-popover-trigger-width);
-	--radix-popover-content-available-height: var(--radix-popover-trigger-height);
-	min-width: var(--radix-popover-trigger-width);
-	background-color: var(--popover-background, var(--l2-background));
-	color: var(--popover-foreground, var(--l1-foreground));
-	width: var(--popover-width, fit-content);
-	transform-origin: var(--popover-transform-origin, var(--radix-popover-content-transform-origin));
-	border-radius: var(--popover-border-radius, var(--radius-2, 4px));
-	padding: var(--popover-padding, var(--spacing-8));
+	// The `width` and `maxWidth` props arrive as the internal pair, so a token still outranks a
+	// call site.
+	--popover-internal-resolved-inline-size: var(
+		--popover-inline-size,
+		var(--popover-internal-inline-size, fit-content)
+	);
+	--popover-internal-resolved-max-inline-size: var(
+		--popover-max-inline-size,
+		var(--popover-internal-max-inline-size, 25rem)
+	);
+
+	box-sizing: var(--popover-box-sizing, border-box);
+	inline-size: var(--popover-internal-resolved-inline-size);
+	// The floor is clamped to the maximum because a min-width wins over a max-width.
+	min-inline-size: min(
+		var(--popover-min-inline-size, 10rem),
+		var(--popover-internal-resolved-max-inline-size)
+	);
+	max-inline-size: var(--popover-internal-resolved-max-inline-size);
+	// `--available-height` comes from Base UI and keeps the popup inside the viewport.
+	max-block-size: var(
+		--popover-max-block-size,
+		var(--popover-internal-max-block-size, var(--available-height, none))
+	);
+
+	// The shell owns no padding: the content slot does, which is what lets a divider or a search
+	// row run edge to edge.
+	padding: var(--popover-padding, 0);
+
+	color: var(--popover-internal-foreground);
 	border-width: var(--popover-border-width, 1px);
 	border-style: var(--popover-border-style, solid);
-	border-color: var(--popover-border-color, var(--l2-border));
-	box-shadow: var(--popover-box-shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1));
-	outline: none;
+	border-color: var(--popover-internal-border);
+	border-radius: var(--popover-border-radius, var(--radius-2));
+	background-color: var(--popover-internal-background);
+	box-shadow: var(--popover-internal-shadow);
+
+	// `--surface-3` is translucent in dark mode. Without the blur the page shows through the popup.
+	backdrop-filter: var(--popover-backdrop-filter, blur(40px));
+
+	// Keeps full-bleed content inside the radius.
+	overflow: var(--popover-overflow, hidden);
+
+	&:focus-visible {
+		outline: var(--popover-focus-visible-outline, none);
+	}
 }
 
-.popover__content[data-state="open"] {
-	animation: popover-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.popover__positioner {
+	// Base UI positions but does not stack.
+	z-index: var(--popover-z-index, 50);
+	// A modal drawer or dialog sets `pointer-events: none` on the body. A popup portalled there,
+	// into a `container` outside the panel, would otherwise take no click. Base UI still switches
+	// it off inline while the popover is closed.
+	pointer-events: var(--popover-positioner-pointer-events, auto);
+	// Base UI places the positioner with `left`, so its width would otherwise shrink to what is
+	// left of the containing block. Inside a dialog that is a zero-size layer.
+	inline-size: var(--popover-positioner-inline-size, max-content);
 
-.popover__content[data-state="closed"] {
-	animation: popover-out 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.popover__arrow {
-	width: var(--popover-arrow-width, 10px);
-	height: var(--popover-arrow-height, 10px);
-	border-radius: var(--popover-arrow-border-radius, 2px);
-	transform: translateY(-1.5px);
-}
-
-.popover__arrowPath {
-	fill: var(--popover-background, var(--l2-background));
-	stroke: var(--popover-border-color, var(--l2-border));
-	stroke-width: var(--popover-border-width, 2px);
+	&:focus-visible {
+		outline: var(--popover-positioner-focus-visible-outline, none);
+	}
 }

@@ -1,429 +1,196 @@
-import * as PopoverPrimitive from '@radix-ui/react-popover';
-import * as React from 'react';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
+import {
+	type CSSProperties,
+	forwardRef,
+	type ReactElement,
+	type RefAttributes,
+	useId,
+	useMemo,
+	useState,
+} from 'react';
+import { toCssLength } from '../lib/css-length.js';
+import { useForceOpen } from '../lib/force-open.js';
+import { mergeRefs } from '../lib/merge-refs.js';
+import { usePopupContainer } from '../lib/popup-container.js';
+import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
+import { PopoverPopup } from './subcomponents/popover-popup.js';
+import { PopoverPositioner } from './subcomponents/popover-positioner.js';
+import { PopoverTrigger } from './subcomponents/popover-trigger.js';
+import type { PopoverProps, ValidatePopoverProps } from './types.js';
 
-import { cn } from '../lib/utils.js';
-import styles from './popover.module.scss';
+const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(function Popover(
+	{
+		children,
+		trigger,
+		open,
+		onOpenChange,
+		side,
+		align,
+		anchor,
+		container,
+		initialFocus,
+		finalFocus,
+		width,
+		maxWidth,
+		maxHeight,
+		nativeButton,
+		testId,
+		id,
+		className: _className,
+		style: _style,
+		...props
+	},
+	ref,
+) {
+	const popupContainer = usePopupContainer();
+	// Inside a dialog the popup goes into its panel, where the focus trap lets the keyboard in.
+	const portalContainer = container === undefined ? popupContainer : container;
+	const generatedId = useId();
+	const popupId = id ?? generatedId;
+	// State, not a ref: the positioner reads the layer the trigger sits in when it mounts.
+	const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+	const triggerRef = useMemo(() => mergeRefs(ref, setTriggerElement), [ref]);
+	// Controlled only under a `ForceOpenProvider`. Everywhere else the consumer or Base UI owns it.
+	const forcedOpen = useForceOpen() ? true : undefined;
 
-export type PopoverProps = {
-	/**
-	 * The children of the popover.
-	 */
-	children?: React.ReactNode;
-	/**
-	 * The controlled open state of the popover. Must be used in conjunction with onOpenChange.
-	 */
-	open?: boolean;
-	/**
-	 * The open state of the popover when it is initially rendered. Use when you do not need to control its open state.
-	 */
-	defaultOpen?: boolean;
-	/**
-	 * Event handler called when the open state of the popover changes.
-	 */
-	onOpenChange?: (open: boolean) => void;
-	/**
-	 * The modality of the popover. When set to true, interaction with outside elements will be disabled and only popover content will be visible to screen readers.
-	 */
-	modal?: boolean;
-	/**
-	 * The test id of the popover.
-	 */
-	testId?: string;
-};
+	// The size props are written as custom properties so they compose with the tokens, the way
+	// Dropdown's `contentMaxWidth` and `contentMaxHeight` do.
+	const popupStyle = useMemo(
+		() =>
+			({
+				...(width != null && { '--popover-internal-inline-size': toCssLength(width) }),
+				...(maxWidth != null && { '--popover-internal-max-inline-size': toCssLength(maxWidth) }),
+				...(maxHeight != null && {
+					'--popover-internal-max-block-size': toCssLength(maxHeight),
+				}),
+			}) as CSSProperties,
+		[width, maxWidth, maxHeight],
+	);
+
+	if (!hasRenderableContent(children)) {
+		return <>{trigger}</>;
+	}
+
+	return (
+		<PopoverPrimitive.Root open={forcedOpen ?? open} modal={false} onOpenChange={onOpenChange}>
+			<PopoverTrigger ref={triggerRef} nativeButton={nativeButton} testId={testId}>
+				{trigger}
+			</PopoverTrigger>
+			<PopoverPrimitive.Portal container={portalContainer}>
+				<PopoverPositioner trigger={triggerElement} side={side} align={align} anchor={anchor}>
+					<PopoverPopup
+						popupId={popupId}
+						initialFocus={initialFocus}
+						finalFocus={finalFocus}
+						style={popupStyle}
+						testId={testId}
+						{...props}
+					>
+						{children}
+					</PopoverPopup>
+				</PopoverPositioner>
+			</PopoverPrimitive.Portal>
+		</PopoverPrimitive.Root>
+	);
+});
 
 /**
- * Root component that manages the open state and accessibility wiring for a popover.
- * Compose with `PopoverTrigger` and `PopoverContent` for the standard pattern, or use
- * `PopoverAnchor` when positioning against a different element than the trigger.
+ * Shows `children` in a floating panel hung off the element you pass as `trigger` (Base UI
+ * Popover). A Tooltip with its label replaced by an open content slot: same surface, border,
+ * radius and collision handling, but the slot may hold anything — which is what makes the popup a
+ * dialog rather than a description.
+ *
+ * A popover opens on a click. A surface that opens on hover is a tooltip, and a menu at the
+ * pointer is a context menu — neither is this component.
+ *
+ * The shell carries zero padding: `children` owns all of it, edge to edge, which is what lets a
+ * divider or a search row run full-bleed. Visual values are `--popover-*` custom properties,
+ * defaults in the `css-tokens` region of [./index.ts](./index.ts).
+ *
+ * ### Opening and closing
+ *
+ * The trigger opens it on a press, `Enter` or `Space`. The popup is a `role="dialog"`: focus
+ * moves to its first tabbable element, nothing is trapped, and `Escape` closes it and returns
+ * focus to the trigger. It also closes on an outside press and when focus leaves it.
+ * `initialFocus` and `finalFocus` redirect the focus on the way in and out.
+ *
+ * The popover owns its open state; `onOpenChange` reports it. Controlled `open` is for what the
+ * popup cannot know by itself — a form that closes only when its save succeeds.
+ *
+ * ### The trigger
+ *
+ * `trigger` is rendered as the element you pass, with the popover's props merged into it, so a
+ * `Button` keeps its own look and there is no second button wrapped around it. `nativeButton`
+ * says whether that element renders a native `<button>` — set it to `false` for anything else.
+ *
+ * ### Anchor
+ *
+ * `anchor` points the popup at something that is not the trigger — a typeahead anchored to its
+ * whole input row. The trigger is still required.
+ *
+ * ### What lands on the popup
+ *
+ * `aria-*`, `data-*` and `id` go to the popup, the portalled part you cannot otherwise reach.
+ * `testId` is the exception, because it names the trigger. A popup with a visible heading is
+ * named by `aria-labelledby`; one without is named by `aria-label`.
+ *
+ * ### Placement and size
+ *
+ * `side` and `align` are required: placement is never incidental. The gap is a fixed 4px. The
+ * popup flips to the opposite side and shifts along its alignment axis to stay in view. `width`,
+ * `maxWidth` and `maxHeight` size the shell; past `maxHeight` (or the room the viewport leaves)
+ * the content scrolls, and its own layout decides what stays pinned.
+ *
+ * ### Asserting on it
+ *
+ * `testId` is `data-testid` on the trigger, and the popup is `` `${testId}-popup` ``. The popup
+ * renders only while open, so asserting its absence asserts the popover is closed. Otherwise use
+ * the data attributes, never the hashed class names.
+ *
+ * | popup attribute | value |
+ * |---|---|
+ * | `data-slot` | `"popover-popup"` |
+ * | `data-side`, `data-align` | the placement actually rendered, after collisions |
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `popover-trigger` | always, merged into the element you passed as `trigger` |
+ * | `popover-positioner` | while open, the box the popup is placed in |
+ * | `popover-popup` | while open |
  *
  * @example
  * ```tsx
- * <Popover>
- *   <PopoverTrigger asChild>
- *     <Button variant="outline">Open popover</Button>
- *   </PopoverTrigger>
- *   <PopoverContent className="w-80">
- *     <div className="space-y-2">
- *       <h4 className="font-medium">Dimensions</h4>
- *       <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
- *     </div>
- *   </PopoverContent>
+ * <Popover
+ *   nativeButton
+ *   side="bottom"
+ *   align="end"
+ *   trigger={<Button variant="outlined">Save view</Button>}
+ *   open={open}
+ *   onOpenChange={setOpen}
+ * >
+ *   <SaveViewForm onDone={() => setOpen(false)} />
  * </Popover>
  * ```
  *
  * @example
  * ```tsx
- * const [open, setOpen] = React.useState(false);
- * <Popover open={open} onOpenChange={setOpen}>
- *   <PopoverTrigger asChild>
- *     <Button>{date ? date.toLocaleDateString() : 'Pick a date'}</Button>
- *   </PopoverTrigger>
- *   <PopoverContent align="start">
- *     <Calendar mode="single" selected={date} onSelect={(d) => { setDate(d); setOpen(false); }} />
- *   </PopoverContent>
- * </Popover>
- * ```
- *
- * @example
- * ```tsx
- * <Popover defaultOpen>
- *   <PopoverTrigger asChild>
- *     <Button>Open by default</Button>
- *   </PopoverTrigger>
- *   <PopoverContent>
- *     <p>I am open by default</p>
- *   </PopoverContent>
+ * // Uncontrolled: the popover owns its open state
+ * <Popover
+ *   nativeButton
+ *   side="bottom"
+ *   align="start"
+ *   aria-label="Markdown help"
+ *   trigger={<Button variant="ghost" prefix={<CircleHelp />} aria-label="Markdown help" />}
+ * >
+ *   <MarkdownCheatsheet />
  * </Popover>
  * ```
  */
-export function Popover({ testId, ...props }: PopoverProps) {
-	return <PopoverPrimitive.Root data-slot="popover" data-testid={testId} {...props} />;
-}
-
-export type PopoverTriggerProps = Omit<
-	React.ComponentProps<typeof PopoverPrimitive.Trigger>,
-	'id' | 'className'
-> & {
-	/**
-	 * The id of the popover trigger.
-	 */
-	id?: string;
-	/**
-	 * The class name of the popover trigger.
-	 */
-	className?: string;
-	/**
-	 * The test id of the popover trigger.
-	 */
-	testId?: string;
-};
-
-/**
- * The button that toggles the popover. Use `asChild` to delegate to a child element (e.g. a Button).
- * By default, `PopoverContent` positions itself against the trigger.
- *
- * @example
- * ```tsx
- * <Popover>
- *   <PopoverTrigger asChild>
- *     <Button variant="outline">Open popover</Button>
- *   </PopoverTrigger>
- *   <PopoverContent>...</PopoverContent>
- * </Popover>
- * ```
- */
-export const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTriggerProps>(
-	({ testId, id, className, ...props }, ref) => {
-		return (
-			<PopoverPrimitive.Trigger
-				ref={ref}
-				data-slot="popover-trigger"
-				data-testid={testId}
-				id={id}
-				className={className}
-				{...props}
-			/>
-		);
-	},
-);
-PopoverTrigger.displayName = 'PopoverTrigger';
-
-export type PopoverAnchorProps = Omit<
-	React.ComponentProps<typeof PopoverPrimitive.Anchor>,
-	'id' | 'className'
-> & {
-	/**
-	 * The id of the popover anchor.
-	 */
-	id?: string;
-	/**
-	 * The class name of the popover anchor.
-	 */
-	className?: string;
-	/**
-	 * The test id of the popover anchor.
-	 */
-	testId?: string;
-};
-
-/**
- * Optional element to position `PopoverContent` against. If not used, content positions against `PopoverTrigger`.
- * Use when you want the popover anchored to a different element than the trigger.
- *
- * @example
- * ```tsx
- * <Popover>
- *   <PopoverAnchor asChild>
- *     <div className="flex gap-2">
- *       <span>Row as anchor</span>
- *       <PopoverTrigger>Trigger</PopoverTrigger>
- *     </div>
- *   </PopoverAnchor>
- *   <PopoverContent>Content positioned against the anchor row</PopoverContent>
- * </Popover>
- * ```
- */
-export const PopoverAnchor = React.forwardRef<HTMLDivElement, PopoverAnchorProps>(
-	({ testId, id, className, ...props }, ref) => {
-		return (
-			<PopoverPrimitive.Anchor
-				ref={ref}
-				data-slot="popover-anchor"
-				data-testid={testId}
-				id={id}
-				className={className}
-				{...props}
-			/>
-		);
-	},
-);
-PopoverAnchor.displayName = 'PopoverAnchor';
-
-export type PopoverPortalProps = React.ComponentProps<typeof PopoverPrimitive.Portal> & {
-	/**
-	 * The test id of the popover portal.
-	 */
-	testId?: string;
-};
-
-/**
- * Portals the popover content into `document.body`. Used internally by `PopoverContent`.
- * Use directly when you need a custom `container` or `forceMount` behavior.
- */
-export const PopoverPortal = ({ testId, ...props }: PopoverPortalProps) => {
-	return <PopoverPrimitive.Portal data-slot="popover-portal" data-testid={testId} {...props} />;
-};
-
-export type PopoverArrowProps = {
-	/**
-	 * The test id of the popover arrow.
-	 */
-	testId?: string;
-} & Pick<React.ComponentProps<'svg'>, 'className' | 'style'>;
-
-/**
- * Optional arrow element to visually link the trigger with the content.
- * Must be rendered inside `PopoverContent`. Use `PopoverContent`'s `arrow` prop for the common case.
- *
- * @example
- * ```tsx
- * <PopoverContent arrow>
- *   <p>Content with arrow</p>
- * </PopoverContent>
- * ```
- */
-export const PopoverArrow = React.forwardRef<SVGSVGElement, PopoverArrowProps>(
-	({ testId, className, style }, ref) => {
-		return (
-			<PopoverPrimitive.Arrow
-				ref={ref}
-				data-slot="popover-arrow"
-				data-testid={testId}
-				asChild
-				className={cn(styles.popover__arrow, className)}
-				style={style}
-			>
-				<svg width={10} height={5} viewBox="0 0 30 10" preserveAspectRatio="none">
-					<path d="M 0,0 L 15,10 L 30,0" className={styles.popover__arrowPath} />
-				</svg>
-			</PopoverPrimitive.Arrow>
-		);
-	},
-);
-PopoverArrow.displayName = 'PopoverArrow';
-
-type OriginalPopoverContentProps = React.ComponentProps<typeof PopoverPrimitive.Content>;
-
-export type PopoverContentProps = {
-	/**
-	 * Used to force mounting when more control is needed. Useful when
-	 * controlling animation with React animation libraries.
-	 */
-	forceMount?: true;
-	/**
-	 * Event handler called when auto-focusing on open.
-	 * Can be prevented.
-	 */
-	onOpenAutoFocus?: OriginalPopoverContentProps['onOpenAutoFocus'];
-	/**
-	 * Event handler called when auto-focusing on close.
-	 * Can be prevented.
-	 */
-	onCloseAutoFocus?: OriginalPopoverContentProps['onCloseAutoFocus'];
-	/**
-	 * When `true`, hover/focus/click interactions will be disabled on elements outside
-	 * the `DismissableLayer`. Users will need to click twice on outside elements to
-	 * interact with them: once to close the `DismissableLayer`, and again to trigger the element.
-	 */
-	disableOutsidePointerEvents?: boolean;
-	/**
-	 * Event handler called when the escape key is down.
-	 * Can be prevented.
-	 */
-	onEscapeKeyDown?: (event: KeyboardEvent) => void;
-	/**
-	 * Event handler called when the a `pointerdown` event happens outside of the `DismissableLayer`.
-	 * Can be prevented.
-	 */
-	onPointerDownOutside?: OriginalPopoverContentProps['onPointerDownOutside'];
-	/**
-	 * Event handler called when the focus moves outside of the `DismissableLayer`.
-	 * Can be prevented.
-	 */
-	onFocusOutside?: OriginalPopoverContentProps['onFocusOutside'];
-	/**
-	 * Event handler called when an interaction happens outside the `DismissableLayer`.
-	 * Specifically, when a `pointerdown` event happens outside or focus moves outside of it.
-	 * Can be prevented.
-	 */
-	onInteractOutside?: OriginalPopoverContentProps['onInteractOutside'];
-	/**
-	 * The preferred side of the trigger to render against when open. Will be reversed when collisions occur and avoidCollisions is enabled.
-	 */
-	side?: OriginalPopoverContentProps['side'];
-	/**
-	 * The distance in pixels from the trigger.
-	 * @default 4
-	 */
-	sideOffset?: number;
-	/**
-	 * The preferred alignment against the trigger. May change when collisions occur.
-	 */
-	align?: OriginalPopoverContentProps['align'];
-	/**
-	 * An offset in pixels from the "start" or "end" alignment options.
-	 */
-	alignOffset?: number;
-	/**
-	 * The padding between the arrow and the edges of the content. If your content has border-radius, this will prevent it from overflowing the corners.
-	 */
-	arrowPadding?: number;
-	/**
-	 * When true, overrides the side and align preferences to prevent collisions with boundary edges.
-	 */
-	avoidCollisions?: boolean;
-	/**
-	 * The element used as the collision boundary. By default this is the viewport, though you can provide additional element(s) to be included in this check.
-	 */
-	collisionBoundary?: OriginalPopoverContentProps['collisionBoundary'];
-	/**
-	 * The distance in pixels from the boundary edges where collision detection should occur. Accepts a number (same for all sides), or a partial padding object, for example: { top: 20, left: 20 }.
-	 */
-	collisionPadding?: OriginalPopoverContentProps['collisionPadding'];
-	/**
-	 * The sticky behavior on the align axis. "partial" will keep the content in the boundary as long as the trigger is at least partially in the boundary whilst "always" will keep the content in the boundary regardless.
-	 */
-	sticky?: 'partial' | 'always';
-	/**
-	 * Whether to hide the content when the trigger becomes fully occluded.
-	 */
-	hideWhenDetached?: boolean;
-	/**
-	 * The strategy used to update the position of the content. "optimized" will use ResizeObserver to
-	 * only update when necessary; "always" will update on every frame.
-	 * @defaultValue 'optimized'
-	 */
-	updatePositionStrategy?: 'optimized' | 'always';
-	/**
-	 * The test id of the popover content.
-	 */
-	testId?: string;
-	/**
-	 * Whether to show the arrow.
-	 */
-	arrow?: boolean;
-	/**
-	 * Only change to false when you want to include a popover inside another popover.
-	 *
-	 * @default true
-	 */
-	withPortal?: boolean;
-} & Pick<React.ComponentProps<'div'>, 'id' | 'className' | 'style' | 'children'>;
-
-/**
- * The content that pops out when the popover is open. Rendered in a portal.
- * Supports positioning via `side`, `align`, and collision detection.
- *
- * @example
- * ```tsx
- * <PopoverContent className="w-80" side="bottom" align="center" arrow>
- *   <div className="space-y-2">
- *     <h4 className="font-medium">Title</h4>
- *     <p className="text-sm text-muted-foreground">Rich content here.</p>
- *   </div>
- * </PopoverContent>
- * ```
- *
- * @example
- * ```tsx
- * <PopoverContent side="top" align="end" arrow>
- *   <p>Positioned above, aligned to end</p>
- * </PopoverContent>
- * ```
- */
-export const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
-	(
-		{
-			className,
-			align = 'center',
-			sideOffset = 4,
-			testId,
-			children,
-			arrow = false,
-			withPortal = true,
-			...props
-		},
-		ref,
-	) => {
-		const popoverContent = (
-			<PopoverPrimitive.Content
-				ref={ref}
-				data-slot="popover-content"
-				data-testid={testId}
-				align={align}
-				sideOffset={sideOffset}
-				className={cn(styles.popover__content, className)}
-				{...props}
-			>
-				{arrow && <PopoverArrow />}
-				{children}
-			</PopoverPrimitive.Content>
-		);
-
-		if (!withPortal) {
-			return popoverContent;
-		}
-
-		return <PopoverPortal>{popoverContent}</PopoverPortal>;
-	},
-);
-PopoverContent.displayName = 'PopoverContent';
-
-export type PopoverCloseProps = React.ComponentProps<typeof PopoverPrimitive.Close> & {
-	/**
-	 * The test id of the popover close.
-	 */
-	testId?: string;
-};
-
-/**
- * Button that closes the popover when clicked. Place inside `PopoverContent`.
- *
- * @example
- * ```tsx
- * <PopoverContent>
- *   <p>Some content</p>
- *   <PopoverClose asChild>
- *     <Button variant="outline" size="sm">Close</Button>
- *   </PopoverClose>
- * </PopoverContent>
- * ```
- */
-export const PopoverClose = React.forwardRef<HTMLButtonElement, PopoverCloseProps>(
-	({ testId, ...props }, ref) => {
-		return (
-			<PopoverPrimitive.Close ref={ref} data-slot="popover-close" data-testid={testId} {...props} />
-		);
-	},
-);
-PopoverClose.displayName = 'PopoverClose';
+export const Popover = PopoverImpl as <T extends PopoverProps>(
+	props: T &
+		ValidatePopoverProps<T> &
+		// `T` is inferred from the call site, so `T extends PopoverProps` alone never runs excess
+		// property checks. Every key outside the props is pinned to `never` instead.
+		Record<Exclude<keyof T, keyof PopoverProps | keyof RefAttributes<HTMLButtonElement>>, never> &
+		RefAttributes<HTMLButtonElement>,
+) => ReactElement;
