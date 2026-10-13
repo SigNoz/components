@@ -9,7 +9,11 @@ import { Calendar } from '../calendar/index.js';
 import { Combobox, type ComboboxOptionItemType } from '../combobox/index.js';
 import { Input } from '../input/index.js';
 import { cn } from '../lib/utils.js';
-import { Popover, PopoverContent, PopoverTrigger } from '../popover/index.js';
+import {
+	LegacyPopover as Popover,
+	LegacyPopoverContent as PopoverContent,
+	LegacyPopoverTrigger as PopoverTrigger,
+} from './subcomponents/legacy-popover.js';
 import { ALL_TIMEZONES } from './constants.js';
 import styles from './date-picker.module.scss';
 
