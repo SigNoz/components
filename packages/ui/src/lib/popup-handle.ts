@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
  * What a popup is positioned against when it is shown imperatively: an element, a rectangle, or
  * a point in viewport coordinates.
  *
- * A point is the case a chart click produces — there is no element at the pointer, only an `x`
+ * A point is the case a chart click produces: there is no element at the pointer, only an `x`
  * and a `y`.
  */
 export type PopupAnchorTarget = Element | DOMRect | { x: number; y: number };
@@ -175,6 +175,22 @@ function closedSnapshot(): PopupHandleState<never> {
  *
  * @access private
  */
+/**
+ * Whether an event landed inside the element a popup was shown at.
+ *
+ * The anchor is neither the trigger nor the popup, so Base UI reports a press on it as a press
+ * outside. For the field a typeahead belongs to, or the row a card follows, it is the surface the
+ * popup is for.
+ *
+ * @access private
+ */
+export function isEventInsideAnchor(
+	anchor: PopupAnchorTarget | null | undefined,
+	target: EventTarget | null | undefined,
+): boolean {
+	return anchor instanceof Element && target instanceof Node && anchor.contains(target);
+}
+
 export function resolveAnchorTarget(
 	target: PopupAnchorTarget | null | undefined,
 ): Element | { getBoundingClientRect: () => DOMRect } | undefined {
