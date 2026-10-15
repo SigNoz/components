@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Popover } from '../popover.js';
+import { usePopoverHandle } from '../use-popover-handle.js';
 import { openPopover, renderPopover } from './popover.test-utils.js';
 
 describe('Popover interaction', () => {
@@ -84,37 +84,57 @@ describe('Popover interaction', () => {
 		await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 	});
 
-	it('follows a controlled open', async () => {
-		function Controlled() {
-			const [open, setOpen] = useState(false);
+	it('is shown and hidden by a handle', async () => {
+		function Handled() {
+			const handle = usePopoverHandle<string>();
 
 			return (
 				<>
-					<button type="button" onClick={() => setOpen(true)}>
+					<button type="button" onClick={() => handle.showAt({ x: 40, y: 40 }, 'from state')}>
 						Elsewhere
 					</button>
-					<Popover
-						nativeButton
-						side="bottom"
-						align="start"
-						trigger={<button type="button">Open</button>}
-						open={open}
-						onOpenChange={setOpen}
-					>
-						<p>Body</p>
+					<Popover nativeButton side="bottom" align="start" handle={handle}>
+						{(payload) => <p>{payload}</p>}
 					</Popover>
 				</>
 			);
 		}
 		const user = userEvent.setup();
-		render(<Controlled />);
+		render(<Handled />);
 
 		expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
 		await user.click(screen.getByRole('button', { name: 'Elsewhere' }));
-		expect(await screen.findByRole('dialog')).toBeInTheDocument();
+		expect(await screen.findByRole('dialog')).toHaveTextContent('from state');
 
 		await user.keyboard('{Escape}');
+		await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+	});
+
+	it('closes itself through the handle, for a form that just saved', async () => {
+		function SaveForm() {
+			const handle = usePopoverHandle();
+
+			return (
+				<Popover
+					nativeButton
+					side="bottom"
+					align="start"
+					handle={handle}
+					trigger={<button type="button">Open</button>}
+				>
+					<button type="button" onClick={() => handle.close()}>
+						Save
+					</button>
+				</Popover>
+			);
+		}
+		const user = userEvent.setup();
+		render(<SaveForm />);
+
+		await openPopover();
+		await user.click(screen.getByRole('button', { name: 'Save' }));
+
 		await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 	});
 

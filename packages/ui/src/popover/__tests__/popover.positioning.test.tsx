@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { Popover } from '../popover.js';
+import { usePopoverHandle } from '../use-popover-handle.js';
 import { openPopover, renderPopover } from './popover.test-utils.js';
 
 describe('Popover positioning', () => {
@@ -26,24 +28,31 @@ describe('Popover positioning', () => {
 		expect(popup).toHaveAttribute('data-side', 'bottom');
 	});
 
-	it('positions against a virtual anchor while the trigger stays required', async () => {
-		render(
-			<Popover
-				nativeButton
-				side="bottom"
-				align="start"
-				open
-				trigger={<button type="button">Open</button>}
-				anchor={{
-					getBoundingClientRect: () => DOMRect.fromRect({ x: 120, y: 80, width: 0, height: 0 }),
-				}}
-			>
-				<p>Drilldown</p>
-			</Popover>,
-		);
+	it('positions at a point through a handle, with no trigger at all', async () => {
+		function AtAPoint() {
+			const menu = usePopoverHandle<string>();
+
+			return (
+				<>
+					<button
+						type="button"
+						onClick={(event) => menu.showAt({ x: event.clientX, y: event.clientY }, 'Drilldown')}
+					>
+						Chart
+					</button>
+					<Popover nativeButton side="bottom" align="start" handle={menu}>
+						{(label) => <p>{label}</p>}
+					</Popover>
+				</>
+			);
+		}
+		render(<AtAPoint />);
+
+		await userEvent.click(screen.getByRole('button', { name: 'Chart' }));
 
 		expect(await screen.findByRole('dialog')).toHaveTextContent('Drilldown');
-		expect(document.querySelector('[data-slot="popover-trigger"]')).not.toBeNull();
+		// The only trigger in the DOM is the chart button, which is not the popover's.
+		expect(document.querySelector('[data-slot="popover-trigger"]')).toBeNull();
 	});
 
 	it('positions against another element passed as anchor while the trigger stays the opener', async () => {

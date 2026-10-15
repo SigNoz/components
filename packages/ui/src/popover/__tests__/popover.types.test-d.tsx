@@ -16,12 +16,14 @@
  */
 import { createRef } from 'react';
 import { assertType, describe, test } from 'vitest';
+import { PopupHandle } from '../../lib/popup-handle.js';
 import { Popover } from '../popover.js';
 
 const body = <p>Body</p>;
 const btn = <button type="button">Open</button>;
 const ref = createRef<HTMLButtonElement>();
 const virtualAnchor = { getBoundingClientRect: () => new DOMRect(0, 0, 0, 0) };
+const handle = new PopupHandle<string>();
 
 describe('root props', () => {
 	test('accepts the required props, plus a ref', () => {
@@ -62,9 +64,9 @@ describe('root props', () => {
 		);
 	});
 
-	test('rejects a popover with no trigger', () => {
+	test('rejects a popover with no trigger and no handle', () => {
 		assertType(
-			// @ts-expect-error - a popover always hangs off a trigger
+			// @ts-expect-error - nothing could ever open it
 			<Popover nativeButton side="bottom" align="start">
 				{body}
 			</Popover>,
@@ -147,32 +149,36 @@ describe('root props', () => {
 	});
 });
 
-describe('click only', () => {
-	test('rejects a hover delay', () => {
+describe('hover mode', () => {
+	test('accepts the hover delays with openOnHover', () => {
 		assertType(
 			<Popover
 				nativeButton
 				side="bottom"
 				align="start"
 				trigger={btn}
-				// @ts-expect-error - `delay` describes a hover, and a popover opens on a click
+				openOnHover
 				delay={0}
+				closeDelay={100}
 			>
 				{body}
 			</Popover>,
 		);
 	});
 
-	test('rejects a hover close delay', () => {
+	test('rejects a hover delay without openOnHover', () => {
 		assertType(
-			<Popover
-				nativeButton
-				side="bottom"
-				align="start"
-				trigger={btn}
-				// @ts-expect-error - `closeDelay` describes a hover, and a popover opens on a click
-				closeDelay={100}
-			>
+			// @ts-expect-error - `delay` describes the hover timing
+			<Popover nativeButton side="bottom" align="start" trigger={btn} delay={0}>
+				{body}
+			</Popover>,
+		);
+	});
+
+	test('rejects a hover close delay without openOnHover', () => {
+		assertType(
+			// @ts-expect-error - `closeDelay` describes the hover timing
+			<Popover nativeButton side="bottom" align="start" trigger={btn} closeDelay={100}>
 				{body}
 			</Popover>,
 		);
@@ -202,6 +208,21 @@ describe('click only', () => {
 				trigger={btn}
 				// @ts-expect-error - `children` is the popup content
 				content={body}
+			>
+				{body}
+			</Popover>,
+		);
+	});
+
+	test('rejects a controlled open', () => {
+		assertType(
+			<Popover
+				nativeButton
+				side="bottom"
+				align="start"
+				trigger={btn}
+				// @ts-expect-error - visibility the app owns is driven by a handle
+				open
 			>
 				{body}
 			</Popover>,
@@ -260,10 +281,53 @@ describe('anchor', () => {
 		);
 	});
 
-	test('rejects an anchor with no trigger', () => {
+	test('rejects a popover with neither a trigger nor a handle', () => {
 		assertType(
-			// @ts-expect-error - a popover always hangs off a trigger
-			<Popover nativeButton side="bottom" align="start" anchor={virtualAnchor} open>
+			// @ts-expect-error - nothing could ever open it
+			<Popover nativeButton side="bottom" align="start" anchor={virtualAnchor}>
+				{body}
+			</Popover>,
+		);
+	});
+
+	test('accepts a handle instead of a trigger', () => {
+		assertType(
+			<Popover nativeButton side="bottom" align="start" handle={handle}>
+				{(payload: string | undefined) => <p>{payload}</p>}
+			</Popover>,
+		);
+	});
+
+	test('accepts a handle that carries no payload', () => {
+		const plain = new PopupHandle();
+
+		assertType(
+			<Popover nativeButton side="bottom" align="start" handle={plain} initialFocus={false}>
+				{body}
+			</Popover>,
+		);
+	});
+
+	test('accepts a handle alongside the focus, size and open-change props', () => {
+		const plain = new PopupHandle();
+
+		assertType(
+			<Popover
+				nativeButton
+				side="bottom"
+				align="start"
+				handle={plain}
+				initialFocus={false}
+				finalFocus={false}
+				width="var(--anchor-width)"
+				maxHeight={300}
+				aria-label="Insert a variable"
+				onOpenChange={(open, eventDetails): void => {
+					if (!open) {
+						eventDetails.cancel();
+					}
+				}}
+			>
 				{body}
 			</Popover>,
 		);
