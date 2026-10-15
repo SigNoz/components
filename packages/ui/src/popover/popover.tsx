@@ -13,6 +13,7 @@ import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { usePopupContainer } from '../lib/popup-container.js';
 import {
+	dismissedTowards,
 	isEventInsideAnchor,
 	type PopupHandle,
 	resolveAnchorTarget,
@@ -103,14 +104,16 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 				open={isOpen}
 				modal={false}
 				onOpenChange={(nextOpen, eventDetails) => {
-					// A press or a focus move inside the element the handle was shown at is not
-					// outside the popover: it is the field a typeahead belongs to, or the row a
-					// card follows. Without this the popup closes on the very press that opened
-					// it, since the anchor is neither the trigger nor the popup.
+					// A press or a focus move that stays inside the element the handle was shown
+					// at is not outside the popover: it is the field a typeahead belongs to, or
+					// the row a card follows. Without this the popup closes on the very press
+					// that opened it, since the anchor is neither the trigger nor the popup.
+					//
+					// A focus-out names the element losing focus, which is the anchor itself, so
+					// it is `relatedTarget` that says where focus actually went.
 					if (
 						!nextOpen &&
-						(eventDetails.reason === 'outside-press' || eventDetails.reason === 'focus-out') &&
-						isEventInsideAnchor(handleState.anchor, eventDetails.event?.target)
+						isEventInsideAnchor(handleState.anchor, dismissedTowards(eventDetails))
 					) {
 						eventDetails.cancel();
 					}

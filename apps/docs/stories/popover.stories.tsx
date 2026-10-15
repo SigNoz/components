@@ -13,7 +13,7 @@ import {
 	usePopoverHandle,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactElement, useEffect, useRef, useState } from 'react';
+import { type ReactElement, type ReactNode, useEffect, useRef, useState } from 'react';
 import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './popover.stories.module.css';
@@ -24,6 +24,21 @@ const VIEWS = [
 	{ name: 'Error budget', owner: 'Platform' },
 	{ name: 'Deploy markers', owner: 'You' },
 ];
+
+const SOURCED_VARIABLES = [
+	{ name: 'service.name', source: 'Query variable' },
+	{ name: 'deployment.environment', source: 'Dashboard variable' },
+	{ name: 'timestamp_start', source: 'Global timestamp' },
+	{ name: 'timestamp_end', source: 'Global timestamp' },
+];
+
+/**
+ * Puts `{{name}}` where the caret was, which is the whole point of tracking it: appending to the
+ * end would land the token in the wrong half of a URL.
+ */
+function insertAtCursor(value: string, token: string, cursor: number): string {
+	return `${value.slice(0, cursor)}${token}${value.slice(cursor)}`;
+}
 
 const VARIABLES = [
 	'service.name',
@@ -162,6 +177,28 @@ const meta: Meta<typeof Popover> = {
 export default meta;
 type Story = StoryObj<typeof Popover>;
 
+/**
+ * A line of instruction above a story, so what to do with it is not a guess.
+ */
+function Hint({ children }: { children: ReactNode }): ReactElement {
+	return (
+		<Typography size="sm" className={styles.hint}>
+			{children}
+		</Typography>
+	);
+}
+
+/**
+ * What the last interaction did. A showcase that swallows every click reads as a broken popover.
+ */
+function Result({ children }: { children?: string }): ReactElement {
+	return (
+		<Typography size="sm" className={children === undefined ? styles.resultEmpty : styles.result}>
+			{children ?? 'Nothing picked yet.'}
+		</Typography>
+	);
+}
+
 function popup(testId: string): HTMLElement {
 	const node = document.querySelector<HTMLElement>(`[data-testid="${testId}-popup"]`);
 
@@ -178,6 +215,8 @@ function popup(testId: string): HTMLElement {
  */
 function ClickPanel(): ReactElement {
 	const [query, setQuery] = useState('');
+	// Kept here rather than in the story, because the Playground's content is a static arg.
+	const [picked, setPicked] = useState<string>();
 	const views = VIEWS.filter((view) => view.name.toLowerCase().includes(query.toLowerCase()));
 
 	return (
@@ -192,17 +231,41 @@ function ClickPanel(): ReactElement {
 				/>
 			</div>
 			<ul className={styles.list}>
+				{views.length === 0 && (
+					<li className={styles.empty}>
+						<Typography size="sm">No view matches “{query}”</Typography>
+					</li>
+				)}
 				{views.map((view) => (
-					<li key={view.name} className={styles.row}>
-						<Typography size="sm">{view.name}</Typography>
-						<Typography size="sm" className={styles.rowMeta}>
-							{view.owner}
-						</Typography>
+					<li key={view.name} className={styles.pickRow}>
+						<Button
+							variant={ButtonVariant.Ghost}
+							color={ButtonColor.Secondary}
+							size="md"
+							width="100%"
+							type="button"
+							onClick={() => setPicked(view.name)}
+						>
+							<div className={styles.pickRowBody}>
+								<Typography size="sm" className={styles.pickRowName}>
+									{view.name}
+								</Typography>
+								<Typography size="sm" className={styles.rowMeta}>
+									{picked === view.name ? 'Showing' : view.owner}
+								</Typography>
+							</div>
+						</Button>
 					</li>
 				))}
 			</ul>
 			<div className={styles.footer}>
-				<Button variant={ButtonVariant.Ghost} color={ButtonColor.Secondary} size="md">
+				<Button
+					variant={ButtonVariant.Ghost}
+					color={ButtonColor.Secondary}
+					size="md"
+					type="button"
+					onClick={() => setPicked('Untitled view')}
+				>
 					Create view
 				</Button>
 			</div>
@@ -230,6 +293,10 @@ export const Playground: Story = {
 	decorators: [
 		(Story): ReactElement => (
 			<div className={styles.roomBelow}>
+				<Hint>
+					Press “Saved views”. The search filters the rows, the shell has no padding of its own, and
+					Escape closes it and puts focus back on the trigger.
+				</Hint>
 				<Story />
 			</div>
 		),
@@ -266,6 +333,7 @@ export const SaveViewForm: Story = {
 	render: function SaveViewFormStory() {
 		const handle = usePopoverHandle();
 		const [name, setName] = useState('Checkout latency');
+		const [saved, setSaved] = useState<string>();
 		// The form is the subject, so the story lands with it open rather than on a button.
 		const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -277,6 +345,10 @@ export const SaveViewForm: Story = {
 
 		return (
 			<div className={styles.roomBelow}>
+				<Hint>
+					The form closes itself once the save succeeds, which the popover cannot know on its own:
+					it calls <code>handle.close()</code>. Cancel closes it the same way.
+				</Hint>
 				<Popover
 					ref={triggerRef}
 					nativeButton
@@ -291,6 +363,7 @@ export const SaveViewForm: Story = {
 						className={styles.form}
 						onSubmit={(event) => {
 							event.preventDefault();
+							setSaved(name);
 							handle.close();
 						}}
 					>
@@ -323,6 +396,7 @@ export const SaveViewForm: Story = {
 						</div>
 					</form>
 				</Popover>
+				<Result>{saved === undefined ? undefined : `Saved the view “${saved}”.`}</Result>
 			</div>
 		);
 	},
@@ -353,29 +427,48 @@ export const ShownFromElsewhere: Story = {
 	},
 	render: function ShownFromElsewhereStory() {
 		const handle = usePopoverHandle();
+		const [openedBy, setOpenedBy] = useState<string>();
 
 		return (
 			<div className={styles.roomBelow}>
-				<Button
-					variant={ButtonVariant.Ghost}
-					color={ButtonColor.Secondary}
-					size="md"
-					type="button"
-					onClick={(event) => handle.showAt(event.currentTarget)}
-				>
-					Show from outside
-				</Button>
-				<Popover
-					nativeButton
-					side="bottom"
-					align="start"
-					handle={handle}
-					aria-label="Notice"
-					testId="popover-shown"
-					trigger={<Button {...TRIGGER}>Details</Button>}
-				>
-					<p className={styles.row}>Shown against whichever button asked for it.</p>
-				</Popover>
+				<Hint>
+					Two ways into one popup. Press either button: the handle owns the open state, so a press
+					and a <code>showAt</code> cannot disagree, and the popup moves to whichever asked for it.
+				</Hint>
+				<div className={styles.inlineRow}>
+					<Button
+						variant={ButtonVariant.Ghost}
+						color={ButtonColor.Secondary}
+						size="md"
+						type="button"
+						onClick={(event) => {
+							handle.showAt(event.currentTarget);
+							setOpenedBy('showAt, from the button beside it');
+						}}
+					>
+						Show from outside
+					</Button>
+					<Popover
+						nativeButton
+						side="bottom"
+						align="start"
+						handle={handle}
+						aria-label="Notice"
+						testId="popover-shown"
+						onOpenChange={(open, details) => {
+							if (open && details.reason === 'trigger-press') {
+								setOpenedBy('a press on its own trigger');
+							}
+						}}
+						trigger={<Button {...TRIGGER}>Details</Button>}
+					>
+						<p className={styles.note}>
+							Opened by {openedBy ?? 'nothing yet'}, and anchored to whatever asked for it. Escape
+							closes it either way.
+						</p>
+					</Popover>
+				</div>
+				<Result>{openedBy === undefined ? undefined : `Opened by ${openedBy}.`}</Result>
 			</div>
 		);
 	},
@@ -403,33 +496,48 @@ export const HoverBreakdown: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, modes: allModes },
 	},
-	render: () => (
-		<div className={styles.roomBelow}>
-			<Popover
-				nativeButton
-				openOnHover
-				side="bottom"
-				align="start"
-				aria-label="Latency breakdown"
-				testId="popover-hover"
-				trigger={<Button {...TRIGGER}>checkout-service</Button>}
-			>
-				<div className={styles.breakdown}>
-					{BREAKDOWN.map((entry) => (
-						<div key={entry.key} className={styles.pair}>
-							<Typography size="sm">{entry.key}</Typography>
-							<Typography size="sm" className={styles.pairValue}>
-								{entry.value}
-							</Typography>
-						</div>
-					))}
-					<Button variant={ButtonVariant.Ghost} color={ButtonColor.Secondary} size="md">
-						Open in traces
-					</Button>
-				</div>
-			</Popover>
-		</div>
-	),
+	render: function HoverBreakdownStory() {
+		const [opened, setOpened] = useState<string>();
+
+		return (
+			<div className={styles.roomBelow}>
+				<Hint>
+					Rest the pointer on the service name. Unlike a tooltip the popup is reachable: move the
+					pointer into it and press the button at the bottom.
+				</Hint>
+				<Popover
+					nativeButton
+					openOnHover
+					side="bottom"
+					align="start"
+					aria-label="Latency breakdown"
+					testId="popover-hover"
+					trigger={<Button {...TRIGGER}>checkout-service</Button>}
+				>
+					<div className={styles.breakdown}>
+						{BREAKDOWN.map((entry) => (
+							<div key={entry.key} className={styles.pair}>
+								<Typography size="sm">{entry.key}</Typography>
+								<Typography size="sm" className={styles.pairValue}>
+									{entry.value}
+								</Typography>
+							</div>
+						))}
+						<Button
+							variant={ButtonVariant.Ghost}
+							color={ButtonColor.Secondary}
+							size="md"
+							type="button"
+							onClick={() => setOpened('checkout-service')}
+						>
+							Open in traces
+						</Button>
+					</div>
+				</Popover>
+				<Result>{opened === undefined ? undefined : `Opened traces for ${opened}.`}</Result>
+			</div>
+		);
+	},
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
 
@@ -493,6 +601,10 @@ export const RowHoverCard: Story = {
 
 		return (
 			<div className={styles.roomBelow}>
+				<Hint>
+					Move the pointer down the rows. One declared popover follows it, swapping its content,
+					instead of a popup per row.
+				</Hint>
 				<div className={styles.rows}>
 					{SPANS.map((span) => (
 						<div
@@ -556,12 +668,15 @@ export const ChartDrilldown: Story = {
 	},
 	render: function ChartDrilldownStory() {
 		const menu = usePopoverHandle<(typeof LATENCY)[number]>();
+		const [drilled, setDrilled] = useState<string>();
 
 		return (
 			<div className={styles.roomBelow}>
-				<Typography size="sm" className={styles.hint}>
-					p99 latency, last hour. Click the chart to drill down from that point.
-				</Typography>
+				<Hint>
+					p99 latency, last hour. Click anywhere on the chart: there is no element under the pointer
+					to hang a trigger off, so the menu is shown at the coordinates the chart reported, for the
+					point nearest to them.
+				</Hint>
 				<button
 					type="button"
 					data-testid="plot"
@@ -611,15 +726,27 @@ export const ChartDrilldown: Story = {
 									{point === undefined ? '' : `${point.value.toFixed(2)} s`}
 								</Typography>
 							</li>
-							<li className={styles.row}>
-								<Typography size="sm">View traces</Typography>
-							</li>
-							<li className={styles.row}>
-								<Typography size="sm">View logs</Typography>
-							</li>
+							{['View traces', 'View logs'].map((action) => (
+								<li key={action} className={styles.suggestion}>
+									<Button
+										variant={ButtonVariant.Ghost}
+										color={ButtonColor.Secondary}
+										size="md"
+										width="100%"
+										type="button"
+										onClick={() => {
+											setDrilled(point === undefined ? undefined : `${action} at ${point.time}`);
+											menu.close();
+										}}
+									>
+										{action}
+									</Button>
+								</li>
+							))}
 						</ul>
 					)}
 				</Popover>
+				<Result>{drilled === undefined ? undefined : `${drilled}.`}</Result>
 			</div>
 		);
 	},
@@ -657,6 +784,10 @@ export const SuggestionsOnFocus: Story = {
 
 		return (
 			<div className={styles.roomBelow}>
+				<Hint>
+					Click the field. The list opens on focus and narrows as you type, the caret never leaves
+					the field, and picking one inserts it. Click anywhere outside to dismiss.
+				</Hint>
 				<div className={styles.inputRow}>
 					<Input
 						ref={field}
@@ -664,8 +795,15 @@ export const SuggestionsOnFocus: Story = {
 						placeholder="Type to filter variables"
 						testId="query"
 						value={query}
-						onChange={(event) => setQuery(event.target.value)}
+						// Focus is the way in, but a field that is already focused fires no focus
+						// event, so a press and a keystroke have to reopen it too. Otherwise the
+						// list is gone for good once it has been dismissed.
 						onFocus={(event) => suggestions.showAt(event.currentTarget)}
+						onClick={(event) => suggestions.showAt(event.currentTarget)}
+						onChange={(event) => {
+							setQuery(event.target.value);
+							suggestions.showAt(event.currentTarget);
+						}}
 					/>
 				</div>
 				<Popover
@@ -673,7 +811,11 @@ export const SuggestionsOnFocus: Story = {
 					side="bottom"
 					align="start"
 					handle={suggestions}
+					// Both: on close Base UI restores focus to the field, and a focus event there
+					// is what opens the list, so without `finalFocus` it reopens itself the moment
+					// an outside press dismisses it.
 					initialFocus={false}
+					finalFocus={false}
 					width={360}
 					aria-label="Variables"
 					testId="popover-suggestions"
@@ -704,6 +846,7 @@ export const SuggestionsOnFocus: Story = {
 						))}
 					</ul>
 				</Popover>
+				<Result>{query === '' ? undefined : `Query is now “${query}”.`}</Result>
 			</div>
 		);
 	},
@@ -733,6 +876,14 @@ export const SuggestionsOnFocus: Story = {
 			within(popup('popover-suggestions')).getByRole('button', { name: 'k8s.namespace.name' }),
 		);
 		await waitFor(() => expect(field).toHaveValue('{{k8s.namespace.name}}'));
+
+		// Left open on the full list, so the story lands on what it is for. The field keeps
+		// focus after the pick, and a press on an already-focused field fires no focus event.
+		fireEvent.change(field, { target: { value: '' } });
+		fireEvent.click(field);
+		await waitFor(() =>
+			expect(within(popup('popover-suggestions')).getAllByRole('button')).toHaveLength(4),
+		);
 	},
 };
 
@@ -745,6 +896,8 @@ export const InsideDialog: Story = {
 	},
 	render: function InsideDialogStory() {
 		const [open, setOpen] = useState(true);
+		const threshold = usePopoverHandle();
+		const [picked, setPicked] = useState<string>();
 
 		return (
 			<div className={styles.roomBelow}>
@@ -758,16 +911,41 @@ export const InsideDialog: Story = {
 							<DialogTitle>Panel settings</DialogTitle>
 						</DialogHeader>
 						<div className={styles.dialogBody}>
+							<Hint>
+								A modal dialog traps focus and turns off pointer events on the body. The popup is
+								portalled into the panel instead, so it stays clickable and the keyboard can reach
+								it. Pick a threshold.
+							</Hint>
 							<Popover
 								nativeButton
 								side="bottom"
 								align="start"
+								handle={threshold}
 								aria-label="Threshold"
 								testId="popover-in-dialog"
 								trigger={<Button {...TRIGGER}>Set threshold</Button>}
 							>
-								<p className={styles.row}>The popup is portalled into the dialog panel.</p>
+								<ul className={styles.list}>
+									{['200 ms', '500 ms', '1 s'].map((value) => (
+										<li key={value} className={styles.suggestion}>
+											<Button
+												variant={ButtonVariant.Ghost}
+												color={ButtonColor.Secondary}
+												size="md"
+												width="100%"
+												type="button"
+												onClick={() => {
+													setPicked(value);
+													threshold.close();
+												}}
+											>
+												{value}
+											</Button>
+										</li>
+									))}
+								</ul>
 							</Popover>
+							<Result>{picked === undefined ? undefined : `Threshold set to ${picked}.`}</Result>
 						</div>
 					</DialogContent>
 				</Dialog>
@@ -801,27 +979,51 @@ export const MaxHeightScrolling: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, modes: allModes },
 	},
-	render: () => (
-		<div className={styles.roomBelow}>
-			<Popover
-				nativeButton
-				side="bottom"
-				align="start"
-				maxHeight={160}
-				aria-label="Services"
-				testId="popover-scroll"
-				trigger={<Button {...TRIGGER}>Services</Button>}
-			>
-				<ul className={styles.list}>
-					{SERVICES.map((service) => (
-						<li key={service} className={styles.row}>
-							<Typography size="sm">{service}</Typography>
-						</li>
-					))}
-				</ul>
-			</Popover>
-		</div>
-	),
+	render: function MaxHeightScrollingStory() {
+		const list = usePopoverHandle();
+		const [picked, setPicked] = useState<string>();
+
+		return (
+			<div className={styles.roomBelow}>
+				<Hint>
+					Twenty-four services in a popup capped at 160px by <code>maxHeight</code>. The cap is on
+					the shell and the list inside it scrolls, so the content never has to know the number.
+					Scroll down and pick one to close it.
+				</Hint>
+				<Popover
+					nativeButton
+					side="bottom"
+					align="start"
+					maxHeight={160}
+					handle={list}
+					aria-label="Services"
+					testId="popover-scroll"
+					trigger={<Button {...TRIGGER}>Services</Button>}
+				>
+					<ul className={styles.list}>
+						{SERVICES.map((service) => (
+							<li key={service} className={styles.pickRow}>
+								<Button
+									variant={ButtonVariant.Ghost}
+									color={ButtonColor.Secondary}
+									size="md"
+									width="100%"
+									type="button"
+									onClick={() => {
+										setPicked(service);
+										list.close();
+									}}
+								>
+									{service}
+								</Button>
+							</li>
+						))}
+					</ul>
+				</Popover>
+				<Result>{picked === undefined ? undefined : `Picked ${picked}.`}</Result>
+			</div>
+		);
+	},
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);
 
@@ -844,33 +1046,94 @@ export const AnchoredTypeahead: Story = {
 	},
 	render: function AnchoredTypeaheadStory() {
 		const row = useRef<HTMLDivElement>(null);
+		const field = useRef<HTMLInputElement>(null);
+		const variables = usePopoverHandle();
+		const [url, setUrl] = useState('/traces?service=&env=prod');
+		// Where the token goes. Tracked on every way the caret can move.
+		const [cursor, setCursor] = useState(0);
+		const trackCursor = (event: { currentTarget: HTMLInputElement }): void =>
+			setCursor(event.currentTarget.selectionStart ?? 0);
 
 		return (
 			<div className={styles.roomBelow}>
-				<div ref={row} className={styles.inputRow}>
+				<Hint>
+					The dashboard editor's URL field. The popup hangs off the whole row rather than the field,
+					so <code>var(--anchor-width)</code> sizes it to match. Put the caret after
+					<code>service=</code>, then pick a variable: the token lands at the caret, not at the end.
+				</Hint>
+				<div ref={row} data-testid="anchored-row" className={styles.inputRow}>
 					<span className={styles.inputRowField}>
-						<Input aria-label="Query" placeholder="service.name" />
+						<Input
+							ref={field}
+							aria-label="Query"
+							placeholder="https://… or /path?var={{variable}}"
+							value={url}
+							onChange={(event) => {
+								setCursor(event.target.selectionStart ?? 0);
+								setUrl(event.target.value);
+							}}
+							onFocus={() => row.current !== null && variables.showAt(row.current)}
+							onClick={(event) => {
+								trackCursor(event);
+								if (row.current !== null) {
+									variables.showAt(row.current);
+								}
+							}}
+							onKeyUp={trackCursor}
+						/>
 					</span>
-					<Popover
-						nativeButton
-						side="bottom"
-						align="start"
-						anchor={row}
-						initialFocus={false}
-						width={360}
-						aria-label="Variables"
-						testId="popover-typeahead"
-						trigger={<Button {...TRIGGER}>Variables</Button>}
-					>
-						<ul className={styles.list}>
-							{VARIABLES.map((variable) => (
-								<li key={variable} className={styles.row}>
-									<Typography size="sm">{variable}</Typography>
-								</li>
-							))}
-						</ul>
-					</Popover>
 				</div>
+				<Popover
+					nativeButton
+					side="bottom"
+					align="start"
+					handle={variables}
+					// The caret belongs to the field the suggestions are for, on the way in and out.
+					initialFocus={false}
+					finalFocus={false}
+					// Both, or the default max width would clamp a wide field's suggestions.
+					width="var(--anchor-width)"
+					maxWidth="var(--anchor-width)"
+					maxHeight={300}
+					aria-label="Insert a variable"
+					testId="popover-typeahead"
+				>
+					<ul className={styles.list}>
+						{SOURCED_VARIABLES.map((variable) => (
+							<li
+								key={variable.name}
+								className={styles.pickRow}
+								// Keeps the caret: without this the press blurs the field first.
+								onMouseDown={(event) => event.preventDefault()}
+							>
+								<Button
+									variant={ButtonVariant.Ghost}
+									color={ButtonColor.Secondary}
+									size="md"
+									width="100%"
+									type="button"
+									onClick={() => {
+										const token = `{{${variable.name}}}`;
+										setUrl((current) => insertAtCursor(current, token, cursor));
+										setCursor((at) => at + token.length);
+										variables.close();
+										field.current?.focus();
+									}}
+								>
+									<div className={styles.pickRowBody}>
+										<Typography size="sm" className={styles.pickRowName}>
+											{`{{${variable.name}}}`}
+										</Typography>
+										<Typography size="sm" className={styles.rowMeta}>
+											{variable.source}
+										</Typography>
+									</div>
+								</Button>
+							</li>
+						))}
+					</ul>
+				</Popover>
+				<Result>{`URL is now “${url}”.`}</Result>
 			</div>
 		);
 	},
@@ -878,10 +1141,25 @@ export const AnchoredTypeahead: Story = {
 		const canvas = within(canvasElement);
 
 		await waitForEffects();
-		expect(canvas.getByRole('textbox', { name: 'Query' })).not.toHaveFocus();
-		fireEvent.click(canvas.getByTestId('popover-typeahead'));
+		const field = canvas.getByRole<HTMLInputElement>('textbox', { name: 'Query' });
 
-		await waitFor(() => expect(popup('popover-typeahead')).toBeVisible());
-		expect(canvas.getByRole('textbox', { name: 'Query' })).not.toHaveFocus();
+		// The caret goes right after `service=`, which is where the token has to land.
+		const at = '/traces?service='.length;
+		field.focus();
+		field.setSelectionRange(at, at);
+		fireEvent.keyUp(field);
+
+		const panel = await waitFor(() => popup('popover-typeahead'));
+		// The caret stays in the field: the popup is anchored to the row, not focused.
+		expect(field).toHaveFocus();
+		// `var(--anchor-width)` sizes the popup to the row it hangs off.
+		expect(Math.round(panel.getBoundingClientRect().width)).toBe(
+			Math.round(canvas.getByTestId('anchored-row').getBoundingClientRect().width),
+		);
+
+		fireEvent.click(within(panel).getByRole('button', { name: /service\.name/ }));
+
+		// Inserted at the caret, not appended: the `env=prod` half survives.
+		await waitFor(() => expect(field).toHaveValue('/traces?service={{service.name}}&env=prod'));
 	},
 };

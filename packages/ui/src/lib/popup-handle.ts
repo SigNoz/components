@@ -176,6 +176,27 @@ function closedSnapshot(): PopupHandleState<never> {
  * @access private
  */
 /**
+ * Where a dismissal is heading: the element pressed, or for a focus move the element focus is
+ * going to. A `focus-out` event names the element *losing* focus, which is the anchor itself, so
+ * reading `target` there would call every focus move a move inside the anchor.
+ *
+ * `undefined` for the reasons that are not a press or a focus move, such as Escape, which no
+ * anchor should hold open.
+ *
+ * @access private
+ */
+export function dismissedTowards(details: {
+	reason?: string | undefined;
+	event?: Event | undefined;
+}): EventTarget | null | undefined {
+	if (details.reason === 'focus-out') {
+		return (details.event as FocusEvent | undefined)?.relatedTarget;
+	}
+
+	return details.reason === 'outside-press' ? details.event?.target : undefined;
+}
+
+/**
  * Whether an event landed inside the element a popup was shown at.
  *
  * The anchor is neither the trigger nor the popup, so Base UI reports a press on it as a press

@@ -16,12 +16,15 @@ function Suggestions({ onOpenChange }: { onOpenChange?: () => void } = {}): JSX.
 		<div>
 			<input aria-label="Query" onFocus={(event) => suggestions.showAt(event.currentTarget)} />
 			<button type="button">Elsewhere</button>
+			{/* Not focusable, so closing cannot hand focus to it: the anchor gets it back. */}
+			<p>Somewhere else entirely</p>
 			<Popover
 				nativeButton
 				side="bottom"
 				align="start"
 				handle={suggestions}
 				initialFocus={false}
+				finalFocus={false}
 				aria-label="Variables"
 				onOpenChange={onOpenChange}
 			>
@@ -63,6 +66,25 @@ describe('Popover anchored to something that is not its trigger', () => {
 		await user.click(screen.getByRole('button', { name: 'Elsewhere' }));
 
 		await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+	});
+
+	// A dismissal that restores focus to the anchor re-fires whatever opened it there. A
+	// typeahead opened on focus then reopens itself the moment an outside press dismisses it,
+	// which reads as an outside press that does nothing at all.
+	it('does not reopen itself when focus returns to the anchor on close', async () => {
+		const user = userEvent.setup();
+		render(<Suggestions />);
+
+		await user.click(screen.getByRole('textbox', { name: 'Query' }));
+		await screen.findByRole('dialog');
+		await user.click(screen.getByText('Somewhere else entirely'));
+
+		await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+		// Settled, not merely closed for a frame.
+		await new Promise((resolve) => {
+			setTimeout(resolve, 150);
+		});
+		expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 	});
 
 	it('still closes on Escape', async () => {

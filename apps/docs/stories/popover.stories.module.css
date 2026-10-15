@@ -31,7 +31,63 @@
 }
 
 .rowMeta {
+	flex: 0 1 auto;
+	color: var(--l3-foreground);
+}
+
+/* A row you can actually pick. Mirrors the dashboard editor's variable rows: the button is a
+   plain full-width surface, and the two labels inside it do the spacing. */
+.pickRow {
+	display: block;
+	overflow: hidden;
+	--button-display: flex;
+	--button-justify-content: flex-start;
+}
+
+.pickRowBody {
+	display: flex;
+	flex: 1 1 auto;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	min-inline-size: 0;
+}
+
+.pickRowName,
+.rowMeta {
+	min-inline-size: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.pickRowName {
+	flex: 1 1 auto;
+	text-align: start;
+}
+
+/* What the story just did, so the interaction has a visible outcome. */
+.result {
+	display: block;
+	margin-block-start: 0.75rem;
 	color: var(--l2-foreground);
+}
+
+.resultEmpty {
+	color: var(--l3-foreground);
+}
+
+.inlineRow {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.note {
+	margin: 0;
+	padding: 0.5rem 0.75rem;
+	inline-size: 15rem;
+	color: var(--l1-foreground);
 }
 
 .footer {
