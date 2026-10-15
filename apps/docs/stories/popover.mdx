@@ -45,8 +45,6 @@ or an input.
 
 <Primary />
 
-<Controls />
-
 ## Opening and closing
 
 The trigger opens it on a press, Enter or Space. It closes on Escape, on an outside press, and
@@ -54,7 +52,7 @@ when focus leaves it. `onOpenChange` reports every change, and `eventDetails.rea
 `eventDetails.cancel()` vetoes the change.
 
 With `openOnHover` it also opens while the pointer rests on the trigger, after `delay`. The popup
-stays interactive, so the pointer can travel into it to read, select or follow a link — which is
+stays interactive, so the pointer can travel into it to read, select or follow a link, which is
 the one thing a Tooltip cannot do. The trigger still opens it on a press, which is the route a
 keyboard takes.
 
@@ -94,8 +92,8 @@ export default function Waterfall({ spans }) {
 Pass `children` as a function to receive the payload of the most recent `showAt`. One declared
 popover then serves every row, moving and swapping its content instead of mounting a popup each.
 
-A handle and a trigger can coexist: the handle owns the open state, so a press and a `showAt` cannot
-disagree, and `close()` works whichever of them opened it.
+A handle and a trigger can coexist: the handle owns the open state, so a press and a `showAt`
+cannot disagree, and `close()` works whichever of them opened it.
 
 ## Placement
 
@@ -114,10 +112,57 @@ the handle is showing. `initialFocus={false}` leaves the caret where it was.
 Anywhere else the popup goes to the body. Inside a `Dialog` or `Drawer` it portals into the panel,
 where the focus trap lets the keyboard reach the content.
 
+## Limitations
+
+**The trigger cannot be a `Tooltip`.** A control that both names itself on hover and opens a popup
+on a press is a common shape, and wrapping the trigger does not give you it:
+
+```tsx
+// Does not open. The press never reaches the button.
+<Popover
+	nativeButton
+	side="bottom"
+	align="end"
+	trigger={
+		<Tooltip title="Download">
+			<button type="button">Download</button>
+		</Tooltip>
+	}
+>
+	<ExportFormats />
+</Popover>
+```
+
+A Tooltip that is not itself inside another tooltip trigger routes every prop it does not
+recognise to its own popup, so the press handlers the popover merges into `trigger` land on the
+tooltip rather than on the button underneath. The tooltip still works; the popover never opens.
+
+Drive the popover from a handle instead, and leave the button to the tooltip:
+
+```tsx
+const menu = usePopoverHandle();
+
+<Tooltip title="Download">
+	<button type="button" onClick={(event) => menu.showAt(event.currentTarget)}>
+		Download
+	</button>
+</Tooltip>
+<Popover nativeButton side="bottom" align="end" handle={menu} aria-label="Export">
+	<ExportFormats />
+</Popover>;
+```
+
+The popover has no trigger of its own in that shape, so `aria-haspopup` and `aria-expanded` belong
+on the button. `popover.tooltip-trigger.test.tsx` pins the behaviour so the day it is fixed is
+visible.
+
+**There is no controlled `open` prop.** The popover owns its open state and reports it through
+`onOpenChange`. Application-driven visibility goes through a `handle`.
+
 ## What this is not
 
 - A short label that only describes the thing under the pointer is a `Tooltip`. Content the
-  pointer has to reach — a link, a copy button, a scrollable body — is a hover popover.
+  pointer has to reach, such as a link, a copy button or a scrollable body, is a hover popover.
 - A menu of rows that closes when one is picked is a `Dropdown`.
 
 ## Asserting on it
@@ -137,3 +182,7 @@ import { ForceOpenProvider } from '@signozhq/ui/testing';
 	</Popover>
 </ForceOpenProvider>;
 ```
+
+## Props
+
+<Controls of={PopoverStories.Playground} />

@@ -63,7 +63,18 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	inline-size: 22.5rem;
+	inline-size: 26rem;
+}
+
+/* The field takes the slack so the trigger beside it keeps its whole label. */
+.inputRowField {
+	display: block;
+	flex: 1 1 auto;
+	min-inline-size: 0;
+}
+
+.inputRow > :not(.inputRowField) {
+	flex: 0 0 auto;
 }
 
 .dialogBody {
@@ -125,8 +136,16 @@
 	background: var(--accent-500);
 }
 
+.hint {
+	display: block;
+	margin-block-end: 0.5rem;
+	color: var(--l3-foreground);
+}
+
 /* Stands in for a chart canvas: the click lands at a point, not on an element. */
 .plot {
+	display: block;
+	padding: 0;
 	position: relative;
 	block-size: 10rem;
 	inline-size: 26rem;
@@ -138,4 +157,22 @@
 		var(--l2-border) 2.5rem calc(2.5rem + 1px)
 	);
 	cursor: crosshair;
+}
+
+.plotSvg {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.plotLine {
+	fill: none;
+	stroke: var(--accent-500);
+	stroke-width: 2;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+
+.plotPoint {
+	fill: var(--accent-500);
 }

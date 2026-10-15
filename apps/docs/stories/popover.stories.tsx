@@ -13,7 +13,7 @@ import {
 	usePopoverHandle,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactElement, useRef, useState } from 'react';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './popover.stories.module.css';
@@ -266,10 +266,19 @@ export const SaveViewForm: Story = {
 	render: function SaveViewFormStory() {
 		const handle = usePopoverHandle();
 		const [name, setName] = useState('Checkout latency');
+		// The form is the subject, so the story lands with it open rather than on a button.
+		const triggerRef = useRef<HTMLButtonElement>(null);
+
+		useEffect(() => {
+			if (triggerRef.current !== null) {
+				handle.showAt(triggerRef.current);
+			}
+		}, [handle]);
 
 		return (
 			<div className={styles.roomBelow}>
 				<Popover
+					ref={triggerRef}
 					nativeButton
 					side="bottom"
 					align="end"
@@ -321,14 +330,16 @@ export const SaveViewForm: Story = {
 		const canvas = within(canvasElement);
 
 		await waitForEffects();
-		fireEvent.click(canvas.getByTestId('popover-save-view'));
-
 		const panel = await waitFor(() => popup('popover-save-view'));
 		fireEvent.click(within(panel).getByRole('button', { name: 'Save' }));
 
 		await waitFor(() =>
 			expect(document.querySelector('[data-testid="popover-save-view-popup"]')).toBeNull(),
 		);
+
+		// Left open: the form is what the story is for, and what the snapshot should show.
+		fireEvent.click(canvas.getByTestId('popover-save-view'));
+		await waitFor(() => expect(popup('popover-save-view')).toBeVisible());
 	},
 };
 
@@ -523,13 +534,37 @@ export const ChartDrilldown: Story = {
 
 		return (
 			<div className={styles.roomBelow}>
+				<Typography size="sm" className={styles.hint}>
+					p99 latency, last hour. Click the chart to drill down from that point.
+				</Typography>
 				<button
 					type="button"
 					data-testid="plot"
 					className={styles.plot}
 					onClick={(event) => menu.showAt({ x: event.clientX, y: event.clientY }, { x: 1, y: 2 })}
-					aria-label="Latency chart"
-				/>
+					aria-label="p99 latency chart, click to drill down"
+				>
+					<svg className={styles.plotSvg} viewBox="0 0 400 160" aria-hidden="true">
+						<title>p99 latency</title>
+						<polyline
+							className={styles.plotLine}
+							points="8,120 56,96 104,104 152,64 200,72 248,40 296,56 344,24 392,36"
+						/>
+						{[
+							[8, 120],
+							[56, 96],
+							[104, 104],
+							[152, 64],
+							[200, 72],
+							[248, 40],
+							[296, 56],
+							[344, 24],
+							[392, 36],
+						].map(([cx, cy]) => (
+							<circle key={`${cx}`} className={styles.plotPoint} cx={cx} cy={cy} r="3" />
+						))}
+					</svg>
+				</button>
 				<Popover
 					nativeButton
 					side="bottom"
@@ -579,7 +614,6 @@ export const SuggestionsOnFocus: Story = {
 						placeholder="Type {{ to insert a variable"
 						testId="query"
 						onFocus={(event) => suggestions.showAt(event.currentTarget)}
-						onBlur={() => suggestions.close()}
 					/>
 				</div>
 				<Popover
@@ -608,11 +642,15 @@ export const SuggestionsOnFocus: Story = {
 
 		await waitForEffects();
 		const field = canvas.getByRole('textbox', { name: 'Query' });
+		fireEvent.pointerDown(field);
 		field.focus();
+		fireEvent.click(field);
 
 		await waitFor(() => expect(popup('popover-suggestions')).toBeVisible());
-		// The caret stays in the field: it anchors the popup, it does not hand over focus.
+		// The caret stays in the field: it anchors the popup, it does not hand over focus. The
+		// press that opened it lands on that same field, and does not dismiss it.
 		expect(field).toHaveFocus();
+		expect(popup('popover-suggestions')).toBeVisible();
 	},
 };
 
@@ -623,27 +661,37 @@ export const InsideDialog: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, modes: allModes },
 	},
-	render: () => (
-		<Dialog defaultOpen>
-			<DialogContent width="base">
-				<DialogHeader>
-					<DialogTitle>Panel settings</DialogTitle>
-				</DialogHeader>
-				<div className={styles.dialogBody}>
-					<Popover
-						nativeButton
-						side="bottom"
-						align="start"
-						aria-label="Threshold"
-						testId="popover-in-dialog"
-						trigger={<Button {...TRIGGER}>Set threshold</Button>}
-					>
-						<p className={styles.row}>The popup is portalled into the dialog panel.</p>
-					</Popover>
-				</div>
-			</DialogContent>
-		</Dialog>
-	),
+	render: function InsideDialogStory() {
+		const [open, setOpen] = useState(true);
+
+		return (
+			<div className={styles.roomBelow}>
+				{/* Dismissing the dialog otherwise leaves the story with nothing on it. */}
+				<Button {...TRIGGER} onClick={() => setOpen(true)}>
+					Open panel settings
+				</Button>
+				<Dialog open={open} onOpenChange={setOpen}>
+					<DialogContent width="base">
+						<DialogHeader>
+							<DialogTitle>Panel settings</DialogTitle>
+						</DialogHeader>
+						<div className={styles.dialogBody}>
+							<Popover
+								nativeButton
+								side="bottom"
+								align="start"
+								aria-label="Threshold"
+								testId="popover-in-dialog"
+								trigger={<Button {...TRIGGER}>Set threshold</Button>}
+							>
+								<p className={styles.row}>The popup is portalled into the dialog panel.</p>
+							</Popover>
+						</div>
+					</DialogContent>
+				</Dialog>
+			</div>
+		);
+	},
 	play: async () => {
 		await waitForEffects();
 		// The dialog portals out of the story canvas and marks that canvas aria-hidden.
@@ -718,7 +766,9 @@ export const AnchoredTypeahead: Story = {
 		return (
 			<div className={styles.roomBelow}>
 				<div ref={row} className={styles.inputRow}>
-					<Input aria-label="Query" placeholder="service.name" />
+					<span className={styles.inputRowField}>
+						<Input aria-label="Query" placeholder="service.name" />
+					</span>
 					<Popover
 						nativeButton
 						side="bottom"
