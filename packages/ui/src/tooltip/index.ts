@@ -43,3 +43,4 @@ export { Tooltip } from './presets/tooltip.js';
 export { type TooltipProps } from './types.js';
 export { TooltipProvider, type TooltipProviderProps } from './subcomponents/tooltip-provider.js';
 export { type TooltipContainer } from './tooltip-config-context.js';
+export { useTooltipHandle } from './use-tooltip-handle.js';

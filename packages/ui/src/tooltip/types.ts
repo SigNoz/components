@@ -1,15 +1,30 @@
 import type * as React from 'react';
+import type { PopupHandle } from '../lib/popup-handle.js';
 import type { TooltipPositionerProps } from './subcomponents/tooltip-positioner.js';
 import type { TooltipContainer } from './tooltip-config-context.js';
 
 type OriginalPositionerProps = TooltipPositionerProps;
 
-export interface TooltipProps {
+export interface TooltipProps<Payload = unknown> {
 	/**
 	 * The content of the tooltip. No tooltip is rendered while it is empty, and the
 	 * trigger stays the element it already was.
+	 *
+	 * With a `handle`, pass a function instead: it receives the payload of the most recent
+	 * `showAt` call, so one declared tooltip serves many rows.
 	 */
-	title: React.ReactNode;
+	title: React.ReactNode | ((payload: Payload | undefined) => React.ReactNode);
+	/**
+	 * Shows and hides the tooltip from application state rather than from the pointer.
+	 *
+	 * For a description positioned against one element but opened by something the tooltip
+	 * cannot observe — a row the pointer entered, a selection that changed. Create one with
+	 * `useTooltipHandle()`.
+	 *
+	 * @note A tooltip belongs to the pointer. Reach for this only when the surface is driven
+	 * from elsewhere; an ordinary tooltip needs nothing but `title`.
+	 */
+	handle?: PopupHandle<Payload>;
 	/**
 	 * The trigger element.
 	 */
