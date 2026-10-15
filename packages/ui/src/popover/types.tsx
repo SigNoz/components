@@ -47,7 +47,7 @@ export type ValidatePopoverProps<T, Payload = unknown> = (T extends {
 	: unknown) &
 	// Keyed, not shaped: `T extends { trigger: ... } | { handle: ... }` resolves to its false
 	// branch while `T` is still being inferred, which an unannotated `onOpenChange` arrow is
-	// enough to cause — and would hand every such call site this rule.
+	// enough to cause, and would hand every such call site this rule.
 	//
 	// A handle is read off `Payload` rather than `keyof T`, because the signature that infers
 	// the payload takes `handle` out of `T`. An inferred payload means a handle was passed;
@@ -85,13 +85,17 @@ export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> 
 		 * trigger or from `handle.showAt(...)`; with neither it could never be shown.
 		 *
 		 * @note A trigger that does not render a `<button>` needs `nativeButton={false}`.
+		 *
+		 * @note It cannot be a `Tooltip`. A Tooltip routes every prop it does not recognise to its
+		 * own popup, so the press handlers merged in here never reach the element underneath and
+		 * the popover never opens. Give the tooltipped control a `handle` instead.
 		 */
 		trigger?: ReactNode;
 		/**
 		 * Shows and hides the popover from application state rather than from a trigger press.
 		 *
 		 * `handle.showAt(target, payload)` places it against an element, a `DOMRect` or a point,
-		 * and renders `payload` through `children`. `handle.close()` dismisses it — which is how
+		 * and renders `payload` through `children`. `handle.close()` dismisses it, which is how
 		 * a form inside the popup closes it after a save succeeds.
 		 *
 		 * @note Create one with `usePopoverHandle()`.
@@ -125,7 +129,7 @@ export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> 
 		/**
 		 * Called when the popover opens or closes. `eventDetails.reason` says why
 		 * (`trigger-press`, `outside-press`, `escape-key`, `focus-out`, …) and
-		 * `eventDetails.cancel()` vetoes the change — how a popover is kept open while a press
+		 * `eventDetails.cancel()` vetoes the change: how a popover is kept open while a press
 		 * lands somewhere that only looks outside, such as its own anchor.
 		 */
 		onOpenChange?: OriginalRootProps['onOpenChange'];
@@ -187,7 +191,7 @@ export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> 
 		maxWidth?: number | string;
 		/**
 		 * How tall the popup may get, written as `--popover-internal-max-block-size`. Past it, the
-		 * content scrolls — its own layout decides what stays pinned.
+		 * content scrolls; its own layout decides what stays pinned.
 		 *
 		 * @default the room the viewport leaves (Base UI's available height)
 		 */

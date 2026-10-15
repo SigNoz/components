@@ -5,13 +5,13 @@ import { type PopupHandle, usePopupHandle } from '../lib/popup-handle.js';
  *
  * Use it for the surfaces a trigger press cannot produce: a menu at the point of a chart click, a
  * suggestion list opened by an input taking focus, a hover card that walks a list of rows. Also
- * for the opposite problem — a form inside a popover that must close itself once its save
+ * for the opposite problem: a form inside a popover that must close itself once its save
  * succeeds.
  *
  * Pass the handle to `Popover`, then call `showAt` with the element, `DOMRect` or point to place
  * it against, and the payload to render. Pass `children` as a function to receive that payload.
  *
- * `onOpenChange` reports every open and close, whichever caused it — `showAt`, `close`, a press
+ * `onOpenChange` reports every open and close, whichever caused it: `showAt`, `close`, a press
  * on the popover's own trigger, Escape, or an outside press. Use it to reset the content a
  * closed popup leaves behind, or to mirror the state a sibling control has to read.
  *

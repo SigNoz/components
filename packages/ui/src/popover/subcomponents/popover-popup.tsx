@@ -17,8 +17,8 @@ export type PopoverPopupProps = {
 } & AriaAttributes & { [key: `data-${string}`]: unknown };
 
 /**
- * The popup shell: surface, border, radius, shadow and zero padding — the content slot owns all of
- * it. Base UI makes it a `role="dialog"`. `aria-*` and `data-*` from the call site land here.
+ * The popup shell: surface, border, radius, shadow and zero padding. The content slot owns all
+ * of it. Base UI makes it a `role="dialog"`. `aria-*` and `data-*` from the call site land here.
  *
  * @access private
  */

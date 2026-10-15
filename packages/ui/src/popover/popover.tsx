@@ -12,7 +12,12 @@ import { toCssLength } from '../lib/css-length.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { usePopupContainer } from '../lib/popup-container.js';
-import { type PopupHandle, resolveAnchorTarget, usePopupHandleState } from '../lib/popup-handle.js';
+import {
+	isEventInsideAnchor,
+	type PopupHandle,
+	resolveAnchorTarget,
+	usePopupHandleState,
+} from '../lib/popup-handle.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { POPOVER_HOVER_CLOSE_DELAY, POPOVER_HOVER_DELAY } from './constants.js';
 import { PopoverPopup } from './subcomponents/popover-popup.js';
@@ -98,6 +103,18 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 				open={isOpen}
 				modal={false}
 				onOpenChange={(nextOpen, eventDetails) => {
+					// A press or a focus move inside the element the handle was shown at is not
+					// outside the popover: it is the field a typeahead belongs to, or the row a
+					// card follows. Without this the popup closes on the very press that opened
+					// it, since the anchor is neither the trigger nor the popup.
+					if (
+						!nextOpen &&
+						(eventDetails.reason === 'outside-press' || eventDetails.reason === 'focus-out') &&
+						isEventInsideAnchor(handleState.anchor, eventDetails.event?.target)
+					) {
+						eventDetails.cancel();
+					}
+
 					onOpenChange?.(nextOpen, eventDetails);
 
 					if (eventDetails.isCanceled) {
@@ -150,7 +167,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 /**
  * Shows `children` in a floating panel hung off the element you pass as `trigger` (Base UI
  * Popover). A Tooltip with its label replaced by an open content slot: same surface, border,
- * radius and collision handling, but the slot may hold anything — which is what makes the popup a
+ * radius and collision handling, but the slot may hold anything, which is what makes the popup a
  * dialog rather than a description.
  *
  * A popover opens on a press of its trigger, and optionally on hover as well. It can also be
@@ -171,23 +188,28 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  * the application needs to drive uses a `handle` instead.
  *
  * With `openOnHover` it also opens while the pointer rests on the trigger. The popup stays
- * interactive — the pointer can travel into it to read, select or click — and the trigger still
+ * interactive (the pointer can travel into it to read, select or click), and the trigger still
  * opens it on press, which is the route a keyboard takes.
  *
  * ### The trigger
  *
  * `trigger` is rendered as the element you pass, with the popover's props merged into it, so a
  * `Button` keeps its own look and there is no second button wrapped around it. `nativeButton`
- * says whether that element renders a native `<button>` — set it to `false` for anything else.
+ * says whether that element renders a native `<button>`. Set it to `false` for anything else.
  *
  * It is required unless a `handle` is passed, since otherwise nothing could ever open the popup.
+ *
+ * It cannot be a `Tooltip`. A Tooltip routes every prop it does not recognise to its own popup, so
+ * the press handlers merged into `trigger` land there instead of on the element underneath, and
+ * the popover never opens. A control that needs both a tooltip and a popup keeps its tooltip and
+ * takes a `handle`.
  *
  * ### Showing it from application state
  *
  * `usePopoverHandle()` returns a handle for the surfaces a press cannot produce: a menu at the
  * point of a chart click, a suggestion list opened by an input taking focus, a hover card walking
  * a list of rows. `handle.showAt(target, payload)` places the popup against an element, a
- * `DOMRect` or a point, and `handle.close()` dismisses it — which is also how a form inside the
+ * `DOMRect` or a point, and `handle.close()` dismisses it, which is also how a form inside the
  * popup closes itself once its save succeeds.
  *
  * Pass `children` as a function to receive the payload of the most recent `showAt`, so one
@@ -195,8 +217,8 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  *
  * ### Anchor
  *
- * `anchor` points the popup at something that is not the trigger — a typeahead anchored to its
- * whole input row. A handle's `showAt` target takes precedence while it is showing.
+ * `anchor` points the popup at something that is not the trigger, such as a typeahead anchored
+ * to its whole input row. A handle's `showAt` target takes precedence while it is showing.
  *
  * ### What lands on the popup
  *
