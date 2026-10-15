@@ -50,17 +50,60 @@ export function getLayerZIndex(element: Element): number {
 }
 
 /**
- * The `z-index` of a popup portalled out of the layer its trigger sits in: a drawer, a modal or a
+ * Whatever a popup is placed against: the element, a ref to one, a getter for either, or a
+ * virtual element standing in for a rect or a point.
+ *
+ * @access private
+ */
+export type LayerSource =
+	| Element
+	| { current: Element | null }
+	// Structural, not `DOMRect`: a floating-ui virtual element returns a plain rect object.
+	| { getBoundingClientRect: () => { left: number; top: number; width: number; height: number } }
+	| (() => LayerSource)
+	| null
+	| undefined;
+
+function resolveLayerElement(source: LayerSource): Element | null {
+	if (source == null) {
+		return null;
+	}
+	if (source instanceof Element) {
+		return source;
+	}
+	if (typeof source === 'function') {
+		return resolveLayerElement(source());
+	}
+	if ('current' in source) {
+		return source.current;
+	}
+
+	// A rect or a point sits in no tree, so it has no layer of its own. Whatever is painted
+	// there is in the layer the popup is being shown in, which is the one it has to clear.
+	const { left, top, width, height } = source.getBoundingClientRect();
+
+	return document.elementFromPoint(left + width / 2, top + height / 2);
+}
+
+/**
+ * The `z-index` of a popup portalled out of the layer it is shown in: a drawer, a modal or a
  * floating panel, from this library or another one. `floor`, the popup's own z-index, stays the
- * minimum. A trigger inside a layer lifts the popup just above it, and one behind a layer stays
+ * minimum. A popup shown inside a layer lifts just above it, and one shown behind a layer stays
  * under it.
+ *
+ * Pass what the popup is anchored to, falling back to its trigger. A popup a handle shows has no
+ * trigger to read, and one anchored away from its trigger would read the wrong layer.
  *
  * The layer is read once, on mount. Call it from the positioner, which mounts on open.
  *
  * @access private
  */
-export function useLayerZIndex(trigger: Element | null, floor: string): CSSProperties | undefined {
-	const [layer] = useState(() => (trigger ? getLayerZIndex(trigger) : 0));
+export function useLayerZIndex(source: LayerSource, floor: string): CSSProperties | undefined {
+	const [layer] = useState(() => {
+		const element = resolveLayerElement(source);
+
+		return element ? getLayerZIndex(element) : 0;
+	});
 
 	return layer > 0 ? { zIndex: `max(${floor}, ${layer + 1})` } : undefined;
 }

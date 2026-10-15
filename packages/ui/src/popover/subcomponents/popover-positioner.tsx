@@ -6,7 +6,7 @@ import styles from '../popover.module.scss';
 import type { PopoverAnchorType, PopoverSideType } from '../types.js';
 
 /**
- * Places the popup against its anchor, stacked above the layer the trigger sits in.
+ * Places the popup against its anchor, stacked above the layer that anchor sits in.
  *
  * Mounts on open, so the layer is read once per open. The offsets are fixed: good defaults, not
  * knobs.
@@ -26,7 +26,9 @@ export function PopoverPositioner({
 	anchor: PopoverAnchorType;
 	children: ReactNode;
 }): ReactNode {
-	const layerStyle = useLayerZIndex(trigger, 'var(--popover-z-index, 50)');
+	// The anchor is where the popup appears, so its layer is the one to clear. A popover a
+	// handle shows has no trigger at all.
+	const layerStyle = useLayerZIndex(anchor ?? trigger, 'var(--popover-z-index, 50)');
 
 	return (
 		<PopoverPrimitive.Positioner
