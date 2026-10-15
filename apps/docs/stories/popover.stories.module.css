@@ -133,7 +133,7 @@
 .bar {
 	block-size: 0.5rem;
 	border-radius: 0.125rem;
-	background: var(--accent-500);
+	background: var(--primary-background);
 }
 
 .hint {
@@ -165,14 +165,42 @@
 	block-size: 100%;
 }
 
+.plotArea {
+	fill: color-mix(in srgb, var(--primary-background) 18%, transparent);
+}
+
 .plotLine {
 	fill: none;
-	stroke: var(--accent-500);
+	stroke: var(--primary-background);
 	stroke-width: 2;
 	stroke-linejoin: round;
 	stroke-linecap: round;
 }
 
 .plotPoint {
-	fill: var(--accent-500);
+	fill: var(--primary-background);
+	stroke: var(--l1-background);
+	stroke-width: 1.5;
+}
+
+.drilldownHeader {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.5rem 0.75rem;
+	border-block-end: 1px solid var(--l2-border);
+}
+
+.empty {
+	padding: 0.5rem 0.75rem;
+	color: var(--l3-foreground);
+}
+
+/* A row of a list, not a centred button label. */
+.suggestion {
+	display: block;
+	overflow: hidden;
+	--button-display: flex;
+	--button-justify-content: flex-start;
 }

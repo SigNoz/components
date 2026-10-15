@@ -448,6 +448,31 @@ export const HoverBreakdown: Story = {
 	},
 };
 
+const LATENCY = [
+	{ time: '14:00', value: 0.42 },
+	{ time: '14:05', value: 0.58 },
+	{ time: '14:10', value: 0.51 },
+	{ time: '14:15', value: 0.94 },
+	{ time: '14:20', value: 0.86 },
+	{ time: '14:25', value: 1.24 },
+	{ time: '14:30', value: 1.05 },
+	{ time: '14:35', value: 1.42 },
+	{ time: '14:40', value: 1.31 },
+];
+
+const PLOT = { width: 400, height: 160, pad: 14, ceiling: 1.6 };
+
+function plotX(index: number): number {
+	return PLOT.pad + index * ((PLOT.width - PLOT.pad * 2) / (LATENCY.length - 1));
+}
+
+function plotY(value: number): number {
+	return PLOT.height - PLOT.pad - (value / PLOT.ceiling) * (PLOT.height - PLOT.pad * 2);
+}
+
+const PLOT_LINE = LATENCY.map((p, i) => `${plotX(i)},${plotY(p.value)}`).join(' ');
+const PLOT_AREA = `${plotX(0)},${PLOT.height} ${PLOT_LINE} ${plotX(LATENCY.length - 1)},${PLOT.height}`;
+
 const SPANS = [
 	{ id: 'a1', name: 'POST /checkout', duration: '1.42 s', width: '100%' },
 	{ id: 'b2', name: 'cart.validate', duration: '318 ms', width: '22%' },
@@ -530,7 +555,7 @@ export const ChartDrilldown: Story = {
 		chromatic: { disableSnapshot: true },
 	},
 	render: function ChartDrilldownStory() {
-		const menu = usePopoverHandle<{ x: number; y: number }>();
+		const menu = usePopoverHandle<(typeof LATENCY)[number]>();
 
 		return (
 			<div className={styles.roomBelow}>
@@ -541,27 +566,32 @@ export const ChartDrilldown: Story = {
 					type="button"
 					data-testid="plot"
 					className={styles.plot}
-					onClick={(event) => menu.showAt({ x: event.clientX, y: event.clientY }, { x: 1, y: 2 })}
+					onClick={(event) => {
+						// The chart reports the point under the pointer; the popup is placed at the
+						// pointer itself, where there is no element to hang a trigger off.
+						const box = event.currentTarget.getBoundingClientRect();
+						const ratio = (event.clientX - box.left) / box.width;
+						const index = Math.min(
+							LATENCY.length - 1,
+							Math.max(0, Math.round(ratio * (LATENCY.length - 1))),
+						);
+
+						menu.showAt({ x: event.clientX, y: event.clientY }, LATENCY[index]);
+					}}
 					aria-label="p99 latency chart, click to drill down"
 				>
 					<svg className={styles.plotSvg} viewBox="0 0 400 160" aria-hidden="true">
 						<title>p99 latency</title>
-						<polyline
-							className={styles.plotLine}
-							points="8,120 56,96 104,104 152,64 200,72 248,40 296,56 344,24 392,36"
-						/>
-						{[
-							[8, 120],
-							[56, 96],
-							[104, 104],
-							[152, 64],
-							[200, 72],
-							[248, 40],
-							[296, 56],
-							[344, 24],
-							[392, 36],
-						].map(([cx, cy]) => (
-							<circle key={`${cx}`} className={styles.plotPoint} cx={cx} cy={cy} r="3" />
+						<polygon className={styles.plotArea} points={PLOT_AREA} />
+						<polyline className={styles.plotLine} points={PLOT_LINE} />
+						{LATENCY.map((point, index) => (
+							<circle
+								key={point.time}
+								className={styles.plotPoint}
+								cx={plotX(index)}
+								cy={plotY(point.value)}
+								r="3.5"
+							/>
 						))}
 					</svg>
 				</button>
@@ -573,14 +603,22 @@ export const ChartDrilldown: Story = {
 					aria-label="Drilldown"
 					testId="popover-drilldown"
 				>
-					<ul className={styles.list}>
-						<li className={styles.row}>
-							<Typography size="sm">View traces</Typography>
-						</li>
-						<li className={styles.row}>
-							<Typography size="sm">View logs</Typography>
-						</li>
-					</ul>
+					{(point) => (
+						<ul className={styles.list}>
+							<li className={styles.drilldownHeader}>
+								<Typography size="sm">{point?.time}</Typography>
+								<Typography size="sm" className={styles.pairValue}>
+									{point === undefined ? '' : `${point.value.toFixed(2)} s`}
+								</Typography>
+							</li>
+							<li className={styles.row}>
+								<Typography size="sm">View traces</Typography>
+							</li>
+							<li className={styles.row}>
+								<Typography size="sm">View logs</Typography>
+							</li>
+						</ul>
+					)}
 				</Popover>
 			</div>
 		);
@@ -589,9 +627,14 @@ export const ChartDrilldown: Story = {
 		const canvas = within(canvasElement);
 
 		await waitForEffects();
-		fireEvent.click(canvas.getByTestId('plot'), { clientX: 180, clientY: 120 });
+		const plot = canvas.getByTestId('plot');
+		const box = plot.getBoundingClientRect();
+		// The last point, so the menu has to name that one rather than a fixed string.
+		fireEvent.click(plot, { clientX: box.right - 2, clientY: box.top + 20 });
 
 		await waitFor(() => expect(popup('popover-drilldown')).toBeVisible());
+		expect(popup('popover-drilldown')).toHaveTextContent('14:40');
+		expect(popup('popover-drilldown')).toHaveTextContent('1.31 s');
 	},
 };
 
@@ -605,14 +648,23 @@ export const SuggestionsOnFocus: Story = {
 	},
 	render: function SuggestionsOnFocusStory() {
 		const suggestions = usePopoverHandle();
+		const [query, setQuery] = useState('');
+		const field = useRef<HTMLInputElement>(null);
+
+		// Braces are the token syntax, not part of the name being searched for.
+		const needle = query.replace(/[{}]/g, '').toLowerCase();
+		const matches = VARIABLES.filter((variable) => variable.toLowerCase().includes(needle));
 
 		return (
 			<div className={styles.roomBelow}>
 				<div className={styles.inputRow}>
 					<Input
+						ref={field}
 						aria-label="Query"
-						placeholder="Type {{ to insert a variable"
+						placeholder="Type to filter variables"
 						testId="query"
+						value={query}
+						onChange={(event) => setQuery(event.target.value)}
 						onFocus={(event) => suggestions.showAt(event.currentTarget)}
 					/>
 				</div>
@@ -627,9 +679,27 @@ export const SuggestionsOnFocus: Story = {
 					testId="popover-suggestions"
 				>
 					<ul className={styles.list}>
-						{VARIABLES.map((variable) => (
-							<li key={variable} className={styles.row}>
-								<Typography size="sm">{variable}</Typography>
+						{matches.length === 0 && (
+							<li className={styles.empty}>
+								<Typography size="sm">No variable matches “{needle}”</Typography>
+							</li>
+						)}
+						{matches.map((variable) => (
+							<li key={variable} className={styles.suggestion}>
+								<Button
+									variant={ButtonVariant.Ghost}
+									color={ButtonColor.Secondary}
+									size="md"
+									width="100%"
+									type="button"
+									onClick={() => {
+										setQuery(`{{${variable}}}`);
+										suggestions.close();
+										field.current?.focus();
+									}}
+								>
+									{variable}
+								</Button>
 							</li>
 						))}
 					</ul>
@@ -650,7 +720,19 @@ export const SuggestionsOnFocus: Story = {
 		// The caret stays in the field: it anchors the popup, it does not hand over focus. The
 		// press that opened it lands on that same field, and does not dismiss it.
 		expect(field).toHaveFocus();
-		expect(popup('popover-suggestions')).toBeVisible();
+		expect(within(popup('popover-suggestions')).getAllByRole('button')).toHaveLength(4);
+
+		// The list narrows while the popup stays open and the caret stays put.
+		fireEvent.change(field, { target: { value: 'k8s' } });
+		await waitFor(() =>
+			expect(within(popup('popover-suggestions')).getAllByRole('button')).toHaveLength(1),
+		);
+		expect(field).toHaveFocus();
+
+		fireEvent.click(
+			within(popup('popover-suggestions')).getByRole('button', { name: 'k8s.namespace.name' }),
+		);
+		await waitFor(() => expect(field).toHaveValue('{{k8s.namespace.name}}'));
 	},
 };
 
