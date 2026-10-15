@@ -6,8 +6,8 @@ import { Tooltip } from '../../tooltip/presets/tooltip.js';
 import { Popover } from '../popover.js';
 import { usePopoverHandle } from '../use-popover-handle.js';
 
-// Another library keeps a fixed ladder of its own — antd puts its modal and drawer at 1000, its
-// dropdown at 1050 — and an app runs both ladders at once for as long as a migration lasts. A
+// Another library keeps a fixed ladder of its own (antd puts its modal and drawer at 1000, its
+// dropdown at 1050), and an app runs both ladders at once for as long as a migration lasts. A
 // popup of ours opened from inside one of those layers has to clear it.
 const FOREIGN_MODAL: CSSProperties = { position: 'fixed', inset: 0, zIndex: 1000 };
 
