@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useForceOpen } from '../../lib/force-open.js';
-import { resolveAnchorTarget, usePopupHandleState } from '../../lib/popup-handle.js';
 import type { RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { useStackedTooltipProps } from '../tooltip-stacked-props.js';
@@ -107,34 +106,19 @@ import type { TooltipProps } from '../types.js';
  * });
  * ```
  */
-export const Tooltip = React.forwardRef<HTMLButtonElement, TooltipProps<unknown>>(function Tooltip(
-	{
-		title,
-		children,
-		handle,
-		className: _className,
-		style: _style,
-		...props
-	}: TooltipProps<unknown> & RejectedProps,
+export const Tooltip = React.forwardRef<HTMLButtonElement, TooltipProps>(function Tooltip(
+	{ title, children, className: _className, style: _style, ...props }: TooltipProps & RejectedProps,
 	ref,
 ) {
 	const { triggerProps, contentProps } = useStackedTooltipProps(props);
 	const forcedOpen = useForceOpen();
-	const handleState = usePopupHandleState(handle);
-
-	// A render function is content for whatever the handle last showed.
-	const content = typeof title === 'function' ? title(handleState.payload) : title;
-	// While a handle drives it, the tooltip shows exactly what it is told and the pointer does
-	// not change that. Without one it belongs to the pointer, as a tooltip should.
-	const open = forcedOpen || (handle ? handleState.open : undefined);
-	const anchor = handle && handleState.open ? resolveAnchorTarget(handleState.anchor) : undefined;
 
 	return (
 		<TooltipAnchor
 			ref={ref}
-			content={content}
-			open={open}
-			contentProps={anchor === undefined ? contentProps : { ...contentProps, anchor }}
+			content={title}
+			open={forcedOpen || undefined}
+			contentProps={contentProps}
 			{...triggerProps}
 		>
 			{children}

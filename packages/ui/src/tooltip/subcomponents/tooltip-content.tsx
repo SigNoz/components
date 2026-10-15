@@ -14,14 +14,14 @@ import { TooltipStack } from './tooltip-stack.js';
  */
 export type TooltipContentProps = TooltipPopupProps & {
 	container?: TooltipPortalProps['container'];
-} & Pick<TooltipPositionerProps, 'side' | 'align' | 'sideOffset' | 'alignOffset' | 'anchor'>;
+} & Pick<TooltipPositionerProps, 'side' | 'align' | 'sideOffset' | 'alignOffset'>;
 
 /**
  * @access private
  */
 export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentProps>(
 	function TooltipContent(
-		{ side, align, sideOffset, alignOffset, anchor, container, children, ...popupProps },
+		{ side, align, sideOffset, alignOffset, container, children, ...popupProps },
 		ref,
 	) {
 		const entries = useTooltipContentStackEntries();
@@ -41,7 +41,6 @@ export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentPro
 					align={align}
 					sideOffset={sideOffset}
 					alignOffset={alignOffset}
-					anchor={anchor}
 				>
 					<TooltipPopup ref={ref} {...popupProps}>
 						<TooltipStack items={[{ id: 'content', content: children }, ...entries]} />
