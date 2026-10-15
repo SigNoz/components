@@ -75,3 +75,67 @@
 	color: var(--l2-foreground);
 	max-inline-size: 36rem;
 }
+
+.breakdown {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	inline-size: 20rem;
+}
+
+.pair {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	color: var(--l1-foreground);
+}
+
+.pairValue {
+	color: var(--l2-foreground);
+	font-variant-numeric: tabular-nums;
+}
+
+.rows {
+	display: flex;
+	flex-direction: column;
+	inline-size: 26rem;
+	border: 1px solid var(--l2-border);
+	border-radius: 0.25rem;
+}
+
+.spanRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.5rem 0.75rem;
+	color: var(--l1-foreground);
+	cursor: default;
+}
+
+.spanRow + .spanRow {
+	border-block-start: 1px solid var(--l2-border);
+}
+
+.bar {
+	block-size: 0.5rem;
+	border-radius: 0.125rem;
+	background: var(--accent-500);
+}
+
+/* Stands in for a chart canvas: the click lands at a point, not on an element. */
+.plot {
+	position: relative;
+	block-size: 10rem;
+	inline-size: 26rem;
+	border: 1px solid var(--l2-border);
+	border-radius: 0.25rem;
+	background: repeating-linear-gradient(
+		to right,
+		transparent 0 2.5rem,
+		var(--l2-border) 2.5rem calc(2.5rem + 1px)
+	);
+	cursor: crosshair;
+}

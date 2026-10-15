@@ -10,6 +10,7 @@ import {
 	Input,
 	Popover,
 	Typography,
+	usePopoverHandle,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, useRef, useState } from 'react';
@@ -55,7 +56,7 @@ const meta: Meta<typeof Popover> = {
 		trigger: {
 			control: false,
 			description:
-				'The trigger. Rendered as the element you pass, with the popover props merged into it. A popover always hangs off a trigger and opens on a click.',
+				'The trigger. Rendered as the element you pass, with the popover props merged into it. Required unless a `handle` is passed, since otherwise nothing could open the popup.',
 			table: { category: 'Content', type: { summary: 'ReactNode' } },
 		},
 		side: {
@@ -78,11 +79,39 @@ const meta: Meta<typeof Popover> = {
 				'Whether the trigger renders a native `<button>`. Required: the value has to match the element, and a default of `true` is silently wrong for anything that is not a button.',
 			table: { category: 'Content', type: { summary: 'boolean' } },
 		},
-		open: {
+		handle: {
+			control: false,
+			description:
+				'A handle from `usePopoverHandle()`, for showing the popup from application state: `showAt(target, payload)` places it against an element, a rect or a point, and `close()` dismisses it. There is no `open` prop.',
+			table: { category: 'State', type: { summary: 'PopoverHandle<Payload>' } },
+		},
+		openOnHover: {
 			control: 'boolean',
 			description:
-				'The controlled open state. Leave it unset and the popover owns its state. Set it when a form closes only after a save succeeds.',
-			table: { category: 'State', type: { summary: 'boolean' } },
+				'Also opens while the pointer rests on the trigger. The popup stays interactive, so the pointer can travel into it.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'boolean' },
+				defaultValue: { summary: 'false' },
+			},
+		},
+		delay: {
+			control: 'number',
+			description: 'How long the pointer has to rest before a hover popover opens, in ms.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'number' },
+				defaultValue: { summary: '300' },
+			},
+		},
+		closeDelay: {
+			control: 'number',
+			description: 'How long a hover popover waits before closing once the pointer leaves, in ms.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'number' },
+				defaultValue: { summary: '0' },
+			},
 		},
 		width: {
 			control: 'text',
@@ -227,15 +256,15 @@ export const Playground: Story = {
 };
 
 /**
- * A form that closes only when the save succeeds. The popover cannot know that on its own, so
- * `open` stays controlled.
+ * A form that closes only when the save succeeds. The popover cannot know that on its own, so the
+ * form calls `handle.close()` once it does.
  */
 export const SaveViewForm: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: false, modes: allModes },
 	},
 	render: function SaveViewFormStory() {
-		const [open, setOpen] = useState(false);
+		const handle = usePopoverHandle();
 		const [name, setName] = useState('Checkout latency');
 
 		return (
@@ -244,8 +273,7 @@ export const SaveViewForm: Story = {
 					nativeButton
 					side="bottom"
 					align="end"
-					open={open}
-					onOpenChange={setOpen}
+					handle={handle}
 					aria-label="Save view"
 					testId="popover-save-view"
 					trigger={<Button {...TRIGGER}>Save view</Button>}
@@ -254,7 +282,7 @@ export const SaveViewForm: Story = {
 						className={styles.form}
 						onSubmit={(event) => {
 							event.preventDefault();
-							setOpen(false);
+							handle.close();
 						}}
 					>
 						<label className={styles.field}>
@@ -271,7 +299,7 @@ export const SaveViewForm: Story = {
 								color={ButtonColor.Secondary}
 								size="md"
 								type="button"
-								onClick={() => setOpen(false)}
+								onClick={() => handle.close()}
 							>
 								Cancel
 							</Button>
@@ -305,15 +333,15 @@ export const SaveViewForm: Story = {
 };
 
 /**
- * Opened from somewhere other than the trigger. Escape still closes it, and the state comes back
- * through `onOpenChange`.
+ * Opened from somewhere other than its own trigger, with `handle.showAt`. Escape still closes it,
+ * and `close()` works whichever of the two opened it.
  */
-export const ControlledOpen: Story = {
+export const ShownFromElsewhere: Story = {
 	parameters: {
 		chromatic: { disableSnapshot: true },
 	},
-	render: function ControlledOpenStory() {
-		const [open, setOpen] = useState(false);
+	render: function ShownFromElsewhereStory() {
+		const handle = usePopoverHandle();
 
 		return (
 			<div className={styles.roomBelow}>
@@ -322,21 +350,20 @@ export const ControlledOpen: Story = {
 					color={ButtonColor.Secondary}
 					size="md"
 					type="button"
-					onClick={() => setOpen(true)}
+					onClick={(event) => handle.showAt(event.currentTarget)}
 				>
-					Open from outside
+					Show from outside
 				</Button>
 				<Popover
 					nativeButton
 					side="bottom"
 					align="start"
-					open={open}
-					onOpenChange={setOpen}
+					handle={handle}
 					aria-label="Notice"
-					testId="popover-controlled"
+					testId="popover-shown"
 					trigger={<Button {...TRIGGER}>Details</Button>}
 				>
-					<p className={styles.row}>Held open by the controlled `open` prop.</p>
+					<p className={styles.row}>Shown against whichever button asked for it.</p>
 				</Popover>
 			</div>
 		);
@@ -345,9 +372,247 @@ export const ControlledOpen: Story = {
 		const canvas = within(canvasElement);
 
 		await waitForEffects();
-		fireEvent.click(canvas.getByRole('button', { name: 'Open from outside' }));
+		fireEvent.click(canvas.getByRole('button', { name: 'Show from outside' }));
 
-		await waitFor(() => expect(popup('popover-controlled')).toBeVisible());
+		await waitFor(() => expect(popup('popover-shown')).toBeVisible());
+	},
+};
+
+const BREAKDOWN = [
+	{ key: 'p50', value: '112 ms' },
+	{ key: 'p90', value: '318 ms' },
+	{ key: 'p99', value: '1.42 s' },
+];
+
+/**
+ * The hover panel from the Figma example. Unlike a Tooltip the popup stays interactive: the
+ * pointer can travel into it to read, select or follow a link.
+ */
+export const HoverBreakdown: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+	},
+	render: () => (
+		<div className={styles.roomBelow}>
+			<Popover
+				nativeButton
+				openOnHover
+				side="bottom"
+				align="start"
+				aria-label="Latency breakdown"
+				testId="popover-hover"
+				trigger={<Button {...TRIGGER}>checkout-service</Button>}
+			>
+				<div className={styles.breakdown}>
+					{BREAKDOWN.map((entry) => (
+						<div key={entry.key} className={styles.pair}>
+							<Typography size="sm">{entry.key}</Typography>
+							<Typography size="sm" className={styles.pairValue}>
+								{entry.value}
+							</Typography>
+						</div>
+					))}
+					<Button variant={ButtonVariant.Ghost} color={ButtonColor.Secondary} size="md">
+						Open in traces
+					</Button>
+				</div>
+			</Popover>
+		</div>
+	),
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		await waitForEffects();
+		// Base UI opens on a real pointer entering: the three events together stand in for one.
+		const trigger = canvas.getByTestId('popover-hover');
+		fireEvent.pointerEnter(trigger);
+		fireEvent.mouseEnter(trigger);
+		fireEvent.mouseMove(trigger);
+
+		const panel = await waitFor(() => popup('popover-hover'), { timeout: 2000 });
+		expect(panel).toBeVisible();
+		// A hover popover is reachable, which is the whole reason it is not a Tooltip.
+		expect(getComputedStyle(panel).pointerEvents).not.toBe('none');
+		expect(within(panel).getByRole('button', { name: 'Open in traces' })).toBeVisible();
+	},
+};
+
+const SPANS = [
+	{ id: 'a1', name: 'POST /checkout', duration: '1.42 s', width: '100%' },
+	{ id: 'b2', name: 'cart.validate', duration: '318 ms', width: '22%' },
+	{ id: 'c3', name: 'payments.charge', duration: '902 ms', width: '63%' },
+];
+
+/**
+ * One popover serving many rows, which is what a hover card over a waterfall needs. The rows have
+ * no triggers of their own: `showAt` names the row and the payload says what to render. Hundreds
+ * of rows still render one popup.
+ */
+export const RowHoverCard: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+	},
+	render: function RowHoverCardStory() {
+		const card = usePopoverHandle<(typeof SPANS)[number]>();
+
+		return (
+			<div className={styles.roomBelow}>
+				<div className={styles.rows}>
+					{SPANS.map((span) => (
+						<div
+							key={span.id}
+							data-testid={`span-${span.id}`}
+							className={styles.spanRow}
+							onPointerEnter={(event) => card.showAt(event.currentTarget, span)}
+							onPointerLeave={() => card.close()}
+						>
+							<Typography size="sm">{span.name}</Typography>
+							<span className={styles.bar} style={{ inlineSize: span.width }} />
+						</div>
+					))}
+				</div>
+				<Popover
+					nativeButton
+					side="right"
+					align="start"
+					handle={card}
+					initialFocus={false}
+					aria-label="Span details"
+					testId="popover-span-card"
+				>
+					{(span) => (
+						<div className={styles.breakdown}>
+							<Typography size="sm">{span?.name}</Typography>
+							<div className={styles.pair}>
+								<Typography size="sm">Duration</Typography>
+								<Typography size="sm" className={styles.pairValue}>
+									{span?.duration}
+								</Typography>
+							</div>
+						</div>
+					)}
+				</Popover>
+			</div>
+		);
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		await waitForEffects();
+		fireEvent.pointerOver(canvas.getByTestId('span-b2'));
+
+		await waitFor(() => expect(popup('popover-span-card')).toHaveTextContent('cart.validate'));
+
+		// The same popup moves to the next row rather than a second one opening.
+		fireEvent.pointerOver(canvas.getByTestId('span-c3'));
+		await waitFor(() => expect(popup('popover-span-card')).toHaveTextContent('payments.charge'));
+		expect(document.querySelectorAll('[data-testid="popover-span-card-popup"]')).toHaveLength(1);
+	},
+};
+
+/**
+ * A drilldown menu at the point of a chart click. There is no element under the pointer to hang a
+ * trigger off, so `showAt` is given the coordinates the chart reported.
+ */
+export const ChartDrilldown: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+	},
+	render: function ChartDrilldownStory() {
+		const menu = usePopoverHandle<{ x: number; y: number }>();
+
+		return (
+			<div className={styles.roomBelow}>
+				<button
+					type="button"
+					data-testid="plot"
+					className={styles.plot}
+					onClick={(event) => menu.showAt({ x: event.clientX, y: event.clientY }, { x: 1, y: 2 })}
+					aria-label="Latency chart"
+				/>
+				<Popover
+					nativeButton
+					side="bottom"
+					align="start"
+					handle={menu}
+					aria-label="Drilldown"
+					testId="popover-drilldown"
+				>
+					<ul className={styles.list}>
+						<li className={styles.row}>
+							<Typography size="sm">View traces</Typography>
+						</li>
+						<li className={styles.row}>
+							<Typography size="sm">View logs</Typography>
+						</li>
+					</ul>
+				</Popover>
+			</div>
+		);
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		await waitForEffects();
+		fireEvent.click(canvas.getByTestId('plot'), { clientX: 180, clientY: 120 });
+
+		await waitFor(() => expect(popup('popover-drilldown')).toBeVisible());
+	},
+};
+
+/**
+ * Suggestions opened by the field taking focus, the shape a variables typeahead needs. The popup
+ * is anchored to the field and `initialFocus` stays false, so the caret never leaves it.
+ */
+export const SuggestionsOnFocus: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+	},
+	render: function SuggestionsOnFocusStory() {
+		const suggestions = usePopoverHandle();
+
+		return (
+			<div className={styles.roomBelow}>
+				<div className={styles.inputRow}>
+					<Input
+						aria-label="Query"
+						placeholder="Type {{ to insert a variable"
+						testId="query"
+						onFocus={(event) => suggestions.showAt(event.currentTarget)}
+						onBlur={() => suggestions.close()}
+					/>
+				</div>
+				<Popover
+					nativeButton
+					side="bottom"
+					align="start"
+					handle={suggestions}
+					initialFocus={false}
+					width={360}
+					aria-label="Variables"
+					testId="popover-suggestions"
+				>
+					<ul className={styles.list}>
+						{VARIABLES.map((variable) => (
+							<li key={variable} className={styles.row}>
+								<Typography size="sm">{variable}</Typography>
+							</li>
+						))}
+					</ul>
+				</Popover>
+			</div>
+		);
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		await waitForEffects();
+		const field = canvas.getByRole('textbox', { name: 'Query' });
+		field.focus();
+
+		await waitFor(() => expect(popup('popover-suggestions')).toBeVisible());
+		// The caret stays in the field: it anchors the popup, it does not hand over focus.
+		expect(field).toHaveFocus();
 	},
 };
 

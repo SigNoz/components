@@ -5,34 +5,32 @@ import * as PopoverStories from './popover.stories';
 
 # Popover
 
-A floating panel hung off a trigger, rendered through Base UI's Popover. It opens on a click. The
-popup is a `role="dialog"`: focus moves into it, nothing is trapped, and Escape closes it.
+A floating panel hung off a trigger, rendered through Base UI's Popover. It opens on a press, and
+optionally on hover. The popup is a `role="dialog"`: focus moves into it, nothing is trapped, and
+Escape closes it.
 
-A surface that opens on hover is a tooltip. A menu at the pointer is a context menu. Rows of
-actions are a dropdown. A popover is the panel that is none of those: a form, a picker, a
-typeahead.
+A label that only describes something is a tooltip. Rows of actions are a dropdown. A popover is
+the panel that is neither: a form, a picker, a typeahead, a hover card with links in it.
 
 ## How to use
 
-`trigger`, `children`, `side`, `align` and `nativeButton` are required. There are no
-subcomponents to compose: the popover owns its own markup. `children` is the popup. `trigger` is
-the element it hangs off.
+`children`, `side`, `align` and `nativeButton` are required, and so is `trigger` unless a `handle`
+is passed. There are no subcomponents to compose: the popover owns its own markup. `children` is
+the popup. `trigger` is the element it hangs off.
 
 ```tsx
 import { Button, Popover } from '@signozhq/ui';
 
-export default function SaveView({ open, onOpenChange }) {
+export default function MarkdownHelp() {
 	return (
 		<Popover
 			nativeButton
 			side="bottom"
-			align="end"
-			trigger={<Button variant="outlined">Save view</Button>}
-			open={open}
-			onOpenChange={onOpenChange}
-			aria-label="Save view"
+			align="start"
+			trigger={<Button variant="ghost" aria-label="Markdown help" />}
+			aria-label="Markdown help"
 		>
-			<SaveViewForm onDone={() => onOpenChange(false)} />
+			<MarkdownCheatsheet />
 		</Popover>
 	);
 }
@@ -55,9 +53,49 @@ The trigger opens it on a press, Enter or Space. It closes on Escape, on an outs
 when focus leaves it. `onOpenChange` reports every change, and `eventDetails.reason` says why.
 `eventDetails.cancel()` vetoes the change.
 
-The popover owns its open state. Controlled `open` is for what the popup cannot know by itself: a
-form that closes only when its save succeeds, or a list that keeps one popover open at a time.
-Nothing starts open on the first render.
+With `openOnHover` it also opens while the pointer rests on the trigger, after `delay`. The popup
+stays interactive, so the pointer can travel into it to read, select or follow a link — which is
+the one thing a Tooltip cannot do. The trigger still opens it on a press, which is the route a
+keyboard takes.
+
+The popover owns its open state. Nothing starts open on the first render, and there is no `open`
+prop: a surface the application drives uses a `handle`.
+
+## Showing it from application state
+
+Some popups cannot come from a trigger press at all. A drilldown menu belongs at the point of a
+chart click, where there is no element to hang a trigger off. A hover card over a waterfall belongs
+next to whichever row the pointer entered, and declaring one popover per row would mean hundreds of
+them. A form inside a popup has to close itself once its save succeeds, which the popover cannot
+know.
+
+`usePopoverHandle()` covers all three. `showAt(target, payload)` shows the popup against an
+element, a `DOMRect` or a `{ x, y }` point, and `close()` dismisses it whichever way it opened.
+
+```tsx
+import { Popover, usePopoverHandle } from '@signozhq/ui';
+
+export default function Waterfall({ spans }) {
+	const card = usePopoverHandle<Span>();
+
+	return (
+		<>
+			{spans.map((span) => (
+				<Row key={span.id} onMouseEnter={(event) => card.showAt(event.currentTarget, span)} />
+			))}
+			<Popover nativeButton side="right" align="start" handle={card} initialFocus={false}>
+				{(span) => <SpanSummary span={span} />}
+			</Popover>
+		</>
+	);
+}
+```
+
+Pass `children` as a function to receive the payload of the most recent `showAt`. One declared
+popover then serves every row, moving and swapping its content instead of mounting a popup each.
+
+A handle and a trigger can coexist: the handle owns the open state, so a press and a `showAt` cannot
+disagree, and `close()` works whichever of them opened it.
 
 ## Placement
 
@@ -68,7 +106,8 @@ The popup flips to the opposite side and shifts along its alignment axis to stay
 leaves, the content scrolls.
 
 `anchor` points the popup at something that is not the trigger, such as the input row of a
-typeahead. The trigger is still required. `initialFocus={false}` leaves the caret where it was.
+typeahead, for a popover that still has a trigger. A handle's `showAt` target wins over it while
+the handle is showing. `initialFocus={false}` leaves the caret where it was.
 
 ## Inside a dialog
 
@@ -77,9 +116,9 @@ where the focus trap lets the keyboard reach the content.
 
 ## What this is not
 
-- Hover content, including a key-value description, is a `Tooltip`.
+- A short label that only describes the thing under the pointer is a `Tooltip`. Content the
+  pointer has to reach — a link, a copy button, a scrollable body — is a hover popover.
 - A menu of rows that closes when one is picked is a `Dropdown`.
-- A menu that opens at the pointer, with no trigger element, is a context menu.
 
 ## Asserting on it
 
