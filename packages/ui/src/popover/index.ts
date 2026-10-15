@@ -36,6 +36,11 @@
 
 export { POPOVER_SIDE_OFFSET } from './constants.js';
 export { Popover } from './popover.js';
+export { usePopoverHandle } from './use-popover-handle.js';
+export type {
+	PopupAnchorTarget as PopoverAnchorTargetType,
+	PopupHandle as PopoverHandleType,
+} from '../lib/popup-handle.js';
 export type {
 	PopoverAnchorType,
 	PopoverProps,

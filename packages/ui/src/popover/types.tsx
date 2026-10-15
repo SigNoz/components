@@ -1,5 +1,6 @@
 import type { Popover } from '@base-ui/react/popover';
 import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
+import type { PopupHandle } from '../lib/popup-handle.js';
 
 type OriginalRootProps = Popover.Root.Props;
 type OriginalPositionerProps = Popover.Positioner.Props;
@@ -25,42 +26,102 @@ interface TheTestIdPropIsCalledTestId {
 	'`data-testid` is written as the `testId` prop, which lands on the trigger and names the popup': never;
 }
 
+interface APopoverNeedsATriggerOrAHandle {
+	'a popover opens from a trigger press or from `handle.showAt(...)`: pass `trigger`, or a `handle`': never;
+}
+
+interface AHoverDelayNeedsAHoverPopover {
+	'`delay` and `closeDelay` describe the hover timing, so they only apply with `openOnHover`': never;
+}
+
 /**
  * Extra constraints layered on top of {@link PopoverProps} at the call site.
  *
  * Resolves to `unknown` (which disappears from an intersection) while the props are valid, and to
  * a rule object when they are not, the way `ValidateDropdownProps` does.
  */
-export type ValidatePopoverProps<T> = T extends { 'data-testid': unknown }
+export type ValidatePopoverProps<T, Payload = unknown> = (T extends {
+	'data-testid': unknown;
+}
 	? TheTestIdPropIsCalledTestId
-	: unknown;
+	: unknown) &
+	// Keyed, not shaped: `T extends { trigger: ... } | { handle: ... }` resolves to its false
+	// branch while `T` is still being inferred, which an unannotated `onOpenChange` arrow is
+	// enough to cause — and would hand every such call site this rule.
+	//
+	// A handle is read off `Payload` rather than `keyof T`, because the signature that infers
+	// the payload takes `handle` out of `T`. An inferred payload means a handle was passed;
+	// `unknown` means nothing matched.
+	([Extract<keyof T, 'trigger' | 'handle'>] extends [never]
+		? unknown extends Payload
+			? APopoverNeedsATriggerOrAHandle
+			: unknown
+		: unknown) &
+	([Extract<keyof T, 'delay' | 'closeDelay'>] extends [never]
+		? unknown
+		: [Extract<keyof T, 'openOnHover'>] extends [never]
+			? AHoverDelayNeedsAHoverPopover
+			: unknown);
 
-export type PopoverProps = Pick<ComponentProps<'div'>, 'id'> &
+export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes & {
 		/**
 		 * The popup content. The shell has no padding, so the content owns all of it, edge to
 		 * edge, which is what lets a divider or a search row run full-bleed.
 		 *
+		 * With a `handle`, pass a function instead: it receives the payload of the most recent
+		 * `showAt` call, so one declared popover serves many rows without one popup each. It is
+		 * `undefined` until the first `showAt`, and whenever `showAt` was called without one.
+		 *
 		 * @note A node that renders nothing (`null`, `false`, an empty string) renders the trigger
 		 * alone: no listeners, no aria wiring, no portal. Same rule as Tooltip's empty `title`.
 		 */
-		children: ReactNode;
+		children: ReactNode | ((payload: Payload | undefined) => ReactNode);
 		/**
 		 * The trigger. Rendered as the element you pass, with the popover's props merged into it,
-		 * so there is no second button wrapped around it. A popover always hangs off a trigger: it
-		 * opens on a click. A surface that opens on hover is a tooltip, and a menu at the pointer
-		 * is a context menu.
+		 * so there is no second button wrapped around it.
+		 *
+		 * @note Required unless a `handle` is passed. A popover opens either from a press on its
+		 * trigger or from `handle.showAt(...)`; with neither it could never be shown.
 		 *
 		 * @note A trigger that does not render a `<button>` needs `nativeButton={false}`.
 		 */
-		trigger: ReactNode;
+		trigger?: ReactNode;
 		/**
-		 * The controlled open state. `undefined` leaves the popover uncontrolled.
+		 * Shows and hides the popover from application state rather than from a trigger press.
 		 *
-		 * @note Kept for the cases `onOpenChange` alone cannot cover: a form that closes only when
-		 * its mutation succeeds, and state the popup cannot read off itself.
+		 * `handle.showAt(target, payload)` places it against an element, a `DOMRect` or a point,
+		 * and renders `payload` through `children`. `handle.close()` dismisses it — which is how
+		 * a form inside the popup closes it after a save succeeds.
+		 *
+		 * @note Create one with `usePopoverHandle()`.
 		 */
-		open?: OriginalRootProps['open'];
+		handle?: PopupHandle<Payload>;
+		/**
+		 * Also opens the popover while the pointer rests on the trigger.
+		 *
+		 * The popup stays interactive: the pointer can travel into it to select text or follow a
+		 * link, and the trigger still opens it on click, which is the route a keyboard takes.
+		 *
+		 * @default false
+		 */
+		openOnHover?: boolean;
+		/**
+		 * Milliseconds the pointer must rest on the trigger before a hover popover opens.
+		 *
+		 * @note Only with `openOnHover`.
+		 *
+		 * @default 300
+		 */
+		delay?: number;
+		/**
+		 * Milliseconds after the pointer leaves before a hover popover closes.
+		 *
+		 * @note Only with `openOnHover`.
+		 *
+		 * @default 0
+		 */
+		closeDelay?: number;
 		/**
 		 * Called when the popover opens or closes. `eventDetails.reason` says why
 		 * (`trigger-press`, `outside-press`, `escape-key`, `focus-out`, …) and

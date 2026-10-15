@@ -7,6 +7,9 @@ import { forwardRef, isValidElement, type ReactNode } from 'react';
 export type PopoverTriggerProps = {
 	children: ReactNode;
 	nativeButton: boolean;
+	openOnHover: boolean;
+	delay: number;
+	closeDelay: number;
 	testId: string | undefined;
 };
 
@@ -16,12 +19,13 @@ export type PopoverTriggerProps = {
  * @access private
  */
 export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>(
-	function PopoverTrigger({ children, nativeButton, testId }, ref) {
+	function PopoverTrigger({ children, nativeButton, openOnHover, delay, closeDelay, testId }, ref) {
 		return (
 			<PopoverPrimitive.Trigger
 				ref={ref}
 				data-slot="popover-trigger"
 				nativeButton={nativeButton}
+				{...(openOnHover && { openOnHover: true, delay, closeDelay })}
 				{...(testId === undefined ? {} : { 'data-testid': testId })}
 				{...(isValidElement(children) ? { render: children } : { children })}
 			/>

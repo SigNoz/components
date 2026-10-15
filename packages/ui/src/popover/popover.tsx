@@ -12,87 +12,140 @@ import { toCssLength } from '../lib/css-length.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { usePopupContainer } from '../lib/popup-container.js';
+import { type PopupHandle, resolveAnchorTarget, usePopupHandleState } from '../lib/popup-handle.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
+import { POPOVER_HOVER_CLOSE_DELAY, POPOVER_HOVER_DELAY } from './constants.js';
 import { PopoverPopup } from './subcomponents/popover-popup.js';
 import { PopoverPositioner } from './subcomponents/popover-positioner.js';
 import { PopoverTrigger } from './subcomponents/popover-trigger.js';
 import type { PopoverProps, ValidatePopoverProps } from './types.js';
 
-const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(function Popover(
-	{
-		children,
-		trigger,
-		open,
-		onOpenChange,
-		side,
-		align,
-		anchor,
-		container,
-		initialFocus,
-		finalFocus,
-		width,
-		maxWidth,
-		maxHeight,
-		nativeButton,
-		testId,
-		id,
-		className: _className,
-		style: _style,
-		...props
-	},
-	ref,
-) {
-	const popupContainer = usePopupContainer();
-	// Inside a dialog the popup goes into its panel, where the focus trap lets the keyboard in.
-	const portalContainer = container === undefined ? popupContainer : container;
-	const generatedId = useId();
-	const popupId = id ?? generatedId;
-	// State, not a ref: the positioner reads the layer the trigger sits in when it mounts.
-	const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
-	const triggerRef = useMemo(() => mergeRefs(ref, setTriggerElement), [ref]);
-	// Controlled only under a `ForceOpenProvider`. Everywhere else the consumer or Base UI owns it.
-	const forcedOpen = useForceOpen() ? true : undefined;
+const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & RejectedProps>(
+	function Popover(
+		{
+			children,
+			trigger,
+			handle,
+			openOnHover = false,
+			delay = POPOVER_HOVER_DELAY,
+			closeDelay = POPOVER_HOVER_CLOSE_DELAY,
+			onOpenChange,
+			side,
+			align,
+			anchor,
+			container,
+			initialFocus,
+			finalFocus,
+			width,
+			maxWidth,
+			maxHeight,
+			nativeButton,
+			testId,
+			id,
+			className: _className,
+			style: _style,
+			...props
+		},
+		ref,
+	) {
+		const popupContainer = usePopupContainer();
+		// Inside a dialog the popup goes into its panel, where the focus trap lets the keyboard in.
+		const portalContainer = container === undefined ? popupContainer : container;
+		const generatedId = useId();
+		const popupId = id ?? generatedId;
+		// State, not a ref: the positioner reads the layer the trigger sits in when it mounts.
+		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+		const triggerRef = useMemo(() => mergeRefs(ref, setTriggerElement), [ref]);
+		// Controlled only under a `ForceOpenProvider`. Everywhere else the consumer or Base UI owns it.
+		const forcedOpen = useForceOpen() ? true : undefined;
 
-	// The size props are written as custom properties so they compose with the tokens, the way
-	// Dropdown's `contentMaxWidth` and `contentMaxHeight` do.
-	const popupStyle = useMemo(
-		() =>
-			({
-				...(width != null && { '--popover-internal-inline-size': toCssLength(width) }),
-				...(maxWidth != null && { '--popover-internal-max-inline-size': toCssLength(maxWidth) }),
-				...(maxHeight != null && {
-					'--popover-internal-max-block-size': toCssLength(maxHeight),
-				}),
-			}) as CSSProperties,
-		[width, maxWidth, maxHeight],
-	);
+		// Two ways in, one open state. With a handle the handle owns it, so a press on the trigger
+		// and `showAt` cannot disagree and `close()` works whichever opened it.
+		const handleState = usePopupHandleState(handle);
+		const [pressedOpen, setPressedOpen] = useState(false);
+		const isOpen = forcedOpen ?? (handle ? handleState.open : pressedOpen);
 
-	if (!hasRenderableContent(children)) {
-		return <>{trigger}</>;
-	}
+		// A handle's anchor wins while it is showing: it is the element, rect or point the call
+		// site just named. Otherwise the `anchor` prop, and failing that the trigger.
+		const resolvedAnchor = handleState.open ? resolveAnchorTarget(handleState.anchor) : anchor;
 
-	return (
-		<PopoverPrimitive.Root open={forcedOpen ?? open} modal={false} onOpenChange={onOpenChange}>
-			<PopoverTrigger ref={triggerRef} nativeButton={nativeButton} testId={testId}>
-				{trigger}
-			</PopoverTrigger>
-			<PopoverPrimitive.Portal container={portalContainer}>
-				<PopoverPositioner trigger={triggerElement} side={side} align={align} anchor={anchor}>
-					<PopoverPopup
-						popupId={popupId}
-						initialFocus={initialFocus}
-						finalFocus={finalFocus}
-						style={popupStyle}
+		// The size props are written as custom properties so they compose with the tokens, the way
+		// Dropdown's `contentMaxWidth` and `contentMaxHeight` do.
+		const popupStyle = useMemo(
+			() =>
+				({
+					...(width != null && { '--popover-internal-inline-size': toCssLength(width) }),
+					...(maxWidth != null && {
+						'--popover-internal-max-inline-size': toCssLength(maxWidth),
+					}),
+					...(maxHeight != null && {
+						'--popover-internal-max-block-size': toCssLength(maxHeight),
+					}),
+				}) as CSSProperties,
+			[width, maxWidth, maxHeight],
+		);
+
+		// A render function is content for whatever the handle last showed, so it cannot be
+		// measured up front the way a node can.
+		const content = typeof children === 'function' ? children(handleState.payload) : children;
+
+		if (typeof children !== 'function' && !hasRenderableContent(children)) {
+			return <>{trigger}</>;
+		}
+
+		return (
+			<PopoverPrimitive.Root
+				open={isOpen}
+				modal={false}
+				onOpenChange={(nextOpen, eventDetails) => {
+					onOpenChange?.(nextOpen, eventDetails);
+
+					if (eventDetails.isCanceled) {
+						return;
+					}
+
+					if (handle) {
+						handle.setOpen(nextOpen);
+					} else {
+						setPressedOpen(nextOpen);
+					}
+				}}
+			>
+				{trigger !== undefined && (
+					<PopoverTrigger
+						ref={triggerRef}
+						nativeButton={nativeButton}
+						openOnHover={openOnHover}
+						delay={delay}
+						closeDelay={closeDelay}
 						testId={testId}
-						{...props}
 					>
-						{children}
-					</PopoverPopup>
-				</PopoverPositioner>
-			</PopoverPrimitive.Portal>
-		</PopoverPrimitive.Root>
-	);
-});
+						{trigger}
+					</PopoverTrigger>
+				)}
+				<PopoverPrimitive.Portal container={portalContainer}>
+					<PopoverPositioner
+						trigger={triggerElement}
+						side={side}
+						align={align}
+						anchor={resolvedAnchor}
+					>
+						<PopoverPopup
+							popupId={popupId}
+							initialFocus={initialFocus}
+							finalFocus={finalFocus}
+							style={popupStyle}
+							testId={testId}
+							{...props}
+						>
+							{content}
+						</PopoverPopup>
+					</PopoverPositioner>
+				</PopoverPrimitive.Portal>
+			</PopoverPrimitive.Root>
+		);
+	},
+);
 
 /**
  * Shows `children` in a floating panel hung off the element you pass as `trigger` (Base UI
@@ -100,8 +153,8 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(
  * radius and collision handling, but the slot may hold anything — which is what makes the popup a
  * dialog rather than a description.
  *
- * A popover opens on a click. A surface that opens on hover is a tooltip, and a menu at the
- * pointer is a context menu — neither is this component.
+ * A popover opens on a press of its trigger, and optionally on hover as well. It can also be
+ * shown from application state through a `handle`, for the surfaces no press can produce.
  *
  * The shell carries zero padding: `children` owns all of it, edge to edge, which is what lets a
  * divider or a search row run full-bleed. Visual values are `--popover-*` custom properties,
@@ -114,8 +167,12 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(
  * focus to the trigger. It also closes on an outside press and when focus leaves it.
  * `initialFocus` and `finalFocus` redirect the focus on the way in and out.
  *
- * The popover owns its open state; `onOpenChange` reports it. Controlled `open` is for what the
- * popup cannot know by itself — a form that closes only when its save succeeds.
+ * The popover owns its open state; `onOpenChange` reports it. There is no `open` prop: a surface
+ * the application needs to drive uses a `handle` instead.
+ *
+ * With `openOnHover` it also opens while the pointer rests on the trigger. The popup stays
+ * interactive — the pointer can travel into it to read, select or click — and the trigger still
+ * opens it on press, which is the route a keyboard takes.
  *
  * ### The trigger
  *
@@ -123,10 +180,23 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(
  * `Button` keeps its own look and there is no second button wrapped around it. `nativeButton`
  * says whether that element renders a native `<button>` — set it to `false` for anything else.
  *
+ * It is required unless a `handle` is passed, since otherwise nothing could ever open the popup.
+ *
+ * ### Showing it from application state
+ *
+ * `usePopoverHandle()` returns a handle for the surfaces a press cannot produce: a menu at the
+ * point of a chart click, a suggestion list opened by an input taking focus, a hover card walking
+ * a list of rows. `handle.showAt(target, payload)` places the popup against an element, a
+ * `DOMRect` or a point, and `handle.close()` dismisses it — which is also how a form inside the
+ * popup closes itself once its save succeeds.
+ *
+ * Pass `children` as a function to receive the payload of the most recent `showAt`, so one
+ * declared popover serves many rows instead of one popup each.
+ *
  * ### Anchor
  *
  * `anchor` points the popup at something that is not the trigger — a typeahead anchored to its
- * whole input row. The trigger is still required.
+ * whole input row. A handle's `showAt` target takes precedence while it is showing.
  *
  * ### What lands on the popup
  *
@@ -160,21 +230,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(
  *
  * @example
  * ```tsx
- * <Popover
- *   nativeButton
- *   side="bottom"
- *   align="end"
- *   trigger={<Button variant="outlined">Save view</Button>}
- *   open={open}
- *   onOpenChange={setOpen}
- * >
- *   <SaveViewForm onDone={() => setOpen(false)} />
- * </Popover>
- * ```
- *
- * @example
- * ```tsx
- * // Uncontrolled: the popover owns its open state
+ * // The popover owns its open state
  * <Popover
  *   nativeButton
  *   side="bottom"
@@ -185,12 +241,43 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps & RejectedProps>(
  *   <MarkdownCheatsheet />
  * </Popover>
  * ```
+ *
+ * @example
+ * ```tsx
+ * // A form that closes only once its save succeeds
+ * const handle = usePopoverHandle();
+ *
+ * <Popover
+ *   nativeButton
+ *   side="bottom"
+ *   align="end"
+ *   handle={handle}
+ *   trigger={<Button variant="outlined">Save view</Button>}
+ * >
+ *   <SaveViewForm onSaved={() => handle.close()} />
+ * </Popover>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // One card for every row, shown where the pointer is
+ * const card = usePopoverHandle<Span>();
+ *
+ * <tr onMouseEnter={(event) => card.showAt(event.currentTarget, span)}>…</tr>
+ *
+ * <Popover nativeButton side="right" align="start" handle={card} initialFocus={false}>
+ *   {(span) => <SpanSummary span={span} />}
+ * </Popover>
+ * ```
  */
-export const Popover = PopoverImpl as <T extends PopoverProps>(
-	props: T &
-		ValidatePopoverProps<T> &
-		// `T` is inferred from the call site, so `T extends PopoverProps` alone never runs excess
-		// property checks. Every key outside the props is pinned to `never` instead.
+export const Popover = PopoverImpl as <Payload, T extends PopoverProps<Payload>>(
+	// `T` is inferred from the call site, so `T extends PopoverProps` alone never runs excess
+	// property checks. Every key outside the props is pinned to `never` instead.
+	//
+	// `handle` is restated so `Payload` has somewhere to be inferred from, which is what types
+	// `children` as a function of whatever that handle shows. That restating also takes `handle`
+	// back out of `T`, so the trigger-or-handle rule is told the payload separately.
+	props: T & { handle?: PopupHandle<Payload> } & ValidatePopoverProps<T, Payload> &
 		Record<Exclude<keyof T, keyof PopoverProps | keyof RefAttributes<HTMLButtonElement>>, never> &
 		RefAttributes<HTMLButtonElement>,
 ) => ReactElement;
