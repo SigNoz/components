@@ -1,38 +1,32 @@
 // Rules read colour only through the `--popover-internal-*` pairs below, never a semantic token
 // directly.
 .popover {
-	--popover-internal-background: var(--popover-background-color, var(--popover-background));
+	--popover-internal-background: var(--popover-background-color,
+			var(--popover-background, var(--surface-3)));
 	--popover-internal-foreground: var(--popover-foreground-color, var(--popover-foreground));
-	--popover-internal-border: var(--popover-border-color, var(--popover-border));
-	--popover-internal-shadow: var(--popover-box-shadow, var(--popover-shadow));
+	--popover-internal-border: var(--popover-border-color, var(--popover-border, var(--l2-border)));
+	--popover-internal-shadow: var(--popover-box-shadow,
+			var(--popover-shadow, var(--shadow-dropdown)));
 
 	display: var(--popover-display, flex);
 	flex-direction: var(--popover-flex-direction, column);
 
 	// The `width` and `maxWidth` props arrive as the internal pair, so a token still outranks a
 	// call site.
-	--popover-internal-resolved-inline-size: var(
-		--popover-inline-size,
-		var(--popover-internal-inline-size, fit-content)
-	);
-	--popover-internal-resolved-max-inline-size: var(
-		--popover-max-inline-size,
-		var(--popover-internal-max-inline-size, 25rem)
-	);
+	--popover-internal-resolved-inline-size: var(--popover-inline-size,
+			var(--popover-internal-inline-size, fit-content));
+	--popover-internal-resolved-max-inline-size: var(--popover-max-inline-size,
+			var(--popover-internal-max-inline-size, 25rem));
 
 	box-sizing: var(--popover-box-sizing, border-box);
 	inline-size: var(--popover-internal-resolved-inline-size);
 	// The floor is clamped to the maximum because a min-width wins over a max-width.
-	min-inline-size: min(
-		var(--popover-min-inline-size, 10rem),
-		var(--popover-internal-resolved-max-inline-size)
-	);
+	min-inline-size: min(var(--popover-min-inline-size, 10rem),
+			var(--popover-internal-resolved-max-inline-size));
 	max-inline-size: var(--popover-internal-resolved-max-inline-size);
 	// `--available-height` comes from Base UI and keeps the popup inside the viewport.
-	max-block-size: var(
-		--popover-max-block-size,
-		var(--popover-internal-max-block-size, var(--available-height, none))
-	);
+	max-block-size: var(--popover-max-block-size,
+			var(--popover-internal-max-block-size, var(--available-height, none)));
 
 	// The shell owns no padding: the content slot does, which is what lets a divider or a search
 	// row run edge to edge.

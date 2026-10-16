@@ -6,14 +6,14 @@
  * | Token | Default |
  * |-------|---------|
  * | `--popover-backdrop-filter` | `blur(40px)` |
- * | `--popover-background` | `-` |
- * | `--popover-background-color` | `var(--popover-background)` |
- * | `--popover-border` | `-` |
- * | `--popover-border-color` | `var(--popover-border)` |
+ * | `--popover-background` | `var(--surface-3)` |
+ * | `--popover-background-color` | `var(--popover-background, var(--surface-3))` |
+ * | `--popover-border` | `var(--l2-border)` |
+ * | `--popover-border-color` | `var(--popover-border, var(--l2-border))` |
  * | `--popover-border-radius` | `var(--radius-2)` |
  * | `--popover-border-style` | `solid` |
  * | `--popover-border-width` | `1px` |
- * | `--popover-box-shadow` | `var(--popover-shadow)` |
+ * | `--popover-box-shadow` | `var(--popover-shadow, var(--shadow-dropdown))` |
  * | `--popover-box-sizing` | `border-box` |
  * | `--popover-display` | `flex` |
  * | `--popover-flex-direction` | `column` |
@@ -29,7 +29,7 @@
  * | `--popover-positioner-focus-visible-outline` | `none` |
  * | `--popover-positioner-inline-size` | `max-content` |
  * | `--popover-positioner-pointer-events` | `auto` |
- * | `--popover-shadow` | `-` |
+ * | `--popover-shadow` | `var(--shadow-dropdown)` |
  * | `--popover-z-index` | `50` |
  */
 // #endregion css-tokens
