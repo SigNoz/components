@@ -1,43 +1,262 @@
-.headingTitle {
-  line-height: 1;
-  margin-top: 0;
+/* The playground opens downwards, so it needs room under its trigger. */
+.roomBelow {
+	min-block-size: 320px;
 }
 
-.formGrid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  align-items: center;
-  gap: 1rem;
+.panel {
+	display: flex;
+	flex-direction: column;
+	inline-size: 17.5rem;
 }
 
-/* Button takes no class, so the trigger's font weight sits on the column around it. */
-.datePickerColumn {
-  gap: 0.75rem;
-  --button-font-weight: normal;
+.search {
+	padding: 0.5rem;
+	border-block-end: 1px solid var(--l2-border);
 }
 
-.datePickerLabel {
-  padding-inline: 0.25rem;
+.list {
+	margin: 0;
+	padding: 0.25rem 0;
+	list-style: none;
+	overflow: auto;
 }
 
-.datePickerContent {
-  width: auto;
-  overflow: hidden;
-  padding: 0;
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.5rem 0.75rem;
+	color: var(--l1-foreground);
 }
 
-.timePickerSection {
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-top: 1px solid var(--border);
+.rowMeta {
+	flex: 0 1 auto;
+	color: var(--l3-foreground);
 }
 
-.showcaseContainer {
-  min-height: 600px;
+/* A row you can actually pick. Mirrors the dashboard editor's variable rows: the button is a
+   plain full-width surface, and the two labels inside it do the spacing. */
+.pickRow {
+	display: block;
+	overflow: hidden;
+	--button-display: flex;
+	--button-justify-content: flex-start;
 }
 
-.showcaseLayout {
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
+.pickRowBody {
+	display: flex;
+	flex: 1 1 auto;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	min-inline-size: 0;
+}
+
+.pickRowName,
+.rowMeta {
+	min-inline-size: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.pickRowName {
+	flex: 1 1 auto;
+	text-align: start;
+}
+
+/* What the story just did, so the interaction has a visible outcome. */
+.result {
+	display: block;
+	margin-block-start: 0.75rem;
+	color: var(--l2-foreground);
+}
+
+.resultEmpty {
+	color: var(--l3-foreground);
+}
+
+.inlineRow {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.note {
+	margin: 0;
+	padding: 0.5rem 0.75rem;
+	inline-size: 15rem;
+	color: var(--l1-foreground);
+}
+
+.footer {
+	padding: 0.5rem;
+	border-block-start: 1px solid var(--l2-border);
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	inline-size: 17.5rem;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.inputRow {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	inline-size: 26rem;
+}
+
+/* The field takes the slack so the trigger beside it keeps its whole label. */
+.inputRowField {
+	display: block;
+	flex: 1 1 auto;
+	min-inline-size: 0;
+}
+
+.inputRow > :not(.inputRowField) {
+	flex: 0 0 auto;
+}
+
+.dialogBody {
+	padding: 1rem;
+	min-block-size: 16rem;
+}
+
+.note {
+	color: var(--l2-foreground);
+	max-inline-size: 36rem;
+}
+
+.breakdown {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	inline-size: 20rem;
+}
+
+.pair {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	color: var(--l1-foreground);
+}
+
+.pairValue {
+	color: var(--l2-foreground);
+	font-variant-numeric: tabular-nums;
+}
+
+.rows {
+	display: flex;
+	flex-direction: column;
+	inline-size: 26rem;
+	border: 1px solid var(--l2-border);
+	border-radius: 0.25rem;
+}
+
+.spanRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.5rem 0.75rem;
+	color: var(--l1-foreground);
+	cursor: default;
+}
+
+.spanRow + .spanRow {
+	border-block-start: 1px solid var(--l2-border);
+}
+
+.bar {
+	block-size: 0.5rem;
+	border-radius: 0.125rem;
+	background: var(--primary-background);
+}
+
+.hint {
+	display: block;
+	margin-block-end: 0.5rem;
+	color: var(--l3-foreground);
+}
+
+/* Stands in for a chart canvas: the click lands at a point, not on an element. */
+.plot {
+	display: block;
+	padding: 0;
+	position: relative;
+	block-size: 10rem;
+	inline-size: 26rem;
+	border: 1px solid var(--l2-border);
+	border-radius: 0.25rem;
+	background: repeating-linear-gradient(
+		to right,
+		transparent 0 2.5rem,
+		var(--l2-border) 2.5rem calc(2.5rem + 1px)
+	);
+	cursor: crosshair;
+}
+
+.plotSvg {
+	display: block;
+	inline-size: 100%;
+	block-size: 100%;
+}
+
+.plotArea {
+	fill: color-mix(in srgb, var(--primary-background) 18%, transparent);
+}
+
+.plotLine {
+	fill: none;
+	stroke: var(--primary-background);
+	stroke-width: 2;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+
+.plotPoint {
+	fill: var(--primary-background);
+	stroke: var(--l1-background);
+	stroke-width: 1.5;
+}
+
+.drilldownHeader {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.5rem 0.75rem;
+	border-block-end: 1px solid var(--l2-border);
+}
+
+.empty {
+	padding: 0.5rem 0.75rem;
+	color: var(--l3-foreground);
+}
+
+/* A row of a list, not a centred button label. */
+.suggestion {
+	display: block;
+	overflow: hidden;
+	--button-display: flex;
+	--button-justify-content: flex-start;
 }

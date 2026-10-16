@@ -1,0 +1,75 @@
+@keyframes date-picker-popover-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes date-picker-popover-out {
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+}
+
+.popover__content {
+	// Radix copies this onto the wrapper that positions the popover.
+	z-index: var(--date-picker-popover-z-index, 50);
+	--radix-popover-content-available-width: var(--radix-popover-trigger-width);
+	--radix-popover-content-available-height: var(--radix-popover-trigger-height);
+	min-width: var(--radix-popover-trigger-width);
+	background-color: var(--date-picker-popover-background, var(--l2-background));
+	color: var(--date-picker-popover-foreground, var(--l1-foreground));
+	width: var(--date-picker-popover-width, fit-content);
+	transform-origin: var(
+		--date-picker-popover-transform-origin,
+		var(--radix-popover-content-transform-origin)
+	);
+	border-radius: var(--date-picker-popover-border-radius, var(--radius-2, 4px));
+	padding: var(--date-picker-popover-padding, var(--spacing-8));
+	border-width: var(--date-picker-popover-border-width, 1px);
+	border-style: var(--date-picker-popover-border-style, solid);
+	border-color: var(--date-picker-popover-border-color, var(--l2-border));
+	box-shadow: var(
+		--date-picker-popover-box-shadow,
+		0 4px 6px -1px rgba(0, 0, 0, 0.1),
+		0 2px 4px -2px rgba(0, 0, 0, 0.1)
+	);
+	outline: none;
+}
+
+.popover__content[data-state='open'] {
+	animation: date-picker-popover-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.popover__content[data-state='closed'] {
+	animation: date-picker-popover-out 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.popover__arrow {
+	width: var(--date-picker-popover-arrow-width, 10px);
+	height: var(--date-picker-popover-arrow-height, 10px);
+	border-radius: var(--date-picker-popover-arrow-border-radius, 2px);
+	transform: translateY(-1.5px);
+}
+
+.popover__arrowPath {
+	fill: var(--date-picker-popover-background, var(--l2-background));
+	stroke: var(--date-picker-popover-border-color, var(--l2-border));
+	stroke-width: var(--date-picker-popover-border-width, 2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.popover__content[data-state='open'],
+	.popover__content[data-state='closed'] {
+		animation: none;
+	}
+}

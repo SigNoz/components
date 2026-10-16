@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Popover type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "anchor > rejects a popover with neither a trigger nor a handle > nothing could ever open it": "TS2741: Property ''a popover opens from a trigger press or from \`handle.showAt(...)\`: pass \`trigger\`, or a \`handle\`'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; anchor: { getBoundingClientRect: () => DOMRect; }; }' but required in type 'APopoverNeedsATriggerOrAHandle'.",
+  "hover mode > rejects a controlled open > visibility the app owns is driven by a handle": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "hover mode > rejects a hover close delay without openOnHover > \`closeDelay\` describes the hover timing": "TS2741: Property ''\`delay\` and \`closeDelay\` describe the hover timing, so they only apply with \`openOnHover\`'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; trigger: Element; closeDelay: number; }' but required in type 'AHoverDelayNeedsAHoverPopover'.",
+  "hover mode > rejects a hover delay without openOnHover > \`delay\` describes the hover timing": "TS2741: Property ''\`delay\` and \`closeDelay\` describe the hover timing, so they only apply with \`openOnHover\`'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; trigger: Element; delay: number; }' but required in type 'AHoverDelayNeedsAHoverPopover'.",
+  "hover mode > rejects an openOn mode > a surface that opens on hover is a tooltip": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "hover mode > rejects defaultOpen > no call site starts open": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "hover mode > rejects the offset knobs > the alignment offset is fixed at 0": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "hover mode > rejects the offset knobs > the gap is a fixed 4px": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "hover mode > rejects the old content prop > \`children\` is the popup content": "TS2322: Type 'Element' is not assignable to type 'never'.",
+  "root props > rejects \`nativeButton\` on a popover with no trigger to describe > \`nativeButton\` describes the trigger, and there is none": "TS2741: Property ''\`nativeButton\` describes the trigger, and a popover shown from a handle alone has none'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; handle: PopupHandle<void>; }' but required in type 'NativeButtonDescribesTheTrigger'.",
+  "root props > rejects a popover that does not say whether its trigger is a button > \`nativeButton\` has to match the trigger, so it has no default": "TS2741: Property ''\`nativeButton\` says whether \`trigger\` renders a native \`<button>\`, and Base UI cannot tell: pass it'' is missing in type '{ children: Element; side: "bottom"; align: "start"; trigger: Element; }' but required in type 'ATriggerNeedsNativeButton'.",
+  "root props > rejects a popover with no side or no align > placement is never incidental, the call site states it": "TS2741: Property 'align' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; trigger: Element; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactNode | ((payload: unknown) => ReactNode); trigger?: ReactNode; handle?: PopupHandle<unknown> | undefined; openOnHover?: boolean | undefined; ... 13 more ...; testId?: string | undefined; }'.",
+  "root props > rejects a popover with no trigger and no handle > nothing could ever open it": "TS2741: Property ''a popover opens from a trigger press or from \`handle.showAt(...)\`: pass \`trigger\`, or a \`handle\`'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; }' but required in type 'APopoverNeedsATriggerOrAHandle'.",
+  "root props > rejects className and style, the look comes from the props and tokens > \`className\` is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects className and style, the look comes from the props and tokens > \`style\` is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "root props > rejects the logical sides > only the four physical sides are exposed": "TS2322: Type '"inline-start"' is not assignable to type 'PopoverSideType'.",
+  "root props > rejects the props of the parts it owns > Base UI flips and shifts by default": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "root props > rejects the props of the parts it owns > a popover traps nothing; a flow that needs a trap is a Dialog": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props of the parts it owns > always portalled; \`container\` chooses where": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "root props > rejects the props of the parts it owns > the design has no arrow": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props of the parts it owns > the popup unmounts on close": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > writes data-testid as testId > \`data-testid\` is written as the \`testId\` prop": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which lands on the trigger and names the popup'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; trigger: Element; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+}
+`;

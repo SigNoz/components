@@ -177,15 +177,21 @@ else that closes on a press outside it, such as a `Popover`, pass `container` an
 ```tsx
 const containerRef = useRef<HTMLDivElement>(null);
 
-<PopoverContent>
-	<Select
-		aria-label="Environment"
-		placeholder="Select an environment..."
-		items={environments}
-		container={containerRef}
-	/>
-	<div ref={containerRef} />
-</PopoverContent>;
+<Popover
+	nativeButton
+	side="bottom"
+	align="start"
+	trigger={<Button variant="outlined">Filters</Button>}
+>
+	<div ref={containerRef}>
+		<Select
+			aria-label="Environment"
+			placeholder="Select an environment..."
+			items={environments}
+			container={containerRef}
+		/>
+	</div>
+</Popover>;
 ```
 
 ## Holding the popup open in a story or a test

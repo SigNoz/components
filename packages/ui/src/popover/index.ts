@@ -5,37 +5,45 @@
  *
  * | Token | Default |
  * |-------|---------|
- * | `--popover-arrow-border-radius` | `2px` |
- * | `--popover-arrow-height` | `10px` |
- * | `--popover-arrow-width` | `10px` |
- * | `--popover-background` | `var(--l2-background)` |
- * | `--popover-border-color` | `var(--l2-border)` |
- * | `--popover-border-radius` | `var(--radius-2, 4px)` |
+ * | `--popover-backdrop-filter` | `blur(40px)` |
+ * | `--popover-background` | `var(--surface-3)` |
+ * | `--popover-background-color` | `var(--popover-background, var(--surface-3))` |
+ * | `--popover-border` | `var(--l2-border)` |
+ * | `--popover-border-color` | `var(--popover-border, var(--l2-border))` |
+ * | `--popover-border-radius` | `var(--radius-2)` |
  * | `--popover-border-style` | `solid` |
  * | `--popover-border-width` | `1px` |
- * | `--popover-box-shadow` | `0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2...` |
- * | `--popover-foreground` | `var(--l1-foreground)` |
- * | `--popover-padding` | `var(--spacing-8)` |
- * | `--popover-transform-origin` | `var(--radix-popover-content-transform-origin)` |
- * | `--popover-width` | `fit-content` |
+ * | `--popover-box-shadow` | `var(--popover-shadow, var(--shadow-dropdown))` |
+ * | `--popover-box-sizing` | `border-box` |
+ * | `--popover-display` | `flex` |
+ * | `--popover-flex-direction` | `column` |
+ * | `--popover-focus-visible-outline` | `none` |
+ * | `--popover-foreground` | `-` |
+ * | `--popover-foreground-color` | `var(--popover-foreground)` |
+ * | `--popover-inline-size` | `var(--popover-internal-inline-size, fit-content)` |
+ * | `--popover-max-block-size` | `var(--popover-internal-max-block-size, var(--av...` |
+ * | `--popover-max-inline-size` | `var(--popover-internal-max-inline-size, 25rem)` |
+ * | `--popover-min-inline-size` | `10rem` |
+ * | `--popover-overflow` | `hidden` |
+ * | `--popover-padding` | `0` |
+ * | `--popover-positioner-focus-visible-outline` | `none` |
+ * | `--popover-positioner-inline-size` | `max-content` |
+ * | `--popover-positioner-pointer-events` | `auto` |
+ * | `--popover-shadow` | `var(--shadow-dropdown)` |
  * | `--popover-z-index` | `50` |
  */
 // #endregion css-tokens
 
-export {
-	Popover,
-	PopoverAnchor,
-	type PopoverAnchorProps,
-	PopoverArrow,
-	type PopoverArrowProps,
-	PopoverClose,
-	type PopoverCloseProps,
-	PopoverContent,
-	type PopoverContentProps,
-	PopoverPortal,
-	type PopoverPortalProps,
-	type PopoverProps,
-	PopoverTrigger,
-	type PopoverTriggerProps,
-} from './popover.js';
-export { PopoverSimple, type PopoverSimpleProps } from './presets/popover-simple.js';
+export { POPOVER_SIDE_OFFSET } from './constants.js';
+export { Popover } from './popover.js';
+export { usePopoverHandle } from './use-popover-handle.js';
+export type {
+	PopupAnchorTarget as PopoverAnchorTargetType,
+	PopupHandle as PopoverHandleType,
+} from '../lib/popup-handle.js';
+export type {
+	PopoverAnchorType,
+	PopoverProps,
+	PopoverSideType,
+	ValidatePopoverProps,
+} from './types.js';
