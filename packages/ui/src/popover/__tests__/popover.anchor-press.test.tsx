@@ -19,7 +19,6 @@ function Suggestions({ onOpenChange }: { onOpenChange?: () => void } = {}): JSX.
 			{/* Not focusable, so closing cannot hand focus to it: the anchor gets it back. */}
 			<p>Somewhere else entirely</p>
 			<Popover
-				nativeButton
 				side="bottom"
 				align="start"
 				handle={suggestions}

@@ -81,7 +81,7 @@ describe('Popover stacking', () => {
 					<button type="button" onClick={(event) => menu.showAt(event.currentTarget)}>
 						Open
 					</button>
-					<Popover nativeButton side="bottom" align="start" aria-label="Actions" handle={menu}>
+					<Popover side="bottom" align="start" aria-label="Actions" handle={menu}>
 						<p>Body</p>
 					</Popover>
 				</div>
