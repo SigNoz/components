@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.4.0](https://github.com/SigNoz/components/compare/v0.3.0...v0.4.0) (2026-10-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **popover:** rework popover on base-ui ([#449](https://github.com/SigNoz/components/issues/449))
+
+### Features
+
+* **popover:** rework popover on base-ui ([#449](https://github.com/SigNoz/components/issues/449)) ([57dc971](https://github.com/SigNoz/components/commit/57dc9717c08361c2787108a12f198c9991eeebb0))
+
+
+### Bug Fixes
+
+* **deps:** cap @babel/core override below 8 ([#450](https://github.com/SigNoz/components/issues/450)) ([996180b](https://github.com/SigNoz/components/commit/996180b0770fcd23a53b6c0d73e5746d0f68288c))
+
+
+### Performance Improvements
+
+* avoid encoding intermediate source maps (&lt;a ([2f4f2ce](https://github.com/SigNoz/components/commit/2f4f2ce12821a86a783a770cf8e2c99dfa1b43b8))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the development-dependencies group across 1 directory with 22 updates ([#448](https://github.com/SigNoz/components/issues/448)) ([2f4f2ce](https://github.com/SigNoz/components/commit/2f4f2ce12821a86a783a770cf8e2c99dfa1b43b8))
+
 ## [0.3.0](https://github.com/SigNoz/components/compare/v0.2.0...v0.3.0) (2026-10-09)
 
 
