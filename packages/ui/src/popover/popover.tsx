@@ -198,7 +198,8 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  *
  * `trigger` is rendered as the element you pass, with the popover's props merged into it, so a
  * `Button` keeps its own look and there is no second button wrapped around it. `nativeButton`
- * says whether that element renders a native `<button>`. Set it to `false` for anything else.
+ * says whether that element renders a native `<button>`. Set it to `false` for anything else; it
+ * belongs to the trigger, so a popover shown from a handle alone does not take it.
  *
  * It is required unless a `handle` is passed, since otherwise nothing could ever open the popup.
  *
@@ -290,7 +291,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  *
  * <tr onMouseEnter={(event) => card.showAt(event.currentTarget, span)}>…</tr>
  *
- * <Popover nativeButton side="right" align="start" handle={card} initialFocus={false}>
+ * <Popover side="right" align="start" handle={card} initialFocus={false}>
  *   {(span) => <SpanSummary span={span} />}
  * </Popover>
  * ```
