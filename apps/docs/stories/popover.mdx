@@ -14,9 +14,9 @@ the panel that is neither: a form, a picker, a typeahead, a hover card with link
 
 ## How to use
 
-`children`, `side`, `align` and `nativeButton` are required, and so is `trigger` unless a `handle`
-is passed. There are no subcomponents to compose: the popover owns its own markup. `children` is
-the popup. `trigger` is the element it hangs off.
+`children`, `side` and `align` are required, and so is `trigger` unless a `handle` is passed.
+There are no subcomponents to compose: the popover owns its own markup. `children` is the popup.
+`trigger` is the element it hangs off.
 
 ```tsx
 import { Button, Popover } from '@signozhq/ui';
@@ -39,9 +39,10 @@ export default function MarkdownHelp() {
 The shell has no padding. The content owns all of it, edge to edge, which is what lets a divider
 or a search row run full-bleed.
 
-`nativeButton` says whether `trigger` renders a native `<button>`. It is required: a default of
-`true` is silently wrong for anything that is not a button. Set it to `false` for a badge, a link,
-or an input.
+`nativeButton` says whether `trigger` renders a native `<button>`. It is required alongside a
+trigger, since a default of `true` is silently wrong for anything that is not a button: set it to
+`false` for a badge, a link or an input. A popover shown from a handle alone has no trigger to
+describe, so passing it there is a type error rather than a no-op.
 
 <Primary />
 
@@ -81,7 +82,7 @@ export default function Waterfall({ spans }) {
 			{spans.map((span) => (
 				<Row key={span.id} onMouseEnter={(event) => card.showAt(event.currentTarget, span)} />
 			))}
-			<Popover nativeButton side="right" align="start" handle={card} initialFocus={false}>
+			<Popover side="right" align="start" handle={card} initialFocus={false}>
 				{(span) => <SpanSummary span={span} />}
 			</Popover>
 		</>
@@ -147,7 +148,7 @@ const menu = usePopoverHandle();
 		Download
 	</button>
 </Tooltip>
-<Popover nativeButton side="bottom" align="end" handle={menu} aria-label="Export">
+<Popover side="bottom" align="end" handle={menu} aria-label="Export">
 	<ExportFormats />
 </Popover>;
 ```

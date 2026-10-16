@@ -620,7 +620,6 @@ export const RowHoverCard: Story = {
 					))}
 				</div>
 				<Popover
-					nativeButton
 					side="right"
 					align="start"
 					handle={card}
@@ -711,7 +710,6 @@ export const ChartDrilldown: Story = {
 					</svg>
 				</button>
 				<Popover
-					nativeButton
 					side="bottom"
 					align="start"
 					handle={menu}
@@ -807,7 +805,6 @@ export const SuggestionsOnFocus: Story = {
 					/>
 				</div>
 				<Popover
-					nativeButton
 					side="bottom"
 					align="start"
 					handle={suggestions}
@@ -1084,7 +1081,6 @@ export const AnchoredTypeahead: Story = {
 					</span>
 				</div>
 				<Popover
-					nativeButton
 					side="bottom"
 					align="start"
 					handle={variables}
