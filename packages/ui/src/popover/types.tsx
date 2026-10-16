@@ -34,6 +34,14 @@ interface AHoverDelayNeedsAHoverPopover {
 	'`delay` and `closeDelay` describe the hover timing, so they only apply with `openOnHover`': never;
 }
 
+interface ATriggerNeedsNativeButton {
+	'`nativeButton` says whether `trigger` renders a native `<button>`, and Base UI cannot tell: pass it': never;
+}
+
+interface NativeButtonDescribesTheTrigger {
+	'`nativeButton` describes the trigger, and a popover shown from a handle alone has none': never;
+}
+
 /**
  * Extra constraints layered on top of {@link PopoverProps} at the call site.
  *
@@ -61,6 +69,15 @@ export type ValidatePopoverProps<T, Payload = unknown> = (T extends {
 		? unknown
 		: [Extract<keyof T, 'openOnHover'>] extends [never]
 			? AHoverDelayNeedsAHoverPopover
+			: unknown) &
+	// `nativeButton` is read only by the trigger part, so a handle-only popover that passes it
+	// is describing an element that does not exist. Required with a trigger, rejected without.
+	([Extract<keyof T, 'trigger'>] extends [never]
+		? [Extract<keyof T, 'nativeButton'>] extends [never]
+			? unknown
+			: NativeButtonDescribesTheTrigger
+		: [Extract<keyof T, 'nativeButton'>] extends [never]
+			? ATriggerNeedsNativeButton
 			: unknown);
 
 export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
@@ -204,10 +221,12 @@ export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> 
 		 * its role, focus and `Enter` and `Space` activation. With `false`, Base UI adds those
 		 * itself: `role="button"`, `tabIndex` and the key handlers.
 		 *
-		 * @note Required. The value has to match the trigger, and a default of `true` is silently
-		 * wrong for anything that is not a button. Base UI logs an error on a mismatch.
+		 * @note Required with a `trigger`, and rejected without one. The value has to match the
+		 * trigger, and a default of `true` is silently wrong for anything that is not a button.
+		 * Base UI logs an error on a mismatch. A popover shown from a handle alone has no trigger
+		 * to describe, so the prop is never read there.
 		 */
-		nativeButton: boolean;
+		nativeButton?: boolean;
 		/**
 		 * Forwarded to the trigger as `data-testid`. The popup is `` `${testId}-popup` ``.
 		 */

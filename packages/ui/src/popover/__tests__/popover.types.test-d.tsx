@@ -82,6 +82,17 @@ describe('root props', () => {
 		);
 	});
 
+	test('rejects `nativeButton` on a popover with no trigger to describe', () => {
+		const plain = new PopupHandle();
+
+		assertType(
+			// @ts-expect-error - `nativeButton` describes the trigger, and there is none
+			<Popover nativeButton side="bottom" align="start" handle={plain}>
+				{body}
+			</Popover>,
+		);
+	});
+
 	test('rejects the logical sides', () => {
 		assertType(
 			// @ts-expect-error - only the four physical sides are exposed
@@ -292,7 +303,7 @@ describe('anchor', () => {
 
 	test('accepts a handle instead of a trigger', () => {
 		assertType(
-			<Popover nativeButton side="bottom" align="start" handle={handle}>
+			<Popover side="bottom" align="start" handle={handle}>
 				{(payload: string | undefined) => <p>{payload}</p>}
 			</Popover>,
 		);
@@ -302,7 +313,7 @@ describe('anchor', () => {
 		const plain = new PopupHandle();
 
 		assertType(
-			<Popover nativeButton side="bottom" align="start" handle={plain} initialFocus={false}>
+			<Popover side="bottom" align="start" handle={plain} initialFocus={false}>
 				{body}
 			</Popover>,
 		);
@@ -313,7 +324,6 @@ describe('anchor', () => {
 
 		assertType(
 			<Popover
-				nativeButton
 				side="bottom"
 				align="start"
 				handle={plain}

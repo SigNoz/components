@@ -54,7 +54,7 @@ describe('Popover layer', () => {
 							Open
 						</button>
 					</div>
-					<Popover nativeButton side="bottom" align="start" aria-label="Actions" handle={menu}>
+					<Popover side="bottom" align="start" aria-label="Actions" handle={menu}>
 						<p>Body</p>
 					</Popover>
 				</>
@@ -82,7 +82,7 @@ describe('Popover layer', () => {
 							Chart
 						</button>
 					</div>
-					<Popover nativeButton side="bottom" align="start" aria-label="Actions" handle={menu}>
+					<Popover side="bottom" align="start" aria-label="Actions" handle={menu}>
 						<p>Body</p>
 					</Popover>
 				</>

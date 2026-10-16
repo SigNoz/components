@@ -40,7 +40,7 @@ describe('Popover positioning', () => {
 					>
 						Chart
 					</button>
-					<Popover nativeButton side="bottom" align="start" handle={menu}>
+					<Popover side="bottom" align="start" handle={menu}>
 						{(label) => <p>{label}</p>}
 					</Popover>
 				</>

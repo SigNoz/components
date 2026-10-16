@@ -6,7 +6,9 @@ import { forwardRef, isValidElement, type ReactNode } from 'react';
  */
 export type PopoverTriggerProps = {
 	children: ReactNode;
-	nativeButton: boolean;
+	// Optional on the root, where the validator requires it only alongside a `trigger`. This
+	// part renders only when there is one, so a value is always passed in practice.
+	nativeButton: boolean | undefined;
 	openOnHover: boolean;
 	delay: number;
 	closeDelay: number;

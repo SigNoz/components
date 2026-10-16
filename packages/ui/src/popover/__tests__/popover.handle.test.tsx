@@ -31,7 +31,7 @@ function RowList({ openOn = 'click' }: { openOn?: 'click' | 'hover' }): JSX.Elem
 					{label}
 				</button>
 			))}
-			<Popover nativeButton side="bottom" align="start" handle={card}>
+			<Popover side="bottom" align="start" handle={card}>
 				{(row) => <p>Row: {row?.label}</p>}
 			</Popover>
 		</>
@@ -95,7 +95,7 @@ describe('Popover handle', () => {
 					>
 						Show
 					</button>
-					<Popover nativeButton side="bottom" align="start" handle={handle}>
+					<Popover side="bottom" align="start" handle={handle}>
 						<p>At a rect</p>
 					</Popover>
 				</>
@@ -118,7 +118,7 @@ describe('Popover handle', () => {
 					<div ref={row}>
 						<input aria-label="Query" onFocus={() => handle.showAt(row.current as Element)} />
 					</div>
-					<Popover nativeButton side="bottom" align="start" handle={handle} initialFocus={false}>
+					<Popover side="bottom" align="start" handle={handle} initialFocus={false}>
 						<p>Suggestions</p>
 					</Popover>
 				</>

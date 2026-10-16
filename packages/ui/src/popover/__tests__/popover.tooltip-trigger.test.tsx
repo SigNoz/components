@@ -47,7 +47,7 @@ describe('Popover with a tooltipped trigger', () => {
 							Download
 						</button>
 					</Tooltip>
-					<Popover nativeButton side="bottom" align="end" aria-label="Export" handle={menu}>
+					<Popover side="bottom" align="end" aria-label="Export" handle={menu}>
 						<p>Formats</p>
 					</Popover>
 				</>

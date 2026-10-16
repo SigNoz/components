@@ -93,7 +93,7 @@ describe('Popover interaction', () => {
 					<button type="button" onClick={() => handle.showAt({ x: 40, y: 40 }, 'from state')}>
 						Elsewhere
 					</button>
-					<Popover nativeButton side="bottom" align="start" handle={handle}>
+					<Popover side="bottom" align="start" handle={handle}>
 						{(payload) => <p>{payload}</p>}
 					</Popover>
 				</>
