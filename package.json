@@ -23,7 +23,7 @@
 	"dependencies": {
 		"@signozhq/design-tokens": "2.3.0",
 		"@signozhq/icons": "0.4.0",
-		"@tanstack/react-virtual": "^3.14.8"
+		"@tanstack/react-virtual": "^3.14.15"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "21.2.3",
