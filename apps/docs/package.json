@@ -46,7 +46,7 @@
 		"react-syntax-highlighter": "^16.1.1",
 		"remark-gfm": "^4.0.1",
 		"serve": "^14.2.1",
-		"storybook": "^10.6.1",
+		"storybook": "^10.6.2",
 		"storybook-addon-pseudo-states": "~10.6.1",
 		"vite": "8.3.3",
 		"vitest": "^5.0.3"
