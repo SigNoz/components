@@ -24,23 +24,57 @@ export interface ColoredVariantProps {
 	 * The possible colors for this variant.
 	 */
 	color: ColorType;
+	/**
+	 * Only the ghost variant plays a glow while loading, so only `ghost` takes this prop.
+	 */
+	noLoadingEffect?: never;
 }
 
 /**
- * The variants that only exist in the secondary treatment.
+ * The variants that only exist in the secondary treatment. `ghost` is secondary only too, but it
+ * has a loading glow of its own to switch off, so it is {@link GhostVariantProps}.
  */
 export interface SecondaryOnlyVariantProps {
 	/**
-	 * The variant of outlined/ghost/dashed only support one type of color.
+	 * The variant of outlined/dashed only support one type of color.
 	 */
-	variant: 'outlined' | 'ghost' | 'dashed';
+	variant: 'outlined' | 'dashed';
 	/**
 	 * The possible colors for this variant.
 	 */
 	color: 'secondary';
+	/**
+	 * Only the ghost variant plays a glow while loading, so only `ghost` takes this prop.
+	 */
+	noLoadingEffect?: never;
 }
 
-export type VariantColorType = ColoredVariantProps | SecondaryOnlyVariantProps;
+/**
+ * The ghost variant: secondary only, and the one variant that plays a glow behind its label while
+ * loading.
+ */
+export interface GhostVariantProps {
+	/**
+	 * The ghost variant only supports one type of color.
+	 */
+	variant: 'ghost';
+	/**
+	 * The possible colors for this variant.
+	 */
+	color: 'secondary';
+	/**
+	 * When `true`, turns off the glow that plays behind the label while `loading` is true. The
+	 * spinner, `aria-busy` and `loadingTooltip` stay as they are.
+	 *
+	 * @note For a list where many ghost buttons load at once. One glow per row is noise, the
+	 * spinners already say the rows are busy.
+	 *
+	 * @default false
+	 */
+	noLoadingEffect?: boolean;
+}
+
+export type VariantColorType = ColoredVariantProps | SecondaryOnlyVariantProps | GhostVariantProps;
 
 /**
  * `disabled` and `disabledTooltip` travel together, but the pairing is enforced by

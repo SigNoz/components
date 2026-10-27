@@ -304,7 +304,7 @@
 			color: var(--button-variant-ghost-hover-color, var(--button-secondary-ghost-label-hover));
 		}
 
-		&[aria-busy="true"]::before {
+		&[aria-busy="true"]:not([data-no-loading-effect="true"])::before {
 			opacity: var(--button-ghost-glow-loading-opacity, 1);
 			animation-play-state: running;
 		}

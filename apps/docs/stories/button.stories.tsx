@@ -128,9 +128,10 @@ export const Default: Story = {
 				break;
 		}
 
-		// outlined/dashed/ghost only accept `secondary`, so the free color control is clamped here.
-		// `icon` is dropped because this playground drives the prefix/suffix slots instead.
-		const { variant, color, icon: _icon, ...rest } = args;
+		// outlined/dashed/ghost only accept `secondary`, so the free color control is clamped here,
+		// and `noLoadingEffect` only reaches a ghost. `icon` is dropped because this playground drives
+		// the prefix/suffix slots instead.
+		const { variant, color, icon: _icon, noLoadingEffect, ...rest } = args;
 
 		return (
 			<Button
@@ -138,7 +139,7 @@ export const Default: Story = {
 				prefix={prefix}
 				suffix={suffix}
 				{...rest}
-				{...resolveVariantColor(variant, color)}
+				{...resolveVariantColor(variant, color, noLoadingEffect)}
 			>
 				Click Me
 			</Button>
@@ -343,6 +344,16 @@ export const ButtonShowcase: Story = {
 				FORCED_TOOLTIPS.length,
 			),
 		);
+
+		// The ghost glow is the button's `::before`, so its opacity is what tells the pair apart.
+		const glow = canvas.getByTestId('ghost-loading-glow');
+		const quiet = canvas.getByTestId('ghost-loading-no-effect');
+		await expect(glow).not.toHaveAttribute('data-no-loading-effect');
+		await expect(quiet).toHaveAttribute('data-no-loading-effect', 'true');
+		await waitFor(() => {
+			expect(getComputedStyle(glow, '::before').opacity).toBe('1');
+			expect(getComputedStyle(quiet, '::before').opacity).toBe('0');
+		});
 	},
 	// The dashed border marches on hover, the ghost glow shimmers while loading and the spinner never
 	// stops. Chromatic's own `disableAnimations` settles all three for the snapshot; the toolbar's
@@ -584,6 +595,48 @@ export const ButtonShowcase: Story = {
 						</Typography>
 					</div>
 				</div>
+				<div className="story-section">
+					<Typography size="base" weight="semibold">
+						Ghost loading effect
+					</Typography>
+					<Typography size="sm">
+						A <code>ghost</code> button plays a glow behind its label while it loads.{' '}
+						<code>noLoadingEffect</code> turns the glow off and keeps the spinner,{' '}
+						<code>aria-busy</code> and <code>loadingTooltip</code>, for a list where every row loads
+						at once. Only <code>ghost</code> takes the prop.
+					</Typography>
+					<div className={`${styles.matrix} ${styles.marginTopMedium}`} style={matrixStyle(1)}>
+						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							default
+						</Typography>
+						<Button
+							variant={ButtonVariant.Ghost}
+							color={ButtonColor.Secondary}
+							size={ButtonSize.MD}
+							loading
+							loadingTooltip={LOADING_REASON}
+							prefix={<Star />}
+							testId="ghost-loading-glow"
+						>
+							Saving view
+						</Button>
+						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							noLoadingEffect
+						</Typography>
+						<Button
+							variant={ButtonVariant.Ghost}
+							color={ButtonColor.Secondary}
+							size={ButtonSize.MD}
+							loading
+							loadingTooltip={LOADING_REASON}
+							noLoadingEffect
+							prefix={<Star />}
+							testId="ghost-loading-no-effect"
+						>
+							Saving view
+						</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	),
@@ -635,6 +688,7 @@ export const LoadingOnClick: Story = {
 	render: ({
 		variant,
 		color,
+		noLoadingEffect,
 		loading: _loading,
 		onClick: _onClick,
 		icon: _icon,
@@ -655,14 +709,14 @@ export const LoadingOnClick: Story = {
 				<div className={`story-row-lg ${styles.marginTopMedium}`}>
 					<LoadingOnClickButton
 						{...args}
-						{...resolveVariantColor(variant, color)}
+						{...resolveVariantColor(variant, color, noLoadingEffect)}
 						testId="loading-on-click-button"
 					>
 						Save changes
 					</LoadingOnClickButton>
 					<LoadingOnClickButton
 						{...args}
-						{...resolveVariantColor(variant, color)}
+						{...resolveVariantColor(variant, color, noLoadingEffect)}
 						prefix={<Star />}
 						suffix={<Check />}
 						testId="loading-on-click-button-with-affixes"
@@ -671,7 +725,7 @@ export const LoadingOnClick: Story = {
 					</LoadingOnClickButton>
 					<LoadingOnClickButton
 						{...args}
-						{...resolveVariantColor(variant, color)}
+						{...resolveVariantColor(variant, color, noLoadingEffect)}
 						icon
 						aria-label="Loading icon only"
 						testId="loading-on-click-icon-button"

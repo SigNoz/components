@@ -29,6 +29,26 @@ describe('Button loadingTooltip', () => {
 		expect(await screen.findByRole('tooltip')).toHaveTextContent(BUSY);
 	});
 
+	it('still opens on a ghost button that turned its glow off', async () => {
+		const user = userEvent.setup();
+		render(
+			<Button
+				size="md"
+				variant="ghost"
+				color="secondary"
+				loading
+				loadingTooltip={BUSY}
+				noLoadingEffect
+			>
+				Delete alert
+			</Button>,
+		);
+
+		await user.hover(screen.getByRole('button'));
+
+		expect(await screen.findByRole('tooltip')).toHaveTextContent(BUSY);
+	});
+
 	it('says nothing while the button is idle', async () => {
 		const user = userEvent.setup();
 		render(

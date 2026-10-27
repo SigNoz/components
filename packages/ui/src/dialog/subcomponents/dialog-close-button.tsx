@@ -26,6 +26,7 @@ export type DialogCloseButtonProps = Omit<
 	| 'color'
 	| 'disabled'
 	| 'disabledTooltip'
+	| 'noLoadingEffect'
 > &
 	ButtonStyleProps & {
 		/**

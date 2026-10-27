@@ -181,7 +181,14 @@ export type PaginationLinkProps = {
 	disabledTooltip?: React.ReactNode;
 } & Omit<
 	ButtonProps,
-	'variant' | 'size' | 'color' | 'children' | 'disabled' | 'disabledTooltip' | 'icon'
+	| 'variant'
+	| 'size'
+	| 'color'
+	| 'children'
+	| 'disabled'
+	| 'disabledTooltip'
+	| 'icon'
+	| 'noLoadingEffect'
 > &
 	ButtonStyleProps;
 

@@ -38,6 +38,18 @@ exports[`Button type error messages > prints a message that names the constraint
   "variant and color > both are required > \`variant\` has no default": "TS2322: Type '{ children: string; size: "md"; color: "primary"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
     Type '{ children: string; size: "md"; color: "primary"; }' is not assignable to type '(IntrinsicAttributes & ButtonBaseProps & ColoredVariantProps & TextButtonProps & Record<never, never> & RefAttributes<...>) | (IntrinsicAttributes & ... 4 more ... & RefAttributes<...>)'.
       Property 'variant' is missing in type '{ children: string; size: "md"; color: "primary"; }' but required in type 'ColoredVariantProps'.",
+  "variant and color > every other variant rejects noLoadingEffect > \`dashed\` has no loading glow to turn off": "TS2322: Type '{ children: string; size: "md"; variant: "dashed"; color: "secondary"; noLoadingEffect: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'noLoadingEffect' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "variant and color > every other variant rejects noLoadingEffect > \`link\` has no loading glow to turn off": "TS2322: Type '{ children: string; size: "md"; variant: "link"; color: "primary"; noLoadingEffect: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'noLoadingEffect' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "variant and color > every other variant rejects noLoadingEffect > \`outlined\` has no loading glow to turn off": "TS2322: Type '{ children: string; size: "md"; variant: "outlined"; color: "secondary"; noLoadingEffect: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'noLoadingEffect' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "variant and color > every other variant rejects noLoadingEffect > \`solid\` has no loading glow to turn off": "TS2322: Type '{ children: string; size: "md"; variant: "solid"; color: "primary"; noLoadingEffect: true; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'noLoadingEffect' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
   "variant and color > outlined, ghost and dashed reject every other color > \`dashed\` only has a secondary treatment": "TS2322: Type '{ children: string; size: "md"; variant: "dashed"; color: "warning"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
     Types of property 'color' are incompatible.
       Type '"warning"' is not assignable to type '"secondary"'.",
@@ -47,6 +59,6 @@ exports[`Button type error messages > prints a message that names the constraint
   "variant and color > outlined, ghost and dashed reject every other color > \`outlined\` only has a secondary treatment": "TS2322: Type '{ children: string; size: "md"; variant: "outlined"; color: "primary"; }' is not assignable to type 'IntrinsicAttributes & (ButtonProps & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
     Types of property 'color' are incompatible.
       Type '"primary"' is not assignable to type '"secondary"'.",
-  "variant and color > rejects a variant outside the set > \`elevated\` is not a ButtonVariant": "TS2322: Type '"elevated"' is not assignable to type '"link" | "solid" | "outlined" | "ghost" | "dashed"'.",
+  "variant and color > rejects a variant outside the set > \`elevated\` is not a ButtonVariant": "TS2322: Type '"elevated"' is not assignable to type '"link" | "solid" | "outlined" | "dashed" | "ghost"'.",
 }
 `;

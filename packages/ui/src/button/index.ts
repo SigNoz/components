@@ -235,6 +235,7 @@ export type {
 	ColoredVariantProps,
 	ColorType,
 	DisableType,
+	GhostVariantProps,
 	IconButtonProps,
 	IconPrefixSuffixType,
 	SecondaryOnlyVariantProps,
