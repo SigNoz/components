@@ -109,16 +109,19 @@ function groupTokensByGroup(tokens: TokenData[]): Map<string, TokenData[]> {
 
 	for (const token of tokens) {
 		const group = token.group || 'other';
-		if (!grouped.has(group)) {
-			grouped.set(group, []);
+		const groupTokens = grouped.get(group);
+		if (groupTokens) {
+			groupTokens.push(token);
+		} else {
+			grouped.set(group, [token]);
 		}
-		grouped.get(group)!.push(token);
 	}
 
 	const sortedGroups = new Map<string, TokenData[]>();
 	for (const group of GROUPS_ORDER) {
-		if (grouped.has(group)) {
-			sortedGroups.set(group, grouped.get(group)!);
+		const groupTokens = grouped.get(group);
+		if (groupTokens) {
+			sortedGroups.set(group, groupTokens);
 		}
 	}
 	for (const [group, tokens] of grouped) {

@@ -148,8 +148,8 @@ export const KeyboardShortcuts: Story = {
 						<div key={label} className={styles.shortcutRow}>
 							<Typography size="sm">{label}</Typography>
 							<div className={`story-row ${styles.keysContainer}`}>
-								{keys.map((key, i) => (
-									<Kbd key={i}>{key}</Kbd>
+								{keys.map((key) => (
+									<Kbd key={key}>{key}</Kbd>
 								))}
 							</div>
 						</div>
@@ -168,8 +168,8 @@ export const KeyboardShortcuts: Story = {
 						<div key={label} className={styles.shortcutRow}>
 							<Typography size="sm">{label}</Typography>
 							<div className={`story-row ${styles.keysContainer}`}>
-								{keys.map((key, i) => (
-									<Kbd key={i}>{key}</Kbd>
+								{keys.map((key) => (
+									<Kbd key={key}>{key}</Kbd>
 								))}
 							</div>
 						</div>

@@ -8,15 +8,18 @@ type PaginationProps = ComponentProps<typeof Pagination>;
 
 function ControlledPagination({
 	initialPage,
+	current,
 	...args
 }: PaginationProps & { initialPage: number }): JSX.Element {
-	const [currentPage, setCurrentPage] = useState(args.current ?? initialPage);
+	const [currentPage, setCurrentPage] = useState(current ?? initialPage);
+	const [syncedCurrent, setSyncedCurrent] = useState(current);
 
-	useEffect(() => {
-		if (args.current !== undefined) {
-			setCurrentPage(args.current);
+	if (current !== syncedCurrent) {
+		setSyncedCurrent(current);
+		if (current !== undefined) {
+			setCurrentPage(current);
 		}
-	}, [args.current]);
+	}
 
 	return (
 		<Pagination
@@ -285,13 +288,14 @@ export const WithPageChangeHandler: Story = {
 		total: 50,
 	},
 	render: (args) => {
-		const [currentPage, setCurrentPage] = useState(args.current ?? 1);
+		const { current: argsCurrent } = args;
+		const [currentPage, setCurrentPage] = useState(argsCurrent ?? 1);
 
 		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrentPage(args.current);
+			if (argsCurrent !== undefined) {
+				setCurrentPage(argsCurrent);
 			}
-		}, [args.current]);
+		}, [argsCurrent]);
 
 		return (
 			<Pagination
@@ -342,20 +346,21 @@ export const WithPageSizeSelector: Story = {
 		enablePageSize: true,
 	},
 	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-		const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
+		const { current: argsCurrent, pageSize: argsPageSize } = args;
+		const [current, setCurrent] = useState(argsCurrent ?? 1);
+		const [pageSize, setPageSize] = useState(argsPageSize ?? 10);
 
 		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
+			if (argsCurrent !== undefined) {
+				setCurrent(argsCurrent);
 			}
-		}, [args.current]);
+		}, [argsCurrent]);
 
 		useEffect(() => {
-			if (args.pageSize !== undefined) {
-				setPageSize(args.pageSize);
+			if (argsPageSize !== undefined) {
+				setPageSize(argsPageSize);
 			}
-		}, [args.pageSize]);
+		}, [argsPageSize]);
 
 		return (
 			<Pagination
@@ -380,20 +385,21 @@ export const WithPageSizeSelectorLeft: Story = {
 		pageSizePosition: 'left',
 	},
 	render: (args) => {
-		const [current, setCurrent] = useState(args.current ?? 1);
-		const [pageSize, setPageSize] = useState(args.pageSize ?? 10);
+		const { current: argsCurrent, pageSize: argsPageSize } = args;
+		const [current, setCurrent] = useState(argsCurrent ?? 1);
+		const [pageSize, setPageSize] = useState(argsPageSize ?? 10);
 
 		useEffect(() => {
-			if (args.current !== undefined) {
-				setCurrent(args.current);
+			if (argsCurrent !== undefined) {
+				setCurrent(argsCurrent);
 			}
-		}, [args.current]);
+		}, [argsCurrent]);
 
 		useEffect(() => {
-			if (args.pageSize !== undefined) {
-				setPageSize(args.pageSize);
+			if (argsPageSize !== undefined) {
+				setPageSize(argsPageSize);
 			}
-		}, [args.pageSize]);
+		}, [argsPageSize]);
 
 		return (
 			<Pagination

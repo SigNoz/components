@@ -246,6 +246,7 @@ function labelledItems(affix: Affix, link: boolean): ButtonGroupItemType[] {
 				label,
 				...(affix === 'prefix' || affix === 'both' ? { prefix: icon } : {}),
 				...(affix === 'suffix' || affix === 'both' ? { suffix: <ChevronDown /> } : {}),
+				// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
 				...(link ? { render: <a href={`#${value}`} /> } : { onClick: noop }),
 			}) as ButtonGroupItemType,
 	);
