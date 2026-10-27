@@ -115,6 +115,24 @@ wait is long enough that the user deserves to know what is happening.
 </Button>
 ```
 
+A `ghost` button also plays a glow behind its label while it loads. The glow suits a single
+button, not a list where every row loads at once, so `noLoadingEffect` turns it off and keeps the
+spinner, `aria-busy` and `loadingTooltip`. Only `variant="ghost"` accepts the prop: the other
+variants have no glow to turn off, so passing it there is a type error.
+
+```tsx
+<Button
+	variant="ghost"
+	color="secondary"
+	size="md"
+	loading={isCheckingPermissions}
+	noLoadingEffect
+	prefix={<Star />}
+>
+	Errors by service
+</Button>
+```
+
 ## Text overflow
 
 `textOverflow` decides what happens to the label when it does not fit the width of the button.

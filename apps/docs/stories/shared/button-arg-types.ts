@@ -37,13 +37,19 @@ export function colorsForVariant(variant: VariantType): ColorType[] {
 /**
  * Clamps a variant/color pair to a combination the `Button` types allow, so stories with a free
  * color control keep rendering something valid when the variant only supports `secondary`.
+ * `noLoadingEffect` only exists on `ghost`, so every other variant drops it.
  */
 export function resolveVariantColor(
 	variant: VariantType = ButtonVariant.Solid,
 	color: ColorType = ButtonColor.Primary,
+	noLoadingEffect?: boolean,
 ): VariantColorType {
+	if (variant === ButtonVariant.Ghost) {
+		return { variant: ButtonVariant.Ghost, color: ButtonColor.Secondary, noLoadingEffect };
+	}
+
 	if (SECONDARY_ONLY_VARIANTS.includes(variant)) {
-		return { variant: variant as 'outlined' | 'dashed' | 'ghost', color: ButtonColor.Secondary };
+		return { variant: variant as 'outlined' | 'dashed', color: ButtonColor.Secondary };
 	}
 
 	return { variant: variant as 'solid' | 'link', color };
@@ -145,6 +151,16 @@ export const buttonArgTypes: Meta<typeof Button>['argTypes'] = {
 		control: 'boolean',
 		description:
 			'Cross-fades a spinner over the `prefix` slot and stops the button from responding to clicks and keyboard activation. The label and `suffix` stay visible. Suppresses `disabledTooltip` even when `disabled` is true, `loadingTooltip` takes its place.',
+		table: {
+			category: 'State',
+			type: { summary: 'boolean' },
+			defaultValue: { summary: 'false' },
+		},
+	},
+	noLoadingEffect: {
+		control: 'boolean',
+		description:
+			'Turns off the glow a `ghost` button plays behind its label while `loading` is true. The spinner, `aria-busy` and `loadingTooltip` stay. Only `variant="ghost"` accepts it, the other variants have no glow to turn off.',
 		table: {
 			category: 'State',
 			type: { summary: 'boolean' },

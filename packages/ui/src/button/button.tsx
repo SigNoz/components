@@ -89,6 +89,7 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 		disabledTooltip,
 		loading = false,
 		loadingTooltip,
+		noLoadingEffect = false,
 		children,
 		testId,
 		onDoubleClick,
@@ -169,6 +170,7 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 			data-icon={icon ?? false}
 			data-text-overflow={textOverflow}
 			data-truncated={isLabelOverflowing || undefined}
+			data-no-loading-effect={noLoadingEffect || undefined}
 			className={cn(styles['button'], className)}
 			disabled={disabled || loading}
 			focusableWhenDisabled
@@ -286,6 +288,7 @@ const PublicButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
  * | `data-icon` | `"true"` in icon mode, else `"false"` |
  * | `data-text-overflow` | mirrors `textOverflow`, `ellipsis` by default |
  * | `data-truncated` | present only while the label does not fit |
+ * | `data-no-loading-effect` | `"true"` only for a ghost button with `noLoadingEffect` |
  *
  * | `data-slot` | rendered |
  * |---|---|

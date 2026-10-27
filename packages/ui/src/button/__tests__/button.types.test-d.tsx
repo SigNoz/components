@@ -147,6 +147,46 @@ describe('variant and color', () => {
 			</Button>,
 		);
 	});
+
+	test('ghost accepts noLoadingEffect', () => {
+		assertType(
+			<Button size="md" variant="ghost" color="secondary" loading noLoadingEffect>
+				Label
+			</Button>,
+		);
+		assertType(
+			<Button size="md" variant="ghost" color="secondary" noLoadingEffect={false}>
+				Label
+			</Button>,
+		);
+	});
+
+	test('every other variant rejects noLoadingEffect', () => {
+		assertType(
+			// @ts-expect-error - `solid` has no loading glow to turn off
+			<Button size="md" variant="solid" color="primary" noLoadingEffect>
+				Label
+			</Button>,
+		);
+		assertType(
+			// @ts-expect-error - `link` has no loading glow to turn off
+			<Button size="md" variant="link" color="primary" noLoadingEffect>
+				Label
+			</Button>,
+		);
+		assertType(
+			// @ts-expect-error - `outlined` has no loading glow to turn off
+			<Button size="md" variant="outlined" color="secondary" noLoadingEffect>
+				Label
+			</Button>,
+		);
+		assertType(
+			// @ts-expect-error - `dashed` has no loading glow to turn off
+			<Button size="md" variant="dashed" color="secondary" noLoadingEffect>
+				Label
+			</Button>,
+		);
+	});
 });
 
 describe('disabled and disabledTooltip', () => {

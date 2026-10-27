@@ -234,3 +234,58 @@ describe('Button loading activation', () => {
 		expect(button).toHaveFocus();
 	});
 });
+
+describe('Button ghost loading glow', () => {
+	it('exposes noLoadingEffect as data-no-loading-effect, next to aria-busy', () => {
+		render(
+			<Button size="md" variant="ghost" color="secondary" loading noLoadingEffect>
+				Saving…
+			</Button>,
+		);
+
+		const button = screen.getByRole('button');
+		expect(button).toHaveAttribute('data-no-loading-effect', 'true');
+		expect(button).toHaveAttribute('aria-busy', 'true');
+		expect(button).toHaveAttribute('aria-disabled', 'true');
+	});
+
+	it('leaves the attribute off by default, so the glow stays on', () => {
+		render(
+			<Button size="md" variant="ghost" color="secondary" loading>
+				Saving…
+			</Button>,
+		);
+
+		expect(screen.getByRole('button')).not.toHaveAttribute('data-no-loading-effect');
+	});
+
+	it('drops the attribute as soon as the prop goes', () => {
+		const { rerender } = render(
+			<Button size="md" variant="ghost" color="secondary" loading noLoadingEffect>
+				Saving…
+			</Button>,
+		);
+
+		rerender(
+			<Button size="md" variant="ghost" color="secondary" loading noLoadingEffect={false}>
+				Saving…
+			</Button>,
+		);
+
+		expect(screen.getByRole('button')).not.toHaveAttribute('data-no-loading-effect');
+	});
+
+	it('keeps the spinner running without the glow', () => {
+		render(
+			<Button size="md" variant="ghost" color="secondary" loading noLoadingEffect>
+				Saving…
+			</Button>,
+		);
+		const spinner = document.querySelector('[data-slot="spinner"]');
+		if (!spinner) {
+			throw new Error('No spinner rendered');
+		}
+
+		expect(getComputedStyle(spinner).animationPlayState).toBe('running');
+	});
+});
