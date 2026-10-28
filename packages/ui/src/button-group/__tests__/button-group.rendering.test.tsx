@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { createRef } from 'react';
+import { type CSSProperties, createRef } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ButtonGroup } from '../button-group.js';
 import { BASE, ITEMS, noop, silenceConsoleError } from './button-group.test-utils.js';
@@ -166,5 +166,51 @@ describe('ButtonGroup rendering', () => {
 		render(<ButtonGroup {...BASE} items={ITEMS} ref={ref} />);
 
 		expect(ref.current).toBe(screen.getByRole('group'));
+	});
+});
+
+/**
+ * The package tokens are not loaded here, so the frame declares the ones the sizes read, with the
+ * numbers `@signozhq/design-tokens` ships.
+ */
+const TEXT_TOKENS = {
+	'--spacing-2': '4px',
+	'--spacing-4': '8px',
+	'--spacing-6': '12px',
+	'--label-small-500-font-size': '11px',
+	'--label-small-500-line-height': '1',
+	'--label-base-500-font-size': '13px',
+	'--label-base-500-line-height': '1',
+} as CSSProperties;
+
+describe('ButtonGroup member size', () => {
+	it.each([
+		['sm', 24],
+		['md', 32],
+	] as const)('keeps the height of %s', (size, height) => {
+		render(
+			<div style={TEXT_TOKENS}>
+				<ButtonGroup {...BASE} size={size} items={ITEMS} />
+			</div>,
+		);
+
+		expect(screen.getByRole('button', { name: 'Week' }).getBoundingClientRect().height).toBe(
+			height,
+		);
+	});
+
+	it('clips the label on the inline axis only, so descenders still paint', () => {
+		render(<ButtonGroup {...BASE} items={ITEMS} />);
+
+		const label = screen
+			.getByRole('button', { name: 'Week' })
+			.querySelector('[data-slot="button-group-item-label"]');
+		if (!label) {
+			throw new Error('No label rendered');
+		}
+		const style = getComputedStyle(label);
+
+		expect(style.overflowX).toBe('clip');
+		expect(style.overflowY).toBe('visible');
 	});
 });

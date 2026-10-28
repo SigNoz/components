@@ -37,8 +37,8 @@ beforeEach(async () => {
 	tokens.textContent = `:root {
 		--spacing-4: 8px;
 		--spacing-10: 20px;
-		--line-height-18: 18px;
-		--periscope-font-size-small: 11px;
+		--label-small-500-font-size: 11px;
+		--label-small-500-line-height: 1;
 		--pill-transition-duration: 0s;
 		--pill-danger-background: rgb(200, 40, 40);
 		--pill-danger-border: rgb(200, 40, 40);
@@ -191,6 +191,8 @@ describe('Pill spacing tokens', () => {
 					env:prod
 				</Pill.Closeable>
 				<Pill
+					variant="outlined"
+					color="secondary"
 					testId="one"
 					style={
 						{
@@ -209,5 +211,36 @@ describe('Pill spacing tokens', () => {
 		expect(endPadding(screen.getByTestId('chip'))).toBe('6px');
 		expect(getComputedStyle(one).letterSpacing).toBe('2px');
 		expect(getComputedStyle(one).paddingInlineStart).toBe('5px');
+	});
+});
+
+describe('Pill text style', () => {
+	it.each(['none', 'capitalize', 'lowercase'] as const)(
+		'sets text-transform %s from the textTransform prop',
+		(textTransform) => {
+			render(
+				<Pill variant="outlined" color="secondary" textTransform={textTransform} testId="pill">
+					env:prod
+				</Pill>,
+			);
+
+			expect(getComputedStyle(screen.getByTestId('pill')).textTransform).toBe(textTransform);
+		},
+	);
+
+	it('keeps its 20px height', () => {
+		render(
+			<>
+				<Pill variant="outlined" color="secondary" testId="pill">
+					env:prod
+				</Pill>
+				<Pill.Closeable onClose={vi.fn()} testId="chip">
+					env:prod
+				</Pill.Closeable>
+			</>,
+		);
+
+		expect(screen.getByTestId('pill').getBoundingClientRect().height).toBe(20);
+		expect(screen.getByTestId('chip').getBoundingClientRect().height).toBe(20);
 	});
 });

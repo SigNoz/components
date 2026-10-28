@@ -3,15 +3,17 @@
 	box-sizing: border-box;
 	border-radius: var(--badge-border-radius, var(--radius-round));
 	border: var(--badge-border-width, 1px) solid var(--badge-border-color, var(--badge-internal-border-color, transparent));
-	// No block padding, so the 18px line box fills the 20px height inside the border. A shorter
-	// line box clips descenders at the label's `overflow: hidden`.
+	// No block padding: the fixed height centres the line box, and the label clips on the inline
+	// axis only, so descenders and accents past the line box still paint.
 	padding: var(--badge-padding, 0 var(--spacing-4));
-	font-size: var(--badge-font-size, var(--periscope-font-size-small));
-	line-height: var(--badge-line-height, var(--line-height-18));
-	// Per case, see the `data-text-transform` blocks. The fallback matches the uppercase default.
-	letter-spacing: var(--badge-letter-spacing, var(--badge-internal-letter-spacing, 0.04em));
-	font-weight: var(--badge-font-weight, var(--font-weight-medium));
-	text-transform: var(--badge-internal-text-transform, uppercase);
+	// Per case, see the `data-text-transform` blocks.
+	font-family: var(--badge-font-family, var(--badge-internal-font-family));
+	font-size: var(--badge-font-size, var(--badge-internal-font-size));
+	font-weight: var(--badge-font-weight, var(--badge-internal-font-weight));
+	line-height: var(--badge-line-height, var(--badge-internal-line-height));
+	letter-spacing: var(--badge-letter-spacing, var(--badge-internal-letter-spacing));
+	text-transform: var(--badge-internal-text-transform);
+	font-feature-settings: 'ss01' 1;
 	white-space: var(--badge-white-space, nowrap);
 	height: var(--badge-height, var(--spacing-10));
 	width: var(--badge-width, var(--badge-internal-width, fit-content));
@@ -96,24 +98,32 @@
 		--badge-internal-outlined-foreground: var(--badge-highlight-danger-outlined-color, var(--badge-highlight-danger-outlined-label));
 	}
 
-	&[data-text-transform='none'] {
+	&[data-text-transform='none'],
+	&[data-text-transform='capitalize'],
+	&[data-text-transform='lowercase'] {
+		--badge-internal-font-family: var(--label-small-500-font-family);
+		--badge-internal-font-size: var(--label-small-500-font-size);
+		--badge-internal-font-weight: var(--label-small-500-font-weight);
+		--badge-internal-line-height: var(--label-small-500-line-height);
+		--badge-internal-letter-spacing: var(--label-small-500-letter-spacing);
 		--badge-internal-text-transform: none;
-		--badge-internal-letter-spacing: 0;
 	}
 
 	&[data-text-transform='capitalize'] {
 		--badge-internal-text-transform: capitalize;
-		--badge-internal-letter-spacing: 0;
 	}
 
 	&[data-text-transform='lowercase'] {
 		--badge-internal-text-transform: lowercase;
-		--badge-internal-letter-spacing: 0;
 	}
 
 	&[data-text-transform='uppercase'] {
-		--badge-internal-text-transform: uppercase;
-		--badge-internal-letter-spacing: 0.04em;
+		--badge-internal-font-family: var(--uppercase-small-500-font-family);
+		--badge-internal-font-size: var(--uppercase-small-500-font-size);
+		--badge-internal-font-weight: var(--uppercase-small-500-font-weight);
+		--badge-internal-line-height: var(--uppercase-small-500-line-height);
+		--badge-internal-letter-spacing: var(--uppercase-small-500-letter-spacing);
+		--badge-internal-text-transform: var(--uppercase-small-500-text-transform);
 	}
 
 	&[data-variant='outlined'] {
@@ -130,8 +140,8 @@
 		gap: var(--badge-gap, var(--spacing-2));
 	}
 
-	// Flex, so the slot is exactly the icon's height. As an inline box the icon sits on the 18px
-	// line's baseline and rides above center.
+	// Flex, so the slot is exactly the icon's height. As an inline box the icon sits on the line's
+	// baseline and rides above center.
 	& > [data-slot$='-prefix'],
 	& > [data-slot$='-suffix'] {
 		display: var(--badge-affix-slot-display, flex);
@@ -167,7 +177,7 @@
 	&__label {
 		display: var(--badge-label-display, block);
 		min-width: var(--badge-label-min-width, 0);
-		overflow: var(--badge-label-overflow, hidden);
+		overflow: var(--badge-label-overflow, clip visible);
 		white-space: var(--badge-label-white-space, nowrap);
 
 		&-tooltip {

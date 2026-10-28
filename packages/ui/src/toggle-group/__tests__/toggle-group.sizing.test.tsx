@@ -22,6 +22,8 @@ const TOKENS = {
 	'--spacing-16': '32px',
 	'--toggle-group-border': 'rgb(1, 2, 3)',
 	'--toggle-group-focus-ring': 'rgb(4, 5, 6)',
+	'--label-small-400-font-size': '11px',
+	'--label-small-400-line-height': '1',
 } as CSSProperties;
 
 const ITEMS: ToggleGroupItemProps[] = [
@@ -175,5 +177,29 @@ describe('ToggleGroup sizing', () => {
 		);
 
 		expect(height(screen.getByTestId('bar'))).toBe(32);
+	});
+});
+
+describe('ToggleGroup label clipping', () => {
+	it('clips the label on the inline axis only, so descenders still paint', () => {
+		renderInFrame(
+			<ToggleGroup
+				type="single"
+				variant="outlined"
+				color="secondary"
+				size="md"
+				testId="bar"
+				items={ITEMS}
+			/>,
+		);
+
+		const label = screen
+			.getByTestId('bar-button-list')
+			.querySelector('[data-slot="toggle-group-label"]') as HTMLElement;
+		const style = getComputedStyle(label);
+
+		expect(style.overflowX).toBe('clip');
+		expect(style.overflowY).toBe('visible');
+		expect(style.textOverflow).toBe('ellipsis');
 	});
 });

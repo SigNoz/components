@@ -2,8 +2,14 @@
 	display: var(--breadcrumb-root-display, flex);
 	flex-wrap: var(--breadcrumb-root-flex-wrap, wrap);
 	align-items: var(--breadcrumb-root-align-items, center);
-	font-size: var(--breadcrumb-root-font-size, var(--periscope-font-size-base, 13px));
-	line-height: var(--breadcrumb-root-line-height, var(--line-height-20, 20px));
+	font-family: var(--breadcrumb-root-font-family, var(--label-base-400-font-family));
+	font-size: var(--breadcrumb-root-font-size, var(--label-base-400-font-size));
+	font-weight: var(--breadcrumb-root-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--breadcrumb-root-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--breadcrumb-root-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--breadcrumb-root-text-transform, var(--label-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	color: var(--breadcrumb-root-color, var(--breadcrumb-label));
 }
 
@@ -11,7 +17,7 @@
 	display: var(--breadcrumb-list-display, flex);
 	flex-wrap: var(--breadcrumb-list-flex-wrap, wrap);
 	align-items: var(--breadcrumb-list-align-items, center);
-	gap: var(--breadcrumb-list-gap, var(--spacing-4, 8px));
+	gap: var(--breadcrumb-list-gap, var(--spacing-4));
 	list-style: var(--breadcrumb-list-list-style, none);
 	margin: var(--breadcrumb-list-margin, 0);
 	padding: var(--breadcrumb-list-padding, 0);
@@ -20,19 +26,21 @@
 .breadcrumb-item {
 	display: var(--breadcrumb-item-display, inline-flex);
 	align-items: var(--breadcrumb-item-align-items, center);
-	gap: var(--breadcrumb-item-gap, var(--spacing-3, 6px));
+	gap: var(--breadcrumb-item-gap, var(--spacing-3));
 }
 
 .breadcrumb-link {
 	display: var(--breadcrumb-link-display, inline-flex);
 	align-items: var(--breadcrumb-link-align-items, center);
-	gap: var(--breadcrumb-link-gap, var(--spacing-2, 4px));
+	gap: var(--breadcrumb-link-gap, var(--spacing-2));
 	color: var(--breadcrumb-link-color, var(--breadcrumb-label));
 	text-decoration: var(--breadcrumb-link-text-decoration, none);
 	transition: var(--breadcrumb-link-transition, color 0.15s ease-in-out, background-color 0.15s ease-in-out);
 	cursor: var(--breadcrumb-link-cursor, pointer);
 	border-radius: var(--breadcrumb-link-border-radius, calc(var(--radius) - 2px));
-	padding: var(--breadcrumb-link-padding, var(--spacing-2, 4px) var(--spacing-1, 2px));
+	box-sizing: var(--breadcrumb-link-box-sizing, border-box);
+	min-block-size: var(--breadcrumb-link-min-block-size, calc(var(--spacing-12) + var(--spacing-2)));
+	padding: var(--breadcrumb-link-padding, var(--spacing-2) var(--spacing-1));
 
 	&:hover {
 		color: var(--breadcrumb-link-hover-color, var(--breadcrumb-label-hover));
@@ -49,9 +57,10 @@
 .breadcrumb-page {
 	display: var(--breadcrumb-page-display, inline-flex);
 	align-items: var(--breadcrumb-page-align-items, center);
-	gap: var(--breadcrumb-page-gap, var(--spacing-2, 4px));
+	gap: var(--breadcrumb-page-gap, var(--spacing-2));
 	color: var(--breadcrumb-page-color, var(--breadcrumb-label));
-	font-weight: var(--breadcrumb-page-font-weight, 400);
+	min-block-size: var(--breadcrumb-page-min-block-size, var(--spacing-10));
+	font-weight: var(--breadcrumb-page-font-weight, var(--label-base-400-font-weight));
 	cursor: var(--breadcrumb-page-cursor, default);
 }
 
@@ -83,15 +92,21 @@
 	border: var(--breadcrumb-dropdown-border, none);
 	background-color: var(--breadcrumb-dropdown-background-color, transparent);
 	font: var(--breadcrumb-dropdown-font, inherit);
+	letter-spacing: var(--breadcrumb-dropdown-letter-spacing, inherit);
+	text-transform: var(--breadcrumb-dropdown-text-transform, inherit);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	display: var(--breadcrumb-dropdown-display, inline-flex);
 	align-items: var(--breadcrumb-dropdown-align-items, center);
-	gap: var(--breadcrumb-dropdown-gap, var(--spacing-2, 4px));
+	gap: var(--breadcrumb-dropdown-gap, var(--spacing-2));
 	color: var(--breadcrumb-dropdown-color, var(--breadcrumb-label));
 	cursor: var(--breadcrumb-dropdown-cursor, pointer);
 	transition: var(--breadcrumb-dropdown-transition, color 0.15s ease-in-out, background-color 0.15s ease-in-out);
 	border-radius: var(--breadcrumb-dropdown-border-radius, calc(var(--radius) - 2px));
-	padding: var(--breadcrumb-dropdown-padding, var(--spacing-2, 4px) var(--spacing-1, 2px));
+	box-sizing: var(--breadcrumb-dropdown-box-sizing, border-box);
+	min-block-size: var(--breadcrumb-dropdown-min-block-size, calc(var(--spacing-12) + var(--spacing-2)));
+	padding: var(--breadcrumb-dropdown-padding, var(--spacing-2) var(--spacing-1));
 
 	&:hover {
 		color: var(--breadcrumb-dropdown-hover-color, var(--breadcrumb-label-hover));

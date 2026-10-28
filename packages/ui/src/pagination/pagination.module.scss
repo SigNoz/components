@@ -1,6 +1,8 @@
 .pagination-root {
   display: flex;
   --button-height: var(--pagination-button-height, 2.25rem);
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &[data-align='start'] {
     justify-content: flex-start;
@@ -19,7 +21,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--pagination-content-gap, var(--spacing-5, 0.625rem));
+  gap: var(--pagination-content-gap, var(--spacing-5));
 }
 
 .pagination-item {
@@ -59,35 +61,53 @@
 .pagination-page-size {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3, 0.75rem);
+  gap: var(--spacing-3);
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &:first-child {
-    margin-right: var(--spacing-4, 1rem);
+    margin-right: var(--spacing-4);
   }
 
   &:last-child {
-    margin-left: var(--spacing-4, 1rem);
+    margin-left: var(--spacing-4);
   }
 }
 
 .pagination-page-size-label {
-  font-size: var(--text-sm, 0.875rem);
+  font-family: var(--pagination-page-size-label-font-family, var(--label-base-400-font-family));
+  font-size: var(--pagination-page-size-label-font-size, var(--label-base-400-font-size));
+  font-weight: var(--pagination-page-size-label-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--pagination-page-size-label-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(
+    --pagination-page-size-label-letter-spacing,
+    var(--label-base-400-letter-spacing)
+  );
+  text-transform: var(
+    --pagination-page-size-label-text-transform,
+    var(--label-base-400-text-transform)
+  );
   color: var(--secondary-foreground);
   white-space: nowrap;
 }
 
 .pagination-total {
-  font-size: var(--text-sm, 0.875rem);
+  font-family: var(--pagination-total-font-family, var(--label-base-400-font-family));
+  font-size: var(--pagination-total-font-size, var(--label-base-400-font-size));
+  font-weight: var(--pagination-total-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--pagination-total-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--pagination-total-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--pagination-total-text-transform, var(--label-base-400-text-transform));
   color: var(--secondary-foreground);
   white-space: nowrap;
   display: flex;
   align-items: center;
 
   &:first-child {
-    margin-right: var(--spacing-4, 1rem);
+    margin-right: var(--spacing-4);
   }
 
   &:last-child {
-    margin-left: var(--spacing-4, 1rem);
+    margin-left: var(--spacing-4);
   }
 }

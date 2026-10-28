@@ -16,9 +16,12 @@ beforeEach(() => {
 		--spacing-2: 4px;
 		--spacing-4: 8px;
 		--spacing-10: 20px;
-		--line-height-18: 18px;
-		--periscope-font-size-small: 11px;
-		--font-weight-medium: 500;
+		--uppercase-small-500-font-size: 11px;
+		--uppercase-small-500-font-weight: 500;
+		--uppercase-small-500-line-height: 1;
+		--label-small-500-font-size: 11px;
+		--label-small-500-font-weight: 500;
+		--label-small-500-line-height: 1;
 		--radius-round: 9999px;
 	}`;
 	document.head.append(tokens);
@@ -53,6 +56,35 @@ describe('Badge box', () => {
 		expect(style.paddingBlock).toBe('2px');
 		expect(style.paddingInline).toBe('6px');
 		expect(style.lineHeight).toBe('14px');
+	});
+});
+
+describe('Badge text style', () => {
+	it.each(['none', 'capitalize', 'lowercase'] as const)(
+		'sets text-transform to %s from the textTransform prop',
+		(textTransform) => {
+			render(
+				<Badge variant="solid" color="primary" textTransform={textTransform} testId="badge">
+					Firing
+				</Badge>,
+			);
+
+			expect(getComputedStyle(badge()).textTransform).toBe(textTransform);
+		},
+	);
+
+	it('keeps its 20px height and clips the label on the inline axis only', () => {
+		render(
+			<Badge variant="solid" color="primary" testId="badge">
+				Typography
+			</Badge>,
+		);
+
+		const style = getComputedStyle(label(badge()));
+
+		expect(badge().getBoundingClientRect().height).toBe(20);
+		expect(style.overflowX).toBe('clip');
+		expect(style.overflowY).toBe('visible');
 	});
 });
 

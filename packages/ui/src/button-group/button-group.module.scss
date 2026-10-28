@@ -2,6 +2,9 @@
 // name, never a semantic token directly, so a re-theme moves one component and nothing else. The
 // semantic tokens themselves live in `@signozhq/design-tokens`.
 .button-group {
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+
 	&[data-variant='outlined'][data-color='secondary'] {
 		--button-group-internal-background: var(--button-group-secondary-outlined-background);
 		--button-group-internal-background-hover: var(--button-group-secondary-outlined-background-hover);
@@ -31,8 +34,12 @@
 
 	&[data-size='sm'] {
 		--button-group-internal-height: var(--button-group-height, 24px);
-		--button-group-internal-font-size: var(--button-group-font-size, var(--periscope-font-size-small));
-		--button-group-internal-line-height: var(--button-group-line-height, 14px);
+		--button-group-internal-font-family: var(--button-group-font-family, var(--label-small-500-font-family));
+		--button-group-internal-font-size: var(--button-group-font-size, var(--label-small-500-font-size));
+		--button-group-internal-font-weight: var(--button-group-font-weight, var(--label-small-500-font-weight));
+		--button-group-internal-line-height: var(--button-group-line-height, var(--label-small-500-line-height));
+		--button-group-internal-letter-spacing: var(--button-group-text-spacing, var(--label-small-500-letter-spacing));
+		--button-group-internal-text-transform: var(--button-group-text-transform, var(--label-small-500-text-transform));
 		--button-group-internal-icon-size: var(--button-group-icon-size, 12px);
 		--button-group-internal-icon-only-size: var(--button-group-icon-only-size, 12px);
 		--button-group-internal-gap: var(--button-group-gap, var(--spacing-3));
@@ -42,8 +49,12 @@
 
 	&[data-size='md'] {
 		--button-group-internal-height: var(--button-group-height, 32px);
-		--button-group-internal-font-size: var(--button-group-font-size, var(--periscope-font-size-base));
-		--button-group-internal-line-height: var(--button-group-line-height, 16px);
+		--button-group-internal-font-family: var(--button-group-font-family, var(--label-base-500-font-family));
+		--button-group-internal-font-size: var(--button-group-font-size, var(--label-base-500-font-size));
+		--button-group-internal-font-weight: var(--button-group-font-weight, var(--label-base-500-font-weight));
+		--button-group-internal-line-height: var(--button-group-line-height, var(--label-base-500-line-height));
+		--button-group-internal-letter-spacing: var(--button-group-text-spacing, var(--label-base-500-letter-spacing));
+		--button-group-internal-text-transform: var(--button-group-text-transform, var(--label-base-500-text-transform));
 		--button-group-internal-icon-size: var(--button-group-icon-size, 12px);
 		--button-group-internal-icon-only-size: var(--button-group-icon-only-size, 12px);
 		// Same gap as `Button` at this size.
@@ -95,12 +106,14 @@
 		padding: var(--button-group-internal-padding);
 		max-width: var(--button-group-item-max-width, none);
 		white-space: var(--button-group-item-white-space, nowrap);
-		font-family: var(--button-group-font-family, inherit);
+		font-family: var(--button-group-internal-font-family);
 		font-size: var(--button-group-internal-font-size);
 		line-height: var(--button-group-internal-line-height);
 		font-variant-numeric: var(--button-group-font-variant-numeric, slashed-zero);
-		font-weight: var(--button-group-font-weight, var(--font-weight-medium));
-		letter-spacing: var(--button-group-text-spacing, -0.005em);
+		font-weight: var(--button-group-internal-font-weight);
+		letter-spacing: var(--button-group-internal-letter-spacing);
+		text-transform: var(--button-group-internal-text-transform);
+		font-feature-settings: 'ss01' 1;
 		text-decoration: var(--button-group-text-decoration, none);
 		border: var(--button-group-border-width, 1px) var(--button-group-border-style, solid) var(--button-group-internal-border);
 		border-radius: var(--button-group-item-border-radius, 0);
@@ -217,7 +230,7 @@
 		display: var(--button-group-label-display, block);
 		min-width: var(--button-group-label-min-width, 0);
 		max-inline-size: var(--button-group-label-max-inline-size, 120px);
-		overflow: var(--button-group-label-overflow, hidden);
+		overflow: var(--button-group-label-overflow, clip visible);
 		white-space: var(--button-group-label-white-space, nowrap);
 	}
 

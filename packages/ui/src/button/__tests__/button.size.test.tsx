@@ -15,6 +15,10 @@ beforeEach(() => {
 		--spacing-3: 6px;
 		--spacing-4: 8px;
 		--spacing-6: 12px;
+		--label-small-500-font-size: 11px;
+		--label-small-500-line-height: 1;
+		--label-base-500-font-size: 13px;
+		--label-base-500-line-height: 1;
 	}`;
 	document.head.append(tokens);
 });
@@ -90,6 +94,34 @@ describe('Button height', () => {
 		);
 
 		expect(screen.getByRole('button').getBoundingClientRect().height).toBe(40);
+	});
+});
+
+describe('Button label size', () => {
+	it.each([
+		['sm', 24],
+		['md', 32],
+	] as const)('keeps the height of %s', (size, height) => {
+		render(
+			<Button size={size} variant="solid" color="primary">
+				Typography
+			</Button>,
+		);
+
+		expect(screen.getByRole('button').getBoundingClientRect().height).toBe(height);
+	});
+
+	it('clips the label on the inline axis only, so descenders still paint', () => {
+		render(
+			<Button size="sm" variant="solid" color="primary">
+				Typography
+			</Button>,
+		);
+
+		const style = getComputedStyle(slot('button-label'));
+
+		expect(style.overflowX).toBe('clip');
+		expect(style.overflowY).toBe('visible');
 	});
 });
 

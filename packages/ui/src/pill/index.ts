@@ -51,9 +51,10 @@
  * | `--pill-focus-ring` | `-` |
  * | `--pill-focus-visible-outline` | `var(--pill-focus-ring) solid 1px` |
  * | `--pill-focus-visible-outline-offset` | `1px` |
- * | `--pill-font-size` | `var(--periscope-font-size-small)` |
+ * | `--pill-font-family` | `-` |
+ * | `--pill-font-size` | `-` |
  * | `--pill-font-variant-numeric` | `slashed-zero` |
- * | `--pill-font-weight` | `var(--font-weight-medium)` |
+ * | `--pill-font-weight` | `-` |
  * | `--pill-height` | `var(--spacing-10)` |
  * | `--pill-highlight-danger-background` | `-` |
  * | `--pill-highlight-danger-background-color` | `color-mix(in oklab, var(--pill-highlight-danger...` |
@@ -91,7 +92,7 @@
  * | `--pill-invalid-label` | `-` |
  * | `--pill-justify-content` | `center` |
  * | `--pill-letter-spacing` | `-` |
- * | `--pill-line-height` | `var(--line-height-18)` |
+ * | `--pill-line-height` | `-` |
  * | `--pill-max-width` | `var(--pill-internal-max-width, min(100%, 7.5rem))` |
  * | `--pill-min-width` | `-` |
  * | `--pill-outlined-background` | `-` |

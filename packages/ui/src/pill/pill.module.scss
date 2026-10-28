@@ -16,18 +16,19 @@
 	--badge-label-justify-content: var(--pill-justify-content, center);
 	--badge-border-radius: var(--pill-border-radius, var(--radius-round));
 	--badge-border-width: var(--pill-border-width, 1px);
-	// Padding and line height mirror Badge's defaults; see `padding` in badge.module.scss.
+	// Padding mirrors Badge's default; see `padding` in badge.module.scss.
 	--badge-padding: var(--pill-padding, 0 var(--spacing-4));
-	--badge-font-size: var(--pill-font-size, var(--periscope-font-size-small));
-	--badge-line-height: var(--pill-line-height, var(--line-height-18));
-	--badge-font-weight: var(--pill-font-weight, var(--font-weight-medium));
 	--badge-white-space: var(--pill-white-space, nowrap);
 	--badge-height: var(--pill-height, var(--spacing-10));
 	--badge-width: var(--pill-width, var(--pill-internal-width, fit-content));
 	--badge-max-width: var(--pill-max-width, var(--pill-internal-max-width, min(100%, 7.5rem)));
 	--badge-font-variant-numeric: var(--pill-font-variant-numeric, slashed-zero);
 	// No fallback: an unset `--pill-*` leaves the `Badge` var unset, so `Badge` keeps its own
-	// default for tracking, the single-character circle and the minimum width.
+	// default for the text style of each case, the single-character circle and the minimum width.
+	--badge-font-family: var(--pill-font-family);
+	--badge-font-size: var(--pill-font-size);
+	--badge-font-weight: var(--pill-font-weight);
+	--badge-line-height: var(--pill-line-height);
 	--badge-letter-spacing: var(--pill-letter-spacing);
 	--badge-single-char-padding-inline: var(--pill-single-char-padding-inline);
 	--badge-min-width: var(--pill-min-width);
