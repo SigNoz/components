@@ -42,6 +42,7 @@ export default defineConfig({
 					exclude: nodeOnlyTests,
 					setupFiles: ['./vitest.setup.ts'],
 					globals: true,
+					env: { SHOW_ACT_WARNINGS: process.env.SHOW_ACT_WARNINGS ?? '' },
 					browser: {
 						enabled: true,
 						provider: playwright({}),
