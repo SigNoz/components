@@ -227,7 +227,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography size="sm" weight="medium" key={column} className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -292,10 +300,24 @@ export const CheckboxShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					One row per color, one column per state, each cell unchecked, checked, then indeterminate.
 					The unchecked border is the same neutral for every color, an unchecked box has no status
 					to report yet. Hover recolors the border of the unchecked box only. Disabled fades to 0.6,
@@ -308,7 +330,14 @@ export const CheckboxShowcase: Story = {
 					<MatrixHeader columns={[...STATES]} />
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							{STATES.map((state) => (
@@ -320,10 +349,24 @@ export const CheckboxShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Labels
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The label is part of the hit target: clicking it toggles. Children that render nothing
 					count as not passed, so the checkbox renders bare — name it with <code>aria-label</code>.
 				</Typography>
@@ -338,10 +381,24 @@ export const CheckboxShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Indeterminate
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The mixed state is one more value of <code>value</code>, derived by the call site from the
 					children: the parent is checked while all children are,{' '}
 					<code>&quot;indeterminate&quot;</code> while some are. Clicking it reports{' '}
@@ -353,10 +410,24 @@ export const CheckboxShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Capped at <code>{CONSTRAINED_WIDTH}</code>. <code>ellipsis</code> shows the full label in
 					a tooltip on hover, <code>wrap</code> takes more lines, <code>hidden</code> clips, and
 					<code>visible</code> paints past the cap.
@@ -364,7 +435,14 @@ export const CheckboxShowcase: Story = {
 				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
 					{Object.values(CheckboxTextOverflow).map((textOverflow) => (
 						<Fragment key={textOverflow}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{textOverflow}
 							</Typography>
 							<Checkbox
@@ -382,10 +460,24 @@ export const CheckboxShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Bare
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					With no children there is no wrapper element at all, the checkbox is its own flex item.
 					Name it with <code>aria-label</code>.
 				</Typography>
@@ -395,10 +487,24 @@ export const CheckboxShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Hit area
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The 16px box carries a built-in 2px ring, dashed here: the pointer target is 20px while
 					the layout footprint stays 16px. The ring never paints any state, only the box does.
 				</Typography>

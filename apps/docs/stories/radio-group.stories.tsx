@@ -198,7 +198,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography size="sm" weight="medium" key={column} className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -280,10 +288,24 @@ export const RadioGroupShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					One row per color, one column per state. Every cell holds a selected and an unselected
 					radio. Hover tints the border and brightens the label, never the fill, so a hovered option
 					cannot be mistaken for a chosen one.
@@ -295,7 +317,14 @@ export const RadioGroupShowcase: Story = {
 					<MatrixHeader columns={[...STATES]} />
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							{STATES.map((state) => (
@@ -307,10 +336,24 @@ export const RadioGroupShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Blocking one option
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A single item can disable itself, which the arrow keys then skip. Read-only is never a
 					property of one option: it locks the whole choice.
 				</Typography>
@@ -332,10 +375,24 @@ export const RadioGroupShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					An option that asks for a value
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A label is a node, not a string, so <code>Other</code> can grow a field once it is picked.
 					Clicking the field does not move the choice. The group is a composite, so it selects the
 					field's text on focus, and holds the arrow keys inside it until the caret reaches an end
@@ -347,10 +404,24 @@ export const RadioGroupShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A label taller than the row
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					An <code>Input</code> or a <code>Button</code> inside a label is taller than the line the
 					label is set on. The dial is centred on that first line rather than on the row, so it
 					holds its position: the row grows downwards and the control the user is about to click
@@ -389,10 +460,24 @@ export const RadioGroupShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Capped at <code>{CONSTRAINED_WIDTH}</code>. <code>ellipsis</code> shows the full label in
 					a tooltip on hover, <code>wrap</code> takes a second line, <code>hidden</code> clips, and
 					<code>visible</code> paints past the cap, which is what keeps a control's focus ring in a
@@ -401,7 +486,14 @@ export const RadioGroupShowcase: Story = {
 				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
 					{Object.values(RadioGroupTextOverflow).map((textOverflow) => (
 						<Fragment key={textOverflow}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{textOverflow}
 							</Typography>
 							<div className={styles.narrow}>

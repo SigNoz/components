@@ -238,10 +238,25 @@ export function TokenReference({
 				{showHeader && (
 					<div className={styles.header}>
 						<div>
-							<Typography size="2xl" weight="bold">
+							<Typography
+								variant="label"
+								size="large"
+								weight="bold"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
 								{title}
 							</Typography>
-							<Typography size="sm" color="muted" className={styles.headerTitle}>
+							<Typography
+								variant="paragraph"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+								marginTop={2}
+							>
 								{description}
 							</Typography>
 						</div>
@@ -292,7 +307,14 @@ export function TokenReference({
 				)}
 
 				<div className={styles.controls}>
-					<Typography size="sm" color="muted">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+					>
 						Showing {filteredTokens.length} tokens
 						{searchQuery && ` matching "${searchQuery}"`}
 						{selectedCategory && ` in ${selectedCategory}`}

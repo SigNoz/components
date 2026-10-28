@@ -42,7 +42,14 @@ export const Default: Story = {
 					<DrawerTitle {...args} />
 				</DrawerHeader>
 				<DrawerDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The title labels the drawer content for assistive technologies.
 					</Typography>
 				</DrawerDescription>

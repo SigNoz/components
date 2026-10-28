@@ -2,8 +2,6 @@ import { DatePicker, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 
-import styles from './date-picker.stories.module.css';
-
 const meta: Meta<typeof DatePicker> = {
 	title: 'Composed Components/DatePicker',
 	component: DatePicker,
@@ -202,10 +200,25 @@ export const Default: Story = {
 		return (
 			<div className="story-section">
 				<div>
-					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Selected Date:
 					</Typography>
-					<Typography size="sm" color="muted" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+					>
 						{date
 							? args.showTime
 								? `${date.toLocaleDateString()} at ${time}${args.showTimezone ? ` (${timezone})` : ''}`
@@ -234,10 +247,25 @@ export const DateOnly: Story = {
 		return (
 			<div className="story-section">
 				<div>
-					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Selected Date:
 					</Typography>
-					<Typography size="sm" color="muted" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+					>
 						{date ? date.toLocaleDateString() : 'No date selected'}
 					</Typography>
 				</div>
@@ -261,10 +289,25 @@ export const DateAndTime: Story = {
 		return (
 			<div className="story-section">
 				<div>
-					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Selected Date & Time:
 					</Typography>
-					<Typography size="sm" color="muted" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+					>
 						{date ? `${date.toLocaleDateString()} at ${time}` : 'No date selected'}
 					</Typography>
 				</div>
@@ -291,10 +334,25 @@ export const WithTimezone: Story = {
 		return (
 			<div className="story-section">
 				<div>
-					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Selected Date & Time:
 					</Typography>
-					<Typography size="sm" color="muted" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+					>
 						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
 					</Typography>
 				</div>
@@ -323,10 +381,25 @@ export const WithActions: Story = {
 		return (
 			<div className="story-section">
 				<div>
-					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Selected Date & Time:
 					</Typography>
-					<Typography size="sm" color="muted" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+					>
 						{date ? `${date.toLocaleDateString()} at ${time} (${timezone})` : 'No date selected'}
 					</Typography>
 				</div>
@@ -357,12 +430,26 @@ export const DifferentButtonVariants: Story = {
 		return (
 			<div className="story-section">
 				<div className="story-section">
-					<Typography size="sm" weight="medium" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Button Variants:
 					</Typography>
 
 					<div className="story-section-sm">
-						<Typography size="xs" color="muted" display="block">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="wrap"
+						>
 							Solid variant:
 						</Typography>
 						<DatePicker
@@ -375,7 +462,14 @@ export const DifferentButtonVariants: Story = {
 					</div>
 
 					<div className="story-section-sm">
-						<Typography size="xs" color="muted" display="block">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="wrap"
+						>
 							Outlined variant:
 						</Typography>
 						<DatePicker
@@ -388,7 +482,14 @@ export const DifferentButtonVariants: Story = {
 					</div>
 
 					<div className="story-section-sm">
-						<Typography size="xs" color="muted" display="block">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="wrap"
+						>
 							Ghost variant:
 						</Typography>
 						<DatePicker
@@ -413,12 +514,26 @@ export const DifferentButtonSizes: Story = {
 		return (
 			<div className="story-section">
 				<div className="story-section">
-					<Typography size="sm" weight="medium" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Button Sizes:
 					</Typography>
 
 					<div className="story-section-sm">
-						<Typography size="xs" color="muted" display="block">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="wrap"
+						>
 							Small size:
 						</Typography>
 						<DatePicker
@@ -431,7 +546,14 @@ export const DifferentButtonSizes: Story = {
 					</div>
 
 					<div className="story-section-sm">
-						<Typography size="xs" color="muted" display="block">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="wrap"
+						>
 							Medium size (default):
 						</Typography>
 						<DatePicker
@@ -455,10 +577,25 @@ export const Disabled: Story = {
 		return (
 			<div className="story-section">
 				<div>
-					<Typography size="sm" weight="medium" display="block" className={styles.labelMargin}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Disabled State:
 					</Typography>
-					<Typography size="sm" color="muted" display="block">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+					>
 						The picker is disabled and cannot be interacted with.
 					</Typography>
 				</div>

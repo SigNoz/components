@@ -85,7 +85,17 @@ export const EllipsisPositions: Story = {
 	render: () => (
 		<div className={styles.positionsContainer}>
 			<div className="story-row">
-				<Typography size="xs" color="muted" className={styles.positionLabel}>
+				<Typography
+					as="span"
+					display="block"
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+					width={48}
+					minWidth={48}
+				>
 					Center:
 				</Typography>
 				<div className={styles.ellipsisContainer}>
@@ -95,7 +105,17 @@ export const EllipsisPositions: Story = {
 				</div>
 			</div>
 			<div className="story-row">
-				<Typography size="xs" color="muted" className={styles.positionLabel}>
+				<Typography
+					as="span"
+					display="block"
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+					width={48}
+					minWidth={48}
+				>
 					Start:
 				</Typography>
 				<div className={styles.ellipsisContainer}>
@@ -105,7 +125,17 @@ export const EllipsisPositions: Story = {
 				</div>
 			</div>
 			<div className="story-row">
-				<Typography size="xs" color="muted" className={styles.positionLabel}>
+				<Typography
+					as="span"
+					display="block"
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+					width={48}
+					minWidth={48}
+				>
 					End:
 				</Typography>
 				<div className={styles.ellipsisContainer}>
@@ -136,7 +166,15 @@ export const FilePaths: Story = {
 	render: () => (
 		<div className={styles.positionsContainer}>
 			<div>
-				<Typography size="sm" weight="medium" className={styles.filePathSection}>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="medium"
+					color="inherit"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Start Truncation (shows filename)
 				</Typography>
 				<div className={styles.filePathList}>
@@ -152,7 +190,15 @@ export const FilePaths: Story = {
 				</div>
 			</div>
 			<div>
-				<Typography size="sm" weight="medium" className={styles.filePathSection}>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="medium"
+					color="inherit"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Center Truncation (shows root and filename)
 				</Typography>
 				<div className={styles.filePathList}>
@@ -186,7 +232,14 @@ export const CustomEllipsis: Story = {
 	render: () => (
 		<div className={styles.customEllipsisContainer}>
 			<div>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+				>
 					Default (...)
 				</Typography>
 				<TextEllipsis ellipsis="...">
@@ -194,7 +247,14 @@ export const CustomEllipsis: Story = {
 				</TextEllipsis>
 			</div>
 			<div>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+				>
 					Unicode (…)
 				</Typography>
 				<TextEllipsis ellipsis="…">
@@ -202,7 +262,14 @@ export const CustomEllipsis: Story = {
 				</TextEllipsis>
 			</div>
 			<div>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+				>
 					Tilde (~)
 				</Typography>
 				<TextEllipsis ellipsis="~" position="start">
@@ -210,7 +277,14 @@ export const CustomEllipsis: Story = {
 				</TextEllipsis>
 			</div>
 			<div>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+				>
 					More (›)
 				</Typography>
 				<TextEllipsis ellipsis=" ›" position="end">
@@ -238,7 +312,14 @@ export const ResponsiveContainer: Story = {
 	},
 	render: () => (
 		<div className={styles.positionsContainer}>
-			<Typography size="xs" color="muted">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+			>
 				Resize the browser window to see the text adapt automatically.
 			</Typography>
 			<div className={`story-panel ${styles.responsivePanel}`}>
@@ -277,7 +358,14 @@ export const WithExternalWidth: Story = {
 
 		return (
 			<div className={styles.positionsContainer}>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+				>
 					Using <code>useTextEllipsisWidth</code> hook to measure the container and pass width
 					externally. Current width: {width}px
 				</Typography>
@@ -309,12 +397,27 @@ export const TooltipOnTruncation: Story = {
 	},
 	render: () => (
 		<div className={styles.positionsContainer}>
-			<Typography size="xs" color="muted">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+			>
 				Hover over the truncated text to see the full content as a tooltip.
 			</Typography>
 			<div className={styles.tooltipList}>
 				<div>
-					<Typography size="xs" color="muted" className={styles.tooltipLabel}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+						marginBottom={2}
+					>
 						Auto title (full text):
 					</Typography>
 					<TextEllipsis position="center">
@@ -322,7 +425,15 @@ export const TooltipOnTruncation: Story = {
 					</TextEllipsis>
 				</div>
 				<div>
-					<Typography size="xs" color="muted" className={styles.tooltipLabel}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+						marginBottom={2}
+					>
 						Custom title override:
 					</Typography>
 					<TextEllipsis
@@ -333,7 +444,15 @@ export const TooltipOnTruncation: Story = {
 					</TextEllipsis>
 				</div>
 				<div>
-					<Typography size="xs" color="muted" className={styles.tooltipLabel}>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						textOverflow="wrap"
+						marginBottom={2}
+					>
 						Short text (no tooltip):
 					</Typography>
 					<TextEllipsis position="center">Short text</TextEllipsis>

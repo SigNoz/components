@@ -10,24 +10,8 @@
 	padding: 16px;
 }
 
-.positionLabel {
-	width: 48px;
-	flex-shrink: 0;
-}
-
 .ellipsisContainer {
 	width: 240px;
-}
-
-.filePathsContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	padding: 16px;
-}
-
-.filePathSection {
-	margin-bottom: 8px;
 }
 
 .filePathList {
@@ -45,13 +29,6 @@
 	width: 280px;
 }
 
-.responsiveContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	padding: 16px;
-}
-
 .responsivePanel {
 	display: flex;
 	flex-direction: column;
@@ -60,22 +37,8 @@
 	max-width: 400px;
 }
 
-.externalWidthContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	padding: 16px;
-}
-
 .externalWidthPanel {
 	width: 320px;
-}
-
-.tooltipContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-	padding: 16px;
 }
 
 .tooltipList {
@@ -83,9 +46,4 @@
 	flex-direction: column;
 	gap: 8px;
 	width: 240px;
-}
-
-.tooltipLabel {
-	display: block;
-	margin-bottom: 4px;
 }

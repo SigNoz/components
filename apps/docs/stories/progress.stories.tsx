@@ -135,7 +135,14 @@ export const Default: Story = {
 function Row({ label, children }: { label: string; children: ReactElement }): ReactElement {
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.rowLabel}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="visible"
+			>
 				{label}
 			</Typography>
 			{children}
@@ -222,10 +229,24 @@ export const ProgressShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Colors
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The same hues as Badge. Pick the color from a threshold on the metric, and keep the
 					thresholds of one metric in one helper so the same value reads the same in every column.
 				</Typography>
@@ -235,13 +256,28 @@ export const ProgressShowcase: Story = {
 				>
 					<span />
 					{COLOR_STATES.map(({ label }) => (
-						<Typography key={label} size="sm" weight="medium" className={styles.rowLabel}>
+						<Typography
+							key={label}
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							{label}
 						</Typography>
 					))}
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.rowLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							{COLOR_STATES.map(({ label, steps, active }) => (
@@ -261,10 +297,24 @@ export const ProgressShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Value text
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Rounded to at most 2 decimals, with no trailing zeros. The fill clamps to the track and
 					the text does not, so 140 reads 140% over a full bar. A value that is not a finite number
 					keeps the empty track and shows a dash.
@@ -279,10 +329,24 @@ export const ProgressShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Steps
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Equal segments with a transparent gap. The fill runs on across them, so 50% of 5 fills two
 					and a half. Below 2 is the continuous bar.
 				</Typography>
@@ -302,10 +366,24 @@ export const ProgressShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Running task
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Only <code>active</code> moves: the fill eases to each new value and stripes cross it,
 					until the task reaches 100. A metric bar jumps to its new value.
 				</Typography>
@@ -333,17 +411,38 @@ export const ProgressShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Surfaces
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The track keeps its contrast on every surface, and the gaps between segments show the
 					surface behind them.
 				</Typography>
 				<div className={`${styles.surfaces} ${styles.marginTopMedium}`}>
 					{SURFACES.map((surface) => (
 						<div key={surface} className={styles.surface} data-surface={surface}>
-							<Typography size="sm" weight="medium">
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
 								{surface}
 							</Typography>
 							<Progress color="primary" percent={45} showInfo aria-label={`${surface} usage`} />
@@ -360,10 +459,24 @@ export const ProgressShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Narrow cell
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The root fills its parent. When space runs out the bar shrinks, down to nothing, and the
 					value text never truncates.
 				</Typography>

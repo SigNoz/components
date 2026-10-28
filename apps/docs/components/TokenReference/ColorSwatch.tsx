@@ -24,7 +24,14 @@ export function ColorSwatch({ value, size = 'md', className = '' }: ColorSwatchP
 	if (!isColorValue) {
 		return (
 			<div className={`${styles.swatch} ${sizeClasses[size]} ${styles.placeholder} ${className}`}>
-				<Typography size="xs" color="muted">
+				<Typography
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="span"
+					textOverflow="visible"
+				>
 					-
 				</Typography>
 			</div>

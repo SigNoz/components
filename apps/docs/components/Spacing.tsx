@@ -8,7 +8,15 @@ const spacingKeys = Object.keys(spacing);
 function Spacing() {
 	return (
 		<div className={styles.container}>
-			<Typography size="lg" weight="bold" className={styles.title}>
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+				marginBottom={10}
+			>
 				Spacing Scale
 			</Typography>
 
@@ -17,7 +25,14 @@ function Spacing() {
 
 				return (
 					<div key={size} className={styles.spacingItem}>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							{size} - {value}
 						</Typography>
 						<div className={styles.spacingBar} style={{ width: value }}></div>

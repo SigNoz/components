@@ -118,7 +118,14 @@ export const Default: Story = {
 	render: ({ orientation, children, width, maxWidth, height, maxHeight, ...args }) =>
 		orientation === 'vertical' ? (
 			<div className="story-container">
-				<Typography size="sm">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					Back
 					<Divider {...args} orientation="vertical" height={height} maxHeight={maxHeight} />
 					checkout-service
@@ -126,15 +133,40 @@ export const Default: Story = {
 			</div>
 		) : (
 			<div className={`story-container ${styles.stack}`}>
-				<Typography size="sm">Content above</Typography>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
+					Content above
+				</Typography>
 				<Divider {...args} width={width} maxWidth={maxWidth}>
 					{children ? (
-						<Typography.Text color="muted" weight="medium">
+						<Typography
+							as="span"
+							variant="label"
+							size="base"
+							weight="medium"
+							color="secondary"
+							textOverflow="visible"
+						>
 							{children}
-						</Typography.Text>
+						</Typography>
 					) : undefined}
 				</Divider>
-				<Typography size="sm">Content below</Typography>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
+					Content below
+				</Typography>
 			</div>
 		),
 };
@@ -151,50 +183,153 @@ export const DividerShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					as="h3"
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					Horizontal
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					Fills the width of its parent and adds no space around it. The parent sets the space with
 					a gap, or spacing sets it on the divider. width and maxWidth set a shorter line.
 				</Typography>
 				<div className={styles.panel}>
-					<Typography size="sm">Section A</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Section A
+					</Typography>
 					<Divider />
-					<Typography size="sm">Section B</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Section B
+					</Typography>
 					<Divider dashed />
-					<Typography size="sm">Section C, after a dashed divider</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Section C, after a dashed divider
+					</Typography>
 					<Divider spacing={16} />
-					<Typography size="sm">Section D, after spacing 16 (plus the 1rem gap)</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Section D, after spacing 16 (plus the 1rem gap)
+					</Typography>
 					<Divider width={160} />
-					<Typography size="sm">Section E, after width 160</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Section E, after width 160
+					</Typography>
 					<Divider maxWidth="50%" />
-					<Typography size="sm">Section F, after maxWidth 50%</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Section F, after maxWidth 50%
+					</Typography>
 				</div>
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					as="h3"
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					Vertical
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					0.9em tall, so it follows the text around it, with 8px on each side. In a flex row that
 					has a gap, spacing 0 drops the side space. height sets a fixed length.
 				</Typography>
 				<div className={styles.panel}>
-					<Typography size="xs">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Back
 						<Divider orientation="vertical" />
 						checkout-service
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="base"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Back
 						<Divider orientation="vertical" />
 						checkout-service
 						<Divider orientation="vertical" dashed />
 						dashed
 					</Typography>
-					<Typography size="lg">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="medium"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Back
 						<Divider orientation="vertical" />
 						checkout-service
@@ -216,34 +351,76 @@ export const DividerShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					as="h3"
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					Label
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					Centred, on one line. The two lines shrink first and the label is never truncated. The
 					label sets no font or colour, so each one is a Typography.
 				</Typography>
 				<div className={styles.panel}>
 					<Divider>
-						<Typography.Text color="muted" weight="medium">
+						<Typography
+							as="span"
+							variant="label"
+							size="base"
+							weight="medium"
+							color="secondary"
+							textOverflow="visible"
+						>
 							OR
-						</Typography.Text>
+						</Typography>
 					</Divider>
 					<Divider dashed>
-						<Typography.Text color="muted" weight="medium">
+						<Typography
+							as="span"
+							variant="label"
+							size="base"
+							weight="medium"
+							color="secondary"
+							textOverflow="visible"
+						>
 							OR
-						</Typography.Text>
+						</Typography>
 					</Divider>
 					<Divider>
-						<Typography.Text color="muted" weight="medium">
+						<Typography
+							as="span"
+							variant="label"
+							size="base"
+							weight="medium"
+							color="secondary"
+							textOverflow="visible"
+						>
 							Or get started with these sample alerts
-						</Typography.Text>
+						</Typography>
 					</Divider>
 					<div className={styles.narrow}>
 						<Divider>
-							<Typography.Text color="muted" weight="medium">
+							<Typography
+								as="span"
+								variant="label"
+								size="base"
+								weight="medium"
+								color="secondary"
+								textOverflow="visible"
+							>
 								Or get started with these sample alerts
-							</Typography.Text>
+							</Typography>
 						</Divider>
 					</div>
 				</div>

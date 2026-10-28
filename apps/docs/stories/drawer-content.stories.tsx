@@ -66,7 +66,14 @@ export const Default: Story = {
 					<DrawerTitle>Drawer content</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						This story focuses on the DrawerContent surface and its layout-related props.
 					</Typography>
 				</DrawerDescription>

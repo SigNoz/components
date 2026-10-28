@@ -26,10 +26,6 @@
   width: 100%;
 }
 
-.rowLabel {
-  white-space: nowrap;
-}
-
 .stack {
   display: flex;
   flex-direction: column;
@@ -46,10 +42,6 @@
 .configSlider {
   flex: 1;
   min-width: 0;
-}
-
-.configValue {
-  font-variant-numeric: tabular-nums;
 }
 
 .narrow {

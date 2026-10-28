@@ -44,7 +44,16 @@ export const Default: Story = {
 					<DialogSubtitle {...args} />
 				</DialogHeader>
 				<DialogDescription>
-					<Typography size="sm">The subtitle provides supporting text below the title.</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						The subtitle provides supporting text below the title.
+					</Typography>
 				</DialogDescription>
 			</DialogContent>
 		</Dialog>

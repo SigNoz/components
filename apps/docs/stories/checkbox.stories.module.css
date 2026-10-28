@@ -19,10 +19,6 @@
   padding-right: 1rem;
 }
 
-.matrixLabel {
-  white-space: nowrap;
-}
-
 .stateCell {
   display: flex;
   align-items: center;

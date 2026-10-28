@@ -32,7 +32,15 @@ function ColorPalette() {
 
 	return (
 		<div className={styles.container}>
-			<Typography size="lg" weight="bold" className={styles.title}>
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+				marginBottom={10}
+			>
 				Pallette
 			</Typography>
 
@@ -43,10 +51,13 @@ function ColorPalette() {
 					.map((color) => (
 						<div key={color.name}>
 							<Typography
+								variant="paragraph"
 								size="base"
 								weight="bold"
-								className={styles.colorCard}
-								style={{ textTransform: 'capitalize' }}
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+								marginTop={8}
 							>
 								{color.name}
 							</Typography>
@@ -68,20 +79,33 @@ function ColorPalette() {
 
 			{/* Accents */}
 			<div className={styles.accentsSection}>
-				<Typography size="lg" weight="bold" className={styles.accentsTitle}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={10}
+				>
 					Accents
 				</Typography>
 
 				{/* Primary Accents */}
 				<div className={styles.accentGroup}>
-					<Typography
-						size="xs"
-						weight="semibold"
-						className={styles.accentGroupTitle}
-						style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
-					>
-						PRIMARY
-					</Typography>
+					<div className={styles.accentGroupTitle}>
+						<Typography
+							variant="uppercase"
+							size="small"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+							marginBottom={8}
+						>
+							PRIMARY
+						</Typography>
+					</div>
 					<div className={styles.accentList}>
 						{primaryAccents.map((accentName) => {
 							const accent = getAccentColor(accentName);
@@ -89,14 +113,18 @@ function ColorPalette() {
 							return (
 								<div key={accent.name} className={styles.accentItem}>
 									<div className={styles.accentSwatch} style={{ backgroundColor: accent.value }} />
-									<Typography
-										size="xs"
-										weight="semibold"
-										className={styles.accentName}
-										style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
-									>
-										{accent.name}
-									</Typography>
+									<div className={styles.accentName}>
+										<Typography
+											variant="uppercase"
+											size="small"
+											weight="bold"
+											color="inherit"
+											as="p"
+											textOverflow="wrap"
+										>
+											{accent.name}
+										</Typography>
+									</div>
 								</div>
 							);
 						})}
@@ -105,14 +133,19 @@ function ColorPalette() {
 
 				{/* Secondary Accents */}
 				<div>
-					<Typography
-						size="xs"
-						weight="semibold"
-						className={styles.accentGroupTitle}
-						style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
-					>
-						SECONDARY
-					</Typography>
+					<div className={styles.accentGroupTitle}>
+						<Typography
+							variant="uppercase"
+							size="small"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+							marginBottom={8}
+						>
+							SECONDARY
+						</Typography>
+					</div>
 					<div className={styles.accentListWrap}>
 						{secondaryAccents.map((accentName) => {
 							const accent = getAccentColor(accentName);
@@ -120,14 +153,18 @@ function ColorPalette() {
 							return (
 								<div key={accent.name} className={styles.accentItem}>
 									<div className={styles.accentSwatch} style={{ backgroundColor: accent.value }} />
-									<Typography
-										size="xs"
-										weight="semibold"
-										className={styles.accentName}
-										style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}
-									>
-										{accent.name}
-									</Typography>
+									<div className={styles.accentName}>
+										<Typography
+											variant="uppercase"
+											size="small"
+											weight="bold"
+											color="inherit"
+											as="p"
+											textOverflow="wrap"
+										>
+											{accent.name}
+										</Typography>
+									</div>
 								</div>
 							);
 						})}
@@ -140,7 +177,15 @@ function ColorPalette() {
 				.filter((item) => item.name === 'Gradient')
 				.map((color) => (
 					<div key={color.name}>
-						<Typography size="lg" weight="bold" className={styles.gradientsTitle}>
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+							marginBottom={10}
+						>
 							Gradients
 						</Typography>
 
@@ -151,7 +196,16 @@ function ColorPalette() {
 										className={styles.gradientSwatch}
 										style={{ backgroundImage: shade.value }}
 									></div>
-									<Typography size="sm">{shade.name}</Typography>
+									<Typography
+										variant="paragraph"
+										size="small"
+										weight="regular"
+										color="inherit"
+										as="p"
+										textOverflow="wrap"
+									>
+										{shade.name}
+									</Typography>
 								</div>
 							))}
 						</div>

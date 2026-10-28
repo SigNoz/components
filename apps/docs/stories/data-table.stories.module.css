@@ -27,6 +27,7 @@
 .columnContainer {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
 .progressBarBackground {
@@ -43,10 +44,6 @@
 
 .actionButtonsContainer {
   gap: 0.25rem;
-}
-
-.salaryText {
-  color: #15803d;
 }
 
 .stickyPerformanceBar {
@@ -76,24 +73,6 @@
   font-weight: 500;
 }
 
-.statusTextCapitalize {
-  text-transform: capitalize;
-}
-
-.salaryMonospace {
-  font-family: monospace;
-}
-
-.marginBottomSm {
-  margin-bottom: 0.5rem;
-}
-
 .marginBottomMd {
   margin-bottom: 1rem;
-}
-
-.truncatedText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }

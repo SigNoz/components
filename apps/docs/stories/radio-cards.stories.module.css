@@ -12,10 +12,6 @@
   margin-top: 1rem;
 }
 
-.stateLabel {
-  text-transform: capitalize;
-}
-
 .layoutList {
   display: flex;
   flex-direction: column;

@@ -131,7 +131,14 @@ function StateRow({ state }: { state: State }): ReactElement {
 
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.stateLabel}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="wrap"
+			>
 				{state}
 			</Typography>
 			<div data-state-cell={state}>
@@ -156,9 +163,17 @@ function OthersField(): ReactElement {
 
 	return (
 		<div className={styles.question}>
-			<Typography.Text id="tool-question" weight="medium">
+			<Typography
+				id="tool-question"
+				variant="paragraph"
+				size="base"
+				weight="medium"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				Which observability tool do you use today?
-			</Typography.Text>
+			</Typography>
 			<RadioCards
 				aria-labelledby="tool-question"
 				columns={2}
@@ -196,10 +211,24 @@ export const RadioCardsShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					One row per state. The first card is checked in every row. A checked card is marked by its
 					tint and a check after the label. Read-only fades less than disabled, since the checked
 					card is a real value worth reading.
@@ -212,17 +241,38 @@ export const RadioCardsShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Columns
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					<code>columns</code> caps the cards per row, and the cards share the row equally. Without
 					it, a row holds as many cards as fit at their minimum width.
 				</Typography>
 				<div className={styles.layoutList}>
 					{[1, 2, 3, undefined].map((columns) => (
 						<div key={String(columns)} className={styles.layoutRow}>
-							<Typography size="sm" weight="medium" className={styles.stateLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
 								{columns === undefined ? 'no columns' : `columns={${columns}}`}
 							</Typography>
 							<RadioCards
@@ -237,10 +287,24 @@ export const RadioCardsShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Two columns in a narrow parent. <code>ellipsis</code> shows the full label in a tooltip,{' '}
 					<code>wrap</code> grows the card, and the cards of a row take the height of the tallest
 					one. The icons stay on the first line.
@@ -248,7 +312,14 @@ export const RadioCardsShowcase: Story = {
 				<div className={styles.layoutList}>
 					{Object.values(RadioCardsTextOverflow).map((textOverflow) => (
 						<div key={textOverflow} className={`${styles.layoutRow} ${styles.narrow}`}>
-							<Typography size="sm" weight="medium" className={styles.stateLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
 								{textOverflow}
 							</Typography>
 							<RadioCards
@@ -267,10 +338,24 @@ export const RadioCardsShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Blocking one card
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A card can disable itself. The arrow keys skip it, and its reason shows on hover.
 				</Typography>
 				<div className={styles.narrowWide}>
@@ -288,10 +373,24 @@ export const RadioCardsShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A field for one option
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The field goes under the group, and the action goes to a button: the arrow keys check each
 					card they land on, so <code>onChange</code> only records the choice.
 				</Typography>

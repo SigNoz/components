@@ -133,7 +133,15 @@ export const KeyboardShortcuts: Story = {
 	render: () => (
 		<div className={`story-section ${styles.container}`}>
 			<div>
-				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
+				<Typography
+					as="h3"
+					variant="label"
+					size="small"
+					weight="medium"
+					color="secondary"
+					textOverflow="wrap"
+					marginBottom={6}
+				>
 					Common Shortcuts
 				</Typography>
 				<div className="story-section-sm">
@@ -146,7 +154,16 @@ export const KeyboardShortcuts: Story = {
 						{ label: 'Command palette', keys: ['⌘', 'K'] },
 					].map(({ label, keys }) => (
 						<div key={label} className={styles.shortcutRow}>
-							<Typography size="sm">{label}</Typography>
+							<Typography
+								as="span"
+								variant="label"
+								size="small"
+								weight="regular"
+								color="inherit"
+								textOverflow="visible"
+							>
+								{label}
+							</Typography>
 							<div className={`story-row ${styles.keysContainer}`}>
 								{keys.map((key) => (
 									<Kbd key={key}>{key}</Kbd>
@@ -157,7 +174,15 @@ export const KeyboardShortcuts: Story = {
 				</div>
 			</div>
 			<div>
-				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
+				<Typography
+					as="h3"
+					variant="label"
+					size="small"
+					weight="medium"
+					color="secondary"
+					textOverflow="wrap"
+					marginBottom={6}
+				>
 					Multi-modifier
 				</Typography>
 				<div className="story-section-sm">
@@ -166,7 +191,16 @@ export const KeyboardShortcuts: Story = {
 						{ label: 'Force quit', keys: ['⌘', '⌥', 'Esc'] },
 					].map(({ label, keys }) => (
 						<div key={label} className={styles.shortcutRow}>
-							<Typography size="sm">{label}</Typography>
+							<Typography
+								as="span"
+								variant="label"
+								size="small"
+								weight="regular"
+								color="inherit"
+								textOverflow="visible"
+							>
+								{label}
+							</Typography>
 							<div className={`story-row ${styles.keysContainer}`}>
 								{keys.map((key) => (
 									<Kbd key={key}>{key}</Kbd>
@@ -196,14 +230,35 @@ export const InlineText: Story = {
 	},
 	render: () => (
 		<div className={`story-section ${styles.container} ${styles.maxWidthMd}`}>
-			<Typography size="sm">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				Press <Kbd size="sm">⌘</Kbd> <Kbd size="sm">K</Kbd> to open the command palette.
 			</Typography>
-			<Typography size="sm">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				Use <Kbd size="sm">↑</Kbd> and <Kbd size="sm">↓</Kbd> to navigate results, then{' '}
 				<Kbd size="sm">↵</Kbd> to confirm.
 			</Typography>
-			<Typography size="sm">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				Hold <Kbd size="sm">⇧</Kbd> while clicking to select a range.
 			</Typography>
 		</div>
@@ -228,7 +283,15 @@ export const ActiveState: Story = {
 	render: () => (
 		<div className={`story-section ${styles.container}`}>
 			<div>
-				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
+				<Typography
+					as="h3"
+					variant="label"
+					size="small"
+					weight="medium"
+					color="secondary"
+					textOverflow="wrap"
+					marginBottom={6}
+				>
 					Default vs Active
 				</Typography>
 				<div className="story-row">
@@ -237,7 +300,15 @@ export const ActiveState: Story = {
 				</div>
 			</div>
 			<div>
-				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
+				<Typography
+					as="h3"
+					variant="label"
+					size="small"
+					weight="medium"
+					color="secondary"
+					textOverflow="wrap"
+					marginBottom={6}
+				>
 					All Sizes
 				</Typography>
 				<div className="story-row">
@@ -253,7 +324,15 @@ export const ActiveState: Story = {
 				</div>
 			</div>
 			<div>
-				<Typography as="h3" size="sm" weight="medium" className={styles.headerMargin}>
+				<Typography
+					as="h3"
+					variant="label"
+					size="small"
+					weight="medium"
+					color="secondary"
+					textOverflow="wrap"
+					marginBottom={6}
+				>
 					Active Key in a Shortcut
 				</Typography>
 				<div className={`story-row ${styles.keysContainer}`}>

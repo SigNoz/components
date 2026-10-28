@@ -254,7 +254,14 @@ function PaletteStory(args: CommandProps): ReactElement {
 			<Button variant="solid" color="secondary" size="md" onClick={() => setOpen(true)}>
 				Open palette
 			</Button>
-			<Typography size="sm" color="muted">
+			<Typography
+				as="span"
+				variant="label"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+			>
 				or press ⌘K / Ctrl+K
 			</Typography>
 			<Command

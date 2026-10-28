@@ -16,10 +16,6 @@
   justify-items: start;
 }
 
-.matrixLabel {
-  white-space: nowrap;
-}
-
 .overflowGrid {
   display: grid;
   grid-template-columns: max-content 12rem minmax(0, 1fr);

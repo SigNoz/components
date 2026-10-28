@@ -277,10 +277,25 @@ function ShowcaseSection({
 }): ReactElement {
 	return (
 		<div className="story-section">
-			<Typography size="base" weight="semibold">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm" className={styles.sectionNote}>
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+				marginBottom={8}
+			>
 				{note}
 			</Typography>
 			{children}
@@ -322,13 +337,28 @@ function ToggleGroupShowcaseLayout(): ReactElement {
 					<div className={styles.matrix}>
 						<span />
 						{STATES.map((state) => (
-							<Typography key={state} size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								key={state}
+								as="span"
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								textOverflow="visible"
+							>
 								{state}
 							</Typography>
 						))}
 						{SIZES.map((size) => (
 							<Fragment key={size}>
-								<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								<Typography
+									as="span"
+									variant="label"
+									size="small"
+									weight="medium"
+									color="inherit"
+									textOverflow="visible"
+								>
 									{size}
 								</Typography>
 								{STATES.map((state) => (

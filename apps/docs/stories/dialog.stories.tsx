@@ -61,7 +61,14 @@ export const Default: Story = {
 							</DialogHeader>
 							<DialogDescription>
 								<div className="story-column">
-									<Typography size="sm">
+									<Typography
+										as="p"
+										variant="paragraph"
+										size="small"
+										weight="regular"
+										color="inherit"
+										textOverflow="wrap"
+									>
 										Dialog content goes here. Use the primitive dialog components for full control.
 									</Typography>
 									<div className={styles.flexEnd}>
@@ -111,7 +118,14 @@ export const Controlled: Story = {
 				}
 			>
 				<div className="story-column">
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Dialog content goes here. Uses AnimatePresence for exit animation.
 					</Typography>
 				</div>
@@ -141,7 +155,16 @@ export const WidthVariants: Story = {
 						}
 					>
 						<div className="story-column">
-							<Typography size="sm">This dialog uses the {width} width variant.</Typography>
+							<Typography
+								as="p"
+								variant="paragraph"
+								size="small"
+								weight="regular"
+								color="inherit"
+								textOverflow="wrap"
+							>
+								This dialog uses the {width} width variant.
+							</Typography>
 							<div className={styles.flexEnd}>
 								<Button
 									variant={ButtonVariant.Solid}
@@ -195,7 +218,16 @@ export const PositionVariants: Story = {
 									</DialogHeader>
 									<DialogDescription>
 										<div className="story-column">
-											<Typography size="sm">This dialog is positioned at {position}.</Typography>
+											<Typography
+												as="p"
+												variant="paragraph"
+												size="small"
+												weight="regular"
+												color="inherit"
+												textOverflow="wrap"
+											>
+												This dialog is positioned at {position}.
+											</Typography>
 										</div>
 									</DialogDescription>
 									<DialogFooter>
@@ -238,7 +270,14 @@ export const WithoutCloseButton: Story = {
 			}
 		>
 			<div className="story-column">
-				<Typography size="sm">
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
 					This dialog has no close (X) button. Use the button below or click outside to close.
 				</Typography>
 				<div className={styles.flexEnd}>
@@ -271,7 +310,14 @@ export const Primitive: Story = {
 								<DialogTitle icon={<Code size={16} />}>Primitive composition</DialogTitle>
 							</DialogHeader>
 							<DialogDescription>
-								<Typography size="sm">
+								<Typography
+									as="p"
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									textOverflow="wrap"
+								>
 									Use Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle,
 									DialogDescription and DialogFooter for full control.
 								</Typography>

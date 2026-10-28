@@ -44,7 +44,14 @@ export const Default: Story = {
 function Row({ label, children }: { label: string; children: ReactNode }): ReactElement {
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.rowLabel}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="visible"
+			>
 				{label}
 			</Typography>
 			{children}
@@ -63,10 +70,26 @@ function Section({
 }): ReactElement {
 	return (
 		<div className="story-section">
-			<Typography size="base" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm">{description}</Typography>
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
+				{description}
+			</Typography>
 			<div className={`${styles.rows} ${styles.marginTopMedium}`}>{children}</div>
 		</div>
 	);
@@ -101,7 +124,15 @@ function OpacityRow(): ReactElement {
 
 	return (
 		<div className={styles.configRow}>
-			<Typography size="sm" id="opacity-label">
+			<Typography
+				variant="label"
+				size="small"
+				weight="regular"
+				color="inherit"
+				as="span"
+				textOverflow="wrap"
+				id="opacity-label"
+			>
 				Fill opacity
 			</Typography>
 			<div className={styles.configSlider}>
@@ -115,7 +146,15 @@ function OpacityRow(): ReactElement {
 					aria-labelledby="opacity-label"
 				/>
 			</div>
-			<Typography size="sm" className={styles.configValue}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="regular"
+				color="inherit"
+				as="span"
+				textOverflow="wrap"
+				tabularNumbers
+			>
 				{opacity.toFixed(2)}
 			</Typography>
 		</div>
@@ -143,7 +182,14 @@ function DurationFilter(): ReactElement {
 				formatValue={(duration) => `${duration} ms`}
 				aria-label="Duration"
 			/>
-			<Typography size="sm">
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				Dragging {value[0]} to {value[1]} ms, filter applied at {applied[0]} to {applied[1]} ms
 			</Typography>
 		</div>
@@ -165,24 +211,59 @@ export const SliderShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Colors
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The same hues as Badge. The color paints the fill, the thumb border and the dots inside
 					the fill. The track and the other dots are tints of it.
 				</Typography>
 				<div className={`${styles.matrix} ${styles.marginTopMedium}`}>
 					<span />
-					<Typography size="sm" weight="medium" className={styles.rowLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						normal
 					</Typography>
-					<Typography size="sm" weight="medium" className={styles.rowLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						marks
 					</Typography>
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.rowLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							<Slider color={color} defaultValue={40} aria-label={`${color} normal`} />
@@ -372,7 +453,16 @@ export const SliderShowcase: Story = {
 				</Row>
 				<Row label="beside a long label">
 					<div className={styles.squeezedRow}>
-						<Typography size="sm">Retention for the logs of every environment</Typography>
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
+							Retention for the logs of every environment
+						</Typography>
 						<Slider
 							color="primary"
 							defaultValue={40}

@@ -226,7 +226,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -275,15 +283,38 @@ export const PillShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Colors
 				</Typography>
-				<Typography size="sm">One outlined pill per color.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					One outlined pill per color.
+				</Typography>
 				<div className={`${styles.matrix} ${styles.marginTopMedium}`} style={matrixStyle(1)}>
 					<MatrixHeader columns={['outlined']} />
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							<Pill variant={VARIANT} color={color}>
@@ -295,10 +326,24 @@ export const PillShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					One row per color, one column per state. <code>hover</code> and <code>focus</code> are
 					forced by <code>storybook-addon-pseudo-states</code>, <code>disabled</code> is the native
 					attribute.
@@ -310,7 +355,14 @@ export const PillShowcase: Story = {
 					<MatrixHeader columns={[...STATES]} />
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							{STATES.map((state) => (
@@ -318,7 +370,14 @@ export const PillShowcase: Story = {
 							))}
 						</Fragment>
 					))}
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						closeable
 					</Typography>
 					{STATES.map((state) => (
@@ -330,10 +389,26 @@ export const PillShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Usage examples
 				</Typography>
-				<Typography size="sm">Applied filters a user can click or remove.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Applied filters a user can click or remove.
+				</Typography>
 				<div className="story-grid">
 					<Pill variant={VARIANT} color="primary" onClick={fn()}>
 						env:prod
@@ -348,14 +423,35 @@ export const PillShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow and tooltip
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Capped at <code>{CONSTRAINED_WIDTH}</code>, full content on hover or focus.
 				</Typography>
 				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
-					<Typography size="sm" weight="medium">
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="wrap"
+					>
 						ellipsis (default)
 					</Typography>
 					<Pill
@@ -367,7 +463,16 @@ export const PillShowcase: Story = {
 					>
 						{LONG_LABEL}
 					</Pill>
-					<Typography size="sm">Truncates, full content on hover or focus.</Typography>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
+						Truncates, full content on hover or focus.
+					</Typography>
 				</div>
 			</div>
 		</div>

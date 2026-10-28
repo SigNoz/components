@@ -17,10 +17,6 @@
   width: 100%;
 }
 
-.rowLabel {
-  white-space: nowrap;
-}
-
 .matrix {
   display: grid;
   grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
@@ -30,10 +26,6 @@
   overflow-x: auto;
   padding-bottom: 4px;
   padding-right: 1rem;
-}
-
-.matrixLabel {
-  white-space: nowrap;
 }
 
 .stateCell {

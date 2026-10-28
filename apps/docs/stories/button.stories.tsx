@@ -220,7 +220,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -351,10 +359,24 @@ export const ButtonShowcase: Story = {
 		<div className="story-container-full">
 			<div className={styles.columnLayout}>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						States
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						One row per variant/color pair the types allow, one column per state. <code>hover</code>
 						, <code>focus</code> and <code>active</code> are forced by{' '}
 						<code>storybook-addon-pseudo-states</code>. No variant styles <code>active</code>, and
@@ -368,7 +390,14 @@ export const ButtonShowcase: Story = {
 						<MatrixHeader columns={[...STATES]} />
 						{VARIANT_COLORS.map(({ variant, color }) => (
 							<Fragment key={`${variant}-${color}`}>
-								<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								<Typography
+									variant="label"
+									size="small"
+									weight="medium"
+									color="inherit"
+									as="span"
+									textOverflow="visible"
+								>
 									{variant} / {color}
 								</Typography>
 								{STATES.map((state) => (
@@ -383,10 +412,24 @@ export const ButtonShowcase: Story = {
 					</div>
 				</div>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						Composition
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						The prefix/suffix/icon slots against both sizes. While loading, the spinner cross-fades
 						over the prefix slot, which opens up on buttons that have no prefix, and the suffix
 						stays where it is.
@@ -398,7 +441,14 @@ export const ButtonShowcase: Story = {
 						<MatrixHeader columns={COMPOSITION_STATES.map(({ label }) => label)} />
 						{COMPOSITIONS.map((composition) => (
 							<Fragment key={composition.id}>
-								<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								<Typography
+									variant="label"
+									size="small"
+									weight="medium"
+									color="inherit"
+									as="span"
+									textOverflow="visible"
+								>
 									{composition.label}
 								</Typography>
 								{COMPOSITION_STATES.map(({ label, size, state }) => (
@@ -414,16 +464,37 @@ export const ButtonShowcase: Story = {
 					</div>
 				</div>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						Overflow and tooltips
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						Every button below is capped at <code>{CONSTRAINED_WIDTH}</code>. The four rows that
 						have something to say are held open by the story's <code>play</code> function, so the
 						snapshot carries the popups themselves, including the stacked ones.
 					</Typography>
 					<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							ellipsis
 						</Typography>
 						<Button
@@ -436,12 +507,26 @@ export const ButtonShowcase: Story = {
 						>
 							{LONG_LABEL}
 						</Button>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							The default: truncates and hands the full label to a tooltip, only while it is
 							actually truncated.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							ellipsis, label fits
 						</Typography>
 						<Button
@@ -454,11 +539,25 @@ export const ButtonShowcase: Story = {
 						>
 							Delete
 						</Button>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Same mode, short label. Nothing is truncated, so there is no tooltip to open.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							hidden
 						</Typography>
 						<Button
@@ -472,11 +571,25 @@ export const ButtonShowcase: Story = {
 						>
 							{LONG_LABEL}
 						</Button>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Clips the label at the button's edge, with no marker and no tooltip.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							disabled + truncated
 						</Typography>
 						<Button
@@ -491,11 +604,25 @@ export const ButtonShowcase: Story = {
 						>
 							{LONG_LABEL}
 						</Button>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Two entries in one popup, the reason first and the full label under it.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							tooltip + truncated
 						</Typography>
 						<TooltipProvider>
@@ -512,12 +639,26 @@ export const ButtonShowcase: Story = {
 								</Button>
 							</Tooltip>
 						</TooltipProvider>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							A button that is already a tooltip trigger stacks into that popup instead of opening a
 							second one on the same hover: your title, then the label.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							tooltip + disabled + truncated
 						</Typography>
 						<TooltipProvider>
@@ -536,11 +677,25 @@ export const ButtonShowcase: Story = {
 								</Button>
 							</Tooltip>
 						</TooltipProvider>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							All three entries stack, dividers between them: title, reason, label.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							loading + disabled + truncated
 						</Typography>
 						<Button
@@ -556,12 +711,26 @@ export const ButtonShowcase: Story = {
 						>
 							{LONG_LABEL}
 						</Button>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							The spinner already says the button is busy, so the reason is dropped. The truncated
 							label still has its own tooltip.
 						</Typography>
 
-						<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
 							loadingTooltip + disabled + truncated
 						</Typography>
 						<Button
@@ -578,7 +747,14 @@ export const ButtonShowcase: Story = {
 						>
 							{LONG_LABEL}
 						</Button>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							<code>loadingTooltip</code> takes the place of the disabled reason for as long as the
 							button is loading, above the truncated label.
 						</Typography>
@@ -644,10 +820,24 @@ export const LoadingOnClick: Story = {
 	}) => (
 		<div className={`story-container-full ${styles.sectionGapLarge}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Loading On Click
 				</Typography>
-				<Typography>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Click a button to put it in the loading state for 5 seconds. While loading, the spinner
 					cross-fades over the prefix, the label and suffix stay visible, and both{' '}
 					<code>onClick</code> and <code>onDoubleClick</code> stop firing.

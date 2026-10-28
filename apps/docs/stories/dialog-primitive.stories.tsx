@@ -58,7 +58,14 @@ export const Default: Story = {
 								<DialogTitle>Dialog title</DialogTitle>
 							</DialogHeader>
 							<DialogDescription>
-								<Typography size="sm">
+								<Typography
+									as="p"
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									textOverflow="wrap"
+								>
 									Dialog content goes here. Use the primitive dialog components for full control.
 								</Typography>
 							</DialogDescription>

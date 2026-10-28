@@ -41,7 +41,14 @@ export const Default: Story = {
 						<DialogTitle>Dialog portal</DialogTitle>
 					</DialogHeader>
 					<DialogDescription>
-						<Typography size="sm">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							textOverflow="wrap"
+						>
 							DialogPortal controls where in the DOM the dialog is rendered (by default,
 							document.body).
 						</Typography>

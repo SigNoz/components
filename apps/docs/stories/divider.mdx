@@ -33,11 +33,18 @@ export default function AlertDetails() {
 or between two items in a row. The divider renders a `<span>`, so it can sit inside a paragraph:
 
 ```tsx
-<Typography.Text>
+<Typography
+	as="p"
+	variant="paragraph"
+	size="base"
+	weight="regular"
+	color="inherit"
+	textOverflow="wrap"
+>
 	Back
 	<Divider orientation="vertical" />
 	{metricName}
-</Typography.Text>
+</Typography>
 ```
 
 ## Layout
@@ -88,13 +95,20 @@ both lines are dashed.
 one line. It is never truncated: the two lines beside it shrink first, so keep it short.
 
 The label sets no font or colour, so it inherits them from the parent. To style it, pass a
-`Typography` as the label:
+`Typography` as the label, with `textOverflow="visible"` so it keeps its one line:
 
 ```tsx
 <Divider>
-	<Typography.Text color="muted" weight="medium">
+	<Typography
+		as="span"
+		variant="label"
+		size="base"
+		weight="medium"
+		color="secondary"
+		textOverflow="visible"
+	>
 		Or get started with these sample alerts
-	</Typography.Text>
+	</Typography>
 </Divider>
 ```
 

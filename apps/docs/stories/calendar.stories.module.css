@@ -59,7 +59,3 @@
     --calendar-day-margin: var(--spacing-1);
   }
 }
-
-.caption {
-  white-space: nowrap;
-}

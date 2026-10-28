@@ -37,14 +37,6 @@
 	font-weight: 500;
 }
 
-.tokenDescription {
-	display: block;
-	margin-top: 0.125rem;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
 .cssVariable {
 	display: none;
 	align-items: center;

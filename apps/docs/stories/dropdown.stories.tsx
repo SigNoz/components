@@ -279,10 +279,25 @@ function ShowcaseCell({
 }): ReactElement {
 	return (
 		<div className={`story-section ${styles.cell} ${className ?? ''}`}>
-			<Typography size="base" weight="semibold">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm" className={styles.sectionNote}>
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+				maxWidth="46ch"
+			>
 				{note}
 			</Typography>
 			{children}

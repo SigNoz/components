@@ -15,12 +15,6 @@
   max-width: 20rem;
 }
 
-.headerMargin {
-  display: block;
-  margin-bottom: 0.75rem;
-  color: var(--text-vanilla-300);
-}
-
 .shortcutRow {
   display: flex;
   align-items: center;

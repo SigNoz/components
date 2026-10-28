@@ -19,13 +19,8 @@
   padding-right: 1rem;
 }
 
-.matrixLabel {
-  white-space: nowrap;
-}
-
 .matrixGroup {
   grid-column: 1 / -1;
-  margin-top: 0.5rem;
 }
 
 /* The title row button of `Callout.Expandable` is its whole click target. */

@@ -40,7 +40,14 @@ export const Default: Story = {
 					<DrawerTitle>Delete this item</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Deleting this item cannot be undone and may affect related data.
 					</Typography>
 				</DrawerDescription>

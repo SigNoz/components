@@ -5,11 +5,6 @@
 	width: 100%;
 }
 
-.sectionNote {
-	color: var(--muted-foreground);
-	margin-bottom: 16px;
-}
-
 .exampleStack {
 	display: flex;
 	flex-direction: column;
@@ -26,10 +21,6 @@
 	justify-items: start;
 	overflow-x: auto;
 	padding-bottom: 4px;
-}
-
-.matrixLabel {
-	white-space: nowrap;
 }
 
 /* Tight enough that the bar cannot fit its options, so the arrows appear. */

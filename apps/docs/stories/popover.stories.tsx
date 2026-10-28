@@ -182,7 +182,15 @@ type Story = StoryObj<typeof Popover>;
  */
 function Hint({ children }: { children: ReactNode }): ReactElement {
 	return (
-		<Typography size="sm" className={styles.hint}>
+		<Typography
+			variant="paragraph"
+			size="small"
+			weight="regular"
+			color="tertiary"
+			as="p"
+			textOverflow="wrap"
+			marginBottom={4}
+		>
 			{children}
 		</Typography>
 	);
@@ -193,7 +201,15 @@ function Hint({ children }: { children: ReactNode }): ReactElement {
  */
 function Result({ children }: { children?: string }): ReactElement {
 	return (
-		<Typography size="sm" className={children === undefined ? styles.resultEmpty : styles.result}>
+		<Typography
+			variant="paragraph"
+			size="small"
+			weight="regular"
+			color={children === undefined ? 'tertiary' : 'secondary'}
+			as="p"
+			textOverflow="wrap"
+			marginTop={6}
+		>
 			{children ?? 'Nothing picked yet.'}
 		</Typography>
 	);
@@ -233,7 +249,16 @@ function ClickPanel(): ReactElement {
 			<ul className={styles.list}>
 				{views.length === 0 && (
 					<li className={styles.empty}>
-						<Typography size="sm">No view matches “{query}”</Typography>
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
+							No view matches “{query}”
+						</Typography>
 					</li>
 				)}
 				{views.map((view) => (
@@ -247,10 +272,27 @@ function ClickPanel(): ReactElement {
 							onClick={() => setPicked(view.name)}
 						>
 							<div className={styles.pickRowBody}>
-								<Typography size="sm" className={styles.pickRowName}>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									as="span"
+									display="block"
+									textOverflow="ellipsis"
+									align="start"
+								>
 									{view.name}
 								</Typography>
-								<Typography size="sm" className={styles.rowMeta}>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="tertiary"
+									as="span"
+									display="block"
+									textOverflow="ellipsis"
+								>
 									{picked === view.name ? 'Showing' : view.owner}
 								</Typography>
 							</div>
@@ -368,7 +410,16 @@ export const SaveViewForm: Story = {
 						}}
 					>
 						<label className={styles.field}>
-							<Typography size="sm">Name</Typography>
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
+								Name
+							</Typography>
 							<Input
 								aria-label="View name"
 								value={name}
@@ -517,8 +568,25 @@ export const HoverBreakdown: Story = {
 					<div className={styles.breakdown}>
 						{BREAKDOWN.map((entry) => (
 							<div key={entry.key} className={styles.pair}>
-								<Typography size="sm">{entry.key}</Typography>
-								<Typography size="sm" className={styles.pairValue}>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									as="p"
+									textOverflow="wrap"
+								>
+									{entry.key}
+								</Typography>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="secondary"
+									as="p"
+									textOverflow="wrap"
+									tabularNumbers
+								>
 									{entry.value}
 								</Typography>
 							</div>
@@ -614,7 +682,16 @@ export const RowHoverCard: Story = {
 							onPointerEnter={(event) => card.showAt(event.currentTarget, span)}
 							onPointerLeave={() => card.close()}
 						>
-							<Typography size="sm">{span.name}</Typography>
+							<Typography
+								variant="paragraph"
+								size="small"
+								weight="regular"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
+								{span.name}
+							</Typography>
 							<span className={styles.bar} style={{ inlineSize: span.width }} />
 						</div>
 					))}
@@ -629,10 +706,36 @@ export const RowHoverCard: Story = {
 				>
 					{(span) => (
 						<div className={styles.breakdown}>
-							<Typography size="sm">{span?.name}</Typography>
+							<Typography
+								variant="paragraph"
+								size="small"
+								weight="regular"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
+								{span?.name}
+							</Typography>
 							<div className={styles.pair}>
-								<Typography size="sm">Duration</Typography>
-								<Typography size="sm" className={styles.pairValue}>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									as="p"
+									textOverflow="wrap"
+								>
+									Duration
+								</Typography>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="secondary"
+									as="p"
+									textOverflow="wrap"
+									tabularNumbers
+								>
 									{span?.duration}
 								</Typography>
 							</div>
@@ -719,8 +822,25 @@ export const ChartDrilldown: Story = {
 					{(point) => (
 						<ul className={styles.list}>
 							<li className={styles.drilldownHeader}>
-								<Typography size="sm">{point?.time}</Typography>
-								<Typography size="sm" className={styles.pairValue}>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									as="p"
+									textOverflow="wrap"
+								>
+									{point?.time}
+								</Typography>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="secondary"
+									as="p"
+									textOverflow="wrap"
+									tabularNumbers
+								>
 									{point === undefined ? '' : `${point.value.toFixed(2)} s`}
 								</Typography>
 							</li>
@@ -820,7 +940,16 @@ export const SuggestionsOnFocus: Story = {
 					<ul className={styles.list}>
 						{matches.length === 0 && (
 							<li className={styles.empty}>
-								<Typography size="sm">No variable matches “{needle}”</Typography>
+								<Typography
+									variant="paragraph"
+									size="small"
+									weight="regular"
+									color="inherit"
+									as="p"
+									textOverflow="wrap"
+								>
+									No variable matches “{needle}”
+								</Typography>
 							</li>
 						)}
 						{matches.map((variable) => (
@@ -1117,10 +1246,27 @@ export const AnchoredTypeahead: Story = {
 									}}
 								>
 									<div className={styles.pickRowBody}>
-										<Typography size="sm" className={styles.pickRowName}>
+										<Typography
+											variant="paragraph"
+											size="small"
+											weight="regular"
+											color="inherit"
+											as="span"
+											display="block"
+											textOverflow="ellipsis"
+											align="start"
+										>
 											{`{{${variable.name}}}`}
 										</Typography>
-										<Typography size="sm" className={styles.rowMeta}>
+										<Typography
+											variant="paragraph"
+											size="small"
+											weight="regular"
+											color="tertiary"
+											as="span"
+											display="block"
+											textOverflow="ellipsis"
+										>
 											{variable.source}
 										</Typography>
 									</div>

@@ -111,7 +111,14 @@ export const AllSizes: Story = {
 						<Avatar size={size} color="robin">
 							{size.toUpperCase()}
 						</Avatar>
-						<Typography size="xs" color="muted">
+						<Typography
+							as="span"
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="visible"
+						>
 							{size}
 						</Typography>
 					</div>
@@ -135,7 +142,14 @@ export const Shapes: Story = {
 				<Avatar size="lg" shape="circle" color="robin">
 					AB
 				</Avatar>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="span"
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="visible"
+				>
 					circle
 				</Typography>
 			</div>
@@ -143,7 +157,14 @@ export const Shapes: Story = {
 				<Avatar size="lg" shape="square" color="robin">
 					AB
 				</Avatar>
-				<Typography size="xs" color="muted">
+				<Typography
+					as="span"
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="visible"
+				>
 					square
 				</Typography>
 			</div>
@@ -177,7 +198,14 @@ export const AllColors: Story = {
 						<Avatar size="lg" color={color}>
 							{color.slice(0, 2).toUpperCase()}
 						</Avatar>
-						<Typography size="xs" color="muted">
+						<Typography
+							as="span"
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							textOverflow="visible"
+						>
 							{color}
 						</Typography>
 					</div>
@@ -220,7 +248,14 @@ export const ImageFallback: Story = {
 			<Avatar size="lg" src="https://broken-url.invalid/avatar.png" color="cherry">
 				JD
 			</Avatar>
-			<Typography size="sm" color="muted">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+			>
 				Broken image URL → falls back to initials
 			</Typography>
 		</div>

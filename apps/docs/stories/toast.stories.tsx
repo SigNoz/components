@@ -569,10 +569,24 @@ export const ToastShowcase: Story = {
 		<div className="story-container-full">
 			<div className={styles.showcase}>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Variants and content
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The stack spread, the way hover or focus inside it spreads it, newest first. It shows
 						three toasts and holds the rest behind, so the frame sits under{' '}
 						<code>PersistToastsProvider</code>, which lifts that limit and keeps it spread, to put
@@ -584,10 +598,24 @@ export const ToastShowcase: Story = {
 				</div>
 
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Stack
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The same toasts as the stack shows them at rest: the newest against the edge, two more
 						peeking out behind it toward the page, every one as tall as the newest. At the bottom
 						the stack grows upward.

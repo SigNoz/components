@@ -277,7 +277,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					as="span"
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -313,7 +321,14 @@ function StateMatrix(): ReactElement {
 			<MatrixHeader columns={[...states]} />
 			{variants.map((variant) => (
 				<Fragment key={variant}>
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						as="span"
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						textOverflow="visible"
+					>
 						{variant}
 					</Typography>
 					{states.map((state) => (
@@ -383,7 +398,15 @@ function LabelledTabs({
 }): ReactElement {
 	return (
 		<div>
-			<Typography size="sm" weight="medium" className={styles.exampleLabel}>
+			<Typography
+				as="p"
+				variant="label"
+				size="small"
+				weight="medium"
+				color="secondary"
+				textOverflow="wrap"
+				marginBottom={2}
+			>
 				{label}
 			</Typography>
 			<WidthFrame overflow={overflow}>
@@ -415,7 +438,15 @@ function AlignmentGroup({
 }): ReactElement {
 	return (
 		<div>
-			<Typography size="base" weight="medium" className={styles.subsectionTitle}>
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="base"
+				weight="medium"
+				color="inherit"
+				textOverflow="wrap"
+				marginBottom={4}
+			>
 				{title}
 			</Typography>
 			<div className={styles.exampleStack}>
@@ -437,7 +468,15 @@ function AlignmentGroup({
 function Section({ title, children }: { title: string; children: ReactNode }): ReactElement {
 	return (
 		<div>
-			<Typography size="lg" weight="semibold" className={styles.sectionTitle}>
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				textOverflow="wrap"
+				marginBottom={8}
+			>
 				{title}
 			</Typography>
 			{children}
@@ -453,7 +492,15 @@ function TabsShowcase(): ReactElement {
 		// Freezing is the toolbar's live/still toggle, never a class baked into a story.
 		<div className={`story-section ${styles.sectionGap}`}>
 			<Section title="States">
-				<Typography size="sm" display="block" className={styles.sectionNote}>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					One row per variant, one column per state. Both tabs in a cell are forced together, so
 					each state is shown on the active tab and an inactive one at once. Primary's hover slider
 					tracks a real pointer, so a forced hover paints the trigger's own background and nothing
@@ -676,7 +723,14 @@ function RoutedTabs(): ReactElement {
 				},
 			]}
 		>
-			<Typography size="base">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="base"
+				weight="regular"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				{`Routed content for /${route}. In an app this is a single <Outlet />.`}
 			</Typography>
 		</Tabs>

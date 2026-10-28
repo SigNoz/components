@@ -87,7 +87,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -201,10 +209,24 @@ export const CalloutShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Variants
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Every color in every variant, once per size. Each description holds a{' '}
 					<code>Callout.Link</code>, and a collapsed callout hides it with the description.
 				</Typography>
@@ -215,12 +237,29 @@ export const CalloutShowcase: Story = {
 					<MatrixHeader columns={VARIANTS.map((variant) => VARIANT_LABELS[variant])} />
 					{SIZES.map((size) => (
 						<Fragment key={size}>
-							<Typography size="sm" weight="semibold" className={styles.matrixGroup}>
-								{size}
-							</Typography>
+							<div className={styles.matrixGroup}>
+								<Typography
+									variant="label"
+									size="small"
+									weight="bold"
+									color="inherit"
+									as="p"
+									textOverflow="wrap"
+									marginTop={4}
+								>
+									{size}
+								</Typography>
+							</div>
 							{COLORS.map((color) => (
 								<Fragment key={color}>
-									<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+									<Typography
+										variant="label"
+										size="small"
+										weight="medium"
+										color="inherit"
+										as="span"
+										textOverflow="visible"
+									>
 										{color}
 									</Typography>
 									{VARIANTS.map((variant) => (
@@ -234,10 +273,24 @@ export const CalloutShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Action
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					<code>Callout.Action</code> in every color at both sizes, with a{' '}
 					<code>Callout.Button</code> in the color of the callout. The action sits where the close
 					button does, centered on the first line of the description, and leaves the height of the
@@ -250,7 +303,14 @@ export const CalloutShowcase: Story = {
 					<MatrixHeader columns={SIZES} />
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							{SIZES.map((size) => (
@@ -270,10 +330,24 @@ export const CalloutShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Title hit area
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The tint marks the title row of <code>Callout.Expandable</code>, the one button that
 					toggles it. It spans the row with the chevron, and the description is outside it.
 				</Typography>
@@ -282,7 +356,14 @@ export const CalloutShowcase: Story = {
 					style={matrixStyle(SIZES.length)}
 				>
 					<MatrixHeader columns={SIZES} />
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						expandable
 					</Typography>
 					{SIZES.map((size) => (
@@ -292,10 +373,24 @@ export const CalloutShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The title row, the close button, the button of an action and the link in each state.{' '}
 					<code>hover</code> and <code>focus</code> are forced by{' '}
 					<code>storybook-addon-pseudo-states</code>.
@@ -305,7 +400,14 @@ export const CalloutShowcase: Story = {
 					style={matrixStyle(STATES.length)}
 				>
 					<MatrixHeader columns={[...STATES]} />
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						expandable
 					</Typography>
 					{STATES.map((state) => (
@@ -321,7 +423,14 @@ export const CalloutShowcase: Story = {
 							</Callout.Expandable>
 						</div>
 					))}
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						closeable
 					</Typography>
 					{STATES.map((state) => (
@@ -337,7 +446,14 @@ export const CalloutShowcase: Story = {
 							</Callout.Closeable>
 						</div>
 					))}
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						action
 					</Typography>
 					{STATES.map((state) => (
@@ -356,10 +472,24 @@ export const CalloutShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Empty and long content
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					An empty <code>Callout</code> renders nothing. <code>Callout.Expandable</code> shows
 					placeholders instead, and truncates a long title with a tooltip.
 				</Typography>
@@ -390,10 +520,24 @@ export const CalloutShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					In a parent with no height left, the description scrolls and the icon stays pinned.
 				</Typography>
 				<div className={`${styles.constrained} ${styles.marginTopMedium}`}>

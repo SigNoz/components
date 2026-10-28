@@ -23,6 +23,13 @@ import styles from './data-table.stories.module.css';
 
 type IconComponent = React.ComponentType<{ className?: string; size?: IconSize | number }>;
 
+const getPerformanceTextColor = (score: number) => {
+	if (score >= 90) return 'success';
+	if (score >= 80) return 'info';
+	if (score >= 70) return 'warning';
+	return 'danger';
+};
+
 // Create a properly typed wrapper component
 const DataTable = <TData,>({
 	columns,
@@ -239,10 +246,24 @@ const enhancedColumns: ColumnDef<User>[] = [
 							.join('')}
 					</div>
 					<div className={styles.columnContainer}>
-						<Typography size="sm" weight="medium">
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							{user.name}
 						</Typography>
-						<Typography size="xs" color="muted">
+						<Typography
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							as="p"
+							textOverflow="wrap"
+						>
 							{user.email}
 						</Typography>
 					</div>
@@ -327,7 +348,14 @@ const enhancedColumns: ColumnDef<User>[] = [
 		cell: ({ row }: { row: Row<User> }) => {
 			const department = row.getValue('department') as string;
 			return (
-				<Typography size="sm" weight="medium">
+				<Typography
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					{department}
 				</Typography>
 			);
@@ -348,7 +376,14 @@ const enhancedColumns: ColumnDef<User>[] = [
 				maximumFractionDigits: 0,
 			}).format(salary);
 			return (
-				<Typography size="sm" weight="medium" className={styles.salaryText}>
+				<Typography
+					variant="label"
+					size="small"
+					weight="medium"
+					color="success"
+					as="p"
+					textOverflow="wrap"
+				>
 					{formatted}
 				</Typography>
 			);
@@ -379,7 +414,14 @@ const enhancedColumns: ColumnDef<User>[] = [
 							}}
 						/>
 					</div>
-					<Typography size="sm" weight="medium" style={{ color: getPerformanceColor(performance) }}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color={getPerformanceTextColor(performance)}
+						as="p"
+						textOverflow="wrap"
+					>
 						{performance}%
 					</Typography>
 				</div>
@@ -401,7 +443,14 @@ const enhancedColumns: ColumnDef<User>[] = [
 				minute: '2-digit',
 			});
 			return (
-				<Typography size="sm" color="muted">
+				<Typography
+					variant="label"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+				>
 					{formatted}
 				</Typography>
 			);
@@ -441,7 +490,16 @@ const simpleColumns: ColumnDef<User>[] = [
 						.map((n: string) => n[0])
 						.join('')}
 				</div>
-				<Typography weight="medium">{row.original.name}</Typography>
+				<Typography
+					variant="label"
+					size="base"
+					weight="medium"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					{row.original.name}
+				</Typography>
 			</div>
 		),
 	},
@@ -449,7 +507,14 @@ const simpleColumns: ColumnDef<User>[] = [
 		accessorKey: 'email',
 		header: 'Email',
 		cell: ({ row }: { row: Row<User> }) => (
-			<Typography size="sm" color="muted">
+			<Typography
+				variant="label"
+				size="small"
+				weight="regular"
+				color="secondary"
+				as="p"
+				textOverflow="wrap"
+			>
 				{row.original.email}
 			</Typography>
 		),
@@ -482,10 +547,26 @@ export const Basic: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Employee Directory
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					A basic data table with sorting, filtering, and pagination capabilities.
 				</Typography>
 				<DataTable {...args} />
@@ -514,10 +595,26 @@ export const Advanced: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Advanced Employee Management
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					Full-featured data table with column reordering, resizing, pinning, row selection, and
 					more.
 				</Typography>
@@ -547,10 +644,26 @@ export const ColumnReordering: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Column Reordering Demo
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					Drag and drop column headers to reorder them. Try dragging the &quot;Name&quot; column to
 					different positions.
 				</Typography>
@@ -579,10 +692,26 @@ export const RowSelection: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Row Selection Demo
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					Select individual rows or use the header checkbox to select all rows. Selected rows are
 					highlighted.
 				</Typography>
@@ -612,10 +741,26 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Compact Employee List
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					A compact view with essential information only, perfect for mobile or space-constrained
 					layouts.
 				</Typography>
@@ -636,7 +781,14 @@ export const Compact: StoryObj<typeof DataTable<User>> = {
 								.map((n: string) => n[0])
 								.join('')}
 						</div>
-						<Typography size="sm" weight="medium">
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							{row.original.name}
 						</Typography>
 					</div>
@@ -698,10 +850,26 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Column Resizing Demo
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					Hover over column headers to see the resize handle. Drag the right edge of column headers
 					to resize them. Double-click the resize handle to reset column width.
 				</Typography>
@@ -722,7 +890,16 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 								.map((n: string) => n[0])
 								.join('')}
 						</div>
-						<Typography weight="medium">{row.original.name}</Typography>
+						<Typography
+							variant="label"
+							size="base"
+							weight="medium"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
+							{row.original.name}
+						</Typography>
 					</div>
 				),
 			},
@@ -730,7 +907,14 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'email',
 				header: 'Email Address',
 				cell: ({ row }: { row: Row<User> }) => (
-					<Typography size="sm" color="muted">
+					<Typography
+						variant="label"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+					>
 						{row.original.email}
 					</Typography>
 				),
@@ -760,7 +944,14 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'department',
 				header: 'Department',
 				cell: ({ row }: { row: Row<User> }) => (
-					<Typography size="sm" weight="medium">
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						{row.original.department}
 					</Typography>
 				),
@@ -777,7 +968,14 @@ export const ColumnResizing: StoryObj<typeof DataTable<User>> = {
 						maximumFractionDigits: 0,
 					}).format(salary);
 					return (
-						<Typography size="sm" weight="medium" className={styles.salaryText}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="success"
+							as="p"
+							textOverflow="wrap"
+						>
 							{formatted}
 						</Typography>
 					);
@@ -806,10 +1004,26 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					All Features Demo
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					This table demonstrates all available features: column reordering, resizing, sorting,
 					filtering, pinning, row selection, and pagination. Try hovering over headers to see resize
 					handles, drag columns to reorder, click headers to sort, use the filter buttons, and
@@ -841,10 +1055,24 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 								.join('')}
 						</div>
 						<div className={styles.columnContainer}>
-							<Typography size="sm" weight="medium">
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
 								{row.original.name}
 							</Typography>
-							<Typography size="xs" color="muted">
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+							>
 								{row.original.email}
 							</Typography>
 						</div>
@@ -917,7 +1145,14 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'department',
 				header: 'Department',
 				cell: ({ row }: { row: Row<User> }) => (
-					<Typography size="sm" weight="medium">
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						{row.original.department}
 					</Typography>
 				),
@@ -934,7 +1169,14 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						maximumFractionDigits: 0,
 					}).format(salary);
 					return (
-						<Typography size="sm" weight="medium" className={styles.salaryText}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="success"
+							as="p"
+							textOverflow="wrap"
+						>
 							{formatted}
 						</Typography>
 					);
@@ -963,9 +1205,12 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 								/>
 							</div>
 							<Typography
-								size="sm"
+								variant="label"
+								size="small"
 								weight="medium"
-								style={{ color: getPerformanceColor(performance) }}
+								color={getPerformanceTextColor(performance)}
+								as="p"
+								textOverflow="wrap"
 							>
 								{performance}%
 							</Typography>
@@ -985,7 +1230,14 @@ export const AllFeatures: StoryObj<typeof DataTable<User>> = {
 						minute: '2-digit',
 					});
 					return (
-						<Typography size="sm" color="muted">
+						<Typography
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							as="p"
+							textOverflow="wrap"
+						>
 							{formatted}
 						</Typography>
 					);
@@ -1068,10 +1320,26 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 	render: (args) => (
 		<div className="story-section">
 			<div className="story-panel">
-				<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={4}
+				>
 					Virtualization with All Features
 				</Typography>
-				<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+					marginBottom={8}
+				>
 					This table demonstrates virtualization with 1000 rows, plus all interactive features:
 					column reordering, resizing, sorting, filtering, and row selection. The table uses virtual
 					scrolling for optimal performance with large datasets. Try scrolling, resizing columns,
@@ -1095,10 +1363,24 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 								.join('')}
 						</div>
 						<div className={styles.columnContainer}>
-							<Typography size="sm" weight="medium">
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
 								{row.original.name}
 							</Typography>
-							<Typography size="xs" color="muted">
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+							>
 								{row.original.email}
 							</Typography>
 						</div>
@@ -1171,7 +1453,14 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 				accessorKey: 'department',
 				header: 'Department',
 				cell: ({ row }: { row: Row<User> }) => (
-					<Typography size="sm" weight="medium">
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
 						{row.original.department}
 					</Typography>
 				),
@@ -1188,7 +1477,14 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						maximumFractionDigits: 0,
 					}).format(salary);
 					return (
-						<Typography size="sm" weight="medium" className={styles.salaryText}>
+						<Typography
+							variant="label"
+							size="small"
+							weight="medium"
+							color="success"
+							as="p"
+							textOverflow="wrap"
+						>
 							{formatted}
 						</Typography>
 					);
@@ -1217,9 +1513,12 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 								/>
 							</div>
 							<Typography
-								size="sm"
+								variant="label"
+								size="small"
 								weight="medium"
-								style={{ color: getPerformanceColor(performance) }}
+								color={getPerformanceTextColor(performance)}
+								as="p"
+								textOverflow="wrap"
 							>
 								{performance}%
 							</Typography>
@@ -1239,7 +1538,14 @@ export const VirtualizationWithFeatures: StoryObj<typeof DataTable<User>> = {
 						minute: '2-digit',
 					});
 					return (
-						<Typography size="sm" color="muted">
+						<Typography
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							as="p"
+							textOverflow="wrap"
+						>
 							{formatted}
 						</Typography>
 					);
@@ -1321,32 +1627,83 @@ export const VirtualizedInfiniteScrollDndResize: StoryObj<typeof DataTable<User>
 		return (
 			<div className="story-section">
 				<div className="story-panel">
-					<Typography size="lg" weight="semibold" className={styles.marginBottomSm}>
+					<Typography
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						Virtualized Infinite Scroll + Reorder + Resize
 					</Typography>
-					<Typography size="sm" color="muted" className={styles.marginBottomMd}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={8}
+					>
 						Large dataset with virtualized rows, drag-and-drop column reordering, and on-change
 						column resizing. Scroll to load more.
 					</Typography>
 					<div className={`story-row-lg ${styles.marginBottomMd}`}>
-						<Typography size="sm" color="muted">
+						<Typography
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							as="p"
+							textOverflow="wrap"
+						>
 							Rows: {data.length}
 						</Typography>
-						<Typography size="sm" color="muted">
+						<Typography
+							variant="label"
+							size="small"
+							weight="regular"
+							color="secondary"
+							as="p"
+							textOverflow="wrap"
+						>
 							Page: {page}
 						</Typography>
 						{loading && (
-							<Typography size="sm" color="muted">
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+							>
 								Loading...
 							</Typography>
 						)}
 						{!hasMore && (
-							<Typography size="sm" className={styles.salaryText}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="success"
+								as="p"
+								textOverflow="wrap"
+							>
 								All items loaded
 							</Typography>
 						)}
 						{orderedColumns.length > 0 && (
-							<Typography size="sm" color="muted" className={styles.truncatedText}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="ellipsis"
+							>
 								Order:{' '}
 								{orderedColumns
 									.map((c) =>
@@ -1582,10 +1939,24 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 								.toUpperCase()}
 						</div>
 						<div className={styles.columnContainer}>
-							<Typography size="sm" weight="medium">
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
 								{row.original.name}
 							</Typography>
-							<Typography size="xs" color="muted">
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+							>
 								{row.original.email}
 							</Typography>
 						</div>
@@ -1629,8 +2000,15 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 					return (
 						<div className="story-row">
 							<Icon className="icon-md" />
-							<Typography size="sm" className={styles.statusTextCapitalize}>
-								{row.original.status}
+							<Typography
+								variant="label"
+								size="small"
+								weight="regular"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
+								{row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
 							</Typography>
 						</div>
 					);
@@ -1646,7 +2024,14 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Annual Salary',
 				size: 140,
 				cell: ({ row }: { row: Row<User> }) => (
-					<Typography size="sm" className={styles.salaryMonospace}>
+					<Typography
+						variant="code"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="code"
+						textOverflow="wrap"
+					>
 						${row.original.salary.toLocaleString()}
 					</Typography>
 				),
@@ -1665,7 +2050,14 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 					};
 					return (
 						<div className="story-row">
-							<Typography size="sm" weight="medium" style={{ color: getPerformanceColor(score) }}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color={getPerformanceTextColor(score)}
+								as="p"
+								textOverflow="wrap"
+							>
 								{score}%
 							</Typography>
 							<div className={styles.stickyPerformanceBar}>
@@ -1686,7 +2078,14 @@ export const StickyHeaders: StoryObj<typeof DataTable<User>> = {
 				header: 'Last Active',
 				size: 140,
 				cell: ({ row }: { row: Row<User> }) => (
-					<Typography size="sm" color="muted">
+					<Typography
+						variant="label"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+					>
 						{new Date(row.original.lastLogin).toLocaleDateString()}
 					</Typography>
 				),

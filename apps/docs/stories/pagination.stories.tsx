@@ -161,7 +161,15 @@ export const Default: Story = {
 		return (
 			<div className={`story-section ${styles.sectionGap}`}>
 				<div>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						3 Pages - First Selected
 					</Typography>
 					<Pagination
@@ -174,7 +182,15 @@ export const Default: Story = {
 				</div>
 
 				<div className={styles.itemMargin}>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						3 Pages - Second Selected
 					</Typography>
 					<Pagination
@@ -187,7 +203,15 @@ export const Default: Story = {
 				</div>
 
 				<div className={styles.itemMargin}>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						10 Pages - First Selected
 					</Typography>
 					<Pagination
@@ -200,7 +224,15 @@ export const Default: Story = {
 				</div>
 
 				<div className={styles.itemMargin}>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						10 Pages - Middle Selected (Page 7)
 					</Typography>
 					<Pagination
@@ -213,7 +245,15 @@ export const Default: Story = {
 				</div>
 
 				<div className={styles.itemMargin}>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						5 Pages - Center Aligned
 					</Typography>
 					<Pagination
@@ -227,7 +267,15 @@ export const Default: Story = {
 				</div>
 
 				<div className={styles.itemMargin}>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						5 Pages - End Aligned
 					</Typography>
 					<Pagination
@@ -241,7 +289,15 @@ export const Default: Story = {
 				</div>
 
 				<div className={styles.itemMargin}>
-					<Typography size="sm" color="muted" display="block" className={styles.labelMargin}>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+						marginBottom={4}
+					>
 						10 Pages - Last Selected
 					</Typography>
 					<Pagination
