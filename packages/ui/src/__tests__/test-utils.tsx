@@ -15,8 +15,21 @@ function isLabel(element: HTMLElement): boolean {
 	return element.dataset.slot === labelSlot;
 }
 
-/** Callbacks of every live ResizeObserver, so a resize can be replayed by hand. */
-const resizeCallbacks = new Set<ResizeObserverCallback>();
+type Observation = {
+	observer: ResizeObserver;
+	callback: ResizeObserverCallback;
+	target: Element;
+};
+
+/** Every element a live ResizeObserver watches, so a resize can be replayed by hand. */
+const observations = new Set<Observation>();
+
+function deliver({ observer, callback, target }: Observation): void {
+	callback(
+		[{ target, contentRect: target.getBoundingClientRect() } as ResizeObserverEntry],
+		observer,
+	);
+}
 
 /** Label wider than its box: the text is cut off. */
 export function truncate(): void {
@@ -30,8 +43,8 @@ export function resize(scrollWidth: number, clientWidth: number): void {
 	labelClientWidth = clientWidth;
 
 	act(() => {
-		for (const callback of resizeCallbacks) {
-			callback([], {} as ResizeObserver);
+		for (const observation of observations) {
+			deliver(observation);
 		}
 	});
 }
@@ -63,19 +76,29 @@ export function mockLabelMeasurement(slot: string): void {
 	globalThis.ResizeObserver = class ResizeObserver {
 		constructor(private readonly callback: ResizeObserverCallback) {}
 
-		observe(): void {
-			resizeCallbacks.add(this.callback);
+		observe(target: Element): void {
+			this.unobserve(target);
+			const observation = { observer: this, callback: this.callback, target };
+			observations.add(observation);
 			// A real ResizeObserver reports the initial size once observation starts,
 			// on the next frame. Delivering it inline keeps the tests synchronous.
-			this.callback([], this);
+			deliver(observation);
 		}
 
-		unobserve(): void {
-			resizeCallbacks.delete(this.callback);
+		unobserve(target: Element): void {
+			for (const observation of observations) {
+				if (observation.observer === this && observation.target === target) {
+					observations.delete(observation);
+				}
+			}
 		}
 
 		disconnect(): void {
-			resizeCallbacks.delete(this.callback);
+			for (const observation of observations) {
+				if (observation.observer === this) {
+					observations.delete(observation);
+				}
+			}
 		}
 	};
 }
@@ -84,7 +107,7 @@ export function mockLabelMeasurement(slot: string): void {
 export function resetLabelMeasurement(): void {
 	labelScrollWidth = 0;
 	labelClientWidth = 0;
-	resizeCallbacks.clear();
+	observations.clear();
 }
 
 /**
