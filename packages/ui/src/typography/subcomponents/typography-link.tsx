@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { useRenderLink } from '../../lib/use-render-link.js';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { cn, type RejectedProps } from '../../lib/utils.js';
-import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
+import { TooltipLazyAnchor } from '../../tooltip/subcomponents/tooltip-lazy-anchor.js';
 import type { TypographyLinkProps } from '../types.js';
 import styles from '../typography.module.scss';
 import {
@@ -28,6 +28,9 @@ import {
  * follows it. A link that renders no text has no accessible name: it warns on the console unless
  * it has an `aria-label` or an `aria-labelledby`. The text is read from the rendered element, so a
  * child component that renders its own text, such as a translation, counts.
+ *
+ * With `textOverflow="ellipsis"`, a cut link shows its full text in a tooltip on hover and when the
+ * keyboard moves focus to it. The tooltip parts mount only then.
  *
  * ### Router links
  *
@@ -163,17 +166,18 @@ export const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(funct
 		},
 	);
 
-	if (!hasEllipsis) {
+	if (!hasEllipsis || !link) {
 		return link;
 	}
 
 	return (
-		<TooltipAnchor
+		<TooltipLazyAnchor
 			content={isTruncated ? children : null}
 			contentProps={{ className: styles['typography__tooltip'] }}
+			openOnFocus
 		>
 			{link}
-		</TooltipAnchor>
+		</TooltipLazyAnchor>
 	);
 });
 TypographyLink.displayName = 'Typography.Link';

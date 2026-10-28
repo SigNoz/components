@@ -18,6 +18,8 @@ type TriggerChildProps = {
 	onMouseEnter?: React.MouseEventHandler<HTMLElement>;
 	onMouseMove?: React.MouseEventHandler<HTMLElement>;
 	onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+	onFocus?: React.FocusEventHandler<HTMLElement>;
+	onBlur?: React.FocusEventHandler<HTMLElement>;
 };
 
 /**
@@ -29,12 +31,19 @@ export type TooltipLazyAnchorProps = Pick<TooltipAnchorProps, 'content' | 'conte
 	 * `aria-describedby` added.
 	 */
 	children: React.ReactElement<TriggerChildProps>;
+	/**
+	 * Opens at once when the trigger takes the focus from the keyboard, and closes when it loses
+	 * it. For a trigger that is focusable.
+	 *
+	 * @default false
+	 */
+	openOnFocus?: boolean;
 };
 
 /**
- * A hover-only trigger that carries no tooltip parts until the pointer is over it. For an element
- * rendered many times that seldom shows its tooltip, such as a cut text in a table cell: a
- * `TooltipAnchor` there mounts a Base UI trigger per element.
+ * A trigger that carries no tooltip parts until the pointer is over it, or with `openOnFocus` until
+ * it takes the focus. For an element rendered many times that seldom shows its tooltip, such as a
+ * cut text in a table cell: a `TooltipAnchor` there mounts a Base UI trigger per element.
  *
  * Opens after the `delay` of the provider, at once while another tooltip of the provider is open or
  * closed less than its `timeout` ago, and stays open while the pointer is over the trigger or the
@@ -66,6 +75,7 @@ export function TooltipLazyAnchor(props: TooltipLazyAnchorProps): React.ReactNod
 function TooltipLazyAnchorParts({
 	content,
 	contentProps,
+	openOnFocus = false,
 	children,
 }: TooltipLazyAnchorProps): React.ReactNode {
 	const entries = useTooltipContentStackEntries();
@@ -118,6 +128,25 @@ function TooltipLazyAnchorParts({
 			pointerTypeRef.current = undefined;
 			tooltip.leaveTrigger();
 		},
+		...(openOnFocus
+			? {
+					onFocus: (event: React.FocusEvent<HTMLElement>) => {
+						childProps.onFocus?.(event);
+
+						// The focus of a child, or one from a press, is not a reason to open.
+						if (
+							event.target === event.currentTarget &&
+							event.currentTarget.matches(':focus-visible')
+						) {
+							tooltip.focusTrigger(event.currentTarget);
+						}
+					},
+					onBlur: (event: React.FocusEvent<HTMLElement>) => {
+						childProps.onBlur?.(event);
+						tooltip.blurTrigger();
+					},
+				}
+			: {}),
 	});
 
 	return (

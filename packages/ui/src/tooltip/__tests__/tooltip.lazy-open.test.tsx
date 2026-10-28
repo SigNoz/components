@@ -73,6 +73,18 @@ describe('useTooltipLazyOpen', () => {
 		expect(result.current.open).toBe(true);
 	});
 
+	it('opens at once on focus and closes at once on blur', () => {
+		const { element, result } = renderLazyOpen();
+
+		act(() => result.current.focusTrigger(element));
+
+		expect(result.current.open).toBe(true);
+
+		act(() => result.current.blurTrigger());
+
+		expect(result.current.open).toBe(false);
+	});
+
 	it('never opens over a trigger with no content', async () => {
 		const { element, result } = renderLazyOpen(false);
 

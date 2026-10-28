@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { userEvent as browserUserEvent } from 'vitest/browser';
 import {
 	mockLabelMeasurement,
 	queryOpenTooltip,
@@ -647,5 +648,112 @@ describe('Typography.Link truncation', () => {
 		);
 
 		expect(screen.getByTestId('link')).toHaveAttribute('data-truncated');
+	});
+
+	it('shows the full text of a cut link on hover, with no tooltip trigger before', async () => {
+		const user = userEvent.setup();
+		truncate();
+		render(
+			<Typography.Link
+				variant="label"
+				size="base"
+				weight="medium"
+				display="block"
+				textOverflow="ellipsis"
+				href="/services"
+				testId="link"
+			>
+				{LONG}
+			</Typography.Link>,
+		);
+		const link = screen.getByTestId('link');
+
+		expect(link).not.toHaveAttribute('data-base-ui-tooltip-trigger');
+
+		await user.hover(link);
+
+		expect(await screen.findByRole('tooltip')).toHaveTextContent(LONG);
+	});
+
+	it('adds the full text of a cut link to the tooltip of a trigger around it', async () => {
+		const user = userEvent.setup();
+		truncate();
+		render(
+			<Tooltip title="Outer title">
+				<Typography.Link
+					variant="label"
+					size="base"
+					weight="medium"
+					display="block"
+					textOverflow="ellipsis"
+					href="#services"
+					testId="link"
+				>
+					{LONG}
+				</Typography.Link>
+			</Tooltip>,
+		);
+
+		await user.hover(screen.getByTestId('link'));
+
+		const tooltips = await screen.findAllByRole('tooltip');
+		expect(tooltips).toHaveLength(1);
+		expect(tooltips[0]).toHaveTextContent(`Outer title${LONG}`);
+	});
+
+	it('shows the full text when the keyboard moves focus to a cut link, and hides it on blur', async () => {
+		const user = userEvent.setup();
+		truncate();
+		render(
+			<>
+				<Typography.Link
+					variant="label"
+					size="base"
+					weight="medium"
+					display="block"
+					textOverflow="ellipsis"
+					href="/services"
+					testId="link"
+				>
+					{LONG}
+				</Typography.Link>
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.tab();
+
+		expect(screen.getByTestId('link')).toHaveFocus();
+		expect(await screen.findByRole('tooltip')).toHaveTextContent(LONG);
+
+		await user.tab();
+
+		await waitFor(() => expect(queryOpenTooltip()).not.toBeInTheDocument());
+	});
+
+	it('opens no tooltip when a press moves focus to a cut link', async () => {
+		truncate();
+		render(
+			<Typography.Link
+				variant="label"
+				size="base"
+				weight="medium"
+				display="block"
+				textOverflow="ellipsis"
+				href="#services"
+				testId="link"
+			>
+				{LONG}
+			</Typography.Link>,
+		);
+		const link = screen.getByTestId('link');
+
+		await browserUserEvent.click(link);
+		await wait(400);
+
+		expect(link).toHaveFocus();
+		expect(queryOpenTooltip()).not.toBeInTheDocument();
+
+		await browserUserEvent.unhover(link);
 	});
 });

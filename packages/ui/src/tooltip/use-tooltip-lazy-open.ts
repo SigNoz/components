@@ -20,10 +20,12 @@ export type TooltipLazyOpen = {
 	enterTrigger: (element: HTMLElement) => void;
 	moveOverTrigger: (element: HTMLElement) => void;
 	leaveTrigger: () => void;
+	focusTrigger: (element: HTMLElement) => void;
+	blurTrigger: () => void;
 	enterPopup: () => void;
 	leavePopup: () => void;
 	/**
-	 * Closes at once, and keeps it closed until the pointer comes back.
+	 * Closes at once, and keeps it closed until the pointer comes back or the trigger takes the focus.
 	 */
 	dismiss: () => void;
 	/**
@@ -46,7 +48,7 @@ export function useTooltipLazyOpen(hasContent: boolean): TooltipLazyOpen {
 	const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 	const [open, setOpen] = useState(false);
 	const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-	const stateRef = useRef({ trigger: false, popup: false, open: false });
+	const stateRef = useRef({ trigger: false, popup: false, focus: false, open: false });
 	const hasContentRef = useRef(hasContent);
 
 	useEffect(() => {
@@ -91,7 +93,7 @@ export function useTooltipLazyOpen(hasContent: boolean): TooltipLazyOpen {
 	const settle = (wait: number): void => {
 		const state = stateRef.current;
 
-		if (state.trigger || state.popup) {
+		if (state.trigger || state.popup || state.focus) {
 			return;
 		}
 
@@ -125,6 +127,14 @@ export function useTooltipLazyOpen(hasContent: boolean): TooltipLazyOpen {
 		leaveTrigger: () => {
 			stateRef.current.trigger = false;
 			settle(Math.max(closeDelay, HOVER_GRACE_MS));
+		},
+		focusTrigger: (element) => {
+			stateRef.current.focus = true;
+			schedule(0, () => show(element));
+		},
+		blurTrigger: () => {
+			stateRef.current.focus = false;
+			settle(0);
 		},
 		enterPopup: () => {
 			const state = stateRef.current;
