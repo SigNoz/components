@@ -36,6 +36,18 @@ export function partTestId(testId: string | undefined, part: string): string | u
 	return testId === undefined ? undefined : `${testId}-${part}`;
 }
 
+/**
+ * Space-separated id lists joined into one, without repeats, for `aria-describedby` and the
+ * other attributes that take a list of ids. `undefined` when no list holds an id.
+ *
+ * @access private
+ */
+export function joinIdRefs(...lists: Array<string | undefined>): string | undefined {
+	const ids = new Set(lists.flatMap((list) => list?.split(/\s+/).filter(Boolean) ?? []));
+
+	return ids.size === 0 ? undefined : [...ids].join(' ');
+}
+
 // https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts
 export type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
 

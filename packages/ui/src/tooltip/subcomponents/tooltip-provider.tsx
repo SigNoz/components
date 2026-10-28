@@ -1,6 +1,11 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import type * as React from 'react';
 import {
+	TOOLTIP_DEFAULT_CLOSE_DELAY,
+	TOOLTIP_DEFAULT_DELAY,
+	TOOLTIP_DEFAULT_TIMEOUT,
+} from '../constants.js';
+import {
 	type TooltipContainer,
 	TooltipConfigProvider,
 	useTooltipConfig,
@@ -43,12 +48,18 @@ export interface TooltipProviderProps {
 export function TooltipProvider({
 	container,
 	children,
-	delay = 300,
-	...props
+	delay = TOOLTIP_DEFAULT_DELAY,
+	closeDelay = TOOLTIP_DEFAULT_CLOSE_DELAY,
+	timeout = TOOLTIP_DEFAULT_TIMEOUT,
 }: TooltipProviderProps): React.ReactElement {
 	return (
-		<TooltipConfigProvider container={container}>
-			<TooltipPrimitive.Provider delay={delay} {...props}>
+		<TooltipConfigProvider
+			container={container}
+			delay={delay}
+			closeDelay={closeDelay}
+			timeout={timeout}
+		>
+			<TooltipPrimitive.Provider delay={delay} closeDelay={closeDelay} timeout={timeout}>
 				{children}
 			</TooltipPrimitive.Provider>
 		</TooltipConfigProvider>
