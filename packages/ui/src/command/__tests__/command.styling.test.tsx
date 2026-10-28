@@ -6,8 +6,8 @@ import type { CommandItemType } from '../types.js';
 import { highlightedOption, renderOpenCommand } from './command.test-utils.js';
 
 /**
- * The spacing and type tokens live in `@signozhq/design-tokens` and are not loaded here, so they
- * are declared in the test to keep the subject on the rules in `command.module.scss`.
+ * The spacing and text style tokens live in `@signozhq/design-tokens` and are not loaded here, so
+ * they are declared in the test to keep the subject on the rules in `command.module.scss`.
  */
 let tokens: HTMLStyleElement;
 
@@ -15,13 +15,17 @@ beforeEach(() => {
 	tokens = document.createElement('style');
 	tokens.textContent = `:root {
 		--spacing-2: 4px;
+		--spacing-3: 6px;
 		--spacing-4: 8px;
 		--spacing-5: 10px;
 		--spacing-6: 12px;
 		--spacing-10: 20px;
-		--periscope-font-size-base: 13px;
-		--line-height-18: 18px;
-		--line-height-20: 20px;
+		--spacing-12: 24px;
+		--label-base-400-font-size: 13px;
+		--label-base-400-line-height: 1;
+		--uppercase-small-600-font-size: 11px;
+		--uppercase-small-600-line-height: 1;
+		--paragraph-base-400-line-height: 20px;
 	}`;
 	document.head.append(tokens);
 });
@@ -81,12 +85,51 @@ describe('Command styling', () => {
 		const label = required(document.querySelector('[data-slot="command-item-label"]'));
 		const prefix = required(screen.getByTestId('command-item-long-prefix').querySelector('svg'));
 		const shortcut = required(document.querySelector('[data-slot="command-item-suffix"] kbd'));
-		const firstLine = label.getBoundingClientRect().top + 18 / 2;
+		const firstLine = label.getBoundingClientRect().top + 20 / 2;
 
 		// Guards the subject: a label on one line would centre the affixes either way.
-		expect(label.getBoundingClientRect().height).toBeGreaterThan(18);
+		expect(label.getBoundingClientRect().height).toBeGreaterThan(20);
 		expect(centerY(prefix)).toBe(firstLine);
 		expect(Math.abs(centerY(shortcut) - firstLine)).toBeLessThanOrEqual(0.5);
+	});
+
+	it('keeps a row at 36px on the paragraph line', async () => {
+		await renderOpenCommand({ items: rows(1) });
+		const row = screen.getByRole('option', { name: 'Row 0' });
+
+		expect(row.getBoundingClientRect().height).toBe(36);
+	});
+
+	it('keeps the search row at 41px on the label line', async () => {
+		await renderOpenCommand({ items: rows(1) });
+		const search = required(document.querySelector('[data-slot="command-search"]'));
+
+		expect(search.getBoundingClientRect().height).toBe(41);
+	});
+
+	it('keeps a group label at 30px on the uppercase line', async () => {
+		await renderOpenCommand({
+			items: [
+				{
+					type: 'group',
+					value: 'navigation',
+					label: 'Navigation',
+					items: [{ type: 'item', value: 'home', label: 'Go to Home', onClick: () => {} }],
+				},
+			],
+		});
+		const label = required(document.querySelector('[data-slot="command-group-label"]'));
+
+		expect(label.getBoundingClientRect().height).toBe(30);
+	});
+
+	it('keeps the empty row on its own line height when the rows take another', async () => {
+		tokens.textContent += `:root { --command-item-line-height: 16px; }`;
+		await renderOpenCommand({ items: [] });
+		const empty = required(document.querySelector('[data-slot="command-empty"]'));
+
+		expect(getComputedStyle(empty).lineHeight).toBe('20px');
+		expect(empty.getBoundingClientRect().height).toBe(36);
 	});
 
 	it('scrolls the row the keyboard reaches clear of the bottom fade', async () => {

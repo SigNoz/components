@@ -22,6 +22,9 @@
   box-sizing: var(--combobox-box-sizing, border-box);
   inline-size: var(--combobox-width, var(--combobox-internal-width, 100%));
   max-inline-size: var(--combobox-max-width, var(--combobox-internal-max-width, 100%));
+
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 }
 
 .combobox__trigger {
@@ -46,10 +49,14 @@
   background-color: var(--combobox-internal-trigger-background);
   color: var(--combobox-internal-trigger-label);
 
-  font-family: var(--combobox-trigger-font-family, inherit);
-  font-size: var(--combobox-trigger-font-size, var(--periscope-font-size-base));
-  font-weight: var(--combobox-trigger-font-weight, var(--font-weight-normal));
-  line-height: var(--combobox-trigger-line-height, var(--line-height-18));
+  font-family: var(--combobox-trigger-font-family, var(--label-base-400-font-family));
+  font-size: var(--combobox-trigger-font-size, var(--label-base-400-font-size));
+  font-weight: var(--combobox-trigger-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--combobox-trigger-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--combobox-trigger-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--combobox-trigger-text-transform, var(--label-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   text-align: var(--combobox-trigger-text-align, start);
 
   cursor: var(--combobox-trigger-cursor, pointer);
@@ -105,7 +112,7 @@
   flex-grow: var(--combobox-value-flex-grow, 1);
   min-inline-size: var(--combobox-value-min-inline-size, 0);
 
-  overflow: var(--combobox-value-overflow, hidden);
+  overflow: var(--combobox-value-overflow, clip visible);
   white-space: var(--combobox-value-white-space, nowrap);
   text-overflow: var(--combobox-value-text-overflow, ellipsis);
 }
@@ -224,15 +231,19 @@
   background-color: var(--combobox-internal-chip-background);
   color: var(--combobox-internal-chip-label);
 
-  font-size: var(--combobox-chip-font-size, var(--periscope-font-size-small));
-  line-height: var(--combobox-chip-line-height, var(--line-height-18));
+  font-family: var(--combobox-chip-font-family, var(--label-small-400-font-family));
+  font-size: var(--combobox-chip-font-size, var(--label-small-400-font-size));
+  font-weight: var(--combobox-chip-font-weight, var(--label-small-400-font-weight));
+  line-height: var(--combobox-chip-line-height, var(--label-small-400-line-height));
+  letter-spacing: var(--combobox-chip-letter-spacing, var(--label-small-400-letter-spacing));
+  text-transform: var(--combobox-chip-text-transform, var(--label-small-400-text-transform));
   white-space: var(--combobox-chip-white-space, nowrap);
 }
 
 .combobox__chip-label {
   max-inline-size: var(--combobox-chip-label-max-inline-size, 8rem);
 
-  overflow: var(--combobox-chip-label-overflow, hidden);
+  overflow: var(--combobox-chip-label-overflow, clip visible);
   text-overflow: var(--combobox-chip-label-text-overflow, ellipsis);
 }
 
@@ -324,6 +335,9 @@
   padding-block: var(--combobox-popup-padding-block, 0);
   padding-inline: var(--combobox-popup-padding-inline, 0);
 
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
+
   border-width: var(--combobox-popup-border-width, 1px);
   border-style: var(--combobox-popup-border-style, solid);
   border-color: var(--combobox-internal-border);
@@ -372,6 +386,7 @@
 .combobox__search-input {
   flex-grow: var(--combobox-search-input-flex-grow, 1);
   min-inline-size: var(--combobox-search-input-min-inline-size, 0);
+  min-block-size: var(--combobox-search-input-min-block-size, var(--spacing-10));
   margin: var(--combobox-search-input-margin, 0);
   padding: var(--combobox-search-input-padding, 0);
 
@@ -379,9 +394,17 @@
   background-color: var(--combobox-search-input-background-color, transparent);
   color: var(--combobox-internal-item-label);
 
-  font-family: var(--combobox-search-input-font-family, inherit);
-  font-size: var(--combobox-item-font-size, var(--periscope-font-size-base));
-  line-height: var(--combobox-search-input-line-height, var(--line-height-20));
+  font-family: var(--combobox-search-input-font-family, var(--label-base-400-font-family));
+  font-size: var(--combobox-item-font-size, var(--label-base-400-font-size));
+  font-weight: var(--combobox-search-input-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--combobox-search-input-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(
+    --combobox-search-input-letter-spacing,
+    var(--label-base-400-letter-spacing)
+  );
+  text-transform: var(--combobox-search-input-text-transform, var(--label-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &::placeholder {
     color: var(--combobox-internal-search-placeholder);
@@ -474,6 +497,9 @@
   gap: var(--combobox-item-slot-gap, var(--spacing-4));
   box-sizing: var(--combobox-item-box-sizing, border-box);
   inline-size: var(--combobox-item-inline-size, 100%);
+  // `COMBOBOX_ESTIMATED_ROW_SIZE` is this 34px floor and the 4px item gap: 38px. It holds only
+  // because nothing wraps.
+  min-block-size: var(--combobox-item-min-block-size, calc(var(--spacing-16) + var(--spacing-1)));
   margin: var(--combobox-item-margin, 0);
 
   padding: var(--combobox-item-padding, var(--spacing-4) var(--spacing-6));
@@ -483,12 +509,14 @@
   background-color: var(--combobox-internal-item-background);
   color: var(--combobox-internal-item-label);
 
-  font-family: var(--combobox-item-font-family, inherit);
-  font-size: var(--combobox-item-font-size, var(--periscope-font-size-base));
-  font-weight: var(--combobox-item-font-weight, var(--font-weight-normal));
-  // `COMBOBOX_ESTIMATED_ROW_SIZE` is this 18px line, 8px of block padding on each side and the
-  // 4px item gap: 38px. It holds only because nothing wraps.
-  line-height: var(--combobox-item-line-height, var(--line-height-18));
+  font-family: var(--combobox-item-font-family, var(--label-base-400-font-family));
+  font-size: var(--combobox-item-font-size, var(--label-base-400-font-size));
+  font-weight: var(--combobox-item-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--combobox-item-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--combobox-item-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--combobox-item-text-transform, var(--label-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   text-align: var(--combobox-item-text-align, start);
   white-space: var(--combobox-item-white-space, nowrap);
 
@@ -519,10 +547,6 @@
       color: var(--combobox-internal-item-label-disabled);
     }
   }
-
-  &[data-kind='hint'] .combobox__item-label {
-    font-style: var(--combobox-hint-font-style, italic);
-  }
 }
 
 .combobox__item-affix {
@@ -543,7 +567,7 @@
   flex-grow: var(--combobox-item-label-flex-grow, 1);
   min-inline-size: var(--combobox-item-label-min-inline-size, 0);
 
-  overflow: var(--combobox-item-label-overflow, hidden);
+  overflow: var(--combobox-item-label-overflow, clip visible);
   white-space: var(--combobox-item-label-white-space, nowrap);
   text-overflow: var(--combobox-item-label-text-overflow, ellipsis);
 }
@@ -625,17 +649,30 @@
 }
 
 .combobox__group-label {
+  display: var(--combobox-group-label-display, flex);
+  align-items: var(--combobox-group-label-align-items, center);
   box-sizing: var(--combobox-group-label-box-sizing, border-box);
+  min-block-size: var(
+    --combobox-group-label-min-block-size,
+    calc(var(--spacing-12) + var(--spacing-3))
+  );
   padding-block: var(--combobox-group-label-padding-block, var(--spacing-3));
   padding-inline: var(--combobox-group-label-padding-inline, var(--spacing-6));
 
   color: var(--combobox-internal-group-label);
 
-  font-size: var(--combobox-group-label-font-size, var(--periscope-font-size-small));
-  font-weight: var(--combobox-group-label-font-weight, var(--font-weight-bold));
-  line-height: var(--combobox-group-label-line-height, var(--line-height-18));
-  text-transform: var(--combobox-group-label-text-transform, uppercase);
-  letter-spacing: var(--combobox-group-label-letter-spacing, 0.04em);
+  font-family: var(--combobox-group-label-font-family, var(--uppercase-small-600-font-family));
+  font-size: var(--combobox-group-label-font-size, var(--uppercase-small-600-font-size));
+  font-weight: var(--combobox-group-label-font-weight, var(--uppercase-small-600-font-weight));
+  line-height: var(--combobox-group-label-line-height, var(--uppercase-small-600-line-height));
+  letter-spacing: var(
+    --combobox-group-label-letter-spacing,
+    var(--uppercase-small-600-letter-spacing)
+  );
+  text-transform: var(
+    --combobox-group-label-text-transform,
+    var(--uppercase-small-600-text-transform)
+  );
 }
 
 .combobox__separator {
@@ -655,8 +692,15 @@
 
   color: var(--combobox-internal-loading-label);
 
-  font-size: var(--combobox-item-font-size, var(--periscope-font-size-base));
-  line-height: var(--combobox-item-line-height, var(--line-height-18));
+  font-family: var(--combobox-loading-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--combobox-loading-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--combobox-loading-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--combobox-loading-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(
+    --combobox-loading-letter-spacing,
+    var(--paragraph-base-400-letter-spacing)
+  );
+  text-transform: var(--combobox-loading-text-transform, var(--paragraph-base-400-text-transform));
 }
 
 .combobox__empty {
@@ -664,8 +708,12 @@
 
   color: var(--combobox-internal-empty-label);
 
-  font-size: var(--combobox-item-font-size, var(--periscope-font-size-base));
-  line-height: var(--combobox-item-line-height, var(--line-height-18));
+  font-family: var(--combobox-empty-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--combobox-empty-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--combobox-empty-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--combobox-empty-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--combobox-empty-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--combobox-empty-text-transform, var(--paragraph-base-400-text-transform));
 }
 
 .combobox__footer {

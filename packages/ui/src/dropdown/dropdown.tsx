@@ -158,7 +158,9 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
 			aria-disabled={disabled || undefined}
 			data-disabled={disabled || undefined}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
-			{...(isValidElement(children) ? { render: children } : { children })}
+			{...(isValidElement(children)
+				? { render: children }
+				: { children, className: styles['dropdown__trigger'] })}
 		/>
 	);
 

@@ -165,7 +165,7 @@ describe('Dropdown styling', () => {
 
 describe('Dropdown row size', () => {
 	/**
-	 * The spacing and line-height tokens the rows read, with the numbers `@signozhq/design-tokens`
+	 * The spacing and text style tokens the rows read, with the numbers `@signozhq/design-tokens`
 	 * ships. Without them every padding computes to zero.
 	 */
 	let sizes: HTMLStyleElement;
@@ -173,11 +173,19 @@ describe('Dropdown row size', () => {
 	beforeEach(() => {
 		sizes = document.createElement('style');
 		sizes.textContent = `:root {
+			--spacing-1: 2px;
 			--spacing-2: 4px;
+			--spacing-3: 6px;
 			--spacing-4: 8px;
 			--spacing-6: 12px;
-			--line-height-18: 18px;
-			--periscope-font-size-base: 13px;
+			--spacing-10: 20px;
+			--spacing-12: 24px;
+			--spacing-16: 32px;
+			--label-base-400-font-size: 13px;
+			--label-base-400-line-height: 1;
+			--uppercase-small-600-font-size: 11px;
+			--uppercase-small-600-line-height: 1;
+			--paragraph-base-400-line-height: 20px;
 		}`;
 		document.head.append(sizes);
 	});
@@ -197,6 +205,49 @@ describe('Dropdown row size', () => {
 		expect(screen.getByRole('menuitem', { name: 'Rename' }).getBoundingClientRect().height).toBe(
 			40,
 		);
+	});
+
+	it('keeps every kind of row at 34px on the label line', async () => {
+		renderDropdown([
+			{ type: 'item', value: 'rename', label: 'Rename' },
+			{ type: 'checkbox', name: 'pinned', label: 'Pinned' },
+			{ type: 'link', value: 'docs', label: 'Docs', render: <a href="#docs" aria-label="Docs" /> },
+			{ type: 'submenu', value: 'export', label: 'Export', items: [] },
+		]);
+		await openDropdown();
+		const rows = [
+			screen.getByRole('menuitem', { name: 'Rename' }),
+			screen.getByRole('menuitemcheckbox', { name: 'Pinned' }),
+			screen.getByRole('menuitem', { name: 'Docs' }),
+			screen.getByRole('menuitem', { name: 'Export' }),
+		];
+
+		expect(rows.map((row) => row.getBoundingClientRect().height)).toEqual([34, 34, 34, 34]);
+	});
+
+	it('keeps a group label at 30px on the uppercase line', async () => {
+		renderDropdown([
+			{
+				type: 'group',
+				value: 'edit',
+				label: 'Edit',
+				items: [{ type: 'item', value: 'rename', label: 'Rename' }],
+			},
+		]);
+		const popup = await openDropdown();
+		const label = popup.querySelector<HTMLElement>('[data-slot="dropdown-group-label"]');
+
+		expect(label?.getBoundingClientRect().height).toBe(30);
+	});
+
+	it('keeps the empty row on its paragraph line when the rows take another', async () => {
+		sizes.textContent += `:root { --dropdown-item-line-height: 16px; }`;
+		renderDropdown([]);
+		const popup = await openDropdown();
+		const empty = popup.querySelector<HTMLElement>('[data-slot="dropdown-empty"]');
+
+		expect(getComputedStyle(empty as HTMLElement).lineHeight).toBe('20px');
+		expect(empty?.getBoundingClientRect().height).toBe(36);
 	});
 
 	it('starts the rows at the popup edge and spaces a separator by the row gap', async () => {
@@ -223,18 +274,19 @@ describe('Dropdown row size', () => {
 
 	// The search row's height is not settled by the rows, so a row line height leaves it alone.
 	it('keeps the search field on its own line height', async () => {
-		sizes.textContent += `:root {
-			--line-height-20: 20px;
-			--dropdown-item-line-height: 16px;
-		}`;
+		sizes.textContent += `:root { --dropdown-item-line-height: 16px; }`;
 		renderDropdown([{ type: 'item', value: 'rename', label: 'Rename' }], {
 			searchInputProps: { placeholder: 'Find' },
 		});
 		await openDropdown();
 
 		const search = screen.getByTestId('menu-search');
+		const style = getComputedStyle(search);
 
-		expect(getComputedStyle(search).lineHeight).toBe('20px');
+		expect(style.lineHeight).toBe('13px');
+		expect(
+			search.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom),
+		).toBe(20);
 
 		sizes.textContent += `:root { --dropdown-search-input-line-height: 24px; }`;
 

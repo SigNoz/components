@@ -16,13 +16,16 @@
  * | `--select-chip-box-sizing` | `border-box` |
  * | `--select-chip-color` | `var(--select-chip-label)` |
  * | `--select-chip-display` | `inline-flex` |
- * | `--select-chip-font-size` | `var(--periscope-font-size-small)` |
+ * | `--select-chip-font-family` | `var(--label-small-400-font-family)` |
+ * | `--select-chip-font-size` | `var(--label-small-400-font-size)` |
+ * | `--select-chip-font-weight` | `var(--label-small-400-font-weight)` |
  * | `--select-chip-gap` | `var(--spacing-1)` |
  * | `--select-chip-label` | `-` |
  * | `--select-chip-label-max-inline-size` | `8rem` |
- * | `--select-chip-label-overflow` | `hidden` |
+ * | `--select-chip-label-overflow` | `clip visible` |
  * | `--select-chip-label-text-overflow` | `ellipsis` |
- * | `--select-chip-line-height` | `var(--line-height-18)` |
+ * | `--select-chip-letter-spacing` | `var(--label-small-400-letter-spacing)` |
+ * | `--select-chip-line-height` | `var(--label-small-400-line-height)` |
  * | `--select-chip-min-inline-size` | `0` |
  * | `--select-chip-padding-inline` | `var(--spacing-3)` |
  * | `--select-chip-remove-align-items` | `center` |
@@ -39,6 +42,7 @@
  * | `--select-chip-remove-justify-content` | `center` |
  * | `--select-chip-remove-margin` | `0` |
  * | `--select-chip-remove-padding` | `0` |
+ * | `--select-chip-text-transform` | `var(--label-small-400-text-transform)` |
  * | `--select-chip-white-space` | `nowrap` |
  * | `--select-chips-align-items` | `center` |
  * | `--select-chips-display` | `flex` |
@@ -48,19 +52,29 @@
  * | `--select-chips-min-inline-size` | `0` |
  * | `--select-display` | `flex` |
  * | `--select-empty-color` | `var(--select-empty-label)` |
+ * | `--select-empty-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--select-empty-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--select-empty-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--select-empty-label` | `-` |
+ * | `--select-empty-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--select-empty-line-height` | `var(--paragraph-base-400-line-height)` |
+ * | `--select-empty-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--select-group-display` | `flex` |
  * | `--select-group-flex-direction` | `column` |
  * | `--select-group-label` | `-` |
+ * | `--select-group-label-align-items` | `center` |
  * | `--select-group-label-box-sizing` | `border-box` |
  * | `--select-group-label-color` | `var(--select-group-label)` |
- * | `--select-group-label-font-size` | `var(--periscope-font-size-small)` |
- * | `--select-group-label-font-weight` | `var(--font-weight-bold)` |
- * | `--select-group-label-letter-spacing` | `0.04em` |
- * | `--select-group-label-line-height` | `var(--line-height-18)` |
+ * | `--select-group-label-display` | `flex` |
+ * | `--select-group-label-font-family` | `var(--uppercase-small-600-font-family)` |
+ * | `--select-group-label-font-size` | `var(--uppercase-small-600-font-size)` |
+ * | `--select-group-label-font-weight` | `var(--uppercase-small-600-font-weight)` |
+ * | `--select-group-label-letter-spacing` | `var(--uppercase-small-600-letter-spacing)` |
+ * | `--select-group-label-line-height` | `var(--uppercase-small-600-line-height)` |
+ * | `--select-group-label-min-block-size` | `calc(var(--spacing-12) + var(--spacing-3))` |
  * | `--select-group-label-padding-block` | `var(--spacing-3)` |
  * | `--select-group-label-padding-inline` | `var(--spacing-6)` |
- * | `--select-group-label-text-transform` | `uppercase` |
+ * | `--select-group-label-text-transform` | `var(--uppercase-small-600-text-transform)` |
  * | `--select-icon-align-items` | `center` |
  * | `--select-icon-chips-block-size` | `var(--select-internal-chip-block-size)` |
  * | `--select-icon-color` | `var(--select-trigger-icon)` |
@@ -110,9 +124,9 @@
  * | `--select-item-disabled-cursor` | `not-allowed` |
  * | `--select-item-display` | `flex` |
  * | `--select-item-focus-outline` | `none` |
- * | `--select-item-font-family` | `inherit` |
- * | `--select-item-font-size` | `var(--periscope-font-size-base)` |
- * | `--select-item-font-weight` | `var(--font-weight-normal)` |
+ * | `--select-item-font-family` | `var(--label-base-400-font-family)` |
+ * | `--select-item-font-size` | `var(--label-base-400-font-size)` |
+ * | `--select-item-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--select-item-gap` | `var(--spacing-2)` |
  * | `--select-item-highlighted-background-color` | `var(--select-item-background-hover)` |
  * | `--select-item-highlighted-color` | `var(--select-item-label-hover)` |
@@ -135,14 +149,17 @@
  * | `--select-item-label-flex-grow` | `1` |
  * | `--select-item-label-hover` | `-` |
  * | `--select-item-label-min-inline-size` | `0` |
- * | `--select-item-label-overflow` | `hidden` |
+ * | `--select-item-label-overflow` | `clip visible` |
  * | `--select-item-label-text-overflow` | `ellipsis` |
  * | `--select-item-label-white-space` | `nowrap` |
- * | `--select-item-line-height` | `var(--line-height-18)` |
+ * | `--select-item-letter-spacing` | `var(--label-base-400-letter-spacing)` |
+ * | `--select-item-line-height` | `var(--label-base-400-line-height)` |
  * | `--select-item-margin` | `0` |
+ * | `--select-item-min-block-size` | `calc(var(--spacing-16) + var(--spacing-1))` |
  * | `--select-item-padding` | `var(--spacing-4) var(--spacing-6)` |
  * | `--select-item-slot-gap` | `var(--spacing-4)` |
  * | `--select-item-text-align` | `start` |
+ * | `--select-item-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--select-item-user-select` | `none` |
  * | `--select-item-white-space` | `nowrap` |
  * | `--select-list-display` | `flex` |
@@ -157,8 +174,14 @@
  * | `--select-loading-align-items` | `center` |
  * | `--select-loading-color` | `var(--select-loading-label)` |
  * | `--select-loading-display` | `flex` |
+ * | `--select-loading-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--select-loading-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--select-loading-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--select-loading-justify-content` | `center` |
  * | `--select-loading-label` | `-` |
+ * | `--select-loading-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--select-loading-line-height` | `var(--paragraph-base-400-line-height)` |
+ * | `--select-loading-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--select-max-block-size` | `var(--select-internal-max-block-size, 20rem)` |
  * | `--select-max-width` | `var(--select-internal-max-width, 100%)` |
  * | `--select-placeholder-color` | `var(--select-trigger-placeholder)` |
@@ -214,16 +237,17 @@
  * | `--select-trigger-focus-outline-width` | `1px` |
  * | `--select-trigger-focus-ring` | `-` |
  * | `--select-trigger-focus-ring-color` | `var(--select-trigger-focus-ring)` |
- * | `--select-trigger-font-family` | `inherit` |
- * | `--select-trigger-font-size` | `var(--periscope-font-size-base)` |
- * | `--select-trigger-font-weight` | `var(--font-weight-normal)` |
+ * | `--select-trigger-font-family` | `var(--label-base-400-font-family)` |
+ * | `--select-trigger-font-size` | `var(--label-base-400-font-size)` |
+ * | `--select-trigger-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--select-trigger-gap` | `var(--spacing-4)` |
  * | `--select-trigger-hover-border-color` | `var(--select-trigger-border-hover)` |
  * | `--select-trigger-icon` | `-` |
  * | `--select-trigger-invalid-border-color` | `var(--destructive)` |
  * | `--select-trigger-label` | `-` |
  * | `--select-trigger-label-disabled` | `-` |
- * | `--select-trigger-line-height` | `var(--line-height-18)` |
+ * | `--select-trigger-letter-spacing` | `var(--label-base-400-letter-spacing)` |
+ * | `--select-trigger-line-height` | `var(--label-base-400-line-height)` |
  * | `--select-trigger-margin` | `0` |
  * | `--select-trigger-min-block-size` | `2rem` |
  * | `--select-trigger-min-inline-size` | `0` |
@@ -234,12 +258,13 @@
  * | `--select-trigger-readonly-cursor` | `not-allowed` |
  * | `--select-trigger-readonly-opacity` | `0.8` |
  * | `--select-trigger-text-align` | `start` |
+ * | `--select-trigger-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--select-trigger-transition-duration` | `150ms` |
  * | `--select-trigger-transition-property` | `border-color` |
  * | `--select-trigger-transition-timing-function` | `ease` |
  * | `--select-value-flex-grow` | `1` |
  * | `--select-value-min-inline-size` | `0` |
- * | `--select-value-overflow` | `hidden` |
+ * | `--select-value-overflow` | `clip visible` |
  * | `--select-value-prefix-align-items` | `center` |
  * | `--select-value-prefix-display` | `inline-grid` |
  * | `--select-value-prefix-flex-shrink` | `0` |

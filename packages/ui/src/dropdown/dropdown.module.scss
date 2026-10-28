@@ -1,3 +1,11 @@
+.dropdown__trigger {
+  font: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+
 // Rules read colour only through the `--dropdown-internal-*` pairs below, never a semantic token
 // directly.
 .dropdown {
@@ -49,6 +57,9 @@
 
   padding-block: var(--dropdown-padding-block, 0);
   padding-inline: var(--dropdown-padding-inline, 0);
+
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   border-width: var(--dropdown-border-width, 1px);
   border-style: var(--dropdown-border-style, solid);
@@ -141,6 +152,9 @@
   display: var(--dropdown-item-display, flex);
   align-items: var(--dropdown-item-align-items, center);
   gap: var(--dropdown-item-slot-gap, var(--spacing-4));
+  box-sizing: var(--dropdown-item-box-sizing, border-box);
+  // The 34px floor and the 4px item gap give a 38px pitch. Holds only because nothing wraps.
+  min-block-size: var(--dropdown-item-min-block-size, calc(var(--spacing-16) + var(--spacing-1)));
 
   padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
@@ -148,11 +162,12 @@
   background-color: var(--dropdown-internal-item-background);
   color: var(--dropdown-internal-item-label);
 
-  font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
-  font-weight: var(--dropdown-item-font-weight, var(--font-weight-normal));
-  // An 18px label between 8px of block padding gives the 34px row, and the 4px item gap a 38px
-  // pitch. Holds only because nothing wraps.
-  line-height: var(--dropdown-item-line-height, var(--line-height-18));
+  font-family: var(--dropdown-item-font-family, var(--label-base-400-font-family));
+  font-size: var(--dropdown-item-font-size, var(--label-base-400-font-size));
+  font-weight: var(--dropdown-item-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--dropdown-item-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--dropdown-item-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--dropdown-item-text-transform, var(--label-base-400-text-transform));
   white-space: var(--dropdown-item-white-space, nowrap);
 
   cursor: var(--dropdown-item-cursor, pointer);
@@ -322,7 +337,7 @@
   flex-grow: var(--dropdown-item-label-flex-grow, 1);
   min-inline-size: var(--dropdown-item-label-min-inline-size, 0);
 
-  overflow: var(--dropdown-item-label-overflow, hidden);
+  overflow: var(--dropdown-item-label-overflow, clip visible);
   white-space: var(--dropdown-item-label-white-space, nowrap);
   text-overflow: var(--dropdown-item-label-text-overflow, ellipsis);
 }
@@ -334,16 +349,30 @@
 }
 
 .dropdown__group-label {
+  display: var(--dropdown-group-label-display, flex);
+  align-items: var(--dropdown-group-label-align-items, center);
+  box-sizing: var(--dropdown-group-label-box-sizing, border-box);
+  min-block-size: var(
+    --dropdown-group-label-min-block-size,
+    calc(var(--spacing-12) + var(--spacing-3))
+  );
   padding-block: var(--dropdown-group-label-padding-block, var(--spacing-3));
   padding-inline: var(--dropdown-group-label-padding-inline, var(--spacing-6));
 
   color: var(--dropdown-internal-group-label);
 
-  font-size: var(--dropdown-group-label-font-size, var(--periscope-font-size-small));
-  font-weight: var(--dropdown-group-label-font-weight, var(--font-weight-bold));
-  line-height: var(--dropdown-group-label-line-height, var(--line-height-18));
-  text-transform: var(--dropdown-group-label-text-transform, uppercase);
-  letter-spacing: var(--dropdown-group-label-letter-spacing, 0.04em);
+  font-family: var(--dropdown-group-label-font-family, var(--uppercase-small-600-font-family));
+  font-size: var(--dropdown-group-label-font-size, var(--uppercase-small-600-font-size));
+  font-weight: var(--dropdown-group-label-font-weight, var(--uppercase-small-600-font-weight));
+  line-height: var(--dropdown-group-label-line-height, var(--uppercase-small-600-line-height));
+  letter-spacing: var(
+    --dropdown-group-label-letter-spacing,
+    var(--uppercase-small-600-letter-spacing)
+  );
+  text-transform: var(
+    --dropdown-group-label-text-transform,
+    var(--uppercase-small-600-text-transform)
+  );
 }
 
 .dropdown__separator {
@@ -466,15 +495,25 @@
 .dropdown__search-input {
   flex-grow: var(--dropdown-search-input-flex-grow, 1);
   min-inline-size: var(--dropdown-search-input-min-inline-size, 0);
+  // A floor of its own: the search row's height is a question of its own, not settled by the 34px
+  // rows, and the label line height of 1 would shrink the field to its font.
+  min-block-size: var(--dropdown-search-input-min-block-size, var(--spacing-10));
 
   border: var(--dropdown-search-input-border, none);
   background-color: var(--dropdown-search-input-background-color, transparent);
   color: var(--dropdown-internal-item-label);
 
-  font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
-  // Still the 20px line, on a token of its own: the search row's height is a question of its own,
-  // not settled by the 34px rows.
-  line-height: var(--dropdown-search-input-line-height, var(--line-height-20));
+  font-family: var(--dropdown-search-input-font-family, var(--label-base-400-font-family));
+  font-size: var(--dropdown-item-font-size, var(--label-base-400-font-size));
+  font-weight: var(--dropdown-search-input-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--dropdown-search-input-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(
+    --dropdown-search-input-letter-spacing,
+    var(--label-base-400-letter-spacing)
+  );
+  text-transform: var(--dropdown-search-input-text-transform, var(--label-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &::placeholder {
     color: var(--dropdown-internal-search-placeholder);
@@ -494,6 +533,16 @@
   padding: var(--dropdown-item-padding, var(--spacing-4) var(--spacing-6));
 
   color: var(--dropdown-internal-loading-label);
+
+  font-family: var(--dropdown-loading-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--dropdown-loading-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--dropdown-loading-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--dropdown-loading-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(
+    --dropdown-loading-letter-spacing,
+    var(--paragraph-base-400-letter-spacing)
+  );
+  text-transform: var(--dropdown-loading-text-transform, var(--paragraph-base-400-text-transform));
 }
 
 .dropdown__empty {
@@ -501,6 +550,10 @@
 
   color: var(--dropdown-internal-item-label-disabled);
 
-  font-size: var(--dropdown-item-font-size, var(--periscope-font-size-base));
-  line-height: var(--dropdown-item-line-height, var(--line-height-18));
+  font-family: var(--dropdown-empty-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--dropdown-empty-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--dropdown-empty-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--dropdown-empty-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--dropdown-empty-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--dropdown-empty-text-transform, var(--paragraph-base-400-text-transform));
 }
