@@ -15,8 +15,8 @@ beforeEach(() => {
 	tokens.textContent = `:root {
 		--spacing-1: 2px;
 		--spacing-4: 8px;
-		--line-height-18: 18px;
-		--periscope-font-size-base: 13px;
+		--paragraph-base-400-font-size: 13px;
+		--paragraph-base-400-line-height: 20px;
 	}`;
 	document.head.append(tokens);
 });
@@ -30,10 +30,21 @@ function popupHeight(): number {
 }
 
 describe('Tooltip sizing', () => {
+	it('is 26px tall on one line: a 20px line, 2px padding and a 1px border on each side', () => {
+		render(
+			<Tooltip title="Helpful information">
+				<button type="button">Hover</button>
+			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
+		);
+
+		expect(popupHeight()).toBe(26);
+	});
+
 	it('still takes --tooltip-padding and --tooltip-line-height from the call site', () => {
 		tokens.textContent += `:root {
 			--tooltip-padding: 4px 8px;
-			--tooltip-line-height: 20px;
+			--tooltip-line-height: 24px;
 		}`;
 
 		render(
@@ -43,6 +54,6 @@ describe('Tooltip sizing', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(popupHeight()).toBe(30);
+		expect(popupHeight()).toBe(34);
 	});
 });

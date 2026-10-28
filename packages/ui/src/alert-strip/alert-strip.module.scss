@@ -8,12 +8,16 @@
 	min-height: var(--alert-strip-min-height, 2rem);
 	margin: 0;
 	color: var(--alert-strip-internal-foreground, inherit);
-	font-size: var(--alert-strip-font-size, var(--periscope-font-size-base));
-	font-weight: var(--alert-strip-font-weight, var(--periscope-font-weight-medium));
+	font-family: var(--alert-strip-font-family, var(--paragraph-base-500-font-family));
+	font-size: var(--alert-strip-font-size, var(--paragraph-base-500-font-size));
+	font-weight: var(--alert-strip-font-weight, var(--paragraph-base-500-font-weight));
 	// Figma draws one line at `line-height: 1`. A second line needs room, and one line still sits in
 	// the middle of the strip.
-	line-height: var(--alert-strip-line-height, var(--periscope-line-height-base));
-	letter-spacing: var(--alert-strip-letter-spacing, -0.005em);
+	line-height: var(--alert-strip-line-height, var(--paragraph-base-500-line-height));
+	letter-spacing: var(--alert-strip-letter-spacing, var(--paragraph-base-500-letter-spacing));
+	text-transform: var(--alert-strip-text-transform, var(--paragraph-base-500-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	--alert-strip-internal-bar-height: var(--alert-strip-bar-height, 8px);
 	--alert-strip-internal-end-inline-size: var(--alert-strip-end-inline-size, 54px);
 	--alert-strip-internal-decoration: var(--alert-strip-decoration-color, var(--alert-strip-decoration));

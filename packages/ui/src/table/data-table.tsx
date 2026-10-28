@@ -247,6 +247,7 @@ function VirtualizedTableBody<TData>({
 								<TableCell className={styles['data-table__action-cell']}>
 									{row.getCanExpand() && (
 										<button
+											type="button"
 											onClick={(e) => {
 												e.stopPropagation();
 												row.toggleExpanded();
@@ -1140,6 +1141,7 @@ export function DataTable<TData, TValue>({
 															: flexRender(header.column.columnDef.header, header.getContext())}
 														{enableSorting && column.getCanSort() && (
 															<button
+																type="button"
 																onClick={column.getToggleSortingHandler()}
 																className={cn(
 																	styles['data-table__header-button'],
@@ -1151,6 +1153,7 @@ export function DataTable<TData, TValue>({
 														)}
 														{canFilter && (
 															<button
+																type="button"
 																onClick={() => toggleFilter(header.id)}
 																className={cn(
 																	styles['data-table__header-button'],
@@ -1163,6 +1166,7 @@ export function DataTable<TData, TValue>({
 														)}
 														{enableColumnPinning && (
 															<button
+																type="button"
 																onClick={() => togglePin(header.id)}
 																className={cn(
 																	styles['data-table__header-button'],
@@ -1302,7 +1306,7 @@ export function DataTable<TData, TValue>({
 																	styles['data-table__row_expandable'],
 															)}
 															style={{
-																height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
+																height: enableDynamicRowHeights ? undefined : `${rowHeight}px`,
 																minHeight: `${rowHeight}px`,
 															}}
 															onClick={(e) => {
@@ -1357,6 +1361,7 @@ export function DataTable<TData, TValue>({
 																<TableCell className={styles['data-table__action-cell']}>
 																	{row.getCanExpand() && (
 																		<button
+																			type="button"
 																			onClick={(e) => {
 																				e.stopPropagation();
 																				row.toggleExpanded();
@@ -1434,7 +1439,7 @@ export function DataTable<TData, TValue>({
 															styles['data-table__row_expandable'],
 													)}
 													style={{
-														height: enableDynamicRowHeights ? 'auto' : `${rowHeight}px`,
+														height: enableDynamicRowHeights ? undefined : `${rowHeight}px`,
 														minHeight: `${rowHeight}px`,
 													}}
 													onClick={(e) => {
@@ -1489,6 +1494,7 @@ export function DataTable<TData, TValue>({
 														<TableCell className={styles['data-table__action-cell']}>
 															{row.getCanExpand() && (
 																<button
+																	type="button"
 																	onClick={(e) => {
 																		e.stopPropagation();
 																		row.toggleExpanded();
@@ -1648,6 +1654,7 @@ export function DataTable<TData, TValue>({
 						</div>
 						<div className={styles['data-table__pagination-buttons']}>
 							<button
+								type="button"
 								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.setPageIndex(0);
@@ -1664,6 +1671,7 @@ export function DataTable<TData, TValue>({
 								<ChevronsLeft className={styles['data-table__pagination-button-icon']} />
 							</button>
 							<button
+								type="button"
 								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.previousPage();
@@ -1680,6 +1688,7 @@ export function DataTable<TData, TValue>({
 								<ChevronLeft className={styles['data-table__pagination-button-icon']} />
 							</button>
 							<button
+								type="button"
 								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.nextPage();
@@ -1696,6 +1705,7 @@ export function DataTable<TData, TValue>({
 								<ChevronRight className={styles['data-table__pagination-button-icon']} />
 							</button>
 							<button
+								type="button"
 								className={styles['data-table__pagination-button']}
 								onClick={() => {
 									table.setPageIndex(table.getPageCount() - 1);

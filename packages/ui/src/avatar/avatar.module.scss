@@ -7,29 +7,57 @@
     vertical-align: middle;
     user-select: none;
     flex-shrink: 0;
+    font-family: var(--avatar-font-family, var(--avatar-internal-font-family));
+    font-size: var(--avatar-internal-font-size);
+    font-weight: var(--avatar-font-weight, var(--avatar-internal-font-weight));
+    line-height: var(--avatar-line-height, var(--avatar-internal-line-height));
+    letter-spacing: var(--avatar-letter-spacing, var(--avatar-internal-letter-spacing));
+    text-transform: var(--avatar-text-transform, var(--avatar-internal-text-transform));
+    font-variant-numeric: normal;
+    font-feature-settings: 'ss01' 1;
 
     &[data-size="sm"] {
         width: var(--avatar-size-sm-width, 24px);
         height: var(--avatar-size-sm-height, 24px);
-        font-size: var(--avatar-size-sm-font-size, 12px);
+        --avatar-internal-font-family: var(--label-small-400-font-family);
+        --avatar-internal-font-size: var(--avatar-size-sm-font-size, var(--label-small-400-font-size));
+        --avatar-internal-font-weight: var(--label-small-400-font-weight);
+        --avatar-internal-line-height: var(--label-small-400-line-height);
+        --avatar-internal-letter-spacing: var(--label-small-400-letter-spacing);
+        --avatar-internal-text-transform: var(--label-small-400-text-transform);
     }
 
     &[data-size="md"] {
         width: var(--avatar-size-md-width, 32px);
         height: var(--avatar-size-md-height, 32px);
-        font-size: var(--avatar-size-md-font-size, 14px);
+        --avatar-internal-font-family: var(--label-base-400-font-family);
+        --avatar-internal-font-size: var(--avatar-size-md-font-size, var(--label-base-400-font-size));
+        --avatar-internal-font-weight: var(--label-base-400-font-weight);
+        --avatar-internal-line-height: var(--label-base-400-line-height);
+        --avatar-internal-letter-spacing: var(--label-base-400-letter-spacing);
+        --avatar-internal-text-transform: var(--label-base-400-text-transform);
     }
 
     &[data-size="lg"] {
         width: var(--avatar-size-lg-width, 40px);
         height: var(--avatar-size-lg-height, 40px);
-        font-size: var(--avatar-size-lg-font-size, 16px);
+        --avatar-internal-font-family: var(--label-medium-400-font-family);
+        --avatar-internal-font-size: var(--avatar-size-lg-font-size, var(--label-medium-400-font-size));
+        --avatar-internal-font-weight: var(--label-medium-400-font-weight);
+        --avatar-internal-line-height: var(--label-medium-400-line-height);
+        --avatar-internal-letter-spacing: var(--label-medium-400-letter-spacing);
+        --avatar-internal-text-transform: var(--label-medium-400-text-transform);
     }
 
     &[data-size="xl"] {
         width: var(--avatar-size-xl-width, 48px);
         height: var(--avatar-size-xl-height, 48px);
-        font-size: var(--avatar-size-xl-font-size, 18px);
+        --avatar-internal-font-family: var(--label-large-400-font-family);
+        --avatar-internal-font-size: var(--avatar-size-xl-font-size, var(--label-large-400-font-size));
+        --avatar-internal-font-weight: var(--label-large-400-font-weight);
+        --avatar-internal-line-height: var(--label-large-400-line-height);
+        --avatar-internal-letter-spacing: var(--label-large-400-letter-spacing);
+        --avatar-internal-text-transform: var(--label-large-400-text-transform);
     }
 
     &[data-shape="circle"] {

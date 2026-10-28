@@ -19,7 +19,14 @@
 	table-layout: fixed;
 	width: 100%;
 	caption-side: bottom;
-	font-size: var(--periscope-font-size-base, 13px);
+	font-family: var(--table-font-family, var(--label-base-400-font-family));
+	font-size: var(--table-font-size, var(--label-base-400-font-size));
+	font-weight: var(--table-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--table-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--table-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--table-text-transform, var(--label-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	margin: 0;
 }
 
@@ -66,7 +73,12 @@
 .table__footer {
 	background: var(--muted);
 	border-top: 1px solid var(--table-border-color, var(--border));
-	font-weight: 500;
+	font-family: var(--table-footer-font-family, var(--label-base-500-font-family));
+	font-size: var(--table-footer-font-size, var(--label-base-500-font-size));
+	font-weight: var(--table-footer-font-weight, var(--label-base-500-font-weight));
+	line-height: var(--table-footer-line-height, var(--label-base-500-line-height));
+	letter-spacing: var(--table-footer-letter-spacing, var(--label-base-500-letter-spacing));
+	text-transform: var(--table-footer-text-transform, var(--label-base-500-text-transform));
 
 	tr:last-child {
 		border-bottom: 0;
@@ -86,6 +98,9 @@
 	}
 }
 
+:where(.table__body > .table__row:not([role='presentation']), .table__footer > .table__row) {
+	height: var(--table-row-height, var(--spacing-16));
+}
 
 .table__head {
 	position: relative;
@@ -93,7 +108,12 @@
 	padding: var(--table-cell-padding, var(--spacing-4, 0.5rem));
 	text-align: left;
 	vertical-align: middle;
-	font-weight: 500;
+	font-family: var(--table-head-font-family, var(--label-base-500-font-family));
+	font-size: var(--table-head-font-size, var(--label-base-500-font-size));
+	font-weight: var(--table-head-font-weight, var(--label-base-500-font-weight));
+	line-height: var(--table-head-line-height, var(--label-base-500-line-height));
+	letter-spacing: var(--table-head-letter-spacing, var(--label-base-500-letter-spacing));
+	text-transform: var(--table-head-text-transform, var(--label-base-500-text-transform));
 	white-space: nowrap;
 	color: var(--foreground);
 
@@ -123,5 +143,10 @@
 .table__caption {
 	color: var(--muted-foreground);
 	margin-top: var(--table-caption-margin-top, var(--spacing-4, 1rem));
-	font-size: var(--periscope-font-size-base, 13px);
+	font-family: var(--table-caption-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--table-caption-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--table-caption-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--table-caption-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--table-caption-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--table-caption-text-transform, var(--paragraph-base-400-text-transform));
 }

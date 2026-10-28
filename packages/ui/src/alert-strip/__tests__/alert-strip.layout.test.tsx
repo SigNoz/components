@@ -19,10 +19,12 @@ beforeEach(() => {
 		--spacing-3: 6px;
 		--spacing-4: 8px;
 		--radius-1: 2px;
-		--periscope-font-size-base: 13px;
-		--periscope-font-size-small: 11px;
-		--periscope-line-height-base: 20px;
-		--periscope-font-weight-medium: 500;
+		--paragraph-base-500-font-size: 13px;
+		--paragraph-base-500-font-weight: 500;
+		--paragraph-base-500-line-height: 20px;
+		--label-small-500-font-size: 11px;
+		--label-small-500-font-weight: 500;
+		--label-small-500-line-height: 1;
 		--alert-strip-warning-background: rgb(255, 205, 86);
 		--alert-strip-warning-foreground: rgb(10, 12, 16);
 		--alert-strip-button-background: rgb(18, 19, 23);

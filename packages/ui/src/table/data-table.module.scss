@@ -2,6 +2,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--spacing-4, 0.5rem);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 }
 
 .data-table__search-icon {
@@ -232,7 +234,13 @@
 }
 
 .data-table__pagination-label {
-	font-size: var(--periscope-font-size-base, 13px);
+	margin: 0;
+	font-family: var(--data-table-pagination-label-font-family, var(--label-base-400-font-family));
+	font-size: var(--data-table-pagination-label-font-size, var(--label-base-400-font-size));
+	font-weight: var(--data-table-pagination-label-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--data-table-pagination-label-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--data-table-pagination-label-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--data-table-pagination-label-text-transform, var(--label-base-400-text-transform));
 	color: var(--muted-foreground);
 }
 
@@ -243,7 +251,14 @@
 	border: 1px solid var(--input);
 	background: var(--background);
 	padding: var(--spacing-1, 0.125rem) var(--spacing-2, 0.25rem);
-	font-size: var(--periscope-font-size-base, 13px);
+	font-family: var(--data-table-pagination-select-font-family, var(--label-base-400-font-family));
+	font-size: var(--data-table-pagination-select-font-size, var(--label-base-400-font-size));
+	font-weight: var(--data-table-pagination-select-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--data-table-pagination-select-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--data-table-pagination-select-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--data-table-pagination-select-text-transform, var(--label-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	outline: none;
 
 	&:focus-visible {
@@ -271,8 +286,12 @@
 	width: var(--data-table-pagination-info-width, 100px);
 	align-items: center;
 	justify-content: center;
-	font-size: var(--periscope-font-size-base, 13px);
-	font-weight: 500;
+	font-family: var(--data-table-pagination-info-font-family, var(--label-base-500-font-family));
+	font-size: var(--data-table-pagination-info-font-size, var(--label-base-500-font-size));
+	font-weight: var(--data-table-pagination-info-font-weight, var(--label-base-500-font-weight));
+	line-height: var(--data-table-pagination-info-line-height, var(--label-base-500-line-height));
+	letter-spacing: var(--data-table-pagination-info-letter-spacing, var(--label-base-500-letter-spacing));
+	text-transform: var(--data-table-pagination-info-text-transform, var(--label-base-500-text-transform));
 }
 
 .data-table__pagination-buttons {
@@ -286,8 +305,6 @@
 	justify-content: center;
 	padding: var(--spacing-1, 0.125rem);
 	border-radius: var(--table-radius, calc(var(--radius) - 2px));
-	font-size: var(--periscope-font-size-base, 13px);
-	font-weight: var(--data-table-pagination-button-font-weight, 500);
 	background: var(--data-table-pagination-button-background, transparent);
 	border: var(--data-table-pagination-button-border, none);
 	cursor: var(--data-table-pagination-button-cursor, pointer);
