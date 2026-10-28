@@ -445,24 +445,24 @@
 		"react-compiler:strict-check": "node scripts/check-react-compiler-strict.mjs"
 	},
 	"dependencies": {
-		"@base-ui/react": "1.7.0",
-		"@chenglou/pretext": "^0.0.8",
-		"@radix-ui/react-dialog": "^1.1.21",
+		"@base-ui/react": "1.9.0",
+		"@chenglou/pretext": "^0.0.9",
+		"@radix-ui/react-dialog": "^1.3.1",
 		"@radix-ui/react-icons": "^1.3.0",
-		"@radix-ui/react-popover": "^1.1.21",
-		"@radix-ui/react-slot": "^1.3.1",
+		"@radix-ui/react-popover": "^1.3.1",
+		"@radix-ui/react-slot": "^1.5.0",
 		"@tanstack/react-table": "^8.21.3",
-		"@tanstack/react-virtual": "^3.14.8",
+		"@tanstack/react-virtual": "^3.14.21",
 		"@types/lodash-es": "^4.17.12",
 		"clsx": "^2.1.1",
 		"copy-text-to-clipboard": "^3.2.2",
-		"dayjs": "^1.11.21",
+		"dayjs": "^1.11.23",
 		"lodash-es": "^4.18.1",
 		"motion": "^11.11.17",
-		"nuqs": "^2.9.2",
+		"nuqs": "^2.10.2",
 		"react-compiler-runtime": "^1.0.0",
 		"react-day-picker": "^9.8.1",
-		"react-resizable-panels": "4.12.2"
+		"react-resizable-panels": "4.14.6"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",
