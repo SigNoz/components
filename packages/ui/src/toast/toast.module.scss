@@ -101,9 +101,14 @@
   box-shadow: var(--toast-internal-shadow);
   // No hover colour on the surface. Hover only pauses the timer and spreads the stack.
   color: var(--toast-internal-title-color);
-  font-size: var(--toast-font-size, var(--periscope-font-size-base));
-  font-weight: var(--toast-font-weight, var(--periscope-font-weight-regular));
-  line-height: var(--toast-line-height, var(--line-height-20));
+  font-family: var(--toast-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--toast-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--toast-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--toast-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--toast-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--toast-text-transform, var(--paragraph-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   // Base UI numbers the toasts from the newest, 0, and sets `--toast-index` on each.
   z-index: calc(var(--toast-internal-z-index-base) - var(--toast-index, 0));
   transform-origin: var(--toast-transform-origin, top center);
@@ -270,7 +275,7 @@
   flex: var(--toast-icon-flex, none);
   align-items: var(--toast-icon-align-items, center);
   // The height of a line of text, so the icon sits on the first line of a wrapped message.
-  block-size: var(--toast-line-height, var(--line-height-20));
+  block-size: var(--toast-line-height, var(--paragraph-base-400-line-height));
   color: var(--toast-internal-icon-color);
   line-height: var(--toast-icon-line-height, 0);
 
@@ -331,9 +336,14 @@
   border-end-end-radius: var(--toast-internal-action-radius);
   background: var(--toast-action-background, none);
   color: var(--toast-internal-action-label);
-  font: var(--toast-action-font, inherit);
-  font-size: var(--toast-action-font-size, var(--periscope-font-size-small));
-  line-height: var(--toast-action-line-height, var(--line-height-18));
+  font-family: var(--toast-action-font-family, var(--label-small-400-font-family));
+  font-size: var(--toast-action-font-size, var(--label-small-400-font-size));
+  font-weight: var(--toast-action-font-weight, var(--label-small-400-font-weight));
+  line-height: var(--toast-action-line-height, var(--label-small-400-line-height));
+  letter-spacing: var(--toast-action-letter-spacing, var(--label-small-400-letter-spacing));
+  text-transform: var(--toast-action-text-transform, var(--label-small-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   cursor: var(--toast-action-cursor, pointer);
   transition-property: var(--toast-action-transition-property, opacity, background-color, color);
   transition-duration: var(--toast-internal-duration);

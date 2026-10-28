@@ -3,11 +3,12 @@
 }
 
 .datePicker__trigger {
+	--button-font-weight: var(--date-picker-trigger-font-weight, var(--label-base-400-font-weight));
+
 	display: inline-flex;
 	align-items: center;
 	gap: var(--date-picker-trigger-gap, var(--spacing-4, 8px));
 	justify-content: space-between;
-	font-weight: var(--date-picker-trigger-font-weight, 400);
 	min-width: var(--date-picker-trigger-min-width, 200px);
 }
 
@@ -18,7 +19,7 @@
 .datePicker__triggerText {
 	flex: 1;
 	text-align: left;
-	overflow: hidden;
+	overflow: clip visible;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -56,8 +57,12 @@
 }
 
 .datePicker__fieldLabel {
-	font-size: var(--date-picker-label-font-size, 12px);
-	font-weight: var(--date-picker-label-font-weight, 400);
+	font-family: var(--date-picker-label-font-family, var(--label-base-400-font-family));
+	font-size: var(--date-picker-label-font-size, var(--label-base-400-font-size));
+	font-weight: var(--date-picker-label-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--date-picker-label-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--date-picker-label-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--date-picker-label-text-transform, var(--label-base-400-text-transform));
 	color: var(--date-picker-label-color, var(--l2-foreground));
 	flex-shrink: 0;
 }

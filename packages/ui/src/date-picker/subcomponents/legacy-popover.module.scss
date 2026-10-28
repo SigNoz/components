@@ -28,6 +28,8 @@
 	min-width: var(--radix-popover-trigger-width);
 	background-color: var(--date-picker-popover-background, var(--l2-background));
 	color: var(--date-picker-popover-foreground, var(--l1-foreground));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	width: var(--date-picker-popover-width, fit-content);
 	transform-origin: var(
 		--date-picker-popover-transform-origin,

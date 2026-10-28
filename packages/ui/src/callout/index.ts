@@ -64,15 +64,16 @@
  * | `--callout-danger-title-color` | `var(--callout-danger-title)` |
  * | `--callout-description-focus-padding` | `var(--spacing-1)` |
  * | `--callout-description-font-variant-numeric` | `slashed-zero` |
- * | `--callout-description-font-weight` | `var(--periscope-font-weight-regular)` |
- * | `--callout-description-line-height` | `var(--periscope-line-height-base)` |
+ * | `--callout-description-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--callout-description-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--callout-description-min-height` | `0` |
  * | `--callout-description-overflow` | `auto` |
  * | `--callout-description-overflow-wrap` | `anywhere` |
  * | `--callout-display` | `flex` |
  * | `--callout-focus-visible-outline` | `var(--ring) solid 1px` |
  * | `--callout-focus-visible-outline-offset` | `1px` |
- * | `--callout-font-size` | `var(--periscope-font-size-base)` |
+ * | `--callout-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--callout-font-size` | `var(--paragraph-base-400-font-size)` |
  * | `--callout-gap` | `var(--spacing-5)` |
  * | `--callout-height` | `var(--callout-internal-height, auto)` |
  * | `--callout-highlight-danger-background` | `-` |
@@ -110,7 +111,7 @@
  * | `--callout-info-link-hover-color` | `var(--info-link-hover)` |
  * | `--callout-info-title` | `-` |
  * | `--callout-info-title-color` | `var(--callout-info-title)` |
- * | `--callout-letter-spacing` | `var(--letter-spacing-0-5)` |
+ * | `--callout-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--callout-link-border-radius` | `var(--radius-1)` |
  * | `--callout-link-cursor` | `pointer` |
  * | `--callout-link-text-decoration` | `underline` |
@@ -161,14 +162,14 @@
  * | `--callout-success-link-hover-color` | `var(--success-link-hover)` |
  * | `--callout-success-title` | `-` |
  * | `--callout-success-title-color` | `var(--callout-success-title)` |
- * | `--callout-title-clip-padding` | `0.125em` |
+ * | `--callout-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--callout-title-flex` | `1 1 auto` |
  * | `--callout-title-font-feature-settings` | `'ss01'` |
  * | `--callout-title-font-variant-numeric` | `slashed-zero lining-nums tabular-nums` |
- * | `--callout-title-font-weight` | `var(--periscope-font-weight-medium)` |
- * | `--callout-title-line-height` | `var(--line-height-none)` |
+ * | `--callout-title-font-weight` | `var(--label-base-500-font-weight)` |
+ * | `--callout-title-line-height` | `var(--label-base-500-line-height)` |
  * | `--callout-title-min-width` | `0` |
- * | `--callout-title-overflow` | `hidden` |
+ * | `--callout-title-overflow` | `clip visible` |
  * | `--callout-title-text-overflow` | `ellipsis` |
  * | `--callout-title-white-space` | `nowrap` |
  * | `--callout-toggle-align-items` | `center` |
@@ -178,7 +179,6 @@
  * | `--callout-toggle-display` | `flex` |
  * | `--callout-toggle-flex-shrink` | `0` |
  * | `--callout-toggle-font` | `inherit` |
- * | `--callout-toggle-letter-spacing` | `inherit` |
  * | `--callout-toggle-min-width` | `0` |
  * | `--callout-toggle-text-align` | `start` |
  * | `--callout-transition-duration` | `150ms` |

@@ -18,9 +18,14 @@
  * | `--popover-display` | `flex` |
  * | `--popover-flex-direction` | `column` |
  * | `--popover-focus-visible-outline` | `none` |
+ * | `--popover-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--popover-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--popover-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--popover-foreground` | `-` |
  * | `--popover-foreground-color` | `var(--popover-foreground)` |
  * | `--popover-inline-size` | `var(--popover-internal-inline-size, fit-content)` |
+ * | `--popover-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--popover-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--popover-max-block-size` | `var(--popover-internal-max-block-size, var(--av...` |
  * | `--popover-max-inline-size` | `var(--popover-internal-max-inline-size, 25rem)` |
  * | `--popover-min-inline-size` | `10rem` |
@@ -30,6 +35,7 @@
  * | `--popover-positioner-inline-size` | `max-content` |
  * | `--popover-positioner-pointer-events` | `auto` |
  * | `--popover-shadow` | `var(--shadow-dropdown)` |
+ * | `--popover-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--popover-z-index` | `50` |
  */
 // #endregion css-tokens

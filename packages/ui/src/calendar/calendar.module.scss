@@ -48,6 +48,8 @@
 	width: fit-content;
 	background-color: var(--calendar-internal-background);
 	padding: var(--calendar-padding, var(--spacing-6));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	&:dir(rtl) {
 		--calendar-internal-range-direction: -1;
@@ -115,8 +117,12 @@
 	width: 100%;
 	height: var(--calendar-internal-cell-size);
 	gap: var(--calendar-dropdown-gap, var(--spacing-3));
-	font-size: var(--calendar-dropdown-font-size, var(--periscope-font-size-small));
-	font-weight: var(--calendar-dropdown-font-weight, var(--font-weight-medium));
+	font-family: var(--calendar-dropdown-font-family, var(--label-small-500-font-family));
+	font-size: var(--calendar-dropdown-font-size, var(--label-small-500-font-size));
+	font-weight: var(--calendar-dropdown-font-weight, var(--label-small-500-font-weight));
+	line-height: var(--calendar-dropdown-line-height, var(--label-small-500-line-height));
+	letter-spacing: var(--calendar-dropdown-letter-spacing, var(--label-small-500-letter-spacing));
+	text-transform: var(--calendar-dropdown-text-transform, var(--label-small-500-text-transform));
 }
 
 .calendar__dropdown-root {
@@ -132,21 +138,27 @@
 }
 
 // The native select is laid invisible over the label, so it keeps its own picker and its own
-// keyboard behaviour while the label is what gets painted.
+// keyboard behaviour while the label is what gets painted. Some platforms draw the open option list
+// in the select's own font, so it takes the dropdowns' text style.
 .calendar__dropdown {
 	position: absolute;
 	inset: 0;
 	opacity: 0;
 	background-color: var(--calendar-internal-select-background);
+	font: inherit;
 }
 
 .calendar__caption-label {
 	user-select: none;
-	font-weight: var(--calendar-caption-label-font-weight, var(--font-weight-medium));
+	font-family: var(--calendar-caption-label-font-family, var(--label-small-500-font-family));
+	font-weight: var(--calendar-caption-label-font-weight, var(--label-small-500-font-weight));
+	line-height: var(--calendar-caption-label-line-height, var(--label-small-500-line-height));
+	letter-spacing: var(--calendar-caption-label-letter-spacing, var(--label-small-500-letter-spacing));
+	text-transform: var(--calendar-caption-label-text-transform, var(--label-small-500-text-transform));
 }
 
 .calendar__caption-label--label {
-	font-size: var(--calendar-caption-label-font-size, var(--periscope-font-size-small));
+	font-size: var(--calendar-caption-label-font-size, var(--label-small-500-font-size));
 }
 
 .calendar__caption-label--dropdown {
@@ -157,7 +169,7 @@
 	height: var(--calendar-caption-label-dropdown-height, var(--spacing-16));
 	padding: var(--calendar-caption-label-dropdown-padding, 0 var(--spacing-2) 0 var(--spacing-4));
 	border-radius: var(--calendar-caption-label-dropdown-border-radius, var(--radius-1));
-	font-size: var(--calendar-caption-label-dropdown-font-size, var(--periscope-font-size-small));
+	font-size: var(--calendar-caption-label-dropdown-font-size, var(--label-small-500-font-size));
 
 	svg {
 		width: var(--calendar-caption-label-dropdown-svg-size, var(--spacing-7));
@@ -177,7 +189,9 @@
 // sits over the column it names instead of drifting across the row.
 .calendar__weekdays {
 	display: flex;
+	align-items: center;
 	gap: var(--calendar-week-gap, var(--spacing-4));
+	min-block-size: var(--calendar-weekdays-min-block-size, var(--spacing-8));
 	margin-bottom: var(--calendar-weekdays-margin-bottom, var(--spacing-4));
 }
 
@@ -190,8 +204,12 @@
 	user-select: none;
 	color: var(--calendar-internal-weekday-label);
 	border-radius: var(--calendar-weekday-border-radius, var(--radius-1));
-	font-weight: var(--calendar-weekday-font-weight, var(--font-weight-normal));
-	font-size: var(--calendar-weekday-font-size, var(--periscope-font-size-small));
+	font-family: var(--calendar-weekday-font-family, var(--label-small-400-font-family));
+	font-size: var(--calendar-weekday-font-size, var(--label-small-400-font-size));
+	font-weight: var(--calendar-weekday-font-weight, var(--label-small-400-font-weight));
+	line-height: var(--calendar-weekday-line-height, var(--label-small-400-line-height));
+	letter-spacing: var(--calendar-weekday-letter-spacing, var(--label-small-400-letter-spacing));
+	text-transform: var(--calendar-weekday-text-transform, var(--label-small-400-text-transform));
 }
 
 .calendar__week {
@@ -212,7 +230,12 @@
 	align-items: center;
 	user-select: none;
 	color: var(--calendar-internal-week-number-label);
-	font-size: var(--calendar-week-number-font-size, var(--periscope-font-size-small));
+	font-family: var(--calendar-week-number-font-family, var(--label-small-600-font-family));
+	font-size: var(--calendar-week-number-font-size, var(--label-small-600-font-size));
+	font-weight: var(--calendar-week-number-font-weight, var(--label-small-600-font-weight));
+	line-height: var(--calendar-week-number-line-height, var(--label-small-600-line-height));
+	letter-spacing: var(--calendar-week-number-letter-spacing, var(--label-small-600-letter-spacing));
+	text-transform: var(--calendar-week-number-text-transform, var(--label-small-600-text-transform));
 }
 
 .calendar__week-number-cell {
@@ -258,10 +281,8 @@
 	border-radius: var(--calendar-button-border-radius, var(--radius-1));
 	background-color: var(--calendar-internal-button-background);
 	color: var(--calendar-internal-button-label);
-	font-weight: var(--calendar-button-font-weight, var(--font-weight-medium));
 	font-variant-numeric: slashed-zero;
-	// TODO: Convert this hardcoded value to a semantic token, the same one Button is waiting on.
-	letter-spacing: var(--calendar-button-letter-spacing, -0.005em);
+	font-feature-settings: 'ss01' 1;
 	cursor: var(--calendar-button-cursor, pointer);
 	user-select: none;
 	transition:
@@ -433,18 +454,27 @@
 
 .calendar__day-button-label,
 .calendar__day-button-affix {
-	font-size: var(--calendar-day-button-font-size, var(--periscope-font-size-small));
+	font-family: var(--calendar-day-button-font-family, var(--label-small-500-font-family));
+	font-size: var(--calendar-day-button-font-size, var(--label-small-500-font-size));
+	font-weight: var(--calendar-button-font-weight, var(--label-small-500-font-weight));
+	line-height: var(--calendar-day-button-line-height, var(--label-small-500-line-height));
+	letter-spacing: var(--calendar-button-letter-spacing, var(--label-small-500-letter-spacing));
+	text-transform: var(--calendar-button-text-transform, var(--label-small-500-text-transform));
 }
 
 /* Footer */
 
-// Sets its own size and colour: otherwise it inherits the page's, well above the 11px labels
+// Sets its own text style and colour: otherwise it inherits the page's, well above the 11px labels
 // around it.
 .calendar__footer {
 	margin-top: var(--calendar-footer-margin-top, var(--spacing-4));
 	color: var(--calendar-internal-footer-label);
-	font-size: var(--calendar-footer-font-size, var(--periscope-font-size-small));
-	line-height: var(--calendar-footer-line-height, var(--line-height-18));
+	font-family: var(--calendar-footer-font-family, var(--paragraph-small-400-font-family));
+	font-size: var(--calendar-footer-font-size, var(--paragraph-small-400-font-size));
+	font-weight: var(--calendar-footer-font-weight, var(--paragraph-small-400-font-weight));
+	line-height: var(--calendar-footer-line-height, var(--paragraph-small-400-line-height));
+	letter-spacing: var(--calendar-footer-letter-spacing, var(--paragraph-small-400-letter-spacing));
+	text-transform: var(--calendar-footer-text-transform, var(--paragraph-small-400-text-transform));
 }
 
 @media (prefers-reduced-motion: reduce) {

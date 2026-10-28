@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--pin-list-container-gap, var(--spacing-10, 20px));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 }
 
 .section {
@@ -23,11 +25,13 @@
   margin-bottom: var(--pin-list-label-margin-bottom, var(--spacing-2, 8px));
   padding-left: var(--pin-list-label-padding-x, var(--spacing-6, 12px));
   padding-right: var(--pin-list-label-padding-x, var(--spacing-6, 12px));
-  font-size: var(--pin-list-label-font-size, var(--periscope-font-size-small, 11px));
-  font-weight: var(--pin-list-label-font-weight, var(--font-weight-semibold, 600));
-  line-height: var(--pin-list-label-line-height, 18px);
-  letter-spacing: var(--pin-list-label-letter-spacing, 0.88px);
-  text-transform: var(--pin-list-label-text-transform, uppercase);
+  min-block-size: var(--pin-list-label-min-block-size, calc(var(--spacing-8) + var(--spacing-1)));
+  font-family: var(--pin-list-label-font-family, var(--uppercase-small-600-font-family));
+  font-size: var(--pin-list-label-font-size, var(--uppercase-small-600-font-size));
+  font-weight: var(--pin-list-label-font-weight, var(--uppercase-small-600-font-weight));
+  line-height: var(--pin-list-label-line-height, var(--uppercase-small-600-line-height));
+  letter-spacing: var(--pin-list-label-letter-spacing, var(--uppercase-small-600-letter-spacing));
+  text-transform: var(--pin-list-label-text-transform, var(--uppercase-small-600-text-transform));
   text-align: var(--pin-list-label-text-align, left);
   color: var(--pin-list-label-color, var(--card-foreground));
 }
@@ -49,11 +53,15 @@
   margin-bottom: var(--pin-list-more-label-margin-bottom, var(--spacing-2, 8px));
   padding-left: var(--pin-list-more-label-padding-x, var(--spacing-6, 12px));
   padding-right: var(--pin-list-more-label-padding-x, var(--spacing-6, 12px));
-  font-size: var(--pin-list-more-label-font-size, var(--periscope-font-size-small, 11px));
-  font-weight: var(--pin-list-more-label-font-weight, var(--font-weight-semibold, 600));
-  line-height: var(--pin-list-more-label-line-height, 18px);
-  letter-spacing: var(--pin-list-more-label-letter-spacing, 0.88px);
-  text-transform: var(--pin-list-more-label-text-transform, uppercase);
+  min-block-size: var(--pin-list-more-label-min-block-size, calc(var(--spacing-8) + var(--spacing-1)));
+  font-family: var(--pin-list-more-label-font-family, var(--uppercase-small-600-font-family));
+  font-size: var(--pin-list-more-label-font-size, var(--uppercase-small-600-font-size));
+  font-weight: var(--pin-list-more-label-font-weight, var(--uppercase-small-600-font-weight));
+  line-height: var(--pin-list-more-label-line-height, var(--uppercase-small-600-line-height));
+  letter-spacing: var(--pin-list-more-label-letter-spacing, var(--uppercase-small-600-letter-spacing));
+  text-transform: var(--pin-list-more-label-text-transform, var(--uppercase-small-600-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   text-align: var(--pin-list-more-label-text-align, left);
   color: var(--pin-list-more-label-color, var(--card-foreground));
   cursor: pointer;
@@ -88,10 +96,12 @@
 
 .empty-state-text {
   width: var(--pin-list-empty-state-text-width, 150px);
-  font-size: var(--pin-list-empty-state-font-size, var(--periscope-font-size-small, 11px));
-  font-weight: var(--pin-list-empty-state-font-weight, var(--font-weight-normal, 400));
-  line-height: var(--pin-list-empty-state-line-height, 18px);
-  letter-spacing: var(--pin-list-empty-state-letter-spacing, -0.06px);
+  font-family: var(--pin-list-empty-state-font-family, var(--paragraph-small-400-font-family));
+  font-size: var(--pin-list-empty-state-font-size, var(--paragraph-small-400-font-size));
+  font-weight: var(--pin-list-empty-state-font-weight, var(--paragraph-small-400-font-weight));
+  line-height: var(--pin-list-empty-state-line-height, var(--paragraph-small-400-line-height));
+  letter-spacing: var(--pin-list-empty-state-letter-spacing, var(--paragraph-small-400-letter-spacing));
+  text-transform: var(--pin-list-empty-state-text-transform, var(--paragraph-small-400-text-transform));
   text-align: var(--pin-list-empty-state-text-align, left);
   color: var(--pin-list-empty-state-color, var(--foreground));
   opacity: var(--pin-list-empty-state-opacity, 0.6);
@@ -108,11 +118,10 @@
   padding: var(--pin-list-item-padding, var(--spacing-2, 4px) var(--spacing-6, 12px));
   gap: var(--pin-list-item-gap, var(--spacing-10, 20px));
   border-radius: var(--pin-list-item-border-radius, 3px);
-  font-size: var(--pin-list-item-font-size, var(--periscope-font-size-base, 13px));
-  font-weight: var(--pin-list-item-font-weight, var(--font-weight-normal, 400));
-  line-height: var(--pin-list-item-line-height, 18px);
   text-align: var(--pin-list-item-text-align, left);
   color: var(--pin-list-item-color, var(--foreground));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   background-color: var(--pin-list-item-background, transparent);
   border: none;
   cursor: pointer;
@@ -148,9 +157,12 @@
 }
 
 .item-label {
-  font-size: var(--pin-list-item-label-font-size, var(--periscope-font-size-base, 13px));
-  font-weight: var(--pin-list-item-label-font-weight, var(--font-weight-normal, 400));
-  line-height: var(--pin-list-item-label-line-height, 18px);
+  font-family: var(--pin-list-item-label-font-family, var(--label-base-400-font-family));
+  font-size: var(--pin-list-item-label-font-size, var(--label-base-400-font-size));
+  font-weight: var(--pin-list-item-label-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--pin-list-item-label-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--pin-list-item-label-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--pin-list-item-label-text-transform, var(--label-base-400-text-transform));
   color: var(--pin-list-item-label-color, var(--foreground));
 
   &[data-active='true'],

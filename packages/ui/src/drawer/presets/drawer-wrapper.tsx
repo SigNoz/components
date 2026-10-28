@@ -154,7 +154,7 @@ export interface DrawerWrapperProps {
  *     </Button>
  *   }
  * >
- *   <div className="flex flex-col gap-4 text-sm leading-5">
+ *   <div className="flex flex-col gap-4">
  *     <p>Drawer content goes here.</p>
  *     <div className="flex justify-end">
  *       <DialogClose asChild>
@@ -182,7 +182,7 @@ export interface DrawerWrapperProps {
  *     </Button>
  *   }
  * >
- *   <div className="flex flex-col gap-4 text-sm leading-5">
+ *   <div className="flex flex-col gap-4">
  *     <p>Drawer content goes here.</p>
  *     <Button variant="solid" color="primary" onClick={() => setOpen(false)}>
  *       Close Drawer
