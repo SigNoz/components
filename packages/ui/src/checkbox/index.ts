@@ -44,10 +44,13 @@
  * | `--checkbox-info-foreground` | `-` |
  * | `--checkbox-label` | `-` |
  * | `--checkbox-label-color` | `var(--checkbox-label)` |
- * | `--checkbox-label-font-size` | `var(--periscope-font-size-base)` |
- * | `--checkbox-label-font-weight` | `var(--font-weight-normal)` |
- * | `--checkbox-label-line-height` | `18px` |
+ * | `--checkbox-label-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--checkbox-label-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--checkbox-label-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--checkbox-label-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--checkbox-label-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--checkbox-label-overflow` | `hidden` |
+ * | `--checkbox-label-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--checkbox-label-tooltip-max-width` | `20rem` |
  * | `--checkbox-label-transition` | `opacity 150ms ease` |
  * | `--checkbox-label-white-space` | `nowrap` |

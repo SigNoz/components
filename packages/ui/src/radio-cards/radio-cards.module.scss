@@ -5,7 +5,7 @@
 	--radio-cards-internal-gap: var(--radio-cards-gap, var(--spacing-6));
 	--radio-cards-internal-column-min-size: var(--radio-cards-column-min-size, 10rem);
 	--radio-cards-internal-icon-size: var(--radio-cards-icon-size, 12px);
-	--radio-cards-internal-label-line-height: var(--radio-cards-label-line-height, var(--periscope-line-height-base));
+	--radio-cards-internal-label-line-height: var(--radio-cards-label-line-height, var(--paragraph-base-500-line-height));
 
 	display: var(--radio-cards-display, grid);
 	// A grid sized to its content has no width for the percentage tracks to share, so it collapses
@@ -14,6 +14,8 @@
 	grid-template-columns: var(--radio-cards-grid-template-columns,
 			repeat(auto-fill, minmax(min(100%, var(--radio-cards-internal-column-min-size)), 1fr)));
 	gap: var(--radio-cards-internal-gap);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	// A track is the larger of the minimum width and an equal share of the row, so a row never
 	// holds more than `columns` cards, and holds fewer once a share would go under the minimum.
@@ -160,11 +162,12 @@
 	overflow: var(--radio-cards-label-overflow, hidden);
 	white-space: var(--radio-cards-label-white-space, nowrap);
 	color: var(--radio-cards-internal-label-color);
-	font-size: var(--radio-cards-label-font-size, var(--periscope-font-size-base));
-	font-weight: var(--radio-cards-label-font-weight, var(--font-weight-medium));
+	font-family: var(--radio-cards-label-font-family, var(--paragraph-base-500-font-family));
+	font-size: var(--radio-cards-label-font-size, var(--paragraph-base-500-font-size));
+	font-weight: var(--radio-cards-label-font-weight, var(--paragraph-base-500-font-weight));
 	line-height: var(--radio-cards-internal-label-line-height);
-	// Figma's -0.5% letter spacing. The package has no token in `em`.
-	letter-spacing: var(--radio-cards-label-letter-spacing, -0.005em);
+	letter-spacing: var(--radio-cards-label-letter-spacing, var(--paragraph-base-500-letter-spacing));
+	text-transform: var(--radio-cards-label-text-transform, var(--paragraph-base-500-text-transform));
 	font-variant-numeric: var(--radio-cards-label-font-variant-numeric, slashed-zero);
 	transition-property: var(--radio-cards-label-transition-property, color);
 	transition-duration: var(--radio-cards-label-transition-duration, 150ms);

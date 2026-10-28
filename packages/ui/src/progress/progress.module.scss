@@ -6,8 +6,14 @@
 	gap: var(--progress-gap, var(--spacing-4));
 	width: var(--progress-width, var(--progress-internal-width, 100%));
 	max-width: var(--progress-max-width, var(--progress-internal-max-width, 100%));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	--progress-internal-border-radius: var(--progress-border-radius, var(--radius-1));
+
+	&:has(.progress__value) {
+		min-block-size: var(--progress-info-min-block-size, var(--spacing-10));
+	}
 
 	&[data-color='primary'] {
 		--progress-internal-indicator: var(
@@ -89,9 +95,12 @@
 	white-space: var(--progress-value-white-space, nowrap);
 	text-align: var(--progress-value-text-align, end);
 	color: var(--progress-value-color, var(--progress-value));
-	font-size: var(--progress-value-font-size, var(--periscope-font-size-base));
-	font-weight: var(--progress-value-font-weight, var(--periscope-font-weight-regular));
-	line-height: var(--progress-value-line-height, var(--periscope-line-height-base));
+	font-family: var(--progress-value-font-family, var(--label-base-400-font-family));
+	font-size: var(--progress-value-font-size, var(--label-base-400-font-size));
+	font-weight: var(--progress-value-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--progress-value-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--progress-value-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--progress-value-text-transform, var(--label-base-400-text-transform));
 	font-variant-numeric: var(--progress-value-font-variant-numeric, tabular-nums slashed-zero);
 }
 

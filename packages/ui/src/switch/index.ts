@@ -19,9 +19,13 @@
  * | `--switch-danger-hover-background` | `-` |
  * | `--switch-description` | `-` |
  * | `--switch-description-color` | `var(--switch-description)` |
- * | `--switch-description-font-size` | `var(--periscope-font-size-base)` |
- * | `--switch-description-line-height` | `18px` |
+ * | `--switch-description-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--switch-description-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--switch-description-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--switch-description-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--switch-description-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--switch-description-overflow` | `hidden` |
+ * | `--switch-description-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--switch-description-white-space` | `nowrap` |
  * | `--switch-disabled-cursor` | `not-allowed` |
  * | `--switch-disabled-opacity` | `0.6` |
@@ -35,10 +39,13 @@
  * | `--switch-info-hover-background` | `-` |
  * | `--switch-label` | `-` |
  * | `--switch-label-color` | `var(--switch-label)` |
- * | `--switch-label-font-size` | `var(--periscope-font-size-base)` |
- * | `--switch-label-font-weight` | `var(--font-weight-normal)` |
- * | `--switch-label-line-height` | `18px` |
+ * | `--switch-label-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--switch-label-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--switch-label-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--switch-label-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--switch-label-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--switch-label-overflow` | `hidden` |
+ * | `--switch-label-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--switch-label-tooltip-max-width` | `20rem` |
  * | `--switch-label-white-space` | `nowrap` |
  * | `--switch-margin-block-start` | `calc((var(--switch-internal-label-line-height) ...` |

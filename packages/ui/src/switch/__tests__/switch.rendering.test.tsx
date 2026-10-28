@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Switch } from '../switch.js';
+import { SENTINEL_FONT, setTextStyle } from '../../__tests__/test-utils.js';
 
 describe('Switch rendering', () => {
 	it('renders a switch named by its label', () => {
@@ -337,5 +338,30 @@ describe('Switch empty label', () => {
 		const container = screen.getByTestId('container');
 		expect(container.querySelector('[data-slot="switch-description"]')).toBeInTheDocument();
 		expect(container.querySelector('[data-slot="switch-label"]')).toBeNull();
+	});
+});
+
+describe('Switch label weight', () => {
+	it('steps the label weight up only over a description, which keeps the regular weight', () => {
+		setTextStyle('paragraph-base-400');
+		setTextStyle('paragraph-base-500', { ...SENTINEL_FONT, fontWeight: '300' });
+		render(
+			<>
+				<Switch color="primary" textPlacement="right">
+					Wrap text
+				</Switch>
+				<Switch color="primary" textPlacement="right" description="Use the 24-hour convention">
+					Time format
+				</Switch>
+			</>,
+		);
+
+		expect(getComputedStyle(screen.getByText('Wrap text')).fontWeight).toBe(
+			SENTINEL_FONT.fontWeight,
+		);
+		expect(getComputedStyle(screen.getByText('Time format')).fontWeight).toBe('300');
+		expect(getComputedStyle(screen.getByText('Use the 24-hour convention')).fontWeight).toBe(
+			SENTINEL_FONT.fontWeight,
+		);
 	});
 });

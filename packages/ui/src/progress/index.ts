@@ -28,6 +28,7 @@
  * | `--progress-indicator-height` | `100%` |
  * | `--progress-info-indicator` | `-` |
  * | `--progress-info-indicator-background-color` | `var(--progress-info-indicator)` |
+ * | `--progress-info-min-block-size` | `var(--spacing-10)` |
  * | `--progress-max-width` | `var(--progress-internal-max-width, 100%)` |
  * | `--progress-primary-indicator` | `-` |
  * | `--progress-primary-indicator-background-color` | `var(--progress-primary-indicator)` |
@@ -51,12 +52,15 @@
  * | `--progress-value` | `-` |
  * | `--progress-value-color` | `var(--progress-value)` |
  * | `--progress-value-flex-shrink` | `0` |
- * | `--progress-value-font-size` | `var(--periscope-font-size-base)` |
+ * | `--progress-value-font-family` | `var(--label-base-400-font-family)` |
+ * | `--progress-value-font-size` | `var(--label-base-400-font-size)` |
  * | `--progress-value-font-variant-numeric` | `tabular-nums slashed-zero` |
- * | `--progress-value-font-weight` | `var(--periscope-font-weight-regular)` |
- * | `--progress-value-line-height` | `var(--periscope-line-height-base)` |
+ * | `--progress-value-font-weight` | `var(--label-base-400-font-weight)` |
+ * | `--progress-value-letter-spacing` | `var(--label-base-400-letter-spacing)` |
+ * | `--progress-value-line-height` | `var(--label-base-400-line-height)` |
  * | `--progress-value-min-inline-size` | `var(--progress-internal-value-min-inline-size, ...` |
  * | `--progress-value-text-align` | `end` |
+ * | `--progress-value-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--progress-value-white-space` | `nowrap` |
  * | `--progress-warning-indicator` | `-` |
  * | `--progress-warning-indicator-background-color` | `var(--progress-warning-indicator)` |

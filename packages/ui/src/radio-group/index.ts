@@ -57,16 +57,18 @@
  * | `--radio-group-item-min-width` | `0` |
  * | `--radio-group-label` | `-` |
  * | `--radio-group-label-color` | `var(--radio-group-label)` |
- * | `--radio-group-label-font-size` | `var(--periscope-font-size-base)` |
- * | `--radio-group-label-font-weight` | `var(--font-weight-normal)` |
+ * | `--radio-group-label-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--radio-group-label-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--radio-group-label-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--radio-group-label-gap` | `var(--spacing-4)` |
  * | `--radio-group-label-hover` | `-` |
  * | `--radio-group-label-hover-color` | `var(--radio-group-label-hover)` |
- * | `--radio-group-label-letter-spacing` | `-0.005em` |
- * | `--radio-group-label-line-height` | `18px` |
+ * | `--radio-group-label-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--radio-group-label-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--radio-group-label-min-width` | `0` |
  * | `--radio-group-label-overflow` | `visible` |
  * | `--radio-group-label-text-overflow` | `ellipsis` |
+ * | `--radio-group-label-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--radio-group-label-tooltip-max-width` | `20rem` |
  * | `--radio-group-label-transition` | `color 150ms ease` |
  * | `--radio-group-label-white-space` | `nowrap` |

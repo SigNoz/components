@@ -80,14 +80,16 @@
  * | `--radio-cards-label` | `-` |
  * | `--radio-cards-label-color` | `var(--radio-cards-label)` |
  * | `--radio-cards-label-flex-grow` | `1` |
- * | `--radio-cards-label-font-size` | `var(--periscope-font-size-base)` |
+ * | `--radio-cards-label-font-family` | `var(--paragraph-base-500-font-family)` |
+ * | `--radio-cards-label-font-size` | `var(--paragraph-base-500-font-size)` |
  * | `--radio-cards-label-font-variant-numeric` | `slashed-zero` |
- * | `--radio-cards-label-font-weight` | `var(--font-weight-medium)` |
+ * | `--radio-cards-label-font-weight` | `var(--paragraph-base-500-font-weight)` |
  * | `--radio-cards-label-hover` | `-` |
- * | `--radio-cards-label-letter-spacing` | `-0.005em` |
- * | `--radio-cards-label-line-height` | `var(--periscope-line-height-base)` |
+ * | `--radio-cards-label-letter-spacing` | `var(--paragraph-base-500-letter-spacing)` |
+ * | `--radio-cards-label-line-height` | `var(--paragraph-base-500-line-height)` |
  * | `--radio-cards-label-min-inline-size` | `0` |
  * | `--radio-cards-label-overflow` | `hidden` |
+ * | `--radio-cards-label-text-transform` | `var(--paragraph-base-500-text-transform)` |
  * | `--radio-cards-label-transition-duration` | `150ms` |
  * | `--radio-cards-label-transition-property` | `color` |
  * | `--radio-cards-label-transition-timing-function` | `ease` |
