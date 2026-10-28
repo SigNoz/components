@@ -9,6 +9,7 @@ import {
 	type MouseEventHandler,
 	type ReactElement,
 	type ReactNode,
+	type Ref,
 } from 'react';
 import type { RejectedProps } from './utils.js';
 
@@ -78,6 +79,11 @@ function withBlankTargetRel(rel: string | undefined): string {
  * owns it. A link with neither `href` nor a destination on the `render` element is a bug: it
  * renders plain text and warns on the console, naming the component as `name`.
  *
+ * `props` go on the link and on the plain text, merged the same way as the `data-slot`. The plain
+ * text takes `fallbackClassName` instead of `className`, and keeps the `ref`, the `id` and the
+ * `aria-*` and `data-*` props of the link. It drops `onClick`: text that goes nowhere is not
+ * clickable.
+ *
  * @access private
  */
 export function useRenderLink(
@@ -92,9 +98,21 @@ export function useRenderLink(
 		style: _style,
 		...aria
 	}: RenderLinkProps & RejectedProps,
-	ref: ForwardedRef<HTMLElement>,
-	{ slot, className, name }: { slot: string; className: string | undefined; name: string },
-): ReactElement {
+	ref: ForwardedRef<HTMLElement> | Array<Ref<HTMLElement>>,
+	{
+		slot,
+		className,
+		name,
+		props: ownProps,
+		fallbackClassName,
+	}: {
+		slot: string;
+		className: string | undefined;
+		name: string;
+		props?: Record<string, unknown>;
+		fallbackClassName?: string;
+	},
+): ReactElement | null {
 	const element = (isValidElement(render) ? render : createElement('a')) as ReactElement<
 		Record<string, unknown>
 	>;
@@ -103,6 +121,7 @@ export function useRenderLink(
 	const resolvedTarget = (elementProps['target'] as string | undefined) ?? target;
 	const hasDestination = resolvedHref != null || elementProps['to'] != null;
 	const sharedProps = {
+		...ownProps,
 		'data-slot': slot,
 		...(testId === undefined ? {} : { 'data-testid': testId }),
 	};
@@ -137,5 +156,17 @@ export function useRenderLink(
 		},
 	});
 
-	return link ?? <span {...sharedProps}>{children}</span>;
+	const text = useRender({
+		enabled: !hasDestination,
+		render: <span />,
+		ref,
+		props: {
+			...aria,
+			...sharedProps,
+			className: fallbackClassName,
+			children,
+		},
+	});
+
+	return link ?? text;
 }

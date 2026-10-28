@@ -114,7 +114,17 @@ import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types
  *
  * @example
  * ```tsx
- * <Typography.Text id="opacity-label">Fill opacity</Typography.Text>
+ * <Typography
+ *   id="opacity-label"
+ *   variant="label"
+ *   size="base"
+ *   weight="regular"
+ *   color="inherit"
+ *   as="span"
+ *   textOverflow="wrap"
+ * >
+ *   Fill opacity
+ * </Typography>
  * <Slider
  *   color="primary"
  *   min={0}

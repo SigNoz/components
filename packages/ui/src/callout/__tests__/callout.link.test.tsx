@@ -106,6 +106,22 @@ describe('Callout.Link', () => {
 		expect(screen.getByRole('link')).toHaveAttribute('aria-describedby', 'hint');
 	});
 
+	it('forwards the ref and aria attributes to the plain text fallback', () => {
+		vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const ref = createRef<HTMLElement>();
+		render(
+			<Callout color="primary" size="sm" icon={icon}>
+				<Callout.Link ref={ref} aria-describedby="hint" testId="l">
+					nowhere
+				</Callout.Link>
+			</Callout>,
+		);
+
+		const text = screen.getByTestId('l');
+		expect(ref.current).toBe(text);
+		expect(text).toHaveAttribute('aria-describedby', 'hint');
+	});
+
 	it('keeps the ref and the className of the render element', () => {
 		const ref = createRef<HTMLElement>();
 		const ownRef = createRef<HTMLAnchorElement>();

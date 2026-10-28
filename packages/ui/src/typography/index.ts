@@ -5,95 +5,79 @@
  *
  * | Token | Default |
  * |-------|---------|
- * | `--typography-border` | `0` |
- * | `--typography-code-background` | `var(--l3-background)` |
- * | `--typography-code-border` | `1px solid var(--l3-border)` |
- * | `--typography-code-font-family` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Co...` |
- * | `--typography-code-font-size` | `0.9em` |
- * | `--typography-code-padding` | `0.125em 0.25em` |
- * | `--typography-code-radius` | `var(--radius-sm)` |
- * | `--typography-color` | `var(--typography-interactive-hover-color, var(-...` |
- * | `--typography-copy-align-items` | `center` |
- * | `--typography-copy-bg` | `transparent` |
- * | `--typography-copy-border` | `none` |
- * | `--typography-copy-cursor` | `pointer` |
- * | `--typography-copy-display` | `inline-flex` |
- * | `--typography-copy-hover-color` | `var(--l2-foreground)` |
- * | `--typography-copy-icon-size` | `14px` |
- * | `--typography-copy-margin` | `0px 0px 0px var(--spacing-2, 8px)` |
- * | `--typography-copy-padding` | `var(--spacing-1, 4px)` |
- * | `--typography-copy-vertical-align` | `middle` |
- * | `--typography-font-family` | `inherit` |
- * | `--typography-font-size` | `var(--periscope-font-size-h5, 16px)` |
- * | `--typography-font-weight` | `var(--font-weight-semibold, 600)` |
- * | `--typography-interactive-hover-color` | `var(--primary-background)` |
- * | `--typography-line-clamp` | `1` |
- * | `--typography-line-height` | `var(--line-height-normal, 1.5)` |
- * | `--typography-margin` | `0` |
- * | `--typography-padding` | `0` |
- * | `--typography-text-align` | `right` |
- * | `--typography-text-display` | `inline` |
- * | `--typography-title-margin-bottom` | `9px` |
- * | `--typography-title-margin-top` | `9px` |
- * | `--typography-vertical-align` | `baseline` |
+ * | `--typography-align-items` | `var(--typography-internal-align-items)` |
+ * | `--typography-archive` | `-` |
+ * | `--typography-archive-color` | `var(--typography-archive)` |
+ * | `--typography-box-sizing` | `border-box` |
+ * | `--typography-clamp-box-orient` | `vertical` |
+ * | `--typography-clamp-display` | `-webkit-box` |
+ * | `--typography-color` | `var(--typography-internal-color, inherit)` |
+ * | `--typography-danger` | `-` |
+ * | `--typography-danger-color` | `var(--typography-danger)` |
+ * | `--typography-display` | `var(--typography-internal-display)` |
+ * | `--typography-font-family` | `var(--typography-internal-font-family)` |
+ * | `--typography-font-feature-settings` | `'ss01' 1` |
+ * | `--typography-font-size` | `var(--typography-internal-font-size)` |
+ * | `--typography-font-variant-numeric` | `var(--typography-internal-font-variant-numeric,...` |
+ * | `--typography-font-weight` | `var(--typography-internal-font-weight)` |
+ * | `--typography-gap` | `var(--typography-internal-gap, 0)` |
+ * | `--typography-highlight-danger` | `-` |
+ * | `--typography-highlight-danger-color` | `var(--typography-highlight-danger)` |
+ * | `--typography-info` | `-` |
+ * | `--typography-info-color` | `var(--typography-info)` |
+ * | `--typography-item-flex-shrink` | `0` |
+ * | `--typography-justify-content` | `var(--typography-internal-justify-content, normal)` |
+ * | `--typography-letter-spacing` | `var(--typography-internal-letter-spacing)` |
+ * | `--typography-line-height` | `var(--typography-internal-line-height)` |
+ * | `--typography-link` | `-` |
+ * | `--typography-link-border-radius` | `var(--radius-1)` |
+ * | `--typography-link-color` | `var(--typography-link)` |
+ * | `--typography-link-cursor` | `pointer` |
+ * | `--typography-link-focus-visible-outline` | `var(--ring) solid 1px` |
+ * | `--typography-link-focus-visible-outline-offset` | `1px` |
+ * | `--typography-link-hover-text-decoration-line` | `underline` |
+ * | `--typography-link-text-decoration-line` | `none` |
+ * | `--typography-main` | `-` |
+ * | `--typography-main-color` | `var(--typography-main)` |
+ * | `--typography-margin` | `var(--typography-internal-margin, 0)` |
+ * | `--typography-max-width` | `var(--typography-internal-max-width, 100%)` |
+ * | `--typography-min-width` | `var(--typography-internal-min-width, var(--typo...` |
+ * | `--typography-nested-text-align` | `start` |
+ * | `--typography-overflow` | `var(--typography-internal-overflow)` |
+ * | `--typography-overflow-wrap` | `var(--typography-internal-overflow-wrap)` |
+ * | `--typography-padding` | `var(--typography-internal-padding, 0)` |
+ * | `--typography-primary` | `-` |
+ * | `--typography-primary-color` | `var(--typography-primary)` |
+ * | `--typography-secondary` | `-` |
+ * | `--typography-secondary-color` | `var(--typography-secondary)` |
+ * | `--typography-success` | `-` |
+ * | `--typography-success-color` | `var(--typography-success)` |
+ * | `--typography-tertiary` | `-` |
+ * | `--typography-tertiary-color` | `var(--typography-tertiary)` |
+ * | `--typography-text-align` | `var(--typography-internal-text-align)` |
+ * | `--typography-text-min-width` | `0` |
+ * | `--typography-text-overflow` | `var(--typography-internal-text-overflow)` |
+ * | `--typography-text-transform` | `var(--typography-internal-text-transform)` |
+ * | `--typography-tooltip-max-width` | `20rem` |
+ * | `--typography-tooltip-overflow-wrap` | `anywhere` |
+ * | `--typography-warning` | `-` |
+ * | `--typography-warning-color` | `var(--typography-warning)` |
+ * | `--typography-white-space` | `var(--typography-internal-white-space)` |
+ * | `--typography-width` | `var(--typography-internal-width, auto)` |
  */
 // #endregion css-tokens
 
-/**
- * A flexible typography component for rendering text with consistent styling.
- * Supports variants (title/text), semantic colors, truncation, and copy-to-clipboard.
- *
- * @example Basic text
- * ```tsx
- * <Typography>Default paragraph text</Typography>
- * ```
- *
- * @example Title with level
- * ```tsx
- * <Typography variant="title" level={1}>Page Heading</Typography>
- * <Typography variant="title" level={2}>Section Heading</Typography>
- * ```
- *
- * @example Using compound components
- * ```tsx
- * <Typography.Title level={1}>Main Title</Typography.Title>
- * <Typography.Text>Body text content</Typography.Text>
- * <Typography.Link href="/docs">Documentation</Typography.Link>
- * ```
- *
- * @example Text with styling props
- * ```tsx
- * <Typography size="lg" weight="semibold">Large semibold text</Typography>
- * <Typography color="muted">Secondary text</Typography>
- * <Typography color="danger">Error message</Typography>
- * <Typography strong>Bold text</Typography>
- * <Typography italic>Italic text</Typography>
- * ```
- *
- * @example Truncation
- * ```tsx
- * <Typography truncate={1}>Single line with ellipsis overflow...</Typography>
- * <Typography truncate={3}>Multi-line text that truncates after 3 lines...</Typography>
- * ```
- *
- * @example Code styling with copy
- * ```tsx
- * <Typography code copyable>npm install @signoz/ui</Typography>
- * ```
- *
- * @example Link styling
- * ```tsx
- * <Typography href="https://signoz.io" target="_blank" rel="noopener noreferrer">
- *   Visit SigNoz
- * </Typography>
- * ```
- *
- * @example Custom element
- * ```tsx
- * <Typography as="label" htmlFor="input-id">Form Label</Typography>
- * <Typography as="span">Inline text</Typography>
- * ```
- */
-
-export type * from './typography.js';
+export {
+	TypographyAlign,
+	TypographyColor,
+	TypographyDisplay,
+	TypographyElement,
+	TypographySize,
+	TypographySpacing,
+	TypographyTextOverflow,
+	TypographyVariant,
+	TypographyVerticalAlign,
+	TypographyWeight,
+} from './constants.js';
+export type * from './types.js';
 export { Typography } from './typography.js';

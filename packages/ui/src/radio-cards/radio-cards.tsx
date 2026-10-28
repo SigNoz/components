@@ -180,7 +180,17 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  *
  * @example
  * ```tsx
- * <Typography.Text id="migration-question">When do you plan to migrate?</Typography.Text>
+ * <Typography
+ *   id="migration-question"
+ *   variant="paragraph"
+ *   size="base"
+ *   weight="regular"
+ *   color="inherit"
+ *   as="p"
+ *   textOverflow="wrap"
+ * >
+ *   When do you plan to migrate?
+ * </Typography>
  * <RadioCards
  *   aria-labelledby="migration-question"
  *   columns={2}

@@ -28,7 +28,6 @@ export const externalPatterns = [
 	/^@base-ui\/react(\/.*)?$/,
 	/^@signozhq\/.*$/,
 	'@chenglou/pretext',
-	'copy-text-to-clipboard',
 ];
 
 export default function getViteLibConfig(

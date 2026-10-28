@@ -20,3 +20,4 @@ tabs
 toast
 toggle-group
 tooltip
+typography
