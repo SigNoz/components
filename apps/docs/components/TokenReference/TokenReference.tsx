@@ -15,7 +15,7 @@ export type SemanticTokenGroup =
 	| 'accents'
 	| 'sidebar'
 	| 'charts'
-	| 'fonts'
+	| 'typography'
 	| 'base'
 	| 'alerts'
 	| 'legacy';
@@ -98,7 +98,7 @@ const GROUPS_ORDER: SemanticTokenGroup[] = [
 	'accents',
 	'sidebar',
 	'charts',
-	'fonts',
+	'typography',
 	'base',
 	'alerts',
 	'legacy',
@@ -140,7 +140,7 @@ export const GROUP_LABELS: Record<string, string> = {
 	accents: 'Accent Colors',
 	sidebar: 'Sidebar',
 	charts: 'Chart Colors',
-	fonts: 'Typography',
+	typography: 'Typography Colors',
 	base: 'Base Colors',
 	alerts: 'Alerts',
 	legacy: 'Legacy Tokens',
@@ -154,7 +154,8 @@ export const GROUP_DESCRIPTIONS: Record<string, string> = {
 	accents: 'Brand and semantic accent colors for highlights and data visualization.',
 	sidebar: 'Tokens specific to sidebar navigation components.',
 	charts: 'Color palette optimized for data visualization and charts.',
-	fonts: 'Typography font family definitions.',
+	typography:
+		'Text colors of Typography. Main, secondary and tertiary follow the l1 to l3 foregrounds; each hue is the label color of an outlined badge of that color.',
 	base: 'Fundamental black and white base colors.',
 	alerts: 'Alert strip and notification styling tokens.',
 	legacy: 'Deprecated tokens maintained for backward compatibility. Migrate to semantic tokens.',

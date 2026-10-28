@@ -4,10 +4,11 @@ import styles from './CopyButton.module.css';
 
 interface CopyButtonProps {
 	text: string;
+	label?: string;
 	className?: string;
 }
 
-export function CopyButton({ text, className = '' }: CopyButtonProps) {
+export function CopyButton({ text, label = `Copy ${text}`, className = '' }: CopyButtonProps) {
 	const [copied, setCopied] = useState(false);
 
 	const handleCopy = async () => {
@@ -25,7 +26,7 @@ export function CopyButton({ text, className = '' }: CopyButtonProps) {
 			type="button"
 			onClick={handleCopy}
 			className={`${styles.button} ${className}`}
-			title={`Copy ${text}`}
+			title={label}
 		>
 			{copied ? <CheckCheck className={styles.icon} /> : <Copy className={styles.icon} />}
 		</button>

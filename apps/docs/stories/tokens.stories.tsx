@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
 	GROUP_DESCRIPTIONS,
 	GROUP_LABELS,
+	TextStyleReference,
 	TokenReference,
 } from '../components/TokenReference/index.js';
 
@@ -121,14 +122,19 @@ export const Charts: Story = {
 
 export const Typography: Story = {
 	name: 'Typography',
+	render: () => <TextStyleReference />,
+};
+
+export const TypographyColors: Story = {
+	name: 'Typography Colors',
 	render: () => (
 		<TokenReference
-			groups={['fonts']}
+			groups={['typography']}
 			mode="semantic"
 			showModeTabs={false}
 			showCategoryFilter={false}
-			title={GROUP_LABELS['fonts']}
-			description={GROUP_DESCRIPTIONS['fonts']}
+			title={GROUP_LABELS['typography']}
+			description={GROUP_DESCRIPTIONS['typography']}
 		/>
 	),
 };

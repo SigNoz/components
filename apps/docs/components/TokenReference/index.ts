@@ -1,5 +1,6 @@
 export { ColorSwatch } from './ColorSwatch.js';
 export { CopyButton } from './CopyButton.js';
+export { TextStyleReference } from './TextStyleReference.js';
 export type { SemanticTokenGroup, TokenReferenceProps } from './TokenReference.js';
 export { GROUP_DESCRIPTIONS, GROUP_LABELS, TokenReference } from './TokenReference.js';
 export type { TokenData } from './TokenRow.js';
