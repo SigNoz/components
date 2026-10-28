@@ -224,7 +224,7 @@ className={styles.badge}
 .badge {
     display: var(--badge-display, inline-flex);
     padding: var(--badge-padding, var(--spacing-4));
-    font-size: var(--badge-font-size, var(--periscope-font-size-small));
+    font-size: var(--badge-font-size, var(--label-small-500-font-size));
     background-color: var(--badge-background-color, var(--badge-background));
 }
 ```
@@ -341,11 +341,12 @@ Also required on the root element:
 ### Values come from design tokens
 
 **Design token first. A literal only when no token matches.** This applies to every kind of
-value: colour, spacing, radius, font size and font weight, not just colour.
+value: colour, spacing, radius and type, not just colour.
 
-`@signozhq/design-tokens` ships scales for spacing, radius, font size, font weight and
-colour. Assume a token exists before reaching for a number. Browse them in Storybook under
-**Design System** (generated from the token package by `apps/docs/utils/tokenDocs.ts`).
+`@signozhq/design-tokens` ships scales for spacing, radius and colour, and 33 text styles for
+type. Assume a token exists before reaching for a number. Browse them in Storybook under
+**Design System**, which the components in `apps/docs/components/` render from the token
+package.
 
 #### Primitive vs semantic tokens
 
@@ -377,8 +378,8 @@ itself out of that.
 **Never reference a `--bg-*` or `--text-*` primitive from a component style.** If the role you
 need has no semantic token, raise it so one gets added. Don't reach past the layer.
 
-The non-colour scales (`--spacing-*`, `--font-size-*`, `--font-weight-*`) live in the primitive
-layer and have no semantic counterpart, so those you use directly. For corner radius prefer the
+The spacing scale (`--spacing-*`) and the [text styles](#text-styles) live in the primitive layer
+and have no semantic counterpart, so those you use directly. For corner radius prefer the
 themeable `--radius` over the fixed `--radius-0` to `--radius-3` steps where it fits.
 
 Rules:
@@ -396,8 +397,7 @@ Rules:
 
 > [!NOTE]
 > **Legacy pattern, being cleaned up.** Most existing style files still read
-> `var(--spacing-4, 0.5rem)`, `var(--periscope-font-size-base, 13px)` and similar. Count what
-> is left with:
+> `var(--spacing-4, 0.5rem)` and similar. Count what is left with:
 >
 > ```sh
 > grep -rE "var\(--[a-z0-9-]+, *[0-9.]" packages/ui/src --include="*.scss" | wc -l
@@ -408,6 +408,91 @@ Rules:
 > which is a different value from the token itself. They are being removed incrementally so
 > only the token remains. **Don't add new ones, and drop the fallback when you touch a line
 > that has one.**
+
+#### Text styles
+
+Type has no separate size, weight or line-height scales. The token package ships 33 text
+styles, and they are the only typography tokens:
+
+| Variant | Sizes | Line height | For |
+| --- | --- | --- | --- |
+| `label` | `large` 18px, `medium` 16px, `base` 13px, `small` 11px | 1 | Text on one line: buttons, items, triggers, chips, badges, tabs, a label next to a control, a one-line title |
+| `paragraph` | `medium` 16px, `base` 13px, `small` 11px | 26px, 20px, 18px | Text that can wrap: descriptions, toast and callout bodies, tooltip content, empty states, helper text |
+| `uppercase` | `base` 13px, `small` 11px | 1 | Uppercase text with wide letter spacing, such as a group label |
+| `code` | `base` 13px, `small` 11px | 1 | Monospace text: code and keyboard keys |
+
+Each comes in the weights 400, 500 and 600 and is named `{variant}-{size}-{weight}`, such as
+`label-base-500` or `paragraph-small-400`. A style is six custom properties:
+`--label-base-500-font-family`, `-font-size`, `-font-weight`, `-line-height`, `-letter-spacing`
+and `-text-transform`. Design System > Tokens > Typography lists them with a sample of each.
+
+**Every text element takes its font from exactly one text style**, and declares all six
+properties from it, each behind the element's override variable:
+
+```scss
+.badge {
+    font-family: var(--badge-font-family, var(--label-small-500-font-family));
+    font-size: var(--badge-font-size, var(--label-small-500-font-size));
+    font-weight: var(--badge-font-weight, var(--label-small-500-font-weight));
+    line-height: var(--badge-line-height, var(--label-small-500-line-height));
+    letter-spacing: var(--badge-letter-spacing, var(--label-small-500-letter-spacing));
+    text-transform: var(--badge-text-transform, var(--label-small-500-text-transform));
+}
+```
+
+- `text-transform` is `none` on every variant except `uppercase`, and is still declared: without
+  it the element takes whatever the page around it sets.
+- Never mix styles on one element. A size from `label-small-500` with the line height of
+  `paragraph-base-400` is a style the design does not have.
+- A size or weight variant re-points `-internal-` variables at another style, all six of them,
+  the same way a colour variant does.
+- Pick the variant by role from the table, then size and weight from the Figma frame. A size off
+  the scale goes to the nearest step: 14px to `base`, 12px to `small` or `base` by role. A 700
+  weight becomes 600.
+- A container for what the consumer passes in, such as a popover, dialog or drawer popup or a
+  tab panel, declares `paragraph-base-400`, the body text style. A popup is portalled to `body`,
+  so without it the content takes the page's font, not the trigger's.
+- Only a wrapper that sits inline in the consumer's own text sets no font and inherits it on
+  purpose: the divider label, and the trigger a tooltip or dropdown wraps around a bare string.
+
+**Every root pins the numerals.** Every text style turns on Inter's open digits (`ss01`) and
+leaves tabular figures and slashed zero off. A page can set either, and both inherit. The root of
+each component, each portalled popup, and each native `<button>`, `<input>` or `<select>` that
+shows text (the browser resets their font, so they do not inherit it from the root) declares:
+
+```scss
+.avatar {
+    font-variant-numeric: normal;
+    font-feature-settings: 'ss01' 1;
+}
+```
+
+Skip either one where the block already sets its own. A component the design gives slashed zero
+or tabular figures declares that value instead of `normal`, behind its override variable: `Button`,
+`Badge` and `Pill` default to `slashed-zero`, `Progress` to `tabular-nums slashed-zero`.
+
+Smoothing, kerning, optical sizing and font synthesis are not declared in components: the design
+sets them once on the app root, and the Inter shipped by `@signozhq/design-tokens` has its optical
+size fixed at the text size. The docs story tests check the text style and the numerals: each
+story renders once under a page with a deliberately wrong value for each of them, and fails if any
+component text shows one (`apps/docs/.storybook/hostFontGuard.ts`).
+
+**Height comes from layout, not from line height.** `label`, `uppercase` and `code` have a line
+height of 1, so the line box is exactly the font size. A button, a row or a tab gets its height
+from `min-block-size`, padding or a fixed size built from `--spacing-*`. Don't raise the line
+height to make a box taller.
+
+**Single-line truncation uses `overflow: clip visible`**, not `overflow: hidden`. With a line
+height of 1, `hidden` cuts the descenders of g, p and y. `clip visible` clips the inline axis for
+the ellipsis and lets the glyphs overflow the block axis:
+
+```scss
+.badge__text {
+    overflow: var(--badge-text-overflow, clip visible);
+    text-overflow: var(--badge-text-text-overflow, ellipsis);
+    white-space: var(--badge-text-white-space, nowrap);
+}
+```
 
 ### Interaction and motion states
 
@@ -1064,8 +1149,9 @@ Storybook before you open the PR.
   pass proves nothing about the other. Toggle with the Storybook theme switch.
 - **Match sibling components.** A `sm` here should be the same height as `sm` on `Button` and
   `Input`; density and radius should not be a one-off.
-- **Typography through `Typography` or the type-scale tokens**, never an ad-hoc
-  `font-size` / `font-weight` pair.
+- **Typography through `Typography` or one [text style](#text-styles)**, all six properties
+  from that style, never an ad-hoc `font-size` / `font-weight` pair, and the rest of the font
+  pinned on each root. Truncated text keeps its descenders, and boxes keep their Figma height.
 - **Icons from `@signozhq/icons`**, sized with tokens. No inline SVG with hardcoded `px`.
 - **Every state built, not just designed**: default, hover, focus-visible, active, disabled,
   loading, invalid, selected, empty, and long/truncated content.

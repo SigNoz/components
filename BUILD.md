@@ -181,7 +181,7 @@ variable with a fallback:
 ```scss
 .badge {
     padding: var(--badge-padding, var(--spacing-2) var(--spacing-4));
-    font-size: var(--badge-font-size, var(--periscope-font-size-small));
+    font-size: var(--badge-font-size, var(--label-small-500-font-size));
     background-color: var(--badge-background);
     color: var(--badge-foreground);
 }
