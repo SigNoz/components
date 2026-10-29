@@ -10,7 +10,7 @@
  * | `--typography-archive-color` | `var(--typography-archive)` |
  * | `--typography-box-sizing` | `border-box` |
  * | `--typography-clamp-box-orient` | `vertical` |
- * | `--typography-clamp-display` | `-webkit-box` |
+ * | `--typography-clamp-display` | `var(--typography-internal-clamp-display, -webki...` |
  * | `--typography-color` | `var(--typography-internal-color, inherit)` |
  * | `--typography-danger` | `-` |
  * | `--typography-danger-color` | `var(--typography-danger)` |

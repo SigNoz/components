@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { SENTINEL_FONT, setTextStyle } from '../../__tests__/test-utils.js';
 import { Typography } from '../typography.js';
 
 function internal(element: HTMLElement, name: string): string {
@@ -101,6 +102,38 @@ describe('Typography display', () => {
 		expect(getComputedStyle(text).display).toBe('inline-block');
 		expect(text.getBoundingClientRect().width).toBe(120);
 		expect(text.querySelector('[data-slot="typography-text"]')).toBeNull();
+	});
+
+	it('keeps an inline-block text in the line when its ellipsis clamps past one line', () => {
+		setTextStyle('paragraph-base-400');
+		render(
+			<p data-testid="line">
+				Before{' '}
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="regular"
+					color="main"
+					as="span"
+					display="inline-block"
+					width={120}
+					textOverflow="ellipsis"
+					maxLines={2}
+					testId="text"
+				>
+					A text long enough to wrap past two lines in a box that is 120px wide
+				</Typography>{' '}
+				after
+			</p>,
+		);
+
+		const line = screen.getByTestId('line').getBoundingClientRect();
+		const text = screen.getByTestId('text');
+		const box = text.getBoundingClientRect();
+		expect(box.left).toBeGreaterThan(line.left);
+		expect(box.top).toBe(line.top);
+		expect(box.height).toBe(2 * parseFloat(SENTINEL_FONT.lineHeight));
+		expect(text.scrollHeight).toBeGreaterThan(text.clientHeight);
 	});
 });
 

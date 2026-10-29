@@ -12,6 +12,7 @@
 	--typography-internal-padding: initial;
 	--typography-internal-gap: initial;
 	--typography-internal-max-lines: initial;
+	--typography-internal-clamp-display: initial;
 
 	display: var(--typography-display, var(--typography-internal-display));
 	box-sizing: var(--typography-box-sizing, border-box);
@@ -50,6 +51,7 @@
 
 	&[data-display='inline-block'] {
 		--typography-internal-display: inline-block;
+		--typography-internal-clamp-display: -webkit-inline-box;
 	}
 
 	&[data-display='flex'] {
@@ -512,7 +514,7 @@
 
 .typography[data-text-overflow='ellipsis']:not([data-max-lines='1']):not([data-display$='flex']),
 .typography[data-text-overflow='ellipsis']:not([data-max-lines='1']) > .typography__text {
-	display: var(--typography-clamp-display, -webkit-box);
+	display: var(--typography-clamp-display, var(--typography-internal-clamp-display, -webkit-box));
 	-webkit-box-orient: var(--typography-clamp-box-orient, vertical);
 	-webkit-line-clamp: var(--typography-internal-max-lines);
 }
