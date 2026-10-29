@@ -1,7 +1,7 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import * as React from 'react';
 import { getElementRef, setRef } from '../../lib/merge-refs.js';
-import { cn } from '../../lib/utils.js';
+import { cn, joinIdRefs } from '../../lib/utils.js';
 import { useTooltipContentId } from '../tooltip-content-id-context.js';
 import { TooltipTriggerProvider, useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
 import styles from '../tooltip.module.scss';
@@ -125,9 +125,3 @@ type TriggerChildProps = {
 	id?: string;
 	'aria-describedby'?: string;
 };
-
-function joinIdRefs(...lists: Array<string | undefined>): string | undefined {
-	const ids = new Set(lists.flatMap((list) => list?.split(/\s+/).filter(Boolean) ?? []));
-
-	return ids.size === 0 ? undefined : [...ids].join(' ');
-}
