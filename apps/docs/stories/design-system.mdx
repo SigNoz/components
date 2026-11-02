@@ -151,8 +151,8 @@ When creating new components, follow this pattern to leverage the token system e
 Start with existing semantic tokens wherever possible:
 
 ```tsx
-// dialog.tsx
-function DialogContent({ children }) {
+// panel.tsx
+function Panel({ children }) {
 	return (
 		<div className="bg-l1-background border border-l2-border rounded-lg shadow-lg">{children}</div>
 	);
@@ -164,65 +164,58 @@ function DialogContent({ children }) {
 For component-specific styling that doesn't fit existing tokens, define CSS custom properties:
 
 ```css
-/* dialog/index.css */
-.dialog {
-	--dialog-border: var(--l2-border);
-	--dialog-close-icon: var(--l2-foreground);
+/* panel/index.css */
+.panel {
+	--panel-border: var(--l2-border);
+	--panel-close-icon: var(--l2-foreground);
 }
 
-.alert-dialog {
-	--dialog-border: var(--danger-background);
+.panel-danger {
+	--panel-border: var(--danger-background);
 }
 ```
 
 ### Step 3: Use Component Variables in Styles
 
 ```tsx
-function DialogHeader({ className, ...props }) {
+function PanelHeader({ className, ...props }) {
 	return (
-		<div className={cn('border-b border-[var(--dialog-border)] px-4 py-3', className)} {...props} />
+		<div className={cn('border-b border-[var(--panel-border)] px-4 py-3', className)} {...props} />
 	);
 }
 ```
 
 ### Real Example: Dialog Component
 
-Here's how the Dialog component from `@signozhq/ui` uses tokens:
+Here's how the Dialog component from `@signozhq/ui` uses tokens. Every value below is a semantic token:
 
-```tsx
-// DialogContent uses surface tokens for background and border
-<DialogPrimitive.Content
-  className={cn(
-    'bg-l1-background',
-    'border border-l2-border',
-    'rounded-lg shadow-[0_-4px_16px_2px_rgba(0,0,0,0.20)]',
-    className
-  )}
->
-  {children}
-</DialogPrimitive.Content>
+```scss
+// The panel sits on the surface above the page, with the level-two border and the dialog shadow
+.dialog {
+	background-color: var(--surface-2);
+	border: 1px solid var(--l2-border);
+	border-radius: var(--radius-2);
+	box-shadow: var(--shadow-dialog);
+}
 
-// DialogHeader uses component-specific variable for flexible border
-<div
-  className={cn(
-    'border-b border-[var(--dialog-border)]',
-    'px-4 py-3',
-    className
-  )}
->
-  {title}
-</div>
+// The header and the footer draw their dividers with the same border token as the panel
+.dialog__header {
+	border-bottom: 1px solid var(--l2-border);
+}
 
-// DialogTitle uses foreground tokens
-<DialogPrimitive.Title
-  className={cn(
-    'text-l1-foreground',
-    'text-[13px] font-medium',
-    className
-  )}
->
-  {children}
-</DialogPrimitive.Title>
+.dialog__footer {
+	border-top: 1px solid var(--l2-border);
+}
+
+// The title takes the strongest foreground, the description and the body the quieter one
+.dialog__title {
+	color: var(--l1-foreground);
+}
+
+.dialog__description,
+.dialog__body {
+	color: var(--l2-foreground);
+}
 ```
 
 ### Pattern Summary

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Dialog, DialogContent, DialogTitle } from '../../dialog/index.js';
+import { Dialog } from '../../dialog/index.js';
 import { Combobox } from '../index.js';
 import { FRAMEWORKS, openCombobox } from './combobox.test-utils.js';
 
@@ -267,28 +267,25 @@ describe('Combobox rendering', () => {
 });
 
 describe('Combobox inside a dialog', () => {
-	function renderInDialog(onOpenChange = vi.fn()) {
+	function renderInDialog(onClose = vi.fn()) {
 		render(
-			<Dialog open onOpenChange={onOpenChange}>
-				<DialogContent>
-					<DialogTitle>Settings</DialogTitle>
-					<Combobox
-						placeholder="Select a framework..."
-						searchInputProps={{ placeholder: 'Search' }}
-						aria-label="Framework"
-						items={FRAMEWORKS}
-					/>
-				</DialogContent>
+			<Dialog open onClose={onClose} title="Settings">
+				<Combobox
+					placeholder="Select a framework..."
+					searchInputProps={{ placeholder: 'Search' }}
+					aria-label="Framework"
+					items={FRAMEWORKS}
+				/>
 			</Dialog>,
 		);
 
-		return onOpenChange;
+		return onClose;
 	}
 
 	it('portals into the dialog panel and keeps the rows clickable', async () => {
 		renderInDialog();
 		const listbox = await openCombobox();
-		const panel = document.querySelector('[data-slot="dialog-content"]') as HTMLElement;
+		const panel = document.querySelector('[data-slot="dialog-popup"]') as HTMLElement;
 
 		expect(panel.contains(listbox)).toBe(true);
 
@@ -298,7 +295,7 @@ describe('Combobox inside a dialog', () => {
 	});
 
 	it('closes only the popup on Escape', async () => {
-		const onOpenChange = renderInDialog();
+		const onClose = renderInDialog();
 		await openCombobox();
 
 		await userEvent.keyboard('{Escape}');
@@ -306,7 +303,7 @@ describe('Combobox inside a dialog', () => {
 		await waitFor(() => {
 			expect(screen.queryByRole('listbox')).toBeNull();
 		});
-		expect(onOpenChange).not.toHaveBeenCalledWith(false, expect.anything());
+		expect(onClose).not.toHaveBeenCalled();
 		expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument();
 	});
 });

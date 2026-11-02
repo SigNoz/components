@@ -1,140 +1,518 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as DialogStories from './dialog.stories';
-import * as DialogPrimitiveStories from './dialog-primitive.stories';
-import * as DialogTriggerStories from './dialog-trigger.stories';
-import * as DialogContentStories from './dialog-content.stories';
-import * as DialogHeaderStories from './dialog-header.stories';
-import * as DialogTitleStories from './dialog-title.stories';
-import * as DialogDescriptionStories from './dialog-description.stories';
-import * as DialogFooterStories from './dialog-footer.stories';
-import * as DialogCloseStories from './dialog-close.stories';
-import * as DialogOverlayStories from './dialog-overlay.stories';
-import * as DialogPortalStories from './dialog-portal.stories';
 
 <Meta of={DialogStories} />
 
 # Dialog
 
-Low-level primitives for building modal dialogs with full control over structure and behaviour.
-
-For ready-made presets, see [DialogWrapper](?path=/docs/composed-components-dialogwrapper--docs), [ConfirmDialog](?path=/docs/composed-components-confirmdialog--docs), or [AlertDialog](?path=/docs/composed-components-alertdialog--docs).
+A modal window over the page, with a backdrop, a header, a body that scrolls and an optional footer,
+rendered through Base UI's Dialog. It is for forms and content.
 
 ## How to use
 
-Compose `Dialog`, `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, and `DialogClose` directly:
+A dialog has no trigger and no uncontrolled mode: it opens from a button, a menu item, a table row
+or a URL param, so the page that owns the state shows it. Pass `open`, or a `handle` for a dialog
+that opens from somewhere far from where it is declared ([see below](#opening-it-from-a-handle)).
+With `open`, `onClose`, `title` and the children are required. With a handle, `open` and `onClose`
+are not passed: the handle owns the open state.
 
 ```tsx
-import {
-	Dialog,
-	DialogTrigger,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogDescription,
-	DialogFooter,
-	DialogClose,
-	Button,
-} from '@signozhq/ui';
-import { AnimatePresence } from 'motion/react';
 import { useState } from 'react';
+import { Button, Dialog } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function RenameView() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button>Open</Button>
-			</DialogTrigger>
-			<AnimatePresence>
-				{open && (
-					<DialogContent key="dialog" width="base" forceMount>
-						<DialogHeader>
-							<DialogTitle>Title</DialogTitle>
-						</DialogHeader>
-						<DialogDescription>Description and body content.</DialogDescription>
-						<DialogFooter>
-							<Button variant="ghost" onClick={() => setOpen(false)}>
-								Cancel
-							</Button>
-							<DialogClose asChild>
-								<Button>Confirm</Button>
-							</DialogClose>
-						</DialogFooter>
-					</DialogContent>
-				)}
-			</AnimatePresence>
-		</Dialog>
+		<>
+			<Button variant="solid" color="primary" size="md" onClick={() => setOpen(true)}>
+				Rename view
+			</Button>
+			<Dialog
+				open={open}
+				onClose={() => setOpen(false)}
+				title="Rename view"
+				description="Dashboards that link to it keep working under the new name."
+				footerSuffix={
+					<>
+						<Button variant="outlined" color="secondary" size="md" onClick={() => setOpen(false)}>
+							Cancel
+						</Button>
+						<Button variant="solid" color="primary" size="md" type="submit" form="rename-view">
+							Save
+						</Button>
+					</>
+				}
+			>
+				<form id="rename-view" onSubmit={save}>
+					<Input aria-label="View name" defaultValue="Checkout latency" />
+				</form>
+			</Dialog>
+		</>
 	);
 }
 ```
 
+`id`, `ref`, `aria-*` and `data-*` land on the panel. `className` and `style` are not forwarded.
+
 <Primary />
 
-## Exit animations
+## Controlled
 
-Wrap `DialogContent` in `AnimatePresence` and pass `forceMount` plus a stable `key` to animate the dialog on close. Without these three, the dialog unmounts instantly with no exit animation.
+With `open`, the dialog never opens or closes itself. `onClose` reports a request to close with its
+reason, and the dialog stays open until `open` becomes `false`. The panel then plays its exit and
+unmounts its content, so a closed dialog keeps no state.
 
-`DialogWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
+## Closing
 
-## Position variants
+The user asks to close in three ways, and with `open`, `onClose` receives the reason:
 
-`DialogContent` accepts a `position` prop to anchor the dialog surface to any edge of the viewport: `center` (default), `top`, `right`, `bottom`, `left`.
+| Reason          | Caused by                      |
+| --------------- | ------------------------------ |
+| `escape-key`    | `Esc`                          |
+| `outside-press` | a press on the backdrop        |
+| `close-press`   | the close button in the header |
+
+To keep the dialog open for one reason, ignore it in the handler and write down why. That takes
+`open`: a dialog on a handle closes itself on every request, as shown
+[below](#opening-it-from-a-handle). To ask before closing, and not refuse, see
+[Unsaved changes](#unsaved-changes).
 
 ```tsx
-<Dialog open={open} onOpenChange={setOpen}>
-	<DialogTrigger asChild>
-		<Button>Open right</Button>
-	</DialogTrigger>
-	<AnimatePresence>
-		{open && (
-			<DialogContent key="dialog-right" position="right" width="base" forceMount>
-				<DialogHeader>
-					<DialogTitle>Right panel</DialogTitle>
-				</DialogHeader>
-				<DialogDescription>Content slides in from the right.</DialogDescription>
-			</DialogContent>
-		)}
-	</AnimatePresence>
+<Dialog
+	open={open}
+	onClose={(reason) => {
+		// Unsaved edits: a backdrop press would drop them without a warning.
+		if (reason === 'outside-press' && isDirty) {
+			return;
+		}
+
+		setOpen(false);
+	}}
+	title="Edit alert"
+	width="wide"
+>
+	<AlertForm />
 </Dialog>
 ```
 
-## Dialog Props
+Only a press on the backdrop is an outside press. A press on a toast, on a popup opened from
+inside the panel, or on another modal that renders in `document.body` (such as the antd
+ErrorModal) is not, so the dialog needs no workaround to stay open under one.
 
-<Controls of={DialogPrimitiveStories.Default} />
+## Opening it from a handle
 
-## DialogTrigger Props
+`open` suits a dialog that one button opens, where the state sits next to both. It suits a table
+badly. A row action far from the dialog needs the state lifted into a parent along with the row the
+dialog is about, and a dialog per row mounts one for every row.
 
-<Controls of={DialogTriggerStories.Default} />
+`useDialogHandle()` returns a handle that stands in for `open`. Declare one dialog, give it the
+handle, and call `handle.open(payload)` from anywhere that holds the handle. `children` may be a
+function of the payload.
 
-## DialogContent Props
+```tsx
+import { Button, Dialog, useDialogHandle } from '@signozhq/ui';
 
-<Controls of={DialogContentStories.Default} />
+export default function AlertRules({ rules }) {
+	const editRule = useDialogHandle<AlertRule>();
 
-## DialogHeader Props
+	return (
+		<>
+			{rules.map((rule) => (
+				<Row key={rule.id} rule={rule}>
+					<Button
+						variant="outlined"
+						color="secondary"
+						size="sm"
+						onClick={() => editRule.open(rule)}
+					>
+						Edit
+					</Button>
+				</Row>
+			))}
+			<Dialog handle={editRule} title="Edit alert" width="wide">
+				{(rule) => <EditAlertForm rule={rule} onSaved={() => editRule.close()} />}
+			</Dialog>
+		</>
+	);
+}
+```
 
-<Controls of={DialogHeaderStories.Default} />
+- `handle.open(payload)` shows the dialog. A handle created without a payload type opens with
+  `handle.open()`.
+- `handle.close()` closes it from anywhere, such as the form in the body once its save succeeds.
+- The dialog closes itself on every close request: `Esc`, a press on the backdrop and the close
+  button. With a handle, `open` and `onClose` are not passed, and the types reject both.
+- `children` is called with the payload only while the dialog is shown. The panel keeps that
+  payload while it plays its exit, so the content does not change as it fades.
+- `title`, `description`, `footerPrefix` and `footerSuffix` do not take the payload. What depends
+  on the row goes in `children`.
+- `open` and `handle` are never passed together.
 
-## DialogTitle Props
+### Learning that it closed
 
-<Controls of={DialogTitleStories.Default} />
+A dialog on a handle has no `onClose`, so the page learns of a close from the handle.
+`useDialogHandle(onOpenChange)` takes an optional callback that reports every open and close,
+whatever caused it. `onOpenChange(false)` runs for `Esc`, a press on the backdrop, the close button
+and `handle.close()` alike, and it carries no reason. It also runs when the dialog unmounts while
+open, such as a conditionally rendered dialog or a child that closes with its parent, so the handle
+never stays open with nothing on screen.
 
-## DialogDescription Props
+```tsx
+const editRule = useDialogHandle<AlertRule>((open) => {
+	if (!open) {
+		resetFilters();
+	}
+});
+```
 
-<Controls of={DialogDescriptionStories.Default} />
+### Refusing a close
 
-## DialogFooter Props
+A handle cannot keep the dialog open: it closes itself on every close request. A dialog that must
+refuse one, such as a form with unsaved edits, uses `open` and decides in `onClose`, as in
+[Closing](#closing).
 
-<Controls of={DialogFooterStories.Default} />
+## Widths
 
-## DialogClose Props
+`width` takes a name, and nothing else. No number, `px`, `%` or `vw` value is accepted.
 
-<Controls of={DialogCloseStories.Default} />
+| `width`      | Max width                            |
+| ------------ | ------------------------------------ |
+| `narrow`     | 384px                                |
+| `base`       | 512px, the default                   |
+| `wide`       | 672px                                |
+| `extra-wide` | 820px                                |
+| `full`       | the viewport minus 16px on each side |
 
-## DialogOverlay Props
+Pick the nearest name so dialogs line up across the product, instead of sizing the panel to its
+content. Each name is a max width, so on a narrow screen the panel shrinks before it overflows.
 
-<Controls of={DialogOverlayStories.Default} />
+## Header and footer
 
-## DialogPortal Props
+`title` is the heading and the accessible name of the panel. It wraps and never truncates, so keep
+it short. `titleIcon` renders an icon before it, hidden from assistive tech. `description` is a
+line under the title, and it is the `aria-describedby` of the panel.
 
-<Controls of={DialogPortalStories.Default} />
+`footerSuffix` holds the actions, at the end of the footer: a secondary Cancel button and one
+primary button, the primary last. Cancel is a plain `Button` that closes the dialog, as in the
+example above. A form in the body submits through the primary button with `form="<form id>"`.
+Below 640px the buttons stack, the last one on top. `footer` is not a prop, and the types reject
+it.
+
+`footerPrefix` sits at the start of the footer, apart from the actions. Put one destructive button
+in it, or one line of hint text. Below 640px it goes under the stacked buttons. It renders only
+with a `footerSuffix`: without one there is no footer at all.
+
+```tsx
+<Dialog
+	open={open}
+	onClose={() => setOpen(false)}
+	title="Edit API key"
+	footerPrefix={
+		<Button variant="link" color="danger" size="md" onClick={revokeKey}>
+			Revoke key
+		</Button>
+	}
+	footerSuffix={
+		<>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setOpen(false)}>
+				Cancel
+			</Button>
+			<Button variant="solid" color="primary" size="md" type="submit" form="edit-key">
+				Save
+			</Button>
+		</>
+	}
+>
+	<EditKeyForm id="edit-key" />
+</Dialog>
+```
+
+For a hint, the prefix is one line of text:
+
+```tsx
+footerPrefix={
+	<Typography
+		variant="paragraph"
+		size="small"
+		weight="regular"
+		color="secondary"
+		as="p"
+		textOverflow="wrap"
+	>
+		Invited people join as Viewers.
+	</Typography>
+}
+```
+
+The close button is always there, labelled `Close`.
+
+## Loading
+
+Open the dialog at once and pass `loading` while its content is on its way. Each slot that is
+passed shows a skeleton in its place: the title and `titleIcon`, the `description`, the
+`footerPrefix` and the `footerSuffix`. The body shows `loadingContent`, or a default skeleton of a
+title line and three text lines. The close button stays, so the user can leave before the data
+arrives.
+
+`children` renders only once `loading` is `false`, and with a `handle` it is not called with the
+payload until then, so the form never renders against data that is not there yet.
+
+```tsx
+const { data: key, isLoading } = useServiceAccountKey(keyId);
+
+<Dialog
+	open={open}
+	onClose={() => setOpen(false)}
+	title={key ? `Edit ${key.name} key` : 'Edit key'}
+	description="Services that use this key keep working until you revoke it."
+	loading={isLoading}
+	loadingContent={<EditKeyFormSkeleton />}
+	footerSuffix={…}
+>
+	{key ? <EditKeyForm keyItem={key} /> : null}
+</Dialog>
+```
+
+Give `loadingContent` the shape of what replaces it, with the labels written out and a
+`Skeleton.Input` where each value goes, so the body keeps its height when the data arrives. The
+default skeleton fits a body of text.
+
+A slot shows its skeleton only when its prop renders something. A `description` that comes from
+the request is `undefined` while loading, so its line appears only with the data.
+
+While loading, the panel is `aria-busy` and keeps `title` as its accessible name, so a screen
+reader still announces which dialog opened.
+
+## Overflow
+
+The panel never grows past the viewport. It keeps 16px from each edge, so its max height is the
+viewport minus 32px. The header and the footer stay fixed, and the body scrolls when the content
+is taller than the room left.
+
+## Focus and keyboard
+
+While open, focus is trapped in the panel, `Tab` and `Shift+Tab` loop through its focusable
+elements, the page under the backdrop does not scroll, and everything outside the panel is hidden
+from assistive technology. The panel is `role="dialog"` with `aria-modal="true"`, named by `title`.
+
+Initial focus goes to the panel, so a screen reader reads the title and the description first. The
+first `Tab` goes to the close button, the next one into the body. To start on another element, such
+as the field to fill first, pass a ref as `initialFocus`, not `autoFocus` on the element: React
+runs `autoFocus` before the dialog records where the focus was, so on close the focus would fall to
+the page body. On close, focus goes back to the element that had it when `open` became `true`, or
+to `finalFocus` when it is set.
+
+- `Esc` calls `onClose('escape-key')` with `open`, and closes a dialog on a handle.
+- `Esc` while a popup inside the panel is open (Select, Combobox, Dropdown, Popover) closes only
+  that popup.
+- `Enter` and `Space` press the focused button. The dialog adds no `Enter` handler of its own.
+
+## Layering
+
+The dialog renders in `document.body`, or in `container`, above a `Drawer` and below a Toast. A
+dialog opened from a drawer needs no `zIndex`. A dialog opened from the button of a toast stacks as
+if it were opened from the page, so the next toast still shows over it. Tooltip, Dropdown, Select,
+Combobox, Popover and the Toaster opened inside the panel portal into the panel and render above
+it.
+
+## Rendering in another element
+
+`container` takes the element the dialog renders in, or a ref to it, in place of `document.body`.
+Use it when the page shows only part of the document. The case that needs it is an element in
+fullscreen: the browser shows that element and what is inside it, so a dialog in `document.body`
+is not on screen at all.
+
+```tsx
+const chartRef = useRef<HTMLDivElement>(null);
+
+<div ref={chartRef}>
+	<Chart />
+	<Dialog open={open} container={chartRef} onClose={() => setOpen(false)} title="Share panel">
+		Anyone with the link can see this panel.
+	</Dialog>
+</div>;
+```
+
+The backdrop and the panel are fixed to the viewport. When the container or one of its ancestors
+has a `transform`, a `filter` or a `contain` rule, they are fixed to that element instead, so the
+dialog covers the element and not the whole screen. A fullscreen element fills the viewport, so the
+two are the same.
+
+A dialog nested in another one renders in the same `container` unless it passes its own. A dialog
+declared in a Popover, Select or Dropdown inside another dialog's panel renders there too, in
+`container` or `document.body`, and not inside the panel, so its backdrop covers the page.
+
+## Nested dialogs
+
+A `Dialog` can open from inside another `Dialog`, at any depth. The typical cases are a form that
+asks "Discard unsaved changes?" before it closes, and a dialog that opens a bigger editor. To be
+nested, the child renders inside the `children`, the `footerPrefix` or the `footerSuffix` of the
+parent. A dialog rendered outside the parent's tree is a second dialog on its own.
+
+```tsx
+<Dialog open={open} onClose={askToDiscard} title="Edit dashboard">
+	<DashboardForm />
+	<Dialog
+		open={discarding}
+		onClose={() => setDiscarding(false)}
+		title="Discard your changes?"
+		width="narrow"
+		footerSuffix={
+			<>
+				<Button variant="outlined" color="secondary" size="md" onClick={() => setDiscarding(false)}>
+					Keep editing
+				</Button>
+				<Button
+					variant="solid"
+					color="danger"
+					size="md"
+					onClick={() => {
+						setDiscarding(false);
+						setOpen(false);
+					}}
+				>
+					Discard changes
+				</Button>
+			</>
+		}
+	>
+		The changes you made to this dashboard are lost.
+	</Dialog>
+</Dialog>
+```
+
+While a child is open:
+
+- It renders above the parent, and only the top dialog takes input. The parent stays rendered and
+  inert, and focus is trapped in the child.
+- There is one backdrop, the first dialog's. The parent panel gets `data-nested-dialog-open`.
+- `Esc` closes only the top dialog. Pressing it again reaches the parent.
+- A press on the parent panel or on the backdrop is an outside press for the child only.
+- When the child closes, focus goes back to the element in the parent that opened it.
+- When the parent closes, its children close with it, because they are part of its content.
+
+A child with a smaller `width` covers only part of its parent, so the parent's edges show the
+depth. A `full` child covers the parent completely.
+
+## Unsaved changes
+
+Asking before a form with unsaved edits closes is the consumer's job. The dialog has no
+`unsavedChanges` prop and no built-in Cancel: Cancel is a plain `Button` in `footerSuffix`, and the
+guard is a `Dialog` you nest and open yourself.
+
+Keep the dialog controlled with `open`. In `onClose`, close at once when the form is clean, and open
+a nested `Dialog` when it is dirty. Point the Cancel button at the same function, so Cancel, `Esc`,
+a press on the backdrop and the close button ask the same question. The nested dialog's discard
+button drops the edits and closes both. A save closes the dialog directly, with no question.
+
+```tsx
+const [open, setOpen] = useState(false);
+const [discarding, setDiscarding] = useState(false);
+const [isDirty, setIsDirty] = useState(false);
+
+function requestClose() {
+	if (isDirty) {
+		setDiscarding(true);
+		return;
+	}
+
+	setOpen(false);
+}
+
+<Dialog
+	open={open}
+	onClose={requestClose}
+	title="Edit alert"
+	footerSuffix={
+		<>
+			<Button variant="outlined" color="secondary" size="md" onClick={requestClose}>
+				Cancel
+			</Button>
+			<Button variant="solid" color="primary" size="md" type="submit" form="edit-alert">
+				Save
+			</Button>
+		</>
+	}
+>
+	<AlertForm id="edit-alert" onDirtyChange={setIsDirty} />
+	<Dialog
+		open={discarding}
+		onClose={() => setDiscarding(false)}
+		title="Discard your changes?"
+		width="narrow"
+		footerSuffix={
+			<>
+				<Button variant="outlined" color="secondary" size="md" onClick={() => setDiscarding(false)}>
+					Keep editing
+				</Button>
+				<Button
+					variant="solid"
+					color="danger"
+					size="md"
+					onClick={() => {
+						setDiscarding(false);
+						setIsDirty(false);
+						setOpen(false);
+					}}
+				>
+					Discard changes
+				</Button>
+			</>
+		}
+	>
+		The changes you made to this alert are lost.
+	</Dialog>
+</Dialog>;
+```
+
+The dialog needs `open` for this. One on a handle closes itself on every request, so it cannot
+ask first.
+
+## Empty text
+
+`title` is required, and it never hides. An empty string renders `<No title>` in the header, so the
+missing accessible name shows in review.
+
+An empty `footerSuffix` renders no footer, and with it no `footerPrefix`. An empty `description`
+renders no description and no `aria-describedby`.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the panel, and it names every part:
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| backdrop      | `` `${testId}-backdrop` ``      |
+| header        | `` `${testId}-header` ``        |
+| title         | `` `${testId}-title` ``         |
+| description   | `` `${testId}-description` ``   |
+| close button  | `` `${testId}-close` ``         |
+| body          | `` `${testId}-body` ``          |
+| footer        | `` `${testId}-footer` ``        |
+| footer prefix | `` `${testId}-footer-prefix` `` |
+| footer suffix | `` `${testId}-footer-suffix` `` |
+
+While `loading`, the skeletons are named too:
+
+| Element              | `data-testid`                          |
+| -------------------- | -------------------------------------- |
+| title skeleton       | `` `${testId}-title-skeleton` ``       |
+| description skeleton | `` `${testId}-description-skeleton` `` |
+| default body         | `` `${testId}-body-skeleton` ``        |
+
+The description renders only when `description` renders something, and the footer only when
+`footerSuffix` does. The prefix part renders only when `footerPrefix` and `footerSuffix` both do.
+A nested dialog shares the backdrop of the first one, so assert on it once per
+stack.
+
+The panel carries `data-width`, `data-open` while open and `data-closed` while the exit runs,
+`data-nested-dialog-open` while a dialog nested in it is open, and `data-loading` with
+`aria-busy="true"` while `loading`. Dialogs portal to `document.body`, or to `container`, so query
+the document, not the canvas.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={DialogStories.Default} />

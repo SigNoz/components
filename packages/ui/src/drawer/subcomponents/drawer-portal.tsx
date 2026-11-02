@@ -1,9 +1,22 @@
-import {
-	DialogPortal as BaseDialogPortal,
-	type DialogPortalProps as BaseDialogPortalProps,
-} from '../../dialog/index.js';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import type * as React from 'react';
 
-export type DrawerPortalProps = BaseDialogPortalProps;
+export type DrawerPortalProps = {
+	children?: React.ReactNode;
+	/**
+	 * Specify a container element to portal the content into.
+	 */
+	container?: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>['container'];
+	/**
+	 * Used to force mounting when more control is needed. Useful when
+	 * controlling animation with React animation libraries.
+	 */
+	forceMount?: true;
+	/**
+	 * Test ID for the drawer portal.
+	 */
+	testId?: string;
+};
 
 /**
  * Portals drawer content outside of the normal DOM tree, usually to
@@ -27,6 +40,6 @@ export type DrawerPortalProps = BaseDialogPortalProps;
  * </Drawer>
  * ```
  */
-export function DrawerPortal(props: DrawerPortalProps) {
-	return <BaseDialogPortal data-slot="drawer-portal" {...props} />;
+export function DrawerPortal({ testId, ...props }: DrawerPortalProps) {
+	return <DialogPrimitive.Portal data-slot="drawer-portal" data-testid={testId} {...props} />;
 }

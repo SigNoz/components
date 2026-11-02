@@ -4,7 +4,7 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { NuqsAdapter } from 'nuqs/adapters/react';
 import { confirmUrlArgTypes } from './shared/dialog-drawer-arg-types.js';
 
-const { position: _, ...sharedConfirmUrlArgTypes } = confirmUrlArgTypes ?? {};
+const sharedConfirmUrlArgTypes = confirmUrlArgTypes ?? {};
 
 const meta: Meta<typeof ConfirmDrawerUrl> = {
 	title: 'Composed Components/Drawer/ConfirmDrawerUrl',

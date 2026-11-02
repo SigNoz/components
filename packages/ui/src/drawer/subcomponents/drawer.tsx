@@ -1,6 +1,29 @@
-import { Dialog, type DialogProps } from '../../dialog/index.js';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import type * as React from 'react';
 
-export type DrawerProps = DialogProps;
+export type DrawerProps = {
+	/**
+	 * The content of the drawer.
+	 */
+	children?: React.ReactNode;
+	/**
+	 * The controlled open state of the drawer. Must be used in conjunction with onOpenChange.
+	 */
+	open?: boolean;
+	/**
+	 * The open state of the drawer when it is initially rendered. Use when you do not need to control its open state.
+	 */
+	defaultOpen?: boolean;
+	/**
+	 * Event handler called when the open state of the drawer changes.
+	 */
+	onOpenChange?(open: boolean): void;
+	/**
+	 * The modality of the drawer. When set to true, interaction with outside elements will be disabled and only drawer content will be visible to screen readers.
+	 * @default true
+	 */
+	modal?: boolean;
+};
 
 /**
  * Root component that manages the open state and accessibility wiring
@@ -48,5 +71,5 @@ export type DrawerProps = DialogProps;
  * ```
  */
 export function Drawer(props: DrawerProps) {
-	return <Dialog {...props} />;
+	return <DialogPrimitive.Root {...props} />;
 }
