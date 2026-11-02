@@ -4,9 +4,6 @@ import {
 	ButtonColor,
 	ButtonVariant,
 	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
 	Input,
 	Popover,
 	Typography,
@@ -1031,49 +1028,50 @@ export const InsideDialog: Story = {
 				<Button {...TRIGGER} onClick={() => setOpen(true)}>
 					Open panel settings
 				</Button>
-				<Dialog open={open} onOpenChange={setOpen}>
-					<DialogContent width="base">
-						<DialogHeader>
-							<DialogTitle>Panel settings</DialogTitle>
-						</DialogHeader>
-						<div className={styles.dialogBody}>
-							<Hint>
-								A modal dialog traps focus and turns off pointer events on the body. The popup is
-								portalled into the panel instead, so it stays clickable and the keyboard can reach
-								it. Pick a threshold.
-							</Hint>
-							<Popover
-								nativeButton
-								side="bottom"
-								align="start"
-								handle={threshold}
-								aria-label="Threshold"
-								testId="popover-in-dialog"
-								trigger={<Button {...TRIGGER}>Set threshold</Button>}
-							>
-								<ul className={styles.list}>
-									{['200 ms', '500 ms', '1 s'].map((value) => (
-										<li key={value} className={styles.suggestion}>
-											<Button
-												variant={ButtonVariant.Ghost}
-												color={ButtonColor.Secondary}
-												size="md"
-												width="100%"
-												type="button"
-												onClick={() => {
-													setPicked(value);
-													threshold.close();
-												}}
-											>
-												{value}
-											</Button>
-										</li>
-									))}
-								</ul>
-							</Popover>
-							<Result>{picked === undefined ? undefined : `Threshold set to ${picked}.`}</Result>
-						</div>
-					</DialogContent>
+				<Dialog
+					open={open}
+					onClose={() => setOpen(false)}
+					title="Panel settings"
+					width="base"
+					testId="popover-dialog"
+				>
+					<div className={styles.dialogBody}>
+						<Hint>
+							A modal dialog traps focus and turns off pointer events on the body. The popup is
+							portalled into the panel instead, so it stays clickable and the keyboard can reach it.
+							Pick a threshold.
+						</Hint>
+						<Popover
+							nativeButton
+							side="bottom"
+							align="start"
+							handle={threshold}
+							aria-label="Threshold"
+							testId="popover-in-dialog"
+							trigger={<Button {...TRIGGER}>Set threshold</Button>}
+						>
+							<ul className={styles.list}>
+								{['200 ms', '500 ms', '1 s'].map((value) => (
+									<li key={value} className={styles.suggestion}>
+										<Button
+											variant={ButtonVariant.Ghost}
+											color={ButtonColor.Secondary}
+											size="md"
+											width="100%"
+											type="button"
+											onClick={() => {
+												setPicked(value);
+												threshold.close();
+											}}
+										>
+											{value}
+										</Button>
+									</li>
+								))}
+							</ul>
+						</Popover>
+						<Result>{picked === undefined ? undefined : `Threshold set to ${picked}.`}</Result>
+					</div>
 				</Dialog>
 			</div>
 		);

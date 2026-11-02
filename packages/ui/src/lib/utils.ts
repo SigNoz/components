@@ -48,6 +48,18 @@ export function joinIdRefs(...lists: Array<string | undefined>): string | undefi
 	return ids.size === 0 ? undefined : [...ids].join(' ');
 }
 
+/**
+ * Whether the element is rendered and visible. `checkVisibility` is missing in jsdom and older
+ * engines, where everything counts as visible.
+ *
+ * @access private
+ */
+export function isVisible(element: Element): boolean {
+	return typeof element.checkVisibility === 'function'
+		? element.checkVisibility({ visibilityProperty: true })
+		: true;
+}
+
 // https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts
 export type Simplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
 

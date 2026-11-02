@@ -1,4 +1,5 @@
 import { type CSSProperties, useState } from 'react';
+import { isVisible } from './utils.js';
 
 function createsStackingContext(
 	style: CSSStyleDeclaration,
@@ -106,4 +107,58 @@ export function useLayerZIndex(source: LayerSource, floor: string): CSSPropertie
 	});
 
 	return layer > 0 ? { zIndex: `max(${floor}, ${layer + 1})` } : undefined;
+}
+
+// A toast is a `role="dialog"`, or `role="alertdialog"` for a danger one, with
+// `aria-modal="false"`. It sits above every dialog and is not one to cover.
+const MODAL_SELECTOR =
+	'[role="dialog"]:not([aria-modal="false"]), [role="alertdialog"]:not([aria-modal="false"])';
+const TOASTER_SELECTOR = '[data-slot="toaster"]';
+
+/**
+ * The element a layer that opens by itself reads its own layer from: the one with the focus. When
+ * the focus is on `body`, because the element that had it unmounted as the layer opened (a
+ * drawer's save button that closes its form), it is a child of the highest open modal on the page,
+ * a `role="dialog"` from this library or another one, so the new layer still covers it. A dialog
+ * that says it is not modal, such as a toast, does not count.
+ *
+ * The same goes for a focus inside a toast, such as its action button: a toast stacks above every
+ * layer, and one that took the layer of a toast would cover the next toast.
+ *
+ * @access private
+ */
+export function findLayerOpener(): Element | null {
+	const active = document.activeElement;
+
+	if (active && active !== document.body && !active.closest(TOASTER_SELECTOR)) {
+		return active;
+	}
+
+	let opener: Element | null = null;
+	let openerLayer = 0;
+
+	for (const modal of Array.from(document.querySelectorAll(MODAL_SELECTOR))) {
+		// `getLayerZIndex` starts at the parent, so a child counts the modal's own z-index too.
+		const inside = modal.firstElementChild ?? modal;
+		const layer = isVisible(modal) ? getLayerZIndex(inside) : 0;
+
+		if (layer > openerLayer) {
+			opener = inside;
+			openerLayer = layer;
+		}
+	}
+
+	return opener;
+}
+
+/**
+ * `useLayerZIndex` for a layer that opens by itself and has no trigger to read: a dialog or a
+ * command palette. It reads the layer of {@link findLayerOpener} at the moment it mounts, which is
+ * the element that opened the layer, because the focus moves into the layer only after its first
+ * render.
+ *
+ * @access private
+ */
+export function useOpenerLayerZIndex(floor: string): CSSProperties | undefined {
+	return useLayerZIndex(findLayerOpener, floor);
 }

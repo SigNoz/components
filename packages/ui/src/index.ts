@@ -1,4 +1,3 @@
-export * from './alert-dialog/index.js';
 export * from './alert-strip/index.js';
 export * from './avatar/index.js';
 export * from './badge/index.js';
