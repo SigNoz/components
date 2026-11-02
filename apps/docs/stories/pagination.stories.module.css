@@ -1,12 +1,40 @@
-.sectionGap {
-  gap: 1.25rem;
-  align-items: stretch;
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.labelMargin {
-  margin-bottom: 0.5rem;
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-self: stretch;
 }
 
-.itemMargin {
-  margin-top: 1.5rem;
+.caption {
+  white-space: nowrap;
+}
+
+.matrix {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  align-self: stretch;
+}
+
+.cell {
+  min-width: 0;
+}
+
+.narrow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 30rem;
+  max-width: 100%;
+}
+
+.query {
+  align-self: flex-start;
 }

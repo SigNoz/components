@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import * as icons from './signozhq-icons.js';
 
 const requiredIconExports = [
+	'ArrowLeft',
+	'ArrowRight',
 	'ArrowUpDown',
 	'Calendar',
 	'Check',

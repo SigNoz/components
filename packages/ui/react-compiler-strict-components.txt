@@ -9,6 +9,7 @@ command
 divider
 dropdown
 input
+pagination
 popover
 progress
 radio-cards
