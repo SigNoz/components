@@ -59,6 +59,30 @@ function findStyleFiles(dir) {
 	return files;
 }
 
+// A token a component reads in TSX, such as the `var(--x, 20rem)` it passes as a prop value, is
+// part of its customization surface too. Only reads count: a custom property a component writes
+// on an element is its own business. The `index.ts` holds the generated table, so it is not read.
+function findSourceFiles(dir) {
+	const files = [];
+
+	for (const entry of readdirSync(dir)) {
+		const fullPath = join(dir, entry);
+
+		if (statSync(fullPath).isDirectory()) {
+			if (entry !== '__tests__') {
+				files.push(...findSourceFiles(fullPath));
+			}
+		} else if (
+			/\.tsx?$/.test(entry) &&
+			!/(\.test|\.test-d|\.test-utils|\.d)\.tsx?$|^index\.ts$/.test(entry)
+		) {
+			files.push(fullPath);
+		}
+	}
+
+	return files;
+}
+
 function extractCssVariables(content) {
 	const variables = {
 		definitions: new Map(),
@@ -109,6 +133,14 @@ function extractCssVariables(content) {
 	}
 
 	return variables;
+}
+
+function mergeUsages(target, usages) {
+	for (const [varName, fallback] of usages) {
+		if (!target.has(varName) || (fallback && !target.get(varName))) {
+			target.set(varName, fallback);
+		}
+	}
 }
 
 function detectComponentPrefix(variables, componentName) {
@@ -222,11 +254,11 @@ function main() {
 				variables.definitions.set(varName, value);
 			}
 
-			for (const [varName, fallback] of extracted.usages) {
-				if (!variables.usages.has(varName) || (fallback && !variables.usages.get(varName))) {
-					variables.usages.set(varName, fallback);
-				}
-			}
+			mergeUsages(variables.usages, extracted.usages);
+		}
+
+		for (const file of findSourceFiles(dir)) {
+			mergeUsages(variables.usages, extractCssVariables(readFileSync(file, 'utf-8')).usages);
 		}
 
 		const prefix = detectComponentPrefix(variables, name);

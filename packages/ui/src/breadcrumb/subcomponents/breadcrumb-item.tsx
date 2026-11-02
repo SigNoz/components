@@ -1,55 +1,94 @@
-import * as React from 'react';
-import { cn } from '../../lib/utils.js';
+import { type ReactElement, useCallback } from 'react';
+import { Dropdown } from '../../dropdown/dropdown.js';
+import { partTestId } from '../../lib/utils.js';
 import styles from '../breadcrumb.module.scss';
+import { BreadcrumbItemKind, BreadcrumbPosition } from '../constants.js';
+import type {
+	BreadcrumbPositionType,
+	BreadcrumbResolvedItem,
+	BreadcrumbTextOverflowType,
+	RegisterBreadcrumbCrumb,
+} from '../types.js';
+import { INERT_PROPS, toMenuRows } from '../utils.js';
+import { BreadcrumbItemContent } from './breadcrumb-item-content.js';
 
-export type BreadcrumbItemProps = Pick<
-	React.ComponentPropsWithoutRef<'li'>,
-	| 'id'
-	| 'className'
-	| 'style'
-	| 'children'
-	| 'title'
-	| 'aria-label'
-	| 'aria-labelledby'
-	| 'aria-describedby'
-> & {
+/**
+ * @access private
+ */
+export type BreadcrumbItemProps = {
+	resolved: BreadcrumbResolvedItem;
+	position: BreadcrumbPositionType;
+	textOverflow: BreadcrumbTextOverflowType;
 	/**
-	 * The test ID to apply to the breadcrumb item.
+	 * True while the crumb sits in the menu of the `...` crumb. It stays mounted, out of the flow,
+	 * invisible and inert, so the trail measures it as it would render.
 	 */
-	testId?: string;
+	collapsed: boolean;
+	/**
+	 * Reports the nodes the trail measures, the crumb and its label, under the index of the crumb.
+	 */
+	registerCrumb: RegisterBreadcrumbCrumb;
 };
 
 /**
- * Wraps each breadcrumb element (link, page, separator, or ellipsis).
- * Use inside `BreadcrumbList`.
+ * One crumb of the trail, and the menu it opens when it has a `menu`.
  *
- * @example
- * ```tsx
- * <BreadcrumbItem>
- *   <BreadcrumbLink href="/products">Products</BreadcrumbLink>
- * </BreadcrumbItem>
- * ```
- *
- * @example
- * ```tsx
- * // Current page (last item)
- * <BreadcrumbItem>
- *   <BreadcrumbPage>Details</BreadcrumbPage>
- * </BreadcrumbItem>
- * ```
+ * @access private
  */
-export const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProps>(
-	({ className, testId, ...props }, ref) => {
-		return (
-			<li
-				ref={ref}
-				data-testid={testId}
-				data-slot="breadcrumb-item"
-				className={cn(styles['breadcrumb-item'], className)}
-				{...props}
-			/>
-		);
-	},
-);
+export function BreadcrumbItem({
+	resolved,
+	position,
+	textOverflow,
+	collapsed,
+	registerCrumb,
+}: BreadcrumbItemProps): ReactElement {
+	const { item, kind, testId, index } = resolved;
+	const crumbRef = useCallback(
+		(node: HTMLLIElement | null): void => registerCrumb(index, 'crumb', node),
+		[registerCrumb, index],
+	);
+	const labelRef = useCallback(
+		(node: HTMLSpanElement | null): void => registerCrumb(index, 'label', node),
+		[registerCrumb, index],
+	);
+	const content = (
+		<BreadcrumbItemContent
+			item={item}
+			kind={kind}
+			current={position === BreadcrumbPosition.End}
+			textOverflow={textOverflow}
+			collapsed={collapsed}
+			labelRef={labelRef}
+		/>
+	);
+	// A collapsed crumb leaves its `testId` to its menu row, and opens no menu of its own.
+	const collapsedProps = collapsed ? { 'aria-hidden': true, ...INERT_PROPS } : {};
+	const menuTestId = partTestId(testId, 'menu');
 
-BreadcrumbItem.displayName = 'BreadcrumbItem';
+	return (
+		<li
+			ref={crumbRef}
+			data-slot="breadcrumb-item"
+			data-position={position}
+			data-kind={kind}
+			data-collapsed={collapsed || undefined}
+			className={styles['breadcrumb__item']}
+			{...collapsedProps}
+			{...(testId === undefined || collapsed ? {} : { 'data-testid': testId })}
+		>
+			{kind === BreadcrumbItemKind.Menu && !collapsed ? (
+				<Dropdown
+					nativeButton
+					side="bottom"
+					align="start"
+					items={toMenuRows(item.menu ?? [])}
+					{...(menuTestId === undefined ? {} : { testId: menuTestId })}
+				>
+					{content}
+				</Dropdown>
+			) : (
+				content
+			)}
+		</li>
+	);
+}

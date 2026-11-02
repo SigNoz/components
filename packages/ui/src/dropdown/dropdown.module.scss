@@ -154,6 +154,8 @@
   // pitch. Holds only because nothing wraps.
   line-height: var(--dropdown-item-line-height, var(--line-height-18));
   white-space: var(--dropdown-item-white-space, nowrap);
+  // A link row renders the consumer's `<a>`, which would bring the browser underline along.
+  text-decoration: var(--dropdown-item-text-decoration, none);
 
   cursor: var(--dropdown-item-cursor, pointer);
   user-select: var(--dropdown-item-user-select, none);

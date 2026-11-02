@@ -1,9 +1,6 @@
 import { type RefObject, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { readPx } from '../lib/css-length.js';
 import { countVisibleMembers } from './utils.js';
-
-function readPx(value: string): number {
-	return Number.parseFloat(value) || 0;
-}
 
 type OverflowState = {
 	visibleCount: number;

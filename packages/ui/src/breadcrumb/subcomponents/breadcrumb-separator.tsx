@@ -1,62 +1,30 @@
-import { ChevronRight } from '@signozhq/icons';
-import * as React from 'react';
-import { cn } from '../../lib/utils.js';
+import type { ReactElement } from 'react';
 import styles from '../breadcrumb.module.scss';
 
-const DEFAULT_SEPARATOR = <ChevronRight size={14} />;
-
-export type BreadcrumbSeparatorProps = Pick<
-	React.ComponentPropsWithoutRef<'li'>,
-	'id' | 'className' | 'style' | 'title'
-> & {
-	/**
-	 * The test ID to apply to the breadcrumb separator.
-	 */
-	testId?: string;
-	/**
-	 * Custom separator content. If not provided, uses the parent's separator type.
-	 */
-	children?: React.ReactNode;
+/**
+ * @access private
+ */
+export type BreadcrumbSeparatorProps = {
+	separator: string;
+	testId: string | undefined;
 };
 
 /**
- * Visual separator between breadcrumb items.
- * Defaults to chevron icon; pass children for custom separator.
+ * The mark between two crumbs. Out of the accessibility tree: the list already says where one
+ * crumb ends.
  *
- * @example
- * ```tsx
- * // Default chevron
- * <BreadcrumbSeparator />
- * ```
- *
- * @example
- * ```tsx
- * // Custom separator
- * <BreadcrumbSeparator>/</BreadcrumbSeparator>
- * ```
- *
- * @example
- * ```tsx
- * // Arrow separator
- * <BreadcrumbSeparator>→</BreadcrumbSeparator>
- * ```
+ * @access private
  */
-export const BreadcrumbSeparator = React.forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
-	({ className, testId, children, ...props }, ref) => {
-		return (
-			<li
-				ref={ref}
-				data-testid={testId}
-				role="presentation"
-				aria-hidden="true"
-				data-slot="breadcrumb-separator"
-				className={cn(styles['breadcrumb-separator'], className)}
-				{...props}
-			>
-				{children ?? DEFAULT_SEPARATOR}
-			</li>
-		);
-	},
-);
-
-BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
+export function BreadcrumbSeparator({ separator, testId }: BreadcrumbSeparatorProps): ReactElement {
+	return (
+		<li
+			role="presentation"
+			aria-hidden="true"
+			data-slot="breadcrumb-separator"
+			className={styles['breadcrumb__separator']}
+			{...(testId === undefined ? {} : { 'data-testid': testId })}
+		>
+			{separator}
+		</li>
+	);
+}
