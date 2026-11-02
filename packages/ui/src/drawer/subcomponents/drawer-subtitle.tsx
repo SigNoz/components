@@ -1,10 +1,16 @@
 import * as React from 'react';
-import {
-	DialogSubtitle as BaseDialogSubtitle,
-	type DialogSubtitleProps as BaseDialogSubtitleProps,
-} from '../../dialog/index.js';
+import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
 
-export type DrawerSubtitleProps = BaseDialogSubtitleProps;
+export type DrawerSubtitleProps = Pick<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className' | 'style' | 'children'
+> & {
+	/**
+	 * Test ID for the drawer subtitle.
+	 */
+	testId?: string;
+};
 
 /**
  * Secondary text displayed below the drawer title.
@@ -28,8 +34,15 @@ export type DrawerSubtitleProps = BaseDialogSubtitleProps;
  * </Drawer>
  * ```
  */
-export const DrawerSubtitle = React.forwardRef<
-	React.ElementRef<typeof BaseDialogSubtitle>,
-	DrawerSubtitleProps
->((props, ref) => <BaseDialogSubtitle ref={ref} data-slot="drawer-subtitle" {...props} />);
+export const DrawerSubtitle = React.forwardRef<HTMLDivElement, DrawerSubtitleProps>(
+	({ className, testId, ...props }, ref) => (
+		<div
+			ref={ref}
+			data-slot="drawer-subtitle"
+			data-testid={testId}
+			className={cn(styles.drawer__subtitle, className)}
+			{...props}
+		/>
+	),
+);
 DrawerSubtitle.displayName = 'DrawerSubtitle';

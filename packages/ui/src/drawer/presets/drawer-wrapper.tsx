@@ -1,30 +1,24 @@
 import { AnimatePresence } from 'motion/react';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
-import {
-	DialogCloseButton,
-	type DialogCloseButtonProps,
-	type DialogSize,
-} from '../../dialog/index.js';
-import styles from '../../dialog/dialog.module.scss';
 import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
+import { Drawer } from '../subcomponents/drawer.js';
 import {
-	Drawer,
-	DrawerContent,
-	type DrawerContentProps,
+	DrawerCloseButton,
+	type DrawerCloseButtonProps,
+} from '../subcomponents/drawer-close-button.js';
+import { DrawerContent, type DrawerContentProps } from '../subcomponents/drawer-content.js';
+import {
 	DrawerDescription,
 	type DrawerDescriptionProps,
-	type DrawerDirection,
-	DrawerFooter,
-	type DrawerFooterProps,
-	DrawerHeader,
-	type DrawerHeaderProps,
-	DrawerSubtitle,
-	type DrawerSubtitleProps,
-	DrawerTitle,
-	type DrawerTitleProps,
-	DrawerTrigger,
-} from '../index.js';
+} from '../subcomponents/drawer-description.js';
+import { DrawerFooter, type DrawerFooterProps } from '../subcomponents/drawer-footer.js';
+import { DrawerHeader, type DrawerHeaderProps } from '../subcomponents/drawer-header.js';
+import { DrawerSubtitle, type DrawerSubtitleProps } from '../subcomponents/drawer-subtitle.js';
+import { DrawerTitle, type DrawerTitleProps } from '../subcomponents/drawer-title.js';
+import { DrawerTrigger } from '../subcomponents/drawer-trigger.js';
+import type { DrawerDirection, DrawerSize } from '../types.js';
 
 export interface DrawerWrapperProps {
 	/**
@@ -92,10 +86,10 @@ export interface DrawerWrapperProps {
 	 */
 	showOverlay?: boolean;
 	/**
-	 * The width of the dialog.
+	 * The maximum width of the drawer when it slides in from the left or the right.
 	 * @default 'base'
 	 */
-	width?: DialogSize;
+	width?: DrawerSize;
 	/**
 	 * The props you can pass to drawer content
 	 */
@@ -135,7 +129,7 @@ export interface DrawerWrapperProps {
 	/**
 	 * The props you can pass to close button
 	 */
-	closeButtonProps?: Omit<DialogCloseButtonProps, 'onClick'>;
+	closeButtonProps?: Omit<DrawerCloseButtonProps, 'onClick'>;
 }
 
 /**
@@ -157,11 +151,11 @@ export interface DrawerWrapperProps {
  *   <div className="flex flex-col gap-4">
  *     <p>Drawer content goes here.</p>
  *     <div className="flex justify-end">
- *       <DialogClose asChild>
+ *       <DrawerClose asChild>
  *         <Button variant="solid" color="primary">
  *           Save Changes
  *         </Button>
- *       </DialogClose>
+ *       </DrawerClose>
  *     </div>
  *   </div>
  * </DrawerWrapper>
@@ -254,7 +248,7 @@ export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps
 					<DrawerHeader
 						{...drawerHeaderProps}
 						className={cn(
-							showCloseButton && styles['dialog__header--with-close'],
+							showCloseButton && styles['drawer__header--with-close'],
 							drawerHeaderProps?.className,
 						)}
 					>
@@ -264,7 +258,7 @@ export const DrawerWrapper = React.forwardRef<HTMLDivElement, DrawerWrapperProps
 				)}
 				{children && <DrawerDescription {...drawerDescriptionProps}>{children}</DrawerDescription>}
 				{footer && <DrawerFooter {...drawerFooterProps}>{footer}</DrawerFooter>}
-				{showCloseButton && <DialogCloseButton onClick={onClickClose} {...closeButtonProps} />}
+				{showCloseButton && <DrawerCloseButton onClick={onClickClose} {...closeButtonProps} />}
 			</DrawerContent>
 		);
 

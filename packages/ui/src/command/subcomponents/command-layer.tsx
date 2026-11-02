@@ -1,5 +1,5 @@
-import { type ReactNode, useState } from 'react';
-import { useLayerZIndex } from '../../lib/layer-z-index.js';
+import type { ReactNode } from 'react';
+import { useOpenerLayerZIndex } from '../../lib/layer-z-index.js';
 import styles from '../command.module.scss';
 
 /**
@@ -8,13 +8,13 @@ import styles from '../command.module.scss';
  * match neither.
  *
  * Mounts on open and reads the layer the focus is in at that moment, such as a modal from another
- * library, to stack above it. Base UI moves the focus into the panel only after this first render.
+ * library, to stack above it. With the focus on `body`, it reads the highest open modal instead.
+ * Base UI moves the focus into the panel only after this first render.
  *
  * @access private
  */
 export function CommandLayer({ children }: { children: ReactNode }): ReactNode {
-	const [opener] = useState(() => document.activeElement);
-	const layerStyle = useLayerZIndex(opener, 'var(--command-z-index, 50)');
+	const layerStyle = useOpenerLayerZIndex('var(--command-z-index, 50)');
 
 	return (
 		<div data-slot="command-layer" className={styles['command__layer']} style={layerStyle}>

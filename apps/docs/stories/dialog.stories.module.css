@@ -1,8 +1,183 @@
-.flexEnd {
-  display: flex;
-  justify-content: flex-end;
+.page {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 2rem;
+	max-inline-size: 36rem;
 }
 
-.minHeightContainer {
-  min-height: 400px;
+/* Tall enough that a dialog opened over it leaves the header and the footer showing. */
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-block-size: 16rem;
+}
+
+.rows {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-block: 0.5rem;
+	border-block-end: 1px solid var(--l2-border);
+	color: var(--l1-foreground);
+}
+
+.rowKind {
+	color: var(--l2-foreground);
+}
+
+.alerts {
+	display: flex;
+	flex-direction: column;
+	inline-size: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.alert {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-block: 0.5rem;
+	border-block-end: 1px solid var(--l2-border);
+	color: var(--l1-foreground);
+}
+
+.alertText {
+	display: flex;
+	flex-direction: column;
+	min-inline-size: 0;
+}
+
+.details {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.5rem 1rem;
+	margin: 0;
+}
+
+.details dt {
+	color: var(--l2-foreground);
+}
+
+.details dd {
+	margin: 0;
+	color: var(--l1-foreground);
+}
+
+/* A `contain` on the box fixes the backdrop and the panel to it instead of the viewport. */
+.box {
+	position: relative;
+	contain: layout;
+	overflow: hidden;
+	display: flex;
+	align-items: flex-start;
+	inline-size: 100%;
+	block-size: 24rem;
+	padding: 1rem;
+	box-sizing: border-box;
+	border: 1px dashed var(--l2-border);
+	border-radius: var(--radius-2);
+}
+
+/* One box per width, each wider than the widest name that is not `full`, so the panels differ. */
+.widths {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	overflow-x: auto;
+}
+
+.widthBox {
+	composes: box;
+	inline-size: 60rem;
+	block-size: 14rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.keyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* As tall as the Badge it stands in for, so the body keeps its height when the key arrives. */
+.badgeSkeleton {
+  --skeleton-input-height-small: 20px;
+}
+
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem 1.5rem;
+  align-items: start;
+}
+
+.stateRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1rem;
+}
+
+/* Two columns at most, so each popup gets the width it asks for and none touches its neighbour. */
+.pickerRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(13rem, calc(50% - 1rem)), 1fr));
+  gap: 1.5rem 2rem;
+  align-items: start;
+}
+
+/* The label, the trigger and the open popup of a select, so the popup ends above the next row. */
+.pickerCell {
+  min-block-size: 13.5rem;
+}
+
+/* The same for a combobox, whose popup adds the search row. */
+.pickerCellSearch {
+  min-block-size: 16rem;
 }

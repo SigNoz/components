@@ -1,8 +1,16 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { toast, Toaster } from '../../toast/index.js';
-import { ACTIONS, CommandHarness, renderOpenCommand, searchField } from './command.test-utils.js';
+import { Command } from '../command.js';
+import {
+	ACTIONS,
+	CommandHarness,
+	ITEMS,
+	renderOpenCommand,
+	searchField,
+} from './command.test-utils.js';
 
 function isOnTop(element: Element): boolean {
 	const { left, top, width, height } = element.getBoundingClientRect();
@@ -108,5 +116,88 @@ describe('Command with a toast over it', () => {
 		await vi.waitFor(() => expect(document.querySelector('[data-slot="toast"]')).toBeNull());
 		expect(onOpenChange).not.toHaveBeenCalled();
 		expect(screen.getByRole('dialog')).toBeInTheDocument();
+	});
+});
+
+function zIndexOf(element: Element): number {
+	return Number.parseInt(getComputedStyle(element).zIndex, 10);
+}
+
+describe('Command stacking with the focus on body', () => {
+	// A modal from another library: not ours, so it is all the palette has to read.
+	function addModal(): HTMLElement {
+		const modal = document.createElement('div');
+		modal.style.cssText = 'display:block;position:fixed;inset:0 0 0 50%;z-index:1000;';
+		modal.innerHTML = '<div role="dialog" aria-label="Settings"><p>Settings</p></div>';
+		document.body.append(modal);
+		(document.activeElement as HTMLElement | null)?.blur();
+
+		return modal;
+	}
+
+	// The element that opened the palette unmounted as it opened, so the focus is on body.
+	it('stacks above the highest open modal on the page', async () => {
+		const modal = addModal();
+
+		try {
+			await renderOpenCommand();
+
+			expect(zIndexOf(document.querySelector('[data-slot="command-layer"]') as Element)).toBe(1001);
+			expect(isOnTop(screen.getByRole('option', { name: 'Members' }))).toBe(true);
+		} finally {
+			modal.remove();
+		}
+	});
+});
+
+describe('Command opened from a toast action', () => {
+	afterEach(() => {
+		act(() => toast.dismiss());
+	});
+
+	function ToastOpensCommand() {
+		const [open, setOpen] = useState(false);
+
+		return (
+			<>
+				<Toaster />
+				<button
+					type="button"
+					onClick={() =>
+						toast.success('Saved', { action: { label: 'Review', onClick: () => setOpen(true) } })
+					}
+				>
+					Raise toast
+				</button>
+				<Command
+					label="Command palette"
+					open={open}
+					onOpenChange={setOpen}
+					searchInputProps={{ placeholder: 'Search…' }}
+					items={ITEMS}
+					testId="command"
+				/>
+			</>
+		);
+	}
+
+	it('stacks at 50, under the toast, so a later toast shows over it', async () => {
+		render(<ToastOpensCommand />);
+		await userEvent.click(screen.getByRole('button', { name: 'Raise toast' }));
+		const action = await vi.waitFor(() => {
+			const element = document.querySelector<HTMLElement>('[data-slot="toast-action"]');
+			expect(element).not.toBeNull();
+
+			return element as HTMLElement;
+		});
+
+		await userEvent.click(action);
+		await waitFor(() => expect(searchField()).toHaveFocus());
+
+		const layer = document.querySelector('[data-slot="command-layer"]') as Element;
+		const toaster = document.querySelector('[data-slot="toaster"]') as Element;
+
+		expect(zIndexOf(layer)).toBe(50);
+		expect(zIndexOf(toaster)).toBeGreaterThan(zIndexOf(layer));
 	});
 });
