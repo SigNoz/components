@@ -95,33 +95,32 @@ export function usePaginationState({
 		}
 	}, [correction]);
 
-	// The page last asked of a consumer that controls `current`. A consumer that waits for a fetch
-	// before it moves `current` still renders the old page, which a new page size can put out of
-	// range, and correcting it would ask for a second page on top of the one already asked for.
-	const pendingPageRef = useRef<number | null>(null);
+	// The page size this pagination just picked, along with a request for page 1. A consumer that
+	// waits for a fetch before it moves `current` still renders the old page once the new size is
+	// in, and that page can be out of range. Correcting it would ask for a second page on top of
+	// page 1, so the commit that brings the new size skips the correction once.
+	const sizeResetRef = useRef<number | null>(null);
 
 	useEffect(() => {
-		pendingPageRef.current = null;
+		sizeResetRef.current = null;
 	}, [requestedPage]);
 
 	useEffect(() => {
-		if (!isPageControlled || page === requestedPage) {
-			return;
+		const isSizeReset = sizeResetRef.current === pageSize;
+
+		if (isSizeReset) {
+			sizeResetRef.current = null;
 		}
 
-		const pendingPage = pendingPageRef.current;
-
-		if (pendingPage !== null && clampPage(pendingPage, pageLimit) === pendingPage) {
+		if (!isPageControlled || page === requestedPage || isSizeReset) {
 			return;
 		}
 
 		onPageChangeRef.current?.(page);
-	}, [isPageControlled, page, requestedPage, pageLimit]);
+	}, [isPageControlled, page, requestedPage, pageLimit, pageSize]);
 
 	function setPage(next: number): void {
-		if (isPageControlled) {
-			pendingPageRef.current = next;
-		} else {
+		if (!isPageControlled) {
 			setInternalPage(next);
 		}
 
@@ -140,7 +139,7 @@ export function usePaginationState({
 		onPageSizeChange?.(next);
 
 		if (isPageControlled) {
-			pendingPageRef.current = 1;
+			sizeResetRef.current = next;
 		} else {
 			setInternalPage(1);
 		}

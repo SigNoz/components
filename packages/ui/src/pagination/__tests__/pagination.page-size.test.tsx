@@ -387,6 +387,41 @@ describe('Pagination page size selector', () => {
 		expect(onPageChange).toHaveBeenLastCalledWith(2);
 	});
 
+	it('corrects a later out-of-range current when a page press was never followed', async () => {
+		const onPageChange = vi.fn();
+		const { rerender } = render(
+			<Pagination total={100} current={10} onPageChange={onPageChange} />,
+		);
+
+		await userEvent.click(screen.getByRole('button', { name: 'Page 1' }));
+
+		rerender(<Pagination total={30} current={10} onPageChange={onPageChange} />);
+
+		expect(onPageChange).toHaveBeenCalledTimes(2);
+		expect(onPageChange).toHaveBeenLastCalledWith(3);
+	});
+
+	it('corrects a later out-of-range current when a size change left current in range', async () => {
+		const onPageChange = vi.fn();
+		const { rerender } = render(
+			<Pagination total={100} pageSizeOptions current={2} onPageChange={onPageChange} />,
+		);
+
+		const listbox = await openPageSize();
+
+		await userEvent.click(within(listbox).getByRole('option', { name: '20' }));
+
+		await waitFor(() => {
+			expect(screen.getByRole('combobox', { name: LABEL })).toHaveTextContent('20');
+		});
+
+		rerender(<Pagination total={20} pageSizeOptions current={2} onPageChange={onPageChange} />);
+
+		expect(onPageChange).toHaveBeenCalledTimes(2);
+		expect(onPageChange).toHaveBeenNthCalledWith(1, 1);
+		expect(onPageChange).toHaveBeenNthCalledWith(2, 1);
+	});
+
 	it('does not call anything when the picked size is the current one', async () => {
 		const onPageSizeChange = vi.fn();
 		const onPageChange = vi.fn();
