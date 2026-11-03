@@ -303,6 +303,90 @@ describe('Pagination page size selector', () => {
 		expect(screen.getByRole('combobox', { name: LABEL })).toHaveTextContent('20');
 	});
 
+	it('asks only for page 1 while the consumer has not moved current yet, when the size is its own', async () => {
+		const onPageChange = vi.fn();
+		render(<Pagination total={100} pageSizeOptions current={10} onPageChange={onPageChange} />);
+
+		const listbox = await openPageSize();
+
+		await userEvent.click(within(listbox).getByRole('option', { name: '50' }));
+
+		await waitFor(() => {
+			expect(screen.getByRole('combobox', { name: LABEL })).toHaveTextContent('50');
+		});
+		expect(onPageChange).toHaveBeenCalledTimes(1);
+		expect(onPageChange).toHaveBeenCalledWith(1);
+	});
+
+	it('asks only for page 1 when the consumer moves the size before current', async () => {
+		const onPageChange = vi.fn();
+		const { rerender } = render(
+			<Pagination
+				total={100}
+				pageSizeOptions
+				pageSize={10}
+				current={10}
+				onPageChange={onPageChange}
+			/>,
+		);
+
+		const listbox = await openPageSize();
+
+		await userEvent.click(within(listbox).getByRole('option', { name: '50' }));
+
+		rerender(
+			<Pagination
+				total={100}
+				pageSizeOptions
+				pageSize={50}
+				current={10}
+				onPageChange={onPageChange}
+			/>,
+		);
+
+		expect(onPageChange).toHaveBeenCalledTimes(1);
+		expect(onPageChange).toHaveBeenCalledWith(1);
+	});
+
+	it('corrects an out-of-range current again once the consumer has followed page 1', async () => {
+		const onPageChange = vi.fn();
+		const { rerender } = render(
+			<Pagination
+				total={100}
+				pageSizeOptions
+				pageSize={10}
+				current={10}
+				onPageChange={onPageChange}
+			/>,
+		);
+
+		const listbox = await openPageSize();
+
+		await userEvent.click(within(listbox).getByRole('option', { name: '50' }));
+
+		rerender(
+			<Pagination
+				total={100}
+				pageSizeOptions
+				pageSize={50}
+				current={1}
+				onPageChange={onPageChange}
+			/>,
+		);
+		rerender(
+			<Pagination
+				total={100}
+				pageSizeOptions
+				pageSize={50}
+				current={9}
+				onPageChange={onPageChange}
+			/>,
+		);
+
+		expect(onPageChange).toHaveBeenCalledTimes(2);
+		expect(onPageChange).toHaveBeenLastCalledWith(2);
+	});
+
 	it('does not call anything when the picked size is the current one', async () => {
 		const onPageSizeChange = vi.fn();
 		const onPageChange = vi.fn();

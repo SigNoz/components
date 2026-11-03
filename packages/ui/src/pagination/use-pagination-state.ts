@@ -64,7 +64,8 @@ export function usePaginationState({
 	const requestedPage = current ?? internalPage;
 	// A total of 0 is often the total of a list that is still loading, so the page waits for a
 	// total instead of going back to 1. The bar shows page 1 meanwhile.
-	const page = clampPage(requestedPage, total === 0 ? Number.POSITIVE_INFINITY : pageCount);
+	const pageLimit = total === 0 ? Number.POSITIVE_INFINITY : pageCount;
+	const page = clampPage(requestedPage, pageLimit);
 
 	const onPageChangeRef = useRef(onPageChange);
 	useIsomorphicLayoutEffect(() => {
@@ -94,14 +95,33 @@ export function usePaginationState({
 		}
 	}, [correction]);
 
+	// The page last asked of a consumer that controls `current`. A consumer that waits for a fetch
+	// before it moves `current` still renders the old page, which a new page size can put out of
+	// range, and correcting it would ask for a second page on top of the one already asked for.
+	const pendingPageRef = useRef<number | null>(null);
+
 	useEffect(() => {
-		if (isPageControlled && page !== requestedPage) {
-			onPageChangeRef.current?.(page);
+		pendingPageRef.current = null;
+	}, [requestedPage]);
+
+	useEffect(() => {
+		if (!isPageControlled || page === requestedPage) {
+			return;
 		}
-	}, [isPageControlled, page, requestedPage]);
+
+		const pendingPage = pendingPageRef.current;
+
+		if (pendingPage !== null && clampPage(pendingPage, pageLimit) === pendingPage) {
+			return;
+		}
+
+		onPageChangeRef.current?.(page);
+	}, [isPageControlled, page, requestedPage, pageLimit]);
 
 	function setPage(next: number): void {
-		if (!isPageControlled) {
+		if (isPageControlled) {
+			pendingPageRef.current = next;
+		} else {
 			setInternalPage(next);
 		}
 
@@ -119,7 +139,9 @@ export function usePaginationState({
 
 		onPageSizeChange?.(next);
 
-		if (!isPageControlled) {
+		if (isPageControlled) {
+			pendingPageRef.current = 1;
+		} else {
 			setInternalPage(1);
 		}
 

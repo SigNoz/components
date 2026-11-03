@@ -11,9 +11,6 @@ export function positionOf(canvas: Canvas, testId: string): string {
 	);
 }
 
-/**
- * The page buttons and separators of a bar, in document order.
- */
 export function slotsOf(bar: HTMLElement): HTMLElement[] {
 	return Array.from(
 		bar.querySelectorAll<HTMLElement>(
@@ -22,9 +19,6 @@ export function slotsOf(bar: HTMLElement): HTMLElement[] {
 	);
 }
 
-/**
- * The slots as the text a reader sees: a page as its number and a separator as `-`.
- */
 export function slotTexts(bar: HTMLElement): string[] {
 	return slotsOf(bar).map((slot) =>
 		slot.dataset.slot === 'pagination-separator' ? '-' : (slot.textContent ?? ''),
