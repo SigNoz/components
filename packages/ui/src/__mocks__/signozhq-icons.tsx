@@ -37,6 +37,7 @@ export const Pin = createIcon('pin');
 export const Plus = createIcon('plus');
 export const PinOff = createIcon('pin-off');
 export const Search = createIcon('search');
+export const User = createIcon('user');
 export const SolidAlertCircle = createIcon('solid-alert-circle');
 export const SolidAlertTriangle = createIcon('solid-alert-triangle');
 export const SolidCheckCircle2 = createIcon('solid-check-circle-2');

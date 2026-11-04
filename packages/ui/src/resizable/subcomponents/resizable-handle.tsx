@@ -1,8 +1,9 @@
 import { GripVertical } from '@signozhq/icons';
 import { useRef } from 'react';
 import { Separator } from 'react-resizable-panels';
+import { isBlankText } from '../../lib/blank-text.js';
 import styles from '../resizable.module.scss';
-import { isBlankLabel, useTestIdAttribute } from '../utils.js';
+import { useTestIdAttribute } from '../utils.js';
 
 /**
  * @access private
@@ -30,7 +31,7 @@ export function ResizableHandle({ id, label, testId }: ResizableHandleProps) {
 		<Separator
 			id={id}
 			elementRef={elementRef}
-			aria-label={isBlankLabel(label) ? undefined : label}
+			aria-label={isBlankText(label) ? undefined : label}
 			data-slot="resizable-handle"
 			className={styles['resizable__handle']}
 		>

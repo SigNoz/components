@@ -1,3 +1,43 @@
-.flexRowAlignEnd {
-  align-items: flex-end;
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 32rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.rowLabel {
+  min-width: 0;
+  text-box: trim-both ex alphabetic;
+}
+
+.caseName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-box: trim-both ex alphabetic;
+}
+
+.buttonRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Narrower than its three avatars, so only a `flex-shrink: 0` avatar keeps its 32px. */
+.narrowRow {
+  display: flex;
+  width: 4rem;
 }
