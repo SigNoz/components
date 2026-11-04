@@ -6,7 +6,8 @@ import * as DialogStories from './dialog.stories';
 # Dialog
 
 A modal window over the page, with a backdrop, a header, a body that scrolls and an optional footer,
-rendered through Base UI's Dialog. It is for forms and content.
+rendered through Base UI's Dialog. It is for forms and content. To confirm a destructive or
+consequential action, use [AlertDialog](?path=/docs/composed-components-alertdialog--docs).
 
 ## How to use
 
@@ -247,6 +248,32 @@ footerPrefix={
 
 The close button is always there, labelled `Close`.
 
+## Confirming an action
+
+A dialog has no confirm mode. Asking before a destructive or consequential action is an
+[AlertDialog](?path=/docs/composed-components-alertdialog--docs): a title, a body that states the
+consequence, and a cancel and a confirm button, with no close button.
+
+```tsx
+<AlertDialog
+	open={confirming}
+	title="Revoke this key?"
+	color="danger"
+	confirmText="Revoke key"
+	onConfirm={async () => {
+		await revokeKey();
+		setConfirming(false);
+	}}
+	onCancel={() => setConfirming(false)}
+>
+	Services that use this key stop authenticating the moment it is revoked.
+</AlertDialog>
+```
+
+When a button inside the dialog opens the alert, render the alert inside the dialog, in the
+`children`, the `footerPrefix` or the `footerSuffix`, so it nests in the dialog. See
+[Nested dialogs](#nested-dialogs) and [Unsaved changes](#unsaved-changes).
+
 ## Loading
 
 Open the dialog at once and pass `loading` while its content is on its way. Each slot that is
@@ -345,39 +372,37 @@ declared in a Popover, Select or Dropdown inside another dialog's panel renders 
 
 ## Nested dialogs
 
-A `Dialog` can open from inside another `Dialog`, at any depth. The typical cases are a form that
-asks "Discard unsaved changes?" before it closes, and a dialog that opens a bigger editor. To be
-nested, the child renders inside the `children`, the `footerPrefix` or the `footerSuffix` of the
-parent. A dialog rendered outside the parent's tree is a second dialog on its own.
+A `Dialog` or an `AlertDialog` can open from inside another `Dialog`, at any depth. The typical
+cases are a dialog that opens a bigger editor, and a form that asks "Discard unsaved changes?"
+before it closes, which is an `AlertDialog` ([see below](#unsaved-changes)). To be nested, the child
+renders inside the `children`, the `footerPrefix` or the `footerSuffix` of the parent. A dialog
+rendered outside the parent's tree is a second dialog on its own.
 
 ```tsx
-<Dialog open={open} onClose={askToDiscard} title="Edit dashboard">
-	<DashboardForm />
+<Dialog open={editing} onClose={() => setEditing(false)} title="Edit dashboard" width="wide">
+	<DashboardForm onEditPanel={() => setConfiguring(true)} />
 	<Dialog
-		open={discarding}
-		onClose={() => setDiscarding(false)}
-		title="Discard your changes?"
-		width="narrow"
+		open={configuring}
+		onClose={() => setConfiguring(false)}
+		title="Panel settings"
+		width="base"
 		footerSuffix={
 			<>
-				<Button variant="outlined" color="secondary" size="md" onClick={() => setDiscarding(false)}>
-					Keep editing
-				</Button>
 				<Button
-					variant="solid"
-					color="danger"
+					variant="outlined"
+					color="secondary"
 					size="md"
-					onClick={() => {
-						setDiscarding(false);
-						setOpen(false);
-					}}
+					onClick={() => setConfiguring(false)}
 				>
-					Discard changes
+					Cancel
+				</Button>
+				<Button variant="solid" color="primary" size="md" type="submit" form="panel-settings">
+					Apply
 				</Button>
 			</>
 		}
 	>
-		The changes you made to this dashboard are lost.
+		<PanelForm id="panel-settings" onSubmit={() => setConfiguring(false)} />
 	</Dialog>
 </Dialog>
 ```
@@ -388,7 +413,8 @@ While a child is open:
   inert, and focus is trapped in the child.
 - There is one backdrop, the first dialog's. The parent panel gets `data-nested-dialog-open`.
 - `Esc` closes only the top dialog. Pressing it again reaches the parent.
-- A press on the parent panel or on the backdrop is an outside press for the child only.
+- A press on the parent panel or on the backdrop is an outside press for the child only. A child
+  `AlertDialog` ignores it, as it ignores every backdrop press.
 - When the child closes, focus goes back to the element in the parent that opened it.
 - When the parent closes, its children close with it, because they are part of its content.
 
@@ -399,12 +425,12 @@ depth. A `full` child covers the parent completely.
 
 Asking before a form with unsaved edits closes is the consumer's job. The dialog has no
 `unsavedChanges` prop and no built-in Cancel: Cancel is a plain `Button` in `footerSuffix`, and the
-guard is a `Dialog` you nest and open yourself.
+guard is an `AlertDialog` you nest and open yourself.
 
 Keep the dialog controlled with `open`. In `onClose`, close at once when the form is clean, and open
-a nested `Dialog` when it is dirty. Point the Cancel button at the same function, so Cancel, `Esc`,
-a press on the backdrop and the close button ask the same question. The nested dialog's discard
-button drops the edits and closes both. A save closes the dialog directly, with no question.
+a nested `AlertDialog` when it is dirty. Point the Cancel button at the same function, so Cancel,
+`Esc`, a press on the backdrop and the close button ask the same question. The alert's confirm
+button discards the edits and closes both. A save closes the dialog directly, with no question.
 
 ```tsx
 const [open, setOpen] = useState(false);
@@ -436,33 +462,21 @@ function requestClose() {
 	}
 >
 	<AlertForm id="edit-alert" onDirtyChange={setIsDirty} />
-	<Dialog
+	<AlertDialog
 		open={discarding}
-		onClose={() => setDiscarding(false)}
 		title="Discard your changes?"
-		width="narrow"
-		footerSuffix={
-			<>
-				<Button variant="outlined" color="secondary" size="md" onClick={() => setDiscarding(false)}>
-					Keep editing
-				</Button>
-				<Button
-					variant="solid"
-					color="danger"
-					size="md"
-					onClick={() => {
-						setDiscarding(false);
-						setIsDirty(false);
-						setOpen(false);
-					}}
-				>
-					Discard changes
-				</Button>
-			</>
-		}
+		color="danger"
+		confirmText="Discard changes"
+		cancelText="Keep editing"
+		onConfirm={() => {
+			setDiscarding(false);
+			setIsDirty(false);
+			setOpen(false);
+		}}
+		onCancel={() => setDiscarding(false)}
 	>
 		The changes you made to this alert are lost.
-	</Dialog>
+	</AlertDialog>
 </Dialog>;
 ```
 
