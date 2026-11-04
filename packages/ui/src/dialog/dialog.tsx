@@ -65,7 +65,11 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 			}}
 		>
 			<DialogPortal container={container}>
-				<DialogLayer>
+				<DialogLayer
+					className={styles['dialog__layer']}
+					slot="dialog-layer"
+					zIndex="var(--dialog-z-index, 50)"
+				>
 					<DialogPrimitive.Backdrop
 						className={styles['dialog__backdrop']}
 						data-slot="dialog-backdrop"
@@ -227,7 +231,8 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 
 /**
  * Renders a modal window over the page with a backdrop, a header, a body that scrolls and an
- * optional footer (Base UI Dialog). For forms and content.
+ * optional footer (Base UI Dialog). For forms and content. A confirmation of a destructive or
+ * consequential action is an `AlertDialog`.
  *
  * `id`, `ref`, `aria-*` and `data-*` land on the panel. `className` and `style` are not
  * forwarded.

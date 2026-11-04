@@ -108,7 +108,12 @@ interface TheDialogTakesNoClassName {
 	'`Dialog` takes no `className` or `style`: wrap your content in your own element, and reach the panel with a `data-*` attribute': never;
 }
 
-type RuleFor<T, Keys extends PropertyKey, Rule> = [Extract<keyof T, Keys>] extends [never]
+/**
+ * Resolves to `Rule` when `T` has any of `Keys`, and to `unknown` otherwise.
+ *
+ * @access private
+ */
+export type RuleFor<T, Keys extends PropertyKey, Rule> = [Extract<keyof T, Keys>] extends [never]
 	? unknown
 	: Rule;
 
@@ -164,9 +169,13 @@ type ValidateOpenOrHandle<T, Payload> =
 			? OpenOrAHandleNotBoth
 			: unknown;
 
-// With `open` the dialog never closes itself, so the handler that does it is required. With a
-// handle the dialog closes itself, so the handler is rejected: the handle owns the open state.
-type CloseHandlerRule<T, Payload, Key extends PropertyKey, ControlledRule, HandleRule> =
+/**
+ * With `open` the dialog never closes itself, so the handler that does it is required. With a
+ * handle the dialog closes itself, so the handler is rejected: the handle owns the open state.
+ *
+ * @access private
+ */
+export type CloseHandlerRule<T, Payload, Key extends PropertyKey, ControlledRule, HandleRule> =
 	IsNoHandle<Payload> extends true
 		? [Extract<keyof T, 'open'>] extends [never]
 			? unknown
@@ -177,7 +186,13 @@ type CloseHandlerRule<T, Payload, Key extends PropertyKey, ControlledRule, Handl
 			? HandleRule
 			: unknown;
 
-type ValidateSharedDialogProps<T, Payload> = RuleFor<
+/**
+ * The rules `Dialog` and `AlertDialog` share: the open-or-handle pair, and the props of the old
+ * dialogs that no longer exist.
+ *
+ * @access private
+ */
+export type ValidateSharedDialogProps<T, Payload> = RuleFor<
 	T,
 	'data-testid',
 	TheTestIdPropIsCalledTestId
@@ -212,8 +227,10 @@ export type ValidateDialogProps<T, Payload = NoHandle> = ValidateSharedDialogPro
 
 /**
  * Where a dialog is shown from: its `open` prop, or a handle from `useDialogHandle()`.
+ *
+ * @access private
  */
-type DialogOpenProps<Payload> = {
+export type DialogOpenProps<Payload> = {
 	/**
 	 * Shows the dialog. With `open` the dialog is controlled: it never opens or closes itself.
 	 *

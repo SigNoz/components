@@ -1,0 +1,172 @@
+// One stacking context for the backdrop and the panel. `position` only lets `z-index` apply: the
+// backdrop and the viewport are fixed, so they still place themselves against the viewport.
+.alert-dialog__layer {
+	position: var(--alert-dialog-layer-position, relative);
+	z-index: var(--alert-dialog-z-index, 50);
+}
+
+.alert-dialog__backdrop {
+	// The design asks for black at 40%, and there is no semantic token for a scrim. `black` here is
+	// the colour of the shade in both themes, not a value to swap for a token.
+	--alert-dialog-internal-backdrop: var(--alert-dialog-backdrop-color,
+			color-mix(in srgb, black 40%, transparent));
+
+	position: var(--alert-dialog-backdrop-position, fixed);
+	inset: var(--alert-dialog-backdrop-inset, 0);
+	background-color: var(--alert-dialog-internal-backdrop);
+
+	opacity: var(--alert-dialog-backdrop-opacity, 1);
+	// Its own tokens: the panel transitions `transform` too, and a token read by both would list
+	// one default for two values.
+	transition-property: var(--alert-dialog-backdrop-transition-property, opacity);
+	transition-duration: var(--alert-dialog-backdrop-transition-duration, 150ms);
+	transition-timing-function: var(--alert-dialog-backdrop-transition-timing-function, ease);
+
+	&[data-starting-style],
+	&[data-ending-style] {
+		opacity: var(--alert-dialog-backdrop-hidden-opacity, 0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
+// Centres the panel and keeps it 16px from every edge, so its max size is the viewport minus that
+// gap. A press here, around the panel, is an outside press.
+.alert-dialog__viewport {
+	position: var(--alert-dialog-viewport-position, fixed);
+	inset: var(--alert-dialog-viewport-inset, 0);
+	display: var(--alert-dialog-viewport-display, flex);
+	align-items: var(--alert-dialog-viewport-align-items, center);
+	justify-content: var(--alert-dialog-viewport-justify-content, center);
+	box-sizing: var(--alert-dialog-viewport-box-sizing, border-box);
+	padding: var(--alert-dialog-viewport-padding, var(--spacing-8));
+}
+
+.alert-dialog {
+	position: var(--alert-dialog-position, relative);
+	display: var(--alert-dialog-display, flex);
+	flex-direction: var(--alert-dialog-flex-direction, column);
+	gap: var(--alert-dialog-gap, var(--spacing-12));
+	box-sizing: var(--alert-dialog-box-sizing, border-box);
+	inline-size: var(--alert-dialog-inline-size, 100%);
+	max-inline-size: var(--alert-dialog-max-inline-size, 24rem);
+	max-block-size: var(--alert-dialog-max-block-size, 100%);
+	padding: var(--alert-dialog-padding, var(--spacing-8));
+
+	border-width: var(--alert-dialog-border-width, 1px);
+	border-style: var(--alert-dialog-border-style, solid);
+	border-color: var(--alert-dialog-border-color, var(--l2-border));
+	border-radius: var(--alert-dialog-border-radius, var(--radius-2));
+	background-color: var(--alert-dialog-background-color, var(--surface-2));
+	box-shadow: var(--alert-dialog-box-shadow, var(--shadow-dialog));
+
+	// The panel is portalled to `body`, so without a text style the content takes the page's font.
+	font-family: var(--alert-dialog-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--alert-dialog-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--alert-dialog-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--alert-dialog-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--alert-dialog-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--alert-dialog-text-transform, var(--paragraph-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+
+	opacity: var(--alert-dialog-opacity, 1);
+	transform: var(--alert-dialog-transform, none);
+	// Keeps the panel on its own layer while open. Otherwise Chrome drops the layer when the
+	// transition ends and repaints the text snapped to the pixel grid, so a panel centred on a
+	// half pixel jumps sideways by that half pixel.
+	will-change: var(--alert-dialog-will-change, transform);
+	transition-property: var(--alert-dialog-transition-property, opacity, transform);
+	transition-duration: var(--alert-dialog-transition-duration, 150ms);
+	transition-timing-function: var(--alert-dialog-transition-timing-function, ease);
+
+	&[data-starting-style],
+	&[data-ending-style] {
+		opacity: var(--alert-dialog-hidden-opacity, 0);
+		transform: var(--alert-dialog-hidden-transform, scale(0.98));
+	}
+
+	&:focus-visible {
+		outline: var(--alert-dialog-focus-visible-outline, none);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
+.alert-dialog__content {
+	display: var(--alert-dialog-content-display, flex);
+	flex-direction: var(--alert-dialog-content-flex-direction, column);
+	gap: var(--alert-dialog-content-gap, var(--spacing-3));
+	min-block-size: var(--alert-dialog-content-min-block-size, 0);
+}
+
+.alert-dialog__heading {
+	display: var(--alert-dialog-heading-display, flex);
+	align-items: var(--alert-dialog-heading-align-items, center);
+	gap: var(--alert-dialog-heading-gap, var(--spacing-4));
+	flex-shrink: var(--alert-dialog-heading-flex-shrink, 0);
+	min-inline-size: var(--alert-dialog-heading-min-inline-size, 0);
+}
+
+.alert-dialog__title-icon {
+	display: var(--alert-dialog-title-icon-display, inline-flex);
+	flex-shrink: var(--alert-dialog-title-icon-flex-shrink, 0);
+	color: var(--alert-dialog-title-icon-color, var(--l2-foreground));
+
+	> svg {
+		inline-size: var(--alert-dialog-title-icon-size, 14px);
+		block-size: var(--alert-dialog-title-icon-size, 14px);
+	}
+}
+
+.alert-dialog__title {
+	min-inline-size: var(--alert-dialog-title-min-inline-size, 0);
+	margin: var(--alert-dialog-title-margin, 0);
+	font-family: var(--alert-dialog-title-font-family, var(--paragraph-base-500-font-family));
+	font-size: var(--alert-dialog-title-font-size, var(--paragraph-base-500-font-size));
+	font-weight: var(--alert-dialog-title-font-weight, var(--paragraph-base-500-font-weight));
+	line-height: var(--alert-dialog-title-line-height, var(--paragraph-base-500-line-height));
+	letter-spacing: var(--alert-dialog-title-letter-spacing, var(--paragraph-base-500-letter-spacing));
+	text-transform: var(--alert-dialog-title-text-transform, var(--paragraph-base-500-text-transform));
+	color: var(--alert-dialog-title-color, var(--l1-foreground));
+	overflow-wrap: var(--alert-dialog-title-overflow-wrap, anywhere);
+}
+
+// The body scrolls, not the panel. The panel holds the element popups are portalled into, so a
+// select or a tooltip in the body can reach past its edge instead of being clipped by it.
+.alert-dialog__body {
+	display: var(--alert-dialog-body-display, block);
+	min-block-size: var(--alert-dialog-body-min-block-size, 0);
+	overflow-y: var(--alert-dialog-body-overflow-y, auto);
+	margin: var(--alert-dialog-body-margin, 0);
+	font-family: var(--alert-dialog-body-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--alert-dialog-body-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--alert-dialog-body-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--alert-dialog-body-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--alert-dialog-body-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--alert-dialog-body-text-transform, var(--paragraph-base-400-text-transform));
+	color: var(--alert-dialog-body-color, var(--l2-foreground));
+	overflow-wrap: var(--alert-dialog-body-overflow-wrap, anywhere);
+
+	// A flex body would split a sentence with a <strong> in it into three items. Text and inline
+	// elements flow as one paragraph; vertical margins skip inline elements, so only blocks get the gap.
+	& > * + * {
+		margin-block-start: var(--alert-dialog-body-gap, var(--spacing-6));
+	}
+}
+
+.alert-dialog__footer {
+	display: var(--alert-dialog-footer-display, flex);
+	flex-direction: var(--alert-dialog-footer-flex-direction, row);
+	flex-shrink: var(--alert-dialog-footer-flex-shrink, 0);
+	justify-content: var(--alert-dialog-footer-justify-content, flex-end);
+	gap: var(--alert-dialog-footer-gap, var(--spacing-6));
+
+	@media (max-width: 639.98px) {
+		flex-direction: var(--alert-dialog-footer-narrow-flex-direction, column-reverse);
+	}
+}

@@ -9,7 +9,8 @@ import type { DialogHandleOpenArgs, DialogHandleState } from './types.js';
 export const DIALOG_HANDLE_CLOSED: DialogHandleState<never> = { open: false, payload: undefined };
 
 /**
- * Opens a `Dialog` from application state, and closes it from inside its content.
+ * Opens a `Dialog` or an `AlertDialog` from application state, and closes it from inside its
+ * content.
  *
  * `open(payload)` shows the dialog and renders `payload` through its `children`; `close()`
  * dismisses it. A close request from the dialog itself (`Esc`, the backdrop, the close button)
