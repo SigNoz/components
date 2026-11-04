@@ -1,61 +1,99 @@
+// The key sits in a slot one press offset taller than itself, so the press never shifts the
+// layout around it.
 .kbd {
-    display: var(--kbd-display, inline-flex);
-    align-items: var(--kbd-align-items, center);
+    position: var(--kbd-position, relative);
+    display: var(--kbd-display, var(--kbd-internal-display, inline-flex));
+    flex-shrink: var(--kbd-flex-shrink, 0);
+    align-items: var(--kbd-align-items, flex-start);
+    inline-size: var(--kbd-size, var(--spacing-10));
+    block-size: calc(var(--kbd-size, var(--spacing-10)) + var(--kbd-press-offset, 1px));
+    vertical-align: var(--kbd-vertical-align, middle);
+    cursor: var(--kbd-cursor, default);
+    user-select: var(--kbd-user-select, none);
+    font-variant-numeric: var(--kbd-font-variant-numeric, normal);
+    font-feature-settings: var(--kbd-font-feature-settings, 'ss01' 1);
+    margin: var(--kbd-margin, var(--kbd-internal-margin, 0));
+
+    &[data-display="block"] {
+        --kbd-internal-display: var(--kbd-block-display, flex);
+    }
+}
+
+.kbd__face {
+    box-sizing: var(--kbd-face-box-sizing, border-box);
+    display: var(--kbd-face-display, flex);
+    align-items: var(--kbd-face-align-items, center);
     justify-content: var(--kbd-justify-content, center);
-    box-sizing: var(--kbd-box-sizing, border-box);
-    min-block-size: var(--kbd-min-block-size, var(--kbd-internal-min-block-size, auto));
-    border-radius: var(--kbd-border-radius, var(--kbd-internal-border-radius));
-    border: var(--kbd-border-width, 1px) solid var(--kbd-border-color, var(--l3-border));
-    padding: var(--kbd-padding, var(--kbd-internal-padding));
-    font-family: var(--kbd-font-family, var(--kbd-internal-font-family));
-    font-size: var(--kbd-font-size, var(--kbd-internal-font-size));
-    font-weight: var(--kbd-font-weight, var(--kbd-internal-font-weight));
-    line-height: var(--kbd-line-height, var(--kbd-internal-line-height));
-    letter-spacing: var(--kbd-letter-spacing, var(--kbd-internal-letter-spacing));
-    text-transform: var(--kbd-text-transform, var(--kbd-internal-text-transform));
-    font-variant-numeric: normal;
-    font-feature-settings: 'ss01' 1;
+    inline-size: var(--kbd-size, var(--spacing-10));
+    block-size: var(--kbd-size, var(--spacing-10));
+    border: var(--kbd-border-width, 1px) solid var(--kbd-border-color, var(--secondary-border));
+    border-block-end-width: var(--kbd-edge-width, 2px);
+    border-radius: var(--kbd-border-radius, var(--radius-1-5));
+    background-color: var(--kbd-background, var(--secondary-background));
+    color: var(--kbd-foreground, var(--secondary-foreground));
+    font-family: var(--kbd-font-family, var(--code-small-500-font-family));
+    font-size: var(--kbd-font-size, var(--code-small-500-font-size));
+    font-weight: var(--kbd-font-weight, var(--code-small-500-font-weight));
+    line-height: var(--kbd-line-height, var(--code-small-500-line-height));
+    letter-spacing: var(--kbd-letter-spacing, var(--code-small-500-letter-spacing));
+    text-transform: var(--kbd-text-transform, var(--code-small-500-text-transform));
     white-space: var(--kbd-white-space, nowrap);
-    background-color: var(--kbd-background, var(--l3-background));
-    color: var(--kbd-foreground, var(--l2-foreground));
-    box-shadow: var(--kbd-shadow, 0 1px 0 0 var(--kbd-border-color, var(--l3-border)));
-    user-select: none;
+    // The press stays under reduced motion: it is one pixel over 75ms, and it is the feedback.
+    transition-property: var(
+        --kbd-transition-property,
+        transform,
+        border-block-end-width,
+        background-color
+    );
+    transition-duration: var(--kbd-transition-duration, 75ms);
+    transition-timing-function: var(--kbd-transition-timing-function, ease);
 
-    &[data-size="sm"],
-    &[data-size="default"] {
-        --kbd-internal-font-family: var(--code-small-500-font-family);
-        --kbd-internal-font-size: var(--code-small-500-font-size);
-        --kbd-internal-font-weight: var(--code-small-500-font-weight);
-        --kbd-internal-line-height: var(--code-small-500-line-height);
-        --kbd-internal-letter-spacing: var(--code-small-500-letter-spacing);
-        --kbd-internal-text-transform: var(--code-small-500-text-transform);
+    .kbd[data-pressed] > & {
+        transform: translateY(var(--kbd-press-offset, 1px));
+        border-block-end-width: var(--kbd-pressed-edge-width, 1px);
+        background-color: var(--kbd-pressed-background, var(--secondary-background-hover));
     }
 
-    &[data-size="sm"] {
-        --kbd-internal-padding: var(--spacing-1) var(--spacing-2);
-        --kbd-internal-border-radius: var(--radius-1);
+    .kbd[data-disabled] > & {
+        opacity: var(--kbd-disabled-opacity, 0.5);
+    }
+}
+
+.kbd__word {
+    position: var(--kbd-word-position, absolute);
+    inline-size: var(--kbd-word-inline-size, 1px);
+    block-size: var(--kbd-word-block-size, 1px);
+    margin: var(--kbd-word-margin, -1px);
+    padding: var(--kbd-word-padding, 0);
+    overflow: var(--kbd-word-overflow, hidden);
+    clip-path: var(--kbd-word-clip-path, inset(50%));
+    white-space: var(--kbd-word-white-space, nowrap);
+}
+
+.kbd-shortcut {
+    position: var(--kbd-shortcut-position, relative);
+    display: var(--kbd-shortcut-display, var(--kbd-shortcut-internal-display, inline-flex));
+    flex-shrink: var(--kbd-shortcut-flex-shrink, 0);
+    align-items: var(--kbd-shortcut-align-items, flex-start);
+    gap: var(--kbd-shortcut-gap, var(--spacing-1));
+    vertical-align: var(--kbd-vertical-align, middle);
+    font-variant-numeric: var(--kbd-font-variant-numeric, normal);
+    font-feature-settings: var(--kbd-font-feature-settings, 'ss01' 1);
+    margin: var(--kbd-shortcut-margin, var(--kbd-shortcut-internal-margin, 0));
+
+    &[data-display="block"] {
+        --kbd-shortcut-internal-display: var(--kbd-shortcut-block-display, flex);
     }
 
-    &[data-size="default"] {
-        --kbd-internal-padding: var(--spacing-2) var(--spacing-3);
-        --kbd-internal-border-radius: var(--radius-2);
+    &[data-mode="sequence"] {
+        gap: var(--kbd-shortcut-sequence-gap, var(--spacing-2));
     }
+}
 
-    &[data-size="lg"] {
-        --kbd-internal-padding: var(--spacing-2) var(--spacing-4);
-        --kbd-internal-border-radius: var(--radius-3);
-        --kbd-internal-min-block-size: var(--spacing-16);
-        --kbd-internal-font-family: var(--code-base-500-font-family);
-        --kbd-internal-font-size: var(--code-base-500-font-size);
-        --kbd-internal-font-weight: var(--code-base-500-font-weight);
-        --kbd-internal-line-height: var(--code-base-500-line-height);
-        --kbd-internal-letter-spacing: var(--code-base-500-letter-spacing);
-        --kbd-internal-text-transform: var(--code-base-500-text-transform);
-    }
-
-    &[data-active] {
-        --kbd-background: var(--kbd-active-background);
-        --kbd-foreground: var(--primary-background);
-        --kbd-border-color: var(--primary-background);
+// A keyboard hint without a keyboard carries no information.
+@media (max-width: 639.98px), (hover: none) and (pointer: coarse) {
+    .kbd,
+    .kbd-shortcut {
+        display: var(--kbd-small-screen-display, none);
     }
 }

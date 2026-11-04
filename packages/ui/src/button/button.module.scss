@@ -180,9 +180,11 @@
 			// Keeps the stripe bands inside the border radius.
 			overflow: var(--button-variant-outlined-disabled-overflow, hidden);
 
+			// The suffix is picked by its slot. A `Kbd` takes no `className`, so it never gets the
+			// `button__suffix` class the button clones onto the suffix.
 			.button__prefix-wrapper,
 			.button__label,
-			.button__suffix {
+			.button__suffix-slot > * {
 				position: var(--button-variant-outlined-disabled-content-position, relative);
 				z-index: var(--button-variant-outlined-disabled-content-z-index, 2);
 			}
@@ -275,7 +277,7 @@
 
 		 .button__prefix-wrapper,
 		 .button__label,
-		 .button__suffix {
+		 .button__suffix-slot > * {
 			position: relative;
 			z-index: var(--button-ghost-content-z-index, 1);
 		}
@@ -400,6 +402,21 @@
 .button__prefix,
 .button__suffix {
 	flex-shrink: var(--button-affix-flex-shrink, 0);
+}
+
+// A click on the key is a click on the button, so the key keeps the button's cursor instead of
+// turning to the arrow halfway across.
+.button [data-slot='kbd'] {
+	cursor: var(--button-kbd-cursor, inherit);
+}
+
+// The neutral key does not read on a saturated fill, so it takes the button's label color. Every
+// solid color but `secondary` is one, so a color added later gets this without being listed here.
+.button[data-variant='solid']:not([data-color='secondary']) [data-slot='kbd'] {
+	--kbd-foreground: var(--button-kbd-foreground, currentColor);
+	--kbd-background: var(--button-kbd-background, color-mix(in srgb, currentColor 10%, transparent));
+	--kbd-border-color: var(--button-kbd-border-color, color-mix(in srgb, currentColor 20%, transparent));
+	--kbd-pressed-background: var(--button-kbd-pressed-background, color-mix(in srgb, currentColor 20%, transparent));
 }
 
 // Only a bare icon gets the icon size. Any other element keeps its own size, and sizing an icon

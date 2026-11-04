@@ -1,43 +1,273 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as KbdStories from './kbd.stories';
+import * as KbdComponentsStories from './kbd-components.stories';
 
 <Meta of={KbdStories} />
 
 # Kbd
 
-A keyboard key component for displaying keyboard shortcuts and key bindings. Renders as a semantic `<kbd>` HTML element.
+A `<kbd>` for one key of a keyboard hint, so a shortcut looks the same in a menu, a tooltip, a
+button and the command palette. It is a 20 × 20 square holding one glyph or one character, and it
+draws as pressed when you set `pressed`. It forwards every `aria-*` and `data-*` attribute.
+
+It is not interactive: no hover, no click handling and no tab stop, and it never runs an action.
+For more than one key, reach for `Kbd.Shortcut`.
 
 ## How to use
 
-### Basic usage
-
-```tsx
-import { Kbd } from '@signozhq/ui';
-
-export default function MyComponent() {
-	return <Kbd>⌘K</Kbd>;
-}
-```
-
-### Active state
-
-Use `active` to highlight a key with a subtle primary color tint:
+`value` is required: the key has no default, every call site names the key it draws.
 
 ```tsx
 import { Kbd } from '@signozhq/ui';
 
 export default function MyComponent() {
 	return (
-		<div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-			<Kbd active>⌘</Kbd>
-			<Kbd>K</Kbd>
-		</div>
+		<p>
+			Press <Kbd value="P" /> to pin the tooltip.
+		</p>
 	);
 }
 ```
 
 <Primary />
 
+## Value
+
+`value` names the key the way `KeyboardEvent.key` does, so the component picks the glyph and the
+spoken word from it. A key is one of:
+
+- `Escape`, `Enter`, `Backspace`, `Tab`
+- `Shift`, `Meta`, `Alt`, `Control`
+- `Mod`, the platform modifier: `Meta` on macOS and `Control` elsewhere
+- `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`
+- one visible character: a letter, a digit, or a symbol such as `/`, `?`, `+` or `[`. A space is
+  not a key.
+
+A letter draws uppercase whatever its case.
+
+| `value`                                           | Glyph                       | Word                                          |
+| ------------------------------------------------- | --------------------------- | --------------------------------------------- |
+| `Escape`                                          | `⎋`                         | Escape                                        |
+| `Enter`                                           | `↵`                         | Enter                                         |
+| `Backspace`                                       | `⌫`                         | Backspace                                     |
+| `Tab`                                             | `⇥`                         | Tab                                           |
+| `Shift`                                           | `⇧`                         | Shift                                         |
+| `Meta`                                            | `⌘`                         | Command on macOS, Meta elsewhere              |
+| `Alt`                                             | `⌥`                         | Option on macOS, Alt elsewhere                |
+| `Control`                                         | `⌃`                         | Control                                       |
+| `Mod`                                             | `⌘` on macOS, `⌃` elsewhere | Command on macOS, Control elsewhere           |
+| `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` | `↑`, `↓`, `←`, `→`          | Up arrow, Down arrow, Left arrow, Right arrow |
+| A letter                                          | The letter, uppercase       | The letter                                    |
+| A digit                                           | As typed                    | As typed                                      |
+| A symbol, such as `/`, `?`, `,`, `.` or `+`       | As typed                    | Its name, such as Slash or Question mark      |
+
+A key never shows a word such as `esc`, `enter` or `shift`. Anything that needs more than one
+character is two keys, or is not a keyboard hint. `Control` and `Alt` draw `⌃` and `⌥` on every
+platform, so the key stays square.
+
+Two glyphs in one key (`↑↓`, or `⌘` and `J` in one `kbd`) are two keys, so use `Kbd.Shortcut`. A
+mouse hint is not a key either: for "Click to drilldown", use the `MousePointerClick` icon on its
+own.
+
+```tsx
+<Kbd value="Escape" />
+<Kbd value="Mod" />
+<Kbd value="k" />
+```
+
+## Empty value
+
+An empty `value`, a space, or a string longer than one character that is not a named key, renders
+nothing and logs an error, in production too. A blank key, or a key with a word in it, reads as a
+broken shortcut, and the design has no wider key for a longer label.
+
+```tsx
+// renders nothing, and logs an error
+<Kbd value="esc" />
+```
+
+## Display and margin
+
+`display` is `inline` by default: the key sits in the line of text around it, centred on the text,
+and the text sets the spacing. `display="block"` puts the key on a line of its own, with no line
+box around it, so the parent's line height does not add space above or below it.
+
+Only a block key takes the margin props. `margin`, `marginX`, `marginY`, `marginTop`,
+`marginRight`, `marginBottom` and `marginLeft` take steps of the spacing scale, each 2px:
+`margin={4}` is 8px. `auto` takes the free space, such as to push the key to the end of a flex row.
+`marginX` and `marginY` win over `margin`, and one side wins over both. A margin on an inline key is
+a type error.
+
+```tsx
+<Kbd value="K" display="block" marginTop={4} />
+<Kbd value="K" display="block" marginLeft="auto" />
+```
+
+`Kbd.Shortcut` takes the same props, on the shortcut as a whole.
+
+## Pressed
+
+The key never listens to the keyboard. Set `pressed` while your own handler runs: the bottom edge
+shrinks and the face moves down, the way a key looks while it is held.
+
+```tsx
+<Kbd value="K" pressed={isHeld} />
+```
+
+The pressed state is visual only: it never moves focus, never changes the accessible name and never
+announces anything. A disabled key stays at rest, whatever `pressed` says.
+
+## Disabled
+
+A disabled key is drawn at half opacity and stays at rest, even with `pressed`. Set it when the
+action the key belongs to is disabled.
+
+It has no `disabledTooltip`, since the key is not interactive: the control the key belongs to shows
+the reason, and a `kbd` element has no disabled semantics, so that control carries `aria-disabled`.
+
+```tsx
+<Button
+	variant="solid"
+	color="primary"
+	size="md"
+	disabled
+	disabledTooltip="Write a query first"
+	suffix={<Kbd value="Enter" disabled />}
+>
+	Run query
+</Button>
+```
+
+## Mouse and keyboard
+
+The key has no hover, no click handler and no tab stop, and it binds no key. A click on it is a
+click on its parent, through normal event bubbling.
+
+The cursor is the default arrow over the key. Inside a `Button`, a `Command` row or a `Dropdown`
+row it takes the parent's cursor instead, so the cursor does not turn from the hand to the arrow
+halfway across.
+
+## Small screens and touch
+
+The key is not rendered (`display: none`) when the viewport is narrower than 640px, and on
+touch-only devices (no hover and a coarse pointer). A keyboard hint without a keyboard carries no
+information.
+
+A sentence built around a key loses a word there: "Press `P` to pin the tooltip" becomes "Press to
+pin the tooltip". Hide the whole hint line on those screens, not only the key, as the showcase
+story does.
+
+## Inside a Button, a Command row and a Dropdown row
+
+`Kbd` has no color prop. Inside a solid `Button` of any color but `secondary`, the key takes the
+button's label color for its glyph, fill and border, so it reads on the saturated fill. Inside
+every other `Button` it keeps the neutral look while the button is hovered, pressed or focused.
+
+```tsx
+<Button variant="solid" color="primary" size="md" suffix={<Kbd value="Enter" />}>
+	Run query
+</Button>
+```
+
+A `Command` row and a `Dropdown` row take the keys of a chord in their `shortcut` field and draw
+them with `Kbd.Shortcut`. The shortcut takes the height of the row's line and centres the keys in
+it, so a row with a shortcut is as tall as a row without one.
+
+## Accessibility
+
+`Kbd` renders a `kbd` element. Screen readers do not read the glyphs reliably, so the accessible
+text of a key is its word from the table above (`Command`, `Escape`), never the glyph. The glyph
+itself is `aria-hidden`.
+
+Inside a sentence, the key stays in the accessibility tree and reads as its word.
+
+When the parent already names the action (a `Command` row, a `Button` with a shortcut), the parent
+marks the key `aria-hidden="true"` and points `aria-describedby` at it, so the shortcut is read
+once, as text, after the label.
+
+```tsx
+const hintId = useId();
+
+<Button
+	variant="solid"
+	color="primary"
+	size="md"
+	aria-describedby={hintId}
+	suffix={<Kbd id={hintId} value="Enter" aria-hidden="true" />}
+>
+	Run query
+</Button>;
+```
+
+## Kbd.Shortcut
+
+`Kbd.Shortcut` draws more than one key as a chord or a sequence. It renders a `kbd` element with
+one `kbd` per key inside it, the HTML pattern for a key combination. It is a static member of
+`Kbd`, and it is not imported on its own.
+
+`keys` is required, and each key is a `value` as `Kbd` takes it. An empty `keys` renders nothing.
+
+```tsx
+<Kbd.Shortcut keys={['Mod', 'K']} />
+```
+
+### Chord and sequence
+
+`mode` is `chord` by default, for keys held together. The keys sit 2px apart.
+
+`mode="sequence"` is for keys pressed one after the other. The keys sit 4px apart, wider than a
+chord, so `G D` does not read as one combination, and no "then" is drawn between them. The mode
+changes the gap, the spoken word and the order: a sequence keeps the keys in the order given. Use `pressed` on the shortcut to press every key
+of it, in either mode.
+
+```tsx
+<Kbd.Shortcut keys={['G', 'D']} mode="sequence" />
+```
+
+### Order of the modifiers
+
+In a chord, the modifiers (`Shift`, `Meta`, `Alt`, `Control` and `Mod`) are drawn before the other
+keys, in the order they are given. The other keys keep their order too. A sequence draws every key
+in the order given, so `['Mod', 'K', 'Mod', 'S']` stays `⌘ K ⌘ S`.
+
+```tsx
+// draws ⌘ ⇧ C
+<Kbd.Shortcut keys={['C', 'Meta', 'Shift']} />
+```
+
+### Disabled and accessibility
+
+`disabled` disables every key of the shortcut, so `pressed` leaves them at rest.
+
+A chord reads as its words joined by spaces (`Command K`), and a sequence joins them with `then`
+(`G then D`). As with a single key, the parent that already names the action marks the shortcut
+`aria-hidden` and points `aria-describedby` at it.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the `kbd` element. On `Kbd.Shortcut` it names the outer element
+and every key under it:
+
+| Element           | `data-testid`                  |
+| ----------------- | ------------------------------ |
+| shortcut          | `` `${testId}` ``              |
+| key of a shortcut | `` `${testId}-key-${index}` `` |
+
+`index` counts the keys in the order they are drawn, modifiers first, so `['K', 'Mod']` is `-key-0`
+for `Mod` and `-key-1` for `K`.
+
+Each key carries `data-key`, the `value` as given (`Mod` stays `Mod`), `data-display`,
+`data-pressed` only while `pressed` is set and the key is not disabled, and `data-disabled` only
+while `disabled` is `true`.
+The shortcut carries `data-mode`, `chord` or `sequence`, `data-display` and `data-disabled`. The
+keys inside a shortcut carry no `data-display`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
 ## Props
 
-<Controls of={KbdStories.Playground} />
+<Controls of={KbdStories.Default} />
+
+### Kbd.Shortcut props
+
+<Controls of={KbdComponentsStories.Shortcut} />

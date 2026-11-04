@@ -95,6 +95,7 @@
  * | `--command-item-text-align` | `start` |
  * | `--command-item-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--command-item-user-select` | `none` |
+ * | `--command-kbd-cursor` | `inherit` |
  * | `--command-layer-position` | `relative` |
  * | `--command-list-display` | `flex` |
  * | `--command-list-flex-direction` | `column` |
@@ -139,6 +140,8 @@
  * | `--command-search-placeholder` | `-` |
  * | `--command-search-placeholder-color` | `var(--command-search-placeholder)` |
  * | `--command-shadow` | `-` |
+ * | `--command-shortcut-align-items` | `center` |
+ * | `--command-shortcut-block-size` | `1lh` |
  * | `--command-viewport-display` | `flex` |
  * | `--command-viewport-flex-direction` | `column` |
  * | `--command-viewport-max-block-size` | `var(--command-internal-max-block-size, 20rem)` |
