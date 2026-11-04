@@ -666,19 +666,21 @@ function EditKeyFormSkeleton(): ReactElement {
 	return (
 		<div className={styles.keyForm}>
 			<Field id="edit-key-name-loading" label="Name">
-				<Skeleton.Input active block />
+				<Skeleton.Input active size="md" />
 			</Field>
 			<Field id="edit-key-id-loading" label="ID">
-				<Skeleton.Input active block />
+				<Skeleton.Input active size="md" />
 			</Field>
 			<Field id="edit-key-secret-loading" label="Key">
-				<Skeleton.Input active block />
+				<Skeleton.Input active size="md" />
 			</Field>
 			<Field id="edit-key-expiration-loading" label="Expiration">
-				<Skeleton.Input active />
+				<Skeleton.Input active size="md" width={160} />
 			</Field>
 			<Field id="edit-key-last-observed-loading" label="Last observed at">
-				<Skeleton.Input active size="small" className={styles.badgeSkeleton} />
+				<div className={styles.badgeSkeleton}>
+					<Skeleton.Input active size="sm" width={160} />
+				</div>
 			</Field>
 		</div>
 	);
