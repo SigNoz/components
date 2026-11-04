@@ -11,6 +11,7 @@ import {
 	Workflow,
 } from '@signozhq/icons';
 import {
+	AlertDialog,
 	Badge,
 	Button,
 	Checkbox,
@@ -128,9 +129,9 @@ const PANELS = [
 ];
 
 /**
- * A dialog that opens a dialog that opens a third, each from inside the one below, so all three
- * are in the page at once. The panels get narrower with the depth, and the parent's edges show
- * around the child.
+ * A dialog that opens a dialog that opens an `AlertDialog`, each from inside the one below, so all
+ * three are in the page at once. The panels get narrower with the depth, and the parent's edges
+ * show around the child.
  */
 function ShowcaseStack(): ReactElement {
 	const [editing, setEditing] = useState(true);
@@ -234,38 +235,21 @@ function ShowcaseStack(): ReactElement {
 						<Input aria-label="Panel name" defaultValue="Checkout latency" />
 						<Input aria-label="Panel description" placeholder="What the panel shows" />
 					</form>
-					<Dialog
+					<AlertDialog
 						open={discarding}
-						onClose={() => setDiscarding(false)}
 						title="Discard your changes?"
-						width="narrow"
+						color="danger"
+						confirmText="Discard changes"
+						cancelText="Keep editing"
 						testId="showcase-discard"
-						footerSuffix={
-							<>
-								<Button
-									variant="outlined"
-									color="secondary"
-									size="md"
-									onClick={() => setDiscarding(false)}
-								>
-									Keep editing
-								</Button>
-								<Button
-									variant="solid"
-									color="danger"
-									size="md"
-									onClick={() => {
-										setDiscarding(false);
-										setConfiguring(false);
-									}}
-								>
-									Discard changes
-								</Button>
-							</>
-						}
+						onConfirm={() => {
+							setDiscarding(false);
+							setConfiguring(false);
+						}}
+						onCancel={() => setDiscarding(false)}
 					>
 						The name and the settings you changed in this panel are lost.
-					</Dialog>
+					</AlertDialog>
 				</Dialog>
 			</Dialog>
 		</div>
@@ -286,8 +270,8 @@ function getNode(testId: string): HTMLElement {
 /**
  * Three dialogs held open at once, since a modal covers the page and cannot sit in a grid: a
  * wide dialog with an icon, a description, a body and a footer, the dialog it opens, and the
- * narrow one that asks to discard what was changed there. The body is short enough that the panel
- * never reaches its max height, so nothing scrolls in the snapshot.
+ * `AlertDialog` that asks to discard what was changed there. The body is short enough that the
+ * panel never reaches its max height, so nothing scrolls in the snapshot.
  *
  * Only the top one takes input. The two below stay rendered and inert, the first one's backdrop is
  * the only backdrop, and each panel under another carries `data-nested-dialog-open`.
@@ -326,11 +310,15 @@ export const Showcase: Story = {
 		await expect(child).not.toHaveAttribute('aria-describedby');
 		await expect(document.querySelector('[data-testid="showcase-panel-description"]')).toBeNull();
 
-		await expect(discard).toHaveAttribute('role', 'dialog');
-		await expect(discard).toHaveAttribute('data-width', 'narrow');
+		await expect(discard).toHaveAttribute('role', 'alertdialog');
+		await expect(discard).toHaveAttribute('aria-modal', 'true');
+		await expect(discard).toHaveAttribute('data-color', 'danger');
 		await expect(discard).not.toHaveAttribute('data-nested-dialog-open');
 		await expect(getNode('showcase-discard-title')).toHaveTextContent('Discard your changes?');
-		await expect(getNode('showcase-discard-footer-suffix')).toHaveTextContent('Discard changes');
+		await expect(discard).toHaveAttribute('aria-describedby', getNode('showcase-discard-body').id);
+		await expect(document.querySelector('[data-testid="showcase-discard-close"]')).toBeNull();
+		await waitFor(() => expect(discard).toHaveFocus());
+		await expect(getNode('showcase-discard-confirm')).toHaveTextContent('Discard changes');
 
 		// The stack shares one backdrop.
 		await expect(document.querySelectorAll('[data-slot$="backdrop"]')).toHaveLength(1);
@@ -502,10 +490,11 @@ export const Closing: Story = {
 /**
  * Edits one API key. The page owns `open`, and the dialog starts open so the footer shows without a
  * press. `Revoke key` is the `footerPrefix`, at the start of the footer and apart from Cancel and
- * Save.
+ * Save. The `AlertDialog` it opens renders beside it, so it is nested in the dialog.
  */
 function EditApiKey(): ReactElement {
 	const [open, setOpen] = useState(true);
+	const [revoking, setRevoking] = useState(false);
 	const [revoked, setRevoked] = useState(false);
 
 	return (
@@ -530,17 +519,27 @@ function EditApiKey(): ReactElement {
 				description="Services that use the key keep working until you revoke it."
 				testId="api-key"
 				footerPrefix={
-					<Button
-						variant="link"
-						color="danger"
-						size="md"
-						onClick={() => {
-							setOpen(false);
-							setRevoked(true);
-						}}
-					>
-						Revoke key
-					</Button>
+					<>
+						<Button variant="link" color="danger" size="md" onClick={() => setRevoking(true)}>
+							Revoke key
+						</Button>
+						<AlertDialog
+							open={revoking}
+							title="Revoke this key?"
+							color="danger"
+							confirmText="Revoke key"
+							cancelText="Keep key"
+							testId="api-key-revoke"
+							onConfirm={() => {
+								setRevoking(false);
+								setOpen(false);
+								setRevoked(true);
+							}}
+							onCancel={() => setRevoking(false)}
+						>
+							Services that use this key stop authenticating the moment it is revoked.
+						</AlertDialog>
+					</>
 				}
 				footerSuffix={
 					<>
@@ -570,8 +569,9 @@ function EditApiKey(): ReactElement {
 
 /**
  * `footerPrefix` holds one destructive action for the dialog, kept at the start of the footer so a
- * slip of the cursor toward Save does not reach it. Cancel and Save stay in `footerSuffix`, primary
- * last. Below 640px the prefix goes under the stacked buttons.
+ * slip of the cursor toward Save does not reach it. The button opens an `AlertDialog`, which asks
+ * before anything is lost. Cancel and Save stay in `footerSuffix`, primary last. Below 640px the
+ * prefix goes under the stacked buttons.
  */
 export const FooterPrefix: Story = {
 	parameters: {

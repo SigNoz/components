@@ -10,9 +10,10 @@ interface ClosableHandle {
 const mountedDialogs = new WeakMap<ClosableHandle, number>();
 
 /**
- * Closes the handle when the last `Dialog` it was given unmounts while it is open, such as a child
- * that closes with its parent. Without it the handle stays open with nothing on screen, so the
- * dialog appears at once the next time it mounts, and `onOpenChange` never hears of a close.
+ * Closes the handle when the last `Dialog` or `AlertDialog` it was given unmounts while it is
+ * open, such as a child that closes with its parent. Without it the handle stays open with nothing
+ * on screen, so the dialog appears at once the next time it mounts, and `onOpenChange` never hears
+ * of a close.
  *
  * The close waits a microtask and is dropped when a dialog is mounted with the same handle by
  * then: Strict Mode mounts, unmounts and mounts every effect again on purpose, a handle opened on
