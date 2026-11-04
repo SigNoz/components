@@ -147,16 +147,6 @@
 				"require": "./dist/command/index.cjs"
 			}
 		},
-		"./date-picker": {
-			"import": {
-				"types": "./dist/date-picker/index.d.ts",
-				"import": "./dist/date-picker/index.mjs"
-			},
-			"require": {
-				"types": "./dist/date-picker/index.d.cts",
-				"require": "./dist/date-picker/index.cjs"
-			}
-		},
 		"./dialog": {
 			"import": {
 				"types": "./dist/dialog/index.d.ts",
@@ -439,12 +429,10 @@
 		"@chenglou/pretext": "^0.0.8",
 		"@radix-ui/react-dialog": "^1.1.21",
 		"@radix-ui/react-icons": "^1.3.0",
-		"@radix-ui/react-popover": "^1.1.21",
 		"@radix-ui/react-slot": "^1.3.1",
 		"@tanstack/react-virtual": "^3.14.8",
 		"clsx": "^2.1.1",
 		"copy-text-to-clipboard": "^3.2.2",
-		"dayjs": "^1.11.21",
 		"motion": "^11.11.17",
 		"nuqs": "^2.9.2",
 		"react-compiler-runtime": "^1.0.0",

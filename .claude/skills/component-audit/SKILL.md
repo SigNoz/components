@@ -144,7 +144,7 @@ return results.filter(Boolean)
 const components = [
   'alert-dialog', 'alert-strip', 'avatar', 'badge', 'breadcrumb',
   'button', 'calendar', 'callout', 'checkbox', 'combobox', 'command',
-  'date-picker', 'dialog', 'divider', 'drawer', 'dropdown-menu', 'input',
+  'dialog', 'divider', 'drawer', 'dropdown-menu', 'input',
   'input-number', 'kbd', 'pagination', 'pin-list', 'popover', 'progress',
   'radio-group', 'resizable', 'select', 'skeleton', 'slider',
   'switch', 'tabs', 'text-ellipsis', 'toast', 'toggle-group',

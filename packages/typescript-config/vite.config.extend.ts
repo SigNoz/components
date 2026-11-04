@@ -19,8 +19,6 @@ export const externalPatterns = [
 	'react-day-picker',
 	'react-resizable-panels',
 	'nuqs',
-	'dayjs',
-	/dayjs\/.*$/,
 	'@tanstack/react-virtual',
 	/@radix-ui\/.*$/,
 	/^@base-ui\/react(\/.*)?$/,

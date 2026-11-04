@@ -77,7 +77,6 @@ import { Callout } from '@signozhq/ui';
 import { Checkbox } from '@signozhq/ui';
 import { Combobox } from '@signozhq/ui';
 import { Command } from '@signozhq/ui';
-import { DatePicker } from '@signozhq/ui';
 import { Dialog } from '@signozhq/ui';
 import { Divider } from '@signozhq/ui';
 import { Drawer } from '@signozhq/ui';

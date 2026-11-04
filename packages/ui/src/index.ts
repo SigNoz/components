@@ -10,7 +10,6 @@ export * from './callout/index.js';
 export * from './checkbox/index.js';
 export * from './combobox/index.js';
 export * from './command/index.js';
-export * from './date-picker/index.js';
 export * from './dialog/index.js';
 export * from './divider/index.js';
 export * from './drawer/index.js';
