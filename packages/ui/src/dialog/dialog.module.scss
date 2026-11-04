@@ -152,21 +152,24 @@
 	}
 
 	&[data-loading] {
-		inline-size: var(--dialog-title-icon-size, 14px);
-		block-size: var(--dialog-title-icon-size, 14px);
+		--skeleton-avatar-sm-size: var(--dialog-title-icon-size, 14px);
 	}
 }
 
 // Same box as the title it stands in for, so the header keeps its height when the title arrives.
 .dialog__title-skeleton {
+	display: var(--dialog-title-skeleton-display, flex);
+	flex-direction: var(--dialog-title-skeleton-flex-direction, column);
 	flex: var(--dialog-title-skeleton-flex, 1 1 auto);
-	justify-content: center;
+	justify-content: var(--dialog-title-skeleton-justify-content, center);
 	block-size: var(--dialog-title-skeleton-block-size, var(--label-base-400-font-size));
 }
 
 // Same box as one line of the description.
 .dialog__description-skeleton {
-	justify-content: center;
+	display: var(--dialog-description-skeleton-display, flex);
+	flex-direction: var(--dialog-description-skeleton-flex-direction, column);
+	justify-content: var(--dialog-description-skeleton-justify-content, center);
 	block-size: var(--dialog-description-skeleton-block-size, var(--paragraph-base-400-line-height));
 }
 

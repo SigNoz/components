@@ -2,7 +2,7 @@ import { Info } from '@signozhq/icons';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type ReactNode, useEffect } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import type { DialogHandle } from '../dialog-handle.js';
 import { Dialog } from '../dialog.js';
 import { useDialogHandle } from '../use-dialog-handle.js';
@@ -26,6 +26,8 @@ describe('Dialog loading', () => {
 		expect(screen.queryByTestId('dialog-title-skeleton')).toBeNull();
 		expect(screen.queryByTestId('dialog-description-skeleton')).toBeNull();
 		expect(screen.queryByTestId('dialog-body-skeleton')).toBeNull();
+		expect(slot('dialog-title-skeleton')).toBeNull();
+		expect(slot('dialog-description-skeleton')).toBeNull();
 	});
 
 	it('marks the panel busy and keeps the title as its accessible name', async () => {
@@ -35,7 +37,9 @@ describe('Dialog loading', () => {
 
 		expect(panel).toHaveAttribute('aria-busy', 'true');
 		expect(panel).toHaveAttribute('data-loading');
-		expect(screen.getByTestId('dialog-title-skeleton')).toBeInTheDocument();
+		expect(
+			slot('dialog-title-skeleton')?.contains(screen.getByTestId('dialog-title-skeleton')),
+		).toBe(true);
 	});
 
 	it('shows a skeleton for the description only when one is passed', async () => {
@@ -47,6 +51,11 @@ describe('Dialog loading', () => {
 		await renderOpenDialog({ loading: true, description: 'Pick a name' });
 
 		expect(screen.getByTestId('dialog-description-skeleton')).toBeInTheDocument();
+		expect(
+			slot('dialog-description-skeleton')?.contains(
+				screen.getByTestId('dialog-description-skeleton'),
+			),
+		).toBe(true);
 		expect(screen.queryByText('Pick a name')).toBeNull();
 		expect(slot('dialog-description')).toBeNull();
 		expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-describedby');
@@ -57,6 +66,26 @@ describe('Dialog loading', () => {
 
 		expect(screen.queryByTestId('title-icon')).toBeNull();
 	});
+
+	it.each([
+		{ size: undefined, expected: 14 },
+		{ size: '20px', expected: 20 },
+	])(
+		'draws the title icon skeleton at the icon size ($expected px)',
+		async ({ size, expected }) => {
+			if (size !== undefined) {
+				document.body.style.setProperty('--dialog-title-icon-size', size);
+				onTestFinished(() => document.body.style.removeProperty('--dialog-title-icon-size'));
+			}
+			await renderOpenDialog({ loading: true, titleIcon: <Info /> });
+
+			const icon = slot('dialog-header')?.querySelector('[data-slot="skeleton-avatar"]');
+			const box = icon?.getBoundingClientRect();
+
+			expect(box?.width).toBe(expected);
+			expect(box?.height).toBe(expected);
+		},
+	);
 
 	it('does not render the children and shows the default body skeleton', async () => {
 		await renderOpenDialog({ loading: true, children: <input aria-label="Name" /> });
