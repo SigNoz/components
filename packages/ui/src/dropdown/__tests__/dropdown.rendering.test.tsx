@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { queryOpenTooltip } from '../../__tests__/test-utils.js';
 import { DROPDOWN_EMPTY_CONTENT, DROPDOWN_EMPTY_LABEL } from '../constants.js';
 import { Badge } from '../../badge/index.js';
 import { Dropdown } from '../index.js';
@@ -93,7 +94,7 @@ describe('Dropdown rendering', () => {
 					type: 'item',
 					value: 'rename',
 					label: 'Rename',
-					shortcut: 'R',
+					shortcut: ['R'],
 					loading: true,
 					loadingTooltip: 'Saving',
 				},
@@ -108,6 +109,80 @@ describe('Dropdown rendering', () => {
 			'true',
 		);
 		expect(screen.getByTestId('menu-item-rename-suffix-spinner')).toBeInTheDocument();
+	});
+
+	it('draws the shortcut as keys in the trailing slot and keeps it out of the name', async () => {
+		renderDropdown({
+			items: [{ type: 'item', value: 'rename', label: 'Rename', shortcut: ['Shift', 'R'] }],
+		});
+		await openDropdown();
+
+		const row = screen.getByRole('menuitem', { name: 'Rename' });
+		const shortcut = row.querySelector('[data-slot="kbd-shortcut"]');
+		const keys = Array.from(row.querySelectorAll('[data-slot="kbd"]'));
+
+		expect(screen.getByTestId('menu-item-rename-suffix')).toContainElement(shortcut as HTMLElement);
+		expect(keys.map((key) => key.getAttribute('data-key'))).toEqual(['Shift', 'R']);
+		expect(row).toHaveAccessibleDescription('Shift R');
+		expect(row).toHaveAccessibleName('Rename');
+	});
+
+	it('reads the shortcut as the description, after the reason', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'item',
+					value: 'rename',
+					label: 'Rename',
+					shortcut: ['R'],
+					disabled: true,
+					disabledTooltip: 'Ask an admin',
+				},
+				{ type: 'item', value: 'copy', label: 'Copy' },
+			],
+		});
+		await openDropdown();
+
+		const row = screen.getByTestId('menu-item-rename');
+
+		await userEvent.hover(row);
+		await waitFor(() => {
+			expect(queryOpenTooltip()).toHaveTextContent('Ask an admin');
+		});
+
+		expect(row).toHaveAccessibleDescription('Ask an admin R');
+		expect(screen.getByTestId('menu-item-copy')).not.toHaveAttribute('aria-describedby');
+	});
+
+	it('has nothing to read while the spinner covers the shortcut', async () => {
+		renderDropdown({
+			items: [
+				{
+					type: 'item',
+					value: 'rename',
+					label: 'Rename',
+					shortcut: ['R'],
+					loading: true,
+					loadingTooltip: undefined,
+				},
+			],
+		});
+		await openDropdown();
+
+		expect(screen.getByTestId('menu-item-rename')).not.toHaveAttribute('aria-describedby');
+	});
+
+	it('treats an empty shortcut as no shortcut', async () => {
+		renderDropdown({
+			items: [{ type: 'item', value: 'rename', label: 'Rename', shortcut: [] }],
+		});
+		await openDropdown();
+
+		const row = screen.getByTestId('menu-item-rename');
+
+		expect(row.querySelector('[data-slot="kbd-shortcut"]')).toBeNull();
+		expect(row).not.toHaveAttribute('aria-describedby');
+		expect(screen.getByTestId('menu-item-rename-suffix')).toHaveAttribute('data-empty');
 	});
 
 	it('keeps an idle row without a prefix ready to grow a spinner in its trailing slot', async () => {

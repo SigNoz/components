@@ -250,6 +250,47 @@ describe('Dropdown row size', () => {
 		expect(empty?.getBoundingClientRect().height).toBe(36);
 	});
 
+	it('keeps the row pitch when a row carries a shortcut', async () => {
+		renderDropdown([
+			{ type: 'item', value: 'plain', label: 'Plain' },
+			{ type: 'item', value: 'keyed', label: 'Keyed', shortcut: ['Mod', 'K'] },
+		]);
+		await openDropdown();
+
+		const plain = screen.getByRole('menuitem', { name: 'Plain' }).getBoundingClientRect();
+		const keyed = screen.getByRole('menuitem', { name: 'Keyed' });
+
+		expect(keyed.querySelector('[data-slot="kbd-shortcut"]')).not.toBeNull();
+		expect(keyed.getBoundingClientRect().height).toBe(plain.height);
+	});
+
+	it('gives the key the cursor of its row, usable or not', async () => {
+		renderDropdown([
+			{ type: 'item', value: 'usable', label: 'Usable', shortcut: ['K'] },
+			{
+				type: 'item',
+				value: 'blocked',
+				label: 'Blocked',
+				shortcut: ['D'],
+				disabled: true,
+				disabledTooltip: 'Ask an admin',
+			},
+		]);
+		await openDropdown();
+
+		for (const [value, cursor] of [
+			['usable', 'pointer'],
+			['blocked', 'not-allowed'],
+		] as const) {
+			const row = screen.getByTestId(`menu-item-${value}`);
+			const key = row.querySelector('[data-slot="kbd"]');
+
+			expect(getComputedStyle(row).cursor).toBe(cursor);
+			expect(key).not.toBeNull();
+			expect(getComputedStyle(key as Element).cursor).toBe(cursor);
+		}
+	});
+
 	it('starts the rows at the popup edge and spaces a separator by the row gap', async () => {
 		renderDropdown([
 			{ type: 'item', value: 'rename', label: 'Rename' },

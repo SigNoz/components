@@ -86,6 +86,11 @@
  * | `--button-info-solid-foreground` | `var(--button-info-label)` |
  * | `--button-isolation` | `isolate` |
  * | `--button-justify-content` | `center` |
+ * | `--button-kbd-background` | `color-mix(in srgb, currentColor 10%, transparent)` |
+ * | `--button-kbd-border-color` | `color-mix(in srgb, currentColor 20%, transparent)` |
+ * | `--button-kbd-cursor` | `inherit` |
+ * | `--button-kbd-foreground` | `currentColor` |
+ * | `--button-kbd-pressed-background` | `color-mix(in srgb, currentColor 20%, transparent)` |
  * | `--button-label-display` | `block` |
  * | `--button-label-min-width` | `0` |
  * | `--button-label-overflow` | `clip visible` |
