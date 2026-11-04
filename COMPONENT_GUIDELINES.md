@@ -120,7 +120,7 @@ Rules:
   says how it is reached ("Reached as `Pill.Closeable`, not imported on its own"), and its
   `displayName` is the dotted name.
 - Shared non-component logic goes in `utils.ts` (see `pagination/utils.ts`) or a `lib/`
-  subfolder (`table/lib/`). Cross-component helpers go in `src/lib/`.
+  subfolder. Cross-component helpers go in `src/lib/`.
 - One style file per component directory is the norm; add `{subcomponent}.module.scss` only
   when the styles are genuinely independent (`button/button-group.module.scss`).
 - Tests are colocated. Shared test setup goes in `{name}.test-utils.tsx`.

@@ -97,7 +97,6 @@ import { Skeleton } from '@signozhq/ui';
 import { Slider } from '@signozhq/ui';
 import { Spinner } from '@signozhq/ui';
 import { Switch } from '@signozhq/ui';
-import { Table } from '@signozhq/ui';
 import { Tabs } from '@signozhq/ui';
 import { TextEllipsis } from '@signozhq/ui';
 import { Toaster } from '@signozhq/ui';
