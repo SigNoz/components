@@ -183,7 +183,7 @@ const TRIGGER_PROPS = {
 } as const;
 
 const DEFAULT_ITEMS: DropdownItemType[] = [
-	{ type: 'item', value: 'rename', label: 'Rename', prefix: <Pencil />, shortcut: 'R' },
+	{ type: 'item', value: 'rename', label: 'Rename', prefix: <Pencil />, shortcut: ['R'] },
 	{ type: 'item', value: 'pin', label: 'Pin to the top', prefix: <Bookmark /> },
 	{ type: 'item', value: 'copy', label: 'Copy link', prefix: <Copy /> },
 	{ type: 'separator', value: 'before-danger' },
@@ -334,7 +334,7 @@ function DropdownShowcaseLayout(): ReactElement {
 										value: 'rename',
 										label: 'Rename',
 										prefix: <Pencil />,
-										shortcut: 'R',
+										shortcut: ['R'],
 									},
 									{
 										type: 'item',
@@ -508,7 +508,7 @@ function DropdownShowcaseLayout(): ReactElement {
 								value: 'with-prefix',
 								label: 'With a prefix',
 								prefix: <Copy />,
-								shortcut: 'C',
+								shortcut: ['C'],
 								loading: true,
 								loadingTooltip: 'Copying',
 							},
@@ -516,11 +516,11 @@ function DropdownShowcaseLayout(): ReactElement {
 								type: 'item',
 								value: 'without-prefix',
 								label: 'Without a prefix',
-								shortcut: 'D',
+								shortcut: ['D'],
 								loading: true,
 								loadingTooltip: 'Deploying',
 							},
-							{ type: 'item', value: 'idle', label: 'Idle, for comparison', shortcut: 'I' },
+							{ type: 'item', value: 'idle', label: 'Idle, for comparison', shortcut: ['I'] },
 						]}
 					>
 						<Button {...TRIGGER_PROPS}>Spinner</Button>

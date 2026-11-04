@@ -11,6 +11,7 @@ command
 divider
 dropdown
 input
+kbd
 pagination
 popover
 progress

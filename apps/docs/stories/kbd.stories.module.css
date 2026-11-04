@@ -1,27 +1,91 @@
-.container {
-  padding: 1rem;
+.columnLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
-.containerWithGap {
-  padding: 1rem;
+.marginTopMedium {
+  margin-top: 1rem;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.keyGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, max-content));
+  gap: 1rem 2rem;
+  align-items: center;
+}
+
+.keyCell {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
 }
 
-.maxWidthMd {
-  max-width: 28rem;
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
 }
 
-.maxWidthSm {
-  max-width: 20rem;
+/* The key is not rendered below 640px or on touch-only devices, so the consumer hides the whole hint line there. */
+.hintLine {
+  margin: 0;
 }
 
-.shortcutRow {
+@media (max-width: 639.98px), (hover: none) and (pointer: coarse) {
+  .hintLine {
+    display: none;
+  }
+}
+
+/* One row per button variant, one column per state. The grid scrolls rather than squeezes the buttons. */
+.matrix {
+  display: grid;
+  grid-template-columns: max-content repeat(var(--matrix-columns), max-content);
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  justify-items: start;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+
+/* The menu opens below its trigger and is portalled out of the section, so the section keeps the room. */
+.menuSection {
+  min-block-size: 22rem;
+}
+
+.displayGrid {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 24rem);
+  gap: 1.25rem 1.5rem;
+  align-items: start;
+}
+
+/* A block key leaves the line of text, so it takes a line between the two. */
+.lines {
+  display: block;
+}
+
+/* The dashed edge shows the margin: the box has a border, so the margin stays inside it. */
+.marginBox {
+  display: flow-root;
+  inline-size: max-content;
+  max-inline-size: 100%;
+  border: 1px dashed var(--l3-border);
+}
+
+.endRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 20rem;
-}
-
-.keysContainer {
-  gap: 0.25rem;
+  border: 1px dashed var(--l3-border);
 }

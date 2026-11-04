@@ -77,14 +77,16 @@ describe('Command styling', () => {
 					value: 'long',
 					label: 'Open the service map for every service in the current environment',
 					prefix: <Info />,
-					shortcut: 'Shift+M',
+					shortcut: ['Shift', 'M'],
 					onClick: () => {},
 				},
 			],
 		});
 		const label = required(document.querySelector('[data-slot="command-item-label"]'));
 		const prefix = required(screen.getByTestId('command-item-long-prefix').querySelector('svg'));
-		const shortcut = required(document.querySelector('[data-slot="command-item-suffix"] kbd'));
+		const shortcut = required(
+			document.querySelector('[data-slot="command-item-suffix"] [data-slot="kbd-shortcut"]'),
+		);
 		const firstLine = label.getBoundingClientRect().top + 20 / 2;
 
 		// Guards the subject: a label on one line would centre the affixes either way.
@@ -130,6 +132,34 @@ describe('Command styling', () => {
 
 		expect(getComputedStyle(empty).lineHeight).toBe('20px');
 		expect(empty.getBoundingClientRect().height).toBe(36);
+	});
+
+	it('gives the key the cursor of its row, usable or not', async () => {
+		await renderOpenCommand({
+			items: [
+				{ type: 'item', value: 'usable', label: 'Usable', shortcut: ['K'], onClick: () => {} },
+				{
+					type: 'item',
+					value: 'blocked',
+					label: 'Blocked',
+					shortcut: ['D'],
+					disabled: true,
+					disabledTooltip: 'Ask an admin',
+					onClick: () => {},
+				},
+			],
+		});
+
+		for (const [value, cursor] of [
+			['usable', 'pointer'],
+			['blocked', 'not-allowed'],
+		] as const) {
+			const row = screen.getByTestId(`command-item-${value}`);
+			const key = required(row.querySelector('[data-slot="kbd"]'));
+
+			expect(getComputedStyle(row).cursor).toBe(cursor);
+			expect(getComputedStyle(key).cursor).toBe(cursor);
+		}
 	});
 
 	it('scrolls the row the keyboard reaches clear of the bottom fade', async () => {

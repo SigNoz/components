@@ -49,7 +49,7 @@ const meta: Meta<typeof Command> = {
 		items: {
 			control: false,
 			description:
-				'The rows, in the order they render while the query is empty. Two kinds, told apart by a required `type`: `item` and `group`. A row takes `label`, `value`, `onClick`, `searchMetadata`, `prefix`, and `shortcut` or `suffix`. `disabled` + `disabledTooltip` block a row, `loading` + `loadingTooltip` say it is waiting.',
+				'The rows, in the order they render while the query is empty. Two kinds, told apart by a required `type`: `item` and `group`. A row takes `label`, `value`, `onClick`, `searchMetadata`, `prefix`, and `shortcut` (the keys of a chord) or `suffix`. `disabled` + `disabledTooltip` block a row, `loading` + `loadingTooltip` say it is waiting.',
 			table: { category: 'Content', type: { summary: 'CommandItemType[]' } },
 		},
 		noContent: {
@@ -151,12 +151,15 @@ const PALETTE: CommandItemType[] = [
 		value: 'navigation',
 		label: 'Navigation',
 		items: [
-			action('home', 'Go to Home', <House />, { shortcut: 'Shift+H', searchMetadata: 'landing' }),
-			action('dashboards', 'Go to Dashboards', <LayoutDashboard />, { shortcut: 'Shift+D' }),
-			action('services', 'Go to Services', <Layers />, { shortcut: 'Shift+S' }),
-			action('traces', 'Go to Traces', <Route />, { shortcut: 'Shift+T' }),
-			action('logs', 'Go to Logs', <Logs />, { shortcut: 'Shift+L' }),
-			action('alerts', 'Go to Alerts', <BellRing />, { shortcut: 'Shift+A' }),
+			action('home', 'Go to Home', <House />, {
+				shortcut: ['Shift', 'H'],
+				searchMetadata: 'landing',
+			}),
+			action('dashboards', 'Go to Dashboards', <LayoutDashboard />, { shortcut: ['Shift', 'D'] }),
+			action('services', 'Go to Services', <Layers />, { shortcut: ['Shift', 'S'] }),
+			action('traces', 'Go to Traces', <Route />, { shortcut: ['Shift', 'T'] }),
+			action('logs', 'Go to Logs', <Logs />, { shortcut: ['Shift', 'L'] }),
+			action('alerts', 'Go to Alerts', <BellRing />, { shortcut: ['Shift', 'A'] }),
 		],
 	},
 	{
@@ -374,7 +377,7 @@ export const LooseRowsAndLongLabels: Story = {
 				'Open the saved view for checkout latency in the production environment',
 				<Compass />,
 				{
-					shortcut: 'Shift+V',
+					shortcut: ['Shift', 'V'],
 				},
 			),
 			action('blank', '', <FileText />),
@@ -401,7 +404,7 @@ export const BlockedAndWaitingRows: Story = {
 	args: {
 		items: [
 			action('delete', 'Delete dashboard', <Trash2 />, {
-				shortcut: 'Shift+Backspace',
+				shortcut: ['Shift', 'Backspace'],
 				disabled: true,
 				disabledTooltip: 'Only the owner can delete this dashboard',
 			}),
@@ -413,7 +416,7 @@ export const BlockedAndWaitingRows: Story = {
 				type: 'item',
 				value: 'export',
 				label: 'Export as JSON',
-				shortcut: 'Shift+E',
+				shortcut: ['Shift', 'E'],
 				loading: true,
 				loadingTooltip: 'Preparing the export',
 				onClick: fn(),

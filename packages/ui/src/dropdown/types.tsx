@@ -1,5 +1,6 @@
 import type { Menu } from '@base-ui/react/menu';
 import type { AriaAttributes, ComponentProps, MouseEvent, ReactElement, ReactNode } from 'react';
+import type { KbdKey } from '../kbd/types.js';
 import type { DropdownItemKind } from './constants.js';
 
 type OriginalPositionerProps = Menu.Positioner.Props;
@@ -154,13 +155,17 @@ export type DropdownActionItemType = DropdownRowBaseType &
 		| {
 				suffix?: never;
 				/**
-				 * A keyboard shortcut, rendered in the trailing slot through `Kbd`.
+				 * A keyboard shortcut, rendered in the trailing slot through `Kbd.Shortcut`. The keys of a
+				 * chord, as `Kbd.Shortcut` takes them, for example `['Mod', 'K']`.
 				 *
 				 * @note Documentation only. The component does not bind the key.
 				 *
+				 * @note Screen readers announce it as the row's description, after the reason. An empty
+				 * list leaves the slot empty, the same as a row with no shortcut.
+				 *
 				 * @note Takes the trailing slot, so it cannot be combined with `suffix`.
 				 */
-				shortcut: ReactNode;
+				shortcut: ReadonlyArray<KbdKey>;
 		  }
 		| (DropdownRowSuffixType & { shortcut?: never })
 	) & {

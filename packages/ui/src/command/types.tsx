@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
+import type { KbdKey } from '../kbd/types.js';
 import type { CommandItemKind } from './constants.js';
 
 export type CommandItemKindType = (typeof CommandItemKind)[keyof typeof CommandItemKind];
@@ -127,16 +128,17 @@ type CommandItemBaseType = {
 type CommandItemShortcutType = {
 	suffix?: never;
 	/**
-	 * A keyboard shortcut, rendered in the trailing slot through `Kbd`.
+	 * A keyboard shortcut, rendered in the trailing slot through `Kbd.Shortcut`. The keys of a
+	 * chord, as `Kbd.Shortcut` takes them, for example `['Mod', 'K']`.
 	 *
 	 * @note Documentation only. The component does not bind the key.
 	 *
-	 * @note Screen readers announce it as the row's description, after the label. A node that
-	 * renders nothing, such as `isMac && '⌘K'` off a Mac, leaves the slot empty.
+	 * @note Screen readers announce it as the row's description, after the label and the reason.
+	 * An empty list leaves the slot empty, the same as a row with no shortcut.
 	 *
 	 * @note Takes the trailing slot, so it cannot be combined with `suffix`.
 	 */
-	shortcut: ReactNode;
+	shortcut: ReadonlyArray<KbdKey>;
 };
 
 type CommandItemSuffixType = {
