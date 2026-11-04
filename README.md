@@ -85,7 +85,6 @@ import { Input } from '@signozhq/ui';
 import { Kbd } from '@signozhq/ui';
 import { Pagination } from '@signozhq/ui';
 import { Progress } from '@signozhq/ui';
-import { PinList } from '@signozhq/ui';
 import { Pill } from '@signozhq/ui';
 import { Popover } from '@signozhq/ui';
 import { RadioCards } from '@signozhq/ui';

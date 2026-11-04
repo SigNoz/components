@@ -17,7 +17,6 @@ export * from './dropdown/index.js';
 export * from './input/index.js';
 export * from './kbd/index.js';
 export * from './pagination/index.js';
-export * from './pin-list/index.js';
 export * from './pill/index.js';
 export * from './popover/index.js';
 export * from './progress/index.js';
