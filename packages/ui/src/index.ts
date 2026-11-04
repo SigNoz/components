@@ -31,7 +31,6 @@ export * from './toast/index.js';
 export * from './spinner/index.js';
 export * from './switch/index.js';
 export * from './tabs/index.js';
-export * from './text-ellipsis/index.js';
 export * from './toggle-group/index.js';
 export * from './tooltip/index.js';
 export * from './typography/index.js';

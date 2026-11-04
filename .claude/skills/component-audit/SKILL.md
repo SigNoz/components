@@ -147,7 +147,7 @@ const components = [
   'dialog', 'divider', 'drawer', 'dropdown-menu', 'input',
   'input-number', 'kbd', 'pagination', 'pin-list', 'popover', 'progress',
   'radio-group', 'resizable', 'select', 'skeleton', 'slider',
-  'switch', 'tabs', 'text-ellipsis', 'toast', 'toggle-group',
+  'switch', 'tabs', 'toast', 'toggle-group',
   'tooltip', 'typography'
 ]
 

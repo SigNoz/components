@@ -610,7 +610,7 @@ the lowercase string that lands in `data-*`, and never a TS `enum`.
 | Escape hatches | No `className`, no `style`, no `classNames` or `styles` maps. See [No `className` or `style`](#no-classname-or-style) |
 | Accessibility | Interactive elements get a real role and a labellable prop (`closeAriaLabel`, `aria-label`). `jsx-a11y` rules are on |
 | Cancellable callbacks | If a callback can veto the default behaviour, use the DOM idiom: run the handler, then check `event.defaultPrevented` (see `Badge`'s `onClose`) |
-| No console noise in the happy path | `console.warn` only for genuine misuse, as `Badge` does for `textEllipsis` with non-string children |
+| No console noise in the happy path | `console.warn` only for genuine misuse |
 
 ### No `className` or `style`
 
