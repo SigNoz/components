@@ -1,5 +1,11 @@
+const UNITLESS_NUMBER = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i;
+
 export function toCssLength(value: string | number): string {
-	return typeof value === 'number' ? `${value}px` : value;
+	if (typeof value === 'number') {
+		return `${value}px`;
+	}
+	const trimmed = value.trim();
+	return UNITLESS_NUMBER.test(trimmed) ? `${Number(trimmed)}px` : value;
 }
 
 /**

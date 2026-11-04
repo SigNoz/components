@@ -20,6 +20,7 @@ progress
 radio-cards
 resizable
 select
+skeleton
 slider
 switch
 tabs

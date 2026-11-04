@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readPx } from './css-length.js';
+import { readPx, toCssLength } from './css-length.js';
 
 describe('readPx', () => {
 	it.each<[string, number]>([
@@ -26,4 +26,36 @@ describe('readPx', () => {
 
 		element.remove();
 	});
+});
+
+describe('toCssLength', () => {
+	it.each([
+		[240, '240px'],
+		[0, '0px'],
+		[-4, '-4px'],
+		[1.5, '1.5px'],
+	])('writes the number %s as %s', (value, expected) => {
+		expect(toCssLength(value)).toBe(expected);
+	});
+
+	it.each([
+		['240', '240px'],
+		['0', '0px'],
+		['-4', '-4px'],
+		['1.5', '1.5px'],
+		['.5', '0.5px'],
+		[' 240 ', '240px'],
+		['240.', '240px'],
+		['+240', '240px'],
+		['1e3', '1000px'],
+	])('writes the unitless string %j as %s', (value, expected) => {
+		expect(toCssLength(value)).toBe(expected);
+	});
+
+	it.each(['50%', '24rem', '240px', 'auto', 'fit-content', 'calc(100% - 8px)', 'var(--x)', ''])(
+		'keeps %j as it is',
+		(value) => {
+			expect(toCssLength(value)).toBe(value);
+		},
+	);
 });

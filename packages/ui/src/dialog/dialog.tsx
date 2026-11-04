@@ -108,12 +108,8 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 												aria-hidden="true"
 											>
 												{loading ? (
-													// The span sets the size: Skeleton.Avatar writes its own as an inline style.
-													<Skeleton.Avatar
-														active
-														shape="square"
-														style={{ width: '100%', height: '100%' }}
-													/>
+													// At the icon size, through the avatar size token in the stylesheet.
+													<Skeleton.Avatar size="sm" shape="square" />
 												) : (
 													titleIcon
 												)}
@@ -131,23 +127,29 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 											{title.trim() === '' ? '<No title>' : title}
 										</DialogPrimitive.Title>
 										{loading ? (
-											<Skeleton
-												active
-												title={false}
-												paragraph={{ rows: 1, width: '40%' }}
+											<div
+												data-slot="dialog-title-skeleton"
 												className={styles['dialog__title-skeleton']}
-												testId={partTestId(testId, 'title-skeleton')}
-											/>
+											>
+												<Skeleton
+													title={false}
+													paragraph={{ rows: 1, width: '40%' }}
+													testId={partTestId(testId, 'title-skeleton')}
+												/>
+											</div>
 										) : null}
 									</div>
 									{hasRenderableContent(description) && loading ? (
-										<Skeleton
-											active
-											title={false}
-											paragraph={{ rows: 1, width: '70%' }}
+										<div
+											data-slot="dialog-description-skeleton"
 											className={styles['dialog__description-skeleton']}
-											testId={partTestId(testId, 'description-skeleton')}
-										/>
+										>
+											<Skeleton
+												title={false}
+												paragraph={{ rows: 1, width: '70%' }}
+												testId={partTestId(testId, 'description-skeleton')}
+											/>
+										</div>
 									) : null}
 									{hasRenderableContent(description) && !loading ? (
 										<DialogPrimitive.Description
@@ -182,9 +184,7 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 									data-testid={partTestId(testId, 'body')}
 								>
 									{loading ? (
-										(loadingContent ?? (
-											<Skeleton active testId={partTestId(testId, 'body-skeleton')} />
-										))
+										(loadingContent ?? <Skeleton testId={partTestId(testId, 'body-skeleton')} />)
 									) : (
 										<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
 									)}
@@ -201,7 +201,7 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 												data-slot="dialog-footer-prefix"
 												data-testid={partTestId(testId, 'footer-prefix')}
 											>
-												{loading ? <Skeleton.Button active /> : footerPrefix}
+												{loading ? <Skeleton.Button size="md" /> : footerPrefix}
 											</div>
 										) : null}
 										<div
@@ -211,8 +211,8 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 										>
 											{loading ? (
 												<>
-													<Skeleton.Button active />
-													<Skeleton.Button active />
+													<Skeleton.Button size="md" />
+													<Skeleton.Button size="md" />
 												</>
 											) : (
 												footerSuffix
@@ -307,6 +307,8 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
  * | `dialog-header` | always |
  * | `dialog-title` | always |
  * | `dialog-description` | when `description` renders something |
+ * | `dialog-title-skeleton` | while `loading`, the box around the title skeleton |
+ * | `dialog-description-skeleton` | while `loading` and `description` renders something, the box around its skeleton |
  * | `dialog-close` | always |
  * | `dialog-body` | always |
  * | `dialog-footer` | when `footerSuffix` renders something |
