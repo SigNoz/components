@@ -52,16 +52,16 @@ On commit, Husky + lint-staged run `pnpm run type-check`, `pnpm oxlint --fix`, `
 2. REVIEWABLE FILES: When creating new code, follow the rules in `COMPONENT_GUIDELINES.md`:
 - One component per file. Directory is kebab-case under `packages/ui/src/`, named after the implementation (`badge/`, not `Badge/`).
 - Implementation `<name>.tsx`, styles `<name>.module.scss`, contract `index.ts`. No logic in `index.ts`.
-- `index.ts` holds only the generated token region plus exports: `export type *` and explicit named exports. Never a bare `export *`. This is the only re-export surface, do not add other barrel files.
+- `index.ts` holds only the generated token region plus exports: explicit named exports for values, and a named `export type { ... }` list for types whenever the source file also holds an `@access private` type (`export type *` would publish it). Never a bare `export *`. This is the only re-export surface, do not add other barrel files.
 - Put composed parts in `subcomponents/`, opinionated compositions in `presets/`. One file per component, named kebab-case after it.
 - No helpers in the component file. Shared logic goes in `utils.ts` or `lib/`, cross-component helpers in `src/lib/`. Custom hooks live in their own file next to the component.
-- More than 3 type declarations in a component directory: put them in `types.tsx`.
-- Relative imports MUST carry the `.js` extension. Types use `import type` (`typescript/consistent-type-imports` is an error; a value import of a type breaks the CJS build).
+- More than 3 public type declarations in a component directory: put them in `types.tsx`. A type private to one file (a hook's state, a subcomponent's props) stays next to its implementation.
+- Relative imports MUST carry the `.js` extension, test files included (`../../__tests__/type-error-messages.js`). Types use `import type` (`typescript/consistent-type-imports` is an error; a value import of a type breaks the CJS build).
 - Icons come from `@signozhq/icons`. Never import `tailwindcss` or `@signozhq/tailwind-config` inside `packages/`.
 - Adding a runtime dependency means adding it to `externalPatterns` in the same commit, or `packages/ui/src/__tests__/vite-externals.test.ts` fails.
 - Always support `testId` on critical/behavioral elements (inputs, buttons, roots). Tests query by role and accessible name or `testId`, never by hashed CSS Module class names.
 - CSS is always a Sass CSS Module (`.module.scss`). No Tailwind, no CVA, no Sass variables, no plain stylesheets. Every overridable value is `var(--{component}-x, <design token>)`; no literal fallback on a design token; semantic tokens only, never `--bg-*` / `--text-*` primitives. Variants are `data-*` attributes. `data-slot` and `data-testid` on the root. This is a presentational library, there is no data fetching or auth layer to wire up.
-- Do not add comments unless asked.
+- Comments follow `COMPONENT_GUIDELINES.md#code-comments`: never restate the code; keep a comment that brings outside context, stops a likely bug, or says why the code has a shape it cannot explain itself.
 
 3. FORCED VERIFICATION: Your internal tools mark file writes as successful even if the code does not compile. You are FORBIDDEN from reporting a task as complete until you have run, from the repo root, and fixed ALL resulting errors:
 - `pnpm run type-check`
