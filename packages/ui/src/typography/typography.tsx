@@ -2,7 +2,7 @@ import { forwardRef, useMemo, type ElementType } from 'react';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import type { RejectedProps } from '../lib/utils.js';
-import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
+import { TooltipLazyAnchor } from '../tooltip/subcomponents/tooltip-lazy-anchor.js';
 import { TypographyLink } from './subcomponents/typography-link.js';
 import type { TypographyProps } from './types.js';
 import styles from './typography.module.scss';
@@ -58,6 +58,10 @@ import {
  * While it is cut, hovering it opens a tooltip with the full text. The full text stays in the DOM,
  * so a screen reader reads all of it and a copy returns all of it. The tooltip does not open from
  * the keyboard, since the text is not focusable.
+ *
+ * The tooltip parts mount only while the pointer is over the text, so a table of cut texts costs
+ * about what the texts cost. The pointer can move onto the open tooltip; a press on the text or
+ * Escape closes it until the pointer comes back.
  *
  * ### Nested text
  *
@@ -226,12 +230,12 @@ const TypographyRoot = forwardRef<HTMLElement, TypographyProps>(function Typogra
 	}
 
 	return (
-		<TooltipAnchor
+		<TooltipLazyAnchor
 			content={isTruncated ? children : null}
 			contentProps={{ className: styles['typography__tooltip'] }}
 		>
 			{element}
-		</TooltipAnchor>
+		</TooltipLazyAnchor>
 	);
 });
 TypographyRoot.displayName = 'Typography';
