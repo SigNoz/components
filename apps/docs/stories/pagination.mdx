@@ -1,13 +1,17 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as PaginationStories from './pagination.stories';
+import * as PaginationComponentsStories from './pagination-components.stories';
 
 <Meta of={PaginationStories} />
 
 # Pagination
 
-All-in-one pagination component that renders previous/next buttons and page numbers automatically. Supports controlled and uncontrolled usage, alignment, and an optional page size selector.
+The bar at the bottom of a table, a list or a stack of cards. It has a position label at the start
+and the page controls at the end. `Pagination` is for a known total. `Pagination.Cursor` is for a
+list that does not know its total.
 
-For URL-synchronized pagination, see [PaginationUrl](?path=/docs/composed-components-paginationurl--docs). For full primitive control, see [Pagination primitives](?path=/docs/primitive-components-pagination-paginationcontainer--docs).
+`total` is the only required prop. The bar renders a `nav`, so it takes `id`, `ref`, every `aria-*`
+and any `data-*`. It has no `className` or `style`: its look is the one design ships.
 
 ## How to use
 
@@ -16,75 +20,288 @@ import { Pagination } from '@signozhq/ui';
 import { useState } from 'react';
 
 export default function MyComponent() {
-	const [currentPage, setCurrentPage] = useState(1);
+	const [page, setPage] = useState(1);
 
-	return (
-		<Pagination
-			total={100}
-			pageSize={10}
-			current={currentPage}
-			onPageChange={(page) => setCurrentPage(page)}
-		/>
-	);
+	return <Pagination total={1240} showTotalLabel="pods" current={page} onPageChange={setPage} />;
 }
 ```
 
 <Primary />
 
-## Uncontrolled usage
+## Controlled and uncontrolled
 
-Use `defaultCurrent` when you don't need to track the page externally:
-
-```tsx
-<Pagination total={100} pageSize={10} defaultCurrent={1} />
-```
-
-## Alignment
-
-Control horizontal alignment with the `align` prop:
+`current` and `pageSize` make the page and the page size controlled: the bar shows what you pass and
+asks for a change through `onPageChange` and `onPageSizeChange`. `defaultCurrent` and
+`defaultPageSize` start a bar that keeps its own state. The page starts at 1 and the page size at 10.
 
 ```tsx
-<Pagination total={100} pageSize={10} align="center" />
-<Pagination total={100} pageSize={10} align="end" />
+<Pagination total={1240} defaultCurrent={3} defaultPageSize={20} />
 ```
 
-## With page size selector
+## Position label
 
-Enable the page size dropdown with `enablePageSize`. It renders on the right by default:
+The label at the start shows the current range and the total, `1 — 20 of 100`, with an em dash
+between the numbers. Numbers above 999 are grouped with a comma, as in `12,345`.
+`showTotalLabel` writes a noun after the total, as in `1 — 20 of 100 pods`. Pass the plural form,
+the component does not change it.
 
 ```tsx
-import { Pagination } from '@signozhq/ui';
-import { useState } from 'react';
-
-export default function MyComponent() {
-	const [currentPage, setCurrentPage] = useState(1);
-	const [pageSize, setPageSize] = useState(10);
-
-	return (
-		<Pagination
-			total={100}
-			pageSize={pageSize}
-			current={currentPage}
-			onPageChange={setCurrentPage}
-			enablePageSize
-			onPageSizeChange={setPageSize}
-		/>
-	);
-}
+<Pagination total={100} pageSize={20} showTotalLabel="pods" />
 ```
 
-Position the selector on the left:
+The label uses tabular numerals and keeps the width of its longest value for the current `total`
+and `pageSize`, so `1 — 20 of 100` and `81 — 100 of 100` take the same width. It is a polite live
+region: focus stays on the control after a page change, and a screen reader reads the new range
+from the label.
+
+`showTotal={false}` hides it, see [Without the position label](#without-the-position-label).
+
+## Page list
+
+`numbered`, the default variant, renders every page up to seven pages. Above that it always renders
+exactly seven slots: the first page, the last page, the current page with one page on each side, and
+a separator for each gap.
+
+With 20 pages the slots are:
+
+| Current page   | Slots                |
+| -------------- | -------------------- |
+| 1, 2, 3, 4     | `1 2 3 4 5 - 20`     |
+| 5              | `1 - 4 5 6 - 20`     |
+| 10             | `1 - 9 10 11 - 20`   |
+| 16             | `1 - 15 16 17 - 20`  |
+| 17, 18, 19, 20 | `1 - 16 17 18 19 20` |
+
+`-` is the separator. A separator never stands in for a single page: when the gap is one page, that
+page renders in its place. The separator is a horizontal rule that is hidden from assistive tech. It
+is not a button and opens nothing.
+
+Every slot, separator included, has the width of the longest page number, with tabular numerals. The
+bar keeps its width and the position of every control while the user moves between pages. The slots
+grow only when the page count gains a digit, which comes from a new `total` or `pageSize`.
+
+Previous and Next stay in place and are disabled at the ends, never hidden. The current page is a
+button too: it stays in the tab order so a screen reader user can reach it and hear
+`aria-current="page"`, and pressing it does nothing.
+
+## Page size
+
+`pageSizeOptions` adds a page size selector. `true` renders it with the defaults, and an object
+renders it with the fields it sets: `items`, `label` and `position`. Left out, or `false`, it renders
+no selector.
 
 ```tsx
-<Pagination total={100} enablePageSize pageSizePosition="left" />
+<Pagination total={1240} pageSizeOptions onPageSizeChange={setPageSize} />
 ```
 
-Custom page size options:
+`items` lists the page sizes, `[10, 20, 30, 40, 50]` by default. `label` is the visible label of the
+selector and its name, `Rows per page` by default. A `pageSize` that is not in `items` is added to
+the list in numeric order, so the selector never shows an empty value.
 
 ```tsx
-<Pagination total={100} enablePageSize pageSizeOptions={[5, 10, 25, 50]} />
+<Pagination
+	total={1240}
+	pageSizeOptions={{ items: [10, 25, 100], label: 'Items per page' }}
+	onPageSizeChange={setPageSize}
+/>
 ```
+
+An item can carry its own label. `{ value: 25, label: 'Auto (25)' }` shows `Auto (25)` in the list
+and `25` once it is picked. The component knows nothing about how the value was computed, so a table
+that measures the rows that fit builds the item itself and drops the plain number it replaces. Each
+`value` appears once: a duplicate is dropped and logs a warning on the console. A `value` that is not
+a positive integer, such as `0` or `2.5`, is dropped and warns the same way.
+
+```tsx
+<Pagination
+	total={1240}
+	pageSizeOptions={{ items: [10, 20, { value: 25, label: 'Auto (25)' }, 50] }}
+/>
+```
+
+A new page size goes back to page 1: the component calls `onPageSizeChange` with the size, then
+`onPageChange` with `1`.
+
+`position` puts the selector before the page controls, with `start`, or after them, with `end`, the
+default.
+
+```tsx
+<Pagination total={1240} pageSizeOptions={{ position: 'start' }} />
+```
+
+## Compact
+
+`variant="compact"` replaces the page list with a Previous and a Next button and a divider between
+them, for cards, side panels and narrow columns. The component does not switch on its own: a
+container too narrow for the numbered list, about 220px before the label, should pass `compact`.
+
+```tsx
+<Pagination total={1240} variant="compact" aria-label="Logs pagination" />
+```
+
+On the first page Previous and the divider hide. On the last page Next and the divider hide. With a
+single page, or a `total` of 0, all three hide. A hidden button keeps its space, so the other button
+does not move while the user pages, and it leaves the tab order and the accessibility tree. The
+buttons are named by their visible labels, `Previous` and `Next`, where the numbered arrows are
+named `Previous page` and `Next page`.
+
+## Pagination.Cursor
+
+The bar for a list that pages forward without knowing its total: a cursor from the API, or an offset
+where a full page means there may be more. It always renders the compact controls, since there is no
+last page to number, and its position label shows the page number, as in `Page 3`.
+
+`hasNextPage` is required. The consumer knows it from the cursor of the API, or from a full page. Next
+hides, and keeps its space, while it is `false`, and Previous hides on page 1.
+
+```tsx
+<Pagination.Cursor current={page} onPageChange={setPage} hasNextPage={nextCursor !== undefined} />
+```
+
+It takes the page and page size props, `pageSizeOptions`, `align`, `disabled` and
+`disabledTooltip` from `Pagination`, with the same behavior. It has no `total`, `showTotalLabel` or
+`variant`.
+
+## Single page
+
+The bar always renders. With a single page, or a `total` of 0, the page list shows `1` and both
+arrows are disabled, and a `total` of 0 reads `0 — 0 of 0`. In `compact`, Previous, Next and the
+divider are hidden and keep their space. A `total` that is not a finite number, or is negative,
+counts as 0.
+
+There is no prop to hide the bar. A caller that does not want it for one page of results does not
+render it:
+
+```tsx
+<footer>
+	{total > pageSize ? <Pagination total={total} current={page} onPageChange={setPage} /> : null}
+</footer>
+```
+
+Keep the previous `total` while a new page loads. A `total` of `0` or `undefined` during the fetch
+makes the bar flash `0 — 0 of 0` and its page list collapse to `1`, until the total comes back. The
+page stays where it was: a `total` of `0` never moves it, so a page read from the URL is still there
+once the total arrives.
+
+A `pageSize` that is not a positive integer falls back to `10`, with a warning on the console.
+
+## Out-of-range page
+
+A `current` above the last page renders the last page, and one below 1 renders page 1. The component
+calls `onPageChange` once with that page, so the data follows the control. It happens when the total
+shrinks under the current page, for example after a filter. A `total` of `0` is the exception: the
+bar shows page 1 and leaves the page as it is, so the page waits for a total.
+
+## Disabled
+
+`disabled` blocks every page change and the page size selector. Each control keeps its slot and stays
+focusable, so nothing moves and the reason is reachable. `disabledTooltip` shows on hover or focus of
+any control while `disabled` is set, and the position label still shows the current range.
+
+```tsx
+<Pagination
+	total={1240}
+	current={page}
+	onPageChange={setPage}
+	disabled={isLoading}
+	disabledTooltip="Wait for the list to load before changing the page."
+/>
+```
+
+While the pagination is enabled, Previous at the first page and Next at the last page are disabled in
+`numbered`, out of the tab order and without a tooltip. "No previous page" is the shape of the data,
+not a blocker the user can act on. While `disabled` is set they behave like every other control: they
+stay focusable and show `disabledTooltip`.
+
+There is no `loading` prop: the bar has no place for a spinner, and the list it closes already shows
+the load. Pass `disabled` with `disabledTooltip` to stop a second click during a load.
+
+## Without the position label
+
+`showTotal={false}` hides the label. `align` then places the page controls: `start`, `center` or
+`end`, the default. While the label shows it takes the start and the controls take the end, so
+`align` has no effect.
+
+```tsx
+<Pagination total={1240} showTotal={false} align="center" />
+```
+
+## Keyboard
+
+Every page button, Previous, Next and the page size selector are in the tab order, in visual order.
+A truncated position label is in it too, see Overflow.
+The bar is a list of buttons and not a composite widget, so there is no roving focus. `Tab` and
+`Shift+Tab` move between the controls, `Enter` and `Space` press the focused one, and the selector
+keeps the keys of `Select`.
+
+Focus follows the page change, so the user can keep pressing the same key:
+
+- After a page button, focus is on the button of that page in its new slot.
+- After Previous or Next, focus stays on the arrow. When the arrow becomes disabled, at the first or
+  the last page, focus moves to the current page. In `compact` and `Pagination.Cursor`, where the
+  arrow hides instead, focus moves to the other arrow.
+
+The focus ring shows for keyboard focus only.
+
+## Accessibility
+
+The root is a `nav` named `Pagination`. A screen with two paginations passes its own `aria-label` to
+each, such as `Logs pagination`, so the two landmarks differ.
+
+```tsx
+<Pagination total={240} aria-label="Logs pagination" />
+<Pagination total={95} aria-label="Events pagination" />
+```
+
+Page buttons are named `Page 3`, and the current one carries `aria-current="page"`. The numbered
+arrows are named `Previous page` and `Next page`. The page size selector is named by its `label`,
+`Rows per page` by default.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the `nav`, and it names everything under it:
+
+| Element            | `data-testid`                                    |
+| ------------------ | ------------------------------------------------ |
+| position label     | `` `${testId}-total` ``                          |
+| Previous           | `` `${testId}-previous` ``                       |
+| page button        | `` `${testId}-page-${n}` ``                      |
+| separator before   | `` `${testId}-separator-start` ``                |
+| separator after    | `` `${testId}-separator-end` ``                  |
+| divider            | `` `${testId}-divider` ``                        |
+| Next               | `` `${testId}-next` ``                           |
+| page size selector | `` `${testId}-page-size` ``                      |
+| page size Select   | `` `${testId}-page-size-select` ``               |
+| page size row      | `` `${testId}-page-size-select-item-${value}` `` |
+
+The separators render only in `numbered` above seven pages, the divider only in `compact` and
+`Pagination.Cursor`, and the selector only with `pageSizeOptions`. In `compact` the Previous and Next
+buttons take the same test IDs as the numbered arrows. A hidden compact button stays in the DOM with
+`visibility: hidden`, so query it by test ID, or by role to confirm it is out of the accessibility
+tree.
+
+The page size rows exist only while the list is open. An object in `pageSizeOptions.items` can
+carry its own `testId`, which names its row in place of the derived one and works without a
+`testId` on the bar:
+
+```tsx
+<Pagination
+	total={500}
+	pageSizeOptions={{ items: [10, 20, { value: 50, label: '50', testId: 'logs-page-size-50' }] }}
+/>
+```
+
+The root carries `data-slot="pagination"`, `data-variant` and `data-align`, and `data-disabled` only
+while `disabled` is `true`. The current page button carries `data-current`. The parts have the slots
+`pagination-total`, `pagination-previous`, `pagination-page`, `pagination-separator`,
+`pagination-divider`, `pagination-next` and `pagination-page-size`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props
 
 <Controls of={PaginationStories.Default} />
+
+### Pagination.Cursor props
+
+<Controls of={PaginationComponentsStories.Cursor} />

@@ -1,63 +1,188 @@
-// Helper function to generate a range of numbers
-const range = (start: number, end: number): number[] => {
-	const length = end - start + 1;
-	return Array.from({ length }, (_, i) => start + i);
-};
+import { PAGINATION_DEFAULT_PAGE_SIZE, PAGINATION_SLOT_COUNT } from './constants.js';
+import type { PaginationPageSizeOption, PaginationPageSizeOptions } from './types.js';
 
 /**
- * Calculates the sequence of page numbers and ellipses to display.
- * @param totalPages - The total number of pages.
- * @param current - The currently active page number.
- * @param siblingCount - The number of page links to show on each side of the current page (default: 1).
- * @returns An array containing page numbers and 'ellipsis' strings.
+ * @access private
  */
-export const renderPageNumbers = (
-	totalPages: number,
-	current: number,
-	siblingCount = 1,
-): (number | 'ellipsis')[] => {
-	// Total visible page numbers/ellipses between prev/next arrows
-	// Includes: first page, last page, current page, siblings on each side, potentially 2 ellipses
-	const totalPageNumbers = 2 * siblingCount + 5; // e.g., 1 ... 4 5 6 ... 10 (7 items for siblingCount=1)
+export type PaginationSlot =
+	| { type: 'page'; page: number }
+	| { type: 'separator'; position: 'start' | 'end' };
 
-	// Case 1: Total pages are less than or equal to the desired visible count, show all pages.
-	if (totalPages <= totalPageNumbers) {
-		return range(1, totalPages);
-	}
-
-	const leftSiblingIndex = Math.max(current - siblingCount, 1);
-	const rightSiblingIndex = Math.min(current + siblingCount, totalPages);
-
-	// Determine if ellipses are needed based on sibling positions relative to boundaries
-	const shouldShowLeftDots = leftSiblingIndex > 2;
-	const shouldShowRightDots = rightSiblingIndex < totalPages - 1;
-
-	const firstPageIndex = 1;
-	const lastPageIndex = totalPages;
-
-	// Case 2: Near the start - No left dots, show right dots
-	// e.g., 1 2 3 ... 10 (when current is 1, 2, or 3 and siblingCount=1)
-	if (!shouldShowLeftDots && shouldShowRightDots) {
-		// Show first 3 pages as per design requirement
-		const leftRange = range(1, 3);
-		return [...leftRange, 'ellipsis', lastPageIndex];
-	}
-
-	// Case 3: Near the end - Show left dots, no right dots
-	// e.g., 1 ... 8 9 10 (when current is totalPages, totalPages-1, or totalPages-2 and siblingCount=1)
-	if (shouldShowLeftDots && !shouldShowRightDots) {
-		// Show last 3 pages as per design requirement
-		const rightRange = range(totalPages - 2, totalPages);
-		return [firstPageIndex, 'ellipsis', ...rightRange];
-	}
-
-	// Case 4: In the middle - Show both left and right dots
-	// e.g., 1 ... 4 5 6 ... 10 (when current is 4, 5, 6, 7 and siblingCount=1)
-	if (shouldShowLeftDots && shouldShowRightDots) {
-		const middleRange = range(leftSiblingIndex, rightSiblingIndex);
-		return [firstPageIndex, 'ellipsis', ...middleRange, 'ellipsis', lastPageIndex];
-	}
-
-	// Fallback (should not be reached with the above logic if totalPages > totalPageNumbers)
-	return range(1, totalPages);
+/**
+ * @access private
+ */
+export type PaginationResolvedPageSizeOption = {
+	value: number;
+	label: string | undefined;
+	testId: string | undefined;
 };
+
+const numberFormat = new Intl.NumberFormat('en-US');
+
+/**
+ * @access private
+ */
+export function formatNumber(value: number): string {
+	return numberFormat.format(value);
+}
+
+/**
+ * @access private
+ */
+export function normalizeTotal(total: number): number {
+	return Number.isFinite(total) && total > 0 ? Math.floor(total) : 0;
+}
+
+/**
+ * @access private
+ */
+export function isValidPageSize(pageSize: unknown): pageSize is number {
+	return typeof pageSize === 'number' && Number.isInteger(pageSize) && pageSize > 0;
+}
+
+/**
+ * @access private
+ */
+export function normalizePageSize(pageSize: number | undefined): number {
+	return isValidPageSize(pageSize) ? pageSize : PAGINATION_DEFAULT_PAGE_SIZE;
+}
+
+/**
+ * @access private
+ */
+export function getPageCount(total: number, pageSize: number): number {
+	return Math.ceil(total / pageSize);
+}
+
+/**
+ * The page in range nearest to `page`. A page count of 0 has the one page `1`, and `Infinity` is
+ * a list with no last page.
+ *
+ * @access private
+ */
+export function clampPage(page: number, pageCount: number): number {
+	if (Number.isNaN(page)) {
+		return 1;
+	}
+
+	return Math.min(Math.max(Math.trunc(page), 1), Math.max(pageCount, 1));
+}
+
+function range(start: number, end: number): number[] {
+	return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+}
+
+/**
+ * The slots of the numbered list: every page up to seven pages, and exactly seven slots above
+ * that. A separator never stands in for a single page.
+ *
+ * @access private
+ */
+export function getPageSlots(pageCount: number, current: number): PaginationSlot[] {
+	if (pageCount <= PAGINATION_SLOT_COUNT) {
+		return range(1, Math.max(pageCount, 1)).map((page) => ({ type: 'page', page }));
+	}
+
+	const start = Math.min(Math.max(current - 1, 3), pageCount - 4);
+	const end = start + 2;
+	const slots: PaginationSlot[] = [{ type: 'page', page: 1 }];
+
+	slots.push(start === 3 ? { type: 'page', page: 2 } : { type: 'separator', position: 'start' });
+
+	for (const page of range(start, end)) {
+		slots.push({ type: 'page', page });
+	}
+
+	slots.push(
+		end === pageCount - 2
+			? { type: 'page', page: pageCount - 1 }
+			: { type: 'separator', position: 'end' },
+	);
+	slots.push({ type: 'page', page: pageCount });
+
+	return slots;
+}
+
+/**
+ * @access private
+ */
+export function formatRange(
+	page: number,
+	pageSize: number,
+	total: number,
+	showTotalLabel?: string,
+) {
+	const start = Math.min((page - 1) * pageSize + 1, total);
+	const end = Math.min(page * pageSize, total);
+	const label = showTotalLabel ? ` ${showTotalLabel}` : '';
+
+	return `${formatNumber(start)} \u2014 ${formatNumber(end)} of ${formatNumber(total)}${label}`;
+}
+
+/**
+ * @access private
+ */
+export function formatCursorPage(page: number): string {
+	return `Page ${formatNumber(page)}`;
+}
+
+/**
+ * The options as the selector lists them: each `value` that is a valid page size, once, and
+ * `pageSize` inserted in numeric order when the list does not have it.
+ *
+ * @access private
+ */
+export function resolvePageSizeOptions(
+	options: PaginationPageSizeOption[],
+	pageSize: number,
+): { options: PaginationResolvedPageSizeOption[]; hasDuplicates: boolean; hasInvalid: boolean } {
+	const resolved: PaginationResolvedPageSizeOption[] = [];
+	let hasDuplicates = false;
+	let hasInvalid = false;
+
+	for (const option of options) {
+		const value = typeof option === 'number' ? option : option.value;
+		const label = typeof option === 'number' ? undefined : option.label;
+		const testId = typeof option === 'number' ? undefined : option.testId;
+
+		if (!isValidPageSize(value)) {
+			hasInvalid = true;
+		} else if (resolved.some((entry) => entry.value === value)) {
+			hasDuplicates = true;
+		} else {
+			resolved.push({ value, label, testId });
+		}
+	}
+
+	if (!resolved.some((entry) => entry.value === pageSize)) {
+		const index = resolved.findIndex((entry) => entry.value > pageSize);
+
+		resolved.splice(index === -1 ? resolved.length : index, 0, {
+			value: pageSize,
+			label: undefined,
+			testId: undefined,
+		});
+	}
+
+	return { options: resolved, hasDuplicates, hasInvalid };
+}
+
+/**
+ * Whether `pageSizeOptions` turns the page size selector on: `true` or an object.
+ *
+ * @access private
+ */
+export function isPageSizeEnabled(
+	pageSizeOptions: boolean | PaginationPageSizeOptions | undefined,
+): pageSizeOptions is true | PaginationPageSizeOptions {
+	return (
+		pageSizeOptions === true || (typeof pageSizeOptions === 'object' && pageSizeOptions !== null)
+	);
+}
+
+/**
+ * @access private
+ */
+export function digitsOf(value: number): number {
+	return String(Math.max(Math.trunc(value), 1)).length;
+}
