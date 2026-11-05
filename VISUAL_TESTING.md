@@ -265,24 +265,40 @@ is skipped.
 
 The merge build can also be started by hand: Actions → **Chromatic (main)** → **Run
 workflow** on `main`. It snapshots the current `main` head and records it on branch
-`main`, auto-accepted. Do this once after changing how the workflow reports commits, or
-whenever a PR build log shows `Missing commit detected` followed by hundreds of changed
-files. That message means TurboSnap could not resolve the last baseline commit and fell
-back to an old build, so every PR re-snapshots the whole Storybook until a fresh,
-reachable baseline exists.
+`main`, auto-accepted. Use it to record a baseline at the current `main` head without
+waiting for a labelled merge.
+
+It does not clear `Missing commit detected`. Every build since the inputs above landed
+has been recorded on `main` at a reachable commit, and four of them captured every story
+and were auto-accepted, yet each one still reports missing commits for builds #2, #3, #4
+and #7 (2024) and diffs against build #1 (`f198b63`), about a thousand changed files. Why
+Chromatic keeps those builds in the baseline set is still open.
 
 Other behaviour worth knowing:
 
 - **TurboSnap (`onlyChanged: true`)**: only stories affected by the changed files are
-  snapshotted, not the whole Storybook.
+  snapshotted, not the whole Storybook. Both workflows also pass:
+  - `storybookBaseDir: apps/docs`. The action runs from the repo root, so without it the
+    changed files never match the stats file and the build fails with `TurboSnap disabled
+    until base directory is set correctly`. Leave `storybookConfigDir` unset: TurboSnap
+    resolves it against the base dir, and `apps/docs/.storybook` there would hide changes
+    to `preview.tsx` and the other config files.
+  - `externals: packages/**`. A production Storybook build imports `@signozhq/ui` from
+    `packages/ui/dist`, which is not in git, so a change in `packages/ui/src` traces to no
+    story at all. Any change under `packages/` therefore snapshots the whole Storybook.
+- **`chromaui/action` is pinned** to an exact version. On `@latest`, a CLI release
+  changed which TurboSnap path ran and broke the merge build without a change in this
+  repo. Dependabot bumps the pin.
 - PR builds use **`cancel-in-progress: true`** so a new push cancels the in-flight build
   and only the latest commit is snapshotted. Merge builds use
   **`cancel-in-progress: false`** because baseline builds must not be cancelled.
 
 ## Configuration reference
 
-Configuration lives in `apps/docs/chromatic.config.json`, shared by both workflows and
-the local `chromatic` script.
+`apps/docs/chromatic.config.json` is read only by the local `chromatic` script in
+`apps/docs`. The workflows run the action from the repo root, which looks for
+`chromatic.config.json` there, so they pass what they need (`storybookBaseDir`,
+`externals`) as action inputs instead.
 
 | Key | Purpose |
 |-----|---------|
