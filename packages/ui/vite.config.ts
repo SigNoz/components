@@ -25,7 +25,6 @@ export const entries: Record<string, string> = {
 	'input/index': 'src/input/index.ts',
 	'kbd/index': 'src/kbd/index.ts',
 	'pagination/index': 'src/pagination/index.ts',
-	'pin-list/index': 'src/pin-list/index.ts',
 	'pill/index': 'src/pill/index.ts',
 	'popover/index': 'src/popover/index.ts',
 	'progress/index': 'src/progress/index.ts',

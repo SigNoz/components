@@ -217,16 +217,6 @@
 				"require": "./dist/pagination/index.cjs"
 			}
 		},
-		"./pin-list": {
-			"import": {
-				"types": "./dist/pin-list/index.d.ts",
-				"import": "./dist/pin-list/index.mjs"
-			},
-			"require": {
-				"types": "./dist/pin-list/index.d.cts",
-				"require": "./dist/pin-list/index.cjs"
-			}
-		},
 		"./pill": {
 			"import": {
 				"types": "./dist/pill/index.d.ts",

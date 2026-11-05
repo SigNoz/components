@@ -145,7 +145,7 @@ const components = [
   'alert-dialog', 'alert-strip', 'avatar', 'badge', 'breadcrumb',
   'button', 'calendar', 'callout', 'checkbox', 'combobox', 'command',
   'dialog', 'divider', 'drawer', 'dropdown-menu', 'input',
-  'input-number', 'kbd', 'pagination', 'pin-list', 'popover', 'progress',
+  'input-number', 'kbd', 'pagination', 'popover', 'progress',
   'radio-group', 'resizable', 'select', 'skeleton', 'slider',
   'switch', 'tabs', 'toast', 'toggle-group',
   'tooltip', 'typography'
