@@ -1,5 +1,6 @@
 import { Fragment, forwardRef, useEffect, useId, useRef, useState } from 'react';
 import { Group, type GroupImperativeHandle, type Layout } from 'react-resizable-panels';
+import { isBlankText } from '../lib/blank-text.js';
 import { setRef } from '../lib/merge-refs.js';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
@@ -10,7 +11,6 @@ import type { ResizableProps } from './types.js';
 import {
 	createLayout,
 	encodeValue,
-	isBlankLabel,
 	isFixedSize,
 	measurePanels,
 	type ResizableLayout,
@@ -218,7 +218,7 @@ export const Resizable = forwardRef<HTMLDivElement, ResizableProps>(function Res
 	const isEmpty = items.length === 0;
 	const hasDuplicateValue = uniqueItems.length < items.length;
 	// The last panel has no handle to name.
-	const hasUnnamedHandle = uniqueItems.slice(0, -1).some((item) => isBlankLabel(item.label));
+	const hasUnnamedHandle = uniqueItems.slice(0, -1).some((item) => isBlankText(item.label));
 
 	useEffect(() => {
 		if (isEmpty) {

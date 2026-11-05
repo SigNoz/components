@@ -17,6 +17,7 @@ const STRICT_COMPONENTS = readFileSync(STRICT_COMPONENTS_FILE, 'utf8')
 	.map((line) => line.trim())
 	.filter((line) => line && !line.startsWith('#'));
 const EXCLUDE = /(^|\/)__tests__(\/|$)|\.test(-d)?\.tsx?$/;
+const LANG_BY_EXTENSION = { '.ts': 'ts', '.tsx': 'tsx' };
 
 function collectFiles(dir) {
 	const files = [];
@@ -26,7 +27,7 @@ function collectFiles(dir) {
 
 		if (statSync(fullPath).isDirectory()) {
 			files.push(...collectFiles(fullPath));
-		} else if (extname(entry) === '.tsx' && !EXCLUDE.test(fullPath)) {
+		} else if (extname(entry) in LANG_BY_EXTENSION && !EXCLUDE.test(fullPath)) {
 			files.push(fullPath);
 		}
 	}
@@ -39,7 +40,7 @@ let hasErrors = false;
 
 for (const file of files) {
 	const { errors } = transformSync(file, readFileSync(file, 'utf8'), {
-		lang: 'tsx',
+		lang: LANG_BY_EXTENSION[extname(file)],
 		reactCompiler: { target: '18', panicThreshold: 'all_errors' },
 	});
 

@@ -637,6 +637,11 @@ How to apply it:
   pattern (`T & Validate{Component}Props<T> & Record<Exclude<keyof T, keyof Props>, never>`), so
   a stray `className` is a type error that points at the prop. Add a `@ts-expect-error` case for
   each rejected prop to `{name}.types.test-d.tsx`.
+- **Do not add runtime guards beyond that.** The `RejectedProps` destructuring that drops the
+  rejected keys is the whole runtime side. Do not filter the rest props through an allow-list of
+  keys (only `id`, `aria-*` and `data-*` reach the root) or a deny-list of handlers. A caller who
+  casts around the exact-props types owns the result, and each extra filter is code to keep in
+  step with the props type.
 - **Pass-through props still land where they must.** `aria-*` and `data-*` on a portalled popup
   go to the popup, because that is the only way to reach it. `className` and `style` do not.
 - **Sizing is a prop.** `width` and `maxWidth` write `--{component}-internal-width` and

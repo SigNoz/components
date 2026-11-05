@@ -51,11 +51,11 @@ Snapshots must be identical across runs. Avoid anything that changes between ren
 ```tsx
 // Bad (flaky)
 <Timestamp date={new Date()} />
-<Avatar name={faker.person.name()} />
+<Avatar name={faker.person.name()} size="md" color="primary" />
 
 // Good (stable)
 <Timestamp date={new Date('2024-01-15T10:00:00Z')} />
-<Avatar name="Jane Doe" />
+<Avatar name="Jane Doe" size="md" color="primary" />
 ```
 
 The same applies to random colours, shuffled lists, or anything pulling live data.

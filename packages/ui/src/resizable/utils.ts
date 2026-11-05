@@ -12,15 +12,6 @@ export function isFixedSize(size: ResizableSizeType | undefined): boolean {
 }
 
 /**
- * Whether a `label` leaves its handle with no name. Takes any value, for a caller with no types.
- *
- * @access private
- */
-export function isBlankLabel(label: unknown): boolean {
-	return typeof label !== 'string' || label.trim() === '';
-}
-
-/**
  * `encodeURIComponent`, which also takes a lone surrogate. There it throws, and here it comes out
  * as `%u` and the code unit in hex, which `encodeURIComponent` never writes, so two values never
  * come out the same.
