@@ -87,7 +87,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] Code comments only add context from outside the file or stop a bug, never restate the code
 - [ ] Story file per root component and per preset, subcomponent stories in the parent's file, static members in `{name}-components.stories.tsx` (`@access private` ones exempt), correct `title` group
 - [ ] `argTypes` complete with `category`, `type.summary`, `defaultValue.summary`
-- [ ] Stories for every meaningful state, not just the happy path
+- [ ] `Default` plus one `{Name}Showcase` story that shows every meaningful state, not just the happy path
 - [ ] `{component}.mdx` with a usage snippet and a `<Controls>` per exported piece
 
 **Tests** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#7-tests))
