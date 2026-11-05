@@ -72,7 +72,7 @@ Reference implementations to copy from:
 ### File layout
 
 One directory per component under `packages/ui/src/`, named in **kebab-case**. The directory
-name is also the public subpath (`@signozhq/ui/date-picker`).
+name is also the public subpath (`@signozhq/ui/dropdown`).
 
 ```
 packages/ui/src/badge/

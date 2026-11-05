@@ -17,7 +17,6 @@ export const entries: Record<string, string> = {
 	'checkbox/index': 'src/checkbox/index.ts',
 	'combobox/index': 'src/combobox/index.ts',
 	'command/index': 'src/command/index.ts',
-	'date-picker/index': 'src/date-picker/index.ts',
 	'dialog/index': 'src/dialog/index.ts',
 	'divider/index': 'src/divider/index.ts',
 	'drawer/index': 'src/drawer/index.ts',
