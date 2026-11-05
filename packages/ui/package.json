@@ -347,16 +347,6 @@
 				"require": "./dist/switch/index.cjs"
 			}
 		},
-		"./table": {
-			"import": {
-				"types": "./dist/table/index.d.ts",
-				"import": "./dist/table/index.mjs"
-			},
-			"require": {
-				"types": "./dist/table/index.d.cts",
-				"require": "./dist/table/index.cjs"
-			}
-		},
 		"./tabs": {
 			"import": {
 				"types": "./dist/tabs/index.d.ts",
@@ -451,13 +441,10 @@
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-popover": "^1.1.21",
 		"@radix-ui/react-slot": "^1.3.1",
-		"@tanstack/react-table": "^8.21.3",
 		"@tanstack/react-virtual": "^3.14.8",
-		"@types/lodash-es": "^4.17.12",
 		"clsx": "^2.1.1",
 		"copy-text-to-clipboard": "^3.2.2",
 		"dayjs": "^1.11.21",
-		"lodash-es": "^4.18.1",
 		"motion": "^11.11.17",
 		"nuqs": "^2.9.2",
 		"react-compiler-runtime": "^1.0.0",

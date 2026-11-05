@@ -37,7 +37,6 @@ export const entries: Record<string, string> = {
 	'slider/index': 'src/slider/index.ts',
 	'spinner/index': 'src/spinner/index.ts',
 	'switch/index': 'src/switch/index.ts',
-	'table/index': 'src/table/index.ts',
 	'tabs/index': 'src/tabs/index.ts',
 	'testing/index': 'src/testing/index.ts',
 	'toast/index': 'src/toast/index.ts',
