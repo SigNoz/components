@@ -1,668 +1,777 @@
-import { Typography } from '@signozhq/ui';
-import type { Meta, StoryFn, StoryObj } from '@storybook/react-vite';
-import type React from 'react';
-import { getTransformedTypographyTokens } from '../utils.js';
+import { ExternalLink, SolidAlertCircle, SolidCheckCircle2 } from '@signozhq/icons';
+import { Typography, type TypographyColorType, type TypographyProps } from '@signozhq/ui';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { forwardRef, Fragment, type AnchorHTMLAttributes, type ReactNode } from 'react';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
+import { allModes } from '../.storybook/modes.js';
+import { waitForEffects } from './shared/play.js';
+import {
+	COLORS,
+	LONG_TEXT,
+	SENTENCE,
+	typographyArgTypes,
+	typographyParameters,
+	WEIGHT_NUMBERS,
+	WEIGHTS,
+} from './shared/typography-arg-types.js';
 import styles from './typography.stories.module.css';
 
-const typography = getTransformedTypographyTokens();
+type TextStyle = TypographyProps extends infer Props
+	? Props extends { variant: infer Variant; size: infer Size }
+		? { variant: Variant; size: Size }
+		: never
+	: never;
 
-const getFontSize = (variant: string): string => {
-	return typography.FONTSIZE[variant as keyof typeof typography.FONTSIZE] || '';
-};
+const TEXT_STYLES: TextStyle[] = [
+	{ variant: 'label', size: 'large' },
+	{ variant: 'label', size: 'medium' },
+	{ variant: 'label', size: 'base' },
+	{ variant: 'label', size: 'small' },
+	{ variant: 'uppercase', size: 'base' },
+	{ variant: 'uppercase', size: 'small' },
+	{ variant: 'code', size: 'base' },
+	{ variant: 'code', size: 'small' },
+	{ variant: 'paragraph', size: 'medium' },
+	{ variant: 'paragraph', size: 'base' },
+	{ variant: 'paragraph', size: 'small' },
+];
 
-const getFontWeight = (variant: string): string => {
-	return typography.FONTWEIGHT[variant as keyof typeof typography.FONTWEIGHT] || '';
-};
+const caption = {
+	variant: 'code',
+	size: 'small',
+	weight: 'regular',
+	color: 'tertiary',
+} as const;
 
-const FontSizeShowcase: React.FC = () => (
-	<div className={styles.showcaseContainer}>
-		<h1 className={styles.showcaseTitle}>Font Sizes</h1>
-		<div className={styles.showcaseGrid}>
-			{Object.keys(typography.FONTSIZE).map((variant) => (
-				<div key={variant} className={styles.showcaseItem}>
-					<h2 style={{ fontSize: getFontSize(variant) }}>
-						{variant} - {getFontSize(variant)}
-					</h2>
-					<p style={{ fontSize: getFontSize(variant) }}>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					</p>
-				</div>
-			))}
+const BOX_PROPERTIES = [
+	'margin',
+	'padding',
+	'max-width',
+	'gap',
+	'align-items',
+	'justify-content',
+	'text-align',
+	'font-variant-numeric',
+	'white-space',
+	'overflow',
+	'text-overflow',
+	'-webkit-line-clamp',
+];
+
+function capitalize(value: string): string {
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function readStyle(node: Element, names: string[]): Record<string, string> {
+	const style = getComputedStyle(node);
+
+	return Object.fromEntries(names.map((name) => [name, style.getPropertyValue(name)]));
+}
+
+function Caption({ children }: { children: string }) {
+	return (
+		<Typography {...caption} as="span" textOverflow="visible">
+			{children}
+		</Typography>
+	);
+}
+
+function Section({
+	title,
+	description,
+	children,
+}: {
+	title: string;
+	description: ReactNode;
+	children: ReactNode;
+}) {
+	return (
+		<div className="story-section">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="main"
+				as="h2"
+				textOverflow="wrap"
+			>
+				{title}
+			</Typography>
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				as="p"
+				textOverflow="wrap"
+			>
+				{description}
+			</Typography>
+			{children}
 		</div>
-	</div>
-);
+	);
+}
 
-const FontWeightShowcase: React.FC = () => (
-	<div className={styles.showcaseContainer}>
-		<h1 className={styles.showcaseTitle}>Font Weights</h1>
-		<div className={styles.showcaseGrid}>
-			{Object.keys(typography.FONTWEIGHT).map((variant) => (
-				<div key={variant} className={styles.showcaseItem}>
-					<h2 style={{ fontWeight: getFontWeight(variant) }}>
-						{variant} - {getFontWeight(variant)}
-					</h2>
-					<p style={{ fontWeight: getFontWeight(variant) }}>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					</p>
-				</div>
-			))}
-		</div>
-	</div>
-);
+const OVERFLOWS = [
+	{ textOverflow: 'wrap' },
+	{ textOverflow: 'visible' },
+	{ textOverflow: 'hidden' },
+	{ textOverflow: 'ellipsis' },
+] as const;
 
-export default {
+const DURATIONS = [
+	['frontend', '1,111.10'],
+	['checkout', '848.06'],
+	['payments', '11.71'],
+	['redis', '0.98'],
+] as const;
+
+const RouterLink = forwardRef<
+	HTMLAnchorElement,
+	AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }
+>(function RouterLink({ to, ...props }, ref) {
+	// eslint-disable-next-line jsx-a11y/anchor-has-content -- the children arrive through `props`.
+	return <a ref={ref} href={to} {...props} />;
+});
+
+const meta: Meta<typeof Typography> = {
 	title: 'Primitive Components/Typography',
 	component: Typography,
 	parameters: {
-		layout: 'fullscreen',
-	},
-	argTypes: {
-		variant: {
-			control: 'inline-radio',
-			options: ['title', 'text'],
-			description: 'Semantic variant – `title` renders as h2, `text` renders as p.',
-			table: { category: 'Appearance', defaultValue: { summary: 'text' } },
-		},
-		as: {
-			control: 'select',
-			options: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'div', 'label'],
-			description: 'Override the rendered HTML element.',
-			table: { category: 'Appearance' },
-		},
-		size: {
-			control: 'select',
-			options: [
-				// Semantic sizes (Ant Design compatible)
-				'small',
-				'base',
-				'medium',
-				'large',
-				// Legacy sizes
-				'xs',
-				'sm',
-				'lg',
-				'xl',
-				'2xl',
-				'3xl',
-				'4xl',
-				'5xl',
-				'6xl',
-				'7xl',
-				'8xl',
-				'9xl',
-			],
-			description:
-				'Font size token. Use semantic sizes (small/base/medium/large) for Ant Design compatibility.',
-			table: { category: 'Appearance', defaultValue: { summary: 'base' } },
-		},
-		weight: {
-			control: 'select',
-			options: [
-				'thin',
-				'extralight',
-				'light',
-				'normal',
-				'medium',
-				'semibold',
-				'bold',
-				'extrabold',
-				'black',
-			],
-			description: 'Font weight token (100–900).',
-			table: { category: 'Appearance', defaultValue: { summary: 'normal' } },
-		},
-		align: {
-			control: 'inline-radio',
-			options: ['left', 'center', 'right'],
-			description: 'Text alignment.',
-			table: { category: 'Appearance' },
-		},
-		truncate: {
-			control: { type: 'number', min: 1, max: 5 },
-			description: 'Number of lines before truncating with ellipsis.',
-			table: { category: 'Appearance' },
-		},
-		muted: {
-			control: 'boolean',
-			description: 'Apply a muted/secondary color treatment (deprecated, use color="muted").',
-			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
-		},
-		color: {
-			control: 'select',
-			options: [undefined, 'muted', 'danger', 'warning', 'success'],
-			description: 'Semantic color variant.',
-			table: { category: 'Appearance' },
-		},
-		strong: {
-			control: 'boolean',
-			description: 'Apply bold font weight.',
-			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
-		},
-		italic: {
-			control: 'boolean',
-			description: 'Apply italic font style.',
-			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
-		},
-		code: {
-			control: 'boolean',
-			description: 'Apply inline code styling.',
-			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Apply disabled styling.',
-			table: { category: 'Appearance', defaultValue: { summary: 'false' } },
-		},
-		copyable: {
-			control: 'boolean',
-			description: 'Enable copy to clipboard.',
-			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-		},
-		interactive: {
-			control: 'boolean',
-			description:
-				'Enable interactive hover styling (cursor pointer, hover color). Auto-enabled when onClick provided.',
-			table: { category: 'Behavior', defaultValue: { summary: 'false' } },
-		},
-		onClick: {
-			action: 'clicked',
-			description: 'Click handler for the typography element.',
-			table: { category: 'Events' },
-		},
-		onMouseEnter: {
-			action: 'mouseEnter',
-			description: 'Mouse enter handler.',
-			table: { category: 'Events' },
-		},
-		onMouseLeave: {
-			action: 'mouseLeave',
-			description: 'Mouse leave handler.',
-			table: { category: 'Events' },
-		},
-		level: {
-			control: 'select',
-			options: [undefined, 1, 2, 3, 4, 5],
-			description: 'Heading level (1-5). Only for variant="title".',
-			table: { category: 'Appearance' },
-		},
-		children: {
-			control: 'text',
-			description: 'Content to render.',
-			table: { category: 'Content' },
-		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes.',
-			table: { category: 'Styling' },
+		...typographyParameters,
+		docs: {
+			description: {
+				component:
+					'Text in one of the 33 Periscope text styles. Every font property and the layout come from props.',
+			},
 		},
 	},
-} as Meta<typeof Typography>;
+	argTypes: typographyArgTypes,
+	args: {
+		variant: 'paragraph',
+		size: 'base',
+		weight: 'regular',
+		color: 'main',
+		as: 'p',
+		textOverflow: 'wrap',
+		children: SENTENCE,
+	},
+};
+
+export default meta;
 
 type Story = StoryObj<typeof Typography>;
 
 export const Playground: Story = {
-	args: {
-		children: 'The quick brown fox jumps over the lazy dog',
-		variant: 'text',
-		size: 'base',
-		weight: 'normal',
-		muted: false,
+	parameters: {
+		chromatic: { disableSnapshot: true },
 	},
-	render: (props) => (
-		<div className={styles.playgroundContainer}>
-			<Typography {...props} />
+	render: (args) => (
+		<div className="story-container-lg">
+			<Typography {...args} />
 		</div>
 	),
 };
 
-export const FontSize: StoryFn = () => <FontSizeShowcase />;
-export const FontWeight: StoryFn = () => <FontWeightShowcase />;
-
-export const SemanticSizes: Story = {
+/**
+ * Every text style, every color, the four overflows, the layouts, the number features, nested text,
+ * the elements and `Typography.Link`, all in one snapshot. The cut `ellipsis` text has its tooltip
+ * opened by `play`, so the snapshot carries it.
+ */
+export const TypographyShowcase: Story = {
 	parameters: {
-		docs: {
-			description: {
-				story:
-					'Semantic size tokens matching Ant Design: `small` (12px), `base` (14px), `medium` (16px), `large` (20px). Recommended for new code.',
-			},
-		},
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
 	},
-	render: () => {
-		const sizes = [
-			{ name: 'small', px: '12px' },
-			{ name: 'base', px: '14px' },
-			{ name: 'medium', px: '16px' },
-			{ name: 'large', px: '20px' },
-		] as const;
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const hovered = canvas.getByTestId('overflow-ellipsis-hovered');
+		const flex = canvas.getByTestId('layout-flex-ellipsis');
 
-		return (
-			<div className={styles.sizesContainer}>
-				{sizes.map(({ name, px }) => (
-					<div key={name} className={styles.sizeRow}>
-						<span className={styles.sizeLabel}>
-							{name} ({px})
-						</span>
-						<Typography size={name}>The quick brown fox jumps over the lazy dog</Typography>
-					</div>
-				))}
-			</div>
+		await waitFor(() =>
+			expect(canvas.getByTestId('overflow-ellipsis')).toHaveAttribute('data-truncated'),
 		);
-	},
-};
-
-export const AllSizes: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Legacy size tokens from `xs` to `9xl`. Kept for backward compatibility. Prefer semantic sizes for new code.',
-			},
-		},
-	},
-	render: () => {
-		const sizes = [
-			'xs',
-			'sm',
-			'lg',
-			'xl',
-			'2xl',
-			'3xl',
-			'4xl',
-			'5xl',
-			'6xl',
-			'7xl',
-			'8xl',
-			'9xl',
-		] as const;
-
-		return (
-			<div className={styles.sizesContainer}>
-				{sizes.map((s) => (
-					<div key={s} className={styles.sizeRow}>
-						<span className={styles.sizeLabelSmall}>{s}</span>
-						<Typography size={s}>The quick brown fox jumps over the lazy dog</Typography>
-					</div>
-				))}
-			</div>
+		await waitFor(() => expect(hovered).toHaveAttribute('data-truncated'));
+		await waitFor(() =>
+			expect(canvas.getByTestId('overflow-ellipsis-2')).toHaveAttribute('data-truncated'),
 		);
-	},
-};
+		await waitFor(() => expect(flex).toHaveAttribute('data-truncated'));
+		expect(canvas.getByTestId('overflow-wrap')).not.toHaveAttribute('data-truncated');
+		for (const testId of ['overflow-hidden', 'overflow-ellipsis']) {
+			const style = getComputedStyle(canvas.getByTestId(testId));
+			expect([style.overflowX, style.overflowY]).toEqual(['clip', 'visible']);
+		}
+		expect(getComputedStyle(canvas.getByTestId('overflow-ellipsis-2')).overflowY).toBe('hidden');
+		expect(flex.querySelector('svg')?.getBoundingClientRect().width).toBe(12);
+		const nestedText = canvas.getByTestId('layout-flex-nested-text');
+		await waitFor(() => expect(nestedText).toHaveAttribute('data-truncated'));
+		expect(nestedText.getBoundingClientRect().right).toBeLessThanOrEqual(
+			canvas.getByTestId('layout-flex-nested').getBoundingClientRect().right,
+		);
+		const spaced = getComputedStyle(canvas.getByTestId('layout-spacing'));
+		expect([spaced.marginTop, spaced.marginBottom, spaced.marginLeft]).toEqual([
+			'8px',
+			'8px',
+			'0px',
+		]);
+		expect([spaced.paddingTop, spaced.paddingLeft]).toEqual(['4px', '8px']);
+		const inner = canvas.getByTestId('nested-inner');
+		const alone = inner.cloneNode(true) as HTMLElement;
+		canvasElement.append(alone);
+		const names = [
+			...Array.from(getComputedStyle(canvas.getByTestId('nested-outer'))).filter((name) =>
+				name.startsWith('--typography-internal-'),
+			),
+			...BOX_PROPERTIES,
+		];
+		const nested = readStyle(inner, names);
+		const standalone = readStyle(alone, names);
+		alone.remove();
+		expect(names).toEqual(
+			expect.arrayContaining(['--typography-internal-margin', '--typography-internal-max-lines']),
+		);
+		expect(nested).toEqual(standalone);
+		await waitForEffects();
 
-const ALL_WEIGHTS = [
-	{ name: 'thin' as const, value: 100 },
-	{ name: 'extralight' as const, value: 200 },
-	{ name: 'light' as const, value: 300 },
-	{ name: 'normal' as const, value: 400 },
-	{ name: 'medium' as const, value: 500 },
-	{ name: 'semibold' as const, value: 600 },
-	{ name: 'bold' as const, value: 700 },
-	{ name: 'extrabold' as const, value: 800 },
-	{ name: 'black' as const, value: 900 },
-];
+		fireEvent.pointerEnter(hovered);
+		fireEvent.mouseEnter(hovered);
+		fireEvent.mouseMove(hovered);
 
-export const AllWeights: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'All 9 font weight tokens from `thin` (100) to `black` (900).',
-			},
-		},
+		await waitFor(() =>
+			expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveTextContent(LONG_TEXT),
+		);
 	},
 	render: () => (
-		<div className={styles.sizesContainer}>
-			{ALL_WEIGHTS.map(({ name, value }) => (
-				<div key={name} className={styles.sizeRow}>
-					<span className={styles.weightLabel}>
-						{name.toUpperCase()} - {value}
+		<div className={`story-container-full ${styles.columnLayout}`}>
+			<Section
+				title="Text styles"
+				description={
+					<>
+						The 33 text styles, named the way Figma names them: <code>variant</code>,{' '}
+						<code>size</code> and <code>weight</code> are the three parts of{' '}
+						<code>Label / Base / 500</code>.
+					</>
+				}
+			>
+				<div className={styles.styleTable}>
+					{TEXT_STYLES.flatMap((style) =>
+						WEIGHTS.map((weight) => (
+							<Fragment key={`${style.variant}-${style.size}-${weight}`}>
+								<Caption>{`${capitalize(style.variant)} / ${capitalize(style.size)} / ${WEIGHT_NUMBERS[weight]}`}</Caption>
+								<Typography
+									{...style}
+									weight={weight}
+									color="main"
+									as="span"
+									textOverflow="visible"
+								>
+									Before we knew, we got some cake.
+								</Typography>
+							</Fragment>
+						)),
+					)}
+				</div>
+			</Section>
+
+			<Section
+				title="Colors"
+				description={
+					<>
+						Each hue draws in the label color of an outlined Badge of the same <code>color</code>.{' '}
+						<code>inherit</code> takes the color of the parent element, here a red one.
+					</>
+				}
+			>
+				<div className={styles.styleTable}>
+					{COLORS.filter(
+						(color): color is Exclude<TypographyColorType, 'inherit'> => color !== 'inherit',
+					).map((color) => (
+						<Fragment key={color}>
+							<Caption>{color}</Caption>
+							<Typography
+								variant="paragraph"
+								size="base"
+								weight="medium"
+								color={color}
+								as="span"
+								textOverflow="visible"
+							>
+								{SENTENCE}
+							</Typography>
+						</Fragment>
+					))}
+					<Caption>inherit</Caption>
+					<span className={styles.inheritParent}>
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="medium"
+							color="inherit"
+							as="span"
+							textOverflow="visible"
+						>
+							{SENTENCE}
+						</Typography>
 					</span>
-					<Typography size="xl" weight={name}>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				</div>
+			</Section>
+
+			<Section
+				title="Overflow"
+				description={
+					<>
+						The same long text in a 240px box with each <code>textOverflow</code>. While an{' '}
+						<code>ellipsis</code> text is cut, hovering it opens a tooltip with the full text.
+					</>
+				}
+			>
+				<div className={styles.overflowList}>
+					{OVERFLOWS.map((overflow) => (
+						<div key={overflow.textOverflow} className={styles.overflowRow}>
+							<Caption>{`textOverflow="${overflow.textOverflow}"`}</Caption>
+							<div className={styles.overflowBox}>
+								<Typography
+									variant="paragraph"
+									size="base"
+									weight="regular"
+									color="main"
+									as="p"
+									{...overflow}
+									testId={`overflow-${overflow.textOverflow}`}
+								>
+									{LONG_TEXT}
+								</Typography>
+							</div>
+						</div>
+					))}
+					<div className={styles.overflowRow}>
+						<Caption>{'textOverflow="ellipsis" maxLines={2}'}</Caption>
+						<div className={styles.overflowBox}>
+							<Typography
+								variant="paragraph"
+								size="base"
+								weight="regular"
+								color="main"
+								as="p"
+								textOverflow="ellipsis"
+								maxLines={2}
+								testId="overflow-ellipsis-2"
+							>
+								{LONG_TEXT}
+							</Typography>
+						</div>
+					</div>
+					<div className={`${styles.overflowRow} ${styles.hoveredRow}`}>
+						<div className={styles.overflowBox}>
+							<Typography
+								variant="paragraph"
+								size="base"
+								weight="regular"
+								color="main"
+								as="p"
+								textOverflow="ellipsis"
+								testId="overflow-ellipsis-hovered"
+							>
+								{LONG_TEXT}
+							</Typography>
+						</div>
+						<Caption>{'textOverflow="ellipsis", hovered'}</Caption>
+					</div>
+				</div>
+			</Section>
+
+			<Section
+				title="Layout"
+				description={
+					<>
+						A <code>flex</code> text lays out an icon and the text in one row, and only the text
+						cuts. A text inside it cuts on its own. An <code>inline-block</code> text has a box and
+						stays in the line. <code>align</code> aligns the lines of a block. The margin and
+						padding props take steps of the spacing scale, each 2px, for all sides, two or one.
+					</>
+				}
+			>
+				<div className={styles.overflowList}>
+					<div className={styles.overflowRow}>
+						<Caption>{'display="inline-flex" gap={2}'}</Caption>
+						<Typography
+							variant="label"
+							size="base"
+							weight="medium"
+							color="success"
+							as="span"
+							display="inline-flex"
+							gap={2}
+							textOverflow="visible"
+						>
+							<SolidCheckCircle2 size={12} />
+							Healthy
+						</Typography>
+					</div>
+					<div className={styles.overflowRow}>
+						<Caption>{'display="inline-block" minWidth={80}'}</Caption>
+						<span>
+							<Typography
+								variant="label"
+								size="base"
+								weight="medium"
+								color="secondary"
+								as="span"
+								display="inline-block"
+								minWidth={80}
+								textOverflow="visible"
+							>
+								Service
+							</Typography>
+							<Typography
+								variant="label"
+								size="base"
+								weight="medium"
+								color="main"
+								as="span"
+								textOverflow="visible"
+							>
+								checkout
+							</Typography>
+						</span>
+					</div>
+					<div className={styles.overflowRow}>
+						<Caption>{'display="flex" textOverflow="ellipsis"'}</Caption>
+						<div className={styles.overflowBox}>
+							<Typography
+								variant="label"
+								size="base"
+								weight="medium"
+								color="danger"
+								as="div"
+								display="flex"
+								gap={2}
+								textOverflow="ellipsis"
+								testId="layout-flex-ellipsis"
+							>
+								<SolidAlertCircle size={12} />
+								{LONG_TEXT}
+							</Typography>
+						</div>
+					</div>
+					<div className={styles.overflowRow}>
+						<Caption>{'display="flex", a text inside with textOverflow="ellipsis"'}</Caption>
+						<div className={styles.overflowBox}>
+							<Typography
+								variant="label"
+								size="base"
+								weight="medium"
+								color="main"
+								as="div"
+								display="flex"
+								gap={2}
+								textOverflow="visible"
+								testId="layout-flex-nested"
+							>
+								<SolidCheckCircle2 size={12} />
+								<Typography
+									variant="label"
+									size="base"
+									weight="regular"
+									color="secondary"
+									as="span"
+									display="block"
+									textOverflow="ellipsis"
+									testId="layout-flex-nested-text"
+								>
+									{LONG_TEXT}
+								</Typography>
+							</Typography>
+						</div>
+					</div>
+					{(['start', 'center', 'end'] as const).map((align) => (
+						<div key={align} className={styles.overflowRow}>
+							<Caption>{`align="${align}"`}</Caption>
+							<div className={styles.layoutBox}>
+								<Typography
+									variant="paragraph"
+									size="base"
+									weight="regular"
+									color="main"
+									as="p"
+									align={align}
+									textOverflow="wrap"
+								>
+									{SENTENCE}
+								</Typography>
+							</div>
+						</div>
+					))}
+					<div className={styles.overflowRow}>
+						<Caption>{'marginY={4} paddingY={2} paddingX={4}'}</Caption>
+						<div className={styles.layoutBox}>
+							<Typography
+								variant="paragraph"
+								size="base"
+								weight="regular"
+								color="main"
+								as="p"
+								marginY={4}
+								paddingY={2}
+								paddingX={4}
+								textOverflow="wrap"
+								testId="layout-spacing"
+							>
+								{SENTENCE}
+							</Typography>
+						</div>
+					</div>
+				</div>
+			</Section>
+
+			<Section
+				title="Numbers"
+				description={
+					<>
+						Digits are proportional by default. <code>tabularNumbers</code> goes on the number only,
+						where digits line up or change in place, and the unit stays outside it.{' '}
+						<code>slashedZero</code> goes on ids and hashes.
+					</>
+				}
+			>
+				<div className={styles.numbers}>
+					{([false, true] as const).map((tabularNumbers) => (
+						<div key={String(tabularNumbers)} className={styles.numbersColumn}>
+							<Caption>{tabularNumbers ? 'tabularNumbers' : 'proportional'}</Caption>
+							{DURATIONS.map(([service, duration]) => (
+								<div key={service} className={styles.numbersRow}>
+									<Typography
+										variant="label"
+										size="base"
+										weight="regular"
+										color="secondary"
+										as="span"
+										textOverflow="visible"
+									>
+										{service}
+									</Typography>
+									<Typography
+										variant="label"
+										size="base"
+										weight="regular"
+										color="main"
+										as="span"
+										display="block"
+										align="end"
+										width={80}
+										textOverflow="visible"
+										tabularNumbers={tabularNumbers}
+									>
+										{duration}
+									</Typography>
+									<Typography
+										variant="label"
+										size="base"
+										weight="regular"
+										color="tertiary"
+										as="span"
+										textOverflow="visible"
+									>
+										ms
+									</Typography>
+								</div>
+							))}
+						</div>
+					))}
+					<div className={styles.numbersColumn}>
+						<Caption>slashedZero</Caption>
+						<Typography
+							variant="code"
+							size="base"
+							weight="regular"
+							color="main"
+							as="code"
+							textOverflow="visible"
+							slashedZero
+						>
+							4f0a-27b0-0O
+						</Typography>
+					</div>
+				</div>
+			</Section>
+
+			<Section
+				title="Nested text"
+				description={
+					<>
+						A <code>Typography</code> inside another one states its own style. A bold word repeats
+						the style of the sentence and changes only <code>weight</code>.
+					</>
+				}
+			>
+				<div className={styles.layoutBox}>
+					<Typography
+						variant="paragraph"
+						size="base"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+					>
+						Logs are kept for{' '}
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="main"
+							as="span"
+							textOverflow="wrap"
+						>
+							15 days
+						</Typography>
+						, then archived.
 					</Typography>
 				</div>
-			))}
-		</div>
-	),
-};
+				<div className={styles.layoutBox}>
+					<Typography
+						variant="paragraph"
+						size="base"
+						weight="medium"
+						color="secondary"
+						as="div"
+						display="flex"
+						gap={4}
+						align="end"
+						verticalAlign="baseline"
+						width="100%"
+						minWidth={120}
+						maxWidth={280}
+						margin={2}
+						padding={2}
+						textOverflow="ellipsis"
+						maxLines={2}
+						tabularNumbers
+						slashedZero
+						testId="nested-outer"
+					>
+						Retention
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="main"
+							as="span"
+							display="block"
+							textOverflow="wrap"
+							testId="nested-inner"
+						>
+							15 days, then archived
+						</Typography>
+					</Typography>
+				</div>
+			</Section>
 
-export const HeadingVariant: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Using `variant="title"` renders as an `<h2>` by default with bold weight and tighter line-height. Combine with `as` to control the heading level.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.sizesContainer}>
-			<Typography variant="title" as="h1" size="5xl">
-				Heading 1
-			</Typography>
-			<Typography variant="title" as="h2" size="4xl">
-				Heading 2
-			</Typography>
-			<Typography variant="title" as="h3" size="3xl">
-				Heading 3
-			</Typography>
-			<Typography variant="title" as="h4" size="2xl">
-				Heading 4
-			</Typography>
-			<Typography variant="title" as="h5" size="xl">
-				Heading 5
-			</Typography>
-			<Typography variant="title" as="h6" size="lg">
-				Heading 6
-			</Typography>
-		</div>
-	),
-};
+			<Section
+				title="Elements"
+				description={
+					<>
+						<code>as</code> picks the element, never the look. A heading takes its size and weight
+						from the props.
+					</>
+				}
+			>
+				<div className={styles.overflowList}>
+					<Typography
+						variant="label"
+						size="large"
+						weight="bold"
+						color="main"
+						as="h3"
+						textOverflow="wrap"
+					>
+						Dashboards
+					</Typography>
+					<Typography
+						variant="uppercase"
+						size="small"
+						weight="medium"
+						color="secondary"
+						as="h4"
+						textOverflow="wrap"
+					>
+						Recently viewed
+					</Typography>
+					<ul className={styles.list}>
+						{['Kubernetes overview', 'Checkout latency', 'Redis'].map((name) => (
+							<Typography
+								key={name}
+								variant="paragraph"
+								size="base"
+								weight="regular"
+								color="main"
+								as="li"
+								textOverflow="wrap"
+							>
+								{name}
+							</Typography>
+						))}
+					</ul>
+				</div>
+			</Section>
 
-export const TextVariant: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'The default `variant="text"` renders as `<p>`. Use `as` to render as `<span>`, `<div>`, or `<label>`.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.sizesContainer}>
-			<div>
-				<Typography size="lg">
-					This is a paragraph of body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-				</Typography>
-			</div>
-			<div>
-				<Typography as="span" size="sm" muted>
-					This is a muted span element.
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const Alignment: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Control text alignment with the `align` prop.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.sizesContainer}>
-			<div className={styles.alignmentRow}>
-				<Typography align="left" size="lg" className={styles.alignmentRow}>
-					Left-aligned text
-				</Typography>
-			</div>
-			<div className={styles.alignmentRow}>
-				<Typography align="center" size="lg" className={styles.alignmentRow}>
-					Center-aligned text
-				</Typography>
-			</div>
-			<div className={styles.alignmentRow}>
-				<Typography align="right" size="lg" className={styles.alignmentRow}>
-					Right-aligned text
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const Truncation: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use the `truncate` prop to clamp text after N lines. Hover the text to see the full content via the browser title.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.truncationContainer}>
-			<div>
-				<Typography size="sm" muted className={styles.truncationLabel}>
-					truncate=1
-				</Typography>
-				<Typography truncate={1} size="base">
-					This is a long piece of text that should be truncated after a single line. It keeps going
-					and going to demonstrate the ellipsis behavior.
-				</Typography>
-			</div>
-			<div>
-				<Typography size="sm" muted className={styles.truncationLabel}>
-					truncate=2
-				</Typography>
-				<Typography truncate={2} size="base">
-					This is a long piece of text that should be truncated after two lines. It keeps going and
-					going to demonstrate the multi-line clamp behavior. The third line and beyond should be
-					hidden with an ellipsis.
-				</Typography>
-			</div>
-			<div>
-				<Typography size="sm" muted className={styles.truncationLabel}>
-					truncate=3
-				</Typography>
-				<Typography truncate={3} size="base">
-					This is a long piece of text that should be truncated after three lines. It keeps going
-					and going and going. We need enough text here to fill at least four lines so we can verify
-					the clamp works. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-					tempor incididunt ut labore.
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const MutedState: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use `muted` to apply a secondary/subdued color. Useful for captions, helper text, and secondary labels.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.colorContainer}>
-			<div>
-				<Typography size="lg" weight="bold">
-					Primary heading text
-				</Typography>
-			</div>
-			<div>
-				<Typography size="base">Normal body text with default color.</Typography>
-			</div>
-			<div>
-				<Typography size="sm" muted>
-					Muted helper text — secondary information or captions.
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const ColorVariants: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `color` prop for semantic color variants.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.colorContainer}>
-			<div>
-				<Typography>Default text</Typography>
-			</div>
-			<div>
-				<Typography color="muted">Muted text (secondary)</Typography>
-			</div>
-			<div>
-				<Typography color="success">Success text</Typography>
-			</div>
-			<div>
-				<Typography color="warning">Warning text</Typography>
-			</div>
-			<div>
-				<Typography color="danger">Danger/error text</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const TextDecorations: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `strong`, `italic`, and `code` props for text styling.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.colorContainer}>
-			<div>
-				<Typography strong>Strong/bold text</Typography>
-			</div>
-			<div>
-				<Typography italic>Italic text</Typography>
-			</div>
-			<div>
-				<Typography code>Inline code: const x = 1</Typography>
-			</div>
-			<div>
-				<Typography strong italic>
-					Strong and italic combined
-				</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const TitleLevels: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `level` prop with `variant="title"` for heading hierarchy.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.sizesContainer}>
-			<Typography.Title level={1}>Heading Level 1 (h1)</Typography.Title>
-			<Typography.Title level={2}>Heading Level 2 (h2)</Typography.Title>
-			<Typography.Title level={3}>Heading Level 3 (h3)</Typography.Title>
-			<Typography.Title level={4}>Heading Level 4 (h4)</Typography.Title>
-			<Typography.Title level={5}>Heading Level 5 (h5)</Typography.Title>
-		</div>
-	),
-};
-
-export const CompoundComponents: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use compound components for Ant Design-like API.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.sizesContainer}>
-			<div>
-				<Typography.Title level={2}>Typography.Title</Typography.Title>
-			</div>
-			<div>
-				<Typography.Text>Typography.Text - regular paragraph text</Typography.Text>
-			</div>
-			<div>
-				<Typography.Text strong>Typography.Text with strong</Typography.Text>
-			</div>
-			<div>
-				<Typography.Text color="danger">Typography.Text with color="danger"</Typography.Text>
-			</div>
-			<div>
-				<Typography.Link href="https://signoz.io">Typography.Link to SigNoz</Typography.Link>
-			</div>
-		</div>
-	),
-};
-
-export const Copyable: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `copyable` prop to enable copy to clipboard functionality.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.colorContainer}>
-			<div>
-				<Typography copyable>Click the icon to copy this text</Typography>
-			</div>
-			<div>
-				<Typography.Text code copyable>
-					npm install @signozhq/ui
-				</Typography.Text>
-			</div>
-		</div>
-	),
-};
-
-export const DisabledState: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story: 'Use `disabled` prop for non-interactive disabled appearance.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.colorContainer}>
-			<div>
-				<Typography>Normal text</Typography>
-			</div>
-			<div>
-				<Typography disabled>Disabled text - cannot be selected</Typography>
-			</div>
-		</div>
-	),
-};
-
-export const Interactive: Story = {
-	parameters: {
-		docs: {
-			description: {
-				story:
-					'Use `onClick` for click handlers or `interactive` for hover styling without click. Interactive text shows cursor pointer and color change on hover.',
-			},
-		},
-	},
-	render: () => (
-		<div className={styles.sizesContainer}>
-			<div>
-				<Typography>Normal text (no hover effect)</Typography>
-			</div>
-			<div>
-				<Typography onClick={() => alert('Clicked!')}>
-					Clickable text - click me (has onClick)
-				</Typography>
-			</div>
-			<div>
-				<Typography interactive>Interactive text - hover me (no onClick, just styling)</Typography>
-			</div>
-			<div>
-				<Typography
-					onClick={() => alert('Clicked!')}
-					onMouseEnter={() => console.log('Mouse entered')}
-					onMouseLeave={() => console.log('Mouse left')}
-				>
-					With all mouse handlers - click, enter, leave
-				</Typography>
-			</div>
+			<Section
+				title="Typography.Link"
+				description={
+					<>
+						Inside a sentence, a link repeats the <code>variant</code> and <code>size</code> of the
+						sentence. A <code>flex</code> link lays out an icon next to its text, and a router link
+						goes through <code>render</code>.
+					</>
+				}
+			>
+				<div className={styles.overflowList}>
+					<div className={styles.layoutBox}>
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="regular"
+							color="main"
+							as="p"
+							textOverflow="wrap"
+						>
+							Traces are sampled at 10%. Read the{' '}
+							<Typography.Link
+								variant="paragraph"
+								size="base"
+								weight="regular"
+								textOverflow="wrap"
+								href="https://signoz.io/docs"
+								target="_blank"
+							>
+								sampling docs
+							</Typography.Link>{' '}
+							to change it.
+						</Typography>
+					</div>
+					<Typography.Link
+						variant="label"
+						size="base"
+						weight="medium"
+						display="inline-flex"
+						gap={2}
+						textOverflow="visible"
+						href="https://signoz.io/docs"
+						target="_blank"
+					>
+						Open the docs
+						<ExternalLink size={12} />
+					</Typography.Link>
+					<Typography.Link
+						variant="label"
+						size="small"
+						weight="medium"
+						textOverflow="visible"
+						render={<RouterLink to="/settings" />}
+					>
+						Settings
+					</Typography.Link>
+				</div>
+			</Section>
 		</div>
 	),
 };

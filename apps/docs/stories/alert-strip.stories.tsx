@@ -109,10 +109,24 @@ export const AlertStripShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Colors
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Every color, once as <code>AlertStrip.Closeable</code> with an{' '}
 					<code>AlertStrip.Button</code> in <code>suffix</code>, as Figma draws it, and once as a
 					plain strip with an <code>AlertStrip.Link</code> inside the sentence.
@@ -120,7 +134,14 @@ export const AlertStripShowcase: Story = {
 				<div className={styles.matrix}>
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							<ColorStrips color={color} />
@@ -130,10 +151,24 @@ export const AlertStripShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The button, the link and the close button in each state. <code>hover</code> and{' '}
 					<code>focus</code> are forced by <code>storybook-addon-pseudo-states</code>. The button is
 					shown loading and disabled too.
@@ -141,7 +176,14 @@ export const AlertStripShowcase: Story = {
 				<div className={styles.matrix}>
 					{STATES.map((state) => (
 						<Fragment key={state}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{state}
 							</Typography>
 							<div data-state-cell={state}>
@@ -161,7 +203,14 @@ export const AlertStripShowcase: Story = {
 							</div>
 						</Fragment>
 					))}
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						loading
 					</Typography>
 					<AlertStrip
@@ -175,7 +224,14 @@ export const AlertStripShowcase: Story = {
 					>
 						Your payment failed.
 					</AlertStrip>
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						disabled
 					</Typography>
 					<AlertStrip
@@ -197,10 +253,24 @@ export const AlertStripShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Prefix and suffix
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					<code>prefix</code> sits before the message, here an outline icon and a{' '}
 					<code>Solid*</code> icon, which the strip sizes and paints. <code>suffix</code> sits at
 					the end of the region, before the close button, and takes several actions.
@@ -233,10 +303,24 @@ export const AlertStripShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Long content and a narrow parent
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Long content wraps to a second line and the strip grows, with the tapered ends stretched
 					to its height, while the suffix keeps its width. A word that cannot wrap breaks. In a
 					narrow parent the region shrinks with it.
@@ -271,10 +355,24 @@ export const AlertStripShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Placement
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The strip renders in normal flow, so it pushes the page aside. <code>side</code> names the
 					edge of the page it sits on: the bar runs along that edge and the region rises from it.
 					Figma shows it on the bottom edge, and where it renders is the call of the consumer.
@@ -282,7 +380,14 @@ export const AlertStripShowcase: Story = {
 				<div className={styles.matrix}>
 					{SIDES.map((side) => (
 						<Fragment key={side}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{side}
 							</Typography>
 							<div className={styles.page}>
@@ -308,10 +413,24 @@ export const AlertStripShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Strips in the app
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The strips SigNoz shows today, rebuilt on <code>AlertStrip</code>.
 				</Typography>
 				<div className={styles.stack}>

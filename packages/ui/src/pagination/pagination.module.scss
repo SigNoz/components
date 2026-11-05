@@ -21,10 +21,12 @@
 		var(--pagination-internal-padding-inline-end)
 	);
 	color: var(--pagination-color, var(--pagination-label));
-	font-size: var(--pagination-font-size, var(--periscope-font-size-base));
-	font-weight: var(--pagination-font-weight, var(--periscope-font-weight-regular));
-	line-height: var(--pagination-line-height, 1);
-	letter-spacing: var(--pagination-letter-spacing, -0.005em);
+	font-family: var(--pagination-font-family, var(--label-base-400-font-family));
+	font-size: var(--pagination-font-size, var(--label-base-400-font-size));
+	font-weight: var(--pagination-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--pagination-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--pagination-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--pagination-text-transform, var(--label-base-400-text-transform));
 	font-variant-numeric: var(
 		--pagination-font-variant-numeric,
 		slashed-zero lining-nums tabular-nums
@@ -102,6 +104,10 @@
 	background-color: var(--pagination-control-background-color, transparent);
 	color: var(--pagination-control-color, var(--pagination-label));
 	font: var(--pagination-control-font, inherit);
+	letter-spacing: var(--pagination-control-letter-spacing, inherit);
+	text-transform: var(--pagination-control-text-transform, inherit);
+	font-variant-numeric: var(--pagination-control-font-variant-numeric, inherit);
+	font-feature-settings: var(--pagination-control-font-feature-settings, inherit);
 	cursor: var(--pagination-control-cursor, pointer);
 	transition-property: var(--pagination-control-transition-property, color);
 	transition-duration: var(--pagination-control-transition-duration, 150ms);

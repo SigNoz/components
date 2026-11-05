@@ -153,11 +153,25 @@ const CONTENT: { label: string; title: ReactNode }[] = [
 		label: 'Rich content',
 		title: (
 			<>
-				<Typography as="span" weight="medium">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="wrap"
+				>
 					Custom tooltip
 				</Typography>
 				<br />
-				<Typography as="span" size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="span"
+					textOverflow="wrap"
+				>
 					With multiple lines
 				</Typography>
 			</>
@@ -185,15 +199,36 @@ const METRICS: [label: string, value: string][] = [
 function MetricCard({ wide = false }: { wide?: boolean }): ReactElement {
 	return (
 		<div className={`${styles.metricCard} ${wide ? styles.wideCard : ''}`}>
-			<Typography as="span" weight="medium">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="wrap"
+			>
 				checkout-api
 			</Typography>
 			{METRICS.map(([label, value]) => (
 				<div key={label} className={styles.metricRow}>
-					<Typography as="span" size="sm">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="span"
+						textOverflow="wrap"
+					>
 						{label}
 					</Typography>
-					<Typography as="span" size="sm">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="span"
+						textOverflow="wrap"
+					>
 						{value}
 					</Typography>
 				</div>
@@ -267,10 +302,24 @@ export const TooltipShowcase: Story = {
 			<div className="story-container-full">
 				<div className={styles.showcase}>
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Placement
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							<code>side</code> picks which side of the trigger the tooltip opens against,{' '}
 							<code>align</code> where it sits along that side. Both are preferences: a tooltip
 							flips to the opposite side and shifts along it on its own rather than running off the
@@ -298,10 +347,24 @@ export const TooltipShowcase: Story = {
 					</div>
 
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Offsets
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							<code>sideOffset</code> is the gap between the tooltip and the trigger, 4px by
 							default. <code>alignOffset</code> slides the tooltip along the side it opens against,
 							and only does anything for <code>align=&quot;start&quot;</code> or{' '}
@@ -324,10 +387,24 @@ export const TooltipShowcase: Story = {
 					</div>
 
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Content
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							<code>title</code> takes any node. The popup caps its width at <code>26.25rem</code>{' '}
 							and clamps itself at six lines, and an empty title (<code>undefined</code>,{' '}
 							<code>null</code>, <code>false</code> or <code>&apos;&apos;</code>) renders no popup
@@ -349,10 +426,24 @@ export const TooltipShowcase: Story = {
 					</div>
 
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Element content
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							The six-line clamp counts lines of text, so a card of rows is never cut short by it
 							and the popup grows as tall as the card. Width is the cap that still bites: past{' '}
 							<code>26.25rem</code> the popup clips the card, and it has no scrollbar to reach the
@@ -384,10 +475,24 @@ export const TooltipShowcase: Story = {
 					</div>
 
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Stacking
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Two tooltips anchored to the same element would open on the same hover and render on
 							top of each other, so a tooltip inside the trigger of another one adds its title to
 							that popup instead: the outer title first, a divider, then everything below it. An
@@ -433,10 +538,24 @@ export const TooltipShowcase: Story = {
 					</div>
 
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Triggers
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							The trigger is the element it was given, not a wrapper around it, so the tooltip adds
 							nothing to the layout. Children that are not an element get a plain{' '}
 							<code>button</code> to hang off.
@@ -472,10 +591,24 @@ export const TooltipShowcase: Story = {
 					</div>
 
 					<div className="story-section">
-						<Typography size="base" weight="semibold">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							Container
 						</Typography>
-						<Typography size="sm">
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
 							<code>container</code> is the element the popup is portalled into,{' '}
 							<code>document.body</code> by default. Inside a <code>Dialog</code> or{' '}
 							<code>Drawer</code> the default is its panel, so the modal leaves the tooltip

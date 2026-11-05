@@ -134,10 +134,28 @@ function Section({
 }): ReactElement {
 	return (
 		<section className="story-section" aria-label={title}>
-			<Typography size="base" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			{description === undefined ? null : <Typography size="sm">{description}</Typography>}
+			{description === undefined ? null : (
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					{description}
+				</Typography>
+			)}
 			<div className={styles.panel}>{children}</div>
 		</section>
 	);
@@ -147,7 +165,14 @@ function Row({ label, children }: { label: string; children: ReactNode }): React
 	return (
 		<div className={styles.row}>
 			<div className={styles.rowLabel}>
-				<Typography size="sm" color="muted">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+				>
 					{label}
 				</Typography>
 			</div>
@@ -326,7 +351,14 @@ export const AvatarShowcase: Story = {
 						<Avatar color="primary" name={name} size="sm" testId={`initials-sm-${index}`} />
 						<Avatar color="primary" name={name} size="md" testId={`initials-md-${index}`} />
 						<div className={styles.caseName}>
-							<Typography size="sm" color="muted">
+							<Typography
+								variant="paragraph"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+							>
 								{name}
 							</Typography>
 						</div>

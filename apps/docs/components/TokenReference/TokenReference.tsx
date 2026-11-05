@@ -15,7 +15,7 @@ export type SemanticTokenGroup =
 	| 'accents'
 	| 'sidebar'
 	| 'charts'
-	| 'fonts'
+	| 'typography'
 	| 'base'
 	| 'alerts'
 	| 'legacy';
@@ -98,7 +98,7 @@ const GROUPS_ORDER: SemanticTokenGroup[] = [
 	'accents',
 	'sidebar',
 	'charts',
-	'fonts',
+	'typography',
 	'base',
 	'alerts',
 	'legacy',
@@ -109,16 +109,19 @@ function groupTokensByGroup(tokens: TokenData[]): Map<string, TokenData[]> {
 
 	for (const token of tokens) {
 		const group = token.group || 'other';
-		if (!grouped.has(group)) {
-			grouped.set(group, []);
+		const groupTokens = grouped.get(group);
+		if (groupTokens) {
+			groupTokens.push(token);
+		} else {
+			grouped.set(group, [token]);
 		}
-		grouped.get(group)!.push(token);
 	}
 
 	const sortedGroups = new Map<string, TokenData[]>();
 	for (const group of GROUPS_ORDER) {
-		if (grouped.has(group)) {
-			sortedGroups.set(group, grouped.get(group)!);
+		const groupTokens = grouped.get(group);
+		if (groupTokens) {
+			sortedGroups.set(group, groupTokens);
 		}
 	}
 	for (const [group, tokens] of grouped) {
@@ -137,7 +140,7 @@ export const GROUP_LABELS: Record<string, string> = {
 	accents: 'Accent Colors',
 	sidebar: 'Sidebar',
 	charts: 'Chart Colors',
-	fonts: 'Typography',
+	typography: 'Typography Colors',
 	base: 'Base Colors',
 	alerts: 'Alerts',
 	legacy: 'Legacy Tokens',
@@ -151,7 +154,8 @@ export const GROUP_DESCRIPTIONS: Record<string, string> = {
 	accents: 'Brand and semantic accent colors for highlights and data visualization.',
 	sidebar: 'Tokens specific to sidebar navigation components.',
 	charts: 'Color palette optimized for data visualization and charts.',
-	fonts: 'Typography font family definitions.',
+	typography:
+		'Text colors of Typography. Main, secondary and tertiary follow the l1 to l3 foregrounds; each hue is the label color of an outlined badge of that color.',
 	base: 'Fundamental black and white base colors.',
 	alerts: 'Alert strip and notification styling tokens.',
 	legacy: 'Deprecated tokens maintained for backward compatibility. Migrate to semantic tokens.',
@@ -235,10 +239,25 @@ export function TokenReference({
 				{showHeader && (
 					<div className={styles.header}>
 						<div>
-							<Typography size="2xl" weight="bold">
+							<Typography
+								variant="label"
+								size="large"
+								weight="bold"
+								color="inherit"
+								as="p"
+								textOverflow="wrap"
+							>
 								{title}
 							</Typography>
-							<Typography size="sm" color="muted" className={styles.headerTitle}>
+							<Typography
+								variant="paragraph"
+								size="small"
+								weight="regular"
+								color="secondary"
+								as="p"
+								textOverflow="wrap"
+								marginTop={2}
+							>
 								{description}
 							</Typography>
 						</div>
@@ -289,7 +308,14 @@ export function TokenReference({
 				)}
 
 				<div className={styles.controls}>
-					<Typography size="sm" color="muted">
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+					>
 						Showing {filteredTokens.length} tokens
 						{searchQuery && ` matching "${searchQuery}"`}
 						{selectedCategory && ` in ${selectedCategory}`}

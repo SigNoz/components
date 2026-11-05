@@ -16,6 +16,8 @@
   // The `width`/`maxWidth` props arrive as the internal pair, so a token still outranks a call site.
   inline-size: var(--tabs-inline-size, var(--tabs-internal-inline-size, 100%));
   max-inline-size: var(--tabs-max-inline-size, var(--tabs-internal-max-inline-size, 100%));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 }
 
 // Bar content sits at the outer edges, and the spacers between it and the list
@@ -280,9 +282,12 @@
   color: var(--tabs-text-color, var(--tabs-label));
   background-color: var(--tabs-trigger-background-color, transparent);
   border: var(--tabs-trigger-border, none);
+  box-sizing: var(--tabs-trigger-box-sizing, border-box);
 
   // A navigating tab renders as an anchor, which the user agent underlines.
   text-decoration: var(--tabs-trigger-text-decoration, none);
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &:hover {
     color: var(--tabs-hover-text-color, var(--tabs-label-hover));
@@ -305,10 +310,14 @@
     max-inline-size: var(--tabs-trigger-primary-max-inline-size, 100%);
     border-radius: var(--tabs-trigger-primary-border-radius, var(--tabs-primary-radius));
     padding: var(--tabs-trigger-primary-padding, var(--spacing-3));
+    min-block-size: var(--tabs-trigger-primary-min-block-size, var(--spacing-16));
     white-space: var(--tabs-trigger-primary-white-space, nowrap);
-    font-size: var(--tabs-trigger-primary-font-size, var(--periscope-font-size-base));
-    font-weight: var(--tabs-trigger-primary-font-weight, var(--font-weight-normal));
-    line-height: var(--tabs-trigger-primary-line-height, 20px);
+    font-family: var(--tabs-trigger-primary-font-family, var(--label-base-400-font-family));
+    font-size: var(--tabs-trigger-primary-font-size, var(--label-base-400-font-size));
+    font-weight: var(--tabs-trigger-primary-font-weight, var(--label-base-400-font-weight));
+    line-height: var(--tabs-trigger-primary-line-height, var(--label-base-400-line-height));
+    letter-spacing: var(--tabs-trigger-primary-letter-spacing, var(--label-base-400-letter-spacing));
+    text-transform: var(--tabs-trigger-primary-text-transform, var(--label-base-400-text-transform));
     position: var(--tabs-trigger-primary-position, relative);
     z-index: var(--tabs-trigger-primary-z-index, 10);
     color: var(--tabs-trigger-primary-color, var(--tabs-primary-label));
@@ -351,7 +360,22 @@
     gap: var(--tabs-internal-secondary-gap);
     white-space: var(--tabs-trigger-secondary-white-space, nowrap);
     padding: var(--tabs-trigger-secondary-padding, var(--spacing-4) var(--spacing-16));
-    font-size: var(--tabs-trigger-secondary-font-size, var(--periscope-font-size-base));
+    min-block-size: var(
+      --tabs-trigger-secondary-min-block-size,
+      calc(var(--spacing-16) + 2 * var(--tabs-trigger-secondary-border-width, 1px))
+    );
+    font-family: var(--tabs-trigger-secondary-font-family, var(--label-base-400-font-family));
+    font-size: var(--tabs-trigger-secondary-font-size, var(--label-base-400-font-size));
+    font-weight: var(--tabs-trigger-secondary-font-weight, var(--label-base-400-font-weight));
+    line-height: var(--tabs-trigger-secondary-line-height, var(--label-base-400-line-height));
+    letter-spacing: var(
+      --tabs-trigger-secondary-letter-spacing,
+      var(--label-base-400-letter-spacing)
+    );
+    text-transform: var(
+      --tabs-trigger-secondary-text-transform,
+      var(--label-base-400-text-transform)
+    );
     cursor: var(--tabs-trigger-secondary-cursor, pointer);
     transition: var(--tabs-trigger-secondary-transition, color 150ms ease);
     border-width: var(--tabs-trigger-secondary-border-width, 1px);
@@ -508,6 +532,14 @@
 .tabs__content {
   margin: var(--tabs-content-margin, var(--spacing-4) 0px 0px 0px);
   padding: var(--tabs-content-padding, var(--spacing-4));
+  font-family: var(--tabs-content-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--tabs-content-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--tabs-content-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--tabs-content-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--tabs-content-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--tabs-content-text-transform, var(--paragraph-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &[data-no-content-padding] {
     padding: var(--tabs-content-no-padding-padding, 0);
@@ -534,7 +566,7 @@
   // Past this the label truncates and shows its full text in a tooltip, so one
   // long label cannot take the bar. No spacing token is this size.
   max-inline-size: var(--tabs-label-max-inline-size, 120px);
-  overflow: var(--tabs-label-overflow, hidden);
+  overflow: var(--tabs-label-overflow, clip visible);
   white-space: var(--tabs-label-white-space, nowrap);
   text-overflow: var(--tabs-label-text-overflow, ellipsis);
 }

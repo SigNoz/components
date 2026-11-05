@@ -23,7 +23,6 @@ export const externalPatterns = [
 	/@radix-ui\/.*$/,
 	/^@base-ui\/react(\/.*)?$/,
 	/^@signozhq\/.*$/,
-	'copy-text-to-clipboard',
 ];
 
 export default function getViteLibConfig(

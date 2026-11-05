@@ -64,7 +64,7 @@
  * | `--avatar-success-background-color` | `var(--avatar-success-background)` |
  * | `--avatar-success-color` | `var(--avatar-success-foreground)` |
  * | `--avatar-success-foreground` | `-` |
- * | `--avatar-text-transform` | `none` |
+ * | `--avatar-text-transform` | `var(--avatar-internal-text-transform)` |
  * | `--avatar-user-select` | `none` |
  * | `--avatar-vertical-align` | `middle` |
  * | `--avatar-warning-background` | `-` |

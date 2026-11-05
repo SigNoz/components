@@ -46,7 +46,16 @@ const IconCell = React.memo(
 					<div className={styles.iconWrapper}>
 						<Icon size={size} strokeWidth={strokeWidth} color={color} />
 					</div>
-					<Typography size="sm" className={styles.iconName}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+						align="center"
+						marginBottom={4}
+					>
 						{name}
 					</Typography>
 					<Button

@@ -5,16 +5,23 @@ import { type RefCallback, useCallback, useRef, useState } from 'react';
 // is a real truncation.
 const LABEL_OVERFLOW_TOLERANCE_PX = 1;
 
-function isLabelTruncated(label: HTMLElement): boolean {
+export function isLabelTruncated(label: HTMLElement): boolean {
 	return label.scrollWidth - label.clientWidth > LABEL_OVERFLOW_TOLERANCE_PX;
 }
 
-export function useIsLabelTruncated(enabled: boolean): [boolean, RefCallback<HTMLSpanElement>] {
+export function isLabelTruncatedInHeight(label: HTMLElement): boolean {
+	return label.scrollHeight - label.clientHeight > LABEL_OVERFLOW_TOLERANCE_PX;
+}
+
+export function useIsLabelTruncated(
+	enabled: boolean,
+	isTruncated: (node: HTMLElement) => boolean = isLabelTruncated,
+): [boolean, RefCallback<HTMLElement>] {
 	const [truncated, setTruncated] = useState(false);
 	const stopMeasuring = useRef<(() => void) | null>(null);
 
 	const labelRef = useCallback(
-		(node: HTMLSpanElement | null): void => {
+		(node: HTMLElement | null): void => {
 			stopMeasuring.current?.();
 			stopMeasuring.current = null;
 
@@ -27,7 +34,7 @@ export function useIsLabelTruncated(enabled: boolean): [boolean, RefCallback<HTM
 				return;
 			}
 
-			const measure = (): void => setTruncated(isLabelTruncated(node));
+			const measure = (): void => setTruncated(isTruncated(node));
 
 			const resizeObserver = new ResizeObserver(measure);
 			resizeObserver.observe(node);
@@ -44,7 +51,7 @@ export function useIsLabelTruncated(enabled: boolean): [boolean, RefCallback<HTM
 				fonts?.removeEventListener('loadingdone', measure);
 			};
 		},
-		[enabled],
+		[enabled, isTruncated],
 	);
 
 	return [enabled && truncated, labelRef];

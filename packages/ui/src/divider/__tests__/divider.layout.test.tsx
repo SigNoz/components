@@ -11,7 +11,6 @@ beforeEach(() => {
 	tokens.textContent = `:root {
 		--spacing-4: 8px;
 		--spacing-6: 12px;
-		--font-size-sm: 14px;
 		--divider-border: rgb(1, 2, 3);
 	}`;
 	document.head.append(tokens);

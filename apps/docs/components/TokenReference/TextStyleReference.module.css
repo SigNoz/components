@@ -1,0 +1,111 @@
+.container {
+	min-height: 100vh;
+	background-color: var(--l1-background);
+	padding: 1.5rem;
+	padding-top: 0;
+}
+
+.content {
+	max-width: 80rem;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.table {
+	border-radius: 0.5rem;
+	border: 1px solid var(--l2-border);
+	background-color: var(--l1-background);
+	overflow: hidden;
+}
+
+.tableHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--l2-border);
+	background-color: var(--l2-background);
+}
+
+.columnHeaders,
+.row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 12rem;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+}
+
+.columnHeaders {
+	padding-block: 0.5rem;
+	border-bottom: 1px solid var(--l2-border);
+	background-color: var(--l2-background);
+	color: var(--l3-foreground);
+	font-family: var(--uppercase-small-500-font-family);
+	font-size: var(--uppercase-small-500-font-size);
+	font-weight: var(--uppercase-small-500-font-weight);
+	line-height: var(--uppercase-small-500-line-height);
+	letter-spacing: var(--uppercase-small-500-letter-spacing);
+	text-transform: var(--uppercase-small-500-text-transform);
+}
+
+.row {
+	border-bottom: 1px solid var(--l2-border);
+}
+
+.row:last-child {
+	border-bottom: none;
+}
+
+.sample {
+	margin: 0;
+	min-width: 0;
+	color: var(--l1-foreground);
+	overflow-wrap: anywhere;
+}
+
+.name {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.nameCode {
+	padding: 0;
+	background: none;
+	color: var(--l1-foreground);
+	font-family: var(--code-base-500-font-family);
+	font-size: var(--code-base-500-font-size);
+	font-weight: var(--code-base-500-font-weight);
+	line-height: var(--code-base-500-line-height);
+	letter-spacing: var(--code-base-500-letter-spacing);
+}
+
+.value,
+.valueHeader {
+	display: none;
+}
+
+.value {
+	color: var(--l2-foreground);
+	white-space: nowrap;
+	font-family: var(--code-small-400-font-family);
+	font-size: var(--code-small-400-font-size);
+	font-weight: var(--code-small-400-font-weight);
+	line-height: var(--code-small-400-line-height);
+	letter-spacing: var(--code-small-400-letter-spacing);
+}
+
+@media (min-width: 1024px) {
+	.columnHeaders,
+	.row {
+		grid-template-columns: minmax(0, 1fr) 12rem repeat(5, 6.5rem);
+	}
+
+	.value,
+	.valueHeader {
+		display: block;
+	}
+}

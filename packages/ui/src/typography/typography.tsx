@@ -1,455 +1,241 @@
-import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
-import copy from 'copy-text-to-clipboard';
-import type React from 'react';
-import { forwardRef, useState } from 'react';
-import { cn } from '../lib/utils.js';
+import { forwardRef, useMemo, type ElementType } from 'react';
+import { mergeRefs } from '../lib/merge-refs.js';
+import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
+import type { RejectedProps } from '../lib/utils.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
+import { TypographyLink } from './subcomponents/typography-link.js';
+import type { TypographyProps } from './types.js';
 import styles from './typography.module.scss';
-
-type TypographySize =
-	// Semantic sizes (Ant Design compatible)
-	| 'small'
-	| 'base'
-	| 'medium'
-	| 'large'
-	// Legacy sizes (for compatibility)
-	| 'xs'
-	| 'sm'
-	| 'lg'
-	| 'xl'
-	| '2xl'
-	| '3xl'
-	| '4xl'
-	| '5xl'
-	| '6xl'
-	| '7xl'
-	| '8xl'
-	| '9xl';
-
-type TypographyWeight =
-	| 'thin'
-	| 'extralight'
-	| 'light'
-	| 'normal'
-	| 'medium'
-	| 'semibold'
-	| 'bold'
-	| 'extrabold'
-	| 'black';
-
-type TypographyElement =
-	| 'h1'
-	| 'h2'
-	| 'h3'
-	| 'h4'
-	| 'h5'
-	| 'h6'
-	| 'p'
-	| 'span'
-	| 'div'
-	| 'label'
-	| 'a';
-
-type TypographyAlign = 'left' | 'center' | 'right';
-
-type TypographyVariant = 'title' | 'text';
-
-type TypographyColor = 'muted' | 'danger' | 'warning' | 'success';
-
-type TypographyDisplay = 'inline' | 'block';
-
-type TypographyLevel = 1 | 2 | 3 | 4 | 5;
-
-interface TypographyProps extends Pick<
-	React.ComponentProps<'div'>,
-	'children' | 'className' | 'id' | 'style' | 'title' | 'role' | 'tabIndex'
-> {
-	/**
-	 * Click handler for the typography element.
-	 */
-	onClick?: React.MouseEventHandler<unknown>;
-
-	/**
-	 * Mouse enter handler for the typography element.
-	 */
-	onMouseEnter?: React.MouseEventHandler<unknown>;
-
-	/**
-	 * Mouse leave handler for the typography element.
-	 */
-	onMouseLeave?: React.MouseEventHandler<unknown>;
-	/**
-	 * The variant determines the semantic role of the typography.
-	 * - `title` renders as heading element
-	 * - `text` renders as `p` by default
-	 * @default 'text'
-	 */
-	variant?: TypographyVariant;
-
-	/**
-	 * The HTML element to render.
-	 * If not provided, defaults based on variant and level.
-	 */
-	as?: TypographyElement;
-
-	/**
-	 * Use the Slot pattern to merge props onto a child element.
-	 * @default false
-	 */
-	asChild?: boolean;
-
-	/**
-	 * The font size token.
-	 * @default 'base'
-	 */
-	size?: TypographySize;
-
-	/**
-	 * The font weight token.
-	 * @default 'normal'
-	 */
-	weight?: TypographyWeight;
-
-	/**
-	 * Text alignment.
-	 */
-	align?: TypographyAlign;
-
-	/**
-	 * Truncate text with an ellipsis after a given number of lines.
-	 * Set to `1` for single-line truncation.
-	 */
-	truncate?: number;
-
-	/**
-	 * Apply a muted/secondary color treatment.
-	 * @default false
-	 * @deprecated Use `color="muted"` instead
-	 */
-	muted?: boolean;
-
-	/**
-	 * Semantic color variant.
-	 */
-	color?: TypographyColor;
-
-	/**
-	 * Apply bold font weight.
-	 * @default false
-	 */
-	strong?: boolean;
-
-	/**
-	 * Apply italic font style.
-	 * @default false
-	 */
-	italic?: boolean;
-
-	/**
-	 * Apply inline code styling.
-	 * @default false
-	 */
-	code?: boolean;
-
-	/**
-	 * Apply disabled styling.
-	 * @default false
-	 */
-	disabled?: boolean;
-
-	/**
-	 * Enable copy to clipboard functionality.
-	 * @default false
-	 */
-	copyable?: boolean;
-
-	/**
-	 * Heading level (1-5). Only applies when variant="title".
-	 * Sets both the HTML element (h1-h5) and default styling.
-	 */
-	level?: TypographyLevel;
-
-	/**
-	 * Link href. When provided, renders as anchor element.
-	 */
-	href?: string;
-
-	/**
-	 * Link target attribute.
-	 */
-	target?: '_blank' | '_self' | '_parent' | '_top';
-
-	/**
-	 * Link rel attribute.
-	 */
-	rel?: string;
-
-	/**
-	 * The testId associated with the element.
-	 */
-	testId?: string;
-
-	/**
-	 * Enable interactive hover styling (cursor pointer, hover color change).
-	 * Automatically enabled when onClick is provided.
-	 * @default false
-	 */
-	interactive?: boolean;
-
-	/**
-	 * CSS display property for the typography element.
-	 * - `inline` (default for text variant)
-	 * - `block` for block-level display
-	 */
-	display?: TypographyDisplay;
-}
-
-const levelTagMap: Record<TypographyLevel, TypographyElement> = {
-	1: 'h1',
-	2: 'h2',
-	3: 'h3',
-	4: 'h4',
-	5: 'h5',
-};
-
-const defaultTagMap: Record<TypographyVariant, TypographyElement> = {
-	title: 'h2',
-	text: 'p',
-};
+import {
+	getTypographyLook,
+	isFlexDisplay,
+	isTypographyTruncated,
+	resolveTypographyDisplay,
+	splitTypographySpacing,
+	wrapTextRuns,
+} from './utils.js';
 
 /**
- * A flexible typography component for rendering text with consistent styling.
- * Supports variants (title/text), semantic colors, truncation, and copy-to-clipboard.
+ * Renders text in one of the 33 Periscope text styles, as the element `as` names. Use
+ * `Typography.Link` for a navigation inside or next to text.
  *
- * @example Basic text
+ * Every `aria-*` and any `data-*` are forwarded, with `id`, `role`, `htmlFor` and the mouse
+ * handlers. There is no `className` or `style`: every font property and the layout come from the
+ * props.
+ *
+ * Visual values are `--typography-*` custom properties, defaults in the `css-tokens` region of
+ * [./index.ts](./index.ts).
+ *
+ * The text is not focusable and has no role of its own. A heading is `as="h2"` or the level the
+ * page outline needs, never a consequence of `size`. `uppercase` changes the case with CSS only, so
+ * a screen reader reads the words as written.
+ *
+ * ### Layout
+ *
+ * `display` follows `as` when it is not set: `span`, `label` and `code` are inline, the other
+ * elements are blocks. An inline text has no box, so the types reject `align`, `width`, `minWidth`,
+ * `maxWidth`, the margin and padding props and the `hidden` and `ellipsis` overflows on it, until
+ * `display` is `block`, `inline-block`, `flex` or `inline-flex`. `inline-block` is for a text that
+ * needs a box and stays in the line; `flex` and `inline-flex` are for an icon next to the text.
+ *
+ * In a `flex` or `inline-flex` text, each run of text in `children` sits in its own span, which
+ * takes the overflow. So with `ellipsis` an icon next to the text stays whole and only the text
+ * cuts. A `Typography` or `Typography.Link` inside it shrinks and cuts on its own overflow; every
+ * other child keeps its size.
+ *
+ * Headings, paragraphs and list items render with no margin until `margin` sets one.
+ *
+ * `margin`, `padding` and `gap` take steps of the spacing scale, each 2px: `margin={4}` is 8px.
+ * `marginX` and `marginY` win over `margin`, and one side such as `marginBottom` wins over both, so
+ * `margin={2} marginBottom={6}` is 4px on three sides and 12px below. Padding works the same way.
+ *
+ * ### Ellipsis
+ *
+ * `textOverflow="ellipsis"` cuts the text after `maxLines` lines at the edge of its box, with
+ * `min-width: 0` so the cut also works on a flex child. The text is measured again when its size
+ * changes and when the font loads.
+ *
+ * While it is cut, hovering it opens a tooltip with the full text. The full text stays in the DOM,
+ * so a screen reader reads all of it and a copy returns all of it. The tooltip does not open from
+ * the keyboard, since the text is not focusable.
+ *
+ * ### Nested text
+ *
+ * A `Typography` inside another one states its own style, color, element and overflow, since they
+ * are required. Nothing passes down from the parent, except the color through `color="inherit"`.
+ * A `--typography-*` override is different: it reaches every text under the element it is set on,
+ * nested ones included, since custom properties inherit.
+ *
+ * ### Asserting on it
+ *
+ * `testId` becomes `data-testid` on the element. Otherwise use the data attributes, never the
+ * hashed class names.
+ *
+ * | root attribute | value |
+ * |---|---|
+ * | `data-slot` | `"typography"` |
+ * | `data-variant`, `data-size`, `data-weight`, `data-color`, `data-text-overflow` | mirror the prop, always present |
+ * | `data-display` | the display the text renders with, including the one that comes from `as` |
+ * | `data-align` | mirrors `align`, only when set |
+ * | `data-vertical-align` | mirrors `verticalAlign`, only on a `flex` or `inline-flex` text |
+ * | `data-max-lines` | the number of lines, only with `ellipsis` |
+ * | `data-tabular-numbers`, `data-slashed-zero` | present only when the prop is set |
+ * | `data-truncated` | present only while the text is cut by `ellipsis` |
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `typography` | always, on the element |
+ * | `typography-text` | on each run of text of a `flex` or `inline-flex` text |
+ *
+ * @example
  * ```tsx
- * <Typography>Default paragraph text</Typography>
+ * <Typography
+ *   variant="paragraph"
+ *   size="base"
+ *   weight="regular"
+ *   color="secondary"
+ *   as="p"
+ *   textOverflow="wrap"
+ * >
+ *   Data is kept for 15 days, then archived.
+ * </Typography>
  * ```
  *
- * @example Title with level
+ * @example
  * ```tsx
- * <Typography variant="title" level={1}>Page Heading</Typography>
- * <Typography variant="title" level={2}>Section Heading</Typography>
+ * // A heading that cuts at the width of its column, full text on hover
+ * <Typography
+ *   variant="label"
+ *   size="large"
+ *   weight="bold"
+ *   color="main"
+ *   as="h2"
+ *   textOverflow="ellipsis"
+ * >
+ *   {dashboard.name}
+ * </Typography>
  * ```
  *
- * @example Text with styling props
+ * @example
  * ```tsx
- * <Typography size="lg" weight="semibold">Large semibold text</Typography>
- * <Typography color="muted">Secondary text</Typography>
- * <Typography color="danger">Error message</Typography>
+ * // An icon next to the text, in one row
+ * <Typography
+ *   variant="label"
+ *   size="base"
+ *   weight="medium"
+ *   color="danger"
+ *   as="span"
+ *   display="inline-flex"
+ *   gap={2}
+ *   textOverflow="visible"
+ * >
+ *   <SolidAlertCircle size={12} />
+ *   Failed
+ * </Typography>
  * ```
  *
- * @example Truncation
+ * @example
  * ```tsx
- * <Typography truncate={1}>Single line with ellipsis overflow...</Typography>
- * ```
- *
- * @example Code styling with copy
- * ```tsx
- * <Typography code copyable>npm install @signoz/ui</Typography>
- * ```
- *
- * @example Link
- * ```tsx
- * <Typography href="https://signoz.io" target="_blank">Visit SigNoz</Typography>
+ * // Tabular numbers on the number only, the unit outside
+ * <Typography variant="paragraph" size="base" weight="regular" color="main" as="p" textOverflow="wrap">
+ *   Showing{' '}
+ *   <Typography
+ *     variant="paragraph"
+ *     size="base"
+ *     weight="regular"
+ *     color="inherit"
+ *     as="span"
+ *     textOverflow="wrap"
+ *     tabularNumbers
+ *   >
+ *     {count}
+ *   </Typography>{' '}
+ *   of 5,000 logs
+ * </Typography>
  * ```
  */
-const Typography = forwardRef<HTMLElement, TypographyProps>(function Typography(
+const TypographyRoot = forwardRef<HTMLElement, TypographyProps>(function Typography(
 	{
-		variant = 'text',
-		as,
-		asChild = false,
+		variant,
 		size,
 		weight,
-		align,
-		truncate,
-		muted = false,
 		color,
-		strong = false,
-		italic = false,
-		code = false,
-		disabled = false,
-		copyable = false,
-		level,
-		href,
-		target,
-		rel,
-		className,
-		children,
-		style,
-		title,
-		testId,
-		interactive,
+		as,
+		textOverflow,
+		maxLines,
+		tabularNumbers,
+		slashedZero,
 		display,
-		onClick,
-		...props
-	},
+		gap,
+		align,
+		verticalAlign,
+		width,
+		minWidth,
+		maxWidth,
+		testId,
+		children,
+		className: _className,
+		style: _style,
+		...rest
+	}: TypographyProps & RejectedProps,
 	ref,
 ) {
-	const [copied, setCopied] = useState(false);
+	const [spacing, props] = splitTypographySpacing(rest);
+	const resolvedDisplay = resolveTypographyDisplay(as, display);
+	const hasEllipsis = textOverflow === 'ellipsis';
+	const [isTruncated, measureRef] = useIsLabelTruncated(hasEllipsis, isTypographyTruncated);
+	const mergedRef = useMemo(() => mergeRefs(ref, measureRef), [ref, measureRef]);
+	const look = getTypographyLook({
+		variant,
+		size,
+		weight,
+		color,
+		textOverflow,
+		maxLines,
+		display: resolvedDisplay,
+		align,
+		verticalAlign,
+		tabularNumbers,
+		slashedZero,
+		width,
+		minWidth,
+		maxWidth,
+		gap,
+		...spacing,
+	});
+	const Element = as as ElementType;
 
-	// Determine the element to render
-	let Tag: TypographyElement;
-	if (as) {
-		Tag = as;
-	} else if (href) {
-		Tag = 'a';
-	} else if (variant === 'title' && level) {
-		Tag = levelTagMap[level];
-	} else {
-		Tag = defaultTagMap[variant];
+	const element = (
+		<Element
+			ref={mergedRef}
+			{...props}
+			{...look}
+			data-slot="typography"
+			data-truncated={isTruncated || undefined}
+			{...(testId === undefined ? {} : { 'data-testid': testId })}
+			className={styles['typography']}
+		>
+			{isFlexDisplay(resolvedDisplay)
+				? wrapTextRuns(children, styles['typography__text'])
+				: children}
+		</Element>
+	);
+
+	if (!hasEllipsis) {
+		return element;
 	}
 
-	const isLink = Tag === 'a' || href;
-	const isInteractive = interactive || !!onClick;
-
-	const truncateStyle: React.CSSProperties | undefined =
-		truncate !== undefined
-			? ({
-					'--typography-line-clamp': truncate,
-				} as React.CSSProperties)
-			: undefined;
-
-	const handleCopy = () => {
-		const text = typeof children === 'string' ? children : '';
-		if (copy(text)) {
-			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
-		}
-	};
-
-	const linkProps = isLink ? { href, target, rel } : {};
-
 	return (
-		<Tag
-			ref={ref as never}
-			data-slot="typography"
-			data-variant={variant}
-			data-size={size || undefined}
-			data-weight={weight || undefined}
-			data-align={align || undefined}
-			data-muted={muted || undefined}
-			data-truncate={truncate !== undefined ? true : undefined}
-			data-color={color || undefined}
-			data-strong={strong || undefined}
-			data-italic={italic || undefined}
-			data-code={code || undefined}
-			data-disabled={disabled || undefined}
-			data-level={level || undefined}
-			data-link={isLink || undefined}
-			data-interactive={isInteractive || undefined}
-			data-display={display || undefined}
-			data-testid={testId}
-			title={title}
-			className={cn(styles.typography, className)}
-			style={{ ...truncateStyle, ...style }}
-			onClick={onClick}
-			{...linkProps}
-			{...props}
+		<TooltipAnchor
+			content={isTruncated ? children : null}
+			contentProps={{ className: styles['typography__tooltip'] }}
 		>
-			{children}
-			{copyable && (
-				<button
-					type="button"
-					onClick={handleCopy}
-					className={styles.copyButton}
-					aria-label={copied ? 'Copied' : 'Copy to clipboard'}
-				>
-					{copied ? <CheckIcon /> : <CopyIcon />}
-				</button>
-			)}
-		</Tag>
+			{element}
+		</TooltipAnchor>
 	);
 });
-Typography.displayName = 'Typography';
+TypographyRoot.displayName = 'Typography';
 
-// Compound components
-interface TypographyTextProps extends Omit<TypographyProps, 'variant' | 'level'> {}
-
-const TypographyText = forwardRef<HTMLElement, TypographyTextProps>(
-	function TypographyText(props, ref) {
-		return <Typography ref={ref} variant="text" {...props} />;
-	},
-);
-TypographyText.displayName = 'TypographyText';
-
-interface TypographyTitleProps extends Omit<TypographyProps, 'variant'> {}
-
-const TypographyTitle = forwardRef<HTMLElement, TypographyTitleProps>(function TypographyTitle(
-	{ level = 1, ...props },
-	ref,
-) {
-	return <Typography ref={ref} variant="title" level={level} {...props} />;
+export const Typography = Object.assign(TypographyRoot, {
+	Link: TypographyLink,
 });
-TypographyTitle.displayName = 'TypographyTitle';
-
-interface TypographyLinkProps extends Omit<TypographyProps, 'variant' | 'level'> {
-	href?: string;
-}
-
-const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(
-	function TypographyLink(props, ref) {
-		return <Typography ref={ref} as="a" {...props} />;
-	},
-);
-TypographyLink.displayName = 'TypographyLink';
-
-interface TypographyComponent extends React.ForwardRefExoticComponent<
-	TypographyProps & React.RefAttributes<HTMLElement>
-> {
-	/**
-	 * Shorthand for rendering body text. Equivalent to `<Typography variant="text">`.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Typography.Text>Body text content</Typography.Text>
-	 * <Typography.Text color="muted">Secondary information</Typography.Text>
-	 * <Typography.Text strong>Important text</Typography.Text>
-	 * ```
-	 */
-	Text: typeof TypographyText;
-	/**
-	 * Shorthand for rendering headings. Equivalent to `<Typography variant="title">`.
-	 * The `level` prop controls both the HTML element (h1-h5) and default styling.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Typography.Title level={1}>Page Title</Typography.Title>
-	 * <Typography.Title level={2}>Section Heading</Typography.Title>
-	 * <Typography.Title level={3} color="muted">Subsection</Typography.Title>
-	 * ```
-	 */
-	Title: typeof TypographyTitle;
-	/**
-	 * Shorthand for rendering links. Renders as an anchor element with link styling.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Typography.Link href="/docs">Documentation</Typography.Link>
-	 * <Typography.Link href="https://signoz.io" target="_blank" rel="noopener noreferrer">
-	 *   Visit SigNoz
-	 * </Typography.Link>
-	 * ```
-	 */
-	Link: typeof TypographyLink;
-}
-
-const TypographyWithCompound = Typography as TypographyComponent;
-TypographyWithCompound.Text = TypographyText;
-TypographyWithCompound.Title = TypographyTitle;
-TypographyWithCompound.Link = TypographyLink;
-
-export type {
-	TypographyAlign,
-	TypographyColor,
-	TypographyDisplay,
-	TypographyElement,
-	TypographyLevel,
-	TypographyLinkProps,
-	TypographyProps,
-	TypographySize,
-	TypographyTextProps,
-	TypographyTitleProps,
-	TypographyVariant,
-	TypographyWeight,
-};
-export { TypographyWithCompound as Typography };

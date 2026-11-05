@@ -14,31 +14,52 @@
 	border-radius: var(--callout-border-radius, var(--radius-2));
 	background: var(--callout-internal-background, transparent);
 	color: var(--callout-internal-description, inherit);
+	font-family: var(--callout-internal-font-family);
 	font-size: var(--callout-internal-font-size);
-	font-weight: var(--callout-description-font-weight, var(--periscope-font-weight-regular));
+	font-weight: var(--callout-internal-font-weight);
 	line-height: var(--callout-internal-line-height);
 	letter-spacing: var(--callout-internal-letter-spacing);
+	text-transform: var(--callout-internal-text-transform);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	// The padding of the title row and of the chevron and close boxes. Each takes it back with a
 	// negative margin, so a larger hit area never moves the layout.
 	--callout-internal-button-padding: var(--callout-button-padding, var(--spacing-2));
 
-	// The type of the Figma text styles, Paragraph/400 for the description and Label/500 for the
-	// title, at Base for `sm` and at Medium for `md`. The title shares the size and the letter
-	// spacing.
+	// Paragraph/400 for the description and Label/500 for the title, at Base for `sm` and at Medium
+	// for `md`. The family, size and letter spacing overrides reach both.
 	&[data-size='sm'] {
 		--callout-internal-icon-size: var(--callout-icon-size, var(--size-icon-callout-sm));
 		--callout-internal-content-gap: var(--callout-content-gap, var(--spacing-3));
-		--callout-internal-font-size: var(--callout-font-size, var(--periscope-font-size-base));
-		--callout-internal-line-height: var(--callout-description-line-height, var(--periscope-line-height-base));
-		--callout-internal-letter-spacing: var(--callout-letter-spacing, var(--letter-spacing-0-5));
+		--callout-internal-font-family: var(--callout-font-family, var(--paragraph-base-400-font-family));
+		--callout-internal-font-size: var(--callout-font-size, var(--paragraph-base-400-font-size));
+		--callout-internal-font-weight: var(--callout-description-font-weight, var(--paragraph-base-400-font-weight));
+		--callout-internal-line-height: var(--callout-description-line-height, var(--paragraph-base-400-line-height));
+		--callout-internal-letter-spacing: var(--callout-letter-spacing, var(--paragraph-base-400-letter-spacing));
+		--callout-internal-text-transform: var(--callout-text-transform, var(--paragraph-base-400-text-transform));
+		--callout-internal-title-font-family: var(--callout-font-family, var(--label-base-500-font-family));
+		--callout-internal-title-font-size: var(--callout-font-size, var(--label-base-500-font-size));
+		--callout-internal-title-font-weight: var(--callout-title-font-weight, var(--label-base-500-font-weight));
+		--callout-internal-title-line-height: var(--callout-title-line-height, var(--label-base-500-line-height));
+		--callout-internal-title-letter-spacing: var(--callout-letter-spacing, var(--label-base-500-letter-spacing));
+		--callout-internal-title-text-transform: var(--callout-text-transform, var(--label-base-500-text-transform));
 	}
 
 	&[data-size='md'] {
 		--callout-internal-icon-size: var(--callout-icon-size, var(--size-icon-callout-md));
 		--callout-internal-content-gap: var(--callout-content-gap, var(--spacing-4));
-		--callout-internal-font-size: var(--callout-font-size, var(--periscope-font-size-medium));
-		--callout-internal-line-height: var(--callout-description-line-height, var(--line-height-26));
-		--callout-internal-letter-spacing: var(--callout-letter-spacing, var(--letter-spacing-0));
+		--callout-internal-font-family: var(--callout-font-family, var(--paragraph-medium-400-font-family));
+		--callout-internal-font-size: var(--callout-font-size, var(--paragraph-medium-400-font-size));
+		--callout-internal-font-weight: var(--callout-description-font-weight, var(--paragraph-medium-400-font-weight));
+		--callout-internal-line-height: var(--callout-description-line-height, var(--paragraph-medium-400-line-height));
+		--callout-internal-letter-spacing: var(--callout-letter-spacing, var(--paragraph-medium-400-letter-spacing));
+		--callout-internal-text-transform: var(--callout-text-transform, var(--paragraph-medium-400-text-transform));
+		--callout-internal-title-font-family: var(--callout-font-family, var(--label-medium-500-font-family));
+		--callout-internal-title-font-size: var(--callout-font-size, var(--label-medium-500-font-size));
+		--callout-internal-title-font-weight: var(--callout-title-font-weight, var(--label-medium-500-font-weight));
+		--callout-internal-title-line-height: var(--callout-title-line-height, var(--label-medium-500-line-height));
+		--callout-internal-title-letter-spacing: var(--callout-letter-spacing, var(--label-medium-500-letter-spacing));
+		--callout-internal-title-text-transform: var(--callout-text-transform, var(--label-medium-500-text-transform));
 	}
 
 	// Links take the semantic link pair of the same intent, not a `callout-{color}-*` token, because
@@ -197,7 +218,8 @@
 	background: var(--callout-toggle-background, transparent);
 	color: var(--callout-internal-title, inherit);
 	font: var(--callout-toggle-font, inherit);
-	letter-spacing: var(--callout-toggle-letter-spacing, inherit);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	text-align: var(--callout-toggle-text-align, start);
 	cursor: var(--callout-toggle-cursor, pointer);
 
@@ -211,19 +233,17 @@
 .callout__title {
 	flex: var(--callout-title-flex, 1 1 auto);
 	min-width: var(--callout-title-min-width, 0);
-	overflow: var(--callout-title-overflow, hidden);
+	// Clipped on the inline axis only: the 1em line box of the title is shorter than Inter's accents
+	// and descenders, which stay visible above and below it.
+	overflow: var(--callout-title-overflow, clip visible);
 	text-overflow: var(--callout-title-text-overflow, ellipsis);
 	white-space: var(--callout-title-white-space, nowrap);
-	font-weight: var(--callout-title-font-weight, var(--periscope-font-weight-medium));
-	line-height: var(--callout-title-line-height, var(--line-height-none));
-	// Inter draws about 1.25em from the top of an accent to the bottom of a descender, more than the
-	// 1em line box of the Figma title, so `overflow: hidden` would cut both. The padding grows the
-	// clip box to fit them and the negative margin takes it back, so the row keeps its height.
-	// Another font may reach further.
-	--callout-internal-title-clip-padding: var(--callout-title-clip-padding, 0.125em);
-
-	padding-block: var(--callout-internal-title-clip-padding);
-	margin-block: calc(-1 * var(--callout-internal-title-clip-padding));
+	font-family: var(--callout-internal-title-font-family);
+	font-size: var(--callout-internal-title-font-size);
+	font-weight: var(--callout-internal-title-font-weight);
+	line-height: var(--callout-internal-title-line-height);
+	letter-spacing: var(--callout-internal-title-letter-spacing);
+	text-transform: var(--callout-internal-title-text-transform);
 	font-variant-numeric: var(--callout-title-font-variant-numeric, slashed-zero lining-nums tabular-nums);
 	font-feature-settings: var(--callout-title-font-feature-settings, 'ss01');
 }

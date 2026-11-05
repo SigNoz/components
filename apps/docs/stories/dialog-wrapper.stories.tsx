@@ -38,7 +38,16 @@ export const Default: Story = {
 			}
 		>
 			<div className="story-column">
-				<Typography size="sm">Dialog content goes here.</Typography>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
+					Dialog content goes here.
+				</Typography>
 				<div className={styles.flexEnd}>
 					<DialogClose asChild>
 						<Button variant={ButtonVariant.Solid} color={ButtonColor.Primary} size="md">

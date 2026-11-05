@@ -39,7 +39,14 @@ export const Default: Story = {
 					<DrawerTitle>Drawer header</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The header typically contains the title and optional actions.
 					</Typography>
 				</DrawerDescription>

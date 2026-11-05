@@ -9,17 +9,21 @@
  * | `--kbd-align-items` | `center` |
  * | `--kbd-background` | `var(--kbd-active-background)` |
  * | `--kbd-border-color` | `var(--primary-background)` |
- * | `--kbd-border-radius` | `var(--radius-md)` |
+ * | `--kbd-border-radius` | `var(--kbd-internal-border-radius)` |
  * | `--kbd-border-width` | `1px` |
+ * | `--kbd-box-sizing` | `border-box` |
  * | `--kbd-display` | `inline-flex` |
- * | `--kbd-font-family` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Co...` |
- * | `--kbd-font-size` | `var(--font-size-base)` |
- * | `--kbd-font-weight` | `var(--font-weight-medium, 500)` |
+ * | `--kbd-font-family` | `var(--kbd-internal-font-family)` |
+ * | `--kbd-font-size` | `var(--kbd-internal-font-size)` |
+ * | `--kbd-font-weight` | `var(--kbd-internal-font-weight)` |
  * | `--kbd-foreground` | `var(--primary-background)` |
  * | `--kbd-justify-content` | `center` |
- * | `--kbd-line-height` | `1.4` |
- * | `--kbd-padding` | `var(--spacing-2) var(--spacing-4)` |
+ * | `--kbd-letter-spacing` | `var(--kbd-internal-letter-spacing)` |
+ * | `--kbd-line-height` | `var(--kbd-internal-line-height)` |
+ * | `--kbd-min-block-size` | `var(--kbd-internal-min-block-size, auto)` |
+ * | `--kbd-padding` | `var(--kbd-internal-padding)` |
  * | `--kbd-shadow` | `0 1px 0 0 var(--kbd-border-color, var(--l3-bord...` |
+ * | `--kbd-text-transform` | `var(--kbd-internal-text-transform)` |
  * | `--kbd-white-space` | `nowrap` |
  */
 // #endregion css-tokens

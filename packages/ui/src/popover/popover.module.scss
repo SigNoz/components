@@ -33,6 +33,14 @@
 	padding: var(--popover-padding, 0);
 
 	color: var(--popover-internal-foreground);
+	font-family: var(--popover-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--popover-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--popover-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--popover-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--popover-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--popover-text-transform, var(--paragraph-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 	border-width: var(--popover-border-width, 1px);
 	border-style: var(--popover-border-style, solid);
 	border-color: var(--popover-internal-border);

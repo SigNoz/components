@@ -143,7 +143,17 @@ The bar is not focusable, has no keys and does not react to hover. A screen read
 reading order.
 
 ```tsx
-<Typography.Text id="memory-label">Memory</Typography.Text>
+<Typography
+	id="memory-label"
+	variant="label"
+	size="base"
+	weight="regular"
+	color="inherit"
+	as="span"
+	textOverflow="wrap"
+>
+	Memory
+</Typography>
 <Progress percent={memory} color={memoryColor(memory)} aria-labelledby="memory-label" />
 ```
 

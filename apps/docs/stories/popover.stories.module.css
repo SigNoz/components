@@ -30,11 +30,6 @@
 	color: var(--l1-foreground);
 }
 
-.rowMeta {
-	flex: 0 1 auto;
-	color: var(--l3-foreground);
-}
-
 /* A row you can actually pick. Mirrors the dashboard editor's variable rows: the button is a
    plain full-width surface, and the two labels inside it do the spacing. */
 .pickRow {
@@ -51,30 +46,6 @@
 	justify-content: space-between;
 	gap: 0.5rem;
 	min-inline-size: 0;
-}
-
-.pickRowName,
-.rowMeta {
-	min-inline-size: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.pickRowName {
-	flex: 1 1 auto;
-	text-align: start;
-}
-
-/* What the story just did, so the interaction has a visible outcome. */
-.result {
-	display: block;
-	margin-block-start: 0.75rem;
-	color: var(--l2-foreground);
-}
-
-.resultEmpty {
-	color: var(--l3-foreground);
 }
 
 .inlineRow {
@@ -159,11 +130,6 @@
 	color: var(--l1-foreground);
 }
 
-.pairValue {
-	color: var(--l2-foreground);
-	font-variant-numeric: tabular-nums;
-}
-
 .rows {
 	display: flex;
 	flex-direction: column;
@@ -190,12 +156,6 @@
 	block-size: 0.5rem;
 	border-radius: 0.125rem;
 	background: var(--primary-background);
-}
-
-.hint {
-	display: block;
-	margin-block-end: 0.5rem;
-	color: var(--l3-foreground);
 }
 
 /* Stands in for a chart canvas: the click lands at a point, not on an element. */

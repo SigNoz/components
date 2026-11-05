@@ -9,6 +9,7 @@ import {
 	type MouseEventHandler,
 	type ReactElement,
 	type ReactNode,
+	type Ref,
 } from 'react';
 import { getLinkProps } from './link-props.js';
 import type { RejectedProps } from './utils.js';
@@ -66,6 +67,11 @@ export type RenderLinkProps = {
  * owns it. A link with neither `href` nor a destination on the `render` element is a bug: it
  * renders plain text and warns on the console, naming the component as `name`.
  *
+ * `props` go on the link and on the plain text, merged the same way as the `data-slot`. The plain
+ * text takes `fallbackClassName` instead of `className`, and keeps the `ref`, the `id` and the
+ * `aria-*` and `data-*` props of the link. It drops `onClick`: text that goes nowhere is not
+ * clickable.
+ *
  * @access private
  */
 export function useRenderLink(
@@ -80,15 +86,28 @@ export function useRenderLink(
 		style: _style,
 		...aria
 	}: RenderLinkProps & RejectedProps,
-	ref: ForwardedRef<HTMLElement>,
-	{ slot, className, name }: { slot: string; className: string | undefined; name: string },
-): ReactElement {
+	ref: ForwardedRef<HTMLElement> | Array<Ref<HTMLElement>>,
+	{
+		slot,
+		className,
+		name,
+		props: ownProps,
+		fallbackClassName,
+	}: {
+		slot: string;
+		className: string | undefined;
+		name: string;
+		props?: Record<string, unknown>;
+		fallbackClassName?: string;
+	},
+): ReactElement | null {
 	const element = (isValidElement(render) ? render : createElement('a')) as ReactElement<
 		Record<string, unknown>
 	>;
 	const elementProps = element.props;
 	const { props: linkProps, hasDestination } = getLinkProps(element, { href, target });
 	const sharedProps = {
+		...ownProps,
 		'data-slot': slot,
 		...(testId === undefined ? {} : { 'data-testid': testId }),
 	};
@@ -117,5 +136,17 @@ export function useRenderLink(
 		},
 	});
 
-	return link ?? <span {...sharedProps}>{children}</span>;
+	const text = useRender({
+		enabled: !hasDestination,
+		render: <span />,
+		ref,
+		props: {
+			...aria,
+			...sharedProps,
+			className: fallbackClassName,
+			children,
+		},
+	});
+
+	return link ?? text;
 }

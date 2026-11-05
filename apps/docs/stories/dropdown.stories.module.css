@@ -23,11 +23,6 @@
 	min-block-size: 300px;
 }
 
-.sectionNote {
-	color: var(--muted-foreground);
-	max-inline-size: 46ch;
-}
-
 /* The playground opens downwards, so it needs room under its trigger too. */
 .roomBelow {
 	min-height: 320px;

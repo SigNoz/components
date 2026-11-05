@@ -24,7 +24,7 @@ Canonical docs. Read the relevant one before touching that area, they are the so
 
 | Command | What |
 | --- | --- |
-| `pnpm format` / `pnpm format:check` | Format with `oxfmt`. Tabs, width 100, single quotes, trailing commas. Skips CSS/SCSS, Markdown, YAML (`.oxfmtrc.json`) |
+| `pnpm fmt:fix` / `pnpm fmt` | Format with `oxfmt` / check formatting. Tabs, width 100, single quotes, trailing commas. Skips CSS/SCSS, Markdown, YAML (`.oxfmtrc.json`) |
 | `pnpm lint` / `pnpm lint:fix` | Lint with `oxlint` (`.oxlintrc.json`) |
 | `pnpm oxlint <files>` | Lint specific files; fix every warning before reporting done |
 | `pnpm run type-check` | `tsgo --noEmit` over the whole repo via turbo |
@@ -66,7 +66,7 @@ On commit, Husky + lint-staged run `pnpm run type-check`, `pnpm oxlint --fix`, `
 3. FORCED VERIFICATION: Your internal tools mark file writes as successful even if the code does not compile. You are FORBIDDEN from reporting a task as complete until you have run, from the repo root, and fixed ALL resulting errors:
 - `pnpm run type-check`
 - `pnpm lint`
-- `pnpm format:check`
+- `pnpm fmt`
 - `pnpm oxlint <file1> <file2>` (fix every warning)
 - `pnpm build`
 - `pnpm -F @signozhq/ui test:run`, plus `pnpm -F docs test` when stories or interactions changed
@@ -103,6 +103,10 @@ On commit, Husky + lint-staged run `pnpm run type-check`, `pnpm oxlint --fix`, `
    - `vite.config.ts` entries and `package.json` exports
    - Test files and mocks
      Do not assume a single grep caught everything.
+
+## Code Review
+
+1. DESIGN TOKENS ARE RELEASED SEPARATELY: A branch that needs new `@signozhq/design-tokens` work keeps the published version in `package.json`, `apps/docs/package.json` and `pnpm-lock.yaml`, and runs against a local build added with `yalc` (`yalc.lock`, `.yalc/`). The design-tokens change is merged and released on its own, and the version bump lands before the PR merges. Do not flag the version pin, the `yalc` files, a missing design-tokens peer dependency, or a token, font or export that only the newer design-tokens build has. The same goes for a test or story that fails only against the published version.
 
 <!-- BEGIN:turborepo-agent-rules -->
 

@@ -29,6 +29,14 @@
   border: 1px solid var(--l2-border);
   background-color: var(--l2-background);
   box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.04);
+  font-family: var(--dialog-content-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--dialog-content-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--dialog-content-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--dialog-content-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--dialog-content-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--dialog-content-text-transform, var(--paragraph-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
 
   &[data-position="top"] {
     top: 0;
@@ -144,9 +152,12 @@
   align-items: center;
   gap: var(--dialog-title-gap, var(--spacing-4, 0.5rem));
   margin: var(--dialog-title-margin, 0);
-  font-size: var(--dialog-title-font-size, var(--periscope-font-size-base, 13px));
-  font-weight: var(--dialog-title-font-weight, var(--font-weight-normal, 400));
-  line-height: var(--dialog-title-line-height, 100%);
+  font-family: var(--dialog-title-font-family, var(--label-base-400-font-family));
+  font-size: var(--dialog-title-font-size, var(--label-base-400-font-size));
+  font-weight: var(--dialog-title-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--dialog-title-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--dialog-title-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--dialog-title-text-transform, var(--label-base-400-text-transform));
   color: var(--dialog-title-color, var(--l1-foreground));
   font-variant-numeric: slashed-zero;
 }
@@ -154,15 +165,23 @@
 .dialog__subtitle {
   margin: var(--dialog-subtitle-margin, 0);
   padding: var(--dialog-subtitle-padding, 0);
-  font-size: var(--dialog-subtitle-font-size, var(--periscope-font-size-base, 13px));
-  font-weight: var(--dialog-subtitle-font-weight, var(--font-weight-normal, 400));
+  font-family: var(--dialog-subtitle-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--dialog-subtitle-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--dialog-subtitle-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--dialog-subtitle-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--dialog-subtitle-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--dialog-subtitle-text-transform, var(--paragraph-base-400-text-transform));
   color: var(--dialog-subtitle-color, var(--l2-foreground));
-  line-height: var(--dialog-subtitle-line-height, 100%);
 }
 
 .dialog__description {
   padding: var(--dialog-description-padding, var(--spacing-8, 1rem));
-  font-size: var(--dialog-description-font-size, var(--periscope-font-size-base, 13px));
+  font-family: var(--dialog-description-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--dialog-description-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--dialog-description-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--dialog-description-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--dialog-description-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--dialog-description-text-transform, var(--paragraph-base-400-text-transform));
   color: var(--dialog-description-color, var(--l2-foreground));
   font-variant-numeric: slashed-zero;
   margin: var(--dialog-description-margin, 0px);

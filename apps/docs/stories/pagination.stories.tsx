@@ -131,7 +131,14 @@ function Rows({ children }: { children: ReactNode }): ReactElement {
 function Row({ label, children }: { label: string; children: ReactNode }): ReactElement {
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.caption}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="visible"
+			>
 				{label}
 			</Typography>
 			<div className={styles.cell}>{children}</div>
@@ -386,7 +393,14 @@ function Section({
 }): ReactElement {
 	return (
 		<div className="story-section" data-testid={testId}>
-			<Typography size="base" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
 			{children}
@@ -716,7 +730,14 @@ export const PaginationShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<Section title="Numbered">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The first page, a page in the middle and the last page, with a total label. Up to seven
 					pages every page renders and no separator does. At the last page Next is disabled and
 					focus moves to the current page. The last row is pressed through to its last page.
@@ -745,7 +766,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Compact">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					At the ends the button with nowhere to go hides and keeps its space, so the other one does
 					not move, and focus follows to the other button. The last row is pressed through to the
 					last page.
@@ -775,7 +803,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Pagination.Cursor">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					For a list that does not know its total. Next hides while <code>hasNextPage</code> is
 					false, and focus moves to Previous so a keyboard user is not left on a button that is
 					gone. The last row asks a list of three pages and is pressed through to the end.
@@ -801,7 +836,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Page size">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The selector after the page controls, and before them. The option with a label shows its
 					label in the list and its value once picked, and a new size goes back to page 1. The last
 					row goes to page 3 and picks that option.
@@ -848,14 +890,28 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Without the position label">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					<code>align</code> places the page controls when <code>showTotal</code> is false.
 				</Typography>
 				<AlignRows />
 			</Section>
 
 			<Section title="Disabled">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Every control keeps its slot and the position label still shows the range. A press changes
 					nothing, and the tooltip shows on hover over any control.
 				</Typography>
@@ -888,7 +944,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Many pages">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Seven slots at every page, one width for every slot, and slots that grow only when the
 					page count gains a digit. The controls and the position label keep their width and their
 					place while the page changes.
@@ -897,7 +960,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="States">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The page buttons and the arrows in each state. <code>hover</code> and <code>focus</code>{' '}
 					are forced by <code>storybook-addon-pseudo-states</code>.
 				</Typography>
@@ -905,7 +975,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Narrow container">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The bar fills its parent and the page controls never shrink or wrap, so in a narrow parent
 					the position label truncates first and a tooltip holds the full text. A parent too narrow
 					for the numbered list should use <code>variant=&quot;compact&quot;</code>, which fits.
@@ -914,7 +991,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Single page and total 0">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The bar always renders. With a single page, or a <code>total</code> of 0, the page list
 					shows <code>1</code>, both arrows are disabled and a total of 0 reads{' '}
 					<code>0 — 0 of 0</code>. The page size selector stays. In <code>compact</code> Previous,
@@ -927,7 +1011,14 @@ export const PaginationShowcase: Story = {
 			</Section>
 
 			<Section title="Two on one screen" testId="two-paginations">
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Each bar gets its own <code>aria-label</code>, so the two landmarks differ and a press in
 					one leaves the other alone.
 				</Typography>

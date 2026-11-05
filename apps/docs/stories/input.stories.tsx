@@ -97,7 +97,15 @@ function MatrixHeader({ columns }: { columns: readonly string[] }): ReactElement
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography key={column} size="sm" weight="medium" className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -131,7 +139,14 @@ function StateCell({ appearance, state }: { appearance: Appearance; state: State
 function Row({ label, children }: { label: string; children: ReactNode }): ReactElement {
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.rowLabel}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="visible"
+			>
 				{label}
 			</Typography>
 			{children}
@@ -150,10 +165,26 @@ function Section({
 }): ReactElement {
 	return (
 		<div className="story-section">
-			<Typography size="base" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm">{description}</Typography>
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
+				{description}
+			</Typography>
 			{children}
 		</div>
 	);
@@ -184,7 +215,14 @@ export const Showcase: Story = {
 					<MatrixHeader columns={['default', 'hover', 'focus', 'disabled', 'read-only']} />
 					{APPEARANCES.map((appearance) => (
 						<Fragment key={appearance.id}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{appearance.label}
 							</Typography>
 							{STATES.map((state) => (
@@ -205,7 +243,14 @@ export const Showcase: Story = {
 			>
 				<div className={`${styles.matrix} ${styles.marginTopMedium}`} style={matrixStyle(2)}>
 					<MatrixHeader columns={['focus', 'noFocusRing']} />
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						default
 					</Typography>
 					<Field>
@@ -219,7 +264,14 @@ export const Showcase: Story = {
 							aria-label="No focus ring"
 						/>
 					</Field>
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						unstyled
 					</Typography>
 					<Field>
@@ -259,7 +311,18 @@ export const Showcase: Story = {
 					<Row label="suffix text">
 						<Field>
 							<Input
-								suffix={<Typography size="sm">ms</Typography>}
+								suffix={
+									<Typography
+										variant="label"
+										size="small"
+										weight="regular"
+										color="inherit"
+										as="span"
+										textOverflow="visible"
+									>
+										ms
+									</Typography>
+								}
 								placeholder="500"
 								aria-label="Suffix"
 							/>
@@ -269,7 +332,18 @@ export const Showcase: Story = {
 						<Field>
 							<Input
 								prefix={<Search />}
-								suffix={<Typography size="sm">ms</Typography>}
+								suffix={
+									<Typography
+										variant="label"
+										size="small"
+										weight="regular"
+										color="inherit"
+										as="span"
+										textOverflow="visible"
+									>
+										ms
+									</Typography>
+								}
 								status="danger"
 								placeholder="500"
 								aria-label="Both"
@@ -303,7 +377,18 @@ export const Showcase: Story = {
 						<div className={styles.bounded}>
 							<Input
 								prefix={<Search />}
-								suffix={<Typography size="sm">ms</Typography>}
+								suffix={
+									<Typography
+										variant="label"
+										size="small"
+										weight="regular"
+										color="inherit"
+										as="span"
+										textOverflow="visible"
+									>
+										ms
+									</Typography>
+								}
 								defaultValue={LONG_VALUE}
 								aria-label="Long value with slots"
 							/>
@@ -313,7 +398,18 @@ export const Showcase: Story = {
 						<div className={styles.bounded}>
 							<Input
 								prefix={<Search />}
-								suffix={<Typography size="sm">ms</Typography>}
+								suffix={
+									<Typography
+										variant="label"
+										size="small"
+										weight="regular"
+										color="inherit"
+										as="span"
+										textOverflow="visible"
+									>
+										ms
+									</Typography>
+								}
 								status="danger"
 								defaultValue={LONG_VALUE}
 								aria-label="Long value with status"
@@ -375,7 +471,14 @@ export const Showcase: Story = {
 					style={matrixStyle(STATES.length)}
 				>
 					<MatrixHeader columns={['default', 'hover', 'focus', 'disabled', 'read-only']} />
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						password
 					</Typography>
 					{STATES.map((state) => (
@@ -388,7 +491,14 @@ export const Showcase: Story = {
 							/>
 						</Field>
 					))}
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						textarea
 					</Typography>
 					{STATES.map((state) => (
@@ -401,7 +511,14 @@ export const Showcase: Story = {
 							/>
 						</Field>
 					))}
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						number
 					</Typography>
 					{STATES.map((state) => (

@@ -31,7 +31,7 @@ Chromatic uploads) and the story tests import the built `dist`, which the `vite 
 | `pnpm build` | Build every package + the Storybook site | `packages/ui` runs `vite build && publint` |
 | `pnpm dev` | Storybook (`apps/docs`) + `vite build --watch` on `packages/ui` | Both are persistent turbo tasks |
 | `pnpm lint` / `pnpm lint:fix` | Lint `apps` + `packages` with `oxlint` | Runs in CI. Config `.oxlintrc.json`. `typescript/consistent-type-imports` is an error, so write `import type` |
-| `pnpm format` / `pnpm format:check` | Format with `oxfmt` | `.oxfmtrc.json`: tabs, width 100, single quotes, trailing commas. **Skips styles, markdown and YAML** (`ignorePatterns`), your editor formats those |
+| `pnpm fmt:fix` / `pnpm fmt` | Format with `oxfmt` / check formatting | `.oxfmtrc.json`: tabs, width 100, single quotes, trailing commas. **Skips styles, markdown and YAML** (`ignorePatterns`), your editor formats those |
 | `pnpm run type-check` | `tsgo --noEmit` over the whole repo | Runs in CI and in `lint-staged` |
 | `pnpm -F @signozhq/ui test:run` | Component tests in Chromium, guardrail and type tests in Node (vitest) | |
 | `cd apps/docs && pnpm test-storybook` | Story render + interaction tests in real Chromium | This is what CI runs |

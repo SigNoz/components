@@ -18,16 +18,19 @@
  * | `--toast-action-divider-style` | `solid` |
  * | `--toast-action-divider-width` | `1px` |
  * | `--toast-action-flex` | `none` |
- * | `--toast-action-font` | `inherit` |
- * | `--toast-action-font-size` | `var(--periscope-font-size-small)` |
+ * | `--toast-action-font-family` | `var(--label-small-400-font-family)` |
+ * | `--toast-action-font-size` | `var(--label-small-400-font-size)` |
+ * | `--toast-action-font-weight` | `var(--label-small-400-font-weight)` |
  * | `--toast-action-hover-background-color` | `var(--toast-action-background-hover)` |
  * | `--toast-action-hover-color` | `var(--toast-action-label-hover)` |
  * | `--toast-action-inline-size` | `var(--spacing-48)` |
  * | `--toast-action-label` | `-` |
  * | `--toast-action-label-hover` | `-` |
- * | `--toast-action-line-height` | `var(--line-height-18)` |
+ * | `--toast-action-letter-spacing` | `var(--label-small-400-letter-spacing)` |
+ * | `--toast-action-line-height` | `var(--label-small-400-line-height)` |
  * | `--toast-action-margin` | `0` |
  * | `--toast-action-padding-inline` | `var(--spacing-4)` |
+ * | `--toast-action-text-transform` | `var(--label-small-400-text-transform)` |
  * | `--toast-action-transition-property` | `opacity, background-color, color` |
  * | `--toast-align-items` | `stretch` |
  * | `--toast-background` | `-` |
@@ -67,8 +70,9 @@
  * | `--toast-focus-ring` | `-` |
  * | `--toast-focus-visible-outline` | `var(--toast-focus-ring) solid 1px` |
  * | `--toast-focus-visible-outline-offset` | `1px` |
- * | `--toast-font-size` | `var(--periscope-font-size-base)` |
- * | `--toast-font-weight` | `var(--periscope-font-weight-regular)` |
+ * | `--toast-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--toast-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--toast-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--toast-icon-align-items` | `center` |
  * | `--toast-icon-disc-color` | `currentcolor` |
  * | `--toast-icon-display` | `inline-flex` |
@@ -80,9 +84,10 @@
  * | `--toast-info-icon-color` | `var(--toast-info-icon)` |
  * | `--toast-inline-size` | `100%` |
  * | `--toast-inset-inline` | `0` |
+ * | `--toast-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--toast-limited-opacity` | `0` |
  * | `--toast-limited-pointer-events` | `none` |
- * | `--toast-line-height` | `var(--line-height-20)` |
+ * | `--toast-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--toast-loading-icon` | `-` |
  * | `--toast-loading-icon-color` | `var(--toast-loading-icon)` |
  * | `--toast-pointer-events` | `auto` |
@@ -98,6 +103,7 @@
  * | `--toast-text-flex-direction` | `column` |
  * | `--toast-text-min-inline-size` | `0` |
  * | `--toast-text-overflow-wrap` | `anywhere` |
+ * | `--toast-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--toast-title` | `-` |
  * | `--toast-title-color` | `var(--toast-title)` |
  * | `--toast-title-font` | `inherit` |

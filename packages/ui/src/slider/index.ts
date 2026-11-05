@@ -45,11 +45,14 @@
  * | `--slider-mark-end-justify-self` | `end` |
  * | `--slider-mark-end-text-align` | `end` |
  * | `--slider-mark-end-translate` | `none` |
- * | `--slider-mark-font-size` | `var(--periscope-font-size-small)` |
+ * | `--slider-mark-font-family` | `var(--paragraph-small-400-font-family)` |
+ * | `--slider-mark-font-size` | `var(--paragraph-small-400-font-size)` |
+ * | `--slider-mark-font-weight` | `var(--paragraph-small-400-font-weight)` |
  * | `--slider-mark-grid-area` | `1 / 1` |
  * | `--slider-mark-inset-inline-start` | `var(--slider-internal-mark-anchor)` |
  * | `--slider-mark-justify-self` | `start` |
- * | `--slider-mark-line-height` | `16px` |
+ * | `--slider-mark-letter-spacing` | `var(--paragraph-small-400-letter-spacing)` |
+ * | `--slider-mark-line-height` | `var(--paragraph-small-400-line-height)` |
  * | `--slider-mark-max-width` | `var(--slider-internal-mark-max-width)` |
  * | `--slider-mark-position` | `relative` |
  * | `--slider-mark-start-inset-inline-start` | `0` |
@@ -57,6 +60,7 @@
  * | `--slider-mark-start-translate` | `none` |
  * | `--slider-mark-text-align` | `center` |
  * | `--slider-mark-text-overflow` | `ellipsis` |
+ * | `--slider-mark-text-transform` | `var(--paragraph-small-400-text-transform)` |
  * | `--slider-mark-translate` | `-50% 0` |
  * | `--slider-mark-white-space` | `nowrap` |
  * | `--slider-mark-wrap-overflow-wrap` | `anywhere` |

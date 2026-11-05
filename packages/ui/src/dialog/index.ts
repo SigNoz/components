@@ -6,10 +6,21 @@
  * | Token | Default |
  * |-------|---------|
  * | `--dialog-close-button-size` | `2rem` |
+ * | `--dialog-content-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--dialog-content-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--dialog-content-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--dialog-content-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--dialog-content-line-height` | `var(--paragraph-base-400-line-height)` |
+ * | `--dialog-content-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--dialog-description-color` | `var(--l2-foreground)` |
- * | `--dialog-description-font-size` | `var(--periscope-font-size-base, 13px)` |
+ * | `--dialog-description-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--dialog-description-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--dialog-description-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--dialog-description-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--dialog-description-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--dialog-description-margin` | `0px` |
  * | `--dialog-description-padding` | `var(--spacing-8, 1rem)` |
+ * | `--dialog-description-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--dialog-footer-border-color` | `var(--border)` |
  * | `--dialog-footer-border-style` | `solid` |
  * | `--dialog-footer-border-width` | `1px 0px 0px 0px` |
@@ -22,17 +33,23 @@
  * | `--dialog-header-gap` | `var(--spacing-2, 0.25rem)` |
  * | `--dialog-header-padding` | `var(--spacing-8, 1rem)` |
  * | `--dialog-subtitle-color` | `var(--l2-foreground)` |
- * | `--dialog-subtitle-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--dialog-subtitle-font-weight` | `var(--font-weight-normal, 400)` |
- * | `--dialog-subtitle-line-height` | `100%` |
+ * | `--dialog-subtitle-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--dialog-subtitle-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--dialog-subtitle-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--dialog-subtitle-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--dialog-subtitle-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--dialog-subtitle-margin` | `0` |
  * | `--dialog-subtitle-padding` | `0` |
+ * | `--dialog-subtitle-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--dialog-title-color` | `var(--l1-foreground)` |
- * | `--dialog-title-font-size` | `var(--periscope-font-size-base, 13px)` |
- * | `--dialog-title-font-weight` | `var(--font-weight-normal, 400)` |
+ * | `--dialog-title-font-family` | `var(--label-base-400-font-family)` |
+ * | `--dialog-title-font-size` | `var(--label-base-400-font-size)` |
+ * | `--dialog-title-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--dialog-title-gap` | `var(--spacing-4, 0.5rem)` |
- * | `--dialog-title-line-height` | `100%` |
+ * | `--dialog-title-letter-spacing` | `var(--label-base-400-letter-spacing)` |
+ * | `--dialog-title-line-height` | `var(--label-base-400-line-height)` |
  * | `--dialog-title-margin` | `0` |
+ * | `--dialog-title-text-transform` | `var(--label-base-400-text-transform)` |
  */
 // #endregion css-tokens
 

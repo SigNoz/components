@@ -43,7 +43,14 @@ export const Default: Story = {
 						<DrawerTitle>Drawer overlay</DrawerTitle>
 					</DrawerHeader>
 					<DrawerDescription>
-						<Typography size="sm">
+						<Typography
+							as="span"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							textOverflow="wrap"
+						>
 							The overlay dims the background and blocks interaction with the page while the drawer
 							is open.
 						</Typography>

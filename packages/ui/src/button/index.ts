@@ -46,9 +46,10 @@
  * | `--button-focus-ring` | `-` |
  * | `--button-focus-visible-outline` | `var(--button-focus-ring) solid 1px` |
  * | `--button-focus-visible-outline-offset` | `1px` |
- * | `--button-font-size` | `var(--periscope-font-size-small)` |
+ * | `--button-font-family` | `var(--button-internal-font-family)` |
+ * | `--button-font-size` | `var(--button-internal-font-size)` |
  * | `--button-font-variant-numeric` | `slashed-zero` |
- * | `--button-font-weight` | `var(--font-weight-medium)` |
+ * | `--button-font-weight` | `var(--button-internal-font-weight)` |
  * | `--button-gap` | `var(--button-internal-gap)` |
  * | `--button-ghost-content-z-index` | `1` |
  * | `--button-ghost-glow-background` | `linear-gradient(90deg, color-mix(in srgb, var(-...` |
@@ -87,7 +88,7 @@
  * | `--button-justify-content` | `center` |
  * | `--button-label-display` | `block` |
  * | `--button-label-min-width` | `0` |
- * | `--button-label-overflow` | `hidden` |
+ * | `--button-label-overflow` | `clip visible` |
  * | `--button-label-text-overflow` | `ellipsis` |
  * | `--button-label-tooltip-max-width` | `20rem` |
  * | `--button-label-white-space` | `nowrap` |
@@ -154,7 +155,7 @@
  * | `--button-secondary-outlined-label` | `-` |
  * | `--button-secondary-outlined-label-hover` | `-` |
  * | `--button-secondary-solid-foreground` | `var(--button-secondary-label)` |
- * | `--button-size-line-height` | `14px` |
+ * | `--button-size-line-height` | `var(--button-internal-line-height)` |
  * | `--button-slot-align-items` | `center` |
  * | `--button-slot-display` | `flex` |
  * | `--button-slot-justify-content` | `center` |
@@ -170,7 +171,8 @@
  * | `--button-success-link-hover` | `-` |
  * | `--button-success-link-hover-color` | `var(--button-success-link-hover)` |
  * | `--button-success-solid-foreground` | `var(--button-success-label)` |
- * | `--button-text-spacing` | `-0.005em` |
+ * | `--button-text-spacing` | `var(--button-internal-letter-spacing)` |
+ * | `--button-text-transform` | `var(--button-internal-text-transform)` |
  * | `--button-transition` | `background-color 150ms ease, color 150ms ease, ...` |
  * | `--button-variant-dashed-background-color` | `transparent` |
  * | `--button-variant-dashed-border` | `1px solid transparent` |
@@ -187,7 +189,7 @@
  * | `--button-variant-ghost-position` | `relative` |
  * | `--button-variant-link-background-color` | `transparent` |
  * | `--button-variant-link-color` | `var(--button-internal-link-foreground)` |
- * | `--button-variant-link-font-weight` | `var(--font-weight-medium)` |
+ * | `--button-variant-link-font-weight` | `var(--button-font-weight, var(--button-internal...` |
  * | `--button-variant-link-hover-background-color` | `transparent` |
  * | `--button-variant-link-hover-color` | `var(--button-internal-link-hover-foreground)` |
  * | `--button-variant-outlined-background-color` | `var(--button-secondary-outlined-background)` |

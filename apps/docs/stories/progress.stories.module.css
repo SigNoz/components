@@ -26,10 +26,6 @@
   width: 100%;
 }
 
-.rowLabel {
-  white-space: nowrap;
-}
-
 /* The bar takes what the button leaves, so the button keeps its label. */
 .task {
   display: grid;

@@ -14,11 +14,13 @@ beforeEach(() => {
 		--label-small-500-font-weight: 500;
 		--label-small-500-line-height: 1;
 		--label-small-500-letter-spacing: 0px;
+		--label-small-500-text-transform: none;
 		--label-base-500-font-family: Inter, sans-serif;
 		--label-base-500-font-size: 13px;
 		--label-base-500-font-weight: 500;
 		--label-base-500-line-height: 1;
 		--label-base-500-letter-spacing: -0.5px;
+		--label-base-500-text-transform: none;
 		--radius-3: 6px;
 		--radius-round: 999999px;
 		--avatar-primary-background: rgb(10, 20, 30);

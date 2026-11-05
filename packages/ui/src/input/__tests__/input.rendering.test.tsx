@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Search } from '@signozhq/icons';
 import { describe, expect, it } from 'vitest';
 import { Input } from '../input.js';
+import { setTokens } from '../../__tests__/test-utils.js';
 
 describe('Input rendering', () => {
 	it('renders a native input inside the frame', () => {
@@ -123,4 +124,25 @@ describe('Input rendering', () => {
 		expect(screen.getByRole('textbox')).not.toBeDisabled();
 		expect(screen.getByRole('textbox')).toHaveAttribute('readonly');
 	});
+});
+
+describe('Input field height', () => {
+	it.each([
+		['base', 18],
+		['large', 26],
+	] as const)(
+		'stretches a single-line field over the inner height of a %s frame',
+		(size, height) => {
+			setTokens(`
+			--spacing-3: 6px;
+			--spacing-6: 12px;
+			--input-border: black;
+			--label-base-400-font-size: 13px;
+			--label-base-400-line-height: 1;
+		`);
+			render(<Input size={size} testId="org" />);
+
+			expect(screen.getByRole('textbox').getBoundingClientRect().height).toBe(height);
+		},
+	);
 });

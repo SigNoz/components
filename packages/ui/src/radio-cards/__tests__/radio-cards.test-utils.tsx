@@ -22,9 +22,10 @@ export function installTokens(): void {
 			--spacing-4: 8px;
 			--spacing-6: 12px;
 			--radius-1: 2px;
-			--periscope-font-size-base: 13px;
-			--periscope-line-height-base: 20px;
-			--font-weight-medium: 500;
+			--paragraph-base-500-font-size: 13px;
+			--paragraph-base-500-font-weight: 500;
+			--paragraph-base-500-line-height: 20px;
+			--paragraph-base-500-letter-spacing: -0.005em;
 		}`;
 		document.head.append(tokens);
 	});

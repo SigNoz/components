@@ -15,10 +15,28 @@ import { waitForEffects } from './shared/play.js';
 function Pane({ title, children }: { title: string; children?: ReactNode }) {
 	return (
 		<div className={styles.pane}>
-			<Typography size="sm" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			{children !== undefined && <Typography.Text color="muted">{children}</Typography.Text>}
+			{children !== undefined && (
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+				>
+					{children}
+				</Typography>
+			)}
 		</div>
 	);
 }
@@ -135,7 +153,16 @@ function SidePanelWithWidth() {
 	return (
 		<div className={`story-resizable ${styles.withHeader}`}>
 			<div className={styles.header}>
-				<Typography size="sm">Span tree: {width}px</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Span tree: {width}px
+				</Typography>
 			</div>
 			<Resizable
 				orientation="horizontal"
@@ -176,7 +203,14 @@ export const ResizableShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Horizontal
 				</Typography>
 				<div className={`story-resizable ${styles.short}`}>
@@ -185,7 +219,14 @@ export const ResizableShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Vertical
 				</Typography>
 				<div className="story-resizable">
@@ -206,10 +247,26 @@ export const ResizableShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Three panels
 				</Typography>
-				<Typography size="sm">Panels with no defaultSize share the room in equal parts.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Panels with no defaultSize share the room in equal parts.
+				</Typography>
 				<div className={`story-resizable ${styles.short}`}>
 					<Resizable
 						orientation="horizontal"
@@ -223,10 +280,24 @@ export const ResizableShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Nested
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A Resizable in a panel fills it with no wrapper, and has handles of its own.
 				</Typography>
 				<div className="story-resizable">
@@ -261,10 +332,24 @@ export const ResizableShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					A panel in pixels, under a header
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The header reads the width from onResize. The Resizable takes the height the header
 					leaves.
 				</Typography>
@@ -272,7 +357,14 @@ export const ResizableShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Content larger than its panel
 				</Typography>
 				<div className={`story-resizable ${styles.short}`}>
@@ -286,11 +378,17 @@ export const ResizableShowcase: Story = {
 								children: (
 									<div className={styles.longContent}>
 										{Array.from({ length: 30 }, (_, index) => (
-											<div key={index} className={styles.logLine}>
-												<Typography.Text>
-													{`2026-10-06T12:00:${String(index).padStart(2, '0')}Z info checkout-service handled request ${index} with a line long enough to scroll sideways`}
-												</Typography.Text>
-											</div>
+											<Typography
+												key={index}
+												variant="paragraph"
+												size="base"
+												weight="regular"
+												color="inherit"
+												as="div"
+												textOverflow="visible"
+											>
+												{`2026-10-06T12:00:${String(index).padStart(2, '0')}Z info checkout-service handled request ${index} with a line long enough to scroll sideways`}
+											</Typography>
 										))}
 									</div>
 								),
@@ -306,10 +404,26 @@ export const ResizableShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					One panel
 				</Typography>
-				<Typography size="sm">Fills the root, with no handle.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Fills the root, with no handle.
+				</Typography>
 				<div className={`story-resizable ${styles.short}`}>
 					<Resizable
 						orientation="horizontal"

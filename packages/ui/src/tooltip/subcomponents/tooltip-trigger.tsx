@@ -4,6 +4,7 @@ import { getElementRef, setRef } from '../../lib/merge-refs.js';
 import { cn } from '../../lib/utils.js';
 import { useTooltipContentId } from '../tooltip-content-id-context.js';
 import { TooltipTriggerProvider, useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
+import styles from '../tooltip.module.scss';
 
 /**
  * @access private
@@ -84,6 +85,7 @@ export const TooltipTrigger = React.forwardRef<HTMLButtonElement, TooltipTrigger
 						handle={handle}
 						{...testIdProps}
 						{...props}
+						className={cn(styles['tooltip__trigger'], props.className)}
 						aria-describedby={ownDescribedBy}
 					>
 						{children}

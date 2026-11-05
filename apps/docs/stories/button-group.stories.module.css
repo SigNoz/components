@@ -5,12 +5,6 @@
 	width: 100%;
 }
 
-.sectionNote {
-	color: var(--muted-foreground);
-	margin-bottom: 16px;
-	max-width: 60rem;
-}
-
 .exampleStack {
 	display: flex;
 	flex-direction: column;
@@ -29,10 +23,6 @@
 	padding-bottom: 4px;
 }
 
-.matrixLabel {
-	white-space: nowrap;
-}
-
 /* A composition matrix: a label column, then one column per member state. */
 .compositionMatrix {
 	grid-template-columns: max-content repeat(3, max-content);
@@ -43,12 +33,6 @@
 	flex-direction: column;
 	gap: 8px;
 	align-items: flex-start;
-}
-
-.compositionNote {
-	color: var(--muted-foreground);
-	margin-bottom: 8px;
-	max-width: 60rem;
 }
 
 /* A dashed outline shows how much room each group was given. Drag the corner to change it. */

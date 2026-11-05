@@ -33,6 +33,9 @@
   overflow: var(--toggle-group-overflow, clip);
   min-inline-size: var(--toggle-group-min-inline-size, 0);
 
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
+
   &[data-variant='outlined'][data-color='secondary'] {
     --toggle-group-internal-background: var(--toggle-group-secondary-outlined-background-color, var(--toggle-group-secondary-outlined-background));
     --toggle-group-internal-background-hover: var(--toggle-group-secondary-outlined-hover-background-color, var(--toggle-group-secondary-outlined-background-hover));
@@ -135,9 +138,14 @@
   background-color: var(--toggle-group-button-background-color, transparent);
   color: var(--toggle-group-button-color, var(--toggle-group-internal-label));
 
-  font-size: var(--toggle-group-button-font-size, var(--periscope-font-size-small));
-  font-weight: var(--toggle-group-button-font-weight, var(--font-weight-normal));
-  line-height: var(--toggle-group-button-line-height, 1);
+  font-family: var(--toggle-group-button-font-family, var(--label-small-400-font-family));
+  font-size: var(--toggle-group-button-font-size, var(--label-small-400-font-size));
+  font-weight: var(--toggle-group-button-font-weight, var(--label-small-400-font-weight));
+  line-height: var(--toggle-group-button-line-height, var(--label-small-400-line-height));
+  letter-spacing: var(--toggle-group-button-letter-spacing, var(--label-small-400-letter-spacing));
+  text-transform: var(--toggle-group-button-text-transform, var(--label-small-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
   white-space: var(--toggle-group-button-white-space, nowrap);
   cursor: var(--toggle-group-button-cursor, pointer);
 
@@ -222,7 +230,7 @@
   // Past this the label truncates and shows its full text in a tooltip, so one long label cannot
   // take the bar. No spacing token is this size.
   max-inline-size: var(--toggle-group-label-max-inline-size, 120px);
-  overflow: var(--toggle-group-label-overflow, hidden);
+  overflow: var(--toggle-group-label-overflow, clip visible);
   white-space: var(--toggle-group-label-white-space, nowrap);
   text-overflow: var(--toggle-group-label-text-overflow, ellipsis);
 }

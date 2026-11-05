@@ -30,10 +30,10 @@
  * | `--button-group-focus-ring` | `-` |
  * | `--button-group-focus-visible-outline` | `var(--button-group-internal-focus-ring) solid 1px` |
  * | `--button-group-focus-visible-outline-offset` | `1px` |
- * | `--button-group-font-family` | `inherit` |
- * | `--button-group-font-size` | `var(--periscope-font-size-small)` |
+ * | `--button-group-font-family` | `var(--label-small-500-font-family)` |
+ * | `--button-group-font-size` | `var(--label-small-500-font-size)` |
  * | `--button-group-font-variant-numeric` | `slashed-zero` |
- * | `--button-group-font-weight` | `var(--font-weight-medium)` |
+ * | `--button-group-font-weight` | `var(--label-small-500-font-weight)` |
  * | `--button-group-gap` | `var(--spacing-3)` |
  * | `--button-group-height` | `24px` |
  * | `--button-group-icon-flex-shrink` | `0` |
@@ -64,10 +64,10 @@
  * | `--button-group-label-display` | `block` |
  * | `--button-group-label-max-inline-size` | `120px` |
  * | `--button-group-label-min-width` | `0` |
- * | `--button-group-label-overflow` | `hidden` |
+ * | `--button-group-label-overflow` | `clip visible` |
  * | `--button-group-label-text-overflow` | `ellipsis` |
  * | `--button-group-label-white-space` | `nowrap` |
- * | `--button-group-line-height` | `14px` |
+ * | `--button-group-line-height` | `var(--label-small-500-line-height)` |
  * | `--button-group-loader-idle-animation-play-state` | `paused` |
  * | `--button-group-loader-slot-busy-opacity` | `1` |
  * | `--button-group-loader-slot-busy-transform` | `translateY(0)` |
@@ -126,7 +126,8 @@
  * | `--button-group-slot-transition` | `opacity var(--button-group-internal-loading-dur...` |
  * | `--button-group-suffix-slot-display` | `contents` |
  * | `--button-group-text-decoration` | `none` |
- * | `--button-group-text-spacing` | `-0.005em` |
+ * | `--button-group-text-spacing` | `var(--label-small-500-letter-spacing)` |
+ * | `--button-group-text-transform` | `var(--label-small-500-text-transform)` |
  * | `--button-group-tooltip-max-width` | `20rem` |
  * | `--button-group-transition` | `background-color 150ms ease, color 150ms ease, ...` |
  * | `--button-group-vertical-align` | `middle` |

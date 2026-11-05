@@ -46,8 +46,12 @@ export function declareDesignTokens(): void {
 			--spacing-8: 16px;
 			--radius-1: 2px;
 			--radius-round: 999999px;
-			--periscope-font-size-base: 13px;
-			--periscope-font-weight-regular: 400;
+			--label-base-400-font-family: Inter, sans-serif;
+			--label-base-400-font-size: 13px;
+			--label-base-400-font-weight: 400;
+			--label-base-400-line-height: 1;
+			--label-base-400-letter-spacing: -0.005em;
+			--label-base-400-text-transform: none;
 			--l1-foreground: rgb(236, 238, 242);
 			--l2-foreground: rgb(192, 193, 195);
 			--primary-background: rgb(78, 116, 248);

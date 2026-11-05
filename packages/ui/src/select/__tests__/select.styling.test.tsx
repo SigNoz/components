@@ -5,27 +5,44 @@ import { Select } from '../index.js';
 import { FRAMEWORKS, openSelect } from './select.test-utils.js';
 
 /**
- * The type tokens live in `@signozhq/design-tokens` and are not loaded here, so they are declared
- * in the test to keep the subject on the rules in `select.module.scss`.
+ * The text style tokens live in `@signozhq/design-tokens` and are not loaded here, so they are
+ * declared in the test to keep the subject on the rules in `select.module.scss`.
  */
 let tokens: HTMLStyleElement;
 
 beforeEach(() => {
 	tokens = document.createElement('style');
 	tokens.textContent = `:root {
-		--periscope-font-size-small: 11px;
-		--line-height-18: 18px;
+		--label-small-400-font-size: 11px;
+		--label-small-400-line-height: 1;
+		--label-base-400-font-size: 13px;
+		--label-base-400-line-height: 1;
+		--uppercase-small-600-font-size: 11px;
+		--uppercase-small-600-line-height: 1;
+		--paragraph-base-400-line-height: 20px;
 		--spacing-10: 20px;
 	}`;
 	document.head.append(tokens);
 });
+
+/**
+ * The spacing steps the row padding and the row floors are built from.
+ */
+const ROW_SPACING = `:root {
+	--spacing-1: 2px;
+	--spacing-3: 6px;
+	--spacing-4: 8px;
+	--spacing-6: 12px;
+	--spacing-12: 24px;
+	--spacing-16: 32px;
+}`;
 
 afterEach(() => {
 	tokens.remove();
 });
 
 describe('Select chips type', () => {
-	it('keeps the descenders inside the label clip', () => {
+	it('leaves the descenders unclipped below the label line', () => {
 		render(
 			<Select
 				multiple
@@ -40,12 +57,13 @@ describe('Select chips type', () => {
 		const range = document.createRange();
 		range.selectNodeContents(text);
 		const glyphs = range.getBoundingClientRect();
-		const box = text.getBoundingClientRect();
+		const chip = required(text.closest('[data-slot="select-chip"]')).getBoundingClientRect();
 
-		// Guards the comparison below: an empty range would sit inside any box.
-		expect(glyphs.height).toBeGreaterThan(0);
-		expect(glyphs.top).toBeGreaterThanOrEqual(box.top);
-		expect(glyphs.bottom).toBeLessThanOrEqual(box.bottom);
+		// Guards the subject: on a line height of 1 the glyphs stand out of the label box.
+		expect(glyphs.height).toBeGreaterThan(text.getBoundingClientRect().height);
+		expect(getComputedStyle(text).overflowY).toBe('visible');
+		expect(glyphs.top).toBeGreaterThanOrEqual(chip.top);
+		expect(glyphs.bottom).toBeLessThanOrEqual(chip.bottom);
 	});
 
 	it('sets the overflow count at the size of the chips beside it', () => {
@@ -124,6 +142,53 @@ describe('Select chips layout', () => {
 		expect(trigger.height).toBeGreaterThan(32);
 		expect(centerY(icon)).toBe(centerY(firstChip));
 		expect(firstChip.getBoundingClientRect().top - trigger.top).toBe(6);
+	});
+});
+
+describe('Select rows type', () => {
+	beforeEach(() => {
+		tokens.textContent += ROW_SPACING;
+	});
+
+	it('keeps a row at 34px on the label line', async () => {
+		render(
+			<Select placeholder="Select a framework..." aria-label="Framework" items={FRAMEWORKS} />,
+		);
+		const listbox = await openSelect();
+		const row = required(listbox.querySelector('[data-slot="select-item"]'));
+
+		expect(row.getBoundingClientRect().height).toBe(34);
+	});
+
+	it('keeps a group label at 30px on the uppercase line', async () => {
+		render(
+			<Select
+				placeholder="Select a framework..."
+				aria-label="Framework"
+				items={[
+					{
+						type: 'group',
+						value: 'web',
+						label: 'Web',
+						items: [{ type: 'item', value: 'react', label: 'React' }],
+					},
+				]}
+			/>,
+		);
+		const listbox = await openSelect();
+		const label = required(listbox.querySelector('[data-slot="select-group-label"]'));
+
+		expect(label.getBoundingClientRect().height).toBe(30);
+	});
+
+	it('keeps the empty row on its paragraph line when the rows take another', async () => {
+		tokens.textContent += `:root { --select-item-line-height: 16px; }`;
+		render(<Select placeholder="Select a framework..." aria-label="Framework" items={[]} />);
+		await openSelect();
+		const empty = required(document.querySelector('[data-slot="select-empty"]'));
+
+		expect(getComputedStyle(empty).lineHeight).toBe('20px');
+		expect(empty.getBoundingClientRect().height).toBe(36);
 	});
 });
 

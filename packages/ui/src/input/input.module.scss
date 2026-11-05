@@ -10,6 +10,12 @@
 	--input-internal-placeholder-hover: var(--input-placeholder-hover-color, var(--input-placeholder-hover));
 	--input-internal-icon: var(--input-icon-color, var(--input-icon));
 	--input-internal-focus-ring: var(--input-focus-ring-color, var(--input-focus-ring));
+	--input-internal-font-family: var(--label-base-400-font-family);
+	--input-internal-font-size: var(--label-base-400-font-size);
+	--input-internal-font-weight: var(--label-base-400-font-weight);
+	--input-internal-line-height: var(--label-base-400-line-height);
+	--input-internal-letter-spacing: var(--label-base-400-letter-spacing);
+	--input-internal-text-transform: var(--label-base-400-text-transform);
 
 	display: var(--input-display, flex);
 	align-items: var(--input-align-items, center);
@@ -23,6 +29,14 @@
 	border-radius: var(--input-border-radius, var(--radius-1));
 	background-color: var(--input-internal-background);
 	transition: var(--input-transition, border-color 150ms ease, background-color 150ms ease, color 150ms ease);
+	font-family: var(--input-font-family, var(--input-internal-font-family));
+	font-size: var(--input-font-size, var(--input-internal-font-size));
+	font-weight: var(--input-font-weight, var(--input-internal-font-weight));
+	line-height: var(--input-line-height, var(--input-internal-line-height));
+	letter-spacing: var(--input-letter-spacing, var(--input-internal-letter-spacing));
+	text-transform: var(--input-text-transform, var(--input-internal-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	&[data-size='base'] {
 		--input-internal-height: var(--input-height, 32px);
@@ -81,6 +95,13 @@
 	}
 
 	&[data-member='textarea'] {
+		--input-internal-font-family: var(--paragraph-base-400-font-family);
+		--input-internal-font-size: var(--paragraph-base-400-font-size);
+		--input-internal-font-weight: var(--paragraph-base-400-font-weight);
+		--input-internal-line-height: var(--paragraph-base-400-line-height);
+		--input-internal-letter-spacing: var(--paragraph-base-400-letter-spacing);
+		--input-internal-text-transform: var(--paragraph-base-400-text-transform);
+
 		block-size: var(--input-textarea-block-size, auto);
 		min-block-size: var(--input-internal-height);
 		align-items: var(--input-textarea-align-items, flex-start);
@@ -92,7 +113,7 @@
 		// Centred on the first line of text rather than on the frame, so it stays put as rows grow.
 		.input__status-icon {
 			margin-block-start: var(--input-textarea-status-icon-offset,
-					calc((var(--input-line-height, 20px) - var(--input-icon-size, 14px)) / 2));
+					calc((var(--input-line-height, var(--input-internal-line-height)) - var(--input-icon-size, 14px)) / 2));
 		}
 	}
 }
@@ -105,12 +126,9 @@
 	outline: var(--input-field-outline, none);
 	background-color: var(--input-field-background, transparent);
 	color: var(--input-internal-foreground);
-	font-family: var(--input-font-family, inherit);
-	font-size: var(--input-font-size, var(--periscope-font-size-base));
-	font-weight: var(--input-font-weight, var(--font-weight-normal));
-	line-height: var(--input-line-height, 20px);
-	// TODO: Convert this hardcoded value to semantic token
-	letter-spacing: var(--input-letter-spacing, -0.005em);
+	font: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
 
 	&::placeholder {
 		color: var(--input-internal-placeholder);
@@ -122,6 +140,10 @@
 	&:disabled {
 		pointer-events: none;
 	}
+}
+
+.input:not([data-member='textarea']) .input__field {
+	align-self: var(--input-field-align-self, stretch);
 }
 
 .input__prefix,

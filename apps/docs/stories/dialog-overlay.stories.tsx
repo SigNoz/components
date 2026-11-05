@@ -43,7 +43,14 @@ export const Default: Story = {
 						<DialogTitle>Dialog overlay</DialogTitle>
 					</DialogHeader>
 					<DialogDescription>
-						<Typography size="sm">
+						<Typography
+							as="p"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							textOverflow="wrap"
+						>
 							The overlay dims the background and blocks interaction with the page while the dialog
 							is open.
 						</Typography>

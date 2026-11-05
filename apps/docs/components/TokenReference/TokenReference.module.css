@@ -27,10 +27,6 @@
 	}
 }
 
-.headerTitle {
-	margin-top: 0.25rem;
-}
-
 .tabs {
 	display: flex;
 	gap: 0.5rem;

@@ -32,10 +32,6 @@
   padding-right: 1rem;
 }
 
-.matrixLabel {
-  white-space: nowrap;
-}
-
 .overflowGrid {
   display: grid;
   grid-template-columns: max-content 14rem minmax(0, 1fr);
