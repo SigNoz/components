@@ -39,7 +39,7 @@ consolidated in `feat: single package (#120)`. Reasons:
   version bumps between them.
 - **One package is less to maintain** than twenty-two: one build, one dependency set, one
   changelog.
-- **Components use each other.** `badge` renders `text-ellipsis`; `drawer` builds on
+- **Components use each other.** `pagination` renders `select`; `alert-dialog` builds on
   `dialog`. As separate packages every such change crossed a published version boundary.
   Now it's a relative import.
 - **Tree-shaking keeps the size honest.** A consumer importing `Badge` doesn't pay for the

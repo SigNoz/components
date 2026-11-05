@@ -23,7 +23,6 @@ export const externalPatterns = [
 	/@radix-ui\/.*$/,
 	/^@base-ui\/react(\/.*)?$/,
 	/^@signozhq\/.*$/,
-	'@chenglou/pretext',
 	'copy-text-to-clipboard',
 ];
 

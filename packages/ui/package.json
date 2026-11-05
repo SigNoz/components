@@ -347,16 +347,6 @@
 				"require": "./dist/tabs/index.cjs"
 			}
 		},
-		"./text-ellipsis": {
-			"import": {
-				"types": "./dist/text-ellipsis/index.d.ts",
-				"import": "./dist/text-ellipsis/index.mjs"
-			},
-			"require": {
-				"types": "./dist/text-ellipsis/index.d.cts",
-				"require": "./dist/text-ellipsis/index.cjs"
-			}
-		},
 		"./toast": {
 			"import": {
 				"types": "./dist/toast/index.d.ts",
@@ -426,7 +416,6 @@
 	},
 	"dependencies": {
 		"@base-ui/react": "1.7.0",
-		"@chenglou/pretext": "^0.0.8",
 		"@radix-ui/react-dialog": "^1.1.21",
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-slot": "^1.3.1",
