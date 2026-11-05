@@ -55,7 +55,8 @@ Five principles behind every component. Read when building; refer back when maki
    the exception: they share one `{name}-components.stories.tsx` next to the root's file.
    Symbols tagged `@access private` are exempt.
 6. **No comment by default.** A code comment stays only when it brings context from outside the
-   file or stops an edit from causing a bug. Read every comment in the diff against
+   file, stops an edit from causing a bug, or says why the code has a shape it cannot explain
+   itself. Read every comment in the diff against
    [Code comments](#code-comments) before you finish.
 
 Reference implementations to copy from:
@@ -138,13 +139,18 @@ Rules:
  */
 // #endregion css-tokens
 
-export type * from './badge.js';
 export { Badge } from './badge.js';
+export type { BadgeColorType, BadgeProps, BadgeVariantType } from './types.js';
 ```
 
-- `export type *` for the types, an explicit named export for each value. Never a bare
-  `export *`, which makes the public surface invisible to review.
-- Relative imports **must** carry the `.js` extension, here and everywhere else.
+- An explicit named export for each value. Never a bare `export *`, which makes the public
+  surface invisible to review.
+- Types are a named `export type { ... }` list whenever the source file also holds a type
+  tagged `@access private`, which is the usual case for `types.tsx` (exact-props helpers,
+  validators, resolved internal shapes). `export type *` would publish those private types.
+  `export type * from './x.js'` is fine only for a file whose every exported type is public.
+- Relative imports **must** carry the `.js` extension, here and everywhere else, tests
+  included: `*.types.messages.test.ts` imports `../../__tests__/type-error-messages.js`.
 - Order for multi-part components: presets first, then Root, then subcomponents alphabetically
   (see `dialog/index.ts`).
 - Every type referenced by a public prop must be exported here. A prop typed with something a
@@ -275,11 +281,18 @@ A shorthand that lists properties, such as `transition: opacity 150ms ease, colo
 splits into longhands so each part has its variable: `transition-property`,
 `transition-duration` and `transition-timing-function`.
 
-Three declarations stay bare, because an override would break a promise the component makes:
+Four declarations stay bare, because an override would break a promise the component makes:
 
 - Anything inside `@media (prefers-reduced-motion: reduce)`.
 - `display: none` on `[hidden]`.
 - `content` that only creates a pseudo-element.
+- A declaration that another public variable needs in order to work, where the override can only
+  break it. `contain: inline-size` is what lets `--skeleton-input-intrinsic-width` size the
+  input, so the width is the hook and the containment is not. Give it a comment that names the
+  variable it serves.
+
+`box-sizing`, `position`, `cursor` and the visually-hidden declarations are not in that list.
+They get a variable like any other declaration.
 
 #### Colours
 
@@ -774,7 +787,7 @@ stories.
 
 #### The test
 
-Ask two questions of every comment. Keep it only if one answer is yes.
+Ask three questions of every comment. Keep it only if one answer is yes.
 
 1. Does it carry context from outside this file that the reader needs on this line? What a
    dependency does on its own (Base UI clamps `value`, and renders `null` as indeterminate), or
@@ -783,9 +796,14 @@ Ask two questions of every comment. Keep it only if one answer is yes.
 2. Does it stop a likely edit from causing a bug? A prop written after the spread so a stray
    value cannot win, a keyframe name left bare, a value that looks redundant, an alternative
    that looks simpler and is wrong (`toFixed(2)` pads `5` to `5.00`).
+3. Does it say why the code has this shape, when the reason is not on the line or in its names?
+   The prefix comes first in the DOM, so the footer column is reversed. Only an explicit `false`
+   keeps the alert open, so a handler that returns nothing still closes it. The query skips
+   `aria-hidden` copies because the measuring row duplicates every item.
 
-"It explains the code" is not a yes. Code that needs explaining gets a better name or a simpler
-shape first.
+"It says what the code does" is not a yes. Code that needs explaining gets a better name or a
+simpler shape first. A reason the code cannot state is a yes, even when the same file has the
+code it explains.
 
 #### Always delete
 
@@ -932,6 +950,10 @@ parameters: {
   design: { type: 'figma', url: 'https://www.figma.com/design/<file>?node-id=<id>' },
 }
 ```
+
+The link is required when the design file has a frame for the component. A component built from
+the semantic tokens with no frame of its own gets no link: say so in the PR body, and add the link
+in the change that follows the frame.
 
 ### `argTypes`
 
@@ -1117,9 +1139,42 @@ a `className` and expects it on the DOM.
 Query by role and accessible name (`getByRole('button', { name: /close badge/i })`) or by
 `testId`. Don't assert on hashed CSS Module class names.
 
+### Bugs review keeps finding
+
+The reworks so far shipped the same few bugs again and again, and review caught each one after
+the code was written. Write the test for each case that applies before you open the PR.
+
+- **Caller props cannot overwrite what the component owns.** Spread the caller's props first,
+  then `data-slot`, the state `data-*` attributes and the ARIA the component computes. Test it:
+  pass `data-slot` or a state attribute and assert the component's value wins.
+- **The type and the runtime accept the same values.** Every value the type allows renders, and
+  every value the runtime drops is a type error. Test the edges in both the type test and the
+  render test: punctuation for a key, a keyword for a width, `unknown` and `any` for a generic
+  payload.
+- **A prop value that reaches CSS math is a length.** `min()`, `max()`, `clamp()` and `calc()`
+  are invalid with `auto`, `none` or `max-content` in them, and an invalid declaration is
+  dropped without a warning. Handle keyword values outside the math, or reject them in the type.
+- **Handles and controlled state survive reordering.** For a handle or an async callback, test
+  close then reopen while a result is pending, unmount while open, and a new `key` on the same
+  handle. A result from an older opening must not touch the current one. For a controlled
+  value, test a parent that answers late or never. Detect an async result with a callable `then`,
+  not `instanceof Promise`, which fails across windows.
+- **Hiding the focused element moves focus first.** Collapsing, `inert`, `hidden` and swapping a
+  wrapper all drop focus to `body`. Move it to the nearest control that stays, and test it with
+  the keyboard.
+- **A resource can settle before React attaches.** An image that failed or loaded during server
+  rendering fires no event later. Check `complete` when the element attaches.
+- **Docs name only what exists on this branch.** Every import path, story name, prop value and
+  size in MDX, JSDoc and the guidelines resolves on the branch. A claim that holds only after
+  another PR merges names that PR in the PR body, and the PR merges after it.
+
 ## 8. Reviewing
 
 - **Per PR**: the checklist in [`.github/pull_request_template.md`](./.github/pull_request_template.md)
   is this document in checkbox form. It ships with every PR body, tick it, don't delete it.
 - **Auditing an existing component**: score it with
   [COMPONENT_AUDIT_RUBRIC.md](./COMPONENT_AUDIT_RUBRIC.md) and record the total in an issue.
+- **Code moved without a rework**: a component moved so another one can be rebuilt (Drawer, kept
+  on Radix when Dialog moved to Base UI) keeps its styles and exports as they are. These rules
+  apply to it in the change that rebuilds it, and the PR body says which directory was only
+  moved.
