@@ -10,6 +10,7 @@ import {
 	type ReactElement,
 	type ReactNode,
 } from 'react';
+import { getLinkProps } from './link-props.js';
 import type { RejectedProps } from './utils.js';
 
 /**
@@ -61,19 +62,6 @@ export type RenderLinkProps = {
 } & AriaAttributes;
 
 /**
- * `rel` with `noopener` and `noreferrer` added, for a link that opens in a new tab. The values it
- * already holds are kept.
- */
-function withBlankTargetRel(rel: string | undefined): string {
-	const values = new Set(rel?.split(/\s+/).filter(Boolean));
-
-	values.add('noopener');
-	values.add('noreferrer');
-
-	return [...values].join(' ');
-}
-
-/**
  * Renders a {@link RenderLinkProps} link with the `data-slot` and the class of the component that
  * owns it. A link with neither `href` nor a destination on the `render` element is a bug: it
  * renders plain text and warns on the console, naming the component as `name`.
@@ -99,9 +87,7 @@ export function useRenderLink(
 		Record<string, unknown>
 	>;
 	const elementProps = element.props;
-	const resolvedHref = (elementProps['href'] as string | undefined) ?? href;
-	const resolvedTarget = (elementProps['target'] as string | undefined) ?? target;
-	const hasDestination = resolvedHref != null || elementProps['to'] != null;
+	const { props: linkProps, hasDestination } = getLinkProps(element, { href, target });
 	const sharedProps = {
 		'data-slot': slot,
 		...(testId === undefined ? {} : { 'data-testid': testId }),
@@ -117,15 +103,9 @@ export function useRenderLink(
 		enabled: hasDestination,
 		// The props of the element win over the ones below, an `undefined` one too. So `href`,
 		// `target` and `children` go on the element itself, where the ones it leaves `undefined` take
-		// the ones of the link, and `noopener` and `noreferrer` join its `rel`. Only the props that are
-		// set: an `undefined` one is still passed to the element, and a router link that spreads its
-		// props after its own `href` would lose it.
+		// the ones of the link.
 		render: cloneElement(element, {
-			...(resolvedHref == null ? {} : { href: resolvedHref }),
-			...(resolvedTarget == null ? {} : { target: resolvedTarget }),
-			...(resolvedTarget === '_blank'
-				? { rel: withBlankTargetRel(elementProps['rel'] as string | undefined) }
-				: {}),
+			...linkProps,
 			children: elementProps['children'] ?? children,
 		}),
 		ref,

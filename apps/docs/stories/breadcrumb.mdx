@@ -1,0 +1,250 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as BreadcrumbStories from './breadcrumb.stories';
+
+<Meta of={BreadcrumbStories} />
+
+# Breadcrumb
+
+A hierarchical location: a `<nav>` holding an ordered list of crumbs, root first and the current
+page last. It renders from a single `items` array, collapses the middle of a trail that does not fit
+into a menu, and forwards `id`, every `aria-*` attribute and every `data-*` attribute except
+`data-testid` to the `<nav>`. Its accessible name is `Breadcrumb` unless `aria-label` says
+otherwise, and the ref is the `<nav>`.
+
+Use it to show where a page sits in a hierarchy and to jump back up. For switching between views of
+one page, use `ToggleGroup`.
+
+## How to use
+
+`items` is the only required prop. There are no subcomponents to compose: the trail owns its markup.
+
+```tsx
+import { Breadcrumb } from '@signozhq/ui';
+
+export default function ServiceHeader() {
+	return (
+		<Breadcrumb
+			items={[
+				{ title: 'Services', href: '/services' },
+				{ title: 'Payments', href: '/services/payments' },
+				{ title: 'checkout-service' },
+			]}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Crumbs
+
+What a crumb renders as depends on what its item carries. Only the first three react to hover and
+focus. A crumb with none of them is plain text.
+
+| The item has                            | The crumb is                                      |
+| --------------------------------------- | ------------------------------------------------- |
+| a `menu` with entries                   | a `<button>` with a chevron, opening a `Dropdown` |
+| an `href` or a `render`                 | an `<a>`                                          |
+| an `onClick`, no `href` and no `render` | a `<button>`                                      |
+| none of those                           | text                                              |
+
+A `menu` wins over an `href`, a `render` and an `onClick` on the same item. Every crumb, the last one
+included, looks the same at rest, and the last one carries `aria-current="page"` whatever its kind.
+
+```tsx
+import { House } from '@signozhq/icons';
+
+<Breadcrumb
+	items={[
+		{ title: 'Home', href: '/', icon: <House /> },
+		{ title: 'Payments', onClick: goToPayments },
+		{
+			title: 'checkout-service',
+			menu: [
+				{ title: 'billing-service', href: '/services/billing-service' },
+				{ title: 'refund-service', href: '/services/refund-service' },
+				{ title: 'Create service', onClick: openCreateService },
+			],
+		},
+	]}
+/>;
+```
+
+An item takes these fields:
+
+| Field     | What it does                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------ |
+| `title`   | The label.                                                                                             |
+| `href`    | Where the crumb navigates.                                                                             |
+| `target`  | Where the link opens. `_blank` adds `noopener noreferrer` to its `rel`.                                |
+| `render`  | The element that draws the link, such as the `Link` of a router. See [Router links](#router-links).    |
+| `onClick` | Runs when the crumb is clicked, after the `onClick` of the `render` element.                           |
+| `icon`    | Shown before the title.                                                                                |
+| `menu`    | The entries of the menu the crumb opens. Each one takes a `title` and the same link fields as an item. |
+
+`href`, `target`, `render` and `onClick` are the link props of `Callout.Link`, typed as
+`BreadcrumbLinkProps`. An entry of a `menu` with an `href` or a `render` is a link row, and one with
+only an `onClick` is an action. A good use of a `menu` is the siblings of the current page.
+
+The trail leaves out a crumb whose `title` renders nothing, an empty string, `null` or only
+whitespace, together with the separator before it. With no crumb left, nothing renders. Test ids
+keep the place each crumb has in `items`, so they do not move when a title before it empties.
+
+`separator` is any string, `/` by default. It is drawn as written between two crumbs, so pass the
+character itself, such as `›`. Screen readers skip it. The literal `'chevron'` is a type error, and
+a `string` that holds it, which the types cannot see, logs a warning and still prints the word.
+
+## Overflow
+
+With `truncate` (the default) the trail stays on one line. It measures the room its container gives
+it and measures again whenever that changes, so it needs no width of its own. While it does not fit:
+
+1. Middle crumbs collapse one at a time, from the centre outward, into a single `...` crumb. The
+   first and the last crumb never collapse.
+2. Once only the first and the last are left, the last one shortens, then the first one, each to a
+   floor. Below that the trail overflows its container.
+
+Collapsed crumbs come back as the room grows, and there is no `...` crumb while everything fits.
+
+The `...` crumb is a `<button>` named `Show N hidden items` for screen readers, and
+`Show 1 hidden item` when one crumb is collapsed. It opens a `Dropdown` that lists the collapsed
+crumbs in path order, with no icons:
+
+- A crumb with a `menu` is a row that opens a submenu of the same entries it opens while visible,
+  such as the siblings of the page. Its `href`, `render` and `onClick` stay out of reach, as they are there.
+- A crumb with an `href` or a `render` is a link row, so middle click and open in new tab still work
+  from the menu.
+- A crumb with only an `onClick` is a row that runs it.
+- A crumb with none of those is a row that does nothing.
+
+The `...` crumb keeps its hover fill while the menu is open and has no tooltip of its own, since the
+menu and a tooltip would answer the same hover.
+
+`maxVisible` caps how many crumbs show at once, the first and the last included, whatever the room.
+A trail in a narrow panel can collapse before it runs out of width. A value below 2 counts as 2, and
+it only applies while `truncate` is set.
+
+```tsx
+<Breadcrumb items={items} maxVisible={4} />
+```
+
+With `truncate={false}` nothing collapses and the trail wraps onto more lines, every crumb visible.
+
+```tsx
+<Breadcrumb items={items} truncate={false} />
+```
+
+## Router links
+
+The breadcrumb imports no router. Pass `render` on a crumb with the `Link` of the router you use, and
+it draws that link as the crumb with the `title` as its label. The click is a client-side
+navigation and a modified click still opens a new tab.
+
+```tsx
+import { Link } from 'react-router-dom';
+
+<Breadcrumb
+	items={[
+		{ title: 'Services', render: <Link to="/services" /> },
+		{ title: 'Payments', render: <Link to="/services/payments" /> },
+		{ title: 'checkout-service' },
+	]}
+/>;
+```
+
+- The props merge as the `render` prop of Base UI merges them, the way `Callout.Link` does: a prop
+  set on the element wins, its `className` and `ref` are kept next to the ones of the crumb, and its
+  `onClick` runs first, then the `onClick` of the item. The breadcrumb never calls `preventDefault`,
+  so the router decides what the click does.
+- An `href` or a `target` the element leaves unset takes the one on the item, and with a `_blank`
+  target, `noopener` and `noreferrer` join the `rel` of the element, which keeps its other values.
+- The children of the element are replaced by the `title`, so leave it without any.
+- The element is the content of the crumb, so it takes the hover and focus of a link crumb. An
+  element that does not render an `<a>` loses the link role.
+- The element has to pass the props it does not know on to the `<a>` it renders. That is how
+  `aria-current="page"` reaches the link on the last crumb.
+- Give the current page no `render` and no `href` to keep it plain text. With either, it is a link
+  that carries `aria-current="page"`.
+- A crumb with a `menu` ignores its `href`, `render` and `onClick`. The entries of the `menu` take a
+  `render` too, and an entry with one renders that element as the row, without its children and with
+  its `title` as the label.
+- A collapsed crumb is still a router link. In the menu of the `...` crumb, a crumb with a `render`
+  renders that element as the row, again without its children.
+
+```tsx
+<Breadcrumb
+	items={[
+		{ title: 'Services', render: <Link to="/services" /> },
+		{
+			title: 'checkout-service',
+			menu: [
+				{ title: 'billing-service', render: <Link to="/services/billing-service" /> },
+				{ title: 'refund-service', render: <Link to="/services/refund-service" /> },
+			],
+		},
+	]}
+/>
+```
+
+## Text overflow
+
+A crumb label has a maximum width. `textOverflow` picks what happens past it:
+
+- `ellipsis` (default) ends the label with `…`, sets `data-truncated` on the crumb content and shows
+  the full title in a tooltip, only while it is cut.
+- `hidden` clips the label at the edge of the crumb with no marker and no tooltip.
+
+A label shortened to make the trail fit, as in the overflow steps above, follows the same rule. A
+machine-generated name such as `checkout-service-prod-us-east-1b-7f9c` never takes the whole trail.
+
+```tsx
+<Breadcrumb items={items} textOverflow="hidden" />
+```
+
+## Keyboard
+
+Every link, button and menu crumb is its own tab stop. `Enter` follows a link, and `Enter` or
+`Space` presses a button. On the `...` crumb and on a crumb with a `menu`, those keys open the
+menu, the arrow keys move between its rows, and `Escape` closes it and returns focus to the crumb
+that opened it. A text crumb is not focusable.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the `<nav>`, and it names everything in it:
+
+| Element                                           | `data-testid`                                         |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| Crumb, in the trail or as a row of the `...` menu | `` `${testId}-item-${index}` ``                       |
+| Separator before a crumb                          | `` `${testId}-item-separator-${index}` ``             |
+| `...` crumb                                       | `` `${testId}-ellipsis` ``                            |
+| Separator before the `...` crumb                  | `` `${testId}-ellipsis-separator` ``                  |
+| Menu trigger of a crumb with a `menu`             | `` `${testId}-item-${index}-menu` ``                  |
+| Row of the menu of a crumb                        | `` `${testId}-item-${index}-menu-item-${position}` `` |
+
+`index` is the place of the crumb in `items`, counted before the empty titles are left out, and
+`position` is the place of the entry in its `menu`.
+
+- A collapsed crumb stays mounted, out of the flow, invisible and inert, and gives its id to its row
+  in the `...` menu. With the menu closed, `queryByTestId` finds nothing for it. Assert on the row
+  once the menu is open.
+- A collapsed crumb with a `menu` is a submenu row. Its entries keep the ids they have while the
+  crumb is visible, `` `${testId}-item-${index}-menu-item-${position}` ``, and exist once the
+  submenu is open. The trigger `` `${testId}-item-${index}-menu` `` only exists while the crumb is
+  visible.
+- The `...` crumb and the separator before it render only while a crumb is collapsed.
+- The trail keeps a hidden row with a `...` and a separator to measure the room, so while a crumb is
+  collapsed `getByText('...')` finds two matches. Query the crumb by role, named
+  `Show N hidden items` (`Show 1 hidden item` for one), or by test id instead.
+
+The `<nav>` carries `data-truncate` and `data-text-overflow`, which mirror the props, and two states
+worth asserting on: `data-overflowing` while at least one crumb is collapsed, and `data-shrinking`
+while only the first and the last crumb show and the trail does not fit, so one of them shortens.
+Each crumb carries `data-position` (`start`, `middle` or `end`) and `data-kind` (`link`, `button`,
+`menu` or `text`), and its content carries `data-truncated` while the label is cut, which only
+happens with `textOverflow="ellipsis"`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={BreadcrumbStories.Default} />

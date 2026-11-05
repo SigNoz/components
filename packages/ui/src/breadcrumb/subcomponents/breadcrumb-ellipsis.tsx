@@ -1,56 +1,49 @@
-import * as React from 'react';
-import { cn } from '../../lib/utils.js';
+import type { ReactElement } from 'react';
+import { Dropdown } from '../../dropdown/dropdown.js';
 import styles from '../breadcrumb.module.scss';
+import { BREADCRUMB_ELLIPSIS_LABEL } from '../constants.js';
+import type { BreadcrumbResolvedItem } from '../types.js';
+import { toCollapsedRow } from '../utils.js';
 
-export type BreadcrumbEllipsisProps = Pick<
-	React.ComponentPropsWithoutRef<'span'>,
-	'id' | 'className' | 'style' | 'title'
-> & {
-	/**
-	 * The test ID to apply to the breadcrumb ellipsis.
-	 */
-	testId?: string;
+/**
+ * @access private
+ */
+export type BreadcrumbEllipsisProps = {
+	collapsed: BreadcrumbResolvedItem[];
+	testId: string | undefined;
 };
 
 /**
- * Placeholder for collapsed breadcrumb items when there are too many levels.
+ * The `...` crumb and the menu it opens, listing the collapsed crumbs in path order. No tooltip:
+ * it has a menu, and the two would race on the same hover.
  *
- * @example
- * ```tsx
- * <Breadcrumb>
- *   <BreadcrumbList>
- *     <BreadcrumbItem>
- *       <BreadcrumbLink href="/">Home</BreadcrumbLink>
- *     </BreadcrumbItem>
- *     <BreadcrumbSeparator />
- *     <BreadcrumbItem>
- *       <BreadcrumbEllipsis />
- *     </BreadcrumbItem>
- *     <BreadcrumbSeparator />
- *     <BreadcrumbItem>
- *       <BreadcrumbPage>Current</BreadcrumbPage>
- *     </BreadcrumbItem>
- *   </BreadcrumbList>
- * </Breadcrumb>
- * ```
+ * @access private
  */
-export const BreadcrumbEllipsis = React.forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
-	({ className, testId, ...props }, ref) => {
-		return (
-			<span
-				ref={ref}
-				data-testid={testId}
-				role="presentation"
-				aria-hidden="true"
-				data-slot="breadcrumb-ellipsis"
-				className={cn(styles['breadcrumb-ellipsis'], className)}
-				{...props}
-			>
-				&#8230;
-				<span className={styles['breadcrumb-sr-only']}>More</span>
-			</span>
-		);
-	},
-);
+export function BreadcrumbEllipsis({ collapsed, testId }: BreadcrumbEllipsisProps): ReactElement {
+	const count = collapsed.length;
 
-BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';
+	return (
+		<li data-slot="breadcrumb-ellipsis" className={styles['breadcrumb__item']}>
+			<Dropdown
+				nativeButton
+				side="bottom"
+				align="start"
+				// Portalled to the body, so the token is read on the page, not on an ancestor of the
+				// trail.
+				contentMaxWidth="var(--breadcrumb-menu-max-width, 20rem)"
+				items={collapsed.map(toCollapsedRow)}
+				{...(testId === undefined ? {} : { testId })}
+			>
+				<button
+					type="button"
+					aria-label={`Show ${count} hidden ${count === 1 ? 'item' : 'items'}`}
+					data-kind="ellipsis"
+					data-slot="breadcrumb-ellipsis-trigger"
+					className={styles['breadcrumb__content']}
+				>
+					{BREADCRUMB_ELLIPSIS_LABEL}
+				</button>
+			</Dropdown>
+		</li>
+	);
+}

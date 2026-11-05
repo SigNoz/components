@@ -1,132 +1,192 @@
-.breadcrumb-root {
-	display: var(--breadcrumb-root-display, flex);
-	flex-wrap: var(--breadcrumb-root-flex-wrap, wrap);
-	align-items: var(--breadcrumb-root-align-items, center);
-	font-size: var(--breadcrumb-root-font-size, var(--periscope-font-size-base, 13px));
-	line-height: var(--breadcrumb-root-line-height, var(--line-height-20, 20px));
-	color: var(--breadcrumb-root-color, var(--breadcrumb-label));
-}
+.breadcrumb {
+	// A column, so the measuring row underneath adds its width to the trail's intrinsic size and no
+	// height. The trail then only shrinks when its container does.
+	display: var(--breadcrumb-display, flex);
+	flex-direction: var(--breadcrumb-flex-direction, column);
+	min-width: var(--breadcrumb-min-width, 0);
+	max-width: var(--breadcrumb-max-width, 100%);
+	font-family: var(--breadcrumb-font-family, var(--label-base-400-font-family));
+	font-size: var(--breadcrumb-font-size, var(--label-base-400-font-size));
+	font-weight: var(--breadcrumb-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--breadcrumb-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--breadcrumb-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--breadcrumb-text-transform, var(--label-base-400-text-transform));
+	font-variant-numeric: var(--breadcrumb-font-variant-numeric, normal);
+	font-feature-settings: var(--breadcrumb-font-feature-settings, 'ss01' 1);
+	color: var(--breadcrumb-color, var(--breadcrumb-label));
 
-.breadcrumb-list {
-	display: var(--breadcrumb-list-display, flex);
-	flex-wrap: var(--breadcrumb-list-flex-wrap, wrap);
-	align-items: var(--breadcrumb-list-align-items, center);
-	gap: var(--breadcrumb-list-gap, var(--spacing-4, 8px));
-	list-style: var(--breadcrumb-list-list-style, none);
-	margin: var(--breadcrumb-list-margin, 0);
-	padding: var(--breadcrumb-list-padding, 0);
-}
-
-.breadcrumb-item {
-	display: var(--breadcrumb-item-display, inline-flex);
-	align-items: var(--breadcrumb-item-align-items, center);
-	gap: var(--breadcrumb-item-gap, var(--spacing-3, 6px));
-}
-
-.breadcrumb-link {
-	display: var(--breadcrumb-link-display, inline-flex);
-	align-items: var(--breadcrumb-link-align-items, center);
-	gap: var(--breadcrumb-link-gap, var(--spacing-2, 4px));
-	color: var(--breadcrumb-link-color, var(--breadcrumb-label));
-	text-decoration: var(--breadcrumb-link-text-decoration, none);
-	transition: var(--breadcrumb-link-transition, color 0.15s ease-in-out, background-color 0.15s ease-in-out);
-	cursor: var(--breadcrumb-link-cursor, pointer);
-	border-radius: var(--breadcrumb-link-border-radius, calc(var(--radius) - 2px));
-	padding: var(--breadcrumb-link-padding, var(--spacing-2, 4px) var(--spacing-1, 2px));
-
-	&:hover {
-		color: var(--breadcrumb-link-hover-color, var(--breadcrumb-label-hover));
-		background-color: var(--breadcrumb-link-hover-background-color, var(--breadcrumb-background-hover));
+	&__list {
+		display: var(--breadcrumb-list-display, flex);
+		flex-wrap: var(--breadcrumb-list-flex-wrap, nowrap);
+		align-items: var(--breadcrumb-list-align-items, center);
+		position: var(--breadcrumb-list-position, relative);
+		gap: var(--breadcrumb-gap, var(--spacing-4));
+		min-width: var(--breadcrumb-list-min-width, 0);
+		margin: var(--breadcrumb-list-margin, 0);
+		padding: var(--breadcrumb-list-padding, 0);
+		list-style: var(--breadcrumb-list-list-style, none);
 	}
 
-	&:focus-visible {
-		outline: var(--breadcrumb-link-focus-visible-outline, 2px solid var(--breadcrumb-focus-ring));
-		outline-offset: var(--breadcrumb-link-focus-visible-outline-offset, 2px);
-		border-radius: var(--breadcrumb-link-focus-visible-border-radius, 2px);
+	&[data-truncate='false'] &__list {
+		flex-wrap: var(--breadcrumb-list-wrap-flex-wrap, wrap);
+	}
+
+	&__item {
+		display: var(--breadcrumb-item-display, flex);
+		flex: var(--breadcrumb-item-flex, 0 0 auto);
+		min-width: var(--breadcrumb-item-min-width, 0);
+		max-inline-size: var(--breadcrumb-item-max-inline-size, 100%);
+
+		// Still laid out at its own width, so it can be measured, but out of the flow and invisible.
+		&[data-collapsed='true'] {
+			position: var(--breadcrumb-item-collapsed-position, absolute);
+			inset-block-start: var(--breadcrumb-item-collapsed-inset-block-start, 0);
+			inset-inline-start: var(--breadcrumb-item-collapsed-inset-inline-start, 0);
+			visibility: var(--breadcrumb-item-collapsed-visibility, hidden);
+			pointer-events: var(--breadcrumb-item-collapsed-pointer-events, none);
+		}
+	}
+
+	// Only the first and the last crumb are left, neither past half of the trail. The trail measures
+	// which one may shorten: the last one first, then the first one once the last sits at the floor.
+	&[data-shrinking] &__item[data-slot='breadcrumb-item'] {
+		max-inline-size: var(--breadcrumb-item-shrinking-max-inline-size, 50%);
+	}
+
+	&[data-shrinking='end'] &__item[data-position='end'],
+	&[data-shrinking='start'] &__item[data-position='start'] {
+		flex-shrink: var(--breadcrumb-item-shrinking-flex-shrink, 1);
+	}
+
+	&[data-shrinking='start'] &__item[data-position='end'],
+	&[data-shrinking='floor'] &__item[data-slot='breadcrumb-item'] {
+		max-inline-size: var(--breadcrumb-item-floor, calc(4ch + 2 * var(--spacing-1)));
+	}
+
+	&__separator {
+		display: var(--breadcrumb-separator-display, inline-flex);
+		flex: var(--breadcrumb-separator-flex, 0 0 auto);
+		align-items: var(--breadcrumb-separator-align-items, center);
+		color: var(--breadcrumb-separator-color, var(--breadcrumb-label));
+		user-select: var(--breadcrumb-separator-user-select, none);
+	}
+
+	&__content {
+		box-sizing: var(--breadcrumb-content-box-sizing, border-box);
+		display: var(--breadcrumb-content-display, inline-flex);
+		align-items: var(--breadcrumb-content-align-items, center);
+		gap: var(--breadcrumb-item-gap, var(--spacing-2));
+		min-width: var(--breadcrumb-content-min-width, 0);
+		max-inline-size: var(--breadcrumb-content-max-inline-size, 100%);
+		height: var(--breadcrumb-item-height, 21px);
+		margin: var(--breadcrumb-content-margin, 0);
+		padding: var(--breadcrumb-item-padding, var(--spacing-2) var(--spacing-1));
+		border: var(--breadcrumb-content-border, 0);
+		border-radius: var(--breadcrumb-item-border-radius, var(--radius-0));
+		background-color: var(--breadcrumb-item-background, transparent);
+		color: var(--breadcrumb-item-color, var(--breadcrumb-label));
+		// The crumb may be a native `<button>`, whose font, tracking, case and numerals the browser
+		// resets instead of inheriting.
+		font: var(--breadcrumb-content-font, inherit);
+		letter-spacing: var(--breadcrumb-content-letter-spacing, inherit);
+		text-transform: var(--breadcrumb-content-text-transform, inherit);
+		font-variant-numeric: var(--breadcrumb-content-font-variant-numeric, inherit);
+		font-feature-settings: var(--breadcrumb-content-font-feature-settings, inherit);
+		text-decoration: var(--breadcrumb-content-text-decoration, none);
+		white-space: var(--breadcrumb-content-white-space, nowrap);
+		cursor: var(--breadcrumb-content-cursor, default);
+		appearance: var(--breadcrumb-content-appearance, none);
+		transition-property: var(--breadcrumb-transition-property, background-color, color, border-radius);
+		transition-duration: var(--breadcrumb-transition-duration, 150ms);
+		transition-timing-function: var(--breadcrumb-transition-timing-function, ease);
+	}
+
+	// Only a crumb that does something reacts: a link, whatever element its `render` is, or a
+	// `<button>`.
+	&__content:is(a, button),
+	&__content[data-kind='link'] {
+		cursor: var(--breadcrumb-interactive-cursor, pointer);
+
+		&:hover {
+			border-radius: var(--breadcrumb-item-hover-border-radius, var(--radius-1));
+			background-color: var(--breadcrumb-item-hover-background, var(--breadcrumb-background-hover));
+			color: var(--breadcrumb-item-hover-color, var(--breadcrumb-label-hover));
+		}
+	}
+
+	&__content:focus-visible {
+		border-radius: var(--breadcrumb-item-hover-border-radius, var(--radius-1));
+		outline: var(--breadcrumb-focus-visible-outline, var(--breadcrumb-focus-ring) solid 1px);
+		outline-offset: var(--breadcrumb-focus-visible-outline-offset, 1px);
+	}
+
+	// A trigger that goes flat the moment its menu appears reads as detached from it, so an open
+	// menu keeps the hover fill.
+	&__content[data-popup-open] {
+		border-radius: var(--breadcrumb-item-hover-border-radius, var(--radius-1));
+		background-color: var(--breadcrumb-item-hover-background, var(--breadcrumb-background-hover));
+		color: var(--breadcrumb-item-hover-color, var(--breadcrumb-label-hover));
+	}
+
+	&__icon {
+		display: var(--breadcrumb-icon-display, inline-flex);
+		flex: var(--breadcrumb-icon-flex, 0 0 auto);
+		align-items: var(--breadcrumb-icon-align-items, center);
+
+		& > svg {
+			width: var(--breadcrumb-icon-size, 14px);
+			height: var(--breadcrumb-icon-size, 14px);
+		}
+	}
+
+	&__label {
+		display: var(--breadcrumb-label-display, block);
+		min-width: var(--breadcrumb-label-min-width, 0);
+		max-inline-size: var(--breadcrumb-item-max-width, 24ch);
+		overflow: var(--breadcrumb-label-overflow, clip visible);
+		white-space: var(--breadcrumb-label-white-space, nowrap);
+	}
+
+	&[data-text-overflow='ellipsis'] &__label {
+		text-overflow: var(--breadcrumb-label-text-overflow, ellipsis);
+	}
+
+	// The Tooltip caps its own popup with one class, the same weight as this one, so the order the
+	// two sheets load in would decide which cap applies. The slot attribute settles it.
+	&__tooltip[data-slot='tooltip-content'] {
+		max-width: var(--breadcrumb-tooltip-max-width, 20rem);
+	}
+
+	// Zero height, so it adds no height. Its inline size is the full-trail width the trail writes on
+	// it, so the trail's intrinsic width stays at the full set. Capped at 100%, so it never pushes
+	// past the trail.
+	&__measure {
+		position: var(--breadcrumb-measure-position, relative);
+		display: var(--breadcrumb-measure-display, flex);
+		inline-size: var(--breadcrumb-internal-full-width, auto);
+		max-inline-size: var(--breadcrumb-measure-max-inline-size, 100%);
+		height: var(--breadcrumb-measure-height, 0);
+		overflow: var(--breadcrumb-measure-overflow, hidden);
+		visibility: var(--breadcrumb-measure-visibility, hidden);
+		pointer-events: var(--breadcrumb-measure-pointer-events, none);
+
+		& > * {
+			position: var(--breadcrumb-measure-part-position, absolute);
+			inset-block-start: var(--breadcrumb-measure-part-inset-block-start, 0);
+			inset-inline-start: var(--breadcrumb-measure-part-inset-inline-start, 0);
+		}
+	}
+
+	// The narrowest a shortened crumb gets. The trail measures this element, so the measured floor
+	// and the cap in CSS are one value.
+	&__floor {
+		display: var(--breadcrumb-floor-display, block);
+		inline-size: var(--breadcrumb-item-floor, calc(4ch + 2 * var(--spacing-1)));
 	}
 }
 
-.breadcrumb-page {
-	display: var(--breadcrumb-page-display, inline-flex);
-	align-items: var(--breadcrumb-page-align-items, center);
-	gap: var(--breadcrumb-page-gap, var(--spacing-2, 4px));
-	color: var(--breadcrumb-page-color, var(--breadcrumb-label));
-	font-weight: var(--breadcrumb-page-font-weight, 400);
-	cursor: var(--breadcrumb-page-cursor, default);
-}
-
-.breadcrumb-separator {
-	display: var(--breadcrumb-separator-display, inline-flex);
-	align-items: var(--breadcrumb-separator-align-items, center);
-	justify-content: var(--breadcrumb-separator-justify-content, center);
-	color: var(--breadcrumb-separator-color, var(--breadcrumb-label));
-
-	svg {
-		flex-shrink: var(--breadcrumb-separator-svg-flex-shrink, 0);
+@media (prefers-reduced-motion: reduce) {
+	.breadcrumb__content {
+		transition-duration: 0s;
 	}
-}
-
-.breadcrumb-ellipsis {
-	display: var(--breadcrumb-ellipsis-display, inline-flex);
-	align-items: var(--breadcrumb-ellipsis-align-items, center);
-	justify-content: var(--breadcrumb-ellipsis-justify-content, center);
-	width: var(--breadcrumb-ellipsis-width, 1.5rem);
-	height: var(--breadcrumb-ellipsis-height, 1.5rem);
-	color: var(--breadcrumb-ellipsis-color, var(--breadcrumb-label));
-	cursor: var(--breadcrumb-ellipsis-cursor, default);
-}
-
-.breadcrumb-dropdown {
-	// A native button, so the trigger is keyboard reachable without anything added to it. The
-	// browser's own chrome is reset here rather than in a global stylesheet.
-	appearance: var(--breadcrumb-dropdown-appearance, none);
-	border: var(--breadcrumb-dropdown-border, none);
-	background-color: var(--breadcrumb-dropdown-background-color, transparent);
-	font: var(--breadcrumb-dropdown-font, inherit);
-
-	display: var(--breadcrumb-dropdown-display, inline-flex);
-	align-items: var(--breadcrumb-dropdown-align-items, center);
-	gap: var(--breadcrumb-dropdown-gap, var(--spacing-2, 4px));
-	color: var(--breadcrumb-dropdown-color, var(--breadcrumb-label));
-	cursor: var(--breadcrumb-dropdown-cursor, pointer);
-	transition: var(--breadcrumb-dropdown-transition, color 0.15s ease-in-out, background-color 0.15s ease-in-out);
-	border-radius: var(--breadcrumb-dropdown-border-radius, calc(var(--radius) - 2px));
-	padding: var(--breadcrumb-dropdown-padding, var(--spacing-2, 4px) var(--spacing-1, 2px));
-
-	&:hover {
-		color: var(--breadcrumb-dropdown-hover-color, var(--breadcrumb-label-hover));
-		background-color: var(--breadcrumb-dropdown-hover-background-color, var(--breadcrumb-background-hover));
-	}
-}
-
-.breadcrumb-dropdown-icon {
-	flex-shrink: var(--breadcrumb-dropdown-icon-flex-shrink, 0);
-	transition: var(--breadcrumb-dropdown-icon-transition, transform 0.15s ease-in-out);
-
-	[data-popup-open] > & {
-		transform: var(--breadcrumb-dropdown-icon-open-transform, rotate(180deg));
-	}
-}
-
-.breadcrumb-icon {
-	display: var(--breadcrumb-icon-display, inline-flex);
-	align-items: var(--breadcrumb-icon-align-items, center);
-	flex-shrink: var(--breadcrumb-icon-flex-shrink, 0);
-
-	svg {
-		width: var(--breadcrumb-icon-svg-width, 1rem);
-		height: var(--breadcrumb-icon-svg-height, 1rem);
-	}
-}
-
-.breadcrumb-sr-only {
-	position: var(--breadcrumb-sr-only-position, absolute);
-	width: var(--breadcrumb-sr-only-width, 1px);
-	height: var(--breadcrumb-sr-only-height, 1px);
-	padding: var(--breadcrumb-sr-only-padding, 0);
-	margin: var(--breadcrumb-sr-only-margin, -1px);
-	overflow: var(--breadcrumb-sr-only-overflow, hidden);
-	clip: var(--breadcrumb-sr-only-clip, rect(0, 0, 0, 0));
-	white-space: var(--breadcrumb-sr-only-white-space, nowrap);
-	border-width: var(--breadcrumb-sr-only-border-width, 0);
 }

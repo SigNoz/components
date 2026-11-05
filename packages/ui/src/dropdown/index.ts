@@ -109,6 +109,7 @@
  * | `--dropdown-item-radio-dot-border-radius` | `var(--radius-round)` |
  * | `--dropdown-item-radio-dot-size` | `8px` |
  * | `--dropdown-item-slot-gap` | `var(--spacing-4)` |
+ * | `--dropdown-item-text-decoration` | `none` |
  * | `--dropdown-item-user-select` | `none` |
  * | `--dropdown-item-white-space` | `nowrap` |
  * | `--dropdown-loading-align-items` | `center` |

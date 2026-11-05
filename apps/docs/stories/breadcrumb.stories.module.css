@@ -1,0 +1,68 @@
+.showcaseContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	width: 100%;
+}
+
+.sectionNote {
+	color: var(--muted-foreground);
+	margin-bottom: 16px;
+	max-width: 60rem;
+}
+
+.stack {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	align-items: flex-start;
+	width: 100%;
+}
+
+.caption {
+	color: var(--muted-foreground);
+	white-space: nowrap;
+}
+
+/* A dashed outline shows how much room each trail was given. Drag the corner to change it. */
+.frame {
+	resize: horizontal;
+	overflow: hidden;
+	width: 100%;
+	min-width: 2.5rem;
+	max-width: 100%;
+	padding: 8px;
+	outline: 1px dashed var(--l3-border);
+}
+
+/* The held-open menus are portalled below their triggers, so the section keeps room for them. */
+.roomBelow {
+	margin-bottom: 12rem;
+}
+
+.menus {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 48px;
+	align-items: flex-start;
+}
+
+/* The state matrix: a label column, then one column per state. */
+.matrix {
+	display: grid;
+	grid-template-columns: max-content repeat(3, max-content);
+	gap: 16px 32px;
+	align-items: center;
+	justify-items: start;
+	overflow-x: auto;
+	padding-bottom: 4px;
+}
+
+.matrixLabel {
+	white-space: nowrap;
+}
+
+/* The fake router shows where its last click went. */
+.location {
+	color: var(--muted-foreground);
+}

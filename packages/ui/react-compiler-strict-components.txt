@@ -1,5 +1,6 @@
 alert-strip
 badge
+breadcrumb
 button
 calendar
 callout

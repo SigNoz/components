@@ -1,6 +1,8 @@
-import { createElement, type ReactElement, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { DropdownItemType } from '../dropdown/types.js';
+import { FIT_TOLERANCE_PX } from '../lib/fit-tolerance.js';
 import { hasRenderableContent } from '../lib/utils.js';
+import { withoutChildren } from '../lib/without-children.js';
 import { TooltipStack } from '../tooltip/subcomponents/tooltip-stack.js';
 import {
 	hasTooltipContent,
@@ -13,27 +15,6 @@ import type {
 	ButtonGroupResolvedItem,
 	ButtonGroupState,
 } from './types.js';
-
-// Rects are fractional and can round either way, so a row that fits exactly may still report a
-// sliver of overflow.
-const FIT_TOLERANCE_PX = 0.5;
-
-/**
- * Drops the element's own children.
- *
- * Base UI merges the element's props over the member's, children included, so `<a>Docs</a>` would
- * replace the prefix, label and suffix slots and take the spinner and the truncation with them.
- */
-function withoutChildren(element: ReactElement): ReactElement {
-	const { children: _children, ...props } = element.props as Record<string, unknown>;
-	const { ref } = element as ReactElement & { ref?: unknown };
-
-	return createElement(element.type, {
-		...props,
-		key: element.key,
-		...(ref == null ? {} : { ref }),
-	});
-}
 
 function getReasons(
 	item: ButtonGroupItemType,
