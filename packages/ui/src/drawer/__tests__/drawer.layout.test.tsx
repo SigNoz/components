@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cdp, page } from 'vitest/browser';
 import { Button } from '../../button/index.js';
 import type { DrawerTypeType, DrawerWidthType } from '../types.js';
-import { drawerPanel, renderOpenDrawer } from './drawer.test-utils.js';
+import { DrawerHarness, drawerPanel, renderOpenDrawer } from './drawer.test-utils.js';
 
 /**
  * The design tokens are not loaded here, so the spacing and the label text the drawer reads are
@@ -204,6 +204,27 @@ describe('Drawer header', () => {
 		});
 
 		expect(rect(screen.getByTestId('drawer-header')).height).toBeCloseTo(56, 0);
+	});
+
+	// The description's skeleton takes its place while loading, so the header does not change
+	// height when the text arrives.
+	it('keeps the same height while a description loads and after it arrives', async () => {
+		const props = {
+			headerPrefix: HEADER_BUTTON,
+			headerSuffix: (
+				<Button variant="ghost" color="secondary" size="sm">
+					Edit
+				</Button>
+			),
+			description: 'Changes apply to every dashboard',
+		};
+		const { rerender } = await renderOpenDrawer({ ...props, loading: true });
+		const loadingHeight = rect(screen.getByTestId('drawer-header')).height;
+
+		rerender(<DrawerHarness defaultOpen {...props} loading={false} />);
+
+		expect(loadingHeight).toBeCloseTo(56, 0);
+		expect(rect(screen.getByTestId('drawer-header')).height).toBeCloseTo(loadingHeight, 0);
 	});
 
 	it('stays 48px tall for a description that renders nothing', async () => {

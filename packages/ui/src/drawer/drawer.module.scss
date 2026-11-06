@@ -174,8 +174,9 @@
 	border-style: var(--drawer-header-border-style, solid);
 	border-color: var(--drawer-header-border-color, var(--drawer-border));
 
-	// A task with a line of guidance under its title.
-	&:has([data-slot='drawer-description']) {
+	// A task with a line of guidance under its title, or its skeleton, so the header keeps its
+	// height when the description arrives.
+	&:has([data-slot='drawer-description'], [data-slot='drawer-description-skeleton']) {
 		min-block-size: var(--drawer-header-with-description-min-block-size, 56px);
 		padding-block: var(--drawer-header-with-description-padding-block, var(--spacing-6));
 	}
