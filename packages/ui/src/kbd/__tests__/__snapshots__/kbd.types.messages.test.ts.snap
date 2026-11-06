@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Kbd type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "Kbd.Shortcut > rejects a word among the keys > a key holds one character": "TS2741: Property ''a key is a named key such as \`Escape\` or \`Mod\`, or one character; split a word into keys with \`Kbd.Shortcut\`'' is missing in type '{ keys: ("Mod" | "enter")[]; }' but required in type 'AKeyHoldsOneCharacter'.",
+  "Kbd.Shortcut > rejects an unknown mode > mode is chord or sequence": "TS2322: Type '"then"' is not assignable to type 'KbdModeType | undefined'.",
+  "Kbd.Shortcut > rejects className, style and data-testid > className is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Kbd.Shortcut > rejects className, style and data-testid > data-testid is written as testId": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop'' is missing in type '{ keys: "K"[]; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "Kbd.Shortcut > rejects className, style and data-testid > style is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "display and margin > rejects a margin off the spacing scale > 9 is not a step of the scale": "TS2322: Type '9' is not assignable to type 'MarginType | undefined'.",
+  "display and margin > rejects a margin off the spacing scale > a margin is a step, never a length": "TS2322: Type '"8px"' is not assignable to type 'MarginType | undefined'.",
+  "display and margin > rejects a margin on an inline key > a key is inline by default": "TS2741: Property ''a key in a line of text takes its spacing from the text: set \`display="block"\` to give it a margin'' is missing in type '{ value: "K"; margin: 2; }' but required in type 'AKeyInALineHasNoMargin'.",
+  "display and margin > rejects a margin on an inline key > an inline key has no margin": "TS2741: Property ''a key in a line of text takes its spacing from the text: set \`display="block"\` to give it a margin'' is missing in type '{ value: "K"; display: "inline"; marginTop: 2; }' but required in type 'AKeyInALineHasNoMargin'.",
+  "display and margin > rejects an unknown display > display is inline or block": "TS2322: Type '"flex"' is not assignable to type 'KbdDisplayType | undefined'.",
+  "display and margin > takes the same rule on a shortcut > an inline shortcut has no margin": "TS2741: Property ''a key in a line of text takes its spacing from the text: set \`display="block"\` to give it a margin'' is missing in type '{ keys: ("Mod" | "K")[]; marginTop: 4; }' but required in type 'AKeyInALineHasNoMargin'.",
+  "pressed > rejects anything but a boolean > a key takes pressed as a boolean": "TS2322: Type 'string' is not assignable to type 'boolean | undefined'.",
+  "pressed > rejects anything but a boolean > a shortcut takes pressed as a boolean": "TS2322: Type 'string' is not assignable to type 'boolean | undefined'.",
+  "rejected props > rejects children > the key comes from value": "TS2745: This JSX tag's 'children' prop expects type 'never' which requires multiple children, but only a single child was provided.",
+  "rejected props > rejects className and style > className is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects className and style > style is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "rejected props > rejects data-testid > data-testid is written as testId": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop'' is missing in type '{ value: "K"; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "rejected props > rejects size, active and asChild > active is gone": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects size, active and asChild > asChild is gone": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects size, active and asChild > size is gone": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "value > is required > value is required": "TS2741: Property 'value' is missing in type '{}' but required in type '{ [key: \`data-\${string}\`]: unknown; testId?: string | undefined; value: KbdKey; disabled?: boolean | undefined; pressed?: boolean | undefined; }'.",
+  "value > rejects a space > a key holds one visible character": "TS2741: Property ''a key is a named key such as \`Escape\` or \`Mod\`, or one character; split a word into keys with \`Kbd.Shortcut\`'' is missing in type '{ value: " "; }' but required in type 'AKeyHoldsOneCharacter'.",
+  "value > rejects a word > a key holds one character": "TS2741: Property ''a key is a named key such as \`Escape\` or \`Mod\`, or one character; split a word into keys with \`Kbd.Shortcut\`'' is missing in type '{ value: "esc"; }' but required in type 'AKeyHoldsOneCharacter'.",
+}
+`;

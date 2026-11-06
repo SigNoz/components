@@ -1,6 +1,7 @@
 import { Menu } from '@base-ui/react/menu';
-import type { MouseEvent, ReactNode } from 'react';
+import { type MouseEvent, type ReactNode, useId } from 'react';
 import { Kbd } from '../../kbd/kbd.js';
+import { isKbdKey } from '../../kbd/utils.js';
 import { useDropdownContext } from '../dropdown-context.js';
 import styles from '../dropdown.module.scss';
 import type { DropdownActionItemType } from '../types.js';
@@ -40,6 +41,16 @@ export function DropdownItem({ item, side }: DropdownItemProps): ReactNode {
 		loadingTooltip,
 	});
 
+	// The shortcut is hidden so it stays out of the row's name. A screen reader reads it as the
+	// description instead, after the reason. The spinner covers it on a loading row without a
+	// prefix, so there is nothing to read then. `Kbd.Shortcut` draws nothing, and logs, for a key it
+	// does not know, which leaves nothing to read either.
+	const shortcutId = useId();
+	const shortcut = item.shortcut;
+	const hasShortcut = shortcut !== undefined && shortcut.length > 0;
+	const isShortcutCovered = row.isLoading && item.prefix === undefined;
+	const isShortcutDescribed = hasShortcut && !isShortcutCovered && shortcut.every(isKbdKey);
+
 	// Every row renders with `closeOnClick={false}`, so an inert row never runs its handler nor
 	// closes the menu.
 	function handleClick(event: MouseEvent): void {
@@ -62,13 +73,22 @@ export function DropdownItem({ item, side }: DropdownItemProps): ReactNode {
 				className={styles['dropdown__item']}
 				closeOnClick={false}
 				onClick={handleClick}
+				// Left off rather than `undefined`: a key that is present replaces the popup the tooltip
+				// trigger adds, so the reason would stop being the row's description.
+				{...(isShortcutDescribed ? { 'aria-describedby': shortcutId } : {})}
 				{...(row.resolvedTestId === undefined ? {} : { 'data-testid': row.resolvedTestId })}
 			>
 				<DropdownRowBody
 					row={row}
 					labelRef={labelRef}
 					prefix={item.prefix}
-					suffix={item.shortcut === undefined ? item.suffix : <Kbd size="sm">{item.shortcut}</Kbd>}
+					suffix={
+						hasShortcut ? (
+							<Kbd.Shortcut id={shortcutId} keys={shortcut} disabled={row.isDisabled} aria-hidden />
+						) : (
+							item.suffix
+						)
+					}
 				/>
 			</Menu.Item>
 		</DropdownRowTooltip>

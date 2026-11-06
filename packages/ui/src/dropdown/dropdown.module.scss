@@ -254,6 +254,20 @@
   }
 }
 
+// The row class in front lifts these above the key's own single class.
+//
+// The key takes the row's cursor, the pointer and the not-allowed one, over its own default arrow.
+.dropdown__item [data-slot='kbd'] {
+  cursor: var(--dropdown-kbd-cursor, inherit);
+}
+
+// The key is taller than the line, so the shortcut takes the line's height and centres the key in
+// it. The key overhangs the line instead of growing the row, which keeps the row pitch.
+.dropdown__item [data-slot='kbd-shortcut'] {
+  align-items: var(--dropdown-shortcut-align-items, center);
+  block-size: var(--dropdown-shortcut-block-size, 1lh);
+}
+
 // Drawn here rather than reusing `Checkbox` / `RadioGroup`: the row is already the control, and
 // those bring their own button, label and focus stop.
 .dropdown__item-control {

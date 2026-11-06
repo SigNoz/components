@@ -207,7 +207,7 @@ const CommandImpl = forwardRef<HTMLDivElement, CommandProps & RejectedProps>(
  *       value: 'navigation',
  *       label: 'Navigation',
  *       items: [
- *         { type: 'item', value: 'home', label: 'Go to Home', prefix: <Home />, shortcut: 'Shift+H', onClick: goHome },
+ *         { type: 'item', value: 'home', label: 'Go to Home', prefix: <Home />, shortcut: ['Shift', 'H'], onClick: goHome },
  *         { type: 'item', value: 'logs', label: 'Logs Explorer', searchMetadata: 'search query', onClick: goLogs },
  *       ],
  *     },

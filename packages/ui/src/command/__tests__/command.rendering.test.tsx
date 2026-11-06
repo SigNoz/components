@@ -47,7 +47,8 @@ describe('Command accessibility', () => {
 
 		const option = screen.getByRole('option', { name: 'Go to Home' });
 
-		expect(option).toHaveAccessibleDescription('Shift+H');
+		expect(option).toHaveAccessibleDescription('Shift H');
+		expect(option).toHaveAccessibleName('Go to Home');
 		expect(screen.getByRole('option', { name: 'Logs Explorer' })).not.toHaveAttribute(
 			'aria-describedby',
 		);
@@ -111,21 +112,21 @@ describe('Command parts', () => {
 
 		const suffix = screen.getByTestId('command-item-home-suffix');
 
-		expect(suffix.querySelector('[data-slot="kbd"]')).toHaveTextContent('Shift+H');
+		const keys = Array.from(
+			suffix.querySelectorAll('[data-slot="kbd-shortcut"] [data-slot="kbd"]'),
+		);
+
+		expect(keys.map((key) => key.getAttribute('data-key'))).toEqual(['Shift', 'H']);
 	});
 
-	it('leaves out the affix slots when the shortcut or the icon renders nothing', async () => {
+	it('leaves out the suffix slot and the description when the shortcut is empty', async () => {
 		await renderOpenCommand({
-			items: [
-				{ type: 'item', value: 'off-mac', label: 'Off a Mac', shortcut: false, onClick: () => {} },
-				{ type: 'item', value: 'blank', label: 'Blank', shortcut: null, onClick: () => {} },
-			],
+			items: [{ type: 'item', value: 'empty', label: 'Empty', shortcut: [], onClick: () => {} }],
 		});
 
-		for (const value of ['off-mac', 'blank']) {
-			expect(screen.queryByTestId(`command-item-${value}-suffix`)).not.toBeInTheDocument();
-			expect(screen.getByTestId(`command-item-${value}`)).not.toHaveAttribute('aria-describedby');
-		}
+		expect(screen.queryByTestId('command-item-empty-suffix')).not.toBeInTheDocument();
+		expect(document.querySelector('[data-slot="kbd-shortcut"]')).toBeNull();
+		expect(screen.getByTestId('command-item-empty')).not.toHaveAttribute('aria-describedby');
 	});
 
 	it('shows <No label> for a label that renders nothing', async () => {
