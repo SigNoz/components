@@ -5,38 +5,69 @@
  *
  * | Token | Default |
  * |-------|---------|
- * | `--skeleton-animation-duration` | `1.5s` |
- * | `--skeleton-avatar-border-radius` | `50%` |
- * | `--skeleton-avatar-square-border-radius` | `calc(var(--radius) - 2px)` |
- * | `--skeleton-background` | `var(--muted, #e0e0e0)` |
- * | `--skeleton-border-radius` | `calc(var(--radius) - 2px)` |
- * | `--skeleton-button-border-radius` | `calc(var(--radius) - 2px)` |
- * | `--skeleton-button-height` | `2rem` |
- * | `--skeleton-button-height-large` | `2.5rem` |
- * | `--skeleton-button-height-small` | `1.5rem` |
- * | `--skeleton-button-min-width` | `4rem` |
- * | `--skeleton-button-min-width-large` | `5rem` |
- * | `--skeleton-button-min-width-small` | `3rem` |
- * | `--skeleton-button-width` | `4rem` |
- * | `--skeleton-button-width-large` | `5rem` |
- * | `--skeleton-button-width-small` | `3rem` |
- * | `--skeleton-gap` | `0.5rem` |
- * | `--skeleton-input-border-radius` | `calc(var(--radius) - 2px)` |
- * | `--skeleton-input-height` | `2rem` |
- * | `--skeleton-input-height-large` | `2.5rem` |
- * | `--skeleton-input-height-small` | `1.5rem` |
- * | `--skeleton-input-min-width` | `10rem` |
- * | `--skeleton-input-min-width-large` | `14rem` |
- * | `--skeleton-input-min-width-small` | `7rem` |
- * | `--skeleton-input-width` | `10rem` |
- * | `--skeleton-paragraph-gap` | `0.5rem` |
- * | `--skeleton-paragraph-row-height` | `0.75rem` |
- * | `--skeleton-shimmer-color` | `rgba(255, 255, 255, 0.25)` |
- * | `--skeleton-title-height` | `1rem` |
- * | `--skeleton-title-margin-bottom` | `0.75rem` |
- * | `--skeleton-width` | `100%` |
+ * | `--skeleton-active-animation-duration` | `1.4s` |
+ * | `--skeleton-active-animation-iteration-count` | `infinite` |
+ * | `--skeleton-active-animation-timing-function` | `ease` |
+ * | `--skeleton-active-background-color` | `transparent` |
+ * | `--skeleton-active-background-image` | `linear-gradient( 90deg, var(--skeleton-internal...` |
+ * | `--skeleton-active-band-color` | `var(--skeleton-highlight)` |
+ * | `--skeleton-active-overflow` | `hidden` |
+ * | `--skeleton-active-position` | `relative` |
+ * | `--skeleton-active-shimmer-inset-block` | `0` |
+ * | `--skeleton-active-shimmer-position` | `absolute` |
+ * | `--skeleton-avatar-circle-border-radius` | `50%` |
+ * | `--skeleton-avatar-display` | `inline-block` |
+ * | `--skeleton-avatar-flex-shrink` | `0` |
+ * | `--skeleton-avatar-md-size` | `32px` |
+ * | `--skeleton-avatar-sm-size` | `24px` |
+ * | `--skeleton-avatar-square-border-radius` | `var(--radius-3)` |
+ * | `--skeleton-avatar-vertical-align` | `middle` |
+ * | `--skeleton-background` | `-` |
+ * | `--skeleton-background-color` | `var(--skeleton-background)` |
+ * | `--skeleton-border-radius` | `var(--radius-1)` |
+ * | `--skeleton-button-display` | `inline-block` |
+ * | `--skeleton-button-flex-shrink` | `1` |
+ * | `--skeleton-button-max-width` | `var(--skeleton-internal-max-width, 100%)` |
+ * | `--skeleton-button-md-height` | `32px` |
+ * | `--skeleton-button-md-width` | `64px` |
+ * | `--skeleton-button-min-width` | `min( var(--skeleton-internal-button-width), var...` |
+ * | `--skeleton-button-sm-height` | `24px` |
+ * | `--skeleton-button-sm-width` | `48px` |
+ * | `--skeleton-button-vertical-align` | `middle` |
+ * | `--skeleton-button-width` | `var(--skeleton-internal-width, var(--skeleton-i...` |
+ * | `--skeleton-display` | `flex` |
+ * | `--skeleton-flex-direction` | `column` |
+ * | `--skeleton-gap` | `var(--spacing-6)` |
+ * | `--skeleton-highlight` | `-` |
+ * | `--skeleton-input-display` | `block` |
+ * | `--skeleton-input-intrinsic-width` | `200px` |
+ * | `--skeleton-input-max-width` | `var(--skeleton-internal-max-width, 100%)` |
+ * | `--skeleton-input-md-height` | `32px` |
+ * | `--skeleton-input-sm-height` | `24px` |
+ * | `--skeleton-input-width` | `var(--skeleton-internal-width, 100%)` |
+ * | `--skeleton-max-width` | `var(--skeleton-internal-max-width, 100%)` |
+ * | `--skeleton-paragraph-display` | `flex` |
+ * | `--skeleton-paragraph-flex-direction` | `column` |
+ * | `--skeleton-paragraph-gap` | `var(--spacing-4)` |
+ * | `--skeleton-row-height` | `12px` |
+ * | `--skeleton-row-max-width` | `100%` |
+ * | `--skeleton-row-width` | `var(--skeleton-internal-row-width, 100%)` |
+ * | `--skeleton-title-height` | `16px` |
+ * | `--skeleton-title-max-width` | `100%` |
+ * | `--skeleton-title-width` | `var(--skeleton-internal-title-width, 38%)` |
+ * | `--skeleton-width` | `var(--skeleton-internal-width, 100%)` |
  */
 // #endregion css-tokens
 
-export type * from './skeleton.js';
 export { Skeleton } from './skeleton.js';
+export { SkeletonAvatarShape, SkeletonSize } from './constants.js';
+export type {
+	SkeletonAvatarProps,
+	SkeletonAvatarShapeType,
+	SkeletonButtonProps,
+	SkeletonInputProps,
+	SkeletonParagraphConfig,
+	SkeletonProps,
+	SkeletonSizeType,
+	SkeletonTitleConfig,
+} from './types.js';

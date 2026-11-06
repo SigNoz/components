@@ -731,7 +731,8 @@ How to apply it:
   go to the popup, because that is the only way to reach it. `className` and `style` do not.
 - **Sizing is a prop.** `width` and `maxWidth` write `--{component}-internal-width` and
   `--{component}-internal-max-width` on the element. They compose with the tokens and never touch
-  `style.width`. Numbers are written as `px`, through `toCssLength`.
+  `style.width`. Numbers, and strings that hold only a number, are written as `px`, through
+  `toCssLength`.
 - **The component's own inline `style` is allowed**, and only for those internal custom
   properties. Cast to `CSSProperties` once, and write nothing the consumer passed in.
 - **Library components that build on another one** may need to style it. Export an
