@@ -1,0 +1,63 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Skeleton type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "Skeleton rejected props > rejects a paragraph option that does not exist > the paragraph takes \`rows\` and \`width\` only": "TS2353: Object literal may only specify known properties, and 'gap' does not exist in type 'SkeletonParagraphConfig'.",
+  "Skeleton rejected props > rejects a paragraph width that is not a string, a number or an array of both > a row width is a string or a number": "TS2322: Type 'boolean' is not assignable to type 'string | number'.",
+  "Skeleton rejected props > rejects a title option that does not exist > the title takes \`width\` only": "TS2353: Object literal may only specify known properties, and 'height' does not exist in type 'SkeletonTitleConfig'.",
+  "Skeleton rejected props > rejects a title that is not a boolean or a config > \`title\` is a boolean or \`{ width }\`": "TS2322: Type 'string' is not assignable to type 'boolean | SkeletonTitleConfig | undefined'.",
+  "Skeleton rejected props > rejects a title width that is not a string or a number > the width is a string or a number": "TS2322: Type 'true' is not assignable to type 'string | number | undefined'.",
+  "Skeleton rejected props > rejects avatar, compose Skeleton.Avatar next to a Skeleton > a text block with an avatar is two components": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "Skeleton rejected props > rejects block, replaced by width > write \`width="100%"\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "Skeleton rejected props > rejects children without any other prop > render the skeleton instead of the content": "TS2747: 'Skeleton' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of 'children' is 'undefined'.",
+  "Skeleton rejected props > rejects children, the skeleton never wraps content > render the skeleton instead of the content": "TS2747: 'Skeleton' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of 'children' is 'undefined'.",
+  "Skeleton rejected props > rejects className, the size comes from width and maxWidth > use \`width\` and \`maxWidth\` for the size": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton rejected props > rejects loading, the consumer renders the skeleton in its own branch > no call site wraps content in the skeleton": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "Skeleton rejected props > rejects round, the radius is fixed > the radius is fixed": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "Skeleton rejected props > rejects rows that are not a number > \`rows\` is a number": "TS2322: Type 'string' is not assignable to type 'number'.",
+  "Skeleton rejected props > rejects size, the root has no size > only the parts for a control take \`size\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton rejected props > rejects style, the size comes from width and maxWidth > use \`width\` and \`maxWidth\` for the size": "TS2322: Type '{ flex: number; }' is not assignable to type 'never'.",
+  "Skeleton spread props > rejects a className spread into Skeleton.Button > a spread is checked like written props, \`className\` is not one": "TS2322: Type '{ size: "md"; className: "action"; }' is not assignable to type 'Record<"className", never>'.
+    Types of property 'className' are incompatible.
+      Type '"action"' is not assignable to type 'never'.",
+  "Skeleton spread props > rejects a className spread into the root > a spread is checked like written props, \`className\` is not one": "TS2322: Type '{ title: boolean; className: string; }' is not assignable to type 'Record<"className", never>'.
+    Types of property 'className' are incompatible.
+      Type 'string' is not assignable to type 'never'.",
+  "Skeleton spread props > rejects a style spread into Skeleton.Avatar > a spread is checked like written props, \`style\` is not one": "TS2322: Type '{ size: "sm"; style: { readonly borderRadius: 4; }; }' is not assignable to type 'Record<"style", never>'.
+    Types of property 'style' are incompatible.
+      Type '{ readonly borderRadius: 4; }' is not assignable to type 'never'.",
+  "Skeleton spread props > rejects a style spread into Skeleton.Input > a spread is checked like written props, \`style\` is not one": "TS2322: Type '{ size: "md"; style: { readonly height: 14; }; }' is not assignable to type 'Record<"style", never>'.
+    Types of property 'style' are incompatible.
+      Type '{ readonly height: 14; }' is not assignable to type 'never'.",
+  "Skeleton.Avatar rejected props > rejects a missing size, it has no default > \`size\` has no default, the size must be picked explicitly": "TS2741: Property 'size' is missing in type '{}' but required in type '{ size: SkeletonSizeType; shape?: SkeletonAvatarShapeType | undefined; testId?: string | undefined; }'.",
+  "Skeleton.Avatar rejected props > rejects a numeric size, the free size is dropped > the size is \`sm\` or \`md\`": "TS2322: Type 'number' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Avatar rejected props > rejects a shape outside circle and square > the shapes are \`circle\` and \`square\`": "TS2322: Type '"rounded"' is not assignable to type 'SkeletonAvatarShapeType | undefined'.",
+  "Skeleton.Avatar rejected props > rejects children, the placeholder is one element > the placeholder has no children": "TS2747: 'Skeleton.Avatar' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of 'children' is 'undefined'.",
+  "Skeleton.Avatar rejected props > rejects className, the size comes from size > use \`size\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton.Avatar rejected props > rejects maxWidth, the size comes from size > the avatar is a square of \`size\`": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "Skeleton.Avatar rejected props > rejects size default, the legacy value > \`default\` is written \`md\`": "TS2322: Type '"default"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Avatar rejected props > rejects size large, there is no lg > there is no placeholder for a 40px avatar": "TS2322: Type '"large"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Avatar rejected props > rejects size small, the legacy value > \`small\` is written \`sm\`": "TS2322: Type '"small"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Avatar rejected props > rejects style, the size comes from size > use \`size\`": "TS2322: Type '{ width: number; }' is not assignable to type 'never'.",
+  "Skeleton.Avatar rejected props > rejects width, the size comes from size > the avatar is a square of \`size\`": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "Skeleton.Button rejected props > rejects a missing size, it has no default > \`size\` has no default, the height must be picked explicitly": "TS2741: Property 'size' is missing in type '{}' but required in type '{ size: SkeletonSizeType; width?: Width<string | number> | undefined; maxWidth?: MaxWidth<string | number> | undefined; testId?: string | undefined; }'.",
+  "Skeleton.Button rejected props > rejects block, replaced by width 100% > write \`width="100%"\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "Skeleton.Button rejected props > rejects children, the placeholder is one element > the placeholder has no children": "TS2747: 'Skeleton.Button' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of 'children' is 'undefined'.",
+  "Skeleton.Button rejected props > rejects className, the size comes from size, width and maxWidth > use \`size\`, \`width\` and \`maxWidth\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton.Button rejected props > rejects shape, a button has no round or circle shape > \`Button\` has no shape": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton.Button rejected props > rejects size default, the legacy value > \`default\` is written \`md\`": "TS2322: Type '"default"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Button rejected props > rejects size large, there is no lg > there is no placeholder for a 40px button": "TS2322: Type '"large"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Button rejected props > rejects size small, the legacy value > \`small\` is written \`sm\`": "TS2322: Type '"small"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Button rejected props > rejects style, the size comes from size, width and maxWidth > use \`size\`, \`width\` and \`maxWidth\`": "TS2322: Type '{ width: number; }' is not assignable to type 'never'.",
+  "Skeleton.Input rejected props > rejects a missing size, it has no default > \`size\` has no default, the height must be picked explicitly": "TS2741: Property 'size' is missing in type '{}' but required in type '{ size: SkeletonSizeType; testId?: string | undefined; }'.",
+  "Skeleton.Input rejected props > rejects a numeric size > the size is \`sm\` or \`md\`": "TS2322: Type 'number' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Input rejected props > rejects block, replaced by width > write \`width="100%"\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "Skeleton.Input rejected props > rejects children, the placeholder is one element > the placeholder has no children": "TS2747: 'Skeleton.Input' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of 'children' is 'undefined'.",
+  "Skeleton.Input rejected props > rejects className, the size comes from size, width and maxWidth > use \`size\`, \`width\` and \`maxWidth\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton.Input rejected props > rejects shape, an input has no shape > only the avatar has a shape": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "Skeleton.Input rejected props > rejects size default, the legacy value > \`default\` is written \`md\`": "TS2322: Type '"default"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Input rejected props > rejects size large, there is no lg > there is no placeholder for a 40px input": "TS2322: Type '"large"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Input rejected props > rejects size small, the legacy value > \`small\` is written \`sm\`": "TS2322: Type '"small"' is not assignable to type 'SkeletonSizeType'.",
+  "Skeleton.Input rejected props > rejects style, the size comes from size, width and maxWidth > use \`size\`, \`width\` and \`maxWidth\`": "TS2322: Type '{ height: number; }' is not assignable to type 'never'.",
+}
+`;

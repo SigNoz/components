@@ -46,6 +46,9 @@
  * | `--dialog-description-margin` | `0` |
  * | `--dialog-description-overflow-wrap` | `anywhere` |
  * | `--dialog-description-skeleton-block-size` | `var(--paragraph-base-400-line-height)` |
+ * | `--dialog-description-skeleton-display` | `flex` |
+ * | `--dialog-description-skeleton-flex-direction` | `column` |
+ * | `--dialog-description-skeleton-justify-content` | `center` |
  * | `--dialog-description-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--dialog-display` | `flex` |
  * | `--dialog-extra-wide-max-inline-size` | `51.25rem` |
@@ -118,7 +121,10 @@
  * | `--dialog-title-min-inline-size` | `0` |
  * | `--dialog-title-overflow-wrap` | `anywhere` |
  * | `--dialog-title-skeleton-block-size` | `var(--label-base-400-font-size)` |
+ * | `--dialog-title-skeleton-display` | `flex` |
  * | `--dialog-title-skeleton-flex` | `1 1 auto` |
+ * | `--dialog-title-skeleton-flex-direction` | `column` |
+ * | `--dialog-title-skeleton-justify-content` | `center` |
  * | `--dialog-title-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--dialog-transform` | `none` |
  * | `--dialog-transition-duration` | `150ms` |

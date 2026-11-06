@@ -1,120 +1,199 @@
-/* Shared shimmer mixin */
-@mixin skeleton-base {
-	background: var(--skeleton-background, var(--muted, #e0e0e0));
-	border-radius: var(--skeleton-border-radius, calc(var(--radius) - 2px));
-	position: relative;
-	overflow: hidden;
+// Every bar: the title, each row and the three placeholders. The shimmer is the Ant Design 5 one:
+// a gradient four times the bar's width, with the band between 25% and 63%.
+@mixin bar {
+	--skeleton-internal-fill: var(--skeleton-background-color, var(--skeleton-background));
+	--skeleton-internal-band: var(--skeleton-active-band-color, var(--skeleton-highlight));
 
-	&[data-active='true']::after {
+	background-color: var(--skeleton-internal-fill);
+	border-radius: var(--skeleton-border-radius, var(--radius-1));
+}
+
+// The fill is translucent, so the gradient replaces it instead of sitting on top of it. The
+// gradient lives on a layer four bars wide that slides under the bar, and only its `transform`
+// animates, so the shimmer runs on the compositor. Animating `background-position` on the bar
+// draws the same frames but repaints every bar on every frame.
+@mixin bar-active {
+	position: var(--skeleton-active-position, relative);
+	overflow: var(--skeleton-active-overflow, hidden);
+	background-color: var(--skeleton-active-background-color, transparent);
+
+	&::after {
 		content: '';
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(90deg,
-				transparent 25%,
-				var(--skeleton-shimmer-color, rgba(255, 255, 255, 0.25)) 50%,
-				transparent 75%);
-		background-size: 200% 100%;
-		animation: skeleton-shimmer var(--skeleton-animation-duration, 1.5s) ease-in-out infinite;
+		position: var(--skeleton-active-shimmer-position, absolute);
+		inset-block: var(--skeleton-active-shimmer-inset-block, 0);
+		// Fixed, not tokens: the keyframes below slide the layer by 75% of its own width, which
+		// lines its right edge up with the bar only for a layer four bars wide that starts at 0.
+		left: 0;
+		width: 400%;
+		background-image: var(
+			--skeleton-active-background-image,
+			linear-gradient(
+				90deg,
+				var(--skeleton-internal-fill) 25%,
+				var(--skeleton-internal-band) 37%,
+				var(--skeleton-internal-fill) 63%
+			)
+		);
+		// Bare: CSS Modules renames the keyframes, and does not rename a name inside a `var()`.
+		animation-name: skeleton-shimmer;
+		animation-duration: var(--skeleton-active-animation-duration, 1.4s);
+		animation-timing-function: var(--skeleton-active-animation-timing-function, ease);
+		animation-iteration-count: var(--skeleton-active-animation-iteration-count, infinite);
 	}
 }
 
+// At either end of the pass the bar shows one plain quarter of the gradient, so a frozen
+// animation rests on the static fill.
 @keyframes skeleton-shimmer {
-	0% {
-		background-position: 200% 0;
+	from {
+		transform: translateX(-75%);
 	}
 
-	100% {
-		background-position: -200% 0;
+	to {
+		transform: translateX(0);
 	}
 }
 
-/* Base Skeleton */
 .skeleton {
-	width: var(--skeleton-width, 100%);
-	display: flex;
-	flex-direction: column;
-	gap: var(--skeleton-gap, 0.5rem);
+	display: var(--skeleton-display, flex);
+	flex-direction: var(--skeleton-flex-direction, column);
+	gap: var(--skeleton-gap, var(--spacing-6));
+	width: var(--skeleton-width, var(--skeleton-internal-width, 100%));
+	max-width: var(--skeleton-max-width, var(--skeleton-internal-max-width, 100%));
 }
 
-.skeleton-title {
-	@include skeleton-base;
-	height: var(--skeleton-title-height, 1rem);
-	margin-bottom: var(--skeleton-title-margin-bottom, 0.75rem);
+.skeleton__title {
+	@include bar;
+
+	height: var(--skeleton-title-height, 16px);
+	width: var(--skeleton-title-width, var(--skeleton-internal-title-width, 38%));
+	max-width: var(--skeleton-title-max-width, 100%);
 }
 
-.skeleton-paragraph {
-	display: flex;
-	flex-direction: column;
-	gap: var(--skeleton-paragraph-gap, 0.5rem);
+.skeleton__paragraph {
+	display: var(--skeleton-paragraph-display, flex);
+	flex-direction: var(--skeleton-paragraph-flex-direction, column);
+	gap: var(--skeleton-paragraph-gap, var(--spacing-4));
 }
 
-.skeleton-paragraph-row {
-	@include skeleton-base;
-	height: var(--skeleton-paragraph-row-height, 0.75rem);
+.skeleton__row {
+	@include bar;
+
+	height: var(--skeleton-row-height, 12px);
+	width: var(--skeleton-row-width, var(--skeleton-internal-row-width, 100%));
+	max-width: var(--skeleton-row-max-width, 100%);
 }
 
-/* Skeleton.Input */
+.skeleton[data-active] .skeleton__title,
+.skeleton[data-active] .skeleton__row {
+	@include bar-active;
+}
+
 .skeleton-input {
-	@include skeleton-base;
-	display: inline-block;
-	height: var(--skeleton-input-height, 2rem);
-	width: var(--skeleton-input-width, 10rem);
-	min-width: var(--skeleton-input-min-width, 10rem);
-	border-radius: var(--skeleton-input-border-radius, calc(var(--radius) - 2px));
+	@include bar;
 
-	&[data-size='small'] {
-		height: var(--skeleton-input-height-small, 1.5rem);
-		min-width: var(--skeleton-input-min-width-small, 7rem);
+	--skeleton-internal-height: var(--skeleton-input-md-height, 32px);
+
+	display: var(--skeleton-input-display, block);
+	// An empty box has no width of its own, so in a parent sized by its content (an `auto` grid
+	// column, an `inline-flex` box, a table cell) `width: 100%` drew nothing. This gives it the
+	// width an empty `Input` takes there, and changes nothing in a parent with a width.
+	contain: inline-size;
+	contain-intrinsic-inline-size: var(--skeleton-input-intrinsic-width, 200px);
+	height: var(--skeleton-internal-height);
+	width: var(--skeleton-input-width, var(--skeleton-internal-width, 100%));
+	max-width: var(--skeleton-input-max-width, var(--skeleton-internal-max-width, 100%));
+
+	&[data-size='sm'] {
+		--skeleton-internal-height: var(--skeleton-input-sm-height, 24px);
 	}
 
-	&[data-size='large'] {
-		height: var(--skeleton-input-height-large, 2.5rem);
-		min-width: var(--skeleton-input-min-width-large, 14rem);
-	}
-
-	&[data-block='true'] {
-		width: 100%;
-		min-width: 100%;
-		display: block;
+	&[data-active] {
+		@include bar-active;
 	}
 }
 
-/* Skeleton.Button  */
 .skeleton-button {
-	@include skeleton-base;
-	display: inline-block;
-	height: var(--skeleton-button-height, 2rem);
-	width: var(--skeleton-button-width, 4rem);
-	min-width: var(--skeleton-button-min-width, 4rem);
-	border-radius: var(--skeleton-button-border-radius, calc(var(--radius) - 2px));
+	@include bar;
 
-	&[data-size='small'] {
-		height: var(--skeleton-button-height-small, 1.5rem);
-		width: var(--skeleton-button-width-small, 3rem);
-		min-width: var(--skeleton-button-min-width-small, 3rem);
+	--skeleton-internal-height: var(--skeleton-button-md-height, 32px);
+	--skeleton-internal-default-width: var(--skeleton-button-md-width, 64px);
+	--skeleton-internal-button-width: var(
+		--skeleton-button-width,
+		var(--skeleton-internal-width, var(--skeleton-internal-default-width))
+	);
+	--skeleton-internal-button-max-width: var(
+		--skeleton-button-max-width,
+		var(--skeleton-internal-max-width, 100%)
+	);
+
+	display: var(--skeleton-button-display, inline-block);
+	vertical-align: var(--skeleton-button-vertical-align, middle);
+	// Shrinks in a short flex row like `Button` does, so `width="100%"` next to another button
+	// leaves it room. It never gets narrower than its size, or than `width` when that is smaller.
+	// The max width caps that floor too, or a `min-width` above `max-width` would win and spill.
+	// A keyword max width, which `min()` cannot take, comes in as a 100% cap instead.
+	flex-shrink: var(--skeleton-button-flex-shrink, 1);
+	min-width: var(
+		--skeleton-button-min-width,
+		min(
+			var(--skeleton-internal-button-width),
+			var(--skeleton-internal-default-width),
+			var(--skeleton-internal-min-width-cap, var(--skeleton-internal-button-max-width))
+		)
+	);
+	height: var(--skeleton-internal-height);
+	width: var(--skeleton-internal-button-width);
+	max-width: var(--skeleton-internal-button-max-width);
+
+	&[data-size='sm'] {
+		--skeleton-internal-height: var(--skeleton-button-sm-height, 24px);
+		--skeleton-internal-default-width: var(--skeleton-button-sm-width, 48px);
 	}
 
-	&[data-size='large'] {
-		height: var(--skeleton-button-height-large, 2.5rem);
-		width: var(--skeleton-button-width-large, 5rem);
-		min-width: var(--skeleton-button-min-width-large, 5rem);
-	}
-
-	&[data-block='true'] {
-		width: 100%;
-		min-width: 100%;
-		display: block;
+	&[data-active] {
+		@include bar-active;
 	}
 }
 
-/* Skeleton.Avatar  */
 .skeleton-avatar {
-	@include skeleton-base;
-	display: inline-block;
-	flex-shrink: 0;
-	border-radius: var(--skeleton-avatar-border-radius, 50%);
+	@include bar;
+
+	--skeleton-internal-size: var(--skeleton-avatar-md-size, 32px);
+
+	display: var(--skeleton-avatar-display, inline-block);
+	vertical-align: var(--skeleton-avatar-vertical-align, middle);
+	flex-shrink: var(--skeleton-avatar-flex-shrink, 0);
+	width: var(--skeleton-internal-size);
+	height: var(--skeleton-internal-size);
+
+	&[data-size='sm'] {
+		--skeleton-internal-size: var(--skeleton-avatar-sm-size, 24px);
+	}
+
+	&[data-shape='circle'] {
+		border-radius: var(--skeleton-avatar-circle-border-radius, 50%);
+	}
 
 	&[data-shape='square'] {
-		border-radius: var(--skeleton-avatar-square-border-radius, calc(var(--radius) - 2px));
+		border-radius: var(--skeleton-avatar-square-border-radius, var(--radius-3));
+	}
+
+	&[data-active] {
+		@include bar-active;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.skeleton[data-active] .skeleton__title,
+	.skeleton[data-active] .skeleton__row,
+	.skeleton-input[data-active],
+	.skeleton-button[data-active],
+	.skeleton-avatar[data-active] {
+		background-color: var(--skeleton-internal-fill);
+
+		&::after {
+			display: none;
+		}
 	}
 }

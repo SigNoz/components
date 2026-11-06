@@ -1,404 +1,120 @@
-import * as React from 'react';
-import { cn } from '../lib/utils.js';
+import { forwardRef, type ReactElement } from 'react';
+import { partTestId, type RejectedProps } from '../lib/utils.js';
 import styles from './skeleton.module.scss';
-
-// Base Skeleton
-
-export interface SkeletonProps {
-	/**
-	 * Whether to show an animated pulse effect.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton active />
-	 * ```
-	 */
-	active?: boolean;
-
-	/**
-	 * Show or hide the title placeholder, or configure its width.
-	 * Set to `false` to hide it entirely.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton title={{ width: '60%' }} />
-	 * <Skeleton title={false} />
-	 * ```
-	 */
-	title?: boolean | { width?: string | number };
-
-	/**
-	 * Show or hide paragraph rows, or configure row count and widths.
-	 * `width` can be a single value applied to all rows, or an array
-	 * of per-row widths.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton paragraph={{ rows: 4 }} />
-	 * <Skeleton paragraph={{ rows: 4, width: '60%' }} />
-	 * <Skeleton paragraph={{ rows: 4, width: ['100%', '95%', '80%', '60%'] }} />
-	 * ```
-	 */
-	paragraph?: boolean | { rows?: number; width?: string | number | (string | number)[] };
-
-	/**
-	 * The id of the skeleton container element.
-	 */
-	id?: string;
-
-	/**
-	 * Test id for the skeleton container, rendered as `data-testid`.
-	 */
-	testId?: string;
-
-	/**
-	 * Inline styles applied to the skeleton container.
-	 */
-	style?: React.CSSProperties;
-
-	/**
-	 * Additional CSS classes applied to the skeleton container.
-	 */
-	className?: string;
-}
+import { SkeletonAvatar } from './subcomponents/skeleton-avatar.js';
+import { SkeletonButton } from './subcomponents/skeleton-button.js';
+import { SkeletonInput } from './subcomponents/skeleton-input.js';
+import type { SkeletonExactProps, SkeletonProps } from './types.js';
+import { skeletonLengthStyle, skeletonRows, skeletonWidthStyle } from './utils.js';
 
 /**
- * Skeleton component for displaying loading placeholders while content is being fetched.
- * Supports animated pulse, configurable title and paragraph rows, and sub-components
- * for inputs, buttons, and avatars.
+ * A placeholder that keeps the shape of a block of text while it loads: a title bar and rows. It
+ * is decorative, so it has no hover, no focus and no events. Render it in the loading branch of
+ * your own check; it never wraps the real content.
+ *
+ * Forwards `ref`, `id` and any `data-*` prop to the root.
+ *
+ * Visual values are `--skeleton-*` custom properties, defaults in the `css-tokens` region of
+ * [./index.ts](./index.ts).
+ *
+ * Every part renders `aria-hidden="true"`, so a screen reader does not read each bar. Mark the
+ * region that is loading with `aria-busy="true"` and, when the wait needs to be announced, add one
+ * status message for the region.
+ *
+ * ### Placeholders for controls
+ *
+ * `Skeleton.Input`, `Skeleton.Button` and `Skeleton.Avatar` stand for one control each, at the
+ * height of that control, so swapping the placeholder for the control keeps the layout still. Put
+ * a `Skeleton.Avatar` next to a `Skeleton` for a text block with an avatar.
+ *
+ * ### Asserting on it
+ *
+ * | `data-*` | when |
+ * |---|---|
+ * | `data-active` | present while `active` is `true` |
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `skeleton` | the root, carries `testId` |
+ * | `skeleton-title` | the title bar, `${testId}-title` |
+ * | `skeleton-paragraph` | the box around the rows, `${testId}-paragraph` |
+ * | `skeleton-row` | each row, `${testId}-row-${index}` |
  *
  * @example
  * ```tsx
- * // Basic usage
- * <Skeleton active />
+ * <Skeleton />
  * ```
  *
  * @example
  * ```tsx
- * // With title and paragraph rows
- * <Skeleton active title={{ width: '40%' }} paragraph={{ rows: 4 }} />
- * ```
- *
- * @example
- * ```tsx
- * // With per-row widths
- * <Skeleton
- *   active
- *   paragraph={{ rows: 3, width: ['100%', '80%', '60%'] }}
- * />
+ * <Skeleton title={false} paragraph={{ rows: 6, width: ['100%', '80%'] }} />
  * ```
  */
-const SkeletonComponent = React.forwardRef<HTMLDivElement, SkeletonProps>(
-	({ active = false, title = true, paragraph = true, id, testId, style, className }, ref) => {
-		const titleWidth = typeof title === 'object' && title.width ? title.width : '38%';
+const SkeletonRoot = forwardRef<HTMLDivElement, SkeletonProps>(function Skeleton(
+	{
+		active = true,
+		title = true,
+		paragraph = true,
+		width,
+		maxWidth,
+		testId,
+		children: _children,
+		className: _className,
+		style: _style,
+		...props
+	}: SkeletonProps & RejectedProps,
+	ref,
+) {
+	const titleWidth = title && title !== true ? title.width : undefined;
+	const rows = paragraph ? skeletonRows(paragraph === true ? {} : paragraph) : [];
 
-		const paragraphRows = React.useMemo(() => {
-			if (!paragraph) return null;
-
-			const rows = typeof paragraph === 'object' ? (paragraph.rows ?? 3) : 3;
-
-			const widths =
-				typeof paragraph === 'object' && paragraph.width
-					? Array.isArray(paragraph.width)
-						? paragraph.width
-						: Array(rows).fill(paragraph.width)
-					: Array(rows).fill('100%');
-
-			return Array.from({ length: rows }).map((_, i) => (
+	return (
+		<div
+			{...props}
+			ref={ref}
+			aria-hidden="true"
+			data-slot="skeleton"
+			data-active={active || undefined}
+			className={styles.skeleton}
+			style={skeletonWidthStyle({ width, maxWidth })}
+			{...(testId === undefined ? {} : { 'data-testid': testId })}
+		>
+			{Boolean(title) && (
 				<div
-					key={i}
-					className={styles['skeleton-paragraph-row']}
-					style={{ width: widths[i] ?? '100%' }}
+					data-slot="skeleton-title"
+					className={styles['skeleton__title']}
+					style={skeletonLengthStyle({ '--skeleton-internal-title-width': titleWidth })}
+					data-testid={partTestId(testId, 'title')}
 				/>
-			));
-		}, [paragraph]);
+			)}
+			{rows.length > 0 && (
+				<div
+					data-slot="skeleton-paragraph"
+					className={styles['skeleton__paragraph']}
+					data-testid={partTestId(testId, 'paragraph')}
+				>
+					{rows.map((row) => (
+						<div
+							key={row.id}
+							data-slot="skeleton-row"
+							className={styles['skeleton__row']}
+							style={skeletonLengthStyle({ '--skeleton-internal-row-width': row.width })}
+							data-testid={partTestId(testId, row.id)}
+						/>
+					))}
+				</div>
+			)}
+		</div>
+	);
+});
 
-		return (
-			<div
-				ref={ref}
-				id={id}
-				data-testid={testId}
-				data-active={active}
-				style={style}
-				className={cn(styles['skeleton'], className)}
-			>
-				{title !== false && (
-					<div className={styles['skeleton-title']} style={{ width: titleWidth }} />
-				)}
-				{paragraph !== false && <div className={styles['skeleton-paragraph']}>{paragraphRows}</div>}
-			</div>
-		);
+export const Skeleton = Object.assign(
+	SkeletonRoot as <T extends SkeletonProps>(
+		props: SkeletonExactProps<T, SkeletonProps>,
+	) => ReactElement,
+	{
+		Input: SkeletonInput,
+		Button: SkeletonButton,
+		Avatar: SkeletonAvatar,
 	},
 );
-SkeletonComponent.displayName = 'Skeleton';
-
-//  Skeleton.Input
-
-export interface SkeletonInputProps {
-	/**
-	 * Whether to show an animated pulse effect.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Input active />
-	 * ```
-	 */
-	active?: boolean;
-
-	/**
-	 * Size of the input skeleton.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Input size="small" />
-	 * <Skeleton.Input size="large" />
-	 * ```
-	 */
-	size?: 'small' | 'default' | 'large';
-
-	/**
-	 * Whether the input skeleton should take up the full width of its container.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Input block />
-	 * ```
-	 */
-	block?: boolean;
-
-	/**
-	 * The id of the skeleton input element.
-	 */
-	id?: string;
-
-	/**
-	 * Test id for the skeleton input, rendered as `data-testid`.
-	 */
-	testId?: string;
-
-	/**
-	 * Inline styles applied to the skeleton input.
-	 */
-	style?: React.CSSProperties;
-
-	/**
-	 * Additional CSS classes applied to the skeleton input.
-	 */
-	className?: string;
-}
-
-/**
- * Skeleton placeholder shaped like an input field.
- *
- * @example
- * ```tsx
- * <Skeleton.Input active size="small" />
- * ```
- *
- * @example
- * ```tsx
- * <Skeleton.Input active block style={{ height: 32, marginTop: 8 }} />
- * ```
- */
-const SkeletonInput = React.forwardRef<HTMLDivElement, SkeletonInputProps>(
-	({ active = false, size = 'default', block = false, id, testId, style, className }, ref) => (
-		<div
-			ref={ref}
-			id={id}
-			data-testid={testId}
-			data-active={active}
-			data-size={size}
-			data-block={block}
-			style={style}
-			className={cn(styles['skeleton-input'], className)}
-		/>
-	),
-);
-SkeletonInput.displayName = 'SkeletonInput';
-
-// Skeleton.Button
-
-export interface SkeletonButtonProps {
-	/**
-	 * Whether to show an animated pulse effect.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Button active />
-	 * ```
-	 */
-	active?: boolean;
-
-	/**
-	 * Size of the button skeleton.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Button size="small" />
-	 * ```
-	 */
-	size?: 'small' | 'default' | 'large';
-
-	/**
-	 * Whether the button skeleton should take up the full width of its container.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Button block />
-	 * ```
-	 */
-	block?: boolean;
-
-	/**
-	 * The id of the skeleton button element.
-	 */
-	id?: string;
-
-	/**
-	 * Test id for the skeleton button, rendered as `data-testid`.
-	 */
-	testId?: string;
-
-	/**
-	 * Inline styles applied to the skeleton button.
-	 */
-	style?: React.CSSProperties;
-
-	/**
-	 * Additional CSS classes applied to the skeleton button.
-	 */
-	className?: string;
-}
-
-/**
- * Skeleton placeholder shaped like a button.
- *
- * @example
- * ```tsx
- * <Skeleton.Button active size="small" />
- * ```
- *
- * @example
- * ```tsx
- * <Skeleton.Button active block />
- * ```
- */
-const SkeletonButton = React.forwardRef<HTMLDivElement, SkeletonButtonProps>(
-	({ active = false, size = 'default', block = false, id, testId, style, className }, ref) => (
-		<div
-			ref={ref}
-			id={id}
-			data-testid={testId}
-			data-active={active}
-			data-size={size}
-			data-block={block}
-			style={style}
-			className={cn(styles['skeleton-button'], className)}
-		/>
-	),
-);
-SkeletonButton.displayName = 'SkeletonButton';
-
-// Skeleton.Avatar
-
-export interface SkeletonAvatarProps {
-	/**
-	 * Whether to show an animated pulse effect.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Avatar active />
-	 * ```
-	 */
-	active?: boolean;
-
-	/**
-	 * Size of the avatar skeleton in pixels, or a named size.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Avatar size={36} />
-	 * <Skeleton.Avatar size="large" />
-	 * ```
-	 */
-	size?: number | 'small' | 'default' | 'large';
-
-	/**
-	 * Shape of the avatar skeleton.
-	 *
-	 * @example
-	 * ```tsx
-	 * <Skeleton.Avatar shape="square" />
-	 * <Skeleton.Avatar shape="circle" />
-	 * ```
-	 */
-	shape?: 'circle' | 'square';
-
-	/**
-	 * The id of the skeleton avatar element.
-	 */
-	id?: string;
-
-	/**
-	 * Test id for the skeleton avatar, rendered as `data-testid`.
-	 */
-	testId?: string;
-
-	/**
-	 * Inline styles applied to the skeleton avatar.
-	 */
-	style?: React.CSSProperties;
-
-	/**
-	 * Additional CSS classes applied to the skeleton avatar.
-	 */
-	className?: string;
-}
-
-const avatarSizeMap = { small: 24, default: 36, large: 48 };
-
-/**
- * Skeleton placeholder shaped like an avatar.
- *
- * @example
- * ```tsx
- * <Skeleton.Avatar active shape="circle" size={36} />
- * ```
- *
- * @example
- * ```tsx
- * <Skeleton.Avatar active shape="square" size="large" />
- * ```
- */
-const SkeletonAvatar = React.forwardRef<HTMLDivElement, SkeletonAvatarProps>(
-	({ active = false, size = 'default', shape = 'circle', id, testId, style, className }, ref) => {
-		const resolvedSize = typeof size === 'number' ? size : avatarSizeMap[size];
-
-		return (
-			<div
-				ref={ref}
-				id={id}
-				data-testid={testId}
-				data-active={active}
-				data-shape={shape}
-				style={{ width: resolvedSize, height: resolvedSize, ...style }}
-				className={cn(styles['skeleton-avatar'], className)}
-			/>
-		);
-	},
-);
-SkeletonAvatar.displayName = 'SkeletonAvatar';
-
-// Compound component
-
-type SkeletonWithSubComponents = typeof SkeletonComponent & {
-	Input: typeof SkeletonInput;
-	Button: typeof SkeletonButton;
-	Avatar: typeof SkeletonAvatar;
-};
-
-(SkeletonComponent as SkeletonWithSubComponents).Input = SkeletonInput;
-(SkeletonComponent as SkeletonWithSubComponents).Button = SkeletonButton;
-(SkeletonComponent as SkeletonWithSubComponents).Avatar = SkeletonAvatar;
-
-export const Skeleton = SkeletonComponent as SkeletonWithSubComponents;
