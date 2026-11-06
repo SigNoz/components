@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { slot, waitForOnTop, zIndexOf } from '../../dialog/__tests__/dialog.test-utils.js';
-import { DrawerWrapper } from '../../drawer/index.js';
+import { Drawer } from '../../drawer/index.js';
 import { AlertDialog } from '../index.js';
 
 function DrawerHarness() {
@@ -14,7 +14,7 @@ function DrawerHarness() {
 	return (
 		<>
 			<output data-testid="drawer-state">{drawerOpen ? 'drawer open' : 'drawer closed'}</output>
-			<DrawerWrapper open={drawerOpen} onOpenChange={setDrawerOpen} title="Settings">
+			<Drawer type="task" open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Settings">
 				<button type="button" onClick={() => setAlertOpen(true)}>
 					Open alert
 				</button>
@@ -28,7 +28,7 @@ function DrawerHarness() {
 				>
 					It goes away.
 				</AlertDialog>
-			</DrawerWrapper>
+			</Drawer>
 		</>
 	);
 }
@@ -42,7 +42,7 @@ async function openOverDrawer() {
 	return user;
 }
 
-describe('AlertDialog opened from an old drawer', () => {
+describe('AlertDialog opened from a drawer', () => {
 	it('lets the confirm button take a press and leaves the drawer open', async () => {
 		const user = await openOverDrawer();
 
@@ -106,9 +106,11 @@ describe('AlertDialog opened from an old drawer', () => {
 
 	it('stacks its layer above the drawer', async () => {
 		await openOverDrawer();
-		const drawer = slot('drawer-content') as HTMLElement;
+		const drawerLayer = slot('drawer-layer') as HTMLElement;
 
-		expect(zIndexOf(slot('alert-dialog-layer') as HTMLElement)).toBeGreaterThan(zIndexOf(drawer));
+		expect(zIndexOf(slot('alert-dialog-layer') as HTMLElement)).toBeGreaterThan(
+			zIndexOf(drawerLayer),
+		);
 	});
 
 	it('gives the focus back to its opener in the drawer when it closes', async () => {

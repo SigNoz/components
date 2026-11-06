@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
-import { DrawerWrapper } from '../../drawer/index.js';
+import { Drawer } from '../../drawer/index.js';
 import { Dialog } from '../dialog.js';
 import { waitForOnTop } from './dialog.test-utils.js';
 
@@ -14,7 +14,7 @@ function DrawerHarness() {
 	return (
 		<>
 			<output data-testid="drawer-state">{drawerOpen ? 'drawer open' : 'drawer closed'}</output>
-			<DrawerWrapper open={drawerOpen} onOpenChange={setDrawerOpen} title="Settings">
+			<Drawer type="task" open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Settings">
 				<button type="button" onClick={() => setDialogOpen(true)}>
 					Open dialog
 				</button>
@@ -30,7 +30,7 @@ function DrawerHarness() {
 				>
 					<input aria-label="Name" />
 				</Dialog>
-			</DrawerWrapper>
+			</Drawer>
 		</>
 	);
 }
@@ -44,7 +44,7 @@ async function openOverDrawer() {
 	return user;
 }
 
-describe('Dialog opened from an old drawer', () => {
+describe('Dialog opened from a drawer', () => {
 	it('takes a press on its buttons and leaves the drawer open', async () => {
 		const user = await openOverDrawer();
 

@@ -1,33 +1,32 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Drawer, DrawerContent, DrawerTitle } from '../../drawer/index.js';
+import { Drawer } from '../../drawer/index.js';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType } from '../types.js';
 import { openDropdown } from './dropdown.test-utils.js';
 
+function noop(): void {}
+
 function renderInDrawer(items: DropdownItemType[], container?: HTMLElement) {
 	return render(
-		<Drawer open>
-			<DrawerContent>
-				<DrawerTitle>Settings</DrawerTitle>
-				{/* Out of the panel's flex row: a stretched trigger would widen the menu with it. */}
-				<div>
-					<Dropdown nativeButton items={items} container={container}>
-						<button type="button">Actions</button>
-					</Dropdown>
-				</div>
-			</DrawerContent>
+		<Drawer type="task" open onClose={noop} title="Settings">
+			{/* Out of the panel's flex row: a stretched trigger would widen the menu with it. */}
+			<div>
+				<Dropdown nativeButton items={items} container={container}>
+					<button type="button">Actions</button>
+				</Dropdown>
+			</div>
 		</Drawer>,
 	);
 }
 
 function drawerPanel(): HTMLElement {
-	return document.querySelector('[data-slot="drawer-content"]') as HTMLElement;
+	return document.querySelector('[data-slot="drawer-popup"]') as HTMLElement;
 }
 
 describe('Dropdown inside a modal', () => {
-	// A modal drawer sets `pointer-events: none` on the body and traps focus in its panel, so
+	// A modal drawer makes the page outside its panel inert and traps focus in the panel, so
 	// the menu goes into the panel. Outside it no row could be clicked, and the drawer would pull
 	// the focus back to the trigger on every arrow key.
 	it('portals into the drawer and keeps the rows clickable', async () => {
@@ -37,7 +36,6 @@ describe('Dropdown inside a modal', () => {
 		const menu = await openDropdown();
 		const row = screen.getByRole('menuitem', { name: 'Rename' });
 
-		expect(getComputedStyle(document.body).pointerEvents).toBe('none');
 		expect(drawerPanel().contains(menu)).toBe(true);
 
 		const { left, top, width, height } = row.getBoundingClientRect();
