@@ -274,7 +274,7 @@
 .combobox__positioner {
   // Base UI positions but does not stack.
   z-index: var(--combobox-z-index, 50);
-  // A modal drawer or dialog sets `pointer-events: none` on the body. A popup portalled into a
+  // A Radix modal sets `pointer-events: none` on the body. A popup portalled into a
   // `container` outside the panel would have no row that can be clicked.
   pointer-events: var(--combobox-positioner-pointer-events, auto);
   // Base UI places the positioner with `left`, so its width would otherwise shrink to what is left

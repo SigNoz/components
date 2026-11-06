@@ -937,7 +937,7 @@ interaction test corpus, so treat them as product surface.
 | --- | --- |
 | `badge.stories.tsx` | `Primitive Components/Badge` |
 | `dialog-primitive.stories.tsx` | `Primitive Components/Dialog` |
-| `drawer-wrapper.stories.tsx` | `Composed Components/Drawer/DrawerWrapper` |
+| `drawer.stories.tsx` | `Composed Components/Drawer` |
 | `confirm-dialog.stories.tsx` | `Composed Components/ConfirmDialog` |
 
 Top-level groups are fixed by `storySort.order` in `apps/docs/.storybook/preview.tsx`:
@@ -1065,8 +1065,7 @@ argTypes: {
    `DialogContent` inside a `Dialog`, `RadioGroupItem` inside a `RadioGroup`. Static members sit
    in `{name}-components.stories.tsx` instead, and render inside a parent the same way
    (`Callout.Link` inside a `Callout`).
-4. **Interactive stories own their state** via `useState` in `render`, or via a decorator.
-   URL-driven presets need a `NuqsAdapter` decorator plus `useQueryState` in the decorator,
+4. **Interactive stories own their state** via `useState` in `render`, or via a decorator,
    keeping `args` hook-free.
 
 Layout: use the shared classes in `apps/docs/index.css` (`story-container`, `story-section`,
