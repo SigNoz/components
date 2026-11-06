@@ -93,7 +93,7 @@ interface GetContainerIsContainer {
 }
 
 interface ThePanelIsCentered {
-	'the panel is always centered: `position`, `heightMode`, `animation` and `offset` belong to Drawer': never;
+	'the panel is always centered: drop `position`, `heightMode`, `animation` and `offset`, and use a `Drawer` for a panel at the edge of the page': never;
 }
 
 interface TheFooterTakesTheButtons {
@@ -158,15 +158,27 @@ export type IsNoHandle<Payload> = 0 extends 1 & Payload
 // `open` counts as passed only when it is a required key of `T`. An unannotated callback in the
 // props makes `T` fall back to its constraint while it is typed, and there `open` is an optional
 // key that nobody passed. The close handlers are read the same way below.
-type ValidateOpenOrHandle<T, Payload> =
+/**
+ * The open-or-handle pair: one of `open` and `handle`, never both, and `children` as a function
+ * only with a handle. The rules default to the dialog's wording, and Drawer passes its own.
+ *
+ * @access private
+ */
+export type ValidateOpenOrHandle<
+	T,
+	Payload,
+	NeedsOpenOrHandle = ADialogNeedsOpenOrAHandle,
+	NotBoth = OpenOrAHandleNotBoth,
+	ChildrenNeedAHandle = PayloadChildrenNeedAHandle,
+> =
 	IsNoHandle<Payload> extends true
 		? [Extract<keyof T, 'open'>] extends [never]
-			? ADialogNeedsOpenOrAHandle
+			? NeedsOpenOrHandle
 			: T extends { children: (...args: never[]) => unknown }
-				? PayloadChildrenNeedAHandle
+				? ChildrenNeedAHandle
 				: unknown
 		: T extends { open: unknown }
-			? OpenOrAHandleNotBoth
+			? NotBoth
 			: unknown;
 
 /**
