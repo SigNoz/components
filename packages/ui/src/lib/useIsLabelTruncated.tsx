@@ -13,6 +13,93 @@ export function isLabelTruncatedInHeight(label: HTMLElement): boolean {
 	return label.scrollHeight - label.clientHeight > LABEL_OVERFLOW_TOLERANCE_PX;
 }
 
+type Measure = () => void;
+
+// Every measured label shares one observer of each kind. An observer per label is an object, a
+// callback and a disconnect per label, which a long list or a table pays thousands of times.
+const measures = new Map<Node, Set<Measure>>();
+const fontSets = new Set<FontFaceSet>();
+let resizeObserver: ResizeObserver | null = null;
+let mutationObserver: MutationObserver | null = null;
+
+function measureAll(): void {
+	for (const nodeMeasures of measures.values()) {
+		for (const measure of nodeMeasures) {
+			measure();
+		}
+	}
+}
+
+function onResize(entries: ResizeObserverEntry[]): void {
+	for (const entry of entries) {
+		measures.get(entry.target)?.forEach((measure) => measure());
+	}
+}
+
+// A change deep inside a label is reported on the node that changed, so every measured label
+// above that node is measured again.
+function onMutation(records: MutationRecord[]): void {
+	const pending = new Set<Measure>();
+
+	for (const record of records) {
+		for (let node: Node | null = record.target; node; node = node.parentNode) {
+			measures.get(node)?.forEach((measure) => pending.add(measure));
+		}
+	}
+
+	for (const measure of pending) {
+		measure();
+	}
+}
+
+function observeLabel(node: HTMLElement, measure: Measure): () => void {
+	resizeObserver ??= new ResizeObserver(onResize);
+	mutationObserver ??= new MutationObserver(onMutation);
+
+	const { fonts } = node.ownerDocument;
+
+	if (fonts && !fontSets.has(fonts)) {
+		fontSets.add(fonts);
+		fonts.addEventListener('loadingdone', measureAll);
+	}
+
+	let nodeMeasures = measures.get(node);
+
+	if (!nodeMeasures) {
+		nodeMeasures = new Set();
+		measures.set(node, nodeMeasures);
+		mutationObserver.observe(node, { characterData: true, childList: true, subtree: true });
+	}
+
+	nodeMeasures.add(measure);
+	// Observing a node again makes the observer report its size again, which is the first
+	// measurement of this caller.
+	resizeObserver.observe(node);
+
+	return (): void => {
+		nodeMeasures.delete(measure);
+
+		if (nodeMeasures.size === 0) {
+			measures.delete(node);
+			resizeObserver?.unobserve(node);
+		}
+
+		// A MutationObserver cannot stop watching one node, so it stops with the last label.
+		if (measures.size === 0) {
+			resizeObserver?.disconnect();
+			resizeObserver = null;
+			mutationObserver?.disconnect();
+			mutationObserver = null;
+
+			for (const fontSet of fontSets) {
+				fontSet.removeEventListener('loadingdone', measureAll);
+			}
+
+			fontSets.clear();
+		}
+	};
+}
+
 export function useIsLabelTruncated(
 	enabled: boolean,
 	isTruncated: (node: HTMLElement) => boolean = isLabelTruncated,
@@ -34,22 +121,7 @@ export function useIsLabelTruncated(
 				return;
 			}
 
-			const measure = (): void => setTruncated(isTruncated(node));
-
-			const resizeObserver = new ResizeObserver(measure);
-			resizeObserver.observe(node);
-
-			const mutationObserver = new MutationObserver(measure);
-			mutationObserver.observe(node, { characterData: true, childList: true, subtree: true });
-
-			const { fonts } = node.ownerDocument;
-			fonts?.addEventListener('loadingdone', measure);
-
-			stopMeasuring.current = (): void => {
-				resizeObserver.disconnect();
-				mutationObserver.disconnect();
-				fonts?.removeEventListener('loadingdone', measure);
-			};
+			stopMeasuring.current = observeLabel(node, () => setTruncated(isTruncated(node)));
 		},
 		[enabled, isTruncated],
 	);
