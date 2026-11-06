@@ -15,6 +15,9 @@ import { DialogHandle } from './dialog-handle.js';
  *
  * `onOpenChange` reports every open and close, whichever caused it.
  *
+ * The same handle drives an `AlertDialog`, which closes itself on cancel and once `onConfirm`
+ * is done.
+ *
  * @example
  * ```tsx
  * const editAlert = useDialogHandle<AlertRule>();

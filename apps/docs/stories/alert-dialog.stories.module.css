@@ -1,0 +1,50 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 2rem;
+	max-inline-size: 36rem;
+}
+
+.views {
+	display: flex;
+	flex-direction: column;
+	inline-size: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.view {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-block: 0.5rem;
+	border-block-end: 1px solid var(--l2-border);
+	color: var(--l1-foreground);
+}
+
+.viewText {
+	display: flex;
+	flex-direction: column;
+	min-inline-size: 0;
+}
+
+/* A `contain` on the box fixes the backdrop and the panel to it instead of the viewport. */
+.box {
+	position: relative;
+	contain: layout;
+	overflow: hidden;
+	inline-size: 100%;
+	block-size: 16rem;
+	border: 1px dashed var(--l2-border);
+	border-radius: var(--radius-2);
+}
+
+.boxes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
+	gap: 1.5rem;
+}

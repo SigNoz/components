@@ -65,6 +65,7 @@ import { Badge } from '@signozhq/ui/badge';   // subpath
 The full set:
 
 ```ts
+import { AlertDialog } from '@signozhq/ui';
 import { AlertStrip } from '@signozhq/ui';
 import { Avatar } from '@signozhq/ui';
 import { Badge } from '@signozhq/ui';
