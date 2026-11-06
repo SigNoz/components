@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.4.0](https://github.com/SigNoz/components/compare/v0.3.0...v0.4.0) (2026-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **typography:** rework the component ([#459](https://github.com/SigNoz/components/issues/459))
+* **avatar:** rework avatar on semantic tokens with a required name, size and color ([#477](https://github.com/SigNoz/components/issues/477))
+* **pin-list:** remove PinList ([#474](https://github.com/SigNoz/components/issues/474))
+* **text-ellipsis:** remove TextEllipsis ([#473](https://github.com/SigNoz/components/issues/473))
+* **date-picker:** remove DatePicker ([#472](https://github.com/SigNoz/components/issues/472))
+* **table:** remove Table and DataTable ([#471](https://github.com/SigNoz/components/issues/471))
+* **pagination:** rework pagination on the new spec ([#467](https://github.com/SigNoz/components/issues/467))
+* **breadcrumb:** rework breadcrumb with per-item render ([#465](https://github.com/SigNoz/components/issues/465))
+* **popover:** rework popover on base-ui ([#449](https://github.com/SigNoz/components/issues/449))
+
+### Features
+
+* **avatar:** rework avatar on semantic tokens with a required name, size and color ([#477](https://github.com/SigNoz/components/issues/477)) ([af1ef2c](https://github.com/SigNoz/components/commit/af1ef2ce59fb531f0a60affa312af30598dfa878))
+* **breadcrumb:** rework breadcrumb with per-item render ([#465](https://github.com/SigNoz/components/issues/465)) ([2293cc9](https://github.com/SigNoz/components/commit/2293cc992548213b7a766fcff5bf63f882e6a828))
+* **button:** add noLoadingEffect to turn off the ghost loading glow ([#458](https://github.com/SigNoz/components/issues/458)) ([f024b3e](https://github.com/SigNoz/components/commit/f024b3ec460aafd7df386ae2a373fb67270c3ff4))
+* **date-picker:** remove DatePicker ([#472](https://github.com/SigNoz/components/issues/472)) ([0df7924](https://github.com/SigNoz/components/commit/0df7924d0340499bd190d5bb6980abda70ca8a3f))
+* **pagination:** rework pagination on the new spec ([#467](https://github.com/SigNoz/components/issues/467)) ([8128645](https://github.com/SigNoz/components/commit/8128645c57c84b9868e8eede00c1dbb2b786fba9))
+* **pin-list:** remove PinList ([#474](https://github.com/SigNoz/components/issues/474)) ([a1f347f](https://github.com/SigNoz/components/commit/a1f347f8c13741e19c17fa8d75a33e616e5c3a9c))
+* **popover:** rework popover on base-ui ([#449](https://github.com/SigNoz/components/issues/449)) ([57dc971](https://github.com/SigNoz/components/commit/57dc9717c08361c2787108a12f198c9991eeebb0))
+* **table:** remove Table and DataTable ([#471](https://github.com/SigNoz/components/issues/471)) ([ea0f65e](https://github.com/SigNoz/components/commit/ea0f65eb09c82f7fd5cd49f15d4a242af61a138c))
+* **text-ellipsis:** remove TextEllipsis ([#473](https://github.com/SigNoz/components/issues/473)) ([d243c68](https://github.com/SigNoz/components/commit/d243c688f4281a017f9b38bcd5b34b4720fe6c4b))
+* **typography:** rework the component ([#459](https://github.com/SigNoz/components/issues/459)) ([65733c0](https://github.com/SigNoz/components/commit/65733c08d9c3972a435a637bb07b019920e60521))
+
+
+### Bug Fixes
+
+* **deps:** cap @babel/core override below 8 ([#450](https://github.com/SigNoz/components/issues/450)) ([996180b](https://github.com/SigNoz/components/commit/996180b0770fcd23a53b6c0d73e5746d0f68288c))
+
+
+### Performance Improvements
+
+* avoid encoding intermediate source maps (&lt;a ([2f4f2ce](https://github.com/SigNoz/components/commit/2f4f2ce12821a86a783a770cf8e2c99dfa1b43b8))
+* **ui:** share the label truncation observers between components ([#461](https://github.com/SigNoz/components/issues/461)) ([63ba6d4](https://github.com/SigNoz/components/commit/63ba6d4bd07448c9479e8feec8c945b199eaf35e))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the development-dependencies group across 1 directory with 21 updates ([#457](https://github.com/SigNoz/components/issues/457)) ([04eb80c](https://github.com/SigNoz/components/commit/04eb80c4dcd4b97b80c9993e94914b92ac314336))
+* **deps-dev:** bump the development-dependencies group across 1 directory with 22 updates ([#448](https://github.com/SigNoz/components/issues/448)) ([2f4f2ce](https://github.com/SigNoz/components/commit/2f4f2ce12821a86a783a770cf8e2c99dfa1b43b8))
+* **deps:** bump glob and drop serve to fix audit ([#464](https://github.com/SigNoz/components/issues/464)) ([0121eb2](https://github.com/SigNoz/components/commit/0121eb26dce3cb2b9a44f3c81afe22493866bc59))
+
 ## [0.3.0](https://github.com/SigNoz/components/compare/v0.2.0...v0.3.0) (2026-10-09)
 
 
