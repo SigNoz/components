@@ -27,6 +27,16 @@
 				"require": "./dist/index.cjs"
 			}
 		},
+		"./alert-dialog": {
+			"import": {
+				"types": "./dist/alert-dialog/index.d.ts",
+				"import": "./dist/alert-dialog/index.mjs"
+			},
+			"require": {
+				"types": "./dist/alert-dialog/index.d.cts",
+				"require": "./dist/alert-dialog/index.cjs"
+			}
+		},
 		"./alert-strip": {
 			"import": {
 				"types": "./dist/alert-strip/index.d.ts",

@@ -1,3 +1,4 @@
+alert-dialog
 alert-strip
 avatar
 badge

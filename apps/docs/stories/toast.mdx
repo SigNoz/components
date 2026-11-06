@@ -11,7 +11,8 @@ It comes in two parts: `toast` raises a toast from anywhere, and `Toaster` draws
 one per position, and `id` to the viewport of its `position`. A toast takes no props of its own: everything it shows comes from the `toast` call.
 
 A toast closes on its own and can be missed. If the user has to read it or act on it, it is not a
-toast: reach for `Callout`, `AlertStrip` or a `Dialog`.
+toast: reach for `Callout`, `AlertStrip` or a `Dialog`, or an `AlertDialog` when the user has to
+confirm an action.
 
 ## How to use
 
@@ -83,7 +84,7 @@ toast.info('Export started', { action: { label: 'Cancel' } });
 ```
 
 The button undoes what the toast reports. Never put an irreversible action there, such as delete,
-discard or revoke: use a confirm dialog.
+discard or revoke: ask first with an `AlertDialog`.
 
 An `onClick` that calls `event.preventDefault()` keeps the toast open, such as when the undo
 failed and the toast should stay for another try.
