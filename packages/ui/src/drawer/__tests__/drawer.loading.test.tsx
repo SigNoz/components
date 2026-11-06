@@ -1,8 +1,10 @@
 import { Info } from '@signozhq/icons';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { describe, expect, it, onTestFinished, vi } from 'vitest';
+import { Dropdown } from '../../dropdown/index.js';
+import { Popover } from '../../popover/index.js';
 import { Drawer } from '../drawer.js';
 import type { DrawerTypeType } from '../types.js';
 import {
@@ -381,5 +383,82 @@ describe('Drawer loading', () => {
 		expect(screen.getByTestId('drawer-title').getBoundingClientRect().width).toBeGreaterThan(1);
 		expect(screen.queryByTestId('drawer-title-skeleton')).toBeNull();
 		expect(screen.queryByTestId('drawer-body-skeleton')).toBeNull();
+	});
+});
+
+describe('Drawer loading with a popup open from the header', () => {
+	function isHittable(element: Element): boolean {
+		const { left, top, width, height } = element.getBoundingClientRect();
+
+		return element.contains(document.elementFromPoint(left + width / 2, top + height / 2));
+	}
+
+	it.each<DrawerTypeType>(['task', 'inspector'])(
+		'makes a menu opened from the headerSuffix of a %s inert with it',
+		async (type) => {
+			const onClick = vi.fn();
+			const setLoading = await renderWithLoadingSetter({
+				type,
+				headerSuffix: (
+					<Dropdown
+						nativeButton
+						side="bottom"
+						align="end"
+						items={[{ type: 'item', value: 'delete', label: 'Delete record', onClick }]}
+					>
+						<button type="button">More actions</button>
+					</Dropdown>
+				),
+			});
+
+			await userEvent.click(screen.getByRole('button', { name: 'More actions' }));
+			const menu = await screen.findByRole('menu');
+			const row = within(menu).getByRole('menuitem', { name: 'Delete record' });
+			await waitFor(() => expect(isHittable(row)).toBe(true));
+
+			setLoading(true);
+
+			// The menu renders in the slot, so the slot going inert takes the menu with it: a press on
+			// a row would act on the record that is being replaced.
+			expect(slot('drawer-header-suffix')).toContainElement(menu);
+			await waitFor(() => expect(slot('drawer-header-suffix')?.inert).toBe(true));
+			expect(isHittable(row)).toBe(false);
+			expect(drawerPanel().contains(document.activeElement)).toBe(true);
+			expect(menu.contains(document.activeElement)).toBe(false);
+			expect(onClick).not.toHaveBeenCalled();
+		},
+	);
+
+	it('makes a popover opened from the headerPrefix inert with it, and usable again after', async () => {
+		const setLoading = await renderWithLoadingSetter({
+			headerPrefix: (
+				<Popover
+					nativeButton
+					side="bottom"
+					align="start"
+					aria-label="Earlier steps"
+					trigger={<button type="button">Steps</button>}
+				>
+					<button type="button">Pod</button>
+				</Popover>
+			),
+		});
+
+		await userEvent.click(screen.getByRole('button', { name: 'Steps' }));
+		const popover = await screen.findByRole('dialog', { name: 'Earlier steps' });
+		const step = within(popover).getByRole('button', { name: 'Pod' });
+		await waitFor(() => expect(isHittable(step)).toBe(true));
+
+		setLoading(true);
+
+		expect(slot('drawer-header-prefix')).toContainElement(popover);
+		await waitFor(() => expect(isHittable(step)).toBe(false));
+
+		setLoading(false);
+
+		await waitFor(() => expect(slot('drawer-header-prefix')?.inert).toBe(false));
+		if (popover.isConnected) {
+			await waitFor(() => expect(isHittable(step)).toBe(true));
+		}
 	});
 });
