@@ -2,6 +2,7 @@ import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { X } from '@signozhq/icons';
 import { type ReactNode, type RefObject, useRef } from 'react';
 import { Button } from '../../button/index.js';
+import { PopupContainer } from '../../lib/popup-container.js';
 import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import { Skeleton } from '../../skeleton/index.js';
 import { Typography } from '../../typography/index.js';
@@ -44,7 +45,9 @@ export function DrawerHeader({
 }: DrawerHeaderProps): ReactNode {
 	const prefixRef = useRef<HTMLDivElement | null>(null);
 	const suffixRef = useRef<HTMLDivElement | null>(null);
-	// Figma keeps the nav and the actions on screen while the record loads, disabled.
+	// Figma keeps the nav and the actions on screen while the record loads, disabled. Each slot is
+	// its own popup container, so a menu or popover opened from it renders inside it and goes inert
+	// with it, instead of acting on the record that is being replaced.
 	useInert(prefixRef, loading, popupRef);
 	useInert(suffixRef, loading, popupRef);
 
@@ -65,7 +68,7 @@ export function DrawerHeader({
 						data-loading={loading || undefined}
 						data-testid={partTestId(testId, 'header-prefix')}
 					>
-						{headerPrefix}
+						<PopupContainer>{headerPrefix}</PopupContainer>
 					</div>
 					<span className={styles['drawer__header-divider']} aria-hidden="true" />
 				</>
@@ -159,7 +162,7 @@ export function DrawerHeader({
 					data-loading={loading || undefined}
 					data-testid={partTestId(testId, 'header-suffix')}
 				>
-					{headerSuffix}
+					<PopupContainer>{headerSuffix}</PopupContainer>
 				</div>
 			) : null}
 			<Button
