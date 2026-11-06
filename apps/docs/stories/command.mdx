@@ -54,7 +54,7 @@ export default function Palette() {
 							value: 'home',
 							label: 'Go to Home',
 							prefix: <House />,
-							shortcut: 'Shift+H',
+							shortcut: ['Shift', 'H'],
 							onClick: () => navigate('/home'),
 						},
 					],
@@ -104,10 +104,11 @@ Every row carries a `type`:
 | `item`  | An action. `onClick` runs it.                                            |
 | `group` | A heading and the rows under it. A group holds rows only, never a group. |
 
-An `item` takes a `prefix` icon, and either a `suffix` icon or a `shortcut`. The shortcut renders
-through `Kbd` in the trailing slot. It is a label only: the component does not bind the key. Screen
-readers announce it as the row's description, after the label. A shortcut that renders nothing,
-such as `isMac && '⌘K'` off a Mac, leaves the slot empty. Row icons render at 14px whatever size
+An `item` takes a `prefix` icon, and either a `suffix` icon or a `shortcut`. The shortcut is the
+list of keys of a chord, such as `['Mod', 'K']`, and renders through `Kbd.Shortcut` in the trailing
+slot. `Mod` is `⌘` on a Mac and `⌃` (Control) elsewhere. It is a label only: the component does not
+bind the key. Screen readers announce it as the row's description, after the label. An empty list
+leaves the slot empty, the same as a row with no shortcut. Row icons render at 14px whatever size
 the element carries.
 
 A label that renders nothing (`null`, `false` or `''`) shows `<No label>`, and the row stays. A long

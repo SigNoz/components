@@ -22,7 +22,7 @@ function inertItems(): CommandItemType[] {
 			type: 'item',
 			value: 'blocked',
 			label: 'Delete dashboard',
-			shortcut: 'D',
+			shortcut: ['D'],
 			disabled: true,
 			disabledTooltip: 'Only the owner can delete it',
 			onClick: () => run.blocked(),
@@ -208,7 +208,7 @@ describe('Command loading row spinner', () => {
 					value: 'export',
 					label: 'Export',
 					prefix: <Info data-testid="icon" />,
-					shortcut: 'E',
+					shortcut: ['E'],
 					loading: true,
 					loadingTooltip: undefined,
 					onClick: () => {},
@@ -221,7 +221,9 @@ describe('Command loading row spinner', () => {
 		expect(prefix).toHaveAttribute('data-loading');
 		expect(prefix.querySelector('[data-slot="spinner"]')).not.toBeNull();
 		expect(screen.queryByTestId('icon')).toBeNull();
-		expect(screen.getByTestId('command-item-export-suffix')).toHaveTextContent('E');
+		expect(
+			screen.getByTestId('command-item-export-suffix').querySelector('[data-slot="kbd-shortcut"]'),
+		).not.toBeNull();
 	});
 
 	it('puts the spinner in the trailing slot of a row with no prefix, over the shortcut', async () => {
@@ -231,7 +233,7 @@ describe('Command loading row spinner', () => {
 					type: 'item',
 					value: 'export',
 					label: 'Export',
-					shortcut: 'E',
+					shortcut: ['E'],
 					loading: true,
 					loadingTooltip: undefined,
 					onClick: () => {},
@@ -245,7 +247,7 @@ describe('Command loading row spinner', () => {
 		expect(screen.queryByTestId('command-item-export-prefix')).toBeNull();
 		expect(suffix).toHaveAttribute('data-loading');
 		expect(suffix.querySelector('[data-slot="spinner"]')).not.toBeNull();
-		expect(suffix).not.toHaveTextContent('E');
+		expect(suffix.querySelector('[data-slot="kbd-shortcut"]')).toBeNull();
 		expect(row).not.toHaveAttribute('aria-describedby');
 	});
 });

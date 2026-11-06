@@ -324,6 +324,20 @@
   }
 }
 
+// The row class in front lifts these above the key's own single class.
+//
+// The key takes the row's cursor, the pointer and the not-allowed one, over its own default arrow.
+.command__item [data-slot='kbd'] {
+  cursor: var(--command-kbd-cursor, inherit);
+}
+
+// The key is taller than the line, so the shortcut takes the line's height and centres the key in
+// it. The key overhangs the line instead of pushing the first line of a wrapped label down.
+.command__item [data-slot='kbd-shortcut'] {
+  align-items: var(--command-shortcut-align-items, center);
+  block-size: var(--command-shortcut-block-size, 1lh);
+}
+
 .command__item-label {
   flex-grow: var(--command-item-label-flex-grow, 1);
   min-inline-size: var(--command-item-label-min-inline-size, 0);

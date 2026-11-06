@@ -248,13 +248,25 @@ describe('the action row', () => {
 	});
 
 	test('accepts a shortcut on its own', () => {
-		assertType<DropdownActionItemType>({ type: 'item', value: 'b', label: 'B', shortcut: 'R' });
+		assertType<DropdownActionItemType>({
+			type: 'item',
+			value: 'b',
+			label: 'B',
+			shortcut: ['Mod', 'R'],
+		});
+	});
+
+	test('rejects a shortcut written as a string', () => {
+		assertType<DropdownActionItemType>(
+			// @ts-expect-error - a shortcut is the list of its keys, not a string to draw
+			{ type: 'item', value: 'b', label: 'B', shortcut: 'Shift+R' },
+		);
 	});
 
 	test('rejects a shortcut next to a suffix', () => {
 		assertType<DropdownActionItemType>(
 			// @ts-expect-error - both take the trailing slot
-			{ type: 'item', value: 'b', label: 'B', shortcut: 'R', suffix: icon },
+			{ type: 'item', value: 'b', label: 'B', shortcut: ['R'], suffix: icon },
 		);
 	});
 
