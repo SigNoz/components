@@ -1,45 +1,49 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import type * as React from 'react';
+import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import { createContext, type ReactNode, useContext, useRef } from 'react';
+import type { DialogProps } from '../types.js';
 
-export type DialogPortalProps = {
-	children?: React.ReactNode;
-	/**
-	 * Specify a container element to portal the content into.
-	 */
-	container?: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>['container'];
-	/**
-	 * Used to force mounting when more control is needed. Useful when
-	 * controlling animation with React animation libraries.
-	 */
-	forceMount?: true;
-	/**
-	 * Test ID for the dialog portal.
-	 */
-	testId?: string;
+type Container = Exclude<DialogProps['container'], undefined>;
+
+// `document.body`, read when the portal mounts so that a server render never touches `document`.
+const BODY_CONTAINER: Container = {
+	get current() {
+		return typeof document === 'undefined' ? null : document.body;
+	},
 };
 
+const DialogPortalNodeContext = createContext<Container>(BODY_CONTAINER);
+
 /**
- * Portals dialog content outside of the normal DOM tree, usually to
- * the end of `document.body`. Useful when you need to control the
- * portal `container` or force mounting behavior.
+ * Where a dialog renders: `container`, else the portal node of the dialog it is nested in, else
+ * `document.body`.
  *
- * @example
- * ```tsx
- * <Dialog>
- *   <DialogTrigger asChild>
- *     <Button variant="solid" color="primary">
- *       Open dialog
- *     </Button>
- *   </DialogTrigger>
- *   <DialogPortal container={document.getElementById('dialog-root')}>
- *     <DialogOverlay />
- *     <DialogContent width="base">
- *       dialog content here
- *     </DialogContent>
- *   </DialogPortal>
- * </Dialog>
- * ```
+ * With no container, Base UI portals into the nearest portal node above, whatever popup made it.
+ * A `Dialog` declared in a Popover inside another dialog's panel would land in that panel, where
+ * its `position: fixed` backdrop is sized to the panel, because the panel has a `will-change`. A
+ * dialog nested in another one is portalled next to it instead, in the same `container`. Base UI
+ * also needs the child's portal node inside the parent's, to keep it out of the `aria-hidden` and
+ * `inert` it puts on everything else.
+ *
+ * @access private
  */
-export function DialogPortal({ testId, ...props }: DialogPortalProps) {
-	return <DialogPrimitive.Portal data-slot="dialog-portal" data-testid={testId} {...props} />;
+export function DialogPortal({
+	container,
+	children,
+}: {
+	container: DialogProps['container'];
+	children: ReactNode;
+}): ReactNode {
+	const parentPortalNode = useContext(DialogPortalNodeContext);
+	const portalNode = useRef<HTMLDivElement | null>(null);
+
+	return (
+		<DialogPortalNodeContext.Provider value={portalNode}>
+			<DialogPrimitive.Portal
+				ref={portalNode}
+				container={container === undefined ? parentPortalNode : container}
+			>
+				{children}
+			</DialogPrimitive.Portal>
+		</DialogPortalNodeContext.Provider>
+	);
 }

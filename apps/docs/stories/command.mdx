@@ -84,7 +84,9 @@ toggles the palette skips an event whose `defaultPrevented` is true, as above, o
 it.
 
 The backdrop and the panel share one layer, so they stack together. The palette stacks above the
-layer the focus was in when it opened, such as a modal from another library.
+layer the focus was in when it opened, such as a modal from another library. With the focus on the
+page body, it stacks above the highest open modal instead. Opened from the button of a toast, it
+stacks as if it were opened from the page, so the next toast still shows over it.
 
 Picking a row runs its `onClick`, then calls `onOpenChange(false)`, also when `onClick` throws.
 `Escape` and a click outside call `onOpenChange(false)` too. Drop the `setOpen(false)` your

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useInsertionEffect, useState, useSyncExternalStore } from 'react';
 
 /**
  * What a popup is positioned against when it is shown imperatively: an element, a rectangle, or
@@ -21,35 +21,27 @@ export interface PopupHandleState<Payload> {
 const CLOSED: PopupHandleState<never> = { open: false, anchor: null, payload: undefined };
 
 /**
- * Shows a popup that no trigger press can produce, and closes one whose trigger cannot know it is
- * finished.
+ * The open state of a popup shown from outside React, and the subscription React reads it
+ * through. `PopupHandle` and `DialogHandle` add the method that shows their popup.
  *
- * The surface it serves is one the application already knows about: a click that landed at a
- * point on a chart, an input that took focus, a row the pointer entered, a save that succeeded.
- * `showAt` says where to put it and what to put in it; `close` dismisses it.
+ * The state lives outside React so the popup can be shown from an event handler, a chart
+ * callback or an effect. The component subscribes to it.
  *
- * The state lives outside React so `showAt` can be called from an event handler, a chart callback
- * or an effect. The component subscribes to it.
+ * @access private
  */
-export class PopupHandle<Payload = void> {
-	private state: PopupHandleState<Payload> = CLOSED as PopupHandleState<Payload>;
+export abstract class OpenStateStore<State extends { open: boolean }> {
+	private state: State;
 
 	private listeners = new Set<() => void>();
 
 	private openListener: ((open: boolean) => void) | undefined;
 
-	/**
-	 * Shows the popup against `target`, rendering `payload` as its content.
-	 *
-	 * Calling it again while open moves the popup and swaps the content, which is what a hover
-	 * card walking down a list of rows does.
-	 */
-	showAt(target: PopupAnchorTarget, payload?: Payload): void {
-		this.set({ open: true, anchor: target, payload });
+	protected constructor(initial: State) {
+		this.state = initial;
 	}
 
 	/**
-	 * Hides the popup. The anchor and payload are kept until the next `showAt`, so a closing
+	 * Hides the popup. What it was shown with is kept until it is shown again, so a closing
 	 * animation still has something to render.
 	 */
 	close(): void {
@@ -68,8 +60,8 @@ export class PopupHandle<Payload = void> {
 	}
 
 	/**
-	 * Opens or closes without moving the popup, for a press on the component's own trigger. The
-	 * anchor stays as it was, so the popup falls back to being placed against that trigger.
+	 * Opens or closes and keeps everything else, for a press on the component's own trigger or a
+	 * close request from inside it.
 	 *
 	 * @access private
 	 */
@@ -95,7 +87,7 @@ export class PopupHandle<Payload = void> {
 	/**
 	 * @access private
 	 */
-	getSnapshot = (): PopupHandleState<Payload> => this.state;
+	getSnapshot = (): State => this.state;
 
 	/**
 	 * @access private
@@ -104,7 +96,7 @@ export class PopupHandle<Payload = void> {
 		this.openListener = listener;
 	}
 
-	private set(next: PopupHandleState<Payload>): void {
+	protected set(next: State): void {
 		const wasOpen = this.state.open;
 
 		this.state = next;
@@ -119,6 +111,71 @@ export class PopupHandle<Payload = void> {
 }
 
 /**
+ * Shows a popup that no trigger press can produce, and closes one whose trigger cannot know it is
+ * finished.
+ *
+ * The surface it serves is one the application already knows about: a click that landed at a
+ * point on a chart, an input that took focus, a row the pointer entered, a save that succeeded.
+ * `showAt` says where to put it and what to put in it; `close` dismisses it.
+ */
+export class PopupHandle<Payload = void> extends OpenStateStore<PopupHandleState<Payload>> {
+	constructor() {
+		super(CLOSED as PopupHandleState<Payload>);
+	}
+
+	/**
+	 * Shows the popup against `target`, rendering `payload` as its content.
+	 *
+	 * Calling it again while open moves the popup and swaps the content, which is what a hover
+	 * card walking down a list of rows does.
+	 */
+	showAt(target: PopupAnchorTarget, payload?: Payload): void {
+		this.set({ open: true, anchor: target, payload });
+	}
+}
+
+/**
+ * Creates a store that lives for as long as the component that owns it, and reports every open
+ * and close to `onOpenChange`.
+ *
+ * @access private
+ */
+export function useOpenStateStore<Store extends OpenStateStore<{ open: boolean }>>(
+	create: () => Store,
+	onOpenChange: ((open: boolean) => void) | undefined,
+): Store {
+	const [store] = useState(create);
+
+	// An insertion effect, not a layout effect: React runs every insertion effect of a commit
+	// before any layout effect, so a layout effect of a child that opens the store, on mount or
+	// on an update, already reaches the `onOpenChange` of this render. A layout effect here
+	// would run after the child's, and its cleanup would leave the store with no listener at
+	// the moment the child opens it.
+	useInsertionEffect(() => {
+		store.setOpenListener(onOpenChange);
+
+		return () => store.setOpenListener(undefined);
+	}, [store, onOpenChange]);
+
+	return store;
+}
+
+/**
+ * Subscribes to a store's state, or reports `closed` when there is no store.
+ *
+ * @access private
+ */
+export function useOpenStateSnapshot<State extends { open: boolean }>(
+	store: OpenStateStore<State> | undefined,
+	closed: State,
+): State {
+	const subscribe = store?.subscribe ?? noopSubscribe;
+	const getSnapshot = store?.getSnapshot ?? (() => closed);
+
+	return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+}
+
+/**
  * Creates a {@link PopupHandle} that lives for as long as the component that owns it.
  *
  * `onOpenChange` is called whenever the popup opens or closes, whichever caused it: `showAt`,
@@ -129,21 +186,7 @@ export class PopupHandle<Payload = void> {
 export function usePopupHandle<Payload = void>(
 	onOpenChange?: (open: boolean) => void,
 ): PopupHandle<Payload> {
-	const [handle] = useState(() => new PopupHandle<Payload>());
-	// The latest callback, without re-registering: the handle outlives every render of it.
-	const latest = useRef(onOpenChange);
-
-	useEffect(() => {
-		latest.current = onOpenChange;
-	});
-
-	useEffect(() => {
-		handle.setOpenListener((open) => latest.current?.(open));
-
-		return () => handle.setOpenListener(undefined);
-	}, [handle]);
-
-	return handle;
+	return useOpenStateStore(() => new PopupHandle<Payload>(), onOpenChange);
 }
 
 /**
@@ -154,27 +197,13 @@ export function usePopupHandle<Payload = void>(
 export function usePopupHandleState<Payload>(
 	handle: PopupHandle<Payload> | undefined,
 ): PopupHandleState<Payload> {
-	const subscribe = handle?.subscribe ?? noopSubscribe;
-	const getSnapshot = handle?.getSnapshot ?? (closedSnapshot as () => PopupHandleState<Payload>);
-
-	return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+	return useOpenStateSnapshot(handle, CLOSED as PopupHandleState<Payload>);
 }
 
 function noopSubscribe(): () => void {
 	return () => {};
 }
 
-function closedSnapshot(): PopupHandleState<never> {
-	return CLOSED;
-}
-
-/**
- * Turns an anchor target into something Base UI's positioner accepts. An element is passed
- * through; a rectangle or a point becomes a virtual element, which is how a popup is placed where
- * nothing exists.
- *
- * @access private
- */
 /**
  * Where a dismissal is heading: the element pressed, or for a focus move the element focus is
  * going to. A `focus-out` event names the element *losing* focus, which is the anchor itself, so
@@ -212,6 +241,13 @@ export function isEventInsideAnchor(
 	return anchor instanceof Element && target instanceof Node && anchor.contains(target);
 }
 
+/**
+ * Turns an anchor target into something Base UI's positioner accepts. An element is passed
+ * through; a rectangle or a point becomes a virtual element, which is how a popup is placed where
+ * nothing exists.
+ *
+ * @access private
+ */
 export function resolveAnchorTarget(
 	target: PopupAnchorTarget | null | undefined,
 ): Element | { getBoundingClientRect: () => DOMRect } | undefined {

@@ -1,8 +1,17 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
+import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
 
-import { DialogClose, type DialogCloseProps } from '../../dialog/index.js';
-
-export type DrawerCloseProps = DialogCloseProps;
+export type DrawerCloseProps = Pick<
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close>,
+	'id' | 'className' | 'style' | 'onClick' | 'asChild' | 'children'
+> & {
+	/**
+	 * Test ID for the drawer close.
+	 */
+	testId?: string;
+};
 
 /**
  * Element that closes the drawer when activated. Often used to wrap
@@ -31,7 +40,16 @@ export type DrawerCloseProps = DialogCloseProps;
  * </Drawer>
  * ```
  */
-export const DrawerClose = React.forwardRef<React.ElementRef<typeof DialogClose>, DrawerCloseProps>(
-	(props, ref) => <DialogClose ref={ref} data-slot="drawer-close" {...props} />,
-);
+export const DrawerClose = React.forwardRef<
+	React.ElementRef<typeof DialogPrimitive.Close>,
+	DrawerCloseProps
+>(({ className, testId, ...props }, ref) => (
+	<DialogPrimitive.Close
+		ref={ref}
+		data-slot="drawer-close"
+		data-testid={testId}
+		className={cn(styles.drawer__close, className)}
+		{...props}
+	/>
+));
 DrawerClose.displayName = 'DrawerClose';

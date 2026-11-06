@@ -1,10 +1,30 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { motion, type Variants } from 'motion/react';
 import * as React from 'react';
-import {
-	DialogOverlay as BaseDialogOverlay,
-	type DialogOverlayProps as BaseDialogOverlayProps,
-} from '../../dialog/index.js';
+import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
+import { drawerTransition, syncMotionStyle } from '../utils.js';
 
-export type DrawerOverlayProps = BaseDialogOverlayProps;
+const overlayVariants: Variants = {
+	initial: { opacity: 0 },
+	animate: { opacity: 1 },
+	exit: { opacity: 0 },
+};
+
+export type DrawerOverlayProps = Pick<
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
+	'id' | 'className' | 'style'
+> & {
+	/**
+	 * Used to force mounting when more control is needed. Useful when
+	 * controlling animation with React animation libraries.
+	 */
+	forceMount?: true;
+	/**
+	 * Test ID for the drawer overlay.
+	 */
+	testId?: string;
+};
 
 /**
  * Semi-transparent background that appears behind `DrawerContent`.
@@ -30,7 +50,26 @@ export type DrawerOverlayProps = BaseDialogOverlayProps;
  * ```
  */
 export const DrawerOverlay = React.forwardRef<
-	React.ElementRef<typeof BaseDialogOverlay>,
+	React.ElementRef<typeof DialogPrimitive.Overlay>,
 	DrawerOverlayProps
->((props, ref) => <BaseDialogOverlay ref={ref} data-slot="drawer-overlay" {...props} />);
+>(({ className, style, testId, ...props }, ref) => (
+	<DialogPrimitive.Overlay
+		ref={ref}
+		data-slot="drawer-overlay"
+		data-testid={testId}
+		asChild
+		{...props}
+	>
+		<motion.div
+			className={cn(styles.drawer__overlay, className)}
+			style={style}
+			variants={overlayVariants}
+			initial="initial"
+			animate="animate"
+			exit="exit"
+			onUpdate={syncMotionStyle}
+			transition={drawerTransition}
+		/>
+	</DialogPrimitive.Overlay>
+));
 DrawerOverlay.displayName = 'DrawerOverlay';

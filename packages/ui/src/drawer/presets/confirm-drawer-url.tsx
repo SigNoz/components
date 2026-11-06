@@ -1,18 +1,19 @@
+import { parseAsBoolean, useQueryState } from 'nuqs';
 import * as React from 'react';
-import { ConfirmDialogUrl, type ConfirmDialogUrlProps } from '../../dialog/index.js';
-import type { DrawerDirection } from '../index.js';
+import { useCallback } from 'react';
+import { ConfirmDrawer, type ConfirmDrawerProps } from './confirm-drawer.js';
 
-export type ConfirmDrawerUrlProps = Omit<ConfirmDialogUrlProps, 'position' | 'heightMode'> & {
+export type ConfirmDrawerUrlProps = {
 	/**
-	 * The side of the viewport from which the drawer appears.
-	 * @default right
+	 * The query parameter that holds the open state.
 	 */
-	direction?: DrawerDirection;
-};
+	urlKey: string;
+} & Omit<ConfirmDrawerProps, 'open' | 'onOpenChange' | 'heightMode'>;
 
 /**
- * URL-driven confirm drawer preset. Reuses ConfirmDialogUrl with
- * direction mapped to position for slide-in behavior.
+ * URL-driven confirm drawer preset that synchronizes its open state
+ * with a boolean query parameter using `nuqs`. Useful for deep-linking
+ * to a confirm drawer or coordinating drawer state with navigation.
  *
  * @example
  * ```tsx
@@ -21,7 +22,7 @@ export type ConfirmDrawerUrlProps = Omit<ConfirmDialogUrlProps, 'position' | 'he
  *   title="Delete from URL param"
  *   confirmText="Delete"
  *   cancelText="Cancel"
- *   confirmColor="destructive"
+ *   confirmColor="danger"
  *   onConfirm={async () => {
  *     await api.deleteSomething();
  *     return true;
@@ -33,8 +34,32 @@ export type ConfirmDrawerUrlProps = Omit<ConfirmDialogUrlProps, 'position' | 'he
  * ```
  */
 export const ConfirmDrawerUrl = React.forwardRef<HTMLDivElement, ConfirmDrawerUrlProps>(
-	({ direction = 'right', ...props }, ref) => {
-		return <ConfirmDialogUrl ref={ref} {...props} position={direction} heightMode="full" />;
+	({ urlKey, onConfirm, onCancel, ...props }, ref) => {
+		const [open, setOpen] = useQueryState(urlKey, parseAsBoolean);
+		const onCancelProxy = useCallback(async () => {
+			await setOpen(false);
+			onCancel?.();
+		}, [setOpen, onCancel]);
+		const onConfirmProxy = useCallback(async () => {
+			const canClose = await onConfirm();
+
+			if (canClose === true || canClose === undefined) {
+				await setOpen(false);
+			}
+
+			return canClose;
+		}, [setOpen, onConfirm]);
+
+		return (
+			<ConfirmDrawer
+				ref={ref}
+				open={open || false}
+				onOpenChange={(next) => setOpen(next)}
+				onConfirm={onConfirmProxy}
+				onCancel={onCancelProxy}
+				{...props}
+			/>
+		);
 	},
 );
 ConfirmDrawerUrl.displayName = 'ConfirmDrawerUrl';
