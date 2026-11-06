@@ -337,8 +337,9 @@ to `finalFocus` when it is set.
 
 ## Layering
 
-The dialog renders in `document.body`, or in `container`, above a `Drawer` and below a Toast. A
-dialog opened from a drawer needs no `zIndex`. A dialog opened from the button of a toast stacks as
+The dialog renders in `document.body`, or in `container`, below a Toast. It shares one layer with
+`Drawer`, in open order: a dialog opened from a drawer covers the drawer, and a drawer opened from a
+dialog covers the dialog, with no `zIndex`. A dialog opened from the button of a toast stacks as
 if it were opened from the page, so the next toast still shows over it. Tooltip, Dropdown, Select,
 Combobox, Popover and the Toaster opened inside the panel portal into the panel and render above
 it.

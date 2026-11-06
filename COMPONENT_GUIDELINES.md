@@ -955,7 +955,7 @@ interaction test corpus, so treat them as product surface.
 | --- | --- |
 | `badge.stories.tsx` | `Primitive Components/Badge` |
 | `dialog-primitive.stories.tsx` | `Primitive Components/Dialog` |
-| `drawer-wrapper.stories.tsx` | `Composed Components/Drawer/DrawerWrapper` |
+| `drawer.stories.tsx` | `Composed Components/Drawer` |
 | `confirm-dialog.stories.tsx` | `Composed Components/ConfirmDialog` |
 
 Top-level groups are fixed by `storySort.order` in `apps/docs/.storybook/preview.tsx`:
@@ -1105,9 +1105,9 @@ argTypes: {
    `DialogContent` inside a `Dialog`, `RadioGroupItem` inside a `RadioGroup`. Static members sit
    in `{name}-components.stories.tsx` instead, and render inside a parent the same way
    (`Callout.Link` inside a `Callout`).
-5. **Interactive stories own their state** via `useState` in `render`, or via a decorator.
-   URL-driven presets need a `NuqsAdapter` decorator plus `useQueryState` in the decorator,
-   keeping `args` hook-free.
+5. **Interactive stories own their state** via `useState` in `render`, or via a decorator,
+   keeping `args` hook-free. A story that keeps its state in the URL wraps what it renders in
+   `NuqsAdapter` from `nuqs/adapters/react` and reads it with `useQueryState` there.
 
 Layout: use the shared classes in `apps/docs/index.css` (`story-container`, `story-section`,
 `story-grid`, `story-row`, `story-panel`, `icon-md`) or a `{name}.stories.module.css`. No
@@ -1266,7 +1266,7 @@ the code was written. Write the test for each case that applies before you open 
   is this document in checkbox form. It ships with every PR body, tick it, don't delete it.
 - **Auditing an existing component**: score it with
   [COMPONENT_AUDIT_RUBRIC.md](./COMPONENT_AUDIT_RUBRIC.md) and record the total in an issue.
-- **Code moved without a rework**: a component moved so another one can be rebuilt (Drawer, kept
-  on Radix when Dialog moved to Base UI) keeps its styles and exports as they are. These rules
+- **Code moved without a rework**: a component moved so another one can be rebuilt (as Drawer was,
+  kept on Radix when Dialog moved to Base UI) keeps its styles and exports as they are. These rules
   apply to it in the change that rebuilds it, and the PR body says which directory was only
   moved.

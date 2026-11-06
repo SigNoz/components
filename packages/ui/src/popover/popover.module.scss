@@ -62,7 +62,7 @@
 .popover__positioner {
 	// Base UI positions but does not stack.
 	z-index: var(--popover-z-index, 50);
-	// A modal drawer or dialog sets `pointer-events: none` on the body. A popup portalled there,
+	// A Radix modal sets `pointer-events: none` on the body. A popup portalled there,
 	// into a `container` outside the panel, would otherwise take no click. Base UI still switches
 	// it off inline while the popover is closed.
 	pointer-events: var(--popover-positioner-pointer-events, auto);
