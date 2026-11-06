@@ -1,7 +1,7 @@
 .tooltip__positioner {
 	// TODO: After migrating the tooltips/dialogs/everything, need to revisit these values to make sure they are needed/not conflict with Antd
 	z-index: var(--tooltip-z-index, 50);
-	// A modal drawer or dialog sets `pointer-events: none` on the body. A popup portalled there,
+	// A Radix modal sets `pointer-events: none` on the body. A popup portalled there,
 	// into a `container` outside the panel, would let the pointer fall through and close before
 	// its text can be selected. Base UI still switches it off inline while the popup closes.
 	pointer-events: auto;

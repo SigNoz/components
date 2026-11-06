@@ -1,170 +1,372 @@
-.drawer__trigger {
-	cursor: pointer;
+// One stacking context for the backdrop and the panel, shared in open order with Dialog. `position`
+// only lets `z-index` apply: the backdrop and the viewport are fixed, so they still place
+// themselves against the viewport.
+.drawer__layer {
+	position: var(--drawer-layer-position, relative);
+	z-index: var(--drawer-z-index, 50);
 }
 
-.drawer__close {
-	cursor: pointer;
+.drawer__backdrop {
+	position: var(--drawer-backdrop-position, fixed);
+	inset: var(--drawer-backdrop-inset, 0);
+	background-color: var(--drawer-backdrop-color, var(--drawer-backdrop));
+
+	// Base UI sets `--drawer-swipe-progress` while a swipe drags the panel, so the shade lifts
+	// with it.
+	opacity: calc(var(--drawer-backdrop-opacity, 1) * (1 - var(--drawer-swipe-progress, 0)));
+	transition-property: var(--drawer-backdrop-transition-property, opacity);
+	transition-duration: var(--drawer-backdrop-transition-duration, 200ms);
+	transition-timing-function: var(--drawer-backdrop-transition-timing-function, ease);
+
+	&[data-starting-style],
+	&[data-ending-style] {
+		opacity: var(--drawer-backdrop-hidden-opacity, 0);
+	}
+
+	&[data-ending-style] {
+		transition-duration: var(--drawer-backdrop-exit-transition-duration, 160ms);
+	}
+
+	&[data-swiping] {
+		transition-duration: var(--drawer-backdrop-swiping-transition-duration, 0ms);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		&,
+		&[data-ending-style] {
+			transition-duration: 100ms;
+		}
+	}
 }
 
-.drawer__overlay {
-	position: fixed;
-	inset: 0;
-	z-index: 50;
-	background-color: rgba(0, 0, 0, 0.5);
+// Holds the panel against the right edge, 16px from the top, the right and the bottom, so its max
+// size is the viewport minus that gap.
+.drawer__viewport {
+	position: var(--drawer-viewport-position, fixed);
+	inset: var(--drawer-viewport-inset, 0);
+	display: var(--drawer-viewport-display, flex);
+	justify-content: var(--drawer-viewport-justify-content, flex-end);
+	box-sizing: var(--drawer-viewport-box-sizing, border-box);
+	padding: var(--drawer-viewport-padding, var(--spacing-8));
+
+	// The viewport covers the page. Under an inspector the page stays usable, so only the panel
+	// takes the pointer.
+	&[data-type='inspector'] {
+		pointer-events: var(--drawer-viewport-inspector-pointer-events, none);
+	}
 }
 
-@media (prefers-color-scheme: dark) {
-	.drawer__overlay {
-		background-color: rgba(0, 0, 0, 0.6);
+.drawer {
+	--drawer-internal-max-inline-size: var(--drawer-base-max-inline-size, 32rem);
+
+	position: var(--drawer-position, relative);
+	display: var(--drawer-display, flex);
+	flex-direction: var(--drawer-flex-direction, column);
+	box-sizing: var(--drawer-box-sizing, border-box);
+	inline-size: var(--drawer-inline-size, 100%);
+	max-inline-size: var(--drawer-max-inline-size, var(--drawer-internal-max-inline-size));
+	block-size: var(--drawer-block-size, 100%);
+	pointer-events: var(--drawer-pointer-events, auto);
+
+	border-width: var(--drawer-border-width, 1px);
+	border-style: var(--drawer-border-style, solid);
+	border-color: var(--drawer-border-color, var(--drawer-border));
+	border-radius: var(--drawer-border-radius, var(--radius-3));
+	background-color: var(--drawer-background-color, var(--drawer-background));
+	box-shadow: var(--drawer-box-shadow, var(--drawer-shadow));
+
+	// The panel is portalled to `body`, so without a text style the content takes the page's font.
+	font-family: var(--drawer-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--drawer-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--drawer-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--drawer-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--drawer-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--drawer-text-transform, var(--paragraph-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+
+	// No transform at rest: a transformed panel becomes the containing block of every
+	// `position: fixed` element inside it, such as a chart tooltip, which then lands in the wrong
+	// place. The panel sits on whole pixels at the right edge, so it needs no `will-change` either.
+	transform: var(--drawer-transform, none);
+	transition-property: var(--drawer-transition-property, transform);
+	transition-duration: var(--drawer-transition-duration, 240ms);
+	transition-timing-function: var(--drawer-transition-timing-function, cubic-bezier(0.2, 0, 0, 1));
+
+	// Out past the 16px gap as well, so no edge of the panel shows before it slides in.
+	&[data-starting-style],
+	&[data-ending-style] {
+		transform: var(--drawer-hidden-transform, translateX(calc(100% + var(--spacing-8))));
+	}
+
+	&[data-ending-style] {
+		transition-duration: var(--drawer-exit-transition-duration, 200ms);
+		transition-timing-function: var(--drawer-exit-transition-timing-function,
+				cubic-bezier(0.4, 0, 1, 1));
+	}
+
+	// Base UI sets `--drawer-swipe-movement-x` while a swipe drags the panel towards the edge.
+	&[data-swiping] {
+		transform: translateX(var(--drawer-swipe-movement-x, 0px));
+		transition-duration: var(--drawer-swiping-transition-duration, 0ms);
+	}
+
+	&[data-width='narrow'] {
+		--drawer-internal-max-inline-size: var(--drawer-narrow-max-inline-size, 24rem);
+	}
+
+	&[data-width='base'] {
+		--drawer-internal-max-inline-size: var(--drawer-base-max-inline-size, 32rem);
+	}
+
+	&[data-width='wide'] {
+		--drawer-internal-max-inline-size: var(--drawer-wide-max-inline-size, 42rem);
+	}
+
+	&[data-width='extra-wide'] {
+		--drawer-internal-max-inline-size: var(--drawer-extra-wide-max-inline-size, 51.25rem);
+	}
+
+	&[data-width='entity'] {
+		--drawer-internal-max-inline-size: var(--drawer-entity-max-inline-size, 55rem);
+	}
+
+	&:focus-visible {
+		outline: var(--drawer-focus-visible-outline, none);
+	}
+
+	// No movement: the panel fades in and out where it rests. Repeated on the exit and swipe states,
+	// whose own durations are more specific than the panel's.
+	@media (prefers-reduced-motion: reduce) {
+		&,
+		&[data-ending-style],
+		&[data-swiping] {
+			transition-property: opacity;
+			transition-duration: 100ms;
+			transition-timing-function: ease;
+		}
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			opacity: 0;
+			transform: none;
+		}
 	}
 }
 
 .drawer__content {
-	position: fixed;
-	z-index: 50;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	border-radius: var(--radius-2);
-	border: 1px solid var(--l2-border);
-	background-color: var(--l2-background);
-	box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.04);
-	font-family: var(--drawer-content-font-family, var(--paragraph-base-400-font-family));
-	font-size: var(--drawer-content-font-size, var(--paragraph-base-400-font-size));
-	font-weight: var(--drawer-content-font-weight, var(--paragraph-base-400-font-weight));
-	line-height: var(--drawer-content-line-height, var(--paragraph-base-400-line-height));
-	letter-spacing: var(--drawer-content-letter-spacing, var(--paragraph-base-400-letter-spacing));
-	text-transform: var(--drawer-content-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
-
-	&[data-position='top'] {
-		top: 0;
-		left: 0;
-	}
-
-	&[data-position='bottom'] {
-		bottom: 0;
-		left: 0;
-	}
-
-	&[data-position='left'] {
-		top: 0;
-		bottom: 0;
-		left: 0;
-	}
-
-	&[data-position='right'] {
-		top: 0;
-		bottom: 0;
-		right: 0;
-	}
-
-	&[data-width='narrow'] {
-		max-width: 24rem;
-	}
-
-	&[data-width='base'] {
-		max-width: 32rem;
-	}
-
-	&[data-width='wide'] {
-		max-width: 42rem;
-	}
-
-	&[data-width='extra-wide'] {
-		max-width: 51.25rem;
-	}
-
-	&[data-position='top'],
-	&[data-position='bottom'] {
-		width: 100vw;
-		max-width: 100vw;
-		height: fit-content;
-	}
+	display: var(--drawer-content-display, flex);
+	flex-direction: var(--drawer-content-flex-direction, column);
+	flex: var(--drawer-content-flex, 1 1 auto);
+	min-block-size: var(--drawer-content-min-block-size, 0);
+	border-radius: var(--drawer-content-border-radius, inherit);
 }
 
 .drawer__header {
-	display: flex;
-	flex-direction: column;
-	border-width: var(--drawer-header-border-width, 0px 0px 1px 0px);
+	display: var(--drawer-header-display, flex);
+	flex-shrink: var(--drawer-header-flex-shrink, 0);
+	align-items: var(--drawer-header-align-items, center);
+	box-sizing: var(--drawer-header-box-sizing, border-box);
+	min-block-size: var(--drawer-header-min-block-size, 48px);
+	padding-block: var(--drawer-header-padding-block, var(--spacing-5));
+	padding-inline: var(--drawer-header-padding-inline, var(--spacing-8));
+	border-width: var(--drawer-header-border-width, 0 0 1px 0);
 	border-style: var(--drawer-header-border-style, solid);
-	border-color: var(--drawer-header-border-color, var(--l2-border));
-	padding: var(--drawer-header-padding, var(--spacing-8));
-	height: fit-content;
-	gap: var(--drawer-header-gap, var(--spacing-2));
+	border-color: var(--drawer-header-border-color, var(--drawer-border));
 
-	&--with-close {
-		padding-right: calc((var(--spacing-8) * 2) + var(--drawer-close-button-size, 2rem));
+	// A task with a line of guidance under its title, or its skeleton, so the header keeps its
+	// height when the description arrives.
+	&:has([data-slot='drawer-description'], [data-slot='drawer-description-skeleton']) {
+		min-block-size: var(--drawer-header-with-description-min-block-size, 56px);
+		padding-block: var(--drawer-header-with-description-padding-block, var(--spacing-6));
 	}
 }
 
-.drawer__close__icon_button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+.drawer__header-prefix {
+	display: var(--drawer-header-prefix-display, flex);
+	flex-shrink: var(--drawer-header-prefix-flex-shrink, 0);
+	align-items: var(--drawer-header-prefix-align-items, center);
+	gap: var(--drawer-header-prefix-gap, var(--spacing-2));
 
-	position: absolute;
-	top: var(--spacing-4);
-	right: var(--spacing-4);
+	&[data-loading] {
+		opacity: var(--drawer-header-prefix-loading-opacity, 0.6);
+	}
 }
 
-.drawer__footer {
-	display: flex;
-	flex-direction: var(--drawer-footer-flex-direction, column-reverse);
-	gap: var(--drawer-footer-gap, var(--spacing-4));
-	padding: var(
-		--drawer-footer-padding,
-		var(--spacing-6) var(--spacing-8) var(--spacing-8) var(--spacing-8)
-	);
-	height: fit-content;
-	border-width: var(--drawer-footer-border-width, 1px 0px 0px 0px);
-	border-style: var(--drawer-footer-border-style, solid);
-	border-color: var(--drawer-footer-border-color, var(--border));
+.drawer__header-divider {
+	flex-shrink: var(--drawer-header-divider-flex-shrink, 0);
+	inline-size: var(--drawer-header-divider-inline-size, 1px);
+	block-size: var(--drawer-header-divider-block-size, 16px);
+	margin-inline: var(--drawer-header-divider-margin-inline, var(--spacing-6) var(--spacing-10));
+	background-color: var(--drawer-header-divider-color, var(--drawer-border));
+}
 
-	@media (min-width: 640px) {
-		flex-direction: row;
-		justify-content: flex-end;
+.drawer__heading {
+	display: var(--drawer-heading-display, flex);
+	flex: var(--drawer-heading-flex, 1 1 auto);
+	flex-direction: var(--drawer-heading-flex-direction, column);
+	gap: var(--drawer-heading-gap, var(--spacing-2));
+	min-inline-size: var(--drawer-heading-min-inline-size, 0);
+	padding-inline-end: var(--drawer-heading-padding-inline-end, var(--spacing-6));
+}
+
+.drawer__title-row {
+	display: var(--drawer-title-row-display, flex);
+	align-items: var(--drawer-title-row-align-items, center);
+	gap: var(--drawer-title-row-gap, var(--spacing-4));
+	min-inline-size: var(--drawer-title-row-min-inline-size, 0);
+}
+
+.drawer__title-prefix {
+	display: var(--drawer-title-prefix-display, inline-flex);
+	flex-shrink: var(--drawer-title-prefix-flex-shrink, 0);
+	align-items: var(--drawer-title-prefix-align-items, center);
+	color: var(--drawer-title-prefix-color, var(--l2-foreground));
+
+	> svg {
+		inline-size: var(--drawer-title-prefix-icon-size, 14px);
+		block-size: var(--drawer-title-prefix-icon-size, 14px);
+	}
+
+	&[data-loading] {
+		--skeleton-avatar-sm-size: var(--drawer-title-prefix-icon-size, 14px);
 	}
 }
 
 .drawer__title {
-	display: flex;
-	align-items: center;
-	gap: var(--drawer-title-gap, var(--spacing-4));
+	flex: var(--drawer-title-flex, 0 1 auto);
+	min-inline-size: var(--drawer-title-min-inline-size, 0);
 	margin: var(--drawer-title-margin, 0);
-	font-family: var(--drawer-title-font-family, var(--label-base-400-font-family));
-	font-size: var(--drawer-title-font-size, var(--label-base-400-font-size));
-	font-weight: var(--drawer-title-font-weight, var(--label-base-400-font-weight));
-	line-height: var(--drawer-title-line-height, var(--label-base-400-line-height));
-	letter-spacing: var(--drawer-title-letter-spacing, var(--label-base-400-letter-spacing));
-	text-transform: var(--drawer-title-text-transform, var(--label-base-400-text-transform));
 	color: var(--drawer-title-color, var(--l1-foreground));
-	font-variant-numeric: slashed-zero;
 }
 
-.drawer__subtitle {
-	margin: var(--drawer-subtitle-margin, 0);
-	padding: var(--drawer-subtitle-padding, 0);
-	font-family: var(--drawer-subtitle-font-family, var(--paragraph-base-400-font-family));
-	font-size: var(--drawer-subtitle-font-size, var(--paragraph-base-400-font-size));
-	font-weight: var(--drawer-subtitle-font-weight, var(--paragraph-base-400-font-weight));
-	line-height: var(--drawer-subtitle-line-height, var(--paragraph-base-400-line-height));
-	letter-spacing: var(--drawer-subtitle-letter-spacing, var(--paragraph-base-400-letter-spacing));
-	text-transform: var(--drawer-subtitle-text-transform, var(--paragraph-base-400-text-transform));
-	color: var(--drawer-subtitle-color, var(--l2-foreground));
+.drawer__title-suffix {
+	display: var(--drawer-title-suffix-display, inline-flex);
+	flex-shrink: var(--drawer-title-suffix-flex-shrink, 0);
+	align-items: var(--drawer-title-suffix-align-items, center);
+}
+
+// Same box as the title it stands in for, so the header keeps its height when the title arrives.
+.drawer__title-skeleton {
+	display: var(--drawer-title-skeleton-display, flex);
+	flex: var(--drawer-title-skeleton-flex, 1 1 auto);
+	flex-direction: var(--drawer-title-skeleton-flex-direction, column);
+	justify-content: var(--drawer-title-skeleton-justify-content, center);
+	block-size: var(--drawer-title-skeleton-block-size, var(--label-base-500-font-size));
 }
 
 .drawer__description {
-	padding: var(--drawer-description-padding, var(--spacing-8));
-	font-family: var(--drawer-description-font-family, var(--paragraph-base-400-font-family));
-	font-size: var(--drawer-description-font-size, var(--paragraph-base-400-font-size));
-	font-weight: var(--drawer-description-font-weight, var(--paragraph-base-400-font-weight));
-	line-height: var(--drawer-description-line-height, var(--paragraph-base-400-line-height));
-	letter-spacing: var(--drawer-description-letter-spacing, var(--paragraph-base-400-letter-spacing));
-	text-transform: var(--drawer-description-text-transform, var(--paragraph-base-400-text-transform));
-	color: var(--drawer-description-color, var(--l2-foreground));
-	font-variant-numeric: slashed-zero;
-	margin: var(--drawer-description-margin, 0px);
-	flex: 1;
+	margin: var(--drawer-description-margin, 0);
+	font-family: var(--drawer-description-font-family, var(--label-base-400-font-family));
+	font-size: var(--drawer-description-font-size, var(--label-base-400-font-size));
+	font-weight: var(--drawer-description-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--drawer-description-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--drawer-description-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--drawer-description-text-transform, var(--label-base-400-text-transform));
+	color: var(--drawer-description-color, var(--l3-foreground));
+	overflow-wrap: var(--drawer-description-overflow-wrap, anywhere);
+}
+
+// Same box as one line of the description.
+.drawer__description-skeleton {
+	display: var(--drawer-description-skeleton-display, flex);
+	flex-direction: var(--drawer-description-skeleton-flex-direction, column);
+	justify-content: var(--drawer-description-skeleton-justify-content, center);
+	block-size: var(--drawer-description-skeleton-block-size, var(--label-base-400-font-size));
+}
+
+.drawer__visually-hidden {
+	position: var(--drawer-visually-hidden-position, absolute);
+	inline-size: var(--drawer-visually-hidden-inline-size, 1px);
+	block-size: var(--drawer-visually-hidden-block-size, 1px);
+	padding: var(--drawer-visually-hidden-padding, 0);
+	margin: var(--drawer-visually-hidden-margin, -1px);
+	overflow: var(--drawer-visually-hidden-overflow, hidden);
+	clip-path: var(--drawer-visually-hidden-clip-path, inset(50%));
+	white-space: var(--drawer-visually-hidden-white-space, nowrap);
+	border-width: var(--drawer-visually-hidden-border-width, 0);
+}
+
+.drawer__header-suffix {
+	display: var(--drawer-header-suffix-display, flex);
+	flex-shrink: var(--drawer-header-suffix-flex-shrink, 0);
+	align-items: var(--drawer-header-suffix-align-items, center);
+	gap: var(--drawer-header-suffix-gap, var(--spacing-2));
+	margin-inline-end: var(--drawer-header-suffix-margin-inline-end, var(--spacing-2));
+
+	&[data-loading] {
+		opacity: var(--drawer-header-suffix-loading-opacity, 0.6);
+	}
+}
+
+.drawer__body {
+	flex: var(--drawer-body-flex, 1 1 auto);
+	min-block-size: var(--drawer-body-min-block-size, 0);
+	overflow-y: var(--drawer-body-overflow-y, auto);
+	overscroll-behavior: var(--drawer-body-overscroll-behavior, contain);
+	padding: var(--drawer-body-padding, var(--spacing-8));
+	font-family: var(--drawer-body-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--drawer-body-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--drawer-body-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--drawer-body-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--drawer-body-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--drawer-body-text-transform, var(--paragraph-base-400-text-transform));
+	color: var(--drawer-body-color, var(--l2-foreground));
+
+	// The panel does not clip, so the popups portalled into it can reach past its edge. Without a
+	// footer, the body is what ends at the bottom corners and keeps its scrollbar inside the radius.
+	&:last-child {
+		border-end-start-radius: var(--drawer-body-last-child-border-end-start-radius, inherit);
+		border-end-end-radius: var(--drawer-body-last-child-border-end-end-radius, inherit);
+	}
+}
+
+.drawer__footer {
+	display: var(--drawer-footer-display, flex);
+	flex-direction: var(--drawer-footer-flex-direction, row);
+	flex-shrink: var(--drawer-footer-flex-shrink, 0);
+	align-items: var(--drawer-footer-align-items, center);
+	justify-content: var(--drawer-footer-justify-content, flex-end);
+	gap: var(--drawer-footer-gap, var(--spacing-4));
+	box-sizing: var(--drawer-footer-box-sizing, border-box);
+	// The min height sets the 56px of the design, border included. The padding only spaces buttons
+	// that stack below 640px.
+	min-block-size: var(--drawer-footer-min-block-size, 56px);
+	padding-block: var(--drawer-footer-padding-block, var(--spacing-4));
+	padding-inline: var(--drawer-footer-padding-inline, var(--spacing-8));
+	border-width: var(--drawer-footer-border-width, 1px 0 0 0);
+	border-style: var(--drawer-footer-border-style, solid);
+	border-color: var(--drawer-footer-border-color, var(--drawer-border));
+
+	// The prefix comes first in the DOM, so the reversed column puts it under the actions.
+	@media (max-width: 639.98px) {
+		flex-direction: var(--drawer-footer-narrow-flex-direction, column-reverse);
+		align-items: var(--drawer-footer-narrow-align-items, stretch);
+	}
+}
+
+// Keeps the destructive action away from the primary, so one slip does not delete.
+.drawer__footer-prefix {
+	display: var(--drawer-footer-prefix-display, flex);
+	align-items: var(--drawer-footer-prefix-align-items, center);
+	min-inline-size: var(--drawer-footer-prefix-min-inline-size, 0);
+	margin-inline-end: var(--drawer-footer-prefix-margin-inline-end, auto);
+
+	@media (max-width: 639.98px) {
+		flex-direction: var(--drawer-footer-prefix-narrow-flex-direction, column);
+		align-items: var(--drawer-footer-prefix-narrow-align-items, stretch);
+		margin-inline-end: var(--drawer-footer-prefix-narrow-margin-inline-end, 0);
+	}
+}
+
+.drawer__footer-suffix {
+	display: var(--drawer-footer-suffix-display, flex);
+	flex-direction: var(--drawer-footer-suffix-flex-direction, row);
+	justify-content: var(--drawer-footer-suffix-justify-content, flex-end);
+	gap: var(--drawer-footer-suffix-gap, var(--spacing-4));
+
+	// Stacks the buttons with the last one on top, where a thumb reaches it first.
+	@media (max-width: 639.98px) {
+		flex-direction: var(--drawer-footer-suffix-narrow-flex-direction, column-reverse);
+	}
 }

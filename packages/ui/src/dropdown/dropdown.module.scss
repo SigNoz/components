@@ -84,7 +84,7 @@
 .dropdown__positioner {
   // Base UI positions but does not stack.
   z-index: var(--dropdown-z-index, 50);
-  // A modal drawer or dialog sets `pointer-events: none` on the body. A menu portalled there,
+  // A Radix modal sets `pointer-events: none` on the body. A menu portalled there,
   // into a `container` outside the panel, would have no row that can be clicked. Base UI still
   // switches it off inline while the menu is closed.
   pointer-events: var(--dropdown-positioner-pointer-events, auto);

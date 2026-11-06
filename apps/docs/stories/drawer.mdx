@@ -1,150 +1,261 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as DrawerStories from './drawer.stories';
-import * as DrawerTriggerStories from './drawer-trigger.stories';
-import * as DrawerContentStories from './drawer-content.stories';
-import * as DrawerHeaderStories from './drawer-header.stories';
-import * as DrawerTitleStories from './drawer-title.stories';
-import * as DrawerSubtitleStories from './drawer-subtitle.stories';
-import * as DrawerDescriptionStories from './drawer-description.stories';
-import * as DrawerFooterStories from './drawer-footer.stories';
-import * as DrawerCloseStories from './drawer-close.stories';
-import * as DrawerOverlayStories from './drawer-overlay.stories';
-import * as DrawerPortalStories from './drawer-portal.stories';
 
 <Meta of={DrawerStories} />
 
 # Drawer
 
-Low-level primitives for building slide-in drawers with full control over structure and behaviour.
-
-For ready-made presets, see [DrawerWrapper](?path=/docs/composed-components-drawer-drawerwrapper--docs) or [ConfirmDrawer](?path=/docs/composed-components-drawer-confirmdrawer--docs).
+A panel that slides in from the right edge of the page, with a header, a body that scrolls and, on
+a task, a footer, rendered through Base UI's Drawer. A yes or no confirmation is an
+[AlertDialog](?path=/docs/composed-components-alertdialog--docs), and a short form that does not need
+the page beside it is a [Dialog](?path=/docs/composed-components-dialog--docs).
 
 ## How to use
 
-Compose `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerFooter`, `DrawerClose`, and `DrawerCloseButton` directly:
+Pick the `type` first. An `inspector` shows one record to read and leaves the page usable. A `task`
+is one job to finish, such as a create or an edit form, or a picker, behind a backdrop.
+
+A drawer has no trigger and no uncontrolled mode. Pass `open` and `onClose`, or a `handle` for a
+drawer that opens from a row of a table ([see below](#opening-it-from-a-handle)). `type`, `title`
+and the children are always required.
 
 ```tsx
-import {
-	Drawer,
-	DrawerTrigger,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerClose,
-	DrawerCloseButton,
-	Button,
-} from '@signozhq/ui';
-import { AnimatePresence } from 'motion/react';
 import { useState } from 'react';
+import { Button, Drawer, Input } from '@signozhq/ui';
 
-export default function MyComponent() {
+export default function EditMember() {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
-			<DrawerTrigger asChild>
-				<Button variant="solid" color="primary">
-					Open drawer
-				</Button>
-			</DrawerTrigger>
-			<AnimatePresence>
-				{open && (
-					<DrawerContent key="drawer" direction="right" forceMount>
-						<DrawerHeader>
-							<DrawerTitle>Drawer title</DrawerTitle>
-							<DrawerCloseButton />
-						</DrawerHeader>
-						<DrawerDescription>Description and body content.</DrawerDescription>
-						<DrawerFooter>
-							<Button variant="ghost" onClick={() => setOpen(false)}>
-								Cancel
-							</Button>
-							<DrawerClose asChild>
-								<Button variant="solid" color="primary">
-									Confirm
-								</Button>
-							</DrawerClose>
-						</DrawerFooter>
-					</DrawerContent>
-				)}
-			</AnimatePresence>
-		</Drawer>
+		<>
+			<Button variant="solid" color="primary" size="md" onClick={() => setOpen(true)}>
+				Edit member
+			</Button>
+			<Drawer
+				type="task"
+				open={open}
+				onClose={() => setOpen(false)}
+				title="Edit member"
+				description="Changes apply the next time they sign in."
+				width="wide"
+				footerSuffix={
+					<>
+						<Button variant="outlined" color="secondary" size="md" onClick={() => setOpen(false)}>
+							Cancel
+						</Button>
+						<Button variant="solid" color="primary" size="md" type="submit" form="edit-member">
+							Save changes
+						</Button>
+					</>
+				}
+			>
+				<form id="edit-member" onSubmit={save}>
+					<Input aria-label="Name" defaultValue="Jane Doe" />
+				</form>
+			</Drawer>
+		</>
 	);
 }
 ```
 
+`id`, `ref`, `aria-*` and `data-*` land on the panel. `className` and `style` are not forwarded.
+
 <Primary />
 
-## Exit animations
+## Inspector or task
 
-Wrap `DrawerContent` in `AnimatePresence` and pass `forceMount` plus a stable `key` to animate the drawer on close. Without these three, the drawer unmounts instantly with no exit animation.
+|               | `inspector`                                         | `task`                                     |
+| ------------- | --------------------------------------------------- | ------------------------------------------ |
+| Use when      | The user opens a record to read it                  | The user creates, edits or picks something |
+| Backdrop      | None                                                | Black at 40%                               |
+| Page behind   | Usable: clickable, scrollable, reachable with `Tab` | Inert and does not scroll                  |
+| Focus         | Moves into the panel, not trapped                   | Moves into the panel, trapped              |
+| Press outside | Does nothing                                        | A press on the backdrop asks to close      |
+| Footer        | None                                                | `footerPrefix` and `footerSuffix`          |
+| `description` | None                                                | One line of guidance under the title       |
 
-`DrawerWrapper` uses this pattern internally when `open` and `onOpenChange` are provided.
+The types reject `description`, `footerPrefix` and `footerSuffix` on an `inspector`, and the drawer
+drops them at runtime too. A picker with one choice has no footer: picking applies and closes.
 
-## Direction variants
+## Closing
 
-`DrawerContent` accepts a `direction` prop to anchor the drawer surface to any edge of the viewport: `right` (default), `left`, `top`, `bottom`.
+`onClose` reports why the user asked to close, and the drawer stays open until `open` becomes
+`false`:
+
+| Reason          | When                                                         |
+| --------------- | ------------------------------------------------------------ |
+| `escape-key`    | `Esc`, after any popup open inside the panel                 |
+| `outside-press` | A press on the backdrop of a `task`. Never on an `inspector` |
+| `close-press`   | The close button                                             |
+| `swipe`         | A swipe towards the right edge on a touch screen             |
+
+The Cancel button in `footerSuffix` is your own button, so it calls your close directly.
+
+## Unsaved changes
+
+A `task` with unsaved edits asks before it closes. Keep it on `open`, and open a nested
+`AlertDialog` from `onClose` and from your Cancel while the form is dirty. The footer start says what
+is unsaved.
 
 ```tsx
-<Drawer open={open} onOpenChange={setOpen}>
-	<DrawerTrigger asChild>
-		<Button>Open bottom</Button>
-	</DrawerTrigger>
-	<AnimatePresence>
-		{open && (
-			<DrawerContent key="drawer-bottom" direction="bottom" forceMount>
-				<DrawerHeader>
-					<DrawerTitle>Bottom drawer</DrawerTitle>
-				</DrawerHeader>
-				<DrawerDescription>Content slides in from the bottom.</DrawerDescription>
-			</DrawerContent>
-		)}
-	</AnimatePresence>
+<Drawer
+	type="task"
+	open={open}
+	onClose={requestClose}
+	title="Edit panel"
+	footerPrefix={changes > 0 ? `• ${changes} unsaved changes` : null}
+	footerSuffix={
+		<>
+			<Button variant="outlined" color="secondary" size="md" onClick={requestClose}>
+				Cancel
+			</Button>
+			<Button variant="solid" color="primary" size="md" onClick={save}>
+				Save changes
+			</Button>
+		</>
+	}
+>
+	<PanelForm />
+	<AlertDialog
+		open={discarding}
+		title={`Discard ${changes} unsaved changes?`}
+		color="danger"
+		confirmText="Discard"
+		cancelText="Keep editing"
+		onConfirm={close}
+		onCancel={() => setDiscarding(false)}
+	>
+		Your changes to this panel are lost.
+	</AlertDialog>
 </Drawer>
 ```
 
-## Drawer Props
+## Opening it from a handle
+
+`useDrawerHandle<Payload>()` returns a handle that stands in for `open`. Declare one drawer, and call
+`handle.open(row)` from each row. `children` may be a function of the row. Calling `handle.open`
+again while the drawer is shown swaps the row in place, with no exit and no entrance, which is how
+↑/↓ step through a list.
+
+With a handle the drawer closes itself on every close request, so `open` and `onClose` are not
+passed. `handle.close()` closes it from inside, `handle.isOpen` reads the state, and
+`useDrawerHandle(onOpenChange)` reports every open and close.
+
+```tsx
+const logDetails = useDrawerHandle<LogRow>();
+
+<Drawer handle={logDetails} type="inspector" title="Log details" width="extra-wide">
+	{(log) => <LogDetails log={log} />}
+</Drawer>
+
+<TableRow onClick={() => logDetails.open(row)} />
+```
+
+## Header
+
+The header is one row of slots, in this order, with the close button always last:
+
+| Slot           | Holds                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| `headerPrefix` | ↑/↓ for a drawer opened from a list, or Back for a view that turned into an edit. A divider follows it |
+| `titlePrefix`  | An icon, or the one neutral type badge of an infra entity                                              |
+| `title`        | The name of the record, on one line, cut with `…` and shown in full in a tooltip                       |
+| `titleSuffix`  | Copy, for a name the user may paste elsewhere                                                          |
+| `headerSuffix` | One kind of action: up to two icon buttons, one text button or a time picker, plus `⋯`                 |
+
+Use `size="sm"` buttons with an `aria-label` in the header. ↑/↓ are disabled, not hidden, at the
+ends of the list. Saving and deleting belong to the footer of a `task`. Facts about the record, such
+as its status or namespace, go in the body, not next to the title.
+
+## Footer
+
+A `task` has the footer: `footerSuffix` holds Cancel and one primary named by what it does,
+primary last, and `footerPrefix` holds one destructive action that confirms first, or one line of
+status. The prefix renders only with a suffix. Below 640px the buttons stack, the last one on top.
+
+## Widths
+
+`width` is a max width, so on a narrow screen the panel shrinks before it overflows: `narrow` 384px,
+`base` 512px, `wide` 672px, `extra-wide` 820px and `entity` 880px for Host and K8s entities. Pick the
+nearest name, not a width that fits the content. No other value is accepted.
+
+## Loading
+
+`loading` opens the drawer before its content is ready. The title, `titlePrefix` and `description`
+show a skeleton, `titleSuffix` is hidden, and `headerPrefix` and `headerSuffix` stay on screen but
+take no input. The body shows `loadingContent`, or a default skeleton, and `children` is not
+rendered. The close button and `Esc` keep working.
+
+## Overflow
+
+The panel stops 16px from the top, the right and the bottom of the viewport. The header and the
+footer stay in place, and the body is the one area that scrolls. Do not put a second header or
+scroll area inside it.
+
+## Focus and keyboard
+
+Focus moves to the panel on open, so a screen reader reads the title, and returns on close to the
+element that had it. `initialFocus` moves it to one element instead, such as the first field. A
+`task` traps focus, and an `inspector` lets `Tab` leave it for the page. `Esc` closes the top layer
+only, a popup open inside the panel first. The drawer adds no `Enter` or arrow key handler.
+
+## Layering
+
+The drawer renders in `document.body`, or in `container`. It shares one layer with `Dialog` and
+`AlertDialog`, in open order: a dialog opened from a drawer covers it, and a drawer opened from a
+dialog covers the dialog, with no `zIndex`. Tooltips, dropdowns, selects, popovers and toasts opened
+inside it portal into the panel and render above it.
+
+## Rendering in another element
+
+`container` names the element the drawer renders in, for a page that shows only part of the
+document, such as a chart in fullscreen.
+
+## Empty text
+
+An empty `title` renders `<No title>`, so the missing name shows in review. An empty slot renders
+no wrapper, an empty `headerPrefix` renders no divider, and an empty `footerSuffix` renders no
+footer.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the panel, and it names every part:
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| backdrop      | `` `${testId}-backdrop` ``      |
+| header        | `` `${testId}-header` ``        |
+| header prefix | `` `${testId}-header-prefix` `` |
+| title prefix  | `` `${testId}-title-prefix` ``  |
+| title         | `` `${testId}-title` ``         |
+| title suffix  | `` `${testId}-title-suffix` ``  |
+| description   | `` `${testId}-description` ``   |
+| header suffix | `` `${testId}-header-suffix` `` |
+| close button  | `` `${testId}-close` ``         |
+| body          | `` `${testId}-body` ``          |
+| footer        | `` `${testId}-footer` ``        |
+| footer prefix | `` `${testId}-footer-prefix` `` |
+| footer suffix | `` `${testId}-footer-suffix` `` |
+
+While `loading`, the skeletons are named too:
+
+| Element               | `data-testid`                           |
+| --------------------- | --------------------------------------- |
+| title prefix skeleton | `` `${testId}-title-prefix-skeleton` `` |
+| title skeleton        | `` `${testId}-title-skeleton` ``        |
+| description skeleton  | `` `${testId}-description-skeleton` ``  |
+| default body          | `` `${testId}-body-skeleton` ``         |
+
+A slot part renders only when its prop renders something. The backdrop, the description and the
+footer render on a `task` only.
+
+The panel carries `data-type`, `data-width`, `data-open` while open and `data-closed` while the
+exit runs, `data-swiping` while a swipe drags it, and `data-loading` with `aria-busy="true"` while
+`loading`. Drawers portal to `document.body`, or to `container`, so query the document, not the
+canvas.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
 
 <Controls of={DrawerStories.Default} />
-
-## DrawerTrigger Props
-
-<Controls of={DrawerTriggerStories.Default} />
-
-## DrawerContent Props
-
-<Controls of={DrawerContentStories.Default} />
-
-## DrawerHeader Props
-
-<Controls of={DrawerHeaderStories.Default} />
-
-## DrawerTitle Props
-
-<Controls of={DrawerTitleStories.Default} />
-
-## DrawerSubtitle Props
-
-<Controls of={DrawerSubtitleStories.Default} />
-
-## DrawerDescription Props
-
-<Controls of={DrawerDescriptionStories.Default} />
-
-## DrawerFooter Props
-
-<Controls of={DrawerFooterStories.Default} />
-
-## DrawerClose Props
-
-<Controls of={DrawerCloseStories.Default} />
-
-## DrawerOverlay Props
-
-<Controls of={DrawerOverlayStories.Default} />
-
-## DrawerPortal Props
-
-<Controls of={DrawerPortalStories.Default} />

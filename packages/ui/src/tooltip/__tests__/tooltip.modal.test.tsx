@@ -2,38 +2,36 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { ForceOpenProvider } from '../../testing/index.js';
-import { Drawer, DrawerContent, DrawerTitle } from '../../drawer/index.js';
+import { Drawer } from '../../drawer/index.js';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipProvider } from '../subcomponents/tooltip-provider.js';
+
+function noop(): void {}
 
 const TITLE = 'Copy me';
 
 function drawerPanel(): HTMLElement {
-	return document.querySelector('[data-slot="drawer-content"]') as HTMLElement;
+	return document.querySelector('[data-slot="drawer-popup"]') as HTMLElement;
 }
 
 describe('Tooltip inside a modal', () => {
-	// A modal drawer sets `pointer-events: none` on the body and traps focus in its panel, so
+	// A modal drawer makes the page outside its panel inert and traps focus in the panel, so
 	// the popup goes into the panel. Outside it the pointer would fall through, and the tooltip
 	// would close before the text can be selected.
 	it('portals into the drawer and stays hoverable', async () => {
 		const user = userEvent.setup();
 		render(
-			<Drawer open>
+			<Drawer type="task" open onClose={noop} title="Settings" initialFocus={false}>
 				{/* Focus would open the tooltip too, and keep it open whatever the pointer does. */}
-				<DrawerContent onOpenAutoFocus={(event) => event.preventDefault()}>
-					<DrawerTitle>Settings</DrawerTitle>
-					<Tooltip title={TITLE}>
-						<button type="button">Hover</button>
-					</Tooltip>
-				</DrawerContent>
+				<Tooltip title={TITLE}>
+					<button type="button">Hover</button>
+				</Tooltip>
 			</Drawer>,
 		);
 
 		await user.hover(await screen.findByRole('button', { name: 'Hover' }));
 		const popup = await screen.findByRole('tooltip');
 
-		expect(getComputedStyle(document.body).pointerEvents).toBe('none');
 		expect(drawerPanel().contains(popup)).toBe(true);
 
 		// `user.hover` carries no coordinates, so the safe polygon Base UI keeps between the
@@ -47,13 +45,10 @@ describe('Tooltip inside a modal', () => {
 
 	it('portals into the drawer when it is open from the first render', async () => {
 		render(
-			<Drawer open>
-				<DrawerContent>
-					<DrawerTitle>Settings</DrawerTitle>
-					<Tooltip title={TITLE}>
-						<button type="button">Hover</button>
-					</Tooltip>
-				</DrawerContent>
+			<Drawer type="task" open onClose={noop} title="Settings">
+				<Tooltip title={TITLE}>
+					<button type="button">Hover</button>
+				</Tooltip>
 			</Drawer>,
 			{ wrapper: ForceOpenProvider },
 		);
@@ -70,13 +65,10 @@ describe('Tooltip inside a modal', () => {
 				<Tooltip title={title} testId="outside">
 					<button type="button">Outside</button>
 				</Tooltip>
-				<Drawer open>
-					<DrawerContent>
-						<DrawerTitle>Settings</DrawerTitle>
-						<Tooltip title={title} testId="inside">
-							<button type="button">Inside</button>
-						</Tooltip>
-					</DrawerContent>
+				<Drawer type="task" open onClose={noop} title="Settings">
+					<Tooltip title={title} testId="inside">
+						<button type="button">Inside</button>
+					</Tooltip>
 				</Drawer>
 			</>,
 			{ wrapper: ForceOpenProvider },
@@ -95,13 +87,10 @@ describe('Tooltip inside a modal', () => {
 
 		render(
 			<TooltipProvider container={outside}>
-				<Drawer open>
-					<DrawerContent>
-						<DrawerTitle>Settings</DrawerTitle>
-						<Tooltip title={TITLE}>
-							<button type="button">Hover</button>
-						</Tooltip>
-					</DrawerContent>
+				<Drawer type="task" open onClose={noop} title="Settings">
+					<Tooltip title={TITLE}>
+						<button type="button">Hover</button>
+					</Tooltip>
 				</Drawer>
 			</TooltipProvider>,
 			{ wrapper: ForceOpenProvider },

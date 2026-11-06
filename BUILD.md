@@ -125,11 +125,11 @@ Which is why `package.json` exports carry two type entries per subpath, not one:
 ### Externals
 
 `externalPatterns` in `vite.config.extend.ts` is the single list of what we do **not**
-bundle: React, every `@radix-ui/*`, every `@base-ui/*`, every `@signozhq/*`, `clsx`,
-`@tanstack/*`, `motion/react`, `nuqs`, and friends.
+bundle: React, every `@base-ui/*`, every `@signozhq/*`, `clsx`, `@tanstack/*`,
+`react-day-picker`, `react-resizable-panels`, and friends.
 
 Rule of thumb: **anything a consumer could also install must be external.** Bundling a copy
-of Radix means two instances of its context: a `Dialog` from our bundle and one from the
+of Base UI means two instances of its context: a `Dialog` from our bundle and one from the
 app's would not see each other's provider.
 
 A test enforces this: `packages/ui/src/__tests__/vite-externals.test.ts` computes

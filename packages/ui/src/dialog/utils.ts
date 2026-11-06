@@ -15,13 +15,3 @@ const CLOSE_REASONS: ReadonlySet<string> = new Set<DialogCloseReasonType>([
 export function isDialogCloseReason(reason: string): reason is DialogCloseReasonType {
 	return CLOSE_REASONS.has(reason);
 }
-
-/**
- * Handler for the auto focus events of a Radix `FocusScope` that only cancels them, so Base UI
- * stays the one that places the focus on open and on close.
- *
- * @access private
- */
-export function preventDefault(event: Event): void {
-	event.preventDefault();
-}

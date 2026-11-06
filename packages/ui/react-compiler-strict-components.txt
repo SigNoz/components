@@ -11,6 +11,7 @@ combobox
 command
 dialog
 divider
+drawer
 dropdown
 input
 kbd

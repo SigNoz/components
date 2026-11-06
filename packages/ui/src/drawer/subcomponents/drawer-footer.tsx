@@ -1,51 +1,58 @@
-import * as React from 'react';
-import { cn } from '../../lib/utils.js';
+import type { ReactNode } from 'react';
+import { hasRenderableContent, partTestId } from '../../lib/utils.js';
+import { Skeleton } from '../../skeleton/index.js';
 import styles from '../drawer.module.scss';
+import type { DrawerProps } from '../types.js';
 
-export type DrawerFooterProps = Pick<
-	React.ComponentPropsWithoutRef<'div'>,
-	'id' | 'className' | 'style' | 'children'
-> & {
-	/**
-	 * Test ID for the drawer footer.
-	 */
-	testId?: string;
+type DrawerFooterProps = Pick<DrawerProps, 'footerPrefix' | 'footerSuffix' | 'testId'> & {
+	loading: boolean;
 };
 
 /**
- * Bottom action area of the drawer, typically used for primary and
- * secondary buttons like "Cancel" and "Confirm".
+ * The footer of a `task` drawer: `footerPrefix` at the start, apart from the `footerSuffix`
+ * actions at the end. Renders nothing without a `footerSuffix`.
  *
- * @example
- * ```tsx
- * <Drawer>
- *   <DrawerTrigger asChild>
- *     <Button variant="solid" color="primary">Open drawer</Button>
- *   </DrawerTrigger>
- *   <DrawerContent>
- *     <DrawerHeader>
- *       <DrawerTitle>Delete this item</DrawerTitle>
- *     </DrawerHeader>
- *     <DrawerDescription>
- *       <p>This action cannot be undone.</p>
- *     </DrawerDescription>
- *     <DrawerFooter>
- *       <Button variant="ghost" color="secondary">Cancel</Button>
- *       <Button variant="solid" color="danger">Delete</Button>
- *     </DrawerFooter>
- *   </DrawerContent>
- * </Drawer>
- * ```
+ * @access private
  */
-export const DrawerFooter = React.forwardRef<HTMLDivElement, DrawerFooterProps>(
-	({ className, testId, ...props }, ref) => (
+export function DrawerFooter({
+	footerPrefix,
+	footerSuffix,
+	loading,
+	testId,
+}: DrawerFooterProps): ReactNode {
+	if (!hasRenderableContent(footerSuffix)) {
+		return null;
+	}
+
+	return (
 		<div
-			ref={ref}
+			className={styles['drawer__footer']}
 			data-slot="drawer-footer"
-			data-testid={testId}
-			className={cn(styles.drawer__footer, className)}
-			{...props}
-		/>
-	),
-);
-DrawerFooter.displayName = 'DrawerFooter';
+			data-testid={partTestId(testId, 'footer')}
+		>
+			{hasRenderableContent(footerPrefix) ? (
+				<div
+					className={styles['drawer__footer-prefix']}
+					data-slot="drawer-footer-prefix"
+					data-testid={partTestId(testId, 'footer-prefix')}
+				>
+					{loading ? <Skeleton.Button size="md" /> : footerPrefix}
+				</div>
+			) : null}
+			<div
+				className={styles['drawer__footer-suffix']}
+				data-slot="drawer-footer-suffix"
+				data-testid={partTestId(testId, 'footer-suffix')}
+			>
+				{loading ? (
+					<>
+						<Skeleton.Button size="md" />
+						<Skeleton.Button size="md" />
+					</>
+				) : (
+					footerSuffix
+				)}
+			</div>
+		</div>
+	);
+}
