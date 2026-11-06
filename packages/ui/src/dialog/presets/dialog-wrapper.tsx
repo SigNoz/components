@@ -103,7 +103,7 @@ export interface DialogWrapperProps {
  *     </Button>
  *   }
  * >
- *   <div className="flex flex-col gap-4 text-sm leading-5">
+ *   <div className="flex flex-col gap-4">
  *     <p>Dialog content goes here.</p>
  *     <div className="flex justify-end">
  *       <Button variant="solid" color="primary">
@@ -130,7 +130,7 @@ export interface DialogWrapperProps {
  *     </Button>
  *   }
  * >
- *   <div className="flex flex-col gap-4 text-sm leading-5">
+ *   <div className="flex flex-col gap-4">
  *     <p>Dialog content goes here.</p>
  *     <div className="flex justify-end">
  *       <Button variant="solid" color="primary" onClick={() => setOpen(false)}>

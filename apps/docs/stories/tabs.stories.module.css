@@ -13,23 +13,10 @@
 	width: 100%;
 }
 
-.sectionTitle {
-	margin-bottom: 16px;
-}
-
-.subsectionTitle {
-	margin-bottom: 8px;
-}
-
 .exampleStack {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
-}
-
-.exampleLabel {
-	color: var(--muted-foreground);
-	margin-bottom: 4px;
 }
 
 /* The alignment examples only say anything while the bar is narrower than the
@@ -106,13 +93,4 @@
 	justify-items: start;
 	overflow-x: auto;
 	padding-bottom: 4px;
-}
-
-.matrixLabel {
-	white-space: nowrap;
-}
-
-.sectionNote {
-	color: var(--muted-foreground);
-	margin-bottom: 16px;
 }

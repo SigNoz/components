@@ -140,39 +140,68 @@ export function parseSpacingTokens(): ParsedToken[] {
 	return tokens;
 }
 
-interface TypographyToken {
-	value: string;
-	type?: string;
+export const TEXT_STYLE_VARIANTS = ['label', 'paragraph', 'uppercase', 'code'] as const;
+
+export type TextStyleVariant = (typeof TEXT_STYLE_VARIANTS)[number];
+
+const TEXT_STYLE_SIZES = ['large', 'medium', 'base', 'small'];
+
+export const TEXT_STYLE_PROPERTIES = [
+	'fontFamily',
+	'fontSize',
+	'fontWeight',
+	'lineHeight',
+	'letterSpacing',
+	'textTransform',
+] as const;
+
+export type TextStyleProperty = (typeof TEXT_STYLE_PROPERTIES)[number];
+
+type TextStyleTokens = Record<TextStyleProperty, { value: string }>;
+
+export interface ParsedTextStyle extends Record<TextStyleProperty, string> {
+	name: string;
+	variant: TextStyleVariant;
+	size: string;
+	weight: string;
 }
 
-export function parseTypographyTokens(): ParsedToken[] {
-	const tokens: ParsedToken[] = [];
-	const fontSize = typographyTokens.fontSize as Record<string, TypographyToken>;
-	const fontWeight = typographyTokens.fontWeight as Record<string, TypographyToken>;
+function bySizeThenWeight(a: ParsedTextStyle, b: ParsedTextStyle): number {
+	return (
+		TEXT_STYLE_SIZES.indexOf(a.size) - TEXT_STYLE_SIZES.indexOf(b.size) ||
+		Number(a.weight) - Number(b.weight)
+	);
+}
 
-	for (const [size, data] of Object.entries(fontSize)) {
-		tokens.push({
-			name: `font-size-${size}`,
-			value: data.value,
-			category: 'typography',
-			group: 'font-size',
-			cssVariable: getCssVariable(`font-size-${size}`),
-			tailwindClass: `text-${size}`,
-		});
-	}
+export function parseTextStyles(): ParsedTextStyle[] {
+	return TEXT_STYLE_VARIANTS.flatMap((variant) => {
+		const sizes: Record<string, Record<string, TextStyleTokens>> = typographyTokens[variant];
 
-	for (const [weight, data] of Object.entries(fontWeight)) {
-		tokens.push({
-			name: `font-weight-${weight}`,
-			value: data.value,
-			category: 'typography',
-			group: 'font-weight',
-			cssVariable: getCssVariable(`font-weight-${weight}`),
-			tailwindClass: `font-${weight}`,
-		});
-	}
+		return Object.entries(sizes)
+			.flatMap(([size, weights]) =>
+				Object.entries(weights).map(([weight, tokens]) => ({
+					name: `${variant}-${size}-${weight}`,
+					variant,
+					size,
+					weight,
+					fontFamily: tokens.fontFamily.value,
+					fontSize: tokens.fontSize.value,
+					fontWeight: tokens.fontWeight.value,
+					lineHeight: tokens.lineHeight.value,
+					letterSpacing: tokens.letterSpacing.value,
+					textTransform: tokens.textTransform.value,
+				})),
+			)
+			.sort(bySizeThenWeight);
+	});
+}
 
-	return tokens;
+export function getCssPropertyName(property: TextStyleProperty): string {
+	return property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
+export function getTextStyleVariable(styleName: string, property: TextStyleProperty): string {
+	return `--${styleName}-${getCssPropertyName(property)}`;
 }
 
 export function groupTokensByGroup(tokens: ParsedToken[]): Map<string, ParsedToken[]> {
@@ -180,10 +209,12 @@ export function groupTokensByGroup(tokens: ParsedToken[]): Map<string, ParsedTok
 
 	for (const token of tokens) {
 		const group = token.group || 'other';
-		if (!grouped.has(group)) {
-			grouped.set(group, []);
+		const entries = grouped.get(group);
+		if (entries) {
+			entries.push(token);
+		} else {
+			grouped.set(group, [token]);
 		}
-		grouped.get(group)!.push(token);
 	}
 
 	return grouped;
@@ -194,10 +225,12 @@ export function groupTokensByCategory(tokens: ParsedToken[]): Map<string, Parsed
 
 	for (const token of tokens) {
 		const category = token.category || 'other';
-		if (!grouped.has(category)) {
-			grouped.set(category, []);
+		const entries = grouped.get(category);
+		if (entries) {
+			entries.push(token);
+		} else {
+			grouped.set(category, [token]);
 		}
-		grouped.get(category)!.push(token);
 	}
 
 	return grouped;

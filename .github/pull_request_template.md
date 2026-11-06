@@ -66,7 +66,8 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] Figma frame linked from the story via `parameters.design`
 - [ ] Checked in light *and* dark
 - [ ] Sizing and density consistent with sibling components (`sm` matches `Button` / `Input`)
-- [ ] Typography via `Typography` or the type-scale tokens, not an ad-hoc `font-size` / `font-weight`
+- [ ] Typography via `Typography` or one text style, all six properties from that style, not an ad-hoc `font-size` / `font-weight`; each root and popup pins the numerals (`font-feature-settings: 'ss01' 1`, `font-variant-numeric: normal`)
+- [ ] Truncated text keeps its descenders (`overflow: clip visible`); heights come from layout, not line height
 - [ ] Icons from `@signozhq/icons`, sized with tokens, no inline SVG with hardcoded `px`
 - [ ] Every state built: default, hover, focus-visible, active, disabled, loading, invalid, selected, empty, long/truncated
 - [ ] Not a duplicate of an existing primitive or preset

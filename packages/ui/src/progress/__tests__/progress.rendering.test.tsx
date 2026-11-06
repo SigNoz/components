@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ProgressColor } from '../constants.js';
 import { Progress } from '../progress.js';
+import { setTokens } from '../../__tests__/test-utils.js';
 
 describe('Progress rendering', () => {
 	it('stamps the slots and the test ids of every part', () => {
@@ -255,5 +256,25 @@ describe('Progress steps', () => {
 		render(<Progress color="primary" percent={50} steps={5} testId="checklist" />);
 
 		expect(screen.getByTestId('checklist-indicator').style.width).toBe('50%');
+	});
+});
+
+describe('Progress value row', () => {
+	it('holds a 20px row while the value shows, and the track height without it', () => {
+		setTokens(`
+			--spacing-3: 6px;
+			--spacing-10: 20px;
+			--label-base-400-font-size: 13px;
+			--label-base-400-line-height: 1;
+		`);
+		render(
+			<>
+				<Progress color="primary" percent={40} showInfo testId="info" />
+				<Progress color="primary" percent={40} testId="bare" />
+			</>,
+		);
+
+		expect(screen.getByTestId('info').getBoundingClientRect().height).toBe(20);
+		expect(screen.getByTestId('bare').getBoundingClientRect().height).toBe(6);
 	});
 });

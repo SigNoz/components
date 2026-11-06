@@ -31,9 +31,20 @@ const LABELS = {
 /** The tokens the footer measures against, so its computed style is something the test chose. */
 const FOOTER_TOKENS = {
 	'--spacing-4': '8px',
-	'--periscope-font-size-small': '11px',
-	'--line-height-18': '18px',
+	'--paragraph-small-400-font-size': '11px',
+	'--paragraph-small-400-line-height': '18px',
 	'--calendar-weekday-label': 'rgb(7, 7, 7)',
+} as CSSProperties;
+
+/** The label styles the grid reads, with a line height of 1 as in the design tokens. */
+const LABEL_TOKENS = {
+	'--spacing-8': '16px',
+	'--label-small-400-font-size': '11px',
+	'--label-small-400-line-height': '1',
+	'--label-small-500-font-size': '11px',
+	'--label-small-500-line-height': '1',
+	'--label-small-500-letter-spacing': '0.1em',
+	'--label-small-600-font-weight': '600',
 } as CSSProperties;
 
 describe('Calendar styling', () => {
@@ -203,6 +214,43 @@ describe('Calendar styling', () => {
 
 			expect(Math.abs(drift)).toBeLessThanOrEqual(1);
 		}
+	});
+
+	it('keeps the weekday row 16px tall', () => {
+		render(
+			<div style={LABEL_TOKENS}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} />
+			</div>,
+		);
+
+		const header = document.querySelector('thead th') as HTMLElement;
+
+		expect(header.closest('tr')?.getBoundingClientRect().height).toBe(16);
+	});
+
+	it('weighs the week number from its text style, not the bold of a table header', () => {
+		render(
+			<div style={LABEL_TOKENS}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} showWeekNumber />
+			</div>,
+		);
+
+		const weekNumber = document.querySelector('[data-slot="calendar-week-number"]');
+
+		expect(weekNumber).not.toBeNull();
+		expect(getComputedStyle(weekNumber?.closest('th') as Element).fontWeight).toBe('600');
+	});
+
+	it('resolves the day number letter spacing against the day number, not the button', () => {
+		render(
+			<div style={LABEL_TOKENS}>
+				<Calendar mode="single" defaultMonth={JUNE_11_2025} />
+			</div>,
+		);
+
+		const label = dayButton(JUNE_11_2025).querySelector('[data-slot="calendar-day-button-label"]');
+
+		expect(getComputedStyle(label as Element).letterSpacing).toBe('1.1px');
 	});
 
 	it('follows a weekday colour override, and takes its own', () => {

@@ -25,6 +25,7 @@
  * | `--input-disabled-cursor` | `not-allowed` |
  * | `--input-disabled-opacity` | `0.4` |
  * | `--input-display` | `flex` |
+ * | `--input-field-align-self` | `stretch` |
  * | `--input-field-background` | `transparent` |
  * | `--input-field-border` | `none` |
  * | `--input-field-flex` | `1` |
@@ -35,9 +36,9 @@
  * | `--input-focus-outline-offset` | `1px` |
  * | `--input-focus-ring` | `-` |
  * | `--input-focus-ring-color` | `var(--input-focus-ring)` |
- * | `--input-font-family` | `inherit` |
- * | `--input-font-size` | `var(--periscope-font-size-base)` |
- * | `--input-font-weight` | `var(--font-weight-normal)` |
+ * | `--input-font-family` | `var(--input-internal-font-family)` |
+ * | `--input-font-size` | `var(--input-internal-font-size)` |
+ * | `--input-font-weight` | `var(--input-internal-font-weight)` |
  * | `--input-foreground` | `-` |
  * | `--input-gap` | `var(--spacing-2)` |
  * | `--input-height` | `32px` |
@@ -48,8 +49,8 @@
  * | `--input-icon-glyph-color` | `var(--l1-background)` |
  * | `--input-icon-size` | `14px` |
  * | `--input-large-height` | `40px` |
- * | `--input-letter-spacing` | `-0.005em` |
- * | `--input-line-height` | `20px` |
+ * | `--input-letter-spacing` | `var(--input-internal-letter-spacing)` |
+ * | `--input-line-height` | `var(--input-internal-line-height)` |
  * | `--input-number-root-display` | `contents` |
  * | `--input-padding` | `var(--spacing-3) var(--spacing-6) var(--spacing...` |
  * | `--input-password-toggle-align-items` | `center` |
@@ -88,10 +89,11 @@
  * | `--input-success-border-color` | `var(--input-success-border)` |
  * | `--input-success-icon` | `-` |
  * | `--input-success-icon-color` | `var(--input-success-icon)` |
+ * | `--input-text-transform` | `var(--input-internal-text-transform)` |
  * | `--input-textarea-align-items` | `flex-start` |
  * | `--input-textarea-block-size` | `auto` |
  * | `--input-textarea-resize` | `vertical` |
- * | `--input-textarea-status-icon-offset` | `calc((var(--input-line-height, 20px) - var(--in...` |
+ * | `--input-textarea-status-icon-offset` | `calc((var(--input-line-height, var(--input-inte...` |
  * | `--input-transition` | `border-color 150ms ease, background-color 150ms...` |
  * | `--input-unstyled-background` | `transparent` |
  * | `--input-unstyled-border-color` | `transparent` |

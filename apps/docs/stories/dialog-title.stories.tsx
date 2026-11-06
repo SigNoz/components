@@ -43,7 +43,14 @@ export const Default: Story = {
 					<DialogTitle {...args} />
 				</DialogHeader>
 				<DialogDescription>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The title labels the dialog content for assistive technologies.
 					</Typography>
 				</DialogDescription>
@@ -69,7 +76,14 @@ export const WithIcon: Story = {
 					<DialogTitle {...args} />
 				</DialogHeader>
 				<DialogDescription>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Use the icon prop to visually differentiate dialog types.
 					</Typography>
 				</DialogDescription>

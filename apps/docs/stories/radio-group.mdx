@@ -115,7 +115,17 @@ Each item labels its own answer. The group still has to state the question once,
 `aria-labelledby` is how: point it at whatever asks it.
 
 ```tsx
-<Typography.Text id="environment-question">Which environment?</Typography.Text>
+<Typography
+	variant="label"
+	size="base"
+	weight="regular"
+	color="inherit"
+	as="p"
+	textOverflow="wrap"
+	id="environment-question"
+>
+	Which environment?
+</Typography>
 <RadioGroup color="primary" items={items} aria-labelledby="environment-question" />
 ```
 

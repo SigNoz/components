@@ -172,7 +172,14 @@ export const Playground: Story = {
 function ColorRow({ color }: { color: BadgeColorType }): ReactElement {
 	return (
 		<Fragment key={color}>
-			<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="visible"
+			>
 				{color}
 			</Typography>
 			<Badge variant="solid" color={color}>
@@ -228,16 +235,46 @@ export const BadgeShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Colors
 				</Typography>
-				<Typography size="sm">One row per color, solid and outlined side by side.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					One row per color, solid and outlined side by side.
+				</Typography>
 				<div className={`${styles.matrix} ${styles.marginTopMedium}`}>
 					<span />
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						solid
 					</Typography>
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						outlined
 					</Typography>
 					{COLORS.map((color) => (
@@ -247,10 +284,26 @@ export const BadgeShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Text transform
 				</Typography>
-				<Typography size="sm">Applied to the content regardless of variant or color.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Applied to the content regardless of variant or color.
+				</Typography>
 				<div className="story-grid">
 					{Object.values(BadgeTextTransform).map((textTransform) => (
 						<Badge
@@ -266,10 +319,26 @@ export const BadgeShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Usage examples
 				</Typography>
-				<Typography size="sm">System status, user status, and notification counts.</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					System status, user status, and notification counts.
+				</Typography>
 				<div className={`story-section ${styles.marginTopMedium}`}>
 					<div className="story-grid">
 						<Badge variant="solid" color="success" prefix={<CheckIcon />}>
@@ -291,19 +360,46 @@ export const BadgeShowcase: Story = {
 					<div className="story-row-lg">
 						<div className="story-row">
 							<BellIcon />
-							<Typography>Messages</Typography>
+							<Typography
+								variant="label"
+								size="base"
+								weight="regular"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
+								Messages
+							</Typography>
 							<Badge variant="solid" color="danger">
 								12
 							</Badge>
 						</div>
 						<div className="story-row">
-							<Typography>Inbox</Typography>
+							<Typography
+								variant="label"
+								size="base"
+								weight="regular"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
+								Inbox
+							</Typography>
 							<Badge variant="outlined" color="primary">
 								5
 							</Badge>
 						</div>
 						<div className="story-row">
-							<Typography>Archive</Typography>
+							<Typography
+								variant="label"
+								size="base"
+								weight="regular"
+								color="inherit"
+								as="span"
+								textOverflow="wrap"
+							>
+								Archive
+							</Typography>
 							<Badge variant="outlined" color="archive">
 								128
 							</Badge>
@@ -313,14 +409,35 @@ export const BadgeShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow and tooltip
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Both are capped at <code>{CONSTRAINED_WIDTH}</code>.
 				</Typography>
 				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
-					<Typography size="sm" weight="medium">
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="wrap"
+					>
 						ellipsis (default)
 					</Typography>
 					<Badge
@@ -332,9 +449,25 @@ export const BadgeShowcase: Story = {
 					>
 						{LONG_LABEL}
 					</Badge>
-					<Typography size="sm">Truncates, full content on hover or focus.</Typography>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
+						Truncates, full content on hover or focus.
+					</Typography>
 
-					<Typography size="sm" weight="medium">
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="wrap"
+					>
 						hidden
 					</Typography>
 					<Badge
@@ -346,7 +479,16 @@ export const BadgeShowcase: Story = {
 					>
 						{LONG_LABEL}
 					</Badge>
-					<Typography size="sm">Clips at the badge's edge, no tooltip.</Typography>
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
+						Clips at the badge's edge, no tooltip.
+					</Typography>
 				</div>
 			</div>
 		</div>

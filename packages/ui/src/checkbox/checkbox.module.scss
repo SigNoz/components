@@ -17,6 +17,8 @@
 	padding: var(--checkbox-internal-hit-area);
 	margin: calc(-1 * var(--checkbox-internal-hit-area));
 	cursor: var(--checkbox-cursor, pointer);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	&[data-color='primary'] {
 		--checkbox-internal-checked-background: var(--checkbox-primary-background);
@@ -124,9 +126,9 @@
 }
 
 .checkbox-container {
-	// The `.checkbox` margin below needs the label line-height before the label's own declaration
-	// applies, so the wrapper carries the same value.
-	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, 18px);
+	// Both the `.checkbox` margin below and the label read the label line-height, so the wrapper
+	// carries it.
+	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, var(--paragraph-base-400-line-height));
 
 	display: var(--checkbox-container-display, inline-flex);
 	// The box sits on the first line of the label and stays there. Centring the row instead would
@@ -140,6 +142,8 @@
 	// The whole row is the hit target, so the pointer reads as interactive from the text too.
 	cursor: var(--checkbox-cursor, pointer);
 	user-select: none;
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	.checkbox {
 		// First-line centring, minus the hit-area ring this margin replaces on the block-start
@@ -182,8 +186,6 @@
 }
 
 .checkbox__label {
-	--checkbox-internal-label-line-height: var(--checkbox-label-line-height, 18px);
-
 	min-width: 0;
 	// The row keeps one line of label height even when the label renders something shorter, so a
 	// row does not change height with its content.
@@ -191,9 +193,12 @@
 	overflow: var(--checkbox-label-overflow, hidden);
 	white-space: var(--checkbox-label-white-space, nowrap);
 	color: var(--checkbox-label-color, var(--checkbox-label));
-	font-size: var(--checkbox-label-font-size, var(--periscope-font-size-base));
-	font-weight: var(--checkbox-label-font-weight, var(--font-weight-normal));
+	font-family: var(--checkbox-label-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--checkbox-label-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--checkbox-label-font-weight, var(--paragraph-base-400-font-weight));
 	line-height: var(--checkbox-internal-label-line-height);
+	letter-spacing: var(--checkbox-label-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--checkbox-label-text-transform, var(--paragraph-base-400-text-transform));
 	cursor: inherit;
 	transition: var(--checkbox-label-transition, opacity 150ms ease);
 

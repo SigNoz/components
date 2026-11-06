@@ -23,6 +23,8 @@
 	background-color: var(--switch-track-background-color, var(--switch-track-background));
 	cursor: var(--switch-cursor, pointer);
 	transition: var(--switch-transition, background-color 150ms ease);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	&[data-color='primary'] {
 		--switch-internal-checked-background: var(--switch-primary-background);
@@ -121,9 +123,9 @@
 }
 
 .switch-container {
-	// The `.switch` margin below needs the label line-height before the label's own declaration
-	// applies, so the wrapper carries the same value.
-	--switch-internal-label-line-height: var(--switch-label-line-height, 18px);
+	// Both the `.switch` margin below and the label read the label line-height, so the wrapper
+	// carries it.
+	--switch-internal-label-line-height: var(--switch-label-line-height, var(--paragraph-base-400-line-height));
 
 	display: var(--switch-container-display, inline-flex);
 	// The switch sits on the first line of the label and stays there. Centring the row instead
@@ -138,6 +140,8 @@
 	// The whole row is the hit target, so the pointer reads as interactive from the text too.
 	cursor: var(--switch-cursor, pointer);
 	user-select: none;
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	&[data-text-placement='left'] {
 		inline-size: var(--switch-internal-width, 100%);
@@ -193,8 +197,6 @@
 }
 
 .switch__label {
-	--switch-internal-label-line-height: var(--switch-label-line-height, 18px);
-
 	min-width: 0;
 	// The row keeps one line of label height even when the label renders something shorter, so a
 	// row does not change height with its content.
@@ -202,9 +204,12 @@
 	overflow: var(--switch-label-overflow, hidden);
 	white-space: var(--switch-label-white-space, nowrap);
 	color: var(--switch-label-color, var(--switch-label));
-	font-size: var(--switch-label-font-size, var(--periscope-font-size-base));
-	font-weight: var(--switch-label-font-weight, var(--font-weight-normal));
+	font-family: var(--switch-label-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--switch-label-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--switch-label-font-weight, var(--paragraph-base-400-font-weight));
 	line-height: var(--switch-internal-label-line-height);
+	letter-spacing: var(--switch-label-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--switch-label-text-transform, var(--paragraph-base-400-text-transform));
 	cursor: inherit;
 
 	&-tooltip {
@@ -212,10 +217,10 @@
 	}
 }
 
-// With a description under it, the label reads as the row's title, so its default weight steps
-// up; an explicit `--switch-label-font-weight` still wins in both shapes.
+// With a description under it, the label reads as the row's title, so it takes the 500 weight of
+// its paragraph style; an explicit `--switch-label-font-weight` still wins in both shapes.
 .switch__text:has(.switch__description) .switch__label {
-	font-weight: var(--switch-label-font-weight, var(--font-weight-medium));
+	font-weight: var(--switch-label-font-weight, var(--paragraph-base-500-font-weight));
 }
 
 .switch__description {
@@ -223,8 +228,12 @@
 	overflow: var(--switch-description-overflow, hidden);
 	white-space: var(--switch-description-white-space, nowrap);
 	color: var(--switch-description-color, var(--switch-description));
-	font-size: var(--switch-description-font-size, var(--periscope-font-size-base));
-	line-height: var(--switch-description-line-height, 18px);
+	font-family: var(--switch-description-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--switch-description-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--switch-description-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--switch-description-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--switch-description-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--switch-description-text-transform, var(--paragraph-base-400-text-transform));
 	cursor: inherit;
 }
 

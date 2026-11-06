@@ -23,10 +23,6 @@
   align-items: center;
 }
 
-.matrixLabel {
-  white-space: nowrap;
-}
-
 /* The showcase holds every popup open at once, so each one needs a cell of its own to open into. */
 .showcaseGrid {
   display: grid;

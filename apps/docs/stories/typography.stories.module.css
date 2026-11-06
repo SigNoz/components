@@ -1,155 +1,73 @@
-.showcaseContainer {
-	padding: 20px;
-}
-
-.showcaseTitle {
-	margin: 0 0 20px;
-	font-size: 18px;
-	font-weight: bold;
-	line-height: 1.5;
-	color: var(--text-vanilla-100);
-}
-
-.showcaseGrid {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 16px;
-}
-
-.showcaseItem {
-	color: var(--text-vanilla-100);
-
-	h2,
-	p {
-		margin: 0;
-		line-height: 1.5;
-	}
-}
-
-.playgroundContainer {
-	padding: 24px;
-}
-
-.sizesContainer {
-	padding: 24px;
-
-	> * {
-		margin-bottom: 16px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.sizeRow {
+.columnLayout {
 	display: flex;
+	flex-direction: column;
+	gap: 3rem;
+}
+
+.styleTable {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	align-items: center;
+	gap: 12px 24px;
+}
+
+.inheritParent {
+	color: var(--danger-background);
+}
+
+.overflowList {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 20px;
+}
+
+.overflowRow {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+}
+
+/* Room above the text for the tooltip `play` opens, with the caption below the text. */
+.hoveredRow {
+	padding-top: 64px;
+}
+
+.overflowBox {
+	width: 240px;
+	padding: 8px;
+	border: 1px dashed var(--l2-border);
+}
+
+.layoutBox {
+	width: 320px;
+	border: 1px dashed var(--l2-border);
+}
+
+.numbers {
+	display: flex;
+	gap: 48px;
+}
+
+.numbersColumn {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.numbersRow {
+	display: grid;
+	grid-template-columns: 80px 80px max-content;
 	align-items: baseline;
-	gap: 16px;
-	line-height: 1.5;
+	gap: 6px;
 }
 
-.sizeLabel {
-	color: var(--text-vanilla-400);
-	flex-shrink: 0;
-	width: 100px;
-	font-size: 12px;
-	text-align: right;
-}
-
-.sizeLabelSmall {
-	color: var(--text-vanilla-400);
-	flex-shrink: 0;
-	width: 48px;
-	font-size: 12px;
-	text-align: right;
-}
-
-.weightLabel {
-	color: var(--text-vanilla-400);
-	flex-shrink: 0;
-	width: 110px;
-	font-size: 12px;
-	text-align: right;
-}
-
-.headingsContainer {
-	padding: 24px;
-
-	> * {
-		margin-bottom: 16px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.textContainer {
-	padding: 24px;
-
-	> * {
-		margin-bottom: 16px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.alignmentContainer {
-	padding: 24px;
-
-	> * {
-		margin-bottom: 16px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.alignmentRow {
-	width: 100%;
-}
-
-.truncationContainer {
-	padding: 24px;
-	max-width: 400px;
-
-	> * {
-		margin-bottom: 24px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.truncationLabel {
-	margin-bottom: 4px;
-}
-
-.colorContainer {
-	padding: 24px;
-
-	> * {
-		margin-bottom: 8px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.interactiveContainer {
-	padding: 24px;
-
-	> * {
-		margin-bottom: 16px;
-	}
-
-	> *:last-child {
-		margin-bottom: 0;
-	}
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }

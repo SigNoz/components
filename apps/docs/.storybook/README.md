@@ -10,9 +10,8 @@ This directory contains the Storybook configuration for the SigNoz Components do
 - Manager UI (sidebar and panels) also uses dark theme
 
 ### 🔤 **Inter Font**
-- Uses Inter font family from Google Fonts
-- Applied globally to all components and UI
-- Optimized font rendering with proper font-feature-settings
+- Inter comes from `@signozhq/design-tokens/dist/fonts/inter.css`, the build SigNoz ships, with `ss01`, `zero` and `case`
+- Every component sets its text style and numerals itself; `index.css` mirrors the SigNoz root for the rest (smoothing, kerning, font synthesis) and for the text around the stories
 
 ### 🏷️ **SigNoz Branding**
 - Custom favicon with SigNoz branding (placeholder SVG)
@@ -24,7 +23,7 @@ This directory contains the Storybook configuration for the SigNoz Components do
 - `main.js` - Storybook framework, addons and `react-docgen-typescript` setup
 - `preview.tsx` - Global decorators, parameters, `storySort.order` and the docs page template
 - `preview.css` - Global styles including Inter font and dark theme
-- `preview-head.html` - HTML head content (fonts, favicon)
+- `preview-head.html` - HTML head content (favicon)
 - `manager.js` - Manager UI configuration (sidebar, panels)
 - `modeDecorator.tsx` - applies the `theme`, `palette` and `motion` toolbar globals to the document
 - `modes.ts` - Chromatic modes, each a named set of those globals

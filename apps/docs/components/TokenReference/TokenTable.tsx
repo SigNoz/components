@@ -11,7 +11,16 @@ interface TokenTableProps {
 export function TokenTable({ tokens, title }: TokenTableProps) {
 	if (tokens.length === 0) {
 		return (
-			<Typography size="sm" color="muted" className={styles.emptyState}>
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="tertiary"
+				as="p"
+				textOverflow="wrap"
+				align="center"
+				paddingY={16}
+			>
 				No tokens found
 			</Typography>
 		);
@@ -21,8 +30,15 @@ export function TokenTable({ tokens, title }: TokenTableProps) {
 		<div className={styles.table}>
 			{title && (
 				<div className={styles.tableHeader}>
-					<Typography size="sm" weight="semibold" className={styles.tableHeaderTitle}>
-						{title}
+					<Typography
+						variant="paragraph"
+						size="small"
+						weight="bold"
+						color="inherit"
+						as="p"
+						textOverflow="wrap"
+					>
+						{title.replace(/(^|\s)\S/g, (letter) => letter.toUpperCase())}
 					</Typography>
 				</div>
 			)}

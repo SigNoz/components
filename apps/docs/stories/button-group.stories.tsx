@@ -246,6 +246,7 @@ function labelledItems(affix: Affix, link: boolean): ButtonGroupItemType[] {
 				label,
 				...(affix === 'prefix' || affix === 'both' ? { prefix: icon } : {}),
 				...(affix === 'suffix' || affix === 'both' ? { suffix: <ChevronDown /> } : {}),
+				// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
 				...(link ? { render: <a href={`#${value}`} /> } : { onClick: noop }),
 			}) as ButtonGroupItemType,
 	);
@@ -276,13 +277,28 @@ function CompositionMatrix({ rows }: { rows: CompositionRow[] }): ReactElement {
 		<div className={`${styles.matrix} ${styles.compositionMatrix}`}>
 			<span />
 			{COMPOSITION_STATES.map((state) => (
-				<Typography key={state} size="sm" weight="medium" className={styles.matrixLabel}>
+				<Typography
+					key={state}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{state}
 				</Typography>
 			))}
 			{rows.map(({ name, items }) => (
 				<Fragment key={name}>
-					<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+					<Typography
+						variant="label"
+						size="small"
+						weight="medium"
+						color="inherit"
+						as="span"
+						textOverflow="visible"
+					>
 						{name}
 					</Typography>
 					{COMPOSITION_STATES.map((state) => (
@@ -311,10 +327,26 @@ function CompositionGroup({
 }): ReactElement {
 	return (
 		<div className={styles.compositionGroup}>
-			<Typography size="sm" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm" className={styles.compositionNote}>
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				as="p"
+				textOverflow="wrap"
+				maxWidth="60rem"
+				marginBottom={4}
+			>
 				{note}
 			</Typography>
 			{children}
@@ -333,10 +365,26 @@ function ShowcaseSection({
 }): ReactElement {
 	return (
 		<div className="story-section">
-			<Typography size="base" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm" className={styles.sectionNote}>
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				as="p"
+				textOverflow="wrap"
+				maxWidth="60rem"
+				marginBottom={8}
+			>
 				{note}
 			</Typography>
 			{children}
@@ -458,7 +506,15 @@ function ButtonGroupShowcaseLayout(): ReactElement {
 					<div className={styles.matrix}>
 						<span />
 						{STATES.map((state) => (
-							<Typography key={state} size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								key={state}
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{state}
 							</Typography>
 						))}
@@ -545,7 +601,14 @@ function ButtonGroupShowcaseLayout(): ReactElement {
 function Row({ size }: { size: ButtonGroupProps['size'] }): ReactElement {
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				as="span"
+				textOverflow="visible"
+			>
 				{size}
 			</Typography>
 			{STATES.map((state) => (

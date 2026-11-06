@@ -13,6 +13,8 @@
 	min-width: var(--slider-min-width, calc(var(--slider-internal-thumb-size) * 2));
 	touch-action: var(--slider-touch-action, none);
 	user-select: var(--slider-user-select, none);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
 
 	&[data-color='primary'] {
 		--slider-internal-indicator: var(
@@ -208,8 +210,12 @@
 	white-space: var(--slider-mark-white-space, nowrap);
 	text-align: var(--slider-mark-text-align, center);
 	color: var(--slider-mark-color, var(--l3-foreground));
-	font-size: var(--slider-mark-font-size, var(--periscope-font-size-small));
-	line-height: var(--slider-mark-line-height, 16px);
+	font-family: var(--slider-mark-font-family, var(--paragraph-small-400-font-family));
+	font-size: var(--slider-mark-font-size, var(--paragraph-small-400-font-size));
+	font-weight: var(--slider-mark-font-weight, var(--paragraph-small-400-font-weight));
+	line-height: var(--slider-mark-line-height, var(--paragraph-small-400-line-height));
+	letter-spacing: var(--slider-mark-letter-spacing, var(--paragraph-small-400-letter-spacing));
+	text-transform: var(--slider-mark-text-transform, var(--paragraph-small-400-text-transform));
 	cursor: var(--slider-mark-cursor, pointer);
 
 	// With no mark on a side, the room runs to that end of the slider.

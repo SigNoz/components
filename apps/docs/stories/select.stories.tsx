@@ -268,7 +268,14 @@ const TOOLS: SelectOptionItemType[] = [
 	option('react', 'React', {
 		prefix: <Code />,
 		suffix: (
-			<Typography size="xs" color="muted">
+			<Typography
+				as="span"
+				variant="label"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="visible"
+			>
 				UI
 			</Typography>
 		),
@@ -693,10 +700,24 @@ function ShowcaseCell({
 }): ReactElement {
 	return (
 		<div className={`story-section ${styles.cell}`}>
-			<Typography size="base" weight="semibold">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm" color="muted">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+			>
 				{note}
 			</Typography>
 			{children}
@@ -707,13 +728,27 @@ function ShowcaseCell({
 function TriggerRowView({ id, label, note, props, pseudo }: TriggerRow): ReactElement {
 	return (
 		<>
-			<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+			<Typography
+				as="span"
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				textOverflow="visible"
+			>
 				{label}
 			</Typography>
 			<div data-pseudo={pseudo}>
 				<Select aria-label={label} {...props} testId={id} />
 			</div>
-			<Typography size="sm" color="muted">
+			<Typography
+				as="p"
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="secondary"
+				textOverflow="wrap"
+			>
 				{note}
 			</Typography>
 		</>
@@ -749,10 +784,24 @@ function SelectShowcaseView(): ReactElement {
 		<div className="story-container-full">
 			<div className={styles.columnLayout}>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Trigger
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						What the closed trigger shows, one row per case. The <code>hovered</code> and{' '}
 						<code>focus-visible</code> rows are forced by <code>storybook-addon-pseudo-states</code>
 						.
@@ -764,10 +813,24 @@ function SelectShowcaseView(): ReactElement {
 					</div>
 				</div>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Popup
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Every popup below is held open by <code>ForceOpenProvider</code>, so they all fit in one
 						snapshot. Without it, the popup that opens last takes the focus and closes the rest.
 					</Typography>

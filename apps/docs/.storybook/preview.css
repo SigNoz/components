@@ -45,14 +45,6 @@ html.dark .docs-story > div:first-of-type {
  * or a code `Typography` asks for.
  */
 
-/* Improved typography for better readability - only for Storybook UI */
-
-.sb-show-main body {
-	font-size: 14px;
-
-	line-height: 1.6;
-}
-
 /* Improve code blocks */
 
 pre {

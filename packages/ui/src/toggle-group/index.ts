@@ -33,18 +33,21 @@
  * | `--toggle-group-button-flex-shrink` | `0` |
  * | `--toggle-group-button-focus-visible-outline` | `var(--toggle-group-focus-ring) solid 1px` |
  * | `--toggle-group-button-focus-visible-outline-offset` | `-1px` |
- * | `--toggle-group-button-font-size` | `var(--periscope-font-size-small)` |
- * | `--toggle-group-button-font-weight` | `var(--font-weight-normal)` |
+ * | `--toggle-group-button-font-family` | `var(--label-small-400-font-family)` |
+ * | `--toggle-group-button-font-size` | `var(--label-small-400-font-size)` |
+ * | `--toggle-group-button-font-weight` | `var(--label-small-400-font-weight)` |
  * | `--toggle-group-button-gap` | `var(--spacing-3)` |
  * | `--toggle-group-button-hover-background-color` | `var(--toggle-group-internal-background-hover)` |
  * | `--toggle-group-button-hover-color` | `var(--toggle-group-internal-label-hover)` |
  * | `--toggle-group-button-icon-size` | `12px` |
  * | `--toggle-group-button-justify-content` | `center` |
- * | `--toggle-group-button-line-height` | `1` |
+ * | `--toggle-group-button-letter-spacing` | `var(--label-small-400-letter-spacing)` |
+ * | `--toggle-group-button-line-height` | `var(--label-small-400-line-height)` |
  * | `--toggle-group-button-padding-block` | `0` |
  * | `--toggle-group-button-padding-inline` | `var(--toggle-group-internal-button-padding-inline)` |
  * | `--toggle-group-button-pressed-background-color` | `var(--toggle-group-internal-background-pressed)` |
  * | `--toggle-group-button-pressed-color` | `var(--toggle-group-internal-label-pressed)` |
+ * | `--toggle-group-button-text-transform` | `var(--label-small-400-text-transform)` |
  * | `--toggle-group-button-white-space` | `nowrap` |
  * | `--toggle-group-disabled-cursor` | `not-allowed` |
  * | `--toggle-group-disabled-opacity` | `0.6` |
@@ -53,7 +56,7 @@
  * | `--toggle-group-inline-size` | `var(--toggle-group-internal-inline-size, fit-co...` |
  * | `--toggle-group-label-max-inline-size` | `120px` |
  * | `--toggle-group-label-min-inline-size` | `0` |
- * | `--toggle-group-label-overflow` | `hidden` |
+ * | `--toggle-group-label-overflow` | `clip visible` |
  * | `--toggle-group-label-text-overflow` | `ellipsis` |
  * | `--toggle-group-label-white-space` | `nowrap` |
  * | `--toggle-group-list-align-items` | `stretch` |

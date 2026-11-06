@@ -42,7 +42,15 @@ export function TokenRow({ token, showDetails = false }: TokenRowProps) {
 						<CopyButton text={cssVariable} />
 					</div>
 					{token.description && (
-						<Typography size="xs" color="muted" className={styles.tokenDescription}>
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="secondary"
+							as="p"
+							textOverflow="ellipsis"
+							marginTop={1}
+						>
 							{token.description}
 						</Typography>
 					)}

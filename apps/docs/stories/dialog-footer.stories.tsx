@@ -40,7 +40,14 @@ export const Default: Story = {
 					<DialogTitle>Delete this step</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Deleting this step would stop further analytics using this step of the funnel.
 					</Typography>
 				</DialogDescription>

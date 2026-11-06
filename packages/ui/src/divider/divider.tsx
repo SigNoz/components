@@ -77,11 +77,18 @@ type Length = string | number | undefined;
  * @example
  * ```tsx
  * // Between two pieces of inline text
- * <Typography.Text>
+ * <Typography
+ *   variant="paragraph"
+ *   size="base"
+ *   weight="regular"
+ *   color="inherit"
+ *   as="p"
+ *   textOverflow="wrap"
+ * >
  *   Back
  *   <Divider orientation="vertical" />
  *   {metricName}
- * </Typography.Text>
+ * </Typography>
  * ```
  *
  * @example
@@ -92,11 +99,18 @@ type Length = string | number | undefined;
  *
  * @example
  * ```tsx
- * // A label in the middle of the line, styled with Typography
+ * // A label in the middle of the line, styled with Typography, visible so it keeps its one line
  * <Divider>
- *   <Typography.Text color="muted" weight="medium">
+ *   <Typography
+ *     variant="label"
+ *     size="base"
+ *     weight="medium"
+ *     color="secondary"
+ *     as="span"
+ *     textOverflow="visible"
+ *   >
  *     Or get started with these sample alerts
- *   </Typography.Text>
+ *   </Typography>
  * </Divider>
  * ```
  */

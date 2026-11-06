@@ -35,7 +35,7 @@
 		"publint": "0.3.25"
 	},
 	"peerDependencies": {
-		"@signozhq/design-tokens": "^2.1.1",
+		"@signozhq/design-tokens": ">=2.5.0",
 		"tailwindcss": "^4.1.4"
 	}
 }

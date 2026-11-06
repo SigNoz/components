@@ -273,7 +273,14 @@ function Example({
 }): ReactElement {
 	return (
 		<div className={styles.calendarCell}>
-			<Typography size="sm" weight="medium" className={styles.caption}>
+			<Typography
+				as="p"
+				variant="label"
+				size="small"
+				weight="medium"
+				color="inherit"
+				textOverflow="visible"
+			>
 				{title}
 			</Typography>
 			<div className={styles.calendarCard} data-pseudo-states={pseudoStates || undefined}>
@@ -306,10 +313,24 @@ export const CalendarShowcase: Story = {
 		<div className="story-container-full">
 			<div className={styles.columnLayout}>
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="h3"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Selection
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						<code>mode</code> decides what <code>selected</code> holds. A day inside a range is
 						painted from its position in that range, not as a selected day, and the range reads as
 						one band that stops at the edge of each week row and flips with the text direction. With
@@ -366,10 +387,24 @@ export const CalendarShowcase: Story = {
 				</div>
 
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="h3"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Caption and navigation
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The arrows sit over the caption row, one cell wide each. At the edge of{' '}
 						<code>startMonth</code> / <code>endMonth</code> the arrow stays in place and carries{' '}
 						<code>aria-disabled</code>, so it keeps its slot in the layout.
@@ -413,10 +448,24 @@ export const CalendarShowcase: Story = {
 				</div>
 
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="h3"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Grid
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Everything in the grid measures against <code>--calendar-cell-size</code>, the
 						week-number column and the month arrows included.
 					</Typography>
@@ -453,10 +502,24 @@ export const CalendarShowcase: Story = {
 				</div>
 
 				<div className="story-section">
-					<Typography size="base" weight="semibold">
+					<Typography
+						as="h3"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						Day states
 					</Typography>
-					<Typography size="sm">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						<code>hover</code>, <code>focus</code> and <code>active</code> are forced by{' '}
 						<code>storybook-addon-pseudo-states</code> onto the 2nd, 3rd and 4th of the month. The
 						second calendar selects those same three days, so a day keeps its selection colour while

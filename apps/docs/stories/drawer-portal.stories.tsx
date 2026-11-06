@@ -43,7 +43,14 @@ export const Default: Story = {
 						<DrawerTitle>Drawer portal</DrawerTitle>
 					</DrawerHeader>
 					<DrawerDescription>
-						<Typography size="sm">
+						<Typography
+							as="span"
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							textOverflow="wrap"
+						>
 							The portal renders the drawer content and overlay outside the regular DOM tree.
 						</Typography>
 					</DrawerDescription>

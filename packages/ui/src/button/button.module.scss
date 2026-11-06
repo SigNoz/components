@@ -19,9 +19,13 @@
 	background-color: var(--button-internal-background);
 	color: var(--button-internal-solid-foreground);
 	font-variant-numeric: var(--button-font-variant-numeric, slashed-zero);
-	font-weight: var(--button-font-weight, var(--font-weight-medium));
-	// TODO: Convert this hardcoded value to semantic token
-	letter-spacing: var(--button-text-spacing, -0.005em);
+	font-family: var(--button-font-family, var(--button-internal-font-family));
+	font-size: var(--button-font-size, var(--button-internal-font-size));
+	font-weight: var(--button-font-weight, var(--button-internal-font-weight));
+	line-height: var(--button-size-line-height, var(--button-internal-line-height));
+	letter-spacing: var(--button-text-spacing, var(--button-internal-letter-spacing));
+	text-transform: var(--button-text-transform, var(--button-internal-text-transform));
+	font-feature-settings: 'ss01' 1;
 	border-color: var(--button-base-border-color, transparent);
 	border-width: var(--button-base-border-width, 0px);
 	width: var(--button-width, var(--button-internal-width, auto));
@@ -126,7 +130,7 @@
 	&__label {
 		display: var(--button-label-display, block);
 		min-width: var(--button-label-min-width, 0);
-		overflow: var(--button-label-overflow, hidden);
+		overflow: var(--button-label-overflow, clip visible);
 		white-space: var(--button-label-white-space, nowrap);
 
 		&-tooltip {
@@ -315,7 +319,7 @@
 		// `--button-padding`: a link has no padding, so a value scoped for the other variants skips it.
 		padding: 0;
 		background-color: var(--button-variant-link-background-color, transparent);
-		font-weight: var(--button-variant-link-font-weight, var(--font-weight-medium));
+		font-weight: var(--button-variant-link-font-weight, var(--button-font-weight, var(--button-internal-font-weight)));
 		color: var(--button-variant-link-color, var(--button-internal-link-foreground));
 
 		&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
@@ -327,8 +331,13 @@
 	&[data-size='sm'] {
 		--button-internal-height: var(--button-height, 24px);
 		height: var(--button-internal-height);
-		font-size: var(--button-font-size, var(--periscope-font-size-small));
-		line-height: var(--button-size-line-height, 14px);
+
+		--button-internal-font-family: var(--label-small-500-font-family);
+		--button-internal-font-size: var(--label-small-500-font-size);
+		--button-internal-font-weight: var(--label-small-500-font-weight);
+		--button-internal-line-height: var(--label-small-500-line-height);
+		--button-internal-letter-spacing: var(--label-small-500-letter-spacing);
+		--button-internal-text-transform: var(--label-small-500-text-transform);
 
 		--button-internal-icon-size: var(--button-icon-size, 12px);
 		--button-internal-gap: var(--spacing-3);
@@ -350,8 +359,13 @@
 	&[data-size='md'] {
 		--button-internal-height: var(--button-height, 32px);
 		height: var(--button-internal-height);
-		font-size: var(--button-font-size, var(--periscope-font-size-base));
-		line-height: var(--button-size-line-height, 16px);
+
+		--button-internal-font-family: var(--label-base-500-font-family);
+		--button-internal-font-size: var(--label-base-500-font-size);
+		--button-internal-font-weight: var(--label-base-500-font-weight);
+		--button-internal-line-height: var(--label-base-500-line-height);
+		--button-internal-letter-spacing: var(--label-base-500-letter-spacing);
+		--button-internal-text-transform: var(--label-base-500-text-transform);
 
 		--button-internal-icon-size: var(--button-icon-size, 14px);
 		--button-internal-gap: var(--spacing-4);

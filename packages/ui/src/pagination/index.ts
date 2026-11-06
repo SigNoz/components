@@ -34,9 +34,13 @@
  * | `--pagination-control-focus-visible-outline` | `1px solid var(--pagination-focus-ring)` |
  * | `--pagination-control-focus-visible-outline-offset` | `1px` |
  * | `--pagination-control-font` | `inherit` |
+ * | `--pagination-control-font-feature-settings` | `inherit` |
+ * | `--pagination-control-font-variant-numeric` | `inherit` |
  * | `--pagination-control-hover-color` | `var(--pagination-label-hover)` |
  * | `--pagination-control-justify-content` | `center` |
+ * | `--pagination-control-letter-spacing` | `inherit` |
  * | `--pagination-control-margin` | `0` |
+ * | `--pagination-control-text-transform` | `inherit` |
  * | `--pagination-control-transition-duration` | `150ms` |
  * | `--pagination-control-transition-property` | `color` |
  * | `--pagination-control-transition-timing-function` | `ease` |
@@ -51,17 +55,18 @@
  * | `--pagination-divider-flex` | `0 0 auto` |
  * | `--pagination-divider-inline-size` | `1px` |
  * | `--pagination-focus-ring` | `-` |
+ * | `--pagination-font-family` | `var(--label-base-400-font-family)` |
  * | `--pagination-font-feature-settings` | `'ss01'` |
- * | `--pagination-font-size` | `var(--periscope-font-size-base)` |
+ * | `--pagination-font-size` | `var(--label-base-400-font-size)` |
  * | `--pagination-font-variant-numeric` | `slashed-zero lining-nums tabular-nums` |
- * | `--pagination-font-weight` | `var(--periscope-font-weight-regular)` |
+ * | `--pagination-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--pagination-gap` | `var(--spacing-8)` |
  * | `--pagination-inline-size` | `100%` |
  * | `--pagination-justify-content` | `var(--pagination-internal-justify-content)` |
  * | `--pagination-label` | `-` |
  * | `--pagination-label-hover` | `-` |
- * | `--pagination-letter-spacing` | `-0.005em` |
- * | `--pagination-line-height` | `1` |
+ * | `--pagination-letter-spacing` | `var(--label-base-400-letter-spacing)` |
+ * | `--pagination-line-height` | `var(--label-base-400-line-height)` |
  * | `--pagination-min-inline-size` | `0` |
  * | `--pagination-padding-block` | `var(--spacing-4)` |
  * | `--pagination-padding-inline-end` | `var(--pagination-internal-padding-inline-end)` |
@@ -99,6 +104,7 @@
  * | `--pagination-separator-line-border-radius` | `var(--radius-round)` |
  * | `--pagination-separator-line-display` | `block` |
  * | `--pagination-separator-line-inline-size` | `100%` |
+ * | `--pagination-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--pagination-total-color` | `var(--pagination-label)` |
  * | `--pagination-total-display` | `grid` |
  * | `--pagination-total-flex` | `0 1 auto` |

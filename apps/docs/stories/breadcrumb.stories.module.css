@@ -6,7 +6,6 @@
 }
 
 .sectionNote {
-	color: var(--muted-foreground);
 	margin-bottom: 16px;
 	max-width: 60rem;
 }
@@ -17,11 +16,6 @@
 	gap: 24px;
 	align-items: flex-start;
 	width: 100%;
-}
-
-.caption {
-	color: var(--muted-foreground);
-	white-space: nowrap;
 }
 
 /* A dashed outline shows how much room each trail was given. Drag the corner to change it. */
@@ -56,13 +50,4 @@
 	justify-items: start;
 	overflow-x: auto;
 	padding-bottom: 4px;
-}
-
-.matrixLabel {
-	white-space: nowrap;
-}
-
-/* The fake router shows where its last click went. */
-.location {
-	color: var(--muted-foreground);
 }

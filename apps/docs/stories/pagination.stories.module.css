@@ -11,10 +11,6 @@
   align-self: stretch;
 }
 
-.caption {
-  white-space: nowrap;
-}
-
 .matrix {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);

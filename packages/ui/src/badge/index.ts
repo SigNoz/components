@@ -35,9 +35,10 @@
  * | `--badge-danger-outlined-color` | `var(--badge-danger-outlined-label)` |
  * | `--badge-danger-outlined-label` | `-` |
  * | `--badge-display` | `inline-flex` |
- * | `--badge-font-size` | `var(--periscope-font-size-small)` |
+ * | `--badge-font-family` | `var(--badge-internal-font-family)` |
+ * | `--badge-font-size` | `var(--badge-internal-font-size)` |
  * | `--badge-font-variant-numeric` | `slashed-zero` |
- * | `--badge-font-weight` | `var(--font-weight-medium)` |
+ * | `--badge-font-weight` | `var(--badge-internal-font-weight)` |
  * | `--badge-gap` | `var(--spacing-2)` |
  * | `--badge-height` | `var(--spacing-10)` |
  * | `--badge-highlight-danger-background` | `-` |
@@ -65,12 +66,12 @@
  * | `--badge-label-gap` | `var(--spacing-2)` |
  * | `--badge-label-justify-content` | `var(--badge-internal-justify-content, flex-start)` |
  * | `--badge-label-min-width` | `0` |
- * | `--badge-label-overflow` | `hidden` |
+ * | `--badge-label-overflow` | `clip visible` |
  * | `--badge-label-text-overflow` | `ellipsis` |
  * | `--badge-label-tooltip-max-width` | `20rem` |
  * | `--badge-label-white-space` | `nowrap` |
- * | `--badge-letter-spacing` | `var(--badge-internal-letter-spacing, 0.04em)` |
- * | `--badge-line-height` | `var(--line-height-18)` |
+ * | `--badge-letter-spacing` | `var(--badge-internal-letter-spacing)` |
+ * | `--badge-line-height` | `var(--badge-internal-line-height)` |
  * | `--badge-max-width` | `var(--badge-internal-max-width, min(100%, 7.5rem))` |
  * | `--badge-min-width` | `var(--badge-internal-min-width, auto)` |
  * | `--badge-outlined-background-color` | `var(--badge-internal-outlined-background)` |

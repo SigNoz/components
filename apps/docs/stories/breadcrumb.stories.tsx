@@ -106,7 +106,14 @@ function Case({
 }): ReactElement {
 	return (
 		<div className="story-section-sm">
-			<Typography size="sm" className={styles.caption}>
+			<Typography
+				variant="label"
+				size="small"
+				weight="regular"
+				color="secondary"
+				as="span"
+				textOverflow="visible"
+			>
 				{caption}
 			</Typography>
 			<Frame width={width}>{children}</Frame>
@@ -127,12 +134,28 @@ function ShowcaseSection({
 }): ReactElement {
 	return (
 		<div className={className === undefined ? 'story-section' : `story-section ${className}`}>
-			<Typography size="base" weight="semibold">
+			<Typography
+				variant="paragraph"
+				size="base"
+				weight="bold"
+				color="inherit"
+				as="p"
+				textOverflow="wrap"
+			>
 				{title}
 			</Typography>
-			<Typography size="sm" className={styles.sectionNote}>
-				{note}
-			</Typography>
+			<div className={styles.sectionNote}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+				>
+					{note}
+				</Typography>
+			</div>
 			{children}
 		</div>
 	);
@@ -339,7 +362,14 @@ function RouterLinks(): ReactElement {
 	return (
 		<NavigateContext.Provider value={setLocation}>
 			<div className={styles.stack}>
-				<Typography size="sm" className={styles.location}>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="secondary"
+					as="p"
+					textOverflow="wrap"
+				>
 					Location: <span data-testid="router-location">{location}</span>
 				</Typography>
 				<Case caption="720px: every crumb but the current page is a router link" width="720px">
@@ -373,13 +403,28 @@ function BreadcrumbShowcaseLayout(): ReactElement {
 					<div className={styles.matrix}>
 						<span />
 						{KIND_STATES.map((state) => (
-							<Typography key={state} size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								key={state}
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{state}
 							</Typography>
 						))}
 						{KIND_ROWS.map(({ name, item }) => (
 							<Fragment key={name}>
-								<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+								<Typography
+									variant="label"
+									size="small"
+									weight="medium"
+									color="inherit"
+									as="span"
+									textOverflow="visible"
+								>
 									{name}
 								</Typography>
 								{KIND_STATES.map((state) => (

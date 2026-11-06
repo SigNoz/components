@@ -17,12 +17,22 @@ The slider has no visible label. Name it with `aria-labelledby`, pointing at the
 or with `aria-label`. A `<label htmlFor>` does not work, since the input id is internal.
 
 ```tsx
-import { Slider } from '@signozhq/ui';
+import { Slider, Typography } from '@signozhq/ui';
 
 export default function FillOpacity({ opacity, setOpacity }) {
 	return (
 		<>
-			<Typography.Text id="opacity-label">Fill opacity</Typography.Text>
+			<Typography
+				variant="label"
+				size="base"
+				weight="regular"
+				color="inherit"
+				as="span"
+				textOverflow="wrap"
+				id="opacity-label"
+			>
+				Fill opacity
+			</Typography>
 			<Slider
 				color="primary"
 				min={0}
@@ -152,11 +162,31 @@ A row that prints the value next to the slider owns that layout:
 
 ```tsx
 <div className="config-row">
-	<Typography.Text id="opacity-label">Fill opacity</Typography.Text>
+	<Typography
+		variant="label"
+		size="base"
+		weight="regular"
+		color="inherit"
+		as="span"
+		textOverflow="wrap"
+		id="opacity-label"
+	>
+		Fill opacity
+	</Typography>
 	<div className="config-slider">
 		<Slider color="primary" value={opacity} onChange={setOpacity} aria-labelledby="opacity-label" />
 	</div>
-	<Typography.Text>{opacity.toFixed(2)}</Typography.Text>
+	<Typography
+		variant="label"
+		size="base"
+		weight="regular"
+		color="inherit"
+		as="span"
+		textOverflow="wrap"
+		tabularNumbers
+	>
+		{opacity.toFixed(2)}
+	</Typography>
 </div>
 ```
 

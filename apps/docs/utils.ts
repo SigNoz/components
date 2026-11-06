@@ -1,4 +1,4 @@
-import { colorTokens, spacingTokens, typographyTokens } from '@signozhq/design-tokens';
+import { colorTokens, spacingTokens } from '@signozhq/design-tokens';
 
 // Extracted types
 type ColorToken = {
@@ -19,20 +19,6 @@ type SpacingToken = {
 
 type SpacingTokens = {
 	padding: Record<string, SpacingToken>;
-};
-
-type TypographyToken = {
-	value: string;
-};
-
-type TypographyTokens = {
-	fontSize: Record<string, TypographyToken>;
-	fontWeight: Record<string, TypographyToken>;
-};
-
-type TransformedTypography = {
-	FONTSIZE: Record<string, string>;
-	FONTWEIGHT: Record<string, string>;
 };
 
 /**
@@ -105,60 +91,3 @@ function transformSpacingTokens(spacingTokens: SpacingTokens): Record<string, st
 }
 
 export const getTransformedSpacingTokens = () => transformSpacingTokens(spacingTokens);
-
-/**
- * Transforms typography tokens into a structured format.
- * @param typographyTokens - The typography tokens object to transform.
- * @returns An object containing FONTSIZE and FONTWEIGHT records.
- */
-/**
- * Retrieves and transforms spacing tokens.
- * @returns Transformed spacing tokens.
- */
-/**
- * transformTypographyTokens
- * Input:
- * {
- *   fontSize: {
- *     small: { value: "12px" },
- *     medium: { value: "16px" }
- *   },
- *   fontWeight: {
- *     regular: { value: "400" },
- *     bold: { value: "700" }
- *   }
- * }
- *
- * Output:
- * {
- *   FONTSIZE: {
- *     SMALL: "12px",
- *     MEDIUM: "16px"
- *   },
- *   FONTWEIGHT: {
- *     REGULAR: "400",
- *     BOLD: "700"
- *   }
- * }
- */
-function transformTypographyTokens(typographyTokens: TypographyTokens): TransformedTypography {
-	// Helper function to transform a specific property
-	const transformProperty = (property: 'fontSize' | 'fontWeight') =>
-		Object.fromEntries(
-			Object.entries(typographyTokens[property]).map(([key, { value }]) => [
-				key.toUpperCase(),
-				value,
-			]),
-		);
-
-	return {
-		FONTSIZE: transformProperty('fontSize'),
-		FONTWEIGHT: transformProperty('fontWeight'),
-	};
-}
-
-/**
- * Retrieves and transforms typography tokens.
- * @returns Transformed typography tokens.
- */
-export const getTransformedTypographyTokens = () => transformTypographyTokens(typographyTokens);

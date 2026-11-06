@@ -44,7 +44,14 @@ export const Default: Story = {
 					<DialogTitle>Dialog content</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						This story focuses on the DialogContent surface and its layout-related props.
 					</Typography>
 				</DialogDescription>

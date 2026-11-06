@@ -228,7 +228,15 @@ function MatrixHeader({ columns }: { columns: string[] }): ReactElement {
 		<>
 			<span />
 			{columns.map((column) => (
-				<Typography size="sm" weight="medium" key={column} className={styles.matrixLabel}>
+				<Typography
+					key={column}
+					variant="label"
+					size="small"
+					weight="medium"
+					color="inherit"
+					as="span"
+					textOverflow="visible"
+				>
 					{column}
 				</Typography>
 			))}
@@ -259,10 +267,24 @@ export const SwitchShowcase: Story = {
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					States
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					One row per color, one column per state, each cell off then on. The off track is the same
 					neutral for every color, an unchecked switch has nothing to announce yet. Hover widens the
 					knob into a pill. Disabled fades to 0.6, read-only to 0.8.
@@ -274,7 +296,14 @@ export const SwitchShowcase: Story = {
 					<MatrixHeader columns={[...STATES]} />
 					{COLORS.map((color) => (
 						<Fragment key={color}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{color}
 							</Typography>
 							{STATES.map((state) => (
@@ -286,10 +315,24 @@ export const SwitchShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Label
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The label is part of the hit target: clicking it toggles, hovering it morphs the knob.
 					<code>textPlacement="right"</code> hugs its content; <code>textPlacement="left"</code>{' '}
 					fills the row and parks the switch at the far edge.
@@ -305,10 +348,24 @@ export const SwitchShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					The settings row
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					<code>textPlacement="left"</code> on its own: the row fills its container and the switch
 					sits at the far edge, the shape two dozen consumer stylesheets used to hand-roll.
 				</Typography>
@@ -325,10 +382,24 @@ export const SwitchShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Overflow
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Capped at <code>{CONSTRAINED_WIDTH}</code>. <code>ellipsis</code> shows the full label in
 					a tooltip on hover, <code>wrap</code> takes a second line, <code>hidden</code> clips, and
 					<code>visible</code> paints past the cap.
@@ -336,7 +407,14 @@ export const SwitchShowcase: Story = {
 				<div className={`${styles.overflowGrid} ${styles.marginTopMedium}`}>
 					{Object.values(SwitchTextOverflow).map((textOverflow) => (
 						<Fragment key={textOverflow}>
-							<Typography size="sm" weight="medium" className={styles.matrixLabel}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
 								{textOverflow}
 							</Typography>
 							<Switch
@@ -355,10 +433,24 @@ export const SwitchShowcase: Story = {
 			</div>
 
 			<div className="story-section">
-				<Typography size="base" weight="semibold">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					Bare
 				</Typography>
-				<Typography size="sm">
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
 					With no children there is no wrapper element at all, the switch is its own flex item. Name
 					it with <code>aria-label</code>.
 				</Typography>

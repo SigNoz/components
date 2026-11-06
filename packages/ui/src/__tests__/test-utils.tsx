@@ -1,4 +1,5 @@
 import { act } from '@testing-library/react';
+import { onTestFinished } from 'vitest';
 
 /**
  * jsdom has no layout, so every element measures 0x0 and no label ever reads as
@@ -93,4 +94,31 @@ export function resetLabelMeasurement(): void {
  */
 export function queryOpenTooltip(): HTMLElement | null {
 	return document.querySelector('[data-slot="tooltip-content"][data-open]');
+}
+
+export const SENTINEL_FONT = {
+	fontFamily: 'monospace',
+	fontSize: '17px',
+	fontWeight: '700',
+	lineHeight: '23px',
+	letterSpacing: '3px',
+};
+
+/** Declares tokens on `:root` for the current test only. */
+export function setTokens(declarations: string): void {
+	const sheet = document.createElement('style');
+	sheet.textContent = `:root { ${declarations} }`;
+	document.head.append(sheet);
+	onTestFinished(() => sheet.remove());
+}
+
+/** Points every property of a text style at a font no default produces, for the current test only. */
+export function setTextStyle(style: string, font = SENTINEL_FONT): void {
+	setTokens(`
+		--${style}-font-family: ${font.fontFamily};
+		--${style}-font-size: ${font.fontSize};
+		--${style}-font-weight: ${font.fontWeight};
+		--${style}-line-height: ${font.lineHeight};
+		--${style}-letter-spacing: ${font.letterSpacing};
+	`);
 }

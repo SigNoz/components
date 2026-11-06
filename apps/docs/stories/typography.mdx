@@ -1,11 +1,14 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as TypographyStories from './typography.stories';
+import * as TypographyComponentsStories from './typography-components.stories';
 
 <Meta of={TypographyStories} />
 
 # Typography
 
-A flexible Typography component for rendering text with consistent sizing, weight, alignment, and truncation. Supports two variants: `title` (heading) and `text` (body).
+Text in one of the 33 Periscope text styles. The style, the color, the element and the overflow
+are all required, so every call site says how its text looks and behaves. There is no `className`
+and no `style`: every font property and the layout come from props.
 
 ## How to use
 
@@ -13,78 +16,237 @@ A flexible Typography component for rendering text with consistent sizing, weigh
 import { Typography } from '@signozhq/ui';
 
 export default function MyComponent() {
-	return <Typography>Hello World</Typography>;
+	return (
+		<Typography
+			variant="paragraph"
+			size="base"
+			weight="regular"
+			color="main"
+			as="p"
+			textOverflow="wrap"
+		>
+			Data is kept for 15 days, then archived.
+		</Typography>
+	);
 }
 ```
 
-This code above will render the following typography:
-
 <Primary />
+
+## Text styles
+
+`variant`, `size` and `weight` together are the Figma style name: `variant="label" size="base"
+weight="medium"` is `Label / Base / 500`.
+
+| `variant`   | For                                                     | Sizes                              |
+| ----------- | ------------------------------------------------------- | ---------------------------------- |
+| `label`     | One line of interface text next to a control or an icon | `small`, `base`, `medium`, `large` |
+| `paragraph` | Text that can wrap                                      | `small`, `base`, `medium`          |
+| `uppercase` | Section and column headers                              | `small`, `base`                    |
+| `code`      | Values such as ids, queries and keys, in the mono font  | `small`, `base`                    |
+
+`weight` is `regular` (400), `medium` (500) or `bold` (600). The types reject a size a variant does
+not have, such as a `large` paragraph.
+
+`uppercase` changes the case with CSS only, so a screen reader reads the words as written.
+
+## Colors
+
+`color` takes the color names of Badge, and each hue draws in the label color of an outlined badge
+of the same color. `main` is the color of body text, `secondary` the secondary text color and
+`tertiary` the least important one. `inherit` takes the color of the parent element, so text inside
+a Callout or an Alert Strip follows it.
+
+## Element and display
+
+`as` picks the element and its meaning, never its look. A heading is `as="h2"`, or the level the page
+outline needs, with the size and weight the design asks for. A `large` text is not a heading unless
+`as` says so. Headings, paragraphs and list items render with no margin.
+
+`display` follows `as` when it is not set: `span`, `label` and `code` are inline, the other elements
+are blocks. A block `li` stays a list item, so it keeps its marker. An inline text has no box, so the types reject `align`, `width`, `minWidth`,
+`maxWidth`, the margin and padding props and the `hidden` and `ellipsis` overflows on it. Set
+`display` to `block`, `inline-block`, `flex` or `inline-flex`, or render a block element, to use
+them. `inline-block` keeps the text in the line, such as a label with a fixed width before a
+control.
+
+```tsx
+<Typography
+	variant="label"
+	size="base"
+	weight="medium"
+	color="main"
+	as="span"
+	display="block"
+	maxWidth={240}
+	textOverflow="ellipsis"
+>
+	{service.name}
+</Typography>
+```
+
+`flex` and `inline-flex` lay out the children in one row, such as an icon and the text. `gap` sets
+the space between them and `verticalAlign` their vertical alignment, centered by default. Each run
+of text sits in its own span, so with `ellipsis` the icon stays whole and only the text cuts. A
+`Typography` or `Typography.Link` inside it shrinks and cuts on its own overflow.
+
+```tsx
+<Typography
+	variant="label"
+	size="base"
+	weight="medium"
+	color="danger"
+	as="span"
+	display="inline-flex"
+	gap={2}
+	textOverflow="visible"
+>
+	<SolidAlertCircle size={12} />
+	Failed
+</Typography>
+```
+
+`margin`, `padding` and `gap` take steps of the spacing scale, each 2px: `margin={4}` is 8px. One
+prop per side, or per axis, wins over the one for all sides: `marginX` and `marginY` win over
+`margin`, and `marginTop`, `marginRight`, `marginBottom` and `marginLeft` win over both. Padding
+works the same way. A margin also takes `auto`, which pushes the text to the end of a flex row.
+
+```tsx
+<Typography
+	variant="label"
+	size="base"
+	weight="bold"
+	color="main"
+	as="h3"
+	margin={2}
+	marginBottom={6}
+	textOverflow="wrap"
+>
+	Retention
+</Typography>
+```
+
+## Overflow
+
+`textOverflow` is required, so every text says what happens when it is longer than its box.
+
+- `wrap` breaks the lines at spaces, and a word longer than the line, such as an id or a URL, at any
+  character.
+- `visible` keeps one line that overflows its parent.
+- `hidden` keeps one line and cuts it at the edge, with no ellipsis and no tooltip. Use it only where
+  the full text shows somewhere else on the screen.
+- `ellipsis` cuts the text with `…` after `maxLines` lines, one by default. Only `paragraph` goes
+  past one line: `label`, `uppercase` and `code` have a line height of 1, so a second line would
+  run into the first.
+
+While an `ellipsis` text is cut, hovering it opens a tooltip with the full text. The full text stays
+in the page, so a screen reader reads all of it and a copy returns all of it. The cut is always at
+the end.
+
+## Numbers
+
+Digits are proportional in every style. `tabularNumbers` gives every digit the same width, for
+digits that change in place or line up: table columns, chart axes, timers, live counts and
+durations. Put it on the number only and keep the unit outside, since it also gives the space, the
+comma and the period a fixed width.
+
+```tsx
+<Typography
+	variant="paragraph"
+	size="base"
+	weight="regular"
+	color="main"
+	as="p"
+	textOverflow="wrap"
+>
+	Showing{' '}
+	<Typography
+		variant="paragraph"
+		size="base"
+		weight="regular"
+		color="inherit"
+		as="span"
+		textOverflow="wrap"
+		tabularNumbers
+	>
+		{count}
+	</Typography>{' '}
+	of 5,000 logs
+</Typography>
+```
+
+`slashedZero` draws `0` with a slash, so it does not read as the letter `O`. Use it only on ids,
+hashes and codes.
+
+## Nested text
+
+A `Typography` inside another one states its own style, color, element and overflow. Nothing passes
+down from the parent, except the color through `color="inherit"`. A bold word inside a sentence
+repeats the style of the sentence and changes only `weight`.
+
+## Typography.Link
+
+A navigation inside a sentence or next to text. It takes the style, number and layout props of
+`Typography` and the link props of `Callout.Link`. It draws in the link color, and the hover
+underlines it. There is no `color` and no `as`.
+
+```tsx
+<Typography
+	variant="paragraph"
+	size="base"
+	weight="regular"
+	color="main"
+	as="p"
+	textOverflow="wrap"
+>
+	Read the{' '}
+	<Typography.Link
+		variant="paragraph"
+		size="base"
+		weight="regular"
+		textOverflow="wrap"
+		href="https://signoz.io/docs"
+		target="_blank"
+	>
+		docs
+	</Typography.Link>
+	.
+</Typography>
+```
+
+The link is inline, so it takes the box props with `display`, the same as an inline `Typography`.
+It is a tab stop with a focus ring, and `Enter` follows it. A `_blank` target adds `noopener` and
+`noreferrer` to `rel`.
+
+A router link goes through `render`: `render={<Link to="/settings" />}` renders it, so the click is a
+client-side navigation and a modified click still opens a new tab. A prop set on the `render`
+element wins, and its `onClick` runs before the one of the link.
+
+A link with neither `href` nor a destination on the `render` element renders plain text and warns on
+the console. A link with no text warns too, unless it has an `aria-label`.
+
+Clickable text that does not navigate is a `Button` with `variant="link"`, not a link.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the element:
+
+| Element         | `data-testid`     |
+| --------------- | ----------------- |
+| text            | `` `${testId}` `` |
+| Typography.Link | `` `${testId}` `` |
+
+The text carries `data-variant`, `data-size`, `data-weight`, `data-color`, `data-text-overflow` and
+`data-display` (the display it renders with, including the one that comes from `as`). `data-truncated`
+is present only while an `ellipsis` text is cut. A `flex` text wraps each run of text in a
+`typography-text` slot. `Typography.Link` carries the same attributes, except `data-color`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Typography Props
 
 <Controls of={TypographyStories.Playground} />
 
-## Variants
+## Typography.Link Props
 
-### Title variant
-
-Use `variant="title"` for headings. It renders as `<h2>` by default with bold weight. Combine with `as` to control the heading level.
-
-```tsx
-<Typography variant="title" as="h1" size="5xl">
-	Main Heading
-</Typography>
-```
-
-### Text variant
-
-The default `variant="text"` renders as `<p>`. Use `as` to render as `<span>`, `<div>`, or `<label>`.
-
-```tsx
-<Typography size="lg">This is a paragraph of body text.</Typography>
-```
-
-## Sizes
-
-Available sizes: `xs` | `sm` | `base` | `lg` | `xl` | `2xl` | `3xl` | `4xl` | `5xl` | `6xl` | `7xl` | `8xl` | `9xl`
-
-```tsx
-<Typography size="xs">Extra small</Typography>
-<Typography size="base">Base (default)</Typography>
-<Typography size="4xl">Extra large</Typography>
-```
-
-## Weights
-
-Available weights: `thin` | `extralight` | `light` | `normal` | `medium` | `semibold` | `bold` | `extrabold` | `black`
-
-```tsx
-<Typography weight="thin">Thin - 100</Typography>
-<Typography weight="normal">Normal - 400</Typography>
-<Typography weight="bold">Bold - 700</Typography>
-```
-
-## Truncation
-
-Use `truncate` to clamp text after N lines with an ellipsis.
-
-```tsx
-<Typography truncate={2}>This long text will be clamped to 2 lines...</Typography>
-```
-
-## Muted state
-
-Use `muted` for secondary text like captions or helper text.
-
-```tsx
-<Typography muted>Helper text or captions</Typography>
-```
-
-## Alignment
-
-Control text alignment with the `align` prop.
-
-```tsx
-<Typography align="center" size="xl">
-	Centered text
-</Typography>
-```
+<Controls of={TypographyComponentsStories.Link} />

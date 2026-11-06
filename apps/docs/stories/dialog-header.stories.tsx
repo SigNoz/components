@@ -39,7 +39,14 @@ export const Default: Story = {
 					<DialogTitle>Dialog header</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					<Typography size="sm">
+					<Typography
+						as="span"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
 						The header typically contains the title and optional actions.
 					</Typography>
 				</DialogDescription>
