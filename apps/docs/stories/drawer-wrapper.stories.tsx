@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './drawer-wrapper.stories.module.css';
 import { wrapperArgTypes } from './shared/dialog-drawer-arg-types.js';
 
-const { width, titleIcon, ...sharedWrapperArgTypes } = wrapperArgTypes ?? {};
+const { width, ...sharedWrapperArgTypes } = wrapperArgTypes ?? {};
 
 const meta: Meta<typeof DrawerWrapper> = {
 	title: 'Composed Components/Drawer/DrawerWrapper',
@@ -81,10 +81,10 @@ const meta: Meta<typeof DrawerWrapper> = {
 		},
 		closeButtonProps: {
 			control: 'object',
-			description: 'Props passed to the DialogCloseButton component.',
+			description: 'Props passed to the DrawerCloseButton component.',
 			table: {
 				category: 'Sub-component Props',
-				type: { summary: "Omit<DialogCloseButtonProps, 'onClick'>" },
+				type: { summary: "Omit<DrawerCloseButtonProps, 'onClick'>" },
 			},
 		},
 	},

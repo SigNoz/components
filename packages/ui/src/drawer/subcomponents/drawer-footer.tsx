@@ -1,7 +1,16 @@
 import * as React from 'react';
-import { DialogFooter, type DialogFooterProps } from '../../dialog/index.js';
+import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
 
-export type DrawerFooterProps = DialogFooterProps;
+export type DrawerFooterProps = Pick<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className' | 'style' | 'children'
+> & {
+	/**
+	 * Test ID for the drawer footer.
+	 */
+	testId?: string;
+};
 
 /**
  * Bottom action area of the drawer, typically used for primary and
@@ -28,8 +37,15 @@ export type DrawerFooterProps = DialogFooterProps;
  * </Drawer>
  * ```
  */
-export const DrawerFooter = React.forwardRef<
-	React.ElementRef<typeof DialogFooter>,
-	DrawerFooterProps
->((props, ref) => <DialogFooter ref={ref} data-slot="drawer-footer" {...props} />);
+export const DrawerFooter = React.forwardRef<HTMLDivElement, DrawerFooterProps>(
+	({ className, testId, ...props }, ref) => (
+		<div
+			ref={ref}
+			data-slot="drawer-footer"
+			data-testid={testId}
+			className={cn(styles.drawer__footer, className)}
+			{...props}
+		/>
+	),
+);
 DrawerFooter.displayName = 'DrawerFooter';
