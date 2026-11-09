@@ -224,3 +224,16 @@
 	--button-display: flex;
 	--button-justify-content: flex-start;
 }
+
+/* `Popover.Trigger`: a row of services that share one card. */
+.serviceRow {
+	display: flex;
+	gap: 1rem;
+}
+
+.serviceCard {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 0.75rem;
+}

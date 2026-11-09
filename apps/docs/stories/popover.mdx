@@ -1,5 +1,6 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as PopoverStories from './popover.stories';
+import * as PopoverComponentsStories from './popover-components.stories';
 
 <Meta of={PopoverStories} />
 
@@ -95,6 +96,52 @@ popover then serves every row, moving and swapping its content instead of mounti
 
 A handle and a trigger can coexist: the handle owns the open state, so a press and a `showAt`
 cannot disagree, and `close()` works whichever of them opened it.
+
+## One popup, many triggers
+
+`Popover.Trigger` connects any element in the tree to the popover its `handle` is passed to. Every
+trigger of one handle opens the same popup: it moves to the trigger the pointer or the focus is on
+and swaps its content for that trigger's `payload`, sliding the old content out and the new one in
+while the popup grows or shrinks to it. `handle.openTrigger(id)` opens it for a trigger from code.
+
+```tsx
+import { Popover, usePopoverHandle } from '@signozhq/ui';
+
+export default function ServiceLinks({ services }) {
+	const card = usePopoverHandle<Service>();
+
+	return (
+		<>
+			{services.map((service) => (
+				<Popover.Trigger
+					key={service.id}
+					handle={card}
+					payload={service}
+					nativeButton={false}
+					preview
+				>
+					<a href={service.href}>{service.name}</a>
+				</Popover.Trigger>
+			))}
+			<Popover handle={card} side="bottom" align="start">
+				{(service) => <ServiceSummary service={service} />}
+			</Popover>
+		</>
+	);
+}
+```
+
+- A trigger opens the popup on a press, and with `openOnHover` on hover as well.
+- A `preview` trigger opens a card about its element instead: on hover and on the keyboard focus,
+  never on a press. The element keeps its role, its tab stop and its click, and the popup has no
+  role and no name, takes no focus and carries `data-preview`. A press on it closes a popup that
+  another trigger opened.
+- `children` is the element, with the trigger's props merged in. Its `id` is the one `openTrigger`
+  takes.
+- The popup a `Popover.Trigger` opens goes where `showAt` would put it: the trigger is its anchor.
+  `Breadcrumb` builds its crumb cards and its `...` list on it.
+
+<Controls of={PopoverComponentsStories.Trigger} />
 
 ## Placement
 
