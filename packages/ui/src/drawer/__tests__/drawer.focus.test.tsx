@@ -182,6 +182,23 @@ describe('Drawer initial focus', () => {
 	);
 
 	it.each(TYPES)(
+		'reaches the close button first with Tab from the panel of a %s with closePosition="start"',
+		async (type) => {
+			await renderOpenDrawer({
+				type,
+				closePosition: 'start',
+				headerPrefix: <button type="button">Previous</button>,
+				headerSuffix: <button type="button">Copy link</button>,
+			});
+			await waitFor(() => {
+				expect(drawerPanel()).toHaveFocus();
+			});
+
+			expect(await tabNames(4)).toEqual(['Close', 'Previous', 'Copy link', 'Name']);
+		},
+	);
+
+	it.each(TYPES)(
 		'focuses the element an initialFocus ref names on a %s, and goes back to the opener on close',
 		async (type) => {
 			render(<RefHarness type={type} pin="initialFocus" />);

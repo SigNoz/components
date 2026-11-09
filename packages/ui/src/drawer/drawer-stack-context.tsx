@@ -1,6 +1,7 @@
 import { createContext, type ReactNode, useContext } from 'react';
 import type { BreadcrumbEllipsisOptions } from '../breadcrumb/types.js';
 import type {
+	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerCrumbType,
 	DrawerStackType,
@@ -54,6 +55,11 @@ export type DrawerStackContextValue = {
 	 * drawer of a breadcrumb trail.
 	 */
 	trailEllipsis: BreadcrumbEllipsisOptions | undefined;
+	/**
+	 * The `closePosition` of the first drawer of the trail, which places the close button of every
+	 * drawer of a breadcrumb trail.
+	 */
+	trailClosePosition: DrawerClosePositionType;
 	/**
 	 * Called by a nested drawer while it is open. The drawer takes no input until every cleanup it
 	 * returned has run.

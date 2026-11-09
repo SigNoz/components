@@ -3,7 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { type ReactNode, useState } from 'react';
 import { expect } from 'vitest';
 import { Drawer } from '../drawer.js';
-import type { DrawerCloseReasonType, DrawerTypeType, DrawerWidthType } from '../types.js';
+import type {
+	DrawerClosePositionType,
+	DrawerCloseReasonType,
+	DrawerTypeType,
+	DrawerWidthType,
+} from '../types.js';
 
 export {
 	isOnTop,
@@ -23,6 +28,7 @@ export type DrawerHarnessProps = {
 	titlePrefix?: ReactNode;
 	titleSuffix?: ReactNode;
 	headerSuffix?: ReactNode;
+	closePosition?: DrawerClosePositionType;
 	description?: ReactNode;
 	footerPrefix?: ReactNode;
 	footerSuffix?: ReactNode;

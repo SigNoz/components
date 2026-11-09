@@ -156,7 +156,7 @@ const logDetails = useDrawerHandle<LogRow>();
 
 ## Header
 
-The header is one row of slots, in this order, with the close button always last:
+The header is one row of slots, in this order, with the close button last:
 
 | Slot           | Holds                                                                                                  |
 | -------------- | ------------------------------------------------------------------------------------------------------ |
@@ -169,6 +169,11 @@ The header is one row of slots, in this order, with the close button always last
 Use `size="sm"` buttons with an `aria-label` in the header. ↑/↓ are disabled, not hidden, at the
 ends of the list. Saving and deleting belong to the footer of a `task`. Facts about the record, such
 as its status or namespace, go in the body, not next to the title.
+
+`closePosition="start"` puts the close button first instead, before `headerPrefix` and the title,
+for a page whose drawers close from the start edge. It moves in the keyboard order too. A drawer of
+a breadcrumb trail takes the `closePosition` of the first drawer of the trail, so the button stays
+put while the user drills down.
 
 ## Footer
 
@@ -378,8 +383,8 @@ The panel carries `data-type`, `data-width`, `data-open` while open and `data-cl
 runs, `data-swiping` while a swipe drags it, and `data-loading` with `aria-busy="true"` while
 `loading`. A drawer declared inside another carries `data-nested`, valued `overlay` or `breadcrumb`
 by the outer drawer's `stack`, and a drawer with another one open over it carries `data-covered`,
-valued by its own `stack`. Drawers portal to `document.body`, or to `container`, so query the
-document, not the canvas.
+valued by its own `stack`. The header carries `data-close-position`, `start` or `end`. Drawers
+portal to `document.body`, or to `container`, so query the document, not the canvas.
 
 Otherwise use the `data-slot` attributes, never the hashed class names.
 

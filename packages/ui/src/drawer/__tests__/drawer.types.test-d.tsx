@@ -13,6 +13,7 @@ import type { DialogCloseReasonType, NoHandle } from '../../dialog/types.js';
 import { PopupHandle } from '../../lib/popup-handle.js';
 import { Drawer } from '../drawer.js';
 import type {
+	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerHandleType,
 	DrawerProps,
@@ -183,6 +184,20 @@ describe('Drawer props', () => {
 		);
 		assertType(
 			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" width="entity">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts both close positions', () => {
+		expectTypeOf<DrawerClosePositionType>().toEqualTypeOf<'start' | 'end'>();
+		assertType(
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" closePosition="start">
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" closePosition="end">
 				Body
 			</Drawer>,
 		);
@@ -573,6 +588,15 @@ describe('Drawer value types', () => {
 		assertType(
 			// @ts-expect-error - `type` is `inspector` or `task`
 			<Drawer type="modal" stack="overlay" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects a closePosition that is not start or end', () => {
+		assertType(
+			// @ts-expect-error - the close button sits at the `start` or the `end` of the header
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" closePosition="left">
 				Body
 			</Drawer>,
 		);

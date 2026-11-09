@@ -161,6 +161,17 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 			'The end of the header, before the close button: one kind of action (up to two icon buttons, one text button or a time picker) and a `⋯` menu for the rest. Use `size="sm"` buttons. Saving and deleting belong to the footer of a `task`. While `loading`, it stays on screen but takes no input.',
 		table: { category: 'Content', type: { summary: 'ReactNode' } },
 	},
+	closePosition: {
+		control: 'inline-radio',
+		options: ['end', 'start'],
+		description:
+			'Where the close button sits: `end`, last in the header, or `start`, first, before `headerPrefix` and the title. It sits there in the keyboard order too. A drawer of a breadcrumb trail takes the `closePosition` of the first drawer of the trail.',
+		table: {
+			category: 'Appearance',
+			type: { summary: "'start' | 'end'" },
+			defaultValue: { summary: 'end' },
+		},
+	},
 	description: {
 		control: 'text',
 		description:

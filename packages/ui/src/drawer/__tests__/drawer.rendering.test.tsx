@@ -232,6 +232,34 @@ describe('Drawer rendering', () => {
 		expect(close).toBe(screen.getByTestId('drawer-close'));
 		expect(close).toHaveAttribute('data-slot', 'drawer-close');
 		expect(screen.getByTestId('drawer-header').lastElementChild).toBe(close);
+		expect(screen.getByTestId('drawer-header')).toHaveAttribute('data-close-position', 'end');
+	});
+
+	it('renders the header in order with closePosition="start": close button, prefix, divider, title row, suffix', async () => {
+		await renderOpenDrawer({ ...TASK_SLOTS, closePosition: 'start' });
+
+		const header = screen.getByTestId('drawer-header');
+		const [close, prefix, divider, heading, suffix] = header.children;
+
+		expect(header).toHaveAttribute('data-close-position', 'start');
+		expect(header.children).toHaveLength(5);
+		expect(close).toBe(screen.getByRole('button', { name: 'Close' }));
+		expect(prefix).toBe(screen.getByTestId('drawer-header-prefix'));
+		expect(divider).toHaveAttribute('aria-hidden', 'true');
+		expect(heading).toContainElement(screen.getByTestId('drawer-title'));
+		expect(suffix).toBe(screen.getByTestId('drawer-header-suffix'));
+	});
+
+	it('renders the close button last for a closePosition the types reject', async () => {
+		await renderOpenDrawer({
+			headerSuffix: HEADER_SLOTS.headerSuffix,
+			closePosition: 'left' as unknown as 'start',
+		});
+
+		const header = screen.getByTestId('drawer-header');
+
+		expect(header).toHaveAttribute('data-close-position', 'end');
+		expect(header.lastElementChild).toBe(screen.getByRole('button', { name: 'Close' }));
 	});
 
 	it('renders the children in the body', async () => {

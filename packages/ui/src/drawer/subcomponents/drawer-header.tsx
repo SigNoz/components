@@ -7,7 +7,7 @@ import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import { Skeleton } from '../../skeleton/index.js';
 import { Typography } from '../../typography/index.js';
 import styles from '../drawer.module.scss';
-import type { DrawerProps } from '../types.js';
+import type { DrawerClosePositionType, DrawerProps } from '../types.js';
 import { useInert } from '../use-inert.js';
 import { displayTitle } from '../utils.js';
 
@@ -21,6 +21,7 @@ type DrawerHeaderProps = Pick<
 	| 'description'
 	| 'testId'
 > & {
+	closePosition: DrawerClosePositionType;
 	loading: boolean;
 	onClosePress: () => void;
 	popupRef: RefObject<HTMLDivElement | null>;
@@ -28,7 +29,8 @@ type DrawerHeaderProps = Pick<
 
 /**
  * The header of a `Drawer`, one row: `headerPrefix` and its divider, the title with its prefix and
- * suffix over the description, `headerSuffix`, and the close button, always last.
+ * suffix over the description, `headerSuffix`, and the close button, last, or first with
+ * `closePosition="start"`.
  *
  * @access private
  */
@@ -38,6 +40,7 @@ export function DrawerHeader({
 	titlePrefix,
 	titleSuffix,
 	headerSuffix,
+	closePosition,
 	description,
 	loading,
 	testId,
@@ -53,13 +56,29 @@ export function DrawerHeader({
 	useInert(suffixRef, loading, popupRef);
 
 	const hasDescription = hasRenderableContent(description);
+	const closeButton = (
+		<Button
+			variant="ghost"
+			color="secondary"
+			size="sm"
+			icon
+			aria-label="Close"
+			data-slot="drawer-close"
+			testId={partTestId(testId, 'close')}
+			onClick={onClosePress}
+		>
+			<X />
+		</Button>
+	);
 
 	return (
 		<div
 			className={styles['drawer__header']}
 			data-slot="drawer-header"
+			data-close-position={closePosition}
 			data-testid={partTestId(testId, 'header')}
 		>
+			{closePosition === 'start' ? closeButton : null}
 			{hasRenderableContent(headerPrefix) ? (
 				<>
 					<div
@@ -166,18 +185,7 @@ export function DrawerHeader({
 					<PopupContainer>{headerSuffix}</PopupContainer>
 				</div>
 			) : null}
-			<Button
-				variant="ghost"
-				color="secondary"
-				size="sm"
-				icon
-				aria-label="Close"
-				data-slot="drawer-close"
-				testId={partTestId(testId, 'close')}
-				onClick={onClosePress}
-			>
-				<X />
-			</Button>
+			{closePosition === 'end' ? closeButton : null}
 		</div>
 	);
 }

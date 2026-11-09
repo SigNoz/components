@@ -41,6 +41,7 @@
  * | `--drawer-border-width` | `1px` |
  * | `--drawer-box-shadow` | `var(--drawer-shadow)` |
  * | `--drawer-box-sizing` | `border-box` |
+ * | `--drawer-close-start-margin-inline-end` | `var(--spacing-4)` |
  * | `--drawer-content-border-radius` | `inherit` |
  * | `--drawer-content-covered-content-visibility` | `hidden` |
  * | `--drawer-content-display` | `flex` |
@@ -119,6 +120,7 @@
  * | `--drawer-header-prefix-gap` | `var(--spacing-2)` |
  * | `--drawer-header-prefix-loading-opacity` | `0.6` |
  * | `--drawer-header-suffix-align-items` | `center` |
+ * | `--drawer-header-suffix-close-start-margin-inline-end` | `0` |
  * | `--drawer-header-suffix-display` | `flex` |
  * | `--drawer-header-suffix-flex-shrink` | `0` |
  * | `--drawer-header-suffix-gap` | `var(--spacing-2)` |
@@ -210,6 +212,7 @@
 export { Drawer } from './drawer.js';
 export { useDrawerHandle } from './use-drawer-handle.js';
 export type {
+	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerCrumbType,
 	DrawerHandleType,

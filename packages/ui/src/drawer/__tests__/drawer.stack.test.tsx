@@ -4,7 +4,12 @@ import { type ReactNode, useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { userEvent as browserUser } from 'vitest/browser';
 import { Drawer } from '../drawer.js';
-import type { DrawerCloseReasonType, DrawerStackType, DrawerTypeType } from '../types.js';
+import type {
+	DrawerClosePositionType,
+	DrawerCloseReasonType,
+	DrawerStackType,
+	DrawerTypeType,
+} from '../types.js';
 import { waitForSettled } from './drawer.test-utils.js';
 
 type Level = 'root' | 'child' | 'grandchild';
@@ -13,6 +18,7 @@ interface ChainProps {
 	rootStack?: DrawerStackType;
 	childStack?: DrawerStackType;
 	rootType?: DrawerTypeType;
+	rootClosePosition?: DrawerClosePositionType;
 	childType?: DrawerTypeType;
 	grandchildType?: DrawerTypeType;
 	open?: Level[];
@@ -23,6 +29,7 @@ function NestedDrawer({
 	level,
 	type,
 	stack,
+	closePosition,
 	open,
 	onClose,
 	children,
@@ -30,6 +37,7 @@ function NestedDrawer({
 	level: Level;
 	type: DrawerTypeType;
 	stack: DrawerStackType;
+	closePosition?: DrawerClosePositionType;
 	open: boolean;
 	onClose: (reason: DrawerCloseReasonType) => void;
 	children?: ReactNode;
@@ -40,6 +48,7 @@ function NestedDrawer({
 		<Drawer
 			type="task"
 			stack={stack}
+			closePosition={closePosition}
 			open={open}
 			onClose={onClose}
 			title={title}
@@ -53,6 +62,7 @@ function NestedDrawer({
 		<Drawer
 			type="inspector"
 			stack={stack}
+			closePosition={closePosition}
 			open={open}
 			onClose={onClose}
 			title={title}
@@ -73,6 +83,7 @@ function Chain({
 	rootStack = 'overlay',
 	childStack = 'overlay',
 	rootType = 'inspector',
+	rootClosePosition,
 	childType = 'inspector',
 	grandchildType = 'inspector',
 	open: initiallyOpen = ['root', 'child'],
@@ -94,6 +105,7 @@ function Chain({
 			level="root"
 			type={rootType}
 			stack={rootStack}
+			closePosition={rootClosePosition}
 			open={open.has('root')}
 			onClose={close('root')}
 		>
@@ -321,6 +333,28 @@ describe('Drawer nested with stack="breadcrumb"', () => {
 
 		expect(document.querySelector('[data-slot="drawer-backdrop"]')).toBeNull();
 		expect(panelOf('child')).not.toHaveAttribute('aria-modal');
+	});
+
+	it('takes the closePosition from the first drawer of the trail', async () => {
+		await renderChain({ rootStack: 'breadcrumb', rootClosePosition: 'start' });
+
+		const header = within(panelOf('child')).getByTestId('child-header');
+
+		expect(header).toHaveAttribute('data-close-position', 'start');
+		expect(header.firstElementChild).toBe(within(header).getByRole('button', { name: 'Close' }));
+	});
+
+	it('keeps the closePosition of a nested drawer in an overlay its own', async () => {
+		await renderChain({ rootStack: 'overlay', rootClosePosition: 'start' });
+
+		expect(within(panelOf('root')).getByTestId('root-header')).toHaveAttribute(
+			'data-close-position',
+			'start',
+		);
+		expect(within(panelOf('child')).getByTestId('child-header')).toHaveAttribute(
+			'data-close-position',
+			'end',
+		);
 	});
 });
 

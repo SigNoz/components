@@ -26,6 +26,12 @@ export type DrawerTypeType = 'inspector' | 'task';
 export type DrawerWidthType = 'narrow' | 'base' | 'wide' | 'extra-wide' | 'entity';
 
 /**
+ * Where the close button of a `Drawer` sits in its header: `end`, last, after `headerSuffix`, or
+ * `start`, first, before `headerPrefix` and the title.
+ */
+export type DrawerClosePositionType = 'start' | 'end';
+
+/**
  * How the drawers opened inside a `Drawer` render.
  *
  * `breadcrumb` drills down: the nested drawer opens in place, at the same width, and a trail of
@@ -455,6 +461,17 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * here. While `loading`, it stays on screen but takes no input.
 		 */
 		headerSuffix?: ReactNode;
+		/**
+		 * Where the close button sits: `end`, last in the header, or `start`, first, before
+		 * `headerPrefix` and the title, for a page whose drawers close from the start edge. It sits
+		 * there in the keyboard order too.
+		 *
+		 * @note A drawer of a breadcrumb trail takes the `closePosition` of the first drawer of the
+		 * trail, so the button stays put while the user drills down.
+		 *
+		 * @default 'end'
+		 */
+		closePosition?: DrawerClosePositionType;
 		/**
 		 * The body. It is the one area that scrolls, between a header and a footer that stay put.
 		 *

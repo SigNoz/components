@@ -213,6 +213,10 @@
 		min-block-size: var(--drawer-header-with-description-min-block-size, 56px);
 		padding-block: var(--drawer-header-with-description-padding-block, var(--spacing-6));
 	}
+
+	&[data-close-position='start'] > [data-slot='drawer-close'] {
+		margin-inline-end: var(--drawer-close-start-margin-inline-end, var(--spacing-4));
+	}
 }
 
 .drawer__header-prefix {
@@ -329,6 +333,10 @@
 
 	&[data-loading] {
 		opacity: var(--drawer-header-suffix-loading-opacity, 0.6);
+	}
+
+	.drawer__header[data-close-position='start'] > & {
+		margin-inline-end: var(--drawer-header-suffix-close-start-margin-inline-end, 0);
 	}
 }
 

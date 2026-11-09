@@ -52,6 +52,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 		titlePrefix,
 		titleSuffix,
 		headerSuffix,
+		closePosition,
 		description,
 		children,
 		initialFocus,
@@ -94,6 +95,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 		nestedIn,
 		inTrail,
 		layerType,
+		closePosition: resolvedClosePosition,
 		covered,
 		style: stackStyle,
 		value: stackValue,
@@ -106,6 +108,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 		steps,
 		onTrailSelect,
 		trailEllipsis,
+		closePosition,
 		isOpen,
 		panel,
 		popupRef,
@@ -182,6 +185,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 											titlePrefix={titlePrefix}
 											titleSuffix={titleSuffix}
 											headerSuffix={headerSuffix}
+											closePosition={resolvedClosePosition}
 											// The type and the runtime agree: an inspector drops what its type
 											// rejects.
 											description={isTask ? description : undefined}
@@ -247,7 +251,8 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * `--drawer-shadow` and `--drawer-backdrop` design tokens.
  *
  * The panel is a `role="dialog"` named by `title`, and described by `description` on a `task`. A
- * `task` panel is `aria-modal="true"`. The close button is labelled `Close`.
+ * `task` panel is `aria-modal="true"`. The close button is labelled `Close`. It is last in the
+ * header, or first with `closePosition="start"`, in the keyboard order too.
  *
  * ### Inspector or task
  *
@@ -306,8 +311,8 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * after it with `crumb-press`. `Esc` closes only the current drawer, a step back, while the close
  * button, a swipe and a press on the backdrop close the whole trail, the drawer on top first. A
  * drawer that stays open after its `onClose` stops the leave: the drawers under it stay open. The
- * first drawer of the trail sets the backdrop and the focus trap, so a `type` further down sets only
- * whether the drawer has a description and a footer. `crumb` sets a drawer's crumb, its `title` by
+ * first drawer of the trail sets the backdrop, the focus trap and the `closePosition`, so a `type`
+ * further down sets only whether the drawer has a description and a footer. `crumb` sets a drawer's crumb, its `title` by
  * default, the card shown while the crumb is hovered or focused (`preview`), and its link (`href`,
  * `target`, `render`). A plain click on a crumb with a link still steps back, and a click with a
  * modifier key opens the link in a new tab. The `...` crumb opens a list of the earlier steps, on
@@ -341,6 +346,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * | `data-swiping` | panel | present while a swipe drags it |
  * | `data-nested` | panel | `overlay`, `breadcrumb`: how the drawer it is declared in stacks it |
  * | `data-covered` | panel | `overlay`, `breadcrumb`: present while a nested drawer is open over it, valued by its own `stack` |
+ * | `data-close-position` | `drawer-header` | `start`, `end`: where the close button sits |
  *
  * | `data-slot` | Rendered |
  * | --- | --- |

@@ -2,6 +2,7 @@ import { type CSSProperties, type RefObject, useCallback, useEffect, useState } 
 import type { BreadcrumbEllipsisOptions } from '../breadcrumb/types.js';
 import { type DrawerStackContextValue, useParentDrawerStack } from './drawer-stack-context.js';
 import type {
+	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerCrumbType,
 	DrawerStackType,
@@ -22,6 +23,7 @@ type UseDrawerStackOptions = {
 	steps: readonly DrawerTrailStepType[];
 	onTrailSelect: ((index: number, reason: DrawerTrailSelectReasonType) => void) | undefined;
 	trailEllipsis: BreadcrumbEllipsisOptions | undefined;
+	closePosition: DrawerClosePositionType | undefined;
 	isOpen: boolean;
 	panel: HTMLElement | null;
 	popupRef: RefObject<HTMLElement | null>;
@@ -42,6 +44,10 @@ type DrawerStackState = {
 	 * The type that sets the backdrop and the focus trap: the first drawer's in a breadcrumb trail.
 	 */
 	layerType: DrawerTypeType;
+	/**
+	 * Where its close button sits: the first drawer's in a breadcrumb trail.
+	 */
+	closePosition: DrawerClosePositionType;
 	/**
 	 * Its own `stack` while a nested drawer is open over it.
 	 */
@@ -70,6 +76,7 @@ export function useDrawerStack({
 	steps,
 	onTrailSelect,
 	trailEllipsis,
+	closePosition,
 	isOpen,
 	panel,
 	popupRef,
@@ -78,8 +85,11 @@ export function useDrawerStack({
 	const resolvedStack = stack === 'breadcrumb' ? 'breadcrumb' : 'overlay';
 	const parent = useParentDrawerStack();
 	const trailParent = parent?.stack === 'breadcrumb' ? parent : null;
-	// A trail is one drawer to the user, so its first drawer sets the backdrop and the focus trap.
+	// A trail is one drawer to the user, so its first drawer sets the backdrop, the focus trap and
+	// where the close button sits.
 	const layerType = trailParent?.trailType ?? type;
+	const resolvedClosePosition =
+		trailParent?.trailClosePosition ?? (closePosition === 'start' ? 'start' : 'end');
 
 	const readIsOpen = useCommittedOpen(isOpen);
 	const trail = buildTrail({
@@ -130,6 +140,7 @@ export function useDrawerStack({
 		nestedIn: parent?.stack,
 		inTrail: trailParent !== null,
 		layerType,
+		closePosition: resolvedClosePosition,
 		covered: isCovered ? resolvedStack : undefined,
 		style:
 			parentWidth === undefined
@@ -141,6 +152,7 @@ export function useDrawerStack({
 			trail,
 			trailType: layerType,
 			trailEllipsis: trailParent ? trailParent.trailEllipsis : trailEllipsis,
+			trailClosePosition: resolvedClosePosition,
 			cover,
 		},
 		requestCloseFromPanel,

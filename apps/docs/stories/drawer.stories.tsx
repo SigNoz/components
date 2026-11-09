@@ -588,6 +588,67 @@ export const Widths: Story = {
 	},
 };
 
+function LogDetailsClosedFromTheStart(): ReactElement {
+	const [open, setOpen] = useState(true);
+
+	return (
+		<div className={styles.page}>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setOpen(true)}>
+				Open log details
+			</Button>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				closePosition="start"
+				open={open}
+				onClose={() => setOpen(false)}
+				title="OOMKilled: container payments exceeded its 2Gi limit"
+				titlePrefix={
+					<Badge variant="outlined" color="secondary">
+						Log
+					</Badge>
+				}
+				headerSuffix={
+					<Button variant="ghost" color="secondary" size="sm" icon aria-label="Open in Logs">
+						<ExternalLink />
+					</Button>
+				}
+				width="wide"
+				testId="log"
+			>
+				The container was killed after it went over its memory limit.
+			</Drawer>
+		</div>
+	);
+}
+
+/**
+ * `closePosition="start"` puts the close button first in the header, before the title, for a page
+ * whose drawers close from the start edge. It is first in the keyboard order too, and the actions
+ * of `headerSuffix` end the header.
+ */
+export const CloseAtTheStart: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => <LogDetailsClosedFromTheStart />,
+	play: async () => {
+		await waitForEffects();
+		await waitFor(() => expect(getNode('log')).toBeVisible());
+
+		const header = getNode('log-header');
+		const close = getNode('log-close');
+
+		await expect(header).toHaveAttribute('data-close-position', 'start');
+		await expect(header.firstElementChild).toBe(close);
+		await expect(close.getBoundingClientRect().right).toBeLessThan(
+			getNode('log-title').getBoundingClientRect().left,
+		);
+		await expect(header.lastElementChild).toBe(getNode('log-header-suffix'));
+	},
+};
+
 /**
  * Opened before the record arrives. The title, the badge and the description show a skeleton,
  * copy is hidden, the nav and the actions stay on screen but take no input, and the close button

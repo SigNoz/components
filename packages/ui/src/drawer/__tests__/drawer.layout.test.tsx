@@ -259,6 +259,38 @@ describe('Drawer header', () => {
 		expect(header.right - close.right).toBeCloseTo(16, 0);
 		expect(suffix.right).toBeLessThanOrEqual(close.left);
 	});
+
+	it('puts the close button 16px from the start with closePosition="start", 8px before the headerPrefix', async () => {
+		await renderOpenDrawer({
+			closePosition: 'start',
+			headerPrefix: HEADER_BUTTON,
+			headerSuffix: (
+				<Button variant="ghost" color="secondary" size="sm">
+					Edit
+				</Button>
+			),
+		});
+		const header = rect(screen.getByTestId('drawer-header'));
+		const close = rect(screen.getByRole('button', { name: 'Close' }));
+		const prefix = rect(screen.getByTestId('drawer-header-prefix'));
+		const suffix = rect(screen.getByTestId('drawer-header-suffix'));
+
+		expect(close.left - header.left).toBeCloseTo(16, 0);
+		expect(prefix.left - close.right).toBeCloseTo(8, 0);
+		expect(header.right - suffix.right).toBeCloseTo(16, 0);
+		expect(header.height).toBeCloseTo(48, 0);
+	});
+
+	it('starts the title 8px after the close button with closePosition="start" and no headerPrefix', async () => {
+		await renderOpenDrawer({ closePosition: 'start' });
+		const close = rect(screen.getByRole('button', { name: 'Close' }));
+		const title = rect(screen.getByTestId('drawer-title'));
+
+		expect(title.left - close.right).toBeCloseTo(8, 0);
+		expect(
+			Math.abs(title.top + title.height / 2 - (close.top + close.height / 2)),
+		).toBeLessThanOrEqual(1);
+	});
 });
 
 describe('Drawer ellipsis', () => {
