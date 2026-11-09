@@ -313,6 +313,11 @@ const DropdownImpl = forwardRef<HTMLButtonElement, DropdownProps>(function Dropd
  * `loadingTooltip`. `loading` outranks `disabled`, the way it does on `Button`. Neither takes the
  * row out of the keyboard walk, which is what keeps the reason reachable.
  *
+ * An `item` row can carry a `shortcut`, the keys of a chord such as `['Mod', 'K']`, drawn in the
+ * trailing slot. The component does not bind them. The row keeps its label as its name, and a
+ * screen reader reads the shortcut as its description, after the reason. A row with an empty
+ * `shortcut` is a row without one.
+ *
  * A label that renders nothing falls back to the text `<No label>` and marks the row
  * `data-empty-label`.
  *

@@ -215,7 +215,7 @@ describe('rows', () => {
 				label: 'Go to Home',
 				searchMetadata: 'landing',
 				prefix: <svg />,
-				shortcut: 'Shift+H',
+				shortcut: ['Shift', 'H'],
 				onClick: noop,
 				testId: 'home',
 			},
@@ -229,10 +229,23 @@ describe('rows', () => {
 		]);
 	});
 
+	test('rejects a shortcut written as a string', () => {
+		assertType<CommandItemType[]>([
+			// @ts-expect-error - a shortcut is the list of its keys, not a string to draw
+			{ type: 'item', value: 'a', label: 'A', shortcut: 'Shift+H', onClick: noop },
+		]);
+	});
+
+	test('accepts a shortcut with the platform modifier', () => {
+		assertType<CommandItemType[]>([
+			{ type: 'item', value: 'a', label: 'A', shortcut: ['Mod', 'K'], onClick: noop },
+		]);
+	});
+
 	test('rejects a row with both a shortcut and a suffix', () => {
 		assertType<CommandItemType[]>([
 			// @ts-expect-error - `shortcut` and `suffix` share the trailing slot
-			{ type: 'item', value: 'a', label: 'A', shortcut: 'K', suffix: <svg />, onClick: noop },
+			{ type: 'item', value: 'a', label: 'A', shortcut: ['K'], suffix: <svg />, onClick: noop },
 		]);
 	});
 
@@ -262,7 +275,7 @@ describe('rows', () => {
 				disabledTooltip: undefined,
 				loading: true,
 				loadingTooltip: 'Saving',
-				shortcut: 'K',
+				shortcut: ['K'],
 				onClick: noop,
 			},
 		]);

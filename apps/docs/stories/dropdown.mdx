@@ -113,7 +113,7 @@ A `checkbox` and a `radio-group` are the exceptions to `value`. Their identity i
 
 ```tsx
 const items = [
-	{ type: 'item', value: 'copy', label: 'Copy link', shortcut: '⌘C', onClick: copy },
+	{ type: 'item', value: 'copy', label: 'Copy link', shortcut: ['Mod', 'C'], onClick: copy },
 	{ type: 'checkbox', name: 'wrap', label: 'Wrap lines', defaultValue: true },
 	{
 		type: 'radio-group',
@@ -136,6 +136,12 @@ const items = [
 	},
 ];
 ```
+
+An `item` can carry a `shortcut`: the list of keys of a chord, such as `['Mod', 'K']`, drawn
+through `Kbd.Shortcut` in the trailing slot. `Mod` is `⌘` on a Mac and `⌃` (Control) elsewhere. It
+is a label only, the menu does not bind the key. The row keeps its label as its name, and a screen
+reader reads the shortcut as the row's description, after the reason. An empty list is a row without
+a shortcut, and a row takes a `shortcut` or a `suffix`, never both.
 
 An uncontrolled `checkbox` or `radio-group` (`defaultValue`) keeps its state on the menu. It survives the menu closing and the search hiding the row.
 

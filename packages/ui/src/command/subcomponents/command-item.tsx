@@ -1,6 +1,7 @@
 import { Autocomplete } from '@base-ui/react/autocomplete';
 import { type ReactNode, useId } from 'react';
 import { Kbd } from '../../kbd/kbd.js';
+import { isKbdKey } from '../../kbd/utils.js';
 import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import { Spinner } from '../../spinner/spinner.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
@@ -31,6 +32,7 @@ export function CommandItem({ item, commandTestId, onPick }: CommandItemProps): 
 	// not disabled at all, and its reason is what the row is waiting for.
 	const isLoading = item.loading === true;
 	const isDisabled = !isLoading && item.disabled === true;
+	const isInert = isLoading || isDisabled;
 	const reason = isLoading ? item.loadingTooltip : isDisabled ? item.disabledTooltip : null;
 	const hasReason = hasTooltipContent(reason);
 	const reasonId = useId();
@@ -39,24 +41,34 @@ export function CommandItem({ item, commandTestId, onPick }: CommandItemProps): 
 	// so the label stays where it is.
 	const hasPrefix = hasRenderableContent(item.prefix);
 	const isSuffixLoading = isLoading && !hasPrefix;
-	const hasShortcut = !isSuffixLoading && hasRenderableContent(item.shortcut);
+	const shortcut = item.shortcut;
+	const hasShortcut = !isSuffixLoading && shortcut !== undefined && shortcut.length > 0;
 	const spinner = <Spinner size={14} />;
 	const prefix = isLoading && hasPrefix ? spinner : item.prefix;
-	const idleSuffix = hasShortcut ? <Kbd size="sm">{item.shortcut}</Kbd> : item.suffix;
+	const idleSuffix = hasShortcut ? (
+		<Kbd.Shortcut keys={shortcut} disabled={isDisabled} />
+	) : (
+		item.suffix
+	);
 	const suffix = isSuffixLoading ? spinner : idleSuffix;
 	const suffixId = useId();
+
+	// `Kbd.Shortcut` draws nothing, and logs, for a key it does not know. Then there is no shortcut to
+	// read, and the empty suffix must not be what the row points at.
+	const isShortcutDescribed = hasShortcut && shortcut.every(isKbdKey);
 
 	// The suffix is hidden so the shortcut stays out of the row's name. A screen reader reads it as
 	// the description instead, after the reason.
 	const describedBy =
-		[hasReason ? reasonId : '', hasShortcut ? suffixId : ''].filter(Boolean).join(' ') || undefined;
+		[hasReason ? reasonId : '', isShortcutDescribed ? suffixId : ''].filter(Boolean).join(' ') ||
+		undefined;
 
 	return (
 		<Autocomplete.Item
 			value={item.value}
 			// With it, Base UI marks the row `aria-disabled` and drops a click or a plain `Enter` on it. The
 			// arrow keys still land on it. A modified `Enter` goes through the panel, which checks too.
-			disabled={isLoading || isDisabled}
+			disabled={isInert}
 			// Base UI sets `aria-selected` only on rows that can be selected, and a palette row runs an
 			// action instead. The highlighted row carries it so a screen reader announces where
 			// `Enter` lands.

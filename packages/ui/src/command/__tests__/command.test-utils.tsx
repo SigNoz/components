@@ -1,8 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { type ReactNode, useState } from 'react';
 import { expect, vi } from 'vitest';
+import { page } from 'vitest/browser';
 import { Command } from '../command.js';
 import type { CommandItemType, CommandSearchInputProps } from '../types.js';
+
+const DESKTOP_VIEWPORT = { width: 1024, height: 768 };
 
 export const ACTIONS = {
 	home: vi.fn(),
@@ -22,7 +25,7 @@ export const ITEMS: CommandItemType[] = [
 				type: 'item',
 				value: 'home',
 				label: 'Go to Home',
-				shortcut: 'Shift+H',
+				shortcut: ['Shift', 'H'],
 				onClick: () => ACTIONS.home(),
 			},
 			{
@@ -123,8 +126,13 @@ export function highlightedOption(): HTMLElement | null {
 
 /**
  * Renders the palette already open and waits for the field to take the focus.
+ *
+ * The page is made 1024px wide first: below 640px `Kbd` draws nothing, and a row's shortcut would
+ * be missing from its description.
  */
 export async function renderOpenCommand(props: Omit<CommandHarnessProps, 'defaultOpen'> = {}) {
+	await page.viewport(DESKTOP_VIEWPORT.width, DESKTOP_VIEWPORT.height);
+
 	const result = render(<CommandHarness defaultOpen {...props} />);
 
 	await waitFor(() => {
