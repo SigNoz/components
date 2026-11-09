@@ -66,13 +66,13 @@
 	gap: 1rem;
 }
 
-/* `contain` fixes the drawer to the box instead of the viewport, and the box is wider than the
-   widest drawer plus its 16px gaps. */
+/* `contain` fixes the drawer to the box instead of the viewport. The box is wider than the widest
+   drawer plus its 16px gaps, and tall enough for the header and one line of body. */
 .widthBox {
 	contain: layout;
 	position: relative;
 	inline-size: 60rem;
-	block-size: 7rem;
+	block-size: 10rem;
 	border: 1px dashed var(--l2-border);
 }
 
