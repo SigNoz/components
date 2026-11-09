@@ -1,8 +1,9 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Popover } from '../popover.js';
 import type { PopoverHandle } from '../popover-handle.js';
+import type { PopoverProps } from '../types.js';
 import { usePopoverHandle } from '../use-popover-handle.js';
 
 type Service = { id: string; name: string };
@@ -87,6 +88,32 @@ function Rows() {
 			<Popover handle={card} side="right" align="start" testId="services">
 				{(service) => <p>{service?.name} summary</p>}
 			</Popover>
+		</>
+	);
+}
+
+/** A trigger a press opens the popup from, and a preview trigger of the same handle. */
+function PressAndPreview({ onOpenChange }: { onOpenChange?: PopoverProps['onOpenChange'] }) {
+	const card = usePopoverHandle<Service>();
+
+	return (
+		<>
+			<Popover
+				handle={card}
+				side="bottom"
+				align="start"
+				testId="services"
+				aria-label="Service"
+				onOpenChange={onOpenChange}
+			>
+				{(service) => <p>{service?.name} summary</p>}
+			</Popover>
+			<Popover.Trigger handle={card} payload={SERVICES[0]} nativeButton>
+				<button type="button">Frontend</button>
+			</Popover.Trigger>
+			<Popover.Trigger handle={card} payload={SERVICES[1]} nativeButton={false} preview delay={0}>
+				<a href="#checkout">Checkout</a>
+			</Popover.Trigger>
 		</>
 	);
 }
@@ -307,6 +334,45 @@ describe('Popover.Trigger', () => {
 
 			expect(screen.getByRole('link', { name: 'Checkout' })).toHaveFocus();
 			await waitFor(() => expect(popup()).toHaveTextContent('Checkout docs'));
+		});
+
+		// Each `onOpenChange` keeps the popup on the trigger a press opened it from, the way a
+		// breadcrumb keeps its pressed `...` list: no hover on another trigger takes it.
+		it('closes a popup a press opened from another trigger, the way a press outside does', async () => {
+			const user = userEvent.setup();
+			render(
+				<PressAndPreview
+					onOpenChange={(open, details) => {
+						if (open && details.reason !== 'trigger-press') {
+							details.cancel();
+						}
+					}}
+				/>,
+			);
+
+			await user.click(screen.getByRole('button', { name: 'Frontend' }));
+			await waitFor(() => expect(popup()).toHaveTextContent('Frontend summary'));
+			await user.click(screen.getByRole('link', { name: 'Checkout' }));
+
+			await waitFor(() => expect(screen.queryByTestId('services-popup')).toBeNull());
+		});
+
+		it('reports that close to `onOpenChange`, which can cancel it', async () => {
+			const user = userEvent.setup();
+			const onOpenChange = vi.fn<NonNullable<PopoverProps['onOpenChange']>>((open, details) => {
+				if (!open || details.reason !== 'trigger-press') {
+					details.cancel();
+				}
+			});
+			render(<PressAndPreview onOpenChange={onOpenChange} />);
+
+			await user.click(screen.getByRole('button', { name: 'Frontend' }));
+			await waitFor(() => expect(popup()).toHaveTextContent('Frontend summary'));
+			onOpenChange.mockClear();
+			await user.click(screen.getByRole('link', { name: 'Checkout' }));
+
+			expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
+			expect(popup()).toHaveTextContent('Frontend summary');
 		});
 
 		it('takes no press: a click on the trigger leaves its card open', async () => {

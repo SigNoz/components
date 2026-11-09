@@ -92,9 +92,11 @@ export function PopoverHandleTrigger<Payload>({
 							event.preventBaseUIHandler();
 
 							// Base UI leaves a press on another trigger alone, so a popup a press opened
-							// elsewhere would outlive the click that a press outside closes it with.
+							// elsewhere would outlive the click that a press outside closes it with. Closed
+							// through Base UI, so `onOpenChange` sees the close and can cancel it, as it can
+							// for a press outside.
 							if (handle.isOpen && !event.currentTarget.hasAttribute('data-popup-open')) {
-								handle.close();
+								handle.primitive.close();
 							}
 						}
 					: undefined

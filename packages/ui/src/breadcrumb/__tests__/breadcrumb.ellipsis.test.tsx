@@ -1158,6 +1158,30 @@ describe('Breadcrumb ellipsis', () => {
 			expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
 		});
 
+		it('keeps it open through a press on a crumb with a preview', async () => {
+			renderInFrame(
+				<ForceOpenProvider>
+					<Breadcrumb
+						items={TRAIL.map((item, index) => ({
+							...item,
+							onClick: cancel,
+							...(index === 0 && { preview: <p>Dashboards card</p> }),
+						}))}
+						testId="bc"
+					/>
+				</ForceOpenProvider>,
+				NARROW,
+			);
+			const popup = await screen.findByRole('dialog', { name: 'Hidden items' });
+			const user = userEvent.setup();
+
+			await user.click(screen.getByRole('link', { name: 'Dashboards' }));
+			await waitPastTheDelay();
+
+			expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
+			expect(trigger()).toHaveAttribute('data-popup-open');
+		});
+
 		it('holds nothing open while no crumb is collapsed', async () => {
 			renderInFrame(
 				<ForceOpenProvider>

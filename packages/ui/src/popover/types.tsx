@@ -293,7 +293,8 @@ export type PopoverTriggerProps<Payload = unknown> = {
 	 *
 	 * The element keeps its role, its `tabindex` and its click, and gets no `aria-haspopup`,
 	 * `aria-expanded` or `aria-controls`. The popup it opens has no role and no name, and takes no
-	 * focus. A press on it closes a popup another trigger opened.
+	 * focus. A press on it closes a popup another trigger opened, through the popover's
+	 * `onOpenChange`, which can cancel it as it can a press outside.
 	 *
 	 * The keyboard focus opens it on the element, or on anything focusable inside it, such as the
 	 * link of a row. `Tab` from there goes into the card when the card holds something focusable,
