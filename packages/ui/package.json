@@ -423,12 +423,12 @@
 		"@testing-library/user-event": "^14.6.8",
 		"@types/node": "25.9.9",
 		"@types/react": "^18.2.61",
-		"@vitejs/plugin-react": "^6.1.2",
+		"@vitejs/plugin-react": "^6.2.1",
 		"@vitest/browser-playwright": "5.0.5",
 		"@vitest/coverage-v8": "^5.0.5",
-		"oxc-transform-react": "^0.154.0",
+		"oxc-transform-react": "^0.156.0",
 		"publint": "0.3.25",
-		"vite": "8.3.4",
+		"vite": "8.3.5",
 		"vitest": "^5.0.5"
 	},
 	"peerDependencies": {
