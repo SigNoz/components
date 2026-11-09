@@ -78,33 +78,38 @@ Do not reach for `chromatic: { disableAnimations: true }`. What it leaves on scr
 Chromatic's to define and cannot be checked from here; a mode can be opened in the browser at
 `?globals=motion:still` and read.
 
-### Use preview stories for visual testing
+### Snapshot the showcase story
 
-By default, visual testing is **disabled for all stories**. We enable it only on
-hand-picked "preview" stories that combine multiple states into a single snapshot.
+By default, visual testing is **disabled for all stories**. We enable it only on each
+component's `{Name}Showcase` story, which lays out every state in one canvas (see "Stories to
+write" in `COMPONENT_GUIDELINES.md`).
 
-Why? With many stories, snapshotting each one exhausts the quota fast. A `Button` component
-might have 10+ stories (variants, sizes, states). If each is snapshotted separately,
-that's 10 snapshots. Instead, create one `Preview` story that renders all variants together.
-One snapshot covers everything.
+Why? Snapshotting each state on its own exhausts the quota fast. A `Button` has 10+ states
+(variants, sizes, disabled, loading). One showcase that renders them all is one snapshot, and
+the states stay in sections of that showcase rather than in stories of their own.
 
 ```tsx
-// Individual stories for docs/playground (NOT snapshotted)
-export const Primary: Story = { args: { variant: 'primary' } }
-export const Secondary: Story = { args: { variant: 'secondary' } }
-export const Disabled: Story = { args: { variant: 'primary', disabled: true } }
+// Controls story for docs and playground (not snapshotted)
+export const Default: Story = {
+  args: { variant: 'primary', children: 'Save' },
+  parameters: { chromatic: { disableSnapshot: true } },
+}
 
-// Preview story for visual testing (snapshotted)
-export const Preview: Story = {
+// Every state in one canvas (snapshotted)
+export const ButtonShowcase: Story = {
   parameters: {
     chromatic: { disableSnapshot: false },
   },
   render: () => (
-    <div className="flex flex-col gap-4">
-      <Button variant="primary">Primary</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="primary" disabled>Disabled</Button>
-      {/* All other variants... */}
+    <div className="story-container">
+      <section className="story-section" aria-label="Variants">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+      </section>
+      <section className="story-section" aria-label="Disabled">
+        <Button variant="primary" disabled>Disabled</Button>
+      </section>
+      {/* All other states... */}
     </div>
   ),
 }
@@ -116,7 +121,7 @@ This approach:
 
 - **Reduces billing**: N variants = 1 snapshot instead of N snapshots
 - **Catches regressions**: all states in one diff, easy to spot inconsistencies
-- **Keeps stories useful**: individual stories still exist for docs and playground
+- **Keeps the story list short**: `Default` drives the controls, the showcase shows the rest
 
 ## Debugging failures
 

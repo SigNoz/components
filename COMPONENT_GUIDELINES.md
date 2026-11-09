@@ -1058,14 +1058,32 @@ argTypes: {
 ### Stories to write
 
 1. **A controls story** (`Default`, or `Playground`): the one MDX wires `<Controls>` to.
-   Realistic args, no hooks in `args`.
-2. **One story per meaningful state**: each variant, each colour, sizes, loading, disabled,
-   invalid, with icon, long/truncated content, empty state.
-3. **Subcomponent stories sit in the parent's file and render inside a realistic parent**:
+   Realistic args, no hooks in `args`. It sets `chromatic: { disableSnapshot: true }`, because the
+   showcase already covers every state it can reach.
+2. **One showcase story, `{Name}Showcase`**, that lays out every meaningful state in labelled
+   sections: each variant, each colour, sizes, loading, disabled, invalid, with icon,
+   long/truncated content, empty state, and the component inside every parent that restyles it.
+   It is the story Chromatic snapshots (`chromatic: { disableSnapshot: false }`), and its `play`
+   checks each section through `within(section)`. `BadgeShowcase` and `SkeletonShowcase` are the
+   reference. A state that only needs different props is a section of the showcase, never a story
+   of its own. Hover, focus and press are sections too, forced by `storybook-addon-pseudo-states`
+   through `parameters.pseudo`.
+3. **A separate story only when a state cannot share a canvas with the others**: an open overlay
+   that covers the page, traps focus or makes the rest of the page inert (`Dialog`, `Drawer`, a
+   command palette), a layer fixed to the viewport instead of in the flow (a toast stack), or an
+   interaction whose `play` needs a fresh mount. This holds for a parent too: a `Kbd` inside a
+   `Command` row is a story of its own, because the palette is a modal. Name it after the
+   behaviour or what it shows (`Closing`, `FromAHandle`, `InCommandRow`), snapshot it the same
+   way, and say in the showcase docblock which story holds it and why. A popup that opens in place
+   and fits a section, such as an open `Dropdown` or `Popover`, stays in the showcase, in a
+   section as tall as the popup. Being long to write is not a reason to split a state out.
+   Behaviour with nothing to look at, such as a retry, a timer or the order of callbacks, goes in
+   the unit tests instead.
+4. **Subcomponent stories sit in the parent's file and render inside a realistic parent**:
    `DialogContent` inside a `Dialog`, `RadioGroupItem` inside a `RadioGroup`. Static members sit
    in `{name}-components.stories.tsx` instead, and render inside a parent the same way
    (`Callout.Link` inside a `Callout`).
-4. **Interactive stories own their state** via `useState` in `render`, or via a decorator.
+5. **Interactive stories own their state** via `useState` in `render`, or via a decorator.
    URL-driven presets need a `NuqsAdapter` decorator plus `useQueryState` in the decorator,
    keeping `args` hook-free.
 
