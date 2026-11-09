@@ -165,7 +165,7 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 										<Button
 											variant="ghost"
 											color="secondary"
-											size="md"
+											size="sm"
 											icon
 											aria-label="Close"
 											data-slot="dialog-close"
