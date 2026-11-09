@@ -620,7 +620,9 @@
 	}
 
 	.breadcrumb__preview,
-	.breadcrumb__preview-positioner {
+	.breadcrumb__preview-positioner,
+	.breadcrumb__preview-viewport > [data-current],
+	.breadcrumb__preview-viewport > [data-previous] {
 		transition-duration: 0s;
 	}
 

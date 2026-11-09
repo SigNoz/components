@@ -1,7 +1,7 @@
 import { render as renderUnwrapped, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { userEvent as browserUser } from 'vitest/browser';
+import { userEvent as browserUser, cdp } from 'vitest/browser';
 import { queryOpenTooltip } from '../../__tests__/test-utils.js';
 import { PopupContainer } from '../../lib/popup-container.js';
 import { POPOVER_HOVER_DELAY } from '../../popover/constants.js';
@@ -842,6 +842,28 @@ describe('Breadcrumb preview', () => {
 
 			expect(popup).toHaveAttribute('data-instant', 'click');
 			expect(transitionDurations(popup)).toEqual(['0s', '0s']);
+		});
+
+		it('does not move, resize or fade under prefers-reduced-motion', async () => {
+			await cdp().send('Emulation.setEmulatedMedia', {
+				features: [{ name: 'prefers-reduced-motion', value: 'reduce' }],
+			});
+			try {
+				render(<Breadcrumb items={ITEMS} />);
+				await browserUser.hover(crumb('prod-eu-west1'));
+				const popup = await waitForCard();
+				const content = popup.querySelector(
+					'[data-slot="breadcrumb-preview-viewport"] > [data-current]',
+				);
+
+				expect(content).not.toBeNull();
+				expect(transitionDurations(popup)).toEqual(['0s', '0s']);
+				expect(getComputedStyle(content as HTMLElement).transitionDuration).toBe('0s');
+			} finally {
+				await cdp().send('Emulation.setEmulatedMedia', {
+					features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }],
+				});
+			}
 		});
 
 		it('is as wide as its content, up to 20rem', async () => {
