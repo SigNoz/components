@@ -39,8 +39,9 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **Structure** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#1-code-organization))
 
 - [ ] Directory is kebab-case under `packages/ui/src/`, matches the export subpath
-- [ ] `index.ts` only re-exports (+ generated token region); `export type *` plus explicit named exports
-- [ ] Relative imports use the `.js` extension; types imported with `import type`
+- [ ] `index.ts` only re-exports (+ generated token region); explicit named exports, and a named `export type { ... }` list when the file also holds `@access private` types
+- [ ] Relative imports use the `.js` extension, tests included; types imported with `import type`
+- [ ] Every export in the component directory is either in `index.ts` or tagged `@access private`
 - [ ] Subcomponents in `subcomponents/`, opinionated compositions in `presets/`
 - [ ] All four lists updated: `src/index.ts`, `vite.config.ts`, `package.json` exports, `README.md` + `intro.mdx`
 - [ ] New runtime deps added to `externalPatterns`
@@ -48,7 +49,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **CSS** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#2-css-organization))
 
 - [ ] `{name}.module.scss`, no Tailwind, no CVA, no Sass variables
-- [ ] Every declaration is `var(--{component}-x, <default>)`, layout and resets included; only reduced-motion rules, `display: none` on `[hidden]` and pseudo-element `content` stay bare
+- [ ] Every declaration is `var(--{component}-x, <default>)`, layout and resets included; only reduced-motion rules, `display: none` on `[hidden]`, pseudo-element `content` and a declaration another public variable needs to work stay bare
 - [ ] Every colour, variant colours included, is a hook onto a design token (`var(--callout-success-background-color, var(--callout-success-background))`), never a literal
 - [ ] No literal fallback on a design token (`var(--spacing-4, 8px)`); a literal default only where no token matches
 - [ ] Colours use semantic tokens only, with no `--bg-*` / `--text-*` primitives referenced from a component
@@ -57,13 +58,14 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] Variants are `data-*` attributes; `data-slot` and `data-testid` on the root
 - [ ] `color-mix()` for derived shades, never `rgba()` over a token
 - [ ] `:hover`, `:focus-visible`, `aria-invalid`, disabled all styled
+- [ ] `transition` split into `transition-property`, `transition-duration` and `transition-timing-function`, each with its variable
 - [ ] Transitions use the component's duration/easing tokens and are disabled under `@media (prefers-reduced-motion: reduce)`
 - [ ] `pnpm run tokens` run and the `index.ts` region committed
 
 **Visual QA** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#6-visual-qa))
 
 - [ ] Compared against the Figma frame side by side: spacing, sizes, colours, every state
-- [ ] Figma frame linked from the story via `parameters.design`
+- [ ] Figma frame linked from the story via `parameters.design` (or the PR body says the design file has no frame yet)
 - [ ] Checked in light *and* dark
 - [ ] Sizing and density consistent with sibling components (`sm` matches `Button` / `Input`)
 - [ ] Typography via `Typography` or one text style, all six properties from that style, not an ad-hoc `font-size` / `font-weight`; each root and popup pins the numerals (`font-feature-settings: 'ss01' 1`, `font-variant-numeric: normal`)
@@ -85,7 +87,8 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] JSDoc on **every** public prop, with `@default` where applicable
 - [ ] No component JSDoc section or `@example` for `width` and `maxWidth`
 - [ ] Component JSDoc repeats nothing the prop JSDoc says, and describes no look, motion or token value
-- [ ] Code comments only add context from outside the file or stop a bug, never restate the code
+- [ ] Code comments add outside context, stop a likely bug or say why the code has its shape, never restate the code
+- [ ] Every import path, story name, prop value and size named in MDX, JSDoc and docs exists on this branch
 - [ ] Story file per root component and per preset, subcomponent stories in the parent's file, static members in `{name}-components.stories.tsx` (`@access private` ones exempt), correct `title` group
 - [ ] `argTypes` complete with `category`, `type.summary`, `defaultValue.summary`
 - [ ] `Default` plus one `{Name}Showcase` story that shows every meaningful state, not just the happy path
@@ -94,6 +97,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **Tests** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#7-tests))
 
 - [ ] Behaviour test per interactive prop
+- [ ] [Bugs review keeps finding](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#bugs-review-keeps-finding) checked: caller props cannot overwrite owned attributes, type and runtime agree, no keyword in CSS math, handle and controlled races, focus kept when hiding
 - [ ] `forward-ref` test
 - [ ] `run-visual-testing` label added if the change is visual
 
