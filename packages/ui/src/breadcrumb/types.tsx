@@ -1,5 +1,5 @@
-import type { Popover } from '@base-ui/react/popover';
 import type { AriaAttributes, ComponentProps, MouseEvent, ReactElement, ReactNode } from 'react';
+import type { PopoverHandle } from '../popover/popover-handle.js';
 import type {
 	BREADCRUMB_ELLIPSIS_PAYLOAD,
 	BreadcrumbCollapseFrom,
@@ -312,8 +312,8 @@ export interface BreadcrumbProps extends Pick<ComponentProps<'nav'>, 'id'>, Aria
 	/**
 	 * Forwarded to the `<nav>` as `data-testid`, and the stem every part is named from:
 	 * `` `${testId}-item-${index}` `` for a crumb, `` `${testId}-item-separator-${index}` `` for
-	 * the separator before it, `` `${testId}-preview` `` for the card of the crumbs, and
-	 * `` `${testId}-ellipsis` `` for the `...` crumb.
+	 * the separator before it, `` `${testId}-popup` `` for the popup of the cards and the list,
+	 * and `` `${testId}-ellipsis` `` for the `...` crumb.
 	 */
 	testId?: string;
 	/**
@@ -350,7 +350,7 @@ export type BreadcrumbPopupPayloadType = number | typeof BREADCRUMB_ELLIPSIS_PAY
 /**
  * @access private
  */
-export type BreadcrumbPopupHandleType = Popover.Handle<BreadcrumbPopupPayloadType>;
+export type BreadcrumbPopupHandleType = PopoverHandle<BreadcrumbPopupPayloadType>;
 
 /**
  * What the collapse planner reads off the trail. Every width is in pixels.

@@ -56,7 +56,7 @@ describe('Breadcrumb on the server', () => {
 		expect(html).toContain('data-slot="breadcrumb-ellipsis-trigger"');
 		expect(html).toContain('aria-haspopup="dialog"');
 		expect(html).toContain('aria-label="Show 2 hidden items"');
-		expect(html).not.toContain('data-slot="breadcrumb-ellipsis-popup"');
+		expect(html).not.toContain('data-slot="popover-popup"');
 		expect(html).not.toContain('breadcrumb-ellipsis-row');
 		expect(error).not.toHaveBeenCalled();
 	});

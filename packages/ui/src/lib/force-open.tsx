@@ -26,6 +26,17 @@ export function ForceOpenProvider({ children }: ForceOpenProviderProps): ReactEl
 }
 
 /**
+ * Gives the popups under it their own open state back inside a `ForceOpenProvider`, for a
+ * component that holds its popup open itself, on a part only it knows: the `...` list of a
+ * `Breadcrumb`, which shares its popup with the cards of the crumbs.
+ *
+ * @access private
+ */
+export function ForceOpenReset({ children }: ForceOpenProviderProps): ReactElement {
+	return <ForceOpenContext.Provider value={false}>{children}</ForceOpenContext.Provider>;
+}
+
+/**
  * Whether a `ForceOpenProvider` holds the popup of the calling component open.
  *
  * @access private
