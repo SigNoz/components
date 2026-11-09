@@ -252,7 +252,7 @@ describe('className and style that get past the types', () => {
 		expectNoStrayStyle(screen.getByTestId('toggle-group'));
 	});
 
-	it('do not reach the Tooltip popup', () => {
+	it('do not reach the Tooltip popup', async () => {
 		render(
 			<Tooltip title="Helpful information" {...STRAY}>
 				<button type="button">Hover</button>
@@ -260,7 +260,7 @@ describe('className and style that get past the types', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expectNoStrayStyle(screen.getByRole('tooltip'));
+		expectNoStrayStyle(await screen.findByRole('tooltip'));
 		expectNoStrayStyle(screen.getByRole('button'));
 	});
 

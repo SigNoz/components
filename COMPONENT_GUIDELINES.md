@@ -109,7 +109,7 @@ Rules:
   uses `components/` for this. That is drift, not an alternative. Use `subcomponents/`.
 - **`presets/`** holds the batteries-included versions, built from the subcomponents.
 - A composed component exports only the composed surface. Its subcomponents stay out of
-  `index.ts` and carry `@access private` (`tooltip/` exports `Tooltip`, not `TooltipTrigger` or
+  `index.ts` and carry `@access private` (`tooltip/` exports `Tooltip`, not `TooltipAnchor` or
   `TooltipContent`). Another component that needs one imports it by relative path, and a change
   to that subcomponent has to keep those imports working.
 - A part a consumer uses on its own, in place of the root, hangs off the root as a static member
@@ -162,8 +162,8 @@ export type { BadgeColorType, BadgeProps, BadgeVariantType } from './types.js';
   symbol can carry the tag and still be exported when another component in this repo needs it
   (`TooltipProviderIfMissing`).
 - Applying it is mechanical: **every `export` in the component directory that `index.ts` does
-  not re-export carries the tag**, props types as much as components (`TooltipTriggerProps`
-  next to `TooltipTrigger`), contexts, providers and hooks included. A symbol that is never
+  not re-export carries the tag**, props types as much as components (`TooltipAnchorProps`
+  next to `TooltipAnchor`), contexts, providers and hooks included. A symbol that is never
   exported from its own file needs nothing, it is already unreachable. The one exception is a
   part attached as a static member of an exported root (`PillCloseable`, reached as
   `Pill.Closeable`): it is public through the root, so it carries no tag even though `index.ts`

@@ -49,7 +49,7 @@ describe('Tooltip empty title', () => {
 });
 
 describe('Tooltip non-empty title', () => {
-	it('treats 0 as content', () => {
+	it('treats 0 as content', async () => {
 		render(
 			<Tooltip title={0}>
 				<button type="button">Hover</button>
@@ -57,17 +57,17 @@ describe('Tooltip non-empty title', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveTextContent('0');
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('0');
 	});
 
-	it('updates the content when the title changes while open', () => {
+	it('updates the content when the title changes while open', async () => {
 		const { rerender } = render(
 			<Tooltip title="Before">
 				<button type="button">Hover</button>
 			</Tooltip>,
 			{ wrapper: ForceOpenProvider },
 		);
-		expect(screen.getByRole('tooltip')).toHaveTextContent('Before');
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('Before');
 
 		rerender(
 			<Tooltip title="After">
@@ -80,7 +80,8 @@ describe('Tooltip non-empty title', () => {
 });
 
 describe('Tooltip title element identity', () => {
-	it('keeps the same trigger element when the title comes and goes', () => {
+	it('keeps the same trigger element when the title comes and goes', async () => {
+		const user = userEvent.setup();
 		const { rerender } = render(
 			<Tooltip title={undefined}>
 				<button type="button">Hover</button>
@@ -94,7 +95,12 @@ describe('Tooltip title element identity', () => {
 			</Tooltip>,
 		);
 		expect(screen.getByRole('button')).toBe(trigger);
-		expect(trigger).toHaveAttribute('aria-describedby');
+		expect(trigger).not.toHaveAttribute('aria-describedby');
+
+		await user.hover(trigger);
+		const tooltip = await screen.findByRole('tooltip');
+		expect(screen.getByRole('button')).toBe(trigger);
+		expect(trigger).toHaveAttribute('aria-describedby', tooltip.id);
 
 		rerender(
 			<Tooltip title={null}>

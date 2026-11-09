@@ -6,7 +6,8 @@ import { useStackedTooltipProps } from '../tooltip-stacked-props.js';
 import type { TooltipProps } from '../types.js';
 
 /**
- * Shows `title` in a popup while its child is hovered or focused (Base UI `Tooltip`).
+ * Shows `title` in a popup while its child is hovered or focused (Base UI `Tooltip` popup, loaded
+ * with the first tooltip that opens).
  *
  * The child is the trigger. No wrapper element is added.
  *
@@ -23,21 +24,24 @@ import type { TooltipProps } from '../types.js';
  * ### The child
  *
  * - One element child. It receives the trigger props and the `ref`.
- * - Text, a fragment or several nodes end up inside a `<button>` Base UI adds.
+ * - Text, a fragment or several nodes end up inside a `<button>` the tooltip adds.
  * - It stays mounted whether there is a popup or not, so it never remounts.
  *
- * ### The child has to forward its ref
+ * ### The child has to pass its props and its ref down
  *
- * Base UI anchors the popup to the DOM node behind that `ref`.
+ * The hover and focus handlers, `aria-describedby` and `data-popup-open` reach the DOM node as
+ * props of the child, and a tooltip forced open by `ForceOpenProvider` is placed against the node
+ * behind the `ref`.
  *
- * A child that drops it (a function component without `forwardRef`, one that never passes
- * `ref` down) shows no tooltip at all. Wrap it in a `<span>` or forward the `ref`.
+ * A child that drops them (a function component that never spreads its props, or one without
+ * `forwardRef`) shows no tooltip. Wrap it in a `<span>`, or pass the props and the `ref` down.
  *
  * ### The popup
  *
  * - Empty `title` (`undefined`, `null`, `false`, `''`) renders no popup, no `aria-describedby`.
  * - So the off switch is the title itself: `title={truncated ? label : undefined}`.
- * - `role="tooltip"`, `id` from `id` or generated, trigger points at it with `aria-describedby`.
+ * - `role="tooltip"`, `id` from `id` or generated, trigger points at it with `aria-describedby`
+ *   while it is open.
  * - Every `data-*` from the call site lands here, the only element the component renders itself.
  *   `data-slot` is the exception, it stays `tooltip-content`.
  * - Portalled into `container`, else the provider's container, else the panel of the `Dialog` or

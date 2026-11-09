@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { useRenderLink } from '../../lib/use-render-link.js';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { cn, type RejectedProps } from '../../lib/utils.js';
-import { TooltipLazyAnchor } from '../../tooltip/subcomponents/tooltip-lazy-anchor.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import type { TypographyLinkProps } from '../types.js';
 import styles from '../typography.module.scss';
 import {
@@ -171,13 +171,12 @@ export const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(funct
 	}
 
 	return (
-		<TooltipLazyAnchor
+		<TooltipAnchor
 			content={isTruncated ? children : null}
 			contentProps={{ className: styles['typography__tooltip'] }}
-			openOnFocus
 		>
 			{link}
-		</TooltipLazyAnchor>
+		</TooltipAnchor>
 	);
 });
 TypographyLink.displayName = 'Typography.Link';

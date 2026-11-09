@@ -18,7 +18,7 @@ export type TooltipLazyPopupProps = {
 };
 
 /**
- * The popup of `TooltipLazyAnchor`, mounted only while it is open or closing. It holds no state:
+ * The popup of `TooltipAnchor`, mounted only while it is open or closing. It holds no state:
  * the anchor decides when it opens, and hears when the pointer is over it and when it was
  * dismissed or finished closing.
  *

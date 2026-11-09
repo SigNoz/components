@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { queryOpenTooltip } from '../../__tests__/test-utils.js';
@@ -88,14 +88,13 @@ describe('Select tooltips', () => {
 
 		const trigger = screen.getByRole('combobox', { name: 'Service' });
 
-		// The value is measured after the first paint, and the tooltip mounts with it. A pointer that
-		// was already over the trigger by then would never have entered it.
-		await waitFor(() => {
-			expect(trigger).toHaveAttribute('aria-describedby');
-		});
+		// The value is measured after the first paint, and only then does the trigger have anything to
+		// show. The trigger describes nothing until its popup is open, so there is no attribute to wait
+		// for. A pointer that already rests on it opens it on its next move.
 		await userEvent.hover(trigger);
-
 		await waitFor(() => {
+			fireEvent.mouseMove(trigger);
+
 			expect(queryOpenTooltip()).toHaveTextContent(LONG_LABEL);
 		});
 	});

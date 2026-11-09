@@ -4,9 +4,8 @@ const TooltipTriggerContext = createContext(false);
 
 /**
  * Marks everything below it as living inside a tooltip trigger. Sits around the
- * trigger rather than inside it: the trigger hands its single child to Base UI as
- * `render`, so a provider element there would become the rendered element and
- * swallow the props meant for the trigger.
+ * trigger rather than inside it: the trigger is the child element itself, cloned with
+ * the trigger props, so a provider element there would take the place of that child.
  *
  * @access private
  */
@@ -27,7 +26,7 @@ export function TooltipTriggerBoundary({ children }: { children: ReactNode }): R
 }
 
 /**
- * True when the caller is rendered inside a `TooltipTrigger`.
+ * True when the caller is rendered inside the trigger of a `TooltipAnchor`.
  *
  * @access private
  */

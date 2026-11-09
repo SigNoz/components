@@ -2,7 +2,7 @@ import { forwardRef, useMemo, type ElementType } from 'react';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import type { RejectedProps } from '../lib/utils.js';
-import { TooltipLazyAnchor } from '../tooltip/subcomponents/tooltip-lazy-anchor.js';
+import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TypographyLink } from './subcomponents/typography-link.js';
 import type { TypographyProps } from './types.js';
 import styles from './typography.module.scss';
@@ -230,12 +230,13 @@ const TypographyRoot = forwardRef<HTMLElement, TypographyProps>(function Typogra
 	}
 
 	return (
-		<TooltipLazyAnchor
+		<TooltipAnchor
 			content={isTruncated ? children : null}
 			contentProps={{ className: styles['typography__tooltip'] }}
+			openOnFocus={false}
 		>
 			{element}
-		</TooltipLazyAnchor>
+		</TooltipAnchor>
 	);
 });
 TypographyRoot.displayName = 'Typography';

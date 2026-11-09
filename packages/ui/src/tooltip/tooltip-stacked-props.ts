@@ -1,4 +1,4 @@
-import type { TooltipTriggerProps } from './subcomponents/tooltip-trigger.js';
+import type { TooltipAnchorProps } from './subcomponents/tooltip-anchor.js';
 import { useIsInsideTooltipTrigger } from './tooltip-trigger-context.js';
 import type { TooltipProps } from './types.js';
 
@@ -16,7 +16,7 @@ export function useStackedTooltipProps({
 	...rest
 }: TooltipOwnProps): {
 	stacked: boolean;
-	triggerProps: TooltipTriggerProps;
+	triggerProps: Omit<TooltipAnchorProps, 'content' | 'children'>;
 	contentProps: TooltipOwnProps;
 } {
 	const stacked = useIsInsideTooltipTrigger();
