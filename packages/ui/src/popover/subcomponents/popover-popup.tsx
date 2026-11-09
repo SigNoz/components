@@ -21,6 +21,10 @@ export type PopoverPopupProps = {
 	 * Wraps the content in the viewport that swaps it as the popup moves between triggers.
 	 */
 	viewport: boolean;
+	/**
+	 * Open for one of the handle's `Popover.Trigger`s, so the popup moves and resizes between them.
+	 */
+	shared: boolean;
 	children: ReactNode;
 } & AriaAttributes & { [key: `data-${string}`]: unknown };
 
@@ -40,6 +44,7 @@ export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopupProps>(functi
 		testId,
 		preview,
 		viewport,
+		shared,
 		children,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
@@ -64,7 +69,7 @@ export const PopoverPopup = forwardRef<HTMLDivElement, PopoverPopupProps>(functi
 				? { role: undefined }
 				: { 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy })}
 			data-preview={preview || undefined}
-			data-viewport={viewport || undefined}
+			data-shared={shared || undefined}
 			// After the spread: a `data-*` from the call site may not take the slot the component
 			// is found by.
 			data-slot="popover-popup"

@@ -149,6 +149,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 
 					if (opener !== undefined) {
 						setActiveTrigger(opener);
+						triggerHandle?.setActiveTrigger(opener);
 					}
 
 					// A `Popover.Trigger` of the handle: the popup goes to it and shows its payload,
@@ -194,7 +195,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 									side={side}
 									align={align}
 									anchor={resolvedAnchor}
-									viewport={isSwapping}
+									shared={fromTrigger}
 								>
 									<PopoverPopup
 										ref={popupRef}
@@ -205,6 +206,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 										testId={testId}
 										preview={preview}
 										viewport={isSwapping}
+										shared={fromTrigger}
 										{...props}
 									>
 										{content}

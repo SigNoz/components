@@ -18,7 +18,7 @@ export function PopoverPositioner({
 	side,
 	align,
 	anchor,
-	viewport,
+	shared,
 	children,
 }: {
 	trigger: Element | null;
@@ -26,10 +26,10 @@ export function PopoverPositioner({
 	align: NonNullable<PopoverPrimitive.Positioner.Props['align']>;
 	anchor: PopoverAnchorType;
 	/**
-	 * The popup swaps its content in a viewport, so the box is placed for the size the popup is
-	 * moving to.
+	 * Open for one of the handle's `Popover.Trigger`s, so the box is placed for the size the popup
+	 * is moving to, and slides between them.
 	 */
-	viewport: boolean;
+	shared: boolean;
 	children: ReactNode;
 }): ReactNode {
 	// The anchor is where the popup appears, so its layer is the one to clear. A popover a
@@ -43,7 +43,7 @@ export function PopoverPositioner({
 			sideOffset={POPOVER_SIDE_OFFSET}
 			alignOffset={POPOVER_ALIGN_OFFSET}
 			anchor={anchor}
-			data-viewport={viewport || undefined}
+			data-shared={shared || undefined}
 			data-slot="popover-positioner"
 			className={styles['popover__positioner']}
 			style={layerStyle}

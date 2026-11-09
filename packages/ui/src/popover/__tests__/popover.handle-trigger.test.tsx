@@ -13,10 +13,14 @@ const SERVICES: Service[] = [
 ];
 
 function Services({
+	services = SERVICES,
 	preview = false,
+	content = 'text',
 	onHandle,
 }: {
+	services?: Service[];
 	preview?: boolean;
+	content?: 'text' | 'link';
 	onHandle?: (handle: PopoverHandle<Service>) => void;
 }) {
 	const card = usePopoverHandle<Service>();
@@ -25,9 +29,15 @@ function Services({
 	return (
 		<>
 			<Popover handle={card} side="bottom" align="start" testId="services" aria-label="Service">
-				{(service) => <p>{service === undefined ? 'Loading' : `${service.name} summary`}</p>}
+				{(service) =>
+					content === 'link' ? (
+						<a href={`#${service?.id}-docs`}>{service?.name} docs</a>
+					) : (
+						<p>{service === undefined ? 'Loading' : `${service.name} summary`}</p>
+					)
+				}
 			</Popover>
-			{SERVICES.map((service) =>
+			{services.map((service) =>
 				preview ? (
 					<Popover.Trigger
 						key={service.id}
@@ -53,6 +63,39 @@ function Services({
 	);
 }
 
+/** The SigNoz saved-views shape: a row that holds a link and a menu button, with one card for all. */
+function Rows() {
+	const card = usePopoverHandle<Service>();
+
+	return (
+		<>
+			{SERVICES.map((service) => (
+				<Popover.Trigger
+					key={service.id}
+					handle={card}
+					payload={service}
+					nativeButton={false}
+					preview
+					delay={0}
+				>
+					<div>
+						<a href={`#${service.id}`}>{service.name}</a>
+						<button type="button">{service.name} actions</button>
+					</div>
+				</Popover.Trigger>
+			))}
+			<Popover handle={card} side="right" align="start" testId="services">
+				{(service) => <p>{service?.name} summary</p>}
+			</Popover>
+		</>
+	);
+}
+
+/** Past the timer a blur closes the card with. */
+async function waitPastTheBlur(): Promise<void> {
+	await new Promise((resolve) => setTimeout(resolve, 50));
+}
+
 function popup(): HTMLElement {
 	return screen.getByTestId('services-popup');
 }
@@ -70,6 +113,40 @@ describe('Popover.Trigger', () => {
 		expect(screen.getByRole('button', { name: 'Checkout' })).toHaveAttribute('data-popup-open');
 	});
 
+	it('keeps a popup that `showAt` placed from sliding, so it does not trail its anchor', async () => {
+		let handle: PopoverHandle<Service> | undefined;
+		render(<Services onHandle={(next) => (handle = next)} />);
+
+		act(() => handle?.showAt({ x: 10, y: 10 }, SERVICES[0]));
+
+		await waitFor(() => expect(popup()).toHaveTextContent('Frontend summary'));
+		expect(popup()).not.toHaveAttribute('data-shared');
+		expect(popup().parentElement).not.toHaveAttribute('data-shared');
+	});
+
+	it('keeps the popup when another trigger unmounts', async () => {
+		const user = userEvent.setup();
+		const { rerender } = render(<Services />);
+
+		await user.click(screen.getByRole('button', { name: 'Frontend' }));
+		await screen.findByText('Frontend summary');
+		rerender(<Services services={SERVICES.slice(0, 1)} />);
+		await waitPastTheBlur();
+
+		expect(popup()).toHaveTextContent('Frontend summary');
+	});
+
+	it('closes when the trigger it is open for unmounts', async () => {
+		const user = userEvent.setup();
+		const { rerender } = render(<Services />);
+
+		await user.click(screen.getByRole('button', { name: 'Checkout' }));
+		await screen.findByText('Checkout summary');
+		rerender(<Services services={SERVICES.slice(0, 1)} />);
+
+		await waitFor(() => expect(screen.queryByTestId('services-popup')).not.toBeInTheDocument());
+	});
+
 	it('moves the popup to another trigger and swaps its content in the viewport', async () => {
 		const user = userEvent.setup();
 		render(<Services />);
@@ -81,7 +158,47 @@ describe('Popover.Trigger', () => {
 		await waitFor(() => expect(popup()).toHaveTextContent('Checkout summary'));
 		expect(screen.getAllByTestId('services-popup')).toHaveLength(1);
 		expect(popup().querySelector('[data-slot="popover-viewport"]')).not.toBeNull();
-		expect(popup()).toHaveAttribute('data-viewport');
+		expect(popup()).toHaveAttribute('data-shared');
+	});
+
+	it('opens on hover with `openOnHover`, and still on a press', async () => {
+		const user = userEvent.setup();
+		let card: PopoverHandle<Service> | undefined;
+
+		function HoverServices({ onHandle }: { onHandle: (handle: PopoverHandle<Service>) => void }) {
+			const handle = usePopoverHandle<Service>();
+			onHandle(handle);
+
+			return (
+				<>
+					{SERVICES.map((service) => (
+						<Popover.Trigger
+							key={service.id}
+							handle={handle}
+							payload={service}
+							nativeButton
+							openOnHover
+							delay={0}
+						>
+							<button type="button">{service.name}</button>
+						</Popover.Trigger>
+					))}
+					<Popover handle={handle} side="bottom" align="start" testId="services">
+						{(service) => <p>{service?.name} summary</p>}
+					</Popover>
+				</>
+			);
+		}
+
+		render(<HoverServices onHandle={(next) => (card = next)} />);
+
+		await user.hover(screen.getByRole('button', { name: 'Checkout' }));
+		await waitFor(() => expect(popup()).toHaveTextContent('Checkout summary'));
+
+		act(() => card?.close());
+		await waitFor(() => expect(screen.queryByTestId('services-popup')).not.toBeInTheDocument());
+		await user.click(screen.getByRole('button', { name: 'Frontend' }));
+		await waitFor(() => expect(popup()).toHaveTextContent('Frontend summary'));
 	});
 
 	it('opens for a trigger from code with `openTrigger`', async () => {
@@ -154,6 +271,37 @@ describe('Popover.Trigger', () => {
 			await user.tab();
 
 			await waitFor(() => expect(screen.queryByTestId('services-popup')).not.toBeInTheDocument());
+		});
+
+		it('opens for a row while the keyboard focus is on a link inside it, and stays as it moves along the row', async () => {
+			const user = userEvent.setup();
+			render(<Rows />);
+
+			await user.tab();
+			await waitFor(() => expect(popup()).toHaveTextContent('Frontend summary'));
+			expect(screen.getByRole('link', { name: 'Frontend' })).toHaveFocus();
+
+			await user.tab();
+			expect(screen.getByRole('button', { name: 'Frontend actions' })).toHaveFocus();
+			await waitPastTheBlur();
+			expect(popup()).toHaveTextContent('Frontend summary');
+
+			await user.tab();
+			await waitFor(() => expect(popup()).toHaveTextContent('Checkout summary'));
+		});
+
+		it('goes into a card that holds a link with Tab, and on to the next trigger after it', async () => {
+			const user = userEvent.setup();
+			render(<Services preview content="link" />);
+
+			await user.tab();
+			await waitFor(() => expect(popup()).toHaveTextContent('Frontend docs'));
+			await user.tab();
+			expect(screen.getByRole('link', { name: 'Frontend docs' })).toHaveFocus();
+			await user.tab();
+
+			expect(screen.getByRole('link', { name: 'Checkout' })).toHaveFocus();
+			await waitFor(() => expect(popup()).toHaveTextContent('Checkout docs'));
 		});
 
 		it('takes no press: a click on the trigger leaves its card open', async () => {

@@ -1,5 +1,5 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
-import { type ReactElement, useId, useMemo } from 'react';
+import { type ReactElement, useEffect, useId, useMemo, useState } from 'react';
 import {
 	POPOVER_HOVER_CLOSE_DELAY,
 	POPOVER_HOVER_DELAY,
@@ -56,6 +56,18 @@ export function PopoverHandleTrigger<Payload>({
 	// of the `render` element win.
 	const id = children.props.id ?? generatedId;
 	const focus = usePopoverPreviewFocus(handle, id, delay);
+	const [element, setElement] = useState<HTMLElement | null>(null);
+
+	// Base UI keeps a popup open after its trigger has gone, placed against nothing at the top left
+	// of the page: a row deleted or filtered out while its popover is open. It goes with the trigger.
+	useEffect(
+		() => () => {
+			if (element !== null && handle.isOpen && handle.activeTrigger === element) {
+				handle.close();
+			}
+		},
+		[handle, element],
+	);
 	// One object per payload: Base UI writes a new payload into the popup's store, which renders
 	// the popover, and so this trigger, again.
 	const envelope = useMemo<PopoverTriggerPayload<Payload>>(
@@ -65,6 +77,7 @@ export function PopoverHandleTrigger<Payload>({
 
 	return (
 		<PopoverPrimitive.Trigger
+			ref={setElement}
 			handle={handle.primitive}
 			payload={envelope}
 			id={id}

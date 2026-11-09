@@ -424,6 +424,21 @@ describe('Popover.Trigger', () => {
 		);
 	});
 
+	test('rejects className and style, the element passed as children carries its own', () => {
+		assertType(
+			// @ts-expect-error - `className` is not a prop
+			<Popover.Trigger handle={cards} nativeButton className="x">
+				{btn}
+			</Popover.Trigger>,
+		);
+		assertType(
+			// @ts-expect-error - `style` is not a prop
+			<Popover.Trigger handle={cards} nativeButton style={{ color: 'red' }}>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
 	test('rejects props a trigger does not take', () => {
 		assertType(
 			// @ts-expect-error - the element carries its own test id
