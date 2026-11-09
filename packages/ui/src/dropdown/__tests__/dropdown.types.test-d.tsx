@@ -300,16 +300,26 @@ describe('the link row', () => {
 	});
 
 	test('rejects a handler, because navigation is the action', () => {
-		assertType<DropdownLinkItemType>(
+		assertType<DropdownLinkItemType>({
+			type: 'link',
+			value: 'docs',
+			label: 'Docs',
+			render: <a href="/docs">Docs</a>,
 			// @ts-expect-error - put the handler on the element you render
-			{ type: 'link', value: 'docs', label: 'Docs', render: <a href="/docs" />, onClick: () => {} },
-		);
+			onClick: () => {},
+		});
 	});
 
 	test('rejects a disabled link row with no reason', () => {
 		assertType<DropdownLinkItemType>(
 			// @ts-expect-error - a blocked row has to tell the user why
-			{ type: 'link', value: 'docs', label: 'Docs', render: <a href="/docs" />, disabled: true },
+			{
+				type: 'link',
+				value: 'docs',
+				label: 'Docs',
+				render: <a href="/docs">Docs</a>,
+				disabled: true,
+			},
 		);
 	});
 });
