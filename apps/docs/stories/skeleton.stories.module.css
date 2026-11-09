@@ -40,7 +40,6 @@
   max-width: 28rem;
 }
 
-/* One label column, then one column per size. */
 .matrix {
   display: grid;
   grid-template-columns: max-content repeat(var(--matrix-columns), minmax(0, 14rem));
