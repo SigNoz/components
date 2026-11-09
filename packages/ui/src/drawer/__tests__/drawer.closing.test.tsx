@@ -192,14 +192,14 @@ describe('Drawer closing', () => {
 
 	it('closes when the consumer sets open to false for a reason of its own', async () => {
 		const { rerender } = render(
-			<Drawer type="inspector" open onClose={() => {}} title="Span details">
+			<Drawer type="inspector" stack="overlay" open onClose={() => {}} title="Span details">
 				Body
 			</Drawer>,
 		);
 		await screen.findByRole('dialog', { name: 'Span details' });
 
 		rerender(
-			<Drawer type="inspector" open={false} onClose={() => {}} title="Span details">
+			<Drawer type="inspector" stack="overlay" open={false} onClose={() => {}} title="Span details">
 				Body
 			</Drawer>,
 		);
@@ -210,7 +210,14 @@ describe('Drawer closing', () => {
 
 	it('plays its exit transition before it unmounts the content', async () => {
 		const { rerender } = render(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" testId="drawer">
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={() => {}}
+				title="Edit member"
+				testId="drawer"
+			>
 				Body
 			</Drawer>,
 		);
@@ -220,7 +227,14 @@ describe('Drawer closing', () => {
 		expect(panel).not.toHaveAttribute('data-closed');
 
 		rerender(
-			<Drawer type="task" open={false} onClose={() => {}} title="Edit member" testId="drawer">
+			<Drawer
+				type="task"
+				stack="overlay"
+				open={false}
+				onClose={() => {}}
+				title="Edit member"
+				testId="drawer"
+			>
 				Body
 			</Drawer>,
 		);
@@ -262,7 +276,7 @@ describe('Drawer closing', () => {
 			return <input aria-label="Probe" />;
 		}
 		render(
-			<Drawer type={type} open={false} onClose={() => {}} title="Edit member">
+			<Drawer type={type} stack="overlay" open={false} onClose={() => {}} title="Edit member">
 				<Probe />
 			</Drawer>,
 		);

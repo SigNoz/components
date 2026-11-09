@@ -9,6 +9,7 @@ import { Typography } from '../../typography/index.js';
 import styles from '../drawer.module.scss';
 import type { DrawerProps } from '../types.js';
 import { useInert } from '../use-inert.js';
+import { displayTitle } from '../utils.js';
 
 type DrawerHeaderProps = Pick<
 	DrawerProps,
@@ -109,7 +110,7 @@ export function DrawerHeader({
 							display="block"
 							textOverflow="ellipsis"
 						>
-							{title.trim() === '' ? '<No title>' : title}
+							{displayTitle(title)}
 						</Typography>
 					</DrawerPrimitive.Title>
 					{loading ? (

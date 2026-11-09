@@ -131,6 +131,26 @@
 		--drawer-internal-max-inline-size: var(--drawer-entity-max-inline-size, 55rem);
 	}
 
+	// A nested drawer takes its width from the drawer it opens from, which it measures into
+	// `--drawer-internal-stack-inline-size`. After the widths, which it replaces.
+	&[data-nested='overlay'] {
+		--drawer-internal-max-inline-size: calc(
+			var(--drawer-internal-stack-inline-size, 100%) * var(--drawer-overlay-width-ratio, 0.8)
+		);
+	}
+
+	// A drawer of a breadcrumb trail opens in place, over the one before it, with no movement.
+	&[data-nested='breadcrumb'] {
+		--drawer-internal-max-inline-size: var(--drawer-internal-stack-inline-size, 100%);
+
+		transition-duration: var(--drawer-nested-breadcrumb-transition-duration, 0ms);
+
+		&[data-starting-style],
+		&[data-ending-style] {
+			transform: var(--drawer-nested-breadcrumb-transform, none);
+		}
+	}
+
 	&:focus-visible {
 		outline: var(--drawer-focus-visible-outline, none);
 	}
@@ -160,6 +180,19 @@
 	flex: var(--drawer-content-flex, 1 1 auto);
 	min-block-size: var(--drawer-content-min-block-size, 0);
 	border-radius: var(--drawer-content-border-radius, inherit);
+
+	// Under the next drawer of a breadcrumb trail, at the same width: out of sight, so its content
+	// skips layout and paint, and keeps its state and scroll for the step back. The nested drawer
+	// is portalled, so it is not inside.
+	.drawer[data-covered='breadcrumb'] > & {
+		content-visibility: var(--drawer-content-covered-content-visibility, hidden);
+	}
+
+	// Base UI sets `data-nested-drawer-swiping` on the panel while the drawer above it is swiped
+	// away, which uncovers it.
+	.drawer[data-covered='breadcrumb'][data-nested-drawer-swiping] > & {
+		content-visibility: var(--drawer-content-nested-swiping-content-visibility, visible);
+	}
 }
 
 .drawer__header {
@@ -297,6 +330,32 @@
 	&[data-loading] {
 		opacity: var(--drawer-header-suffix-loading-opacity, 0.6);
 	}
+}
+
+// The way back of a breadcrumb trail, one row under the header.
+.drawer__trail {
+	display: var(--drawer-trail-display, flex);
+	flex-shrink: var(--drawer-trail-flex-shrink, 0);
+	align-items: var(--drawer-trail-align-items, center);
+	box-sizing: var(--drawer-trail-box-sizing, border-box);
+	min-block-size: var(--drawer-trail-min-block-size, 48px);
+	padding-inline: var(--drawer-trail-padding-inline, var(--spacing-6));
+	border-width: var(--drawer-trail-border-width, 0 0 1px 0);
+	border-style: var(--drawer-trail-border-style, solid);
+	border-color: var(--drawer-trail-border-color, var(--drawer-border));
+
+	> [data-slot='breadcrumb'] {
+		flex: var(--drawer-trail-breadcrumb-flex, 1 1 auto);
+		min-inline-size: var(--drawer-trail-breadcrumb-min-inline-size, 0);
+	}
+}
+
+// The number of a step at the end of its row in the `...` list of the trail, which portals out of
+// the trail.
+.drawer__trail-step {
+	color: var(--drawer-trail-step-color, var(--l3-foreground));
+	font-size: var(--drawer-trail-step-font-size, var(--label-small-400-font-size));
+	font-variant-numeric: var(--drawer-trail-step-font-variant-numeric, tabular-nums);
 }
 
 .drawer__body {

@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent as browserUser } from 'vitest/browser';
+import { Drawer } from '../drawer.js';
 import type { DrawerTypeType } from '../types.js';
 import {
 	DrawerHarness,
@@ -10,6 +11,7 @@ import {
 	renderOpenDrawer,
 	slot,
 	waitForClosed,
+	waitForSettled,
 } from './drawer.test-utils.js';
 
 const TYPES: DrawerTypeType[] = ['task', 'inspector'];
@@ -216,5 +218,47 @@ describe('Drawer swipe', () => {
 		expect(swipeMovement()).toBe('0px');
 		expect(onClose).not.toHaveBeenCalled();
 		expect(drawerPanel()).toHaveAttribute('data-open');
+	});
+});
+
+describe('Drawer swipe in a breadcrumb trail', () => {
+	it('shows the content of the drawer under the one being swiped', async () => {
+		render(
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				open
+				onClose={() => {}}
+				title="node"
+				testId="node"
+			>
+				<p>The node.</p>
+				<Drawer
+					type="inspector"
+					stack="breadcrumb"
+					open
+					onClose={() => {}}
+					title="pod"
+					testId="pod"
+				>
+					<p>The pod.</p>
+				</Drawer>
+			</Drawer>,
+		);
+		await waitFor(() => {
+			expect(screen.getByTestId('node')).toHaveAttribute('data-covered', 'breadcrumb');
+		});
+		await waitForSettled();
+		expect(screen.getByText('The node.').checkVisibility()).toBe(false);
+
+		const finger = touch(screen.getByText('The pod.'));
+		await finger.moveBy(100, 16);
+		await finger.moveBy(100, 16);
+
+		await waitFor(() => {
+			expect(screen.getByTestId('node')).toHaveAttribute('data-nested-drawer-swiping');
+		});
+		expect(screen.getByText('The node.').checkVisibility()).toBe(true);
+		finger.lift();
 	});
 });

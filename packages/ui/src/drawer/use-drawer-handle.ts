@@ -11,10 +11,10 @@ import type { DrawerHandleType } from './types.js';
  * a function to receive that payload. Calling `open` again while the drawer is shown swaps the
  * payload in place, which is how ↑/↓ step through the rows.
  *
- * With a handle the drawer closes itself on `Esc`, the close button, a swipe and a press on the
- * backdrop of a `task`. `handle.close()` closes it from inside, such as a form after its save
- * succeeds. So `open` and `onClose` are never passed with a handle, and a drawer that must refuse
- * a close uses `open`.
+ * With a handle the drawer closes itself on `Esc`, the close button, a swipe, a press on the
+ * backdrop of a `task` and a press on an earlier crumb of a breadcrumb trail. `handle.close()`
+ * closes it from inside, such as a form after its save succeeds. So `open` and `onClose` are never
+ * passed with a handle, and a drawer that must refuse a close uses `open`.
  *
  * `onOpenChange` reports every open and close, whichever caused it.
  *
@@ -22,7 +22,13 @@ import type { DrawerHandleType } from './types.js';
  * ```tsx
  * const logDetails = useDrawerHandle<LogRow>();
  *
- * <Drawer handle={logDetails} type="inspector" title="Log details" width="extra-wide">
+ * <Drawer
+ *   handle={logDetails}
+ *   type="inspector"
+ *   stack="overlay"
+ *   title="Log details"
+ *   width="extra-wide"
+ * >
  *   {(log) => <LogDetails log={log} />}
  * </Drawer>;
  *

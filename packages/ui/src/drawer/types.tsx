@@ -1,5 +1,6 @@
 import type { Drawer } from '@base-ui/react/drawer';
-import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
+import type { BreadcrumbEllipsisOptions } from '../breadcrumb/types.js';
 import type { DialogHandle } from '../dialog/dialog-handle.js';
 import type { CloseHandlerRule, NoHandle, RuleFor, ValidateOpenOrHandle } from '../dialog/types.js';
 
@@ -25,10 +26,91 @@ export type DrawerTypeType = 'inspector' | 'task';
 export type DrawerWidthType = 'narrow' | 'base' | 'wide' | 'extra-wide' | 'entity';
 
 /**
- * Why a `Drawer` asks to close: `Esc`, a press on the backdrop of a `task`, the close button, or a
- * swipe towards the edge on a touch screen.
+ * How the drawers opened inside a `Drawer` render.
+ *
+ * `breadcrumb` drills down: the nested drawer opens in place, at the same width, and a trail of
+ * crumbs under its header leads back. Every drawer of the trail is one crumb.
+ *
+ * `overlay` opens the nested drawer over this one, 20% narrower so this one stays in sight. This
+ * one takes no input until the nested drawer closes.
  */
-export type DrawerCloseReasonType = 'escape-key' | 'outside-press' | 'close-press' | 'swipe';
+export type DrawerStackType = 'overlay' | 'breadcrumb';
+
+/**
+ * What a drawer shows as its crumb in a breadcrumb trail.
+ */
+export type DrawerCrumbType = {
+	/**
+	 * The label of the crumb, such as the short name of the record.
+	 *
+	 * @note A blank label, such as `''`, falls back to the `title` of the drawer too, and a blank
+	 * `title` to `<No title>`.
+	 *
+	 * @default the `title` of the drawer
+	 */
+	title?: ReactNode;
+	/**
+	 * Rendered before the label: the icon of the kind of record, such as a pod or a trace.
+	 */
+	icon?: ReactNode;
+	/**
+	 * A card shown while the pointer rests on the crumb, or while the crumb has keyboard focus, such
+	 * as the full name, the kind and the key facts of the record. The card closes shortly after the
+	 * pointer leaves, and stays open while the pointer is on it.
+	 *
+	 * @note The crumb of the drawer on top shows no card: its record is on screen.
+	 */
+	preview?: ReactNode;
+	/**
+	 * Makes the crumb a link to this drawer's record, such as a URL that reopens the trail up to
+	 * it, so the crumb can open in a new tab. A plain click still steps back in the trail and does
+	 * not follow the link. A click with `Ctrl`, `Cmd`, `Shift` or `Alt`, a middle click and the
+	 * context menu are left to the browser, and close no drawer.
+	 *
+	 * @note The crumb of the drawer on top is never a link.
+	 */
+	href?: string;
+	/**
+	 * Where the link of the crumb opens, as on an `<a>`.
+	 */
+	target?: string;
+	/**
+	 * The element that renders the link of the crumb, such as the `Link` of the router. A plain
+	 * click cancels its navigation, the same as it does for `href`, so its own click handler sees
+	 * `event.defaultPrevented`.
+	 *
+	 * @note Leave it without children: the label is the crumb's title.
+	 */
+	render?: ReactElement;
+};
+
+/**
+ * One earlier step of the trail a drawer shows with its `trail` prop: a crumb with a label of its
+ * own, since there is no drawer for its title to default to.
+ */
+export type DrawerTrailStepType = Omit<DrawerCrumbType, 'title'> & {
+	/**
+	 * The label of the crumb, such as the short name of the record.
+	 */
+	title: ReactNode;
+};
+
+/**
+ * Why a drawer with a `trail` asks to show an earlier step: a plain click on its crumb, or `Esc`,
+ * which steps back to the last one.
+ */
+export type DrawerTrailSelectReasonType = 'crumb-press' | 'escape-key';
+
+/**
+ * Why a `Drawer` asks to close: `Esc`, a press on the backdrop of a `task`, the close button, a
+ * swipe towards the edge on a touch screen, or a press on an earlier crumb of a breadcrumb trail.
+ */
+export type DrawerCloseReasonType =
+	| 'escape-key'
+	| 'outside-press'
+	| 'close-press'
+	| 'swipe'
+	| 'crumb-press';
 
 /**
  * Opens a `Drawer` from application state, and closes it from inside its content. Create one with
@@ -132,6 +214,24 @@ interface TheDrawerTakesNoClassName {
 	'`Drawer` takes no `className` or `style`: wrap your content in your own element, and reach the panel with a `data-*` attribute': never;
 }
 
+interface ATrailNeedsOnTrailSelect {
+	'a press on an earlier step of `trail` asks you to show it: pass `onTrailSelect(index)` and render that step': never;
+}
+
+interface OnTrailSelectNeedsATrail {
+	'`onTrailSelect` reports a press on a step of `trail`: pass the `trail`, or drop it': never;
+}
+
+/**
+ * A `trail` is controlled: the drawer never changes its content itself, so the handler that does
+ * is required with it, and rejected without it.
+ */
+type ValidateDrawerTrail<T> = [Extract<keyof T, 'trail'>] extends [never]
+	? RuleFor<T, 'onTrailSelect', OnTrailSelectNeedsATrail>
+	: [Extract<keyof T, 'onTrailSelect'>] extends [never]
+		? ATrailNeedsOnTrailSelect
+		: unknown;
+
 /**
  * The rules of an `inspector`: no footer and no description. A `type` known only at runtime takes
  * the slots of a `task`, and the drawer drops them when it turns out to be an inspector.
@@ -161,6 +261,7 @@ export type ValidateDrawerProps<T, Payload = NoHandle> = RuleFor<
 		PayloadChildrenNeedAHandle
 	> &
 	ValidateDrawerType<T> &
+	ValidateDrawerTrail<T> &
 	RuleFor<T, 'trigger' | 'defaultOpen', TheDrawerIsAlwaysControlled> &
 	RuleFor<T, 'onOpenChange', OnOpenChangeIsOnClose> &
 	RuleFor<T, 'showOverlay' | 'modal' | 'mask', TheTypeSetsTheBackdrop> &
@@ -206,6 +307,69 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		type: DrawerTypeType;
 		/**
+		 * How a drawer declared inside this one renders when it opens.
+		 *
+		 * `breadcrumb` drills down: the nested drawer opens in place at this one's width, and a trail
+		 * of crumbs under its header leads back. A press on a crumb closes every drawer after it with
+		 * `crumb-press`. In the trail, `Esc` closes only the current drawer, a step back, while the
+		 * close button, a swipe and a press on the backdrop close every drawer of the trail, the one
+		 * on top first. A drawer that stays open after its `onClose` stops the leave: the drawers
+		 * under it stay open. The first drawer of the trail sets the backdrop and the focus trap of
+		 * all of them.
+		 *
+		 * `overlay` opens the nested drawer over this one, at 80% of its width, so this one stays in
+		 * sight but takes no input until the nested drawer closes. The nested drawer's `type` sets
+		 * its own backdrop.
+		 *
+		 * @note A nested drawer takes its width from this one, so its own `width` does not apply.
+		 * The trails nest: a drawer of a trail with `stack="overlay"` opens an overlay, and the
+		 * overlay may start a trail of its own.
+		 */
+		stack: DrawerStackType;
+		/**
+		 * The crumb of this drawer in a breadcrumb trail: a short label and the icon of the kind of
+		 * record.
+		 *
+		 * @default the `title`, with no icon
+		 */
+		crumb?: DrawerCrumbType;
+		/**
+		 * The `...` crumb of the breadcrumb trail this drawer starts, merged over the default. It
+		 * opens a popover on hover and on a press that lists the earlier steps. `render` replaces the
+		 * list with your own content.
+		 *
+		 * @note Read on the first drawer of a trail only, the one that is not nested in a trail
+		 * itself.
+		 *
+		 * @default { heading: 'Earlier steps', rowSuffix: step number }
+		 */
+		trailEllipsis?: BreadcrumbEllipsisOptions;
+		/**
+		 * The earlier steps of a drill-down this one drawer shows itself, root first, for content
+		 * too heavy to keep mounted once per step, such as a page of charts. The drawer renders them
+		 * as the breadcrumb trail under its header, its own `crumb` last, and you render only the
+		 * current step as `children`: a nested drawer with `stack="breadcrumb"` keeps every earlier
+		 * step mounted instead.
+		 *
+		 * The crumbs behave as in a nested trail. A plain click on a step calls `onTrailSelect` with
+		 * its index and `crumb-press`, `Esc` calls it with the last index and `escape-key`, and a
+		 * click with a modifier key follows the step's `href` in a new tab. The close button, a
+		 * swipe and a press on the backdrop still call `onClose`.
+		 *
+		 * @note Controlled: the drawer never changes its steps or its content, so `onTrailSelect` is
+		 * required with it. An empty `trail` shows no trail, and `Esc` closes the drawer.
+		 */
+		trail?: readonly DrawerTrailStepType[];
+		/**
+		 * Called when the user asks to show an earlier step of `trail`: a plain click on its crumb
+		 * (`crumb-press`), or `Esc` for the last one (`escape-key`). Drop the steps after `index` and
+		 * render that step.
+		 *
+		 * @note Required with `trail`, rejected without it. A nested drawer open over this one
+		 * closes first, with `crumb-press`.
+		 */
+		onTrailSelect?: (index: number, reason: DrawerTrailSelectReasonType) => void;
+		/**
 		 * Shows the drawer. With `open` the drawer is controlled: it never opens or closes itself.
 		 *
 		 * @note Required unless a `handle` is passed, and never passed with one.
@@ -237,9 +401,9 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		container?: OriginalPortalProps['container'];
 		/**
 		 * Called when the user asks to close the drawer: `Esc` (`escape-key`), a press on the
-		 * backdrop of a `task` (`outside-press`), the close button (`close-press`) or a swipe
-		 * towards the right edge on a touch screen (`swipe`). The drawer stays open until `open`
-		 * becomes `false`.
+		 * backdrop of a `task` (`outside-press`), the close button (`close-press`), a swipe
+		 * towards the right edge on a touch screen (`swipe`), or a press on an earlier crumb of a
+		 * breadcrumb trail (`crumb-press`). The drawer stays open until `open` becomes `false`.
 		 *
 		 * @note Required with `open`, rejected with a `handle`: a drawer on a handle closes itself on
 		 * every request, and `useDrawerHandle(onOpenChange)` reports it. A drawer that must refuse a
@@ -248,6 +412,9 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note To keep the drawer open for one reason, ignore that reason in the handler, and say
 		 * why in the code. An `inspector` never reports `outside-press`: the page behind it stays
 		 * usable.
+		 *
+		 * @note In a breadcrumb trail, a drawer that stays open after its `onClose` stops the leave:
+		 * the drawers under it stay open.
 		 */
 		onClose?: (reason: DrawerCloseReasonType) => void;
 		/**
@@ -344,10 +511,13 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * Forwarded to the panel as `data-testid`. Every part is named after it:
 		 * `` `${testId}-backdrop` ``, `-header`, `-header-prefix`, `-title-prefix`, `-title`,
-		 * `-title-suffix`, `-description`, `-header-suffix`, `-close`, `-body`, `-footer`,
-		 * `-footer-prefix`, `-footer-suffix`. While `loading`, the skeletons are
-		 * `-title-prefix-skeleton`, `-title-skeleton`, `-description-skeleton` and
-		 * `-body-skeleton`.
+		 * `-title-suffix`, `-description`, `-header-suffix`, `-close`, `-trail`,
+		 * `-trail-breadcrumb`, `-body`, `-footer`, `-footer-prefix`, `-footer-suffix`. While
+		 * `loading`, the skeletons are `-title-prefix-skeleton`, `-title-skeleton`,
+		 * `-description-skeleton` and `-body-skeleton`.
+		 *
+		 * The parts of the trail are named from `-trail-breadcrumb`, the way `Breadcrumb` names its
+		 * parts from its own `testId`, such as `-trail-breadcrumb-item-0` for the first crumb.
 		 */
 		testId?: string;
 		/**

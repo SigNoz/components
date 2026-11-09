@@ -49,6 +49,7 @@ function DrawerIn({
 	return (
 		<Drawer
 			type={type}
+			stack="overlay"
 			open
 			title="Edit member"
 			testId="drawer"
@@ -145,7 +146,14 @@ describe('Drawer container', () => {
 		await settle();
 
 		rerender(
-			<Drawer type={type} open={false} title="Edit member" container={host} onClose={() => {}}>
+			<Drawer
+				type={type}
+				stack="overlay"
+				open={false}
+				title="Edit member"
+				container={host}
+				onClose={() => {}}
+			>
 				Body
 			</Drawer>,
 		);
@@ -216,6 +224,7 @@ describe('Drawer container', () => {
 					<Drawer
 						handle={handle}
 						type="inspector"
+						stack="overlay"
 						title="Edit member"
 						testId="drawer"
 						container={host}

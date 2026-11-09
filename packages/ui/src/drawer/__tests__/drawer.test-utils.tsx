@@ -75,6 +75,7 @@ export function DrawerHarness({
 				<Drawer
 					{...props}
 					type="task"
+					stack="overlay"
 					open={open}
 					title={title}
 					testId={testId}
@@ -89,6 +90,7 @@ export function DrawerHarness({
 				<Drawer
 					{...props}
 					type="inspector"
+					stack="overlay"
 					open={open}
 					title={title}
 					testId={testId}

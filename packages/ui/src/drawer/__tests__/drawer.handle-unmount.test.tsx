@@ -32,7 +32,7 @@ function ShownHarness({
 	}, [handle, handleRef]);
 
 	return shown ? (
-		<Drawer handle={handle} type="task" title="Log details" testId="drawer">
+		<Drawer handle={handle} type="task" stack="overlay" title="Log details" testId="drawer">
 			<input aria-label="Name" />
 		</Drawer>
 	) : null;
@@ -54,7 +54,14 @@ function KeyedHarness({
 	}, [handle, handleRef]);
 
 	return (
-		<Drawer key={drawerKey} handle={handle} type="inspector" title="Log details" testId="drawer">
+		<Drawer
+			key={drawerKey}
+			handle={handle}
+			type="inspector"
+			stack="overlay"
+			title="Log details"
+			testId="drawer"
+		>
 			Body
 		</Drawer>
 	);
@@ -79,7 +86,14 @@ function ParentHarness({
 	}, [child, handleRef]);
 
 	return (
-		<Drawer type="task" open={parentOpen} onClose={() => {}} title="Edit member" testId="drawer">
+		<Drawer
+			type="task"
+			stack="overlay"
+			open={parentOpen}
+			onClose={() => {}}
+			title="Edit member"
+			testId="drawer"
+		>
 			<Dialog handle={child} title="Discard changes?" testId="child">
 				Body
 			</Dialog>
@@ -260,7 +274,7 @@ describe('Drawer on a handle that unmounts while open', () => {
 			}, [handle]);
 
 			return (
-				<Drawer handle={handle} type="task" title="Log details" testId="drawer">
+				<Drawer handle={handle} type="task" stack="overlay" title="Log details" testId="drawer">
 					Body
 				</Drawer>
 			);

@@ -202,6 +202,7 @@ function DialogInDrawer({ type = 'task', onDrawerClose }: DialogInDrawerProps): 
 	return (
 		<Drawer
 			type={type}
+			stack="overlay"
 			open={drawerOpen}
 			onClose={(reason) => {
 				onDrawerClose?.(reason);
@@ -301,6 +302,7 @@ function DrawerInDialog({ type = 'task', onDialogClose, onDrawerClose }: DrawerI
 			</button>
 			<Drawer
 				type={type}
+				stack="overlay"
 				open={drawerOpen}
 				onClose={(reason) => {
 					onDrawerClose?.(reason);
@@ -335,6 +337,14 @@ describe('Drawer layer when opened from inside a Dialog', () => {
 			await waitForOnTop(screen.getByRole('textbox', { name: 'Filter' }));
 		},
 	);
+
+	// Base UI renders the backdrop of the outermost dialog only, and the dialog already shades the
+	// page.
+	it('renders no backdrop of its own for a task', async () => {
+		await openDrawerInDialog({ type: 'task' });
+
+		expect(document.querySelector('[data-slot="drawer-backdrop"]')).toBeNull();
+	});
 
 	it('marks the dialog panel with data-nested-dialog-open while the drawer is open', async () => {
 		await openDrawerInDialog();
@@ -492,7 +502,14 @@ describe('Drawer with popups opened inside the panel', () => {
 			const [panel, setPanel] = useState<HTMLDivElement | null>(null);
 
 			return (
-				<Drawer ref={setPanel} type="inspector" open onClose={() => {}} title="Log details">
+				<Drawer
+					ref={setPanel}
+					type="inspector"
+					stack="overlay"
+					open
+					onClose={() => {}}
+					title="Log details"
+				>
 					<Tooltip container={panel} title="Copies the span id">
 						<button type="button">Copy</button>
 					</Tooltip>

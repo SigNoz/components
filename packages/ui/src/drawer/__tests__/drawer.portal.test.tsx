@@ -85,6 +85,7 @@ function Harness({
 	return (
 		<Drawer
 			type={type}
+			stack="overlay"
 			open
 			onClose={onDrawerClose}
 			title="Edit member"
@@ -239,6 +240,7 @@ describe('Drawer declared in a popover inside a dialog', () => {
 					</button>
 					<Drawer
 						type="task"
+						stack="overlay"
 						open={drawerOpen}
 						onClose={() => setDrawerOpen(false)}
 						title="Pick a member"

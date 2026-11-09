@@ -57,6 +57,7 @@ function GuardedForm({ onDrawerClose }: GuardedFormProps): ReactNode {
 			</button>
 			<Drawer
 				type="task"
+				stack="overlay"
 				open={open}
 				onClose={(reason) => {
 					onDrawerClose?.(reason);
@@ -295,6 +296,7 @@ function NestedHarness({
 			</button>
 			<Drawer
 				type={type}
+				stack="overlay"
 				open={drawerOpen}
 				onClose={(reason) => {
 					onDrawerClose?.(reason);
@@ -516,7 +518,14 @@ describe('Drawer with a Dialog nested in it', () => {
 		const onDialogClose = vi.fn();
 		function Harness({ open }: { open: boolean }): ReactNode {
 			return (
-				<Drawer type="task" open={open} onClose={() => {}} title="Edit member" testId="drawer">
+				<Drawer
+					type="task"
+					stack="overlay"
+					open={open}
+					onClose={() => {}}
+					title="Edit member"
+					testId="drawer"
+				>
 					<Dialog open onClose={onDialogClose} title="Rename view" testId="child">
 						Body
 					</Dialog>

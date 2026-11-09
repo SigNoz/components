@@ -19,6 +19,59 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 			'Required. What the drawer is for. `inspector` shows one record to read and leaves the page usable: no backdrop, no focus trap, no scroll lock, and a press outside does not close it. It takes no footer and no description. `task` is one job to finish, such as a create or an edit form, or a picker: modal, with a backdrop and the footer.',
 		table: { category: 'Appearance', type: { summary: "'inspector' | 'task'" } },
 	},
+	stack: {
+		control: 'inline-radio',
+		options: ['overlay', 'breadcrumb'],
+		description:
+			'Required. How a drawer declared inside this one renders when it opens. `breadcrumb` drills down: the nested drawer opens in place at the same width, and a trail of crumbs under its header leads back. `Esc` steps back one drawer, the close button closes the whole trail. `overlay` opens the nested drawer over this one at 80% of its width, and this one takes no input until it closes. A nested drawer takes its width from this one.',
+		table: { category: 'Behavior', type: { summary: "'overlay' | 'breadcrumb'" } },
+	},
+	crumb: {
+		control: false,
+		description:
+			'The crumb of this drawer in a breadcrumb trail, nested in another drawer or the last one of the `trail` this drawer shows: a short `title`, the `icon` of the kind of record, a `preview` card shown while the crumb is hovered or focused, and a link (`href`, `target`, or a router link in `render`) for a new tab. A plain click on a crumb with a link still steps back. The crumb of the drawer on top has no card and no link. The `title` of the drawer, with no icon, by default.',
+		table: {
+			category: 'Content',
+			type: {
+				summary:
+					'{ title?: ReactNode; icon?: ReactNode; preview?: ReactNode; href?: string; target?: string; render?: ReactElement }',
+			},
+			defaultValue: { summary: '{ title }' },
+		},
+	},
+	trailEllipsis: {
+		control: false,
+		description:
+			'The `...` crumb of the breadcrumb trail this drawer starts, merged over the default: a popover list that opens on hover and on a press, under the heading `Earlier steps`, with the number of the step at the end of every row. `render` replaces the list with your own content. Read on the first drawer of a trail only.',
+		table: {
+			category: 'Content',
+			type: { summary: 'BreadcrumbEllipsisOptions' },
+			defaultValue: {
+				summary: "{ heading: 'Earlier steps', rowSuffix: step number }",
+			},
+		},
+	},
+	trail: {
+		control: false,
+		description:
+			'The earlier steps of a drill-down this one drawer shows itself, root first, for content too heavy to keep mounted once per step, such as a page of charts. Each step is a crumb like `crumb`, with a required `title`. The drawer renders them as the trail under its header, its own `crumb` last, and `children` render only the current step, so a step back mounts that step again and it keeps no scroll or state. A nested drawer with `stack="breadcrumb"` keeps every earlier step mounted instead. Controlled: the drawer never changes the steps, so `onTrailSelect` is required with it. An empty `trail` shows no trail row, and `Esc` closes the drawer.',
+		table: {
+			category: 'Content',
+			type: {
+				summary:
+					'readonly { title: ReactNode; icon?: ReactNode; preview?: ReactNode; href?: string; target?: string; render?: ReactElement }[]',
+			},
+		},
+	},
+	onTrailSelect: {
+		control: false,
+		description:
+			'Called when the user asks to show an earlier step of `trail`: a plain click on its crumb (`crumb-press`), or `Esc`, which asks for the last one (`escape-key`). Drop the steps after `index` and render that step. A click on a crumb with `Ctrl`, `Cmd`, `Shift` or `Alt` follows its `href` and does not call it. The close button, a swipe and a press on the backdrop call `onClose` instead. A nested drawer open over this one closes first, with `crumb-press`. Required with `trail`, and rejected without it.',
+		table: {
+			category: 'Events',
+			type: { summary: "(index: number, reason: 'crumb-press' | 'escape-key') => void" },
+		},
+	},
 	open: {
 		control: false,
 		description:
@@ -69,11 +122,12 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 	onClose: {
 		control: false,
 		description:
-			'Called when the user asks to close the drawer, with the reason: `escape-key`, `outside-press` (the backdrop of a `task`), `close-press` or `swipe` (towards the right edge on a touch screen). The drawer stays open until `open` becomes `false`. An `inspector` never reports `outside-press`. Required with `open`, and never passed with a `handle`.',
+			'Called when the user asks to close the drawer, with the reason: `escape-key`, `outside-press` (the backdrop of a `task`), `close-press`, `swipe` (towards the right edge on a touch screen) or `crumb-press` (an earlier crumb of a breadcrumb trail). The drawer stays open until `open` becomes `false`. An `inspector` never reports `outside-press`. Required with `open`, and never passed with a `handle`.',
 		table: {
 			category: 'Events',
 			type: {
-				summary: "(reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe') => void",
+				summary:
+					"(reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press') => void",
 			},
 		},
 	},
@@ -160,7 +214,7 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 	testId: {
 		control: 'text',
 		description:
-			'Forwarded to the panel as `data-testid`. Every part is named after it: `-backdrop`, `-header`, `-header-prefix`, `-title-prefix`, `-title`, `-title-suffix`, `-description`, `-header-suffix`, `-close`, `-body`, `-footer`, `-footer-prefix` and `-footer-suffix`. While `loading`, the skeletons are `-title-prefix-skeleton`, `-title-skeleton`, `-description-skeleton` and `-body-skeleton`.',
+			'Forwarded to the panel as `data-testid`. Every part is named after it: `-backdrop`, `-header`, `-header-prefix`, `-title-prefix`, `-title`, `-title-suffix`, `-description`, `-header-suffix`, `-close`, `-body`, `-footer`, `-footer-prefix` and `-footer-suffix`, and in a breadcrumb trail `-trail` and `-trail-breadcrumb`. While `loading`, the skeletons are `-title-prefix-skeleton`, `-title-skeleton`, `-description-skeleton` and `-body-skeleton`.',
 		table: { category: 'Testing', type: { summary: 'string' } },
 	},
 	id: {

@@ -16,6 +16,7 @@ import type {
 	DrawerCloseReasonType,
 	DrawerHandleType,
 	DrawerProps,
+	DrawerStackType,
 	DrawerTypeType,
 	DrawerWidthType,
 	ValidateDrawerProps,
@@ -48,12 +49,14 @@ const maybeRowHandle: ReturnType<typeof useDrawerHandle<Row | undefined>> = new 
 const readsRow = { children: (row: Row) => row.name };
 const readsOther = { children: (other: Other) => other.id };
 const runtimeType = 'inspector' as DrawerTypeType;
+const runtimeStack = 'breadcrumb' as DrawerStackType;
 
 describe('Drawer props', () => {
 	test('accepts the required props, a ref, id, aria-* and data-*', () => {
 		assertType(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				onClose={noop}
 				title="Edit member"
@@ -68,6 +71,7 @@ describe('Drawer props', () => {
 		assertType(
 			<Drawer
 				type="inspector"
+				stack="overlay"
 				open
 				onClose={noop}
 				title="checkout-7d9f"
@@ -85,6 +89,7 @@ describe('Drawer props', () => {
 		assertType(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				onClose={noop}
 				title="T"
@@ -101,6 +106,7 @@ describe('Drawer props', () => {
 		assertType(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open={false}
 				onClose={(reason) => {
 					if (reason === 'outside-press') {
@@ -131,6 +137,7 @@ describe('Drawer props', () => {
 		assertType(
 			<Drawer
 				type="inspector"
+				stack="overlay"
 				open
 				onClose={noop}
 				title="checkout-7d9f"
@@ -155,27 +162,27 @@ describe('Drawer props', () => {
 			'narrow' | 'base' | 'wide' | 'extra-wide' | 'entity'
 		>();
 		assertType(
-			<Drawer type="inspector" open onClose={noop} title="T" width="narrow">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" width="narrow">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" open onClose={noop} title="T" width="base">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" width="base">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" open onClose={noop} title="T" width="wide">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" width="wide">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" open onClose={noop} title="T" width="extra-wide">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" width="extra-wide">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" open onClose={noop} title="T" width="entity">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" width="entity">
 				Body
 			</Drawer>,
 		);
@@ -185,9 +192,134 @@ describe('Drawer props', () => {
 		assertType(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
-				onClose={(_reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe') => noop()}
+				onClose={(
+					_reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press',
+				) => noop()}
 				title="T"
+			>
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts every stack name', () => {
+		expectTypeOf<DrawerStackType>().toEqualTypeOf<'overlay' | 'breadcrumb'>();
+		assertType(
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer type="inspector" stack="breadcrumb" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts a stack known only at runtime', () => {
+		assertType(
+			<Drawer type="inspector" stack={runtimeStack} open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts a crumb with a title and an icon', () => {
+		assertType(
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				crumb={{ title: 'payments', icon: <svg /> }}
+				open
+				onClose={noop}
+				title="Pod details"
+			>
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts a crumb with an icon alone', () => {
+		assertType(
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				crumb={{ icon: <svg /> }}
+				open
+				onClose={noop}
+				title="Pod details"
+			>
+				Body
+			</Drawer>,
+		);
+	});
+});
+
+describe('Drawer controlled trail', () => {
+	test('accepts a trail with onTrailSelect, the reason typed', () => {
+		assertType(
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				trail={[{ title: 'cluster', icon, href: '/c', preview: 'Cluster' }]}
+				onTrailSelect={(index, reason) => {
+					expectTypeOf(index).toEqualTypeOf<number>();
+					expectTypeOf(reason).toEqualTypeOf<'crumb-press' | 'escape-key'>();
+				}}
+				open
+				onClose={noop}
+				title="Node"
+			>
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects a step with no title', () => {
+		assertType(
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				// @ts-expect-error - a step of `trail` names its own `title`
+				trail={[{ icon }]}
+				onTrailSelect={noop}
+				open
+				onClose={noop}
+				title="Node"
+			>
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects a trail with no onTrailSelect', () => {
+		assertType(
+			// @ts-expect-error - a press on an earlier step of `trail` asks you to show it
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				trail={[{ title: 'cluster' }]}
+				open
+				onClose={noop}
+				title="Node"
+			>
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects onTrailSelect with no trail', () => {
+		assertType(
+			// @ts-expect-error - `onTrailSelect` reports a press on a step of `trail`
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				onTrailSelect={noop}
+				open
+				onClose={noop}
+				title="Node"
 			>
 				Body
 			</Drawer>,
@@ -199,7 +331,25 @@ describe('Drawer required props', () => {
 	test('rejects a drawer with no type', () => {
 		assertType(
 			// @ts-expect-error - every drawer names its `type`
-			<Drawer open onClose={noop} title="T">
+			<Drawer stack="overlay" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects a drawer with no stack', () => {
+		assertType(
+			// @ts-expect-error - every drawer names its `stack`
+			<Drawer type="task" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects a stack that is not overlay or breadcrumb', () => {
+		assertType(
+			// @ts-expect-error - `stack` is `overlay` or `breadcrumb`
+			<Drawer type="task" stack="stacked" open onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
@@ -210,13 +360,13 @@ describe('Drawer required props', () => {
 
 		assertType(
 			// @ts-expect-error - `type` is never left to chance, not even `undefined`
-			<Drawer type={undefined} open onClose={noop} title="T">
+			<Drawer type={undefined} stack="overlay" open onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a type that may be missing is a missing type
-			<Drawer type={maybeType} open onClose={noop} title="T">
+			<Drawer type={maybeType} stack="overlay" open onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
@@ -229,7 +379,37 @@ describe('Drawer required props', () => {
 
 		assertType(
 			// @ts-expect-error - a wrapper that spreads `DrawerProps` asks for a `type` too
-			<Wrapper open onClose={noop} title="T">
+			<Wrapper stack="overlay" open onClose={noop} title="T">
+				Body
+			</Wrapper>,
+		);
+	});
+
+	test('rejects a stack that may be undefined', () => {
+		const maybeStack = undefined as DrawerStackType | undefined;
+
+		assertType(
+			// @ts-expect-error - `stack` is never left to chance, not even `undefined`
+			<Drawer type="task" stack={undefined} open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+		assertType(
+			// @ts-expect-error - a stack that may be missing is a missing stack
+			<Drawer type="task" stack={maybeStack} open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects a wrapper typed with DrawerProps that leaves the stack out', () => {
+		function Wrapper(props: DrawerProps): ReactElement {
+			return <Drawer {...props} />;
+		}
+
+		assertType(
+			// @ts-expect-error - a wrapper that spreads `DrawerProps` asks for a `stack` too
+			<Wrapper type="task" open onClose={noop} title="T">
 				Body
 			</Wrapper>,
 		);
@@ -238,7 +418,7 @@ describe('Drawer required props', () => {
 	test('rejects a drawer with neither open nor a handle', () => {
 		assertType(
 			// @ts-expect-error - nothing says whether it is shown: pass `open` or a `handle`
-			<Drawer type="task" onClose={noop} title="T">
+			<Drawer type="task" stack="overlay" onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
@@ -247,7 +427,7 @@ describe('Drawer required props', () => {
 	test('rejects a drawer with open and no onClose', () => {
 		assertType(
 			// @ts-expect-error - with `open`, `onClose` is required: the drawer never closes itself
-			<Drawer type="inspector" open title="T">
+			<Drawer type="inspector" stack="overlay" open title="T">
 				Body
 			</Drawer>,
 		);
@@ -256,7 +436,7 @@ describe('Drawer required props', () => {
 	test('rejects a drawer with no title', () => {
 		assertType(
 			// @ts-expect-error - `title` is required, it is the accessible name
-			<Drawer type="task" open onClose={noop}>
+			<Drawer type="task" stack="overlay" open onClose={noop}>
 				Body
 			</Drawer>,
 		);
@@ -265,7 +445,7 @@ describe('Drawer required props', () => {
 	test('rejects a drawer with no children', () => {
 		assertType(
 			// @ts-expect-error - `children` is required, it is the body
-			<Drawer type="task" open onClose={noop} title="T" />,
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" />,
 		);
 	});
 });
@@ -273,23 +453,31 @@ describe('Drawer required props', () => {
 describe('Drawer type rules', () => {
 	test('accepts a description, a footerPrefix and a footerSuffix on a task', () => {
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" description="Detail">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" description="Detail">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" footerSuffix={button}>
-				Body
-			</Drawer>,
-		);
-		assertType(
-			<Drawer type="task" open onClose={noop} title="T" footerPrefix="2 unsaved changes">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" footerSuffix={button}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			<Drawer
 				type="task"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				footerPrefix="2 unsaved changes"
+			>
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
 				handle={rowHandle}
 				title="T"
 				description="Detail"
@@ -305,6 +493,7 @@ describe('Drawer type rules', () => {
 		assertType(
 			<Drawer
 				type={runtimeType}
+				stack="overlay"
 				open
 				onClose={noop}
 				title="T"
@@ -319,19 +508,34 @@ describe('Drawer type rules', () => {
 	test('rejects a footer on an inspector', () => {
 		assertType(
 			// @ts-expect-error - an `inspector` has no footer, no `footerSuffix`
-			<Drawer type="inspector" open onClose={noop} title="T" footerSuffix="Save">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" footerSuffix="Save">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - an `inspector` has no footer, no `footerPrefix`
-			<Drawer type="inspector" open onClose={noop} title="T" footerPrefix="2 unsaved changes">
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				footerPrefix="2 unsaved changes"
+			>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - an `inspector` has no footer, with both slots
-			<Drawer type="inspector" open onClose={noop} title="T" footerPrefix="x" footerSuffix="y">
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				footerPrefix="x"
+				footerSuffix="y"
+			>
 				Body
 			</Drawer>,
 		);
@@ -340,7 +544,7 @@ describe('Drawer type rules', () => {
 	test('rejects a description on an inspector', () => {
 		assertType(
 			// @ts-expect-error - an `inspector` has no `description`
-			<Drawer type="inspector" open onClose={noop} title="T" description="Detail">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" description="Detail">
 				Body
 			</Drawer>,
 		);
@@ -349,7 +553,15 @@ describe('Drawer type rules', () => {
 	test('rejects a description and a footer on an inspector together', () => {
 		assertType(
 			// @ts-expect-error - an `inspector` has no `description` and no footer
-			<Drawer type="inspector" open onClose={noop} title="T" description="x" footerSuffix="y">
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				description="x"
+				footerSuffix="y"
+			>
 				Body
 			</Drawer>,
 		);
@@ -360,7 +572,7 @@ describe('Drawer value types', () => {
 	test('rejects a type that is not inspector or task', () => {
 		assertType(
 			// @ts-expect-error - `type` is `inspector` or `task`
-			<Drawer type="modal" open onClose={noop} title="T">
+			<Drawer type="modal" stack="overlay" open onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
@@ -369,25 +581,25 @@ describe('Drawer value types', () => {
 	test('rejects a width that is not a name', () => {
 		assertType(
 			// @ts-expect-error - `full` is a Dialog width, a drawer has none
-			<Drawer type="task" open onClose={noop} title="T" width="full">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" width="full">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `width` takes a name, not a percentage
-			<Drawer type="task" open onClose={noop} title="T" width="50%">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" width="50%">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `width` takes a name, not a number
-			<Drawer type="task" open onClose={noop} title="T" width={600}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" width={600}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `width` takes a name, not a pixel size
-			<Drawer type="task" open onClose={noop} title="T" width="600px">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" width="600px">
 				Body
 			</Drawer>,
 		);
@@ -396,22 +608,25 @@ describe('Drawer value types', () => {
 	test('rejects a title that is not a string', () => {
 		assertType(
 			// @ts-expect-error - `title` is the accessible name, a string
-			<Drawer type="task" open onClose={noop} title={<b>Edit member</b>}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title={<b>Edit member</b>}>
 				Body
 			</Drawer>,
 		);
 	});
 
 	test('rejects an onClose that cannot take every reason', () => {
+		const readsEscape = (_reason: 'escape-key') => noop();
+		const readsDialogReasons = (_reason: DialogCloseReasonType) => noop();
+
 		assertType(
-			// @ts-expect-error - `onClose` is called with four reasons
-			<Drawer type="task" open onClose={(_reason: 'escape-key') => noop()} title="T">
+			// @ts-expect-error - `onClose` is called with five reasons
+			<Drawer type="task" stack="overlay" open onClose={readsEscape} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			// @ts-expect-error - the reasons of a Dialog miss `swipe`
-			<Drawer type="task" open onClose={(_reason: DialogCloseReasonType) => noop()} title="T">
+			// @ts-expect-error - the reasons of a Dialog miss `swipe` and `crumb-press`
+			<Drawer type="task" stack="overlay" open onClose={readsDialogReasons} title="T">
 				Body
 			</Drawer>,
 		);
@@ -420,7 +635,7 @@ describe('Drawer value types', () => {
 	test('rejects an open that is not a boolean', () => {
 		assertType(
 			// @ts-expect-error - `open` is a boolean
-			<Drawer type="task" open="yes" onClose={noop} title="T">
+			<Drawer type="task" stack="overlay" open="yes" onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
@@ -431,49 +646,51 @@ describe('Drawer rejected props', () => {
 	test('rejects the props that belong to a trigger, to uncontrolled state and to the layer', () => {
 		assertType(
 			// @ts-expect-error - a `data-testid` is written as `testId`
-			<Drawer type="task" open onClose={noop} title="T" data-testid="x">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" data-testid="x">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a drawer has no trigger
-			<Drawer type="task" open onClose={noop} title="T" trigger={button}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" trigger={button}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a drawer has no uncontrolled mode, no `defaultOpen`
-			<Drawer type="task" open onClose={noop} title="T" defaultOpen>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" defaultOpen>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `onOpenChange` is `onClose`
-			<Drawer type="task" open onClose={noop} title="T" onOpenChange={noop}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" onOpenChange={noop}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the `type` sets the backdrop, no `showOverlay`
-			<Drawer type="task" open onClose={noop} title="T" showOverlay>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" showOverlay>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the `type` sets whether it is modal, no `modal`
-			<Drawer type="task" open onClose={noop} title="T" modal={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" modal={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer owns its layer, no `zIndex`
-			<Drawer type="task" open onClose={noop} title="T" zIndex={1100}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" zIndex={1100}>
 				Body
 			</Drawer>,
 		);
+		const getBody = () => document.body;
+
 		assertType(
 			// @ts-expect-error - `getContainer` is `container`, and takes the element
-			<Drawer type="task" open onClose={noop} title="T" getContainer={() => document.body}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" getContainer={getBody}>
 				Body
 			</Drawer>,
 		);
@@ -482,127 +699,127 @@ describe('Drawer rejected props', () => {
 	test('rejects the props of DrawerWrapper and of antd Drawer that have a replacement', () => {
 		assertType(
 			// @ts-expect-error - `subTitle` is `description`
-			<Drawer type="task" open onClose={noop} title="T" subTitle="Detail">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" subTitle="Detail">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `footer` is called `footerSuffix`, the pair of `footerPrefix`
-			<Drawer type="task" open onClose={noop} title="T" footer={button}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" footer={button}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the close button is always there, no `showCloseButton`
-			<Drawer type="task" open onClose={noop} title="T" showCloseButton={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" showCloseButton={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the close button is always there, no `closable`
-			<Drawer type="task" open onClose={noop} title="T" closable={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" closable={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the close button is fixed, no `closeIcon`
-			<Drawer type="task" open onClose={noop} title="T" closeIcon={icon}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" closeIcon={icon}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - ignore the `outside-press` reason, no `disableOutsideClick`
-			<Drawer type="task" open onClose={noop} title="T" disableOutsideClick>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" disableOutsideClick>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - ignore the `outside-press` reason, no `maskClosable`
-			<Drawer type="task" open onClose={noop} title="T" maskClosable={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" maskClosable={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the `type` sets the backdrop, no `mask`
-			<Drawer type="task" open onClose={noop} title="T" mask={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" mask={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - ignore the `escape-key` reason, no `keyboard`
-			<Drawer type="task" open onClose={noop} title="T" keyboard={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" keyboard={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer opens from the right, no `direction`
-			<Drawer type="task" open onClose={noop} title="T" direction="left">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" direction="left">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer opens from the right, no `placement`
-			<Drawer type="task" open onClose={noop} title="T" placement="left">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" placement="left">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has one animation, no `animation`
-			<Drawer type="task" open onClose={noop} title="T" animation="fade">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" animation="fade">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer is inset by the viewport, no `offset`
-			<Drawer type="task" open onClose={noop} title="T" offset={8}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" offset={8}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer is always full height, no `heightMode`
-			<Drawer type="task" open onClose={noop} title="T" heightMode="auto">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" heightMode="auto">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a nested drawer does not push its parent, no `push`
-			<Drawer type="task" open onClose={noop} title="T" push={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" push={false}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - antd `extra` is `headerSuffix`
-			<Drawer type="task" open onClose={noop} title="T" extra={button}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" extra={button}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the content always unmounts on close, no `destroyOnClose`
-			<Drawer type="task" open onClose={noop} title="T" destroyOnClose>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" destroyOnClose>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the content only mounts while open, no `forceMount`
-			<Drawer type="task" open onClose={noop} title="T" forceMount>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" forceMount>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `Drawer` takes no `className`, wrap the content in your own element
-			<Drawer type="task" open onClose={noop} title="T" className="scope">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" className="scope">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `Drawer` takes no `style`
-			<Drawer type="task" open onClose={noop} title="T" style={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" style={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `Drawer` takes no `rootClassName`
-			<Drawer type="task" open onClose={noop} title="T" rootClassName="x">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" rootClassName="x">
 				Body
 			</Drawer>,
 		);
@@ -611,43 +828,43 @@ describe('Drawer rejected props', () => {
 	test('rejects the part props of DrawerWrapper', () => {
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `drawerContentProps`
-			<Drawer type="task" open onClose={noop} title="T" drawerContentProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" drawerContentProps={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `drawerHeaderProps`
-			<Drawer type="task" open onClose={noop} title="T" drawerHeaderProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" drawerHeaderProps={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `drawerTitleProps`
-			<Drawer type="task" open onClose={noop} title="T" drawerTitleProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" drawerTitleProps={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `drawerSubtitleProps`
-			<Drawer type="task" open onClose={noop} title="T" drawerSubtitleProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" drawerSubtitleProps={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `drawerDescriptionProps`
-			<Drawer type="task" open onClose={noop} title="T" drawerDescriptionProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" drawerDescriptionProps={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `drawerFooterProps`
-			<Drawer type="task" open onClose={noop} title="T" drawerFooterProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" drawerFooterProps={{}}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - the drawer has no part props, no `closeButtonProps`
-			<Drawer type="task" open onClose={noop} title="T" closeButtonProps={{}}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" closeButtonProps={{}}>
 				Body
 			</Drawer>,
 		);
@@ -656,7 +873,7 @@ describe('Drawer rejected props', () => {
 	test('rejects a prop the drawer does not know', () => {
 		assertType(
 			// @ts-expect-error - not a prop, no `size`
-			<Drawer type="task" open onClose={noop} title="T" size="large">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" size="large">
 				Body
 			</Drawer>,
 		);
@@ -861,17 +1078,33 @@ describe('Drawer focus props', () => {
 	test('takes initialFocus and finalFocus as a ref, a boolean or a function', () => {
 		const field = createRef<HTMLInputElement>();
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" initialFocus={field} finalFocus={field}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				initialFocus={field}
+				finalFocus={field}
+			>
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" initialFocus={false} finalFocus={false}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				initialFocus={false}
+				finalFocus={false}
+			>
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" initialFocus={() => true}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" initialFocus={() => true}>
 				Body
 			</Drawer>,
 		);
@@ -881,17 +1114,24 @@ describe('Drawer focus props', () => {
 describe('Drawer container', () => {
 	test('accepts an element, a ref to one, or null', () => {
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" container={document.body}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" container={document.body}>
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" container={createRef<HTMLDivElement>()}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={noop}
+				title="T"
+				container={createRef<HTMLDivElement>()}
+			>
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" open onClose={noop} title="T" container={null}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" container={null}>
 				Body
 			</Drawer>,
 		);
@@ -899,7 +1139,13 @@ describe('Drawer container', () => {
 
 	test('accepts a container with a handle', () => {
 		assertType(
-			<Drawer type="inspector" handle={rowHandle} title="T" container={document.body}>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				handle={rowHandle}
+				title="T"
+				container={document.body}
+			>
 				Body
 			</Drawer>,
 		);
@@ -908,7 +1154,7 @@ describe('Drawer container', () => {
 	test('rejects a container that is not an element or a ref', () => {
 		assertType(
 			// @ts-expect-error - `container` takes the element, not a selector
-			<Drawer type="task" open onClose={noop} title="T" container="#root">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T" container="#root">
 				Body
 			</Drawer>,
 		);
@@ -950,12 +1196,12 @@ describe('Drawer handle', () => {
 
 	test('accepts a handle in place of open, with no onClose', () => {
 		assertType(
-			<Drawer type="inspector" handle={rowHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" handle={plainHandle} title="T">
+			<Drawer type="task" stack="overlay" handle={plainHandle} title="T">
 				Body
 			</Drawer>,
 		);
@@ -965,6 +1211,7 @@ describe('Drawer handle', () => {
 		assertType(
 			<Drawer
 				type="inspector"
+				stack="overlay"
 				handle={rowHandle}
 				title="T"
 				id="x"
@@ -979,7 +1226,7 @@ describe('Drawer handle', () => {
 
 	test('types the children function after the payload of the handle', () => {
 		assertType(
-			<Drawer type="inspector" handle={rowHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T">
 				{(row) => {
 					expectTypeOf(row).toEqualTypeOf<Row>();
 
@@ -988,7 +1235,7 @@ describe('Drawer handle', () => {
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" handle={rowHandle} title="T">
+			<Drawer type="task" stack="overlay" handle={rowHandle} title="T">
 				{(row: Row) => {
 					expectTypeOf(row).toEqualTypeOf<Row>();
 
@@ -1000,7 +1247,7 @@ describe('Drawer handle', () => {
 
 	test('accepts children as a function for a handle without a payload', () => {
 		assertType(
-			<Drawer type="inspector" handle={plainHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={plainHandle} title="T">
 				{() => 'Body'}
 			</Drawer>,
 		);
@@ -1008,32 +1255,46 @@ describe('Drawer handle', () => {
 
 	test('accepts a handle whose payload is unknown, any, never or optional', () => {
 		assertType(
-			<Drawer type="inspector" handle={unknownHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={unknownHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={anyHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={anyHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={neverHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={neverHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={maybeRowHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={maybeRowHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" handle={unknownHandle} title="T" container={document.body} ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				handle={unknownHandle}
+				title="T"
+				container={document.body}
+				ref={ref}
+			>
 				<p>Body</p>
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="task" handle={anyHandle} title="T" container={document.body} ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				handle={anyHandle}
+				title="T"
+				container={document.body}
+				ref={ref}
+			>
 				<p>Body</p>
 			</Drawer>,
 		);
@@ -1041,7 +1302,7 @@ describe('Drawer handle', () => {
 
 	test('types the children function for a handle whose payload is unknown, any, never or optional', () => {
 		assertType(
-			<Drawer type="inspector" handle={unknownHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={unknownHandle} title="T">
 				{(payload) => {
 					expectTypeOf(payload).toBeUnknown();
 
@@ -1050,7 +1311,7 @@ describe('Drawer handle', () => {
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={anyHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={anyHandle} title="T">
 				{(payload) => {
 					expectTypeOf(payload).toBeAny();
 
@@ -1059,7 +1320,7 @@ describe('Drawer handle', () => {
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={neverHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={neverHandle} title="T">
 				{(payload) => {
 					expectTypeOf(payload).toBeNever();
 
@@ -1068,7 +1329,7 @@ describe('Drawer handle', () => {
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={maybeRowHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={maybeRowHandle} title="T">
 				{(row) => {
 					expectTypeOf(row).toEqualTypeOf<Row | undefined>();
 
@@ -1080,12 +1341,12 @@ describe('Drawer handle', () => {
 
 	test('accepts every other node as children with a handle', () => {
 		assertType(
-			<Drawer type="inspector" handle={rowHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T">
 				{null}
 			</Drawer>,
 		);
 		assertType(
-			<Drawer type="inspector" handle={rowHandle} title="T">
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T">
 				<p>Body</p>
 			</Drawer>,
 		);
@@ -1095,6 +1356,7 @@ describe('Drawer handle', () => {
 		assertType(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				title="T"
 				onClose={(reason) => {
@@ -1109,13 +1371,13 @@ describe('Drawer handle', () => {
 	test('rejects an onClose with a handle', () => {
 		assertType(
 			// @ts-expect-error - with a handle the drawer closes itself, so `onClose` is not passed
-			<Drawer type="inspector" handle={rowHandle} title="T" onClose={noop}>
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T" onClose={noop}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a handle without a payload closes the drawer itself too
-			<Drawer type="task" handle={plainHandle} title="T" onClose={noop}>
+			<Drawer type="task" stack="overlay" handle={plainHandle} title="T" onClose={noop}>
 				Body
 			</Drawer>,
 		);
@@ -1123,6 +1385,7 @@ describe('Drawer handle', () => {
 			// @ts-expect-error - an annotated reason is still an `onClose`
 			<Drawer
 				type="task"
+				stack="overlay"
 				handle={rowHandle}
 				title="T"
 				onClose={(_reason: DrawerCloseReasonType) => noop()}
@@ -1132,13 +1395,25 @@ describe('Drawer handle', () => {
 		);
 		assertType(
 			// @ts-expect-error - an unannotated `onClose` with a handle on a payload
-			<Drawer type="task" handle={rowHandle} title="T" onClose={(reason) => void reason}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				handle={rowHandle}
+				title="T"
+				onClose={(reason) => void reason}
+			>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - an unannotated `onClose` next to a children function
-			<Drawer type="task" handle={rowHandle} title="T" onClose={(reason) => void reason}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				handle={rowHandle}
+				title="T"
+				onClose={(reason) => void reason}
+			>
 				{(row: Row) => row.name}
 			</Drawer>,
 		);
@@ -1147,19 +1422,19 @@ describe('Drawer handle', () => {
 	test('rejects an onClose with a handle whose payload is unknown, any or never', () => {
 		assertType(
 			// @ts-expect-error - a handle of `unknown` still closes the drawer itself, no `onClose`
-			<Drawer type="task" handle={unknownHandle} title="T" onClose={noop}>
+			<Drawer type="task" stack="overlay" handle={unknownHandle} title="T" onClose={noop}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a handle of `any` still closes the drawer itself, no `onClose`
-			<Drawer type="task" handle={anyHandle} title="T" onClose={noop}>
+			<Drawer type="task" stack="overlay" handle={anyHandle} title="T" onClose={noop}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - a handle of `never` still closes the drawer itself, no `onClose`
-			<Drawer type="task" handle={neverHandle} title="T" onClose={noop}>
+			<Drawer type="task" stack="overlay" handle={neverHandle} title="T" onClose={noop}>
 				Body
 			</Drawer>,
 		);
@@ -1168,19 +1443,26 @@ describe('Drawer handle', () => {
 	test('rejects open together with a handle', () => {
 		assertType(
 			// @ts-expect-error - `open` and `handle` both say whether it is shown: pass one
-			<Drawer type="task" open handle={rowHandle} onClose={noop} title="T">
+			<Drawer type="task" stack="overlay" open handle={rowHandle} onClose={noop} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `open={false}` with a handle is still both
-			<Drawer type="inspector" open={false} handle={plainHandle} title="T">
+			<Drawer type="inspector" stack="overlay" open={false} handle={plainHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `open` and `handle` with an unannotated `onClose`
-			<Drawer type="task" open handle={rowHandle} title="T" onClose={(reason) => void reason}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				handle={rowHandle}
+				title="T"
+				onClose={(reason) => void reason}
+			>
 				Body
 			</Drawer>,
 		);
@@ -1189,13 +1471,13 @@ describe('Drawer handle', () => {
 	test('rejects open together with a handle whose payload is unknown or any', () => {
 		assertType(
 			// @ts-expect-error - `open` and a handle of `unknown` both say whether it is shown
-			<Drawer type="task" open handle={unknownHandle} title="T">
+			<Drawer type="task" stack="overlay" open handle={unknownHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `open` and a handle of `any` both say whether it is shown
-			<Drawer type="task" open handle={anyHandle} title="T">
+			<Drawer type="task" stack="overlay" open handle={anyHandle} title="T">
 				Body
 			</Drawer>,
 		);
@@ -1204,7 +1486,7 @@ describe('Drawer handle', () => {
 	test('rejects a handle that is not a DialogHandle', () => {
 		assertType(
 			// @ts-expect-error - a PopupHandle shows a popover, not a drawer
-			<Drawer type="inspector" handle={new PopupHandle<Row>()} title="T">
+			<Drawer type="inspector" stack="overlay" handle={new PopupHandle<Row>()} title="T">
 				Body
 			</Drawer>,
 		);
@@ -1213,33 +1495,33 @@ describe('Drawer handle', () => {
 	test('rejects children as a function with no handle', () => {
 		assertType(
 			// @ts-expect-error - a function of the payload needs the `handle` that opens it
-			<Drawer type="inspector" open onClose={noop} title="T">
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T">
 				{() => 'Body'}
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `Row` is not what the drawer passes without a handle
-			<Drawer type="inspector" open onClose={noop} title="T" {...readsRow} />,
+			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" {...readsRow} />,
 		);
 	});
 
 	test('rejects children as a function that does not take the payload of the handle', () => {
 		assertType(
 			// @ts-expect-error - the handle opens with a Row, not an Other
-			<Drawer type="inspector" handle={rowHandle} title="T" {...readsOther} />,
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T" {...readsOther} />,
 		);
 	});
 
 	test('rejects what an inspector rejects with open, with a handle too', () => {
 		assertType(
 			// @ts-expect-error - an `inspector` on a handle has no `description`
-			<Drawer type="inspector" handle={rowHandle} title="T" description="Detail">
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T" description="Detail">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - an `inspector` on a handle has no footer
-			<Drawer type="inspector" handle={rowHandle} title="T" footerSuffix="Save">
+			<Drawer type="inspector" stack="overlay" handle={rowHandle} title="T" footerSuffix="Save">
 				Body
 			</Drawer>,
 		);
@@ -1248,41 +1530,41 @@ describe('Drawer handle', () => {
 	test('rejects what Drawer rejects with open, with a handle too', () => {
 		assertType(
 			// @ts-expect-error - a drawer on a handle names its `type` too
-			<Drawer handle={rowHandle} title="T">
+			<Drawer stack="overlay" handle={rowHandle} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `title` is required, it is the accessible name
-			<Drawer type="task" handle={rowHandle}>
+			<Drawer type="task" stack="overlay" handle={rowHandle}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `children` is required, it is the body
-			<Drawer type="task" handle={rowHandle} title="T" />,
+			<Drawer type="task" stack="overlay" handle={rowHandle} title="T" />,
 		);
 		assertType(
 			// @ts-expect-error - a drawer has no uncontrolled mode, no `defaultOpen`
-			<Drawer type="task" handle={rowHandle} title="T" defaultOpen>
+			<Drawer type="task" stack="overlay" handle={rowHandle} title="T" defaultOpen>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `onOpenChange` is on the hook, `useDrawerHandle(onOpenChange)`
-			<Drawer type="task" handle={rowHandle} title="T" onOpenChange={noop}>
+			<Drawer type="task" stack="overlay" handle={rowHandle} title="T" onOpenChange={noop}>
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `subTitle` is `description`
-			<Drawer type="task" handle={rowHandle} title="T" subTitle="Detail">
+			<Drawer type="task" stack="overlay" handle={rowHandle} title="T" subTitle="Detail">
 				Body
 			</Drawer>,
 		);
 		assertType(
 			// @ts-expect-error - `Drawer` takes no `className`
-			<Drawer type="task" handle={rowHandle} title="T" className="x">
+			<Drawer type="task" stack="overlay" handle={rowHandle} title="T" className="x">
 				Body
 			</Drawer>,
 		);

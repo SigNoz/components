@@ -7,7 +7,15 @@ describe('Drawer forwardRef', () => {
 	it('forwards the ref to the panel', async () => {
 		const ref = createRef<HTMLDivElement>();
 		render(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" testId="drawer" ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={() => {}}
+				title="Edit member"
+				testId="drawer"
+				ref={ref}
+			>
 				Body
 			</Drawer>,
 		);
@@ -22,7 +30,14 @@ describe('Drawer forwardRef', () => {
 	it('forwards the ref to the panel of an inspector', async () => {
 		const ref = createRef<HTMLDivElement>();
 		render(
-			<Drawer type="inspector" open onClose={() => {}} title="Span details" ref={ref}>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={() => {}}
+				title="Span details"
+				ref={ref}
+			>
 				Body
 			</Drawer>,
 		);
@@ -35,7 +50,7 @@ describe('Drawer forwardRef', () => {
 	it('calls a callback ref with the panel, and with null when it unmounts', async () => {
 		const ref = vi.fn();
 		const { rerender } = render(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" ref={ref}>
+			<Drawer type="task" stack="overlay" open onClose={() => {}} title="Edit member" ref={ref}>
 				Body
 			</Drawer>,
 		);
@@ -44,7 +59,14 @@ describe('Drawer forwardRef', () => {
 		expect(ref).toHaveBeenCalledWith(panel);
 
 		rerender(
-			<Drawer type="task" open={false} onClose={() => {}} title="Edit member" ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open={false}
+				onClose={() => {}}
+				title="Edit member"
+				ref={ref}
+			>
 				Body
 			</Drawer>,
 		);
@@ -54,14 +76,21 @@ describe('Drawer forwardRef', () => {
 	it('empties an object ref once the drawer closes', async () => {
 		const ref = createRef<HTMLDivElement>();
 		const { rerender } = render(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" ref={ref}>
+			<Drawer type="task" stack="overlay" open onClose={() => {}} title="Edit member" ref={ref}>
 				Body
 			</Drawer>,
 		);
 		await screen.findByRole('dialog');
 
 		rerender(
-			<Drawer type="task" open={false} onClose={() => {}} title="Edit member" ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open={false}
+				onClose={() => {}}
+				title="Edit member"
+				ref={ref}
+			>
 				Body
 			</Drawer>,
 		);
@@ -71,7 +100,14 @@ describe('Drawer forwardRef', () => {
 	it('leaves the ref empty while it is closed', () => {
 		const ref = createRef<HTMLDivElement>();
 		render(
-			<Drawer type="task" open={false} onClose={() => {}} title="Edit member" ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open={false}
+				onClose={() => {}}
+				title="Edit member"
+				ref={ref}
+			>
 				Body
 			</Drawer>,
 		);
@@ -83,14 +119,14 @@ describe('Drawer forwardRef', () => {
 		const first = createRef<HTMLDivElement>();
 		const second = createRef<HTMLDivElement>();
 		const { rerender } = render(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" ref={first}>
+			<Drawer type="task" stack="overlay" open onClose={() => {}} title="Edit member" ref={first}>
 				Body
 			</Drawer>,
 		);
 		const panel = await screen.findByRole('dialog');
 
 		rerender(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" ref={second}>
+			<Drawer type="task" stack="overlay" open onClose={() => {}} title="Edit member" ref={second}>
 				Body
 			</Drawer>,
 		);
@@ -101,7 +137,15 @@ describe('Drawer forwardRef', () => {
 	it('lands the id on the panel, where the ref points', async () => {
 		const ref = createRef<HTMLDivElement>();
 		render(
-			<Drawer type="task" open onClose={() => {}} title="Edit member" id="edit-member" ref={ref}>
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={() => {}}
+				title="Edit member"
+				id="edit-member"
+				ref={ref}
+			>
 				Body
 			</Drawer>,
 		);

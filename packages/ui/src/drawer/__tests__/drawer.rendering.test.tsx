@@ -340,6 +340,7 @@ describe('Drawer rendering', () => {
 			<Drawer
 				// A `type` widened to the union gets past the rule that rejects these on an inspector.
 				type={'inspector' as DrawerTypeType}
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Span details"
@@ -385,6 +386,7 @@ describe('Drawer rendering', () => {
 		render(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Edit member"
@@ -438,6 +440,7 @@ describe('Drawer forwarded props', () => {
 		render(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Edit member"
@@ -479,6 +482,7 @@ describe('Drawer forwarded props', () => {
 		render(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Edit member"
@@ -500,6 +504,7 @@ describe('Drawer forwarded props', () => {
 		render(
 			<Drawer
 				type="inspector"
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Span details"
@@ -521,6 +526,7 @@ describe('Drawer forwarded props', () => {
 		render(
 			<Drawer
 				type="task"
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Edit member"

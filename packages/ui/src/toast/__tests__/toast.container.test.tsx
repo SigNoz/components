@@ -42,7 +42,7 @@ describe('Toaster container', () => {
 
 	it('portals into the panel of the drawer it sits in', () => {
 		render(
-			<Drawer type="task" open onClose={noop} title="Settings">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="Settings">
 				<Toaster />
 			</Drawer>,
 		);

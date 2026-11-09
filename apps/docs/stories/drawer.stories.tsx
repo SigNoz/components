@@ -1,4 +1,16 @@
-import { ChevronDown, ChevronUp, Copy, Ellipsis, ExternalLink } from '@signozhq/icons';
+import {
+	Box,
+	ChevronDown,
+	ChevronUp,
+	Copy,
+	Ellipsis,
+	ExternalLink,
+	FileText,
+	Folder,
+	Network,
+	Server,
+	Waypoints,
+} from '@signozhq/icons';
 import {
 	AlertDialog,
 	Badge,
@@ -13,12 +25,15 @@ import {
 	useDrawerHandle,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactElement, useRef, useState } from 'react';
+import { createSerializer, parseAsArrayOf, parseAsStringLiteral, useQueryState } from 'nuqs';
+import { NuqsAdapter } from 'nuqs/adapters/react';
+import { Fragment, type ReactElement, useRef, useState } from 'react';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './drawer.stories.module.css';
 import { drawerArgTypes, drawerParameters, WIDTHS } from './shared/drawer-arg-types.js';
 import { waitForEffects } from './shared/play.js';
+import { type PreviewStep, StepPreview } from './shared/step-preview.js';
 
 const meta: Meta<typeof Drawer> = {
 	title: 'Composed Components/Drawer',
@@ -27,6 +42,7 @@ const meta: Meta<typeof Drawer> = {
 	argTypes: drawerArgTypes,
 	args: {
 		type: 'task',
+		stack: 'overlay',
 		open: false,
 		onClose: fn(),
 		title: 'Edit member',
@@ -210,6 +226,7 @@ function PodsPage(): ReactElement {
 				))}
 			</ul>
 			<Drawer
+				stack="overlay"
 				type="inspector"
 				open={open}
 				onClose={() => setOpen(false)}
@@ -330,6 +347,7 @@ function EditMember(): ReactElement {
 				Edit member
 			</Button>
 			<Drawer
+				stack="overlay"
 				type="task"
 				open={open}
 				onClose={close}
@@ -421,6 +439,7 @@ function UnsavedChangesForm(): ReactElement {
 				Edit panel
 			</Button>
 			<Drawer
+				stack="overlay"
 				type="task"
 				open={open}
 				// Unsaved edits: every way out asks first, the backdrop and `Esc` included.
@@ -519,6 +538,7 @@ function WidthBox({ width }: { width: (typeof WIDTHS)[number] }): ReactElement {
 	return (
 		<div ref={boxRef} className={styles.widthBox}>
 			<Drawer
+				stack="overlay"
 				type="inspector"
 				open
 				container={boxRef}
@@ -581,6 +601,7 @@ export const Loading: Story = {
 	render: () => (
 		<div className={styles.page}>
 			<Drawer
+				stack="overlay"
 				type="inspector"
 				open
 				loading
@@ -669,6 +690,7 @@ function LogsTable(): ReactElement {
 				))}
 			</ul>
 			<Drawer
+				stack="overlay"
 				type="inspector"
 				handle={logDetails}
 				title="Log details"
@@ -749,6 +771,7 @@ function PipelinePreview(): ReactElement {
 					))}
 				</ul>
 				<Drawer
+					stack="overlay"
 					type="inspector"
 					open={logOpen}
 					onClose={() => setLogOpen(false)}
@@ -790,6 +813,755 @@ export const OverADialog: Story = {
 	},
 };
 
+function PodLabels(): ReactElement {
+	const pod = PODS[0];
+	const [podOpen, setPodOpen] = useState(true);
+	const [editing, setEditing] = useState(true);
+
+	return (
+		<div className={styles.page}>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setPodOpen(true)}>
+				Open pod
+			</Button>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open={podOpen}
+				onClose={() => setPodOpen(false)}
+				title={pod.name}
+				width="entity"
+				testId="labels-pod"
+				titlePrefix={
+					<Badge variant="outlined" color="secondary">
+						Pod
+					</Badge>
+				}
+				headerSuffix={
+					<Button variant="outlined" color="secondary" size="sm" onClick={() => setEditing(true)}>
+						Edit labels
+					</Button>
+				}
+			>
+				<PodSummary pod={pod} />
+				<Dialog
+					open={editing}
+					onClose={() => setEditing(false)}
+					title="Edit labels"
+					description="Labels are added to every log and trace of the pod."
+					testId="labels-dialog"
+					footerSuffix={
+						<>
+							<Button
+								variant="outlined"
+								color="secondary"
+								size="md"
+								onClick={() => setEditing(false)}
+							>
+								Cancel
+							</Button>
+							<Button variant="solid" color="primary" size="md" onClick={() => setEditing(false)}>
+								Save
+							</Button>
+						</>
+					}
+				>
+					<Input aria-label="Team" defaultValue="payments" />
+				</Dialog>
+			</Drawer>
+		</div>
+	);
+}
+
+/**
+ * A dialog opened from a drawer covers it, the way a drawer opened from a dialog covers the
+ * dialog in `OverADialog`: the one opened last is on top, with no `zIndex`. `Esc` closes the
+ * dialog first, and the drawer stays open under it.
+ */
+export const DialogOverADrawer: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => <PodLabels />,
+	play: async () => {
+		await waitForEffects();
+		await waitFor(() => expect(getNode('labels-dialog')).toBeVisible());
+
+		const dialog = getNode('labels-dialog');
+		const { left, top, width, height } = dialog.getBoundingClientRect();
+
+		await expect(
+			dialog.contains(document.elementFromPoint(left + width / 2, top + height / 2)),
+		).toBe(true);
+
+		await userEvent.keyboard('{Escape}');
+		await waitFor(() => expect(document.querySelector('[data-testid="labels-dialog"]')).toBeNull());
+		await expect(getNode('labels-pod')).toBeVisible();
+
+		await userEvent.click(
+			within(getNode('labels-pod')).getByRole('button', { name: 'Edit labels' }),
+		);
+		await waitFor(() => expect(getNode('labels-dialog')).toBeVisible());
+	},
+};
+
+function PodWithLogs(): ReactElement {
+	const pod = PODS[0];
+	const [podOpen, setPodOpen] = useState(true);
+	const [logOpen, setLogOpen] = useState(true);
+	const [log, setLog] = useState<LogRow>(LOGS[0]);
+
+	return (
+		<div className={styles.page}>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setPodOpen(true)}>
+				Open pod
+			</Button>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open={podOpen}
+				onClose={() => setPodOpen(false)}
+				title={pod.name}
+				width="entity"
+				testId="overlay-pod"
+				titlePrefix={
+					<Badge variant="outlined" color="secondary">
+						Pod
+					</Badge>
+				}
+			>
+				<PodSummary pod={pod} />
+				<ul className={styles.rows}>
+					{LOGS.map((row) => (
+						<li key={row.id}>
+							<button
+								type="button"
+								className={styles.rowButton}
+								onClick={() => {
+									setLog(row);
+									setLogOpen(true);
+								}}
+							>
+								{row.body}
+							</button>
+						</li>
+					))}
+				</ul>
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					open={logOpen}
+					onClose={() => setLogOpen(false)}
+					title="Log details"
+					testId="overlay-log"
+				>
+					<dl className={styles.summary}>
+						<dt>Timestamp</dt>
+						<dd>{log.timestamp}</dd>
+						<dt>Service</dt>
+						<dd>{log.service}</dd>
+						<dt>Body</dt>
+						<dd>{log.body}</dd>
+					</dl>
+				</Drawer>
+			</Drawer>
+		</div>
+	);
+}
+
+/**
+ * `stack="overlay"`: a drawer opened from another one covers it at 80% of its width, so the pod
+ * stays in sight. The pod takes no input until the log closes, and `Esc` closes the log first.
+ */
+export const StackAsOverlay: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => <PodWithLogs />,
+	play: async () => {
+		await waitForEffects();
+		await waitFor(() => expect(getNode('overlay-log')).toBeVisible());
+
+		const pod = getNode('overlay-pod');
+		const log = getNode('overlay-log');
+
+		await expect(log).toHaveAttribute('data-nested', 'overlay');
+		await expect(pod).toHaveAttribute('data-covered');
+		await expect(log.getBoundingClientRect().width).toBeCloseTo(
+			pod.getBoundingClientRect().width * 0.8,
+			0,
+		);
+
+		await userEvent.keyboard('{Escape}');
+		await waitFor(() => expect(document.querySelector('[data-testid="overlay-log"]')).toBeNull());
+		await expect(getNode('overlay-pod')).not.toHaveAttribute('data-covered');
+
+		// Opened again from the pod, so the snapshot shows the stack.
+		await userEvent.click(
+			within(getNode('overlay-pod')).getByRole('button', { name: LOGS[1].body }),
+		);
+		await waitFor(() => expect(getNode('overlay-log')).toHaveTextContent(LOGS[1].body));
+	},
+};
+
+const DRILL_DOWN: PreviewStep[] = [
+	{
+		kind: 'Cluster',
+		name: 'prod-gke-eu-west1',
+		icon: <Network />,
+		facts: [
+			['Nodes', '12'],
+			['Region', 'europe-west1'],
+		],
+	},
+	{
+		kind: 'Node',
+		name: 'gke-prod-pool-b-6h0t',
+		icon: <Server />,
+		facts: [
+			['Status', 'MemoryPressure'],
+			['Pods', '38'],
+		],
+	},
+	{
+		kind: 'Namespace',
+		name: 'payments',
+		icon: <Folder />,
+		facts: [
+			['Pods', '9'],
+			['Services', '4'],
+		],
+	},
+	{
+		kind: 'Pod',
+		name: 'payments-7c9d4f6b8-xk2lp',
+		icon: <Box />,
+		facts: [
+			['Status', 'CrashLoopBackOff'],
+			['Restarts', '6'],
+		],
+	},
+	{
+		kind: 'Trace',
+		name: 'POST /charge · 2.4s',
+		icon: <Waypoints />,
+		facts: [
+			['Spans', '42'],
+			['Errors', '3'],
+		],
+	},
+	{
+		kind: 'Log',
+		name: 'OOMKilled: container payments exceeded its 2Gi limit',
+		icon: <FileText />,
+		facts: [
+			['Severity', 'ERROR'],
+			['Container', 'payments'],
+		],
+	},
+];
+
+function crumbPreview(index: number): ReactElement {
+	return (
+		<StepPreview
+			step={DRILL_DOWN[index]}
+			from={DRILL_DOWN[index - 1]}
+			position={index + 1}
+			total={DRILL_DOWN.length}
+		/>
+	);
+}
+
+function DrillDownStep({
+	index,
+	depth,
+	setDepth,
+	hrefFor,
+}: {
+	index: number;
+	depth: number;
+	setDepth: (depth: number) => void;
+	hrefFor?: (index: number) => string;
+}): ReactElement | null {
+	const step = DRILL_DOWN[index];
+
+	if (step === undefined) {
+		return null;
+	}
+
+	const next = DRILL_DOWN[index + 1];
+
+	return (
+		<Drawer
+			type="inspector"
+			stack="breadcrumb"
+			open={depth >= index}
+			onClose={() => setDepth(index - 1)}
+			title={step.name}
+			crumb={{
+				icon: step.icon,
+				preview: crumbPreview(index),
+				...(hrefFor === undefined ? {} : { href: hrefFor(index) }),
+			}}
+			width="entity"
+			testId={`drill-${index}`}
+			titlePrefix={
+				<Badge variant="outlined" color="secondary">
+					{step.kind}
+				</Badge>
+			}
+		>
+			<dl className={styles.summary}>
+				{step.facts.map(([label, value]) => (
+					<Fragment key={label}>
+						<dt>{label}</dt>
+						<dd>{value}</dd>
+					</Fragment>
+				))}
+			</dl>
+			{next === undefined ? null : (
+				<ul className={styles.rows}>
+					<li>
+						<button type="button" className={styles.rowButton} onClick={() => setDepth(index + 1)}>
+							{`${next.kind}: ${next.name}`}
+						</button>
+					</li>
+				</ul>
+			)}
+			<DrillDownStep index={index + 1} depth={depth} setDepth={setDepth} hrefFor={hrefFor} />
+		</Drawer>
+	);
+}
+
+function DrillDown(): ReactElement {
+	const [depth, setDepth] = useState(DRILL_DOWN.length - 1);
+
+	return (
+		<div className={styles.page}>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setDepth(0)}>
+				Open cluster
+			</Button>
+			<DrillDownStep index={0} depth={depth} setDepth={setDepth} />
+		</div>
+	);
+}
+
+/**
+ * `stack="breadcrumb"`: a record opened from a drawer opens in place, at the same width, and the
+ * trail under the header leads back: the first crumb, a `...` crumb that lists the earlier steps
+ * on hover and on a press, and the last three. A press on a crumb goes back to it, `Esc` steps
+ * back one record, and the close button closes the whole trail.
+ */
+export const StackAsBreadcrumb: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => <DrillDown />,
+	play: async () => {
+		const last = DRILL_DOWN.length - 1;
+		await waitForEffects();
+		await waitFor(() => expect(getNode(`drill-${last}`)).toBeVisible());
+
+		const panel = getNode(`drill-${last}`);
+		const trail = getNode(`drill-${last}-trail-breadcrumb`);
+
+		await expect(panel).toHaveAttribute('data-nested', 'breadcrumb');
+		await expect(panel.getBoundingClientRect().width).toBeCloseTo(
+			getNode('drill-0').getBoundingClientRect().width,
+			0,
+		);
+		await expect(trail).toHaveAttribute('data-variant', 'outlined');
+
+		await userEvent.keyboard('{Escape}');
+		await waitFor(() => expect(document.querySelector(`[data-testid="drill-${last}"]`)).toBeNull());
+
+		const backTo = DRILL_DOWN[last - 3];
+		await userEvent.click(
+			within(getNode(`drill-${last - 1}-trail-breadcrumb`)).getByRole('button', {
+				name: backTo.name,
+			}),
+		);
+		await waitFor(() =>
+			expect(document.querySelector(`[data-testid="drill-${last - 2}"]`)).toBeNull(),
+		);
+		await expect(getNode(`drill-${last - 3}`)).toBeVisible();
+
+		// Down the trail again, so the snapshot shows it at its longest.
+		for (let index = last - 3; index < last; index++) {
+			await userEvent.click(
+				within(getNode(`drill-${index}-body`)).getByRole('button', {
+					name: `${DRILL_DOWN[index + 1].kind}: ${DRILL_DOWN[index + 1].name}`,
+				}),
+			);
+			await waitFor(() => expect(getNode(`drill-${index + 1}`)).toBeVisible());
+		}
+
+		// The card of an earlier crumb, so the snapshot shows it.
+		const previewed = DRILL_DOWN[last - 2];
+		await userEvent.hover(
+			within(getNode(`drill-${last}-trail-breadcrumb`)).getByRole('button', {
+				name: previewed.name,
+			}),
+		);
+		await waitFor(() =>
+			expect(
+				within(document.body).getByText(`Step ${last - 1} of ${DRILL_DOWN.length}`, {
+					exact: false,
+				}),
+			).toBeVisible(),
+		);
+	},
+};
+
+const DRILL_DOWN_KEYS = DRILL_DOWN.map((step) => step.kind.toLowerCase());
+
+const trailParser = parseAsArrayOf(parseAsStringLiteral(DRILL_DOWN_KEYS)).withOptions({
+	history: 'push',
+});
+
+const serializeTrail = createSerializer({ trail: trailParser });
+
+function DeepLinkedDrillDown(): ReactElement {
+	const [trail, setTrail] = useQueryState('trail', trailParser);
+	const depth = (trail?.length ?? 0) - 1;
+
+	const setDepth = (next: number): void => {
+		void setTrail(next < 0 ? null : DRILL_DOWN_KEYS.slice(0, next + 1));
+	};
+
+	return (
+		<div className={styles.page}>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setDepth(0)}>
+				Open cluster
+			</Button>
+			<DrillDownStep
+				index={0}
+				depth={depth}
+				setDepth={setDepth}
+				hrefFor={(index) =>
+					serializeTrail(window.location.search, { trail: DRILL_DOWN_KEYS.slice(0, index + 1) })
+				}
+			/>
+		</div>
+	);
+}
+
+/**
+ * A trail kept in the URL with [nuqs](https://nuqs.dev), `?trail=cluster,node,...`, so every step
+ * has a deep link. A plain click on a crumb steps back, and `onClose` writes the shorter trail to
+ * the URL. `Ctrl` or `Cmd` and a click on a crumb, or on its row in the `...` list, opens that step
+ * in a new tab, which reads the trail from the URL and opens every drawer of it. The browser's back
+ * button steps back too.
+ */
+export const DeepLinkWithNuqs: Story = {
+	parameters: {
+		// The trail lives in the URL, and `StackAsBreadcrumb` snapshots the same trail.
+		chromatic: { disableSnapshot: true },
+		controls: { disable: true },
+	},
+	render: () => (
+		<NuqsAdapter>
+			<DeepLinkedDrillDown />
+		</NuqsAdapter>
+	),
+	play: async ({ canvasElement }) => {
+		const last = DRILL_DOWN.length - 1;
+		const trailInUrl = (): string | null =>
+			new URLSearchParams(window.location.search).get('trail');
+		await waitForEffects();
+
+		// A trail left in the URL by an earlier run is closed first, so every run starts the same.
+		if (document.querySelector('[data-testid="drill-0"]') !== null) {
+			await userEvent.click(getNode('drill-0-close'));
+		}
+		await waitFor(() => expect(trailInUrl()).toBeNull());
+
+		await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open cluster' }));
+		for (let index = 0; index < last; index++) {
+			await waitFor(() => expect(getNode(`drill-${index}`)).toBeVisible());
+			await userEvent.click(
+				within(getNode(`drill-${index}-body`)).getByRole('button', {
+					name: `${DRILL_DOWN[index + 1].kind}: ${DRILL_DOWN[index + 1].name}`,
+				}),
+			);
+		}
+		await waitFor(() => expect(getNode(`drill-${last}`)).toBeVisible());
+		await waitFor(() => expect(trailInUrl()).toBe(DRILL_DOWN_KEYS.join(',')));
+
+		const trail = getNode(`drill-${last}-trail-breadcrumb`);
+		const backTo = within(trail).getByRole('link', { name: DRILL_DOWN[last - 2].name });
+		await expect(
+			new URL(backTo.getAttribute('href') ?? '', window.location.href).searchParams.get('trail'),
+		).toBe(DRILL_DOWN_KEYS.slice(0, last - 1).join(','));
+
+		await userEvent.click(backTo);
+		await waitFor(() =>
+			expect(document.querySelector(`[data-testid="drill-${last - 1}"]`)).toBeNull(),
+		);
+		await waitFor(() => expect(trailInUrl()).toBe(DRILL_DOWN_KEYS.slice(0, last - 1).join(',')));
+		await expect(getNode(`drill-${last - 2}`)).toBeVisible();
+		// The drawer handled the click, so the link guard of the docs shows no toast over it.
+		await expect(document.querySelector('[data-slot="toast"]')).toBeNull();
+	},
+};
+
+const serializeSteps = createSerializer({ steps: trailParser });
+
+function ControlledTrailDrillDown(): ReactElement {
+	const [steps, setSteps] = useQueryState('steps', trailParser);
+	const open = (steps?.length ?? 0) > 0;
+	const [shown, setShown] = useState<string[]>([]);
+
+	// The drawer plays its exit with the steps it had, so its content does not change while it
+	// slides out.
+	if (steps !== null && steps.length > 0 && steps.join() !== shown.join()) {
+		setShown(steps);
+	}
+
+	const currentIndex = Math.max(DRILL_DOWN_KEYS.indexOf(shown.at(-1) ?? ''), 0);
+	const current = DRILL_DOWN[currentIndex];
+	const next = DRILL_DOWN[currentIndex + 1];
+
+	return (
+		<div className={styles.page}>
+			<Button
+				variant="outlined"
+				color="secondary"
+				size="md"
+				onClick={() => void setSteps([DRILL_DOWN_KEYS[0]])}
+			>
+				Open cluster
+			</Button>
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				open={open}
+				onClose={() => void setSteps(null)}
+				title={current.name}
+				crumb={{ icon: current.icon }}
+				trail={shown.slice(0, -1).map((key, index) => {
+					const stepIndex = DRILL_DOWN_KEYS.indexOf(key);
+
+					return {
+						title: DRILL_DOWN[stepIndex].name,
+						icon: DRILL_DOWN[stepIndex].icon,
+						preview: crumbPreview(stepIndex),
+						href: serializeSteps(window.location.search, { steps: shown.slice(0, index + 1) }),
+					};
+				})}
+				onTrailSelect={(index) => void setSteps(shown.slice(0, index + 1))}
+				width="entity"
+				testId="controlled"
+				titlePrefix={
+					<Badge variant="outlined" color="secondary">
+						{current.kind}
+					</Badge>
+				}
+			>
+				<dl className={styles.summary}>
+					{current.facts.map(([label, value]) => (
+						<Fragment key={label}>
+							<dt>{label}</dt>
+							<dd>{value}</dd>
+						</Fragment>
+					))}
+				</dl>
+				{next === undefined ? null : (
+					<ul className={styles.rows}>
+						<li>
+							<button
+								type="button"
+								className={styles.rowButton}
+								onClick={() => void setSteps([...shown, DRILL_DOWN_KEYS[currentIndex + 1]])}
+							>
+								{`${next.kind}: ${next.name}`}
+							</button>
+						</li>
+					</ul>
+				)}
+			</Drawer>
+		</div>
+	);
+}
+
+/**
+ * The same drill-down with one drawer and a `trail` instead of one drawer per step, for steps too
+ * heavy to keep mounted, such as a page of charts. The steps live in the URL,
+ * `?steps=cluster,node,...`, through nuqs, and `onTrailSelect` drops the steps after the crumb that
+ * was pressed. This mode mounts only the current step, so a step back mounts that step again and it
+ * keeps no scroll or state. `Esc` steps back one step too, and a click on a crumb with `Ctrl` or
+ * `Cmd` opens that step in a new tab.
+ */
+export const ControlledTrail: Story = {
+	parameters: {
+		// The trail lives in the URL, and `StackAsBreadcrumb` snapshots the same trail.
+		chromatic: { disableSnapshot: true },
+		controls: { disable: true },
+	},
+	render: () => (
+		<NuqsAdapter>
+			<ControlledTrailDrillDown />
+		</NuqsAdapter>
+	),
+	play: async ({ canvasElement }) => {
+		const last = 3;
+		const stepsInUrl = (): string | null =>
+			new URLSearchParams(window.location.search).get('steps');
+		const keysUpTo = (index: number): string => DRILL_DOWN_KEYS.slice(0, index + 1).join(',');
+		const labelOf = (index: number): string =>
+			`${DRILL_DOWN[index].kind}: ${DRILL_DOWN[index].name}`;
+		const crumbs = (): HTMLElement => getNode('controlled-trail-breadcrumb');
+		const drillButton = (index: number): HTMLElement =>
+			within(getNode('controlled-body')).getByRole('button', { name: labelOf(index) });
+		await waitForEffects();
+
+		// A trail left in the URL by an earlier run is closed first, so every run starts the same.
+		if (document.querySelector('[data-testid="controlled"]') !== null) {
+			await userEvent.click(getNode('controlled-close'));
+		}
+		await waitFor(() => expect(stepsInUrl()).toBeNull());
+
+		await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open cluster' }));
+		await waitFor(() => expect(getNode('controlled')).toBeVisible());
+		await expect(getNode('controlled-title')).toHaveTextContent(DRILL_DOWN[0].name);
+		await expect(document.querySelector('[data-testid="controlled-trail"]')).toBeNull();
+
+		for (let index = 1; index <= last; index++) {
+			await userEvent.click(drillButton(index));
+			await waitFor(() =>
+				expect(getNode('controlled-title')).toHaveTextContent(DRILL_DOWN[index].name),
+			);
+		}
+		await waitFor(() => expect(stepsInUrl()).toBe(keysUpTo(last)));
+
+		for (let index = 0; index < last; index++) {
+			const crumb = within(crumbs()).getByRole('link', { name: DRILL_DOWN[index].name });
+			await expect(
+				new URL(crumb.getAttribute('href') ?? '', window.location.href).searchParams.get('steps'),
+			).toBe(keysUpTo(index));
+		}
+		await expect(within(crumbs()).queryByRole('link', { name: DRILL_DOWN[last].name })).toBeNull();
+		await expect(within(crumbs()).getByText(DRILL_DOWN[last].name)).toBeVisible();
+
+		for (let index = 1; index <= last; index++) {
+			await expect(within(document.body).queryByText(labelOf(index))).toBeNull();
+		}
+		await expect(drillButton(last + 1)).toBeVisible();
+
+		await userEvent.click(within(crumbs()).getByRole('link', { name: DRILL_DOWN[last - 1].name }));
+		await waitFor(() =>
+			expect(getNode('controlled-title')).toHaveTextContent(DRILL_DOWN[last - 1].name),
+		);
+		await waitFor(() => expect(stepsInUrl()).toBe(keysUpTo(last - 1)));
+		await expect(within(document.body).queryByText(labelOf(last + 1))).toBeNull();
+		await expect(drillButton(last)).toBeVisible();
+		// The drawer handled the click, so the link guard of the docs shows no toast over it.
+		await expect(document.querySelector('[data-slot="toast"]')).toBeNull();
+
+		// `Esc` asks for the last earlier step, so the drawer steps back once more and stays open.
+		await userEvent.keyboard('{Escape}');
+		await waitFor(() =>
+			expect(getNode('controlled-title')).toHaveTextContent(DRILL_DOWN[last - 2].name),
+		);
+		await waitFor(() => expect(stepsInUrl()).toBe(keysUpTo(last - 2)));
+		await expect(getNode('controlled')).toBeVisible();
+		await expect(drillButton(last - 1)).toBeVisible();
+		await expect(within(crumbs()).getAllByRole('link')).toHaveLength(last - 2);
+	},
+};
+
+function TraceFromPod(): ReactElement {
+	const pod = PODS[0];
+	const [podOpen, setPodOpen] = useState(true);
+	const [traceOpen, setTraceOpen] = useState(true);
+	const [logOpen, setLogOpen] = useState(true);
+
+	return (
+		<div className={styles.page}>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setPodOpen(true)}>
+				Open pod
+			</Button>
+			<Drawer
+				type="inspector"
+				stack="breadcrumb"
+				open={podOpen}
+				onClose={() => setPodOpen(false)}
+				title={pod.name}
+				crumb={{ icon: <Box /> }}
+				width="entity"
+				testId="mixed-pod"
+			>
+				<PodSummary pod={pod} />
+				<Button variant="outlined" color="secondary" size="md" onClick={() => setTraceOpen(true)}>
+					Open the latest trace
+				</Button>
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					open={traceOpen}
+					onClose={() => setTraceOpen(false)}
+					title="POST /charge · 2.4s"
+					crumb={{ icon: <Waypoints /> }}
+					testId="mixed-trace"
+				>
+					<Button variant="outlined" color="secondary" size="md" onClick={() => setLogOpen(true)}>
+						Open the error log
+					</Button>
+					<Drawer
+						type="inspector"
+						stack="overlay"
+						open={logOpen}
+						onClose={() => setLogOpen(false)}
+						title="Log details"
+						testId="mixed-log"
+					>
+						{LOGS[0].body}
+					</Drawer>
+				</Drawer>
+			</Drawer>
+		</div>
+	);
+}
+
+/**
+ * The two at once: the trace opens in the pod's trail, and the trace sets `stack="overlay"`, so
+ * its log covers the trail. The trail takes no input until the log closes.
+ */
+export const BreadcrumbThenOverlay: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => <TraceFromPod />,
+	play: async () => {
+		await waitForEffects();
+		await waitFor(() => expect(getNode('mixed-log')).toBeVisible());
+
+		const trace = getNode('mixed-trace');
+		const log = getNode('mixed-log');
+
+		await expect(trace).toHaveAttribute('data-nested', 'breadcrumb');
+		await expect(trace).toHaveAttribute('data-covered');
+		await expect(log).toHaveAttribute('data-nested', 'overlay');
+		await expect(log.getBoundingClientRect().width).toBeCloseTo(
+			trace.getBoundingClientRect().width * 0.8,
+			0,
+		);
+
+		await userEvent.keyboard('{Escape}');
+		await waitFor(() => expect(document.querySelector('[data-testid="mixed-log"]')).toBeNull());
+		await expect(getNode('mixed-trace')).not.toHaveAttribute('data-covered');
+		await expect(getNode('mixed-trace-trail')).toBeVisible();
+
+		await userEvent.click(
+			within(getNode('mixed-trace')).getByRole('button', { name: 'Open the error log' }),
+		);
+		await waitFor(() => expect(getNode('mixed-log')).toBeVisible());
+	},
+};
+
 const SERVICES_REPORTING = Array.from({ length: 40 }, (_, index) => `checkout-${index + 1}`);
 
 /**
@@ -804,6 +1576,7 @@ export const Overflow: Story = {
 	render: () => (
 		<div className={styles.page}>
 			<Drawer
+				stack="overlay"
 				type="task"
 				open
 				onClose={() => undefined}
@@ -861,6 +1634,7 @@ function DrawerInABox(): ReactElement {
 				</Button>
 			</div>
 			<Drawer
+				stack="overlay"
 				type="task"
 				open={open}
 				container={boxRef}

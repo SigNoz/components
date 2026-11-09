@@ -123,6 +123,7 @@ describe('Drawer loading', () => {
 			<Drawer
 				// A `type` widened to the union gets past the rule that rejects it on an inspector.
 				type={'inspector' as DrawerTypeType}
+				stack="overlay"
 				open
 				onClose={() => {}}
 				title="Span details"

@@ -80,6 +80,7 @@ function RefHarness({ type, pin }: { type: DrawerTypeType; pin: 'initialFocus' |
 			</button>
 			<Drawer
 				type={type}
+				stack="overlay"
 				open={open}
 				onClose={() => setOpen(false)}
 				title="Edit member"

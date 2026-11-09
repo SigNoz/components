@@ -42,10 +42,12 @@
  * | `--drawer-box-shadow` | `var(--drawer-shadow)` |
  * | `--drawer-box-sizing` | `border-box` |
  * | `--drawer-content-border-radius` | `inherit` |
+ * | `--drawer-content-covered-content-visibility` | `hidden` |
  * | `--drawer-content-display` | `flex` |
  * | `--drawer-content-flex` | `1 1 auto` |
  * | `--drawer-content-flex-direction` | `column` |
  * | `--drawer-content-min-block-size` | `0` |
+ * | `--drawer-content-nested-swiping-content-visibility` | `visible` |
  * | `--drawer-description-color` | `var(--l3-foreground)` |
  * | `--drawer-description-font-family` | `var(--label-base-400-font-family)` |
  * | `--drawer-description-font-size` | `var(--label-base-400-font-size)` |
@@ -137,6 +139,9 @@
  * | `--drawer-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--drawer-max-inline-size` | `var(--drawer-internal-max-inline-size)` |
  * | `--drawer-narrow-max-inline-size` | `24rem` |
+ * | `--drawer-nested-breadcrumb-transform` | `none` |
+ * | `--drawer-nested-breadcrumb-transition-duration` | `0ms` |
+ * | `--drawer-overlay-width-ratio` | `0.8` |
  * | `--drawer-pointer-events` | `auto` |
  * | `--drawer-position` | `relative` |
  * | `--drawer-shadow` | `-` |
@@ -163,6 +168,20 @@
  * | `--drawer-title-suffix-align-items` | `center` |
  * | `--drawer-title-suffix-display` | `inline-flex` |
  * | `--drawer-title-suffix-flex-shrink` | `0` |
+ * | `--drawer-trail-align-items` | `center` |
+ * | `--drawer-trail-border-color` | `var(--drawer-border)` |
+ * | `--drawer-trail-border-style` | `solid` |
+ * | `--drawer-trail-border-width` | `0 0 1px 0` |
+ * | `--drawer-trail-box-sizing` | `border-box` |
+ * | `--drawer-trail-breadcrumb-flex` | `1 1 auto` |
+ * | `--drawer-trail-breadcrumb-min-inline-size` | `0` |
+ * | `--drawer-trail-display` | `flex` |
+ * | `--drawer-trail-flex-shrink` | `0` |
+ * | `--drawer-trail-min-block-size` | `48px` |
+ * | `--drawer-trail-padding-inline` | `var(--spacing-6)` |
+ * | `--drawer-trail-step-color` | `var(--l3-foreground)` |
+ * | `--drawer-trail-step-font-size` | `var(--label-small-400-font-size)` |
+ * | `--drawer-trail-step-font-variant-numeric` | `tabular-nums` |
  * | `--drawer-transform` | `none` |
  * | `--drawer-transition-duration` | `240ms` |
  * | `--drawer-transition-property` | `transform` |
@@ -192,8 +211,12 @@ export { Drawer } from './drawer.js';
 export { useDrawerHandle } from './use-drawer-handle.js';
 export type {
 	DrawerCloseReasonType,
+	DrawerCrumbType,
 	DrawerHandleType,
 	DrawerProps,
+	DrawerStackType,
+	DrawerTrailSelectReasonType,
+	DrawerTrailStepType,
 	DrawerTypeType,
 	DrawerWidthType,
 	ValidateDrawerProps,

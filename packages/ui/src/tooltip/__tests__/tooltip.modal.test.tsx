@@ -21,7 +21,7 @@ describe('Tooltip inside a modal', () => {
 	it('portals into the drawer and stays hoverable', async () => {
 		const user = userEvent.setup();
 		render(
-			<Drawer type="task" open onClose={noop} title="Settings" initialFocus={false}>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="Settings" initialFocus={false}>
 				{/* Focus would open the tooltip too, and keep it open whatever the pointer does. */}
 				<Tooltip title={TITLE}>
 					<button type="button">Hover</button>
@@ -45,7 +45,7 @@ describe('Tooltip inside a modal', () => {
 
 	it('portals into the drawer when it is open from the first render', async () => {
 		render(
-			<Drawer type="task" open onClose={noop} title="Settings">
+			<Drawer type="task" stack="overlay" open onClose={noop} title="Settings">
 				<Tooltip title={TITLE}>
 					<button type="button">Hover</button>
 				</Tooltip>
@@ -65,7 +65,7 @@ describe('Tooltip inside a modal', () => {
 				<Tooltip title={title} testId="outside">
 					<button type="button">Outside</button>
 				</Tooltip>
-				<Drawer type="task" open onClose={noop} title="Settings">
+				<Drawer type="task" stack="overlay" open onClose={noop} title="Settings">
 					<Tooltip title={title} testId="inside">
 						<button type="button">Inside</button>
 					</Tooltip>
@@ -87,7 +87,7 @@ describe('Tooltip inside a modal', () => {
 
 		render(
 			<TooltipProvider container={outside}>
-				<Drawer type="task" open onClose={noop} title="Settings">
+				<Drawer type="task" stack="overlay" open onClose={noop} title="Settings">
 					<Tooltip title={TITLE}>
 						<button type="button">Hover</button>
 					</Tooltip>

@@ -6,7 +6,8 @@ import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.j
  * assistive technology, while it stays on screen.
  *
  * An element that turns inert with the focus inside drops it to `body`, so the focus moves to
- * `focusFallback` first.
+ * `focusFallback` first, when one is given. Leave it out when something else takes the focus, such
+ * as a nested drawer that opens over the element.
  *
  * Runs after every render, not on a change of `inert`, because the element mounts and unmounts
  * with the content of its slot. React 18 has no `inert` prop, so the property is set on the
@@ -17,7 +18,7 @@ import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.j
 export function useInert(
 	ref: RefObject<HTMLElement | null>,
 	inert: boolean,
-	focusFallback: RefObject<HTMLElement | null>,
+	focusFallback?: RefObject<HTMLElement | null>,
 ): void {
 	useIsomorphicLayoutEffect(() => {
 		const element = ref.current;
@@ -26,7 +27,7 @@ export function useInert(
 		}
 
 		if (inert && element.contains(element.ownerDocument.activeElement)) {
-			focusFallback.current?.focus();
+			focusFallback?.current?.focus();
 		}
 		element.inert = inert;
 	});

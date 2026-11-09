@@ -14,7 +14,13 @@ function DrawerHarness() {
 	return (
 		<>
 			<output data-testid="drawer-state">{drawerOpen ? 'drawer open' : 'drawer closed'}</output>
-			<Drawer type="task" open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Settings">
+			<Drawer
+				type="task"
+				stack="overlay"
+				open={drawerOpen}
+				onClose={() => setDrawerOpen(false)}
+				title="Settings"
+			>
 				<button type="button" onClick={() => setAlertOpen(true)}>
 					Open alert
 				</button>

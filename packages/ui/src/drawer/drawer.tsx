@@ -18,20 +18,31 @@ import { PopupContainer } from '../lib/popup-container.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import { Skeleton } from '../skeleton/index.js';
 import styles from './drawer.module.scss';
+import { DrawerStackProvider } from './drawer-stack-context.js';
 import { DrawerFooter } from './subcomponents/drawer-footer.js';
 import { DrawerHeader } from './subcomponents/drawer-header.js';
+import { DrawerTrail } from './subcomponents/drawer-trail.js';
 import type {
 	DrawerCloseReasonType,
 	DrawerHandleType,
 	DrawerProps,
+	DrawerTrailStepType,
 	ValidateDrawerProps,
 } from './types.js';
+import { useDrawerStack } from './use-drawer-stack.js';
 import { useFocusFallback } from './use-focus-fallback.js';
 import { toDrawerCloseReason } from './utils.js';
+
+const NO_STEPS: readonly DrawerTrailStepType[] = [];
 
 const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(function Drawer(
 	{
 		type,
+		stack,
+		crumb,
+		trailEllipsis,
+		trail: steps = NO_STEPS,
+		onTrailSelect,
 		open,
 		handle,
 		container,
@@ -78,18 +89,42 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 		}
 	};
 
+	const {
+		isNested,
+		nestedIn,
+		inTrail,
+		layerType,
+		covered,
+		style: stackStyle,
+		value: stackValue,
+		requestCloseFromPanel,
+	} = useDrawerStack({
+		stack,
+		type: resolvedType,
+		title,
+		crumb,
+		steps,
+		onTrailSelect,
+		trailEllipsis,
+		isOpen,
+		panel,
+		popupRef,
+		requestClose,
+	});
+	const isModal = layerType === 'task';
+
 	return (
 		<DrawerPrimitive.Root
 			open={isOpen}
 			// An inspector leaves the page usable: no focus trap, no scroll lock, and neither a press
 			// outside nor the focus moving out of it closes it.
-			modal={isTask}
-			disablePointerDismissal={!isTask}
+			modal={isModal}
+			disablePointerDismissal={!isModal}
 			swipeDirection="right"
 			onOpenChange={(nextOpen, eventDetails) => {
 				const reason = toDrawerCloseReason(eventDetails.reason);
 				if (!nextOpen && reason) {
-					requestClose(reason);
+					requestCloseFromPanel(reason);
 				}
 			}}
 		>
@@ -99,14 +134,18 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 					slot="drawer-layer"
 					zIndex="var(--drawer-z-index, 50)"
 				>
-					{isTask ? (
+					{isTask && !inTrail ? (
 						<DrawerPrimitive.Backdrop
+							// Base UI renders the backdrop of the outermost dialog only. A `task` nested
+							// in an overlay drawer has its own, over the drawer it opens from, while a
+							// `task` declared in a `Dialog` keeps the dialog's.
+							forceRender={isNested}
 							className={styles['drawer__backdrop']}
 							data-slot="drawer-backdrop"
 							data-testid={partTestId(testId, 'backdrop')}
 						/>
 					) : null}
-					<DrawerPrimitive.Viewport className={styles['drawer__viewport']} data-type={resolvedType}>
+					<DrawerPrimitive.Viewport className={styles['drawer__viewport']} data-type={layerType}>
 						<DrawerPrimitive.Popup
 							ref={mergedRef}
 							// Base UI's default is the first tabbable element of the panel, which is the
@@ -120,52 +159,70 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 							// After the spread: a `data-*` from the call site may not take the slot, the
 							// state or the test id the component is found and styled by, and an `aria-*`
 							// may not undo the modal.
-							aria-modal={isTask ? 'true' : undefined}
+							style={stackStyle}
+							aria-modal={isModal ? 'true' : undefined}
 							data-testid={testId}
 							data-type={resolvedType}
 							data-width={width}
 							data-loading={loading || undefined}
+							data-nested={nestedIn}
+							// Valued by how it is covered: under a breadcrumb trail it is out of sight, and its
+							// content skips layout and paint.
+							data-covered={covered}
 							data-slot="drawer-popup"
 						>
-							<PopupContainer>
+							<DrawerStackProvider value={stackValue}>
 								<DrawerPrimitive.Content className={styles['drawer__content']}>
-									<DrawerHeader
-										title={title}
-										headerPrefix={headerPrefix}
-										titlePrefix={titlePrefix}
-										titleSuffix={titleSuffix}
-										headerSuffix={headerSuffix}
-										// The type and the runtime agree: an inspector drops what its type
-										// rejects.
-										description={isTask ? description : undefined}
-										loading={loading}
-										testId={testId}
-										popupRef={popupRef}
-										onClosePress={() => {
-											requestClose('close-press');
-										}}
-									/>
-									<div
-										className={styles['drawer__body']}
-										data-slot="drawer-body"
-										data-testid={partTestId(testId, 'body')}
-									>
-										{loading ? (
-											(loadingContent ?? <Skeleton testId={partTestId(testId, 'body-skeleton')} />)
-										) : (
-											<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
-										)}
-									</div>
-									{isTask ? (
-										<DrawerFooter
-											footerPrefix={footerPrefix}
-											footerSuffix={footerSuffix}
+									{/* Inside the content, so a press in a menu portalled here is not taken for the
+									    start of a swipe: Base UI ignores the swipe on the content only. */}
+									<PopupContainer>
+										<DrawerHeader
+											title={title}
+											headerPrefix={headerPrefix}
+											titlePrefix={titlePrefix}
+											titleSuffix={titleSuffix}
+											headerSuffix={headerSuffix}
+											// The type and the runtime agree: an inspector drops what its type
+											// rejects.
+											description={isTask ? description : undefined}
 											loading={loading}
 											testId={testId}
+											popupRef={popupRef}
+											onClosePress={() => {
+												requestCloseFromPanel('close-press');
+											}}
 										/>
-									) : null}
+										{stackValue.trail.length > 1 ? (
+											<DrawerTrail
+												trail={stackValue.trail}
+												ellipsis={stackValue.trailEllipsis}
+												testId={testId}
+											/>
+										) : null}
+										<div
+											className={styles['drawer__body']}
+											data-slot="drawer-body"
+											data-testid={partTestId(testId, 'body')}
+										>
+											{loading ? (
+												(loadingContent ?? (
+													<Skeleton testId={partTestId(testId, 'body-skeleton')} />
+												))
+											) : (
+												<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
+											)}
+										</div>
+										{isTask ? (
+											<DrawerFooter
+												footerPrefix={footerPrefix}
+												footerSuffix={footerSuffix}
+												loading={loading}
+												testId={testId}
+											/>
+										) : null}
+									</PopupContainer>
 								</DrawerPrimitive.Content>
-							</PopupContainer>
+							</DrawerStackProvider>
 						</DrawerPrimitive.Popup>
 					</DrawerPrimitive.Viewport>
 				</DialogLayer>
@@ -238,6 +295,39 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * dialog covers the dialog, with no `zIndex`. Tooltips, dropdowns, selects, popovers and toasts
  * opened inside it portal into the panel and render above it.
  *
+ * ### Nested drawers
+ *
+ * A drawer declared inside another one, in its body or a header slot, renders the way the outer
+ * drawer's `stack` says, and takes its width from it.
+ *
+ * With `stack="breadcrumb"`, the nested drawer drills down: it opens in place at the same width,
+ * with no movement, and a trail of crumbs under its header leads back, the first crumb, a `...`
+ * crumb that lists the earlier steps, and the last three. A press on a crumb closes every drawer
+ * after it with `crumb-press`. `Esc` closes only the current drawer, a step back, while the close
+ * button, a swipe and a press on the backdrop close the whole trail, the drawer on top first. A
+ * drawer that stays open after its `onClose` stops the leave: the drawers under it stay open. The
+ * first drawer of the trail sets the backdrop and the focus trap, so a `type` further down sets only
+ * whether the drawer has a description and a footer. `crumb` sets a drawer's crumb, its `title` by
+ * default, the card shown while the crumb is hovered or focused (`preview`), and its link (`href`,
+ * `target`, `render`). A plain click on a crumb with a link still steps back, and a click with a
+ * modifier key opens the link in a new tab. The `...` crumb opens a list of the earlier steps, on
+ * hover and on a press, with the number of each step, and `trailEllipsis` on the first drawer of the
+ * trail changes it. A covered drawer of the trail is out of sight, so its content skips layout and
+ * paint and keeps its state and scroll, but its effects, timers and requests keep running.
+ *
+ * For content too heavy to keep mounted once per step, such as a page of charts, one drawer shows
+ * the trail itself: `trail` lists the earlier steps, root first, the drawer's own `crumb` is last,
+ * and `children` renders only the current step. A plain click on a step and `Esc` call
+ * `onTrailSelect(index, reason)`, and you drop the steps after it. A step back mounts the step
+ * again, so it keeps no scroll or state of its own.
+ *
+ * With `stack="overlay"`, the nested drawer opens over the outer one at 80% of its width, so the
+ * outer one stays in sight. The outer one takes no input until the nested one closes, and the
+ * nested drawer's own `type` sets its backdrop.
+ *
+ * A drawer of a trail with `stack="overlay"` opens an overlay over the trail, and the overlay may
+ * start a trail of its own.
+ *
  * ### Asserting on it
  *
  * `testId` lands on the panel and names every part. Use these, never the hashed class names.
@@ -249,10 +339,12 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * | `data-open` / `data-closed` | panel | present while open / while the exit runs |
  * | `data-loading` | panel, `drawer-header-prefix`, `drawer-header-suffix`, `drawer-title-prefix` | present while `loading` |
  * | `data-swiping` | panel | present while a swipe drags it |
+ * | `data-nested` | panel | `overlay`, `breadcrumb`: how the drawer it is declared in stacks it |
+ * | `data-covered` | panel | `overlay`, `breadcrumb`: present while a nested drawer is open over it, valued by its own `stack` |
  *
  * | `data-slot` | Rendered |
  * | --- | --- |
- * | `drawer-backdrop` | on a `task` |
+ * | `drawer-backdrop` | on a `task`, except inside a breadcrumb trail, where only the first drawer of the trail has one |
  * | `drawer-popup` | always, the panel |
  * | `drawer-header` | always |
  * | `drawer-header-prefix` | when `headerPrefix` renders something |
@@ -264,6 +356,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * | `drawer-close` | always |
  * | `drawer-title-skeleton` | while `loading`, the box around the title skeleton |
  * | `drawer-description-skeleton` | while `loading` and `description` renders something |
+ * | `drawer-trail` | in a breadcrumb trail, under the header, with the `Breadcrumb` of the trail |
  * | `drawer-body` | always |
  * | `drawer-footer` | on a `task`, when `footerSuffix` renders something |
  * | `drawer-footer-prefix` | when `footerPrefix` and `footerSuffix` both render something |
@@ -275,6 +368,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * // the record stays on screen while the drawer slides out.
  * <Drawer
  *   type="inspector"
+ *   stack="overlay"
  *   open={isOpen}
  *   onClose={() => setIsOpen(false)}
  *   title={selected.name}
@@ -301,6 +395,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * // An edit form with a destructive action apart from the actions
  * <Drawer
  *   type="task"
+ *   stack="overlay"
  *   open={isOpen}
  *   onClose={() => setIsOpen(false)}
  *   title="Edit member"
@@ -326,11 +421,44 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * // One drawer for every row of the table, opened from the row
  * const logDetails = useDrawerHandle<LogRow>();
  *
- * <Drawer handle={logDetails} type="inspector" title="Log details" width="extra-wide">
+ * <Drawer
+ *   handle={logDetails}
+ *   type="inspector"
+ *   stack="overlay"
+ *   title="Log details"
+ *   width="extra-wide"
+ * >
  *   {(log) => <LogDetails log={log} />}
  * </Drawer>
  *
  * <TableRow onClick={() => logDetails.open(row)} />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // A drill-down: a press on a pod opens it in the same drawer, with a trail back. As in the first
+ * // example, `node` and `pod` are the last records shown, kept apart from the open flags.
+ * <Drawer
+ *   type="inspector"
+ *   stack="breadcrumb"
+ *   open={isNodeOpen}
+ *   onClose={() => setIsNodeOpen(false)}
+ *   title={node.name}
+ *   crumb={{ icon: <Server /> }}
+ *   width="entity"
+ * >
+ *   <PodList pods={node.pods} onSelect={showPod} />
+ *   <Drawer
+ *     type="inspector"
+ *     stack="breadcrumb"
+ *     open={isPodOpen}
+ *     onClose={() => setIsPodOpen(false)}
+ *     title={pod.name}
+ *     crumb={{ icon: <Box /> }}
+ *   >
+ *     <PodDetails pod={pod} />
+ *   </Drawer>
+ * </Drawer>
  * ```
  */
 export const Drawer = DrawerImpl as <

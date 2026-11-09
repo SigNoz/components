@@ -71,7 +71,7 @@ function DrawerHandleHarness({
 			<button type="button" onClick={() => handle.open(LATENCY)}>
 				{OPENER_NAME}
 			</button>
-			<Drawer handle={handle} type={type} title="Log details" testId="drawer">
+			<Drawer handle={handle} type={type} stack="overlay" title="Log details" testId="drawer">
 				{(row: Row) => renderRow(row)}
 			</Drawer>
 		</>
@@ -229,7 +229,7 @@ describe('Drawer with a handle', () => {
 					<button type="button" onClick={() => handle.open()}>
 						{OPENER_NAME}
 					</button>
-					<Drawer handle={handle} type="task" title="Log details" testId="drawer">
+					<Drawer handle={handle} type="task" stack="overlay" title="Log details" testId="drawer">
 						<p>Static body</p>
 					</Drawer>
 				</>
@@ -252,7 +252,7 @@ describe('Drawer with a handle', () => {
 					<button type="button" onClick={() => handle.open()}>
 						{OPENER_NAME}
 					</button>
-					<Drawer handle={handle} type="task" title="Log details" testId="drawer">
+					<Drawer handle={handle} type="task" stack="overlay" title="Log details" testId="drawer">
 						{(payload: void) => {
 							received.push(payload);
 
@@ -303,6 +303,7 @@ describe('Drawer with a handle closing', () => {
 					<Drawer
 						handle={handle}
 						type="task"
+						stack="overlay"
 						title="Log details"
 						testId="drawer"
 						footerSuffix={
@@ -435,7 +436,7 @@ describe('Drawer with a handle and onOpenChange', () => {
 			return (
 				<>
 					<OpensInEffect handle={handle} when={openOnMount} />
-					<Drawer handle={handle} type="task" title="Log details" testId="drawer">
+					<Drawer handle={handle} type="task" stack="overlay" title="Log details" testId="drawer">
 						{(row: Row) => <RowBody row={row} />}
 					</Drawer>
 				</>
@@ -512,6 +513,7 @@ function InspectorHarness({ onOpenChange, onPagePress }: InspectorHarnessProps):
 			<Drawer
 				handle={handle}
 				type="inspector"
+				stack="overlay"
 				title="Log details"
 				testId="drawer"
 				headerPrefix={
