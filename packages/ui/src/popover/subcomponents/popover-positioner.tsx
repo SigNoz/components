@@ -18,16 +18,22 @@ export function PopoverPositioner({
 	side,
 	align,
 	anchor,
+	viewport,
 	children,
 }: {
 	trigger: Element | null;
 	side: PopoverSideType;
 	align: NonNullable<PopoverPrimitive.Positioner.Props['align']>;
 	anchor: PopoverAnchorType;
+	/**
+	 * The popup swaps its content in a viewport, so the box is placed for the size the popup is
+	 * moving to.
+	 */
+	viewport: boolean;
 	children: ReactNode;
 }): ReactNode {
 	// The anchor is where the popup appears, so its layer is the one to clear. A popover a
-	// handle shows has no trigger at all.
+	// handle shows has no trigger at all, and one a `Popover.Trigger` opened passes that trigger.
 	const layerStyle = useLayerZIndex(anchor ?? trigger, 'var(--popover-z-index, 50)');
 
 	return (
@@ -37,6 +43,7 @@ export function PopoverPositioner({
 			sideOffset={POPOVER_SIDE_OFFSET}
 			alignOffset={POPOVER_ALIGN_OFFSET}
 			anchor={anchor}
+			data-viewport={viewport || undefined}
 			data-slot="popover-positioner"
 			className={styles['popover__positioner']}
 			style={layerStyle}

@@ -18,6 +18,7 @@ import { createRef } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { PopupHandle } from '../../lib/popup-handle.js';
 import { Popover } from '../popover.js';
+import { PopoverHandle } from '../popover-handle.js';
 
 const body = <p>Body</p>;
 const btn = <button type="button">Open</button>;
@@ -340,6 +341,95 @@ describe('anchor', () => {
 			>
 				{body}
 			</Popover>,
+		);
+	});
+});
+
+describe('Popover.Trigger', () => {
+	const cards = new PopoverHandle<number>();
+
+	test('accepts a handle, a payload of its type and the element', () => {
+		assertType(
+			<Popover.Trigger handle={cards} payload={3} nativeButton>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
+	test('takes a key, for a trigger rendered in a list', () => {
+		assertType(
+			<Popover.Trigger key="checkout" handle={cards} payload={3} nativeButton>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
+	test('rejects a payload the handle does not carry', () => {
+		assertType(
+			<Popover.Trigger
+				handle={cards}
+				// @ts-expect-error - the handle carries numbers
+				payload="three"
+				nativeButton
+			>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
+	test('rejects a handle that is not a popover handle', () => {
+		assertType(
+			<Popover.Trigger
+				// @ts-expect-error - only `usePopoverHandle()` connects triggers
+				handle={handle}
+				nativeButton
+			>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
+	test('requires nativeButton', () => {
+		assertType(
+			// @ts-expect-error - `nativeButton` is required
+			<Popover.Trigger handle={cards}>{btn}</Popover.Trigger>,
+		);
+	});
+
+	test('takes hover timing only with openOnHover or preview', () => {
+		assertType(
+			<Popover.Trigger handle={cards} nativeButton openOnHover delay={100} closeDelay={150}>
+				{btn}
+			</Popover.Trigger>,
+		);
+		assertType(
+			<Popover.Trigger handle={cards} nativeButton={false} preview delay={100}>
+				{btn}
+			</Popover.Trigger>,
+		);
+		assertType(
+			// @ts-expect-error - `delay` describes the hover timing
+			<Popover.Trigger handle={cards} nativeButton delay={100}>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
+	test('rejects openOnHover on a preview, which opens on hover already', () => {
+		assertType(
+			// @ts-expect-error - `preview` already opens on hover
+			<Popover.Trigger handle={cards} nativeButton preview openOnHover>
+				{btn}
+			</Popover.Trigger>,
+		);
+	});
+
+	test('rejects props a trigger does not take', () => {
+		assertType(
+			// @ts-expect-error - the element carries its own test id
+			<Popover.Trigger handle={cards} nativeButton testId="x">
+				{btn}
+			</Popover.Trigger>,
 		);
 	});
 });

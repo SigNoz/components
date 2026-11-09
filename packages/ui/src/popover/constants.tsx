@@ -20,3 +20,19 @@ export const POPOVER_HOVER_DELAY = 300;
  * Milliseconds after the pointer leaves before a hover popover closes.
  */
 export const POPOVER_HOVER_CLOSE_DELAY = 0;
+
+/**
+ * What a Base UI popover trigger adds to its element that a preview trigger does not want, each
+ * set to `undefined` so the element keeps what it was: the `button` role and the `tabindex` of a
+ * trigger that is not a native button, and the `aria-haspopup`, `aria-expanded` and
+ * `aria-controls` that announce a dialog. A preview opens a card about its element, not a dialog.
+ *
+ * @access private
+ */
+export const POPOVER_PREVIEW_TRIGGER_RESET = {
+	role: undefined,
+	tabIndex: undefined,
+	'aria-haspopup': undefined,
+	'aria-expanded': undefined,
+	'aria-controls': undefined,
+} as const;
