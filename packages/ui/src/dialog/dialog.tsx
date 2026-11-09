@@ -2,6 +2,7 @@ import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { X } from '@signozhq/icons';
 import { forwardRef, type ReactElement, type RefAttributes, useMemo, useRef } from 'react';
 import { Button } from '../button/index.js';
+import { DrawerStackReset } from '../drawer/drawer-stack-context.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { PopupContainer } from '../lib/popup-container.js';
 import { Skeleton } from '../skeleton/index.js';
@@ -11,7 +12,14 @@ import { DialogLayer } from './subcomponents/dialog-layer.js';
 import type { DialogHandle } from './dialog-handle.js';
 import { DialogPayload } from './subcomponents/dialog-payload.js';
 import { DialogPortal } from './subcomponents/dialog-portal.js';
-import type { DialogCloseReasonType, DialogProps, NoHandle, ValidateDialogProps } from './types.js';
+import type {
+	DialogChildren,
+	DialogCloseReasonType,
+	DialogProps,
+	NoHandle,
+	RuledDialogKeys,
+	ValidateDialogProps,
+} from './types.js';
 import { useCloseHandleOnUnmount } from './use-close-handle-on-unmount.js';
 import { useDialogHandleState } from './use-dialog-handle-state.js';
 import { isDialogCloseReason } from './utils.js';
@@ -64,167 +72,169 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 				}
 			}}
 		>
-			<DialogPortal container={container}>
-				<DialogLayer
-					className={styles['dialog__layer']}
-					slot="dialog-layer"
-					zIndex="var(--dialog-z-index, 50)"
-				>
-					<DialogPrimitive.Backdrop
-						className={styles['dialog__backdrop']}
-						data-slot="dialog-backdrop"
-						data-testid={partTestId(testId, 'backdrop')}
-					/>
-					<DialogPrimitive.Viewport className={styles['dialog__viewport']}>
-						<DialogPrimitive.Popup
-							ref={mergedRef}
-							// Base UI's default is the first tabbable element of the panel, which is the
-							// close button in the header. The panel itself takes it, so a screen reader
-							// reads the title first.
-							initialFocus={initialFocus ?? popupRef}
-							finalFocus={finalFocus}
-							className={styles['dialog']}
-							data-width={width}
-							data-loading={loading || undefined}
-							data-testid={testId}
-							aria-busy={loading || undefined}
-							{...props}
-							// After the spread: a `data-*` from the call site may not take the slot the
-							// component is found by, and an `aria-*` may not undo the modal.
-							aria-modal="true"
-							data-slot="dialog-popup"
-						>
-							<PopupContainer>
-								<div
-									className={styles['dialog__header']}
-									data-slot="dialog-header"
-									data-testid={partTestId(testId, 'header')}
-								>
-									<div className={styles['dialog__heading']}>
-										{titleIcon ? (
-											<span
-												className={styles['dialog__title-icon']}
-												data-loading={loading || undefined}
-												aria-hidden="true"
+			<DrawerStackReset>
+				<DialogPortal container={container}>
+					<DialogLayer
+						className={styles['dialog__layer']}
+						slot="dialog-layer"
+						zIndex="var(--dialog-z-index, 50)"
+					>
+						<DialogPrimitive.Backdrop
+							className={styles['dialog__backdrop']}
+							data-slot="dialog-backdrop"
+							data-testid={partTestId(testId, 'backdrop')}
+						/>
+						<DialogPrimitive.Viewport className={styles['dialog__viewport']}>
+							<DialogPrimitive.Popup
+								ref={mergedRef}
+								// Base UI's default is the first tabbable element of the panel, which is the
+								// close button in the header. The panel itself takes it, so a screen reader
+								// reads the title first.
+								initialFocus={initialFocus ?? popupRef}
+								finalFocus={finalFocus}
+								className={styles['dialog']}
+								data-width={width}
+								data-loading={loading || undefined}
+								data-testid={testId}
+								aria-busy={loading || undefined}
+								{...props}
+								// After the spread: a `data-*` from the call site may not take the slot the
+								// component is found by, and an `aria-*` may not undo the modal.
+								aria-modal="true"
+								data-slot="dialog-popup"
+							>
+								<PopupContainer>
+									<div
+										className={styles['dialog__header']}
+										data-slot="dialog-header"
+										data-testid={partTestId(testId, 'header')}
+									>
+										<div className={styles['dialog__heading']}>
+											{titleIcon ? (
+												<span
+													className={styles['dialog__title-icon']}
+													data-loading={loading || undefined}
+													aria-hidden="true"
+												>
+													{loading ? (
+														// At the icon size, through the avatar size token in the stylesheet.
+														<Skeleton.Avatar size="sm" shape="square" />
+													) : (
+														titleIcon
+													)}
+												</span>
+											) : null}
+											<DialogPrimitive.Title
+												// While loading, the title stays the accessible name of the panel and only the
+												// skeleton shows.
+												className={
+													loading ? styles['dialog__visually-hidden'] : styles['dialog__title']
+												}
+												data-slot="dialog-title"
+												data-testid={partTestId(testId, 'title')}
 											>
-												{loading ? (
-													// At the icon size, through the avatar size token in the stylesheet.
-													<Skeleton.Avatar size="sm" shape="square" />
-												) : (
-													titleIcon
-												)}
-											</span>
-										) : null}
-										<DialogPrimitive.Title
-											// While loading, the title stays the accessible name of the panel and only the
-											// skeleton shows.
-											className={
-												loading ? styles['dialog__visually-hidden'] : styles['dialog__title']
-											}
-											data-slot="dialog-title"
-											data-testid={partTestId(testId, 'title')}
-										>
-											{title.trim() === '' ? '<No title>' : title}
-										</DialogPrimitive.Title>
-										{loading ? (
+												{title.trim() === '' ? '<No title>' : title}
+											</DialogPrimitive.Title>
+											{loading ? (
+												<div
+													data-slot="dialog-title-skeleton"
+													className={styles['dialog__title-skeleton']}
+												>
+													<Skeleton
+														title={false}
+														paragraph={{ rows: 1, width: '40%' }}
+														testId={partTestId(testId, 'title-skeleton')}
+													/>
+												</div>
+											) : null}
+										</div>
+										{hasRenderableContent(description) && loading ? (
 											<div
-												data-slot="dialog-title-skeleton"
-												className={styles['dialog__title-skeleton']}
+												data-slot="dialog-description-skeleton"
+												className={styles['dialog__description-skeleton']}
 											>
 												<Skeleton
 													title={false}
-													paragraph={{ rows: 1, width: '40%' }}
-													testId={partTestId(testId, 'title-skeleton')}
+													paragraph={{ rows: 1, width: '70%' }}
+													testId={partTestId(testId, 'description-skeleton')}
 												/>
 											</div>
 										) : null}
-									</div>
-									{hasRenderableContent(description) && loading ? (
-										<div
-											data-slot="dialog-description-skeleton"
-											className={styles['dialog__description-skeleton']}
-										>
-											<Skeleton
-												title={false}
-												paragraph={{ rows: 1, width: '70%' }}
-												testId={partTestId(testId, 'description-skeleton')}
-											/>
-										</div>
-									) : null}
-									{hasRenderableContent(description) && !loading ? (
-										<DialogPrimitive.Description
-											render={<div />}
-											className={styles['dialog__description']}
-											data-slot="dialog-description"
-											data-testid={partTestId(testId, 'description')}
-										>
-											{description}
-										</DialogPrimitive.Description>
-									) : null}
-									<div className={styles['dialog__close']}>
-										<Button
-											variant="ghost"
-											color="secondary"
-											size="md"
-											icon
-											aria-label="Close"
-											data-slot="dialog-close"
-											testId={partTestId(testId, 'close')}
-											onClick={() => {
-												requestClose('close-press');
-											}}
-										>
-											<X />
-										</Button>
-									</div>
-								</div>
-								<div
-									className={styles['dialog__body']}
-									data-slot="dialog-body"
-									data-testid={partTestId(testId, 'body')}
-								>
-									{loading ? (
-										(loadingContent ?? <Skeleton testId={partTestId(testId, 'body-skeleton')} />)
-									) : (
-										<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
-									)}
-								</div>
-								{hasRenderableContent(footerSuffix) ? (
-									<div
-										className={styles['dialog__footer']}
-										data-slot="dialog-footer"
-										data-testid={partTestId(testId, 'footer')}
-									>
-										{hasRenderableContent(footerPrefix) ? (
-											<div
-												className={styles['dialog__footer-prefix']}
-												data-slot="dialog-footer-prefix"
-												data-testid={partTestId(testId, 'footer-prefix')}
+										{hasRenderableContent(description) && !loading ? (
+											<DialogPrimitive.Description
+												render={<div />}
+												className={styles['dialog__description']}
+												data-slot="dialog-description"
+												data-testid={partTestId(testId, 'description')}
 											>
-												{loading ? <Skeleton.Button size="md" /> : footerPrefix}
-											</div>
+												{description}
+											</DialogPrimitive.Description>
 										) : null}
-										<div
-											className={styles['dialog__footer-suffix']}
-											data-slot="dialog-footer-suffix"
-											data-testid={partTestId(testId, 'footer-suffix')}
-										>
-											{loading ? (
-												<>
-													<Skeleton.Button size="md" />
-													<Skeleton.Button size="md" />
-												</>
-											) : (
-												footerSuffix
-											)}
+										<div className={styles['dialog__close']}>
+											<Button
+												variant="ghost"
+												color="secondary"
+												size="sm"
+												icon
+												aria-label="Close"
+												data-slot="dialog-close"
+												testId={partTestId(testId, 'close')}
+												onClick={() => {
+													requestClose('close-press');
+												}}
+											>
+												<X />
+											</Button>
 										</div>
 									</div>
-								) : null}
-							</PopupContainer>
-						</DialogPrimitive.Popup>
-					</DialogPrimitive.Viewport>
-				</DialogLayer>
-			</DialogPortal>
+									<div
+										className={styles['dialog__body']}
+										data-slot="dialog-body"
+										data-testid={partTestId(testId, 'body')}
+									>
+										{loading ? (
+											(loadingContent ?? <Skeleton testId={partTestId(testId, 'body-skeleton')} />)
+										) : (
+											<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
+										)}
+									</div>
+									{hasRenderableContent(footerSuffix) ? (
+										<div
+											className={styles['dialog__footer']}
+											data-slot="dialog-footer"
+											data-testid={partTestId(testId, 'footer')}
+										>
+											{hasRenderableContent(footerPrefix) ? (
+												<div
+													className={styles['dialog__footer-prefix']}
+													data-slot="dialog-footer-prefix"
+													data-testid={partTestId(testId, 'footer-prefix')}
+												>
+													{loading ? <Skeleton.Button size="md" /> : footerPrefix}
+												</div>
+											) : null}
+											<div
+												className={styles['dialog__footer-suffix']}
+												data-slot="dialog-footer-suffix"
+												data-testid={partTestId(testId, 'footer-suffix')}
+											>
+												{loading ? (
+													<>
+														<Skeleton.Button size="md" />
+														<Skeleton.Button size="md" />
+													</>
+												) : (
+													footerSuffix
+												)}
+											</div>
+										</div>
+									) : null}
+								</PopupContainer>
+							</DialogPrimitive.Popup>
+						</DialogPrimitive.Viewport>
+					</DialogLayer>
+				</DialogPortal>
+			</DrawerStackReset>
 		</DialogPrimitive.Root>
 	);
 });
@@ -388,7 +398,8 @@ export const Dialog = DialogImpl as <
 	T extends Omit<DialogProps<Payload>, 'children'> = Omit<DialogProps<Payload>, 'children'>,
 >(
 	// `T` is inferred from the call site, so `T extends DialogProps` alone never runs excess
-	// property checks. Every key outside the props is pinned to `never` instead.
+	// property checks. Every key outside the props is pinned to `never` instead, except the keys
+	// a rule rejects: pinned too, the compiler reports `never` on the prop and drops the rule.
 	//
 	// `handle` is restated so `Payload` has somewhere to be inferred from, which is what types
 	// `children` as a function of whatever that handle opens with. That restating also takes
@@ -402,10 +413,13 @@ export const Dialog = DialogImpl as <
 	// unannotated `(row) => …` is typed from the handle alone. Inferred from `T`, TypeScript 5.9
 	// reads it before the payload and types `row` as an implicit `any`.
 	props: T & { handle?: DialogHandle<Payload> } & {
-		children: DialogProps<NoInfer<Payload>>['children'];
+		children: DialogChildren<NoInfer<Payload>>;
 	} & ValidateDialogProps<T, NoInfer<Payload>> &
 		Record<
-			Exclude<keyof T, keyof DialogProps<Payload> | keyof RefAttributes<HTMLDivElement>>,
+			Exclude<
+				keyof T,
+				keyof DialogProps<Payload> | keyof RefAttributes<HTMLDivElement> | RuledDialogKeys
+			>,
 			never
 		> &
 		RefAttributes<HTMLDivElement>,

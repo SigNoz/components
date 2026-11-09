@@ -144,7 +144,7 @@ describe('Breadcrumb tooltips', () => {
 		expect(await screen.findByRole('menu')).toBeInTheDocument();
 	});
 
-	it('gives the `...` crumb no tooltip of its own', async () => {
+	it('gives the `...` crumb no tooltip of its own, only the popup its hover opens', async () => {
 		const user = userEvent.setup();
 		truncate();
 
@@ -170,7 +170,7 @@ describe('Breadcrumb tooltips', () => {
 
 		await user.hover(trigger);
 		await waitFor(() => expect(queryOpenTooltip()).toBeNull());
-		await new Promise((resolve) => setTimeout(resolve, 400));
+		expect(await screen.findByRole('dialog', { name: 'Hidden items' })).toBeInTheDocument();
 		expect(queryOpenTooltip()).toBeNull();
 		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 	});

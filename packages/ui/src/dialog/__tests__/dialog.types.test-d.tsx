@@ -859,7 +859,7 @@ describe('Dialog handle', () => {
 			</Dialog>,
 		);
 		assertType(
-			// @ts-expect-error - `Row` is not what the dialog passes without a handle
+			// @ts-expect-error - a function that reads a `Row` needs the `handle` that opens it too
 			<Dialog open onClose={noop} title="T" {...readsRow} />,
 		);
 	});

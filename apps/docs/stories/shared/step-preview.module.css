@@ -1,0 +1,22 @@
+/* The popup of a breadcrumb has no padding of its own, so each part of the card draws its own, edge
+   to edge. */
+.header {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: var(--spacing-4);
+	padding: var(--spacing-5) var(--spacing-6);
+}
+
+.facts {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	gap: var(--spacing-4) var(--spacing-8);
+	margin: 0;
+	padding: var(--spacing-5) var(--spacing-6);
+	border-block: 1px solid var(--l2-border);
+}
+
+.facts dd {
+	margin: 0;
+}

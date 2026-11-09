@@ -2,6 +2,13 @@
 
 exports[`Breadcrumb type error messages > prints a message that names the constraint that failed 1`] = `
 {
+  "collapseFrom > rejects a wrong order > \`collapseFrom\` is \`center\` or \`start\`": "TS2322: Type '"end"' is not assignable to type 'BreadcrumbCollapseFromType | undefined'.",
+  "ellipsis > rejects a render that is not a function of the collapsed crumbs > \`render\` is a function that receives the collapsed crumbs": "TS2322: Type 'Element' is not assignable to type '(collapsed: BreadcrumbCollapsedCrumb[]) => ReactNode'.
+    Type 'ReactElement<any, any>' provides no match for the signature '(collapsed: BreadcrumbCollapsedCrumb[]): ReactNode'.",
+  "ellipsis > rejects a row suffix that is not an element > the suffix of a row is an element, such as a \`<span>\`": "TS2322: Type '(_item: BreadcrumbItemType, index: number) => string' is not assignable to type '(item: BreadcrumbItemType, index: number) => ReactElement<any, string | JSXElementConstructor<any>> | undefined'.
+    Type 'string' is not assignable to type 'ReactElement<any, string | JSXElementConstructor<any>>'.",
+  "ellipsis > rejects an option that does not exist > \`delay\` is not an option of the \`...\` crumb": "TS2353: Object literal may only specify known properties, and 'delay' does not exist in type 'BreadcrumbEllipsisOptions'.",
+  "ellipsis > rejects opening on hover: the \`...\` crumb always opens on hover, so there is no such option > \`openOnHover\` is not an option of the \`...\` crumb, which always opens on hover": "TS2353: Object literal may only specify known properties, and 'openOnHover' does not exist in type 'BreadcrumbEllipsisOptions'.",
   "itemRender and path > rejects a path on a crumb > a crumb has no path, a link is an \`href\` or a \`render\`": "TS2353: Object literal may only specify known properties, and 'path' does not exist in type 'BreadcrumbItemType'.",
   "itemRender and path > rejects a path on a menu entry > an entry has no path either": "TS2353: Object literal may only specify known properties, and 'path' does not exist in type 'BreadcrumbDropdownItem'.",
   "itemRender and path > rejects itemRender on the trail > \`itemRender\` is not a prop, a crumb takes its own \`render\`": "TS2741: Property ''\`itemRender\` is gone: pass \`render\` on the item, such as \`{ title, render: <Link to="/services" /> }\`'' is missing in type '{ items: BreadcrumbItemType[]; itemRender: () => string; }' but required in type 'TheItemRenderPropIsGone'.",
@@ -19,6 +26,8 @@ exports[`Breadcrumb type error messages > prints a message that names the constr
   "items written inline > reject a field a crumb does not have > a misspelt \`href\` is not a link": "TS2353: Object literal may only specify known properties, and 'herf' does not exist in type 'BreadcrumbItemType'.",
   "items written inline > reject a field a menu entry does not have > an entry takes no icon": "TS2353: Object literal may only specify known properties, and 'icon' does not exist in type 'BreadcrumbDropdownItem'.",
   "items written inline > require a title > a crumb without a title has nothing to draw": "TS2741: Property 'title' is missing in type '{ href: string; }' but required in type 'BreadcrumbItemType'.",
+  "preview > is not a field of an entry of a menu > an entry of a menu has no card": "TS2353: Object literal may only specify known properties, and 'preview' does not exist in type 'BreadcrumbDropdownItem'.",
+  "preview > is not a prop of the trail > \`preview\` belongs to a crumb in \`items\`": "TS2322: Type 'Element' is not assignable to type 'never'.",
   "render > rejects a function, the element is the crumb itself > \`render\` is an element, not a function that draws one": "TS2322: Type '() => JSX.Element' is not assignable to type 'ReactElement<any, string | JSXElementConstructor<any>>'.",
   "render > rejects a target that is not text > \`target\` is a string": "TS2322: Type 'boolean' is not assignable to type 'string'.",
   "render > rejects text, which is not an element > \`render\` is an element, not text": "TS2322: Type 'string' is not assignable to type 'ReactElement<any, string | JSXElementConstructor<any>>'.",
@@ -37,5 +46,6 @@ exports[`Breadcrumb type error messages > prints a message that names the constr
   "root props > rejects the chevron separator, it would print the word > \`chevron\` is not a keyword, the separator is the character itself": "TS2741: Property ''\`separator\` draws the text it is given, so \`chevron\` prints the word: pass a character such as \`›\`'' is missing in type '{ items: BreadcrumbItemType[]; separator: "chevron"; }' but required in type 'TheChevronSeparatorIsGone'.",
   "root props > rejects the chevron separator, it would print the word > a choice that can be \`chevron\` prints the word on that branch": "TS2741: Property ''\`separator\` draws the text it is given, so \`chevron\` prints the word: pass a character such as \`›\`'' is missing in type '{ items: BreadcrumbItemType[]; separator: "chevron" | "›"; }' but required in type 'TheChevronSeparatorIsGone'.",
   "root props > requires its items > a trail with nothing to show is not allowed": "TS2741: Property 'items' is missing in type '{}' but required in type 'BreadcrumbProps'.",
+  "variant > rejects a wrong variant > \`variant\` is \`plain\` or \`outlined\`": "TS2322: Type '"solid"' is not assignable to type 'BreadcrumbVariantType | undefined'.",
 }
 `;

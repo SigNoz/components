@@ -33,10 +33,10 @@
  * | `--dialog-box-shadow` | `var(--shadow-dialog)` |
  * | `--dialog-box-sizing` | `border-box` |
  * | `--dialog-close-display` | `flex` |
- * | `--dialog-close-inset-block-start` | `var(--spacing-4)` |
- * | `--dialog-close-inset-inline-end` | `var(--spacing-4)` |
+ * | `--dialog-close-inset-block-start` | `calc(var(--dialog-header-padding-block, var(--s...` |
+ * | `--dialog-close-inset-inline-end` | `var(--dialog-header-padding-inline-start, var(-...` |
  * | `--dialog-close-position` | `absolute` |
- * | `--dialog-close-size` | `2rem` |
+ * | `--dialog-close-size` | `1.5rem` |
  * | `--dialog-description-color` | `var(--l2-foreground)` |
  * | `--dialog-description-font-family` | `var(--paragraph-base-400-font-family)` |
  * | `--dialog-description-font-size` | `var(--paragraph-base-400-font-size)` |
@@ -88,7 +88,7 @@
  * | `--dialog-header-flex-shrink` | `0` |
  * | `--dialog-header-gap` | `var(--spacing-3)` |
  * | `--dialog-header-padding-block` | `var(--spacing-8)` |
- * | `--dialog-header-padding-inline-end` | `calc(var(--spacing-4) * 2 + var(--dialog-close-...` |
+ * | `--dialog-header-padding-inline-end` | `calc(var(--dialog-header-padding-inline-start, ...` |
  * | `--dialog-header-padding-inline-start` | `var(--spacing-8)` |
  * | `--dialog-header-position` | `relative` |
  * | `--dialog-heading-align-items` | `center` |

@@ -4,6 +4,8 @@ import type {
 	CloseHandlerRule,
 	DialogOpenProps,
 	NoHandle,
+	OnOpenChangeRule,
+	RuledSharedDialogKeys,
 	RuleFor,
 	ValidateSharedDialogProps,
 } from '../dialog/types.js';
@@ -19,6 +21,14 @@ interface AHandleClosesTheAlert {
 
 interface AControlledAlertNeedsOnCancel {
 	'with `open`, only you close the alert: pass `onCancel` and set `open` to `false` in it': never;
+}
+
+interface OnOpenChangeIsOnCancel {
+	'an alert only ever reports an answer: use `onCancel` and `onConfirm`, and set `open` to `false` in them': never;
+}
+
+interface AHandleReportsTheClose {
+	'with a `handle`, the handle reports the close: pass `onOpenChange` to `useDialogHandle(onOpenChange)`, not to the alert': never;
 }
 
 interface AnAlertHasOneWidth {
@@ -49,9 +59,32 @@ interface TheCheckboxBelongsToTheConsumer {
 	'render the "Do not ask me this again" Checkbox in `children`, and store the choice yourself': never;
 }
 
-interface AnAlertHasOneLayout {
-	'`AlertDialog` has one fixed layout: `className` and `style` are not forwarded': never;
-}
+/**
+ * The props {@link ValidateAlertDialogProps} rejects with a rule and that are not props of
+ * `AlertDialog`. The signature leaves them out of the keys it pins to `never`: pinned, the compiler
+ * reports `never` on the prop and drops the rule's message. `className` and `style` have no rule:
+ * the plain `never` on the prop says enough.
+ *
+ * @access private
+ */
+export type RuledAlertDialogKeys =
+	| RuledSharedDialogKeys
+	| 'onOpenChange'
+	| 'width'
+	| 'footer'
+	| 'footerPrefix'
+	| 'footerSuffix'
+	| 'loading'
+	| 'confirmLoading'
+	| 'onClose'
+	| 'showCloseButton'
+	| 'disableOutsideClick'
+	| 'subTitle'
+	| 'description'
+	| 'checkboxLabel'
+	| 'checkboxChecked'
+	| 'onCheckboxChange'
+	| 'checkboxColor';
 
 /**
  * Extra constraints layered on top of {@link AlertDialogProps} at the call site. Each rejected
@@ -64,6 +97,7 @@ export type ValidateAlertDialogProps<T, Payload = NoHandle> = ValidateSharedDial
 	T,
 	Payload
 > &
+	OnOpenChangeRule<T, Payload, OnOpenChangeIsOnCancel, AHandleReportsTheClose> &
 	CloseHandlerRule<T, Payload, 'onCancel', AControlledAlertNeedsOnCancel, AHandleClosesTheAlert> &
 	RuleFor<T, 'width', AnAlertHasOneWidth> &
 	RuleFor<T, 'footer' | 'footerPrefix' | 'footerSuffix', AnAlertHasAFixedFooter> &
@@ -75,8 +109,7 @@ export type ValidateAlertDialogProps<T, Payload = NoHandle> = ValidateSharedDial
 		T,
 		'checkboxLabel' | 'checkboxChecked' | 'onCheckboxChange' | 'checkboxColor',
 		TheCheckboxBelongsToTheConsumer
-	> &
-	RuleFor<T, 'className' | 'style', AnAlertHasOneLayout>;
+	>;
 
 export type AlertDialogProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes &

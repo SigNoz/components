@@ -9,6 +9,7 @@ import type {
 	BreadcrumbTextOverflowType,
 	RegisterBreadcrumbCrumb,
 } from '../types.js';
+import type { BreadcrumbPopupState } from '../use-breadcrumb-popup.js';
 import { INERT_PROPS, toMenuRows } from '../utils.js';
 import { BreadcrumbItemContent } from './breadcrumb-item-content.js';
 
@@ -20,7 +21,7 @@ export type BreadcrumbItemProps = {
 	position: BreadcrumbPositionType;
 	textOverflow: BreadcrumbTextOverflowType;
 	/**
-	 * True while the crumb sits in the menu of the `...` crumb. It stays mounted, out of the flow,
+	 * True while the crumb sits in the list of the `...` crumb. It stays mounted, out of the flow,
 	 * invisible and inert, so the trail measures it as it would render.
 	 */
 	collapsed: boolean;
@@ -28,6 +29,7 @@ export type BreadcrumbItemProps = {
 	 * Reports the nodes the trail measures, the crumb and its label, under the index of the crumb.
 	 */
 	registerCrumb: RegisterBreadcrumbCrumb;
+	popup: BreadcrumbPopupState;
 };
 
 /**
@@ -41,6 +43,7 @@ export function BreadcrumbItem({
 	textOverflow,
 	collapsed,
 	registerCrumb,
+	popup,
 }: BreadcrumbItemProps): ReactElement {
 	const { item, kind, testId, index } = resolved;
 	const crumbRef = useCallback(
@@ -51,6 +54,7 @@ export function BreadcrumbItem({
 		(node: HTMLSpanElement | null): void => registerCrumb(index, 'label', node),
 		[registerCrumb, index],
 	);
+	const menuTestId = partTestId(testId, 'menu');
 	const content = (
 		<BreadcrumbItemContent
 			item={item}
@@ -59,11 +63,12 @@ export function BreadcrumbItem({
 			textOverflow={textOverflow}
 			collapsed={collapsed}
 			labelRef={labelRef}
+			popup={popup}
+			index={index}
 		/>
 	);
 	// A collapsed crumb leaves its `testId` to its menu row, and opens no menu of its own.
 	const collapsedProps = collapsed ? { 'aria-hidden': true, ...INERT_PROPS } : {};
-	const menuTestId = partTestId(testId, 'menu');
 
 	return (
 		<li

@@ -2,10 +2,12 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Dialog } from '../../dialog/index.js';
-import { Drawer, DrawerContent, DrawerTitle } from '../../drawer/index.js';
+import { Drawer } from '../../drawer/index.js';
 import { Toaster } from '../toaster.js';
 import { toast } from '../toast.js';
 import { slot } from './toast.test-utils.js';
+
+function noop(): void {}
 
 describe('Toaster container', () => {
 	it('portals into document.body by default', () => {
@@ -40,15 +42,12 @@ describe('Toaster container', () => {
 
 	it('portals into the panel of the drawer it sits in', () => {
 		render(
-			<Drawer open>
-				<DrawerContent>
-					<DrawerTitle>Settings</DrawerTitle>
-					<Toaster />
-				</DrawerContent>
+			<Drawer type="task" stack="overlay" open onClose={noop} title="Settings">
+				<Toaster />
 			</Drawer>,
 		);
 
-		expect(document.querySelector('[data-slot="drawer-content"]')?.contains(slot('toaster'))).toBe(
+		expect(document.querySelector('[data-slot="drawer-popup"]')?.contains(slot('toaster'))).toBe(
 			true,
 		);
 	});

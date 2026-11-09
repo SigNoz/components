@@ -2,6 +2,7 @@ import { type MutableRefObject, type RefObject, useCallback, useRef, useState } 
 import { readPx } from '../lib/css-length.js';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import type {
+	BreadcrumbCollapseFromType,
 	BreadcrumbCrumbPart,
 	BreadcrumbShrinkType,
 	BreadcrumbTrailMeasure,
@@ -123,10 +124,12 @@ export function useBreadcrumbCollapse({
 	enabled,
 	itemsKey,
 	minCollapsed,
+	collapseFrom,
 }: {
 	enabled: boolean;
 	itemsKey: string;
 	minCollapsed: number;
+	collapseFrom: BreadcrumbCollapseFromType;
 }): BreadcrumbCollapse {
 	const [state, setState] = useState<CollapseState>(INITIAL_STATE);
 	const rootRef = useRef<HTMLElement | null>(null);
@@ -136,6 +139,7 @@ export function useBreadcrumbCollapse({
 	const floorRef = useRef<HTMLSpanElement | null>(null);
 	const collapsedRef = useRef(0);
 	const minCollapsedRef = useRef(minCollapsed);
+	const collapseFromRef = useRef(collapseFrom);
 	const observerRef = useRef<ResizeObserver | null>(null);
 	// Keyed by the index of the crumb in `items`, which grows with the path, so the sorted keys are
 	// the order of the trail.
@@ -185,6 +189,7 @@ export function useBreadcrumbCollapse({
 		const scale = getScale(root);
 		const listStyle = getComputedStyle(list);
 		const trail: BreadcrumbTrailMeasure = {
+			collapseFrom: collapseFromRef.current,
 			widths: Array.from(crumbsRef.current)
 				.sort(([a], [b]) => a - b)
 				.flatMap(([, { crumb, label }]) => (crumb ? [getCrumbWidth(crumb, label, scale)] : [])),
@@ -211,12 +216,13 @@ export function useBreadcrumbCollapse({
 		);
 	}, []);
 
-	// Read through a ref, so a new `minCollapsed` does not make a new `measure`, which would restart
-	// the observer and observe every crumb and label again. It comes first, so the measures below
-	// read the new value.
+	// Read through a ref, so a new `minCollapsed` or `collapseFrom` does not make a new `measure`,
+	// which would restart the observer and observe every crumb and label again. It comes first, so
+	// the measures below read the new value.
 	useIsomorphicLayoutEffect(() => {
 		minCollapsedRef.current = minCollapsed;
-	}, [minCollapsed]);
+		collapseFromRef.current = collapseFrom;
+	}, [minCollapsed, collapseFrom]);
 
 	// Each crumb is observed too: a crumb that changes size moves the thresholds without the trail
 	// changing width. The ones that mount later are observed as they register.
@@ -258,7 +264,7 @@ export function useBreadcrumbCollapse({
 		if (enabled) {
 			measure();
 		}
-	}, [enabled, itemsKey, minCollapsed, measure]);
+	}, [enabled, itemsKey, minCollapsed, collapseFrom, measure]);
 
 	const refs = { rootRef, listRef, separatorRef, ellipsisRef, floorRef, registerCrumb };
 

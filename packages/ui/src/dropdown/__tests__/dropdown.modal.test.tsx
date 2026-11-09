@@ -1,33 +1,33 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Drawer, DrawerContent, DrawerTitle } from '../../drawer/index.js';
+import { userEvent as browserUser } from 'vitest/browser';
+import { Drawer } from '../../drawer/index.js';
 import { Dropdown } from '../index.js';
 import type { DropdownItemType } from '../types.js';
 import { openDropdown } from './dropdown.test-utils.js';
 
+function noop(): void {}
+
 function renderInDrawer(items: DropdownItemType[], container?: HTMLElement) {
 	return render(
-		<Drawer open>
-			<DrawerContent>
-				<DrawerTitle>Settings</DrawerTitle>
-				{/* Out of the panel's flex row: a stretched trigger would widen the menu with it. */}
-				<div>
-					<Dropdown nativeButton items={items} container={container}>
-						<button type="button">Actions</button>
-					</Dropdown>
-				</div>
-			</DrawerContent>
+		<Drawer type="task" stack="overlay" open onClose={noop} title="Settings">
+			{/* Out of the panel's flex row: a stretched trigger would widen the menu with it. */}
+			<div>
+				<Dropdown nativeButton items={items} container={container}>
+					<button type="button">Actions</button>
+				</Dropdown>
+			</div>
 		</Drawer>,
 	);
 }
 
 function drawerPanel(): HTMLElement {
-	return document.querySelector('[data-slot="drawer-content"]') as HTMLElement;
+	return document.querySelector('[data-slot="drawer-popup"]') as HTMLElement;
 }
 
 describe('Dropdown inside a modal', () => {
-	// A modal drawer sets `pointer-events: none` on the body and traps focus in its panel, so
+	// A modal drawer makes the page outside its panel inert and traps focus in the panel, so
 	// the menu goes into the panel. Outside it no row could be clicked, and the drawer would pull
 	// the focus back to the trigger on every arrow key.
 	it('portals into the drawer and keeps the rows clickable', async () => {
@@ -37,7 +37,6 @@ describe('Dropdown inside a modal', () => {
 		const menu = await openDropdown();
 		const row = screen.getByRole('menuitem', { name: 'Rename' });
 
-		expect(getComputedStyle(document.body).pointerEvents).toBe('none');
 		expect(drawerPanel().contains(menu)).toBe(true);
 
 		const { left, top, width, height } = row.getBoundingClientRect();
@@ -48,6 +47,41 @@ describe('Dropdown inside a modal', () => {
 		await userEvent.click(row);
 
 		expect(onClick).toHaveBeenCalledTimes(1);
+	});
+
+	// A real press, not a synthetic one: the drawer starts a swipe on a press outside its content
+	// and captures the pointer, and the row would then never get its click.
+	it('takes a real mouse click on a row', async () => {
+		const onClick = vi.fn();
+		renderInDrawer([{ type: 'item', value: 'rename', label: 'Rename', onClick }]);
+		await openDropdown();
+
+		await browserUser.click(screen.getByRole('menuitem', { name: 'Rename' }));
+
+		await waitFor(() => {
+			expect(onClick).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	it('takes a real mouse click on a row of a menu in a container outside the drawer', async () => {
+		const onClick = vi.fn();
+		const outside = document.createElement('div');
+		document.body.append(outside);
+		renderInDrawer([{ type: 'item', value: 'rename', label: 'Rename', onClick }], outside);
+		await userEvent.click(screen.getByRole('button', { name: 'Actions' }));
+		const row = await waitFor(() => {
+			const item = outside.querySelector<HTMLElement>('[role="menuitem"]');
+			expect(item).not.toBeNull();
+
+			return item as HTMLElement;
+		});
+
+		await browserUser.click(row);
+
+		await waitFor(() => {
+			expect(onClick).toHaveBeenCalledTimes(1);
+		});
+		outside.remove();
 	});
 
 	it('lets the keyboard reach the rows', async () => {

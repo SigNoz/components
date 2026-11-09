@@ -6,7 +6,7 @@ import {
 	type ReactNode,
 	version,
 } from 'react';
-import type { DropdownItemType, DropdownLeafItemType } from '../dropdown/types.js';
+import type { DropdownLeafItemType } from '../dropdown/types.js';
 import { FIT_TOLERANCE_PX } from '../lib/fit-tolerance.js';
 import { getLinkProps } from '../lib/link-props.js';
 import { hasRenderableContent, partTestId } from '../lib/utils.js';
@@ -16,11 +16,13 @@ import {
 	BREADCRUMB_ITEMS_KEY_SEPARATOR,
 	BREADCRUMB_MIN_COLLAPSIBLE_ITEMS,
 	BREADCRUMB_MIN_VISIBLE_ITEMS,
+	BreadcrumbCollapseFrom,
 	BreadcrumbItemKind,
 	BreadcrumbPosition,
 	BreadcrumbShrink,
 } from './constants.js';
 import type {
+	BreadcrumbCollapseFromType,
 	BreadcrumbDropdownItem,
 	BreadcrumbItemKindType,
 	BreadcrumbItemType,
@@ -112,6 +114,16 @@ export function isLink(link: BreadcrumbLinkProps): boolean {
 }
 
 /**
+ * Whether a crumb opens a card. A crumb with a `menu` is already the trigger of that menu, so it
+ * has none, and neither has one whose `preview` renders nothing.
+ *
+ * @access private
+ */
+export function hasPreview({ item, kind }: Pick<BreadcrumbResolvedItem, 'item' | 'kind'>): boolean {
+	return kind !== BreadcrumbItemKind.Menu && hasRenderableContent(item.preview);
+}
+
+/**
  * @access private
  */
 export function getKind(item: BreadcrumbItemType): BreadcrumbItemKindType {
@@ -138,22 +150,32 @@ export function getPosition(position: number, count: number): BreadcrumbPosition
 }
 
 /**
- * The order the middle crumbs collapse in: the centre first, then outward, the side of the first
- * crumb before the side of the last on a tie, so the crumbs next to the current page stay the
- * longest. The first and the last crumb are never in it.
+ * The order the middle crumbs collapse in. From the `center`: the centre first, then outward, the
+ * side of the first crumb before the side of the last on a tie, so the crumbs next to the current
+ * page stay the longest. From the `start`: the crumb after the first one, then toward the last, so
+ * the crumbs next to the current page stay the longest by construction. The first and the last
+ * crumb are never in it.
  *
- * Every prefix of the order is a contiguous run, so one `...` crumb always stands in for the whole
- * collapsed set.
+ * Every prefix of either order is a contiguous run, so one `...` crumb always stands in for the
+ * whole collapsed set.
  *
  * @access private
  */
-export function getCollapseOrder(count: number): number[] {
+export function getCollapseOrder(
+	count: number,
+	collapseFrom: BreadcrumbCollapseFromType = BreadcrumbCollapseFrom.Center,
+): number[] {
 	if (count < BREADCRUMB_MIN_COLLAPSIBLE_ITEMS) {
 		return [];
 	}
 
-	const centre = (count - 1) / 2;
 	const middle = Array.from({ length: count - 2 }, (_, offset) => offset + 1);
+
+	if (collapseFrom === BreadcrumbCollapseFrom.Start) {
+		return middle;
+	}
+
+	const centre = (count - 1) / 2;
 
 	return middle.sort((a, b) => Math.abs(a - centre) - Math.abs(b - centre) || a - b);
 }
@@ -202,14 +224,14 @@ export function getMinCollapsed(count: number, maxVisible: number | undefined): 
 }
 
 /**
- * The width of the trail once the first `collapsedCount` crumbs of the collapse order collapse into
- * one `...` crumb.
+ * The width of the trail once the first `collapsedCount` crumbs of the collapse order, the one
+ * `measure.collapseFrom` names, collapse into one `...` crumb.
  *
  * @access private
  */
 export function getTrailWidth(measure: BreadcrumbTrailMeasure, collapsedCount: number): number {
-	const { widths, separatorWidth, ellipsisWidth, gap } = measure;
-	const collapsed = new Set(getCollapseOrder(widths.length).slice(0, collapsedCount));
+	const { widths, separatorWidth, ellipsisWidth, gap, collapseFrom } = measure;
+	const collapsed = new Set(getCollapseOrder(widths.length, collapseFrom).slice(0, collapsedCount));
 	let total = 0;
 	let segments = 0;
 
@@ -314,18 +336,20 @@ export function getShrink(
 }
 
 /**
- * The element a menu row renders as for a crumb or a menu entry that navigates: its `render`
- * element without children, since the row draws the label, or an `<a>`. Takes the `href` and
- * `target` the element leaves unset, and an `onClick` that runs after the one of the element.
- * `undefined` makes the row an action.
+ * The element a row renders as for a crumb or a menu entry that navigates: its `render` element
+ * without children, since the row draws the label, or an `<a>`. Takes the `href` and `target` the
+ * element leaves unset, and an `onClick` that runs after the one of the element. `undefined` makes
+ * the row an action.
  *
- * With `dropRef` the row leaves the `ref` of the element to the other copy that is mounted.
+ * With `dropRef` the row leaves the `ref` of the element to the other copy that is mounted. `props`
+ * are written over the ones of the element, so a `data-slot` or `data-testid` it carries cannot
+ * rename the row.
  *
  * @access private
  */
 export function getRowRender(
 	link: BreadcrumbLinkProps,
-	{ dropRef = false }: { dropRef?: boolean } = {},
+	{ dropRef = false, props }: { dropRef?: boolean; props?: Record<string, unknown> } = {},
 ): ReactElement | undefined {
 	if (!isLink(link)) {
 		return undefined;
@@ -351,66 +375,52 @@ export function getRowRender(
 									onClick(event);
 								},
 				}),
+		...props,
 	});
 }
 
 /**
- * The row of the `...` crumb's menu for one collapsed crumb, with the same test id the crumb has
- * while it is visible.
- *
- * A crumb with a `menu` is a submenu of its entries, the way it is a menu while visible, so its
- * `href` and `onClick` are as unreachable as they are there. Any other crumb is label only, both
- * icon slots off.
+ * The key a list of rows moves focus by, and where it goes: the next row, the one before, the first
+ * or the last. The arrow keys wrap, as the arrows of a menu do. `undefined` for any other key, and
+ * for a list with no row to move to.
  *
  * @access private
  */
-export function toCollapsedRow({
-	item,
-	index,
-	testId,
-	kind,
-}: BreadcrumbResolvedItem): DropdownItemType {
-	const base = {
-		value: String(index),
-		label: item.title,
-		...(testId === undefined ? {} : { testId }),
-	};
-
-	if (kind === BreadcrumbItemKind.Menu) {
-		return {
-			type: 'submenu',
-			items: toMenuRows(item.menu ?? [], partTestId(testId, 'menu')),
-			...base,
-		};
+export function getNextRowIndex(key: string, current: number, count: number): number | undefined {
+	if (count === 0) {
+		return undefined;
 	}
 
-	// The collapsed crumb stays mounted, so its link keeps the caller's `ref`. A row that shared it
-	// would set it to `null` as the menu closes, under a link that is still there.
-	const render = getRowRender(item, { dropRef: true });
-
-	if (render !== undefined) {
-		return { type: 'link', render, ...base };
+	switch (key) {
+		case 'ArrowDown':
+			return (current + 1) % count;
+		case 'ArrowUp':
+			return (current - 1 + count) % count;
+		case 'Home':
+			return 0;
+		case 'End':
+			return count - 1;
+		default:
+			return undefined;
 	}
-
-	return {
-		type: 'item',
-		...(item.onClick === undefined ? {} : { onClick: item.onClick }),
-		...base,
-	};
 }
 
 /**
  * The rows of the menu a crumb opens through its own `menu`.
  *
- * Without a `menuTestId` the rows name no test id and the `Dropdown` names them after its own. A
- * submenu has no test id of its own to do that from, so the collapsed crumb passes the one its
- * visible menu has, which keeps a row named the same wherever it shows.
+ * Without a `menuTestId` the rows name no test id and the `Dropdown` names them after its own. The
+ * crumb collapsed into the `...` crumb has no `Dropdown` test id of its own to do that from, so it
+ * passes the one its visible menu has, which keeps a row named the same wherever it shows.
+ *
+ * `onPick` runs after a row is picked, which is how the popup the menu opens from learns that its
+ * work is done.
  *
  * @access private
  */
 export function toMenuRows(
 	menu: BreadcrumbDropdownItem[],
 	menuTestId?: string,
+	onPick?: () => void,
 ): DropdownLeafItemType[] {
 	return menu.map((entry, index) => {
 		const value = String(index);
@@ -420,8 +430,18 @@ export function toMenuRows(
 			label: entry.title,
 			...(testId === undefined ? {} : { testId }),
 		};
+		const { onClick } = entry;
+		const handleClick =
+			onPick === undefined
+				? onClick
+				: (event: MouseEvent): void => {
+						onClick?.(event);
+						onPick();
+					};
 
-		const render = getRowRender(entry);
+		const render = getRowRender(
+			handleClick === onClick ? entry : { ...entry, onClick: handleClick },
+		);
 
 		if (render !== undefined) {
 			return { type: 'link', render, ...base };
@@ -429,7 +449,7 @@ export function toMenuRows(
 
 		return {
 			type: 'item',
-			...(entry.onClick === undefined ? {} : { onClick: entry.onClick }),
+			...(handleClick === undefined ? {} : { onClick: handleClick }),
 			...base,
 		};
 	});

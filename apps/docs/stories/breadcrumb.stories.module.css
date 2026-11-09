@@ -18,6 +18,11 @@
 	width: 100%;
 }
 
+/* The tooltip held open above a trail needs the room between it and the trail above. */
+.stackRoomy {
+	gap: 72px;
+}
+
 /* A dashed outline shows how much room each trail was given. Drag the corner to change it. */
 .frame {
 	resize: horizontal;
@@ -29,16 +34,17 @@
 	outline: 1px dashed var(--l3-border);
 }
 
-/* The held-open menus are portalled below their triggers, so the section keeps room for them. */
-.roomBelow {
-	margin-bottom: 12rem;
+/* The popups held open are portalled below their triggers, so each cell keeps the room its popup
+   needs, and no popup lands on the cell under it. */
+.popups {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(21rem, 1fr));
+	gap: 24px 16px;
+	align-items: start;
 }
 
-.menus {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 48px;
-	align-items: flex-start;
+.popupCell {
+	min-height: 16rem;
 }
 
 /* The state matrix: a label column, then one column per state. */
@@ -50,4 +56,38 @@
 	justify-items: start;
 	overflow-x: auto;
 	padding-bottom: 4px;
+}
+
+/* The step number at the end of a row of the ... list, and of a link in a custom ... popover. */
+.step {
+	color: var(--l3-foreground);
+	font-variant-numeric: tabular-nums;
+}
+
+/* The content of a custom ... popover, which has no padding of its own. */
+.collapsedList {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-1);
+	margin: 0;
+	padding: var(--spacing-2);
+	list-style: none;
+}
+
+.collapsedLink {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-4);
+	padding: var(--spacing-3) var(--spacing-4);
+	border-radius: var(--radius-2);
+	color: var(--l1-foreground);
+	text-decoration: none;
+}
+
+.collapsedLink:hover {
+	background-color: var(--l2-background);
+}
+
+.collapsedLink .step {
+	margin-inline-start: auto;
 }

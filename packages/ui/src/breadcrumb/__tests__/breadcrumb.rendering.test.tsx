@@ -39,12 +39,26 @@ describe('Breadcrumb rendering', () => {
 		expect(nav).toHaveAttribute('data-slot', 'breadcrumb');
 		expect(nav).toHaveAttribute('data-truncate', 'true');
 		expect(nav).toHaveAttribute('data-text-overflow', 'ellipsis');
+		expect(nav).toHaveAttribute('data-variant', 'plain');
 		expect(within(nav).getByRole('list')).toHaveAttribute('data-slot', 'breadcrumb-list');
 
-		rerender(<Breadcrumb items={THREE} testId="bc" truncate={false} textOverflow="hidden" />);
+		rerender(
+			<Breadcrumb
+				items={THREE}
+				testId="bc"
+				truncate={false}
+				textOverflow="hidden"
+				variant="outlined"
+			/>,
+		);
 
 		expect(nav).toHaveAttribute('data-truncate', 'false');
 		expect(nav).toHaveAttribute('data-text-overflow', 'hidden');
+		expect(nav).toHaveAttribute('data-variant', 'outlined');
+
+		rerender(<Breadcrumb items={THREE} testId="bc" variant="plain" />);
+
+		expect(nav).toHaveAttribute('data-variant', 'plain');
 	});
 
 	it('marks neither overflowing nor shrinking while every crumb shows', () => {
@@ -487,6 +501,23 @@ describe('Breadcrumb rendering', () => {
 			expect(link('Services')).toHaveAttribute('data-kind', 'link');
 		});
 
+		it('keeps its own data-slot and data-kind over the ones the element sets', () => {
+			render(
+				<Breadcrumb
+					items={[
+						{
+							title: 'Services',
+							render: <RouterLink to="/services" data-slot="router-link" data-kind="custom" />,
+						},
+						{ title: 'Now' },
+					]}
+				/>,
+			);
+
+			expect(link('Services')).toHaveAttribute('data-slot', 'breadcrumb-item-content');
+			expect(link('Services')).toHaveAttribute('data-kind', 'link');
+		});
+
 		it('keeps the crumb class when the element has a className of its own', () => {
 			render(
 				<Breadcrumb
@@ -728,6 +759,7 @@ describe('Breadcrumb rendering', () => {
 					data-slot="custom"
 					data-truncate="nope"
 					data-text-overflow="nope"
+					data-variant="nope"
 					data-overflowing="true"
 					data-shrinking="floor"
 					testId="bc"
@@ -738,6 +770,7 @@ describe('Breadcrumb rendering', () => {
 			expect(nav).toHaveAttribute('data-slot', 'breadcrumb');
 			expect(nav).toHaveAttribute('data-truncate', 'true');
 			expect(nav).toHaveAttribute('data-text-overflow', 'ellipsis');
+			expect(nav).toHaveAttribute('data-variant', 'plain');
 			expect(nav).not.toHaveAttribute('data-overflowing');
 		});
 

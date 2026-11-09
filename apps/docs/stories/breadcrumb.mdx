@@ -7,9 +7,9 @@ import * as BreadcrumbStories from './breadcrumb.stories';
 
 A hierarchical location: a `<nav>` holding an ordered list of crumbs, root first and the current
 page last. It renders from a single `items` array, collapses the middle of a trail that does not fit
-into a menu, and forwards `id`, every `aria-*` attribute and every `data-*` attribute except
-`data-testid` to the `<nav>`. Its accessible name is `Breadcrumb` unless `aria-label` says
-otherwise, and the ref is the `<nav>`.
+into a `...` crumb that opens a popover, and forwards `id`, every `aria-*` attribute and every
+`data-*` attribute except `data-testid` to the `<nav>`. Its accessible name is `Breadcrumb` unless
+`aria-label` says otherwise, and the ref is the `<nav>`.
 
 Use it to show where a page sits in a hierarchy and to jump back up. For switching between views of
 one page, use `ToggleGroup`.
@@ -48,8 +48,9 @@ focus. A crumb with none of them is plain text.
 | an `onClick`, no `href` and no `render` | a `<button>`                                      |
 | none of those                           | text                                              |
 
-A `menu` wins over an `href`, a `render` and an `onClick` on the same item. Every crumb, the last one
-included, looks the same at rest, and the last one carries `aria-current="page"` whatever its kind.
+A `menu` wins over an `href`, a `render` and an `onClick` on the same item. In the default `plain`
+variant every crumb, the last one included, looks the same at rest, and the last one carries
+`aria-current="page"` whatever its kind.
 
 ```tsx
 import { House } from '@signozhq/icons';
@@ -79,12 +80,15 @@ An item takes these fields:
 | `target`  | Where the link opens. `_blank` adds `noopener noreferrer` to its `rel`.                                |
 | `render`  | The element that draws the link, such as the `Link` of a router. See [Router links](#router-links).    |
 | `onClick` | Runs when the crumb is clicked, after the `onClick` of the `render` element.                           |
-| `icon`    | Shown before the title.                                                                                |
+| `icon`    | Shown before the title, and on its row in the `...` popover once collapsed.                            |
 | `menu`    | The entries of the menu the crumb opens. Each one takes a `title` and the same link fields as an item. |
+| `preview` | A card that opens below the crumb on hover or focus. See [Preview on hover](#preview-on-hover).        |
 
 `href`, `target`, `render` and `onClick` are the link props of `Callout.Link`, typed as
 `BreadcrumbLinkProps`. An entry of a `menu` with an `href` or a `render` is a link row, and one with
 only an `onClick` is an action. A good use of a `menu` is the siblings of the current page.
+
+`preview` is shown on hover and on focus, and a crumb with a `menu` ignores it.
 
 The trail leaves out a crumb whose `title` renders nothing, an empty string, `null` or only
 whitespace, together with the separator before it. With no crumb left, nothing renders. Test ids
@@ -93,6 +97,46 @@ keep the place each crumb has in `items`, so they do not move when a title befor
 `separator` is any string, `/` by default. It is drawn as written between two crumbs, so pass the
 character itself, such as `›`. Screen readers skip it. The literal `'chevron'` is a type error, and
 a `string` that holds it, which the types cannot see, logs a warning and still prints the word.
+
+## Variants
+
+`variant` picks how the crumbs are drawn, and has no effect on what they do. Both variants collapse,
+shorten, open menus and take the same props.
+
+| `variant`         | Looks like                                                                                          |
+| ----------------- | --------------------------------------------------------------------------------------------------- |
+| `plain` (default) | Text. A crumb that reacts fills on hover.                                                           |
+| `outlined`        | Every crumb but the last, and the `...` crumb, is a chip with a border. The last one is plain text. |
+
+Use `outlined` for a trail the user walks back along, such as the drill-down trail under the header
+of a drawer, where each crumb is a record opened from the one before and each chip is a way back to
+it. The chips set the crumbs you can go back to apart from the current page. Keep `plain` for a page
+header that only says where the page sits.
+
+- A chip has a fill and a border, takes the secondary text colour and, on hover or while its menu is
+  open, gets a stronger fill and border. Its label keeps its colour.
+- The last crumb has no fill and no border and takes the primary text colour. If it reacts, it keeps
+  the plain hover fill.
+- An `icon` sits before the title of a chip and of the current page, 14px wide. Give every crumb
+  one, or none, so the labels line up.
+- The chips are part of what the trail measures, so the overflow below works as it does for `plain`,
+  with the `...` crumb as a chip too.
+- The space around the separator is narrower than in `plain`, since each chip carries its own
+  padding. Pass `separator="›"` for the usual look.
+
+```tsx
+import { Boxes, Container } from '@signozhq/icons';
+
+<Breadcrumb
+	variant="outlined"
+	separator="›"
+	items={[
+		{ title: 'prod-gke-eu-west1', href: '/clusters/prod', icon: <Boxes /> },
+		{ title: 'payments-7c9d5b6f4-xk2lp', href: '/pods/payments', icon: <Container /> },
+		{ title: 'OOMKilled: container over the 2Gi limit' },
+	]}
+/>;
+```
 
 ## Overflow
 
@@ -106,19 +150,35 @@ it and measures again whenever that changes, so it needs no width of its own. Wh
 
 Collapsed crumbs come back as the room grows, and there is no `...` crumb while everything fits.
 
+`collapseFrom` picks where the collapsing starts. `center` (the default) starts at the middle crumb.
+`start` starts at the crumb after the first one and moves toward the current page, so the trail
+reads the first crumb, `...`, then the last crumbs, and the crumbs next to the current page stay the
+longest. Use it for a trail where the nearest steps matter most, such as the drill-down trail of a
+drawer. The `...` crumb is still one crumb, and its popover lists the collapsed crumbs in path order
+either way.
+
 The `...` crumb is a `<button>` named `Show N hidden items` for screen readers, and
-`Show 1 hidden item` when one crumb is collapsed. It opens a `Dropdown` that lists the collapsed
-crumbs in path order, with no icons:
+`Show 1 hidden item` when one crumb is collapsed. It opens a popover below it, lined up with its
+start edge, that lists the collapsed crumbs in path order, each row with the icon of its crumb. The
+popover opens while the pointer rests on the `...` crumb for 300ms and on a press, `Enter` or
+`Space` included. The pointer can cross from the crumb onto the popover, which stays open until the
+pointer or the focus leaves it:
 
-- A crumb with a `menu` is a row that opens a submenu of the same entries it opens while visible,
-  such as the siblings of the page. Its `href`, `render` and `onClick` stay out of reach, as they are there.
 - A crumb with an `href` or a `render` is a link row, so middle click and open in new tab still work
-  from the menu.
-- A crumb with only an `onClick` is a row that runs it.
-- A crumb with none of those is a row that does nothing.
+  from the popover.
+- A crumb with only an `onClick` is a `<button>` row that runs it.
+- A crumb with a `menu` is a `<button>` row that opens a submenu of the same entries it opens while
+  visible, such as the siblings of the page, on a press. Its `href`, `render` and `onClick` stay out
+  of reach, as they are there.
+- A crumb with none of those is a row of plain text that does nothing.
 
-The `...` crumb keeps its hover fill while the menu is open and has no tooltip of its own, since the
-menu and a tooltip would answer the same hover.
+A press on a row runs the `onClick` of its crumb and closes the popover. A press with a modifier
+key on a link row leaves it open, for the next click. A row takes the `icon` of its crumb as an
+element, such as `<House />`. An `icon` given as text shows in the trail and stays out of the row.
+
+The `...` crumb keeps its hover fill while the popover is open and has no tooltip of its own, since
+the popover and a tooltip would answer the same hover. The next section describes `ellipsis`, which
+sets what the popover holds.
 
 `maxVisible` caps how many crumbs show at once, the first and the last included, whatever the room.
 A trail in a narrow panel can collapse before it runs out of width. A value below 2 counts as 2, and
@@ -128,16 +188,146 @@ it only applies while `truncate` is set.
 <Breadcrumb items={items} maxVisible={4} />
 ```
 
+With `collapseFrom="start"`, `maxVisible={4}` on six crumbs shows the first crumb, `...` and the
+last three.
+
+```tsx
+<Breadcrumb items={items} maxVisible={4} collapseFrom="start" />
+```
+
 With `truncate={false}` nothing collapses and the trail wraps onto more lines, every crumb visible.
 
 ```tsx
 <Breadcrumb items={items} truncate={false} />
 ```
 
+## The `...` popover
+
+`ellipsis` sets what the popover of the `...` crumb holds. The popover opens on hover and on a press
+whatever it holds, so there is no option to open on a press only. It only matters while a crumb is
+collapsed, since the `...` crumb renders only then.
+
+| Option      | Type                            | What it does                                                                                                                                                |
+| ----------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `heading`   | `ReactNode`                     | A label above the rows, such as `Earlier steps`. It is a group label that the arrow keys pass over. Rows only. A heading that renders nothing adds none.    |
+| `rowSuffix` | `(item, index) => ReactElement` | The element at the end of each row, such as a step number. `index` is the place of the crumb in `items`. Return `undefined` for a row with none. Rows only. |
+| `render`    | `(collapsed) => ReactNode`      | Puts your own content in the popover in place of the rows. See [Your own content](#your-own-content).                                                       |
+
+`rowSuffix` is not called for a crumb with a `menu`. Its row opens a submenu, and the trailing slot
+holds the chevron of that submenu.
+
+```tsx
+<Breadcrumb
+	items={items}
+	collapseFrom="start"
+	maxVisible={4}
+	ellipsis={{
+		heading: 'Earlier steps',
+		rowSuffix: (_item, index) => <span>{index + 1}</span>,
+	}}
+/>
+```
+
+### Your own content
+
+`render` receives the collapsed crumbs in path order, each as `{ item, index }`: `item` is the crumb
+as passed in `items` and `index` is its place there, counted before the empty titles are left out,
+so it matches the test id of the crumb. What it returns goes in the popover that opens below the
+`...` crumb and lines up with its start edge, where the rows would be.
+
+```tsx
+<Breadcrumb
+	items={items}
+	ellipsis={{
+		render: (collapsed) => (
+			<ul>
+				{collapsed.map(({ item, index }) => (
+					<li key={index}>
+						<a href={item.href}>
+							{item.icon}
+							{item.title}
+							<span>{index + 1}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		),
+	}}
+/>
+```
+
+- Your content has no rows, no arrow key walk and no navigation of its own. It links to what it
+  lists, and navigation is yours: a link or a handler in the content decides where a click goes and
+  whether the popover should close.
+- The popover shell has no padding, so the content sets all of it, edge to edge.
+- `heading` and `rowSuffix` are not used with `render`. A function that returns nothing (`null`,
+  `false`, an empty string) leaves the `...` crumb as plain text, with no popover.
+- The `...` crumb keeps its name (`Show N hidden items`), its test id, its `data-slot` and the way
+  it opens, on hover and on a press.
+
+## Preview on hover
+
+`preview` on an item is a card that opens below the crumb, such as a summary of the record the crumb
+stands for. Use it on the crumbs of a trail the user walks back along, where the crumb alone says
+too little about the record behind it.
+
+```tsx
+<Breadcrumb
+	variant="outlined"
+	separator="›"
+	items={[
+		{
+			title: 'prod-eu-west1',
+			href: '/kubernetes/clusters/prod-eu-west1',
+			preview: <ClusterSummary name="prod-eu-west1" />,
+		},
+		{
+			title: 'gke-prod-eu-west1-pool-2-8f3c1a7d-q4tn',
+			href: '/kubernetes/nodes/gke-prod-eu-west1-pool-2-8f3c1a7d-q4tn',
+			preview: <NodeSummary name="gke-prod-eu-west1-pool-2-8f3c1a7d-q4tn" />,
+		},
+		{ title: 'MemoryPressure' },
+	]}
+/>
+```
+
+- It opens after the pointer rests on the crumb for 300ms, or as soon as keyboard focus reaches the
+  crumb with `:focus-visible`. A click does not open it. It closes 150ms after the pointer leaves,
+  and stays open while the pointer is on the card, so the content can hold links and text to select.
+  `Escape` closes it, and the crumb keeps its focus.
+- The trail has one card, shared by every crumb that has a `preview`. Moving the pointer, or the
+  focus, from one of those crumbs to the next moves and resizes the open card and swaps its content,
+  instead of closing one card and opening another. It closes once the pointer or the focus has left
+  the last crumb.
+- The card is the same box as the popover of the `...` crumb. Moving the pointer from a crumb with a
+  `preview` to the `...` crumb, or back, moves and resizes that box and cross-fades its content,
+  with no delay and no close in between, the way it goes from one crumb to the next. A list that a
+  press opened on the `...` crumb stays where it is while the pointer or the focus visits a crumb:
+  only a press, `Escape`, a click on a crumb or a press outside closes it.
+- The crumb keeps its own link and click. Clicking the crumb navigates or runs its `onClick`, and
+  clicking the card does nothing to the crumb. The card is extra, never the way to navigate.
+- The card takes the place of the tooltip with the full title that a cut label shows, so put the
+  full name in it. A `preview` that renders nothing (`null`, `false`, an empty string) leaves the
+  crumb with that tooltip.
+- A crumb with a `menu` ignores `preview`, since it already opens that menu. A crumb that is
+  collapsed into the `...` popover shows no card either, and a card that is open for a crumb closes
+  as the trail collapses it.
+- A crumb that is plain text cannot take focus, so its card opens on hover only. Give it an `href`
+  or an `onClick` to make it reachable from the keyboard.
+- The card is a hover card, not a dialog: it has no role, it never takes the focus, and screen
+  readers do not announce it. Do not put anything in it that the user cannot also reach from the
+  page. The `...` popover, in the same box, is a `dialog` named by `ellipsis.heading` when the list
+  has one, and `Hidden items` otherwise.
+- The card sits in the panel of a `Dialog` or a `Drawer` when the trail is inside one, and in the
+  body otherwise.
+- The shell has no padding: the content sets all of it, edge to edge, which lets a divider run from
+  one side to the other. The surface, the border, the radius and the shadow come from the library.
+  The width follows the content, up to 20rem.
+
 ## Router links
 
-The breadcrumb imports no router. Pass `render` on a crumb with the `Link` of the router you use, and
-it draws that link as the crumb with the `title` as its label. The click is a client-side
+The breadcrumb imports no router. Pass `render` on a crumb with the `Link` of the router you use,
+and it draws that link as the crumb with the `title` as its label. The click is a client-side
 navigation and a modified click still opens a new tab.
 
 ```tsx
@@ -168,8 +358,8 @@ import { Link } from 'react-router-dom';
 - A crumb with a `menu` ignores its `href`, `render` and `onClick`. The entries of the `menu` take a
   `render` too, and an entry with one renders that element as the row, without its children and with
   its `title` as the label.
-- A collapsed crumb is still a router link. In the menu of the `...` crumb, a crumb with a `render`
-  renders that element as the row, again without its children.
+- A collapsed crumb is still a router link. In the popover of the `...` crumb, a crumb with a
+  `render` renders that element as the row, again without its children.
 
 ```tsx
 <Breadcrumb
@@ -204,44 +394,68 @@ machine-generated name such as `checkout-service-prod-us-east-1b-7f9c` never tak
 ## Keyboard
 
 Every link, button and menu crumb is its own tab stop. `Enter` follows a link, and `Enter` or
-`Space` presses a button. On the `...` crumb and on a crumb with a `menu`, those keys open the
-menu, the arrow keys move between its rows, and `Escape` closes it and returns focus to the crumb
-that opened it. A text crumb is not focusable.
+`Space` presses a button. On a crumb with a `menu`, those keys open the menu, the arrow keys move
+between its rows, and `Escape` closes it and returns focus to the crumb that opened it. A text
+crumb is not focusable.
+
+On the `...` crumb, `Enter` or `Space` opens the popover and moves the focus into it. In the list of
+rows, `Tab`, the arrow keys, `Home` and `End` move between the rows, and the arrow keys wrap at the
+ends. A row of plain text takes no focus. `Escape` closes the popover and returns the focus to the
+`...` crumb. The popover also closes when the focus leaves it.
+
+A crumb with a `preview` opens its card when focus reaches it by keyboard, and `Escape` closes the
+card without moving the focus. The card also closes when the focus leaves the crumb.
 
 ## Asserting on it
 
 `testId` becomes `data-testid` on the `<nav>`, and it names everything in it:
 
-| Element                                           | `data-testid`                                         |
-| ------------------------------------------------- | ----------------------------------------------------- |
-| Crumb, in the trail or as a row of the `...` menu | `` `${testId}-item-${index}` ``                       |
-| Separator before a crumb                          | `` `${testId}-item-separator-${index}` ``             |
-| `...` crumb                                       | `` `${testId}-ellipsis` ``                            |
-| Separator before the `...` crumb                  | `` `${testId}-ellipsis-separator` ``                  |
-| Menu trigger of a crumb with a `menu`             | `` `${testId}-item-${index}-menu` ``                  |
-| Row of the menu of a crumb                        | `` `${testId}-item-${index}-menu-item-${position}` `` |
+| Element                                                     | `data-testid`                                         |
+| ----------------------------------------------------------- | ----------------------------------------------------- |
+| Crumb, in the trail or as a row of the `...` popover        | `` `${testId}-item-${index}` ``                       |
+| Separator before a crumb                                    | `` `${testId}-item-separator-${index}` ``             |
+| `...` crumb                                                 | `` `${testId}-ellipsis` ``                            |
+| Separator before the `...` crumb                            | `` `${testId}-ellipsis-separator` ``                  |
+| Popover of the `...` crumb, whatever it holds               | `` `${testId}-ellipsis-popup` ``                      |
+| Heading group of the `...` popover, with `ellipsis.heading` | `` `${testId}-ellipsis-group-collapsed` ``            |
+| Menu trigger of a crumb with a `menu`                       | `` `${testId}-item-${index}-menu` ``                  |
+| Row of the menu of a crumb                                  | `` `${testId}-item-${index}-menu-item-${position}` `` |
+| Preview card, one for the whole trail                       | `` `${testId}-preview` ``                             |
 
 `index` is the place of the crumb in `items`, counted before the empty titles are left out, and
 `position` is the place of the entry in its `menu`.
 
 - A collapsed crumb stays mounted, out of the flow, invisible and inert, and gives its id to its row
-  in the `...` menu. With the menu closed, `queryByTestId` finds nothing for it. Assert on the row
-  once the menu is open.
-- A collapsed crumb with a `menu` is a submenu row. Its entries keep the ids they have while the
-  crumb is visible, `` `${testId}-item-${index}-menu-item-${position}` ``, and exist once the
-  submenu is open. The trigger `` `${testId}-item-${index}-menu` `` only exists while the crumb is
-  visible.
+  in the `...` popover. With the popover closed, `queryByTestId` finds nothing for it. Assert on the
+  row once the popover is open.
+- The popover renders only while it is open, so asserting its absence asserts it is closed. It is
+  portalled, so query it from the document, or by its role, a `dialog` named by `ellipsis.heading`
+  when the list has one and `Hidden items` otherwise, and not from the `<nav>`. Hover on the `...`
+  crumb opens it after 300ms, and a click opens it at once.
+- A row carries a `data-kind` of `link`, `button`, `menu` or `text`.
+- A collapsed crumb with a `menu` is a row that opens a submenu. Its entries keep the ids they have
+  while the crumb is visible, `` `${testId}-item-${index}-menu-item-${position}` ``, and exist once
+  the submenu is open. The trigger `` `${testId}-item-${index}-menu` `` only exists while the crumb
+  is visible.
 - The `...` crumb and the separator before it render only while a crumb is collapsed.
+- The preview card renders only while it is open, so asserting its absence asserts it is closed. It
+  is portalled, so query it from the document and not from the `<nav>`.
+- The card and the popover of the `...` crumb are one element, so it keeps its identity as the
+  pointer goes from a crumb to the `...` crumb and back, and its test id follows what it shows,
+  `` `${testId}-preview` `` or `` `${testId}-ellipsis-popup` ``. The trigger the popup is open for,
+  a crumb or the `...` crumb, carries `data-popup-open`.
+- A collapsed crumb has no card, so its `preview` is never in the document while the crumb sits in
+  the `...` popover.
 - The trail keeps a hidden row with a `...` and a separator to measure the room, so while a crumb is
   collapsed `getByText('...')` finds two matches. Query the crumb by role, named
   `Show N hidden items` (`Show 1 hidden item` for one), or by test id instead.
 
-The `<nav>` carries `data-truncate` and `data-text-overflow`, which mirror the props, and two states
-worth asserting on: `data-overflowing` while at least one crumb is collapsed, and `data-shrinking`
-while only the first and the last crumb show and the trail does not fit, so one of them shortens.
-Each crumb carries `data-position` (`start`, `middle` or `end`) and `data-kind` (`link`, `button`,
-`menu` or `text`), and its content carries `data-truncated` while the label is cut, which only
-happens with `textOverflow="ellipsis"`.
+The `<nav>` carries `data-truncate`, `data-text-overflow` and `data-variant` (`plain` or
+`outlined`), which mirror the props, and two states worth asserting on: `data-overflowing` while at
+least one crumb is collapsed, and `data-shrinking` while only the first and the last crumb show and
+the trail does not fit, so one of them shortens. Each crumb carries `data-position` (`start`,
+`middle` or `end`) and `data-kind` (`link`, `button`, `menu` or `text`), and its content carries
+`data-truncated` while the label is cut, which only happens with `textOverflow="ellipsis"`.
 
 Otherwise use the `data-slot` attributes, never the hashed class names.
 

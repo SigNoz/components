@@ -36,6 +36,12 @@ function isStoryContent(node: Element): boolean {
 }
 
 function handleClick(event: MouseEvent): void {
+	// A modifier or another button opens the link in a new tab or window, which leaves the
+	// preview where it is, so a story that offers it can be tried here.
+	if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+		return;
+	}
+
 	if (!(event.target instanceof Element)) {
 		return;
 	}
@@ -46,8 +52,42 @@ function handleClick(event: MouseEvent): void {
 		return;
 	}
 
-	event.preventDefault();
-	toast.info(`Navigation blocked. This link would go to ${anchor.getAttribute('href')}`);
+	// Blocked before any handler of the story runs. A story that handles the click itself calls
+	// `preventDefault` too, such as a crumb whose plain click steps back in a trail: that click
+	// went where the story meant, so it gets no toast, which would cover the story in a snapshot.
+	let handledByStory = false;
+	const preventDefault = event.preventDefault.bind(event);
+	event.preventDefault = () => {
+		handledByStory = true;
+		preventDefault();
+	};
+	preventDefault();
+
+	setTimeout(() => {
+		if (!handledByStory) {
+			toast.info(`Navigation blocked. This link would go to ${anchor.getAttribute('href')}`);
+		}
+	});
+}
+
+// The browser keeps one listener per function, however often it is added, and the docs page mounts
+// every story at once. So the first story to unmount would remove the guard from all the others.
+let guardedStories = 0;
+
+function addLinkGuard(): () => void {
+	if (guardedStories === 0) {
+		document.addEventListener('click', handleClick, true);
+	}
+
+	guardedStories += 1;
+
+	return () => {
+		guardedStories -= 1;
+
+		if (guardedStories === 0) {
+			document.removeEventListener('click', handleClick, true);
+		}
+	};
 }
 
 /**
@@ -59,11 +99,7 @@ function handleClick(event: MouseEvent): void {
 export function LinkGuardDecorator(Story: () => ReactElement, context: any): ReactElement {
 	const ownToaster = context.parameters?.ownToaster === true;
 
-	useEffect(() => {
-		document.addEventListener('click', handleClick, true);
-
-		return () => document.removeEventListener('click', handleClick, true);
-	}, []);
+	useEffect(addLinkGuard, []);
 
 	useEffect(() => {
 		setSharedToaster(!ownToaster);

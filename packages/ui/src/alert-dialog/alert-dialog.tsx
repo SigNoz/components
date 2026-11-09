@@ -13,14 +13,15 @@ import type { DialogHandle } from '../dialog/dialog-handle.js';
 import { DialogLayer } from '../dialog/subcomponents/dialog-layer.js';
 import { DialogPayload } from '../dialog/subcomponents/dialog-payload.js';
 import { DialogPortal } from '../dialog/subcomponents/dialog-portal.js';
-import type { NoHandle } from '../dialog/types.js';
+import type { DialogChildren, NoHandle } from '../dialog/types.js';
 import { useCloseHandleOnUnmount } from '../dialog/use-close-handle-on-unmount.js';
 import { useDialogHandleState } from '../dialog/use-dialog-handle-state.js';
+import { DrawerStackReset } from '../drawer/drawer-stack-context.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { PopupContainer } from '../lib/popup-container.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import styles from './alert-dialog.module.scss';
-import type { AlertDialogProps, ValidateAlertDialogProps } from './types.js';
+import type { AlertDialogProps, RuledAlertDialogKeys, ValidateAlertDialogProps } from './types.js';
 
 const AlertDialogImpl = forwardRef<HTMLDivElement, AlertDialogProps<unknown> & RejectedProps>(
 	function AlertDialog(
@@ -163,91 +164,93 @@ const AlertDialogImpl = forwardRef<HTMLDivElement, AlertDialogProps<unknown> & R
 					}
 				}}
 			>
-				<DialogPortal container={container}>
-					<DialogLayer
-						className={styles['alert-dialog__layer']}
-						slot="alert-dialog-layer"
-						zIndex="var(--alert-dialog-z-index, 50)"
-					>
-						<AlertDialogPrimitive.Backdrop
-							className={styles['alert-dialog__backdrop']}
-							data-slot="alert-dialog-backdrop"
-							data-testid={partTestId(testId, 'backdrop')}
-						/>
-						<AlertDialogPrimitive.Viewport className={styles['alert-dialog__viewport']}>
-							<AlertDialogPrimitive.Popup
-								ref={mergedRef}
-								// Base UI's default is the first tabbable element of the panel. The panel itself
-								// takes it, so a screen reader reads the title and the body first, and an `Enter`
-								// meant for the page answers nothing.
-								initialFocus={initialFocus ?? popupRef}
-								finalFocus={finalFocus}
-								className={styles['alert-dialog']}
-								data-testid={testId}
-								{...props}
-								// After the spread: a `data-*` from the call site may not take the slot or the
-								// color the component is found by, and an `aria-*` may not undo the modal.
-								aria-modal="true"
-								data-color={color}
-								data-slot="alert-dialog-popup"
-							>
-								<PopupContainer>
-									<div className={styles['alert-dialog__content']}>
-										<div className={styles['alert-dialog__heading']}>
-											{titleIcon ? (
-												<span className={styles['alert-dialog__title-icon']} aria-hidden="true">
-													{titleIcon}
-												</span>
-											) : null}
-											<AlertDialogPrimitive.Title
-												className={styles['alert-dialog__title']}
-												data-slot="alert-dialog-title"
-												data-testid={partTestId(testId, 'title')}
+				<DrawerStackReset>
+					<DialogPortal container={container}>
+						<DialogLayer
+							className={styles['alert-dialog__layer']}
+							slot="alert-dialog-layer"
+							zIndex="var(--alert-dialog-z-index, 50)"
+						>
+							<AlertDialogPrimitive.Backdrop
+								className={styles['alert-dialog__backdrop']}
+								data-slot="alert-dialog-backdrop"
+								data-testid={partTestId(testId, 'backdrop')}
+							/>
+							<AlertDialogPrimitive.Viewport className={styles['alert-dialog__viewport']}>
+								<AlertDialogPrimitive.Popup
+									ref={mergedRef}
+									// Base UI's default is the first tabbable element of the panel. The panel itself
+									// takes it, so a screen reader reads the title and the body first, and an `Enter`
+									// meant for the page answers nothing.
+									initialFocus={initialFocus ?? popupRef}
+									finalFocus={finalFocus}
+									className={styles['alert-dialog']}
+									data-testid={testId}
+									{...props}
+									// After the spread: a `data-*` from the call site may not take the slot or the
+									// color the component is found by, and an `aria-*` may not undo the modal.
+									aria-modal="true"
+									data-color={color}
+									data-slot="alert-dialog-popup"
+								>
+									<PopupContainer>
+										<div className={styles['alert-dialog__content']}>
+											<div className={styles['alert-dialog__heading']}>
+												{titleIcon ? (
+													<span className={styles['alert-dialog__title-icon']} aria-hidden="true">
+														{titleIcon}
+													</span>
+												) : null}
+												<AlertDialogPrimitive.Title
+													className={styles['alert-dialog__title']}
+													data-slot="alert-dialog-title"
+													data-testid={partTestId(testId, 'title')}
+												>
+													{title.trim() === '' ? '<No title>' : title}
+												</AlertDialogPrimitive.Title>
+											</div>
+											<AlertDialogPrimitive.Description
+												render={<div />}
+												className={styles['alert-dialog__body']}
+												data-slot="alert-dialog-body"
+												data-testid={partTestId(testId, 'body')}
 											>
-												{title.trim() === '' ? '<No title>' : title}
-											</AlertDialogPrimitive.Title>
+												<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
+											</AlertDialogPrimitive.Description>
 										</div>
-										<AlertDialogPrimitive.Description
-											render={<div />}
-											className={styles['alert-dialog__body']}
-											data-slot="alert-dialog-body"
-											data-testid={partTestId(testId, 'body')}
-										>
-											<DialogPayload payload={handleState.payload}>{children}</DialogPayload>
-										</AlertDialogPrimitive.Description>
-									</div>
-									<div className={styles['alert-dialog__footer']}>
-										<Button
-											variant="solid"
-											color="secondary"
-											size="md"
-											prefix={cancelIcon}
-											disabled={busy}
-											disabledTooltip={undefined}
-											data-slot="alert-dialog-cancel"
-											testId={partTestId(testId, 'cancel')}
-											onClick={cancel}
-										>
-											{cancelText}
-										</Button>
-										<Button
-											variant="solid"
-											color={color}
-											size="md"
-											prefix={confirmIcon}
-											loading={busy}
-											data-slot="alert-dialog-confirm"
-											testId={partTestId(testId, 'confirm')}
-											onClick={confirm}
-										>
-											{confirmText}
-										</Button>
-									</div>
-								</PopupContainer>
-							</AlertDialogPrimitive.Popup>
-						</AlertDialogPrimitive.Viewport>
-					</DialogLayer>
-				</DialogPortal>
+										<div className={styles['alert-dialog__footer']}>
+											<Button
+												variant="solid"
+												color="secondary"
+												size="md"
+												prefix={cancelIcon}
+												disabled={busy}
+												disabledTooltip={undefined}
+												data-slot="alert-dialog-cancel"
+												testId={partTestId(testId, 'cancel')}
+												onClick={cancel}
+											>
+												{cancelText}
+											</Button>
+											<Button
+												variant="solid"
+												color={color}
+												size="md"
+												prefix={confirmIcon}
+												loading={busy}
+												data-slot="alert-dialog-confirm"
+												testId={partTestId(testId, 'confirm')}
+												onClick={confirm}
+											>
+												{confirmText}
+											</Button>
+										</div>
+									</PopupContainer>
+								</AlertDialogPrimitive.Popup>
+							</AlertDialogPrimitive.Viewport>
+						</DialogLayer>
+					</DialogPortal>
+				</DrawerStackReset>
 			</AlertDialogPrimitive.Root>
 		);
 	},
@@ -350,11 +353,14 @@ export const AlertDialog = AlertDialogImpl as <
 	// missing `children` or `onConfirm` does not keep the handle from being read, the way `Dialog`
 	// explains.
 	props: T & { handle?: DialogHandle<Payload> } & {
-		children: AlertDialogProps<NoInfer<Payload>>['children'];
+		children: DialogChildren<NoInfer<Payload>>;
 		onConfirm: AlertDialogProps<NoInfer<Payload>>['onConfirm'];
 	} & ValidateAlertDialogProps<T, NoInfer<Payload>> &
 		Record<
-			Exclude<keyof T, keyof AlertDialogProps<Payload> | keyof RefAttributes<HTMLDivElement>>,
+			Exclude<
+				keyof T,
+				keyof AlertDialogProps<Payload> | keyof RefAttributes<HTMLDivElement> | RuledAlertDialogKeys
+			>,
 			never
 		> &
 		RefAttributes<HTMLDivElement>,

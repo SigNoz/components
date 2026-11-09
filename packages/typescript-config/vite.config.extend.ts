@@ -15,12 +15,9 @@ export const externalPatterns = [
 	// React Compiler output with `target: '18'` imports the memo cache from here.
 	'react-compiler-runtime',
 	'clsx',
-	'motion/react',
 	'react-day-picker',
 	'react-resizable-panels',
-	'nuqs',
 	'@tanstack/react-virtual',
-	/@radix-ui\/.*$/,
 	/^@base-ui\/react(\/.*)?$/,
 	/^@signozhq\/.*$/,
 ];

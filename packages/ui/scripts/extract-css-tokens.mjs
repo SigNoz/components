@@ -10,6 +10,15 @@ const UI_SRC_DIR = join(__dirname, '../src');
 // Custom properties a primitive sets on its own elements at runtime. A component reads them, but
 // they share the component prefix and are not theming hooks, so they stay out of the docs.
 const PRIMITIVE_VARS = new Set([
+	'--drawer-frontmost-height',
+	'--drawer-height',
+	'--drawer-keyboard-inset',
+	'--drawer-snap-point-offset',
+	'--drawer-swipe-movement-x',
+	'--drawer-swipe-movement-y',
+	'--drawer-swipe-progress',
+	'--drawer-swipe-strength',
+	'--nested-drawers',
 	'--toast-frontmost-height',
 	'--toast-height',
 	'--toast-index',

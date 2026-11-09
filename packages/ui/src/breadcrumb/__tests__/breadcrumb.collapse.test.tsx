@@ -12,6 +12,7 @@ import {
 	Frame,
 	FULL_WIDTH,
 	labelsOf,
+	openEllipsisPopup,
 	PINNED_PARTS,
 	renderInFrame,
 	settle,
@@ -166,13 +167,10 @@ describe('Breadcrumb collapse by width', () => {
 	});
 
 	it('lists the collapsed crumbs in path order as links', async () => {
-		const user = userEvent.setup();
 		renderInFrame(<Breadcrumb items={TRAIL} testId="bc" />, THREE_COLLAPSED);
 
-		await user.click(screen.getByTestId('bc-ellipsis'));
-
-		const menu = await screen.findByRole('menu');
-		const rows = within(menu).getAllByRole('menuitem');
+		const popup = await openEllipsisPopup();
+		const rows = within(popup).getAllByRole('link');
 
 		expect(rows.map((row) => row.textContent)).toEqual(['Payments', 'Services', 'Checkout']);
 		expect(rows.map((row) => row.tagName)).toEqual(['A', 'A', 'A']);
@@ -189,15 +187,13 @@ describe('Breadcrumb collapse by width', () => {
 	});
 
 	it('lists only the crumbs that are collapsed', async () => {
-		const user = userEvent.setup();
 		renderInFrame(<Breadcrumb items={TRAIL} testId="bc" />, FULL_WIDTH - 1);
 
-		await user.click(screen.getByTestId('bc-ellipsis'));
+		const popup = await openEllipsisPopup();
 
-		const menu = await screen.findByRole('menu');
 		expect(
-			within(menu)
-				.getAllByRole('menuitem')
+			within(popup)
+				.getAllByRole('link')
 				.map((row) => row.textContent),
 		).toEqual(['Services']);
 	});
@@ -273,7 +269,7 @@ describe('Breadcrumb collapse by width', () => {
 			await waitFor(() => expect(collapsedCrumbs()).toHaveLength(1));
 		});
 
-		describe('keeps the `...` crumb, with its focus and its menu, as more crumbs collapse', () => {
+		describe('keeps the `...` crumb, with its focus and its popup, as more crumbs collapse', () => {
 			// Five crumbs collapse the second one, then the second and the third, so the first collapsed
 			// crumb moves from the third to the second. Six collapse the third and the fourth, then the
 			// second as well. Both need 470px with the first collapse and 360px with the next.
@@ -333,22 +329,33 @@ describe('Breadcrumb collapse by width', () => {
 				expect(flowOrder()).toEqual(['Dashboards', 'Payments', '...', 'Checkout', 'prod-east']);
 			});
 
-			it('keeps its menu open', async () => {
-				const user = userEvent.setup();
+			it('keeps its popup open, and adds the crumbs that collapse to the list', async () => {
 				const { resize } = renderInFrame(<Breadcrumb items={TRAIL} testId="bc" />, ONE_COLLAPSED);
-
-				await user.click(screen.getByTestId('bc-ellipsis'));
-				await screen.findByRole('menu');
+				const popup = await openEllipsisPopup();
+				expect(within(popup).getAllByRole('link')).toHaveLength(1);
 
 				await resize(TWO_COLLAPSED);
 				await waitFor(() => expect(collapsedCrumbs()).toHaveLength(2));
 
-				expect(screen.getByRole('menu')).toBeInTheDocument();
+				expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
 				expect(
-					within(screen.getByRole('menu'))
-						.getAllByRole('menuitem')
+					within(popup)
+						.getAllByRole('link')
 						.map((row) => row.textContent),
 				).toEqual(['Payments', 'Services']);
+			});
+
+			it('keeps the focus inside its popup, on the row it was on', async () => {
+				const { resize } = renderInFrame(<Breadcrumb items={TRAIL} testId="bc" />, ONE_COLLAPSED);
+				const popup = await openEllipsisPopup();
+				const services = within(popup).getByRole('link', { name: 'Services' });
+				services.focus();
+
+				await resize(TWO_COLLAPSED);
+				await waitFor(() => expect(collapsedCrumbs()).toHaveLength(2));
+
+				expect(within(popup).getByRole('link', { name: 'Services' })).toBe(services);
+				expect(services).toHaveFocus();
 			});
 		});
 
@@ -919,7 +926,6 @@ describe('Breadcrumb maxVisible', () => {
 	});
 
 	it('numbers the crumbs after their place in items when a title is empty', async () => {
-		const user = userEvent.setup();
 		const items: BreadcrumbItemType[] = [
 			{ title: 'A', href: '/a' },
 			{ title: '', href: '/hidden' },
@@ -938,17 +944,137 @@ describe('Breadcrumb maxVisible', () => {
 			'bc-item-5',
 		]);
 
-		await user.click(screen.getByTestId('bc-ellipsis'));
+		const popup = await openEllipsisPopup();
 
-		const menu = await screen.findByRole('menu');
 		expect(
-			within(menu)
-				.getAllByRole('menuitem')
+			within(popup)
+				.getAllByRole('link')
 				.map((row) => [row.textContent, row.getAttribute('data-testid')]),
 		).toEqual([
 			['B', 'bc-item-2'],
 			['C', 'bc-item-3'],
 		]);
+	});
+});
+
+describe('Breadcrumb collapseFrom', () => {
+	const SIX = ['A', 'B', 'C', 'D', 'E', 'F'].map((title) => ({ title, href: `/${title}` }));
+
+	/** The crumbs in the flow and the `...` crumb, in the order they are in the document. */
+	function trail(): (string | null)[] {
+		return Array.from(
+			document.querySelectorAll<HTMLElement>(
+				'[data-slot="breadcrumb-item"]:not([data-collapsed]), [data-slot="breadcrumb-ellipsis"]',
+			),
+		).map((node) =>
+			node.getAttribute('data-slot') === 'breadcrumb-ellipsis'
+				? 'ellipsis'
+				: node.getAttribute('data-testid'),
+		);
+	}
+
+	it('reads the first crumb, the `...` crumb and the last three with a maxVisible of 4', () => {
+		render(<Breadcrumb items={SIX} maxVisible={4} collapseFrom="start" testId="bc" />);
+
+		expect(trail()).toEqual(['bc-item-0', 'ellipsis', 'bc-item-3', 'bc-item-4', 'bc-item-5']);
+		expect(collapsedTitles()).toEqual(['B', 'C']);
+	});
+
+	it('leaves the crumbs next to the current page for last, whatever the maxVisible', () => {
+		const { rerender } = render(
+			<Breadcrumb items={SIX} maxVisible={5} collapseFrom="start" testId="bc" />,
+		);
+
+		expect(collapsedTitles()).toEqual(['B']);
+
+		rerender(<Breadcrumb items={SIX} maxVisible={3} collapseFrom="start" testId="bc" />);
+		expect(collapsedTitles()).toEqual(['B', 'C', 'D']);
+		expect(trail()).toEqual(['bc-item-0', 'ellipsis', 'bc-item-4', 'bc-item-5']);
+
+		rerender(<Breadcrumb items={SIX} maxVisible={2} collapseFrom="start" testId="bc" />);
+		expect(trail()).toEqual(['bc-item-0', 'ellipsis', 'bc-item-5']);
+	});
+
+	it('collapses from the centre by default and with center', () => {
+		const { rerender } = render(<Breadcrumb items={SIX} maxVisible={4} testId="bc" />);
+
+		expect(trail()).toEqual(['bc-item-0', 'bc-item-1', 'ellipsis', 'bc-item-4', 'bc-item-5']);
+
+		rerender(<Breadcrumb items={SIX} maxVisible={4} collapseFrom="center" testId="bc" />);
+		expect(trail()).toEqual(['bc-item-0', 'bc-item-1', 'ellipsis', 'bc-item-4', 'bc-item-5']);
+	});
+
+	it('follows the prop when it changes', () => {
+		const { rerender } = render(<Breadcrumb items={SIX} maxVisible={4} testId="bc" />);
+
+		expect(collapsedTitles()).toEqual(['C', 'D']);
+
+		rerender(<Breadcrumb items={SIX} maxVisible={4} collapseFrom="start" testId="bc" />);
+		expect(collapsedTitles()).toEqual(['B', 'C']);
+	});
+
+	it('lists the collapsed crumbs in path order in the popup of the `...` crumb', async () => {
+		render(<Breadcrumb items={SIX} maxVisible={3} collapseFrom="start" testId="bc" />);
+
+		const popup = await openEllipsisPopup();
+
+		expect(
+			within(popup)
+				.getAllByRole('link')
+				.map((row) => row.getAttribute('data-testid')),
+		).toEqual(['bc-item-1', 'bc-item-2', 'bc-item-3']);
+	});
+
+	it('collapses the crumb after the first one as the room shrinks, one more at each step', async () => {
+		const { resize } = renderInFrame(
+			<Breadcrumb items={TRAIL} collapseFrom="start" testId="bc" />,
+			FULL_WIDTH,
+		);
+
+		expect(collapsedCrumbs()).toHaveLength(0);
+
+		await resize(ONE_COLLAPSED);
+		await waitFor(() => expect(collapsedTitles()).toEqual(['Payments']));
+
+		await resize(TWO_COLLAPSED);
+		await waitFor(() => expect(collapsedTitles()).toEqual(['Payments', 'Services']));
+		expect(visibleTitles()).toEqual(['Dashboards', 'Checkout', 'prod-east']);
+
+		await resize(THREE_COLLAPSED);
+		await waitFor(() => expect(collapsedTitles()).toEqual(['Payments', 'Services', 'Checkout']));
+	});
+
+	it('keeps the same `...` crumb mounted as more crumbs collapse, so its focus and popup stay', async () => {
+		const { resize } = renderInFrame(
+			<Breadcrumb items={TRAIL} collapseFrom="start" testId="bc" />,
+			ONE_COLLAPSED,
+		);
+
+		const first = ellipsis();
+
+		expect(first).not.toBeNull();
+
+		await resize(THREE_COLLAPSED);
+		await waitFor(() => expect(collapsedCrumbs()).toHaveLength(3));
+		expect(ellipsis()).toBe(first);
+	});
+
+	it('shortens the last crumb, then the first, once only they are left', async () => {
+		const { resize } = renderInFrame(
+			<Breadcrumb items={TRAIL} collapseFrom="start" testId="bc" />,
+			THREE_COLLAPSED,
+		);
+
+		await resize(200);
+		await waitFor(() => expect(screen.getByTestId('bc')).toHaveAttribute('data-shrinking'));
+		expect(collapsedCrumbs()).toHaveLength(3);
+	});
+
+	it('leaves a trail without the room to collapse alone', () => {
+		render(<Breadcrumb items={SIX.slice(0, 2)} collapseFrom="start" testId="bc" />);
+
+		expect(ellipsis()).toBeNull();
+		expect(visibleCrumbs()).toHaveLength(2);
 	});
 });
 
@@ -990,19 +1116,19 @@ describe('Breadcrumb collapsed crumbs', () => {
 		).not.toHaveFocus();
 	});
 
-	it('hand their test id to the row of the menu', async () => {
-		const user = userEvent.setup();
+	it('hand their test id to the row of the popup', async () => {
 		render(<Breadcrumb items={TRAIL} maxVisible={3} testId="bc" />);
 
 		expect(screen.queryByTestId('bc-item-1')).not.toBeInTheDocument();
 		expect(screen.queryByTestId('bc-item-2')).not.toBeInTheDocument();
 
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await screen.findByRole('menu');
+		const popup = await openEllipsisPopup();
 
-		expect(screen.getByTestId('bc-item-1')).toHaveTextContent('Payments');
-		expect(screen.getByTestId('bc-item-1')).toHaveAttribute('role', 'menuitem');
-		expect(screen.getByTestId('bc-item-2')).toHaveTextContent('Services');
+		expect(within(popup).getByTestId('bc-item-1')).toHaveTextContent('Payments');
+		expect(within(popup).getByTestId('bc-item-1')).toBe(
+			within(popup).getByRole('link', { name: 'Payments' }),
+		);
+		expect(within(popup).getByTestId('bc-item-2')).toHaveTextContent('Services');
 	});
 
 	// A collapsed crumb mounts no menu of its own, so `${testId}-item-${index}-menu` does not point

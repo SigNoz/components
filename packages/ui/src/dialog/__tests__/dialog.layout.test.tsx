@@ -22,6 +22,8 @@ beforeEach(() => {
 		--spacing-12: 24px;
 		--radius-2: 4px;
 		--paragraph-base-400-line-height: 20px;
+		--label-base-400-font-size: 13px;
+		--label-base-400-line-height: 1;
 	}`;
 	document.head.append(tokens);
 });
@@ -288,6 +290,60 @@ describe('Dialog transition', () => {
 			await renderOpenDialog();
 
 			expect(transitionProperty('dialog-backdrop')).toBe('opacity');
+		} finally {
+			overrides.remove();
+		}
+	});
+});
+
+describe('Dialog close button', () => {
+	it('is the small icon button of a drawer header: 24px, centred on the title, 16px inside the end', async () => {
+		await page.viewport(1280, 800);
+		await renderOpenDialog({});
+		const close = rect(screen.getByRole('button', { name: 'Close' }));
+		const title = rect(screen.getByTestId('dialog-title'));
+		const panel = rect(screen.getByRole('dialog'));
+
+		expect(close.width).toBeCloseTo(24, 0);
+		expect(close.height).toBeCloseTo(24, 0);
+		expect(
+			Math.abs(close.top + close.height / 2 - (title.top + title.height / 2)),
+		).toBeLessThanOrEqual(1);
+		const border = Number.parseFloat(
+			getComputedStyle(screen.getByRole('dialog')).borderInlineEndWidth,
+		);
+		expect(panel.right - border - close.right).toBeCloseTo(16, 0);
+	});
+
+	it('follows the header padding: still centred on the title, inset as far as the title, clear of it', async () => {
+		const overrides = document.createElement('style');
+		overrides.textContent = `:root {
+			--dialog-header-padding-block: 32px;
+			--dialog-header-padding-inline-start: 24px;
+		}`;
+		document.head.append(overrides);
+
+		try {
+			await page.viewport(1280, 800);
+			await renderOpenDialog({
+				title: 'A title long enough to wrap onto the close button '.repeat(8),
+			});
+			const close = rect(screen.getByRole('button', { name: 'Close' }));
+			const title = rect(screen.getByTestId('dialog-title'));
+			const panel = rect(screen.getByRole('dialog'));
+			const style = getComputedStyle(screen.getByRole('dialog'));
+			const border = Number.parseFloat(style.borderInlineEndWidth);
+			const lineHeight = 13;
+
+			expect(
+				Math.abs(close.top + close.height / 2 - (title.top + lineHeight / 2)),
+			).toBeLessThanOrEqual(1);
+			expect(panel.right - border - close.right).toBeCloseTo(24, 0);
+			expect(title.left - panel.left - Number.parseFloat(style.borderInlineStartWidth)).toBeCloseTo(
+				24,
+				0,
+			);
+			expect(close.left - title.right).toBeGreaterThanOrEqual(8 - 0.5);
 		} finally {
 			overrides.remove();
 		}

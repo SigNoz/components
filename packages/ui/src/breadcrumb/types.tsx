@@ -1,13 +1,22 @@
+import type { Popover } from '@base-ui/react/popover';
 import type { AriaAttributes, ComponentProps, MouseEvent, ReactElement, ReactNode } from 'react';
 import type {
+	BREADCRUMB_ELLIPSIS_PAYLOAD,
+	BreadcrumbCollapseFrom,
 	BreadcrumbItemKind,
 	BreadcrumbPosition,
 	BreadcrumbShrink,
 	BreadcrumbTextOverflow,
+	BreadcrumbVariant,
 } from './constants.js';
 
 export type BreadcrumbTextOverflowType =
 	(typeof BreadcrumbTextOverflow)[keyof typeof BreadcrumbTextOverflow];
+
+export type BreadcrumbVariantType = (typeof BreadcrumbVariant)[keyof typeof BreadcrumbVariant];
+
+export type BreadcrumbCollapseFromType =
+	(typeof BreadcrumbCollapseFrom)[keyof typeof BreadcrumbCollapseFrom];
 
 /**
  * @access private
@@ -87,7 +96,8 @@ export interface BreadcrumbItemType extends BreadcrumbLinkProps {
 	 */
 	title: ReactNode;
 	/**
-	 * Shown before the title.
+	 * Shown before the title, and before the title of its row while the crumb is collapsed into the
+	 * list of the `...` crumb.
 	 */
 	icon?: ReactNode;
 	/**
@@ -96,6 +106,90 @@ export interface BreadcrumbItemType extends BreadcrumbLinkProps {
 	 * crumb as it would be without `menu`.
 	 */
 	menu?: BreadcrumbDropdownItem[];
+	/**
+	 * A card that opens below the crumb, such as a summary of the record the crumb stands for. It
+	 * opens once the pointer has rested on the crumb for 300ms, or the keyboard focus reaches it, and
+	 * closes 150ms after the pointer leaves the crumb and the card, or as the focus leaves the crumb.
+	 * The crumb keeps its own click and its link: the card is extra, never the way to navigate.
+	 *
+	 * The pointer can use what the card holds, such as a link to follow or text to select. The
+	 * keyboard cannot: the card never takes the focus, and `Tab` passes it by. So anything in it must
+	 * also be reachable from the page.
+	 *
+	 * The card takes the place of the tooltip with the full title that a cut label shows, since the
+	 * card is expected to name the crumb in full. A `preview` that renders nothing (`null`, `false`,
+	 * an empty string) leaves the crumb with that tooltip.
+	 *
+	 * @note A crumb with a `menu` ignores it, and so does a crumb while it is collapsed into the list
+	 * of the `...` crumb.
+	 *
+	 * @note A crumb that is plain text cannot take focus, so its card opens on hover only. Give it an
+	 * `href` or an `onClick` for the keyboard to reach it.
+	 *
+	 * @note A click does not open it, only a keyboard focus (`:focus-visible`) does. `Escape` closes
+	 * it, and the crumb keeps the focus. It is a hover card, not a dialog: it has no role, and screen
+	 * readers do not announce it.
+	 */
+	preview?: ReactNode;
+}
+
+/**
+ * A crumb that is collapsed into the `...` crumb, as `ellipsis.render` receives it.
+ */
+export interface BreadcrumbCollapsedCrumb {
+	/**
+	 * The crumb, as it was passed in `items`.
+	 */
+	item: BreadcrumbItemType;
+	/**
+	 * Its index in `items`, counted before the crumbs with an empty title were left out, so it is the
+	 * same number the `testId` of the crumb carries.
+	 */
+	index: number;
+}
+
+/**
+ * What the popup of the `...` crumb holds: the collapsed crumbs as a list, or content of your own.
+ */
+export interface BreadcrumbEllipsisOptions {
+	/**
+	 * A heading above the rows of the list, such as `Earlier steps`. It names the popup, in place of
+	 * `Hidden items`, and the group the rows are in. It is not a row: the arrow keys pass over it.
+	 *
+	 * @note Only for the list. With `render` the content is yours, heading included. A heading that
+	 * renders nothing (`null`, `false`, an empty string) adds none.
+	 */
+	heading?: ReactNode;
+	/**
+	 * The element at the end of a row, such as the number of the step the crumb stands for. `index` is
+	 * the place of the crumb in `items`, counted before the crumbs with an empty title were left out,
+	 * so a trail that starts at step one reads `index + 1`. Return `undefined` to leave a row without
+	 * one.
+	 *
+	 * @note A crumb with a `menu` is a row that opens a menu, and its trailing slot is the chevron of
+	 * that menu, so it gets no suffix and the function is not called for it.
+	 *
+	 * @note Only for the list. Nothing calls it with `render`.
+	 */
+	rowSuffix?: (item: BreadcrumbItemType, index: number) => ReactElement | undefined;
+	/**
+	 * Replaces the list with your own content, in the popup the `...` crumb opens. It receives the
+	 * collapsed crumbs in path order, with the index of each in `items`. The content has no rows, no
+	 * arrow key walk and no navigation of its own, so it links to what it lists and closes itself as
+	 * it needs to.
+	 *
+	 * @note It is called while the breadcrumb renders, on every render with a crumb collapsed. Keep it
+	 * a pure function that calls no hooks, and return an element, such as
+	 * `<StepList steps={collapsed} />`, for content that holds state of its own.
+	 *
+	 * @note With it, `heading` and `rowSuffix` are not used, and the popup is named `Hidden items`.
+	 *
+	 * @note A function that returns nothing (`null`, `false`, an empty string) leaves the `...` crumb
+	 * as text: a `<span>` that takes no focus and opens nothing, with the `data-slot`, `data-kind`
+	 * and test id of the trigger. Otherwise the trigger, its name (`Show N hidden items`) and the way
+	 * it opens are the ones the list has.
+	 */
+	render?: (collapsed: BreadcrumbCollapsedCrumb[]) => ReactNode;
 }
 
 /**
@@ -185,6 +279,16 @@ export interface BreadcrumbProps extends Pick<ComponentProps<'nav'>, 'id'>, Aria
 	 */
 	maxVisible?: number;
 	/**
+	 * Which middle crumbs collapse first. `center` starts at the middle one and moves outward, so the
+	 * `...` crumb sits in the middle of the trail. `start` starts at the crumb after the first one and
+	 * moves toward the current page, so the trail reads first crumb, `...`, then the last crumbs, and
+	 * the crumbs next to the current page stay the longest. Only applies while `truncate` is set, and
+	 * the first and the last crumb never collapse either way.
+	 *
+	 * @default 'center'
+	 */
+	collapseFrom?: BreadcrumbCollapseFromType;
+	/**
 	 * What a crumb's label does when it does not fit. `ellipsis` cuts it with `…` and shows the
 	 * full title in a tooltip, `hidden` clips it.
 	 *
@@ -192,9 +296,24 @@ export interface BreadcrumbProps extends Pick<ComponentProps<'nav'>, 'id'>, Aria
 	 */
 	textOverflow?: BreadcrumbTextOverflowType;
 	/**
+	 * How the crumbs are drawn. `plain` is text that fills on hover. `outlined` draws every crumb
+	 * but the current page, and the `...` crumb, as a chip with a border, and leaves the current page
+	 * as text in the primary colour. Both collapse and shorten the same way.
+	 *
+	 * @default 'plain'
+	 */
+	variant?: BreadcrumbVariantType;
+	/**
+	 * What the `...` crumb opens: the heading and the trailing element of the rows it lists, or
+	 * content of your own in their place. It opens on hover and on a press either way. Only matters
+	 * while a crumb is collapsed, since the `...` crumb renders only then.
+	 */
+	ellipsis?: BreadcrumbEllipsisOptions;
+	/**
 	 * Forwarded to the `<nav>` as `data-testid`, and the stem every part is named from:
 	 * `` `${testId}-item-${index}` `` for a crumb, `` `${testId}-item-separator-${index}` `` for
-	 * the separator before it, and `` `${testId}-ellipsis` `` for the `...` crumb.
+	 * the separator before it, `` `${testId}-preview` `` for the card of the crumbs, and
+	 * `` `${testId}-ellipsis` `` for the `...` crumb.
 	 */
 	testId?: string;
 	/**
@@ -221,11 +340,28 @@ export type BreadcrumbResolvedItem = {
 };
 
 /**
+ * What a trigger hands the popup: the place in `items` of a crumb with a `preview`, or `'ellipsis'`
+ * for the `...` crumb.
+ *
+ * @access private
+ */
+export type BreadcrumbPopupPayloadType = number | typeof BREADCRUMB_ELLIPSIS_PAYLOAD;
+
+/**
+ * @access private
+ */
+export type BreadcrumbPopupHandleType = Popover.Handle<BreadcrumbPopupPayloadType>;
+
+/**
  * What the collapse planner reads off the trail. Every width is in pixels.
  *
  * @access private
  */
 export type BreadcrumbTrailMeasure = {
+	/**
+	 * The order the crumbs collapse in, which decides the crumbs that are left at each step.
+	 */
+	collapseFrom: BreadcrumbCollapseFromType;
 	/**
 	 * The width of each crumb at its own size, its label capped at `--breadcrumb-item-max-width` but
 	 * never shortened to fit.

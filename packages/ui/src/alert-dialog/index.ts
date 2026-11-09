@@ -98,4 +98,4 @@
 // #endregion css-tokens
 
 export { AlertDialog } from './alert-dialog.js';
-export type * from './types.js';
+export type { AlertDialogColorType, AlertDialogProps, ValidateAlertDialogProps } from './types.js';
