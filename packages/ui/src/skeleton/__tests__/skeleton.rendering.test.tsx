@@ -567,6 +567,19 @@ describe('Skeleton.Button in a flex row', () => {
 		expect(screen.getByTestId('uncapped').getBoundingClientRect().width).toBe(64);
 	});
 
+	it.each(['auto', 'max-content'])('keeps the width of its size with width="%s"', (width) => {
+		render(
+			row(
+				<>
+					<div style={{ flex: 'none', width: 280 }} />
+					<Skeleton.Button size="md" width={width} testId="keyword" />
+				</>,
+			),
+		);
+
+		expect(screen.getByTestId('keyword').getBoundingClientRect().width).toBe(64);
+	});
+
 	it('never spills out of a parent narrower than its size', () => {
 		render(
 			<div style={{ width: 40 }}>
