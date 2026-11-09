@@ -1,7 +1,16 @@
 import * as React from 'react';
-import { DialogHeader, type DialogHeaderProps } from '../../dialog/index.js';
+import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
 
-export type DrawerHeaderProps = DialogHeaderProps;
+export type DrawerHeaderProps = Pick<
+	React.ComponentPropsWithoutRef<'div'>,
+	'id' | 'className' | 'style' | 'children'
+> & {
+	/**
+	 * Test ID for the drawer header.
+	 */
+	testId?: string;
+};
 
 /**
  * Layout wrapper for the top section of the drawer.
@@ -24,8 +33,17 @@ export type DrawerHeaderProps = DialogHeaderProps;
  * </Drawer>
  * ```
  */
-export const DrawerHeader = React.forwardRef<
-	React.ElementRef<typeof DialogHeader>,
-	DrawerHeaderProps
->((props, ref) => <DialogHeader ref={ref} data-slot="drawer-header" {...props} />);
+export const DrawerHeader = React.forwardRef<HTMLDivElement, DrawerHeaderProps>(
+	({ className, testId, children, ...props }, ref) => (
+		<div
+			ref={ref}
+			data-slot="drawer-header"
+			data-testid={testId}
+			className={cn(styles.drawer__header, className)}
+			{...props}
+		>
+			{children}
+		</div>
+	),
+);
 DrawerHeader.displayName = 'DrawerHeader';

@@ -1,10 +1,21 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
-import {
-	DialogTitle as BaseDialogTitle,
-	type DialogTitleProps as BaseDialogTitleProps,
-} from '../../dialog/index.js';
+import { cn } from '../../lib/utils.js';
+import styles from '../drawer.module.scss';
 
-export type DrawerTitleProps = BaseDialogTitleProps;
+export type DrawerTitleProps = Pick<
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>,
+	'id' | 'className' | 'style' | 'children'
+> & {
+	/**
+	 * Test ID for the drawer title.
+	 */
+	testId?: string;
+	/**
+	 * The icon of the drawer title.
+	 */
+	icon?: React.ReactNode;
+};
 
 /**
  * Accessible title for a drawer. Renders text (and optional icon) and
@@ -28,7 +39,18 @@ export type DrawerTitleProps = BaseDialogTitleProps;
  * ```
  */
 export const DrawerTitle = React.forwardRef<
-	React.ElementRef<typeof BaseDialogTitle>,
+	React.ElementRef<typeof DialogPrimitive.Title>,
 	DrawerTitleProps
->((props, ref) => <BaseDialogTitle ref={ref} data-slot="drawer-title" {...props} />);
+>(({ className, icon, children, testId, ...props }, ref) => (
+	<DialogPrimitive.Title
+		ref={ref}
+		data-slot="drawer-title"
+		data-testid={testId}
+		className={cn(styles.drawer__title, className)}
+		{...props}
+	>
+		{icon}
+		{children}
+	</DialogPrimitive.Title>
+));
 DrawerTitle.displayName = 'DrawerTitle';

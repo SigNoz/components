@@ -145,23 +145,40 @@ covers the page it is anchored over without anyone having asked for it. `Tooltip
 
 ## Inside a modal
 
-Tooltips are portalled to `document.body`. Pass `container` to keep one inside a dialog instead, which sidesteps stacking context issues:
+Tooltips are portalled to `document.body`. Inside a `Dialog` or a `Drawer` they go into the panel on
+their own, so they render above it:
 
 ```tsx
-import { useRef } from 'react';
-import { Dialog, DialogContent, Tooltip, Button } from '@signozhq/ui';
+import { Button, Dialog, Tooltip } from '@signozhq/ui';
+
+function ShareView({ open, onClose }) {
+	return (
+		<Dialog open={open} onClose={onClose} title="Share view">
+			<Tooltip title="Copies a link to this view">
+				<Button variant="solid" color="secondary" size="md">
+					Copy link
+				</Button>
+			</Tooltip>
+		</Dialog>
+	);
+}
+```
+
+Pass `container` to put one in another element, which sidesteps stacking context issues. The
+element only exists after the first render, so hold it in state rather than in a ref:
+
+```tsx
+import { useState } from 'react';
 
 function MyComponent() {
-	const dialogRef = useRef<HTMLDivElement>(null);
+	const [panel, setPanel] = useState<HTMLDivElement | null>(null);
 
 	return (
-		<Dialog>
-			<DialogContent ref={dialogRef}>
-				<Tooltip title="Inside modal" container={dialogRef}>
-					<Button>Hover me</Button>
-				</Tooltip>
-			</DialogContent>
-		</Dialog>
+		<div ref={setPanel}>
+			<Tooltip title="Inside the panel" container={panel}>
+				<Button>Hover me</Button>
+			</Tooltip>
+		</div>
 	);
 }
 ```
@@ -169,7 +186,7 @@ function MyComponent() {
 Set it once on the provider to cover every tooltip in that subtree:
 
 ```tsx
-<TooltipProvider container={dialogRef}>{children}</TooltipProvider>
+<TooltipProvider container={panel}>{children}</TooltipProvider>
 ```
 
 ## Nested tooltips

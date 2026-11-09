@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 import { confirmArgTypes } from './shared/dialog-drawer-arg-types.js';
 
-const { position: _, ...sharedConfirmArgTypes } = confirmArgTypes ?? {};
+const sharedConfirmArgTypes = confirmArgTypes ?? {};
 
 const meta: Meta<typeof ConfirmDrawer> = {
 	title: 'Composed Components/Drawer/ConfirmDrawer',
