@@ -274,6 +274,9 @@ export type PopoverTriggerProps<Payload = unknown> = {
 	 *
 	 * @note Its `id` is the id `handle.openTrigger(id)` opens it by. Without one, the trigger
 	 * generates one.
+	 *
+	 * @note A component of your own has to pass the props and the ref it is given on to its
+	 * element. One that drops them leaves the trigger with no listeners, and it never opens.
 	 */
 	children: ReactElement<{ id?: string }>;
 	/**
@@ -291,6 +294,13 @@ export type PopoverTriggerProps<Payload = unknown> = {
 	 * The element keeps its role, its `tabindex` and its click, and gets no `aria-haspopup`,
 	 * `aria-expanded` or `aria-controls`. The popup it opens has no role and no name, and takes no
 	 * focus. A press on it closes a popup another trigger opened.
+	 *
+	 * The keyboard focus opens it on the element, or on anything focusable inside it, such as the
+	 * link of a row. `Tab` from there goes into the card when the card holds something focusable,
+	 * and on to the next element otherwise.
+	 *
+	 * @note Screen readers do not announce the card, and a touch screen has no hover to open it, so
+	 * it adds to what the element says and never replaces it.
 	 *
 	 * @default false
 	 */
