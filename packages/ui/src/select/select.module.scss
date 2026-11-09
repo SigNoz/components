@@ -85,6 +85,7 @@
   &[aria-disabled='true'] {
     color: var(--select-internal-trigger-label-disabled);
     cursor: var(--select-trigger-disabled-cursor, not-allowed);
+    opacity: var(--select-trigger-disabled-opacity, 0.6);
   }
 
   // Faded like the other read-only controls, and keeps its colours: the value is still there to read.

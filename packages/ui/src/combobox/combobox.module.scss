@@ -86,6 +86,7 @@
   &[aria-disabled='true'] {
     color: var(--combobox-internal-trigger-label-disabled);
     cursor: var(--combobox-trigger-disabled-cursor, not-allowed);
+    opacity: var(--combobox-trigger-disabled-opacity, 0.6);
   }
 
   // Faded like the other read-only controls, and keeps its colours: the value is still there to read.

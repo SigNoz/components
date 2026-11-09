@@ -278,6 +278,7 @@
  * | `--combobox-trigger-cursor` | `pointer` |
  * | `--combobox-trigger-disabled-color` | `var(--combobox-trigger-label-disabled)` |
  * | `--combobox-trigger-disabled-cursor` | `not-allowed` |
+ * | `--combobox-trigger-disabled-opacity` | `0.6` |
  * | `--combobox-trigger-display` | `flex` |
  * | `--combobox-trigger-flex-grow` | `1` |
  * | `--combobox-trigger-focus-outline-offset` | `1px` |

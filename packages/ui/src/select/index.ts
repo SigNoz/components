@@ -230,6 +230,7 @@
  * | `--select-trigger-cursor` | `pointer` |
  * | `--select-trigger-disabled-color` | `var(--select-trigger-label-disabled)` |
  * | `--select-trigger-disabled-cursor` | `not-allowed` |
+ * | `--select-trigger-disabled-opacity` | `0.6` |
  * | `--select-trigger-display` | `flex` |
  * | `--select-trigger-flex-grow` | `1` |
  * | `--select-trigger-focus-outline-offset` | `1px` |
