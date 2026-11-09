@@ -1,9 +1,21 @@
-import { CreditCard, House } from '@signozhq/icons';
+import {
+	Boxes,
+	Container,
+	CreditCard,
+	House,
+	Layers,
+	ScrollText,
+	Server,
+	Waypoints,
+} from '@signozhq/icons';
 import {
 	Breadcrumb,
+	type BreadcrumbCollapsedCrumb,
 	type BreadcrumbItemType,
+	type BreadcrumbLinkProps,
 	type BreadcrumbProps,
 	BreadcrumbTextOverflow,
+	BreadcrumbVariant,
 	Typography,
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -22,11 +34,14 @@ import { allModes } from '../.storybook/modes.js';
 import styles from './breadcrumb.stories.module.css';
 import { breadcrumbArgTypes } from './shared/breadcrumb-arg-types.js';
 import { waitForEffects } from './shared/play.js';
+import { type PreviewStep, StepPreview } from './shared/step-preview.js';
 
 const FIGMA_FILE =
 	'https://www.figma.com/design/eyORbfrXMWCz9w0xEFdgWe/Periscope-%E2%80%93-Primitives-v2';
 
 const ELLIPSIS_NAME = /^Show \d+ hidden items?$/;
+
+const ELLIPSIS_POPUP_NAME = 'Hidden items';
 
 const noop = (): void => {};
 
@@ -75,6 +90,7 @@ const meta: Meta<typeof Breadcrumb> = {
 		separator: '/',
 		truncate: true,
 		textOverflow: BreadcrumbTextOverflow.Ellipsis,
+		variant: BreadcrumbVariant.Plain,
 	},
 };
 
@@ -161,6 +177,24 @@ function ShowcaseSection({
 	);
 }
 
+function PopupCell({
+	caption,
+	width = '100%',
+	children,
+}: {
+	caption: string;
+	width?: string;
+	children: ReactNode;
+}): ReactElement {
+	return (
+		<div className={styles.popupCell}>
+			<Case caption={caption} width={width}>
+				{children}
+			</Case>
+		</div>
+	);
+}
+
 function getNav(canvasElement: HTMLElement, testId: string): HTMLElement {
 	return within(canvasElement).getByTestId(testId);
 }
@@ -177,7 +211,7 @@ function getVisibleCrumbs(nav: HTMLElement): Element[] {
 }
 
 /**
- * The positions, among the crumbs of the trail, that sit in the menu of the `...` crumb. A
+ * The positions, among the crumbs of the trail, that sit in the popover of the `...` crumb. A
  * collapsed crumb stays mounted but gives up its test id, so its position is the only handle left
  * on it.
  */
@@ -288,6 +322,71 @@ const CRUMB_MENU_TRAIL: BreadcrumbItemType[] = [
 	},
 ];
 
+const OUTLINED_TRAIL: BreadcrumbItemType[] = [
+	{ title: 'prod-gke-eu-west1', href: '/kubernetes/clusters/prod-gke-eu-west1', icon: <Boxes /> },
+	{ title: 'checkout', href: '/kubernetes/namespaces/checkout', icon: <Layers /> },
+	{
+		title: 'payments-7c9d5b6f4-xk2lp',
+		href: '/kubernetes/pods/payments-7c9d5b6f4-xk2lp',
+		icon: <Container />,
+	},
+	{ title: 'POST /charge · 2.4s', href: '/traces/3f9a1c', icon: <Waypoints /> },
+	{ title: 'OOMKilled: container over the 2Gi limit', icon: <ScrollText /> },
+];
+
+const OUTLINED_MENU_TRAIL: BreadcrumbItemType[] = [
+	{
+		title: 'checkout',
+		icon: <Layers />,
+		menu: [
+			{ title: 'billing', href: '/kubernetes/namespaces/billing' },
+			{ title: 'checkout', href: '/kubernetes/namespaces/checkout' },
+			{ title: 'refunds', href: '/kubernetes/namespaces/refunds' },
+		],
+	},
+	{ title: 'payments-7c9d5b6f4-xk2lp', icon: <Container /> },
+];
+
+const OUTLINED_WIDTHS = ['960px', '560px', '360px'];
+
+/**
+ * Every kind of row the `...` popover holds: a menu, a link, an action and plain text. `maxVisible`
+ * leaves only the first crumb and the current page in the trail, so all four sit in the popover.
+ */
+const RICH_ELLIPSIS_TRAIL: BreadcrumbItemType[] = [
+	{ title: 'prod-gke-eu-west1', href: '/kubernetes/clusters/prod-gke-eu-west1', icon: <Boxes /> },
+	{
+		title: 'checkout',
+		icon: <Layers />,
+		menu: [
+			{ title: 'billing', href: '/kubernetes/namespaces/billing' },
+			{ title: 'checkout', href: '/kubernetes/namespaces/checkout' },
+			{ title: 'refunds', href: '/kubernetes/namespaces/refunds' },
+		],
+	},
+	{
+		title: 'payments-7c9d5b6f4-xk2lp',
+		href: '/kubernetes/pods/payments-7c9d5b6f4-xk2lp',
+		icon: <Container />,
+	},
+	{ title: 'Rollout history', icon: <Server />, onClick: noop },
+	{ title: 'POST /charge · 2.4s', icon: <Waypoints /> },
+	{ title: 'OOMKilled: container over the 2Gi limit', icon: <ScrollText /> },
+];
+
+const RICH_ROW_KINDS = ['menu', 'link', 'button', 'text'];
+
+/**
+ * The menus held open in the snapshot. A Base UI menu opens on `mousedown`.
+ */
+const HELD_OPEN_MENUS = ['popup-crumb-menu-item-2-menu', 'popup-outlined-menu-item-0-menu'];
+
+/**
+ * The `...` popovers held open in the snapshot. A popover that a press opens takes the focus into
+ * its popup, and the next one doing the same closes it, so these open by hover, which moves no focus.
+ */
+const HELD_OPEN_ELLIPSES = ['popup-plain-ellipsis', 'popup-rich-ellipsis', 'popup-custom-ellipsis'];
+
 const NavigateContext = createContext<(to: string) => void>(noop);
 
 /**
@@ -375,7 +474,7 @@ function RouterLinks(): ReactElement {
 				<Case caption="720px: every crumb but the current page is a router link" width="720px">
 					<Breadcrumb items={ROUTER_TRAIL} testId="router-wide" />
 				</Case>
-				<Case caption="320px: the rows of the ... menu are router links too" width="320px">
+				<Case caption="320px: the rows of the ... popover are router links too" width="320px">
 					<Breadcrumb items={ROUTER_TRAIL} testId="router-narrow" />
 				</Case>
 				<Case caption="A crumb with a menu: its entries take a render as well" width="32rem">
@@ -386,11 +485,141 @@ function RouterLinks(): ReactElement {
 	);
 }
 
+type TrailStep = PreviewStep & { link: BreadcrumbLinkProps };
+
+const NODE_NAME = 'gke-prod-eu-west1-pool-2-8f3c1a7d-q4tn';
+
+const TRAIL_STEPS: TrailStep[] = [
+	{
+		kind: 'Cluster',
+		name: 'prod-eu',
+		icon: <Boxes />,
+		link: { href: '/kubernetes/clusters/prod-eu' },
+		facts: [
+			['Nodes', '12'],
+			['Region', 'europe-west1'],
+			['Version', '1.31.4'],
+		],
+	},
+	{
+		kind: 'Node',
+		name: NODE_NAME,
+		icon: <Server />,
+		link: { href: `/kubernetes/nodes/${NODE_NAME}` },
+		facts: [
+			['Status', 'MemoryPressure'],
+			['Pods', '38'],
+			['Zone', 'europe-west1-b'],
+		],
+	},
+	{
+		kind: 'Namespace',
+		name: 'checkout',
+		icon: <Layers />,
+		link: { href: '/kubernetes/namespaces/checkout' },
+		facts: [
+			['Pods', '9'],
+			['Services', '4'],
+			['Owner', 'payments team'],
+		],
+	},
+	{
+		kind: 'Pod',
+		name: 'payments-xk2lp',
+		icon: <Container />,
+		link: { href: '/kubernetes/pods/payments-xk2lp' },
+		facts: [
+			['Status', 'CrashLoopBackOff'],
+			['Restarts', '6'],
+			['Image', 'payments:2.14.0'],
+		],
+	},
+	{
+		kind: 'Trace',
+		name: 'POST /charge',
+		icon: <Waypoints />,
+		link: { href: '/traces/3f9a1c' },
+		facts: [
+			['Spans', '42'],
+			['Errors', '3'],
+			['Duration', '2.4s'],
+		],
+	},
+	{
+		kind: 'Log',
+		name: 'OOMKilled',
+		icon: <ScrollText />,
+		link: {},
+		facts: [
+			['Severity', 'ERROR'],
+			['Container', 'payments'],
+			['Limit', '2Gi'],
+		],
+	},
+];
+
+const PREVIEW_STEPS = [0, 2, 5].map((index) => TRAIL_STEPS[index] as TrailStep);
+
+const PREVIEW_TRAIL: BreadcrumbItemType[] = PREVIEW_STEPS.map((step, index, steps) => ({
+	title: step.name,
+	icon: step.icon,
+	...step.link,
+	...(index === steps.length - 1
+		? {}
+		: {
+				preview: (
+					<StepPreview
+						step={step}
+						from={steps[index - 1]}
+						position={index + 1}
+						total={steps.length}
+					/>
+				),
+			}),
+}));
+
+const STEP_TRAIL: BreadcrumbItemType[] = TRAIL_STEPS.map((step) => ({
+	title: step.name,
+	icon: step.icon,
+	...step.link,
+}));
+
+function StepNumber({ index }: { index: number }): ReactElement {
+	return <span className={styles.step}>{index + 1}</span>;
+}
+
+function CollapsedLinks({ collapsed }: { collapsed: BreadcrumbCollapsedCrumb[] }): ReactElement {
+	return (
+		<ul className={styles.collapsedList}>
+			{collapsed.map(({ item, index }) => (
+				<li key={index}>
+					<a href={item.href} className={styles.collapsedLink}>
+						{item.icon}
+						<span>{item.title}</span>
+						<StepNumber index={index} />
+					</a>
+				</li>
+			))}
+		</ul>
+	);
+}
+
 /**
- * The menus held open in the snapshot: the one a crumb's own `menu` opens, and the one behind the
- * `...` crumb.
+ * Resolves with the first element that matches once it is in the document. The popups of a
+ * breadcrumb are portalled, so they are never inside the canvas.
  */
-const HELD_OPEN_MENUS = ['crumb-menu-item-2-menu', 'overflow-menu-ellipsis'];
+async function findPopup(selector: string): Promise<HTMLElement> {
+	return waitFor(
+		() => {
+			const popup = document.querySelector<HTMLElement>(selector);
+
+			expect(popup).not.toBeNull();
+
+			return popup as HTMLElement;
+		},
+		{ timeout: 2000 },
+	);
+}
 
 function BreadcrumbShowcaseLayout(): ReactElement {
 	return (
@@ -454,7 +683,7 @@ function BreadcrumbShowcaseLayout(): ReactElement {
 					title="Shrinking"
 					note="Once only the first and the last crumb are left and the trail still does not fit, the last crumb shortens first, then the first one, each to a floor. A shortened crumb ends with … and shows its full title in a tooltip, held open here on the 260px trail."
 				>
-					<div className={styles.stack}>
+					<div className={`${styles.stack} ${styles.stackRoomy}`}>
 						{SHRINKING_WIDTHS.map((width) => (
 							<Case key={width} caption={width} width={width}>
 								<Breadcrumb items={SHRINKING_TRAIL} testId={`shrinking-${width}`} />
@@ -529,7 +758,7 @@ function BreadcrumbShowcaseLayout(): ReactElement {
 
 				<ShowcaseSection
 					title="Router links"
-					note="A crumb or a menu entry takes a render, here a stand-in for the Link of a router, drawn in place of a plain <a> with the title as its label. The current page has none and stays text. In the menu of the ... crumb and in the menu of a crumb, an entry with a render is a row drawn by that element, so a collapsed crumb is still a router link. Click a crumb or a row to move the location."
+					note="A crumb or a menu entry takes a render, here a stand-in for the Link of a router, drawn in place of a plain <a> with the title as its label. The current page has none and stays text. In the popover of the ... crumb and in the menu of a crumb, an entry with a render is a row drawn by that element, so a collapsed crumb is still a router link. Click a crumb or a row to move the location."
 				>
 					<RouterLinks />
 				</ShowcaseSection>
@@ -555,20 +784,115 @@ function BreadcrumbShowcaseLayout(): ReactElement {
 				</ShowcaseSection>
 
 				<ShowcaseSection
-					title="Menus"
-					note="Held open. On the left, a crumb with a menu, such as the siblings of the current page: an entry with an href is a link, one with only an onClick is an action. On the right, the menu behind the ... crumb: the collapsed crumbs in path order, each one a link to that crumb, with no icons. Both triggers keep their hover fill while their menu is open."
-					className={styles.roomBelow}
+					title="Outlined"
+					note="Every crumb but the current page is a chip: a raised fill, a border, an icon and a label. The current page has no fill and no border and takes the primary text colour. The plain trail underneath is the same trail, for comparison."
 				>
-					<div className={styles.menus}>
-						<Frame width="32rem">
-							<Breadcrumb testId="crumb-menu" items={CRUMB_MENU_TRAIL} />
-						</Frame>
-						<Frame width="240px">
-							<Breadcrumb items={LONG_TRAIL} testId="overflow-menu" />
-						</Frame>
+					<div className={styles.stack}>
+						<Case caption="outlined" width="960px">
+							<Breadcrumb
+								items={OUTLINED_TRAIL}
+								separator="›"
+								variant={BreadcrumbVariant.Outlined}
+								testId="outlined-wide"
+							/>
+						</Case>
+						<Case caption="plain (default)" width="960px">
+							<Breadcrumb items={OUTLINED_TRAIL} separator="›" testId="outlined-plain" />
+						</Case>
+					</div>
+				</ShowcaseSection>
+
+				<ShowcaseSection
+					title="Outlined overflow"
+					note="The chips are part of what the trail measures, so it collapses and shortens as the plain trail does. The ... crumb is a chip as well. Middle crumbs collapse into it first, and with only the first and the last left the last one shortens, then the first one, each to a floor."
+				>
+					<div className={styles.stack}>
+						{OUTLINED_WIDTHS.map((width) => (
+							<Case key={width} caption={width} width={width}>
+								<Breadcrumb
+									items={OUTLINED_TRAIL}
+									separator="›"
+									variant={BreadcrumbVariant.Outlined}
+									testId={`outlined-${width}`}
+								/>
+							</Case>
+						))}
+					</div>
+				</ShowcaseSection>
+
+				<ShowcaseSection
+					title="Outlined states"
+					note="The first chip at rest, hovered and focused. Hover fills the chip and strengthens its border. The label keeps its colour."
+				>
+					<div className={styles.stack}>
+						{KIND_STATES.map((state) => (
+							<div key={state} data-outlined-state={state}>
+								<Breadcrumb
+									items={OUTLINED_TRAIL}
+									separator="›"
+									variant={BreadcrumbVariant.Outlined}
+									testId={`outlined-state-${state}`}
+								/>
+							</div>
+						))}
 					</div>
 				</ShowcaseSection>
 			</div>
+		</div>
+	);
+}
+
+function PopupsShowcaseLayout(): ReactElement {
+	return (
+		<div className={styles.popups}>
+			<PopupCell caption="A crumb with a menu">
+				<Breadcrumb testId="popup-crumb-menu" items={CRUMB_MENU_TRAIL} />
+			</PopupCell>
+			<PopupCell caption="The ... popover" width="240px">
+				<Breadcrumb items={LONG_TRAIL} testId="popup-plain" />
+			</PopupCell>
+			<PopupCell caption="Outlined, with a heading, a suffix and every kind of row">
+				<Breadcrumb
+					items={RICH_ELLIPSIS_TRAIL}
+					variant={BreadcrumbVariant.Outlined}
+					separator="›"
+					maxVisible={2}
+					ellipsis={{
+						heading: 'Earlier steps',
+						rowSuffix: (_item, index) => <StepNumber index={index} />,
+					}}
+					testId="popup-rich"
+				/>
+			</PopupCell>
+			<PopupCell caption="Outlined, a crumb with a menu">
+				<Breadcrumb
+					items={OUTLINED_MENU_TRAIL}
+					separator="›"
+					variant={BreadcrumbVariant.Outlined}
+					testId="popup-outlined-menu"
+				/>
+			</PopupCell>
+			<PopupCell caption="ellipsis.render">
+				<Breadcrumb
+					items={STEP_TRAIL}
+					variant={BreadcrumbVariant.Outlined}
+					separator="›"
+					collapseFrom="start"
+					maxVisible={4}
+					ellipsis={{
+						render: (collapsed) => <CollapsedLinks collapsed={collapsed} />,
+					}}
+					testId="popup-custom"
+				/>
+			</PopupCell>
+			<PopupCell caption="A preview card">
+				<Breadcrumb
+					items={PREVIEW_TRAIL}
+					variant={BreadcrumbVariant.Outlined}
+					separator="›"
+					testId="popup-preview"
+				/>
+			</PopupCell>
 		</div>
 	);
 }
@@ -729,8 +1053,8 @@ async function expectRouterLinks(canvasElement: HTMLElement): Promise<void> {
 	await expect(canvas.getByTestId('router-wide-item-5')).toHaveAttribute('data-kind', 'text');
 	await expect(canvas.getByTestId('router-wide-item-5').querySelector('a')).toBeNull();
 
-	// A collapsed crumb is still a router link: its row is drawn by the element, so it keeps the route
-	// and the click that moves the location.
+	// A collapsed crumb is still a router link: its row in the `...` popover is drawn by the element,
+	// so it keeps the route and the click that moves the location.
 	const narrow = getNav(canvasElement, 'router-narrow');
 
 	await waitFor(() => expect(getEllipsis(narrow)).not.toBeNull());
@@ -738,7 +1062,7 @@ async function expectRouterLinks(canvasElement: HTMLElement): Promise<void> {
 	const hiddenRoutes = getCollapsedPositions(narrow).map((position) =>
 		getRoute(ROUTER_TRAIL[position] as BreadcrumbItemType),
 	);
-	const hiddenRows = await openMenuRows(getEllipsis(narrow) as HTMLElement, 'router-narrow-item-');
+	const hiddenRows = await openEllipsisRows(narrow, 'router-narrow');
 
 	await expect(hiddenRows.map((row) => row.getAttribute('href'))).toEqual(hiddenRoutes);
 
@@ -748,6 +1072,7 @@ async function expectRouterLinks(canvasElement: HTMLElement): Promise<void> {
 
 	await userEvent.click(hiddenRows[0] as HTMLElement);
 	await waitFor(() => expect(location).toHaveTextContent(hiddenRoutes[0] as string));
+	await waitFor(() => expect(getEllipsisPopup('router-narrow')).toBeNull());
 
 	// The entries of a crumb's own menu take a `render` the same way, and an entry with none stays
 	// an action.
@@ -787,52 +1112,246 @@ async function expectEmptyTitles(canvasElement: HTMLElement): Promise<void> {
 	await expect(canvas.queryByRole('navigation', { name: 'Empty trail' })).toBeNull();
 }
 
-async function expectHeldOpenMenus(canvasElement: HTMLElement): Promise<void> {
+function getBorderWidth(crumb: Element): string {
+	return getComputedStyle(getContent(crumb)).borderTopWidth;
+}
+
+async function expectOutlinedChips(canvasElement: HTMLElement): Promise<void> {
 	const canvas = within(canvasElement);
 
-	await waitFor(() => expect(canvas.getByTestId('overflow-menu-ellipsis')).toBeVisible());
+	await expect(getNav(canvasElement, 'outlined-wide')).toHaveAttribute('data-variant', 'outlined');
+	await expect(getNav(canvasElement, 'outlined-plain')).toHaveAttribute('data-variant', 'plain');
 
-	// Base UI opens a menu on `mousedown`, and an open menu dismisses itself on a press outside it,
-	// on a document listener it only registers once it has settled. Opening both in one synchronous
-	// block beats that listener, which leaves both open in the same snapshot.
+	for (const index of [0, 1, 2, 3]) {
+		await expect(getBorderWidth(canvas.getByTestId(`outlined-wide-item-${index}`))).toBe('1px');
+	}
+
+	await expect(getBorderWidth(canvas.getByTestId('outlined-wide-item-4'))).toBe('0px');
+
+	for (const index of [0, 4]) {
+		await expect(getBorderWidth(canvas.getByTestId(`outlined-plain-item-${index}`))).toBe('0px');
+	}
+
+	await expect(getNav(canvasElement, 'outlined-wide')).not.toHaveAttribute('data-overflowing');
+}
+
+async function expectOutlinedOverflow(canvasElement: HTMLElement): Promise<void> {
+	const canvas = within(canvasElement);
+	const narrow = getNav(canvasElement, 'outlined-360px');
+
+	await waitFor(() => expect(narrow).toHaveAttribute('data-overflowing'));
+
+	const trigger = getEllipsis(narrow) as HTMLElement;
+	const measured = narrow.querySelector<HTMLElement>('[data-slot="breadcrumb-measure-ellipsis"]');
+
+	await expect(trigger).toBeVisible();
+	await expect(getComputedStyle(trigger).borderTopWidth).toBe('1px');
+	await expect(measured?.getBoundingClientRect().width).toBe(trigger.getBoundingClientRect().width);
+
+	await expect(canvas.getByTestId('outlined-360px-item-0')).toBeVisible();
+	await expect(canvas.getByTestId('outlined-360px-item-4')).toBeVisible();
+	await expect(narrow.querySelector('ol')?.scrollWidth).toBeLessThanOrEqual(
+		narrow.querySelector('ol')?.clientWidth ?? 0,
+	);
+}
+
+function ellipsisPopupSelector(testId: string): string {
+	return `[data-slot="breadcrumb-ellipsis-popup"][data-testid="${testId}-ellipsis-popup"]`;
+}
+
+function getEllipsisPopup(testId: string): HTMLElement | null {
+	return document.querySelector<HTMLElement>(ellipsisPopupSelector(testId));
+}
+
+function getEllipsisRows(popup: HTMLElement): HTMLElement[] {
+	return Array.from(popup.querySelectorAll<HTMLElement>('[data-slot="breadcrumb-ellipsis-row"]'));
+}
+
+async function openEllipsisRows(nav: HTMLElement, testId: string): Promise<HTMLElement[]> {
+	await userEvent.click(getEllipsis(nav) as HTMLElement);
+
+	return getEllipsisRows(await findPopup(ellipsisPopupSelector(testId)));
+}
+
+async function expectEllipsisPopover(canvasElement: HTMLElement): Promise<void> {
+	const testId = 'overflow-240px';
+	const trigger = getEllipsis(getNav(canvasElement, testId)) as HTMLElement;
+	const hrefs = LONG_TRAIL.slice(1, 6).map((item) => item.href);
+
+	await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+	await expect(getEllipsisPopup(testId)).toBeNull();
+
+	await userEvent.hover(trigger);
+
+	const hovered = await findPopup(ellipsisPopupSelector(testId));
+
+	await expect(hovered).toHaveAttribute('role', 'dialog');
+	await expect(hovered).toHaveAccessibleName(ELLIPSIS_POPUP_NAME);
+	await expect(getEllipsisRows(hovered).map((row) => row.getAttribute('href'))).toEqual(hrefs);
+
+	await userEvent.unhover(trigger);
+	await waitFor(() => expect(getEllipsisPopup(testId)).toBeNull());
+
+	// A press opens it as well, which is how the keyboard gets in, and `Escape` gives the focus back.
+	await userEvent.click(trigger);
+	await expect(getEllipsisRows(await findPopup(ellipsisPopupSelector(testId)))).toHaveLength(
+		hrefs.length,
+	);
+	await userEvent.keyboard('{Escape}');
+	await waitFor(() => expect(getEllipsisPopup(testId)).toBeNull());
+	await waitFor(() => expect(trigger).toHaveFocus());
+}
+
+/**
+ * Leaves the card open for the second crumb, which is the state the snapshot shows.
+ */
+async function expectPreviewCard(canvasElement: HTMLElement): Promise<void> {
+	const canvas = within(canvasElement);
+	const cluster = getContent(canvas.getByTestId('popup-preview-item-0'));
+	const namespace = getContent(canvas.getByTestId('popup-preview-item-1'));
+
+	await expect(cluster).toHaveAttribute('href', '/kubernetes/clusters/prod-eu');
+	await expect(document.querySelector('[data-slot="breadcrumb-preview"]')).toBeNull();
+
+	await userEvent.hover(cluster);
+
+	const card = await findPopup('[data-slot="breadcrumb-preview"]');
+
+	await expect(card).toHaveAttribute('data-testid', 'popup-preview-preview');
+	await expect(within(card).getByText('europe-west1')).toBeVisible();
+	await expect(card).toHaveTextContent('Step 1 of 3');
+	await expect(cluster).toHaveAttribute('href', '/kubernetes/clusters/prod-eu');
+
+	// The pointer goes straight from one crumb to the next: the same card follows it.
+	await userEvent.unhover(cluster);
+	await userEvent.hover(namespace);
+
+	await waitFor(() => {
+		expect(document.querySelectorAll('[data-slot="breadcrumb-preview"]')).toHaveLength(1);
+		expect(document.querySelector('[data-slot="breadcrumb-preview"]')).toBe(card);
+		expect(card).toHaveTextContent('Step 2 of 3 · opened from Cluster');
+		expect(within(card).queryByText('europe-west1')).toBeNull();
+	});
+	await expect(within(card).getByText('payments team')).toBeVisible();
+}
+
+/**
+ * Puts the pointer on `element` without ever taking it off, so what opens on hover stays open.
+ */
+function restPointerOn(element: HTMLElement): void {
+	fireEvent.pointerEnter(element);
+	fireEvent.mouseEnter(element);
+	fireEvent.mouseMove(element);
+}
+
+function getMenuRows(testId: string): HTMLElement[] {
+	const popup = document.querySelector<HTMLElement>(
+		`[data-slot="dropdown-popup"]:has([data-testid^="${testId}-"])`,
+	);
+
+	if (popup === null) {
+		throw new Error(`Breadcrumb story: no open menu for ${testId}.`);
+	}
+
+	return within(popup).getAllByRole('menuitem');
+}
+
+async function expectHeldOpenPopups(canvasElement: HTMLElement): Promise<void> {
+	const canvas = within(canvasElement);
+
+	await waitFor(() => expect(canvas.getByTestId('popup-custom-ellipsis')).toBeVisible());
+
+	// Base UI opens a menu on `mousedown`, and an open menu dismisses itself on a press outside it, on
+	// a listener it only registers once it has settled. Opening both in one synchronous block beats
+	// that listener, which leaves both open in the same snapshot. The popovers open by hover, after
+	// the last press.
 	for (const testId of HELD_OPEN_MENUS) {
 		fireEvent.mouseDown(canvas.getByTestId(testId));
 	}
 
-	await waitFor(() =>
-		expect(document.querySelectorAll('[data-slot="dropdown-popup"]')).toHaveLength(
-			HELD_OPEN_MENUS.length,
-		),
+	for (const testId of HELD_OPEN_ELLIPSES) {
+		restPointerOn(canvas.getByTestId(testId));
+	}
+
+	await waitFor(
+		() => {
+			expect(document.querySelectorAll('[data-slot="dropdown-popup"]')).toHaveLength(
+				HELD_OPEN_MENUS.length,
+			);
+			expect(document.querySelectorAll('[data-slot="breadcrumb-ellipsis-popup"]')).toHaveLength(
+				HELD_OPEN_ELLIPSES.length,
+			);
+		},
+		{ timeout: 3000 },
 	);
 
-	const rows = (testId: string): HTMLElement[] => {
-		const popup = document.querySelector<HTMLElement>(
-			`[data-slot="dropdown-popup"]:has([data-testid^="${testId}-"])`,
-		);
-
-		if (popup === null) {
-			throw new Error(`Breadcrumb story: no open menu for ${testId}.`);
-		}
-
-		return within(popup).getAllByRole('menuitem');
-	};
-
-	await expect(rows('crumb-menu-item-2-menu').map((row) => row.textContent)).toEqual([
+	await expect(getMenuRows('popup-crumb-menu-item-2-menu').map((row) => row.textContent)).toEqual([
 		'billing-service',
 		'checkout-service',
 		'refund-service',
 		'Create service',
 	]);
-	await expect(rows('overflow-menu-item').map((row) => row.getAttribute('href'))).toEqual(
+	await expect(
+		getMenuRows('popup-outlined-menu-item-0-menu').map((row) => row.textContent),
+	).toEqual(['billing', 'checkout', 'refunds']);
+
+	const plain = getEllipsisRows(getEllipsisPopup('popup-plain') as HTMLElement);
+
+	await expect(plain.map((row) => row.getAttribute('href'))).toEqual(
 		LONG_TRAIL.slice(1, 6).map((item) => item.href),
 	);
+
+	const rich = getEllipsisPopup('popup-rich') as HTMLElement;
+	const rows = getEllipsisRows(rich);
+	const collapsed = getCollapsedPositions(getNav(canvasElement, 'popup-rich'));
+
+	await expect(within(rich).getByRole('group', { name: 'Earlier steps' })).toHaveAttribute(
+		'data-testid',
+		'popup-rich-ellipsis-group-collapsed',
+	);
+	await expect(rows.map((row) => row.getAttribute('data-kind'))).toEqual(RICH_ROW_KINDS);
+	await expect(rows.map((row) => row.getAttribute('data-testid'))).toEqual(
+		collapsed.map((position) => `popup-rich-item-${position}`),
+	);
+
+	for (const [at, row] of rows.entries()) {
+		const suffix = row.querySelector('[data-slot="breadcrumb-ellipsis-row-suffix"]');
+
+		await expect(
+			row.querySelector('[data-slot="breadcrumb-ellipsis-row-icon"] svg'),
+		).not.toBeNull();
+
+		// A crumb with a menu ends in the chevron of its menu and takes no suffix.
+		if (row.getAttribute('data-kind') === 'menu') {
+			await expect(
+				row.querySelector('[data-slot="breadcrumb-ellipsis-row-chevron"]'),
+			).not.toBeNull();
+			await expect(suffix).toBeNull();
+		} else {
+			await expect(suffix).toHaveTextContent(String((collapsed[at] as number) + 1));
+		}
+	}
+
+	const custom = getEllipsisPopup('popup-custom') as HTMLElement;
+	const customCollapsed = getCollapsedPositions(getNav(canvasElement, 'popup-custom'));
+
+	await expect(
+		within(custom)
+			.getAllByRole('link')
+			.map((link) => link.getAttribute('href')),
+	).toEqual(customCollapsed.map((position) => STEP_TRAIL[position]?.href));
+	await expect(custom.querySelector('[data-slot="breadcrumb-ellipsis-row"]')).toBeNull();
 }
 
 /**
  * Every kind of crumb in every state, every overflow step, both text overflows, `maxVisible`,
- * wrapping, separators, router links and empty titles in one snapshot. Hover and focus are held by
- * `storybook-addon-pseudo-states`, both kinds of menu are held open, and the tooltip of a shortened
- * crumb is held open.
+ * wrapping, separators, router links, empty titles and the `outlined` variant in one snapshot. Hover
+ * and focus are held by `storybook-addon-pseudo-states`, and the tooltip of a shortened crumb is
+ * held open. The popups that a press or a pointer opens are in `BreadcrumbPopupsShowcase`.
+ *
+ * The Figma frame of the plain trail is linked above. The outlined variant is designed in the drawer
+ * rework file:
+ * https://www.figma.com/design/C9EMOzYN8ioNdRnypPxg0a/Drawer-component-rework?node-id=248-7394
  */
 export const BreadcrumbShowcase: Story = {
 	parameters: {
@@ -841,10 +1360,14 @@ export const BreadcrumbShowcase: Story = {
 		chromatic: { disableSnapshot: false, modes: allModes },
 		design: { type: 'figma', url: `${FIGMA_FILE}?node-id=6854-45&p=f&m=dev` },
 		pseudo: {
-			hover:
+			hover: [
 				'[data-state-cell="hover"] [data-slot="breadcrumb-item"][data-position="middle"] [data-slot="breadcrumb-item-content"]:is(a, button)',
-			focusVisible:
+				'[data-outlined-state="hover"] [data-slot="breadcrumb-item"][data-position="start"] [data-slot="breadcrumb-item-content"]:is(a, button)',
+			],
+			focusVisible: [
 				'[data-state-cell="focus"] [data-slot="breadcrumb-item"][data-position="middle"] [data-slot="breadcrumb-item-content"]:is(a, button)',
+				'[data-outlined-state="focus"] [data-slot="breadcrumb-item"][data-position="start"] [data-slot="breadcrumb-item-content"]:is(a, button)',
+			],
 		},
 	},
 	play: async ({ canvasElement }) => {
@@ -858,9 +1381,10 @@ export const BreadcrumbShowcase: Story = {
 		await expectSeparators(canvasElement);
 		await expectRouterLinks(canvasElement);
 		await expectEmptyTitles(canvasElement);
-		await expectHeldOpenMenus(canvasElement);
+		await expectOutlinedChips(canvasElement);
+		await expectOutlinedOverflow(canvasElement);
+		await expectEllipsisPopover(canvasElement);
 
-		// The tooltip goes last, and by hover rather than a press, which would dismiss both menus.
 		const shrinking = getNav(canvasElement, 'shrinking-260px');
 		const shortened = getContent(within(shrinking).getByTestId('shrinking-260px-item-3'));
 
@@ -868,9 +1392,7 @@ export const BreadcrumbShowcase: Story = {
 		await expect(getEllipsis(shrinking)).toBeVisible();
 		await expect(shortened).toHaveAttribute('aria-current', 'page');
 		await waitFor(() => expect(shortened).toHaveAttribute('data-truncated'));
-		fireEvent.pointerEnter(shortened);
-		fireEvent.mouseEnter(shortened);
-		fireEvent.mouseMove(shortened);
+		restPointerOn(shortened);
 
 		await waitFor(() =>
 			expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveTextContent(
@@ -879,4 +1401,35 @@ export const BreadcrumbShowcase: Story = {
 		);
 	},
 	render: () => <BreadcrumbShowcaseLayout />,
+};
+
+/**
+ * Every popup a breadcrumb opens, held open: the menu of a crumb, plain and outlined, the popover
+ * of the `...` crumb as a plain list, as a list with a heading, a step number and icons, and with
+ * `ellipsis.render`, and the card of a crumb. A popup that sits below the fold flips above its
+ * trigger when the capture viewport is short, onto the content around it, so the cells sit in two
+ * rows near the top of the page, where every popup fits under its trigger.
+ *
+ * The Figma frame is the one of the drawer rework file.
+ */
+export const BreadcrumbPopupsShowcase: Story = {
+	parameters: {
+		layout: 'fullscreen',
+		controls: { disable: true },
+		chromatic: { disableSnapshot: false, modes: allModes },
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/C9EMOzYN8ioNdRnypPxg0a/Drawer-component-rework?node-id=248-7394',
+		},
+	},
+	play: async ({ canvasElement }) => {
+		await waitForEffects();
+
+		await expectHeldOpenPopups(canvasElement);
+
+		// The card goes after the popups it shares the page with. It opens by hover rather than a
+		// press, which would dismiss the menus.
+		await expectPreviewCard(canvasElement);
+	},
+	render: () => <PopupsShowcaseLayout />,
 };

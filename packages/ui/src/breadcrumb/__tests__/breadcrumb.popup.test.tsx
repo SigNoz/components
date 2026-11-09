@@ -25,8 +25,8 @@ function rem(count: number): number {
 }
 
 /**
- * Both popups are portalled to the body, outside the trail, so a custom property reaches them only
- * from the page. An element around the trail is not an ancestor of the popup.
+ * The popup and the tooltip are portalled to the body, outside the trail, so a custom property
+ * reaches them only from the page. An element around the trail is not an ancestor of either.
  */
 function setOnPage(token: string, value: string): void {
 	document.documentElement.style.setProperty(token, value);
@@ -37,7 +37,7 @@ afterEach(() => {
 	document.documentElement.style.removeProperty(TOOLTIP_TOKEN);
 });
 
-async function openMenu(): Promise<HTMLElement> {
+async function renderAndOpenPopup(): Promise<HTMLElement> {
 	const user = userEvent.setup();
 	renderInFrame(<Breadcrumb items={LONG_TRAIL} testId="bc" />, 400);
 
@@ -48,9 +48,9 @@ async function openMenu(): Promise<HTMLElement> {
 	await user.click(trigger);
 
 	return waitFor(() => {
-		const popup = document.querySelector<HTMLElement>('[data-slot="dropdown-popup"]');
+		const popup = document.querySelector<HTMLElement>('[data-slot="breadcrumb-ellipsis-popup"]');
 		if (popup === null) {
-			throw new Error('the menu is not open');
+			throw new Error('the popup is not open');
 		}
 		return popup;
 	});
@@ -83,18 +83,18 @@ async function openTooltip(): Promise<HTMLElement> {
 	});
 }
 
-describe('Breadcrumb menu of the `...` crumb', () => {
+describe('Breadcrumb popup of the `...` crumb', () => {
 	it('is no wider than 20rem', async () => {
-		const popup = await openMenu();
+		const popup = await renderAndOpenPopup();
 
 		expect(getComputedStyle(popup).maxInlineSize).toBe(`${rem(20)}px`);
 		expect(popup.getBoundingClientRect().width).toBe(rem(20));
 	});
 
-	it('takes its cap from the page, where the portalled menu inherits from', async () => {
+	it('takes its cap from the page, where the portalled popup inherits from', async () => {
 		setOnPage(MENU_TOKEN, '28rem');
 
-		const popup = await openMenu();
+		const popup = await renderAndOpenPopup();
 
 		expect(getComputedStyle(popup).maxInlineSize).toBe(`${rem(28)}px`);
 		expect(popup.getBoundingClientRect().width).toBe(rem(28));

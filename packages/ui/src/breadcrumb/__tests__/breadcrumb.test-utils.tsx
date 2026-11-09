@@ -1,4 +1,5 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
 	type ComponentProps,
 	type CSSProperties,
@@ -6,6 +7,7 @@ import {
 	type ReactElement,
 	type ReactNode,
 } from 'react';
+import { expect } from 'vitest';
 import type { BreadcrumbItemType } from '../types.js';
 
 export const noop = (): void => {};
@@ -155,4 +157,21 @@ export function labelsOf(crumbs: HTMLElement[]): (string | null)[] {
 
 export function ellipsis(): HTMLElement | null {
 	return document.querySelector<HTMLElement>('[data-slot="breadcrumb-ellipsis-trigger"]');
+}
+
+/** Opens the popup of the `...` crumb with a press, and waits for it. */
+export async function openEllipsisPopup(): Promise<HTMLElement> {
+	const trigger = ellipsis();
+
+	if (trigger === null) {
+		throw new Error('the trail did not collapse');
+	}
+
+	await userEvent.setup().click(trigger);
+
+	return screen.findByRole('dialog', { name: 'Hidden items' });
+}
+
+export async function expectEllipsisPopupClosed(): Promise<void> {
+	await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
 }

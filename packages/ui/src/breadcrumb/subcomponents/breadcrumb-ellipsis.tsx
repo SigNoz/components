@@ -1,49 +1,72 @@
+import { Popover } from '@base-ui/react/popover';
 import type { ReactElement } from 'react';
-import { Dropdown } from '../../dropdown/dropdown.js';
+import { POPOVER_HOVER_DELAY } from '../../popover/constants.js';
 import styles from '../breadcrumb.module.scss';
-import { BREADCRUMB_ELLIPSIS_LABEL } from '../constants.js';
-import type { BreadcrumbResolvedItem } from '../types.js';
-import { toCollapsedRow } from '../utils.js';
+import {
+	BREADCRUMB_ELLIPSIS_LABEL,
+	BREADCRUMB_ELLIPSIS_PAYLOAD,
+	BREADCRUMB_PREVIEW_CLOSE_DELAY,
+} from '../constants.js';
+import type { BreadcrumbPopupState } from '../use-breadcrumb-popup.js';
 
 /**
  * @access private
  */
 export type BreadcrumbEllipsisProps = {
-	collapsed: BreadcrumbResolvedItem[];
+	/**
+	 * How many crumbs are collapsed into it, which its name says.
+	 */
+	count: number;
+	popup: BreadcrumbPopupState;
+	/**
+	 * False when `ellipsis.render` renders nothing: the crumb is text then, with no popup to open.
+	 */
+	hasPopup: boolean;
 	testId: string | undefined;
 };
 
 /**
- * The `...` crumb and the menu it opens, listing the collapsed crumbs in path order. No tooltip:
- * it has a menu, and the two would race on the same hover.
+ * The `...` crumb: the trigger of the list of the collapsed crumbs, or of the content of
+ * `ellipsis.render`. No tooltip: it opens something, and the two would race on the same hover.
  *
  * @access private
  */
-export function BreadcrumbEllipsis({ collapsed, testId }: BreadcrumbEllipsisProps): ReactElement {
-	const count = collapsed.length;
+export function BreadcrumbEllipsis({
+	count,
+	popup,
+	hasPopup,
+	testId,
+}: BreadcrumbEllipsisProps): ReactElement {
+	const partProps = {
+		'data-kind': 'ellipsis',
+		'data-slot': 'breadcrumb-ellipsis-trigger',
+		className: styles['breadcrumb__content'],
+		...(testId === undefined ? {} : { 'data-testid': testId }),
+	};
 
 	return (
 		<li data-slot="breadcrumb-ellipsis" className={styles['breadcrumb__item']}>
-			<Dropdown
-				nativeButton
-				side="bottom"
-				align="start"
-				// Portalled to the body, so the token is read on the page, not on an ancestor of the
-				// trail.
-				contentMaxWidth="var(--breadcrumb-menu-max-width, 20rem)"
-				items={collapsed.map(toCollapsedRow)}
-				{...(testId === undefined ? {} : { testId })}
-			>
-				<button
-					type="button"
-					aria-label={`Show ${count} hidden ${count === 1 ? 'item' : 'items'}`}
-					data-kind="ellipsis"
-					data-slot="breadcrumb-ellipsis-trigger"
-					className={styles['breadcrumb__content']}
-				>
-					{BREADCRUMB_ELLIPSIS_LABEL}
-				</button>
-			</Dropdown>
+			{hasPopup ? (
+				<Popover.Trigger
+					handle={popup.handle}
+					id={popup.ellipsisTriggerId}
+					payload={BREADCRUMB_ELLIPSIS_PAYLOAD}
+					openOnHover
+					delay={POPOVER_HOVER_DELAY}
+					closeDelay={BREADCRUMB_PREVIEW_CLOSE_DELAY}
+					render={
+						<button
+							type="button"
+							aria-label={`Show ${count} hidden ${count === 1 ? 'item' : 'items'}`}
+							{...partProps}
+						>
+							{BREADCRUMB_ELLIPSIS_LABEL}
+						</button>
+					}
+				/>
+			) : (
+				<span {...partProps}>{BREADCRUMB_ELLIPSIS_LABEL}</span>
+			)}
 		</li>
 	);
 }

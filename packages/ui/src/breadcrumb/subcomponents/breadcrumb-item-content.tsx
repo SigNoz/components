@@ -22,6 +22,9 @@ import type {
 	BreadcrumbItemType,
 	BreadcrumbTextOverflowType,
 } from '../types.js';
+import type { BreadcrumbPopupState } from '../use-breadcrumb-popup.js';
+import { hasPreview } from '../utils.js';
+import { BreadcrumbPreviewTrigger } from './breadcrumb-preview-trigger.js';
 
 /**
  * @access private
@@ -36,7 +39,7 @@ export type BreadcrumbItemContentProps = Omit<HTMLAttributes<HTMLElement>, 'chil
 	current: boolean;
 	textOverflow: BreadcrumbTextOverflowType;
 	/**
-	 * True while the crumb sits in the menu of the `...` crumb. Nobody can hover it there, so its
+	 * True while the crumb sits in the list of the `...` crumb. Nobody can hover it there, so its
 	 * label is not measured and it carries no `data-truncated`.
 	 */
 	collapsed: boolean;
@@ -44,19 +47,36 @@ export type BreadcrumbItemContentProps = Omit<HTMLAttributes<HTMLElement>, 'chil
 	 * Ref of the label, for the trail to measure it. The truncation check keeps its own.
 	 */
 	labelRef: RefCallback<HTMLSpanElement>;
+	popup: BreadcrumbPopupState;
+	/**
+	 * The place of the crumb in `items`, which the popup reads the crumb by.
+	 */
+	index: number;
 };
 
 /**
  * The part of a crumb that takes hover and focus: the link, its `render` element or an `<a>`, a
  * `<button>`, or a `<span>` for a crumb that does nothing. Carries the tooltip with the full title
- * while the label is cut. Also the trigger of a crumb's own menu, so every prop the menu merges in
- * is forwarded to the element.
+ * while the label is cut, or the card of its `preview` instead, which is the full title and more. Also
+ * the trigger of a crumb's own menu, so every prop the menu merges in is forwarded to the element.
  *
  * @access private
  */
 export const BreadcrumbItemContent = forwardRef<HTMLElement, BreadcrumbItemContentProps>(
 	function BreadcrumbItemContent(
-		{ item, kind, current, textOverflow, collapsed, labelRef, className, onClick, ...props },
+		{
+			item,
+			kind,
+			current,
+			textOverflow,
+			collapsed,
+			labelRef,
+			popup,
+			index,
+			className,
+			onClick,
+			...props
+		},
 		ref,
 	) {
 		const [isLabelTruncated, truncationRef] = useIsLabelTruncated(
@@ -89,14 +109,14 @@ export const BreadcrumbItemContent = forwardRef<HTMLElement, BreadcrumbItemConte
 			</>
 		);
 
-		// `data-slot` after the spread, so the menu's trigger props do not rename the part.
+		const ownProps = { 'data-kind': kind, 'data-slot': 'breadcrumb-item-content' };
+		// After the spread, so the menu's trigger props do not rename the part.
 		const contentProps = {
-			'data-kind': kind,
 			'data-truncated': isLabelTruncated || undefined,
 			'aria-current': current ? ('page' as const) : undefined,
 			className: cn(styles['breadcrumb__content'], className),
 			...props,
-			'data-slot': 'breadcrumb-item-content',
+			...ownProps,
 		};
 		const handleClick = onClick ?? item.onClick;
 		const isLink = kind === BreadcrumbItemKind.Link;
@@ -104,11 +124,16 @@ export const BreadcrumbItemContent = forwardRef<HTMLElement, BreadcrumbItemConte
 
 		// The props of the `render` element win over the ones of the content, so `href` and `target`
 		// go on the element itself, where the ones it leaves `undefined` take the ones of the crumb.
-		// The children too: the label is the title, whatever the element holds.
+		// The children too: the label is the title, whatever the element holds. So do the props that
+		// name the part, which a `data-slot` or `data-kind` of the element would otherwise replace.
 		const link = useRender({
 			enabled: isLink,
 			render: isLink
-				? cloneElement(linkElement, { ...getLinkProps(linkElement, item).props, children })
+				? cloneElement(linkElement, {
+						...getLinkProps(linkElement, item).props,
+						...ownProps,
+						children,
+					})
 				: linkElement,
 			ref,
 			props: { ...contentProps, ...(handleClick === undefined ? {} : { onClick: handleClick }) },
@@ -134,6 +159,16 @@ export const BreadcrumbItemContent = forwardRef<HTMLElement, BreadcrumbItemConte
 				<span ref={ref as Ref<HTMLSpanElement>} {...contentProps}>
 					{children}
 				</span>
+			);
+		}
+
+		// A collapsed crumb keeps its trigger, so it does not remount, and lose its focus, as the trail
+		// collapses it. Nobody can reach it there, and the card closes if it was open for it.
+		if (hasPreview({ item, kind })) {
+			return (
+				<BreadcrumbPreviewTrigger popup={popup} index={index} kind={kind}>
+					{element}
+				</BreadcrumbPreviewTrigger>
 			);
 		}
 

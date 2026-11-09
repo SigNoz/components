@@ -7,6 +7,26 @@ export const BreadcrumbTextOverflow = {
 } as const;
 
 /**
+ * Where the middle crumbs start to collapse. `center` collapses the middle one first and moves
+ * outward, so the crumbs on both sides of the `...` stay. `start` collapses the crumb right after
+ * the first one and moves toward the current page, so the crumbs next to the current page stay the
+ * longest.
+ */
+export const BreadcrumbCollapseFrom = {
+	Center: 'center',
+	Start: 'start',
+} as const;
+
+/**
+ * How the crumbs of a trail are drawn. `plain` is text that fills on hover. `outlined` draws every
+ * crumb but the current page as a chip with a border.
+ */
+export const BreadcrumbVariant = {
+	Plain: 'plain',
+	Outlined: 'outlined',
+} as const;
+
+/**
  * Where a crumb sits in the trail, named after the positional variants of `_Breadcrumb Item` in the
  * design spec. A single crumb is the current page, so it is the `end`.
  *
@@ -66,6 +86,53 @@ export const BREADCRUMB_ELLIPSIS_LABEL = '...';
  * @access private
  */
 export const BREADCRUMB_MIN_COLLAPSIBLE_ITEMS = 3;
+
+/**
+ * Milliseconds the popup stays open after the pointer leaves its trigger: the time the pointer has
+ * to cross the gap onto the popup, or onto the next trigger.
+ *
+ * @access private
+ */
+export const BREADCRUMB_PREVIEW_CLOSE_DELAY = 150;
+
+/**
+ * What a Base UI popover trigger adds to its element that a crumb with a `preview` does not want,
+ * each set to `undefined` so the crumb keeps what it was: the `button` role and the `tabindex` of a
+ * trigger that is not a native button, and the `aria-haspopup`, `aria-expanded` and `aria-controls`
+ * that announce a dialog.
+ *
+ * @access private
+ */
+export const BREADCRUMB_PREVIEW_TRIGGER_RESET = {
+	role: undefined,
+	tabIndex: undefined,
+	'aria-haspopup': undefined,
+	'aria-expanded': undefined,
+	'aria-controls': undefined,
+} as const;
+
+/**
+ * The payload of the trigger of the `...` crumb, where a crumb with a `preview` hands its place in
+ * `items`.
+ *
+ * @access private
+ */
+export const BREADCRUMB_ELLIPSIS_PAYLOAD = 'ellipsis';
+
+/**
+ * The accessible name of the popup of the `...` crumb when no `ellipsis.heading` names it.
+ *
+ * @access private
+ */
+export const BREADCRUMB_ELLIPSIS_POPUP_LABEL = 'Hidden items';
+
+/**
+ * The value that names the group holding the collapsed rows under the `ellipsis.heading`, which the
+ * test id of the group is built from.
+ *
+ * @access private
+ */
+export const BREADCRUMB_ELLIPSIS_GROUP_VALUE = 'collapsed';
 
 /**
  * Two crumbs always stay: the first and the last.

@@ -1,4 +1,5 @@
-import { Fragment, isValidElement, type ReactElement, type ReactNode } from 'react';
+import { render as renderInDom } from '@testing-library/react';
+import { createRef, Fragment, isValidElement, type ReactElement, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import {
 	BREADCRUMB_COLLAPSE_HYSTERESIS_PX,
@@ -13,15 +14,16 @@ import {
 	getItemsKey,
 	getKind,
 	getMinCollapsed,
+	getNextRowIndex,
 	getPosition,
 	getRowRender,
 	getShrink,
 	getTrailWidth,
 	hasMenu,
+	hasPreview,
 	hasTitle,
 	isLink,
 	resolveItems,
-	toCollapsedRow,
 	toMenuRows,
 } from '../utils.js';
 import { noop, RouterLink } from './breadcrumb.test-utils.js';
@@ -29,6 +31,7 @@ import { noop, RouterLink } from './breadcrumb.test-utils.js';
 /** Five 100px crumbs, 10px separators, a 30px `...` crumb and no gap. */
 function measureOf(overrides: Partial<BreadcrumbTrailMeasure> = {}): BreadcrumbTrailMeasure {
 	return {
+		collapseFrom: 'center',
 		widths: [100, 100, 100, 100, 100],
 		separatorWidth: 10,
 		ellipsisWidth: 30,
@@ -333,6 +336,59 @@ describe('getCollapseOrder', () => {
 	it('hands out a new array every time', () => {
 		expect(getCollapseOrder(5)).not.toBe(getCollapseOrder(5));
 	});
+
+	it('collapses from the centre unless it is told otherwise', () => {
+		for (const count of [3, 4, 5, 6, 9]) {
+			expect(getCollapseOrder(count)).toEqual(getCollapseOrder(count, 'center'));
+		}
+	});
+
+	describe('from the start', () => {
+		it.each([0, 1, 2])(
+			'is empty for %i crumbs, nothing sits between the first and the last',
+			(count) => {
+				expect(getCollapseOrder(count, 'start')).toEqual([]);
+			},
+		);
+
+		it.each<[number, number[]]>([
+			[3, [1]],
+			[4, [1, 2]],
+			[5, [1, 2, 3]],
+			[6, [1, 2, 3, 4]],
+			[8, [1, 2, 3, 4, 5, 6]],
+		])('collapses %i crumbs from the one after the first, in this order: %j', (count, expected) => {
+			expect(getCollapseOrder(count, 'start')).toEqual(expected);
+		});
+
+		it.each(Array.from({ length: 18 }, (_, offset) => offset + 3))(
+			'holds every middle crumb once and leaves a contiguous run after every step, with %i crumbs',
+			(count) => {
+				const order = getCollapseOrder(count, 'start');
+
+				expect([...order].sort((a, b) => a - b)).toEqual(
+					Array.from({ length: count - 2 }, (_, index) => index + 1),
+				);
+				expect(order).not.toContain(0);
+				expect(order).not.toContain(count - 1);
+
+				for (let length = 1; length <= order.length; length++) {
+					const prefix = order.slice(0, length);
+
+					expect(Math.max(...prefix) - Math.min(...prefix) + 1).toBe(length);
+				}
+			},
+		);
+
+		it('keeps the crumbs next to the last one for the end, so the nearest steps stay longest', () => {
+			expect(getCollapseOrder(7, 'start').slice(0, 3)).toEqual([1, 2, 3]);
+			expect(getCollapseOrder(7, 'start').at(-1)).toBe(5);
+		});
+
+		it('hands out a new array every time', () => {
+			expect(getCollapseOrder(5, 'start')).not.toBe(getCollapseOrder(5, 'start'));
+		});
+	});
 });
 
 describe('getMinCollapsed', () => {
@@ -464,6 +520,20 @@ describe('getTrailWidth', () => {
 		expect(getTrailWidth(measure, 3)).toBe(150 - 30 - 20 - 40 + 5);
 	});
 
+	it('hides the crumb after the first one first when it collapses from the start', () => {
+		const measure = measureOf({
+			collapseFrom: 'start',
+			widths: [10, 20, 30, 40, 50],
+			separatorWidth: 0,
+			ellipsisWidth: 5,
+		});
+
+		expect(getTrailWidth(measure, 0)).toBe(150);
+		expect(getTrailWidth(measure, 1)).toBe(150 - 20 + 5);
+		expect(getTrailWidth(measure, 2)).toBe(150 - 20 - 30 + 5);
+		expect(getTrailWidth(measure, 3)).toBe(150 - 20 - 30 - 40 + 5);
+	});
+
 	it('counts the gap on both sides of every separator', () => {
 		const measure = measureOf({ gap: 5 });
 
@@ -584,278 +654,34 @@ describe('countCollapsed', () => {
 		});
 	});
 
+	describe('from the start', () => {
+		// The crumb after the first one is the wide one, so the start order frees the room sooner
+		// than the centre order does.
+		const widths = [100, 200, 50, 10, 100];
+		const measure = (available: number, collapseFrom: 'center' | 'start') =>
+			measureOf({ collapseFrom, widths, available });
+
+		it('stops at the step the order frees the room at', () => {
+			// 460 of crumbs and 4 separators of 10 is 500. Collapsing adds the 30px `...` crumb.
+			// Start order, crumb 1 (200) first: 260 + 30 + 4 * 10 = 330.
+			expect(countCollapsed(measure(330, 'start'), 0, 0)).toBe(1);
+			expect(countCollapsed(measure(329, 'start'), 0, 0)).toBe(2);
+			// Centre order, crumb 2 (50) first: 410 + 30 + 4 * 10 = 480.
+			expect(countCollapsed(measure(480, 'center'), 0, 0)).toBe(1);
+			expect(countCollapsed(measure(479, 'center'), 0, 0)).toBe(2);
+		});
+
+		it('keeps the same bounds: never the first or the last crumb', () => {
+			expect(countCollapsed(measure(0, 'start'), 0, 0)).toBe(3);
+			expect(countCollapsed(measure(1000, 'start'), 0, 99)).toBe(3);
+		});
+	});
+
 	it('collapses nothing for a trail that is not wider than the room, measured with a gap', () => {
 		const measure = measureOf({ gap: 5 });
 
 		expect(countCollapsed({ ...measure, available: 580 }, 0, 0)).toBe(0);
 		expect(countCollapsed({ ...measure, available: 579 }, 0, 0)).toBe(1);
-	});
-});
-
-describe('toCollapsedRow', () => {
-	it('builds a link row for a crumb with an href, rendered as an anchor', () => {
-		const onClick = vi.fn();
-		const { entry } = resolveOne({ title: 'Payments', href: '/payments', onClick });
-		const row = toCollapsedRow(entry);
-
-		expect(row).toMatchObject({
-			type: 'link',
-			value: '0',
-			label: 'Payments',
-			testId: 'bc-item-0',
-		});
-
-		const render = renderOf(row);
-		expect(render.type).toBe('a');
-		expect(render.props).toMatchObject({ href: '/payments', onClick });
-		expect(row).not.toHaveProperty('onClick');
-	});
-
-	it('numbers the row after the crumb index in items, not its place in the trail', () => {
-		const { entry } = resolveOne(
-			{ title: 'C', href: '/c' },
-			{ before: [{ title: 'A' }, { title: '' }, { title: 'B' }] },
-		);
-
-		expect(entry.index).toBe(3);
-		expect(toCollapsedRow(entry)).toMatchObject({
-			value: '3',
-			testId: 'bc-item-3',
-		});
-	});
-
-	it('builds an action row for a crumb with only an onClick', () => {
-		const onClick = vi.fn();
-		const { entry } = resolveOne({ title: 'Reports', onClick });
-
-		expect(toCollapsedRow(entry)).toEqual({
-			type: 'item',
-			value: '0',
-			label: 'Reports',
-			testId: 'bc-item-0',
-			onClick,
-		});
-	});
-
-	it('builds a row with no handler for a crumb that does nothing', () => {
-		const { entry } = resolveOne({ title: 'Reports' });
-		const row = toCollapsedRow(entry);
-
-		expect(row).toEqual({ type: 'item', value: '0', label: 'Reports', testId: 'bc-item-0' });
-		expect(row).not.toHaveProperty('onClick');
-	});
-
-	it('names no test id without a testId', () => {
-		const link = resolveOne({ title: 'Reports', href: '/r' }, { testId: null });
-		const action = resolveOne({ title: 'Reports' }, { testId: null });
-
-		expect(toCollapsedRow(link.entry)).not.toHaveProperty('testId');
-		expect(toCollapsedRow(action.entry)).not.toHaveProperty('testId');
-	});
-
-	it('keeps a node title as the label', () => {
-		const title = <b>Reports</b>;
-		const { entry } = resolveOne({ title, href: '/r' });
-
-		expect(toCollapsedRow(entry)).toMatchObject({ label: title });
-	});
-
-	describe('with a menu', () => {
-		const MENU = [
-			{ title: 'Checkout', href: '/services/checkout' },
-			{ title: 'Rename', onClick: noop },
-		];
-
-		it('builds a submenu row of the entries of the menu', () => {
-			const { entry } = resolveOne({ title: 'Services', menu: MENU });
-			const row = toCollapsedRow(entry);
-
-			expect(row).toMatchObject({
-				type: 'submenu',
-				value: '0',
-				label: 'Services',
-				testId: 'bc-item-0',
-			});
-			expect((row as { items: unknown[] }).items).toEqual(toMenuRows(MENU, 'bc-item-0-menu'));
-		});
-
-		it('names the entries after the menu the crumb has while it is visible', () => {
-			const { entry } = resolveOne(
-				{ title: 'Services', menu: MENU },
-				{ before: [{ title: 'Home' }] },
-			);
-			const row = toCollapsedRow(entry) as {
-				items: { type: string; label: ReactNode; testId?: string }[];
-			};
-
-			expect(row.items.map(({ type, label, testId }) => ({ type, label, testId }))).toEqual([
-				{ type: 'link', label: 'Checkout', testId: 'bc-item-1-menu-item-0' },
-				{ type: 'item', label: 'Rename', testId: 'bc-item-1-menu-item-1' },
-			]);
-		});
-
-		it('gives two collapsed crumbs entries that do not share a test id', () => {
-			const first = resolveOne({ title: 'A', menu: [{ title: 'One' }] });
-			const second = resolveOne(
-				{ title: 'B', menu: [{ title: 'One' }] },
-				{ before: [{ title: 'A' }] },
-			);
-			const ids = [first, second].flatMap(({ entry }) =>
-				(toCollapsedRow(entry) as { items: { testId?: string }[] }).items.map(
-					({ testId }) => testId,
-				),
-			);
-
-			expect(ids).toEqual(['bc-item-0-menu-item-0', 'bc-item-1-menu-item-0']);
-		});
-
-		it('lets the menu win over the href and the onClick of the crumb, as it does while visible', () => {
-			const { entry } = resolveOne({
-				title: 'Services',
-				href: '/services',
-				onClick: vi.fn(),
-				menu: MENU,
-			});
-			const row = toCollapsedRow(entry);
-
-			expect(row).toMatchObject({ type: 'submenu' });
-			expect(row).not.toHaveProperty('render');
-			expect(row).not.toHaveProperty('onClick');
-		});
-
-		it('names no test id without a testId', () => {
-			const { entry } = resolveOne({ title: 'Services', menu: MENU }, { testId: null });
-			const row = toCollapsedRow(entry) as { items: object[] };
-
-			expect(row).not.toHaveProperty('testId');
-			for (const entryRow of row.items) {
-				expect(entryRow).not.toHaveProperty('testId');
-			}
-		});
-
-		it('falls back to the href while the menu is empty, as the visible crumb does', () => {
-			const { entry } = resolveOne({ title: 'Services', href: '/services', menu: [] });
-
-			expect(toCollapsedRow(entry)).toMatchObject({ type: 'link' });
-		});
-
-		it('falls back to the render while the menu is empty, as the visible crumb does', () => {
-			const { entry } = resolveOne({
-				title: 'Services',
-				render: <RouterLink to="/services" />,
-				menu: [],
-			});
-
-			expect(toCollapsedRow(entry)).toMatchObject({ type: 'link' });
-		});
-
-		it('lets the menu win over the render of the crumb, as it does while visible', () => {
-			const { entry } = resolveOne({
-				title: 'Services',
-				render: <RouterLink to="/services" />,
-				menu: MENU,
-			});
-
-			expect(toCollapsedRow(entry)).toMatchObject({ type: 'submenu' });
-			expect(toCollapsedRow(entry)).not.toHaveProperty('render');
-		});
-
-		it('builds the rows of a menu entry with a render as link rows', () => {
-			const { entry } = resolveOne({
-				title: 'Services',
-				menu: [{ title: 'Checkout', render: <RouterLink to="/services/checkout" /> }],
-			});
-			const [checkout] = (toCollapsedRow(entry) as { items: unknown[] }).items;
-
-			expect(checkout).toMatchObject({ type: 'link', label: 'Checkout' });
-			expect(renderOf(checkout).type).toBe(RouterLink);
-			expect(renderOf(checkout).props).toEqual({ to: '/services/checkout' });
-		});
-	});
-
-	describe('with a render', () => {
-		it('renders the row with the element, without its children', () => {
-			const { entry } = resolveOne({
-				title: 'Payments',
-				render: <RouterLink to="/payments">Not the label</RouterLink>,
-			});
-			const row = toCollapsedRow(entry);
-			const render = renderOf(row);
-
-			expect(row).toMatchObject({ type: 'link', label: 'Payments', testId: 'bc-item-0' });
-			expect(render.type).toBe(RouterLink);
-			expect(render.props).toEqual({ to: '/payments' });
-		});
-
-		it('keeps every other prop and the key of the element', () => {
-			const { entry } = resolveOne({
-				title: 'Payments',
-				render: <RouterLink key="stable" to="/real" data-extra="1" className="track" />,
-			});
-			const render = renderOf(toCollapsedRow(entry));
-
-			expect(render.key).toBe('stable');
-			expect(render.props).toEqual({ to: '/real', 'data-extra': '1', className: 'track' });
-		});
-
-		it('is a link row even when the crumb has no href', () => {
-			const { entry } = resolveOne({ title: 'Payments', render: <RouterLink to="/payments" /> });
-
-			expect(toCollapsedRow(entry)).toMatchObject({ type: 'link' });
-			expect(toCollapsedRow(entry)).not.toHaveProperty('onClick');
-		});
-
-		it('takes the href and the target of the crumb the element leaves unset', () => {
-			const { entry } = resolveOne({
-				title: 'Payments',
-				href: '/from-item',
-				target: '_blank',
-				render: <RouterLink href={undefined} />,
-			});
-
-			expect(renderOf(toCollapsedRow(entry)).props).toMatchObject({
-				href: '/from-item',
-				target: '_blank',
-				rel: 'noopener noreferrer',
-			});
-		});
-
-		it('prefers the href of the element to the one of the crumb', () => {
-			const { entry } = resolveOne({
-				title: 'Payments',
-				href: '/from-item',
-				render: <RouterLink href="/from-render" />,
-			});
-
-			expect(renderOf(toCollapsedRow(entry)).props).toMatchObject({ href: '/from-render' });
-		});
-
-		it('chains the onClick of the crumb after the one of the element', () => {
-			const order: string[] = [];
-			const { entry } = resolveOne({
-				title: 'Payments',
-				render: <RouterLink to="/payments" onClick={() => order.push('element')} />,
-				onClick: () => order.push('crumb'),
-			});
-			const { onClick } = renderOf(toCollapsedRow(entry)).props as { onClick: () => void };
-
-			onClick();
-
-			expect(order).toEqual(['element', 'crumb']);
-		});
-
-		it('falls back to an action row for a crumb with only an onClick', () => {
-			const onClick = vi.fn();
-			const { entry } = resolveOne({ title: 'Payments', onClick });
-
-			expect(toCollapsedRow(entry)).toEqual({
-				type: 'item',
-				value: '0',
-				label: 'Payments',
-				testId: 'bc-item-0',
-				onClick,
-			});
-		});
 	});
 });
 
@@ -983,6 +809,105 @@ describe('getRowRender', () => {
 			expect(getRowRender({ href: '/logs' })?.props).not.toHaveProperty('onClick');
 		});
 	});
+
+	describe('dropRef', () => {
+		it('keeps the ref of the element by default', () => {
+			const ref = createRef<HTMLAnchorElement>();
+
+			renderInDom(getRowRender({ render: <RouterLink ref={ref} to="/logs" /> }) as ReactElement);
+
+			expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
+		});
+
+		it('leaves the ref to the other copy of the element, which is the one still mounted', () => {
+			const ref = createRef<HTMLAnchorElement>();
+
+			renderInDom(
+				getRowRender(
+					{ render: <RouterLink ref={ref} to="/logs" /> },
+					{ dropRef: true },
+				) as ReactElement,
+			);
+
+			expect(ref.current).toBeNull();
+		});
+
+		it('keeps every other prop of the element', () => {
+			const render = getRowRender(
+				{ href: '/logs', render: <RouterLink to="/other" data-extra="1" /> },
+				{ dropRef: true },
+			);
+
+			expect(render?.props).toMatchObject({ to: '/other', 'data-extra': '1' });
+		});
+	});
+});
+
+describe('getNextRowIndex', () => {
+	it.each<[string, number, number, number]>([
+		['ArrowDown', 0, 3, 1],
+		['ArrowDown', 1, 3, 2],
+		['ArrowDown', 2, 3, 0],
+		['ArrowUp', 2, 3, 1],
+		['ArrowUp', 1, 3, 0],
+		['ArrowUp', 0, 3, 2],
+		['Home', 2, 3, 0],
+		['Home', 0, 3, 0],
+		['End', 0, 3, 2],
+		['End', 2, 3, 2],
+		['ArrowDown', 0, 1, 0],
+		['ArrowUp', 0, 1, 0],
+	])('goes %s from the row %i of %i to the row %i', (key, current, count, expected) => {
+		expect(getNextRowIndex(key, current, count)).toBe(expected);
+	});
+
+	it.each(['Enter', ' ', 'Tab', 'Escape', 'ArrowLeft', 'ArrowRight', 'PageDown', 'a'])(
+		'leaves %j to the browser',
+		(key) => {
+			expect(getNextRowIndex(key, 1, 3)).toBeUndefined();
+		},
+	);
+
+	it.each(['ArrowDown', 'ArrowUp', 'Home', 'End'])(
+		'has nowhere to go for %s without a row',
+		(key) => {
+			expect(getNextRowIndex(key, 0, 0)).toBeUndefined();
+		},
+	);
+});
+
+describe('hasPreview', () => {
+	it('is true for a crumb with a preview that renders something, whatever it is', () => {
+		for (const item of [
+			{ title: 'A', href: '/a', preview: <p>Card</p> },
+			{ title: 'A', onClick: noop, preview: 'Card' },
+			{ title: 'A', preview: 3 },
+		]) {
+			expect(hasPreview(resolveOne(item).entry)).toBe(true);
+		}
+	});
+
+	it('is false without a preview, and when it renders nothing', () => {
+		for (const preview of [undefined, null, false, true, '', <></>, [null, false]]) {
+			expect(hasPreview(resolveOne({ title: 'A', href: '/a', preview }).entry)).toBe(false);
+		}
+	});
+
+	it('is false for a crumb with a menu, which is already the trigger of that menu', () => {
+		const { entry } = resolveOne({
+			title: 'A',
+			menu: [{ title: 'B', href: '/b' }],
+			preview: <p>Card</p>,
+		});
+
+		expect(hasPreview(entry)).toBe(false);
+	});
+
+	it('counts an empty menu as no menu, so the card stays', () => {
+		const { entry } = resolveOne({ title: 'A', href: '/a', menu: [], preview: <p>Card</p> });
+
+		expect(hasPreview(entry)).toBe(true);
+	});
 });
 
 describe('toMenuRows', () => {
@@ -1091,5 +1016,116 @@ describe('toMenuRows', () => {
 			'bc-item-1-menu-item-0',
 			'bc-item-1-menu-item-1',
 		]);
+	});
+
+	describe('with onPick', () => {
+		type Clickable = { onClick: (event: MouseEvent) => void };
+
+		it('runs it after the onClick of an action entry, with the event the entry gets', () => {
+			const order: string[] = [];
+			const event = new MouseEvent('click');
+			const onClick = vi.fn(() => order.push('entry'));
+			const onPick = vi.fn(() => order.push('pick'));
+			const [row] = toMenuRows([{ title: 'Rename', onClick }], undefined, onPick);
+
+			(row as unknown as Clickable).onClick(event);
+
+			expect(order).toEqual(['entry', 'pick']);
+			expect(onClick).toHaveBeenCalledExactlyOnceWith(event);
+		});
+
+		it('gives an entry with no onClick a handler that only picks', () => {
+			const onPick = vi.fn();
+			const [row] = toMenuRows([{ title: 'Nothing' }], undefined, onPick);
+
+			expect(row).toMatchObject({ type: 'item', value: '0', label: 'Nothing' });
+			(row as unknown as Clickable).onClick(new MouseEvent('click'));
+
+			expect(onPick).toHaveBeenCalledOnce();
+		});
+
+		it('runs it after the onClick of the element and the one of the entry for a link entry', () => {
+			const order: string[] = [];
+			const [row] = toMenuRows(
+				[
+					{
+						title: 'Logs',
+						render: <RouterLink to="/logs" onClick={() => order.push('element')} />,
+						onClick: () => order.push('entry'),
+					},
+				],
+				undefined,
+				() => order.push('pick'),
+			);
+
+			(renderOf(row).props as Clickable).onClick(new MouseEvent('click'));
+
+			expect(row).toMatchObject({ type: 'link' });
+			expect(row).not.toHaveProperty('onClick');
+			expect(order).toEqual(['element', 'entry', 'pick']);
+		});
+
+		it('picks for a link entry that has no onClick of its own or on its element', () => {
+			const onPick = vi.fn();
+			const [row] = toMenuRows([{ title: 'Logs', href: '/logs' }], undefined, onPick);
+
+			expect(renderOf(row).type).toBe('a');
+			expect(renderOf(row).props).toMatchObject({ href: '/logs' });
+			(renderOf(row).props as Clickable).onClick(new MouseEvent('click'));
+
+			expect(onPick).toHaveBeenCalledOnce();
+		});
+
+		it('runs it after the onClick of the element when the entry has none', () => {
+			const order: string[] = [];
+			const [row] = toMenuRows(
+				[
+					{
+						title: 'Logs',
+						render: <RouterLink to="/logs" onClick={() => order.push('element')} />,
+					},
+				],
+				undefined,
+				() => order.push('pick'),
+			);
+
+			(renderOf(row).props as Clickable).onClick(new MouseEvent('click'));
+
+			expect(order).toEqual(['element', 'pick']);
+		});
+
+		it('hands every row its own handler, so a pick on one runs no onClick of another', () => {
+			const onFirst = vi.fn();
+			const onSecond = vi.fn();
+			const onPick = vi.fn();
+			const [first, second] = toMenuRows(
+				[
+					{ title: 'First', onClick: onFirst },
+					{ title: 'Second', onClick: onSecond },
+				],
+				undefined,
+				onPick,
+			);
+
+			(second as unknown as Clickable).onClick(new MouseEvent('click'));
+
+			expect(onSecond).toHaveBeenCalledOnce();
+			expect(onFirst).not.toHaveBeenCalled();
+			expect(onPick).toHaveBeenCalledOnce();
+			expect(first).not.toBe(second);
+		});
+
+		it('keeps the labels, the values and the test ids of the rows', () => {
+			const rows = toMenuRows(
+				[{ title: 'Logs', href: '/logs' }, { title: 'Rename' }],
+				'bc-item-1-menu',
+				vi.fn(),
+			);
+
+			expect(rows).toMatchObject([
+				{ type: 'link', value: '0', label: 'Logs', testId: 'bc-item-1-menu-item-0' },
+				{ type: 'item', value: '1', label: 'Rename', testId: 'bc-item-1-menu-item-1' },
+			]);
+		});
 	});
 });

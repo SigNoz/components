@@ -12,18 +12,22 @@
  * The comment suppresses the line directly below it, so it sits *inside* the `assertType(...)`
  * call, right above its argument. Keep every prop on the opening tag line.
  */
-import { createRef, type MouseEvent, type ReactElement } from 'react';
+import { createRef, type MouseEvent, type ReactElement, type ReactNode } from 'react';
 import { assertType, describe, expectTypeOf, test } from 'vitest';
 import { Breadcrumb } from '../breadcrumb.js';
 import type {
+	BreadcrumbCollapsedCrumb,
+	BreadcrumbCollapseFromType,
 	BreadcrumbDropdownItem,
+	BreadcrumbEllipsisOptions,
 	BreadcrumbItemType,
 	BreadcrumbLinkProps,
 	BreadcrumbProps,
 	BreadcrumbTextOverflowType,
+	BreadcrumbVariantType,
 	ValidateBreadcrumbProps,
 } from '../index.js';
-import { BreadcrumbTextOverflow } from '../index.js';
+import { BreadcrumbCollapseFrom, BreadcrumbTextOverflow, BreadcrumbVariant } from '../index.js';
 import { RouterLink } from './breadcrumb.test-utils.js';
 
 const noop = (): void => {};
@@ -49,7 +53,10 @@ describe('root props', () => {
 				separator=">"
 				truncate={false}
 				maxVisible={3}
+				collapseFrom="start"
 				textOverflow="hidden"
+				variant="outlined"
+				ellipsis={{ heading: 'Earlier steps' }}
 				testId="trail"
 				id="trail"
 				aria-label="You are here"
@@ -349,6 +356,179 @@ describe('textOverflow', () => {
 	test('accepts the constant as well as the text', () => {
 		assertType(<Breadcrumb items={ITEMS} textOverflow={BreadcrumbTextOverflow.Hidden} />);
 		assertType(<Breadcrumb items={ITEMS} textOverflow="ellipsis" />);
+	});
+});
+
+describe('collapseFrom', () => {
+	test('is one of the two orders the component collapses in', () => {
+		expectTypeOf<BreadcrumbCollapseFromType>().toEqualTypeOf<'center' | 'start'>();
+		expectTypeOf(BreadcrumbCollapseFrom.Center).toEqualTypeOf<'center'>();
+		expectTypeOf(BreadcrumbCollapseFrom.Start).toEqualTypeOf<'start'>();
+	});
+
+	test('accepts the constant as well as the text', () => {
+		assertType(<Breadcrumb items={ITEMS} collapseFrom={BreadcrumbCollapseFrom.Start} />);
+		assertType(<Breadcrumb items={ITEMS} collapseFrom="center" />);
+	});
+
+	test('rejects a wrong order', () => {
+		assertType(
+			// @ts-expect-error - `collapseFrom` is `center` or `start`
+			<Breadcrumb items={ITEMS} collapseFrom="end" />,
+		);
+	});
+});
+
+describe('variant', () => {
+	test('is one of the two the component draws', () => {
+		expectTypeOf<BreadcrumbVariantType>().toEqualTypeOf<'plain' | 'outlined'>();
+		expectTypeOf(BreadcrumbVariant.Plain).toEqualTypeOf<'plain'>();
+		expectTypeOf(BreadcrumbVariant.Outlined).toEqualTypeOf<'outlined'>();
+	});
+
+	test('accepts the constant as well as the text', () => {
+		assertType(<Breadcrumb items={ITEMS} variant={BreadcrumbVariant.Outlined} />);
+		assertType(<Breadcrumb items={ITEMS} variant="plain" />);
+	});
+
+	test('rejects a wrong variant', () => {
+		assertType(
+			// @ts-expect-error - `variant` is `plain` or `outlined`
+			<Breadcrumb items={ITEMS} variant="solid" />,
+		);
+	});
+});
+
+describe('preview', () => {
+	test('takes any node, on a link, a button and a text crumb alike', () => {
+		assertType(<Breadcrumb items={[{ title: 'Pod', href: '/pods/1', preview: <p>Summary</p> }]} />);
+		assertType(<Breadcrumb items={[{ title: 'Pod', onClick: noop, preview: 'Summary' }]} />);
+		assertType(<Breadcrumb items={[{ title: 'Pod', preview: null }]} />);
+		assertType(
+			<Breadcrumb
+				items={[{ title: 'Pod', render: <RouterLink to="/pods/1" />, preview: <p>Summary</p> }]}
+			/>,
+		);
+	});
+
+	test('is a field of the crumb and not of the menu entry', () => {
+		expectTypeOf<BreadcrumbItemType>().toHaveProperty('preview');
+		expectTypeOf<BreadcrumbItemType['preview']>().toEqualTypeOf<ReactNode | undefined>();
+		expectTypeOf<BreadcrumbDropdownItem>().not.toHaveProperty('preview');
+		expectTypeOf<BreadcrumbLinkProps>().not.toHaveProperty('preview');
+	});
+
+	test('is not a prop of the trail', () => {
+		assertType(
+			// @ts-expect-error - `preview` belongs to a crumb in `items`
+			<Breadcrumb items={ITEMS} preview={<p>Summary</p>} />,
+		);
+	});
+
+	test('is not a field of an entry of a menu', () => {
+		assertType(
+			<Breadcrumb
+				items={[
+					{
+						title: 'Payments',
+						menu: [
+							{
+								title: 'Billing',
+								href: '/billing',
+								// @ts-expect-error - an entry of a menu has no card
+								preview: <p>Summary</p>,
+							},
+						],
+					},
+				]}
+			/>,
+		);
+	});
+});
+
+describe('ellipsis', () => {
+	test('is optional, and takes any of its three options', () => {
+		assertType(<Breadcrumb items={ITEMS} ellipsis={{}} />);
+		assertType(<Breadcrumb items={ITEMS} ellipsis={{ heading: 'Earlier steps' }} />);
+		assertType(<Breadcrumb items={ITEMS} ellipsis={{ heading: <b>Earlier steps</b> }} />);
+		assertType(
+			<Breadcrumb
+				items={ITEMS}
+				ellipsis={{
+					heading: 'Earlier steps',
+					rowSuffix: (_item, index) => <span>{index + 1}</span>,
+				}}
+			/>,
+		);
+		assertType(
+			<Breadcrumb items={ITEMS} ellipsis={{ render: (collapsed) => <p>{collapsed.length}</p> }} />,
+		);
+	});
+
+	test('types its options', () => {
+		expectTypeOf<BreadcrumbProps['ellipsis']>().toEqualTypeOf<
+			BreadcrumbEllipsisOptions | undefined
+		>();
+		expectTypeOf<NonNullable<BreadcrumbEllipsisOptions['rowSuffix']>>().toEqualTypeOf<
+			(item: BreadcrumbItemType, index: number) => ReactElement | undefined
+		>();
+		expectTypeOf<NonNullable<BreadcrumbEllipsisOptions['render']>>().toEqualTypeOf<
+			(collapsed: BreadcrumbCollapsedCrumb[]) => ReactNode
+		>();
+	});
+
+	test('hands the row suffix the crumb and its index, and the render function the collapsed crumbs', () => {
+		assertType(
+			<Breadcrumb
+				items={ITEMS}
+				ellipsis={{
+					rowSuffix: (item, index) => {
+						expectTypeOf(item).toEqualTypeOf<BreadcrumbItemType>();
+						expectTypeOf(index).toEqualTypeOf<number>();
+						return undefined;
+					},
+					render: (collapsed) => {
+						expectTypeOf(collapsed).toEqualTypeOf<BreadcrumbCollapsedCrumb[]>();
+						return null;
+					},
+				}}
+			/>,
+		);
+	});
+
+	test('names a collapsed crumb by the crumb and its place in items', () => {
+		expectTypeOf<BreadcrumbCollapsedCrumb>().toEqualTypeOf<{
+			item: BreadcrumbItemType;
+			index: number;
+		}>();
+	});
+
+	test('rejects an option that does not exist', () => {
+		assertType(
+			// @ts-expect-error - `delay` is not an option of the `...` crumb
+			<Breadcrumb items={ITEMS} ellipsis={{ heading: 'Earlier steps', delay: 100 }} />,
+		);
+	});
+
+	test('rejects opening on hover: the `...` crumb always opens on hover, so there is no such option', () => {
+		assertType(
+			// @ts-expect-error - `openOnHover` is not an option of the `...` crumb, which always opens on hover
+			<Breadcrumb items={ITEMS} ellipsis={{ openOnHover: true }} />,
+		);
+	});
+
+	test('rejects a row suffix that is not an element', () => {
+		assertType(
+			// @ts-expect-error - the suffix of a row is an element, such as a `<span>`
+			<Breadcrumb items={ITEMS} ellipsis={{ rowSuffix: (_item, index) => String(index) }} />,
+		);
+	});
+
+	test('rejects a render that is not a function of the collapsed crumbs', () => {
+		assertType(
+			// @ts-expect-error - `render` is a function that receives the collapsed crumbs
+			<Breadcrumb items={ITEMS} ellipsis={{ render: <p>Hidden</p> }} />,
+		);
 	});
 });
 

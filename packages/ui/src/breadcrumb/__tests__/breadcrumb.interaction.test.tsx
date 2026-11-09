@@ -4,7 +4,12 @@ import { createRef, type MouseEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Breadcrumb } from '../breadcrumb.js';
 import type { BreadcrumbItemType } from '../types.js';
-import { RouterLink, TRAIL } from './breadcrumb.test-utils.js';
+import {
+	expectEllipsisPopupClosed,
+	openEllipsisPopup,
+	RouterLink,
+	TRAIL,
+} from './breadcrumb.test-utils.js';
 
 /** A click on a real anchor would navigate the page the tests run in. */
 function stay(event: MouseEvent): void {
@@ -480,9 +485,15 @@ describe('Breadcrumb crumb menu', () => {
 	});
 });
 
-describe('Breadcrumb ellipsis menu', () => {
+describe('Breadcrumb ellipsis popup', () => {
 	function renderCollapsed(items: BreadcrumbItemType[] = TRAIL) {
 		return render(<Breadcrumb items={items} maxVisible={2} testId="bc" />);
+	}
+
+	function rowNames(popup: HTMLElement): (string | null)[] {
+		return within(popup)
+			.getAllByRole('listitem')
+			.map((row) => row.textContent);
 	}
 
 	it('is a button that says how many crumbs it hides', () => {
@@ -491,35 +502,30 @@ describe('Breadcrumb ellipsis menu', () => {
 		const trigger = screen.getByTestId('bc-ellipsis');
 		expect(trigger).toBe(screen.getByRole('button', { name: 'Show 3 hidden items' }));
 		expect(trigger).toHaveTextContent('...');
-		expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+		expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
 		expect(trigger).toHaveAttribute('aria-expanded', 'false');
 		expect(trigger).toHaveAttribute('data-slot', 'breadcrumb-ellipsis-trigger');
 		expect(trigger.closest('li')).toHaveAttribute('data-slot', 'breadcrumb-ellipsis');
 	});
 
-	it('opens a menu of the collapsed crumbs in path order, with no icons', async () => {
-		const user = userEvent.setup();
+	it('opens a popup of the collapsed crumbs in path order, with no icons', async () => {
 		renderCollapsed();
 
-		await user.click(screen.getByTestId('bc-ellipsis'));
+		const popup = await openEllipsisPopup();
 
-		const menu = await screen.findByRole('menu');
-		const rows = within(menu).getAllByRole('menuitem');
-
-		expect(rows.map((row) => row.textContent)).toEqual(['Payments', 'Services', 'Checkout']);
+		expect(rowNames(popup)).toEqual(['Payments', 'Services', 'Checkout']);
 		expect(screen.getByTestId('bc-ellipsis')).toHaveAttribute('aria-expanded', 'true');
 		expect(screen.getByTestId('bc-ellipsis')).toHaveAttribute('data-popup-open');
-		expect(menu.querySelector('svg')).toBeNull();
+		expect(popup.querySelector('svg')).toBeNull();
+		expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 	});
 
 	it('renders every row with an href as a link to that crumb', async () => {
-		const user = userEvent.setup();
 		renderCollapsed();
 
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await screen.findByRole('menu');
+		const popup = await openEllipsisPopup();
 
-		const rows = screen.getAllByRole('menuitem');
+		const rows = within(popup).getAllByRole('link');
 		expect(rows.map((row) => row.tagName)).toEqual(['A', 'A', 'A']);
 		expect(rows.map((row) => row.getAttribute('href'))).toEqual([
 			'/dashboards/payments',
@@ -528,20 +534,20 @@ describe('Breadcrumb ellipsis menu', () => {
 		]);
 	});
 
-	it('calls the onClick of a collapsed link crumb from its row, and closes the menu', async () => {
+	it('calls the onClick of a collapsed link crumb from its row, and closes the popup', async () => {
 		const user = userEvent.setup();
 		const onClick = vi.fn(stay);
 		const items = TRAIL.map((item, index) => (index === 2 ? { ...item, onClick } : item));
 
 		renderCollapsed(items);
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await user.click(await screen.findByRole('menuitem', { name: 'Services' }));
+		const popup = await openEllipsisPopup();
+		await user.click(within(popup).getByRole('link', { name: 'Services' }));
 
 		expect(onClick).toHaveBeenCalledOnce();
-		await expectMenuClosed();
+		await expectEllipsisPopupClosed();
 	});
 
-	it('renders a collapsed crumb with only an onClick as an action row', async () => {
+	it('renders a collapsed crumb with only an onClick as a button row', async () => {
 		const user = userEvent.setup();
 		const onClick = vi.fn();
 		const items: BreadcrumbItemType[] = [
@@ -552,21 +558,21 @@ describe('Breadcrumb ellipsis menu', () => {
 		];
 
 		renderCollapsed(items);
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await screen.findByRole('menu');
+		const popup = await openEllipsisPopup();
 
-		const reports = screen.getByRole('menuitem', { name: 'Reports' });
-		const plain = screen.getByRole('menuitem', { name: 'Plain' });
-		expect(reports.tagName).not.toBe('A');
-		expect(plain.tagName).not.toBe('A');
+		const reports = within(popup).getByRole('button', { name: 'Reports' });
+		expect(reports).toHaveAttribute('data-kind', 'button');
+		expect(reports.tagName).toBe('BUTTON');
+		expect(within(popup).queryByRole('button', { name: 'Plain' })).not.toBeInTheDocument();
+		expect(within(popup).queryByRole('link', { name: 'Plain' })).not.toBeInTheDocument();
 
 		await user.click(reports);
 
 		expect(onClick).toHaveBeenCalledOnce();
-		await expectMenuClosed();
+		await expectEllipsisPopupClosed();
 	});
 
-	it('closes without calling anything when a row of a plain crumb is picked', async () => {
+	it('calls nothing and keeps the popup open when a row of a plain crumb is pressed', async () => {
 		const user = userEvent.setup();
 		const onOther = vi.fn();
 		const items: BreadcrumbItemType[] = [
@@ -576,11 +582,14 @@ describe('Breadcrumb ellipsis menu', () => {
 		];
 
 		renderCollapsed(items);
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await user.click(await screen.findByRole('menuitem', { name: 'Plain' }));
+		const popup = await openEllipsisPopup();
+		const plain = within(popup).getByText('Plain').closest('[data-slot="breadcrumb-ellipsis-row"]');
+
+		expect(plain).toHaveAttribute('data-kind', 'text');
+		await user.click(plain as HTMLElement);
 
 		expect(onOther).not.toHaveBeenCalled();
-		await expectMenuClosed();
+		expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
 	});
 
 	describe('for a collapsed crumb with a menu', () => {
@@ -607,67 +616,70 @@ describe('Breadcrumb ellipsis menu', () => {
 			onCrumb.mockClear();
 		});
 
-		// Each click is its own `userEvent` call. One instance teleports the pointer from the submenu
-		// row to an entry without crossing the gap, and a submenu opened on hover closes when the
-		// pointer leaves its row before it reaches the entries.
-		async function openSubmenu(): Promise<void> {
-			await userEvent.click(screen.getByTestId('bc-ellipsis'));
-			await userEvent.click(await screen.findByRole('menuitem', { name: 'Services' }));
+		async function openMenu(): Promise<HTMLElement> {
+			const popup = await openEllipsisPopup();
+			await userEvent.setup().click(within(popup).getByRole('button', { name: 'Services' }));
 			await screen.findByRole('menuitem', { name: 'Checkout' });
+
+			return popup;
 		}
 
-		it('lists it as one row, its entries behind a submenu', async () => {
+		it('lists it as one row, its entries behind a menu', async () => {
 			renderCollapsed(MENU_TRAIL);
 
-			await userEvent.click(screen.getByTestId('bc-ellipsis'));
-			await screen.findByRole('menu');
+			const popup = await openEllipsisPopup();
 
-			const row = screen.getByRole('menuitem', { name: 'Services' });
-			expect(screen.getAllByRole('menuitem')).toEqual([row]);
-			expect(row).toHaveAttribute('data-slot', 'dropdown-submenu-trigger');
+			const row = within(popup).getByRole('button', { name: 'Services' });
+			expect(within(popup).getAllByRole('listitem')).toHaveLength(1);
+			expect(row).toHaveAttribute('data-kind', 'menu');
 			expect(row).toHaveAttribute('aria-haspopup', 'menu');
 			expect(row).not.toHaveAttribute('href');
+			expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+			expect(screen.queryByRole('menuitem')).not.toBeInTheDocument();
 		});
 
-		it('opens a submenu with the entries of the crumb, links and actions alike', async () => {
+		it('opens a menu with the entries of the crumb, links and actions alike', async () => {
 			renderCollapsed(MENU_TRAIL);
 
-			await openSubmenu();
+			const popup = await openMenu();
 
 			const checkout = screen.getByRole('menuitem', { name: 'Checkout' });
 			expect(checkout.tagName).toBe('A');
 			expect(checkout).toHaveAttribute('href', '/services/checkout');
 			expect(screen.getByRole('menuitem', { name: 'Rename' }).tagName).not.toBe('A');
-			expect(screen.getByRole('menuitem', { name: 'Services' })).toHaveAttribute(
+			expect(within(popup).getByRole('button', { name: 'Services' })).toHaveAttribute(
 				'aria-expanded',
 				'true',
 			);
+			expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
 		});
 
-		it('reaches an entry: its onClick runs and the whole menu closes', async () => {
+		it('reaches an entry: its onClick runs and the menu and the popup close', async () => {
 			renderCollapsed(MENU_TRAIL);
 
-			await openSubmenu();
-			await userEvent.click(screen.getByRole('menuitem', { name: 'Rename' }));
+			await openMenu();
+			await userEvent.setup().click(screen.getByRole('menuitem', { name: 'Rename' }));
 
 			expect(onRename).toHaveBeenCalledOnce();
 			await expectMenuClosed();
+			await expectEllipsisPopupClosed();
 		});
 
-		it('follows a link entry', async () => {
+		it('follows a link entry, and closes the menu and the popup', async () => {
 			renderCollapsed(MENU_TRAIL);
 
-			await openSubmenu();
-			await userEvent.click(screen.getByRole('menuitem', { name: 'Checkout' }));
+			await openMenu();
+			await userEvent.setup().click(screen.getByRole('menuitem', { name: 'Checkout' }));
 
 			expect(onCheckout).toHaveBeenCalledOnce();
 			await expectMenuClosed();
+			await expectEllipsisPopupClosed();
 		});
 
 		it('never reaches the href or the onClick of the crumb, the menu wins as it does while visible', async () => {
 			renderCollapsed(MENU_TRAIL);
 
-			await openSubmenu();
+			await openMenu();
 
 			expect(document.querySelector('a[href="/services"]')).toBeNull();
 			expect(onCrumb).not.toHaveBeenCalled();
@@ -676,29 +688,49 @@ describe('Breadcrumb ellipsis menu', () => {
 		it('names the row after the crumb and the entries after its menu', async () => {
 			renderCollapsed(MENU_TRAIL);
 
-			await openSubmenu();
+			const popup = await openMenu();
 
 			expect(screen.getByTestId('bc-item-1')).toBe(
-				screen.getByRole('menuitem', { name: 'Services' }),
+				within(popup).getByRole('button', { name: 'Services' }),
 			);
 			expect(screen.getByTestId('bc-item-1-menu-item-0')).toHaveTextContent('Checkout');
 			expect(screen.getByTestId('bc-item-1-menu-item-1')).toHaveTextContent('Rename');
 		});
 
-		it('opens the submenu from the keyboard', async () => {
+		it('opens the menu from the keyboard, and picks an entry with Enter', async () => {
 			renderCollapsed(MENU_TRAIL);
 
 			const user = userEvent.setup();
 			screen.getByTestId('bc-ellipsis').focus();
 			await user.keyboard('{Enter}');
-			await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Services' })).toHaveFocus());
-			await user.keyboard('{ArrowRight}');
+			const popup = await screen.findByRole('dialog', { name: 'Hidden items' });
+			await waitFor(() =>
+				expect(within(popup).getByRole('button', { name: 'Services' })).toHaveFocus(),
+			);
+			await user.keyboard('{Enter}');
 
 			await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Checkout' })).toHaveFocus());
 			await user.keyboard('{ArrowDown}{Enter}');
 
 			expect(onRename).toHaveBeenCalledOnce();
 			await expectMenuClosed();
+			await expectEllipsisPopupClosed();
+		});
+
+		it('falls back to the href while the menu is empty, as the visible crumb does', async () => {
+			renderCollapsed([
+				{ title: 'Home', href: '/home' },
+				{ title: 'Services', href: '/services', menu: [] },
+				{ title: 'Now' },
+			]);
+
+			const popup = await openEllipsisPopup();
+
+			expect(within(popup).getByRole('link', { name: 'Services' })).toHaveAttribute(
+				'href',
+				'/services',
+			);
+			expect(within(popup).queryByRole('button', { name: 'Services' })).not.toBeInTheDocument();
 		});
 	});
 
@@ -711,13 +743,11 @@ describe('Breadcrumb ellipsis menu', () => {
 		];
 
 		it('renders every row with its element, a link row without an href of the crumb', async () => {
-			const user = userEvent.setup();
 			renderCollapsed(ROUTED_TRAIL);
 
-			await user.click(screen.getByTestId('bc-ellipsis'));
-			await screen.findByRole('menu');
+			const popup = await openEllipsisPopup();
 
-			const rows = screen.getAllByRole('menuitem');
+			const rows = within(popup).getAllByRole('link');
 			expect(rows.map((row) => row.tagName)).toEqual(['A', 'A']);
 			expect(rows.map((row) => row.textContent)).toEqual(['Payments', 'Services']);
 			expect(rows.map((row) => row.getAttribute('href'))).toEqual([
@@ -725,10 +755,13 @@ describe('Breadcrumb ellipsis menu', () => {
 				'/app/services',
 			]);
 			expect(rows.map((row) => row.getAttribute('data-router'))).toEqual(['link', 'link']);
+			expect(rows.map((row) => row.getAttribute('data-slot'))).toEqual([
+				'breadcrumb-ellipsis-row',
+				'breadcrumb-ellipsis-row',
+			]);
 		});
 
 		it('keeps the label of the crumb, not the children of the element', async () => {
-			const user = userEvent.setup();
 			renderCollapsed([
 				{ title: 'Home', href: '/home' },
 				{ title: 'Payments', render: <RouterLink to="/payments">Not the label</RouterLink> },
@@ -736,18 +769,16 @@ describe('Breadcrumb ellipsis menu', () => {
 				{ title: 'Now' },
 			]);
 
-			await user.click(screen.getByTestId('bc-ellipsis'));
+			const popup = await openEllipsisPopup();
 
-			const menu = await screen.findByRole('menu');
-			expect(within(menu).queryByText('Not the label')).not.toBeInTheDocument();
-			expect(within(menu).getByRole('menuitem', { name: 'Payments' })).toHaveAttribute(
+			expect(within(popup).queryByText('Not the label')).not.toBeInTheDocument();
+			expect(within(popup).getByRole('link', { name: 'Payments' })).toHaveAttribute(
 				'href',
 				'/payments',
 			);
 		});
 
-		it('leaves the ref of the element on the collapsed crumb, before and after the menu opens', async () => {
-			const user = userEvent.setup();
+		it('leaves the ref of the element on the collapsed crumb, before and after the popup opens', async () => {
 			const ref = createRef<HTMLAnchorElement>();
 			renderCollapsed([
 				{ title: 'Home', href: '/home' },
@@ -761,19 +792,18 @@ describe('Breadcrumb ellipsis menu', () => {
 			expect(crumbLink).not.toBeNull();
 			expect(ref.current).toBe(crumbLink);
 
-			await user.click(screen.getByTestId('bc-ellipsis'));
-			const row = await screen.findByRole('menuitem', { name: 'Payments' });
+			const popup = await openEllipsisPopup();
+			const row = within(popup).getByRole('link', { name: 'Payments' });
 			expect(ref.current).toBe(crumbLink);
 			expect(ref.current).not.toBe(row);
 
-			await user.keyboard('{Escape}');
-			await expectMenuClosed();
+			await userEvent.setup().keyboard('{Escape}');
+			await expectEllipsisPopupClosed();
 			expect(ref.current).toBe(crumbLink);
 			expect(crumbLink).toBeInTheDocument();
 		});
 
 		it('takes the href and the target of the crumb the element leaves unset', async () => {
-			const user = userEvent.setup();
 			renderCollapsed([
 				{ title: 'Home', href: '/home' },
 				{
@@ -786,16 +816,15 @@ describe('Breadcrumb ellipsis menu', () => {
 				{ title: 'Now' },
 			]);
 
-			await user.click(screen.getByTestId('bc-ellipsis'));
+			const popup = await openEllipsisPopup();
 
-			const docs = await screen.findByRole('menuitem', { name: 'Docs' });
+			const docs = within(popup).getByRole('link', { name: 'Docs' });
 			expect(docs).toHaveAttribute('href', '/docs');
 			expect(docs).toHaveAttribute('target', '_blank');
 			expect(docs).toHaveAttribute('rel', 'nofollow noopener noreferrer');
 		});
 
-		it('calls the onClick of the element first, then the one of the crumb, and closes the menu', async () => {
-			const user = userEvent.setup();
+		it('calls the onClick of the element first, then the one of the crumb, and closes the popup', async () => {
 			const order: string[] = [];
 			const items = ROUTED_TRAIL.map((item, index) =>
 				index === 1
@@ -808,27 +837,24 @@ describe('Breadcrumb ellipsis menu', () => {
 			);
 
 			renderCollapsed(items);
-			await user.click(screen.getByTestId('bc-ellipsis'));
-			await user.click(await screen.findByRole('menuitem', { name: 'Payments' }));
+			const popup = await openEllipsisPopup();
+			await userEvent.setup().click(within(popup).getByRole('link', { name: 'Payments' }));
 
 			expect(order).toEqual(['element', 'crumb']);
-			await expectMenuClosed();
+			await expectEllipsisPopupClosed();
 		});
 
 		it('names the row after the crumb, as the crumb is named while it shows', async () => {
-			const user = userEvent.setup();
 			renderCollapsed(ROUTED_TRAIL);
 
-			await user.click(screen.getByTestId('bc-ellipsis'));
-			await screen.findByRole('menu');
+			const popup = await openEllipsisPopup();
 
 			expect(screen.getByTestId('bc-item-1')).toBe(
-				screen.getByRole('menuitem', { name: 'Payments' }),
+				within(popup).getByRole('link', { name: 'Payments' }),
 			);
 		});
 
-		it('keeps the submenu of a crumb that has a menu over its render', async () => {
-			const user = userEvent.setup();
+		it('keeps the menu of a crumb that has a menu over its render', async () => {
 			renderCollapsed([
 				{ title: 'Home', href: '/home' },
 				{
@@ -839,8 +865,8 @@ describe('Breadcrumb ellipsis menu', () => {
 				{ title: 'Now' },
 			]);
 
-			await user.click(screen.getByTestId('bc-ellipsis'));
-			await user.click(await screen.findByRole('menuitem', { name: 'Services' }));
+			const popup = await openEllipsisPopup();
+			await userEvent.setup().click(within(popup).getByRole('button', { name: 'Services' }));
 
 			const checkout = await screen.findByRole('menuitem', { name: 'Checkout' });
 			expect(checkout).toHaveAttribute('href', '/app/services/checkout');
@@ -856,15 +882,15 @@ describe('Breadcrumb ellipsis menu', () => {
 		trigger.focus();
 
 		await user.keyboard('{Enter}');
-		expect(await screen.findByRole('menu')).toBeInTheDocument();
+		expect(await screen.findByRole('dialog', { name: 'Hidden items' })).toBeInTheDocument();
 		await user.keyboard('{Escape}');
-		await expectMenuClosed();
+		await expectEllipsisPopupClosed();
 		expect(trigger).toHaveFocus();
 
 		await user.keyboard(' ');
-		expect(await screen.findByRole('menu')).toBeInTheDocument();
+		expect(await screen.findByRole('dialog', { name: 'Hidden items' })).toBeInTheDocument();
 		await user.keyboard('{Escape}');
-		await expectMenuClosed();
+		await expectEllipsisPopupClosed();
 		expect(trigger).toHaveFocus();
 	});
 
@@ -874,14 +900,16 @@ describe('Breadcrumb ellipsis menu', () => {
 
 		screen.getByTestId('bc-ellipsis').focus();
 		await user.keyboard('{Enter}');
-		await screen.findByRole('menu');
+		const popup = await screen.findByRole('dialog', { name: 'Hidden items' });
 
 		// Opening from the keyboard lands on the first row.
-		await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Payments' })).toHaveFocus());
+		await waitFor(() =>
+			expect(within(popup).getByRole('link', { name: 'Payments' })).toHaveFocus(),
+		);
 		await user.keyboard('{ArrowDown}');
-		await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Services' })).toHaveFocus());
+		expect(within(popup).getByRole('link', { name: 'Services' })).toHaveFocus();
 		await user.keyboard('{ArrowDown}');
-		await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Checkout' })).toHaveFocus());
+		expect(within(popup).getByRole('link', { name: 'Checkout' })).toHaveFocus();
 	});
 
 	it('picks the focused row with Enter', async () => {
@@ -892,12 +920,14 @@ describe('Breadcrumb ellipsis menu', () => {
 		renderCollapsed(items);
 		screen.getByTestId('bc-ellipsis').focus();
 		await user.keyboard('{Enter}');
-		await screen.findByRole('menu');
-		await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Payments' })).toHaveFocus());
+		const popup = await screen.findByRole('dialog', { name: 'Hidden items' });
+		await waitFor(() =>
+			expect(within(popup).getByRole('link', { name: 'Payments' })).toHaveFocus(),
+		);
 		await user.keyboard('{Enter}');
 
 		expect(onClick).toHaveBeenCalledOnce();
-		await expectMenuClosed();
+		await expectEllipsisPopupClosed();
 	});
 
 	it('closes when another crumb is clicked', async () => {
@@ -906,11 +936,11 @@ describe('Breadcrumb ellipsis menu', () => {
 		const items = TRAIL.map((item, index) => (index === 0 ? { ...item, onClick } : item));
 
 		renderCollapsed(items);
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await screen.findByRole('menu');
+		await openEllipsisPopup();
 		await user.click(screen.getByRole('link', { name: 'Dashboards' }));
 
-		await expectMenuClosed();
+		expect(onClick).toHaveBeenCalledOnce();
+		await expectEllipsisPopupClosed();
 	});
 
 	it('says one hidden item in the singular', () => {
@@ -919,7 +949,7 @@ describe('Breadcrumb ellipsis menu', () => {
 		expect(screen.getByTestId('bc-ellipsis')).toHaveAccessibleName('Show 1 hidden item');
 	});
 
-	it('keeps its menu apart from the crumbs that have a menu of their own', async () => {
+	it('keeps its popup apart from the crumbs that have a menu of their own', async () => {
 		const user = userEvent.setup();
 		const items: BreadcrumbItemType[] = [
 			{ title: 'Home', href: '/home', menu: [{ title: 'Sibling', href: '/sibling' }] },
@@ -928,14 +958,15 @@ describe('Breadcrumb ellipsis menu', () => {
 		];
 
 		renderCollapsed(items);
-		await user.click(screen.getByTestId('bc-ellipsis'));
-		await screen.findByRole('menu');
+		const popup = await openEllipsisPopup();
 
-		expect(screen.getAllByRole('menuitem').map((row) => row.textContent)).toEqual(['Middle']);
+		expect(rowNames(popup)).toEqual(['Middle']);
+		expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 		await user.keyboard('{Escape}');
-		await expectMenuClosed();
+		await expectEllipsisPopupClosed();
 
 		await user.click(screen.getByTestId('bc-item-0-menu'));
 		expect(await screen.findByRole('menuitem', { name: 'Sibling' })).toBeInTheDocument();
+		expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 	});
 });
