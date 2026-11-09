@@ -101,6 +101,11 @@ function popup(): HTMLElement {
 }
 
 describe('Popover.Trigger', () => {
+	it('is named by its dotted name in React DevTools', () => {
+		// The part is typed by its call signature alone, which has no `displayName`.
+		expect((Popover.Trigger as { displayName?: string }).displayName).toBe('Popover.Trigger');
+	});
+
 	it('opens the one popup with the payload of the trigger pressed', async () => {
 		const user = userEvent.setup();
 		render(<Services />);

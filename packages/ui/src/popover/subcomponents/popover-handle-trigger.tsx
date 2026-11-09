@@ -106,3 +106,5 @@ export function PopoverHandleTrigger<Payload>({
 		/>
 	);
 }
+
+PopoverHandleTrigger.displayName = 'Popover.Trigger';
