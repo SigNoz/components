@@ -818,3 +818,50 @@ describe('AlertDialog with a handle and onOpenChange', () => {
 		expect(onOpenChange).toHaveBeenCalledExactlyOnceWith(true);
 	});
 });
+
+interface SwitchHarnessProps {
+	handleRef: HandleRef;
+	useSecond: boolean;
+}
+
+function SwitchHandleHarness({ handleRef, useSecond }: SwitchHarnessProps): ReactNode {
+	const first = useDialogHandle<Row>();
+	const second = useDialogHandle<Row>();
+
+	useEffect(() => {
+		handleRef.current = first;
+	}, [first, handleRef]);
+
+	return (
+		<AlertDialog
+			handle={useSecond ? second : first}
+			title="Delete this view?"
+			color="danger"
+			confirmText="Delete view"
+			testId="alert"
+			onConfirm={() => {}}
+		>
+			{(row: Row) => <p>Row: {row.name}</p>}
+		</AlertDialog>
+	);
+}
+
+describe('AlertDialog moved to another handle', () => {
+	it('keeps the last payload on screen while it leaves for a handle that was never opened', async () => {
+		const handleRef: HandleRef = { current: null };
+		const { rerender } = render(<SwitchHandleHarness handleRef={handleRef} useSecond={false} />);
+		await waitFor(() => {
+			expect(handleRef.current).not.toBeNull();
+		});
+		await openWith(handleOf(handleRef), LATENCY);
+
+		rerender(<SwitchHandleHarness handleRef={handleRef} useSecond />);
+
+		const panel = screen.getByRole('alertdialog', { hidden: true });
+
+		expect(panel).toHaveAttribute('data-closed');
+		expect(panel).toHaveTextContent('Row: Latency overview');
+
+		await waitForClosed();
+	});
+});
