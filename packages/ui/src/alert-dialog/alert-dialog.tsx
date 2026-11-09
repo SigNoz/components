@@ -13,14 +13,14 @@ import type { DialogHandle } from '../dialog/dialog-handle.js';
 import { DialogLayer } from '../dialog/subcomponents/dialog-layer.js';
 import { DialogPayload } from '../dialog/subcomponents/dialog-payload.js';
 import { DialogPortal } from '../dialog/subcomponents/dialog-portal.js';
-import type { NoHandle } from '../dialog/types.js';
+import type { DialogChildren, NoHandle } from '../dialog/types.js';
 import { useCloseHandleOnUnmount } from '../dialog/use-close-handle-on-unmount.js';
 import { useDialogHandleState } from '../dialog/use-dialog-handle-state.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { PopupContainer } from '../lib/popup-container.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import styles from './alert-dialog.module.scss';
-import type { AlertDialogProps, ValidateAlertDialogProps } from './types.js';
+import type { AlertDialogProps, RuledAlertDialogKeys, ValidateAlertDialogProps } from './types.js';
 
 const AlertDialogImpl = forwardRef<HTMLDivElement, AlertDialogProps<unknown> & RejectedProps>(
 	function AlertDialog(
@@ -350,11 +350,14 @@ export const AlertDialog = AlertDialogImpl as <
 	// missing `children` or `onConfirm` does not keep the handle from being read, the way `Dialog`
 	// explains.
 	props: T & { handle?: DialogHandle<Payload> } & {
-		children: AlertDialogProps<NoInfer<Payload>>['children'];
+		children: DialogChildren<NoInfer<Payload>>;
 		onConfirm: AlertDialogProps<NoInfer<Payload>>['onConfirm'];
 	} & ValidateAlertDialogProps<T, NoInfer<Payload>> &
 		Record<
-			Exclude<keyof T, keyof AlertDialogProps<Payload> | keyof RefAttributes<HTMLDivElement>>,
+			Exclude<
+				keyof T,
+				keyof AlertDialogProps<Payload> | keyof RefAttributes<HTMLDivElement> | RuledAlertDialogKeys
+			>,
 			never
 		> &
 		RefAttributes<HTMLDivElement>,

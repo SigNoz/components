@@ -2,7 +2,13 @@ import type { Drawer } from '@base-ui/react/drawer';
 import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
 import type { BreadcrumbEllipsisOptions } from '../breadcrumb/types.js';
 import type { DialogHandle } from '../dialog/dialog-handle.js';
-import type { CloseHandlerRule, NoHandle, RuleFor, ValidateOpenOrHandle } from '../dialog/types.js';
+import type {
+	CloseHandlerRule,
+	NoHandle,
+	OnOpenChangeRule,
+	RuleFor,
+	ValidateOpenOrHandle,
+} from '../dialog/types.js';
 
 type OriginalPortalProps = Drawer.Portal.Props;
 type OriginalPopupProps = Drawer.Popup.Props;
@@ -152,6 +158,10 @@ interface OnOpenChangeIsOnClose {
 	'a drawer only ever asks to close: use `onClose(reason)`, and ignore a reason to keep it open': never;
 }
 
+interface AHandleReportsTheClose {
+	'with a `handle`, the handle reports the close: pass `onOpenChange` to `useDrawerHandle(onOpenChange)`, not to the drawer': never;
+}
+
 interface TheTypeSetsTheBackdrop {
 	'`type` sets the backdrop: a `task` is modal behind one, an `inspector` has none and leaves the page usable': never;
 }
@@ -189,7 +199,7 @@ interface FooterIsFooterSuffix {
 }
 
 interface TheCloseButtonIsFixed {
-	'a `Drawer` always renders its close button, last in the header': never;
+	'a `Drawer` always renders its close button: move it to the start of the header with `closePosition="start"`': never;
 }
 
 interface OutsidePressIsAReason {
@@ -205,7 +215,7 @@ interface EscIsAReason {
 }
 
 interface ExtraIsHeaderSuffix {
-	'antd `extra` is called `headerSuffix`: the actions before the close button': never;
+	'antd `extra` is called `headerSuffix`: the actions at the end of the header': never;
 }
 
 interface TheDrawerUnmountsWhenClosed {
@@ -216,12 +226,8 @@ interface PartPropsAreSlots {
 	'the drawer has no part props: put content in `headerPrefix`, `titlePrefix`, `titleSuffix`, `headerSuffix`, `footerPrefix` or `footerSuffix`, and test it through `testId`': never;
 }
 
-interface TheDrawerTakesNoClassName {
-	'`Drawer` takes no `className` or `style`: wrap your content in your own element, and reach the panel with a `data-*` attribute': never;
-}
-
 interface ATrailNeedsOnTrailSelect {
-	'a press on an earlier step of `trail` asks you to show it: pass `onTrailSelect(index)` and render that step': never;
+	'a press on an earlier step of `trail` asks you to show it: pass `onTrailSelect(index, reason)` and render that step': never;
 }
 
 interface OnTrailSelectNeedsATrail {
@@ -248,6 +254,49 @@ type ValidateDrawerType<T> = T extends { type: 'inspector' }
 	: unknown;
 
 /**
+ * The props {@link ValidateDrawerProps} rejects with a rule and that are not props of `Drawer`.
+ * The signature leaves them out of the keys it pins to `never`: pinned, the compiler reports
+ * `never` on the prop and drops the rule's message. `className`, `style` and `rootClassName` have
+ * no rule: the drawer takes no class name or style at all, and the plain `never` on the prop says
+ * enough.
+ *
+ * @access private
+ */
+export type RuledDrawerKeys =
+	| 'trigger'
+	| 'defaultOpen'
+	| 'onOpenChange'
+	| 'showOverlay'
+	| 'modal'
+	| 'mask'
+	| 'zIndex'
+	| 'getContainer'
+	| 'subTitle'
+	| 'footer'
+	| 'showCloseButton'
+	| 'closable'
+	| 'closeIcon'
+	| 'disableOutsideClick'
+	| 'maskClosable'
+	| 'keyboard'
+	| 'direction'
+	| 'placement'
+	| 'animation'
+	| 'offset'
+	| 'heightMode'
+	| 'push'
+	| 'extra'
+	| 'destroyOnClose'
+	| 'forceMount'
+	| 'drawerContentProps'
+	| 'drawerHeaderProps'
+	| 'drawerTitleProps'
+	| 'drawerSubtitleProps'
+	| 'drawerDescriptionProps'
+	| 'drawerFooterProps'
+	| 'closeButtonProps';
+
+/**
  * Extra constraints layered on top of {@link DrawerProps} at the call site. Each rejected prop the
  * old `DrawerWrapper` or the antd `Drawer` took names its replacement.
  *
@@ -269,7 +318,7 @@ export type ValidateDrawerProps<T, Payload = NoHandle> = RuleFor<
 	ValidateDrawerType<T> &
 	ValidateDrawerTrail<T> &
 	RuleFor<T, 'trigger' | 'defaultOpen', TheDrawerIsAlwaysControlled> &
-	RuleFor<T, 'onOpenChange', OnOpenChangeIsOnClose> &
+	OnOpenChangeRule<T, Payload, OnOpenChangeIsOnClose, AHandleReportsTheClose> &
 	RuleFor<T, 'showOverlay' | 'modal' | 'mask', TheTypeSetsTheBackdrop> &
 	RuleFor<T, 'zIndex', TheDrawerOwnsItsLayer> &
 	RuleFor<T, 'getContainer', GetContainerIsContainer> &
@@ -296,8 +345,7 @@ export type ValidateDrawerProps<T, Payload = NoHandle> = RuleFor<
 		| 'drawerFooterProps'
 		| 'closeButtonProps',
 		PartPropsAreSlots
-	> &
-	RuleFor<T, 'className' | 'style' | 'rootClassName', TheDrawerTakesNoClassName>;
+	>;
 
 /**
  * The props of a `Drawer`. A `type="inspector"` drawer takes no `description`, `footerPrefix` or

@@ -68,6 +68,10 @@ interface OnOpenChangeIsOnClose {
 	'a dialog only ever asks to close: use `onClose(reason)`, and ignore a reason to keep it open': never;
 }
 
+interface AHandleReportsTheClose {
+	'with a `handle`, the handle reports the close: pass `onOpenChange` to `useDialogHandle(onOpenChange)`, not to the dialog': never;
+}
+
 interface SubTitleIsDescription {
 	'`subTitle` is called `description`, and it is the accessible description of the panel': never;
 }
@@ -80,12 +84,16 @@ interface OutsidePressIsAReason {
 	'a press on the backdrop calls `onClose("outside-press")`: ignore that reason to keep the dialog open': never;
 }
 
+interface EscIsAReason {
+	'`Esc` calls `onClose("escape-key")`: ignore that reason to keep the dialog open': never;
+}
+
 interface TheDialogIsAlwaysModal {
 	'a dialog is always modal and always has the backdrop': never;
 }
 
 interface TheDialogOwnsItsLayer {
-	'a dialog stacks above drawers on its own: drop `zIndex`': never;
+	'a dialog stacks above the layer it opens from on its own: drop `zIndex`': never;
 }
 
 interface GetContainerIsContainer {
@@ -102,10 +110,6 @@ interface TheFooterTakesTheButtons {
 
 interface FooterIsFooterSuffix {
 	'`footer` is called `footerSuffix`, the pair of `footerPrefix`': never;
-}
-
-interface TheDialogTakesNoClassName {
-	'`Dialog` takes no `className` or `style`: wrap your content in your own element, and reach the panel with a `data-*` attribute': never;
 }
 
 /**
@@ -182,6 +186,31 @@ export type ValidateOpenOrHandle<
 			: unknown;
 
 /**
+ * The `children` of a dialog in its signature. With a handle, a function of its payload. With no
+ * handle, a function of any parameter still passes as `children`, so the open-or-handle rule
+ * rejects it with its own message: typed `(payload: NoHandle) => ReactNode`, the compiler would
+ * reject the function first and print that internal marker instead.
+ *
+ * @access private
+ */
+export type DialogChildren<Payload> =
+	IsNoHandle<Payload> extends true
+		? ReactNode | ((payload: never) => ReactNode)
+		: ReactNode | ((payload: Payload) => ReactNode);
+
+/**
+ * `onOpenChange` is never a prop of a dialog. With `open` it is the close handler under another
+ * name, and with a handle it belongs to the hook that made the handle.
+ *
+ * @access private
+ */
+export type OnOpenChangeRule<T, Payload, ControlledRule, HandleRule> = RuleFor<
+	T,
+	'onOpenChange',
+	IsNoHandle<Payload> extends true ? ControlledRule : HandleRule
+>;
+
+/**
  * With `open` the dialog never closes itself, so the handler that does it is required. With a
  * handle the dialog closes itself, so the handler is rejected: the handle owns the open state.
  *
@@ -199,8 +228,24 @@ export type CloseHandlerRule<T, Payload, Key extends PropertyKey, ControlledRule
 			: unknown;
 
 /**
+ * The props `ValidateSharedDialogProps` rejects with a rule. Not one of them is a prop, so the
+ * signature leaves them out of the keys it pins to `never`: pinned, the compiler reports the prop
+ * as `never` and drops the rule's message.
+ *
+ * @access private
+ */
+export type RuledSharedDialogKeys =
+	| 'trigger'
+	| 'defaultOpen'
+	| 'showOverlay'
+	| 'modal'
+	| 'zIndex'
+	| 'getContainer';
+
+/**
  * The rules `Dialog` and `AlertDialog` share: the open-or-handle pair, and the props of the old
- * dialogs that no longer exist.
+ * dialogs that no longer exist. Each component words `onOpenChange` itself, since only `Dialog`
+ * has an `onClose`.
  *
  * @access private
  */
@@ -211,10 +256,39 @@ export type ValidateSharedDialogProps<T, Payload> = RuleFor<
 > &
 	ValidateOpenOrHandle<T, Payload> &
 	RuleFor<T, 'trigger' | 'defaultOpen', TheDialogIsAlwaysControlled> &
-	RuleFor<T, 'onOpenChange', OnOpenChangeIsOnClose> &
 	RuleFor<T, 'showOverlay' | 'modal', TheDialogIsAlwaysModal> &
 	RuleFor<T, 'zIndex', TheDialogOwnsItsLayer> &
 	RuleFor<T, 'getContainer', GetContainerIsContainer>;
+
+/**
+ * The props {@link ValidateDialogProps} rejects with a rule and that are not props of `Dialog`.
+ * The signature leaves them out of the keys it pins to `never`, so the rule's message shows.
+ * `className` and `style` have no rule: the plain `never` on the prop says enough.
+ *
+ * @access private
+ */
+export type RuledDialogKeys =
+	| RuledSharedDialogKeys
+	| 'onOpenChange'
+	| 'subTitle'
+	| 'footer'
+	| 'showCloseButton'
+	| 'closable'
+	| 'closeIcon'
+	| 'disableOutsideClick'
+	| 'maskClosable'
+	| 'keyboard'
+	| 'position'
+	| 'heightMode'
+	| 'animation'
+	| 'offset'
+	| 'centered'
+	| 'onOk'
+	| 'onCancel'
+	| 'okText'
+	| 'cancelText'
+	| 'okButtonProps'
+	| 'cancelButtonProps';
 
 /**
  * Extra constraints layered on top of {@link DialogProps} at the call site. Each rejected prop
@@ -224,18 +298,19 @@ export type ValidateSharedDialogProps<T, Payload> = RuleFor<
  * a rule object when they are not.
  */
 export type ValidateDialogProps<T, Payload = NoHandle> = ValidateSharedDialogProps<T, Payload> &
+	OnOpenChangeRule<T, Payload, OnOpenChangeIsOnClose, AHandleReportsTheClose> &
 	CloseHandlerRule<T, Payload, 'onClose', AControlledDialogNeedsOnClose, AHandleClosesTheDialog> &
 	RuleFor<T, 'subTitle', SubTitleIsDescription> &
 	RuleFor<T, 'footer', FooterIsFooterSuffix> &
 	RuleFor<T, 'showCloseButton' | 'closable' | 'closeIcon', TheCloseButtonIsFixed> &
-	RuleFor<T, 'disableOutsideClick' | 'maskClosable' | 'keyboard', OutsidePressIsAReason> &
+	RuleFor<T, 'disableOutsideClick' | 'maskClosable', OutsidePressIsAReason> &
+	RuleFor<T, 'keyboard', EscIsAReason> &
 	RuleFor<T, 'position' | 'heightMode' | 'animation' | 'offset' | 'centered', ThePanelIsCentered> &
 	RuleFor<
 		T,
 		'onOk' | 'onCancel' | 'okText' | 'cancelText' | 'okButtonProps' | 'cancelButtonProps',
 		TheFooterTakesTheButtons
-	> &
-	RuleFor<T, 'className' | 'style', TheDialogTakesNoClassName>;
+	>;
 
 /**
  * Where a dialog is shown from: its `open` prop, or a handle from `useDialogHandle()`.

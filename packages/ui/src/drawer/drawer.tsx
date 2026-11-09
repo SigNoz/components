@@ -10,7 +10,7 @@ import {
 import { DialogLayer } from '../dialog/subcomponents/dialog-layer.js';
 import { DialogPayload } from '../dialog/subcomponents/dialog-payload.js';
 import { DialogPortal } from '../dialog/subcomponents/dialog-portal.js';
-import type { NoHandle } from '../dialog/types.js';
+import type { DialogChildren, NoHandle } from '../dialog/types.js';
 import { useCloseHandleOnUnmount } from '../dialog/use-close-handle-on-unmount.js';
 import { useDialogHandleState } from '../dialog/use-dialog-handle-state.js';
 import { mergeRefs } from '../lib/merge-refs.js';
@@ -27,6 +27,7 @@ import type {
 	DrawerHandleType,
 	DrawerProps,
 	DrawerTrailStepType,
+	RuledDrawerKeys,
 	ValidateDrawerProps,
 } from './types.js';
 import { useDrawerStack } from './use-drawer-stack.js';
@@ -471,14 +472,18 @@ export const Drawer = DrawerImpl as <
 	Payload = NoHandle,
 	T extends Omit<DrawerProps<Payload>, 'children'> = Omit<DrawerProps<Payload>, 'children'>,
 >(
-	// The same signature as `Dialog`, which explains each part: excess keys pinned to `never`,
-	// `handle` restated so `Payload` is inferred from it, and `children` read through `NoInfer` so
-	// an unannotated `(row) => …` is typed from the handle alone.
+	// The same signature as `Dialog`, which explains each part: excess keys pinned to `never`
+	// except the ones a rule rejects, `handle` restated so `Payload` is inferred from it, and
+	// `children` read through `NoInfer` so an unannotated `(row) => …` is typed from the handle
+	// alone.
 	props: T & { handle?: DrawerHandleType<Payload> } & {
-		children: DrawerProps<NoInfer<Payload>>['children'];
+		children: DialogChildren<NoInfer<Payload>>;
 	} & ValidateDrawerProps<T, NoInfer<Payload>> &
 		Record<
-			Exclude<keyof T, keyof DrawerProps<Payload> | keyof RefAttributes<HTMLDivElement>>,
+			Exclude<
+				keyof T,
+				keyof DrawerProps<Payload> | keyof RefAttributes<HTMLDivElement> | RuledDrawerKeys
+			>,
 			never
 		> &
 		RefAttributes<HTMLDivElement>,

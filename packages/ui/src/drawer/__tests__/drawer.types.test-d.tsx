@@ -20,6 +20,7 @@ import type {
 	DrawerStackType,
 	DrawerTypeType,
 	DrawerWidthType,
+	RuledDrawerKeys,
 	ValidateDrawerProps,
 } from '../types.js';
 import type { useDrawerHandle } from '../use-drawer-handle.js';
@@ -912,25 +913,28 @@ describe('Drawer rules', () => {
 	const SUBTITLE =
 		'`subTitle` is called `description`: one line of guidance under the title of a `task`';
 	const FOOTER = '`footer` is called `footerSuffix`, the pair of `footerPrefix`';
-	const CLOSE_BUTTON = 'a `Drawer` always renders its close button, last in the header';
+	const CLOSE_BUTTON =
+		'a `Drawer` always renders its close button: move it to the start of the header with `closePosition="start"`';
 	const OUTSIDE_PRESS =
 		'a press on the backdrop of a `task` calls `onClose("outside-press")`: ignore that reason to keep the drawer open';
 	const FROM_THE_RIGHT =
 		'a drawer always opens from the right edge, with one animation: drop `direction`, `placement`, `push`, `animation`, `offset` and `heightMode`';
 	const ESC = '`Esc` calls `onClose("escape-key")`: ignore that reason to keep the drawer open';
-	const EXTRA = 'antd `extra` is called `headerSuffix`: the actions before the close button';
+	const EXTRA = 'antd `extra` is called `headerSuffix`: the actions at the end of the header';
 	const UNMOUNTS =
 		'a closed drawer always unmounts its content: drop `destroyOnClose` and `forceMount`';
 	const PART_PROPS =
 		'the drawer has no part props: put content in `headerPrefix`, `titlePrefix`, `titleSuffix`, `headerSuffix`, `footerPrefix` or `footerSuffix`, and test it through `testId`';
-	const CLASS_NAME =
-		'`Drawer` takes no `className` or `style`: wrap your content in your own element, and reach the panel with a `data-*` attribute';
 	const TEST_ID =
 		'`data-testid` is written as the `testId` prop, which lands on the panel and names every part';
 	const CONTROLLED =
 		'a drawer has no trigger and no uncontrolled mode: pass `open`, or a `handle` from `useDrawerHandle()`';
 	const ON_CLOSE =
 		'a drawer only ever asks to close: use `onClose(reason)`, and ignore a reason to keep it open';
+	const ON_OPEN_CHANGE_WITH_A_HANDLE =
+		'with a `handle`, the handle reports the close: pass `onOpenChange` to `useDrawerHandle(onOpenChange)`, not to the drawer';
+	const TRAIL =
+		'a press on an earlier step of `trail` asks you to show it: pass `onTrailSelect(index, reason)` and render that step';
 	const BACKDROP =
 		'`type` sets the backdrop: a `task` is modal behind one, an `inspector` has none and leaves the page usable';
 	const LAYER = 'a drawer stacks above the layer it opens from on its own: drop `zIndex`';
@@ -1035,11 +1039,34 @@ describe('Drawer rules', () => {
 		expectTypeOf<ValidateDrawerProps<Task & { closeButtonProps: object }>>().toHaveProperty(
 			PART_PROPS,
 		);
-		expectTypeOf<ValidateDrawerProps<Task & { className: string }>>().toHaveProperty(CLASS_NAME);
-		expectTypeOf<ValidateDrawerProps<Task & { style: object }>>().toHaveProperty(CLASS_NAME);
-		expectTypeOf<ValidateDrawerProps<Task & { rootClassName: string }>>().toHaveProperty(
-			CLASS_NAME,
-		);
+	});
+
+	test('leaves className, style and rootClassName to the never of the signature', () => {
+		expectTypeOf<ValidateDrawerProps<Task & { className: string }>>().toEqualTypeOf<unknown>();
+		expectTypeOf<ValidateDrawerProps<Task & { style: object }>>().toEqualTypeOf<unknown>();
+		expectTypeOf<ValidateDrawerProps<Task & { rootClassName: string }>>().toEqualTypeOf<unknown>();
+	});
+
+	test('keeps the props of the drawer out of the keys a rule rejects', () => {
+		expectTypeOf<Extract<RuledDrawerKeys, keyof DrawerProps>>().toEqualTypeOf<never>();
+		expectTypeOf<
+			Extract<RuledDrawerKeys, 'className' | 'style' | 'rootClassName'>
+		>().toEqualTypeOf<never>();
+	});
+
+	test('sends onOpenChange to the hook when a handle is passed', () => {
+		expectTypeOf<
+			ValidateDrawerProps<{ type: 'task'; title: string; onOpenChange: () => void }, Row>
+		>().toHaveProperty(ON_OPEN_CHANGE_WITH_A_HANDLE);
+		expectTypeOf<
+			ValidateDrawerProps<{ type: 'task'; title: string; onOpenChange: () => void }, Row>
+		>().not.toHaveProperty(ON_CLOSE);
+	});
+
+	test('names both arguments of onTrailSelect in the rule of a trail', () => {
+		expectTypeOf<
+			ValidateDrawerProps<Inspector & { trail: readonly { title: string }[] }>
+		>().toHaveProperty(TRAIL);
 	});
 });
 
@@ -1524,7 +1551,7 @@ describe('Drawer handle', () => {
 			</Drawer>,
 		);
 		assertType(
-			// @ts-expect-error - `Row` is not what the drawer passes without a handle
+			// @ts-expect-error - a function that reads a `Row` needs the `handle` that opens it too
 			<Drawer type="inspector" stack="overlay" open onClose={noop} title="T" {...readsRow} />,
 		);
 	});

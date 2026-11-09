@@ -273,7 +273,7 @@ describe('AlertDialog rejected props', () => {
 			</AlertDialog>,
 		);
 		assertType(
-			// @ts-expect-error - `onOpenChange` is `onClose`
+			// @ts-expect-error - `onOpenChange` is `onCancel` and `onConfirm`
 			<AlertDialog {...alert} onOpenChange={noop}>
 				Body
 			</AlertDialog>,
@@ -396,13 +396,13 @@ describe('AlertDialog rejected props', () => {
 			</AlertDialog>,
 		);
 		assertType(
-			// @ts-expect-error - an alert has one fixed layout, no `className`
+			// @ts-expect-error - `AlertDialog` takes no `className`
 			<AlertDialog {...alert} className="x">
 				Body
 			</AlertDialog>,
 		);
 		assertType(
-			// @ts-expect-error - an alert has one fixed layout, no `style`
+			// @ts-expect-error - `AlertDialog` takes no `style`
 			<AlertDialog {...alert} style={{}}>
 				Body
 			</AlertDialog>,
@@ -723,7 +723,7 @@ describe('AlertDialog handle', () => {
 			<AlertDialog {...alert}>{() => 'Body'}</AlertDialog>,
 		);
 		assertType(
-			// @ts-expect-error - `Row` is not what the alert passes without a handle
+			// @ts-expect-error - a function that reads a `Row` needs the `handle` that opens it too
 			<AlertDialog {...alert}>{(row: Row) => row.name}</AlertDialog>,
 		);
 	});
@@ -845,7 +845,13 @@ describe('AlertDialog handle', () => {
 			</AlertDialog>,
 		);
 		assertType(
-			// @ts-expect-error - an alert has one fixed layout, no `className`
+			// @ts-expect-error - `onOpenChange` is on the hook, `useDialogHandle(onOpenChange)`
+			<AlertDialog {...rowAlert} onOpenChange={noop}>
+				Body
+			</AlertDialog>,
+		);
+		assertType(
+			// @ts-expect-error - `AlertDialog` takes no `className`
 			<AlertDialog {...rowAlert} className="x">
 				Body
 			</AlertDialog>,

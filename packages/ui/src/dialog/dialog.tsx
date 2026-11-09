@@ -11,7 +11,14 @@ import { DialogLayer } from './subcomponents/dialog-layer.js';
 import type { DialogHandle } from './dialog-handle.js';
 import { DialogPayload } from './subcomponents/dialog-payload.js';
 import { DialogPortal } from './subcomponents/dialog-portal.js';
-import type { DialogCloseReasonType, DialogProps, NoHandle, ValidateDialogProps } from './types.js';
+import type {
+	DialogChildren,
+	DialogCloseReasonType,
+	DialogProps,
+	NoHandle,
+	RuledDialogKeys,
+	ValidateDialogProps,
+} from './types.js';
 import { useCloseHandleOnUnmount } from './use-close-handle-on-unmount.js';
 import { useDialogHandleState } from './use-dialog-handle-state.js';
 import { isDialogCloseReason } from './utils.js';
@@ -388,7 +395,8 @@ export const Dialog = DialogImpl as <
 	T extends Omit<DialogProps<Payload>, 'children'> = Omit<DialogProps<Payload>, 'children'>,
 >(
 	// `T` is inferred from the call site, so `T extends DialogProps` alone never runs excess
-	// property checks. Every key outside the props is pinned to `never` instead.
+	// property checks. Every key outside the props is pinned to `never` instead, except the keys
+	// a rule rejects: pinned too, the compiler reports `never` on the prop and drops the rule.
 	//
 	// `handle` is restated so `Payload` has somewhere to be inferred from, which is what types
 	// `children` as a function of whatever that handle opens with. That restating also takes
@@ -402,10 +410,13 @@ export const Dialog = DialogImpl as <
 	// unannotated `(row) => …` is typed from the handle alone. Inferred from `T`, TypeScript 5.9
 	// reads it before the payload and types `row` as an implicit `any`.
 	props: T & { handle?: DialogHandle<Payload> } & {
-		children: DialogProps<NoInfer<Payload>>['children'];
+		children: DialogChildren<NoInfer<Payload>>;
 	} & ValidateDialogProps<T, NoInfer<Payload>> &
 		Record<
-			Exclude<keyof T, keyof DialogProps<Payload> | keyof RefAttributes<HTMLDivElement>>,
+			Exclude<
+				keyof T,
+				keyof DialogProps<Payload> | keyof RefAttributes<HTMLDivElement> | RuledDialogKeys
+			>,
 			never
 		> &
 		RefAttributes<HTMLDivElement>,

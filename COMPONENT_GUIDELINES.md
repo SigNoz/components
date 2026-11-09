@@ -735,6 +735,10 @@ How to apply it:
   pattern (`T & Validate{Component}Props<T> & Record<Exclude<keyof T, keyof Props>, never>`), so
   a stray `className` is a type error that points at the prop. Add a `@ts-expect-error` case for
   each rejected prop to `{name}.types.test-d.tsx`.
+- **Leave a prop that has a rule out of the `never` pin.** When `Validate{Component}Props` names
+  the replacement of a removed prop, list the key in a `Ruled{Component}Keys` union and exclude
+  it from the pin as well. Pinned, the compiler prints `Type 'X' is not assignable to type
+  'never'` on the prop and drops the rule's message (see `RuledDrawerKeys`).
 - **Do not add runtime guards beyond that.** The `RejectedProps` destructuring that drops the
   rejected keys is the whole runtime side. Do not filter the rest props through an allow-list of
   keys (only `id`, `aria-*` and `data-*` reach the root) or a deny-list of handlers. A caller who
