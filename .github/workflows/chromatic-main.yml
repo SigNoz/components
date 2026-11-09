@@ -45,7 +45,7 @@ jobs:
           pnpm build
 
       - name: Run Chromatic
-        uses: chromaui/action@latest
+        uses: chromaui/action@v18.14.1
         # On `pull_request` the action reports the PR head commit and branch. A squash
         # merge leaves that commit unreachable from main, so the baseline lands under a
         # SHA later runs can't resolve and TurboSnap falls back to an ancient build.
@@ -63,3 +63,15 @@ jobs:
           chromaticSha: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
           autoAcceptChanges: main
           onlyChanged: true
+          # The Storybook lives in `apps/docs`, but the action runs from the repo root and
+          # never reads `apps/docs/chromatic.config.json`. Without this input the changed
+          # files (repo-root paths) never match the stats file (paths relative to
+          # `apps/docs`), and TurboSnap fails with "base directory is set correctly".
+          # Leave `storybookConfigDir` unset: TurboSnap resolves it against this base dir,
+          # so the default `.storybook` already points at `apps/docs/.storybook`.
+          storybookBaseDir: apps/docs
+          # Stories import `@signozhq/ui` from the built `packages/ui/dist`, which is not in
+          # git, so a change under `packages/` traces to zero stories and would skip the
+          # snapshots it affects. Snapshot everything when anything there changes.
+          externals: |
+            packages/**
