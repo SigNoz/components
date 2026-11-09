@@ -8,8 +8,8 @@ import type { PopoverAnchorType, PopoverSideType } from '../types.js';
 /**
  * Places the popup against its anchor, stacked above the layer that anchor sits in.
  *
- * Mounts on open, so the layer is read once per open. The offsets are fixed: good defaults, not
- * knobs.
+ * Mounts on open, so the layer is read once per open, and again when the popup moves to another
+ * `Popover.Trigger`. The offsets are fixed: good defaults, not knobs.
  *
  * @access private
  */
