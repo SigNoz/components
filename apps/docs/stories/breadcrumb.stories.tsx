@@ -844,55 +844,57 @@ function BreadcrumbShowcaseLayout(): ReactElement {
 
 function PopupsShowcaseLayout(): ReactElement {
 	return (
-		<div className={styles.popups}>
-			<PopupCell caption="A crumb with a menu">
-				<Breadcrumb testId="popup-crumb-menu" items={CRUMB_MENU_TRAIL} />
-			</PopupCell>
-			<PopupCell caption="The ... popover" width="240px">
-				<Breadcrumb items={LONG_TRAIL} testId="popup-plain" />
-			</PopupCell>
-			<PopupCell caption="Outlined, with a heading, a suffix and every kind of row">
-				<Breadcrumb
-					items={RICH_ELLIPSIS_TRAIL}
-					variant={BreadcrumbVariant.Outlined}
-					separator="›"
-					maxVisible={2}
-					ellipsis={{
-						heading: 'Earlier steps',
-						rowSuffix: (_item, index) => <StepNumber index={index} />,
-					}}
-					testId="popup-rich"
-				/>
-			</PopupCell>
-			<PopupCell caption="Outlined, a crumb with a menu">
-				<Breadcrumb
-					items={OUTLINED_MENU_TRAIL}
-					separator="›"
-					variant={BreadcrumbVariant.Outlined}
-					testId="popup-outlined-menu"
-				/>
-			</PopupCell>
-			<PopupCell caption="ellipsis.render">
-				<Breadcrumb
-					items={STEP_TRAIL}
-					variant={BreadcrumbVariant.Outlined}
-					separator="›"
-					collapseFrom="start"
-					maxVisible={4}
-					ellipsis={{
-						render: (collapsed) => <CollapsedLinks collapsed={collapsed} />,
-					}}
-					testId="popup-custom"
-				/>
-			</PopupCell>
-			<PopupCell caption="A preview card">
-				<Breadcrumb
-					items={PREVIEW_TRAIL}
-					variant={BreadcrumbVariant.Outlined}
-					separator="›"
-					testId="popup-preview"
-				/>
-			</PopupCell>
+		<div className="story-container-full">
+			<div className={styles.popups}>
+				<PopupCell caption="A crumb with a menu">
+					<Breadcrumb testId="popup-crumb-menu" items={CRUMB_MENU_TRAIL} />
+				</PopupCell>
+				<PopupCell caption="The ... popover" width="240px">
+					<Breadcrumb items={LONG_TRAIL} testId="popup-plain" />
+				</PopupCell>
+				<PopupCell caption="Outlined, with a heading, a suffix and every kind of row">
+					<Breadcrumb
+						items={RICH_ELLIPSIS_TRAIL}
+						variant={BreadcrumbVariant.Outlined}
+						separator="›"
+						maxVisible={2}
+						ellipsis={{
+							heading: 'Earlier steps',
+							rowSuffix: (_item, index) => <StepNumber index={index} />,
+						}}
+						testId="popup-rich"
+					/>
+				</PopupCell>
+				<PopupCell caption="Outlined, a crumb with a menu">
+					<Breadcrumb
+						items={OUTLINED_MENU_TRAIL}
+						separator="›"
+						variant={BreadcrumbVariant.Outlined}
+						testId="popup-outlined-menu"
+					/>
+				</PopupCell>
+				<PopupCell caption="ellipsis.render">
+					<Breadcrumb
+						items={STEP_TRAIL}
+						variant={BreadcrumbVariant.Outlined}
+						separator="›"
+						collapseFrom="start"
+						maxVisible={4}
+						ellipsis={{
+							render: (collapsed) => <CollapsedLinks collapsed={collapsed} />,
+						}}
+						testId="popup-custom"
+					/>
+				</PopupCell>
+				<PopupCell caption="A preview card">
+					<Breadcrumb
+						items={PREVIEW_TRAIL}
+						variant={BreadcrumbVariant.Outlined}
+						separator="›"
+						testId="popup-preview"
+					/>
+				</PopupCell>
+			</div>
 		</div>
 	);
 }
