@@ -1,0 +1,318 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as AlertDialogStories from './alert-dialog.stories';
+
+<Meta of={AlertDialogStories} />
+
+# AlertDialog
+
+The confirmation for an action the user cannot take back, or one with a consequence worth a second
+look, rendered through Base UI's Alert Dialog. It asks one question and takes one of two answers,
+cancel or confirm.
+
+It has one width, 384px, no close button and a fixed footer of a cancel and a confirm button, so it
+takes no `footer`, `footerPrefix` or `footerSuffix`. For a form or any other content, use
+[Dialog](?path=/docs/composed-components-dialog--docs).
+
+## How to use
+
+An alert has no trigger and no uncontrolled mode: it opens from a button, a menu item or a table
+row, so the page that owns the state shows it. Pass `open`, or a `handle` for an alert that opens
+from somewhere far from where it is declared ([see below](#from-a-handle)). `title`, `color`,
+`confirmText`, `onConfirm` and the children are required, and so are `open` and `onCancel`, unless a
+`handle` is passed. A handle replaces both, so the types reject `open` and `onCancel` next to one.
+
+```tsx
+import { useState } from 'react';
+import { AlertDialog, Button } from '@signozhq/ui';
+
+export default function DeleteView({ view }) {
+	const [open, setOpen] = useState(false);
+
+	return (
+		<>
+			<Button variant="outlined" color="secondary" size="md" onClick={() => setOpen(true)}>
+				Delete view
+			</Button>
+			<AlertDialog
+				open={open}
+				title="Delete this view?"
+				color="danger"
+				confirmText="Delete view"
+				onConfirm={async () => {
+					await deleteView(view.id);
+					setOpen(false);
+				}}
+				onCancel={() => setOpen(false)}
+			>
+				Dashboards that link to it will open the default view.
+			</AlertDialog>
+		</>
+	);
+}
+```
+
+`id`, `ref`, `aria-*` and `data-*` land on the panel. `className` and `style` are not forwarded.
+
+<Primary />
+
+`title` asks the question, and the children state the consequence, not the action again. The confirm
+label names the action: `Delete view`, not `OK`. `color` is `danger` for a destructive action and
+`primary` for a consequential one, and it sets the intent of the confirm button. An empty `title`
+renders `<No title>`, so the missing accessible name shows in review.
+
+## Answering it
+
+An alert is answered, not escaped. It has no close button, a press on the backdrop does nothing, and
+`Esc` is the cancel button.
+
+With `open`, the alert never opens or closes itself. `onCancel` reports the cancel button and `Esc`,
+`onConfirm` reports the confirm button, and the alert stays open until `open` becomes `false`. Set
+it in both handlers, as in the example above.
+
+## Labels and icons
+
+`confirmText` is required. `cancelText` is `Cancel` unless you pass another label. Name the safe
+answer after what it keeps when `Cancel` would be vague, such as `Keep editing` next to
+`Discard changes`.
+
+`titleIcon` renders an icon before the title, hidden from assistive tech, so the title alone names
+the panel. `confirmIcon` and `cancelIcon` are the prefix of each button.
+
+```tsx
+<AlertDialog
+	open={open}
+	title="Delete this view?"
+	titleIcon={<TriangleAlert />}
+	color="danger"
+	confirmText="Delete view"
+	confirmIcon={<Trash2 />}
+	cancelIcon={<X />}
+	onConfirm={confirm}
+	onCancel={() => setOpen(false)}
+>
+	Dashboards that link to it will open the default view.
+</AlertDialog>
+```
+
+## Pending
+
+`onConfirm` may return a promise. While it is pending the confirm button shows its loading state,
+the cancel button is disabled and `Esc` does nothing, because the request cannot be stopped and
+closing would hide its result.
+
+With `open`, set `open` to `false` at the end of the handler, once the request has resolved. When it
+rejects, the loading state ends and the alert stays open, so the user can try again or cancel. The
+alert catches the rejection and does not rethrow it, so it never reaches the page as an unhandled
+rejection. Show the error from the handler, for example with a toast:
+
+```tsx
+onConfirm={async () => {
+	try {
+		await deleteView(view.id);
+		setOpen(false);
+	} catch {
+		toast.danger('The view could not be deleted.', { action: { label: 'Close' } });
+	}
+}}
+```
+
+## From a handle
+
+`open` suits an alert that one button opens, where the state sits next to both. It suits a table
+badly: a row action far from the alert needs the state lifted into a parent along with the row the
+alert is about.
+
+`useDialogHandle()` returns a handle that stands in for `open` and `onCancel`. Declare one alert,
+give it the handle, and call `handle.open(payload)` from anywhere that holds the handle. The
+children may be a function of the payload, and `onConfirm` receives the same payload, so one alert
+serves every row of a table.
+
+```tsx
+import { AlertDialog, Button, useDialogHandle } from '@signozhq/ui';
+
+export default function SavedViews({ views }) {
+	const deleteView = useDialogHandle<SavedView>();
+
+	return (
+		<>
+			{views.map((view) => (
+				<Row key={view.id} view={view}>
+					<Button
+						variant="outlined"
+						color="secondary"
+						size="sm"
+						onClick={() => deleteView.open(view)}
+					>
+						Delete
+					</Button>
+				</Row>
+			))}
+			<AlertDialog
+				handle={deleteView}
+				title="Delete this view?"
+				color="danger"
+				confirmText="Delete view"
+				onConfirm={(view) => removeView(view.id)}
+			>
+				{(view) => <>Everyone who can see {view.name} loses it.</>}
+			</AlertDialog>
+		</>
+	);
+}
+```
+
+With a handle the alert closes itself, so `open`, `onCancel` and a `setOpen(false)` have no place in
+the handlers:
+
+- `handle.open(payload)` shows the alert. A handle created without a payload type opens with
+  `handle.open()`.
+- Cancel and `Esc` close it.
+- Confirm closes it once `onConfirm` returns, or once the promise it returns resolves. The confirm
+  button stays loading until then.
+- An answer of `false`, returned or resolved, keeps it open. Any other answer, `undefined`
+  included, closes it.
+- A rejected promise ends the loading state and leaves the alert open. The alert catches it and
+  does not rethrow it.
+- `children` is called with the payload only while the alert is shown. The panel keeps that payload
+  while it plays its exit, so the content does not change as it fades.
+- `title`, `confirmText` and the other props do not take the payload. What depends on the row goes
+  in the children.
+
+To show a failed request and let the user try again, report the error and answer `false`:
+
+```tsx
+<AlertDialog
+	handle={deleteView}
+	title="Delete this view?"
+	color="danger"
+	confirmText="Delete view"
+	onConfirm={async (view) => {
+		try {
+			await removeView(view.id);
+			return true;
+		} catch {
+			toast.danger('The view could not be deleted.', { action: { label: 'Close' } });
+			return false;
+		}
+	}}
+>
+	{(view) => <>Everyone who can see {view.name} loses it.</>}
+</AlertDialog>
+```
+
+### Learning that it closed
+
+An alert on a handle has no `onCancel`, so the page learns of a close from the handle.
+`useDialogHandle(onOpenChange)` takes an optional callback that reports every open and close,
+whatever caused it. `onOpenChange(false)` runs for the cancel button, `Esc` and a confirm that
+closed the alert alike, and it carries no reason. It also runs when the alert unmounts while open,
+such as a conditionally rendered alert or one that closes with the dialog it is declared in, so the
+handle never stays open with nothing on screen.
+
+```tsx
+const deleteView = useDialogHandle<SavedView>((open) => {
+	if (!open) {
+		resetError();
+	}
+});
+```
+
+## Do not ask me again
+
+The alert has no checkbox for it. Render a `Checkbox` in the children, under the text of the
+consequence, and own the choice: where it is stored, and skipping the alert the next time.
+
+```tsx
+<AlertDialog
+	open={open}
+	title="Delete this view?"
+	color="danger"
+	confirmText="Delete view"
+	onConfirm={() => {
+		setSkipNextTime(skipChecked);
+		deleteView(view.id);
+		setOpen(false);
+	}}
+	onCancel={() => setOpen(false)}
+>
+	<div>Dashboards that link to it will open the default view.</div>
+	<div>
+		<Checkbox color="primary" value={skipChecked} onChange={setSkipChecked}>
+			Do not ask me again
+		</Checkbox>
+	</div>
+</AlertDialog>
+```
+
+## Focus and keyboard
+
+The panel is `role="alertdialog"` with `aria-modal="true"`, named by `title` and described by the
+children. While it is open, focus is trapped in the panel.
+
+Initial focus goes to the panel, so a screen reader reads the title and the body first, and an
+`Enter` meant for the page answers nothing. The first `Tab` reaches the first focusable element of
+the body, or the cancel button when the body has none. On close, focus goes back to the element
+that had it when the alert opened.
+
+`initialFocus` and `finalFocus` redirect the focus on the way in and out, the way they do on
+`Popover`. Pass a ref to `initialFocus` for a field in the body the user fills before confirming,
+and never point it at the confirm button. Pass a ref to `finalFocus` when the element that opened
+the alert is gone after the answer, such as the row of a deleted view:
+
+```tsx
+<AlertDialog handle={deleteView} finalFocus={tableRef} {...props}>
+	{(view) => (
+		<>
+			Everyone loses access to <strong>{view.name}</strong>.
+		</>
+	)}
+</AlertDialog>
+```
+
+- `Esc` calls `onCancel` with `open`, and closes an alert on a handle.
+- `Esc` does nothing while `onConfirm` is pending.
+- `Enter` and `Space` press the focused button. The alert adds no `Enter` handler of its own.
+
+## Layering and nesting
+
+The alert renders in `document.body`, or in `container`, which takes an element or a ref to it and
+works as it does on `Dialog`. A Toast stacks above it. Opened from inside a `Dialog`, it stacks above
+that dialog and needs no `zIndex`.
+
+To nest an alert in a `Dialog`, render it inside the `children`, the `footerPrefix` or the
+`footerSuffix` of the dialog. While it is open:
+
+- It renders above the dialog, and only the alert takes input. The dialog stays rendered and inert.
+- There is one backdrop, the dialog's. The alert renders none of its own, and the dialog panel gets
+  `data-nested-dialog-open`.
+- When the alert closes, focus goes back to the element in the dialog that opened it.
+- When the dialog closes, the alert closes with it, because it is part of the dialog's content.
+
+[Dialog](?path=/docs/composed-components-dialog--docs) shows how to guard a form with unsaved edits
+this way.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the panel, and it names every part:
+
+| Element        | `data-testid`              |
+| -------------- | -------------------------- |
+| backdrop       | `` `${testId}-backdrop` `` |
+| title          | `` `${testId}-title` ``    |
+| body           | `` `${testId}-body` ``     |
+| cancel button  | `` `${testId}-cancel` ``   |
+| confirm button | `` `${testId}-confirm` ``  |
+
+An alert nested in a `Dialog` renders no backdrop, so assert on the backdrop only for an alert that
+stands alone.
+
+The panel carries `data-color`, `data-open` while open and `data-closed` while the exit runs. While
+`onConfirm` is pending, the confirm button has `aria-busy="true"` and the cancel button has
+`aria-disabled="true"`. An alert portals to `document.body`, or to `container`, so query the
+document, not the canvas.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={AlertDialogStories.Default} />

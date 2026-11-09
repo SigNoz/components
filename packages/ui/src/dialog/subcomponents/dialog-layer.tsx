@@ -2,12 +2,14 @@ import { DismissableLayer, DismissableLayerBranch } from '@radix-ui/react-dismis
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import type { ReactNode } from 'react';
 import { useOpenerLayerZIndex } from '../../lib/layer-z-index.js';
-import styles from '../dialog.module.scss';
 import { preventDefault } from '../utils.js';
 
 /**
- * The one stacking layer of a dialog. The backdrop and the viewport sit inside it and share its
- * z-index, which `--dialog-z-index` moves.
+ * The one stacking layer of a dialog, shared by `Dialog` and `AlertDialog`. The backdrop and the
+ * viewport sit inside it and share its z-index.
+ *
+ * `className` carries the layer's own z-index, and `zIndex` is the same value as a CSS expression,
+ * the floor the layer never goes under when it stacks above another one.
  *
  * Mounts on open and reads the layer the focus is in at that moment, to stack above it: the
  * drawer a dialog opens from, or the parent dialog of a nested one. Base UI moves the focus into
@@ -22,14 +24,24 @@ import { preventDefault } from '../utils.js';
  *
  * @access private
  */
-export function DialogLayer({ children }: { children: ReactNode }): ReactNode {
-	const layerStyle = useOpenerLayerZIndex('var(--dialog-z-index, 50)');
+export function DialogLayer({
+	children,
+	className,
+	slot,
+	zIndex,
+}: {
+	children: ReactNode;
+	className: string;
+	slot: string;
+	zIndex: string;
+}): ReactNode {
+	const layerStyle = useOpenerLayerZIndex(zIndex);
 
 	return (
 		<DismissableLayerBranch asChild>
 			<DismissableLayer asChild>
 				<FocusScope asChild onMountAutoFocus={preventDefault} onUnmountAutoFocus={preventDefault}>
-					<div data-slot="dialog-layer" className={styles['dialog__layer']} style={layerStyle}>
+					<div data-slot={slot} className={className} style={layerStyle}>
 						{children}
 					</div>
 				</FocusScope>

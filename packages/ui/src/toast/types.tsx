@@ -72,7 +72,7 @@ export interface ToastOptions {
 	/**
 	 * The button on the right. It closes the toast, after running `onClick`, so it is both the way
 	 * out and the place to undo what the toast reports. Never put an irreversible action there,
-	 * use a confirm dialog.
+	 * use an `AlertDialog`.
 	 *
 	 * A toast with an action stays until it is dismissed or replaced.
 	 */
