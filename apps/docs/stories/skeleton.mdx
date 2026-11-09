@@ -1,42 +1,239 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as SkeletonStories from './skeleton.stories';
+import * as SkeletonComponentsStories from './skeleton-components.stories';
 
 <Meta of={SkeletonStories} />
 
 # Skeleton
 
-Use `Skeleton` to show placeholder loading states while content is being fetched.
-It supports animated pulse effects, configurable title and paragraph rows,
-and sub-components for inputs, buttons, and avatars.
+A placeholder that keeps the shape of content while it loads, so the layout does not jump when the
+data arrives. It is decorative: it has no hover, no focus and no events, and it is hidden from
+assistive technology. It forwards `ref`, `id` and every `data-*` attribute to the root.
 
-## Basic Usage
+There are four parts. `Skeleton` is a block of text, a title and rows. `Skeleton.Input`,
+`Skeleton.Button` and `Skeleton.Avatar` each stand for one control, at the height of that control.
+
+## When to use it
+
+Use a skeleton when you know the shape of what is loading: a card, a table row, a field, a list row.
+Render it in the loading branch of your own check. It never wraps the real content, so there is no
+`loading` or `children` prop.
+
+Pick another component when the wait has a different shape. `Spinner` is for a wait with no known
+shape, such as a button that submits. `Progress` is for a task with a known percent.
+
+Never render a skeleton as an error or as an empty state. It says "loading", so a failed request
+that keeps showing one never tells the user that it failed, and an empty list that shows one never
+tells them that it is empty. Render a message for each of those.
+
+## How to use
 
 ```tsx
 import { Skeleton } from '@signozhq/ui';
 
-export default function MyComponent() {
-	return <Skeleton active title={{ width: '40%' }} paragraph={{ rows: 3 }} />;
+export default function ServiceCard({ isLoading, service }: ServiceCardProps) {
+	if (isLoading) {
+		return <Skeleton />;
+	}
+
+	return <ServiceSummary service={service} />;
 }
 ```
 
 <Primary />
 
+## Parts and sizes
+
+`Skeleton.Input`, `Skeleton.Button` and `Skeleton.Avatar` take a required `size`, `sm` or `md`, with
+no default. The sizes are the heights of the controls they stand for: `Button` at `sm` and `md`,
+`Input` at its default size, and `Avatar` at `sm` and `md`. Swapping the placeholder for the control
+then keeps the same height. There is no larger size, so an `Input` at `large` has no placeholder.
+
+| Part              | Stands for               | Size                                                         |
+| ----------------- | ------------------------ | ------------------------------------------------------------ |
+| `Skeleton`        | a title and rows of text | title 16px tall and 38% wide, 3 rows 12px tall at full width |
+| `Skeleton.Input`  | an `Input`               | 24px (`sm`) or 32px (`md`) tall, fills the parent            |
+| `Skeleton.Button` | a `Button`               | 24px or 32px tall, 48px (`sm`) or 64px (`md`) wide           |
+| `Skeleton.Avatar` | an `Avatar`              | 24px or 32px, a circle or a square                           |
+
+The skeleton has no outer margin. A layout that needs space around it sets it on the parent.
+
+## Text blocks
+
+`Skeleton` stacks a title bar and rows in a column. `title` and `paragraph` change them, and `false`
+hides either one.
+
+- `title` takes `false`, or `{ width }` to set the width of the bar. A number is written as `px`.
+- `paragraph` takes `false`, or `{ rows, width }`. `rows` is how many rows to draw.
+- `width` is one value for every row, or an array with one value per row. A row with no value in the
+  array is full width.
+- `rows: 0` draws no rows and keeps the title.
+
+```tsx
+<Skeleton
+	title={{ width: '24%' }}
+	paragraph={{ rows: 4, width: ['100%', '100%', '100%', '60%'] }}
+/>
+```
+
+## Active and reduced motion
+
+The shimmer plays by default: a lighter band moves across each bar from left to right, 1.4 seconds
+per pass, for as long as the skeleton is mounted. It is the shimmer of the Ant Design skeleton, so a
+screen that moves over to this component looks the same. Pass `active={false}` for a still fill, on
+a placeholder that does not stand for data being loaded.
+
+```tsx
+<Skeleton active={false} />
+```
+
+`active` is set per part, so to turn it off for a region, pass `active={false}` on every part of it.
+
+With `prefers-reduced-motion: reduce`, the shimmer does not play and the skeleton shows the still
+fill. In Storybook the shimmer only moves with the Motion toolbar item set to live.
+
+## Width and max width
+
+`Skeleton` and `Skeleton.Input` fill the width of their parent unless `width` says otherwise.
+`Skeleton.Button` keeps the width of its `size`, and `width="100%"` makes it fill the parent.
+`Skeleton.Avatar` takes no width, its `size` is both its width and its height.
+
+`width` and `maxWidth` take a number, written as `px`, or any CSS length. `maxWidth` defaults to
+`100%`, so a placeholder never grows past its parent. `Skeleton.Avatar` keeps its size in a flex row
+and does not shrink. `Skeleton.Button` shrinks in a short flex row like a `Button`, so a button at
+`width="100%"` leaves room for the buttons next to it, and it never gets narrower than its `size`.
+
+```tsx
+<Skeleton.Input size="sm" width={160} />
+<Skeleton.Button size="md" width="100%" />
+```
+
+None of the parts takes `className` or `style`. The height comes from `size`, the width from `width`
+and `maxWidth`, and the space around the skeleton from its parent.
+
+## Compositions
+
+The parts are made to sit together. Each of these marks the region that is loading with
+`aria-busy="true"`, see [Accessibility](#accessibility). The showcase story renders all of them.
+
+### Card
+
+A card that has not loaded yet is a `Skeleton`. The default is a title and three rows.
+
+```tsx
+<div className="card" aria-busy="true">
+	<Skeleton />
+</div>
+```
+
+### Table
+
+A table keeps its header and stands in each cell with the placeholder of what it will hold: a text
+cell is a `Skeleton.Input` at `sm`, and a row action is a `Skeleton.Button` at `sm`. Set the `width`
+of each input to the width of the value, so the columns look like the data.
+
+```tsx
+<tr>
+	<td>
+		<Skeleton.Input size="sm" width={160} />
+	</td>
+	<td>
+		<Skeleton.Button size="sm" />
+	</td>
+</tr>
+```
+
+### List row
+
+A row with an avatar is a `Skeleton.Avatar` next to a `Skeleton` with `title={false}` and two rows.
+The avatar keeps its size and the text block takes the rest of the row.
+
+```tsx
+<div className="list-row">
+	<Skeleton.Avatar size="md" />
+	<Skeleton title={false} paragraph={{ rows: 2, width: ['70%', '40%'] }} />
+</div>
+```
+
+### Form
+
+A form keeps its labels, which are known before the data arrives, and stands in the fields with a
+`Skeleton.Input` at `md`, the height of an `Input`. The footer buttons are `Skeleton.Button` at `md`.
+
+```tsx
+<div className="field">
+	<label htmlFor="webhook">Webhook URL</label>
+	<Skeleton.Input size="md" />
+</div>
+```
+
+## Accessibility
+
+Every part renders `aria-hidden="true"`, and none of them takes an `aria-*` prop. A screen reader
+would otherwise read the placeholder once per bar, and a table with 10 placeholder rows would
+announce it 10 times. The parts are not focusable, are skipped by `Tab` and have no keys.
+
+Mark the region that is loading with `aria-busy="true"` and remove it when the data arrives. When
+the wait needs to be announced, add one status message for the region, not one per skeleton. Keep
+that element mounted and change its text, since a live region that appears together with its content
+is often not announced.
+
+```tsx
+<div aria-busy={isLoading}>
+	<output className="sr-only">{isLoading ? 'Loading the service summary' : ''}</output>
+	{isLoading ? <Skeleton /> : <ServiceSummary service={service} />}
+</div>
+```
+
+## Mistakes to avoid
+
+- A skeleton in an error branch or in an empty state. Both need their own message.
+- `title={false}` with `paragraph={false}`. The skeleton is then an empty box with no height. Render
+  nothing instead.
+- A skeleton around the real content. Render one or the other.
+- A test that finds a skeleton by a class name. The parts are `aria-hidden`, so a query by role does
+  not find them either, see below.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names everything under it:
+
+| Element         | `data-testid`                  |
+| --------------- | ------------------------------ |
+| title bar       | `` `${testId}-title` ``        |
+| box around rows | `` `${testId}-paragraph` ``    |
+| row             | `` `${testId}-row-${index}` `` |
+
+The title bar renders unless `title` is `false`. The box and the rows render only when there is at
+least one row, so `paragraph={false}` and `rows: 0` render neither. Rows count from 0.
+`Skeleton.Input`, `Skeleton.Button` and `Skeleton.Avatar` are one element each, so their `testId`
+lands on that element and names nothing under it.
+
+The props that change the look are attributes on the root of each part:
+
+| Attribute     | On                                                     | When                           |
+| ------------- | ------------------------------------------------------ | ------------------------------ |
+| `data-active` | every part                                             | present while `active` is true |
+| `data-size`   | `Skeleton.Input`, `Skeleton.Button`, `Skeleton.Avatar` | always, `sm` or `md`           |
+| `data-shape`  | `Skeleton.Avatar`                                      | always, `circle` or `square`   |
+
+A query by role skips a skeleton, since every part is `aria-hidden`. Assert on the loading region
+through its `aria-busy`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
 ## Props
 
 <Controls of={SkeletonStories.Default} />
 
-## Sub-Components
+### Skeleton.Input props
 
-```tsx
-// Input
-<Skeleton.Input active size="small" />
-<Skeleton.Input active block />
+<Controls of={SkeletonComponentsStories.Input} />
 
-// Button
-<Skeleton.Button active size="small" />
-<Skeleton.Button active block />
+### Skeleton.Button props
 
-// Avatar
-<Skeleton.Avatar active shape="circle" size={36} />
-<Skeleton.Avatar active shape="square" />
-```
+<Controls of={SkeletonComponentsStories.Button} />
+
+### Skeleton.Avatar props
+
+<Controls of={SkeletonComponentsStories.Avatar} />
