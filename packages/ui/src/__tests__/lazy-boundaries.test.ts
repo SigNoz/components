@@ -60,4 +60,10 @@ describe('lazy boundaries', () => {
 	it.each(TOOLTIP_CARRIERS)('%s loads the Base UI tooltip only when one opens', (entry) => {
 		expect(staticGraph(entry).packages).not.toContain('@base-ui/react/tooltip');
 	});
+
+	it('Drawer loads the Breadcrumb of its trail only with the first trail', () => {
+		const { files } = staticGraph('drawer/drawer.tsx');
+
+		expect([...files].some((file) => file.endsWith('breadcrumb/breadcrumb.tsx'))).toBe(false);
+	});
 });
