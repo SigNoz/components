@@ -85,6 +85,17 @@ export function DrawerStackProvider({
 }
 
 /**
+ * Ends the stack of the drawer it is declared in, for a `Dialog` or an `AlertDialog` opened from a
+ * drawer. A drawer opened from that dialog opens over it as a drawer of its own: it does not join
+ * the outer drawer's trail, take its width or cover it, and its close button closes it alone.
+ *
+ * @access private
+ */
+export function DrawerStackReset({ children }: { children: ReactNode }): ReactNode {
+	return <DrawerStackContext.Provider value={null}>{children}</DrawerStackContext.Provider>;
+}
+
+/**
  * The stack of the drawer this one is declared in, `null` for a drawer that is not nested.
  *
  * @access private

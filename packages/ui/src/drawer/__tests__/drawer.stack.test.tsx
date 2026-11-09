@@ -1,8 +1,10 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type ReactNode, useState } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { userEvent as browserUser } from 'vitest/browser';
+import { AlertDialog } from '../../alert-dialog/alert-dialog.js';
+import { Dialog } from '../../dialog/dialog.js';
 import { Drawer } from '../drawer.js';
 import type {
 	DrawerClosePositionType,
@@ -453,5 +455,120 @@ describe('Drawer breadcrumb trail with collapsed crumbs', () => {
 			['namespace', 'crumb-press'],
 		]);
 		expect(screen.getByTestId('node')).toBeVisible();
+	});
+});
+
+type DialogLevel = 'root' | 'dialog' | 'inner';
+
+type OnDialogLevelClose = (level: DialogLevel, reason?: DrawerCloseReasonType) => void;
+
+/**
+ * A drawer, a `Dialog` or an `AlertDialog` declared in its body, and a drawer declared in the body
+ * of that dialog. Each level keeps its own `open` and closes on every reason.
+ */
+function DrawerInDialog({
+	rootStack,
+	dialog,
+	onClose,
+}: {
+	rootStack: DrawerStackType;
+	dialog: 'dialog' | 'alert-dialog';
+	onClose: OnDialogLevelClose;
+}): ReactNode {
+	const [open, setOpen] = useState<ReadonlySet<DialogLevel>>(new Set(['root', 'dialog', 'inner']));
+	const close =
+		(level: DialogLevel) =>
+		(reason?: DrawerCloseReasonType): void => {
+			onClose(level, reason);
+			setOpen((current) => new Set([...current].filter((item) => item !== level)));
+		};
+	const inner = (
+		<Drawer
+			type="inspector"
+			stack="breadcrumb"
+			open={open.has('inner')}
+			onClose={close('inner')}
+			title="inner record"
+			width="narrow"
+			testId="inner"
+		>
+			The inner drawer.
+		</Drawer>
+	);
+
+	return (
+		<Drawer
+			type="task"
+			stack={rootStack}
+			open={open.has('root')}
+			onClose={close('root')}
+			title="root record"
+			width="entity"
+			testId="root"
+		>
+			{dialog === 'dialog' ? (
+				<Dialog open={open.has('dialog')} onClose={close('dialog')} title="Pick" testId="dialog">
+					{inner}
+				</Dialog>
+			) : (
+				<AlertDialog
+					open={open.has('dialog')}
+					title="Delete it?"
+					color="danger"
+					confirmText="Delete"
+					onConfirm={close('dialog')}
+					onCancel={close('dialog')}
+					testId="dialog"
+				>
+					{inner}
+				</AlertDialog>
+			)}
+		</Drawer>
+	);
+}
+
+describe.each([
+	{ name: 'a Dialog', dialog: 'dialog' },
+	{ name: 'an AlertDialog', dialog: 'alert-dialog' },
+] as const)('Drawer declared in $name opened from a drawer', ({ dialog }) => {
+	async function renderDrawerInDialog(
+		rootStack: DrawerStackType,
+	): Promise<Mock<OnDialogLevelClose>> {
+		const onClose = vi.fn<OnDialogLevelClose>();
+		render(<DrawerInDialog rootStack={rootStack} dialog={dialog} onClose={onClose} />);
+		await waitFor(() => {
+			expect(screen.getByTestId('inner')).toBeVisible();
+		});
+		await waitForSettled();
+
+		return onClose;
+	}
+
+	it.each(['breadcrumb', 'overlay'] as const)(
+		'opens as a drawer of its own under stack="%s": no trail, its own width, the outer one not covered',
+		async (rootStack) => {
+			await renderDrawerInDialog(rootStack);
+
+			const inner = screen.getByTestId('inner');
+			const root = screen.getByTestId('root');
+			expect(inner).not.toHaveAttribute('data-nested');
+			expect(screen.queryByTestId('inner-trail')).toBeNull();
+			expect(inner.style.getPropertyValue('--drawer-internal-stack-inline-size')).toBe('');
+			expect(root).not.toHaveAttribute('data-covered');
+		},
+	);
+
+	it('closes alone from its close button, leaving the dialog and the outer drawer open', async () => {
+		const user = userEvent.setup();
+		const onClose = await renderDrawerInDialog('breadcrumb');
+
+		await user.click(within(screen.getByTestId('inner')).getByRole('button', { name: 'Close' }));
+		await waitFor(() => {
+			expect(screen.queryByTestId('inner')).toBeNull();
+		});
+
+		expect(onClose.mock.calls).toEqual([['inner', 'close-press']]);
+		expect(screen.getByTestId('dialog')).toBeVisible();
+		expect(screen.getByTestId('root')).toBeInTheDocument();
 	});
 });

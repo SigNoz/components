@@ -259,6 +259,10 @@ drawer's own `type` sets its backdrop.
 The two combine: a drawer in a trail with `stack="overlay"` opens an overlay over the trail, and the
 overlay may start a trail of its own.
 
+A `Dialog` or an `AlertDialog` ends the nesting. A drawer declared in a dialog opened from a drawer
+opens over the dialog as a drawer of its own: it joins no trail, keeps its own `width`, and its close
+button closes it alone.
+
 ### One drawer with a trail
 
 Nested drawers keep every step of the trail mounted. When each step is heavy, such as a page of

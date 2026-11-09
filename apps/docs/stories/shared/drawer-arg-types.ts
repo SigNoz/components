@@ -23,7 +23,7 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 		control: 'inline-radio',
 		options: ['overlay', 'breadcrumb'],
 		description:
-			'Required. How a drawer declared inside this one renders when it opens. `breadcrumb` drills down: the nested drawer opens in place at the same width, and a trail of crumbs under its header leads back. `Esc` steps back one drawer, the close button closes the whole trail. `overlay` opens the nested drawer over this one at 80% of its width, and this one takes no input until it closes. A nested drawer takes its width from this one.',
+			'Required. How a drawer declared inside this one renders when it opens. `breadcrumb` drills down: the nested drawer opens in place at the same width, and a trail of crumbs under its header leads back. `Esc` steps back one drawer, the close button closes the whole trail. `overlay` opens the nested drawer over this one at 80% of its width, and this one takes no input until it closes. A nested drawer takes its width from this one. A drawer declared in a `Dialog` or an `AlertDialog` opened from this one is not nested: it opens over the dialog as a drawer of its own.',
 		table: { category: 'Behavior', type: { summary: "'overlay' | 'breadcrumb'" } },
 	},
 	crumb: {

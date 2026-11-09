@@ -378,6 +378,9 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note A nested drawer takes its width from this one, so its own `width` does not apply.
 		 * The trails nest: a drawer of a trail with `stack="overlay"` opens an overlay, and the
 		 * overlay may start a trail of its own.
+		 *
+		 * @note A drawer declared in a `Dialog` or an `AlertDialog` opened from this one is not
+		 * nested in it: it opens over the dialog as a drawer of its own.
 		 */
 		stack: DrawerStackType;
 		/**
