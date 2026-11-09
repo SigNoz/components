@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 // Runs the same React Compiler pass as the build (see ../react-compiler.config.ts)
-// with panicThreshold: 'all_errors' against a hardened subset of components, so a
-// bailout there fails CI instead of only showing up as a build log warning.
+// with panicThreshold: 'all_errors' against every source file, so a bailout fails CI
+// instead of only showing up as a build log warning.
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
@@ -11,12 +11,7 @@ import { transformSync } from 'oxc-transform-react';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = join(__dirname, '../src');
-const STRICT_COMPONENTS_FILE = join(__dirname, '../react-compiler-strict-components.txt');
-const STRICT_COMPONENTS = readFileSync(STRICT_COMPONENTS_FILE, 'utf8')
-	.split('\n')
-	.map((line) => line.trim())
-	.filter((line) => line && !line.startsWith('#'));
-const EXCLUDE = /(^|\/)__tests__(\/|$)|\.test(-d)?\.tsx?$/;
+const EXCLUDE = /(^|\/)__(tests|mocks|screenshots)__(\/|$)|\.test(-d)?\.tsx?$|\.d\.ts$/;
 const LANG_BY_EXTENSION = { '.ts': 'ts', '.tsx': 'tsx' };
 
 function collectFiles(dir) {
@@ -35,7 +30,7 @@ function collectFiles(dir) {
 	return files;
 }
 
-const files = STRICT_COMPONENTS.flatMap((name) => collectFiles(join(SRC_DIR, name)));
+const files = collectFiles(SRC_DIR);
 let hasErrors = false;
 
 for (const file of files) {
@@ -51,12 +46,8 @@ for (const file of files) {
 }
 
 if (hasErrors) {
-	console.error(
-		`\nReact Compiler bailout in a hardened component (${STRICT_COMPONENTS.join(', ')}).`,
-	);
+	console.error('\nReact Compiler bailout in packages/ui/src.');
 	process.exit(1);
 }
 
-console.log(
-	`React Compiler: no bailouts in ${STRICT_COMPONENTS.join(', ')} (${files.length} files checked).`,
-);
+console.log(`React Compiler: no bailouts (${files.length} files checked).`);
