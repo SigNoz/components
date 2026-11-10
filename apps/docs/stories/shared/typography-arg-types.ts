@@ -209,6 +209,16 @@ export const typographyFontArgTypes: Meta<typeof Typography>['argTypes'] = {
  * The number features, on `Typography` and `Typography.Link`.
  */
 export const typographyNumeralArgTypes: Meta<typeof Typography>['argTypes'] = {
+	capitalize: {
+		control: 'boolean',
+		description:
+			'Sets the first letter of every word in capitals, for a value that arrives in lower case. Not on `uppercase`.',
+		table: {
+			category: 'Appearance',
+			type: { summary: 'boolean' },
+			defaultValue: { summary: 'false' },
+		},
+	},
 	tabularNumbers: {
 		control: 'boolean',
 		description:

@@ -137,6 +137,7 @@ export function getTypographyLook({
 	verticalAlign,
 	tabularNumbers = false,
 	slashedZero = false,
+	capitalize,
 	width,
 	minWidth,
 	maxWidth,
@@ -175,6 +176,7 @@ export function getTypographyLook({
 			: undefined,
 		'data-tabular-numbers': tabularNumbers || undefined,
 		'data-slashed-zero': slashedZero || undefined,
+		'data-capitalize': capitalize === true || undefined,
 		style,
 	};
 }

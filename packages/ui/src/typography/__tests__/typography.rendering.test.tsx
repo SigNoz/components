@@ -163,6 +163,44 @@ describe('Typography attributes', () => {
 		expect(text).toHaveAttribute('data-slashed-zero');
 	});
 
+	it('marks the capitalized case only when asked', () => {
+		const { rerender } = render(
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="main"
+				as="span"
+				textOverflow="wrap"
+				testId="text"
+			>
+				resource
+			</Typography>,
+		);
+
+		const text = screen.getByTestId('text');
+		expect(text).not.toHaveAttribute('data-capitalize');
+
+		rerender(
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="main"
+				as="span"
+				textOverflow="wrap"
+				testId="text"
+				capitalize
+			>
+				resource
+			</Typography>,
+		);
+
+		expect(text).toHaveAttribute('data-capitalize');
+		expect(text).not.toHaveAttribute('capitalize');
+		expect(text).toHaveTextContent(/^resource$/);
+	});
+
 	it('forwards id, role, aria-* and data-*', () => {
 		render(
 			<Typography

@@ -67,6 +67,24 @@ export interface OnlyALabelNamesAControl {
 	'`htmlFor` only works with `as="label"`': never;
 }
 
+/**
+ * The type of `capitalize` on `variant="uppercase"`, which no value matches.
+ */
+export interface AnUppercaseTextIsAlreadyInCapitals {
+	'`capitalize` has no effect on `variant="uppercase"`, which sets every letter in capitals': never;
+}
+
+type TypographyCaseProps = {
+	/**
+	 * Sets the first letter of every word in capitals, for a value that arrives in lower case, such
+	 * as `resource` shown as `Resource`. The case changes with CSS only, so a screen reader and a
+	 * copy get the text as written.
+	 *
+	 * @default false
+	 */
+	capitalize?: boolean;
+};
+
 type TypographyStyleProps = {
 	/**
 	 * The group of the text style. It sets the font family, the line height, the letter spacing and
@@ -90,12 +108,25 @@ type TypographyStyleProps = {
 	 */
 	weight: TypographyWeightType;
 } & (
-	| { variant: 'label'; size: TypographySizeType; maxLines?: 1 | OnlyAParagraphWrapsPastOneLine }
-	| { variant: 'paragraph'; size: 'small' | 'base' | 'medium' }
-	| {
-			variant: 'uppercase' | 'code';
+	| ({
+			variant: 'label';
+			size: TypographySizeType;
+			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
+	  } & TypographyCaseProps)
+	| ({ variant: 'paragraph'; size: 'small' | 'base' | 'medium' } & TypographyCaseProps)
+	| ({
+			variant: 'code';
 			size: 'small' | 'base';
 			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
+	  } & TypographyCaseProps)
+	| {
+			variant: 'uppercase';
+			size: 'small' | 'base';
+			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
+			/**
+			 * `uppercase` already sets every letter in capitals.
+			 */
+			capitalize?: AnUppercaseTextIsAlreadyInCapitals;
 	  }
 );
 
@@ -430,6 +461,7 @@ export type TypographyLookProps = {
 	display: TypographyDisplayType;
 	tabularNumbers?: boolean;
 	slashedZero?: boolean;
+	capitalize?: unknown;
 	maxLines?: unknown;
 	align?: unknown;
 	verticalAlign?: unknown;

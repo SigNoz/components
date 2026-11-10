@@ -27,8 +27,8 @@ import {
  * [./index.ts](./index.ts).
  *
  * The text is not focusable and has no role of its own. A heading is `as="h2"` or the level the
- * page outline needs, never a consequence of `size`. `uppercase` changes the case with CSS only, so
- * a screen reader reads the words as written.
+ * page outline needs, never a consequence of `size`. `uppercase` and `capitalize` change the case
+ * with CSS only, so a screen reader reads the words as written.
  *
  * ### Layout
  *
@@ -83,7 +83,7 @@ import {
  * | `data-align` | mirrors `align`, only when set |
  * | `data-vertical-align` | mirrors `verticalAlign`, only on a `flex` or `inline-flex` text |
  * | `data-max-lines` | the number of lines, only with `ellipsis` |
- * | `data-tabular-numbers`, `data-slashed-zero` | present only when the prop is set |
+ * | `data-tabular-numbers`, `data-slashed-zero`, `data-capitalize` | present only when the prop is set |
  * | `data-truncated` | present only while the text is cut by `ellipsis` |
  *
  * | `data-slot` | rendered |
@@ -169,6 +169,7 @@ const TypographyRoot = forwardRef<HTMLElement, TypographyProps>(function Typogra
 		maxLines,
 		tabularNumbers,
 		slashedZero,
+		capitalize,
 		display,
 		gap,
 		align,
@@ -201,6 +202,7 @@ const TypographyRoot = forwardRef<HTMLElement, TypographyProps>(function Typogra
 		verticalAlign,
 		tabularNumbers,
 		slashedZero,
+		capitalize,
 		width,
 		minWidth,
 		maxWidth,

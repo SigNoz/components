@@ -58,6 +58,12 @@ const BOX_PROPERTIES = [
 	'-webkit-line-clamp',
 ];
 
+const CAPITALIZED_STYLES = [
+	{ variant: 'label' },
+	{ variant: 'paragraph' },
+	{ variant: 'code' },
+] as const;
+
 function capitalize(value: string): string {
 	return value.charAt(0).toUpperCase() + value.slice(1);
 }
@@ -174,7 +180,7 @@ export const Playground: Story = {
 };
 
 /**
- * Every text style, every color, the four overflows, the layouts, the number features, nested text,
+ * Every text style, the case, every color, the four overflows, the layouts, the number features, nested text,
  * the elements and `Typography.Link`, all in one snapshot. The cut `ellipsis` text has its tooltip
  * opened by `play`, so the snapshot carries it.
  */
@@ -202,6 +208,11 @@ export const TypographyShowcase: Story = {
 			expect([style.overflowX, style.overflowY]).toEqual(['clip', 'visible']);
 		}
 		expect(getComputedStyle(canvas.getByTestId('overflow-ellipsis-2')).overflowY).toBe('hidden');
+		for (const { variant } of CAPITALIZED_STYLES) {
+			expect(getComputedStyle(canvas.getByTestId(`case-capitalize-${variant}`)).textTransform).toBe(
+				'capitalize',
+			);
+		}
 		expect(flex.querySelector('svg')?.getBoundingClientRect().width).toBe(12);
 		const nestedText = canvas.getByTestId('layout-flex-nested-text');
 		await waitFor(() => expect(nestedText).toHaveAttribute('data-truncated'));
@@ -270,6 +281,37 @@ export const TypographyShowcase: Story = {
 							</Fragment>
 						)),
 					)}
+				</div>
+			</Section>
+
+			<Section
+				title="Case"
+				description={
+					<>
+						<code>capitalize</code> sets the first letter of every word in capitals, for a value
+						that arrives in lower case. <code>uppercase</code> already sets every letter in
+						capitals, so the types reject it there.
+					</>
+				}
+			>
+				<div className={styles.styleTable}>
+					{CAPITALIZED_STYLES.map((style) => (
+						<Fragment key={style.variant}>
+							<Caption>{`${capitalize(style.variant)} / capitalize`}</Caption>
+							<Typography
+								{...style}
+								size="base"
+								weight="regular"
+								color="main"
+								as="span"
+								textOverflow="visible"
+								testId={`case-capitalize-${style.variant}`}
+								capitalize
+							>
+								resource attribute
+							</Typography>
+						</Fragment>
+					))}
 				</div>
 			</Section>
 

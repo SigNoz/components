@@ -142,6 +142,28 @@ describe('variant and size', () => {
 		);
 	});
 
+	test('capitalize goes on every variant but uppercase', () => {
+		assertType(
+			<Typography {...body} as="span" textOverflow="wrap" capitalize>
+				text
+			</Typography>,
+		);
+		assertType(
+			<Typography {...font} color="main" as="span" textOverflow="visible" capitalize>
+				text
+			</Typography>,
+		);
+	});
+
+	test('rejects capitalize on uppercase', () => {
+		assertType(
+			// @ts-expect-error - `uppercase` already sets every letter in capitals
+			<Typography {...body} variant="uppercase" size="small" as="p" textOverflow="wrap" capitalize>
+				text
+			</Typography>,
+		);
+	});
+
 	test('rejects the old colors', () => {
 		assertType(
 			// @ts-expect-error - `muted` is `secondary`

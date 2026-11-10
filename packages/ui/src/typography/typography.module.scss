@@ -157,6 +157,12 @@
 		--typography-internal-font-variant-numeric: tabular-nums slashed-zero;
 	}
 
+	// Sets the property, not the internal variable: the variant rules below set that variable with a
+	// higher specificity.
+	&[data-capitalize] {
+		text-transform: var(--typography-text-transform, capitalize);
+	}
+
 	&[data-color='main'] {
 		--typography-internal-color: var(--typography-main-color, var(--typography-main));
 	}

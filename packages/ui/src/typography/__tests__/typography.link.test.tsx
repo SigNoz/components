@@ -56,7 +56,7 @@ describe('Typography.Link', () => {
 		expect(link).not.toHaveAttribute('data-color');
 	});
 
-	it('marks the numerals when asked, and keeps the props off the element', () => {
+	it('marks the numerals and the case when asked, and keeps the props off the element', () => {
 		render(
 			<Typography.Link
 				variant="code"
@@ -66,6 +66,7 @@ describe('Typography.Link', () => {
 				href="/traces/4f0a"
 				tabularNumbers
 				slashedZero
+				capitalize
 			>
 				4f0a-27b0
 			</Typography.Link>,
@@ -74,8 +75,10 @@ describe('Typography.Link', () => {
 		const link = screen.getByRole('link', { name: '4f0a-27b0' });
 		expect(link).toHaveAttribute('data-tabular-numbers');
 		expect(link).toHaveAttribute('data-slashed-zero');
+		expect(link).toHaveAttribute('data-capitalize');
 		expect(link).not.toHaveAttribute('tabularNumbers');
 		expect(link).not.toHaveAttribute('slashedZero');
+		expect(link).not.toHaveAttribute('capitalize');
 	});
 
 	it('adds noopener and noreferrer for a _blank target', () => {
