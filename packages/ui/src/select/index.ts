@@ -228,8 +228,8 @@
  * | `--select-trigger-chips-inset` | `5px` |
  * | `--select-trigger-color` | `var(--select-trigger-label)` |
  * | `--select-trigger-cursor` | `pointer` |
- * | `--select-trigger-disabled-color` | `var(--select-trigger-label-disabled)` |
  * | `--select-trigger-disabled-cursor` | `not-allowed` |
+ * | `--select-trigger-disabled-opacity` | `0.4` |
  * | `--select-trigger-display` | `flex` |
  * | `--select-trigger-flex-grow` | `1` |
  * | `--select-trigger-focus-outline-offset` | `1px` |
@@ -245,7 +245,6 @@
  * | `--select-trigger-icon` | `-` |
  * | `--select-trigger-invalid-border-color` | `var(--destructive)` |
  * | `--select-trigger-label` | `-` |
- * | `--select-trigger-label-disabled` | `-` |
  * | `--select-trigger-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--select-trigger-line-height` | `var(--label-base-400-line-height)` |
  * | `--select-trigger-margin` | `0` |

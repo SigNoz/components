@@ -217,3 +217,99 @@ describe('Combobox list scroll', () => {
 		).toBeGreaterThanOrEqual(20);
 	});
 });
+
+describe('Combobox trigger opacity', () => {
+	function trigger(): HTMLElement {
+		return screen.getByRole('combobox', { name: 'Framework' });
+	}
+
+	it('fades a disabled trigger like a disabled Input', () => {
+		render(
+			<Combobox
+				aria-label="Framework"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={FRAMEWORKS}
+				disabled
+			/>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('0.4');
+	});
+
+	it('leaves an enabled trigger opaque', () => {
+		render(
+			<Combobox
+				aria-label="Framework"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={FRAMEWORKS}
+			/>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('1');
+	});
+
+	it('does not stack the read-only fade on a disabled trigger', () => {
+		render(
+			<Combobox
+				aria-label="Framework"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={FRAMEWORKS}
+				readOnly
+				disabled
+			/>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('0.4');
+	});
+
+	it('keeps the label colour, so the fade is the only dimming', () => {
+		render(
+			<div style={{ ['--combobox-trigger-color' as string]: 'rgb(10, 20, 30)' }}>
+				<Combobox
+					aria-label="Framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).color).toBe('rgb(10, 20, 30)');
+	});
+
+	it('keeps the placeholder colour, so the fade is the only dimming', () => {
+		render(
+			<div
+				style={{
+					['--combobox-trigger-color' as string]: 'rgb(10, 20, 30)',
+					['--combobox-placeholder-color' as string]: 'rgb(40, 50, 60)',
+				}}
+			>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(screen.getByText('Pick a framework')).color).toBe('rgb(40, 50, 60)');
+	});
+
+	it('takes the disabled opacity from its variable', () => {
+		render(
+			<div style={{ ['--combobox-trigger-disabled-opacity' as string]: '0.25' }}>
+				<Combobox
+					aria-label="Framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('0.25');
+	});
+});
