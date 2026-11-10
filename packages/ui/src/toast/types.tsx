@@ -5,6 +5,27 @@ import type { ToastPosition, ToastVariant } from './constants.js';
 export type ToastVariantType = (typeof ToastVariant)[keyof typeof ToastVariant];
 export type ToastPositionType = (typeof ToastPosition)[keyof typeof ToastPosition];
 
+export interface ToastOffset {
+	/**
+	 * The distance from the top edge of the window. A number is written as `px`, a string is a CSS
+	 * length.
+	 */
+	top?: number | string;
+	/**
+	 * The distance from the right edge of the window, as `top`. Also caps the width of the stack,
+	 * so it has to be a length: a keyword such as `auto` removes the cap.
+	 */
+	right?: number | string;
+	/**
+	 * The distance from the bottom edge of the window, as `top`.
+	 */
+	bottom?: number | string;
+	/**
+	 * The distance from the left edge of the window, as `right`.
+	 */
+	left?: number | string;
+}
+
 export interface ToasterProps
 	extends Pick<ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'style'>, AriaAttributes {
 	/**
@@ -14,12 +35,16 @@ export interface ToasterProps
 	 */
 	position?: ToastPositionType;
 	/**
-	 * The distance between the stack and the edges of the window it sits against. Numbers are
-	 * written as `px`.
+	 * The distance between the stack and the edges of the window it sits against. A number is
+	 * written as `px` and a string is a CSS length, and either one sets every edge. An object sets
+	 * the edges it names, and the others keep the default.
+	 *
+	 * A stack reads only the edges its position sits against: `bottom-right` reads `bottom` and
+	 * `right`, `top-center` reads `top`.
 	 *
 	 * @default 16
 	 */
-	offset?: number | string;
+	offset?: number | string | ToastOffset;
 	/**
 	 * How many toasts the stack shows. The rest wait behind until one closes.
 	 *

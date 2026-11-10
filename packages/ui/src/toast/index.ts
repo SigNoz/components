@@ -119,8 +119,12 @@
  * | `--toast-viewport-center-transform` | `translateX(-50%)` |
  * | `--toast-viewport-inline-size` | `26.25rem` |
  * | `--toast-viewport-margin` | `0` |
- * | `--toast-viewport-max-inline-size` | `calc(100vw - 2 * var(--toast-internal-offset))` |
+ * | `--toast-viewport-max-inline-size` | `calc(100vw - 2 * max(var(--toast-internal-offse...` |
  * | `--toast-viewport-offset` | `var(--toast-internal-viewport-offset, var(--spa...` |
+ * | `--toast-viewport-offset-bottom` | `var(--toast-internal-viewport-offset-bottom, va...` |
+ * | `--toast-viewport-offset-left` | `var(--toast-internal-viewport-offset-left, var(...` |
+ * | `--toast-viewport-offset-right` | `var(--toast-internal-viewport-offset-right, var...` |
+ * | `--toast-viewport-offset-top` | `var(--toast-internal-viewport-offset-top, var(-...` |
  * | `--toast-viewport-padding` | `0` |
  * | `--toast-viewport-pointer-events` | `none` |
  * | `--toast-viewport-position` | `fixed` |
@@ -137,6 +141,7 @@ export type {
 	ToastAction,
 	ToastDangerOptions,
 	ToasterProps,
+	ToastOffset,
 	ToastOptions,
 	ToastPositionType,
 	ToastPromiseOptions,

@@ -186,6 +186,39 @@ stack from the edges of the window, 16px by default. A number is in px, a string
 toast.info('Query copied', { position: 'top-right' });
 ```
 
+### Offset per edge
+
+An object sets the edges it names, and the others keep the default. A stack reads only the edges
+its position sits against: `bottom-right` reads `bottom` and `right`, and `top-center` reads `top`.
+A value is a number in px or a CSS length, and it can read a variable from `body`, such as the
+height of a footer, since the stacks are portalled there.
+
+```tsx
+<Toaster
+	position="bottom-right"
+	offset={{ bottom: 'calc(var(--footer-height) + 16px)', right: 24 }}
+/>
+```
+
+`left` and `right` also cap the width of the stack, at the window minus twice the larger of the two.
+Pass them a length: a keyword such as `auto` removes the cap.
+
+The same distances are custom properties, set from the CSS of the app. Each one beats the prop for
+its edge, and an edge with no value falls back to the next one in this order:
+
+1. `--toast-viewport-offset-top`, `--toast-viewport-offset-right`, `--toast-viewport-offset-bottom`
+   or `--toast-viewport-offset-left`
+2. the edge in the `offset` object
+3. `--toast-viewport-offset`, for every edge
+4. `offset` as a number or a string
+5. 16px
+
+```css
+body:has(.page-footer) {
+	--toast-viewport-offset-bottom: 72px;
+}
+```
+
 The newest toast sits against the edge and the older ones peek out behind it. `limit` is how many
 each stack shows, 3 by default. Any toast past it waits until one closes. The stack spreads on hover
 and on focus inside it. At the bottom it grows upward.
@@ -201,7 +234,9 @@ The toasts portal into `document.body`, or into the panel of the `Dialog` or `Dr
 
 They stack above dialogs, popovers and tooltips, because a toast often reports what a click inside
 one of them just did. Over a modal dialog the button stays clickable, and clicking it does not
-close the dialog.
+close the dialog. A toast does not move for a dialog or a drawer. To keep one clear of a header or
+footer, set `offset` or `--toast-viewport-offset-top` and `--toast-viewport-offset-bottom` from the
+app.
 
 ## Empty text
 
