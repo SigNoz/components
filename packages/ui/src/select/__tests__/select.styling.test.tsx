@@ -281,6 +281,27 @@ describe('Select trigger opacity', () => {
 		expect(getComputedStyle(trigger()).color).toBe('rgb(10, 20, 30)');
 	});
 
+	it('keeps the placeholder colour, so the fade is the only dimming', () => {
+		render(
+			<div
+				style={{
+					['--select-trigger-color' as string]: 'rgb(10, 20, 30)',
+					['--select-placeholder-color' as string]: 'rgb(40, 50, 60)',
+				}}
+			>
+				<Select
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(screen.getByText('Pick a framework')).color).toBe('rgb(40, 50, 60)');
+	});
+
 	it('takes the disabled opacity from its variable', () => {
 		render(
 			<div style={{ ['--select-trigger-disabled-opacity' as string]: '0.25' }}>
