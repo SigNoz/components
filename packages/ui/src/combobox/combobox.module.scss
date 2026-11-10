@@ -4,7 +4,6 @@
   --combobox-internal-trigger-border-hover: var(--combobox-trigger-hover-border-color, var(--combobox-trigger-border-hover));
   --combobox-internal-trigger-focus-ring: var(--combobox-trigger-focus-ring-color, var(--combobox-trigger-focus-ring));
   --combobox-internal-trigger-label: var(--combobox-trigger-color, var(--combobox-trigger-label));
-  --combobox-internal-trigger-label-disabled: var(--combobox-trigger-disabled-color, var(--combobox-trigger-label-disabled));
   --combobox-internal-trigger-placeholder: var(--combobox-placeholder-color, var(--combobox-trigger-placeholder));
   --combobox-internal-trigger-icon: var(--combobox-icon-color, var(--combobox-trigger-icon));
   --combobox-internal-trigger-icon-hover: var(--combobox-clear-hover-color, var(--combobox-trigger-icon-hover));
@@ -84,7 +83,6 @@
 
   // Never the native `disabled`: it drops pointer events and breaks the reason tooltip.
   &[aria-disabled='true'] {
-    color: var(--combobox-internal-trigger-label-disabled);
     cursor: var(--combobox-trigger-disabled-cursor, not-allowed);
     opacity: var(--combobox-trigger-disabled-opacity, 0.6);
   }
@@ -134,10 +132,6 @@
 
 .combobox__placeholder {
   color: var(--combobox-internal-trigger-placeholder);
-
-  [aria-disabled='true'] > & {
-    color: var(--combobox-internal-trigger-label-disabled);
-  }
 }
 
 .combobox__icon {

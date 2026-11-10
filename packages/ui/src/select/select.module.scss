@@ -4,7 +4,6 @@
   --select-internal-trigger-border-hover: var(--select-trigger-hover-border-color, var(--select-trigger-border-hover));
   --select-internal-trigger-focus-ring: var(--select-trigger-focus-ring-color, var(--select-trigger-focus-ring));
   --select-internal-trigger-label: var(--select-trigger-color, var(--select-trigger-label));
-  --select-internal-trigger-label-disabled: var(--select-trigger-disabled-color, var(--select-trigger-label-disabled));
   --select-internal-trigger-placeholder: var(--select-placeholder-color, var(--select-trigger-placeholder));
   --select-internal-trigger-icon: var(--select-icon-color, var(--select-trigger-icon));
   --select-internal-chip-background: var(--select-chip-background-color, var(--select-chip-background));
@@ -83,7 +82,6 @@
 
   // Never the native `disabled`: it drops pointer events and breaks the reason tooltip.
   &[aria-disabled='true'] {
-    color: var(--select-internal-trigger-label-disabled);
     cursor: var(--select-trigger-disabled-cursor, not-allowed);
     opacity: var(--select-trigger-disabled-opacity, 0.6);
   }
@@ -132,10 +130,6 @@
 
 .select__placeholder {
   color: var(--select-internal-trigger-placeholder);
-
-  [aria-disabled='true'] > & {
-    color: var(--select-internal-trigger-label-disabled);
-  }
 }
 
 .select__icon {

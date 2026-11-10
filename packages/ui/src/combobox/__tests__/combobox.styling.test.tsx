@@ -268,6 +268,23 @@ describe('Combobox trigger opacity', () => {
 		expect(getComputedStyle(trigger()).opacity).toBe('0.6');
 	});
 
+	it('keeps the label colour, so the fade is the only dimming', () => {
+		render(
+			<div style={{ ['--combobox-trigger-color' as string]: 'rgb(10, 20, 30)' }}>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).color).toBe('rgb(10, 20, 30)');
+	});
+
 	it('takes the disabled opacity from its variable', () => {
 		render(
 			<div style={{ ['--combobox-trigger-disabled-opacity' as string]: '0.25' }}>
