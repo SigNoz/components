@@ -29,7 +29,7 @@ Canonical docs. Read the relevant one before touching that area, they are the so
 | `pnpm oxlint <files>` | Lint specific files; fix every warning before reporting done |
 | `pnpm run type-check` | `tsgo --noEmit` over the whole repo via turbo |
 | `pnpm build` | Build every package + Storybook (`packages/ui` runs `vite build && publint`) |
-| `pnpm -F @signozhq/ui test:run` | Unit + guardrail tests (jsdom, vitest) |
+| `pnpm -F @signozhq/ui test:run` | Unit + guardrail tests (jsdom, vitest). React act warnings are hidden; `SHOW_ACT_WARNINGS=1` shows them |
 | `pnpm -F docs test` | Story render + interaction tests in Chromium (what CI runs) |
 | `pnpm -F @signozhq/ui tokens` | Regenerate CSS token JSDoc tables in `index.ts` after touching any `--{component}-*` var |
 | `pnpm -F @signozhq/ui tokens:check` | Fail if token tables are stale (also runs in lint-staged and CI) |
