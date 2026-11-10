@@ -100,6 +100,15 @@ import type { ToasterProps } from './types.js';
  * // At the bottom of the page, further from the edge, and up to five at once
  * <Toaster position="bottom-center" offset={32} limit={5} />
  * ```
+ *
+ * @example
+ * ```tsx
+ * // One distance per edge, with a value from the page for the bottom
+ * <Toaster
+ *   position="bottom-right"
+ *   offset={{ bottom: 'calc(var(--footer-height) + 16px)', right: 24 }}
+ * />
+ * ```
  */
 export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster(
 	{

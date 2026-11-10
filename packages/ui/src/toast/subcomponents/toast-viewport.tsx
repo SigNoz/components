@@ -1,10 +1,10 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import { forwardRef, type ReactNode } from 'react';
-import { toCssLength } from '../../lib/css-length.js';
 import { cn } from '../../lib/utils.js';
 import { usePersistToasts } from '../persist-toasts.js';
 import styles from '../toast.module.scss';
 import type { ToasterProps, ToastPositionType } from '../types.js';
+import { viewportOffsetStyle } from '../utils.js';
 
 /**
  * @access private
@@ -41,7 +41,7 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 			className={cn(styles['toaster'], spread && styles['toaster--spread'], className)}
 			style={{
 				...style,
-				...(offset != null && { '--toast-internal-viewport-offset': toCssLength(offset) }),
+				...viewportOffsetStyle(offset),
 			}}
 			data-testid={testId}
 			{...props}

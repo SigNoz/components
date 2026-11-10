@@ -38,6 +38,11 @@
 	block-size: 7.25rem;
 }
 
+/* The collapsed frame, with 32px more under the stack for its 48px offset. */
+.offset {
+	block-size: 9.25rem;
+}
+
 /*
  * Every `Toaster` draws a stack per position, and the showcase raises its toasts in two of them.
  * Each frame shows only the stack of its own position.

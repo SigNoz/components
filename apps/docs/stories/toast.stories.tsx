@@ -53,10 +53,10 @@ const meta: Meta<ToastStoryArgs> = {
 		offset: {
 			control: 'number',
 			description:
-				'The distance between the stack and the edges of the window it sits against. Numbers are written as `px`.',
+				'The distance between the stack and the edges of the window it sits against. A number is written as `px` and a string is a CSS length, and either one sets every edge. An object sets the edges it names, and the others keep the default. A stack reads only the edges its position sits against: `bottom-right` reads `bottom` and `right`, `top-center` reads `top`.',
 			table: {
 				category: 'Appearance',
-				type: { summary: 'number | string' },
+				type: { summary: 'number | string | ToastOffset' },
 				defaultValue: { summary: '16' },
 			},
 		},
@@ -469,7 +469,7 @@ export const PositionsAndTimeouts: Story = {
 	},
 };
 
-type FrameName = 'spread' | 'collapsed-top' | 'collapsed-bottom';
+type FrameName = 'spread' | 'collapsed-top' | 'collapsed-bottom' | 'offset';
 
 /**
  * A `Toaster` that stacks inside a frame on the page instead of against the window. Every
@@ -486,16 +486,23 @@ function ToastFrame({
 	frame,
 	position,
 	className,
+	offset,
 	persist = false,
 }: {
 	frame: FrameName;
 	position: ToastPositionType;
 	className: string;
+	offset?: ToasterProps['offset'];
 	persist?: boolean;
 }): ReactElement {
 	const [host, setHost] = useState<HTMLDivElement | null>(null);
 	const toaster = host !== null && (
-		<Toaster position={position} container={host} aria-label={`Notifications, ${frame}`} />
+		<Toaster
+			position={position}
+			offset={offset}
+			container={host}
+			aria-label={`Notifications, ${frame}`}
+		/>
 	);
 
 	return (
@@ -550,13 +557,13 @@ function raiseShowcaseToasts(position: ToastPositionType): void {
 const SHOWCASE_TOASTS = 9;
 // The showcase raises its toasts at the top and at the bottom.
 const SHOWCASE_STACKS = 2;
-const FRAMES = 3;
+const FRAMES = 4;
 const POSITIONS = Object.values(ToastPosition).length;
 
 /**
  * Every variant and content shape, the stack spread and collapsed, at the top and at the bottom,
- * and the states of the button, in one snapshot. The toasts are the story: they are raised on
- * load, and each frame draws them with a `Toaster` of its own.
+ * the offset per edge, and the states of the button, in one snapshot. The toasts are the story:
+ * they are raised on load, and each frame draws them with a `Toaster` of its own.
  *
  * The spread frame is held spread by `PersistToastsProvider`, which also stops its timers, so a
  * toast that closes after five seconds does not race the snapshot there.
@@ -629,6 +636,37 @@ export const ToastShowcase: Story = {
 						/>
 					</div>
 				</div>
+
+				<div className="story-section">
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="base"
+						weight="bold"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						Offset per edge
+					</Typography>
+					<Typography
+						as="p"
+						variant="paragraph"
+						size="small"
+						weight="regular"
+						color="inherit"
+						textOverflow="wrap"
+					>
+						An object sets the edges it names. This stack sits at the bottom right with{' '}
+						<code>{'{ bottom: 48, right: 8 }'}</code>, so it clears a footer 48px tall and keeps 8px
+						from the right. Compare it with the stack above, which keeps 16px from both.
+					</Typography>
+					<ToastFrame
+						frame="offset"
+						position="bottom-right"
+						offset={{ bottom: 48, right: 8 }}
+						className={styles.offset}
+					/>
+				</div>
 			</div>
 		</div>
 	),
@@ -660,5 +698,11 @@ export const ToastShowcase: Story = {
 			spread.querySelector(`[data-testid="${testId}"] [data-slot="toast-action"]`) as HTMLElement;
 		action('toast-hover').classList.add('pseudo-hover');
 		action('toast-focus').classList.add('pseudo-focus-visible');
+
+		const edges = getComputedStyle(
+			frame('offset').querySelector('[data-position="bottom-right"]') as HTMLElement,
+		);
+		await expect(edges.bottom).toBe('48px');
+		await expect(edges.right).toBe('8px');
 	},
 };
