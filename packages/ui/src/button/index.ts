@@ -176,6 +176,7 @@
  * | `--button-success-link-hover` | `-` |
  * | `--button-success-link-hover-color` | `var(--button-success-link-hover)` |
  * | `--button-success-solid-foreground` | `var(--button-success-label)` |
+ * | `--button-text-rendering` | `geometricPrecision` |
  * | `--button-text-spacing` | `var(--button-internal-letter-spacing)` |
  * | `--button-text-transform` | `var(--button-internal-text-transform)` |
  * | `--button-transition` | `background-color 150ms ease, color 150ms ease, ...` |

@@ -125,6 +125,12 @@
 				color 150ms ease,
 				border-color 150ms ease);
 
+		// A native button does not inherit text-rendering from the page, as in `Button`. A link
+		// member does, so it keeps the page's value.
+		&:where(button) {
+			text-rendering: var(--button-group-text-rendering, geometricPrecision);
+		}
+
 		// Still laid out at its own width, so it can be measured, but out of the flow, invisible and
 		// out of the accessibility tree.
 		&[data-collapsed='true'] {

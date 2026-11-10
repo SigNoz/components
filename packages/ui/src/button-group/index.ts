@@ -126,6 +126,7 @@
  * | `--button-group-slot-transition` | `opacity var(--button-group-internal-loading-dur...` |
  * | `--button-group-suffix-slot-display` | `contents` |
  * | `--button-group-text-decoration` | `none` |
+ * | `--button-group-text-rendering` | `geometricPrecision` |
  * | `--button-group-text-spacing` | `var(--label-small-500-letter-spacing)` |
  * | `--button-group-text-transform` | `var(--label-small-500-text-transform)` |
  * | `--button-group-tooltip-max-width` | `20rem` |
