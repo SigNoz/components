@@ -308,8 +308,8 @@
  * | `--combobox-trigger-text-align` | `start` |
  * | `--combobox-trigger-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--combobox-trigger-transition-duration` | `150ms` |
- * | `--combobox-trigger-transition-property` | `border-color` |
- * | `--combobox-trigger-transition-timing-function` | `ease` |
+ * | `--combobox-trigger-transition-property` | `border-color, opacity, outline-color` |
+ * | `--combobox-trigger-transition-timing-function` | `ease-out` |
  * | `--combobox-value-flex-grow` | `1` |
  * | `--combobox-value-min-inline-size` | `0` |
  * | `--combobox-value-overflow` | `clip visible` |

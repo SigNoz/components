@@ -259,8 +259,8 @@
  * | `--select-trigger-text-align` | `start` |
  * | `--select-trigger-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--select-trigger-transition-duration` | `150ms` |
- * | `--select-trigger-transition-property` | `border-color` |
- * | `--select-trigger-transition-timing-function` | `ease` |
+ * | `--select-trigger-transition-property` | `border-color, opacity, outline-color` |
+ * | `--select-trigger-transition-timing-function` | `ease-out` |
  * | `--select-value-flex-grow` | `1` |
  * | `--select-value-min-inline-size` | `0` |
  * | `--select-value-overflow` | `clip visible` |

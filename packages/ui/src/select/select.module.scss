@@ -59,15 +59,19 @@
 
   cursor: var(--select-trigger-cursor, pointer);
 
-  transition-property: var(--select-trigger-transition-property, border-color);
+  // The ring is always drawn and only its color changes, so it fades in like the other states
+  // instead of popping. An `outline-style` change cannot be interpolated.
+  outline-width: var(--select-trigger-focus-outline-width, 1px);
+  outline-style: var(--select-trigger-focus-outline-style, solid);
+  outline-color: transparent;
+  outline-offset: var(--select-trigger-focus-outline-offset, 1px);
+
+  transition-property: var(--select-trigger-transition-property, border-color, opacity, outline-color);
   transition-duration: var(--select-trigger-transition-duration, 150ms);
-  transition-timing-function: var(--select-trigger-transition-timing-function, ease);
+  transition-timing-function: var(--select-trigger-transition-timing-function, ease-out);
 
   &:focus-visible {
-    outline-width: var(--select-trigger-focus-outline-width, 1px);
-    outline-style: var(--select-trigger-focus-outline-style, solid);
     outline-color: var(--select-internal-trigger-focus-ring);
-    outline-offset: var(--select-trigger-focus-outline-offset, 1px);
   }
 
   // Re-points both pairs, so the hover and open rules keep the colour too.
@@ -492,6 +496,13 @@
   .select__trigger,
   .select__item-control {
     transition: none;
+  }
+}
+
+// Forced colors repaint every outline in a system color, the transparent resting ring included.
+@media (forced-colors: active) {
+  .select__trigger:not(:focus-visible) {
+    outline-style: none;
   }
 }
 
