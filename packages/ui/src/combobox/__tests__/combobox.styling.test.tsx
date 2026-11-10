@@ -227,9 +227,11 @@ describe('Combobox trigger opacity', () => {
 		render(
 			<Combobox
 				aria-label="Framework"
+				placeholder="Pick a framework"
 				searchInputProps={{ placeholder: 'Search' }}
 				items={FRAMEWORKS}
 				disabled
+				disabledTooltip={undefined}
 			/>,
 		);
 
@@ -240,6 +242,7 @@ describe('Combobox trigger opacity', () => {
 		render(
 			<Combobox
 				aria-label="Framework"
+				placeholder="Pick a framework"
 				searchInputProps={{ placeholder: 'Search' }}
 				items={FRAMEWORKS}
 			/>,
@@ -252,10 +255,13 @@ describe('Combobox trigger opacity', () => {
 		render(
 			<Combobox
 				aria-label="Framework"
+				placeholder="Pick a framework"
 				searchInputProps={{ placeholder: 'Search' }}
 				items={FRAMEWORKS}
 				readOnly
+				readOnlyTooltip={undefined}
 				disabled
+				disabledTooltip={undefined}
 			/>,
 		);
 
@@ -267,9 +273,11 @@ describe('Combobox trigger opacity', () => {
 			<div style={{ ['--combobox-trigger-color' as string]: 'rgb(10, 20, 30)' }}>
 				<Combobox
 					aria-label="Framework"
+					placeholder="Pick a framework"
 					searchInputProps={{ placeholder: 'Search' }}
 					items={FRAMEWORKS}
 					disabled
+					disabledTooltip={undefined}
 				/>
 			</div>,
 		);
@@ -291,6 +299,7 @@ describe('Combobox trigger opacity', () => {
 					searchInputProps={{ placeholder: 'Search' }}
 					items={FRAMEWORKS}
 					disabled
+					disabledTooltip={undefined}
 				/>
 			</div>,
 		);
@@ -303,9 +312,11 @@ describe('Combobox trigger opacity', () => {
 			<div style={{ ['--combobox-trigger-disabled-opacity' as string]: '0.25' }}>
 				<Combobox
 					aria-label="Framework"
+					placeholder="Pick a framework"
 					searchInputProps={{ placeholder: 'Search' }}
 					items={FRAMEWORKS}
 					disabled
+					disabledTooltip={undefined}
 				/>
 			</div>,
 		);

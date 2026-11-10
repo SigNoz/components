@@ -230,19 +230,37 @@ describe('Select trigger opacity', () => {
 	}
 
 	it('fades a disabled trigger like a disabled Input', () => {
-		render(<Select aria-label="Framework" items={FRAMEWORKS} disabled />);
+		render(
+			<Select
+				aria-label="Framework"
+				placeholder="Pick a framework"
+				items={FRAMEWORKS}
+				disabled
+				disabledTooltip={undefined}
+			/>,
+		);
 
 		expect(getComputedStyle(trigger()).opacity).toBe('0.6');
 	});
 
 	it('leaves an enabled trigger opaque', () => {
-		render(<Select aria-label="Framework" items={FRAMEWORKS} />);
+		render(<Select aria-label="Framework" placeholder="Pick a framework" items={FRAMEWORKS} />);
 
 		expect(getComputedStyle(trigger()).opacity).toBe('1');
 	});
 
 	it('does not stack the read-only fade on a disabled trigger', () => {
-		render(<Select aria-label="Framework" items={FRAMEWORKS} readOnly disabled />);
+		render(
+			<Select
+				aria-label="Framework"
+				placeholder="Pick a framework"
+				items={FRAMEWORKS}
+				readOnly
+				readOnlyTooltip={undefined}
+				disabled
+				disabledTooltip={undefined}
+			/>,
+		);
 
 		expect(getComputedStyle(trigger()).opacity).toBe('0.6');
 	});
@@ -250,7 +268,13 @@ describe('Select trigger opacity', () => {
 	it('keeps the label colour, so the fade is the only dimming', () => {
 		render(
 			<div style={{ ['--select-trigger-color' as string]: 'rgb(10, 20, 30)' }}>
-				<Select aria-label="Framework" items={FRAMEWORKS} disabled />
+				<Select
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
 			</div>,
 		);
 
@@ -265,7 +289,13 @@ describe('Select trigger opacity', () => {
 					['--select-placeholder-color' as string]: 'rgb(40, 50, 60)',
 				}}
 			>
-				<Select aria-label="Framework" placeholder="Pick a framework" items={FRAMEWORKS} disabled />
+				<Select
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
 			</div>,
 		);
 
@@ -275,7 +305,13 @@ describe('Select trigger opacity', () => {
 	it('takes the disabled opacity from its variable', () => {
 		render(
 			<div style={{ ['--select-trigger-disabled-opacity' as string]: '0.25' }}>
-				<Select aria-label="Framework" items={FRAMEWORKS} disabled />
+				<Select
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
 			</div>,
 		);
 
