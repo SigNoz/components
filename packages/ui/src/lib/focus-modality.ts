@@ -1,8 +1,4 @@
-import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect.js';
-
 const MODIFIER_KEYS = new Set(['Alt', 'Control', 'Meta', 'Shift']);
-
-const trackedDocuments = new WeakSet<Document>();
 
 // Until the first event the page was reached without a pointer (`autoFocus` on load, a link from
 // another page), which counts as keyboard, the way browsers start `:focus-visible`.
@@ -35,21 +31,11 @@ export function isPointerModality(): boolean {
 	return lastPointer;
 }
 
-/**
- * Starts tracking the last input modality on the document. Listeners are installed once per
- * document, in the capture phase so a handler that stops propagation cannot hide an event, and
- * stay for the life of the page.
- *
- * @access private
- */
-export function useFocusModalityTracking(): void {
-	useIsomorphicLayoutEffect(() => {
-		if (trackedDocuments.has(document)) {
-			return;
-		}
-
-		trackedDocuments.add(document);
-		document.addEventListener('pointerdown', onPointerDown, { capture: true, passive: true });
-		document.addEventListener('keydown', onKeyDown, { capture: true, passive: true });
-	}, []);
+// Installed when the module loads, before any field mounts: a click that mounts the first field
+// with `autoFocus` must already count as a pointer. Capture phase, so a handler that stops
+// propagation cannot hide an event. Only the page's own document is watched: a field portaled into
+// an iframe reads this state, a gap the Input docs list under Limitations.
+if (typeof document !== 'undefined') {
+	document.addEventListener('pointerdown', onPointerDown, { capture: true, passive: true });
+	document.addEventListener('keydown', onKeyDown, { capture: true, passive: true });
 }

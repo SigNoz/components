@@ -16,6 +16,8 @@
 	--input-internal-line-height: var(--label-base-400-line-height);
 	--input-internal-letter-spacing: var(--label-base-400-letter-spacing);
 	--input-internal-text-transform: var(--label-base-400-text-transform);
+	// Reset on every frame, or an Input in another one's slot inherits the outer ring color.
+	--input-internal-outline-color: transparent;
 
 	display: var(--input-display, flex);
 	align-items: var(--input-align-items, center);
@@ -30,14 +32,16 @@
 	background-color: var(--input-internal-background);
 	// The ring is always drawn and only its color changes, so it fades in like the other states
 	// instead of popping. An `outline-style` change cannot be interpolated.
-	outline: var(--input-focus-outline-width, 1px) solid var(--input-internal-outline-color, transparent);
+	outline: var(--input-focus-outline-width, 1px) solid var(--input-internal-outline-color);
 	outline-offset: var(--input-focus-outline-offset, 1px);
-	transition: var(--input-transition,
-			border-color 150ms ease-out,
-			background-color 150ms ease-out,
-			color 150ms ease-out,
-			opacity 150ms ease-out,
-			outline-color 150ms ease-out);
+	transition-property: var(--input-transition-property,
+			border-color,
+			background-color,
+			color,
+			opacity,
+			outline-color);
+	transition-duration: var(--input-transition-duration, 150ms);
+	transition-timing-function: var(--input-transition-timing-function, ease-out);
 	font-family: var(--input-font-family, var(--input-internal-font-family));
 	font-size: var(--input-font-size, var(--input-internal-font-size));
 	font-weight: var(--input-font-weight, var(--input-internal-font-weight));
@@ -141,7 +145,9 @@
 	&::placeholder {
 		color: var(--input-internal-placeholder);
 		opacity: var(--input-placeholder-opacity, 0.6);
-		transition: var(--input-placeholder-transition, color 150ms ease-out);
+		transition-property: var(--input-placeholder-transition-property, color);
+		transition-duration: var(--input-placeholder-transition-duration, 150ms);
+		transition-timing-function: var(--input-placeholder-transition-timing-function, ease-out);
 	}
 
 	// Browsers suppress pointer events over a disabled control, which would keep hover from ever
