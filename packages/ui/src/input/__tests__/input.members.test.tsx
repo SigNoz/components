@@ -134,13 +134,13 @@ describe('Input.Number', () => {
 	});
 
 	it('marks the frame as the number member with the shared attributes', () => {
-		render(<Input.Number aria-label="Count" size="large" status="warning" testId="count" />);
+		render(<Input.Number aria-label="Count" size="md" status="warning" testId="count" />);
 
 		const frame = screen.getByTestId('count');
 
 		expect(frame).toHaveAttribute('data-slot', 'input');
 		expect(frame).toHaveAttribute('data-member', 'number');
-		expect(frame).toHaveAttribute('data-size', 'large');
+		expect(frame).toHaveAttribute('data-size', 'md');
 		expect(frame).toHaveAttribute('data-status', 'warning');
 		expect(screen.getByTestId('count-status')).toBeInTheDocument();
 	});

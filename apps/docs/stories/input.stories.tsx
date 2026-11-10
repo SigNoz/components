@@ -38,9 +38,10 @@ export const Default: Story = {
 };
 
 /**
- * `hover` and `focus` cannot be reached by a snapshot on their own, so
- * `storybook-addon-pseudo-states` forces them through the `[data-pseudo]` selectors in the
- * story parameters. `disabled` and `readOnly` are real props, so they need no pseudo.
+ * `hover` cannot be reached by a snapshot on its own, so `storybook-addon-pseudo-states` forces it
+ * through the `[data-pseudo]` selectors in the story parameters. The ring follows the frame's
+ * `data-focus-visible`, which the frame keeps when it is passed in, so `focus` passes it.
+ * `disabled` and `readOnly` are real props, so they need no pseudo.
  *
  * Each cell holds an empty field, then a filled one. The empty one is where the placeholder
  * color shows, including its hover color.
@@ -53,7 +54,8 @@ type LockedProps = Pick<
 	InputProps,
 	'disabled' | 'disabledTooltip' | 'readOnly' | 'readOnlyTooltip'
 > & {
-	'data-pseudo'?: 'hover' | 'focus';
+	'data-pseudo'?: 'hover';
+	'data-focus-visible'?: true;
 };
 
 function stateProps(state: State): LockedProps {
@@ -65,7 +67,7 @@ function stateProps(state: State): LockedProps {
 		case 'hover':
 			return { 'data-pseudo': 'hover' };
 		case 'focus':
-			return { 'data-pseudo': 'focus' };
+			return { 'data-focus-visible': true };
 		default:
 			return {};
 	}
@@ -78,8 +80,8 @@ type Appearance = {
 };
 
 const APPEARANCES: Appearance[] = [
-	{ id: 'base', label: 'base', props: {} },
-	{ id: 'large', label: 'large', props: { size: 'large' } },
+	{ id: 'sm', label: 'sm', props: {} },
+	{ id: 'md', label: 'md', props: { size: 'md' } },
 	{ id: 'success', label: 'success', props: { status: 'success' } },
 	{ id: 'warning', label: 'warning', props: { status: 'warning' } },
 	{ id: 'danger', label: 'danger', props: { status: 'danger' } },
@@ -198,15 +200,13 @@ export const Showcase: Story = {
 			// The hover border is on the frame. The toggle and the steppers paint their own hover.
 			hover:
 				'[data-pseudo="hover"], [data-pseudo="hover"] [data-slot="input-password-toggle"], [data-pseudo="hover"] [data-slot="input-step-up"], [data-pseudo="hover"] [data-slot="input-step-down"]',
-			// The ring is `:has(.input__field:focus-visible)` on the frame, so the class lands on the control.
-			focusVisible: '[data-pseudo="focus"] [data-slot="input-field"]',
 		},
 	},
 	render: () => (
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<Section
 				title="States"
-				description="One row per appearance, one column per state, each cell empty then filled. base is 32px, large is 40px, and the text size does not change. Hover darkens the border and the placeholder, and never while a status, disabled, or read-only is set: the status border wins. danger also announces itself as aria-invalid. Success is confirmation of a completed check, not a resting state for a valid field. Disabled fades to 0.4, read-only to 0.8. Unstyled drops the border and the background and keeps the focus ring."
+				description="One row per appearance, one column per state, each cell empty then filled. sm is 32px, md is 40px, and the text size does not change. Hover darkens the border and the placeholder, and never while a status, disabled, or read-only is set: the status border wins. danger also announces itself as aria-invalid. Success is confirmation of a completed check, not a resting state for a valid field. Disabled fades to 0.6, read-only to 0.8. Unstyled drops the border and the background and keeps the focus ring."
 			>
 				<div
 					className={`${styles.matrix} ${styles.marginTopMedium}`}
@@ -254,11 +254,11 @@ export const Showcase: Story = {
 						default
 					</Typography>
 					<Field>
-						<Input data-pseudo="focus" defaultValue="Springfield" aria-label="Focused" />
+						<Input data-focus-visible defaultValue="Springfield" aria-label="Focused" />
 					</Field>
 					<Field>
 						<Input
-							data-pseudo="focus"
+							data-focus-visible
 							noFocusRing
 							defaultValue="Springfield"
 							aria-label="No focus ring"
@@ -276,7 +276,7 @@ export const Showcase: Story = {
 					</Typography>
 					<Field>
 						<Input
-							data-pseudo="focus"
+							data-focus-visible
 							variant="unstyled"
 							defaultValue="Springfield"
 							aria-label="Unstyled focused"
@@ -284,7 +284,7 @@ export const Showcase: Story = {
 					</Field>
 					<Field>
 						<Input
-							data-pseudo="focus"
+							data-focus-visible
 							variant="unstyled"
 							noFocusRing
 							defaultValue="Springfield"
@@ -350,13 +350,13 @@ export const Showcase: Story = {
 							/>
 						</Field>
 					</Row>
-					<Row label="large, with a prefix">
+					<Row label="md, with a prefix">
 						<Field>
 							<Input
-								size="large"
+								size="md"
 								prefix={<Search />}
 								placeholder="For eg. Simpsonville..."
-								aria-label="Large prefix"
+								aria-label="Medium prefix"
 							/>
 						</Field>
 					</Row>
@@ -571,13 +571,13 @@ export const Showcase: Story = {
 							/>
 						</Field>
 					</Row>
-					<Row label="number, large, prefix">
+					<Row label="number, md, prefix">
 						<Field>
 							<Input.Number
-								size="large"
+								size="md"
 								defaultValue={3}
 								prefix={<Search />}
-								aria-label="Large count"
+								aria-label="Medium count"
 							/>
 						</Field>
 					</Row>

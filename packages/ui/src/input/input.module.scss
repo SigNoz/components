@@ -1,6 +1,6 @@
 // State lives on the frame as data attributes (`data-size`, `data-status`, `data-disabled`,
-// `data-member`), and keyboard focus is read back from the control with `:has()`, so one rule
-// tree covers `Input`, `Input.Password`, `Input.TextArea` and `Input.Number`.
+// `data-focus-visible`, `data-member`), so one rule tree covers `Input`, `Input.Password`,
+// `Input.TextArea` and `Input.Number`.
 .input {
 	--input-internal-background: var(--input-background-color, var(--input-background));
 	--input-internal-border: var(--input-border-color, var(--input-border));
@@ -28,7 +28,16 @@
 	border: var(--input-border-width, 1px) solid var(--input-internal-border);
 	border-radius: var(--input-border-radius, var(--radius-1));
 	background-color: var(--input-internal-background);
-	transition: var(--input-transition, border-color 150ms ease, background-color 150ms ease, color 150ms ease);
+	// The ring is always drawn and only its color changes, so it fades in like the other states
+	// instead of popping. An `outline-style` change cannot be interpolated.
+	outline: var(--input-focus-outline-width, 1px) solid var(--input-internal-outline-color, transparent);
+	outline-offset: var(--input-focus-outline-offset, 1px);
+	transition: var(--input-transition,
+			border-color 150ms ease-out,
+			background-color 150ms ease-out,
+			color 150ms ease-out,
+			opacity 150ms ease-out,
+			outline-color 150ms ease-out);
 	font-family: var(--input-font-family, var(--input-internal-font-family));
 	font-size: var(--input-font-size, var(--input-internal-font-size));
 	font-weight: var(--input-font-weight, var(--input-internal-font-weight));
@@ -38,12 +47,12 @@
 	font-variant-numeric: normal;
 	font-feature-settings: 'ss01' 1;
 
-	&[data-size='base'] {
-		--input-internal-height: var(--input-height, 32px);
+	&[data-size='sm'] {
+		--input-internal-height: var(--input-sm-height, 32px);
 	}
 
-	&[data-size='large'] {
-		--input-internal-height: var(--input-large-height, 40px);
+	&[data-size='md'] {
+		--input-internal-height: var(--input-md-height, 40px);
 	}
 
 	// The hover border never moves while a status is set: the status border is the stronger signal.
@@ -80,13 +89,12 @@
 
 	// The ring wraps the frame, not the control, so it holds the field's shape around any slots.
 	// It stays on the unstyled variant, where it is the only thing marking focus.
-	&:has(.input__field:focus-visible):not([data-no-focus-ring]) {
-		outline: var(--input-focus-outline, 1px solid var(--input-internal-focus-ring));
-		outline-offset: var(--input-focus-outline-offset, 1px);
+	&[data-focus-visible]:not([data-no-focus-ring]) {
+		--input-internal-outline-color: var(--input-internal-focus-ring);
 	}
 
 	&[data-disabled] {
-		opacity: var(--input-disabled-opacity, 0.4);
+		opacity: var(--input-disabled-opacity, 0.6);
 		cursor: var(--input-disabled-cursor, not-allowed);
 	}
 
@@ -133,6 +141,7 @@
 	&::placeholder {
 		color: var(--input-internal-placeholder);
 		opacity: var(--input-placeholder-opacity, 0.6);
+		transition: var(--input-placeholder-transition, color 150ms ease-out);
 	}
 
 	// Browsers suppress pointer events over a disabled control, which would keep hover from ever
@@ -241,7 +250,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.input {
+	.input,
+	.input__field::placeholder {
 		transition: none;
+	}
+}
+
+// Forced colors repaint every outline in a system color, the transparent resting ring included.
+@media (forced-colors: active) {
+	.input:not([data-focus-visible]),
+	.input[data-no-focus-ring] {
+		outline-style: none;
 	}
 }

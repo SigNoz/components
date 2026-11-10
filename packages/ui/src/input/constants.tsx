@@ -1,6 +1,6 @@
 export const InputSize = {
-	Base: 'base',
-	Large: 'large',
+	Sm: 'sm',
+	Md: 'md',
 } as const;
 
 export const InputVariant = {

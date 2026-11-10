@@ -17,23 +17,23 @@ describe('Input rendering', () => {
 		expect(frame).toContainElement(field);
 	});
 
-	it('defaults to the base size and the default variant', () => {
+	it('defaults to the sm size and the default variant', () => {
 		render(<Input testId="org" />);
 
 		const frame = screen.getByTestId('org');
 
-		expect(frame).toHaveAttribute('data-size', 'base');
+		expect(frame).toHaveAttribute('data-size', 'sm');
 		expect(frame).toHaveAttribute('data-variant', 'default');
 		expect(frame).not.toHaveAttribute('data-status');
 		expect(frame).not.toHaveAttribute('data-member');
 	});
 
 	it('mirrors size, variant and noFocusRing onto the frame', () => {
-		render(<Input size="large" variant="unstyled" noFocusRing testId="org" />);
+		render(<Input size="md" variant="unstyled" noFocusRing testId="org" />);
 
 		const frame = screen.getByTestId('org');
 
-		expect(frame).toHaveAttribute('data-size', 'large');
+		expect(frame).toHaveAttribute('data-size', 'md');
 		expect(frame).toHaveAttribute('data-variant', 'unstyled');
 		expect(frame).toHaveAttribute('data-no-focus-ring');
 	});
@@ -128,8 +128,8 @@ describe('Input rendering', () => {
 
 describe('Input field height', () => {
 	it.each([
-		['base', 18],
-		['large', 26],
+		['sm', 18],
+		['md', 26],
 	] as const)(
 		'stretches a single-line field over the inner height of a %s frame',
 		(size, height) => {
