@@ -490,6 +490,13 @@ size fixed at the text size. The docs story tests check the text style and the n
 story renders once under a page with a deliberately wrong value for each of them, and fails if any
 component text shows one (`apps/docs/.storybook/hostFontGuard.ts`).
 
+`text-rendering` is the exception, on a native `<button>` only. The browser resets it to `auto` on
+form controls, so the root's value never reaches them, and `auto` rounds a 13px medium space to
+3px on hinted Linux Chromium. `Button` and the `ButtonGroup` item declare
+`text-rendering: var(--{component}-text-rendering, geometricPrecision)`. A class that can land on
+another element scopes it with `:where(button)`, so a `ButtonGroup` link member keeps the page's
+value.
+
 **Height comes from layout, not from line height.** `label`, `uppercase` and `code` have a line
 height of 1, so the line box is exactly the font size. A button, a row or a tab gets its height
 from `min-block-size`, padding or a fixed size built from `--spacing-*`. Don't raise the line
