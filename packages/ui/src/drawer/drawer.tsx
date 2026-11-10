@@ -32,7 +32,7 @@ import type {
 } from './types.js';
 import { useDrawerStack } from './use-drawer-stack.js';
 import { useFocusFallback } from './use-focus-fallback.js';
-import { toDrawerCloseReason } from './utils.js';
+import { letPageKeysThrough, toDrawerCloseReason } from './utils.js';
 
 const NO_STEPS: readonly DrawerTrailStepType[] = [];
 
@@ -165,6 +165,9 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 							// may not undo the modal.
 							style={stackStyle}
 							aria-modal={isModal ? 'true' : undefined}
+							// Base UI stops the arrow keys, `Home` and `End` at every popup. A modal keeps that, and
+							// an inspector leaves the page usable, so its shortcuts get them.
+							onKeyDown={isModal ? undefined : letPageKeysThrough}
 							data-testid={testId}
 							data-type={resolvedType}
 							data-width={width}
@@ -292,7 +295,9 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * Focus starts on the panel, so a screen reader reads the title, and goes back on close to the
  * element that had it when the drawer opened. `Esc` closes only the top layer: a popup open inside
  * the panel first, then the drawer. A swipe towards the right edge on a touch screen asks to close
- * with the `swipe` reason. The drawer adds no `Enter` or arrow key handler of its own.
+ * with the `swipe` reason. A select, menu, tabs or radio group in the panel handles its own arrow
+ * keys, `Home` and `End` and stops them, and a text field does not, so a page shortcut that reads
+ * those keys must skip it. The drawer acts on no `Enter` or arrow key itself.
  *
  * ### Layering
  *
