@@ -66,7 +66,7 @@ describe('Typography.Link', () => {
 				href="/traces/4f0a"
 				tabularNumbers
 				slashedZero
-				capitalize
+				textTransform="capitalize"
 			>
 				4f0a-27b0
 			</Typography.Link>,
@@ -75,10 +75,10 @@ describe('Typography.Link', () => {
 		const link = screen.getByRole('link', { name: '4f0a-27b0' });
 		expect(link).toHaveAttribute('data-tabular-numbers');
 		expect(link).toHaveAttribute('data-slashed-zero');
-		expect(link).toHaveAttribute('data-capitalize');
+		expect(link).toHaveAttribute('data-text-transform', 'capitalize');
 		expect(link).not.toHaveAttribute('tabularNumbers');
 		expect(link).not.toHaveAttribute('slashedZero');
-		expect(link).not.toHaveAttribute('capitalize');
+		expect(link).not.toHaveAttribute('textTransform');
 	});
 
 	it('adds noopener and noreferrer for a _blank target', () => {

@@ -1,6 +1,7 @@
 import {
 	type Typography,
 	TypographyAlign,
+	TypographyTextTransform,
 	TypographyColor,
 	TypographyDisplay,
 	TypographyElement,
@@ -209,14 +210,15 @@ export const typographyFontArgTypes: Meta<typeof Typography>['argTypes'] = {
  * The number features, on `Typography` and `Typography.Link`.
  */
 export const typographyNumeralArgTypes: Meta<typeof Typography>['argTypes'] = {
-	capitalize: {
-		control: 'boolean',
+	textTransform: {
+		control: 'select',
+		options: [undefined, ...Object.values(TypographyTextTransform)],
 		description:
-			'Sets the first letter of every word in capitals, for a value that arrives in lower case. Not on `uppercase`.',
+			'Changes the case of the text with CSS only. No `uppercase`: capitals come from `variant="uppercase"`, with their letter spacing.',
 		table: {
 			category: 'Appearance',
-			type: { summary: 'boolean' },
-			defaultValue: { summary: 'false' },
+			type: { summary: "'capitalize' | 'lowercase'" },
+			defaultValue: { summary: 'the case of the variant' },
 		},
 	},
 	tabularNumbers: {

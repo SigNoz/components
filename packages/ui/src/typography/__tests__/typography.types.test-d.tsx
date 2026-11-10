@@ -15,6 +15,7 @@ import { Typography } from '../typography.js';
 
 const body = { variant: 'paragraph', size: 'base', weight: 'regular', color: 'main' } as const;
 const font = { variant: 'label', size: 'base', weight: 'medium' } as const;
+const smallLine = { ...body, size: 'small', as: 'p', textOverflow: 'wrap' } as const;
 const textRef = createRef<HTMLElement>();
 const noop = (): void => {};
 const anchor = createElement('a', { href: '/docs' });
@@ -142,23 +143,32 @@ describe('variant and size', () => {
 		);
 	});
 
-	test('capitalize goes on every variant but uppercase', () => {
+	test('textTransform goes on every variant but uppercase', () => {
 		assertType(
-			<Typography {...body} as="span" textOverflow="wrap" capitalize>
+			<Typography {...body} as="span" textOverflow="wrap" textTransform="capitalize">
 				text
 			</Typography>,
 		);
 		assertType(
-			<Typography {...font} color="main" as="span" textOverflow="visible" capitalize>
+			<Typography {...font} color="main" as="span" textOverflow="visible" textTransform="lowercase">
 				text
 			</Typography>,
 		);
 	});
 
-	test('rejects capitalize on uppercase', () => {
+	test('rejects uppercase as a textTransform', () => {
 		assertType(
-			// @ts-expect-error - `uppercase` already sets every letter in capitals
-			<Typography {...body} variant="uppercase" size="small" as="p" textOverflow="wrap" capitalize>
+			// @ts-expect-error - capitals come from `variant="uppercase"`, with their letter spacing
+			<Typography {...body} as="span" textOverflow="wrap" textTransform="uppercase">
+				text
+			</Typography>,
+		);
+	});
+
+	test('rejects textTransform on uppercase', () => {
+		assertType(
+			// @ts-expect-error - `variant="uppercase"` sets the case and the letter spacing together
+			<Typography {...smallLine} variant="uppercase" textTransform="capitalize">
 				text
 			</Typography>,
 		);

@@ -9,6 +9,7 @@ import type {
 	TypographySpacing,
 	TypographySpacingPropNames,
 	TypographyTextOverflow,
+	TypographyTextTransform,
 	TypographyVariant,
 	TypographyVerticalAlign,
 	TypographyWeight,
@@ -21,6 +22,8 @@ export type TypographyColorType = (typeof TypographyColor)[keyof typeof Typograp
 export type TypographyElementType = (typeof TypographyElement)[keyof typeof TypographyElement];
 export type TypographyTextOverflowType =
 	(typeof TypographyTextOverflow)[keyof typeof TypographyTextOverflow];
+export type TypographyTextTransformType =
+	(typeof TypographyTextTransform)[keyof typeof TypographyTextTransform];
 export type TypographyDisplayType = (typeof TypographyDisplay)[keyof typeof TypographyDisplay];
 export type TypographyAlignType = (typeof TypographyAlign)[keyof typeof TypographyAlign];
 export type TypographyVerticalAlignType =
@@ -68,21 +71,26 @@ export interface OnlyALabelNamesAControl {
 }
 
 /**
- * The type of `capitalize` on `variant="uppercase"`, which no value matches.
+ * The type of `textTransform="uppercase"`, and of `textTransform` on `variant="uppercase"`, which no
+ * value matches.
  */
-export interface AnUppercaseTextIsAlreadyInCapitals {
-	'`capitalize` has no effect on `variant="uppercase"`, which sets every letter in capitals': never;
+export interface CapitalsComeFromTheUppercaseVariant {
+	'capitals come from `variant="uppercase"`, which also sets their wider letter spacing: `textTransform` has no `uppercase` and does not apply to that variant': never;
 }
 
 type TypographyCaseProps = {
 	/**
-	 * Sets the first letter of every word in capitals, for a value that arrives in lower case, such
-	 * as `resource` shown as `Resource`. The case changes with CSS only, so a screen reader and a
-	 * copy get the text as written.
+	 * Changes the case of the text with CSS only, so a screen reader and a copy get the text as
+	 * written. `capitalize` sets the first letter of every word in capitals, for a value that arrives
+	 * in lower case, such as `resource` shown as `Resource`, and `lowercase` sets every letter in
+	 * lower case.
 	 *
-	 * @default false
+	 * @note There is no `uppercase`: capitals come from `variant="uppercase"`, which also sets the
+	 * wider letter spacing they need.
+	 *
+	 * @default the case of the variant, as written
 	 */
-	capitalize?: boolean;
+	textTransform?: TypographyTextTransformType | CapitalsComeFromTheUppercaseVariant;
 };
 
 type TypographyStyleProps = {
@@ -124,9 +132,9 @@ type TypographyStyleProps = {
 			size: 'small' | 'base';
 			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
 			/**
-			 * `uppercase` already sets every letter in capitals.
+			 * `variant="uppercase"` sets the case and the letter spacing together.
 			 */
-			capitalize?: AnUppercaseTextIsAlreadyInCapitals;
+			textTransform?: CapitalsComeFromTheUppercaseVariant;
 	  }
 );
 
@@ -461,7 +469,7 @@ export type TypographyLookProps = {
 	display: TypographyDisplayType;
 	tabularNumbers?: boolean;
 	slashedZero?: boolean;
-	capitalize?: unknown;
+	textTransform?: unknown;
 	maxLines?: unknown;
 	align?: unknown;
 	verticalAlign?: unknown;

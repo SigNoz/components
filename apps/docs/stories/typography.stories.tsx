@@ -58,10 +58,10 @@ const BOX_PROPERTIES = [
 	'-webkit-line-clamp',
 ];
 
-const CAPITALIZED_STYLES = [
-	{ variant: 'label' },
-	{ variant: 'paragraph' },
-	{ variant: 'code' },
+const CASE_STYLES = [
+	{ variant: 'label', textTransform: 'capitalize' },
+	{ variant: 'paragraph', textTransform: 'capitalize' },
+	{ variant: 'code', textTransform: 'lowercase' },
 ] as const;
 
 function capitalize(value: string): string {
@@ -208,9 +208,9 @@ export const TypographyShowcase: Story = {
 			expect([style.overflowX, style.overflowY]).toEqual(['clip', 'visible']);
 		}
 		expect(getComputedStyle(canvas.getByTestId('overflow-ellipsis-2')).overflowY).toBe('hidden');
-		for (const { variant } of CAPITALIZED_STYLES) {
-			expect(getComputedStyle(canvas.getByTestId(`case-capitalize-${variant}`)).textTransform).toBe(
-				'capitalize',
+		for (const { variant, textTransform } of CASE_STYLES) {
+			expect(getComputedStyle(canvas.getByTestId(`case-${variant}`)).textTransform).toBe(
+				textTransform,
 			);
 		}
 		expect(flex.querySelector('svg')?.getBoundingClientRect().width).toBe(12);
@@ -288,16 +288,16 @@ export const TypographyShowcase: Story = {
 				title="Case"
 				description={
 					<>
-						<code>capitalize</code> sets the first letter of every word in capitals, for a value
-						that arrives in lower case. <code>uppercase</code> already sets every letter in
-						capitals, so the types reject it there.
+						<code>textTransform</code> changes the case of a value that arrives in another case.
+						Capitals come from <code>variant="uppercase"</code>, which also sets their letter
+						spacing, so the prop has no <code>uppercase</code> and does not apply to that variant.
 					</>
 				}
 			>
 				<div className={styles.styleTable}>
-					{CAPITALIZED_STYLES.map((style) => (
+					{CASE_STYLES.map((style) => (
 						<Fragment key={style.variant}>
-							<Caption>{`${capitalize(style.variant)} / capitalize`}</Caption>
+							<Caption>{`${capitalize(style.variant)} / ${style.textTransform}`}</Caption>
 							<Typography
 								{...style}
 								size="base"
@@ -305,8 +305,7 @@ export const TypographyShowcase: Story = {
 								color="main"
 								as="span"
 								textOverflow="visible"
-								testId={`case-capitalize-${style.variant}`}
-								capitalize
+								testId={`case-${style.variant}`}
 							>
 								resource attribute
 							</Typography>

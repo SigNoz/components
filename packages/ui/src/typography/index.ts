@@ -75,6 +75,7 @@ export {
 	TypographySize,
 	TypographySpacing,
 	TypographyTextOverflow,
+	TypographyTextTransform,
 	TypographyVariant,
 	TypographyVerticalAlign,
 	TypographyWeight,

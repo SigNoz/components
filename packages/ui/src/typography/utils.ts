@@ -9,12 +9,13 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { isLabelTruncated, isLabelTruncatedInHeight } from '../lib/useIsLabelTruncated.js';
-import { TypographySpacingPropNames } from './constants.js';
+import { TypographySpacingPropNames, TypographyTextTransform } from './constants.js';
 import type {
 	TypographyDisplayType,
 	TypographyElementType,
 	TypographyLookProps,
 	TypographySpacingProps,
+	TypographyVariantType,
 	WithoutTypographySpacingProps,
 } from './types.js';
 
@@ -119,6 +120,17 @@ export function splitTypographySpacing<Props extends object>(
 	return [spacing, rest as WithoutTypographySpacingProps<Props>];
 }
 
+const TEXT_TRANSFORMS: ReadonlySet<unknown> = new Set(Object.values(TypographyTextTransform));
+
+function textTransformOf(
+	variant: TypographyVariantType,
+	textTransform: unknown,
+): string | undefined {
+	return variant !== 'uppercase' && TEXT_TRANSFORMS.has(textTransform)
+		? (textTransform as string)
+		: undefined;
+}
+
 /**
  * The `data-*` attributes and the inline custom properties of a text. The style holds only
  * `--typography-internal-*` properties.
@@ -137,7 +149,7 @@ export function getTypographyLook({
 	verticalAlign,
 	tabularNumbers = false,
 	slashedZero = false,
-	capitalize,
+	textTransform,
 	width,
 	minWidth,
 	maxWidth,
@@ -155,6 +167,7 @@ export function getTypographyLook({
 		'--typography-internal-padding': toSpacingShorthand(spacing, 'padding'),
 		'--typography-internal-gap': isFlex ? toSpacing(gap) : undefined,
 		'--typography-internal-max-lines': lines ?? undefined,
+		'--typography-internal-text-transform': textTransformOf(variant, textTransform),
 	};
 	const style = Object.fromEntries(
 		Object.entries(internal).filter(([, value]) => value !== undefined),
@@ -176,7 +189,7 @@ export function getTypographyLook({
 			: undefined,
 		'data-tabular-numbers': tabularNumbers || undefined,
 		'data-slashed-zero': slashedZero || undefined,
-		'data-capitalize': capitalize === true || undefined,
+		'data-text-transform': textTransformOf(variant, textTransform),
 		style,
 	};
 }
