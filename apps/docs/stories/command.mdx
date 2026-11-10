@@ -221,6 +221,10 @@ The highlighted row carries `data-highlighted` and `aria-selected="true"`. A dis
 that shows a loading row's spinner carries `data-loading` too. The search prefix carries
 `data-loading` while `searchInputProps.loading` is true.
 
+In a jsdom test, `user.click(row)` needs `@testing-library/user-event` 14.6.1 or later. A row
+cancels `pointerdown` to keep the focus in the search field, and older versions then skip the
+`click`. `fireEvent.click(row)` picks a row with any version.
+
 Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props

@@ -352,6 +352,10 @@ import { ForceOpenProvider } from '@signozhq/ui/testing';
 `rowTestId` is the row's own `testId` or the generated one. A row, a group or the footer action
 with its own `testId` keeps it. The popup parts render only while it is open.
 
+In a jsdom test, `user.click(row)` needs `@testing-library/user-event` 14.6.1 or later. A row
+cancels `pointerdown` to keep the focus in the search field, and older versions then skip the
+`click`. `fireEvent.click(row)` picks a row with any version.
+
 Otherwise use the `data-slot` attributes, never the hashed class names.
 
 ## Props
