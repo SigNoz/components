@@ -314,6 +314,16 @@ $slant: (
 	transition-timing-function: var(--alert-strip-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
 	transition-duration: var(--alert-strip-transition-duration, 150ms);
 
+	&:is(button) {
+		display: inline;
+		padding: 0;
+		border: 0;
+		background: none;
+		font: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+	}
+
 	&:hover {
 		color: var(--alert-strip-internal-link-hover, inherit);
 	}

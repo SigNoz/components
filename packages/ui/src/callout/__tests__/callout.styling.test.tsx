@@ -40,3 +40,43 @@ describe('Callout styling', () => {
 		expect(title.scrollWidth).toBeGreaterThan(title.clientWidth);
 	});
 });
+
+describe('Callout.Link styling', () => {
+	it('draws an action like the anchor link inside the prose', () => {
+		render(
+			<Callout color="primary" size="md" icon={icon}>
+				Read the{' '}
+				<Callout.Link href="#docs" testId="anchor">
+					docs
+				</Callout.Link>{' '}
+				or{' '}
+				<Callout.Link onClick={() => {}} testId="action">
+					act
+				</Callout.Link>
+				.
+			</Callout>,
+		);
+
+		const anchor = getComputedStyle(screen.getByTestId('anchor'));
+		const action = getComputedStyle(screen.getByTestId('action'));
+
+		for (const property of [
+			'color',
+			'fontFamily',
+			'fontSize',
+			'fontWeight',
+			'lineHeight',
+			'letterSpacing',
+			'textTransform',
+			'textDecorationLine',
+			'cursor',
+		] as const) {
+			expect(action[property], property).toBe(anchor[property]);
+		}
+
+		expect(action.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+		expect(action.borderTopWidth).toBe('0px');
+		expect(action.paddingTop).toBe('0px');
+		expect(action.paddingLeft).toBe('0px');
+	});
+});
