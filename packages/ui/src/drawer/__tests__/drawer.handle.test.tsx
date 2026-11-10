@@ -631,3 +631,49 @@ describe('Drawer with a handle driving an inspector', () => {
 		},
 	);
 });
+
+interface SwitchHarnessProps {
+	handleRef: HandleRef;
+	useSecond: boolean;
+}
+
+function SwitchHandleHarness({ handleRef, useSecond }: SwitchHarnessProps): ReactNode {
+	const first = useDrawerHandle<Row>();
+	const second = useDrawerHandle<Row>();
+
+	useEffect(() => {
+		handleRef.current = first;
+	}, [first, handleRef]);
+
+	return (
+		<Drawer
+			handle={useSecond ? second : first}
+			type="task"
+			stack="overlay"
+			title="Log details"
+			testId="drawer"
+		>
+			{(row: Row) => <p>Row: {row.name}</p>}
+		</Drawer>
+	);
+}
+
+describe('Drawer moved to another handle', () => {
+	it('keeps the last payload on screen while it leaves for a handle that was never opened', async () => {
+		const handleRef: HandleRef = { current: null };
+		const { rerender } = render(<SwitchHandleHarness handleRef={handleRef} useSecond={false} />);
+		await waitFor(() => {
+			expect(handleRef.current).not.toBeNull();
+		});
+		await openWith(handleOf(handleRef), LATENCY);
+
+		rerender(<SwitchHandleHarness handleRef={handleRef} useSecond />);
+
+		const panel = drawerPanel();
+
+		expect(panel).toHaveAttribute('data-closed');
+		expect(panel).toHaveTextContent('Row: Latency overview');
+
+		await waitForClosed();
+	});
+});
