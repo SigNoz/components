@@ -355,9 +355,10 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes & {
 		/**
 		 * What the drawer is for. `inspector` shows one record to read, and the page behind stays
-		 * usable: no backdrop, no focus trap, and a press outside does not close it. `task` is one
-		 * job to finish, such as a create or an edit form, or a picker: modal, with a backdrop and
-		 * the footer.
+		 * usable: no backdrop, no focus trap, a press outside does not close it, and the arrow keys,
+		 * `Home` and `End` pressed in the panel reach the shortcuts of the page. `task` is one job to
+		 * finish, such as a create or an edit form, or a picker: modal, with a backdrop and the
+		 * footer, and it keeps those keys in the panel, as `Dialog` does.
 		 */
 		type: DrawerTypeType;
 		/**
