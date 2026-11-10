@@ -137,6 +137,15 @@ function keepOpen(): void {}
 
 const ACTION = <Callout.Button>Refresh</Callout.Button>;
 
+const LINK_FORMS = ['link', 'action'] as const;
+
+type LinkForm = (typeof LINK_FORMS)[number];
+
+const LINK_FORM_ELEMENTS: Record<LinkForm, ReactElement> = {
+	link: <Callout.Link href="https://signoz.io/docs">here</Callout.Link>,
+	action: <Callout.Link onClick={keepOpen}>here</Callout.Link>,
+};
+
 function VariantCell({
 	variant,
 	color,
@@ -323,6 +332,55 @@ export const CalloutShowcase: Story = {
 								>
 									{LINKED_DESCRIPTION}
 								</Callout.Action>
+							))}
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Link forms
+				</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					<code>Callout.Link</code> as a link and as an action (a <code>button</code> with an{' '}
+					<code>onClick</code> and no destination). Both draw in the link color of the callout.
+				</Typography>
+				<div
+					className={`${styles.matrix} ${styles.marginTopMedium}`}
+					style={matrixStyle(LINK_FORMS.length)}
+				>
+					<MatrixHeader columns={[...LINK_FORMS]} />
+					{COLORS.map((color) => (
+						<Fragment key={color}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
+								{color}
+							</Typography>
+							{LINK_FORMS.map((form) => (
+								<Callout key={form} color={color} size="sm" icon={ICONS[color]}>
+									Update your card details {LINK_FORM_ELEMENTS[form]}.
+								</Callout>
 							))}
 						</Fragment>
 					))}

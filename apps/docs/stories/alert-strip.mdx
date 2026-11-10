@@ -245,9 +245,9 @@ shrinks.
 
 ## AlertStrip.Link
 
-A navigation the user can take about the message, in `suffix` or inside the sentence. It has
-the same props as `Callout.Link`, draws in the text color of the strip, underlined, and inherits its
-type. It has no `className`, `style`, disabled or loading state.
+A navigation or an inline action the user can take about the message, in `suffix` or inside the
+sentence. It has the same props as `Callout.Link`, draws in the text color of the strip, underlined,
+and inherits its type. It has no `className` or `style`.
 
 Pass `render` for a router link. The strip imports no router, so the click is a client-side
 navigation and a modified click still opens a new tab. The props merge as the `render` prop of Base
@@ -259,7 +259,22 @@ the ones of the link, and its `onClick` runs first. With a `_blank` target, `noo
 <AlertStrip.Link render={<Link to="/billing" />}>Upgrade</AlertStrip.Link>
 ```
 
-A link with neither `href` nor a destination on the `render` element renders plain text and warns on
+A link with an `onClick` and no destination, neither `href` nor one on the `render` element, is an
+action. By default it renders a native `<button type="button">` that draws exactly like the anchor
+and carries the same class, `data-slot`, `testId`, `aria-*` props and `ref`. A native button never
+wraps across lines, so keep the label short.
+
+```tsx
+<AlertStrip color="warning" side="bottom">
+	Your trial ends soon. <AlertStrip.Link onClick={upgrade}>Upgrade</AlertStrip.Link>
+</AlertStrip>
+```
+
+When you pass a `render` element, an action uses it in place of the button and `type="button"` is
+only added to the default button. Pass a component that renders a `button`, so the action keeps
+working from the keyboard.
+
+A link with neither a destination nor an `onClick` is a mistake: it renders plain text and warns on
 the console.
 
 ## Asserting on it

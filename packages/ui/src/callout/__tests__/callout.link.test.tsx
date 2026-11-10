@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createRef, forwardRef, type AnchorHTMLAttributes } from 'react';
+import { createRef, forwardRef, type AnchorHTMLAttributes, type ButtonHTMLAttributes } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Callout } from '../callout.js';
@@ -25,6 +25,16 @@ const RouterLink = forwardRef<
 		/>
 	);
 });
+
+// Stands in for a design system button: takes the props, adds its own, sets no `type`.
+const CustomButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
+	function CustomButton(props, ref) {
+		return (
+			// eslint-disable-next-line jsx-a11y/control-has-associated-label, react/button-has-type -- the children arrive through `props`, and the type is left to the caller.
+			<button ref={ref} data-custom="" {...props} />
+		);
+	},
+);
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -88,6 +98,7 @@ describe('Callout.Link', () => {
 		);
 
 		expect(screen.queryByRole('link')).not.toBeInTheDocument();
+		expect(screen.queryByRole('button')).not.toBeInTheDocument();
 		expect(screen.getByText('nowhere')).toBeInTheDocument();
 		expect(warn).toHaveBeenCalled();
 	});
@@ -204,6 +215,100 @@ describe('Callout.Link', () => {
 		);
 
 		expect(screen.getByRole('link')).toHaveAttribute('rel', 'nofollow');
+	});
+
+	it('renders a button for an onClick without a destination, and runs it on click', async () => {
+		const user = userEvent.setup();
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const onClick = vi.fn();
+		render(
+			<Callout color="danger" size="sm" icon={icon}>
+				Update your card details{' '}
+				<Callout.Link onClick={onClick} testId="l">
+					here
+				</Callout.Link>
+				.
+			</Callout>,
+		);
+
+		const button = screen.getByRole('button', { name: 'here' });
+		expect(screen.queryByRole('link')).not.toBeInTheDocument();
+		expect(button.tagName).toBe('BUTTON');
+		expect(button).toHaveAttribute('type', 'button');
+		expect(button).toHaveAttribute('data-slot', 'callout-link');
+		expect(button).toHaveAttribute('data-testid', 'l');
+
+		await user.click(button);
+
+		expect(onClick).toHaveBeenCalledTimes(1);
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('gives the button the class of the anchor link', () => {
+		render(
+			<Callout color="primary" size="sm" icon={icon}>
+				<Callout.Link href="/docs">docs</Callout.Link>
+				<Callout.Link onClick={() => {}}>action</Callout.Link>
+			</Callout>,
+		);
+
+		const anchor = screen.getByRole('link', { name: 'docs' });
+		const button = screen.getByRole('button', { name: 'action' });
+		expect(button.className).not.toBe('');
+		expect(button.className).toBe(anchor.className);
+	});
+
+	it('forwards the ref and aria attributes to the button', async () => {
+		const user = userEvent.setup();
+		const ref = createRef<HTMLElement>();
+		render(
+			<Callout color="primary" size="sm" icon={icon}>
+				<Callout.Link ref={ref} onClick={() => {}} aria-describedby="hint">
+					action
+				</Callout.Link>
+			</Callout>,
+		);
+
+		const button = screen.getByRole('button');
+		expect(ref.current).toBe(button);
+		expect(button).toHaveAttribute('aria-describedby', 'hint');
+
+		await user.tab();
+
+		expect(button).toHaveFocus();
+	});
+
+	it('uses the render element for an action, keeps its own props and runs onClick', async () => {
+		const user = userEvent.setup();
+		const onClick = vi.fn();
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const ref = createRef<HTMLElement>();
+		render(
+			<Callout color="primary" size="sm" icon={icon}>
+				<Callout.Link
+					ref={ref}
+					render={<CustomButton className="track" />}
+					onClick={onClick}
+					testId="l"
+				>
+					action
+				</Callout.Link>
+			</Callout>,
+		);
+
+		const action = screen.getByRole('button', { name: 'action' });
+		expect(action.tagName).toBe('BUTTON');
+		expect(action).toHaveAttribute('data-custom');
+		expect(action).not.toHaveAttribute('type');
+		expect(action).toHaveClass('track');
+		expect(action).toHaveAttribute('data-slot', 'callout-link');
+		expect(action).toHaveAttribute('data-testid', 'l');
+		expect(ref.current).toBe(action);
+
+		await user.click(action);
+
+		expect(onClick).toHaveBeenCalledTimes(1);
+		expect(warn).not.toHaveBeenCalled();
 	});
 
 	it('is reachable with the keyboard', async () => {

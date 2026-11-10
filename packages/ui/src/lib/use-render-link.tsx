@@ -49,6 +49,10 @@ export type RenderLinkProps = {
 	/**
 	 * Runs when the user clicks the link, after the handler of the `render` element. The link never
 	 * calls `preventDefault`, so the router decides if the navigation is client-side.
+	 *
+	 * On a component that supports actions, a link with an `onClick` and no destination is an
+	 * action: an inline control that runs code instead of navigating. It renders the `render`
+	 * element, or a native `<button type="button">` without one.
 	 */
 	onClick?: MouseEventHandler<HTMLElement>;
 	/**
@@ -66,6 +70,10 @@ export type RenderLinkProps = {
  * Renders a {@link RenderLinkProps} link with the `data-slot` and the class of the component that
  * owns it. A link with neither `href` nor a destination on the `render` element is a bug: it
  * renders plain text and warns on the console, naming the component as `name`.
+ *
+ * With `allowAction`, a link with an `onClick` and no destination is an action instead: it renders
+ * the `render` element, or a native `<button type="button">` without one, with the same `props`,
+ * class, `ref` and `onClick` as the link.
  *
  * `props` go on the link and on the plain text, merged the same way as the `data-slot`. The plain
  * text takes `fallbackClassName` instead of `className`, and keeps the `ref`, the `id` and the
@@ -93,12 +101,14 @@ export function useRenderLink(
 		name,
 		props: ownProps,
 		fallbackClassName,
+		allowAction = false,
 	}: {
 		slot: string;
 		className: string | undefined;
 		name: string;
 		props?: Record<string, unknown>;
 		fallbackClassName?: string;
+		allowAction?: boolean;
 	},
 ): ReactElement | null {
 	const element = (isValidElement(render) ? render : createElement('a')) as ReactElement<
@@ -106,6 +116,8 @@ export function useRenderLink(
 	>;
 	const elementProps = element.props;
 	const { props: linkProps, hasDestination } = getLinkProps(element, { href, target });
+	const isAction = allowAction && !hasDestination && onClick != null;
+	const isText = !hasDestination && !isAction;
 	const sharedProps = {
 		...ownProps,
 		'data-slot': slot,
@@ -113,10 +125,16 @@ export function useRenderLink(
 	};
 
 	useEffect(() => {
-		if (!hasDestination) {
-			console.warn(`${name} needs an \`href\`, or a \`render\` element with its own destination.`);
+		if (isText) {
+			console.warn(
+				`${name} needs ${
+					allowAction
+						? 'an `href`, an `onClick`, or a `render` element with its own destination'
+						: 'an `href`, or a `render` element with its own destination'
+				}.`,
+			);
 		}
-	}, [hasDestination, name]);
+	}, [isText, allowAction, name]);
 
 	const link = useRender({
 		enabled: hasDestination,
@@ -136,8 +154,24 @@ export function useRenderLink(
 		},
 	});
 
+	const action = useRender({
+		enabled: isAction,
+		render: isValidElement(render) ? render : undefined,
+		defaultTagName: 'button',
+		ref,
+		props: {
+			...aria,
+			...sharedProps,
+			// Only the default button: a `type` on the caller's element would mean something else.
+			...(isValidElement(render) ? {} : { type: 'button' }),
+			className,
+			onClick,
+			children,
+		},
+	});
+
 	const text = useRender({
-		enabled: !hasDestination,
+		enabled: isText,
 		render: <span />,
 		ref,
 		props: {
@@ -148,5 +182,5 @@ export function useRenderLink(
 		},
 	});
 
-	return link ?? text;
+	return link ?? action ?? text;
 }
