@@ -50,6 +50,28 @@ not have, such as a `large` paragraph.
 
 `uppercase` changes the case with CSS only, so a screen reader reads the words as written.
 
+`textTransform` changes the case of a value that arrives in another case: `capitalize` sets the
+first letter of every word in capitals, such as an attribute type `resource` shown as `Resource`,
+and `lowercase` sets every letter in lower case. It also changes the case with CSS only.
+
+It has no `uppercase`, and the types reject it on `variant="uppercase"`. Capitals need wider
+letter spacing than the other styles (0.04em against 0 or -0.005em), and `variant="uppercase"`
+sets the case and the spacing together.
+
+```tsx
+<Typography
+	variant="paragraph"
+	size="small"
+	weight="regular"
+	color="inherit"
+	as="span"
+	textOverflow="wrap"
+	textTransform="capitalize"
+>
+	{attribute.type}
+</Typography>
+```
+
 ## Colors
 
 `color` takes the color names of Badge, and each hue draws in the label color of an outlined badge

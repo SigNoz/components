@@ -68,6 +68,11 @@ export const TypographyAlign = {
 	End: 'end',
 } as const;
 
+export const TypographyTextTransform = {
+	Capitalize: 'capitalize',
+	Lowercase: 'lowercase',
+} as const;
+
 export const TypographyVerticalAlign = {
 	Start: 'start',
 	Center: 'center',

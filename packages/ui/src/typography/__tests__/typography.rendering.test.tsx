@@ -163,6 +163,84 @@ describe('Typography attributes', () => {
 		expect(text).toHaveAttribute('data-slashed-zero');
 	});
 
+	it('sets the case only when asked, and never on uppercase', () => {
+		const { rerender } = render(
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="main"
+				as="span"
+				textOverflow="wrap"
+				testId="text"
+			>
+				resource
+			</Typography>,
+		);
+
+		const text = screen.getByTestId('text');
+		expect(text).not.toHaveAttribute('data-text-transform');
+		expect(text.style.getPropertyValue('--typography-internal-text-transform')).toBe('');
+
+		rerender(
+			<Typography
+				variant="paragraph"
+				size="small"
+				weight="regular"
+				color="main"
+				as="span"
+				textOverflow="wrap"
+				testId="text"
+				textTransform="capitalize"
+			>
+				resource
+			</Typography>,
+		);
+
+		expect(text).toHaveAttribute('data-text-transform', 'capitalize');
+		expect(text.style.getPropertyValue('--typography-internal-text-transform')).toBe('capitalize');
+		expect(text).not.toHaveAttribute('textTransform');
+		expect(text).toHaveTextContent(/^resource$/);
+
+		rerender(
+			<Typography
+				variant="uppercase"
+				size="small"
+				weight="regular"
+				color="main"
+				as="span"
+				textOverflow="wrap"
+				testId="text"
+				// @ts-expect-error - `variant="uppercase"` sets the case and the letter spacing together
+				textTransform="lowercase"
+			>
+				resource
+			</Typography>,
+		);
+
+		expect(text).not.toHaveAttribute('data-text-transform');
+		expect(text.style.getPropertyValue('--typography-internal-text-transform')).toBe('');
+
+		rerender(
+			<Typography
+				variant="label"
+				size="small"
+				weight="regular"
+				color="main"
+				as="span"
+				textOverflow="visible"
+				testId="text"
+				// @ts-expect-error - capitals come from `variant="uppercase"`, with their letter spacing
+				textTransform="uppercase"
+			>
+				resource
+			</Typography>,
+		);
+
+		expect(text).not.toHaveAttribute('data-text-transform');
+		expect(text.style.getPropertyValue('--typography-internal-text-transform')).toBe('');
+	});
+
 	it('forwards id, role, aria-* and data-*', () => {
 		render(
 			<Typography

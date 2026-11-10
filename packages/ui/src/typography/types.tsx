@@ -9,6 +9,7 @@ import type {
 	TypographySpacing,
 	TypographySpacingPropNames,
 	TypographyTextOverflow,
+	TypographyTextTransform,
 	TypographyVariant,
 	TypographyVerticalAlign,
 	TypographyWeight,
@@ -21,6 +22,8 @@ export type TypographyColorType = (typeof TypographyColor)[keyof typeof Typograp
 export type TypographyElementType = (typeof TypographyElement)[keyof typeof TypographyElement];
 export type TypographyTextOverflowType =
 	(typeof TypographyTextOverflow)[keyof typeof TypographyTextOverflow];
+export type TypographyTextTransformType =
+	(typeof TypographyTextTransform)[keyof typeof TypographyTextTransform];
 export type TypographyDisplayType = (typeof TypographyDisplay)[keyof typeof TypographyDisplay];
 export type TypographyAlignType = (typeof TypographyAlign)[keyof typeof TypographyAlign];
 export type TypographyVerticalAlignType =
@@ -67,6 +70,29 @@ export interface OnlyALabelNamesAControl {
 	'`htmlFor` only works with `as="label"`': never;
 }
 
+/**
+ * The type of `textTransform="uppercase"`, and of `textTransform` on `variant="uppercase"`, which no
+ * value matches.
+ */
+export interface CapitalsComeFromTheUppercaseVariant {
+	'capitals come from `variant="uppercase"`, which also sets their wider letter spacing: `textTransform` has no `uppercase` and does not apply to that variant': never;
+}
+
+type TypographyCaseProps = {
+	/**
+	 * Changes the case of the text with CSS only, so a screen reader and a copy get the text as
+	 * written. `capitalize` sets the first letter of every word in capitals, for a value that arrives
+	 * in lower case, such as `resource` shown as `Resource`, and `lowercase` sets every letter in
+	 * lower case.
+	 *
+	 * @note There is no `uppercase`: capitals come from `variant="uppercase"`, which also sets the
+	 * wider letter spacing they need.
+	 *
+	 * @default the case of the variant, as written
+	 */
+	textTransform?: TypographyTextTransformType | CapitalsComeFromTheUppercaseVariant;
+};
+
 type TypographyStyleProps = {
 	/**
 	 * The group of the text style. It sets the font family, the line height, the letter spacing and
@@ -90,12 +116,25 @@ type TypographyStyleProps = {
 	 */
 	weight: TypographyWeightType;
 } & (
-	| { variant: 'label'; size: TypographySizeType; maxLines?: 1 | OnlyAParagraphWrapsPastOneLine }
-	| { variant: 'paragraph'; size: 'small' | 'base' | 'medium' }
-	| {
-			variant: 'uppercase' | 'code';
+	| ({
+			variant: 'label';
+			size: TypographySizeType;
+			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
+	  } & TypographyCaseProps)
+	| ({ variant: 'paragraph'; size: 'small' | 'base' | 'medium' } & TypographyCaseProps)
+	| ({
+			variant: 'code';
 			size: 'small' | 'base';
 			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
+	  } & TypographyCaseProps)
+	| {
+			variant: 'uppercase';
+			size: 'small' | 'base';
+			maxLines?: 1 | OnlyAParagraphWrapsPastOneLine;
+			/**
+			 * `variant="uppercase"` sets the case and the letter spacing together.
+			 */
+			textTransform?: CapitalsComeFromTheUppercaseVariant;
 	  }
 );
 
@@ -430,6 +469,7 @@ export type TypographyLookProps = {
 	display: TypographyDisplayType;
 	tabularNumbers?: boolean;
 	slashedZero?: boolean;
+	textTransform?: unknown;
 	maxLines?: unknown;
 	align?: unknown;
 	verticalAlign?: unknown;
