@@ -132,12 +132,13 @@
 	// Shrinks in a short flex row like `Button` does, so `width="100%"` next to another button
 	// leaves it room. It never gets narrower than its size, or than `width` when that is smaller.
 	// The max width caps that floor too, or a `min-width` above `max-width` would win and spill.
-	// A keyword max width, which `min()` cannot take, comes in as a 100% cap instead.
+	// `min()` cannot take a keyword: a keyword width comes in as `--skeleton-button-width` or the
+	// width of the size, and a keyword max width as a 100% cap.
 	flex-shrink: var(--skeleton-button-flex-shrink, 1);
 	min-width: var(
 		--skeleton-button-min-width,
 		min(
-			var(--skeleton-internal-button-width),
+			var(--skeleton-internal-min-width-floor, var(--skeleton-internal-button-width)),
 			var(--skeleton-internal-default-width),
 			var(--skeleton-internal-min-width-cap, var(--skeleton-internal-button-max-width))
 		)

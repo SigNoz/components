@@ -59,9 +59,6 @@ export function keyOf(row: HTMLElement): HTMLElement {
 	return key;
 }
 
-/**
- * The shortcut a row holds.
- */
 export function shortcutOf(row: HTMLElement): HTMLElement {
 	const shortcut = row.querySelector<HTMLElement>('[data-slot="kbd-shortcut"]');
 
