@@ -284,8 +284,8 @@
 		max-width: var(--breadcrumb-tooltip-max-width, 20rem);
 	}
 
-	// The list and the popup are portalled out of the trail, so they read these tokens on the page, not
-	// on an ancestor of the trail.
+	// The list is portalled out of the trail, so it reads these tokens on the page, not on an ancestor
+	// of the trail.
 	&__ellipsis {
 		display: var(--breadcrumb-ellipsis-display, flex);
 		flex-direction: var(--breadcrumb-ellipsis-flex-direction, column);
@@ -438,154 +438,6 @@
 		white-space: var(--breadcrumb-ellipsis-row-label-white-space, nowrap);
 	}
 
-	// The box owns no padding: the content does, which lets a divider or a row run edge to edge.
-	&__preview {
-		--breadcrumb-internal-preview-background: var(
-			--breadcrumb-preview-background-color,
-			var(--surface-3)
-		);
-		--breadcrumb-internal-preview-border: var(--breadcrumb-preview-border-color, var(--l2-border));
-		--breadcrumb-internal-preview-shadow: var(
-			--breadcrumb-preview-box-shadow,
-			var(--shadow-dropdown)
-		);
-		--breadcrumb-internal-preview-color: var(--breadcrumb-preview-color, var(--l1-foreground));
-
-		display: var(--breadcrumb-preview-display, flex);
-		flex-direction: var(--breadcrumb-preview-flex-direction, column);
-		box-sizing: var(--breadcrumb-preview-box-sizing, border-box);
-		// `--popup-width` and `--popup-height` come from Base UI. They hold the size of the content the
-		// popup is moving to while it resizes, which is what the transition below animates, and `auto`
-		// the rest of the time.
-		inline-size: var(--breadcrumb-preview-inline-size, var(--popup-width, fit-content));
-		block-size: var(--breadcrumb-preview-block-size, var(--popup-height, auto));
-		max-inline-size: var(--breadcrumb-preview-max-inline-size, 20rem);
-		padding: var(--breadcrumb-preview-padding, 0);
-		border-width: var(--breadcrumb-preview-border-width, 1px);
-		border-style: var(--breadcrumb-preview-border-style, solid);
-		border-color: var(--breadcrumb-internal-preview-border);
-		border-radius: var(--breadcrumb-preview-border-radius, var(--radius-3));
-		background-color: var(--breadcrumb-internal-preview-background);
-		box-shadow: var(--breadcrumb-internal-preview-shadow);
-		color: var(--breadcrumb-internal-preview-color);
-		font-family: var(--breadcrumb-preview-font-family, var(--paragraph-base-400-font-family));
-		font-size: var(--breadcrumb-preview-font-size, var(--paragraph-base-400-font-size));
-		font-weight: var(--breadcrumb-preview-font-weight, var(--paragraph-base-400-font-weight));
-		line-height: var(--breadcrumb-preview-line-height, var(--paragraph-base-400-line-height));
-		letter-spacing: var(
-			--breadcrumb-preview-letter-spacing,
-			var(--paragraph-base-400-letter-spacing)
-		);
-		text-transform: var(
-			--breadcrumb-preview-text-transform,
-			var(--paragraph-base-400-text-transform)
-		);
-		font-variant-numeric: var(--breadcrumb-preview-font-variant-numeric, normal);
-		font-feature-settings: var(--breadcrumb-preview-font-feature-settings, 'ss01' 1);
-		// `--surface-3` is translucent in dark mode. Without the blur the page shows through the popup.
-		backdrop-filter: var(--breadcrumb-preview-backdrop-filter, blur(40px));
-		// Keeps full-bleed content inside the radius.
-		overflow: var(--breadcrumb-preview-overflow, hidden);
-		transition-property: var(--breadcrumb-preview-transition-property, inline-size, block-size);
-		transition-duration: var(--breadcrumb-preview-transition-duration, 200ms);
-		transition-timing-function: var(
-			--breadcrumb-preview-transition-timing-function,
-			cubic-bezier(0.22, 1, 0.36, 1)
-		);
-
-		// The list of the `...` crumb keeps the width cap of a menu, which
-		// `--breadcrumb-preview-max-inline-size` does not move.
-		&[data-slot='breadcrumb-ellipsis-popup'] {
-			--breadcrumb-internal-ellipsis-max-inline-size: var(--breadcrumb-menu-max-width, 20rem);
-
-			// The floor is clamped to the maximum because a min-width wins over a max-width.
-			min-inline-size: min(
-				var(--breadcrumb-ellipsis-min-inline-size, 10rem),
-				var(--breadcrumb-internal-ellipsis-max-inline-size)
-			);
-			max-inline-size: var(--breadcrumb-internal-ellipsis-max-inline-size);
-		}
-
-		&:focus-visible {
-			outline: var(--breadcrumb-preview-focus-visible-outline, none);
-		}
-	}
-
-	&__preview-positioner {
-		// Base UI positions but does not stack.
-		z-index: var(--breadcrumb-preview-z-index, 50);
-		// A Radix modal sets `pointer-events: none` on the body. A popup portalled there, into a
-		// container outside the panel, would otherwise take no pointer, so it could not be reached.
-		pointer-events: var(--breadcrumb-preview-positioner-pointer-events, auto);
-		// Base UI places the positioner with `left`, so its width would otherwise shrink to what is
-		// left of the containing block. Inside a dialog that is a zero-size layer. `--positioner-width`
-		// and `--positioner-height` are the size of the content the popup holds or is moving to, so the
-		// box is placed for its final size while the popup inside it grows or shrinks to it.
-		inline-size: var(
-			--breadcrumb-preview-positioner-inline-size,
-			var(--positioner-width, max-content)
-		);
-		block-size: var(--breadcrumb-preview-positioner-block-size, var(--positioner-height, auto));
-		transition-property: var(--breadcrumb-preview-positioner-transition-property, top, left);
-		transition-duration: var(--breadcrumb-preview-transition-duration, 200ms);
-		transition-timing-function: var(
-			--breadcrumb-preview-transition-timing-function,
-			cubic-bezier(0.22, 1, 0.36, 1)
-		);
-	}
-
-	// Base UI marks the positioner and the popup `data-instant` once a move to another trigger has
-	// settled, and on a keyboard, focus or dismiss open or close. Left on, the transitions would make
-	// the popup trail behind its trigger on every scroll and resize.
-	&__preview-positioner[data-instant],
-	&__preview[data-instant] {
-		transition-duration: var(--breadcrumb-preview-instant-transition-duration, 0s);
-	}
-
-	// Base UI keeps the content the popup showed as `[data-previous]` while the new one comes in as
-	// `[data-current]`.
-	&__preview-viewport {
-		--breadcrumb-internal-preview-shift: var(--breadcrumb-preview-shift, 16px);
-
-		position: var(--breadcrumb-preview-viewport-position, relative);
-		overflow: var(--breadcrumb-preview-viewport-overflow, clip);
-		flex: var(--breadcrumb-preview-viewport-flex, 1 1 auto);
-
-		& > [data-current],
-		& > [data-previous] {
-			transition-property: var(--breadcrumb-preview-content-transition-property, translate, opacity);
-			transition-duration: var(--breadcrumb-preview-transition-duration, 200ms);
-			transition-timing-function: var(
-				--breadcrumb-preview-transition-timing-function,
-				cubic-bezier(0.22, 1, 0.36, 1)
-			);
-		}
-
-		// The old content sits over the new one at the size it had, so it does not reflow as the popup
-		// resizes.
-		& > [data-previous] {
-			inset-block-start: var(--breadcrumb-internal-preview-previous-inset, 0);
-			inset-inline-start: var(--breadcrumb-internal-preview-previous-inset, 0);
-			inline-size: var(--breadcrumb-internal-preview-previous-inline-size, var(--popup-width, auto));
-			block-size: var(--breadcrumb-internal-preview-previous-block-size, var(--popup-height, auto));
-		}
-
-		& > [data-current][data-starting-style],
-		& > [data-previous][data-ending-style] {
-			opacity: var(--breadcrumb-preview-content-swap-opacity, 0);
-		}
-
-		&[data-activation-direction~='left'] > [data-current][data-starting-style],
-		&[data-activation-direction~='right'] > [data-previous][data-ending-style] {
-			translate: calc(-1 * var(--breadcrumb-internal-preview-shift));
-		}
-
-		&[data-activation-direction~='right'] > [data-current][data-starting-style],
-		&[data-activation-direction~='left'] > [data-previous][data-ending-style] {
-			translate: var(--breadcrumb-internal-preview-shift);
-		}
-	}
-
 	// Zero height, so it adds no height. Its inline size is the full-trail width the trail writes on
 	// it, so the trail's intrinsic width stays at the full set. Capped at 100%, so it never pushes
 	// past the trail.
@@ -617,16 +469,5 @@
 @media (prefers-reduced-motion: reduce) {
 	.breadcrumb__content {
 		transition-duration: 0s;
-	}
-
-	.breadcrumb__preview,
-	.breadcrumb__preview-positioner,
-	.breadcrumb__preview-viewport > [data-current],
-	.breadcrumb__preview-viewport > [data-previous] {
-		transition-duration: 0s;
-	}
-
-	.breadcrumb__preview-viewport {
-		--breadcrumb-internal-preview-shift: 0px;
 	}
 }

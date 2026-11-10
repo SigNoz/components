@@ -17,10 +17,10 @@ import {
 	TRAIL,
 } from './breadcrumb.test-utils.js';
 
-const CARD = '[data-slot="breadcrumb-preview"]';
+const CARD = '[data-slot="popover-popup"][data-preview]';
 
 /** The one popup of the trail, whatever it shows now: a card, or the list of the `...` crumb. */
-const POPUP = `${CARD}, [data-slot="breadcrumb-ellipsis-popup"]`;
+const POPUP = '[data-slot="popover-popup"]';
 
 /** The slack a timer and a poll need, so a delay is not asserted to the millisecond. */
 const TIMER_SLACK = 30;
@@ -123,8 +123,8 @@ describe('Breadcrumb preview', () => {
 			await browserUser.hover(crumb('payments-7c9d5b6f4-xk2lp'));
 			const popup = await waitForCard();
 
-			expect(popup).toHaveAttribute('data-testid', 'bc-preview');
-			expect(popup.parentElement).toHaveAttribute('data-slot', 'breadcrumb-preview-positioner');
+			expect(popup).toHaveAttribute('data-testid', 'bc-popup');
+			expect(popup.parentElement).toHaveAttribute('data-slot', 'popover-positioner');
 		});
 
 		it('leaves the card without a test id when the trail has none', async () => {
@@ -838,7 +838,7 @@ describe('Breadcrumb preview', () => {
 			(ellipsis() as HTMLElement).focus();
 
 			await browserUser.keyboard('{Enter}');
-			const popup = await screen.findByTestId('bc-ellipsis-popup');
+			const popup = await screen.findByTestId('bc-popup');
 
 			expect(popup).toHaveAttribute('data-instant', 'click');
 			expect(transitionDurations(popup)).toEqual(['0s', '0s']);
@@ -852,9 +852,7 @@ describe('Breadcrumb preview', () => {
 				render(<Breadcrumb items={ITEMS} />);
 				await browserUser.hover(crumb('prod-eu-west1'));
 				const popup = await waitForCard();
-				const content = popup.querySelector(
-					'[data-slot="breadcrumb-preview-viewport"] > [data-current]',
-				);
+				const content = popup.querySelector('[data-slot="popover-viewport"] > [data-current]');
 
 				expect(content).not.toBeNull();
 				expect(transitionDurations(popup)).toEqual(['0s', '0s']);
@@ -866,7 +864,7 @@ describe('Breadcrumb preview', () => {
 			}
 		});
 
-		it('is as wide as its content, up to 20rem', async () => {
+		it('is as wide as its content, up to the 25rem of a Popover', async () => {
 			const long = 'word '.repeat(200);
 			render(
 				<Breadcrumb
@@ -881,12 +879,12 @@ describe('Breadcrumb preview', () => {
 			const popup = await waitForCard();
 			const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-			expect(getComputedStyle(popup).maxInlineSize).toBe(`${20 * rem}px`);
-			expect(popup.getBoundingClientRect().width).toBe(20 * rem);
+			expect(getComputedStyle(popup).maxInlineSize).toBe(`${25 * rem}px`);
+			expect(popup.getBoundingClientRect().width).toBe(25 * rem);
 		});
 
 		it('takes its cap from the page, where the portalled card inherits from', async () => {
-			document.documentElement.style.setProperty('--breadcrumb-preview-max-inline-size', '12rem');
+			document.documentElement.style.setProperty('--popover-max-inline-size', '12rem');
 			try {
 				render(
 					<Breadcrumb
@@ -903,7 +901,7 @@ describe('Breadcrumb preview', () => {
 
 				expect(popup.getBoundingClientRect().width).toBe(12 * rem);
 			} finally {
-				document.documentElement.style.removeProperty('--breadcrumb-preview-max-inline-size');
+				document.documentElement.style.removeProperty('--popover-max-inline-size');
 			}
 		});
 
@@ -1101,8 +1099,8 @@ describe('Breadcrumb preview', () => {
 			expect(box).not.toHaveTextContent('Dashboards summary');
 			expect(box).toHaveAttribute('role', 'dialog');
 			expect(box).toHaveAttribute('aria-label', 'Hidden items');
-			expect(box).toHaveAttribute('data-testid', 'bc-ellipsis-popup');
-			expect(box).toHaveAttribute('data-slot', 'breadcrumb-ellipsis-popup');
+			expect(box).toHaveAttribute('data-testid', 'bc-popup');
+			expect(box).toHaveAttribute('data-slot', 'popover-popup');
 			expect(target).toHaveAttribute('data-popup-open');
 			expect(from).not.toHaveAttribute('data-popup-open');
 		});
@@ -1141,8 +1139,8 @@ describe('Breadcrumb preview', () => {
 			expect(box.querySelector('[data-slot="breadcrumb-ellipsis-list"]')).toBeNull();
 			expect(box).not.toHaveAttribute('role');
 			expect(box).not.toHaveAttribute('aria-label');
-			expect(box).toHaveAttribute('data-testid', 'bc-preview');
-			expect(box).toHaveAttribute('data-slot', 'breadcrumb-preview');
+			expect(box).toHaveAttribute('data-testid', 'bc-popup');
+			expect(box).toHaveAttribute('data-slot', 'popover-popup');
 			expect(target).toHaveAttribute('data-popup-open');
 			expect(from).not.toHaveAttribute('data-popup-open');
 		});

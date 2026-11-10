@@ -14,9 +14,14 @@ import { getLinkProps } from '../../lib/link-props.js';
 import { mergeRefs } from '../../lib/merge-refs.js';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { cn, hasRenderableContent } from '../../lib/utils.js';
+import { Popover } from '../../popover/popover.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../breadcrumb.module.scss';
-import { BreadcrumbItemKind, BreadcrumbTextOverflow } from '../constants.js';
+import {
+	BREADCRUMB_PREVIEW_CLOSE_DELAY,
+	BreadcrumbItemKind,
+	BreadcrumbTextOverflow,
+} from '../constants.js';
 import type {
 	BreadcrumbItemKindType,
 	BreadcrumbItemType,
@@ -24,7 +29,6 @@ import type {
 } from '../types.js';
 import type { BreadcrumbPopupState } from '../use-breadcrumb-popup.js';
 import { hasPreview } from '../utils.js';
-import { BreadcrumbPreviewTrigger } from './breadcrumb-preview-trigger.js';
 
 /**
  * @access private
@@ -166,9 +170,15 @@ export const BreadcrumbItemContent = forwardRef<HTMLElement, BreadcrumbItemConte
 		// collapses it. Nobody can reach it there, and the card closes if it was open for it.
 		if (hasPreview({ item, kind })) {
 			return (
-				<BreadcrumbPreviewTrigger popup={popup} index={index} kind={kind}>
+				<Popover.Trigger
+					handle={popup.handle}
+					payload={index}
+					nativeButton={kind === BreadcrumbItemKind.Button}
+					preview
+					closeDelay={BREADCRUMB_PREVIEW_CLOSE_DELAY}
+				>
 					{element}
-				</BreadcrumbPreviewTrigger>
+				</Popover.Trigger>
 			);
 		}
 

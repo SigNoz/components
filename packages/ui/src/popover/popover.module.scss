@@ -57,6 +57,21 @@
 	&:focus-visible {
 		outline: var(--popover-focus-visible-outline, none);
 	}
+
+	// Open for a `Popover.Trigger`, the popup moves between the triggers of its handle and swaps
+	// its content in a viewport. `--popup-width` and `--popup-height` come from Base UI: the size of
+	// the content the popup is moving to while it resizes, which the transition animates, and `auto`
+	// the rest of the time. A popup that `showAt` places does not slide: it would trail behind its
+	// anchor on every scroll.
+	&[data-shared] {
+		inline-size: var(--popover-inline-size,
+				var(--popover-internal-inline-size, var(--popup-width, fit-content)));
+		block-size: var(--popover-block-size, var(--popup-height, auto));
+		transition-property: var(--popover-transition-property, inline-size, block-size);
+		transition-duration: var(--popover-transition-duration, 200ms);
+		transition-timing-function: var(--popover-transition-timing-function,
+				cubic-bezier(0.22, 1, 0.36, 1));
+	}
 }
 
 .popover__positioner {
@@ -72,5 +87,91 @@
 
 	&:focus-visible {
 		outline: var(--popover-positioner-focus-visible-outline, none);
+	}
+
+	// `--positioner-width` and `--positioner-height` are the size of the content the popup holds or
+	// is moving to, so the box is placed for its final size while the popup grows or shrinks to it.
+	&[data-shared] {
+		inline-size: var(--popover-positioner-inline-size, var(--positioner-width, max-content));
+		block-size: var(--popover-positioner-block-size, var(--positioner-height, auto));
+		transition-property: var(--popover-positioner-transition-property, top, left);
+		transition-duration: var(--popover-transition-duration, 200ms);
+		transition-timing-function: var(--popover-transition-timing-function,
+				cubic-bezier(0.22, 1, 0.36, 1));
+	}
+}
+
+// Base UI marks the positioner and the popup `data-instant` once a move to another trigger has
+// settled, and on a keyboard, focus or dismiss open or close. Left on, the transitions would make
+// the popup trail behind its trigger on every scroll and resize.
+.popover__positioner[data-instant],
+.popover[data-instant] {
+	transition-duration: var(--popover-instant-transition-duration, 0s);
+}
+
+// Base UI keeps the content the popup showed as `[data-previous]` while the new one comes in as
+// `[data-current]`. Both lay their content out as the shell does, so a popover that swaps reads
+// the same as one that does not.
+.popover__viewport {
+	--popover-internal-content-shift: var(--popover-content-shift, 16px);
+
+	position: var(--popover-viewport-position, relative);
+	display: var(--popover-viewport-display, flex);
+	flex-direction: var(--popover-viewport-flex-direction, column);
+	flex: var(--popover-viewport-flex, 1 1 auto);
+	min-block-size: var(--popover-viewport-min-block-size, 0);
+	overflow: var(--popover-viewport-overflow, clip);
+
+	& > [data-current],
+	& > [data-previous] {
+		display: var(--popover-content-display, flex);
+		flex-direction: var(--popover-content-flex-direction, column);
+		min-block-size: var(--popover-content-min-block-size, 0);
+		transition-property: var(--popover-content-transition-property, translate, opacity);
+		transition-duration: var(--popover-transition-duration, 200ms);
+		transition-timing-function: var(--popover-transition-timing-function,
+				cubic-bezier(0.22, 1, 0.36, 1));
+	}
+
+	& > [data-current] {
+		flex: var(--popover-content-flex, 1 1 auto);
+	}
+
+	// The old content sits over the new one at the size it had, so it does not reflow as the popup
+	// resizes.
+	& > [data-previous] {
+		inset-block-start: var(--popover-internal-previous-inset, 0);
+		inset-inline-start: var(--popover-internal-previous-inset, 0);
+		inline-size: var(--popover-internal-previous-inline-size, var(--popup-width, auto));
+		block-size: var(--popover-internal-previous-block-size, var(--popup-height, auto));
+	}
+
+	& > [data-current][data-starting-style],
+	& > [data-previous][data-ending-style] {
+		opacity: var(--popover-content-swap-opacity, 0);
+	}
+
+	&[data-activation-direction~='left'] > [data-current][data-starting-style],
+	&[data-activation-direction~='right'] > [data-previous][data-ending-style] {
+		translate: calc(-1 * var(--popover-internal-content-shift));
+	}
+
+	&[data-activation-direction~='right'] > [data-current][data-starting-style],
+	&[data-activation-direction~='left'] > [data-previous][data-ending-style] {
+		translate: var(--popover-internal-content-shift);
+	}
+}
+
+// The swap still happens, at once: no slide, no fade, no resize.
+@media (prefers-reduced-motion: reduce) {
+	.popover[data-shared],
+	.popover__positioner[data-shared],
+	.popover__viewport > [data-current],
+	.popover__viewport > [data-previous] {
+		transition-duration: 0s;
+	}
+
+	.popover__viewport {
+		--popover-internal-content-shift: 0px;
 	}
 }

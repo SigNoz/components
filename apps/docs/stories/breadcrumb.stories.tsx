@@ -1157,8 +1157,11 @@ async function expectOutlinedOverflow(canvasElement: HTMLElement): Promise<void>
 	);
 }
 
+/** The popup of a trail while it shows the card of a crumb. */
+const PREVIEW_CARD = '[data-slot="popover-popup"][data-preview]';
+
 function ellipsisPopupSelector(testId: string): string {
-	return `[data-slot="breadcrumb-ellipsis-popup"][data-testid="${testId}-ellipsis-popup"]`;
+	return `[data-slot="popover-popup"][data-testid="${testId}-popup"]:not([data-preview])`;
 }
 
 function getEllipsisPopup(testId: string): HTMLElement | null {
@@ -1213,13 +1216,13 @@ async function expectPreviewCard(canvasElement: HTMLElement): Promise<void> {
 	const namespace = getContent(canvas.getByTestId('popup-preview-item-1'));
 
 	await expect(cluster).toHaveAttribute('href', '/kubernetes/clusters/prod-eu');
-	await expect(document.querySelector('[data-slot="breadcrumb-preview"]')).toBeNull();
+	await expect(document.querySelector(PREVIEW_CARD)).toBeNull();
 
 	await userEvent.hover(cluster);
 
-	const card = await findPopup('[data-slot="breadcrumb-preview"]');
+	const card = await findPopup(PREVIEW_CARD);
 
-	await expect(card).toHaveAttribute('data-testid', 'popup-preview-preview');
+	await expect(card).toHaveAttribute('data-testid', 'popup-preview-popup');
 	await expect(within(card).getByText('europe-west1')).toBeVisible();
 	await expect(card).toHaveTextContent('Step 1 of 3');
 	await expect(cluster).toHaveAttribute('href', '/kubernetes/clusters/prod-eu');
@@ -1229,8 +1232,8 @@ async function expectPreviewCard(canvasElement: HTMLElement): Promise<void> {
 	await userEvent.hover(namespace);
 
 	await waitFor(() => {
-		expect(document.querySelectorAll('[data-slot="breadcrumb-preview"]')).toHaveLength(1);
-		expect(document.querySelector('[data-slot="breadcrumb-preview"]')).toBe(card);
+		expect(document.querySelectorAll(PREVIEW_CARD)).toHaveLength(1);
+		expect(document.querySelector(PREVIEW_CARD)).toBe(card);
 		expect(card).toHaveTextContent('Step 2 of 3 · opened from Cluster');
 		expect(within(card).queryByText('europe-west1')).toBeNull();
 	});
@@ -1280,9 +1283,9 @@ async function expectHeldOpenPopups(canvasElement: HTMLElement): Promise<void> {
 			expect(document.querySelectorAll('[data-slot="dropdown-popup"]')).toHaveLength(
 				HELD_OPEN_MENUS.length,
 			);
-			expect(document.querySelectorAll('[data-slot="breadcrumb-ellipsis-popup"]')).toHaveLength(
-				HELD_OPEN_ELLIPSES.length,
-			);
+			expect(
+				document.querySelectorAll('[data-slot="popover-popup"]:not([data-preview])'),
+			).toHaveLength(HELD_OPEN_ELLIPSES.length);
 		},
 		{ timeout: 3000 },
 	);

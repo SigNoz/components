@@ -1,6 +1,5 @@
-import { Popover } from '@base-ui/react/popover';
 import type { ReactElement } from 'react';
-import { POPOVER_HOVER_DELAY } from '../../popover/constants.js';
+import { Popover } from '../../popover/popover.js';
 import styles from '../breadcrumb.module.scss';
 import {
 	BREADCRUMB_ELLIPSIS_LABEL,
@@ -49,21 +48,20 @@ export function BreadcrumbEllipsis({
 			{hasPopup ? (
 				<Popover.Trigger
 					handle={popup.handle}
-					id={popup.ellipsisTriggerId}
 					payload={BREADCRUMB_ELLIPSIS_PAYLOAD}
+					nativeButton
 					openOnHover
-					delay={POPOVER_HOVER_DELAY}
 					closeDelay={BREADCRUMB_PREVIEW_CLOSE_DELAY}
-					render={
-						<button
-							type="button"
-							aria-label={`Show ${count} hidden ${count === 1 ? 'item' : 'items'}`}
-							{...partProps}
-						>
-							{BREADCRUMB_ELLIPSIS_LABEL}
-						</button>
-					}
-				/>
+				>
+					<button
+						id={popup.ellipsisTriggerId}
+						type="button"
+						aria-label={`Show ${count} hidden ${count === 1 ? 'item' : 'items'}`}
+						{...partProps}
+					>
+						{BREADCRUMB_ELLIPSIS_LABEL}
+					</button>
+				</Popover.Trigger>
 			) : (
 				<span {...partProps}>{BREADCRUMB_ELLIPSIS_LABEL}</span>
 			)}

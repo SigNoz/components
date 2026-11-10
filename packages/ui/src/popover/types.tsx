@@ -1,6 +1,7 @@
 import type { Popover } from '@base-ui/react/popover';
-import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
 import type { PopupHandle } from '../lib/popup-handle.js';
+import type { PopoverHandle } from './popover-handle.js';
 
 type OriginalRootProps = Popover.Root.Props;
 type OriginalPositionerProps = Popover.Positioner.Props;
@@ -236,3 +237,100 @@ export type PopoverProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> 
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+interface APreviewOpensOnHoverAlready {
+	'`preview` already opens on hover and on the keyboard focus, so it takes no `openOnHover`': never;
+}
+
+/**
+ * Extra constraints layered on top of {@link PopoverTriggerProps} at the call site.
+ */
+export type ValidatePopoverTriggerProps<T> = ([Extract<keyof T, 'delay' | 'closeDelay'>] extends [
+	never,
+]
+	? unknown
+	: [Extract<keyof T, 'openOnHover' | 'preview'>] extends [never]
+		? AHoverDelayNeedsAHoverPopover
+		: unknown) &
+	([Extract<keyof T, 'preview'>] extends [never]
+		? unknown
+		: [Extract<keyof T, 'openOnHover'>] extends [never]
+			? unknown
+			: APreviewOpensOnHoverAlready);
+
+export type PopoverTriggerProps<Payload = unknown> = {
+	/**
+	 * The handle of the `Popover` this trigger opens, from `usePopoverHandle()`. Every trigger of
+	 * one handle opens the same popup, which moves to the trigger and swaps its content.
+	 */
+	handle: PopoverHandle<Payload>;
+	/**
+	 * What the popover's `children` function receives while this trigger has it open.
+	 */
+	payload?: Payload;
+	/**
+	 * The trigger. Rendered as the element you pass, with the trigger's props merged into it, so
+	 * the element keeps its own ref, link and click.
+	 *
+	 * @note Its `id` is the id `handle.openTrigger(id)` opens it by. Without one, the trigger
+	 * generates one.
+	 *
+	 * @note A component of your own has to pass the props and the ref it is given on to its
+	 * element. One that drops them leaves the trigger with no listeners, and it never opens.
+	 */
+	children: ReactElement<{ id?: string }>;
+	/**
+	 * Whether `children` renders a native `<button>`. Base UI only sees the element after it
+	 * mounts, so the trigger has to be told up front.
+	 *
+	 * @note Required. With `false`, a trigger that is not a `preview` gets `role="button"`, a
+	 * `tabIndex` and the key handlers.
+	 */
+	nativeButton: boolean;
+	/**
+	 * Makes the trigger open a card about its element instead of a dialog: on hover, and while
+	 * the keyboard focus is on it, never on a press.
+	 *
+	 * The element keeps its role, its `tabindex` and its click, and gets no `aria-haspopup`,
+	 * `aria-expanded` or `aria-controls`. The popup it opens has no role and no name, and takes no
+	 * focus. A press on it closes a popup another trigger opened, through the popover's
+	 * `onOpenChange`, which can cancel it as it can a press outside.
+	 *
+	 * The keyboard focus opens it on the element, or on anything focusable inside it, such as the
+	 * link of a row. `Tab` from there goes into the card when the card holds something focusable,
+	 * and on to the next element otherwise.
+	 *
+	 * @note Screen readers do not announce the card, and a touch screen has no hover to open it, so
+	 * it adds to what the element says and never replaces it.
+	 *
+	 * @default false
+	 */
+	preview?: boolean;
+	/**
+	 * Also opens the popover while the pointer rests on the trigger, which still opens it on a
+	 * press.
+	 *
+	 * @note Not with `preview`, which already opens on hover.
+	 *
+	 * @default false
+	 */
+	openOnHover?: boolean;
+	/**
+	 * Milliseconds the pointer, or the keyboard focus of a `preview`, rests on the trigger before
+	 * the popover opens.
+	 *
+	 * @note Only with `openOnHover` or `preview`.
+	 *
+	 * @default 300
+	 */
+	delay?: number;
+	/**
+	 * Milliseconds after the pointer leaves before the popover closes: the time the pointer has to
+	 * cross the gap onto the popup, or onto the next trigger.
+	 *
+	 * @note Only with `openOnHover` or `preview`.
+	 *
+	 * @default 0
+	 */
+	closeDelay?: number;
+};

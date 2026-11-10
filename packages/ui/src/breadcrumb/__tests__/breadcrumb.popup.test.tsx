@@ -5,7 +5,7 @@ import { Breadcrumb } from '../breadcrumb.js';
 import type { BreadcrumbItemType } from '../types.js';
 import { ellipsis, renderInFrame } from './breadcrumb.test-utils.js';
 
-const MENU_TOKEN = '--breadcrumb-menu-max-width';
+const MENU_TOKEN = '--popover-max-inline-size';
 const TOOLTIP_TOKEN = '--breadcrumb-tooltip-max-width';
 
 const LONG_TITLE =
@@ -48,7 +48,7 @@ async function renderAndOpenPopup(): Promise<HTMLElement> {
 	await user.click(trigger);
 
 	return waitFor(() => {
-		const popup = document.querySelector<HTMLElement>('[data-slot="breadcrumb-ellipsis-popup"]');
+		const popup = document.querySelector<HTMLElement>('[data-slot="popover-popup"]');
 		if (popup === null) {
 			throw new Error('the popup is not open');
 		}
@@ -84,11 +84,11 @@ async function openTooltip(): Promise<HTMLElement> {
 }
 
 describe('Breadcrumb popup of the `...` crumb', () => {
-	it('is no wider than 20rem', async () => {
+	it('is no wider than 25rem, the cap of a Popover', async () => {
 		const popup = await renderAndOpenPopup();
 
-		expect(getComputedStyle(popup).maxInlineSize).toBe(`${rem(20)}px`);
-		expect(popup.getBoundingClientRect().width).toBe(rem(20));
+		expect(getComputedStyle(popup).maxInlineSize).toBe(`${rem(25)}px`);
+		expect(popup.getBoundingClientRect().width).toBe(rem(25));
 	});
 
 	it('takes its cap from the page, where the portalled popup inherits from', async () => {

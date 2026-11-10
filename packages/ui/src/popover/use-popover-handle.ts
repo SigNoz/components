@@ -1,4 +1,5 @@
-import { type PopupHandle, usePopupHandle } from '../lib/popup-handle.js';
+import { useOpenStateStore } from '../lib/popup-handle.js';
+import { PopoverHandle } from './popover-handle.js';
 
 /**
  * Creates a handle that shows and hides a `Popover` from application state.
@@ -10,6 +11,9 @@ import { type PopupHandle, usePopupHandle } from '../lib/popup-handle.js';
  *
  * Pass the handle to `Popover`, then call `showAt` with the element, `DOMRect` or point to place
  * it against, and the payload to render. Pass `children` as a function to receive that payload.
+ *
+ * The same handle connects any number of `Popover.Trigger`s to the one popup: each opens it
+ * against itself with its own `payload`, and `openTrigger(id)` does the same from code.
  *
  * `onOpenChange` reports every open and close, whichever caused it: `showAt`, `close`, a press
  * on the popover's own trigger, Escape, or an outside press. Use it to reset the content a
@@ -39,6 +43,6 @@ import { type PopupHandle, usePopupHandle } from '../lib/popup-handle.js';
  */
 export function usePopoverHandle<Payload = void>(
 	onOpenChange?: (open: boolean) => void,
-): PopupHandle<Payload> {
-	return usePopupHandle<Payload>(onOpenChange);
+): PopoverHandle<Payload> {
+	return useOpenStateStore(() => new PopoverHandle<Payload>(), onOpenChange);
 }

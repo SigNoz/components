@@ -86,6 +86,12 @@ function resolveLayerElement(source: LayerSource): Element | null {
 	return document.elementFromPoint(left + width / 2, top + height / 2);
 }
 
+function readLayer(source: LayerSource): number {
+	const element = resolveLayerElement(source);
+
+	return element ? getLayerZIndex(element) : 0;
+}
+
 /**
  * The `z-index` of a popup portalled out of the layer it is shown in: a drawer, a modal or a
  * floating panel, from this library or another one. `floor`, the popup's own z-index, stays the
@@ -95,16 +101,22 @@ function resolveLayerElement(source: LayerSource): Element | null {
  * Pass what the popup is anchored to, falling back to its trigger. A popup a handle shows has no
  * trigger to read, and one anchored away from its trigger would read the wrong layer.
  *
- * The layer is read once, on mount. Call it from the positioner, which mounts on open.
+ * The layer is read on mount, so call it from the positioner, which mounts on open. It is read
+ * again when the source becomes another element, since a shared popup moves to another trigger
+ * without remounting. A ref, a getter or a virtual element may be a new object on every render,
+ * so it never causes a read of its own.
  *
  * @access private
  */
 export function useLayerZIndex(source: LayerSource, floor: string): CSSProperties | undefined {
-	const [layer] = useState(() => {
-		const element = resolveLayerElement(source);
+	const element = source instanceof Element ? source : null;
+	const [read, setRead] = useState(() => ({ element, layer: readLayer(source) }));
 
-		return element ? getLayerZIndex(element) : 0;
-	});
+	if (element !== null && element !== read.element) {
+		setRead({ element, layer: getLayerZIndex(element) });
+	}
+
+	const { layer } = read;
 
 	return layer > 0 ? { zIndex: `max(${floor}, ${layer + 1})` } : undefined;
 }
