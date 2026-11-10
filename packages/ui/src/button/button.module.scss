@@ -26,6 +26,9 @@
 	letter-spacing: var(--button-text-spacing, var(--button-internal-letter-spacing));
 	text-transform: var(--button-text-transform, var(--button-internal-text-transform));
 	font-feature-settings: 'ss01' 1;
+	// A native button does not inherit text-rendering from the page. Hinted Chromium on Linux then
+	// rounds the 13px medium space to 3px.
+	text-rendering: var(--button-text-rendering, geometricPrecision);
 	border-color: var(--button-base-border-color, transparent);
 	border-width: var(--button-base-border-width, 0px);
 	width: var(--button-width, var(--button-internal-width, auto));
