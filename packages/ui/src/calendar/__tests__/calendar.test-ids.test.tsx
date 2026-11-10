@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Calendar } from '../calendar.js';
-import { CalendarDayButton } from '../subcomponents/calendar-day-button.js';
 import { JUNE_11_2025, dayButton, june, navButtons } from './calendar.test-utils.js';
 
 describe('Calendar testId', () => {
@@ -45,28 +44,6 @@ describe('Calendar testId', () => {
 		expect(weekNumbers).toHaveLength(5);
 		expect(weekNumbers[0]).toHaveTextContent('23');
 		expect(weekNumbers[0]).toHaveAttribute('data-testid', 'report-start-week-number-23');
-	});
-
-	it('lets a day carry a testId of its own instead', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				testId="report-start"
-				components={{
-					DayButton: (props) => (
-						<CalendarDayButton
-							{...props}
-							testId={props.day.date.getDate() === 11 ? 'the-eleventh' : undefined}
-						/>
-					),
-				}}
-			/>,
-		);
-
-		expect(screen.getByTestId('the-eleventh')).toBe(dayButton(JUNE_11_2025));
-		expect(screen.queryByTestId('report-start-button-11-06-2025')).toBeNull();
-		expect(screen.getByTestId('report-start-button-12-06-2025')).toBe(dayButton(june(12)));
 	});
 
 	it('names the parts of each displayed month apart once more than one is shown', () => {
@@ -115,6 +92,6 @@ describe('Calendar testId', () => {
 		);
 
 		expect(named).toHaveLength(0);
-		expect(container.querySelector('.rdp-root')).not.toHaveAttribute('data-testid');
+		expect(container.querySelector('[data-slot="calendar"]')).not.toHaveAttribute('data-testid');
 	});
 });

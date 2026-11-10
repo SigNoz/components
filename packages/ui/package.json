@@ -409,7 +409,6 @@
 		"@tanstack/react-virtual": "^3.14.8",
 		"clsx": "^2.1.1",
 		"react-compiler-runtime": "^1.0.0",
-		"react-day-picker": "^9.8.1",
 		"react-resizable-panels": "4.12.2"
 	},
 	"devDependencies": {

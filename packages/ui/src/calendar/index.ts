@@ -134,16 +134,14 @@
 // #endregion css-tokens
 
 export { Calendar } from './calendar.js';
-export type { CalendarProps } from './types.js';
-
-// The types a `Calendar` prop is declared with, so a consumer can hold a selection or write a
-// matcher without depending on react-day-picker themselves.
+export { createCalendar } from './create-calendar.js';
+export type { DateAdapter } from '../lib/date-adapter.js';
 export type {
-	ClassNames,
-	CustomComponents,
+	CalendarCaptionLayoutType,
+	CalendarComponent,
+	CalendarProps,
+	CalendarWeekdayType,
 	DateRange,
-	DayPickerProps,
-	Formatters,
 	Matcher,
 	Modifiers,
-} from 'react-day-picker';
+} from './types.js';

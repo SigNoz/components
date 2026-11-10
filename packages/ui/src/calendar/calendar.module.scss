@@ -40,9 +40,6 @@
 	--calendar-internal-range-bridge: calc(
 		var(--calendar-week-gap, var(--spacing-4)) / 2 + var(--calendar-day-margin, var(--spacing-2))
 	);
-	// `box-shadow` offsets are physical, so the bridges are flipped by hand when the grid runs
-	// right to left.
-	--calendar-internal-range-direction: 1;
 
 	box-sizing: border-box;
 	width: fit-content;
@@ -50,10 +47,6 @@
 	padding: var(--calendar-padding, var(--spacing-6));
 	font-variant-numeric: normal;
 	font-feature-settings: 'ss01' 1;
-
-	&:dir(rtl) {
-		--calendar-internal-range-direction: -1;
-	}
 }
 
 /* Month layout */
@@ -317,12 +310,6 @@
 	padding: var(--calendar-nav-button-padding, 0);
 }
 
-// Both arrows mirror together: the grid itself is laid out right to left, so the arrow pointing at
-// the previous month is the one on the right.
-:dir(rtl) .calendar__button[data-variant="nav"] > svg {
-	transform: rotate(180deg);
-}
-
 .calendar__button[data-variant="day"] {
 	width: 100%;
 	height: var(--calendar-internal-cell-size);
@@ -384,10 +371,10 @@
 		&[data-range-middle="true"],
 		&[data-range-end="true"] {
 			box-shadow:
-				calc(-1 * var(--calendar-internal-range-direction) * var(--calendar-internal-range-reach-start, 0px))
-					0 0 0 var(--calendar-internal-day-range-middle-background),
-				calc(var(--calendar-internal-range-direction) * var(--calendar-internal-range-reach-end, 0px))
-					0 0 0 var(--calendar-internal-day-range-middle-background);
+				calc(-1 * var(--calendar-internal-range-reach-start, 0px)) 0 0 0
+					var(--calendar-internal-day-range-middle-background),
+				var(--calendar-internal-range-reach-end, 0px) 0 0 0
+					var(--calendar-internal-day-range-middle-background);
 		}
 
 		&[data-range-middle="true"] {
@@ -452,8 +439,7 @@
 	--calendar-internal-range-reach-end: 0px;
 }
 
-.calendar__day-button-label,
-.calendar__day-button-affix {
+.calendar__day-button-label {
 	font-family: var(--calendar-day-button-font-family, var(--label-small-500-font-family));
 	font-size: var(--calendar-day-button-font-size, var(--label-small-500-font-size));
 	font-weight: var(--calendar-button-font-weight, var(--label-small-500-font-weight));

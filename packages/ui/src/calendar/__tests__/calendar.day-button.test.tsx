@@ -1,17 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Calendar } from '../calendar.js';
-// From the public entry point, because that is where a consumer marking days reaches it.
-import { CalendarDayButton } from '../subcomponents/calendar-day-button.js';
-import type { CalendarDayButtonProps } from '../types.js';
 import { JUNE_11_2025, dayButton, june } from './calendar.test-utils.js';
-
-/** Declared here so react-day-picker is handed the same component on every render. */
-function MarkedDayButton(props: CalendarDayButtonProps): ReactElement {
-	return <CalendarDayButton {...props} prefix="<" suffix=">" />;
-}
 
 describe('CalendarDayButton', () => {
 	it('renders as a day-variant button that never submits a form', () => {
@@ -144,31 +135,6 @@ describe('CalendarDayButton', () => {
 		expect(selected).toBeInstanceOf(Date);
 		expect(selected.getDate()).toBe(11);
 		expect(selected.getMonth()).toBe(5);
-	});
-
-	it('renders a prefix and a suffix around the day number when given one', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				components={{ DayButton: MarkedDayButton }}
-			/>,
-		);
-
-		const day = dayButton(JUNE_11_2025);
-
-		expect(day.querySelector('[data-slot="calendar-day-button-prefix"]')).toHaveTextContent('<');
-		expect(day.querySelector('[data-slot="calendar-day-button-suffix"]')).toHaveTextContent('>');
-		expect(day).toHaveTextContent('<11>');
-	});
-
-	it('leaves the prefix and suffix slots out when it has nothing to put in them', () => {
-		render(<Calendar mode="single" defaultMonth={JUNE_11_2025} />);
-
-		const day = dayButton(JUNE_11_2025);
-
-		expect(day.querySelector('[data-slot="calendar-day-button-prefix"]')).toBeNull();
-		expect(day.querySelector('[data-slot="calendar-day-button-suffix"]')).toBeNull();
 	});
 
 	it('names every day for a screen reader', () => {

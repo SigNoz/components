@@ -1,28 +1,37 @@
-import { type ComponentProps, type ReactElement, useMemo } from 'react';
-import type { Month } from 'react-day-picker';
-import { CalendarMonthContext } from '../calendar-context.js';
+import type { ReactElement } from 'react';
+import { partTestId } from '../../lib/utils.js';
+import { useCalendarContext } from '../calendar-context.js';
+import styles from '../calendar.module.scss';
+import type { GridMonth } from '../month-grid.js';
+import { CalendarCaption } from './calendar-caption.js';
+import { CalendarMonthGrid } from './calendar-month-grid.js';
 
 /**
  * One displayed month: its caption and its grid.
  *
- * It exists to tell the parts inside which of the displayed months they are in, which nothing below
- * `Month` is given and every `data-testid` down there needs once `numberOfMonths` is above one.
- *
- * `calendarMonth` is react-day-picker's own object and is dropped here rather than spread, because
- * React would otherwise write it to the DOM as an attribute.
+ * It works out the stem every part below derives its `data-testid` from. That is the calendar's own
+ * `testId` while one month is displayed, and `{testId}-month-{n}` while several are, so a
+ * single-month calendar keeps the short names and a multi-month one stays addressable a month at a
+ * time.
  *
  * @access private
  */
 export function CalendarMonth({
-	calendarMonth,
+	month,
 	displayIndex,
-	...props
-}: ComponentProps<typeof Month>): ReactElement {
-	const value = useMemo(() => ({ displayIndex }), [displayIndex]);
+}: {
+	month: GridMonth;
+	displayIndex: number;
+}): ReactElement {
+	const { testId, months } = useCalendarContext();
+	const testIdStem = months.length > 1 ? partTestId(testId, `month-${displayIndex + 1}`) : testId;
 
 	return (
-		<CalendarMonthContext.Provider value={value}>
-			<div data-slot="calendar-month" {...props} />
-		</CalendarMonthContext.Provider>
+		<div data-slot="calendar-month" className={styles['calendar__month']}>
+			<div className={styles['calendar__month-caption']}>
+				<CalendarCaption month={month} testIdStem={testIdStem} />
+			</div>
+			<CalendarMonthGrid month={month} testIdStem={testIdStem} />
+		</div>
 	);
 }
