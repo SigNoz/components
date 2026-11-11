@@ -457,6 +457,21 @@ const TRIGGER_ROWS: TriggerRow[] = [
 		},
 	},
 	{
+		id: 'trigger-narrow-chip',
+		label: 'chip wider than the trigger',
+		note: 'A chip wider than a narrow trigger shrinks, and its label truncates before the remove button.',
+		props: {
+			items: [
+				option('checkout', 'checkout-service'),
+				option('long', 'frontend-proxy-edge-gateway-europe-west-1-production-canary'),
+			],
+			placeholder: 'Select services...',
+			multiple: true,
+			defaultValue: ['long', 'checkout'],
+			width: '10rem',
+		},
+	},
+	{
 		id: 'trigger-hover',
 		label: 'hovered',
 		note: 'The border darkens under the pointer.',
@@ -773,6 +788,14 @@ export const SelectShowcase: Story = {
 			),
 		);
 		await waitForEffects();
+
+		const chip = document.querySelector<HTMLElement>(
+			'[data-testid="trigger-narrow-chip-chip-long"]',
+		);
+		const remove = chip?.querySelector<HTMLElement>('[data-slot="select-chip-remove"]');
+		const chipRight = chip?.getBoundingClientRect().right ?? 0;
+
+		await expect(remove?.getBoundingClientRect().right).toBeLessThanOrEqual(chipRight);
 	},
 	render: () => <SelectShowcaseView />,
 };
