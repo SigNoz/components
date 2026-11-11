@@ -241,6 +241,9 @@
 }
 
 .combobox__chip-label {
+  // `overflow: clip` does not zero a flex item's automatic minimum the way `hidden` does, so
+  // without it the label keeps its full width and spills out of a chip narrower than the trigger.
+  min-inline-size: var(--combobox-chip-label-min-inline-size, 0);
   max-inline-size: var(--combobox-chip-label-max-inline-size, 8rem);
 
   overflow: var(--combobox-chip-label-overflow, clip visible);

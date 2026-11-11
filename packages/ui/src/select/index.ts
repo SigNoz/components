@@ -22,6 +22,7 @@
  * | `--select-chip-gap` | `var(--spacing-1)` |
  * | `--select-chip-label` | `-` |
  * | `--select-chip-label-max-inline-size` | `8rem` |
+ * | `--select-chip-label-min-inline-size` | `0` |
  * | `--select-chip-label-overflow` | `clip visible` |
  * | `--select-chip-label-text-overflow` | `ellipsis` |
  * | `--select-chip-letter-spacing` | `var(--label-small-400-letter-spacing)` |

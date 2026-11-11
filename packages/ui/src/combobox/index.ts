@@ -22,6 +22,7 @@
  * | `--combobox-chip-gap` | `var(--spacing-1)` |
  * | `--combobox-chip-label` | `-` |
  * | `--combobox-chip-label-max-inline-size` | `8rem` |
+ * | `--combobox-chip-label-min-inline-size` | `0` |
  * | `--combobox-chip-label-overflow` | `clip visible` |
  * | `--combobox-chip-label-text-overflow` | `ellipsis` |
  * | `--combobox-chip-letter-spacing` | `var(--label-small-400-letter-spacing)` |
