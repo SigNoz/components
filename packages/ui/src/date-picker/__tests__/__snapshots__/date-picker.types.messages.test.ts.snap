@@ -1,0 +1,127 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DatePicker type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "aria props > rejects the ones the date picker writes itself > \`aria-controls\` names the popup": "TS2322: Type '{ placeholder: string; "aria-controls": string; }' is not assignable to type '{ "aria-haspopup"?: undefined; "aria-expanded"?: undefined; "aria-controls"?: undefined; "aria-readonly"?: undefined; "aria-disabled"?: undefined; "aria-required"?: undefined; }'.
+    Types of property '"aria-controls"' are incompatible.
+      Type 'string' is not assignable to type 'undefined'.",
+  "aria props > rejects the ones the date picker writes itself > \`aria-expanded\` follows the popup": "TS2322: Type '{ placeholder: string; "aria-expanded": true; }' is not assignable to type '{ "aria-haspopup"?: undefined; "aria-expanded"?: undefined; "aria-controls"?: undefined; "aria-readonly"?: undefined; "aria-disabled"?: undefined; "aria-required"?: undefined; }'.
+    Types of property '"aria-expanded"' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "aria props > rejects the ones the date picker writes itself > \`aria-haspopup\` is \`dialog\`, written by the trigger": "TS2322: Type '{ placeholder: string; "aria-haspopup": string; }' is not assignable to type '{ "aria-haspopup"?: undefined; "aria-expanded"?: undefined; "aria-controls"?: undefined; "aria-readonly"?: undefined; "aria-disabled"?: undefined; "aria-required"?: undefined; }'.
+    Types of property '"aria-haspopup"' are incompatible.
+      Type 'string' is not assignable to type 'undefined'.",
+  "aria props > rejects the ones the date picker writes itself > use \`disabled\`": "TS2322: Type '{ placeholder: string; "aria-disabled": true; }' is not assignable to type '{ "aria-haspopup"?: undefined; "aria-expanded"?: undefined; "aria-controls"?: undefined; "aria-readonly"?: undefined; "aria-disabled"?: undefined; "aria-required"?: undefined; }'.
+    Types of property '"aria-disabled"' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "aria props > rejects the ones the date picker writes itself > use \`readOnly\`": "TS2322: Type '{ placeholder: string; "aria-readonly": true; }' is not assignable to type '{ "aria-haspopup"?: undefined; "aria-expanded"?: undefined; "aria-controls"?: undefined; "aria-readonly"?: undefined; "aria-disabled"?: undefined; "aria-required"?: undefined; }'.
+    Types of property '"aria-readonly"' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "aria props > rejects the ones the date picker writes itself > use \`required\`": "TS2322: Type '{ placeholder: string; "aria-required": true; }' is not assignable to type '{ "aria-haspopup"?: undefined; "aria-expanded"?: undefined; "aria-controls"?: undefined; "aria-readonly"?: undefined; "aria-disabled"?: undefined; "aria-required"?: undefined; }'.
+    Types of property '"aria-required"' are incompatible.
+      Type 'true' is not assignable to type 'undefined'.",
+  "createDatePicker > follows a branded type the same way > a \`Date\` is not an \`Epoch\`": "TS2322: Type 'Date' is not assignable to type 'Epoch'.
+    Type 'Date' is not assignable to type 'number'.",
+  "createDatePicker > follows a branded type the same way > a bare number is not an \`Epoch\`": "TS2322: Type 'number' is not assignable to type 'Epoch'.
+    Type 'number' is not assignable to type '{ readonly __epoch: unique symbol; }'.",
+  "createDatePicker > keeps the other props of the built-in date picker > \`className\` is not a prop of a made date picker either": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "createDatePicker > keeps the other props of the built-in date picker > a disabled date picker has to tell the user why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ placeholder: string; disabled: true; }' but required in type 'ADisabledDatePickerMustSayWhy'.",
+  "createDatePicker > keeps the other props of the built-in date picker > the prop is called \`testId\`": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which lands on the trigger and names every part'' is missing in type '{ placeholder: string; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "createDatePicker > rejects a native Date where the adapter holds a wrapper > the handler gets an \`Instant\`, not a \`Date\`": "TS2322: Type '(value: Date | undefined) => Date | undefined' is not assignable to type '(value: Instant | undefined, details: DatePickerChangeDetailsType) => void'.
+    Types of parameters 'value' and 'value' are incompatible.
+      Type 'Instant | undefined' is not assignable to type 'Date | undefined'.
+        Type 'Instant' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.",
+  "createDatePicker > rejects a native Date where the adapter holds a wrapper > the limits are \`Instant\`s too": "TS2741: Property 'epoch' is missing in type 'Date' but required in type 'Instant'.",
+  "createDatePicker > rejects a native Date where the adapter holds a wrapper > the predicate gets an \`Instant\`, not a \`Date\`": "TS2322: Type '(date: Date) => boolean' is not assignable to type '(date: Instant) => boolean'.
+    Types of parameters 'date' and 'date' are incompatible.
+      Type 'Instant' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.",
+  "createDatePicker > rejects a native Date where the adapter holds a wrapper > this date picker holds an \`Instant\`": "TS2741: Property 'epoch' is missing in type 'Date' but required in type 'Instant'.",
+  "createDatePicker > rejects a wrapper where the built-in date picker holds a Date > the built-in date picker holds a \`Date\`": "TS2740: Type 'Instant' is missing the following properties from type 'Date': toDateString, toTimeString, toLocaleDateString, toLocaleTimeString, and 37 more.",
+  "createDatePicker > rejects an adapter that does not hand back a Date > \`toDate\` hands the date picker a native \`Date\`": "TS2769: No overload matches this call.
+    Overload 1 of 2, '(adapter: DateAdapter<Instant, true>): DatePickerComponentType<Instant, true>', gave the following error.
+      Type '(value: Instant) => number' is not assignable to type '(value: Instant, timezone: string | undefined) => Date'.
+        Type 'number' is not assignable to type 'Date'.
+    Overload 2 of 2, '(adapter: DateAdapter<Instant>): DatePickerComponentType<Instant>', gave the following error.
+      Type '(value: Instant) => number' is not assignable to type '(value: Instant, timezone: string | undefined) => Date'.
+        Type 'number' is not assignable to type 'Date'.",
+  "createDatePicker > rejects an adapter that is missing a side > the adapter needs \`fromDate\`": "TS2769: No overload matches this call.
+    Overload 1 of 2, '(adapter: DateAdapter<Date, true>): DatePickerComponentType<Date, true>', gave the following error.
+      Argument of type '{ toDate: (value: Date) => Date; }' is not assignable to parameter of type 'DateAdapter<Date, true>'.
+        Property 'fromDate' is missing in type '{ toDate: (value: Date) => Date; }' but required in type '{ toDate: (value: Date, timezone: string | undefined) => Date; fromDate: (date: Date, timezone: string | undefined) => Date; }'.
+    Overload 2 of 2, '(adapter: DateAdapter<Date>): DatePickerComponentType<Date>', gave the following error.
+      Argument of type '{ toDate: (value: Date) => Date; }' is not assignable to parameter of type 'DateAdapter<Date>'.
+        Property 'fromDate' is missing in type '{ toDate: (value: Date) => Date; }' but required in type '{ toDate: (value: Date, timezone: string | undefined) => Date; fromDate: (date: Date, timezone: string | undefined) => Date; }'.",
+  "createDatePicker > rejects an adapter that is missing a side > the adapter needs \`toDate\`": "TS2769: No overload matches this call.
+    Overload 1 of 2, '(adapter: DateAdapter<Date, true>): DatePickerComponentType<Date, true>', gave the following error.
+      Argument of type '{ fromDate: (date: Date) => Date; }' is not assignable to parameter of type 'DateAdapter<Date, true>'.
+        Property 'toDate' is missing in type '{ fromDate: (date: Date) => Date; }' but required in type '{ toDate: (value: Date, timezone: string | undefined) => Date; fromDate: (date: Date, timezone: string | undefined) => Date; }'.
+    Overload 2 of 2, '(adapter: DateAdapter<Date>): DatePickerComponentType<Date>', gave the following error.
+      Argument of type '{ fromDate: (date: Date) => Date; }' is not assignable to parameter of type 'DateAdapter<Date>'.
+        Property 'toDate' is missing in type '{ fromDate: (date: Date) => Date; }' but required in type '{ toDate: (value: Date, timezone: string | undefined) => Date; fromDate: (date: Date, timezone: string | undefined) => Date; }'.",
+  "createDatePicker > rejects supportsTimezone set to false > \`supportsTimezone\` is \`true\` or left out": "TS2769: No overload matches this call.
+    Overload 1 of 2, '(adapter: DateAdapter<Date, true>): DatePickerComponentType<Date, true>', gave the following error.
+      Type 'false' is not assignable to type 'true'.
+    Overload 2 of 2, '(adapter: DateAdapter<Date>): DatePickerComponentType<Date>', gave the following error.
+      Type 'false' is not assignable to type 'undefined'.",
+  "disabled and readOnly > rejects a disabled date picker with no reason > a disabled date picker has to tell the user why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ placeholder: string; disabled: true; }' but required in type 'ADisabledDatePickerMustSayWhy'.",
+  "disabled and readOnly > rejects a disabled reason with no disabled > \`disabledTooltip\` only renders while \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ placeholder: string; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledDatePicker'.",
+  "disabled and readOnly > rejects a readOnly date picker with no reason > a read-only date picker has to tell the user why": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a read-only control has to tell the user why it cannot be changed'' is missing in type '{ placeholder: string; readOnly: true; }' but required in type 'AReadOnlyDatePickerMustSayWhy'.",
+  "disabled and readOnly > rejects a readOnly reason with no readOnly > \`readOnlyTooltip\` only renders while \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ placeholder: string; readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlyDatePicker'.",
+  "root props > rejects a date picker with no placeholder > the trigger has to show something while nothing is selected": "TS2741: Property 'placeholder' is missing in type '{ "aria-label": string; }' but required in type '{ [key: \`data-\${string}\`]: unknown; id?: string | undefined; value?: Date | undefined; defaultValue?: Date | undefined; onChange?: ((value: Date | undefined, details: DatePickerChangeDetailsType) => void) | undefined; ... 16 more ...; testId?: string | undefined; }'.",
+  "root props > rejects a prop it does not have > \`colour\` is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects a raw data-testid > the prop is called \`testId\`": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which lands on the trigger and names every part'' is missing in type '{ placeholder: string; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "root props > rejects a ref that is not the trigger > the ref lands on the trigger, a button": "TS2322: Type 'RefObject<HTMLDivElement>' is not assignable to type 'RefObject<HTMLDivElement> & (LegacyRef<HTMLButtonElement> | undefined)'.
+    Type 'RefObject<HTMLDivElement>' is not assignable to type 'RefObject<HTMLDivElement> & ((instance: HTMLButtonElement | null) => void)'.
+      Type 'RefObject<HTMLDivElement>' is not assignable to type '(instance: HTMLButtonElement | null) => void'.
+        Type 'RefObject<HTMLDivElement>' provides no match for the signature '(instance: HTMLButtonElement | null): void'.",
+  "root props > rejects className and style, the size comes from width and maxWidth > \`className\` is not a prop": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects className and style, the size comes from width and maxWidth > \`style\` is not a prop": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > \`format\` is replaced by \`formatValue\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > \`getPopupContainer\` is replaced by \`container\`": "TS2322: Type '() => HTMLElement' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > \`showTime\` always confirms with Apply": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > \`timeZone\` is replaced by \`showTimezone\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > a field that failed validation passes \`aria-invalid\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > a story or a test holds it open with \`ForceOpenProvider\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > no call site limits the time of day": "TS2322: Type '() => {}' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the date picker owns its open state, there is no \`onOpenChange\`": "TS2322: Type '() => undefined' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the date picker owns its open state, there is no \`open\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the date picker picks one day, there is no \`multiple\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the date picker picks one day, there is no \`picker\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the popup has no Now shortcut": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the popup opens below the trigger": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the popup takes no class": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the trigger has one height": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "root props > rejects the props of the antd DatePicker it replaces > the trigger takes no typed text": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "showTimezone > is rejected by a date picker whose adapter does not declare supportsTimezone > this adapter declares no \`supportsTimezone\`": "TS2322: Type '{ options: readonly DatePickerTimezoneOptionType[]; }' is not assignable to type 'undefined'.",
+  "showTimezone > is rejected by the built-in date picker, whose adapter does no zone math > the built-in \`Date\` adapter cannot honor a zone": "TS2322: Type '{ options: readonly DatePickerTimezoneOptionType[]; }' is not assignable to type 'undefined'.",
+  "showTimezone > needs its options > the zone field lists \`options\`": "TS2741: Property 'options' is missing in type '{ value: string; }' but required in type 'DatePickerTimezoneType'.",
+  "showTimezone > needs showTime > \`showTime\` has to be true to give the zone a step to be picked in": "TS2322: Type '{ placeholder: string; showTime: false; showTimezone: { options: readonly DatePickerTimezoneOptionType[]; }; }' is not assignable to type 'IntrinsicAttributes & (DatePickerProps<Instant, true> & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Types of property 'showTimezone' are incompatible.
+      Type '{ options: readonly DatePickerTimezoneOptionType[]; }' is not assignable to type 'undefined'.",
+  "showTimezone > needs showTime > without the time row a pick closes the popup at once": "TS2322: Type '{ placeholder: string; showTimezone: { options: readonly DatePickerTimezoneOptionType[]; }; }' is not assignable to type 'IntrinsicAttributes & (DatePickerProps<Instant, true> & Record<never, never> & RefAttributes<HTMLButtonElement>)'.
+    Property 'showTime' is missing in type '{ placeholder: string; showTimezone: { options: readonly DatePickerTimezoneOptionType[]; }; }' but required in type 'DatePickerWithTimezoneProps'.",
+  "showTimezone > takes options that carry a value and a label > a zone is a string the adapter reads": "TS2322: Type 'number' is not assignable to type 'string'.",
+  "showTimezone > takes options that carry a value and a label > every zone has a label": "TS2741: Property 'label' is missing in type '{ value: string; }' but required in type 'DatePickerTimezoneOptionType'.",
+  "value > rejects a formatValue and a disabledDate that take the wrong type > the formatter gets a \`Date\`": "TS2322: Type '(value: string) => string' is not assignable to type '(value: Date, details: DatePickerChangeDetailsType) => string'.
+    Types of parameters 'value' and 'value' are incompatible.
+      Type 'Date' is not assignable to type 'string'.",
+  "value > rejects a formatValue and a disabledDate that take the wrong type > the predicate gets a \`Date\`": "TS2322: Type '(date: string) => date is ""' is not assignable to type '(date: Date) => boolean'.
+    Types of parameters 'date' and 'date' are incompatible.
+      Type 'Date' is not assignable to type 'string'.",
+  "value > rejects a formatValue that does not return text > the trigger shows a string": "TS2322: Type '() => number' is not assignable to type '(value: Date, details: DatePickerChangeDetailsType) => string'.
+    Type 'number' is not assignable to type 'string'.",
+  "value > rejects a limit that is not a Date > \`maxDate\` is a \`Date\` too": "TS2322: Type 'number' is not assignable to type 'Date'.",
+  "value > rejects a limit that is not a Date > \`minDate\` is a \`Date\` too": "TS2322: Type 'string' is not assignable to type 'Date'.",
+  "value > rejects a value that is not a Date > \`defaultValue\` holds a native \`Date\` with the built-in adapter": "TS2322: Type 'number' is not assignable to type 'Date'.",
+  "value > rejects a value that is not a Date > \`value\` holds a native \`Date\` with the built-in adapter": "TS2322: Type 'string' is not assignable to type 'Date'.",
+  "value > rejects an onChange that takes the other shape > the handler gets a \`Date\`, not a string": "TS2322: Type '(value: string | undefined) => string | undefined' is not assignable to type '(value: Date | undefined, details: DatePickerChangeDetailsType) => void'.
+    Types of parameters 'value' and 'value' are incompatible.
+      Type 'Date | undefined' is not assignable to type 'string | undefined'.
+        Type 'Date' is not assignable to type 'string'.",
+  "value > rejects an onChange that takes the other shape > the handler is called with \`undefined\` when the value is cleared": "TS2322: Type '(value: Date) => Date' is not assignable to type '(value: Date | undefined, details: DatePickerChangeDetailsType) => void'.
+    Types of parameters 'value' and 'value' are incompatible.
+      Type 'Date | undefined' is not assignable to type 'Date'.
+        Type 'undefined' is not assignable to type 'Date'.",
+  "value > rejects null, which is not how a value is cleared > no value is \`undefined\`": "TS2322: Type 'null' is not assignable to type 'Date | undefined'.",
+}
+`;

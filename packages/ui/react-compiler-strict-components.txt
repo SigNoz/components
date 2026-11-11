@@ -11,6 +11,7 @@ checkbox
 collapse
 combobox
 command
+date-picker
 dialog
 divider
 drawer

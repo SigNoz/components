@@ -1,0 +1,334 @@
+.date-picker {
+  --date-picker-internal-trigger-background: var(--date-picker-trigger-background-color, var(--date-picker-trigger-background));
+  --date-picker-internal-trigger-border: var(--date-picker-trigger-border-color, var(--date-picker-trigger-border));
+  --date-picker-internal-trigger-border-hover: var(--date-picker-trigger-hover-border-color, var(--date-picker-trigger-border-hover));
+  --date-picker-internal-trigger-focus-ring: var(--date-picker-trigger-focus-ring-color, var(--date-picker-trigger-focus-ring));
+  --date-picker-internal-trigger-label: var(--date-picker-trigger-color, var(--date-picker-trigger-label));
+  --date-picker-internal-trigger-label-disabled: var(--date-picker-trigger-disabled-color, var(--date-picker-trigger-label-disabled));
+  --date-picker-internal-trigger-placeholder: var(--date-picker-placeholder-color, var(--date-picker-trigger-placeholder));
+  --date-picker-internal-trigger-icon: var(--date-picker-icon-color, var(--date-picker-trigger-icon));
+  --date-picker-internal-trigger-icon-hover: var(--date-picker-icon-hover-color, var(--date-picker-trigger-icon-hover));
+  --date-picker-internal-icon-size: var(--date-picker-icon-size, 14px);
+
+  position: var(--date-picker-position, relative);
+  display: var(--date-picker-display, flex);
+  box-sizing: var(--date-picker-box-sizing, border-box);
+  inline-size: var(--date-picker-width, var(--date-picker-internal-width, 100%));
+  max-inline-size: var(--date-picker-max-width, var(--date-picker-internal-max-width, 100%));
+
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
+}
+
+.date-picker__trigger {
+  display: var(--date-picker-trigger-display, flex);
+  align-items: var(--date-picker-trigger-align-items, center);
+  gap: var(--date-picker-trigger-gap, var(--spacing-4));
+  flex-grow: var(--date-picker-trigger-flex-grow, 1);
+  box-sizing: var(--date-picker-trigger-box-sizing, border-box);
+  min-inline-size: var(--date-picker-trigger-min-inline-size, 0);
+  block-size: var(--date-picker-trigger-block-size, 2rem);
+  margin: var(--date-picker-trigger-margin, 0);
+
+  padding-block: var(--date-picker-trigger-padding-block, var(--spacing-2));
+  padding-inline-start: var(--date-picker-trigger-padding-inline-start, var(--spacing-6));
+  padding-inline-end: var(--date-picker-trigger-padding-inline-end, var(--spacing-4));
+
+  border-width: var(--date-picker-trigger-border-width, 1px);
+  border-style: var(--date-picker-trigger-border-style, solid);
+  border-color: var(--date-picker-internal-trigger-border);
+  border-radius: var(--date-picker-trigger-border-radius, var(--radius-1));
+  background-color: var(--date-picker-internal-trigger-background);
+  color: var(--date-picker-internal-trigger-label);
+
+  font-family: var(--date-picker-trigger-font-family, var(--label-base-400-font-family));
+  font-size: var(--date-picker-trigger-font-size, var(--label-base-400-font-size));
+  font-weight: var(--date-picker-trigger-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--date-picker-trigger-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--date-picker-trigger-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--date-picker-trigger-text-transform, var(--label-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
+  text-align: var(--date-picker-trigger-text-align, start);
+
+  cursor: var(--date-picker-trigger-cursor, pointer);
+
+  transition-property: var(--date-picker-trigger-transition-property, border-color);
+  transition-duration: var(--date-picker-trigger-transition-duration, 150ms);
+  transition-timing-function: var(--date-picker-trigger-transition-timing-function, ease);
+
+  &:focus-visible {
+    outline-width: var(--date-picker-trigger-focus-outline-width, 1px);
+    outline-style: var(--date-picker-trigger-focus-outline-style, solid);
+    outline-color: var(--date-picker-internal-trigger-focus-ring);
+    outline-offset: var(--date-picker-trigger-focus-outline-offset, 1px);
+  }
+
+  // Re-points both, so the hover and open rules keep the colour too.
+  &[aria-invalid='true'] {
+    --date-picker-internal-trigger-border: var(--date-picker-trigger-invalid-border-color, var(--destructive));
+    --date-picker-internal-trigger-border-hover: var(--date-picker-trigger-invalid-border-color, var(--destructive));
+  }
+
+  &[data-popup-open] {
+    border-color: var(--date-picker-internal-trigger-border-hover);
+  }
+
+  // Never the native `disabled`: it drops pointer events and breaks the reason tooltip.
+  &[aria-disabled='true'] {
+    color: var(--date-picker-internal-trigger-label-disabled);
+    opacity: var(--date-picker-trigger-disabled-opacity, 0.6);
+    cursor: var(--date-picker-trigger-disabled-cursor, not-allowed);
+  }
+
+  // Keeps its colours and fades less than disabled: the value is still there to read.
+  &[aria-readonly='true'] {
+    opacity: var(--date-picker-trigger-readonly-opacity, 0.8);
+    cursor: var(--date-picker-trigger-readonly-cursor, not-allowed);
+  }
+
+}
+
+.date-picker:hover > .date-picker__trigger:not([aria-disabled='true'], [aria-readonly='true']) {
+  border-color: var(--date-picker-internal-trigger-border-hover);
+}
+
+.date-picker__value,
+.date-picker__placeholder {
+  flex-grow: var(--date-picker-value-flex-grow, 1);
+  min-inline-size: var(--date-picker-value-min-inline-size, 0);
+
+  overflow: var(--date-picker-value-overflow, clip visible);
+  white-space: var(--date-picker-value-white-space, nowrap);
+  text-overflow: var(--date-picker-value-text-overflow, ellipsis);
+}
+
+// Room for the clear button, which sits over the trigger between the value and the icon.
+.date-picker[data-clearable] .date-picker__value {
+  margin-inline-end: var(
+    --date-picker-value-clearable-margin-inline-end,
+    calc(var(--date-picker-internal-icon-size) + var(--date-picker-trigger-gap, var(--spacing-4)))
+  );
+}
+
+.date-picker__placeholder {
+  color: var(--date-picker-internal-trigger-placeholder);
+}
+
+.date-picker__icon {
+  display: var(--date-picker-icon-display, inline-flex);
+  align-items: var(--date-picker-icon-align-items, center);
+  justify-content: var(--date-picker-icon-justify-content, center);
+  flex-shrink: var(--date-picker-icon-flex-shrink, 0);
+
+  color: var(--date-picker-internal-trigger-icon);
+
+  & svg {
+    inline-size: var(--date-picker-internal-icon-size);
+    block-size: var(--date-picker-internal-icon-size);
+  }
+
+  // The icon offers a popup a read-only date picker never opens. Hidden, not removed, so toggling
+  // `readOnly` does not move the value.
+  .date-picker[data-readonly] & {
+    visibility: var(--date-picker-icon-readonly-visibility, hidden);
+  }
+}
+
+.date-picker__clear {
+  position: var(--date-picker-clear-position, absolute);
+  inset-block: var(--date-picker-clear-inset-block, 0);
+  inset-inline-end: var(
+    --date-picker-clear-inset-inline-end,
+    calc(
+      var(--date-picker-trigger-border-width, 1px) +
+        var(--date-picker-trigger-padding-inline-end, var(--spacing-4)) +
+        var(--date-picker-internal-icon-size) + var(--date-picker-trigger-gap, var(--spacing-4))
+    )
+  );
+  display: var(--date-picker-clear-display, inline-flex);
+  align-items: var(--date-picker-clear-align-items, center);
+  justify-content: var(--date-picker-clear-justify-content, center);
+  margin: var(--date-picker-clear-margin, 0);
+  padding: var(--date-picker-clear-padding, 0);
+
+  border: var(--date-picker-clear-border, none);
+  background-color: var(--date-picker-clear-background-color, transparent);
+  color: var(--date-picker-internal-trigger-icon);
+
+  cursor: var(--date-picker-clear-cursor, pointer);
+
+  & svg {
+    inline-size: var(--date-picker-internal-icon-size);
+    block-size: var(--date-picker-internal-icon-size);
+  }
+
+  &:hover {
+    color: var(--date-picker-internal-trigger-icon-hover);
+  }
+}
+
+// Under the trigger, so the browser's `required` message points at it. Out of reach of the pointer
+// and invisible.
+.date-picker__input {
+  position: var(--date-picker-input-position, absolute);
+  inset: var(--date-picker-input-inset, 0);
+  box-sizing: var(--date-picker-input-box-sizing, border-box);
+  inline-size: var(--date-picker-input-inline-size, 100%);
+  block-size: var(--date-picker-input-block-size, 100%);
+  margin: var(--date-picker-input-margin, 0);
+  padding: var(--date-picker-input-padding, 0);
+  border: var(--date-picker-input-border, 0);
+  opacity: var(--date-picker-input-opacity, 0);
+  pointer-events: var(--date-picker-input-pointer-events, none);
+}
+
+.date-picker__positioner {
+  // Base UI positions but does not stack.
+  z-index: var(--date-picker-z-index, 50);
+  // A Radix modal sets `pointer-events: none` on the body. A popup portalled into a `container`
+  // outside the panel would have no day that can be clicked.
+  pointer-events: var(--date-picker-positioner-pointer-events, auto);
+  inline-size: var(--date-picker-positioner-inline-size, max-content);
+
+  &:focus-visible {
+    outline: var(--date-picker-positioner-focus-visible-outline, none);
+  }
+}
+
+.date-picker__popup {
+  --date-picker-internal-popup-background: var(--date-picker-popup-background-color, var(--date-picker-background));
+  --date-picker-internal-popup-border: var(--date-picker-popup-border-color, var(--date-picker-border));
+  --date-picker-internal-popup-shadow: var(--date-picker-popup-box-shadow, var(--date-picker-shadow));
+  --date-picker-internal-separator: var(--date-picker-separator-color, var(--date-picker-separator));
+  --date-picker-internal-time-field-border: var(--date-picker-time-field-border-color, var(--date-picker-time-field-border));
+  --date-picker-internal-time-field-border-hover: var(--date-picker-time-field-hover-border-color, var(--date-picker-time-field-border-hover));
+  --date-picker-internal-time-field-focus-ring: var(--date-picker-time-field-focus-ring-color, var(--date-picker-time-field-focus-ring));
+  --date-picker-internal-time-field-label: var(--date-picker-time-field-color, var(--date-picker-time-field-label));
+  --date-picker-internal-time-separator: var(--date-picker-time-separator-color, var(--date-picker-time-separator));
+
+  display: var(--date-picker-popup-display, flex);
+  flex-direction: var(--date-picker-popup-flex-direction, column);
+  box-sizing: var(--date-picker-popup-box-sizing, border-box);
+  // As wide as one month of the calendar. The footer fits inside that width rather than widening it.
+  inline-size: var(--date-picker-popup-inline-size, min-content);
+  max-block-size: var(--date-picker-popup-max-block-size, var(--available-height, none));
+  overflow: var(--date-picker-popup-overflow, auto);
+
+  border-width: var(--date-picker-popup-border-width, 1px);
+  border-style: var(--date-picker-popup-border-style, solid);
+  border-color: var(--date-picker-internal-popup-border);
+  border-radius: var(--date-picker-popup-border-radius, var(--radius-2));
+  background-color: var(--date-picker-internal-popup-background);
+  box-shadow: var(--date-picker-internal-popup-shadow);
+  // `--surface-3` is translucent in dark mode. Without the blur the page shows through the popup.
+  backdrop-filter: var(--date-picker-popup-backdrop-filter, blur(40px));
+
+  font-family: var(--date-picker-popup-font-family, var(--paragraph-base-400-font-family));
+  font-size: var(--date-picker-popup-font-size, var(--paragraph-base-400-font-size));
+  font-weight: var(--date-picker-popup-font-weight, var(--paragraph-base-400-font-weight));
+  line-height: var(--date-picker-popup-line-height, var(--paragraph-base-400-line-height));
+  letter-spacing: var(--date-picker-popup-letter-spacing, var(--paragraph-base-400-letter-spacing));
+  text-transform: var(--date-picker-popup-text-transform, var(--paragraph-base-400-text-transform));
+  font-variant-numeric: normal;
+  font-feature-settings: 'ss01' 1;
+
+  &:focus-visible {
+    outline: var(--date-picker-popup-focus-visible-outline, none);
+  }
+}
+
+// The popup paints the surface, so the calendar inside it does not paint its own.
+.date-picker__calendar {
+  --calendar-background-color: var(--date-picker-calendar-background-color, transparent);
+}
+
+.date-picker__footer {
+  display: var(--date-picker-footer-display, flex);
+  flex-direction: var(--date-picker-footer-flex-direction, column);
+  gap: var(--date-picker-footer-gap, var(--spacing-4));
+  padding: var(--date-picker-footer-padding, var(--spacing-6));
+  padding-block-start: var(--date-picker-footer-padding-block-start, var(--spacing-4));
+
+  border-block-start-width: var(--date-picker-footer-border-width, 1px);
+  border-block-start-style: var(--date-picker-footer-border-style, solid);
+  border-block-start-color: var(--date-picker-internal-separator);
+}
+
+.date-picker__time {
+  display: var(--date-picker-time-display, flex);
+  align-items: var(--date-picker-time-align-items, center);
+  gap: var(--date-picker-time-gap, var(--spacing-2));
+}
+
+.date-picker__time-part {
+  display: var(--date-picker-time-part-display, inline-flex);
+  align-items: var(--date-picker-time-part-align-items, center);
+  gap: var(--date-picker-time-part-gap, var(--spacing-2));
+}
+
+.date-picker__time-separator {
+  color: var(--date-picker-internal-time-separator);
+}
+
+.date-picker__time-field {
+  box-sizing: var(--date-picker-time-field-box-sizing, border-box);
+  inline-size: var(--date-picker-time-field-inline-size, 2.5rem);
+  block-size: var(--date-picker-time-field-block-size, 2rem);
+  margin: var(--date-picker-time-field-margin, 0);
+  padding-block: var(--date-picker-time-field-padding-block, 0);
+  padding-inline: var(--date-picker-time-field-padding-inline, var(--spacing-2));
+
+  border-width: var(--date-picker-time-field-border-width, 1px);
+  border-style: var(--date-picker-time-field-border-style, solid);
+  border-color: var(--date-picker-internal-time-field-border);
+  border-radius: var(--date-picker-time-field-border-radius, var(--radius-1));
+  background-color: var(--date-picker-time-field-background-color, transparent);
+  color: var(--date-picker-internal-time-field-label);
+
+  font-family: var(--date-picker-time-field-font-family, var(--label-base-400-font-family));
+  font-size: var(--date-picker-time-field-font-size, var(--label-base-400-font-size));
+  font-weight: var(--date-picker-time-field-font-weight, var(--label-base-400-font-weight));
+  line-height: var(--date-picker-time-field-line-height, var(--label-base-400-line-height));
+  letter-spacing: var(--date-picker-time-field-letter-spacing, var(--label-base-400-letter-spacing));
+  text-transform: var(--date-picker-time-field-text-transform, var(--label-base-400-text-transform));
+  font-variant-numeric: var(--date-picker-time-field-font-variant-numeric, tabular-nums);
+  font-feature-settings: 'ss01' 1;
+  text-align: var(--date-picker-time-field-text-align, center);
+  caret-color: var(--date-picker-time-field-caret-color, transparent);
+
+  transition-property: var(--date-picker-time-field-transition-property, border-color);
+  transition-duration: var(--date-picker-time-field-transition-duration, 150ms);
+  transition-timing-function: var(--date-picker-time-field-transition-timing-function, ease);
+
+  &:hover {
+    border-color: var(--date-picker-internal-time-field-border-hover);
+  }
+
+  &:focus-visible {
+    outline-width: var(--date-picker-time-field-focus-outline-width, 1px);
+    outline-style: var(--date-picker-time-field-focus-outline-style, solid);
+    outline-color: var(--date-picker-internal-time-field-focus-ring);
+    outline-offset: var(--date-picker-time-field-focus-outline-offset, 1px);
+  }
+}
+
+// Takes the width of the popup and adds none: a long zone label ends in an ellipsis rather than
+// widening the popup past one month of the calendar.
+.date-picker__timezone {
+  display: var(--date-picker-timezone-display, flex);
+  inline-size: var(--date-picker-timezone-inline-size, 0);
+  min-inline-size: var(--date-picker-timezone-min-inline-size, 100%);
+}
+
+.date-picker__apply {
+  display: var(--date-picker-apply-display, flex);
+  justify-content: var(--date-picker-apply-justify-content, flex-end);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .date-picker__trigger,
+  .date-picker__time-field {
+    transition-duration: 0ms;
+  }
+}
