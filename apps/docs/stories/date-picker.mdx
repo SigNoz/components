@@ -1,0 +1,436 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as DatePickerStories from './date-picker.stories';
+
+<Meta of={DatePickerStories} />
+
+# DatePicker
+
+A field that picks a day, or a day and a time. It works like `Select` and `Combobox`: the trigger
+is the field, and a press opens a popup with one month in it: a `Calendar` inside Base UI's
+`Popover`. `showTime` adds a time row under the month, and `showTimezone` a time zone field.
+
+Use it for one date in a form, such as the day an API key expires or the start of a planned
+downtime. It never picks a range. To show a month on the page itself, use `Calendar`.
+
+## How to use
+
+`placeholder` is required, and there are no parts to compose. The value is a native `Date`. If the
+app keeps its dates in a date library such as dayjs, build its own date picker once, as Date
+adapter shows.
+
+```tsx
+import { DatePicker } from '@signozhq/ui';
+import { useState } from 'react';
+
+export default function ExpiryField() {
+	const [expiry, setExpiry] = useState<Date | undefined>();
+
+	return (
+		<DatePicker
+			aria-label="Expires on"
+			placeholder="Select date"
+			value={expiry}
+			onChange={setExpiry}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Naming the field
+
+The trigger is `role="combobox"` with `aria-haspopup="dialog"`, and its text is the formatted value.
+Name it with `aria-label`, with `aria-labelledby` pointing at a visible label, or with a
+`<label htmlFor>` pointing at its `id`. With none of them, the trigger falls back to the
+`placeholder`, which is not a label.
+
+```tsx
+<label htmlFor="expiry">Expires on</label>
+<DatePicker id="expiry" placeholder="Select date" />
+```
+
+The popup is a `role="dialog"` named `Choose date`, or `Choose date and time` with `showTime`. The
+text the date picker draws itself (`Apply`, `Clear date`, `Hours`, `Minutes`, `Seconds`, `Time`,
+`Time zone`) is fixed English.
+
+Pass `disabled`, `readOnly` and `required` rather than their `aria-*` props. The date picker sets
+`aria-disabled`, `aria-readonly` and `aria-required` itself, with `aria-haspopup`, `aria-expanded`
+and `aria-controls`, and passing any of them is a type error. `aria-invalid` and
+`aria-describedby` pass through.
+
+## Values
+
+`value` is the selected date. Without `showTime` it is the start of the picked day. Writing `value`
+makes the date picker controlled, even with `undefined`. Leave it out and use `defaultValue` for one
+that keeps its own state.
+
+`onChange` gets the new date when a day is picked, when `Apply` is pressed with `showTime`, and
+`undefined` when the value is cleared. Its second argument holds `timezone`, the zone picked with
+`showTimezone`, and `undefined` without it.
+
+```tsx
+<DatePicker
+	aria-label="Expires on"
+	placeholder="Select date"
+	defaultValue={new Date(2026, 8, 14)}
+	onChange={(date, { timezone }) => save(date, timezone)}
+/>
+```
+
+Without `showTime`, a pick calls `onChange` and closes the popup.
+
+The popup opens on the selected day, or on today when the field is empty. When that day is outside
+`minDate` or `maxDate`, it opens on the nearest limit instead. The focus starts on that day.
+
+A value outside the limits, or on a day that `disabledDate` disables, still shows as it is: its day
+is selected and disabled. The date picker never calls `onChange` to correct it. A value that the
+adapter reads as an invalid date counts as empty and logs a warning.
+
+## What the trigger shows
+
+Without `formatValue`, the trigger shows `YYYY-MM-DD`, or `YYYY-MM-DD HH:mm:ss` with `showTime`,
+then the label of the selected zone with `showTimezone`. Pass `formatValue` to write that text with
+the app's own date library. Screen readers read the same text.
+
+```tsx
+<DatePicker
+	aria-label="Expires on"
+	placeholder="Select date"
+	value={expiry}
+	onChange={setExpiry}
+	formatValue={(date) => date.toLocaleDateString('en-US', { dateStyle: 'medium' })}
+/>
+```
+
+An empty string from `formatValue` shows `<No label>`, so a broken formatter does not hide the field.
+
+The trigger fills its parent. `width` and `maxWidth` size it, and a number is read as pixels. It
+takes no `className` or `style`. The text and the placeholder end in an ellipsis when they do not
+fit, and a tooltip shows the full text only while it is cut off.
+
+## Showing a time
+
+`showTime` adds a row of hours, minutes and seconds, in 24-hour form, under the calendar, and an
+`Apply` button. The day and the time are two steps, so the popup holds a draft until `Apply`:
+picking a day moves the draft and keeps the popup open, and `Apply` calls `onChange` once with both.
+The row starts at the time of `value`, or at `00:00:00` when the field is empty.
+
+```tsx
+<DatePicker
+	aria-label="Starts at"
+	placeholder="Select date and time"
+	showTime
+	value={start}
+	onChange={setStart}
+/>
+```
+
+Closing the popup any other way drops the draft: `Esc`, a press outside, a press on the trigger, or
+focus leaving the popup. `Apply` stays disabled until the draft has a day.
+
+## Date limits
+
+`minDate` and `maxDate` are the first and the last day that can be picked, both included. Days
+outside them are disabled, with `aria-disabled="true"`, and the month arrows stop at their months.
+Only the day counts: a `minDate` at 15:00 still allows that whole day, and the time of day is never
+limited.
+
+`disabledDate` disables single days inside the limits, such as weekends or holidays. It gets the
+start of each drawn day inside the limits and runs for each of them on every render, so keep it
+cheap.
+
+```tsx
+<DatePicker
+	aria-label="Maintenance day"
+	placeholder="Select a weekday"
+	minDate={tomorrow}
+	maxDate={endOfQuarter}
+	disabledDate={(date) => date.getDay() === 0 || date.getDay() === 6}
+/>
+```
+
+A disabled day takes the focus and cannot be picked, so the arrow keys never get stuck at a limit.
+
+## Date adapter
+
+Inside, the date picker works on `Date`, the same as `Calendar`. An adapter converts the app's date
+type at the edge: `toDate` on the way in, `fromDate` on the way out. Every date prop (`value`,
+`defaultValue`, `minDate`, `maxDate`) and every callback that gets a date (`onChange`,
+`formatValue`, `disabledDate`) then uses the app's type, so no call site converts anything.
+
+Pass the adapter to `createDatePicker` once, next to the app's other wrappers, and use the component
+it returns everywhere. That component takes every prop of `DatePicker`, which is itself
+`createDatePicker` with an adapter for the native `Date`. The library depends on no date library and
+ships no adapter for one.
+
+```tsx
+import { createDatePicker, type DateAdapter } from '@signozhq/ui';
+import dayjs, { type Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const dayjsAdapter: DateAdapter<Dayjs, true> = {
+	supportsTimezone: true,
+	toDate: (value, timezone) => {
+		const v = timezone ? value.tz(timezone) : value;
+		// `new Date(year, ...)` reads a year from 0 to 99 as 1900 to 1999.
+		const date = new Date(0);
+		date.setFullYear(v.year(), v.month(), v.date());
+		date.setHours(v.hour(), v.minute(), v.second(), 0);
+
+		return date;
+	},
+	fromDate: (date, timezone) => {
+		if (!timezone) {
+			return dayjs(date);
+		}
+
+		return dayjs.tz(dayjs(date).format('YYYY-MM-DDTHH:mm:ss'), timezone);
+	},
+};
+
+export const DatePicker = createDatePicker(dayjsAdapter);
+```
+
+A `Date` that crosses the adapter holds a wall clock in its local fields (year, month, day, hours,
+minutes, seconds), read in the browser's zone. `toDate` turns a value into its wall clock in a zone,
+and `fromDate` turns a wall clock in a zone back into a value. A zone of `undefined` is the
+browser's zone. A wall clock the browser's zone skips, such as the hour lost to a daylight saving
+change, cannot be held, even when it exists in the selected zone.
+
+The returned component then takes the app's type everywhere:
+
+```tsx
+<DatePicker
+	aria-label="Expires on"
+	placeholder="Select date"
+	value={expiry}
+	onChange={setExpiry}
+	minDate={dayjs().add(1, 'day')}
+	disabledDate={(date) => date.day() === 0 || date.day() === 6}
+/>
+```
+
+The type does not have to be a date object. The Custom date type story builds a date picker whose
+value is a `YYYY-MM-DD` string.
+
+## Time zone
+
+`showTimezone` adds a time zone field under the time row. The picked zone commits with `Apply`,
+together with the date, and comes back in `onChange` as `details.timezone`. It needs `showTime` and
+an adapter with `supportsTimezone: true`. The native `Date` adapter has none, so `showTimezone` on
+`DatePicker` is a type error: a form that needs a zone builds its date picker with an adapter that
+knows zones.
+
+With the dayjs `DatePicker` from the previous section:
+
+```tsx
+const [start, setStart] = useState<Dayjs | undefined>();
+const [timezone, setTimezone] = useState<string | undefined>('Asia/Kolkata');
+
+<DatePicker
+	aria-label="Starts at"
+	placeholder="Select date and time"
+	showTime
+	showTimezone={{ options: timezoneOptions, value: timezone }}
+	value={start}
+	onChange={(value, details) => {
+		setStart(value);
+		setTimezone(details.timezone);
+	}}
+/>;
+```
+
+`options` lists the zones as `{ value, label }`. The date picker never reads a zone's `value`, it
+only passes it to the adapter and to `onChange`. `label` is what the field and its list show, and
+what typing filters on. In `showTimezone`, `value` makes the zone controlled, even with `undefined`,
+and `defaultValue` sets the starting zone of one that keeps its own state.
+
+The selected zone decides the trigger text, the selected day, the time row, the today mark and the
+days the limits disable.
+
+Changing the zone keeps the wall clock of the draft. `09:00` stays `09:00`, so `Apply` commits 09:00
+in the new zone, a different instant. The field says which zone the time is in, not which zone to
+view it in. `Apply` stays disabled until the draft has a zone.
+
+The Picking a time zone story runs this with an adapter of fixed offsets.
+
+## Clearing
+
+`allowClear` shows a clear button in the trigger while there is a value. It calls `onChange` with
+`undefined` and gives the focus back to the trigger. `Delete` and `Backspace` on the trigger do the
+same. The clear button is not a tab stop, since the keys cover it, and it is named `Clear date`.
+
+It is off by default, since a field that needs a value gains nothing from it. Turn it on where an
+empty date means something, such as the end of a schedule that may repeat forever.
+
+## Disabled and read-only
+
+`disabled` and `readOnly` keep the popup closed, block the keys on the trigger and hide the clear
+button. `disabled` fades the trigger and leaves the value out of the form submit. `readOnly` fades
+it less and hides the calendar icon, since the value is still worth reading, and the value still
+submits.
+
+Each state travels with its reason: `disabled` with `disabledTooltip`, `readOnly` with
+`readOnlyTooltip`, and neither tooltip is allowed without its state. Pass the reason as `undefined`
+when there is none to give.
+
+```tsx
+<DatePicker
+	aria-label="Expires on"
+	placeholder="Select date"
+	value={expiry}
+	disabled={!canEdit}
+	disabledTooltip="Ask an admin to change the date"
+/>
+```
+
+The trigger stays focusable in both states, so the keyboard reaches the tooltip. With both props
+set, `readOnly` wins and only its tooltip shows. Do not wrap the date picker in a `Tooltip`.
+
+## Forms
+
+With `name`, the date picker submits with its form like a native date input: `YYYY-MM-DD`, or
+`YYYY-MM-DDTHH:mm:ss` with `showTime`, as the wall clock in the selected zone, and an empty string
+when the field is empty. With `showTimezone`, a second field named `<name>-timezone` submits the
+zone.
+
+`required` blocks the submit while the field is empty, and the browser points its message at the
+trigger. A form reset brings an uncontrolled date picker back to `defaultValue`. Pass `form` the id
+of a form when the date picker sits outside it.
+
+```tsx
+<form onSubmit={handleSubmit}>
+	<label htmlFor="expires">Expires on</label>
+	<DatePicker id="expires" name="expires" required placeholder="Select date" />
+	<button type="submit">Save</button>
+</form>
+```
+
+## Invalid
+
+`aria-invalid` reaches the trigger and turns its border red, hovered or not. Set it from the form's
+validation, next to an error message the trigger points at with `aria-describedby`.
+
+```tsx
+<DatePicker
+	aria-label="Expires on"
+	placeholder="Select date"
+	aria-invalid={error !== undefined}
+	aria-describedby="expiry-error"
+	value={expiry}
+	onChange={setExpiry}
+/>
+```
+
+## Keyboard
+
+On the trigger:
+
+- `Enter`, `Space` and `ArrowDown` open the popup and move the focus to the day it opened on.
+- `Delete` and `Backspace` clear the value with `allowClear`.
+
+In the popup, `Tab` and `Shift+Tab` move through the month arrows, the day grid (one tab stop, the
+focused day), and with `showTime` the three time fields, the time zone field and `Apply`. Focus that
+leaves the popup closes it.
+
+In the day grid:
+
+- `ArrowLeft` and `ArrowRight` move one day, `ArrowUp` and `ArrowDown` move one week.
+- `Home` and `End` move to the first and the last day of the week.
+- `PageUp` and `PageDown` move one month, and with `Shift` one year.
+- `Enter` and `Space` pick the focused day.
+
+In a time field:
+
+- `ArrowUp` and `ArrowDown` add or remove one, and wrap at the ends: `23` to `00`, `59` to `00`.
+- Digits replace the value. The second digit moves the focus to the next field, and a number above
+  the maximum of the field is written as the maximum.
+- `Enter` applies, the same as `Apply`.
+
+In the time zone field, typing filters the zones by label, the arrow keys move, and `Enter` picks.
+`Esc` while its list is open closes the list only.
+
+Anywhere in the popup, `Esc` closes it, drops what was not applied, and gives the focus back to the
+trigger. Inside a `Dialog`, it closes only the popup.
+
+## Inside a popover, dialog or drawer
+
+Inside a `Dialog` or `Drawer` the popup goes into the panel on its own, where the focus trap of the
+modal lets the keyboard reach the calendar. Inside a `Popover` it needs nothing either: a press in
+the calendar is not a press outside the popover, so picking a day leaves it open.
+
+A popover from another library, such as antd's, can take a press in the calendar for a press
+outside it and close. Pass `container` an element inside that popover.
+
+```tsx
+const containerRef = useRef<HTMLDivElement>(null);
+
+<AntdPopover
+	trigger="click"
+	content={
+		<div ref={containerRef}>
+			<DatePicker aria-label="Starts on" placeholder="Select date" container={containerRef} />
+		</div>
+	}
+>
+	<Button variant="outlined">Schedule</Button>
+</AntdPopover>;
+```
+
+## Holding the popup open in a story or a test
+
+`ForceOpenProvider`, from `@signozhq/ui/testing`, puts the popup of every DatePicker under it on
+screen and keeps it there: clicks, keys, picks and presses outside stop driving it. Stories need it
+because two popups never stay open together on their own. A disabled or read-only date picker stays
+closed. The date picker has no `open` prop: in app code the user opens and closes it.
+
+```tsx
+import { ForceOpenProvider } from '@signozhq/ui/testing';
+
+<ForceOpenProvider>
+	<DatePicker aria-label="Expires on" placeholder="Select date" defaultValue={expiry} />
+</ForceOpenProvider>;
+```
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the trigger, and it names everything else:
+
+| Element         | `data-testid`                                                                |
+| --------------- | ---------------------------------------------------------------------------- |
+| trigger         | `testId`                                                                     |
+| clear button    | `` `${testId}-clear` ``                                                      |
+| popup           | `` `${testId}-popup` ``                                                      |
+| calendar        | `` `${testId}-calendar` ``                                                   |
+| month arrows    | `` `${testId}-calendar-nav-previous` ``, `` `${testId}-calendar-nav-next` `` |
+| day             | `` `${testId}-calendar-button-${DD-MM-YYYY}` ``                              |
+| hours field     | `` `${testId}-time-hours` ``                                                 |
+| minutes field   | `` `${testId}-time-minutes` ``                                               |
+| seconds field   | `` `${testId}-time-seconds` ``                                               |
+| time zone field | `` `${testId}-timezone` ``                                                   |
+| `Apply` button  | `` `${testId}-apply` ``                                                      |
+
+The calendar names its own parts from `` `${testId}-calendar` ``, so the 6th of November 2026 is
+`` `${testId}-calendar-button-06-11-2026` ``. The popup parts render only while it is open.
+
+```tsx
+await user.click(screen.getByTestId('expiry'));
+await user.click(screen.getByTestId('expiry-calendar-button-06-11-2026'));
+```
+
+A disabled trigger and a disabled `Apply` button are not `disabled` in the DOM: assert
+`aria-disabled="true"` instead of `toBeDisabled()`. The trigger carries `data-popup-open` while the
+popup is open, `data-empty` while there is no value, and `data-disabled`, `data-readonly`,
+`data-show-time` and `data-show-timezone` while those props are on. A day carries `data-day`, such
+as `data-day="2026-11-06"`, and `data-selected-single` while it is the selected day.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={DatePickerStories.Default} />
