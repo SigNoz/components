@@ -89,7 +89,7 @@ describe('root props', () => {
 	test('rejects children, the crumbs come from `items`', () => {
 		assertType(
 			// @ts-expect-error - crumbs come from `items`
-			<Breadcrumb items={ITEMS} children={<span />} />, // eslint-disable-line react/no-children-prop -- passing `children` is the case under test
+			<Breadcrumb items={ITEMS} children={<span />} />,
 		);
 		assertType(
 			// @ts-expect-error - the composition parts are gone, a crumb is an entry of `items`

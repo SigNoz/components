@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Info } from '@signozhq/icons';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { CommandItemType } from '../types.js';
+import { required } from '../../__tests__/test-utils.js';
 import { highlightedOption, renderOpenCommand } from './command.test-utils.js';
 
 /**
@@ -41,14 +42,6 @@ function rows(count: number): CommandItemType[] {
 		label: `Row ${index}`,
 		onClick: () => {},
 	}));
-}
-
-function required<T>(element: T | null): T {
-	if (element === null) {
-		throw new Error('Not rendered');
-	}
-
-	return element;
 }
 
 function centerY(element: Element): number {

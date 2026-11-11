@@ -156,7 +156,6 @@ describe('Button focus', () => {
 
 	it('takes focus on mount with autoFocus', () => {
 		render(
-			// eslint-disable-next-line jsx-a11y/no-autofocus -- the prop is what this test covers
 			<Button size="md" variant="solid" color="primary" autoFocus>
 				Save
 			</Button>,

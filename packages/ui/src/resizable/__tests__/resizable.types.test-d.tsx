@@ -40,12 +40,10 @@ describe('root props', () => {
 		assertType(<Resizable items={TWO} orientation="diagonal" />);
 	});
 
-	/* oxlint-disable react/no-children-prop -- the case under test is a `children` prop */
 	test('rejects children, the panels come from items', () => {
 		// @ts-expect-error - `children` is not a prop, pass the panels in `items`
 		assertType(<Resizable items={TWO} orientation="horizontal" children={<div />} />);
 	});
-	/* oxlint-enable react/no-children-prop */
 
 	test('rejects className and style, the component owns its look', () => {
 		// @ts-expect-error - `className` is not a prop

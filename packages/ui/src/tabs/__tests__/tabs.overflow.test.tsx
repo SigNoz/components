@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { CSSProperties, ReactElement, ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
+import { required } from '../../__tests__/test-utils.js';
 import { Tabs } from '../tabs.js';
 import type { TabsItemProps } from '../types.js';
 
@@ -147,7 +148,7 @@ describe('Tabs overflow', () => {
 			expect(scrollButton('end')).not.toBeNull();
 		});
 
-		await user.click(scrollButton('end')!);
+		await user.click(required(scrollButton('end')));
 
 		await waitFor(() => {
 			expect(viewport().scrollLeft).toBeGreaterThan(0);
@@ -190,9 +191,9 @@ describe('Tabs overflow', () => {
 			expect(scrollButton('end')).not.toBeNull();
 		});
 
-		const wrapper = document
-			.querySelector('[data-slot="tabs-list-wrapper"]')!
-			.getBoundingClientRect();
+		const wrapper = required(
+			document.querySelector('[data-slot="tabs-list-wrapper"]'),
+		).getBoundingClientRect();
 		const extra = screen.getByRole('button', { name: 'Add view' }).getBoundingClientRect();
 
 		expect(extra.right).toBeLessThanOrEqual(wrapper.right + 1);
@@ -208,9 +209,9 @@ describe('Tabs overflow', () => {
 			<Tabs variant="primary" orientation="horizontal" alignment="start" items={FEW_ITEMS} />,
 		);
 
-		const plainHeight = document
-			.querySelector('[data-slot="tabs-list-wrapper"]')!
-			.getBoundingClientRect().height;
+		const plainHeight = required(
+			document.querySelector('[data-slot="tabs-list-wrapper"]'),
+		).getBoundingClientRect().height;
 		unmount();
 
 		renderInFrame(
@@ -222,13 +223,13 @@ describe('Tabs overflow', () => {
 			expect(scrollButton('end')).not.toBeNull();
 		});
 
-		const indicator = document
-			.querySelector('[data-slot="tabs-active-slider"]')!
-			.getBoundingClientRect();
+		const indicator = required(
+			document.querySelector('[data-slot="tabs-active-slider"]'),
+		).getBoundingClientRect();
 		const port = viewport().getBoundingClientRect();
-		const wrapperHeight = document
-			.querySelector('[data-slot="tabs-list-wrapper"]')!
-			.getBoundingClientRect().height;
+		const wrapperHeight = required(
+			document.querySelector('[data-slot="tabs-list-wrapper"]'),
+		).getBoundingClientRect().height;
 
 		expect(indicator.bottom).toBeLessThanOrEqual(port.bottom + 1);
 		expect(wrapperHeight).toBeCloseTo(plainHeight, 0);
@@ -311,9 +312,9 @@ describe('Tabs overflow', () => {
 			expect(scrollButton('end')).not.toBeNull();
 		});
 
-		const arrow = getComputedStyle(scrollButton('start')!);
+		const arrow = getComputedStyle(required(scrollButton('start')));
 		const spacer = getComputedStyle(
-			document.querySelector<HTMLElement>('[data-slot="tab-spacer-start"]')!,
+			required(document.querySelector<HTMLElement>('[data-slot="tab-spacer-start"]')),
 		);
 
 		expect(arrow.borderBottomWidth).toBe(spacer.borderBottomWidth);

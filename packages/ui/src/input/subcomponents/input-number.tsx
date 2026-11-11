@@ -129,6 +129,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 						{...control}
 						ref={ref}
 						placeholder={placeholder}
+						// oxlint-disable-next-line jsx-a11y/no-autofocus -- forwards the consumer's own prop, off unless they set it
 						autoFocus={autoFocus}
 						tabIndex={tabIndex}
 						onBlur={onBlur}

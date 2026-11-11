@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { required } from '../../__tests__/test-utils.js';
 import { Tabs } from '../tabs.js';
 import type { TabsItemProps } from '../types.js';
 
@@ -102,18 +103,17 @@ describe('Tabs orientation', () => {
 		const user = userEvent.setup();
 		render(<Tabs variant="primary" orientation="horizontal" alignment="start" items={ITEMS} />);
 
-		const slider = document.querySelector<HTMLElement>('[data-slot="tabs-hover-slider"]');
-		expect(slider).not.toBeNull();
-		expect(slider?.style.opacity).toBe('0');
+		const slider = required(document.querySelector<HTMLElement>('[data-slot="tabs-hover-slider"]'));
+		expect(slider.style.opacity).toBe('0');
 
 		const tab = screen.getByRole('tab', { name: 'Settings' });
 		await user.hover(tab);
 
 		await waitFor(() => {
-			expect(slider?.style.opacity).toBe('1');
+			expect(slider.style.opacity).toBe('1');
 		});
 
-		const sliderRect = slider!.getBoundingClientRect();
+		const sliderRect = slider.getBoundingClientRect();
 		const tabRect = tab.getBoundingClientRect();
 
 		expect(sliderRect.width).toBeGreaterThan(0);

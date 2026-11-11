@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Select } from '../index.js';
+import { required } from '../../__tests__/test-utils.js';
 import { FRAMEWORKS, openSelect } from './select.test-utils.js';
 
 /**
@@ -83,14 +84,6 @@ describe('Select chips type', () => {
 		);
 	});
 });
-
-function required<T>(element: T | null): T {
-	if (element === null) {
-		throw new Error('Not rendered');
-	}
-
-	return element;
-}
 
 function centerY(element: Element): number {
 	const { top, height } = element.getBoundingClientRect();

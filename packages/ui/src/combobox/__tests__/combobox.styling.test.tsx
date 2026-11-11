@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Combobox } from '../index.js';
+import { required } from '../../__tests__/test-utils.js';
 import { FRAMEWORKS, openCombobox } from './combobox.test-utils.js';
 
 /**
@@ -41,14 +42,6 @@ const ROW_SPACING = `:root {
 afterEach(() => {
 	tokens.remove();
 });
-
-function required<T>(element: T | null): T {
-	if (element === null) {
-		throw new Error('Not rendered');
-	}
-
-	return element;
-}
 
 function centerY(element: Element): number {
 	const { top, height } = element.getBoundingClientRect();
