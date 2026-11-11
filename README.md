@@ -76,6 +76,7 @@ import { Calendar } from '@signozhq/ui';
 import { Callout } from '@signozhq/ui';
 import { Card } from '@signozhq/ui';
 import { Checkbox } from '@signozhq/ui';
+import { Collapse } from '@signozhq/ui';
 import { Combobox } from '@signozhq/ui';
 import { Command } from '@signozhq/ui';
 import { Dialog } from '@signozhq/ui';

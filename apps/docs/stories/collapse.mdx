@@ -1,0 +1,251 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as CollapseStories from './collapse.stories';
+import * as CollapseComponentsStories from './collapse-components.stories';
+
+<Meta of={CollapseStories} />
+
+# Collapse
+
+A section of a page whose content the user can hide and show from its header. Use it for settings
+most users skip, for the data sections of a details page, and for lists of records with actions in
+the header. `Collapse` is one section, and `Collapse.Group` is a list of sections that open and
+close on their own.
+
+`variant`, `size`, `title`, the children and the initial state (`defaultExpanded` or `expanded`)
+are all required. The section has no default appearance and no default state, every call site says
+what it is.
+
+A collapsible notice with a severity is a `Callout.Expandable`, not a `Collapse`.
+
+## How to use
+
+```tsx
+import { Collapse } from '@signozhq/ui';
+
+export default function MyComponent() {
+	return (
+		<Collapse variant="outlined" size="sm" title="Advanced options" defaultExpanded={false}>
+			<AdvancedOptionsForm />
+		</Collapse>
+	);
+}
+```
+
+<Primary />
+
+## Variants
+
+`variant` is `outlined` or `ghost`. `outlined` draws a box around the header and the panel, for a
+data section on a page. `ghost` has no box, for a section that sits inside a card or a form.
+
+`size` is `sm`, the only size. It sets the type scale and the height of the header.
+
+## Header
+
+The header is one row: the chevron, the `prefix`, the `title` with the `description` under it, and
+`headerSuffix` at the end. The chevron points right while collapsed and down while expanded, and no
+prop moves or hides it.
+
+The chevron, the prefix, the title and the description are one button, so a click on any of them
+toggles the section.
+
+- `title` takes text and inline formatting. Pass a string, since the ellipsis and the tooltip only
+  work with a string.
+- `description` is one or two lines under the title. It wraps, and it describes the button without
+  being part of its name.
+- `prefix` is an icon, hidden from screen readers. When it is the only thing that tells two
+  sections apart, say so in the `title`. The section sets its size.
+
+```tsx
+<Collapse
+	variant="outlined"
+	size="sm"
+	title="Notification channels"
+	description="Where the alert is sent when it fires."
+	prefix={<Bell />}
+	defaultExpanded={false}
+>
+	<ChannelList />
+</Collapse>
+```
+
+## Header suffix
+
+Controls that belong to the section go in `headerSuffix`: icon buttons, a switch or an indicator. It
+sits in the header row, outside the header button, so a click on its controls does not toggle the
+section and the call site needs no `stopPropagation`.
+
+```tsx
+<Collapse
+	variant="outlined"
+	size="sm"
+	title="Ingestion key"
+	headerSuffix={
+		<Button
+			variant="ghost"
+			color="secondary"
+			size="sm"
+			icon
+			aria-label="Copy key"
+			onClick={copyKey}
+		>
+			<Copy />
+		</Button>
+	}
+	defaultExpanded={false}
+>
+	<IngestionKeyDetails />
+</Collapse>
+```
+
+Never put a control in `title` or `description`. It would sit inside the header button, where a
+screen reader cannot reach it and every click on it toggles the section.
+
+## Controlled and uncontrolled
+
+`defaultExpanded` alone keeps the state in the section, and `expanded` with `onExpandedChange` is
+the controlled pair. Which one applies is decided on the first render. Writing `expanded` without
+`onExpandedChange`, or together with `defaultExpanded`, is a type error.
+
+`onExpandedChange` fires when the user presses the header button, with the new state. A change that
+comes from `expanded` does not call it. The state does not survive a reload or a remount.
+
+```tsx
+const [expanded, setExpanded] = useState(false);
+
+<Collapse
+	variant="outlined"
+	size="sm"
+	title="Notification settings"
+	expanded={expanded}
+	onExpandedChange={setExpanded}
+>
+	<NotificationSettings />
+</Collapse>;
+```
+
+## Mounting
+
+The content of a collapsed section is not mounted. It mounts when the section opens and unmounts
+when it closes, so a closed table or chart costs nothing, and its local state resets on the next
+open.
+
+With `keepMounted` the content stays mounted while collapsed and is hidden until found. Use it for a
+form section, so its fields keep their state and stay in the form validation. Find in page reaches
+the hidden text, opens the section and calls `onExpandedChange`.
+
+## Text overflow
+
+`textOverflow` is `ellipsis` or `wrap`. With `ellipsis`, the default, the title stays on one line
+and is cut at the end, and a tooltip shows the whole title on hover and on keyboard focus while it
+is cut. With `wrap` the title takes as many lines as it needs, the header grows, and no tooltip
+shows. Use `wrap` for a title that is a question.
+
+The title is the only part of the header that shrinks. The chevron, the prefix and `headerSuffix`
+keep their width and the row never wraps. The description wraps under the title and never
+truncates.
+
+## Overflow
+
+The root fills its parent and has no outer margin, so the parent owns the spacing around it.
+
+The panel grows with its content and has no scroll of its own. A wide element that cannot wrap,
+such as a code block, scrolls on the x axis inside the panel, so it never pushes the section past
+its parent. `noContentPadding` removes the padding of the panel, for a table or a chart that runs
+to the edges of the section.
+
+## Empty title and content
+
+A section never hides itself. A title that renders nothing shows `<No title>`, and content that
+renders nothing shows `<No content>` in the open panel, so a broken section stays visible. Both are
+exported, as `COLLAPSE_EMPTY_TITLE` and `COLLAPSE_EMPTY_CONTENT`.
+
+## Focus and keyboard
+
+The header button is one tab stop. The controls in `headerSuffix` and the content of an open panel
+come after it, in the order they show on screen. `Enter` and `Space` toggle the section and keep
+focus on the header button. No other key does anything.
+
+When the section closes while focus is inside its panel, for example after a parent sets `expanded`
+to `false` on save, focus moves to the header button, so it never falls to the page body.
+
+## Accessibility
+
+The header button sits in a heading and carries `aria-expanded`, plus `aria-controls` while the
+panel is in the DOM. The title names it and the description describes it. The panel is a `region`
+named by the title.
+
+`headingLevel` sets the level of that heading, from `2` to `6`, so the section fits the outline of
+the page. It defaults to `3`.
+
+Every `aria-*` prop goes to the header button, except `aria-expanded`, `aria-controls` and
+`aria-labelledby`, which the section writes. An `aria-describedby` is joined with the description.
+`id`, `ref` and any `data-*` go to the root. There is no `className` or `style`.
+
+## Collapse.Group
+
+A list of sections that open and close on their own: any number can be open at once, and opening
+one never closes another. The look and behaviour props of `Collapse` (`variant`, `size`,
+`keepMounted`, `noContentPadding`, `textOverflow`, `headingLevel`) go on the group and apply to
+every item. Each entry of `items` takes the header and content props, `{ value, title, children }`
+plus an optional `description`, `prefix`, `headerSuffix` and `testId`.
+
+`defaultValue` lists the items open on mount, and `value` with `onChange` is the controlled pair,
+under the same rules as `defaultExpanded` and `expanded`. `[]` is every item collapsed. `onChange`
+reports the open values in the order of `items`, not in the order of the clicks.
+
+```tsx
+<Collapse.Group
+	variant="outlined"
+	size="sm"
+	textOverflow="wrap"
+	defaultValue={['what']}
+	items={[
+		{ value: 'what', title: 'What is SigNoz?', children: <p>An observability platform.</p> },
+		{ value: 'cost', title: 'How much does it cost?', children: <p>See the pricing page.</p> },
+	]}
+/>
+```
+
+`outlined` draws one box around the group with a divider between the items, and `ghost` stacks the
+items with no box. Each header button is its own tab stop, in the order of `items`.
+
+- `value` is unique within the group. Of two items with the same `value`, only the first renders,
+  with a warning.
+- An empty `items` renders an empty root with no warning, since the items come from data and the
+  call site owns the empty state.
+- Past 6 items the panels leave out `role="region"`, since many regions crowd the landmark list.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names everything under it:
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| header button | `` `${testId}-toggle` ``        |
+| prefix        | `` `${testId}-prefix` ``        |
+| title         | `` `${testId}-title` ``         |
+| description   | `` `${testId}-description` ``   |
+| header suffix | `` `${testId}-header-suffix` `` |
+| panel         | `` `${testId}-panel` ``         |
+
+The prefix, the description and the header suffix render only when set. The panel renders only
+while the section is open, unless `keepMounted` keeps it in the page.
+
+The root carries `data-variant`, `data-size` and `data-text-overflow`, and `data-expanded` while
+the section is open. The title carries `data-truncated` while it is cut and `data-empty-title`
+while it is empty.
+
+On `Collapse.Group`, `testId` lands on the root of the group, and each item is
+`` `${testId}-item-${value}` `` unless the item has a `testId` of its own, which wins. The parts of
+an item take that name in place of `testId`, as `` `${testId}-item-${value}-toggle` ``.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={CollapseStories.Default} />
+
+### Collapse.Group props
+
+<Controls of={CollapseComponentsStories.Group} />
