@@ -6,6 +6,7 @@ import { ButtonGroup } from './button-group/index.js';
 import { Calendar } from './calendar/calendar.js';
 import { Callout } from './callout/callout.js';
 import { Checkbox } from './checkbox/checkbox.js';
+import { Collapse } from './collapse/collapse.js';
 import { Combobox } from './combobox/index.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
@@ -160,6 +161,53 @@ describe('className and style that get past the types', () => {
 		render(<Checkbox color="primary" testId="checkbox" {...STRAY} />);
 
 		expectNoStrayStyle(screen.getByTestId('checkbox'));
+	});
+
+	it('do not reach Collapse, Collapse.Group, nor their parts', () => {
+		render(
+			<>
+				<Collapse
+					variant="outlined"
+					size="sm"
+					title="t"
+					description="d"
+					prefix={<svg />}
+					headerSuffix={<span>suffix</span>}
+					testId="collapse"
+					defaultExpanded
+					{...STRAY}
+				>
+					a
+				</Collapse>
+				<Collapse.Group
+					variant="outlined"
+					size="sm"
+					testId="group"
+					defaultValue={['a']}
+					items={[{ value: 'a', title: 't', children: 'a' }]}
+					{...STRAY}
+				/>
+			</>,
+		);
+
+		for (const testId of [
+			'collapse',
+			'collapse-toggle',
+			'collapse-prefix',
+			'collapse-title',
+			'collapse-description',
+			'collapse-header-suffix',
+			'collapse-panel',
+			'group',
+			'group-item-a',
+			'group-item-a-toggle',
+			'group-item-a-title',
+			'group-item-a-panel',
+		]) {
+			expectNoStrayStyle(screen.getByTestId(testId));
+		}
+
+		expect(document.querySelector('.stray')).toBeNull();
 	});
 
 	it('do not reach Switch', () => {

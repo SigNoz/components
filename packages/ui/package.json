@@ -137,6 +137,16 @@
 				"require": "./dist/checkbox/index.cjs"
 			}
 		},
+		"./collapse": {
+			"import": {
+				"types": "./dist/collapse/index.d.ts",
+				"import": "./dist/collapse/index.mjs"
+			},
+			"require": {
+				"types": "./dist/collapse/index.d.cts",
+				"require": "./dist/collapse/index.cjs"
+			}
+		},
 		"./combobox": {
 			"import": {
 				"types": "./dist/combobox/index.d.ts",
