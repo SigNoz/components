@@ -1,0 +1,355 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as CardStories from './card.stories';
+
+<Meta of={CardStories} />
+
+# Card
+
+A card groups related content in one bordered box: a settings group, a summary, a chart, a list,
+an empty state. It has up to three parts:
+
+- a header, with a title, a description and room for actions,
+- a body, which is whatever you pass as `children`,
+- a footer, for links and buttons that act on the whole card.
+
+A card is only a container. It has no hover style, no focus, no click handler and no states of its
+own, and the controls you put inside keep all of theirs. If a click on the card should take the
+user somewhere, put a `Button` or a link inside it instead of making the whole card clickable.
+
+## How to use
+
+Most cards are a title and some content:
+
+```tsx
+import { Card } from '@signozhq/ui';
+
+export default function TopServices() {
+	return (
+		<Card title="Top services" description="By request count, last 15 minutes.">
+			<ServiceList />
+		</Card>
+	);
+}
+```
+
+<Primary />
+
+## Header
+
+The card shows a header as soon as you set one of `title`, `titleSuffix`, `description` or
+`headerSuffix`. The text sits on the left and the actions on the right.
+
+- `title` names the card. It is plain text, with no heading element.
+- `titlePrefix` is an icon in front of the title. The card sizes it and hides it from screen
+  readers, since it is decoration.
+- `titleSuffix` follows the title on the same line. Use it for a
+  [Badge](?path=/docs/primitive-components-badge--docs), an info button with a
+  [Tooltip](?path=/docs/composed-components-tooltip--docs), or a spinner. It never shrinks, so when
+  space runs out the title truncates first.
+- `description` is a line or two under the title. It always wraps: it is a sentence, and clamping
+  it would hide words the user has no way to read.
+- `headerSuffix` holds the actions at the end of the row: a `Switch`, a `Button`, a `Select`.
+
+When the text and the actions compete for space, the actions keep their width and the title gives
+way. The actions stay level with the title line, so a description that wraps onto more lines does
+not push them down.
+
+The header padding is fixed, and the padding props do not change it. That keeps titles lined up
+across cards whose bodies use different padding. A suffix taller than one line of text, such as a
+`sm` button, does not make the header taller: it stays on the middle of the title line and spills
+the same amount above and below it.
+
+```tsx
+<Card
+	title="Top services"
+	titleSuffix={
+		<Badge variant="outlined" color="primary">
+			Beta
+		</Badge>
+	}
+	headerSuffix={
+		<Button variant="ghost" color="secondary" size="sm" icon aria-label="Panel settings">
+			<Settings />
+		</Button>
+	}
+/>
+```
+
+### Header divider
+
+`headerDivider` draws a line under the header, from one edge of the card to the other. Use it when
+the body starts with a chart, a table or a list that has no padding of its own, so the content does
+not touch the title. A card with only a header has nothing to separate, so it draws no line.
+
+## Setting rows
+
+A card with a header and no children has no body. That gives you a compact setting row: a title,
+a description and a control on the right.
+
+Pass `headerSuffix` as a function and the card hands you the ids that tie the control to the text:
+`id`, `aria-labelledby` and `aria-describedby`. Spread them on a control that has no label of its
+own, such as a [Switch](?path=/docs/primitive-components-switch--docs). A screen reader then
+announces the title as the name of the switch and the description as its description.
+`aria-describedby` is only there when the card has a description.
+
+```tsx
+<Card
+	title="Wrap long log lines"
+	headerSuffix={(field) => (
+		<Switch color="primary" textPlacement="right" {...field} value={wrap} onChange={setWrap} />
+	)}
+/>
+```
+
+Without those ids, a control with no label of its own has no accessible name, so spread them
+unless the control brings its own label. An empty `headerSuffix` renders no suffix slot, and the
+text takes the full width.
+
+## Body
+
+The `children` are the body: a chart, a form, a table, a list, an empty state, or a mix of them.
+They stack in a column, `gap` apart.
+
+The card grows to fit its content and never scrolls. When part of the content can get long, such
+as a table or a log list, give that part its own scroll. The card does not clip its content
+either, so the focus ring of a control near the edge stays visible. The one exception is a body
+with `padding={0}` and no footer under it: it clips to the rounded corners, so keep controls off
+its edges.
+
+```tsx
+<Card
+	title="Retention"
+	footerSuffix={
+		<Button variant="solid" color="primary" size="md">
+			Save
+		</Button>
+	}
+>
+	<LogsRetention />
+	<Divider />
+	<TracesRetention />
+</Card>
+```
+
+### Dividers
+
+A [Divider](?path=/docs/primitive-components-divider--docs) placed directly in the card runs from
+one edge to the other, across the body padding. Inside another element it takes the width of that
+element, so wrap it in a `div` when you want a line that stays inside the padding.
+
+```tsx
+<Card title="Retention">
+	<LogsRetention />
+	<Divider />
+	<TracesRetention />
+	<div>
+		<Divider />
+	</div>
+	<MetricsRetention />
+</Card>
+```
+
+Use a divider to separate groups. Two blocks that belong together only need the gap. A card that
+needs three or more dividers usually wants to be two cards.
+
+## Footer
+
+The footer holds what acts on the whole card. `footerPrefix` sits at the start, apart from the
+actions: a `View all` link or one line of hint text. `footerSuffix` sits at the end: one button, or
+a secondary and a primary button with the primary last.
+
+The footer shows when either prop is set, always with a line above it, and it wraps when the card
+is narrow. Like the header, its padding is fixed.
+
+```tsx
+<Card
+	title="Retention"
+	footerPrefix="Applies to new data only."
+	footerSuffix={
+		<>
+			<Button variant="outlined" color="secondary" size="md">
+				Cancel
+			</Button>
+			<Button variant="solid" color="primary" size="md">
+				Save
+			</Button>
+		</>
+	}
+>
+	...
+</Card>
+```
+
+## Loading
+
+`loading` replaces `children` with a placeholder while the data of the card loads. The children
+are not rendered while it loads. The root gets `aria-busy="true"`, and the body renders while it loads
+even when there are no children. `loading` takes three forms.
+
+`true` shows three text lines of a [Skeleton](?path=/docs/primitive-components-skeleton--docs) in the
+body. The lines take the padding of the header and the footer whatever the padding props are, so a
+card with `padding={0}` does not put them against the edges.
+
+```tsx
+<Card title="Top services" loading={isLoading}>
+	<ServiceTable />
+</Card>
+```
+
+`{ header: true, footer: true }` does the same, and also swaps the header or the footer for a
+`Skeleton` of the same shape, for a title or a footer hint that comes with the data. Set only the
+parts that wait for it: `{ header: true }` leaves the footer as it is. The header swaps its title,
+description and `headerSuffix`, the footer swaps its `footerPrefix` and `footerSuffix`, and a part
+that is not set is not rendered.
+
+```tsx
+<Card
+	title="Top services"
+	description="Slowest services by p99 latency."
+	headerSuffix={<SettingsButton />}
+	footerPrefix="Refreshed a minute ago."
+	footerSuffix={<RefreshButton />}
+	loading={isLoading && { header: true, footer: true }}
+>
+	<ServiceTable />
+</Card>
+```
+
+Any other node is shown in the body in place of `children`, inside the padding props. Pass a
+`Skeleton` shaped like the chart or the list about to render. With `padding={0}` the node brings its
+own gutter. An empty node falls back to the default `Skeleton`.
+
+```tsx
+<Card
+	title="Requests"
+	headerDivider
+	padding={0}
+	height="100%"
+	loading={isLoading && <ChartSkeleton />}
+>
+	<Chart />
+</Card>
+```
+
+A header or a footer that is not loading stays interactive. A control in it that must wait for the
+data takes its own `loading` or `disabled`. The card has no error state: a card whose data failed
+shows the error in the body, in place of the content.
+
+## Long titles
+
+`textOverflow` sets what a title does when it does not fit.
+
+- `ellipsis`, the default, keeps the title on one line and truncates it with an ellipsis, based on
+  the width it renders at and not on a character count. While the title is truncated, hovering it
+  shows the full text in a tooltip, and the title carries `data-truncated`. Use it for names the
+  user typed, such as a panel or a saved view.
+- `wrap` shows the whole title on as many lines as it needs. Use it for titles we write to name a
+  setting, where a truncated title is a truncated label.
+
+A screen reader always reads the full title. The title is not focusable, so the tooltip opens on
+pointer hover only, and a keyboard user never sees it. Keep nothing in it that is not on the page
+already.
+
+A long word in the title or the description breaks onto the next line instead of spilling out of
+the card.
+
+## Size
+
+By default the card fills the width of its parent, up to `maxWidth`, which is `100%`. Set `width`
+or `maxWidth` to change that. `minHeight` keeps the card at a steady height while its content
+changes, for example a table card that is loading.
+
+Setting `height` turns the card into a column: the header and the footer keep their size and the
+body takes the rest, so a chart with `height: 100%` fills the body. That is the dashboard panel,
+where the grid cell sets the height and the card gets `height="100%"`. The card still never
+scrolls, so content taller than the body spills out of it. Give a long list its own scroll with
+`overflow: auto`.
+
+```tsx
+<Card
+	title="Requests"
+	headerSuffix={
+		<Button variant="ghost" color="secondary" size="sm" icon aria-label="Panel settings">
+			<Settings />
+		</Button>
+	}
+	headerDivider
+	padding={0}
+	height="100%"
+>
+	<Chart />
+</Card>
+```
+
+In a grid or a flex row without `height`, the card takes the height its parent gives it. The extra
+room goes to the body, as it does with `minHeight`, so the footer stays at the bottom.
+
+## Empty content
+
+When `title` is empty but the card has a `titleSuffix`, a `description` or a `headerSuffix`, the
+card shows `<No title>` in its place and warns on the console, so the missing name is obvious in
+review. The header stays, because the title is also the name of the `headerSuffix` control. The
+text is exported as `CARD_EMPTY_TITLE`.
+
+An empty `description` renders nothing and adds no `aria-describedby`.
+
+A card with no header, no children and no footer renders an empty box and warns.
+
+## Keyboard and accessibility
+
+The root is a plain `div` with no role. A card groups content on screen, and a landmark for each
+one would crowd the landmark list of a screen reader. The card takes no focus and handles no keys.
+Each control inside is a tab stop of its own, in page order: the `titleSuffix`, the
+`headerSuffix`, the body, then the footer.
+
+The lines of the header and the footer, and any `Divider` in the body, are decorative. In the light
+theme the border is what sets the card apart from the page, so it is always drawn.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names every part under it:
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| header        | `` `${testId}-header` ``        |
+| title prefix  | `` `${testId}-title-prefix` ``  |
+| title         | `` `${testId}-title` ``         |
+| title suffix  | `` `${testId}-title-suffix` ``  |
+| description   | `` `${testId}-description` ``   |
+| header suffix | `` `${testId}-header-suffix` `` |
+| body          | `` `${testId}-body` ``          |
+| footer        | `` `${testId}-footer` ``        |
+| footer prefix | `` `${testId}-footer-prefix` `` |
+| footer suffix | `` `${testId}-footer-suffix` `` |
+
+Without `testId`, no part has a `data-testid`. A part is only in the page when its prop is set. The
+title is always there while the header is, and the body is there while it has children or while it
+loads.
+
+The root carries `data-text-overflow`, which mirrors `textOverflow`. It carries
+`data-header-divider` only while `headerDivider` is set, and `data-loading` only while `loading` is
+set. The title carries `data-truncated` while it is truncated.
+
+While `loading` swaps the header or the footer for a `Skeleton`, that part carries `data-loading`.
+The body carries `data-skeleton` while it shows the default `Skeleton`, and not while it shows your
+own node.
+
+For anything else, use the `data-slot` attributes, never the hashed class names.
+
+## Examples
+
+Each story below is a page of cards. Check them in both the light and the dark theme.
+
+- [CardShowcase](?path=/story/primitive-components-card--card-showcase): the header parts, a card
+  with every part, the header divider, setting rows that toggle, the footer and long titles.
+- [CardCompositionShowcase](?path=/story/primitive-components-card--card-composition-showcase):
+  a chart panel and a list at a fixed height, a form with dividers, cards with no header, every
+  form of `loading`, and a table card that goes in and out of loading.
+- [CardLayoutShowcase](?path=/story/primitive-components-card--card-layout-showcase): padding, gap,
+  margin, size and a grid of cards.
+- [CardSurfacesShowcase](?path=/story/primitive-components-card--card-surfaces-showcase): the same
+  card on each background the design tokens offer.
+
+## Props
+
+<Controls of={CardStories.Playground} />
