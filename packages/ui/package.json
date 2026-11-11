@@ -117,6 +117,16 @@
 				"require": "./dist/callout/index.cjs"
 			}
 		},
+		"./card": {
+			"import": {
+				"types": "./dist/card/index.d.ts",
+				"import": "./dist/card/index.mjs"
+			},
+			"require": {
+				"types": "./dist/card/index.d.cts",
+				"require": "./dist/card/index.cjs"
+			}
+		},
 		"./checkbox": {
 			"import": {
 				"types": "./dist/checkbox/index.d.ts",

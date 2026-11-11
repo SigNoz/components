@@ -6,6 +6,7 @@ breadcrumb
 button
 calendar
 callout
+card
 checkbox
 combobox
 command

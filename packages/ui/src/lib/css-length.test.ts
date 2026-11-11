@@ -1,5 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { readPx, toCssLength } from './css-length.js';
+import { readPx, toCssLength, toOptionalCssLength } from './css-length.js';
+
+describe('toOptionalCssLength', () => {
+	it.each<[unknown, string | undefined]>([
+		[0, '0px'],
+		[240, '240px'],
+		['100%', '100%'],
+		['fit-content', 'fit-content'],
+		[undefined, undefined],
+		[null, undefined],
+		[{}, undefined],
+	])('writes %j as %j', (value, expected) => {
+		expect(toOptionalCssLength(value)).toBe(expected);
+	});
+});
 
 describe('readPx', () => {
 	it.each<[string, number]>([
