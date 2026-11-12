@@ -1,5 +1,5 @@
-import { type ReactElement, useEffect, useRef } from 'react';
-import { useIsomorphicLayoutEffect } from '../../lib/use-isomorphic-layout-effect.js';
+import { type ReactElement, useRef } from 'react';
+import { useFormReset } from '../../lib/use-form-reset.js';
 import styles from '../date-picker.module.scss';
 
 /**
@@ -39,48 +39,8 @@ export function DatePickerHiddenInput({
 	onReset,
 }: DatePickerHiddenInputProps): ReactElement {
 	const inputRef = useRef<HTMLInputElement>(null);
-	const onResetRef = useRef(onReset);
 
-	useIsomorphicLayoutEffect(() => {
-		onResetRef.current = onReset;
-	});
-
-	useEffect(() => {
-		const input = inputRef.current;
-
-		if (input == null) {
-			return undefined;
-		}
-
-		// Heard on the root, and matched against the form the input belongs to when the reset
-		// happens: a form named by `form` can mount after the date picker, or be swapped for another
-		// one with the same id, and neither changes a prop this effect could follow. `reset` bubbles,
-		// and capture keeps a form that stops it from hiding it.
-		const root = input.getRootNode();
-		let pending: ReturnType<typeof setTimeout> | undefined;
-
-		// This listener runs before React's `onReset` on the form, which can still cancel the reset,
-		// so the reset is read once the event is over. A microtask would run between two listeners of
-		// a reset the browser dispatches, before React's.
-		function handleReset(event: Event): void {
-			if (input?.form == null || event.target !== input.form) {
-				return;
-			}
-
-			pending = setTimeout(() => {
-				if (!event.defaultPrevented) {
-					onResetRef.current();
-				}
-			});
-		}
-
-		root.addEventListener('reset', handleReset, true);
-
-		return () => {
-			root.removeEventListener('reset', handleReset, true);
-			clearTimeout(pending);
-		};
-	}, []);
+	useFormReset(inputRef, onReset);
 
 	return (
 		<>

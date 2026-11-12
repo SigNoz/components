@@ -1,0 +1,194 @@
+/* The playground and the call-site stories open downwards, so they need room under the trigger. */
+.roomBelow {
+	min-block-size: 360px;
+}
+
+/*
+ * The showcase holds every popup open at once, so each one needs a cell of its own to open into.
+ * A cell spans two rows through a subgrid, the text and the room for the popup, so the triggers of
+ * a row line up whatever the length of the notes above them.
+ */
+.showcaseGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	column-gap: 48px;
+	width: 100%;
+}
+
+.cell {
+	display: grid;
+	grid-row: span 2;
+	grid-template-rows: subgrid;
+	min-inline-size: 0;
+}
+
+.cellText {
+	padding-block-end: 16px;
+}
+
+/*
+ * A popup is portalled out of its cell, so it takes no height there. Each cell keeps this much under
+ * its trigger: the trigger, the gap to the popup and the popup (318px), then the space before the
+ * next row. The footer one is taller, since its note can wrap to a second line.
+ */
+.popupRoom {
+	min-block-size: 360px;
+	margin-block-end: 40px;
+}
+
+.footerRoom {
+	min-block-size: 420px;
+	margin-block-end: 40px;
+}
+
+.marginTopMedium {
+	margin-top: 16px;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* A preset or custom swatch. The fill comes from `--swatch`, which the story writes per element. */
+.swatch {
+	box-sizing: border-box;
+	inline-size: 24px;
+	block-size: 24px;
+	padding: 0;
+	border: 1px solid var(--l2-border);
+	border-radius: var(--radius-2);
+	background: var(--swatch, transparent);
+	cursor: pointer;
+}
+
+.swatch:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 2px;
+}
+
+/* The selected preset, and the custom slot while it holds the value or its popup is open. */
+.swatch[aria-pressed='true'],
+.swatch[data-popup-open] {
+	outline: 2px solid var(--l1-foreground);
+	outline-offset: 2px;
+}
+
+/* No color: a diagonal rule over the surface, the same cue the panel preview gives. */
+.swatch[data-empty] {
+	background: linear-gradient(
+		to top right,
+		transparent calc(50% - 1px),
+		var(--danger-background) 50%,
+		transparent calc(50% + 1px)
+	);
+}
+
+/* Transparent: a checkerboard, so it reads as no fill rather than as the surface color. */
+.swatch[data-transparent] {
+	background: repeating-conic-gradient(var(--l3-border) 0% 25%, transparent 0% 50%) 50% / 8px 8px;
+}
+
+/* Translucent: the fill sits over a checkerboard, so the alpha reads against the surface. */
+.swatch[data-translucent] {
+	background:
+		linear-gradient(var(--swatch), var(--swatch)),
+		repeating-conic-gradient(var(--l3-border) 0% 25%, transparent 0% 50%) 50% / 8px 8px;
+}
+
+/* The picker does not restyle its trigger, so the trigger reads the state attributes itself. */
+.swatch[data-disabled] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.swatch[data-readonly] {
+	cursor: default;
+}
+
+/* The custom slot while a preset holds the value: a hue wheel, so it reads as "any other color". */
+.swatch[data-any-color] {
+	background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+}
+
+.legendList {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	inline-size: 320px;
+}
+
+.legendItem {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* The whole row is the trigger, the swatch and the label inside it. */
+.legendRow {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 8px;
+	min-inline-size: 0;
+	padding: 4px 8px;
+	border: 0;
+	border-radius: var(--radius-2);
+	background: transparent;
+	color: var(--l1-foreground);
+	font: inherit;
+	text-align: start;
+	cursor: pointer;
+}
+
+.legendRow:hover,
+.legendRow[data-popup-open] {
+	background: var(--l2-background);
+}
+
+.legendRow:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 1px;
+}
+
+.legendSwatch {
+	flex: none;
+	inline-size: 12px;
+	block-size: 12px;
+	border-radius: var(--radius-2);
+	background: var(--swatch);
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 16px;
+}
+
+.field {
+	display: grid;
+	grid-template-columns: 160px max-content;
+	align-items: center;
+	gap: 12px;
+}
+
+.fieldset {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-inline-size: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.legend {
+	padding: 0;
+}
+
+/* The reason opens above the trigger, so the note above it keeps its last line in view. */
+.tooltipRoom {
+	padding-top: 40px;
+}
