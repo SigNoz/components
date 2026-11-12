@@ -34,7 +34,10 @@ import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
  * ```
  */
 export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function InputNumber(
-	{
+	allProps: InputNumberProps & RejectedProps,
+	ref,
+) {
+	const {
 		size = 'md',
 		variant = 'default',
 		status,
@@ -72,12 +75,11 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		onKeyDown,
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
+		nullable: _nullable,
 		className: _className,
 		style: _style,
 		...props
-	}: InputNumberProps & RejectedProps,
-	ref,
-) {
+	} = allProps;
 	const field = useFieldControl({
 		id,
 		status,

@@ -46,7 +46,8 @@ const ComboboxFieldImpl = createFieldShorthand<ComboboxFieldProps, HTMLElement>(
  * @example
  * ```tsx
  * // The `field` of a react-hook-form `Controller` spreads as is: `value`, `onChange`, `onBlur`,
- * // `name` and `ref` all land on the combobox.
+ * // `name` and `ref` all land on the combobox. A nullable schema field, such as a zod `.nullable()`
+ * // one, adds `nullable`.
  * <Controller
  *   control={control}
  *   name="service"

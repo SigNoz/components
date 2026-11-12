@@ -31,6 +31,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 		const {
 			items,
 			multiple = false,
+			nullable = false,
 			value,
 			defaultValue,
 			onChange,
@@ -71,6 +72,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 		const { selectedValues, commit } = useSelectionValue({
 			isControlled: 'value' in props,
 			multiple,
+			nullable,
 			value,
 			defaultValue,
 			onChange,
@@ -248,6 +250,10 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  * `value` makes the select controlled, even with `undefined`. `onChange` reports a `string`, or a
  * `string[]` with `multiple`, `[]` once every chip is removed. A single select has no way to clear
  * its value.
+ *
+ * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
+ * react-hook-form `Controller`: `value` then takes `null` too, a controlled select with nothing
+ * selected, and `onChange` is typed to take `null` so a `useState<string | null>` setter fits.
  *
  * A single trigger shows the selected row's `prefix`, then its `displayValue` when it has one, its
  * label otherwise. A multiple select shows chips, and `maxDisplayedPills` collapses the rest into a

@@ -241,7 +241,43 @@ export type ComboboxFooterActionType = {
 	testId?: string;
 };
 
-type ComboboxSingleProps = {
+/**
+ * `nullable` decides the types of `value` and `onChange`, so the two travel as a union: a combobox
+ * that is not nullable keeps the props it always had, and a nullable one takes `null` in and
+ * reports `null` out. `nullable` only takes `true`, so a combobox is nullable by being written
+ * that way, never by a flag decided at run time.
+ *
+ * The plain single member comes last in `ComboboxProps` on purpose. TypeScript reports a props
+ * object that matches no member against the last one, so a `value={null}` written without
+ * `nullable` is told that `null` is not a `string | undefined`, not that `multiple` is missing.
+ */
+type ComboboxNullableOn = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the combobox is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 *
+	 * @note A single combobox reports `null`, not `undefined`, once its value is cleared.
+	 */
+	nullable: true;
+};
+
+type ComboboxNullableOff = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the combobox is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 *
+	 * @note A single combobox reports `null`, not `undefined`, once its value is cleared.
+	 */
+	nullable?: never;
+};
+
+type ComboboxSingleShared = {
 	/**
 	 * When true, the combobox picks several values and shows them as chips in the trigger.
 	 *
@@ -249,20 +285,9 @@ type ComboboxSingleProps = {
 	 */
 	multiple?: false;
 	/**
-	 * The selected `value` of an `item` row, or a value created through `allowCreate`.
-	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled combobox.
-	 */
-	value?: string;
-	/**
 	 * The value selected on the first render, for a combobox that keeps its own state.
 	 */
 	defaultValue?: string;
-	/**
-	 * Called with the new value. `undefined` when the value is cleared.
-	 */
-	onChange?: (value: string | undefined) => void;
 	/**
 	 * Decides what the trigger shows for the selected row, in place of the row's `prefix`,
 	 * `displayValue` and label.
@@ -274,22 +299,41 @@ type ComboboxSingleProps = {
 	maxDisplayedPills?: never;
 };
 
-type ComboboxMultipleProps = {
-	multiple: true;
+interface ComboboxSingleNullableProps extends ComboboxSingleShared, ComboboxNullableOn {
 	/**
-	 * The selected values, in the order they were picked.
+	 * The selected `value` of an `item` row, or a value created through `allowCreate`. `null` is
+	 * none.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 * @note `null` makes the component controlled with nothing selected. Leave the prop out
+	 * entirely for an uncontrolled combobox.
 	 */
-	value?: string[];
+	value?: string | null;
+	/**
+	 * Called with the new value. `null` when the value is cleared.
+	 */
+	onChange?: (value: string | null) => void;
+}
+
+interface ComboboxSingleProps extends ComboboxSingleShared, ComboboxNullableOff {
+	/**
+	 * The selected `value` of an `item` row, or a value created through `allowCreate`.
+	 *
+	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
+	 * entirely for an uncontrolled combobox.
+	 */
+	value?: string;
+	/**
+	 * Called with the new value. `undefined` when the value is cleared.
+	 */
+	onChange?: (value: string | undefined) => void;
+}
+
+type ComboboxMultipleShared = {
+	multiple: true;
 	/**
 	 * The values selected on the first render, for a combobox that keeps its own state.
 	 */
 	defaultValue?: string[];
-	/**
-	 * Called with the new values. `[]` when every value is removed.
-	 */
-	onChange?: (value: string[]) => void;
 	displayValue?: never;
 	/**
 	 * How many chips the trigger shows. The rest collapse into a `+N` chip whose tooltip lists
@@ -297,6 +341,32 @@ type ComboboxMultipleProps = {
 	 */
 	maxDisplayedPills?: number;
 };
+
+interface ComboboxMultipleNullableProps extends ComboboxMultipleShared, ComboboxNullableOn {
+	/**
+	 * The selected values, in the order they were picked. `null` is `[]`.
+	 *
+	 * @note `null` makes the component controlled with nothing selected.
+	 */
+	value?: string[] | null;
+	/**
+	 * Called with the new values. `[]` when every value is removed, never `null`.
+	 */
+	onChange?: (value: string[]) => void;
+}
+
+interface ComboboxMultipleProps extends ComboboxMultipleShared, ComboboxNullableOff {
+	/**
+	 * The selected values, in the order they were picked.
+	 *
+	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 */
+	value?: string[];
+	/**
+	 * Called with the new values. `[]` when every value is removed.
+	 */
+	onChange?: (value: string[]) => void;
+}
 
 interface ADisabledComboboxMustSayWhy {
 	'`disabled` needs `disabledTooltip`, a disabled control has to tell the user why it cannot be used': never;
@@ -545,11 +615,17 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		[key: `data-${string}`]: unknown;
 	};
 
-export type ComboboxProps = ComboboxBaseProps & (ComboboxSingleProps | ComboboxMultipleProps);
+export type ComboboxProps = ComboboxBaseProps &
+	(
+		| ComboboxMultipleNullableProps
+		| ComboboxMultipleProps
+		| ComboboxSingleNullableProps
+		| ComboboxSingleProps
+	);
 
 /**
- * Distributive, so the single and the multiple shape of `ComboboxProps` stay apart: a plain `Omit`
- * over the union would drop the link between `multiple`, `value` and `onChange`.
+ * Distributive, so the shapes of `ComboboxProps` stay apart: a plain `Omit` over the union would
+ * drop the link between `multiple`, `nullable`, `value` and `onChange`.
  */
 type WithField<P> = P extends unknown
 	? Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps

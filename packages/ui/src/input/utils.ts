@@ -10,9 +10,15 @@ import type { InputStatusType } from './types.js';
  * attributes and the remaining `aria-*`) for the control. The aria attributes the input resolves
  * against the surrounding `Field` are destructured away before the rest reaches this.
  *
+ * A `value` of `null` becomes the empty string when the field is `nullable`, which keeps the control
+ * controlled. Any other `value` is passed as it is.
+ *
  * @access private
  */
-export function splitAttributes(props: Record<string, unknown>): {
+export function splitAttributes(
+	props: Record<string, unknown>,
+	nullable?: boolean,
+): {
 	control: Record<string, unknown>;
 	data: Record<string, unknown>;
 } {
@@ -22,6 +28,8 @@ export function splitAttributes(props: Record<string, unknown>): {
 	for (const [key, value] of Object.entries(props)) {
 		if (key.startsWith('data-')) {
 			data[key] = value;
+		} else if (key === 'value' && nullable === true && value === null) {
+			control[key] = '';
 		} else {
 			control[key] = value;
 		}

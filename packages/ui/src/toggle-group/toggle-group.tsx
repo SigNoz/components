@@ -25,8 +25,8 @@ import type { ToggleGroupProps, ValidateToggleGroupProps } from './types.js';
  *
  * @access private
  */
-function toGroupValue(value: string | string[] | undefined): string[] | undefined {
-	if (value === undefined) {
+function toGroupValue(value: string | string[] | null | undefined): string[] | undefined {
+	if (value === undefined || value === null) {
 		return undefined;
 	}
 
@@ -47,6 +47,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		value,
 		defaultValue,
 		onChange,
+		nullable,
 		onBlur,
 		name,
 		disabled = false,
@@ -111,11 +112,11 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 					return;
 				}
 
-				// Only `allowClear` reaches this with nothing pressed, and the empty string is what
-				// a `single` bar calls that.
-				(onChange as (next: string) => void)(next[0] ?? '');
+				// Only `allowClear` reaches this with nothing pressed, and a `single` bar calls that the
+				// empty string, or `null` while it is nullable.
+				(onChange as (next: string | null) => void)(next[0] ?? (nullable ? null : ''));
 			},
-		[onChange, isMultiple, allowClear, isControlled],
+		[onChange, isMultiple, allowClear, isControlled, nullable],
 	);
 
 	const {
@@ -275,6 +276,9 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  *
  * `allowClear` hands that press back. A `single` bar then reports the empty string, which is also
  * what `value=""` means, and a `multiple` bar reports the empty array.
+ *
+ * `nullable` is for a bar bound to a nullable schema field (zod `.nullable()`). `null` is the
+ * empty `value`, and a `single` bar with `allowClear` reports `null` instead of the empty string.
  *
  * A bar that starts with nothing pressed stays that way until the first press either way.
  *

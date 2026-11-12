@@ -45,7 +45,8 @@ const SelectFieldRoot = createFieldShorthand<SelectFieldProps, HTMLElement>(Sele
  * @example
  * ```tsx
  * // The `field` of a react-hook-form `Controller` spreads as is: `value`, `onChange`, `onBlur`,
- * // `name` and `ref` all land on the select.
+ * // `name` and `ref` all land on the select. A nullable schema field, such as a zod `.nullable()`
+ * // one, adds `nullable`.
  * <Controller
  *   control={control}
  *   name="framework"

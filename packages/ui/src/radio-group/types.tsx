@@ -199,10 +199,62 @@ export type ValidateRadioGroupProps<T> = (T extends { disabled: boolean | undefi
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
+/**
+ * `nullable` decides the type of `onChange`, so the two travel as a union: a group that is not
+ * nullable keeps a callback typed `(value: string) => void`, and a nullable one takes a callback
+ * whose parameter is `string | null`, which is what a `useState<string | null>` setter looks like.
+ *
+ * `nullable` only takes `true`, so a group is nullable by being written that way, never by a flag
+ * decided at run time.
+ *
+ * The member without `nullable` comes last on purpose. TypeScript reports a props object that
+ * matches neither member against the last one, so a group missing `items` is told about `items`,
+ * not about a missing `nullable`.
+ */
+export type RadioGroupNullableType =
+	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `onChange` takes `null`, so a
+			 * `useState<string | null>` setter fits.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable: true;
+			/**
+			 * Called with the newly checked item's `value`.
+			 *
+			 * @note Only a radio reports a change, and it reports its own `value`, so this never fires
+			 * with `null`. The type takes it anyway, so a `useState<string | null>` setter fits.
+			 *
+			 * @note Never called while `disabled` or `readOnly`.
+			 */
+			onChange?: (value: string | null) => void;
+	  }
+	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `onChange` takes `null`, so a
+			 * `useState<string | null>` setter fits.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
+			/**
+			 * Called with the newly checked item's `value`.
+			 *
+			 * @note Only a radio reports a change, and it reports its own `value`, so this never fires
+			 * with `null`. A group is cleared by the call site writing `value={null}`, which is not a
+			 * change the group made.
+			 *
+			 * @note Never called while `disabled` or `readOnly`.
+			 */
+			onChange?: (value: string) => void;
+	  };
+
 export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes &
 	RadioGroupDisableType &
-	RadioGroupReadOnlyType & {
+	RadioGroupReadOnlyType &
+	RadioGroupNullableType & {
 		/**
 		 * The options, in the order they are rendered. The group owns its markup, so there are no
 		 * children to compose.
@@ -245,9 +297,8 @@ export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * The controlled value, which is one of the items' `value`s.
 		 *
-		 * @note `null` is the empty group, and it is the only way to write one: `undefined` makes
-		 * the group uncontrolled for the rest of its life, so a controlled group that starts with
-		 * nothing checked passes `null`.
+		 * @note `null` is the empty group. `undefined` makes the group uncontrolled for the rest of
+		 * its life, so a controlled group that starts with nothing checked passes `null`.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
 		 */
@@ -258,16 +309,6 @@ export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note Use with `onChange`. For a controlled group use `value` instead.
 		 */
 		defaultValue?: string;
-		/**
-		 * Called with the newly checked item's `value`.
-		 *
-		 * @note Only a radio reports a change, and it reports its own `value`, so this never fires
-		 * with `null`. A group is cleared by the call site writing `value={null}`, which is not a
-		 * change the group made.
-		 *
-		 * @note Never called while `disabled` or `readOnly`.
-		 */
-		onChange?: (value: string) => void;
 		/**
 		 * Called once when the focus leaves the group, for a form that validates on blur.
 		 *

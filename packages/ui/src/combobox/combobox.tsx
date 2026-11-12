@@ -42,6 +42,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		const {
 			items,
 			multiple = false,
+			nullable = false,
 			value,
 			defaultValue,
 			onChange,
@@ -88,6 +89,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		const { selectedValues, commit } = useSelectionValue({
 			isControlled: 'value' in props,
 			multiple,
+			nullable,
 			value,
 			defaultValue,
 			onChange,
@@ -382,6 +384,10 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
  * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. Writing
  * `value` makes the combobox controlled, even with `undefined`. `onChange` reports `undefined` for
  * a cleared single value and `[]` for a multiple one.
+ *
+ * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
+ * react-hook-form `Controller`: `value` then takes `null` too, a controlled combobox with nothing
+ * selected, and a cleared single value is reported as `null`.
  *
  * A selected value `items` does not have still shows, as itself, in the trigger and in a `Custom`
  * group at the top of the list, so it can be unselected. `allowCreate` adds a `Create "<query>"`
