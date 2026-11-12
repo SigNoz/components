@@ -38,8 +38,10 @@ export function skeletonWidthStyle({ width, maxWidth }: SkeletonWidthProps): CSS
 
 /**
  * {@link skeletonWidthStyle} for `Skeleton.Button`, whose min width is a `min()` over its widths.
- * `min()` takes only lengths, so a keyword `maxWidth` such as `none` would drop that floor. The
- * floor is capped at 100% instead, as with no `maxWidth`.
+ * `min()` takes only lengths, so a keyword would make the min width invalid and let the empty box
+ * collapse. A keyword `width` such as `auto` leaves the floor at `--skeleton-button-width`, or at
+ * the width of the size without it. A keyword `maxWidth` such as `none` caps the floor at 100%, as
+ * with no `maxWidth`.
  *
  * @access private
  */
@@ -47,6 +49,9 @@ export function skeletonButtonWidthStyle(props: SkeletonWidthProps): CSSProperti
 	return {
 		...skeletonWidthStyle(props),
 		...skeletonLengthStyle({
+			'--skeleton-internal-min-width-floor': isCssKeyword(props.width)
+				? 'var(--skeleton-button-width, var(--skeleton-internal-default-width))'
+				: undefined,
 			'--skeleton-internal-min-width-cap': isCssKeyword(props.maxWidth) ? '100%' : undefined,
 		}),
 	};

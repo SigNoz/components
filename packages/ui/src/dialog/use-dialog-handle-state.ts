@@ -16,15 +16,24 @@ export function useDialogHandleState<Payload>(
 	handle: DialogHandle<Payload> | undefined,
 ): DialogHandleState<Payload> {
 	const state = useOpenStateSnapshot(handle, DIALOG_HANDLE_CLOSED as DialogHandleState<Payload>);
-	const [shown, setShown] = useState(state);
+	const [shown, setShown] = useState(() => shownState(state));
 
-	if (state.open && state !== shown) {
-		setShown(state);
+	if (state.open && state !== shown.last) {
+		setShown(shownState(state));
 	}
 
-	if (state.open || state.payload === shown.payload) {
+	if (state.open || state.payload === shown.last.payload) {
 		return state;
 	}
 
-	return { open: false, payload: shown.payload };
+	// The same object on every render, never a new one: `AlertDialog` compares the state it gets
+	// with the one it had, and a fresh object each render would set its state on every render.
+	return shown.closed;
+}
+
+function shownState<Payload>(state: DialogHandleState<Payload>): {
+	last: DialogHandleState<Payload>;
+	closed: DialogHandleState<Payload>;
+} {
+	return { last: state, closed: { open: false, payload: state.payload } };
 }

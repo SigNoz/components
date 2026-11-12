@@ -30,7 +30,7 @@
  * | `--skeleton-button-max-width` | `var(--skeleton-internal-max-width, 100%)` |
  * | `--skeleton-button-md-height` | `32px` |
  * | `--skeleton-button-md-width` | `64px` |
- * | `--skeleton-button-min-width` | `min( var(--skeleton-internal-button-width), var...` |
+ * | `--skeleton-button-min-width` | `min( var(--skeleton-internal-min-width-floor, v...` |
  * | `--skeleton-button-sm-height` | `24px` |
  * | `--skeleton-button-sm-width` | `48px` |
  * | `--skeleton-button-vertical-align` | `middle` |

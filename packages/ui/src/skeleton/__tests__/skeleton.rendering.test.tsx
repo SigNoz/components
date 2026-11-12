@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import type { ReactElement } from 'react';
+import type { CSSProperties, ReactElement } from 'react';
 import { describe, expect, it, onTestFinished } from 'vitest';
 import { Skeleton } from '../skeleton.js';
 
@@ -570,6 +570,34 @@ describe('Skeleton.Button in a flex row', () => {
 		);
 
 		expect(screen.getByTestId('uncapped').getBoundingClientRect().width).toBe(64);
+	});
+
+	it.each(['auto', 'max-content'])('keeps the width of its size with width="%s"', (width) => {
+		render(
+			row(
+				<>
+					<div style={{ flex: 'none', width: 280 }} />
+					<Skeleton.Button size="md" width={width} testId="keyword" />
+				</>,
+			),
+		);
+
+		expect(screen.getByTestId('keyword').getBoundingClientRect().width).toBe(64);
+	});
+
+	it('keeps a --skeleton-button-width override with a keyword width', () => {
+		render(
+			<div style={{ '--skeleton-button-width': '40px' } as CSSProperties}>
+				{row(
+					<>
+						<div style={{ flex: 'none', width: 280 }} />
+						<Skeleton.Button size="md" width="auto" testId="overridden" />
+					</>,
+				)}
+			</div>,
+		);
+
+		expect(screen.getByTestId('overridden').getBoundingClientRect().width).toBe(40);
 	});
 
 	it('never spills out of a parent narrower than its size', () => {
