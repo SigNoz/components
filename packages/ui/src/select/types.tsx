@@ -385,6 +385,16 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		testId?: string;
 		/**
+		 * The name the selected value is submitted under. Base UI's hidden input carries it, so the
+		 * `FormData` of the surrounding `<form>` holds the value: one entry for a single select, an
+		 * empty string while nothing is selected, and one entry per value with `multiple`, in the order
+		 * they were picked, none while nothing is selected.
+		 *
+		 * @note A `disabled` select submits nothing, as a native control does. The trigger carries no
+		 * native `disabled`, so the name is what is withheld.
+		 */
+		name?: string;
+		/**
 		 * Called when the focus leaves the select, the trigger and its popup counting as one. Opening
 		 * the popup, which takes the focus, and closing it, which gives it back, do not call it.
 		 * Tabbing away, or pressing outside while the popup is open, does.

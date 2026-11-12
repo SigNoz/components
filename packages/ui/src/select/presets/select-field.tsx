@@ -44,6 +44,8 @@ const SelectFieldRoot = createFieldShorthand<SelectFieldProps, HTMLElement>(Sele
  *
  * @example
  * ```tsx
+ * // The `field` of a react-hook-form `Controller` spreads as is: `value`, `onChange`, `onBlur`,
+ * // `name` and `ref` all land on the select.
  * <Controller
  *   control={control}
  *   name="framework"
@@ -52,9 +54,7 @@ const SelectFieldRoot = createFieldShorthand<SelectFieldProps, HTMLElement>(Sele
  *       label="Framework"
  *       placeholder="Select a framework..."
  *       items={frameworks}
- *       value={field.value}
- *       onChange={field.onChange}
- *       ref={field.ref}
+ *       {...field}
  *       error={fieldState.error?.message}
  *     />
  *   )}

@@ -42,6 +42,26 @@ const ComboboxFieldImpl = createFieldShorthand<ComboboxFieldProps, HTMLElement>(
  *   onChange={setService}
  * />
  * ```
+ *
+ * @example
+ * ```tsx
+ * // The `field` of a react-hook-form `Controller` spreads as is: `value`, `onChange`, `onBlur`,
+ * // `name` and `ref` all land on the combobox.
+ * <Controller
+ *   control={control}
+ *   name="service"
+ *   render={({ field, fieldState }) => (
+ *     <ComboboxField
+ *       label="Service"
+ *       placeholder="Select a service..."
+ *       searchInputProps={{ placeholder: 'Search services' }}
+ *       items={services}
+ *       {...field}
+ *       error={fieldState.error?.message}
+ *     />
+ *   )}
+ * />
+ * ```
  */
 export const ComboboxField = ComboboxFieldImpl as <T extends ComboboxFieldProps>(
 	props: Checked<ComboboxFieldProps, HTMLElement, T>,

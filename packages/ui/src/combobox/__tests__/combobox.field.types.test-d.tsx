@@ -20,6 +20,20 @@ declare const field: {
 	onChange: (...event: unknown[]) => void;
 	ref: (instance: HTMLElement | null) => void;
 };
+/**
+ * What react-hook-form's `Controller` and `useController` hand over as `field`, written out by
+ * hand because the library does not depend on react-hook-form.
+ */
+type ReactHookFormField<Value> = {
+	onChange: (...event: any[]) => void;
+	onBlur: () => void;
+	value: Value;
+	name: string;
+	ref: (instance: any) => void;
+	disabled?: boolean;
+};
+declare const rhfField: ReactHookFormField<string>;
+declare const rhfMultipleField: ReactHookFormField<string[]>;
 
 describe('field props and combobox props together', () => {
 	test('takes the label with the props of the combobox', () => {
@@ -64,6 +78,33 @@ describe('field props and combobox props together', () => {
 				error={maybeError}
 			/>,
 		);
+	});
+
+	test('accepts a react-hook-form field as the props it spreads', () => {
+		assertType(
+			<ComboboxField
+				label="Framework"
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				{...rhfField}
+				error={maybeError}
+			/>,
+		);
+		assertType(
+			<ComboboxField
+				label="Framework"
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				items={ONE}
+				{...rhfMultipleField}
+				error={maybeError}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - a field that holds an array is a multiple combobox
+		assertType(<ComboboxField label="Framework" placeholder="Pick" searchInputProps={{ placeholder: 'Search' }} items={ONE} {...rhfMultipleField} />);
 	});
 
 	test('exposes the props type', () => {

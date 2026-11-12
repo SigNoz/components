@@ -68,6 +68,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			testId,
 			id,
 			required,
+			name,
 			onBlur,
 			className: _className,
 			style: _style,
@@ -263,6 +264,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 				<BaseCombobox.Root<ComboboxBaseValue, boolean>
 					multiple={multiple}
 					required={required}
+					name={disabled ? undefined : name}
 					value={(multiple ? selectedValues : (selectedValues[0] ?? null)) as never}
 					onValueChange={handleValueChange}
 					open={open}

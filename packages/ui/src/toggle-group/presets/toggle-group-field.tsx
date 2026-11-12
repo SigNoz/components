@@ -26,7 +26,7 @@ const ToggleGroupFieldRoot = createFieldShorthand<ToggleGroupFieldProps, HTMLBut
  *
  * `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required`
  * go to the group. The label is its `<legend>`, and the `role="group"` list of the bar takes it as
- * its name. Every other prop goes to the bar: `type`, `items`, `value`, `onChange`, `onBlur`,
+ * its name. Every other prop goes to the bar: `type`, `items`, `value`, `onChange`, `onBlur`, `name`,
  * `aria-*`, `data-*` and `testId` land where `ToggleGroup` puts them. The group parts take
  * `testId` as their prefix (`${testId}-label`, `${testId}-message`), and the `<fieldset>` gets
  * none.
