@@ -5,6 +5,7 @@ import {
 	buildTrail,
 	displayTitle,
 	leaveTrail,
+	letPageKeysThrough,
 	stepBackInTrail,
 	toDrawerCloseReason,
 } from '../utils.js';
@@ -27,6 +28,32 @@ describe('toDrawerCloseReason', () => {
 		'reports nothing for %s, which no drawer without a trigger closes for',
 		(reason) => {
 			expect(toDrawerCloseReason(reason)).toBeUndefined();
+		},
+	);
+});
+
+describe('letPageKeysThrough', () => {
+	function pressKey(key: string) {
+		const preventBaseUIHandler = vi.fn();
+		letPageKeysThrough({ key, preventBaseUIHandler } as unknown as Parameters<
+			typeof letPageKeysThrough
+		>[0]);
+
+		return preventBaseUIHandler;
+	}
+
+	it.each(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'])(
+		'skips the Base UI handler for %s',
+		(key) => {
+			expect(pressKey(key)).toHaveBeenCalledTimes(1);
+		},
+	);
+
+	// Skipping the Base UI handler skips the one that reads Escape, so only the six keys may.
+	it.each(['Escape', 'Enter', 'PageDown', 'Tab', 'a'])(
+		'keeps the Base UI handler for %s',
+		(key) => {
+			expect(pressKey(key)).not.toHaveBeenCalled();
 		},
 	);
 });

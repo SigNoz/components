@@ -1,3 +1,4 @@
+import type { Drawer } from '@base-ui/react/drawer';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { hasTitle } from '../breadcrumb/utils.js';
@@ -17,6 +18,31 @@ const CLOSE_REASONS: ReadonlySet<string> = new Set<DrawerCloseReasonType>([
 ]);
 
 const NO_TITLE = '<No title>';
+
+const PAGE_KEYS: ReadonlySet<string> = new Set([
+	'ArrowUp',
+	'ArrowDown',
+	'ArrowLeft',
+	'ArrowRight',
+	'Home',
+	'End',
+]);
+
+/**
+ * Keeps the arrow keys, `Home` and `End` on their way to the page. Base UI stops them at the popup
+ * of every dialog and drawer, so a composite the popup is declared in keeps its roving focus, and
+ * a `keydown` listener on `document` never sees them. Its handler is skipped for these keys only,
+ * so `Esc` still closes the panel.
+ *
+ * @access private
+ */
+export function letPageKeysThrough(
+	event: Parameters<NonNullable<Drawer.Popup.Props['onKeyDown']>>[0],
+): void {
+	if (PAGE_KEYS.has(event.key)) {
+		event.preventBaseUIHandler();
+	}
+}
 
 /**
  * The reason `onClose` reports for a Base UI change reason, or `undefined` for one it does not

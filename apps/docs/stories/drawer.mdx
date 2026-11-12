@@ -205,7 +205,13 @@ scroll area inside it.
 Focus moves to the panel on open, so a screen reader reads the title, and returns on close to the
 element that had it. `initialFocus` moves it to one element instead, such as the first field. A
 `task` traps focus, and an `inspector` lets `Tab` leave it for the page. `Esc` closes the top layer
-only, a popup open inside the panel first. The drawer adds no `Enter` or arrow key handler.
+only, a popup open inside the panel first. The drawer acts on no `Enter` or arrow key itself.
+
+A `task` keeps the arrow keys, `Home` and `End` in the panel, as `Dialog` does, so a `keydown`
+listener on `document` never sees them. An `inspector` lets them reach the page, so a shortcut on
+`document` reads them while the panel holds the focus. A select, menu, tabs or radio group in the
+panel still handles its keys and stops them. A text field does not, so a shortcut must skip it for
+its caret keys.
 
 ## Layering
 
