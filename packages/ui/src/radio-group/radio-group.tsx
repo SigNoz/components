@@ -133,6 +133,10 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
  * `required` wins, and keeps the native one. `RadioGroupField` renders both from one set of
  * props.
  *
+ * While the group is `aria-invalid`, whether from a `danger` status or written on it, every dial
+ * takes `--destructive` for its border, a checked one included: the fill and the dot still say it
+ * is checked.
+ *
  * ### Items
  *
  * Each item is `{ label, value }`, plus an optional `testId`. `value` is what `onChange` reports

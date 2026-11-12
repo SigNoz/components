@@ -66,3 +66,16 @@ export const FieldContext = createContext<FieldContextValue | null>(null);
 export function useFieldContext(): FieldContextValue | null {
 	return useContext(FieldContext);
 }
+
+/**
+ * `data-invalid` while the field is in `danger`, for a control Base UI does not mark invalid itself:
+ * one in a `Field.Group`, which has no Base UI field, or a plain `<div>`, which takes no
+ * `aria-invalid`. `undefined` otherwise, so the spread leaves what Base UI sets alone.
+ *
+ * @access private
+ */
+export function fieldInvalidDataProps(
+	field: FieldContextValue | null,
+): { 'data-invalid': '' } | undefined {
+	return field?.status === 'danger' ? { 'data-invalid': '' } : undefined;
+}

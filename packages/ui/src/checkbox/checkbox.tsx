@@ -10,6 +10,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -51,6 +52,10 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 	ref,
 ) {
 	const labelId = useId();
+	// Inside a `Field` Base UI marks the checkbox invalid. A `Field.Group` has no Base UI field, so
+	// the status it hands down is read here, as `data-invalid` only: each checkbox of a list is not
+	// announced as invalid on its own, the group's message already says so.
+	const field = useFieldContext();
 
 	const isReadOnly = readOnly === true;
 
@@ -141,6 +146,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			required={required}
 			name={name}
 			aria-labelledby={hasLabel ? labelId : undefined}
+			{...fieldInvalidDataProps(field)}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
@@ -257,6 +263,12 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * `CheckboxField`, which uses its `label` as the text of the checkbox and keeps the rest of a
  * field around it. A list of checkboxes, each with its own text, goes in a `Field.Group`.
  *
+ * While the field is in `danger`, the border of the box takes `--destructive`, on a checked box too:
+ * the fill and the glyph still say it is checked. `data-invalid` is on the checkbox for it. Base UI
+ * sets it inside a `Field`, and a `Field.Group` has no Base UI field, so the checkbox reads the
+ * status itself and sets no `aria-invalid`. An `aria-invalid` written on the checkbox paints it the
+ * same way.
+ *
  * ### Asserting on it
  *
  * `testId` is `data-testid` on the checkbox itself and survives the tooltip trigger cloning the
@@ -270,6 +282,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * | `data-checked` / `data-unchecked` | the current state, neither while `indeterminate` |
  * | `data-indeterminate` | present while `indeterminate` |
  * | `data-disabled`, `data-readonly`, `data-required` | present while set |
+ * | `data-invalid` | present while a `Field` or a `Field.Group` around it is in `danger` |
  *
  * | wrapper attribute | value |
  * |---|---|

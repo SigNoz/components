@@ -62,6 +62,13 @@
 		--checkbox-internal-hover-border-color: var(--checkbox-highlight-danger-border-hover);
 	}
 
+	// A `Field` or a `Field.Group` in danger, or an `aria-invalid` written on the checkbox. Only the
+	// unchecked box reacts to hover, and it does it through this property, so the colour holds there.
+	&[aria-invalid='true'],
+	&[data-invalid] {
+		--checkbox-internal-hover-border-color: var(--checkbox-invalid-border-color, var(--destructive));
+	}
+
 	// The ring hugs the box, not the box plus label: focus belongs to the control; the click
 	// target is a separate, larger thing.
 	&:focus-visible {
@@ -103,6 +110,12 @@
 .checkbox[data-indeterminate] .checkbox__box {
 	border-color: var(--checkbox-checked-border, var(--checkbox-internal-checked-background));
 	background-color: var(--checkbox-checked-background, var(--checkbox-internal-checked-background));
+}
+
+// A checked box keeps its fill and its glyph, so the border alone says what is wrong. It weighs the
+// same as the rule above and comes after it.
+.checkbox:is([aria-invalid='true'], [data-invalid]) .checkbox__box {
+	border-color: var(--checkbox-invalid-border-color, var(--destructive));
 }
 
 // Hover fires from the box, its hit-area ring, or the whole labelled row: the label is part of

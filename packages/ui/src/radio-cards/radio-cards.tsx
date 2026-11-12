@@ -161,7 +161,12 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * no native `required`, so the form's own validation runs before the browser's, and `aria-invalid`
  * for a `danger` status. The group's own `required` wins, and keeps the native one.
  * `RadioCards.Multiple` takes the name and the required state, but no `aria-invalid`, since
- * `role="group"` does not allow it.
+ * `role="group"` does not allow it: it carries `data-invalid` instead.
+ *
+ * While the group is in `danger`, every card takes `--destructive` for its border, a checked card
+ * included: its fill, label and check still say it is checked. A `RadioCards` reads
+ * `aria-invalid`, so one written on it paints the same way, and a `RadioCards.Multiple` reads
+ * `data-invalid`.
  *
  * ### Keyboard
  *
@@ -198,6 +203,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * | `data-text-overflow` | `ellipsis` (default) or `wrap` |
  * | `data-disabled` | present while the group is disabled |
  * | `data-readonly` | present while the group is read-only |
+ * | `data-invalid` | on `RadioCards.Multiple` while a `Field` or a `Field.Group` around it is in `danger` |
  *
  * | `data-slot` | rendered |
  * |---|---|

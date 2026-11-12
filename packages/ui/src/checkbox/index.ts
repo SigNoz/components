@@ -71,6 +71,7 @@
  * | `--checkbox-info-background` | `-` |
  * | `--checkbox-info-border-hover` | `-` |
  * | `--checkbox-info-foreground` | `-` |
+ * | `--checkbox-invalid-border-color` | `var(--destructive)` |
  * | `--checkbox-label` | `-` |
  * | `--checkbox-label-color` | `var(--checkbox-label)` |
  * | `--checkbox-label-font-family` | `var(--paragraph-base-400-font-family)` |
