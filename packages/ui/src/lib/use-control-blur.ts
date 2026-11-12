@@ -24,17 +24,20 @@ import { containsNode } from './focus-leave.js';
  * came from.
  *
  * `handleBlur` goes on the element that wraps the trigger and on the popup, `rootRef` on that
- * wrapper and `popupRef` on the popup. `trackOpenChange` takes every open change of the popup.
+ * wrapper, or on the trigger itself for a control with no wrapper, and `popupRef` on the popup.
+ * `trackOpenChange` takes every open change of the popup.
  *
  * @access private
  */
-export function useControlBlur(onBlur: ((event: FocusEvent<HTMLElement>) => void) | undefined): {
-	rootRef: RefObject<HTMLDivElement>;
+export function useControlBlur<Root extends HTMLElement = HTMLDivElement>(
+	onBlur: ((event: FocusEvent<HTMLElement>) => void) | undefined,
+): {
+	rootRef: RefObject<Root>;
 	popupRef: RefObject<HTMLDivElement>;
 	handleBlur: (event: FocusEvent<HTMLElement>) => void;
 	trackOpenChange: (open: boolean, reason: string) => void;
 } {
-	const rootRef = useRef<HTMLDivElement>(null);
+	const rootRef = useRef<Root>(null);
 	const popupRef = useRef<HTMLDivElement>(null);
 	const onBlurRef = useRef(onBlur);
 	const pendingRef = useRef<number | null>(null);

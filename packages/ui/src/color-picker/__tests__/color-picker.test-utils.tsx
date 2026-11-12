@@ -64,7 +64,8 @@ export function ControlledPicker({
 				side="bottom"
 				align="start"
 				testId="picker"
-				value={value}
+				// `''` keeps a picker that starts with no color controlled from the first render.
+				value={value ?? ''}
 				allowClear={allowClear}
 				opaque={opaque}
 				footer={footer}
