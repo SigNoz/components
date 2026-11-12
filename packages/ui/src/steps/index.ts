@@ -102,7 +102,14 @@
  * | `--steps-list-footer-box-sizing` | `border-box` |
  * | `--steps-list-footer-column-gap` | `var(--spacing-6)` |
  * | `--steps-list-footer-connector-margin-block-end` | `var(--spacing-2)` |
+ * | `--steps-list-footer-content-color` | `var(--steps-list-content-foreground)` |
+ * | `--steps-list-footer-content-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--steps-list-footer-content-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--steps-list-footer-content-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--steps-list-footer-content-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
+ * | `--steps-list-footer-content-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--steps-list-footer-content-min-inline-size` | `0` |
+ * | `--steps-list-footer-content-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--steps-list-footer-display` | `grid` |
  * | `--steps-list-footer-grid-template-columns` | `var(--steps-internal-list-marker-size) minmax(0...` |
  * | `--steps-list-footer-margin` | `0` |
@@ -217,6 +224,12 @@
  */
 // #endregion css-tokens
 
-export type * from './types.js';
+export type {
+	StepsItem,
+	StepsListItem,
+	StepsListProps,
+	StepsProps,
+	StepsStatusType,
+} from './types.js';
 export { StepsStatus } from './constants.js';
 export { Steps } from './steps.js';

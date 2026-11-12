@@ -169,6 +169,28 @@ describe('Steps markers', () => {
 		expect(connector?.getBoundingClientRect().height).toBe(1);
 	});
 
+	it('draw a plain text footer of Steps.List in the body text style, like the content', () => {
+		render(<Steps.List testId="list" items={[{ children: 'a' }]} footer="Add a step" />);
+
+		const footer = style('list-footer-content');
+		const content = style('list-item-1-content');
+
+		expect(footer.fontSize).toBe('13px');
+		expect(footer.fontWeight).toBe('400');
+		expect(footer.lineHeight).toBe('20px');
+		for (const property of [
+			'color',
+			'fontFamily',
+			'fontSize',
+			'fontWeight',
+			'lineHeight',
+			'letterSpacing',
+			'textTransform',
+		] as const) {
+			expect(footer[property]).toBe(content[property]);
+		}
+	});
+
 	it('draw the markers of Steps.List the same in every step', () => {
 		render(
 			<Steps.List

@@ -59,8 +59,7 @@ export function toListStepKey(item: StepsListItem, index: number): string {
 
 /**
  * The rest props of `Steps.List`, split between its two elements: `id` and every `aria-*` go to the
- * `ol`, so an `aria-label` names the list of steps, and every `data-*` goes to the root. Any other
- * key is dropped, so a prop that gets past the types never reaches the DOM.
+ * `ol`, so an `aria-label` names the list of steps, and everything else goes to the root.
  *
  * @access private
  */
@@ -74,7 +73,7 @@ export function splitListAttributes(props: object): {
 	for (const [key, value] of Object.entries(props)) {
 		if (key === 'id' || key.startsWith('aria-')) {
 			list[key] = value;
-		} else if (key.startsWith('data-')) {
+		} else {
 			root[key] = value;
 		}
 	}

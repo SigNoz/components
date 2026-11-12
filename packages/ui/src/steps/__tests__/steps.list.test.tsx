@@ -68,28 +68,29 @@ describe('Steps.List root', () => {
 	});
 
 	it('keeps data-slot and the test ID on the root whatever data-* the consumer passes', () => {
-		render(<Steps.List items={FUNNEL} data-slot="other" data-testid="other" testId="funnel" />);
+		render(
+			<Steps.List
+				items={FUNNEL}
+				data-slot="other"
+				{...({ 'data-testid': 'other' } as object)}
+				testId="funnel"
+			/>,
+		);
 
 		expect(screen.getByTestId('funnel')).toHaveAttribute('data-slot', 'steps-list');
 		expect(listOf('funnel')).toHaveAttribute('data-slot', 'steps-list-items');
 		expect(screen.queryByTestId('other')).toBeNull();
 	});
 
-	it('drops a prop that is not id, aria-* or data-*, and does not forward it', () => {
+	it('forwards a prop that gets past the types to the root, not to the ol', () => {
 		render(
-			<Steps.List
-				items={FUNNEL}
-				testId="funnel"
-				{...({ role: 'tablist', title: 'x', tabIndex: 0 } as object)}
-			/>,
+			<Steps.List items={FUNNEL} testId="funnel" {...({ title: 'x', tabIndex: 0 } as object)} />,
 		);
 
-		for (const element of [screen.getByTestId('funnel'), listOf('funnel')]) {
-			expect(element).not.toHaveAttribute('role');
-			expect(element).not.toHaveAttribute('title');
-			expect(element).not.toHaveAttribute('tabindex');
-		}
-		expect(screen.getByRole('list')).toBe(listOf('funnel'));
+		expect(screen.getByTestId('funnel')).toHaveAttribute('title', 'x');
+		expect(screen.getByTestId('funnel')).toHaveAttribute('tabindex', '0');
+		expect(listOf('funnel')).not.toHaveAttribute('title');
+		expect(listOf('funnel')).not.toHaveAttribute('tabindex');
 	});
 
 	it('gives the list no name of its own', () => {

@@ -1,11 +1,16 @@
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect, type ReactElement, type RefAttributes } from 'react';
 import { isBlankText } from '../lib/blank-text.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import styles from './steps.module.scss';
 import { StepsList } from './subcomponents/steps-list.js';
 import { StepsStep } from './subcomponents/steps-step.js';
-import type { StepsProps } from './types.js';
+import type {
+	StepsListProps,
+	StepsProps,
+	ValidateStepsListProps,
+	ValidateStepsProps,
+} from './types.js';
 import { getStepStatus, isValidCurrent, toCurrentStep } from './utils.js';
 
 /**
@@ -137,4 +142,24 @@ const StepsRoot = forwardRef<HTMLOListElement, StepsProps>(function Steps(
 	);
 });
 
-export const Steps = Object.assign(StepsRoot, { List: StepsList });
+export const Steps = Object.assign(
+	StepsRoot as unknown as <T extends StepsProps>(
+		props: T &
+			ValidateStepsProps<T> &
+			// `T` is inferred from the call site, so `T extends StepsProps` alone never runs excess
+			// property checks. Every key outside the props is pinned to `never` instead.
+			Record<Exclude<keyof T, keyof StepsProps | keyof RefAttributes<HTMLOListElement>>, never> &
+			RefAttributes<HTMLOListElement>,
+	) => ReactElement | null,
+	{
+		List: StepsList as unknown as <T extends StepsListProps>(
+			props: T &
+				ValidateStepsListProps<T> &
+				Record<
+					Exclude<keyof T, keyof StepsListProps | keyof RefAttributes<HTMLDivElement>>,
+					never
+				> &
+				RefAttributes<HTMLDivElement>,
+		) => ReactElement | null,
+	},
+);

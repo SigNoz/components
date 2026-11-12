@@ -338,6 +338,35 @@ describe('Steps.List connector', () => {
 		expect(rectOf(byId('list-footer')).bottom).toBeCloseTo(rectOf(byId('list')).bottom, 0);
 	});
 
+	it('keeps the gap under the lines of a list nested in the last step of a list with a footer', () => {
+		render(
+			<Frame>
+				<Steps.List
+					testId="outer"
+					items={[
+						{ label: 'One', children: 'a' },
+						{
+							label: 'Two',
+							children: (
+								<Steps.List
+									testId="inner"
+									items={[
+										{ label: 'A', children: 'a' },
+										{ label: 'B', children: 'b' },
+									]}
+								/>
+							),
+						},
+					]}
+					footer={<button type="button">Add step</button>}
+				/>
+			</Frame>,
+		);
+
+		expect(getComputedStyle(connectorOf('outer-item-2')).marginBlockEnd).toBe('0px');
+		expect(getComputedStyle(connectorOf('inner-item-1')).marginBlockEnd).toBe('4px');
+	});
+
 	it('keeps the room under the last step when a footer follows, and adds none without one', () => {
 		const items = [
 			{ label: 'One', children: 'a' },

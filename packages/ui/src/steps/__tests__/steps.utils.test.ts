@@ -114,10 +114,13 @@ describe('splitListAttributes', () => {
 		});
 	});
 
-	it('drops every other key', () => {
-		expect(
-			splitListAttributes({ role: 'tablist', title: 'x', onClick: () => {}, tabIndex: 0 }),
-		).toEqual({ root: {}, list: {} });
+	it('sends every other key to the root', () => {
+		const onClick = (): void => {};
+
+		expect(splitListAttributes({ title: 'x', onClick, tabIndex: 0 })).toEqual({
+			root: { title: 'x', onClick, tabIndex: 0 },
+			list: {},
+		});
 	});
 
 	it('returns two empty records for no props', () => {
