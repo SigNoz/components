@@ -100,10 +100,12 @@
 // #endregion css-tokens
 
 export { RadioGroup } from './radio-group.js';
+export { RadioGroupField } from './presets/radio-group-field.js';
 export { RadioGroupColor, RadioGroupTextOverflow } from './constants.js';
 export type {
 	RadioGroupColorType,
 	RadioGroupDisableType,
+	RadioGroupFieldProps,
 	RadioGroupItemType,
 	RadioGroupProps,
 	RadioGroupReadOnlyType,

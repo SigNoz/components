@@ -85,10 +85,12 @@
 // #endregion css-tokens
 
 export { Switch } from './switch.js';
+export { SwitchField } from './presets/switch-field.js';
 export { SwitchColor, SwitchTextOverflow, SwitchTextPlacement } from './constants.js';
 export type {
 	SwitchColorType,
 	SwitchDisableType,
+	SwitchFieldProps,
 	SwitchProps,
 	SwitchReadOnlyType,
 	SwitchTextOverflowType,

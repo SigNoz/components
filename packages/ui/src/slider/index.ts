@@ -106,3 +106,4 @@
 export { SliderColor, SliderTextOverflow } from './constants.js';
 export type * from './types.js';
 export { Slider } from './slider.js';
+export { SliderField } from './presets/slider-field.js';
