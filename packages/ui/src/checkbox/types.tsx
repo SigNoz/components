@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode, Ref } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { CheckboxColor, CheckboxTextOverflow } from './constants.js';
 
 export type CheckboxColorType = (typeof CheckboxColor)[keyof typeof CheckboxColor];
@@ -245,3 +246,16 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `CheckboxField`: the field's label, description and status, and every prop of
+ * `Checkbox` except the three the field takes over.
+ *
+ * `label` is the checkbox text, so `children` is not a prop. `required` is the field's: it adds the
+ * asterisk and sets `aria-required` on the checkbox, never the native `required`. `textOverflow`
+ * is not a prop either: the text wraps, so the asterisk and the info icon after it are never cut
+ * off.
+ * `labelIcon` is not a prop, since the box already sits where an icon before the text would.
+ */
+export type CheckboxFieldProps = Omit<CheckboxProps, 'children' | 'required' | 'textOverflow'> &
+	Omit<FieldLabelAndMessageProps, 'labelIcon'>;

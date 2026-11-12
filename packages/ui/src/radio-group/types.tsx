@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { RadioGroupColor, RadioGroupTextOverflow } from './constants.js';
 
 export type RadioGroupColorType = (typeof RadioGroupColor)[keyof typeof RadioGroupColor];
@@ -277,3 +278,9 @@ export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `RadioGroupField`: the field's label, description and status, and every prop of
+ * `RadioGroup`.
+ */
+export type RadioGroupFieldProps = RadioGroupProps & FieldLabelAndMessageProps;

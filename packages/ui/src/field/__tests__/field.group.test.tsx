@@ -250,6 +250,16 @@ describe('Field.Group accessibility', () => {
 		expect(screen.getByTestId('group')).not.toHaveAttribute('data-status');
 	});
 
+	it('gives a RadioGroup inside a danger group aria-invalid', () => {
+		render(
+			<Field.Group label="Environment" error="Pick one">
+				<RadioGroup color="primary" items={ENVIRONMENTS} />
+			</Field.Group>,
+		);
+
+		expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+	});
+
 	it('does not set aria-invalid for a warning', () => {
 		render(
 			<Field.Group label="Environment" status="warning" message="Staging resets nightly">

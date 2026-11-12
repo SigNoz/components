@@ -251,6 +251,12 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * wraps the control, an antd `Form.Item` with `valuePropName` cannot inject state from outside:
  * pass `value` and `onChange` yourself.
  *
+ * ### Inside a field
+ *
+ * A single checkbox that needs a required marker, a description or a validation message is a
+ * `CheckboxField`, which uses its `label` as the text of the checkbox and keeps the rest of a
+ * field around it. A list of checkboxes, each with its own text, goes in a `Field.Group`.
+ *
  * ### Asserting on it
  *
  * `testId` is `data-testid` on the checkbox itself and survives the tooltip trigger cloning the

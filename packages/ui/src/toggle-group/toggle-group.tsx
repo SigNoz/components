@@ -7,6 +7,7 @@ import {
 	useMemo,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { useFieldContext } from '../lib/field-context.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -58,6 +59,17 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 	}: ToggleGroupProps & RejectedProps,
 	ref,
 ) {
+	// The `role="group"` is the Base UI list inside the root, not the root, so the legend of a
+	// `Field.Group` around the bar names the list. A bar with an `aria-label` or an `aria-labelledby`
+	// keeps it on the root and is not given the legend.
+	const field = useFieldContext();
+	const listNameProps =
+		field?.kind === 'group' &&
+		props['aria-label'] === undefined &&
+		props['aria-labelledby'] === undefined
+			? { 'aria-labelledby': field.labelId }
+			: undefined;
+
 	const isMultiple = type === ToggleGroupType.Multiple;
 
 	// `readOnly` outranks `disabled`: while the value is locked the bar is not disabled at all, and
@@ -143,6 +155,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 					className={styles['toggle-group__viewport']}
 				>
 					<ToggleGroupPrimitive
+						{...listNameProps}
 						data-slot="toggle-group-list"
 						className={styles['toggle-group__list']}
 						value={groupValue}
@@ -185,6 +198,13 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  *
  * Visual values are `--toggle-group-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts).
+ *
+ * ### Inside a `Field.Group`
+ *
+ * A surrounding `Field.Group` names the `role="group"` list of the bar with its legend, unless the
+ * bar has an `aria-label` or an `aria-labelledby` of its own. The bar takes no `aria-invalid` and no
+ * `aria-required`, since `role="group"` allows neither. `ToggleGroupField` renders both from one
+ * set of props.
  *
  * ### Items
  *

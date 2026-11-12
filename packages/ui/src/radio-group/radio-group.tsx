@@ -1,5 +1,6 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
+import { useFieldContext } from '../lib/field-context.js';
 import { resolveGroupReason } from '../lib/group-reason.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipTriggerBoundary } from '../tooltip/tooltip-trigger-context.js';
@@ -30,6 +31,14 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 	}: RadioGroupProps & RejectedProps,
 	ref,
 ) {
+	// Inside a `Field.Group` there is no Base UI field to mark the group invalid, so the status the
+	// group hands down is read here. Base UI's fieldset already names the group with the legend, and
+	// that name outranks an `aria-label`, so a group with its own `aria-label` erases it.
+	const field = useFieldContext();
+	const ownLabelProps =
+		field !== null && props['aria-label'] !== undefined && props['aria-labelledby'] === undefined
+			? { 'aria-labelledby': undefined }
+			: undefined;
 	// Base UI hands the change two arguments, the value and its event details, and types the value
 	// as `string | null` because the generic also covers the `value` prop. Only a radio reports a
 	// change, and it reports its own `value`, so `null` never arrives here: both the extra argument
@@ -52,6 +61,9 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		reason: tooltipContent,
 		hasReasonAnchor: hasTooltip,
 	} = resolveGroupReason({ disabled, disabledTooltip, readOnly, readOnlyTooltip });
+	// The field's `required` only announces the group. A native `required` would put one on every
+	// hidden radio, and the browser would stop the submit before the form's own validation runs.
+	const isFieldRequired = required === undefined && field?.required === true;
 
 	const groupEl = (
 		<RadioGroupPrimitive<string | null>
@@ -67,6 +79,9 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			value={value}
 			defaultValue={defaultValue}
 			onValueChange={onValueChange}
+			{...(isFieldRequired ? { 'aria-required': true } : {})}
+			{...(field?.status === 'danger' ? { 'aria-invalid': true } : {})}
+			{...ownLabelProps}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
@@ -105,6 +120,14 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
  *
  * Visual values are `--radio-group-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts).
+ *
+ * ### Inside a `Field.Group`
+ *
+ * A surrounding `Field.Group` names the group with its legend, marks it `aria-invalid` for a
+ * `danger` status and sets `aria-required` on it while the `Field.Group` is `required`, with no
+ * native `required`, so the form's own validation runs before the browser's. The group's own
+ * `required` wins, and keeps the native one. `RadioGroupField` renders both from one set of
+ * props.
  *
  * ### Items
  *
