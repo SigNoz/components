@@ -192,8 +192,10 @@
 // #endregion css-tokens
 
 export { ColorPicker } from './color-picker.js';
+export { ColorPickerField } from './presets/color-picker-field.js';
 export type {
 	ColorPickerAlignType,
+	ColorPickerFieldProps,
 	ColorPickerProps,
 	ColorPickerSideType,
 	ValidateColorPickerProps,

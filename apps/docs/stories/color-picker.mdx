@@ -78,7 +78,10 @@ pattern. The first change sets a color.
 Pass the color the panel should start from rather than leaving it empty, when an empty field has no
 meaning. A hidden default would store a color the user never picked.
 
-Writing `value` makes the picker controlled, even when it is `undefined`.
+`value` that is `undefined` on the first render leaves the picker uncontrolled, starting at
+`defaultValue`. A value that arrives later is followed, with a warning, and once controlled
+`undefined` is no color. A controlled picker that starts with no color passes `''`, or `null` with
+`nullable`.
 
 ## Callbacks
 
@@ -90,7 +93,7 @@ The pair follows `Slider`:
 | `onAfterChange` | Once when a change ends: on pointer release, on each key press, when the hex field commits                                               |
 
 A press on the area or the hue strip that does not move still sets the color under the pointer, and
-calls each callback once. A clear calls each once with `undefined`.
+calls each callback once. A clear calls each once with `undefined`, or `null` with `nullable`.
 
 Nothing is called when the hex did not change. Opening the panel and pressing the color it already
 holds writes nothing, and a drag that ends on the color it started from calls no `onAfterChange`.
@@ -245,6 +248,40 @@ points at the owning form by id, for a picker rendered outside the `<form>` elem
 - With `required`, a picker with no color blocks the submit and the trigger takes the focus.
   `required` and `allowClear` work together: the user can clear the color, and the form then blocks.
 
+## In a field
+
+`ColorPickerField` puts a picker inside a `Field` from one object. It takes the field's props
+(`label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message`, `required`) and
+every prop of the picker but `required`. It renders the same DOM as a hand-written `Field` around a
+`ColorPicker`.
+
+```tsx
+import { ColorPickerField } from '@signozhq/ui';
+
+<ColorPickerField
+	label="Series color"
+	description="The line color on the chart."
+	nativeButton
+	side="bottom"
+	align="start"
+	value={color}
+	onAfterChange={setColor}
+>
+	<button type="button">
+		<Swatch color={color} />
+	</button>
+</ColorPickerField>;
+```
+
+The field points its label at the trigger, and the description or the message describes it. `error`
+sets `aria-invalid` and `data-invalid` on the trigger, for your own styles. A `<button>` trigger is
+named by the label, and an `aria-label` on it outranks the label. `required` marks the label with an
+asterisk and sets no `aria-required`, which a button does not take. `id` stays the id of the popup.
+
+With react-hook-form, spread `field` from `Controller`, and pass `fieldState.error?.message` to
+`error`. `onBlur` fires once when the focus leaves the trigger and the popup together. A nullable
+schema field, such as a zod `.nullable()` one, adds `nullable`, and the clear then reports `null`.
+
 ## Accessibility
 
 The trigger's accessible name is yours to give, through its text or `aria-label`. Make it say the
@@ -290,10 +327,10 @@ The popup and everything in it render only while it is open. The clear button re
 `allowClear`, a color, and neither `disabled` nor `readOnly`, and the footer only with `footer`.
 Without `testId`, no part gets a `data-testid`.
 
-The trigger carries `data-popup-open`, `data-disabled` and `data-readonly` while they apply. The
-popup carries `data-readonly`, and `data-dragging` while a thumb moves under the pointer. The hex
-field carries `data-invalid` while its text is not a color, and the preview `data-empty` while
-there is no color.
+The trigger carries `data-popup-open`, `data-disabled` and `data-readonly` while they apply, and
+`data-invalid` while a `Field` around it is in `danger`. The popup carries `data-readonly`, and
+`data-dragging` while a thumb moves under the pointer. The hex field carries `data-invalid` while
+its text is not a color, and the preview `data-empty` while there is no color.
 
 `ForceOpenProvider`, from `@signozhq/ui/testing`, holds the popup of every picker under it open, for
 a story or a screenshot that needs it on screen. A disabled picker stays closed under it. Call sites

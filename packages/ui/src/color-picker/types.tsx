@@ -1,5 +1,6 @@
 import type { Popover } from '@base-ui/react/popover';
-import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, FocusEvent, ReactElement, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { COLOR_PICKER_OWN_ARIA_ATTRIBUTES } from './constants.js';
 
 type OriginalPositionerProps = Popover.Positioner.Props;
@@ -84,7 +85,7 @@ export type ValidateColorPickerProps<T> = (T extends { disabled: boolean | undef
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-export type ColorPickerProps = Pick<ComponentProps<'div'>, 'id'> &
+type ColorPickerBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 	ColorPickerAriaAttributes & {
 		/**
 		 * The trigger. Rendered as the element you pass, with the press handler, the aria
@@ -95,7 +96,8 @@ export type ColorPickerProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * own popup, so the press handler never reaches the element underneath.
 		 *
 		 * @note The picker does not restyle it in any state. It reads `data-popup-open`,
-		 * `data-disabled` and `data-readonly` to show them.
+		 * `data-disabled`, `data-readonly`, and `data-invalid` inside a `Field` in `danger`, to show
+		 * them.
 		 */
 		children: ReactElement;
 		/**
@@ -110,46 +112,15 @@ export type ColorPickerProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		nativeButton: boolean;
 		/**
-		 * The selected color, a hex string. `undefined` and `''` are no color.
-		 *
-		 * @note Reads `#rgb`, `#rgba`, `#rrggbb` and `#rrggbbaa`, in any case, and drops the alpha.
-		 *
-		 * @note Writing `value` makes the picker controlled, even with `undefined`.
-		 *
-		 * @note A value the picker cannot read, such as `red` or `rgb(...)`, is a bug: the panel
-		 * opens at `#000000` with an empty hex field, and a warning is logged in every
-		 * environment. The picker never calls `onChange` to correct it.
-		 *
-		 * @note While the user drags, the panel shows the color under the pointer, and applies a
-		 * `value` that changed from outside after the release. So a call site that only updates
-		 * `value` in `onAfterChange` still sees the drag.
-		 */
-		value?: string | undefined;
-		/**
-		 * The initial color when `value` is not written. Without both, the picker holds no color.
+		 * The initial color, for a picker that keeps its own state. Without it, and without
+		 * `value`, the picker holds no color.
 		 */
 		defaultValue?: string | undefined;
 		/**
-		 * Called on every change: while the area or the hue thumb drags (at most once per animation
-		 * frame), on each key press, when the hex field commits, and with `undefined` when the
-		 * color is cleared.
-		 *
-		 * @note A color is always `#rrggbb`, in lower case. Never called when the hex did not
-		 * change.
-		 */
-		onChange?: (value: string | undefined) => void;
-		/**
-		 * Called once when a change ends: on pointer release, on each key press, when the hex field
-		 * commits, and with `undefined` when the color is cleared.
-		 *
-		 * @note A release on the hex the press started from calls nothing.
-		 */
-		onAfterChange?: (value: string | undefined) => void;
-		/**
 		 * Lets the user take the picker back to no color: a clear button at the end of the hex
 		 * field, and `Delete` and `Backspace` on the trigger while the popup is closed. Both call
-		 * `onChange` and `onAfterChange` once each with `undefined`, close the popup and leave the
-		 * focus on the trigger.
+		 * `onChange` and `onAfterChange` once each with `undefined`, or `null` with `nullable`, close
+		 * the popup and leave the focus on the trigger.
 		 *
 		 * @note Only while there is a color, and never while `disabled` or `readOnly`.
 		 *
@@ -260,7 +231,133 @@ export type ColorPickerProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		testId?: string;
 		/**
+		 * Called when the focus leaves the picker, the trigger and its popup counting as one. Opening
+		 * the popup, which takes the focus, and closing it, which gives it back, do not call it.
+		 * Tabbing away, or pressing outside while the popup is open, does.
+		 *
+		 * @note Called one task after the focus moved, so a `Tab` through the popup has handed it on by
+		 * then, and `event.currentTarget` is the trigger. A handler that takes no argument, such as
+		 * the `onBlur` a react-hook-form `field` holds, is accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
+		/**
 		 * Any `data-*` prop is accepted and forwarded to the trigger, alongside `aria-*`.
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * `nullable` decides the types of `value`, `onChange` and `onAfterChange`, so they travel as a
+ * union: a picker that is not nullable keeps the props it always had, and a nullable one takes
+ * `null` in and reports it. `nullable` only takes `true`, so a picker is nullable by being written
+ * that way, never by a flag decided at run time.
+ *
+ * The plain member comes last in `ColorPickerProps` on purpose. TypeScript reports a props object
+ * that matches no member against the last one, so a `value={null}` written without `nullable` is
+ * told that `null` is not a `string | undefined`.
+ */
+interface ColorPickerNullableProps {
+	/**
+	 * Makes `value` also take `null` for no color, and makes the clear report `null` in place of
+	 * `undefined`. For a field whose schema is nullable, such as a zod `.nullable()` one behind a
+	 * react-hook-form `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable: true;
+	/**
+	 * The selected color, a hex string. `null`, `undefined` and `''` are no color.
+	 *
+	 * @note Reads `#rgb`, `#rgba`, `#rrggbb` and `#rrggbbaa`, in any case, and drops the alpha.
+	 *
+	 * @note `undefined` on the first render leaves the picker uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with no color. A value that arrives later is
+	 * followed, with one warning, and once controlled `undefined` is no color.
+	 *
+	 * @note A value the picker cannot read, such as `red` or `rgb(...)`, is a bug: the panel
+	 * opens at `#000000` with an empty hex field, and a warning is logged in every
+	 * environment. The picker never calls `onChange` to correct it.
+	 *
+	 * @note While the user drags, the panel shows the color under the pointer, and applies a
+	 * `value` that changed from outside after the release.
+	 */
+	value?: string | null;
+	/**
+	 * Called on every change: while the area or the hue thumb drags (at most once per animation
+	 * frame), on each key press, when the hex field commits, and with `null` when the color is
+	 * cleared.
+	 *
+	 * @note A color is always `#rrggbb`, in lower case. Never called when the hex did not
+	 * change.
+	 */
+	onChange?: (value: string | null) => void;
+	/**
+	 * Called once when a change ends: on pointer release, on each key press, when the hex field
+	 * commits, and with `null` when the color is cleared.
+	 *
+	 * @note A release on the hex the press started from calls nothing.
+	 */
+	onAfterChange?: (value: string | null) => void;
+}
+
+interface ColorPickerPlainProps {
+	/**
+	 * Makes `value` also take `null` for no color, and makes the clear report `null` in place of
+	 * `undefined`. For a field whose schema is nullable, such as a zod `.nullable()` one behind a
+	 * react-hook-form `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable?: never;
+	/**
+	 * The selected color, a hex string. `undefined` and `''` are no color.
+	 *
+	 * @note Reads `#rgb`, `#rgba`, `#rrggbb` and `#rrggbbaa`, in any case, and drops the alpha.
+	 *
+	 * @note `undefined` on the first render leaves the picker uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` is no color.
+	 *
+	 * @note A controlled picker that starts with no color passes `''`.
+	 *
+	 * @note A value the picker cannot read, such as `red` or `rgb(...)`, is a bug: the panel
+	 * opens at `#000000` with an empty hex field, and a warning is logged in every
+	 * environment. The picker never calls `onChange` to correct it.
+	 *
+	 * @note While the user drags, the panel shows the color under the pointer, and applies a
+	 * `value` that changed from outside after the release. So a call site that only updates
+	 * `value` in `onAfterChange` still sees the drag.
+	 */
+	value?: string | undefined;
+	/**
+	 * Called on every change: while the area or the hue thumb drags (at most once per animation
+	 * frame), on each key press, when the hex field commits, and with `undefined` when the
+	 * color is cleared.
+	 *
+	 * @note A color is always `#rrggbb`, in lower case. Never called when the hex did not
+	 * change.
+	 */
+	onChange?: (value: string | undefined) => void;
+	/**
+	 * Called once when a change ends: on pointer release, on each key press, when the hex field
+	 * commits, and with `undefined` when the color is cleared.
+	 *
+	 * @note A release on the hex the press started from calls nothing.
+	 */
+	onAfterChange?: (value: string | undefined) => void;
+}
+
+export type ColorPickerProps = ColorPickerBaseProps &
+	(ColorPickerNullableProps | ColorPickerPlainProps);
+
+/**
+ * Distributes over both shapes of `ColorPickerProps`, so `nullable` still decides the type of
+ * `value`, `onChange` and `onAfterChange`.
+ */
+type WithField<P> = P extends unknown ? Omit<P, 'required'> & FieldLabelAndMessageProps : never;
+
+/**
+ * The props of `ColorPickerField`: the field's label, description and status, and every prop of
+ * `ColorPicker` but `required`, which the field owns.
+ */
+export type ColorPickerFieldProps = WithField<ColorPickerProps>;

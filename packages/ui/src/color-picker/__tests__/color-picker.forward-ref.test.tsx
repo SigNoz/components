@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
-import { ColorPicker } from '../index.js';
+import { ColorPicker, ColorPickerField } from '../index.js';
 
 describe('ColorPicker forwardRef', () => {
 	it('forwards the ref to the trigger element', () => {
@@ -72,5 +72,29 @@ describe('ColorPicker forwardRef', () => {
 
 		expect(seen[0]).toBe(trigger);
 		expect(seen.at(-1)).toBeNull();
+	});
+});
+
+describe('ColorPickerField forwardRef', () => {
+	it('forwards the ref to the trigger, which focus() moves the focus to', () => {
+		const ref = createRef<HTMLElement>();
+		render(
+			<ColorPickerField
+				label="Series color"
+				nativeButton
+				side="bottom"
+				align="start"
+				testId="picker"
+				ref={ref}
+			>
+				<button type="button">Pick</button>
+			</ColorPickerField>,
+		);
+
+		expect(ref.current).toBe(screen.getByTestId('picker'));
+
+		ref.current?.focus();
+
+		expect(screen.getByRole('button', { name: 'Series color' })).toHaveFocus();
 	});
 });
