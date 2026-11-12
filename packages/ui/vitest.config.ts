@@ -3,8 +3,9 @@ import { fileURLToPath } from 'node:url';
 import getViteLibConfig from '@repo/typescript-config/vite.config.extend';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { reactCompilerOptions } from './react-compiler.config.js';
+import { createActWarningFilter } from './vitest.act-warnings.js';
 import { entries } from './vite.config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +18,8 @@ const nodeOnlyTests = [
 	'src/**/*.types.messages.test.ts',
 	'src/**/*.server.test.tsx',
 ];
+
+const actWarnings = createActWarningFilter();
 
 const shared = {
 	...getViteLibConfig(entries, { plugins: [react({ compiler: reactCompilerOptions })] }),
@@ -33,6 +36,8 @@ const shared = {
 
 export default defineConfig({
 	test: {
+		onConsoleLog: actWarnings.onConsoleLog,
+		reporters: [...configDefaults.reporters, actWarnings.reporter],
 		projects: [
 			{
 				...shared,
