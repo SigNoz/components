@@ -29,7 +29,7 @@ const RouterLink = forwardRef<
 const CustomButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
 	function CustomButton(props, ref) {
 		return (
-			// eslint-disable-next-line jsx-a11y/control-has-associated-label, react/button-has-type -- the children arrive through `props`, and the type is left to the caller.
+			// eslint-disable-next-line react/button-has-type -- the type is left to the caller.
 			<button ref={ref} data-custom="" {...props} />
 		);
 	},
