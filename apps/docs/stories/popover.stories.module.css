@@ -260,19 +260,6 @@
 	background: var(--l2-background);
 }
 
-/* A stand-in for a chart, pressed to show a popup at a point. */
-.chart {
-	display: block;
-	inline-size: 18rem;
-	block-size: 4rem;
-	margin-block-start: 0.75rem;
-	padding: 0;
-	border: 1px dashed var(--l2-border);
-	border-radius: 0.25rem;
-	background: transparent;
-	cursor: crosshair;
-}
-
 /* The showcase: two groups side by side, each with room below for its held popup. */
 .heldGroups {
 	display: flex;

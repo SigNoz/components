@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Dialog } from '../../dialog/dialog.js';
 import { Popover } from '../popover.js';
 import type { PopoverHandle } from '../popover-handle.js';
 import type { PopoverProps } from '../types.js';
@@ -191,6 +192,66 @@ describe('Popover.Trigger', () => {
 		expect(screen.getAllByTestId('services-popup')).toHaveLength(1);
 		expect(popup().querySelector('[data-slot="popover-viewport"]')).not.toBeNull();
 		expect(popup()).toHaveAttribute('data-shared');
+	});
+
+	it('closes on Escape and gives the focus back to the trigger it moved to', async () => {
+		const user = userEvent.setup();
+		render(<Services />);
+
+		await user.click(screen.getByRole('button', { name: 'Frontend' }));
+		await screen.findByText('Frontend summary');
+		await user.click(screen.getByRole('button', { name: 'Checkout' }));
+		await waitFor(() => expect(popup()).toHaveTextContent('Checkout summary'));
+		await user.keyboard('{Escape}');
+
+		await waitFor(() => expect(screen.queryByTestId('services-popup')).toBeNull());
+		expect(screen.getByRole('button', { name: 'Checkout' })).toHaveFocus();
+	});
+
+	it('moves the same content with no viewport when `children` is not a function', async () => {
+		function Help() {
+			const help = usePopoverHandle();
+
+			return (
+				<>
+					<Popover handle={help} side="bottom" align="start" aria-label="Help" testId="services">
+						<p>Settings apply to new data only.</p>
+					</Popover>
+					{['Sampling', 'Retention'].map((label) => (
+						<Popover.Trigger key={label} handle={help} nativeButton>
+							<button type="button">{label}</button>
+						</Popover.Trigger>
+					))}
+				</>
+			);
+		}
+		const user = userEvent.setup();
+		render(<Help />);
+
+		await user.click(screen.getByRole('button', { name: 'Sampling' }));
+		const shown = await screen.findByTestId('services-popup');
+		await user.click(screen.getByRole('button', { name: 'Retention' }));
+
+		await waitFor(() =>
+			expect(screen.getByRole('button', { name: 'Retention' })).toHaveAttribute('data-popup-open'),
+		);
+		expect(popup()).toBe(shown);
+		expect(shown.querySelector('[data-slot="popover-viewport"]')).toBeNull();
+		expect(shown).toHaveTextContent('Settings apply to new data only.');
+	});
+
+	it('opens inside the panel of a Dialog it is declared in', async () => {
+		const user = userEvent.setup();
+		render(
+			<Dialog open onClose={() => {}} title="Services">
+				<Services />
+			</Dialog>,
+		);
+
+		await user.click(await screen.findByRole('button', { name: 'Checkout' }));
+
+		await waitFor(() => expect(popup()).toHaveTextContent('Checkout summary'));
+		expect(popup().closest('[data-slot="dialog-popup"]')).not.toBeNull();
 	});
 
 	it('lays the new content out at its final width while the popup grows to it', async () => {
