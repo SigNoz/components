@@ -1,0 +1,316 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as ColorPickerStories from './color-picker.stories';
+
+<Meta of={ColorPickerStories} />
+
+# ColorPicker
+
+Picks any color and reports it as a hex string, from a popup hung off a trigger you provide. The
+popup is Base UI's `Popover`, and the panel inside it is the library's own: a saturation and
+brightness area, a hue strip, a preview of the color and a hex field.
+
+Use it as the "any other color" slot at the end of a row of preset swatches, or as the whole control
+on a legend row that sets one series color. The preset row stays outside the picker, since some
+presets (`Transparent`, `Default panel`) are not colors.
+
+## How to use
+
+`children`, `nativeButton`, `side` and `align` are required. There are no subcomponents to compose.
+
+```tsx
+import { ColorPicker } from '@signozhq/ui';
+
+export default function SeriesColor({ series, color, setColor }) {
+	return (
+		<ColorPicker nativeButton side="bottom" align="start" value={color} onAfterChange={setColor}>
+			<button type="button" aria-label={`Series color for ${series}, ${color}`}>
+				<Swatch color={color} />
+			</button>
+		</ColorPicker>
+	);
+}
+```
+
+<Primary />
+
+## The trigger
+
+`children` is the trigger. The picker merges its press handler, its aria attributes and its data
+attributes into the element you pass, so no wrapper is added around it, and it keeps its place in a
+flex row or a virtualized list.
+
+`nativeButton` says whether that element renders a native `<button>`:
+
+- `true` for a plain `<button>` or `Button`. The browser gives it its role, focus and `Enter` and
+  `Space` activation.
+- `false` for anything else. Base UI then adds `role="button"`, `tabIndex` and the key handlers.
+
+The value has to match the element, and Base UI logs an error when it does not.
+
+The trigger cannot be a `Tooltip`. A tooltip routes the props it does not know to its own popup, so
+the press handler never reaches the element underneath.
+
+The picker never restyles the trigger, on hover or in any state. Style it where you write it, and
+read the state from its attributes: `data-popup-open` while the popup is open, `data-disabled` and
+`data-readonly`.
+
+## Value format
+
+`value`, `defaultValue` and both callbacks hold a hex string. The picker reads `#rgb`, `#rgba`,
+`#rrggbb` and `#rrggbbaa`, in any case. It drops the alpha, so a saved `#3a2a6380` shows as
+`#3a2a63`. There is no alpha slider and no format select.
+
+The picker writes `#rrggbb` in lower case. It never rewrites a value on its own: a saved value keeps
+its form until the user changes the color.
+
+A value the picker cannot read, such as `red`, `rgb(...)` or a hex of the wrong length, is a bug in
+the call site. The panel opens at `#000000` with an empty hex field, and the picker logs a warning in
+every environment. It never calls `onChange` to correct it.
+
+## No color
+
+`undefined` is no color, and so is an uncontrolled picker with no `defaultValue`. `''` is read as no
+color too, so a stored empty string does not warn, but the picker never writes it.
+
+With no color the panel opens at `#000000`, the hex field is empty and the preview shows the empty
+pattern. The first change sets a color.
+
+Pass the color the panel should start from rather than leaving it empty, when an empty field has no
+meaning. A hidden default would store a color the user never picked.
+
+Writing `value` makes the picker controlled, even when it is `undefined`.
+
+## Callbacks
+
+The pair follows `Slider`:
+
+| Callback        | Called                                                                                                                                   |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `onChange`      | On every change: while the area or the hue thumb drags (at most once per animation frame), on each key press, when the hex field commits |
+| `onAfterChange` | Once when a change ends: on pointer release, on each key press, when the hex field commits                                               |
+
+A press on the area or the hue strip that does not move still sets the color under the pointer, and
+calls each callback once. A clear calls each once with `undefined`.
+
+Nothing is called when the hex did not change. Opening the panel and pressing the color it already
+holds writes nothing, and a drag that ends on the color it started from calls no `onAfterChange`.
+
+A call site that saves on every change can update `value` in `onAfterChange` alone:
+
+```tsx
+<ColorPicker nativeButton side="bottom" align="start" value={color} onAfterChange={saveColor}>
+	<button type="button" aria-label={`Base color, ${color}`} />
+</ColorPicker>
+```
+
+During the drag the panel shows the draft color, and it shows `value` again after the release. A
+`value` that changes from outside during a drag is applied after the release. So the commit-only
+pattern needs no second state.
+
+## The panel
+
+The area is saturation from left to right and brightness from bottom to top, painted for the hue on
+the strip. A press on either sets the color under the pointer, and a drag follows the pointer even
+outside the panel, without closing the popup.
+
+The panel keeps its own hue while it is open. Grey, black and white have no hue in hex, so a drag to
+the left edge of the area and back keeps the hue the user picked instead of jumping to red. A new
+`value` with no hue keeps the hue the panel had.
+
+The popup has one fixed width for every picker, and takes no `width` or `maxWidth`.
+
+## Hex field
+
+The field takes three or six hex digits, with or without a leading `#`, in any case. A pasted
+`#3A2A63` is read as `3a2a63`.
+
+It commits on `Enter`, which keeps the popup open, and on blur. Typing calls nothing and does not
+move the panel. While the text is not a color the field carries `aria-invalid="true"` and
+`data-invalid`, and the blur puts back the color the panel holds. `Esc` drops the text and closes the
+popup.
+
+The field follows the panel: a drag or a key on the area or the hue strip rewrites it, except while
+the field has the focus.
+
+## Footer
+
+`footer` renders under the hex field and receives the color the panel shows as `#rrggbb`, the draft
+during a drag included, and `#000000` while there is no color. A contrast note passed here follows the
+drag instead of waiting for the release.
+
+```tsx
+<ColorPicker
+	nativeButton
+	side="bottom"
+	align="start"
+	value={background}
+	onAfterChange={setBackground}
+	footer={(color) => <ContrastNote background={color} />}
+>
+	<button type="button" aria-label={`Custom background, ${background}`} />
+</ColorPicker>
+```
+
+The footer wraps inside the popup width and the popup grows in height with it. It never scrolls, so
+keep it to a line or two.
+
+It is not a live region. Content that has to be announced when it changes carries its own
+`aria-live`. Interactive content in it comes after the hex field in the tab order.
+
+## Clearing
+
+`allowClear` lets the user take the picker back to no color. It is off by default, the same prop and
+default as `DatePicker` and `Combobox`.
+
+With a color, the hex field ends in a clear button. A press calls `onChange` and
+`onAfterChange` once each with `undefined`, closes the popup and returns the focus to the trigger.
+`Delete` and `Backspace` on the closed trigger do the same.
+
+Without a color the button does not render and the keys do nothing. A disabled or read-only picker
+never clears.
+
+## Opening and closing
+
+A press on the trigger opens the popup, and a second press closes it. When it opens, the focus moves
+to the area.
+
+It closes on `Esc`, on a press outside it, and when the focus leaves it. The focus goes back to the
+trigger, except after a press outside, where it goes to what was pressed. A valid text in the hex
+field is committed by the close, and dropped by `Esc`.
+
+The picker owns its open state, so there is no `open` prop. The popup unmounts when it closes, and
+when the trigger unmounts, as a legend row scrolled out of a virtualized list does. A drag in progress
+then ends without `onAfterChange`.
+
+`container` portals the popup somewhere other than `document.body`. Inside a `Dialog` or `Drawer` it
+goes into the panel on its own.
+
+## Keyboard
+
+The trigger is one tab stop. Inside the popup the tab stops are the area, the hue strip, the hex
+field, the clear button while it shows, then anything focusable in `footer`. `Tab` past the last one
+closes the popup and moves on.
+
+| Where     | Keys                                                                                                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| area      | `ArrowRight` and `ArrowLeft` move saturation 1%, `ArrowUp` and `ArrowDown` brightness 1%, `Shift` with an arrow 10%, `PageUp` and `PageDown` brightness 10%, `Home` and `End` saturation to 0% and 100% |
+| hue strip | `ArrowRight` and `ArrowUp` add one degree, `ArrowLeft` and `ArrowDown` remove one, `PageUp`, `PageDown` and `Shift` with an arrow move 36, `Home` and `End` go to 0 and 359                             |
+| hex field | `Enter` commits and keeps the popup open, `Esc` drops the text and closes the popup                                                                                                                     |
+| trigger   | `Enter` and `Space` open a native button trigger, `Delete` and `Backspace` clear the color with `allowClear` while the popup is closed                                                                  |
+
+`Esc` anywhere in the popup closes it and returns the focus to the trigger.
+
+Every color can be reached from the keyboard, and a single press or a typed hex sets any color, so no
+color needs a drag.
+
+## Disabled and read-only
+
+`disabled` keeps the popup closed: a press, `Enter` and `Space` on the trigger do nothing, and
+`Delete` and `Backspace` do not clear it. Turning it on closes an open popup.
+
+`readOnly` still opens the popup, because the trigger shows a swatch and not the hex, and the exact
+value is what a read-only field is for. The area and the hue strip stay focusable and announce the
+value, but a drag, a press or a key changes nothing. The hex field is a native read-only input, so
+its text can be selected and copied. The clear button does not render, and the callbacks are never
+called.
+
+Each state takes its reason, `disabledTooltip` and `readOnlyTooltip`, and the types require it. The
+reason opens in a tooltip on the trigger, on hover and on keyboard focus. The trigger carries
+`aria-disabled` or `aria-readonly`, never the native `disabled`, so it stays focusable and the
+reason stays reachable.
+
+```tsx
+<ColorPicker
+	nativeButton
+	side="bottom"
+	align="start"
+	value={color}
+	readOnly={!canEdit}
+	readOnlyTooltip="Only the dashboard owner can change colors"
+>
+	<button type="button" aria-label={`Series color for ${series}, ${color}`} />
+</ColorPicker>
+```
+
+Both at once are treated as read-only, which says more about why the value cannot change.
+
+## Forms
+
+With `name`, `form` or `required`, the picker renders a hidden input next to the trigger that holds
+`#rrggbb`, or `''` while there is no color. It submits with the form like a native input. `form`
+points at the owning form by id, for a picker rendered outside the `<form>` element.
+
+- A disabled picker is left out of the submit, the same as a disabled native input.
+- A read-only picker is submitted, since its value is real.
+- With `required`, a picker with no color blocks the submit and the trigger takes the focus.
+  `required` and `allowClear` work together: the user can clear the color, and the form then blocks.
+
+## Accessibility
+
+The trigger's accessible name is yours to give, through its text or `aria-label`. Make it say the
+color, such as `Series color for cpu.user, #4e74f8`. A swatch alone tells a screen reader nothing,
+and the picker cannot read the name of an element it did not render.
+
+The picker writes `aria-haspopup="dialog"`, `aria-expanded`, `aria-controls` while open,
+`aria-disabled` and `aria-readonly` on the trigger itself. Passing any of them is a type error. Other
+`aria-*` and `data-*` props land on the trigger, and `id` lands on the popup.
+
+The popup is a non-modal `role="dialog"` named by the trigger. The page behind it stays readable and
+its scroll is not locked.
+
+| Part      | What a screen reader gets                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| area      | Two range inputs behind one tab stop, `Saturation` and `Brightness`, each read as a `2D slider` with its percent and the hex, eg: `60%, #3a2a63` |
+| hue strip | A range input, `Hue`, read with its degrees and the hex, eg: `255 degrees, #3a2a63`                                                              |
+| hex field | A text field, `Hex color`, invalid while its text is not a color                                                                                 |
+| clear     | A button, `Clear color`                                                                                                                          |
+| preview   | Hidden, since the hex field and the value texts already read the color                                                                           |
+
+A key on the area moves the focus to the input of the axis it changes, so a screen reader names that
+axis. The color is named by its hex only. These strings are fixed English, the same as `Slider`'s.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the trigger, where it wins over the element's own, and it names
+every part of the popup:
+
+| Element    | `data-testid`                |
+| ---------- | ---------------------------- |
+| popup      | `` `${testId}-popup` ``      |
+| area       | `` `${testId}-area` ``       |
+| area thumb | `` `${testId}-area-thumb` `` |
+| hue strip  | `` `${testId}-hue` ``        |
+| hue thumb  | `` `${testId}-hue-thumb` ``  |
+| preview    | `` `${testId}-preview` ``    |
+| hex field  | `` `${testId}-hex` ``        |
+| clear      | `` `${testId}-clear` ``      |
+| footer     | `` `${testId}-footer` ``     |
+
+The popup and everything in it render only while it is open. The clear button renders only with
+`allowClear`, a color, and neither `disabled` nor `readOnly`, and the footer only with `footer`.
+Without `testId`, no part gets a `data-testid`.
+
+The trigger carries `data-popup-open`, `data-disabled` and `data-readonly` while they apply. The
+popup carries `data-readonly`, and `data-dragging` while a thumb moves under the pointer. The hex
+field carries `data-invalid` while its text is not a color, and the preview `data-empty` while
+there is no color.
+
+`ForceOpenProvider`, from `@signozhq/ui/testing`, holds the popup of every picker under it open, for
+a story or a screenshot that needs it on screen. A disabled picker stays closed under it. Call sites
+do not use it.
+
+```tsx
+import { ForceOpenProvider } from '@signozhq/ui/testing';
+
+<ForceOpenProvider>
+	<ColorPicker nativeButton side="bottom" align="start" value="#4e74f8">
+		<button type="button" aria-label="Series color, #4e74f8" />
+	</ColorPicker>
+</ForceOpenProvider>;
+```
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={ColorPickerStories.Playground} />

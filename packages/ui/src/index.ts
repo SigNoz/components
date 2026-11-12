@@ -10,6 +10,7 @@ export * from './callout/index.js';
 export * from './card/index.js';
 export * from './checkbox/index.js';
 export * from './collapse/index.js';
+export * from './color-picker/index.js';
 export * from './combobox/index.js';
 export * from './command/index.js';
 export * from './date-picker/index.js';
