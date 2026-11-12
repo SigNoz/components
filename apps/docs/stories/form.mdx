@@ -51,9 +51,11 @@ export default function InviteForm({ save }) {
 
 A control with a value that is not a native event (Select, Combobox, Switch, Slider, Checkbox,
 Radio Group and Toggle Group) goes through a `Controller`: pass `field.value` to `value`,
-`field.onChange` to `onChange`, and `fieldState.error?.message` to `error`. Pass `defaultValues` to
-`useForm` for every field that goes through a `Controller`, so the control is controlled from its
-first render.
+`field.onChange` to `onChange`, `field.onBlur` to `onBlur`, and `fieldState.error?.message` to
+`error`. Pass `defaultValues` to `useForm` for every field that goes through a `Controller`, so the
+control is controlled from its first render. A value that only arrives later is still followed, with
+a warning. A schema field that allows `null` takes `nullable` on the control, where it has one, and
+`null` is then its empty value.
 
 Without react-hook-form, keep the value in state, validate in the handlers, and pass the result to
 `error`, or to `status` and `message`.
@@ -106,7 +108,9 @@ Select or Combobox picks the highlighted option and does not submit.
 
 After a submit with errors, focus moves to the first invalid control. With react-hook-form this is
 `shouldFocusError`, on by default, and it works because every control forwards its `ref` to its
-focusable element. Without react-hook-form you move the focus, as the `Validated` story does.
+focusable element. A control that is several elements, such as Radio Group, Radio Cards, Toggle
+Group and Slider, does it through its field shorthand, which hands `ref` to a focusable element
+inside. Without react-hook-form you move the focus, as the `Validated` story does.
 
 An error that does not belong to one field (the request failed, the license is not valid) is not a
 field message. Show it with a Callout or a Toast.

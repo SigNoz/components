@@ -118,7 +118,8 @@ change after that.
 
 `register` fits a control that fires a native change event. Select, Combobox, Switch, Checkbox,
 Slider, Radio Group and `Input.Number` call `onChange` with the value itself, so wire them through
-`Controller`:
+`Controller`. The `field` it renders with spreads onto a shorthand as it is: `value`, `onChange`,
+`onBlur`, `name` and `ref`.
 
 ```tsx
 import { Controller } from 'react-hook-form';
@@ -171,6 +172,9 @@ import { Controller } from 'react-hook-form';
 	)}
 />
 ```
+
+A schema field that allows `null` (zod `.nullable()`) takes `nullable` on Select, Combobox, Radio
+Group, Radio Cards, Toggle Group and the inputs, and `null` is then the empty value.
 
 ## Label
 
@@ -246,8 +250,10 @@ the control alone.
 While the field has a status:
 
 - The label and the message take the status color, and the message starts with the status icon.
-- The control shows the status. Input, Select and Combobox tint their frame. Checkbox, Switch, Radio
-  Group, Slider and Toggle Group have no frame, so the label and the message carry it.
+- The control shows the status. Input, Select and Combobox tint their frame. With `danger`, the
+  other controls paint a red border too: the box of a Checkbox, a ring around the track of a Switch,
+  the dials of a Radio Group, the cards of Radio Cards, the thumb of a Slider and the outline of a
+  Toggle Group. With `warning` and `success` the label and the message carry the status.
 - `danger` sets `aria-invalid` on the control. `warning` and `success` do not.
 
 `success` confirms a check that ran and passed, such as a name that is available. It is not the
@@ -413,6 +419,11 @@ A shorthand takes the props of the field and the props of the control in one obj
 field, and the field sets `aria-required` on the control. Every other prop goes to the control,
 including `id`, `ref`, `name`, `aria-*`, `data-*` and `testId`. `htmlFor` is not accepted: the
 shorthand wires the id itself.
+
+`ref` is the control's own, except on `RadioGroupField`, `RadioCardsField`, `ToggleGroupField` and
+`SliderField`. Their control is more than one element, so `ref` goes to a focusable one inside: the
+checked radio or card, the pressed button, or the first thumb. That is the element react-hook-form
+focuses after a failed submit, where the root of the bare control would ignore `focus()`.
 
 These two render the same DOM:
 

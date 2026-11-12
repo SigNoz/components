@@ -46,7 +46,7 @@ export const radioGroupArgTypes: Meta<typeof RadioGroup>['argTypes'] = {
 	value: {
 		control: 'text',
 		description:
-			'The controlled value. `null` is the empty group, and the only way to write one: `undefined` makes the group uncontrolled. Use with `onChange`.',
+			'The controlled value. `null` is the empty group. `undefined` on the first render leaves the group uncontrolled, and a value that arrives later is followed, with a warning. Once controlled, `undefined` and `null` both show no radio checked. Use with `onChange`.',
 		table: { category: 'State', type: { summary: 'string | null' } },
 	},
 	defaultValue: {

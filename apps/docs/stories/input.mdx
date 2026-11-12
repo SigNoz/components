@@ -86,6 +86,9 @@ native input. `htmlFor` is not accepted, because the shorthand wires the id itse
 They take the field props and the props of the member, listed under the member's own props below.
 `InputField.Number` is not a target for `register()`: use a `Controller`.
 
+A text input takes `nullable` for a schema field that holds `null` while empty: `value` accepts
+`null` and draws it as an empty field, and `onChange` stays the native event.
+
 The field owns the label, the description and the message, and the input owns its frame. Read the
 `Field` page for the label, the message and the accessibility the pair wires, and the `Form` page
 for submit and validation.
@@ -144,6 +147,18 @@ Otherwise reach for the role and the data attributes, never the hashed class nam
 The frame has `data-size`, `data-variant`, `data-status` while one is set, `data-disabled` while
 disabled and not read-only, `data-readonly` while read-only, `data-no-focus-ring` with
 `noFocusRing`, `data-focus-visible` while the field has keyboard focus, and `data-member` (`password`, `textarea` or `number`) on the members.
+
+### `InputField`
+
+`InputField` keeps `testId` on the frame, and the field parts take it as
+their prefix. The field root gets none.
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| label         | `` `${testId}-label` ``         |
+| label tooltip | `` `${testId}-label-tooltip` `` |
+| description   | `` `${testId}-description` ``   |
+| message       | `` `${testId}-message` ``       |
 
 ## Input props
 
