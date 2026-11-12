@@ -127,8 +127,9 @@ type CollapseControlProps = {
 	 * @note Use with `onExpandedChange`. For a section that keeps its own state use
 	 * `defaultExpanded` instead.
 	 *
-	 * @note Decided on the first render. An `expanded` that turns `undefined` later, or appears on a
-	 * section that started uncontrolled, is ignored with a warning.
+	 * @note `undefined` on the first render leaves the section uncontrolled. An `expanded` that
+	 * arrives later is followed, with a warning, and once controlled `undefined` is collapsed. The
+	 * same rule as `value` on every value control.
 	 */
 	expanded?: boolean;
 	/**

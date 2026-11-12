@@ -378,7 +378,7 @@ describe('Collapse.Group controlled', () => {
 		expect(onChange).not.toHaveBeenCalled();
 	});
 
-	it('stays controlled when value turns undefined, shows no item open, and warns', () => {
+	it('stays controlled when value turns undefined, and shows no item open', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { rerender } = render(
 			<Collapse.Group
@@ -406,14 +406,13 @@ describe('Collapse.Group controlled', () => {
 			expect(expanded(title)).toBe('false');
 		}
 
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('Collapse.Group: `value` turned `undefined`'),
-		);
+		expect(warn).not.toHaveBeenCalled();
 	});
 
-	it('ignores a value that appears on a group that started uncontrolled, and warns', async () => {
+	it('follows a value that appears on a group that started uncontrolled, and warns', async () => {
 		const user = userEvent.setup();
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const onChange = vi.fn();
 		const { rerender } = render(
 			<Collapse.Group variant="outlined" size="sm" items={GROUP_ITEMS} defaultValue={[]} />,
 		);
@@ -427,19 +426,22 @@ describe('Collapse.Group controlled', () => {
 				size="sm"
 				items={GROUP_ITEMS}
 				value={['logs']}
-				onChange={vi.fn()}
+				onChange={onChange}
 			/>,
 		);
 
-		expect(expanded('Traces')).toBe('true');
-		expect(expanded('Logs')).toBe('false');
+		expect(expanded('Traces')).toBe('false');
+		expect(expanded('Logs')).toBe('true');
 		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('Collapse.Group: `value` was `undefined` on the first render'),
+			expect.stringContaining(
+				'Collapse.Group: `value` was `undefined` on the first render and is set now',
+			),
 		);
 
-		await user.click(screen.getByRole('button', { name: 'Logs' }));
+		await user.click(screen.getByRole('button', { name: 'Traces' }));
 
-		expect(expanded('Logs')).toBe('true');
+		expect(onChange).toHaveBeenCalled();
+		expect(expanded('Traces')).toBe('false');
 	});
 
 	it('does not warn for a group that stays controlled or uncontrolled', async () => {

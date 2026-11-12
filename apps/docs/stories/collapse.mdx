@@ -104,7 +104,8 @@ screen reader cannot reach it and every click on it toggles the section.
 ## Controlled and uncontrolled
 
 `defaultExpanded` alone keeps the state in the section, and `expanded` with `onExpandedChange` is
-the controlled pair. Which one applies is decided on the first render. Writing `expanded` without
+the controlled pair. `expanded` that is `undefined` on the first render leaves the section
+uncontrolled, and one that arrives later is followed, with a warning. Writing `expanded` without
 `onExpandedChange`, or together with `defaultExpanded`, is a type error.
 
 `onExpandedChange` fires when the user presses the header button, with the new state. A change that
