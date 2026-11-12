@@ -103,6 +103,12 @@ describe('DatePicker trigger semantics', () => {
 		expect(style.outlineStyle).toBe('solid');
 		expect(style.outlineWidth).toBe('1px');
 	});
+
+	it('keeps the resting ring transparent, so focus fades it in', () => {
+		render(<DatePicker placeholder="Select date" aria-label="Expiry" />);
+
+		expect(getComputedStyle(getTrigger()).outlineColor).toBe('rgba(0, 0, 0, 0)');
+	});
 });
 
 describe('DatePicker naming', () => {

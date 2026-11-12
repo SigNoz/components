@@ -175,6 +175,34 @@ describe('DatePicker disabled', () => {
 		expect(style.cursor).toBe('not-allowed');
 	});
 
+	it('keeps the value colour, so the fade is the only dimming', () => {
+		setTokens('--date-picker-trigger-color: rgb(10, 20, 30);');
+		renderDisabled();
+
+		expect(getComputedStyle(getTrigger()).color).toBe('rgb(10, 20, 30)');
+	});
+
+	it('keeps the placeholder colour, so the fade is the only dimming', () => {
+		setTokens('--date-picker-placeholder-color: rgb(40, 50, 60);');
+		render(
+			<DatePicker
+				placeholder="Select date"
+				aria-label="Expiry"
+				disabled
+				disabledTooltip={undefined}
+			/>,
+		);
+
+		expect(getComputedStyle(screen.getByText('Select date')).color).toBe('rgb(40, 50, 60)');
+	});
+
+	it('takes the disabled opacity from its variable', () => {
+		setTokens('--date-picker-trigger-disabled-opacity: 0.25;');
+		renderDisabled();
+
+		expect(getComputedStyle(getTrigger()).opacity).toBe('0.25');
+	});
+
 	it('leaves the border where it was on hover', async () => {
 		setTokens(
 			'--date-picker-trigger-border: rgb(10, 10, 10); --date-picker-trigger-border-hover: rgb(200, 200, 200);',
