@@ -52,6 +52,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			testId,
 			id,
 			required,
+			name,
 			onBlur,
 			className: _className,
 			style: _style,
@@ -164,6 +165,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					open={open}
 					onOpenChange={handleOpenChange}
 					required={required}
+					name={disabled ? undefined : name}
 					modal={false}
 				>
 					<div

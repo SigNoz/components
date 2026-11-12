@@ -183,6 +183,13 @@ describe('onBlur', () => {
 	});
 });
 
+describe('name', () => {
+	test('takes a name, with one value or several', () => {
+		assertType(<Select placeholder="Pick" items={ONE} name="framework" />);
+		assertType(<Select placeholder="Pick" multiple items={ONE} name="frameworks" />);
+	});
+});
+
 describe('disabled and readOnly', () => {
 	test('rejects a disabled select with no reason', () => {
 		assertType(

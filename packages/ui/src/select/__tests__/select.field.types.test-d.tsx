@@ -12,6 +12,20 @@ const selectRef = createRef<HTMLElement>();
 declare const maybeError: string | undefined;
 declare const maybeDisabled: boolean | undefined;
 declare const controllerRef: Ref<HTMLElement>;
+/**
+ * What react-hook-form's `Controller` and `useController` hand over as `field`, written out by
+ * hand because the library does not depend on react-hook-form.
+ */
+type ReactHookFormField<Value> = {
+	onChange: (...event: any[]) => void;
+	onBlur: () => void;
+	value: Value;
+	name: string;
+	ref: (instance: any) => void;
+	disabled?: boolean;
+};
+declare const rhfField: ReactHookFormField<string>;
+declare const rhfMultipleField: ReactHookFormField<string[]>;
 
 describe('label, items and placeholder', () => {
 	test('all three are required', () => {
@@ -151,6 +165,31 @@ describe('the select props', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - the event comes from the trigger or the popup, never from an input
 		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} onBlur={(event: FocusEvent<HTMLInputElement>) => event.currentTarget.value} />);
+	});
+
+	test('a react-hook-form field is accepted as the props it spreads', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				{...rhfField}
+				error={maybeError}
+			/>,
+		);
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				multiple
+				items={ONE}
+				{...rhfMultipleField}
+				error={maybeError}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - a field that holds an array is a multiple select
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} {...rhfMultipleField} />);
 	});
 
 	test('disabled and read-only keep their reasons', () => {

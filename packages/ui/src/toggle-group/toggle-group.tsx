@@ -48,6 +48,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		defaultValue,
 		onChange,
 		onBlur,
+		name,
 		disabled = false,
 		disabledTooltip,
 		readOnly = false,
@@ -201,6 +202,18 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 					/>
 				)}
 			</TooltipProviderIfMissing>
+			{name !== undefined &&
+				items.map((item) =>
+					pressedValues.includes(item.value) && item.disabled !== true ? (
+						<input
+							key={item.value}
+							type="hidden"
+							name={name}
+							value={item.value}
+							disabled={isDisabled}
+						/>
+					) : null,
+				)}
 		</div>
 	);
 });
@@ -254,6 +267,11 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  *
  * Pressed is the filled state, and hovering an unpressed button paints half that fill, so the hover
  * previews the press.
+ *
+ * ### In a form
+ *
+ * With `name`, each pressed button submits its `value` under it, so a `multiple` bar submits one
+ * entry per pressed button. A disabled bar submits nothing, and a read-only one still does.
  *
  * ### Disabled and read-only
  *
