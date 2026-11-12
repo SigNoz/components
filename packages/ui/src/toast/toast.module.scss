@@ -3,6 +3,22 @@
     --toast-viewport-offset,
     var(--toast-internal-viewport-offset, var(--spacing-8))
   );
+  --toast-internal-offset-top: var(
+    --toast-viewport-offset-top,
+    var(--toast-internal-viewport-offset-top, var(--toast-internal-offset))
+  );
+  --toast-internal-offset-right: var(
+    --toast-viewport-offset-right,
+    var(--toast-internal-viewport-offset-right, var(--toast-internal-offset))
+  );
+  --toast-internal-offset-bottom: var(
+    --toast-viewport-offset-bottom,
+    var(--toast-internal-viewport-offset-bottom, var(--toast-internal-offset))
+  );
+  --toast-internal-offset-left: var(
+    --toast-viewport-offset-left,
+    var(--toast-internal-viewport-offset-left, var(--toast-internal-offset))
+  );
 
   position: var(--toast-viewport-position, fixed);
   // The toast reports what a click inside a dialog, a popover or a tooltip just did, so it cannot
@@ -16,7 +32,7 @@
   inline-size: var(--toast-viewport-inline-size, 26.25rem);
   max-inline-size: var(
     --toast-viewport-max-inline-size,
-    calc(100vw - 2 * var(--toast-internal-offset))
+    calc(100vw - 2 * max(var(--toast-internal-offset-left), var(--toast-internal-offset-right)))
   );
   // The viewport has no surface of its own, so a click beside a toast reaches the page below.
   // Each toast turns it back on, which also keeps it clickable while a modal dialog has turned
@@ -24,19 +40,19 @@
   pointer-events: var(--toast-viewport-pointer-events, none);
 
   &[data-position^='top'] {
-    top: var(--toast-internal-offset);
+    top: var(--toast-internal-offset-top);
   }
 
   &[data-position^='bottom'] {
-    bottom: var(--toast-internal-offset);
+    bottom: var(--toast-internal-offset-bottom);
   }
 
   &[data-position$='left'] {
-    left: var(--toast-internal-offset);
+    left: var(--toast-internal-offset-left);
   }
 
   &[data-position$='right'] {
-    right: var(--toast-internal-offset);
+    right: var(--toast-internal-offset-right);
   }
 
   &[data-position$='center'] {
