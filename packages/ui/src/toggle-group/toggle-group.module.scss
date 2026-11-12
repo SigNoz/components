@@ -10,7 +10,7 @@
 
   // Not left to a global reset, which signoz-v3 lacks: without it a `width="100%"` bar overflows
   // its parent by its two borders.
-  box-sizing: border-box;
+  box-sizing: var(--toggle-group-box-sizing, border-box);
 
   // The `width`/`maxWidth` props arrive as the internal pair, so a token still outranks a call site.
   inline-size: var(--toggle-group-inline-size, var(--toggle-group-internal-inline-size, fit-content));
@@ -19,8 +19,9 @@
     var(--toggle-group-internal-max-inline-size, 100%)
   );
 
-  border: var(--toggle-group-border-width, 1px) solid
-    var(--toggle-group-border-color, var(--toggle-group-border));
+  border-width: var(--toggle-group-border-width, 1px);
+  border-style: var(--toggle-group-border-style, solid);
+  border-color: var(--toggle-group-border-color, var(--toggle-group-border));
   border-radius: var(--toggle-group-border-radius, var(--radius-1));
   background-color: var(--toggle-group-background-color, var(--toggle-group-internal-background));
 
@@ -33,8 +34,8 @@
   overflow: var(--toggle-group-overflow, clip);
   min-inline-size: var(--toggle-group-min-inline-size, 0);
 
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--toggle-group-font-variant-numeric, normal);
+  font-feature-settings: var(--toggle-group-font-feature-settings, 'ss01' 1);
 
   &[data-variant='outlined'][data-color='secondary'] {
     --toggle-group-internal-background: var(--toggle-group-secondary-outlined-background-color, var(--toggle-group-secondary-outlined-background));
@@ -122,7 +123,7 @@
 
   // The bar is 32px outside, so a button is 32px less the bar's two borders. `border-box` holds
   // that height when a token adds padding or a border back; signoz-v3 has no global reset.
-  box-sizing: border-box;
+  box-sizing: var(--toggle-group-button-box-sizing, border-box);
   block-size: var(
     --toggle-group-button-block-size,
     calc(var(--spacing-16) - 2 * var(--toggle-group-border-width, 1px))
@@ -144,19 +145,21 @@
   line-height: var(--toggle-group-button-line-height, var(--label-small-400-line-height));
   letter-spacing: var(--toggle-group-button-letter-spacing, var(--label-small-400-letter-spacing));
   text-transform: var(--toggle-group-button-text-transform, var(--label-small-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--toggle-group-button-font-variant-numeric, normal);
+  font-feature-settings: var(--toggle-group-button-font-feature-settings, 'ss01' 1);
   white-space: var(--toggle-group-button-white-space, nowrap);
   cursor: var(--toggle-group-button-cursor, pointer);
 
-  transition: background-color var(--toggle-group-transition-duration, 150ms) ease,
-    color var(--toggle-group-transition-duration, 150ms) ease;
+  transition-property: var(--toggle-group-transition-property, background-color, color);
+  transition-duration: var(--toggle-group-transition-duration, 150ms);
+  transition-timing-function: var(--toggle-group-transition-timing-function, ease);
 
   // A joined row reads as one control, so the seam between two segments is the bar's own rule
   // rather than a gap.
   & + & {
-    border-inline-start: var(--toggle-group-button-divider-width, 1px) solid
-      var(--toggle-group-button-divider-color, var(--toggle-group-border));
+    border-inline-start-width: var(--toggle-group-button-divider-width, 1px);
+    border-inline-start-style: var(--toggle-group-button-divider-style, solid);
+    border-inline-start-color: var(--toggle-group-button-divider-color, var(--toggle-group-border));
   }
 
   &:hover:not([aria-disabled='true']) {
@@ -253,7 +256,7 @@
 
   // 24px is the smallest target WCAG 2.2 calls adequate. The bar is 32px tall, so only the inline
   // axis needs saying. `border-box` keeps the padding and the divider inside those 24px.
-  box-sizing: border-box;
+  box-sizing: var(--toggle-group-scroll-button-box-sizing, border-box);
   min-inline-size: var(--toggle-group-scroll-button-min-inline-size, var(--spacing-12));
   padding-inline: var(--toggle-group-scroll-button-padding-inline, var(--spacing-2));
   padding-block: var(--toggle-group-scroll-button-padding-block, 0);
@@ -275,13 +278,15 @@
 
   // The hard edge, on whichever side the strip is.
   &[data-direction='start'] {
-    border-inline-end: var(--toggle-group-scroll-button-divider-width, 1px) solid
-      var(--toggle-group-scroll-button-divider-color, var(--toggle-group-border));
+    border-inline-end-width: var(--toggle-group-scroll-button-divider-width, 1px);
+    border-inline-end-style: var(--toggle-group-scroll-button-divider-style, solid);
+    border-inline-end-color: var(--toggle-group-scroll-button-divider-color, var(--toggle-group-border));
   }
 
   &[data-direction='end'] {
-    border-inline-start: var(--toggle-group-scroll-button-divider-width, 1px) solid
-      var(--toggle-group-scroll-button-divider-color, var(--toggle-group-border));
+    border-inline-start-width: var(--toggle-group-scroll-button-divider-width, 1px);
+    border-inline-start-style: var(--toggle-group-scroll-button-divider-style, solid);
+    border-inline-start-color: var(--toggle-group-scroll-button-divider-color, var(--toggle-group-border));
   }
 
   &:hover:not(:disabled) {

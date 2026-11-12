@@ -18,23 +18,27 @@
 	--input-internal-text-transform: var(--label-base-400-text-transform);
 	--input-internal-padding-block: var(--spacing-3);
 	// Reset on every frame, or an Input in another one's slot inherits the outer ring color.
-	--input-internal-outline-color: transparent;
+	--input-internal-outline-color: var(--input-outline-color, transparent);
 
 	display: var(--input-display, flex);
 	align-items: var(--input-align-items, center);
 	gap: var(--input-gap, var(--spacing-2));
-	box-sizing: border-box;
+	box-sizing: var(--input-box-sizing, border-box);
 	inline-size: var(--input-internal-width, 100%);
 	max-inline-size: var(--input-internal-max-width, none);
 	block-size: var(--input-internal-height);
 	padding: var(--input-padding,
 			var(--input-internal-padding-block) var(--spacing-6) var(--input-internal-padding-block) var(--spacing-3));
-	border: var(--input-border-width, 1px) solid var(--input-internal-border);
+	border-width: var(--input-border-width, 1px);
+	border-style: var(--input-border-style, solid);
+	border-color: var(--input-internal-border);
 	border-radius: var(--input-border-radius, var(--radius-1));
 	background-color: var(--input-internal-background);
 	// The ring is always drawn and only its color changes, so it fades in like the other states
 	// instead of popping. An `outline-style` change cannot be interpolated.
-	outline: var(--input-focus-outline-width, 1px) solid var(--input-internal-outline-color);
+	outline-width: var(--input-focus-outline-width, 1px);
+	outline-style: var(--input-focus-outline-style, solid);
+	outline-color: var(--input-internal-outline-color);
 	outline-offset: var(--input-focus-outline-offset, 1px);
 	transition-property: var(--input-transition-property,
 			border-color,
@@ -50,8 +54,8 @@
 	line-height: var(--input-line-height, var(--input-internal-line-height));
 	letter-spacing: var(--input-letter-spacing, var(--input-internal-letter-spacing));
 	text-transform: var(--input-text-transform, var(--input-internal-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--input-font-variant-numeric, normal);
+	font-feature-settings: var(--input-font-feature-settings, 'ss01' 1);
 
 	// The default block padding leaves a 24px frame shorter than its text.
 	&[data-size='sm'] {
@@ -146,9 +150,9 @@
 	outline: var(--input-field-outline, none);
 	background-color: var(--input-field-background, transparent);
 	color: var(--input-internal-foreground);
-	font: inherit;
-	letter-spacing: inherit;
-	text-transform: inherit;
+	font: var(--input-field-font, inherit);
+	letter-spacing: var(--input-field-letter-spacing, inherit);
+	text-transform: var(--input-field-text-transform, inherit);
 
 	&::placeholder {
 		color: var(--input-internal-placeholder);
@@ -161,7 +165,7 @@
 	// Browsers suppress pointer events over a disabled control, which would keep hover from ever
 	// reaching the frame and make `disabledTooltip` unreachable. The frame takes the hover instead.
 	&:disabled {
-		pointer-events: none;
+		pointer-events: var(--input-field-disabled-pointer-events, none);
 	}
 }
 
@@ -174,12 +178,12 @@
 .input__status-icon {
 	display: var(--input-adornment-display, inline-flex);
 	align-items: var(--input-adornment-align-items, center);
-	flex-shrink: 0;
+	flex-shrink: var(--input-adornment-flex-shrink, 0);
 
 	svg {
 		inline-size: var(--input-icon-size, 14px);
 		block-size: var(--input-icon-size, 14px);
-		flex-shrink: 0;
+		flex-shrink: var(--input-icon-flex-shrink, 0);
 	}
 }
 
@@ -234,7 +238,7 @@
 .input__stepper {
 	display: var(--input-stepper-display, inline-flex);
 	flex-direction: var(--input-stepper-direction, column);
-	flex-shrink: 0;
+	flex-shrink: var(--input-stepper-flex-shrink, 0);
 }
 
 .input__step-button {

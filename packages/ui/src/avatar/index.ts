@@ -23,7 +23,9 @@
  * | `--avatar-fallback-width` | `100%` |
  * | `--avatar-flex-shrink` | `0` |
  * | `--avatar-font-family` | `var(--avatar-internal-font-family)` |
+ * | `--avatar-font-feature-settings` | `'ss01' 1` |
  * | `--avatar-font-style` | `normal` |
+ * | `--avatar-font-variant-numeric` | `normal` |
  * | `--avatar-font-weight` | `var(--avatar-internal-font-weight)` |
  * | `--avatar-highlight-danger-background` | `-` |
  * | `--avatar-highlight-danger-background-color` | `var(--avatar-highlight-danger-background)` |

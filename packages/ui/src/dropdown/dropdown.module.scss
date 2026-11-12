@@ -1,9 +1,9 @@
 .dropdown__trigger {
-  font: inherit;
-  letter-spacing: inherit;
-  word-spacing: inherit;
-  text-transform: inherit;
-  color: inherit;
+  font: var(--dropdown-trigger-font, inherit);
+  letter-spacing: var(--dropdown-trigger-letter-spacing, inherit);
+  word-spacing: var(--dropdown-trigger-word-spacing, inherit);
+  text-transform: var(--dropdown-trigger-text-transform, inherit);
+  color: var(--dropdown-trigger-color, inherit);
 }
 
 // Rules read colour only through the `--dropdown-internal-*` pairs below, never a semantic token
@@ -58,8 +58,8 @@
   padding-block: var(--dropdown-padding-block, 0);
   padding-inline: var(--dropdown-padding-inline, 0);
 
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--dropdown-font-variant-numeric, normal);
+  font-feature-settings: var(--dropdown-font-feature-settings, 'ss01' 1);
 
   border-width: var(--dropdown-border-width, 1px);
   border-style: var(--dropdown-border-style, solid);
@@ -119,31 +119,39 @@
   );
 
   // `mask-image` rather than a gradient overlay, so the row fades instead of being covered. A mask
-  // reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
+  // reads alpha only: keep the opaque stop `black`, a translucent token would dim every row.
   &[data-scroll-start] {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 var(--dropdown-scroll-fade-size, var(--spacing-10))
+    mask-image: var(
+      --dropdown-viewport-scroll-start-mask-image,
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--dropdown-scroll-fade-size, var(--spacing-10))
+      )
     );
   }
 
   &[data-scroll-end] {
-    mask-image: linear-gradient(
-      to top,
-      transparent 0,
-      #000 var(--dropdown-scroll-fade-size, var(--spacing-10))
+    mask-image: var(
+      --dropdown-viewport-scroll-end-mask-image,
+      linear-gradient(
+        to top,
+        transparent 0,
+        black var(--dropdown-scroll-fade-size, var(--spacing-10))
+      )
     );
   }
 
   &[data-scroll-start][data-scroll-end] {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 var(--dropdown-scroll-fade-size, var(--spacing-10)),
-      #000
-        calc(100% - var(--dropdown-scroll-fade-size, var(--spacing-10))),
-      transparent 100%
+    mask-image: var(
+      --dropdown-viewport-scroll-start-scroll-end-mask-image,
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--dropdown-scroll-fade-size, var(--spacing-10)),
+        black calc(100% - var(--dropdown-scroll-fade-size, var(--spacing-10))),
+        transparent 100%
+      )
     );
   }
 }
@@ -323,11 +331,11 @@
   block-size: var(--dropdown-item-checkbox-check-size, 12px);
 
   color: var(--dropdown-internal-item-control-checked-foreground);
-  visibility: hidden;
+  visibility: var(--dropdown-item-control-check-visibility, hidden);
 }
 
 .dropdown__item-affix .dropdown__item-control[data-checked] .dropdown__item-control-check {
-  visibility: visible;
+  visibility: var(--dropdown-item-control-check-checked-visibility, visible);
 }
 
 .dropdown__item-control-dot {
@@ -336,10 +344,10 @@
 
   border-radius: var(--dropdown-item-radio-dot-border-radius, var(--radius-round));
   background-color: var(--dropdown-internal-item-control-checked-foreground);
-  visibility: hidden;
+  visibility: var(--dropdown-item-control-dot-visibility, hidden);
 
   [data-checked] > & {
-    visibility: visible;
+    visibility: var(--dropdown-item-control-dot-checked-visibility, visible);
   }
 }
 
@@ -440,10 +448,10 @@
   // Content can draw outside its box, so the slot only clips while it is collapsed.
   overflow: var(--dropdown-affix-overflow, visible);
 
-  transition:
-    grid-template-columns var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing),
-    margin-inline-start var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing);
-  transition-delay: 0s;
+  transition-property: var(--dropdown-affix-transition-property, grid-template-columns, margin-inline-start);
+  transition-duration: var(--dropdown-affix-transition-duration, var(--dropdown-internal-loading-duration));
+  transition-timing-function: var(--dropdown-affix-transition-timing-function, var(--dropdown-internal-loading-easing));
+  transition-delay: var(--dropdown-affix-transition-delay, 0s);
 }
 
 // Only a trailing slot is ever empty, so the gap it gives back is the one before it.
@@ -456,44 +464,44 @@
 
 .dropdown__affix-content,
 .dropdown__affix-loader {
-  grid-area: 1 / 1;
+  grid-area: var(--dropdown-affix-layer-grid-area, 1 / 1);
   display: var(--dropdown-affix-layer-display, inline-flex);
   align-items: var(--dropdown-affix-layer-align-items, center);
   justify-content: var(--dropdown-affix-layer-justify-content, center);
-  min-inline-size: 0;
+  min-inline-size: var(--dropdown-affix-layer-min-inline-size, 0);
 
-  transition:
-    opacity var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing),
-    transform var(--dropdown-internal-loading-duration) var(--dropdown-internal-loading-easing);
+  transition-property: var(--dropdown-affix-layer-transition-property, opacity, transform);
+  transition-duration: var(--dropdown-affix-layer-transition-duration, var(--dropdown-internal-loading-duration));
+  transition-timing-function: var(--dropdown-affix-layer-transition-timing-function, var(--dropdown-internal-loading-easing));
 }
 
 .dropdown__affix-content {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: var(--dropdown-affix-content-opacity, 1);
+  transform: var(--dropdown-affix-content-transform, translateY(0));
   transition-delay: var(--dropdown-internal-loading-delay);
 }
 
 .dropdown__affix-loader {
-  opacity: 0;
+  opacity: var(--dropdown-affix-loader-opacity, 0);
   transform: translateY(var(--dropdown-internal-loading-travel));
-  transition-delay: 0s;
+  transition-delay: var(--dropdown-affix-loader-transition-delay, 0s);
 }
 
 // Frozen while hidden instead of turning behind an invisible layer.
 .dropdown__affix:not([data-loading]) .dropdown__affix-loader [data-slot='spinner'] {
-  animation-play-state: paused;
+  animation-play-state: var(--dropdown-affix-spinner-not-loading-animation-play-state, paused);
 }
 
 .dropdown__affix[data-loading] {
   .dropdown__affix-content {
-    opacity: 0;
+    opacity: var(--dropdown-affix-content-loading-opacity, 0);
     transform: translateY(calc(-1 * var(--dropdown-internal-loading-travel)));
-    transition-delay: 0s;
+    transition-delay: var(--dropdown-affix-content-loading-transition-delay, 0s);
   }
 
   .dropdown__affix-loader {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: var(--dropdown-affix-loader-loading-opacity, 1);
+    transform: var(--dropdown-affix-loader-loading-transform, translateY(0));
     transition-delay: var(--dropdown-internal-loading-delay);
   }
 }
@@ -528,8 +536,8 @@
     var(--label-base-400-letter-spacing)
   );
   text-transform: var(--dropdown-search-input-text-transform, var(--label-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--dropdown-search-input-font-variant-numeric, normal);
+  font-feature-settings: var(--dropdown-search-input-font-feature-settings, 'ss01' 1);
 
   &::placeholder {
     color: var(--dropdown-internal-search-placeholder);

@@ -22,7 +22,10 @@
  * | `--badge-archive-outlined-label` | `-` |
  * | `--badge-border-color` | `var(--badge-internal-border-color, transparent)` |
  * | `--badge-border-radius` | `var(--radius-round)` |
+ * | `--badge-border-style` | `solid` |
  * | `--badge-border-width` | `1px` |
+ * | `--badge-box-sizing` | `border-box` |
+ * | `--badge-capitalize-text-transform` | `capitalize` |
  * | `--badge-cursor` | `default` |
  * | `--badge-danger-background` | `-` |
  * | `--badge-danger-background-color` | `var(--badge-danger-background)` |
@@ -36,6 +39,7 @@
  * | `--badge-danger-outlined-label` | `-` |
  * | `--badge-display` | `inline-flex` |
  * | `--badge-font-family` | `var(--badge-internal-font-family)` |
+ * | `--badge-font-feature-settings` | `'ss01' 1` |
  * | `--badge-font-size` | `var(--badge-internal-font-size)` |
  * | `--badge-font-variant-numeric` | `slashed-zero` |
  * | `--badge-font-weight` | `var(--badge-internal-font-weight)` |
@@ -72,8 +76,10 @@
  * | `--badge-label-white-space` | `nowrap` |
  * | `--badge-letter-spacing` | `var(--badge-internal-letter-spacing)` |
  * | `--badge-line-height` | `var(--badge-internal-line-height)` |
+ * | `--badge-lowercase-text-transform` | `lowercase` |
  * | `--badge-max-width` | `var(--badge-internal-max-width, min(100%, 7.5rem))` |
  * | `--badge-min-width` | `var(--badge-internal-min-width, auto)` |
+ * | `--badge-none-text-transform` | `none` |
  * | `--badge-outlined-background-color` | `var(--badge-internal-outlined-background)` |
  * | `--badge-outlined-border-color` | `var(--badge-internal-outlined-border)` |
  * | `--badge-outlined-color` | `var(--badge-internal-outlined-foreground)` |
@@ -100,6 +106,7 @@
  * | `--badge-secondary-outlined-border-color` | `var(--badge-secondary-outlined-border)` |
  * | `--badge-secondary-outlined-color` | `var(--badge-secondary-outlined-label)` |
  * | `--badge-secondary-outlined-label` | `-` |
+ * | `--badge-single-char-justify-content` | `center` |
  * | `--badge-single-char-padding-inline` | `0` |
  * | `--badge-success-background` | `-` |
  * | `--badge-success-background-color` | `var(--badge-success-background)` |

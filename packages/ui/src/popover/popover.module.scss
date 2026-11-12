@@ -39,8 +39,8 @@
 	line-height: var(--popover-line-height, var(--paragraph-base-400-line-height));
 	letter-spacing: var(--popover-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--popover-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--popover-font-variant-numeric, normal);
+	font-feature-settings: var(--popover-font-feature-settings, 'ss01' 1);
 	border-width: var(--popover-border-width, 1px);
 	border-style: var(--popover-border-style, solid);
 	border-color: var(--popover-internal-border);

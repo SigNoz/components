@@ -1,9 +1,9 @@
 // Out of the flow and without a size, so the panel lays out as if it were not there. The popups
 // inside position themselves against it and overflow it.
 .popup-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
+  position: var(--popup-container-position, absolute);
+  top: var(--popup-container-top, 0);
+  left: var(--popup-container-left, 0);
+  width: var(--popup-container-width, 0);
+  height: var(--popup-container-height, 0);
 }

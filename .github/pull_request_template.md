@@ -49,7 +49,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 **CSS** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#2-css-organization))
 
 - [ ] `{name}.module.scss`, no Tailwind, no CVA, no Sass variables
-- [ ] Every declaration is `var(--{component}-x, <default>)`, layout and resets included; only reduced-motion rules, `display: none` on `[hidden]`, pseudo-element `content` and a declaration another public variable needs to work stay bare
+- [ ] Every declaration is `var(--{component}-x, <default>)`, layout, resets and numerals included; only reduced-motion and forced-colors rules, `display: none` on `[hidden]`, pseudo-element `content`, keyframe frames and a declaration another public variable or the keyframes need to work stay bare (`css-variables.test.ts` checks it)
 - [ ] Every colour, variant colours included, is a hook onto a design token (`var(--callout-success-background-color, var(--callout-success-background))`), never a literal
 - [ ] No literal fallback on a design token (`var(--spacing-4, 8px)`); a literal default only where no token matches
 - [ ] Colours use semantic tokens only, with no `--bg-*` / `--text-*` primitives referenced from a component
@@ -68,7 +68,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] Figma frame linked from the story via `parameters.design` (or the PR body says the design file has no frame yet)
 - [ ] Checked in light *and* dark
 - [ ] Sizing and density consistent with sibling components (`sm` matches `Button` / `Input`)
-- [ ] Typography via `Typography` or one text style, all six properties from that style, not an ad-hoc `font-size` / `font-weight`; each root and popup pins the numerals (`font-feature-settings: 'ss01' 1`, `font-variant-numeric: normal`)
+- [ ] Typography via `Typography` or one text style, all six properties from that style, not an ad-hoc `font-size` / `font-weight`; each root and popup pins the numerals (`font-feature-settings` `'ss01' 1`, `font-variant-numeric` `normal`, each behind its variable)
 - [ ] Truncated text keeps its descenders (`overflow: clip visible`); heights come from layout, not line height
 - [ ] Icons from `@signozhq/icons`, sized with tokens, no inline SVG with hardcoded `px`
 - [ ] Every state built: default, hover, focus-visible, active, disabled, loading, invalid, selected, empty, long/truncated

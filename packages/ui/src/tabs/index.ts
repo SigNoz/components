@@ -16,6 +16,7 @@
  * | `--tabs-bar-content-end-order` | `4` |
  * | `--tabs-bar-content-gap` | `var(--spacing-8)` |
  * | `--tabs-bar-content-start-order` | `0` |
+ * | `--tabs-bar-rule-color` | `transparent` |
  * | `--tabs-border` | `-` |
  * | `--tabs-border-color` | `var(--tabs-border)` |
  * | `--tabs-border-spacer-flex-basis` | `0%` |
@@ -25,12 +26,15 @@
  * | `--tabs-border-spacer-grow-flex-shrink` | `0` |
  * | `--tabs-border-spacer-min-block-size` | `0` |
  * | `--tabs-border-spacer-min-inline-size` | `var(--tabs-internal-spacer-min-inline, 0)` |
+ * | `--tabs-border-style` | `solid` |
  * | `--tabs-border-width` | `1px` |
  * | `--tabs-content-focus-visible-box-shadow` | `0 0 0 2px var(--tabs-focus-ring), 0 0 0 4px var...` |
  * | `--tabs-content-focus-visible-outline` | `none` |
  * | `--tabs-content-focus-visible-ring-offset-color` | `var(--tabs-focus-ring-offset)` |
  * | `--tabs-content-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--tabs-content-font-feature-settings` | `'ss01' 1` |
  * | `--tabs-content-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--tabs-content-font-variant-numeric` | `normal` |
  * | `--tabs-content-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--tabs-content-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--tabs-content-line-height` | `var(--paragraph-base-400-line-height)` |
@@ -54,6 +58,8 @@
  * | `--tabs-flex-direction` | `column` |
  * | `--tabs-focus-ring` | `-` |
  * | `--tabs-focus-ring-offset` | `-` |
+ * | `--tabs-font-feature-settings` | `'ss01' 1` |
+ * | `--tabs-font-variant-numeric` | `normal` |
  * | `--tabs-gap` | `var(--spacing-4)` |
  * | `--tabs-hover-slider-background` | `-` |
  * | `--tabs-hover-slider-background-color` | `var(--tabs-hover-slider-background)` |
@@ -157,6 +163,8 @@
  * | `--tabs-trigger-border` | `none` |
  * | `--tabs-trigger-box-sizing` | `border-box` |
  * | `--tabs-trigger-cursor` | `pointer` |
+ * | `--tabs-trigger-font-feature-settings` | `'ss01' 1` |
+ * | `--tabs-trigger-font-variant-numeric` | `normal` |
  * | `--tabs-trigger-primary-active-color` | `var(--tabs-primary-label-hover)` |
  * | `--tabs-trigger-primary-align-items` | `center` |
  * | `--tabs-trigger-primary-border-radius` | `var(--tabs-primary-radius)` |
@@ -207,16 +215,21 @@
  * | `--tabs-trigger-secondary-disabled-stripe-before-mask-image` | `linear-gradient(to left, transparent 5%, black ...` |
  * | `--tabs-trigger-secondary-disabled-stripe-color` | `var(--tabs-secondary-stripe-disabled)` |
  * | `--tabs-trigger-secondary-disabled-stripe-content` | `""` |
+ * | `--tabs-trigger-secondary-disabled-stripe-first-child-border-start-start-radius` | `inherit` |
  * | `--tabs-trigger-secondary-disabled-stripe-inset-block` | `0` |
  * | `--tabs-trigger-secondary-disabled-stripe-inset-inline` | `0` |
+ * | `--tabs-trigger-secondary-disabled-stripe-last-child-border-start-end-radius` | `inherit` |
  * | `--tabs-trigger-secondary-disabled-stripe-pointer-events` | `none` |
  * | `--tabs-trigger-secondary-disabled-stripe-position` | `absolute` |
  * | `--tabs-trigger-secondary-disabled-stripe-size` | `var(--spacing-12)` |
  * | `--tabs-trigger-secondary-disabled-stripe-z-index` | `1` |
  * | `--tabs-trigger-secondary-disabled-z-index` | `0` |
  * | `--tabs-trigger-secondary-display` | `inline-flex` |
+ * | `--tabs-trigger-secondary-dot-active-display` | `block` |
+ * | `--tabs-trigger-secondary-dot-animation-name` | `var(--tabs-internal-dot-animation-name)` |
  * | `--tabs-trigger-secondary-dot-background-color` | `var(--tabs-primary-indicator)` |
  * | `--tabs-trigger-secondary-dot-border-radius` | `var(--radius-round)` |
+ * | `--tabs-trigger-secondary-dot-display` | `none` |
  * | `--tabs-trigger-secondary-dot-duration` | `180ms` |
  * | `--tabs-trigger-secondary-dot-easing` | `cubic-bezier(0.34, 1.2, 0.64, 1)` |
  * | `--tabs-trigger-secondary-dot-enter-scale` | `0.2` |

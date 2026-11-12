@@ -28,7 +28,9 @@
  * | `--popover-flex-direction` | `column` |
  * | `--popover-focus-visible-outline` | `none` |
  * | `--popover-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--popover-font-feature-settings` | `'ss01' 1` |
  * | `--popover-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--popover-font-variant-numeric` | `normal` |
  * | `--popover-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--popover-foreground` | `-` |
  * | `--popover-foreground-color` | `var(--popover-foreground)` |

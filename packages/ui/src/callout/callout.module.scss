@@ -20,8 +20,8 @@
 	line-height: var(--callout-internal-line-height);
 	letter-spacing: var(--callout-internal-letter-spacing);
 	text-transform: var(--callout-internal-text-transform);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--callout-font-variant-numeric, normal);
+	font-feature-settings: var(--callout-font-feature-settings, 'ss01' 1);
 	// The padding of the title row and of the chevron and close boxes. Each takes it back with a
 	// negative margin, so a larger hit area never moves the layout.
 	--callout-internal-button-padding: var(--callout-button-padding, var(--spacing-2));
@@ -218,8 +218,8 @@
 	background: var(--callout-toggle-background, transparent);
 	color: var(--callout-internal-title, inherit);
 	font: var(--callout-toggle-font, inherit);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--callout-toggle-font-variant-numeric, normal);
+	font-feature-settings: var(--callout-toggle-font-feature-settings, 'ss01' 1);
 	text-align: var(--callout-toggle-text-align, start);
 	cursor: var(--callout-toggle-cursor, pointer);
 
@@ -266,10 +266,10 @@
 	// The box sits on the title row and does not scroll with a parent scroll box, so it drops the
 	// focus padding and takes no clicks: it never blocks the title row or what scrolls under it.
 	&[hidden] {
-		position: absolute;
-		padding: 0;
-		margin: 0;
-		pointer-events: none;
+		position: var(--callout-description-hidden-position, absolute);
+		padding: var(--callout-description-hidden-padding, 0);
+		margin: var(--callout-description-hidden-margin, 0);
+		pointer-events: var(--callout-description-hidden-pointer-events, none);
 	}
 
 	&:focus-visible {
@@ -318,7 +318,7 @@
 
 	// Base UI marks the title row `data-panel-open` while expanded, which turns the chevron up.
 	.callout__toggle[data-panel-open] > & > svg {
-		transform: rotate(180deg);
+		transform: var(--callout-button-icon-panel-open-transform, rotate(180deg));
 	}
 }
 
@@ -348,13 +348,13 @@
 	transition-duration: var(--callout-transition-duration, 150ms);
 
 	&:is(button) {
-		display: inline;
-		padding: 0;
-		border: 0;
-		background: none;
-		font: inherit;
-		letter-spacing: inherit;
-		text-transform: inherit;
+		display: var(--callout-link-is-button-display, inline);
+		padding: var(--callout-link-is-button-padding, 0);
+		border: var(--callout-link-is-button-border, 0);
+		background: var(--callout-link-is-button-background, none);
+		font: var(--callout-link-is-button-font, inherit);
+		letter-spacing: var(--callout-link-is-button-letter-spacing, inherit);
+		text-transform: var(--callout-link-is-button-text-transform, inherit);
 	}
 
 	&:hover {

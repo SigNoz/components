@@ -26,7 +26,9 @@
     justify-content: var(--kbd-justify-content, center);
     inline-size: var(--kbd-size, var(--spacing-10));
     block-size: var(--kbd-size, var(--spacing-10));
-    border: var(--kbd-border-width, 1px) solid var(--kbd-border-color, var(--secondary-border));
+    border-width: var(--kbd-border-width, 1px);
+    border-style: var(--kbd-border-style, solid);
+    border-color: var(--kbd-border-color, var(--secondary-border));
     border-block-end-width: var(--kbd-edge-width, 2px);
     border-radius: var(--kbd-border-radius, var(--radius-1-5));
     background-color: var(--kbd-background, var(--secondary-background));
