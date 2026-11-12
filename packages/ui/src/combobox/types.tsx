@@ -1,5 +1,6 @@
 import type { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { ComboboxItemKind } from './constants.js';
 
 type OriginalPortalProps = BaseCombobox.Portal.Props;
@@ -445,6 +446,19 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		readOnlyTooltip?: ReactNode;
 		/**
+		 * When true, the trigger carries `aria-required="true"`, so assistive technology announces the
+		 * combobox as required.
+		 *
+		 * @note Inside a `Field` or a `Field.Group` the field's `required` only sets `aria-required`
+		 * on the trigger, with no native `required`, so the form's own validation runs before the
+		 * browser's. This prop wins over the field, and keeps the native `required`. In a `Form`,
+		 * which is `noValidate`, it blocks nothing: the consumer's validation refuses the empty
+		 * value.
+		 *
+		 * @default false
+		 */
+		required?: boolean;
+		/**
 		 * When true, only the rows in view are mounted. For lists of thousands of rows.
 		 *
 		 * @note Group headings become plain rows of the list, without `role="group"`.
@@ -505,3 +519,17 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 	};
 
 export type ComboboxProps = ComboboxBaseProps & (ComboboxSingleProps | ComboboxMultipleProps);
+
+/**
+ * Distributive, so the single and the multiple shape of `ComboboxProps` stay apart: a plain `Omit`
+ * over the union would drop the link between `multiple`, `value` and `onChange`.
+ */
+type WithField<P> = P extends unknown
+	? Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps
+	: never;
+
+/**
+ * The props of `ComboboxField`: the field's label, description and status, and every prop of
+ * `Combobox`.
+ */
+export type ComboboxFieldProps = WithField<ComboboxProps>;

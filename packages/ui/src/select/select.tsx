@@ -1,5 +1,6 @@
 import { Select as BaseSelect } from '@base-ui/react/select';
 import {
+	type AriaAttributes,
 	type CSSProperties,
 	forwardRef,
 	type ReactElement,
@@ -9,6 +10,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { useFieldContext } from '../lib/field-context.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { useLabelFor } from '../lib/use-label-for.js';
@@ -48,10 +50,20 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			maxWidth,
 			testId,
 			id,
+			required,
 			className: _className,
 			style: _style,
 			...triggerProps
 		} = props;
+
+		const field = useFieldContext();
+		// A `Field` or a `Field.Group` around the select announces it as required with `aria-required`
+		// alone, and its own prop wins. The form's own validation owns the rule, and the native
+		// `required` of Base UI's hidden input would stop the browser's submit before it runs.
+		const isFieldRequired = required === undefined && field?.required === true;
+		const fieldRequiredProps: AriaAttributes | undefined = isFieldRequired
+			? { 'aria-required': true }
+			: undefined;
 
 		const { selectedValues, commit } = useSelectionValue({
 			isControlled: 'value' in props,
@@ -119,9 +131,14 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 
 		// The name, in the order the accessible name takes it: `aria-labelledby`, `aria-label`, a
 		// `<label for>`, then the placeholder. The popup list takes the same one.
-		const [labelId, labelRef] = useLabelFor(id);
 		// State, not a ref: the popup reads the layer the trigger sits in when it mounts.
 		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+		// A `Field` points its `<label for>` at the trigger one commit after the trigger mounts, and at
+		// the id Base UI gives it when there is no `id`. The label is looked up again once the trigger
+		// is mounted, by the id the element ended up with.
+		const [labelId, labelRef] = useLabelFor(
+			triggerElement === null ? undefined : (id ?? triggerElement.id),
+		);
 		const triggerRef = useMemo(() => mergeRefs(ref, labelRef, setTriggerElement), [ref, labelRef]);
 		const labelledBy =
 			triggerProps['aria-labelledby'] ??
@@ -142,6 +159,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					onValueChange={handleValueChange as never}
 					open={open}
 					onOpenChange={handleOpenChange}
+					required={required}
 					modal={false}
 				>
 					<div
@@ -156,7 +174,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					>
 						<SelectTrigger
 							ref={triggerRef}
-							forwardedProps={triggerProps}
+							forwardedProps={{ ...fieldRequiredProps, ...triggerProps }}
 							id={id}
 							accessibleName={accessibleName}
 							labelledBy={labelledBy}
@@ -246,6 +264,18 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  *
  * `aria-invalid` reaches the trigger like any other `aria-*` prop and paints its border in the
  * destructive colour, hovered or not. It changes nothing else.
+ *
+ * ### Inside a Field
+ *
+ * In a `Field` the trigger takes its name from the field's label, its description from the field's
+ * row, and `aria-invalid` from a `danger` status, so the border turns destructive with the
+ * message. A multiple trigger is a `<div>`, so the browser does not link the label to it: the
+ * select adds `aria-labelledby` and focuses the trigger when the label is clicked. The field's
+ * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
+ * runs before the browser's. The select's own `required` wins, and keeps the native one.
+ * `SelectField` writes the two together.
+ *
+ * Only `danger` tints the border. `warning` and `success` reach the label and the message alone.
  *
  * `loading` swaps the trigger's chevron for a spinner and the rows for `loadingContent`. It blocks
  * nothing: the popup still opens.
