@@ -1,5 +1,11 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
-import { type CSSProperties, type ReactElement, useRef } from 'react';
+import {
+	type CSSProperties,
+	type FocusEvent,
+	type ReactElement,
+	type RefObject,
+	useRef,
+} from 'react';
 import { partTestId } from '../../lib/utils.js';
 import { ToggleGroup } from '../../toggle-group/toggle-group.js';
 import styles from '../color-picker.module.scss';
@@ -26,6 +32,8 @@ import { ColorPickerStrip } from './color-picker-strip.js';
  * @access private
  */
 export type ColorPickerPopupProps = {
+	popupRef: RefObject<HTMLDivElement>;
+	onBlur: (event: FocusEvent<HTMLElement>) => void;
 	popupId: string;
 	triggerId: string;
 	state: ColorPickerState;
@@ -47,6 +55,8 @@ export type ColorPickerPopupProps = {
  * @access private
  */
 export function ColorPickerPopup({
+	popupRef,
+	onBlur,
 	popupId,
 	triggerId,
 	state,
@@ -102,6 +112,7 @@ export function ColorPickerPopup({
 
 	return (
 		<PopoverPrimitive.Popup
+			ref={popupRef}
 			id={popupId}
 			initialFocus={saturationRef}
 			aria-labelledby={triggerId}
@@ -112,6 +123,7 @@ export function ColorPickerPopup({
 			data-opaque={isOpaque || undefined}
 			className={styles['color-picker']}
 			style={style}
+			onBlur={onBlur}
 		>
 			<ColorPickerArea
 				hsva={panelHsva}

@@ -1,0 +1,43 @@
+/* Fields stack 16px apart, the rhythm the Form page documents. */
+.stack {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* The picker does not style its trigger: a swatch button, the same as on the ColorPicker page. */
+.swatch {
+	box-sizing: border-box;
+	inline-size: 24px;
+	block-size: 24px;
+	padding: 0;
+	border: 1px solid var(--l2-border);
+	border-radius: var(--radius-2);
+	background: var(--swatch, transparent);
+	cursor: pointer;
+}
+
+.swatch:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 2px;
+}
+
+.swatch[data-popup-open] {
+	outline: 2px solid var(--l1-foreground);
+	outline-offset: 2px;
+}
+
+/* No color: a diagonal rule over the surface, the same cue the panel preview gives. */
+.swatch[data-empty] {
+	background: linear-gradient(
+		to top right,
+		transparent calc(50% - 1px),
+		var(--danger-background) 50%,
+		transparent calc(50% + 1px)
+	);
+}
+
+/* The trigger reads `data-invalid` itself while the field is in `danger`. */
+.swatch[data-invalid] {
+	border-color: var(--danger-background);
+}
