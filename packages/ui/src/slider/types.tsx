@@ -1,4 +1,4 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, CSSProperties, FocusEvent, ReactNode } from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SLIDER_OWN_ARIA_ATTRIBUTES, SliderColor, SliderTextOverflow } from './constants.js';
 
@@ -156,6 +156,16 @@ type SliderBaseProps = Pick<ComponentProps<'div'>, 'id'> & {
 	 * @default '100%'
 	 */
 	maxWidth?: CSSProperties['maxWidth'];
+	/**
+	 * Called once when the focus leaves the slider, for a form that validates on blur.
+	 *
+	 * @note Moving the focus from one thumb of `Slider.Range` to the other does not call it, the
+	 * focus is still inside the slider.
+	 *
+	 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
+	 * accepted.
+	 */
+	onBlur?: (event: FocusEvent<HTMLElement>) => void;
 	/**
 	 * Forwarded to the root as `data-testid`. The parts take it as a prefix: `${testId}-track`,
 	 * `${testId}-indicator`, `${testId}-thumb-0` (and `${testId}-thumb-1` on `Slider.Range`) and

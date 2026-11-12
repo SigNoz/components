@@ -13,7 +13,7 @@
  * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
  * comment stops covering it.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { RadioCards } from '../radio-cards.js';
 import { RadioCardsField } from '../presets/radio-cards-field.js';
@@ -119,6 +119,21 @@ describe('the props of the cards', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - with `allowClear` the group reports `null`
 		assertType(<RadioCardsField label="Signal" items={items} allowClear onChange={(value: string) => value} />);
+	});
+
+	test('takes the blur handler, with or without the event', () => {
+		assertType(<RadioCardsField label="Signal" items={items} onBlur={noop} />);
+		assertType(
+			<RadioCardsField
+				label="Signal"
+				items={items}
+				onBlur={(event: FocusEvent<HTMLElement>) => event}
+			/>,
+		);
+		assertType(<RadioCardsField.Multiple label="Tools" items={items} onBlur={noop} />);
+		// oxfmt-ignore
+		// @ts-expect-error - the blur handler takes a focus event
+		assertType(<RadioCardsField label="Signal" items={items} onBlur={(event: MouseEvent) => event} />);
 	});
 
 	test('disabled and readOnly bring their reason', () => {

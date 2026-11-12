@@ -24,6 +24,20 @@ const textAreaRef = createRef<HTMLTextAreaElement>();
 declare const maybeError: string | undefined;
 declare const maybeStatus: 'danger' | undefined;
 declare const maybeMessage: string | undefined;
+/**
+ * The object react-hook-form's `Controller` hands to `render`, modelled by hand: the library does
+ * not depend on react-hook-form, but a consumer spreads this exact shape onto a field.
+ */
+type ControllerField<T> = {
+	onChange: (...event: any[]) => void;
+	onBlur: () => void;
+	value: T;
+	name: string;
+	ref: (instance: any) => void;
+	disabled?: boolean;
+};
+declare const textField: ControllerField<string>;
+declare const numberField: ControllerField<number | null>;
 declare const registration: {
 	name: string;
 	onChange: (event: unknown) => Promise<boolean>;
@@ -89,6 +103,13 @@ describe('props of the field and of the input in one object', () => {
 	test('accepts a react-hook-form register() spread', () => {
 		assertType(<InputField label="Email" error={maybeError} {...registration} />);
 		assertType(<InputField label="Email" required {...registration} />);
+	});
+
+	test('accepts a react-hook-form Controller field spread, on every member', () => {
+		assertType(<InputField label="Email" error={maybeError} {...textField} />);
+		assertType(<InputField.Password label="Secret" error={maybeError} {...textField} />);
+		assertType(<InputField.TextArea label="Notes" error={maybeError} {...textField} />);
+		assertType(<InputField.Number label="Replica count" error={maybeError} {...numberField} />);
 	});
 
 	test('accepts the members with their own props and refs', () => {

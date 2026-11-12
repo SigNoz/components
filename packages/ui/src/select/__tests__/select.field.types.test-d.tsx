@@ -2,7 +2,7 @@
  * Type-level tests for the props of {@link SelectField}. Run by `vitest --typecheck` and by
  * `pnpm type-check`. See `field.types.test-d.tsx` for how the cases are written.
  */
-import { createRef, type Ref } from 'react';
+import { createRef, type FocusEvent, type Ref } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { SelectField } from '../presets/select-field.js';
 import type { SelectItemType } from '../types.js';
@@ -134,6 +134,23 @@ describe('the select props', () => {
 		const field = { value: 'a', onChange: (value: string) => value, ref: controllerRef };
 
 		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} {...field} />);
+	});
+
+	test('onBlur takes the blur event, or no parameter at all', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+		assertType(
+			<SelectField label="Framework" placeholder="Pick" items={ONE} onBlur={() => undefined} />,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - the event comes from the trigger or the popup, never from an input
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} onBlur={(event: FocusEvent<HTMLInputElement>) => event.currentTarget.value} />);
 	});
 
 	test('disabled and read-only keep their reasons', () => {

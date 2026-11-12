@@ -40,8 +40,8 @@ const SwitchFieldRoot = createFieldShorthand<SwitchFieldProps, HTMLSpanElement>(
  *
  * `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required`
  * go to the field, which names and describes the switch. Every other prop goes to the switch:
- * `color`, `value`, `onChange`, `name`, `id`, `ref`, `aria-*`, `data-*` and `testId` land where
- * `Switch` puts them. The field parts take `testId` as their prefix (`${testId}-label`,
+ * `color`, `value`, `onChange`, `onBlur`, `name`, `id`, `ref`, `aria-*`, `data-*` and `testId` land
+ * where `Switch` puts them. The field parts take `testId` as their prefix (`${testId}-label`,
  * `${testId}-message`), and the field root gets none.
  *
  * The switch is bare: `children`, `description`, `textPlacement` and the other props that lay out
@@ -60,6 +60,7 @@ const SwitchFieldRoot = createFieldShorthand<SwitchFieldProps, HTMLSpanElement>(
  *
  * @example
  * ```tsx
+ * // react-hook-form: `field` carries value, onChange, onBlur, name and ref
  * <Controller
  *   control={control}
  *   name="enabled"
@@ -67,10 +68,8 @@ const SwitchFieldRoot = createFieldShorthand<SwitchFieldProps, HTMLSpanElement>(
  *     <SwitchField
  *       label="Send alerts"
  *       color="primary"
- *       value={field.value}
- *       onChange={field.onChange}
- *       ref={field.ref}
  *       error={fieldState.error?.message}
+ *       {...field}
  *     />
  *   )}
  * />

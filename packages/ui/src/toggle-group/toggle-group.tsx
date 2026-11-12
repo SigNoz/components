@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useFieldContext } from '../lib/field-context.js';
+import { onFocusLeave } from '../lib/focus-leave.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -45,6 +46,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		value,
 		defaultValue,
 		onChange,
+		onBlur,
 		disabled = false,
 		disabledTooltip,
 		readOnly = false,
@@ -136,6 +138,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 			data-readonly={isReadOnly || undefined}
 			className={styles['toggle-group']}
 			style={toggleGroupStyle}
+			onBlur={onFocusLeave(onBlur)}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>

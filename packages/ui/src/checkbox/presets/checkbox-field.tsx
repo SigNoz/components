@@ -113,8 +113,8 @@ type Checked<T extends CheckboxFieldProps> = T &
  * region. `danger` sets `aria-invalid` on the checkbox, and the text and the message take the
  * status color.
  *
- * Every other prop goes to the `Checkbox`: `color`, `value`, `onChange`, `name`, `id`, `ref`,
- * `aria-*`, `data-*` and `testId` land where `Checkbox` puts them. The field parts take `testId` as
+ * Every other prop goes to the `Checkbox`: `color`, `value`, `onChange`, `onBlur`, `name`, `id`,
+ * `ref`, `aria-*`, `data-*` and `testId` land where `Checkbox` puts them. The field parts take `testId` as
  * their prefix: `${testId}-description`, `${testId}-message` and `${testId}-label-tooltip`. There
  * is no `${testId}-label`, the checkbox owns its text.
  *
@@ -130,13 +130,20 @@ type Checked<T extends CheckboxFieldProps> = T &
  *
  * @example
  * ```tsx
- * <CheckboxField
- *   color="primary"
- *   label="I accept the terms of service"
- *   required
- *   description="You can read them in your account settings."
- *   error={errors.terms?.message}
- *   {...field}
+ * // react-hook-form: `field` carries value, onChange, onBlur, name and ref
+ * <Controller
+ *   control={control}
+ *   name="terms"
+ *   render={({ field, fieldState }) => (
+ *     <CheckboxField
+ *       color="primary"
+ *       label="I accept the terms of service"
+ *       required
+ *       description="You can read them in your account settings."
+ *       error={fieldState.error?.message}
+ *       {...field}
+ *     />
+ *   )}
  * />
  * ```
  */

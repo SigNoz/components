@@ -13,7 +13,7 @@
  * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
  * comment stops covering it.
  */
-import { createRef, type Ref } from 'react';
+import { createRef, type FocusEvent, type Ref } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { CheckboxField } from '../presets/checkbox-field.js';
 
@@ -22,6 +22,20 @@ const checkboxRef = createRef<HTMLSpanElement>();
 declare const maybeError: string | undefined;
 declare const maybeDisabled: boolean | undefined;
 declare const controllerRef: Ref<HTMLSpanElement>;
+
+/**
+ * The object react-hook-form's `Controller` hands to `render`, modelled by hand: the library does
+ * not depend on react-hook-form, but a consumer spreads this exact shape onto a field.
+ */
+type ControllerField<T> = {
+	onChange: (...event: any[]) => void;
+	onBlur: () => void;
+	value: T;
+	name: string;
+	ref: (instance: any) => void;
+	disabled?: boolean;
+};
+declare const controllerField: ControllerField<boolean>;
 
 describe('label and color', () => {
 	test('the label and the color are required', () => {
@@ -128,6 +142,17 @@ describe('the props of the checkbox', () => {
 		assertType(<CheckboxField label="Accept the terms" color="primary" defaultValue />);
 	});
 
+	test('takes the blur handler, with or without the event', () => {
+		assertType(<CheckboxField label="Accept the terms" color="primary" onBlur={noop} />);
+		assertType(
+			<CheckboxField
+				label="Accept the terms"
+				color="primary"
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+	});
+
 	test('value and defaultValue are one or the other', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - `value` makes the checkbox controlled for its whole life
@@ -169,6 +194,21 @@ describe('the props of the checkbox', () => {
 				color="primary"
 				aria-describedby="hint"
 				data-analytics="terms"
+			/>,
+		);
+	});
+});
+
+describe('a react-hook-form Controller field', () => {
+	test('is spread whole, next to the field props', () => {
+		assertType(
+			<CheckboxField
+				label="Accept the terms"
+				color="primary"
+				required
+				description="You can read them in your account settings."
+				error={maybeError}
+				{...controllerField}
 			/>,
 		);
 	});

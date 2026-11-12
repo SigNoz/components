@@ -51,6 +51,23 @@ const InputFieldNumber = createFieldShorthand<InputFieldNumberProps, HTMLInputEl
  * ```tsx
  * <InputField label="Email" required type="email" error={errors.email?.message} {...register('email')} />
  * ```
+ *
+ * @example
+ * ```tsx
+ * // `InputField.Number` reports a number, so react-hook-form drives it through a `Controller`
+ * <Controller
+ *   control={control}
+ *   name="replicas"
+ *   render={({ field, fieldState }) => (
+ *     <InputField.Number
+ *       label="Replica count"
+ *       min={1}
+ *       error={fieldState.error?.message}
+ *       {...field}
+ *     />
+ *   )}
+ * />
+ * ```
  */
 export const InputField = Object.assign(InputFieldRoot, {
 	Password: InputFieldPassword,
