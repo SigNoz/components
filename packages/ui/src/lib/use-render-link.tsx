@@ -156,7 +156,9 @@ export function useRenderLink(
 
 	const action = useRender({
 		enabled: isAction,
-		render: isValidElement(render) ? render : undefined,
+		render: isValidElement(render)
+			? cloneElement(element, { children: elementProps['children'] ?? children })
+			: undefined,
 		defaultTagName: 'button',
 		ref,
 		props: {
