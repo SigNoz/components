@@ -5,6 +5,7 @@ import {
 	type ReactElement,
 	type RefAttributes,
 	useMemo,
+	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useFieldContext } from '../lib/field-context.js';
@@ -77,8 +78,12 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 	const isReadOnly = readOnly === true;
 	const isDisabled = isReadOnly ? false : disabled;
 
-	const groupValue = useMemo(() => toGroupValue(value), [value]);
-	const groupDefaultValue = useMemo(() => toGroupValue(defaultValue), [defaultValue]);
+	// The bar keeps the pressed list itself, even uncontrolled, so it knows which button a form
+	// library's `focus()` has to land on. Base UI always gets the list as a controlled one.
+	const isControlled = value !== undefined;
+	const [ownValue, setOwnValue] = useState<string[]>(() => toGroupValue(defaultValue) ?? []);
+	const controlledValue = useMemo(() => toGroupValue(value) ?? [], [value]);
+	const pressedValues = isControlled ? controlledValue : ownValue;
 
 	const onValueChange = useMemo(
 		() =>
@@ -88,6 +93,10 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 				if (!allowClear && next.length === 0) {
 					eventDetails.cancel();
 					return;
+				}
+
+				if (!isControlled) {
+					setOwnValue(next);
 				}
 
 				if (onChange === undefined) {
@@ -103,7 +112,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 				// a `single` bar calls that.
 				(onChange as (next: string) => void)(next[0] ?? '');
 			},
-		[onChange, isMultiple, allowClear],
+		[onChange, isMultiple, allowClear, isControlled],
 	);
 
 	const {
@@ -114,9 +123,14 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		scrollTowardsStart,
 		scrollTowardsEnd,
 	} = useOverflowScroll({
-		activeKey: (groupValue ?? groupDefaultValue)?.[0],
+		activeKey: pressedValues[0],
 		activeItemSelector: '[data-slot="toggle-group-button"][data-pressed]',
 	});
+
+	const focusTargetItem =
+		items.find((item) => pressedValues.includes(item.value)) ??
+		items.find((item) => item.disabled !== true) ??
+		items[0];
 
 	const toggleGroupStyle = {
 		...(width != null && { '--toggle-group-internal-inline-size': toCssLength(width) }),
@@ -159,8 +173,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 						{...listNameProps}
 						data-slot="toggle-group-list"
 						className={styles['toggle-group__list']}
-						value={groupValue}
-						defaultValue={groupDefaultValue}
+						value={pressedValues}
 						onValueChange={onValueChange}
 						multiple={isMultiple}
 					>
@@ -173,6 +186,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 								groupDisabledTooltip={disabledTooltip}
 								groupReadOnly={isReadOnly}
 								groupReadOnlyTooltip={readOnlyTooltip}
+								focusTarget={item === focusTargetItem ? field?.focusTarget : undefined}
 							/>
 						))}
 					</ToggleGroupPrimitive>

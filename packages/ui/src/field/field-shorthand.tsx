@@ -2,6 +2,7 @@ import { type ComponentType, forwardRef, type Ref } from 'react';
 import { FieldImpl } from './field.js';
 import { FieldGroup } from './subcomponents/field-group.js';
 import type { FieldLabelAndMessageProps } from './types.js';
+import { useFocusTarget } from './use-focus-target.js';
 
 type ShorthandOptions = {
 	/**
@@ -9,10 +10,13 @@ type ShorthandOptions = {
 	 * field yet.
 	 */
 	passRequired?: boolean;
-	/**
-	 * Renders the control inside a `Field.Group`, for a control with more than one input.
-	 */
 	group?: boolean;
+	/**
+	 * For a control whose root `<div>` cannot take focus. The shorthand's `ref` goes to the element
+	 * the control names, through the field context, and the control's own `ref` keeps its root.
+	 * react-hook-form focuses the first invalid field by calling `focus()` on that `ref`.
+	 */
+	refIsFocusTarget?: boolean;
 	displayName: string;
 };
 
@@ -24,7 +28,7 @@ type ShorthandOptions = {
  */
 export function createFieldShorthand<P extends FieldLabelAndMessageProps, E>(
 	Control: ComponentType<Record<string, unknown> & { ref?: Ref<E> }>,
-	{ passRequired = false, group = false, displayName }: ShorthandOptions,
+	{ passRequired = false, group = false, refIsFocusTarget = false, displayName }: ShorthandOptions,
 ) {
 	const Shorthand = forwardRef<E, P>(function FieldShorthand(props, ref) {
 		// `htmlFor` is not a prop of any shorthand: the field points its label at the control itself.
@@ -42,6 +46,7 @@ export function createFieldShorthand<P extends FieldLabelAndMessageProps, E>(
 		} = props as P & { htmlFor?: unknown };
 		const testId = (control as { testId?: string }).testId;
 		const Wrapper = group ? FieldGroup : FieldImpl;
+		const focusTarget = useFocusTarget(refIsFocusTarget ? ref : null);
 
 		return (
 			<Wrapper
@@ -55,8 +60,13 @@ export function createFieldShorthand<P extends FieldLabelAndMessageProps, E>(
 				required={required}
 				testId={testId}
 				testIdOnPartsOnly
+				focusTarget={refIsFocusTarget ? focusTarget : undefined}
 			>
-				<Control {...control} {...(passRequired && required ? { required: true } : {})} ref={ref} />
+				<Control
+					{...control}
+					{...(passRequired && required ? { required: true } : {})}
+					{...(refIsFocusTarget ? {} : { ref })}
+				/>
 			</Wrapper>
 		);
 	});

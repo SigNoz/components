@@ -10,14 +10,14 @@ type Checked<T extends ToggleGroupFieldProps> = T &
 	// `T` is inferred from the call site, so `T extends P` alone never runs excess property checks.
 	// Every key outside the props is pinned to `never` instead.
 	Record<
-		Exclude<keyof T, keyof ToggleGroupFieldProps | keyof RefAttributes<HTMLDivElement>>,
+		Exclude<keyof T, keyof ToggleGroupFieldProps | keyof RefAttributes<HTMLButtonElement>>,
 		never
 	> &
-	RefAttributes<HTMLDivElement>;
+	RefAttributes<HTMLButtonElement>;
 
-const ToggleGroupFieldRoot = createFieldShorthand<ToggleGroupFieldProps, HTMLDivElement>(
+const ToggleGroupFieldRoot = createFieldShorthand<ToggleGroupFieldProps, HTMLButtonElement>(
 	ToggleGroup as never,
-	{ displayName: 'ToggleGroupField', group: true },
+	{ displayName: 'ToggleGroupField', group: true, refIsFocusTarget: true },
 );
 
 /**
@@ -26,9 +26,14 @@ const ToggleGroupFieldRoot = createFieldShorthand<ToggleGroupFieldProps, HTMLDiv
  *
  * `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required`
  * go to the group. The label is its `<legend>`, and the `role="group"` list of the bar takes it as
- * its name. Every other prop goes to the bar: `type`, `items`, `value`, `onChange`, `ref`, `aria-*`,
- * `data-*` and `testId` land where `ToggleGroup` puts them. The group parts take `testId` as their
- * prefix (`${testId}-label`, `${testId}-message`), and the `<fieldset>` gets none.
+ * its name. Every other prop goes to the bar: `type`, `items`, `value`, `onChange`, `onBlur`,
+ * `aria-*`, `data-*` and `testId` land where `ToggleGroup` puts them. The group parts take
+ * `testId` as their prefix (`${testId}-label`, `${testId}-message`), and the `<fieldset>` gets
+ * none.
+ *
+ * The `ref` is the pressed button, or the first one that is not disabled while nothing is
+ * pressed, and not the root `<div>` of `ToggleGroup`. Its `focus()` puts the focus on that button,
+ * which is how react-hook-form focuses the first invalid field.
  *
  * A toggle group has nothing to mark invalid or required, because `role="group"` takes neither
  * `aria-invalid` nor `aria-required`. `required` shows the asterisk, and the legend and the message

@@ -1,5 +1,11 @@
 import { Field as BaseField } from '@base-ui/react/field';
-import { forwardRef, type ReactElement, type RefAttributes, useState } from 'react';
+import {
+	forwardRef,
+	type ReactElement,
+	type RefAttributes,
+	type RefCallback,
+	useState,
+} from 'react';
 import { FieldContext, type FieldContextValue } from '../lib/field-context.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import styles from './field.module.scss';
@@ -21,6 +27,11 @@ export type FieldImplProps = FieldProps & {
 	 * prefix, and the root gets no `data-testid`.
 	 */
 	testIdOnPartsOnly?: boolean;
+	/**
+	 * Set by a field shorthand whose `ref` is the focus target of its control, and handed to the
+	 * control through the field context.
+	 */
+	focusTarget?: RefCallback<HTMLElement>;
 };
 
 /**
@@ -42,6 +53,7 @@ export const FieldImpl = forwardRef<HTMLDivElement, FieldImplProps>(function Fie
 		htmlFor,
 		testId,
 		testIdOnPartsOnly = false,
+		focusTarget,
 		className: _className,
 		style: _style,
 		...props
@@ -63,6 +75,7 @@ export const FieldImpl = forwardRef<HTMLDivElement, FieldImplProps>(function Fie
 		status: parts.status,
 		required,
 		claimControl: setClaimedId,
+		focusTarget,
 	};
 
 	return (
