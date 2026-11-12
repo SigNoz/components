@@ -277,12 +277,14 @@
 // #endregion css-tokens
 
 export { Select } from './select.js';
+export { SelectField } from './presets/select-field.js';
 export { SELECT_EMPTY_CONTENT, SELECT_EMPTY_LABEL, SelectItemKind } from './constants.js';
 export type {
 	SelectGroupChildType,
 	SelectGroupItemType,
 	SelectItemDisabledType,
 	SelectItemKindType,
+	SelectFieldProps,
 	SelectItemType,
 	SelectOptionItemType,
 	SelectProps,

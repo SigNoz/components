@@ -1,5 +1,6 @@
 import type { Select as BaseSelect } from '@base-ui/react/select';
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SelectItemKind } from './constants.js';
 
 type OriginalPortalProps = BaseSelect.Portal.Props;
@@ -281,6 +282,19 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		noContent?: ReactNode;
 		/**
+		 * When true, marks the select as required: the trigger carries `aria-required`.
+		 *
+		 * @note It blocks nothing inside a `Form`, which is `noValidate`. The consumer's validation
+		 * catches an empty value, the same as for every other rule.
+		 *
+		 * @note Inside a `Field` or a `Field.Group` the field's `required` only sets `aria-required`
+		 * on the trigger, with no native `required`, so the form's own validation runs before the
+		 * browser's. This prop wins over the field, and keeps the native `required`.
+		 *
+		 * @default false
+		 */
+		required?: boolean;
+		/**
 		 * When true, the popup does not open, and the trigger carries `aria-disabled` and
 		 * `data-disabled`.
 		 *
@@ -370,3 +384,15 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 	};
 
 export type SelectProps = SelectBaseProps & (SelectSingleProps | SelectMultipleProps);
+
+/**
+ * Distributes over the single and the multiple shape, so `multiple` still decides the type of
+ * `value`, `defaultValue` and `onChange`.
+ */
+type WithField<P> = P extends unknown ? Omit<P, 'required'> & FieldLabelAndMessageProps : never;
+
+/**
+ * The props of `SelectField`: the field's label, description and status, and every prop of
+ * `Select`.
+ */
+export type SelectFieldProps = WithField<SelectProps>;
