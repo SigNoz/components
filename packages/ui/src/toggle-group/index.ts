@@ -133,6 +133,7 @@
 // #endregion css-tokens
 
 export { ToggleGroup } from './toggle-group.js';
+export { ToggleGroupField } from './presets/toggle-group-field.js';
 export {
 	ToggleGroupColor,
 	ToggleGroupScrollDirection,
@@ -144,6 +145,7 @@ export {
 export type {
 	ToggleGroupColorType,
 	ToggleGroupDisableType,
+	ToggleGroupFieldProps,
 	ToggleGroupItemProps,
 	ToggleGroupProps,
 	ToggleGroupReadOnlyType,

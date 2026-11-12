@@ -8,7 +8,13 @@ import { RadioCardsTextOverflow } from './constants.js';
 import { RadioCardsItem } from './subcomponents/radio-cards-item.js';
 import { RadioCardsMultiple } from './subcomponents/radio-cards-multiple.js';
 import type { RadioCardsMultipleProps, RadioCardsProps, ValidateRadioCardsProps } from './types.js';
-import { hasCheckedCard, NO_VALUES, useRadioCardsGroup, useRadioCardsValue } from './utils.js';
+import {
+	hasCheckedCard,
+	NO_VALUES,
+	useRadioCardsField,
+	useRadioCardsGroup,
+	useRadioCardsValue,
+} from './utils.js';
 
 const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function RadioCards(
 	{
@@ -19,7 +25,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 		disabledTooltip,
 		readOnly = false,
 		readOnlyTooltip,
-		required = false,
+		required: requiredProp,
 		name,
 		form,
 		value,
@@ -33,6 +39,10 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 	}: RadioCardsProps & RejectedProps,
 	ref,
 ) {
+	const { required, isFieldRequired, nameProps, invalidProps } = useRadioCardsField(
+		props,
+		requiredProp,
+	);
 	const {
 		items: cards,
 		isReadOnly,
@@ -86,12 +96,16 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 			readOnly={isReadOnly}
 			// Base UI puts `required` on every hidden radio, and a radio with no `name` is a group of
 			// its own, so a required one left unchecked would block the form after another card is
-			// checked. It stays only while the group is empty, as on `RadioCards.Multiple`.
+			// checked. It stays only while the group is empty, as on `RadioCards.Multiple`. The
+			// field's `required` is announced the same way, with no native `required`.
 			required={required && isEmpty}
 			name={name}
 			form={form}
 			value={selectedValue}
 			onValueChange={onValueChange}
+			{...(isFieldRequired && isEmpty ? { 'aria-required': true } : {})}
+			{...nameProps}
+			{...invalidProps}
 			{...props}
 			{...rootProps}
 		>
@@ -134,6 +148,16 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * The root is the `role="radiogroup"`, and each card is a `role="radio"` named by its label. The
  * group needs a name, the question its cards answer: `aria-labelledby` with the id of the visible
  * question above it, or `aria-label` when there is none. Leaving both out is a type error.
+ *
+ * ### Inside a `Field.Group`
+ *
+ * A surrounding `Field.Group` names the group with its legend, unless it has an `aria-label` or an
+ * `aria-labelledby` of its own, so the type error that asks for one is met by `RadioCardsField`,
+ * which renders both from one set of props. The group takes `aria-required` from the field, with
+ * no native `required`, so the form's own validation runs before the browser's, and `aria-invalid`
+ * for a `danger` status. The group's own `required` wins, and keeps the native one.
+ * `RadioCards.Multiple` takes the name and the required state, but no `aria-invalid`, since
+ * `role="group"` does not allow it.
  *
  * ### Keyboard
  *

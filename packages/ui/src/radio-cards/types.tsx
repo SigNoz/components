@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { RadioCardsTextOverflow } from './constants.js';
 
 export type RadioCardsTextOverflowType =
@@ -429,3 +430,15 @@ export type RadioCardsMultipleProps = RadioCardsSharedProps & {
 	 */
 	allowClear?: boolean;
 };
+
+/**
+ * The props of `RadioCardsField`: the field's label, description and status, and every prop of
+ * `RadioCards`. The legend names the group, so `aria-label` and `aria-labelledby` are optional.
+ */
+export type RadioCardsFieldProps = RadioCardsProps & FieldLabelAndMessageProps;
+
+/**
+ * The props of `RadioCardsField.Multiple`: the field's label, description and status, and every
+ * prop of `RadioCards.Multiple`.
+ */
+export type RadioCardsFieldMultipleProps = RadioCardsMultipleProps & FieldLabelAndMessageProps;

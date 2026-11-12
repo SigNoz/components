@@ -101,10 +101,13 @@
 // #endregion css-tokens
 
 export { RadioCards } from './radio-cards.js';
+export { RadioCardsField } from './presets/radio-cards-field.js';
 export { RadioCardsTextOverflow } from './constants.js';
 export type {
 	RadioCardsClearType,
 	RadioCardsDisableType,
+	RadioCardsFieldMultipleProps,
+	RadioCardsFieldProps,
 	RadioCardsItemType,
 	RadioCardsMultipleProps,
 	RadioCardsProps,

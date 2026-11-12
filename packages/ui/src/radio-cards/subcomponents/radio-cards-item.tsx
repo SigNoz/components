@@ -48,6 +48,7 @@ type RadioCardsItemRadioProps = {
 	form?: never;
 	readOnly?: never;
 	required?: never;
+	ariaRequired?: never;
 	focusableWhenDisabled?: never;
 };
 
@@ -66,6 +67,11 @@ type RadioCardsItemCheckboxProps = {
 	 * one card is checked, and each card announces `aria-required` until then.
 	 */
 	required?: boolean;
+	/**
+	 * Set on every card while a `Field.Group` around the group is required and the group is empty.
+	 * Each card announces `aria-required` until one is checked, and the form is not blocked.
+	 */
+	ariaRequired?: boolean;
 	/**
 	 * Keeps this card a tab stop while the group is disabled, so `disabledTooltip` stays reachable.
 	 * Set on the first card only: a disabled group is one stop, as on `RadioCards`.
@@ -98,6 +104,7 @@ export function RadioCardsItem({
 	form,
 	readOnly,
 	required,
+	ariaRequired,
 	focusableWhenDisabled = false,
 }: RadioCardsItemProps): ReactElement {
 	const { value, prefix, disabled } = item;
@@ -177,6 +184,7 @@ export function RadioCardsItem({
 			form={form}
 			readOnly={readOnly}
 			required={required}
+			{...(ariaRequired ? { 'aria-required': true } : {})}
 			onKeyDown={preventEnter}
 			// `Checkbox.Root` has no `focusableWhenDisabled`. The root of the group keeps `Space` from
 			// scrolling the page, which Base UI's version of it would do here.

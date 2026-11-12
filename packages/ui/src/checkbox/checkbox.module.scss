@@ -207,6 +207,76 @@
 	}
 }
 
+// `CheckboxField`: one checkbox whose text is the field label, and the description or the message
+// below it, lined up with the text and not with the box. The status lives on the root as
+// `data-status`. The row and the label content are parts of `Field`, which read the three
+// `--field-internal-*` properties below for their colors, so they are set here as they are on a
+// field.
+.checkbox-field {
+	--field-internal-message: var(--checkbox-field-description-color, var(--l2-foreground));
+	--field-internal-message-icon: var(--checkbox-field-message-icon-color, var(--field-label-icon));
+	--field-internal-label-icon: var(--checkbox-field-label-icon-color, var(--field-label-icon));
+
+	// The live region of the field is absolute, so the root holds it.
+	position: var(--checkbox-field-position, relative);
+	display: var(--checkbox-field-display, flex);
+	flex-direction: var(--checkbox-field-flex-direction, column);
+	// The label wraps the text only, so the click target is the checkbox row and not the whole width.
+	align-items: var(--checkbox-field-align-items, flex-start);
+	gap: var(--checkbox-field-gap, var(--spacing-4));
+	min-inline-size: var(--checkbox-field-min-inline-size, 0);
+	font-feature-settings: var(--checkbox-field-font-feature-settings, 'ss01' 1);
+	font-variant-numeric: var(--checkbox-field-font-variant-numeric, normal);
+
+	&[data-status='success'] {
+		--field-internal-message: var(--checkbox-field-success-message-color, var(--field-success-message));
+		--field-internal-message-icon: var(--checkbox-field-success-icon-color, var(--field-success-icon));
+
+		.checkbox__label {
+			color: var(--checkbox-field-success-label-color, var(--field-success-label));
+		}
+	}
+
+	&[data-status='warning'] {
+		--field-internal-message: var(--checkbox-field-warning-message-color, var(--field-warning-message));
+		--field-internal-message-icon: var(--checkbox-field-warning-icon-color, var(--field-warning-icon));
+
+		.checkbox__label {
+			color: var(--checkbox-field-warning-label-color, var(--field-warning-label));
+		}
+	}
+
+	&[data-status='danger'] {
+		--field-internal-message: var(--checkbox-field-danger-message-color, var(--field-danger-message));
+		--field-internal-message-icon: var(--checkbox-field-danger-icon-color, var(--field-danger-icon));
+
+		.checkbox__label {
+			color: var(--checkbox-field-danger-label-color, var(--field-danger-label));
+		}
+	}
+}
+
+// The text, the asterisk and the info icon in one line that wraps with the text. The asterisk and
+// the icon follow the last line of a text that wraps.
+.checkbox-field__label {
+	display: var(--checkbox-field-label-display, inline-flex);
+	align-items: var(--checkbox-field-label-align-items, last baseline);
+	gap: var(--checkbox-field-label-gap, var(--spacing-2));
+	min-inline-size: var(--checkbox-field-label-min-inline-size, 0);
+	max-inline-size: var(--checkbox-field-label-max-inline-size, 100%);
+}
+
+// The row starts where the text does: the box and the gap between the box and the text.
+.checkbox-field__row {
+	box-sizing: var(--checkbox-field-row-box-sizing, border-box);
+	min-inline-size: var(--checkbox-field-row-min-inline-size, 0);
+	max-inline-size: var(--checkbox-field-row-max-inline-size, 100%);
+	padding-inline-start: var(
+		--checkbox-field-row-offset,
+		calc(var(--checkbox-size, 16px) + var(--checkbox-gap, var(--spacing-5)))
+	);
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.checkbox__box,
 	.checkbox__label {

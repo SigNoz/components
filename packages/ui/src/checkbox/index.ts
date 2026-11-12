@@ -30,6 +30,35 @@
  * | `--checkbox-disabled-cursor` | `not-allowed` |
  * | `--checkbox-disabled-opacity` | `0.6` |
  * | `--checkbox-display` | `inline-flex` |
+ * | `--checkbox-field-align-items` | `flex-start` |
+ * | `--checkbox-field-danger-icon-color` | `var(--field-danger-icon)` |
+ * | `--checkbox-field-danger-label-color` | `var(--field-danger-label)` |
+ * | `--checkbox-field-danger-message-color` | `var(--field-danger-message)` |
+ * | `--checkbox-field-description-color` | `var(--l2-foreground)` |
+ * | `--checkbox-field-display` | `flex` |
+ * | `--checkbox-field-flex-direction` | `column` |
+ * | `--checkbox-field-font-feature-settings` | `'ss01' 1` |
+ * | `--checkbox-field-font-variant-numeric` | `normal` |
+ * | `--checkbox-field-gap` | `var(--spacing-4)` |
+ * | `--checkbox-field-label-align-items` | `last baseline` |
+ * | `--checkbox-field-label-display` | `inline-flex` |
+ * | `--checkbox-field-label-gap` | `var(--spacing-2)` |
+ * | `--checkbox-field-label-icon-color` | `var(--field-label-icon)` |
+ * | `--checkbox-field-label-max-inline-size` | `100%` |
+ * | `--checkbox-field-label-min-inline-size` | `0` |
+ * | `--checkbox-field-message-icon-color` | `var(--field-label-icon)` |
+ * | `--checkbox-field-min-inline-size` | `0` |
+ * | `--checkbox-field-position` | `relative` |
+ * | `--checkbox-field-row-box-sizing` | `border-box` |
+ * | `--checkbox-field-row-max-inline-size` | `100%` |
+ * | `--checkbox-field-row-min-inline-size` | `0` |
+ * | `--checkbox-field-row-offset` | `calc(var(--checkbox-size, 16px) + var(--checkbo...` |
+ * | `--checkbox-field-success-icon-color` | `var(--field-success-icon)` |
+ * | `--checkbox-field-success-label-color` | `var(--field-success-label)` |
+ * | `--checkbox-field-success-message-color` | `var(--field-success-message)` |
+ * | `--checkbox-field-warning-icon-color` | `var(--field-warning-icon)` |
+ * | `--checkbox-field-warning-label-color` | `var(--field-warning-label)` |
+ * | `--checkbox-field-warning-message-color` | `var(--field-warning-message)` |
  * | `--checkbox-flex-shrink` | `0` |
  * | `--checkbox-focus-ring` | `-` |
  * | `--checkbox-focus-visible-outline` | `1px solid var(--checkbox-focus-ring)` |
@@ -76,10 +105,12 @@
 // #endregion css-tokens
 
 export { Checkbox } from './checkbox.js';
+export { CheckboxField } from './presets/checkbox-field.js';
 export { CheckboxColor, CheckboxTextOverflow } from './constants.js';
 export type {
 	CheckboxColorType,
 	CheckboxDisableType,
+	CheckboxFieldProps,
 	CheckboxProps,
 	CheckboxReadOnlyType,
 	CheckboxTextOverflowType,

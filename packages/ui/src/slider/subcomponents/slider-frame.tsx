@@ -1,6 +1,7 @@
 import { Slider as SliderPrimitive } from '@base-ui/react/slider';
 import { type CSSProperties, forwardRef, useEffect, useState } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
+import { useFieldContext } from '../../lib/field-context.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../../tooltip/tooltip-content-stack-context.js';
@@ -143,17 +144,26 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	// A single slider names and describes its thumb input. A range is a group, so every aria
 	// attribute goes to the root and the thumbs get names of their own.
 	const { aria, data } = splitAttributes(props);
+	// Inside a `Field.Group` the legend names the range too, so a screen reader does not meet two
+	// groups with different names. The fieldset already carries the description, which stays
+	// there. A `danger` status marks both thumbs, since `role="group"` takes no `aria-invalid`.
+	// Inside a `Field` Base UI wires the root, so nothing is added.
+	const field = useFieldContext();
+	const groupField = range && field?.kind === 'group' ? field : undefined;
+	const isGroupInvalid = groupField?.status === 'danger' && aria['aria-invalid'] === undefined;
 	const rootAria = range
 		? {
 				...aria,
 				'aria-label': ariaLabel,
-				'aria-labelledby': ariaLabelledBy,
+				'aria-labelledby':
+					ariaLabelledBy ?? (ariaLabel === undefined ? groupField?.labelId : undefined),
 				'aria-describedby': ariaDescribedBy,
 			}
 		: {};
 	const thumbInputAttributes = {
 		...(range ? {} : aria),
 		...(readOnly ? { 'aria-readonly': 'true' } : {}),
+		...(isGroupInvalid ? { 'aria-invalid': 'true' } : {}),
 	};
 
 	const rootStyle = {

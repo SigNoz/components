@@ -8,6 +8,7 @@ import {
 	useMemo,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { useFieldContext } from '../lib/field-context.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -51,6 +52,11 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 ) {
 	const labelId = useId();
 	const descriptionId = useId();
+	const field = useFieldContext();
+	// A group of switches names each one on its own, so the group's `required` is not theirs. The
+	// field's `required` only announces the switch: the form's own validation owns the rule, and a
+	// native `required` would stop the browser's submit before that validation runs.
+	const isFieldRequired = required === undefined && field?.kind === 'field' && field.required;
 
 	const isReadOnly = readOnly === true;
 
@@ -130,6 +136,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			readOnly={readOnly}
 			required={required}
 			name={name}
+			{...(isFieldRequired ? { 'aria-required': true } : {})}
 			aria-labelledby={hasLabel ? labelId : undefined}
 			aria-describedby={hasDescription ? descriptionId : undefined}
 			{...props}
@@ -249,6 +256,14 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  *   Display timestamp in 24-hour format
  * </Switch>
  * ```
+ *
+ * ### Inside a Field
+ *
+ * In a `Field` the switch is bare, with the label above it: the field's label names it, its
+ * description and message describe it, and `danger` sets `aria-invalid`. The field's `required`
+ * sets `aria-required` on the switch and nothing native, so the form's own validation runs before
+ * the browser's. The switch's own `required` wins, and keeps the native one. `SwitchField` writes
+ * the two together.
  *
  * ### Disabled and read-only
  *

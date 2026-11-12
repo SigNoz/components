@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode, Ref } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SwitchColor, SwitchTextOverflow, SwitchTextPlacement } from './constants.js';
 
 export type SwitchColorType = (typeof SwitchColor)[keyof typeof SwitchColor];
@@ -187,6 +188,11 @@ export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 		/**
 		 * When true, the owning form cannot be submitted until the switch is on.
 		 *
+		 * @note Inside a `Field` the field's `required` only sets `aria-required` on the switch, with
+		 * no native `required`, so the form's own validation runs before the browser's. This prop
+		 * wins over the field, and keeps the native `required`. A `Field.Group` around the switch
+		 * does not make it required.
+		 *
 		 * @default false
 		 */
 		required?: boolean;
@@ -247,3 +253,30 @@ export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `Switch` that lay out its own text. A switch in a field has no text of its own: the
+ * field's label sits above it and the field's description below.
+ */
+type SwitchTextKeys =
+	| 'children'
+	| 'description'
+	| 'textPlacement'
+	| 'textOverflow'
+	| 'width'
+	| 'maxWidth'
+	| 'containerId'
+	| 'containerTestId'
+	| 'containerRef';
+
+type WithField<P> = Omit<P, 'status' | 'required' | SwitchTextKeys> & FieldLabelAndMessageProps;
+
+/**
+ * The props of `SwitchField`: the field's label, description and status, and every prop of
+ * `Switch` that does not lay out text.
+ *
+ * @note `children`, `description`, `textPlacement`, `textOverflow`, `width`, `maxWidth` and the
+ * `container*` props are not accepted. The label above the switch is the field's `label`, and the
+ * switch has no row of its own to size.
+ */
+export type SwitchFieldProps = WithField<SwitchProps>;

@@ -18,6 +18,7 @@ import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types
  *
  * The slider has no visible label. Name it with `aria-labelledby`, pointing at the label next to
  * it, or with `aria-label`. A `<label htmlFor>` does not work, since the input id is internal.
+ * Inside a `Field`, or through `SliderField`, the field's label names it.
  *
  * Each thumb input carries `min`, `max`, `aria-valuenow` and `aria-valuetext`, from `formatValue`.
  * So a screen reader reads `1,000 GB` and not `50`.

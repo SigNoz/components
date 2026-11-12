@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SLIDER_OWN_ARIA_ATTRIBUTES, SliderColor, SliderTextOverflow } from './constants.js';
 
 export type SliderColorType = (typeof SliderColor)[keyof typeof SliderColor];
@@ -279,3 +280,17 @@ export type SliderRangeProps = SliderBaseProps &
 		 */
 		onAfterChange?: (value: SliderRangeValue) => void;
 	};
+
+type WithField<P> = Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps;
+
+/**
+ * The props of `SliderField`: the field's label, description and status, and every prop of
+ * `Slider`.
+ */
+export type SliderFieldProps = WithField<SliderProps>;
+
+/**
+ * The props of `SliderField.Range`: the field's label, description and status, and every prop of
+ * `Slider.Range`.
+ */
+export type SliderFieldRangeProps = WithField<SliderRangeProps>;

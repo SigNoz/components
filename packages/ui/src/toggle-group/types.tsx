@@ -1,4 +1,5 @@
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type {
 	ToggleGroupColor,
 	ToggleGroupScrollDirection,
@@ -378,3 +379,12 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `ToggleGroupField`: the field's label, description and status, and every prop of
+ * `ToggleGroup`.
+ *
+ * @note A toggle group has no `required` of its own. The prop marks the label with an asterisk and
+ * nothing else, because `role="group"` takes no `aria-required`.
+ */
+export type ToggleGroupFieldProps = ToggleGroupProps & FieldLabelAndMessageProps;

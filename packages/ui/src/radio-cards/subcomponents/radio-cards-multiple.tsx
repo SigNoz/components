@@ -6,7 +6,13 @@ import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-pr
 import { TooltipTriggerBoundary } from '../../tooltip/tooltip-trigger-context.js';
 import { RadioCardsTextOverflow } from '../constants.js';
 import type { RadioCardsItemType, RadioCardsMultipleProps } from '../types.js';
-import { hasCheckedCard, NO_VALUES, useRadioCardsGroup, useRadioCardsValue } from '../utils.js';
+import {
+	hasCheckedCard,
+	NO_VALUES,
+	useRadioCardsField,
+	useRadioCardsGroup,
+	useRadioCardsValue,
+} from '../utils.js';
 import { RadioCardsItem } from './radio-cards-item.js';
 
 // Base UI appends a checked value to the end of the list, so the list would follow the clicks. It
@@ -32,7 +38,9 @@ function orderByItems(items: readonly RadioCardsItemType[], values: readonly str
  * and each card is a `role="checkbox"`. The root carries `aria-disabled` while the group is
  * disabled. A `group` takes neither `aria-readonly` nor `aria-required`, so the cards carry them:
  * `aria-readonly` while the group is read-only, `aria-required` while it is required and no card
- * is checked.
+ * is checked. A `Field.Group` that is `required` sets `aria-required` alone, with no native
+ * `required`, so the form's own validation runs before the browser's. The group's own `required`
+ * keeps the native one.
  *
  * ### Keyboard
  *
@@ -74,7 +82,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 			disabledTooltip,
 			readOnly = false,
 			readOnlyTooltip,
-			required = false,
+			required: requiredProp,
 			name,
 			form,
 			value,
@@ -88,6 +96,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		}: RadioCardsMultipleProps & RejectedProps,
 		ref,
 	) {
+		const { required, isFieldRequired, nameProps } = useRadioCardsField(props, requiredProp);
 		const {
 			items: cards,
 			isReadOnly,
@@ -146,6 +155,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 				// Base UI types the list as mutable, but never writes to it.
 				value={selectedValues as string[]}
 				onValueChange={onValueChange}
+				{...nameProps}
 				{...props}
 				{...rootProps}
 			>
@@ -164,7 +174,8 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 								name={name}
 								form={form}
 								readOnly={isReadOnly}
-								required={required === true && isEmpty}
+								required={required && isEmpty}
+								ariaRequired={isFieldRequired && isEmpty}
 								focusableWhenDisabled={isDisabled && index === 0}
 							/>
 						))}
