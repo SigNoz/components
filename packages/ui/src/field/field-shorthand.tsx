@@ -3,6 +3,7 @@ import { FIELD_SHORTHAND_KEYS } from './constants.js';
 import { FieldImpl } from './field.js';
 import { FieldGroup } from './subcomponents/field-group.js';
 import type { FieldLabelAndMessageProps } from './types.js';
+import { useFocusTarget } from './use-focus-target.js';
 
 type ShorthandOptions = {
 	/**
@@ -14,6 +15,13 @@ type ShorthandOptions = {
 	 * Renders the control inside a `Field.Group`, for a control with more than one input.
 	 */
 	group?: boolean;
+	/**
+	 * For a control that is several elements, whose root `<div>` `focus()` does nothing on. The
+	 * shorthand's `ref` goes to the element the control names as its focus target, through the
+	 * field context, and no longer to the control's own `ref`, which keeps pointing at its root.
+	 * A form library focuses the first invalid field by calling `focus()` on that `ref`.
+	 */
+	refIsFocusTarget?: boolean;
 	displayName: string;
 };
 
@@ -57,19 +65,26 @@ export function splitFieldProps<P extends FieldLabelAndMessageProps>(
  */
 export function createFieldShorthand<P extends FieldLabelAndMessageProps, E>(
 	Control: ComponentType<Record<string, unknown> & { ref?: Ref<E> }>,
-	{ passRequired = false, group = false, displayName }: ShorthandOptions,
+	{ passRequired = false, group = false, refIsFocusTarget = false, displayName }: ShorthandOptions,
 ) {
 	const Shorthand = forwardRef<E, P>(function FieldShorthand(props, ref) {
 		const { field, control, required } = splitFieldProps(props);
 		const testId = (control as { testId?: string }).testId;
 		const Wrapper = group ? FieldGroup : FieldImpl;
+		const focusTarget = useFocusTarget(refIsFocusTarget ? ref : null);
 
 		return (
-			<Wrapper {...field} required={required} testId={testId} testIdOnPartsOnly>
+			<Wrapper
+				{...field}
+				required={required}
+				testId={testId}
+				testIdOnPartsOnly
+				focusTarget={refIsFocusTarget ? focusTarget : undefined}
+			>
 				<Control
 					{...(control as Record<string, unknown>)}
 					{...(passRequired && required ? { required: true } : {})}
-					ref={ref}
+					{...(refIsFocusTarget ? {} : { ref })}
 				/>
 			</Wrapper>
 		);

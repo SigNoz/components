@@ -20,7 +20,7 @@ import { RadioCardsField } from '../presets/radio-cards-field.js';
 import type { RadioCardsItemType } from '../types.js';
 
 const noop = (): void => {};
-const groupRef = createRef<HTMLDivElement>();
+const inputRef = createRef<HTMLInputElement>();
 declare const maybeError: string | undefined;
 declare const items: RadioCardsItemType[];
 
@@ -174,11 +174,14 @@ describe('RadioCardsField.Multiple', () => {
 });
 
 describe('ref', () => {
-	test('the ref is the radio group div', () => {
-		assertType(<RadioCardsField label="Signal" items={items} ref={groupRef} />);
-		assertType(<RadioCardsField.Multiple label="Tools" items={items} ref={groupRef} />);
+	test('the ref is the hidden card input, the element a focus() can land on', () => {
+		assertType(<RadioCardsField label="Signal" items={items} ref={inputRef} />);
+		assertType(<RadioCardsField.Multiple label="Tools" items={items} ref={inputRef} />);
 		// oxfmt-ignore
-		// @ts-expect-error - the cards root is a div, not a span
-		assertType(<RadioCardsField label="Signal" items={items} ref={createRef<HTMLSpanElement>()} />);
+		// @ts-expect-error - the ref is the card input, not the root div
+		assertType(<RadioCardsField label="Signal" items={items} ref={createRef<HTMLDivElement>()} />);
+		// oxfmt-ignore
+		// @ts-expect-error - the ref is the card input, not the root div
+		assertType(<RadioCardsField.Multiple label="Tools" items={items} ref={createRef<HTMLDivElement>()} />);
 	});
 });

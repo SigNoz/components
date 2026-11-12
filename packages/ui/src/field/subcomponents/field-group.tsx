@@ -1,5 +1,5 @@
 import { Fieldset } from '@base-ui/react/fieldset';
-import { forwardRef, useMemo } from 'react';
+import { forwardRef, type RefCallback, useMemo } from 'react';
 import { FieldContext, type FieldContextValue } from '../../lib/field-context.js';
 import { joinIdRefs, partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../field.module.scss';
@@ -20,6 +20,11 @@ export type FieldGroupImplProps = FieldGroupProps & {
 	 * prefix, and the `<fieldset>` gets no `data-testid`.
 	 */
 	testIdOnPartsOnly?: boolean;
+	/**
+	 * Set by a field shorthand whose `ref` is the focus target of its control, and handed to the
+	 * control through the field context.
+	 */
+	focusTarget?: RefCallback<HTMLElement>;
 };
 
 /**
@@ -46,6 +51,7 @@ export const FieldGroup = forwardRef<HTMLFieldSetElement, FieldGroupImplProps>(f
 		required = false,
 		testId,
 		testIdOnPartsOnly = false,
+		focusTarget,
 		'aria-describedby': ariaDescribedBy,
 		className: _className,
 		style: _style,
@@ -64,8 +70,9 @@ export const FieldGroup = forwardRef<HTMLFieldSetElement, FieldGroupImplProps>(f
 			status: parts.status,
 			required,
 			claimControl: claimNoControl,
+			focusTarget,
 		}),
-		[parts.labelId, parts.describedBy, parts.status, required],
+		[parts.labelId, parts.describedBy, parts.status, required, focusTarget],
 	);
 
 	return (

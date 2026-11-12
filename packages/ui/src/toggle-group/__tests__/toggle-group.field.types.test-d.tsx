@@ -19,7 +19,7 @@ import { ToggleGroupField } from '../presets/toggle-group-field.js';
 import type { ToggleGroupItemProps } from '../types.js';
 
 const noop = (): void => {};
-const groupRef = createRef<HTMLDivElement>();
+const buttonRef = createRef<HTMLButtonElement>();
 declare const maybeError: string | undefined;
 declare const items: ToggleGroupItemProps[];
 
@@ -213,7 +213,7 @@ describe('the field props', () => {
 });
 
 describe('ref', () => {
-	test('the ref is the bar root div', () => {
+	test('the ref is a button of the bar, the element a focus() can land on', () => {
 		assertType(
 			<ToggleGroupField
 				label="Layout"
@@ -222,11 +222,11 @@ describe('ref', () => {
 				color="secondary"
 				size="md"
 				items={items}
-				ref={groupRef}
+				ref={buttonRef}
 			/>,
 		);
 		// oxfmt-ignore
-		// @ts-expect-error - the bar is a div, not a span
-		assertType(<ToggleGroupField label="Layout" type="single" variant="outlined" color="secondary" size="md" items={items} ref={createRef<HTMLSpanElement>()} />);
+		// @ts-expect-error - the ref is a button, not the root div
+		assertType(<ToggleGroupField label="Layout" type="single" variant="outlined" color="secondary" size="md" items={items} ref={createRef<HTMLDivElement>()} />);
 	});
 });

@@ -227,11 +227,12 @@ describe('RadioCardsField props split', () => {
 		expect(screen.getByRole('radio', { name: 'Traces' })).toBeChecked();
 	});
 
-	it('hands the ref to the radio group', () => {
-		const ref = createRef<HTMLDivElement>();
+	it('hands the ref to the hidden input of a card, not to the root', () => {
+		const ref = createRef<HTMLInputElement>();
 		render(<RadioCardsField label="Signal" items={ITEMS} ref={ref} />);
 
-		expect(ref.current).toBe(screen.getByRole('radiogroup'));
+		expect(ref.current).toBeInstanceOf(HTMLInputElement);
+		expect(ref.current).not.toBe(screen.getByRole('radiogroup'));
 	});
 
 	it('drops className, style and htmlFor that get past the types', () => {
@@ -368,16 +369,17 @@ describe('RadioCardsField.Multiple', () => {
 		expect(screen.getByRole('group', { name: 'Own name' })).toBeInTheDocument();
 	});
 
-	it('reports the checked list through onChange and hands the ref to the group', async () => {
+	it('reports the checked list through onChange and hands the ref to the first card input', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		const ref = createRef<HTMLDivElement>();
+		const ref = createRef<HTMLInputElement>();
 		render(<RadioCardsField.Multiple label="Tools" items={ITEMS} onChange={onChange} ref={ref} />);
 
 		await user.click(screen.getByRole('checkbox', { name: 'Logs' }));
 		await user.click(screen.getByRole('checkbox', { name: 'Metrics' }));
 
 		expect(onChange).toHaveBeenLastCalledWith(['logs', 'metrics']);
-		expect(ref.current).toHaveAttribute('data-multiple');
+		expect(ref.current).toBeInstanceOf(HTMLInputElement);
+		expect(ref.current).toHaveAttribute('type', 'checkbox');
 	});
 });

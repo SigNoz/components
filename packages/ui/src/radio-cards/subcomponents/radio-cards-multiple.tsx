@@ -98,7 +98,10 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		}: RadioCardsMultipleProps & RejectedProps,
 		ref,
 	) {
-		const { required, isFieldRequired, nameProps } = useRadioCardsField(props, requiredProp);
+		const { required, isFieldRequired, nameProps, focusTarget } = useRadioCardsField(
+			props,
+			requiredProp,
+		);
 		const {
 			items: cards,
 			isReadOnly,
@@ -145,6 +148,12 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		}
 
 		const isEmpty = !hasCheckedCard(cards, selectedValues);
+		// The first checked card, else the first one, as `RadioCards` does with its checked radio. A
+		// disabled card is skipped: Base UI moves the focus from a checkbox input to its card, and a
+		// disabled input takes none.
+		const focusTargetCard =
+			cards.find((item) => item.disabled !== true && selectedValues.includes(item.value)) ??
+			cards.find((item) => item.disabled !== true);
 
 		const groupEl = (
 			<CheckboxGroup
@@ -180,6 +189,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 								required={required && isEmpty}
 								ariaRequired={isFieldRequired && isEmpty}
 								focusableWhenDisabled={isDisabled && index === 0}
+								inputRef={item === focusTargetCard ? focusTarget : undefined}
 							/>
 						))}
 					</TooltipTriggerBoundary>

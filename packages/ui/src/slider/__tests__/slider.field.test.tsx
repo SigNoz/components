@@ -262,18 +262,17 @@ describe('SliderField props split', () => {
 });
 
 describe('SliderField ref', () => {
-	it('forwards the ref to the root div, which does not take focus', async () => {
-		const ref = createRef<HTMLDivElement>();
+	it('hands the ref to the thumb input, which takes focus', async () => {
+		const ref = createRef<HTMLInputElement>();
 		await renderSlider(
 			<SliderField label="Sampling rate" color="primary" testId="rate" ref={ref} />,
 		);
 
-		expect(ref.current).toBeInstanceOf(HTMLDivElement);
-		expect(ref.current).toBe(screen.getByTestId('rate'));
+		expect(ref.current).toBe(getThumbInput());
 
 		ref.current?.focus();
 
-		expect(getThumbInput()).not.toHaveFocus();
+		expect(getThumbInput()).toHaveFocus();
 	});
 });
 
@@ -335,7 +334,7 @@ describe('SliderField value', () => {
 		await user.keyboard('{ArrowRight}');
 
 		expect(onChange).toHaveBeenCalledWith(41);
-		expect(ref).toHaveBeenCalledWith(expect.any(HTMLDivElement));
+		expect(ref).toHaveBeenCalledWith(getThumbInput());
 		expect(getThumbInput()).toHaveAttribute('name', 'rate');
 		expect(getThumbInput()).toHaveAttribute('aria-invalid', 'true');
 	});
@@ -614,18 +613,17 @@ describe('SliderField.Range parts and value', () => {
 		await user.keyboard('{ArrowRight}');
 
 		expect(onChange).toHaveBeenCalledWith([21, 80]);
-		expect(ref).toHaveBeenCalledWith(expect.any(HTMLDivElement));
+		expect(ref).toHaveBeenCalledWith(screen.getByRole('slider', { name: 'Minimum' }));
 		expect(screen.getByRole('slider', { name: 'Minimum' })).toHaveAttribute('name', 'duration');
 	});
 
-	it('forwards the ref to the root div of the range', async () => {
-		const ref = createRef<HTMLDivElement>();
+	it('hands the ref to the input of the first thumb', async () => {
+		const ref = createRef<HTMLInputElement>();
 		await renderRange(
 			<SliderField.Range label="Duration" color="primary" testId="duration" ref={ref} />,
 		);
 
-		expect(ref.current).toBe(screen.getByTestId('duration'));
-		expect(ref.current).toHaveAttribute('role', 'group');
+		expect(ref.current).toBe(screen.getByRole('slider', { name: 'Minimum' }));
 	});
 });
 

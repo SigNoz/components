@@ -183,11 +183,12 @@ describe('ToggleGroupField props split', () => {
 		expect(root).toHaveAttribute('data-analytics', 'layout');
 	});
 
-	it('hands the ref to the root', () => {
-		const ref = createRef<HTMLDivElement>();
+	it('hands the ref to a button of the bar, not to the root', () => {
+		const ref = createRef<HTMLButtonElement>();
 		render(<ToggleGroupField label="Layout" {...BAR} items={ITEMS} ref={ref} testId="layout" />);
 
-		expect(ref.current).toBe(screen.getByTestId('layout'));
+		expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+		expect(ref.current).not.toBe(screen.getByTestId('layout'));
 	});
 
 	it('drops className, style and htmlFor that get past the types', () => {

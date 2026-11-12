@@ -10,14 +10,14 @@ type Checked<T extends RadioGroupFieldProps> = T &
 	// `T` is inferred from the call site, so `T extends P` alone never runs excess property checks.
 	// Every key outside the props is pinned to `never` instead.
 	Record<
-		Exclude<keyof T, keyof RadioGroupFieldProps | keyof RefAttributes<HTMLDivElement>>,
+		Exclude<keyof T, keyof RadioGroupFieldProps | keyof RefAttributes<HTMLInputElement>>,
 		never
 	> &
-	RefAttributes<HTMLDivElement>;
+	RefAttributes<HTMLInputElement>;
 
-const RadioGroupFieldRoot = createFieldShorthand<RadioGroupFieldProps, HTMLDivElement>(
+const RadioGroupFieldRoot = createFieldShorthand<RadioGroupFieldProps, HTMLInputElement>(
 	RadioGroup as never,
-	{ displayName: 'RadioGroupField', group: true },
+	{ displayName: 'RadioGroupField', group: true, refIsFocusTarget: true },
 );
 
 /**
@@ -27,9 +27,14 @@ const RadioGroupFieldRoot = createFieldShorthand<RadioGroupFieldProps, HTMLDivEl
  * `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required`
  * go to the group. The label is its `<legend>`, and the radio group takes it as its name, takes
  * `aria-required` from `required`, and gets `aria-invalid` while the status is `danger`. Every
- * other prop goes to the radio group: `items`, `value`, `onChange`, `name`, `ref`, `aria-*`,
+ * other prop goes to the radio group: `items`, `value`, `onChange`, `onBlur`, `name`, `aria-*`,
  * `data-*` and `testId` land where `RadioGroup` puts them. The group parts take `testId` as their
  * prefix (`${testId}-label`, `${testId}-message`), and the `<fieldset>` gets none.
+ *
+ * The `ref` is the hidden `<input>` of the checked radio, or of the first one that is not
+ * disabled, and not the root `<div>` of `RadioGroup`. Its `focus()` puts the focus on that radio,
+ * which is how react-hook-form focuses the first invalid field. It is `null` while the group is
+ * disabled, since every input is.
  *
  * @example
  * ```tsx

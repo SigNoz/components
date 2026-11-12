@@ -149,6 +149,9 @@ export function useRadioCardsGroup({
  * Base UI names a radio group with the legend of its fieldset on its own, and that name outranks an
  * `aria-label`, so a group with an `aria-label` and no `aria-labelledby` erases it.
  *
+ * The `focusTarget` is where a `RadioCardsField` sends its `ref`: the element whose `focus()` lands
+ * on a card, see `FieldContextValue`.
+ *
  * The two attribute sets are spread before the cards' own props, and each is `undefined` rather
  * than holding an `undefined` value, which would erase what Base UI sets on the same attribute.
  * `aria-invalid` is not allowed on `role="group"`, so `RadioCards.Multiple` leaves it out.
@@ -178,6 +181,7 @@ export function useRadioCardsField(
 		isFieldRequired: required === undefined && field?.required === true,
 		nameProps,
 		invalidProps: field?.status === 'danger' ? { 'aria-invalid': true } : undefined,
+		focusTarget: field?.focusTarget,
 	};
 }
 
