@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
  */
 export function useControlledValue<T>({
 	component,
+	prop = 'value',
 	value,
 	defaultValue,
 	empty,
@@ -25,6 +26,12 @@ export function useControlledValue<T>({
 	 * The component name the warning starts with.
 	 */
 	component: string;
+	/**
+	 * The name of the controlled prop, for the warning.
+	 *
+	 * @default 'value'
+	 */
+	prop?: string;
 	value: T | null | undefined;
 	defaultValue: T | undefined;
 	/**
@@ -46,10 +53,10 @@ export function useControlledValue<T>({
 	useEffect(() => {
 		if (startedUncontrolled && isControlled) {
 			console.warn(
-				`${component}: \`value\` was \`undefined\` on the first render and is set now, so it stops keeping its own state and follows \`value\`. Pass the starting value on the first render, the empty one included.`,
+				`${component}: \`${prop}\` was \`undefined\` on the first render and is set now, so it stops keeping its own state and follows \`${prop}\`. Pass the starting value on the first render, the empty one included.`,
 			);
 		}
-	}, [component, startedUncontrolled, isControlled]);
+	}, [component, prop, startedUncontrolled, isControlled]);
 
 	function setValue(next: T): void {
 		if (!isControlled) {
