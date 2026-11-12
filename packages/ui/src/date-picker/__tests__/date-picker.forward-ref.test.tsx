@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
-import { DatePicker } from '../index.js';
+import { DatePicker, DatePickerField } from '../index.js';
 import { StampDatePicker, ZonedDatePicker } from './date-picker.test-utils.js';
 
 describe('DatePicker forwardRef', () => {
@@ -88,5 +88,18 @@ describe('DatePicker forwardRef', () => {
 		render(<DatePicker placeholder="Select date" aria-label="Expiry" id="expiry" ref={ref} />);
 
 		expect(ref.current).toHaveAttribute('id', 'expiry');
+	});
+});
+
+describe('DatePickerField forwardRef', () => {
+	it('forwards the ref to the trigger, which focus() moves the focus to', () => {
+		const ref = createRef<HTMLButtonElement>();
+		render(<DatePickerField label="Expiry" placeholder="Select date" testId="dp" ref={ref} />);
+
+		expect(ref.current).toBe(screen.getByTestId('dp'));
+
+		ref.current?.focus();
+
+		expect(screen.getByRole('combobox', { name: 'Expiry' })).toHaveFocus();
 	});
 });

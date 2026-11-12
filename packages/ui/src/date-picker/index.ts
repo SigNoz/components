@@ -182,10 +182,12 @@
 
 export { createDatePicker, DatePicker } from './date-picker.js';
 export { DATE_PICKER_EMPTY_LABEL } from './constants.js';
+export { DatePickerField } from './presets/date-picker-field.js';
 export type {
 	DateAdapter,
 	DatePickerChangeDetailsType,
 	DatePickerComponentType,
+	DatePickerFieldProps,
 	DatePickerProps,
 	DatePickerTimezoneOptionType,
 	DatePickerTimezoneType,

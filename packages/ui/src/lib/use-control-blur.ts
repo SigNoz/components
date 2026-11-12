@@ -23,8 +23,13 @@ import { containsNode } from './focus-leave.js';
  * `currentTarget` set to the wrapper: the element the `onBlur` belongs to, whichever part the blur
  * came from.
  *
+ * A popup can open a popup of its own, such as the time zone list of a date picker, portalled
+ * outside both parts. React still bubbles its focus through the component tree, so `handleFocus`
+ * on the parts records that the focus landed in the control, and the blur stays quiet.
+ *
  * `handleBlur` goes on the element that wraps the trigger and on the popup, `rootRef` on that
  * wrapper, or on the trigger itself for a control with no wrapper, and `popupRef` on the popup.
+ * `handleFocus` goes next to `handleBlur`, for a popup that opens popups of its own.
  * `trackOpenChange` takes every open change of the popup.
  *
  * @access private
@@ -35,6 +40,7 @@ export function useControlBlur<Root extends HTMLElement = HTMLDivElement>(
 	rootRef: RefObject<Root>;
 	popupRef: RefObject<HTMLDivElement>;
 	handleBlur: (event: FocusEvent<HTMLElement>) => void;
+	handleFocus: () => void;
 	trackOpenChange: (open: boolean, reason: string) => void;
 } {
 	const rootRef = useRef<Root>(null);
@@ -42,6 +48,7 @@ export function useControlBlur<Root extends HTMLElement = HTMLDivElement>(
 	const onBlurRef = useRef(onBlur);
 	const pendingRef = useRef<number | null>(null);
 	const closedByPressRef = useRef(false);
+	const focusedInsideRef = useRef(false);
 
 	useEffect(() => {
 		onBlurRef.current = onBlur;
@@ -77,20 +84,26 @@ export function useControlBlur<Root extends HTMLElement = HTMLDivElement>(
 				currentTarget: { value: root, enumerable: true },
 			}) as FocusEvent<HTMLElement>;
 
+			focusedInsideRef.current = false;
 			pendingRef.current = window.setTimeout(() => {
 				pendingRef.current = null;
 
 				const closedByPress = closedByPressRef.current;
+				const focusedInside = focusedInsideRef.current;
 
 				closedByPressRef.current = false;
 
-				if (closedByPress || !isInside(ownerDocument.activeElement)) {
+				if (closedByPress || (!focusedInside && !isInside(ownerDocument.activeElement))) {
 					onBlurRef.current?.(deferredEvent);
 				}
 			}, 0);
 		},
 		[isInside],
 	);
+
+	const handleFocus = useCallback((): void => {
+		focusedInsideRef.current = true;
+	}, []);
 
 	const trackOpenChange = useCallback((open: boolean, reason: string): void => {
 		if (open) {
@@ -100,5 +113,5 @@ export function useControlBlur<Root extends HTMLElement = HTMLDivElement>(
 		}
 	}, []);
 
-	return { rootRef, popupRef, handleBlur, trackOpenChange };
+	return { rootRef, popupRef, handleBlur, handleFocus, trackOpenChange };
 }

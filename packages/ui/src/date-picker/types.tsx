@@ -1,5 +1,13 @@
 import type { Popover as BasePopover } from '@base-ui/react/popover';
-import type { AriaAttributes, CSSProperties, ReactElement, ReactNode, RefAttributes } from 'react';
+import type {
+	AriaAttributes,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+	RefAttributes,
+} from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { DatePickerTimeUnit } from './constants.js';
 
 type OriginalPortalProps = BasePopover.Portal.Props;
@@ -123,28 +131,10 @@ type DatePickerBaseProps<TDate> = Omit<AriaAttributes, DatePickerWrittenAria> & 
 	 */
 	id?: string;
 	/**
-	 * The selected date. Without `showTime` it is the start of the picked day.
-	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled date picker.
-	 *
-	 * @note A value outside `minDate` and `maxDate`, or on a day `disabledDate` disables, is shown
-	 * as it is. The date picker never calls `onChange` to correct it.
-	 */
-	value?: TDate;
-	/**
 	 * The date selected on the first render, for a date picker that keeps its own state. A form
 	 * reset brings it back.
 	 */
 	defaultValue?: TDate;
-	/**
-	 * Called with the new date when a day is picked, when `Apply` is pressed with `showTime`, and
-	 * with `undefined` when the value is cleared.
-	 *
-	 * @note `details.timezone` is the zone picked with `showTimezone`, and the date is the instant
-	 * of the picked day and time in that zone.
-	 */
-	onChange?: (value: TDate | undefined, details: DatePickerChangeDetailsType) => void;
 	/**
 	 * The text the trigger shows while there is no value. Also the trigger's accessible name when
 	 * no `aria-label`, `aria-labelledby` or `<label for>` names it.
@@ -200,6 +190,9 @@ type DatePickerBaseProps<TDate> = Omit<AriaAttributes, DatePickerWrittenAria> & 
 	/**
 	 * When true, an empty date picker fails the form's validation, and the trigger carries
 	 * `aria-required`.
+	 *
+	 * @note Inside a required `Field`, the trigger carries `aria-required` without this prop, and
+	 * the form's own validation keeps the rule: only this prop sets the native `required`.
 	 *
 	 * @default false
 	 */
@@ -270,10 +263,93 @@ type DatePickerBaseProps<TDate> = Omit<AriaAttributes, DatePickerWrittenAria> & 
 	 */
 	testId?: string;
 	/**
+	 * Called when the focus leaves the date picker, the trigger and its popup counting as one.
+	 * Opening the popup, which takes the focus, and closing it, which gives it back, do not call
+	 * it. Tabbing away, or pressing outside while the popup is open, does.
+	 *
+	 * @note Called one task after the focus moved, so a `Tab` through the popup has handed it on by
+	 * then, and `event.currentTarget` is the root around the trigger. A handler that takes no
+	 * argument, such as the `onBlur` a react-hook-form `field` holds, is accepted.
+	 */
+	onBlur?: (event: FocusEvent<HTMLElement>) => void;
+	/**
 	 * Any `data-*` prop is accepted and forwarded to the trigger, alongside `aria-*`.
 	 */
 	[key: `data-${string}`]: unknown;
 };
+
+/**
+ * `nullable` decides the types of `value` and `onChange`, so they travel as a union: a date picker
+ * that is not nullable keeps the props it always had, and a nullable one takes `null` in and
+ * reports it. `nullable` only takes `true`, so a date picker is nullable by being written that way,
+ * never by a flag decided at run time.
+ *
+ * The plain member comes last in `DatePickerProps` on purpose. TypeScript reports a props object
+ * that matches no member against the last one, so a `value={null}` written without `nullable` is
+ * told that `null` is not a date.
+ */
+interface DatePickerNullableProps<TDate> {
+	/**
+	 * Makes `value` also take `null` for no date, and makes a clear report `null` in place of
+	 * `undefined`. For a field whose schema is nullable, such as a zod `.nullable()` one behind a
+	 * react-hook-form `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable: true;
+	/**
+	 * The selected date. Without `showTime` it is the start of the picked day. `null` and
+	 * `undefined` are no date.
+	 *
+	 * @note `undefined` on the first render leaves the date picker uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with no date. A value that arrives later is
+	 * followed, with one warning, and once controlled `undefined` is no date.
+	 *
+	 * @note A value outside `minDate` and `maxDate`, or on a day `disabledDate` disables, is shown
+	 * as it is. The date picker never calls `onChange` to correct it.
+	 */
+	value?: TDate | null;
+	/**
+	 * Called with the new date when a day is picked, when `Apply` is pressed with `showTime`, and
+	 * with `null` when the value is cleared.
+	 *
+	 * @note `details.timezone` is the zone picked with `showTimezone`, and the date is the instant
+	 * of the picked day and time in that zone.
+	 */
+	onChange?: (value: TDate | null, details: DatePickerChangeDetailsType) => void;
+}
+
+interface DatePickerPlainProps<TDate> {
+	/**
+	 * Makes `value` also take `null` for no date, and makes a clear report `null` in place of
+	 * `undefined`. For a field whose schema is nullable, such as a zod `.nullable()` one behind a
+	 * react-hook-form `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable?: never;
+	/**
+	 * The selected date. Without `showTime` it is the start of the picked day.
+	 *
+	 * @note `undefined` on the first render leaves the date picker uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once
+	 * controlled `undefined` is no date.
+	 *
+	 * @note A controlled date picker that starts with no date takes `nullable` and passes `null`.
+	 *
+	 * @note A value outside `minDate` and `maxDate`, or on a day `disabledDate` disables, is shown
+	 * as it is. The date picker never calls `onChange` to correct it.
+	 */
+	value?: TDate;
+	/**
+	 * Called with the new date when a day is picked, when `Apply` is pressed with `showTime`, and
+	 * with `undefined` when the value is cleared.
+	 *
+	 * @note `details.timezone` is the zone picked with `showTimezone`, and the date is the instant
+	 * of the picked day and time in that zone.
+	 */
+	onChange?: (value: TDate | undefined, details: DatePickerChangeDetailsType) => void;
+}
 
 type DatePickerWithoutTimezoneProps = {
 	/**
@@ -312,7 +388,20 @@ export type DatePickerProps<
 > = DatePickerBaseProps<TDate> &
 	(TTimezone extends true
 		? DatePickerWithoutTimezoneProps | DatePickerWithTimezoneProps
-		: DatePickerWithoutTimezoneProps);
+		: DatePickerWithoutTimezoneProps) &
+	(DatePickerNullableProps<TDate> | DatePickerPlainProps<TDate>);
+
+/**
+ * Distributes over every shape of `DatePickerProps`, so `nullable` and `showTimezone` still decide
+ * the types of the props they pair with.
+ */
+type WithField<P> = P extends unknown ? Omit<P, 'required'> & FieldLabelAndMessageProps : never;
+
+/**
+ * The props of `DatePickerField`: the field's label, description and status, and every prop of
+ * `DatePicker` but `required`, which the field owns.
+ */
+export type DatePickerFieldProps = WithField<DatePickerProps>;
 
 interface ADisabledDatePickerMustSayWhy {
 	'`disabled` needs `disabledTooltip`, a disabled control has to tell the user why it cannot be used': never;

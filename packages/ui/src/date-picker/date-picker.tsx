@@ -6,14 +6,17 @@ import {
 	type KeyboardEvent,
 	useEffect,
 	useMemo,
-	useRef,
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useControlBlur } from '../lib/use-control-blur.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
+import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import { useLabelFor } from '../lib/use-label-for.js';
-import { partTestId, type RejectedProps } from '../lib/utils.js';
+import { joinIdRefs, partTestId, type RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { DatePickerText } from './constants.js';
 import styles from './date-picker.module.scss';
@@ -45,9 +48,11 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 	function DatePicker(props, ref) {
 		const {
 			adapter,
-			value: _value,
+			nullable = false,
+			value: valueProp,
 			defaultValue,
 			onChange,
+			onBlur,
 			placeholder,
 			showTime = false,
 			showTimezone,
@@ -58,7 +63,7 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 			allowClear = false,
 			name,
 			form,
-			required = false,
+			required,
 			disabled = false,
 			disabledTooltip,
 			readOnly = false,
@@ -73,9 +78,19 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 			...triggerProps
 		} = props;
 
-		const isControlled = 'value' in props;
-		const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
-		const value = isControlled ? props.value : uncontrolledValue;
+		const [value, setValue] = useControlledValue<unknown>({
+			component: 'DatePicker',
+			value: valueProp,
+			defaultValue,
+			empty: undefined,
+		});
+		const field = useFieldContext();
+		// A `Field` around the date picker announces it as required with `aria-required` alone, and
+		// its own prop wins. The form's own validation owns the rule, and the native `required` of
+		// the hidden input would stop the browser's submit before it runs.
+		const isRequired = required ?? false;
+		const isFieldRequired = required === undefined && field?.required === true;
+		const { rootRef, popupRef, handleBlur, handleFocus, trackOpenChange } = useControlBlur(onBlur);
 
 		const isTimezoneControlled = showTimezone !== undefined && 'value' in showTimezone;
 		const [uncontrolledTimezone, setUncontrolledTimezone] = useState(showTimezone?.defaultValue);
@@ -149,8 +164,6 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 
 		const startDay = clampDay(draft.day ?? today, minDay, maxDay);
 
-		const popupRef = useRef<HTMLDivElement | null>(null);
-
 		function close(): void {
 			// Back on the trigger before the popup unmounts. Otherwise the focused day is removed with
 			// it, and a dialog around the date picker moves the focus to its panel.
@@ -165,11 +178,9 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 		}
 
 		function commit(next: unknown, timezone: string | undefined): void {
-			if (!isControlled) {
-				setUncontrolledValue(next);
-			}
-
-			onChange?.(next, { timezone });
+			setValue(next);
+			// The only `undefined` is a clear, which a nullable date picker reports as `null`.
+			onChange?.(next === undefined && nullable ? null : next, { timezone });
 		}
 
 		function handleOpenChange(nextOpen: boolean, eventDetails: PopoverChangeDetails): void {
@@ -177,6 +188,8 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 				eventDetails.cancel();
 				return;
 			}
+
+			trackOpenChange(nextOpen, eventDetails.reason);
 
 			if (nextOpen) {
 				setNow(readNow());
@@ -258,15 +271,46 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 					: formatValue(value, { timezone: committedTimezone });
 		}
 
-		const [labelId, labelRef] = useLabelFor(id);
+		// The trigger is a `<button>`, so the field's `<label for>` names it once it points at the
+		// trigger's id: the field's control id, unless the date picker has an `id` of its own.
+		const triggerId = id ?? field?.controlId;
+		const claimControl = field?.claimControl;
+
+		useIsomorphicLayoutEffect(() => {
+			if (claimControl === undefined || triggerId === undefined) {
+				return undefined;
+			}
+
+			claimControl(triggerId);
+
+			return () => claimControl(undefined);
+		}, [claimControl, triggerId]);
+
+		const [labelId, labelRef] = useLabelFor(triggerId);
 		// State, not a ref: the popup reads the layer the trigger sits in when it mounts.
 		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
 		const triggerRef = useMemo(() => mergeRefs(ref, labelRef, setTriggerElement), [ref, labelRef]);
+		// The field's label is read from the context, not from the DOM: the label only points at the
+		// trigger after the claim above, which runs after the trigger mounted.
+		const fieldLabelId = field?.kind === 'field' ? field.labelId : undefined;
 		const labelledBy =
 			triggerProps['aria-labelledby'] ??
-			(triggerProps['aria-label'] === undefined ? labelId : undefined);
+			(triggerProps['aria-label'] === undefined ? (labelId ?? fieldLabelId) : undefined);
 		const accessibleName =
 			triggerProps['aria-label'] ?? (labelledBy === undefined ? placeholder : undefined);
+
+		// What a surrounding `Field` hands the trigger, as defaults the caller's own attributes win
+		// over.
+		const forwardedProps =
+			field === null
+				? triggerProps
+				: {
+						...triggerProps,
+						'aria-describedby': joinIdRefs(triggerProps['aria-describedby'], field.describedBy),
+						'aria-invalid':
+							triggerProps['aria-invalid'] ?? (field.status === 'danger' ? true : undefined),
+						...fieldInvalidDataProps(field),
+					};
 
 		const rootStyle = {
 			...(width != null && { '--date-picker-internal-width': toCssLength(width) }),
@@ -277,6 +321,7 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 			<TooltipProviderIfMissing>
 				<BasePopover.Root open={open} onOpenChange={handleOpenChange} modal={false}>
 					<div
+						ref={rootRef}
 						data-slot="date-picker"
 						data-disabled={(disabled && !readOnly) || undefined}
 						data-readonly={readOnly || undefined}
@@ -284,11 +329,13 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 						data-popup-open={open || undefined}
 						className={styles['date-picker']}
 						style={rootStyle}
+						onBlur={handleBlur}
+						onFocus={handleFocus}
 					>
 						<DatePickerTrigger
 							ref={triggerRef}
-							forwardedProps={triggerProps}
-							id={id}
+							forwardedProps={forwardedProps}
+							id={triggerId}
 							accessibleName={accessibleName}
 							labelledBy={labelledBy}
 							text={text}
@@ -296,7 +343,7 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 							open={open}
 							showTime={showTime}
 							showTimezone={showTimezone !== undefined}
-							required={required}
+							required={isRequired || isFieldRequired}
 							disabled={disabled}
 							disabledTooltip={disabledTooltip}
 							readOnly={readOnly}
@@ -328,14 +375,11 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 							timezone={committedTimezone}
 							showTimezone={showTimezone !== undefined}
 							// A read-only field cannot be filled in, so it is left out of the check, like a native one.
-							required={required && !readOnly}
+							required={isRequired && !readOnly}
 							disabled={disabled && !readOnly}
 							onReset={() => {
 								setEditedDraft(null);
-
-								if (!isControlled) {
-									setUncontrolledValue(defaultValue);
-								}
+								setValue(defaultValue);
 
 								if (!isTimezoneControlled) {
 									setUncontrolledTimezone(showTimezone?.defaultValue);
@@ -346,6 +390,8 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 					<DatePickerPopup
 						trigger={triggerElement}
 						popupRef={popupRef}
+						onBlur={handleBlur}
+						onFocus={handleFocus}
 						container={container}
 						showTime={showTime}
 						startDay={startDay}
