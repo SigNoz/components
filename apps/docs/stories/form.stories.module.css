@@ -1,0 +1,23 @@
+.showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: 3rem 2rem;
+  width: 100%;
+  padding: 2rem;
+}
+
+/* The consumer's row of actions, the form adds none. */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.column {
+  width: 100%;
+  max-width: 24rem;
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}

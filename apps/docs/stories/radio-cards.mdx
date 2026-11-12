@@ -181,6 +181,43 @@ A value that matches no item submits nothing, so it does not count as checked. A
 is disabled submits nothing either: `RadioCards.Multiple` does not count it, and `RadioCards` does,
 as a native radio group counts a disabled checked radio.
 
+### In a field
+
+`RadioCardsField` renders the cards inside a `Field.Group` from one object holding the props of both.
+The label is the legend of the fieldset, and the cards take it as their name, so `aria-label` and
+`aria-labelledby` are not needed. A name of its own still wins over the legend.
+`RadioCardsField.Multiple` does the same for `RadioCards.Multiple`.
+
+```tsx
+import { RadioCardsField } from '@signozhq/ui';
+
+<Controller
+	control={control}
+	name="timeline"
+	render={({ field, fieldState }) => (
+		<RadioCardsField
+			label="When do you plan to migrate?"
+			columns={2}
+			items={timelines}
+			required
+			error={fieldState.error?.message}
+			name={field.name}
+			value={field.value}
+			onChange={field.onChange}
+		/>
+	)}
+/>;
+```
+
+- `required` adds an asterisk to the legend and sets `aria-required` on the group, as the cards do
+  without a field.
+- With a `danger` status, `RadioCardsField` sets `aria-invalid="true"` on the radio group.
+  `RadioCardsField.Multiple` is a `role="group"`, which takes no `aria-invalid`, so the legend and
+  the message carry the status there.
+- The description or the message is listed in the `aria-describedby` of the fieldset.
+- `ref` goes to the root of the cards. With a `testId`, the cards get it, and the parts of the field
+  take it as their prefix: `<testId>-label`, `<testId>-description` and `<testId>-message`.
+
 ## Asserting on it
 
 `testId` becomes `data-testid` on the root, and it names everything under it:
