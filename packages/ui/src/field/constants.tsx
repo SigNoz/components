@@ -10,3 +10,18 @@ export const FieldStatus = {
  * @access private
  */
 export const EMPTY_LABEL_TEXT = '<No label>';
+
+/**
+ * The props of a field shorthand that go to the field. Every other prop goes to the control.
+ *
+ * @access private
+ */
+export const FIELD_SHORTHAND_KEYS = [
+	'label',
+	'labelIcon',
+	'labelTooltip',
+	'description',
+	'error',
+	'status',
+	'message',
+] as const;
