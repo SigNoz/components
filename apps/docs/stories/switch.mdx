@@ -140,6 +140,62 @@ shows a tooltip.
 
 The switch's own reason stacks above the truncated label in one popup, reason first.
 
+## In a form
+
+`SwitchField` puts a switch inside a `Field` from one object, with the label above the switch
+instead of next to it. It takes the field's props (`label`, `labelIcon`, `labelTooltip`,
+`description`, `error`, `status`, `message`, `required`) and every prop of the switch that does not
+lay out text. It renders the same DOM as a hand-written `Field` around a bare `Switch`.
+
+```tsx
+import { SwitchField } from '@signozhq/ui';
+
+export default function AlertsField() {
+	const [enabled, setEnabled] = useState(false);
+
+	return (
+		<SwitchField
+			label="Send alerts"
+			description="Email the on-call channel when a rule fires."
+			color="primary"
+			value={enabled}
+			onChange={setEnabled}
+		/>
+	);
+}
+```
+
+The label names the switch, the description or the message describes it, and `error` sets
+`aria-invalid`. `required` marks the label with an asterisk and sets `aria-required` on the switch.
+A switch has no frame, so the label and the message carry the status.
+
+`children`, `description`, `textPlacement`, `textOverflow`, `width`, `maxWidth` and the `container*`
+props are not accepted: the label above takes the place of the text next to the switch.
+`testId` stays on the switch, and the field parts take it as their prefix (`${testId}-label`,
+`${testId}-description`, `${testId}-message`).
+
+With react-hook-form, spread `value`, `onChange`, `name` and `ref` from `Controller`, and pass
+`fieldState.error?.message` to `error`. A bare `Switch` inside a `Field` takes the same wiring, and
+its own `required` wins over the field's.
+
+```tsx
+<Controller
+	control={control}
+	name="enabled"
+	render={({ field, fieldState }) => (
+		<SwitchField
+			label="Send alerts"
+			color="primary"
+			value={field.value}
+			onChange={field.onChange}
+			name={field.name}
+			ref={field.ref}
+			error={fieldState.error?.message}
+		/>
+	)}
+/>
+```
+
 ## Asserting on it
 
 `testId` is `data-testid` on the switch itself and survives the tooltip trigger cloning the

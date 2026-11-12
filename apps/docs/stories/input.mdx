@@ -1,6 +1,7 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as InputStories from './input.stories';
 import * as InputComponentsStories from './input-components.stories';
+import * as InputFieldStories from './input-field.stories';
 
 <Meta of={InputStories} />
 
@@ -10,19 +11,24 @@ A one-line text field: a native `<input>` inside a frame that owns the border, t
 validation states and the `prefix`/`suffix` slots. `Input.Password`, `Input.TextArea` and
 `Input.Number` swap the control and keep the frame.
 
-The input has no visible label of its own. Name it with `aria-label` or `aria-labelledby`, or with
-a `<label htmlFor>` that matches `id`.
+The input has no visible label of its own. The label, the description and the validation message
+belong to `Field`, which wraps any one control and owns that layout, see the `Field` page.
 
 ## How to use
 
 Every native input prop lands on the `<input>`, so react-hook-form's `register()` spreads straight
-onto it.
+onto it. Name a bare input with `aria-label`, or put it inside a `Field`, whose label reaches it on
+its own.
 
 ```tsx
-import { Input } from '@signozhq/ui';
+import { Field, Input } from '@signozhq/ui';
 
-export default function OrganisationSearch() {
-	return <Input placeholder="For eg. Simpsonville..." aria-label="Organisation" />;
+export default function OrganisationField({ register, errors }) {
+	return (
+		<Field label="Your Organisation Name" error={errors.organisation?.message}>
+			<Input placeholder="For eg. Simpsonville..." {...register('organisation')} />
+		</Field>
+	);
 }
 ```
 
@@ -40,6 +46,52 @@ height, text, and the focus ring, which is the only thing marking focus there.
 `status` tints the border and the background and renders a matching icon at the trailing edge,
 after the `suffix`. `danger` also announces itself as `aria-invalid`. `success` is confirmation of
 a completed check (name available, connection verified), not a resting state for a valid field.
+
+Inside a `Field`, the field's `status` is the default, and the description or message of the field
+lands in the input's `aria-describedby`. The input's own `status` wins when both are set.
+
+## In a form
+
+`InputField` is `Input` inside a `Field`, in one element, and it renders the same DOM as the
+hand-written pair. It takes the props of the field and the props of the input in one object:
+`label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required` go
+to the field, which hands `status` and `required` to the input, and every other prop goes to the
+input.
+
+```tsx
+import { Button, Form, InputField } from '@signozhq/ui';
+
+export default function EmailForm({ register, errors, onSubmit }) {
+	return (
+		<Form onSubmit={onSubmit}>
+			<InputField
+				label="Email"
+				required
+				type="email"
+				error={errors.email?.message}
+				{...register('email')}
+			/>
+			<Button type="submit" variant="solid" color="primary" size="md">
+				Save
+			</Button>
+		</Form>
+	);
+}
+```
+
+`register()` spreads straight onto it, and `id`, `ref`, `name`, `aria-*` and `data-*` land on the
+native input. `testId` is the input's, and the field parts take it as their prefix:
+`${testId}-label`, `${testId}-label-tooltip`, `${testId}-description` and `${testId}-message`. The
+field root gets no `data-testid`. `htmlFor` is not accepted, because the shorthand wires the id
+itself.
+
+`InputField.Password`, `InputField.TextArea` and `InputField.Number` do the same for the members.
+They take the field props and the props of the member, listed under the member's own props below.
+`InputField.Number` is not a target for `register()`: use a `Controller`.
+
+The field owns the label, the description and the message, and the input owns its frame. Read the
+`Field` page for the label, the message and the accessibility the pair wires, and the `Form` page
+for submit and validation.
 
 ## Focus
 
@@ -111,3 +163,7 @@ disabled and not read-only, `data-readonly` while read-only, `data-no-focus-ring
 ## Input.Number props
 
 <Controls of={InputComponentsStories.Number} />
+
+## InputField props
+
+<Controls of={InputFieldStories.Default} />
