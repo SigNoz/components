@@ -98,10 +98,8 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		}: RadioCardsMultipleProps & RejectedProps,
 		ref,
 	) {
-		const { required, isFieldRequired, nameProps, focusTarget } = useRadioCardsField(
-			props,
-			requiredProp,
-		);
+		const { required, isFieldRequired, nameProps, invalidDataProps, focusTarget } =
+			useRadioCardsField(props, requiredProp);
 		const {
 			items: cards,
 			isReadOnly,
@@ -168,6 +166,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 				onValueChange={onValueChange}
 				onBlur={onFocusLeave(onBlur)}
 				{...nameProps}
+				{...invalidDataProps}
 				{...props}
 				{...rootProps}
 			>

@@ -8,7 +8,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { useFieldContext } from '../lib/field-context.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { onFocusLeave } from '../lib/focus-leave.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -153,6 +153,9 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 			data-size={size}
 			data-disabled={isDisabled || undefined}
 			data-readonly={isReadOnly || undefined}
+			// The bar is a plain `<div>`, which takes no `aria-invalid`, and Base UI has no field around
+			// it, so the status of the field is marked here for the stylesheet.
+			{...fieldInvalidDataProps(field)}
 			className={styles['toggle-group']}
 			style={toggleGroupStyle}
 			onBlur={onFocusLeave(onBlur)}
@@ -239,6 +242,10 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * bar has an `aria-label` or an `aria-labelledby` of its own. The bar takes no `aria-invalid` and no
  * `aria-required`, since `role="group"` allows neither. `ToggleGroupField` renders both from one
  * set of props.
+ *
+ * While a `Field` or a `Field.Group` around the bar is in `danger`, the root carries `data-invalid`
+ * and the outline of the bar takes `--destructive`. The seams between the options and a pressed
+ * option stay as they are.
  *
  * ### Items
  *
@@ -365,6 +372,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * | `data-variant`, `data-color`, `data-size` | mirrors the prop |
  * | `data-disabled` | present only while the whole bar is disabled |
  * | `data-readonly` | present only while the bar's value is locked |
+ * | `data-invalid` | present only while a `Field` or a `Field.Group` around the bar is in `danger` |
  *
  * | `data-slot` | rendered |
  * |---|---|

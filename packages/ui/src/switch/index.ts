@@ -37,6 +37,8 @@
  * | `--switch-highlight-danger-hover-background` | `-` |
  * | `--switch-info-background` | `-` |
  * | `--switch-info-hover-background` | `-` |
+ * | `--switch-invalid-border-color` | `var(--destructive)` |
+ * | `--switch-invalid-border-width` | `1px` |
  * | `--switch-label` | `-` |
  * | `--switch-label-color` | `var(--switch-label)` |
  * | `--switch-label-font-family` | `var(--paragraph-base-400-font-family)` |

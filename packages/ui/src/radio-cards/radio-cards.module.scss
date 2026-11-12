@@ -105,6 +105,14 @@
 	}
 }
 
+// The group carries `aria-invalid` (`RadioCards`) or `data-invalid` (`RadioCards.Multiple`, whose
+// `role="group"` takes no `aria-invalid`) for a `Field` or a `Field.Group` in danger. Only the border
+// changes: a checked card keeps its fill, its label and its check, and hover never touches the
+// border. It weighs more than the checked rule, so the order does not matter.
+.radio-cards:is([aria-invalid='true'], [data-multiple][data-invalid]) .radio-cards__item {
+	--radio-cards-internal-border-color: var(--radio-cards-invalid-border-color, var(--destructive));
+}
+
 .radio-cards__prefix,
 .radio-cards__indicator {
 	display: var(--radio-cards-icon-display, inline-flex);

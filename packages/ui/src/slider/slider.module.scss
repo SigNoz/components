@@ -129,6 +129,13 @@
 	}
 }
 
+// The input of the thumb carries `aria-invalid` for a `Field` or a `Field.Group` in danger, and for
+// one written on a single slider. The thumb is the one part with a border, so it takes the colour
+// and the bar keeps its own.
+.slider__thumb:has([aria-invalid='true']) {
+	border-color: var(--slider-thumb-invalid-border-color, var(--destructive));
+}
+
 .slider[data-dragging] {
 	.slider__control,
 	.slider__thumb {
