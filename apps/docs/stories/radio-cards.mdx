@@ -85,7 +85,7 @@ action belongs to a button next to the group, such as `Next` or `Add panel`.
 A click on the checked card changes nothing, the same as a native radio, so the call site clears the
 group by writing `value={null}`. `allowClear` hands that click back: a click or `Space` on the
 checked card unchecks it, and `onChange` reports `null`. The types then ask for an `onChange` that
-takes `null`.
+takes `null`, and so does `nullable`, for a field whose schema allows `null`.
 
 ```tsx
 const [signal, setSignal] = useState<string | null>(null);
@@ -94,16 +94,16 @@ const [signal, setSignal] = useState<string | null>(null);
 ```
 
 A group is controlled when `value` is set on its first render, so a controlled group with nothing
-checked writes `null`, never `undefined`. A `value` that turns `undefined` later shows no card
-checked, and a `value` that appears on a group that started without one is ignored. Both log a
-warning.
+checked writes `null`. A `value` that is `undefined` on the first render leaves the group
+uncontrolled, and one that arrives later is followed, with a warning. Once controlled, `undefined`
+and `null` both show no card checked.
 
 `RadioCards.Multiple` keeps one card checked once something is checked: the click that would
 uncheck the last card is cancelled, so `onChange` is not called. `allowClear` hands it back, and the
 group then reports the empty array. A group that starts with nothing checked stays that way until
 the first check either way. A value that matches no item, or a checked card that is disabled, does
-not count as the card the group keeps. On `RadioCards.Multiple` the empty value is `[]`, and the
-same rule for `undefined` applies.
+not count as the card the group keeps. On `RadioCards.Multiple` the empty value is `[]`, or `null`
+with `nullable`, and the same rule for `undefined` applies.
 
 ## Multiple
 
@@ -204,6 +204,8 @@ import { RadioCardsField } from '@signozhq/ui';
 			name={field.name}
 			value={field.value}
 			onChange={field.onChange}
+			onBlur={field.onBlur}
+			ref={field.ref}
 		/>
 	)}
 />;
@@ -213,10 +215,13 @@ import { RadioCardsField } from '@signozhq/ui';
   without a field.
 - With a `danger` status, `RadioCardsField` sets `aria-invalid="true"` on the radio group.
   `RadioCardsField.Multiple` is a `role="group"`, which takes no `aria-invalid`, so the legend and
-  the message carry the status there.
+  the message carry the status there. On both, every card border turns red.
 - The description or the message is listed in the `aria-describedby` of the fieldset.
-- `ref` goes to the root of the cards. With a `testId`, the cards get it, and the parts of the field
-  take it as their prefix: `<testId>-label`, `<testId>-description` and `<testId>-message`.
+- `ref` goes to the checked card, or to the first one that is not disabled, and not to the root of
+  the cards, so react-hook-form can focus it after a failed submit. It is `null` while the group is
+  disabled. On `RadioCardsField.Multiple` it is the first card that is not disabled.
+- With a `testId`, the cards get it, and the parts of the field take it as their prefix:
+  `<testId>-label`, `<testId>-description` and `<testId>-message`.
 
 ## Asserting on it
 

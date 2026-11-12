@@ -78,7 +78,8 @@ export const Default: Story = {
 /**
  * The marker, the description and the status of the field, each wired to the switch. The message
  * takes the place of the description in the same row, and only `danger` sets `aria-invalid`. A
- * switch has no frame to tint, so the label and the message carry the status.
+ * switch has no frame, so `danger` draws a ring around the track, and the label and the message
+ * carry every status.
  */
 export const States: Story = {
 	parameters: {

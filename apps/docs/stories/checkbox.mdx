@@ -83,7 +83,9 @@ something dangerous.
 
 `value` + `onChange` is the controlled pair; `defaultValue` alone is the uncontrolled one. Writing
 `value` and `defaultValue` together is a type error: `value` makes the checkbox controlled for its
-whole life, so the default could never apply.
+whole life, so the default could never apply. A `value` that is `undefined` on the first render
+leaves it uncontrolled, and one that arrives later is followed, with a warning. Once controlled,
+`undefined` shows it unchecked.
 
 `onChange` receives the new checked state as its one argument, and nothing else.
 
@@ -165,6 +167,7 @@ import { CheckboxField } from '@signozhq/ui';
 			ref={field.ref}
 			value={field.value}
 			onChange={field.onChange}
+			onBlur={field.onBlur}
 		/>
 	)}
 />;
@@ -180,8 +183,8 @@ import { CheckboxField } from '@signozhq/ui';
   the box. The message takes the place of the description in the same row, so the field does not
   grow when an error appears. A message that appears or changes is announced once.
 - `error` is the usual wiring: `status="danger"` and the message in one prop. With `danger` the
-  checkbox gets `aria-invalid`, and the text and the message take the status color. `status` with
-  `message` covers `warning` and `success`.
+  checkbox gets `aria-invalid` and its border turns red, a checked box included, and the text and
+  the message take the status color. `status` with `message` covers `warning` and `success`.
 - `labelTooltip` adds an info icon after the text. Its content is also part of the checkbox's
   description, because the tooltip only opens on hover. Clicking the icon does not toggle the
   checkbox.
@@ -214,13 +217,14 @@ element; `containerTestId` names the wrapper. Otherwise use the data attributes,
 class names. The checkbox keeps `role="checkbox"` and `aria-checked`, so `getByRole('checkbox')`
 works.
 
-| root attribute                                    | value                                            |
-| ------------------------------------------------- | ------------------------------------------------ |
-| `data-slot`                                       | `"checkbox"`                                     |
-| `data-color`                                      | mirrors the prop                                 |
-| `data-checked` / `data-unchecked`                 | the current state, neither while `indeterminate` |
-| `data-indeterminate`                              | present while `indeterminate`                    |
-| `data-disabled`, `data-readonly`, `data-required` | present while set                                |
+| root attribute                                    | value                                                               |
+| ------------------------------------------------- | ------------------------------------------------------------------- |
+| `data-slot`                                       | `"checkbox"`                                                        |
+| `data-color`                                      | mirrors the prop                                                    |
+| `data-checked` / `data-unchecked`                 | the current state, neither while `indeterminate`                    |
+| `data-indeterminate`                              | present while `indeterminate`                                       |
+| `data-disabled`, `data-readonly`, `data-required` | present while set                                                   |
+| `data-invalid`                                    | present while a `Field` or a `Field.Group` around it is in `danger` |
 
 | wrapper attribute    | value                                               |
 | -------------------- | --------------------------------------------------- |

@@ -21,7 +21,7 @@ import { Combobox } from '@signozhq/ui';
 import { useState } from 'react';
 
 export default function FrameworkField() {
-	const [framework, setFramework] = useState<string | undefined>();
+	const [framework, setFramework] = useState<string | undefined>('');
 
 	return (
 		<Combobox
@@ -93,12 +93,15 @@ A label that renders nothing shows `<No label>`.
 
 ## Values
 
-`value` is a `string`, or a `string[]` with `multiple`. Writing `value` makes the combobox
-controlled, even with `undefined`. Leave it out and use `defaultValue` for one that keeps its own
-state.
+`value` is a `string`, or a `string[]` with `multiple`. Leave it out and use `defaultValue` for a
+combobox that keeps its own state: a `value` that is `undefined` on the first render counts as left
+out. One that arrives later is followed, with a warning, and once controlled `undefined` shows
+nothing selected. A controlled combobox with nothing selected starts at `''`, or at `null` with
+`nullable`, for a field whose schema allows it.
 
 `onChange` gets `string | undefined` in single mode, `undefined` when the value is cleared, and a
-`string[]` with `multiple`.
+`string[]` with `multiple`. With `nullable` a single combobox reports `null` when the value is
+cleared.
 
 ```tsx
 const [tags, setTags] = useState<string[]>([]);
@@ -287,8 +290,8 @@ takes a `required` prop of its own, which wins over the one of the surrounding f
 a submit: a `Form` does not validate, so the form's rules refuse the empty value.
 
 Only `danger` tints the frame, through `aria-invalid`. A `warning` or a `success` shows in the
-label and in the message below. The `value`, `onChange` and `ref` of a `Controller` field spread
-onto `ComboboxField`.
+label and in the message below. The `value`, `onChange`, `onBlur`, `name` and `ref` of a `Controller`
+field spread onto `ComboboxField`.
 
 ## Keyboard
 

@@ -42,7 +42,7 @@ export const selectArgTypes: Meta<typeof Select>['argTypes'] = {
 	value: {
 		control: false,
 		description:
-			'The selected value, a `string`, or a `string[]` with `multiple`. Writing it makes the select controlled, even with `undefined`.',
+			'The selected value, a `string`, or a `string[]` with `multiple`. `undefined` on the first render leaves the select uncontrolled, starting at `defaultValue`. A value that arrives later is followed, with a warning, and once controlled `undefined` shows nothing selected. `null` is nothing selected too, with `nullable`.',
 		table: { category: 'Behavior', type: { summary: 'string | string[]' } },
 	},
 	defaultValue: {
