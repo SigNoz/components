@@ -1,0 +1,251 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as StepsStories from './steps.stories';
+import * as StepsComponentsStories from './steps-components.stories';
+
+<Meta of={StepsStories} />
+
+# Steps
+
+A row of numbered steps that shows where the user is in a flow with a known number of steps, such as
+the setup of a data source. Each step is done, current or waiting, and the state comes from one
+prop, `current`. It is display only: no step can be clicked, and the page moves between steps with
+its own Back and Continue buttons.
+
+`Steps.List` is the other half: a vertical numbered list where each step holds its own content, such
+as the steps of a trace funnel. It has no current step and no state.
+
+`items` and `current` are required. The row renders an `ol`, so it takes `id`, `ref`, every `aria-*`
+and any `data-*`. It has no `className` or `style`: its look is the one design ships.
+
+## How to use
+
+```tsx
+import { Steps } from '@signozhq/ui';
+
+export default function SetupProgress({ step }: { step: number }) {
+	return (
+		<Steps
+			aria-label="Setup progress"
+			current={step}
+			items={[
+				{ label: 'Select data source', description: 'Kubernetes' },
+				{ label: 'Configure', description: 'Acme Inc.' },
+				{ label: 'Send data' },
+			]}
+		/>
+	);
+}
+```
+
+<Primary />
+
+## Step state
+
+`current` is the number of the current step, starting at 1, the same number the marker shows. The
+state of every step comes from it:
+
+- A step before `current` is done. Its marker shows a done mark in place of the number.
+- The step at `current` is current. Its marker shows the number and stands out from the others.
+- A step after `current` is waiting. Its marker shows the number.
+
+The page owns the step, and moves it with its own buttons:
+
+```tsx
+const [step, setStep] = useState(1);
+
+<Steps aria-label="Setup progress" current={step} items={items} />
+<Button onClick={() => setStep(step + 1)}>Continue</Button>
+```
+
+A `current` above the count of steps marks every step done, for a flow that is finished and still on
+screen. No step is current then. A `current` below 1, or one that is not an integer, renders as `1`
+and warns on the console.
+
+A step cannot be skipped or failed: the state of a step is only its position against `current`. A
+step that fails shows its error in the content of the page, next to the control that failed. No step
+reacts to hover, and none can be clicked.
+
+## Empty text
+
+A step whose `label` is empty, or has only spaces, shows `<No label>`. It is never hidden, since the
+numbers of the steps after it would move and the count would lie.
+
+A step with no `description` shows none. A `description` that is empty or only spaces counts as none.
+
+An empty `items` renders nothing, on `Steps` and on `Steps.List`. A flow with no steps has nothing to
+show. The one exception is a `Steps.List` with a `footer`, which renders the footer alone.
+
+## Stable height
+
+The row keeps the same height while the flow moves. While at least one step has a `description`,
+every step keeps the line of the description, so the row does not grow when one arrives, such as the
+name of the organization after it loads.
+
+Pass no `description` until there is one. The line is already reserved, so a placeholder such as a
+space is not needed.
+
+```tsx
+<Steps
+	aria-label="Setup progress"
+	current={2}
+	items={[
+		{ label: 'Select data source', description: 'Kubernetes' },
+		{ label: 'Configure', description: organization?.name },
+		{ label: 'Send data' },
+	]}
+/>
+```
+
+A change of `current` changes the markers only. No step moves and no width changes.
+
+## Layout
+
+The row is one line and fills the width of its parent. Every step but the last takes an equal share
+of the row, and a line joins the end of the text of each step to the next marker. The last step takes
+the same share, up to the width of its content. The row never wraps.
+
+When the row runs out of width, the labels and the descriptions cut first, see Ellipsis. The markers
+never shrink. When even the cut text does not fit, the row overflows its parent.
+
+The component does not turn into a column on a narrow screen. A screen that needs that renders
+`Steps` in a wider place, or does not render it.
+
+## Ellipsis
+
+The label and the description are one line each. Text that does not fit is cut at the end with `…`,
+and a tooltip shows the full text. The number in the marker never cuts.
+
+While the text is cut it is a tab stop, so the tooltip opens on keyboard focus too. `Tab` reaches it
+in reading order, and `Esc` closes the tooltip. Text that fits is not focusable, and the row has no
+other keys.
+
+## Steps.List
+
+A vertical list of numbered steps. Each step has a marker with its number, an optional label next to
+the marker, and its own content under the label. A line joins each marker to the next one along the
+full height of the content, and the last step has no line. There is no current step, so every
+marker looks the same.
+
+It takes the same `id`, `ref`, `aria-*`, `data-*` and `testId` as `Steps`. `id` and `aria-*` go to
+its `ol`, and `ref`, `data-*` and `testId` to the `div` around it. It does not take `current`.
+
+```tsx
+<Steps.List
+	aria-label="Funnel steps"
+	items={[
+		{ label: 'Add to cart', children: 'Spans named POST /cart in the cart service.' },
+		{ label: 'Checkout', children: 'Spans named POST /checkout in the checkout service.' },
+	]}
+/>
+```
+
+`label` is a title next to the marker. Leave it out when the content shows its own title. `children`
+is the content of the step and can hold any element, such as a form:
+
+```tsx
+<Steps.List
+	aria-label="Funnel steps"
+	items={steps.map((step) => ({ children: <FunnelStep key={step.id} step={step} /> }))}
+/>
+```
+
+When a step can be removed or moved, give its content a `key`, such as the id of the step, as above.
+The step is matched by that key and keeps its state, such as a value typed in its form. Without it,
+the steps are matched by their position, and the state of a removed step shows in the step that takes
+its place.
+
+The content of each step keeps its own focus order: `Tab` moves through the controls of step 1, then
+step 2, in the order they render. A step whose content renders nothing still shows its marker, so the
+numbers stay in order.
+
+The list fills the width of its parent. The marker column has a fixed width, and the label and the
+content take the rest. Nothing is cut: the label wraps, the list grows with its content, and the
+parent owns the scroll.
+
+An action that adds a step is not a step. Pass it as `footer`, never as an item, or a screen reader
+counts it as one more step. The footer sits after the last step, in the content column, with a dot in
+place of a number, and the line of the last step runs down to it:
+
+```tsx
+<Steps.List
+	aria-label="Funnel steps"
+	items={items}
+	footer={
+		<Button variant="outlined" color="secondary" onClick={addStep}>
+			Add step
+		</Button>
+	}
+/>
+```
+
+With an empty `items`, the footer renders alone, so the first step can still be added.
+
+## Accessibility
+
+`Steps` renders an `ol` with one `li` per step, so a screen reader announces a list and the count of
+steps.
+
+- The current step carries `aria-current="step"`, which a screen reader reads as "current step".
+- A done step adds the word `Completed` after its label, as visually hidden text, so the state does
+  not rely on the done mark alone.
+- A waiting step adds nothing. Its place after the current step says it.
+- The marker is hidden from assistive tech. The list already gives the position, and the hidden word
+  already says what the done mark shows.
+- The description is read after the label.
+
+The list has no name of its own. A screen with two `Steps` passes an `aria-label` to each, so the two
+lists differ.
+
+```tsx
+<Steps aria-label="Setup progress" current={2} items={setupItems} />
+<Steps aria-label="Alert progress" current={1} items={alertItems} />
+```
+
+`Steps` is not a live region. When `current` changes, the page shows the content of the new step, and
+the page owns the focus and the announcement of that change. A live region here would repeat the
+heading of the new step.
+
+`Steps.List` renders an `ol` with one `li` per step. The marker is hidden from assistive tech, and the
+label is plain text, read before the content. The footer is a `div` after the `ol`, so the list
+counts only the steps, and its dot is hidden.
+
+Every state shows in more than color: done has its own mark and its hidden word, and current has
+`aria-current`.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and it names everything under it:
+
+| Element                | `data-testid`                           |
+| ---------------------- | --------------------------------------- |
+| `ol` (`Steps.List`)    | `` `${testId}-items` ``                 |
+| step                   | `` `${testId}-item-${n}` ``             |
+| marker                 | `` `${testId}-item-${n}-marker` ``      |
+| label                  | `` `${testId}-item-${n}-label` ``       |
+| description (`Steps`)  | `` `${testId}-item-${n}-description` `` |
+| content (`Steps.List`) | `` `${testId}-item-${n}-content` ``     |
+| footer (`Steps.List`)  | `` `${testId}-footer` ``                |
+| footer dot             | `` `${testId}-footer-marker` ``         |
+| footer content         | `` `${testId}-footer-content` ``        |
+
+`n` is the step number, starting at 1, the same number the marker shows. Without `testId`, no part
+gets a `data-testid`. The description renders only when the step has one, and the line that
+`Steps` reserves for it is not an element a test can find. In `Steps.List` the label renders only
+when the step has a `label`, and the content always renders. The line between two steps has no test
+ID.
+
+The root of `Steps` carries `data-current` with `current` after the fallback to `1`, as in
+`data-current="2"`. A `current` above the count of steps is kept, so a finished flow of three steps
+reads `data-current="4"`. Each step carries `data-status`, with the value `done`, `current` or
+`waiting`. A label or a description carries `data-truncated` only while it is cut. `Steps.List` has
+no state to expose.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Props
+
+<Controls of={StepsStories.Default} />
+
+### Steps.List props
+
+<Controls of={StepsComponentsStories.List} />
