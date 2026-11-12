@@ -415,7 +415,9 @@ same DOM.
 - `ColorPickerField` from the ColorPicker entry. The trigger is your element, so `ref` lands on it,
   `id` stays the id of the popup, and `required` sets no `aria-required`, which a button does not
   take.
-- `DatePickerField` and `UploadField` come with those controls.
+- `DatePickerField` from the DatePicker entry, for native `Date`s. `id` stays on the trigger, and
+  `required` sets `aria-required`, never the native `required`.
+- `UploadField` comes with that control.
 
 A shorthand takes the props of the field and the props of the control in one object. `label`,
 `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required` go to the
