@@ -170,28 +170,32 @@ the form's validation, next to an error message the trigger points at with `aria
 
 ## Inside a popover, dialog or drawer
 
-Inside a `Dialog` or `Drawer` the popup goes into the panel on its own. Inside a modal or drawer from
-another library, such as antd's, the popup stays in the body and stacks above it. Inside anything
-else that closes on a press outside it, such as a `Popover`, pass `container` an element inside it.
+Inside a `Dialog` or `Drawer` the popup goes into the panel on its own. Inside a `Popover` it needs
+nothing either: a press in the list is not a press outside the popover, so picking an option
+leaves it open. Inside a modal or drawer from another library, such as antd's, the popup stays in
+the body and stacks above it.
+
+A popover from another library, such as antd's, can take a press in the list for a press
+outside it and close. Pass `container` an element inside that popover.
 
 ```tsx
 const containerRef = useRef<HTMLDivElement>(null);
 
-<Popover
-	nativeButton
-	side="bottom"
-	align="start"
-	trigger={<Button variant="outlined">Filters</Button>}
+<AntdPopover
+	trigger="click"
+	content={
+		<div ref={containerRef}>
+			<Select
+				aria-label="Environment"
+				placeholder="Select an environment..."
+				items={environments}
+				container={containerRef}
+			/>
+		</div>
+	}
 >
-	<div ref={containerRef}>
-		<Select
-			aria-label="Environment"
-			placeholder="Select an environment..."
-			items={environments}
-			container={containerRef}
-		/>
-	</div>
-</Popover>;
+	<Button variant="outlined">Filters</Button>
+</AntdPopover>;
 ```
 
 ## Holding the popup open in a story or a test
