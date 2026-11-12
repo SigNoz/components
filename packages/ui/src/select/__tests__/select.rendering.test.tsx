@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Dialog } from '../../dialog/index.js';
+import { Popover } from '../../popover/index.js';
 import { Select } from '../index.js';
 import type { SelectItemType } from '../types.js';
 import { FRAMEWORKS, openSelect } from './select.test-utils.js';
@@ -678,6 +679,63 @@ describe('Select inside a dialog', () => {
 		});
 		expect(onClose).not.toHaveBeenCalled();
 		expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument();
+	});
+});
+
+// The popup stays in the body. Base UI counts a nested popup as part of the popover, so a press in
+// the list is not a press outside it and no `container` is needed.
+describe('Select inside a popover', () => {
+	async function renderInPopover() {
+		render(
+			<Popover
+				nativeButton
+				side="bottom"
+				align="start"
+				trigger={<button type="button">Filters</button>}
+				testId="popover"
+			>
+				<Select placeholder="Select a framework..." aria-label="Framework" items={FRAMEWORKS} />
+			</Popover>,
+		);
+		await userEvent.click(screen.getByRole('button', { name: 'Filters' }));
+		await screen.findByTestId('popover-popup');
+	}
+
+	it('keeps the popover open on a pick', async () => {
+		await renderInPopover();
+		const listbox = await openSelect();
+
+		await userEvent.click(within(listbox).getByRole('option', { name: 'Vue' }));
+
+		await waitFor(() => {
+			expect(screen.queryByRole('listbox')).toBeNull();
+		});
+		expect(screen.getByRole('combobox', { name: 'Framework' })).toHaveTextContent('Vue');
+		expect(screen.getByTestId('popover-popup')).toBeInTheDocument();
+	});
+
+	it('closes only the popup on Escape', async () => {
+		await renderInPopover();
+		await openSelect();
+
+		await userEvent.keyboard('{Escape}');
+
+		await waitFor(() => {
+			expect(screen.queryByRole('listbox')).toBeNull();
+		});
+		expect(screen.getByTestId('popover-popup')).toBeInTheDocument();
+	});
+
+	it('closes both on a press outside the popover', async () => {
+		await renderInPopover();
+		await openSelect();
+
+		await userEvent.click(document.body);
+
+		await waitFor(() => {
+			expect(screen.queryByTestId('popover-popup')).toBeNull();
+		});
+		expect(screen.queryByRole('listbox')).toBeNull();
 	});
 });
 
