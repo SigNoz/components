@@ -1,8 +1,9 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
-import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
+import { forwardRef, type ReactElement, type RefAttributes } from 'react';
 import { useFieldContext } from '../lib/field-context.js';
 import { onFocusLeave } from '../lib/focus-leave.js';
 import { resolveGroupReason } from '../lib/group-reason.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipTriggerBoundary } from '../tooltip/tooltip-trigger-context.js';
 import { RadioGroupTextOverflow } from './constants.js';
@@ -42,23 +43,25 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		field !== null && props['aria-label'] !== undefined && props['aria-labelledby'] === undefined
 			? { 'aria-labelledby': undefined }
 			: undefined;
+	const [checkedValue, setCheckedValue] = useControlledValue<string | null>({
+		component: 'RadioGroup',
+		value,
+		defaultValue,
+		empty: null,
+	});
 	// Base UI hands the change two arguments, the value and its event details, and types the value
 	// as `string | null` because the generic also covers the `value` prop. Only a radio reports a
 	// change, and it reports its own `value`, so `null` never arrives here: both the extra argument
 	// and the null half of the type stop at this boundary.
-	const onValueChange = useMemo(
-		() =>
-			onChange === undefined
-				? undefined
-				: (next: string | null): void => {
-						if (next === null) {
-							return;
-						}
+	function onValueChange(next: string | null): void {
+		if (next === null) {
+			return;
+		}
 
-						onChange(next);
-					},
-		[onChange],
-	);
+		setCheckedValue(next);
+		onChange?.(next);
+	}
+
 	const {
 		isDisabled,
 		reason: tooltipContent,
@@ -80,8 +83,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			required={required}
 			name={name}
 			inputRef={field?.focusTarget}
-			value={value}
-			defaultValue={defaultValue}
+			value={checkedValue}
 			onValueChange={onValueChange}
 			onBlur={onFocusLeave(onBlur)}
 			{...(isFieldRequired ? { 'aria-required': true } : {})}

@@ -142,6 +142,13 @@ export type InputNullableType<Value> =
 			/**
 			 * The controlled value. `null` is the empty field, drawn as an empty string.
 			 *
+			 * `undefined` on the first render leaves the field uncontrolled, starting at `defaultValue`.
+			 * A value that arrives later is followed, with one warning, and from then on `undefined`
+			 * shows it empty.
+			 *
+			 * @note React also logs its own "uncontrolled to controlled" error when the value arrives
+			 * late.
+			 *
 			 * @note Use with `onChange`. For an uncontrolled field leave `value` out and use
 			 * `defaultValue`, which is what react-hook-form's `register()` does.
 			 */
@@ -160,6 +167,13 @@ export type InputNullableType<Value> =
 			nullable?: never;
 			/**
 			 * The controlled value. The empty field is the empty string.
+			 *
+			 * `undefined` on the first render leaves the field uncontrolled, starting at `defaultValue`.
+			 * A value that arrives later is followed, with one warning, and from then on `undefined`
+			 * shows it empty.
+			 *
+			 * @note React also logs its own "uncontrolled to controlled" error when the value arrives
+			 * late.
 			 *
 			 * @note `null` is not a value here. A field that holds `null` while empty takes
 			 * `nullable`.
@@ -274,9 +288,11 @@ export type InputNumberProps = InputAppearanceProps &
 		'id' | 'name' | 'placeholder' | 'required' | 'autoFocus' | 'form' | 'tabIndex'
 	> & {
 		/**
-		 * The controlled value. `null` is the empty field, and the only way to write one: a
-		 * controlled field that starts empty passes `null`, since `undefined` makes it
-		 * uncontrolled for the rest of its life.
+		 * The controlled value. `null` is the empty field.
+		 *
+		 * `undefined` on the first render leaves the field uncontrolled, starting at `defaultValue`.
+		 * A value that arrives later is followed, with one warning, and from then on `undefined`
+		 * shows it empty.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled field use `defaultValue` instead.
 		 */

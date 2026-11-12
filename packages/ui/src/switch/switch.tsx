@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -60,18 +61,21 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 
 	const isReadOnly = readOnly === true;
 
+	// Base UI is always controlled from `shown`, and an uncontrolled switch keeps `shown` itself.
+	const [shown, setShown] = useControlledValue<boolean>({
+		component: 'Switch',
+		value,
+		defaultValue,
+		empty: false,
+	});
+
 	// Base UI hands the change two arguments, the value and its event details. The extra argument
 	// stops at this boundary so `onChange` keeps the one-argument shape every input in this
 	// library shares.
-	const onCheckedChange = useMemo(
-		() =>
-			onChange === undefined
-				? undefined
-				: (checked: boolean): void => {
-						onChange(checked);
-					},
-		[onChange],
-	);
+	const onCheckedChange = (checked: boolean): void => {
+		setShown(checked);
+		onChange?.(checked);
+	};
 
 	const hasDescription = typeof description === 'string' && description !== '';
 	const hasLabel = hasRenderableContent(children);
@@ -125,8 +129,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			data-color={color}
 			className={styles['switch']}
 			style={hasContainer ? undefined : sizeStyle}
-			checked={value}
-			defaultChecked={defaultValue}
+			checked={shown}
 			onCheckedChange={onCheckedChange}
 			disabled={isReadOnly ? false : disabled}
 			// Base UI parks a disabled switch at `tabindex="-1"`; staying focusable is what keeps

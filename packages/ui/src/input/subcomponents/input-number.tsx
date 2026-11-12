@@ -1,6 +1,7 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react/number-field';
 import { ChevronDown, ChevronUp } from '@signozhq/icons';
 import { forwardRef } from 'react';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../input.module.scss';
@@ -98,13 +99,23 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 	});
 	const { focusVisible, focusProps } = useInputFocusVisible();
 
+	// Base UI is always controlled from `shown`, and an uncontrolled field keeps `shown` itself.
+	const [shown, setShown] = useControlledValue<number | null>({
+		component: 'Input.Number',
+		value,
+		defaultValue,
+		empty: null,
+	});
+
 	const numberField = (
 		<NumberFieldPrimitive.Root
 			className={styles['input__number-root']}
 			id={field.id}
-			value={value}
-			defaultValue={defaultValue}
-			onValueChange={onChange && ((next) => onChange(next))}
+			value={shown}
+			onValueChange={(next) => {
+				setShown(next);
+				onChange?.(next);
+			}}
 			onValueCommitted={onAfterChange && ((next) => onAfterChange(next))}
 			min={min}
 			max={max}

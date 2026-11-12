@@ -135,7 +135,7 @@ describe('the switch props', () => {
 
 	test('a controlled value cannot come with a default', () => {
 		// oxfmt-ignore
-		// @ts-expect-error - `value` makes the switch controlled for its whole life
+		// @ts-expect-error - `value` and `defaultValue` are one or the other
 		assertType(<SwitchField label="Send alerts" color="primary" value defaultValue />);
 	});
 

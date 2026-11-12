@@ -197,6 +197,10 @@ type ToggleGroupSelectionType =
 			 * The controlled pressed item's `value`, or `null` while nothing is pressed. The empty
 			 * string is the empty bar too.
 			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` and `null` show
+			 * the empty bar.
+			 *
 			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
 			 *
 			 * @note The bar reaches the empty state on its own only with `allowClear`.
@@ -233,6 +237,10 @@ type ToggleGroupSelectionType =
 			/**
 			 * The controlled pressed items' `value`s. `[]` and `null` are the empty bar.
 			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` and `null` show
+			 * the empty bar.
+			 *
 			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
 			 *
 			 * @note The bar reaches the empty array on its own only with `allowClear`.
@@ -266,6 +274,10 @@ type ToggleGroupSelectionType =
 			nullable?: never;
 			/**
 			 * The controlled pressed item's `value`, or the empty string while nothing is pressed.
+			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` shows the empty
+			 * bar.
 			 *
 			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
 			 *
@@ -301,6 +313,10 @@ type ToggleGroupSelectionType =
 			nullable?: never;
 			/**
 			 * The controlled pressed items' `value`s.
+			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` shows the empty
+			 * bar.
 			 *
 			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
 			 *

@@ -72,6 +72,22 @@ describe('RadioCards nullable', () => {
 		expect(logged.warn).not.toHaveBeenCalled();
 	});
 
+	it.each([
+		['undefined', undefined],
+		['null', null],
+	])('shows no card checked once a value turns %s, with no warning', (_, empty) => {
+		const logged = spyOnConsole();
+		const { rerender } = render(
+			<RadioCards aria-label="Signal" items={ITEMS} nullable value="traces" />,
+		);
+
+		rerender(<RadioCards aria-label="Signal" items={ITEMS} nullable value={empty} />);
+
+		expectNothingChecked('radio');
+		expect(logged.error).not.toHaveBeenCalled();
+		expect(logged.warn).not.toHaveBeenCalled();
+	});
+
 	it('follows a form state that starts null, and reports null on a clear', async () => {
 		const user = userEvent.setup();
 		const logged = spyOnConsole();
@@ -246,6 +262,22 @@ describe('RadioCards.Multiple nullable', () => {
 
 		expect(screen.getByRole('checkbox', { name: 'Logs' })).toBeChecked();
 		expect(screen.getByRole('checkbox', { name: 'Metrics' })).toBeChecked();
+		expect(logged.error).not.toHaveBeenCalled();
+		expect(logged.warn).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		['undefined', undefined],
+		['null', null],
+	])('shows no card checked once a value turns %s, with no warning', (_, empty) => {
+		const logged = spyOnConsole();
+		const { rerender } = render(
+			<RadioCards.Multiple aria-label="Tools" items={ITEMS} nullable value={['logs']} />,
+		);
+
+		rerender(<RadioCards.Multiple aria-label="Tools" items={ITEMS} nullable value={empty} />);
+
+		expectNothingChecked('checkbox');
 		expect(logged.error).not.toHaveBeenCalled();
 		expect(logged.warn).not.toHaveBeenCalled();
 	});

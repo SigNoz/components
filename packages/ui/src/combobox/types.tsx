@@ -304,8 +304,9 @@ interface ComboboxSingleNullableProps extends ComboboxSingleShared, ComboboxNull
 	 * The selected `value` of an `item` row, or a value created through `allowCreate`. `null` is
 	 * none.
 	 *
-	 * @note `null` makes the component controlled with nothing selected. Leave the prop out
-	 * entirely for an uncontrolled combobox.
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
 	 */
 	value?: string | null;
 	/**
@@ -318,8 +319,11 @@ interface ComboboxSingleProps extends ComboboxSingleShared, ComboboxNullableOff 
 	/**
 	 * The selected `value` of an `item` row, or a value created through `allowCreate`.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled combobox.
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
+	 *
+	 * @note A controlled combobox that starts with nothing selected passes `''`.
 	 */
 	value?: string;
 	/**
@@ -346,7 +350,9 @@ interface ComboboxMultipleNullableProps extends ComboboxMultipleShared, Combobox
 	/**
 	 * The selected values, in the order they were picked. `null` is `[]`.
 	 *
-	 * @note `null` makes the component controlled with nothing selected.
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
 	 */
 	value?: string[] | null;
 	/**
@@ -359,7 +365,9 @@ interface ComboboxMultipleProps extends ComboboxMultipleShared, ComboboxNullable
 	/**
 	 * The selected values, in the order they were picked.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
 	 */
 	value?: string[];
 	/**

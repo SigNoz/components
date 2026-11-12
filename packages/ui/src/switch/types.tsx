@@ -104,7 +104,7 @@ interface TheTestIdPropIsCalledTestId {
 }
 
 interface ASwitchIsControlledOrUncontrolledNeverBoth {
-	'`value` makes the switch controlled for its whole life, so `defaultValue` never applies, drop one of the two': never;
+	'`value` and `defaultValue` both set the checked state, pass `value` or `defaultValue`, not both': never;
 }
 
 /**
@@ -204,7 +204,9 @@ export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 		 */
 		required?: boolean;
 		/**
-		 * The controlled checked state.
+		 * The controlled checked state. `undefined` on the first render leaves the switch
+		 * uncontrolled, starting at `defaultValue`. A value that arrives later is followed, with one
+		 * warning, and from then on `undefined` shows it off.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled switch use `defaultValue` instead, never
 		 * both.

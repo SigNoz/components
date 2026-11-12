@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../input.module.scss';
 import type { InputTextAreaProps } from '../types.js';
-import { getReasonTooltip, splitAttributes, useFieldControl } from '../utils.js';
+import { getReasonTooltip, splitAttributes, useFieldControl, useNativeValue } from '../utils.js';
 import { InputFrame } from './input-frame.js';
 
 /**
@@ -39,7 +39,9 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			'aria-required': ariaRequired,
 			'aria-describedby': ariaDescribedBy,
 			'aria-invalid': ariaInvalid,
-			nullable,
+			value,
+			defaultValue,
+			nullable: _nullable,
 			className: _className,
 			style: _style,
 			...props
@@ -54,7 +56,8 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			ariaDescribedBy,
 			ariaInvalid,
 		});
-		const { control, data } = splitAttributes(props, nullable);
+		const { control, data } = splitAttributes(props);
+		const nativeValue = useNativeValue({ component: 'Input.TextArea', value, defaultValue });
 		const isDisabled = disabled && !readOnly;
 		const { reason, hasReasonAnchor } = getReasonTooltip({
 			disabled,
@@ -83,6 +86,7 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			>
 				<textarea
 					{...control}
+					{...nativeValue}
 					ref={ref}
 					id={field.id}
 					required={field.required}

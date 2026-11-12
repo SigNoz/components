@@ -198,8 +198,9 @@ interface SelectSingleNullableProps extends SelectSingleShared, SelectNullableOn
 	/**
 	 * The selected `value` of an `item` row, or `null` for none.
 	 *
-	 * @note `null` makes the component controlled with nothing selected. Leave the prop out
-	 * entirely for an uncontrolled select.
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
 	 */
 	value?: string | null;
 	/**
@@ -215,8 +216,11 @@ interface SelectSingleProps extends SelectSingleShared, SelectNullableOff {
 	/**
 	 * The selected `value` of an `item` row.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled select.
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
+	 *
+	 * @note A controlled select that starts with nothing selected passes `''`.
 	 */
 	value?: string;
 	/**
@@ -249,7 +253,9 @@ interface SelectMultipleNullableProps extends SelectMultipleShared, SelectNullab
 	/**
 	 * The selected values, in the order they were picked. `null` is `[]`.
 	 *
-	 * @note `null` makes the component controlled with nothing selected.
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
 	 */
 	value?: string[] | null;
 	/**
@@ -262,7 +268,9 @@ interface SelectMultipleProps extends SelectMultipleShared, SelectNullableOff {
 	/**
 	 * The selected values, in the order they were picked.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
 	 */
 	value?: string[];
 	/**

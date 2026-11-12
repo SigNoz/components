@@ -297,8 +297,9 @@ export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * The controlled value, which is one of the items' `value`s.
 		 *
-		 * @note `null` is the empty group. `undefined` makes the group uncontrolled for the rest of
-		 * its life, so a controlled group that starts with nothing checked passes `null`.
+		 * @note `undefined` on the first render leaves the group uncontrolled, and a `value` that
+		 * arrives later is followed, with a warning. Once controlled, `undefined` and `null` show no
+		 * radio checked.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
 		 */

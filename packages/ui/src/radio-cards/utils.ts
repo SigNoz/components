@@ -9,7 +9,6 @@ import {
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { resolveGroupReason } from '../lib/group-reason.js';
 import { uniqueByValue } from '../lib/unique-by-value.js';
-import { useFirstRenderControl } from '../lib/use-first-render-control.js';
 import styles from './radio-cards.module.scss';
 import type { RadioCardsItemType, RadioCardsTextOverflowType } from './types.js';
 
@@ -185,34 +184,4 @@ export function useRadioCardsField(
 		invalidDataProps: fieldInvalidDataProps(field),
 		focusTarget: field?.focusTarget,
 	};
-}
-
-/**
- * The value of a group, controlled or kept by the group itself, decided on the first render with
- * the rules of `useFirstRenderControl`. The group always hands Base UI a value, so Base UI never
- * sees the switch, and the warnings speak of cards.
- *
- * @access private
- */
-export function useRadioCardsValue<T>({
-	component,
-	value,
-	defaultValue,
-	empty,
-}: {
-	component: string;
-	value: T | null | undefined;
-	defaultValue: T | undefined;
-	/**
-	 * The value with no card checked: what a controlled group shows once `value` turns `undefined`.
-	 */
-	empty: T;
-}): [T, (next: T) => void] {
-	return useFirstRenderControl({
-		value: value === null ? empty : value,
-		defaultValue,
-		empty,
-		turnedUndefinedWarning: `${component}: \`value\` turned \`undefined\`, but it was set on the first render, so the group stays controlled and shows no card checked. Write ${JSON.stringify(empty)} to clear it.`,
-		appearedWarning: `${component}: \`value\` was \`undefined\` on the first render, so the group keeps its own state and ignores \`value\`. A controlled group that starts with nothing checked passes ${JSON.stringify(empty)}.`,
-	});
 }

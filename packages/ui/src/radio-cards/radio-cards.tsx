@@ -1,6 +1,7 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes } from 'react';
 import { onFocusLeave } from '../lib/focus-leave.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -9,13 +10,7 @@ import { RadioCardsTextOverflow } from './constants.js';
 import { RadioCardsItem } from './subcomponents/radio-cards-item.js';
 import { RadioCardsMultiple } from './subcomponents/radio-cards-multiple.js';
 import type { RadioCardsMultipleProps, RadioCardsProps, ValidateRadioCardsProps } from './types.js';
-import {
-	hasCheckedCard,
-	NO_VALUES,
-	useRadioCardsField,
-	useRadioCardsGroup,
-	useRadioCardsValue,
-} from './utils.js';
+import { hasCheckedCard, NO_VALUES, useRadioCardsField, useRadioCardsGroup } from './utils.js';
 
 const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function RadioCards(
 	{
@@ -67,7 +62,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 
 	// The group keeps the value itself, even uncontrolled, since Base UI has no way to uncheck a
 	// radio: `allowClear` writes `null` here.
-	const [selectedValue, setSelectedValue] = useRadioCardsValue<string | null>({
+	const [selectedValue, setSelectedValue] = useControlledValue<string | null>({
 		component: 'RadioCards',
 		value,
 		defaultValue,

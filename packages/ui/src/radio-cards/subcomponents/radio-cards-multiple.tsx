@@ -1,19 +1,14 @@
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { forwardRef } from 'react';
 import { onFocusLeave } from '../../lib/focus-leave.js';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import type { RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
 import { TooltipTriggerBoundary } from '../../tooltip/tooltip-trigger-context.js';
 import { RadioCardsTextOverflow } from '../constants.js';
 import type { RadioCardsItemType, RadioCardsMultipleProps } from '../types.js';
-import {
-	hasCheckedCard,
-	NO_VALUES,
-	useRadioCardsField,
-	useRadioCardsGroup,
-	useRadioCardsValue,
-} from '../utils.js';
+import { hasCheckedCard, NO_VALUES, useRadioCardsField, useRadioCardsGroup } from '../utils.js';
 import { RadioCardsItem } from './radio-cards-item.js';
 
 // Base UI appends a checked value to the end of the list, so the list would follow the clicks. It
@@ -122,7 +117,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 
 		// Not `useSelectionValue`: it reads `''` as no value, the rule of a select. A card's value is
 		// any string, `''` included, as on `RadioCards`.
-		const [selectedValues, setSelectedValues] = useRadioCardsValue<readonly string[]>({
+		const [selectedValues, setSelectedValues] = useControlledValue<readonly string[]>({
 			component: 'RadioCards.Multiple',
 			value,
 			defaultValue,

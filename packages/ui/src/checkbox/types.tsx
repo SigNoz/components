@@ -109,7 +109,7 @@ interface TheTestIdPropIsCalledTestId {
 }
 
 interface ACheckboxIsControlledOrUncontrolledNeverBoth {
-	'`value` makes the checkbox controlled for its whole life, so `defaultValue` never applies, drop one of the two': never;
+	'`value` and `defaultValue` both set the checked state, pass `value` or `defaultValue`, not both': never;
 }
 
 /**
@@ -194,6 +194,10 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 * The controlled checked state. `'indeterminate'` shows the mixed state: a dash instead
 		 * of the check mark, announced as `aria-checked="mixed"`, for a parent in a tree whose
 		 * children are partly selected.
+		 *
+		 * `undefined` on the first render leaves the checkbox uncontrolled, starting at `defaultValue`.
+		 * A value that arrives later is followed, with one warning, and from then on `undefined`
+		 * shows it unchecked.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled checkbox use `defaultValue` instead,
 		 * never both.

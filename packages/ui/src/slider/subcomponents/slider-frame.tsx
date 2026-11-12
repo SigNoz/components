@@ -3,6 +3,7 @@ import { type CSSProperties, forwardRef, useEffect, useState } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
 import { useFieldContext } from '../../lib/field-context.js';
 import { onFocusLeave } from '../../lib/focus-leave.js';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../../tooltip/tooltip-content-stack-context.js';
@@ -81,13 +82,14 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	}: SliderFrameProps & RejectedProps,
 	ref,
 ) {
-	const isControlled = value !== undefined;
-	const [uncontrolledValue, setUncontrolledValue] = useState<readonly number[]>(
-		() => defaultValue ?? (range ? [min, max] : [min]),
-	);
-	const values = (isControlled ? value : uncontrolledValue).map((entry) =>
-		toThumbValue(entry, min, max),
-	);
+	// Base UI is always controlled from `values`, and an uncontrolled slider keeps them itself.
+	const [shownValues, setShownValues] = useControlledValue<readonly number[]>({
+		component: range ? 'Slider.Range' : 'Slider',
+		value,
+		defaultValue,
+		empty: range ? [min, max] : [min],
+	});
+	const values = shownValues.map((entry) => toThumbValue(entry, min, max));
 
 	const isDisabled = disabled && !readOnly;
 	const isInteractive = !disabled && !readOnly;
@@ -120,10 +122,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	}, [isPressing]);
 
 	function setValues(next: number[]): void {
-		if (!isControlled) {
-			setUncontrolledValue(next);
-		}
-
+		setShownValues(next);
 		onChange?.(next);
 	}
 

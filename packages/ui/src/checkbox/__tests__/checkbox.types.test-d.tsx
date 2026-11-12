@@ -167,7 +167,7 @@ describe('value, defaultValue and onChange', () => {
 	});
 
 	test('rejects value and defaultValue together', () => {
-		// @ts-expect-error - `value` makes the checkbox controlled for life, `defaultValue` is dead beside it
+		// @ts-expect-error - `value` and `defaultValue` are one or the other
 		assertType(<Checkbox color="primary" value defaultValue onChange={noop} />);
 	});
 
