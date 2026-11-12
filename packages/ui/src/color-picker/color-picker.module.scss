@@ -1,0 +1,474 @@
+.color-picker {
+	--color-picker-internal-thumb-size: var(--color-picker-thumb-size, var(--spacing-12));
+	--color-picker-internal-thumb-inset: var(--color-picker-thumb-inset, var(--spacing-2));
+	--color-picker-internal-thumb-rim: var(
+		--color-picker-thumb-rim-color,
+		var(--color-picker-thumb-rim)
+	);
+	// Drawn in the text color over the popup, so the squares that show through a translucent color
+	// follow the theme.
+	--color-picker-internal-checker-color: var(
+		--color-picker-checkerboard-color,
+		color-mix(in srgb, var(--color-picker-foreground) 24%, transparent)
+	);
+	--color-picker-internal-checker-size: var(--color-picker-checkerboard-size, var(--spacing-4));
+	--color-picker-internal-checkerboard: repeating-conic-gradient(
+		var(--color-picker-internal-checker-color) 0 25%,
+		transparent 0 50%
+	);
+
+	display: var(--color-picker-display, flex);
+	flex-direction: var(--color-picker-flex-direction, column);
+	gap: var(--color-picker-gap, var(--spacing-6));
+	box-sizing: var(--color-picker-box-sizing, border-box);
+	inline-size: var(--color-picker-inline-size, 16rem);
+	padding: var(--color-picker-padding, var(--spacing-6));
+	color: var(--color-picker-color, var(--color-picker-foreground));
+	font-family: var(--color-picker-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--color-picker-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--color-picker-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--color-picker-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--color-picker-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--color-picker-text-transform, var(--paragraph-base-400-text-transform));
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+	border-width: var(--color-picker-border-width, 1px);
+	border-style: var(--color-picker-border-style, solid);
+	border-color: var(--color-picker-border-color, var(--color-picker-border));
+	border-radius: var(--color-picker-border-radius, var(--radius-2));
+	background-color: var(
+		--color-picker-background-color,
+		var(--color-picker-background)
+	);
+	box-shadow: var(--color-picker-box-shadow, var(--color-picker-shadow));
+	// The popup background is translucent in dark mode. Without the blur the page shows through.
+	backdrop-filter: var(--color-picker-backdrop-filter, blur(40px));
+
+	&:focus-visible {
+		outline: var(--color-picker-focus-visible-outline, none);
+	}
+}
+
+.color-picker__positioner {
+	// Base UI positions but does not stack.
+	z-index: var(--color-picker-z-index, 50);
+	// A Radix modal sets `pointer-events: none` on the body. A popup portalled there, into a
+	// `container` outside the panel, would otherwise take no press.
+	pointer-events: var(--color-picker-positioner-pointer-events, auto);
+	// Base UI places the positioner with `left`, so its width would otherwise shrink to what is
+	// left of the containing block.
+	inline-size: var(--color-picker-positioner-inline-size, max-content);
+
+	&:focus-visible {
+		outline: var(--color-picker-positioner-focus-visible-outline, none);
+	}
+}
+
+.color-picker__area {
+	position: var(--color-picker-area-position, relative);
+	block-size: var(--color-picker-area-block-size, 10rem);
+	border-radius: var(--color-picker-area-border-radius, var(--radius-2));
+	background-color: var(--color-picker-internal-hue-color);
+	// White and black are the ends of the saturation and brightness axes, not palette colors, so
+	// they stay the same in every theme.
+	background-image: var(
+		--color-picker-area-background-image,
+		linear-gradient(to top, var(--base-black), transparent),
+		linear-gradient(to right, var(--base-white), transparent)
+	);
+	cursor: var(--color-picker-area-cursor, pointer);
+	touch-action: var(--color-picker-area-touch-action, none);
+	user-select: var(--color-picker-area-user-select, none);
+}
+
+.color-picker__strips-row {
+	display: var(--color-picker-strips-row-display, flex);
+	align-items: var(--color-picker-strips-row-align-items, center);
+	gap: var(--color-picker-strips-row-gap, var(--spacing-6));
+}
+
+.color-picker__strips {
+	display: var(--color-picker-strips-display, flex);
+	flex: var(--color-picker-strips-flex, 1);
+	flex-direction: var(--color-picker-strips-flex-direction, column);
+	gap: var(--color-picker-strips-gap, var(--spacing-4));
+	min-inline-size: var(--color-picker-strips-min-inline-size, 0);
+}
+
+.color-picker__hue {
+	position: var(--color-picker-hue-position, relative);
+	block-size: var(--color-picker-hue-block-size, var(--spacing-6));
+	border-radius: var(--color-picker-hue-border-radius, var(--radius-round));
+	// The stops are the hues the strip measures, from 0 to 360 degrees, not palette colors, so no
+	// token stands for them.
+	background-image: var(
+		--color-picker-hue-background-image,
+		linear-gradient(
+			to right,
+			hsl(0 100% 50%),
+			hsl(60 100% 50%),
+			hsl(120 100% 50%),
+			hsl(180 100% 50%),
+			hsl(240 100% 50%),
+			hsl(300 100% 50%),
+			hsl(360 100% 50%)
+		)
+	);
+	cursor: var(--color-picker-hue-cursor, pointer);
+	touch-action: var(--color-picker-hue-touch-action, none);
+	user-select: var(--color-picker-hue-user-select, none);
+}
+
+.color-picker__alpha {
+	position: var(--color-picker-alpha-position, relative);
+	block-size: var(--color-picker-alpha-block-size, var(--spacing-6));
+	border-radius: var(--color-picker-alpha-border-radius, var(--radius-round));
+	// From no alpha to the color itself, over the checkerboard that shows how much of the page comes
+	// through.
+	background-image: var(
+		--color-picker-alpha-background-image,
+		linear-gradient(to right, transparent, var(--color-picker-internal-opaque-color)),
+		var(--color-picker-internal-checkerboard)
+	);
+	background-size: var(
+		--color-picker-alpha-background-size,
+		100% 100%,
+		var(--color-picker-internal-checker-size) var(--color-picker-internal-checker-size)
+	);
+	cursor: var(--color-picker-alpha-cursor, pointer);
+	touch-action: var(--color-picker-alpha-touch-action, none);
+	user-select: var(--color-picker-alpha-user-select, none);
+}
+
+// One rule for every thumb: the box is the press target, and the visible ring sits inside it.
+.color-picker__area-thumb,
+.color-picker__hue-thumb,
+.color-picker__alpha-thumb {
+	position: var(--color-picker-thumb-position, absolute);
+	box-sizing: var(--color-picker-thumb-box-sizing, border-box);
+	inline-size: var(--color-picker-internal-thumb-size);
+	block-size: var(--color-picker-internal-thumb-size);
+	translate: var(--color-picker-thumb-translate, -50% -50%);
+	cursor: var(--color-picker-thumb-cursor, grab);
+
+	&::before {
+		content: '';
+		position: var(--color-picker-thumb-ring-position, absolute);
+		inset: var(--color-picker-internal-thumb-inset);
+		box-sizing: var(--color-picker-thumb-ring-box-sizing, border-box);
+		border-width: var(--color-picker-thumb-ring-border-width, 2px);
+		border-style: var(--color-picker-thumb-ring-border-style, solid);
+		border-color: var(
+			--color-picker-thumb-ring-border-color,
+			var(--color-picker-thumb-border)
+		);
+		border-radius: var(--color-picker-thumb-ring-border-radius, var(--radius-round));
+		// A rim inside and outside the ring, so the thumb stays visible over any color the area or
+		// the strip can show.
+		box-shadow: var(
+			--color-picker-thumb-ring-box-shadow,
+			0 0 0 1px var(--color-picker-internal-thumb-rim),
+			inset 0 0 0 1px var(--color-picker-internal-thumb-rim)
+		);
+		background-color: var(--color-picker-internal-thumb-fill);
+	}
+}
+
+.color-picker__area-thumb {
+	// The area shows the color without its alpha, so its thumb does too.
+	--color-picker-internal-thumb-fill: var(--color-picker-internal-opaque-color);
+
+	// Physical, like the gradients and the pointer math: the saturation axis runs left to right in
+	// every writing direction.
+	inset-block-start: var(--color-picker-internal-brightness-offset);
+	left: var(--color-picker-internal-saturation);
+}
+
+.color-picker__hue-thumb {
+	--color-picker-internal-thumb-fill: var(--color-picker-internal-hue-color);
+
+	inset-block-start: var(--color-picker-hue-thumb-inset-block-start, 50%);
+	left: var(--color-picker-internal-hue-position);
+}
+
+.color-picker__alpha-thumb {
+	--color-picker-internal-thumb-fill: var(--color-picker-internal-color);
+
+	inset-block-start: var(--color-picker-alpha-thumb-inset-block-start, 50%);
+	left: var(--color-picker-internal-alpha-position);
+}
+
+.color-picker__area:has(:focus-visible) .color-picker__area-thumb::before,
+.color-picker__hue:has(:focus-visible) .color-picker__hue-thumb::before,
+.color-picker__alpha:has(:focus-visible) .color-picker__alpha-thumb::before {
+	outline-width: var(--color-picker-thumb-focus-visible-outline-width, 2px);
+	outline-style: var(--color-picker-thumb-focus-visible-outline-style, solid);
+	outline-color: var(
+		--color-picker-thumb-focus-visible-outline-color,
+		var(--color-picker-thumb-focus-ring)
+	);
+	outline-offset: var(--color-picker-thumb-focus-visible-outline-offset, 1px);
+}
+
+.color-picker__preview {
+	flex: var(--color-picker-preview-flex, none);
+	box-sizing: var(--color-picker-preview-box-sizing, border-box);
+	// As tall as the two strips and the gap between them.
+	inline-size: var(--color-picker-preview-size, var(--spacing-16));
+	block-size: var(--color-picker-preview-size, var(--spacing-16));
+	border-width: var(--color-picker-preview-border-width, 1px);
+	border-style: var(--color-picker-preview-border-style, solid);
+	border-color: var(
+		--color-picker-preview-border-color,
+		var(--color-picker-preview-border)
+	);
+	border-radius: var(--color-picker-preview-border-radius, var(--radius-2));
+	// The color as a layer over the checkerboard, so a translucent color shows what comes through.
+	background-image: linear-gradient(
+			var(--color-picker-internal-color),
+			var(--color-picker-internal-color)
+		),
+		var(--color-picker-internal-checkerboard);
+	background-size:
+		100% 100%,
+		var(--color-picker-internal-checker-size) var(--color-picker-internal-checker-size);
+
+	&[data-empty] {
+		--color-picker-internal-preview-empty-line: var(
+			--color-picker-preview-empty-line-color,
+			var(--color-picker-preview-empty-line)
+		);
+
+		background-color: var(
+			--color-picker-preview-empty-background-color,
+			var(--color-picker-preview-empty-background)
+		);
+		background-image: var(
+			--color-picker-preview-empty-background-image,
+			linear-gradient(
+				to top right,
+				transparent calc(50% - 1px),
+				var(--color-picker-internal-preview-empty-line) calc(50% - 1px),
+				var(--color-picker-internal-preview-empty-line) calc(50% + 1px),
+				transparent calc(50% + 1px)
+			)
+		);
+		background-size: var(--color-picker-preview-empty-background-size, auto);
+	}
+}
+
+// The row under the format switch: the hex or RGB field, then the alpha field.
+.color-picker__fields {
+	display: var(--color-picker-fields-display, flex);
+	gap: var(--color-picker-fields-gap, var(--spacing-3));
+}
+
+// The frame. Each `<label>` inside it holds a prefix or suffix and its input, so a press on either
+// focuses the input, and the clear button sits after the labels: a button inside a `<label>` is
+// invalid HTML.
+.color-picker__field {
+	flex: var(--color-picker-field-flex, 1);
+	display: var(--color-picker-field-display, flex);
+	align-items: var(--color-picker-field-align-items, center);
+	gap: var(--color-picker-field-gap, var(--spacing-2));
+	box-sizing: var(--color-picker-field-box-sizing, border-box);
+	min-inline-size: var(--color-picker-field-min-inline-size, 0);
+	block-size: var(--color-picker-field-block-size, var(--spacing-16));
+	padding-block: var(--color-picker-field-padding-block, 0);
+	padding-inline: var(--color-picker-field-padding-inline, 0 var(--spacing-2));
+	border-width: var(--color-picker-field-border-width, 1px);
+	border-style: var(--color-picker-field-border-style, solid);
+	// The field sits on the popup, not on the page, so its tokens default to the `l3` layer: the
+	// `--input-*` colors are made for the page and all but vanish here.
+	border-color: var(--color-picker-field-border-color, var(--color-picker-field-border));
+	border-radius: var(--color-picker-field-border-radius, var(--radius-1));
+	background-color: var(
+		--color-picker-field-background-color,
+		var(--color-picker-field-background)
+	);
+	color: var(--color-picker-field-color, var(--color-picker-field-prefix));
+	font-family: var(--color-picker-field-font-family, var(--label-base-400-font-family));
+	font-size: var(--color-picker-field-font-size, var(--label-base-400-font-size));
+	font-weight: var(--color-picker-field-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--color-picker-field-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(
+		--color-picker-field-letter-spacing,
+		var(--label-base-400-letter-spacing)
+	);
+	text-transform: var(
+		--color-picker-field-text-transform,
+		var(--label-base-400-text-transform)
+	);
+
+	// Only the input: the clear button inside the frame draws its own ring.
+	&:has(input:focus-visible) {
+		outline-width: var(--color-picker-field-focus-visible-outline-width, 1px);
+		outline-style: var(--color-picker-field-focus-visible-outline-style, solid);
+		outline-color: var(
+			--color-picker-field-focus-visible-outline-color,
+			var(--color-picker-field-focus-ring)
+		);
+		outline-offset: var(--color-picker-field-focus-visible-outline-offset, 1px);
+	}
+
+	&:has([data-invalid]) {
+		border-color: var(
+			--color-picker-field-invalid-border-color,
+			var(--color-picker-field-border-invalid)
+		);
+		background-color: var(
+			--color-picker-field-invalid-background-color,
+			var(--color-picker-field-background-invalid)
+		);
+	}
+}
+
+// Sized to `100` and its `%`, so the color field next to it takes the rest of the row.
+.color-picker__field[data-field='alpha'] {
+	flex: var(--color-picker-alpha-field-flex, none);
+	inline-size: var(--color-picker-alpha-field-inline-size, 4rem);
+}
+
+.color-picker__field-label {
+	display: var(--color-picker-field-label-display, flex);
+	flex: var(--color-picker-field-label-flex, 1);
+	align-self: var(--color-picker-field-label-align-self, stretch);
+	align-items: var(--color-picker-field-label-align-items, center);
+	gap: var(--color-picker-field-label-gap, var(--spacing-2));
+	min-inline-size: var(--color-picker-field-label-min-inline-size, 0);
+	padding-inline: var(--color-picker-field-label-padding-inline, var(--spacing-4) var(--spacing-2));
+	cursor: var(--color-picker-field-label-cursor, text);
+}
+
+.color-picker__field-input {
+	flex: var(--color-picker-field-input-flex, 1);
+	min-inline-size: var(--color-picker-field-input-min-inline-size, 0);
+	margin: var(--color-picker-field-input-margin, 0);
+	padding: var(--color-picker-field-input-padding, 0);
+	border: var(--color-picker-field-input-border, none);
+	outline: var(--color-picker-field-input-outline, none);
+	background-color: var(--color-picker-field-input-background-color, transparent);
+	color: var(--color-picker-field-input-color, var(--color-picker-field-value));
+	font-family: var(--color-picker-field-input-font-family, var(--label-base-400-font-family));
+	font-size: var(--color-picker-field-input-font-size, var(--label-base-400-font-size));
+	font-weight: var(--color-picker-field-input-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--color-picker-field-input-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(
+		--color-picker-field-input-letter-spacing,
+		var(--label-base-400-letter-spacing)
+	);
+	text-transform: var(
+		--color-picker-field-input-text-transform,
+		var(--label-base-400-text-transform)
+	);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+}
+
+.color-picker__clear {
+	display: var(--color-picker-clear-display, inline-flex);
+	flex: var(--color-picker-clear-flex, none);
+	align-items: var(--color-picker-clear-align-items, center);
+	justify-content: var(--color-picker-clear-justify-content, center);
+	box-sizing: var(--color-picker-clear-box-sizing, border-box);
+	inline-size: var(--color-picker-clear-size, var(--spacing-12));
+	block-size: var(--color-picker-clear-size, var(--spacing-12));
+	margin: var(--color-picker-clear-margin, 0);
+	padding: var(--color-picker-clear-padding, 0);
+	border: var(--color-picker-clear-border, none);
+	border-radius: var(--color-picker-clear-border-radius, var(--radius-1));
+	background-color: var(--color-picker-clear-background-color, transparent);
+	color: var(--color-picker-clear-color, var(--color-picker-clear-icon));
+	cursor: var(--color-picker-clear-cursor, pointer);
+
+	svg {
+		inline-size: var(--color-picker-clear-icon-size, var(--spacing-7));
+		block-size: var(--color-picker-clear-icon-size, var(--spacing-7));
+	}
+
+	&:hover {
+		background-color: var(
+			--color-picker-clear-hover-background-color,
+			var(--color-picker-clear-background-hover)
+		);
+		color: var(--color-picker-clear-hover-color, var(--color-picker-clear-icon-hover));
+	}
+
+	&:focus-visible {
+		outline-width: var(--color-picker-clear-focus-visible-outline-width, 1px);
+		outline-style: var(--color-picker-clear-focus-visible-outline-style, solid);
+		outline-color: var(
+			--color-picker-clear-focus-visible-outline-color,
+			var(--color-picker-clear-focus-ring)
+		);
+		outline-offset: var(--color-picker-clear-focus-visible-outline-offset, 0);
+	}
+}
+
+.color-picker__footer {
+	min-inline-size: var(--color-picker-footer-min-inline-size, 0);
+	color: var(--color-picker-footer-color, var(--color-picker-footer-foreground));
+	font-family: var(--color-picker-footer-font-family, var(--paragraph-small-400-font-family));
+	font-size: var(--color-picker-footer-font-size, var(--paragraph-small-400-font-size));
+	font-weight: var(--color-picker-footer-font-weight, var(--paragraph-small-400-font-weight));
+	line-height: var(--color-picker-footer-line-height, var(--paragraph-small-400-line-height));
+	letter-spacing: var(
+		--color-picker-footer-letter-spacing,
+		var(--paragraph-small-400-letter-spacing)
+	);
+	text-transform: var(
+		--color-picker-footer-text-transform,
+		var(--paragraph-small-400-text-transform)
+	);
+	overflow-wrap: var(--color-picker-footer-overflow-wrap, anywhere);
+}
+
+.color-picker__visually-hidden {
+	position: var(--color-picker-visually-hidden-position, absolute);
+	inline-size: var(--color-picker-visually-hidden-inline-size, 1px);
+	block-size: var(--color-picker-visually-hidden-block-size, 1px);
+	padding: var(--color-picker-visually-hidden-padding, 0);
+	margin: var(--color-picker-visually-hidden-margin, -1px);
+	overflow: var(--color-picker-visually-hidden-overflow, hidden);
+	clip-path: var(--color-picker-visually-hidden-clip-path, inset(50%));
+	white-space: var(--color-picker-visually-hidden-white-space, nowrap);
+	border-width: var(--color-picker-visually-hidden-border-width, 0);
+}
+
+// Three labels share the frame, so each keeps only the space before its letter.
+.color-picker__field:has(> .color-picker__field-label + .color-picker__field-label)
+	.color-picker__field-label {
+	padding-inline: var(--color-picker-channel-label-padding-inline, var(--spacing-3) 0);
+}
+
+// One strip only, so the preview matches its single row.
+.color-picker[data-opaque] .color-picker__preview {
+	inline-size: var(--color-picker-opaque-preview-size, var(--spacing-12));
+	block-size: var(--color-picker-opaque-preview-size, var(--spacing-12));
+}
+
+.color-picker[data-dragging] {
+	.color-picker__area,
+	.color-picker__hue,
+	.color-picker__alpha,
+	.color-picker__area-thumb,
+	.color-picker__hue-thumb,
+	.color-picker__alpha-thumb {
+		cursor: var(--color-picker-dragging-cursor, grabbing);
+	}
+}
+
+.color-picker[data-readonly] {
+	.color-picker__area,
+	.color-picker__hue,
+	.color-picker__alpha,
+	.color-picker__area-thumb,
+	.color-picker__hue-thumb,
+	.color-picker__alpha-thumb {
+		cursor: var(--color-picker-readonly-cursor, not-allowed);
+	}
+
+	.color-picker__field-label {
+		cursor: var(--color-picker-readonly-field-label-cursor, default);
+	}
+}

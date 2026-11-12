@@ -9,6 +9,7 @@ callout
 card
 checkbox
 collapse
+color-picker
 combobox
 command
 date-picker
