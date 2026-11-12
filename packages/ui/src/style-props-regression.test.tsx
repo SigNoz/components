@@ -11,7 +11,7 @@ import { Combobox } from './combobox/index.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
 import { Field } from './field/index.js';
-import { Input } from './input/index.js';
+import { Input, InputField } from './input/index.js';
 import { Popover } from './popover/index.js';
 import { openPopover } from './popover/__tests__/popover.test-utils.js';
 import { Progress } from './progress/progress.js';
@@ -268,6 +268,31 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('group'));
 		expectNoStrayStyle(screen.getByTestId('group-label'));
+	});
+
+	it('do not reach InputField, its members, nor the field around them', () => {
+		render(
+			<>
+				<InputField label="Email" testId="email" {...STRAY} />
+				<InputField.Password label="Secret" testId="secret" {...STRAY} />
+				<InputField.TextArea label="Notes" testId="notes" {...STRAY} />
+				<InputField.Number label="Count" testId="count" {...STRAY} />
+			</>,
+		);
+
+		for (const testId of ['email', 'secret', 'notes', 'count']) {
+			expectNoStrayStyle(screen.getByTestId(testId));
+			expectNoStrayStyle(screen.getByTestId(`${testId}-field`));
+			expectNoStrayStyle(screen.getByTestId(`${testId}-label`));
+		}
+
+		const fields = document.querySelectorAll<HTMLElement>('[data-slot="field"]');
+
+		expect(fields).toHaveLength(4);
+
+		for (const field of fields) {
+			expectNoStrayStyle(field);
+		}
 	});
 
 	it('do not reach Input', () => {

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Checkbox } from './checkbox/checkbox.js';
+import { InputField } from './input/index.js';
 import { Switch } from './switch/switch.js';
 
 describe('wrapper prop targeting regressions', () => {
@@ -47,5 +48,31 @@ describe('wrapper prop targeting regressions', () => {
 		expect(document.querySelector('input#tos')).not.toBeNull();
 		expect(control).toHaveAttribute('data-testid', 'tos-checkbox');
 		expect(container).toHaveAttribute('id', 'tos-container');
+	});
+
+	it('keeps InputField control props on the input, and leaves the field root bare', () => {
+		render(
+			<InputField
+				label="Email"
+				id="email"
+				name="email"
+				testId="email-field"
+				aria-label="Email address"
+				data-analytics="email"
+			/>,
+		);
+
+		const input = screen.getByRole('textbox', { name: 'Email address' });
+		const root = document.querySelector('[data-slot="field"]');
+
+		expect(input).toHaveAttribute('id', 'email');
+		expect(input).toHaveAttribute('name', 'email');
+		expect(input).toHaveAttribute('data-testid', 'email-field-field');
+		expect(screen.getByTestId('email-field')).toHaveAttribute('data-analytics', 'email');
+		expect(root).not.toHaveAttribute('id');
+		expect(root).not.toHaveAttribute('data-testid');
+		expect(root).not.toHaveAttribute('data-analytics');
+		expect(root).not.toHaveAttribute('aria-label');
+		expect(document.querySelector('label')).toHaveAttribute('for', 'email');
 	});
 });
