@@ -548,6 +548,19 @@ const TRIGGER_ROWS: TriggerRow[] = [
 		},
 	},
 	{
+		id: 'trigger-narrow-chip',
+		label: 'chip wider than the trigger',
+		note: 'A chip wider than a narrow trigger shrinks, and its label truncates before the remove button.',
+		props: {
+			items: SERVICES_WITH_REASONS,
+			placeholder: 'Select services...',
+			searchInputProps: { placeholder: 'Search services' },
+			multiple: true,
+			defaultValue: ['long', 'checkout'],
+			width: '10rem',
+		},
+	},
+	{
 		id: 'trigger-clear',
 		label: 'allowClear, hovered',
 		note: (
@@ -1113,6 +1126,14 @@ export const ComboboxShowcase: Story = {
 					.length,
 			),
 		);
+
+		const chip = document.querySelector<HTMLElement>(
+			'[data-testid="trigger-narrow-chip-chip-long"]',
+		);
+		const remove = chip?.querySelector<HTMLElement>('[data-slot="combobox-chip-remove"]');
+		const chipRight = chip?.getBoundingClientRect().right ?? 0;
+
+		await expect(remove?.getBoundingClientRect().right).toBeLessThanOrEqual(chipRight);
 	},
 	render: () => <ComboboxShowcaseView />,
 };
