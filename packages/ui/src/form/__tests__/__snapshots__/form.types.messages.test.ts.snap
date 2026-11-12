@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Form type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "rejected props > a prop that does not exist is rejected > a form-level error is a Callout or a Toast the consumer places": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > autoComplete is on or off > autoComplete is one switch for every field, the tokens belong to the field": "TS2322: Type '"new-password"' is not assignable to type '"on" | "off" | undefined'.",
+  "rejected props > className and style are not props > the spacing comes from \`layout\`, visual overrides go through \`--form-*\`": "TS2322: Type '{ gap: number; }' is not assignable to type 'never'.",
+  "rejected props > data-testid is spelled testId > \`data-testid\` is written as the \`testId\` prop": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, matching every other component'' is missing in type '{ children: string; onSubmit: () => void; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "rejected props > name, size, disabled and readOnly stay on the controls > \`name\` was antd's way to build ids, the field generates them now": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > name, size, disabled and readOnly stay on the controls > each control keeps its own \`disabled\` and its reason tooltip": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > name, size, disabled and readOnly stay on the controls > each control keeps its own \`readOnly\` and its reason tooltip": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > name, size, disabled and readOnly stay on the controls > each control keeps its own \`size\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > the antd Form props are not props > submit goes through onSubmit, the validation is the consumer's": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > the antd Form props are not props > the label always sits above the control": "TS2322: Type '{ span: number; }' is not assignable to type 'never'.",
+  "rejected props > the antd Form props are not props > the required marker is an asterisk after the label, always": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "rejected props > the antd Form props are not props > the values live in react-hook-form or in the consumer's state": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "rejected props > the form is always noValidate > the browser bubbles would show one error at a time on top of the field message": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "rejected props > the form never posts natively > \`action\` is for a page that reloads on submit, the submit goes through onSubmit": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > the form never posts natively > \`encType\` is for a page that reloads on submit, the submit goes through onSubmit": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > the form never posts natively > \`method\` is for a page that reloads on submit, the submit goes through onSubmit": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > the form never posts natively > \`target\` is for a page that reloads on submit, the submit goes through onSubmit": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > the layout is one of the two > the label always sits above the control, there is no horizontal layout": "TS2322: Type '"horizontal"' is not assignable to type 'FormLayoutType | undefined'.",
+  "rejected props > the ref points at the form > the root is a form element, not a div": "TS2322: Type 'RefObject<HTMLDivElement>' is not assignable to type 'RefObject<HTMLDivElement> & (LegacyRef<HTMLFormElement> | undefined)'.
+    Type 'RefObject<HTMLDivElement>' is not assignable to type 'RefObject<HTMLDivElement> & ((instance: HTMLFormElement | null) => void)'.
+      Type 'RefObject<HTMLDivElement>' is not assignable to type '(instance: HTMLFormElement | null) => void'.
+        Type 'RefObject<HTMLDivElement>' provides no match for the signature '(instance: HTMLFormElement | null): void'.",
+  "submit and children > onReset takes the form event > the reset callback gets the form event, not the values": "TS2322: Type '(values: { email: string; }) => string' is not assignable to type '(event: FormEvent<HTMLFormElement>) => void'.
+    Types of parameters 'values' and 'event' are incompatible.
+      Property 'email' is missing in type 'FormEvent<HTMLFormElement>' but required in type '{ email: string; }'.",
+  "submit and children > onSubmit and children are required > a form that cannot be submitted has nothing to call": "TS2741: Property 'onSubmit' is missing in type '{ children: string; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactNode; onSubmit: (event: FormEvent<HTMLFormElement>) => void; onReset?: ((event: FormEvent<HTMLFormElement>) => void) | undefined; layout?: FormLayoutType | undefined; autoComplete?: "on" | ... 1 more ... | undefined; testId?: string | undefined; }'.",
+  "submit and children > onSubmit and children are required > a form with no children has nothing to submit": "TS2741: Property 'children' is missing in type '{ onSubmit: () => void; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactNode; onSubmit: (event: FormEvent<HTMLFormElement>) => void; onReset?: ((event: FormEvent<HTMLFormElement>) => void) | undefined; layout?: FormLayoutType | undefined; autoComplete?: "on" | ... 1 more ... | undefined; testId?: string | undefined; }'.",
+  "submit and children > onSubmit takes the form event > the submit callback gets the form event, not the values": "TS2322: Type '(values: { email: string; }) => string' is not assignable to type '(event: FormEvent<HTMLFormElement>) => void'.
+    Types of parameters 'values' and 'event' are incompatible.
+      Property 'email' is missing in type 'FormEvent<HTMLFormElement>' but required in type '{ email: string; }'.",
+}
+`;
