@@ -3,7 +3,7 @@
  * `createDatePicker`. Run by `vitest --typecheck` and by `pnpm type-check`. See
  * `dropdown.types.test-d.tsx` for how the cases are written.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, expectTypeOf, test } from 'vitest';
 import {
 	createDatePicker,
@@ -19,6 +19,8 @@ const wrongRef = createRef<HTMLDivElement>();
 
 declare const maybeDisabled: boolean | undefined;
 declare const maybeReadOnly: boolean | undefined;
+declare const maybeNullDate: Date | null;
+declare const isNullable: boolean;
 
 class Instant {
 	constructor(readonly epoch: number) {}
@@ -273,7 +275,7 @@ describe('value', () => {
 		);
 	});
 
-	test('takes undefined, which is a controlled date picker with nothing in it', () => {
+	test('takes undefined, a date picker with nothing in it that keeps its own state', () => {
 		assertType(<DatePicker placeholder="Select date" value={undefined} />);
 	});
 
@@ -299,9 +301,9 @@ describe('value', () => {
 		);
 	});
 
-	test('rejects null, which is not how a value is cleared', () => {
+	test('rejects null without nullable, which is not how a value is cleared', () => {
 		assertType(
-			// @ts-expect-error - no value is `undefined`
+			// @ts-expect-error - no value is `undefined`, or `null` with `nullable`
 			<DatePicker placeholder="Select date" value={null} />,
 		);
 	});
@@ -332,6 +334,79 @@ describe('value', () => {
 		assertType(
 			// @ts-expect-error - the trigger shows a string
 			<DatePicker placeholder="Select date" formatValue={() => 1} />,
+		);
+	});
+});
+
+describe('onBlur', () => {
+	test('takes a focus event handler, or one with no argument', () => {
+		assertType(
+			<DatePicker
+				placeholder="Select date"
+				onBlur={(event: FocusEvent<HTMLElement>) => event.currentTarget}
+			/>,
+		);
+		assertType(<DatePicker placeholder="Select date" onBlur={() => undefined} />);
+	});
+});
+
+describe('nullable', () => {
+	test('takes null as the value and reports a date or null', () => {
+		assertType(
+			<DatePicker
+				placeholder="Select date"
+				nullable
+				value={maybeNullDate}
+				onChange={(value, details) => {
+					expectTypeOf(value).toEqualTypeOf<Date | null>();
+					expectTypeOf(details).toEqualTypeOf<DatePickerChangeDetailsType>();
+				}}
+			/>,
+		);
+	});
+
+	test('takes nullable on a date picker made with createDatePicker, with zones', () => {
+		assertType(
+			<InstantPicker
+				placeholder="Select date"
+				nullable
+				value={null}
+				onChange={(value: Instant | null) => value}
+				showTime
+				showTimezone={{ options: [{ value: 'utc', label: 'UTC' }] }}
+			/>,
+		);
+	});
+
+	test('rejects a null value without nullable', () => {
+		assertType(
+			// @ts-expect-error - `null` needs `nullable`
+			<DatePicker placeholder="Select date" value={maybeNullDate} />,
+		);
+	});
+
+	test('rejects nullable={false}, which is the same as leaving it out', () => {
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`
+			<DatePicker placeholder="Select date" nullable={false} />,
+		);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+			<DatePicker placeholder="Select date" nullable={isNullable} />,
+		);
+	});
+
+	test('rejects a handler that only takes undefined for no date', () => {
+		assertType(
+			// @ts-expect-error - a nullable date picker reports `null` for no date
+			<DatePicker
+				placeholder="Select date"
+				nullable
+				onChange={(value: Date | undefined) => value}
+			/>,
 		);
 	});
 });
@@ -661,11 +736,17 @@ describe('createDatePicker', () => {
 	});
 });
 
+// The props without `nullable`, the shape every date picker had before it.
+type Plain<P> = Exclude<P, { nullable: true }>;
+
 describe('exported types', () => {
 	test('DatePickerProps takes the date type and whether zones are supported', () => {
-		expectTypeOf<DatePickerProps['value']>().toEqualTypeOf<Date | undefined>();
-		expectTypeOf<DatePickerProps<Instant>['value']>().toEqualTypeOf<Instant | undefined>();
-		expectTypeOf<DatePickerProps<Instant, true>['value']>().toEqualTypeOf<Instant | undefined>();
+		expectTypeOf<Plain<DatePickerProps>['value']>().toEqualTypeOf<Date | undefined>();
+		expectTypeOf<Plain<DatePickerProps<Instant>>['value']>().toEqualTypeOf<Instant | undefined>();
+		expectTypeOf<Plain<DatePickerProps<Instant, true>>['value']>().toEqualTypeOf<
+			Instant | undefined
+		>();
+		expectTypeOf<DatePickerProps<Instant>['value']>().toEqualTypeOf<Instant | null | undefined>();
 		expectTypeOf<DatePickerProps['showTimezone']>().toEqualTypeOf<undefined>();
 	});
 
