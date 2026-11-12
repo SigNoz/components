@@ -224,3 +224,51 @@
 	--button-display: flex;
 	--button-justify-content: flex-start;
 }
+
+/* `Popover.Trigger`: a row of services that share one card. */
+.serviceRow {
+	display: flex;
+	gap: 1rem;
+}
+
+.serviceCard {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 0.75rem;
+}
+
+/* `Popover.Trigger` rows: a list where each row holds a link and an actions button. */
+.viewRows {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	inline-size: 18rem;
+}
+
+.viewRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding: 0.25rem 0.5rem;
+	border-radius: 0.25rem;
+}
+
+.viewRow:hover,
+.viewRow[data-popup-open] {
+	background: var(--l2-background);
+}
+
+/* The showcase: two groups side by side, each with room below for its held popup. */
+.heldGroups {
+	display: flex;
+	gap: 3rem;
+	min-block-size: 200px;
+}
+
+.heldGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}

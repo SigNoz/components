@@ -220,8 +220,8 @@ describe('Breadcrumb ellipsis', () => {
 
 			const popup = await openByClick();
 
-			expect(popup).toHaveAttribute('data-slot', 'breadcrumb-ellipsis-popup');
-			expect(popup).toHaveAttribute('data-testid', 'bc-ellipsis-popup');
+			expect(popup).toHaveAttribute('data-slot', 'popover-popup');
+			expect(popup).toHaveAttribute('data-testid', 'bc-popup');
 			expect(rowNames(popup)).toEqual(ROW_NAMES);
 			expect(within(popup).queryByRole('group')).not.toBeInTheDocument();
 			expect(screen.queryByRole('menu')).not.toBeInTheDocument();
@@ -962,8 +962,8 @@ describe('Breadcrumb ellipsis', () => {
 			const popup = await openByClick();
 
 			expect(popup).toHaveTextContent('Your content');
-			expect(popup).toHaveAttribute('data-slot', 'breadcrumb-ellipsis-popup');
-			expect(popup).toHaveAttribute('data-testid', 'bc-ellipsis-popup');
+			expect(popup).toHaveAttribute('data-slot', 'popover-popup');
+			expect(popup).toHaveAttribute('data-testid', 'bc-popup');
 			expect(popup.querySelector('[data-slot="breadcrumb-ellipsis-list"]')).toBeNull();
 			expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 			expect(trigger()).toHaveAttribute('aria-label', 'Show 3 hidden items');
@@ -1110,7 +1110,7 @@ describe('Breadcrumb ellipsis', () => {
 			const popup = await openByClick();
 			const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
 
-			expect(getComputedStyle(popup).maxInlineSize).toBe(`${20 * rem}px`);
+			expect(getComputedStyle(popup).maxInlineSize).toBe(`${25 * rem}px`);
 		});
 
 		it('is the list again once the option goes', async () => {
@@ -1156,6 +1156,30 @@ describe('Breadcrumb ellipsis', () => {
 			await waitPastTheDelay();
 
 			expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
+		});
+
+		it('keeps it open through a press on a crumb with a preview', async () => {
+			renderInFrame(
+				<ForceOpenProvider>
+					<Breadcrumb
+						items={TRAIL.map((item, index) => ({
+							...item,
+							onClick: cancel,
+							...(index === 0 && { preview: <p>Dashboards card</p> }),
+						}))}
+						testId="bc"
+					/>
+				</ForceOpenProvider>,
+				NARROW,
+			);
+			const popup = await screen.findByRole('dialog', { name: 'Hidden items' });
+			const user = userEvent.setup();
+
+			await user.click(screen.getByRole('link', { name: 'Dashboards' }));
+			await waitPastTheDelay();
+
+			expect(screen.getByRole('dialog', { name: 'Hidden items' })).toBe(popup);
+			expect(trigger()).toHaveAttribute('data-popup-open');
 		});
 
 		it('holds nothing open while no crumb is collapsed', async () => {

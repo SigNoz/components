@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import {
+	type Attributes,
 	type CSSProperties,
 	forwardRef,
 	type ReactElement,
@@ -21,10 +22,17 @@ import {
 } from '../lib/popup-handle.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { POPOVER_HOVER_CLOSE_DELAY, POPOVER_HOVER_DELAY } from './constants.js';
+import { PopoverHandle, type PopoverTriggerPayload } from './popover-handle.js';
+import { PopoverHandleTrigger } from './subcomponents/popover-handle-trigger.js';
 import { PopoverPopup } from './subcomponents/popover-popup.js';
 import { PopoverPositioner } from './subcomponents/popover-positioner.js';
 import { PopoverTrigger } from './subcomponents/popover-trigger.js';
-import type { PopoverProps, ValidatePopoverProps } from './types.js';
+import type {
+	PopoverProps,
+	PopoverTriggerProps,
+	ValidatePopoverProps,
+	ValidatePopoverTriggerProps,
+} from './types.js';
 
 const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & RejectedProps>(
 	function Popover(
@@ -70,6 +78,18 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 		const handleState = usePopupHandleState(handle);
 		const [pressedOpen, setPressedOpen] = useState(false);
 		const isOpen = forcedOpen ?? (handle ? handleState.open : pressedOpen);
+		// The `Popover.Trigger`s of a handle register with its Base UI handle, which hands the Root
+		// the trigger the pointer or the focus is on, along with its payload.
+		const triggerHandle = handle instanceof PopoverHandle ? handle : undefined;
+		// The trigger the popup last opened for, own or shared, whose layer the popup clears.
+		const [activeTrigger, setActiveTrigger] = useState<Element | null>(null);
+		const popupRef = useMemo(
+			() =>
+				triggerHandle === undefined
+					? undefined
+					: (element: HTMLElement | null) => triggerHandle.setPopupElement(element),
+			[triggerHandle],
+		);
 
 		// A handle's anchor wins while it is showing: it is the element, rect or point the call
 		// site just named. Otherwise the `anchor` prop, and failing that the trigger.
@@ -93,15 +113,16 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 
 		// A render function is content for whatever the handle last showed, so it cannot be
 		// measured up front the way a node can.
-		const content = typeof children === 'function' ? children(handleState.payload) : children;
+		const isSwapping = typeof children === 'function';
 
-		if (typeof children !== 'function' && !hasRenderableContent(children)) {
+		if (!isSwapping && !hasRenderableContent(children)) {
 			return <>{trigger}</>;
 		}
 
 		return (
-			<PopoverPrimitive.Root
+			<PopoverPrimitive.Root<PopoverTriggerPayload<unknown>>
 				open={isOpen}
+				handle={triggerHandle?.primitive}
 				modal={false}
 				onOpenChange={(nextOpen, eventDetails) => {
 					// A press or a focus move that stays inside the element the handle was shown
@@ -124,6 +145,21 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 						return;
 					}
 
+					const opener = nextOpen ? eventDetails.trigger : undefined;
+
+					if (opener !== undefined) {
+						setActiveTrigger(opener);
+						triggerHandle?.setActiveTrigger(opener);
+					}
+
+					// A `Popover.Trigger` of the handle: the popup goes to it and shows its payload,
+					// not what `showAt` last named.
+					if (triggerHandle !== undefined && opener !== undefined && opener !== triggerElement) {
+						triggerHandle.openFromTrigger();
+
+						return;
+					}
+
 					if (handle) {
 						handle.setOpen(nextOpen);
 					} else {
@@ -131,37 +167,55 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 					}
 				}}
 			>
-				{trigger !== undefined && (
-					<PopoverTrigger
-						ref={triggerRef}
-						nativeButton={nativeButton}
-						openOnHover={openOnHover}
-						delay={delay}
-						closeDelay={closeDelay}
-						testId={testId}
-					>
-						{trigger}
-					</PopoverTrigger>
-				)}
-				<PopoverPrimitive.Portal container={portalContainer}>
-					<PopoverPositioner
-						trigger={triggerElement}
-						side={side}
-						align={align}
-						anchor={resolvedAnchor}
-					>
-						<PopoverPopup
-							popupId={popupId}
-							initialFocus={initialFocus}
-							finalFocus={finalFocus}
-							style={popupStyle}
-							testId={testId}
-							{...props}
-						>
-							{content}
-						</PopoverPopup>
-					</PopoverPositioner>
-				</PopoverPrimitive.Portal>
+				{({ payload: triggered }) => {
+					// What a `Popover.Trigger` handed over, unless `showAt` placed the popup since.
+					const fromTrigger = triggered !== undefined && handleState.anchor === null;
+					const preview = fromTrigger && triggered.preview;
+					const content = isSwapping
+						? children(fromTrigger ? triggered.value : handleState.payload)
+						: children;
+
+					return (
+						<>
+							{trigger !== undefined && (
+								<PopoverTrigger
+									ref={triggerRef}
+									nativeButton={nativeButton}
+									openOnHover={openOnHover}
+									delay={delay}
+									closeDelay={closeDelay}
+									testId={testId}
+								>
+									{trigger}
+								</PopoverTrigger>
+							)}
+							<PopoverPrimitive.Portal container={portalContainer}>
+								<PopoverPositioner
+									trigger={activeTrigger ?? triggerElement}
+									side={side}
+									align={align}
+									anchor={resolvedAnchor}
+									shared={fromTrigger}
+								>
+									<PopoverPopup
+										ref={popupRef}
+										popupId={popupId}
+										initialFocus={initialFocus}
+										finalFocus={finalFocus}
+										style={popupStyle}
+										testId={testId}
+										preview={preview}
+										viewport={isSwapping}
+										shared={fromTrigger}
+										{...props}
+									>
+										{content}
+									</PopoverPopup>
+								</PopoverPositioner>
+							</PopoverPrimitive.Portal>
+						</>
+					);
+				}}
 			</PopoverPrimitive.Root>
 		);
 	},
@@ -219,6 +273,18 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  * Pass `children` as a function to receive the payload of the most recent `showAt`, so one
  * declared popover serves many rows instead of one popup each.
  *
+ * ### Many triggers, one popup
+ *
+ * `Popover.Trigger` connects any element in the tree to the popover its `handle` is passed to. A
+ * row of them shares the one popup: it moves to the trigger the pointer or the focus is on and
+ * swaps its content for that trigger's `payload`, which a `children` function receives. With a
+ * function the content sits in a viewport that slides the old content out and the new one in,
+ * and the popup grows or shrinks to it. `handle.openTrigger(id)` opens it for a trigger from code.
+ *
+ * A `preview` trigger opens a card about its element rather than a dialog: on hover and on the
+ * keyboard focus, never on a press. The popup it opens has no role and no name and takes no focus,
+ * and carries `data-preview`.
+ *
  * ### Anchor
  *
  * `anchor` points the popup at something that is not the trigger, such as a typeahead anchored
@@ -253,6 +319,9 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  * | `popover-trigger` | always, merged into the element you passed as `trigger` |
  * | `popover-positioner` | while open, the box the popup is placed in |
  * | `popover-popup` | while open |
+ * | `popover-viewport` | while open, inside the popup, when `children` is a function |
+ *
+ * The popup carries `data-preview` while a `preview` trigger has it open.
  *
  * @example
  * ```tsx
@@ -296,7 +365,7 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
  * </Popover>
  * ```
  */
-export const Popover = PopoverImpl as <Payload, T extends PopoverProps<Payload>>(
+const PopoverRoot = PopoverImpl as <Payload, T extends PopoverProps<Payload>>(
 	// `T` is inferred from the call site, so `T extends PopoverProps` alone never runs excess
 	// property checks. Every key outside the props is pinned to `never` instead.
 	//
@@ -307,3 +376,19 @@ export const Popover = PopoverImpl as <Payload, T extends PopoverProps<Payload>>
 		Record<Exclude<keyof T, keyof PopoverProps | keyof RefAttributes<HTMLButtonElement>>, never> &
 		RefAttributes<HTMLButtonElement>,
 ) => ReactElement;
+
+const PopoverTriggerPart = PopoverHandleTrigger as <
+	Payload,
+	T extends Omit<PopoverTriggerProps<Payload>, 'payload'>,
+>(
+	// As on the root: `handle` is restated so `Payload` is inferred from it alone, which types
+	// `payload`. `T` infers a string payload widened to `string`, which would fail a constraint
+	// that held `payload` and drop `T` back to the whole props, so the payload is checked here.
+	props: T & {
+		handle: PopoverHandle<Payload>;
+		payload?: NoInfer<Payload>;
+	} & ValidatePopoverTriggerProps<T> &
+		Record<Exclude<keyof T, keyof PopoverTriggerProps | keyof Attributes>, never>,
+) => ReactElement;
+
+export const Popover = Object.assign(PopoverRoot, { Trigger: PopoverTriggerPart });

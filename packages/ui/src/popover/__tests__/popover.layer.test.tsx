@@ -95,4 +95,41 @@ describe('Popover layer', () => {
 
 		expect(positionerZIndex()).toBe('1001');
 	});
+
+	// A shared popup moves between the triggers of its handle without remounting, so it can slide.
+	it('reads the layer again when a shared popup moves to a trigger in another layer', async () => {
+		function Shared(): JSX.Element {
+			const card = usePopoverHandle<string>();
+
+			return (
+				<>
+					<Popover side="bottom" align="start" aria-label="Card" handle={card}>
+						{(name) => <p>{name}</p>}
+					</Popover>
+					<Popover.Trigger handle={card} payload="On the page" nativeButton>
+						<button type="button">Page</button>
+					</Popover.Trigger>
+					<div style={{ position: 'fixed', top: 0, right: 0, zIndex: 1000 }}>
+						<Popover.Trigger handle={card} payload="In the panel" nativeButton>
+							<button type="button">Panel</button>
+						</Popover.Trigger>
+					</div>
+				</>
+			);
+		}
+		render(<Shared />);
+		const user = userEvent.setup();
+
+		await user.click(screen.getByRole('button', { name: 'Page' }));
+		await screen.findByText('On the page');
+		expect(positionerZIndex()).toBe('50');
+
+		await user.click(screen.getByRole('button', { name: 'Panel' }));
+		await screen.findByText('In the panel');
+		expect(positionerZIndex()).toBe('1001');
+
+		await user.click(screen.getByRole('button', { name: 'Page' }));
+		await screen.findByText('On the page');
+		expect(positionerZIndex()).toBe('50');
+	});
 });

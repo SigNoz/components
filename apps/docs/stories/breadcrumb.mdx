@@ -299,6 +299,8 @@ too little about the record behind it.
   focus, from one of those crumbs to the next moves and resizes the open card and swaps its content,
   instead of closing one card and opening another. It closes once the pointer or the focus has left
   the last crumb.
+- The card and the popover of the `...` crumb are one `Popover`, opened through `Popover.Trigger`,
+  so they look like every other popover and take the `--popover-*` tokens.
 - The card is the same box as the popover of the `...` crumb. Moving the pointer from a crumb with a
   `preview` to the `...` crumb, or back, moves and resizes that box and cross-fades its content,
   with no delay and no close in between, the way it goes from one crumb to the next. A list that a
@@ -416,11 +418,10 @@ card without moving the focus. The card also closes when the focus leaves the cr
 | Separator before a crumb                                    | `` `${testId}-item-separator-${index}` ``             |
 | `...` crumb                                                 | `` `${testId}-ellipsis` ``                            |
 | Separator before the `...` crumb                            | `` `${testId}-ellipsis-separator` ``                  |
-| Popover of the `...` crumb, whatever it holds               | `` `${testId}-ellipsis-popup` ``                      |
+| Popup: the `...` popover or the preview card                | `` `${testId}-popup` ``                               |
 | Heading group of the `...` popover, with `ellipsis.heading` | `` `${testId}-ellipsis-group-collapsed` ``            |
 | Menu trigger of a crumb with a `menu`                       | `` `${testId}-item-${index}-menu` ``                  |
 | Row of the menu of a crumb                                  | `` `${testId}-item-${index}-menu-item-${position}` `` |
-| Preview card, one for the whole trail                       | `` `${testId}-preview` ``                             |
 
 `index` is the place of the crumb in `items`, counted before the empty titles are left out, and
 `position` is the place of the entry in its `menu`.
@@ -440,10 +441,10 @@ card without moving the focus. The card also closes when the focus leaves the cr
 - The `...` crumb and the separator before it render only while a crumb is collapsed.
 - The preview card renders only while it is open, so asserting its absence asserts it is closed. It
   is portalled, so query it from the document and not from the `<nav>`.
-- The card and the popover of the `...` crumb are one element, so it keeps its identity as the
-  pointer goes from a crumb to the `...` crumb and back, and its test id follows what it shows,
-  `` `${testId}-preview` `` or `` `${testId}-ellipsis-popup` ``. The trigger the popup is open for,
-  a crumb or the `...` crumb, carries `data-popup-open`.
+- The card and the popover of the `...` crumb are one `Popover`, so it keeps its identity and its
+  test id, `` `${testId}-popup` ``, as the pointer goes from a crumb to the `...` crumb and back.
+  It is `data-slot="popover-popup"`, and carries `data-preview` while it shows a card. The trigger
+  the popup is open for, a crumb or the `...` crumb, carries `data-popup-open`.
 - A collapsed crumb has no card, so its `preview` is never in the document while the crumb sits in
   the `...` popover.
 - The trail keeps a hidden row with a `...` and a separator to measure the room, so while a crumb is

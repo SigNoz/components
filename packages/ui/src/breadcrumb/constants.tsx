@@ -96,22 +96,6 @@ export const BREADCRUMB_MIN_COLLAPSIBLE_ITEMS = 3;
 export const BREADCRUMB_PREVIEW_CLOSE_DELAY = 150;
 
 /**
- * What a Base UI popover trigger adds to its element that a crumb with a `preview` does not want,
- * each set to `undefined` so the crumb keeps what it was: the `button` role and the `tabindex` of a
- * trigger that is not a native button, and the `aria-haspopup`, `aria-expanded` and `aria-controls`
- * that announce a dialog.
- *
- * @access private
- */
-export const BREADCRUMB_PREVIEW_TRIGGER_RESET = {
-	role: undefined,
-	tabIndex: undefined,
-	'aria-haspopup': undefined,
-	'aria-expanded': undefined,
-	'aria-controls': undefined,
-} as const;
-
-/**
  * The payload of the trigger of the `...` crumb, where a crumb with a `preview` hands its place in
  * `items`.
  *

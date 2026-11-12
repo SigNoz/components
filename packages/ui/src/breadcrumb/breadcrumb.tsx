@@ -200,7 +200,6 @@ const BreadcrumbImpl = forwardRef<HTMLElement, BreadcrumbProps>(function Breadcr
 					ellipsis={ellipsis}
 					ellipsisContent={ellipsisContent}
 					hasEllipsisPopup={hasEllipsisPopup}
-					layerSource={rootRef}
 					testId={testId}
 				/>
 			)}
@@ -260,8 +259,9 @@ const BreadcrumbImpl = forwardRef<HTMLElement, BreadcrumbProps>(function Breadcr
  *
  * ### Popup
  *
- * The crumbs with a `preview` and the `...` crumb are the triggers of one popup, which shows the
- * card of a crumb or the list of the `...` crumb. The pointer going from one trigger to another, or
+ * The crumbs with a `preview` and the `...` crumb are the triggers of one `Popover`, which shows
+ * the card of a crumb or the list of the `...` crumb, with the look and the `--popover-*` tokens of
+ * every other popover. The pointer going from one trigger to another, or
  * the focus from one crumb with a `preview` to another, moves the open popup to the new trigger and
  * swaps its content, with no delay and no close in between. The focus reaching the `...` crumb
  * closes a card and opens nothing. The popup goes into the panel of the `Dialog` or `Drawer` around
@@ -328,10 +328,9 @@ const BreadcrumbImpl = forwardRef<HTMLElement, BreadcrumbProps>(function Breadcr
  * | `data-slot` | crumb label, icon, chevron | `"breadcrumb-item-label"`, `"breadcrumb-item-icon"`, `"breadcrumb-item-chevron"` (menu crumbs only) |
  * | `data-slot` | separator | `"breadcrumb-separator"` |
  * | `data-slot` | `...` crumb | `"breadcrumb-ellipsis"` on the `<li>`, `"breadcrumb-ellipsis-trigger"` with `data-kind="ellipsis"` on the button, or on the `<span>` that stands in for it when `ellipsis.render` renders nothing |
- * | `data-slot` | `...` popup | `"breadcrumb-ellipsis-popup"` on the popup, a `role="dialog"` named by `ellipsis.heading` or `Hidden items`, `"breadcrumb-ellipsis-popup-positioner"` on the box it is placed in and `"breadcrumb-ellipsis-popup-viewport"` on the box that swaps its content, the list or the content of `ellipsis.render` inside it. They render only while the popup is open |
+ * | `data-slot` | popup | `"popover-popup"` on the popup, `"popover-positioner"` on the box it is placed in and `"popover-viewport"` on the box that swaps its content. They render only while the popup is open. For the `...` crumb it is a `role="dialog"` named by `ellipsis.heading` or `Hidden items`, holding the list or the content of `ellipsis.render`. For a card it has no role and carries `data-preview` |
  * | `data-slot` | `...` list | `"breadcrumb-ellipsis-content"` on the box that holds the list (a `role="group"` named by the heading when there is one), `"breadcrumb-ellipsis-heading"`, `"breadcrumb-ellipsis-list"` on the `<ul>` |
  * | `data-slot` | `...` row | `"breadcrumb-ellipsis-row"` on the link, `<button>` or `<span>` of the row, with `data-kind` set to `link`, `button`, `menu` or `text`. `"breadcrumb-ellipsis-row-icon"`, `"breadcrumb-ellipsis-row-label"`, `"breadcrumb-ellipsis-row-suffix"` and `"breadcrumb-ellipsis-row-chevron"` (menu rows only) inside it |
- * | `data-slot` | preview card | `"breadcrumb-preview"` on the popup, which has no role, `"breadcrumb-preview-positioner"` on the box it is placed in, `"breadcrumb-preview-viewport"` on the box that swaps its content. They render only while the card is open |
  * | `data-popup-open` | crumb content, `...` crumb | present on the trigger the open popup belongs to |
  * | `data-slot` | measuring row | `"breadcrumb-measure"`, hidden, rendered while `truncate` is set |
  *
@@ -339,11 +338,10 @@ const BreadcrumbImpl = forwardRef<HTMLElement, BreadcrumbProps>(function Breadcr
  * popup of the `...` crumb, `index` being its place in `items`: on a row it is the link, `<button>`
  * or `<span>` that holds the icon, the title and the suffix. The separator before a crumb is
  * `` `${testId}-item-separator-${index}` ``, the `...` crumb is `` `${testId}-ellipsis` `` and the
- * separator before it `` `${testId}-ellipsis-separator` ``. The popup it opens is
- * `` `${testId}-ellipsis-popup` ``, with the default list and with `ellipsis.render`, and the group
- * that holds the rows under the `ellipsis.heading` is `` `${testId}-ellipsis-group-collapsed` ``. The
- * card of a crumb is `` `${testId}-preview` ``. Both are the same element, so its id and its
- * `data-slot` change as the popup moves between a crumb and the `...` crumb. A crumb's own menu is
+ * separator before it `` `${testId}-ellipsis-separator` ``. The popup, the list of the `...` crumb
+ * or the card of a crumb, is `` `${testId}-popup` ``: one element, which keeps its id as it moves
+ * between them. The group that holds the rows under the `ellipsis.heading` is
+ * `` `${testId}-ellipsis-group-collapsed` ``. A crumb's own menu is
  * `` `${testId}-item-${index}-menu` `` and each of its rows
  * `` `${testId}-item-${index}-menu-item-${position}` ``, `position` being the place of the entry in
  * its `menu`. Once the crumb is collapsed its rows keep their names, in the menu its row opens, and
