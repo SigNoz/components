@@ -1,12 +1,14 @@
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { forwardRef } from 'react';
+import { onFocusLeave } from '../../lib/focus-leave.js';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import type { RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
 import { TooltipTriggerBoundary } from '../../tooltip/tooltip-trigger-context.js';
 import { RadioCardsTextOverflow } from '../constants.js';
 import type { RadioCardsItemType, RadioCardsMultipleProps } from '../types.js';
-import { hasCheckedCard, NO_VALUES, useRadioCardsGroup, useRadioCardsValue } from '../utils.js';
+import { hasCheckedCard, NO_VALUES, useRadioCardsField, useRadioCardsGroup } from '../utils.js';
 import { RadioCardsItem } from './radio-cards-item.js';
 
 // Base UI appends a checked value to the end of the list, so the list would follow the clicks. It
@@ -32,7 +34,9 @@ function orderByItems(items: readonly RadioCardsItemType[], values: readonly str
  * and each card is a `role="checkbox"`. The root carries `aria-disabled` while the group is
  * disabled. A `group` takes neither `aria-readonly` nor `aria-required`, so the cards carry them:
  * `aria-readonly` while the group is read-only, `aria-required` while it is required and no card
- * is checked.
+ * is checked. A `Field.Group` that is `required` sets `aria-required` alone, with no native
+ * `required`, so the form's own validation runs before the browser's. The group's own `required`
+ * keeps the native one.
  *
  * ### Keyboard
  *
@@ -74,13 +78,15 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 			disabledTooltip,
 			readOnly = false,
 			readOnlyTooltip,
-			required = false,
+			required: requiredProp,
 			name,
 			form,
 			value,
 			defaultValue,
 			onChange,
+			onBlur,
 			allowClear = false,
+			nullable: _nullable,
 			testId,
 			className: _className,
 			style: _style,
@@ -88,6 +94,8 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		}: RadioCardsMultipleProps & RejectedProps,
 		ref,
 	) {
+		const { required, isFieldRequired, nameProps, invalidDataProps, focusTarget } =
+			useRadioCardsField(props, requiredProp);
 		const {
 			items: cards,
 			isReadOnly,
@@ -109,7 +117,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 
 		// Not `useSelectionValue`: it reads `''` as no value, the rule of a select. A card's value is
 		// any string, `''` included, as on `RadioCards`.
-		const [selectedValues, setSelectedValues] = useRadioCardsValue<readonly string[]>({
+		const [selectedValues, setSelectedValues] = useControlledValue<readonly string[]>({
 			component: 'RadioCards.Multiple',
 			value,
 			defaultValue,
@@ -134,6 +142,12 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		}
 
 		const isEmpty = !hasCheckedCard(cards, selectedValues);
+		// The first checked card, else the first one, as `RadioCards` does with its checked radio. A
+		// disabled card is skipped: Base UI moves the focus from a checkbox input to its card, and a
+		// disabled input takes none.
+		const focusTargetCard =
+			cards.find((item) => item.disabled !== true && selectedValues.includes(item.value)) ??
+			cards.find((item) => item.disabled !== true);
 
 		const groupEl = (
 			<CheckboxGroup
@@ -146,6 +160,9 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 				// Base UI types the list as mutable, but never writes to it.
 				value={selectedValues as string[]}
 				onValueChange={onValueChange}
+				onBlur={onFocusLeave(onBlur)}
+				{...nameProps}
+				{...invalidDataProps}
 				{...props}
 				{...rootProps}
 			>
@@ -164,8 +181,10 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 								name={name}
 								form={form}
 								readOnly={isReadOnly}
-								required={required === true && isEmpty}
+								required={required && isEmpty}
+								ariaRequired={isFieldRequired && isEmpty}
 								focusableWhenDisabled={isDisabled && index === 0}
+								inputRef={item === focusTargetCard ? focusTarget : undefined}
 							/>
 						))}
 					</TooltipTriggerBoundary>

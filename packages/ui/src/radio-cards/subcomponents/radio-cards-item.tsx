@@ -1,7 +1,7 @@
 import { Checkbox } from '@base-ui/react/checkbox';
 import { Radio } from '@base-ui/react/radio';
 import { Check } from '@signozhq/icons';
-import type { KeyboardEvent, MouseEvent, ReactElement } from 'react';
+import type { KeyboardEvent, MouseEvent, ReactElement, Ref } from 'react';
 import { useGroupItem } from '../../lib/use-group-item.js';
 import { partTestId } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
@@ -48,7 +48,9 @@ type RadioCardsItemRadioProps = {
 	form?: never;
 	readOnly?: never;
 	required?: never;
+	ariaRequired?: never;
 	focusableWhenDisabled?: never;
+	inputRef?: never;
 };
 
 type RadioCardsItemCheckboxProps = {
@@ -67,10 +69,21 @@ type RadioCardsItemCheckboxProps = {
 	 */
 	required?: boolean;
 	/**
+	 * Set on every card while a `Field.Group` around the group is required and the group is empty.
+	 * Each card announces `aria-required` until one is checked, and the form is not blocked.
+	 */
+	ariaRequired?: boolean;
+	/**
 	 * Keeps this card a tab stop while the group is disabled, so `disabledTooltip` stays reachable.
 	 * Set on the first card only: a disabled group is one stop, as on `RadioCards`.
 	 */
 	focusableWhenDisabled?: boolean;
+	/**
+	 * A ref to the hidden checkbox input. Set on the first card that is not disabled, as the
+	 * `focusTarget` of a `RadioCardsField.Multiple`: Base UI moves the focus from the input to the
+	 * card. `RadioCards` hands its ref to Base UI's group instead.
+	 */
+	inputRef?: Ref<HTMLInputElement>;
 };
 
 // Base UI's checkbox submits the owning form on `Enter`. A card follows the radio, where `Enter`
@@ -98,7 +111,9 @@ export function RadioCardsItem({
 	form,
 	readOnly,
 	required,
+	ariaRequired,
 	focusableWhenDisabled = false,
+	inputRef,
 }: RadioCardsItemProps): ReactElement {
 	const { value, prefix, disabled } = item;
 	const {
@@ -177,6 +192,8 @@ export function RadioCardsItem({
 			form={form}
 			readOnly={readOnly}
 			required={required}
+			inputRef={inputRef}
+			{...(ariaRequired ? { 'aria-required': true } : {})}
 			onKeyDown={preventEnter}
 			// `Checkbox.Root` has no `focusableWhenDisabled`. The root of the group keeps `Space` from
 			// scrolling the page, which Base UI's version of it would do here.

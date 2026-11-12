@@ -1,4 +1,12 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+} from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type {
 	ToggleGroupColor,
 	ToggleGroupScrollDirection,
@@ -163,7 +171,12 @@ export type ValidateToggleGroupProps<T> = (T extends { disabled: boolean | undef
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
 /**
- * How many buttons can be pressed at once, and the value/callback triple that follows from it.
+ * How many buttons can be pressed at once, whether the bar is `nullable`, and the value/callback
+ * triple that follows from the two.
+ *
+ * The `nullable` members come first and only take `true`, so a bar is nullable by being written
+ * that way, never by a flag decided at run time. The members without it come last, so a bar that
+ * matches none is reported against them.
  */
 type ToggleGroupSelectionType =
 	| {
@@ -172,7 +185,99 @@ type ToggleGroupSelectionType =
 			 */
 			type: 'single';
 			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `null` is the empty bar, and
+			 * releasing the pressed button with `allowClear` reports it.
+			 *
+			 * @note Without it the empty string is the only empty value.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable: true;
+			/**
+			 * The controlled pressed item's `value`, or `null` while nothing is pressed. The empty
+			 * string is the empty bar too.
+			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` and `null` show
+			 * the empty bar.
+			 *
+			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
+			 *
+			 * @note The bar reaches the empty state on its own only with `allowClear`.
+			 */
+			value?: string | null;
+			/**
+			 * The pressed item's `value` on the first render, for a bar that keeps its own state.
+			 *
+			 * @note Use with `onChange`. For a controlled bar use `value` instead. Without it the bar
+			 * starts with nothing pressed.
+			 */
+			defaultValue?: string;
+			/**
+			 * Called with the newly pressed item's `value`, or `null` once the pressed button is
+			 * released, which takes `allowClear`.
+			 */
+			onChange?: (value: string | null) => void;
+	  }
+	| {
+			/**
+			 * Any number of buttons can be pressed at once.
+			 */
+			type: 'multiple';
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `null` is the empty bar.
+			 *
+			 * @note Without it `null` is not a value.
+			 *
+			 * @note `onChange` still reports the empty array, never `null`.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable: true;
+			/**
+			 * The controlled pressed items' `value`s. `[]` and `null` are the empty bar.
+			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` and `null` show
+			 * the empty bar.
+			 *
+			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
+			 *
+			 * @note The bar reaches the empty array on its own only with `allowClear`.
+			 */
+			value?: string[] | null;
+			/**
+			 * The pressed items' `value`s on the first render, for a bar that keeps its own state.
+			 *
+			 * @note Use with `onChange`. For a controlled bar use `value` instead.
+			 */
+			defaultValue?: string[];
+			/**
+			 * Called with every pressed item's `value`. Reaching the empty array takes
+			 * `allowClear`.
+			 */
+			onChange?: (value: string[]) => void;
+	  }
+	| {
+			/**
+			 * Only one button can be pressed. Pressing another releases the previous one.
+			 */
+			type: 'single';
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `null` is the empty bar, and
+			 * releasing the pressed button with `allowClear` reports it.
+			 *
+			 * @note Without it the empty string is the only empty value.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
+			/**
 			 * The controlled pressed item's `value`, or the empty string while nothing is pressed.
+			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` shows the empty
+			 * bar.
 			 *
 			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
 			 *
@@ -199,7 +304,19 @@ type ToggleGroupSelectionType =
 			 */
 			type: 'multiple';
 			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `null` is the empty bar.
+			 *
+			 * @note Without it `null` is not a value.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
+			/**
 			 * The controlled pressed items' `value`s.
+			 *
+			 * @note `undefined` on the first render leaves the bar uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` shows the empty
+			 * bar.
 			 *
 			 * @note Use with `onChange`. For an uncontrolled bar use `defaultValue` instead.
 			 *
@@ -337,8 +454,9 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note Off by default: once something is pressed the bar keeps reporting a value. The
 		 * press that would empty it is cancelled, so `onChange` is not called and nothing moves.
 		 *
-		 * @note On a `single` bar this is the press of the pressed button. On a `multiple` bar it
-		 * is the release of the last pressed one, and releasing any other is unaffected.
+		 * @note On a `single` bar this is the press of the pressed button, and the bar reports the
+		 * empty string, or `null` with `nullable`. On a `multiple` bar it is the release of the last
+		 * pressed one, which reports the empty array, and releasing any other is unaffected.
 		 *
 		 * @note A bar that starts with nothing pressed stays that way until the first press. This
 		 * blocks the way back to empty, not the empty state itself.
@@ -367,6 +485,28 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		maxWidth?: CSSProperties['maxWidth'];
 		/**
+		 * Identifies the field when the owning form is submitted. Every pressed button submits its
+		 * `value` under this name, in the order of `items`, so a `multiple` bar submits one entry per
+		 * pressed button and a bar with nothing pressed submits none.
+		 *
+		 * @note A disabled bar is left out of the submit, and so is a pressed button that is
+		 * disabled. A read-only bar is still submitted.
+		 *
+		 * @note Base UI's toggle group does not take part in form submission, so the bar renders a
+		 * hidden `<input>` for each value it submits.
+		 */
+		name?: string;
+		/**
+		 * Called once when the focus leaves the bar, for a form that validates on blur.
+		 *
+		 * @note Moving the focus from one button to another, or to a scroll arrow of the bar, does not
+		 * call it, the focus is still inside the bar.
+		 *
+		 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
+		 * accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
+		/**
 		 * Forwarded to the rendered element as `data-testid`.
 		 *
 		 * @note Also names every button: an item with no `testId` of its own is addressable as
@@ -378,3 +518,12 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `ToggleGroupField`: the field's label, description and status, and every prop of
+ * `ToggleGroup`.
+ *
+ * @note A toggle group has no `required` of its own. The prop marks the label with an asterisk and
+ * nothing else, because `role="group"` takes no `aria-required`.
+ */
+export type ToggleGroupFieldProps = ToggleGroupProps & FieldLabelAndMessageProps;

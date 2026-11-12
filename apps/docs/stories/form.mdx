@@ -1,0 +1,162 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as FormStories from './form.stories';
+
+<Meta of={FormStories} />
+
+# Form
+
+The `<form>` element and the rhythm between its fields. Form support has three parts: `Form` is the
+element and the space between its children, `Field` gives one control its label, description and
+validation message, and `Field.Group` does the same for several controls that share one label.
+
+The form holds no values and runs no validation. The values live in react-hook-form or in your own
+state, you decide what is invalid, and the fields render what they are told. The parts do not
+import react-hook-form, so a form with plain state uses the same ones. The form takes no
+`className` or `style`: the spacing comes from `layout`, and the container around it (a Dialog, a
+Drawer or a Card) owns the padding.
+
+## How to use
+
+A field shorthand renders a control inside a `Field` in one element. `register()` spreads onto
+`InputField` and its native members, and a form library's `handleSubmit` goes straight to
+`onSubmit`.
+
+```tsx
+import { Button, Form, InputField } from '@signozhq/ui';
+import { useForm } from 'react-hook-form';
+
+export default function InviteForm({ save }) {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({ mode: 'onTouched' });
+
+	return (
+		<Form onSubmit={handleSubmit(save)}>
+			<InputField
+				label="Email"
+				required
+				type="email"
+				error={errors.email?.message}
+				{...register('email', { required: 'Enter an email.' })}
+			/>
+			<Button type="submit" variant="solid" color="primary" size="md">
+				Send invite
+			</Button>
+		</Form>
+	);
+}
+```
+
+A control with a value that is not a native event (Select, Combobox, Switch, Slider, Checkbox,
+Radio Group and Toggle Group) goes through a `Controller`: pass `field.value` to `value`,
+`field.onChange` to `onChange`, `field.onBlur` to `onBlur`, and `fieldState.error?.message` to
+`error`. Pass `defaultValues` to `useForm` for every field that goes through a `Controller`, so the
+control is controlled from its first render. A value that only arrives later is still followed, with
+a warning. A schema field that allows `null` takes `nullable` on the control, where it has one, and
+`null` is then its empty value.
+
+Without react-hook-form, keep the value in state, validate in the handlers, and pass the result to
+`error`, or to `status` and `message`.
+
+```tsx
+export default function InviteForm({ save }) {
+	const [email, setEmail] = useState('');
+	const [error, setError] = useState<string>();
+
+	return (
+		<Form onSubmit={() => (isEmail(email) ? save(email) : setError('Enter an email.'))}>
+			<InputField
+				label="Email"
+				required
+				type="email"
+				value={email}
+				onChange={(event) => setEmail(event.target.value)}
+				error={error}
+			/>
+			<Button type="submit" variant="solid" color="primary" size="md">
+				Send invite
+			</Button>
+		</Form>
+	);
+}
+```
+
+<Primary />
+
+## Submit
+
+The form always calls `preventDefault()` on the submit event and then `onSubmit`, so the page never
+reloads, also when you forget to prevent it. A handler from react-hook-form calls `preventDefault()`
+again, which does nothing. The form never posts natively, so `action`, `method`, `target` and
+`encType` are not props.
+
+The form is always `noValidate`. The browser bubbles show one error at a time, in the browser's
+language and style, on top of the field message. The fields show your result instead.
+
+Submit with a `Button` with `type="submit"`, inside the form, or outside it with `form` set to the
+`id` of the form. A dialog with its buttons in the footer uses the second shape, see the
+`InDialog` story. The form does not render its own buttons and does not disable the submit button
+while it saves: pass `loading` to the `Button`.
+
+`Enter` in a single-line text control submits the form through the browser's implicit submission,
+which needs a submit button in the form, or one outside it that names the form with `form`.
+Without one, `Enter` does nothing in a form with more than one text control, and still submits a
+form with only one. `Enter` in `Input.TextArea` adds a line. `Enter` in an open
+Select or Combobox picks the highlighted option and does not submit.
+
+After a submit with errors, focus moves to the first invalid control. With react-hook-form this is
+`shouldFocusError`, on by default, and it works because every control forwards its `ref` to its
+focusable element. A control that is several elements, such as Radio Group, Radio Cards, Toggle
+Group and Slider, does it through its field shorthand, which hands `ref` to a focusable element
+inside. Without react-hook-form you move the focus, as the `Validated` story does.
+
+An error that does not belong to one field (the request failed, the license is not valid) is not a
+field message. Show it with a Callout or a Toast.
+
+## Validation timing
+
+The form does not validate. This is the rule to follow, and the react-hook-form setting that gives
+it:
+
+- Validate a field when it loses focus, not on every key.
+- Once a field shows an error, validate it again on every change, so the error goes away as soon as
+  the value is fixed.
+- On submit, validate every field.
+
+With react-hook-form this is `mode: 'onTouched'`. The `Validated` story does the same with plain
+state.
+
+## Layout
+
+`vertical` stacks the children 16px apart. `inline` puts them in one row, 16px apart, and wraps to a
+new row 16px below when the width runs out. In a row the fields line up on their bottom edge with
+the buttons, so a label that wraps to two lines does not push its control out of line.
+
+Any element is allowed as a child, not only `Field`. A row of action buttons is your own
+container. A two-column layout, or a row of two fields inside a vertical form, is your own grid:
+keep the same 16px between the columns as between the rows. The form does not scroll: the
+container around it does.
+
+## Reset
+
+A `Button` with `type="reset"` fires `onReset`. The native reset only clears uncontrolled native
+inputs, so with react-hook-form call `reset()` in `onReset`, and with plain state set the state
+back, as the `Reset` story does.
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the `<form>`. The fields inside keep their own `testId`.
+
+| Element | `data-testid` |
+| ------- | ------------- |
+| form    | `testId`      |
+
+The `<form>` has `data-slot="form"` and `data-layout`, set to `vertical` or `inline`.
+
+Otherwise use the `data-slot` attributes, never the hashed class names.
+
+## Form props
+
+<Controls of={FormStories.Default} />

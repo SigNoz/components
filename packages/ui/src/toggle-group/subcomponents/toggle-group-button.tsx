@@ -1,5 +1,5 @@
 import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
-import { type ReactElement, type ReactNode, useEffect, useMemo } from 'react';
+import { type ReactElement, type ReactNode, type RefCallback, useEffect, useMemo } from 'react';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { hasRenderableContent } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
@@ -40,6 +40,11 @@ export type ToggleGroupButtonProps = {
 	 * Why the value is locked. The only reason shown while it is set.
 	 */
 	groupReadOnlyTooltip: ReactNode;
+	/**
+	 * Set on the one button a `ToggleGroupField` sends its `ref` to, the pressed one or the first
+	 * that is not disabled.
+	 */
+	focusTarget: RefCallback<HTMLElement> | undefined;
 };
 
 /**
@@ -57,6 +62,7 @@ export function ToggleGroupButton({
 	groupDisabledTooltip,
 	groupReadOnly,
 	groupReadOnlyTooltip,
+	focusTarget,
 }: ToggleGroupButtonProps): ReactElement {
 	const { value, label, prefix, suffix, testId, disabled, disabledTooltip } = item;
 	// The bar's own `disabled` never reaches Base UI, so it is applied here alongside the item's.
@@ -136,6 +142,7 @@ export function ToggleGroupButton({
 	// unannounced. `data-readonly` is what the stylesheet reads to paint the lock apart.
 	const buttonEl = (
 		<TogglePrimitive
+			ref={focusTarget}
 			value={value}
 			data-slot="toggle-group-button"
 			data-disabled={disabled || undefined}

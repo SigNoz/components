@@ -114,4 +114,5 @@
 
 export type * from './types.js';
 export { Input } from './input.js';
+export { InputField } from './presets/input-field.js';
 export { InputSize, InputStatus, InputVariant } from './constants.js';

@@ -49,6 +49,7 @@
  * | `--radio-group-info-dot` | `-` |
  * | `--radio-group-info-dot-color` | `var(--radio-group-info-dot)` |
  * | `--radio-group-info-hover-border-color` | `var(--radio-group-info-border-hover)` |
+ * | `--radio-group-invalid-border-color` | `var(--destructive)` |
  * | `--radio-group-item-align-items` | `flex-start` |
  * | `--radio-group-item-control-display` | `flex` |
  * | `--radio-group-item-display` | `flex` |
@@ -100,11 +101,14 @@
 // #endregion css-tokens
 
 export { RadioGroup } from './radio-group.js';
+export { RadioGroupField } from './presets/radio-group-field.js';
 export { RadioGroupColor, RadioGroupTextOverflow } from './constants.js';
 export type {
 	RadioGroupColorType,
 	RadioGroupDisableType,
+	RadioGroupFieldProps,
 	RadioGroupItemType,
+	RadioGroupNullableType,
 	RadioGroupProps,
 	RadioGroupReadOnlyType,
 	RadioGroupTextOverflowType,

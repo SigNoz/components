@@ -1,0 +1,339 @@
+/**
+ * Type-level tests for the props of {@link SelectField}. Run by `vitest --typecheck` and by
+ * `pnpm type-check`. See `field.types.test-d.tsx` for how the cases are written.
+ */
+import { createRef, type FocusEvent, type Ref } from 'react';
+import { assertType, describe, test } from 'vitest';
+import { SelectField } from '../presets/select-field.js';
+import type { SelectItemType } from '../types.js';
+
+const ONE: SelectItemType[] = [{ type: 'item', value: 'a', label: 'A' }];
+const selectRef = createRef<HTMLElement>();
+declare const maybeError: string | undefined;
+declare const maybeDisabled: boolean | undefined;
+declare const controllerRef: Ref<HTMLElement>;
+/**
+ * What react-hook-form's `Controller` and `useController` hand over as `field`, written out by
+ * hand because the library does not depend on react-hook-form.
+ */
+type ReactHookFormField<Value> = {
+	onChange: (...event: any[]) => void;
+	onBlur: () => void;
+	value: Value;
+	name: string;
+	ref: (instance: any) => void;
+	disabled?: boolean;
+};
+declare const rhfField: ReactHookFormField<string>;
+declare const rhfMultipleField: ReactHookFormField<string[]>;
+declare const rhfNullableField: ReactHookFormField<string | null>;
+declare const rhfNullableMultipleField: ReactHookFormField<string[] | null>;
+declare const isNullable: boolean;
+
+describe('label, items and placeholder', () => {
+	test('all three are required', () => {
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} />);
+		// oxfmt-ignore
+		// @ts-expect-error - a field exists to own its label
+		assertType(<SelectField placeholder="Pick" items={ONE} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `items` is what the select lists, it cannot be left out
+		assertType(<SelectField label="Framework" placeholder="Pick" />);
+		// oxfmt-ignore
+		// @ts-expect-error - the trigger has to show something while nothing is selected
+		assertType(<SelectField label="Framework" items={ONE} />);
+	});
+});
+
+describe('the field props', () => {
+	test('takes the label parts and the description as nodes', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				labelIcon={<span />}
+				labelTooltip={<b>Tip</b>}
+				description={<i>Help</i>}
+				required
+			/>,
+		);
+	});
+
+	test('status and message travel together', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				status="warning"
+				message="Careful"
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - a status with nothing to say belongs on the control itself
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} status="danger" />);
+		// oxfmt-ignore
+		// @ts-expect-error - the message row is a validation state, it takes its color from one
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} message="Careful" />);
+	});
+
+	test('error stands alone', () => {
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} error={maybeError} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `error` already says `status="danger"` and the message
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} error="Bad" status="danger" message="Bad" />);
+		// oxfmt-ignore
+		// @ts-expect-error - `error` already says `status="danger"` and the message
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} error="Bad" message="Bad" />);
+	});
+
+	test('data-testid is spelled testId', () => {
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} testId="framework" />);
+		// oxfmt-ignore
+		// @ts-expect-error - `data-testid` is written as the `testId` prop
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} data-testid="framework" />);
+	});
+
+	test('htmlFor is not a prop', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - the shorthand wires the control id itself
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} htmlFor="framework" />);
+	});
+});
+
+describe('the select props', () => {
+	test('takes a string for one value and reports a string', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				value="a"
+				onChange={(value: string) => value}
+				displayValue={(item) => item?.label}
+			/>,
+		);
+	});
+
+	test('takes a string array with multiple and reports one', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				multiple
+				items={ONE}
+				value={['a']}
+				defaultValue={['a']}
+				onChange={(value: string[]) => value}
+				maxDisplayedPills={2}
+				displayValue={(items) => `${items.length} selected`}
+			/>,
+		);
+	});
+
+	test('multiple still decides the shape of the value', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - a single select holds one value
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} value={['a']} />);
+		// oxfmt-ignore
+		// @ts-expect-error - a multiple select holds an array
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} value="a" />);
+		// oxfmt-ignore
+		// @ts-expect-error - only a multiple select shows chips
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} maxDisplayedPills={2} />);
+		// oxfmt-ignore
+		// @ts-expect-error - a single select reports a string
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} onChange={(value: string[]) => value} />);
+	});
+
+	test('a Controller field is accepted as the props it spreads', () => {
+		const field = { value: 'a', onChange: (value: string) => value, ref: controllerRef };
+
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} {...field} />);
+	});
+
+	test('onBlur takes the blur event, or no parameter at all', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+		assertType(
+			<SelectField label="Framework" placeholder="Pick" items={ONE} onBlur={() => undefined} />,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - the event comes from the trigger or the popup, never from an input
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} onBlur={(event: FocusEvent<HTMLInputElement>) => event.currentTarget.value} />);
+	});
+
+	test('a react-hook-form field is accepted as the props it spreads', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				{...rhfField}
+				error={maybeError}
+			/>,
+		);
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				multiple
+				items={ONE}
+				{...rhfMultipleField}
+				error={maybeError}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - a field that holds an array is a multiple select
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} {...rhfMultipleField} />);
+	});
+
+	test('disabled and read-only keep their reasons', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				disabled
+				disabledTooltip="Ask an admin"
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - a disabled select has to tell the user why
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} disabled />);
+		// oxfmt-ignore
+		// @ts-expect-error - a possibly undefined `disabled` is still `disabled`
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} disabled={maybeDisabled} />);
+		// oxfmt-ignore
+		// @ts-expect-error - a read-only select has to tell the user why
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} readOnly />);
+		// oxfmt-ignore
+		// @ts-expect-error - `readOnlyTooltip` only renders while `readOnly` is set
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} readOnlyTooltip="Why" />);
+	});
+
+	test('the ref is the trigger element', () => {
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} ref={selectRef} />);
+		assertType(
+			<SelectField label="Framework" placeholder="Pick" items={ONE} ref={controllerRef} />,
+		);
+	});
+
+	test('takes aria-*, data-* and the sizes', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				id="framework"
+				aria-keyshortcuts="F"
+				data-source="settings"
+				width={240}
+				maxWidth="100%"
+				contentMaxHeight={200}
+			/>,
+		);
+	});
+});
+
+describe('nullable', () => {
+	test('a react-hook-form field whose value can be null is accepted, with nullable', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				nullable
+				{...rhfNullableField}
+				error={maybeError}
+			/>,
+		);
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				multiple
+				items={ONE}
+				nullable
+				{...rhfNullableMultipleField}
+				error={maybeError}
+			/>,
+		);
+	});
+
+	test('a react-hook-form field whose value cannot be null is accepted too', () => {
+		assertType(
+			<SelectField label="Framework" placeholder="Pick" items={ONE} nullable {...rhfField} />,
+		);
+	});
+
+	test('takes null as the value and reports a string or null', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				nullable
+				value={null}
+				onChange={(value: string | null) => value}
+			/>,
+		);
+	});
+
+	test('rejects a null value without nullable', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable`
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} {...rhfNullableField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable`, with multiple too
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} {...rhfNullableMultipleField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable={false} {...rhfNullableField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`, with multiple too
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} nullable={false} {...rhfNullableMultipleField} />);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable={isNullable} {...rhfNullableField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, also without a `null` value
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable={isNullable} {...rhfField} />);
+	});
+
+	test('keeps the shape that multiple decides', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - a nullable array field is a multiple select
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable {...rhfNullableMultipleField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - a nullable single field is not a multiple select
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} nullable {...rhfNullableField} />);
+	});
+});
+
+describe('rejected props', () => {
+	test('className and style are not props', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `className` is not a prop
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} className="x" />);
+		// oxfmt-ignore
+		// @ts-expect-error - `style` is not a prop
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} style={{}} />);
+	});
+
+	test('a prop that does not exist is rejected', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - the label always sits above the select
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} labelPlacement="right" />);
+	});
+});

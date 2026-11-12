@@ -25,6 +25,37 @@ exports[`Input type error messages > prints a message that names the constraint 
   "native props > rejects a prop that does not exist > \`onPressEnter\` is antd, submit on Enter comes from the owning form": "TS2322: Type '() => void' is not assignable to type 'never'.",
   "native props > rejects className and style > visual overrides go through the \`--input-*\` custom properties": "TS2322: Type '{ color: string; }' is not assignable to type 'never'.",
   "native props > rejects the native size attribute, the prop means the frame height > \`size\` is \`'sm' | 'md' | 'lg'\`, not the character-width attribute": "TS2322: Type 'number' is not assignable to type 'InputSizeType | undefined'.",
+  "nullable > Input.Number takes nullable too, and keeps its number value > \`nullable\` only takes \`true\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > Input.Number takes nullable too, and keeps its number value > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > Input.Number takes nullable too, and keeps its number value > the value is a number, \`null\` while empty": "TS2322: Type 'string' is not assignable to type 'number'.",
+  "nullable > onChange stays the native event > the change event is native, it cannot report \`null\`": "TS2322: Type '(value: string | null) => void' is not assignable to type 'ChangeEventHandler<HTMLInputElement>'.
+    Types of parameters 'value' and 'event' are incompatible.
+      Type 'ChangeEvent<HTMLInputElement>' is not assignable to type 'string'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, also without a \`null\` value": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on Input.Password too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on Input.TextArea too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, also without a \`null\` value": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on Input.Password too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on Input.TextArea too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > without nullable the value is what it was > \`null\` needs \`nullable\` on Input": "TS2322: Type '{ value: null; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (InputProps & Record<never, never> & RefAttributes<HTMLInputElement>)'.
+    Type '{ value: null; "aria-label": string; }' is not assignable to type '{ nullable?: undefined; value?: string | number | readonly string[] | undefined; }'.
+      Types of property 'value' are incompatible.
+        Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
+  "nullable > without nullable the value is what it was > \`null\` needs \`nullable\` on Input.Password": "TS2322: Type '{ value: null; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (InputPasswordProps & Record<never, never> & RefAttributes<HTMLInputElement>)'.
+    Type '{ value: null; "aria-label": string; }' is not assignable to type '{ nullable?: undefined; value?: string | number | readonly string[] | undefined; }'.
+      Types of property 'value' are incompatible.
+        Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
+  "nullable > without nullable the value is what it was > \`null\` needs \`nullable\` on Input.TextArea": "TS2322: Type '{ value: null; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (InputTextAreaProps & Record<never, never> & RefAttributes<HTMLTextAreaElement>)'.
+    Type '{ value: null; "aria-label": string; }' is not assignable to type '{ nullable?: undefined; value?: string | number | readonly string[] | undefined; }'.
+      Types of property 'value' are incompatible.
+        Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
+  "nullable > without nullable the value is what it was > a \`string | null\` value needs \`nullable\` on Input": "TS2322: Type '{ value: string | null; "aria-label": string; }' is not assignable to type 'IntrinsicAttributes & (InputProps & Record<never, never> & RefAttributes<HTMLInputElement>)'.
+    Type '{ value: string | null; "aria-label": string; }' is not assignable to type '{ nullable?: undefined; value?: string | number | readonly string[] | undefined; }'.
+      Types of property 'value' are incompatible.
+        Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+          Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
   "testId > data-testid is spelled testId > \`data-testid\` is written as the \`testId\` prop": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which survives the tooltip trigger cloning the frame'' is missing in type '{ "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
 }
 `;

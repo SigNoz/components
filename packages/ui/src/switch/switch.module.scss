@@ -72,6 +72,14 @@
 		background-color: var(--switch-checked-background, var(--switch-internal-checked-background));
 	}
 
+	// A `Field` or a `Field.Group` in danger, or an `aria-invalid` written on the switch. The track has
+	// no border, so an inset ring stands for one: it paints over the fill in both states, under the
+	// thumb, and the focus outline keeps its place outside it.
+	&[aria-invalid='true'],
+	&[data-invalid] {
+		box-shadow: inset 0 0 0 var(--switch-invalid-border-width, 1px) var(--switch-invalid-border-color, var(--destructive));
+	}
+
 	// The ring hugs the track and follows its pill radius. It never wraps the label: the label is
 	// not the focus target, and enclosing it makes a 28px control look like a row.
 	&:focus-visible {

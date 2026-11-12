@@ -1,6 +1,7 @@
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import { X } from '@signozhq/icons';
 import {
+	type AriaAttributes,
 	type CSSProperties,
 	forwardRef,
 	type KeyboardEvent,
@@ -14,6 +15,8 @@ import {
 import { toCssLength } from '../lib/css-length.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useFieldContext } from '../lib/field-context.js';
+import { useControlBlur } from '../lib/use-control-blur.js';
 import { useLabelFor } from '../lib/use-label-for.js';
 import { useSelectionValue } from '../lib/use-selection-value.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -39,6 +42,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		const {
 			items,
 			multiple = false,
+			nullable = false,
 			value,
 			defaultValue,
 			onChange,
@@ -64,18 +68,34 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			maxWidth,
 			testId,
 			id,
+			required,
+			name,
+			onBlur,
 			className: _className,
 			style: _style,
 			...triggerProps
 		} = props;
 
+		const field = useFieldContext();
+		// A `Field` or a `Field.Group` around the combobox announces it as required with
+		// `aria-required` alone, and its own prop wins. The form's own validation owns the rule, and
+		// the native `required` of Base UI's hidden input would stop the browser's submit before it
+		// runs.
+		const isFieldRequired = required === undefined && field?.required === true;
+		const fieldRequiredProps: AriaAttributes | undefined = isFieldRequired
+			? { 'aria-required': true }
+			: undefined;
+
 		const { selectedValues, commit } = useSelectionValue({
-			isControlled: 'value' in props,
+			component: 'Combobox',
 			multiple,
+			nullable,
 			value,
 			defaultValue,
 			onChange,
 		});
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
 
 		const isInert = disabled || readOnly;
 
@@ -200,6 +220,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 				return;
 			}
 
+			trackOpenChange(nextOpen, eventDetails.reason);
 			setOpenState(nextOpen);
 		}
 
@@ -216,11 +237,18 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		}
 
 		const showClear = allowClear && !isInert && !loading && selectedValues.length > 0;
-		// The name, in the order the accessible name takes it: `aria-labelledby`, `aria-label`, a
-		// `<label for>`, then the placeholder. The popup takes the same one.
-		const [labelId, labelRef] = useLabelFor(id);
 		// State, not a ref: the popup reads the layer the trigger sits in when it mounts.
 		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+		// The name, in the order the accessible name takes it: `aria-labelledby`, `aria-label`, a
+		// `<label for>`, then the placeholder. The popup takes the same one.
+		//
+		// Inside a `Field` the label's `for` is the id Base UI gave the trigger, and the field points it
+		// there one commit after the trigger mounts. So the label is looked up again once the trigger
+		// is mounted, by the id it ended up with. A multiple trigger is a `<div>`, which the browser
+		// does not link to a `<label for>` on its own.
+		const [labelId, labelRef] = useLabelFor(
+			triggerElement === null ? undefined : (id ?? triggerElement.id),
+		);
 		const triggerRef = useMemo(() => mergeRefs(ref, labelRef, setTriggerElement), [ref, labelRef]);
 		const labelledBy =
 			triggerProps['aria-labelledby'] ??
@@ -237,6 +265,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			<TooltipProviderIfMissing>
 				<BaseCombobox.Root<ComboboxBaseValue, boolean>
 					multiple={multiple}
+					required={required}
+					name={disabled ? undefined : name}
 					value={(multiple ? selectedValues : (selectedValues[0] ?? null)) as never}
 					onValueChange={handleValueChange}
 					open={open}
@@ -255,6 +285,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 					}}
 				>
 					<div
+						ref={rootRef}
 						data-slot="combobox"
 						data-multiple={multiple || undefined}
 						data-disabled={disabled || undefined}
@@ -264,10 +295,11 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 						data-popup-open={open || undefined}
 						className={styles['combobox']}
 						style={rootStyle}
+						onBlur={handleBlur}
 					>
 						<ComboboxTrigger
 							ref={triggerRef}
-							forwardedProps={triggerProps}
+							forwardedProps={{ ...fieldRequiredProps, ...triggerProps }}
 							id={id}
 							accessibleName={accessibleName}
 							labelledBy={labelledBy}
@@ -298,6 +330,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 						)}
 					</div>
 					<ComboboxPopup
+						popupRef={popupRef}
+						onBlur={handleBlur}
 						trigger={triggerElement}
 						accessibleName={accessibleName}
 						labelledBy={labelledBy}
@@ -347,9 +381,15 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
  *
  * ### Values
  *
- * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. Writing
- * `value` makes the combobox controlled, even with `undefined`. `onChange` reports `undefined` for
- * a cleared single value and `[]` for a multiple one.
+ * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. A `value`
+ * that is `undefined` on the first render leaves the combobox uncontrolled, starting at
+ * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+ * `undefined` shows nothing selected. `onChange` reports `undefined` for a cleared single value and
+ * `[]` for a multiple one.
+ *
+ * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
+ * react-hook-form `Controller`: `value` then takes `null` too, a controlled combobox with nothing
+ * selected, and a cleared single value is reported as `null`.
  *
  * A selected value `items` does not have still shows, as itself, in the trigger and in a `Custom`
  * group at the top of the list, so it can be unselected. `allowCreate` adds a `Create "<query>"`
@@ -393,6 +433,15 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
  * `loading` swaps the trigger's chevron for a spinner and the rows for `loadingContent`. It blocks
  * nothing: the popup opens and the search row takes a query. `searchInputProps.loading` only swaps
  * the search glyph.
+ *
+ * ### Inside a `Field`
+ *
+ * The label of a surrounding `Field` names the trigger and the popup, in single and multiple mode,
+ * and a click on it focuses the trigger. The field's description and message are in the trigger's
+ * `aria-describedby`, and `danger` sets `aria-invalid`, which paints the border. The field's
+ * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
+ * runs before the browser's. The combobox's own `required` wins, and keeps the native one. The
+ * search row keeps its own name. `ComboboxField` renders the pair from one object.
  *
  * ### Truncation
  *

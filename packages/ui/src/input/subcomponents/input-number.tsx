@@ -1,12 +1,13 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react/number-field';
 import { ChevronDown, ChevronUp } from '@signozhq/icons';
 import { forwardRef } from 'react';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../input.module.scss';
 import type { InputNumberProps } from '../types.js';
 import { useInputFocusVisible } from '../use-input-focus-visible.js';
-import { getReasonTooltip, splitAttributes } from '../utils.js';
+import { getReasonTooltip, splitAttributes, useFieldControl } from '../utils.js';
 import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
 
 /**
@@ -34,8 +35,11 @@ import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
  * ```
  */
 export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function InputNumber(
-	{
-		size,
+	allProps: InputNumberProps & RejectedProps,
+	ref,
+) {
+	const {
+		size = 'md',
 		variant = 'default',
 		status,
 		prefix,
@@ -53,7 +57,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		form,
 		placeholder,
 		required,
-		autoFocus,
+		'aria-required': ariaRequired,
 		tabIndex,
 		value,
 		defaultValue,
@@ -72,14 +76,19 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		onKeyDown,
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
+		nullable: _nullable,
 		className: _className,
 		style: _style,
 		...props
-	}: InputNumberProps & RejectedProps,
-	ref,
-) {
-	const resolvedSize = size ?? 'md';
-	const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
+	} = allProps;
+	const field = useFieldControl({
+		id,
+		status,
+		required,
+		ariaRequired,
+		ariaDescribedBy,
+		ariaInvalid,
+	});
 	const { control, data } = splitAttributes(props);
 	const isDisabled = disabled && !readOnly;
 	const { reason, hasReasonAnchor } = getReasonTooltip({
@@ -90,13 +99,23 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 	});
 	const { focusVisible, focusProps } = useInputFocusVisible();
 
+	// Base UI is always controlled from `shown`, and an uncontrolled field keeps `shown` itself.
+	const [shown, setShown] = useControlledValue<number | null>({
+		component: 'Input.Number',
+		value,
+		defaultValue,
+		empty: null,
+	});
+
 	const numberField = (
 		<NumberFieldPrimitive.Root
 			className={styles['input__number-root']}
-			id={id}
-			value={value}
-			defaultValue={defaultValue}
-			onValueChange={onChange && ((next) => onChange(next))}
+			id={field.id}
+			value={shown}
+			onValueChange={(next) => {
+				setShown(next);
+				onChange?.(next);
+			}}
 			onValueCommitted={onAfterChange && ((next) => onAfterChange(next))}
 			min={min}
 			max={max}
@@ -105,7 +124,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 			snapOnStep={snapOnStep}
 			format={format}
 			locale={locale}
-			required={required}
+			required={field.required}
 			disabled={isDisabled}
 			readOnly={readOnly}
 			name={name}
@@ -113,9 +132,9 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		>
 			<NumberFieldPrimitive.Group
 				{...getFrameAttributes({
-					size: resolvedSize,
+					size,
 					variant,
-					status: status,
+					status: field.status,
 					noFocusRing,
 					focusVisible,
 					disabled: isDisabled,
@@ -128,18 +147,18 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 				})}
 				{...focusProps}
 			>
-				<InputFrameSlots prefix={prefix} suffix={suffix} status={status} testId={testId}>
+				<InputFrameSlots prefix={prefix} suffix={suffix} status={field.status} testId={testId}>
 					<NumberFieldPrimitive.Input
 						{...control}
 						ref={ref}
 						placeholder={placeholder}
-						autoFocus={autoFocus}
 						tabIndex={tabIndex}
 						onBlur={onBlur}
 						onFocus={onFocus}
 						onKeyDown={onKeyDown}
-						aria-describedby={ariaDescribedBy}
-						aria-invalid={resolvedInvalid}
+						aria-required={field.ariaRequired}
+						aria-describedby={field.ariaDescribedBy}
+						aria-invalid={field.ariaInvalid}
 						className={styles['input__field']}
 						data-slot="input-field"
 						data-testid={partTestId(testId, 'field')}

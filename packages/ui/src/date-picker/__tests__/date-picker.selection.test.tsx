@@ -170,13 +170,14 @@ describe('DatePicker selection', () => {
 			expect(getTrigger()).toHaveTextContent('2026-11-10');
 		});
 
-		it('stays controlled with an undefined value, even after a pick', async () => {
+		it('stays controlled with a null value, even after a pick', async () => {
 			const onChange = vi.fn();
 			render(
 				<DatePicker
 					placeholder="Select date"
 					aria-label="Expiry"
-					value={undefined}
+					nullable
+					value={null}
 					onChange={onChange}
 					testId="dp"
 				/>,

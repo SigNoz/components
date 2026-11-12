@@ -18,6 +18,7 @@ import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types
  *
  * The slider has no visible label. Name it with `aria-labelledby`, pointing at the label next to
  * it, or with `aria-label`. A `<label htmlFor>` does not work, since the input id is internal.
+ * Inside a `Field`, or through `SliderField`, the field's label names it.
  *
  * Each thumb input carries `min`, `max`, `aria-valuenow` and `aria-valuetext`, from `formatValue`.
  * So a screen reader reads `1,000 GB` and not `50`.
@@ -26,6 +27,12 @@ import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types
  *
  * `color` paints the fill, the thumb border and the dots inside the fill, from the same hues as
  * `Badge`. The track and the other dots are tints of it. It is required, with no default.
+ *
+ * ### Invalid
+ *
+ * While a thumb input is `aria-invalid`, from a `Field` or a `Field.Group` in `danger` or written
+ * on a single slider, the border of its thumb takes `--destructive` whatever the `color`. The fill
+ * and the track keep theirs.
  *
  * ### Keys
  *

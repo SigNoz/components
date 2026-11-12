@@ -98,7 +98,7 @@ export const Number: StoryObj<typeof Input.Number> = {
 		value: {
 			control: false,
 			description:
-				'The controlled value. `null` is the empty field, and the only way to write one.',
+				'The controlled value. `null` is the empty field. `undefined` on the first render leaves the field uncontrolled, and a value that arrives later is followed, with a warning. Once controlled, `undefined` shows it empty.',
 			table: { category: 'Content', type: { summary: 'number | null' } },
 		},
 		defaultValue: {

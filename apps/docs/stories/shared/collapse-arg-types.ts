@@ -129,7 +129,7 @@ export const collapseArgTypes: Meta<typeof Collapse>['argTypes'] = {
 	expanded: {
 		control: false,
 		description:
-			'The controlled open state. Use with `onExpandedChange`. For a section that keeps its own state use `defaultExpanded` instead. Decided on the first render: an `expanded` that turns `undefined` later, or appears on a section that started uncontrolled, is ignored with a warning.',
+			'The controlled open state. Use with `onExpandedChange`. For a section that keeps its own state use `defaultExpanded` instead. `undefined` on the first render leaves the section uncontrolled. An `expanded` that arrives later is followed, with a warning, and once controlled `undefined` is collapsed.',
 		table: { category: 'State', type: { summary: 'boolean' } },
 	},
 	defaultExpanded: {

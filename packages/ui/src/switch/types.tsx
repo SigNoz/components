@@ -1,4 +1,12 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode, Ref } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactNode,
+	Ref,
+} from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SwitchColor, SwitchTextOverflow, SwitchTextPlacement } from './constants.js';
 
 export type SwitchColorType = (typeof SwitchColor)[keyof typeof SwitchColor];
@@ -96,7 +104,7 @@ interface TheTestIdPropIsCalledTestId {
 }
 
 interface ASwitchIsControlledOrUncontrolledNeverBoth {
-	'`value` makes the switch controlled for its whole life, so `defaultValue` never applies, drop one of the two': never;
+	'`value` and `defaultValue` both set the checked state, pass `value` or `defaultValue`, not both': never;
 }
 
 /**
@@ -187,11 +195,18 @@ export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 		/**
 		 * When true, the owning form cannot be submitted until the switch is on.
 		 *
+		 * @note Inside a `Field` the field's `required` only sets `aria-required` on the switch, with
+		 * no native `required`, so the form's own validation runs before the browser's. This prop
+		 * wins over the field, and keeps the native `required`. A `Field.Group` around the switch
+		 * does not make it required.
+		 *
 		 * @default false
 		 */
 		required?: boolean;
 		/**
-		 * The controlled checked state.
+		 * The controlled checked state. `undefined` on the first render leaves the switch
+		 * uncontrolled, starting at `defaultValue`. A value that arrives later is followed, with one
+		 * warning, and from then on `undefined` shows it off.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled switch use `defaultValue` instead, never
 		 * both.
@@ -209,6 +224,13 @@ export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 		 * @note Never called while `disabled` or `readOnly`.
 		 */
 		onChange?: (checked: boolean) => void;
+		/**
+		 * Called when the switch loses focus, for a form that marks the field as touched or
+		 * validates on blur, such as react-hook-form's `field.onBlur`.
+		 *
+		 * @note Also called while `disabled` or `readOnly`: both keep the switch focusable.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Forwarded to the switch itself as `data-testid`. Survives the tooltip trigger cloning
 		 * the element, which a raw `data-testid` prop does not. The wrapper is addressed with
@@ -247,3 +269,30 @@ export type SwitchProps = Pick<ComponentProps<'button'>, 'id' | 'children'> &
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `Switch` that lay out its own text. A switch in a field has no text of its own: the
+ * field's label sits above it and the field's description below.
+ */
+type SwitchTextKeys =
+	| 'children'
+	| 'description'
+	| 'textPlacement'
+	| 'textOverflow'
+	| 'width'
+	| 'maxWidth'
+	| 'containerId'
+	| 'containerTestId'
+	| 'containerRef';
+
+type WithField<P> = Omit<P, 'status' | 'required' | SwitchTextKeys> & FieldLabelAndMessageProps;
+
+/**
+ * The props of `SwitchField`: the field's label, description and status, and every prop of
+ * `Switch` that does not lay out text.
+ *
+ * @note `children`, `description`, `textPlacement`, `textOverflow`, `width`, `maxWidth` and the
+ * `container*` props are not accepted. The label above the switch is the field's `label`, and the
+ * switch has no row of its own to size.
+ */
+export type SwitchFieldProps = WithField<SwitchProps>;

@@ -1,5 +1,6 @@
 import { Collapsible } from '@base-ui/react/collapsible';
 import { forwardRef, type ReactElement, type RefAttributes } from 'react';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import type { RejectedProps } from '../lib/utils.js';
 import styles from './collapse.module.scss';
 import { CollapseTextOverflow } from './constants.js';
@@ -11,7 +12,6 @@ import type {
 	ValidateCollapseGroupProps,
 	ValidateCollapseProps,
 } from './types.js';
-import { useCollapseState } from './use-collapse-state.js';
 import { splitDataAndAria } from './utils.js';
 
 /**
@@ -124,7 +124,7 @@ const CollapseRoot = forwardRef<HTMLDivElement, CollapseProps>(function Collapse
 	}: CollapseProps & RejectedProps,
 	ref,
 ) {
-	const [open, setOpen] = useCollapseState({
+	const [open, setOpen] = useControlledValue({
 		component: 'Collapse',
 		prop: 'expanded',
 		value: expanded,

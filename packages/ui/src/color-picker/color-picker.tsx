@@ -1,5 +1,6 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import {
+	type AriaAttributes,
 	cloneElement,
 	forwardRef,
 	type KeyboardEvent,
@@ -9,10 +10,13 @@ import {
 	useMemo,
 	useState,
 } from 'react';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { usePopupContainer } from '../lib/popup-container.js';
-import type { RejectedProps } from '../lib/utils.js';
+import { useControlBlur } from '../lib/use-control-blur.js';
+import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
+import { joinIdRefs, type RejectedProps } from '../lib/utils.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
 import { ColorPickerHiddenInput } from './subcomponents/color-picker-hidden-input.js';
@@ -20,16 +24,30 @@ import { ColorPickerPopup } from './subcomponents/color-picker-popup.js';
 import { ColorPickerPositioner } from './subcomponents/color-picker-positioner.js';
 import type { ColorPickerProps, ValidateColorPickerProps } from './types.js';
 import { useColorPickerState } from './use-color-picker-state.js';
+import { reportEmptyAs } from './utils.js';
+
+/**
+ * The attributes of the trigger the picker reads before writing its own.
+ */
+type TriggerOwnProps = {
+	id?: string;
+	'aria-label'?: string;
+	'aria-labelledby'?: string;
+	'aria-describedby'?: string;
+	'aria-invalid'?: AriaAttributes['aria-invalid'];
+};
 
 const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps>(
 	function ColorPicker(props, ref) {
 		const {
 			children,
 			nativeButton,
+			nullable = false,
 			value,
 			defaultValue,
 			onChange,
 			onAfterChange,
+			onBlur,
 			allowClear = false,
 			side,
 			align,
@@ -48,18 +66,33 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
 			style: _style,
 			...attributes
 		} = props;
-		// `value={undefined}` is a controlled picker with no color, so the key decides, not the value.
-		const isControlled = 'value' in props;
 		const popupContainer = usePopupContainer();
 		// Inside a dialog the popup goes into its panel, where the focus trap lets the keyboard in.
 		const portalContainer = container === undefined ? popupContainer : container;
 		const generatedPopupId = useId();
 		const popupId = id ?? generatedPopupId;
+		const field = useFieldContext();
 		const generatedTriggerId = useId();
-		const triggerId = (children.props as { id?: string }).id ?? generatedTriggerId;
+		const childProps = children.props as TriggerOwnProps;
+		const triggerId = childProps.id ?? field?.controlId ?? generatedTriggerId;
+		const claimControl = field?.claimControl;
+
+		// The picker renders no element of its own to register with Base UI's field, so it hands the
+		// field the trigger's id for the `<label for>`, the way a native input does.
+		useIsomorphicLayoutEffect(() => {
+			if (claimControl === undefined) {
+				return undefined;
+			}
+
+			claimControl(triggerId);
+
+			return () => claimControl(undefined);
+		}, [claimControl, triggerId]);
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur<HTMLElement>(onBlur);
 		// State, not a ref: the positioner reads the layer the trigger sits in when it mounts.
 		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
-		const triggerRef = useMemo(() => mergeRefs(ref, setTriggerElement), [ref]);
+		const triggerRef = useMemo(() => mergeRefs(ref, setTriggerElement, rootRef), [ref, rootRef]);
 
 		const isDisabled = disabled && !readOnly;
 		const [pressedOpen, setPressedOpen] = useState(false);
@@ -73,13 +106,12 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
 		const isOpen = forcedOpen ?? pressedOpen;
 
 		const state = useColorPickerState({
-			isControlled,
 			value,
 			defaultValue,
 			isOpen,
 			isReadOnly: readOnly,
-			onChange,
-			onAfterChange,
+			onChange: reportEmptyAs(onChange, nullable),
+			onAfterChange: reportEmptyAs(onAfterChange, nullable),
 		});
 		const canClear = allowClear && state.valueHex !== undefined && !readOnly && !isDisabled;
 
@@ -104,11 +136,32 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
 			}
 		}
 
+		// What a surrounding `Field` hands the trigger, as defaults the caller's own attributes, on the
+		// picker or on the element, win over. No `aria-required`: the trigger is a button, which does
+		// not take it, so the field's asterisk and the message carry the rule.
+		const own = { ...childProps, ...attributes } as TriggerOwnProps;
+		const fieldProps =
+			field === null
+				? undefined
+				: {
+						'aria-describedby': joinIdRefs(own['aria-describedby'], field.describedBy),
+						...(own['aria-invalid'] === undefined &&
+							field.status === 'danger' && { 'aria-invalid': true }),
+						// A `<label for>` names a `<button>` and nothing else, so any other trigger is named
+						// by the label's id.
+						...(!nativeButton &&
+							field.kind === 'field' &&
+							own['aria-label'] === undefined &&
+							own['aria-labelledby'] === undefined && { 'aria-labelledby': field.labelId }),
+						...fieldInvalidDataProps(field),
+					};
+
 		// Cloned rather than left to Base UI, which lets the element's own props win the merge. The
 		// state the picker owns has to win over the element, and the caller's `aria-*` and `data-*`
 		// over the element's.
 		const triggerChild = cloneElement(children, {
 			...attributes,
+			...fieldProps,
 			'data-slot': 'color-picker-trigger',
 			// Written even while off, so a value on the element or the caller cannot show a state the
 			// picker is not in.
@@ -130,6 +183,7 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
 				id={triggerId}
 				nativeButton={nativeButton}
 				onKeyDown={handleTriggerKeyDown}
+				onBlur={handleBlur}
 				render={triggerChild}
 			/>
 		);
@@ -145,6 +199,8 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
 						eventDetails.cancel();
 						return;
 					}
+
+					trackOpenChange(nextOpen, eventDetails.reason);
 
 					if (!nextOpen) {
 						// An outside press can unmount the field before its blur reaches React, so the
@@ -181,6 +237,8 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
 				<PopoverPrimitive.Portal container={portalContainer}>
 					<ColorPickerPositioner trigger={triggerElement} side={side} align={align}>
 						<ColorPickerPopup
+							popupRef={popupRef}
+							onBlur={handleBlur}
 							popupId={popupId}
 							triggerId={triggerId}
 							state={state}
@@ -281,6 +339,18 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
  * uncontrolled picker back to `defaultValue`, without `onChange`, and a reset the form cancels
  * changes nothing.
  *
+ * ### In a Field
+ *
+ * Inside a `Field`, the trigger takes the field's control id unless it has an `id` of its own, so
+ * the `<label for>` names a `<button>` trigger and a click on the label focuses it. Any other
+ * trigger is named by the label's id in `aria-labelledby`. The description or the message joins its
+ * `aria-describedby`, and `danger` sets `aria-invalid` and `data-invalid`. The caller's own
+ * attributes win. `required` on the field sets no `aria-required`, which a button does not take.
+ * `ColorPickerField` renders the pair from one object.
+ *
+ * `onBlur` fires once when the focus leaves the trigger and the popup together, the way a form
+ * library marks a field as touched.
+ *
  * ### Asserting on it
  *
  * `testId` is `data-testid` on the trigger, and it names every part of the popup. The popup renders
@@ -292,6 +362,7 @@ const ColorPickerImpl = forwardRef<HTMLElement, ColorPickerProps & RejectedProps
  * | `data-popup-open` | present while the popup is open |
  * | `data-disabled` | present while disabled, and not read-only |
  * | `data-readonly` | present while `readOnly` |
+ * | `data-invalid` | present while a `Field` around it is in `danger` |
  *
  * | `data-slot` | rendered | `data-testid` |
  * |---|---|---|

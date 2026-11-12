@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
-import type { ColorPickerProps } from './types.js';
 import {
 	type ColorPickerHsv,
 	hexToHsv,
@@ -9,7 +9,9 @@ import {
 	parseHexInput,
 } from './utils.js';
 
-type ColorPickerChange = ColorPickerProps['onChange'];
+// `nullable` swaps the `undefined` of a clear for `null` in the component, so the state only ever
+// reports `undefined`.
+type ColorPickerChange = ((value: string | undefined) => void) | undefined;
 
 /**
  * What the panel shows: the color it holds, and its hex, `undefined` while it shows no color. The
@@ -25,8 +27,7 @@ type PanelState = {
  * @access private
  */
 export type UseColorPickerStateOptions = {
-	isControlled: boolean;
-	value: string | undefined;
+	value: string | null | undefined;
 	defaultValue: string | undefined;
 	isOpen: boolean;
 	isReadOnly: boolean;
@@ -77,7 +78,6 @@ function toPanel(hex: string | undefined, fallbackHue: number): PanelState {
  * @access private
  */
 export function useColorPickerState({
-	isControlled,
 	value,
 	defaultValue,
 	isOpen,
@@ -85,8 +85,12 @@ export function useColorPickerState({
 	onChange,
 	onAfterChange,
 }: UseColorPickerStateOptions): ColorPickerState {
-	const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
-	const rawValue = isControlled ? value : uncontrolledValue;
+	const [rawValue, setValue] = useControlledValue<string | undefined>({
+		component: 'ColorPicker',
+		value,
+		defaultValue,
+		empty: undefined,
+	});
 	const { hex: valueHex, isInvalid } = parseColorValue(rawValue);
 
 	useEffect(() => {
@@ -123,10 +127,10 @@ export function useColorPickerState({
 
 	// Read by the animation frame and the drag release, which run after the render that scheduled
 	// them, so a parent that swaps its handler mid-drag is still called with the latest one.
-	const latest = useRef({ isControlled, onChange, onAfterChange });
+	const latest = useRef({ setValue, onChange, onAfterChange });
 
 	useIsomorphicLayoutEffect(() => {
-		latest.current = { isControlled, onChange, onAfterChange };
+		latest.current = { setValue, onChange, onAfterChange };
 	});
 
 	// The panel and the value as the last change left them. A press on the area blurs the hex
@@ -175,10 +179,7 @@ export function useColorPickerState({
 
 	function emitChange(next: string | undefined): void {
 		live.current.valueHex = next;
-
-		if (!latest.current.isControlled) {
-			setUncontrolledValue(next);
-		}
+		latest.current.setValue(next);
 
 		latest.current.onChange?.(next);
 	}
@@ -322,10 +323,7 @@ export function useColorPickerState({
 			setIsDragging(false);
 			hexDraft.current = null;
 			setHexText(null);
-
-			if (!latest.current.isControlled) {
-				setUncontrolledValue(defaultValue);
-			}
+			latest.current.setValue(defaultValue);
 		},
 	};
 }

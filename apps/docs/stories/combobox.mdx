@@ -21,7 +21,7 @@ import { Combobox } from '@signozhq/ui';
 import { useState } from 'react';
 
 export default function FrameworkField() {
-	const [framework, setFramework] = useState<string | undefined>();
+	const [framework, setFramework] = useState<string | undefined>('');
 
 	return (
 		<Combobox
@@ -47,7 +47,8 @@ export default function FrameworkField() {
 The trigger is `role="combobox"`. Name it with `aria-label`, with `aria-labelledby` pointing at a
 visible label, or with a `<label htmlFor>` pointing at its `id`, in single and multiple mode alike.
 The popup takes the same name. With none of them, the trigger falls back to the `placeholder`,
-which is not a label.
+which is not a label. Inside a `Field`, the field's label names the trigger, so none of the three is
+needed.
 
 `placeholder` and `searchInputProps.placeholder` are required. `placeholder` is what the trigger
 shows while nothing is selected. `searchInputProps.placeholder` is the placeholder of the search row
@@ -92,12 +93,15 @@ A label that renders nothing shows `<No label>`.
 
 ## Values
 
-`value` is a `string`, or a `string[]` with `multiple`. Writing `value` makes the combobox
-controlled, even with `undefined`. Leave it out and use `defaultValue` for one that keeps its own
-state.
+`value` is a `string`, or a `string[]` with `multiple`. Leave it out and use `defaultValue` for a
+combobox that keeps its own state: a `value` that is `undefined` on the first render counts as left
+out. One that arrives later is followed, with a warning, and once controlled `undefined` shows
+nothing selected. A controlled combobox with nothing selected starts at `''`, or at `null` with
+`nullable`, for a field whose schema allows it.
 
 `onChange` gets `string | undefined` in single mode, `undefined` when the value is cleared, and a
-`string[]` with `multiple`.
+`string[]` with `multiple`. With `nullable` a single combobox reports `null` when the value is
+cleared.
 
 ```tsx
 const [tags, setTags] = useState<string[]>([]);
@@ -253,6 +257,41 @@ colour. Set it from the form's validation, next to an error message the trigger 
 	items={items}
 />
 ```
+
+## In a form
+
+`ComboboxField` renders the combobox inside a `Field` from one object, so a form needs no wrapper
+and no `id` to match. The label, the description, the status and `required` go to the field. Every
+other prop goes to the combobox, `searchInputProps` and `testId` included, and the field parts take
+the `testId` as their prefix.
+
+```tsx
+import { ComboboxField } from '@signozhq/ui';
+
+<ComboboxField
+	label="Service"
+	required
+	description="Where the alert runs."
+	placeholder="Select a service..."
+	searchInputProps={{ placeholder: 'Search services' }}
+	items={services}
+	value={service}
+	onChange={setService}
+	error={errors.service?.message}
+/>;
+```
+
+The label names the trigger and the popup, also in `multiple` mode, where the trigger is not a
+labelable element. A click on the label focuses it. The description, or the message while there is
+one, and the text of `labelTooltip` are part of the trigger's description.
+
+`required` sets `aria-required` on the trigger and the asterisk on the label. The combobox also
+takes a `required` prop of its own, which wins over the one of the surrounding field. Neither stops
+a submit: a `Form` does not validate, so the form's rules refuse the empty value.
+
+Only `danger` tints the frame, through `aria-invalid`. A `warning` or a `success` shows in the
+label and in the message below. The `value`, `onChange`, `onBlur`, `name` and `ref` of a `Controller`
+field spread onto `ComboboxField`.
 
 ## Keyboard
 

@@ -54,6 +54,7 @@
  * | `--toggle-group-display` | `inline-flex` |
  * | `--toggle-group-focus-ring` | `-` |
  * | `--toggle-group-inline-size` | `var(--toggle-group-internal-inline-size, fit-co...` |
+ * | `--toggle-group-invalid-border-color` | `var(--destructive)` |
  * | `--toggle-group-label-max-inline-size` | `120px` |
  * | `--toggle-group-label-min-inline-size` | `0` |
  * | `--toggle-group-label-overflow` | `clip visible` |
@@ -133,6 +134,7 @@
 // #endregion css-tokens
 
 export { ToggleGroup } from './toggle-group.js';
+export { ToggleGroupField } from './presets/toggle-group-field.js';
 export {
 	ToggleGroupColor,
 	ToggleGroupScrollDirection,
@@ -144,6 +146,7 @@ export {
 export type {
 	ToggleGroupColorType,
 	ToggleGroupDisableType,
+	ToggleGroupFieldProps,
 	ToggleGroupItemProps,
 	ToggleGroupProps,
 	ToggleGroupReadOnlyType,

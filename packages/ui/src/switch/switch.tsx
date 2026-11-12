@@ -8,6 +8,8 @@ import {
 	useMemo,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -51,21 +53,29 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 ) {
 	const labelId = useId();
 	const descriptionId = useId();
+	const field = useFieldContext();
+	// A group of switches names each one on its own, so the group's `required` is not theirs. The
+	// field's `required` only announces the switch: the form's own validation owns the rule, and a
+	// native `required` would stop the browser's submit before that validation runs.
+	const isFieldRequired = required === undefined && field?.kind === 'field' && field.required;
 
 	const isReadOnly = readOnly === true;
+
+	// Base UI is always controlled from `shown`, and an uncontrolled switch keeps `shown` itself.
+	const [shown, setShown] = useControlledValue<boolean>({
+		component: 'Switch',
+		value,
+		defaultValue,
+		empty: false,
+	});
 
 	// Base UI hands the change two arguments, the value and its event details. The extra argument
 	// stops at this boundary so `onChange` keeps the one-argument shape every input in this
 	// library shares.
-	const onCheckedChange = useMemo(
-		() =>
-			onChange === undefined
-				? undefined
-				: (checked: boolean): void => {
-						onChange(checked);
-					},
-		[onChange],
-	);
+	const onCheckedChange = (checked: boolean): void => {
+		setShown(checked);
+		onChange?.(checked);
+	};
 
 	const hasDescription = typeof description === 'string' && description !== '';
 	const hasLabel = hasRenderableContent(children);
@@ -119,8 +129,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			data-color={color}
 			className={styles['switch']}
 			style={hasContainer ? undefined : sizeStyle}
-			checked={value}
-			defaultChecked={defaultValue}
+			checked={shown}
 			onCheckedChange={onCheckedChange}
 			disabled={isReadOnly ? false : disabled}
 			// Base UI parks a disabled switch at `tabindex="-1"`; staying focusable is what keeps
@@ -130,8 +139,12 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			readOnly={readOnly}
 			required={required}
 			name={name}
+			{...(isFieldRequired ? { 'aria-required': true } : {})}
 			aria-labelledby={hasLabel ? labelId : undefined}
 			aria-describedby={hasDescription ? descriptionId : undefined}
+			// Inside a `Field` Base UI marks the switch invalid. A `Field.Group` has no Base UI field,
+			// so its status is read here, as `data-invalid` only: the group's message already says so.
+			{...fieldInvalidDataProps(field)}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
@@ -250,6 +263,19 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * </Switch>
  * ```
  *
+ * ### Inside a Field
+ *
+ * In a `Field` the switch is bare, with the label above it: the field's label names it, its
+ * description and message describe it, and `danger` sets `aria-invalid`. The field's `required`
+ * sets `aria-required` on the switch and nothing native, so the form's own validation runs before
+ * the browser's. The switch's own `required` wins, and keeps the native one. `SwitchField` writes
+ * the two together.
+ *
+ * While the field is in `danger`, an inset ring of `--destructive` outlines the track, checked or
+ * not, since the track has no border of its own. `data-invalid` is on the switch for it. Base UI
+ * sets it inside a `Field`, and the switches of a `Field.Group` read the status themselves and set
+ * no `aria-invalid`. An `aria-invalid` written on the switch draws the ring the same way.
+ *
  * ### Disabled and read-only
  *
  * `disabled` blocks the switch, `readOnly` locks its value. Neither leaves the keyboard: both are
@@ -278,6 +304,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * | `data-color` | mirrors the prop |
  * | `data-checked` / `data-unchecked` | the current state |
  * | `data-disabled`, `data-readonly`, `data-required` | present while set |
+ * | `data-invalid` | present while a `Field` or a `Field.Group` around it is in `danger` |
  *
  * | wrapper attribute | value |
  * |---|---|

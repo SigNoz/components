@@ -1,5 +1,13 @@
 import type { Combobox as BaseCombobox } from '@base-ui/react/combobox';
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+} from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { ComboboxItemKind } from './constants.js';
 
 type OriginalPortalProps = BaseCombobox.Portal.Props;
@@ -233,7 +241,43 @@ export type ComboboxFooterActionType = {
 	testId?: string;
 };
 
-type ComboboxSingleProps = {
+/**
+ * `nullable` decides the types of `value` and `onChange`, so the two travel as a union: a combobox
+ * that is not nullable keeps the props it always had, and a nullable one takes `null` in and
+ * reports `null` out. `nullable` only takes `true`, so a combobox is nullable by being written
+ * that way, never by a flag decided at run time.
+ *
+ * The plain single member comes last in `ComboboxProps` on purpose. TypeScript reports a props
+ * object that matches no member against the last one, so a `value={null}` written without
+ * `nullable` is told that `null` is not a `string | undefined`, not that `multiple` is missing.
+ */
+type ComboboxNullableOn = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the combobox is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 *
+	 * @note A single combobox reports `null`, not `undefined`, once its value is cleared.
+	 */
+	nullable: true;
+};
+
+type ComboboxNullableOff = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the combobox is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 *
+	 * @note A single combobox reports `null`, not `undefined`, once its value is cleared.
+	 */
+	nullable?: never;
+};
+
+type ComboboxSingleShared = {
 	/**
 	 * When true, the combobox picks several values and shows them as chips in the trigger.
 	 *
@@ -241,20 +285,9 @@ type ComboboxSingleProps = {
 	 */
 	multiple?: false;
 	/**
-	 * The selected `value` of an `item` row, or a value created through `allowCreate`.
-	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled combobox.
-	 */
-	value?: string;
-	/**
 	 * The value selected on the first render, for a combobox that keeps its own state.
 	 */
 	defaultValue?: string;
-	/**
-	 * Called with the new value. `undefined` when the value is cleared.
-	 */
-	onChange?: (value: string | undefined) => void;
 	/**
 	 * Decides what the trigger shows for the selected row, in place of the row's `prefix`,
 	 * `displayValue` and label.
@@ -266,22 +299,45 @@ type ComboboxSingleProps = {
 	maxDisplayedPills?: never;
 };
 
-type ComboboxMultipleProps = {
-	multiple: true;
+interface ComboboxSingleNullableProps extends ComboboxSingleShared, ComboboxNullableOn {
 	/**
-	 * The selected values, in the order they were picked.
+	 * The selected `value` of an `item` row, or a value created through `allowCreate`. `null` is
+	 * none.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
 	 */
-	value?: string[];
+	value?: string | null;
+	/**
+	 * Called with the new value. `null` when the value is cleared.
+	 */
+	onChange?: (value: string | null) => void;
+}
+
+interface ComboboxSingleProps extends ComboboxSingleShared, ComboboxNullableOff {
+	/**
+	 * The selected `value` of an `item` row, or a value created through `allowCreate`.
+	 *
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
+	 *
+	 * @note A controlled combobox that starts with nothing selected passes `''`.
+	 */
+	value?: string;
+	/**
+	 * Called with the new value. `undefined` when the value is cleared.
+	 */
+	onChange?: (value: string | undefined) => void;
+}
+
+type ComboboxMultipleShared = {
+	multiple: true;
 	/**
 	 * The values selected on the first render, for a combobox that keeps its own state.
 	 */
 	defaultValue?: string[];
-	/**
-	 * Called with the new values. `[]` when every value is removed.
-	 */
-	onChange?: (value: string[]) => void;
 	displayValue?: never;
 	/**
 	 * How many chips the trigger shows. The rest collapse into a `+N` chip whose tooltip lists
@@ -289,6 +345,36 @@ type ComboboxMultipleProps = {
 	 */
 	maxDisplayedPills?: number;
 };
+
+interface ComboboxMultipleNullableProps extends ComboboxMultipleShared, ComboboxNullableOn {
+	/**
+	 * The selected values, in the order they were picked. `null` is `[]`.
+	 *
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
+	 */
+	value?: string[] | null;
+	/**
+	 * Called with the new values. `[]` when every value is removed, never `null`.
+	 */
+	onChange?: (value: string[]) => void;
+}
+
+interface ComboboxMultipleProps extends ComboboxMultipleShared, ComboboxNullableOff {
+	/**
+	 * The selected values, in the order they were picked.
+	 *
+	 * @note `undefined` on the first render leaves the combobox uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
+	 */
+	value?: string[];
+	/**
+	 * Called with the new values. `[]` when every value is removed.
+	 */
+	onChange?: (value: string[]) => void;
+}
 
 interface ADisabledComboboxMustSayWhy {
 	'`disabled` needs `disabledTooltip`, a disabled control has to tell the user why it cannot be used': never;
@@ -445,6 +531,19 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		readOnlyTooltip?: ReactNode;
 		/**
+		 * When true, the trigger carries `aria-required="true"`, so assistive technology announces the
+		 * combobox as required.
+		 *
+		 * @note Inside a `Field` or a `Field.Group` the field's `required` only sets `aria-required`
+		 * on the trigger, with no native `required`, so the form's own validation runs before the
+		 * browser's. This prop wins over the field, and keeps the native `required`. In a `Form`,
+		 * which is `noValidate`, it blocks nothing: the consumer's validation refuses the empty
+		 * value.
+		 *
+		 * @default false
+		 */
+		required?: boolean;
+		/**
 		 * When true, only the rows in view are mounted. For lists of thousands of rows.
 		 *
 		 * @note Group headings become plain rows of the list, without `role="group"`.
@@ -499,9 +598,49 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		testId?: string;
 		/**
+		 * The name the selected value is submitted under. Base UI's hidden input carries it, so the
+		 * `FormData` of the surrounding `<form>` holds the value: one entry for a single combobox, an
+		 * empty string while nothing is selected, and one entry per value with `multiple`, in the order
+		 * they were picked, none while nothing is selected.
+		 *
+		 * @note A `disabled` combobox submits nothing, as a native control does. The trigger carries no
+		 * native `disabled`, so the name is what is withheld.
+		 */
+		name?: string;
+		/**
+		 * Called when the focus leaves the combobox, the trigger and its popup counting as one. Opening
+		 * the popup, which moves the focus to the search row, and closing it, which gives it back, do
+		 * not call it. Tabbing away, or pressing outside while the popup is open, does.
+		 *
+		 * @note Called one task after the focus moved, so a `Tab` through the popup has handed it on by
+		 * then, and `event.currentTarget` is the root of the combobox. A handler that takes no argument,
+		 * such as the `onBlur` a react-hook-form `field` holds, is accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
+		/**
 		 * Any `data-*` prop is accepted and forwarded to the trigger, alongside `aria-*`.
 		 */
 		[key: `data-${string}`]: unknown;
 	};
 
-export type ComboboxProps = ComboboxBaseProps & (ComboboxSingleProps | ComboboxMultipleProps);
+export type ComboboxProps = ComboboxBaseProps &
+	(
+		| ComboboxMultipleNullableProps
+		| ComboboxMultipleProps
+		| ComboboxSingleNullableProps
+		| ComboboxSingleProps
+	);
+
+/**
+ * Distributive, so the shapes of `ComboboxProps` stay apart: a plain `Omit` over the union would
+ * drop the link between `multiple`, `nullable`, `value` and `onChange`.
+ */
+type WithField<P> = P extends unknown
+	? Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps
+	: never;
+
+/**
+ * The props of `ComboboxField`: the field's label, description and status, and every prop of
+ * `Combobox`.
+ */
+export type ComboboxFieldProps = WithField<ComboboxProps>;

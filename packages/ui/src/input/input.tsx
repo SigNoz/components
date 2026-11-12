@@ -25,8 +25,17 @@ import type {
  * Visual values are `--input-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts).
  *
- * The input has no visible label of its own. Name it with `aria-label` or `aria-labelledby`, or
- * with a `<label htmlFor>` that matches `id`.
+ * The input has no visible label of its own. Put it inside a `Field`, whose label reaches it on
+ * its own, or name it with `aria-label`/`aria-labelledby`.
+ *
+ * ### Inside a `Field`
+ *
+ * A surrounding `Field` supplies defaults the input's own props win over: the `id` its label
+ * points at, `status`, and `aria-required` for a required field (the native `required` only comes
+ * from the input's own prop). The ids of the field's description, message and label
+ * tooltip land in `aria-describedby`. The input keeps its own `size`. There is no prop to wire:
+ * rendering the input as the field's child is the whole contract. `InputField` renders both from
+ * one set of props.
  *
  * ### Status
  *
@@ -87,6 +96,26 @@ import type {
  * <Input placeholder="For eg. Simpsonville..." prefix={<Search />} aria-label="Organisation" />
  * ```
  *
+ * @example
+ * ```tsx
+ * // react-hook-form
+ * <InputField
+ *   label="Your Organisation Name"
+ *   placeholder="For eg. Simpsonville..."
+ *   error={errors.organisation?.message}
+ *   {...register('organisation')}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // A zod `.nullable()` field: `nullable` lets the `null` of an empty field through as `value`
+ * <Controller
+ *   control={control}
+ *   name="nickname"
+ *   render={({ field }) => <Input aria-label="Nickname" {...field} nullable />}
+ * />
+ * ```
  */
 const InputRoot = forwardRef<HTMLInputElement, InputProps>(function Input(props, ref) {
 	return <InputBase {...props} ref={ref} />;

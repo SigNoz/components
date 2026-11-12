@@ -276,3 +276,22 @@ export function getHueKeyChange(key: string, shiftKey: boolean, hue: number): nu
 			return undefined;
 	}
 }
+
+/**
+ * A change callback the picker's state calls with `undefined` for no color, which reports `null`
+ * in its place for a `nullable` picker.
+ *
+ * @access private
+ */
+export function reportEmptyAs(
+	callback: ((value: string) => void) | ((value: string | null) => void) | undefined,
+	nullable: boolean,
+): ((value: string | undefined) => void) | undefined {
+	if (callback === undefined) {
+		return undefined;
+	}
+
+	const report = callback as (value: string | null | undefined) => void;
+
+	return (value) => report(value ?? (nullable ? null : undefined));
+}

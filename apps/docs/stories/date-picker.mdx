@@ -61,12 +61,13 @@ and `aria-controls`, and passing any of them is a type error. `aria-invalid` and
 
 ## Values
 
-`value` is the selected date. Without `showTime` it is the start of the picked day. Writing `value`
-makes the date picker controlled, even with `undefined`. Leave it out and use `defaultValue` for one
-that keeps its own state.
+`value` is the selected date. Without `showTime` it is the start of the picked day. `value` that is
+`undefined` on the first render leaves the date picker uncontrolled, starting at `defaultValue`. A
+value that arrives later is followed, with a warning, and once controlled `undefined` is no date. A
+controlled date picker that starts empty takes `nullable` and passes `null`.
 
 `onChange` gets the new date when a day is picked, when `Apply` is pressed with `showTime`, and
-`undefined` when the value is cleared. Its second argument holds `timezone`, the zone picked with
+`undefined` when the value is cleared, or `null` with `nullable`. Its second argument holds `timezone`, the zone picked with
 `showTimezone`, and `undefined` without it.
 
 ```tsx
@@ -262,7 +263,7 @@ The Picking a time zone story runs this with an adapter of fixed offsets.
 ## Clearing
 
 `allowClear` shows a clear button in the trigger while there is a value. It calls `onChange` with
-`undefined` and gives the focus back to the trigger. `Delete` and `Backspace` on the trigger do the
+`undefined`, or `null` with `nullable`, and gives the focus back to the trigger. `Delete` and `Backspace` on the trigger do the
 same. The clear button is not a tab stop, since the keys cover it, and it is named `Clear date`.
 
 It is off by default, since a field that needs a value gains nothing from it. Turn it on where an
@@ -311,10 +312,41 @@ of a form when the date picker sits outside it.
 </form>
 ```
 
+## In a field
+
+`DatePickerField` puts a date picker inside a `Field` from one object. It takes the field's props
+(`label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message`, `required`) and
+every prop of the date picker but `required`. It renders the same DOM as a hand-written `Field`
+around a `DatePicker`. Its dates are native `Date`s; write the `Field` by hand around a date picker
+made with `createDatePicker`.
+
+```tsx
+import { DatePickerField } from '@signozhq/ui';
+
+<DatePickerField
+	label="Expires on"
+	description="The key stops working after this day."
+	placeholder="Select date"
+	value={expiry}
+	onChange={setExpiry}
+/>;
+```
+
+The field points its label at the trigger, and the description or the message describes it. `error`
+sets `aria-invalid` and `data-invalid` on the trigger and turns its border red. `required` marks the
+label with an asterisk and sets `aria-required`, never the native `required`, so the form's own
+validation keeps the rule. An `id` of the date picker's own stays on the trigger, and the label
+points at it.
+
+With react-hook-form, spread `field` from `Controller`, and pass `fieldState.error?.message` to
+`error`. `onBlur` fires once when the focus leaves the trigger and the popup together, the time zone
+list included. A nullable schema field, such as a zod `.nullable()` one, adds `nullable`, and the
+clear then reports `null`.
+
 ## Invalid
 
-`aria-invalid` reaches the trigger and turns its border red, hovered or not. Set it from the form's
-validation, next to an error message the trigger points at with `aria-describedby`.
+`aria-invalid` reaches the trigger and turns its border red, hovered or not. Inside a `Field`, the
+`danger` status sets it. Outside one, set it from the form's validation, next to an error message the trigger points at with `aria-describedby`.
 
 ```tsx
 <DatePicker
@@ -425,9 +457,10 @@ await user.click(screen.getByTestId('expiry-calendar-button-06-11-2026'));
 
 A disabled trigger and a disabled `Apply` button are not `disabled` in the DOM: assert
 `aria-disabled="true"` instead of `toBeDisabled()`. The trigger carries `data-popup-open` while the
-popup is open, `data-empty` while there is no value, and `data-disabled`, `data-readonly`,
-`data-show-time` and `data-show-timezone` while those props are on. A day carries `data-day`, such
-as `data-day="2026-11-06"`, and `data-selected-single` while it is the selected day.
+popup is open, `data-empty` while there is no value, `data-invalid` while a `Field` around it is in
+`danger`, and `data-disabled`, `data-readonly`, `data-show-time` and `data-show-timezone` while
+those props are on. A day carries `data-day`, such as `data-day="2026-11-06"`, and
+`data-selected-single` while it is the selected day.
 
 Otherwise use the `data-slot` attributes, never the hashed class names.
 

@@ -137,7 +137,7 @@ describe('ColorPicker invalid value', () => {
 
 describe('ColorPicker empty value', () => {
 	it.each([
-		['undefined, controlled', undefined],
+		['undefined', undefined],
 		['an empty string', ''],
 	])('reads %s as no color, without a warning', (_, value) => {
 		const onChange = vi.fn();
@@ -164,10 +164,10 @@ describe('ColorPicker empty value', () => {
 		expect(screen.getByTestId('picker-preview')).toHaveAttribute('data-empty');
 	});
 
-	it('stays controlled with value={undefined}, so the panel goes back to no color', async () => {
+	it('stays controlled with an empty string, so the panel goes back to no color', async () => {
 		const onChange = vi.fn();
 		render(
-			<ColorPicker nativeButton side="bottom" align="start" value={undefined} onChange={onChange}>
+			<ColorPicker nativeButton side="bottom" align="start" value="" onChange={onChange}>
 				<button type="button">Color</button>
 			</ColorPicker>,
 		);

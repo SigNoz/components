@@ -2,13 +2,14 @@
  * Type-level tests for the props of {@link Select}. Run by `vitest --typecheck` and by
  * `pnpm type-check`. See `dropdown.types.test-d.tsx` for how the cases are written.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { Select } from '../select.js';
 import type { SelectGroupItemType, SelectItemType, SelectOptionItemType } from '../types.js';
 
 const ONE: SelectItemType[] = [{ type: 'item', value: 'a', label: 'A' }];
 const ref = createRef<HTMLElement>();
+declare const isNullable: boolean;
 
 describe('root props', () => {
 	test('accepts items and a placeholder, plus a ref', () => {
@@ -166,6 +167,117 @@ describe('value', () => {
 			// @ts-expect-error - a single select reports a string
 			<Select placeholder="Pick" items={ONE} onChange={(value: string[]) => value} />,
 		);
+	});
+});
+
+describe('nullable', () => {
+	test('takes null or undefined as the value, and reports a string or null', () => {
+		assertType(
+			<Select
+				placeholder="Pick"
+				items={ONE}
+				nullable
+				value={null}
+				onChange={(value: string | null) => value}
+			/>,
+		);
+		assertType(<Select placeholder="Pick" items={ONE} nullable value={undefined} />);
+		assertType(<Select placeholder="Pick" items={ONE} nullable value="a" />);
+		assertType(<Select placeholder="Pick" items={ONE} nullable={true} value={null} />);
+	});
+
+	test('takes null with multiple, and still reports an array', () => {
+		assertType(
+			<Select
+				placeholder="Pick"
+				multiple
+				items={ONE}
+				nullable
+				value={null}
+				onChange={(value: string[]) => value}
+			/>,
+		);
+		assertType(<Select placeholder="Pick" multiple items={ONE} nullable value={['a']} />);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+			<Select placeholder="Pick" items={ONE} nullable={isNullable} value={null} />,
+		);
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, with multiple too
+			<Select placeholder="Pick" multiple items={ONE} nullable={isNullable} value={null} />,
+		);
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, also without a `null` value
+			<Select placeholder="Pick" items={ONE} nullable={isNullable} value="a" />,
+		);
+	});
+
+	test('rejects null without nullable', () => {
+		assertType(
+			// @ts-expect-error - `null` needs `nullable`
+			<Select placeholder="Pick" items={ONE} value={null} />,
+		);
+		assertType(
+			// @ts-expect-error - `null` needs `nullable`, with multiple too
+			<Select placeholder="Pick" multiple items={ONE} value={null} />,
+		);
+	});
+
+	test('rejects null when nullable is false or undefined', () => {
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`
+			<Select placeholder="Pick" items={ONE} nullable={false} value={null} />,
+		);
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`, with multiple too
+			<Select placeholder="Pick" multiple items={ONE} nullable={false} value={null} />,
+		);
+		assertType(
+			// @ts-expect-error - `nullable={undefined}` is the same as leaving it out
+			<Select placeholder="Pick" items={ONE} nullable={undefined} value={null} />,
+		);
+	});
+
+	test('keeps the shape that multiple decides', () => {
+		assertType(
+			// @ts-expect-error - a nullable single select holds one value
+			<Select placeholder="Pick" items={ONE} nullable value={['a']} />,
+		);
+		assertType(
+			// @ts-expect-error - a nullable multiple select holds an array
+			<Select placeholder="Pick" multiple items={ONE} nullable value="a" />,
+		);
+	});
+
+	test('a nullable select reports null, so its onChange has to take it', () => {
+		assertType(
+			// @ts-expect-error - a `(value: string) => void` does not take `null`
+			<Select placeholder="Pick" items={ONE} nullable onChange={(value: string) => value} />,
+		);
+	});
+});
+
+describe('onBlur', () => {
+	test('takes a handler of the blur event, or one with no parameters', () => {
+		assertType(
+			<Select
+				placeholder="Pick"
+				items={ONE}
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+		assertType(<Select placeholder="Pick" items={ONE} onBlur={() => undefined} />);
+		assertType(<Select placeholder="Pick" multiple items={ONE} onBlur={() => undefined} />);
+	});
+});
+
+describe('name', () => {
+	test('takes a name, with one value or several', () => {
+		assertType(<Select placeholder="Pick" items={ONE} name="framework" />);
+		assertType(<Select placeholder="Pick" multiple items={ONE} name="frameworks" />);
 	});
 });
 

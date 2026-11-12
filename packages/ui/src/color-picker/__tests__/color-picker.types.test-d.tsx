@@ -12,7 +12,7 @@
  * The comment suppresses the line directly below it, so it sits inside the `assertType(...)` call,
  * right above the opening tag, and the refused prop stays on that tag line.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, expectTypeOf, test } from 'vitest';
 import { ColorPicker } from '../color-picker.js';
 
@@ -22,6 +22,8 @@ const ref = createRef<HTMLButtonElement>();
 declare const maybeDisabled: boolean | undefined;
 declare const maybeReadOnly: boolean | undefined;
 declare const maybeColor: string | undefined;
+declare const maybeNullColor: string | null;
+declare const isNullable: boolean;
 
 describe('required props', () => {
 	test('accepts the required four, plus a ref', () => {
@@ -106,7 +108,7 @@ describe('value and callbacks', () => {
 		);
 	});
 
-	test('accepts an explicit undefined value, which is a controlled picker with no color', () => {
+	test('accepts an explicit undefined value, a picker with no color that keeps its own state', () => {
 		assertType(
 			<ColorPicker nativeButton side="bottom" align="start" value={undefined}>
 				{btn}
@@ -156,6 +158,77 @@ describe('value and callbacks', () => {
 				{btn}
 			</ColorPicker>,
 		);
+	});
+});
+
+describe('onBlur', () => {
+	test('takes a focus event handler, or one with no argument', () => {
+		assertType(
+			<ColorPicker
+				nativeButton
+				side="bottom"
+				align="start"
+				onBlur={(event: FocusEvent<HTMLElement>) => event.currentTarget}
+			>
+				{btn}
+			</ColorPicker>,
+		);
+		assertType(
+			<ColorPicker nativeButton side="bottom" align="start" onBlur={() => undefined}>
+				{btn}
+			</ColorPicker>,
+		);
+	});
+});
+
+describe('nullable', () => {
+	test('takes null as the value and reports a string or null', () => {
+		assertType(
+			<ColorPicker
+				nativeButton
+				side="bottom"
+				align="start"
+				nullable
+				value={maybeNullColor}
+				onChange={(value) => expectTypeOf(value).toEqualTypeOf<string | null>()}
+				onAfterChange={(value) => expectTypeOf(value).toEqualTypeOf<string | null>()}
+			>
+				{btn}
+			</ColorPicker>,
+		);
+	});
+
+	test('rejects a null value without nullable', () => {
+		assertType(
+			// @ts-expect-error - `null` needs `nullable`
+			<ColorPicker nativeButton side="bottom" align="start" value={maybeNullColor}>
+				{btn}
+			</ColorPicker>,
+		);
+	});
+
+	test('rejects nullable={false}, which is the same as leaving it out', () => {
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`
+			<ColorPicker nativeButton side="bottom" align="start" nullable={false}>
+				{btn}
+			</ColorPicker>,
+		);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		assertType(
+			// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+			<ColorPicker nativeButton side="bottom" align="start" nullable={isNullable}>
+				{btn}
+			</ColorPicker>,
+		);
+	});
+
+	test('rejects a handler that only takes undefined for no color', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - a nullable picker reports `null` for no color
+		assertType(<ColorPicker nativeButton side="bottom" align="start" nullable onChange={(value: string | undefined) => value}>{btn}</ColorPicker>);
 	});
 });
 

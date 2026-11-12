@@ -1,5 +1,12 @@
 import { Slider as SliderPrimitive } from '@base-ui/react/slider';
-import { type ReactElement, useLayoutEffect, useRef, useState } from 'react';
+import {
+	type ReactElement,
+	type RefCallback,
+	useCallback,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react';
 import { partTestId } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../slider.module.scss';
@@ -22,6 +29,11 @@ export type SliderThumbProps = {
 	ariaDescribedBy: string | undefined;
 	/** Every other attribute of the thumb input, written after render. */
 	inputAttributes: Record<string, unknown>;
+	/**
+	 * Set on the first thumb of a `SliderField`, which sends its `ref` to the native range input,
+	 * the element a `focus()` can land on.
+	 */
+	focusTarget: RefCallback<HTMLElement> | undefined;
 	testId: string | undefined;
 };
 
@@ -42,9 +54,17 @@ export function SliderThumb({
 	ariaLabelledBy,
 	ariaDescribedBy,
 	inputAttributes,
+	focusTarget,
 	testId,
 }: SliderThumbProps): ReactElement {
-	const inputRef = useRef<HTMLInputElement>(null);
+	const inputRef = useRef<HTMLInputElement | null>(null);
+	const setInput = useCallback(
+		(node: HTMLInputElement | null) => {
+			inputRef.current = node;
+			focusTarget?.(node);
+		},
+		[focusTarget],
+	);
 	const [isHovered, setIsHovered] = useState(false);
 	const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
 
@@ -68,7 +88,7 @@ export function SliderThumb({
 	const thumb = (
 		<SliderPrimitive.Thumb
 			index={index}
-			inputRef={inputRef}
+			inputRef={setInput}
 			data-slot="slider-thumb"
 			className={styles['slider__thumb']}
 			aria-label={ariaLabel}

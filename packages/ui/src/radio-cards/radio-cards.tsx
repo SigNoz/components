@@ -1,5 +1,7 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes } from 'react';
+import { onFocusLeave } from '../lib/focus-leave.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -8,7 +10,7 @@ import { RadioCardsTextOverflow } from './constants.js';
 import { RadioCardsItem } from './subcomponents/radio-cards-item.js';
 import { RadioCardsMultiple } from './subcomponents/radio-cards-multiple.js';
 import type { RadioCardsMultipleProps, RadioCardsProps, ValidateRadioCardsProps } from './types.js';
-import { hasCheckedCard, NO_VALUES, useRadioCardsGroup, useRadioCardsValue } from './utils.js';
+import { hasCheckedCard, NO_VALUES, useRadioCardsField, useRadioCardsGroup } from './utils.js';
 
 const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function RadioCards(
 	{
@@ -19,13 +21,15 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 		disabledTooltip,
 		readOnly = false,
 		readOnlyTooltip,
-		required = false,
+		required: requiredProp,
 		name,
 		form,
 		value,
 		defaultValue,
 		onChange,
+		onBlur,
 		allowClear = false,
+		nullable: _nullable,
 		testId,
 		className: _className,
 		style: _style,
@@ -33,6 +37,10 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 	}: RadioCardsProps & RejectedProps,
 	ref,
 ) {
+	const { required, isFieldRequired, nameProps, invalidProps, focusTarget } = useRadioCardsField(
+		props,
+		requiredProp,
+	);
 	const {
 		items: cards,
 		isReadOnly,
@@ -54,7 +62,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 
 	// The group keeps the value itself, even uncontrolled, since Base UI has no way to uncheck a
 	// radio: `allowClear` writes `null` here.
-	const [selectedValue, setSelectedValue] = useRadioCardsValue<string | null>({
+	const [selectedValue, setSelectedValue] = useControlledValue<string | null>({
 		component: 'RadioCards',
 		value,
 		defaultValue,
@@ -86,12 +94,18 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 			readOnly={isReadOnly}
 			// Base UI puts `required` on every hidden radio, and a radio with no `name` is a group of
 			// its own, so a required one left unchecked would block the form after another card is
-			// checked. It stays only while the group is empty, as on `RadioCards.Multiple`.
+			// checked. It stays only while the group is empty, as on `RadioCards.Multiple`. The
+			// field's `required` is announced the same way, with no native `required`.
 			required={required && isEmpty}
 			name={name}
 			form={form}
+			inputRef={focusTarget}
 			value={selectedValue}
 			onValueChange={onValueChange}
+			onBlur={onFocusLeave(onBlur)}
+			{...(isFieldRequired && isEmpty ? { 'aria-required': true } : {})}
+			{...nameProps}
+			{...invalidProps}
 			{...props}
 			{...rootProps}
 		>
@@ -135,6 +149,21 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * group needs a name, the question its cards answer: `aria-labelledby` with the id of the visible
  * question above it, or `aria-label` when there is none. Leaving both out is a type error.
  *
+ * ### Inside a `Field.Group`
+ *
+ * A surrounding `Field.Group` names the group with its legend, unless it has an `aria-label` or an
+ * `aria-labelledby` of its own, so the type error that asks for one is met by `RadioCardsField`,
+ * which renders both from one set of props. The group takes `aria-required` from the field, with
+ * no native `required`, so the form's own validation runs before the browser's, and `aria-invalid`
+ * for a `danger` status. The group's own `required` wins, and keeps the native one.
+ * `RadioCards.Multiple` takes the name and the required state, but no `aria-invalid`, since
+ * `role="group"` does not allow it: it carries `data-invalid` instead.
+ *
+ * While the group is in `danger`, every card takes `--destructive` for its border, a checked card
+ * included: its fill, label and check still say it is checked. A `RadioCards` reads
+ * `aria-invalid`, so one written on it paints the same way, and a `RadioCards.Multiple` reads
+ * `data-invalid`.
+ *
  * ### Keyboard
  *
  * The group is one tab stop, on the checked card, or on the first card that is not disabled. The
@@ -145,6 +174,9 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * ### Clearing
  *
  * With `allowClear`, the types ask for an `onChange` that takes `null`.
+ *
+ * `nullable` is for a group bound to a nullable schema field (zod `.nullable()`), and `onChange`
+ * always takes `null`.
  *
  * ### Layout
  *
@@ -170,6 +202,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * | `data-text-overflow` | `ellipsis` (default) or `wrap` |
  * | `data-disabled` | present while the group is disabled |
  * | `data-readonly` | present while the group is read-only |
+ * | `data-invalid` | on `RadioCards.Multiple` while a `Field` or a `Field.Group` around it is in `danger` |
  *
  * | `data-slot` | rendered |
  * |---|---|

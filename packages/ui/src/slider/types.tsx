@@ -1,4 +1,5 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, CSSProperties, FocusEvent, ReactNode } from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SLIDER_OWN_ARIA_ATTRIBUTES, SliderColor, SliderTextOverflow } from './constants.js';
 
 export type SliderColorType = (typeof SliderColor)[keyof typeof SliderColor];
@@ -156,6 +157,16 @@ type SliderBaseProps = Pick<ComponentProps<'div'>, 'id'> & {
 	 */
 	maxWidth?: CSSProperties['maxWidth'];
 	/**
+	 * Called once when the focus leaves the slider, for a form that validates on blur.
+	 *
+	 * @note Moving the focus from one thumb of `Slider.Range` to the other does not call it, the
+	 * focus is still inside the slider.
+	 *
+	 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
+	 * accepted.
+	 */
+	onBlur?: (event: FocusEvent<HTMLElement>) => void;
+	/**
 	 * Forwarded to the root as `data-testid`. The parts take it as a prefix: `${testId}-track`,
 	 * `${testId}-indicator`, `${testId}-thumb-0` (and `${testId}-thumb-1` on `Slider.Range`) and
 	 * `${testId}-mark-${value}`.
@@ -233,7 +244,9 @@ export type ValidateSliderProps<T> = (T extends { disabled: boolean | undefined 
 export type SliderProps = SliderBaseProps &
 	SliderAriaAttributes & {
 		/**
-		 * The controlled value.
+		 * The controlled value. `undefined` on the first render leaves the slider uncontrolled,
+		 * starting at `defaultValue`. A value that arrives later is followed, with one warning, and
+		 * from then on `undefined` puts the thumb at `min`.
 		 *
 		 * @note A value that is not a finite number renders the thumb at `min`, and one below
 		 * `min` or above `max` renders the thumb at the nearest end. The slider never calls
@@ -259,7 +272,9 @@ export type SliderProps = SliderBaseProps &
 export type SliderRangeProps = SliderBaseProps &
 	SliderAriaAttributes & {
 		/**
-		 * The controlled value, the lower bound first.
+		 * The controlled value, the lower bound first. `undefined` on the first render leaves the
+		 * range uncontrolled, starting at `defaultValue`. A value that arrives later is followed,
+		 * with one warning, and from then on `undefined` puts the thumbs at `min` and `max`.
 		 *
 		 * @note Each value renders the way it does on `Slider`. A pair with the first value above
 		 * the second is a bug.
@@ -279,3 +294,17 @@ export type SliderRangeProps = SliderBaseProps &
 		 */
 		onAfterChange?: (value: SliderRangeValue) => void;
 	};
+
+type WithField<P> = Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps;
+
+/**
+ * The props of `SliderField`: the field's label, description and status, and every prop of
+ * `Slider`.
+ */
+export type SliderFieldProps = WithField<SliderProps>;
+
+/**
+ * The props of `SliderField.Range`: the field's label, description and status, and every prop of
+ * `Slider.Range`.
+ */
+export type SliderFieldRangeProps = WithField<SliderRangeProps>;

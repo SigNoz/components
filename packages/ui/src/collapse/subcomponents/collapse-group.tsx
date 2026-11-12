@@ -1,11 +1,11 @@
 import { Accordion } from '@base-ui/react/accordion';
 import { forwardRef, useEffect, useMemo } from 'react';
 import { uniqueByValue } from '../../lib/unique-by-value.js';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../collapse.module.scss';
 import { COLLAPSE_GROUP_MAX_REGIONS, CollapseTextOverflow } from '../constants.js';
 import type { CollapseGroupProps } from '../types.js';
-import { useCollapseState } from '../use-collapse-state.js';
 import { orderGroupValue } from '../utils.js';
 import { CollapseGroupItem } from './collapse-group-item.js';
 
@@ -75,7 +75,7 @@ export const CollapseGroup = forwardRef<HTMLDivElement, CollapseGroupProps>(func
 	}: CollapseGroupProps & RejectedProps,
 	ref,
 ) {
-	const [openValues, setOpenValues] = useCollapseState<readonly string[]>({
+	const [openValues, setOpenValues] = useControlledValue<readonly string[]>({
 		component: 'Collapse.Group',
 		prop: 'value',
 		value,

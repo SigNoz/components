@@ -83,7 +83,9 @@ something dangerous.
 
 `value` + `onChange` is the controlled pair; `defaultValue` alone is the uncontrolled one. Writing
 `value` and `defaultValue` together is a type error: `value` makes the checkbox controlled for its
-whole life, so the default could never apply.
+whole life, so the default could never apply. A `value` that is `undefined` on the first render
+leaves it uncontrolled, and one that arrives later is followed, with a warning. Once controlled,
+`undefined` shows it unchecked.
 
 `onChange` receives the new checked state as its one argument, and nothing else.
 
@@ -142,6 +144,72 @@ injection: pass `value` and `onChange` from the field yourself.
 </Checkbox>
 ```
 
+### In a field
+
+`CheckboxField` is for one checkbox that needs a required marker, a description or a validation
+message, such as a consent line. It takes the props of the checkbox and the props of a field in one
+object.
+
+```tsx
+import { CheckboxField } from '@signozhq/ui';
+
+<Controller
+	control={control}
+	name="terms"
+	render={({ field, fieldState }) => (
+		<CheckboxField
+			color="primary"
+			label="I accept the terms of service"
+			required
+			description="You can read them in your account settings."
+			error={fieldState.error?.message}
+			name={field.name}
+			ref={field.ref}
+			value={field.value}
+			onChange={field.onChange}
+			onBlur={field.onBlur}
+		/>
+	)}
+/>;
+```
+
+- `label` is the text next to the box and the accessible name of the checkbox. Nothing renders above
+  the box, so `children` is not a prop. `htmlFor` is not a prop either, since the field points the
+  text at the checkbox itself.
+- `required` adds an asterisk after the text and sets `aria-required` on the checkbox, never the
+  native `required`, so your validation owns the rule. The asterisk is hidden from screen readers,
+  so "required" is read once.
+- `description` and the validation message sit below the text, lined up with the text and not with
+  the box. The message takes the place of the description in the same row, so the field does not
+  grow when an error appears. A message that appears or changes is announced once.
+- `error` is the usual wiring: `status="danger"` and the message in one prop. With `danger` the
+  checkbox gets `aria-invalid` and its border turns red, a checked box included, and the text and
+  the message take the status color. `status` with `message` covers `warning` and `success`.
+- `labelTooltip` adds an info icon after the text. Its content is also part of the checkbox's
+  description, because the tooltip only opens on hover. Clicking the icon does not toggle the
+  checkbox.
+- The text wraps up to 2 lines and then ends with an ellipsis and a tooltip with the full text, so
+  the asterisk and the icon always show. `textOverflow` and `labelIcon` are not props.
+
+A checkbox with a heading above it is a group: put it in a `Field.Group`. A list of checkboxes, each
+with its own text, goes in a `Field.Group` as well. Each one keeps its own id and its own label, and
+the legend names the group.
+
+```tsx
+<Field.Group label="Notify me by" description="Pick every channel that applies.">
+	<Checkbox color="primary" value={email} onChange={setEmail}>
+		Email
+	</Checkbox>
+	<Checkbox color="primary" value={slack} onChange={setSlack}>
+		Slack
+	</Checkbox>
+</Field.Group>
+```
+
+With a `testId` on `CheckboxField`, the checkbox gets it and the parts of the field take it as their
+prefix: `<testId>-description`, `<testId>-message` and `<testId>-label-tooltip`. There is no
+`<testId>-label`, since the checkbox owns its text.
+
 ## Asserting on it
 
 `testId` is `data-testid` on the checkbox itself and survives the tooltip trigger cloning the
@@ -149,13 +217,14 @@ element; `containerTestId` names the wrapper. Otherwise use the data attributes,
 class names. The checkbox keeps `role="checkbox"` and `aria-checked`, so `getByRole('checkbox')`
 works.
 
-| root attribute                                    | value                                            |
-| ------------------------------------------------- | ------------------------------------------------ |
-| `data-slot`                                       | `"checkbox"`                                     |
-| `data-color`                                      | mirrors the prop                                 |
-| `data-checked` / `data-unchecked`                 | the current state, neither while `indeterminate` |
-| `data-indeterminate`                              | present while `indeterminate`                    |
-| `data-disabled`, `data-readonly`, `data-required` | present while set                                |
+| root attribute                                    | value                                                               |
+| ------------------------------------------------- | ------------------------------------------------------------------- |
+| `data-slot`                                       | `"checkbox"`                                                        |
+| `data-color`                                      | mirrors the prop                                                    |
+| `data-checked` / `data-unchecked`                 | the current state, neither while `indeterminate`                    |
+| `data-indeterminate`                              | present while `indeterminate`                                       |
+| `data-disabled`, `data-readonly`, `data-required` | present while set                                                   |
+| `data-invalid`                                    | present while a `Field` or a `Field.Group` around it is in `danger` |
 
 | wrapper attribute    | value                                               |
 | -------------------- | --------------------------------------------------- |
