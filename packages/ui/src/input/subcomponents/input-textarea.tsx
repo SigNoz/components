@@ -39,6 +39,7 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			'aria-required': ariaRequired,
 			'aria-describedby': ariaDescribedBy,
 			'aria-invalid': ariaInvalid,
+			nullable,
 			className: _className,
 			style: _style,
 			...props
@@ -53,7 +54,7 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			ariaDescribedBy,
 			ariaInvalid,
 		});
-		const { control, data } = splitAttributes(props);
+		const { control, data } = splitAttributes(props, nullable);
 		const isDisabled = disabled && !readOnly;
 		const { reason, hasReasonAnchor } = getReasonTooltip({
 			disabled,

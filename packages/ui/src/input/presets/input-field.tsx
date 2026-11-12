@@ -68,6 +68,16 @@ const InputFieldNumber = createFieldShorthand<InputFieldNumberProps, HTMLInputEl
  *   )}
  * />
  * ```
+ *
+ * @example
+ * ```tsx
+ * // A zod `.nullable()` field: `nullable` takes the `null` of an empty field as `value`
+ * <Controller
+ *   control={control}
+ *   name="nickname"
+ *   render={({ field }) => <InputField label="Nickname" {...field} nullable />}
+ * />
+ * ```
  */
 export const InputField = Object.assign(InputFieldRoot, {
 	Password: InputFieldPassword,

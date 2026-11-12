@@ -110,6 +110,7 @@ export type {
 	RadioCardsFieldMultipleProps,
 	RadioCardsFieldProps,
 	RadioCardsItemType,
+	RadioCardsMultipleNullableType,
 	RadioCardsMultipleProps,
 	RadioCardsProps,
 	RadioCardsReadOnlyType,

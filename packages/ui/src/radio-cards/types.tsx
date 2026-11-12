@@ -297,19 +297,60 @@ type RadioCardsSharedProps = Pick<ComponentProps<'div'>, 'id'> &
 	};
 
 /**
- * `allowClear` decides whether `onChange` can report `null`, so the two travel as a union: a group
- * that cannot be emptied keeps a callback typed `(value: string) => void`, and a group that can
- * takes one that handles `null`.
+ * `allowClear` and `nullable` decide whether `onChange` can report `null`, so they travel as a
+ * union: a group that cannot be emptied keeps a callback typed `(value: string) => void`, and a
+ * group that can takes one that handles `null`.
  *
- * The first member takes `boolean`, not `true`, so an `allowClear` decided at run time asks for the
- * callback that handles `null` too.
+ * `allowClear` takes `boolean`, so an `allowClear` decided at run time asks for the callback that
+ * handles `null` too. `nullable` only takes `true`, so a group is nullable by being written that
+ * way.
  *
- * The member without `allowClear` comes last on purpose. TypeScript reports a props object that
- * matches neither member against the last one, so a group missing `items` is told about `items`,
- * not about a missing `allowClear`.
+ * The member without either comes last on purpose. TypeScript reports a props object that matches
+ * no member against the last one, so a group missing `items` is told about `items`, not about a
+ * missing `allowClear`.
  */
 export type RadioCardsClearType =
 	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`).
+			 *
+			 * @note The group reports `null` once the checked card is unchecked, which takes
+			 * `allowClear`, so `onChange` always takes `null`.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable: true;
+			/**
+			 * When true, a click or `Space` on the checked card unchecks it, and the group reports
+			 * `null`.
+			 *
+			 * @note Without it a click on the checked card changes nothing, the same as a native radio.
+			 *
+			 * @note A group that starts with nothing checked stays that way until the first check
+			 * either way. This blocks the way back to empty, not the empty state itself.
+			 *
+			 * @default false
+			 */
+			allowClear?: boolean;
+			/**
+			 * Called with the `value` of the card that becomes checked: on a click, on `Space`, and on
+			 * each arrow key as the focus walks the cards. Called with `null` once the checked card is
+			 * unchecked, which takes `allowClear`.
+			 *
+			 * @note A choice, not an action. Navigating, creating a record or opening a dialog here
+			 * runs on the first arrow key press, so the action belongs to a button next to the group.
+			 *
+			 * @note Never called while `disabled` or `readOnly`.
+			 */
+			onChange?: (value: string | null) => void;
+	  }
+	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`).
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
 			/**
 			 * When true, a click or `Space` on the checked card unchecks it, and the group reports
 			 * `null`.
@@ -335,6 +376,12 @@ export type RadioCardsClearType =
 			onChange?: (value: string | null) => void;
 	  }
 	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`).
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
 			/**
 			 * When true, a click or `Space` on the checked card unchecks it, and the group reports
 			 * `null`.
@@ -374,9 +421,8 @@ export type RadioCardsProps = RadioCardsSharedProps &
 		/**
 		 * The controlled value, one of the items' `value`s.
 		 *
-		 * @note `null` is the group with no card checked, and it is the only way to write one:
-		 * `undefined` makes the group uncontrolled for the rest of its life, so a controlled group
-		 * that starts with nothing checked passes `null`.
+		 * @note `null` is the group with no card checked. `undefined` makes the group uncontrolled for
+		 * the rest of its life, so a controlled group that starts with nothing checked passes `null`.
 		 *
 		 * @note Decided on the first render. A `value` that turns `undefined` later shows no card
 		 * checked, and one that appears on a group that started uncontrolled is ignored. Both log a
@@ -393,53 +439,91 @@ export type RadioCardsProps = RadioCardsSharedProps &
 		defaultValue?: string;
 	};
 
-export type RadioCardsMultipleProps = RadioCardsSharedProps & {
-	/**
-	 * The cards, in the order they are rendered, as on `RadioCards`.
-	 *
-	 * @note An empty array renders no card and logs a warning.
-	 */
-	items: readonly RadioCardsItemType[];
-	/**
-	 * The controlled value, the `value` of every checked card. `[]` is the group with no card
-	 * checked, which the group reaches on its own only with `allowClear`.
-	 *
-	 * @note `undefined` makes the group uncontrolled for the rest of its life, as on `RadioCards`:
-	 * a `value` that turns `undefined` later shows no card checked, and one that appears on a group
-	 * that started uncontrolled is ignored. Both log a warning.
-	 *
-	 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
-	 */
-	value?: readonly string[];
-	/**
-	 * The values checked on the first render, for a group that keeps its own state.
-	 *
-	 * @note Use with `onChange`. For a controlled group use `value` instead.
-	 */
-	defaultValue?: readonly string[];
-	/**
-	 * Called with the new list of checked values, in the order of `items`, on a click and on
-	 * `Space`.
-	 *
-	 * @note Reaching the empty array takes `allowClear`.
-	 *
-	 * @note Never called while `disabled` or `readOnly`.
-	 */
-	onChange?: (value: string[]) => void;
-	/**
-	 * When true, the last checked card can be unchecked, and the group reports the empty array.
-	 *
-	 * @note Without it, once a card is checked the group keeps one: the press that would leave it
-	 * empty is cancelled, so `onChange` is not called. A value that matches no item, or a checked
-	 * card that is disabled, does not count, the same as for `required`.
-	 *
-	 * @note A group that starts with nothing checked stays that way until the first check either
-	 * way. This blocks the way back to empty, not the empty state itself.
-	 *
-	 * @default false
-	 */
-	allowClear?: boolean;
-};
+/**
+ * `nullable` decides whether `value` takes `null`, so it travels as a union with the type of
+ * `value`. `nullable` only takes `true`, as in {@link RadioCardsClearType}, and the member without
+ * it comes last.
+ */
+export type RadioCardsMultipleNullableType =
+	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`). `value` takes `null`, the
+			 * group with no card checked.
+			 *
+			 * @note Without it `null` is not a value.
+			 *
+			 * @note `onChange` still reports the empty array, never `null`.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable: true;
+			/**
+			 * The controlled value, the `value` of every checked card. `[]` and `null` are the group
+			 * with no card checked, which the group reaches on its own only with `allowClear`.
+			 *
+			 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
+			 */
+			value?: readonly string[] | null;
+	  }
+	| {
+			/**
+			 * For a field whose schema allows `null` (zod `.nullable()`).
+			 *
+			 * @note Without it `null` is not a value.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
+			/**
+			 * The controlled value, the `value` of every checked card. `[]` is the group with no card
+			 * checked, which the group reaches on its own only with `allowClear`.
+			 *
+			 * @note `undefined` makes the group uncontrolled for the rest of its life, as on
+			 * `RadioCards`: a `value` that turns `undefined` later shows no card checked, and one that
+			 * appears on a group that started uncontrolled is ignored. Both log a warning.
+			 *
+			 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
+			 */
+			value?: readonly string[];
+	  };
+
+export type RadioCardsMultipleProps = RadioCardsSharedProps &
+	RadioCardsMultipleNullableType & {
+		/**
+		 * The cards, in the order they are rendered, as on `RadioCards`.
+		 *
+		 * @note An empty array renders no card and logs a warning.
+		 */
+		items: readonly RadioCardsItemType[];
+		/**
+		 * The values checked on the first render, for a group that keeps its own state.
+		 *
+		 * @note Use with `onChange`. For a controlled group use `value` instead.
+		 */
+		defaultValue?: readonly string[];
+		/**
+		 * Called with the new list of checked values, in the order of `items`, on a click and on
+		 * `Space`.
+		 *
+		 * @note Reaching the empty array takes `allowClear`.
+		 *
+		 * @note Never called while `disabled` or `readOnly`.
+		 */
+		onChange?: (value: string[]) => void;
+		/**
+		 * When true, the last checked card can be unchecked, and the group reports the empty array.
+		 *
+		 * @note Without it, once a card is checked the group keeps one: the press that would leave it
+		 * empty is cancelled, so `onChange` is not called. A value that matches no item, or a checked
+		 * card that is disabled, does not count, the same as for `required`.
+		 *
+		 * @note A group that starts with nothing checked stays that way until the first check either
+		 * way. This blocks the way back to empty, not the empty state itself.
+		 *
+		 * @default false
+		 */
+		allowClear?: boolean;
+	};
 
 /**
  * The props of `RadioCardsField`: the field's label, description and status, and every prop of

@@ -106,6 +106,16 @@ import type {
  *   {...register('organisation')}
  * />
  * ```
+ *
+ * @example
+ * ```tsx
+ * // A zod `.nullable()` field: `nullable` lets the `null` of an empty field through as `value`
+ * <Controller
+ *   control={control}
+ *   name="nickname"
+ *   render={({ field }) => <Input aria-label="Nickname" {...field} nullable />}
+ * />
+ * ```
  */
 const InputRoot = forwardRef<HTMLInputElement, InputProps>(function Input(props, ref) {
 	return <InputBase {...props} ref={ref} />;

@@ -34,6 +34,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 		onChange,
 		onBlur,
 		allowClear = false,
+		nullable: _nullable,
 		testId,
 		className: _className,
 		style: _style,
@@ -178,6 +179,9 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * ### Clearing
  *
  * With `allowClear`, the types ask for an `onChange` that takes `null`.
+ *
+ * `nullable` is for a group bound to a nullable schema field (zod `.nullable()`), and `onChange`
+ * always takes `null`.
  *
  * ### Layout
  *

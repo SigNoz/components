@@ -38,6 +38,8 @@ type ControllerField<T> = {
 };
 declare const textField: ControllerField<string>;
 declare const numberField: ControllerField<number | null>;
+declare const nullableTextField: ControllerField<string | null>;
+declare const runtimeNullable: boolean;
 declare const registration: {
 	name: string;
 	onChange: (event: unknown) => Promise<boolean>;
@@ -191,6 +193,72 @@ describe('status, message and error', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - the number member follows the same status rules
 		assertType(<InputField.Number label="Replica count" message="Too many" />);
+	});
+});
+
+describe('nullable', () => {
+	test('accepts a Controller field whose value is nullable, on every member', () => {
+		assertType(<InputField label="Nickname" error={maybeError} {...nullableTextField} nullable />);
+		assertType(<InputField.Password label="Secret" {...nullableTextField} nullable />);
+		assertType(<InputField.TextArea label="Notes" {...nullableTextField} nullable />);
+		assertType(<InputField.Number label="Replica count" {...numberField} nullable />);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+		assertType(<InputField label="Nickname" {...nullableTextField} nullable={runtimeNullable} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on InputField.Password too
+		assertType(<InputField.Password label="Secret" {...nullableTextField} nullable={runtimeNullable} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on InputField.TextArea too
+		assertType(<InputField.TextArea label="Notes" {...nullableTextField} nullable={runtimeNullable} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on InputField.Number too
+		assertType(<InputField.Number label="Replica count" {...numberField} nullable={runtimeNullable} />);
+	});
+
+	test('rejects nullable={false}, which is the same as leaving it out', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`
+		assertType(<InputField label="Nickname" {...nullableTextField} nullable={false} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on InputField.Password too
+		assertType(<InputField.Password label="Secret" {...nullableTextField} nullable={false} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on InputField.TextArea too
+		assertType(<InputField.TextArea label="Notes" {...nullableTextField} nullable={false} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on InputField.Number too
+		assertType(<InputField.Number label="Replica count" {...numberField} nullable={false} />);
+	});
+
+	test('keeps the field props next to nullable', () => {
+		assertType(
+			<InputField label="Nickname" status="danger" message="Taken" value={null} nullable />,
+		);
+	});
+
+	test('without nullable a null value is a type error', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable` on InputField
+		assertType(<InputField label="Nickname" {...nullableTextField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable` on InputField.Password
+		assertType(<InputField.Password label="Secret" {...nullableTextField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable` on InputField.TextArea
+		assertType(<InputField.TextArea label="Notes" {...nullableTextField} />);
+	});
+
+	test('the excess-key check still runs with nullable', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `onPressEnter` is antd, submit on Enter comes from the owning form
+		assertType(<InputField label="Nickname" nullable onPressEnter={noop} />);
+		// oxfmt-ignore
+		// @ts-expect-error - the input renders no children, the field renders the input
+		assertType(<InputField label="Nickname" nullable>child</InputField>);
 	});
 });
 

@@ -25,6 +25,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		value,
 		defaultValue,
 		onChange,
+		nullable: _nullable,
 		onBlur,
 		testId,
 		className: _className,
@@ -136,6 +137,12 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
  * While the group is `aria-invalid`, whether from a `danger` status or written on it, every dial
  * takes `--destructive` for its border, a checked one included: the fill and the dot still say it
  * is checked.
+ *
+ * ### Nullable fields
+ *
+ * `nullable` is for a group bound to a nullable schema field (zod `.nullable()`). `onChange` is
+ * typed to take `null`, so a `useState<string | null>` setter fits, and the group still never
+ * reports it.
  *
  * ### Items
  *

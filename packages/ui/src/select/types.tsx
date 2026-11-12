@@ -140,7 +140,39 @@ export type SelectGroupItemType = {
  */
 export type SelectItemType = SelectGroupChildType | SelectGroupItemType;
 
-type SelectSingleProps = {
+/**
+ * `nullable` decides the types of `value` and `onChange`, so the two travel as a union: a select
+ * that is not nullable keeps the props it always had, and a nullable one takes `null` in and a
+ * callback that handles it. `nullable` only takes `true`, so a select is nullable by being written
+ * that way, never by a flag decided at run time.
+ *
+ * The plain single member comes last in `SelectProps` on purpose. TypeScript reports a props
+ * object that matches no member against the last one, so a `value={null}` written without
+ * `nullable` is told that `null` is not a `string | undefined`, not that `multiple` is missing.
+ */
+type SelectNullableOn = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the select is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable: true;
+};
+
+type SelectNullableOff = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the select is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable?: never;
+};
+
+type SelectSingleShared = {
 	/**
 	 * When true, the select picks several values and shows them as chips in the trigger.
 	 *
@@ -148,20 +180,9 @@ type SelectSingleProps = {
 	 */
 	multiple?: false;
 	/**
-	 * The selected `value` of an `item` row.
-	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled select.
-	 */
-	value?: string;
-	/**
 	 * The value selected on the first render, for a select that keeps its own state.
 	 */
 	defaultValue?: string;
-	/**
-	 * Called with the value of the row the user picked.
-	 */
-	onChange?: (value: string) => void;
 	/**
 	 * Decides what the trigger shows for the selected row, in place of the row's `prefix`,
 	 * `displayValue` and label.
@@ -173,22 +194,43 @@ type SelectSingleProps = {
 	maxDisplayedPills?: never;
 };
 
-type SelectMultipleProps = {
-	multiple: true;
+interface SelectSingleNullableProps extends SelectSingleShared, SelectNullableOn {
 	/**
-	 * The selected values, in the order they were picked.
+	 * The selected `value` of an `item` row, or `null` for none.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 * @note `null` makes the component controlled with nothing selected. Leave the prop out
+	 * entirely for an uncontrolled select.
 	 */
-	value?: string[];
+	value?: string | null;
+	/**
+	 * Called with the value of the row the user picked.
+	 *
+	 * @note Takes `null` so a `useState<string | null>` setter fits. A single select never
+	 * reports it: nothing in it clears the value.
+	 */
+	onChange?: (value: string | null) => void;
+}
+
+interface SelectSingleProps extends SelectSingleShared, SelectNullableOff {
+	/**
+	 * The selected `value` of an `item` row.
+	 *
+	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
+	 * entirely for an uncontrolled select.
+	 */
+	value?: string;
+	/**
+	 * Called with the value of the row the user picked.
+	 */
+	onChange?: (value: string) => void;
+}
+
+type SelectMultipleShared = {
+	multiple: true;
 	/**
 	 * The values selected on the first render, for a select that keeps its own state.
 	 */
 	defaultValue?: string[];
-	/**
-	 * Called with the new values. `[]` when every value is removed.
-	 */
-	onChange?: (value: string[]) => void;
 	/**
 	 * Decides what the trigger shows in place of the chips, such as `3 services`.
 	 *
@@ -202,6 +244,32 @@ type SelectMultipleProps = {
 	 */
 	maxDisplayedPills?: number;
 };
+
+interface SelectMultipleNullableProps extends SelectMultipleShared, SelectNullableOn {
+	/**
+	 * The selected values, in the order they were picked. `null` is `[]`.
+	 *
+	 * @note `null` makes the component controlled with nothing selected.
+	 */
+	value?: string[] | null;
+	/**
+	 * Called with the new values. `[]` when every value is removed, never `null`.
+	 */
+	onChange?: (value: string[]) => void;
+}
+
+interface SelectMultipleProps extends SelectMultipleShared, SelectNullableOff {
+	/**
+	 * The selected values, in the order they were picked.
+	 *
+	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 */
+	value?: string[];
+	/**
+	 * Called with the new values. `[]` when every value is removed.
+	 */
+	onChange?: (value: string[]) => void;
+}
 
 interface ADisabledSelectMustSayWhy {
 	'`disabled` needs `disabledTooltip`, a disabled control has to tell the user why it cannot be used': never;
@@ -410,11 +478,17 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		[key: `data-${string}`]: unknown;
 	};
 
-export type SelectProps = SelectBaseProps & (SelectSingleProps | SelectMultipleProps);
+export type SelectProps = SelectBaseProps &
+	(
+		| SelectMultipleNullableProps
+		| SelectMultipleProps
+		| SelectSingleNullableProps
+		| SelectSingleProps
+	);
 
 /**
- * Distributes over the single and the multiple shape, so `multiple` still decides the type of
- * `value`, `defaultValue` and `onChange`.
+ * Distributes over every shape of `SelectProps`, so `multiple` and `nullable` still decide the type
+ * of `value`, `defaultValue` and `onChange`.
  */
 type WithField<P> = P extends unknown ? Omit<P, 'required'> & FieldLabelAndMessageProps : never;
 

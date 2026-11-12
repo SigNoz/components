@@ -91,6 +91,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 			onChange,
 			onBlur,
 			allowClear = false,
+			nullable: _nullable,
 			testId,
 			className: _className,
 			style: _style,
