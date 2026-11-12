@@ -108,6 +108,10 @@
 		--skeleton-internal-height: var(--skeleton-input-sm-height, 24px);
 	}
 
+	&[data-size='lg'] {
+		--skeleton-internal-height: var(--skeleton-input-lg-height, 40px);
+	}
+
 	&[data-active] {
 		@include bar-active;
 	}

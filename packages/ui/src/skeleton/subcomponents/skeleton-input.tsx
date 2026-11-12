@@ -18,7 +18,7 @@ import { skeletonWidthStyle } from '../utils.js';
  *
  * | `data-*` | when |
  * |---|---|
- * | `data-size` | always, `sm` or `md` |
+ * | `data-size` | always, `sm`, `md` or `lg` |
  * | `data-active` | present while `active` is `true` |
  *
  * | `data-slot` | rendered |

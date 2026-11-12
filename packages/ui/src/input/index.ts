@@ -23,7 +23,7 @@
  * | `--input-danger-icon` | `-` |
  * | `--input-danger-icon-color` | `var(--input-danger-icon)` |
  * | `--input-disabled-cursor` | `not-allowed` |
- * | `--input-disabled-opacity` | `0.4` |
+ * | `--input-disabled-opacity` | `0.6` |
  * | `--input-display` | `flex` |
  * | `--input-field-align-self` | `stretch` |
  * | `--input-field-background` | `transparent` |
@@ -32,8 +32,8 @@
  * | `--input-field-min-inline-size` | `0` |
  * | `--input-field-outline` | `none` |
  * | `--input-field-padding` | `0` |
- * | `--input-focus-outline` | `1px solid var(--input-internal-focus-ring)` |
  * | `--input-focus-outline-offset` | `1px` |
+ * | `--input-focus-outline-width` | `1px` |
  * | `--input-focus-ring` | `-` |
  * | `--input-focus-ring-color` | `var(--input-focus-ring)` |
  * | `--input-font-family` | `var(--input-internal-font-family)` |
@@ -41,18 +41,18 @@
  * | `--input-font-weight` | `var(--input-internal-font-weight)` |
  * | `--input-foreground` | `-` |
  * | `--input-gap` | `var(--spacing-2)` |
- * | `--input-height` | `32px` |
  * | `--input-hover-border-color` | `var(--input-border-hover)` |
  * | `--input-icon` | `-` |
  * | `--input-icon-color` | `var(--input-icon)` |
  * | `--input-icon-disc-color` | `currentcolor` |
  * | `--input-icon-glyph-color` | `var(--l1-background)` |
  * | `--input-icon-size` | `14px` |
- * | `--input-large-height` | `40px` |
  * | `--input-letter-spacing` | `var(--input-internal-letter-spacing)` |
+ * | `--input-lg-height` | `40px` |
  * | `--input-line-height` | `var(--input-internal-line-height)` |
+ * | `--input-md-height` | `32px` |
  * | `--input-number-root-display` | `contents` |
- * | `--input-padding` | `var(--spacing-3) var(--spacing-6) var(--spacing...` |
+ * | `--input-padding` | `var(--input-internal-padding-block) var(--spaci...` |
  * | `--input-password-toggle-align-items` | `center` |
  * | `--input-password-toggle-background` | `transparent` |
  * | `--input-password-toggle-border` | `none` |
@@ -67,7 +67,11 @@
  * | `--input-placeholder-hover` | `-` |
  * | `--input-placeholder-hover-color` | `var(--input-placeholder-hover)` |
  * | `--input-placeholder-opacity` | `0.6` |
+ * | `--input-placeholder-transition-duration` | `150ms` |
+ * | `--input-placeholder-transition-property` | `color` |
+ * | `--input-placeholder-transition-timing-function` | `ease-out` |
  * | `--input-readonly-opacity` | `0.8` |
+ * | `--input-sm-height` | `24px` |
  * | `--input-step-button-align-items` | `center` |
  * | `--input-step-button-background` | `transparent` |
  * | `--input-step-button-border` | `none` |
@@ -94,7 +98,9 @@
  * | `--input-textarea-block-size` | `auto` |
  * | `--input-textarea-resize` | `vertical` |
  * | `--input-textarea-status-icon-offset` | `calc((var(--input-line-height, var(--input-inte...` |
- * | `--input-transition` | `border-color 150ms ease, background-color 150ms...` |
+ * | `--input-transition-duration` | `150ms` |
+ * | `--input-transition-property` | `border-color, background-color, color, opacity,...` |
+ * | `--input-transition-timing-function` | `ease-out` |
  * | `--input-unstyled-background` | `transparent` |
  * | `--input-unstyled-border-color` | `transparent` |
  * | `--input-warning-background` | `-` |

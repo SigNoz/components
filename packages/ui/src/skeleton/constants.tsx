@@ -3,6 +3,16 @@ export const SkeletonSize = {
 	Md: 'md',
 } as const;
 
+/**
+ * The sizes of `Skeleton.Input`, the three of `Input`. `Skeleton.Button` and `Skeleton.Avatar` take
+ * `SkeletonSize`.
+ */
+export const SkeletonInputSize = {
+	Sm: 'sm',
+	Md: 'md',
+	Lg: 'lg',
+} as const;
+
 export const SkeletonAvatarShape = {
 	Circle: 'circle',
 	Square: 'square',

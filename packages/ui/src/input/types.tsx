@@ -11,9 +11,9 @@ export type InputStatusType = (typeof InputStatus)[keyof typeof InputStatus];
  */
 type InputAppearanceProps = {
 	/**
-	 * The height of the field: `base` is 32px, `large` is 40px. The text size does not change.
+	 * The height of the field: `sm` is 24px, `md` is 32px, `lg` is 40px. The text size does not change.
 	 *
-	 * @default 'base'
+	 * @default 'md'
 	 */
 	size?: InputSizeType;
 	/**
@@ -49,8 +49,8 @@ type InputAppearanceProps = {
 	/**
 	 * When true, keyboard focus draws no ring around the field.
 	 *
-	 * @note The ring only shows on `:focus-visible` to begin with, so this is for a surface that
-	 * draws a focus treatment of its own, not for hiding focus.
+	 * @note The ring only shows on keyboard focus to begin with, never after a click, so this is
+	 * for a surface that draws a focus treatment of its own, not for hiding focus.
 	 *
 	 * @default false
 	 */

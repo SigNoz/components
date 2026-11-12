@@ -44,15 +44,15 @@ export default function ServiceCard({ isLoading, service }: ServiceCardProps) {
 
 ## Parts and sizes
 
-`Skeleton.Input`, `Skeleton.Button` and `Skeleton.Avatar` take a required `size`, `sm` or `md`, with
-no default. The sizes are the heights of the controls they stand for: `Button` at `sm` and `md`,
-`Input` at its default size, and `Avatar` at `sm` and `md`. Swapping the placeholder for the control
-then keeps the same height. There is no larger size, so an `Input` at `large` has no placeholder.
+`Skeleton.Input`, `Skeleton.Button` and `Skeleton.Avatar` take a required `size` with no default.
+The sizes are the heights of the controls they stand for: `Input` at `sm`, `md` and `lg`, and
+`Button` and `Avatar` at `sm` and `md`. Swapping the placeholder for the control then keeps the same
+height. `lg` is for `Skeleton.Input` only.
 
 | Part              | Stands for               | Size                                                         |
 | ----------------- | ------------------------ | ------------------------------------------------------------ |
 | `Skeleton`        | a title and rows of text | title 16px tall and 38% wide, 3 rows 12px tall at full width |
-| `Skeleton.Input`  | an `Input`               | 24px (`sm`) or 32px (`md`) tall, fills the parent            |
+| `Skeleton.Input`  | an `Input`               | 24px (`sm`), 32px (`md`), 40px (`lg`) tall, fills the parent |
 | `Skeleton.Button` | a `Button`               | 24px or 32px tall, 48px (`sm`) or 64px (`md`) wide           |
 | `Skeleton.Avatar` | an `Avatar`              | 24px or 32px, a circle or a square                           |
 
@@ -211,11 +211,12 @@ lands on that element and names nothing under it.
 
 The props that change the look are attributes on the root of each part:
 
-| Attribute     | On                                                     | When                           |
-| ------------- | ------------------------------------------------------ | ------------------------------ |
-| `data-active` | every part                                             | present while `active` is true |
-| `data-size`   | `Skeleton.Input`, `Skeleton.Button`, `Skeleton.Avatar` | always, `sm` or `md`           |
-| `data-shape`  | `Skeleton.Avatar`                                      | always, `circle` or `square`   |
+| Attribute     | On                                   | When                           |
+| ------------- | ------------------------------------ | ------------------------------ |
+| `data-active` | every part                           | present while `active` is true |
+| `data-size`   | `Skeleton.Input`                     | always, `sm`, `md` or `lg`     |
+| `data-size`   | `Skeleton.Button`, `Skeleton.Avatar` | always, `sm` or `md`           |
+| `data-shape`  | `Skeleton.Avatar`                    | always, `circle` or `square`   |
 
 A query by role skips a skeleton, since every part is `aria-hidden`. Assert on the loading region
 through its `aria-busy`.

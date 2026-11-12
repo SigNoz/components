@@ -1,6 +1,7 @@
 import { Skeleton, Typography } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
+	INPUT_SIZES,
 	SHAPES,
 	SIZES,
 	skeletonArgTypes,
@@ -57,9 +58,11 @@ export const Input: StoryObj<typeof Skeleton.Input> = {
 	argTypes: {
 		id: idArgType,
 		size: {
-			...sizeArgType,
+			control: 'inline-radio',
+			options: INPUT_SIZES,
 			description:
-				'Required. The height of the placeholder: `sm` is 24px, `md` is 32px, the height of an `Input` at its default size.',
+				'Required. The height of the placeholder: `sm` is 24px, `md` is 32px, `lg` is 40px, the heights of `Input` at its three sizes.',
+			table: { category: 'Appearance', type: { summary: 'SkeletonInputSizeType' } },
 		},
 		width: {
 			control: 'text',

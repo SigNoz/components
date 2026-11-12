@@ -1,7 +1,9 @@
 import type { ComponentProps, CSSProperties, RefAttributes } from 'react';
-import type { SkeletonAvatarShape, SkeletonSize } from './constants.js';
+import type { SkeletonAvatarShape, SkeletonInputSize, SkeletonSize } from './constants.js';
 
 export type SkeletonSizeType = (typeof SkeletonSize)[keyof typeof SkeletonSize];
+
+export type SkeletonInputSizeType = (typeof SkeletonInputSize)[keyof typeof SkeletonInputSize];
 
 export type SkeletonAvatarShapeType =
 	(typeof SkeletonAvatarShape)[keyof typeof SkeletonAvatarShape];
@@ -122,10 +124,10 @@ export type SkeletonProps = SkeletonBaseProps &
 export type SkeletonInputProps = SkeletonBaseProps &
 	SkeletonWidthProps & {
 		/**
-		 * The height of the placeholder: `sm` is 24px, `md` is 32px, the height of an `Input` at its
-		 * default size.
+		 * The height of the placeholder: `sm` is 24px, `md` is 32px, `lg` is 40px, the heights of
+		 * `Input` at its three sizes.
 		 */
-		size: SkeletonSizeType;
+		size: SkeletonInputSizeType;
 		/**
 		 * Forwarded to the placeholder as `data-testid`.
 		 */

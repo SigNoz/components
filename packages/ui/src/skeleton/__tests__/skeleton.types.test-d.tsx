@@ -151,6 +151,7 @@ describe('Skeleton.Input accepted props', () => {
 	test('accepts every size', () => {
 		assertType(<Skeleton.Input size="sm" />);
 		assertType(<Skeleton.Input size="md" />);
+		assertType(<Skeleton.Input size="lg" />);
 	});
 
 	test('accepts every prop it declares, and data attributes', () => {
@@ -200,13 +201,13 @@ describe('Skeleton.Input rejected props', () => {
 		assertType(<Skeleton.Input size="default" />);
 	});
 
-	test('rejects size large, there is no lg', () => {
-		// @ts-expect-error - there is no placeholder for a 40px input
+	test('rejects size large, the legacy value', () => {
+		// @ts-expect-error - `large` is written `lg`
 		assertType(<Skeleton.Input size="large" />);
 	});
 
 	test('rejects a numeric size', () => {
-		// @ts-expect-error - the size is `sm` or `md`
+		// @ts-expect-error - the size is `sm`, `md` or `lg`
 		assertType(<Skeleton.Input size={36} />);
 	});
 
@@ -284,6 +285,11 @@ describe('Skeleton.Button rejected props', () => {
 		assertType(<Skeleton.Button size="large" />);
 	});
 
+	test('rejects size lg, only the input has it', () => {
+		// @ts-expect-error - `Button` is `sm` or `md`
+		assertType(<Skeleton.Button size="lg" />);
+	});
+
 	test('rejects block, replaced by width 100%', () => {
 		// @ts-expect-error - write `width="100%"`
 		assertType(<Skeleton.Button size="md" block />);
@@ -355,6 +361,11 @@ describe('Skeleton.Avatar rejected props', () => {
 	test('rejects size large, there is no lg', () => {
 		// @ts-expect-error - there is no placeholder for a 40px avatar
 		assertType(<Skeleton.Avatar size="large" />);
+	});
+
+	test('rejects size lg, only the input has it', () => {
+		// @ts-expect-error - `Avatar` is `sm` or `md`
+		assertType(<Skeleton.Avatar size="lg" />);
 	});
 
 	test('rejects a numeric size, the free size is dropped', () => {
