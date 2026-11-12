@@ -2,7 +2,7 @@
  * Type-level tests for the props of {@link Combobox}. Run by `vitest --typecheck` and by
  * `pnpm type-check`. See `dropdown.types.test-d.tsx` for how the cases are written.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { Combobox } from '../combobox.js';
 import type {
@@ -225,6 +225,36 @@ describe('value', () => {
 				multiple
 				items={ONE}
 				displayValue={() => 'x'}
+			/>,
+		);
+	});
+});
+
+describe('onBlur', () => {
+	test('takes a handler of the blur event, or one with no parameters', () => {
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				onBlur={() => undefined}
+			/>,
+		);
+		assertType(
+			<Combobox
+				multiple
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				onBlur={() => undefined}
 			/>,
 		);
 	});

@@ -261,3 +261,72 @@ describe('Switch readOnly', () => {
 		expect(screen.getByRole('switch')).toHaveFocus();
 	});
 });
+
+describe('Switch onBlur', () => {
+	it('fires once when focus moves to another element, and not on focus or toggle', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<Switch color="primary" textPlacement="right" onBlur={onBlur}>
+					Wrap text
+				</Switch>
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.tab();
+		await user.keyboard(' ');
+
+		expect(screen.getByRole('switch')).toHaveFocus();
+		expect(onBlur).not.toHaveBeenCalled();
+
+		await user.tab();
+
+		expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+
+	it('fires when a click elsewhere takes the focus away', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<Switch color="primary" textPlacement="right" onBlur={onBlur} aria-label="Wrap text" />
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.click(screen.getByRole('switch'));
+
+		expect(onBlur).not.toHaveBeenCalled();
+
+		await user.click(screen.getByRole('button', { name: 'Next' }));
+
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+
+	it('fires from a disabled switch, which keeps its tab stop', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<Switch
+					color="primary"
+					textPlacement="right"
+					disabled
+					disabledTooltip="Ask an admin"
+					onBlur={onBlur}
+				>
+					Wrap text
+				</Switch>
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.tab();
+		await user.tab();
+
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+});

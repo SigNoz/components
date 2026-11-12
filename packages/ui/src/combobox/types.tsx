@@ -1,5 +1,12 @@
 import type { Combobox as BaseCombobox } from '@base-ui/react/combobox';
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+} from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { ComboboxItemKind } from './constants.js';
 
@@ -512,6 +519,16 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * Forwarded to the trigger as `data-testid`, and the stem every part is named from.
 		 */
 		testId?: string;
+		/**
+		 * Called when the focus leaves the combobox, the trigger and its popup counting as one. Opening
+		 * the popup, which moves the focus to the search row, and closing it, which gives it back, do
+		 * not call it. Tabbing away, or pressing outside while the popup is open, does.
+		 *
+		 * @note Called one task after the focus moved, so a `Tab` through the popup has handed it on by
+		 * then, and `event.currentTarget` is the root of the combobox. A handler that takes no argument,
+		 * such as the `onBlur` a react-hook-form `field` holds, is accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Any `data-*` prop is accepted and forwarded to the trigger, alongside `aria-*`.
 		 */

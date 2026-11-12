@@ -13,7 +13,7 @@
  * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
  * comment stops covering it.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, expectTypeOf, test } from 'vitest';
 import { SliderField } from '../presets/slider-field.js';
 import type { SliderRangeValue } from '../types.js';
@@ -95,6 +95,21 @@ describe('SliderField label and slider props', () => {
 
 	test('accepts the fields a Controller spreads', () => {
 		assertType(<SliderField label="Sampling rate" color="primary" {...controllerField} />);
+	});
+
+	test('takes the blur handler, with or without the event', () => {
+		assertType(<SliderField label="Sampling rate" color="primary" onBlur={noop} />);
+		assertType(
+			<SliderField
+				label="Sampling rate"
+				color="primary"
+				onBlur={(event: FocusEvent<HTMLElement>) => event}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - the blur handler takes a focus event
+		assertType(<SliderField label="Sampling rate" color="primary" onBlur={(event: MouseEvent) => event} />);
+		assertType(<SliderField.Range label="Duration" color="primary" onBlur={noop} />);
 	});
 });
 

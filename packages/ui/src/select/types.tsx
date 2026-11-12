@@ -1,5 +1,12 @@
 import type { Select as BaseSelect } from '@base-ui/react/select';
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+} from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SelectItemKind } from './constants.js';
 
@@ -377,6 +384,16 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * Forwarded to the trigger as `data-testid`, and the stem every part is named from.
 		 */
 		testId?: string;
+		/**
+		 * Called when the focus leaves the select, the trigger and its popup counting as one. Opening
+		 * the popup, which takes the focus, and closing it, which gives it back, do not call it.
+		 * Tabbing away, or pressing outside while the popup is open, does.
+		 *
+		 * @note Called one task after the focus moved, so a `Tab` through the popup has handed it on by
+		 * then, and `event.currentTarget` is the root of the select. A handler that takes no argument,
+		 * such as the `onBlur` a react-hook-form `field` holds, is accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Any `data-*` prop is accepted and forwarded to the trigger, alongside `aria-*`.
 		 */

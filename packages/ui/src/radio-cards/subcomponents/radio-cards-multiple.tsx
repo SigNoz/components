@@ -1,5 +1,6 @@
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { forwardRef } from 'react';
+import { onFocusLeave } from '../../lib/focus-leave.js';
 import type { RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-provider.js';
@@ -88,6 +89,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 			value,
 			defaultValue,
 			onChange,
+			onBlur,
 			allowClear = false,
 			testId,
 			className: _className,
@@ -155,6 +157,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 				// Base UI types the list as mutable, but never writes to it.
 				value={selectedValues as string[]}
 				onValueChange={onValueChange}
+				onBlur={onFocusLeave(onBlur)}
 				{...nameProps}
 				{...props}
 				{...rootProps}

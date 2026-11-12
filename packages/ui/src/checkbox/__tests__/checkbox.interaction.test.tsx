@@ -276,3 +276,66 @@ describe('Checkbox readOnly', () => {
 		expect(screen.getByRole('checkbox')).toHaveFocus();
 	});
 });
+
+describe('Checkbox onBlur', () => {
+	it('fires once when focus moves to another element, and not on focus or toggle', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<Checkbox color="primary" onBlur={onBlur}>
+					Accept the terms
+				</Checkbox>
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.tab();
+		await user.keyboard(' ');
+
+		expect(screen.getByRole('checkbox')).toHaveFocus();
+		expect(onBlur).not.toHaveBeenCalled();
+
+		await user.tab();
+
+		expect(screen.getByRole('button', { name: 'Next' })).toHaveFocus();
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+
+	it('fires when a click elsewhere takes the focus away', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<Checkbox color="primary" onBlur={onBlur} aria-label="Accept the terms" />
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.click(screen.getByRole('checkbox'));
+
+		expect(onBlur).not.toHaveBeenCalled();
+
+		await user.click(screen.getByRole('button', { name: 'Next' }));
+
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+
+	it('fires from a disabled checkbox, which keeps its tab stop', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<Checkbox color="primary" disabled disabledTooltip="Ask an admin" onBlur={onBlur}>
+					Accept the terms
+				</Checkbox>
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.tab();
+		await user.tab();
+
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+});

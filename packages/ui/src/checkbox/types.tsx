@@ -1,4 +1,11 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode, Ref } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactNode,
+	Ref,
+} from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { CheckboxColor, CheckboxTextOverflow } from './constants.js';
 
@@ -208,6 +215,13 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 * @note Never called while `disabled` or `readOnly`.
 		 */
 		onChange?: (checked: boolean) => void;
+		/**
+		 * Called when the checkbox loses focus, for a form that marks the field as touched or
+		 * validates on blur, such as react-hook-form's `field.onBlur`.
+		 *
+		 * @note Also called while `disabled` or `readOnly`: both keep the checkbox focusable.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Forwarded to the checkbox itself as `data-testid`. Survives the tooltip trigger cloning
 		 * the element, which a raw `data-testid` prop does not. The wrapper is addressed with

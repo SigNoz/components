@@ -14,7 +14,7 @@
  * breaks the props one per line, a prop-level error moves off the tag line and the comment stops
  * covering it.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { Checkbox } from '../checkbox.js';
 
@@ -182,6 +182,18 @@ describe('value, defaultValue and onChange', () => {
 		assertType(<Checkbox color="primary" defaultChecked />);
 		// @ts-expect-error - the change handler is called `onChange`
 		assertType(<Checkbox color="primary" onCheckedChange={noop} />);
+	});
+});
+
+describe('onBlur', () => {
+	test('accepts a handler that takes no argument, as react-hook-form hands it', () => {
+		assertType(<Checkbox color="primary" onBlur={noop} />);
+	});
+
+	test('hands the handler the focus event', () => {
+		assertType(
+			<Checkbox color="primary" onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget} />,
+		);
 	});
 });
 

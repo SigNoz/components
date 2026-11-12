@@ -428,3 +428,24 @@ describe('CheckboxField props split', () => {
 		expect(screen.getByRole('checkbox')).not.toHaveStyle({ color: 'red' });
 	});
 });
+
+describe('CheckboxField onBlur', () => {
+	it('reaches the checkbox: once when focus leaves, and not on a toggle', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<CheckboxField color="primary" label="Send alerts" onBlur={onBlur} />
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.click(screen.getByText('Send alerts'));
+
+		expect(onBlur).not.toHaveBeenCalled();
+
+		await user.tab();
+
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+});

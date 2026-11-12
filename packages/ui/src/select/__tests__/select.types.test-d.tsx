@@ -2,7 +2,7 @@
  * Type-level tests for the props of {@link Select}. Run by `vitest --typecheck` and by
  * `pnpm type-check`. See `dropdown.types.test-d.tsx` for how the cases are written.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { Select } from '../select.js';
 import type { SelectGroupItemType, SelectItemType, SelectOptionItemType } from '../types.js';
@@ -166,6 +166,20 @@ describe('value', () => {
 			// @ts-expect-error - a single select reports a string
 			<Select placeholder="Pick" items={ONE} onChange={(value: string[]) => value} />,
 		);
+	});
+});
+
+describe('onBlur', () => {
+	test('takes a handler of the blur event, or one with no parameters', () => {
+		assertType(
+			<Select
+				placeholder="Pick"
+				items={ONE}
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+		assertType(<Select placeholder="Pick" items={ONE} onBlur={() => undefined} />);
+		assertType(<Select placeholder="Pick" multiple items={ONE} onBlur={() => undefined} />);
 	});
 });
 

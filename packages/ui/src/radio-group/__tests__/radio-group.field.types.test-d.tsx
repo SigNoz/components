@@ -13,7 +13,7 @@
  * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
  * comment stops covering it.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { RadioGroupField } from '../presets/radio-group-field.js';
 import type { RadioGroupItemType } from '../types.js';
@@ -141,6 +141,21 @@ describe('the props of the radio group', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - the change handler takes the value, not an event
 		assertType(<RadioGroupField label="Retention" color="primary" items={items} onChange={(event: MouseEvent) => event} />);
+	});
+
+	test('takes the blur handler, with or without the event', () => {
+		assertType(<RadioGroupField label="Retention" color="primary" items={items} onBlur={noop} />);
+		assertType(
+			<RadioGroupField
+				label="Retention"
+				color="primary"
+				items={items}
+				onBlur={(event: FocusEvent<HTMLElement>) => event}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - the blur handler takes a focus event
+		assertType(<RadioGroupField label="Retention" color="primary" items={items} onBlur={(event: MouseEvent) => event} />);
 	});
 
 	test('disabled and readOnly bring their reason', () => {

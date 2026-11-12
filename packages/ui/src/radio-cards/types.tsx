@@ -1,4 +1,4 @@
-import type { AriaAttributes, ComponentProps, ReactElement, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, FocusEvent, ReactElement, ReactNode } from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { RadioCardsTextOverflow } from './constants.js';
 
@@ -275,6 +275,16 @@ type RadioCardsSharedProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * @default false
 		 */
 		required?: boolean;
+		/**
+		 * Called once when the focus leaves the group, for a form that validates on blur.
+		 *
+		 * @note Moving the focus from one card to another does not call it, the focus is still inside
+		 * the group.
+		 *
+		 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
+		 * accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Forwarded to the root as `data-testid`. Survives the tooltip trigger cloning the group,
 		 * which a raw `data-testid` prop does not. Also names every card, see `items`.

@@ -2,7 +2,7 @@
 
 exports[`Checkbox type error messages > prints a message that names the constraint that failed 1`] = `
 {
-  "color > is required, the checked fill is a semantic statement the call site makes > \`color\` has no default, the call site has to pick the checked fill": "TS2741: Property 'color' is missing in type '{}' but required in type '{ [key: \`data-\${string}\`]: unknown; color: CheckboxColorType; textOverflow?: CheckboxTextOverflowType | undefined; name?: string | undefined; required?: boolean | undefined; ... 8 more ...; containerRef?: Ref<...> | undefined; }'.",
+  "color > is required, the checked fill is a semantic statement the call site makes > \`color\` has no default, the call site has to pick the checked fill": "TS2741: Property 'color' is missing in type '{}' but required in type '{ [key: \`data-\${string}\`]: unknown; color: CheckboxColorType; textOverflow?: CheckboxTextOverflowType | undefined; name?: string | undefined; required?: boolean | undefined; ... 9 more ...; containerRef?: Ref<...> | undefined; }'.",
   "color > rejects a color outside the palette > \`cherry\` is the legacy palette, not a CheckboxColor": "TS2322: Type '"cherry"' is not assignable to type 'CheckboxColorType'.",
   "color > rejects a color outside the palette > \`robin\` is the legacy palette, not a CheckboxColor": "TS2322: Type '"robin"' is not assignable to type 'CheckboxColorType'.",
   "color > rejects secondary, which Badge and Switch keep and Checkbox dropped > \`secondary\` is not a CheckboxColor, the checkbox palette dropped it": "TS2322: Type '"secondary"' is not assignable to type 'CheckboxColorType'.",

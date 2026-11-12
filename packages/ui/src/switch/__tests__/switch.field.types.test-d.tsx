@@ -13,7 +13,7 @@
  * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
  * comment stops covering it.
  */
-import { createRef, type Ref } from 'react';
+import { createRef, type FocusEvent, type Ref } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { SwitchField } from '../presets/switch-field.js';
 
@@ -22,6 +22,20 @@ const switchRef = createRef<HTMLSpanElement>();
 declare const maybeError: string | undefined;
 declare const maybeDisabled: boolean | undefined;
 declare const controllerRef: Ref<HTMLSpanElement>;
+
+/**
+ * The object react-hook-form's `Controller` hands to `render`, modelled by hand: the library does
+ * not depend on react-hook-form, but a consumer spreads this exact shape onto a field.
+ */
+type ControllerField<T> = {
+	onChange: (...event: any[]) => void;
+	onBlur: () => void;
+	value: T;
+	name: string;
+	ref: (instance: any) => void;
+	disabled?: boolean;
+};
+declare const controllerField: ControllerField<boolean>;
 
 describe('label and color', () => {
 	test('the label and the color are required', () => {
@@ -108,6 +122,17 @@ describe('the switch props', () => {
 		assertType(<SwitchField label="Send alerts" color="primary" defaultValue />);
 	});
 
+	test('takes the blur handler, with or without the event', () => {
+		assertType(<SwitchField label="Send alerts" color="primary" onBlur={noop} />);
+		assertType(
+			<SwitchField
+				label="Send alerts"
+				color="primary"
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+	});
+
 	test('a controlled value cannot come with a default', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - `value` makes the switch controlled for its whole life
@@ -118,6 +143,12 @@ describe('the switch props', () => {
 		const field = { value: true, onChange: noop, name: 'enabled', ref: controllerRef };
 
 		assertType(<SwitchField label="Send alerts" color="primary" {...field} />);
+	});
+
+	test('a react-hook-form Controller field is spread whole, next to the field props', () => {
+		assertType(
+			<SwitchField label="Send alerts" color="primary" error={maybeError} {...controllerField} />,
+		);
 	});
 
 	test('disabled and read-only keep their reasons', () => {

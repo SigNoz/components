@@ -2,6 +2,7 @@ import { Slider as SliderPrimitive } from '@base-ui/react/slider';
 import { type CSSProperties, forwardRef, useEffect, useState } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
 import { useFieldContext } from '../../lib/field-context.js';
+import { onFocusLeave } from '../../lib/focus-leave.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../../tooltip/tooltip-content-stack-context.js';
@@ -51,6 +52,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 		defaultValue,
 		onChange,
 		onAfterChange,
+		onBlur,
 		min = 0,
 		max = 100,
 		step = 1,
@@ -177,6 +179,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 			{...rootAria}
 			ref={ref}
 			id={id}
+			onBlur={onFocusLeave(onBlur)}
 			value={range ? values : values[0]}
 			min={min}
 			max={max}
