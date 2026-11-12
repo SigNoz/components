@@ -80,8 +80,9 @@ type Appearance = {
 };
 
 const APPEARANCES: Appearance[] = [
-	{ id: 'sm', label: 'sm', props: {} },
-	{ id: 'md', label: 'md', props: { size: 'md' } },
+	{ id: 'sm', label: 'sm', props: { size: 'sm' } },
+	{ id: 'md', label: 'md', props: {} },
+	{ id: 'lg', label: 'lg', props: { size: 'lg' } },
 	{ id: 'success', label: 'success', props: { status: 'success' } },
 	{ id: 'warning', label: 'warning', props: { status: 'warning' } },
 	{ id: 'danger', label: 'danger', props: { status: 'danger' } },
@@ -206,7 +207,7 @@ export const Showcase: Story = {
 		<div className={`story-container-full ${styles.columnLayout}`}>
 			<Section
 				title="States"
-				description="One row per appearance, one column per state, each cell empty then filled. sm is 32px, md is 40px, and the text size does not change. Hover darkens the border and the placeholder, and never while a status, disabled, or read-only is set: the status border wins. danger also announces itself as aria-invalid. Success is confirmation of a completed check, not a resting state for a valid field. Disabled fades to 0.6, read-only to 0.8. Unstyled drops the border and the background and keeps the focus ring."
+				description="One row per appearance, one column per state, each cell empty then filled. sm is 24px, md is 32px, lg is 40px, and the text size does not change. Hover darkens the border and the placeholder, and never while a status, disabled, or read-only is set: the status border wins. danger also announces itself as aria-invalid. Success is confirmation of a completed check, not a resting state for a valid field. Disabled fades to 0.6, read-only to 0.8. Unstyled drops the border and the background and keeps the focus ring."
 			>
 				<div
 					className={`${styles.matrix} ${styles.marginTopMedium}`}
@@ -350,13 +351,23 @@ export const Showcase: Story = {
 							/>
 						</Field>
 					</Row>
-					<Row label="md, with a prefix">
+					<Row label="sm, with a prefix">
 						<Field>
 							<Input
-								size="md"
+								size="sm"
 								prefix={<Search />}
 								placeholder="For eg. Simpsonville..."
-								aria-label="Medium prefix"
+								aria-label="Small prefix"
+							/>
+						</Field>
+					</Row>
+					<Row label="lg, with a prefix">
+						<Field>
+							<Input
+								size="lg"
+								prefix={<Search />}
+								placeholder="For eg. Simpsonville..."
+								aria-label="Large prefix"
 							/>
 						</Field>
 					</Row>
@@ -571,13 +582,39 @@ export const Showcase: Story = {
 							/>
 						</Field>
 					</Row>
-					<Row label="number, md, prefix">
+					<Row label="number, lg, prefix">
 						<Field>
 							<Input.Number
-								size="md"
+								size="lg"
 								defaultValue={3}
 								prefix={<Search />}
-								aria-label="Medium count"
+								aria-label="Large count"
+							/>
+						</Field>
+					</Row>
+					<Row label="number, sm">
+						<Field>
+							<Input.Number size="sm" defaultValue={3} min={0} max={10} aria-label="Small count" />
+						</Field>
+					</Row>
+					<Row label="password, sm">
+						<Field>
+							<Input.Password
+								size="sm"
+								placeholder="Enter password"
+								autoComplete="new-password"
+								aria-label="Small password"
+							/>
+						</Field>
+					</Row>
+					<Row label="textarea, sm, danger">
+						<Field>
+							<Input.TextArea
+								size="sm"
+								rows={3}
+								status="danger"
+								defaultValue={'Line one\nLine two'}
+								aria-label="Small description danger"
 							/>
 						</Field>
 					</Row>

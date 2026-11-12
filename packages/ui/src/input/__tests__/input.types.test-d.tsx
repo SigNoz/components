@@ -51,8 +51,16 @@ describe('native props', () => {
 	});
 
 	test('rejects the native size attribute, the prop means the frame height', () => {
-		// @ts-expect-error - `size` is `'sm' | 'md'`, not the character-width attribute
+		// @ts-expect-error - `size` is `'sm' | 'md' | 'lg'`, not the character-width attribute
 		assertType(<Input size={20} />);
+	});
+
+	test('accepts sm, md and lg, rejects any other size', () => {
+		assertType(<Input size="sm" />);
+		assertType(<Input size="md" />);
+		assertType(<Input size="lg" />);
+		// @ts-expect-error - the sizes are `'sm' | 'md' | 'lg'`
+		assertType(<Input size="xl" />);
 	});
 
 	test('rejects className and style', () => {
@@ -117,7 +125,7 @@ describe('testId', () => {
 describe('Input.Password', () => {
 	test('accepts the shared props', () => {
 		assertType(
-			<Input.Password placeholder="Password" size="md" testId="password" ref={inputRef} />,
+			<Input.Password placeholder="Password" size="lg" testId="password" ref={inputRef} />,
 		);
 	});
 

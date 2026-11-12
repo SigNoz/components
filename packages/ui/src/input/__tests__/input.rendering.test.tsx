@@ -17,23 +17,23 @@ describe('Input rendering', () => {
 		expect(frame).toContainElement(field);
 	});
 
-	it('defaults to the sm size and the default variant', () => {
+	it('defaults to the md size and the default variant', () => {
 		render(<Input testId="org" />);
 
 		const frame = screen.getByTestId('org');
 
-		expect(frame).toHaveAttribute('data-size', 'sm');
+		expect(frame).toHaveAttribute('data-size', 'md');
 		expect(frame).toHaveAttribute('data-variant', 'default');
 		expect(frame).not.toHaveAttribute('data-status');
 		expect(frame).not.toHaveAttribute('data-member');
 	});
 
 	it('mirrors size, variant and noFocusRing onto the frame', () => {
-		render(<Input size="md" variant="unstyled" noFocusRing testId="org" />);
+		render(<Input size="lg" variant="unstyled" noFocusRing testId="org" />);
 
 		const frame = screen.getByTestId('org');
 
-		expect(frame).toHaveAttribute('data-size', 'md');
+		expect(frame).toHaveAttribute('data-size', 'lg');
 		expect(frame).toHaveAttribute('data-variant', 'unstyled');
 		expect(frame).toHaveAttribute('data-no-focus-ring');
 	});
@@ -129,11 +129,13 @@ describe('Input rendering', () => {
 describe('Input field height', () => {
 	it.each([
 		['sm', 18],
-		['md', 26],
+		['md', 18],
+		['lg', 26],
 	] as const)(
 		'stretches a single-line field over the inner height of a %s frame',
 		(size, height) => {
 			setTokens(`
+			--spacing-1: 2px;
 			--spacing-3: 6px;
 			--spacing-6: 12px;
 			--input-border: black;

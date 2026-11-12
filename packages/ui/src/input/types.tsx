@@ -11,9 +11,9 @@ export type InputStatusType = (typeof InputStatus)[keyof typeof InputStatus];
  */
 type InputAppearanceProps = {
 	/**
-	 * The height of the field: `sm` is 32px, `md` is 40px. The text size does not change.
+	 * The height of the field: `sm` is 24px, `md` is 32px, `lg` is 40px. The text size does not change.
 	 *
-	 * @default 'sm'
+	 * @default 'md'
 	 */
 	size?: InputSizeType;
 	/**

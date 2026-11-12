@@ -55,7 +55,7 @@ export const TextArea: StoryObj<typeof Input.TextArea> = {
 		placeholder: 'Describe the incident...',
 		'aria-label': 'Description',
 		rows: 2,
-		size: 'md',
+		size: 'lg',
 		noFocusRing: false,
 	},
 	parameters: {

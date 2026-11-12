@@ -30,7 +30,7 @@ export default function OrganisationSearch() {
 
 ## Sizes and variants
 
-`size` is the height of the field: `sm` is 32px, `md` is 40px. The text does not change size.
+`size` is the height of the field: `sm` is 24px, `md` is 32px, `lg` is 40px. The text does not change size.
 
 `variant="unstyled"` drops the border and the background and keeps everything else: padding,
 height, text, and the focus ring, which is the only thing marking focus there.
@@ -71,17 +71,6 @@ has no `prefix`/`suffix`.
 event, and the field steps with the buttons at its trailing edge, the arrow keys (`Shift` for
 `largeStep`) and `Home`/`End`. It is not a target for `register()`; use a react-hook-form
 `Controller`.
-
-## Limitations
-
-**A field inside an iframe reads the page's keyboard and pointer state.** Whether focus came from
-a keyboard or a pointer is tracked on the page's own document. A field portaled into an iframe
-reads that state too, so a click inside the iframe can still draw the ring, and Tab inside it can
-miss it, depending on the last key or press in the page.
-
-**A click made before the Input code loads is not seen.** Tracking starts when that code loads. If
-Input sits in a lazy-loaded chunk, the click that loads the chunk comes first, so a field that
-focuses itself on mount takes that click for keyboard focus and draws the ring.
 
 ## Asserting on it
 

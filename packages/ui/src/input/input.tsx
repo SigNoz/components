@@ -66,7 +66,7 @@ import type {
  * | root attribute | value |
  * |---|---|
  * | `data-slot` | `"input"` |
- * | `data-size` | `"sm"` or `"md"` |
+ * | `data-size` | `"sm"`, `"md"` or `"lg"` |
  * | `data-variant` | `"default"` or `"unstyled"` |
  * | `data-status` | mirrors the resolved status, absent without one |
  * | `data-disabled` | present while disabled, and not read-only |

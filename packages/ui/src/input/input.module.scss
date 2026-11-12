@@ -16,6 +16,7 @@
 	--input-internal-line-height: var(--label-base-400-line-height);
 	--input-internal-letter-spacing: var(--label-base-400-letter-spacing);
 	--input-internal-text-transform: var(--label-base-400-text-transform);
+	--input-internal-padding-block: var(--spacing-3);
 	// Reset on every frame, or an Input in another one's slot inherits the outer ring color.
 	--input-internal-outline-color: transparent;
 
@@ -26,7 +27,8 @@
 	inline-size: var(--input-internal-width, 100%);
 	max-inline-size: var(--input-internal-max-width, none);
 	block-size: var(--input-internal-height);
-	padding: var(--input-padding, var(--spacing-3) var(--spacing-6) var(--spacing-3) var(--spacing-3));
+	padding: var(--input-padding,
+			var(--input-internal-padding-block) var(--spacing-6) var(--input-internal-padding-block) var(--spacing-3));
 	border: var(--input-border-width, 1px) solid var(--input-internal-border);
 	border-radius: var(--input-border-radius, var(--radius-1));
 	background-color: var(--input-internal-background);
@@ -51,12 +53,18 @@
 	font-variant-numeric: normal;
 	font-feature-settings: 'ss01' 1;
 
+	// The default block padding leaves a 24px frame shorter than its text.
 	&[data-size='sm'] {
-		--input-internal-height: var(--input-sm-height, 32px);
+		--input-internal-height: var(--input-sm-height, 24px);
+		--input-internal-padding-block: var(--spacing-1);
 	}
 
 	&[data-size='md'] {
-		--input-internal-height: var(--input-md-height, 40px);
+		--input-internal-height: var(--input-md-height, 32px);
+	}
+
+	&[data-size='lg'] {
+		--input-internal-height: var(--input-lg-height, 40px);
 	}
 
 	// The hover border never moves while a status is set: the status border is the stronger signal.

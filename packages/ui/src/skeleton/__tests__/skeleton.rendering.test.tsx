@@ -37,7 +37,11 @@ const avatar: PartCase = {
 
 const allParts = [root, input, button, avatar];
 const widthParts = [root, input, button];
-const sizedParts = [input, button, avatar];
+const sizedParts = [
+	{ part: input, sizes: ['sm', 'md', 'lg'] },
+	{ part: button, sizes: ['sm', 'md'] },
+	{ part: avatar, sizes: ['sm', 'md'] },
+] as const;
 
 function rowsOf(container: HTMLElement): HTMLElement[] {
 	return [...container.querySelectorAll<HTMLElement>('[data-slot="skeleton-row"]')];
@@ -437,9 +441,9 @@ describe.each(widthParts)('$name width and maxWidth', ({ ui }) => {
 	});
 });
 
-describe.each(sizedParts)('$name size', ({ ui }) => {
-	it.each(['sm', 'md'] as const)('mirrors size %s on the element', (size) => {
-		render(ui({ size }));
+describe.each(sizedParts)('$part.name size', ({ part, sizes }) => {
+	it.each(sizes)('mirrors size %s on the element', (size) => {
+		render(part.ui({ size }));
 
 		expect(screen.getByTestId('part')).toHaveAttribute('data-size', size);
 	});
@@ -448,6 +452,7 @@ describe.each(sizedParts)('$name size', ({ ui }) => {
 const renderedSizes = [
 	{ part: input, size: 'sm', height: 24 },
 	{ part: input, size: 'md', height: 32 },
+	{ part: input, size: 'lg', height: 40 },
 	{ part: button, size: 'sm', width: 48, height: 24 },
 	{ part: button, size: 'md', width: 64, height: 32 },
 	{ part: avatar, size: 'sm', width: 24, height: 24 },

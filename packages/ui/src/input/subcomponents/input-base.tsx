@@ -44,7 +44,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(function I
 	}: InputBaseProps & RejectedProps,
 	ref,
 ) {
-	const resolvedSize = size ?? 'sm';
+	const resolvedSize = size ?? 'md';
 	const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
 	const { control, data } = splitAttributes(props);
 	const isDisabled = disabled && !readOnly;

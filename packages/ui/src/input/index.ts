@@ -48,10 +48,11 @@
  * | `--input-icon-glyph-color` | `var(--l1-background)` |
  * | `--input-icon-size` | `14px` |
  * | `--input-letter-spacing` | `var(--input-internal-letter-spacing)` |
+ * | `--input-lg-height` | `40px` |
  * | `--input-line-height` | `var(--input-internal-line-height)` |
- * | `--input-md-height` | `40px` |
+ * | `--input-md-height` | `32px` |
  * | `--input-number-root-display` | `contents` |
- * | `--input-padding` | `var(--spacing-3) var(--spacing-6) var(--spacing...` |
+ * | `--input-padding` | `var(--input-internal-padding-block) var(--spaci...` |
  * | `--input-password-toggle-align-items` | `center` |
  * | `--input-password-toggle-background` | `transparent` |
  * | `--input-password-toggle-border` | `none` |
@@ -70,7 +71,7 @@
  * | `--input-placeholder-transition-property` | `color` |
  * | `--input-placeholder-transition-timing-function` | `ease-out` |
  * | `--input-readonly-opacity` | `0.8` |
- * | `--input-sm-height` | `32px` |
+ * | `--input-sm-height` | `24px` |
  * | `--input-step-button-align-items` | `center` |
  * | `--input-step-button-background` | `transparent` |
  * | `--input-step-button-border` | `none` |

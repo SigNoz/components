@@ -33,8 +33,8 @@ export function isPointerModality(): boolean {
 
 // Installed when the module loads, before any field mounts: a click that mounts the first field
 // with `autoFocus` must already count as a pointer. Capture phase, so a handler that stops
-// propagation cannot hide an event. Only the page's own document is watched: a field portaled into
-// an iframe reads this state, a gap the Input docs list under Limitations.
+// propagation cannot hide an event. Only the page's own document is watched, so a field portaled
+// into an iframe reads the parent page's state.
 if (typeof document !== 'undefined') {
 	document.addEventListener('pointerdown', onPointerDown, { capture: true, passive: true });
 	document.addEventListener('keydown', onKeyDown, { capture: true, passive: true });
