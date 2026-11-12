@@ -6,7 +6,7 @@ import {
 	useEffect,
 	useMemo,
 } from 'react';
-import { useFieldContext } from '../lib/field-context.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { resolveGroupReason } from '../lib/group-reason.js';
 import { uniqueByValue } from '../lib/unique-by-value.js';
 import { useFirstRenderControl } from '../lib/use-first-render-control.js';
@@ -154,7 +154,8 @@ export function useRadioCardsGroup({
  *
  * The two attribute sets are spread before the cards' own props, and each is `undefined` rather
  * than holding an `undefined` value, which would erase what Base UI sets on the same attribute.
- * `aria-invalid` is not allowed on `role="group"`, so `RadioCards.Multiple` leaves it out.
+ * `aria-invalid` is not allowed on `role="group"`, so `RadioCards.Multiple` takes `invalidDataProps`
+ * instead: `data-invalid`, which the stylesheet reads and Base UI sets by itself inside a `Field`.
  *
  * @access private
  */
@@ -181,6 +182,7 @@ export function useRadioCardsField(
 		isFieldRequired: required === undefined && field?.required === true,
 		nameProps,
 		invalidProps: field?.status === 'danger' ? { 'aria-invalid': true } : undefined,
+		invalidDataProps: fieldInvalidDataProps(field),
 		focusTarget: field?.focusTarget,
 	};
 }

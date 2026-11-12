@@ -28,6 +28,12 @@ import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types
  * `color` paints the fill, the thumb border and the dots inside the fill, from the same hues as
  * `Badge`. The track and the other dots are tints of it. It is required, with no default.
  *
+ * ### Invalid
+ *
+ * While a thumb input is `aria-invalid`, from a `Field` or a `Field.Group` in `danger` or written
+ * on a single slider, the border of its thumb takes `--destructive` whatever the `color`. The fill
+ * and the track keep theirs.
+ *
  * ### Keys
  *
  * Each thumb is one tab stop, a native `<input type="range">`. The arrows move one `step`.

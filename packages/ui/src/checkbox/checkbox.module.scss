@@ -62,6 +62,13 @@
 		--checkbox-internal-hover-border-color: var(--checkbox-highlight-danger-border-hover);
 	}
 
+	// Only the unchecked box reacts to hover, through this property, so setting it keeps the danger
+	// border on hover.
+	&[aria-invalid='true'],
+	&[data-invalid] {
+		--checkbox-internal-hover-border-color: var(--checkbox-invalid-border-color, var(--destructive));
+	}
+
 	// The ring hugs the box, not the box plus label: focus belongs to the control; the click
 	// target is a separate, larger thing.
 	&:focus-visible {
@@ -103,6 +110,11 @@
 .checkbox[data-indeterminate] .checkbox__box {
 	border-color: var(--checkbox-checked-border, var(--checkbox-internal-checked-background));
 	background-color: var(--checkbox-checked-background, var(--checkbox-internal-checked-background));
+}
+
+// The same specificity as the filled rule above, so it has to come after it.
+.checkbox:is([aria-invalid='true'], [data-invalid]) .checkbox__box {
+	border-color: var(--checkbox-invalid-border-color, var(--destructive));
 }
 
 // Hover fires from the box, its hit-area ring, or the whole labelled row: the label is part of

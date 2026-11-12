@@ -8,7 +8,7 @@ import {
 	useMemo,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { useFieldContext } from '../lib/field-context.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -139,6 +139,9 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			{...(isFieldRequired ? { 'aria-required': true } : {})}
 			aria-labelledby={hasLabel ? labelId : undefined}
 			aria-describedby={hasDescription ? descriptionId : undefined}
+			// Inside a `Field` Base UI marks the switch invalid. A `Field.Group` has no Base UI field,
+			// so its status is read here, as `data-invalid` only: the group's message already says so.
+			{...fieldInvalidDataProps(field)}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
@@ -265,6 +268,11 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * the browser's. The switch's own `required` wins, and keeps the native one. `SwitchField` writes
  * the two together.
  *
+ * While the field is in `danger`, an inset ring of `--destructive` outlines the track, checked or
+ * not, since the track has no border of its own. `data-invalid` is on the switch for it. Base UI
+ * sets it inside a `Field`, and the switches of a `Field.Group` read the status themselves and set
+ * no `aria-invalid`. An `aria-invalid` written on the switch draws the ring the same way.
+ *
  * ### Disabled and read-only
  *
  * `disabled` blocks the switch, `readOnly` locks its value. Neither leaves the keyboard: both are
@@ -293,6 +301,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * | `data-color` | mirrors the prop |
  * | `data-checked` / `data-unchecked` | the current state |
  * | `data-disabled`, `data-readonly`, `data-required` | present while set |
+ * | `data-invalid` | present while a `Field` or a `Field.Group` around it is in `danger` |
  *
  * | wrapper attribute | value |
  * |---|---|

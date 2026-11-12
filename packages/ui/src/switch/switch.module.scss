@@ -72,6 +72,13 @@
 		background-color: var(--switch-checked-background, var(--switch-internal-checked-background));
 	}
 
+	// An inset shadow stands in for a border: it paints over the fill, under the thumb, and leaves
+	// the outside free for the focus outline.
+	&[aria-invalid='true'],
+	&[data-invalid] {
+		box-shadow: inset 0 0 0 var(--switch-invalid-border-width, 1px) var(--switch-invalid-border-color, var(--destructive));
+	}
+
 	// The ring hugs the track and follows its pill radius. It never wraps the label: the label is
 	// not the focus target, and enclosing it makes a 28px control look like a row.
 	&:focus-visible {
