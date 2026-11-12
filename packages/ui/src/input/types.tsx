@@ -113,12 +113,68 @@ type InputAppearanceProps = {
 	[key: `data-${string}`]: unknown;
 };
 
+type InputValue = ComponentPropsWithoutRef<'input'>['value'];
+type InputTextAreaValue = ComponentPropsWithoutRef<'textarea'>['value'];
+
+/**
+ * `nullable` decides whether `value` may be `null`, so the two travel as a union: without it the
+ * types are the native ones, and `value={null}` is a type error.
+ *
+ * `nullable` only takes `true`, so a field is nullable by being written that way, never by a flag
+ * decided at run time.
+ *
+ * The member without `nullable` comes last on purpose. TypeScript reports a props object that
+ * matches neither member against the last one, so a `value` of `null` without `nullable` is told
+ * about the `value`, not about a missing `nullable`.
+ */
+export type InputNullableType<Value> =
+	| {
+			/**
+			 * Makes `value` also take `null` as the empty field. For a nullable schema field (zod
+			 * `.nullable()`) driven through a react-hook-form `Controller`.
+			 *
+			 * @note `onChange` is still the native change event, so it never reports `null`: the
+			 * form library holds the empty field as `null` itself, and writes it back through `value`.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable: true;
+			/**
+			 * The controlled value. `null` is the empty field, drawn as an empty string.
+			 *
+			 * @note Use with `onChange`. For an uncontrolled field leave `value` out and use
+			 * `defaultValue`, which is what react-hook-form's `register()` does.
+			 */
+			value?: Value | null;
+	  }
+	| {
+			/**
+			 * Makes `value` also take `null` as the empty field. For a nullable schema field (zod
+			 * `.nullable()`) driven through a react-hook-form `Controller`.
+			 *
+			 * @note `onChange` is still the native change event, so it never reports `null`: the
+			 * form library holds the empty field as `null` itself, and writes it back through `value`.
+			 *
+			 * @note Only `true` is accepted.
+			 */
+			nullable?: never;
+			/**
+			 * The controlled value. The empty field is the empty string.
+			 *
+			 * @note `null` is not a value here. A field that holds `null` while empty takes
+			 * `nullable`.
+			 *
+			 * @note Use with `onChange`. For an uncontrolled field leave `value` out and use
+			 * `defaultValue`, which is what react-hook-form's `register()` does.
+			 */
+			value?: Value;
+	  };
+
 type InputNativeProps = Pick<
 	ComponentPropsWithoutRef<'input'>,
 	| 'id'
 	| 'name'
 	| 'type'
-	| 'value'
 	| 'defaultValue'
 	| 'placeholder'
 	| 'required'
@@ -164,15 +220,17 @@ type InputNativeProps = Pick<
 	| 'onCompositionEnd'
 >;
 
-export type InputProps = InputAppearanceProps & InputNativeProps & AriaAttributes;
+type InputSharedProps = InputAppearanceProps & InputNativeProps & AriaAttributes;
 
-export type InputPasswordProps = Omit<InputProps, 'type' | 'suffix' | 'list' | 'multiple'>;
+export type InputProps = InputSharedProps & InputNullableType<InputValue>;
+
+export type InputPasswordProps = Omit<InputSharedProps, 'type' | 'suffix' | 'list' | 'multiple'> &
+	InputNullableType<InputValue>;
 
 type InputTextAreaNativeProps = Pick<
 	ComponentPropsWithoutRef<'textarea'>,
 	| 'id'
 	| 'name'
-	| 'value'
 	| 'defaultValue'
 	| 'placeholder'
 	| 'required'
@@ -207,7 +265,8 @@ type InputTextAreaNativeProps = Pick<
 
 export type InputTextAreaProps = Omit<InputAppearanceProps, 'prefix' | 'suffix'> &
 	InputTextAreaNativeProps &
-	AriaAttributes;
+	AriaAttributes &
+	InputNullableType<InputTextAreaValue>;
 
 export type InputNumberProps = InputAppearanceProps &
 	Pick<
@@ -222,6 +281,16 @@ export type InputNumberProps = InputAppearanceProps &
 		 * @note Use with `onChange`. For an uncontrolled field use `defaultValue` instead.
 		 */
 		value?: number | null;
+		/**
+		 * Accepted so a nullable schema field (zod `.nullable()`) spreads through a react-hook-form
+		 * `Controller` the same way as on the other inputs.
+		 *
+		 * @note `value` and `onChange` already take and report `null` for an empty field, with or
+		 * without this prop, so it changes nothing here.
+		 *
+		 * @note Only `true` is accepted.
+		 */
+		nullable?: true;
 		/**
 		 * The value on first render, for a field that keeps its own state.
 		 *
@@ -351,7 +420,12 @@ export type ValidateInputProps<T> = (T extends { disabled: boolean | undefined }
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
 
-type WithField<P> = Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps;
+/**
+ * Distributes over the `nullable` union, so `nullable` still decides the type of `value`.
+ */
+type WithField<P> = P extends unknown
+	? Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps
+	: never;
 
 /**
  * The props of `InputField`: the field's label, description and status, and every prop of `Input`.

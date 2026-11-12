@@ -108,6 +108,7 @@ export type {
 	RadioGroupDisableType,
 	RadioGroupFieldProps,
 	RadioGroupItemType,
+	RadioGroupNullableType,
 	RadioGroupProps,
 	RadioGroupReadOnlyType,
 	RadioGroupTextOverflowType,

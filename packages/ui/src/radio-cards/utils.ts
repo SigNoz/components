@@ -201,7 +201,7 @@ export function useRadioCardsValue<T>({
 	empty,
 }: {
 	component: string;
-	value: T | undefined;
+	value: T | null | undefined;
 	defaultValue: T | undefined;
 	/**
 	 * The value with no card checked: what a controlled group shows once `value` turns `undefined`.
@@ -209,7 +209,7 @@ export function useRadioCardsValue<T>({
 	empty: T;
 }): [T, (next: T) => void] {
 	return useFirstRenderControl({
-		value,
+		value: value === null ? empty : value,
 		defaultValue,
 		empty,
 		turnedUndefinedWarning: `${component}: \`value\` turned \`undefined\`, but it was set on the first render, so the group stays controlled and shows no card checked. Write ${JSON.stringify(empty)} to clear it.`,

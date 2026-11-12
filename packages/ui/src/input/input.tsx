@@ -50,8 +50,8 @@ import type {
  * browsers match `:focus-visible` on a clicked text field, so the frame tracks the last input
  * instead and sets `data-focus-visible`. Focus moved by a script draws the ring unless a pointer
  * came first. The border itself never changes color on focus: the ring is the one focus signal,
- * the same as every other control. `noFocusRing` is for a surface that draws a focus treatment of its own; it never
- * goes with `variant="unstyled"`, where the ring is all that marks focus.
+ * the same as every other control. `noFocusRing` is for a surface that draws a focus treatment of
+ * its own; it never goes with `variant="unstyled"`, where the ring is all that marks focus.
  *
  * ### Disabled and read-only
  *
@@ -104,6 +104,16 @@ import type {
  *   placeholder="For eg. Simpsonville..."
  *   error={errors.organisation?.message}
  *   {...register('organisation')}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // A zod `.nullable()` field: `nullable` lets the `null` of an empty field through as `value`
+ * <Controller
+ *   control={control}
+ *   name="nickname"
+ *   render={({ field }) => <Input aria-label="Nickname" {...field} nullable />}
  * />
  * ```
  */

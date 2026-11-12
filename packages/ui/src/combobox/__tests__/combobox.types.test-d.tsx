@@ -14,6 +14,7 @@ import type {
 
 const ONE: ComboboxItemType[] = [{ type: 'item', value: 'a', label: 'A' }];
 const ref = createRef<HTMLElement>();
+declare const isNullable: boolean;
 
 describe('root props', () => {
 	test('accepts items and the two placeholders, plus a ref', () => {
@@ -225,6 +226,180 @@ describe('value', () => {
 				multiple
 				items={ONE}
 				displayValue={() => 'x'}
+			/>,
+		);
+	});
+});
+
+describe('nullable', () => {
+	test('takes null or undefined as the value, and reports a string or null', () => {
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				nullable
+				value={null}
+				onChange={(value: string | null) => value}
+			/>,
+		);
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				nullable
+				value={undefined}
+			/>,
+		);
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				nullable={true}
+				value="a"
+			/>,
+		);
+	});
+
+	test('takes null with multiple, and still reports an array', () => {
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				items={ONE}
+				nullable
+				value={null}
+				onChange={(value: string[]) => value}
+			/>,
+		);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+				nullable={isNullable}
+				value={null}
+			/>,
+		);
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				items={ONE}
+				// @ts-expect-error - `nullable` only takes `true`, with multiple too
+				nullable={isNullable}
+				value={null}
+			/>,
+		);
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				// @ts-expect-error - `nullable` only takes `true`, also without a `null` value
+				nullable={isNullable}
+				value="a"
+			/>,
+		);
+	});
+
+	test('rejects null without nullable', () => {
+		assertType(
+			// @ts-expect-error - `null` needs `nullable`
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				value={null}
+			/>,
+		);
+		assertType(
+			// @ts-expect-error - `null` needs `nullable`, with multiple too
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				items={ONE}
+				value={null}
+			/>,
+		);
+	});
+
+	test('rejects null when nullable is false or undefined', () => {
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`
+				nullable={false}
+				value={null}
+			/>,
+		);
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				items={ONE}
+				// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`, with multiple too
+				nullable={false}
+				value={null}
+			/>,
+		);
+		assertType(
+			// @ts-expect-error - `nullable={undefined}` is the same as leaving it out
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				nullable={undefined}
+				value={null}
+			/>,
+		);
+	});
+
+	test('keeps the shape that multiple decides', () => {
+		assertType(
+			// @ts-expect-error - a nullable single combobox holds one value
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				nullable
+				value={['a']}
+			/>,
+		);
+		assertType(
+			// @ts-expect-error - a nullable multiple combobox holds an array
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				items={ONE}
+				nullable
+				value="a"
+			/>,
+		);
+	});
+
+	test('a nullable combobox reports null, so its onChange has to take it', () => {
+		assertType(
+			// @ts-expect-error - a `(value: string | undefined) => void` does not take `null`
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				nullable
+				onChange={(value: string | undefined) => value}
 			/>,
 		);
 	});

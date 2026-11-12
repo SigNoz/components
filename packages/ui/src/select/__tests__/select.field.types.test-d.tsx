@@ -26,6 +26,9 @@ type ReactHookFormField<Value> = {
 };
 declare const rhfField: ReactHookFormField<string>;
 declare const rhfMultipleField: ReactHookFormField<string[]>;
+declare const rhfNullableField: ReactHookFormField<string | null>;
+declare const rhfNullableMultipleField: ReactHookFormField<string[] | null>;
+declare const isNullable: boolean;
 
 describe('label, items and placeholder', () => {
 	test('all three are required', () => {
@@ -237,6 +240,84 @@ describe('the select props', () => {
 				contentMaxHeight={200}
 			/>,
 		);
+	});
+});
+
+describe('nullable', () => {
+	test('a react-hook-form field whose value can be null is accepted, with nullable', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				nullable
+				{...rhfNullableField}
+				error={maybeError}
+			/>,
+		);
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				multiple
+				items={ONE}
+				nullable
+				{...rhfNullableMultipleField}
+				error={maybeError}
+			/>,
+		);
+	});
+
+	test('a react-hook-form field whose value cannot be null is accepted too', () => {
+		assertType(
+			<SelectField label="Framework" placeholder="Pick" items={ONE} nullable {...rhfField} />,
+		);
+	});
+
+	test('takes null as the value and reports a string or null', () => {
+		assertType(
+			<SelectField
+				label="Framework"
+				placeholder="Pick"
+				items={ONE}
+				nullable
+				value={null}
+				onChange={(value: string | null) => value}
+			/>,
+		);
+	});
+
+	test('rejects a null value without nullable', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable`
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} {...rhfNullableField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `null` needs `nullable`, with multiple too
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} {...rhfNullableMultipleField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable={false} {...rhfNullableField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, leave it out instead of passing `false`, with multiple too
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} nullable={false} {...rhfNullableMultipleField} />);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable={isNullable} {...rhfNullableField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, also without a `null` value
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable={isNullable} {...rhfField} />);
+	});
+
+	test('keeps the shape that multiple decides', () => {
+		// oxfmt-ignore
+		// @ts-expect-error - a nullable array field is a multiple select
+		assertType(<SelectField label="Framework" placeholder="Pick" items={ONE} nullable {...rhfNullableMultipleField} />);
+		// oxfmt-ignore
+		// @ts-expect-error - a nullable single field is not a multiple select
+		assertType(<SelectField label="Framework" placeholder="Pick" multiple items={ONE} nullable {...rhfNullableField} />);
 	});
 });
 

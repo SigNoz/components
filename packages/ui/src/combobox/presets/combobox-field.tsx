@@ -64,8 +64,7 @@ const ComboboxFieldImpl = createFieldShorthand<ComboboxFieldProps, HTMLElement>(
  *
  * @example
  * ```tsx
- * // The `field` of a react-hook-form `Controller` spreads as is: `value`, `onChange`, `onBlur`,
- * // `name` and `ref` all land on the combobox.
+ * // react-hook-form: spread the Controller's field; a zod `.nullable()` field adds `nullable`
  * <Controller
  *   control={control}
  *   name="service"

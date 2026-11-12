@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RadioGroup nullable type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "nullable and onChange > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable and onChange > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on the field shorthand too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable and onChange > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, with a plain callback too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable and onChange > rejects an onChange that cannot take null > a nullable group's \`onChange\` takes \`string | null\`": "TS2322: Type '{ color: "primary"; items: RadioGroupItemType[]; nullable: true; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & (RadioGroupProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
+    Types of property 'onChange' are incompatible.
+      Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null) => void'.
+        Types of parameters 'value' and 'value' are incompatible.
+          Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+            Type 'null' is not assignable to type 'SetStateAction<string>'.",
+  "nullable and onChange > rejects an onChange that cannot take null from the field shorthand too > a nullable group's \`onChange\` takes \`string | null\`": "TS2322: Type '{ label: string; color: "primary"; items: RadioGroupItemType[]; nullable: true; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & Checked<RadioGroupFieldProps>'.
+    Types of property 'onChange' are incompatible.
+      Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null) => void'.
+        Types of parameters 'value' and 'value' are incompatible.
+          Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+            Type 'null' is not assignable to type 'SetStateAction<string>'.",
+  "nullable and onChange > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable and onChange > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on the field shorthand too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable and onChange > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, with a plain callback too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable and the other props > rejects a prop the shorthand does not have > \`retention\` is not a prop": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "nullable and the other props > still asks for the items and the color > \`color\` has no default, it must be picked explicitly": "TS2322: Type '{ label: string; items: RadioGroupItemType[]; nullable: true; }' is not assignable to type 'IntrinsicAttributes & Checked<RadioGroupFieldProps>'.
+    Property 'color' is missing in type '{ label: string; items: RadioGroupItemType[]; nullable: true; }' but required in type '{ [key: \`data-\${string}\`]: unknown; items: RadioGroupItemType[]; color: RadioGroupColorType; textOverflow?: RadioGroupTextOverflowType | undefined; ... 5 more ...; testId?: string | undefined; }'.",
+  "nullable and the other props > still asks for the items and the color > a radio group with no options is not allowed": "TS2322: Type '{ label: string; color: "primary"; nullable: true; }' is not assignable to type 'IntrinsicAttributes & Checked<RadioGroupFieldProps>'.
+    Property 'items' is missing in type '{ label: string; color: "primary"; nullable: true; }' but required in type '{ [key: \`data-\${string}\`]: unknown; items: RadioGroupItemType[]; color: RadioGroupColorType; textOverflow?: RadioGroupTextOverflowType | undefined; ... 5 more ...; testId?: string | undefined; }'.",
+}
+`;

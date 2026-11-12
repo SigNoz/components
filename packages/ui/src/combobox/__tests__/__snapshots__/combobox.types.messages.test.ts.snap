@@ -6,6 +6,37 @@ exports[`Combobox type error messages > prints a message that names the constrai
   "disabled and readOnly > rejects a disabled reason with no disabled > \`disabledTooltip\` only renders while \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledCombobox'.",
   "disabled and readOnly > rejects a readOnly combobox with no reason > a read-only combobox has to tell the user why": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a read-only control has to tell the user why it cannot be changed'' is missing in type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; readOnly: true; }' but required in type 'AReadOnlyComboboxMustSayWhy'.",
   "disabled and readOnly > rejects a readOnly reason with no readOnly > \`readOnlyTooltip\` only renders while \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlyCombobox'.",
+  "nullable > a nullable combobox reports null, so its onChange has to take it > a \`(value: string | undefined) => void\` does not take \`null\`": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; nullable: true; onChange: (value: string | undefined) => string | undefined; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Types of property 'onChange' are incompatible.
+      Type '(value: string | undefined) => string | undefined' is not assignable to type '((value: string[]) => void) | ((value: string | null) => void) | undefined'.
+        Type '(value: string | undefined) => string | undefined' is not assignable to type '(value: string[]) => void'.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'string[]' is not assignable to type 'string'.",
+  "nullable > keeps the shape that multiple decides > a nullable multiple combobox holds an array": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; multiple: true; items: ComboboxItemType[]; nullable: true; value: string; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Types of property 'value' are incompatible.
+      Type 'string' is not assignable to type 'string[]'.",
+  "nullable > keeps the shape that multiple decides > a nullable single combobox holds one value": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; nullable: true; value: string[]; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; nullable: true; value: string[]; }' is not assignable to type '(IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & ... 4 more ... & RefAttributes<...>) | (IntrinsicAttributes & ... 5 more ... & RefAttributes<...>)'.
+      Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; nullable: true; value: string[]; }' is not assignable to type 'ComboboxSingleNullableProps'.
+        Types of property 'value' are incompatible.
+          Type 'string[]' is not assignable to type 'string'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, also without a \`null\` value": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, with multiple too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects null when nullable is false or undefined > \`nullable={undefined}\` is the same as leaving it out": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; nullable: undefined; value: null; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Types of property 'value' are incompatible.
+      Type 'null' is not assignable to type 'string | string[] | undefined'.",
+  "nullable > rejects null when nullable is false or undefined > \`nullable\` only takes \`true\`, leave it out instead of passing \`false\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects null when nullable is false or undefined > \`nullable\` only takes \`true\`, leave it out instead of passing \`false\`, with multiple too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects null without nullable > \`null\` needs \`nullable\`": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; value: null; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; value: null; }' is not assignable to type 'ComboboxSingleProps'.
+      Types of property 'value' are incompatible.
+        Type 'null' is not assignable to type 'string | undefined'.",
+  "nullable > rejects null without nullable > \`null\` needs \`nullable\`, with multiple too": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; multiple: true; items: ComboboxItemType[]; value: null; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
+    Type '{ placeholder: string; searchInputProps: { placeholder: string; }; multiple: true; items: ComboboxItemType[]; value: null; }' is not assignable to type '(IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & ... 4 more ... & RefAttributes<...>) | (IntrinsicAttributes & ... 5 more ... & RefAttributes<...>)'.
+      Type '{ placeholder: string; searchInputProps: { placeholder: string; }; multiple: true; items: ComboboxItemType[]; value: null; }' is not assignable to type 'ComboboxMultipleProps'.
+        Types of property 'value' are incompatible.
+          Type 'null' is not assignable to type 'string[] | undefined'.",
   "root props > rejects a combobox with no placeholder > the trigger has to show something while nothing is selected": "TS2322: Type '{ searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
     Property 'placeholder' is missing in type '{ searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; }' but required in type '{ [key: \`data-\${string}\`]: unknown; items: ComboboxItemType[]; placeholder: string; allowClear?: boolean | undefined; allowCreate?: boolean | ((query: string) => ReactNode) | undefined; ... 18 more ...; onBlur?: ((event: FocusEvent<...>) => void) | undefined; }'.",
   "root props > rejects a combobox with no search row props > the search row is always there, so \`searchInputProps\` cannot be left out": "TS2322: Type '{ placeholder: string; items: ComboboxItemType[]; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
@@ -32,11 +63,14 @@ exports[`Combobox type error messages > prints a message that names the constrai
     Types of property 'value' are incompatible.
       Type 'string' is not assignable to type 'string[]'.",
   "value > rejects an array without multiple > a single combobox holds one value": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; value: string[]; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
-    Property 'multiple' is missing in type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; value: string[]; }' but required in type 'ComboboxMultipleProps'.",
+    Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; value: string[]; }' is not assignable to type 'ComboboxSingleProps'.
+      Types of property 'value' are incompatible.
+        Type 'string[]' is not assignable to type 'string'.",
   "value > rejects displayValue with multiple > a multiple combobox shows chips, not one value": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; multiple: true; items: ComboboxItemType[]; displayValue: () => string; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
     Types of property 'displayValue' are incompatible.
       Type '() => string' is not assignable to type 'undefined'.",
   "value > rejects maxDisplayedPills without multiple > only a multiple combobox shows chips": "TS2322: Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; maxDisplayedPills: number; }' is not assignable to type 'IntrinsicAttributes & (ComboboxProps & Record<never, never> & RefAttributes<HTMLElement>)'.
-    Property 'multiple' is missing in type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; maxDisplayedPills: number; }' but required in type 'ComboboxMultipleProps'.",
+    Type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; maxDisplayedPills: number; }' is not assignable to type '(IntrinsicAttributes & Pick<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "id"> & ... 4 more ... & RefAttributes<...>) | (IntrinsicAttributes & ... 5 more ... & RefAttributes<...>)'.
+      Property 'multiple' is missing in type '{ placeholder: string; searchInputProps: { placeholder: string; }; items: ComboboxItemType[]; maxDisplayedPills: number; }' but required in type 'ComboboxMultipleProps'.",
 }
 `;

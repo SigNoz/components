@@ -2,12 +2,37 @@
 
 exports[`InputField type error messages > prints a message that names the constraint that failed 1`] = `
 {
-  "label > is required and a string > a field exists to own its label": "TS2741: Property 'label' is missing in type '{}' but required in type 'FieldLabelAndMessageProps'.",
+  "label > is required and a string > a field exists to own its label": "TS2322: Type '{}' is not assignable to type 'IntrinsicAttributes & Checked<InputFieldProps, HTMLInputElement, InputFieldProps>'.",
   "label > is required and a string > an undefined label is a field with no name, pass an empty string to see the gap": "TS2322: Type 'undefined' is not assignable to type 'string'.",
   "label > is required and a string > the label is also the accessible name and the ellipsis tooltip, it needs text": "TS2322: Type 'Element' is not assignable to type 'string'.",
   "label > is required on every member > the number member needs a label too": "TS2741: Property 'label' is missing in type '{}' but required in type 'FieldLabelAndMessageProps'.",
-  "label > is required on every member > the password member needs a label too": "TS2741: Property 'label' is missing in type '{}' but required in type 'FieldLabelAndMessageProps'.",
-  "label > is required on every member > the textarea member needs a label too": "TS2741: Property 'label' is missing in type '{}' but required in type 'FieldLabelAndMessageProps'.",
+  "label > is required on every member > the password member needs a label too": "TS2322: Type '{}' is not assignable to type 'IntrinsicAttributes & Checked<InputFieldPasswordProps, HTMLInputElement, InputFieldPasswordProps>'.",
+  "label > is required on every member > the textarea member needs a label too": "TS2322: Type '{}' is not assignable to type 'IntrinsicAttributes & Checked<InputFieldTextAreaProps, HTMLTextAreaElement, InputFieldTextAreaProps>'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on InputField.Number too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on InputField.Password too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on InputField.TextArea too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on InputField.Number too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on InputField.Password too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on InputField.TextArea too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable > the excess-key check still runs with nullable > \`onPressEnter\` is antd, submit on Enter comes from the owning form": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "nullable > the excess-key check still runs with nullable > the input renders no children, the field renders the input": "TS2745: This JSX tag's 'children' prop expects type 'never' which requires multiple children, but only a single child was provided.",
+  "nullable > without nullable a null value is a type error > \`null\` needs \`nullable\` on InputField": "TS2322: Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; }' is not assignable to type 'IntrinsicAttributes & Checked<InputFieldProps, HTMLInputElement, InputFieldProps>'.
+    Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; }' is not assignable to type 'Omit<InputAppearanceProps & InputNativeProps & AriaAttributes & { nullable?: undefined; value?: string | number | readonly string[] | undefined; }, "required" | "status">'.
+      Types of property 'value' are incompatible.
+        Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+          Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
+  "nullable > without nullable a null value is a type error > \`null\` needs \`nullable\` on InputField.Password": "TS2322: Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; }' is not assignable to type 'IntrinsicAttributes & Checked<InputFieldPasswordProps, HTMLInputElement, InputFieldPasswordProps>'.
+    Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; }' is not assignable to type 'Omit<Omit<InputSharedProps, "list" | "multiple" | "type" | "suffix"> & { nullable?: undefined; value?: string | number | readonly string[] | undefined; }, "required" | "status">'.
+      Types of property 'value' are incompatible.
+        Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+          Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
+  "nullable > without nullable a null value is a type error > \`null\` needs \`nullable\` on InputField.TextArea": "TS2322: Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; }' is not assignable to type 'IntrinsicAttributes & Checked<InputFieldTextAreaProps, HTMLTextAreaElement, InputFieldTextAreaProps>'.
+    Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; }' is not assignable to type 'Omit<Omit<InputAppearanceProps, "prefix" | "suffix"> & InputTextAreaNativeProps & AriaAttributes & { ...; }, "required" | "status">'.
+      Types of property 'value' are incompatible.
+        Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+          Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.",
   "props of the field and of the input in one object > a locked input says why > a disabled control has to say why": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ label: string; disabled: true; }' but required in type 'ADisabledInputMustSayWhy'.",
   "props of the field and of the input in one object > a locked input says why > a locked control has to say why": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ label: string; readOnly: true; }' but required in type 'AReadOnlyInputMustSayWhy'.",
   "props of the field and of the input in one object > keeps the input size, not the native character width > \`size\` is \`'sm' | 'md' | 'lg'\`, not the character-width attribute": "TS2322: Type 'number' is not assignable to type 'InputSizeType | undefined'.",
