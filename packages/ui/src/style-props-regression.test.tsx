@@ -11,6 +11,7 @@ import { Combobox } from './combobox/index.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
 import { Field } from './field/index.js';
+import { Form } from './form/index.js';
 import { Input, InputField } from './input/index.js';
 import { Popover } from './popover/index.js';
 import { openPopover } from './popover/__tests__/popover.test-utils.js';
@@ -268,6 +269,16 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('group'));
 		expectNoStrayStyle(screen.getByTestId('group-label'));
+	});
+
+	it('do not reach Form', () => {
+		render(
+			<Form onSubmit={() => {}} testId="form" {...STRAY}>
+				<Input aria-label="Name" />
+			</Form>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('form'));
 	});
 
 	it('do not reach InputField, its members, nor the field around them', () => {

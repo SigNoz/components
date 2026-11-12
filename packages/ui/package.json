@@ -237,6 +237,16 @@
 				"require": "./dist/field/index.cjs"
 			}
 		},
+		"./form": {
+			"import": {
+				"types": "./dist/form/index.d.ts",
+				"import": "./dist/form/index.mjs"
+			},
+			"require": {
+				"types": "./dist/form/index.d.cts",
+				"require": "./dist/form/index.cjs"
+			}
+		},
 		"./input": {
 			"import": {
 				"types": "./dist/input/index.d.ts",
