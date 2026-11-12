@@ -145,3 +145,12 @@ export function setTextStyle(style: string, font = SENTINEL_FONT): void {
 		--${style}-letter-spacing: ${font.letterSpacing};
 	`);
 }
+
+/** The element a query found, or a failure here instead of a `TypeError` further down. */
+export function required<T>(element: T | null | undefined): T {
+	if (element === null || element === undefined) {
+		throw new Error('Not rendered');
+	}
+
+	return element;
+}

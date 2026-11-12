@@ -66,6 +66,7 @@ export function ComboboxVirtualRows({
 		return { optionIndexes: optionsOfRows, rowIndexes: rowsOfOptions };
 	}, [rows]);
 
+	// oxlint-disable-next-line react/incompatible-library -- the compiler leaves this component unmemoized, and it reads the virtualizer fresh on every render, so nothing goes stale
 	const virtualizer = useVirtualizer({
 		count: rows.length,
 		getScrollElement: () => scrollElement,

@@ -27,7 +27,6 @@ const ITEMS: TabsItemProps[] = [
 	{
 		key: 'traces',
 		label: 'Traces',
-		// eslint-disable-next-line jsx-a11y/anchor-has-content -- the children arrive through `props`.
 		render: (props) => <a {...props} href="#traces" />,
 	},
 ];

@@ -2,6 +2,12 @@
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"jsPlugins": ["./plugins/signoz.mjs"],
 	"plugins": ["react", "typescript", "unicorn", "oxc", "import", "jsx-a11y"],
+	"categories": {
+		"correctness": "error"
+	},
+	"options": {
+		"reportUnusedDisableDirectives": "error"
+	},
 	"env": {
 		"browser": true,
 		"node": true,
@@ -28,11 +34,11 @@
 			}
 		],
 		"typescript/consistent-type-imports": "error",
-		"typescript/no-non-null-assertion": "warn",
+		"typescript/no-non-null-assertion": "error",
 		"typescript/no-explicit-any": "off",
 		"no-shadow-restricted-names": "off",
 		"react-hooks/rules-of-hooks": "error",
-		"react-hooks/exhaustive-deps": "warn",
+		"react-hooks/exhaustive-deps": "error",
 		"react/error-boundaries": "error",
 		"react/globals": "error",
 		"react/immutability": "error",
@@ -42,27 +48,27 @@
 		"react/static-components": "error",
 		"react/use-memo": "error",
 		"react/void-use-memo": "error",
-		"react/incompatible-library": "warn",
-		"react/refs": "warn",
-		"react/set-state-in-effect": "warn",
-		"react/no-deriving-state-in-effects": "warn",
-		"react/capitalized-calls": "warn",
-		"react/hooks": "warn",
-		"react/memo-dependencies": "warn",
-		"react/invariant": "warn",
-		"react/syntax": "warn",
-		"react/unsupported-syntax": "warn",
-		"react/no-array-index-key": "warn",
-		"react/button-has-type": "warn",
+		"react/incompatible-library": "error",
+		"react/refs": "error",
+		"react/set-state-in-effect": "error",
+		"react/no-deriving-state-in-effects": "error",
+		"react/capitalized-calls": "error",
+		"react/hooks": "error",
+		"react/memo-dependencies": "error",
+		"react/invariant": "error",
+		"react/syntax": "error",
+		"react/unsupported-syntax": "error",
+		"react/no-array-index-key": "error",
+		"react/button-has-type": "error",
 		"import/no-default-export": "off",
-		"jsx-a11y/click-events-have-key-events": "warn",
-		"jsx-a11y/no-static-element-interactions": "warn",
-		"jsx-a11y/anchor-is-valid": "warn",
-		"jsx-a11y/role-supports-aria-props": "warn",
+		"jsx-a11y/click-events-have-key-events": "error",
+		"jsx-a11y/no-static-element-interactions": "error",
+		"jsx-a11y/anchor-is-valid": "error",
+		"jsx-a11y/role-supports-aria-props": "error",
 		"jsx-a11y/label-has-associated-control": "off",
-		"jsx-a11y/prefer-tag-over-role": "warn",
-		"jsx-a11y/role-has-required-aria-props": "warn",
-		"jsx-a11y/no-autofocus": "warn",
+		"jsx-a11y/prefer-tag-over-role": "error",
+		"jsx-a11y/role-has-required-aria-props": "error",
+		"jsx-a11y/no-autofocus": "error",
 		"signoz/no-conditional-text-nodes-with-siblings": "off",
 		"signoz/no-return-text-nodes": "off"
 	},
@@ -81,24 +87,18 @@
 			}
 		},
 		{
-			"files": [
-				"packages/ui/src/badge/**/*.tsx",
-				"packages/ui/src/switch/**/*.tsx",
-				"packages/ui/src/button/**/*.tsx",
-				"packages/ui/src/tabs/**/*.tsx",
-				"packages/ui/src/tooltip/**/*.tsx"
-			],
+			"files": ["**/__tests__/**", "**/*.test.ts", "**/*.test.tsx", "**/*.test-d.tsx"],
 			"rules": {
-				"react/incompatible-library": "error",
-				"react/refs": "error",
-				"react/set-state-in-effect": "error",
-				"react/no-deriving-state-in-effects": "error",
-				"react/capitalized-calls": "error",
-				"react/hooks": "error",
-				"react/memo-dependencies": "error",
-				"react/invariant": "error",
-				"react/syntax": "error",
-				"react/unsupported-syntax": "error"
+				"jsx-a11y/anchor-has-content": "off",
+				"jsx-a11y/control-has-associated-label": "off",
+				"jsx-a11y/no-autofocus": "off",
+				"jsx-a11y/prefer-tag-over-role": "off"
+			}
+		},
+		{
+			"files": ["**/*.test-d.tsx"],
+			"rules": {
+				"react/no-children-prop": "off"
 			}
 		}
 	]

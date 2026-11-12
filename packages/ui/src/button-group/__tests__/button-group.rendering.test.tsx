@@ -98,10 +98,7 @@ describe('ButtonGroup rendering', () => {
 		render(
 			<ButtonGroup
 				{...BASE}
-				items={[
-					// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
-					{ value: 'docs', label: 'Docs', render: <a href="/docs" /> },
-				]}
+				items={[{ value: 'docs', label: 'Docs', render: <a href="/docs" /> }]}
 			/>,
 		);
 

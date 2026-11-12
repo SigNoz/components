@@ -56,7 +56,7 @@ describe('items', () => {
 	test('take no children', () => {
 		assertType(
 			// @ts-expect-error - members come from `items`
-			<ButtonGroup {...BASE} children={<span />} />, // eslint-disable-line react/no-children-prop -- passing `children` is the case under test
+			<ButtonGroup {...BASE} children={<span />} />,
 		);
 	});
 
@@ -95,7 +95,6 @@ describe('items', () => {
 	});
 
 	test('accept a link member', () => {
-		// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
 		assertType<ButtonGroupItemType>({ value: 'docs', label: 'Docs', render: <a href="/docs" /> });
 	});
 
@@ -105,7 +104,6 @@ describe('items', () => {
 			label: 'Docs',
 			prefix: <svg />,
 			suffix: <svg />,
-			// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
 			render: <a href="/docs" />,
 		});
 	});
@@ -120,7 +118,6 @@ describe('items', () => {
 		assertType<ButtonGroupItemType>({
 			value: 'docs',
 			label: 'Docs',
-			// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
 			render: <a href="/docs" />,
 			onClick: noop,
 		});
@@ -238,7 +235,6 @@ describe('attributes', () => {
 describe('ButtonGroup entry point types', () => {
 	test('exports every part of the item type', () => {
 		assertType<ButtonGroupActionItemType>({ onClick: noop });
-		// eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- a link member's own children are dropped, its text comes from `label`
 		assertType<ButtonGroupLinkItemType>({ render: <a href="/docs" /> });
 	});
 });
