@@ -1,0 +1,16 @@
+.form {
+	display: var(--form-display, flex);
+	flex-direction: var(--form-flex-direction, column);
+	gap: var(--form-gap, var(--spacing-8));
+	margin: var(--form-margin, 0);
+	padding: var(--form-padding, 0);
+	min-inline-size: var(--form-min-inline-size, 0);
+
+	// The fields line up on their bottom edge, so a label that wraps to two lines does not push its
+	// control out of line.
+	&[data-layout='inline'] {
+		flex-direction: var(--form-inline-flex-direction, row);
+		flex-wrap: var(--form-inline-flex-wrap, wrap);
+		align-items: var(--form-inline-align-items, flex-end);
+	}
+}
