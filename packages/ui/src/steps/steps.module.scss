@@ -288,8 +288,12 @@
 	margin-block: var(--steps-list-connector-margin-block, var(--spacing-2));
 	background-color: var(--steps-list-connector-color, var(--steps-list-connector));
 
-	// The line goes on in the footer row, so it ends at the edge of the step.
-	.steps-list__items:has(+ .steps-list__footer) > .steps-list__item:last-child & {
+	// The line goes on in the footer row, so it ends at the edge of the step. Only the rail of the
+	// last step itself: a `Steps.List` in its content keeps its own lines.
+	.steps-list__items:has(+ .steps-list__footer)
+		> .steps-list__item:last-child
+		> .steps-list__rail
+		> & {
 		margin-block-end: var(--steps-list-connector-last-margin-block-end, 0);
 	}
 }
@@ -385,4 +389,26 @@
 
 .steps-list__footer-content {
 	min-inline-size: var(--steps-list-footer-content-min-inline-size, 0);
+	color: var(--steps-list-footer-content-color, var(--steps-list-content-foreground));
+	font-family: var(
+		--steps-list-footer-content-font-family,
+		var(--paragraph-base-400-font-family)
+	);
+	font-size: var(--steps-list-footer-content-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(
+		--steps-list-footer-content-font-weight,
+		var(--paragraph-base-400-font-weight)
+	);
+	line-height: var(
+		--steps-list-footer-content-line-height,
+		var(--paragraph-base-400-line-height)
+	);
+	letter-spacing: var(
+		--steps-list-footer-content-letter-spacing,
+		var(--paragraph-base-400-letter-spacing)
+	);
+	text-transform: var(
+		--steps-list-footer-content-text-transform,
+		var(--paragraph-base-400-text-transform)
+	);
 }

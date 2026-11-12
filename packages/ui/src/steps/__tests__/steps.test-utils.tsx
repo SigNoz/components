@@ -13,16 +13,10 @@ export const PLAIN: StepsItem[] = [{ label: 'One' }, { label: 'Two' }, { label: 
 export const LONG_LABEL = 'Configure the collector for the production east cluster';
 export const LONG_DESCRIPTION = 'my-production-east-cluster-in-the-us-east-1-region';
 
-/**
- * The `li` of every step of a `Steps` row, in document order.
- */
 export function stepElements(testId: string): HTMLElement[] {
 	return Array.from(screen.getByTestId(testId).querySelectorAll<HTMLElement>(':scope > li'));
 }
 
-/**
- * The `data-status` of every step, in document order.
- */
 export function statusesOf(testId: string): (string | null)[] {
 	return stepElements(testId).map((step) => step.getAttribute('data-status'));
 }

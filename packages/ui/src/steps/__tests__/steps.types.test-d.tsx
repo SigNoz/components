@@ -114,6 +114,36 @@ describe('Steps props', () => {
 		);
 	});
 
+	test('rejects className and style that come in a spread', () => {
+		const withClassName = { current: 1, items, className: 'x' };
+		const withStyle = { current: 1, items, style: {} };
+
+		assertType(
+			// @ts-expect-error - a spread does not get past the props
+			<Steps {...withClassName} />,
+		);
+		assertType(
+			// @ts-expect-error - a spread does not get past the props
+			<Steps {...withStyle} />,
+		);
+	});
+
+	test('rejects a step with extra keys that comes in a variable', () => {
+		const steps = [{ label: 'One' }, { label: 'Two', className: 'x' }];
+
+		assertType(
+			// @ts-expect-error - a step takes only `label` and `description`
+			<Steps current={1} items={steps} />,
+		);
+	});
+
+	test('rejects data-testid, the prop is testId', () => {
+		assertType(
+			// @ts-expect-error - `data-testid` is written `testId`
+			<Steps current={1} items={items} data-testid="steps" />,
+		);
+	});
+
 	test('rejects className and style on a step', () => {
 		assertType(
 			// @ts-expect-error - a step takes no `className`
@@ -369,6 +399,36 @@ describe('Steps.List props', () => {
 		assertType(
 			// @ts-expect-error - `style` is not a prop
 			<Steps.List items={listItems} style={{}} />,
+		);
+	});
+
+	test('rejects className and style that come in a spread', () => {
+		const withClassName = { items: listItems, className: 'x' };
+		const withStyle = { items: listItems, style: {} };
+
+		assertType(
+			// @ts-expect-error - a spread does not get past the props
+			<Steps.List {...withClassName} />,
+		);
+		assertType(
+			// @ts-expect-error - a spread does not get past the props
+			<Steps.List {...withStyle} />,
+		);
+	});
+
+	test('rejects a step with extra keys that comes in a variable', () => {
+		const steps = [{ children: 'a' }, { children: 'b', className: 'x' }];
+
+		assertType(
+			// @ts-expect-error - a step takes only `label` and `children`
+			<Steps.List items={steps} />,
+		);
+	});
+
+	test('rejects data-testid, the prop is testId', () => {
+		assertType(
+			// @ts-expect-error - `data-testid` is written `testId`
+			<Steps.List items={listItems} data-testid="list" />,
 		);
 	});
 

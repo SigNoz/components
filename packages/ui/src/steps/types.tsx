@@ -101,3 +101,47 @@ export type StepsListProps = StepsRootProps & {
 	 */
 	footer?: ReactNode;
 };
+
+interface TheTestIdPropIsCalledTestId {
+	'`data-testid` is written as the `testId` prop, which lands on the root and names every step': never;
+}
+
+interface AStepTakesALabelAndADescription {
+	'A step of `Steps` takes only `label` and `description`': never;
+}
+
+interface AListStepTakesALabelAndChildren {
+	'A step of `Steps.List` takes only `label` and `children`': never;
+}
+
+// `T` is inferred from the call site, `items` included, so the steps get no excess property check
+// of their own. The keys of every step outside `Item` are collected here instead.
+type ExtraItemKeys<T, Item> = T extends { items: readonly (infer I)[] }
+	? I extends unknown
+		? Exclude<keyof I, keyof Item>
+		: never
+	: never;
+
+type ValidateTestId<T> = T extends { 'data-testid': unknown }
+	? TheTestIdPropIsCalledTestId
+	: unknown;
+
+/**
+ * Extra constraints layered on top of {@link StepsProps} at the call site.
+ *
+ * Resolves to `unknown` while the props are valid, and to a rule object when they are not.
+ *
+ * @access private
+ */
+export type ValidateStepsProps<T> = ValidateTestId<T> &
+	([ExtraItemKeys<T, StepsItem>] extends [never] ? unknown : AStepTakesALabelAndADescription);
+
+/**
+ * Extra constraints layered on top of {@link StepsListProps} at the call site.
+ *
+ * Resolves to `unknown` while the props are valid, and to a rule object when they are not.
+ *
+ * @access private
+ */
+export type ValidateStepsListProps<T> = ValidateTestId<T> &
+	([ExtraItemKeys<T, StepsListItem>] extends [never] ? unknown : AListStepTakesALabelAndChildren);

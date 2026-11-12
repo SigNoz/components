@@ -54,7 +54,8 @@ describe('Steps root', () => {
 				items={PLAIN}
 				data-slot="other"
 				data-current="9"
-				data-testid="other"
+				// `data-testid` is a type error, the cast stands for a caller who gets past it.
+				{...({ 'data-testid': 'other' } as object)}
 				testId="steps"
 			/>,
 		);
