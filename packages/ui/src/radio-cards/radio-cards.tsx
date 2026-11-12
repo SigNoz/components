@@ -1,5 +1,6 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes } from 'react';
+import { onFocusLeave } from '../lib/focus-leave.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -31,6 +32,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 		value,
 		defaultValue,
 		onChange,
+		onBlur,
 		allowClear = false,
 		testId,
 		className: _className,
@@ -102,6 +104,8 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 			form={form}
 			value={selectedValue}
 			onValueChange={onValueChange}
+			onBlur={onFocusLeave(onBlur)}
+			// The field's `required`, like the native one, holds only while the group is empty.
 			{...(isFieldRequired && isEmpty ? { 'aria-required': true } : {})}
 			{...nameProps}
 			{...invalidProps}

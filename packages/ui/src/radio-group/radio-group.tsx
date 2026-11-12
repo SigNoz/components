@@ -1,6 +1,7 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { forwardRef, type ReactElement, type RefAttributes, useMemo } from 'react';
 import { useFieldContext } from '../lib/field-context.js';
+import { onFocusLeave } from '../lib/focus-leave.js';
 import { resolveGroupReason } from '../lib/group-reason.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipTriggerBoundary } from '../tooltip/tooltip-trigger-context.js';
@@ -24,6 +25,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		value,
 		defaultValue,
 		onChange,
+		onBlur,
 		testId,
 		className: _className,
 		style: _style,
@@ -78,7 +80,9 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			value={value}
 			defaultValue={defaultValue}
 			onValueChange={onValueChange}
+			onBlur={onFocusLeave(onBlur)}
 			{...(isFieldRequired ? { 'aria-required': true } : {})}
+			// A `Field.Group` has no Base UI field to mark the group invalid, so its status is read here.
 			{...(field?.status === 'danger' ? { 'aria-invalid': true } : {})}
 			{...ownLabelProps}
 			{...props}

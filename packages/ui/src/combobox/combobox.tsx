@@ -16,6 +16,7 @@ import { toCssLength } from '../lib/css-length.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { useFieldContext } from '../lib/field-context.js';
+import { useControlBlur } from '../lib/use-control-blur.js';
 import { useLabelFor } from '../lib/use-label-for.js';
 import { useSelectionValue } from '../lib/use-selection-value.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -67,6 +68,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			testId,
 			id,
 			required,
+			onBlur,
 			className: _className,
 			style: _style,
 			...triggerProps
@@ -87,6 +89,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			defaultValue,
 			onChange,
 		});
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
 
 		const isInert = disabled || readOnly;
 
@@ -211,6 +215,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 				return;
 			}
 
+			trackOpenChange(nextOpen, eventDetails.reason);
 			setOpenState(nextOpen);
 		}
 
@@ -271,6 +276,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 					}}
 				>
 					<div
+						ref={rootRef}
 						data-slot="combobox"
 						data-multiple={multiple || undefined}
 						data-disabled={disabled || undefined}
@@ -280,6 +286,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 						data-popup-open={open || undefined}
 						className={styles['combobox']}
 						style={rootStyle}
+						onBlur={handleBlur}
 					>
 						<ComboboxTrigger
 							ref={triggerRef}
@@ -314,6 +321,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 						)}
 					</div>
 					<ComboboxPopup
+						popupRef={popupRef}
+						onBlur={handleBlur}
 						trigger={triggerElement}
 						accessibleName={accessibleName}
 						labelledBy={labelledBy}

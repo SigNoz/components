@@ -1,4 +1,11 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+} from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type {
 	ToggleGroupColor,
@@ -367,6 +374,16 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * @default "100%"
 		 */
 		maxWidth?: CSSProperties['maxWidth'];
+		/**
+		 * Called once when the focus leaves the bar, for a form that validates on blur.
+		 *
+		 * @note Moving the focus from one button to another, or to a scroll arrow of the bar, does not
+		 * call it, the focus is still inside the bar.
+		 *
+		 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
+		 * accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Forwarded to the rendered element as `data-testid`.
 		 *

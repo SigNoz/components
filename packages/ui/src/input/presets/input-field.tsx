@@ -35,21 +35,62 @@ const InputFieldNumber = createFieldShorthand<InputFieldNumberProps, HTMLInputEl
 );
 
 /**
- * `Input` inside a `Field`, from one object holding the props of both. It renders the same DOM as
- * the hand-written pair and adds nothing of its own.
+ * Renders an `Input` inside a `Field`, from one set of props. The DOM is the same as the
+ * hand-written pair.
  *
- * `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required`
- * go to the field, which hands `status` and `required` to the input. Every other prop goes to the
- * input: `id`, `ref`, `name`, `aria-*`, `data-*` and `testId` land where `Input` puts them. The
- * field parts take `testId` as their prefix (`${testId}-label`, `${testId}-message`), and the field
- * root gets none.
+ * The field takes `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`,
+ * `message` and `required`. It names and describes the input, and hands it `status` and
+ * `aria-required`. Every other prop goes to the input.
  *
- * `InputField.Password`, `InputField.TextArea` and `InputField.Number` do the same for the members
- * of `Input`.
+ * Visual values are the `--field-*` and `--input-*` custom properties, defaults in the
+ * `css-tokens` regions of [../../field/index.ts](../../field/index.ts) and
+ * [../index.ts](../index.ts).
+ *
+ * ### Members
+ *
+ * `InputField.Password`, `InputField.TextArea` and `InputField.Number` render the same pair around
+ * `Input.Password`, `Input.TextArea` and `Input.Number`.
+ *
+ * ### Asserting on it
+ *
+ * `testId` is the input's own: `Input` puts it on the frame. The field parts take it as their
+ * prefix, and the field root gets none.
+ *
+ * | `data-slot` | `data-testid` |
+ * |---|---|
+ * | `field-label` | `${testId}-label` |
+ * | `field-label-tooltip` | `${testId}-label-tooltip` |
+ * | `field-description` | `${testId}-description` |
+ * | `field-message` | `${testId}-message` |
+ *
+ * The data attributes are those of `Field` and `Input`. Use them, never the hashed class names.
  *
  * @example
  * ```tsx
- * <InputField label="Email" required type="email" error={errors.email?.message} {...register('email')} />
+ * <InputField
+ *   label="Email"
+ *   required
+ *   type="email"
+ *   error={errors.email?.message}
+ *   {...register('email')}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // `InputField.Number` reports a number, so react-hook-form drives it through a `Controller`
+ * <Controller
+ *   control={control}
+ *   name="replicas"
+ *   render={({ field, fieldState }) => (
+ *     <InputField.Number
+ *       label="Replica count"
+ *       min={1}
+ *       error={fieldState.error?.message}
+ *       {...field}
+ *     />
+ *   )}
+ * />
  * ```
  */
 export const InputField = Object.assign(InputFieldRoot, {

@@ -1,4 +1,4 @@
-import type { AriaAttributes, ComponentProps, ReactNode } from 'react';
+import type { AriaAttributes, ComponentProps, FocusEvent, ReactNode } from 'react';
 import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { RadioGroupColor, RadioGroupTextOverflow } from './constants.js';
 
@@ -268,6 +268,16 @@ export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note Never called while `disabled` or `readOnly`.
 		 */
 		onChange?: (value: string) => void;
+		/**
+		 * Called once when the focus leaves the group, for a form that validates on blur.
+		 *
+		 * @note Moving the focus from one radio to another does not call it, the focus is still
+		 * inside the group.
+		 *
+		 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
+		 * accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Forwarded to the rendered element as `data-testid`. Survives the tooltip trigger cloning
 		 * the group, which a raw `data-testid` prop does not.

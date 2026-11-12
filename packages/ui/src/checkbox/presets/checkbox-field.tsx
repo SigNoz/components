@@ -104,43 +104,74 @@ type Checked<T extends CheckboxFieldProps> = T &
 	RefAttributes<HTMLSpanElement>;
 
 /**
- * One `Checkbox` whose text is the field `label`, with the rest of a field around it: the required
- * marker, the description or the validation message, and the wiring. It is the one field whose
- * label is not above the control: a checkbox has its own text next to the box, and a label above it
- * would give it two names. A checkbox with a heading above it is a group, so use `Field.Group`.
+ * Renders one `Checkbox` whose text is the field `label`, with the rest of a field around it.
  *
- * `label` is the text and the checkbox's accessible name. The asterisk of `required` follows it,
- * `aria-hidden`, while `aria-required` lands on the checkbox, never the native `required`.
- * `labelTooltip` adds an info icon after the text, and its content joins the checkbox's
- * `aria-describedby`. The `description`, or the message while there is one, sits below the text,
- * lined up with the text and not with the box. A message that appears or changes is announced once, through a polite live
- * region. `danger` sets `aria-invalid` on the checkbox, and the text and the message take the
- * status color.
+ * The field takes `label`, `labelTooltip`, `description`, `error`, `status`, `message` and
+ * `required`. `required` sets `aria-required` on the `Checkbox`, and a `danger` status sets
+ * `aria-invalid`. Every other prop goes to the `Checkbox`.
  *
- * Every other prop goes to the `Checkbox`: `color`, `value`, `onChange`, `name`, `id`, `ref`,
- * `aria-*`, `data-*` and `testId` land where `Checkbox` puts them. The field parts take `testId` as
- * their prefix: `${testId}-description`, `${testId}-message` and `${testId}-label-tooltip`. There
- * is no `${testId}-label`, the checkbox owns its text.
+ * Visual values are the `--field-*` and `--checkbox-*` custom properties, defaults in the
+ * `css-tokens` regions of [../../field/index.ts](../../field/index.ts) and
+ * [../index.ts](../index.ts).
  *
- * `children` and `htmlFor` are not props, since `label` takes the place of `children` and the
- * field wires the checkbox itself. `textOverflow` and `labelIcon` are not props either: the text
- * wraps, up to 2 lines and then an ellipsis with a tooltip, so the asterisk and the info icon
- * always show.
+ * ### Label
  *
- * Built on Base UI `Field.Root` and `Field.Description`, the pair `Field` is built on. The
- * checkbox reads the description ids and the invalid state from it, so a change in how Base UI
- * wires them reaches `Field` and `CheckboxField` together. The checkbox takes `required` as a
- * prop, since it is the only control in the field.
+ * The `label` is the text beside the box, and the accessible name of the `Checkbox`. It does not
+ * sit above the control as it does in every other field, because a label above would give the
+ * checkbox two names.
+ *
+ * The description and the message sit below the text, lined up with it and not with the box.
+ *
+ * A checkbox with a heading above it is a group of choices. Use `Field.Group` around one
+ * `Checkbox` per choice.
+ *
+ * ### Asserting on it
+ *
+ * `testId` is the `Checkbox`'s own. The parts take it as their prefix, and the field root gets
+ * none.
+ *
+ * | `data-testid` | rendered |
+ * |---|---|
+ * | `${testId}-label-tooltip` | with `labelTooltip`, the info icon |
+ * | `${testId}-description` | while `description` shows |
+ * | `${testId}-message` | while a status message shows |
+ *
+ * There is no `${testId}-label`, since the label is the text of the `Checkbox`.
+ *
+ * The data attributes are those of `Field` and `Checkbox`, plus two `data-slot`s of its own. Use
+ * them, never the hashed class names.
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `checkbox-field-label` | always, wraps the label text |
+ * | `checkbox-field-row` | while a description or a message shows, wraps that row |
  *
  * @example
  * ```tsx
  * <CheckboxField
+ *   label="Send me product updates"
  *   color="primary"
- *   label="I accept the terms of service"
- *   required
- *   description="You can read them in your account settings."
- *   error={errors.terms?.message}
- *   {...field}
+ *   value={subscribed}
+ *   onChange={setSubscribed}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // react-hook-form: `field` carries value, onChange, onBlur, name and ref
+ * <Controller
+ *   control={control}
+ *   name="terms"
+ *   render={({ field, fieldState }) => (
+ *     <CheckboxField
+ *       color="primary"
+ *       label="I accept the terms of service"
+ *       required
+ *       description="You can read them in your account settings."
+ *       error={fieldState.error?.message}
+ *       {...field}
+ *     />
+ *   )}
  * />
  * ```
  */

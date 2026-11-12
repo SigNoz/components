@@ -13,6 +13,7 @@ import { toCssLength } from '../lib/css-length.js';
 import { useFieldContext } from '../lib/field-context.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useControlBlur } from '../lib/use-control-blur.js';
 import { useLabelFor } from '../lib/use-label-for.js';
 import { useSelectionValue } from '../lib/use-selection-value.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -51,6 +52,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			testId,
 			id,
 			required,
+			onBlur,
 			className: _className,
 			style: _style,
 			...triggerProps
@@ -71,6 +73,8 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			defaultValue,
 			onChange,
 		});
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
 
 		const isInert = disabled || readOnly;
 
@@ -125,6 +129,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 				return;
 			}
 
+			trackOpenChange(nextOpen, eventDetails.reason);
 			setOpenState(nextOpen);
 		}
 
@@ -162,6 +167,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					modal={false}
 				>
 					<div
+						ref={rootRef}
 						data-slot="select"
 						data-multiple={multiple || undefined}
 						data-disabled={disabled || undefined}
@@ -170,6 +176,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 						data-popup-open={open || undefined}
 						className={styles['select']}
 						style={rootStyle}
+						onBlur={handleBlur}
 					>
 						<SelectTrigger
 							ref={triggerRef}
@@ -193,6 +200,8 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 						/>
 					</div>
 					<SelectPopup
+						popupRef={popupRef}
+						onBlur={handleBlur}
 						trigger={triggerElement}
 						accessibleName={accessibleName}
 						labelledBy={labelledBy}

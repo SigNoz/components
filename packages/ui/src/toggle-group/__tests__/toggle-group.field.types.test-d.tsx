@@ -13,7 +13,7 @@
  * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
  * comment stops covering it.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { ToggleGroupField } from '../presets/toggle-group-field.js';
 import type { ToggleGroupItemProps } from '../types.js';
@@ -163,6 +163,34 @@ describe('the field props', () => {
 		// oxfmt-ignore
 		// @ts-expect-error - the layout is fixed, visual overrides go through `--toggle-group-*`
 		assertType(<ToggleGroupField label="Layout" type="single" variant="outlined" color="secondary" size="md" items={items} style={{ gap: 0 }} />);
+	});
+
+	test('takes the blur handler, with or without the event', () => {
+		assertType(
+			<ToggleGroupField
+				label="Layout"
+				type="single"
+				variant="outlined"
+				color="secondary"
+				size="md"
+				items={items}
+				onBlur={noop}
+			/>,
+		);
+		assertType(
+			<ToggleGroupField
+				label="Layout"
+				type="multiple"
+				variant="outlined"
+				color="secondary"
+				size="md"
+				items={items}
+				onBlur={(event: FocusEvent<HTMLElement>) => event}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - the blur handler takes a focus event
+		assertType(<ToggleGroupField label="Layout" type="single" variant="outlined" color="secondary" size="md" items={items} onBlur={(event: MouseEvent) => event} />);
 	});
 
 	test('disabled and readOnly bring their reason', () => {

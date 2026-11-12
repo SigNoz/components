@@ -397,3 +397,24 @@ describe('Switch inside a hand-written Field', () => {
 		expect(screen.getByRole('switch')).not.toHaveAttribute('aria-required');
 	});
 });
+
+describe('SwitchField onBlur', () => {
+	it('reaches the switch: once when focus leaves, and not on a toggle', async () => {
+		const user = userEvent.setup();
+		const onBlur = vi.fn();
+		render(
+			<>
+				<SwitchField label="Send alerts" color="primary" onBlur={onBlur} />
+				<button type="button">Next</button>
+			</>,
+		);
+
+		await user.click(screen.getByRole('switch'));
+
+		expect(onBlur).not.toHaveBeenCalled();
+
+		await user.tab();
+
+		expect(onBlur).toHaveBeenCalledOnce();
+	});
+});

@@ -35,17 +35,30 @@ const SwitchFieldRoot = createFieldShorthand<SwitchFieldProps, HTMLSpanElement>(
 );
 
 /**
- * `Switch` inside a `Field`, from one object holding the props of both. It renders the same DOM
- * as the hand-written pair, with the label above the switch, and adds nothing of its own.
+ * Renders a `Switch` inside a `Field`, from one set of props. The DOM is the same as the
+ * hand-written pair.
  *
- * `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required`
- * go to the field, which names and describes the switch. Every other prop goes to the switch:
- * `color`, `value`, `onChange`, `name`, `id`, `ref`, `aria-*`, `data-*` and `testId` land where
- * `Switch` puts them. The field parts take `testId` as their prefix (`${testId}-label`,
- * `${testId}-message`), and the field root gets none.
+ * The field takes `label`, `labelIcon`, `labelTooltip`, `description`, `error`, `status`,
+ * `message` and `required`. It names and describes the switch, and sets `aria-required` for
+ * `required` and `aria-invalid` for `danger`. Every other prop goes to the switch.
  *
- * The switch is bare: `children`, `description`, `textPlacement` and the other props that lay out
- * its own text are not accepted, since the field's label and description take that place.
+ * Visual values are the `--field-*` and `--switch-*` custom properties, defaults in the
+ * `css-tokens` regions of [../../field/index.ts](../../field/index.ts) and
+ * [../index.ts](../index.ts).
+ *
+ * ### Asserting on it
+ *
+ * `testId` is the switch's own: `Switch` puts it on the switch itself. The field parts take it as
+ * their prefix, and the field root gets none.
+ *
+ * | `data-slot` | `data-testid` |
+ * |---|---|
+ * | `field-label` | `${testId}-label` |
+ * | `field-label-tooltip` | `${testId}-label-tooltip` |
+ * | `field-description` | `${testId}-description` |
+ * | `field-message` | `${testId}-message` |
+ *
+ * The data attributes are those of `Field` and `Switch`. Use them, never the hashed class names.
  *
  * @example
  * ```tsx
@@ -60,6 +73,7 @@ const SwitchFieldRoot = createFieldShorthand<SwitchFieldProps, HTMLSpanElement>(
  *
  * @example
  * ```tsx
+ * // react-hook-form: spread the Controller's field
  * <Controller
  *   control={control}
  *   name="enabled"
@@ -67,10 +81,8 @@ const SwitchFieldRoot = createFieldShorthand<SwitchFieldProps, HTMLSpanElement>(
  *     <SwitchField
  *       label="Send alerts"
  *       color="primary"
- *       value={field.value}
- *       onChange={field.onChange}
- *       ref={field.ref}
  *       error={fieldState.error?.message}
+ *       {...field}
  *     />
  *   )}
  * />

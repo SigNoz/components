@@ -1,12 +1,8 @@
 /**
  * Type-level tests for the props of {@link ComboboxField}. Run by `vitest --typecheck` and by
- * `pnpm type-check`. See `combobox.types.test-d.tsx` for how the cases are written.
- *
- * The comment suppresses the line directly below it. `oxfmt-ignore` keeps that line whole: once
- * oxfmt breaks the props one per line, a prop-level error moves off the suppressed line and the
- * comment stops covering it.
+ * `pnpm type-check`. See `field.types.test-d.tsx` for how the cases are written.
  */
-import { createRef } from 'react';
+import { createRef, type FocusEvent } from 'react';
 import { assertType, describe, test } from 'vitest';
 import { ComboboxField } from '../index.js';
 import type { ComboboxFieldProps, ComboboxItemType } from '../types.js';
@@ -73,6 +69,32 @@ describe('field props and combobox props together', () => {
 			searchInputProps: { placeholder: 'Search' },
 			items: ONE,
 		});
+	});
+});
+
+describe('onBlur', () => {
+	test('takes the blur event, or no parameter at all', () => {
+		assertType(
+			<ComboboxField
+				label="Framework"
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				onBlur={(event: FocusEvent<HTMLElement>) => event.relatedTarget}
+			/>,
+		);
+		assertType(
+			<ComboboxField
+				label="Framework"
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				onBlur={() => undefined}
+			/>,
+		);
+		// oxfmt-ignore
+		// @ts-expect-error - the event comes from the trigger or the popup, never from an input
+		assertType(<ComboboxField label="Framework" placeholder="Pick" searchInputProps={{ placeholder: 'Search' }} items={ONE} onBlur={(event: FocusEvent<HTMLInputElement>) => event.currentTarget.value} />);
 	});
 });
 
