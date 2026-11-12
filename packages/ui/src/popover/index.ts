@@ -21,6 +21,7 @@
  * | `--popover-content-flex-direction` | `column` |
  * | `--popover-content-min-block-size` | `0` |
  * | `--popover-content-shift` | `16px` |
+ * | `--popover-content-swap-inline-size` | `calc(var(--popup-width) - 2 * var(--popover-bor...` |
  * | `--popover-content-swap-opacity` | `0` |
  * | `--popover-content-transition-property` | `translate, opacity` |
  * | `--popover-display` | `flex` |

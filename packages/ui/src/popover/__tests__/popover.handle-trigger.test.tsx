@@ -193,6 +193,50 @@ describe('Popover.Trigger', () => {
 		expect(popup()).toHaveAttribute('data-shared');
 	});
 
+	it('lays the new content out at its final width while the popup grows to it', async () => {
+		function Widths() {
+			const card = usePopoverHandle<string>();
+
+			return (
+				<>
+					<Popover handle={card} side="bottom" align="start" testId="services" aria-label="Service">
+						{(text) => <p>{text}</p>}
+					</Popover>
+					<Popover.Trigger handle={card} payload="Brief" nativeButton>
+						<button type="button">Short</button>
+					</Popover.Trigger>
+					<Popover.Trigger
+						handle={card}
+						payload="A summary wider than the popup it moves into"
+						nativeButton
+					>
+						<button type="button">Wide</button>
+					</Popover.Trigger>
+				</>
+			);
+		}
+		const user = userEvent.setup();
+		render(<Widths />);
+
+		await user.click(screen.getByRole('button', { name: 'Short' }));
+		await screen.findByText('Brief');
+		const lineHeight = screen.getByText('Brief').getBoundingClientRect().height;
+		await user.click(screen.getByRole('button', { name: 'Wide' }));
+
+		const viewport = popup().querySelector<HTMLElement>('[data-slot="popover-viewport"]');
+		await waitFor(() => expect(viewport).toHaveAttribute('data-transitioning'), { interval: 5 });
+		const current = viewport?.querySelector<HTMLElement>('[data-current]');
+		const finalWidth = Number.parseFloat(
+			getComputedStyle(popup()).getPropertyValue('--popup-width'),
+		);
+
+		expect(current?.getBoundingClientRect().width).toBeCloseTo(finalWidth - 2, 0);
+		expect(
+			screen.getByText('A summary wider than the popup it moves into').getBoundingClientRect()
+				.height,
+		).toBe(lineHeight);
+	});
+
 	it('opens on hover with `openOnHover`, and still on a press', async () => {
 		const user = userEvent.setup();
 		let card: PopoverHandle<Service> | undefined;
