@@ -22,7 +22,7 @@ import { Select } from '@signozhq/ui';
 import { useState } from 'react';
 
 export default function FrameworkField() {
-	const [framework, setFramework] = useState<string | undefined>();
+	const [framework, setFramework] = useState('');
 
 	return (
 		<Select
@@ -91,8 +91,11 @@ A label that renders nothing shows `<No label>`.
 
 ## Values
 
-`value` is a `string`, or a `string[]` with `multiple`. Writing `value` makes the select controlled,
-even with `undefined`. Leave it out and use `defaultValue` for one that keeps its own state.
+`value` is a `string`, or a `string[]` with `multiple`. Leave it out and use `defaultValue` for a
+select that keeps its own state: a `value` that is `undefined` on the first render counts as left
+out. One that arrives later is followed, with a warning, and once controlled `undefined` shows
+nothing selected. A controlled select with nothing selected starts at `''`. `nullable` takes `null`
+as nothing selected, for a field whose schema allows it.
 
 `onChange` gets a `string` in single mode and a `string[]` with `multiple`, so there is nothing to
 cast. A single select has no way to clear its value once picked.
@@ -219,7 +222,7 @@ of `Select`, and renders the same DOM as a hand-written `Field` around a `Select
 import { SelectField } from '@signozhq/ui';
 
 export default function FrameworkField({ errors }) {
-	const [framework, setFramework] = useState<string | undefined>();
+	const [framework, setFramework] = useState('');
 
 	return (
 		<SelectField
@@ -245,8 +248,8 @@ asterisk and sets `aria-required` on the trigger.
 `${testId}-description`, `${testId}-message`). `ref` is the trigger. A bare `Select` inside a
 `Field` takes the same wiring, and its own `required` wins over the field's.
 
-With react-hook-form, pass `value`, `onChange` and `ref` from `Controller`, and
-`fieldState.error?.message` to `error`.
+With react-hook-form, pass `value`, `onChange`, `onBlur`, `name` and `ref` from `Controller`, and
+`fieldState.error?.message` to `error`. `name` is the one the form submits the value under.
 
 ```tsx
 <Controller
@@ -259,6 +262,8 @@ With react-hook-form, pass `value`, `onChange` and `ref` from `Controller`, and
 			items={frameworks}
 			value={field.value}
 			onChange={field.onChange}
+			onBlur={field.onBlur}
+			name={field.name}
 			ref={field.ref}
 			error={fieldState.error?.message}
 		/>

@@ -102,7 +102,8 @@ export const Default: Story = {
 /**
  * `RadioCardsField.Multiple` renders `RadioCards.Multiple`, whose root is a `role="group"`. That
  * role takes no `aria-invalid`, so the legend and the message carry the status there, while
- * `RadioCardsField` sets `aria-invalid` on its radio group.
+ * `RadioCardsField` sets `aria-invalid` on its radio group. A `danger` status turns the card
+ * borders red on both.
  */
 export const Members: Story = {
 	parameters: {

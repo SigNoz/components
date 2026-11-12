@@ -107,7 +107,8 @@ export const Default: Story = {
 /**
  * The legend is the label of the group, and the `role="group"` list of the bar takes it as its
  * name. That role takes neither `aria-required` nor `aria-invalid`, so `required` draws the
- * asterisk and a `danger` status shows on the legend and the message, with nothing on the bar.
+ * asterisk and a `danger` status shows on the legend and the message, and turns the outline of the
+ * bar red.
  */
 export const States: Story = {
 	parameters: {

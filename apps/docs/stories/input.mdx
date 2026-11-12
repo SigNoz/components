@@ -89,6 +89,9 @@ itself.
 They take the field props and the props of the member, listed under the member's own props below.
 `InputField.Number` is not a target for `register()`: use a `Controller`.
 
+A text input takes `nullable` for a schema field that holds `null` while empty: `value` accepts
+`null` and draws it as an empty field, and `onChange` stays the native event.
+
 The field owns the label, the description and the message, and the input owns its frame. Read the
 `Field` page for the label, the message and the accessibility the pair wires, and the `Form` page
 for submit and validation.

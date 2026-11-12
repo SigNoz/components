@@ -176,16 +176,18 @@ export default function SamplingRate({ rate, setRate, errors }) {
 ```
 
 A slider has no frame, so a status shows on the label and the message, and `error` or
-`status="danger"` sets `aria-invalid` on the thumb. `required` only draws the asterisk after the
-label: a slider always holds a value, so the thumb takes no `required` or `aria-required`.
+`status="danger"` sets `aria-invalid` on the thumb and turns its border red. `required` only draws
+the asterisk after the label: a slider always holds a value, so the thumb takes no `required` or
+`aria-required`.
 
 `testId` goes to the slider, and the field parts take it as their prefix (`` `${testId}-label` ``,
-`` `${testId}-description` ``, `` `${testId}-message` ``). The ref is the root of the slider, not
-the thumb, so react-hook-form cannot move the focus to it after a failed submit.
+`` `${testId}-description` ``, `` `${testId}-message` ``). The ref is the native input of the thumb,
+not the root of the slider, so react-hook-form can move the focus to it after a failed submit.
 
 `SliderField.Range` does the same for `Slider.Range`, inside a `Field.Group`. The legend names the
 group, the range takes the same name, and its thumbs keep `Minimum` and `Maximum`. The description
-and the message stay on the group, and `error` sets `aria-invalid` on both thumbs.
+and the message stay on the group, and `error` sets `aria-invalid` on both thumbs and turns their
+border red. The ref is the input of the first thumb.
 
 ```tsx
 <SliderField.Range
