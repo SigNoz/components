@@ -254,6 +254,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 							ariaLabelledBy={range ? undefined : ariaLabelledBy}
 							ariaDescribedBy={range ? undefined : ariaDescribedBy}
 							inputAttributes={thumbInputAttributes}
+							focusTarget={index === 0 ? field?.focusTarget : undefined}
 							testId={testId}
 						/>
 					))}

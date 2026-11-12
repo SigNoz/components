@@ -18,8 +18,8 @@ import { assertType, describe, expectTypeOf, test } from 'vitest';
 import { SliderField } from '../presets/slider-field.js';
 import type { SliderRangeValue } from '../types.js';
 
-const sliderRef = createRef<HTMLDivElement>();
-const wrongRef = createRef<HTMLButtonElement>();
+const sliderRef = createRef<HTMLInputElement>();
+const wrongRef = createRef<HTMLDivElement>();
 const noop = (): void => {};
 
 declare const maybeError: string | undefined;
@@ -29,13 +29,13 @@ declare const controllerField: {
 	name: string;
 	value: number;
 	onChange: (value: number) => void;
-	ref: (instance: HTMLDivElement | null) => void;
+	ref: (instance: HTMLInputElement | null) => void;
 };
 declare const controllerRangeField: {
 	name: string;
 	value: [number, number];
 	onChange: (value: [number, number]) => void;
-	ref: (instance: HTMLDivElement | null) => void;
+	ref: (instance: HTMLInputElement | null) => void;
 };
 
 describe('SliderField label and slider props', () => {
@@ -87,9 +87,9 @@ describe('SliderField label and slider props', () => {
 		assertType(<SliderField label="Sampling rate" color="primary" value={[10, 20]} />);
 	});
 
-	test('the ref is the root div', () => {
+	test('the ref is the thumb input, the element a focus() can land on', () => {
 		// oxfmt-ignore
-		// @ts-expect-error - the ref is the root div, not a button
+		// @ts-expect-error - the ref is the thumb input, not the root div
 		assertType(<SliderField label="Sampling rate" color="primary" ref={wrongRef} />);
 	});
 
@@ -263,7 +263,7 @@ describe('SliderField.Range props', () => {
 		// @ts-expect-error - visual overrides go through the `--slider-*` custom properties
 		assertType(<SliderField.Range label="Duration" color="primary" className="styled" />);
 		// oxfmt-ignore
-		// @ts-expect-error - the ref is the root div, not a button
+		// @ts-expect-error - the ref is the thumb input, not the root div
 		assertType(<SliderField.Range label="Duration" color="primary" ref={wrongRef} />);
 	});
 });

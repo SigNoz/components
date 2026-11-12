@@ -350,11 +350,12 @@ describe('RadioGroupField props split', () => {
 		expect(screen.getByRole('radio', { name: '30 days' })).toBeChecked();
 	});
 
-	it('hands the ref to the radio group', () => {
-		const ref = createRef<HTMLDivElement>();
+	it('hands the ref to the hidden input of a radio, not to the root', () => {
+		const ref = createRef<HTMLInputElement>();
 		render(<RadioGroupField label="Retention" color="primary" items={ITEMS} ref={ref} />);
 
-		expect(ref.current).toBe(screen.getByRole('radiogroup'));
+		expect(ref.current).toBeInstanceOf(HTMLInputElement);
+		expect(ref.current).not.toBe(screen.getByRole('radiogroup'));
 	});
 
 	it('drops className, style and htmlFor that get past the types', () => {

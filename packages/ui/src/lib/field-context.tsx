@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, type RefCallback, useContext } from 'react';
 
 /**
  * What a `Field` or a `Field.Group` hands the control inside it. The control reads these as
@@ -42,6 +42,15 @@ export type FieldContextValue = {
 	 * Base UI's own field instead, and never call it.
 	 */
 	claimControl: (id: string | undefined) => void;
+	/**
+	 * Set by a field shorthand over a control that is several elements, a radio group, a slider, a
+	 * bar of buttons, whose root is a `<div>` that `focus()` does nothing on. The shorthand's `ref`
+	 * reaches this callback instead of the control's `ref`, and the control calls it with the
+	 * element whose `focus()` puts the focus on the control, which is how a form library focuses
+	 * the first invalid field. `undefined` everywhere else, so a control used by hand keeps its
+	 * `ref` on its root.
+	 */
+	focusTarget?: RefCallback<HTMLElement>;
 };
 
 /**

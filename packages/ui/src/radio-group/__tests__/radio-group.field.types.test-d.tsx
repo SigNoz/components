@@ -19,7 +19,7 @@ import { RadioGroupField } from '../presets/radio-group-field.js';
 import type { RadioGroupItemType } from '../types.js';
 
 const noop = (): void => {};
-const groupRef = createRef<HTMLDivElement>();
+const inputRef = createRef<HTMLInputElement>();
 declare const maybeError: string | undefined;
 declare const items: RadioGroupItemType[];
 
@@ -178,10 +178,10 @@ describe('the props of the radio group', () => {
 });
 
 describe('ref', () => {
-	test('the ref is the radio group div', () => {
-		assertType(<RadioGroupField label="Retention" color="primary" items={items} ref={groupRef} />);
+	test('the ref is the hidden radio input, the element a focus() can land on', () => {
+		assertType(<RadioGroupField label="Retention" color="primary" items={items} ref={inputRef} />);
 		// oxfmt-ignore
-		// @ts-expect-error - the radio group is a div, not a span
-		assertType(<RadioGroupField label="Retention" color="primary" items={items} ref={createRef<HTMLSpanElement>()} />);
+		// @ts-expect-error - the ref is the radio input, not the root div
+		assertType(<RadioGroupField label="Retention" color="primary" items={items} ref={createRef<HTMLDivElement>()} />);
 	});
 });

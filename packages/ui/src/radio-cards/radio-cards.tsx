@@ -41,7 +41,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 	}: RadioCardsProps & RejectedProps,
 	ref,
 ) {
-	const { required, isFieldRequired, nameProps, invalidProps } = useRadioCardsField(
+	const { required, isFieldRequired, nameProps, invalidProps, focusTarget } = useRadioCardsField(
 		props,
 		requiredProp,
 	);
@@ -103,6 +103,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 			required={required && isEmpty}
 			name={name}
 			form={form}
+			inputRef={focusTarget}
 			value={selectedValue}
 			onValueChange={onValueChange}
 			onBlur={onFocusLeave(onBlur)}

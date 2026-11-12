@@ -78,6 +78,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 			readOnly={readOnly}
 			required={required}
 			name={name}
+			inputRef={field?.focusTarget}
 			value={value}
 			defaultValue={defaultValue}
 			onValueChange={onValueChange}
