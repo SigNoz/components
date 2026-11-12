@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../input.module.scss';
 import type { InputProps } from '../types.js';
-import { getReasonTooltip, splitAttributes } from '../utils.js';
+import { getReasonTooltip, splitAttributes, useFieldControl } from '../utils.js';
 import { InputFrame, type InputMemberType } from './input-frame.js';
 
 /**
@@ -20,7 +20,7 @@ export type InputBaseProps = InputProps & {
  */
 export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(function InputBase(
 	{
-		size,
+		size = 'md',
 		variant = 'default',
 		status,
 		prefix,
@@ -36,6 +36,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(function I
 		member,
 		id,
 		required,
+		'aria-required': ariaRequired,
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
 		className: _className,
@@ -44,8 +45,14 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(function I
 	}: InputBaseProps & RejectedProps,
 	ref,
 ) {
-	const resolvedSize = size ?? 'md';
-	const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
+	const field = useFieldControl({
+		id,
+		status,
+		required,
+		ariaRequired,
+		ariaDescribedBy,
+		ariaInvalid,
+	});
 	const { control, data } = splitAttributes(props);
 	const isDisabled = disabled && !readOnly;
 	const { reason, hasReasonAnchor } = getReasonTooltip({
@@ -57,9 +64,9 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(function I
 
 	return (
 		<InputFrame
-			size={resolvedSize}
+			size={size}
 			variant={variant}
-			status={status}
+			status={field.status}
 			noFocusRing={noFocusRing}
 			disabled={isDisabled}
 			readOnly={readOnly}
@@ -76,12 +83,13 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(function I
 			<input
 				{...control}
 				ref={ref}
-				id={id}
-				required={required}
+				id={field.id}
+				required={field.required}
+				aria-required={field.ariaRequired}
 				disabled={isDisabled}
 				readOnly={readOnly}
-				aria-describedby={ariaDescribedBy}
-				aria-invalid={resolvedInvalid}
+				aria-describedby={field.ariaDescribedBy}
+				aria-invalid={field.ariaInvalid}
 				className={styles['input__field']}
 				data-slot="input-field"
 				data-testid={partTestId(testId, 'field')}

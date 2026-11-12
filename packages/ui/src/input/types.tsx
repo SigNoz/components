@@ -32,6 +32,9 @@ type InputAppearanceProps = {
 	 *
 	 * @note `danger` also announces itself as `aria-invalid`.
 	 *
+	 * @note Inside a `Field` the field's `status` is the default, so the message below and the
+	 * field tint together. This prop wins when both are set.
+	 *
 	 * @note `success` is confirmation of a completed check (name available, connection verified),
 	 * not a resting state for a valid field.
 	 */
