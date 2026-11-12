@@ -44,7 +44,7 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 		}: InputTextAreaProps & RejectedProps,
 		ref,
 	) {
-		const resolvedSize = size ?? 'base';
+		const resolvedSize = size ?? 'md';
 		const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
 		const { control, data } = splitAttributes(props);
 		const isDisabled = disabled && !readOnly;

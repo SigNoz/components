@@ -1401,9 +1401,9 @@ function TextFieldsDialog(): ReactElement {
 								aria-labelledby="dialog-form-search"
 							/>
 						</Field>
-						<Field id="dialog-form-endpoint" label="Endpoint (large)">
+						<Field id="dialog-form-endpoint" label="Endpoint (lg)">
 							<Input
-								size="large"
+								size="lg"
 								defaultValue="https://hooks.example.com/alerts"
 								aria-labelledby="dialog-form-endpoint"
 							/>

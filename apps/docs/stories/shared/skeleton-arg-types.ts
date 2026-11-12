@@ -1,7 +1,8 @@
-import { type Skeleton, SkeletonAvatarShape, SkeletonSize } from '@signozhq/ui';
+import { type Skeleton, SkeletonAvatarShape, SkeletonInputSize, SkeletonSize } from '@signozhq/ui';
 import type { Meta } from '@storybook/react-vite';
 
 export const SIZES = Object.values(SkeletonSize);
+export const INPUT_SIZES = Object.values(SkeletonInputSize);
 export const SHAPES = Object.values(SkeletonAvatarShape);
 
 export const skeletonParameters: Meta<typeof Skeleton>['parameters'] = {

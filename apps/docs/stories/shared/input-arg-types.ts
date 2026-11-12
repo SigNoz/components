@@ -61,11 +61,11 @@ export const inputArgTypes: Meta<typeof Input>['argTypes'] = {
 		control: 'inline-radio',
 		options: Object.values(InputSize),
 		description:
-			'The height of the field: `base` is 32px, `large` is 40px. The text size does not change.',
+			'The height of the field: `sm` is 24px, `md` is 32px, `lg` is 40px. The text size does not change.',
 		table: {
 			category: 'Appearance',
 			type: { summary: 'InputSizeType' },
-			defaultValue: { summary: "'base'" },
+			defaultValue: { summary: "'md'" },
 		},
 	},
 	variant: {

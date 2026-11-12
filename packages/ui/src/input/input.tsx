@@ -37,9 +37,11 @@ import type {
  *
  * ### Focus
  *
- * Keyboard focus draws a 1px ring one pixel outside the field edge, on `:focus-visible` only. The
- * border itself never changes color on focus: the ring is the one focus signal, the same as every
- * other control. `noFocusRing` is for a surface that draws a focus treatment of its own; it never
+ * Keyboard focus draws a 1px ring one pixel outside the field edge. A click or a tap does not:
+ * browsers match `:focus-visible` on a clicked text field, so the frame tracks the last input
+ * instead and sets `data-focus-visible`. Focus moved by a script draws the ring unless a pointer
+ * came first. The border itself never changes color on focus: the ring is the one focus signal,
+ * the same as every other control. `noFocusRing` is for a surface that draws a focus treatment of its own; it never
  * goes with `variant="unstyled"`, where the ring is all that marks focus.
  *
  * ### Disabled and read-only
@@ -64,12 +66,13 @@ import type {
  * | root attribute | value |
  * |---|---|
  * | `data-slot` | `"input"` |
- * | `data-size` | `"base"` or `"large"` |
+ * | `data-size` | `"sm"`, `"md"` or `"lg"` |
  * | `data-variant` | `"default"` or `"unstyled"` |
  * | `data-status` | mirrors the resolved status, absent without one |
  * | `data-disabled` | present while disabled, and not read-only |
  * | `data-readonly` | present while `readOnly` |
  * | `data-no-focus-ring` | present with `noFocusRing` |
+ * | `data-focus-visible` | present while the field has keyboard focus |
  * | `data-member` | `"password"`, `"textarea"` or `"number"` on the members, absent on `Input` |
  *
  * | `data-slot` | rendered | `data-testid` |

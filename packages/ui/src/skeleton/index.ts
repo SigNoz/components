@@ -41,6 +41,7 @@
  * | `--skeleton-highlight` | `-` |
  * | `--skeleton-input-display` | `block` |
  * | `--skeleton-input-intrinsic-width` | `200px` |
+ * | `--skeleton-input-lg-height` | `40px` |
  * | `--skeleton-input-max-width` | `var(--skeleton-internal-max-width, 100%)` |
  * | `--skeleton-input-md-height` | `32px` |
  * | `--skeleton-input-sm-height` | `24px` |
@@ -60,12 +61,13 @@
 // #endregion css-tokens
 
 export { Skeleton } from './skeleton.js';
-export { SkeletonAvatarShape, SkeletonSize } from './constants.js';
+export { SkeletonAvatarShape, SkeletonInputSize, SkeletonSize } from './constants.js';
 export type {
 	SkeletonAvatarProps,
 	SkeletonAvatarShapeType,
 	SkeletonButtonProps,
 	SkeletonInputProps,
+	SkeletonInputSizeType,
 	SkeletonParagraphConfig,
 	SkeletonProps,
 	SkeletonSizeType,

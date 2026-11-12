@@ -30,7 +30,7 @@ export default function OrganisationSearch() {
 
 ## Sizes and variants
 
-`size` is the height of the field: `base` is 32px, `large` is 40px. The text does not change size.
+`size` is the height of the field: `sm` is 24px, `md` is 32px, `lg` is 40px. The text does not change size.
 
 `variant="unstyled"` drops the border and the background and keeps everything else: padding,
 height, text, and the focus ring, which is the only thing marking focus there.
@@ -43,7 +43,9 @@ a completed check (name available, connection verified), not a resting state for
 
 ## Focus
 
-Keyboard focus draws a 1px ring one pixel outside the field edge, on `:focus-visible` only. The
+Keyboard focus draws a 1px ring one pixel outside the field edge. A click or a tap into the field
+does not, and the ring stays off while you type after a click. Focus moved by a script draws it
+unless a pointer came first. The ring fades in and out with the hover and state changes. The
 border itself never changes color on focus: the ring is the one focus signal, the same as every
 other control. `noFocusRing` is for a surface that draws a focus treatment of its own; never use it
 with `variant="unstyled"`.
@@ -92,7 +94,7 @@ Otherwise reach for the role and the data attributes, never the hashed class nam
 
 The frame has `data-size`, `data-variant`, `data-status` while one is set, `data-disabled` while
 disabled and not read-only, `data-readonly` while read-only, `data-no-focus-ring` with
-`noFocusRing`, and `data-member` (`password`, `textarea` or `number`) on the members.
+`noFocusRing`, `data-focus-visible` while the field has keyboard focus, and `data-member` (`password`, `textarea` or `number`) on the members.
 
 ## Input props
 

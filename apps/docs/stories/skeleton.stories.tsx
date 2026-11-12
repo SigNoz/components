@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type CSSProperties, Fragment, type ReactElement, useState } from 'react';
 import { expect, userEvent, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
-import { SIZES, skeletonArgTypes, skeletonParameters } from './shared/skeleton-arg-types.js';
+import { skeletonArgTypes, skeletonParameters } from './shared/skeleton-arg-types.js';
 import styles from './skeleton.stories.module.css';
 
 const meta: Meta<typeof Skeleton> = {
@@ -88,16 +88,36 @@ const WIDTHS: Array<{ label: string; part: ReactElement }> = [
 	{ label: 'Button, width 100%', part: <Skeleton.Button size="md" width="100%" /> },
 ];
 
-const PART_ROWS: Array<{ label: string; render: (size: (typeof SIZES)[number]) => ReactElement }> =
-	[
-		{ label: 'Input', render: (size) => <Skeleton.Input size={size} /> },
-		{ label: 'Input, width 120', render: (size) => <Skeleton.Input size={size} width={120} /> },
-		{ label: 'Button', render: (size) => <Skeleton.Button size={size} /> },
-		{ label: 'Button, width 120', render: (size) => <Skeleton.Button size={size} width={120} /> },
-		{ label: 'Button, width 100%', render: (size) => <Skeleton.Button size={size} width="100%" /> },
-		{ label: 'Avatar, circle', render: (size) => <Skeleton.Avatar size={size} shape="circle" /> },
-		{ label: 'Avatar, square', render: (size) => <Skeleton.Avatar size={size} shape="square" /> },
-	];
+// `Skeleton.Input` has all three sizes like `Input`, the other two parts have `sm` and `md`.
+const MATRIX_SIZES = ['sm', 'md', 'lg'] as const;
+
+const PART_ROWS: Array<{
+	label: string;
+	render: (size: (typeof MATRIX_SIZES)[number]) => ReactElement;
+}> = [
+	{ label: 'Input', render: (size) => <Skeleton.Input size={size} /> },
+	{ label: 'Input, width 120', render: (size) => <Skeleton.Input size={size} width={120} /> },
+	{
+		label: 'Button',
+		render: (size) => (size === 'lg' ? <span /> : <Skeleton.Button size={size} />),
+	},
+	{
+		label: 'Button, width 120',
+		render: (size) => (size === 'lg' ? <span /> : <Skeleton.Button size={size} width={120} />),
+	},
+	{
+		label: 'Button, width 100%',
+		render: (size) => (size === 'lg' ? <span /> : <Skeleton.Button size={size} width="100%" />),
+	},
+	{
+		label: 'Avatar, circle',
+		render: (size) => (size === 'lg' ? <span /> : <Skeleton.Avatar size={size} shape="circle" />),
+	},
+	{
+		label: 'Avatar, square',
+		render: (size) => (size === 'lg' ? <span /> : <Skeleton.Avatar size={size} shape="square" />),
+	},
+];
 
 const SURFACES = ['surface-1', 'surface-2', 'surface-3'] as const;
 
@@ -300,8 +320,8 @@ export const SkeletonShowcase: Story = {
 					as="p"
 					textOverflow="wrap"
 				>
-					Both sizes have the height of the control they stand for. The button keeps the width of
-					its size unless{' '}
+					Each size has the height of the control it stands for, and a blank cell is a size the
+					control does not have. The button keeps the width of its size unless{' '}
 					<Typography
 						variant="code"
 						size="small"
@@ -316,10 +336,10 @@ export const SkeletonShowcase: Story = {
 				</Typography>
 				<div
 					className={`${styles.matrix} ${styles.marginTopMedium}`}
-					style={matrixStyle(SIZES.length)}
+					style={matrixStyle(MATRIX_SIZES.length)}
 				>
 					<span />
-					{SIZES.map((size) => (
+					{MATRIX_SIZES.map((size) => (
 						<Typography
 							variant="label"
 							size="base"
@@ -344,7 +364,7 @@ export const SkeletonShowcase: Story = {
 							>
 								{label}
 							</Typography>
-							{SIZES.map((size) => (
+							{MATRIX_SIZES.map((size) => (
 								<Fragment key={size}>{render(size)}</Fragment>
 							))}
 						</Fragment>

@@ -5,6 +5,7 @@ import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../input.module.scss';
 import type { InputNumberProps } from '../types.js';
+import { useInputFocusVisible } from '../use-input-focus-visible.js';
 import { getReasonTooltip, splitAttributes } from '../utils.js';
 import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
 
@@ -77,7 +78,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 	}: InputNumberProps & RejectedProps,
 	ref,
 ) {
-	const resolvedSize = size ?? 'base';
+	const resolvedSize = size ?? 'md';
 	const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
 	const { control, data } = splitAttributes(props);
 	const isDisabled = disabled && !readOnly;
@@ -87,6 +88,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		readOnly,
 		readOnlyTooltip,
 	});
+	const { focusVisible, focusProps } = useInputFocusVisible();
 
 	const numberField = (
 		<NumberFieldPrimitive.Root
@@ -115,6 +117,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 					variant,
 					status: status,
 					noFocusRing,
+					focusVisible,
 					disabled: isDisabled,
 					readOnly,
 					member: 'number',
@@ -123,6 +126,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 					testId,
 					dataAttributes: data,
 				})}
+				{...focusProps}
 			>
 				<InputFrameSlots prefix={prefix} suffix={suffix} status={status} testId={testId}>
 					<NumberFieldPrimitive.Input

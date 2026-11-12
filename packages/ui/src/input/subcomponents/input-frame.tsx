@@ -5,6 +5,7 @@ import { hasRenderableContent, partTestId } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../input.module.scss';
 import type { InputProps, InputSizeType, InputStatusType, InputVariantType } from '../types.js';
+import { useInputFocusVisible } from '../use-input-focus-visible.js';
 
 const STATUS_ICONS = {
 	success: SolidCheckCircle2,
@@ -25,6 +26,7 @@ export type InputFrameAttributeProps = {
 	variant: InputVariantType;
 	status: InputStatusType | undefined;
 	noFocusRing: boolean;
+	focusVisible: boolean;
 	disabled: boolean;
 	readOnly: boolean;
 	member: InputMemberType | undefined;
@@ -45,6 +47,7 @@ export function getFrameAttributes({
 	variant,
 	status,
 	noFocusRing,
+	focusVisible,
 	disabled,
 	readOnly,
 	member,
@@ -69,6 +72,7 @@ export function getFrameAttributes({
 		...(disabled && !readOnly ? { 'data-disabled': true } : {}),
 		...(readOnly ? { 'data-readonly': true } : {}),
 		...(noFocusRing ? { 'data-no-focus-ring': true } : {}),
+		...(focusVisible ? { 'data-focus-visible': true } : {}),
 		...(member === undefined ? {} : { 'data-member': member }),
 		...(testId === undefined ? {} : { 'data-testid': testId }),
 	};
@@ -153,7 +157,7 @@ export function InputFrameSlots({
 /**
  * @access private
  */
-export type InputFrameProps = InputFrameAttributeProps & {
+export type InputFrameProps = Omit<InputFrameAttributeProps, 'focusVisible'> & {
 	prefix: ReactNode;
 	suffix: ReactNode;
 	reason: ReactNode;
@@ -175,8 +179,9 @@ export function InputFrame({
 	children,
 	...attributeProps
 }: InputFrameProps) {
+	const { focusVisible, focusProps } = useInputFocusVisible();
 	const frame = (
-		<div {...getFrameAttributes(attributeProps)}>
+		<div {...getFrameAttributes({ ...attributeProps, focusVisible })} {...focusProps}>
 			<InputFrameSlots
 				prefix={prefix}
 				suffix={suffix}
