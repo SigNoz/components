@@ -1,22 +1,23 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useControlledValue } from './use-controlled-value.js';
 
-function toValues(value: string | readonly string[] | null | undefined): string[] {
-	if (value === undefined || value === null) {
-		return [];
-	}
-
+function toValues(value: string | readonly string[]): string[] {
 	return (typeof value === 'string' ? [value] : [...value]).filter((entry) => entry !== '');
 }
+
+const NO_VALUES: string[] = [];
 
 /**
  * @access private
  */
 export type UseSelectionValueOptions = {
-	isControlled: boolean;
+	/**
+	 * The component name the warning of a `value` that arrives late starts with.
+	 */
+	component: string;
 	multiple: boolean;
 	/**
 	 * Decides what a single selection reports once it is emptied: `null`, or `undefined` without it.
-	 * `null` and `undefined` as `value` mean an empty selection either way.
 	 */
 	nullable: boolean;
 	value: string | readonly string[] | null | undefined;
@@ -37,7 +38,7 @@ export type UseSelectionValueOptions = {
  * @access private
  */
 export function useSelectionValue({
-	isControlled,
+	component,
 	multiple,
 	nullable,
 	value,
@@ -47,16 +48,19 @@ export function useSelectionValue({
 	selectedValues: string[];
 	commit: (next: string[]) => void;
 } {
-	const [uncontrolledValues, setUncontrolledValues] = useState<string[]>(() =>
-		toValues(defaultValue),
+	const written = useMemo(
+		() => (value === undefined || value === null ? value : toValues(value)),
+		[value],
 	);
-	const controlledValues = useMemo(() => toValues(value), [value]);
-	const selectedValues = isControlled ? controlledValues : uncontrolledValues;
+	const [selectedValues, setSelectedValues] = useControlledValue<string[]>({
+		component,
+		value: written,
+		defaultValue: defaultValue === undefined ? undefined : toValues(defaultValue),
+		empty: NO_VALUES,
+	});
 
 	function commit(next: string[]): void {
-		if (!isControlled) {
-			setUncontrolledValues(next);
-		}
+		setSelectedValues(next);
 
 		if (multiple) {
 			(onChange as ((value: string[]) => void) | undefined)?.(next);

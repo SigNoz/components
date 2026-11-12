@@ -196,7 +196,7 @@ describe('value, defaultValue and onChange', () => {
 	});
 
 	test('rejects value and defaultValue together', () => {
-		// @ts-expect-error - `value` makes the switch controlled for life, `defaultValue` is dead beside it
+		// @ts-expect-error - `value` and `defaultValue` are one or the other
 		assertType(<Switch color="primary" textPlacement="right" value defaultValue onChange={noop} />);
 	});
 

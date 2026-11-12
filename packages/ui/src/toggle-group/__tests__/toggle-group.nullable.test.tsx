@@ -88,6 +88,22 @@ describe('ToggleGroup single nullable', () => {
 		expect(logged.warn).not.toHaveBeenCalled();
 	});
 
+	it.each([
+		['undefined', undefined],
+		['null', null],
+	])('shows nothing pressed once a value turns %s, with no warning', (_, empty) => {
+		const logged = spyOnConsole();
+		const { rerender } = render(
+			<ToggleGroup type="single" {...BAR} items={ITEMS} nullable value="grid" />,
+		);
+
+		rerender(<ToggleGroup type="single" {...BAR} items={ITEMS} nullable value={empty} />);
+
+		expectNothingPressed();
+		expect(logged.error).not.toHaveBeenCalled();
+		expect(logged.warn).not.toHaveBeenCalled();
+	});
+
 	it('reports null when the pressed button is released with allowClear', async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
@@ -358,6 +374,22 @@ describe('ToggleGroup multiple nullable', () => {
 
 		pressed('List');
 		pressed('Table');
+		expect(logged.error).not.toHaveBeenCalled();
+		expect(logged.warn).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		['undefined', undefined],
+		['null', null],
+	])('shows nothing pressed once a value turns %s, with no warning', (_, empty) => {
+		const logged = spyOnConsole();
+		const { rerender } = render(
+			<ToggleGroup type="multiple" {...BAR} items={ITEMS} nullable value={['grid']} />,
+		);
+
+		rerender(<ToggleGroup type="multiple" {...BAR} items={ITEMS} nullable value={empty} />);
+
+		expectNothingPressed();
 		expect(logged.error).not.toHaveBeenCalled();
 		expect(logged.warn).not.toHaveBeenCalled();
 	});

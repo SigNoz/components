@@ -274,25 +274,66 @@ describe('RadioCards interaction', () => {
 		}
 	});
 
-	it('stays controlled when value turns undefined, shows no card checked, and warns', () => {
+	it('starts at the default and keeps its own state while value is undefined', async () => {
+		const user = userEvent.setup();
+		const logged = {
+			error: vi.spyOn(console, 'error').mockImplementation(() => {}),
+			warn: vi.spyOn(console, 'warn').mockImplementation(() => {}),
+		};
+		const onChange = vi.fn();
+		render(
+			<RadioCards aria-label="Signal" items={ITEMS} defaultValue="metrics" onChange={onChange} />,
+		);
+
+		expect(screen.getByRole('radio', { name: 'Metrics' })).toBeChecked();
+
+		await user.click(screen.getByRole('radio', { name: 'Traces' }));
+
+		expect(onChange).toHaveBeenCalledWith('traces');
+		expect(screen.getByRole('radio', { name: 'Traces' })).toBeChecked();
+		expect(screen.getByRole('radio', { name: 'Metrics' })).not.toBeChecked();
+		expect(logged.warn).not.toHaveBeenCalled();
+		expect(logged.error).not.toHaveBeenCalled();
+	});
+
+	it('shows no card checked once value turns undefined, and stays controlled', async () => {
+		const user = userEvent.setup();
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const onChange = vi.fn();
 		const { rerender } = render(
-			<RadioCards aria-label="Signal" items={ITEMS} value="traces" defaultValue="metrics" />,
+			<RadioCards
+				aria-label="Signal"
+				items={ITEMS}
+				value="traces"
+				defaultValue="metrics"
+				onChange={onChange}
+			/>,
 		);
 
 		rerender(
-			<RadioCards aria-label="Signal" items={ITEMS} value={undefined} defaultValue="metrics" />,
+			<RadioCards
+				aria-label="Signal"
+				items={ITEMS}
+				value={undefined}
+				defaultValue="metrics"
+				onChange={onChange}
+			/>,
 		);
 
 		for (const radio of screen.getAllByRole('radio')) {
 			expect(radio).not.toBeChecked();
 		}
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('RadioCards: `value` turned `undefined`'),
-		);
+
+		await user.click(screen.getByRole('radio', { name: 'Logs' }));
+
+		expect(onChange).toHaveBeenCalledWith('logs');
+		for (const radio of screen.getAllByRole('radio')) {
+			expect(radio).not.toBeChecked();
+		}
+		expect(warn).not.toHaveBeenCalled();
 	});
 
-	it('ignores a value that appears on a group that started uncontrolled, and warns', async () => {
+	it('follows a value that appears on a group that started uncontrolled, and warns once', async () => {
 		const user = userEvent.setup();
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { rerender } = render(<RadioCards aria-label="Signal" items={ITEMS} />);
@@ -300,10 +341,14 @@ describe('RadioCards interaction', () => {
 		await user.click(screen.getByRole('radio', { name: 'Traces' }));
 		rerender(<RadioCards aria-label="Signal" items={ITEMS} value="metrics" />);
 
-		expect(screen.getByRole('radio', { name: 'Traces' })).toBeChecked();
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('RadioCards: `value` was `undefined` on the first render'),
-		);
+		expect(screen.getByRole('radio', { name: 'Metrics' })).toBeChecked();
+		expect(screen.getByRole('radio', { name: 'Traces' })).not.toBeChecked();
+
+		rerender(<RadioCards aria-label="Signal" items={ITEMS} value="logs" />);
+
+		expect(screen.getByRole('radio', { name: 'Logs' })).toBeChecked();
+		expect(warn).toHaveBeenCalledTimes(1);
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('RadioCards:'));
 	});
 
 	it('keeps Space from scrolling the page on the tab stop of a disabled group', async () => {
@@ -731,14 +776,44 @@ describe('RadioCards.Multiple interaction', () => {
 		expect(fireEvent.keyDown(card, { key: ' ' })).toBe(false);
 	});
 
-	it('stays controlled when value turns undefined, shows no card checked, and warns', () => {
+	it('starts at the default and keeps its own state while value is undefined', async () => {
+		const user = userEvent.setup();
+		const logged = {
+			error: vi.spyOn(console, 'error').mockImplementation(() => {}),
+			warn: vi.spyOn(console, 'warn').mockImplementation(() => {}),
+		};
+		const onChange = vi.fn();
+		render(
+			<RadioCards.Multiple
+				aria-label="Tools"
+				items={ITEMS}
+				defaultValue={['metrics']}
+				onChange={onChange}
+			/>,
+		);
+
+		expect(screen.getByRole('checkbox', { name: 'Metrics' })).toBeChecked();
+
+		await user.click(screen.getByRole('checkbox', { name: 'Traces' }));
+
+		expect(onChange).toHaveBeenCalledWith(['traces', 'metrics']);
+		expect(screen.getByRole('checkbox', { name: 'Traces' })).toBeChecked();
+		expect(screen.getByRole('checkbox', { name: 'Metrics' })).toBeChecked();
+		expect(logged.warn).not.toHaveBeenCalled();
+		expect(logged.error).not.toHaveBeenCalled();
+	});
+
+	it('shows no card checked once value turns undefined, and stays controlled', async () => {
+		const user = userEvent.setup();
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const onChange = vi.fn();
 		const { rerender } = render(
 			<RadioCards.Multiple
 				aria-label="Tools"
 				items={ITEMS}
 				value={['traces']}
 				defaultValue={['metrics']}
+				onChange={onChange}
 			/>,
 		);
 
@@ -748,18 +823,24 @@ describe('RadioCards.Multiple interaction', () => {
 				items={ITEMS}
 				value={undefined}
 				defaultValue={['metrics']}
+				onChange={onChange}
 			/>,
 		);
 
 		for (const checkbox of screen.getAllByRole('checkbox')) {
 			expect(checkbox).not.toBeChecked();
 		}
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('RadioCards.Multiple: `value` turned `undefined`'),
-		);
+
+		await user.click(screen.getByRole('checkbox', { name: 'Logs' }));
+
+		expect(onChange).toHaveBeenCalledWith(['logs']);
+		for (const checkbox of screen.getAllByRole('checkbox')) {
+			expect(checkbox).not.toBeChecked();
+		}
+		expect(warn).not.toHaveBeenCalled();
 	});
 
-	it('ignores a value that appears on a group that started uncontrolled, and warns', async () => {
+	it('follows a value that appears on a group that started uncontrolled, and warns once', async () => {
 		const user = userEvent.setup();
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { rerender } = render(<RadioCards.Multiple aria-label="Tools" items={ITEMS} />);
@@ -767,11 +848,14 @@ describe('RadioCards.Multiple interaction', () => {
 		await user.click(screen.getByRole('checkbox', { name: 'Traces' }));
 		rerender(<RadioCards.Multiple aria-label="Tools" items={ITEMS} value={['metrics']} />);
 
-		expect(screen.getByRole('checkbox', { name: 'Traces' })).toBeChecked();
-		expect(screen.getByRole('checkbox', { name: 'Metrics' })).not.toBeChecked();
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('RadioCards.Multiple: `value` was `undefined` on the first render'),
-		);
+		expect(screen.getByRole('checkbox', { name: 'Metrics' })).toBeChecked();
+		expect(screen.getByRole('checkbox', { name: 'Traces' })).not.toBeChecked();
+
+		rerender(<RadioCards.Multiple aria-label="Tools" items={ITEMS} value={['logs']} />);
+
+		expect(screen.getByRole('checkbox', { name: 'Logs' })).toBeChecked();
+		expect(warn).toHaveBeenCalledTimes(1);
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('RadioCards.Multiple:'));
 	});
 
 	it('follows a controlled value', async () => {
