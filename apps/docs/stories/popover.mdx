@@ -142,9 +142,9 @@ export default function ServiceLinks({ services }) {
 - A row can be the trigger: the keyboard focus on a link or a button inside it opens the row's card,
   and the card stays while the focus moves along the row.
 - The popup closes when the trigger it is open for unmounts, such as a row deleted or filtered out.
-- Every way of sharing a popup is a story under Popover / Components: press triggers, hover
-  triggers, preview links, preview rows, a press and previews together, `openTrigger`, `showAt`
-  next to triggers, one content for every trigger, inside a dialog, and a showcase.
+- Popover / Components has the stories: `Trigger` for the controls below, `HoverTriggers` and
+  `PreviewRows` to try by hand, with Motion set to Live to watch the content swap, and
+  `TriggerShowcase`.
 - The popup a `Popover.Trigger` opens goes where `showAt` would put it: the trigger is its anchor.
   `Breadcrumb` builds its crumb cards and its `...` list on it.
 

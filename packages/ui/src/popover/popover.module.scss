@@ -137,6 +137,15 @@
 		flex: var(--popover-content-flex, 1 1 auto);
 	}
 
+	// The new content takes its final width, `--popup-width` less the border, for the whole swap,
+	// and the popup clips what does not fit yet. At the width the popup has while it grows, the
+	// content would wrap until the resize ends. `--popover-padding` is left out: it may be a
+	// shorthand, which `calc` cannot take.
+	&[data-transitioning] > [data-current] {
+		inline-size: var(--popover-content-swap-inline-size,
+				calc(var(--popup-width) - 2 * var(--popover-border-width, 1px)));
+	}
+
 	// The old content sits over the new one at the size it had, so it does not reflow as the popup
 	// resizes.
 	& > [data-previous] {
