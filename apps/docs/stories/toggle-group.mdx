@@ -256,6 +256,42 @@ The trigger is mounted from the props rather than from whether there is somethin
 so a button never remounts when a tooltip appears and never loses its focus. The tooltip itself
 mounts only while there is content for it.
 
+## In a field
+
+`ToggleGroupField` renders the bar inside a `Field.Group` from one object holding the props of both.
+The label is the legend of the fieldset, and the `role="group"` list of the bar takes it as its
+name, so a screen reader reads the same name for both. A bar with an `aria-label` or an
+`aria-labelledby` of its own keeps it and does not take the legend.
+
+```tsx
+import { ToggleGroupField } from '@signozhq/ui';
+
+<Controller
+	control={control}
+	name="layout"
+	render={({ field }) => (
+		<ToggleGroupField
+			label="Layout"
+			type="single"
+			variant="outlined"
+			color="secondary"
+			size="md"
+			items={layouts}
+			description="How the rows are drawn."
+			value={field.value}
+			onChange={field.onChange}
+		/>
+	)}
+/>;
+```
+
+- `description` and the validation message are listed in the `aria-describedby` of the fieldset.
+- `required` adds an asterisk to the legend. A `role="group"` takes neither `aria-required` nor
+  `aria-invalid`, so the legend and the message carry the status and the bar sets neither.
+- `ref` goes to the root of the bar. Every other prop that is not a field prop goes to the bar.
+- With a `testId`, the bar gets it, and the parts of the field take it as their prefix:
+  `<testId>-label`, `<testId>-description` and `<testId>-message`. The fieldset gets none.
+
 ## Asserting on it
 
 `testId` becomes `data-testid` on the root, and it names every button: with `testId="layout"`, the

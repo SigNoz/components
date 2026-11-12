@@ -209,6 +209,63 @@ import { ForceOpenProvider } from '@signozhq/ui/testing';
 </ForceOpenProvider>;
 ```
 
+## In a form
+
+`SelectField` puts a select inside a `Field` from one object. It takes the field's props (`label`,
+`labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message`, `required`) and every prop
+of `Select`, and renders the same DOM as a hand-written `Field` around a `Select`.
+
+```tsx
+import { SelectField } from '@signozhq/ui';
+
+export default function FrameworkField({ errors }) {
+	const [framework, setFramework] = useState<string | undefined>();
+
+	return (
+		<SelectField
+			label="Framework"
+			placeholder="Select a framework..."
+			description="The one the team builds with."
+			items={frameworks}
+			value={framework}
+			onChange={setFramework}
+			error={errors.framework?.message}
+		/>
+	);
+}
+```
+
+The label names the trigger, in single and multiple mode alike, and the list takes the same name. A
+click on the label of a multiple select focuses its trigger. The description or the message
+describes the trigger. `error`, or a `danger` status, sets `aria-invalid` and turns the border red.
+`warning` and `success` reach the label and the message only. `required` marks the label with an
+asterisk and sets `aria-required` on the trigger.
+
+`testId` stays on the trigger, and the field parts take it as their prefix (`${testId}-label`,
+`${testId}-description`, `${testId}-message`). `ref` is the trigger. A bare `Select` inside a
+`Field` takes the same wiring, and its own `required` wins over the field's.
+
+With react-hook-form, pass `value`, `onChange` and `ref` from `Controller`, and
+`fieldState.error?.message` to `error`.
+
+```tsx
+<Controller
+	control={control}
+	name="framework"
+	render={({ field, fieldState }) => (
+		<SelectField
+			label="Framework"
+			placeholder="Select a framework..."
+			items={frameworks}
+			value={field.value}
+			onChange={field.onChange}
+			ref={field.ref}
+			error={fieldState.error?.message}
+		/>
+	)}
+/>
+```
+
 ## Asserting on it
 
 `testId` becomes `data-testid` on the trigger, and it names everything under it:

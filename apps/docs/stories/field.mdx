@@ -1,0 +1,559 @@
+import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as FieldStories from './field.stories';
+import * as FieldComponentsStories from './field-components.stories';
+
+<Meta of={FieldStories} />
+
+# Field
+
+The label, the control and the row below it of one form field, in the one layout the design system
+draws: the label above the control, the description or the validation message below. `Field.Group`
+does the same for several controls that share one label, as a `<fieldset>` with a `<legend>`.
+
+A field holds no values and runs no validation. The values live in react-hook-form or in your own
+state, you decide what is invalid, and the field renders what it is told and wires the
+accessibility between the label, the control and the message. It takes no `className` or `style`:
+a field that moved its label or restyled its message would not read as the same form.
+
+The control is `children`, and the field reaches it through context rather than props. `Input` and
+its members read the field directly. Checkbox, Switch, Select, Combobox, Slider and Radio Group take
+the label, the description and `aria-invalid` from the Base UI field that `Field` renders. The
+control's own props always win, so a control that sets its own `id` or `status` keeps it. A control
+that reads neither yet still renders inside a field, but its label does not name it: pass `id` on
+the control and `htmlFor` on the field until it does.
+
+## How to use
+
+```tsx
+import { Button, Field, Form, Input } from '@signozhq/ui';
+import { useForm } from 'react-hook-form';
+
+type Values = { organisation: string };
+
+export default function OrganisationForm({ onSave }: { onSave: (values: Values) => void }) {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<Values>();
+
+	return (
+		<Form onSubmit={handleSubmit(onSave)}>
+			<Field label="Organisation name" required error={errors.organisation?.message}>
+				<Input
+					placeholder="For eg. Simpsonville..."
+					{...register('organisation', { required: 'Enter the name of your organisation.' })}
+				/>
+			</Field>
+			<Button type="submit" variant="solid" color="primary" size="md">
+				Create organisation
+			</Button>
+		</Form>
+	);
+}
+```
+
+`error` is the shorthand for `status="danger"` with `message`, built for form libraries that hand
+over one string. A value that renders nothing (an untouched `errors.organisation?.message`) shows
+no message and sets no status, so the wiring above is complete as written.
+
+<Primary />
+
+## With a zod schema
+
+The schema owns every rule and every message. The field shows what the resolver puts in `errors`,
+and `Form` is `noValidate`, so the browser never stops the submit before the schema runs.
+
+```tsx
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Form, InputField } from '@signozhq/ui';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const schema = z.object({
+	email: z.string().min(1, 'Enter your work email.').email('Enter an email like name@company.com.'),
+	password: z.string().min(12, 'Use at least 12 characters.'),
+});
+
+type Values = z.infer<typeof schema>;
+
+export default function SignUpForm({ onSave }: { onSave: (values: Values) => void }) {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm<Values>({ resolver: zodResolver(schema), mode: 'onTouched' });
+
+	return (
+		<Form onSubmit={handleSubmit(onSave)}>
+			<InputField
+				label="Work email"
+				type="email"
+				autoComplete="email"
+				required
+				error={errors.email?.message}
+				{...register('email')}
+			/>
+			<InputField.Password
+				label="Password"
+				autoComplete="new-password"
+				required
+				description="At least 12 characters."
+				error={errors.password?.message}
+				{...register('password')}
+			/>
+			<Button type="submit" variant="solid" color="primary" size="md" loading={isSubmitting}>
+				Create account
+			</Button>
+		</Form>
+	);
+}
+```
+
+`register` hands the input its ref, so on a failed submit react-hook-form moves focus to the first
+field with an error. `mode: 'onTouched'` validates a field when it loses focus and again on every
+change after that.
+
+## Controls that report a value
+
+`register` fits a control that fires a native change event. Select, Combobox, Switch, Checkbox,
+Slider, Radio Group and `Input.Number` call `onChange` with the value itself, so wire them through
+`Controller`:
+
+```tsx
+import { Controller } from 'react-hook-form';
+
+<Controller
+	control={control}
+	name="framework"
+	rules={{ required: 'Pick a framework.' }}
+	render={({ field, fieldState }) => (
+		<SelectField
+			label="Framework"
+			required
+			placeholder="Select a framework..."
+			items={FRAMEWORKS}
+			error={fieldState.error?.message}
+			value={field.value}
+			onChange={field.onChange}
+		/>
+	)}
+/>
+
+<Controller
+	control={control}
+	name="sendAlerts"
+	render={({ field }) => (
+		<SwitchField
+			label="Send alerts"
+			color="primary"
+			description="Email the on-call channel when a rule fires."
+			value={field.value}
+			onChange={field.onChange}
+		/>
+	)}
+/>
+
+<Controller
+	control={control}
+	name="replicas"
+	render={({ field, fieldState }) => (
+		<InputField.Number
+			label="Replicas"
+			ref={field.ref}
+			min={1}
+			max={100}
+			error={fieldState.error?.message}
+			value={field.value}
+			onChange={field.onChange}
+			onBlur={field.onBlur}
+		/>
+	)}
+/>
+```
+
+## Label
+
+`label` is a string, it is required, and it is the accessible name of the control. It wraps to two
+lines and then ends with an ellipsis, with the full text in a tooltip. The accessible name is
+always the full text. A label that needs more than two lines is a sentence: split it into a short
+label and a `description`.
+
+An empty label renders `<No label>` and names the control that way, so a missing name shows in
+review and in tests. A field with no visible label is a broken form element, so the field does not
+hide it.
+
+`labelIcon` puts an icon before the text. Use it only for a label that fits on one line: a wrapping
+label with a leading icon has nowhere correct for the icon to sit.
+
+`labelTooltip` adds an info icon after the label with the text in a tooltip. The icon is not a tab
+stop. The same text is part of the control's description, so a screen reader reaches it from the
+control. Use plain text: a link or a button inside the tooltip cannot be reached with the
+keyboard, so put those in `description`.
+
+```tsx
+import { Building } from '@signozhq/icons';
+
+<Field label="Organisation name" labelIcon={<Building />}>
+	<Input placeholder="For eg. Simpsonville..." />
+</Field>
+
+<Field label="Organisation name" labelTooltip="Visible to everyone in the workspace.">
+	<Input placeholder="For eg. Simpsonville..." />
+</Field>
+```
+
+## Description and message
+
+`description` is neutral help text below the control. A status message takes its place in the same
+row while one shows, so the field does not grow by a line when an error appears. The message has to
+say what to do, so it repeats the part of the description the user needs. A field with neither
+ends at the control.
+
+```tsx
+<Field
+	label="Organisation name"
+	description="Between 3 and 40 characters."
+	error={errors.organisation?.message}
+>
+	<Input {...register('organisation')} />
+</Field>
+```
+
+While `errors.organisation?.message` is `'Use at least 3 characters.'`, that text shows in the row
+and the description is gone. Once it is `undefined` again, the description comes back.
+
+`error` is the common case. `status` with `message` covers `warning`, `success`, and a `danger`
+message that is not a string. Passing `error` with `status` or `message` is a type error, and so is
+`status` without `message` or `message` without `status`: a status with nothing to say belongs on
+the control alone.
+
+```tsx
+<Field label="Organisation name" status="warning" message="This name is close to one that is taken.">
+	<Input defaultValue="Simpsonville Co" />
+</Field>
+
+<Field label="Organisation name" status="success" message="This name is available.">
+	<Input defaultValue="Simpsonville" />
+</Field>
+
+// Type errors: each says the same thing twice, or only half of it.
+<Field label="Email" error="Enter your email." status="danger">…</Field>
+<Field label="Email" status="warning">…</Field>
+<Field label="Email" message="Looks good.">…</Field>
+```
+
+While the field has a status:
+
+- The label and the message take the status color, and the message starts with the status icon.
+- The control shows the status. Input, Select and Combobox tint their frame. Checkbox, Switch, Radio
+  Group, Slider and Toggle Group have no frame, so the label and the message carry it.
+- `danger` sets `aria-invalid` on the control. `warning` and `success` do not.
+
+`success` confirms a check that ran and passed, such as a name that is available. It is not the
+state of a valid field, and it goes stale as soon as the value changes: clear it on the next change
+and run the check again on blur.
+
+```tsx
+const [name, setName] = useState('');
+const [check, setCheck] = useState<'idle' | 'free' | 'taken'>('idle');
+
+const feedback =
+	check === 'free'
+		? ({ status: 'success', message: 'This name is available.' } as const)
+		: check === 'taken'
+			? ({ status: 'danger', message: 'Another organisation uses this name.' } as const)
+			: {};
+
+<Field label="Organisation name" {...feedback}>
+	<Input
+		value={name}
+		onChange={(event) => {
+			setName(event.target.value);
+			setCheck('idle');
+		}}
+		onBlur={async () => setCheck((await isNameFree(name)) ? 'free' : 'taken')}
+	/>
+</Field>;
+```
+
+A text that renders nothing (`labelTooltip`, `description`, `error` or `message` set to `null`,
+`undefined` or `''`) is ignored: no icon and no row.
+
+## Required
+
+`required` adds an asterisk after the label text and sets `aria-required` on the control. The
+asterisk is hidden from assistive tech, so a screen reader says "required" once, from the control,
+and never reads "star".
+
+It never sets the native `required`. Your validation owns the rule, as it owns every other one: a
+native `required` would let the browser stop the submit with its own bubble and its own words
+before react-hook-form or zod run. So a required field works the same inside `Form` and inside a
+plain `<form>`.
+
+```tsx
+<Field label="Cluster name" required error={errors.cluster?.message}>
+	<Input {...register('cluster', { required: 'Enter a cluster name.' })} />
+</Field>
+```
+
+`required` on the field only marks it. The rule itself still lives in `register`, or in the
+schema. For a form with no validation library, pass `required` to the control as well, and the
+browser checks it:
+
+```tsx
+<form onSubmit={save}>
+	<Field label="Cluster name" required>
+		<Input name="cluster" required />
+	</Field>
+</form>
+```
+
+## Hover and focus
+
+When the pointer is over the control, the label color brightens with it, the same step the control
+border takes. It does not change while the field has a status, or while the control is disabled or
+read-only. The label has no hover state of its own.
+
+A field is not focusable and `Tab` skips it. Clicking the label moves focus to the control. The
+focus ring belongs to the control and wraps the control only, never the label or the message.
+
+## Field.Group
+
+A Radio Group, a Toggle Group, a `Slider.Range`, a list of Checkboxes or Switches, and two controls
+that make one value (an amount and a unit) have more than one input, so a `<label for>` cannot name
+them. `Field.Group` renders a `<fieldset>` and `label` becomes its `<legend>`. It takes the props of
+`Field` except `htmlFor`, so a group shows its marker, its description and its message the same
+way.
+
+The label names the group, not the controls inside it, so each control of a custom group needs a
+name of its own, such as `aria-label="Amount"`. A Radio Group or Toggle Group inside takes the
+legend as its name, so a screen reader does not announce two groups. The message and the description
+are part of the fieldset's description, and `danger` sets `aria-invalid` on a Radio Group inside.
+
+```tsx
+const RETENTION = [
+	{ label: '7 days', value: '7' },
+	{ label: '30 days', value: '30' },
+	{ label: '90 days', value: '90' },
+];
+
+<Field.Group label="Retention" description="How long the data is kept." required>
+	<RadioGroup color="primary" items={RETENTION} defaultValue="30" />
+</Field.Group>
+
+<Field.Group label="Notify me about" description="Sent to the on-call channel.">
+	<div className={styles.checkboxList}>
+		<Checkbox color="primary" defaultValue>
+			Deploys
+		</Checkbox>
+		<Checkbox color="primary">Alerts</Checkbox>
+		<Checkbox color="primary">Weekly digest</Checkbox>
+	</div>
+</Field.Group>
+```
+
+Two controls that make one value each get an `aria-label`, and the group's error reaches both:
+
+```tsx
+<Field.Group label="Retention period" error={errors.retention?.message}>
+	<div className={styles.valueRow}>
+		<Input.Number aria-label="Amount" min={1} {...amountProps} />
+		<Select aria-label="Unit" items={UNITS} placeholder="Unit" {...unitProps} />
+	</div>
+</Field.Group>
+```
+
+A checkbox with a heading above it is a group too: use `Field.Group` with the one Checkbox. A
+single checkbox with its text next to the box is `CheckboxField`.
+
+```tsx
+<Field.Group label="Terms" required>
+	<Checkbox color="primary">I accept the terms of service</Checkbox>
+</Field.Group>
+
+<Controller
+	control={control}
+	name="privacy"
+	rules={{ required: 'Accept the policy to continue.' }}
+	render={({ field, fieldState }) => (
+		<CheckboxField
+			color="primary"
+			label="Accept the privacy policy"
+			required
+			error={fieldState.error?.message}
+			value={field.value}
+			onChange={field.onChange}
+		/>
+	)}
+/>
+```
+
+## Field shorthands
+
+Each control exports a component from its own entry that renders the control inside a `Field`, or
+inside a `Field.Group` for a control with more than one input. It only composes the two. It adds no
+layout, no style and no behavior of its own, so a shorthand and a hand-written `Field` render the
+same DOM.
+
+- `InputField`, with `InputField.Password`, `InputField.TextArea` and `InputField.Number`, from the
+  Input entry.
+- `SelectField` from the Select entry and `ComboboxField` from the Combobox entry.
+- `SwitchField` from the Switch entry and `SliderField` from the Slider entry. `SliderField.Range`
+  renders a `Field.Group` around `Slider.Range`.
+- `CheckboxField` from the Checkbox entry. It is for one checkbox that needs a required marker, a
+  description or a message, such as a consent line. The label renders as the text next to the box,
+  nothing renders above it, and `children` is not accepted.
+- `RadioGroupField`, `ToggleGroupField` and `RadioCardsField` render a `Field.Group` around the
+  control, each from its own entry.
+- `DatePickerField`, `ColorPickerField` and `UploadField` come with those controls.
+
+A shorthand takes the props of the field and the props of the control in one object. `label`,
+`labelIcon`, `labelTooltip`, `description`, `error`, `status`, `message` and `required` go to the
+field, and the field sets `aria-required` on the control. Every other prop goes to the control,
+including `id`, `ref`, `name`, `aria-*`, `data-*` and `testId`. `htmlFor` is not accepted: the
+shorthand wires the id itself.
+
+These two render the same DOM:
+
+```tsx
+<Field label="Service name" description="The name your traces report." error={errors.service?.message}>
+	<Input placeholder="checkout-service" {...register('service')} />
+</Field>
+
+<InputField
+	label="Service name"
+	description="The name your traces report."
+	error={errors.service?.message}
+	placeholder="checkout-service"
+	{...register('service')}
+/>
+```
+
+The same shape for the other controls:
+
+```tsx
+<SelectField
+	label="Framework"
+	required
+	description="The one the team builds with."
+	placeholder="Select a framework..."
+	items={FRAMEWORKS}
+/>
+
+<RadioGroupField
+	label="Retention"
+	description="How long the data is kept."
+	color="primary"
+	items={RETENTION}
+	defaultValue="30"
+	required
+/>
+
+<SliderField
+	label="Sampling rate"
+	description="Share of requests that are traced."
+	color="primary"
+	defaultValue={40}
+/>
+
+<SwitchField
+	label="Weekly digest"
+	labelTooltip="Sent on Monday morning."
+	color="primary"
+	description="A summary of last week."
+/>
+```
+
+## Spacing
+
+The label sits 8px above the control and the row 8px below it, less than the 16px between fields,
+so a label reads as part of its own field and not of the one above it. The label is never wider than
+its field and never wider than 48 characters, whichever is smaller. The description and the message
+wrap with no line limit, and the status icon stays on the first line.
+
+A field takes the full width of its parent. The gap between fields comes from `Form`, and a row of
+two fields or a two-column layout is your own grid.
+
+```tsx
+// Stacked 16px apart, the default.
+<Form onSubmit={handleSubmit(onSave)}>
+	<InputField label="Full name" required {...register('name')} />
+	<InputField label="Email" type="email" required {...register('email')} />
+	<Button type="submit" variant="solid" color="primary" size="md">
+		Save
+	</Button>
+</Form>
+
+// In a row 16px apart, wrapping when the width runs out.
+<Form layout="inline" onSubmit={handleSubmit(onSearch)}>
+	<SelectField label="Environment" items={ENVIRONMENTS} placeholder="Any" />
+	<InputField label="Service name" placeholder="checkout-service" {...register('service')} />
+	<Button type="submit" variant="solid" color="primary" size="md">
+		Search
+	</Button>
+</Form>
+```
+
+## Asserting on it
+
+`testId` becomes `data-testid` on the root, and the prefix of the parts. A `Field.Group` puts it on
+the `<fieldset>`:
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| label         | `` `${testId}-label` ``         |
+| label tooltip | `` `${testId}-label-tooltip` `` |
+| description   | `` `${testId}-description` ``   |
+| message       | `` `${testId}-message` ``       |
+
+The description renders only while no message shows, because the message takes its place. The
+control inside keeps its own `testId`: reach it with that, or with `getByLabelText` and the label.
+A shorthand puts `testId` on the control instead, and its field root gets none.
+
+The root has `data-status` while a status is set (`danger` while `error` renders something) and
+`data-required` while `required`.
+
+Prefer the control's role and its accessible name. The label names it, and the description or the
+message describes it:
+
+```tsx
+await user.click(screen.getByRole('button', { name: 'Create organisation' }));
+
+const input = screen.getByRole('textbox', { name: 'Organisation name' });
+
+expect(input).toBeRequired();
+expect(input).toBeInvalid();
+expect(input).toHaveAccessibleDescription('Enter the name of your organisation.');
+// With <Field testId="organisation">.
+expect(screen.getByTestId('organisation-message')).toHaveTextContent('Enter the name');
+
+// A group is named by its legend.
+expect(screen.getByRole('group', { name: 'Retention' })).toHaveAccessibleDescription(
+	'How long the data is kept.',
+);
+```
+
+Otherwise use the `data-slot` attributes, never the hashed class names:
+
+| `data-slot`             | rendered                                                           |
+| ----------------------- | ------------------------------------------------------------------ |
+| `field`                 | the root of a `Field`                                              |
+| `field-group`           | the `<fieldset>` of a `Field.Group`                                |
+| `field-label`           | always, the `<label>` or the `<legend>`                            |
+| `field-label-icon`      | while `labelIcon` renders something, hidden from assistive tech    |
+| `field-label-text`      | always, the label text, with `data-truncated` while it is cut      |
+| `field-required-marker` | while `required`, hidden from assistive tech                       |
+| `field-label-tooltip`   | while `labelTooltip` renders something, hidden from assistive tech |
+| `field-control`         | always in a `Field`, wraps the control                             |
+| `field-group-content`   | always in a `Field.Group`, wraps the controls                      |
+| `field-description`     | while the description shows                                        |
+| `field-message`         | while a status message shows, holds the status icon                |
+
+## Field props
+
+<Controls of={FieldStories.Default} />
+
+## Field.Group props
+
+<Controls of={FieldComponentsStories.Group} />

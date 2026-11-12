@@ -284,6 +284,44 @@ itself mounts only while there is content for it.
 </form>
 ```
 
+### In a field
+
+`RadioGroupField` renders the group inside a `Field.Group` from one object holding the props of both.
+The label is the legend of the fieldset, and the radio group takes it as its name, so `aria-label`
+and `aria-labelledby` are not needed. A name of its own still wins over the legend.
+
+```tsx
+import { RadioGroupField } from '@signozhq/ui';
+
+<Controller
+	control={control}
+	name="retention"
+	render={({ field, fieldState }) => (
+		<RadioGroupField
+			label="Retention"
+			color="primary"
+			items={periods}
+			required
+			description="How long the data is kept."
+			error={fieldState.error?.message}
+			name={field.name}
+			value={field.value}
+			onChange={field.onChange}
+		/>
+	)}
+/>;
+```
+
+- `required` adds an asterisk to the legend and sets `aria-required` on the radio group.
+- With a `danger` status, from `error` or from `status` with `message`, the radio group gets
+  `aria-invalid="true"`. `warning` and `success` do not set it.
+- The description or the message is listed in the `aria-describedby` of the fieldset, and the
+  message takes the place of the description in the same row.
+- `ref` goes to the radio group. Every other prop that is not a field prop goes to the radio group
+  as well.
+- With a `testId`, the radio group gets it, and the parts of the field take it as their prefix:
+  `<testId>-label`, `<testId>-description` and `<testId>-message`. The fieldset gets none.
+
 ## Asserting on it
 
 `testId` becomes `data-testid` on the root and survives the tooltip trigger cloning the group.
