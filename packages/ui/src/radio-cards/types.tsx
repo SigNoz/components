@@ -421,12 +421,9 @@ export type RadioCardsProps = RadioCardsSharedProps &
 		/**
 		 * The controlled value, one of the items' `value`s.
 		 *
-		 * @note `null` is the group with no card checked. `undefined` makes the group uncontrolled for
-		 * the rest of its life, so a controlled group that starts with nothing checked passes `null`.
-		 *
-		 * @note Decided on the first render. A `value` that turns `undefined` later shows no card
-		 * checked, and one that appears on a group that started uncontrolled is ignored. Both log a
-		 * warning.
+		 * @note `undefined` on the first render leaves the group uncontrolled, and a `value` that
+		 * arrives later is followed, with a warning. Once controlled, `undefined` and `null` show no
+		 * card checked.
 		 *
 		 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
 		 */
@@ -461,6 +458,10 @@ export type RadioCardsMultipleNullableType =
 			 * The controlled value, the `value` of every checked card. `[]` and `null` are the group
 			 * with no card checked, which the group reaches on its own only with `allowClear`.
 			 *
+			 * @note `undefined` on the first render leaves the group uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` shows no card
+			 * checked.
+			 *
 			 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
 			 */
 			value?: readonly string[] | null;
@@ -478,9 +479,9 @@ export type RadioCardsMultipleNullableType =
 			 * The controlled value, the `value` of every checked card. `[]` is the group with no card
 			 * checked, which the group reaches on its own only with `allowClear`.
 			 *
-			 * @note `undefined` makes the group uncontrolled for the rest of its life, as on
-			 * `RadioCards`: a `value` that turns `undefined` later shows no card checked, and one that
-			 * appears on a group that started uncontrolled is ignored. Both log a warning.
+			 * @note `undefined` on the first render leaves the group uncontrolled, and a `value` that
+			 * arrives later is followed, with a warning. Once controlled, `undefined` shows no card
+			 * checked.
 			 *
 			 * @note Use with `onChange`. For an uncontrolled group use `defaultValue` instead.
 			 */

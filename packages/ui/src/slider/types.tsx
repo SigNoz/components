@@ -244,7 +244,9 @@ export type ValidateSliderProps<T> = (T extends { disabled: boolean | undefined 
 export type SliderProps = SliderBaseProps &
 	SliderAriaAttributes & {
 		/**
-		 * The controlled value.
+		 * The controlled value. `undefined` on the first render leaves the slider uncontrolled,
+		 * starting at `defaultValue`. A value that arrives later is followed, with one warning, and
+		 * from then on `undefined` puts the thumb at `min`.
 		 *
 		 * @note A value that is not a finite number renders the thumb at `min`, and one below
 		 * `min` or above `max` renders the thumb at the nearest end. The slider never calls
@@ -270,7 +272,9 @@ export type SliderProps = SliderBaseProps &
 export type SliderRangeProps = SliderBaseProps &
 	SliderAriaAttributes & {
 		/**
-		 * The controlled value, the lower bound first.
+		 * The controlled value, the lower bound first. `undefined` on the first render leaves the
+		 * range uncontrolled, starting at `defaultValue`. A value that arrives later is followed,
+		 * with one warning, and from then on `undefined` puts the thumbs at `min` and `max`.
 		 *
 		 * @note Each value renders the way it does on `Slider`. A pair with the first value above
 		 * the second is a bug.

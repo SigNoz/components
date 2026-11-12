@@ -70,7 +70,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			: undefined;
 
 		const { selectedValues, commit } = useSelectionValue({
-			isControlled: 'value' in props,
+			component: 'Select',
 			multiple,
 			nullable,
 			value,
@@ -246,10 +246,11 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  *
  * ### Values
  *
- * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. Writing
- * `value` makes the select controlled, even with `undefined`. `onChange` reports a `string`, or a
- * `string[]` with `multiple`, `[]` once every chip is removed. A single select has no way to clear
- * its value.
+ * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. A `value`
+ * that is `undefined` on the first render leaves the select uncontrolled, starting at
+ * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+ * `undefined` shows nothing selected. `onChange` reports a `string`, or a `string[]` with
+ * `multiple`, `[]` once every chip is removed. A single select has no way to clear its value.
  *
  * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
  * react-hook-form `Controller`: `value` then takes `null` too, a controlled select with nothing

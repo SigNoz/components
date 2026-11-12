@@ -1,5 +1,6 @@
-import type { AriaAttributes, ReactNode } from 'react';
+import { useState, type AriaAttributes, type ReactNode } from 'react';
 import { useFieldContext } from '../lib/field-context.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import { joinIdRefs } from '../lib/utils.js';
 import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
@@ -10,15 +11,9 @@ import type { InputStatusType } from './types.js';
  * attributes and the remaining `aria-*`) for the control. The aria attributes the input resolves
  * against the surrounding `Field` are destructured away before the rest reaches this.
  *
- * A `value` of `null` becomes the empty string when the field is `nullable`, which keeps the control
- * controlled. Any other `value` is passed as it is.
- *
  * @access private
  */
-export function splitAttributes(
-	props: Record<string, unknown>,
-	nullable?: boolean,
-): {
+export function splitAttributes(props: Record<string, unknown>): {
 	control: Record<string, unknown>;
 	data: Record<string, unknown>;
 } {
@@ -28,14 +23,44 @@ export function splitAttributes(
 	for (const [key, value] of Object.entries(props)) {
 		if (key.startsWith('data-')) {
 			data[key] = value;
-		} else if (key === 'value' && nullable === true && value === null) {
-			control[key] = '';
 		} else {
 			control[key] = value;
 		}
 	}
 
 	return { control, data };
+}
+
+type NativeValue = string | number | readonly string[];
+
+/**
+ * The `value` or the `defaultValue` a native text control renders, under the one rule every value
+ * control follows (see `useControlledValue`). The native element has no state to hand over, so an
+ * uncontrolled control renders the `defaultValue` of its first render and no `value`, and a
+ * controlled one renders `value`, the empty string for `null` and `undefined`.
+ *
+ * @access private
+ */
+export function useNativeValue({
+	component,
+	value,
+	defaultValue,
+}: {
+	component: string;
+	value: NativeValue | null | undefined;
+	defaultValue: NativeValue | undefined;
+}): { value: NativeValue } | { defaultValue: NativeValue | undefined } {
+	const [shown, , isControlled] = useControlledValue<NativeValue>({
+		component,
+		value,
+		defaultValue,
+		empty: '',
+	});
+	// React writes a changed `defaultValue` into a field the user has not typed in yet, so it is
+	// held at the first render's value to match the controls that keep their own state.
+	const [firstDefaultValue] = useState(defaultValue);
+
+	return isControlled ? { value: shown } : { defaultValue: firstDefaultValue };
 }
 
 /**

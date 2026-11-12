@@ -155,7 +155,7 @@ describe('the props of the checkbox', () => {
 
 	test('value and defaultValue are one or the other', () => {
 		// oxfmt-ignore
-		// @ts-expect-error - `value` makes the checkbox controlled for its whole life
+		// @ts-expect-error - `value` and `defaultValue` are one or the other
 		assertType(<CheckboxField label="Accept the terms" color="primary" value defaultValue />);
 	});
 

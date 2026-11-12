@@ -7,10 +7,10 @@ import {
 	type RefAttributes,
 	useId,
 	useMemo,
-	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -21,7 +21,7 @@ import {
 } from '../tooltip/tooltip-content-stack-context.js';
 import { CheckboxTextOverflow } from './constants.js';
 import styles from './checkbox.module.scss';
-import type { CheckboxProps, ValidateCheckboxProps } from './types.js';
+import type { CheckboxProps, CheckboxValueType, ValidateCheckboxProps } from './types.js';
 
 const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbox(
 	{
@@ -60,24 +60,24 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 	const isReadOnly = readOnly === true;
 
 	// `'indeterminate'` is one more value of `value`, while Base UI splits it into a boolean prop
-	// beside `checked`; the union is unpacked here. An uncontrolled checkbox needs one piece of
-	// state for it: the dash shows until the first toggle, then the internal boolean takes over.
-	const [uncontrolledIndeterminate, setUncontrolledIndeterminate] = useState(
-		defaultValue === 'indeterminate',
-	);
-	const indeterminate = value === undefined ? uncontrolledIndeterminate : value === 'indeterminate';
+	// beside `checked`; the union is unpacked here. Base UI is always controlled from `shown`, and
+	// an uncontrolled checkbox keeps `shown` itself: the dash shows until the first toggle, then the
+	// boolean it reports takes its place.
+	const [shown, setShown] = useControlledValue<CheckboxValueType>({
+		component: 'Checkbox',
+		value,
+		defaultValue,
+		empty: false,
+	});
+	const indeterminate = shown === 'indeterminate';
 
 	// Base UI hands the change two arguments, the value and its event details. The extra argument
 	// stops at this boundary so `onChange` keeps the one-argument shape every input in this
 	// library shares.
-	const onCheckedChange = useMemo(
-		() =>
-			(checked: boolean): void => {
-				setUncontrolledIndeterminate(false);
-				onChange?.(checked);
-			},
-		[onChange],
-	);
+	const onCheckedChange = (checked: boolean): void => {
+		setShown(checked);
+		onChange?.(checked);
+	};
 
 	const hasLabel = hasRenderableContent(children);
 	const hasContainer =
@@ -129,8 +129,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			data-color={color}
 			className={styles['checkbox']}
 			style={hasContainer ? undefined : sizeStyle}
-			checked={value === undefined ? undefined : value === true}
-			defaultChecked={defaultValue === undefined ? undefined : defaultValue === true}
+			checked={shown === true}
 			onCheckedChange={onCheckedChange}
 			indeterminate={indeterminate}
 			disabled={isReadOnly ? false : disabled}

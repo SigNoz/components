@@ -5,11 +5,11 @@ import {
 	type ReactElement,
 	type RefAttributes,
 	useMemo,
-	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { onFocusLeave } from '../lib/focus-leave.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -19,15 +19,18 @@ import { ToggleGroupScrollButton } from './subcomponents/toggle-group-scroll-but
 import styles from './toggle-group.module.scss';
 import type { ToggleGroupProps, ValidateToggleGroupProps } from './types.js';
 
+const NO_VALUES: string[] = [];
+
 /**
  * Base UI holds the pressed state as an array whatever the selection mode is, so a `single` bar's
- * string goes in as a one entry array and the empty string as none at all.
+ * string goes in as a one entry array and the empty string as none at all. `null` and `undefined`
+ * stay as they are, for `useControlledValue` to tell a written value from a missing one.
  *
  * @access private
  */
-function toGroupValue(value: string | string[] | null | undefined): string[] | undefined {
+function toGroupValue(value: string | string[] | null | undefined): string[] | null | undefined {
 	if (value === undefined || value === null) {
-		return undefined;
+		return value;
 	}
 
 	if (Array.isArray(value)) {
@@ -84,40 +87,40 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 
 	// The bar keeps the pressed list itself, even uncontrolled, so it knows which button a form
 	// library's `focus()` has to land on. Base UI always gets the list as a controlled one.
-	const isControlled = value !== undefined;
-	const [ownValue, setOwnValue] = useState<string[]>(() => toGroupValue(defaultValue) ?? []);
-	const controlledValue = useMemo(() => toGroupValue(value) ?? [], [value]);
-	const pressedValues = isControlled ? controlledValue : ownValue;
+	const controlledValue = useMemo(() => toGroupValue(value), [value]);
+	const [pressedValues, setPressedValues] = useControlledValue<string[]>({
+		component: 'ToggleGroup',
+		value: controlledValue,
+		defaultValue: toGroupValue(defaultValue) ?? undefined,
+		empty: NO_VALUES,
+	});
 
-	const onValueChange = useMemo(
-		() =>
-			(next: string[], eventDetails: ToggleGroupPrimitive.ChangeEventDetails): void => {
-				// Base UI reads `isCanceled` after this call, so vetoing here holds the group where
-				// it was rather than reporting a move we then have to undo.
-				if (!allowClear && next.length === 0) {
-					eventDetails.cancel();
-					return;
-				}
+	function onValueChange(
+		next: string[],
+		eventDetails: ToggleGroupPrimitive.ChangeEventDetails,
+	): void {
+		// Base UI reads `isCanceled` after this call, so vetoing here holds the group where
+		// it was rather than reporting a move we then have to undo.
+		if (!allowClear && next.length === 0) {
+			eventDetails.cancel();
+			return;
+		}
 
-				if (!isControlled) {
-					setOwnValue(next);
-				}
+		setPressedValues(next);
 
-				if (onChange === undefined) {
-					return;
-				}
+		if (onChange === undefined) {
+			return;
+		}
 
-				if (isMultiple) {
-					(onChange as (next: string[]) => void)(next);
-					return;
-				}
+		if (isMultiple) {
+			(onChange as (next: string[]) => void)(next);
+			return;
+		}
 
-				// Only `allowClear` reaches this with nothing pressed, and a `single` bar calls that the
-				// empty string, or `null` while it is nullable.
-				(onChange as (next: string | null) => void)(next[0] ?? (nullable ? null : ''));
-			},
-		[onChange, isMultiple, allowClear, isControlled, nullable],
-	);
+		// Only `allowClear` reaches this with nothing pressed, and a `single` bar calls that the
+		// empty string, or `null` while it is nullable.
+		(onChange as (next: string | null) => void)(next[0] ?? (nullable ? null : ''));
+	}
 
 	const {
 		viewportRef,

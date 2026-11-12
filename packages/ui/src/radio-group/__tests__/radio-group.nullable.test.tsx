@@ -83,6 +83,24 @@ describe('RadioGroup nullable', () => {
 		expect(logged.warn).not.toHaveBeenCalled();
 	});
 
+	it.each([
+		['undefined', undefined],
+		['null', null],
+	])('shows no radio checked once a value turns %s, with no warning', (_, empty) => {
+		const logged = spyOnConsole();
+		const { rerender } = render(
+			<RadioGroup color="primary" items={ITEMS} aria-label="Retention" nullable value="30" />,
+		);
+
+		rerender(
+			<RadioGroup color="primary" items={ITEMS} aria-label="Retention" nullable value={empty} />,
+		);
+
+		expectNoRadioChecked();
+		expect(logged.error).not.toHaveBeenCalled();
+		expect(logged.warn).not.toHaveBeenCalled();
+	});
+
 	it('keeps an uncontrolled group uncontrolled while no value is written', async () => {
 		const user = userEvent.setup();
 		render(<RadioGroup color="primary" items={ITEMS} aria-label="Retention" nullable />);
