@@ -134,7 +134,6 @@
  * | `--date-picker-trigger-box-sizing` | `border-box` |
  * | `--date-picker-trigger-color` | `var(--date-picker-trigger-label)` |
  * | `--date-picker-trigger-cursor` | `pointer` |
- * | `--date-picker-trigger-disabled-color` | `var(--date-picker-trigger-label-disabled)` |
  * | `--date-picker-trigger-disabled-cursor` | `not-allowed` |
  * | `--date-picker-trigger-disabled-opacity` | `0.6` |
  * | `--date-picker-trigger-display` | `flex` |
@@ -147,17 +146,18 @@
  * | `--date-picker-trigger-font-family` | `var(--label-base-400-font-family)` |
  * | `--date-picker-trigger-font-size` | `var(--label-base-400-font-size)` |
  * | `--date-picker-trigger-font-weight` | `var(--label-base-400-font-weight)` |
+ * | `--date-picker-trigger-forced-colors-outline-style` | `none` |
  * | `--date-picker-trigger-gap` | `var(--spacing-4)` |
  * | `--date-picker-trigger-hover-border-color` | `var(--date-picker-trigger-border-hover)` |
  * | `--date-picker-trigger-icon` | `-` |
  * | `--date-picker-trigger-icon-hover` | `-` |
  * | `--date-picker-trigger-invalid-border-color` | `var(--destructive)` |
  * | `--date-picker-trigger-label` | `-` |
- * | `--date-picker-trigger-label-disabled` | `-` |
  * | `--date-picker-trigger-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--date-picker-trigger-line-height` | `var(--label-base-400-line-height)` |
  * | `--date-picker-trigger-margin` | `0` |
  * | `--date-picker-trigger-min-inline-size` | `0` |
+ * | `--date-picker-trigger-outline-color` | `transparent` |
  * | `--date-picker-trigger-padding-block` | `var(--spacing-2)` |
  * | `--date-picker-trigger-padding-inline-end` | `var(--spacing-4)` |
  * | `--date-picker-trigger-padding-inline-start` | `var(--spacing-6)` |
@@ -167,8 +167,8 @@
  * | `--date-picker-trigger-text-align` | `start` |
  * | `--date-picker-trigger-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--date-picker-trigger-transition-duration` | `150ms` |
- * | `--date-picker-trigger-transition-property` | `border-color` |
- * | `--date-picker-trigger-transition-timing-function` | `ease` |
+ * | `--date-picker-trigger-transition-property` | `border-color, opacity, outline-color` |
+ * | `--date-picker-trigger-transition-timing-function` | `ease-out` |
  * | `--date-picker-value-clearable-margin-inline-end` | `calc(var(--date-picker-internal-icon-size) + va...` |
  * | `--date-picker-value-flex-grow` | `1` |
  * | `--date-picker-value-min-inline-size` | `0` |

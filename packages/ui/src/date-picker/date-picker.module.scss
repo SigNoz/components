@@ -4,7 +4,6 @@
   --date-picker-internal-trigger-border-hover: var(--date-picker-trigger-hover-border-color, var(--date-picker-trigger-border-hover));
   --date-picker-internal-trigger-focus-ring: var(--date-picker-trigger-focus-ring-color, var(--date-picker-trigger-focus-ring));
   --date-picker-internal-trigger-label: var(--date-picker-trigger-color, var(--date-picker-trigger-label));
-  --date-picker-internal-trigger-label-disabled: var(--date-picker-trigger-disabled-color, var(--date-picker-trigger-label-disabled));
   --date-picker-internal-trigger-placeholder: var(--date-picker-placeholder-color, var(--date-picker-trigger-placeholder));
   --date-picker-internal-trigger-icon: var(--date-picker-icon-color, var(--date-picker-trigger-icon));
   --date-picker-internal-trigger-icon-hover: var(--date-picker-icon-hover-color, var(--date-picker-trigger-icon-hover));
@@ -53,15 +52,19 @@
 
   cursor: var(--date-picker-trigger-cursor, pointer);
 
-  transition-property: var(--date-picker-trigger-transition-property, border-color);
+  // The ring is always drawn and only its color changes, so it fades in like the other states
+  // instead of popping. An `outline-style` change cannot be interpolated.
+  outline-width: var(--date-picker-trigger-focus-outline-width, 1px);
+  outline-style: var(--date-picker-trigger-focus-outline-style, solid);
+  outline-color: var(--date-picker-trigger-outline-color, transparent);
+  outline-offset: var(--date-picker-trigger-focus-outline-offset, 1px);
+
+  transition-property: var(--date-picker-trigger-transition-property, border-color, opacity, outline-color);
   transition-duration: var(--date-picker-trigger-transition-duration, 150ms);
-  transition-timing-function: var(--date-picker-trigger-transition-timing-function, ease);
+  transition-timing-function: var(--date-picker-trigger-transition-timing-function, ease-out);
 
   &:focus-visible {
-    outline-width: var(--date-picker-trigger-focus-outline-width, 1px);
-    outline-style: var(--date-picker-trigger-focus-outline-style, solid);
     outline-color: var(--date-picker-internal-trigger-focus-ring);
-    outline-offset: var(--date-picker-trigger-focus-outline-offset, 1px);
   }
 
   // Re-points both, so the hover and open rules keep the colour too.
@@ -76,7 +79,6 @@
 
   // Never the native `disabled`: it drops pointer events and breaks the reason tooltip.
   &[aria-disabled='true'] {
-    color: var(--date-picker-internal-trigger-label-disabled);
     opacity: var(--date-picker-trigger-disabled-opacity, 0.6);
     cursor: var(--date-picker-trigger-disabled-cursor, not-allowed);
   }
@@ -87,6 +89,13 @@
     cursor: var(--date-picker-trigger-readonly-cursor, not-allowed);
   }
 
+}
+
+// Forced colors repaint every outline in a system color, the transparent resting ring included.
+@media (forced-colors: active) {
+  .date-picker__trigger:not(:focus-visible) {
+    outline-style: var(--date-picker-trigger-forced-colors-outline-style, none);
+  }
 }
 
 .date-picker:hover > .date-picker__trigger:not([aria-disabled='true'], [aria-readonly='true']) {
