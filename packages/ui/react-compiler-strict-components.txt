@@ -17,6 +17,7 @@ dialog
 divider
 drawer
 dropdown
+field
 input
 kbd
 pagination

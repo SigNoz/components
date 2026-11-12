@@ -10,6 +10,7 @@ import { Collapse } from './collapse/collapse.js';
 import { Combobox } from './combobox/index.js';
 import { Dropdown } from './dropdown/index.js';
 import { openDropdown } from './dropdown/__tests__/dropdown.test-utils.js';
+import { Field } from './field/index.js';
 import { Input } from './input/index.js';
 import { Popover } from './popover/index.js';
 import { openPopover } from './popover/__tests__/popover.test-utils.js';
@@ -246,6 +247,27 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('select'));
 		expectNoStrayStyle(document.querySelector('[data-slot="select"]'));
+	});
+
+	it('do not reach Field', () => {
+		render(
+			<Field label="Name" testId="field" {...STRAY}>
+				<Input placeholder="Name" />
+			</Field>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('field'));
+	});
+
+	it('do not reach Field.Group', () => {
+		render(
+			<Field.Group label="Amount" testId="group" {...STRAY}>
+				<Input aria-label="Value" />
+			</Field.Group>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('group'));
+		expectNoStrayStyle(screen.getByTestId('group-label'));
 	});
 
 	it('do not reach Input', () => {

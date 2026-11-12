@@ -1,0 +1,194 @@
+// The status lives on the root as `data-status`, so the label and the message color from one
+// attribute. The control inside tints itself through context, not through CSS.
+.field,
+.field-group {
+	--field-internal-label: var(--field-label-color, var(--field-label));
+	--field-internal-label-hover: var(--field-label-hover-color, var(--field-label-hover));
+	--field-internal-label-icon: var(--field-label-icon-color, var(--field-label-icon));
+	--field-internal-message: var(--field-description-color, var(--l2-foreground));
+	--field-internal-message-icon: var(--field-message-icon-color, var(--field-label-icon));
+
+	position: var(--field-position, relative);
+	display: var(--field-display, flex);
+	flex-direction: var(--field-flex-direction, column);
+	// The label sits 8px above the control and the row 8px below it, less than the 16px between
+	// fields, so a label reads as part of its own field and not of the one above it.
+	gap: var(--field-gap, var(--spacing-4));
+	min-inline-size: var(--field-min-inline-size, 0);
+	font-feature-settings: var(--field-font-feature-settings, 'ss01' 1);
+	font-variant-numeric: var(--field-font-variant-numeric, normal);
+
+	&[data-status='success'] {
+		--field-internal-label: var(--field-success-label-color, var(--field-success-label));
+		--field-internal-message: var(--field-success-message-color, var(--field-success-message));
+		--field-internal-message-icon: var(--field-success-icon-color, var(--field-success-icon));
+	}
+
+	&[data-status='warning'] {
+		--field-internal-label: var(--field-warning-label-color, var(--field-warning-label));
+		--field-internal-message: var(--field-warning-message-color, var(--field-warning-message));
+		--field-internal-message-icon: var(--field-warning-icon-color, var(--field-warning-icon));
+	}
+
+	&[data-status='danger'] {
+		--field-internal-label: var(--field-danger-label-color, var(--field-danger-label));
+		--field-internal-message: var(--field-danger-message-color, var(--field-danger-message));
+		--field-internal-message-icon: var(--field-danger-icon-color, var(--field-danger-icon));
+	}
+}
+
+.field-group {
+	margin: var(--field-group-margin, 0);
+	padding: var(--field-group-padding, 0);
+	border: var(--field-group-border, 0);
+}
+
+// The label brightens with the control under the pointer, the same step the control's border
+// takes. Never while a status colors the label, and never for a locked control. Hovering the label
+// itself changes nothing.
+.field:not([data-status]):has(> .field__control:hover):not(
+		:has(> .field__control :is([data-disabled], [data-readonly]))
+	)
+	> .field__label {
+	color: var(--field-internal-label-hover);
+}
+
+.field__label {
+	display: var(--field-label-display, inline-flex);
+	// The marker and the info icon follow the last line of a label that wraps.
+	align-items: var(--field-label-align-items, last baseline);
+	gap: var(--field-label-gap, var(--spacing-2));
+	max-inline-size: var(--field-label-max-inline-size, min(100%, 48ch));
+	color: var(--field-internal-label);
+	font-family: var(--field-label-font-family, var(--label-base-400-font-family));
+	font-size: var(--field-label-font-size, var(--label-base-400-font-size));
+	font-weight: var(--field-label-font-weight, var(--label-base-400-font-weight));
+	line-height: var(--field-label-line-height, var(--label-base-400-line-height));
+	letter-spacing: var(--field-label-letter-spacing, var(--label-base-400-letter-spacing));
+	text-transform: var(--field-label-text-transform, var(--label-base-400-text-transform));
+	transition-property: var(--field-label-transition-property, color);
+	transition-duration: var(--field-label-transition-duration, 150ms);
+	transition-timing-function: var(--field-label-transition-timing-function, ease);
+}
+
+// A legend is a flex item only while it floats. A `<legend>` that does not float is drawn on the
+// border of the fieldset, outside the column and its gap.
+legend.field__label {
+	float: var(--field-legend-float, inline-start);
+	margin: var(--field-legend-margin, 0);
+	padding: var(--field-legend-padding, 0);
+}
+
+.field__label-text {
+	display: var(--field-label-text-display, -webkit-box);
+	min-inline-size: var(--field-label-text-min-inline-size, 0);
+	overflow: var(--field-label-text-overflow, hidden);
+	-webkit-box-orient: var(--field-label-text-box-orient, vertical);
+	-webkit-line-clamp: var(--field-label-max-lines, 2);
+	line-clamp: var(--field-label-max-lines, 2);
+	overflow-wrap: var(--field-label-text-overflow-wrap, anywhere);
+}
+
+.field__label-icon,
+.field__label-tooltip {
+	display: var(--field-label-icon-display, inline-flex);
+	align-self: var(--field-label-icon-align-self, center);
+	flex-shrink: var(--field-label-icon-flex-shrink, 0);
+	color: var(--field-internal-label-icon);
+
+	svg {
+		inline-size: var(--field-icon-size, 14px);
+		block-size: var(--field-icon-size, 14px);
+		flex-shrink: var(--field-label-icon-flex-shrink, 0);
+	}
+}
+
+.field__required-marker {
+	flex-shrink: var(--field-required-marker-flex-shrink, 0);
+	color: var(--field-required-marker-color, var(--field-required-marker));
+}
+
+.field__control {
+	display: var(--field-control-display, flex);
+	flex-direction: var(--field-control-flex-direction, column);
+	min-inline-size: var(--field-control-min-inline-size, 0);
+}
+
+.field-group__content {
+	display: var(--field-group-content-display, flex);
+	flex-direction: var(--field-group-content-flex-direction, column);
+	gap: var(--field-group-content-gap, var(--spacing-4));
+	min-inline-size: var(--field-group-content-min-inline-size, 0);
+}
+
+.field__row {
+	display: var(--field-row-display, flex);
+	align-items: var(--field-row-align-items, flex-start);
+	gap: var(--field-row-gap, var(--spacing-3));
+	color: var(--field-internal-message);
+}
+
+.field__message-icon {
+	display: var(--field-message-icon-display, inline-flex);
+	flex-shrink: var(--field-message-icon-flex-shrink, 0);
+	// Inset from the top so the icon centres on the first line of the message and stays there when
+	// the message wraps.
+	padding-block-start: var(--field-message-icon-offset, var(--spacing-1));
+	color: var(--field-internal-message-icon);
+
+	svg {
+		inline-size: var(--field-icon-size, 14px);
+		block-size: var(--field-icon-size, 14px);
+		flex-shrink: var(--field-message-icon-flex-shrink, 0);
+	}
+
+	// The solid icons ship a white disc and a dark glyph written into the SVG. The disc takes the
+	// status color and the glyph is cut out of it, down to the page surface. A field on another
+	// surface, a card or a dialog, points the glyph at that surface instead.
+	svg [fill='#fff'] {
+		fill: var(--field-message-icon-disc-color, currentcolor);
+	}
+
+	// SolidAlertCircle cuts its glyph out of the disc path and gives the path no stroke, so it
+	// inherits the `currentColor` stroke the icon wrapper sets on `<svg>`, which fills the cut-out.
+	svg [fill='#fff']:not([stroke]) {
+		stroke: none;
+	}
+
+	svg [stroke='#fff'] {
+		stroke: var(--field-message-icon-disc-color, currentcolor);
+	}
+
+	svg [stroke='#121317'] {
+		stroke: var(--field-message-icon-glyph-color, var(--l1-background));
+	}
+}
+
+.field__row-text {
+	min-inline-size: var(--field-row-text-min-inline-size, 0);
+	overflow-wrap: var(--field-row-text-overflow-wrap, anywhere);
+	font-family: var(--field-row-font-family, var(--paragraph-small-400-font-family));
+	font-size: var(--field-row-font-size, var(--paragraph-small-400-font-size));
+	font-weight: var(--field-row-font-weight, var(--paragraph-small-400-font-weight));
+	line-height: var(--field-row-line-height, var(--paragraph-small-400-line-height));
+	letter-spacing: var(--field-row-letter-spacing, var(--paragraph-small-400-letter-spacing));
+	text-transform: var(--field-row-text-transform, var(--paragraph-small-400-text-transform));
+}
+
+.field__announcer {
+	position: var(--field-announcer-position, absolute);
+	inline-size: var(--field-announcer-inline-size, 1px);
+	block-size: var(--field-announcer-block-size, 1px);
+	margin: var(--field-announcer-margin, -1px);
+	padding: var(--field-announcer-padding, 0);
+	overflow: var(--field-announcer-overflow, hidden);
+	clip-path: var(--field-announcer-clip-path, inset(50%));
+	white-space: var(--field-announcer-white-space, nowrap);
+	border: var(--field-announcer-border, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.field__label {
+		transition: none;
+	}
+}
