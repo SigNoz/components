@@ -276,8 +276,8 @@
  * | `--combobox-trigger-chips-inset` | `5px` |
  * | `--combobox-trigger-color` | `var(--combobox-trigger-label)` |
  * | `--combobox-trigger-cursor` | `pointer` |
- * | `--combobox-trigger-disabled-color` | `var(--combobox-trigger-label-disabled)` |
  * | `--combobox-trigger-disabled-cursor` | `not-allowed` |
+ * | `--combobox-trigger-disabled-opacity` | `0.6` |
  * | `--combobox-trigger-display` | `flex` |
  * | `--combobox-trigger-flex-grow` | `1` |
  * | `--combobox-trigger-focus-outline-offset` | `1px` |
@@ -294,7 +294,6 @@
  * | `--combobox-trigger-icon-hover` | `-` |
  * | `--combobox-trigger-invalid-border-color` | `var(--destructive)` |
  * | `--combobox-trigger-label` | `-` |
- * | `--combobox-trigger-label-disabled` | `-` |
  * | `--combobox-trigger-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--combobox-trigger-line-height` | `var(--label-base-400-line-height)` |
  * | `--combobox-trigger-margin` | `0` |
@@ -309,8 +308,8 @@
  * | `--combobox-trigger-text-align` | `start` |
  * | `--combobox-trigger-text-transform` | `var(--label-base-400-text-transform)` |
  * | `--combobox-trigger-transition-duration` | `150ms` |
- * | `--combobox-trigger-transition-property` | `border-color` |
- * | `--combobox-trigger-transition-timing-function` | `ease` |
+ * | `--combobox-trigger-transition-property` | `border-color, opacity, outline-color` |
+ * | `--combobox-trigger-transition-timing-function` | `ease-out` |
  * | `--combobox-value-flex-grow` | `1` |
  * | `--combobox-value-min-inline-size` | `0` |
  * | `--combobox-value-overflow` | `clip visible` |

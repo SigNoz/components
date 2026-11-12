@@ -4,7 +4,6 @@
   --combobox-internal-trigger-border-hover: var(--combobox-trigger-hover-border-color, var(--combobox-trigger-border-hover));
   --combobox-internal-trigger-focus-ring: var(--combobox-trigger-focus-ring-color, var(--combobox-trigger-focus-ring));
   --combobox-internal-trigger-label: var(--combobox-trigger-color, var(--combobox-trigger-label));
-  --combobox-internal-trigger-label-disabled: var(--combobox-trigger-disabled-color, var(--combobox-trigger-label-disabled));
   --combobox-internal-trigger-placeholder: var(--combobox-placeholder-color, var(--combobox-trigger-placeholder));
   --combobox-internal-trigger-icon: var(--combobox-icon-color, var(--combobox-trigger-icon));
   --combobox-internal-trigger-icon-hover: var(--combobox-clear-hover-color, var(--combobox-trigger-icon-hover));
@@ -61,15 +60,19 @@
 
   cursor: var(--combobox-trigger-cursor, pointer);
 
-  transition-property: var(--combobox-trigger-transition-property, border-color);
+  // The ring is always drawn and only its color changes, so it fades in like the other states
+  // instead of popping. An `outline-style` change cannot be interpolated.
+  outline-width: var(--combobox-trigger-focus-outline-width, 1px);
+  outline-style: var(--combobox-trigger-focus-outline-style, solid);
+  outline-color: transparent;
+  outline-offset: var(--combobox-trigger-focus-outline-offset, 1px);
+
+  transition-property: var(--combobox-trigger-transition-property, border-color, opacity, outline-color);
   transition-duration: var(--combobox-trigger-transition-duration, 150ms);
-  transition-timing-function: var(--combobox-trigger-transition-timing-function, ease);
+  transition-timing-function: var(--combobox-trigger-transition-timing-function, ease-out);
 
   &:focus-visible {
-    outline-width: var(--combobox-trigger-focus-outline-width, 1px);
-    outline-style: var(--combobox-trigger-focus-outline-style, solid);
     outline-color: var(--combobox-internal-trigger-focus-ring);
-    outline-offset: var(--combobox-trigger-focus-outline-offset, 1px);
   }
 
   // Re-points both pairs, so the hover and open rules keep the colour too.
@@ -84,8 +87,8 @@
 
   // Never the native `disabled`: it drops pointer events and breaks the reason tooltip.
   &[aria-disabled='true'] {
-    color: var(--combobox-internal-trigger-label-disabled);
     cursor: var(--combobox-trigger-disabled-cursor, not-allowed);
+    opacity: var(--combobox-trigger-disabled-opacity, 0.6);
   }
 
   // Faded like the other read-only controls, and keeps its colours: the value is still there to read.
@@ -133,10 +136,6 @@
 
 .combobox__placeholder {
   color: var(--combobox-internal-trigger-placeholder);
-
-  [aria-disabled='true'] > & {
-    color: var(--combobox-internal-trigger-label-disabled);
-  }
 }
 
 .combobox__icon {
@@ -639,6 +638,13 @@
   .combobox__trigger,
   .combobox__item-control {
     transition: none;
+  }
+}
+
+// Forced colors repaint every outline in a system color, the transparent resting ring included.
+@media (forced-colors: active) {
+  .combobox__trigger:not(:focus-visible) {
+    outline-style: none;
   }
 }
 

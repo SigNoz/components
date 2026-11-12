@@ -217,3 +217,168 @@ describe('Combobox list scroll', () => {
 		).toBeGreaterThanOrEqual(20);
 	});
 });
+
+describe('Combobox trigger opacity', () => {
+	function trigger(): HTMLElement {
+		return screen.getByRole('combobox', { name: 'Framework' });
+	}
+
+	it('fades a disabled trigger like a disabled Input', () => {
+		render(
+			<Combobox
+				aria-label="Framework"
+				placeholder="Pick a framework"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={FRAMEWORKS}
+				disabled
+				disabledTooltip={undefined}
+			/>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('0.6');
+	});
+
+	it('leaves an enabled trigger opaque', () => {
+		render(
+			<Combobox
+				aria-label="Framework"
+				placeholder="Pick a framework"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={FRAMEWORKS}
+			/>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('1');
+	});
+
+	it('does not stack the read-only fade on a disabled trigger', () => {
+		render(
+			<Combobox
+				aria-label="Framework"
+				placeholder="Pick a framework"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={FRAMEWORKS}
+				readOnly
+				readOnlyTooltip={undefined}
+				disabled
+				disabledTooltip={undefined}
+			/>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('0.6');
+	});
+
+	it('keeps the label colour, so the fade is the only dimming', () => {
+		render(
+			<div style={{ ['--combobox-trigger-color' as string]: 'rgb(10, 20, 30)' }}>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).color).toBe('rgb(10, 20, 30)');
+	});
+
+	it('keeps the placeholder colour, so the fade is the only dimming', () => {
+		render(
+			<div
+				style={{
+					['--combobox-trigger-color' as string]: 'rgb(10, 20, 30)',
+					['--combobox-placeholder-color' as string]: 'rgb(40, 50, 60)',
+				}}
+			>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(screen.getByText('Pick a framework')).color).toBe('rgb(40, 50, 60)');
+	});
+
+	it('takes the disabled opacity from its variable', () => {
+		render(
+			<div style={{ ['--combobox-trigger-disabled-opacity' as string]: '0.25' }}>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+					disabled
+					disabledTooltip={undefined}
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).opacity).toBe('0.25');
+	});
+});
+
+const RING = 'rgb(10, 20, 30)';
+const TRANSPARENT = 'rgba(0, 0, 0, 0)';
+
+// The ring fades, so the outline is read once every running transition has ended.
+async function settleTransitions(element: HTMLElement): Promise<void> {
+	await Promise.all(element.getAnimations().map((animation) => animation.finished));
+}
+
+describe('Combobox trigger focus ring', () => {
+	function trigger(): HTMLElement {
+		return screen.getByRole('combobox', { name: 'Framework' });
+	}
+
+	it('keeps the ring drawn in a transparent color at rest', () => {
+		render(
+			<div style={{ ['--combobox-trigger-focus-ring-color' as string]: RING }}>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+				/>
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).outlineStyle).toBe('solid');
+		expect(getComputedStyle(trigger()).outlineColor).toBe(TRANSPARENT);
+	});
+
+	it('fades the ring in on keyboard focus by changing only its color', async () => {
+		const user = userEvent.setup();
+		render(
+			<div style={{ ['--combobox-trigger-focus-ring-color' as string]: RING }}>
+				<Combobox
+					aria-label="Framework"
+					placeholder="Pick a framework"
+					searchInputProps={{ placeholder: 'Search' }}
+					items={FRAMEWORKS}
+				/>
+			</div>,
+		);
+
+		await user.tab();
+
+		expect(trigger()).toHaveFocus();
+		expect(
+			trigger()
+				.getAnimations()
+				.map((animation) => (animation as CSSTransition).transitionProperty),
+		).toContain('outline-color');
+
+		await settleTransitions(trigger());
+
+		expect(getComputedStyle(trigger()).outlineStyle).toBe('solid');
+		expect(getComputedStyle(trigger()).outlineColor).toBe(RING);
+	});
+});
