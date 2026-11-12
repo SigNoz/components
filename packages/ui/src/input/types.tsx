@@ -1,3 +1,4 @@
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { AriaAttributes, ComponentPropsWithoutRef, CSSProperties, ReactNode } from 'react';
 import type { InputSize, InputStatus, InputVariant } from './constants.js';
 
@@ -349,3 +350,13 @@ export type ValidateInputProps<T> = (T extends { disabled: boolean | undefined }
 			: AReadOnlyReasonNeedsAReadOnlyInput
 		: unknown) &
 	(T extends { 'data-testid': unknown } ? TheTestIdPropIsCalledTestId : unknown);
+
+type WithField<P> = Omit<P, 'status' | 'required'> & FieldLabelAndMessageProps;
+
+/**
+ * The props of `InputField`: the field's label, description and status, and every prop of `Input`.
+ */
+export type InputFieldProps = WithField<InputProps>;
+export type InputFieldPasswordProps = WithField<InputPasswordProps>;
+export type InputFieldTextAreaProps = WithField<InputTextAreaProps>;
+export type InputFieldNumberProps = WithField<InputNumberProps>;

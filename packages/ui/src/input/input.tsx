@@ -34,7 +34,8 @@ import type {
  * points at, `status`, and `aria-required` for a required field (the native `required` only comes
  * from the input's own prop). The ids of the field's description, message and label
  * tooltip land in `aria-describedby`. The input keeps its own `size`. There is no prop to wire:
- * rendering the input as the field's child is the whole contract.
+ * rendering the input as the field's child is the whole contract. `InputField` renders both from
+ * one set of props.
  *
  * ### Status
  *
@@ -95,6 +96,16 @@ import type {
  * <Input placeholder="For eg. Simpsonville..." prefix={<Search />} aria-label="Organisation" />
  * ```
  *
+ * @example
+ * ```tsx
+ * // react-hook-form
+ * <InputField
+ *   label="Your Organisation Name"
+ *   placeholder="For eg. Simpsonville..."
+ *   error={errors.organisation?.message}
+ *   {...register('organisation')}
+ * />
+ * ```
  */
 const InputRoot = forwardRef<HTMLInputElement, InputProps>(function Input(props, ref) {
 	return <InputBase {...props} ref={ref} />;
