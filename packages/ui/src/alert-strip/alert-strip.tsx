@@ -11,8 +11,9 @@ import type { AlertStripProps } from './types.js';
  * A full-width strip for a state of the account or the instance that holds until someone fixes it:
  * billing, quota, license and degradation notices. Use `AlertStrip.Closeable` and
  * `AlertStrip.CloseablePersisted` for a message the user can dismiss, `AlertStrip.Button` for an
- * action and `AlertStrip.Link` for a navigation. The actions go in `suffix`, at the end of the
- * region, and a link can also sit inside the content. `prefix` takes an icon before the content.
+ * action and `AlertStrip.Link` for a navigation or an inline action. The actions go in `suffix`, at
+ * the end of the region, and a link can also sit inside the content. `prefix` takes an icon before
+ * the content.
  *
  * The plain strip cannot be closed, since a billing or license notice must stay until the
  * condition is fixed.

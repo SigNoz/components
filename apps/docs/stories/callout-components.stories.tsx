@@ -1,4 +1,4 @@
-import { SolidAlertTriangle, SolidInfoCircle } from '@signozhq/icons';
+import { SolidAlertTriangle, SolidInfoCircle, SolidXCircle } from '@signozhq/icons';
 import {
 	Button as UiButton,
 	Callout,
@@ -7,7 +7,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, useRef, useState } from 'react';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import styles from './callout.stories.module.css';
 import {
 	calloutArgTypes,
@@ -343,7 +343,7 @@ export const Button: StoryObj<typeof Callout.Button> = {
 
 /**
  * `Callout.Link` sits inside the children of a callout and draws in its link color. It takes none
- * of the callout props.
+ * of the callout props. An `onClick` without a destination makes it an action, see `LinkAction`.
  */
 export const Link: StoryObj<typeof Callout.Link> = {
 	parameters: {
@@ -369,7 +369,7 @@ export const Link: StoryObj<typeof Callout.Link> = {
 		href: {
 			control: 'text',
 			description:
-				'The destination of a plain link. Not needed when `render` is a router link with its own destination.',
+				'The destination of a plain link. Not needed when `render` is a router link with its own destination, or when the link is an action with an `onClick`.',
 			table: { category: 'Content', type: { summary: 'string' } },
 		},
 		target: {
@@ -381,7 +381,7 @@ export const Link: StoryObj<typeof Callout.Link> = {
 		render: {
 			control: false,
 			description:
-				'The element that renders the link, such as a router link. It keeps its own props, like `to`, and a prop set on it wins over the one of the link.',
+				'The element that renders the link, such as a router link. It keeps its own props, like `to`, and a prop set on it wins over the one of the link. An action uses it too, in place of the native `button`.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'ReactElement' },
@@ -391,7 +391,7 @@ export const Link: StoryObj<typeof Callout.Link> = {
 		onClick: {
 			control: false,
 			description:
-				'Runs on click, after the handler of the `render` element. It never prevents the navigation.',
+				'Runs on click, after the handler of the `render` element. It never prevents the navigation. With no destination it makes the link an action, a `button` that runs it.',
 			table: { category: 'Events', type: { summary: 'MouseEventHandler' } },
 		},
 		testId: {
@@ -408,6 +408,50 @@ export const Link: StoryObj<typeof Callout.Link> = {
 				{children}
 			</Callout.Link>{' '}
 			to set it up.
+		</Callout>
+	),
+};
+
+/**
+ * A `Callout.Link` with an `onClick` and no `href` is an action, such as the "here" that runs a
+ * mutation and then opens the URL the API returns. It renders a native `button` that draws like
+ * the anchor, in the link color, with the underline and the focus ring. A `render` element, when
+ * given, takes the place of the `button`.
+ */
+export const LinkAction: StoryObj<typeof Callout.Link> = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+		controls: {
+			exclude: ['color', 'size', 'icon', 'width', 'maxWidth', 'height', 'maxHeight', 'id'],
+		},
+	},
+	args: {
+		children: 'here',
+		onClick: fn(),
+		testId: 'action-link',
+	},
+	argTypes: {
+		href: { control: false },
+		target: { control: false },
+		render: { control: false },
+	},
+	play: async ({ args, canvasElement }) => {
+		const link = within(canvasElement).getByTestId('action-link');
+
+		await expect(link.tagName).toBe('BUTTON');
+		await expect(args.onClick).not.toHaveBeenCalled();
+
+		await userEvent.click(link);
+
+		await expect(args.onClick).toHaveBeenCalledTimes(1);
+	},
+	render: ({ onClick, testId, children }) => (
+		<Callout color="danger" size="md" icon={<SolidXCircle />}>
+			Your last payment failed. Please update your card details{' '}
+			<Callout.Link onClick={onClick} testId={testId}>
+				{children}
+			</Callout.Link>
+			.
 		</Callout>
 	),
 };

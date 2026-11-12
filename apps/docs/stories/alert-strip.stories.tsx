@@ -86,10 +86,19 @@ function ColorStrips({ color }: { color: AlertStripColorType }): ReactElement {
 	);
 }
 
+function LinkActionStrip({ color }: { color: AlertStripColorType }): ReactElement {
+	return (
+		<AlertStrip color={color} side="bottom">
+			Your trial ends in 3 days. <AlertStrip.Link onClick={keepOpen}>Upgrade</AlertStrip.Link> to
+			keep your data.
+		</AlertStrip>
+	);
+}
+
 /**
  * Every color with a button in the suffix and a close button, and with a link inside the sentence,
- * the controls in each state, a prefix and several actions, long content, a narrow parent and the
- * strips the app shows today, all in one snapshot.
+ * the link as an action, the controls in each state, a prefix and several actions, long content,
+ * a narrow parent and the strips the app shows today, all in one snapshot.
  */
 export const AlertStripShowcase: Story = {
 	parameters: {
@@ -145,6 +154,47 @@ export const AlertStripShowcase: Story = {
 								{color}
 							</Typography>
 							<ColorStrips color={color} />
+						</Fragment>
+					))}
+				</div>
+			</div>
+
+			<div className="story-section">
+				<Typography
+					variant="paragraph"
+					size="base"
+					weight="bold"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Link action
+				</Typography>
+				<Typography
+					variant="paragraph"
+					size="small"
+					weight="regular"
+					color="inherit"
+					as="p"
+					textOverflow="wrap"
+				>
+					Every color with an action: an <code>AlertStrip.Link</code> that has an{' '}
+					<code>onClick</code> and no destination, so a <code>button</code>.
+				</Typography>
+				<div className={styles.matrix}>
+					{COLORS.map((color) => (
+						<Fragment key={color}>
+							<Typography
+								variant="label"
+								size="small"
+								weight="medium"
+								color="inherit"
+								as="span"
+								textOverflow="visible"
+							>
+								{color}
+							</Typography>
+							<LinkActionStrip color={color} />
 						</Fragment>
 					))}
 				</div>

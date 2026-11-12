@@ -252,8 +252,26 @@ the ones of the link, and its `onClick` runs first. With a `_blank` target, `noo
 <Callout.Link render={<Link to="/alerts" />}>alerts</Callout.Link>
 ```
 
-A link with neither `href` nor a destination on the `render` element renders plain text and warns on
-the console.
+### Actions
+
+A link with an `onClick` and no destination, neither `href` nor one on the `render` element, is an
+action: an inline control that runs code instead of navigating. By default it renders a native
+`<button type="button">` that draws like the anchor, with the same link color, hover color,
+underline, cursor and focus ring, and carries its `data-slot`, `testId`, `aria-*` props and `ref`.
+A native button never wraps across lines, so keep the label short.
+
+```tsx
+<Callout color="danger" size="md" icon={<SolidXCircle />}>
+	Your last payment failed. Please update your card details{' '}
+	<Callout.Link onClick={openBillingPortal}>here</Callout.Link>.
+</Callout>
+```
+
+When you pass a `render` element, an action uses it in place of the button and `type="button"` is
+only added to the default button. Pass a component that renders a `button`, so the action keeps
+working from the keyboard.
+
+A link with neither a destination nor an `onClick` renders plain text and warns on the console.
 
 ## Asserting on it
 

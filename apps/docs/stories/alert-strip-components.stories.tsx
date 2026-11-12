@@ -7,7 +7,7 @@ import {
 } from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, useRef, useState } from 'react';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import styles from './alert-strip.stories.module.css';
 import {
 	alertStripArgTypes,
@@ -276,7 +276,7 @@ export const Button: StoryObj<typeof AlertStrip.Button> = {
 
 /**
  * `AlertStrip.Link` sits inside the children of a strip and draws in its text color. It has the
- * props of `Callout.Link` and none of the strip props.
+ * props of `Callout.Link` and none of the strip props. `LinkAction` shows its action form.
  */
 export const Link: StoryObj<typeof AlertStrip.Link> = {
 	parameters: {
@@ -302,7 +302,7 @@ export const Link: StoryObj<typeof AlertStrip.Link> = {
 		href: {
 			control: 'text',
 			description:
-				'The destination of a plain link. Not needed when `render` is a router link with its own destination.',
+				'The destination of a plain link. Not needed when `render` is a router link with its own destination, or when `onClick` is set: a link with an `onClick` and no destination is an action.',
 			table: { category: 'Content', type: { summary: 'string' } },
 		},
 		target: {
@@ -314,7 +314,7 @@ export const Link: StoryObj<typeof AlertStrip.Link> = {
 		render: {
 			control: false,
 			description:
-				'The element that renders the link, such as a router link. It keeps its own props, like `to`, and a prop set on it wins over the one of the link.',
+				'The element that renders the link, such as a router link. It keeps its own props, like `to`, and a prop set on it wins over the one of the link. An action uses it too, in place of the native `button`.',
 			table: {
 				category: 'Behavior',
 				type: { summary: 'ReactElement' },
@@ -324,7 +324,7 @@ export const Link: StoryObj<typeof AlertStrip.Link> = {
 		onClick: {
 			control: false,
 			description:
-				'Runs on click, after the handler of the `render` element. It never prevents the navigation.',
+				'Runs on click, after the handler of the `render` element. It never prevents the navigation. A link with an `onClick` and no destination is an action, a `button` that runs it.',
 			table: { category: 'Events', type: { summary: 'MouseEventHandler' } },
 		},
 		testId: {
@@ -347,6 +347,39 @@ export const Link: StoryObj<typeof AlertStrip.Link> = {
 				{children}
 			</AlertStrip.Link>
 			.
+		</AlertStrip>
+	),
+};
+
+/**
+ * A link with an `onClick` and no destination renders a native `button` that draws like the anchor,
+ * for an action that runs code instead of navigating. A `render` element, when given, takes the
+ * place of the `button`.
+ */
+export const LinkAction: StoryObj<typeof AlertStrip.Link> = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+		controls: { disable: true },
+	},
+	args: {
+		onClick: fn(),
+	},
+	play: async ({ args, canvasElement }) => {
+		const link = within(canvasElement).getByTestId('action-link');
+
+		await expect(link.tagName).toBe('BUTTON');
+		await expect(args.onClick).not.toHaveBeenCalled();
+
+		await userEvent.click(link);
+
+		await expect(args.onClick).toHaveBeenCalledTimes(1);
+	},
+	render: ({ onClick }) => (
+		<AlertStrip color="warning" side="bottom">
+			Your trial ends soon.{' '}
+			<AlertStrip.Link onClick={onClick} testId="action-link">
+				Upgrade
+			</AlertStrip.Link>
 		</AlertStrip>
 	),
 };
