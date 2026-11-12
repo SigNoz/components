@@ -318,3 +318,51 @@ describe('Select trigger opacity', () => {
 		expect(getComputedStyle(trigger()).opacity).toBe('0.25');
 	});
 });
+
+const RING = 'rgb(10, 20, 30)';
+const TRANSPARENT = 'rgba(0, 0, 0, 0)';
+
+// The ring fades, so the outline is read once every running transition has ended.
+async function settleTransitions(element: HTMLElement): Promise<void> {
+	await Promise.all(element.getAnimations().map((animation) => animation.finished));
+}
+
+describe('Select trigger focus ring', () => {
+	function trigger(): HTMLElement {
+		return screen.getByRole('combobox', { name: 'Framework' });
+	}
+
+	it('keeps the ring drawn in a transparent color at rest', () => {
+		render(
+			<div style={{ ['--select-trigger-focus-ring-color' as string]: RING }}>
+				<Select aria-label="Framework" placeholder="Pick a framework" items={FRAMEWORKS} />
+			</div>,
+		);
+
+		expect(getComputedStyle(trigger()).outlineStyle).toBe('solid');
+		expect(getComputedStyle(trigger()).outlineColor).toBe(TRANSPARENT);
+	});
+
+	it('fades the ring in on keyboard focus by changing only its color', async () => {
+		const user = userEvent.setup();
+		render(
+			<div style={{ ['--select-trigger-focus-ring-color' as string]: RING }}>
+				<Select aria-label="Framework" placeholder="Pick a framework" items={FRAMEWORKS} />
+			</div>,
+		);
+
+		await user.tab();
+
+		expect(trigger()).toHaveFocus();
+		expect(
+			trigger()
+				.getAnimations()
+				.map((animation) => (animation as CSSTransition).transitionProperty),
+		).toContain('outline-color');
+
+		await settleTransitions(trigger());
+
+		expect(getComputedStyle(trigger()).outlineStyle).toBe('solid');
+		expect(getComputedStyle(trigger()).outlineColor).toBe(RING);
+	});
+});
