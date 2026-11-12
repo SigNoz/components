@@ -375,6 +375,18 @@ export type ToggleGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		maxWidth?: CSSProperties['maxWidth'];
 		/**
+		 * Identifies the field when the owning form is submitted. Every pressed button submits its
+		 * `value` under this name, in the order of `items`, so a `multiple` bar submits one entry per
+		 * pressed button and a bar with nothing pressed submits none.
+		 *
+		 * @note A disabled bar is left out of the submit, and so is a pressed button that is
+		 * disabled. A read-only bar is still submitted.
+		 *
+		 * @note Base UI's toggle group does not take part in form submission, so the bar renders a
+		 * hidden `<input>` for each value it submits.
+		 */
+		name?: string;
+		/**
 		 * Called once when the focus leaves the bar, for a form that validates on blur.
 		 *
 		 * @note Moving the focus from one button to another, or to a scroll arrow of the bar, does not

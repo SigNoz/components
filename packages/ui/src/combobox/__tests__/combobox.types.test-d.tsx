@@ -260,6 +260,28 @@ describe('onBlur', () => {
 	});
 });
 
+describe('name', () => {
+	test('takes a name, with one value or several', () => {
+		assertType(
+			<Combobox
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				name="framework"
+			/>,
+		);
+		assertType(
+			<Combobox
+				multiple
+				placeholder="Pick"
+				searchInputProps={{ placeholder: 'Search' }}
+				items={ONE}
+				name="frameworks"
+			/>,
+		);
+	});
+});
+
 describe('disabled and readOnly', () => {
 	test('rejects a disabled combobox with no reason', () => {
 		assertType(
