@@ -142,9 +142,6 @@ function layoutOf(list: HTMLElement): number[] {
 	];
 }
 
-/**
- * The text of a label or a description, one line each.
- */
 function textOf(canvas: Canvas, testId: string): string {
 	return canvas.getByTestId(testId).textContent ?? '';
 }

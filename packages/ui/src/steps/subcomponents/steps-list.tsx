@@ -29,7 +29,11 @@ import { StepsListStep } from './steps-list-step.js';
  *
  * `ref` and every `data-*` go to the root `div`. `id` and every `aria-*` go to the `ol`, so an
  * `aria-label` names the list of steps. With an empty `items` there is no `ol`, and the footer
- * renders alone: `id` and `aria-*` have no element to land on. There is no `className` or `style`.
+ * renders alone: `id` and `aria-*` have no element to land on. `className` and `style` are not
+ * props, and a value that gets past the types is dropped.
+ *
+ * Visual values are `--steps-list-*` custom properties, defaults in the `css-tokens` region of
+ * [../index.ts](../index.ts).
  *
  * ### Asserting on it
  *
