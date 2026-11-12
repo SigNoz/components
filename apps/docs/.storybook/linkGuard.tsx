@@ -95,7 +95,6 @@ function addLinkGuard(): () => void {
  * would have gone instead. It also mounts the shared `Toaster` for every story that does not
  * bring its own.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function LinkGuardDecorator(Story: () => ReactElement, context: any): ReactElement {
 	const ownToaster = context.parameters?.ownToaster === true;
 

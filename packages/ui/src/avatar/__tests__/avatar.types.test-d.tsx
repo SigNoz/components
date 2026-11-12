@@ -176,12 +176,10 @@ describe('Avatar rejected props', () => {
 		assertType(<Avatar color="primary" name="Alex Example" size="md" alt="Alex Example" />);
 	});
 
-	/* oxlint-disable react/no-children-prop -- the case under test is a `children` prop */
 	test('rejects children, the initials come from name', () => {
 		// @ts-expect-error - the initials come from `name`
 		assertType(<Avatar color="primary" name="Alex Example" size="md" children="AE" />);
 	});
-	/* oxlint-enable react/no-children-prop */
 
 	test('rejects children written between the tags', () => {
 		assertType(

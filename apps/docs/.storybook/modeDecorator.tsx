@@ -15,7 +15,6 @@ const STILL_CLASS = 'story-freeze-animations';
  * named set of globals (see `modes.ts`): anything a snapshot has to vary has to be one, and the
  * toolbar then gets the control for free.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ModeDecorator = (Story: any): ReactElement => {
 	const [globals] = useGlobals();
 	const { theme, palette, motion } = globals;

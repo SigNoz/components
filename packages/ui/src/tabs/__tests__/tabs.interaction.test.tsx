@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { required } from '../../__tests__/test-utils.js';
 import { Tabs } from '../tabs.js';
 import type { TabsItemProps } from '../types.js';
 
@@ -335,7 +336,7 @@ describe('Tabs interaction', () => {
 		);
 
 		const settings = screen.getByRole('tab', { name: 'Settings' });
-		const label = settings.querySelector<HTMLElement>('[data-slot="tabs-label"]')!;
+		const label = required(settings.querySelector<HTMLElement>('[data-slot="tabs-label"]'));
 		const unselectedWidth = settings.getBoundingClientRect().width;
 		const unselectedLabelLeft = label.getBoundingClientRect().left;
 
@@ -345,7 +346,7 @@ describe('Tabs interaction', () => {
 			expect(settings).toHaveAttribute('data-active');
 		});
 
-		const dot = settings.querySelector<HTMLElement>('[data-slot="tabs-dot"]')!;
+		const dot = required(settings.querySelector<HTMLElement>('[data-slot="tabs-dot"]'));
 
 		expect(getComputedStyle(dot).display).toBe('block');
 		expect(getComputedStyle(dot).position).toBe('absolute');

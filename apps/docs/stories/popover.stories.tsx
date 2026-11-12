@@ -1223,6 +1223,7 @@ export const AnchoredTypeahead: Story = {
 				>
 					<ul className={styles.list}>
 						{SOURCED_VARIABLES.map((variable) => (
+							// oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- the handler only keeps focus in the field, the Button inside is the control
 							<li
 								key={variable.name}
 								className={styles.pickRow}

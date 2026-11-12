@@ -11,7 +11,6 @@ const RouterLink = forwardRef<
 	AnchorHTMLAttributes<HTMLAnchorElement> & { to?: string }
 >(function RouterLink({ to, onClick, ...props }, ref) {
 	return (
-		// eslint-disable-next-line jsx-a11y/anchor-has-content -- the children arrive through `props`.
 		<a
 			ref={ref}
 			href={to}
