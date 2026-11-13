@@ -1,5 +1,96 @@
 # Changelog
 
+## [0.4.0](https://github.com/SigNoz/components/compare/v0.3.0...v0.4.0) (2026-11-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **input:** show the focus ring on keyboard focus only and size the field sm, md and lg ([#497](https://github.com/SigNoz/components/issues/497))
+* **breadcrumb:** build the crumb popup on Popover, which gains Popover.Trigger ([#488](https://github.com/SigNoz/components/issues/488))
+* **drawer:** rework drawer on base-ui ([#482](https://github.com/SigNoz/components/issues/482))
+* **skeleton:** rework skeleton on semantic tokens ([#470](https://github.com/SigNoz/components/issues/470))
+* **alert-dialog:** rework alert dialog on base-ui ([#468](https://github.com/SigNoz/components/issues/468))
+* **dialog:** rework dialog on base-ui ([#466](https://github.com/SigNoz/components/issues/466))
+* **kbd:** rework kbd with named keys, shortcuts and semantic tokens ([#478](https://github.com/SigNoz/components/issues/478))
+* **typography:** rework the component ([#459](https://github.com/SigNoz/components/issues/459))
+* **avatar:** rework avatar on semantic tokens with a required name, size and color ([#477](https://github.com/SigNoz/components/issues/477))
+* **pin-list:** remove PinList ([#474](https://github.com/SigNoz/components/issues/474))
+* **text-ellipsis:** remove TextEllipsis ([#473](https://github.com/SigNoz/components/issues/473))
+* **date-picker:** remove DatePicker ([#472](https://github.com/SigNoz/components/issues/472))
+* **table:** remove Table and DataTable ([#471](https://github.com/SigNoz/components/issues/471))
+* **pagination:** rework pagination on the new spec ([#467](https://github.com/SigNoz/components/issues/467))
+* **breadcrumb:** rework breadcrumb with per-item render ([#465](https://github.com/SigNoz/components/issues/465))
+* **popover:** rework popover on base-ui ([#449](https://github.com/SigNoz/components/issues/449))
+
+### Features
+
+* **alert-dialog:** rework alert dialog on base-ui ([#468](https://github.com/SigNoz/components/issues/468)) ([639f975](https://github.com/SigNoz/components/commit/639f9753cd0a6d736fa0a3c2160ea9cd227f77f5))
+* **avatar:** rework avatar on semantic tokens with a required name, size and color ([#477](https://github.com/SigNoz/components/issues/477)) ([af1ef2c](https://github.com/SigNoz/components/commit/af1ef2ce59fb531f0a60affa312af30598dfa878))
+* **breadcrumb:** build the crumb popup on Popover, which gains Popover.Trigger ([#488](https://github.com/SigNoz/components/issues/488)) ([6e637c0](https://github.com/SigNoz/components/commit/6e637c0d85a0f04bc324d22f3c13d42511851137))
+* **breadcrumb:** rework breadcrumb with per-item render ([#465](https://github.com/SigNoz/components/issues/465)) ([2293cc9](https://github.com/SigNoz/components/commit/2293cc992548213b7a766fcff5bf63f882e6a828))
+* **button:** add noLoadingEffect to turn off the ghost loading glow ([#458](https://github.com/SigNoz/components/issues/458)) ([f024b3e](https://github.com/SigNoz/components/commit/f024b3ec460aafd7df386ae2a373fb67270c3ff4))
+* **callout:** let Callout.Link and AlertStrip.Link run an inline action ([#502](https://github.com/SigNoz/components/issues/502)) ([fc4b0a1](https://github.com/SigNoz/components/commit/fc4b0a1c46a21c0314ddd053921d8ff0539e8e9c))
+* **date-picker:** remove DatePicker ([#472](https://github.com/SigNoz/components/issues/472)) ([0df7924](https://github.com/SigNoz/components/commit/0df7924d0340499bd190d5bb6980abda70ca8a3f))
+* **dialog:** rework dialog on base-ui ([#466](https://github.com/SigNoz/components/issues/466)) ([62d349b](https://github.com/SigNoz/components/commit/62d349b6d78cda221ba12a7230c1dc8959d36332))
+* **drawer:** rework drawer on base-ui ([#482](https://github.com/SigNoz/components/issues/482)) ([24fc618](https://github.com/SigNoz/components/commit/24fc6183cea767c956869ecc6d074a3d1d3243f6))
+* **input:** show the focus ring on keyboard focus only and size the field sm, md and lg ([#497](https://github.com/SigNoz/components/issues/497)) ([5895326](https://github.com/SigNoz/components/commit/58953264ebc0be355238e70f745c48f2787c1904))
+* **kbd:** rework kbd with named keys, shortcuts and semantic tokens ([#478](https://github.com/SigNoz/components/issues/478)) ([4e8ec61](https://github.com/SigNoz/components/commit/4e8ec61c2c3a6d596959728e78aa2f23d8f00461))
+* **pagination:** rework pagination on the new spec ([#467](https://github.com/SigNoz/components/issues/467)) ([8128645](https://github.com/SigNoz/components/commit/8128645c57c84b9868e8eede00c1dbb2b786fba9))
+* **pin-list:** remove PinList ([#474](https://github.com/SigNoz/components/issues/474)) ([a1f347f](https://github.com/SigNoz/components/commit/a1f347f8c13741e19c17fa8d75a33e616e5c3a9c))
+* **popover:** rework popover on base-ui ([#449](https://github.com/SigNoz/components/issues/449)) ([57dc971](https://github.com/SigNoz/components/commit/57dc9717c08361c2787108a12f198c9991eeebb0))
+* **skeleton:** rework skeleton on semantic tokens ([#470](https://github.com/SigNoz/components/issues/470)) ([0abe49f](https://github.com/SigNoz/components/commit/0abe49f0db3a52c4653aaae619c5ddf7ff2275cd))
+* **table:** remove Table and DataTable ([#471](https://github.com/SigNoz/components/issues/471)) ([ea0f65e](https://github.com/SigNoz/components/commit/ea0f65eb09c82f7fd5cd49f15d4a242af61a138c))
+* **text-ellipsis:** remove TextEllipsis ([#473](https://github.com/SigNoz/components/issues/473)) ([d243c68](https://github.com/SigNoz/components/commit/d243c688f4281a017f9b38bcd5b34b4720fe6c4b))
+* **toast:** accept an offset per edge on the Toaster ([#491](https://github.com/SigNoz/components/issues/491)) ([29cb801](https://github.com/SigNoz/components/commit/29cb801e468d996d78d268f03cc6e6361f3c7d69))
+* **typography:** add a textTransform prop ([#499](https://github.com/SigNoz/components/issues/499)) ([20e1e9b](https://github.com/SigNoz/components/commit/20e1e9b761570156075448c9ac2a2db491507d29))
+* **typography:** rework the component ([#459](https://github.com/SigNoz/components/issues/459)) ([65733c0](https://github.com/SigNoz/components/commit/65733c08d9c3972a435a637bb07b019920e60521))
+
+
+### Bug Fixes
+
+* **deps:** cap @babel/core override below 8 ([#450](https://github.com/SigNoz/components/issues/450)) ([996180b](https://github.com/SigNoz/components/commit/996180b0770fcd23a53b6c0d73e5746d0f68288c))
+* **drawer:** let arrow, Home and End keys bubble out of an inspector drawer ([#490](https://github.com/SigNoz/components/issues/490)) ([51989f8](https://github.com/SigNoz/components/commit/51989f870c61810246311d194ca66c7a07333517))
+* **select:** fade the disabled Select and Combobox trigger like Input ([#495](https://github.com/SigNoz/components/issues/495)) ([41a2053](https://github.com/SigNoz/components/commit/41a20537f264ee6f7103d183d0ffea07a7137bc1))
+* **ui:** address the Greptile findings left open in the drawer stack ([#486](https://github.com/SigNoz/components/issues/486)) ([960e6ec](https://github.com/SigNoz/components/commit/960e6ec66b8ea9e0fd9936de9d8916f00032b160))
+* **ui:** keep a long chip label inside a narrow Combobox or Select chip ([#500](https://github.com/SigNoz/components/issues/500)) ([a13653b](https://github.com/SigNoz/components/commit/a13653b70ee81dff3ea4a759f89d8897b9ba020d))
+
+
+### Performance Improvements
+
+* avoid encoding intermediate source maps (&lt;a ([2f4f2ce](https://github.com/SigNoz/components/commit/2f4f2ce12821a86a783a770cf8e2c99dfa1b43b8))
+* **typography:** mount the truncation tooltip only while the text is hovered ([#462](https://github.com/SigNoz/components/issues/462)) ([6321940](https://github.com/SigNoz/components/commit/6321940882034d5a339be21cc0f72b8b62fe2e02))
+* **ui:** share the label truncation observers between components ([#461](https://github.com/SigNoz/components/issues/461)) ([63ba6d4](https://github.com/SigNoz/components/commit/63ba6d4bd07448c9479e8feec8c945b199eaf35e))
+
+
+### Documentation
+
+* **combobox:** say which user-event version picks a row in jsdom ([#494](https://github.com/SigNoz/components/issues/494)) ([87eca5f](https://github.com/SigNoz/components/commit/87eca5f07caabe96cb358f2a762cfb270622776b))
+* **guidelines:** ask for one showcase story instead of a story per state ([#476](https://github.com/SigNoz/components/issues/476)) ([746f4e5](https://github.com/SigNoz/components/commit/746f4e5ffd16d99287ea82ba3b77857b470de02c))
+* **guidelines:** match the rules to what review keeps accepting and add the bugs it keeps finding ([#479](https://github.com/SigNoz/components/issues/479)) ([85ce7b8](https://github.com/SigNoz/components/commit/85ce7b826d36023d3f75a6fe4a74d98118b1c215))
+* **select, combobox:** drop the container step inside a Popover ([#506](https://github.com/SigNoz/components/issues/506)) ([3985867](https://github.com/SigNoz/components/commit/3985867e9534ff2c462a70457a886094cd2917df))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the development-dependencies group across 1 directory with 21 updates ([#457](https://github.com/SigNoz/components/issues/457)) ([04eb80c](https://github.com/SigNoz/components/commit/04eb80c4dcd4b97b80c9993e94914b92ac314336))
+* **deps-dev:** bump the development-dependencies group across 1 directory with 22 updates ([#448](https://github.com/SigNoz/components/issues/448)) ([2f4f2ce](https://github.com/SigNoz/components/commit/2f4f2ce12821a86a783a770cf8e2c99dfa1b43b8))
+* **deps-dev:** bump the development-dependencies group with 16 updates ([#485](https://github.com/SigNoz/components/issues/485)) ([1571ab0](https://github.com/SigNoz/components/commit/1571ab03aef1f9e7aff6a3fc3e542576387cd721))
+* **deps:** bump glob and drop serve to fix audit ([#464](https://github.com/SigNoz/components/issues/464)) ([0121eb2](https://github.com/SigNoz/components/commit/0121eb26dce3cb2b9a44f3c81afe22493866bc59))
+* **design-tokens:** bump package to 2.6.0 ([#487](https://github.com/SigNoz/components/issues/487)) ([2e5caf6](https://github.com/SigNoz/components/commit/2e5caf67a7ddb26df210c86668f44b44e1358620))
+* **lint:** clear the oxlint warnings and make every rule an error ([#501](https://github.com/SigNoz/components/issues/501)) ([6c23cc0](https://github.com/SigNoz/components/commit/6c23cc08b89f6f3be577f1ed4fc0dc793b10c89e))
+* **lint:** drop the unused control-has-associated-label directive from the link tests ([#510](https://github.com/SigNoz/components/issues/510)) ([11894f8](https://github.com/SigNoz/components/commit/11894f893c268df94ebcdb6cef9936aaa81dde08))
+
+
+### Tests
+
+* **drawer:** keep the last payload while the drawer moves to another handle ([#493](https://github.com/SigNoz/components/issues/493)) ([dee8520](https://github.com/SigNoz/components/commit/dee852028ead5b6f86c766035598857eeebdab70))
+* hide React act warnings unless SHOW_ACT_WARNINGS=1 ([#460](https://github.com/SigNoz/components/issues/460)) ([84feb36](https://github.com/SigNoz/components/commit/84feb36287338a49c21b62d7083ecc1637aa587a))
+
+
+### Continuous Integration
+
+* **chromatic:** set storybook base dir and externals, pin the action ([#481](https://github.com/SigNoz/components/issues/481)) ([69603ba](https://github.com/SigNoz/components/commit/69603ba847e244535a0687fb1ef1eb7d5073096c))
+
 ## [0.3.0](https://github.com/SigNoz/components/compare/v0.2.0...v0.3.0) (2026-10-09)
 
 
