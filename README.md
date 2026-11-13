@@ -79,6 +79,7 @@ import { Checkbox } from '@signozhq/ui';
 import { Collapse } from '@signozhq/ui';
 import { Combobox } from '@signozhq/ui';
 import { Command } from '@signozhq/ui';
+import { DatePicker } from '@signozhq/ui';
 import { Dialog } from '@signozhq/ui';
 import { Divider } from '@signozhq/ui';
 import { Drawer } from '@signozhq/ui';
@@ -105,7 +106,7 @@ import { Typography } from '@signozhq/ui';
 ```
 
 `@signozhq/ui/testing` holds helpers for stories and tests, and is not in the barrel.
-`ForceOpenProvider` holds open the popup of every `Select`, `Combobox`, `Dropdown` and `Tooltip`
+`ForceOpenProvider` holds open the popup of every `Select`, `Combobox`, `DatePicker`, `Dropdown` and `Tooltip`
 under it, which none of them takes as a prop:
 
 ```tsx
