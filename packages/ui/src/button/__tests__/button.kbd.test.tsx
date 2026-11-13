@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import type { CSSProperties } from 'react';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { Kbd } from '../../kbd/index.js';
@@ -113,6 +114,25 @@ describe('Button with a Kbd suffix', () => {
 			expect(style.color).toBe(NEUTRAL_FOREGROUND);
 			expect(style.borderTopColor).toBe(NEUTRAL_BORDER);
 			expect(style.backgroundColor).toBe(NEUTRAL_BACKGROUND);
+		});
+
+		it('passes on the key colors set around the button', () => {
+			const themed = 'rgb(1, 2, 3)';
+
+			render(
+				<div style={{ '--kbd-foreground': themed } as CSSProperties}>
+					<Button
+						size="md"
+						variant={ButtonVariant.Outlined}
+						color={ButtonColor.Secondary}
+						suffix={<Kbd value="Enter" testId="key" />}
+					>
+						Run
+					</Button>
+				</div>,
+			);
+
+			expect(getComputedStyle(face('key')).color).toBe(themed);
 		});
 	});
 
