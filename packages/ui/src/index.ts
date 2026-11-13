@@ -32,6 +32,7 @@ export * from './skeleton/index.js';
 export * from './slider/index.js';
 export * from './toast/index.js';
 export * from './spinner/index.js';
+export * from './steps/index.js';
 export * from './switch/index.js';
 export * from './tabs/index.js';
 export * from './toggle-group/index.js';

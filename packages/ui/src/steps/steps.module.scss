@@ -1,0 +1,414 @@
+.steps {
+	--steps-internal-marker-size: var(--steps-marker-size, var(--spacing-12));
+	--steps-internal-column-gap: var(--steps-item-column-gap, var(--spacing-4));
+
+	display: var(--steps-display, flex);
+	flex-wrap: var(--steps-flex-wrap, nowrap);
+	align-items: var(--steps-align-items, flex-start);
+	gap: var(--steps-gap, var(--steps-internal-column-gap));
+	box-sizing: var(--steps-box-sizing, border-box);
+	inline-size: var(--steps-inline-size, 100%);
+	margin: var(--steps-margin, 0);
+	padding: var(--steps-padding, 0);
+	list-style: var(--steps-row-list-style, none);
+	font-variant-numeric: var(--steps-font-variant-numeric, normal);
+	font-feature-settings: var(--steps-font-feature-settings, 'ss01' 1);
+}
+
+.steps__item {
+	--steps-internal-marker-background: var(
+		--steps-marker-waiting-background-color,
+		var(--steps-marker-waiting-background)
+	);
+	--steps-internal-marker-border-color: var(
+		--steps-marker-waiting-border-color,
+		var(--steps-marker-waiting-border)
+	);
+	--steps-internal-marker-color: var(
+		--steps-marker-waiting-color,
+		var(--steps-marker-waiting-foreground)
+	);
+	--steps-internal-label-color: var(
+		--steps-label-waiting-color,
+		var(--steps-label-waiting-foreground)
+	);
+	--steps-internal-connector-color: var(--steps-connector-color, var(--steps-connector));
+
+	position: var(--steps-item-position, relative);
+	display: var(--steps-item-display, grid);
+	// The text column has no floor of its own, so the line starts where a short text ends. The floor
+	// of the text is in the floor of the step instead: at that width the text column takes up to
+	// `--steps-text-min-inline-size`, and a text shorter than that leaves the rest to the line.
+	grid-template-columns: var(
+		--steps-item-grid-template-columns,
+		auto minmax(0, max-content)
+			minmax(var(--steps-connector-min-inline-size, var(--spacing-8)), 1fr)
+	);
+	grid-template-rows: var(--steps-item-grid-template-rows, var(--steps-internal-marker-size) auto);
+	column-gap: var(--steps-internal-column-gap);
+	align-items: var(--steps-item-align-items, center);
+	flex: var(--steps-item-flex, 1 1 0);
+	box-sizing: var(--steps-item-box-sizing, border-box);
+	min-inline-size: var(
+		--steps-item-min-inline-size,
+		calc(
+			var(--steps-internal-marker-size) + 2 * var(--steps-internal-column-gap) +
+				var(--steps-text-min-inline-size, var(--spacing-24)) +
+				var(--steps-connector-min-inline-size, var(--spacing-8))
+		)
+	);
+	margin: var(--steps-item-margin, 0);
+	padding: var(--steps-item-padding, 0);
+
+	&:last-child {
+		grid-template-columns: var(
+			--steps-item-last-grid-template-columns,
+			auto minmax(var(--steps-text-min-inline-size, var(--spacing-24)), max-content)
+		);
+		// With no line after it, the last step keeps the floor in its text column.
+		min-inline-size: var(--steps-item-last-min-inline-size, auto);
+		// The same share as the other steps, capped at the width of its content: the space it does
+		// not need goes to the other steps, and when the row is short every step shrinks alike.
+		flex: var(--steps-item-last-flex, 1 1 0);
+		max-inline-size: var(--steps-item-last-max-inline-size, max-content);
+	}
+
+	&[data-status='current'] {
+		--steps-internal-marker-background: var(
+			--steps-marker-current-background-color,
+			var(--steps-marker-current-background)
+		);
+		--steps-internal-marker-border-color: var(
+			--steps-marker-current-border-color,
+			var(--steps-marker-current-border)
+		);
+		--steps-internal-marker-color: var(
+			--steps-marker-current-color,
+			var(--steps-marker-current-foreground)
+		);
+		--steps-internal-label-color: var(
+			--steps-label-current-color,
+			var(--steps-label-current-foreground)
+		);
+	}
+
+	&[data-status='done'] {
+		--steps-internal-marker-background: var(
+			--steps-marker-done-background-color,
+			var(--steps-marker-done-background)
+		);
+		--steps-internal-marker-border-color: var(
+			--steps-marker-done-border-color,
+			var(--steps-marker-done-border)
+		);
+		--steps-internal-marker-color: var(
+			--steps-marker-done-color,
+			var(--steps-marker-done-foreground)
+		);
+		--steps-internal-label-color: var(
+			--steps-label-done-color,
+			var(--steps-label-done-foreground)
+		);
+		--steps-internal-connector-color: var(
+			--steps-connector-done-color,
+			var(--steps-connector-done)
+		);
+	}
+}
+
+.steps__marker {
+	display: var(--steps-marker-display, inline-flex);
+	grid-row: var(--steps-marker-grid-row, 1);
+	grid-column: var(--steps-marker-grid-column, 1);
+	align-items: var(--steps-marker-align-items, center);
+	justify-content: var(--steps-marker-justify-content, center);
+	box-sizing: var(--steps-marker-box-sizing, border-box);
+	inline-size: var(--steps-internal-marker-size);
+	block-size: var(--steps-internal-marker-size);
+	border-width: var(--steps-marker-border-width, 1px);
+	border-style: var(--steps-marker-border-style, solid);
+	border-color: var(--steps-internal-marker-border-color);
+	border-radius: var(--steps-marker-border-radius, var(--radius-round));
+	background-color: var(--steps-internal-marker-background);
+	color: var(--steps-internal-marker-color);
+	font-family: var(--steps-marker-font-family, var(--label-small-500-font-family));
+	font-size: var(--steps-marker-font-size, var(--label-small-500-font-size));
+	font-weight: var(--steps-marker-font-weight, var(--label-small-500-font-weight));
+	line-height: var(--steps-marker-line-height, var(--label-small-500-line-height));
+	letter-spacing: var(--steps-marker-letter-spacing, var(--label-small-500-letter-spacing));
+	text-transform: var(--steps-marker-text-transform, var(--label-small-500-text-transform));
+	user-select: var(--steps-marker-user-select, none);
+}
+
+.steps__done-mark {
+	inline-size: var(--steps-done-mark-size, var(--spacing-6));
+	block-size: var(--steps-done-mark-size, var(--spacing-6));
+	flex: var(--steps-done-mark-flex, 0 0 auto);
+}
+
+.steps__label,
+.steps__description {
+	grid-column: var(--steps-text-grid-column, 2);
+	overflow: var(--steps-text-overflow, clip visible);
+	text-overflow: var(--steps-text-text-overflow, ellipsis);
+	white-space: var(--steps-text-white-space, nowrap);
+
+	&:focus-visible {
+		border-radius: var(--steps-text-focus-visible-border-radius, var(--radius-1));
+		outline: var(--steps-text-focus-visible-outline, 1px solid var(--steps-text-focus-ring));
+		outline-offset: var(--steps-text-focus-visible-outline-offset, 1px);
+	}
+}
+
+.steps__label {
+	grid-row: var(--steps-label-grid-row, 1);
+	color: var(--steps-internal-label-color);
+	font-family: var(--steps-label-font-family, var(--label-base-500-font-family));
+	font-size: var(--steps-label-font-size, var(--label-base-500-font-size));
+	font-weight: var(--steps-label-font-weight, var(--label-base-500-font-weight));
+	line-height: var(--steps-label-line-height, var(--label-base-500-line-height));
+	letter-spacing: var(--steps-label-letter-spacing, var(--label-base-500-letter-spacing));
+	text-transform: var(--steps-label-text-transform, var(--label-base-500-text-transform));
+}
+
+.steps__description {
+	grid-row: var(--steps-description-grid-row, 2);
+	margin-block-start: var(--steps-description-margin-block-start, var(--spacing-2));
+	color: var(--steps-description-color, var(--steps-description-foreground));
+	font-family: var(--steps-description-font-family, var(--label-small-400-font-family));
+	font-size: var(--steps-description-font-size, var(--label-small-400-font-size));
+	font-weight: var(--steps-description-font-weight, var(--label-small-400-font-weight));
+	line-height: var(--steps-description-line-height, var(--label-small-400-line-height));
+	letter-spacing: var(--steps-description-letter-spacing, var(--label-small-400-letter-spacing));
+	text-transform: var(
+		--steps-description-text-transform,
+		var(--label-small-400-text-transform)
+	);
+}
+
+.steps__description-placeholder {
+	visibility: var(--steps-description-placeholder-visibility, hidden);
+}
+
+.steps__connector {
+	grid-row: var(--steps-connector-grid-row, 1);
+	grid-column: var(--steps-connector-grid-column, 3);
+	block-size: var(--steps-connector-block-size, 1px);
+	background-color: var(--steps-internal-connector-color);
+}
+
+.steps__hidden {
+	position: var(--steps-hidden-position, absolute);
+	inline-size: var(--steps-hidden-inline-size, 1px);
+	block-size: var(--steps-hidden-block-size, 1px);
+	margin: var(--steps-hidden-margin, -1px);
+	padding: var(--steps-hidden-padding, 0);
+	overflow: var(--steps-hidden-overflow, hidden);
+	clip-path: var(--steps-hidden-clip-path, inset(50%));
+	white-space: var(--steps-hidden-white-space, nowrap);
+	border: var(--steps-hidden-border, 0);
+}
+
+.steps-list {
+	--steps-internal-list-marker-size: var(--steps-list-marker-size, var(--spacing-12));
+
+	display: var(--steps-list-display, flex);
+	flex-direction: var(--steps-list-flex-direction, column);
+	box-sizing: var(--steps-list-box-sizing, border-box);
+	inline-size: var(--steps-list-inline-size, 100%);
+	margin: var(--steps-list-margin, 0);
+	padding: var(--steps-list-padding, 0);
+	font-variant-numeric: var(--steps-list-font-variant-numeric, normal);
+	font-feature-settings: var(--steps-list-font-feature-settings, 'ss01' 1);
+}
+
+.steps-list__items {
+	display: var(--steps-list-items-display, flex);
+	flex-direction: var(--steps-list-items-flex-direction, column);
+	box-sizing: var(--steps-list-items-box-sizing, border-box);
+	margin: var(--steps-list-items-margin, 0);
+	padding: var(--steps-list-items-padding, 0);
+	list-style: var(--steps-list-items-list-style, none);
+}
+
+.steps-list__item {
+	display: var(--steps-list-item-display, grid);
+	grid-template-columns: var(
+		--steps-list-item-grid-template-columns,
+		var(--steps-internal-list-marker-size) minmax(0, 1fr)
+	);
+	column-gap: var(--steps-list-item-column-gap, var(--spacing-6));
+	box-sizing: var(--steps-list-item-box-sizing, border-box);
+	margin: var(--steps-list-item-margin, 0);
+	padding: var(--steps-list-item-padding, 0);
+}
+
+.steps-list__rail {
+	display: var(--steps-list-rail-display, flex);
+	flex-direction: var(--steps-list-rail-flex-direction, column);
+	align-items: var(--steps-list-rail-align-items, center);
+}
+
+.steps-list__marker {
+	display: var(--steps-list-marker-display, inline-flex);
+	flex: var(--steps-list-marker-flex, 0 0 auto);
+	align-items: var(--steps-list-marker-align-items, center);
+	justify-content: var(--steps-list-marker-justify-content, center);
+	box-sizing: var(--steps-list-marker-box-sizing, border-box);
+	inline-size: var(--steps-internal-list-marker-size);
+	block-size: var(--steps-internal-list-marker-size);
+	border-width: var(--steps-list-marker-border-width, 1px);
+	border-style: var(--steps-list-marker-border-style, solid);
+	border-color: var(--steps-list-marker-border-color, var(--steps-list-marker-border));
+	border-radius: var(--steps-list-marker-border-radius, var(--radius-round));
+	background-color: var(
+		--steps-list-marker-background-color,
+		var(--steps-list-marker-background)
+	);
+	color: var(--steps-list-marker-color, var(--steps-list-marker-foreground));
+	font-family: var(--steps-list-marker-font-family, var(--label-small-500-font-family));
+	font-size: var(--steps-list-marker-font-size, var(--label-small-500-font-size));
+	font-weight: var(--steps-list-marker-font-weight, var(--label-small-500-font-weight));
+	line-height: var(--steps-list-marker-line-height, var(--label-small-500-line-height));
+	letter-spacing: var(
+		--steps-list-marker-letter-spacing,
+		var(--label-small-500-letter-spacing)
+	);
+	text-transform: var(
+		--steps-list-marker-text-transform,
+		var(--label-small-500-text-transform)
+	);
+	user-select: var(--steps-list-marker-user-select, none);
+}
+
+.steps-list__connector {
+	flex: var(--steps-list-connector-flex, 1 1 auto);
+	inline-size: var(--steps-list-connector-inline-size, 1px);
+	min-block-size: var(--steps-list-connector-min-block-size, var(--spacing-4));
+	margin-block: var(--steps-list-connector-margin-block, var(--spacing-2));
+	background-color: var(--steps-list-connector-color, var(--steps-list-connector));
+
+	// The line goes on in the footer row, so it ends at the edge of the step. Only the rail of the
+	// last step itself: a `Steps.List` in its content keeps its own lines.
+	.steps-list__items:has(+ .steps-list__footer)
+		> .steps-list__item:last-child
+		> .steps-list__rail
+		> & {
+		margin-block-end: var(--steps-list-connector-last-margin-block-end, 0);
+	}
+}
+
+.steps-list__body {
+	display: var(--steps-list-body-display, flex);
+	flex-direction: var(--steps-list-body-flex-direction, column);
+	gap: var(--steps-list-body-gap, var(--spacing-4));
+	min-inline-size: var(--steps-list-body-min-inline-size, 0);
+	padding-block-end: var(--steps-list-body-padding-block-end, var(--spacing-12));
+
+	// A footer after the `ol` leaves the last step its room, so its line reaches the footer dot.
+	.steps-list__items:not(:has(+ .steps-list__footer)) > .steps-list__item:last-child > & {
+		padding-block-end: var(--steps-list-body-last-padding-block-end, 0);
+	}
+}
+
+.steps-list__label {
+	display: var(--steps-list-label-display, flex);
+	align-items: var(--steps-list-label-align-items, center);
+	min-block-size: var(--steps-internal-list-marker-size);
+	overflow-wrap: var(--steps-list-label-overflow-wrap, anywhere);
+	color: var(--steps-list-label-color, var(--steps-list-label-foreground));
+	font-family: var(--steps-list-label-font-family, var(--paragraph-base-500-font-family));
+	font-size: var(--steps-list-label-font-size, var(--paragraph-base-500-font-size));
+	font-weight: var(--steps-list-label-font-weight, var(--paragraph-base-500-font-weight));
+	line-height: var(--steps-list-label-line-height, var(--paragraph-base-500-line-height));
+	letter-spacing: var(
+		--steps-list-label-letter-spacing,
+		var(--paragraph-base-500-letter-spacing)
+	);
+	text-transform: var(
+		--steps-list-label-text-transform,
+		var(--paragraph-base-500-text-transform)
+	);
+}
+
+.steps-list__content {
+	min-inline-size: var(--steps-list-content-min-inline-size, 0);
+	color: var(--steps-list-content-color, var(--steps-list-content-foreground));
+	font-family: var(--steps-list-content-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--steps-list-content-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--steps-list-content-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--steps-list-content-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(
+		--steps-list-content-letter-spacing,
+		var(--paragraph-base-400-letter-spacing)
+	);
+	text-transform: var(
+		--steps-list-content-text-transform,
+		var(--paragraph-base-400-text-transform)
+	);
+}
+
+.steps-list__footer {
+	display: var(--steps-list-footer-display, grid);
+	grid-template-columns: var(
+		--steps-list-footer-grid-template-columns,
+		var(--steps-internal-list-marker-size) minmax(0, 1fr)
+	);
+	column-gap: var(--steps-list-footer-column-gap, var(--spacing-6));
+	align-items: var(--steps-list-footer-align-items, center);
+	box-sizing: var(--steps-list-footer-box-sizing, border-box);
+	margin: var(--steps-list-footer-margin, 0);
+	padding: var(--steps-list-footer-padding, 0);
+}
+
+// The dot sits in the middle row, centred on the footer content, and the line of the last step goes
+// on through the first row, down to the dot.
+.steps-list__footer-rail {
+	display: var(--steps-list-footer-rail-display, grid);
+	grid-template-rows: var(--steps-list-footer-rail-grid-template-rows, 1fr auto 1fr);
+	justify-items: var(--steps-list-footer-rail-justify-items, center);
+	align-self: var(--steps-list-footer-rail-align-self, stretch);
+}
+
+.steps-list__footer-connector {
+	inline-size: var(--steps-list-connector-inline-size, 1px);
+	margin-block-end: var(--steps-list-footer-connector-margin-block-end, var(--spacing-2));
+	background-color: var(--steps-list-connector-color, var(--steps-list-connector));
+}
+
+.steps-list__footer-marker {
+	box-sizing: var(--steps-list-footer-marker-box-sizing, border-box);
+	inline-size: var(--steps-list-footer-marker-size, var(--spacing-4));
+	block-size: var(--steps-list-footer-marker-size, var(--spacing-4));
+	border-radius: var(--steps-list-footer-marker-border-radius, var(--radius-round));
+	background-color: var(
+		--steps-list-footer-marker-background-color,
+		var(--steps-list-footer-marker-background)
+	);
+}
+
+.steps-list__footer-content {
+	min-inline-size: var(--steps-list-footer-content-min-inline-size, 0);
+	color: var(--steps-list-footer-content-color, var(--steps-list-content-foreground));
+	font-family: var(
+		--steps-list-footer-content-font-family,
+		var(--paragraph-base-400-font-family)
+	);
+	font-size: var(--steps-list-footer-content-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(
+		--steps-list-footer-content-font-weight,
+		var(--paragraph-base-400-font-weight)
+	);
+	line-height: var(
+		--steps-list-footer-content-line-height,
+		var(--paragraph-base-400-line-height)
+	);
+	letter-spacing: var(
+		--steps-list-footer-content-letter-spacing,
+		var(--paragraph-base-400-letter-spacing)
+	);
+	text-transform: var(
+		--steps-list-footer-content-text-transform,
+		var(--paragraph-base-400-text-transform)
+	);
+}

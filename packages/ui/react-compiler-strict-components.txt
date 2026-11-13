@@ -27,6 +27,7 @@ resizable
 select
 skeleton
 slider
+steps
 switch
 tabs
 toast
