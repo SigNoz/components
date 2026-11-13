@@ -525,6 +525,16 @@
 	cursor: var(--typography-link-cursor, pointer);
 	border-radius: var(--typography-link-border-radius, var(--radius-1));
 
+	// The font, padding and display come from `.typography`; this clears the rest of the native
+	// button look so an action draws like the anchor.
+	&:is(button) {
+		border: var(--typography-link-border, 0);
+		background: var(--typography-link-background, none);
+		font-style: var(--typography-link-font-style, inherit);
+		word-spacing: var(--typography-link-word-spacing, inherit);
+		text-align: var(--typography-link-text-align, inherit);
+	}
+
 	&:hover {
 		text-decoration-line: var(--typography-link-hover-text-decoration-line, underline);
 	}

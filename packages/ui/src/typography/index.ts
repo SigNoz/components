@@ -30,13 +30,18 @@
  * | `--typography-letter-spacing` | `var(--typography-internal-letter-spacing)` |
  * | `--typography-line-height` | `var(--typography-internal-line-height)` |
  * | `--typography-link` | `-` |
+ * | `--typography-link-background` | `none` |
+ * | `--typography-link-border` | `0` |
  * | `--typography-link-border-radius` | `var(--radius-1)` |
  * | `--typography-link-color` | `var(--typography-link)` |
  * | `--typography-link-cursor` | `pointer` |
  * | `--typography-link-focus-visible-outline` | `var(--ring) solid 1px` |
  * | `--typography-link-focus-visible-outline-offset` | `1px` |
+ * | `--typography-link-font-style` | `inherit` |
  * | `--typography-link-hover-text-decoration-line` | `underline` |
+ * | `--typography-link-text-align` | `inherit` |
  * | `--typography-link-text-decoration-line` | `none` |
+ * | `--typography-link-word-spacing` | `inherit` |
  * | `--typography-main` | `-` |
  * | `--typography-main-color` | `var(--typography-main)` |
  * | `--typography-margin` | `var(--typography-internal-margin, 0)` |
