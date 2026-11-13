@@ -1,12 +1,7 @@
-import {
-	type CSSProperties,
-	type KeyboardEvent,
-	type ReactNode,
-	useEffect,
-	useMemo,
-	useState,
-} from 'react';
+import { type CSSProperties, type KeyboardEvent, type ReactNode, useEffect, useMemo } from 'react';
 import { resolveGroupReason } from '../lib/group-reason.js';
+import { uniqueByValue } from '../lib/unique-by-value.js';
+import { useFirstRenderControl } from '../lib/use-first-render-control.js';
 import styles from './radio-cards.module.scss';
 import type { RadioCardsItemType, RadioCardsTextOverflowType } from './types.js';
 
@@ -78,19 +73,7 @@ export function useRadioCardsGroup({
 
 	// Two cards with one `value` would share a key, a test id and a checked state. The first one
 	// renders, as on `Resizable`.
-	const uniqueItems = useMemo(() => {
-		const seen = new Set<string>();
-
-		return items.filter((item) => {
-			if (seen.has(item.value)) {
-				return false;
-			}
-
-			seen.add(item.value);
-
-			return true;
-		});
-	}, [items]);
+	const uniqueItems = useMemo(() => uniqueByValue(items), [items]);
 
 	const isEmpty = items.length === 0;
 	const hasDuplicateValue = uniqueItems.length < items.length;
@@ -146,12 +129,9 @@ export function useRadioCardsGroup({
 }
 
 /**
- * The value of a group, controlled or kept by the group itself. Decided once, on the first render:
- * `undefined` there makes the group uncontrolled for the rest of its life, and a later switch
- * either way logs a warning and is ignored.
- *
- * The group always hands Base UI a value, since it keeps its own even uncontrolled, so this is the
- * only place that can warn about the switch.
+ * The value of a group, controlled or kept by the group itself, decided on the first render with
+ * the rules of `useFirstRenderControl`. The group always hands Base UI a value, so Base UI never
+ * sees the switch, and the warnings speak of cards.
  *
  * @access private
  */
@@ -169,29 +149,11 @@ export function useRadioCardsValue<T>({
 	 */
 	empty: T;
 }): [T, (next: T) => void] {
-	const [isControlled] = useState(value !== undefined);
-	const [uncontrolledValue, setUncontrolledValue] = useState<T>(defaultValue ?? empty);
-	const isControlledNow = value !== undefined;
-
-	useEffect(() => {
-		if (isControlled && !isControlledNow) {
-			console.warn(
-				`${component}: \`value\` turned \`undefined\`, but it was set on the first render, so the group stays controlled and shows no card checked. Write ${JSON.stringify(empty)} to clear it.`,
-			);
-		}
-
-		if (!isControlled && isControlledNow) {
-			console.warn(
-				`${component}: \`value\` was \`undefined\` on the first render, so the group keeps its own state and ignores \`value\`. A controlled group that starts with nothing checked passes ${JSON.stringify(empty)}.`,
-			);
-		}
-	}, [component, isControlled, isControlledNow, empty]);
-
-	function setValue(next: T): void {
-		if (!isControlled) {
-			setUncontrolledValue(next);
-		}
-	}
-
-	return [isControlled ? (value ?? empty) : uncontrolledValue, setValue];
+	return useFirstRenderControl({
+		value,
+		defaultValue,
+		empty,
+		turnedUndefinedWarning: `${component}: \`value\` turned \`undefined\`, but it was set on the first render, so the group stays controlled and shows no card checked. Write ${JSON.stringify(empty)} to clear it.`,
+		appearedWarning: `${component}: \`value\` was \`undefined\` on the first render, so the group keeps its own state and ignores \`value\`. A controlled group that starts with nothing checked passes ${JSON.stringify(empty)}.`,
+	});
 }

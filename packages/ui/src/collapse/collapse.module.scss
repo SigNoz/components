@@ -1,0 +1,262 @@
+// `Collapse` and `Collapse.Group` share the size and variant values: a group item has no root of
+// its own, so its parts read them from the group.
+.collapse,
+.collapse-group {
+	display: var(--collapse-display, block);
+	box-sizing: var(--collapse-box-sizing, border-box);
+	width: var(--collapse-width, 100%);
+	min-width: var(--collapse-min-width, 0);
+	margin: var(--collapse-margin, 0);
+	color: var(--collapse-color, var(--collapse-content));
+	font-family: var(--collapse-internal-font-family);
+	font-size: var(--collapse-internal-font-size);
+	font-weight: var(--collapse-internal-font-weight);
+	line-height: var(--collapse-internal-line-height);
+	letter-spacing: var(--collapse-internal-letter-spacing);
+	text-transform: var(--collapse-internal-text-transform);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+
+	// The type scale of `Callout`: Label/500 for the title and Paragraph/400 for the description and
+	// the panel, at Base.
+	&[data-size='sm'] {
+		--collapse-internal-font-family: var(--collapse-font-family, var(--paragraph-base-400-font-family));
+		--collapse-internal-font-size: var(--collapse-font-size, var(--paragraph-base-400-font-size));
+		--collapse-internal-font-weight: var(--collapse-font-weight, var(--paragraph-base-400-font-weight));
+		--collapse-internal-line-height: var(--collapse-line-height, var(--paragraph-base-400-line-height));
+		--collapse-internal-letter-spacing: var(--collapse-letter-spacing, var(--paragraph-base-400-letter-spacing));
+		--collapse-internal-text-transform: var(--collapse-text-transform, var(--paragraph-base-400-text-transform));
+		--collapse-internal-header-min-height: var(--collapse-header-min-height, var(--spacing-16));
+		--collapse-internal-header-padding-inline: var(--collapse-header-padding-inline, var(--spacing-4));
+		--collapse-internal-header-gap: var(--collapse-header-gap, var(--spacing-3));
+		--collapse-internal-icon-size: var(--collapse-icon-size, var(--spacing-7));
+		--collapse-internal-panel-padding: var(--collapse-panel-padding, var(--spacing-4));
+		--collapse-internal-title-font-family: var(--collapse-title-font-family, var(--label-base-500-font-family));
+		--collapse-internal-title-font-size: var(--collapse-title-font-size, var(--label-base-500-font-size));
+		--collapse-internal-title-font-weight: var(--collapse-title-font-weight, var(--label-base-500-font-weight));
+		--collapse-internal-title-line-height: var(--collapse-title-line-height, var(--label-base-500-line-height));
+		--collapse-internal-title-letter-spacing: var(--collapse-title-letter-spacing, var(--label-base-500-letter-spacing));
+		--collapse-internal-title-text-transform: var(--collapse-title-text-transform, var(--label-base-500-text-transform));
+		--collapse-internal-title-line-box: var(--collapse-internal-title-font-size);
+		--collapse-internal-title-wrap-line-height: var(--collapse-title-wrap-line-height, var(--paragraph-base-400-line-height));
+		--collapse-internal-description-font-family: var(--collapse-description-font-family, var(--paragraph-base-400-font-family));
+		--collapse-internal-description-font-size: var(--collapse-description-font-size, var(--paragraph-base-400-font-size));
+		--collapse-internal-description-font-weight: var(--collapse-description-font-weight, var(--paragraph-base-400-font-weight));
+		--collapse-internal-description-line-height: var(--collapse-description-line-height, var(--paragraph-base-400-line-height));
+		--collapse-internal-description-letter-spacing: var(--collapse-description-letter-spacing, var(--paragraph-base-400-letter-spacing));
+		--collapse-internal-description-text-transform: var(--collapse-description-text-transform, var(--paragraph-base-400-text-transform));
+	}
+
+	// The overflow of the title is set on the root and read by the title, so a section nested in the
+	// panel of another one follows its own `textOverflow`, not the one of the section around it.
+	// Clipped on the inline axis only: the 1em line box of the title is shorter than Inter's accents
+	// and descenders, which stay visible above and below it.
+	&[data-text-overflow='ellipsis'] {
+		--collapse-internal-toggle-align-items: center;
+		--collapse-internal-title-overflow: var(--collapse-title-overflow, clip visible);
+		--collapse-internal-title-text-overflow: var(--collapse-title-text-overflow, ellipsis);
+		--collapse-internal-title-white-space: var(--collapse-title-white-space, nowrap);
+	}
+
+	// A wrapped title takes the line height of the paragraph at the same size, so its lines do not
+	// touch. The chevron and the prefix stay centred on its first line.
+	&[data-text-overflow='wrap'] {
+		--collapse-internal-toggle-align-items: flex-start;
+		--collapse-internal-title-line-height: var(--collapse-internal-title-wrap-line-height);
+		--collapse-internal-title-line-box: var(--collapse-internal-title-wrap-line-height);
+		--collapse-internal-title-overflow: visible;
+		--collapse-internal-title-text-overflow: clip;
+		--collapse-internal-title-white-space: normal;
+	}
+
+	// The box clips the edges of a panel with no padding to its radius, so the focus ring of the
+	// header button is drawn inside it.
+	&[data-variant='outlined'] {
+		overflow: var(--collapse-outlined-overflow, clip);
+		border: var(--collapse-outlined-border-width, 1px) var(--collapse-outlined-border-style, solid)
+			var(--collapse-outlined-border-color, var(--collapse-border));
+		border-radius: var(--collapse-outlined-border-radius, var(--radius-2));
+		background: var(--collapse-outlined-background, var(--collapse-background));
+		--collapse-internal-toggle-border-radius: var(--collapse-outlined-toggle-border-radius, 0);
+		--collapse-internal-focus-visible-outline-offset: var(--collapse-outlined-focus-visible-outline-offset, -1px);
+		--collapse-internal-panel-divider: var(--collapse-outlined-divider-width, 1px)
+			var(--collapse-outlined-divider-style, solid)
+			var(--collapse-outlined-divider-color, var(--collapse-border));
+	}
+
+	&[data-variant='ghost'] {
+		background: var(--collapse-ghost-background, transparent);
+		--collapse-internal-toggle-border-radius: var(--collapse-ghost-toggle-border-radius, var(--radius-2));
+		--collapse-internal-focus-visible-outline-offset: var(--collapse-ghost-focus-visible-outline-offset, 0);
+		--collapse-internal-panel-divider: none;
+	}
+}
+
+.collapse-group__item {
+	display: var(--collapse-group-item-display, block);
+	min-width: var(--collapse-group-item-min-width, 0);
+}
+
+.collapse-group[data-variant='outlined'] .collapse-group__item + .collapse-group__item {
+	border-top: var(--collapse-internal-panel-divider);
+}
+
+.collapse__header {
+	display: var(--collapse-header-display, flex);
+	align-items: var(--collapse-header-align-items, stretch);
+	min-width: var(--collapse-header-min-width, 0);
+}
+
+.collapse__heading {
+	display: var(--collapse-heading-display, flex);
+	flex: var(--collapse-heading-flex, 1 1 auto);
+	min-width: var(--collapse-heading-min-width, 0);
+	margin: var(--collapse-heading-margin, 0);
+	font: var(--collapse-heading-font, inherit);
+}
+
+// The whole header but `headerSuffix` is the button, so the click target is as large as the row.
+.collapse__toggle {
+	display: var(--collapse-toggle-display, flex);
+	flex: var(--collapse-toggle-flex, 1 1 auto);
+	// A one line title is centred in a row that a tall `headerSuffix` made taller. A wrapped title or
+	// a description keeps the chevron and the prefix on the first line instead.
+	align-items: var(--collapse-toggle-align-items, var(--collapse-internal-toggle-align-items));
+	gap: var(--collapse-internal-header-gap);
+	box-sizing: var(--collapse-toggle-box-sizing, border-box);
+	min-width: var(--collapse-toggle-min-width, 0);
+	min-height: var(--collapse-internal-header-min-height);
+	// A one line header is exactly the min height, with its first line centred in it. A description
+	// or a wrapped title grows the button below that line.
+	--collapse-internal-header-padding-block: var(
+		--collapse-header-padding-block,
+		calc(
+			(var(--collapse-internal-header-min-height) - max(var(--collapse-internal-icon-size), var(--collapse-internal-title-line-box))) / 2
+		)
+	);
+
+	padding: var(--collapse-internal-header-padding-block) var(--collapse-internal-header-padding-inline);
+	margin: var(--collapse-toggle-margin, 0);
+	border: var(--collapse-toggle-border, none);
+	border-radius: var(--collapse-internal-toggle-border-radius);
+	background: var(--collapse-toggle-background, transparent);
+	color: var(--collapse-toggle-color, var(--collapse-title));
+	font: var(--collapse-toggle-font, inherit);
+	font-variant-numeric: normal;
+	font-feature-settings: 'ss01' 1;
+	text-align: var(--collapse-toggle-text-align, start);
+	cursor: var(--collapse-toggle-cursor, pointer);
+
+	&:has(.collapse__description) {
+		align-items: var(--collapse-toggle-align-items, flex-start);
+	}
+
+	&:focus-visible {
+		outline: var(--collapse-focus-visible-outline, var(--collapse-focus-ring) solid 1px);
+		outline-offset: var(--collapse-internal-focus-visible-outline-offset);
+	}
+}
+
+// The chevron and the prefix sit on the first line of the title, whatever the height of the button.
+.collapse__chevron,
+.collapse__prefix {
+	display: var(--collapse-icon-display, flex);
+	flex-shrink: var(--collapse-icon-flex-shrink, 0);
+	align-items: var(--collapse-icon-align-items, center);
+	justify-content: var(--collapse-icon-justify-content, center);
+	inline-size: var(--collapse-internal-icon-size);
+	block-size: max(var(--collapse-internal-icon-size), var(--collapse-internal-title-line-box));
+	color: var(--collapse-icon-color, var(--collapse-icon));
+
+	svg {
+		inline-size: var(--collapse-internal-icon-size);
+		block-size: var(--collapse-internal-icon-size);
+	}
+}
+
+.collapse__chevron {
+	transition-property: var(--collapse-chevron-transition-property, transform, color);
+	transition-timing-function: var(--collapse-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--collapse-transition-duration, 150ms);
+
+	// The header has no hover background: it would stop at the edge of `headerSuffix`, which sits
+	// outside the button. The chevron brightens instead.
+	.collapse__toggle:hover & {
+		color: var(--collapse-chevron-hover-color, var(--collapse-icon-hover));
+	}
+
+	.collapse__toggle[data-panel-open] & {
+		transform: var(--collapse-chevron-open-transform, rotate(90deg));
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
+.collapse__heading-text {
+	display: var(--collapse-heading-text-display, flex);
+	flex: var(--collapse-heading-text-flex, 1 1 auto);
+	flex-direction: var(--collapse-heading-text-flex-direction, column);
+	gap: var(--collapse-heading-text-gap, var(--spacing-1));
+	min-width: var(--collapse-heading-text-min-width, 0);
+}
+
+.collapse__title {
+	min-width: var(--collapse-title-min-width, 0);
+	color: var(--collapse-title-color, var(--collapse-title));
+	font-family: var(--collapse-internal-title-font-family);
+	font-size: var(--collapse-internal-title-font-size);
+	font-weight: var(--collapse-internal-title-font-weight);
+	line-height: var(--collapse-internal-title-line-height);
+	letter-spacing: var(--collapse-internal-title-letter-spacing);
+	text-transform: var(--collapse-internal-title-text-transform);
+	font-variant-numeric: var(--collapse-title-font-variant-numeric, normal);
+	font-feature-settings: var(--collapse-title-font-feature-settings, 'ss01');
+	overflow-wrap: var(--collapse-title-overflow-wrap, anywhere);
+	overflow: var(--collapse-internal-title-overflow);
+	text-overflow: var(--collapse-internal-title-text-overflow);
+	white-space: var(--collapse-internal-title-white-space);
+}
+
+.collapse__description {
+	color: var(--collapse-description-color, var(--collapse-description));
+	font-family: var(--collapse-internal-description-font-family);
+	font-size: var(--collapse-internal-description-font-size);
+	font-weight: var(--collapse-internal-description-font-weight);
+	line-height: var(--collapse-internal-description-line-height);
+	letter-spacing: var(--collapse-internal-description-letter-spacing);
+	text-transform: var(--collapse-internal-description-text-transform);
+	overflow-wrap: var(--collapse-description-overflow-wrap, anywhere);
+}
+
+.collapse__header-suffix {
+	display: var(--collapse-header-suffix-display, flex);
+	flex-shrink: var(--collapse-header-suffix-flex-shrink, 0);
+	align-items: var(--collapse-header-suffix-align-items, center);
+	gap: var(--collapse-header-suffix-gap, var(--spacing-2));
+	// Keeps a control as tall as the header off the border of the box.
+	padding-block: var(--collapse-header-suffix-padding-block, var(--spacing-2));
+	padding-inline-end: var(--collapse-internal-header-padding-inline);
+}
+
+// Collapsed with `keepMounted`, the panel is `hidden="until-found"`: its content is hidden and its
+// box stays, so find in page can reach it. The padding sits on the content and the divider only
+// shows while open, so the hidden box takes no height.
+.collapse__panel {
+	min-width: var(--collapse-panel-min-width, 0);
+	overflow-x: var(--collapse-panel-overflow-x, auto);
+
+	&:not([hidden]) {
+		border-top: var(--collapse-internal-panel-divider);
+	}
+}
+
+.collapse__content {
+	padding: var(--collapse-internal-panel-padding);
+	overflow-wrap: var(--collapse-content-overflow-wrap, anywhere);
+
+	.collapse__panel[data-no-content-padding] > & {
+		padding: var(--collapse-no-content-padding-padding, 0);
+	}
+}
