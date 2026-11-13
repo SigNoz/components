@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createRef, forwardRef, type AnchorHTMLAttributes } from 'react';
+import { createRef, forwardRef, type AnchorHTMLAttributes, type ButtonHTMLAttributes } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Typography } from '../typography.js';
 
@@ -20,6 +20,16 @@ const RouterLink = forwardRef<
 		/>
 	);
 });
+
+// Stands in for a design system button: takes the props, adds its own, sets no `type`.
+const CustomButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
+	function CustomButton(props, ref) {
+		return (
+			// eslint-disable-next-line react/button-has-type -- the type is left to the caller.
+			<button ref={ref} data-custom="" {...props} />
+		);
+	},
+);
 
 const MESSAGES = { settings: 'Settings' };
 
@@ -162,6 +172,131 @@ describe('Typography.Link', () => {
 		expect(warn).toHaveBeenCalledWith(expect.stringContaining('Typography.Link needs an `href`'));
 	});
 
+	it('renders a button for an onClick without a destination, and runs it on click', async () => {
+		const user = userEvent.setup();
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const onClick = vi.fn();
+		render(
+			<Typography.Link
+				variant="label"
+				size="base"
+				weight="medium"
+				textOverflow="visible"
+				onClick={onClick}
+				testId="link"
+			>
+				Retry
+			</Typography.Link>,
+		);
+
+		const button = screen.getByRole('button', { name: 'Retry' });
+		expect(screen.queryByRole('link')).not.toBeInTheDocument();
+		expect(button.tagName).toBe('BUTTON');
+		expect(button).toHaveAttribute('type', 'button');
+		expect(button).toHaveAttribute('data-slot', 'typography-link');
+		expect(button).toHaveAttribute('data-testid', 'link');
+		expect(button).toHaveAttribute('data-variant', 'label');
+		expect(button).toHaveAttribute('data-display', 'inline');
+
+		await user.click(button);
+
+		expect(onClick).toHaveBeenCalledTimes(1);
+		expect(warn).not.toHaveBeenCalled();
+	});
+
+	it('gives the button the class of the anchor link', () => {
+		render(
+			<>
+				<Typography.Link
+					variant="label"
+					size="base"
+					weight="medium"
+					textOverflow="visible"
+					href="/docs"
+				>
+					docs
+				</Typography.Link>
+				<Typography.Link
+					variant="label"
+					size="base"
+					weight="medium"
+					textOverflow="visible"
+					onClick={() => {}}
+				>
+					action
+				</Typography.Link>
+			</>,
+		);
+
+		const anchor = screen.getByRole('link', { name: 'docs' });
+		const button = screen.getByRole('button', { name: 'action' });
+		expect(button.className).not.toBe('');
+		expect(button.className).toBe(anchor.className);
+	});
+
+	it('forwards the ref and aria attributes to the button and runs it with the keyboard', async () => {
+		const user = userEvent.setup();
+		const onClick = vi.fn();
+		const ref = createRef<HTMLElement>();
+		render(
+			<Typography.Link
+				ref={ref}
+				variant="label"
+				size="base"
+				weight="medium"
+				textOverflow="visible"
+				onClick={onClick}
+				aria-describedby="hint"
+			>
+				action
+			</Typography.Link>,
+		);
+
+		const button = screen.getByRole('button');
+		expect(ref.current).toBe(button);
+		expect(button).toHaveAttribute('aria-describedby', 'hint');
+
+		await user.tab();
+		expect(button).toHaveFocus();
+		await user.keyboard('{Enter}');
+
+		expect(onClick).toHaveBeenCalledTimes(1);
+	});
+
+	it('uses the render element for an action, keeps its own props and runs onClick', async () => {
+		const user = userEvent.setup();
+		const onClick = vi.fn();
+		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const ref = createRef<HTMLElement>();
+		render(
+			<Typography.Link
+				ref={ref}
+				variant="label"
+				size="base"
+				weight="medium"
+				textOverflow="visible"
+				render={<CustomButton className="track" />}
+				onClick={onClick}
+				testId="link"
+			>
+				action
+			</Typography.Link>,
+		);
+
+		const action = screen.getByRole('button', { name: 'action' });
+		expect(action).toHaveAttribute('data-custom');
+		expect(action).not.toHaveAttribute('type');
+		expect(action).toHaveClass('track');
+		expect(action).toHaveAttribute('data-slot', 'typography-link');
+		expect(action).toHaveAttribute('data-testid', 'link');
+		expect(ref.current).toBe(action);
+
+		await user.click(action);
+
+		expect(onClick).toHaveBeenCalledTimes(1);
+		expect(warn).not.toHaveBeenCalled();
+	});
+
 	it('keeps the ref, the id and the aria and data props on the plain text fallback', () => {
 		vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const ref = createRef<HTMLElement>();
@@ -287,5 +422,117 @@ describe('Typography.Link', () => {
 		expect(link.style.getPropertyValue('--typography-internal-padding')).toBe('0 var(--spacing-4)');
 		expect(link).not.toHaveAttribute('marginTop');
 		expect(link).not.toHaveAttribute('paddingX');
+	});
+});
+
+describe('Typography.Link action styling', () => {
+	it('draws an action like the anchor link inside italic prose', () => {
+		render(
+			<p style={{ fontStyle: 'italic', wordSpacing: '4px' }}>
+				Read the{' '}
+				<Typography.Link
+					variant="paragraph"
+					size="base"
+					weight="medium"
+					textOverflow="wrap"
+					href="#docs"
+					testId="anchor"
+				>
+					docs
+				</Typography.Link>{' '}
+				or{' '}
+				<Typography.Link
+					variant="paragraph"
+					size="base"
+					weight="medium"
+					textOverflow="wrap"
+					onClick={() => {}}
+					testId="action"
+				>
+					retry
+				</Typography.Link>
+				.
+			</p>,
+		);
+
+		const anchor = getComputedStyle(screen.getByTestId('anchor'));
+		const action = getComputedStyle(screen.getByTestId('action'));
+
+		for (const property of [
+			'color',
+			'fontFamily',
+			'fontSize',
+			'fontWeight',
+			'fontStyle',
+			'lineHeight',
+			'letterSpacing',
+			'wordSpacing',
+			'textTransform',
+			'textDecorationLine',
+			'cursor',
+		] as const) {
+			expect(action[property], property).toBe(anchor[property]);
+		}
+
+		expect(action.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+		expect(action.borderTopWidth).toBe('0px');
+		expect(action.paddingTop).toBe('0px');
+		expect(action.paddingLeft).toBe('0px');
+	});
+
+	it('starts the text of a wide action where an anchor starts it, and follows align', () => {
+		render(
+			<>
+				<Typography.Link
+					variant="label"
+					size="base"
+					weight="medium"
+					textOverflow="visible"
+					display="block"
+					width={200}
+					onClick={() => {}}
+					testId="start"
+				>
+					retry
+				</Typography.Link>
+				<Typography.Link
+					variant="label"
+					size="base"
+					weight="medium"
+					textOverflow="visible"
+					display="block"
+					width={200}
+					align="end"
+					onClick={() => {}}
+					testId="end"
+				>
+					retry
+				</Typography.Link>
+			</>,
+		);
+
+		expect(getComputedStyle(screen.getByTestId('start')).textAlign).toBe('start');
+		expect(getComputedStyle(screen.getByTestId('end')).textAlign).toBe('end');
+	});
+
+	it('cuts a long action with an ellipsis', () => {
+		render(
+			<Typography.Link
+				variant="label"
+				size="base"
+				weight="medium"
+				textOverflow="ellipsis"
+				display="block"
+				width={60}
+				onClick={() => {}}
+				testId="action"
+			>
+				View every log line of this service
+			</Typography.Link>,
+		);
+
+		const action = screen.getByTestId('action');
+		expect(getComputedStyle(action).textOverflow).toBe('ellipsis');
+		expect(action.scrollWidth).toBeGreaterThan(action.clientWidth);
 	});
 });

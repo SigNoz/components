@@ -760,8 +760,9 @@ export const TypographyShowcase: Story = {
 				description={
 					<>
 						Inside a sentence, a link repeats the <code>variant</code> and <code>size</code> of the
-						sentence. A <code>flex</code> link lays out an icon next to its text, and a router link
-						goes through <code>render</code>.
+						sentence. A <code>flex</code> link lays out an icon next to its text, a router link goes
+						through <code>render</code>, and an <code>onClick</code> with no destination makes an
+						action.
 					</>
 				}
 			>
@@ -811,6 +812,25 @@ export const TypographyShowcase: Story = {
 					>
 						Settings
 					</Typography.Link>
+					<Typography
+						variant="label"
+						size="base"
+						weight="regular"
+						color="secondary"
+						as="p"
+						textOverflow="wrap"
+					>
+						The logs could not be loaded.{' '}
+						<Typography.Link
+							variant="label"
+							size="base"
+							weight="medium"
+							textOverflow="visible"
+							onClick={() => {}}
+						>
+							Retry
+						</Typography.Link>
+					</Typography>
 				</div>
 			</Section>
 		</div>
