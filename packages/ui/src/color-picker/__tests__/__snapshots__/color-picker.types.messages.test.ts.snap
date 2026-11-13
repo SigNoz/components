@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ColorPicker type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "disabled and disabledTooltip > a possibly undefined disabled still needs a reason > \`disabled\` typed \`boolean | undefined\` is still \`disabled\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; disabled: boolean | undefined; }' but required in type 'ADisabledColorPickerMustSayWhy'.",
+  "disabled and disabledTooltip > rejects a reason without disabled > \`disabledTooltip\` only renders while \`disabled\` is set": "TS2741: Property ''\`disabledTooltip\` only renders while \`disabled\` is set, add \`disabled\` or drop the tooltip'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; disabledTooltip: string; }' but required in type 'ADisabledReasonNeedsADisabledColorPicker'.",
+  "disabled and disabledTooltip > rejects disabled without a reason > a disabled picker has to tell the user why it cannot be used": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; disabled: true; }' but required in type 'ADisabledColorPickerMustSayWhy'.",
+  "opaque > rejects a value that is not a boolean > \`opaque\` is a flag that takes the alpha out, not an alpha level": "TS2322: Type 'number' is not assignable to type 'boolean | undefined'.",
+  "opaque > rejects a value that is not a boolean > \`opaque\` is a flag, the string \`"false"\` is not one": "TS2322: Type 'string' is not assignable to type 'boolean | undefined'.",
+  "picker-owned aria > rejects aria-controls > the picker writes \`aria-controls\` with the popup id": "TS2322: Type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; "aria-controls": string; }' is not assignable to type 'Record<"aria-controls", never>'.
+    Types of property '"aria-controls"' are incompatible.
+      Type 'string' is not assignable to type 'never'.",
+  "picker-owned aria > rejects aria-disabled > write \`disabled\`, the picker sets \`aria-disabled\`": "TS2322: Type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; "aria-disabled": true; }' is not assignable to type 'Record<"aria-disabled", never>'.
+    Types of property '"aria-disabled"' are incompatible.
+      Type 'true' is not assignable to type 'never'.",
+  "picker-owned aria > rejects aria-expanded > the picker writes \`aria-expanded\` from its open state": "TS2322: Type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; "aria-expanded": boolean; }' is not assignable to type 'Record<"aria-expanded", never>'.
+    Types of property '"aria-expanded"' are incompatible.
+      Type 'boolean' is not assignable to type 'never'.",
+  "picker-owned aria > rejects aria-haspopup > the picker writes \`aria-haspopup="dialog"\`": "TS2322: Type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; "aria-haspopup": string; }' is not assignable to type 'Record<"aria-haspopup", never>'.
+    Types of property '"aria-haspopup"' are incompatible.
+      Type 'string' is not assignable to type 'never'.",
+  "picker-owned aria > rejects aria-readonly > write \`readOnly\`, the picker sets \`aria-readonly\`": "TS2322: Type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; "aria-readonly": true; }' is not assignable to type 'Record<"aria-readonly", never>'.
+    Types of property '"aria-readonly"' are incompatible.
+      Type 'true' is not assignable to type 'never'.",
+  "readOnly and readOnlyTooltip > a possibly undefined readOnly still needs a reason > \`readOnly\` typed \`boolean | undefined\` is still \`readOnly\`": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; readOnly: boolean | undefined; }' but required in type 'AReadOnlyColorPickerMustSayWhy'.",
+  "readOnly and readOnlyTooltip > rejects a reason without readOnly > \`readOnlyTooltip\` only renders while \`readOnly\` is set": "TS2741: Property ''\`readOnlyTooltip\` only renders while \`readOnly\` is set, add \`readOnly\` or drop the tooltip'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; readOnlyTooltip: string; }' but required in type 'AReadOnlyReasonNeedsAReadOnlyColorPicker'.",
+  "readOnly and readOnlyTooltip > rejects readOnly without a reason > a locked picker has to tell the user why it cannot change": "TS2741: Property ''\`readOnly\` needs \`readOnlyTooltip\`, a locked control has to tell the user why it cannot change'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; readOnly: true; }' but required in type 'AReadOnlyColorPickerMustSayWhy'.",
+  "rejected props > rejects a raw data-testid > the prop is called \`testId\`": "TS2741: Property ''\`data-testid\` is written as the \`testId\` prop, which lands on the trigger and names every part of the popup'' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; align: "start"; "data-testid": string; }' but required in type 'TheTestIdPropIsCalledTestId'.",
+  "rejected props > rejects className > the trigger takes its own class, the popup takes none": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects disabledAlpha, replaced by opaque > write \`opaque\`, there is no \`disabledAlpha\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects getPopupContainer, replaced by container > write \`container\`": "TS2322: Type '() => HTMLElement' is not assignable to type 'never'.",
+  "rejected props > rejects onChangeComplete, renamed to onAfterChange > write \`onAfterChange\`, the name on Slider": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects onClear, onChange reports the clear > \`onChange\` is called with \`undefined\` on a clear": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects panelRender, replaced by footer > write \`footer\`": "TS2322: Type '() => null' is not assignable to type 'never'.",
+  "rejected props > rejects presets, the swatches live next to the trigger > the preset row is outside the popup": "TS2322: Type 'never[]' is not assignable to type 'never'.",
+  "rejected props > rejects showText and size, which only styled the antd trigger > the picker draws no trigger to show text on": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "rejected props > rejects showText and size, which only styled the antd trigger > the trigger's size is the consumer's": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects style > the trigger takes its own style, the popup takes none": "TS2322: Type '{ width: number; }' is not assignable to type 'never'.",
+  "rejected props > rejects the antd placement props, replaced by side and align > the popup always flips when there is no room": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "rejected props > rejects the antd placement props, replaced by side and align > the popup has no arrow": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects the antd placement props, replaced by side and align > write \`side\` and \`align\`, there is no \`placement\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects the antd popup styling props > the parts of the popup take no style": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "rejected props > rejects the antd popup styling props > the popup takes no class": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects the antd popup styling props > the popup unmounts when it closes": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects the format props, the value is always a hex string > the value is a hex string, there is no \`defaultFormat\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects the format props, the value is always a hex string > the value is a hex string, there is no \`format\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects the format props, the value is always a hex string > the value is a hex string, there is no \`onFormatChange\`": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects the open state props, the picker owns its open state > the picker owns its open state, there is no \`onOpenChange\`": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects the open state props, the picker owns its open state > use ForceOpenProvider in stories and tests, there is no \`defaultOpen\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects the open state props, the picker owns its open state > use ForceOpenProvider in stories and tests, there is no \`open\`": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects trigger, the popup opens on press only > a press opens the popup, there is no hover trigger": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "required props > rejects a logical side > the four physical sides, the same as Popover": "TS2322: Type '"inline-start"' is not assignable to type 'ColorPickerSideType'.",
+  "required props > rejects a picker that does not say whether its trigger is a button > \`nativeButton\` has to match the trigger, so it has no default": "TS2741: Property 'nativeButton' is missing in type '{ children: Element; side: "bottom"; align: "start"; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactElement<any, string | JSXElementConstructor<any>>; nativeButton: boolean; value?: string | undefined; ... 16 more ...; testId?: string | undefined; }'.",
+  "required props > rejects a picker with no align > placement is never incidental, the call site states the align": "TS2741: Property 'align' is missing in type '{ children: Element; nativeButton: true; side: "bottom"; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactElement<any, string | JSXElementConstructor<any>>; nativeButton: boolean; value?: string | undefined; ... 16 more ...; testId?: string | undefined; }'.",
+  "required props > rejects a picker with no side > placement is never incidental, the call site states the side": "TS2741: Property 'side' is missing in type '{ children: Element; nativeButton: true; align: "start"; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactElement<any, string | JSXElementConstructor<any>>; nativeButton: boolean; value?: string | undefined; ... 16 more ...; testId?: string | undefined; }'.",
+  "required props > rejects a picker with no trigger > the trigger is the consumer's element, passed as children": "TS2741: Property 'children' is missing in type '{ nativeButton: true; side: "bottom"; align: "start"; }' but required in type '{ [key: \`data-\${string}\`]: unknown; children: ReactElement<any, string | JSXElementConstructor<any>>; nativeButton: boolean; value?: string | undefined; ... 16 more ...; testId?: string | undefined; }'.",
+  "required props > rejects a trigger that is not an element > the picker merges its props into one element, text has none": "TS2747: 'ColorPicker' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of 'children' is 'ReactElement<any, string | JSXElementConstructor<any>>'.",
+  "value and callbacks > rejects a footer that is not a function > footer receives the color, so it is a render function": "TS2322: Type 'Element' is not assignable to type '(color: string) => ReactNode'.
+    Type 'ReactElement<any, any>' provides no match for the signature '(color: string): ReactNode'.",
+  "value and callbacks > rejects a handler that expects a color object > the callbacks receive the hex string": "TS2322: Type '(c: { r: number; }) => { r: number; }' is not assignable to type '(value: string | undefined) => void'.
+    Types of parameters 'c' and 'value' are incompatible.
+      Type 'string | undefined' is not assignable to type '{ r: number; }'.
+        Type 'undefined' is not assignable to type '{ r: number; }'.",
+  "value and callbacks > rejects a value that is not a string > the value is a hex string, there is no Color object": "TS2322: Type '{ r: number; g: number; b: number; }' is not assignable to type 'string'.",
+}
+`;

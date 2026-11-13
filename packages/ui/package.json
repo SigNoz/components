@@ -147,6 +147,16 @@
 				"require": "./dist/collapse/index.cjs"
 			}
 		},
+		"./color-picker": {
+			"import": {
+				"types": "./dist/color-picker/index.d.ts",
+				"import": "./dist/color-picker/index.mjs"
+			},
+			"require": {
+				"types": "./dist/color-picker/index.d.cts",
+				"require": "./dist/color-picker/index.cjs"
+			}
+		},
 		"./combobox": {
 			"import": {
 				"types": "./dist/combobox/index.d.ts",
