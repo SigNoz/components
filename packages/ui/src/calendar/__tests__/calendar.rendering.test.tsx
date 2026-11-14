@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { ptBR } from 'react-day-picker/locale';
 import { describe, expect, it } from 'vitest';
 import { Calendar } from '../calendar.js';
 import { JUNE_11_2025, dayButton } from './calendar.test-utils.js';
@@ -11,7 +10,6 @@ describe('Calendar rendering', () => {
 		const root = screen.getByTestId('calendar');
 
 		expect(root).toHaveAttribute('data-slot', 'calendar');
-		expect(root).toHaveClass('rdp-root');
 	});
 
 	it('mirrors the selection mode on the root', () => {
@@ -63,26 +61,18 @@ describe('Calendar rendering', () => {
 
 	it('shortens the month names in the locale the calendar was given', () => {
 		render(
-			<Calendar mode="single" defaultMonth={JUNE_11_2025} captionLayout="dropdown" locale={ptBR} />,
-		);
-
-		// The shortened name goes through react-day-picker's date library, so it follows `locale`
-		// the way the caption and the aria labels do rather than the host's default.
-		expect(screen.getByRole('option', { name: 'fev' })).toBeInTheDocument();
-		expect(screen.queryByRole('option', { name: 'Feb' })).toBeNull();
-	});
-
-	it('lets a formatter of its own replace the shortened month names', () => {
-		render(
 			<Calendar
 				mode="single"
 				defaultMonth={JUNE_11_2025}
 				captionLayout="dropdown"
-				formatters={{ formatMonthDropdown: (date) => `M${date.getMonth() + 1}` }}
+				locale="pt-BR"
 			/>,
 		);
 
-		expect(screen.getByRole('combobox', { name: /month/i })).toHaveTextContent('M6');
+		// The shortened name follows `locale` the way the caption and the aria labels do, rather than
+		// the host's default.
+		expect(screen.getByRole('option', { name: 'fev.' })).toBeInTheDocument();
+		expect(screen.queryByRole('option', { name: 'Feb' })).toBeNull();
 	});
 
 	it('renders the week number as the row header, and only when asked', () => {
@@ -97,22 +87,7 @@ describe('Calendar rendering', () => {
 
 		expect(weekNumber).toBeInTheDocument();
 		expect(header).toHaveAttribute('scope', 'row');
-		// `week` is react-day-picker's own object, not a DOM attribute.
+		// `week` is the calendar's own object, not a DOM attribute.
 		expect(header).not.toHaveAttribute('week');
-	});
-
-	it('lets a consumer replace one of react-day-picker components', () => {
-		render(
-			<Calendar
-				mode="single"
-				defaultMonth={JUNE_11_2025}
-				components={{
-					DayButton: ({ day }) => <button type="button">day {day.date.getDate()}</button>,
-				}}
-			/>,
-		);
-
-		expect(screen.getByRole('button', { name: 'day 11' })).toBeInTheDocument();
-		expect(document.querySelector('[data-variant="day"]')).toBeNull();
 	});
 });

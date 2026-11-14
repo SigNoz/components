@@ -126,7 +126,7 @@ Which is why `package.json` exports carry two type entries per subpath, not one:
 
 `externalPatterns` in `vite.config.extend.ts` is the single list of what we do **not**
 bundle: React, every `@base-ui/*`, every `@signozhq/*`, `clsx`, `@tanstack/*`,
-`react-day-picker`, `react-resizable-panels`, and friends.
+`react-resizable-panels`, and friends.
 
 Rule of thumb: **anything a consumer could also install must be external.** Bundling a copy
 of Base UI means two instances of its context: a `Dialog` from our bundle and one from the

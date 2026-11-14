@@ -1,7 +1,14 @@
-import { Calendar, type CalendarProps, Typography } from '@signozhq/ui';
+import {
+	Calendar,
+	type CalendarProps,
+	createCalendar,
+	type DateAdapter,
+	Typography,
+} from '@signozhq/ui';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import dayjs, { type Dayjs } from 'dayjs';
 import { type ReactElement, type ReactNode, useState } from 'react';
-import { fn } from 'storybook/test';
+import { expect, fn, mocked, userEvent, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './calendar.stories.module.css';
 
@@ -109,31 +116,23 @@ const meta: Meta<typeof Calendar> = {
 			description: 'Keeps the calendar on one month, arrows and dropdowns included.',
 			table: { category: 'Behavior', type: { summary: 'boolean' } },
 		},
-		animate: {
-			control: 'boolean',
-			description: 'Slides between months instead of swapping them.',
-			table: { category: 'Behavior', type: { summary: 'boolean' } },
-		},
 		weekStartsOn: {
 			control: 'select',
 			options: [0, 1, 2, 3, 4, 5, 6],
 			description: 'Which day the week starts on, `0` being Sunday.',
 			table: { category: 'Behavior', type: { summary: '0 | 1 | 2 | 3 | 4 | 5 | 6' } },
 		},
-		timeZone: {
-			control: 'text',
-			description: 'IANA time zone the days are resolved in. Experimental upstream.',
-			table: { category: 'Behavior', type: { summary: 'string' } },
-		},
 		locale: {
-			control: false,
-			description: 'A locale from `react-day-picker/locale`, which renames every label.',
-			table: { category: 'Behavior', type: { summary: 'Locale' } },
-		},
-		components: {
-			control: false,
-			description: "Replaces one of react-day-picker's own components, `DayButton` included.",
-			table: { category: 'Behavior', type: { summary: 'Partial<CustomComponents>' } },
+			control: 'select',
+			options: ['en-US', 'en-GB', 'de-DE', 'pt-BR', 'ja-JP'],
+			description:
+				'BCP 47 tag the caption, the weekday names, the month names and every label are ' +
+				'written in.',
+			table: {
+				category: 'Behavior',
+				type: { summary: 'string' },
+				defaultValue: { summary: 'en-US' },
+			},
 		},
 		footer: {
 			control: 'text',
@@ -298,7 +297,9 @@ const pseudoDay = (date: number): string =>
 	`[data-pseudo-states] [data-day="2025-06-${String(date).padStart(2, '0')}"]`;
 
 /**
- * Every selection mode, caption, grid option and day state in one snapshot.
+ * Every selection mode, caption, grid option and day state in one snapshot. `WithDateAdapter` is
+ * the calendar typed on a date library: its `play` needs a mount of its own, and the grid it draws
+ * is the one painted here.
  */
 export const CalendarShowcase: Story = {
 	parameters: {
@@ -333,8 +334,8 @@ export const CalendarShowcase: Story = {
 					>
 						<code>mode</code> decides what <code>selected</code> holds. A day inside a range is
 						painted from its position in that range, not as a selected day, and the range reads as
-						one band that stops at the edge of each week row and flips with the text direction. With
-						one month displayed, it runs on into the outside days of the next.
+						one band that stops at the edge of each week row. With one month displayed, it runs on
+						into the outside days of the next.
 					</Typography>
 					<div className={styles.calendarGrid}>
 						<Example title="single">
@@ -352,16 +353,6 @@ export const CalendarShowcase: Story = {
 								today={TODAY}
 								defaultMonth={TODAY}
 								selected={{ from: day(9), to: day(13) }}
-								onSelect={fn()}
-							/>
-						</Example>
-						<Example title="range across weeks, right to left">
-							<Calendar
-								mode="range"
-								dir="rtl"
-								today={TODAY}
-								defaultMonth={TODAY}
-								selected={{ from: day(12), to: day(24) }}
 								onSelect={fn()}
 							/>
 						</Example>
@@ -572,4 +563,89 @@ export const CalendarShowcase: Story = {
 			</div>
 		</div>
 	),
+};
+
+/**
+ * Where `Calendar` meets the app's date type. It reads and builds a `Dayjs` through this adapter
+ * and works on a wall-clock `Date` everywhere else, so nothing in the calendar knows about dayjs.
+ */
+const dayjsAdapter: DateAdapter<Dayjs> = {
+	toDate: (value) =>
+		new Date(
+			value.year(),
+			value.month(),
+			value.date(),
+			value.hour(),
+			value.minute(),
+			value.second(),
+		),
+	fromDate: (date) => dayjs(date),
+};
+
+const DayjsCalendar = createCalendar(dayjsAdapter);
+
+/** The same pinned day as `TODAY`, built once so the calendar sees one identity across renders. */
+const DAYJS_TODAY = dayjs(TODAY);
+
+function DayjsCalendarExample({
+	onSelect,
+}: {
+	onSelect?: (...selection: unknown[]) => void;
+}): ReactElement {
+	const [selected, setSelected] = useState<Dayjs | undefined>();
+
+	return (
+		<DayjsCalendar
+			testId="dayjs-calendar"
+			mode="single"
+			today={DAYJS_TODAY}
+			defaultMonth={DAYJS_TODAY}
+			selected={selected}
+			onSelect={(value) => {
+				setSelected(value);
+				onSelect?.(value);
+			}}
+			footer={selected ? selected.format('dddd, D MMMM YYYY') : 'Pick a day.'}
+		/>
+	);
+}
+
+/**
+ * `createCalendar(adapter)` with dayjs: `selected`, `today`, `defaultMonth` and what `onSelect`
+ * receives are all `Dayjs`.
+ */
+export const WithDateAdapter: Story = {
+	parameters: {
+		// Same grid as `Default` and the showcase, only the date type differs.
+		chromatic: { disableSnapshot: true },
+	},
+	render: (args) => (
+		<div className="story-container-full">
+			<div className={styles.calendarCard}>
+				<DayjsCalendarExample onSelect={storyOnSelect(args)} />
+			</div>
+		</div>
+	),
+	play: async ({ canvasElement, args }) => {
+		const canvas = within(canvasElement);
+		const onSelect = storyOnSelect(args);
+
+		if (onSelect === undefined) {
+			throw new Error('WithDateAdapter needs the onSelect spy from the story args.');
+		}
+
+		const pickedDay = canvas.getByTestId('dayjs-calendar-button-17-06-2025');
+		await userEvent.click(pickedDay);
+
+		await expect(onSelect).toHaveBeenCalledTimes(1);
+
+		const [picked] = mocked(onSelect).mock.calls[0] ?? [];
+		await expect(dayjs.isDayjs(picked)).toBe(true);
+		await expect(dayjs.isDayjs(picked) ? picked.format('YYYY-MM-DD') : undefined).toBe(
+			'2025-06-17',
+		);
+
+		await expect(pickedDay).toHaveAttribute('data-selected-single', 'true');
+		await expect(canvas.getByText('Tuesday, 17 June 2025')).toBeVisible();
+	},
 };

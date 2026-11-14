@@ -1,75 +1,62 @@
-import { createContext, type Ref, useContext } from 'react';
-import { useDayPicker } from 'react-day-picker';
+import { createContext, type KeyboardEvent, type MouseEvent, useContext } from 'react';
+import type { CalendarFormatter } from './formatting.js';
+import type { GridDay, GridMonth } from './month-grid.js';
+import type { CalendarCaptionLayoutType, Modifiers } from './types.js';
 
 /**
- * What the parts react-day-picker owns need from the calendar around them.
- *
- * react-day-picker builds `Root`, the arrows, the dropdowns and every day itself, so neither the
- * ref a consumer hands `Calendar` nor its `testId` can be passed down as a prop. Going through a
- * context keeps those parts module-level components: handing react-day-picker a new one on every
- * render would remount the whole grid.
+ * What the parts of a calendar share, so a day nested five elements down needs neither the state
+ * of the calendar nor a long chain of props.
  *
  * @access private
  */
 export type CalendarContextValue = {
 	/**
-	 * The ref the consumer gave `Calendar`, to be merged onto the root element.
-	 */
-	rootRef: Ref<HTMLDivElement> | undefined;
-	/**
-	 * The `testId` the consumer gave `Calendar`. Every part below derives its own from it, so one
-	 * prop names the whole calendar.
+	 * The `testId` the consumer gave `Calendar`. Every part derives its own from it, so one prop
+	 * names the whole calendar.
 	 */
 	testId: string | undefined;
-};
-
-/**
- * @access private
- */
-export const CalendarContext = createContext<CalendarContextValue>({
-	rootRef: undefined,
-	testId: undefined,
-});
-
-/**
- * What the parts inside one month grid need to know about which month they are in.
- *
- * react-day-picker renders a caption, a week number and a day button per displayed month, so with
- * `numberOfMonths` above one the same `testId` would be handed to several elements. `Month` is the
- * only ancestor all of them share, so it is where the index comes from.
- *
- * @access private
- */
-export type CalendarMonthContextValue = {
+	formatter: CalendarFormatter;
+	mode: 'single' | 'multiple' | 'range';
+	captionLayout: CalendarCaptionLayoutType;
+	showWeekNumber: boolean;
+	hideWeekdays: boolean;
+	disableNavigation: boolean;
 	/**
-	 * Which of the displayed months this is, counting from zero, as react-day-picker numbers them.
+	 * A date for each weekday, from the first day of the week, to read the names off.
 	 */
-	displayIndex: number;
+	weekdays: Date[];
+	months: GridMonth[];
+	navStart: Date | undefined;
+	navEnd: Date | undefined;
+	previousMonth: Date | undefined;
+	nextMonth: Date | undefined;
+	goToMonth: (date: Date) => void;
+	getModifiers: (day: GridDay) => Modifiers;
+	isFocusTarget: (day: GridDay) => boolean;
+	onDayClick: (day: GridDay, modifiers: Modifiers, event: MouseEvent) => void;
+	onDayFocus: (day: GridDay) => void;
+	onDayBlur: () => void;
+	onDayKeyDown: (event: KeyboardEvent) => void;
 };
 
+const CalendarContext = createContext<CalendarContextValue | undefined>(undefined);
+
 /**
  * @access private
  */
-export const CalendarMonthContext = createContext<CalendarMonthContextValue>({ displayIndex: 0 });
+export const CalendarContextProvider = CalendarContext.Provider;
 
 /**
- * The stem every part below a month derives its `data-testid` from, or `undefined` when the
- * calendar has no `testId`.
- *
- * It is the calendar's own `testId` while one month is displayed, and `{testId}-month-{n}` while
- * several are, so a single-month calendar keeps the short names and a multi-month one stays
- * addressable a month at a time.
+ * The state of the calendar around the part that calls it.
  *
  * @access private
  */
-export function useCalendarTestIdStem(): string | undefined {
-	const { testId } = useContext(CalendarContext);
-	const { displayIndex } = useContext(CalendarMonthContext);
-	const { months } = useDayPicker();
+export function useCalendarContext(): CalendarContextValue {
+	const value = useContext(CalendarContext);
 
-	if (testId === undefined) {
-		return undefined;
+	if (value === undefined) {
+		throw new Error('A calendar part must be rendered inside a Calendar.');
 	}
 
-	return months.length > 1 ? `${testId}-month-${displayIndex + 1}` : testId;
+	return value;
 }

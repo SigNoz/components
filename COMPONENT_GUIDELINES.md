@@ -714,7 +714,7 @@ the lowercase string that lands in `data-*`, and never a TS `enum`.
 
 A component does not accept `className` or `style`. This covers the root, every wrapper
 (`containerClassName`, `containerStyle`), every part (`classNames`, `styles`, `contentClassName`)
-and third-party style props such as react-day-picker's `modifiersClassNames`. A consumer can
+and the style props of a wrapped third-party component. A consumer can
 reach the look of a component in three ways, in this order:
 
 1. A **prop or variant** (`variant`, `color`, `size`, `width`, `maxWidth`).

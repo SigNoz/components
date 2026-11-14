@@ -16,14 +16,6 @@ describe('Calendar forwardRef', () => {
 		expect(ref.current).toHaveAttribute('data-slot', 'calendar');
 	});
 
-	it('still forwards the ref while react-day-picker holds one of its own', () => {
-		const ref = createRef<HTMLDivElement>();
-
-		render(<Calendar mode="single" defaultMonth={JUNE_2025} testId="calendar" animate ref={ref} />);
-
-		expect(ref.current).toBe(screen.getByTestId('calendar'));
-	});
-
 	it('calls a callback ref with the root and with null on unmount', () => {
 		const seen: Array<HTMLDivElement | null> = [];
 
