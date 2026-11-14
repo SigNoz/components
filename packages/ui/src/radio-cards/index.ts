@@ -34,6 +34,8 @@
  * | `--radio-cards-display` | `grid` |
  * | `--radio-cards-ellipsis-label-text-overflow` | `ellipsis` |
  * | `--radio-cards-focus-ring` | `-` |
+ * | `--radio-cards-font-feature-settings` | `'ss01' 1` |
+ * | `--radio-cards-font-variant-numeric` | `normal` |
  * | `--radio-cards-gap` | `var(--spacing-6)` |
  * | `--radio-cards-grid-template-columns` | `repeat(auto-fill, minmax(min(100%, var(--radio-...` |
  * | `--radio-cards-hover-background-color` | `var(--radio-cards-background-hover)` |

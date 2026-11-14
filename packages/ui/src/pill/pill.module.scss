@@ -139,10 +139,10 @@
 
 .pill.pill-closeable[data-slot='pill'] {
 	--pill-internal-background: var(--pill-closeable-background-color, var(--pill-rect-solid-background));
-	--pill-internal-border-color: transparent;
+	--pill-internal-border-color: var(--pill-closeable-border-color, transparent);
 	--pill-internal-foreground: var(--pill-closeable-color, var(--pill-rect-solid-label));
 	--pill-internal-hover-background: var(--pill-closeable-hover-background-color, var(--pill-rect-solid-background-hover));
-	--pill-internal-hover-border-color: transparent;
+	--pill-internal-hover-border-color: var(--pill-closeable-hover-border-color, transparent);
 	--pill-internal-hover-foreground: var(--pill-closeable-hover-color, var(--pill-rect-solid-label-hover));
 	background-color: var(--pill-background-color, var(--pill-internal-background));
 	border-color: var(--pill-border-color, var(--pill-internal-border-color));
@@ -182,12 +182,12 @@
 }
 
 .pill__close {
-	all: unset;
-	display: flex;
-	align-items: center;
-	cursor: pointer;
-	flex-shrink: 0;
-	justify-content: center;
+	all: var(--pill-close-all, unset);
+	display: var(--pill-close-display, flex);
+	align-items: var(--pill-close-align-items, center);
+	cursor: var(--pill-close-cursor, pointer);
+	flex-shrink: var(--pill-close-flex-shrink, 0);
+	justify-content: var(--pill-close-justify-content, center);
 	inline-size: var(--pill-close-icon-size, 12px);
 	block-size: var(--pill-close-icon-size, 12px);
 	color: var(--pill-close-color, var(--pill-internal-close-color, var(--pill-rect-solid-dismiss-icon)));
@@ -206,8 +206,8 @@
 	}
 
 	& > svg {
-		inline-size: 100%;
-		block-size: 100%;
+		inline-size: var(--pill-close-icon-inline-size, 100%);
+		block-size: var(--pill-close-icon-block-size, 100%);
 	}
 }
 

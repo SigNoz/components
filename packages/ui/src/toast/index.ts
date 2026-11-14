@@ -19,7 +19,9 @@
  * | `--toast-action-divider-width` | `1px` |
  * | `--toast-action-flex` | `none` |
  * | `--toast-action-font-family` | `var(--label-small-400-font-family)` |
+ * | `--toast-action-font-feature-settings` | `'ss01' 1` |
  * | `--toast-action-font-size` | `var(--label-small-400-font-size)` |
+ * | `--toast-action-font-variant-numeric` | `normal` |
  * | `--toast-action-font-weight` | `var(--label-small-400-font-weight)` |
  * | `--toast-action-hover-background-color` | `var(--toast-action-background-hover)` |
  * | `--toast-action-hover-color` | `var(--toast-action-label-hover)` |
@@ -71,7 +73,9 @@
  * | `--toast-focus-visible-outline` | `var(--toast-focus-ring) solid 1px` |
  * | `--toast-focus-visible-outline-offset` | `1px` |
  * | `--toast-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--toast-font-feature-settings` | `'ss01' 1` |
  * | `--toast-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--toast-font-variant-numeric` | `normal` |
  * | `--toast-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--toast-icon-align-items` | `center` |
  * | `--toast-icon-disc-color` | `currentcolor` |

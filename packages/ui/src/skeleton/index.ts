@@ -7,6 +7,7 @@
  * |-------|---------|
  * | `--skeleton-active-animation-duration` | `1.4s` |
  * | `--skeleton-active-animation-iteration-count` | `infinite` |
+ * | `--skeleton-active-animation-name` | `var(--skeleton-internal-animation-name)` |
  * | `--skeleton-active-animation-timing-function` | `ease` |
  * | `--skeleton-active-background-color` | `transparent` |
  * | `--skeleton-active-background-image` | `linear-gradient( 90deg, var(--skeleton-internal...` |

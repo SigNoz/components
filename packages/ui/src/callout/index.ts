@@ -38,6 +38,7 @@
  * | `--callout-button-hover-background` | `var(--callout-internal-background-hover, transp...` |
  * | `--callout-button-icon-block-size` | `100%` |
  * | `--callout-button-icon-inline-size` | `100%` |
+ * | `--callout-button-icon-panel-open-transform` | `rotate(180deg)` |
  * | `--callout-button-justify-content` | `center` |
  * | `--callout-button-padding` | `var(--spacing-2)` |
  * | `--callout-button-transition-property` | `color, background-color` |
@@ -65,6 +66,10 @@
  * | `--callout-description-focus-padding` | `var(--spacing-1)` |
  * | `--callout-description-font-variant-numeric` | `slashed-zero` |
  * | `--callout-description-font-weight` | `var(--paragraph-base-400-font-weight)` |
+ * | `--callout-description-hidden-margin` | `0` |
+ * | `--callout-description-hidden-padding` | `0` |
+ * | `--callout-description-hidden-pointer-events` | `none` |
+ * | `--callout-description-hidden-position` | `absolute` |
  * | `--callout-description-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--callout-description-min-height` | `0` |
  * | `--callout-description-overflow` | `auto` |
@@ -73,7 +78,9 @@
  * | `--callout-focus-visible-outline` | `var(--ring) solid 1px` |
  * | `--callout-focus-visible-outline-offset` | `1px` |
  * | `--callout-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--callout-font-feature-settings` | `'ss01' 1` |
  * | `--callout-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--callout-font-variant-numeric` | `normal` |
  * | `--callout-gap` | `var(--spacing-5)` |
  * | `--callout-height` | `var(--callout-internal-height, auto)` |
  * | `--callout-highlight-danger-background` | `-` |
@@ -114,6 +121,13 @@
  * | `--callout-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--callout-link-border-radius` | `var(--radius-1)` |
  * | `--callout-link-cursor` | `pointer` |
+ * | `--callout-link-is-button-background` | `none` |
+ * | `--callout-link-is-button-border` | `0` |
+ * | `--callout-link-is-button-display` | `inline` |
+ * | `--callout-link-is-button-font` | `inherit` |
+ * | `--callout-link-is-button-letter-spacing` | `inherit` |
+ * | `--callout-link-is-button-padding` | `0` |
+ * | `--callout-link-is-button-text-transform` | `inherit` |
  * | `--callout-link-text-decoration` | `underline` |
  * | `--callout-link-transition-property` | `color` |
  * | `--callout-max-height` | `var(--callout-internal-max-height, 100%)` |
@@ -179,6 +193,8 @@
  * | `--callout-toggle-display` | `flex` |
  * | `--callout-toggle-flex-shrink` | `0` |
  * | `--callout-toggle-font` | `inherit` |
+ * | `--callout-toggle-font-feature-settings` | `'ss01' 1` |
+ * | `--callout-toggle-font-variant-numeric` | `normal` |
  * | `--callout-toggle-min-width` | `0` |
  * | `--callout-toggle-text-align` | `start` |
  * | `--callout-transition-duration` | `150ms` |

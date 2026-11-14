@@ -70,8 +70,8 @@
 	line-height: var(--dialog-line-height, var(--paragraph-base-400-line-height));
 	letter-spacing: var(--dialog-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--dialog-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--dialog-font-variant-numeric, normal);
+	font-feature-settings: var(--dialog-font-feature-settings, 'ss01' 1);
 
 	opacity: var(--dialog-opacity, 1);
 	transform: var(--dialog-transform, none);

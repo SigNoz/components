@@ -1,6 +1,6 @@
 .button {
 	display: var(--button-display, inline-flex);
-	box-sizing: border-box;
+	box-sizing: var(--button-box-sizing, border-box);
 	// The label and affixes carry a z-index over the ghost glow and the disabled stripes. Isolated,
 	// that z-index orders them inside the button only, never above a popup that covers it.
 	isolation: var(--button-isolation, isolate);
@@ -25,7 +25,7 @@
 	line-height: var(--button-size-line-height, var(--button-internal-line-height));
 	letter-spacing: var(--button-text-spacing, var(--button-internal-letter-spacing));
 	text-transform: var(--button-text-transform, var(--button-internal-text-transform));
-	font-feature-settings: 'ss01' 1;
+	font-feature-settings: var(--button-font-feature-settings, 'ss01' 1);
 	border-color: var(--button-base-border-color, transparent);
 	border-width: var(--button-base-border-width, 0px);
 	width: var(--button-width, var(--button-internal-width, auto));
@@ -124,7 +124,7 @@
 	}
 
 	&__suffix-slot {
-		display: contents;
+		display: var(--button-suffix-slot-display, contents);
 	}
 
 	&__label {
@@ -162,7 +162,7 @@
 	// A link icon has no fixed width, so its content is its size. Not `auto`: the prefix wrapper's
 	// `fr` track has no min-content width, so the automatic minimum is only the padding.
 	&[data-icon='true'][data-variant='link'] {
-		--button-internal-min-width: max-content;
+		--button-internal-min-width: var(--button-variant-link-icon-min-width, max-content);
 	}
 
 	&[data-variant='outlined'] {
@@ -246,24 +246,36 @@
 
 	&__dash-border {
 		--button-internal-dash-offset: calc(var(--button-internal-dash-stroke-width) / 2 - var(--button-internal-dash-border-width));
-		position: absolute;
+		position: var(--button-dash-border-position, absolute);
 		inset-inline-start: var(--button-internal-dash-offset);
 		inset-block-start: var(--button-internal-dash-offset);
-		inline-size: calc(100% - 2 * var(--button-internal-dash-offset));
-		block-size: calc(100% - 2 * var(--button-internal-dash-offset));
-		overflow: visible;
-		pointer-events: none;
+		inline-size: var(--button-dash-border-inline-size, calc(100% - 2 * var(--button-internal-dash-offset)));
+		block-size: var(--button-dash-border-block-size, calc(100% - 2 * var(--button-internal-dash-offset)));
+		overflow: var(--button-dash-border-overflow, visible);
+		pointer-events: var(--button-dash-border-pointer-events, none);
 
 		rect {
-			fill: none;
+			fill: var(--button-dash-border-rect-fill, none);
 			stroke: var(--button-internal-dash-stroke);
 			stroke-width: var(--button-internal-dash-stroke-width);
 			stroke-dasharray: var(--button-internal-dash-length) var(--button-internal-dash-gap);
 			rx: var(--button-internal-border-radius);
 			ry: var(--button-internal-border-radius);
-			transition: stroke 150ms ease;
-			animation: button-dash-march var(--button-internal-dash-duration) linear infinite;
-			animation-play-state: paused;
+			transition-property: var(--button-dash-border-rect-transition-property, stroke);
+			transition-duration: var(--button-dash-border-rect-transition-duration, 150ms);
+			transition-timing-function: var(--button-dash-border-rect-transition-timing-function, ease);
+			// CSS Modules renames the keyframes, and does not rename a name inside a `var()` fallback, so
+			// the name goes through an internal variable first.
+			--button-internal-dash-animation-name: button-dash-march;
+
+			animation-name: var(
+				--button-dash-border-rect-animation-name,
+				var(--button-internal-dash-animation-name)
+			);
+			animation-duration: var(--button-internal-dash-duration);
+			animation-timing-function: var(--button-dash-border-rect-animation-timing-function, linear);
+			animation-iteration-count: var(--button-dash-border-rect-animation-iteration-count, infinite);
+			animation-play-state: var(--button-dash-border-rect-animation-play-state, paused);
 		}
 	}
 
@@ -278,17 +290,17 @@
 		 .button__prefix-wrapper,
 		 .button__label,
 		 .button__suffix-slot > * {
-			position: relative;
+			position: var(--button-ghost-content-position, relative);
 			z-index: var(--button-ghost-content-z-index, 1);
 		}
 
 		&::before {
 			content: '';
-			position: absolute;
+			position: var(--button-ghost-glow-position, absolute);
 			inset: var(--button-ghost-glow-inset, -4px);
 			z-index: var(--button-ghost-glow-z-index, 0);
-			pointer-events: none;
-			opacity: 0;
+			pointer-events: var(--button-ghost-glow-pointer-events, none);
+			opacity: var(--button-ghost-glow-idle-opacity, 0);
 			filter: blur(var(--button-ghost-glow-blur, 6px));
 			background: var(--button-ghost-glow-background,
 			linear-gradient(90deg,
@@ -300,9 +312,21 @@
 							color-mix(in srgb, var(--bg-cherry-400) var(--button-internal-ghost-glow-opacity), transparent)));
 			// Twice the width so the gradient can slide a full period and wrap on itself.
 			background-size: var(--button-ghost-glow-background-size, 200% 100%);
-			transition: opacity var(--button-ghost-glow-fade, 600ms ease);
-			animation: button-ghost-shimmer var(--button-ghost-glow-duration, 2.5s) linear infinite;
-			animation-play-state: paused;
+			transition-property: var(--button-ghost-glow-transition-property, opacity);
+			transition-duration: var(--button-ghost-glow-transition-duration, 600ms);
+			transition-timing-function: var(--button-ghost-glow-transition-timing-function, ease);
+			// CSS Modules renames the keyframes, and does not rename a name inside a `var()` fallback, so
+			// the name goes through an internal variable first.
+			--button-internal-ghost-glow-animation-name: button-ghost-shimmer;
+
+			animation-name: var(
+				--button-ghost-glow-animation-name,
+				var(--button-internal-ghost-glow-animation-name)
+			);
+			animation-duration: var(--button-ghost-glow-duration, 2.5s);
+			animation-timing-function: var(--button-ghost-glow-animation-timing-function, linear);
+			animation-iteration-count: var(--button-ghost-glow-animation-iteration-count, infinite);
+			animation-play-state: var(--button-ghost-glow-animation-play-state, paused);
 		}
 
 		&:hover:not([aria-busy="true"]):not([aria-disabled="true"]) {
@@ -312,14 +336,14 @@
 
 		&[aria-busy="true"]:not([data-no-loading-effect="true"])::before {
 			opacity: var(--button-ghost-glow-loading-opacity, 1);
-			animation-play-state: running;
+			animation-play-state: var(--button-ghost-glow-loading-animation-play-state, running);
 		}
 	}
 
 	&[data-variant='link'] {
 		// Set, not left out: an unset padding falls through to the UA's 1px 6px on a `<button>`. Not
 		// `--button-padding`: a link has no padding, so a value scoped for the other variants skips it.
-		padding: 0;
+		padding: var(--button-variant-link-padding, 0);
 		background-color: var(--button-variant-link-background-color, transparent);
 		font-weight: var(--button-variant-link-font-weight, var(--button-font-weight, var(--button-internal-font-weight)));
 		color: var(--button-variant-link-color, var(--button-internal-link-foreground));
@@ -396,7 +420,7 @@
 
 .button[data-variant='dashed']:hover:not([aria-disabled="true"]) .button__dash-border rect,
 .button[data-variant='dashed'][aria-busy="true"] .button__dash-border rect {
-	animation-play-state: running;
+	animation-play-state: var(--button-dash-border-rect-running-animation-play-state, running);
 }
 
 .button__prefix,
@@ -441,7 +465,7 @@ svg.button__suffix {
 			grid-template-columns var(--button-internal-loading-duration) var(--button-internal-loading-easing),
 			margin-inline-end var(--button-internal-loading-duration) var(--button-internal-loading-easing));
 	// Opening up for the spinner is the first beat of the sequence.
-	transition-delay: 0s;
+	transition-delay: var(--button-prefix-wrapper-transition-delay, 0s);
 }
 
 .button:not([aria-busy="true"]) .button__prefix-wrapper[data-empty='true'] {
@@ -455,7 +479,7 @@ svg.button__suffix {
 
 .button__prefix-slot,
 .button__loader-slot {
-	grid-area: 1 / 1;
+	grid-area: var(--button-slot-grid-area, 1 / 1);
 	display: var(--button-slot-display, flex);
 	align-items: var(--button-slot-align-items, center);
 	justify-content: var(--button-slot-justify-content, center);
@@ -477,7 +501,7 @@ svg.button__suffix {
 	opacity: var(--button-loader-slot-hidden-opacity, 0);
 	transform: var(--button-loader-slot-hidden-transform,
 			translateY(var(--button-internal-loading-travel)));
-	transition-delay: 0s;
+	transition-delay: var(--button-loader-slot-transition-delay, 0s);
 }
 
 // The spinner stays mounted for the cross-fade, so the ring is frozen while the
@@ -491,7 +515,7 @@ svg.button__suffix {
 		opacity: var(--button-prefix-slot-hidden-opacity, 0);
 		transform: var(--button-prefix-slot-hidden-transform,
 				translateY(calc(-1 * var(--button-internal-loading-travel))));
-		transition-delay: 0s;
+		transition-delay: var(--button-prefix-slot-hidden-transition-delay, 0s);
 	}
 
 	.button__loader-slot {

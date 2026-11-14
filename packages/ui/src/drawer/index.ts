@@ -70,7 +70,9 @@
  * | `--drawer-flex-direction` | `column` |
  * | `--drawer-focus-visible-outline` | `none` |
  * | `--drawer-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--drawer-font-feature-settings` | `'ss01' 1` |
  * | `--drawer-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--drawer-font-variant-numeric` | `normal` |
  * | `--drawer-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--drawer-footer-align-items` | `center` |
  * | `--drawer-footer-border-color` | `var(--drawer-border)` |

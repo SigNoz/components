@@ -8,30 +8,40 @@
  * | `--switch-archive-background` | `-` |
  * | `--switch-archive-hover-background` | `-` |
  * | `--switch-border-radius` | `var(--radius-round)` |
+ * | `--switch-box-sizing` | `border-box` |
  * | `--switch-checked-background` | `var(--switch-internal-checked-background)` |
  * | `--switch-checked-hover-background` | `var(--switch-internal-checked-hover-background)` |
  * | `--switch-container-align-items` | `flex-start` |
  * | `--switch-container-display` | `inline-flex` |
+ * | `--switch-container-font-feature-settings` | `'ss01' 1` |
+ * | `--switch-container-font-variant-numeric` | `normal` |
  * | `--switch-container-justify` | `flex-start` |
  * | `--switch-container-min-width` | `0` |
+ * | `--switch-container-user-select` | `none` |
  * | `--switch-cursor` | `pointer` |
  * | `--switch-danger-background` | `-` |
  * | `--switch-danger-hover-background` | `-` |
  * | `--switch-description` | `-` |
  * | `--switch-description-color` | `var(--switch-description)` |
+ * | `--switch-description-cursor` | `inherit` |
  * | `--switch-description-font-family` | `var(--paragraph-base-400-font-family)` |
  * | `--switch-description-font-size` | `var(--paragraph-base-400-font-size)` |
  * | `--switch-description-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--switch-description-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--switch-description-line-height` | `var(--paragraph-base-400-line-height)` |
+ * | `--switch-description-min-width` | `0` |
  * | `--switch-description-overflow` | `hidden` |
  * | `--switch-description-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--switch-description-white-space` | `nowrap` |
  * | `--switch-disabled-cursor` | `not-allowed` |
  * | `--switch-disabled-opacity` | `0.6` |
+ * | `--switch-display` | `inline-block` |
+ * | `--switch-flex-shrink` | `0` |
  * | `--switch-focus-ring` | `-` |
  * | `--switch-focus-visible-outline` | `1px solid var(--switch-focus-ring)` |
  * | `--switch-focus-visible-outline-offset` | `1px` |
+ * | `--switch-font-feature-settings` | `'ss01' 1` |
+ * | `--switch-font-variant-numeric` | `normal` |
  * | `--switch-gap` | `var(--spacing-4)` |
  * | `--switch-highlight-danger-background` | `-` |
  * | `--switch-highlight-danger-hover-background` | `-` |
@@ -39,16 +49,19 @@
  * | `--switch-info-hover-background` | `-` |
  * | `--switch-label` | `-` |
  * | `--switch-label-color` | `var(--switch-label)` |
+ * | `--switch-label-cursor` | `inherit` |
  * | `--switch-label-font-family` | `var(--paragraph-base-400-font-family)` |
  * | `--switch-label-font-size` | `var(--paragraph-base-400-font-size)` |
  * | `--switch-label-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--switch-label-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--switch-label-line-height` | `var(--paragraph-base-400-line-height)` |
+ * | `--switch-label-min-width` | `0` |
  * | `--switch-label-overflow` | `hidden` |
  * | `--switch-label-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--switch-label-tooltip-max-width` | `20rem` |
  * | `--switch-label-white-space` | `nowrap` |
  * | `--switch-margin-block-start` | `calc((var(--switch-internal-label-line-height) ...` |
+ * | `--switch-position` | `relative` |
  * | `--switch-primary-background` | `-` |
  * | `--switch-primary-hover-background` | `-` |
  * | `--switch-readonly-cursor` | `not-allowed` |
@@ -57,6 +70,8 @@
  * | `--switch-secondary-hover-background` | `-` |
  * | `--switch-success-background` | `-` |
  * | `--switch-success-hover-background` | `-` |
+ * | `--switch-text-display` | `flex` |
+ * | `--switch-text-flex-direction` | `column` |
  * | `--switch-text-gap` | `var(--spacing-2)` |
  * | `--switch-text-min-width` | `0` |
  * | `--switch-text-overflow-visible` | `visible` |
@@ -67,9 +82,12 @@
  * | `--switch-thumb-border-radius` | `var(--radius-round)` |
  * | `--switch-thumb-hover-extend` | `2px` |
  * | `--switch-thumb-inset` | `2px` |
+ * | `--switch-thumb-inset-block-start` | `50%` |
+ * | `--switch-thumb-position` | `absolute` |
  * | `--switch-thumb-shadow` | `0 1px 3px 0 color-mix(in srgb, black 30%, trans...` |
  * | `--switch-thumb-size` | `12px` |
  * | `--switch-thumb-transition` | `translate 150ms ease-out, inline-size 150ms eas...` |
+ * | `--switch-thumb-translate` | `var(--switch-internal-thumb-x) -50%` |
  * | `--switch-track-background` | `-` |
  * | `--switch-track-background-color` | `var(--switch-track-background)` |
  * | `--switch-track-height` | `16px` |

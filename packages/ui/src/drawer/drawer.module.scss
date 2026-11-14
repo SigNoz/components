@@ -82,8 +82,8 @@
 	line-height: var(--drawer-line-height, var(--paragraph-base-400-line-height));
 	letter-spacing: var(--drawer-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--drawer-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--drawer-font-variant-numeric, normal);
+	font-feature-settings: var(--drawer-font-feature-settings, 'ss01' 1);
 
 	// No transform at rest: a transformed panel becomes the containing block of every
 	// `position: fixed` element inside it, such as a chart tooltip, which then lands in the wrong

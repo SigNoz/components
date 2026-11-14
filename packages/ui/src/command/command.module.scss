@@ -57,8 +57,8 @@
   padding-block: var(--command-padding-block, 0);
   padding-inline: var(--command-padding-inline, 0);
 
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--command-font-variant-numeric, normal);
+  font-feature-settings: var(--command-font-feature-settings, 'ss01' 1);
 
   border-width: var(--command-border-width, 1px);
   border-style: var(--command-border-style, solid);
@@ -137,8 +137,8 @@
     var(--label-base-400-letter-spacing)
   );
   text-transform: var(--command-search-input-text-transform, var(--label-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--command-search-input-font-variant-numeric, normal);
+  font-feature-settings: var(--command-search-input-font-feature-settings, 'ss01' 1);
 
   &::placeholder {
     color: var(--command-internal-search-placeholder);
@@ -172,30 +172,39 @@
     var(--command-scroll-fade-size, var(--spacing-10))
   );
 
-  // A mask reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
+  // A mask reads alpha only: keep the opaque stop `black`, a translucent token would dim every row.
   &[data-scroll-start] {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 var(--command-scroll-fade-size, var(--spacing-10))
+    mask-image: var(
+      --command-viewport-scroll-start-mask-image,
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--command-scroll-fade-size, var(--spacing-10))
+      )
     );
   }
 
   &[data-scroll-end] {
-    mask-image: linear-gradient(
-      to top,
-      transparent 0,
-      #000 var(--command-scroll-fade-size, var(--spacing-10))
+    mask-image: var(
+      --command-viewport-scroll-end-mask-image,
+      linear-gradient(
+        to top,
+        transparent 0,
+        black var(--command-scroll-fade-size, var(--spacing-10))
+      )
     );
   }
 
   &[data-scroll-start][data-scroll-end] {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 var(--command-scroll-fade-size, var(--spacing-10)),
-      #000 calc(100% - var(--command-scroll-fade-size, var(--spacing-10))),
-      transparent 100%
+    mask-image: var(
+      --command-viewport-scroll-start-scroll-end-mask-image,
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--command-scroll-fade-size, var(--spacing-10)),
+        black calc(100% - var(--command-scroll-fade-size, var(--spacing-10))),
+        transparent 100%
+      )
     );
   }
 }

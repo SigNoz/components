@@ -17,8 +17,8 @@
 	padding: var(--checkbox-internal-hit-area);
 	margin: calc(-1 * var(--checkbox-internal-hit-area));
 	cursor: var(--checkbox-cursor, pointer);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--checkbox-font-variant-numeric, normal);
+	font-feature-settings: var(--checkbox-font-feature-settings, 'ss01' 1);
 
 	&[data-color='primary'] {
 		--checkbox-internal-checked-background: var(--checkbox-primary-background);
@@ -65,7 +65,7 @@
 	// The ring hugs the box, not the box plus label: focus belongs to the control; the click
 	// target is a separate, larger thing.
 	&:focus-visible {
-		outline: none;
+		outline: var(--checkbox-root-focus-visible-outline, none);
 
 		.checkbox__box {
 			outline: var(--checkbox-focus-visible-outline, 1px solid var(--checkbox-focus-ring));
@@ -85,13 +85,15 @@
 }
 
 .checkbox__box {
-	box-sizing: border-box;
+	box-sizing: var(--checkbox-box-box-sizing, border-box);
 	display: var(--checkbox-box-display, flex);
 	align-items: var(--checkbox-box-align-items, center);
 	justify-content: var(--checkbox-box-justify-content, center);
 	inline-size: var(--checkbox-internal-size);
 	block-size: var(--checkbox-internal-size);
-	border: var(--checkbox-internal-border-width) solid var(--checkbox-internal-border-color);
+	border-width: var(--checkbox-internal-border-width);
+	border-style: var(--checkbox-border-style, solid);
+	border-color: var(--checkbox-internal-border-color);
 	border-radius: var(--checkbox-border-radius, var(--radius-1));
 	background-color: var(--checkbox-background, transparent);
 	transition: var(--checkbox-transition, background-color 150ms ease, border-color 150ms ease);
@@ -114,9 +116,9 @@
 }
 
 .checkbox__indicator {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: var(--checkbox-indicator-display, flex);
+	align-items: var(--checkbox-indicator-align-items, center);
+	justify-content: var(--checkbox-indicator-justify-content, center);
 	color: var(--checkbox-checked-foreground, var(--checkbox-internal-checked-foreground));
 
 	svg {
@@ -141,9 +143,9 @@
 	min-width: var(--checkbox-container-min-width, 0);
 	// The whole row is the hit target, so the pointer reads as interactive from the text too.
 	cursor: var(--checkbox-cursor, pointer);
-	user-select: none;
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	user-select: var(--checkbox-container-user-select, none);
+	font-variant-numeric: var(--checkbox-container-font-variant-numeric, normal);
+	font-feature-settings: var(--checkbox-container-font-feature-settings, 'ss01' 1);
 
 	.checkbox {
 		// First-line centring, minus the hit-area ring this margin replaces on the block-start
@@ -186,7 +188,7 @@
 }
 
 .checkbox__label {
-	min-width: 0;
+	min-width: var(--checkbox-label-min-width, 0);
 	// The row keeps one line of label height even when the label renders something shorter, so a
 	// row does not change height with its content.
 	min-block-size: var(--checkbox-internal-label-line-height);
@@ -199,7 +201,7 @@
 	line-height: var(--checkbox-internal-label-line-height);
 	letter-spacing: var(--checkbox-label-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--checkbox-label-text-transform, var(--paragraph-base-400-text-transform));
-	cursor: inherit;
+	cursor: var(--checkbox-label-cursor, inherit);
 	transition: var(--checkbox-label-transition, opacity 150ms ease);
 
 	&-tooltip {

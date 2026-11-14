@@ -5,7 +5,10 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--pagination-align-center-justify-content` | `center` |
+ * | `--pagination-align-end-justify-content` | `flex-end` |
  * | `--pagination-align-items` | `center` |
+ * | `--pagination-align-start-justify-content` | `flex-start` |
  * | `--pagination-arrow-block-size` | `24px` |
  * | `--pagination-arrow-inline-size` | `16px` |
  * | `--pagination-arrow-padding` | `0` |
@@ -77,6 +80,7 @@
  * | `--pagination-page-current-color` | `var(--pagination-page-current-label)` |
  * | `--pagination-page-current-cursor` | `default` |
  * | `--pagination-page-current-label` | `-` |
+ * | `--pagination-page-digit-inline-size` | `1ch` |
  * | `--pagination-page-inline-size` | `var(--pagination-internal-slot-inline-size)` |
  * | `--pagination-page-min-inline-size` | `24px` |
  * | `--pagination-page-padding-block` | `1px` |

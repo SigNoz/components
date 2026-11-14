@@ -1,8 +1,10 @@
 .badge {
 	display: var(--badge-display, inline-flex);
-	box-sizing: border-box;
+	box-sizing: var(--badge-box-sizing, border-box);
 	border-radius: var(--badge-border-radius, var(--radius-round));
-	border: var(--badge-border-width, 1px) solid var(--badge-border-color, var(--badge-internal-border-color, transparent));
+	border-width: var(--badge-border-width, 1px);
+	border-style: var(--badge-border-style, solid);
+	border-color: var(--badge-border-color, var(--badge-internal-border-color, transparent));
 	// No block padding: the fixed height centres the line box, and the label clips on the inline
 	// axis only, so descenders and accents past the line box still paint.
 	padding: var(--badge-padding, 0 var(--spacing-4));
@@ -13,7 +15,7 @@
 	line-height: var(--badge-line-height, var(--badge-internal-line-height));
 	letter-spacing: var(--badge-letter-spacing, var(--badge-internal-letter-spacing));
 	text-transform: var(--badge-internal-text-transform);
-	font-feature-settings: 'ss01' 1;
+	font-feature-settings: var(--badge-font-feature-settings, 'ss01' 1);
 	white-space: var(--badge-white-space, nowrap);
 	height: var(--badge-height, var(--spacing-10));
 	width: var(--badge-width, var(--badge-internal-width, fit-content));
@@ -106,15 +108,15 @@
 		--badge-internal-font-weight: var(--label-small-500-font-weight);
 		--badge-internal-line-height: var(--label-small-500-line-height);
 		--badge-internal-letter-spacing: var(--label-small-500-letter-spacing);
-		--badge-internal-text-transform: none;
+		--badge-internal-text-transform: var(--badge-none-text-transform, none);
 	}
 
 	&[data-text-transform='capitalize'] {
-		--badge-internal-text-transform: capitalize;
+		--badge-internal-text-transform: var(--badge-capitalize-text-transform, capitalize);
 	}
 
 	&[data-text-transform='lowercase'] {
-		--badge-internal-text-transform: lowercase;
+		--badge-internal-text-transform: var(--badge-lowercase-text-transform, lowercase);
 	}
 
 	&[data-text-transform='uppercase'] {
@@ -160,7 +162,7 @@
 	// sets it) and a wider `width` still wins.
 	&[data-single-char] {
 		--badge-internal-min-width: var(--badge-height, var(--spacing-10));
-		--badge-internal-justify-content: center;
+		--badge-internal-justify-content: var(--badge-single-char-justify-content, center);
 		padding-inline: var(--badge-single-char-padding-inline, 0);
 	}
 

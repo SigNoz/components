@@ -5,6 +5,9 @@
  *
  * | Token | Default |
  * |-------|---------|
+ * | `--spinner-animation-iteration-count` | `infinite` |
+ * | `--spinner-animation-name` | `var(--spinner-internal-animation-name)` |
+ * | `--spinner-animation-timing-function` | `linear` |
  * | `--spinner-border-radius` | `50%` |
  * | `--spinner-border-style` | `solid` |
  * | `--spinner-duration` | `0.7s` |

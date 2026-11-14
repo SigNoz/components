@@ -30,6 +30,8 @@
  * | `--command-empty-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--command-flex-direction` | `column` |
  * | `--command-focus-visible-outline` | `none` |
+ * | `--command-font-feature-settings` | `'ss01' 1` |
+ * | `--command-font-variant-numeric` | `normal` |
  * | `--command-group-display` | `flex` |
  * | `--command-group-flex-direction` | `column` |
  * | `--command-group-label` | `-` |
@@ -128,6 +130,8 @@
  * | `--command-search-input-flex-grow` | `1` |
  * | `--command-search-input-focus-visible-outline` | `none` |
  * | `--command-search-input-font-family` | `var(--label-base-400-font-family)` |
+ * | `--command-search-input-font-feature-settings` | `'ss01' 1` |
+ * | `--command-search-input-font-variant-numeric` | `normal` |
  * | `--command-search-input-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--command-search-input-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--command-search-input-line-height` | `var(--label-base-400-line-height)` |
@@ -149,7 +153,10 @@
  * | `--command-viewport-overflow-x` | `hidden` |
  * | `--command-viewport-overflow-y` | `auto` |
  * | `--command-viewport-overscroll-behavior` | `contain` |
+ * | `--command-viewport-scroll-end-mask-image` | `linear-gradient( to top, transparent 0, black v...` |
  * | `--command-viewport-scroll-padding-block` | `var(--command-scroll-fade-size, var(--spacing-10))` |
+ * | `--command-viewport-scroll-start-mask-image` | `linear-gradient( to bottom, transparent 0, blac...` |
+ * | `--command-viewport-scroll-start-scroll-end-mask-image` | `linear-gradient( to bottom, transparent 0, blac...` |
  * | `--command-viewport-scrollbar-width` | `thin` |
  * | `--command-visually-hidden-block-size` | `1px` |
  * | `--command-visually-hidden-border` | `0` |

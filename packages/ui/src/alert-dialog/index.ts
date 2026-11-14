@@ -41,7 +41,9 @@
  * | `--alert-dialog-flex-direction` | `column` |
  * | `--alert-dialog-focus-visible-outline` | `none` |
  * | `--alert-dialog-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--alert-dialog-font-feature-settings` | `'ss01' 1` |
  * | `--alert-dialog-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--alert-dialog-font-variant-numeric` | `normal` |
  * | `--alert-dialog-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--alert-dialog-footer-display` | `flex` |
  * | `--alert-dialog-footer-flex-direction` | `row` |
